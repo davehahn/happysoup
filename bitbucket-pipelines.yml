@@ -14,8 +14,8 @@ pipelines:
             - echo $DEPLOY_KEY | base64 --decode > deploy.key
             - sfdx force:auth:jwt:grant -i $PROD_CUSTOMER_KEY -u $PROD_USERNAME -f deploy.key --setalias ci-deploy --instanceurl https://test.salesforce.com
             - sfdx heber:staticresources:deploy -u ci-deploy
-            - sfdx force:source:deploy --targetusername ci-deploy -p force-app/main/default -w 120
-            #- sfdx force:source:deploy --testlevel RunLocalTests --targetusername ci-deploy -p force-app/main/default
+            #- sfdx force:source:deploy --targetusername ci-deploy -p force-app/main/default -w 120
+            - sfdx force:source:deploy --testlevel RunLocalTests --targetusername ci-deploy -p force-app/main/default -w 120
 #    release:
 #      - step:
 #          name: Deploy to Testing
