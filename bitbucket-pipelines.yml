@@ -1,0 +1,46 @@
+image:
+  name: legendarydevs/sfdx_deploy
+  username: $DOCKER_HUB_USERNAME
+  password: $DOCKER_HUB_PASSWORD
+  email: $DOCKER_HUB_EMAIL
+pipelines:
+  branches:
+    master:
+      - step:
+          name: Deploy to Production
+          script:
+            - echo 'Deploy to Production'
+            - ant -buildfile build/build.xml doMetadataClean
+            - echo $DEPLOY_KEY | base64 --decode > deploy.key
+            - sfdx force:auth:jwt:grant -i $PROD_CUSTOMER_KEY -u $PROD_USERNAME -f deploy.key --setalias ci-deploy --instanceurl https://test.salesforce.com
+            - sfdx heber:staticresources:deploy -u ci-deploy
+            - sfdx force:source:deploy --targetusername ci-deploy -p force-app/main/default -w 120
+            #- sfdx force:source:deploy --testlevel RunLocalTests --targetusername ci-deploy -p force-app/main/default
+#    release:
+#      - step:
+#          name: Deploy to Testing
+#          deployment: test
+#          script:
+#            - echo 'Deploy to Testing Complete'
+#            - ant -buildfile build/build.xml deployCode -Dsfdc.username=$SFDC_USERNAME -Dsfdc.password=$SFDC_PASS$SFDC_TOKEN -Dsfdc.serverurl=https://$SFDC_SANDBOX_SERVERURL
+#      - step:
+#          name: Deploy to UAT
+#          deployment: staging
+#          trigger: manual
+#          script:
+#            - echo 'Deploy to UAT'
+#            - ant -buildfile build/build.xml deployCode -Dsfdc.username=$SFDC_USERNAME -Dsfdc.password=$SFDC_PASS$SFDC_TOKEN -Dsfdc.serverurl=https://$SFDC_SANDBOX_SERVERURL
+#      - step:
+#          name: Pull Request to Production Repo
+#          deployment: production
+#          trigger: manual
+#          script:
+#            # - echo 'Creating Pull Request to Production'
+#            # - chmod +x pr_2_production.sh
+#            # - ./pr_2_production.sh master
+#            - echo 'Merging release into master'
+#            - git config --add remote.origin.fetch +refs/heads/*:refs/remotes/origin/*
+#            - git fetch
+#            - git checkout master
+#            - git merge $BITBUCKET_BRANCH
+#            - git push origin master
