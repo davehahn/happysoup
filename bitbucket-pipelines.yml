@@ -9,6 +9,8 @@ pipelines:
       - step:
           name: Deploy to Production
           script:
+            - java -version
+            - ant -version
             - echo 'Deploy to Production'
             - ant -buildfile build/build.xml doMetadataClean
             - echo $DEPLOY_KEY | base64 --decode > deploy.key
