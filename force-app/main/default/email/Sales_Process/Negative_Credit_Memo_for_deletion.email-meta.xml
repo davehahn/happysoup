@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <description>Negative Credit Memo - process checking</description>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>Legend_Letterhead</letterhead>
+    <name>Negative Credit Memo for deletion</name>
+    <style>freeForm</style>
+    <subject>From Ben: Negative Credit Memo {!AcctSeed__AP_Credit_Memo__c.Name}</subject>
+    <textOnly>HI Michelle, this work?  This is your notification.
+
+{!AcctSeed__AP_Credit_Memo__c.Name}</textOnly>
+    <type>html</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

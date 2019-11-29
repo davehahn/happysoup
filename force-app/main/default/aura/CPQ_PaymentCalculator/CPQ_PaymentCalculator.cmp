@@ -1,0 +1,202 @@
+<aura:component controller="CPQ_Controller_dh">
+
+  <!-- attributes -->
+  <aura:attribute name="recordId" type="String" />
+  <aura:attribute name="isLoaded" type="Boolean" default="false" />
+  <aura:attribute name="amount" type="Decimal" />
+  <aura:attribute name="term" type="Integer" default="60" />
+  <aura:attribute name="amort" type="Integer" default="120" />
+  <aura:attribute name="deposit" type="Decimal" default="0" />
+  <aura:attribute name="interestRate" type="Decimal" default="4.99"/>
+  <aura:attribute name="saleProvince" type="String" />
+  <aura:attribute name="remaining" type="Decimal" />
+  <aura:attribute name="monthlyPayment" type="Decimal" />
+  <aura:attribute name="biWeeklyPayment" type="Decimal" />
+  <aura:attribute name="weeklyPayment" type="Decimal" />
+  <aura:attribute name="taxZones" type="List" />
+  <aura:attribute name="currentTaxZone" type="Map" />
+  <aura:attribute name="currentTaxZoneId" type="String" />
+  <aura:attribute name="currentTaxRate" type="Decimal" />
+  <aura:attribute name="updateViaButton" type="Boolean" default="false" />
+  <aura:attribute name="isTaxExempt" type="Boolean" default="false" />
+  <aura:attribute name="lockTaxExempt" type="Boolean" default="false" />
+
+  <ltng:require scripts="{!join(',', $Resource.Libraries +'/js/LightningApex.js',
+                                     $Resource.Libraries +'/js/LightningUtils.js') }"
+                afterScriptsLoaded="{!c.scriptsLoaded}" />
+
+  <!-- Events -->
+  <aura:handler name="change"
+                value="{!v.amount}"
+                action="{!c.calculate}" />
+  <!-- <aura:handler name="change"
+                value="{!v.currentTaxZoneId}"
+                action="{!c.handleTaxZoneChange}" /> -->
+  <aura:registerEvent name="paymentsChangedEvent" type="c:CPQ_PaymentCalculator_PaymentsChanged_Event" />
+
+  <aura:method name="calculate" action="{!c.calculate}" />
+
+  <div class="slds-card">
+    <aura:if isTrue="{!v.isLoaded}">
+      <h1>Payment Calculator</h1>
+      <div style="padding-top: 1rem;">
+
+        <lightning:layout>
+          <lightning:layoutItem size="4" class="payment-cell">
+            <span>Weekly</span>
+            <span>
+              <lightning:formattedNumber value="{!v.weeklyPayment}"
+                                   style="currency"
+                                   currencyCode="CAD" />
+            </span>
+          </lightning:layoutItem>
+          <lightning:layoutItem size="4" class="payment-cell">
+            <span>Bi-Weekly</span>
+            <span>
+              <lightning:formattedNumber value="{!v.biWeeklyPayment}"
+                                   style="currency"
+                                   currencyCode="CAD" />
+            </span>
+          </lightning:layoutItem>
+          <lightning:layoutItem size="4" class="payment-cell">
+            <span>Monthly</span>
+            <span>
+              <lightning:formattedNumber value="{!v.monthlyPayment}"
+                                   style="currency"
+                                   currencyCode="CAD" />
+            </span>
+          </lightning:layoutItem>
+        </lightning:layout>
+
+        <lightning:layout horizontalAlign="center" class="remaining">
+          <lightning:layoutItem size="12" class="payment-cell">
+            <span>Principal After Term</span>
+            <span>
+              <lightning:formattedNumber value="{!v.remaining}"
+                                   style="currency"
+                                   currencyCode="CAD" />
+            </span>
+          </lightning:layoutItem>
+        </lightning:layout>
+
+        <lightning:layout class="range-row">
+          <lightning:layoutItem size="9">
+            <lightning:input type="range"
+                             label="Term"
+                             name="term"
+                             min="12"
+                             max="240"
+                             step="12"
+                             class="termSlider"
+                             value="{!v.term}"
+                             onchange="{!c.termChange}" />
+          </lightning:layoutItem>
+          <lightning:layoutItem size="3" class="value-container">
+            <span class="range-value">{!v.term}</span>
+            <span>mths</span>
+          </lightning:layoutItem>
+        </lightning:layout>
+
+        <lightning:layout class="range-row">
+          <lightning:layoutItem size="9">
+            <lightning:input type="range"
+                             label="Ammortization"
+                             name="ammortization"
+                             min="12"
+                             max="240"
+                             step="12"
+                             value="{!v.amort}"
+                             onchange="{!c.amortChange}" />
+          </lightning:layoutItem>
+          <lightning:layoutItem size="3" class="value-container">
+            <span class="range-value">{!v.amort}</span>
+            <span>mths</span>
+          </lightning:layoutItem>
+        </lightning:layout>
+
+        <lightning:layout pullToBoundary="small" horizontalAlign="center" class="ir-deposit-row">
+          <lightning:layoutItem size="5" padding="horizontal-small">
+            <div class="slds-form-element">
+              <label class="slds-form-element__label"
+                     for="deposit">Intrest Rate
+              </label>
+              <div class="slds-form-element__control">
+                <lightning:input type="number"
+                                 name="interestRate"
+                                 label="interestRate"
+                                 class="un-stylize"
+                                 step="0.01"
+                                 min="0"
+                                 value="{!v.interestRate}"
+                                 onchange="{!c.rate_deposit_change}" />
+                  <span>%</span>
+              </div>
+            </div>
+          </lightning:layoutItem>
+          <lightning:layoutItem size="5" padding="horizontal-small">
+            <div class="slds-form-element">
+              <label class="slds-form-element__label"
+                     for="deposit">Deposit
+              </label>
+              <div class="slds-form-element__control">
+                <span>$</span>
+                 <lightning:input type="number"
+                       label="Deposit"
+                       step="any"
+                       class="un-stylize"
+                       name="deposit"
+                       value="{!v.deposit}"
+                       onchange="{!c.rate_deposit_change}" />
+              </div>
+            </div>
+          </lightning:layoutItem>
+        </lightning:layout>
+
+      </div>
+
+      <aura:if isTrue="{! !(empty(v.taxZones) )}">
+        <h1 style="margin-top:1rem">Taxes</h1>
+        <lightning:layout>
+
+          <lightning:layoutItem size="4" class='slds-p-right_small slds-p-top_small slds-p-bottom_small slds-p-left_large'>
+            <label class="slds-form-element__label">
+              <span>Tax Exempt?</span>
+            </label>
+            <lightning:input type="toggle"
+                             label=""
+                             checked="{!v.isTaxExempt}"
+                             variant="label-hidden"
+                             disabled="{!v.lockTaxExempt}"
+                             messageToggleActive=""
+                             messageToggleInactive="" />
+          </lightning:layoutItem>
+
+          <lightning:layoutItem padding="around-small" size="5">
+            <lightning:select label="Tax Zone"
+                              value="{!v.currentTaxZoneId}"
+                              onchange="{!c.handleTaxZoneChange}"
+                              disabled="{! v.isTaxExempt }">
+              <aura:iteration items="{!v.taxZones}" var="taxZone">
+                <option value="{!taxZone.id}">{!taxZone.name}</option>
+              </aura:iteration>
+            </lightning:select>
+          </lightning:layoutItem>
+
+          <lightning:layoutItem padding="around-small" size="3">
+            <label class="slds-form-element__label">Tax Rate</label><br />
+            <lightning:formattedNumber value="{! if(v.isTaxExempt, 0, (v.currentTaxZone.provincialRate + v.currentTaxZone.federalRate)/100 )}" style="percent" maximumFractionDigits="3"/>
+          </lightning:layoutItem>
+        </lightning:layout>
+      </aura:if>
+
+      <aura:if isTrue="{!v.updateViaButton}">
+        <div class="slds-align_absolute-center slds-p-top_medium">
+          <lightning:button label="Update Quote"
+                            onclick="{!c.handleUpdate}" />
+        </div>
+      </aura:if>
+
+    </aura:if>
+  </div>
+
+</aura:component>

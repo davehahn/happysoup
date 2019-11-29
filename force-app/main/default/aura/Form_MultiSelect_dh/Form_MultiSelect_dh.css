@@ -1,0 +1,39 @@
+.THIS .chosen-container {
+  border: 1px solid rgb(221, 219, 218);
+  border-radius: .25rem;
+  width: 100%;
+  -webkit-transition: border .1s linear,background-color .1s linear;
+  transition: border .1s linear,background-color .1s linear;
+  display: inline-block;
+  padding: 0 .5rem 0 .25rem;
+  line-height: 1.875rem;
+  min-height: calc(1.875rem + (1px * 2));
+}
+
+.THIS .chosen-container:focus,
+.THIS .chosen-container:active,
+.THIS .chosen-container.chosen-container-active,
+.THIS .chosen-container.chosen-container-active ul.chose-choices {
+  outline: 0;
+  border-color: rgb(21, 137, 238);
+  background-color: rgb(255, 255, 255);
+  box-shadow: 0 0 3px #0070d2;
+}
+
+.THIS .chosen-choices {
+  border:none;
+  background-image:none;
+  margin: 0 -.5rem 0 -.25rem;
+  width: calc( 100% + 0.75rem);
+  border-radius: 0.25rem;
+  box-shadow: none;
+}
+
+.THIS ul.chosen-choices li.search-choice {
+  padding: 0 20px 0 5px;
+  line-height: 1.4rem;
+  background: #FFF;
+  border-color: #dddbda;
+  color: #0070d2;
+  border-radius: 0.25rem;
+}

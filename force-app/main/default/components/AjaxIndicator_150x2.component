@@ -1,0 +1,112 @@
+<apex:component >
+
+  <apex:attribute name="width" description="Width of indicator"
+    type="String" required="true" />
+
+  <style>
+
+    #loadingProgressG_container {
+      position:relative;
+      top:1px;
+      left:4px;
+    }
+
+    #loadingProgressG{
+      width:100%;
+      height:2px;
+      overflow:hidden;
+      background-color:red;
+      -moz-border-radius:1px;
+      -webkit-border-radius:1px;
+      -ms-border-radius:1px;
+      -o-border-radius:1px;
+      border-radius:1px;
+    }
+
+    .loadingProgressG{
+      background-color:#FFFFFF;
+      margin-top:0;
+      margin-left:-100%;
+      -moz-animation-name:bounce_loadingProgressG;
+      -moz-animation-duration:1.3s;
+      -moz-animation-iteration-count:infinite;
+      -moz-animation-timing-function:linear;
+      -webkit-animation-name:bounce_loadingProgressG;
+      -webkit-animation-duration:1.3s;
+      -webkit-animation-iteration-count:infinite;
+      -webkit-animation-timing-function:linear;
+      -ms-animation-name:bounce_loadingProgressG;
+      -ms-animation-duration:1.3s;
+      -ms-animation-iteration-count:infinite;
+      -ms-animation-timing-function:linear;
+      -o-animation-name:bounce_loadingProgressG;
+      -o-animation-duration:1.3s;
+      -o-animation-iteration-count:infinite;
+      -o-animation-timing-function:linear;
+      animation-name:bounce_loadingProgressG;
+      animation-duration:1.3s;
+      animation-iteration-count:infinite;
+      animation-timing-function:linear;
+      width:100%;
+      height:2px;
+    }
+
+    @-moz-keyframes bounce_loadingProgressG{
+      0%{
+        margin-left:-100%;
+      }
+
+      100%{
+        margin-left:100%;
+      }
+    }
+
+    @-webkit-keyframes bounce_loadingProgressG{
+      0%{
+        margin-left:-100%;
+      }
+
+      100%{
+        margin-left:100%;
+      }
+    }
+
+    @-ms-keyframes bounce_loadingProgressG{
+      0%{
+        margin-left:-100%;
+      }
+
+      100%{
+        margin-left:100%;
+      }
+    }
+
+    @-o-keyframes bounce_loadingProgressG{
+      0%{
+        margin-left:-100%;
+      }
+
+      100%{
+        margin-left:100%;
+      }
+    }
+
+    @keyframes bounce_loadingProgressG{
+      0%{
+        margin-left:-100%;
+      }
+
+      100%{
+        margin-left:100%;
+      }
+    }
+
+  </style>
+
+<div id="loadingProgressG_container" style="width:{!width}">
+  <div id="loadingProgressG">
+    <div id="loadingProgressG_1" class="loadingProgressG"></div>
+  </div>
+</div>
+
+</apex:component>

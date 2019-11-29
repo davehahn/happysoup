@@ -1,0 +1,54 @@
+<tr class="invalid validatable creating slds-is-selected">
+  {{ quantity_cell_new this }}
+  <td>
+    <input class="required" type="text" data-field-name="Description__c" tabindex="1"></input>
+  </td>
+  <td></td>
+  <td>
+    $ <input type="text"
+             class="number_only customItemAmount required"
+             data-field-name='CommissionableAmount__c'
+             tabindex="2"></input>
+  </td>
+  <td></td>
+  <td></td>
+  <td>
+    <input type="text"
+           disabled="disabled"
+           class="number_only cp_linked required"
+           data-field-name="AppliedCommissionRate__c"
+           data-field-type="percentage"
+           tabindex="2"></input> %
+  </td>
+  <td>$ <input type="text"
+               disabled="disabled"
+               class="number_only cp_linked required"
+               data-field-name="AppliedCommissionAmount__c"
+               data-field-type="currency"
+               tabindex="3"></input></td>
+  <td>
+    <input type="hidden" data-field-name="Department__c" value="{{this.Department__c}}" />
+    <input type="hidden" data-field-name="CommissionRecord__c" value="{{this.Id}}" />
+    <input type="hidden" data-field-name="CustomItem__c" value="true" />
+    <div class="slds-dropdown-trigger">
+      <button class="slds-button slds-button--icon-border-filled" aria-haspopup="true">
+        <i class="fa fa-chevron-down" />
+        <span class="slds-assistive-text">Show More</span>
+      </button>
+      <div class="slds-dropdown slds-dropdown--right slds-dropdown--menu">
+        <ul class="slds-dropdown__list" role="menu">
+          <li id="menu-0-0" class="slds-dropdown__item">
+            <a href="#" role="menuitem" class="cancelNewItem" data-id="{{this.Id}}">
+              <p class="slds-truncate">Cancel</p>
+            </a>
+          </li>
+          <li id="menu-1-1" class="slds-dropdown__item">
+            <a href="#" role="menuitem" class="createItem" data-id="{{this.Id}}">
+              <p class="slds-truncate">Save</p>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </td>
+</tr>

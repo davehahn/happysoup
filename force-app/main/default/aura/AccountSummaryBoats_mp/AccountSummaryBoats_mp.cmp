@@ -1,0 +1,115 @@
+<aura:component controller="AccountSummaries_mp"
+								implements="forceCommunity:availableForAllPageTypes">
+
+	<ltng:require scripts="{!join(',', $Resource.Libraries +'/js/LightningApex.js',
+                         						 $Resource.Libraries +'/js/LightningUtils.js') }"
+    						afterScriptsLoaded="{!c.doInit}" />
+
+  <aura:attribute type="Boolean" 	name="includeInvoices" 		default="True" />
+  <aura:attribute type="Boolean" 	name="includeCreditMemos" default="True" />
+  <aura:attribute type="Boolean" 	name="includeReceipts" 		default="True" />
+	<aura:attribute type="Date" 		name="startDate" />
+	<aura:attribute type="Date" 		name="endDate" />
+	<aura:attribute type="Decimal" 	name="creditTotal" />
+	<aura:attribute type="Decimal" 	name="debitTotal" />
+	<aura:attribute type="Object[]" name="transactions" />
+	<aura:attribute type="Object[]"	name="statements" />
+
+	<aura:handler name="change" value="{!v.startDate}" action="{!c.doInit}" />
+	<aura:handler name="change" value="{!v.endDate}" action="{!c.doInit}" />
+	<aura:handler name="change" value="{!v.includeInvoices}" action="{!c.doInit}" />
+	<aura:handler name="change" value="{!v.includeCreditMemos}" action="{!c.doInit}" />
+	<aura:handler name="change" value="{!v.includeReceipts}" action="{!c.doInit}" />
+
+	<div class="slds-scope">
+		<div class="slds-page-header slds-m-vertical_large">
+		  <div class="slds-media">
+		    <div class="slds-media__figure">
+		      <lightning:icon iconName="standard:insights" />
+		    </div>
+		    <div class="slds-media__body">
+		      <h1 class="slds-page-header__title slds-truncate slds-align-middle">Boats Account</h1>
+		      <p class="slds-text-body_small slds-line-height_reset">Summary</p>
+		    </div>
+		  </div>
+		</div>
+		<div class="transactions slds-m-vertical_large">
+			<div class="slds-m-vertical_medium">
+				<div class="slds-grid slds-m-vertical_small">
+					<div class="slds-col slds-size_1-of-2">
+						<h1 class="slds-text-heading_small">Transaction History</h1>
+						<div class="slds-grid slds-m-vertical_small">
+							<div class="slds-col slds-size_1-of-4">
+								<lightning:input type="checkbox" 
+																 label="Invoices" 
+																 checked="{!v.includeInvoices}" />
+							</div>
+							<div class="slds-col slds-size_1-of-4">
+								<lightning:input type="checkbox" 
+																 label="Credit Memos" 
+																 checked="{!v.includeCreditMemos}" />
+							</div>
+							<div class="slds-col slds-size_1-of-4">
+								<lightning:input type="checkbox" 
+																 label="Receipts" 
+																 checked="{!v.includeReceipts}" />
+							</div>
+						</div>
+					</div>
+					<div class="slds-col slds-size_1-of-2 align-right">
+						<div class="slds-m-vertical_small">
+							<c:DateRangePicker_mp startDate="{!v.startDate}"
+																		endDate="{!v.endDate}" />
+						</div>
+					</div>
+				</div>
+			</div>
+			<table class="slds-table slds-table_bordered slds-table_cell-buffer">
+				<thead class="slds-text-title_caps">
+					<tr>
+						<th>ID</th>
+						<th>Type</th>
+						<th>Reference</th>
+						<th>Date</th>
+						<th class="align-right">Debit</th>
+						<th class="align-right">Credit</th>
+					</tr>
+				</thead>
+				<tbody>
+					<aura:iteration items="{!v.transactions}" var="t">
+						<tr>
+							<td>{!t.Name}</td>
+							<td>{!t.Type}</td>
+							<td>{!t.Reference}</td>
+							<td>{!t.SortDate}</td>
+							<td class="align-right">
+								<ui:outputCurrency value="{!t.Debit}" 
+																	 format="$##,##,###,##0.00"/>
+							</td>
+							<td class="align-right">
+								<ui:outputCurrency value="{!t.Credit}" 
+																	 format="$##,##,###,##0.00"/>
+							</td>
+						</tr>
+					</aura:iteration>
+				</tbody>
+				<tfoot>
+					<tr>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<th class="align-right">
+							<ui:outputCurrency value="{!v.debitTotal}" 
+																 format="$##,##,###,##0.00"/>
+						</th>
+						<th class="align-right">
+							<ui:outputCurrency value="{!v.creditTotal}" 
+																 format="$##,##,###,##0.00"/>
+						</th>
+					</tr>
+				</tfoot>
+			</table>
+		</div>
+	</div>
+</aura:component>

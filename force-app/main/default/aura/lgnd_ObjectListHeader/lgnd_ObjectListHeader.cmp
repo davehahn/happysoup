@@ -1,0 +1,37 @@
+<aura:component implements="forceCommunity:availableForAllPageTypes" access="global">
+  <aura:attribute name="title" type="String" access="global"/>
+  <aura:attribute name="iconName" type="String" access="global" />
+  <aura:attribute name="newURL" type="String" access="global"/>
+  <aura:attribute name="listNames" type="String" access="global"/>
+
+  <aura:attribute name="selectedList" type="String"  access="global"/>
+  <aura:attribute name="availableLists" type="String[]"  access="global"/>
+
+  <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+
+  <div>
+    <div class="slds-page-header">
+      <div class="slds-grid">
+        <div class="slds-col slds-has-flexi-truncate">
+          <div class="slds-media slds-no-space slds-grow">
+            <div class="slds-media__figure">
+              <lightning:icon size="large" iconName="{!v.iconName}" />
+            </div>
+            <div class="slds-media__body">
+              <div class="slds-picklist slds-dropdown-trigger slds-dropdown-trigger--click">
+                <p class="slds-text-title--caps slds-line-height--reset">{!v.title}</p>
+                <c:lgnd_ListSelector value="{!v.selectedList}"
+                                     listOptions="{!v.availableLists}"
+                                     aura:id="listSelector--Cmp" />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="slds-col slds-no-flex slds-grid slds-align-top">
+          <button class="slds-button slds-button--neutral" onclick="{!c.navigateToNew}">New</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</aura:component>

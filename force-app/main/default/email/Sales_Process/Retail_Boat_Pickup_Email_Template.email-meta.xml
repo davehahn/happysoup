@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <description>Email Notifcation when a Retail Boat is scheduled for Pickup or the date changes</description>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>Legend_Letterhead</letterhead>
+    <name>Retail Boat Pickup Email Template</name>
+    <style>freeForm</style>
+    <subject>Retail Pickup Date Scheduled or Rescheduled: {!AcctSeed__Project__c.Boat_Specialist__c}</subject>
+    <textOnly>Hello,
+
+The following Retail Boat Pickup date has been Scheduled or Rescheduled for your location {!AcctSeed__Project__c.GMBLASERP__Warehouse__c}:
+
+{!AcctSeed__Project__c.Name}
+
+New Delivery Date:
+{!AcctSeed__Project__c.Delivery_Date__c}
+
+Boat Specialist:
+{!AcctSeed__Project__c.Boat_Specialist__c}
+
+Sales Person:
+{!AcctSeed__Project__c.Salesperson__c}
+
+Modified By:
+{!AcctSeed__Project__c.LastModifiedBy}</textOnly>
+    <type>html</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

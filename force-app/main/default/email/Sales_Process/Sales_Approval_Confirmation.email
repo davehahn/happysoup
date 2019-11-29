@@ -1,0 +1,57 @@
+<messaging:emailTemplate subject="New Deal" relatedToType="Opportunity">
+<messaging:htmlEmailBody >
+<html>
+    <body style="font-family: arial; font-size:1.1em;">
+        <p>Hi {!relatedTo.Owner.FirstName},</p>
+        
+        <p>
+            I have some great news!  Your deal has been approved.  
+        </p>
+        
+        <p>
+            For your convenience, this email has been sent to the entire sales team to let them know that 
+            YOU ARE AWESOME and helped another customer onto the water to create some incredible memories.
+        </p>
+        
+        <p>
+            Here are a few more details about your deal so that everyone is in the loop:
+        </p>
+        
+        <div style="width:100%;height:2px !important;padding:0;margin:0;background:#D4E6F1;"></div>
+        
+        <div style="padding:10px;">
+        
+            <div style="padding:3px;color:#6C799B;">
+                Account Name: <b>{!relatedTo.Account.Name}</b>
+            </div>
+            
+             <div style="padding:3px;color:#6C799B;">
+                Boat Model: <b>{!relatedTo.BoatID__r.Name}</b>
+            </div>
+            
+            <div style="padding:3px;color:#6C799B;">
+                Payment Method: <b>{!relatedTo.Payment_Method__c}</b>
+            </div>
+            
+            <div style="padding:3px;color:#6C799B;">
+                Deposit of <b>${!relatedTo.Deposit__c}</b> by <b>{!relatedTo.Deposit_Method__c}</b>
+            </div>
+            
+             <div style="padding:3px;color:#6C799B;">
+                Notes: 
+                <div style="padding-left:10px;">
+                    <b><apex:outputText value="{!relatedTo.Customer_Notes__c}" escape="false" /></b>
+                </div> 
+            </div>
+           
+           
+        </div>
+
+        <br />
+        <a href="https://na15.salesforce.com/servlet/servlet.FileDownload?file={!relatedTo.Invoice_Document_Id__c}" target="_blank">View Invoice</a>
+        <br />
+        Thanks,
+    </body>
+</html>
+</messaging:htmlEmailBody>
+</messaging:emailTemplate>

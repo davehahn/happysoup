@@ -1,0 +1,16 @@
+<aura:component controller="LeadSourceSelectorController_mp">
+
+	<ltng:require scripts="{!join(',', $Resource.Libraries +'/js/LightningApex.js',
+                                     $Resource.Libraries +'/js/LightningUtils.js') }"
+                afterScriptsLoaded="{!c.afterScripts}" />
+
+	<aura:attribute name="leadOptions" type="String[]" />
+	<aura:attribute name="lead" type="String" />
+
+	<lightning:select aura:id="leadSelect" name="selectItem" label="Lead Source" onchange="{!c.selectLead}">
+	  <option value="">choose one...</option>
+	  <aura:iteration items="{!v.leadOptions}" var="option">
+	    <option value="{!option}">{!option}</option>
+	  </aura:iteration>
+	</lightning:select>
+</aura:component>

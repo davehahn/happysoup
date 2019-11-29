@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <description>3 Month Follow Up</description>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>Legend_Letterhead</letterhead>
+    <name>7) Suivi - 3 mois après visite</name>
+    <style>freeForm</style>
+    <subject>J&#39;espère que tout va bien</subject>
+    <textOnly>Bonjour {!Contact.FirstName},
+
+
+Je voudrais simplement avoir de vos nouvelles et savoir comment vous alliez. Ça fait un moment que nous nous sommes rencontrés et que nous avions discuté de notre gamme de bateaux Legend. Donc si vous avez des questions ou besoin d’une nouvelle proposition, je vais y répondre ou vous la faire parvenir immédiatement. En outre, si, pour une raison quelconque, vous avez décidé d’abandonner votre projet d’achat ou que vous l’avez concrétisé ailleurs, SVP faites le moi savoir.
+
+
+
+Le but de mon message aujourd’hui est de veiller à ce que vous ne passiez pas à côté d’un excellent produit canadien et que vous puissiez profiter de tous les avantages qui vont avec.
+
+
+
+Encore une fois, c’est un plaisir de passer à travers ce processus avec vous. J’espère que vous partagez mon avis et que nous aurons une chance de discuter bientôt
+
+
+
+Bien à vous,
+
+
+{!User.Name}
+
+{!User.Email}</textOnly>
+    <type>html</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <description>To notify Orientation Staff that a unit has been tagged and to call the customer for add-ons</description>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>Legend_Letterhead</letterhead>
+    <name>Whitefish Orientation Add On Call</name>
+    <style>freeForm</style>
+    <subject>Orientation Specialist Add-On Call</subject>
+    <textOnly>Hello,,
+
+This is to let you know that {!Account.Name} &#39;s package has been tagged.  Please call the customer to offer them any add-on parts before their package is brought into the shop to be built.  Once the call is complete, please create the Work Order.
+
+Thank you</textOnly>
+    <type>html</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

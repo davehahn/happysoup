@@ -1,0 +1,342 @@
+body {
+  color:#444 !important;
+}
+
+#changeOwnerLink {
+  display: none;
+}
+
+.legendInvoice {
+
+  h2, h3, i {
+    color:#444 !important;
+  }
+
+  .row {
+    width:100%;
+    position:relative;
+    display:inline-block;
+
+    .columns {
+      position:relative;
+      float:left;
+
+      &.medium-1 {
+        width:8.33%;
+      }
+
+      &.medium-2 {
+        width:16.667%;
+      }
+
+      &.medium-3 {
+        width:24.99%;
+      }
+
+      &.medium-4 {
+        width:33.332%;
+      }
+
+      &.medium-5 {
+        width:41.65%;
+      }
+
+      &.medium-6 {
+        width:49.98%;
+      }
+
+      &.medium-7 {
+        width:58.31%;
+      }
+
+      &.medium-8 {
+        width:66.664%;
+      }
+
+      &.medium-9 {
+        width:74.97%;
+      }
+
+      &.medium-10 {
+        width:83.3%;
+      }
+
+      &.medium-11 {
+        width:91.63%;
+      }
+
+      &.medium-12 {
+        width:100%;
+      }
+
+      &.medium-offset-1 {
+        margin-left:8.32%;
+      }
+
+      &.medium-offset-6 {
+        margin-left:49.98%;
+      }
+
+    }// /.columns
+
+  }// /.row
+
+  .right {
+    float: right;
+  }
+
+  .header {
+    p {
+      color:#444 !important;
+    }
+
+    .header-contact {
+      text-align:center;
+      margin-top:12px;
+    }
+
+    .large-5 .header-contact .signature p {
+      font-size:12px;
+      font-weight: 300;
+
+      span {
+        font-size:14px;
+        margin-left:10px;
+        display: block;
+      }
+
+    }
+
+    .logo {
+      text-align: center;
+    }
+
+    .medium-4 {
+      margin-top:0 !important;
+    }
+
+  }// /.header
+
+  .header-bottom {
+
+    p {
+      color:#444 !important;
+    }
+
+    .invoice-header {
+
+      h1 {
+        display:none;
+      }
+
+      table {
+        margin-top: 35px;
+
+        .circle {
+          padding:0;
+          height:50px;
+          width:50px;
+          background:none !important;
+        }
+
+        i {
+          width:18px;
+          font-size:17px;
+        }
+
+        thead td {
+          padding: 0 0 0 12px;
+        }
+
+        tbody td {
+          padding: 20px 12px 3px 12px;
+          font-size:13px;
+          font-weight:300;
+          background: #444;
+
+          &:before {
+            border-left-color:#444;
+            border-right-color: #444;
+          }
+
+          &:last-child .circle {
+            padding: 0 !important;
+
+            img {
+              padding: 20px 0;
+            }
+
+          }
+        }
+
+      }// /table
+
+    }// /.invoice-header
+
+  }// /.header-bottom
+
+  .icon-dollar {
+    width:12px !important;
+  }
+
+  .invoice-header {
+    margin-top:-55px;
+  }
+
+  .icon-calendar {
+    width:18px !important;
+  }
+
+  .icon-barcode {
+    width:22px !important;
+    padding: 18px 10px 10px 11px !important;
+  }
+
+  .headerLogo {
+    width:90%;
+    margin-bottom:15px;
+
+    &.screen-only {
+      display:none;
+    }
+
+  }
+
+  .header-bottom-left {
+
+    h2 {
+      font-size:18px;
+      padding-left:15px;
+
+      a {
+        text-decoration:none;
+        color: #444 !important;
+      }
+    }
+
+    h3 i{
+      margin:auto 5px;
+      font-size:16px;
+    }
+
+    p {
+      font-size: 12px;
+      font-weight: 300;
+      padding-left:15px;
+    }
+
+  }// /.header-bottom-left
+
+  .products-table {
+    border-collapse: collapse;
+
+    thead th {
+      font-size:12px;
+      padding:10px;
+      color:#444;
+    }
+
+    tbody tr {
+
+      td {
+        padding:8px;
+        font-size:10px;
+      }
+
+      &:nth-child(odd) td {
+        background: #EFEFEF;
+      }
+
+      &:nth-child(even) td {
+        background: #F9F9F9;
+      }
+    }
+
+    &.counterSale {
+      tbody tr td:first-child .kit-contents {
+        table tbody tr td {
+          line-height: 1rem;
+          font-size:9px;
+        }
+      }
+    }
+
+  }// /.products-table
+
+  .totals {
+
+    table {
+
+      tbody td {
+        font-size:14px;
+      }
+
+      tfoot td {
+        font-size:16px;
+        font-weight:300;
+        padding:6px 10px;
+        background: #444;
+        color: #FFF;
+      }
+    }// /table
+
+  }// /.totals
+
+  .bottom-left {
+
+    table {
+      border-collapse: collapse;
+
+      thead th {
+        background: #7E7E7E;
+        font-size: 14px;
+        padding:5px 0;
+        font-weight: 300;
+      }
+
+    }// /table
+
+    p {
+      color:#000;
+      font-weight: 300;
+    }
+
+  }// /.bottom-left
+
+  .show-for-small-only {
+    display:none;
+  }
+
+  .email i {
+    font-size: 14px !important;
+  }
+
+  .mobilePhone i {
+    font-size: 23px !important;
+  }
+
+}// /.legendInvoice
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

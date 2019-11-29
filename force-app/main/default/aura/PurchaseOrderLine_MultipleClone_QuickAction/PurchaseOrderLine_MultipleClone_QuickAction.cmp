@@ -1,0 +1,30 @@
+<aura:component controller="PurchaseOrderLines_MultipleClone"
+                implements="force:lightningQuickActionWithoutHeader,force:hasRecordId">
+
+  <ltng:require scripts="{!join(',', $Resource.Libraries +'/js/LightningApex.js',
+                                     $Resource.Libraries +'/js/LightningUtils.js') }" />
+
+  <aura:attribute name="recordId" type="String" />
+  <aura:attribute name="lineCount" type="Integer" default="1" />
+
+  <div>
+    <c:Lgnd_Spinner_dh aura:id="spinner" />
+    <header class="slds-modal__header">
+      <h2 class="slds-text-heading_medium">How many lines would you to clone?</h2>
+    </header>
+
+    <lightning:layout horizontalAlign="center" verticalAlign="center" class="content">
+      <lightning:layoutItem size="4" class="slds-col-bump-left">
+        <lightning:input type="number"
+                         value="{!v.lineCount}"
+                         step="1"
+                         variant="label-hidden" />
+      </lightning:layoutItem>
+    </lightning:layout>
+
+    <footer class="slds-modal__footer">
+      <button class="slds-button slds-button_neutral" onclick="{!c.closeModal}">Cancel</button>
+      <button class="slds-button slds-button_brand" onclick="{!c.doClone}">Clone</button>
+    </footer>
+  </div>
+</aura:component>

@@ -1,0 +1,88 @@
+<aura:component controller="Account_FindClosestPartner"
+                implements="force:appHostable,flexipage:availableForAllPageTypes,forceCommunity:availableForAllPageTypes">
+
+  <ltng:require scripts="{!join(',', $Resource.Libraries + '/js/LightningApex.js',
+                                     $Resource.Libraries + '/js/LightningUtils.js') }" />
+
+  <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+
+  <aura:attribute type="String" name="cmpTitle" />
+  <aura:attribute type="String" name="inputLabel" />
+  <aura:attribute type="String" name="lookupValue" />
+  <aura:attribute type="String" name="originAddress" />
+  <aura:attribute type="Map" name="results" />
+  <aura:attribute type="Object" name="mapMarkers" />
+  <aura:attribute type="Integer" name="zoomLevel" />
+  <aura:attribute type="List" name="partnerCountOptions" />
+  <aura:attribute type="Integer" name="partnerCount"  />
+  <aura:attribute type="Boolean" name="mapView"  />
+  <aura:attribute type="String" name="excludedAccountIds" />
+
+  <div class="slds-p-around_small forceBaseCard">
+
+    <c:Lgnd_Spinner_dh aura:id="spinner" />
+
+    <h2 class="header-title-container slds-m-bottom_medium">
+      <span class="slds-card__header-title slds-truncate">
+        {!v.cmpTitle}
+      </span>
+    </h2>
+    <lightning:layout class="lookup-field">
+      <lightning:layoutItem size="11" class="slds-m-bottom_small ">
+        <lightning:input label="{!v.inputLabel}"
+                         type="text"
+                         value="{!v.lookupValue}" />
+        </lightning:layoutItem>
+        <lightning:layoutItem size="1">
+          <lightning:buttonIcon iconName="utility:search"
+                                alternativeText="Search"
+                                class="slds-m-top_large"
+                                onclick="{!c.findClosestDealer}" />
+        </lightning:layoutItem>
+    </lightning:layout>
+
+    <aura:if isTrue="{! !empty(v.mapMarkers)}">
+
+      <!-- <lightning:layout>
+        <lightning:layoutItem size="12"
+                              class="slds-m-bottom_small">
+          <lightning:radioGroup name="Result Count"
+                                label="Result Count"
+                                options="{! v.partnerCountOptions }"
+                                value="{! v.partnerCount }"
+                                onchange="{!c.handleCountChange}"
+                                type="button"/>
+        </lightning:layoutItem>
+      </lightning:layout> -->
+
+      <aura:if isTrue="{! !empty(v.mapMarkers) }">
+
+        <aura:if isTrue="{!v.mapView}" >
+          <!-- <div class="slds-p-around_small slds-theme_success slds-text-align_center">
+            Closest partner is {!v.mapMarkers[0].name} and is approximately {!v.mapMarkers[0].duration} ( {!v.mapMarkers[0].distance} ) away.
+          </div> -->
+
+          <lightning:map
+            mapMarkers="{! v.mapMarkers }"
+            markersTitle="Closest Partners"
+            zoomLevel="{!v.zoomLevel}"
+            center="true" />
+
+            <aura:if isTrue="{! equals( v.partnerCount, 1 )}">
+              <c:Account_FindClosestPartner_AccountDetailCard acct="{!v.mapMarkers[0]}" />
+            </aura:if>
+        </aura:if>
+      </aura:if>
+
+      <aura:if isTrue="{! not(v.mapView)}" >
+        <aura:iteration items="{!v.mapMarkers}" var="marker">
+          <c:Account_FindClosestPartner_AccountDetailCard
+            acct="{!marker}"
+            originAddress="{!v.originAddress}" />
+        </aura:iteration>
+      </aura:if>
+
+    </aura:if>
+  </div>
+
+</aura:component>

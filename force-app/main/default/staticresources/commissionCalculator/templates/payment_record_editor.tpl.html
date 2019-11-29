@@ -1,0 +1,19 @@
+{{#each this.records}}
+  {{PaymentRecordEditCell this}}
+{{/each}}
+
+<div class="button-container">
+  <div class="slds-button-group" role="group">
+    <button class="slds-button slds-button--neutral add-payment-record"
+            data-commission-record-id="{{this.CommissionRecordId}}"
+            data-action="add-payment">
+      Add
+    </button>
+    <button class="slds-button slds-button--neutral update-payments"
+             data-action="save-payments">
+      Save
+    </button>
+  </div>
+</div>
+
+

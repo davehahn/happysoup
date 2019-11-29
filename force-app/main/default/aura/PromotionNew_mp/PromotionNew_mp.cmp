@@ -1,0 +1,307 @@
+<aura:component controller="Promotion_mp"
+								implements="force:hasRecordId,lightning:actionOverride">
+
+	<aura:attribute type="Promotion__c"
+		name="promotion"
+		default="{Name:'',Start_Date__c:'',End_Date__c:'',Description__c:''}" />
+	<aura:attribute type="Account[]" name="accounts" />
+	<aura:attribute type="Id[]" name="selectedAccounts" />
+	<aura:attribute type="List" default="[]" name="availableProducts" />
+	<aura:attribute type="List" default="[]" name="selectedProducts" />
+	<aura:attribute type="List" default="[]" name="promoItems" />
+	<aura:attribute type="String[]" name="documentationRequirementOptions" />
+	<aura:attribute type="String" name="productSearch" />
+	<aura:attribute type="String" name="currentStep" default="step1" />
+
+	<ltng:require scripts="{! join(',', $Resource.Libraries +'/js/LightningApex.js',
+                          $Resource.Libraries +'/js/LightningUtils.js') }"
+    afterScriptsLoaded="{! c.doInit }" />
+
+  <div class="slds-scope slds-grid">
+	  <div class="slds-card slds-size_3-of-3">
+  		<div class="slds-card__header">
+	  		<header class="slds-media slds-media_center slds-has-flexi-truncate">
+		      <div class="slds-media__figure">
+		        <span class="slds-icon_container slds-icon-standard-contact"
+		        			title="description of icon when needed">
+		          <lightning:icon iconName="standard:quotes" />
+		        </span>
+		      </div>
+		      <div class="slds-media__body">
+		        <h2>
+		          <a href="javascript:void(0);"
+		          	 class="slds-card__header-link slds-truncate">
+		            <span class="slds-text-heading_small">New Promotion</span>
+		          </a>
+		        </h2>
+		      </div>
+		    </header>
+		  </div>
+		</div>
+	</div>
+
+	<div class="slds-scope slds-grid slds-p-vertical_small">
+		<div class="slds-p-around_small slds-card slds-size_1-of-1">
+	  	<lightning:progressIndicator variant="shaded"
+	  															 currentStep="{! v.currentStep }">
+	      <lightning:progressStep label="Step One" value="step1"/>
+	      <lightning:progressStep label="Step Two" value="step2"/>
+	      <lightning:progressStep label="Step Three" value="step3"/>
+	      <lightning:progressStep label="Step Four" value="step4"/>
+	  	</lightning:progressIndicator>
+  	</div>
+  </div>
+
+	<lightning:spinner variant="brand"
+										 size="large"
+										 aura:id="spinner" />
+
+  <aura:if isTrue="{! v.currentStep == 'step1' }">
+	  <div class="slds-scope slds-grid">
+		  <div class="slds-card slds-size_3-of-3">
+	  		<div class="slds-card__header">
+		  		<header class="slds-media slds-media_center">
+			      <div class="slds-media__body">
+			        <h2>
+			          <a href="javascript:void(0);"
+			          	 class="slds-card__header-link slds-truncate">
+			            <span class="slds-text-heading_small">
+			            	Step 1: Promotion Info
+			            </span>
+			          </a>
+			        </h2>
+			      </div>
+			    </header>
+			  </div>
+			  <div class="slds-card__body slds-card__body_inner">
+			  	<div class="slds-grid">
+			  		<div class="slds-size_1-of-2">
+					  	<div class="slds-p-around_small">
+					  		<lightning:input type="text"
+					  									 	 label="Name"
+					  									 	 value="{! v.promotion.Name }" />
+					  	</div>
+					  	<div class="slds-p-around_small">
+					  		<div class="slds-grid slds-gutters">
+					  			<div class="slds-col">
+							  		<lightning:input type="date"
+							  									 	 label="Start Date"
+							  									 	 value="{! v.promotion.Start_Date__c }" />
+				  				</div>
+				  				<div class="slds-col">
+							  		<lightning:input type="date"
+							  									 	 label="End Date"
+							  									 	 value="{! v.promotion.End_Date__c }" />
+							  	</div>
+							  </div>
+							</div>
+					  	<div class="slds-p-around_small">
+					  		<lightning:input type="text"
+					  									 	 label="Description"
+					  									 	 value="{! v.promotion.Description__c }" />
+					  	</div>
+					  	<div class="slds-p-around_small">
+					  		<lightning:select name="paymentMethod"
+					  											value="{!v.promotion.Payment_Method__c}"
+					  											label="Payment Method">
+					  			<option value="">Doesn't matter</option>
+					  			<option value="Cash">Cash</option>
+					  			<option value="Finance">Finance</option>
+					  		</lightning:select>
+					  	</div>
+					  </div>
+			  		<div class="slds-size_1-of-2">
+					  	<div class="slds-p-around_small">
+					  		<lightning:dualListbox aura:id="accountSelections"
+									name="Accounts"
+									label="Limit promotion to these accounts:"
+									sourceLabel="Available Accounts"
+									selectedLabel="Selected Accounts"
+									options="{! v.accounts }"
+									value="{! v.selectedAccounts }"/>
+					  	</div>
+					  </div>
+					</div>
+
+			  	<div class="slds-p-around_small">
+			  		<button class="slds-button slds-button_neutral slds-float_right"
+			  						onclick="{! c.goToStep2 }">
+			  			Next: Select Products
+			  		</button>
+			  		<div class="clearfix"></div><br/>
+			  		<br/>
+			  	</div>
+				</div>
+			</div>
+		</div>
+	</aura:if>
+
+	<aura:if isTrue="{! v.currentStep == 'step2' }">
+		<div class="slds-scope slds-grid">
+		  <div class="slds-card slds-size_3-of-3">
+	  		<div class="slds-card__header">
+		  		<header class="slds-media slds-media_center">
+			      <div class="slds-media__body">
+			        <h2>
+			          <a href="javascript:void(0);"
+			          	 class="slds-card__header-link slds-truncate">
+			            <span class="slds-text-heading_small">
+			            	Step 2: Product Selection
+			            </span>
+			          </a>
+			        </h2>
+			      </div>
+			    </header>
+			  </div>
+			  <div class="slds-card__body slds-card__body_inner">
+					<div class="slds-grid">
+					  <div class="slds-size_1-of-2 slds-p-around_small">
+					  	<div class="slds-p-around_small slds-box">
+						  	<lightning:dualListbox aura:id="productSelections"
+									name="Products"
+									label=" "
+									sourceLabel="Available Products"
+									selectedLabel="Selected Products"
+									options="{! v.availableProducts }"
+									value="{! v.selectedProducts}" />
+							</div>
+						</div>
+					  <div class="slds-size_1-of-2 slds-p-around_small">
+					  	<div class="slds-p-around_small slds-box">
+						  	<lightning:input value="{! v.promotion.Model_Year__c }" type="text" label="Limit to boats with this model year (e.g. 2019) (Optional)" min="2000" max="2050" pattern="[0-9]*" />
+							</div>
+					  </div>
+					</div>
+
+			  	<div class="slds-p-around_small">
+			  		<button class="slds-button slds-button_bare"
+			  						onclick="{! c.goBack }">
+			  			Back
+			  		</button>
+			  		<button class="slds-button slds-button_neutral slds-float_right"
+			  						onclick="{! c.goToStep3 }">
+			  			Next: Set Discounts
+			  		</button>
+			  	</div>
+				</div>
+			</div>
+		</div>
+	</aura:if>
+
+	<aura:if isTrue="{! v.currentStep == 'step3' }">
+		<div class="slds-scope slds-grid">
+		  <div class="slds-card slds-size_3-of-3">
+	  		<div class="slds-card__header">
+		  		<header class="slds-media slds-media_center">
+			      <div class="slds-media__body">
+			        <h2>
+			          <a href="javascript:void(0);"
+			          	 class="slds-card__header-link slds-truncate">
+			            <span class="slds-text-heading_small">
+			            	Step 3: Discounts
+			            </span>
+			          </a>
+			        </h2>
+			      </div>
+			    </header>
+			  </div>
+			  <div class="slds-card__body slds-card__body_inner">
+					<div class="slds-grid">
+					  <div class="slds-size_1-of-2 slds-p-around_small">
+					  	<div class="slds-p-around_small slds-box">
+						  	<table class="slds-table">
+						  		<tr>
+						  			<th><strong>Product</strong></th>
+						  			<th><strong>Partner Rebate</strong></th>
+						  			<th><strong>Retail Discount</strong></th>
+						  		</tr>
+
+						  		<aura:iteration items="{! v.promoItems }" var="p">
+						  			<tr>
+						  				<td>
+						  					{! p.Product__r.Name }
+						  				</td>
+						  				<td>
+						  					<lightning:input label=""
+					  														 type="number"
+					  														 formatter="currency"
+					  														 step="0.01"
+					  														 value="{! p.Amount__c }" />
+						  				</td>
+						  				<td>
+						  					<lightning:input label=""
+					  														 type="number"
+					  														 formatter="currency"
+					  														 step="0.01"
+					  														 value="{! p.Retail_Amount__c }" />
+					  					</td>
+						  			</tr>
+						  		</aura:iteration>
+						  	</table>
+						  </div>
+					  </div>
+					</div>
+
+			  	<div class="slds-p-around_small">
+			  		<button class="slds-button slds-button_bare "
+			  						onclick="{! c.goBack }">
+			  			Back
+			  		</button>
+			  		<button class="slds-button slds-button_neutral slds-float_right"
+			  						onclick="{! c.goToStep4 }">
+			  			Next: Document Requirements
+			  		</button>
+			  	</div>
+
+			  </div>
+		  </div>
+	  </div>
+	</aura:if>
+
+	<aura:if isTrue="{! v.currentStep == 'step4' }">
+		<div class="slds-scope slds-grid">
+		  <div class="slds-card slds-size_3-of-3">
+	  		<div class="slds-card__header">
+		  		<header class="slds-media slds-media_center">
+			      <div class="slds-media__body">
+			        <h2>
+			          <a href="javascript:void(0);"
+			          	 class="slds-card__header-link slds-truncate">
+			            <span class="slds-text-heading_small">
+			            	Step 4: Document Requirements
+			            </span>
+			          </a>
+			        </h2>
+			      </div>
+			    </header>
+			  </div>
+			  <div class="slds-card__body slds-card__body_inner">
+					<div class="slds-grid">
+					  <div class="slds-size_1-of-2 slds-p-around_small">
+					  	<div class="slds-p-around_small slds-box">
+						  	<c:Form_MultiSelect_dh label="Documentation Requirements"
+                                       options="{! v.documentationRequirementOptions}"
+                                       value="{! v.promotion.Document_Requirements__c }"/>
+						  </div>
+					  </div>
+					</div>
+
+			  	<div class="slds-p-around_small">
+			  		<button class="slds-button slds-button_bare "
+			  						onclick="{! c.goBack }">
+			  			Back
+			  		</button>
+			  		<button class="slds-button slds-button_neutral slds-float_right"
+			  						onclick="{! c.publish }">
+			  			Publish Promotion
+			  		</button>
+			  	</div>
+
+			  </div>
+		  </div>
+	  </div>
+	</aura:if>
+  <br/>
+  <br/>
+  <br/>
+</aura:component>

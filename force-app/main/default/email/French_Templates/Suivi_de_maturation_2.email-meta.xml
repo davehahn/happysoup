@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <description>Nurturing Lead 6 Month Follow Up</description>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>Legend_Letterhead</letterhead>
+    <name>Suivi de maturation - 6 mois après abandon de projet</name>
+    <style>freeForm</style>
+    <subject>Lancez moi la ligne, vous allez m’attraper!</subject>
+    <textOnly>Bonjour {!Contact.FirstName},
+
+
+
+J&#39;espère que vous allez bien. Cela fait un moment que je n&#39;ai plus de nouvelles de vous, alors je voulais simplement vous dire que je suis toujours là si vous désirez poursuivre notre discussion.
+
+
+
+Comme toujours, n&#39;hésitez pas à m&#39;appeler, m&#39;envoyer un courriel avec toutes vos questions, ou même passer au concessionnaire, ça serait super de vous voir! Cependant, si les circonstances ont changés, et que vous ne souhaitez plus aller prendre du plaisir sur l’eau, s&#39;il vous plaît laissez-moi savoir.
+
+
+
+Merci et j’espère entendre de vos nouvelles bientôt.
+
+
+
+Bien à vous,
+
+
+{!User.Name}
+
+{!User.Email}</textOnly>
+    <type>html</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

@@ -1,0 +1,2071 @@
+<apex:page title="{!AcctSeedERP__Purchase_Order__c.Name}" standardController="AcctSeedERP__Purchase_Order__c" extensions="gcPurchaseOrder_Ext" cache="false" docType="html-5.0" showHeader="false" sidebar="false">
+
+<head>
+<style>
+.link{
+    cursor:pointer;
+    text-decoration:underline;
+}
+table{
+    border-collapse:collapse;
+}
+tr.total td{
+    font-weight: bold;
+}
+tr.ui-state-highlight td
+{
+    background-color: yellow;
+}
+div.pq-grid-footer{
+    display:none;
+}
+</style>
+
+<apex:stylesheet value="{!URLFOR($Resource.GMBLJS__jQueryUI,'/jquery-ui/jquery-ui.min.css')}"/>
+<apex:stylesheet value="{!URLFOR($Resource.GMBLJS__pqGridPro241,'/pqgrid.min.css')}"/>
+
+</head>
+
+<body>
+    <div id="thePageBlock">
+        <apex:pageBlock mode="edit" title="Purchase Order Lines">
+            <apex:pageBlockButtons location="top" rendered="{!IF(OR(!AcctSeedERP__Purchase_Order__c.Locked__c,$Permission.CanModifyLockedPurchaseOrder),true,false)}">
+                <button type="button" class="btn" id="btnLaunchSearchProduct" onclick="launchSearchProduct();">New Purchase Order Line</button>
+                <button type="button" class="btn" id="btnLaunchSearchProduct" onclick="launchFreightCharge();">Apply Freight Charge</button>
+                <button type="button" class="btn" id="btnLaunchSearchProduct" onclick="allFreightCharges();">Freight Charges Applied</button>
+                <button type="button" class="btn" id="btnCreateAPWithSelected" onclick="createAPWithSelected();">Create AP With (Selected Lines)</button>
+                <button type="button" class="btn" id="btnExpandMaterial"    onclick="expandGrid_Lines();">Expand</button>
+            </apex:pageBlockButtons>
+            <apex:outputText rendered="{!IF(OR(!AcctSeedERP__Purchase_Order__c.Locked__c,$Permission.CanModifyLockedPurchaseOrder),true,false)}">
+            <table width="100%">
+                <tr>
+                    <td style="text-align:left; padding-left:10px;">
+                        <span style="font-weight:bold;">NOTE:  to undo a price override, click on the unit price and clear the value (i.e. make it blank).</span>
+                    </td>
+                    <td style="text-align:right;">
+                        <label for="selectPricebook" style="font-weight:bold">Pricebook:&nbsp;&nbsp;</label>
+                        <select name="selectPricebook" id="selectPricebook" onchange="updatePricebook()"></select>
+                        <span  id="pricebookMessage" style="font-size:smaller;font-style:italic;display:none;"><br/>The pricebook cannot be changed, because some receiving or payment has already occurred.</span>
+                    </td>
+                </tr>
+            </table>
+            </apex:outputText>
+            <div id="lines"></div>
+
+        </apex:pageBlock>
+    </div>
+</body>
+
+<apex:includeScript value="{!$Resource.GMBLJS__jQuery}"/>
+<apex:includeScript value="{!URLFOR($Resource.GMBLJS__jQueryUI,'/jquery-ui/jquery-ui.min.js')}"/>
+<apex:includeScript value="{!URLFOR($Resource.GMBLJS__pqGridPro241,'/pqgrid.min.js')}"/>
+<apex:includeScript value="{!URLFOR($Resource.GMBLJS__pqGridPro241,'/touch-punch/touch-punch.min.js')}"/>
+<apex:includeScript value="{!$Resource.GMBLJS__accountingJS}"/>
+<apex:includeScript value="{!$Resource.GMBLJS__ExcellentExport}"/>
+<apex:includeScript value="{!$Resource.GMBLJS__gsrSpinner}"/>
+<apex:includeScript value="{!$Resource.GMBLJS__gsrGrid2}"/>
+
+<script>function setFocusOnLoad() {}</script>
+<script type="text/javascript">
+    $j = jQuery.noConflict();
+    var poLocked = {!AcctSeedERP__Purchase_Order__c.Locked__c};
+    var currentTheme = "{!$User.UITheme}";
+    $j(document).ready(function()
+    {
+        if('{!Id}' == '') return;
+        initGrid_lines();
+        initSelectPricebook();
+        refreshAll();
+
+        $j('#lines').on( "focus", "input.autoComplete2", function( event ) {
+            $currentSelection = null;
+            $inputField = $j(this);
+            $inputField.autocomplete({
+                minLength: 0,
+                autoFocus: false,
+                source: function (request, response) {
+                    Visualforce.remoting.Manager.invokeAction(
+                        '{!$RemoteAction.gcPurchaseOrder_Ext.searchProjectTask}',
+                         request.term,
+                        function (result, event) {
+                            if (event.status) {
+                                $j.each(result,function(k,item){
+                                    if(item.label == undefined)
+                                        result[k].label = item.label;
+                                    if(item.value == undefined)
+                                        result[k].value = item.idTask;
+                                })  
+                                response(result);
+                            } else {
+                                alert(event.message);
+                            }
+                        }, {
+                            buffer: true,
+                            escape: true,
+                            timeout: 120000
+                        });
+                },
+                focus: function (event, ui) {
+                    $inputField.val(ui.item.label);
+                    $currentSelection = ui.item;
+                    return false;
+                },
+                select: function (event, ui) {
+                    var rowIndx = $inputField.data('rowindx');
+                    updateRowData(rowIndx,ui.item);
+                    $currentSelection = null;
+                    return false;
+                },
+                change: function (event, ui) {
+                    var rowIndx = $inputField.data('rowindx');
+                    if($currentSelection != null)
+                    {
+                        updateRowData(rowIndx,$currentSelection);
+                        $currentSelection = null;
+                    }
+                    return false;
+                }
+            });
+        });
+
+        $j('#lines').on( "focus", "input.autoComplete3", function( event ) {
+            $currentSelection = null;
+            $inputField = $j(this);
+            $inputField.autocomplete({
+                minLength: 0,
+                autoFocus: false,
+                source: function (request, response) {
+                    var rowIndx = $inputField.data('rowindx');
+                    var rowData = $j('#lines').pqGrid( "getRowData", {rowIndx:rowIndx});
+                    Visualforce.remoting.Manager.invokeAction(
+                        '{!$RemoteAction.gcPurchaseOrder_Ext.searchLot}',
+                         request.term,rowData.idProduct,
+                        function (result, event) {
+                            if (event.status) {
+                                $j.each(result,function(k,item){
+                                    if(item.label == undefined)
+                                        result[k].label = item.label;
+                                    if(item.value == undefined)
+                                        result[k].value = item.idTask;
+                                })  
+                                response(result);
+                            } else {
+                                alert(event.message);
+                            }
+                        }, {
+                            buffer: true,
+                            escape: true,
+                            timeout: 120000
+                        });
+                },
+                focus: function (event, ui) {
+                    $inputField.val(ui.item.label);
+                    $currentSelection = ui.item;
+                    return false;
+                },
+                select: function (event, ui) {
+                    var rowIndx = $inputField.data('rowindx');
+                    updateRowLot(rowIndx,ui.item);
+                    $currentSelection = null;
+                    return false;
+                },
+                change: function (event, ui) {
+                    var rowIndx = $inputField.data('rowindx');
+                    if($currentSelection != null)
+                    {
+                        updateRowLot(rowIndx,$currentSelection);
+                        $currentSelection = null;
+                    }
+                    return false;
+                }
+            });
+        });
+    });
+    var lotupdating = false;
+    function updateRowLot(rowIndx,obj)
+    {
+        var $gridDiv = $j('#lines');
+        var rowData = $gridDiv.pqGrid( "getRowData", {rowIndx:rowIndx});
+        var idLot = null;
+        if(obj != null)
+            idLot = obj.idLot;
+        else{
+            refreshGrid_lines();
+            return;
+        }
+        if(!lotupdating){
+            lotupdating = true;
+            $gridDiv.pqGrid('showLoading');
+            Visualforce.remoting.Manager.invokeAction(
+                '{!$RemoteAction.gcPurchaseOrder_Ext.updateLot}',
+                rowData.idLine, idLot,
+                function(result,event)
+                {
+                    if(event.status)
+                    {
+                        $j.extend($gridDiv.pqGrid('getRowData',{rowIndx:rowIndx}),result);
+                        $gridDiv.pqGrid('refresh');
+                        $gridDiv.pqGrid('refreshRow', {rowIndx:rowIndx});
+                        // refreshAll();
+                    }
+                    else
+                    {
+                        refreshGrid_lines();
+                        alert(event.message);
+                    }
+                    $gridDiv.pqGrid('hideLoading');
+                    lotupdating = false;
+                },
+            {buffer:true, escape:true, timeout:120000});
+        }
+    }
+
+    function updateRowData(rowIndx,obj)
+    {
+        var $gridDiv = $j('#lines');
+        $gridDiv.pqGrid('showLoading');
+        var rowData = $gridDiv.pqGrid( "getRowData", {rowIndx:rowIndx});
+        var idTask = null;
+        if(obj != null)
+            idTask = obj.idTask;
+        else{
+            rowData.projectName = '';
+            rowData.projectTaskName = '';
+        }
+        Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.gcPurchaseOrder_Ext.updateProjectTask}',
+            rowData.idLine, idTask,
+            function(result,event)
+            {
+                if(event.status)
+                {
+                    $j.extend($gridDiv.pqGrid('getRowData',{rowIndx:rowIndx}),result);
+                    $gridDiv.pqGrid('refresh');
+                    $gridDiv.pqGrid('refreshRow', {rowIndx:rowIndx});
+                    // refreshAll();
+                }
+                else
+                {
+                    $gridDiv.pqGrid('refreshRow', {rowIndx:rowIndx});
+                    alert(event.message);
+                }
+                $gridDiv.pqGrid('hideLoading');
+            },
+        {buffer:true, escape:true, timeout:120000});
+    }
+
+    var dpFormat = "m/d/yy";
+    if('{!locale}' == 'en_CA') dpFormat = "dd/mm/yy";
+
+    var dateEditor = function (ui) {
+        var $inp = ui.$cell.find("input");
+        var rowIndx = ui.rowIndx;
+        $inp.datepicker({
+            changeMonth: true,
+            changeYear: true,
+            dateFormat: dpFormat, 
+            onSelect: function () {
+                this.firstOpen = true;
+                updateDeliverDate(rowIndx,$inp);
+            },
+            beforeShow: function (input, inst) {
+                return !this.firstOpen;
+            },
+            onClose: function () {
+                this.focus();
+            }
+        });
+    }
+
+    function updateDeliverDate(rowIndx,obj)
+    {
+        var $gridDiv = $j('#lines');
+        $gridDiv.pqGrid('showLoading');
+        var rowData = $gridDiv.pqGrid( "getRowData", {rowIndx:rowIndx});
+        Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.gcPurchaseOrder_Ext.updateDeliverDate}',
+            rowData.idLine, obj.val(),
+            function(result,event)
+            {
+                if(event.status)
+                {
+                    $j.extend($gridDiv.pqGrid('getRowData',{rowIndx:rowIndx}),result);
+                    $gridDiv.pqGrid('refresh');
+                }
+                else
+                {
+                    $gridDiv.pqGrid('refreshRow', {rowIndx:rowIndx});
+                    alert(event.message);
+                }
+                $gridDiv.pqGrid('hideLoading');
+            },
+        {buffer:true, escape:true, timeout:120000});
+    }
+
+    function refreshAll()
+    {
+        refreshGrid_lines();
+        checkEnablePricebookSelection();   
+    }
+
+    function initSelectPricebook()
+    {
+        if('{!Id}' == '') return;
+        if({!AND(AcctSeedERP__Purchase_Order__c.Locked__c,!$Permission.CanModifyLockedPurchaseOrder)}) return;
+        Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.gcPurchaseOrder_Ext.retrievePricebooks}',
+            '{!Id}',
+            function(result,event)
+            {
+                if(event.status)
+                {
+                    var select = document.getElementById('selectPricebook');
+                    while (select.firstChild) {
+                        select.removeChild(select.firstChild);
+                    }
+
+                    var arrayLength = result.length;
+                    for (var i = 0; i < arrayLength; i++) {
+
+                        var obj = result[i];
+
+                        var option = document.createElement('option');
+                        option.text = obj.Name;
+                        option.value = obj.Id;
+                        select.appendChild(option);
+                        if(obj.makeSelected == 'true')
+                        select.value = obj.Id;
+                    }
+                }
+                else 
+                {
+                    alert(event.message);
+                }
+            },
+            {buffer:true, escape:true, timeout:120000});
+    }
+
+    function checkEnablePricebookSelection()
+    {
+        // if({!OR(AcctSeedERP__Purchase_Order__c.Locked__c,!$Permission.CanModifyLockedPurchaseOrder)}) return;   
+        Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.gcPurchaseOrder_Ext.checkEnablePricebookSelection}',
+            '{!Id}',
+            function(result,event)
+            {
+                if(event.status)
+                {
+                    if(result !== true)
+                    {
+                        $j("#selectPricebook").prop('disabled', true);
+                        $j("#pricebookMessage").show();
+                    }
+                }
+                else 
+                {
+                    alert(event.message);
+                }
+            },
+            {buffer:true, escape:true, timeout:120000});
+    }
+
+    function updatePricebook()
+    {
+        $j('#lines').pqGrid('showLoading');
+        Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.gcPurchaseOrder_Ext.updatePricebook}',
+            '{!Id}',document.getElementById('selectPricebook').value,
+            function(result,event)
+            {
+                if(event.status)
+                {
+                    window.top.location = '/'+'{!Id}';
+                }
+                else 
+                {
+                    alert(event.message);
+                    $j('#lines').pqGrid('hideLoading');
+                }
+            },
+            {buffer:true, escape:true, timeout:120000});
+    }
+
+    function initGrid_lines()
+    {
+        var gridObj = { title:"Purchase Order Lines",
+                        collapsible:{on:false,collapsed:false,toggle:false},
+                        columnTemplate: {sortable:true,editable:false, minWidth:80},
+                        dataModel:{data:[], sorting:'local', location:'local', sortDir:'up', sortIndx:'productName'}, 
+                        dragColumns:{enabled:false},
+                        editable:true,
+                        editModel: {clicksToEdit:1, saveKey: jQuery.ui.keyCode.ENTER, keyUpDown: false, onSave:null, onBlur:'save'},
+                        //editModel:{clicksToEdit:1, pressToEdit:false, filterKeys:true, keyUpDown:true, saveKey:$j.ui.keyCode.ENTER},
+                        //filterModel:{on:true, mode:'AND', header:true},
+                        freezeCols:0,
+                        freezeRows:0,
+                        height:285,
+                        historyModel:{on:false},
+                        hoverMode:'row',
+                        hwrap:false,
+                        numberCell:{show:true},
+                        pageModel: {type:null},
+                        pasteModel:{on:false},
+                        resizable: true,
+                        roundCorners: false,
+                        // scrollModel: {autoFit:true},
+                        scrollModel: {pace:'fast', autoFit:false, horizontal:true},
+                        selectionModel: { type: null},
+                        showBottom:true,
+                        showHeader:true,
+                        showTitle:false,
+                        showTop:true,
+                        showToolbar:false,
+                        sortable:true,
+                        swipeModel:{on:false},
+                        virtualX: false,
+                        //virtualXHeader: false,
+                        virtualY: false,
+                        //width:'auto',
+                        wrap:false};
+
+        gridObj.colModel=[{dataIndx:'action',                   title:'Action',                         align:'center', maxWidth:80},
+                          {dataIndx:"selector",     title: "", minWidth:30, maxWidth:30, align: "center", cb:{header: true, all: true},   type: 'checkBoxSelection', resizable: false, sortable: false, editable: false},
+                          {dataIndx:'productFamily',            title:'Product<br/>Family',   width:100, resizable:true},
+                          {dataIndx:'productName',              title:'Product<br/>Name',               width:200, resizable:true},
+                          {dataIndx:'productCode',              title:'Product<br/>Code',   width:100, resizable:true},
+                          //{dataIndx:'project',                  title:'Project &amp<br/>Project Task', hidden:true},
+                          {dataIndx:"lotName",                  title:"Lot",       align:'left', editable:function(ui){return checkEditable(ui.rowData,ui.dataIndx);}, editor:{ type: 'textbox', cls: 'autoComplete3', select: true}},
+                          {dataIndx:"projectTaskName",                 title:"Project &amp<br/>Project Task",       align:'left', editable:function(ui){return checkEditable(ui.rowData,ui.dataIndx);}, editor:{ type: 'textbox', cls: 'autoComplete2', select: true}},
+                          {dataIndx:"idProjectTask",            hidden:true},
+                          {dataIndx:"idLine",            hidden:true},
+                          {dataIndx:'comment',                  title:'Comment',                        editable:true, editor:{type:'textarea', attr:'rows=3', select:false}},
+                          {dataIndx:'freightApplied',           title:'Freight<br/>Applied',            gFormat:'checkbox', maxWidth:65, minWidth:65, hidden:true},
+                          {dataIndx:"deliverDate",              title:"Deliver Date",   dataType:"string",    align:"center", maxWidth:90, 
+                                editable:function(ui){return checkEditable(ui.rowData,ui.dataIndx)},
+                                editor: {type:'textbox', select: true, init: dateEditor}, 
+                                sortType: function (rowData1, rowData2, dataIndx) {return sortDateTime(rowData1, rowData2,'deliverDate');}
+                          },
+                          {dataIndx:'basePrice',                title:'Freight&nbsp;<br/>Base',         dataType:'float',   align:'right',  maxWidth:110, gFormat:'money', editable:false, hidden:true},
+                          {dataIndx:'unitPrice',                title:'Unit&nbsp;<br/>Price',           dataType:'float',   align:'right',  maxWidth:110, gFormat:'money', editable:true},
+                          {dataIndx:'priceOverride',            title:'Price<br/>Override',             gFormat:'checkbox', maxWidth:65, minWidth:65},
+                          {dataIndx:'qtyOrdered',               title:'Qty<br/>Ordered',                dataType:'float', gFormat:'number',   maxWidth:65, minWidth:65, gTotal:true, editable:true},
+                          {dataIndx:'qtyReceived',              title:'Qty Rec\'d<br/>to inventory',    dataType:'float', gFormat:'number',   maxWidth:80, gTotal:true},
+                          {dataIndx:'qtyReceivedNonInventory',  title:'Qty Rec\'d<br/>other',           dataType:'float', gFormat:'number',   maxWidth:80, gTotal:true, editable:true},                          
+                          {dataIndx:'amtOrdered',               title:'Amount&nbsp;<br/>Ordered',       dataType:'float', align:'right',  gFormat:'money', maxWidth:110, gTotal:true},
+                          {dataIndx:'totalFreightApplied',      title:'Total&nbsp;<br/>Freight Applied',dataType:'float', align:'right',  gFormat:'money', maxWidth:110, gTotal:true},
+                          {dataIndx:'amtReceived',              title:'Amount&nbsp;<br/>Received',      dataType:'float', align:'right',  gFormat:'money', maxWidth:110, gTotal:true},
+                          {dataIndx:'amtPaid',                  title:'Amount&nbsp;<br/>Paid',          dataType:'float', align:'right',  gFormat:'money', maxWidth:110, gTotal:true},
+                          {dataIndx:"scrollSpacer", minWidth:15, maxWidth:15}];
+
+        gGrid.initFormat(gridObj.colModel);
+        //gGrid.initFilter(gridObj.colModel);
+
+        $j.each(gridObj.colModel, function(i,col)
+        {
+            if(col.dataIndx == 'selector')
+            {
+                $j.extend(col,{
+                    render:function(ui)
+                    {
+                        if(ui.rowData.isTotal) return '';
+                    }
+                });             
+            }
+            else if(col.dataIndx == 'action')
+            {
+                $j.extend(col,{
+                    render:function(ui)
+                    {
+                        if(ui.rowData.isTotal) return;
+
+                        var myHTML = '';
+                        if({!$ObjectType.AcctSeedERP__Purchase_Order_Line__c.accessible})
+                        {
+                            if(currentTheme == 'Theme4d')
+                                myHTML += '<span class="link" onclick="createLighteningNavigation(\''+ui.rowData.idLine+'\',\'view\');">view</span>';
+                            else                            
+                                myHTML +=  '<a href=\"/'+ui.rowData.idLine+'\" target=\"_top\">view</a>';
+                        }
+                        if({!OR(!AcctSeedERP__Purchase_Order__c.Locked__c,$Permission.CanModifyLockedPurchaseOrder)} && ui.rowData.hasAPLines == 'false' && ui.rowData.hasMovesClosedPeriod == 'false' && ui.rowData.freightApplied == 'false')
+                        {
+                            myHTML += '&nbsp;&nbsp;<span class="link" onclick="deleteLine(\''+ui.rowData.idLine+'\','+ui.rowIndx+');">del</span>';
+                        }
+
+                        return myHTML;
+                    }
+                });             
+            }
+            else if(col.dataIndx == 'productName')
+            {
+                $j.extend(col,{
+                    render:function(ui)
+                    {
+                        if(ui.rowData.isTotal || !ui.rowData.idProduct) return;
+
+                        if({!$ObjectType.Product2.accessible})
+                            return '<a href=\"/'+ ui.rowData.idProduct+'\" target=\"_blank\">'+ui.rowData.productName+'</a>';
+                        else
+                            return ui.rowData.productName;
+                    }
+                });
+            }
+            else if(col.dataIndx == 'productCode')
+            {
+                $j.extend(col,{
+                    render:function(ui)
+                    {
+                        if(ui.rowData.isTotal || !ui.rowData.productCode) return;
+
+                        if({!$ObjectType.Product2.accessible})
+                            return '<a href=\"/'+ ui.rowData.idProduct+'\" target=\"_blank\">'+ui.rowData.productCode+'</a>';
+                        else
+                            return ui.rowData.productCode;
+                    }
+                });
+            }
+            else if(col.dataIndx == 'project')
+            {
+                $j.extend(col,{
+                    render:function(ui)
+                    {
+                        if(ui.rowData.isTotal || !ui.rowData.idProject) return '';
+
+                        var myHTML = '<a href=\"/'+ ui.rowData.idProject+'\" target=\"_blank\">'+ui.rowData.projectName+'</a>';
+                        if(ui.rowData.idProjectTask)
+                            myHTML = myHTML + '<br/><a href=\"/'+ ui.rowData.idProjectTask+'\" target=\"_blank\">'+ui.rowData.projectTaskName+'</a>';
+
+                        return myHTML;
+                    }
+                });                
+            }
+            else if(col.dataIndx == 'projectTaskName')
+            {
+                $j.extend(col,{
+                    render:function(ui)
+                    {
+                        if(ui.rowData.isTotal || !ui.rowData.idProject) return '';
+
+                        var myHTML = '<span class="link">'+ui.rowData.projectName+'</span>';
+                        if(ui.rowData.idProjectTask)
+                            myHTML = myHTML + '<br/><span class="link">'+ui.rowData.projectTaskName+'</span>';
+
+                        return myHTML;
+                    }
+                });                
+            }          
+            else if(col.dataIndx == 'comment')
+            {
+                col.title = 'Comment<br/><span style="font-weight:smaller; font-style:italic">click to edit</span>';
+            }
+            else if(col.dataIndx == 'unitPrice')
+            {
+                $j.extend(col,{
+                    render:function(ui)
+                    {
+                        if(ui.rowData.isTotal) return '';
+                        if(ui.rowData.hasAPLines == 'true' || {!AND(AcctSeedERP__Purchase_Order__c.Locked__c,!$Permission.CanModifyLockedPurchaseOrder)}  || ui.rowData.freightApplied == 'true') return accounting.formatMoney(ui.rowData.unitPrice);
+                        return '<span class="link">'+accounting.formatMoney(ui.rowData.unitPrice)+'</span>';
+                    }
+                });
+            }
+            else if(col.dataIndx == 'qtyOrdered')
+            {
+                $j.extend(col,{
+                    render:function(ui)
+                    {
+                        var htm = '0';
+                        if(ui.rowData.qtyOrdered)
+                        {
+                            var val = parseFloat(ui.rowData.qtyOrdered);
+                            htm = accounting.formatNumber(ui.rowData.qtyOrdered);
+                            if(Math.floor(val) != val) htm = accounting.toFixed(ui.rowData.qtyOrdered,2);
+                        }
+                        
+                        if(ui.rowData.isTotal || ui.rowData.freightApplied == 'true') 
+                            return htm;
+                        else if(ui.rowData.hasAPLines == 'false' && {!OR(!AcctSeedERP__Purchase_Order__c.Locked__c,$Permission.CanModifyLockedPurchaseOrder)})
+                            return '<span class="link">'+htm+'</span>';
+                        else
+                            return htm;
+                    }
+                });
+            } 
+            else if(col.dataIndx == 'qtyReceived')
+            {
+                if({!OR(!AcctSeedERP__Purchase_Order__c.Locked__c,$Permission.CanModifyLockedPurchaseOrder)} && '{!AcctSeedERP__Purchase_Order__c.AcctSeedERP__Type__c}' != 'Drop Shipment')
+                {
+                    col.title += '<br/><button type=\"button\" cls=\"btn\" onclick=\"launchReceiveAllInventory()\">Receive All</button>';
+                    col.sortable = false;
+                }
+
+                $j.extend(col,{
+                    render:function(ui)
+                    {
+                        var htm = '0';
+                        if(ui.rowData.qtyReceived)
+                        {
+                            var val = parseFloat(ui.rowData.qtyReceived);
+                            htm = accounting.formatNumber(ui.rowData.qtyReceived);
+                            if(Math.floor(val) != val) htm = accounting.toFixed(ui.rowData.qtyReceived,2);
+                        }
+
+                        if(ui.rowData.isTotal)
+                            return htm;
+
+                        if(ui.rowData.poType == 'Drop Shipment')
+                            return '<div style=\"font-size:smaller\">Drop<br/>Ship</div>';
+
+                        if(ui.rowData.isInventory == 'false')
+                        {
+                            if(parseFloat(ui.rowData.qtyReceived) != 0)
+                                return htm;
+                            else
+                                return '<div style=\"font-size:smaller\">non-<br/>inventory</div>';
+                        }
+
+                        if({!AND(AcctSeedERP__Purchase_Order__c.Locked__c,!$Permission.CanModifyLockedPurchaseOrder)})
+                            return htm;
+
+                        return '<span class="link" onclick="launchReceive('+ui.rowIndx+')">'+htm+'</span>';
+                    }
+                });
+            }
+            else if(col.dataIndx == 'qtyReceivedNonInventory')
+            {
+                if({!OR(!AcctSeedERP__Purchase_Order__c.Locked__c,$Permission.CanModifyLockedPurchaseOrder)})
+                {
+                    col.title += '<br/><button type=\"button\" cls=\"btn\" onclick=\"receiveAllNonInventory()\">Receive All</button>';
+                    col.sortable = false;
+                }
+                $j.extend(col,{
+                    render:function(ui)
+                    {
+                        var htm = '0';
+                        if(ui.rowData.qtyReceivedNonInventory)
+                        {
+                            var val = parseFloat(ui.rowData.qtyReceivedNonInventory);
+                            htm = accounting.formatNumber(ui.rowData.qtyReceivedNonInventory);
+                            if(Math.floor(val) != val) htm = accounting.toFixed(ui.rowData.qtyReceivedNonInventory,2);
+                        }
+                        if(ui.rowData.isTotal || {!AND(AcctSeedERP__Purchase_Order__c.Locked__c,!$Permission.CanModifyLockedPurchaseOrder)} || (ui.rowData.hasAPLines == 'true' && ui.rowData.isInventory == 'true') || ui.rowData.isInventory == 'true')
+                            return htm;
+
+                        return '<span class="link">'+htm+'</span>';
+                    }
+                });
+            }
+        });
+
+        var $gridDiv = $j('#lines');
+
+        $gridDiv.pqGrid(gridObj);
+
+        $gridDiv.on('pqgridrefresh', function(event, ui){
+            gGrid.refreshTotal($j(this),ui.pageData);
+        });
+
+        $gridDiv.on('pqgrideditorbegin', function(event,ui)
+        {
+            //allow cell edits of quantity, if there are no AP lines
+            if(ui.rowData.isTotal 
+                || {!AND(AcctSeedERP__Purchase_Order__c.Locked__c,!$Permission.CanModifyLockedPurchaseOrder)} 
+                || (ui.dataIndx != 'qtyReceivedNonInventory' && ui.rowData.hasAPLines == 'true')
+                || (ui.dataIndx == 'qtyReceivedNonInventory' && ui.rowData.isInventory == 'true' && ui.rowData.hasAPLines == 'true'))
+            {
+                $j(this).pqGrid( "quitEditMode" );
+            }
+            if(ui.dataIndx == 'qtyOrdered')
+            {
+                if(ui.rowData.freightApplied == 'true')
+                    $j(this).pqGrid( "quitEditMode" );
+            }
+            else if(ui.dataIndx == 'unitPrice' && ui.rowData.hasMovesClosedPeriod == 'false')
+            {
+                if(ui.rowData.freightApplied == 'true')
+                    $j(this).pqGrid( "quitEditMode" );
+            }
+            else if(ui.dataIndx == 'comment')
+            {
+                //ok
+            }
+            else if(ui.dataIndx == 'qtyReceivedNonInventory')
+            {
+                if(ui.rowData.isInventory == 'true')
+                    $j(this).pqGrid( "quitEditMode" );
+            }
+            else if(ui.dataIndx == 'projectTaskName' 
+                || ui.dataIndx == 'deliverDate'
+                || ui.dataIndx == 'lotName')
+            {
+                ui.$editor.data('rowindx',ui.rowIndx);
+            }
+            else
+            {
+                //quit editing of cell
+                $j(this).pqGrid( "quitEditMode" );              
+            }
+        });
+
+        $gridDiv.on('pqgridchange', function(event, ui)
+        {
+            var row = ui.rowList[0];
+
+            //only respond to grid changes that have all of the following attributes
+            if(row.type == 'update' &&
+               ui.source != 'xyz' &&    
+               ui.rowList && 
+               ui.rowList.length == 1 &&
+               row.newRow)
+            {
+                var newRow = row.newRow;
+                var oldRow = row.oldRow;
+                var rowData = row.rowData;
+                var idLine = row.rowData.idLine;
+                //console.log('row: '+JSON.stringify(row));
+                var rowIndx = row.rowIndx;
+
+                if(newRow.unitPrice !== undefined && newRow.unitPrice != oldRow.unitPrice)
+                {
+                    if(newRow.unitPrice == null || (!isNaN(newRow.unitPrice) && newRow.unitPrice >= 0))
+                        updatePrice(rowIndx, idLine, newRow.unitPrice);
+                    else
+                    {
+                        alert('The Unit Price must be either blank (to undo a price override) or greater than zero.');
+                        rowData.unitPrice = oldRow.unitPrice;
+                    }
+                }
+                else if(newRow.qtyOrdered !== undefined && newRow.qtyOrdered != oldRow.qtyOrdered)
+                {
+                    if(!isNaN(newRow.qtyOrdered) && newRow.qtyOrdered !== '')
+                        updateQtyOrdered(rowIndx, idLine, newRow.qtyOrdered);
+                    else
+                    {
+                        alert('The Quantity Ordered must be numerical.');
+                        rowData.qtyOrdered = oldRow.qtyOrdered;
+                    }
+                }
+                else if(newRow.comment != oldRow.comment)
+                {
+                    updateComment(rowIndx,idLine,newRow.comment);
+                }
+                else if(newRow.qtyReceivedNonInventory != oldRow.qtyReceivedNonInventory)
+                {
+                    var ordered = (rowData.qtyOrdered == undefined || isNaN(rowData.qtyOrdered)?0:parseFloat(rowData.qtyOrdered));
+                    var received = (rowData.qtyReceived == undefined || isNaN(rowData.qtyReceived)?0:parseFloat(rowData.qtyReceived));
+                    if(!isNaN(newRow.qtyReceivedNonInventory) && newRow.qtyReceivedNonInventory !== '' && ordered < (newRow.qtyReceivedNonInventory + received))
+                    {
+                        if(confirm("You are about to receive more quantity than ordered. Do you want to proceed?"))
+                            updateQtyReceivedNonInventory(rowIndx,idLine,newRow.qtyReceivedNonInventory);
+                        else
+                            rowData.qtyReceivedNonInventory = oldRow.qtyReceivedNonInventory;
+                    }
+                    else if(!isNaN(newRow.qtyReceivedNonInventory) && newRow.qtyReceivedNonInventory !== '')
+                        updateQtyReceivedNonInventory(rowIndx,idLine,newRow.qtyReceivedNonInventory);
+                    else
+                    {
+                        alert('The Quantity Received must be numerical.');
+                        rowData.qtyReceivedNonInventory = oldRow.qtyReceivedNonInventory;
+                    }
+                }
+            }
+        });
+
+        //select the contents of the input text box, when edit commences
+        $gridDiv.on( "focus", "input,textarea,div[contenteditable=true]",  function(evt){
+             $j(this).select();
+        });
+    }
+
+    function checkEditable(rowData,dataIndx){
+        if(dataIndx == 'lotName' && rowData.productType != 'Boat')
+            return false;
+        if(rowData.hasAPLines == 'true' || {!AND(AcctSeedERP__Purchase_Order__c.Locked__c,!$Permission.CanModifyLockedPurchaseOrder)}  || rowData.freightApplied == 'true') return false;
+        else return true;
+    }
+
+    function expandGrid_Lines()
+    {
+        var $gridDiv = $j('#lines');
+        var height = $gridDiv.pqGrid( "option", "height" );
+
+        if(height == 'flex')
+        {
+            $gridDiv.pqGrid( "option", "height", 285);
+            $j('#btnExpandMaterial').html('Expand');
+        }
+        else
+        {
+            $gridDiv.pqGrid( "option", "height", 'flex');
+            $j('#btnExpandMaterial').html('Collapse');
+        }
+
+        $gridDiv.pqGrid('refresh');
+
+    }
+
+    function refreshGrid_lines(){
+        var $gridDiv = $j('#lines');
+        $gridDiv.pqGrid('showLoading');
+        if('{!Id}' == '') return;
+        Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.gcPurchaseOrder_Ext.retrieveLines}',
+            '{!Id}',
+            function(result,event){
+                if(event.status)
+                {
+                    gGrid.refreshGrid_callback($gridDiv,result);
+                }
+                else
+                {
+                    alert(event.message); 
+                }
+                $gridDiv.pqGrid('hideLoading');
+            },
+            {buffer:true, escape:false, timeout:120000});
+    }
+
+    function updatePrice(rowIndx, idLine, unitPrice)
+    {
+        var $gridDiv = $j('#lines');
+        $gridDiv.pqGrid('showLoading');
+
+        Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.gcPurchaseOrder_Ext.updateUnitPrice}',
+            idLine, unitPrice,
+            function(result,event){
+                if(event.status)
+                {
+                    $j.extend($gridDiv.pqGrid('getRowData',{rowIndx:rowIndx}),result);
+                    $gridDiv.pqGrid('refresh');
+                }
+                else
+                {
+                    alert(event.message);
+                    refreshAll();
+                }
+                $gridDiv.pqGrid('hideLoading');
+            },
+            {buffer:true, escape:false, timeout:120000});        
+    }
+
+    function updateQtyOrdered(rowIndx, idLine, qty)
+    {
+        var $gridDiv = $j('#lines');
+        $gridDiv.pqGrid('showLoading');
+
+        Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.gcPurchaseOrder_Ext.updateQtyOrdered}',
+            idLine, qty,
+            function(result,event){
+                if(event.status)
+                {
+                    $j.extend($gridDiv.pqGrid('getRowData',{rowIndx:rowIndx}),result);
+                    $gridDiv.pqGrid('refresh');
+                }
+                else
+                {
+                    alert(event.message);
+                    refreshAll();
+                }
+                $gridDiv.pqGrid('hideLoading');
+            },
+            {buffer:true, escape:false, timeout:120000});        
+    }
+
+    function updateQtyReceivedNonInventory(rowIndx, idLine, qty)
+    {
+        var $gridDiv = $j('#lines');
+        $gridDiv.pqGrid('showLoading');
+
+        Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.gcPurchaseOrder_Ext.updateQtyReceivedNonInventory}',
+            idLine, qty,
+            function(result,event){
+                if(event.status)
+                {
+                    $j.extend($gridDiv.pqGrid('getRowData',{rowIndx:rowIndx}),result);
+                    $gridDiv.pqGrid('refresh');
+                }
+                else
+                {
+                    alert(event.message);
+                    refreshAll();
+                }
+                $gridDiv.pqGrid('hideLoading');
+            },
+            {buffer:true, escape:false, timeout:120000});        
+    }
+
+    function receiveAllNonInventory()
+    {
+        var $gridDiv = $j('#lines');
+        $gridDiv.pqGrid('showLoading');
+
+        Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.gcPurchaseOrder_Ext.receiveAllNonInventory}',
+            '{!Id}',
+            function(result,event){
+                if(event.status)
+                {
+                    gGrid.refreshGrid_callback($gridDiv,result);
+                }
+                else
+                {
+                    alert(event.message); 
+                }
+                $gridDiv.pqGrid('hideLoading');
+            },
+            {buffer:true, escape:false, timeout:120000});              
+    }
+
+    function updateComment(rowIndx, idLine, comment)
+    {
+        var $gridDiv = $j('#lines');
+        $gridDiv.pqGrid('showLoading');
+
+        Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.gcPurchaseOrder_Ext.updateComment}',
+            idLine, comment,
+            function(result,event){
+                if(event.status)
+                {
+                    $j.extend($gridDiv.pqGrid('getRowData',{rowIndx:rowIndx}),result);
+                    $gridDiv.pqGrid('refreshRow',{rowIndx:rowIndx});
+                }
+                else
+                {
+                    alert(event.message);
+                    refreshAll();
+                }
+                $gridDiv.pqGrid('hideLoading');
+            },
+            {buffer:true, escape:false, timeout:120000});        
+    }
+
+    function deleteLine(idLine, rowIndx)
+    {
+        var $gridDiv = $j('#lines');
+        $gridDiv.pqGrid('showLoading');
+
+        Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.gcPurchaseOrder_Ext.deleteLine}',
+            idLine,
+            function(result,event){
+                if(event.status)
+                {
+                    $gridDiv.pqGrid('deleteRow',{rowIndx:rowIndx});
+                    $gridDiv.pqGrid('removeData',{rowIndx:rowIndx});                  
+                }
+                else
+                {
+                    alert(event.message);
+                    refreshAll();
+                }
+                $gridDiv.pqGrid('hideLoading');
+            },
+            {buffer:true, escape:false, timeout:120000});        
+    }
+
+    function launchSearchProductThisCode(productCode)
+    {
+        launchSearchProduct();
+        $j('#inputSearchString').val(productCode);
+        searchProduct();     
+    }
+
+    function launchSearchProduct()
+    {
+        var $dialogDiv = $j('<div style=\"z-index:100 !important;\"></div>');
+        var $gridDiv = $j('<div id=\"productSearchResults\"></div>');
+        $dialogDiv.append($gridDiv);
+
+        $dialogDiv.dialog({
+            autoOpen: false,
+            height: 350,
+            width: '95%',
+            modal: true,
+            position:{my:'center bottom', at:'center top', of:'#lines'},
+            close:function(){$gridDiv.pqGrid('destroy'); $gridDiv.remove(); $dialogDiv.dialog('destroy'); $dialogDiv.remove(); refreshAll();},
+            open:function(){initGrid_searchProduct($gridDiv);},
+            title: 'Add Line(s) to Purchase Order'
+        });
+
+        $dialogDiv.dialog('open');
+        $j('#inputSearchString').focus();
+    }
+
+    var keyStrokeTimeout = window.setTimeout(function(){},0);
+
+    function onKeyUpSearch(e)
+    {
+        //console.log('e.which: '+JSON.stringify(e.which));
+        if (e.which == 13){
+            //console.log('searching!');
+            searchProduct();
+        }
+    }
+
+    function searchProduct()
+    {   
+        //new keystrokes reset the delay
+        //window.clearTimeout(keyStrokeTimeout);
+
+        var searchString = $j('#inputSearchString').val();
+        //console.log('searchString: '+searchString);
+        if(searchString.trim().length > 0){
+            refreshGrid_searchProduct(searchString);
+        } //OK
+        else return;
+
+        //keyStrokeTimeout = window.setTimeout(refreshGrid_searchProduct,500, searchString);
+    }
+
+    function addLine(idObject,rowIndx, qty)
+    {
+        var $gridDiv = $j('#productSearchResults');
+        $gridDiv.pqGrid('showLoading');
+
+        Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.gcPurchaseOrder_Ext.createLine}',
+            '{!Id}',idObject, qty,
+            function(result,event)
+            {
+                if(event.status)
+                {
+                    $gridDiv.pqGrid( "getRowData", {rowIndx:rowIndx}).alreadyIncluded='true';
+                    $gridDiv.pqGrid("refreshRow",{rowIndx:rowIndx});
+                    refreshAll();
+                }
+                else
+                {
+                    alert(event.message); 
+                }
+                $gridDiv.pqGrid('hideLoading');
+            },
+            {buffer:true, escape:true, timeout:120000});        
+    }
+
+    function initGrid_searchProduct($gridDiv)
+    {
+        var gridObj = { title:"Search Products:&nbsp;&nbsp;<input id=\"inputSearchString\" type=\"text\" length=\"20\" onkeyup=\"onKeyUpSearch(event)\"/>&nbsp;<span style=\"font-weight:normal; font-size:smaller; font-style:italic\">enter a partial product name, product code, product family, or vendor name and then click [enter]</span>",
+                        collapsible:{on:false,collapsed:false,toggle:false},
+                        columnTemplate: {sortable:true, minWidth:80, editable:false},
+                        dataModel:{data:[], sorting:'local', location:'local', sortDir:'up', sortIndx:'productName'}, 
+                        dragColumns:{enabled:false},
+                        editable:true,
+                        editModel: {clicksToEdit:1, saveKey: jQuery.ui.keyCode.ENTER, keyUpDown: false, onSave:null, onBlur:'save'},
+                        filterModel:{on:true, mode:'AND', header:true},
+                        freezeCols:0,
+                        freezeRows:0,
+                        height:300,
+                        historyModel:{on:false},
+                        hoverMode:'row',
+                        hwrap:false,
+                        numberCell:{show:false},
+                        pageModel: {type:null},
+                        pasteModel:{on:false},
+                        resizable: true,
+                        roundCorners: false,
+                        scrollModel: {autoFit:true},
+                        selectionModel: { type: null},
+                        showBottom:true,
+                        showHeader:true,
+                        showTitle:true,
+                        showTop:true,
+                        showToolbar:false,
+                        sortable:true,
+                        swipeModel:{on:false},
+                        virtualX: false,
+                        //virtualXHeader: false,
+                        virtualY: false,
+                        width:'auto',
+                        wrap:false};
+
+        gridObj.colModel=[
+                          {dataIndx:'productFamily',title:'Product Family', gFilter:'text', maxWidth:150},
+                          {dataIndx:'productName',  title:'Product Name',   gFilter:'text'},
+                          {dataIndx:'productCode',  title:'Product Code',   gFilter:'text', maxWidth:150},
+                          {dataIndx:'vendorName',   title:'Default Vendor', gFilter:'text', maxWidth:150},
+                          {dataIndx:'isInventory',  title:'Is Inventory<br/>Product',   gFormat:'checkbox', gFilter:'select', maxWidth:100},
+                          {dataIndx:'qtyInventory', title:'Current<br/>Inventory',      dataType:'float',   gFormat:'number', maxWidth:100},
+                          {dataIndx:'qtyOrdered',   title:'Purchased<br/>Last 90 Days', dataType:'float',   gFormat:'number', maxWidth:100},                       
+                          {dataIndx:'action',       title:'<i><small>(click to edit qty)</small></i>',                 align:'center', maxWidth:120, sortable:false,    editable:true},
+                          {dataIndx:"scrollSpacer", minWidth:15, maxWidth:15, sortable:false}];
+
+
+        gGrid.initFormat(gridObj.colModel);
+        gGrid.initFilter(gridObj.colModel);
+
+        $j.each(gridObj.colModel, function(i,col)
+        {
+            if(col.dataIndx == 'qtyInventory')
+            {
+                $j.extend(col,{
+                    render:function(ui)
+                    {
+                        if(ui.rowData.isInventory == 'true')
+                            return accounting.formatNumber(ui.rowData.qtyInventory);
+                        else return '';
+                    }
+                }); 
+            }       
+            else if(col.dataIndx == 'action')
+            {
+                $j.extend(col,{
+                    render:function(ui)
+                    {
+
+                        if(ui.rowData.isTotal) return;
+                        var myButtonText = 'Add to Order';
+                        if(ui.rowData.alreadyIncluded == 'true')
+                            myButtonText = 'Add Again';
+                    
+                        // return '<button type="button" class="btn" onclick=\"addLine(\''+ui.rowData.idProduct+'\','+ui.rowIndx+')\">'+myButtonText+'</button>';
+                        return '<button type="button" class="btn">'+myButtonText+'</button>';
+                    }
+                });
+            }
+        });
+
+        $gridDiv.pqGrid(gridObj);  
+
+        $gridDiv.on('pqgridchange', function(event, ui)
+        {
+            var row = ui.rowList[0];
+
+            //only respond to grid changes that have all of the following attributes
+            if(row.type == 'update' &&
+               ui.source != 'xyz' &&    
+               ui.rowList && 
+               ui.rowList.length == 1 &&
+               row.newRow)
+            {
+                var newRow = row.newRow;
+                var oldRow = row.oldRow;
+                var rowData = row.rowData;
+                var idProduct = row.rowData.idProduct;
+                var rowIndx = row.rowIndx;
+
+                if(newRow.action !== undefined && newRow.action != oldRow.action)
+                {
+                    if(!isNaN(newRow.action) && newRow.action != '')
+                    {
+                        addLine(idProduct, rowIndx, newRow.action);
+                        rowData.action = '';
+                    }
+                    else if(isNaN(newRow.action))
+                    {
+                        alert('The Quantity must be numerical.');
+                    }
+                }
+                //ok to continue
+            }
+        });  
+    }
+
+    function refreshGrid_searchProduct(searchString){
+        var $gridDiv = $j('#productSearchResults');
+        $gridDiv.pqGrid('showLoading');
+
+        Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.gcPurchaseOrder_Ext.searchProduct}',
+            '{!Id}',searchString,
+            function(result,event)
+            {
+                if(event.status)
+                {
+                    gGrid.refreshGrid_callback($gridDiv,result);
+                }
+                else 
+                {
+                    alert(event.message);
+                }
+                $gridDiv.pqGrid('hideLoading');
+            },
+            {buffer:true, escape:true, timeout:120000});
+    }
+
+    function getIdObject(rowData)
+    {
+        if(rowData.idItem && rowData.idItem != null)
+            return rowData.idItem;
+        else if(rowData.idLot && rowData.idLot != null)
+            return rowData.idLot;
+        else
+            return rowData.idProduct;       
+    }
+
+    function onKeyUpReceive(e,rowIndx)
+    {
+        if (e.which == 13){
+            createMove(rowIndx);
+        }
+    }
+
+    function launchReceive(rowIndx)
+    {
+        var rowData = $j('#lines').pqGrid( "getRowData", {rowIndx:rowIndx});
+
+        var $dialogDiv = $j('<div style=\"z-index:100 !important;\"></div>');
+
+        var myHTML = '';
+        myHTML += '<div>';
+        myHTML += '<table style="margin:0 auto;">';
+        myHTML +=   '<tr>';
+        myHTML +=       '<th style=\"text-align:center\" class=\"warehouse\">Warehouse</th>';
+        myHTML +=       '<th style=\"text-align:center\" class=\"lot\">Lot</th>';
+        myHTML +=       '<th style=\"text-align:center\" class=\"modelYear\">Model Year</th>';
+        myHTML +=       '<th style=\"text-align:center\" class=\"serial\">Serial Number</th>';
+        myHTML +=       '<th style=\"text-align:center\" class=\"qty\">Qty</th>';
+        myHTML +=       '<th></th>';        
+        myHTML +=   '</tr>';
+        myHTML +=   '<tr>';
+        myHTML +=       '<td style=\"text-align:center;vertical-align:top;\" class=\"warehouse\">';
+        myHTML +=           '<select id=\"selectWarehouse\" tabindex=1></select></td>';
+        myHTML +=       '<td style=\"text-align:center;vertical-align:top;\" class=\"lot\">';
+
+        if(!{!$Permission.CanReceiveAnyLotPOL} && rowData.productType == 'Boat' && rowData.idLot != null){
+            myHTML +=           '<span>&nbsp;&nbsp;'+rowData.lotName+'&nbsp;&nbsp;</span>';
+            myHTML +=           '<div style="display:none;">';
+        }
+        myHTML +=           '<input type=\"text\"   id=\"inputLot\"  tabindex=2   placeholder=\"enter lot #\" style=\"text-align:center\" onkeyup=\"onKeyUpReceive(event,'+rowIndx+')\"/>';
+        myHTML +=           '<br/><select id=\"selectLot\" onkeyup=\"onKeyUpReceive(event,'+rowIndx+')\" tabindex=0></select></td>';
+        myHTML +=       '<td style=\"text-align:center;vertical-align:top;\" class=\"modelYear\">';
+        myHTML +=           '<input type=\"text\"   id=\"inputModelYear\" tabindex=3 placeholder=\"Enter Model Year" style=\"text-align:center\" size=15/></td>';
+        if(!{!$Permission.CanReceiveAnyLotPOL} && rowData.productType == 'Boat' && rowData.idLot != null)
+        myHTML +=           '</div>';
+
+        myHTML +=       '<td style=\"text-align:center;vertical-align:top;\" class=\"serial\">';
+        myHTML +=           '<input type=\"text\"   id=\"inputSerial\" tabindex=4 placeholder=\"enter s/n\" style=\"text-align:center\" onkeyup=\"onKeyUpReceive(event,'+rowIndx+')\" size=25/>';
+        myHTML +=           '<br/><select id=\"selectSerial\" onkeyup=\"onKeyUpReceive(event,'+rowIndx+')\" tabindex=0></select></td>';
+        myHTML +=       '<td style=\"text-align:center;vertical-align:top;\" class=\"qty\">';
+        myHTML +=           '<input type=\"number\" id=\"inputQtyReceived\" tabindex=5 placeholder=\"enter qty\" size="10" style=\"text-align:center\" onkeyup=\"onKeyUpReceive(event,'+rowIndx+')\" /></td>';
+        myHTML +=       '<td style=\"text-align:center;vertical-align:top;\">';
+        myHTML +=           '<button type=\"button\" id="btnReceive" tabindex=0 onclick=\"createMove('+rowIndx+')\">receive</button></td>';      
+        myHTML +=   '</tr>';
+        myHTML += '</table>';
+        myHTML += '</div><br/>';
+
+        $dialogDiv.append($j(myHTML));
+
+        if(rowData.isSerialized == 'false') {
+            $dialogDiv.find('.serial').hide();
+            $dialogDiv.find('.modelYear').hide();
+        }
+        if(rowData.isSerialized == 'true')  $dialogDiv.find('.qty').hide();
+        if(rowData.isLotTracked == 'false') $dialogDiv.find('.lot').hide();
+        $dialogDiv.find('#inputQtyReceived').val(1);
+
+        var $gridDiv = $j('<div id=\"receive\"></div>');
+        $dialogDiv.append($gridDiv);
+
+        $dialogDiv.dialog({
+            autoOpen: false,
+            height: 350,
+            width: '80%',
+            modal: true,
+            position:{my:'center top', at:'center top', of:'#thePageBlock'},
+            close:function(){$gridDiv.pqGrid('destroy'); $gridDiv.remove(); $dialogDiv.dialog('destroy'); $dialogDiv.remove(); refreshAll();},
+            open:function(){initGrid_receive($gridDiv,rowIndx);},
+            title: 'Receiving: '+rowData.productName
+        });
+
+        $dialogDiv.dialog('open');
+        
+        if(rowData.isLotTracked == 'true')
+          $j('#inputLot').focus();
+        else if(rowData.isSerialized == 'true')
+          $j('#inputSerial').focus();
+        else
+          $j('#inputQtyReceived').focus();
+    }
+
+    function initGrid_receive($gridDiv,rowIndx)
+    {
+        var gridObj = { title:"Receiving Log",
+                        collapsible:{on:false,collapsed:false,toggle:false},
+                        columnTemplate: {sortable:true, minWidth:80},
+                        dataModel:{data:[], sorting:'local', location:'local'}, 
+                        dragColumns:{enabled:false},
+                        editable:false,
+                        filterModel:{on:false, mode:'AND', header:false},
+                        freezeCols:0,
+                        freezeRows:0,
+                        height:200,
+                        historyModel:{on:false},
+                        hoverMode:'row',
+                        hwrap:false,
+                        numberCell:{show:true},
+                        pageModel: {type:null},
+                        pasteModel:{on:false},
+                        resizable: true,
+                        roundCorners: false,
+                        scrollModel: {autoFit:true},
+                        selectionModel: { type: null},
+                        showBottom:true,
+                        showHeader:true,
+                        showTitle:true,
+                        showTop:true,
+                        showToolbar:false,
+                        sortable:false,
+                        swipeModel:{on:false},
+                        virtualX: false,
+                        //virtualXHeader: false,
+                        virtualY: false,
+                        width:'auto',
+                        wrap:false};
+
+        gridObj.colModel=[{dataIndx:'action',               title:'Action',         align:'center', maxWidth:80},
+                          {dataIndx:'warehouseName',        title:'Warehouse'},
+                          {dataIndx:'moveDate',             title:'Date',           align:'center'},
+                          {dataIndx:'freightChargeHeaderName',  title:'Freight',                align:'center'},
+                          {dataIndx:'freightApplied',       title:'Freight<br/>Applied',    gFormat:'checkbox', maxWidth:65, minWidth:65},
+                          {dataIndx:'lotName',              title:'Lot'},
+                          {dataIndx:'serialName',           title:'Serial Number'},
+                          {dataIndx:'freightCharge',        title:'Freight/Qty',            dataType:'float',   gFormat:'money'},
+                          {dataIndx:'qty',                  title:'Qty',                    dataType:'float',   gFormat:'number', gTotal:true},
+                          {dataIndx:'unitCost',             title:'Unit Cost',              dataType:'float',   gFormat:'money'},
+                          {dataIndx:'amtReceived',          title:'Amount<br/>Received',    dataType:'float',   gFormat:'money', gTotal:true},
+                          {dataIndx:'amtPaid',              title:'Amount<br/>Paid',        dataType:'float',   gFormat:'money', gTotal:true},
+                          {dataIndx:'msg',                  title:''}];
+
+
+        gGrid.initFormat(gridObj.colModel);
+        gGrid.initFilter(gridObj.colModel);
+
+        var rowData = $j('#lines').pqGrid( "getRowData", {rowIndx:rowIndx});
+
+        $j.each(gridObj.colModel, function(i,col)
+        {
+            if(col.dataIndx == 'action')
+            {
+                $j.extend(col,{
+                    render:function(ui)
+                    {
+                        if(ui.rowData.isTotal) return;
+
+                        var myHTML = '';
+                        if({!$ObjectType.AcctSeedERP__Purchase_Order_Inventory_Movement__c.accessible})
+                        {
+                            if(currentTheme == 'Theme4d')
+                                myHTML += '<span class="link" onclick="createLighteningNavigation(\''+ui.rowData.idMove+'\',\'view\');">view</span>';
+                            else                            
+                                myHTML +=  '<a href=\"/'+ui.rowData.idMove+'\" target=\"_top\">view</a>';
+                        }
+                        if({!OR(!AcctSeedERP__Purchase_Order__c.Locked__c,$Permission.CanModifyLockedPurchaseOrder)} && ui.rowData.hasAPLine == 'false' && ui.rowData.periodIsClosed == 'false' && ui.rowData.freightApplied == 'false')
+                        {
+                            myHTML += '&nbsp;&nbsp;<span class="link" onclick="deleteMove(\''+ui.rowData.idMove+'\','+ui.rowIndx+');">del</span>';
+                        }
+
+                        return myHTML;
+                    }
+                });            
+            } 
+            else if(col.dataIndx == 'lotName')
+            {
+                if(rowData.isLotTracked == 'false')
+                    col.hidden = true;
+                else
+                $j.extend(col,{
+                    render:function(ui)
+                    {
+                        if(ui.rowData.isTotal || ui.rowData.idLot === undefined || !ui.rowData.idLot) 
+                            return '';
+                        if({!$ObjectType.GMBLASERP__Lot__c.accessible})
+                            return '<a href=\"/'+ui.rowData.idLot+'\" target=\"_blank\">'+ui.rowData.lotName+'</a>';
+                        else
+                            return ui.rowData.lotName;
+                    }
+                }); 
+            }  
+            else if(col.dataIndx == 'serialName')
+            {
+                if(rowData.isSerialized == 'false')
+                    col.hidden = true;
+                else
+                $j.extend(col,{
+                    render:function(ui)
+                    {
+                        if(ui.rowData.isTotal || ui.rowData.idSerial === undefined || !ui.rowData.idSerial) 
+                            return '';
+                        if({!$ObjectType.GMBLASERP__Serial_Number__c.accessible})
+                            return '<a href=\"/'+ui.rowData.idSerial+'\" target=\"_blank\">'+ui.rowData.serialName+'</a>';
+                        else
+                            return ui.rowData.serialName;
+                    }
+                });                 
+            }  
+            else if(col.dataIndx == 'freightChargeHeaderName')
+            {
+                $j.extend(col,{
+                    render:function(ui)
+                    {
+                        if(ui.rowData.isTotal || ui.rowData.freightChargeHeader === undefined) return '';
+                        if({!$ObjectType.Freight_Charges__c.accessible})
+                            return '<a href=\"/'+ui.rowData.freightChargeHeader+'\" target=\"_blank\">'+ui.rowData.freightChargeHeaderName+'</a>';
+                        else
+                            return ui.rowData.freightChargeHeaderName;
+                    }
+                });                 
+            }
+        });
+
+        var $gridDiv = $j('#receive');
+
+        $gridDiv.pqGrid(gridObj);
+
+        $gridDiv.on('pqgridrefresh', function(event, ui){
+            gGrid.refreshTotal($j(this),ui.pageData);
+        });
+
+        refreshGrid_receive(rowIndx);
+        initSelectWarehouse();
+        initSelectLot(rowData.idLine);
+        initSelectSerial(rowData.idLine);
+
+        $j('#selectLot').change(function(){
+            $j('#inputLot').val($j('#selectLot').val());
+            $j('#inputSerial').val('');
+        });
+        $j('#selectSerial').change(function(){
+            $j('#inputSerial').val($j('#selectSerial').val());
+            var $option = $j('#selectSerial option:selected');
+            if($option.data('lotName'))
+            {
+                $j('#selectLot').val($option.data('lotName'));
+                $j('#inputLot').val($option.data('lotName'));
+            }
+        });
+    }
+
+    function initSelectWarehouse()
+    {
+        var poWarehouse = "{!AcctSeedERP__Purchase_Order__c.Warehouse__c}";
+        var poWarehouseName = "{!AcctSeedERP__Purchase_Order__c.Warehouse__r.Name}";
+        var $select = $j('#selectWarehouse');
+        if(poWarehouse != ""){
+            $select.css('display','none');
+            $select.parent().append($j("<div></div>").html(poWarehouseName));
+        }
+        Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.gcPurchaseOrder_Ext.retrieveWarehouses}',
+            '{!Id}',
+            function(result,event)
+            {
+                if(event.status)
+                {
+                    $j.each(result,function(i,opt){
+                        var $option = $j('<option>').attr('value',opt.idWarehouse).html(opt.warehouseName);
+                        $select.append($option);
+                        if(opt.isMostRecent == 'true' && poWarehouse == "")
+                            $select.val(opt.idWarehouse);
+                    });
+                    if(poWarehouse != "")
+                        $select.val(poWarehouse);
+                }
+                else 
+                {
+                    alert(event.message);
+                }
+            },
+            {buffer:true, escape:true, timeout:120000});
+    }
+
+    function initSelectLot(idPurchaseOrderLine)
+    {
+        Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.gcPurchaseOrder_Ext.retrieveLots}',
+            idPurchaseOrderLine,
+            function(result,event)
+            {
+                if(event.status)
+                {
+                    var $select = $j('#selectLot');
+                    $select.children().remove();
+                    $j.each(result,function(i,opt){
+                        var $option = $j('<option>').attr('value',opt.lotName).html(opt.lotName);
+                        $select.append($option);
+                        if(opt.isMostRecent == 'true')
+                        {
+                            $select.val(opt.lotName);
+                        }
+                    });
+                    $j('#inputLot').val($select.val());
+                }
+                else 
+                {
+                    alert(event.message);
+                }
+            },
+            {buffer:true, escape:true, timeout:120000});
+    }
+
+    function initSelectSerial(idPurchaseOrderLine)
+    {
+        var $select = $j('#selectSerial');
+
+        Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.gcPurchaseOrder_Ext.retrieveSerials}',
+            idPurchaseOrderLine,
+            function(result,event)
+            {
+                if(event.status)
+                {                 
+                    $select.children().remove();
+                    $select.append($j('<option>').attr('value','').html('--- view existing ---'));
+                    $j.each(result,function(i,opt){
+
+                        var $option = $j('<option>').attr('value',opt.serialName).html(opt.serialName);
+                        $select.append($option);
+
+                        if(opt.disabled == 'true')
+                        {
+                            $option.attr('disabled','disabled');
+                        }
+
+                        if(opt.lotName)
+                        {
+                            $option.data('lotName',opt.lotName);
+                        }
+                    });
+                }
+                else 
+                {
+                    alert(event.message);
+                }
+            },
+            {buffer:true, escape:true, timeout:120000});
+    }
+
+    function refreshGrid_receive(rowIndx){
+        var $gridDiv = $j('#receive');
+        $gridDiv.pqGrid('showLoading');
+
+        var rowData = $j('#lines').pqGrid( "getRowData", {rowIndx:rowIndx});
+
+        Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.gcPurchaseOrder_Ext.retrieveMoves}',
+            rowData.idLine,
+            function(result,event)
+            {
+                if(event.status)
+                {
+                    gGrid.refreshGrid_callback($gridDiv,result);
+                    //refreshGrid_lines();
+                }
+                else 
+                {
+                    alert(event.message);
+                }
+                $gridDiv.pqGrid('hideLoading');
+            },
+            {buffer:true, escape:true, timeout:120000});
+    }
+
+//createMove(Id idPurchaseOrderLine, Id idWarehouse, String lotName, String serialName, Decimal qty)
+    function createMove(rowIndx)
+    {
+        var rowData = $j('#lines').pqGrid( "getRowData", {rowIndx:rowIndx});
+        var $gridDiv = $j('#receive');
+        var lotName = $j('#inputLot').val();
+        var modelYear = $j('#inputModelYear').val();
+        if(modelYear == undefined || modelYear == '')
+            modelYear = null;
+        var serialName = $j('#inputSerial').val();
+        var qty = $j('#inputQtyReceived').val();
+
+        var qtyOrdered = rowData.qtyOrdered;
+        var data = $gridDiv.pqGrid( "option", "dataModel.data");
+        if(data.length)
+        {
+            var totalReceived = 0;
+            $j.each(data,function(k,v){
+                totalReceived += parseFloat(v.qty);
+            });
+//console.log(totalReceived);
+//console.log(qtyOrdered);
+//console.log(totalReceived + parseFloat(qty));
+            if(parseFloat(qtyOrdered) < (totalReceived + parseFloat(qty)))
+                if(!confirm("You are about to receive more quantity than ordered. Do you want to proceed?"))
+                    return false;
+        }       
+
+        if(rowData.isLotTracked == 'true' && !lotName)
+        {
+            alert('A lot number is required, because the Product is lot-tracked.');
+            return;
+        }
+        else if(rowData.isSerialized == 'true' && !serialName)
+        {
+            alert('A serial number is required, because the Product is serialized');
+            return;
+        }
+        else if(rowData.isSerialized == 'false' && (isNaN(qty) || qty < 1))
+        {
+            alert('A valid positive quantity is required.');
+            return;
+        }
+
+        if(rowData.isSerialized == 'true' && (isNaN(modelYear) || (modelYear != null && modelYear.length < 4)))
+        {
+            alert('Model Year must be a positive number.');
+            return;
+        }
+
+        $gridDiv.pqGrid('showLoading');
+
+        Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.gcPurchaseOrder_Ext.createMove}',
+            rowData.idLine,$j('#selectWarehouse').val(),lotName,serialName,qty,modelYear,
+            function(result,event)
+            {
+                if(event.status)
+                {
+                    gGrid.refreshGrid_callback($gridDiv,result);
+                    initSelectLot(rowData.idLine);
+                    initSelectSerial(rowData.idLine);
+                }
+                else 
+                {
+                    alert(event.message);
+                }
+                $gridDiv.pqGrid('hideLoading');
+            },
+            {buffer:true, escape:true, timeout:120000});        
+    }
+
+    function deleteMove(idMove, rowIndx)
+    {
+        var $gridDiv = $j('#receive');
+        $gridDiv.pqGrid('showLoading');
+
+        Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.gcPurchaseOrder_Ext.deleteMove}',
+            idMove,
+            function(result,event){
+                initSelectSerial($gridDiv.pqGrid( "getRowData", {rowIndx:rowIndx}).idLine);              
+                if(event.status)
+                {
+                    $gridDiv.pqGrid('deleteRow',{rowIndx:rowIndx});
+                    $gridDiv.pqGrid('removeData',{rowIndx:rowIndx});
+                }
+                else
+                {
+                    alert(event.message);
+                    gGrid.refreshGrid_callback($gridDiv,result);
+                }
+                $gridDiv.pqGrid('hideLoading');
+            },
+            {buffer:true, escape:true, timeout:120000});        
+    }
+
+    function launchReceiveAllInventory()
+    {
+        var $dialogDiv = $j('<div id=\"dialogDivReceiveAllInventory\" style=\"z-index:100 !important;\"></div>');
+
+        var myHTML = '';
+        myHTML += '<div>';
+        myHTML += '<table style="margin:0 auto;">';
+        myHTML +=   '<tr>';
+        myHTML +=       '<td style=\"text-align:center;vertical-align:top;font-size:smaller;\">';
+        myHTML +=           'NOTE:  Only inventory products that are neither Lot-Tracked nor Serialized will be received with \"Receive All.\"<br/><br/>';
+        myHTML +=       '</td>';  
+        myHTML +=   '</tr>';
+        myHTML +=   '<tr>';
+        myHTML +=       '<th style=\"text-align:center\" class=\"warehouse\">Warehouse</th>';       
+        myHTML +=   '</tr>';
+        myHTML +=   '<tr>';
+        myHTML +=       '<td style=\"text-align:center;vertical-align:top;\" class=\"warehouse\">';
+        myHTML +=           '<select id=\"selectWarehouse\" tabindex=1></select>';
+        myHTML +=       '</td>';  
+        myHTML +=   '</tr>';
+        myHTML +=   '<tr>';
+        myHTML +=       '<td style=\"text-align:center;vertical-align:top;\"><br/><button type=\"button\" id="btnReceiveAllInventory" tabindex=0 onclick=\"receiveAllInventory()\">receive</button></td>';      
+        myHTML +=   '</tr>';
+        myHTML += '</table>';
+        myHTML += '</div><br/>';
+
+        $dialogDiv.append($j(myHTML));
+
+        $dialogDiv.dialog({
+            autoOpen: false,
+            height: 200,
+            //width: '80%',
+            modal: true,
+            position:{my:'center top', at:'center top', of:'#thePageBlock'},
+            close:function(){$dialogDiv.dialog('destroy'); $dialogDiv.remove();},
+            open:function(){initSelectWarehouse();},
+            title: 'Receive All Inventory Products'
+        });
+
+        $dialogDiv.dialog('open');
+        
+        $j('#selectWarehouse').focus();
+    }
+
+    function receiveAllInventory()
+    {
+        var $gridDiv = $j('#lines');
+        $gridDiv.pqGrid('showLoading');
+
+        Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.gcPurchaseOrder_Ext.receiveAllInventory}',
+            '{!Id}',$j('#selectWarehouse').val(),
+            function(result,event){
+                if(event.status)
+                {
+                    gGrid.refreshGrid_callback($gridDiv,result);
+                }
+                else
+                {
+                    alert(event.message); 
+                }
+                $gridDiv.pqGrid('hideLoading');
+            },
+            {buffer:true, escape:false, timeout:120000});
+
+        $j('#dialogDivReceiveAllInventory').dialog('close');       
+    }
+
+    function createLighteningNavigation(idRecord,type) {
+        if(type == 'view')
+            sforce.one.navigateToSObject(idRecord);
+        else if(type == 'edit')
+        {
+            sforce.one.editRecord(idRecord);
+        }
+    }
+
+    function allFreightCharges(){
+        var $dialogDiv = $j('<div style=\"z-index:100 !important;\"></div>');
+        var $gridDiv = $j('<div id=\"freightChargesGrid\"></div>');
+        $dialogDiv.append($gridDiv);
+
+        $dialogDiv.dialog({
+            autoOpen: false,
+            height: 350,
+            width: '95%',
+            modal: true,
+            position:{my:'center bottom', at:'center top', of:'#lines'},
+            close:function(){
+                $gridDiv.pqGrid('destroy');
+                $gridDiv.remove();
+                $dialogDiv.dialog('destroy');
+                $dialogDiv.remove();
+                refreshAll();
+            },
+            open:function(){
+                initGrid_freightCharges($gridDiv);
+            },
+            title: 'All Freight Charges'
+        });
+
+        $dialogDiv.dialog('open');
+    }
+
+    function initGrid_freightCharges($gridDiv)
+    {
+        var gridObj = { title:"",
+                        collapsible:{on:false,collapsed:false,toggle:false},
+                        columnTemplate: {sortable:true, minWidth:80, editable:false},
+                        dataModel:{data:[], sorting:'local', location:'local'}, 
+                        dragColumns:{enabled:false},
+                        editable:true,
+                        //editModel: {clicksToEdit:1, saveKey: jQuery.ui.keyCode.ENTER, keyUpDown: false, onSave:null, onBlur:'save'},
+                        filterModel:{on:true, mode:'AND', header:true},
+                        freezeCols:0,
+                        freezeRows:0,
+                        height:300,
+                        historyModel:{on:false},
+                        hoverMode:'row',
+                        hwrap:false,
+                        numberCell:{show:false},
+                        pageModel: {type:null},
+                        pasteModel:{on:false},
+                        resizable: true,
+                        roundCorners: false,
+                        scrollModel: {autoFit:true},
+                        selectionModel: { type: null},
+                        showBottom:true,
+                        showHeader:true,
+                        showTitle:true,
+                        showTop:true,
+                        showToolbar:false,
+                        sortable:true,
+                        swipeModel:{on:false},
+                        virtualX: false,
+                        //virtualXHeader: false,
+                        virtualY: false,
+                        width:'auto',
+                        wrap:false};
+
+        gridObj.colModel=[
+                          {dataIndx:'action',       title:'',               align:'center', maxWidth:120, sortable:false,    editable:true},
+                          {dataIndx:'freightName',  title:'Freight',        gFilter:'text'},
+                          {dataIndx:'dateApplied',  title:'Date Applied'},
+                          {dataIndx:'amount',       title:'Amount',         dataType:'float',   gFormat:'money', gTotal:true},
+                          {dataIndx:'totalPOLines', title:'Lines',          dataType:'float',   gFormat:'number'},
+                          {dataIndx:"scrollSpacer", minWidth:15, maxWidth:15, sortable:false}];
+
+
+        gGrid.initFormat(gridObj.colModel);
+        gGrid.initFilter(gridObj.colModel);
+
+        $j.each(gridObj.colModel, function(i,col)
+        {
+            if(col.dataIndx == 'action')
+            {
+                $j.extend(col,{
+                    render:function(ui)
+                    {
+
+                        return '<button type="button" class="btn" onclick="removeFreight(\''+ui.rowData.idFreight+'\')">Delete</button>';
+                    }
+                });
+            }
+            else if(col.dataIndx == 'freightName')
+            {
+                $j.extend(col,{
+                    render:function(ui)
+                    {
+                        if(ui.rowData.isTotal || ui.rowData.idFreight === undefined) return '';
+                        if({!$ObjectType.Freight_Charges__c.accessible})
+                            return '<a href=\"/'+ui.rowData.idFreight+'\" target=\"_blank\">'+ui.rowData.freightName+'</a>';
+                        else
+                            return ui.rowData.freightName;
+                    }
+                });                 
+            }
+        });
+
+        $gridDiv.pqGrid(gridObj);  
+        refreshGrid_freightCharges();
+    }
+
+    function refreshGrid_freightCharges(){
+        var $gridDiv = $j('#freightChargesGrid');
+        $gridDiv.pqGrid('showLoading');
+
+        Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.gcPurchaseOrder_Ext.allFreightCharges}',
+            '{!Id}',
+            function(result,event)
+            {
+                if(event.status)
+                {
+                    gGrid.refreshGrid_callback($gridDiv,result);
+                }
+                else 
+                {
+                    alert(event.message);
+                }
+                $gridDiv.pqGrid('hideLoading');
+            },
+            {buffer:true, escape:true, timeout:120000});
+    }
+
+    function removeFreight(idFreight){
+        var $gridDiv = $j('#freightChargesGrid');
+        $gridDiv.pqGrid('showLoading');
+
+        Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.gcPurchaseOrder_Ext.removeFreight}',
+            '{!Id}',idFreight,
+            function(result,event)
+            {
+                if(event.status)
+                {
+                    gGrid.refreshGrid_callback($gridDiv,result);
+                }
+                else 
+                {
+                    alert(event.message);
+                }
+                $gridDiv.pqGrid('hideLoading');
+            },
+            {buffer:true, escape:true, timeout:120000});
+    }
+
+    function launchFreightCharge()
+    {
+        var rows = $j('#lines').pqGrid('selection', { type: 'row', method: 'getSelection' });
+
+        if(rows.length == 0)
+        {
+            alert('Please select some order lines with items received to Apply Freight charge.');
+            return;
+        }
+
+        var $dialogDiv = $j('<div id=\"dialogDivReceiveAllInventory\" style=\"z-index:100 !important;\"></div>');
+
+        var myHTML = '';
+        myHTML += '<div>';
+        myHTML += '<table style="margin:0 auto;">';
+        myHTML +=   '<tr>';
+        myHTML +=       '<th style=\"text-align:center\">Enter Freight Amount</th>';       
+        myHTML +=   '</tr>';
+        myHTML +=   '<tr>';
+        myHTML +=       '<td style=\"text-align:center;vertical-align:top;\">';
+        myHTML +=           '<input id=\"freightAmount\" name=\"freightAmount\" tabindex=1/>';
+        myHTML +=       '</td>';  
+        myHTML +=   '</tr>';
+        myHTML +=   '<tr>';
+        myHTML +=       '<td style=\"text-align:center;vertical-align:top;\"><br/><button type=\"button\" id="btnAddFreight" tabindex=0>Apply Freight Amount</button></td>';
+        myHTML +=   '</tr>';
+        myHTML += '</table>';
+        myHTML += '</div><br/>';
+
+        $dialogDiv.append($j(myHTML));
+        $dialogDiv.find('input#freightAmount').keypress(function(event){
+            if (event.which == 13){
+                $dialogDiv.find('button#btnAddFreight').trigger('click');
+            }
+        });
+
+        $dialogDiv.find('button#btnAddFreight').click(function(){
+            var freightAmount = $dialogDiv.find('#freightAmount').val();
+            if(isNaN(freightAmount) || freightAmount == 0)
+            {
+                alert('Freight Amount must be a positive number.');
+                return;
+            }
+            else
+            {
+                $dialogDiv.dialog('destroy'); 
+                $dialogDiv.remove();
+                applyFreightAmount(freightAmount);
+            }
+        });
+
+        $dialogDiv.dialog({
+            autoOpen: false,
+            height: 170,
+            //width: '80%',
+            modal: true,
+            // position:{my:'center top', at:'center top', of:'#thePageBlock'},
+            close:function(){$dialogDiv.dialog('destroy'); $dialogDiv.remove();},
+            open:function(){initSelectWarehouse();},
+            title: ''
+        });
+
+        $dialogDiv.dialog('open');
+        
+        $j('#selectWarehouse').focus();
+    }
+
+    function applyFreightAmount(freightAmount) {
+        var $gridDiv = $j('#lines');
+        var listIdLines = [];
+
+        var rows = $gridDiv.pqGrid('selection', { type: 'row', method: 'getSelection' });
+
+        jQuery.each(rows, function(i,row)
+        {
+            listIdLines.push(row.rowData.idLine);
+        });
+
+        if(listIdLines.length == 0)
+        {
+            alert('Please select some order lines with items received to Apply Freight charge.');
+            return;
+        }
+
+        $gridDiv.pqGrid('showLoading');
+
+        Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.gcPurchaseOrder_Ext.applyFreightCharge}',
+            '{!Id}',listIdLines, freightAmount,
+            function(result,event){
+                if(event.status)
+                {
+                    if(result != '')
+                        alert(result);
+                    else
+                        refreshAll();
+                }
+                else
+                {
+                    alert(event.message); 
+                }
+                $gridDiv.pqGrid('hideLoading');
+            },
+            {buffer:true, escape:false, timeout:120000});
+
+        $j('#dialogDivReceiveAllInventory').dialog('close');       
+    }    
+
+    function createAPWithSelected() {
+        var $gridDiv = $j('#lines');
+        var listIdLines = [];
+
+        var rows = $gridDiv.pqGrid('selection', { type: 'row', method: 'getSelection' });
+
+        jQuery.each(rows, function(i,row)
+        {
+            listIdLines.push(row.rowData.idLine);
+        });
+
+        if(listIdLines.length == 0)
+        {
+            alert('Please select some order lines to create AP from.');
+            return;
+        }
+
+        if({!$ObjectType.AcctSeedERP__Purchase_Order__c.fields.GL_Account_Variable_1__c.accessible} && {!$ObjectType.AcctSeedERP__Purchase_Order__c.fields.GL_Account_Variable_2__c.accessible})
+        {
+            if(!confirm('Please confirm GLV1 and GLV2 are correct.'))
+                return;
+        }
+
+        $gridDiv.pqGrid('showLoading');
+
+        Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.gcPurchaseOrder_Ext.createAPSelected}',
+            '{!Id}',listIdLines,
+            function(result,event){
+                if(event.status)
+                {
+                    if(currentTheme == 'Theme4d')
+                        sforce.one.navigateToSObject(result);
+                    else                            
+                        window.location.href = '/apex/'+result;
+                }
+                else
+                {
+                    alert(event.message); 
+                }
+                $gridDiv.pqGrid('hideLoading');
+            },
+            {buffer:true, escape:false, timeout:120000});
+
+        $j('#dialogDivReceiveAllInventory').dialog('close');       
+    }
+
+    function sortDateTime(rowData1, rowData2, dataIndx)
+    {
+        var d=1,m=0;
+        if('{!locale}' == 'en_CA')
+        {
+            d=0;
+            m=1;
+        }
+        var data1 = rowData1[dataIndx].split('/'),
+            data2 = rowData2[dataIndx].split('/'),
+            date1 = new Date(data1[2],data1[m],data1[d]),
+            date2 = new Date(data2[2],data2[m],data2[d]),
+            time1 = date1.getTime(),
+            time2 = date2.getTime();
+
+        if (time1 > time2) {
+            return 1;
+        }
+        else if (time1 < time2) {
+            return -1;
+        }
+        else {
+            return 0;
+        }
+    }
+
+</script>
+</apex:page>

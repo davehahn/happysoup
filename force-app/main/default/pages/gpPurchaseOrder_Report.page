@@ -1,0 +1,465 @@
+<apex:page controller="gcPurchaseOrder_Report" showHeader="true" sidebar="true" cache="false" readOnly="true">
+
+<head>
+<style>
+tr.pq-row-select td{
+    background-color:yellow;
+}
+tr.total td{
+    font-weight: bold;
+}
+div.pq-grid-footer{
+    display:none;
+}
+.colHighlight{
+    background-color: yellow;
+}
+</style>
+
+<apex:stylesheet value="{!URLFOR($Resource.GMBLJS__jQueryUI,'/jquery-ui/jquery-ui.min.css')}"/>
+<apex:stylesheet value="{!URLFOR($Resource.GMBLJS__pqGridPro241,'/pqgrid.min.css')}"/>
+
+</head>
+<body>
+    <div style="width:98%; margin:0 auto">
+        <table width="100%">
+            <tr style="text-align:center;">
+                <td colspan="2">
+                    Open Purchase Orders
+                </td>
+            </tr>
+            <tr>
+                <td width="30%">
+                    <div><div id="vendor"></div></div>
+                </td>
+                <td width="70%">
+                    <div><div id="product"></div></div>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <div><div id="detail"></div></div>
+                </td>
+            </tr>
+        </table>
+    </div>
+</body>
+
+<apex:includeScript value="{!$Resource.GMBLJS__jQuery}"/>
+<apex:includeScript value="{!URLFOR($Resource.GMBLJS__jQueryUI,'/jquery-ui/jquery-ui.min.js')}"/>
+<apex:includeScript value="{!$Resource.GMBLJS__accountingJS}"/>
+<apex:includeScript value="{!$Resource.GMBLJS__ExcellentExport}"/>
+
+<apex:includeScript value="{!URLFOR($Resource.GMBLJS__pqGridPro241,'/pqgrid.min.js')}"/>
+
+<apex:includeScript value="{!$Resource.GMBLJS__gsrSpinner}"/>
+<apex:includeScript value="{!$Resource.GMBLJS__gsrGrid2}"/>
+
+<script>function setFocusOnLoad() {}</script>
+
+<script type="text/javascript">
+
+    $j = jQuery.noConflict();
+
+    $j(document).ready(function()
+    {
+        initGrid_vendor();
+        initGrid_product();
+        initGrid_detail();
+    });
+
+    accounting.settings = {
+        currency: {
+            symbol : "$",   // default currency symbol is '$'
+            format: "%s%v", // controls output: %s = symbol, %v = value/number (can be object: see below)
+            decimal : ".",  // decimal point separator
+            thousand: ",",  // thousands separator
+            precision : 2   // decimal places
+        },
+        number: {
+            precision : 0,  // default precision on numbers is 0
+            thousand: ",",
+            decimal : "."
+        }
+    }
+
+    function initGrid_vendor()
+    {
+        var gridObj = {title:"Vendors",
+                        collapsible:{on:false,collapsed:false,toggle:false},
+                        columnTemplate: {minWidth:10, sortable:true},
+                        dataModel:{data:[], sorting:'local', location:'local', sortDir:'up', sortIndx:'vendorName'}, 
+                        detailModel:{cache:false},
+                        dragColumns:{enabled:false},
+                        editable:false,
+                        filterModel:{on:true, mode:'AND', header:true, type:'local'},
+                        freezeCols:0,
+                        freezeRows:0,
+                        height:300,
+                        historyModel:{on:false},
+                        hoverMode:'row',
+                        hwrap:false,
+                        numberCell:{show:false},
+                        pageModel: {type:null},
+                        pasteModel:{on:false},
+                        resizable: true,
+                        roundCorners: false,
+                        scrollModel: {autoFit:true},
+                        selectionModel: {type:'row', mode:'range', fireSelectChange:true},
+                        showBottom:true,
+                        showHeader:true,
+                        showTitle:true,
+                        showTop:true,
+                        showToolbar:true,
+                        sortable:true,
+                        swipeModel:{on:false},
+                        track:false,
+                        virtualX: false,
+                        //virtualXHeader: false,
+                        virtualY: false,
+                        width:'auto',
+                        wrap:false};
+
+        gridObj.colModel=[{dataIndx:"vendorName",   title:"Name",               align:"left",   dataType:"string", gFilter:"text"},
+                          {dataIndx:"amt",          title:"PO<br/>Amount", align:"right",  dataType:"float",  gFormat:'money', gTotal:true, maxWidth:80},
+                          {dataIndx:"scrollSpacer", minWidth:15, maxWidth:15}];
+
+        gGrid.initFormat(gridObj.colModel);
+        gGrid.initFilter(gridObj.colModel);
+
+        var $gridDiv = $j('#vendor');
+
+        $gridDiv.pqGrid(gridObj);
+
+        gGrid.appendExportLink($gridDiv);
+
+        gGrid.appendButtonClearSelection($gridDiv);
+
+        $gridDiv.on('pqgridrefresh', function(event, ui)
+        {
+            gGrid.refreshTotal($j(this),ui.pageData);
+        });
+
+        $gridDiv.on('pqgridselectchange',function(event,ui)
+        {
+            $j('#product').pqGrid( "setSelection", null );
+            refreshGrid_detail();
+        });
+
+        refreshGrid_vendor();
+
+        gridObj = null;
+    }
+
+    function refreshGrid_vendor()
+    {
+        var $gridDiv = $j('#vendor');
+        $gridDiv.pqGrid('showLoading');
+
+        Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.gcPurchaseOrder_Report.retrieveVendors}',
+            function(result,event){
+                if(event.status){
+                    gGrid.refreshGrid_callback($gridDiv,result);
+                }
+                else{
+                    alert(event.message); 
+                }
+                $gridDiv.pqGrid('hideLoading');
+            },
+            {buffer:true, escape:true, timeout:120000});
+    }
+
+     function initGrid_product()
+    {
+        var gridObj = {title:"Products",
+                        collapsible:{on:false,collapsed:false,toggle:false},
+                        columnTemplate: {minWidth:80, sortable:true},
+                        dataModel:{data:null, sorting:'local', location:'local', sortDir:'up', sortIndx:'productName'},
+                        detailModel:{cache:false},
+                        dragColumns:{enabled:false},
+                        editable:false,
+                        filterModel:{on:true, mode:'AND', header:true, type:'local'},
+                        freezeCols:0,
+                        freezeRows:0,
+                        height:300,
+                        historyModel:{on:false},
+                        hoverMode:'row',
+                        hwrap:false,
+                        numberCell:{show:false},
+                        pageModel: {type:null},
+                        pasteModel:{on:false},
+                        resizable: true,
+                        roundCorners: false,
+                        scrollModel: {autoFit:true},
+                        selectionModel: {type:'row', mode:'range', fireSelectChange:true},
+                        showBottom:true,
+                        showHeader:true,
+                        showTitle:true,
+                        showTop:true,
+                        showToolbar:true,
+                        sortable:true,
+                        swipeModel:{on:true},
+                        track:false,
+                        virtualX: false,
+                        //virtualXHeader: false,
+                        virtualY: false,
+                        width:'auto',
+                        wrap:false};
+
+        gridObj.colModel=[{dataIndx:"productName",  title:"Product Name",         align:"left",   dataType:"string",  gFilter:"text"},
+                          {dataIndx:"productCode",  title:"Product Code",         align:"left",   dataType:"string",  gFilter:"text", minWidth:100, maxWidth:150},
+                          {dataIndx:"qtyOrdered",   title:"Qty<br/>Ordered",      align:"center",  dataType:"float",   gTotal:true, maxWidth:80},
+                          {dataIndx:"qtyOpen",      title:"Qty<br/>Unreceived",   align:"center",  dataType:"float",   gTotal:true, maxWidth:80},
+                          {dataIndx:"scrollSpacer", minWidth:15, maxWidth:15}];
+
+        gGrid.initFormat(gridObj.colModel);
+        gGrid.initFilter(gridObj.colModel);
+
+        var $gridDiv = $j('#product');
+
+        $gridDiv.pqGrid(gridObj);
+
+        gGrid.appendExportLink($gridDiv);
+
+        gGrid.appendButtonClearSelection($gridDiv);
+
+        $gridDiv.on('pqgridrefresh', function(event, ui)
+        {
+            gGrid.refreshTotal($j(this),ui.pageData);
+        });        
+
+        $gridDiv.on('pqgridselectchange',function(event,ui)
+        {
+            $j('#vendor').pqGrid( "setSelection", null );
+            refreshGrid_detail();
+        });
+
+        refreshGrid_product();
+
+        gridObj = null;
+    }
+
+ function refreshGrid_product()
+    {
+        var $gridDiv = $j('#product');
+        $gridDiv.pqGrid('showLoading');
+
+        Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.gcPurchaseOrder_Report.retrieveProducts}',
+            function(result,event){
+                if(event.status){
+                    gGrid.refreshGrid_callback($gridDiv,result);
+                }
+                else{
+                    alert(event.message);
+                }
+                $gridDiv.pqGrid('hideLoading');
+            },
+            {buffer:true, escape:true, timeout:120000});
+
+        filter = null;
+        groupBy = null;
+    }
+
+function initGrid_detail()
+    {
+        var gridObj = {title:"Purchase Order Lines",
+                        collapsible:{on:false,collapsed:false,toggle:false},
+                        columnTemplate: {minWidth:10, sortable:true},
+                        dataModel:{data:null, sorting:'local', location:'local', sortDir:'up', sortIndx:'poNumber'},
+                        detailModel:{cache:false},
+                        dragColumns:{enabled:false},
+                        editable:false,
+                        filterModel:{on:true, mode:'AND', header:true, type:'local'},
+                        freezeCols:0,
+                        freezeRows:0,
+                        height:300,
+                        historyModel:{on:false},
+                        hoverMode:'row',
+                        hwrap:false,
+                        numberCell:{show:true},
+                        pageModel: {type:null},
+                        pasteModel:{on:false},
+                        resizable: true,
+                        roundCorners: false,
+                        scrollModel: {autoFit:true},
+                        selectionModel: {type:null},
+                        showBottom:true,
+                        showHeader:true,
+                        showTitle:true,
+                        showTop:true,
+                        showToolbar:true,
+                        sortable:true,
+                        swipeModel:{on:false},
+                        track:false,
+                        virtualX: false,
+                        //virtualXHeader: false,
+                        virtualY: false,
+                        width:'auto',
+                        wrap:false};
+
+        gridObj.colModel=[{dataIndx:"vendorName",      title:"Vendor",             align:"left",   dataType:"string",  gFilter:"text"},
+                          {dataIndx:"poNumber",        title:"PO Number",          align:"left",   dataType:"string",  gFilter:"text"},
+                          {dataIndx:"lineNumber",      title:"PO Line Number",     align:"left",   dataType:"string",  gFilter:"text"},
+                          {dataIndx:"productName",     title:"Product Name",       align:"left",   dataType:"string",  gFilter:"text"},
+                          {dataIndx:"productCode",     title:"Product Code",       align:"left",   dataType:"string",  gFilter:"text"},
+                          {dataIndx:"qtyOrdered",      title:"Qty <br/> Ordered",  align:"right",  dataType:"float",   gFormat:'number', gTotal:true, maxWidth:80},
+                          {dataIndx:'qtyReceived',     title:'Qty Rec\'d<br/>to inventory', align:"right",   dataType:'float', gFormat:'number',   maxWidth:80, gTotal:true},
+                          {dataIndx:"qtyReceivedNonInventory",  title:"Qty Rec\'d<br/> Non-Inventory",  align:"right",  dataType:"float", gFormat:'number', gTotal:true, maxWidth:100},
+                          {dataIndx:"qtyUnreceived",   title:"Qty <br/> Unrec\'d", align:"right",  dataType:"float", gFormat:'number', gTotal:true, maxWidth:100},
+                          {dataIndx:"unitPrice",       title:"Unit Price",         align:"right",  dataType:"float", gFormat:'money', maxWidth:110, gTotal:false},
+                          {dataIndx:"scrollSpacer", minWidth:15, maxWidth:15}];
+
+        gGrid.initFormat(gridObj.colModel);
+        gGrid.initFilter(gridObj.colModel);
+
+        $j.each(gridObj.colModel, function(i,col)
+        {
+            if(col.dataIndx == 'poNumber')
+            {
+                $j.extend(col,{
+                    render:function(ui)
+                    {
+                        if (ui.rowData.isTotal || !ui.rowData.idProduct) return '';
+
+                        var myHTML = ui.rowData.poNumber;
+                        
+                        if({!$ObjectType.Product2.accessible})
+                            return '<a href=\"/'+ui.rowData.idPurchaseOrder+'\" target=\"_blank\">'+myHTML+'</a>';
+
+                        return myHTML;
+                    }
+                });                 
+            }
+
+            else if(col.dataIndx == 'lineNumber')
+            {
+                $j.extend(col,{
+                    render:function(ui)
+                    {
+                        if (ui.rowData.isTotal || !ui.rowData.idProduct) return '';
+
+                        var myHTML = ui.rowData.lineNumber;
+                        
+                        if({!$ObjectType.Product2.accessible})
+                            return '<a href=\"/'+ui.rowData.idLine+'\" target=\"_blank\">'+myHTML+'</a>';
+
+                        return myHTML;
+                    }
+                });                 
+            }
+
+
+            else if(col.dataIndx == 'productName')
+            {
+                $j.extend(col,{
+                    render:function(ui)
+                    {
+                        if (ui.rowData.isTotal || !ui.rowData.idProduct) return '';
+
+                        var myHTML = ui.rowData.productName;
+                        
+                        if({!$ObjectType.Product2.accessible})
+                            return '<a href=\"/'+ui.rowData.idProduct+'\" target=\"_blank\">'+myHTML+'</a>';
+
+                        return myHTML;
+                    }
+                });                 
+            }
+
+            else if(col.dataIndx == 'productCode')
+            {
+                $j.extend(col,{
+                    render:function(ui)
+                    {
+                        if (ui.rowData.isTotal || !ui.rowData.productCode) return '';
+
+                        var myHTML = ui.rowData.productCode;
+                        
+                        if({!$ObjectType.Product2.accessible})
+                            return '<a href=\"/'+ui.rowData.idProduct+'\" target=\"_blank\">'+myHTML+'</a>';
+
+                        return myHTML;
+                    }
+                });                 
+            }
+        });
+
+        var $gridDiv = $j('#detail');
+
+        $gridDiv.pqGrid(gridObj);
+
+        gGrid.appendExportLink($gridDiv);
+
+        gGrid.appendButtonClearFilters($gridDiv);
+
+        $gridDiv.on('pqgridrefresh', function(event, ui)
+        {
+            gGrid.refreshTotal($j(this),ui.pageData);
+        });
+
+        gridObj = null;
+    }
+
+    function refreshGrid_detail()
+    {
+        var $gridDiv = $j('#detail');
+        $gridDiv.pqGrid('showLoading');
+
+        var filter = {};
+
+        //collect the ids of the selected products
+        var idProductArray = [];
+        $j.each($j('#product').pqGrid( "selection",{type:'row', method:'getSelection'}), function(i,row)
+        {
+            idProductArray.push(row.rowData.idProduct);
+        });
+        if(idProductArray.length > 0)
+        {
+            $j.extend(filter,{'idProduct':idProductArray});
+        }
+
+        //collect the ids of the select warehouses
+        var idvendorArray = [];
+        $j.each($j('#vendor').pqGrid( "selection",{type:'row', method:'getSelection'}), function(i,row)
+        {
+            idvendorArray.push(row.rowData.idVendor);
+        });
+        if(idvendorArray.length > 0)
+        {
+            $j.extend(filter,{'idVendor':idvendorArray});
+        }
+
+        //if no products or warehouses are selected, then empty the grid, otherwise refresh the grid.
+        if(idvendorArray.length == 0 && idProductArray.length == 0)
+        {
+            gGrid.refreshGrid_callback($gridDiv,[]);
+            $gridDiv.pqGrid('hideLoading');
+        }
+        else
+        {
+        //console.log('filter: '+JSON.stringify(filter));
+        Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.gcPurchaseOrder_Report.retrieveDetail}',
+            filter,
+            function(result,event){
+                if(event.status) 
+                {
+                    gGrid.refreshGrid_callback($gridDiv,result);
+                }
+                else 
+                {
+                    alert(event.message);
+                }
+                $gridDiv.pqGrid('hideLoading');
+            },
+            {buffer:true, escape:true, timeout:120000});
+        }
+        filter = null;
+        idProductArray = null;
+        idvendorArray = null;
+    }
+
+</script>
+</apex:page>

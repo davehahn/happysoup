@@ -1,0 +1,21 @@
+
+<div class="logo">
+  <!-- <img src="{{logoUrl}}" /> -->
+</div>
+
+<ul>
+  <li ng-repeat="item in navItems">
+    <a href="#{{item.url}}" ng-class="{'active':activeItem === item.url}">
+      <md-icon>{{item.icon}}</md-icon>
+      <span>{{item.label}}</span>
+    </a>
+  </li>
+  <li>
+    <a href="{{logOutUrl}}">
+      <md-icon>exit_to_app</md-icon>
+      <span>Logout</span>
+    </a>
+  </li>
+</ul>
+
+

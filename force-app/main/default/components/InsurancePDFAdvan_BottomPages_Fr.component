@@ -1,0 +1,460 @@
+<apex:component controller="InsurancePDFComp_Controller">
+	<div class="page-break"></div>
+    <div class="header"></div>
+    <div class="form-bottom-content">
+	    <div style="border: 2px solid black; margin: 0; padding: 10px; line-height: 12px;" class="top-box">
+		    <div style="margin-bottom: 2px;" class="form-large-text bolder center">DÉCLARATION DU DÉBITEUR ET DU CODÉBITEUR</div>
+		    <table class="form-msmall-text justifying" cellspacing="0" cellpadding="0" border="0">
+		    	<tr>
+		    		<td width="39%" style="vertical-align: top;">
+		    			Je comprends que je dois remplir un Questionnaire complémentaire sur la santé (QCS) si :
+		    			<ol style="list-style-type: lower-alpha; margin-left: 10px; margin-top: 0; margin-bottom: 0;">
+		    				<li>le total de ma Somme financée assurée et de la Valeur résiduelle assurée excède :
+		    					<ul style="list-style-type: disc; margin-left: 10px; margin-top: 0; margin-bottom: 0;">
+		    						<li>dans le cadre de l’Assurance vie - 150 000 $ (personnes âgées de 18 à 60 ans) ou 100 000 $ (personnes âgées de 61 à 70 ans); ET/OU</li>
+		    						<li>dans le cadre de l’Assurance MG - 150 000 $ (personnes âgées de 18 à 60 ans); OU</li>
+		    					</ul>
+		    				</li>
+		    				<li>mon Versement mensuel assuré excède :
+		    					<ul style="list-style-type: disc; margin-left: 10px; margin-top: 0; margin-bottom: 0;">
+		    						<li>dans le cadre de l’Assurance invalidité - 2 500 $ (personnes âgés de 18 à 60 ans) ou 1 000 $ (personnes âgés de 61 à 64 ans).</li>
+		    					</ul>
+		    				</li>
+		    			</ol>
+		    		</td>
+		    		<td style="width: 2%">&nbsp;</td>
+		    		<td style="vertical-align: top;">
+		    			En outre, si:
+		    			<ul style="list-style-type: disc; margin-left: 10px; margin-top: 0; margin-bottom: 0;">
+		    				<li>je réponds OUI à l’une ou l’autre des questions sur la santé, ou</li>
+		    				<li>le total de la Somme financée assurée et de la Valeur résiduelle assurée dans le cadre de l’Assurance vie ou MG excède 300 000 $,</li>
+		    			</ul>
+		    			la présente proposition d’assurance sera soumise à la sélection des risques par l’Assureur, et l’approbation écrite de l’Assureur sera requise pour que l’assurance soit en vigueur. L’Assureur peut demander un examen médical ou des tests sans frais pour moi. Les propositions d’assurance qui sont assujetties au QCS peuvent être refusées par l’Assureur au moyen d’un avis écrit envoyé par la poste à l’adresse indiquée dans la présente proposition d’assurance. Les primes payées, s’il en est, seront remboursées à l’Établissement financier.
+		    		</td>
+		    	</tr>
+		    </table>
+		    <br/>
+		    <div class="form-large-text bolder center">CONDITIONS D’ADMISSIBILITÉ, LIMITATIONS ET EXCLUSIONS</div>
+		    <div class="form-small-text bolder center small-top-gap">Veuillez lire le présent document et signer ci-dessous. Il est important que vous établissiez si vous êtes admissible à l’achat de la présente assurance.</div>
+		    <table class="form-msmall-text justifying" cellspacing="0" cellpadding="0" border="0">
+		    	<tr>
+		    		<td width="30%" style="vertical-align: top;">
+		    			Vous êtes admissible :
+		    			<ul class="bottom-content" style="list-style-type: disc; margin-left: 10px; margin-top: 0; margin-bottom: 0;">
+		    				<li>Si la Période d’amortissement maximale de votre prêt n’excède pas 240 mois.</li>
+		    				<li>Si vous avez choisi l’Assurance vie ou Perte d’emploi involontaire, vous reconnaissez être âgé d’au moins 18 ans mais de moins de 71 ans.</li>
+		    				<li>Si vous avez choisi l’Assurance MG, vous reconnaissez être âgé d’au moins 18 ans mais de moins de 61 ans.</li>
+		    				<li>Si vous avez choisi l’Assurance invalidité, vous reconnaissez être âgé d’au moins 18 ans mais de moins de 65 ans.</li>
+		    				<li>Si vous avez choisi l’Assurance invalidité, vous confirmez que :
+		    					<ul style="list-style-type: disc; margin-left: 10px; margin-top: 0; margin-bottom: 0;">
+		    						<li>vous êtes apte à accomplir les fonctions habituelles de votre emploi; ET</li>
+		    						<li>vous détenez un emploi rémunérateur et avez travaillé au moins 23 heures par semaine au cours des 4 dernières semaines (incluant les travailleurs autonomes qui ont un revenu minimal d’entreprise après frais d’exploitation d’au moins 9 000 $ par année); OU</li>
+		    						<li>i) vous avez occupé un emploi rémunérateur Saisonnier pendant au moins 11 semaines consécutives et au moins 25</li>
+		    					</ul>
+		    				</li>
+		    			</ul>
+		    		</td>
+		    		<td width="2%">&nbsp;</td>
+		    		<td width="30%" style="vertical-align: top;">
+		    			<ul style="list-style-type: disc; margin-left: 10px; margin-top: 0; margin-bottom: 0;">
+		    				<li>heures par semaine au cours des 12 derniers mois; ou ii) vous avez versé des cotisations au Compte d’assurance emploi et travaillez pendant le nombre d’heures requis (ce nombre varie selon le lieu de résidence et le taux de chômage de la région) afin d’être éligible aux prestations de la Loi sur l’assurance emploi (Canada).</li>
+		    				<li>Si vous avez choisi l’Assurance pour Perte d’emploi involontaire, vous confirmez que :
+		    					<ul style="list-style-type: disc; margin-left: 10px; margin-top: 0; margin-bottom: 0;">
+		    						<li>vous êtes apte à accomplir les fonctions habituelles de votre emploi; ET</li>
+		    						<li>vous détenez un emploi rémunérateur et avez travaillé au moins 23 heures par semaine au cours des 4 dernières semaines ; ET</li>
+		    						<li>vous n’êtes ni travailleur autonome, ni travailleur saisonnier.</li>
+		    					</ul>
+		    				</li>
+		    			</ul>
+		    			<div>Je déclare avoir pris connaissance de ces conditions et qu’aucune protection ne sera accordée en tout ou en partie si je ne remplis pas les conditions d’admissibilité. Je confirme également que l’information donnée ci-dessus et à la page 1 est correcte et je comprends que toute réponse incorrecte ou fausse déclaration peut entraîner l’annulation du Certificat.</div>
+		    			<div>Je comprends que toute réclamation ayant pour cause directe ou</div>
+		    		</td>
+		    		<td width="2%">&nbsp;</td>
+		    		<td style="vertical-align: top;">
+		    			<div>accessoire une CONDITION PRÉEXISTANTE, telle que décrite ci-dessous, ne sera pas couverte si l’événement faisant l’objet de la réclamation survient dans les 24 mois suivant la Date d’effet de l’assurance sauf pour l’Assurance MG, en vertu de laquelle le cas ne sera jamais couvert.</div>
+		    			<div>Je comprends que les indemnités d’assurance payables en vertu du présent Certificat sont assujetties à toutes les modalités et conditions, y compris les limitations et exclusions décrites dans les présentes.</div>
+		    			<div>ON M’A CONSEILLÉ DE LIRE AU COMPLET LE PRÉSENT CERTIFICAT (PAGES 1 À 4) ET JE COMPRENDS QUE LA PRÉSENTE ASSURANCE EST FACULTATIVE. J’AI LU LA « POLITIQUE DE PROTECTION DES RENSEIGNEMENTS PERSONNELS » ET LA « DÉCLARATION DU DÉBITEUR ET DU CODÉBITEUR », ET JE CONSENS À L’UTILISATION ET À LA DIVULGATION DE MES RENSEIGNEMENTS PERSONNELS.</div>
+		    			<div>Je sais qu’aucune partie n’est autorisée à renoncer aux conditions du présent Certificat ni à les modifier et que le titulaire de la police collective n’est pas un représentant de l’Assureur. J’ai pris connaissance de la Garantie de Remboursement à la page 4.</div>
+		    			<div>Guide de distribution - J’atteste par la présente avoir reçu le Guide de distribution.</div>
+		    			<div>Si vous souhaitez recevoir une autre copie du Guide de distribution, veuillez contacter notre centre administratif.</div>
+		    		</td>
+		    	</tr>
+		    </table>
+		    <div class="form-xsmall-text bolder center">Prendre note que certaines conditions préexistantes ne sont pas couvertes par ce Certificat. Nous vous demandons de prendre connaissance de la définition de Condition préexistante que l’on trouve ci-dessous.</div>
+		    <div class="form-xsmall-text bolder center">Pour tout complément d’information sur les Conditions préexistantes, conditions d’admissibilité, limitations et exclusions, composez le 1 800 761-4655. Pour toute autre demande, composez le numéro figurant à la page 4.</div>
+		    <table style="margin-top: 15px;" cellpadding="0" cellspacing="5" border="0" class="first-form">
+	    		<tr>
+	    			<td width="32%">
+		    			<div class="form-text">X</div>
+		    			<div class="overliner"></div>
+		    			<div class="form-medium-text">DÉBITEUR</div>
+	    			</td>
+	    			<td width="15%">
+		    			<div class="form-text">&nbsp;</div>
+		    			<div class="overliner"></div>
+		    			<div class="form-medium-text">DATE (JJ/MM/AAAA)</div>
+	    			</td>
+	    			<td width="32%">
+		    			<div class="form-text">X</div>
+		    			<div class="overliner"></div>
+		    			<div class="form-medium-text">CODÉBITEUR</div>
+	    			</td>
+	    			<td width="15%">
+		    			<div class="form-text">&nbsp;</div>
+		    			<div class="overliner"></div>
+		    			<div class="form-medium-text">DATE (JJ/MM/AAAA)</div>
+	    			</td>
+	    		</tr>
+    		</table>
+	    </div>
+	    <div style="padding: 2px; line-height: 12px;">
+		    <table class="form-msmall-text justifying" cellspacing="0" cellpadding="0" border="0">
+	    		<tr>
+	    			<td style="width: 48%; ">
+	    				<div>«Nous», «notre» ou «nos» s’entendent de l’Assureur. «Vous», «votre» ou «vos» s’entendent de l’Assuré ou du Proposant. Dans le présent Certificat, les termes commençant par une lettre majuscule ont le sens ou la valeur qui leur est donné sous la rubrique «Définitions» ou à la page 1 du Certificat. Toutes les clauses qui régissent la protection sont énoncées dans les présentes. En contrepartie de la réception du Coût total applicable (et, s’il y a lieu, dès notre approbation), nous vous assurons uniquement pour la protection décrite dans le Certificat. Si aucune prime n’est indiquée ou si le montant d’une prime est nul, cela signifie que vous n’êtes pas couvert par ce type de protection. Votre protection entre en vigueur à la Date d’effet de l’assurance, telle que définie ci-après. Les sommes payables aux termes du présent Certificat sont versées à l’Établissement financier, si un tel établissement est désigné, pour réduire le montant de votre obligation au titre de la Somme financée.Votre Certificat est incessible.</div>
+	    				<div class="small-top-gap form-medium-text bolder">SECTION 1 – DEFINITIONS</div>
+	    				<ol style="list-style-type: decimal; margin-left: 13px; margin-top: 0;">
+	    					<li>
+	    						« Assurance » : la protection d’Assurance vie, Perte d’emploi involontaire, MG et/ou invalidité choisie dans le Certificat.
+	    					</li>
+	    					<li>« Assurance récurrente » : si cette option est choisie à la page 1 du présent Certificat, cela signifie que l’Assurance invalidité prévoit un maximum de six (6) Versements mensuels assurés par réclamation, par Assuré, et que le dossier de demande de réclamation est par la suite fermé. Pour soumettre une demande ultérieure, l’Assuré devra être retourné au travail pour une période minimum de quatre-vingt-dix (90) jours et sera soumis à une nouvelle Période d’attente.</li>
+	    					<li>« Assurance variable » : si cette option est choisie à la page 1 du présent Certificat, cela signifie qu’un maximum de 12 ou 24 Versements mensuels assurés seront versés par Assuré pendant la durée del’Assurance invalidité.</li>
+	    					<li>« Assuré » : le débiteur et le codébiteur qui sont désignés dans le Certificat, qui sont débiteurs au titre de la Somme financée et qui ont choisi l’assurance et qui, le cas échéant, ont reçu de l’Assureur l’approbation écrite de la protection. L’Assuré doit être une personne physique et non pas une société, une compagnie ou une association.</li>
+	    					<li>« Assureur » : Industrielle Alliance, Assurance et services financiers inc.</li>
+	    					<li>« Blessure » : un dommage corporel causé par un accident survenant après la Date d’effet de l’assurance. La blessure doit résulter directement de l’accident, être indépendante de toute autre cause et causer uniquement une Invalidité totale ou un décès.</li>
+	    					<li>« Certificat d’assurance » ou « Certificat » : la présente proposition d’assurance, le QCS (le cas échéant) et les autres documents concernant votre protection qui vous sont délivrés par l’Assureur et qui constitue votre contrat d’assurance.</li>
+	    					<li>« Condition préexistante » :
+	    						<ol style="list-style-type: upper-alpha; margin-left: 13px;">
+		    						<li>relativement à l’Assurance vie et/ou à l’Assurance invalidité, une maladie, une affection, un état ou un trouble mental, nerveux ou psychiatrique pour lequel vous avez reçu, ou une personne diligente aurait reçu, a) dans les douze (12) mois qui précèdent immédiatement la Date d’effet de l’assurance et b) dans les douze (12) mois qui suivent immédiatement la Date d’effet de l’assurance, l’un ou l’autre de ce qui suit : i) un avis médical; ii) un traitement; iii) un service; iv) un médicament sur ordonnance; v) un diagnostic; ou vi) une consultation, y compris une consultation pour investigation, suivi et/ou diagnostic (lorsqu’un diagnostic n’a pas encore été posé).
+		    						</li>
+		    						<li>relativement à l’Assurance MG, une maladie, une affection, un état ou un trouble mental, nerveux ou psychiatrique pour lequel vous avez reçu, ou une personne diligente aurait reçu, avant la Date d’effet de l’Assurance, l’un ou l’autre de ce qui suit : i) un avis médical; ii) un traitement; iii) un service; iv) un</li>
+	    						</ol>
+	    					</li>
+	    				</ol>
+	    			</td>
+	    			<td style="width: 2%;">&nbsp;</td>
+	    			<td style="vertical-align: top;">
+	    				<ol style="list-style-type: decimal; margin-left: 13px; margin-top: 0;">
+							<li></li><li></li><li></li><li></li><li></li><li></li><li></li>
+							<li style="list-style: none;">
+	    						<ol style="list-style-type: upper-alpha; margin-left: 13px;">
+									<li style="list-style: none;">médicament sur ordonnance; v) un diagnostic; ou vi) une consultation, y compris une consultation pour investigation, suivi et/ou diagnostic (lorsqu’un diagnostic n’a pas encore été posé).</li>
+								</ol>
+							</li>
+	    					<li>« Date d’effet de l’assurance » :
+	    						<ol style="list-style-type: lower-alpha; margin-left: 13px;">
+	    							<li>la Date d’effet demandée, si vous n’êtes pas assujetti au QCS; ou</li>
+	    							<li>la Date d’effet demandée, si vous êtes assujetti au QCS, que vous avez répondu « non » à toutes les questions sur la santé et que le total de votre Somme financée assurée et de la Valeur résiduelle assurée dans le cadre de l’Assurance vie ou MG est inférieur à 300 000 $; ou</li>
+	    							<li>si a) et b) ne s’appliquent pas, la date à laquelle nous vous avisons par écrit que votre protection a été approuvée.</li>
+	    						</ol>
+	    						Votre proposition d’assurance sera nulle et sans effet s’il n’est pas satisfait à toutes les exigences de la sélection des risques dans les 90 jours de la signature de cette proposition d’assurance.
+	    					</li>
+	    					<li>« Diagnostic » : le diagnostic certifié d’une maladie ou affection couverte dont souffre l’Assuré, établi par un Spécialiste.</li>
+	    					<li>« Maladie » : une maladie, une affection ou un trouble psychiatrique qui se manifeste pour la première fois après la Date d’effet de l’assurance.</li>
+	    					<li>
+	    						« Maladie Grave » ou « MG » : Diagnostic de l’une ou l’autre des maladies, affections, états ou troubles couverts qui suivent, dont l’apparition survient après l’entrée en vigueur de l’assurance :
+	    						<ol style="list-style-type: upper-alpha; margin-left: 13px;">
+	    							<li>Cancer potentiellement mortel : Diagnostic d’une tumeur maligne caractérisée par la croissance incontrôlée et la propagation de cellules malignes et l’invasion du tissu. Les maladies suivantes NE SONT PAS couvertes :
+	    								<ol style="list-style-type: disc; margin-left: 13px;">
+	    									<li>cancer précoce de la prostate diagnostiqué comme T1 N0 M0 ou stade équivalent;</li>
+	    									<li>lésions précancéreuses;</li>
+	    									<li>tumeurs bénignes et polypes;</li>
+	    									<li>cancer in situ non invasif; tout cancer de la peau autre qu’un mélanome malin propagé dans le derme ou plus profondément;</li>
+	    									<li>et toute tumeur en présence du virus de l’immunodéficience humaine (VIH).</li>
+	    								</ol>
+	    							</li>
+	    							<li>Crise cardiaque (infarctus du myocarde) : la mort d’une partie du muscle cardiaque par suite d’une irrigation sanguine insuffisante de la zone appropriée. Le diagnostic doit être confirmé à la fois par :
+	    								<ol style="list-style-type: decimal; margin-left: 13px;">
+	    									<li>de nouvelles variations électrocardiographiques indicatrices d’un infarctus du myocarde ou par une nouvelle présentation clinique seulement dans les cas où l’ECG ne peut pas être interprété (bloc de branche complet, syndrome de WPW, stimulateur cardiaque), et par</li>
+	    									<li>des modifications caractéristiques des marqueurs biologiques cardiaques (troponine ou CPK ou CPK-Mb) à des niveaux compatibles avec l’infarctus du myocarde aigu.</li>
+	    								</ol>
+	    								Exclusions :
+	    								<ol style="list-style-type: decimal; margin-left: 13px;">
+	    									<li>Crise cardiaque survenant dans les 48 heures qui suivent une intervention de revascularisation non urgente, à moins qu’elle ne soit accompagnée de nouvelles ondes Q pathologiques.</li>
+	    								</ol>
+	    							</li>
+
+	    						</ol>
+	    					</li>
+	    				</ol>
+	    				<br/><br/><br/>
+	    				<div style="border: 1px solid black; padding: 2px; width: 150px; height: 35px; margin-top: -15px; float: right;">
+	    					<div class="form-small-text bolder">N° DE CERTIFICAT</div>
+	    					<div class="form-text">{!formData.certificateNo}</div>
+	    				</div>
+	    			</td>
+	    		</tr>
+	    	</table>
+	    </div>
+	</div>
+	<div class="page-break"></div>
+	<div class="form-bottom-content">
+	    <div style="padding: 2px; line-height: 0.96em; page-break-inside: avoid;">
+		    <table class="form-msmall-text justifying" cellspacing="0" cellpadding="0" border="0">
+	    		<tr>
+	    			<td style="width: 48%; vertical-align: top;">
+	    				<ol style="list-style-type: decimal; margin: 0; margin-left: 15px;">
+	    					<li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li>
+	    					<li style="list-style: none;">
+			    				<ol style="list-style-type: upper-alpha; margin: 0; margin-left: 15px;">
+			    					<li></li>
+			    					<li style="list-style: none;">
+			    						<ol style="list-style-type: decimal; margin: 0; margin-left: 15px;">
+			    							<li></li>
+			    							<li>Crise cardiaque diagnostiquée par toute autre méthode, à moins que le Diagnostic ne soit confirmé de la manière décrite ci-dessus.</li>
+			    						</ol>
+			    					</li>
+			    					<li>Pontage aortocoronarien : une chirurgie cardiaque exécutée pour corriger le rétrécissement ou le blocage d’une ou de plusieurs artères coronaires au moyen de greffes de dérivation. Les techniques non chirurgicales, comme l’angioplastie transluminale, l’embolectomie au laser et autres techniques sans pontage, sont exclues.</li>
+			    					<li>Accident vasculaire cérébral (AVC) : accident vasculaire cérébral aigu produisant une altération du système nerveux et entraînant la paralysie ou un autre déficit neurologique mesurable et objectif qui persiste pendant au moins trente (30) jours après la survenance de l’AVC. Les accidents ischémiques transitoires (AIT) ne sont pas couverts.</li>
+			    					<li>Insuffisance d’un organe principal nécessitant une greffe : insuffisance irréversible du coeur, du foie, de la moelle osseuse, des deux poumons ou des deux reins nécessitant une greffe de l’organe en cause, en raison de laquelle l’Assuré est accepté dans un programme de greffe d’organes reconnu au Canada. L’Assuré doit survivre pendant au moins 30 jours après la date de son inscription au programme de greffe d’organes.</li>
+			    					<li>Paralysie : paralysie résultant de la perte d’usage complète et permanente d’au moins deux membres, sans interruption pendant une période de 90 jours. À la fin de cette période, le Spécialiste doit certifier que la paralysie est complète et permanente.</li>
+			    				</ol>
+			    			</li>
+			    			<li>« Nombre maximum de versements mensuels assurés » : comme choisi à la page 1 du présent Certificat, est le nombre total de Versements mensuels assurés qui sera versé par Assuré pendant la durée de l’assurance pour Perte d’emploi involontaire (si choisie sous Assurance vie) ou de l’Assurance invalidité.</li>
+			    			<li>« Perte d’emploi involontaire » : le fait que vous avez fait l’objet d’une mise à pied ou d’un licenciement qui n’est pas imputable à votre activité, votre inconduite, vos options ou vos choix et qui n’était pas prévu avant ou lors de la Date d’effet de l’assurance.</li>
+			    			<li>« Prêt couvert par l’assurance » : la dette qui est décrite à la page 1 du présent Certificat par la Somme financée assurée et la durée de l’assurance en mois au Taux d’intérêt. Si a) la Somme financée est supérieure à la Somme financée assurée, ou b) si la Période d’amortissement est plus longue que la durée de votre assurance, il se peut que l’indemnité d’Assurance ne règle pas le montant intégral du solde impayé de votre obligation financière.</li>
+			    			<li>« Prêt couvert par l’assurance PLUS » : la dette qui est décrite à la page 1 du présent Certificat par la Somme financée assurée et la Période d’amortissement en mois au Taux d’intérêt. Si la Somme financée est plus élevée que la Somme financée assurée, il se peut que l’indemnité d’Assurance ne règle pas le montant intégral du solde impayé de votre obligation financière.</li>
+			    			<li>
+			    				« Proposant » : le débiteur et/ou le codébiteur nommé(s) dans la présente proposition d’assurance, qui :
+			    				<ol style="list-style-type: lower-alpha; margin: 0; margin-left: 15px;">
+			    					<li>est/sont débiteur(s) au titre de la Somme financée,</li>
+			    					<li>remplit/remplissent les conditions d’admissibilité,</li>
+			    					<li>est/sont assujetti(s) au QCS, et</li>
+			    					<li>a/ont acquitté la prime exigible pour la protection choisie dans la proposition d’assurance.</li>
+			    				</ol>
+			    				Dès l’approbation de la protection, le Proposant devient l’Assuré.
+			    			</li>
+			    			<li>« Saisonnier » : à l’égard d’un emploi, un emploi dont la fréquence est limitée en raison des conditions du temps ou d’autres conditions de la nature, à l’exception des emplois limités par la disponibilité du travail.</li>
+			    			<li>« Somme financée » : la dette décrite à la page 1 du présent Certificat, payable en tout ou en partie par versements, qui résulte de votre dette envers l’Établissement financier, si un tel établissement est désigné.</li>
+			    			<li>« Spécialiste » : un médecin (autre que l’Assuré, qu’un parent de ce dernier ou qu’un de ses associés) autorisé et pratiquant au Canada, dont la pratique est limitée à la branche particulière de la médecine qui se rapporte à la maladie ou affection couverte applicable.</li>
+			    			<li>« Totalement invalide » ou « Invalidité totale » : votre incapacité, due uniquement à une Maladie ou à une Blessure, d’accomplir toutes les tâches de votre travail. Après avoir été Totalement invalide pendant une période de 12 mois consécutifs (plus toute Période d’attente), l’Invalidité totale s’entend de votre incapacité, due uniquement à une Maladie ou à une Blessure, d’accomplir toutes les tâches d’un travail pour lequel vous êtes ou pouvez devenir raisonnablement qualifié par vos études, votre formation ou votre expérience. Vous n’êtes pas Totalement invalide si vous travaillez à plein temps ou à temps partiel ou si vous êtes à la retraite. Le manque de travail ne constitue pas une Invalidité totale pas plus qu’il ne vous donne droit à un Versement mensuel assuré.</li>
+			    		</ol>
+	    				<div class="small-top-gap form-medium-text bolder">SECTION 2 – ASSURANCE VIE</div>
+	    				<div class="small-top-gap form-small-text bolder">L’assurance pour Perte d’emploi involontaire ne peut pas être souscrite sur base indépendante.</div>
+	    				<div>Aux clients qui ont choisi ‘l’Assurance vie‘ ou ‘l’Assurance vie + Perte d’emploi involontaire‘ : en cas de votre décès par suite d’une Maladie ou de Blessures, nous paierons 1) le solde impayé de votre Prêt couvert par l’assurance à la date du décès, plus 2) la valeur actualisée de la Valeur résiduelle assurée si vous avez choisi cette protection.</div>
+	    				<div>Aux clients qui ont choisi `l’Assurance vie PLUS` ou `l’Assurance vie PLUS + Perte d’emploi involontaire` : en cas de votre décès par suite d’une Maladie ou de Blessures, nous paierons 1) le solde impayé du Prêt couvert par l’assurance PLUS à la date du décès.</div>
+	    				<div>Aux clients qui ont choisi ‘l’Assurance vie + Perte d’emploi involontaire‘ ou ‘l’Assurance vie PLUS + Perte d’emploi involontaire‘: en cas de Perte d’emploi involontaire durant un nombre de jours consécutifs supérieur à la Période d’attente, nous effectuerons votre Versement mensuel assuré pendant la durée de la Perte d’emploi involontaire, à terme échu par Versements mensuels, sous réserve de la Période d’attente. Le versement sera calculé à compter du lendemain de la Période d’attente. Les Versements mensuels assurés cesseront à la première des éventualités suivantes : a) dès que vous ne subirez plus une Perte d’emploi involontaire; b) le Nombre maximum de versements mensuels assurés aura été versé; c) dès la Cessation de l’assurance, telle qu’indiquée à la page 4. La somme payée pour les périodes de Perte d’emploi involontaire inférieures à un mois sera calculée à raison d’un taux journalier de 1/30 du Versement mensuel assuré. Après la Période d’attente, les périodes successives de Perte d’emploi involontaire séparées par moins d’un mois d’emploi continu sont considérées comme la continuation d’une période de Perte d’emploi involontaire et ne sont pas assujetties à une nouvelle Période d’attente. Nous ne paierons aucune indemnité d’Assurance pour une dette qui est impayée au titre de la Somme financée à la Date d’échéance de l’assurance.</div>
+	    				<div>
+	    					Quoi qu’il en soit, nous ne paierons pas plus que le solde du principal dû à la date du décès.
+	    				</div>
+	    				<div class="small-top-gap form-medium-text bolder">SECTION 3 – ASSURANCE MALADIE GRAVE (MG)</div>
+	    				<div>Aux clients qui ont choisi l’Assurance MG : si l’on vous diagnostique une MG, nous paierons 1) le solde impayé de votre Prêt couvert par l’assurance à la date à laquelle la MG a été diagnostiquée, plus 2) la valeur actualisée de la Valeur résiduelle assurée si vous avez choisi cette protection.</div>
+	    				<div>Aux clients qui ont choisi l’Assurance MG PLUS : si l’on vous diagnostique une MG, nous paierons le solde impayé du Prêt couvert par l’Assurance PLUS à la date à laquelle la MG a été diagnostiquée.</div>
+	    			</td>
+	    			<td style="width: 2%;">&nbsp;</td>
+	    			<td style="vertical-align: top;">
+	    				<div>L’Assureur paiera une indemnité pour MG lorsqu’il aura reçu une preuve satisfaisante que la MG est survenue et a été diagnostiquée pour la première fois alors que l’Assurance était en vigueur et qu’elle ne résulte pas d’une des cause listées à la section 5 (LIMITATIONS ET EXCLUSIONS).</div>
+	    				<div>Quoi qu’il en soit, nous ne paierons pas plus que le solde du principal dû à la date du Diagnostic.</div>
+	    				<div>Chaque certificat d’assurance délivré par l’Assureur donne droit à une indemnité pour une seule MG.</div>
+	    				<div class="small-top-gap form-medium-text bolder">SECTION 4 – ASSURANCE INVALIDITÉ – ACCIDENT ET MALADIE</div>
+	    				<div>Si vous êtes Totalement invalide en raison de Blessures ou de Maladies durant un nombre de jours consécutifs supérieur à la Période d’attente, nous effectuerons votre Versement mensuel assuré pendant la durée de l’Invalidité totale, à terme échu par Versements mensuels, sous réserve de la Période d’attente. Si vous avez choisi une période d’attente avec indemnisation rétroactive, le versement sera calculé à compter du premier jour d’Invalidité totale. Si vous avez choisi une période d’attente avec délai de carence, le versement sera calculé à compter du lendemain de la Période d’attente.</div>
+	    				<div>Les Versements mensuels assurés cesseront à la première des éventualités suivantes : a) dès que vous ne serez plus Totalement invalide; ou b) dès la Cessation de l’assurance, telle qu’indiquée à la page 4 ou; c) si l’option Assurance variable a été choisie, lorsque le Nombre maximum de versements mensuels assurés auront été versés; ou d) si l’option Assurance récurrente a été choisie, lorsque l’équivalent de six Versements mensuels assurés pour une réclamation auront été versés. La somme payée pour les périodes d’Invalidité totale inférieures à un mois sera calculée à raison d’un taux journalier de 1/30 du Versement mensuel assuré.</div>
+	    				<div>Après la Période d’attente, les périodes successives d’Invalidité totale causées par la même Maladie ou Blessure et séparées par moins de quatre-vingt-dix (90) jours d’emploi continu sont considérées comme la continuation d’une période d’Invalidité totale et ne sont pas assujetties à une nouvelle Période d’attente. Au-delà de quatrevingt-dix (90) jours d’emploi continu, elles seront considérées comme étant une nouvelle réclamation et elles seront soumises à une nouvelle Période d’attente.</div>
+	    				<div>Nous ne paierons aucune indemnité d’Assurance invalidité pour une dette qui est impayée au titre de la Somme financée à la Date d’échéance de l’assurance.</div>
+	    				<div class="small-top-gap form-medium-text bolder">SECTION 5 – LIMITATIONS ET EXCLUSIONS</div>
+	    				<div class="small-top-gap form-small-text bolder">Limitations et exclusions générales applicables à tous les types de protections :</div>
+	    				Aucune indemnité ne sera versée aux termes du présent Certificat si votre demande d’indemnité a pour cause directe ou accessoire l’un des points suivants :
+	    				<ol style="list-style-type: lower-alpha; margin: 0; margin-left: 13px;">
+	    					<li>une Condition préexistante, ou découle directement ou indirectement d’un traitement relatif à une Condition préexistante. Cette exclusion ne s’applique que si l’événement pour lequel la réclamation a été faite survient dans les 24 mois suivant la Date d’effet de l’assurance, sauf pour l’Assurance MG, en vertu de laquelle le cas ne sera jamais couvert;</li>
+	    					<li>une automutilation volontaire,</li>
+	    					<li>une contamination nucléaire, chimique ou biologique;</li>
+	    					<li>la guerre ou un fait de guerre, que celle-ci soit déclarée ou non;</li>
+	    					<li>le suicide survenant dans les deux années qui suivent immédiatement la Date d’effet de l’assurance;</li>
+	    					<li>la participation directe ou indirecte à un acte criminel, ou toute tentative de perpétration d’une infraction criminelle, y compris mais ne se limitant pas à la conduite d’un véhicule motorisé au moment où la concentration d’alcool dans 100 millilitres du sang de l’Assuré excède 80 milligrammes;</li>
+	    					<li>la consommation chronique ou excessive d’alcool;</li>
+	    					<li>l’usage de drogues ou de substances, mis à part l’usage de drogues réglementées prescrites par un médecin et sur ses conseils;</li>
+	    					<li>une grossesse, un accouchement ou une interruption de grossesse; ou</li>
+	    					<li>la chirurgie esthétique ou élective.</li>
+	    				</ol>
+	    				<br/>
+				    	<div class="small-top-gap form-small-text bolder underliner">Limitations et exclusions particulières à la protection d’assurance pour Perte d’emploi involontaire:</div>
+				    	Outre les limitations et exclusions générales énumérées ci-dessus, aucune prestation ne sera payable pour l’assurance pour Perte d’emploi involontaire résultant directement ou indirectement de :
+				    	<ol style="list-style-type: lower-alpha; margin: 0; margin-left: 13px;">
+	    					<li>perte d’emploi involontaire survenant dans les 90 jours suivant la Date d’effet de l’assurance;</li>
+	    					<li>retraite, préretraite ou réception d’indemnité de retraite des régimes de pensions du Canada ou du Québec;</li>
+	    					<li>démission volontaire;</li>
+	    					<li>tromperie, fraude, conduite criminelle, conflit d’intérêts, faute intentionnelle ou refus d’exécuter ses fonctions professionnelles;</li>
+	    					<li>lock-out ou grève;</li>
+	    					<li>emploi à son compte ou Saisonnier;</li>
+	    					<li>échec de la réélection de l’Assuré à son poste de représentant élu municipal, provincial ou fédéral, ou la résiliation de ce poste;</li>
+	    					<li>expiration d’un contrat de travail de durée déterminée.</li>
+	    				</ol>
+	    				Outre ces exclusions, si la Perte d’emploi involontaire survient dans les 12 mois qui suivent la Date d’effet de l’assurance, aucune prestation ne sera payable pour l’assurance pour Perte d’emploi involontaire résultant directement ou indirectement d’un(e) :
+				    	<ol style="list-style-type: lower-alpha; margin: 0; margin-left: 13px;">
+	    					<li>programme de réduction du personnel annoncé par un employeur avant la Date d’effet de l’assurance;</li>
+	    					<li>mise à pied qui, d’une manière générale ou particulière, vise le poste d’un Assuré et qui est entreprise avant la Date d’effet de l’assurance; ou</li>
+	    					<li>perte d’emploi involontaire au titre de l’annonce d’une possible Perte d’emploi involontaire faite avant la Date d’effet de l’assurance.</li>
+	    				</ol>
+				    	<div class="small-top-gap form-small-text bolder underliner">Limitations et exclusions particulières à la protection d’Assurance Maladie Grave :</div>
+				    	Outre les limitations et exclusions générales énumérées ci-dessus, aucune prestation pour MG ne sera versée si :
+				    	<ol style="list-style-type: lower-alpha; margin: 0; margin-left: 13px;">
+				    		<li>l’Assuré décède moins de 30 jours après avoir reçu un diagnostic de MG;</li>
+				    		<li>l’on diagnostique à l’Assuré un cancer, si des signes et/ou des symptômes ou des problèmes médicaux se manifestent ou si des investigations menant au diagnostic d’un cancer couvert ou exclu en vertu de la police collective sont entreprises dans les quatre-vingt-dix (90) jours qui suivent la Date d’effet de l’assurance.</li>
+				    	</ol>
+				    	<div style="height: 80px;">&nbsp;</div>
+						<div style="border: 1px solid black; padding: 2px; width: 150px; height: 35px; float: right;">
+							<div class="form-small-text bolder">N° DE CERTIFICAT</div>
+							<div class="form-text">{!formData.certificateNo}</div>
+						</div>
+	    			</td>
+				</tr>
+			</table>
+	    </div>
+	</div>
+	<div class="page-break"></div>
+	<div class="form-bottom-content">
+	    <div style="padding: 2px; line-height: 0.96em; page-break-inside: avoid;">
+		    <table class="form-msmall-text justifying" cellspacing="0" cellpadding="0" border="0">
+	    		<tr>
+	    			<td style="width: 48%; ">
+	    				<div class="small-top-gap form-medium-text bolder">SECTION 6 – LIMITATIONS SPÉCIALES</div>
+	    				Outre les limitations et exclusions énumérées ci-dessus, les limitations spéciales suivantes s’appliquent:
+	    				<ol style="list-style-type: decimal; margin: 0; margin-left: 15px;">
+	    					<li>
+	    						Advenant le décès simultané du débiteur et du codébiteur qui sont assurés tous les deux, l’indemnité d’Assurance vie sera versée uniquement pour le débiteur.
+	    					</li>
+	    					<li>Les indemnités d’Assurance vie et les indemnités d’Assurance MG payables aux termes du présent Certificat combiné à tout certificat d’assurance collective que nous vous avons délivré ne dépasseront pas 1 000 000 $. En pareil cas, l’obligation aux termes du présent Certificat sera rajustée au prorata de l’ensemble des certificats d’assurance collective.</li>
+	    					<li>Si le débiteur et le codébiteur sont Totalement invalides ou confrontés à une Perte d’emploi involontaire en même temps, le Versement mensuel assuré sera effectué uniquement pour le débiteur. Un seul Versement mensuel assuré par mois sera effectué dans le cas de toute indemnité demandée dans le cadre de l’Assurance invalidité ou de l’Assurance vie.</li>
+	    					<li>Si l’option « Assurance récurrente » est choisie à la page 1 du présent Certificat, le montant total des prestations payables par réclamation doit se limiter à six (6) fois le Versement mensuel assuré indiqué dans le présent Certificat. Dans le cas d’une demande ultérieure, l’Assuré devra être retourné au travail pour une période minimum de quatre-vingt-dix (90) jours.</li>
+	    					<li>
+	    						Si votre Invalidité totale a pour cause directe ou accessoire :
+	    						<ol style="list-style-type: lower-alpha; margin: 0; margin-left: 15px;">
+	    							<li>une condition ou un trouble mental, nerveux ou psychiatrique, après une période d’indemnités de trois mois, les paiements ne seront versés que si vous voyez régulièrement un Spécialiste licencié tel qu’un psychiatre, un psychologue ou un neurologue et la période d’indemnité n’excèdera jamais six (6) mois par réclamation.</li>
+	    							<li>une maladie ou un trouble du cou ou du dos, y compris mais ne se limitant pas à la colonne lombaire, thoracique ou cervicale, après une période d’indemnité de deux mois, les paiements ne seront versés que si vous êtes sous les soins d’un Spécialiste licencié tel qu’un neurologue, un neurochirurgien, un physiatre, un chirurgien orthopédiste ou un rhumatologue et la période d’indemnité n’excèdera jamais six (6) mois par réclamation.</li>
+	    						</ol>
+	    					</li>
+	    					<li>L’âge du Proposant le plus âgé détermine le Montant maximal d’assurance.</li>
+	    				</ol>
+	    				<div class="small-top-gap form-medium-text bolder">SECTION 8 – CONDITIONS DE PAIEMENT</div>
+	    				<ol style="list-style-type: decimal; margin: 0; margin-left: 15px;">
+	    					<li>Les formulaires de demande d’indemnité doivent être remplis et soumis à l’Assureur dans les 90 jours qui suivent la date du décès, de la Perte d’emploi involontaire, du Diagnostic de la MG ou de l’Invalidité totale faisant l’objet de la demande et, par la suite, selon nos exigences. S’il n’est pas raisonnablement possible de remplir et de soumettre les formulaires susdits dans les 90 jours, ceux-ci doivent être présentés dès qu’il est raisonnablement possible de le faire, mais au plus tard dans un délai de deux ans à compter du moment où ils sont normalement requis. Si nous recevons les formulaires de demandes d’indemnité pour invalidité ou Perte d’emploi involontaire plus de 90 jours après le début de l’Invalidité totale ou de la Perte d’emploi involontaire, la rétroactivité des indemnités sera limitée à la période de 90 jours qui précède la date de réception des formulaires de demande d’indemnité. Il incombe à l’Assuré d’assumer tous les frais requis pour établir la preuve de la demande d’indemnité.</li>
+	    					<li>Dans le cadre du traitement de toute demande d’indemnité, nous avons le droit d’exiger une preuve satisfaisante d’admissibilité et des éléments suivants : a) de la date: 1) de naissance, 2) du décès, 3) de la Perte d’emploi involontaire, 4) de la MG, 5) de l’Invalidité totale; et b) des circonstances ayant causé ou ayant contribué à la demande d’indemnité; et c) une description détaillée de tous les traitements reçus avant et après la Date d’effet de l’assurance et une preuve de l’Établissement financier que le montant d’assurance n’a pas été payé, modifié ou révisé.</li>
+	    					<li>Vous devez être suivi régulièrement et traité par un médecin dûment qualifié (docteur en médecine), à notre satisfaction, pendant que vous êtes Totalement invalide.</li>
+	    					<li>Nous aurons le droit de vous faire examiner par un médecin dûment qualifié de notre choix aussi souvent que nous l’exigerons d’une manière raisonnable durant la période pour laquelle des indemnités d’Assurance invalidité sont demandées. Si vous omettez ou négligez de subir un tel examen dans un délai raisonnable, nous serons en droit de mettre fin au paiement de votre Assurance invalidité.</li>
+	    					<li>Il vous incombe d’effectuer les Versements mensuels qui viennent à échéance pendant que nous procédons à l’examen de la demande d’indemnité, sujet à notre remboursement par l’intermédiaire de l’Établissement financier pour la période durant laquelle nous sommes tenus du paiement des Versements mensuels assurés. Nous ne paierons aucun versement arriéré ni aucuns frais d’intérêt supplémentaires.</li>
+	    					<li>Nous ne paierons aucun versement arriéré ni aucun intérêt additionnel au titre de la Somme financée à la date du décès, de la Perte d’emploi involontaire, du Diagnostic de MG ou de l’Invalidité totale.</li>
+	    					<li>Dans le cas où vous ne rempliriez pas les conditions d’admissibilité pour souscrire à l’assurance, notre seule obligation sera de rembourser la prime qui a été acquittée. Ce remboursement sera envoyé à l’Établissement financier.</li>
+	    					<li>Pour recevoir une prestation en cas de Perte d’emploi involontaire, l’Assuré doit en outre respecter les conditions suivantes :
+	    						<ol style="list-style-type: lower-alpha; margin: 0; margin-left: 13px;">
+	    							<li>soumettre, immédiatement après être devenu admissible, une demande de prestations de chômage en vertu de la Loi sur l’assurance-emploi (Canada);</li>
+	    							<li>être admissible à des prestations en vertu de la Loi sur l’assurance-emploi (Canada);</li>
+	    							<li>chercher activement un emploi pendant la durée de la Perte d’emploi involontaire;</li>
+	    							<li>soumettre chaque semaine les copies des relevés de prestations reçues en vertu de la Loi sur l’assurance-emploi (Canada).</li>
+	    						</ol>
+	    					</li>
+	    				</ol>
+	    			</td>
+	    			<td style="width: 2%;">&nbsp;</td>
+	    			<td style="vertical-align: top;">
+	    				<div class="small-top-gap form-medium-text bolder">SECTION 9 – CESSATION DE L’ASSURANCE</div>
+	    				<ol style="list-style-type: decimal; margin: 0; margin-left: 13px;">
+	    					<li>Le présent Certificat prendra fin à l’égard de tous les Assurés quand surviendra l’un des événements suivants:
+	    						<ol style="list-style-type: lower-alpha; margin: 0; margin-left: 13px;">
+	    							<li>l’acquittement de la dette relative à la Somme financée;</li>
+	    							<li>la Date d’échéance de l’assurance;</li>
+	    							<li>la prolongation des périodes de paiement ou l’augmentation de la somme payable au titre de la Somme financée (sous réserve du paragraphe 3 du présent article);</li>
+	    							<li>la demande formelle, par l’Établissement financier, du paiement du montant intégral dû au titre de la Somme financée par suite de manquement de votre part;</li>
+	    							<li>la reprise des biens faisant l’objet de la Somme financée, ou si ces biens font l’objet d’une action en justice;</li>
+	    							<li>la réception par nous d’un avis écrit, signé par le débiteur et par le codébiteur, s’il en est, indiquant que vous désirez mettre fin à l’assurance;</li>
+	    							<li>le paiement d’un remboursement de prime, le cas échéant, aux termes du paragraphe 4 du présent article;</li>
+	    							<li>la date du décès du débiteur assuré en vertu de l’assurance individuelle, ou du débiteur et du codébiteur assurés en vertu de l’assurance conjointe; ou</li>
+	    							<li>le paiement par nous de l’indemnité d’Assurance vie, ou de MG.</li>
+	    						</ol>
+	    					</li>
+	    					<li>L’Assurance invalidité (si choisie) prendra fin à l’égard de tous les Assurés dès que le Maximum Global d’indemnités aux termes de ce Certificat et de tout certificat d’assurance émis par nous aura été versé.</li>
+	    					<li>Les protections spécifiques prendront fin à l’égard d’un Assuré quand surviendra l’un des événements suivants:
+	    						<ol style="list-style-type: lower-alpha; margin: 0; margin-left: 13px;">
+	    							<li>l’Assurance vie (si choisie) prendra fin à l’égard d’un Assuré à son 75e anniversaire de naissance;</li>
+	    							<li>l’Assurance MG (si choisie) prendra fin à l’égard d’un Assuré à son 65e anniversaire de naissance;</li>
+	    							<li>l’Assurance invalidité (si choisie) prendra fin à l’égard d’un Assuré à son 70e anniversaire de naissance;</li>
+	    							<li>l’Assurance invalidité et/ou Perte d’emploi involontaire (si choisie(s)) prendront fin à l’égard d’un Assuré à la date de son départ en retraite d’un emploi régulier ou Saisonnier;</li>
+	    							<li>l’Assurance invalidité (si choisie avec l’option Assurance variable) prendra fin à l’égard d’un Assuré dès que le Nombre maximum de versements mensuels assurés auront été versés;</li>
+	    							<li>l’assurance pour Perte d’emploi involontaire (si choisie) prendra fin à l’égard d’un Assuré dès que le Nombre maximum de versements mensuels assurés auront été versés.</li>
+	    						</ol>
+	    					</li>
+	    					<li>Sur demande écrite de votre part au moment du refinancement de la Somme financée, nous pourrons à notre gré continuer d’offrir la protection prévue par le présent Certificat. Si nous offrons une telle protection, la Date d’effet et la Date d’échéance de l’assurance, les montants d’assurance et toutes les autres clauses et conditions demeureront inchangés.</li>
+	    					<li>
+	    						<div>S’il est mis fin à l’assurance prévue par le présent Certificat avant sa Date d’échéance, vous devez demander par écrit le paiement d’un remboursement de prime. Le remboursement de prime NE SERA PAS calculé au prorata; il correspondra à la provision actuarielle constituée pour votre Certificat, moins les frais d’administration (75 $) et moins toutes les indemnités payées. La demande de remboursement de prime doit être soumise dans les 180 jours qui suivent la résiliation de l’assurance sinon vous pourriez vous voir imposer des frais d’administration supplémentaire.</div>
+	    						<div>Si la dette relative à la Somme financée est toujours impayée à la date de la Cessation, le remboursement de prime sera payé conjointement à vous-même et à l’Établissement financier. Si la Cessation de l’assurance est due aux cas décrits aux alinéas 1.d) ou e) du présent article, le remboursement de prime sera payé uniquement à l’Établissement financier. Aucun remboursement de prime ne sera payé si nous versons l’indemnité d’Assurance vie ou d’Assurance MG ou si le montant est inférieur à 5 $.</div>
+	    					</li>
+	    				</ol>
+				    	<br/>
+				    	<div class="small-top-gap form-medium-text bolder">COORDONNÉES DE L’ASSUREUR</div>
+				    	<div class="small-top-gap">C.P. 5900, Vancouver, (Colombie-Britannique), V6B 5H6</div>
+				    	<div>
+				    		<table width="90%" cellpadding="0" cellspacing="0">
+				    			<tr>
+				    				<td>Administration:</td>
+				    				<td>1-877-671-9009 (Tél.)</td>
+				    				<td>&nbsp;</td>
+				    			</tr>
+				    			<tr>
+				    				<td>Réclamations:</td>
+				    				<td>1-800-549-7227 (Tél.)</td>
+				    				<td>1 (604) 733-9519 (Télécopieur)</td>
+				    			</tr>
+				    			<tr>
+				    				<td>Annulations:</td>
+				    				<td>1-855-766-8239 (Tél.)</td>
+				    				<td>1 (450) 671-2525 (Télécopieur)</td>
+				    			</tr>
+				    			<tr>
+				    				<td>&nbsp;</td>
+				    				<td>cancellation@ia.ca (Courriel)</td>
+				    				<td>&nbsp;</td>
+				    			</tr>
+				    			<tr><td colspan="3">Pour des informations au sujet des procédures de plainte, veuillez visiter :</td></tr>
+				    			<tr><td colspan="3">www.iavag.ca/plaintes</td></tr>
+				    		</table>
+				    	</div>
+				    	<br/>
+				    	<div style="border: 2px solid black; padding: 5px;">
+				    		<div class="form-medium-text bolder">GARANTIE DE REMBOURSEMENT</div>
+				    		Après la signature du présent Certificat, vous disposez d’un délai de vingt (20) jours pour décider si vous désirez toujours souscrire à la protection. Si ce n’est pas le cas, veuillez renvoyer le Certificat à l’Assureur ou au titulaire de la police collective auprès duquel vous l’avez obtenu. Nous annulerons votre protection à compter de la Date d’effet de l’assurance, et nous rembourserons les primes acquittées à vous-même et/ou à l’Établissement financier désigné dans le Certificat.
+				    	</div>
+				    	<p>
+				    		<div class="form-medium-text bolder">LIMITES D’ACTION</div>
+				    		<div>Toute action ou procédure judiciaire intentée contre un Assureur en vue de recouvrir des sommes payables en vertu du contrat d’assurance est réputée nulle et non avenue à moins que l’action ou la procédure judiciaire n’ait été déposée dans le délai spécifié dans la Loi sur les assurances ou autres lois applicables.</div>
+				    	</p>
+	    			</td>
+				</tr>
+			</table>
+			<br/><br/><br/><br/><br/>
+			<div class="overliner small-top-gap"></div>
+			<div class="justifying form-medium-text small-top-gap">
+				<div>Je comprends en outre que les indemnités d’assurance payables aux termes du présent Certificat sont assujetties aux conditions d’admissibilité, aux conditions générales, aux définitions et aux exclusions décrites dans le présent Certificat et que <span class="bolder">LES CONDITIONS PRÉEXISTANTES NE SONT PAS COUVERTES SI L’ÉVÉNEMENT POUR LEQUEL LA RÉCLAMATION A ÉTÉ FAITE SURVIENT DANS LES 24 MOIS SUIVANT LA DATE D’EFFET DE L’ASSURANCE SAUF POUR L’ASSURANCE MG, EN VERTU DE LAQUELLE LE CAS NE SERA JAMAIS COUVERT. IMPORTANT</span></div>
+				<div>Je reconnais que j’ai lu la description des protections qui apparaît dans les 4 pages du présent Certificat et j’accepte les dispositions de ces protections. Je reconnais en outre que je ne suis pas couvert par les protections pour lesquelles aucune prime n’est indiquée.</div>
+			</div>
+			<table style="margin-top: 30px;" cellpadding="0" cellspacing="5" border="0" class="first-form">
+	    		<tr>
+	    			<td width="25%">
+		    			<div class="form-text">X</div>
+		    			<div class="overliner"></div>
+		    			<div class="form-small-text">DÉBITEUR</div>
+	    			</td>
+	    			<td width="15%">
+		    			<div class="form-text">&nbsp;</div>
+		    			<div class="overliner"></div>
+		    			<div class="form-small-text">DATE (JJ/MM/AAAA)</div>
+	    			</td>
+	    			<td width="25%">
+		    			<div class="form-text">X</div>
+		    			<div class="overliner"></div>
+		    			<div class="form-small-text">CODÉBITEUR</div>
+	    			</td>
+	    			<td width="15%">
+		    			<div class="form-text">&nbsp;</div>
+		    			<div class="overliner"></div>
+		    			<div class="form-small-text">DATE (JJ/MM/AAAA)</div>
+	    			</td>
+	    			<td>
+						<div style="border: 1px solid black; padding: 2px; width: 150px; height: 35px; float: right;">
+							<div class="form-small-text bolder">N° DE CERTIFICAT</div>
+							<div class="form-text">{!formData.certificateNo}</div>
+						</div>	    				
+	    			</td>
+	    		</tr>
+	    	</table>
+	    </div>
+	</div>
+</apex:component>

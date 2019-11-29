@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>Legend_Letterhead</letterhead>
+    <name>5) 1 Month Follow Up - Floor Contact</name>
+    <style>freeForm</style>
+    <subject>Legend Boats - Get on the Water</subject>
+    <textOnly>Hi {!Account.FirstName},
+
+A month has passed since I had the opportunity to present you our line of products.  I hope you can appreciate my persistence in trying to help you find the right boat.
+
+As a Memory Maker, one of the things I love is the opportunity to show our product line to clients.  I appreciate you considering Legend to help you get on the water.
+
+If you are still interested in owning a boat, I am here to help.  If you are no longer in the market or the time frame for boat ownership has changed, please let me know.
+
+Thanks for your time and I look forward to hearing from you.
+
+
+Regards,
+
+
+{!User.Name}
+{!User.Title}
+
+{!User.Email}
+{!User.Phone}
+legendboats.com
+
+{!User.Address}</textOnly>
+    <type>html</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

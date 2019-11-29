@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Insurance_Item_Total__c</fullName>
+    <description>Total of all insurance items - pre tax</description>
+    <externalId>false</externalId>
+    <label>Insurance_Item_Total</label>
+    <summarizedField>AcctSeed__Project_Task__c.Order_Item_Total__c</summarizedField>
+    <summaryFilterItems>
+        <field>AcctSeed__Project_Task__c.IsInsurance__c</field>
+        <operation>equals</operation>
+        <value>True</value>
+    </summaryFilterItems>
+    <summaryForeignKey>AcctSeed__Project_Task__c.AcctSeed__Project__c</summaryForeignKey>
+    <summaryOperation>sum</summaryOperation>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Summary</type>
+</CustomField>

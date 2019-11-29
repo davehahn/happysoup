@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Parent_Product__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <description>The Product the Fee is being assigned to.</description>
+    <externalId>false</externalId>
+    <label>Parent Product</label>
+    <lookupFilter>
+        <active>false</active>
+        <filterItems>
+            <field>Product2.RecordType.Name</field>
+            <operation>equals</operation>
+            <value>Fees</value>
+        </filterItems>
+        <isOptional>false</isOptional>
+    </lookupFilter>
+    <referenceTo>Product2</referenceTo>
+    <relationshipLabel>Fee Products</relationshipLabel>
+    <relationshipName>Parent_Product_Fee_Maps</relationshipName>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

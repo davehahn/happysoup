@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>AcctSeed__Default_Cash_Disbursement_Category__c</fullName>
+    <deleteConstraint>Restrict</deleteConstraint>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <inlineHelpText>Used to categorize Cash Disbursements on the Cash Flow statement.</inlineHelpText>
+    <label>Default Cash Disbursement Category</label>
+    <lookupFilter>
+        <active>true</active>
+        <filterItems>
+            <field>AcctSeed__GL_Account__c.AcctSeed__Type__c</field>
+            <operation>equals</operation>
+            <value>Cash Flow</value>
+        </filterItems>
+        <isOptional>true</isOptional>
+    </lookupFilter>
+    <referenceTo>AcctSeed__GL_Account__c</referenceTo>
+    <relationshipLabel>Accounting Settings (Default Cash Disburs. Cash Flow Category)</relationshipLabel>
+    <relationshipName>Accounting_Settings_CF_CD</relationshipName>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

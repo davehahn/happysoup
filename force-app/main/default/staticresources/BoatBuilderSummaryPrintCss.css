@@ -1,0 +1,226 @@
+@import url(https://fonts.googleapis.com/css?family=Lato:300,400);
+
+body {
+  font-family: 'Lato', sans-serif;
+}
+
+h4 {
+  display:block !important;
+  width:100%;
+  text-align:center;
+  padding-bottom:5px;
+  padding-top:10px;
+  opacity:1;
+}
+
+h4 img {
+  max-width:35% ;
+  min-width:300px ;
+  margin-bottom:10px;
+}
+
+a#printSummary {
+  display:none;
+}
+#summaryContainer{
+  width:100% !important;
+}
+
+/* the Account and Owner Details */
+#summaryAccountDetails {
+  width:100%;
+  margin:auto;
+  clear:both;
+  display:table;
+  font-size:0.7rem;
+}
+
+#summaryAccountDetails > div:first-child {
+  width:15%;
+  float:left;
+  display:inline-block;
+}
+
+ #summaryAccountDetails > div:first-child > span,
+ #summaryAccountDetails > div:first-child + div + div > span {
+  font: 300 1rem/20px 'Lato', sans-serif;
+  font-size:0.9rem;
+  border-bottom: 1px solid #000;
+  position: relative;
+  top: 0;
+ }
+
+ #summaryAccountDetails > div:first-child + div {
+   float:left;
+   display:inline-block;
+   width:35%;
+ }
+
+ #summaryAccountDetails > div:first-child + div > ul,
+ #summaryAccountDetails > div:last-child > ul {
+   border:none;
+   margin: 0 ;
+   padding: 0.;
+   font-size: 0.8rem;
+   list-style-position: outside;
+   list-style-type:none;
+ }
+
+ #summaryAccountDetails > div:first-child + div > ul li,
+ #summaryAccountDetails > div:last-child > ul li {
+  margin: 0;
+  font-size:0.8rem;
+ }
+
+  #summaryAccountDetails > div:first-child + div > ul li:first-child,
+  #summaryAccountDetails > div:last-child > ul li:first-child {
+    font-size:1rem;
+  }
+
+#summaryAccountDetails > div:first-child + div + div {
+  float:left;
+  display:inline-block;
+  width:15%;
+}
+
+#summaryAccountDetails > div:last-child {
+  float:left;
+  display:inline-block;
+  width:35%;
+}
+
+.summary_table {
+  width:100%;
+  position:relative;
+  margin:auto;
+  -webkit-print-color-adjust: exact;
+}
+
+.summary_table  h3 {
+  font: 300 1rem/20px 'Lato', sans-serif;
+  display:block;
+  margin:10px 0 5px 0;
+  padding-left:5px;
+  border-bottom:1px solid #34444D;
+  color:#34444D;
+}
+
+.summary_table p {
+  margin:0px;
+  padding:0px 0px 0px 5px;
+  line-height:20px;
+  background:#FFF;
+  font-size:0.6rem;
+}
+
+.summary_table p:nth-child(even){
+  background:#EFEFEF;
+}
+
+.summary_table p:nth-child(odd){
+  background:#FFFFFF;
+}
+
+.summary_table p.subItem {
+  margin-left:30px;
+}
+
+.summary_table p.total_row {
+  line-height:30px;
+  height:30px;
+  font-size:0.8rem;
+  border-top: 1px solid #34444D;
+  background: #FFF;
+}
+
+.summary_table p.total_row.sub_total {
+
+  border-top-color: #34444D;
+}
+
+.summary_table p.total_row.total_savings {
+
+  border-top-color: #34444D;
+}
+
+.summary_table p.total_row.grand_total {
+  font-size:1.1rem;
+  line-height:40px;
+  height:40px;
+  color: #000;
+  border-top-color: transparent;
+}
+
+.summary_table p.total_row.grand_total > span > span > span {
+  font-size: 0.8rem;
+  position: relative;
+  bottom: 0.5rem;
+}
+
+.summary_table p.total_row span{
+  font-size:inherit;
+ }
+
+.summary_table p.total_row span span {
+  float:none;
+  font-size:inherit;
+  margin-right:15px;
+}
+
+.summary_table p > span {
+  float:right;
+  text-align:right;
+  padding-right:5px;
+}
+
+.summary_table p > span.quantity {
+  float:left;
+  font-weight:bold;
+  text-align:right;
+  padding:0px 15px 0px 5px;
+}
+
+/* Signiture container */
+
+#summarySignatures {
+  width:100%;
+  margin-top:3rem;
+}
+
+#summarySignatures > div {
+  width:100%;
+  display:inline-block;
+  float:left;
+}
+
+.sigRow {
+  width:100%;
+  height:1.5rem;
+  margin-bottom:1.5rem;
+  font-size:0.9em;
+}
+
+.sigRow > div:first-child {
+  display:inline-block;
+  width:38%;
+  float:left;
+  line-height:1.5rem;
+  text-align:right;
+  padding-right:2%;
+}
+
+.sigRow > div:first-child + div {
+  display:inline-block;
+  width:60%;
+  float:left;
+  border-bottom:1px solid #000;
+  line-height:1.5rem;
+  height:1.5rem;
+}
+
+.sigRow > div:first-child + div.date {
+  border-bottom:none;
+  width:55%;
+  padding-left:5%;
+
+}

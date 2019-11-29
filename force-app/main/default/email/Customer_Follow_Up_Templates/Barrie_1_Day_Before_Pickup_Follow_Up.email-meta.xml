@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>Legend_Letterhead</letterhead>
+    <name>Barrie 1 Day Before Pickup Follow Up</name>
+    <style>freeForm</style>
+    <subject>Legend Boats - Have Fun on the Water</subject>
+    <textOnly>Hi {!Account.FirstName},
+
+Tomorrow&#39;s the big day! We can&#39;t wait to finally welcome you into the Legend Family.
+
+We have some detailed instructions for you to make the pick up and orientation process as simple as possible.  When you arrive tomorrow at your scheduled pick up time:
+
+Enter in the main gates and go to the left to park in front of the Showroom.
+When you enter the main doors, go to the right and approach the Service desk.
+Tell them your name and that you are there to pick up your new Legend boat package.  We will take it from there!
+
+Again a big congratulations on joining the Legend Family and if you have any questions or concerns, please do not hesitate to contact me.
+
+See you tomorrow!
+
+Sincerely,
+
+{!User.Name}
+{!User.Title}
+
+{!User.Email}
+{!User.Phone}
+legendboats.com
+
+{!User.Address}</textOnly>
+    <type>html</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

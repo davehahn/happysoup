@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>AcctSeed__Avalara_Sales_Tax_GL_Account__c</fullName>
+    <deleteConstraint>Restrict</deleteConstraint>
+    <deprecated>false</deprecated>
+    <description>This GL Account should be set up as Type Balance Sheet and Sub Type 1 Liabilities.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>This GL Account should be set up as Type Balance Sheet and Sub Type 1 Liabilities.</inlineHelpText>
+    <label>Avalara Sales Tax GL Account</label>
+    <lookupFilter>
+        <active>true</active>
+        <filterItems>
+            <field>AcctSeed__GL_Account__c.AcctSeed__Type__c</field>
+            <operation>equals</operation>
+            <value>Balance Sheet</value>
+        </filterItems>
+        <filterItems>
+            <field>AcctSeed__GL_Account__c.AcctSeed__Sub_Type_1__c</field>
+            <operation>equals</operation>
+            <value>Liabilities</value>
+        </filterItems>
+        <isOptional>true</isOptional>
+    </lookupFilter>
+    <referenceTo>AcctSeed__GL_Account__c</referenceTo>
+    <relationshipLabel>Accounting Settings (Avalara Sales Tax GL Account)</relationshipLabel>
+    <relationshipName>Accounting_Settings_AvaGLAcct</relationshipName>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

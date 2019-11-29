@@ -1,0 +1,9 @@
+{{#each fees}}
+  <tr>
+    <td>
+      <input type="checkbox" data-fee-ammount-id="{{@key}}"/>
+    </td>
+    <td>{{{ this.name }}}</td>
+    <td> {{ toCurrency this.unitPrice }}</td>
+  </tr>
+{{/each}}

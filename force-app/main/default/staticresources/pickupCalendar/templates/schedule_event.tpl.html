@@ -1,0 +1,121 @@
+<div class="slds-modal__header">
+  <h2 class="slds-text-heading--medium">Schedule Pickup Date</h2>
+
+  <button class="slds-button slds-button--icon-inverse slds-modal__close close-modal">
+    <svg aria-hidden="true" class="slds-button__icon slds-button__icon--large">
+      <use xlink:href="{{icons.close}}"></use>
+    </svg>
+    <span class="slds-assistive-text">Close</span>
+  </button>
+</div>
+
+<div class="slds-modal__content">
+
+  <form id="schedule-form" class="slds-form--compound">
+    <input type="hidden" value="{{eventData.whatId}}" data-opp-field data-field-name="Id" />
+
+    <div class="slds-grid slds-grid--pull-padded slds-grid--align-center">
+
+      <div class="slds-col--padded slds-size--5-of-12">
+        <label class="slds-form-element__label" for="date">Date</label>
+        <div class="slds-grid slds-grid--pull-padded ">
+
+          <div class="slds-form-element slds-size--6-of-12">
+            <div class="slds-input-has-icon slds-input-has-icon--right">
+              <svg aria-hidden="true" class="slds-input__icon slds-icon-text-default">
+                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{{icons.calendar}}"></use>
+              </svg>
+              <input class="slds-input has-datepicker"
+                     value="{{eventData.startDate}}"
+                     type="text"
+                     data-field-name="start-date"
+                     placeholder="Pick a Date"
+                     label="Date Picker Label">
+            </div>
+          </div>
+
+          <div class="slds-form-element slds-size--4-of-12">
+            <div class="slds-input-has-icon slds-input-has-icon--right">
+              <svg aria-hidden="true" class="slds-input__icon slds-icon-text-default">
+                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{{icons.arrowDown}}"></use>
+              </svg>
+              <input class="slds-input is-combobox"
+                     type="text"
+                     value="{{eventData.startTime}}"
+                     data-field-name='start-time' />
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+    <div class="slds-card">
+      <div class="slds-card__header">
+        <div class="slds-media slds-media--center slds-has-flexi-truncate">
+          <div class="slds-media__figure">
+            <svg aria-hidden="true" class="slds-icon slds-icon-standard-opportunity slds-icon--medium">
+              <use xlink:href="{{icons.opportunity}}"></use>
+            </svg>
+          </div>
+          <div class="slds-media__body">
+            <h2 class="slds-text-heading--small slds-truncate">{{eventData.subject}}</h2>
+          </div>
+        </div>
+      </div>
+      <div class="slds-card__body">
+        <div class="slds-form--horizontal">
+          <div class="slds-grid">
+
+            <div class="slds-col--padded slds-size-7-of-12">
+
+              <div class="slds-form-element">
+                <label class="slds-form-element__label" for="pickupLocation">Pickup Location</label>
+                <div class="slds-form-element__control">
+                  <div class="slds-select_container">
+                    <select id="pickupLocation" class="slds-select" data-opp-field data-field-name="Pickup_Location__c" value="{{eventData.pickupLocation}}">
+                      <option value="">Select Location</option>
+                      {{#each pickupLocations}}
+                        {{locationOption this ../eventData.pickupLocation }}
+                      {{/each}}
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            <div class="slds-col--padded slds-size--5-of-12">
+              <div class="slds-form-element">
+                <div class="slds-form-element__control">
+                  <label class="slds-checkbox">
+                  {{#if eventData.onWater}}
+                    <input type="checkbox" id="onWater" checked data-opp-field data-field-name="On_Water_Orientation__c"/>
+                  {{else}}
+                    <input type="checkbox" id="onWater" data-opp-field data-field-name="On_Water_Orientation__c"/>
+                  {{/if}}
+                    <span class="slds-checkbox--faux"></span>
+                    <span class="slds-form-element__label">On Water</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </form>
+
+
+</div>
+
+<div class="slds-modal__footer">
+  <div class="slds-x-small-buttons--horizontal">
+    <button class="slds-button slds-button--neutral close-modal">Cancel</button>
+    <button data-form-submit-btn="schedule-form" class="slds-button slds-button--neutral slds-button--brand">Save</button>
+  </div>
+</div>

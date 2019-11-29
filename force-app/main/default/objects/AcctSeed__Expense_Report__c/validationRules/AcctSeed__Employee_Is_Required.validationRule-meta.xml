@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>AcctSeed__Employee_Is_Required</fullName>
+    <active>true</active>
+    <description>The employee field is required</description>
+    <errorConditionFormula>ISBLANK(AcctSeed__Employee__c)</errorConditionFormula>
+    <errorDisplayField>AcctSeed__Employee__c</errorDisplayField>
+    <errorMessage>You must enter a value</errorMessage>
+</ValidationRule>

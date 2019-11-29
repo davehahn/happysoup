@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>Legend_Letterhead</letterhead>
+    <name>Happy Birthday</name>
+    <style>freeForm</style>
+    <subject>It&#39;s your Customer&#39;s Birthday!</subject>
+    <textOnly>Hey {!Account.OwnerFirstName},
+
+It&#39;s {!Account.Name}&#39;s birthday today!  Be sure to send them a message wishing them well.
+
+Thanks!</textOnly>
+    <type>html</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>Legend_Letterhead</letterhead>
+    <name>2 Weeks Before PickUp Follow Up</name>
+    <style>freeForm</style>
+    <subject>Legend Boats - The Water is Calling</subject>
+    <textOnly>Hi {!Account.FirstName},
+
+The time for you to pick up your new boat is fast approaching! We are so excited for you to join our Legend family.  To ensure the pick-up of your new boat package goes as smoothly as possible, please remember the following items on your pick up date:
+
+2 Inch Trailer Ball - Install 18&quot; - 20&quot; from the ground
+Flat 4-Pin Wiring Harness (For a trailer without brakes)
+Flat 5-Pin Wiring Harness (For a trailer with brakes)
+Your Pleasure Craft Operators Card
+Final Payment, If Applicable (Cash, Certified Cheque or Bank Draft)
+
+Please arrive a few minutes early to allow time to get acquainted and allow approximately 1 - 2 hours for your new boat orientation.
+
+If you have any questions or concerns, please do not hesitate to contact me.
+
+Once again, welcome to the Legend Family and we look forward to seeing you!
+
+Sincerely,
+
+{!User.Name}
+{!User.Title}
+
+{!User.Email}
+{!User.Phone}
+legendboats.com
+
+{!User.Address}</textOnly>
+    <type>html</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

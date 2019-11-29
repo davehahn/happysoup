@@ -1,0 +1,70 @@
+<aura:component controller="DealerPartsOrderController"
+                access="global"
+                implements="forceCommunity:availableForAllPageTypes,force:hasRecordId">
+
+  <aura:attribute name="isFound" type="Boolean" default="false"/>
+  <aura:attribute name="erpOrder" type="AcctSeed__Project__c" />
+  <aura:attribute name="record" type="Id" />
+  <aura:attribute name="materials" type="DealerPartsOrderController.MaterialWrapper[]"/>
+
+  <aura:handler name="init" value="{!this}" action="{!c.init}" />
+  <aura:handler event="c:lgndP_DealerPartsOrderReload_Event" action="{!c.init}"/>
+  <!--forceChatter:publisher context="RECORD" recordId="a15R0000001LZM8IAO"/-->
+  <!--forceChatter:fullFeed subjectId="a15R0000001LZM8IAO" type="Record"/-->
+
+  <div class="recordHomePrimaryContent">
+    <div aura:id="firstDetail"
+          id="tab-default-1"
+          class="slds-tabs--default__content slds-show"
+          role="tabpanel"
+          aria-labelledby="tab-default-1__item">
+
+      <div class="lgnd" style="margin-top: 10px;">
+        <fieldset class="slds-form--compound">
+            <aura:iteration items="{!v.materials}" var="mat" indexVar="index1">
+                <div class="slds-grid" style="border-bottom: 1px solid lightgrey;">
+                    <div class="slds-col slds-size--2-of-6">
+                        <img src="{!mat.matImgUrl}" alt="No Product Image" width="80" height="80" border="0" style="margin-top: 20px;"/>
+                    </div>&nbsp;&nbsp;
+                    <div class="slds-col slds-size--4-of-6">
+                        <br/>
+                        <div style="padding-top: 10px;color: cornflowerblue;">
+                            <ui:outputText value="{!mat.pdtName}"/>
+                        </div>
+                        <div style="color: grey;">
+                            <ui:outputText value="{!mat.pdtcode}"/>
+                        </div>
+                        <div>
+                            <span style="font-weight: bold;padding-right: 20px;font-size:80%">${!mat.pricePerQuantity}</span><span style="padding-left: 10px;padding-right: 10px;color: grey;font-size:80%">x</span>
+                            <ui:outputText value="{!mat.matQuantity}"/>
+                            <span style="float: right;font-weight: bold;font-size:80%">${!mat.totalPrice}</span>
+                        </div>
+                    </div>
+                </div>
+            </aura:iteration>
+        </fieldset>
+      </div>
+    </div>
+  </div>
+  <div aura:id="deleteForm" class="slds-hide">
+    <div role="dialog" tabindex="-1" aria-labelledby="header43" class="slds-modal slds-fade-in-open">
+        <div class="slds-modal__container">
+            <div class="slds-modal__header">
+                <button class="slds-button slds-modal__close slds-button--icon-inverse" onclick="{!c.toggleDelete}">
+                    <c:svg class="slds-button__icon slds-button__icon--large" xlinkHref="/resource/SLDS/assets/icons/action-sprite/svg/symbols.svg#close" ariaHidden="true" />
+                    <span class="slds-assistive-text">Close</span>
+                </button>
+                <h2 id="header43" class="slds-text-heading--medium">Delete Order</h2>
+            </div>
+            <div class="slds-modal__content slds-p-around--medium">
+                <div class="detail slds-text-align--center">Are you sure you want to delete this Order?</div>
+            </div>
+            <div class="slds-modal__footer">
+                <button class="slds-button slds-button--neutral" onclick="{!c.toggleDelete}">Cancel</button>
+                <button class="slds-button slds-button--brand" type="submit" onclick="{!c.deleteRecord}">Delete</button>
+            </div>
+        </div>
+    </div>
+    <div class="slds-backdrop slds-backdrop--open"></div>
+  </div>
+</aura:component>

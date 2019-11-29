@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>No_Insurance_for_people_over_65</fullName>
+    <active>false</active>
+    <description>Do not allow insurance to be sold if the Person Account is over 65 years in age</description>
+    <errorConditionFormula>AND (
+ Opportunity.Account.IsPersonAccount,
+ Opportunity.Account.PersonContact.Current_Age__c &gt; 65,
+ Product2.RecordType.Name = &#39;Insurance&#39;
+)</errorConditionFormula>
+    <errorMessage>I am sorry, the customer is not eligible for insurance coverage</errorMessage>
+</ValidationRule>

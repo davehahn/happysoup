@@ -1,0 +1,913 @@
+/** Custom CSS Styles added by Legend Boats Developers **/
+
+@import url(https://fonts.googleapis.com/css?family=Lato:300,400);
+
+/* ++++++++++++ Fixes for salesforce that Foundation clobbers +++++++++++ */
+  .feedpage,
+  .feedpage div,
+  .feedpage textarea,
+  .feedpage ul,
+  .feedpage li,
+  .feedpage a
+   {
+    box-sizing:content-box;
+    -webkit-box-sizing:content-box;
+    -moz-box-sizing:content-box;
+  }
+
+  .feedpage textarea {
+    box-shadow: none !important;
+  }
+
+  .listHoverLinks a {
+    color: #333435;
+  }
+
+
+/* =========== END Salesforce fixes that Foundation Clobbers =========== */
+
+/*  .btnContainer {
+    margin-top:20px;
+    margin-bottom:25px;
+    text-align:center;
+  }
+*/
+
+
+/* Custom Legend Confim/Alert Boxes */
+
+.LGND-alert {
+  padding:0;
+  z-index: 100000;
+}
+
+.LGND-alert h2 {
+  display: block;
+  width: 100%;
+  background: #F96868;
+  color: #FFF;
+  text-align: center;
+  font-family: 'Lato', sans-serif;
+  font-weight: 300;
+  padding: 6px;
+  font-size: 1.75rem;
+}
+
+.LGND-alert h2 i {
+  float:left;
+  margin:7px;
+}
+
+.LGND-alert h2 span {
+  margin-left: -34px;
+}
+
+.LGND-alert.confirm h2 {
+  background: #00AAF9;
+}
+
+.LGND-alert p {
+  margin:5px 0;
+  width:100%;
+  padding:25px 5px;
+  font-family: 'Lato', sans-serif;
+  font-weight:300;
+  font-size:1.25rem;
+  text-align:center;
+}
+
+.LGND-alert div {
+  padding: 15px 0px;
+  text-align: center;
+  border-top: 1px solid #EFEFEF;
+  clear:both;
+  overflow:hidden;
+}
+
+.LGND-alert div a {
+  margin:0;
+  float:right;
+  margin-right:15px;
+}
+
+/* container wrapper to get globalStyling */
+
+.legendStyled {
+  font-family: "Lato", "Open Sans", "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif !important;
+}
+
+.legendStyled input {
+  box-shadow:none;
+}
+
+/** tab styles  **/
+
+div.tabContainer {
+  position:relative;
+  margin-top:15px;
+}
+
+div.row.full_row {
+  max-width:95%;
+}
+
+/*********************  Custom button styles **************************/
+
+.fd_button.small {
+  font-size:1rem;
+}
+
+.fd_button.smaller {
+  padding-top: .425rem;
+  padding-right: 1rem;
+  padding-bottom: .4875rem;
+  padding-left: 1rem;
+  font-size: .8875rem;
+}
+
+
+.fd_button:hover {
+  text-decoration:none;
+}
+
+.fd_button.jsDisabled {
+  pointer-events: none;
+}
+
+.fd_button.invert {
+  background-color:#FFF;
+  border-color:#89B6F0;
+  border-width:1px;
+  color:#89B6F0;
+}
+
+.fd_button.invert:before {
+  border-color: #89B6F0 rgba(0, 0, 0, 0) rgba(0, 0, 0, 0) rgba(0, 0, 0, 0);
+}
+
+.fd_button.invert:hover {
+  background-color:rgba(232, 234, 255, 0.36);
+}
+
+.fd_button.success.invert {
+  background-color: #FFF;
+  border-color: #4ACE6F;
+  color: #4ACE6F;
+}
+
+.fd_button.success.invert:hover {
+  background-color: #F0FFF4;
+  color: #4ACE6F;
+}
+
+.fd_button.alert.invert {
+  background-color: #FFF;
+  border-color: #FF8D8D;
+  color: #FF8D8D;
+}
+
+.fd_button.alert.invert:hover {
+  background: #FFEFEF;
+}
+
+.fd_button.gold {
+  background: #ACA343;
+  color:#FFF;
+}
+
+.fd_button.gold:hover {
+  background: #8E810E;
+}
+
+.fd_button.gold.invert {
+  border-color: #ACA343;
+  color:#ACA343;
+  background:#FFF;
+}
+
+.fd_button.gold.invert:hover {
+  background:#EFEABC;
+  color: #776F18;
+}
+
+.fd_button.yellow.invert {
+  background-color: #FFF;
+  border-color: #F3D600;
+  color: #F3D600;
+}
+
+.fd_button.yellow.invert:hover {
+background-color:#FFFEF0;
+}
+
+.fd_button.orange.invert {
+  border-color: #FF7F03;
+  color: #FF7f03;
+}
+
+.fd_button.orange.invert:hover {
+  background:#FFF6F1;
+}
+
+.fd_button.aqua {
+  background:#04A0AD;
+  color: #FFF;
+}
+
+.fd_button.lgnd {
+  background: #00AAF9;
+  color: #FFF;
+  border-color: #00AAF9;
+}
+
+.fd_button.lgnd:hover {
+  background: #FFF;
+  color: #00AAF9;
+  border-color: #00AAF9;
+}
+
+.fd_button.lgnd.invert {
+  background: #FFF;
+  color: #00AAF9;
+  border-color: #00AAF9;
+}
+
+.fd_button.lgnd.invert:hover {
+  background: #00AAF9;
+  color: #FFF;
+  border-color: #00AAF9;
+}
+
+.fd_button.aqua:hover {
+  background: #047781;
+}
+
+.fd_button.aqua.invert {
+  border-color: #04A0AD;
+  background: #FFF;
+  color: #04A0AD;
+}
+
+.fd_button.aqua.invert:hover {
+  background: #F1FEFF;
+}
+
+.fd_button.invert.small {
+  border-width: 1px;
+  font-weight: 300;
+  font-size:1rem;
+  padding-top: 0.65rem;
+  padding-right: 1.55rem;
+  padding-bottom: 0.85rem;
+  padding-left: 1.55rem;
+}
+
+.fd_button.jsDisabled {
+  border:1px solid #DDD !important;
+  color:#DDD !important;
+  background:#FFF !important;
+}
+
+.fd_button.icon-left i {
+  margin-right:7px;
+}
+
+.fd_button.icon-right i {
+  margin-left: 7px;
+}
+
+.lgnd_btn, a.lgnd_btn {
+  border: 1px solid #CDCDCD;
+  color: #00AAF9;
+  box-sizing: border-box;
+  padding: 0.7rem 0.8rem;
+  font-size: 0.9rem;
+  margin:0;
+  text-decoration: none;
+  z-index: 1;
+  background: #FFF;
+}
+
+.lgnd_btn.radius, a.lgnd_btn.radius {
+  border-radius:4px;
+}
+
+.lgnd_btn:hover, a.lgnd_btn:hover {
+  text-decoration: none;
+  color: #0087c6;
+}
+
+/****************************** Foundation customizations **************************/
+.columns.no-padding {
+  padding:0
+}
+
+.prefix.transparent,
+.postfix.transparent {
+  background:transparent;
+}
+
+.prefix.focus,
+.postfix.focus {
+  border-color:#B3C0FF;
+  border-width:2px;
+}
+
+
+.has-prefix {
+  border-left:none !important;
+}
+
+.has-postfix {
+  border-right:none !important;
+}
+
+.has-postfix:focus {
+  border-right:none !important;
+}
+
+.tabs {
+  margin-top: 8px;
+  margin-left: 1rem;
+  position: relative;
+  margin-bottom:-1px !important;
+}
+
+.tabs > dd > a {
+  padding: 0.5rem 1rem;
+  border-top: 1px solid #CCC;
+  border-left: 1px solid #CCC;
+  border-bottom: 1px solid #CCC;
+}
+
+.tabs > dd > a:hover {
+  text-decoration:none;
+}
+
+.tabs > dd:last-child > a {
+  border-right: 1px solid #CCC;
+}
+
+.tabs:not(.vertical) > dd.active {
+  border-top: .2rem solid #00AAF9;
+
+}
+
+.tabs.vertical > dd.active {
+  border-left: 0.2rem solid #00aaf9;
+}
+
+.tabs:not(.vertical) > dd.active > a {
+  border-bottom-color: #FFF;
+  padding-top:0.3rem;
+}
+
+.tabs-content {
+  border-top: 1px solid #CCC;
+}
+
+.tabs.small { margin-top:0;}
+
+.tabs.small dd a {
+  padding:.25rem .5rem;
+  font-size: 0.8rem;
+}
+
+.tabs.small > dd.active {
+  border-top-width:0.15rem;
+  margin-bottom: -0.15rem !important;
+}
+
+.tabs.small > dd.active > a {
+  padding-top: 0.1rem;
+}
+
+
+/* ============================ END Foundation Customizations =========================== */
+
+
+
+
+div.tabContainer table.rich-tabpanel td.rich-tab-bottom-line > table {
+  margin-left:10px;
+}
+
+div.tabContainer table.rich-tabpanel td table td > img {
+  width:0 !important;
+  margin:0 !important;
+}
+
+div.tabContainer table, div.tabContainer table tr, div.tabContainer table tr td {
+  border-color: inherit ;
+}
+
+div.tabContainer table tr td.rich-tabhdr-side-border {
+  background:none !important;
+}
+
+div.tabContainer .rich-tabpanel-content {
+  background: #FFF !important;
+}
+
+.tab__c {
+  font-size:1em;
+  font-family: dialog !important;
+  border-radius: 3px 3px 0px 0px;
+}
+
+/* Tab Color Styling */
+
+div.tabContainer.blue {
+  border-color:#1797C0 !important;
+}
+
+div.tabContainer.blue table tr td.rich-tabhdr-side-cell {
+  border:none !important;
+  border-color: #1797C0 !important;
+}
+
+div.tabContainer.blue .tab__c {
+  background:#FFF;
+  color:#1797C0 !important;
+}
+div.tabContainer.blue .inActiveTab__c  {
+  color:#155B7E !important;
+  background-image: linear-gradient(to top, #1797C0, #64D3FF) !important;
+}
+
+div.tabContainer.blue .inActiveTab__c:hover {
+  background-image: linear-gradient(to bottom, #1797C0, #64D3FF) !important;
+  color:#F9FDFF !important;
+}
+
+div.tabContainer.yellow {
+  border-color:#E5C130 !important;
+}
+
+div.tabContainer.yellow table tr td.rich-tabhdr-side-cell {
+  border:none !important;
+  border-color: #E5C130 !important;
+}
+
+div.tabContainer.yellow .tab__c {
+  background:#FFF;
+  color:#BB9D22 !important;
+}
+div.tabContainer.yellow .inActiveTab__c  {
+  color:#B69A29 !important;
+  background-image: linear-gradient(to top, #F6E1B3, #FFF6D3) !important;
+}
+
+div.tabContainer.yellow .inActiveTab__c:hover {
+  background-image: linear-gradient(to bottom, #F6E1B3, #FFF6D3) !important;
+  color:#857212 !important;
+}
+
+.tab__c.big {
+  font-size:1.2em;
+}
+
+/* +++++++++++++++++ Tables scrollable with fixed header ++++++++++++++++++++++++++++++++ */
+
+.fixed-header-scrollable > tbody,
+.fixed-header-scrollable > thead,
+.fixed-header-scrollable > tbody > tr,
+.fixed-header-scrollable > thead >  tr,
+.fixed-header-scrollable > tbody > tr > td,
+.fixed-header-scrollable > thead > tr > td {
+  display:block;
+}
+
+table.fixed-header-scrollable {
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+  border-bottom-color: #CCC !important;
+}
+
+.fixed-header-scrollable > thead {
+    background: #FAFAFA;
+}
+
+.fixed-header-scrollable > thead > tr {
+  line-height: 2.3125rem;
+  /* fallback */
+  width: 97%;
+  /* minus scroll bar width */
+  width: -webkit-calc(100% - 16px);
+  width:    -moz-calc(100% - 16px);
+  width:         calc(100% - 16px);
+}
+
+/* clearing float */
+.fixed-header-scrollable > thead > tr:after,
+.fixed-header-scrollable > tbody > tr:after {
+  content: ' ';
+  display: block;
+  visibility: hidden;
+  clear: both;
+}
+
+.fixed-header-scrollable > tbody {
+  max-height:300px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.fixed-header-scrollable > tbody > tr:first-child td {
+  border-top: none;
+}
+
+.fixed-header-scrollable > tbody > tr:last-child td {
+  border-bottom: none;
+}
+
+.fixed-header-scrollable > tbody > tr > td,
+.fixed-header-scrollable > thead > tr > td {
+  display:inline;
+  float:left;
+  font-family: 'Lato' sans-serif;
+}
+
+.fixed-header-scrollable > tbody > tr > td:last-child {
+
+}
+
+
+/* ================= END Tables scrollable with fixed header ============================ */
+
+
+/** button Styles **/
+
+a.btn, a.btn:hover {
+  text-decoration: none;
+  padding: 4px 3px !important;
+}
+
+.button_l {
+  text-decoration:none;
+  padding:6px 3px;
+}
+
+.button_l.gray {
+  background:#F4F4F4;
+  border:1px solid #CCC;
+  border-radius:3px;
+  color:#222;
+}
+
+.button_l.gray:hover {
+  text-decoration:none;
+  background:#EFEFEF;
+}
+
+/** Layout Styles **/
+
+.two_col {
+  display:flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: stretch;
+  width:100%;
+}
+
+.two_col > .left {
+  padding:0px;
+  margin:0px;
+  /*float:left;*/
+}
+
+.two_col > .right {
+  padding:0px;
+  margin:0px;
+  /*float:right;*/
+}
+
+.two_col > .w85 {
+  width: 85%;
+  position:relative;
+}
+
+.two_col > .w15 {
+  width:15%;
+  position:relative;
+}
+
+.two_col > .w75 {
+  width: 75%;
+  position:relative;
+}
+
+.two_col > .w25 {
+  width:25%;
+  position:relative;
+}
+
+
+/** Custom Components **/
+
+
+ul.featureList {
+  max-height:400px;
+  width:95%;
+  overflow:auto;
+  padding:3px;
+  background: #FFF;
+  margin:0px auto;
+  font-weight: 300;
+  font-family: 'Lato' sans-serif;
+  font-size:1rem;
+}
+
+ul.featureList li {
+  padding:2px;
+  line-height: 1.5rem;
+}
+
+
+
+table.upgradeChart {
+  border-collapse: collapse;
+  border-spacing: 0px;
+}
+
+table.upgradeChart thead td {
+  background: rgba(25,25,25,0.9);
+  padding:5px 7px;
+  color:#DDD;
+  text-align: center;
+  border-right: 1px solid #6A6A6A;
+}
+
+table.upgradeChart thead td:last-child {
+  border-left: 1px solid #6A6A6A;
+}
+
+table.upgradeChart thead td:first-child {
+  text-align: right;
+  padding-right:25px;
+}
+
+table.upgradeChart tbody tr {
+  line-height:25px;
+}
+
+table.upgradeChart tbody tr td {
+  border-bottom:1px solid #8d976d;
+  text-align: center;
+  padding:5px;
+  height:100%;
+  position:relative;
+}
+
+table.upgradeChart tbody tr td:hover:not(.notApplic) {
+  box-shadow:inset 0px 0px 10px 0px rgba(200, 200, 200, 1);
+  top:1px;
+}
+
+table.upgradeChart tbody tr td div {
+  height:100%;
+  width:100%;
+}
+
+table.upgradeChart tbody tr td a {
+  text-decoration:none;
+  display:inline-block;
+  height:100%;
+  width:100%;
+}
+
+table.upgradeChart tbody tr td.notApplic {
+  background:rgba(155,105,105,0.1);
+  color:#999;
+}
+
+table.upgradeChart tbody tr td:first-child{
+  text-align: left;
+  padding-left:5px;
+  border-left: 1px solid #8d976d;
+ /* background:rgba(171, 183, 132, 0.8);*/
+ background:rgba(50,50,50,0.3);
+  border-bottom-color:#8d976d;
+  color:#4F4F4F;
+}
+
+table.upgradeChart tbody tr td:last-child {
+  border-right:1px solid #8d976d;
+}
+
+.tableHover {
+  /*background:rgba(229, 244, 179, 0.5);*/
+  background:#FFF;
+}
+
+
+.optionTableContainer {
+  max-height:400px;
+  width:100%;
+  position:relative;
+  overflow:auto;
+}
+
+.optionTableContainer.full {
+  height:100%;
+}
+
+.optionTableContainer table {
+  width: 96%;
+  margin:auto;
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+.optionTableContainer table.upgrades {
+  margin-top:30px;
+}
+
+.optionTableContainer table.options {
+  margin-top:25px;
+}
+
+.optionTableContainer table thead {
+  color: #222;
+  background: #FAFAFA;
+  border: 1px solid #CCC !important;
+  border-bottom:none;
+}
+
+.optionTableContainer table tr {
+  line-height: 2.3125rem;
+
+}
+
+.optionTableContainer table.upgrades tr td:first-child {
+  width: 60%;
+}
+
+.optionTableContainer table.upgrades.upgradeCosts tr td:first-child {
+  width: 70%;
+}
+
+.optionTableContainer table.upgrades tr td:first-child + td {
+  width: 30%;
+}
+
+.optionTableContainer table.upgrades.motors tr td:first-child + td {
+  width: 20%;
+}
+
+.optionTableContainer table.upgrades tr td:first-child + td + td,
+.optionTableContainer table.upgrades tr td:last-child {
+  width: 10%;
+  text-align: center;
+  line-height: inherit;
+}
+
+.optionTableContainer table.upgrades tr td a.maximumLink,
+.optionTableContainer table.upgrades tr td a.displayOnWebLink,
+.optionTableContainer table.options tr td a.displayOnWebLink {
+  color: #FAFAFA;
+  font-size: 1.1rem;
+}
+
+.optionTableContainer table.upgrades tr td a.maximumLink:hover {
+  color: #B3E6FE;
+}
+
+.optionTableContainer table.upgrades tr td a.displayOnWebLink[data-value=true],
+.optionTableContainer table.upgrades tr td a.displayOnWebLink i.fa-spin,
+.optionTableContainer table.options tr td a.displayOnWebLink[data-value=true],
+.optionTableContainer table.options tr td a.displayOnWebLink i.fa-spin {
+  color: #34e434;
+}
+
+.optionTableContainer table.upgrades tr td a.displayOnWebLink:hover,
+.optionTableContainer table.options tr td a.displayOnWebLink:hover {
+  color: #b7fdb7;
+}
+
+.optionTableContainer table.upgrades.motors tr td a.maximumLink[data-value=true],
+.optionTableContainer table.upgrades.motors tr td:last-child a i.fa-spin {
+  color: #00AAF9;
+}
+
+.optionTableContainer table.upgrades tr td:first-child + td + td a i,
+.optionTableContainer table.upgrades tr td:last-child a i,
+.optionTableContainer table.options tr td:last-child a i {
+  line-height: inherit;
+}
+
+
+.optionTableContainer table.options thead tr td,
+.optionTableContainer table.options tbody tr td {
+  width:10%;
+  text-align:center;
+}
+
+.optionTableContainer table.options thead tr td:first-child,
+.optionTableContainer table.options tbody tr td:first-child {
+  text-align:left;
+}
+
+.optionTableContainer table.options thead tr td:first-child + td,
+.optionTableContainer table.options tbody tr td:first-child + td {
+  width:60%;
+  text-align:left;
+}
+
+.optionTableContainer table.options thead tr td {
+  width:10%;
+}
+
+.optionTableContainer table thead tr td {
+  color: #222;
+}
+
+.optionTableContainer table thead tr td:first-child {
+  padding-left:10px;
+}
+
+.optionTableContainer table tbody {
+  border-color: #CCC;
+  border-bottom: 1px solid #CCC;
+}
+
+.optionTableContainer table tbody tr:last-child td {
+  border-bottom:none;
+}
+
+.optionTableContainer table tbody tr td {
+  border-top: 1px solid #CCC ;
+
+}
+
+.optionTableContainer table tbody tr td:first-child {
+  padding-left: 10px;
+  border-left: 1px solid #CCC ;
+}
+
+.optionTableContainer table tbody tr td:first-child p{
+  line-height: 1.25rem;
+  font-size: inherit;
+}
+
+
+.optionTableContainer table tbody tr td:last-child {
+  border-right: 1px solid #CCC ;
+}
+
+.optionTableContainer table tbody tr td a {
+  text-decoration: none;
+  color: #00AAF9;
+}
+
+.optionTableContainer.full table {
+  border-left: 1px solid #CCC;
+}
+
+.optionTableContainer.full table thead,
+.optionTableContainer.full table thead tr td:first-child,
+.optionTableContainer.full table tbody tr td:first-child {
+  border-left: none !important;
+}
+
+.optionTableContainer.full table thead tr td:first-child,
+.optionTableContainer.full table tbody tr td:first-child {
+  width:40%;
+  text-align:left;
+}
+
+.optionTableContainer.full table thead tr td:first-child + td,
+.optionTableContainer.full table tbody tr td:first-child + td {
+  width:20%;
+  text-align:left;
+}
+
+.optionTableContainer.full table thead tr td:last-child,
+.optionTableContainer.full table tbody tr td:last-child {
+  text-align: center;
+  width:40%;
+}
+
+
+.optionTableContainer.full table tbody tr td table tr td {
+  border:none !important;
+  text-align:left;
+}
+
+.optionTableContainer.full table tbody tr td table tr td:first-child {
+  width:65%;
+}
+
+.optionTableContainer.full table tbody tr td table tr td:last-child {
+  text-align:left;
+  width:30%;
+}
+
+
+.optionTable a, .optionTable a:not[.displayOnWebLink]:hover  {
+  text-decoration:none;
+  color:#290bd3 !important;
+}
+
+
+

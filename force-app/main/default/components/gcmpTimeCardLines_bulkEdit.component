@@ -1,0 +1,1374 @@
+<apex:component controller="gcTimeCard_Ext" allowDML="true">
+<apex:attribute name="idTimeCard"           type="string"    required="false"   access="public" description="The Id of the Time Card."/>
+<apex:attribute name="idTimeCardPeriod"     type="string"    required="false"   access="public" description="The Id of the Time Card Period."/>
+<apex:attribute name="idTimeCardProject"    type="string"    required="false"   access="public" description="The Id of the Time Card Period."/>
+<head>
+    <style type="text/css">
+    span.modifyButtons{
+        width: 60%;
+        text-align: right;
+        display: inline-block;
+    }
+
+    #btnBulkEditSave{
+        display: none;
+    }
+
+    span.noHiperlink
+    {
+        text-decoration: none !important;
+    }
+
+    div.smallerText
+    {
+        font-size:smaller !important; 
+        text-align:right;"
+    }
+
+    td.smallerText
+    {
+        font-size:smaller !important;
+    }
+
+    .filtered{
+        background-color: #ffff66;
+    }
+
+    </style>
+</head>
+<body>
+    <div style="margin:0 auto; width:100%">
+
+        <apex:form >
+            <div id="pageBlock_lines">
+                <apex:pageBlock mode="edit" title="Time Card Lines">
+                    <apex:pageBlockButtons location="top">
+                        <apex:outputText rendered="{!$ObjectType.AcctSeed__Time_Card_Line__c.createable}">
+                        <button id="timeCardLineNewBtn" type="button" class="btn" onclick="launchDialog_newTimeCardLine();">New Time Card Line</button>    
+                        &nbsp;&nbsp;
+
+                        <span class="modifyButtons">
+                            <span id="btnBulkEdit"><button id="timeCardLineBulkEditBtn" type="button" class="btn" onclick="startBulkEditing();">Bulk Edit</button></span>
+                            <span id="btnBulkEditSave">
+                                <button type="button" class="btn" onclick="saveBulkEdit();">Save</button>
+                                &nbsp;&nbsp;
+                                <button type="button" class="btn" onclick="cancelBulkEdit();">Cancel</button>
+                            </span>
+                            &nbsp;&nbsp;
+                        </span>
+                        </apex:outputText>
+                    </apex:pageBlockButtons>
+                    <div><div id="timeCardLines"></div></div>
+                    <!--<div style="text-align:center; font-style:italic">drag here ^^^ to resize the grid</div> -->               
+                </apex:pageBlock>
+            </div>
+        </apex:form>
+    </div>
+</body>
+
+<script type="text/javascript">
+
+    var optionsTimeIn;
+    var optionsTimeOut;
+    idTimeCard = "{!idTimeCard}";
+    idTimeCardPeriod = "{!idTimeCardPeriod}";
+    idTimeCardProject = "{!idTimeCardProject}";
+
+    var editHours = {!$Permission.MultiplePagesTimeCardLinesHoursEdit};
+    var showDollars = {!$Permission.MultiplePagesTimeCardLinesDollarsView};
+
+    var inEditMode = false;
+
+    $j(document).ready(function(){
+        initOnKeyDownBulkEditorInput();
+    });
+
+    function initOnKeyDownBulkEditorInput()
+    {
+        $j("#pageBlock_lines").on('keydown', '.dayValueInputs' , function(e){
+            if(e.which == 37)// left arrow
+            {
+                $j(e.currentTarget).parent().prevAll('td:has(input)').first().find('input').focus();
+            }
+            else if(e.which == 38)// up arrow
+            {
+                $currObj = $j(e.currentTarget).parent();
+                $prevTrs = $currObj.closest('tr').prevAll();
+                var indx = $currObj.index();
+                $j.each($prevTrs,function(e,tr){
+                    $tdInput = $j(tr).children().eq(indx).find('input');
+                    if($tdInput.length > 0)
+                    {
+                        $tdInput.focus();
+                        return false;
+                    }
+                });
+            }
+            else if(e.which == 39)// right arrow
+            {
+                $j(e.currentTarget).parent().nextAll('td:has(input)').first().find('input').focus();
+            }
+            else if(e.which == 40)// down arrow
+            {
+                $currObj = $j(e.currentTarget).parent();
+                $nextTrs = $currObj.closest('tr').nextAll();
+                var indx = $currObj.index();
+                $j.each($nextTrs,function(e,tr){
+                    $tdInput = $j(tr).children().eq(indx).find('input');
+                    if($tdInput.length > 0)
+                    {
+                        $tdInput.focus();
+                        return false;
+                    }
+                });
+                // var indx = $j(e.currentTarget).parent().index();
+                // $j(e.currentTarget).parent().closest('tr').next().children().eq(indx).find('input').focus();
+            }
+            else if(e.which == 13)// Enter
+            {
+                if(inEditMode)
+                    saveBulkEdit();
+            }
+        });     
+    }
+
+    function initComponent_timeCardLines()
+    {
+        initPermissionChanges();
+        initGrid_lines();
+        initOptionsTimeInTimeOut();
+        retrieveEmployeeName();
+    }
+
+    function initPermissionChanges(){
+        if(!editHours){
+            $j('#timeCardLineNewBtn').hide();
+            $j('#timeCardLineBulkEditBtn').hide();
+        }
+    }
+
+    function retrieveEmployeeName()
+    {
+        if(!idTimeCard)
+        {
+            $j('#pageBlock_lines').find('.mainTitle').html('Time Card Lines');
+            return;
+        }
+
+        Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.gcTimeCard_Ext.retrieveEmployeeName}',
+            idTimeCard,
+            function(result,event){
+                if(event.status){
+                    $j('#pageBlock_lines').find('.mainTitle').html('Time Card Lines for '+result);
+                }
+                else {
+                    alert(event.message);
+                }
+            },
+            {buffer:true, escape:true, timeout:120000});        
+    }
+
+    function initOptionsTimeInTimeOut()
+    {
+        Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.gcTimeCard_Ext.retrieveTimeInPicklistValues}',
+            function(result,event){
+                if(event.status){
+                    optionsTimeIn = result;
+                }
+                else {
+                    alert(event.message);
+                }
+            },
+            {buffer:true, escape:true, timeout:120000});
+
+        Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.gcTimeCard_Ext.retrieveTimeOutPicklistValues}',
+            function(result,event){
+                if(event.status){
+                    optionsTimeOut = result;
+                }
+                else {
+                    alert(event.message);
+                }
+            },
+            {buffer:true, escape:true, timeout:120000});  
+    }
+
+    function initGrid_lines(){
+
+        var gridObj = { title:"Time Card Lines",
+                        collapsible:{on:false,collapsed:false,toggle:false},
+                        columnTemplate: {sortable:true,editable:false, align:'left'},
+                        dataModel:{data:[], sorting:'local', location:'local', sortDir:'up', sortIndx:'projectName'}, 
+                        dragColumns:{enabled:false},
+                        editable:false,
+                        //editModel: {clicksToEdit:1, pressToEdit:false, keyUpDown: false, saveKey: '', onSave: null, onBlur:''},
+                        filterModel:{on:true, mode:'AND', header:true},
+                        freezeCols:6,
+                        freezeRows:0,
+                        height:'flex',
+                        historyModel:{on:true},
+                        hoverMode:'row',
+                        hwrap:false,
+                        numberCell:{show:true},
+                        pageModel: {type:null},
+                        pasteModel:{on:false},
+                        resizable: true,
+                        roundCorners: false,
+                        scrollModel: {autoFit:true},
+                        selectionModel: { type: null},
+                        showBottom:true,
+                        showHeader:true,
+                        showTitle:false,
+                        showTop:true,
+                        showToolbar:false,
+                        sortable:true,
+                        swipeModel:{on:false},
+                        virtualX: false,
+                        //virtualXHeader: false,
+                        virtualY: false,
+                        width:'auto',
+                        // width:'flex',
+                        wrap:false};
+
+        gridObj.colModel=[  {dataIndx:'ViewEditDelete',     title:'Action',                           align:'center', minWidth:60, maxWidth:60, hidden:!editHours},
+                            {dataIndx:'projectName',        title:'Project',                    minWidth:200, gFilter:'select'},
+                            {dataIndx:'recordType',        title:'Record Type',                 minWidth:150, gFilter:'select'},
+                            {dataIndx:'projectAccount',     title:'Account',                    minWidth:150, maxWidth:150, gFilter:'select'},
+                            /*{dataIndx:'projectDescription', title:'Project Description',      minWidth:150, maxWidth:200, gFilter:'text'}*/
+                            {dataIndx:'salesPerson', title:'Sales Person',        minWidth:150, maxWidth:100, gFilter:'text'},                      
+                            {dataIndx:'projectTaskName',    title:'Project&nbsp;<br/>Task',     minWidth:100, gFilter:'select'},
+                            /*{dataIndx:'workOrderName',      title:'SMax WO#',                 minWidth:100, gFilter:'select'},*/
+                            {dataIndx:'glv1Name',           title:'Business <br/> Unit&nbsp;<br/>(GLV1)',     minWidth:80, gFilter:'select', cls:'testCls'},
+                            {dataIndx:'glv2Name',           title:'Dep\'t&nbsp;<br/>(GLV2)',    minWidth:80, gFilter:'select'},
+                            /*{dataIndx:'glv3Name',           title:'Trade&nbsp;<br/>(GLV3)',   minWidth:80, gFilter:'select', cls:'testCls'},*/
+                            
+                            {dataIndx:'tcv1Name',           title:'Wage Type&nbsp;<br/>(TCV1)', minWidth:80, gFilter:'select'},
+                            /*{dataIndx:'tcv2Name',           title:'Wage Class&nbsp;<br/>(TCV2)', minWidth:200, gFilter:'select'},*/
+                            {dataIndx:'wareHouse',           title:'Warehouse', minWidth:80, gFilter:'select'},
+                            {dataIndx:'wageRateHR',         title:'$/hr', minWidth:80, align:'center', hidden:!showDollars},
+                            {dataIndx:'totalHours',         title:'Total<br/>Hours',    align:'center', dataType:'float', gFormat:'number', gTotal:true, cls:'total', minWidth:80, maxWidth:80},
+                            {dataIndx:'totalWages',         title:'totalWages',         hidden:true, gTotal:'true'},
+                            {dataIndx:'totalBurden',        title:'totalBurden',        hidden:true, gTotal:'true'},
+                            {dataIndx:"scrollSpacer", minWidth:15, maxWidth:15}];
+
+        gGrid.initFormat(gridObj.colModel);
+        gGrid.initFilter(gridObj.colModel);
+
+        $j.each(gridObj.colModel, function(i,col)
+        {
+            if(col.dataIndx == 'ViewEditDelete')
+            {
+                $j.extend(col,{
+                    render:function(ui)
+                    {
+                        if(ui.rowData.isTotal) return;
+
+                        if(ui.rowData.periodIsOpen == 'true')
+                            return '<a href="#" onclick="deleteTimeCardLine(\''+ui.rowData.idTimeCardLine+'\'); return false;">del</a>';
+                    }
+                });             
+            }
+            else if(col.dataIndx == 'projectName')
+            {
+                $j.extend(col,{
+                    render:function(ui)
+                    {
+                        if(ui.rowData.isTotal || !ui.rowData.idProject)
+                            return '';
+                        return '<a href=\"/'+ui.rowData.idProject+'\">'+ui.rowData.projectName+'</a>';
+                    }
+                });                 
+            }      
+            else if(col.dataIndx == 'glv3Name')
+            {
+                $j.extend(col,{
+                    render:function(ui)
+                    {
+                        if(ui.rowData.isTotal) return '';
+
+                        if(ui.rowData.glv3Name == 'Holiday' || ui.rowData.glv3Name == 'Medical' || ui.rowData.glv3Name == 'Vacation')
+                            $j(this).pqGrid( "addClass", {rowIndx:ui.rowIndx, dataIndx:ui.dataIndx, cls:'glv3OffDays'} );
+                        else
+                            $j(this).pqGrid( "removeClass", {rowIndx:ui.rowIndx, dataIndx:ui.dataIndx, cls:'glv3OffDays'} );
+                    }
+                });             
+            }
+            else if(col.dataIndx == 'tcv1Name')
+            {
+                $j.extend(col,{
+                    render:function(ui)
+                    {
+                        if(ui.rowData.isTotal) return '';
+
+                        if(ui.rowData.tcv1Name != 'Work')
+                            $j(this).pqGrid( "addClass", {rowIndx:ui.rowIndx, dataIndx:ui.dataIndx, cls:'tcv1NonWork'} );
+                        else
+                            $j(this).pqGrid( "removeClass", {rowIndx:ui.rowIndx, dataIndx:ui.dataIndx, cls:'tcv1NonWork'} );
+                    }
+                });             
+            }
+            else if(col.dataIndx == 'tcv2Name')
+            {
+                $j.extend(col,{
+                    render:function(ui)
+                    {
+                        if(ui.rowData.isTotal) return '';
+
+                        $j(this).pqGrid("addClass", {rowIndx:ui.rowIndx, dataIndx:ui.dataIndx, cls:'smallerText'} );
+
+                        if(ui.rowData.tcv2Name != 'Direct')
+                            $j(this).pqGrid( "addClass", {rowIndx:ui.rowIndx, dataIndx:ui.dataIndx, cls:'tcv2NonDirect'} );
+                        else
+                            $j(this).pqGrid( "removeClass", {rowIndx:ui.rowIndx, dataIndx:ui.dataIndx, cls:'tcv2NonDirect'} );
+                    }
+                });             
+            }
+            else if(col.dataIndx == 'wageRateHR')
+            {
+                $j.extend(col,{
+                    render:function(ui)
+                    {
+                        if(ui.rowData.isTotal) return '';
+                        if(!showDollars) return '';
+
+                        var myHTML = '';
+                        if(parseFloat(ui.rowData.hoursTCLTotalRT) > 0){
+                            myHTML += '<div class="smallerText">RT:&nbsp;'+accounting.formatMoney(ui.rowData.wageRateRT)+'</div>';
+                        }
+                        if(parseFloat(ui.rowData.hoursTCLTotalOT) > 0){
+                            myHTML += '<div class="smallerText">OT:&nbsp;'+accounting.formatMoney(ui.rowData.wageRateOT)+'</div>';
+                        }
+                        if(parseFloat(ui.rowData.hoursTCLTotalDT) > 0){
+                            myHTML += myHTML + '<div class="smallerText">DT:&nbsp;'+accounting.formatMoney(ui.rowData.wageRateDT)+'</div>';
+                        }
+
+                        return myHTML;
+                    }
+                });             
+            }
+            else if(col.dataIndx == 'totalHours')
+            {
+                $j.extend(col,{
+                    render:function(ui)
+                    {
+                        var myHTML = '';
+                        myHTML = myHTML + '<span>'+accounting.formatNumber(ui.rowData.totalHours)+'</span>';
+
+                        // Permission to see dollars
+                        if(showDollars)
+                        {
+                            myHTML = myHTML + '<div style="font-size:smaller; text-align:center;">'+accounting.formatMoney(ui.rowData.totalWages)+'</div>';                                            
+                        }
+                        return myHTML;
+                    }
+                });             
+            }     
+        });
+
+        var $gridDiv = $j('#timeCardLines');
+
+        $gridDiv.pqGrid(gridObj);
+
+        refreshColumns();
+
+        $gridDiv.on('pqgridcellclick', function(e,ui){
+            if(!inEditMode && editHours && ui.column.cls == 'gDay')
+                launchDialog_timeInOut(ui.dataIndx);
+        });
+
+        $gridDiv.on('pqgrideditorblur', function(event,ui){
+            // do nothing
+        });
+
+        $gridDiv.on('pqgridrefresh', function(event, ui)
+        {
+            gGrid.refreshTotal($j(this),ui.pageData);
+            toggleModifyButtons(false);
+        });
+
+        //select the contents of the input text box, when edit commences
+        $gridDiv.on( "focus", "input,textarea,div[contenteditable=true]",  function(evt){
+             $j(this).select();
+        });
+
+        // Override the original 'refreshTotal' method
+        var refreshTotalOrig = gGrid.refreshTotal;
+        gGrid.refreshTotal = function(gridDiv, pageData){
+            
+            // Call the original method
+            refreshTotalOrig(gridDiv, pageData);
+
+            // Go through the filter controls and add styles if used
+            $gridDiv.find('.pq-grid-hd-search-field').each(function(idx){
+                var ctrl = $j(this);
+
+                // There are two versions of each control.  Use the visible one
+                if (ctrl.css('visibility') == 'hidden') return true;
+
+                if(ctrl.is('input:text')){
+                    if(ctrl.val() == '') ctrl.removeClass('filtered');
+                    else ctrl.addClass('filtered');                    
+                } else if(ctrl.is('select')){
+                    if(ctrl.val() == '') ctrl.removeClass('filtered');
+                    else ctrl.addClass('filtered');
+                }
+            });
+        }
+    }
+
+    function startBulkEditing()
+    {   
+        var $gridDiv = $j('#timeCardLines');
+        var data = $gridDiv.pqGrid( "option", "dataModel.data" );
+        if(data && data.length == 0){
+            showMessage('Info','There are no Time card lines.')
+            return false;
+        }
+
+        var colModel = $gridDiv.pqGrid( "getColModel" );
+        var startedEditing = false;
+        $j.each(colModel,function(i,col){
+            if(col.cls != undefined && col.cls == 'gDay')
+            {
+                var dayKey = col.dataIndx;
+                for(var i=0;i<data.length;i++)
+                {
+                    var rowData = data[i];//$gridDiv.pqGrid( "getRowData", { rowIndx: i } );
+                    
+                    var hasTimeCardEntries = false;
+                    var daysHavingEntries = rowData.timeCardDaysHavingEntries;
+                    if(daysHavingEntries.split(',').indexOf(dayKey) > -1 )
+                        hasTimeCardEntries = true;
+                    
+                    var $td = $gridDiv.pqGrid( "getCell", { rowIndx: i, dataIndx: dayKey } );
+                    if(!hasTimeCardEntries)
+                    {
+                        var colData = (rowData[dayKey] != undefined)?rowData[dayKey]:"";
+                        $j($td[0]).html($j('<input style="width:90%;" type="text" class="dayValueInputs" name="'+ dayKey +'__'+ i +'" value="'+colData+'" />'));
+                        startedEditing = true;
+                    }
+                }               
+            }
+        });
+        if(startedEditing)
+            toggleModifyButtons(true);
+    }
+
+    function saveBulkEdit()
+    {
+        var $gridDiv = $j('#timeCardLines');
+        var data = $gridDiv.pqGrid( "option", "dataModel.data" );
+        var list = [];
+
+        var colModel = $gridDiv.pqGrid( "getColModel" );
+        var startedEditing = false;
+        $j.each(colModel,function(i,col){
+            if(col.cls != undefined && col.cls == 'gDay')
+            {
+                var dayKey = col.dataIndx;
+                for(var i=0;i<data.length;i++)
+                {
+                    var rowData = data[i];
+                    
+                    var hasTimeCardEntries = false;
+                    var daysHavingEntries = rowData.timeCardDaysHavingEntries;
+                    if(daysHavingEntries.split(',').indexOf(dayKey) > -1 )
+                        hasTimeCardEntries = true;
+                    
+                    if(!hasTimeCardEntries)
+                    {
+                        var $td = $gridDiv.pqGrid( "getCell", { rowIndx: i, dataIndx: dayKey } );
+                        var newVal = $j.trim($j($td[0]).find('input').val());
+                        if(newVal == '') newVal = null;
+                        //Id idTimeCardLine, String key, Decimal hoursNew
+                        if(!(isNaN(rowData[dayKey]) && newVal == null) && parseFloat(rowData[dayKey]) != parseFloat(newVal))
+                        {
+                            //console.log(isNaN(rowData[dayKey]) + ' --- ' + isNaN(newVal));
+                            if(newVal == null) newVal = 0;
+                            var mapVal = {idTimeCardLine:rowData.idTimeCardLine,key:dayKey,hoursNew:newVal};
+                            list.push(mapVal);
+                        }
+                    }
+                }               
+            }
+        });
+
+        if(list.length == 0)
+        {
+            showMessage('Info','No changes were made.');
+            return false;
+        }
+
+        $gridDiv.pqGrid('showLoading');
+        Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.gcTimeCard_Ext.updateTimeCardDayBulkEditHours}',
+            idTimeCard, list, idTimeCardProject,
+            function(result, e){
+                if(e.status){
+                    toggleModifyButtons(false);
+                    gGrid.refreshGrid_callback($gridDiv,result);
+                    $gridDiv.pqGrid('hideLoading');
+                    if(typeof refreshRow_employee !== 'undefined')
+                        refreshRow_employee(idTimeCard); 
+                    if(typeof refreshRow_timeCardPeriod !== 'undefined')
+                        refreshRow_timeCardPeriod(idTimeCard);  
+                    if(typeof refreshGrid_timeCardDays !== 'undefined')
+                        refreshGrid_timeCardDays();
+                    if(typeof refreshGrid_timeCardLedger !== 'undefined')
+                        refreshGrid_timeCardLedger();
+                    if(typeof rerenderJournalEntry !== 'undefined')
+                        rerenderJournalEntry();
+                }
+                else{
+                    $gridDiv.pqGrid('hideLoading');
+                    alert(e.message);
+                }
+                console.log(inEditMode);
+            },
+            {buffer:true, escape:true, timeout:120000});
+    }
+
+    function cancelBulkEdit()
+    {
+        toggleModifyButtons(false);
+        $j('#timeCardLines').pqGrid('refresh'); 
+    }
+
+    function toggleModifyButtons(showSave)
+    {
+        if(showSave)
+        {
+            inEditMode = true;
+            $j("#btnBulkEdit").hide();
+            $j("#btnBulkEditSave").show();          
+            $j("#pageBlock_lines table td.gDay span.link").addClass('noHiperlink');         
+            $j("#pageBlock_lines table tr.total td.gDay").css('visibility','hidden');
+            $j("#pageBlock_lines table td.total").css('visibility','hidden');
+            $j("#pageBlock_lines table input.dayValueInputs[type=text]:first").focus();
+        }
+        else
+        {
+            inEditMode = false;
+            $j("#btnBulkEdit").show();
+            $j("#btnBulkEditSave").hide();
+            $j("#pageBlock_lines table td.gDay span.link").removeClass('noHiperlink');
+            $j("#pageBlock_lines table tr.total td.gDay").css('visibility','visible');
+            $j("#pageBlock_lines table td.total").css('visibility','visible');
+        }
+    }
+
+    function refreshColumns()
+    {
+        var $gridDiv = $j('#timeCardLines');
+        $gridDiv.pqGrid('showLoading');
+
+        var idFilter = idTimeCard;
+        if(!idFilter)
+            idFilter = idTimeCardPeriod;
+        if(!idFilter)
+        {
+            gGrid.refreshGrid_callback($gridDiv,[]);
+            $gridDiv.pqGrid('hideLoading');
+            return;
+        }
+
+        Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.gcTimeCard_Ext.retrieveTimeCardDates}',
+            idFilter,
+            function(result,event)
+            {
+                if(event.status)
+                {
+                    var colModel = $gridDiv.pqGrid( "option", "colModel" );
+
+                    //remove any columns that are for a specific day
+                    for(i = colModel.length - 1; i >= 0; i-- )
+                    {
+                        if(colModel[i].cls == 'gDay')
+                            colModel.splice(i,1);
+                    }
+                    var asteriskChar = '*';
+                    //splice in the new day columns
+                    $j.each(result, function(i,obj)
+                    {
+                        var title = obj.dayOfWeek + '<br/>' + obj.myDate;//obj.monthName + ' ' + obj.dayOfMonth;
+                        var row = {dataIndx:obj['dataIndx'],
+                                   title:title, 
+                                   align:'center',
+                                   cls:'gDay',
+                                   editable:editHours,
+                                   gFormat:'number',
+                                   gTotal:true,
+                                   dataType:'float',
+                                   minWidth:80,
+                                   maxWidth:80,
+                                   render:function(ui)
+                                          {
+                                            var hrs = ui.rowData[ui.dataIndx];
+                                            var hrsRT = ui.rowData[ui.dataIndx + 'RT'];
+                                            var hrsOT = ui.rowData[ui.dataIndx + 'OT'];
+                                            var hrsDT = ui.rowData[ui.dataIndx + 'DT'];
+                                            var wages = ui.rowData[ui.dataIndx + 'Wages'];
+                                            var burden = ui.rowData[ui.dataIndx + 'Burden'];
+                                            if(!wages) wages = 0;
+                                            if(!burden) burden = 0;
+
+                                            if(ui.rowData[ui.dataIndx+'wait'])
+                                                return '<img src=\"/img/loading32.gif\" width=\"15\" height=\"15\" />';
+
+                                            var myHTMLmoney = '';
+                                            
+                                            // Permission to see dollars
+                                            if(showDollars)
+                                            {
+                                                myHTMLmoney = myHTMLmoney + '<div style="font-size:smaller; text-align:center;">'+accounting.formatMoney(wages)+'</div>';
+                                            }
+
+                                            var myHTMLhours = '<span>'+accounting.formatNumber(hrs)+'</span>';
+
+
+                                            if(ui.rowData.isTotal) return myHTMLhours+myHTMLmoney;
+
+                                            //// to add asterisk
+                                            var hasTimeCardEntries = false;
+                                            var dayKey = ui.dataIndx;
+                                            var daysHavingEntries = ui.rowData.timeCardDaysHavingEntries;
+                                            if(daysHavingEntries.split(',').indexOf(dayKey) > -1 )
+                                                hasTimeCardEntries = true;
+                                            //// End
+
+                                            var myVal = accounting.formatNumber(hrs);
+
+                                            if(!isNaN(hrs) && (parseFloat(hrsOT) < 0 || parseFloat(hrsOT) > 0 || parseFloat(hrsDT) < 0 || parseFloat(hrsDT) > 0))
+                                            {
+                                                myVal = '';
+
+                                                if(parseFloat(hrsRT) != 0)
+                                                    myVal = 'RT:&nbsp'+accounting.formatNumber(hrsRT);
+
+                                                if(parseFloat(hrsOT) != 0)
+                                                {
+                                                    if(myVal != '')
+                                                        myVal += '<br/>';
+                                                    myVal += 'OT:&nbsp;'+accounting.formatNumber(hrsOT);
+                                                }
+                                                if(parseFloat(hrsDT) != 0)
+                                                {
+                                                    if(myVal != '')
+                                                        myVal += '<br/>';
+                                                    myVal += 'DT:&nbsp;'+accounting.formatNumber(hrsDT);
+                                                }
+                                                $gridDiv.pqGrid( "addClass", {rowIndx:ui.rowIndx, dataIndx:ui.dataIndx, cls:'highlight'} );
+                                            }
+                                            else
+                                            {
+                                                $gridDiv.pqGrid( "removeClass", {rowIndx:ui.rowIndx, dataIndx:ui.dataIndx, cls:'highlight'} );
+                                            }
+
+                                            var linkClass = (editHours) ? 'link' : '';
+
+                                            if(!isNaN(hrs) && parseFloat(hrs) != 0){
+                                                return '<span class="'+linkClass+'">'+myVal+'</span>'+(hasTimeCardEntries?asteriskChar:'');//+myHTMLmoney;//'<br/><span style="font-size:smaller">'+accounting.formatMoney(wages)+'</span>';
+                                            }
+
+                                            if(ui.rowData.periodIsOpen == 'true')
+                                                return '<span class="'+linkClass+'">&nbsp;&nbsp;</span>';
+
+                                            return '';
+                                          }
+                                   };
+                        colModel.splice(colModel.length - 4,0,row);
+
+                        //hidden columns for wage totals
+                        var row = {dataIndx:obj['dataIndx']+'Wages',
+                                   title:'', 
+                                   gTotal:true,
+                                   hidden:true};
+                        
+                        colModel.splice(colModel.length - 4,0,row);
+
+
+                        //hidden columns for burden totals
+                        var row = {dataIndx:obj['dataIndx']+'Burden',
+                                   title:'', 
+                                   gTotal:true,
+                                   hidden:true};
+                        
+                        colModel.splice(colModel.length - 4,0,row);
+
+                    });
+
+                    $gridDiv.pqGrid( "option", "colModel", colModel );
+                    if(idTimeCard)
+                        refreshGrid_lines();
+                    else
+                    {
+                        gGrid.refreshGrid_callback($gridDiv,[]);
+                    }
+                }
+                else
+                {
+                    alert(event.message);
+                }
+                $gridDiv.pqGrid('hideLoading');
+            },
+            {buffer:true, escape:true, timeout:120000});
+    }
+
+    function refreshGrid_lines(){        
+        var $gridDiv = $j('#timeCardLines');
+        $gridDiv.pqGrid('showLoading');
+
+        Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.gcTimeCard_Ext.retrieveTimeCardLines}',
+            idTimeCard, idTimeCardProject,
+            function(result,event){
+                if(event.status){
+                    gGrid.refreshGrid_callback($gridDiv,result);
+                }
+                else {
+                    alert(event.message);
+                }
+                $gridDiv.pqGrid('hideLoading');
+                if(typeof refreshRow_employee !== 'undefined')
+                    refreshRow_employee(idTimeCard);
+                if(typeof refreshRow_timeCardPeriod !== 'undefined')
+                    refreshRow_timeCardPeriod(idTimeCard);  
+                if(typeof refreshGrid_timeCardDays !== 'undefined')
+                    refreshGrid_timeCardDays();
+                // if(typeof refreshGrid_timeCardLedger !== 'undefined')
+                //     refreshGrid_timeCardLedger();
+                // if(typeof rerenderJournalEntry !== 'undefined')
+                //     rerenderJournalEntry();
+            },
+            {buffer:true, escape:true, timeout:120000});
+    }
+
+    function gridEditorBegin(event, ui)
+    {
+    }
+
+    function deleteTimeCardLine(idTimeCardLine)
+    {
+        if(inEditMode)
+        {
+            showMessage('Info','Cannot delete. The grid is now in edit mode. Please save or cancel to proceed.')
+            return false;
+        }
+
+        var $gridDiv = $j('#timeCardLines');
+        $gridDiv.pqGrid('showLoading');
+
+        Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.gcTimeCard_Ext.deleteTimeCardLine}',
+            idTimeCard,idTimeCardLine,idTimeCardProject,
+            function(result,event){
+                if(event.status){
+                    gGrid.refreshGrid_callback($gridDiv,result);
+                }
+                else {
+                    alert(event.message);
+                }
+                $gridDiv.pqGrid('hideLoading');
+                if(typeof refreshRow_employee !== 'undefined')
+                    refreshRow_employee(idTimeCard);    
+                if(typeof refreshRow_timeCardPeriod !== 'undefined')
+                    refreshRow_timeCardPeriod(idTimeCard);  
+                if(typeof refreshGrid_timeCardDays !== 'undefined')
+                    refreshGrid_timeCardDays();            
+                if(typeof refreshGrid_timeCardLedger !== 'undefined')
+                    refreshGrid_timeCardLedger();
+                if(typeof rerenderJournalEntry !== 'undefined')
+                    rerenderJournalEntry();
+            },
+            {buffer:true, escape:true, timeout:120000});        
+    }
+
+    function launchDialog_timeInOut(dataIndx)
+    {
+        var myDate1 = Date.parse( dataIndx.substring(5,7)+'-'+dataIndx.substring(7,9)+'-'+dataIndx.substring(1,5)); 
+        var myDate = new Date(myDate1);
+        var $dialogDiv = $j('<div id=\"timeCardEntriesDialog\" style=\"z-index:100 !important;\"></div>');
+        var $gridDiv = $j('<div id=\"timeCardEntries\"></div>');
+        $dialogDiv.append($gridDiv);
+
+        $dialogDiv.dialog({
+            autoOpen: false,
+            height: 375,
+            width: '95%',
+            modal: true,
+            position:{my:'center bottom', at:'center top', of:'#timeCardLines'},
+            close:function(){$gridDiv.pqGrid('destroy'); $gridDiv.remove(); $dialogDiv.dialog('destroy'); $dialogDiv.remove();},
+            open:function(){initGrid_timeCardEntries($gridDiv); refreshGrid_timeCardEntries(dataIndx);},
+            title: 'Time Card Entries for ' + myDate.toString('ddd MMM d'),
+            buttons:{
+                Save: function(){upsertTimeCardEntries();},
+                Cancel: function () {
+                    $j(this).dialog('close');
+                }
+            }
+        });
+ 
+        $dialogDiv.dialog('open');
+    }
+
+    function initGrid_timeCardEntries($gridDiv)
+    {
+        var gridObj = { title:"Time Card Entries",
+                        collapsible:{on:false,collapsed:false,toggle:false},
+                        columnTemplate: {sortable:false,editable:false},
+                        /*dataModel:{data:[], sorting:'local', location:'local', sortDir:['up','up','up','up','up'], sortIndx:['timeInMilliseconds','projectName','projectTaskName','tcv2Name']}, */
+                        dataModel:{data:[], sorting:'local', location:'local', sortDir:['up','up','up','up','up'], sortIndx:['timeInMilliseconds','projectName','projectTaskName']}, 
+                        dragColumns:{enabled:false},
+                        editable:true,
+                        editModel:{clicksToEdit:1, pressToEdit:false, filterKeys:false, keyUpDown:false},
+                        filterModel:{on:false, mode:'AND', header:false},
+                        freezeCols:0,
+                        freezeRows:0,
+                        height:250,
+                        historyModel:{on:false},
+                        hoverMode:'row',
+                        hwrap:false,
+                        numberCell:{show:true},
+                        pageModel: {type:null},
+                        pasteModel:{on:false},
+                        resizable: true,
+                        roundCorners: false,
+                        scrollModel: {autoFit:true},
+                        selectionModel: { type: null},
+                        showBottom:true,
+                        showHeader:true,
+                        showTitle:false,
+                        showTop:true,
+                        showToolbar:false,
+                        sortable:true,
+                        swipeModel:{on:false},
+                        virtualX: false,
+                        //virtualXHeader: false,
+                        virtualY: false,
+                        width:'auto',
+                        wrap:false};
+
+           gridObj.colModel=[{dataIndx:'ViewEditDelete',  title:'',                     align:'center', maxWidth:50},
+                            {dataIndx:'projectName',        title:'Project',            align:'left', maxWidth:200},
+                            {dataIndx:'recordType',         title:'Record Type',        maxWidth:100, align:'left', gFilter:'select'},
+                            {dataIndx:'projectAccount',     title:'Account',            align:'left'},
+                            /*{dataIndx:'projectDescription', title:'Project Description'},*/    
+                            {dataIndx:'salesPerson', title:'Sales Person',              maxWidth:200,  align:'left'},                         
+                            {dataIndx:'projectTaskName',    title:'Project Task',       align:'left', maxWidth:100},
+                            /*{dataIndx:'workOrderName',      title:'SMax WO#',           align:'left', maxWidth:100},*/
+                            {dataIndx:'glv1Name',           title:'Business Unit (GLV1)', align:'center', maxWidth:150},
+                            {dataIndx:'glv2Name',           title:'Dep\'t (GLV2)',      align:'center', maxWidth:100},
+                            /*{dataIndx:'glv3Name',         title:'Trade (GLV3)',       align:'center', maxWidth:100},*/
+                            /*{dataIndx:'tcv2Name',         title:'Rate (TCV2)',   align:'center', maxWidth:100},*/
+                            {dataIndx:'wareHouse',          title:'Warehouse', maxWidth:100},
+                            {dataIndx:'timeInMilliseconds', title:'',                   dataType:'float',hidden:true},
+                            {dataIndx:'isDoubleTime',       title:'DoubleTime',         align:'center', maxWidth:90},                            
+                            {dataIndx:'timeIn',             title:'Time In',            align:'center', maxWidth:100,editable:true},
+                            {dataIndx:'timeOut',            title:'Time Out',           align:'center', maxWidth:100,editable:true},
+                            {dataIndx:'hours',              title:'Hours',              align:'center', gFormat:'number', gTotal:true, maxWidth:60},
+                            {dataIndx:"scrollSpacer", minWidth:15, maxWidth:15}];
+
+        gGrid.initFormat(gridObj.colModel);
+        gGrid.initFilter(gridObj.colModel);
+
+
+        $j.each(gridObj.colModel, function(i,col)
+        {
+            if(col.dataIndx == 'ViewEditDelete')
+            {
+                $j.extend(col,{
+                    render:function(ui)
+                    {
+                        if(ui.rowData.isTotal) return '';
+
+                        if(ui.rowData.idTimeCardEntry !== undefined && ui.rowData.idTimeCardEntry.length >= 12 && $j(this).pqGrid('option','editable') == true)
+                            return '<span class=\"link\" onclick=\"deleteTimeCardEntry('+ui.rowIndx+');\">del</span>';
+
+                        return '';
+                    }
+                });             
+            }      
+            else if(col.dataIndx == 'timeIn')
+            {
+                $j.extend(col,{
+                    render:function(ui)
+                    {
+                        if (ui.rowData.isTotal) return;
+                        if ($j(this).pqGrid('option','editable') == false) return;
+                        $j(this).pqGrid('addClass',{rowIndx:ui.rowIndx, dataIndx:ui.dataIndx, cls:'link'});
+                    },
+                    editor:
+                    {
+                        type:'select',
+                        options:optionsTimeIn
+                    }
+                });
+            }
+            else if(col.dataIndx == 'timeOut')
+            {
+                $j.extend(col,{
+                    render:function(ui)
+                    {
+                        if (ui.rowData.isTotal) return;
+                        if ($j(this).pqGrid('option','editable') == false) return;
+                        $j(this).pqGrid('addClass',{rowIndx:ui.rowIndx, dataIndx:ui.dataIndx, cls:'link'});
+                    },
+                    editor:
+                    {
+                        type:'select',
+                        options:optionsTimeOut
+                    }
+                });
+            }
+            else if(col.dataIndx == 'isDoubleTime')
+            {
+                $j.extend(col,{
+                    render: function(ui)
+                    {
+                        if(ui.rowData.isTotal) return '';
+
+                        if(!ui.rowData.idTimeCardEntry) return '';
+
+                        if(ui.rowData.isDoubleTime == 'false' && ui.rowData.excludeFromOvertime == 'true') return '';
+
+                        var myHTML = '';
+                        myHTML += '<input type="checkbox" ';
+                        if(ui.rowData.isDoubleTime == 'true')
+                        myHTML += ' checked="checked" ';
+                        if ($j(this).pqGrid('option','editable') == false || ui.rowData.excludeFromOvertime == 'true')
+                        myHTML += ' disabled="disabled" ';
+                        myHTML += ' onchange="updateDoubleTime($j(this),' + ui.rowIndx+ ')"/>';
+                        return myHTML;                        
+                    }
+                });             
+            } 
+        });
+
+
+        $gridDiv.pqGrid(gridObj);
+
+        $gridDiv.on('pqgridrefresh', function(event, ui)
+        {
+            gGrid.refreshTotal($j(this),ui.pageData);
+        });
+
+        $gridDiv.on('pqgrideditorbegin',function(event,ui)
+        {
+            if(ui.dataIndx == 'timeIn' || ui.dataIndx == 'timeOut')
+            {
+                ui.$editor.on('change',function()
+                {
+                    $gridDiv.pqGrid('addClass',{rowIndx:ui.rowIndx, dataIndx:ui.dataIndx, cls:'highlight'});
+                    ui.$editor.addClass('highlight');
+                });
+
+                if(ui.rowData[ui.dataIndx] == '')
+                {
+                    if(ui.dataIndx == 'timeIn')
+                    {
+                        ui.$editor.val('8:00AM');
+                        $gridDiv.pqGrid('addClass',{rowIndx:ui.rowIndx, dataIndx:ui.dataIndx, cls:'highlight'});
+                    }
+                    if(ui.dataIndx == 'timeOut')
+                    {
+                        ui.$editor.val('4:00PM');
+                        $gridDiv.pqGrid('addClass',{rowIndx:ui.rowIndx, dataIndx:ui.dataIndx, cls:'highlight'});
+                    }
+                }
+            }
+        }); 
+    }
+
+    function updateDoubleTime($ckbx,rowIndx)
+    {
+        var $gridDiv = $j('#timeCardEntries');
+
+        if($ckbx.prop('checked'))
+        $gridDiv.pqGrid('getRowData',{rowIndx:rowIndx}).isDoubleTime = 'true';
+        else
+        $gridDiv.pqGrid('getRowData',{rowIndx:rowIndx}).isDoubleTime = 'false';
+
+        $gridDiv.pqGrid('addClass',{rowIndx:rowIndx, dataIndx:'isDoubleTime', cls:'highlight'});
+    }
+
+    function refreshGrid_timeCardEntries(dataIndx){
+
+        var $gridDiv = $j('#timeCardEntries');
+        $gridDiv.pqGrid('showLoading');
+
+        Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.gcTimeCard_Ext.retrievePeriodStatus}',
+            idTimeCard,
+            function(result,event)
+            {
+                if(event.status)
+                {
+                    if(result != 'Open')
+                    {
+                        $gridDiv.pqGrid('option','editable',false);
+                        $j('#timeCardEntriesDialog').dialog( "option", "buttons", []);
+                    }
+
+                    Visualforce.remoting.Manager.invokeAction(
+                        '{!$RemoteAction.gcTimeCard_Ext.retrieveTimeCardEntries}',
+                        idTimeCard, dataIndx,
+                        function(result,event)
+                        {
+                            if(event.status)
+                            {
+
+                            }
+                            else 
+                            {
+                                alert(event.message);
+                            }
+                            gGrid.refreshGrid_callback($gridDiv,result);
+                            $gridDiv.pqGrid('hideLoading');
+                        },
+                        {buffer:true, escape:true, timeout:120000});
+
+                }
+                else
+                {
+                    alert(event.message); 
+                    $gridDiv.pqGrid('hideLoading');
+                }
+            },
+            {buffer:true, escape:true, timeout:120000});
+    }
+
+    function deleteTimeCardEntry(rowIndx)
+    {
+        var $gridDiv = $j('#timeCardEntries');
+        $gridDiv.pqGrid('showLoading');
+        var rowData = $gridDiv.pqGrid('getRowData',{rowIndx:rowIndx});
+
+        Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.gcTimeCard_Ext.deleteTimeCardEntry}',
+            rowData.idTimeCardEntry,
+            function(result,event){
+                if(event.status){
+                    $gridDiv.pqGrid('deleteRow',{rowIndx:rowIndx});
+                    $gridDiv.pqGrid('removeData',{rowIndx:rowIndx});
+                    refreshGrid_lines();
+                }
+                else {
+                    alert(event.message);
+                }
+                $gridDiv.pqGrid('hideLoading');
+            },
+            {buffer:true, escape:true, timeout:120000});        
+    }
+
+    function upsertTimeCardEntries()
+    {
+        var $gridDiv = $j('#timeCardEntries');
+
+        var rows = [];
+        $j.each($gridDiv.pqGrid('option','dataModel.data'), function(i,rowData)
+        {
+            if(rowData.timeIn !== undefined && rowData.timeOut !== undefined &&
+               rowData.timeIn.length >= 1 && rowData.timeOut.length >= 1)
+            {
+                if(rowData.idTimeCardEntry === undefined) rowData.idTimeCardEntry = null;
+
+                rows.push({
+                    idTimeCardLine:rowData.idTimeCardLine,
+                    idTimeCardEntry:rowData.idTimeCardEntry,
+                    key:rowData.key,
+                    timeIn:rowData.timeIn,
+                    timeOut:rowData.timeOut,
+                    isDoubleTime:rowData.isDoubleTime
+                });
+            }
+        });
+
+        if(rows.length > 0)
+        {
+            $gridDiv.pqGrid('showLoading');
+            Visualforce.remoting.Manager.invokeAction(
+                '{!$RemoteAction.gcTimeCard_Ext.upsertTimeCardEntries}',
+                rows,
+                function(result,event)
+                {
+                    if(event.status)
+                    {
+                        refreshGrid_timeCardEntries(rows[0].key);
+                    }
+                    else 
+                    {
+                        alert(event.message); 
+                    }
+                    $gridDiv.pqGrid('hideLoading');
+                    refreshGrid_lines();                   
+                },
+                {buffer:true, escape:true, timeout:120000});            
+        }
+    }
+
+    function launchDialog_newTimeCardLine()
+    {
+        if(!idTimeCard)
+        {
+            alert('Select a Time Card, before attempting to add time card lines.');
+            return;
+        }
+        var $dialogDiv = $j('<div style=\"z-index:100 !important;\"></div>');
+
+        var myHTML = '';
+       // myHTML += '<span style=\"font-weight:bold\">Step 1:&nbsp;&nbsp;</span><span>Select Line Type (TCV1)&nbsp;&nbsp;</span>';
+        //myHTML += '<select id=\"selectTcv1\" tabindex=1 onchange=\"selectTcv1Change()\"></select>';
+
+        myHTML += '<div class=\"selectProjectTask\"><br/>'; //style=\"display:none\"><br/>';
+        myHTML +=   '<span style=\"font-weight:bold\">Step 1:&nbsp;&nbsp;</span>';
+        myHTML +=   '<span>Click a row to select a project task.</span><br/>';
+        myHTML +=   '<div id=\"projectTasks\"></div><br/>';
+        myHTML += '</div>';
+
+        myHTML +=   '<span class=\"selectProjectTask\">'; //'   style=\"display:none\">';
+        myHTML +=       '<span style=\"font-weight:bold\">Step 2:&nbsp;&nbsp;</span>';
+        myHTML +=       '<span>Select Wage (TCV1)&nbsp;&nbsp;</span>';
+        myHTML +=       '<select id=\"selectTcv2\" tabindex=1 onchange=\"selectTcv2Change()\" disabled=\"disabled\"></select>';
+        myHTML +=   '</span>';
+
+        myHTML +=   '&nbsp;&nbsp;<button type=\"button\" id="btnCreateTCL" tabindex=0 onclick=\"createTimeCardLine()\" disabled=\"disabled\" class=\"btn-disable\" ">Create Time Card Line</button><br/>';      
+
+        $dialogDiv.append($j(myHTML));
+
+        $dialogDiv.dialog({
+            autoOpen: false,
+            height: 'auto',
+            width: '95%',
+            modal: true,
+            position:{my:'center top', at:'center top', of:'#timeCardLines'},
+            close:function(){$dialogDiv.dialog('destroy'); $dialogDiv.remove();},
+            open:function(){
+                initGrid_projectTasks();
+                refreshGrid_projectTasks();
+            },
+            title: 'Create Time Card Line: '
+        });
+
+        $dialogDiv.dialog('open');  
+    }
+
+    function initGrid_projectTasks()
+    {
+        var gridObj = { title:"",
+                        collapsible:{on:false,collapsed:false,toggle:false},
+                        columnTemplate: {sortable:true, align:'left', maxWidth:100},
+                        dataModel:{data:[], sorting:'local', location:'local', sortDir:'up', sortIndx:'projectName'}, 
+                        dragColumns:{enabled:false},
+                        editable:false,
+                        filterModel:{on:true, mode:'AND', header:true},
+                        freezeCols:0,
+                        freezeRows:0,
+                        height:200,
+                        historyModel:{on:false},
+                        hoverMode:'row',
+                        hwrap:false,
+                        numberCell:{show:true},
+                        pageModel: {type:null},
+                        pasteModel:{on:false},
+                        resizable: true,
+                        roundCorners: false,
+                        scrollModel: {autoFit:true},
+                        selectionModel: { type:'row', mode:'single'},
+                        showBottom:true,
+                        showHeader:true,
+                        showTitle:false,
+                        showTop:true,
+                        showToolbar:false,
+                        sortable:true,
+                        swipeModel:{on:false},
+                        virtualX: false,
+                        //virtualXHeader: false,
+                        virtualY: false,
+                        width:'auto',
+                        wrap:false};
+
+        gridObj.colModel=[  //{dataIndx:'isInternal',           title:'Internal',           gFormat:'checkbox', gFilter:'select'},
+                            {dataIndx:'projectName',        title:'Project',            gFilter:'text'},
+                            {dataIndx:'recordType',        title:'Record Type',         maxWidth:100, align:'left', gFilter:'select'},
+                            {dataIndx:'projectTaskName',    title:'Project Task',       gFilter:'text'},
+                            {dataIndx:'glv1Name',           title:'Business Unit (GLV1)', align:'center', maxWidth:150,gFilter:'text'},
+                            {dataIndx:'glv2Name',           title:'Dep\'t (GLV2)',  gFilter:'text'},
+                            /*{dataIndx:'glv3Name',           title:'Trade (GLV3)',       gFilter:'text'},
+                            {dataIndx:'workOrderName',      title:'SMax WO #',          gFilter:'text'}, */                           
+                            {dataIndx:'projectAccount',     title:'Account',            gFilter:'text',maxWidth:null},
+                            /*{dataIndx:'projectDescription', title:'Project Desc.',      gFilter:'text',maxWidth:null},*/
+                            {dataIndx:'salesPerson', title:'Sales Person',         maxWidth:200,  align:'left', gFilter:'text'}, 
+                            {dataIndx:"scrollSpacer", minWidth:15, maxWidth:15}];
+
+        gGrid.initFormat(gridObj.colModel);
+        gGrid.initFilter(gridObj.colModel);
+
+        var $gridDiv = $j('#projectTasks');
+
+        $gridDiv.pqGrid(gridObj);
+
+        $gridDiv.on('pqgridrefresh', function(event, ui)
+        {
+            //gGrid.refreshTotal($j(this),ui.pageData);
+        });
+
+        $gridDiv.on('pqgridrowclick', function(event,ui)
+        {
+            initSelectTcv2(ui.rowData.idProject, ui.rowData.idProjectTask);
+        });
+    }
+
+    function refreshGrid_projectTasks(){
+        
+        var $gridDiv = $j('#projectTasks');
+        $gridDiv.pqGrid('showLoading');
+
+        Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.gcTimeCard_Ext.retrieveProjectTasks}', 
+            idTimeCardProject,
+            function(result,event){
+                if(event.status){
+                    gGrid.refreshGrid_callback($gridDiv,result);
+                }
+                else {
+                    alert(event.message);
+                }
+                $gridDiv.pqGrid('hideLoading');
+            },
+            {buffer:true, escape:true, timeout:120000});
+    }
+
+    function initSelectTcv2(idProject,idProjectTask)
+    {
+        var $select = $j('#selectTcv2');
+        $select.prop('disabled','disabled');
+
+        var $button = $j('#btnCreateTCL');
+        $button.addClass('btn-disable');
+        $button.prop('disabled','disabled');
+
+        Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.gcTimeCard_Ext.retrieveOptions_tcv2}',
+            idProject,idProjectTask,idTimeCard,
+            function(result,event)
+            {
+                $select.children().remove();
+                if(event.status)
+                {
+                    if(result.length > 0)
+                    {
+                        $j.each(result,function(i,opt){
+                            var $option = $j('<option>').attr('value',opt.idGlv).html(opt.glvName);
+                            $select.append($option);
+                        });
+
+                        $select.prop('disabled',false);
+                        $button.removeClass('btn-disable');
+                        $button.prop('disabled',false);
+                    }
+                    else
+                    {
+                        alert('All possible wage rates for the selected project task have been added to the current time card.');
+                    }
+                }
+                else 
+                {
+                    alert(event.message);
+                }                
+            },
+            {buffer:true, escape:true, timeout:120000});
+    }
+
+    function createTimeCardLine()
+    {
+        var $gridDiv = $j('#selectProjectTask');
+        $gridDiv.pqGrid('showLoading');
+
+        var idProject = null;
+        var idProjectTask = null;
+        var idTcv2 = null
+
+        var rows = $j('#projectTasks').pqGrid( "selection",{ type:'row', method: 'getSelection' });
+
+        if(rows === undefined || rows.length != 1)
+        {
+            alert('Select a Project Task row in the grid.');
+            $gridDiv.pqGrid('hideLoading');
+            return;
+        }
+
+        idProject = rows[0].rowData.idProject;
+        idProjectTask = rows[0].rowData.idProjectTask;
+
+        var idTcv2 = $j('#selectTcv2').val();
+
+        if(!idTcv2)
+        {
+            alert('Select a Wage Rate (TCV2).');
+            $gridDiv.pqGrid('hideLoading');
+            return
+        }
+
+        Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.gcTimeCard_Ext.createTimeCardLine}',
+            idTimeCard,idProject,idProjectTask,idTcv2,
+            function(result,event){
+                if(event.status){
+                    refreshGrid_lines();
+                }
+                else {
+                    alert(event.message);
+                }
+                $j('#btnCreateTCL').addClass('btn-disable');
+                $j('#btnCreateTCL').prop('disabled','disabled');
+                initSelectTcv2(idProject,idProjectTask);
+                $gridDiv.pqGrid('hideLoading');
+            },
+            {buffer:true, escape:true, timeout:120000});
+    }
+
+    function showMessage(title,message){
+        $j("<div>")
+            .html(message)
+            .dialog({
+                autoOpen: true,
+                width: 350,
+                modal: true,
+                title: title,
+                buttons:{
+                    Ok:function(){
+                        $j(this).dialog('close');
+                        $j(this).remove();
+                    }
+                }
+            });
+    }
+
+    function sortDateTime(rowData1, rowData2, dataIndx)
+    {
+        var data1Str = rowData1[dataIndx].split('/'),
+            data2Str = rowData2[dataIndx].split('/'),
+            data1 = data1Str[1] + '/' + data1Str[0] + '/' + data1Str[2],
+            data2 = data2Str[1] + '/' + data2Str[0] + '/' + data2Str[2],
+            date1 = new Date(data1),
+            date2 = new Date(data2),
+            time1 = date1.getTime(),
+            time2 = date2.getTime();
+
+        if (time1 > time2) {
+            return 1;
+        }
+        else if (time1 < time2) {
+            return -1;
+        }
+        else {
+            return 0;
+        }
+    }
+</script>
+
+</apex:component>

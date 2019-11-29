@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <description>Letting the Whitefish Shop Foreman know that the boat is being picked up in Barrie in 2 weeks</description>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>Legend_Letterhead</letterhead>
+    <name>Last Day to Rig</name>
+    <style>freeForm</style>
+    <subject>This Boat is Being Picked Up in Barrie in 2 Weeks</subject>
+    <textOnly>Hey Quentin,
+
+Just letting you know that the {!Opportunity.BoatId__c} for {!Account.Name} is scheduled to be picked up in Barrie on {!Opportunity.Delivery_Date__c}.
+
+If this is already Rigged, please notify Lisa, if not, you may want to bump this up the schedule as it still has to have time to get to Barrie.
+
+Any questions, please let me know.
+
+Thanks!</textOnly>
+    <type>html</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

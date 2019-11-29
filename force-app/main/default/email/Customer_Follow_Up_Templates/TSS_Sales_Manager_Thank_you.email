@@ -1,0 +1,31 @@
+<messaging:emailTemplate subject="I Hope You Enjoyed the Show" recipientType="Contact" relatedToType="Opportunity">
+<messaging:htmlEmailBody >
+Hello {!relatedTo.Account.FirstName},
+<br></br>
+<br></br>
+I'm glad you made it to the Toronto Sportsman Show.  I wanted to take this time to thank you again for becoming part of our Legend Family! I also wanted to let you know that if your Memory Maker is unavailable for any reason whatsoever, you can contact me for anything you need.  
+<br></br>
+<br></br>
+At Legend, we are always striving to create the ultimate customer experience, from buying to boating.  I have attached a link to a quick feedback form with 7 short questions and I would really appreciate if you took a few minutes to share your feelings about your Legend experience here at the show.
+<br></br>
+<br></br>
+                                                            
+<a href="http://legendboats.force.com/surveys/TakeSurvey?id=a1ai0000002Oz8Q&cId={!relatedTo.Account.PersonContactId}&oppId={!relatedTo.Id}">Click Here to Share your Feedback</a>
+<br></br>
+<br></br>
+Thank you again and I look forward to seeing you in the Spring.
+<br></br>
+<br></br>
+Yours in Boating,
+<br></br>
+<br></br>
+Brad MacArthur
+<br></br>
+Sales Manager
+<br></br>
+<br></br>
+bmacarthur@legendboats.com
+<br></br>
+1(800) 459-8448
+</messaging:htmlEmailBody>
+</messaging:emailTemplate>

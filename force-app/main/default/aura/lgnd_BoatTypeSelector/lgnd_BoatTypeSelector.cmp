@@ -1,0 +1,143 @@
+<aura:component access="global">
+
+  <!-- Attributes -->
+  <aura:attribute name="label" type="String" default="Select Product Type" />
+  <aura:attribute name="family" type="String" />
+  <aura:attribute name="productRecordType" type="String" access="global" default=""/>
+  <aura:attribute name="allowMotors" type="Boolean" default="true" />
+  <aura:attribute name="allowTrailers" type="Boolean" default="true" />
+  <aura:attribute name="allowTrollingMotors" type="Boolean" default="true" />
+
+  <!-- Events -->
+  <aura:registerEvent name="typeSelectChanged" type="c:lgnd_BoatTypeSelectorChange_Event" />
+
+  <!-- Methods -->
+  <aura:method name="resetVars" access="public" />
+
+  <div>
+    <label class="slds-form-element__label">{!v.label}</label>
+    <div class="slds-clearfix boat-type-selector">
+      <div class="slds-float_left">
+        <a href="#"
+           class="{!and(v.productRecordType == 'Boat', v.family == 'Utility') ? 'active' : ''}"
+           onclick="{!c.selectType}"
+           onmouseover="{!c.displayTooltip}"
+           onmouseout="{!c.removeToolTip}"
+           data-record-type="Boat"
+           data-family="Utility">
+          <!-- <img src="{!$Resource.BoatTypeSelector + '/BoatTypeSelector/css/images/icon_utilities.svg'}"/> -->
+          <img src="{!$Resource.lgnd_svgs + '/Utility-Icon.svg'}"/>
+        </a>
+        <div class="slds-popover slds-popover_tooltip slds-nubbin_bottom-left" aura:id="utility-tip">
+          <div class="slds-popover__body">Utility Boat</div>
+        </div>
+      </div>
+
+      <div class="slds-float_left">
+        <a href="#"
+           class="{!and(v.productRecordType == 'Boat', v.family == 'Side Console') ? 'active' : ''}"
+           onclick="{!c.selectType}"
+           onmouseover="{!c.displayTooltip}"
+           onmouseout="{!c.removeToolTip}"
+           data-record-type="Boat"
+           data-family="Side Console">
+          <!-- <img src="{!$Resource.BoatTypeSelector + '/BoatTypeSelector/css/images/icon_sideconsoles.svg'}"/> -->
+          <img src="{!$Resource.lgnd_svgs + '/SideConsole-Icon.svg'}"/>
+        </a>
+        <div class="slds-popover slds-popover_tooltip slds-nubbin_bottom-left" aura:id="side-console-tip">
+          <div class="slds-popover__body">Side Console</div>
+        </div>
+      </div>
+      <div class="slds-float_left">
+        <a href="#"
+           class="{!and(v.productRecordType == 'Boat', v.family == 'Full Windshield') ? 'active' : ''}"
+           onclick="{!c.selectType}"
+           onmouseover="{!c.displayTooltip}"
+           onmouseout="{!c.removeToolTip}"
+           data-record-type="Boat"
+           data-family="Full Windshield">
+          <!-- <img src="{!$Resource.BoatTypeSelector + '/BoatTypeSelector/css/images/icon_fullwindshields.svg'}"/> -->
+          <img src="{!$Resource.lgnd_svgs + '/FullWindshield-Icon.svg'}"/>
+        </a>
+        <div class="slds-popover slds-popover_tooltip slds-nubbin_bottom-left" aura:id="full-windshield-tip">
+          <div class="slds-popover__body">Full Windshield</div>
+        </div>
+      </div>
+      <div class="slds-float_left">
+        <a href="#"
+           class="{!and(v.productRecordType == 'Boat', v.family == 'Pontoon') ? 'active' : ''}"
+           onclick="{!c.selectType}"
+           onmouseover="{!c.displayTooltip}"
+           onmouseout="{!c.removeToolTip}"
+           data-record-type="Boat"
+           data-family="Pontoon">
+          <!-- <img src="{!$Resource.BoatTypeSelector + '/BoatTypeSelector/css/images/icon_pontoons.svg'}"/> -->
+          <img src="{!$Resource.lgnd_svgs + '/Pontoon-Icon.svg'}"/>
+        </a>
+        <div class="slds-popover slds-popover_tooltip slds-nubbin_bottom-left" aura:id="pontoon-tip">
+          <div class="slds-popover__body">Pontoon</div>
+        </div>
+      </div>
+      <div class="slds-float_left">
+        <a href="#"
+           class="{!and(v.productRecordType == 'Boat', v.family == 'Deck Boat') ? 'active' : ''}"
+           onclick="{!c.selectType}"
+           onmouseover="{!c.displayTooltip}"
+           onmouseout="{!c.removeToolTip}"
+           data-record-type="Boat"
+           data-family="Deck Boat">
+          <img src="{!$Resource.lgnd_svgs + '/DeckBoat-Icon.svg'}"/>
+        </a>
+        <div class="slds-popover slds-popover_tooltip slds-nubbin_bottom-left" aura:id="deck-boat-tip">
+          <div class="slds-popover__body">Deck Boat</div>
+        </div>
+      </div>
+      <aura:if isTrue="{! v.allowMotors }">
+        <div class="slds-float_left">
+          <a href="#"
+             class="{!v.productRecordType == 'Motor' ? 'active' : ''}"
+             onclick="{!c.selectType}"
+             onmouseover="{!c.displayTooltip}"
+             onmouseout="{!c.removeToolTip}"
+             data-record-type="Motor">
+            <img src="{!$Resource.lgnd_svgs + '/Motor-Icon.svg'}"/>
+          </a>
+          <div class="slds-popover slds-popover_tooltip slds-nubbin_bottom-left" aura:id="motor-tip">
+            <div class="slds-popover__body">Motor Only</div>
+          </div>
+        </div>
+      </aura:if>
+      <aura:if isTrue="{! v.allowTrailers }">
+        <div class="slds-float_left">
+          <a href="#"
+             class="{!v.productRecordType == 'Trailer' ? 'active' : ''}"
+             onclick="{!c.selectType}"
+             onmouseover="{!c.displayTooltip}"
+             onmouseout="{!c.removeToolTip}"
+             data-record-type="Trailer">
+            <img src="{!$Resource.lgnd_svgs + '/Trailer-Icon.svg'}"/>
+          </a>
+          <div class="slds-popover slds-popover_tooltip slds-nubbin_bottom-left" aura:id="trailer-tip">
+            <div class="slds-popover__body">Trailer Only</div>
+          </div>
+        </div>
+      </aura:if>
+      <aura:if isTrue="{! v.allowTrollingMotors }">
+        <div class="slds-float_left">
+          <a href="#"
+             class="{!v.productRecordType == 'Trolling Motor' ? 'active' : ''}"
+             onclick="{!c.selectType}"
+             onmouseover="{!c.displayTooltip}"
+             onmouseout="{!c.removeToolTip}"
+             data-record-type="Trolling Motor">
+            <img src="{!$Resource.lgnd_svgs + '/Motor-Icon.svg'}"/>
+          </a>
+          <div class="slds-popover slds-popover_tooltip slds-nubbin_bottom-left" aura:id="trolling-motor-tip">
+            <div class="slds-popover__body">Trolling Motor Only</div>
+          </div>
+        </div>
+      </aura:if>
+
+    </div>
+  </div>
+</aura:component>

@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RecordType xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Partner_Boat_Sale</fullName>
+    <active>true</active>
+    <businessProcess>Wholesale Sales Process</businessProcess>
+    <compactLayoutAssignment>Partner_Retail_Opportunity</compactLayoutAssignment>
+    <label>Partner Boat Sale</label>
+    <picklistValues>
+        <picklist>Additional_Deposit_Method__c</picklist>
+        <values>
+            <fullName>Cash</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Cheque</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Debit</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Master Card</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Visa</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Deposit_Method__c</picklist>
+        <values>
+            <fullName>Cash</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Cheque</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Master Card</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Other</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Visa</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Finance_Status__c</picklist>
+        <values>
+            <fullName>Approved</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Approved with Conditions</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Declined</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Funded</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Submitted</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Financing_Institution__c</picklist>
+        <values>
+            <fullName>Bank of Montreal</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Desjardins</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Financeit</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>National Bank</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Royal Bank of Canada</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Scotia Bank</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>TD Canada Trust</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>ForecastCategoryName</picklist>
+        <values>
+            <fullName>Best Case</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Closed</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Commit</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Omitted</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Pipeline</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Items_Shipped__c</picklist>
+        <values>
+            <fullName>All Items Shipped</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Items to be Shipped to Barrie</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Items to be Shipped to Whitefish</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>No Shipment Needed</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>LeadSource</picklist>
+        <values>
+            <fullName>Employee Referral</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>External Referral</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Online - Web</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Other</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Public Relations</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Trade Show Event</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Word of mouth</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Payment_Method__c</picklist>
+        <values>
+            <fullName>Cash</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Finance</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Pickup_Location__c</picklist>
+        <values>
+            <fullName>Barrie - Delivery</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Barrie - Pick-up</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Whitefish - Pick-up</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Reason_Lost__c</picklist>
+        <values>
+            <fullName>Other</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Personal Issues</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Purchased Competitive Product</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Purchased Non-Competitive Product</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Unable to Get Financing</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Sales_Department__c</picklist>
+        <values>
+            <fullName>Barrie</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Whitefish</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Wholesale</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Type</picklist>
+        <values>
+            <fullName>Existing Business</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>New Business</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>taxationProvince__c</picklist>
+        <values>
+            <fullName>Alberta</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>British Columbia</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Manitoba</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>New Brunswick</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Newfoundland and Labrador</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Northwest Territories</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Nova Scotia</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Nunavut</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Ontario</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Prince Edward Island</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Quebec</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Saskatchewan</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Yukon</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+</RecordType>

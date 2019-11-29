@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>Legend_Letterhead</letterhead>
+    <name>9a) 1 Year Follow Up</name>
+    <style>freeForm</style>
+    <subject>Come on in, the water&#39;s great</subject>
+    <textOnly>{!Account.FirstName}!
+
+Owning a boat is amazing! The freedom, the bonding, the peace and quiet, whatever floats your boat, really!  I hope that you&#39;ve spent the last year dreaming about boating.  I wanted to reach out to see if I can make your dreams a reality!
+
+Since we first met, Legend Boats has gotten bigger and better! We always do, and there&#39;s no better time than now to jump on board with us. Please give me a call or send me an email or a text to go over what Legend Boats can do for you!
+
+I look forward to hearing from you and helping you finally get out on the water in a new Legend!
+
+
+As always, Yours in Boating,
+
+{!User.Name}
+{!User.Title}
+
+{!User.Email}
+{!User.Phone}
+legendboats.com</textOnly>
+    <type>html</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

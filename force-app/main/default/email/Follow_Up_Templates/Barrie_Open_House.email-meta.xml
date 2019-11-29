@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <description>Season Ticket to Summer Fun</description>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>Legend_Letterhead</letterhead>
+    <name>Barrie Open House</name>
+    <style>freeForm</style>
+    <subject>Your ticket to Summer Fun</subject>
+    <textOnly>Hi {!Account.FirstName},
+
+
+Winter is over :)  ...And here&#39;s your ticket to summer fun!
+
+
+If you&#39;re thinking about creating memories and having a blast on the water with family and friends this summer, you don&#39;t wanna miss Legend Boats Season ticket to summer fun Sales Event This weekend!
+
+
+Offering huge savings on new 2019 boats and pontoons plus 3.99% finance rate.
+
+Start your summer fun This Weekend...Take a short drive with your family this Friday through Sunday to our Legend Boats Store in Barrie.
+
+
+Looking forward to seeing you there.
+
+
+Thanks again.
+
+
+
+
+{!User.Name}
+
+{!User.Title}
+
+{!User.Email}
+
+{!User.Phone}
+
+legendboats.com
+
+{!User.Address}</textOnly>
+    <type>html</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

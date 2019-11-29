@@ -1,0 +1,46 @@
+.THIS {
+  width: 100%;
+  padding: 0.5rem 0;
+  border-top: 1px solid #F4F4F4;
+}
+
+.THIS .slds.col {
+  text-align: right;
+  padding-right: 10px;
+}
+
+.THIS .slds.col:last-child {
+  text-align: right;
+}
+
+.THIS .slds-form-element__control label span.slds-form-element__label {
+  display: none;
+}
+
+.THIS.subOption {
+  padding-left: 5%;
+  font-size: 0.85rem;
+}
+
+.THIS.subOption .slds-checkbox--toggle .slds-checkbox--faux {
+  width: 2rem;
+  height: 1rem;
+}
+
+.THIS.subOption .slds-checkbox--toggle .slds-checkbox--faux:after,
+.THIS.subOption .slds-checkbox--toggle .slds-checkbox--faux:before {
+  height: 0.75rem !important;
+  width: 0.75rem !important;
+}
+
+.THIS.subOption .slds-checkbox--toggle [type=checkbox]:checked + .slds-checkbox--faux_container .slds-checkbox--faux:after {
+  top: 0.2rem !important;
+  left: 0.35rem !important;
+  height: 0.45rem !important;
+  width: 0.25rem !important;
+}
+
+/*.THIS.subOption .slds-checkbox--toggle [type=checkbox]:checked + slds-checkbox--faux_container + .slds-checkbox--faux:before {
+  height: 0.75rem;
+  width: 0.75rem;
+}*/

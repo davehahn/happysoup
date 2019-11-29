@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>AWS_Link__c</fullName>
+    <externalId>false</externalId>
+    <formula>HYPERLINK(&#39;https://s3.amazonaws.com/&#39;&amp;  Bucket_Name__c  &amp;&#39;/&#39;&amp; AWS_Key__c  , 
+&#39;https://s3.amazonaws.com/&#39; &amp; Bucket_Name__c  &amp;&#39;/&#39;&amp;  AWS_Key__c  )</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>AWS Link</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

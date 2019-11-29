@@ -1,0 +1,51 @@
+ {{currentStageIndicator this.Stage__c}}
+  <div class="content-overlay"></div>
+
+  <div class="flex-container payments-editor"></div>
+
+  <div class="flex-container payments-view"></div>
+
+  <div class='user-selector-container'></div>
+
+  <table class='fd_table commissionTable'>
+
+    <thead>
+      <tr>
+        {{ quantity_header this }}
+        <td class="">Product</td>
+        <td class="w8">Sale Price</td>
+        <td class="w8">Commissionable</td>
+        <td class="w8">Std. Rate</td>
+        <td class="w8 hasTotal">Calc. Comm</td>
+        <td class="w10">Applied Rate</td>
+        <td class="w10 hasTotal">Applied Comm.</td>
+        {{#ifEditable this.Stage__c}}
+          <td class="w10"></td>
+        {{/ifEditable}}
+      </tr>
+    </thead>
+
+    {{ table_body this.CommissionLineItems__r }}
+
+    <tfoot>
+      <tr>
+        {{ quantity_footer this }}
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td data-total="true"></td>
+        {{#ifEditable this.Stage__c}}
+          <td>
+            <a href="#" class="fd_button tiny success radius invert newItem" data-record='{"Id": "{{this.Id}}", "Department__c": "{{this.Type__c }}" }' >
+              <i class="fa fa-plus"></i>
+              <i class="fa fa-circle-o-notch fa-spin"></i>
+            </a>
+          </td>
+        {{/ifEditable}}
+      </tr>
+    </tfoot>
+
+  </table>

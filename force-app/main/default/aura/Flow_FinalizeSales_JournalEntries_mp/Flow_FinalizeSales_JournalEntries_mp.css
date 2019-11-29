@@ -1,0 +1,73 @@
+.THIS .myTable {
+	vertical-align: top; 
+	margin: 1em 0;
+	padding: 1em 0;
+}
+
+.THIS .myTableWrap>table {
+	vertical-align: top; 
+	border-top: 3px solid rgb(217, 219, 221);
+	margin: 1em 0;
+}
+
+.THIS .myTableWrap>table>tr>td {
+	border: 1px solid rgb(217, 219, 221);
+}
+
+.THIS .myTableWrap td {
+	vertical-align: top;
+}
+
+.THIS .myTableWrap tbody td {
+	vertical-align: top;
+	line-height: 2.4;
+}
+
+.THIS .myTable thead {
+	text-transform: uppercase;
+	border-bottom: 1px solid rgb(217, 219, 221);
+}
+
+.THIS .myTable thead th { width: 10em; }
+.THIS .myTable thead th+th { width: inherit; }
+.THIS .myTable thead th+th+th { width: 12em; }
+
+.THIS .subtotals td { width: 10em; }
+.THIS .subtotals td+td { width: inherit; }
+.THIS .subtotals td+td+td { width: 12em; }
+
+.THIS .myTable tbody label { display: none; }
+
+.THIS lightning-icon.slds-icon-action-check,
+.THIS lightning-icon.slds-icon-action-reject {
+  height: 36px;
+  width: 36px;
+  text-align: center;
+}
+
+.THIS .btnCreateJournalEntries {
+	text-align: center;
+}
+
+.THIS .btnCreateJournalEntries button,
+.THIS .btnCreateJournalEntries button:active,
+.THIS .btnCreateJournalEntries button:hover,
+.THIS .btnCreateJournalEntries button:link,
+.THIS .btnCreateJournalEntries button:visited {
+	background: #4bca81;
+	color: white;
+	padding: 0.25em 1em;
+	box-shadow: 0px 1px 2px rgba(0,0,0,0.75);
+	text-shadow: 0px -1px 0px rgba(0,0,0,0.5);
+  font-weight: bold;
+}
+
+.THIS .cLightningLookup {
+	max-width: 75%;
+	float: left;
+}
+.THIS .hint {
+	line-height: 1.5;
+	float: right;
+	padding-top: 0.5em;
+}

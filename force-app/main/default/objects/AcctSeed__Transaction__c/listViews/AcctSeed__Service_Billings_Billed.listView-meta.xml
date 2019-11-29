@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>AcctSeed__Service_Billings_Billed</fullName>
+    <columns>NAME</columns>
+    <columns>AcctSeed__Date__c</columns>
+    <columns>AcctSeed__Employee__c</columns>
+    <columns>AcctSeed__Units__c</columns>
+    <columns>AcctSeed__Amount__c</columns>
+    <columns>AcctSeed__Project__c</columns>
+    <columns>AcctSeed__Project_Task__c</columns>
+    <columns>AcctSeed__GL_Account__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>AcctSeed__Billing_Processed__c</field>
+        <operation>equals</operation>
+        <value>1</value>
+    </filters>
+    <filters>
+        <field>AcctSeed__GL_Account_Type__c</field>
+        <operation>equals</operation>
+        <value>Expense</value>
+    </filters>
+    <filters>
+        <field>AcctSeed__Revenue_Recognition_Method__c</field>
+        <operation>equals</operation>
+        <value>Time &amp; Materials in Period Invoiced</value>
+    </filters>
+    <filters>
+        <field>AcctSeed__Time_Card_Day__c</field>
+        <operation>notEqual</operation>
+    </filters>
+    <label>Service Billings-Billed</label>
+</ListView>

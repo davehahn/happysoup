@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <description>Letting the Record Creator know that their Knowledge FAQ Article has been declined</description>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>Legend_Letterhead</letterhead>
+    <name>Article Declined</name>
+    <style>freeForm</style>
+    <subject>Your Article has been Declined</subject>
+    <textOnly>Hi {!Approval_Requesting_User.FirstName},
+
+The following Knowledge Article was rejected:
+
+KB Article Number: {!General_Information__kav.ArticleNumber}
+KB Article Title: {!General_Information__kav.Title}
+URL: {!General_Information__kav.Link}
+
+Reason:
+{!ApprovalRequest.Comments}</textOnly>
+    <type>html</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

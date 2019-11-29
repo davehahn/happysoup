@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>Legend_Letterhead</letterhead>
+    <name>Phone Contact Next Day Follow Up</name>
+    <style>freeForm</style>
+    <subject>Legend Boats - Have some Fun on the Water</subject>
+    <textOnly>Hi {!Account.FirstName},
+
+Thank you for spending time with me on the phone discussing our line of boats here at Legend.  Hopefully we can meet in the near future and I can show you the many features of our line up and the benefits of owning a Legend Boat.
+
+Please let me know when would be a good time for you to visit and a receive a full product demonstration.
+
+At Legend Boats, we take great pride in our service during the ownership process, but of more importance to our customers is the service and attention to detail we pay after you take ownership of your new boat.
+
+Thank you again for your interest in Legend Boats.
+
+
+Best Regards,
+
+{!User.Name}
+{!User.Title}
+
+{!User.Email}
+{!User.Phone}
+legendboats.com
+
+{!User.Address}</textOnly>
+    <type>html</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

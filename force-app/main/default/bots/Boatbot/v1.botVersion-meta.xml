@@ -1,0 +1,697 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<BotVersion xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>v1</fullName>
+    <botDialogGroups>
+        <developerName>English</developerName>
+        <label>English</label>
+    </botDialogGroups>
+    <botDialogGroups>
+        <developerName>French</developerName>
+        <label>French</label>
+    </botDialogGroups>
+    <botDialogGroups>
+        <developerName>Generic</developerName>
+        <label>Generic</label>
+    </botDialogGroups>
+    <botDialogs>
+        <botDialogGroup>English</botDialogGroup>
+        <botSteps>
+            <botSteps>
+                <botVariableOperation>
+                    <botVariableOperands>
+                        <targetName>Search_Variable</targetName>
+                        <targetType>ConversationVariable</targetType>
+                    </botVariableOperands>
+                    <type>Unset</type>
+                </botVariableOperation>
+                <type>VariableOperation</type>
+            </botSteps>
+            <type>Group</type>
+        </botSteps>
+        <botSteps>
+            <botVariableOperation>
+                <botMessages>
+                    <message>I&#39;d be happy to help with any Sales related inquiries. What can I assist you with?</message>
+                </botMessages>
+                <botVariableOperands>
+                    <disableAutoFill>true</disableAutoFill>
+                    <sourceName>_Text</sourceName>
+                    <sourceType>StandardMlSlotClass</sourceType>
+                    <targetName>Search_Variable</targetName>
+                    <targetType>ConversationVariable</targetType>
+                </botVariableOperands>
+                <quickReplyWidgetType>Buttons</quickReplyWidgetType>
+                <type>Collect</type>
+            </botVariableOperation>
+            <type>VariableOperation</type>
+        </botSteps>
+        <botSteps>
+            <botMessages>
+                <message>Hang tight! Let me see what I can find.</message>
+            </botMessages>
+            <type>Message</type>
+        </botSteps>
+        <botSteps>
+            <botVariableOperation>
+                <botInvocation>
+                    <invocationActionName>Bot_SearchKB_Eng</invocationActionName>
+                    <invocationActionType>apex</invocationActionType>
+                    <invocationMappings>
+                        <parameterName>sKeyword</parameterName>
+                        <type>Input</type>
+                        <variableName>Search_Variable</variableName>
+                        <variableType>ConversationVariable</variableType>
+                    </invocationMappings>
+                    <invocationMappings>
+                        <parameterName>sFAQSearchResult</parameterName>
+                        <type>Output</type>
+                        <variableName>Search_Result</variableName>
+                        <variableType>ConversationVariable</variableType>
+                    </invocationMappings>
+                </botInvocation>
+                <type>Set</type>
+            </botVariableOperation>
+            <type>VariableOperation</type>
+        </botSteps>
+        <botSteps>
+            <botMessages>
+                <message>{!Search_Result}</message>
+            </botMessages>
+            <type>Message</type>
+        </botSteps>
+        <botSteps>
+            <botVariableOperation>
+                <botMessages>
+                    <message>Is this what you are looking for?</message>
+                </botMessages>
+                <botQuickReplyOptions>
+                    <literalValue>Yes</literalValue>
+                </botQuickReplyOptions>
+                <botQuickReplyOptions>
+                    <literalValue>No</literalValue>
+                </botQuickReplyOptions>
+                <botVariableOperands>
+                    <disableAutoFill>true</disableAutoFill>
+                    <sourceName>_Text</sourceName>
+                    <sourceType>StandardMlSlotClass</sourceType>
+                    <targetName>MoreHelp</targetName>
+                    <targetType>ConversationVariable</targetType>
+                </botVariableOperands>
+                <quickReplyType>Static</quickReplyType>
+                <quickReplyWidgetType>Menu</quickReplyWidgetType>
+                <type>Collect</type>
+            </botVariableOperation>
+            <type>VariableOperation</type>
+        </botSteps>
+        <botSteps>
+            <botStepConditions>
+                <leftOperandName>MoreHelp</leftOperandName>
+                <leftOperandType>ConversationVariable</leftOperandType>
+                <operatorType>Equals</operatorType>
+                <rightOperandValue>No</rightOperandValue>
+            </botStepConditions>
+            <botSteps>
+                <botVariableOperation>
+                    <botVariableOperands>
+                        <sourceName>Chat_Support</sourceName>
+                        <sourceType>Queue</sourceType>
+                        <targetName>ENQueue</targetName>
+                        <targetType>ConversationVariable</targetType>
+                    </botVariableOperands>
+                    <type>Set</type>
+                </botVariableOperation>
+                <type>VariableOperation</type>
+            </botSteps>
+            <type>Group</type>
+        </botSteps>
+        <botSteps>
+            <botStepConditions>
+                <leftOperandName>MoreHelp</leftOperandName>
+                <leftOperandType>ConversationVariable</leftOperandType>
+                <operatorType>Equals</operatorType>
+                <rightOperandValue>Yes</rightOperandValue>
+            </botStepConditions>
+            <botSteps>
+                <botNavigation>
+                    <botNavigationLinks>
+                        <targetBotDialog>End_Chat</targetBotDialog>
+                    </botNavigationLinks>
+                    <type>Redirect</type>
+                </botNavigation>
+                <type>Navigation</type>
+            </botSteps>
+            <type>Group</type>
+        </botSteps>
+        <botSteps>
+            <botSteps>
+                <conversationSystemMessage>
+                    <systemMessageMappings>
+                        <mappingType>Input</mappingType>
+                        <parameterType>Transfer</parameterType>
+                        <variableName>ENQueue</variableName>
+                    </systemMessageMappings>
+                    <type>Transfer</type>
+                </conversationSystemMessage>
+                <type>SystemMessage</type>
+            </botSteps>
+            <type>Group</type>
+        </botSteps>
+        <botSteps>
+            <conversationSystemMessage>
+                <type>Transfer</type>
+            </conversationSystemMessage>
+            <type>SystemMessage</type>
+        </botSteps>
+        <developerName>Sales</developerName>
+        <label>Sales</label>
+        <mlIntent>Sales</mlIntent>
+        <mlIntentTrainingEnabled>false</mlIntentTrainingEnabled>
+        <showInFooterMenu>false</showInFooterMenu>
+    </botDialogs>
+    <botDialogs>
+        <botDialogGroup>English</botDialogGroup>
+        <botSteps>
+            <botSteps>
+                <botVariableOperation>
+                    <botVariableOperands>
+                        <targetName>Search_Variable</targetName>
+                        <targetType>ConversationVariable</targetType>
+                    </botVariableOperands>
+                    <type>Unset</type>
+                </botVariableOperation>
+                <type>VariableOperation</type>
+            </botSteps>
+            <type>Group</type>
+        </botSteps>
+        <botSteps>
+            <botVariableOperation>
+                <botMessages>
+                    <message>I&#39;d be happy to help with any Service related inquiries. What can I assist you with?</message>
+                </botMessages>
+                <botVariableOperands>
+                    <disableAutoFill>true</disableAutoFill>
+                    <sourceName>_Text</sourceName>
+                    <sourceType>StandardMlSlotClass</sourceType>
+                    <targetName>Search_Variable</targetName>
+                    <targetType>ConversationVariable</targetType>
+                </botVariableOperands>
+                <quickReplyWidgetType>Buttons</quickReplyWidgetType>
+                <type>Collect</type>
+            </botVariableOperation>
+            <type>VariableOperation</type>
+        </botSteps>
+        <botSteps>
+            <botMessages>
+                <message>Hang tight! Let me see what I can find.</message>
+            </botMessages>
+            <type>Message</type>
+        </botSteps>
+        <botSteps>
+            <botVariableOperation>
+                <botInvocation>
+                    <invocationActionName>Bot_SearchKB_Eng</invocationActionName>
+                    <invocationActionType>apex</invocationActionType>
+                    <invocationMappings>
+                        <parameterName>sKeyword</parameterName>
+                        <type>Input</type>
+                        <variableName>Search_Variable</variableName>
+                        <variableType>ConversationVariable</variableType>
+                    </invocationMappings>
+                    <invocationMappings>
+                        <parameterName>sFAQSearchResult</parameterName>
+                        <type>Output</type>
+                        <variableName>Search_Result</variableName>
+                        <variableType>ConversationVariable</variableType>
+                    </invocationMappings>
+                </botInvocation>
+                <type>Set</type>
+            </botVariableOperation>
+            <type>VariableOperation</type>
+        </botSteps>
+        <botSteps>
+            <botMessages>
+                <message>{!Search_Result}</message>
+            </botMessages>
+            <type>Message</type>
+        </botSteps>
+        <botSteps>
+            <type>Wait</type>
+        </botSteps>
+        <developerName>Service</developerName>
+        <label>Service</label>
+        <showInFooterMenu>false</showInFooterMenu>
+    </botDialogs>
+    <botDialogs>
+        <botDialogGroup>Generic</botDialogGroup>
+        <botSteps>
+            <botNavigation>
+                <botNavigationLinks>
+                    <targetBotDialog>English</targetBotDialog>
+                </botNavigationLinks>
+                <botNavigationLinks>
+                    <targetBotDialog>Francais</targetBotDialog>
+                </botNavigationLinks>
+                <type>Redirect</type>
+            </botNavigation>
+            <type>Navigation</type>
+        </botSteps>
+        <developerName>Welcome</developerName>
+        <label>Welcome</label>
+        <showInFooterMenu>false</showInFooterMenu>
+    </botDialogs>
+    <botDialogs>
+        <botDialogGroup>Generic</botDialogGroup>
+        <botSteps>
+            <botNavigation>
+                <botNavigationLinks>
+                    <label>Sales</label>
+                    <targetBotDialog>Sales</targetBotDialog>
+                </botNavigationLinks>
+                <botNavigationLinks>
+                    <label>Service</label>
+                    <targetBotDialog>Service</targetBotDialog>
+                </botNavigationLinks>
+                <type>Redirect</type>
+            </botNavigation>
+            <type>Navigation</type>
+        </botSteps>
+        <developerName>Main_Menu</developerName>
+        <label>Main Menu</label>
+        <showInFooterMenu>false</showInFooterMenu>
+    </botDialogs>
+    <botDialogs>
+        <botDialogGroup>Generic</botDialogGroup>
+        <botSteps>
+            <conversationSystemMessage>
+                <type>Transfer</type>
+            </conversationSystemMessage>
+            <type>SystemMessage</type>
+        </botSteps>
+        <developerName>Transfer_To_Agent</developerName>
+        <label>Transfer To Agent</label>
+        <showInFooterMenu>false</showInFooterMenu>
+    </botDialogs>
+    <botDialogs>
+        <botDialogGroup>Generic</botDialogGroup>
+        <botSteps>
+            <botMessages>
+                <message>Glad I was able to help you today! Have a great day.</message>
+            </botMessages>
+            <type>Message</type>
+        </botSteps>
+        <botSteps>
+            <botSteps>
+                <conversationSystemMessage>
+                    <type>EndChat</type>
+                </conversationSystemMessage>
+                <type>SystemMessage</type>
+            </botSteps>
+            <type>Group</type>
+        </botSteps>
+        <botSteps>
+            <type>Wait</type>
+        </botSteps>
+        <developerName>End_Chat</developerName>
+        <label>End Chat</label>
+        <showInFooterMenu>false</showInFooterMenu>
+    </botDialogs>
+    <botDialogs>
+        <botDialogGroup>Generic</botDialogGroup>
+        <botSteps>
+            <botMessages>
+                <message>Sorry, I didn&#39;t understand that.</message>
+            </botMessages>
+            <type>Message</type>
+        </botSteps>
+        <botSteps>
+            <type>Wait</type>
+        </botSteps>
+        <developerName>Confused</developerName>
+        <label>Confused</label>
+        <showInFooterMenu>false</showInFooterMenu>
+    </botDialogs>
+    <botDialogs>
+        <botDialogGroup>English</botDialogGroup>
+        <botSteps>
+            <botMessages>
+                <message>It looks like you are trying to find out when we are open.  I can certainly help you with that, however I need to know which location you&#39;re looking for.</message>
+            </botMessages>
+            <type>Message</type>
+        </botSteps>
+        <botSteps>
+            <botNavigation>
+                <botNavigationLinks>
+                    <targetBotDialog>Legend_Boat_Barrie</targetBotDialog>
+                </botNavigationLinks>
+                <botNavigationLinks>
+                    <targetBotDialog>Legend_Boats_Montreal</targetBotDialog>
+                </botNavigationLinks>
+                <botNavigationLinks>
+                    <targetBotDialog>Legend_Boats_Whitefish</targetBotDialog>
+                </botNavigationLinks>
+                <botNavigationLinks>
+                    <targetBotDialog>Another_Legend_Dealer</targetBotDialog>
+                </botNavigationLinks>
+                <type>Redirect</type>
+            </botNavigation>
+            <type>Navigation</type>
+        </botSteps>
+        <description>Dialog to provide customers with open hours</description>
+        <developerName>Hours</developerName>
+        <label>Hours</label>
+        <showInFooterMenu>false</showInFooterMenu>
+    </botDialogs>
+    <botDialogs>
+        <botDialogGroup>English</botDialogGroup>
+        <botSteps>
+            <botMessages>
+                <message>Legend Boats Barrie:
+
+2375 Industrial Park Rd, Innisfil, ON 
+L9S 3W1, Canada
+
+The Hours of Operation are:
+Monday to Friday - 8:30am - 6:00pm
+Saturday  9:00am - 4:00pm
+Sunday - Closed
+
+Phone: (705) 431-6922
+
+Is there anything else I can help you with?</message>
+            </botMessages>
+            <type>Message</type>
+        </botSteps>
+        <botSteps>
+            <type>Wait</type>
+        </botSteps>
+        <description>Dialog to provide hours and location for Legend Boats Barrie.</description>
+        <developerName>Legend_Boat_Barrie</developerName>
+        <label>Legend Boat Barrie</label>
+        <showInFooterMenu>false</showInFooterMenu>
+    </botDialogs>
+    <botDialogs>
+        <botDialogGroup>English</botDialogGroup>
+        <botSteps>
+            <botMessages>
+                <message>Legend Boats Montreal:
+
+3255 Chemin D&#39;Oka, Ste-Marthe-sur-le-Lac, QC
+J0N, 1P0
+
+The Hours of Operation are:
+Monday to Friday - 8:30am - 6:00pm
+Saturday  9:00am - 4:00pm
+Sunday - Closed
+
+Phone: (514) 907-7999
+
+Is there anything else I can help you with?</message>
+            </botMessages>
+            <type>Message</type>
+        </botSteps>
+        <botSteps>
+            <type>Wait</type>
+        </botSteps>
+        <description>Dialog to show Legend Boats Montreal hours and location</description>
+        <developerName>Legend_Boats_Montreal</developerName>
+        <label>Legend Boats Montreal</label>
+        <showInFooterMenu>false</showInFooterMenu>
+    </botDialogs>
+    <botDialogs>
+        <botDialogGroup>English</botDialogGroup>
+        <botSteps>
+            <botMessages>
+                <message>Legend Boats Sudbury:
+
+4795 Greater Sudbury Regional Road 55, Whitefish, ON 
+
+The Hours of Operation are:
+Monday to Friday - 8:00am - 5:30pm
+Saturday  9:00am - 4:00pm
+Sunday - Closed
+
+Phone: (705) 866-2821
+
+Is there anything else I can help you with?</message>
+            </botMessages>
+            <type>Message</type>
+        </botSteps>
+        <botSteps>
+            <type>Wait</type>
+        </botSteps>
+        <description>Dialog to provide Legend Boats Whitefish Hours and Location</description>
+        <developerName>Legend_Boats_Whitefish</developerName>
+        <label>Legend Boats Whitefish</label>
+        <showInFooterMenu>false</showInFooterMenu>
+    </botDialogs>
+    <botDialogs>
+        <botDialogGroup>English</botDialogGroup>
+        <botSteps>
+            <type>Wait</type>
+        </botSteps>
+        <description>Dialog to handle when hours are requested for a dealer other than a factory store</description>
+        <developerName>Another_Legend_Dealer</developerName>
+        <label>Another Legend Dealer</label>
+        <showInFooterMenu>false</showInFooterMenu>
+    </botDialogs>
+    <botDialogs>
+        <botDialogGroup>French</botDialogGroup>
+        <botSteps>
+            <botMessages>
+                <message>Bonjour, je suis BoatBot et je suis ici pour vous aider! En quoi puis-je vous aider?</message>
+            </botMessages>
+            <type>Message</type>
+        </botSteps>
+        <botSteps>
+            <botNavigation>
+                <botNavigationLinks>
+                    <targetBotDialog>Sales_FR</targetBotDialog>
+                </botNavigationLinks>
+                <botNavigationLinks>
+                    <targetBotDialog>Service_FR</targetBotDialog>
+                </botNavigationLinks>
+                <botNavigationLinks>
+                    <targetBotDialog>Hours_FR</targetBotDialog>
+                </botNavigationLinks>
+                <type>Redirect</type>
+            </botNavigation>
+            <type>Navigation</type>
+        </botSteps>
+        <developerName>Francais</developerName>
+        <label>Francais</label>
+        <showInFooterMenu>false</showInFooterMenu>
+    </botDialogs>
+    <botDialogs>
+        <botDialogGroup>English</botDialogGroup>
+        <botSteps>
+            <botMessages>
+                <message>Hi, I&#39;m Boatbot and I&#39;m here to help!  What can I help you with?</message>
+            </botMessages>
+            <type>Message</type>
+        </botSteps>
+        <botSteps>
+            <botNavigation>
+                <botNavigationLinks>
+                    <targetBotDialog>Sales</targetBotDialog>
+                </botNavigationLinks>
+                <botNavigationLinks>
+                    <targetBotDialog>Service</targetBotDialog>
+                </botNavigationLinks>
+                <botNavigationLinks>
+                    <targetBotDialog>Hours</targetBotDialog>
+                </botNavigationLinks>
+                <type>Redirect</type>
+            </botNavigation>
+            <type>Navigation</type>
+        </botSteps>
+        <developerName>English</developerName>
+        <label>English</label>
+        <showInFooterMenu>false</showInFooterMenu>
+    </botDialogs>
+    <botDialogs>
+        <botDialogGroup>French</botDialogGroup>
+        <botSteps>
+            <type>Wait</type>
+        </botSteps>
+        <developerName>Sales_FR</developerName>
+        <label>Ventes</label>
+        <showInFooterMenu>false</showInFooterMenu>
+    </botDialogs>
+    <botDialogs>
+        <botDialogGroup>French</botDialogGroup>
+        <botSteps>
+            <botMessages>
+                <message>Cette fonctionnalité sera disponible bientôt</message>
+            </botMessages>
+            <type>Message</type>
+        </botSteps>
+        <botSteps>
+            <type>Wait</type>
+        </botSteps>
+        <developerName>Service_FR</developerName>
+        <label>Service</label>
+        <showInFooterMenu>false</showInFooterMenu>
+    </botDialogs>
+    <botDialogs>
+        <botDialogGroup>French</botDialogGroup>
+        <botSteps>
+            <botMessages>
+                <message>On dirait que vous essayez de savoir quand nous sommes ouverts. Je peux certainement vous aider avec cela, mais j&#39;ai besoin de savoir quel endroit vous recherchez.</message>
+            </botMessages>
+            <type>Message</type>
+        </botSteps>
+        <botSteps>
+            <botNavigation>
+                <botNavigationLinks>
+                    <targetBotDialog>Legend_Boats_Montreal_FR</targetBotDialog>
+                </botNavigationLinks>
+                <botNavigationLinks>
+                    <targetBotDialog>Legend_Boats_Barrie_FR</targetBotDialog>
+                </botNavigationLinks>
+                <botNavigationLinks>
+                    <targetBotDialog>Legend_Boats_Whitefish_FR</targetBotDialog>
+                </botNavigationLinks>
+                <type>Redirect</type>
+            </botNavigation>
+            <type>Navigation</type>
+        </botSteps>
+        <developerName>Hours_FR</developerName>
+        <label>Heures</label>
+        <showInFooterMenu>false</showInFooterMenu>
+    </botDialogs>
+    <botDialogs>
+        <botDialogGroup>French</botDialogGroup>
+        <botSteps>
+            <botMessages>
+                <message>Bateaux Legend Barrie:
+
+2375 Industrial Park Rd, Innisfil, ON 
+L9S 3W1, Canada
+
+Les heures d&#39;ouverture sont:
+Du lundi au vendredi de 8h30 à 18h00
+Samedi de 9h à 16h
+Dimanche - fermé
+
+Téléphone: (705) 431-6922</message>
+            </botMessages>
+            <type>Message</type>
+        </botSteps>
+        <botSteps>
+            <botMessages>
+                <message>Y a-t-il autre chose pour lequel je peux vous aider?</message>
+            </botMessages>
+            <type>Message</type>
+        </botSteps>
+        <botSteps>
+            <type>Wait</type>
+        </botSteps>
+        <developerName>Legend_Boats_Barrie_FR</developerName>
+        <label>Bateaux Legend Barrie</label>
+        <showInFooterMenu>false</showInFooterMenu>
+    </botDialogs>
+    <botDialogs>
+        <botDialogGroup>French</botDialogGroup>
+        <botSteps>
+            <botMessages>
+                <message>Legend Boats Montreal:
+
+3255 Chemin D&#39;Oka, Ste-Marthe-sur-le-Lac, QC
+J0N, 1P0
+
+Les heures d&#39;ouverture sont:
+Du lundi au vendredi de 8h30 à 18h00
+Samedi de 9h à 16h
+Dimanche - fermé
+
+Téléphone: (514) 907-7999</message>
+            </botMessages>
+            <type>Message</type>
+        </botSteps>
+        <botSteps>
+            <botMessages>
+                <message>Y a-t-il autre chose pour lequel je peux vous aider?</message>
+            </botMessages>
+            <type>Message</type>
+        </botSteps>
+        <botSteps>
+            <type>Wait</type>
+        </botSteps>
+        <developerName>Legend_Boats_Montreal_FR</developerName>
+        <label>Bateaux Legend Montreal</label>
+        <showInFooterMenu>false</showInFooterMenu>
+    </botDialogs>
+    <botDialogs>
+        <botDialogGroup>French</botDialogGroup>
+        <botSteps>
+            <botMessages>
+                <message>Bateaux Legend Sudbury:
+
+4795 Greater Sudbury Regional Road 55, Whitefish, ON 
+
+Les heures d&#39;ouverture sont:
+Du lundi au vendredi de 8h00 à 17h30
+Samedi de 9h à 16h
+Dimanche - fermé
+
+Téléphone: (705) 866-2821</message>
+            </botMessages>
+            <type>Message</type>
+        </botSteps>
+        <botSteps>
+            <botMessages>
+                <message>Y a-t-il autre chose pour lequel je peux vous aider?</message>
+            </botMessages>
+            <type>Message</type>
+        </botSteps>
+        <botSteps>
+            <type>Wait</type>
+        </botSteps>
+        <developerName>Legend_Boats_Whitefish_FR</developerName>
+        <label>Bateaux Legend Whitefish</label>
+        <showInFooterMenu>false</showInFooterMenu>
+    </botDialogs>
+    <botDialogs>
+        <botDialogGroup>French</botDialogGroup>
+        <botSteps>
+            <type>Wait</type>
+        </botSteps>
+        <developerName>Another_Legend_Dealer_FR</developerName>
+        <label>Un autre marchand Legend</label>
+        <showInFooterMenu>false</showInFooterMenu>
+    </botDialogs>
+    <conversationVariables>
+        <SObjectType>Queue</SObjectType>
+        <dataType>Id</dataType>
+        <developerName>ENQueue</developerName>
+        <label>ENQueue</label>
+    </conversationVariables>
+    <conversationVariables>
+        <SObjectType>Queue</SObjectType>
+        <dataType>Id</dataType>
+        <developerName>FRQueue</developerName>
+        <label>FRQueue</label>
+    </conversationVariables>
+    <conversationVariables>
+        <dataType>Text</dataType>
+        <developerName>MoreHelp</developerName>
+        <label>MoreHelp</label>
+    </conversationVariables>
+    <conversationVariables>
+        <dataType>Text</dataType>
+        <developerName>Search_Result</developerName>
+        <label>Search Result</label>
+    </conversationVariables>
+    <conversationVariables>
+        <dataType>Text</dataType>
+        <developerName>Search_Variable</developerName>
+        <label>Search Variable</label>
+    </conversationVariables>
+    <conversationVariables>
+        <dataType>Text</dataType>
+        <developerName>Service_Contact_Method</developerName>
+        <label>Service_Contact_Method</label>
+    </conversationVariables>
+    <entryDialog>Welcome</entryDialog>
+    <mainMenuDialog>Main_Menu</mainMenuDialog>
+</BotVersion>

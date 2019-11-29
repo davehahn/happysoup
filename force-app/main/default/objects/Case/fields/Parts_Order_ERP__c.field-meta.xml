@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Parts_Order_ERP__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <externalId>false</externalId>
+    <label>Parts Order ERP</label>
+    <lookupFilter>
+        <active>true</active>
+        <filterItems>
+            <field>AcctSeed__Project__c.RecordTypeId</field>
+            <operation>equals</operation>
+            <value>Legend Partner Parts Order</value>
+        </filterItems>
+        <isOptional>false</isOptional>
+    </lookupFilter>
+    <referenceTo>AcctSeed__Project__c</referenceTo>
+    <relationshipLabel>Cases (Parts Order ERP)</relationshipLabel>
+    <relationshipName>Cases</relationshipName>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

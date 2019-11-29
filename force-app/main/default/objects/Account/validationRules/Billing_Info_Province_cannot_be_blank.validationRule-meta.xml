@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Billing_Info_Province_cannot_be_blank</fullName>
+    <active>false</active>
+    <description>This is a request by Accounting as it can affect taxes.</description>
+    <errorConditionFormula>AND(
+OR (
+ISBLANK(BillingState)))</errorConditionFormula>
+    <errorMessage>Province must be selected under State</errorMessage>
+</ValidationRule>

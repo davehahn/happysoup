@@ -1,0 +1,491 @@
+<apex:page standardController="AcctSeed__Cash_Receipt__c" extensions="gcApplyFinanceCharges" showHeader="true" sidebar="false">
+<head>
+<style>
+tr.pq-row-select td{
+    background-color:yellow;
+}
+tr.total td{
+    font-weight: bold;
+}
+div.pq-grid-footer{
+    display:none;
+}
+.green
+{
+    background-color: #c5e0b2;
+}
+.yellow
+{
+    background-color: #fff3cb;
+}
+.silver
+{
+    background-color: #C0C0C0;
+}
+.red
+{
+    color: #ff0000;
+}
+.link
+{
+    text-decoration:underline;
+    cursor:pointer;
+}
+.editLink
+{
+    color:blue;
+}
+/*body div.bDetailBlock div.pbBottomButtons, body div.bDetailBlock div.pbHeader, body div.bDetailBlock div.apexp 
+{
+    display: none !important;
+}
+body div.bDetailBlock div.pbBody div:not(:nth-child(2))
+{
+    display: none !important;
+}*/
+</style>
+<apex:stylesheet value="{!URLFOR($Resource.GMBLJS__jQueryUI,'/jquery-ui/jquery-ui.min.css')}"/>
+<apex:stylesheet value="{!URLFOR($Resource.GMBLJS__pqGridPro241,'/pqgrid.min.css')}"/>
+
+</head>
+<body>
+    <apex:form >
+        <apex:actionFunction name="rerenderBCR" reRender="bcrContainer"/>
+    </apex:form>
+    <div id="spinner" class="spinner" style="display:none;"></div>
+    <div id="modal" class="modal" style="display:none;"></div>
+    <apex:pageBlock id="cashReceiptDetail" title="Cash Receipt">
+        <apex:pageBlockButtons location="top">
+            <button class="btn" onclick="window.location.href = '/{!AcctSeed__Cash_Receipt__c.Id}'">Back To Receipt Detail</button>
+            <button class="btn" onclick="createFinanceCharges();">Create Dealer Reserved Billing</button>
+        </apex:pageBlockButtons>
+        <apex:outputPanel id="detailSection">
+        <apex:pageBlockSection collapsible="false" columns="2" title="{!AcctSeed__Cash_Receipt__c.Name}">
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="{!$ObjectType.AcctSeed__Cash_Receipt__c.fields.AcctSeed__Receipt_Date__c.Label}"/>
+                <apex:outputField value="{!AcctSeed__Cash_Receipt__c.AcctSeed__Receipt_Date__c}"/>
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="{!$ObjectType.AcctSeed__Cash_Receipt__c.fields.AcctSeed__Status__c.Label}"/>
+                <apex:outputField value="{!AcctSeed__Cash_Receipt__c.AcctSeed__Status__c}"/>
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="{!$ObjectType.AcctSeed__Cash_Receipt__c.fields.Name.Label}"/>
+                <apex:outputField value="{!AcctSeed__Cash_Receipt__c.Name}"/>
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="{!$ObjectType.AcctSeed__Cash_Receipt__c.fields.AcctSeed__Accounting_Period__c.Label}"/>
+                <apex:outputField value="{!AcctSeed__Cash_Receipt__c.AcctSeed__Accounting_Period__c}"/>
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="{!$ObjectType.AcctSeed__Cash_Receipt__c.fields.AcctSeed__Account__c.Label}"/>
+                <apex:outputField value="{!AcctSeed__Cash_Receipt__c.AcctSeed__Account__c}"/>
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="{!$ObjectType.AcctSeed__Cash_Receipt__c.fields.AcctSeed__Amount__c.Label}"/>
+                <apex:outputField value="{!AcctSeed__Cash_Receipt__c.AcctSeed__Amount__c}"/>
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="{!$ObjectType.AcctSeed__Cash_Receipt__c.fields.AcctSeed__Payment_Reference__c.Label}"/>
+                <apex:outputField value="{!AcctSeed__Cash_Receipt__c.AcctSeed__Payment_Reference__c}"/>
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="{!$ObjectType.AcctSeed__Cash_Receipt__c.fields.AcctSeed__Applied_Amount__c.Label}"/>
+                <apex:outputText styleClass="textAppliedAmount" value="${0,number,###,###,##0.00}">
+                    <apex:param value="{!AcctSeed__Cash_Receipt__c.AcctSeed__Applied_Amount__c}" />
+                </apex:outputText>
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="{!$ObjectType.AcctSeed__Cash_Receipt__c.fields.AcctSeed__Purpose__c.Label}"/>
+                <apex:outputField value="{!AcctSeed__Cash_Receipt__c.AcctSeed__Purpose__c}"/>
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="{!$ObjectType.AcctSeed__Cash_Receipt__c.fields.AcctSeed__Balance__c.Label}"/>
+                <apex:outputText styleClass="textBalanceAmount" value="${0,number,###,###,##0.00}">
+                    <apex:param value="{!AcctSeed__Cash_Receipt__c.AcctSeed__Balance__c}" />
+                </apex:outputText>
+            </apex:pageBlockSectionItem>
+        </apex:pageBlockSection>
+        </apex:outputPanel>
+    </apex:pageBlock>
+    
+    <br />
+    <div style="margin:0 auto;">
+        <apex:pageBlock mode="edit" title="Billings">
+            <div>
+                <div id="allOpenBillings"></div>
+            </div>
+        </apex:pageBlock>
+    </div>
+    <apex:outputPanel id="bcrContainer">
+        <apex:relatedList subject="{!Id}" list="AcctSeed__Billing_Cash_Receipts__r"/>
+    </apex:outputPanel>
+
+<div id="exportStage" style="display:none;"></div>
+</body>
+<apex:includeScript value="{!$Resource.GMBLJS__jQuery}"/>
+<apex:includeScript value="{!URLFOR($Resource.GMBLJS__jQueryUI,'/jquery-ui/jquery-ui.min.js')}"/>
+<apex:includeScript value="{!URLFOR($Resource.GMBLJS__pqGridPro241,'/pqgrid.min.js')}"/>
+<apex:includeScript value="{!URLFOR($Resource.GMBLJS__pqGridPro241,'/touch-punch/touch-punch.min.js')}"/>
+<apex:includeScript value="{!$Resource.GMBLJS__accountingJS}"/>
+<apex:includeScript value="{!$Resource.GMBLJS__ExcellentExport}"/>
+<apex:includeScript value="{!$Resource.GMBLJS__gsrSpinner}"/>
+<apex:includeScript value="{!$Resource.GMBLJS__gsrGrid2}"/>
+
+<script>function setFocusOnLoad() {}</script>
+<script type="text/javascript">
+    $j = jQuery.noConflict();
+
+    $j(document).ready(function()
+    {
+        initGrid_billingGrid();
+        refreshBillings();
+    });
+
+    function refreshAll()
+    {
+        refreshGrid_openBillings();
+        rerenderSection();
+    }
+
+    function refreshBillings()
+    {
+        refreshGrid_openBillings();
+    }
+
+    function rerenderSection()
+    {
+        Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.gcApplyFinanceCharges.retrieveCR}',
+            '{!Id}',
+            function(result,event){
+                if(event.status){
+                    $j("span.textAppliedAmount").html(accounting.formatMoney(result.AcctSeed__Applied_Amount__c));
+                    $j("span.textBalanceAmount").html(accounting.formatMoney(result.AcctSeed__Balance__c));
+                }
+                else{
+                    alert(event.message); 
+                }
+            },
+            {buffer:true, escape:true, timeout:120000});                
+    }
+
+    function createFinanceCharges() {
+        var remainingBalance = $j("span.textBalanceAmount").html().replace('$','').replace(',','').replace('\'','');
+        var $dialogDiv = $j('<div id=\"dialogDivGLV4\" style=\"z-index:100 !important;\"></div>');
+        var $innerDiv = $j('<div id=\"lotSearchResults\"></div>');
+        var $htm = "<table cellpadding='10'>"
+            $htm += "<tr>"
+            $htm += "<tr>"
+            $htm += "<td>Cash Receipt Balance:</td>"
+            $htm += "<td>"
+            $htm += remainingBalance
+            $htm += "</td>"
+            $htm += "</tr>"
+            $htm += "<tr>"
+            $htm += "<td>Dealer Reserved:</td>"
+            $htm += "<td><input type='text' id='inputFC' placeholder='Enter Amount..' value='"+remainingBalance+"'/></td>"
+            $htm += "</tr>"
+            $htm += "<tr>"
+            $htm += "<td>Bank Fees:</td>"
+            $htm += "<td><input type='text' id='inputBC' placeholder='Enter Bank Fees.' value='0'/></td>"
+            $htm += "</tr>"
+            $htm += "</table>"
+        $dialogDiv.append($innerDiv.append($htm));
+        $dialogDiv.dialog({
+            autoOpen: false,
+            width: 400,
+            modal: true,
+            //position:{my:'center bottom', at:'center top', of:'#cashReceiptDetail'},
+            close:function(){
+                $dialogDiv.dialog('destroy'); 
+                $dialogDiv.remove();
+            },
+            title: 'Finance Charge and Bank Charge',
+            buttons:{
+                Save:function(){
+                    if($innerDiv.find('#inputFC').val() == '')
+                        return;
+                    var fc = parseFloat($innerDiv.find('#inputFC').val());
+                    var bc = parseFloat($innerDiv.find('#inputBC').val());
+                    if(fc == 0 && bc == 0){
+                        alert('Please enter Dealer Reserved amount.')
+                        return;
+                    }
+                    if(fc < 0 && bc < 0){
+                        alert('Both Dealer Reserved and Bank Fees cannot be negative.')
+                        return;
+                    }
+                                        
+                    gSpinner.show();
+                    Visualforce.remoting.Manager.invokeAction(
+                        '{!$RemoteAction.gcApplyFinanceCharges.createFCBill}',
+                        '{!Id}', fc, bc,
+                        function(result,event){
+                            if(event.status){
+                                $dialogDiv.dialog('close');
+                                rerenderBCR();
+                                rerenderSection();
+                            }
+                            else{
+                                alert(event.message); 
+                            }
+                            gSpinner.hide();
+                        },
+                        {buffer:true, escape:true, timeout:120000});                
+
+                },
+                Cancel: function(){
+                    $dialogDiv.dialog('close');
+                }
+            }
+        });
+        $innerDiv.find('#inputFC').on('keyup',function () {
+            if(isNaN($j(this).val())){
+                alert('Amount must be numeric.');
+                $j(this).val(remainingBalance);
+                $innerDiv.find('#inputBC').val('0');
+            }
+            else if(parseFloat($j(this).val()) > parseFloat(remainingBalance))
+            {
+                alert('Amount must no be greater than cash receipt balance.');
+                $j(this).val(remainingBalance);
+                $innerDiv.find('#inputBC').val('0');
+            }
+            else if(parseFloat($j(this).val()) >= 0)
+            {
+                var bankCharge = parseFloat(remainingBalance) - parseFloat($j(this).val());
+                $innerDiv.find('#inputBC').val(accounting.formatNumber(bankCharge,2,''));
+            }
+
+        });
+
+        $dialogDiv.dialog('open');
+    }
+
+    accounting.settings = {
+        currency: {
+            symbol : "$",   // default currency symbol is '$'
+            format: "%s%v", // controls output: %s = symbol, %v = value/number (can be object: see below)
+            decimal : ".",  // decimal point separator
+            thousand: ",",  // thousands separator
+            precision : 2   // decimal places
+        },
+        number: {
+            precision : 2,  // default precision on numbers is 0
+            thousand: ",",
+            decimal : "."
+        }
+    }
+
+    function initGrid_billingGrid() {
+        var gridObj = {title:"",
+                        collapsible:{on:false,collapsed:false,toggle:false},
+                        columnTemplate: {minWidth:10, editable:false, sortable:true},
+                        dataModel:{data:[], sorting:'local', location:'local'}, 
+                        detailModel:{cache:false},
+                        dragColumns:{enabled:false},
+                        editable:true,
+                        editModel: {clicksToEdit:1, saveKey: jQuery.ui.keyCode.ENTER, keyUpDown: false, onSave:null, onBlur:'save'},
+                        filterModel:{on:true, mode:'AND', header:true, type:'local'},
+                        freezeCols:0,
+                        freezeRows:0,
+                        // flexHeight:true,
+                        width:'100%',
+                        height:350,
+                        historyModel:{on:false},
+                        hoverMode:'row',
+                        hwrap:false,
+                        numberCell:{show:true},
+                        pageModel: {type:null},
+                        pasteModel:{on:false},
+                        resizable: true,
+                        roundCorners: false,
+                        scrollModel: {autoFit:true},
+                        selectionModel: {type:null},
+                        showBottom:true,
+                        showHeader:true,
+                        showTitle:false,
+                        showTop:true,
+                        showToolbar:true,
+                        sortable:true,
+                        swipeModel:{on:false},
+                        track:false,
+                        virtualX: false,
+                        //virtualXHeader: false,
+                        virtualY: false,
+                        width:'auto',
+                        wrap:false};
+
+        gridObj.colModel=[
+                        {dataIndx:"customerName",   title:"Customer",        align:"left",  dataType:"string", gFilter:'text'},
+                        {dataIndx:"billingName",    title:"Billing",        align:"left",   dataType:"string", gFilter:'text'},
+                        {dataIndx:"billDate",       title:"Bill Date",      align:"left",   dataType:"date"},
+                        {dataIndx:"billTotal",      title:"Total",          align:"right",  dataType:"float", gFormat: 'money', gTotal:true},
+                        {dataIndx:"billBalance",    title:"Balance",        align:"right",  dataType:"float", gFormat: 'money', gTotal:true},
+                        {dataIndx:"action",     title:"",               align:"center", dataType:"float", maxWidth:100, sortable:false, editable:true},
+                        {dataIndx:"scrollSpacer", minWidth:15, maxWidth:15, sortable:false}];
+
+        gGrid.initFormat(gridObj.colModel);
+        gGrid.initFilter(gridObj.colModel);
+
+
+        var $gridDiv = $j('#allOpenBillings');
+
+        $gridDiv.pqGrid(gridObj);
+
+        gGrid.appendExportLink($gridDiv);
+
+        $gridDiv.on('pqgridrefresh', function(event, ui)
+        {
+            gGrid.refreshTotal($j(this),ui.pageData);
+        });
+
+        $j.each(gridObj.colModel, function(i,col)
+        {
+            if(col.dataIndx == 'action')
+            {
+                $j.extend(col,{
+                    render:function(ui)
+                    {
+                        //onClick="applyBCR('+ui.rowIndx+');"
+                        if (ui.rowData.isTotal) return '';
+                        return '<a href="javascript:void(0);" class="link">Apply</a>';
+                    }
+                });                 
+            }
+            else if(col.dataIndx == 'billingName')
+            {
+                $j.extend(col,{
+                    render:function(ui)
+                    {
+                        if (ui.rowData.isTotal) return '';
+                        return '<a class="link" href="/'+ui.rowData.idBill+'">'+ui.rowData.billingName+'</span>';
+                    }
+                });                 
+            }
+            else if(col.dataIndx == 'customerName')
+            {
+                $j.extend(col,{
+                    render:function(ui)
+                    {
+                        if (ui.rowData.isTotal) return '';
+                        return '<a class="link" href="/'+ui.rowData.idCustomer+'">'+ui.rowData.customerName+'</span>';
+                    }
+                });                 
+            }
+        });
+
+        $gridDiv.on('pqgridchange', function(event, ui)
+        {
+            var row = ui.rowList[0];
+
+            //only respond to grid changes that have all of the following attributes
+            if(row.type == 'update' &&
+               ui.source != 'xyz' &&    
+               ui.rowList && 
+               ui.rowList.length == 1 &&
+               row.newRow)
+            {
+                var newRow = row.newRow;
+                var oldRow = row.oldRow;
+                var rowData = row.rowData;
+                var rowIndx = row.rowIndx;
+
+                if(newRow.action !== undefined && newRow.action != oldRow.action)
+                {
+                    if(!isNaN(newRow.action) && newRow.action != '')
+                    {
+                        applyBCR(rowIndx, newRow.action);
+                        rowData.action = '';
+                    }
+                    else if(isNaN(newRow.action))
+                    {
+                        alert('The Amount must be numerical.');
+                    }
+                }
+                //ok to continue
+            }
+        });
+
+        $gridDiv.on('pqgrideditorbegin',function(event,ui)
+        {
+            if(ui.dataIndx == 'action')
+            {
+                var remainingBalance = $j("span.textBalanceAmount").html().replace('$','').replace(',','').replace('\'','');
+                if(parseFloat(ui.rowData.billBalance) > parseFloat(remainingBalance))
+                    ui.$editor.val(remainingBalance);
+                else if(parseFloat(ui.rowData.billBalance) < parseFloat(remainingBalance))
+                        ui.$editor.val(ui.rowData.billBalance);
+            }
+        });
+         
+        $gridDiv.on( "focus", "input,textarea,div[contenteditable=true]",  function(evt){
+             $j(this).select();
+        });
+    }
+
+    function refreshGrid_openBillings()
+    {
+        var $gridDiv = $j('#allOpenBillings');
+        $gridDiv.pqGrid('showLoading');
+        Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.gcApplyFinanceCharges.retrieveOpenBillings}',
+            '{!Id}',
+            function(result,event){
+                if(event.status){
+                    gGrid.refreshGrid_callback($gridDiv,result);
+                }
+                else{
+                    alert(event.message); 
+                }
+                $gridDiv.pqGrid('hideLoading');
+            },
+            {buffer:true, escape:true, timeout:120000});
+    }
+
+    function applyBCR(indx,amount) 
+    {
+        var $gridDiv = $j('#allOpenBillings');
+        var rowData = $gridDiv.pqGrid('getRowData',{rowIndx: indx});
+        $gridDiv.pqGrid('showLoading');
+        Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.gcApplyFinanceCharges.applyBCR}',
+            '{!Id}', rowData.idBill, amount,
+            function(result,event){
+                if(event.status){
+                    if(result.idBill == undefined){
+                        $gridDiv.pqGrid("deleteRow", { rowIndx: indx });
+                    }else{
+                        $j.extend($gridDiv.pqGrid('getRowData',{rowIndx:indx}),result);
+                    }
+                    $gridDiv.pqGrid("refresh");
+                    rerenderBCR();
+                    rerenderSection();
+                }
+                else{
+                    alert(event.message); 
+                }
+                $gridDiv.pqGrid('hideLoading');
+            },
+            {buffer:true, escape:true, timeout:120000});                
+    }
+    
+    function showMessage(title,message){
+        $j("<div>")
+            .html(message)
+            .dialog({
+                autoOpen: true,
+                width: 350,
+                modal: true,
+                title: title,
+                buttons:{
+                    Ok:function(){
+                        $j(this).dialog('close');
+                        $j(this).remove();
+                    }
+                }
+            });
+    }
+</script>
+</apex:page>

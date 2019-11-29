@@ -1,0 +1,781 @@
+<apex:page title="{!AcctSeed__Account_Payable__c.Name}" standardController="AcctSeed__Account_Payable__c" extensions="gcAccountPayable_Override" showHeader="true" sidebar="true" cache="false" readOnly="true">
+
+<head>
+<style>
+.link{
+    cursor:pointer;
+    text-decoration:underline;
+}
+tr.pq-row-select td{
+    background-color:yellow;
+}
+tr.total td{
+    font-weight: bold;
+}
+div.pq-grid-footer{
+    display:none;
+}
+input.autoComplete
+{
+    width: 90%;
+    border: 1px solid #000;
+}
+
+</style>
+
+<apex:stylesheet value="{!URLFOR($Resource.GMBLJS__jQueryUI,'/jquery-ui/jquery-ui.min.css')}"/>
+<apex:stylesheet value="{!URLFOR($Resource.GMBLJS__pqGridPro241,'/pqgrid.min.css')}"/>
+
+</head>
+<body>
+    <div style="width:98%; margin:0 auto">
+        <apex:outputPanel id="theDetail">
+            <apex:detail subject="{!Id}" relatedList="false" inlineEdit="true" oncomplete="refreshGrid_apLines();"></apex:detail>
+        </apex:outputPanel>
+        <apex:pageBlock mode="edit" title="Account Payable Lines">
+            <table width="100%">
+                <tr>
+                    <td><div id="accountPayableLines"></div></td>
+                </tr>
+                <tr>
+                    
+                </tr>
+                <tr>
+                    <td style="text-align:left;">
+                        <apex:outputText rendered="{!IF(!AcctSeed__Account_Payable__c.GMBLASG__Posted__c,true,false)}">
+                            <button type="button" class="btn" id="btnAddNewRow" onclick="addNewBlankRow();">New AP Line</button>
+                            <button type="button" class="btn" id="changes" onclick="saveChanges();" >Save Changes</button>
+                        </apex:outputText>
+                        <span id="journal-date" style="display: none;">
+                            <apex:outputField value="{!AcctSeed__Account_Payable__c.AcctSeed__Date__c}"></apex:outputField>                        
+                        </span>
+                    </td>
+                </tr>
+            </table>
+        </apex:pageBlock>
+    </div>
+    <apex:form >
+        <apex:actionFunction name="rerenderDetail" reRender="theDetail"/>
+        <apex:actionFunction name="rerenderRelated" reRender="relatedListCashDisburseMents"/>
+    </apex:form>
+    <apex:relatedList id="relatedListCashDisburseMents" subject="{!Id}" list="AcctSeed__Account_Payable_Cash_Disbursements__r"/>
+</body>
+
+<apex:includeScript value="{!$Resource.GMBLJS__jQuery}"/>
+<apex:includeScript value="{!URLFOR($Resource.GMBLJS__jQueryUI,'/jquery-ui/jquery-ui.min.js')}"/>
+<apex:includeScript value="{!$Resource.GMBLJS__accountingJS}"/>
+<apex:includeScript value="{!$Resource.GMBLJS__ExcellentExport}"/>
+
+<apex:includeScript value="{!URLFOR($Resource.GMBLJS__pqGridPro241,'/pqgrid.min.js')}"/>
+
+<apex:includeScript value="{!$Resource.GMBLJS__gsrSpinner}"/>
+<apex:includeScript value="{!$Resource.GMBLJS__gsrGrid2}"/>
+
+
+<script>function setFocusOnLoad() {}</script>
+<script type="text/javascript">
+
+    
+    var glAccounts = {!allGlAccounts};
+    var glVariables = {!allGlVariables};
+
+    $j = jQuery.noConflict();
+    accounting.settings = {
+        currency: {
+            symbol : "$",   // default currency symbol is '$'
+            format: "%s%v", // controls output: %s = symbol, %v = value/number (can be object: see below)
+            decimal : ".",  // decimal point separator
+            thousand: ",",  // thousands separator
+            precision : 6   // decimal places
+        },
+        number: {
+            precision : 6,  // default precision on numbers is 0
+            thousand: ",",
+            decimal : "."
+        }
+    }
+    $j(document).ready(function()
+    {
+        initGrid_apLines();
+        refreshGrid_apLines();
+
+        $j("input.autoComplete").keydown(function(event){
+            if(event.keyCode == 13) {
+                if($j("input.autoComplete").val().length == 0) {
+                    event.preventDefault();
+                    return false;
+                }
+            }
+        });
+
+        $j('#accountPayableLines').on( "focus", "input.autoComplete", function( event ) {
+            $currentSelection = null;
+            $inputField = $j(this);
+            $inputField.autocomplete({
+                minLength: 2,
+                autoFocus: false,
+                source: function (request, response) {
+                    Visualforce.remoting.Manager.invokeAction(
+                        '{!$RemoteAction.gcAccountPayable_Override.searchGLA}',
+                         request.term,
+                        function (result, event) {
+                            if (event.status) {
+                                $j.each(result,function(k,item){
+                                    if(item.label == undefined)
+                                        result[k].label = item.Name;
+                                    if(item.value == undefined)
+                                        result[k].value = item.Id;
+                                })  
+                                response(result);
+                            } else {
+                                alert(event.message);
+                            }
+                        }, {
+                            buffer: true,
+                            escape: true,
+                            timeout: 120000
+                        });
+                },
+                focus: function (event, ui) {
+                    $inputField.val(ui.item.Name);
+                    $currentSelection = ui.item;
+                    return false;
+                },
+                select: function (event, ui) {
+                    var rowIndx = $inputField.prop('id');
+                    updateRowData(rowIndx,ui.item,'glv');
+                    return false;
+                },
+                change: function (event, ui) {
+                    var rowIndx = $inputField.prop('id');
+                    if($currentSelection != null)
+                    {
+                        updateRowData(rowIndx,$currentSelection,'glv');
+                        $currentSelection = null;
+                    }
+                    return false;
+                }
+            });
+        });
+
+        $j('#accountPayableLines').on( "focus", "input.autoComplete1", function( event ) {
+            $currentSelection = null;
+            $inputField = $j(this);
+            $inputField.autocomplete({
+                minLength: 2,
+                autoFocus: false,
+                source: function (request, response) {
+                    Visualforce.remoting.Manager.invokeAction(
+                        '{!$RemoteAction.gcAccountPayable_Override.searchProject}',
+                         request.term,
+                        function (result, event) {
+                            if (event.status) {
+                                $j.each(result,function(k,item){
+                                    if(item.label == undefined)
+                                        result[k].label = item.Name;
+                                    if(item.value == undefined)
+                                        result[k].value = item.Id;
+                                })  
+                                response(result);
+                            } else {
+                                alert(event.message);
+                            }
+                        }, {
+                            buffer: true,
+                            escape: true,
+                            timeout: 120000
+                        });
+                },
+                focus: function (event, ui) {
+                    $inputField.val(ui.item.Name);
+                    $currentSelection = ui.item;
+                    return false;
+                },
+                select: function (event, ui) {
+                    var rowIndx = $inputField.prop('id');
+                    updateRowData(rowIndx,ui.item,'project');
+                    return false;
+                },
+                change: function (event, ui) {
+                    var rowIndx = $inputField.prop('id');
+                    if($currentSelection != null)
+                    {
+                        updateRowData(rowIndx,$currentSelection,'project');
+                        $currentSelection = null;
+                    }
+                    return false;
+                }
+            });
+        });
+
+        $j('#accountPayableLines').on( "focus", "input.autoComplete2", function( event ) {
+            $currentSelection = null;
+            $inputField = $j(this);
+            $inputField.autocomplete({
+                minLength: 0,
+                autoFocus: false,
+                source: function (request, response) {
+                    var rowIndx = $inputField.prop('id');
+                    var $gridDiv = $j('#accountPayableLines');
+                    var rowData = $gridDiv.pqGrid( "getRowData", {rowIndx:rowIndx});
+                    if(rowData.idProject == null || rowData.projectName == null || rowData.projectName == '')
+                    {
+                        rowData.idTask = null;
+                        rowData.taskName = null;
+                        $gridDiv.pqGrid( "refreshRow", {rowIndx:rowIndx} );
+                        $gridDiv.pqGrid( "quitEditMode" );
+                        return false;
+                    }
+                    Visualforce.remoting.Manager.invokeAction(
+                        '{!$RemoteAction.gcAccountPayable_Override.searchProjectTask}',
+                         request.term, rowData.idProject,
+                        function (result, event) {
+                            if (event.status) {
+                                $j.each(result,function(k,item){
+                                    if(item.label == undefined)
+                                        result[k].label = item.Name;
+                                    if(item.value == undefined)
+                                        result[k].value = item.Id;
+                                })  
+                                response(result);
+                            } else {
+                                alert(event.message);
+                            }
+                        }, {
+                            buffer: true,
+                            escape: true,
+                            timeout: 120000
+                        });
+                },
+                focus: function (event, ui) {
+                    $inputField.val(ui.item.Name);
+                    $currentSelection = ui.item;
+                    return false;
+                },
+                select: function (event, ui) {
+                    var rowIndx = $inputField.prop('id');
+                    updateRowData(rowIndx,ui.item,'task');
+                    return false;
+                },
+                change: function (event, ui) {
+                    var rowIndx = $inputField.prop('id');
+                    if($currentSelection != null)
+                    {
+                        updateRowData(rowIndx,$currentSelection,'task');
+                        $currentSelection = null;
+                    }
+                    return false;
+                }
+            });
+        });
+
+        $j('#accountPayableLines').on( "focus", "input.autoComplete3", function( event ) {
+            $currentSelection = null;
+            $inputField = $j(this);
+            $inputField.autocomplete({
+                minLength: 2,
+                autoFocus: false,
+                source: function (request, response) {
+                    Visualforce.remoting.Manager.invokeAction(
+                        '{!$RemoteAction.gcAccountPayable_Override.searchProduct}',
+                         request.term,
+                        function (result, event) {
+                            if (event.status) {
+                                $j.each(result,function(k,item){
+                                    if(item.label == undefined)
+                                        result[k].label = item.Name;
+                                    if(item.value == undefined)
+                                        result[k].value = item.Id;
+                                })  
+                                response(result);
+                            } else {
+                                alert(event.message);
+                            }
+                        }, {
+                            buffer: true,
+                            escape: true,
+                            timeout: 120000
+                        });
+                },
+                focus: function (event, ui) {
+                    $inputField.val(ui.item.Name);
+                    $currentSelection = ui.item;
+                    return false;
+                },
+                select: function (event, ui) {
+                    var rowIndx = $inputField.prop('id');
+                    updateRowData(rowIndx,ui.item,'product');
+                    return false;
+                },
+                change: function (event, ui) {
+                    var rowIndx = $inputField.prop('id');
+                    if($currentSelection != null)
+                    {
+                        updateRowData(rowIndx,$currentSelection,'product');
+                        $currentSelection = null;
+                    }
+                    return false;
+                }
+            });
+        });
+    });
+
+    var autoCompleteGlv1 = function (ui) {
+            var $inp = ui.$cell.find("input");
+            $inp.autocomplete({
+                source: glVariables.glv1List,
+                selectItem: { on: true }, //custom option
+                highlightText: { on: true }, //custom option
+                minLength: 0
+            }).focus(function () {
+                $j(this).autocomplete("search", "");
+            });
+        }
+
+    var dpFormat = "m/d/yy";
+    if('{!locale}' == 'en_CA') dpFormat = "dd/mm/yy";
+
+    var dateEditor = function (ui) {
+        var $inp = ui.$cell.find("input");
+        $inp.datepicker({
+            changeMonth: true,
+            changeYear: true,
+            dateFormat: dpFormat, 
+            showAnim: '',
+            onSelect: function () {
+                this.firstOpen = true;
+            },
+            beforeShow: function (input, inst) {
+                return !this.firstOpen;
+            },
+            onClose: function () {
+                this.focus();
+            }
+        });
+    }
+
+    function updateRowData(rowIndx,obj,type)
+    {
+        var $gridDiv = $j('#accountPayableLines');
+        var rowData = $gridDiv.pqGrid( "getRowData", {rowIndx:rowIndx});
+        if(type == 'glv')
+            rowData.idGLAccount = obj.Id;
+        else if(type == 'product')
+            rowData.idProduct = obj.Id;
+        else if(type == 'project')
+            rowData.idProject = obj.Id;
+        else if(type == 'task')
+            rowData.idTask = obj.Id;
+        $gridDiv.pqGrid('refreshRow', {rowIndx:rowIndx});
+    }
+
+    function initGrid_apLines()
+    {
+        var gridObj = {title:"",
+                        collapsible:{on:false,collapsed:false,toggle:false},
+                        columnTemplate: {minWidth:110, sortable:true},
+                        dataModel:{data:[], sorting:'local', location:'local', recIndx: "idLine"}, 
+                        detailModel:{cache:false},
+                        dragColumns:{enabled:false},
+                        editable:true,
+                        //editModel: {clicksToEdit:1, saveKey: jQuery.ui.keyCode.ENTER, keyUpDown: false, onSave:null, onBlur:'save'},
+                        editModel:{clicksToEdit:1, pressToEdit:false, filterKeys:true, keyUpDown:false, onSave: null, saveKey:$j.ui.keyCode.ENTER},
+                        filterModel:{on:true, mode:'AND', header:true, type:'local'},
+                        freezeCols:0,
+                        freezeRows:0,
+                        //height:300,
+                        flexHeight:true,
+                        hoverMode:'row',
+                        hwrap:false,
+                        numberCell:{show:true},
+                        pageModel: {type:null},
+                        pasteModel:{on:false},
+                        resizable: true,
+                        roundCorners: false,
+                        // scrollModel: {autoFit:true},
+                        scrollModel: {pace:'fast', autoFit:false, horizontal:true},
+                        selectionModel: {type:'null'},
+                        showBottom:true,
+                        showHeader:true,
+                        showTitle:false,
+                        showTop:true,
+                        showToolbar:true,
+                        sortable:true,
+                        swipeModel:{on:false},
+                        track:true,
+                        trackModel: { on: true },
+                        virtualX: false,
+                        //virtualXHeader: false,
+                        virtualY: false,
+                        width:'auto',
+                        wrap:false,
+                        historyModel:{on:true},
+                        history: function (evt, ui) {
+                            if (ui.canUndo != null) {
+                                $j("button.changes", this).button("option", { disabled: !ui.canUndo });
+                            }
+                        },
+                        toolbar: {
+                            items: [
+                                { type: 'button', icon: 'ui-icon-plus', label: 'New AP Line', 
+                                    listener:{'click': function(){addNewBlankRow();}}
+                                },
+                                { type: 'separator' },
+                                { type: 'button', icon: 'ui-icon-disk', label: 'Save Changes', cls: 'changes', 
+                                    listener:{'click': function(){saveChanges();}},
+                                    options: { disabled: true }
+                                }
+                            ]
+                        }
+                    };
+
+        gridObj.colModel=[{dataIndx:"idLine",   hidden:true,            editable:false},                       
+                        {dataIndx:"action",         title:"",           editable:false, maxWidth:60, minWidth:60},
+                        {dataIndx:"lineName",       title:"Line#",      editable:false, maxWidth:90, hidden:true},
+                        {dataIndx:"projectName",    title:"Project",    align:'left', editable:function(ui){return (ui.rowData != undefined && (ui.rowData.jePosted == 'true' || ui.rowData.taxLine == 'true'))?false:true;}, editor:{ type: 'textbox', cls: 'autoComplete1', select: true}},
+                        {dataIndx:"idProject",      hidden:true},
+                        {dataIndx:"taskName",       title:"Task",       align:'left', editable:function(ui){return (ui.rowData != undefined && (ui.rowData.jePosted == 'true' || ui.rowData.taxLine == 'true'))?false:true;}, editor:{ type: 'textbox', cls: 'autoComplete2', select: true}},
+                        {dataIndx:"idTask",         hidden:true},
+                        {dataIndx:'gLAccountName',  title:'GL Account', align:'left', editable:function(ui){return (ui.rowData != undefined && (ui.rowData.jePosted == 'true' || ui.rowData.taxLine == 'true'))?false:true;}, editor:{ type: 'textbox', cls: 'autoComplete', select: true}, minWidth:200},
+                        {dataIndx:"idGLAccount",    hidden:true},
+                        {dataIndx:"idGLV1",         hidden:true},
+                        {dataIndx:"gLV1Name",           title:"{!$ObjectType.AcctSeed__Account_Payable_Line__c.fields.AcctSeed__GL_Account_Variable_1__c.Label}",
+                            editor: {
+                                type: 'select',
+                                //init:autoCompleteGlv1,
+                                valueIndx: "value",
+                                labelIndx: "text",                                      
+                                mapIndices: {"text": "gLV1Name", "value": "idGLV1"},
+                                options: glVariables.glv1List
+                            }, editable:function(ui){return (ui.rowData != undefined && (ui.rowData.jePosted == 'true' || ui.rowData.taxLine == 'true'))?false:true;}
+                        },
+                        {dataIndx:"idGLV2",         hidden:true},
+                        {dataIndx:"gLV2Name",           title:"{!$ObjectType.AcctSeed__Account_Payable_Line__c.fields.AcctSeed__GL_Account_Variable_2__c.Label}",
+                            editor: {
+                                type: 'select',
+                                valueIndx: "value",
+                                labelIndx: "text",                                      
+                                mapIndices: {"text": "gLV2Name", "value": "idGLV2"},
+                                options: glVariables.glv2List
+                            }, editable:function(ui){return (ui.rowData != undefined && (ui.rowData.jePosted == 'true' || ui.rowData.taxLine == 'true'))?false:true;}
+                        },
+                        {dataIndx:"idGLV3",         hidden:true},
+                        {dataIndx:"gLV3Name",           title:"{!$ObjectType.AcctSeed__Account_Payable_Line__c.fields.AcctSeed__GL_Account_Variable_3__c.Label}",
+                            editor: {
+                                type: 'select',
+                                valueIndx: "value",
+                                labelIndx: "text",                                      
+                                mapIndices: {"text": "gLV3Name", "value": "idGLV3"},
+                                options: glVariables.glv3List
+                            }, editable:function(ui){return (ui.rowData != undefined && (ui.rowData.jePosted == 'true'))?false:true;}
+                        },
+                        {dataIndx:"idGLV4",         hidden:true},
+                        {dataIndx:"gLV4Name",           title:"{!$ObjectType.AcctSeed__Account_Payable_Line__c.fields.AcctSeed__GL_Account_Variable_4__c.Label}",
+                            editor: {
+                                type: 'select',
+                                valueIndx: "value",
+                                labelIndx: "text",                                      
+                                mapIndices: {"text": "gLV4Name", "value": "idGLV4"},
+                                options: glVariables.glv4List
+                            }, editable:function(ui){return (ui.rowData != undefined && (ui.rowData.jePosted == 'true' || ui.rowData.taxLine == 'true'))?false:true;}
+                        },
+                        {dataIndx:"aplDate",        title:"Date",   dataType:"string",    align:"center", maxWidth:90, 
+                            editable:function(ui){return (ui.rowData != undefined && (ui.rowData.jePosted == 'true' || ui.rowData.taxLine == 'true'))?false:true;},
+                            editor: {type:'textbox', init: dateEditor}, 
+                            sortType: function (rowData1, rowData2, dataIndx) {return sortDateTime(rowData1, rowData2,'aplDate');}
+                        },
+                        {dataIndx:"productName",    title:"Product",    align:'left', editable:function(ui){return (ui.rowData != undefined && (ui.rowData.jePosted == 'true' || ui.rowData.taxLine == 'true'))?false:true;}, editor:{ type: 'textbox', cls: 'autoComplete3', select: true}, minWidth:170},
+                        {dataIndx:"idProduct",      hidden:true},
+                        {dataIndx:"qty",          title: "Quantity",  dataType:"number",  align:"right",  gFormat:'number',   gTotal:true, maxWidth:60, editable:function(ui){return (ui.rowData != undefined && (ui.rowData.jePosted == 'true' || ui.rowData.taxLine == 'true'))?false:true;}},
+                        {dataIndx:"aplAmount",    title: "Amount",     dataType:"float",   align:"right",  gFormat:'money',    gTotal:true, maxWidth:80, editable:function(ui){return (ui.rowData != undefined && (ui.rowData.jePosted == 'true' || ui.rowData.taxLine == 'true'))?false:true;}},
+                        {dataIndx:"lineNote",    title: "Note",     dataType:"string",    maxWidth:180, editable:function(ui){return (ui.rowData != undefined && (ui.rowData.jePosted == 'true' || ui.rowData.taxLine == 'true'))?false:true;},editor: {type:'textarea', attr:'rows='}},
+                        {dataIndx:"scrollSpacer", minWidth:15, maxWidth:15, editable:false}];
+
+        gGrid.initFormat(gridObj.colModel);
+        gGrid.initFilter(gridObj.colModel);
+
+        $j.each(gridObj.colModel, function(i,col)
+        {
+            if(col.dataIndx == 'action')
+            {
+                 $j.extend(col,{
+                    render:function(ui)
+                    {
+                        if(ui.rowData.isTotal) return;
+                        var myHTML = '';
+                        var myViewURL = '';
+                        if(ui.rowData.idLine != undefined)
+                        {
+                            myViewURL = '/'+ui.rowData.idLine;
+                            myHTML =  '<a href=\"'+myViewURL+'\" target=\"_blank\">view</a>';
+                        }
+                        if((ui.rowData.jePosted == 'false' && ui.rowData.taxLine == 'false') || ui.rowData.idLine == undefined)
+                            myHTML += '&nbsp;&nbsp;<span class="link" onclick="deleteLine('+ui.rowIndx+');">del</span>';
+
+                        return myHTML;
+                    }
+                });
+            }
+            else if(col.dataIndx == 'aplDateYMD')
+            {
+                 $j.extend(col,{
+                    render:function(ui)
+                    {
+                        if(ui.rowData.isTotal || ui.rowData.aplDateYMD == undefined) return;
+                        
+                        return $j.datepicker.formatDate( dpFormat, new Date(ui.rowData.aplDateYMD) );
+                    }
+                });
+            }
+            else if(col.dataIndx == 'aplAmount' 
+                || col.dataIndx == 'qty')
+            {
+                $j.extend(col,{
+                    render:function(ui)
+                    {
+                        if(ui.rowData[col.dataIndx] == undefined || parseFloat(ui.rowData[col.dataIndx]) == 0) return '';
+                        else 
+                        {
+                            if(col.dataIndx == 'qty')
+                                return accounting.formatNumber(ui.rowData[col.dataIndx],6,'');
+                            else
+                                return accounting.formatMoney(ui.rowData[col.dataIndx]);
+                        }
+                    }
+                });
+            }
+
+        });
+
+        var $gridDiv = $j('#accountPayableLines');
+
+        $gridDiv.on( "pqgrideditorbegin", function( event, ui ) {
+            if(ui.dataIndx == 'taskName')
+            {
+                if(ui.rowData.idProject == undefined 
+                    || ui.rowData.idProject == null 
+                    || ui.rowData.projectName == null 
+                    || ui.rowData.projectName == '')
+                {
+                    ui.rowData.idTask = null;
+                    ui.rowData.taskName = null;
+                    $gridDiv.pqGrid( "refreshRow", {rowIndx:ui.rowIndx} );
+                    $gridDiv.pqGrid( "quitEditMode" );
+                }
+            }
+
+            if(ui.dataIndx == 'gLAccountName' || ui.dataIndx == 'projectName' || ui.dataIndx == 'productName' || ui.dataIndx == 'taskName')
+               ui.$editor.prop('id',ui.rowIndx);
+        });
+
+        $gridDiv.on('pqgridrefresh', function(event, ui)
+        {
+            gGrid.refreshTotal($j(this),ui.pageData);
+        });
+
+        $gridDiv.on('pqgridrowclick', function(event, ui)
+        {
+            console.log(ui.rowData);
+        });
+
+        $gridDiv.on('pqgridchange', function(event, ui)
+        {
+            var row = ui.rowList[0];
+
+            //only respond to grid changes that have all of the following attributes
+            if(row.type == 'update' &&
+               ui.source != 'xyz' &&    
+               ui.rowList && 
+               ui.rowList.length == 1 &&
+               row.newRow)
+            {
+                var newRow = row.newRow;
+                var oldRow = row.oldRow;
+                var rowData = row.rowData;
+                //var idLine = row.rowData.idLine;
+                //console.log('row: '+JSON.stringify(row));
+                var rowIndx = row.rowIndx;
+
+                if(newRow.qty !== undefined && newRow.qty != oldRow.qty)
+                {
+                    if(newRow.qty == null || newRow.qty == '' ){
+                        rowData.qty = 0;
+                    }
+                }
+                else if(newRow.aplAmount !== undefined && newRow.aplAmount != oldRow.aplAmount)
+                {
+                    if(newRow.aplAmount == null || newRow.aplAmount == '' ){
+                        rowData.aplAmount = 0;
+                    }
+                }
+                else if(newRow.gLAccountName !== undefined)
+                {
+                    if(rowData.gLAccountName == null 
+                        || rowData.gLAccountName == '')
+                    {
+                        rowData.idGLAccount = null;
+                    }
+                }
+                else if(newRow.productName !== undefined)
+                {
+                    if(rowData.productName == null 
+                        || rowData.productName == '')
+                    {
+                        rowData.idProduct = null;
+                    }
+                }
+                else if(newRow.projectName !== undefined)
+                {
+                    if(rowData.projectName == null 
+                        || rowData.projectName == '')
+                    {
+                        rowData.idProject = null;
+                        rowData.idTask = null;
+                        rowData.taskName = null;
+                    }
+                    else if(newRow.projectName != oldRow.projectName)
+                    {
+                        rowData.idTask = null;
+                        rowData.taskName = null;
+                    }
+                }
+                else if(newRow.taskName !== undefined)
+                {
+                    if(rowData.taskName == null 
+                        || rowData.taskName == '')
+                    {
+                        rowData.idTask = null;
+                    }
+                }
+                $gridDiv.pqGrid('refresh');
+            }
+        });
+
+        $gridDiv.pqGrid(gridObj);
+
+        $gridDiv.pqGrid( "option", "showToolbar", false );
+        //select the contents of the input text box, when edit commences
+        $gridDiv.on( "focus", "input,textarea,div[contenteditable=true]",  function(evt){
+             $j(this).select();
+        });
+    }
+
+    function deleteLine(rowIndx)
+    {
+        var $gridDiv = $j('#accountPayableLines');
+        var rowData = $gridDiv.pqGrid('getRowData',{rowIndx:rowIndx});
+        if(rowData == undefined || rowData.idLine == undefined)
+        {
+            $gridDiv.pqGrid('deleteRow',{rowIndx:rowIndx});
+            $gridDiv.pqGrid('refresh');
+            
+        }
+        else
+        {
+            $gridDiv.pqGrid('showLoading');
+            Visualforce.remoting.Manager.invokeAction(
+                '{!$RemoteAction.gcAccountPayable_Override.deleteAPLine}',
+                rowData.idLine,
+                function(result,event){
+                    if(event.status){
+                        // $gridDiv.pqGrid('deleteRow',{rowIndx:rowIndx});
+                        // $gridDiv.pqGrid('refresh');
+                        refreshGrid_apLines();
+                    }
+                    else{
+                        alert(event.message); 
+                    }
+                    $gridDiv.pqGrid('hideLoading');
+                    rerenderRelated();
+                },
+                {buffer:true, escape:true, timeout:120000});
+        }
+    }
+
+    function refreshGrid_apLines()
+    {
+        var $gridDiv = $j('#accountPayableLines');
+        $gridDiv.pqGrid('showLoading');
+        Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.gcAccountPayable_Override.retrieveAPLines}',
+            '{!Id}',
+            function(result,event){
+                if(event.status){
+                    gGrid.refreshGrid_callback($gridDiv,result);
+                }
+                else{
+                    alert(event.message); 
+                }
+                $gridDiv.pqGrid('hideLoading');
+                rerenderRelated();
+
+            },
+            {buffer:true, escape:true, timeout:120000});
+    }
+
+    function addNewBlankRow()
+    {
+        $gridDiv = $j('#accountPayableLines');
+        var rowData = {qty:0,aplDate:$j("#journal-date span").html()};
+        var rowIndx = $gridDiv.pqGrid( "getRowIndx", { rowData : rowData } );
+        $gridDiv.pqGrid( "addRow",{rowData: rowData});
+        $gridDiv.pqGrid( "goToPage", { rowIndx: rowIndx} );
+        $gridDiv.pqGrid( "editFirstCellInRow", { rowIndx: rowIndx } );
+        
+    }
+
+    function saveChanges()
+    {
+        
+        var changes = $j('#accountPayableLines').pqGrid("getChanges");
+        //console.log(changes);
+        if(changes.addList.length == 0 && changes.updateList.length == 0) return;
+        var $gridDiv = $j('#accountPayableLines');
+        $gridDiv.pqGrid('showLoading');
+        Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.gcAccountPayable_Override.saveAPLines}',
+            '{!Id}',changes.addList, changes.updateList,
+            function(result,event){
+                if(event.status){
+                    //gGrid.refreshGrid_callback($gridDiv,result);
+                    refreshGrid_apLines();
+                    rerenderDetail();
+                }
+                else{
+                    alert(event.message); 
+                    //refreshGrid_apLines();
+                }
+                $gridDiv.pqGrid('hideLoading');
+                rerenderRelated();
+            },
+            {buffer:true, escape:true, timeout:120000});
+    }
+
+    function sortDateTime(rowData1, rowData2, dataIndx)
+    {
+        var d=1,m=0;
+        if('{!locale}' == 'en_CA')
+        {
+            d=0;
+            m=1;
+        }
+        var data1 = rowData1[dataIndx].split('/'),
+            data2 = rowData2[dataIndx].split('/'),
+            date1 = new Date(data1[2],data1[m],data1[d]),
+            date2 = new Date(data2[2],data2[m],data2[d]),
+            time1 = date1.getTime(),
+            time2 = date2.getTime();
+
+        if (time1 > time2) {
+            return 1;
+        }
+        else if (time1 < time2) {
+            return -1;
+        }
+        else {
+            return 0;
+        }
+    }
+</script>
+
+</apex:page>

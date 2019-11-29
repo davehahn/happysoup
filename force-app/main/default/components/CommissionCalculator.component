@@ -1,0 +1,169 @@
+<apex:component Controller="CommissionCalculatorController">
+
+  <apex:includeScript value="{!URLFOR($Resource.Foundation, 'js/vendor/modernizr.js')}"/>
+  <apex:stylesheet value="{!URLFOR($Resource.LGND_SLDS_203, 'assets/styles/salesforce-lightning-design-system-vf.min.css')}" />
+  <c:LegendFormResources includeFontAwesome="true" includeHandlebars="true" includeSFFD="true"/>
+  <apex:stylesheet value="{!URLFOR($Resource.commissionCalculator, '/css/styles.min.css')}" />
+  <apex:stylesheet value="{!URLFOR($Resource.commissionCalculator, '/css/sfone_styles.min.css')}" />
+
+  <div id="lgnd-spinner" class="hidden">
+    <apex:image url="{!$Resource.LegendLoadingIndicator2017}" />
+  </div>
+
+  <div id="body" class="lgnd">
+
+    <apex:outputPanel layout="none" rendered="{!NOT(renderedOnParentDetailPage)}">
+      <div class="slds-page-header" role="banner">
+        <div class="slds-grid">
+          <div class="slds-col slds-has-flexi-truncate">
+            <div class="slds-media slds-no-space slds-grow">
+              <div class="slds-media__figure">
+                <img src="{!URLFOR($Resource.LGND_SLDS_203, 'assets/icons/custom/custom17_60.png')}" class="slds-icon slds-icon--large slds-icon-custom-custom17"/>
+              </div>
+              <div class="slds-media__body">
+                <p class="slds-text-title--caps slds-line-height--reset">Commission Calculator</p>
+                <h1 class="slds-page-header__title slds-m-right--small slds-align-middle slds-truncate slds-m-bottom--xx-small" title="{!oppName}">
+                  <img src="{!URLFOR($Resource.LGND_SLDS_203, 'assets/icons/custom/custom68_60.png')}" class="slds-icon slds-icon--small slds-icon-custom-custom68 slds-m-right--small"/>
+                  <apex:outputPanel layout="none" rendered="{!erpOrderId != null}">
+                    <a href="/{!erpOrderId}">{!oppName}</a>
+                  </apex:outputPanel>
+                  <apex:outputPanel layout="none" rendered="{!erpOrderId = null}">
+                    {!oppName}
+                  </apex:outputPanel>
+                </h1>
+                <img src="{!URLFOR($Resource.LGND_SLDS_203, 'assets/icons/standard/campaign_60.png')}" class="slds-icon slds-icon--small slds-icon-standard-campaign slds-m-right--small"/>
+                <apex:outputPanel rendered="{!campaignName != null}">
+                  {!campaignName}
+                </apex:outputPanel>
+              </div>
+            </div>
+          </div>
+          <div class="slds-col slds-no-flex slds-grid slds-align-top">
+            <apex:outputPanel layout="none" rendered="{!retURL != null}">
+              <a id="returnBtn" data-href="{!retURL}" class="slds-button slds-button--neutral">Return</a>
+            </apex:outputPanel>
+          </div>
+        </div>
+
+      </div>
+    </apex:outputPanel>
+
+
+<!-- ********************************************************** -->
+
+
+    <div id="content"></div>
+    <div id="modal"></div>
+
+  </div>
+
+  <!-- <apex:includeScript value="{!URLFOR($Resource.commissionCalculator, 'js/vendor/hammer.min.js')}" /> -->
+  <apex:includeScript value="{!URLFOR($Resource.aljs, 'jquery/jquery.aljs-init.min.js')}" />
+  <apex:includeScript value="{!URLFOR($Resource.aljs, 'jquery/jquery.aljs-tabs.js')}" />
+  <apex:includescript value="{!URLFOR($Resource.CkEditor,
+ 'ckeditor/ckeditor.js')}" />
+  <apex:includeScript value="{!URLFOR($Resource.UtilJS)}" />
+  <apex:includeScript value="{!URLFOR($Resource.commissionCalculator, 'js/commissionCalculator.js')}" />
+   <apex:includeScript value="{!URLFOR($Resource.commissionCalculator, 'js/commissionPaymentEditor.js')}" />
+  <apex:includeScript value="{!URLFOR($Resource.commissionCalculator, 'js/commissionStatusPath.js')}" />
+  <apex:includeScript value="{!URLFOR($Resource.commissionCalculator, 'js/commissionPayment.js')}" />
+  <apex:includeScript value="{!URLFOR($Resource.commissionCalculator, 'js/commissionUserSelector.js')}" />
+  <apex:includeScript value="{!URLFOR($Resource.commissionCalculator, 'js/commissionPaymentEditor.js')}" />
+  <apex:includeScript value="{!URLFOR($Resource.commissionCalculator, 'js/commissionCalculatorSfOne.js')}" />
+  <!-- <apex:includeScript value="{!URLFOR($Resource.foundation, 'js/foundation/responsive-tables.js')}"/> -->
+  <script type="text/javascript">
+
+  (function($) {
+
+    var oppId = "{!oppId}",
+      comRecordId = "{!comRecordId}",
+      erpOrderId = "{!erpOrderId}",
+      maxApprovalStage = "{!maxApprovalStage}",
+      permissions = {!permissions},
+      currentUiEnv = determineUI('{! $User.UITheme }'),
+      spinnerURLs = {
+        gray: "{!URLFOR($Resource.LGND_SLDS_203, 'assets/images/spinners/slds_spinner.gif')}",
+        brand: "{!URLFOR($Resource.LGND_SLDS_203, 'assets/images/spinners/slds_spinner_brand.gif')}",
+        white: "{!URLFOR($Resource.LGND_SLDS_203, 'assets/images/spinners/slds_spinner_inverse.gif')}"
+      },
+      calcTmplsURLS, paymentTmplsURLS;
+    if( currentUiEnv === 'sf1' )
+    {
+      console.log('we are on a salesforce one page');
+
+      $('#body').addClass('sfOne');
+      calcTmplsURLS = {
+        'indicator': "{!URLFOR($Resource.commissionCalculator, 'templates/indicator.tpl.html')}",
+        'record': "{!URLFOR($Resource.commissionCalculator, 'templates/sf1/record.tpl.html')}",
+        'item': "{!URLFOR($Resource.commissionCalculator, 'templates/sf1/item.tpl.html')}",
+        'item_attribute': "{!URLFOR($Resource.commissionCalculator, 'templates/sf1/item_attribute.tpl.html')}",
+        'editable_item_attribute': "{!URLFOR($Resource.commissionCalculator, 'templates/sf1/editable_item_attribute.tpl.html')}"
+      }
+      $.when( LGND.HandlebarsHelpers.templateLoader(calcTmplsURLS) ).done(function(hbTemplates) {
+      var ctrl = new CommissionCalculatorSfOne( $('#content'), hbTemplates, oppId, comRecordId, "{!$Profile.Name}", "{!$UserRole.Name}" );
+      ctrl.init();
+    });
+    }
+    else
+    {
+      console.log('permissions');
+      console.log( permissions );
+      calcTmplsURLS = {
+        'indicator': "{!URLFOR($Resource.commissionCalculator, 'templates/indicator.tpl.html')}",
+        'records': "{!URLFOR($Resource.commissionCalculator, 'templates/records.tpl.html')}",
+        'stage_path': "{!URLFOR($Resource.commissionCalculator, 'templates/status_path.tpl.html')}",
+        'control_buttons': "{!URLFOR($Resource.commissionCalculator, 'templates/control_buttons.tpl.html')}",
+        //'record_content': "{!URLFOR($Resource.commissionCalculator, 'templates/record_content.tpl.html')}",
+        'items_table': "{!URLFOR($Resource.commissionCalculator, 'templates/items_table.tpl.html')}",
+        'table_body': "{!URLFOR($Resource.commissionCalculator, 'templates/items_table_body.tpl.html')}",
+        'row': "{!URLFOR($Resource.commissionCalculator, 'templates/items_table_row.tpl.html')}",
+        'edit_row': "{!URLFOR($Resource.commissionCalculator, 'templates/items_table_edit_row.tpl.html')}",
+        'new_row': "{!URLFOR($Resource.commissionCalculator, 'templates/new_item_row.tpl.html')}",
+        'invoice': "{!URLFOR($Resource.commissionCalculator, 'templates/invoice.tpl.html')}",
+        'dispute_modal': "{!URLFOR($Resource.commissionCalculator, 'templates/dispute_modal.tpl.html')}"
+      };
+      paymentTmplsURLS = {
+         'payment_records': "{!URLFOR($Resource.commissionCalculator, 'templates/payment_records.tpl.html')}",
+         'payment_amount': "{!URLFOR($Resource.commissionCalculator, 'templates/payment_amount.tpl.html')}",
+         'payment_record_details': "{!URLFOR($Resource.commissionCalculator, 'templates/payment_record_details.tpl.html')}",
+         'payment_record_editor': "{!URLFOR($Resource.commissionCalculator, 'templates/payment_record_editor.tpl.html')}",
+         'user_selector': "{!URLFOR($Resource.commissionCalculator, 'templates/user_selector.tpl.html')}",
+         'payment_record_edit': "{!URLFOR($Resource.commissionCalculator, 'templates/payment_record_edit.tpl.html')}",
+      };
+
+      $.when( LGND.HandlebarsHelpers.templateLoader(calcTmplsURLS), LGND.HandlebarsHelpers.templateLoader(paymentTmplsURLS) ).done(function(cTmpls, pTmpls) {
+        var tmpls = {calc: cTmpls, payment: pTmpls};
+        CommissionCalc.init(oppId, comRecordId, erpOrderId, tmpls, "{!$User.Id}", maxApprovalStage, spinnerURLs, permissions);
+      });
+    }
+
+    $("#returnBtn").on('click', function(e) {
+      var $this = $(this),
+          retURL = $this.data('href');
+      console.log(retURL);
+      e.preventDefault();
+      if( (typeof sforce != 'undefined') && (sforce != null)  )
+      {
+        console.log('sforce.one redirect');
+        sforce.one.navigateToURL(retURL);
+      }
+      else
+      {
+        console.log('hard redirect');
+        window.location.href = window.location.origin + retURL;
+      }
+    });
+    // CKEDITOR.config.removePlugins = 'maximize, image, source';
+    // CKEDITOR.config.enterMode = CKEDITOR.ENTER_BR;
+
+  })( jQuery.noConflict() );
+
+// console.log('Opportunity Id = {!oppId}');
+// console.log('ComRecord Id = {!comRecordId}')
+// console.log('ERPOrderId = {!erpOrderId}');
+// console.log('objectId = {!objectId}')
+// console.log('retUrl = {!retURL}')
+
+  </script>
+
+</apex:component>

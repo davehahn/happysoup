@@ -1,0 +1,69 @@
+<div id="record-blocker" class="{{dealLostClass records }}"> <p>Deal Lost</p> </div>
+<div class="slds-tabs--default {{dealLostClass records }}" data-aljs="tabs" data-tabset="1">
+
+  <ul class="slds-tabs--default__nav" role="tablist">
+    {{#each records}}
+    <li class="slds-tabs--default__item outer-tab-item slds-text-title--caps slds-active" role="presentation" data-tabset="1">
+      <a class="slds-tabs--default__link outer-tab-link" href="javascript:void(0);" role="tab" tabindex="0" aria-selected="true" aria-controls="{{this.Id}}" data-aljs-show="{{this.Id}}">
+        {{this.Type__c}}
+      </a>
+    </li>
+    {{/each}}
+    <li class="slds-tabs--default__item outer-tab-item slds-text-title--caps slds-hide" role="presentation" data-tabset="1">
+      <a class="slds-tabs--default__link outer-tab-link" href="javascript:void(0);" role="tab" aria-selected="true" aria-controls="invoice" data-aljs-show="invoice">
+       Invoice
+      </a>
+    </li>
+  </ul>
+
+  {{#each records}}
+  <div id="{{this.Id}}" class="slds-tabs--default__content outer-tab-content slds-hide" role="tabpanel" aria-labelledby="{{this.Id}}">
+    <div class="slds-tabs--scoped" data-aljs="inner-tabs" data-uniquifier="{{this.Id}}">
+      <ul class="slds-tabs--scoped__nav" role="tablist">
+        <li class="slds-tabs--scoped__item inner-tab-item{{this.Id}} slds-text-title--caps slds-active" title="Item One" role="presentation" data-tabset="2">
+          <a class="slds-tabs--scoped__link inner-tab-link{{this.Id}}" href="javascript:void(0);" role="tab" tabindex="0" aria-selected="true" aria-controls="{{this.Id}}_details" data-aljs-show="{{this.Id}}_details">
+            Details
+          </a>
+        </li>
+        <li class="slds-tabs--scoped__item inner-tab-item{{this.Id}} slds-text-title--caps" title="Item One" role="presentation" data-tabset="2">
+          <a class="slds-tabs--scoped__link inner-tab-link{{this.Id}}" href="javascript:void(0);" role="tab" tabindex="0" aria-selected="true" aria-controls="{{this.Id}}_feed" data-aljs-show="{{this.Id}}_feed">
+            Feed
+          </a>
+        </li>
+      </ul>
+      <div id="{{this.Id}}_details" class="slds-tabs--scoped__content inner-tab-content{{this.Id}} slds-show" role="tabpanel" aria-labelledby="{{this.Id}}_details">
+        <div class="content-overlay"></div>
+
+        <div class="slds-grid">
+          <div class="slds-col slds-large-size--9-of-12 status-path">
+            {{ status-path this }}
+          </div>
+          <div class="slds-col slds-large-size--3-of-12 control-buttons" style="text-align:center;">
+            {{ control-buttons this }}
+          </div>
+        </div>
+
+        <div class="flex-container payments-editor"></div>
+
+        <div class="flex-container payments-view"></div>
+
+        <div class='user-selector-container'></div>
+
+        <div class="items-table-container">
+          {{ items-table this }}
+        </div>
+
+      </div>
+
+      <div id="{{this.Id}}_feed" class="slds-tabs--scoped__content slds-hide inner-tab-content{{this.Id}}" role="tabpanel" aria-labelledby="{{this.Id}}_feed">
+        <iframe src="/apex/CommissionRecordChatterFeed?commissionRecordId={{this.Id}}" width="100%"  height="600px"/>
+      </div>
+
+    </div>
+
+  </div>
+  {{/each}}
+
+  <div id="invoice" class="slds-tabs--default__content outer-tab-content slds-hide" role="tabpanel" aria-labelledby="Invoice"></div>
+</div>
+

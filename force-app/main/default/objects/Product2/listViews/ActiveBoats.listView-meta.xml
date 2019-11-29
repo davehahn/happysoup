@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>ActiveBoats</fullName>
+    <columns>PRODUCT2.NAME</columns>
+    <columns>PRODUCT2.FAMILY</columns>
+    <columns>Model_Year__c</columns>
+    <columns>Standard_Motor__c</columns>
+    <columns>Standard_Trailer__c</columns>
+    <columns>PRODUCT2.LAST_UPDATE</columns>
+    <columns>Series__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>PRODUCT2.ACTIVE</field>
+        <operation>equals</operation>
+        <value>1</value>
+    </filters>
+    <filters>
+        <field>PRODUCT2.RECORD_TYPE</field>
+        <operation>equals</operation>
+        <value>Product2.Boat</value>
+    </filters>
+    <label>Active Boats</label>
+    <language>en_US</language>
+</ListView>

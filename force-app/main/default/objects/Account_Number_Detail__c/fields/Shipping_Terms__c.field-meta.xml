@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Shipping_Terms__c</fullName>
+    <description>Shipping terms</description>
+    <externalId>false</externalId>
+    <label>Shipping Terms</label>
+    <required>false</required>
+    <trackFeedHistory>true</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <controllingField>Type__c</controllingField>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Free Shipping</fullName>
+                <default>false</default>
+                <label>Free Shipping</label>
+            </value>
+            <value>
+                <fullName>Free Shipping on orders over $1000</fullName>
+                <default>false</default>
+                <label>Free Shipping on orders over $1000</label>
+            </value>
+            <value>
+                <fullName>Free Shipping on orders over $500</fullName>
+                <default>false</default>
+                <label>Free Shipping on orders over $500</label>
+            </value>
+            <value>
+                <fullName>No Free Shipping</fullName>
+                <default>false</default>
+                <label>No Free Shipping</label>
+            </value>
+        </valueSetDefinition>
+        <valueSettings>
+            <controllingFieldValue>Parts</controllingFieldValue>
+            <valueName>Free Shipping on orders over $1000</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Parts</controllingFieldValue>
+            <valueName>Free Shipping on orders over $500</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Parts</controllingFieldValue>
+            <valueName>No Free Shipping</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Parts Booking Order</controllingFieldValue>
+            <valueName>Free Shipping</valueName>
+        </valueSettings>
+    </valueSet>
+</CustomField>

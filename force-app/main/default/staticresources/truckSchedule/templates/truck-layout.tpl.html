@@ -1,0 +1,15 @@
+ <div class="slds-grid slds-wrap truck-row">
+    {{#each trailerPositions}}
+      <div class="slds-col slds-size--3-of-12 ">
+        <h1> Position: {{this}} </h1>
+        {{trailerCell this ../loadContents}}
+      </div>
+    {{/each}}
+
+    <div class="slds-col slds-size--3-of-12 cab ">
+      <div class="top"></div>
+      <div class="bottom"></div>
+    </div>
+  </div>
+
+</div>

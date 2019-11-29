@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <description>Email Notification to Salesperson &amp; Boat Specialist Manager upon survey completion</description>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>Legend_Letterhead</letterhead>
+    <name>Survey Completed</name>
+    <style>formalLetter</style>
+    <subject>New Feedback Survey Completed</subject>
+    <textOnly>Hello,
+The following survey has been completed:
+
+Survey Name: {!GetFeedback_Survey_Response__c.Name}
+
+Salesperson: {!GetFeedback_Survey_Response__c.Salesperson__c}
+
+Boat Specialist: {!GetFeedback_Survey_Response__c.Boat_Specialist__c}
+
+The record can be viewed via the following URL:</textOnly>
+    <type>html</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

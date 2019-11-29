@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>Legend_Letterhead</letterhead>
+    <name>Day After Pick Up</name>
+    <style>freeForm</style>
+    <subject>Time to love your new boat</subject>
+    <textOnly>Hi {!Account.FirstName},
+
+
+
+How did your orientation go? Did all of your questions and concerns get addressed? I hope everything went great for you and you are ready to love your new boat. Was there anything else that we could have done differently to serve you better?
+
+
+
+Please keep in mind that if you are ever in need of assistance with your boating that I am always around to help as best as I can, with a great team here at Legend Boats to help serve you as well. Do not hesitate if you have any other questions or concerns and I would love to help.
+
+
+
+Thank you from all of us at Legend Boats.  I hope to see you again very soon.
+
+
+
+Best Regards,
+
+
+
+
+
+{!User.Name}
+
+{!User.Title}
+
+
+
+{!User.Email}
+
+{!User.Phone}
+
+legendboats.com
+
+
+
+{!User.Address}</textOnly>
+    <type>html</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

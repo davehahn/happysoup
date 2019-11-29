@@ -1,0 +1,127 @@
+<aura:component controller="Case_CreatePurchaseOrderController_dh" implements="force:appHostable,flexipage:availableForAllPageTypes,force:hasRecordId">
+
+  <aura:attribute name="recordId" type="String" />
+  <aura:attribute name="title" type="String" />
+  <aura:attribute name="userWarehouse" type="String" />
+  <aura:attribute name="vendorParts" type="List" />
+  <aura:attribute name="currentStep" type="Integer" />
+  <aura:attribute name="cmpLoaded" type="Boolean" default="false" />
+  <aura:attribute name="modalOpen" type="Boolean" default="false" />
+  <aura:attribute name="vendorPartsSelection" type="Map" />
+  <aura:attribute name="vendorEmpty" type="Boolean" default="false" />
+
+  <ltng:require scripts="{!join(',', $Resource.Libraries +'/js/LightningApex.js',
+                                     $Resource.Libraries +'/js/LightningUtils.js') }"
+                afterScriptsLoaded="{!c.afterScripts}" />
+
+  <aura:handler name="init"
+                value="{!this}"
+                action="{!c.doInit}" />
+  <aura:handler event="force:refreshView"
+                action="{!c.doInit}" />
+  <aura:handler name="change"
+                value="{!v.currentStep}"
+                action="{!c.handleStepChange}" />
+  <aura:handler name="vendorPartsSelected"
+                event="c:Case_CreatePO_VenderPartsSelected_Event"
+                action="{!c.handleVendorPartsSelected}" />
+
+  <c:Lgnd_Spinner_dh aura:id="spinner" />
+  <c:lgnd_Confirm aura:id="lgnd-confirm"/>
+
+  <aura:if isTrue="{!v.cmpLoaded}">
+    <div class="slds-clearfix">
+      <lightning:button label="Create Purchase Order"
+                        onclick="{!c.handleInitializePo}"
+                        class="slds-float_right" />
+    </div>
+
+    <!-- <aura:if isTrue="{! not(empty(v.poRecordId)) }">
+      <div class="slds-card">
+        <h1 class="slds-text-title_caps slds-text-align_center">Puchase Order Status</h1>
+        <lightning:path recordId="{!v.poRecordId}"
+                        hideUpdateButton="true" />
+      </div>
+    </aura:if> -->
+
+  </aura:if>
+
+  <aura:if isTrue="{!v.modalOpen}">
+    <section role="dialog" class="slds-modal slds-modal_medium slds-fade-in-open">
+      <div class="slds-modal__container">
+        <header class="slds-modal__header">
+          <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">
+            {!v.title}
+          </h2>
+        </header>
+        <div class="slds-modal__content slds-p-around_medium">
+          <!-- Parts Selection -->
+          <aura:if isTrue="{! equals(1, v.currentStep) }">
+            <div class="slds-p-around_small vendor-parts">
+              <aura:iteration items="{!v.vendorParts}" var="vp">
+                <c:Case_CreatePO_VendorParts vendor="{!vp}" />
+              </aura:iteration>
+            </div>
+          </aura:if>
+          <!-- /Parts Selection -->
+          <!--PO Form -->
+          <aura:if isTrue="{! equals(2, v.currentStep) }">
+            <div class="slds-p-around_small">
+              <lightning:recordEditForm objectApiName="AcctSeedERP__Purchase_Order__c"
+                                        aura:id="po-form"
+                                        onsuccess="{!c.handlePO_Success}">
+                <lightning:messages />
+
+                <lightning:layout multipleRows="true">
+                  <lightning:layoutItem size="6" padding="around-small">
+                    <lightning:inputField fieldName="AcctSeedERP__Order_Date__c" />
+                  </lightning:layoutItem>
+                  <lightning:layoutItem size="6" padding="around-small">
+                    <lightning:inputField fieldName="Warehouse__c" value="{!v.userWarehouse}" />
+                  </lightning:layoutItem>
+                 <!--  <lightning:layoutItem size="6" padding="around-small">
+                    <lightning:inputField fieldName="Estimated_Time_of_Arrival_ETA__c" />
+                  </lightning:layoutItem> -->
+                  <lightning:layoutItem size="6" padding="around-small">
+                    <lightning:inputField fieldName="AcctSeedERP__Vendor__c" value="{!v.vendorPartsSelection.vendorId}" />
+                  </lightning:layoutItem>
+                  <lightning:layoutItem size="6" padding="around-small">
+                    <lightning:inputField fieldName="AcctSeedERP__Shipping_Company__c" />
+                  </lightning:layoutItem>
+                  <lightning:layoutItem size="6" padding="around-small">
+                    <lightning:inputField fieldName="AcctSeedERP__Comment__c" />
+                  </lightning:layoutItem>
+                  <lightning:layoutItem size="6" padding="around-small">
+                    <lightning:inputField fieldName="Internal_Notes__c" />
+                  </lightning:layoutItem>
+                </lightning:layout>
+                 <lightning:inputField fieldName="Parts_Request_Case__c"
+                                          value="{!v.recordId}"
+                                          class="slds-hidden" />
+
+              </lightning:recordEditForm>
+            </div>
+          </aura:if>
+          <!-- /PO Form -->
+        </div>
+        <footer class="slds-modal__footer slds-clearfix">
+          <lightning:button label="Cancel"
+                            variant="neutral"
+                            onclick="{!c.closeModal}"
+                            class="slds-m-right_small slds-float_left" />
+          <aura:if isTrue="{!equals(2, v.currentStep)}">
+             <lightning:button label="Create PO"
+                              variant="brand"
+                              onclick="{!c.handleSubmit}"
+                              class="slds-m-right_small slds-float_right" />
+            <lightning:button label="Back"
+                              variant="neutral"
+                              onclick="{!c.handleBack}"
+                              class="slds-m-right_small slds-float_right" />
+          </aura:if>
+        </footer>
+      </div>
+    </section>
+    <div class="slds-backdrop slds-backdrop_open"></div>
+  </aura:if>
+</aura:component>

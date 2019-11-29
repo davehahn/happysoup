@@ -1,0 +1,71 @@
+<apex:component layout="none">
+
+  <apex:attribute name="opp"
+                  description="The Opportunity"
+                  type="Opportunity"
+                  required="true" />
+
+
+  <div class="oppStageChanger">
+
+    <a href="#" data-new-stage="Sales Manager Approval Pending" data-click-state="true">
+      <span class="status-badge"></span>
+      <span>Quoting</span>
+    </a>
+
+    <a href="#" data-new-stage="Business Office Approval Pending" data-click-state="true">
+      <span class="status-badge"></span>
+      <span>Sales Manager Approved</span>
+    </a>
+
+    <a href="#" data-new-stage="Pending ERP" data-click-state="true">
+      <span class="status-badge"></span>
+      <span>Business Office Approved</span>
+    </a>
+
+    <!-- <a href="#" data-new-stage="Orientation Specialist Add-On Call">
+      <span class="status-badge"></span>
+      <span>Tagged</span>
+    </a> -->
+
+    <!-- <a href="#" data-new-stage="Pending Work Order">
+      <span class="status-badge"></span>
+      <span>Add On Call Complete</span>
+    </a> -->
+
+    <!-- <a href="#" data-new-stage="Pending Rigging">
+      <span class="status-badge"></span>
+      <span>Work Order Created</span>
+    </a> -->
+
+    <!-- <a href="#" data-new-stage="Pending Inspection">
+      <span class="status-badge"></span>
+      <span>Rigged</span>
+    </a> -->
+
+    <!-- <a href="#" data-new-stage="Pending Pickup">
+      <span class="status-badge"></span>
+      <span>Inspected by Salesperson</span>
+    </a> -->
+
+    <a href="#" data-new-stage="Sent to ERP">
+      <span class="status-badge"></span>
+      <span>Sent to ERP</span>
+    </a>
+
+  </div>
+
+  <script type="text/javascript">
+
+    if( $j === undefined )
+    {
+      var $j = jQuery.noConflict();
+    }
+
+    $j(function() {
+      OpportunityStageChanger.init('{!opp.StageName}', '{!opp.Id}', '{!opp.Probability}');
+    });
+
+  </script>
+
+</apex:component>

@@ -1,0 +1,81 @@
+<tr id="{{this.Id}}" class="validatable editing slds-is-selected">
+   {{ quantity_cell this }}
+  <td>
+    {{#if this.CustomItem__c}}
+      <input type="text" data-field-name="Description__c" value="{{this.Description__c}}" tabindex="1"></input>
+    {{else}}
+      {{this.Description__c}}
+    {{/if}}
+  </td>
+  <td>
+    {{#unless this.CustomItem__c}}
+      $ {{this.Sale_Price__c}} ea.
+    {{/unless}}
+  </td>
+  <td>
+    {{#if this.EditCommissionableAmount__c}}
+      $ <input type="text"
+         class="number_only customItemAmount required"
+         value="{{this.CommissionableAmount__c}}"
+         data-field-name='CommissionableAmount__c'
+         tabindex="2"></input>
+    {{else}}
+      $ {{this.CommissionableAmount__c }}
+    {{/if}}
+  </td>
+  <td>
+    {{#unless this.CustomItem__c}}
+      {{this.CommissionRate__c}} %
+    {{/unless}}
+  </td>
+  <td>
+    {{#unless this.CustomItem__c}}
+      $ {{this.CalculatedCommissionAmount__c}}
+    {{/unless}}
+  </td>
+  <td>
+    <input type="text"
+           class="number_only cp_linked required"
+           tabindex="2"
+           value="{{this.AppliedCommissionRate__c}}"
+           data-field-name="AppliedCommissionRate__c"
+           data-field-type="percentage"/> %
+  </td>
+  <td>$ <input type="text"
+               class="number_only cp_linked required"
+               tabindex="3"
+               value="{{this.AppliedCommissionAmount__c}}"
+               data-field-name="AppliedCommissionAmount__c"
+               data-field-type="currency"/>
+  </td>
+  <td>
+    <div class="slds-dropdown-trigger">
+      <button class="slds-button slds-button--icon-border-filled" aria-haspopup="true">
+        <i class="fa fa-chevron-down" />
+        <span class="slds-assistive-text">Show More</span>
+      </button>
+      <div class="slds-dropdown slds-dropdown--right slds-dropdown--menu">
+        <ul class="slds-dropdown__list" role="menu">
+          <li id="menu-0-0" class="slds-dropdown__item">
+            <a href="" role="menuitem" class="cancelEdit" data-id="{{this.Id}}">
+              <p class="slds-truncate">Cancel</p>
+            </a>
+          </li>
+          <li id="menu-1-1" class="slds-dropdown__item">
+            <a href="" role="menuitem" class="updateItem" data-id="{{this.Id}}">
+              <p class="slds-truncate">Save</p>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <!-- <a href="#" class="fd_button tiny radius invert cancelEdit" data-id="{{this.Id}}" tabindex="5">
+      <i class="fa fa-times"></i>
+    </a>
+    <a href="#" class="fd_button success tiny radius invert updateItem" data-id="{{this.Id}}" tabindex="4">
+      <i class="fa fa-save" ></i>
+      <i class="fa fa-circle-o-notch fa-spin"></i>
+      <i class="fa fa-ban disabled-notice"></i>
+    </a> -->
+  </td>
+</tr>

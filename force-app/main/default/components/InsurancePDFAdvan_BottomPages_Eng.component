@@ -1,0 +1,452 @@
+<apex:component controller="InsurancePDFComp_Controller">
+	<div class="page-break"></div>
+    <div class="header"></div>
+    <div class="form-bottom-content">
+	    <div style="border: 2px solid black; margin: 0; padding: 10px; line-height: 12px;" class="top-box">
+		    <div style="margin-bottom: 2px;" class="form-large-text bolder center">STATEMENT BY DEBTOR AND CO-DEBTOR</div>
+		    <table class="form-msmall-text justifying" cellspacing="0" cellpadding="0" border="0">
+		    	<tr>
+		    		<td width="41%" style="vertical-align: top;">
+		    			I understand that I must complete a Supplemental Health Questionnaire (SHQ) if:
+		    			<ol style="list-style-type: lower-alpha; margin-left: 10px; margin-top: 0; margin-bottom: 0;">
+		    				<li>the sum of my Insured Financed Amount plus Insured Residual Value exceeds:
+		    					<ul style="list-style-type: disc; margin-left: 10px; margin-top: 0; margin-bottom: 0;">
+		    						<li>for Life – $150,000 (ages 18-60) or $100,000 (ages 61-70); AND/OR</li>
+		    						<li>for CI – $150,000 (ages 18-60); OR</li>
+		    					</ul>
+		    				</li>
+		    				<li>my Insured Monthly Payment exceeds:
+		    					<ul style="list-style-type: disc; margin-left: 10px; margin-top: 0; margin-bottom: 0;">
+		    						<li>for Disability – $2,500 (ages 18-60) or $1,000 (age 61-64).</li>
+		    					</ul>
+		    				</li>
+		    			</ol>
+		    		</td>
+		    		<td style="width: 2%">&nbsp;</td>
+		    		<td style="vertical-align: top;">
+		    			Further, this Application will be underwritten and will require the Insurer’s written approval to be in effect if:
+		    			<ul style="list-style-type: disc; margin-left: 10px; margin-top: 0; margin-bottom: 0;">
+		    				<li>I answer YES to any of the Health Questions; OR</li>
+		    				<li>the sum of my Insured Financed Amount plus Insured Residual Value for Life or CI exceeds $300,000.</li>
+		    			</ul>
+		    			The Insurer may request a medical examination or tests and any cost for these will be paid for by the Insurer. Applications that are subject to the SHQ may be declined by the Insurer via written notification by regular mail to the address shown on this Application. Any premiums paid will be refunded to the Financial Institution.
+		    		</td>
+		    	</tr>
+		    </table>
+		    <br/>
+		    <div class="form-large-text bolder center">ELIGIBILITY REQUIREMENTS, LIMITATIONS AND EXCLUSIONS</div>
+		    <div class="form-normal-text bolder center small-top-gap">Please read the following and sign below. It is important that you determine whether you are eligible to purchase this insurance.</div>
+		    <table class="form-msmall-text justifying" cellspacing="0" cellpadding="0" border="0">
+		    	<tr>
+		    		<td width="37%" style="vertical-align: top;">
+		    			You are eligible:
+		    			<ul class="bottom-content" style="list-style-type: disc; margin-left: 10px; margin-top: 0; margin-bottom: 0;">
+		    				<li>If the maximum Amortization Term of your loan does not exceed 240 months.</li>
+		    				<li>If you have selected Life or Involuntary Unemployment Insurance, you confirm that you are over 18 but not yet 71 years of age.</li>
+		    				<li>If you have selected CI Insurance, you confirm that you are over 18 but not yet 61 years of age.</li>
+		    				<li>If you have selected Disability Insurance, you confirm that you are over 18 but not yet 65 years of age.</li>
+		    				<li>If you have selected Disability Insurance, you confirm that you are:
+		    					<ul style="list-style-type: disc; margin-left: 10px; margin-top: 0; margin-bottom: 0;">
+		    						<li>able to perform the usual duties of your occupation; AND</li>
+		    						<li>gainfully employed, and have been working at least 23 hours per week for the past 4 weeks (also applicable to selfemployed individuals who have an annual business income after operating costs of at least $9,000); OR</li>
+		    						<li>gainfully employed Seasonally, (i) at least 11 consecutive weeks, for 25 hours per week during the past 12 months; or (ii) having contributed to the Employment Insurance Account and having worked for the required number of hours (based on location and regional employment rate) to be eligible to collect benefits under the Employment Insurance Act (Canada).</li>
+		    					</ul>
+		    				</li>
+		    			</ul>
+		    		</td>
+		    		<td width="2%">&nbsp;</td>
+		    		<td width="30%" style="vertical-align: top;">
+		    			<ul style="list-style-type: disc; margin-left: 10px; margin-top: 0; margin-bottom: 0;">
+		    				<li>If you have selected Involuntary Unemployment, you confirm that you are:
+		    					<ul style="list-style-type: disc; margin-left: 10px; margin-top: 0; margin-bottom: 0;">
+		    						<li>able to perform the usual duties of your occupation; AND</li>
+		    						<li>gainfully employed, and have been working at least 23 hours per week for the past 4 weeks; AND</li>
+		    						<li>neither self-employed, nor employed Seasonally.</li>
+		    					</ul>
+		    				</li>
+		    			</ul>
+		    			<div>I confirm that I have read the above and understand that no insurance coverage will be available in part or at all if I do not meet the applicable Eligibility Requirements. I also confirm that the information given above and on page 1 is correct and understand that any incorrect answer or misrepresentation may render this Certificate void.</div>
+		    			<div>I understand that any claims arising from, or caused or contributed to by PRE-EXISTING CONDITIONS, as described on page 3, will not be covered if such event occurs within 24 months of the Effective Date of Insurance with the exception of CI, where the event will not be covered at any time.</div>
+		    		</td>
+		    		<td width="2%">&nbsp;</td>
+		    		<td style="vertical-align: top;">
+		    			<div>I understand that the Insurance payable under this Certificate is subject to all terms and conditions including Limitations and Exclusions as described herein.</div>
+		    			<div>I HAVE BEEN ADVISED TO READ THIS CERTIFICATE IN FULL (PAGES 1 – 4) AND UNDERSTAND THAT THIS INSURANCE IS VOLUNTARY. I HAVE READ THE “PRIVACY NOTICE” AND “STATEMENT BY DEBTOR AND CO-DEBTOR” AND CONSENT TO USE AND DISCLOSURE OF MY PERSONAL INFORMATION.</div>
+		    			<div>I am aware that no party is authorized to waive or modify the terms of this Certificate and the Group Policyholder is not an agent of the Insurer. I am aware of the Money Back Guarantee on page 4.</div>
+		    			<div>I require that the contract herein and any other related documentation to be drawn up in English. Je demande que le présent contrat et les documents qui s’y rattachent soient rédigés en anglais.</div>
+		    			<div>Distribution Guide – I hereby acknowledge having received the Distribution Guide.</div>
+		    			<div>If you would like another copy of the Distribution Guide, please contact our Administration Centre.</div>
+		    		</td>
+		    	</tr>
+		    </table>
+		    <div class="form-msmall-text bolder center">Please be aware this Certificate excludes coverage for certain pre-existing conditions. We urge you to review the definition of Pre-existing Condition provided on page 3.</div>
+		    <div class="form-msmall-text bolder center">For questions regarding Pre-existing Conditions, eligibility, limitations and exclusions, call 1-800-761-4655. For all other inquiries, please see the number contained on page 4.</div>
+		    <table style="margin-top: 15px;" cellpadding="0" cellspacing="5" border="0" class="first-form">
+	    		<tr>
+	    			<td width="32%">
+		    			<div class="form-text">X</div>
+		    			<div class="overliner"></div>
+		    			<div class="form-medium-text">DEBTOR</div>
+	    			</td>
+	    			<td width="15%">
+		    			<div class="form-text">&nbsp;</div>
+		    			<div class="overliner"></div>
+		    			<div class="form-medium-text">DATE (DD/MMM/YYYY)</div>
+	    			</td>
+	    			<td width="32%">
+		    			<div class="form-text">X</div>
+		    			<div class="overliner"></div>
+		    			<div class="form-medium-text">CO-DEBTOR</div>
+	    			</td>
+	    			<td width="15%">
+		    			<div class="form-text">&nbsp;</div>
+		    			<div class="overliner"></div>
+		    			<div class="form-medium-text">DATE (DD/MMM/YYYY)</div>
+	    			</td>
+	    		</tr>
+    		</table>
+	    </div>
+	    <div style="padding: 2px; line-height: 12px;">
+		    <table class="form-msmall-text justifying" cellspacing="0" cellpadding="0" border="0">
+	    		<tr>
+	    			<td style="width: 48%; ">
+	    				<div>“We”, “us” or “our” means the Insurer. “You” or “your” means the Insured or Applicant. Words used in this Certificate that have an initial capital letter have the defined meaning or value as set out below or on page 1 of this Certificate. All of the terms governing coverage are set out in this Certificate. In consideration of our receipt of the applicable Total Cost (and if applicable, upon our approval), we insure you for only the Insurance detailed in your Certificate. If there is no Premium indicated or the Premium is zero, then you are not insured for that type of Insurance. Your coverage will begin on the Effective Date of Insurance as defined below. Any amounts payable under this Certificate will be paid to the Financial Institution if named, to reduce your financial obligation under the Financed Amount. Your Certificate is not assignable.</div>
+	    				<div class="small-top-gap form-medium-text bolder">SECTION 1 – DEFINITIONS</div>
+	    				<ol style="list-style-type: decimal; margin-left: 13px; margin-top: 0;">
+	    					<li>
+	    						“Applicant” means the Debtor and/or Co-Debtor named on this Application, that:
+	    						<ol style="list-style-type: lower-alpha; margin-left: 13px;">
+	    							<li>are debtor(s) under the Financed Amount; and</li>
+	    							<li>satisfy the Eligibility Requirements; and</li>
+	    							<li>are subject to the Supplemental Health Questionnaire (SHQ); and</li>
+	    							<li>have paid the applicable premium for the insurance coverage selected on the Application. </li>
+	    						</ol>
+	    						Upon approval of coverage, the Applicant becomes the Insured.
+	    					</li>
+	    					<li>“Certificate of Insurance” or “Certificate” means this Application, the SHQ (if applicable) plus any additional documents regarding your coverage issued to you by the Insurer and forms your contract of insurance.</li>
+	    					<li>“Critical Illness” or “CI” means Diagnosis of any of the following Covered Conditions which occur directly as a result of illness, and first occur after the Effective Date of Insurance:
+	    						<ol style="list-style-type: upper-alpha; margin-left: 13px;">
+		    						<li>
+		    							Life-Threatening Cancer: The Diagnosis of a malignancy characterized by the uncontrolled growth and spread of malignant cells and the invasion of tissue but not including:
+		    							<ol style="list-style-type: disc; margin-left: 13px;">
+		    								<li>Pre-malignant lesions, benign tumours or benign polyps;</li>
+		    								<li>Any skin cancer, other than invasive malignant melanoma into the dermis or deeper;</li>
+		    								<li>Non-invasive cancer in situ;</li>
+		    								<li>Early prostate cancer diagnosed as T1 N0 M0 or equivalent staging; or</li>
+		    								<li>Any tumour in the presence of the human immunodeficiency virus (HIV).</li>
+		    							</ol>
+		    						</li>
+		    						<li>Heart Attack (Myocardial Infarction): The death of a portion of the heart muscle as a result of inadequate blood supply to the relevant area. The diagnostic must be confirmed by both:
+		    							<ol style="list-style-type: decimal; margin-left: 13px;">
+		    								<li>new electrocardiographic changes indicative of a myocardial infarction or by a new clinical presentation, only in cases where the ECG can not be interpreted (complete bundle branch block, WPW, pace-maker), AND</li>
+		    								<li>characteristic changes of cardiac biochemical markers (troponin or CPK or CPK-MB) to levels consistent with acute myocardial infarction.</li>
+		    							</ol>
+		    							Exclusions:
+		    							<ol style="list-style-type: decimal; margin-left: 13px;">
+		    								<li>Heart Attack occurring in the 48 hours following an elective revascularization procedure, unless it is accompanied by new pathological Q waves.</li>
+		    								<li>Heart Attack diagnosed by any other method, unless the diagnosis is confirmed as described above.</li>
+		    							</ol>
+		    						</li>
+		    						<li>Coronary Artery Bypass Surgery: The heart surgery performed to correct narrowing or blockage of one or more coronary arteries with bypass grafts. Non-surgical techniques such as balloon angioplasty, laser embolectomy or other non-bypass techniques are excluded.</li>
+		    						<li>Stroke: An acute cerebral vascular accident (CVA) producing neurological impairment and resulting in paralysis or other measurable objective neurological deficit persisting for at least thirty (30) days following the occurrence of the stroke. Transient Ischemic Attacks (TIAs) are not covered.</li>
+	    						</ol>
+	    					</li>
+	    				</ol>
+	    			</td>
+	    			<td style="width: 2%;">&nbsp;</td>
+	    			<td style="vertical-align: top;">
+	    				<ol style="list-style-type: decimal; margin-left: 13px; margin-top: 0;">
+							<li></li><li></li>
+							<li style="list-style: none;">
+	    						<ol style="list-style-type: upper-alpha; margin-left: 13px;">
+	    							<li></li><li></li><li></li><li></li>
+									<li>Major Organ Failure Requiring Transplant: The irreversible failure of the liver, bone marrow, entire heart, both lungs or both kidneys requiring a transplant of that organ, resulting in the Insured being accepted into a recognized transplant program in Canada. The Insured must survive at least 30 days following the date of enrollment into the transplant program.</li>
+									<li>Paralysis: Paralysis resulting in complete and permanent loss of use of two or more limbs without interruption for a period of 90 days. At the end of such period, the Specialist must certify that the paralysis is complete and permanent.</li>
+								</ol>
+							</li>
+	    					<li>“Diagnosis” means the certified diagnosis of the Insured with a Covered Condition by a Specialist.</li>
+	    					<li>“Effective Date of Insurance” means:
+	    						<ol style="list-style-type: lower-alpha; margin-left: 13px;">
+	    							<li>the Requested Effective Date, if you are not subject to the SHQ; or</li>
+	    							<li>the Requested Effective Date, if you are subject to the SHQ and you answered “no” to all of the Health Questions and your Insured Financed Amount plus Insured Residual Value for Life or CI are less than $300,000; or</li>
+	    							<li>if a) and b) don’t apply, the date we notify you in writing that your insurance coverage has been approved.</li>
+	    						</ol>
+	    						Your Application will be null and void if all underwriting requirements are not satisfied within 90 days of signing this Application.
+	    					</li>
+	    					<li>“Financed Amount” means the debt described on page 1 of this Certificate, payable in whole or part by installments, resulting from your debt to the Financial Institution, if one is named.</li>
+	    					<li>“Injury” means bodily injury caused by an accident that occurs after the Effective Date of Insurance. The Injury must result from the accident, directly and independently of any other causes and must solely cause the death or Total Disability.</li>
+	    					<li>“Insurance” means the Life, Involuntary Unemployment, CI and/or Disability Insurance selected on this Certificate.</li>
+	    					<li>“Insured” means the Debtor and Co-Debtor named on this Certificate, who are debtor(s) under the Financed Amount, and have selected Insurance and, if applicable, have received the Insurer’s written approval of coverage. The Insured must be a natural person, not a partnership, company or association.</li>
+	    					<li>“Insured Loan” means the debt described on page 1 of this Certificate by the Insured Financed Amount over the Insurance Term in Months at the Interest Rate. If a) the Financed Amount is greater than the Insured Financed Amount or b) your Amortization Term is greater than your Insurance Term, the Insurance benefit may not pay the full outstanding balance of your financial obligation.</li>
+	    					<li>“Insurer” means Industrial Alliance Insurance and Financial Services Inc.</li>
+	    					<li>“Involuntary Unemployment” means job-loss or layoff which is not attributed to your action, misconduct, option, or desire and was not anticipated on or prior to the Effective Date of Insurance.</li>
+	    					<li>“Maximum number of Insured Monthly Payments” as selected on page 1 of this Certificate, means the total number of Insured Monthly Payments that will be paid during the Insurance Term for Involuntary Unemployment (if selected under Life Insurance) or Disability Insurance, per Insured.</li>
+	    					<li>“PLUS Insured Loan” means the debt described on page 1 of this Certificate by the Insured Financed Amount over the Amortization Term in Months. If the Financed Amount is greater than the Insured Financed Amount, the Insurance benefit may not pay the full outstanding balance of your financial obligation.</li>
+	    				</ol>
+	    				<br/><br/><br/>
+	    				<div style="border: 1px solid black; padding: 2px; width: 150px; height: 35px; margin-top: -15px; float: right;">
+	    					<div class="form-small-text bolder">Certificate No.</div>
+	    					<div class="form-text">{!formData.certificateNo}</div>
+	    				</div>
+	    			</td>
+	    		</tr>
+	    	</table>
+	    </div>
+	</div>
+	<div class="page-break"></div>
+	<div class="form-bottom-content">
+	    <div style="padding: 2px; line-height: 0.96em; page-break-inside: avoid;">
+		    <table class="form-msmall-text justifying" cellspacing="0" cellpadding="0" border="0">
+	    		<tr>
+	    			<td style="width: 48%; ">
+	    				<ol style="list-style-type: decimal; margin: 0; margin-left: 15px;">
+	    					<li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li>
+	    					<li>
+	    						“Pre-existing Condition” means:
+	    						<ol style="list-style-type: upper-alpha; margin: 0; margin-left: 15px;">
+	    							<li>in relation to Life and/or Disability Insurance, an illness, disease, mental, nervous or psychiatric condition or disorder for which any of (i) medical advice (ii) treatment (iii) service (iv) prescribed medication (v) diagnosis or (vi) consultation, including consultation to investigate, follow-up and/or diagnose (where diagnosis has not yet been made) was received by you or would have been received by a prudent individual within both (a) the 12 months immediately preceding the Effective Date of Insurance and (b) the 12 months immediately following the Effective Date of Insurance.</li>
+	    							<li>in relation to CI Insurance, an illness, disease, mental, nervous or psychiatric condition or disorder for which any of (i) medical advice (ii) treatment (iii) service (iv) prescribed medication (v) diagnosis or (vi) consultation, including consultation to investigate, follow-up and/or diagnose (where diagnosis has not yet been made) was received by you or would have been received by a prudent individual anytime prior to the Effective Date of Insurance.</li>
+	    							<li>“Recurring Insurance”, if selected on page 1 of this Certificate, means Disability Insurance that will pay a maximum equivalent of 6 Insured Monthly Payments per claim per Insured and the claim will close. A subsequent claim would require that the Insured has returned to work for a minimum of ninety (90) days and is subject to a new Waiting Period.</li>
+	    							<li>“Seasonally” or “Seasonal”, as used with reference to work, means work that is limited in frequency by weather or other natural conditions and does not include occupations limited by availability of work.</li>
+	    							<li>“Sickness” means illness, disease or psychiatric disorder that first becomes manifest after the Effective Date of Insurance.</li>
+	    							<li>“Specialist” means a physician licensed and practicing in Canada whose practice is limited to the particular branch of medicine relating to the applicable Covered Condition and who is not the Insured, a relative or business associate of the Insured.</li>
+	    							<li>“Totally Disabled” or “Total Disability” means your inability, solely due to Sickness or Injury to perform all the duties of your occupation. After you have been Totally Disabled for 12 continuous months (plus any Elimination Waiting Period), Total Disability means your inability solely due to Sickness or Injury, to perform all duties of any occupation for which you are or can become reasonably qualified by virtue of your education, training, or experience. You are not Totally Disabled if you are working full or part time or if you have retired. Lack of work does not constitute Total Disability or entitle you to Insured Monthly Payments.</li>
+	    							<li>“Variable Insurance”, if selected on page 1 of this Certificate, means Disability Insurance that will pay a maximum of 12 or 24 Insured Monthly Payments during the Insurance Term for Disability Insurance per Insured.</li>
+	    						</ol>
+	    					</li>
+	    				</ol>
+	    				<div class="small-top-gap form-medium-text bolder">SECTION 2 – LIFE INSURANCE</div>
+	    				<div class="small-top-gap form-small-text bolder">Involuntary Unemployment Insurance cannot be purchased as a stand-alone coverage.</div>
+	    				<div>
+	    					If you have selected ‘Life Insurance’ or ‘Life + Involuntary Unemployment Insurance’ option: in the event of your death due to Sickness or Injury, we will pay: (1) the outstanding balance of your Insured Loan at the date of death, plus (2) the present value of the Insured Residual Value if you have selected this coverage.
+	    				</div>
+	    				<div>
+	    					If you have selected ‘Life PLUS Insurance’ or ‘Life PLUS + Involuntary Unemployment Insurance’ option: in the event of your death due to Sickness or Injury, we will pay the outstanding balance of the PLUS Insured Loan on the date of death.
+	    				</div>
+	    				<div>If you have selected ‘Life + Involuntary Unemployment Insurance’ or ‘Life PLUS + Involuntary Unemployment Insurance’ option: in the event that you experience Involuntary Unemployment, for a consecutive number of days longer than the Waiting Period, we will pay your Insured Monthly Payment for the period of Involuntary Unemployment, monthly in arrears, subject to the Waiting Period. Payment will be calculated from the day following the Waiting Period. Insured Monthly Payments will stop when: a) you are no longer experiencing Involuntary Unemployment; b) the Maximum Number of Insured Monthly Payments have been made; or c) upon Termination of Insurance as described on page 4, whichever occurs first. The amount paid for periods of Involuntary Unemployment which are less than one month will be calculated at a daily rate of 1/30th of the Insured Monthly Payment. After the Waiting Period, successive periods of Involuntary Unemployment separated by less than one month of continuous employment are considered a continuation of a period of Involuntary Unemployment and not subject to a new Waiting Period. We will not pay any Insurance benefits for any debt outstanding under the Financed Amount at the Expiry Date of Insurance.</div>
+	    				<div>
+	    					In any event, we will not pay more than the remaining principal owing at the date of death.
+	    				</div>
+	    				<div class="small-top-gap form-medium-text bolder">SECTION 3 – CRITICAL ILLNESS (CI) INSURANCE</div>
+	    				<div>
+	    					If you have selected CI Insurance: in the event that you are Diagnosed with a CI, we will pay: (1) the outstanding balance of your Insured Loan on the date the CI was Diagnosed, plus (2) the present value of the Insured Residual Value if you have selected this coverage.
+	    				</div>
+	    				<div>If you have selected CI PLUS Insurance: in the event that you are Diagnosed with a CI, we will pay the outstanding balance of the PLUS Insured Loan on the date the CI was Diagnosed.</div>
+	    				<div>The Insurer will pay a CI benefit upon receipt of satisfactory proof that a CI occurred and was first Diagnosed while the Insurance was in force and did not result from one or more of the items listed under Section 5 (Limitations and Exclusions).</div>
+	    				<div>In any event, we will not pay more than the remaining principal owing at the date the CI was Diagnosed.</div>
+	    				<div>Only one CI benefit is payable under each certificate issued by the Insurer.</div>
+	    				<div class="small-top-gap form-medium-text bolder">SECTION 4 – DISABILITY INSURANCE – ACCIDENT AND SICKNESS</div>
+	    				<div>In the event you are Totally Disabled due to Injury or Sickness for a consecutive number of days longer than the Waiting Period, we will pay your Insured Monthly Payment for the period of Total Disability, monthly in arrears, subject to the Waiting Period. If you selected a Retroactive Waiting Period, payment will be calculated from the first day of Total Disability. If you selected an Elimination Waiting Period, payment will be calculated from the day following the Waiting Period.</div>
+	    				<div>Insured Monthly Payments will stop when: a) you are no longer Totally Disabled; or b) upon Termination of Insurance as described on page 3; or c) if the Variable Insurance option is selected, upon payment of the selected Maximum Number of Insured Monthly Payments; or d) if the Recurring Insurance option is selected, upon payment of the equivalent of 6 Insured Monthly Payments for a claim, whichever occurs first. The amount paid for periods of Total Disability which are less than one month will be calculated at a daily rate of 1/30th of the Insured Monthly Payments.</div>
+	    				<div>After the Waiting Period, successive periods of Total Disability, caused by the same Sickness or Injury, separated by less than ninety (90) days of continuous employment are considered a continuation of a period of Total Disability and not subject to a new Waiting Period. After ninety (90) days of continuous employment, they would be considered a new claim and will be subject to a new Waiting Period.</div>
+	    				<div>We will not pay any Disability Insurance for any debt outstanding under the Financed Amount at the Expiry Date of Insurance.</div>
+	    			</td>
+	    			<td style="width: 2%;">&nbsp;</td>
+	    			<td style="vertical-align: top;">
+	    				<div class="small-top-gap form-medium-text bolder">SECTION 5 – LIMITATIONS AND EXCLUSIONS</div>
+	    				<div class="small-top-gap form-small-text bolder underliner">General Limitations and Exclusions for all coverage types:</div>
+	    				No insurance will be paid under your Certificate in the event that your claim is caused or contributed to by any of the following:
+	    				<ol style="list-style-type: lower-alpha; margin: 0; margin-left: 13px;">
+	    					<li>a Pre-existing Condition, or as a direct or indirect result of treatment for a Pre-existing Condition. This exclusion only applies if the event claimed for occurs within 24 months of the Effective Date of Insurance with the exception of CI, where the event will not be covered at any time;
+	    					</li>
+	    					<li>intentionally self-inflicted injury;</li>
+	    					<li>nuclear, chemical or biological contamination;</li>
+	    					<li>war or any act of war whether declared or undeclared;</li>
+	    					<li>suicide within the two year period immediately following the Effective Date of Insurance;</li>
+	    					<li>direct or indirect participation in a criminal act, or any attempt to commit a criminal offence, including but not limited to, operating a motor vehicle while the concentration of alcohol in 100 millilitres of the Insured’s blood exceeds 80 milligrams;</li>
+	    					<li>chronic or excessive use of alcohol;</li>
+	    					<li>drug or substance use apart from controlled drugs used as legally prescribed by and on the advice of a physician;</li>
+	    					<li>pregnancy, childbirth, or termination of pregnancy; or</li>
+	    					<li>cosmetic or elective surgery.</li>
+	    				</ol>
+	    				<br/>
+				    	<div class="small-top-gap form-small-text bolder underliner">Limitations and Exclusions specific to Involuntary Unemployment Insurance:</div>
+				    	In addition to the general Limitations and Exclusions listed above, no benefit shall be payable for Involuntary Unemployment that results directly or indirectly from:
+				    	<ol style="list-style-type: lower-alpha; margin: 0; margin-left: 13px;">
+	    					<li>Involuntary Unemployment occurring anytime during a period of 90 days following the Effective Date of Insurance;</li>
+	    					<li>retirement or early retirement or receipt of retirement benefits under the Canada or Quebec Pension Plans;</li>
+	    					<li>voluntary resignation;</li>
+	    					<li>deception, fraud, criminal conduct, conflict of interest, willful misconduct or refusal to perform one’s position;</li>
+	    					<li>lock-out or strike;</li>
+	    					<li>self-employment or Seasonal employment;</li>
+	    					<li>failure to be re-elected as or termination of one’s duties as an elected municipal, provincial or federal official; or</li>
+	    					<li>expiry of a contract of employment for a fixed term.</li>
+	    				</ol>
+	    				In addition to the above exclusions, if Involuntary Unemployment occurs within 12 months of the Effective Date of Insurance, no benefit shall be payable for Involuntary Unemployment that results directly or indirectly from:
+				    	<ol style="list-style-type: lower-alpha; margin: 0; margin-left: 13px;">
+	    					<li>any staff reduction program announced by an employer prior to the Effective Date of Insurance;</li>
+	    					<li>any layoff which includes either in a general or specific manner the position of an Insured and which is initiated prior to the Effective Date of Insurance; or</li>
+	    					<li>Involuntary Unemployment pursuant to notice of possible Involuntary Unemployment provided prior to the Effective Date of Insurance.</li>
+	    				</ol>
+				    	<div class="small-top-gap form-small-text bolder underliner">Limitations and Exclusions specific to CI insurance:</div>
+				    	In addition to the general Limitations and Exclusions listed above, no CI benefit will be paid if:
+				    	<ol style="list-style-type: lower-alpha; margin: 0; margin-left: 13px;">
+				    		<li>the Insured does not survive 30 days following the Diagnosis of the CI; or</li>
+				    		<li>the Insured is diagnosed with Cancer, had any signs and/or symptoms or medical problems commence, or had investigations leading to the Diagnosis of any cancer covered or excluded under the Group Policy initiated within 90 days following the Effective Date of Insurance.</li>
+				    	</ol>
+				    	<div class="small-top-gap form-medium-text bolder">SECTION 6 – SPECIAL LIMITATIONS</div>
+				    	In addition to the Limitations and Exclusions listed above, the following Special Limitations apply:
+				    	<ol style="list-style-type: decimal; margin: 0; margin-left: 13px;">
+				    		<li>If the Debtor and Co-Debtor die simultaneously and they were both insured, the Life Insurance benefit will be paid for the Debtor only.</li>
+				    		<li>The Life and CI Insurance benefits payable under this Certificate combined with any other group insurance certificates issued by us to you will not exceed $1,000,000. In such event, the liability under your Certificate will be adjusted on a pro-rata basis with the other group insurance certificates.</li>
+				    		<li>If the Debtor and Co-Debtor are Totally Disabled or experience Involuntary Unemployment at the same time and they were both insured, the Insured Monthly Payment will be paid for the Debtor only. No more than one Insured Monthly Payment per month will be made for any benefit(s) claimed under Disability or Life Insurance.</li>
+				    		<li>If the Recurring Insurance option is selected on page 1 of this Certificate, the total amount of benefit payable for each claim shall not exceed 6 times the Monthly Insured Payment amount stated on this Certificate. A subsequent claim would require that the Insured has returned to work for a minimum of ninety (90) days.</li>
+				    		<li>If your Total Disability is caused or contributed to by:
+				    			<ol style="list-style-type: lower-alpha; margin: 0; margin-left: 13px;">
+				    				<li>mental, nervous or psychiatric condition or disorder, after a benefit period of three months, payments will only be made if you are regularly attending a licensed Specialist such as a psychiatrist, a psychologist or a neurologist and the benefit period will never exceed (6) months per claim.</li>
+				    				<li>disease or disorder of the neck or back including but not limited to lumbar, thoracic or cervical spine, after a benefit period of two months, payments will only be made if you are under the care of a licensed Specialist such as a neurologist, a neurosurgeon, a physiatrist, an orthopaedic surgeon or a rheumatologist and the benefit period will never exceed (6) months per claim.</li>
+				    				<li>The maximum amount of Insurance is governed by the age of the eldest Applicant.</li>
+				    			</ol>
+				    		</li>
+				    		<li></li>
+				    	</ol>
+				    	<div style="height: 150px;">&nbsp;</div>
+						<div style="border: 1px solid black; padding: 2px; width: 150px; height: 35px; float: right;">
+							<div class="form-small-text bolder">Certificate No.</div>
+							<div class="form-text">{!formData.certificateNo}</div>
+						</div>
+	    			</td>
+				</tr>
+			</table>
+	    </div>
+	</div>
+	<div class="page-break"></div>
+	<div class="form-bottom-content">
+	    <div style="padding: 2px; line-height: 0.96em; page-break-inside: avoid;">
+		    <table class="form-msmall-text justifying" cellspacing="0" cellpadding="0" border="0">
+	    		<tr>
+	    			<td style="width: 48%; ">
+	    				<div class="small-top-gap form-medium-text bolder">SECTION 7 – CONDITIONS OF PAYMENT</div>
+	    				<ol style="list-style-type: decimal; margin: 0; margin-left: 15px;">
+	    					<li>Claim forms must be completed and submitted to the Insurer within 90 days of the date of death, Involuntary Unemployment, Diagnosis of CI or Total Disability for which a claim is made, and thereafter as required by us. If it is not reasonably possible to complete and submit claim forms within 90 days, they must be furnished as soon as reasonably possible and in no event later than two years from the time claim forms are otherwise required. In the event disability or Involuntary Unemployment claim forms are received after 90 days from the onset of the event, benefits will only be retroactively considered for the 90 days prior to the receipt of the claim forms. The expense of providing the proofs of claim is the responsibility of the Insured.</li>
+	    					<li>In adjudicating any claim, we shall be entitled to receive satisfactory proof of eligibility and proof of the following: a) date of 1) birth, 2) death, 3) Involuntary Unemployment, 4) CI, 5) Total Disability; and b) the circumstances causing or contributing to it; and c) any treatment both before and after the Effective Date of Insurance and proof from the Financial Institution that the Insured Amount has not been paid out, re-written, or revised.</li>
+	    					<li>You must be under the continuing medical supervision and treatment of a physician (M.D.) considered appropriate by us while Totally Disabled.</li>
+	    					<li>We will have the right to have you medically examined by a licensed physician of our choice as often as is reasonably required during the period for which Insurance is claimed. If you fail to submit to such an examination within a reasonable period, we will be entitled to terminate payment of your Insurance.</li>
+	    					<li>You are responsible to make any Monthly Payments that fall due while the claim is being adjudicated, subject to our reimbursement through the Financial Institution for the period of time for which we are responsible to make the Insured Monthly Payment. We will not pay any overdue payments or additional interest charges.</li>
+	    					<li>We will not pay any overdue payments or additional interest charges under the Financed Amount at the date of death, Involuntary Unemployment, CI Diagnosis or Total Disability.</li>
+	    					<li>In the event you were not eligible to purchase the Insurance, our only obligation is to refund any premium which has been paid. This refund will be forwarded to the Financial Institution.</li>
+	    					<li>
+	    						As a condition of payment of Involuntary Unemployment benefits, the Insured must also:
+	    						<ol style="list-style-type: lower-alpha; margin: 0; margin-left: 15px;">
+	    							<li>submit an application for unemployment benefits under the Employment Insurance Act (Canada) immediately upon being eligible to do so;</li>
+	    							<li>be eligible to collect benefits under the Employment Insurance Act (Canada);</li>
+	    							<li>be actively seeking employment during the period of Involuntary Unemployment;</li>
+	    							<li>submit copies of their weekly stubs from benefit payments received under the Employment Insurance Act (Canada).</li>
+	    						</ol>
+	    					</li>
+	    				</ol>
+	    				<div class="small-top-gap form-medium-text bolder">SECTION 8 – TERMINATION OF INSURANCE</div>
+	    				<ol style="list-style-type: decimal; margin: 0; margin-left: 15px;">
+	    					<li>This Certificate will terminate for all Insured(s), when any of the following events occur:
+	    						<ol style="list-style-type: lower-alpha; margin: 0; margin-left: 15px;">
+	    							<li>upon the discharge of the debt in respect of the Financed Amount;</li>
+	    							<li>upon the Expiry Date of Insurance;</li>
+	    							<li>the terms of payment, or the amount payable, under the Financed Amount have been increased or extended (subject to paragraph 3 of this section);</li>
+	    							<li>the Financial Institution has demanded payment of the full amount due under the Financed Amount because of default;</li>
+	    							<li>the property which is the subject of the Financed Amount has been repossessed or become the subject of a court action;</li>
+	    							<li>upon our receipt of written notice to cancel the insurance coverage signed by both the Debtor and the Co-Debtor;</li>
+	    							<li>upon payment of a premium refund, if any is owing, under paragraph 4 of this section;</li>
+	    							<li>upon the date of death of the Insured Debtor for single coverage, or both Insured Debtor and Co-Debtor for joint coverage; or</li>
+	    							<li>upon our payment of the Life Insurance or CI Insurance benefit.</li>
+	    						</ol>
+	    					</li>
+	    				</ol>
+	    			</td>
+	    			<td style="width: 2%;">&nbsp;</td>
+	    			<td style="vertical-align: top;">
+	    				<ol style="list-style-type: decimal; margin: 0; margin-left: 13px;">
+	    					<li></li>
+	    					<li>Disability Insurance (if selected) will terminate for all Insured(s) upon the payment of the Aggregate Maximum benefit under this Certificate and any other group insurance certificates issued by us to you.</li>
+	    					<li>Specific Insurance coverages will terminate for an Insured, when any of the following events occur:
+	    						<ol style="list-style-type: lower-alpha; margin: 0; margin-left: 13px;">
+	    							<li>Life Insurance (if selected), will terminate for an Insured upon his or her 75th birthday;</li>
+	    							<li>CI Insurance (if selected), will terminate for an Insured upon his or her 65th birthday;</li>
+	    							<li>Disability Insurance (if selected), will terminate for an Insured upon his or her 70th birthday;</li>
+	    							<li>Disability and/or Involuntary Unemployment Insurance (if selected), will terminate for an Insured upon the date of his or her retirement from regular or Seasonal employment;</li>
+	    							<li>Disability Insurance (if selected with a Variable Insurance option), will terminate for an Insured upon payment of the Maximum Number of Insured Monthly Payments;</li>
+	    							<li>Involuntary Unemployment Insurance (if selected), will terminate for an Insured upon payment of the Maximum Number of Insured Monthly Payments as specified on this Certificate.</li>
+	    						</ol>
+	    					</li>
+	    					<li>Upon your written request, we may continue to offer coverage, at our option, under your Certificate upon refinancing of the Financed Amount. In the event we offer such coverage, the Effective Date of Insurance, Expiry Date of Insurance, Insurance amounts and all other terms and conditions will remain the same.</li>
+	    					<li>If the Insurance under your Certificate is terminated before the Expiry Date of Insurance, you must apply in writing to be paid a premium refund. The premium refund will NOT be calculated pro-rata but will be the actuarial reserve held in respect of your Certificate by us, less an administration fee ($75) and less any claims paid. We will require the request for premium refund to be submitted within 180 days following Termination of Insurance. If such a request is received more than 180 days following termination, you may be subject to an additional administration fee.<br/>If the debt in respect of the Financed Amount is still outstanding at the date of cancellation the premium refund will be made payable jointly to you and the Financial Institution. If the termination was as a result of the circumstances described in paragraph 1. (d) or (e) of this section the premium refund will be made payable to the Financial Institution only. No premium refund will be payable if we pay the Life or CI Insurance Benefit or for amounts of less than $5.</li>
+	    				</ol>
+				    	<br/>
+				    	<div class="small-top-gap form-medium-text bolder">INSURER’S CONTACT INFORMATION</div>
+				    	<div class="small-top-gap">P.O. Box 5900, Vancouver, B.C., V6B 5H6</div>
+				    	<div>
+				    		<table width="90%" cellpadding="0" cellspacing="0">
+				    			<tr>
+				    				<td>Administration:</td>
+				    				<td>1-877-671-9009 (Tel)</td>
+				    				<td>&nbsp;</td>
+				    			</tr>
+				    			<tr>
+				    				<td>Claims:</td>
+				    				<td>1-800-549-7227 (Tel)</td>
+				    				<td>1 (604) 733-9519 (Fax)</td>
+				    			</tr>
+				    			<tr>
+				    				<td>Cancellations:</td>
+				    				<td>1-855-766-8239 (Tel)</td>
+				    				<td>1 (450) 671-2525 (Fax)</td>
+				    			</tr>
+				    			<tr>
+				    				<td>&nbsp;</td>
+				    				<td>cancellation@ia.ca (E-mail)</td>
+				    				<td>&nbsp;</td>
+				    			</tr>
+				    			<tr><td colspan="3">For procedures on how to file a complaint, please visit: www.iasal.ca/complaints</td></tr>
+				    		</table>
+				    	</div>
+				    	<br/>
+				    	<div style="border: 2px solid black; padding: 5px;">
+				    		<div class="form-medium-text bolder">MONEY BACK GUARANTEE</div>
+				    		You have twenty (20) days after you sign this Certificate to decide if you still want the coverage. If you do not, return it to the Insurer or to the Creditor/Group Policyholder from whom you bought it. We will cancel your coverage from the Effective Date of Insurance and will refund any premium paid jointly to you and/or to the Financial Institution named in this Certificate.
+				    	</div>
+				    	<p>
+				    		<div class="form-medium-text bolder">LIMITATION OF ACTION</div>
+				    		<div>Every action or proceeding against an insurer for the recovery of insurance money payable under the contract is absolutely barred unless commenced within the time set out in the Insurance Act or other applicable legislation.</div>
+				    	</p>
+	    			</td>
+				</tr>
+			</table>
+			<br/><br/><br/><br/><br/><br/><br/><br/>
+			<div style="margin-top: 200px;" class="overliner small-top-gap"></div>
+			<div class="justifying form-medium-text small-top-gap">
+				<div>I understand that the Insurance payable under this Certificate is subject to the eligibility requirements, general terms, conditions, Definitions and Exclusions described in this Certificate and that <span class="bolder">PRE-EXISTING CONDITIONS WILL NOT BE COVERED IF THE EVENT CLAIMED FOR OCCURS WITHIN 24 MONTHS OF THE EFFECTIVE DATE OF INSURANCE WITH THE EXCEPTION OF CI, WHERE THE EVENT WILL NOT BE COVERED AT ANY TIME.</span></div>
+				<div><span>IMPORTANT</span> – I acknowledge that I have received and read the description of the coverages that appear on this 4 page Certificate and hereby accept these provisions. I acknowledge that where there is no Premium indicated, I am not insured for that type of coverage.
+				</div>
+			</div>
+			<table style="margin-top: 30px;" cellpadding="0" cellspacing="5" border="0" class="first-form">
+	    		<tr>
+	    			<td width="25%">
+		    			<div class="form-text">X</div>
+		    			<div class="overliner"></div>
+		    			<div class="form-small-text">DEBTOR</div>
+	    			</td>
+	    			<td width="15%">
+		    			<div class="form-text">&nbsp;</div>
+		    			<div class="overliner"></div>
+		    			<div class="form-small-text">DATE (DD/MMM/YYYY)</div>
+	    			</td>
+	    			<td width="25%">
+		    			<div class="form-text">X</div>
+		    			<div class="overliner"></div>
+		    			<div class="form-small-text">CO-DEBTOR</div>
+	    			</td>
+	    			<td width="15%">
+		    			<div class="form-text">&nbsp;</div>
+		    			<div class="overliner"></div>
+		    			<div class="form-small-text">DATE (DD/MMM/YYYY)</div>
+	    			</td>
+	    			<td>
+						<div style="border: 1px solid black; padding: 2px; width: 150px; height: 35px; float: right;">
+							<div class="form-small-text bolder">Certificate No.</div>
+							<div class="form-text">{!formData.certificateNo}</div>
+						</div>	    				
+	    			</td>
+	    		</tr>
+	    	</table>
+	    </div>
+	</div>
+</apex:component>

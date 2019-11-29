@@ -1,0 +1,465 @@
+<apex:page standardController="Opportunity" extensions="gcOpportunityTradeIn" cache="false" docType="html-5.0" showChat="false" showHeader="true" sidebar="true">
+
+<head>
+<style>
+.link{
+    cursor:pointer;
+    text-decoration:underline;
+}
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+tr.total td{
+    font-weight: bold;
+}
+div.pq-grid-footer{
+    display:none;
+}
+td.right{
+    text-align:right;
+}
+input.autoComplete
+{
+	width: 90%;
+	border: 1px solid #000;
+}
+</style>
+
+<apex:stylesheet value="{!URLFOR($Resource.GMBLJS__jQueryUI,'/jquery-ui/jquery-ui.min.css')}"/>
+<apex:stylesheet value="{!URLFOR($Resource.GMBLJS__pqGridPro241,'/pqgrid.min.css')}"/>
+
+</head>
+
+<body>
+    <apex:pageBlock mode="edit" title="Trade In Items">
+    	<apex:pageBlockButtons location="top">
+    		<button onclick="window.location.href = '/{!Id}';">Return to Opportunity</button>
+    		<button onclick="createTradeInOrder();">Create Orders</button>
+    	</apex:pageBlockButtons>
+    	<div id="tradeInItems"></div>
+    </apex:pageBlock>
+    <br />
+    <apex:pageBlock mode="edit" title="Projects">
+    	<div id="opportunityProjects"></div>
+    </apex:pageBlock>
+</body>
+
+<apex:includeScript value="{!$Resource.GMBLJS__jQuery}"/>
+<apex:includeScript value="{!URLFOR($Resource.GMBLJS__jQueryUI,'/jquery-ui/jquery-ui.min.js')}"/>
+<apex:includeScript value="{!URLFOR($Resource.GMBLJS__pqGridPro241,'/pqgrid.min.js')}"/>
+<apex:includeScript value="{!URLFOR($Resource.GMBLJS__pqGridPro241,'/touch-punch/touch-punch.min.js')}"/>
+<apex:includeScript value="{!$Resource.GMBLJS__accountingJS}"/>
+<apex:includeScript value="{!$Resource.GMBLJS__ExcellentExport}"/>
+<apex:includeScript value="{!$Resource.GMBLJS__gsrSpinner}"/>
+<apex:includeScript value="{!$Resource.GMBLJS__gsrGrid2}"/>
+
+<script>function setFocusOnLoad() {}</script>
+<script type="text/javascript">
+    $j = jQuery.noConflict();
+    $j(document).ready(function()
+    {
+        initGrid_tradeInItems();
+        refreshGrid_tradeInItems();
+        initGrid_opportunityProjects();
+        refreshGrid_opportunityProjects();
+
+        $j('#tradeInItems').on( "focus", "input.autoComplete", function( event ) {
+	    	$inputField = $j(this);
+	  		$inputField.autocomplete({
+	            minLength: 2,
+	            autoFocus: false,
+	            source: function (request, response) {
+	                Visualforce.remoting.Manager.invokeAction(
+	                    '{!$RemoteAction.gcOpportunityTradeIn.searchProductForSerial}',
+	                     request.term,
+	                    function (result, event) {
+	                        if (event.status) {
+	                            $j.each(result,function(k,item){
+	                                if(item.label == undefined)
+	                                    result[k].label = item.Name;
+	                                if(item.value == undefined)
+	                                    result[k].value = item.Id;
+	                            })  
+	                            response(result);
+	                        } else {
+	                            alert(event.message);
+	                        }
+	                    }, {
+	                        buffer: true,
+	                        escape: true,
+	                        timeout: 120000
+	                    });
+	            },
+	            focus: function (event, ui) {
+	                $inputField.val(ui.item.Name);
+	                return false;
+	            },
+	            select: function (event, ui) {
+                    var rowIndx = $inputField.prop('id');
+                    updateTradeInProduct(rowIndx,ui.item.Id);
+                    return false;
+                },
+                change: function (event, ui) {
+                    if(ui.item != undefined)
+                    {
+                        var rowIndx = $inputField.prop('id');
+                        updateTradeInProduct(rowIndx,ui.item.Id);
+                    }
+                    else
+                    {
+	            	    console.log($inputField);
+                        $j('#tradeInItems').pqGrid( "quitEditMode" );
+                        $j('#tradeInItems').pqGrid("refreshRow",{rowIndx:rowIndx});
+                    }
+	                return false;
+	            }
+	        });
+		});
+    });
+
+    function updateTradeInProduct(rowIndx,productId)
+    {
+        var $gridDiv = $j('#tradeInItems');
+        $gridDiv.pqGrid('showLoading');
+        var rowData = $gridDiv.pqGrid( "getRowData", {rowIndx:rowIndx});
+        Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.gcOpportunityTradeIn.updateTradeInProduct}',
+            rowData.tiId, productId,
+            function(result,event){
+                if(event.status)
+                {
+                    $j.extend($gridDiv.pqGrid('getRowData',{rowIndx:rowIndx}),result);
+                    $gridDiv.pqGrid('refresh');
+                }
+                else
+                {
+                    alert(event.message); 
+                }
+                $gridDiv.pqGrid('hideLoading');
+            },
+            {buffer:true, escape:true, timeout:120000});    	
+    }
+
+	function initGrid_tradeInItems()
+    {
+        var gridObj = { title:"",
+                        collapsible:{on:false,collapsed:false,toggle:false},
+                        columnTemplate: {sortable:true,editable:false, minWidth:80},
+                        dataModel:{data:[], sorting:'local', location:'local'}, 
+                        dragColumns:{enabled:false},
+                        editable:true,
+                        editModel: {clicksToEdit:1, saveKey: jQuery.ui.keyCode.ENTER, keyUpDown: false, onSave:null, onBlur:'save'},
+                        //editModel:{clicksToEdit:1, pressToEdit:false, filterKeys:true, keyUpDown:true, saveKey:$j.ui.keyCode.ENTER},
+                        //filterModel:{on:true, mode:'AND', header:true},
+                        freezeCols:0,
+                        freezeRows:0,
+                        height:'flex',
+                        historyModel:{on:false},
+                        hoverMode:'row',
+                        hwrap:false,
+                        numberCell:{show:true},
+                        pageModel: {type:null},
+                        pasteModel:{on:false},
+                        resizable: false,
+                        roundCorners: false,
+                        scrollModel: {autoFit:true},
+                        selectionModel: { type: null},
+                        showBottom:true,
+                        showHeader:true,
+                        showTitle:false,
+                        showTop:true,
+                        showToolbar:false,
+                        sortable:true,
+                        swipeModel:{on:false},
+                        virtualX: false,
+                        //virtualXHeader: false,
+                        virtualY: false,
+                        width:'auto',
+                        wrap:false};
+
+        gridObj.colModel=[{dataIndx:'productName',	title:'Product',	align:'center', editable:true, 
+        					editor:{ type: 'textbox', cls: 'autoComplete', select: true}},
+                          {dataIndx:'tiName',		title:'Name'},
+                          {dataIndx:'tiMake',		title:'Make'},
+                          {dataIndx:'tiModel',		title:'Model'},
+                          {dataIndx:'tiLot',		title:'Lot'},
+                          {dataIndx:'tiSerial',		title:'Serial', editable:true},
+                          {dataIndx:"scrollSpacer", minWidth:15, maxWidth:15}];
+
+        //gGrid.initFormat(gridObj.colModel);
+        //gGrid.initFilter(gridObj.colModel);
+
+        $j.each(gridObj.colModel, function(i,col)
+        {
+            if(col.dataIndx == 'productName')
+            {
+                $j.extend(col,{
+                    render:function(ui)
+                    {
+                        if(ui.rowData.isTotal) return '';
+
+                        var productName = '';
+                        if(ui.rowData.idProduct != undefined)
+                        	productName = ui.rowData.productName;
+                        //myHTML += '<input type="text" id="'+ui.rowIndx+'" class="autoComplete" Name="productName" placeholder="Search product..." value="'+productName+'" />';
+                        var myHTML = productName;
+
+                        return myHTML;
+                    }
+                });             
+            }
+            
+            else if(col.dataIndx == 'tiName')
+            {
+                $j.extend(col,{
+                    render:function(ui)
+                    {
+                        if (ui.rowData.isTotal || !ui.rowData.tiId) return '';
+
+                        var myHTML = ui.rowData.tiName;
+                        
+                        if({!$ObjectType.Trade_In_Item__c.accessible})
+                            return '<a href=\"/'+ui.rowData.tiId+'\" target=\"_blank\">'+myHTML+'</a>';
+
+                        return myHTML;
+                    }
+                });                 
+            }
+        });
+
+        var $gridDiv = $j('#tradeInItems');
+
+        $gridDiv.on( "pqgrideditorbegin", function( event, ui ) {
+            if(ui.dataIndx == 'productName')
+        	   ui.$editor.prop('id',ui.rowIndx);
+        });
+
+        $gridDiv.on('pqgridchange', function(event, ui)
+        {
+            var row = ui.rowList[0];
+            //only respond to grid changes that have all of the following attributes
+            if(row.type == 'update' &&
+               ui.rowList && 
+               ui.rowList.length == 1 &&
+               row.newRow)
+            {
+                if(row.newRow.tiSerial != undefined)
+                {
+                    //console.log(row);
+                    if(row.newRow.tiSerial == '')
+                    {
+                        row.rowData.tiSerial = row.oldRow.tiSerial;
+                        return;
+                    }
+                    else if(row.newRow.tiSerial == row.oldRow.tiSerial)
+                        return;
+
+                    updateTradeInSerial(row);
+                }
+                if(row.newRow.productName != undefined)
+                {
+                    row.rowData.productName = row.oldRow.productName;
+                }
+            }
+            return;
+        });
+
+        $gridDiv.pqGrid(gridObj);
+    }
+
+    function updateTradeInSerial(row)
+    {
+        var $gridDiv = $j('#tradeInItems');
+        $gridDiv.pqGrid('showLoading');
+        Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.gcOpportunityTradeIn.updateTradeInSerial}',
+            row.rowData.tiId, row.newRow.tiSerial,
+            function(result,event){
+                if(event.status)
+                {
+                    $j.extend($gridDiv.pqGrid('getRowData',{rowIndx:row.rowIndx}),result);
+                    $gridDiv.pqGrid('refresh');
+                }
+                else
+                {
+                    alert(event.message); 
+                    row.rowData.tiSerial = row.oldRow.tiSerial;
+                    $gridDiv.pqGrid("refreshRow",{rowIndx:row.rowIndx});
+                }
+                $gridDiv.pqGrid('hideLoading');
+            },
+            {buffer:true, escape:true, timeout:120000});        
+    }
+
+    function refreshGrid_tradeInItems(){
+
+        var $gridDiv = $j('#tradeInItems');
+        $gridDiv.pqGrid('showLoading');
+
+        Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.gcOpportunityTradeIn.retrieveTradeInItems}',
+            '{!Id}',
+            function(result,event){
+                if(event.status)
+                {
+                    gGrid.refreshGrid_callback($gridDiv,result);
+                }
+                else
+                {
+                    alert(event.message); 
+                }
+                $gridDiv.pqGrid('hideLoading');
+            },
+            {buffer:true, escape:true, timeout:120000});
+    }
+
+    function createTradeInOrder()
+    {
+    	var $gridDiv = $j('#tradeInItems');
+    	$gridDiv.pqGrid('showLoading');
+    	var dataModel = $gridDiv.pqGrid( "option", "dataModel" ); 
+        var allProductSelected = true;
+    	var boatSelected = 0;
+        $j.each(dataModel.data, function(i,data){
+            if(data.idProduct == undefined){
+            	allProductSelected = false;
+            }else if(data.recordType == 'Boat')
+            {
+                boatSelected += 1;
+            }
+        });     
+        if(!allProductSelected)        
+        {
+        	alert("You must select a product for each Trade In Item.");
+            $gridDiv.pqGrid('hideLoading');
+        	return;
+        }
+
+        if(boatSelected > 1)
+        {
+            alert("You cannot select two boats for the same Trade In.");
+            $gridDiv.pqGrid('hideLoading');
+            return;            
+        }
+
+        if(boatSelected == 0)
+        {
+            if(!confirm("You have not selected a boat for this Trade In. Would you like to proceed?"))
+            {
+                $gridDiv.pqGrid('hideLoading');
+                return;                
+            }
+        }
+
+        Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.gcOpportunityTradeIn.createTradeInOrders}',
+            '{!Id}',
+            function(result,event){
+                if(event.status)
+                {
+                    //gGrid.refreshGrid_callback($gridDiv,result);
+                    refreshGrid_opportunityProjects();
+                }
+                else
+                {
+                    alert(event.message); 
+                }
+                $gridDiv.pqGrid('hideLoading');
+            },
+            {buffer:true, escape:true, timeout:120000});
+    }
+    /// Projects 
+	function initGrid_opportunityProjects()
+    {
+        var gridObj = { title:"",
+                        collapsible:{on:false,collapsed:false,toggle:false},
+                        columnTemplate: {sortable:true,editable:false, minWidth:80},
+                        dataModel:{data:[], sorting:'local', location:'local'}, 
+                        dragColumns:{enabled:false},
+                        editable:false,
+                        //editModel: {clicksToEdit:1, saveKey: jQuery.ui.keyCode.ENTER, keyUpDown: false, onSave:null, onBlur:''},
+                        //editModel:{clicksToEdit:1, pressToEdit:false, filterKeys:true, keyUpDown:true, saveKey:$j.ui.keyCode.ENTER},
+                        //filterModel:{on:true, mode:'AND', header:true},
+                        freezeCols:0,
+                        freezeRows:0,
+                        height:'flex',
+                        historyModel:{on:false},
+                        hoverMode:'row',
+                        hwrap:false,
+                        numberCell:{show:true},
+                        pageModel: {type:null},
+                        pasteModel:{on:false},
+                        resizable: false,
+                        roundCorners: false,
+                        scrollModel: {autoFit:true},
+                        selectionModel: { type: null},
+                        showBottom:true,
+                        showHeader:true,
+                        showTitle:false,
+                        showTop:true,
+                        showToolbar:false,
+                        sortable:true,
+                        swipeModel:{on:false},
+                        virtualX: false,
+                        //virtualXHeader: false,
+                        virtualY: false,
+                        width:'auto',
+                        wrap:false};
+
+        gridObj.colModel=[{dataIndx:'projectName',	title:'Project'},
+                          {dataIndx:'recordType',	title:'Type'},
+                          {dataIndx:"scrollSpacer", minWidth:15, maxWidth:15}];
+
+        //gGrid.initFormat(gridObj.colModel);
+        //gGrid.initFilter(gridObj.colModel);
+
+        $j.each(gridObj.colModel, function(i,col)
+        {
+            if(col.dataIndx == 'projectName')
+            {
+                $j.extend(col,{
+                    render:function(ui)
+                    {
+                        if (ui.rowData.isTotal || !ui.rowData.idProject) return '';
+
+                        var myHTML = ui.rowData.projectName;
+                        
+                        if({!$ObjectType.AcctSeed__Project__c.accessible})
+                            return '<a href=\"/'+ui.rowData.idProject+'\" target=\"_blank\">'+myHTML+'</a>';
+
+                        return myHTML;
+                    }
+                });                 
+            }
+        });
+
+        var $gridDiv = $j('#opportunityProjects');
+
+        $gridDiv.pqGrid(gridObj);
+    }
+
+    function refreshGrid_opportunityProjects(){
+
+        var $gridDiv = $j('#opportunityProjects');
+        $gridDiv.pqGrid('showLoading');
+
+        Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.gcOpportunityTradeIn.retrieveOppyProjects}',
+            '{!Id}',
+            function(result,event){
+                if(event.status)
+                {
+                    gGrid.refreshGrid_callback($gridDiv,result);
+                }
+                else
+                {
+                    alert(event.message); 
+                }
+                $gridDiv.pqGrid('hideLoading');
+            },
+            {buffer:true, escape:true, timeout:120000});
+    }
+
+</script>
+</apex:page>

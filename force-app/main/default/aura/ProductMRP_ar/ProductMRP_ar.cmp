@@ -1,0 +1,120 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,force:lightningQuickAction" access="global" controller="ProductMRP_ar" >
+    <aura:attribute name="resultData" type="Object[]" />   
+    <aura:attribute name="periodOptions" type="sObject[]" />
+    <aura:attribute name="productTypes" type="Object[]" />
+    <aura:attribute name="warehouses" type="Object[]" />
+    <aura:attribute name="idRecordType" type="String" default="" />
+    <aura:attribute name="idWarehouse" type="String" default="" />
+    <aura:attribute name="orderBy" type="String" default="Product__r.Name" />
+    <aura:attribute name="orderDirection" type="String" default="ASC" />
+    <aura:attribute name="idSelectedProduct" type="String" />
+    <aura:attribute name="donotLoad" type="Boolean" default="false" />
+   	<aura:attribute name="listData" type="Object[]" />   
+    <aura:attribute name="listTitle" type="String" />
+    <aura:attribute name="page" type="integer" default="1"/>
+    <aura:attribute name="pages" type="integer"/>
+    <aura:attribute name="total" type="integer"/>
+ 
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    <aura:handler name="change" value="{!v.idRecordType}" action="{!c.retrieveProductDetails}"/>
+    <aura:handler name="change" value="{!v.idWarehouse}" action="{!c.retrieveProductDetails}"/>
+    <aura:handler name="change" value="{!v.orderBy}" action="{!c.retrieveProductDetails}"/>
+    <aura:handler name="change" value="{!v.orderDirection}" action="{!c.retrieveProductDetails}"/>
+    <aura:handler name="filterSelectedEvent" event="c:filterSelectedEvent" action="{!c.handleFilterSelected}" />
+    <lightning:card >
+        <aura:set attribute="title"></aura:set>
+        <div class="slds-align_absolute-center account-type-selector">
+            <label>Search Product: &nbsp;&nbsp;</label>            
+            <c:SearchProduct_ar aura:id="searchProductComp" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <label>Sort By: &nbsp;&nbsp;</label>            
+            <lightning:select aura:id="selectSortType" name="sorts" label="" value="{!v.orderBy}">
+                <option value="Product__r.Name" text="Product Name"></option>
+                <option value="Product__r.Average_MRP_Time__c" text="Average Lead Time"></option>
+                <option value="MRP_Quantity_Available__c" text="Available Quantity"></option>
+                <option value="Last_Year_Lead_Time_Consumption__c" text="Last Year Consumption"></option>
+                <option value="Availability_Percentage__c" text="Availability Percentage"></option>
+            </lightning:select>&nbsp;&nbsp;
+            <lightning:select aura:id="selectSortDirection" name="direction" label="" value="{!v.orderDirection}">
+                <option value="DESC" text="Descending"></option>
+                <option value="ASC" text="Ascending"></option>
+            </lightning:select> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <label>Filter By: &nbsp;&nbsp;</label>            
+            <lightning:select aura:id="selectRecType" name="productRecTypes" label="" value="{!v.idRecordType}">
+                <option value="" text="-Select Product Type-"></option>
+                <aura:iteration items="{!v.productTypes}" var="rt">
+                    <option value="{!rt.Id}" text="{!rt.Name}"></option>
+                </aura:iteration>
+            </lightning:select>&nbsp;&nbsp;
+            <lightning:select aura:id="selectWarehouse" name="productWarehouse" label="" value="{!v.idWarehouse}">
+                <option value="" text="-Select Warehouse-"></option>
+                <aura:iteration items="{!v.warehouses}" var="whs">
+                    <option value="{!whs.Id}" text="{!whs.Name}"></option>
+                </aura:iteration>
+            </lightning:select>&nbsp;&nbsp;
+            <ui:inputCheckbox aura:id="showAllCheckbox" change="{!c.retrieveProductDetails}" label="Show all?"/>
+        </div>
+    </lightning:card>    
+
+    <lightning:card >
+        <aura:set attribute="title"></aura:set>
+        <table class="slds-table slds-table_bordered slds-table--fixed-layout">
+            <thead>
+                <tr class="slds-text-title_caps">
+                    <th scope="col" style="overflow:hidden;" data-label="productName">
+                        <span class="slds-truncate" title="Product Name">Product</span>
+                    </th>
+                    <th scope="col" width="100" data-label="warehouseName">
+                        <span class="slds-truncate" title="Warehouse Name">Warehouse</span>
+                    </th>
+                    <th scope="col" width="800" class="slds-is-sortable slds-text-align_right" data-label="billingBalance" onclick="{!c.sortTry}">
+                        <span class="slds-truncate" title="">&nbsp;</span>
+                    </th>
+                    <th scope="col" width="100">
+                        <span class="slds-truncate" title="Last Year Consumption">Consumption</span>
+                    </th>
+                    <th scope="col" width="100">
+                        <span class="slds-truncate" title="Available Quantity">Available</span>
+                    </th>
+                    <th scope="col" width="100">
+                        <span class="slds-truncate" title="Availablity">Availablity</span>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <aura:iteration items="{!v.resultData}" var="a">
+                    <tr>
+                        <th scope="row" data-label="{#a.productName}" class="slds-truncate" >
+                            <a class="slds-truncate" target="_blank" href="{!'/one/one.app?#/sObject/'+ a.productId + '/view'}">{#a.productName}</a>
+                        </th>
+                        <td data-label="{#a.warehouseName}">
+                            <a target="_blank" href="{!'/one/one.app?#/sObject/'+ a.warehouseId + '/view'}">{#a.warehouseName}</a>
+                        </td>
+                        <td style="overflow:hidden;" class="slds-text-align_left">
+                            <div class="full-width blue center-text chart-section">&nbsp;</div>
+                            <aura:if isTrue="{!a.mrpQuantity != 0}">
+                            <aura:if isTrue="{!a.percentageQuantity != 5000}">                                
+                            <div style="{!'width:'+a.percentageQuantity+'px;background-color:'+a.colorCode}" class="center-text chart-section">&nbsp;</div>
+                            </aura:if>
+                            </aura:if>
+                            <br clear="all"/>
+                            <div style="clear:both; z-index:100;" class="full-width small-height center-text">Lead Time: {!a.averageLeadTime}</div>
+                        </td>
+                        <td class="slds-text-align_center">{!a.lastYearSeasonConsumption}</td>
+                        <td class="slds-text-align_center">{!a.mrpQuantity}</td>
+                        <td class="slds-text-align_center">{!a.percentageLength}%</td>
+                    </tr>
+                </aura:iteration>
+            </tbody>
+        </table>
+    </lightning:card>
+    <lightning:card >
+        <aura:set attribute="title"></aura:set>
+        <div class="slds-align_absolute-center account-type-selector">            
+            <lightning:button disabled="{!v.page == 1}" variant="brand" label="Previous Page" onclick="{! c.retrieveProductDetailsPP }" />  &nbsp;&nbsp;           
+            <div>Page {!v.page}/{!v.pages}</div> &nbsp;&nbsp;
+            <lightning:button disabled="{!v.page == v.pages}" aura:id="previousPage" variant="brand" label="Next Page" onclick="{! c.retrieveProductDetailsNP }" />
+            <br/>
+        </div>
+    </lightning:card>    
+    <lightning:spinner aura:id="spinner" />
+</aura:component>

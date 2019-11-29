@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <description>To notify the Salesperson that it is their last chance to offer the customer add on options and earn the commission</description>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>Legend_Letterhead</letterhead>
+    <name>Salesperson Last Chance Add On</name>
+    <style>freeForm</style>
+    <subject>Last Chance for Add Ons</subject>
+    <textOnly>Hey {!Opportunity.OwnerFirstName},
+
+{!Opportunity.Name} is now pending tagging, this is your last opportunity to offer this customer add on options and earn the commission.  After this deal is tagged, the commission for add on options will be earned by the Orientation Specialist.
+
+Thank you.</textOnly>
+    <type>html</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

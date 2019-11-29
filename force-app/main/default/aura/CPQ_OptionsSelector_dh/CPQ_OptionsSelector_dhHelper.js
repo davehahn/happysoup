@@ -1,0 +1,6 @@
+({
+	fetchOptions: function( component )
+  {
+
+	}
+})

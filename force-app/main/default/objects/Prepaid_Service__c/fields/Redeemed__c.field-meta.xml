@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Redeemed__c</fullName>
+    <description>Roll up field to show how many of the quantity of prepaid services allowed have been redeemed</description>
+    <externalId>false</externalId>
+    <label>Redeemed</label>
+    <summaryForeignKey>Prepaid_Service_Redeemed__c.Prepaid_Service__c</summaryForeignKey>
+    <summaryOperation>count</summaryOperation>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Summary</type>
+</CustomField>

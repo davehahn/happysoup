@@ -1,0 +1,61 @@
+.THIS td div {
+  line-height:initial;
+}
+
+.THIS.suboption-row td {
+  border-top: none;
+  padding:4px;
+}
+
+.THIS.suboption-row td:first-child div:first-child {
+  border-left: 1px solid #DDD;
+  border-bottom: 1px solid #CCC;
+  margin-right: 0.5rem;
+  width: 15px;
+  height: 38px;
+  display: inline-block;
+  position: absolute;
+  top: -20px;
+}
+
+.THIS.suboption-row:not(.premium-item) td:first-child div:first-child {
+  margin-left:8px;
+}
+
+.THIS.suboption-row.premium-item td:first-child div:first-child {
+  left:13px;
+  width:75%;
+}
+
+.THIS.option-row + tr.suboption-row:first-child td:first-child div:first-child,
+.THIS.suboption-row-0 td:first-child div:first-child {
+  height: 25px;
+  top: -7px;
+}
+
+.THIS.option-row + tr.suboption-row.premium-item td:first-child div:first-child {
+  top:0;
+  height:20px;
+}
+
+.THIS.suboption-row td:first-child div:first-child + div {
+  display:inline-block;
+  margin-left: 28px;
+}
+
+.THIS td.option-price {
+  line-height:initial;
+}
+
+.THIS td.option-price > div {
+  font-size:0.65rem;
+}
+
+.THIS .premium-item td:first-item div {
+  left: 15px;
+}
+
+.THIS .premium-item:first-child td:first-child div {
+  height:20px;
+  top: 0;
+}

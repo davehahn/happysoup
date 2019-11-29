@@ -1,0 +1,47 @@
+<messaging:emailTemplate subject="Votre expérience avec Legend" recipientType="Contact" relatedToType="Opportunity">
+<messaging:htmlEmailBody >
+<html>
+
+    <h1 style="width:100%; margin: 10px 0; border-bottom: 2px solid #00aaf9; padding-bottom:5px;">
+        <img src="https://na15.salesforce.com/servlet/servlet.ImageServer?id=015i0000006pR7C&oid=00Di0000000aRhm"
+             style="padding:10px 15px; height: 45px; width: 300px;" />
+    </h1>
+    
+    <div style="width: 95%; margin: auto;">
+        <p style="line-height: 25px; margin: 20px 0; font-size: 18px;">
+            Bonjour et Merci pour l'intérêt que vous porter sur les Bateaux Legend!
+        </p>
+        
+        <p style="line-height: 25px; margin: 20px 0; font-size: 18px;">
+            On est conscient que la transaction d'acquisition de bateau Legend n'a pas porté de fruit de manière que on tous espérait cette fois. Cependant, on apprécierait grandement votre avis sur cette experience avec Legend. 
+        </p>
+        
+        <p style="line-height: 25px; margin: 20px 0; font-size: 18px;">
+            SVP, en 
+            <a href="http://legendboats.force.com/surveys/TakeSurvey?id=a1ai000000H9CAw&cId={!relatedTo.Account.PersonContactId}&oppId={!relatedTo.Id}">
+                cliquant ici
+            </a> 
+            , vous pouvez nous laisser vos impressions et vos commentaires.
+        </p>
+        
+        <p style="line-height: 25px; margin: 20px 0; font-size: 18px;">
+            Merci pour votre temps, et comme toujours, soyez bienvenue de nous appeler si vous avez d'autres besoins ou questions.
+        </p>
+        
+        <p style="line-height: 25px; margin: 20px 0; font-size: 18px;">
+            On espère sincèrement que vous serait toujours en mesure de profiter de cette saison sur l'eau!  
+        </p>
+        
+        <p style="line-height: 25px; margin: 20px 0; font-size: 18px;">
+            Cordialement,
+        </p>
+ 
+ 
+        {!relatedTo.Owner.Name}<br />
+        {!relatedTo.Owner.Title}
+        
+    </div>
+    
+</html>
+</messaging:htmlEmailBody>
+</messaging:emailTemplate>

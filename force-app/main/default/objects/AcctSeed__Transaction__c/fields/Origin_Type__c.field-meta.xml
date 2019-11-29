@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Origin_Type__c</fullName>
+    <externalId>false</externalId>
+    <formula>IF(NOT(ISBLANK( AcctSeed__Account_Payable_Line__c )),&#39;Account Payable Line&#39;, 
+IF(NOT(ISBLANK( AcctSeed__Billing_Cash_Receipt__c )),&#39;Billing Cash Receipt&#39;, 
+IF(NOT(ISBLANK( AcctSeed__Billing_Line__c )),&#39;Billing Line&#39;, 
+IF(NOT(ISBLANK( AcctSeed__Cash_Disbursement__c )),&#39;Cash Disbursement&#39;, 
+IF(NOT(ISBLANK( AcctSeed__Cash_Receipt__c )),&#39;Cash Receipt&#39;, 
+IF(NOT(ISBLANK( AcctSeedERP__Inbound_Inventory_Movement__c )),&#39;Inbound Movement&#39;, 
+IF(NOT(ISBLANK( AcctSeed__Journal_Entry_Line__c )),&#39;Journal Entry Line&#39;, 
+IF(NOT(ISBLANK( AcctSeedERP__Manufacturing_Inventory_Movement__c )),&#39;Manufacturing Movement&#39;, 
+IF(NOT(ISBLANK( AcctSeedERP__Outbound_Inventory_Movement__c )),&#39;Outbound Movement&#39;, 
+IF(NOT(ISBLANK( AcctSeedERP__Purchase_Order_Inventory_Movement__c )),&#39;Purchase Movement&#39;, 
+IF(NOT(ISBLANK( AcctSeed__Scheduled_Revenue_Expense__c )),&#39;Scheduled Revenue Expense&#39;, 
+IF(NOT(ISBLANK( AcctSeed__Time_Card_Day__c )),&#39;Time Card&#39; 
+,&#39;&#39;))))))))))))</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Origin Type</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

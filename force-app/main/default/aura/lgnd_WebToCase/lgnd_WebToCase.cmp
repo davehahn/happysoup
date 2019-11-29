@@ -1,0 +1,146 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes" controller="CaseLexController">
+  <!-- ATTRIBUTES -->
+  <aura:attribute name="orgId" type="String" access="GLOBAL" />
+  <aura:attribute name="url" type="String" access="GLOBAL" />
+
+   <aura:attribute name="caseId" type="String" />
+  <aura:attribute name="userName" type="String" />
+  <aura:attribute name="userEmail" type="String" />
+  <aura:attribute name="contactId" type="String" />
+  <aura:attribute name="subject" type="String" />
+  <aura:attribute name="description" type="String" />
+  <aura:attribute name="type" type="String" />
+  <aura:attribute name="typeOptions" type="Object" />
+  <aura:attribute name="reason" type="String" />
+  <aura:attribute name="reasonOptions" type="Object" />
+  <aura:attribute name="priority" type="String" />
+  <aura:attribute name="priorityOptions" type="Object" />
+  <aura:attribute name="retUrl" type="String" />
+  <aura:attribute name="toastContent" type="Object" />
+  <aura:attribute name="formValid" type="Boolean" default="false" />
+  <aura:attribute name="fileUploadInitd" type="Boolean" default="false" />
+
+  <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+  <aura:registerEvent name="beginComplete" type="c:lgnd_dh_fileUploadBegin_Event" />
+
+  <lightning:utilityBarAPI aura:id="utilitybar" />
+
+  <div>
+
+    <div class="slds-spinner_container hidden" aura:id="busy-indicator">
+      <div role="status" class="slds-spinner slds-spinner--medium">
+        <span class="slds-assistive-text">Loading</span>
+        <div class="slds-spinner__dot-a"></div>
+        <div class="slds-spinner__dot-b"></div>
+      </div>
+    </div>
+
+    <c:toast content="{!v.toastContent}" isThemeReverse="false" containerId="toast" isToast="true"/>
+
+    <!-- <input type="hidden" name="orgid" value="{!v.orgId}" />
+    <input type="hidden" name="retURL" value="{!v.retUrl}" />
+    <input type="hidden" name="contact" value="{!v.contactId}" />
+    <input type="hidden"  id="external" name="external" value="0" /><br /> -->
+
+    <!--  NOTE: These fields are optional debugging elements. Please uncomment    -->
+    <!--  these lines if you wish to test in debug mode.                          -->
+    <!--  <input type="hidden" name="debug" value=1>                              -->
+    <!--  <input type="hidden" name="debugEmail" value="dhahn@legendboats.com">   -->
+
+    <!-- <lightning:input label="User Name"
+                     name="name"
+                     value="{!v.userName}"
+                     disabled="true" />
+
+    <lightning:input type="email"
+                     label="Email"
+                     name="email"
+                     value="{!v.userEmail}"
+                     disabled="true" /> -->
+
+    <lightning:tabset >
+
+        <lightning:tab label="Details">
+
+          <div class="slds-grid">
+            <div class="slds-col">
+              <lightning:select name="type"
+                        label="Select Type"
+                        value="{!v.type}"
+                        required="true"
+                        aura:id="requiredField"
+                        messageWhenValueMissing="Type is Required"
+                        onchange="{!c.checkValidity}">
+                <option value="">choose one...</option>
+                <aura:iteration items="{!v.typeOptions}" var="t">
+                  <option value="{!t}" text="{!t}"></option>
+                </aura:iteration>
+              </lightning:select>
+            </div>
+
+            <div class="slds-col">
+              <lightning:select name="type"
+                        label="Select Priority"
+                        value="{!v.priority}"
+                        required="true"
+                        aura:id="requiredField"
+                        messageWhenValueMissing="Priority is Required"
+                        onchange="{!c.checkValidity}">
+                <option value="">choose one...</option>
+                <aura:iteration items="{!v.priorityOptions}" var="p">
+                  <option value="{!p}" text="{!p}"></option>
+                </aura:iteration>
+              </lightning:select>
+            </div>
+          </div>
+
+          <lightning:select name="reason"
+                            label="Select Reason"
+                            value="{!v.reason}"
+                            required="true"
+                            aura:id="requiredField"
+                            messageWhenValueMissing="Reason is Required"
+                            onchange="{!c.checkValidity}">
+            <option value="">choose one...</option>
+            <aura:iteration items="{!v.reasonOptions}" var="r">
+              <option value="{!r}" text="{!r}"></option>
+            </aura:iteration>
+          </lightning:select>
+
+          <lightning:input label="Subject"
+                           name="subject"
+                           value="{!v.subject}"
+                           required="true"
+                           aura:id="requiredField"
+                           messageWhenValueMissing="Subject is Required"
+                           onchange="{!c.checkValidity}" />
+
+          <lightning:textarea name="description"
+                              value="{!v.description}"
+                              label="Description of issue"
+                              maxlength="1000"
+                              required="true"
+                              aura:id="requiredField"
+                              messageWhenValueMissing="Description is Required"
+                              onchange="{!c.checkValidity}" />
+        </lightning:tab>
+
+        <lightning:tab label="Attachments" onactive="{!c.attachmentsActive}">
+          <c:lgnd_dh_fileUpload />
+        </lightning:tab>
+
+    </lightning:tabset>
+
+
+
+
+    <lightning:button variant="brand"
+                      label="Submit"
+                      onclick="{! c.submitCase }"
+                      class="submit-button"
+                      disabled="{!!v.formValid}" />
+
+   <!--  </form> -->
+  </div>
+
+</aura:component>

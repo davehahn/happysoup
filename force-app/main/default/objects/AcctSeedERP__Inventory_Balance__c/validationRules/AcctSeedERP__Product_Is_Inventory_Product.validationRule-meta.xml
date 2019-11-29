@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>AcctSeedERP__Product_Is_Inventory_Product</fullName>
+    <active>true</active>
+    <description>Only inventoried products can be associated with an inventory balance</description>
+    <errorConditionFormula>AcctSeedERP__Product__r.AcctSeed__Inventory_Product__c = false</errorConditionFormula>
+    <errorDisplayField>AcctSeedERP__Product__c</errorDisplayField>
+    <errorMessage>Only a product where the inventory product field is true can be associated with an inventory balance</errorMessage>
+</ValidationRule>

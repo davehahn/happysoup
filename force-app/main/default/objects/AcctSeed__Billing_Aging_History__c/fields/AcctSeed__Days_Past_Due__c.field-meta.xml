@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>AcctSeed__Days_Past_Due__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <formula>IF(AcctSeed__Period_End_Date__c-AcctSeed__Due_Date__c&gt;0,AcctSeed__Period_End_Date__c-AcctSeed__Due_Date__c,0)</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <inlineHelpText>Number of days the billing is past due. This is derived by subtracting the due date from the end date associated with the accounting period.</inlineHelpText>
+    <label>Days Past Due</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>0</scale>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

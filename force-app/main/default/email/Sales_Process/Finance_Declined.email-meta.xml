@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>Legend_Letterhead</letterhead>
+    <name>Finance Declined</name>
+    <style>freeForm</style>
+    <subject>Your Customer has Been Declined Financing</subject>
+    <textOnly>Hello {!Opportunity.OwnerFirstName},
+
+Unfortunately your customer, {!Opportunity.Name} has been declined financing at this point.  Please feel free to check with your Business Office Manager for details.
+
+In the mean time, a task has been created for you to follow up with this customer in 2 months to see if their present financial situation has changed.
+
+Best of luck!</textOnly>
+    <type>html</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

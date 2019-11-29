@@ -1,0 +1,21 @@
+<apex:component controller="UpgradeChart">
+  <apex:attribute name="fromProductObject" description="item being upgraded from" type="Product2" required="true" assignTo="{!fromObj}" />
+  <apex:attribute name="toId" description="item being upgraded to" type="ID" required="true" assignTo="{!to_Id}" />
+
+
+
+  <apex:variable value="{!fromProductObject.Id == toId}" var="sameItem" />
+  <td class="{!IF(sameItem, 'notApplic', '')}" >
+
+      <apex:variable value="{!ProductUpgradeCost}" var="upgrade" />
+      <apex:outputLink value="/{!upgrade.Id}/e" target="_parent" title="Edit Upgrade Cost" rendered="{!NOT(upgrade.Id == null)}">
+        {!upgrade.Price__c}
+      </apex:outputLink>
+      <apex:outputLink value="/apex/ProductUpgradeForm?fromProductId={!fromProductObject.Id}&toProductId={!to_Id}" target="_parent" rendered="{!upgrade.Id == null && NOT(sameItem) }">
+        New
+      </apex:outputLink>
+      <apex:outputText value="N/A" rendered="{!sameItem}" />
+
+  </td>
+
+</apex:component>

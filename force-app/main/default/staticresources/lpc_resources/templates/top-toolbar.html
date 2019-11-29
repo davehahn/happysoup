@@ -1,0 +1,47 @@
+<md-toolbar class="global-header">
+  <div class="md-toolbar-tools">
+
+    <md-button flex-sm="5" ng-click="appCtrl.toggleLeft()" class="md-icon-button" aria-label="Menu" hide-gt-sm="true">
+      <md-icon style="color:#414142;">menu</md-icon>
+    </md-button>
+
+    <div class="top-toolbar-content"  layout="row" flex-sm="95"  flex-gt-sm="100">
+
+      <div flex>
+        <h2>
+          <img src="{{toolBarCtrl.logoUrl}}" />
+        </h2>
+      </div>
+
+      <div flex class="globalSearch">
+        <input ng-model="globalSearchQuery" type='text'></input>
+      </div>
+
+      <div flex class="user-drop-down">
+      <md-menu md-offset="0 73" md-position-mode="target-right target">
+        <a href="" md-menu-origin ng-click="$mdOpenMenu($event)">
+          <div class='avatar'>
+            <md-icon>account_circle</md-icon>
+          </div>
+          <div class='details'>
+            <span>{{ toolBarCtrl.user.FullName }}</span>
+            <span>{{ toolBarCtrl.user.AccountName}}</span>
+          </div>
+          <div>
+            <md-icon>arrow_drop_down</md-icon>
+          </div>
+        </a>
+        <md-menu-content width='3'>
+          <md-menu-item>Item 1</md-menu-item>
+          <md-menu-item>Item 2</md-menu-item>
+          <md-menu-item>item 3</md-menu-item>
+        </md-menu-content>
+      </md-menu>
+
+
+      </div>
+
+    </div>
+
+  </div>
+</md-toolbar>

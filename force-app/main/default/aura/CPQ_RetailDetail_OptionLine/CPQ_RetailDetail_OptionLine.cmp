@@ -1,0 +1,117 @@
+<aura:component>
+  <aura:attribute name="optionItem" type="Object" />
+  <aura:attribute name="saleItem" type="Object" />
+  <aura:attribute name="lineCost" type="Decimal" />
+  <aura:attribute name="isSubOption" type="Boolean" default="false" />
+  <aura:attribute name="subOptIndex" type="Integer" />
+
+  <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+  <aura:handler name="change" value="{!v.optionItem}" action="{!c.doInit}" />
+  <aura:if isTrue="{! not( empty( v.optionItem ) ) }">
+    <tr class="{!if( v.isSubOption, join(' ', 'suboption-row', 'suboption-row-'+v.subOptIndex), 'option-row')}">
+
+      <td>
+        <aura:if isTrue="{!v.isSubOption}">
+          <div></div>
+        </aura:if>
+        <div>
+          {!v.optionItem.quantitySelected}
+        </div>
+      </td>
+      <td>
+        {!v.optionItem.name}
+        <aura:if isTrue="{!and( v.optionItem.standard > 0, v.optionItem.quantitySelected > v.optionItem.standard )}">
+          <div style="font-size:0.65rem;">
+             ( {!v.optionItem.standard} included )
+          </div>
+        </aura:if>
+      </td>
+      <td class="option-price">
+        <lightning:formattedNumber value="{!v.lineCost}"
+                                   style="currency"
+                                   currencyCode="CAD" />
+        <!-- <c:lgnd_currencyDisplay value="{!v.lineCost}" zeroLabel=" Included " /> -->
+        <aura:if isTrue="{! and( v.optionItem.quantitySelected > 1, v.lineCost > 0 )}">
+          <div>
+            <lightning:formattedNumber value="{!v.optionItem.retailPrice}"
+                                     style="currency"
+                                     currencyCode="CAD" /> ea.
+          </div>
+        </aura:if>
+      </td>
+    </tr>
+    <!-- Premium Package -->
+    <aura:if isTrue="{! not( empty( v.optionItem.premiumPackage ) ) }">
+      <aura:iteration items="{! v.optionItem.premiumPackage}" var="item">
+        <tr class="suboption-row premium-item">
+          <td><div></div></td>
+          <td style="padding-left:6px;">{!item}</td>
+          <td>Included</td>
+        </tr>
+      </aura:iteration>
+    </aura:if>
+    <!-- Sub Options -->
+    <aura:if isTrue="{! not( empty( v.optionItem.subOptions ) ) }">
+      <aura:iteration items="{! v.optionItem.selectedSubOptions }" var="subOpt" indexVar="idx">
+        <c:CPQ_RetailDetail_OptionLine optionItem="{!subOpt}"
+                                       isSubOption="true"
+                                       subOptIndex="{!idx}" />
+      </aura:iteration>
+    </aura:if>
+    <!-- /Sub Options -->
+  </aura:if>
+
+  <aura:if isTrue="{! not( empty( v.saleItem ) ) }">
+    <tr class="{!if( v.isSubOption, join(' ', 'suboption-row', 'suboption-row-'+v.subOptIndex), 'option-row')}">
+
+      <td>
+        <aura:if isTrue="{!v.isSubOption}">
+          <div></div>
+        </aura:if>
+        <div>
+          {!v.saleItem.quantity}
+        </div>
+      </td>
+      <td>
+        {!v.saleItem.productName}
+        <!-- <aura:if isTrue="{!and( v.optionItem.standard > 0, v.optionItem.quantitySelected > v.optionItem.standard )}">
+          <div style="font-size:0.65rem;">
+             ( {!v.optionItem.standard} included )
+          </div>
+        </aura:if> -->
+      </td>
+      <td class="option-price">
+        <lightning:formattedNumber value="{!v.saleItem.lineTotal}"
+                                   style="currency"
+                                   currencyCode="CAD" />
+
+        <aura:if isTrue="{! and( v.saleItem.quantity > 1, v.saleItem.lineTotal > 0 )}">
+          <div>
+            <lightning:formattedNumber value="{!v.saleItem.salePrice}"
+                                     style="currency"
+                                     currencyCode="CAD" /> ea.
+          </div>
+        </aura:if>
+      </td>
+    </tr>
+    <!-- Premium Package -->
+    <aura:if isTrue="{! not( empty( v.saleItem.premiumPackage ) ) }">
+      <aura:iteration items="{! v.saleItem.premiumPackage}" var="item">
+        <tr class="suboption-row premium-item">
+          <td><div></div></td>
+          <td style="padding-left:6px;">{!item}</td>
+          <td>Included</td>
+        </tr>
+      </aura:iteration>
+    </aura:if>
+    <!-- Sub Options -->
+    <aura:if isTrue="{! not( empty( v.saleItem.subSaleItems ) ) }">
+      <aura:iteration items="{! v.saleItem.subSaleItems }" var="subItem" indexVar="idx">
+        <c:CPQ_RetailDetail_OptionLine saleItem="{!subItem}"
+                                       isSubOption="true"
+                                       subOptIndex="{!idx}" />
+      </aura:iteration>
+    </aura:if>
+    <!-- /Sub Options -->
+  </aura:if>
+</aura:component>

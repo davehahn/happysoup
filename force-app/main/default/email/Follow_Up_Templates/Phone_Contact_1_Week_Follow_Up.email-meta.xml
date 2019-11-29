@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>Legend_Letterhead</letterhead>
+    <name>Phone Contact 1 Week Follow Up</name>
+    <style>freeForm</style>
+    <subject>Legend Boats - The Water is Calling</subject>
+    <textOnly>Hi {!Account.FirstName},
+
+It has been a few days since we spoke on the phone.  I would like to arrange for you to visit the dealership as it is impossible to appreciate all the features our boats offer over the phone.
+
+At Legend, we have a great selection of new and previously owned boats.  There will be absolutely no pressure if you, for any reason, should choose to shop other dealerships.
+
+Taking ownership of a boat should be a pleasant experience.  You can be assured you will be very pleased with Legend&#39;s service before, during and after you take ownership of your new boat.
+
+When do you think you could make it in for a visit?
+
+
+Best Regards,
+
+{!User.Name}
+{!User.Title}
+
+{!User.Email}
+{!User.Phone}
+legendboats.com
+
+{!User.Address}</textOnly>
+    <type>html</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

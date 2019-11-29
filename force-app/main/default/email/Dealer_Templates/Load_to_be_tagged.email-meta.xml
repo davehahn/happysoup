@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <description>Load to be Tagged</description>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>Legend_Letterhead</letterhead>
+    <name>Load to be tagged</name>
+    <style>freeForm</style>
+    <subject>New truck load to be tagged</subject>
+    <textOnly>Hi Mike,
+
+Truck Load {!AcctSeed__Project__c.Destination__c}
+Trip name {!Truck_Trip__c.Name}
+Leaving {!Truck_Trip__c.Departure_Date__c}</textOnly>
+    <type>html</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

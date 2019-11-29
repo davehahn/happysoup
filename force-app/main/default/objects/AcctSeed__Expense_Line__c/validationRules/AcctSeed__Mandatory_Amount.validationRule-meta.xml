@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>AcctSeed__Mandatory_Amount</fullName>
+    <active>true</active>
+    <description>Requires Amount to be mandatory if GL Account is not Mileage type.</description>
+    <errorConditionFormula>AND(AcctSeed__Expense_GL_Account__r.AcctSeed__Mileage_Account__c =false, ISBLANK( AcctSeed__Amount__c ))</errorConditionFormula>
+    <errorDisplayField>AcctSeed__Amount__c</errorDisplayField>
+    <errorMessage>An amount is required for an expense that is not a Mileage reimbursement.</errorMessage>
+</ValidationRule>

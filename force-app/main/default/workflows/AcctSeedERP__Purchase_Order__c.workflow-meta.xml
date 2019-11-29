@@ -1,0 +1,556 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workflow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <alerts>
+        <fullName>Approve_Purchase_Order</fullName>
+        <description>Approve Purchase Order</description>
+        <protected>false</protected>
+        <recipients>
+            <recipient>bgrenier@legendboats.com</recipient>
+            <type>user</type>
+        </recipients>
+        <recipients>
+            <recipient>bmacarthur@legendboats.com</recipient>
+            <type>user</type>
+        </recipients>
+        <recipients>
+            <recipient>cmclean@legendboats.com</recipient>
+            <type>user</type>
+        </recipients>
+        <recipients>
+            <recipient>epaulino@legendboats.com</recipient>
+            <type>user</type>
+        </recipients>
+        <recipients>
+            <recipient>jdewar@legendboats.com</recipient>
+            <type>user</type>
+        </recipients>
+        <recipients>
+            <recipient>jduhamel@legendboats.com</recipient>
+            <type>user</type>
+        </recipients>
+        <recipients>
+            <recipient>jmaltais@legendboats.com</recipient>
+            <type>user</type>
+        </recipients>
+        <recipients>
+            <recipient>mduhamel@legendboats.com</recipient>
+            <type>user</type>
+        </recipients>
+        <recipients>
+            <recipient>mmcrae@legendboats.com</recipient>
+            <type>user</type>
+        </recipients>
+        <recipients>
+            <recipient>ylavallee@legendboats.com</recipient>
+            <type>user</type>
+        </recipients>
+        <senderType>CurrentUser</senderType>
+        <template>AcctSeed__Accounting_Seed_Email_Templates/Approve_Purchase_Order</template>
+    </alerts>
+    <alerts>
+        <fullName>Go_create_the_AP</fullName>
+        <description>Go create the AP</description>
+        <protected>false</protected>
+        <recipients>
+            <recipient>mmoss@legendboats.com</recipient>
+            <type>user</type>
+        </recipients>
+        <senderType>CurrentUser</senderType>
+        <template>AcctSeed__Accounting_Seed_Email_Templates/Go_create_AP</template>
+    </alerts>
+    <alerts>
+        <fullName>Go_create_the_correspondng_AP</fullName>
+        <description>Go create the corresponding AP</description>
+        <protected>false</protected>
+        <recipients>
+            <recipient>mmoss@legendboats.com</recipient>
+            <type>user</type>
+        </recipients>
+        <senderType>CurrentUser</senderType>
+        <template>AcctSeed__Accounting_Seed_Email_Templates/Go_create_AP</template>
+    </alerts>
+    <alerts>
+        <fullName>Purchase_Order_Approval</fullName>
+        <description>Purchase Order Approval</description>
+        <protected>false</protected>
+        <recipients>
+            <type>creator</type>
+        </recipients>
+        <senderType>CurrentUser</senderType>
+        <template>AcctSeed__Accounting_Seed_Email_Templates/Approve_Purchase_Order</template>
+    </alerts>
+    <alerts>
+        <fullName>Purchase_Order_Approval_Barrie</fullName>
+        <description>Purchase Order Approval - Barrie</description>
+        <protected>false</protected>
+        <recipients>
+            <type>creator</type>
+        </recipients>
+        <senderType>CurrentUser</senderType>
+        <template>AcctSeed__Accounting_Seed_Email_Templates/Submit_Purchase_Order</template>
+    </alerts>
+    <alerts>
+        <fullName>Purchase_Order_Approval_Email</fullName>
+        <description>Purchase Order Approval Email</description>
+        <protected>false</protected>
+        <recipients>
+            <type>creator</type>
+        </recipients>
+        <senderType>CurrentUser</senderType>
+        <template>AcctSeed__Accounting_Seed_Email_Templates/Approve_Purchase_Order</template>
+    </alerts>
+    <alerts>
+        <fullName>Purchase_Order_Approval_Montreal</fullName>
+        <description>Purchase Order Has Been Approved - Montreal</description>
+        <protected>false</protected>
+        <recipients>
+            <type>owner</type>
+        </recipients>
+        <senderType>CurrentUser</senderType>
+        <template>AcctSeed__Accounting_Seed_Email_Templates/Submit_Purchase_Order</template>
+    </alerts>
+    <alerts>
+        <fullName>Purchase_Order_Approval_Rejection</fullName>
+        <description>Purchase Order Approval Rejection</description>
+        <protected>false</protected>
+        <recipients>
+            <type>owner</type>
+        </recipients>
+        <senderType>CurrentUser</senderType>
+        <template>AcctSeed__Accounting_Seed_Email_Templates/Purchase_Order_Approval_Rejected</template>
+    </alerts>
+    <alerts>
+        <fullName>Submit_Purchase_Order</fullName>
+        <description>Submit Purchase Order</description>
+        <protected>false</protected>
+        <recipients>
+            <type>owner</type>
+        </recipients>
+        <senderType>CurrentUser</senderType>
+        <template>AcctSeed__Accounting_Seed_Email_Templates/Submit_Purchase_Order</template>
+    </alerts>
+    <alerts>
+        <fullName>Submit_the_Purchase_Order</fullName>
+        <description>Email Alert to the Owner of the Purchase Order to Submit the Purchase Order</description>
+        <protected>false</protected>
+        <recipients>
+            <type>owner</type>
+        </recipients>
+        <senderType>CurrentUser</senderType>
+        <template>AcctSeed__Accounting_Seed_Email_Templates/Submit_Purchase_Order</template>
+    </alerts>
+    <alerts>
+        <fullName>Your_purchase_Order_has_been_rejected_Barrie</fullName>
+        <description>Your purchase Order has been rejected Barrie</description>
+        <protected>false</protected>
+        <recipients>
+            <type>owner</type>
+        </recipients>
+        <senderType>CurrentUser</senderType>
+        <template>AcctSeed__Accounting_Seed_Email_Templates/Purchase_Order_Approval_Rejected</template>
+    </alerts>
+    <alerts>
+        <fullName>Your_purchase_Order_has_been_rejected_Montreal</fullName>
+        <description>Your purchase Order has been rejected Montreal</description>
+        <protected>false</protected>
+        <recipients>
+            <type>owner</type>
+        </recipients>
+        <senderType>CurrentUser</senderType>
+        <template>AcctSeed__Accounting_Seed_Email_Templates/Purchase_Order_Approval_Rejected</template>
+    </alerts>
+    <alerts>
+        <fullName>Your_purchase_order_has_been_approved</fullName>
+        <description>Your purchase order has been approved</description>
+        <protected>false</protected>
+        <recipients>
+            <type>owner</type>
+        </recipients>
+        <senderType>CurrentUser</senderType>
+        <template>AcctSeed__Accounting_Seed_Email_Templates/Submit_Purchase_Order</template>
+    </alerts>
+    <alerts>
+        <fullName>Your_purchase_order_has_been_rejected</fullName>
+        <description>Your purchase order has been rejected</description>
+        <protected>false</protected>
+        <recipients>
+            <type>owner</type>
+        </recipients>
+        <senderType>CurrentUser</senderType>
+        <template>AcctSeed__Accounting_Seed_Email_Templates/Purchase_Order_Approval_Rejected</template>
+    </alerts>
+    <fieldUpdates>
+        <fullName>Change_Stage_back_to_New</fullName>
+        <field>Stage__c</field>
+        <literalValue>New</literalValue>
+        <name>Change Stage back to New</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>Change_Stage_to_Approved</fullName>
+        <field>Stage__c</field>
+        <literalValue>Approved</literalValue>
+        <name>Change Stage to Approved</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>Change_Stage_to_Pending_Approval</fullName>
+        <field>Stage__c</field>
+        <literalValue>Pending Approval</literalValue>
+        <name>Change Stage to Pending Approval</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>Change_Status_back_to_Open</fullName>
+        <field>AcctSeedERP__Status__c</field>
+        <literalValue>Open</literalValue>
+        <name>Change Status back to Open</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>Change_Status_to_Closed</fullName>
+        <field>AcctSeedERP__Status__c</field>
+        <literalValue>Closed</literalValue>
+        <name>Change Status to Closed</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>Change_to_Pending_Approval</fullName>
+        <field>AcctSeedERP__Status__c</field>
+        <literalValue>Pending Approval</literalValue>
+        <name>Change to Pending Approval</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>Locked_If_Not_Open</fullName>
+        <field>Locked__c</field>
+        <literalValue>1</literalValue>
+        <name>Locked_If_Not_Open</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>true</reevaluateOnChange>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>Purchase_Order_Stage_Approved_1</fullName>
+        <description>Changes purchase order stage to approved</description>
+        <field>Stage__c</field>
+        <literalValue>Pending Approval</literalValue>
+        <name>Purchase Order Stage - Approved - 1</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>true</reevaluateOnChange>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>Purchase_Order_Stage_Approved_2</fullName>
+        <description>Changes purchase order stage to approved</description>
+        <field>Stage__c</field>
+        <literalValue>Approved</literalValue>
+        <name>Purchase Order Stage - Approved - 2</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>true</reevaluateOnChange>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>Purchase_Order_Update_Pend_Approval</fullName>
+        <field>Stage__c</field>
+        <literalValue>Pending Approval</literalValue>
+        <name>Purchase Order Update Pend Approval</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>Set_Pending_Approval</fullName>
+        <description>Set PO stage to pending approval</description>
+        <field>Stage__c</field>
+        <literalValue>Pending Approval</literalValue>
+        <name>Set Pending Approval</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>Set_Pending_Approval_Barrie</fullName>
+        <description>Sets PO stage to pending approval</description>
+        <field>Stage__c</field>
+        <literalValue>Pending Approval</literalValue>
+        <name>Set Pending Approval - Barrie</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>Set_Pending_Approval_Montreal</fullName>
+        <description>Set PO stage to pending approval</description>
+        <field>Stage__c</field>
+        <literalValue>Pending Approval</literalValue>
+        <name>Set Pending Approval - Montreal</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>Stage_Change_to_Approved</fullName>
+        <description>Approving the Purchase Order changes the Stage to Approved</description>
+        <field>AcctSeedERP__Status__c</field>
+        <literalValue>Approved</literalValue>
+        <name>Stage Change to Approved</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>Stage_Update_Rejected</fullName>
+        <field>Stage__c</field>
+        <literalValue>Cancelled</literalValue>
+        <name>Stage_Update Rejected</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>Unlocked_If_Open</fullName>
+        <field>Locked__c</field>
+        <literalValue>0</literalValue>
+        <name>Unlocked_If_Open</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>true</reevaluateOnChange>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>Update_Locked</fullName>
+        <field>Locked__c</field>
+        <literalValue>1</literalValue>
+        <name>Update Locked</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>Update_Order_Date</fullName>
+        <description>Updates order Date to Current Date</description>
+        <field>AcctSeedERP__Order_Date__c</field>
+        <formula>Today()</formula>
+        <name>Update Order Date</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Formula</operation>
+        <protected>false</protected>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>Update_to_Delivered_Stage</fullName>
+        <field>Stage__c</field>
+        <literalValue>Approved</literalValue>
+        <name>Update to Delivered Stage</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>Update_to_PO_Pending_Approval</fullName>
+        <description>Update to PO pending approval to trigger rest of approval process</description>
+        <field>Stage__c</field>
+        <literalValue>Pending Approval</literalValue>
+        <name>Update to PO Pending Approval</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+    </fieldUpdates>
+    <outboundMessages>
+        <fullName>grffgfd</fullName>
+        <apiVersion>40.0</apiVersion>
+        <endpointUrl>http://5</endpointUrl>
+        <fields>AcctSeedERP__Shipping_Company__c</fields>
+        <fields>Id</fields>
+        <includeSessionId>false</includeSessionId>
+        <integrationUser>bfram@legendboats.com</integrationUser>
+        <name>grfd</name>
+        <protected>false</protected>
+        <useDeadLetterQueue>false</useDeadLetterQueue>
+    </outboundMessages>
+    <rules>
+        <fullName>Go create AP</fullName>
+        <actions>
+            <name>Go_create_the_correspondng_AP</name>
+            <type>Alert</type>
+        </actions>
+        <actions>
+            <name>Go_create_AP</name>
+            <type>Task</type>
+        </actions>
+        <active>false</active>
+        <criteriaItems>
+            <field>AcctSeedERP__Purchase_Order__c.Stage__c</field>
+            <operation>equals</operation>
+            <value>Partially Received,Received</value>
+        </criteriaItems>
+        <description>create accounts payable according to partially received or received items from a purchase order</description>
+        <triggerType>onCreateOrTriggeringUpdate</triggerType>
+    </rules>
+    <rules>
+        <fullName>Locked_If_Not_Open</fullName>
+        <actions>
+            <name>Locked_If_Not_Open</name>
+            <type>FieldUpdate</type>
+        </actions>
+        <active>true</active>
+        <booleanFilter>(3 OR 1) AND 2</booleanFilter>
+        <criteriaItems>
+            <field>AcctSeedERP__Purchase_Order__c.AcctSeedERP__Status__c</field>
+            <operation>notEqual</operation>
+            <value>Open</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>AcctSeedERP__Purchase_Order__c.Locked__c</field>
+            <operation>equals</operation>
+            <value>False</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>AcctSeedERP__Purchase_Order__c.Stage__c</field>
+            <operation>notEqual</operation>
+            <value>New</value>
+        </criteriaItems>
+        <triggerType>onCreateOrTriggeringUpdate</triggerType>
+    </rules>
+    <rules>
+        <fullName>Purchase Order Pending Approval</fullName>
+        <actions>
+            <name>Approve_Purchase_Order</name>
+            <type>Alert</type>
+        </actions>
+        <active>false</active>
+        <criteriaItems>
+            <field>AcctSeedERP__Purchase_Order__c.AcctSeedERP__Status__c</field>
+            <operation>equals</operation>
+            <value>Pending Approval</value>
+        </criteriaItems>
+        <triggerType>onCreateOrTriggeringUpdate</triggerType>
+    </rules>
+    <rules>
+        <fullName>Purchase Order Update Date</fullName>
+        <actions>
+            <name>Update_Order_Date</name>
+            <type>FieldUpdate</type>
+        </actions>
+        <active>true</active>
+        <criteriaItems>
+            <field>AcctSeedERP__Purchase_Order__c.Stage__c</field>
+            <operation>equals</operation>
+            <value>Submitted</value>
+        </criteriaItems>
+        <description>Updates the date to current date when Submitted stage is activated</description>
+        <triggerType>onCreateOrTriggeringUpdate</triggerType>
+    </rules>
+    <rules>
+        <fullName>Status Change to Closed</fullName>
+        <actions>
+            <name>Change_Status_to_Closed</name>
+            <type>FieldUpdate</type>
+        </actions>
+        <active>true</active>
+        <criteriaItems>
+            <field>AcctSeedERP__Purchase_Order__c.Stage__c</field>
+            <operation>equals</operation>
+            <value>Received,Cancelled</value>
+        </criteriaItems>
+        <triggerType>onCreateOrTriggeringUpdate</triggerType>
+    </rules>
+    <rules>
+        <fullName>Submit Purchase Order</fullName>
+        <actions>
+            <name>Submit_Purchase_Order</name>
+            <type>Alert</type>
+        </actions>
+        <active>false</active>
+        <criteriaItems>
+            <field>AcctSeedERP__Purchase_Order__c.AcctSeedERP__Status__c</field>
+            <operation>equals</operation>
+            <value>Approved</value>
+        </criteriaItems>
+        <triggerType>onCreateOrTriggeringUpdate</triggerType>
+    </rules>
+    <rules>
+        <fullName>Task to Purchase Order Creator Parts are Received</fullName>
+        <actions>
+            <name>Please_Update_the_Case_to_Parts_Received</name>
+            <type>Task</type>
+        </actions>
+        <active>true</active>
+        <criteriaItems>
+            <field>AcctSeedERP__Purchase_Order__c.CreatedById</field>
+            <operation>contains</operation>
+            <value>levac</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>AcctSeedERP__Purchase_Order__c.Stage__c</field>
+            <operation>equals</operation>
+            <value>Received</value>
+        </criteriaItems>
+        <description>This is for when a PO is received, it will notify the PO creator to update the Case status to Received, which will move the associated Service ERP to Pending Scheduling</description>
+        <triggerType>onCreateOrTriggeringUpdate</triggerType>
+    </rules>
+    <rules>
+        <fullName>Unlocked_If_Open</fullName>
+        <actions>
+            <name>Unlocked_If_Open</name>
+            <type>FieldUpdate</type>
+        </actions>
+        <active>true</active>
+        <booleanFilter>1 AND 2 AND 3</booleanFilter>
+        <criteriaItems>
+            <field>AcctSeedERP__Purchase_Order__c.AcctSeedERP__Status__c</field>
+            <operation>equals</operation>
+            <value>Open</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>AcctSeedERP__Purchase_Order__c.Locked__c</field>
+            <operation>equals</operation>
+            <value>True</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>AcctSeedERP__Purchase_Order__c.Stage__c</field>
+            <operation>equals</operation>
+            <value>New</value>
+        </criteriaItems>
+        <triggerType>onCreateOrTriggeringUpdate</triggerType>
+    </rules>
+    <tasks>
+        <fullName>Go_create_AP</fullName>
+        <assignedTo>mmoss@legendboats.com</assignedTo>
+        <assignedToType>user</assignedToType>
+        <description>Go create the AP for any partially received or fully received items on the PO</description>
+        <dueDateOffset>7</dueDateOffset>
+        <notifyAssignee>false</notifyAssignee>
+        <priority>Normal</priority>
+        <protected>false</protected>
+        <status>Open</status>
+        <subject>Go create AP!</subject>
+    </tasks>
+    <tasks>
+        <fullName>Please_Update_the_Case_to_Parts_Received</fullName>
+        <assignedTo>mpatrakka@legendboats.com</assignedTo>
+        <assignedToType>user</assignedToType>
+        <description>Your parts for this PO have been fully received.  Please update the Case status to Parts Received</description>
+        <dueDateOffset>0</dueDateOffset>
+        <notifyAssignee>false</notifyAssignee>
+        <priority>Normal</priority>
+        <protected>false</protected>
+        <status>Open</status>
+        <subject>Please Update the Case to Parts Received</subject>
+    </tasks>
+</Workflow>

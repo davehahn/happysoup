@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>Legend_Letterhead</letterhead>
+    <name>3) 1 Week Follow Up - Floor Contact</name>
+    <style>freeForm</style>
+    <subject>Legend Boats - The Memories are Waiting</subject>
+    <textOnly>Hi {!Account.FirstName},
+
+It has been a little over a week since you visited me.  My interest in getting you on the water hasn&#39;t diminished one bit.  You will find I&#39;m just as persistent in providing service after you take ownership and ensuring your complete satisfaction, as I am working with you on selecting the right boat to create your memories.
+
+I would like to ask a favour.  Present me with a challenge that I would need to overcome to get you on the water.  It can be anything:  trade-in value, price, terms, or perhaps a different boat than you were first considering.
+
+Give me the chance, and I&#39;ll ensure you are happy with your decision.
+
+
+Best Regards,
+
+
+{!User.Name}
+{!User.Title}
+
+{!User.Email}
+{!User.Phone}
+legendboats.com
+
+{!User.Address}</textOnly>
+    <type>html</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

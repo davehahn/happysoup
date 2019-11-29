@@ -1,0 +1,15 @@
+<messaging:emailTemplate subject="Motor Order ( Legend - Mercury Special Programs )" relatedToType="Dealer_Order_Line__c">
+<messaging:htmlEmailBody >
+
+    <div style="text-align:center;margin: 15px 0;">
+        <apex:image style="width:300px;" id="Logo" value="https://legendboats--c.na88.content.force.com/sfc/servlet.shepherd/version/renditionDownload?rendition=ORIGINAL_Png&versionId=0681Y0000036lEC&operationContext=CHATTER&contentId=05T1Y000008lIu0" />
+    </div>
+     
+    <c:DealerMotorRequest5PercentPromo lineId="{!relatedTo.Id}" accountId="{!relatedTo.Dealer_Order__r.Account__c}" />
+    
+</messaging:htmlEmailBody>
+</messaging:emailTemplate>
+
+<!--
+
+-->

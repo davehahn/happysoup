@@ -1,0 +1,199 @@
+$event-text-color: #3C3C3C;
+$activeErpPickupEvent-bg: #F6A8F7;
+$activeErpPickupEvent-bg-dark: darken( $activeErpPickupEvent-bg, 50%);
+
+$locations: (
+  barrie: #D4F1FF,
+  montreal: #ffa9b7,
+  whitefish: #E7FFF1
+);
+
+@each $name, $color in $locations {
+  #lg-toggle-#{$name}:checked + label {
+    background: darken($color, 50%);
+    &:before {
+      background: $color;
+    }
+    &:after {
+      background: darken($color, 50%);
+    }
+  }
+}
+
+.fc {
+
+  .fc-event {
+
+    // &.no-driver {
+    //   background: $no-driver-bg;
+    //   border-color: $no-driver-bg-dark;
+    //   span.fc-time {
+    //     background: $no-driver-bg-dark;
+    //     color: #FFF;
+    //   }
+    //   &:hover {
+    //     background: $no-driver-bg-dark;
+    //     color: #FFF;
+    //     span.fc-time {
+    //       color: $event-text-color;
+    //       background: #FFF;
+    //     }
+    //   }
+    // }
+
+    /* ++++++++++++++++ locationr specific event class ++++++++++++++++ */
+    @each $name, $color in $locations {
+      &.#{$name} {
+        background: $color;
+        border-color: darken( $color, 50%);
+        span.fc-time {
+          background: darken($color, 50%);
+          color: #FFF;
+        }
+        &:hover {
+          background: darken($color, 50%);
+          color: #FFF;
+          span.fc-time {
+            color: $event-text-color;
+            background: #FFF;
+          }
+        }
+      }
+    }
+    /* =============== /location specific event class ================ */
+
+    &.activeErp {
+      background: $activeErpPickupEvent-bg;
+      border-color: $activeErpPickupEvent-bg-dark;
+      span.fc-time {
+        background: $activeErpPickupEvent-bg-dark;
+        color: #FFF;
+      }
+      &:hover {
+        background: $activeErpPickupEvent-bg-dark;
+        color: #FFF;
+        span.fc-time {
+          color: $event-text-color;
+          background: #FFF;
+        }
+      }
+    }
+
+  }// /.fc-event
+
+}// /.fc
+
+#scheduables {
+
+  .scheduable {
+    padding: 0.5rem 0.75rem;
+    margin: 0.5rem 1rem;
+    display: flex;
+    align-items: center;
+    background: #f4f6f9;
+    border-radius: 5px;
+    cursor: move;
+    position:relative;
+    z-index:99;
+
+    & > div {
+      height: 100%;
+      width: 32px;
+      box-sizing: border-box;
+      padding: 0;
+      margin: 0;
+      & + div {
+        background: #FFF;
+        margin-left: 0.75rem;
+        padding: 0.5rem 0.5rem 0.5rem 1rem;
+        border-radius: 4px;
+        display: inline-block;
+        width: calc(100% - 32px - 0.5rem);
+
+        p {
+          margin: 0;
+          padding: 0;
+        }
+      }
+    }
+
+    @each $name, $color in $locations {
+      &.#{$name} {
+        background: $color;
+      }
+    }
+
+    &.processing {
+      visibility: hidden;
+    }
+
+    &.activeErp {
+      background: $activeErpPickupEvent-bg;
+    }
+
+    &.justRemoved {
+      background: yellow;
+    }
+  }
+
+  .unscheduleDropZone {
+    height: 100%;
+    background: #ECECEC;
+    border-radius: 5px;
+    width: 96%;
+    margin: auto;
+    display:none;
+    text-align: center;
+
+    svg {
+      width: 60px;
+      height: 60px;
+      position: relative;
+      top: calc( 50% - 30px );
+    }
+  }
+
+  &.dropZone {
+    .scheduable-list {
+      display: none;
+    }
+    .unscheduleDropZone {
+      display: block;
+    }
+  }
+
+}
+
+.slds-modal__container .slds-modal__content {
+  padding-top: 1rem;
+
+  .slds-card {
+    margin: 0;
+    margin-top: 20px;
+  }
+  .slds-form-element {
+    text-align: center;
+
+    .slds-form-element__control .legend_switch {
+
+      input.lg-toggle-round {
+        &:checked {
+          & + label {
+            &:before {
+              background: #00AAF9;
+            }
+          }
+        }
+      }
+
+      label {
+      left: 50%;
+      margin-left: -30px;
+
+      }
+
+    }
+
+  }
+
+}

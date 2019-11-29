@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <description>A letter inviting Salespeople&#39;s prospects to the New Sudbury Mall Show</description>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>Legend_Letterhead</letterhead>
+    <name>New Sudbury Mall Show Opportunity Invitation</name>
+    <style>freeForm</style>
+    <subject>Come Visit us at the New Sudbury Shopping Centre!</subject>
+    <textOnly>Hi {!Account.FirstName},
+
+I hope all has been well with you since we last spoke and that you&#39;re enjoying this lovely, snowy weather!  I just wanted to extend an invitation for you to come and take another look at our boats:
+
+Legend Boats will be set up in the New Sudbury Shopping Centre starting this Sunday January 24th till Sunday 31st.
+
+Reasons to come to the New Sudbury Mall Show:
+
+No interest No payments until Summer
+Boat before you pay
+Toronto Boat Show Pricing (Yes available in Sudbury!)
+2016 New line up just released
+Massive Non-current savings (While quantities last)
+Pontoon, Full windshield, Side console and Utility Boats on display
+Enter to win a brand new iPad!
+
+Please feel free to send me an email or give me a call to set up a date and time that you might want to come see (and of course play) in our boats.  I want to be sure that I can give you a full demonstration of the memories that you could be creating this summer on the water!
+
+From all of us here at Legend Boats, we truly hope to see you there!
+
+Yours in Boating,
+
+{!User.Name}
+{!User.Title}
+{!User.Email}
+{!User.Phone}
+www.legendboats.com</textOnly>
+    <type>html</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

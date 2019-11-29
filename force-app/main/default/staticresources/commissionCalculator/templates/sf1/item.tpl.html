@@ -1,0 +1,43 @@
+  <div id="{{this.Id}}" class="record">
+
+
+      <div class="panel record-details">
+        <h5>{{ this.Description__c }}</h5>
+
+        <div class="row">
+
+          <div class="column small-12">
+            {{ item_attr 'Retail Price' this.Retail_Price__c 'currency' }}
+            {{ item_attr 'Sale Price'  this.Sale_Price__c 'currency' }}
+            {{ item_attr 'Commissionable Amount'  this.CommissionableAmount__c 'currency' }}
+
+            {{ item_attr 'Standard Comm. Rate' this.CommissionRate__c 'percent' }}
+            {{ item_attr 'Calculated Comm. Amount' this.CalculatedCommissionAmount__c 'currency' }}
+
+            {{ editable_item_attr 'Applied Comm. Rate' 'Com. Rate' this.AppliedCommissionRate__c 'percent' }}
+            {{ editable_item_attr 'Applied Comm. Amount' 'Com. Amount' this.AppliedCommissionAmount__c 'currency' }}
+          </div>
+
+        </div>
+
+        <div class="row">
+
+          <div class="column small-12">
+
+            <a href="" class="item-button update-item right"  data-item-id="{{this.Id}}">
+              <i class="fa fa-save"></i>
+            </a>
+            <a href="" class="item-button edit-item right" data-item-id="{{this.Id}}">
+              <i class="fa fa-edit"></i>
+              <i class="fa fa-close"></i>
+            </a>
+
+          </div>
+
+        </div>
+
+      </div><!-- /.panel.record-details -->
+
+  </div><!-- /record -->
+
+

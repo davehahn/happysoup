@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Email_Invoice__c</fullName>
+    <externalId>false</externalId>
+    <formula>IF( Invoice_Document_Id__c = null, 
+null, 
+HYPERLINK(&#39;/_ui/core/email/author/EmailAuthor?new_template=true&amp;p3_lkid=&#39; &amp; Id &amp; &#39;&amp;doc_id=&#39; &amp; Invoice_Document_Id__c &amp; &#39;&amp;retURL=&#39; &amp; Id &amp; &#39;&amp;p2_lkid=&#39; &amp;  AccountId , &#39;Email Invoice&#39; ) 
+)</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Email Invoice</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

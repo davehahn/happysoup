@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workflow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <alerts>
+        <fullName>Approval_Expiry_Email</fullName>
+        <description>Approval Expiry Email</description>
+        <protected>false</protected>
+        <recipients>
+            <recipient>jdavis@legendboats.com</recipient>
+            <type>user</type>
+        </recipients>
+        <recipients>
+            <recipient>melcorcoran@legendboats.com</recipient>
+            <type>user</type>
+        </recipients>
+        <senderType>CurrentUser</senderType>
+        <template>Dealer_Templates/Approval_Expiry_Alert</template>
+    </alerts>
+    <rules>
+        <fullName>Approval Expiry Alert</fullName>
+        <active>true</active>
+        <criteriaItems>
+            <field>Dealer_Financing_Request__c.Date_of_Expiry__c</field>
+            <operation>equals</operation>
+            <value>TODAY</value>
+        </criteriaItems>
+        <triggerType>onCreateOrTriggeringUpdate</triggerType>
+        <workflowTimeTriggers>
+            <actions>
+                <name>Approval_Expiry_Email</name>
+                <type>Alert</type>
+            </actions>
+            <offsetFromField>Dealer_Financing_Request__c.Date_of_Expiry__c</offsetFromField>
+            <timeLength>-10</timeLength>
+            <workflowTimeTriggerUnit>Days</workflowTimeTriggerUnit>
+        </workflowTimeTriggers>
+    </rules>
+    <rules>
+        <fullName>ERP Archive Record Dealer Financing Request</fullName>
+        <active>false</active>
+        <criteriaItems>
+            <field>Dealer_Financing_Request__c.Status__c</field>
+            <operation>equals</operation>
+            <value>Expired,Insufficient Funds</value>
+        </criteriaItems>
+        <description>When Status set to Expired or Insufficient Funds, the record will be archived automatically</description>
+        <triggerType>onCreateOrTriggeringUpdate</triggerType>
+    </rules>
+</Workflow>

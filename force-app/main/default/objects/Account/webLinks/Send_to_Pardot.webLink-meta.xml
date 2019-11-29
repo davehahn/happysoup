@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebLink xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Send_to_Pardot</fullName>
+    <availability>online</availability>
+    <displayType>button</displayType>
+    <linkType>javascript</linkType>
+    <masterLabel>Send to Pardot</masterLabel>
+    <openType>onClickJavaScript</openType>
+    <protected>false</protected>
+    <url>window.location = &#39;https://pi.pardot.com/prospect/sync/email/{!Account.PersonEmail}?Account_id={!Account.Id}&amp;sessionid={!$Api.Session_ID}&amp;serverurl={!$Api.Partner_Server_URL_90}&amp;redirect_location=&#39;+window.location</url>
+</WebLink>

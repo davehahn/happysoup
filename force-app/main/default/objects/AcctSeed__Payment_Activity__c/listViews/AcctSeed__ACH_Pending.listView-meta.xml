@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>AcctSeed__ACH_Pending</fullName>
+    <columns>NAME</columns>
+    <columns>AcctSeed__Payment_Method__c</columns>
+    <columns>AcctSeed__Payment_Method_Type__c</columns>
+    <columns>AcctSeed__Status__c</columns>
+    <columns>AcctSeed__Type__c</columns>
+    <columns>AcctSeed__Amount__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>AcctSeed__Payment_Method_Type__c</field>
+        <operation>equals</operation>
+        <value>ACH</value>
+    </filters>
+    <filters>
+        <field>AcctSeed__Status__c</field>
+        <operation>equals</operation>
+        <value>Pending</value>
+    </filters>
+    <label>ACH Pending</label>
+</ListView>

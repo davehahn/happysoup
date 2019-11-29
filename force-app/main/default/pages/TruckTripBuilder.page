@@ -1,0 +1,93 @@
+<apex:page showHeader="true"
+            sidebar="false"
+            docType="html-5.0"
+            standardStylesheets="false"
+            standardController="Truck_Trip__c"
+            extensions="TripBuilderController"
+            action="{!init}">
+
+  <c:lgnd_slds_resources />
+  <apex:stylesheet value="{!URLFOR($Resource.DragulaJS, 'dragula.min.css')}" />
+  <apex:stylesheet value="{!URLFOR($Resource.truckTripResources, 'css/styles.min.css')}" />
+  <apex:stylesheet value="{!URLFOR($Resource.truckTripResources, 'css/truck-load-styles.min.css')}" />
+
+  <div class="lgnd" style="min-height: 600px;">
+    <div id="trip-backdrop" class="slds-backdrop"></div>
+    <div id="trip-dialog" aria-hidden="true" role="dialog" class="slds-modal"></div>
+
+    <div id="trip-header" class="slds-page-header" role="banner"></div>
+
+    <div id="trip-content"></div>
+
+  </div>
+
+  <apex:includeScript value="{!URLFOR($Resource.pickupCalendar, 'js/lib/moment.min.js')}" />
+  <apex:includeScript value="{!URLFOR($Resource.aljs, 'jquery/jquery.aljs-init.min.js')}" />
+  <apex:includeScript value="{!URLFOR($Resource.aljs, 'jquery/jquery.aljs-datepicker.min.js')}" />
+  <apex:includeScript value="{!URLFOR($Resource.aljs, 'jquery/jquery.aljs-tabs.min.js')}" />
+  <apex:includeScript value="{!URLFOR($Resource.DragulaJS, 'dragula.min.js')}" />
+  <apex:includeScript value="{!URLFOR($Resource.truckTripResources, 'js/helper.js')}" />
+  <apex:includeScript value="{!URLFOR($Resource.truckTripResources, 'js/truck-trip.js')}" />
+  <apex:includeScript value="{!URLFOR($Resource.truckTripResources, 'js/trip-destination.js')}" />
+  <apex:includeScript value="{!URLFOR($Resource.truckTripResources, 'js/truck-load.js')}" />
+  <apex:includeScript value="{!URLFOR($Resource.truckTripResources, 'js/truck-delivery-item.js')}" />
+  <apex:includeScript value="{!URLFOR($Resource.truckTripResources, 'js/serial-selector.js')}" />
+
+  <script type="text/javascript">
+
+
+    (function($, document, window, undefined) {
+
+      var tmplURLS = {
+            'trip_header': "{!URLFOR($Resource.truckTripResources, 'templates/trip-header.tpl.html')}",
+            'trip_content': "{!URLFOR($Resource.truckTripResources, 'templates/trip-content.tpl.html')}",
+            'trip_form': "{!URLFOR($Resource.truckTripResources, 'templates/trip-form.tpl.html')}",
+            'special_instructions': "{!URLFOR($Resource.truckTripResources, 'templates/special_delivery_instructions.tpl.html')}",
+            'destination_form': "{!URLFOR($Resource.truckTripResources, 'templates/add-destination.tpl.html')}",
+            'destinations_timeline': "{!URLFOR($Resource.truckTripResources, 'templates/destinations-timeline.tpl.html')}",
+            'destination_material_row': "{!URLFOR($Resource.truckTripResources, 'templates/destination-material-row.tpl.html')}",
+            'loading_modal': "{!URLFOR($Resource.truckTripResources, 'templates/loading-modal.tpl.html')}",
+            'spinner': "{!URLFOR($Resource.truckTripResources, 'templates/spinner.tpl.html')}",
+            'spinner_small': "{!URLFOR($Resource.truckTripResources, 'templates/spinner-small.tpl.html')}",
+            'erp_orders': "{!URLFOR($Resource.truckTripResources, 'templates/erp-orders.tpl.html')}",
+            'pickup_notes': "{!URLFOR($Resource.truckTripResources, 'templates/pickup-notes.tpl.html')}",
+            'truck_load': "{!URLFOR($Resource.truckTripResources, 'templates/truck-load.tpl.html')}",
+            'truck_load_items': "{!URLFOR($Resource.truckTripResources, 'templates/truck-load-items.tpl.html')}",
+            'truck_delivery_item': "{!URLFOR($Resource.truckTripResources, 'templates/truck-delivery-item.tpl.html')}",
+            'serial_selector': "{!URLFOR($Resource.truckTripResources, 'templates/serial-selector.tpl.html')}",
+            'serial_selector_row': "{!URLFOR($Resource.truckTripResources, 'templates/serial-selector-row.tpl.html')}",
+            'contact_select': "{!URLFOR($Resource.truckTripResources, 'templates/contact_select.tpl.html')}",
+            'serial_list': "{!URLFOR($Resource.truckTripResources, 'templates/serial-number-list.tpl.html')}"
+          },
+          tripId = '{!tripId}',
+          trip;
+      LGND.returnURL = "{!returnURL}";
+      LGND.truckLoadPdfURL = '{!URLFOR($Action.Truck_Trip__c.Truck_Load_PDF )}';
+      LGND.truckLoad_BOL_PDF = '{!URLFOR($Action.Truck_Trip__c.Bill_of_Lading )}';
+      LGND.listViewURL = '{!URLFOR($Action.Truck_Trip__c.List,$ObjectType.Truck_Trip__c)}';
+      LGND.slds_asset_path = "{!URLFOR($Resource.LGND_SLDS_214, 'assets/')}";
+      LGND.selectOptions = {!selectOptions};
+      LGND.HandlebarsHelpers.templateLoader( tmplURLS )
+      .then( function( tmpls ) {
+        LGND.templates = tmpls;
+        if( tripId.length > 0 )
+        {
+          TripBuilderController.fetchTrip('{!tripId}', function(r, e) {
+            trip = new TruckTrip( r );
+          });
+        }
+        else
+        {
+          trip = new TruckTrip();
+        }
+      });
+
+      $.aljsInit({
+        assetsLocation: '{!URLFOR($Resource.LGND_SLDS_214)}'
+      });
+
+    })(jQuery.noConflict(), document, window)
+
+  </script>
+
+</apex:page>

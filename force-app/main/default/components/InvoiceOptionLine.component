@@ -1,0 +1,34 @@
+<apex:component >
+  <apex:attribute name="rowClass"
+                  description="The CSS class applied to the row"
+                  type="String"
+                  required="true" />
+  <apex:attribute name="quantity"
+                  description="Quantity of the Line Item"
+                  type="Integer"
+                  required="false" />
+  <apex:attribute name="description"
+                  description="The description of the Item"
+                  type="String"
+                  required="true" />
+  <apex:attribute name="cost"
+                  description="The Cost of the Line Item"
+                  type="String"
+                  required="true" />
+
+  <p class="itemRow {!rowClass}">
+    <span class='quantity'>
+      <apex:outputText value="{!IF(quantity==null, '', quantity)}" />
+    </span>
+    <apex:outputText value="{!IF(description==null, '', description)}" />
+    <span class="cost">
+      <apex:outputText value="" rendered="{!cost == null}" />
+      <apex:outputText value="{!cost}" rendered="{!cost == 'Included'}" />
+      <apex:outputText value="${0, number, ###,###,###,##0.00}"
+                       rendered="{!AND( cost != null, cost != 'Included' )}">
+        <apex:param value="{!VALUE(cost)}"/>
+      </apex:outputText>
+    </span>
+  </p>
+
+</apex:component>

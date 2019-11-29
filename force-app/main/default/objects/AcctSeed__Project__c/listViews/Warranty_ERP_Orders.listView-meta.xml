@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Warranty_ERP_Orders</fullName>
+    <columns>NAME</columns>
+    <columns>AcctSeedERP__Work_Order_Number__c</columns>
+    <columns>AcctSeed__Account__c</columns>
+    <columns>GMBLASERP__Warehouse__c</columns>
+    <columns>Serial_Number__c</columns>
+    <columns>AcctSeed__Status__c</columns>
+    <columns>Order_Item_Total__c</columns>
+    <columns>Grand_Total__c</columns>
+    <columns>WIP__c</columns>
+    <columns>Cash__c</columns>
+    <columns>Revenue__c</columns>
+    <columns>Expense__c</columns>
+    <columns>Profit_Pct__c</columns>
+    <columns>CREATED_DATE</columns>
+    <columns>LAST_UPDATE</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>RECORDTYPE</field>
+        <operation>equals</operation>
+        <value>AcctSeed__Project__c.Legend_Warranty</value>
+    </filters>
+    <filters>
+        <field>AcctSeed__Status__c</field>
+        <operation>equals</operation>
+        <value>Active</value>
+    </filters>
+    <label>Warranty ERP Orders</label>
+</ListView>

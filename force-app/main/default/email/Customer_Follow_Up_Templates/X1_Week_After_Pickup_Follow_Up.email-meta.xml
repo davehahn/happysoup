@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>Legend_Letterhead</letterhead>
+    <name>1 Week After Pickup Follow Up</name>
+    <style>freeForm</style>
+    <subject>Legend Boats - We Hope You&#39;re Enjoying the Water</subject>
+    <textOnly>Hi {!Account.FirstName},
+
+It has been one week since you picked up your new boat and we hope you&#39;ve gotten a chance to experience the thrills of being on the water in a Legend Boat!
+
+Please let us know how you are enjoying yourself so far, we love your feedback.  We would appreciate hearing about your first experience on the water and also if you have any comments or suggestions.
+
+To be sure you are maintaining the quality of your boat, we suggest the following Service Schedule:
+
+Fuel Treatment with each Fill Up
+Check the Pressure Regularly
+Grease the Trailer Wheel Bearings
+Mercury Service After your First 20 Running Hours
+Impeller/Water Pump Service Every 100 Hours or 3 Years
+Winterization - Be Sure to Book Annually Every Fall
+
+Again, thank you so much for becoming a member of our Legend Family and if you have any questions or concerns, please do not hesitate to contact me.
+
+Yours in Boating,
+
+{!User.Name}
+{!User.Title}
+
+{!User.Email}
+{!User.Phone}
+legendboats.com
+
+{!User.Address}</textOnly>
+    <type>html</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

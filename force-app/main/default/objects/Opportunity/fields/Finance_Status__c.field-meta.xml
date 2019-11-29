@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Finance_Status__c</fullName>
+    <description>Financing status</description>
+    <externalId>false</externalId>
+    <label>Finance Status</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <controllingField>Payment_Method__c</controllingField>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Submitted</fullName>
+                <default>false</default>
+                <label>Submitted</label>
+            </value>
+            <value>
+                <fullName>Approved</fullName>
+                <default>false</default>
+                <label>Approved</label>
+            </value>
+            <value>
+                <fullName>Approved with Conditions</fullName>
+                <default>false</default>
+                <label>Approved with Conditions</label>
+            </value>
+            <value>
+                <fullName>Funded</fullName>
+                <default>false</default>
+                <label>Funded</label>
+            </value>
+            <value>
+                <fullName>Declined</fullName>
+                <default>false</default>
+                <label>Declined</label>
+            </value>
+            <value>
+                <fullName>Balance Owing</fullName>
+                <default>false</default>
+                <label>Balance Owing</label>
+            </value>
+            <value>
+                <fullName>Paid in Full</fullName>
+                <default>false</default>
+                <label>Paid in Full</label>
+            </value>
+            <value>
+                <fullName>Balance at Pickup</fullName>
+                <default>false</default>
+                <label>Balance at Pickup</label>
+            </value>
+            <value>
+                <fullName>Declined but Working</fullName>
+                <default>false</default>
+                <label>Declined but Working</label>
+            </value>
+        </valueSetDefinition>
+        <valueSettings>
+            <controllingFieldValue>Cash</controllingFieldValue>
+            <valueName>Balance Owing</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Cash</controllingFieldValue>
+            <valueName>Paid in Full</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Cash</controllingFieldValue>
+            <valueName>Balance at Pickup</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Finance</controllingFieldValue>
+            <valueName>Submitted</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Finance</controllingFieldValue>
+            <valueName>Approved</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Finance</controllingFieldValue>
+            <valueName>Approved with Conditions</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Finance</controllingFieldValue>
+            <valueName>Funded</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Finance</controllingFieldValue>
+            <valueName>Declined</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Finance</controllingFieldValue>
+            <valueName>Declined but Working</valueName>
+        </valueSettings>
+    </valueSet>
+</CustomField>

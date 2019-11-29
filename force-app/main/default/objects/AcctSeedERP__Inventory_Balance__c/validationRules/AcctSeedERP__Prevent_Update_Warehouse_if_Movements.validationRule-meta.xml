@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>AcctSeedERP__Prevent_Update_Warehouse_if_Movements</fullName>
+    <active>true</active>
+    <description>Prevent changing the warehouse if there are associated inventory movements</description>
+    <errorConditionFormula>NOT(ISNEW()) &amp;&amp; (AcctSeedERP__Inbound_Quantity__c &gt; 0 ||  AcctSeedERP__Outbound_Quantity__c &gt; 0 ||  AcctSeedERP__Manufacturing_Quantity__c &gt; 0 ||  AcctSeedERP__Sales_Order_Quantity__c &gt; 0 ||  AcctSeedERP__Purchasing_Quantity__c &gt; 0) &amp;&amp;  PRIORVALUE(AcctSeedERP__Warehouse__c) != AcctSeedERP__Warehouse__c</errorConditionFormula>
+    <errorDisplayField>AcctSeedERP__Warehouse__c</errorDisplayField>
+    <errorMessage>You cannot change the warehouse if there are associated inventory movements. You must delete all inventory movements in order to change the warehouse.</errorMessage>
+</ValidationRule>

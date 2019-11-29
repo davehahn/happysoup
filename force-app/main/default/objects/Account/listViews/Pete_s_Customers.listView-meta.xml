@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Pete_s_Customers</fullName>
+    <columns>ACCOUNT.NAME</columns>
+    <columns>ACCOUNT.CREATED_DATE</columns>
+    <columns>CORE.USERS.ALIAS</columns>
+    <columns>ACCOUNT.ADDRESS1_STREET</columns>
+    <columns>ACCOUNT.ADDRESS1_CITY</columns>
+    <columns>ACCOUNT.ADDRESS1_STATE_CODE</columns>
+    <columns>ACCOUNT.ADDRESS1_ZIP</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>ACCOUNT.TYPE</field>
+        <operation>equals</operation>
+        <value>Legend Customer</value>
+    </filters>
+    <filters>
+        <field>CORE.USERS.LAST_NAME</field>
+        <operation>equals</operation>
+        <value>Lafreniere</value>
+    </filters>
+    <label>Pete&#39;s Customers</label>
+    <language>en_US</language>
+    <sharedTo>
+        <allInternalUsers/>
+    </sharedTo>
+</ListView>

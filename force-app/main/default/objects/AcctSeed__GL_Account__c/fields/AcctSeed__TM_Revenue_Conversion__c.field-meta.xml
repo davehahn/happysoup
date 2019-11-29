@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>AcctSeed__TM_Revenue_Conversion__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <inlineHelpText>This GL Account lookup field is used for correctly mapping expense related transactions to the proper revenue related GL Account. This is used when creating Billing records from Time Card or Expense Report records.</inlineHelpText>
+    <label>Time and Expense Revenue Conversion</label>
+    <referenceTo>AcctSeed__GL_Account__c</referenceTo>
+    <relationshipLabel>GL Accounts</relationshipLabel>
+    <relationshipName>Project_GL_Accounts</relationshipName>
+    <required>false</required>
+    <trackHistory>true</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

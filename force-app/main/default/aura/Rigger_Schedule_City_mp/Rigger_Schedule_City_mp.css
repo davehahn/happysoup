@@ -1,0 +1,310 @@
+.THIS .teamSelector {
+	position: absolute;
+	top: 1em;
+	right: 1em;
+	font-weight: bold;
+}
+
+.THIS .dropzone {
+	z-index: 50;
+	height: 50px;
+	width: 100%;
+	border: 1px dashed #ccc;
+	border-radius: 0.25em;
+	text-align: center;
+	line-height: 50px;
+	color: #ccc;
+	margin: 10px 0 0 0;
+}
+
+.THIS h1 {
+	font-size: 18px;
+}
+
+.THIS .backlog {
+	background: #333;
+	border-color: #333;
+}
+	.THIS .backlog h1 {color: #fff;}
+
+.THIS .riggers {	
+	overflow-x: scroll;
+	white-space: nowrap;
+	display: inline-block;
+	min-width: 100%;
+	max-width: 100%;
+}
+
+.THIS .rigger {	
+	display: inline-block;
+/*	flex: none;
+	width: 20%;*/
+}
+
+.THIS .done {
+	background: #14a8dc;
+	border-color: #14a8dc;
+}
+	.THIS .done h1 {color: #fff;}
+	.THIS .done .dropzone { color: #fff; }
+
+.THIS .garbage {
+	background: #990000;
+	border-color: #990000;
+}
+	.THIS .garbage h1 {color: #fff;}
+
+.THIS .dragItem {
+	margin: 10px 0 0 0;
+	border-color: #999;
+	background: #fff;
+	/*background: linear-gradient(0deg, #eee, #fff);*/
+}
+
+	.THIS .dragItem:hover {
+		background: #fff;
+		/*background: linear-gradient(0deg, #dfdfdf, #fdfdfd);*/
+	}
+
+	.THIS .dragItem.dueToday {
+		background: #fff;
+		border-color: #90EE90;
+		/*background: linear-gradient(0deg, #90EE90, #fff);*/
+	}
+
+	.THIS .dragItem.dueDateMissed {
+		background: #fff;
+		/*background: linear-gradient(0deg, #ffbbbb, #fff);*/
+		border-color: #ff0000;
+	}
+
+	.THIS .dragItem.inProgress {
+		background: lightgreen;
+	}
+
+	.THIS .dragItem.onHold {
+		background: pink;
+	}
+
+	.THIS .dragItem.yellow {
+		background: #FF5;
+	}
+
+	.THIS .dragItem.instorage {
+		background: lightblue;
+	}
+
+.THIS .grey {
+	color: #aaa;
+}
+	.THIS h1 .grey {
+		font-size: 0.75em;
+	}
+	.THIS #done .grey {  color: #eee; }
+
+.THIS dt {
+	font-weight: bold;
+}
+.THIS dd {
+	margin: 0 0 0.5em 0;
+}
+
+.THIS .age {
+	float: right;
+	text-align: center;
+	line-height: 1;
+	font-size: 0.75em;
+}
+	.THIS .age span {
+		font-size: 2.5em;
+		font-weight: bold;
+		display: block;
+	}
+
+.THIS .slds-card {
+	padding: 0.65em;
+}
+.THIS .slds-box,
+.THIS .slds-p-around_small {
+	padding: 0.5em;
+}
+.THIS .slds-box {
+	position: relative;
+	overflow: hidden;
+}
+.THIS .overlay {
+	position: absolute;
+	width: 100%; /* Full width (cover the whole page) */
+  height: 100%; /* Full height (cover the whole page) */
+  top: 0; 
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0,0,0,0); /* Black background with opacity */
+  z-index: 2; /* Specify a stack order in case you're using a different order for other elements */
+  cursor: pointer; /* Add a pointer on hover */
+}
+.THIS .pull-right { float: right; }
+.THIS .heavy { font-weight: bold; }
+.THIS .toggle {
+    display: none;
+}
+.THIS .initials {
+	float: right;
+	background: #14a8dc;
+	color: #fff;
+	border-radius: 100%;
+	padding: 0.5em;
+	font-weight: bold;
+}
+.THIS .RecordType {
+	padding: 0.25em 0.5em 0 0.5em;
+	margin: -0.6em -0.6em 0.5em -0.6em;
+	background: #999;
+	color: #fff;
+	text-align: left;
+}
+
+	.THIS .dueToday .RecordType {
+		background: #90EE90;
+		color: #000;
+	}
+
+	.THIS .dueDateMissed .RecordType {
+		background: #ff0000;
+	}
+
+.THIS input {
+	margin: 8px 0 8px 0;
+}
+
+.THIS .noLabel+.noLabel {
+	margin-bottom: 8px;
+}
+
+.THIS .noLabel label { 
+	display: none;
+}
+
+.THIS .button-backlog_new {
+	padding: 0.25em 0.5em;
+	line-height: 1;
+}
+
+.THIS .hasNoERP {
+	display: none;
+}
+
+.THIS .placeholder {
+	background: #fff;
+	border: 2px dashed #333;
+}
+
+	.THIS .placeholder button { display: none; }
+
+	.THIS .placeholder .RecordType {
+		display: none;
+	}
+
+	.THIS .placeholder .actions {
+		display: none;
+	}
+
+	.THIS .placeholder .hasNoERP {
+		display: inline;
+	}
+
+	.THIS .placeholder .hasERP {
+		display: none;
+	}
+
+.THIS .slds-modal__content {
+	min-height: 300px;
+}
+
+.THIS .actions {
+	padding: 0.25em 0.5em 0 0.5em;
+	margin: -0.6em -0.6em 0.5em -0.6em;
+	z-index: 50;
+	height: 2.1em;
+	background: #666;
+}
+	.THIS #done .card-expanded,
+	.THIS #done .card-collapsed { display: none; }
+
+	.THIS .minimizeBtn,
+	.THIS .timerBtn {
+		font-size: 1em;
+		line-height: 1;
+		padding: 0.125em 0.25em;
+		z-index: 50;
+		border: none;
+		border-radius: 0.25em;
+		color: #fff;
+		background: #999;
+	}
+
+	.THIS .minimizeBtn {
+		width: 1.5em;
+		margin-top: -1px;
+		margin-left: -1px;
+	}
+
+
+	.THIS .timerBtn {
+		float: right;
+		margin-top: 2px;
+		margin-right: 1px;
+	}
+
+	.THIS span.timerBtn {
+		background: none;
+	}
+
+.THIS .jobsContainer {
+	overflow-y: scroll;
+}
+/*	.THIS .jobsContainer.individual { max-height: 528px; }
+	.THIS .jobsContainer.completed { max-height: 488px; }*/
+
+.THIS dd {
+	white-space: normal;
+}
+
+.THIS .card-expanded .fullDetails { display: inline; }
+.THIS .card-expanded .minDetails { display: none; }
+.THIS .card-collapsed .fullDetails { display: none; }
+.THIS .card-collapsed .minDetails { display: inline; }
+
+.THIS .slds-text-heading_medium {
+	font-size: 14px;
+}
+.THIS .cRigger_Schedule_Individual_mp .slds-text-heading_medium .grey {
+	position: absolute;
+	top: 0.25em;
+	right: 0.25em;
+	background: #fff;
+	padding: 0.5em;
+}
+
+.THIS .slds-form-element__label {
+	white-space: nowrap;
+}
+
+.THIS .sunyata {
+	background-color: rgba(0,0,0,0);
+	position: absolute;
+	top: 88px;
+	left: 0;
+	width: 100%;
+	height: calc(100% - 88px)
+}
+.THIS #done .sunyata {
+	top: 128px;
+	height: calc(100% - 128px)
+}
+.THIS .completedSpinner .slds-spinner_container{
+	position: relative;
+	height: 100%;
+	width: 100%;
+}

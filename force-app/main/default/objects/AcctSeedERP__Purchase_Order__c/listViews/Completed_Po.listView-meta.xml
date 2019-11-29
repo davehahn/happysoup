@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Completed_Po</fullName>
+    <columns>AcctSeedERP__Status__c</columns>
+    <columns>NAME</columns>
+    <columns>AcctSeedERP__Order_Date__c</columns>
+    <columns>AcctSeedERP__Vendor__c</columns>
+    <columns>AcctSeedERP__Total__c</columns>
+    <columns>Internal_Notes__c</columns>
+    <columns>LAST_UPDATE</columns>
+    <columns>UPDATEDBY_USER</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>Stage__c</field>
+        <operation>equals</operation>
+        <value>Received</value>
+    </filters>
+    <filters>
+        <field>AcctSeedERP__Status__c</field>
+        <operation>equals</operation>
+        <value>Closed</value>
+    </filters>
+    <label>Completed Po</label>
+    <language>en_US</language>
+</ListView>

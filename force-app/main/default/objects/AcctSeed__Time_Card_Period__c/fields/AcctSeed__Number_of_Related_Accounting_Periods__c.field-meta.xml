@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>AcctSeed__Number_of_Related_Accounting_Periods__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <inlineHelpText>A Time Card should be related to 1 or 2 accounting periods. If the Time Card Period start and end date both reside in the same accounting period then it should be related to 1 accounting period. If it crosses 2 accounting periods it should be 2.</inlineHelpText>
+    <label>Number of Related Accounting Periods</label>
+    <summaryForeignKey>AcctSeed__Time_Card_Accounting_Period__c.AcctSeed__Time_Card_Period__c</summaryForeignKey>
+    <summaryOperation>count</summaryOperation>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Summary</type>
+</CustomField>

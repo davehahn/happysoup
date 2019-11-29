@@ -1,0 +1,44 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,force:hasRecordId,force:lightningQuickAction,force:LightningQuickActionWithoutHeader" access="global" controller="arRefundCashReceipt">
+    <aura:attribute name="recordId" type="Id" />
+    <aura:attribute name="options" type="String[]" />
+    <aura:attribute name="refundFrom" type="String" default="Balance" />
+    <aura:attribute name="cdType" type="String" default="Check" />
+    <aura:attribute name="maxRefundAmount" type="Decimal" default="0.00" />
+    <aura:attribute name="refundAmount" type="Decimal" default="0.00" />
+    <aura:attribute name="receiptData" type="AcctSeed__Cash_Receipt__c" />
+    <aura:attribute name="btnDisabled" type="Boolean" default="true" />
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    <lightning:card >
+        <aura:set attribute="title">
+            Refund From Receipt Balance:
+        </aura:set>
+        <div class="slds-modal__content slds-p-around--medium">
+            <div class="slds-form slds-form_stacked slds-m-horizontal_large">
+                <div class="slds-form-element">
+                	<lightning:select name="refundFromPL" value="{!v.refundFrom}" label="Refund From" onchange="{!c.resetRefundAmount}">
+                		<option value="Balance">Balance</option>
+                		<!-- <option value="Applied Amount">Applied Amount</option> -->
+    				</lightning:select>
+                </div>
+                <div class="slds-form-element">
+                	<lightning:select name="cdTypes" value="{!v.cdType}" label="Select Disbursement Type" onchange="{!c.validate}">
+    					<aura:iteration items="{!v.options}" var="option">
+    						<option value="{!option}" text="{!option}"></option>
+    					</aura:iteration>
+    				</lightning:select>
+                </div>
+                <div class="slds-form-element">
+                    <div class="slds-form-element__control">
+                        <lightning:input aura:id="refundAmountInput" type="text" label="Amount to refund" onchange="{!c.validate}" value="{!v.refundAmount}"/>
+                    </div>
+                    <div>Max Refund Amount: {!v.maxRefundAmount}</div>
+                </div>
+            </div>
+        </div>
+        <aura:set attribute="footer">
+            <lightning:button variant="brand" label="Process Refund" onclick="{!c.processRefund}" disabled="{!v.btnDisabled}" />
+        </aura:set>
+    <lightning:spinner aura:id="spinner" />
+    </lightning:card>
+</aura:component>

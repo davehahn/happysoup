@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Years_with_Legend__c</fullName>
+    <description>Number of Years dealer has been a Legend Dealer</description>
+    <externalId>false</externalId>
+    <formula>(Today() - Legend_Start_Date__c)/365</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <inlineHelpText>Number of years a dealer has been a Legend Dealer</inlineHelpText>
+    <label>Years with Legend</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>0</scale>
+    <trackHistory>false</trackHistory>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

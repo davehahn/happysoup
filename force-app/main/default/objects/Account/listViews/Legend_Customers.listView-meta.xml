@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Legend_Customers</fullName>
+    <columns>ACCOUNT.NAME</columns>
+    <columns>PC_ADDRESS2_CITY</columns>
+    <columns>ACCOUNT.PHONE1</columns>
+    <columns>PC_PHONE3</columns>
+    <columns>PC_EMAIL</columns>
+    <columns>ACCOUNT.LAST_ACTIVITY</columns>
+    <columns>ACCOUNT.TYPE</columns>
+    <columns>CORE.USERS.FIRST_NAME</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>ACCOUNT.RECORDTYPE</field>
+        <operation>equals</operation>
+        <value>PersonAccount.PersonAccount</value>
+    </filters>
+    <filters>
+        <field>ACCOUNT.TYPE</field>
+        <operation>equals</operation>
+        <value>Legend Customer</value>
+    </filters>
+    <label>Legend Customers</label>
+    <language>en_US</language>
+    <sharedTo>
+        <allInternalUsers/>
+    </sharedTo>
+</ListView>

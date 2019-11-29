@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>Legend_Letterhead</letterhead>
+    <name>9) 9 Month Follow Up</name>
+    <style>freeForm</style>
+    <subject>It&#39;s Not Too Late</subject>
+    <textOnly>Hey there {!Account.FirstName},
+
+It&#39;s been a great year so far!  I hope all has been well with you too.  I know it has been a long time since we first met and I fully understand taking all the time you need to analyze your decision.  I just wanted to offer my help in any way, shape, or form to make the boat ownership process easier on you.
+
+Please feel free to give me a call, send me an email or a text and ask anything you&#39;d like.  I am your boating expert and I aim to make sure your mind is at ease going into a new relationship with Legend Boats.
+
+Thank you again for your time and I hope to talk to you soon.
+
+Yours in Boating,
+
+{!User.Name}
+{!User.Title}
+
+{!User.Email}
+{!User.Phone}
+legendboats.com</textOnly>
+    <type>html</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

@@ -1,0 +1,82 @@
+<aura:component controller="CaseLexController" implements="force:appHostable,flexipage:availableForAllPageTypes,force:hasRecordId">
+  <aura:attribute name="recordId" type="String" />
+  <aura:attribute name="header" type="String" />
+  <aura:attribute name="hasRecoverable" type="Boolean" default="false" />
+  <aura:attribute name="supplierQuery" type="String" default="" />
+  <aura:attribute name="suppliers" type="Account[]" />
+  <aura:attribute name="supplierId" type="String" />
+  <aura:attribute  name="recoverableErpId" type="String" />
+  <aura:attribute name="materials" type="AcctSeedERP__Material__c[]" />
+  <aura:attribute name="currentStep" type="Integer" default="1" />
+
+  <ltng:require scripts="{!join(',', $Resource.Libraries +'/js/LightningApex.js',
+                                     $Resource.Libraries +'/js/LightningUtils.js') }"
+                afterScriptsLoaded="{!c.doInit}" />
+
+  <lightning:spinner aura:id="spinner" class="slds-hide" size="large" />
+
+  <div class="slds-clearfix">
+    <aura:if isTrue="{! not(v.hasRecoverable) }">
+      <lightning:button label="Create Warranty Recoverable"
+                        onclick="{!c.createRecoverable}"
+                        class="slds-float_right" />
+    </aura:if>
+  </div>
+
+  <section role="dialog"
+           class="slds-modal slds-fade-in-open slds-hide"
+           aura:id="recoverable-modal">
+    <div class="slds-modal__container">
+      <header class="slds-modal__header">
+        <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">{!v.header}</h2>
+      </header>
+      <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+        <aura:if isTrue="{! equals( 1, v.currentStep)}">
+          <c:dh_AccountSelector searchQuery="{!v.supplierQuery}"
+                                accountId="{!v.supplierId}"
+                                accountScope="supplier"
+                                label="Seach for Supplier"
+                                allowNew="false"
+                                showUseAccountButton="false" />
+        </aura:if>
+        <aura:if isTrue="{! equals( 2, v.currentStep)}">
+
+          <table class="slds-table slds-table_cell-buffer slds-table_bordered">
+            <thead>
+            <tr class="slds-line-height_reset">
+              <th class="slds-p-around_small" scope="col">Product Name</th>
+              <th class="slds-text-align_center slds-p-around_small" scope="col">Credit Only</th>
+            </tr>
+            </thead>
+            <tbody>
+            <aura:iteration items="{!v.materials}" var="mat">
+              <tr>
+                <td data-label="Product Name">
+                  {!mat.AcctSeedERP__Product__r.Name}
+                </td>
+                <td data-label="Credit Only" class="slds-align_absolute-center">
+                  <lightning:input type="toggle"
+                                   label=""
+                                   class="slds-m-top_x-small"
+                                   variant="label-hidden"
+                                   checked="{!mat.Supplier_Credit_Requested__c}"
+                                   messageToggleActive="Credit Only"
+                                   messageToggleInactive="Order Part" />
+                </td>
+              </tr>
+            </aura:iteration>
+            </tbody>
+          </table>
+        </aura:if>
+      </div>
+      <footer class="slds-modal__footer">
+        <button class="slds-button slds-button_neutral" onclick="{!c.cancelRecoverable}">Cancel</button>
+        <button class="slds-button slds-button_brand"
+                onclick="{!c.handleContinue}"
+                disabled="{! and(equals(1,v.currentStep), empty(v.supplierId))}">Continue</button>
+      </footer>
+    </div>
+  </section>
+  <div class="slds-backdrop" aura:id="back-drop"></div>
+
+</aura:component>

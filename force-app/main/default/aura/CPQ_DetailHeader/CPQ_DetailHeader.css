@@ -1,0 +1,162 @@
+.THIS .slds-page-header {
+  border: 1px solid #f5f6f5;
+  background: #FFF;
+  /*border-radius: 0 0 0.25rem 0.25rem;*/
+  padding: 0;
+}
+
+.THIS .cpq-header {
+  z-index:1000;
+}
+
+.THIS .sticky {
+  position: fixed;
+  top: 0;
+  width: 95%;
+  box-shadow: 0 6px 3px -3px #959595;
+}
+
+.THIS .slds-page-header .header-image-container {
+  width: 100%;
+  text-align: center;
+}
+
+.THIS .slds-page-header > .slds-grid {
+  position: relative;
+}
+
+.THIS .slds-page-header h1.slds-page-header__title {
+  line-height: 2.5rem;
+  background: #03abee;
+  color: #FFF;
+  margin-top: -1.7rem;
+  border-radius: 0 0 1.25rem 1.25rem;
+  text-align: center;
+  border: 1px solid #03abee;
+  border-top-color: transparent;
+  position:relative;
+  z-index:10;
+}
+
+.THIS .slds-page-header h1.slds-page-header__title span:before {
+  content:'';
+  position:absolute;
+  height: 1.25rem;
+  width:1.25rem;
+  background:#03abee;
+  top:-1px;
+  left: -1.25rem;
+  z-index:11;
+}
+
+.THIS .slds-page-header h1.slds-page-header__title:before {
+  content:'';
+  position:absolute;
+  height: 1.25rem;
+  width:1.25rem;
+  background:#FFF;
+  border:1px solid #03abee;
+  top:-1px;
+  left: -1.25rem;
+  border-bottom-color:transparent;
+  border-left-color:transparent;
+  border-radius: 0 1.25rem 0 0;
+  z-index:12;
+}
+
+.THIS .slds-page-header h1.slds-page-header__title span:after {
+  content:'';
+  position:absolute;
+  height: 1.25rem;
+  width:1.25rem;
+  background:#03abee;
+  top:-1px;
+  right: -1.25rem;
+  z-index:11;
+}
+
+.THIS .slds-page-header h1.slds-page-header__title:after {
+  content:'';
+  position:absolute;
+  height: 1.25rem;
+  width:1.25rem;
+  background:#FFF;
+  border:1px solid #03abee;
+  top:-1px;
+  right: -1.25rem;
+  border-bottom-color:transparent;
+  border-right-color:transparent;
+  border-radius: 1.25rem 0 0 0;
+  z-index:12;
+}
+
+.THIS .slds-page-header button {
+  border-color: #03abee;
+}
+
+.THIS .slds-page-header .slds-icon_container {
+ /* position: absolute;
+  top: -2rem;
+  left: -0.75rem;*/
+}
+
+.THIS .slds-page-header .slds-icon_container img {
+  height: 150px !important;
+  width: 150px !important;
+}
+
+.THIS .slds-page-header button svg {
+  color: #03abee;
+}
+
+.THIS .cpq-total {
+  font-size: 3rem;
+  color: #7A7A7A;
+  margin-bottom: 0.75rem;
+  /*padding: .25rem .75rem;
+  background: #fff;
+  border-radius: 5px;*/
+  /*border: 1px solid #42C376;
+  color: #42C376;*/
+}
+
+.THIS .payment-amount_label {
+  /*color: #03abee;*/
+  color: #7A7A7A;
+  line-height:1.5rem;
+  box-sizing: border-box;
+}
+
+.THIS .payment-amount {
+  font-size: 1rem;
+  padding: .25rem .75rem;
+  background: #FFF;
+  /*border-radius: 5px;
+  border: 1px solid #03abee;
+  color: #03abee;*/
+  color: #7A7A7A;
+  font-weight:bold;
+  box-sizing: border-box;
+}
+
+@media only screen and (max-width: 768px) {
+
+  .THIS .cpq-total {
+    font-size: 2rem;
+    margin-bottom:0;
+  }
+
+  .THIS .payment-amount_label {
+    display: inline-block;
+    width: 50%;
+    text-align: right;
+    padding-right: 0.25rem;
+  }
+
+  .THIS .payment-amount {
+    display: inline-block;
+    width: 50%;
+    text-align: left;
+    padding-left: 0.25rem;
+  }
+}

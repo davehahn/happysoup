@@ -1,0 +1,192 @@
+<apex:page standardController="Opportunity" extensions="OpportunityExt_OppDoc" sidebar="false" showHeader="false">
+<apex:stylesheet value="{!URLFOR($Resource.FontAwesome420, 'font-awesome-4.2.0/css/font-awesome.min.css')}" />
+
+<!-- <apex:stylesheet value="{!URLFOR($Resource.Foundation, 'css/normalize.css')}" />
+<apex:stylesheet value="{!URLFOR($Resource.Foundation, 'css/foundation.min.css')}" /> -->
+<c:LegendFormResources />
+
+<style>
+
+tr.setToDelete {
+    opacity:0.3;
+}
+
+.one{
+background-color: white;
+}
+.two{
+background-color: #d2eefc;
+}
+
+.defaultContainer {
+    width:40%;
+    margin:0px auto;
+    padding:25px;
+    text-align:center;
+}
+
+.defaultContainer p {
+    padding:10px 0px;
+    font-size:1.5em;
+    color:#FF9B9E;
+}
+
+.working {
+    color: #0279FF;
+}
+
+.complete {
+    color: #4DD059;
+    margin-left:15px;
+}
+
+a.disabled {
+    pointer-events:none;
+    opacity:0.5;
+}
+
+
+</style>
+<c:LegendMainAjaxIndicator id="ajaxInd" />
+<apex:form >
+    <apex:pageBlock mode="maindetail">
+        <apex:pageBlock rendered="{!!renderList}"
+                      mode="mainDetail">
+            <div class="defaultContainer">
+              <p>
+                Currently No Documents Have Been Created
+              </p>
+            </div>
+
+        </apex:pageBlock>
+
+        <apex:outputPanel rendered="{!renderList}">
+
+        <dl class="tabs small" data-tab="true">
+        <apex:repeat value="{!oppDocs}" var="docType">
+            <dd>
+                <a href="#{!SUBSTITUTE( LOWER(docType), ' ', '_' ) }">{!docType}</a>
+            </dd>
+        </apex:repeat>
+        </dl>
+
+        <div class="tabs-content">
+            <apex:repeat value="{!oppDocs}" var="key">
+                <div class="content"  id="{!SUBSTITUTE( LOWER(key), ' ', '_' ) }">
+
+                    <apex:pageBlockTable value="{!oppDocs[key]}" var="doc">
+                        <apex:column headerValue="Action" headerClass="TableTitle" styleClass="actionColumn">
+                            <!-- <a href="#" data-doc-id="{!doc.Id}" class="actionLink emailDoc">Email</a> -->
+
+                            <apex:outputLink value="/_ui/core/email/author/EmailAuthor?p3_lkid={!doc.Opportunity__c}&doc_id={!doc.Document_Id__c}&retURL={!doc.Opportunity__c}&p2_lkid={!acctId}" target="_blank" styleClass="actionLink">Email</apex:outputLink>
+                            &nbsp;|&nbsp;
+                            <apex:outputPanel layout="none"
+                                              rendered="{!doc.Document_Id__c != Opportunity.Invoice_Document_Id__c}">
+                                <a href="#" data-doc-id="{!doc.Id}" class="actionLink deleteDoc">Del</a>
+                            </apex:outputPanel>
+
+                        </apex:column>
+                        <!-- <apex:column headerValue=" Document Type" headerClass="TableTitle" styleClass="actionColumn">
+                            <apex:outputText value="{!doc.Document_Type__c}" />
+                        </apex:column> -->
+                        <apex:column headerClass="TableTitle" headerValue=" Document Name">
+                            <apex:outputLink value="/servlet/servlet.FileDownload?file={!doc.Document_Id__c}" target="_blank">{!doc.Name}</apex:outputLink>
+                        </apex:column>
+
+                    </apex:pageBlockTable>
+
+                </div>
+            </apex:repeat>
+        </div>
+
+        </apex:outputPanel>
+
+    </apex:pageBlock>
+ </apex:form>
+
+
+  <apex:includeScript value="{!URLFOR($Resource.jQuery)}"/>
+  <apex:includeScript value="{!URLFOR($Resource.Foundation, 'js/foundation.min.js')}" />
+  <script type="text/javascript">
+
+  (function($, document, window, undefined){
+    var $ind = $('#ajaxInd');
+     Visualforce.remoting.timeout = 120000; // Set timeout at page level
+     $(document).foundation();
+    var $firstTab = $('.tabs dd:first a');
+    $firstTab.parent().addClass('active');
+    $( $firstTab.attr('href') ).addClass('active');
+
+    $('.deleteDoc').on('click', function(e) {
+        e.preventDefault();
+        var $this = $(this),
+            $row = $this.closest('tr'),
+            docId = $this.data('doc-id');
+        $row.addClass('setToDelete');
+        if( confirm("Are you Sure?") )
+        {
+            $ind.show();
+            OpportunityExt_OppDoc.deleteDoc( docId, function(events, result) {
+                console.log(result);
+                if( result.statusCode === 200 )
+                {
+                    $row.remove();
+                }
+                else
+                {
+                    alert(result.message);
+                    $row.removeClass('setToDelete');
+                }
+                $ind.hide();
+            });
+        }
+        else
+        {
+            $row.removeClass('setToDelete');
+        }
+    });
+
+    // $('.emailDoc').on('click', function(e) {
+    //     e.preventDefault();
+    //     var $this = $(this),
+    //         $row = $this.closest('tr'),
+    //         $nameCell = $row.find('td:last'),
+    //         $origContent = $nameCell.html(),
+    //         $busyContent = $("<span class='working'>Sending Email .... <i class='fa fa-spinner fa-spin'></i></span>"),
+    //         $successContent = $("<span class='complete'>Email Sent Successfully. <i class='fa fa-thumbs-up'</i></span>"),
+    //         docId = $this.data('doc-id');
+
+    //     $row.closest('table').find('a').addClass('disabled');
+    //     $nameCell.html($busyContent);
+
+    //     OpportunityExt_OppDoc.sendEmail("{!Opportunity.Id}", docId, function(events, result) {
+    //         console.log(result);
+    //         if( result.statusCode === 200 )
+    //         {
+
+    //             $nameCell.animate({opacity: 0}, 500, function() {
+    //                 $('a.disabled').removeClass('disabled');
+    //                 $nameCell.html($origContent).append($successContent)
+    //                 .animate({opacity: 1}, 500, function() {
+    //                     setTimeout(function() {
+    //                         $nameCell.children('.complete').animate({opacity: 0}, 500, function() {
+    //                             $(this).remove();
+    //                         });
+    //                     }, 1500);
+    //                 });
+    //             });
+
+    //         }
+    //         else
+    //         {
+    //             $('a.disabled').removeClass('disabled');
+    //             $nameCell.html($origContent);
+    //             alert(result.message);
+    //         }
+    //     });
+    // });
+
+  })(jQuery.noConflict(), document, window);
+
+  </script>
+</apex:page>

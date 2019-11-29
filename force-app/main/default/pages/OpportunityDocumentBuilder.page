@@ -1,0 +1,226 @@
+<apex:page controller="OpportunityDocumentBuilder"
+           action="{!preview}"
+           showHeader="false">
+  <c:LegendFormResources includeFontAwesome="true" />
+  <style>
+
+    form {
+      background:#666;
+      height:100%;
+    }
+
+    .row {
+      height:100%;
+    }
+
+    .columns {
+      height:100%;
+    }
+
+    .btnContainer {
+      width:80%;
+      margin:40px auto;
+    }
+
+    .btnContainer .fd_button {
+      width:100%;
+    }
+
+    .hiddenOnStart {
+      opacity: 0;
+    }
+
+    .setupModal {
+      width: 360px;
+      margin: 40% auto;
+      background: #FFF;
+    }
+
+    .setupModal > p {
+      background: #00AEEF;
+      line-height: 45px;
+      text-align: center;
+      font-size: 22px;
+      color: #FFF;
+    }
+
+
+    .setupModal > div.lang-tax-setup {
+      height: 65px;
+      width: 90%;
+      margin: auto;
+    }
+
+    .setupModal > .lang-select {
+      width: 50%;
+      margin: auto;
+    }
+
+    .setupModal input:not([type="radio"]) {
+      width:150px !important;
+    }
+
+    .setupModal > a.fd_button {
+      margin-right:20px;
+      margin-top:15px;
+      margin-top: 15px;
+      width: 120px;
+      position: relative;
+      margin-left: 50%;
+      left: -60px;
+    }
+
+    .loadingInd {
+      z-index:9;
+      width:80%;
+      margin:auto;
+      height:100px;
+      line-height:100px;
+      text-align: center;
+      font-size:40px;
+      position:absolute;
+      color:#FFF;
+      top:40%;
+    }
+
+    #viewerIframe {
+      z-index:10;
+      position:absolute;
+      top:0;
+      opacity:1;
+      -webkit-transition:opacity 1.0s ease-in-out;
+      -moz-transition:opacity 1.0s ease-in-out;
+      -o-transition:opacity 1.0s ease-in-out;
+      transition:opacity 1.0s ease-in-out;
+    }
+
+    #viewerIframe.temp_hidden {
+      opacity:0;
+    }
+
+  </style>
+  <script>
+
+    $j = jQuery.noConflict();
+
+
+    $j( function() {
+      var $setQuoteBtn = $j('#setQuoteDate');
+
+      if( $setQuoteBtn.length > 0 )
+      {
+        $setQuoteBtn.on('click', function(e){
+          e.preventDefault();
+          var qd = $j('[id*=quoteDate]').val(),
+              lang = $j('[id*=langSelect]').val();
+          setQuoteValidDate(qd, lang);
+        });
+      }
+      else
+      {
+        quoteDateSetComplete();
+      }
+    });
+
+    function quoteDateSetComplete()
+    {
+      var $btns = $j('.fd_button');
+      $j('#viewerIframe').attr('height', $j(window).height() )
+      .on('load', function() {
+        console.log("iframe loaded");
+        $j(this).removeClass('temp_hidden');
+        $btns.removeClass('hiddenOnStart');
+      });
+    }
+
+  </script>
+  <apex:form id="form" styleClass="legendForm">
+    <apex:actionFunction name="setQuoteValidDate"
+                         action="{!setQuoteValidDate}"
+                         oncomplete="quoteDateSetComplete()"
+                         rerender="viewer">
+      <apex:param value="" name="quote_valid_date" />
+      <apex:param value="" name="language" />
+    </apex:actionFunction>
+    <apex:pageMessages />
+
+    <sffd:row >
+
+      <sffd:column cols="large-3">
+        <div class="btnContainer">
+          <apex:commandButton value="Save to Opportunity"
+                              action="{!savePDF}"
+                              styleClass="fd_button small hiddenOnStart"
+                              rendered="{!isSaveable}"/><br />
+          <apex:outputLink value="/{!opportunityId}"
+                            styleClass="fd_button small aqua">
+            Cancel
+          </apex:outputLink>
+        </div>
+      </sffd:column>
+
+
+      <sffd:column cols="large-9">
+
+        <apex:outputPanel id="viewer">
+
+          <apex:outputPanel layout="none" rendered="{!!renderDoc}">
+
+            <div class="setupModal" style="margin-top:40%;">
+              <p>Document Setup</p>
+            <!-- we are just using fakeTask, a sObjcet(Task) so we have access to the datepicker -->
+              <apex:outputPanel styleClass="row lang-tax-setup dateSelect" rendered="{!docType == 'quote'}" layout="block">
+                <sffd:column cols="large-8 large-offset-2 end">
+                  <label>Quote Valid Until:</label>
+                  <apex:inputField value="{!fakeTask.ActivityDate}" showDatePicker="true" id="quoteDate"/>
+                </sffd:column>
+              </apex:outputPanel>
+
+              <sffd:row styleClass="lang-tax-setup">
+
+                <sffd:column cols="large-8 large-offset-2">
+                  <label>Language</label>
+                  <apex:selectList value="{!language}" id="langSelect" multiselect="false" size="1">
+                    <apex:selectOptions value="{!languageOptions}" />
+                  </apex:selectList>
+                </sffd:column>
+
+               <!--  <sffd:column cols="large-6">
+                  <label>Taxation Province</label>
+                  <apex:selectList value="{!taxProvince}" multiselect="false" size="1" >
+                    <apex:selectOptions value="{!provinceOptions}" />
+                  </apex:selectList>
+                </sffd:column> -->
+
+              </sffd:row>
+
+              <a href="#" class="fd_button success small invert" id="setQuoteDate">Continue</a>
+
+            </div>
+          </apex:outputPanel>
+
+          <apex:outputPanel layout="none" rendered="{!renderDoc}">
+
+            <div class="loadingInd">
+              Constructing PDF .... <i class="fa fa-cog fa-spin"></i>
+            </div>
+
+            <apex:outputPanel layout="none" rendered="{!docType = 'quote'}">
+              <iframe height="800px" id="viewerIframe" name="QuotePDF" src="/apex/{!docTypePage}?opportunity_id={!opportunityId}&quote_valid_date={!quoteValidDate}&language={!language}&tax_province={!taxProvince}&render_type=pdf" width="100%" class="temp_hidden"></iframe>
+            </apex:outputPanel>
+
+            <apex:outputPanel layout="none" rendered="{!docType = 'invoice'}">
+              <iframe height="800px" id="viewerIframe" name="InvoicePDF" src="/apex/{!docTypePage}?opportunity_id={!opportunityId}&language={!language}" width="100%" class="temp_hidden"></iframe>
+            </apex:outputPanel>
+
+          </apex:outputPanel>
+
+        </apex:outputPanel>
+
+      </sffd:column>
+
+    </sffd:row>
+
+  </apex:form>
+
+</apex:page>

@@ -1,0 +1,301 @@
+#trip-dialog {
+  position: absolute;
+  width: 80%;
+  left: 10%;
+
+  .slds-modal__container {
+    width: 100%;
+    max-width: 100%;
+
+    .slds-modal__content {
+      overflow: initial;
+      overflow-y: initial;
+
+      .slds-spinner_container {
+        background: rgba( 255, 255, 255, 0);
+        position: relative;
+        height: 75px;
+      }
+    }
+
+    &.contact-select {
+      width:50%;
+      min-width: 500px;
+
+      .notification-sent-already {
+        width: 90%;
+        margin: 10px auto;
+        text-align: center;
+        background: #e46565;
+        padding: 0.5rem 1rem;
+        color: #FFF;
+        border-radius: 5px;
+        p {
+          margin-bottom: 10px;
+          &:first-child {
+            font-weight:bold;
+            border-bottom: 1px solid #e88c8c;
+          }
+          &:last-child {
+            margin-bottom:0;
+          }
+        }
+      }
+
+      table {
+        width: 100%;
+        margin: 20px auto;
+        border-collapse: collapse;
+
+        tr {
+          td {
+            line-height:35px;
+            border-bottom: 1px solid #DDD;
+            text-align:center;
+            &:first-child {
+              text-align:left;
+            }
+          }
+          &:first-child {
+            td {
+              border-top: 1px solid #DDD;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+#destination-container,
+#truck-load {
+  position: relative;
+  min-height: 400px;
+  .slds-spinner_container {
+    background: transparent;
+    z-index: 8998;
+  }
+  .button-row {
+    margin-bottom: 1rem;
+
+    a {
+      margin-right: 1.5rem;
+      float:right;
+    }
+  }
+  .product-row {
+    color:#C5C5C5;
+
+    &.shipping-required {
+      color: #54698d;
+    }
+  }
+
+}
+
+iframe {
+  border: none;
+}
+
+.slds-icon_container.booking-order svg {
+  height: 1.3rem;
+  width: 1.3rem;
+  fill: #7c9ed8;
+  &.booking {
+    fill: #06b140;
+  }
+  &.retail {
+    fill: #d87c7c;
+  }
+}
+
+.slds-modal__footer .erp-type {
+  display: none;
+  width:20%;
+  float: left;
+  line-height: 1.85rem;
+  span:first-child {
+    padding-right: 5px;
+  }
+}
+
+.account-option {
+
+  &.selected {
+    background: #0070d2;
+    color: #FFF;
+
+    img {
+      background: #16325c;
+    }
+    .slds-lookup__menu,
+    .slds-lookup__item-action,
+    .slds-media__body,
+    .slds-lookup__result--text,
+    .slds-lookup__result-meta {
+      color: inherit;
+    }
+  }
+}
+
+[data-erp-select-container] {
+  position: relative;
+  padding-top: 2rem;
+  .slds-grid {
+    padding: 0.5rem;
+    margin: 1rem;
+
+    .slds-item {
+      padding: 0.5rem;
+    }
+  }
+  table {
+    width: 100%;
+    tr td {
+      text-align: center;
+      &:first-child {
+        text-align: left;
+        padding-left: 0.5rem !important;
+      }
+      &:last-child {
+        text-align: right;
+      }
+    }
+  }
+}
+
+#trip-content {
+  padding: 1rem;
+  background: #FFF;
+  // #trip-details {
+  //   max-height: 50vh;
+  //   overflow-y: scroll;
+  // }
+  .destination-list {
+    padding: 1rem;
+
+    li {
+      .slds-media--timeline {
+        &:before {
+          z-index:0;
+        }
+        &.slds-timeline__media--delivery {
+          &:before { background: #50ceb9; }
+        }
+        &.slds-timeline__media--pickup {
+          &:before { background: #6a89e5; }
+        }
+        &.slds-timeline__media--default {
+          &:before { background: #e1d951; }
+        }
+        .slds-timeline__icon {
+          z-index: 1;
+        }
+      }
+
+      .slds-media__body {
+        h3 {
+          font-size: 1rem;
+          color: #0070d2;
+          margin-bottom: 0.5rem;
+        }
+        .item-container {
+          padding: 0.5rem;
+          border: 1px solid #d8dde6;
+          margin-bottom: 0.25rem;
+          border-radius: 4px;
+
+          &:last-child {
+            margin-bottom: 0;
+          }
+        }
+        p {
+          font-size: 0.75rem;
+          font-weight: 300;
+          line-height: 1.75rem;
+          border-bottom: 1px solid #FAFAFA;
+          span {
+            float: right
+          }
+        }
+      }
+    }
+    h3 .slds-badge {
+      margin-left:10px;
+    }
+  }
+  .feed {
+    padding: 1rem;
+    border-left: 1px solid #d8dde6;
+  }
+  .slds-dropdown-trigger {
+
+    .slds-dropdown--menu {
+      &:before {
+        content: '';
+        position:absolute;
+        height: 10px;
+        background: transparent;
+        left:0;
+        width: 100%;
+        top: -10px;
+      }
+    }
+
+  }
+
+}
+
+.instructions-container {
+  width:90%;
+  margin: 0 2% 0 8%;
+  border: 1px solid #d8dde6;
+  .slds-page-header {
+    padding: 0.75rem 1rem;
+    .slds-media__figure svg {
+      height: 1.5rem;
+      width: 1.5rem;
+    }
+    .slds-media__body {
+      p {
+        font-size: 0.6rem;
+      }
+      .slds-page-header__title {
+        font-size: 1rem;
+        line-height: 1.25rem;
+      }
+    }
+  }
+  .instruction-content {
+    padding: 1rem;
+    margin: 0;
+    div {
+      padding: 0.5rem 0.5rem 1rem 0.5rem;
+    }
+  }
+}
+
+.trip-form {
+
+  select.error,
+  input.error {
+    border-left: 3px solid red !important;
+    border-right: 1px solid red !important;
+    border-top: 1px solid red !important;
+    border-bottom: 1px solid red !important;
+    margin-bottom: 0 !important;
+  }
+}
+
+.destination-form {
+  [data-type-specific-fields] {
+    max-height: 300px;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+}
+
+
+
+
+

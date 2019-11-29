@@ -1,0 +1,83 @@
+<aura:component controller="Partner_OutstandingBoatOrders">
+
+  <ltng:require scripts="{!join(',', $Resource.Libraries +'/js/LightningApex.js',
+                                     $Resource.Libraries +'/js/LightningUtils.js') }"
+                afterScriptsLoaded="{!c.afterScripts}" />
+
+  <aura:attribute name="modalOpen" type="Boolean" default="false" />
+  <aura:attribute name="title" type="String" />
+  <aura:attribute name="orderType" type="String" />
+  <aura:attribute name="orders" type="List" />
+
+  <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+
+  <c:Lgnd_Spinner_dh aura:id="spinner" />
+
+  <section role="dialog" class="{!join(' ', 'slds-modal', 'slds-modal_large', if(v.modalOpen, 'slds-fade-in-open', '') )}">
+    <div class="slds-modal__container">
+      <header class="slds-modal__header">
+        <h2 class="slds-text-heading_medium slds-hyphenate">{!v.title}</h2>
+      </header>
+      <div class="slds-modal__content slds-p-around_medium">
+
+         <table class="slds-table slds-table--bordered
+                slds-table--cell-buffer
+                slds-max-medium-table--stacked ">
+          <thead>
+            <tr class="slds-text-title--caps">
+              <th scope="col">
+                <div class="slds-truncate">Item</div>
+              </th>
+              <th scope="col" class="slds-text-align--center">
+                <div class="slds-truncate">Order Name</div>
+              </th>
+              <th scope="col" class="slds-text-align--center">
+                <div class="slds-truncate">Invoice Number</div>
+              </th>
+              <th scope="col" class="slds-text-align--center">
+                <div class="slds-truncate">Date Submitted</div>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <aura:iteration items="{!v.orders}" var="order">
+              <tr>
+                <td>
+                  <span>{!order.majorItemName}</span>
+                  <aura:iteration items="{!order.lineItems}" var="line">
+                    <p class="sub-item slds-truncarte">{!line}</p>
+                  </aura:iteration>
+                </td>
+                <td class="slds-text-align--center">
+                  <a href="javascript:void()"
+                     data-record-id="{!order.dealerOrderId}"
+                     onclick="{!c.recordClick}">
+                     {!order.dealerOrderName}
+                   </a>
+                </td>
+                <td class="slds-text-align--center">
+                  <a href="javascript:void()"
+                     data-record-id="{!order.erpOrderId}"
+                     onclick="{!c.recordClick}">
+                     {!order.erpOrderNumber}
+                   </a>
+                </td>
+                <td class="slds-text-align--center">
+                  <lightning:formattedDateTime value="{!order.orderDate}" />
+                </td>
+              </tr>
+            </aura:iteration>
+          </tbody>
+        </table>
+      </div>
+      <footer class="slds-modal__footer">
+        <button class="slds-button slds-button_brand"
+                onclick="{!c.closeModal}">
+          Close
+        </button>
+      </footer>
+    </div>
+  </section>
+  <div class="{!join(' ', 'slds-backdrop', if(v.modalOpen, 'slds-backdrop_open', '') )}"></div>
+
+</aura:component>

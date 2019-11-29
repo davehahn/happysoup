@@ -1,0 +1,36 @@
+<aura:component controller="lgnd_inventory"
+								implements="forceCommunity:availableForAllPageTypes,flexipage:availableForAllPageTypes"
+								access="global">
+
+	<aura:attribute name="serno" 							type="String" />
+	<aura:attribute name="sernoId" 						type="String" />
+	<aura:attribute name="userId" 						type="String" />
+	<aura:attribute name="registrationTitle" 	type="String" />
+	<aura:attribute name="accountScope"			 	type="String" />
+	<aura:attribute name="productRegistered" 	type="Boolean"	default="false"/>
+
+	<aura:handler name="init" 	value="{!this}" 					action="{!c.doInit}" />
+	<aura:handler name="change" value="{!v.productRegistered}" action="{!c.productRegistered}" />
+	
+	<div id="lgnd_inventory_list">
+		<c:lgnd_inventory_list serno="{!v.serno}" 
+														sernoId="{!v.sernoId}" 
+														userId="{!v.userId}" 
+														registrationTitle="{!v.registrationTitle}"
+														accountScope="{!v.accountScope}"
+														productRegistered="{!v.productRegistered}"
+														aura:id="lgnd_inventory_list" />
+	</div>
+									
+	<div id="lgnd_registration" class="slds-hide">
+		<c:lgnd_registration serno="{!v.serno}" 
+													sernoId="{!v.sernoId}" 
+													title="{!v.registrationTitle}" 
+													accountScope="{!v.accountScope}"
+													productRegistered="{!v.productRegistered}"
+													context="limited"
+													hideSernoSearch="true" />
+	</div>
+	
+
+</aura:component>

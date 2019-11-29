@@ -1,0 +1,122 @@
+<div class="slds-modal__container trip-form">
+  <div class="slds-modal__header">
+    <h2 class="slds-text-heading--medium">Trip Details</h2>
+  </div>
+  <div class="slds-modal__content slds-p-around--medium">
+
+    <div class="slds-form--compound">
+      <div class="slds-form-element__group">
+        <div class="slds-form-element__row">
+          <div class="slds-form-element slds-p-horizontal--small">
+            <label class="slds-form-element__label">Trip Name</label>
+            <div class="slds-form-element__control">
+              <input class="slds-input"
+                     type="text"
+                     placeholder="Trip Name"
+                     data-attribute-name="Name"
+                     value="{{{record.Name}}}"/>
+            </div>
+          </div>
+        </div>
+        <div class="slds-form-element__row slds-m-top--medium">
+
+          <div class="slds-size--4-of-12 slds-p-horizontal--small">
+            <div class="slds-form-element">
+              <label class="slds-form-element__label">Driver</label>
+              <div class="slds-form-element__control">
+                <div class="slds-select_container">
+                  <select class="slds-select" data-attribute-name="Truck_Driver__c"
+                                              data-init-value="{{ record.Truck_Driver__c }}">
+                    <option value=''>-- Select Driver --</option>
+                    {{#each selectOptions.drivers}}
+                        <option value="{{this.Id}}">{{this.Name}}</option>
+                    {{/each}}
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div><!-- /driver Select -->
+
+          <div class="slds-size--4-of-12 slds-p-horizontal--small">
+            <div class="slds-form-element">
+              <label class="slds-form-element__label">Truck</label>
+              <div class="slds-form-element__control">
+                <div class="slds-select_container">
+                  <select class="slds-select" data-attribute-name="Truck__c" data-init-value="{{ record.Truck__c }}">
+                    <option value=''>-- Select Truck --</option>
+                    {{#each selectOptions.trucks}}
+                      <option value="{{this}}">{{this}}</option>
+                    {{/each}}
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div><!-- /truck Select -->
+
+          <div class="slds-size--4-of-12 slds-p-horizontal--small">
+            <div class="slds-form-element">
+              <label class="slds-form-element__label">Trailer</label>
+              <div class="slds-form-element__control">
+                <div class="slds-select_container">
+                  <select class="slds-select" data-attribute-name="Trailer__c" data-init-value="{{ record.Trailer__c }}">
+                    <option value=''>-- Select Trailer --</option>
+                    {{#each selectOptions.trailers}}
+                      <option value="{{this}}">{{this}}</option>
+                    {{/each}}
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div><!-- /truck Select -->
+        </div><!-- /slds-form-element__row -->
+
+        <div class="slds-form-element__row slds-m-top--medium">
+
+          <div class="slds-size--5-of-12  slds-p-horizontal--small">
+            <div class="slds-form-element">
+              <label class="slds-form-element__label" for="date"> Departure Date</label>
+              <div class="slds-input-has-icon slds-input-has-icon--right">
+                <svg aria-hidden="true" class="slds-input__icon slds-icon-text-default">
+                  <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{{icons.calendar}}"></use>
+                </svg>
+                <input class="slds-input has-datepicker"
+                       type="text"
+                       data-attribute-name="Departure_Date__c"
+                        data-init-value="{{ record.Departure_Date__c }}"
+                       placeholder="Pick a Date">
+              </div>
+            </div>
+          </div>
+          <div class="slds-size--2-of-12  slds-p-horizontal--small"></div>
+          <div class="slds-size--5-of-12  slds-p-horizontal--small">
+            <div class="slds-form-element">
+              <label class="slds-form-element__label" for="date"> Return Date</label>
+              <div class="slds-input-has-icon slds-input-has-icon--right">
+                <svg aria-hidden="true" class="slds-input__icon slds-icon-text-default">
+                  <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{{icons.calendar}}"></use>
+                </svg>
+                <input class="slds-input has-datepicker"
+                       type="text"
+                       data-attribute-name="Return_Date__c"
+                        data-init-value="{{ record.Return_Date__c }}"
+                       placeholder="Pick a Date">
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div><!-- /slds-form-element__group -->
+    </div><!-- /slds-form--compund -->
+
+  </div>
+  <div class="slds-modal__footer">
+    {{#ifIsNew record.Id }}
+      <button class="slds-button slds-button--neutral slds-button--brand" data-trip-form-btn="save">Continue</button>
+    {{ else }}
+      <button class="slds-button slds-button--neutral" data-trip-form-btn="cancel">Cancel</button>
+      <button class="slds-button slds-button--neutral slds-button--brand" data-trip-form-btn="save">Save</button>
+    {{/ifIsNew}}
+  </div>
+
+</div>

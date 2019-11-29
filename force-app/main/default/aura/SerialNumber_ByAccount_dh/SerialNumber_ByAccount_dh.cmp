@@ -1,0 +1,118 @@
+<aura:component controller="SalesAndServiceCalendar_Controller">
+
+  <ltng:require scripts="{!join(',', $Resource.Libraries + '/js/LightningApex.js',
+                                     $Resource.Libraries + '/js/LightningUtils.js') }"
+                afterScriptsLoaded="{!c.afterScripts}" />
+
+  <aura:attribute name="accountId" type="String" />
+  <aura:attribute name="searchEnabled" type="Boolean" default="false" />
+  <aura:attribute name="serialNumberId" type="String" />
+  <aura:attribute name="serialNumber" type="String" />
+  <aura:attribute name="serialNumberData" type="Object" />
+  <aura:attribute name="serialTableCols" type="List" />
+  <aura:attribute name="selectedRows" type="List" />
+  <aura:attribute name="gettingSerialInfo" type="Boolean" />
+  <aura:attribute name="selectedSerial" type="GMBLASERP__Serial_Number__c" />
+
+
+  <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+  <aura:handler name="change" value="{!v.accountId}" action="{!c.handleAccountChange}" />
+
+  <div>
+
+    <aura:if isTrue="{! v.searchEnabled}">
+      *** No Serial Numbers Associated with selected account ****
+      <!-- <lightning:button label="Cancel Search"
+                        variant="neutral"
+                        onclick="{!c.cancelSearch}" /> -->
+    </aura:if>
+
+    <aura:if isTrue="{! and( !empty( v.serialNumberData ), !v.searchEnabled ) }">
+      <lightning:datatable data="{! v.serialNumberData }"
+                           columns="{!v.serialTableCols}"
+                           keyField="idSerial"
+                           onrowselection="{!c.handleSerialSelect}"
+                           maxRowSelection="1"
+                           selectedRows="{!v.selectedRows}"
+                           aura:id="associated-serials-table" />
+
+      <div class="slds-clearfix slds-m-top_small">
+        <aura:if isTrue="{! !empty(v.selectedRows)}">
+          <lightning:button label="Clear Selection"
+                            variant="neutral"
+                            onclick="{!c.clearTableSelection}"
+                            class="slds-float_right" />
+        </aura:if>
+        <!-- <lightning:button label="Serial Number Search"
+                            variant="neutral"
+                            onclick="{!c.enableSearch}"
+                            class="slds-float_left" /> -->
+      </div>
+    </aura:if>
+
+
+    <aura:if isTrue="{! or( !empty(v.selectedSerial), v.gettingSerialInfo )}">
+    <div class="slds-border_top
+                slds-border_right
+                slds-border_bottom
+                slds-border_left
+                slds-p-around-small
+                slds-m-top_small"
+          style="position:relative; min-height:150px;">
+
+      <aura:if isTrue="{!v.gettingSerialInfo}">
+        <div class="slds-spinner_container">
+          <div role="status" class="slds-spinner slds-spinner_medium">
+            <span class="slds-assistive-text">Loading</span>
+            <div class="slds-spinner__dot-a"></div>
+            <div class="slds-spinner__dot-b"></div>
+          </div>
+        </div>
+      </aura:if>
+
+      <aura:if isTrue="{! and( !empty(v.selectedSerial), !v.gettingSerialInfo )}">
+        <lightning:card title="{! join(' - ',
+                                        v.selectedSerial.GMBLASERP__Lot__r.Name,
+                                        v.selectedSerial.GMBLASERP__Product__r.Name,
+                                        v.selectedSerial.Name)}"
+                    iconName="custom:custom55">
+          <aura:set attribute="actions">
+            <lightning:button label="Use Serial" onclick="{!c.setSerial}" variant="brand" />
+          </aura:set>
+
+          <aura:if isTrue="{! not(empty( v.selectedSerial.Nested_Serial_Numbers__r )) }">
+            <div class="slds-card__body slds-card__body_inner no-overflow">
+              <div class="slds-car__header slds-grid">
+                <div class="slds-media__figure">
+                  <lightning:icon iconName="standard:product" size="small"/>
+                </div>
+                <div class="slds-media__body">
+                  <h2 class="slds-text-heading_small">
+                    Nested Items
+                  </h2>
+                </div>
+              </div>
+
+              <div class="slds-m-left_medium slds-m-top_small">
+                <aura:iteration items="{!v.selectedSerial.Nested_Serial_Numbers__r}" var="nest">
+                  <lightning:layout >
+                    <lightning:layoutItem padding="horizontal-small">
+                      <p style="font-weight:bold">{!nest.GMBLASERP__Product__r.Name}</p>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem padding="horizontal-small">
+                      <p>{!nest.Name}</p>
+                    </lightning:layoutItem>
+                  </lightning:layout>
+                </aura:iteration>
+              </div>
+            </div>
+          </aura:if>
+
+        </lightning:card>
+      </aura:if>
+    </div>
+  </aura:if>
+
+  </div>
+
+</aura:component>

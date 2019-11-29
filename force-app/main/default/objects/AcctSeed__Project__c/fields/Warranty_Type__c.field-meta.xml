@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Warranty_Type__c</fullName>
+    <externalId>false</externalId>
+    <formula>IF(RecordType.DeveloperName == &#39;Legend_Warranty&#39;,(IF(AcctSeed__Account__r.RecordType.DeveloperName == &#39;Supplier&#39;,&#39;Recoverable&#39;,&#39;Warranty&#39;)),&#39;&#39;)</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Warranty Type</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

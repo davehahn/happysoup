@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>AcctSeed__Account_Payable_Invoice__c</fullName>
+    <deleteConstraint>Restrict</deleteConstraint>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <label>Payable Invoice</label>
+    <lookupFilter>
+        <active>true</active>
+        <errorMessage>The Type field of the payable must be &quot;Invoice&quot;.</errorMessage>
+        <filterItems>
+            <field>AcctSeed__Account_Payable__c.AcctSeed__Type__c</field>
+            <operation>equals</operation>
+            <value>Invoice</value>
+        </filterItems>
+        <isOptional>false</isOptional>
+    </lookupFilter>
+    <referenceTo>AcctSeed__Account_Payable__c</referenceTo>
+    <relationshipLabel>Applied Credit Memos to Invoice</relationshipLabel>
+    <relationshipName>AP_Credit_Memos1</relationshipName>
+    <required>true</required>
+    <trackHistory>true</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

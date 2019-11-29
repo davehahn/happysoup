@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>AcctSeed__Prevent_Modifying_Paid_Amount</fullName>
+    <active>true</active>
+    <description>DO NOT disable this validation rule unless instructed by Accounting Seed Support.</description>
+    <errorConditionFormula>(!ISNEW()) &amp;&amp; ROUND(PRIORVALUE(AcctSeed__Paid_Amount__c),2) != ROUND(AcctSeed__Paid_Amount__c,2)</errorConditionFormula>
+    <errorDisplayField>AcctSeed__Paid_Amount__c</errorDisplayField>
+    <errorMessage>You cannot change Paid Amount value directly.</errorMessage>
+</ValidationRule>

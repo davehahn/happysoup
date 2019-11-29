@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>AcctSeed__Project_must_be_associated_with_customer</fullName>
+    <active>false</active>
+    <errorConditionFormula>!ISBLANK(AcctSeed__Project__c) &amp;&amp; AcctSeed__Project__r.AcctSeed__Account__c != AcctSeed__Billing__r.AcctSeed__Customer__c</errorConditionFormula>
+    <errorDisplayField>AcctSeed__Project__c</errorDisplayField>
+    <errorMessage>The project you have selected is not associated with the customer listed in the billing header. The account (customer) field on this project must be the same as the customer on the billing header.</errorMessage>
+</ValidationRule>

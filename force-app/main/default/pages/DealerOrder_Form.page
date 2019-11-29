@@ -1,0 +1,51 @@
+<apex:page standardController="Dealer_Order__c" >
+  <apex:stylesheet value="{!URLFOR($Resource.SLDS202, 'assets/styles/salesforce-lightning-design-system.min.css')}" />
+  <apex:includeLightning />
+
+  <div style="max-width: 80rem;margin:auto;position:relative;">
+    <div class="slds-page-header">
+      <div class="slds-media">
+        <div class="slds-media__figure">
+          <span class="slds-icon_container slds-icon-standard-opportunity" title="">
+            <img src="{!URLFOR( $Resource.SLDS202, '/assets/icons/custom/custom54_60.png')}" style="width: 40px;" />
+          </span>
+        </div>
+        <div class="slds-media__body">
+          <h1 class="slds-page-header__title slds-truncate slds-align-middle" title="Create New Dealer Order">Create New Dealer Order</h1>
+          <p class="slds-text-body_small slds-line-height_reset"></p>
+        </div>
+      </div>
+    </div>
+    <div id="lightning" style="margin-top:1rem;"></div>
+  </div>
+
+  <script>
+        $Lightning.use("c:lgnd_DealerOrderForm_App", function() {
+          $Lightning.createComponent("c:lgnd_NewDealerOrder",
+            {label: ''},
+          "lightning",
+          function(cmp) {
+            $A.eventService.addHandler({
+                event: 'force:navigateToObjectHome',
+                handler: function(event) {
+                  if (sforce && sforce.one)
+                  {
+                    // VF page in S1 or Lightning Exp
+                    console.log( event );
+                    console.log( event.getParams() )
+                    sforce.one.navigateToObjectHome(event.getParams().scope);
+                    //sforce.one.navigateToObjectHome(event.$params$.scope);
+                  }
+                  else
+                  {
+                    // VF page in Classic
+                    window.location = '{!URLFOR($Action.Contact.Tab, $ObjectType.Contact)}';
+                  }
+                }
+            });
+          });
+        });
+    </script>
+
+
+</apex:page>

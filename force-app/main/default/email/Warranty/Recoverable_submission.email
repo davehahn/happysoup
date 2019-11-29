@@ -1,0 +1,11 @@
+<messaging:emailTemplate subject="Warranty Recoverable" recipientType="Contact" relatedToType="AcctSeed__Project__c">
+<messaging:htmlEmailBody >
+
+    <div style="text-align:center;margin: 15px 0 30px 0;">
+        <apex:image style="width:300px;" id="Logo" value="{!URLFOR($Resource.LegendLogo)}" />
+    </div>
+
+    <c:Warranty_Recoverable_Email erpId="{!relatedTo.Id}" />
+
+</messaging:htmlEmailBody>
+</messaging:emailTemplate>

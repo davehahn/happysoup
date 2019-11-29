@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <description>Offering a Service Customer the opportunity to upgrade their boat</description>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>Legend_Letterhead</letterhead>
+    <name>Service Boat Trade In</name>
+    <style>freeForm</style>
+    <subject>We&#39;re Eyeing Your Boat!</subject>
+    <textOnly>Hello {!Account.FirstName},
+
+I see that your boat is in for servicing.  I hope you don&#39;t mind, but I took a look at it and have determined that it really is a beautiful boat!  I&#39;ve spoken with our Sales Manager and he agrees with me.
+
+The reason I am sending you this e-mail is to let you know that if you wish to trade in your boat for a brand new Legend, we are prepared to offer you a very reasonable trade in value.
+
+There are several benefits to upgrading your boat package after 5 to 7 years, such as higher trade in values, taking advantage of the latest technologies Legend has to offer, higher performance and, of course, being the talk of the lake!
+
+If you would like to discuss further, please feel free to give me a call or reply to this e-mail.
+
+I look forward to hearing from you about this exciting opportunity!
+
+Yours in boating,
+
+{!Opportunity.OwnerFullName}
+{!Opportunity.OwnerTitle}
+
+{!Opportunity.OwnerEmail}
+{!Opportunity.OwnerPhone}</textOnly>
+    <type>html</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

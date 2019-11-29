@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <description>For the Service Department to send to customers 45 days after they pick up their new boat package</description>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>Legend_Letterhead</letterhead>
+    <name>Multi Point Courtesy Inspection Whitefish</name>
+    <style>freeForm</style>
+    <subject>Legend Boats - Keeping you Happy on the Water</subject>
+    <textOnly>Hello {!Account.FirstName},
+
+We hope you&#39;ve been enjoying your time on the water so far!  We want to make sure that you are completely, 100% satisfied with your new boat and that you will enjoy it for years to come.  To ensure that everything is exactly the way you want it, I would like to invite you to come back in for a complimentary 50 Point Inspection!
+
+We find that all too often, boat owners are willing to live with a slight inconvenience on their boat, when really it just requires the simplest tweak on our end.  When you come in, please tell us everything! Any concerns you may have, anything that you are unsure of, anything that you require further training with, Anything!  In return, we will look over your boat package and ensure that everything is where it should be and working correctly.
+
+Your lifelong boating happiness is paramount to us and like any vehicle, regular boat inspections and maintenance help keep you on the water and out of the Shop!
+
+To schedule your 50 Point Inspection:
+Please call us at the Service Desk at (705) 866-2821 or
+Email Legend Customer Care at customercare@legendboats.com.
+
+Please be sure to let us know of any additional Services you would like completed while your boat is left with us.
+
+We look forward to hearing from you.  Have a Legendary day!
+
+{!User.Name}
+{!User.Title}</textOnly>
+    <type>html</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

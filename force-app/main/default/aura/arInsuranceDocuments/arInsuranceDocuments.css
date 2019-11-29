@@ -1,0 +1,47 @@
+.THIS .container {
+  width: 100%;
+  text-align: center;
+}
+
+.THIS .container .doc-archive {
+  width: calc(100% - 850px - 0.5rem);
+  height: 200px;
+  margin-top:30px;
+  float: left;
+}
+
+.THIS .container .doc-archive h2 {
+  font-size: 1.25rem
+}
+
+.THIS .container .doc-archive table {
+  width: 100%;
+}
+
+.THIS .container .doc-archive table tr.highlighted{
+    background-color: #4bca81;
+    color:#FFF;
+}
+
+.THIS .container .doc-archive table tr.highlighted a {
+    color:#FFF;
+}
+
+.THIS .container .doc-archive table tr a.disabled {
+  opacity: 0.5;
+  color:#ccc;
+}
+
+.THIS .container .pdf-container {
+  width: calc(850px + 0.5rem) !important;
+  display:inline-block;
+  margin-top: 30px;
+  background: #4bca81;
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+}
+
+.THIS .container .pdf-container > div:first-child {
+  width: 850px !important;
+  margin:auto;
+}

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>AcctSeed__Require_Expense_GL_Account</fullName>
+    <active>true</active>
+    <description>Require a Expense GL Account if the Inventory Product field is true or the Inventory Type field is Purchased</description>
+    <errorConditionFormula>(TEXT(AcctSeed__Inventory_Type__c) = &quot;Purchased&quot; || AcctSeed__Inventory_Product__c) &amp;&amp;  ISBLANK(AcctSeed__Expense_GL_Account__c)</errorConditionFormula>
+    <errorDisplayField>AcctSeed__Expense_GL_Account__c</errorDisplayField>
+    <errorMessage>You must enter a value</errorMessage>
+</ValidationRule>

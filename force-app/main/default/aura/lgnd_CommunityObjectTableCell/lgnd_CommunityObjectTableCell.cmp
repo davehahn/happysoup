@@ -1,0 +1,48 @@
+<aura:component >
+
+  <aura:attribute name="record" type="sObject" />
+  <aura:attribute name="field" type="String" />
+  <aura:attribute name="typeMap" type="Object" />
+  <aura:attribute name="fieldValue" type="String" />
+  <aura:attribute name="fieldName" type="String" />
+  <aura:attribute name="fieldType" type="String" />
+  <aura:attribute name="isViewLink" type="Boolean" />
+  <aura:attribute name="viewUrl" type="String" />
+  <aura:attribute name="viewRecordId" type="String" />
+
+  <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+
+  <td data-label="{!v.fieldName}">
+    <aura:if isTrue="{!v.fieldType == 'CURRENCY'}">
+      <lightning:formattedNumber value="{!v.fieldValue}" style="currency" currencyCode="CAD" />
+    </aura:if>
+    <aura:if isTrue="{!v.fieldType == 'STRING'}">
+      <div class="slds-truncate" title="{!v.fieldValue}">
+        <aura:if isTrue="{!v.isViewLink}">
+          <a href="javascript:void(0);" onclick="{!c.viewRecord}">
+            <aura:unescapedHtml value="{!v.fieldValue}" />
+          </a>
+          <aura:set attribute="else">
+            <aura:unescapedHtml value="{!v.fieldValue}" />
+          </aura:set>
+        </aura:if>
+      </div>
+    </aura:if>
+    <aura:if isTrue="{!v.fieldType == 'DATETIME'}">
+      <ui:outputDateTime value="{!v.fieldValue}"/>
+      <!-- <div class="slds-truncate" title="{!v.fieldValue}">{!v.fieldValue}</div> -->
+    </aura:if>
+    <aura:if isTrue="{!v.fieldType == 'PICKLIST'}">
+      <div class="slds-truncate" title="{!v.fieldName}">{!v.fieldValue}</div>
+    </aura:if>
+    <aura:if isTrue="{!v.fieldType == 'BOOLEAN'}">
+      <aura:if isTrue="{!v.fieldValue == true}">
+        <lightning:icon iconName="utility:check" size="x-small" class="boolean"/>
+        <aura:set attribute="else">
+          <div></div>
+        </aura:set>
+      </aura:if>
+    </aura:if>
+  </td>
+
+</aura:component>

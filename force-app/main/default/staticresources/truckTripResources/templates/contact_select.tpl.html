@@ -1,0 +1,37 @@
+<div class="slds-modal__container contact-select">
+  <div class="slds-modal__header">
+    <h2 class="slds-text-heading--medium">Who should receive this notice?</h2>
+  </div>
+  <div class="slds-modal__content slds-p-around--medium">
+    {{#if wasSent }}
+    <div class="notification-sent-already">
+      <p style="font-weight:bold">WARNING</p>
+      <p style="margin-bottom:10px;">A notification has previously been sent for this Delivery</p>
+      <p>Please be sure you want to sent ANOTHER notification as
+         multiple notification for the same delivery causes confusion</p>
+    </div>
+    {{/if}}
+    <table>
+      {{#each contacts}}
+        <tr>
+          <td>
+            <input type="checkbox" value="{{this.id}}" />
+          </td>
+          <td>
+            {{this.name}}
+          </td>
+          <td>
+            {{this.title}}
+          </td>
+          <td>
+            {{this.email}}
+          </td>
+        </tr>
+      {{/each}}
+    </table>
+  </div>
+  <div class="slds-modal__footer">
+    <button class="slds-button slds-button--neutral" data-contact-select-btn="cancel">Cancel</button>
+    <button class="slds-button slds-button--neutral slds-button--brand" data-contact-select-btn="send" disabled>Send</button>
+  </div>
+</div>

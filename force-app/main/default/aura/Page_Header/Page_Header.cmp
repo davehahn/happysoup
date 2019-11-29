@@ -1,0 +1,19 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,forceCommunity:availableForAllPageTypes">
+  <aura:attribute name="iconName" type="String" />
+  <aura:attribute name="title" type="String" />
+  <aura:attribute name="subTitle" type="String" />
+
+  <div class="slds-page-header">
+    <div class="slds-media">
+      <aura:if isTrue="{! not( empty(v.iconName) )}">
+        <div class="slds-media__figure">
+          <lightning:icon iconName="{!v.iconName}" class="slds-page-header__icon" />
+        </div>
+      </aura:if>
+      <div class="slds-media__body">
+        <h1 class="slds-page-header__title slds-truncate slds-align-middle" title="{!v.title}">{!v.title}</h1>
+        <p class="slds-text-body_small slds-line-height_reset">{!v.subTitle}</p>
+      </div>
+    </div>
+  </div>
+</aura:component>

@@ -1,0 +1,175 @@
+<apex:component >
+
+<style type="text/css">
+  #lgnd-ca-modal {
+    z-index: 10001;
+  }
+  #lgnd-ca-backdrop {
+    z-index:10000;
+  }
+
+  #lgnd-ca-modal .slds-modal__container.alert .slds-modal__header {
+    background: #c23934;
+    color: #FFF;
+  }
+
+  #lgnd-ca-modal .slds-modal__container.confirm .slds-modal__header {
+    background: #ffb75d;
+    color: #fff;
+  }
+
+  #lgnd-ca-modal .slds-modal__container .slds-modal__content {
+    text-align: center;
+    font-size: 1rem;
+    font-weight: 300;
+  }
+</style>
+
+  <apex:stylesheet value="{!URLFOR($Resource.LGND_SLDS_214, 'assets/styles/salesforce-lightning-design-system-vf.css')}" />
+
+  <div class="lgnd">
+    <div id="lgnd-ca-backdrop" class="slds-backdrop"></div>
+    <div id="lgnd-ca-modal" role="dialog" class="slds-modal"></div>
+    <div id="lgnd-ca-success"></div>
+  </div>
+
+  <script id="modal-content" type="text/x-handlebars-template">
+    <div class="slds-modal__container {{ styleClass }}">
+        <div class="slds-modal__header">
+            <h2 class="slds-text-heading--medium">{{title}}</h2>
+        </div>
+        <div class="slds-modal__content slds-p-around--medium">
+            <div>
+                <p>{{ message }}</p>
+            </div>
+        </div>
+        <div class="slds-modal__footer">
+        {{#ifEquals styleClass 'confirm' }}
+          <button class="slds-button slds-button--neutral" data-confirm-answer="false">Cancel</button>
+          <button class="slds-button slds-button--neutral" data-confirm-answer="true">Ok</button>
+        {{/ifEquals}}
+        {{#ifEquals styleClass 'alert' }}
+          <button class="slds-button slds-button--neutral">Ok</button>
+        {{/ifEquals}}
+        </div>
+    </div>
+  </script>
+
+  <script id="success-content" type="text/x-handlebars-template">
+    <div class="slds-notify_container">
+      <div class="slds-theme--success slds-notify slds-notify--toast" role="alert">
+        <div class="slds-notify__content">
+          <h2 class="slds-text-heading--small">{{message}}</h2>
+        </div>
+      </div>
+    </div>
+  </script>
+
+
+  <apex:includeScript value="{!URLFOR($Resource.Libraries, 'js/jquery-3.1.1.min.js')}" />
+  <apex:includeScript value="{!URLFOR($Resource.Libraries, 'js/handlebars.min-latest.js')}" />
+  <!-- <apex:includeScript value="{!URLFOR($Resource.aljs, 'jquery/jquery.aljs-init.min.js')}" /> -->
+  <!-- <apex:includeScript value="{!URLFOR($Resource.aljs, 'jquery/jquery.aljs-modal.min.js')}" /> -->
+
+
+
+
+
+  <script type="text/javascript">
+
+   (function( $, document, window, undefined) {
+
+    // $(document).ready(function() {
+    //   $('#lgnd-alert').modal({
+    //     onDismissed: function() {
+    //       $(this).html('');
+    //     }
+    //   });
+    // });
+
+    if( window.LGND === undefined) window.LGND = {};
+
+    var lgnd = window.LGND,
+        $modal = $('#lgnd-ca-modal'),
+        $backDrop = $('#lgnd-ca-backdrop'),
+        $success = $('#lgnd-ca-success'),
+        modalContent = Handlebars.compile( $('#modal-content').html() ),
+        successContent = Handlebars.compile( $('#success-content').html() );
+
+    Handlebars.registerHelper( 'ifEquals' , function( v1, v2, options ) {
+      if( v1 === v2 )
+      {
+        return options.fn(this);
+      }
+      return options.inverse(this);
+    });
+
+    lgnd.HandlebarsHelpers = {
+
+      templateLoader: function(templateMap)
+      {
+        var requests = [],
+         dfd = new $.Deferred(),
+         tmpls = {};
+        $.each(templateMap, function(name, url) {
+          requests.push($.ajax({
+            url: url,
+            cache: true,
+            success: function(data) {
+              tmpls[name] = Handlebars.compile(data);
+            }
+          }));
+        });
+
+        $.when.apply(undefined, requests).done(function() {
+          dfd.resolve(tmpls);
+        });
+
+        return dfd.promise();
+      }
+
+    }// /HandleBarsHelpers
+
+    lgnd.alert = function(title, message)
+    {
+      $modal.html( modalContent({ message: message, title: title, styleClass: 'alert'}) )
+      .addClass('slds-fade-in-open')
+      .find('button')
+      .on('click', function(e) {
+        e.preventDefault();
+        $modal.removeClass('slds-fade-in-open');
+        $backDrop.removeClass('slds-backdrop--open');
+      });
+      $backDrop.addClass('slds-backdrop--open');
+    }
+
+    lgnd.success = function( message )
+    {
+      $success.html( successContent({message: message}) );
+      setTimeout( function() {
+        $success.html('');
+      }, 2000 );
+    }
+
+    lgnd.confirm = function( title, message )
+    {
+      var dfd = new $.Deferred();
+      $modal.html( modalContent({ message: message, title: title, styleClass: 'confirm'}) )
+      .on('click', 'button[data-confirm-answer]', function(e) {
+        e.preventDefault();
+        var result, $this = $(this);
+        dfd.resolve( $this.data('confirm-answer') );
+        $modal.removeClass('slds-fade-in-open');
+        $backDrop.removeClass('slds-backdrop--open');
+      })
+      .addClass('slds-fade-in-open');
+      $backDrop.addClass('slds-backdrop--open');
+      return dfd.promise();
+    }
+
+
+   })( jQuery.noConflict(), document, window)
+
+  </script>
+
+</apex:component>

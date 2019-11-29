@@ -1,0 +1,61 @@
+<aura:component controller="CPQ_Controller_dh" access="global">
+  <!-- Attributes -->
+  <aura:attribute type="Object" name="optionItem" />
+  <aura:attribute type="String" name="pricebookId" />
+  <aura:attribute type="String" name="className" default="" />
+  <aura:attribute type="Decimal" name="quantitySelected" />
+  <aura:attribute type="Array" name="quantityOptions" />
+  <aura:attribute type="Array" name="saleItems" />
+  <aura:attribute type="Boolean" name="compLoaded" default="false" />
+
+  <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+
+  <ltng:require scripts="{!join(',', $Resource.Libraries +'/js/LightningApex.js',
+                                     $Resource.Libraries +'/js/LightningUtils.js') }" />
+
+  <!-- Events -->
+  <aura:registerEvent name="optionChanged" type="c:CPQ_OptionLine_ChangeEvent" />
+
+  <div class="{! 'slds-grid option-row slds-wrap ' + v.className}">
+    <div class="slds-col slds-size--1-of-1 slds-medium-size--2-of-12 slds-large-size--2-of-12">
+      <aura:if isTrue="{!v.optionItem.isCheckbox}">
+        <lightning:input type="toggle"
+                 name="{!v.optionItem.name + '-toggle'}"
+                 variant="label-hidden"
+                 label=""
+                 disabled="{! and( v.optionItem.isSelected, equals(v.optionItem.standard, v.optionItem.maximum) ) }"
+                 messageToggleActive=""
+                 messageToggleInactive=""
+                 checked="{!v.optionItem.isSelected}"
+                 onchange="{!c.toggleSelected}" />
+      </aura:if>
+      <aura:if isTrue="{! not(v.optionItem.isCheckbox) }">
+        <lightning:select label=""
+                          value="{!v.optionItem.quantitySelected}"
+                          onchange="{!c.selectChanged}"
+                          variant="label-hidden">
+          <aura:iteration items="{!v.quantityOptions}" var="opt">
+            <option value="{!opt}">{!opt}</option>
+          </aura:iteration>
+        </lightning:select>
+      </aura:if>
+    </div>
+    <div class="slds-col slds-size--1-of-1 slds-medium-size--8-of-12 slds-large-size--8-of-12">
+      <div class="slds-truncate">
+        {!v.optionItem.name}
+      </div>
+    </div>
+    <div class="slds-col slds-size--1-of-1 slds-medium-size--2-of-12 slds-large-size--2-of-12 slds-text-align--right">
+        <lightning:formattedNumber value="{!v.optionItem.retailPrice}" style="currency" currencyCode="CAD" />
+    </div>
+  </div>
+  <aura:renderIf isTrue="{!!empty(v.optionItem.subOptions)}">
+    <aura:iteration items="{!v.optionItem.subOptions}" var="sub">
+      <c:CPQ_OptionLine optionItem="{!sub}"
+                        pricebookId="{!v.pricebookId}"
+                        saleItems="{!v.saleItems}"
+                        className="subOption" />
+  </aura:iteration>
+
+  </aura:renderIf>
+</aura:component>

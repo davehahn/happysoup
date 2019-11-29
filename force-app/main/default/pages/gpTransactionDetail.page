@@ -1,0 +1,528 @@
+<apex:page controller="GMBLASERP.gcAccountingPeriod" extensions="gcTransactionDetail" showHeader="true" sidebar="false">
+
+<head>
+<style>
+.spinner {
+    background: rgba(0,0,0,.2);
+    background-image: url('/img/loading32.gif');
+    background-repeat: no-repeat;
+    background-attachment: fixed;	    
+    background-position: center;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 9998;
+}
+.modal {
+    background: rgba(0,0,0,.2);
+    background-repeat: no-repeat;
+    background-attachment: fixed;	    
+    background-position: center;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 100;
+}
+tr.hoverBlue:hover td{background:#00EEFF !important;}
+tr.total td {font-weight: bold}
+.link{
+	cursor:pointer;
+	text-decoration:underline;
+}
+table{
+	width:100%;
+	border-collapse:collapse;
+}
+#TransactionDetail div.pq-grid-footer{
+	display:none;
+}
+</style>
+<apex:stylesheet value="{!URLFOR($Resource.GMBLJS__jQueryUI,'/jquery-ui/jquery-ui.min.css')}"/>
+<apex:stylesheet value="{!URLFOR($Resource.GMBLJS__pqGridPro,'/pqgrid.min.css')}"/>
+</head>
+<body>
+	<div id="spinner" class="spinner" style="display:none;"></div>
+	<div id="modal" class="modal" style="display:none;"></div>	
+	
+	<div style="margin:0 auto; width:98%;">
+		<apex:form >
+			<div style="text-align:center; padding: 10px 0 10px 0; font-weight: bold;">
+				<span style="font-size:large">Transaction Detail</span>
+			</div>
+		</apex:form>
+
+		<table width="100%" cellpadding="0" cellspacing="0">
+		<tr>
+			<td style="width:200px; vertical-align:top; text-align:center;padding-right:10px;">
+				<div><button type="button" onclick="fn_refreshGrid_TransactionDetail();">Refresh Grid</button></div><br/>
+				<table>
+					<tr>
+						<th class="ui-widget-header" style="text-align:center;">FROM</th><th class="ui-widget-header"  style="text-align:center;">THRU</th>
+					</tr>
+					<tr>
+						<td class="ui-widget-content" style="text-align:center;"><select class="idPeriodFrom"></select></td>
+						<td class="ui-widget-content" style="text-align:center;"><select class="idPeriodThru"></select></td>
+					</tr>
+				</table><br/>
+				<div class="ui-widget-header">Account</div>
+				<select style="width:100%" class="idAccount"></select><br/><br/>
+				<div class="ui-widget-header">GL Account</div>
+				<select style="width:100%" class="idGL" multiple="multiple" size="5"></select><br/><br/>
+				<div class="ui-widget-header">{!$ObjectType.AcctSeed__Transaction__c.fields.AcctSeed__GL_Account_Variable_1__c.label}</div>
+				<select style="width:100%" class="idGLV1" multiple="multiple" size="5"></select><br/><br/>
+				<div class="ui-widget-header">{!$ObjectType.AcctSeed__Transaction__c.fields.AcctSeed__GL_Account_Variable_2__c.label}</div>
+				<select style="width:100%" class="idGLV2" multiple="multiple" size="5"></select><br/><br/>	
+				<div class="ui-widget-header">{!$ObjectType.AcctSeed__Transaction__c.fields.AcctSeed__GL_Account_Variable_3__c.label}</div>
+				<select style="width:100%" class="idGLV3" multiple="multiple" size="5"></select><br/><br/>	
+				<div class="ui-widget-header">{!$ObjectType.AcctSeed__Transaction__c.fields.AcctSeed__GL_Account_Variable_4__c.label}</div>
+				<select style="width:100%" class="idGLV4" multiple="multiple" size="5"></select><br/><br/>	
+				<div class="ui-widget-header">Project?</div>
+				<select style="width:100%" class="hasProject">
+					<option value='all'>Don't Care</option>
+					<option value='yes'>Yes - Has Project</option>
+					<option value='no'>No - Does not have Project</option>
+				</select>		
+
+			</td>
+			<td style="vertical-align:top;">
+				<div><div id="TransactionDetail"></div></div>
+			</td>
+		</tr>
+
+		</table>
+	</div>
+<div id="exportStage" style="display:none;"></div>
+</body>
+<apex:includeScript value="{!$Resource.GMBLJS__jQuery}"/>
+<apex:includeScript value="{!URLFOR($Resource.GMBLJS__jQueryUI,'/jquery-ui/jquery-ui.min.js')}"/>
+<apex:includeScript value="{!$Resource.GMBLJS__accountingJS}"/>
+<apex:includeScript value="{!$Resource.GMBLJS__ExcellentExport}"/>
+<apex:includeScript value="{!URLFOR($Resource.GMBLJS__pqGridPro,'/pqgrid.min.js')}"/>
+
+<script>function setFocusOnLoad() {}</script>
+<script type="text/javascript">
+    $j = jQuery.noConflict();
+    var spinner = +0;
+    
+    var idPeriodFrom;
+    var idPeriodThru;
+    var idProject;
+    var idProjectTask;
+    var hasProject;
+
+    var setIdGL   = [];
+    var setIdGLV1 = [];
+    var setIdGLV2 = [];
+    var setIdGLV3 = [];
+    var setIdGLV4 = [];
+
+    var openingBalance = +0;
+    var totalRows=[{debit:0, credit:0, balance:0}];
+	var $summaryContainer_TransactionDetail ={};
+    $j(document).ready(function()
+    {
+    	fn_initGrid_TransactionDetail();
+ 		fn_initControls();
+    });
+
+	accounting.settings = {
+		currency: {
+			symbol : "$",   // default currency symbol is '$'
+			format: "%s%v", // controls output: %s = symbol, %v = value/number (can be object: see below)
+			decimal : ".",  // decimal point separator
+			thousand: ",",  // thousands separator
+			precision : 2   // decimal places
+		},
+		number: {
+			precision : 2,  // default precision on numbers is 0
+			thousand: ",",
+			decimal : "."
+		}
+	}
+
+	function fn_showSpinner()
+	{
+		spinner ++;
+		if(spinner > 0)
+		$j('#spinner').show();
+	}
+	function fn_hideSpinner()
+	{
+		spinner --;
+		if(spinner <= 0)
+		{
+			$j('#spinner').hide();
+			spinner = +0;
+		}
+	}
+
+	function fn_initControls()
+	{
+		fn_showSpinner();
+		Visualforce.remoting.Manager.invokeAction(
+			'{!$RemoteAction.gcTransactionDetail.initControls}',
+			function(result,event){if(event.status) fn_initControls_callback(result);else {alert(event.message); fn_hideSpinner();}},
+			{ buffer: true, escape: true, timeout: 120000 });			
+	}
+	function fn_initControls_callback(c)
+	{
+		$j.each(c.listAccount, function(i,keyValue)
+		{
+			$j('select.idAccount').append($j('<option>').attr('value',keyValue.Id).html(keyValue.Name));
+		});
+		$j.each(c.listGL, function(i,keyValue)
+		{
+			$j('select.idGL').append($j('<option>').attr('value',keyValue.Id).html(keyValue.Name));
+		});
+		$j('select.idGL').val('{!$CurrentPage.parameters.idGL}');
+
+		$j.each(c.listGLV1, function(i,keyValue)
+		{
+			$j('select.idGLV1').append($j('<option>').attr('value',keyValue.Id).html(keyValue.Name));
+		});
+		if('{!$CurrentPage.parameters.idGLV1}')
+		{
+			if('{!$CurrentPage.parameters.idGLV1}' == 'null') $j('select.idGLV1').val('blank');
+			else $j('select.idGLV1').val('{!$CurrentPage.parameters.idGLV1}');
+		}
+		else  $j('select.idGLV1').val('all');
+
+		$j.each(c.listGLV2, function(i,keyValue)
+		{
+			$j('select.idGLV2').append($j('<option>').attr('value',keyValue.Id).html(keyValue.Name));
+		});
+		if('{!$CurrentPage.parameters.idGLV2}')
+		{
+			if('{!$CurrentPage.parameters.idGLV2}' == 'null') $j('select.idGLV2').val('blank');
+			else $j('select.idGLV2').val('{!$CurrentPage.parameters.idGLV2}');
+		}
+		else  $j('select.idGLV2').val('all');
+
+		$j.each(c.listGLV3, function(i,keyValue)
+		{
+			$j('select.idGLV3').append($j('<option>').attr('value',keyValue.Id).html(keyValue.Name));
+		});
+		if('{!$CurrentPage.parameters.idGLV3}')
+		{
+			if('{!$CurrentPage.parameters.idGLV3}' == 'null') $j('select.idGLV3').val('blank');
+			else $j('select.idGLV3').val('{!$CurrentPage.parameters.idGLV3}');
+		}
+		else  $j('select.idGLV3').val('all');
+
+		$j.each(c.listGLV4, function(i,keyValue)
+		{
+			$j('select.idGLV4').append($j('<option>').attr('value',keyValue.Id).html(keyValue.Name));
+		});
+		if('{!$CurrentPage.parameters.idGLV4}')
+		{
+			if('{!$CurrentPage.parameters.idGLV4}' == 'null') $j('select.idGLV4').val('blank');
+			else $j('select.idGLV4').val('{!$CurrentPage.parameters.idGLV4}');
+		}
+		else  $j('select.idGLV4').val('all');
+
+		$j.each(c.listPeriod, function(i,keyValue)
+		{
+			$j('select.idPeriodThru').append($j('<option>').attr('value',keyValue.Id).html(keyValue.Name));
+		});
+		if('{!$CurrentPage.parameters.idPeriodThru}') $j('select.idPeriodThru').val('{!$CurrentPage.parameters.idPeriodThru}');
+
+		$j.each(c.listPeriod, function(i,keyValue)
+		{
+			$j('select.idPeriodFrom').append($j('<option>').attr('value',keyValue.Id).html(keyValue.Name));
+		});
+		if('{!$CurrentPage.parameters.idPeriodFrom}') $j('select.idPeriodFrom').val('{!$CurrentPage.parameters.idPeriodFrom}');
+		else $j('select.idPeriodFrom').val($j('select.idPeriodThru').val());
+
+    	if('{!$CurrentPage.parameters.idProject}') 		idProject 		= '{!$CurrentPage.parameters.idProject}';
+    	else idProject = 'all';
+    	if('{!$CurrentPage.parameters.idProjectTask}') 	idProjectTask 	= '{!$CurrentPage.parameters.idProjectTask}';
+    	else idProjectTask = 'all';
+
+    	if('{!$CurrentPage.parameters.hasProject}')
+			$j('select.hasProject').val('{!$CurrentPage.parameters.hasProject}');
+		else
+			$j('select.hasProject').val('all');
+
+		var idAccount = "{!$CurrentPage.parameters.idAccount}";
+		if(idAccount != null)
+		{
+			$j('select.idAccount').val('{!CASESAFEID($CurrentPage.parameters.idAccount)}');
+			if($j('select.idAccount').val() == null || $j('select.idAccount').val() == '')
+				$j('select.idAccount').val('all');
+			else
+			{
+				$j('select.idPeriodFrom option:last-child').prop('selected', true);
+				$j('select.idGL option').prop('selected',true);
+			}
+		}
+
+		fn_refreshGrid_TransactionDetail();
+
+		fn_hideSpinner();
+	}
+
+	function fn_initGrid_TransactionDetail()
+	{
+		var gridObj = {title:"TransactionDetail &nbsp&nbsp<a download='export.xls' href='#' onclick='return fn_export($j(\"#TransactionDetail\"),this);$j(\"#exportStage\").empty();'>Export XLS</a>",
+						collapsible:{on:false,collapsed:false},
+						columnTemplate: {minWidth:50, sortable:true},
+						dragColumns:{enabled:false},
+						editable:false,
+						filterModel:{on:false, mode:'AND', header:false},
+						freezeCols:5,
+						freezeRows:0,
+						height:625,
+						historyModel:{on:false},
+						hoverMode:'row',
+						hwrap:false,
+						numberCell:{show:false},
+						pageModel: {type:null},
+						pasteModel:{on:false},
+						resizable: true,
+						roundCorners: false,
+						scrollModel: {pace:'fast', autoFit:false, horizontal:true},
+						selectionModel: { type: 'row', mode: 'single'},
+						showBottom:true,
+						showHeader:true,
+						showTitle:true,
+						showTop:true,
+						showToolbar:true,
+						sortable:true,
+						swipeModel:{on:false},
+						virtualX: false,
+						virtualXHeader: false,
+						virtualY: false,
+						width:'100%',
+						wrap:false};
+
+		var emptyData = [];
+		gridObj.colModel=[{dataIndx:'temp0'},{dataIndx:'temp1'},{dataIndx:'temp2'},{dataIndx:'temp3'},{dataIndx:'temp4'},{dataIndx:'temp5'}];
+		gridObj.dataModel={data:null, sorting:'local', location:'local'};
+		gridObj.toolbar={
+
+           items: [
+                { type: '<span>Freeze Columns: </span>' },
+                { type: 'select', options: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+                	listeners: [
+	                    {
+	                        change: function (evt) {
+	                            $j('#TransactionDetail').pqGrid("option", "freezeCols", $j(this).val());
+	                            $j('#TransactionDetail').pqGrid("refresh");
+	                        }
+	                    }
+                	]
+                }
+                ]
+            };
+
+        var $gridDiv = $j('#TransactionDetail');
+
+		$gridDiv.pqGrid(gridObj);
+
+		$gridDiv.find('div.pq-toolbar select').val(gridObj.freezeCols);
+
+		$gridDiv.on('pqgridrowclick', function(event, ui){
+			if(ui.rowData.isAccessible == 'true')
+				window.open('/'+ui.rowData.idOrigin,'_blank');
+		});
+
+		$gridDiv.on('pqgridbeforetableview', function(event, ui){
+			fn_runningBalance();
+		});
+
+		$gridDiv.on('pqgridrefresh', function(event, ui){
+			if($j(this).find('.pq-grid-summary').length == 0)
+				$j("<div class='pq-grid-summary'></div>").prependTo($j(this).find('.pq-grid-bottom'));
+	        $j(this).pqGrid("createTable", {data: totalRows, $cont: $j(this).find('div.pq-grid-summary')}); 	
+		});
+	}
+
+	function fn_refreshGrid_TransactionDetail()
+	{
+		fn_showSpinner();
+
+		idPeriodFrom = $j('select.idPeriodFrom').val();
+		idPeriodThru = $j('select.idPeriodThru').val();
+		hasProject = $j('select.hasProject').val();
+		idAcc = $j('select.idAccount').val();
+		setIdGL = [];
+		setIdGLV1 = [];
+		setIdGLV2 = [];
+		setIdGLV3 = [];
+		setIdGLV4 = [];
+
+		$j('select.idGL option:selected').each(function(a,b){setIdGL.push($j(this).val())});
+		$j('select.idGLV1 option:selected').each(function(a,b){setIdGLV1.push($j(this).val())});
+		$j('select.idGLV2 option:selected').each(function(a,b){setIdGLV2.push($j(this).val())});
+		$j('select.idGLV3 option:selected').each(function(a,b){setIdGLV3.push($j(this).val())});
+		$j('select.idGLV4 option:selected').each(function(a,b){setIdGLV4.push($j(this).val())});
+
+		Visualforce.remoting.Manager.invokeAction(
+			'{!$RemoteAction.gcTransactionDetail.retrieveTransactionDetail}',
+			idPeriodFrom,
+			idPeriodThru,
+			idAcc,
+			setIdGL,
+			setIdGLV1,
+			setIdGLV2,
+			setIdGLV3,
+			setIdGLV4,
+			idProject,
+			idProjectTask,
+			hasProject,
+			function(result,event){if(event.status) fn_refreshGrid_TransactionDetail_callback(result);else {alert(event.message); fn_hideSpinner();}},
+			{ buffer: true, escape: true, timeout: 120000 });	
+	}
+
+	function fn_runningBalance()
+	{
+		var runningBalance = openingBalance;
+		totalRows = [{debit:0, credit:0, net:0, balance:0}];
+		$j.each($j('#TransactionDetail').pqGrid('option','dataModel.data'),function(i,rowData)
+		{
+			if(!isNaN(rowData.debit))
+			{
+				runningBalance += parseFloat(rowData.debit);
+				totalRows[0].debit += parseFloat(rowData.debit);
+			}
+			if(!isNaN(rowData.credit))
+			{
+				runningBalance -= parseFloat(rowData.credit);
+				totalRows[0].credit += parseFloat(rowData.credit);
+			}
+			if(!isNaN(rowData.net))
+				totalRows[0].net += parseFloat(rowData.net);
+
+			rowData.balance = runningBalance;
+
+		});
+		totalRows[0].balance = runningBalance;
+	}
+
+	function fn_refreshGrid_TransactionDetail_callback(grid)
+	{
+		//set the colModel
+		$j('#TransactionDetail').pqGrid('option','colModel',fn_refreshGrid_TransactionDetail_ColModel(grid.colModel));
+		//set the data model
+		$j('#TransactionDetail').pqGrid('option','dataModel', {data:grid.data, sorting:'local', location:'local'});
+
+        $j('#TransactionDetail').pqGrid('refreshDataAndView');
+
+	    fn_hideSpinner();
+	}
+
+	function fn_refreshGrid_TransactionDetail_ColModel(colModel)
+	{
+
+		$j.each(colModel, function(i,col)
+		{
+			if(col.dataIndx == 'debit' || col.dataIndx == 'credit' || col.dataIndx == 'net' || col.dataIndx == 'balance')
+			{
+				col.width = 100;
+				col.dataType='float';
+				col.align='right';
+
+				$j.extend(col,{
+					render: function(ui)
+					{
+						var cont = eval('ui.rowData.'+ui.dataIndx);
+						if (cont == null || (col.dataIndx != 'balance' && parseFloat(cont)== 0 && ui.rowData.idTxn)) return '';
+						return accounting.formatNumber(cont);
+					}
+				});	
+			}
+			else
+			{
+				col.width = 100;
+				col.maxWidth = 400;
+			}
+
+			if(col.dataIndx == 'balance')
+			{
+				openingBalance = parseFloat(col.mapProperty.OpeningBalance);
+				col.title='Balance<br/>Open: '+accounting.formatNumber(openingBalance);
+				col.sortable=false;
+			}
+	
+		});
+
+		return colModel;
+	}
+
+
+	function fn_export($gridDiv,aTag)
+	{
+		fn_createExportTable($gridDiv);
+		return ExcellentExport.excel(aTag, 'exportTable', 'exportWorkSheet');
+	}
+
+
+	function fn_createExportTable($gridDiv)
+	{
+		fn_showSpinner();
+
+		var grid = $gridDiv.pqGrid('getInstance').grid;
+		var tableData = grid.option('dataModel').data;
+		var colModel = grid.getColModel();
+
+		var $rowTemplate = $j('<tr></tr>');
+		var $header = $j('<tr></tr>');
+
+		//build-up the header row
+		//build-up a template detail row
+		$j.each(colModel, function(i,col)
+		{
+			var $newTD = $j('<td></td>');
+			var $newTH = $j('<th style="border:1px solid black"></th>');
+			if(!col.hidden && col.dataIndx != 'scrollSpacer')
+			{
+				$header.append($newTH.clone().addClass(col.dataIndx).html(col.title));
+				$rowTemplate.append($newTD.clone().attr('id',col.dataIndx));
+			}
+		});
+
+		tableData.push(totalRows[0]);
+
+		//create the table
+		$j('#exportStage').html('');
+		$table = $j('<table></table>');
+		$table.attr('id','exportTable');
+
+		//add the header row
+		$table.append('<tr><td colspan="4" style="font-size:larger; font-weight:bold;">Transaction Detail</td></tr>');
+		$table.append($header);
+
+		//create and add the detail rows
+		$j.each(tableData, function(i, dataRow){
+			var $newRow = $rowTemplate.clone();
+			if(dataRow.pq_rowcls && dataRow.pq_rowcls.contains('total'))
+			{
+				$newRow.css('font-weight','bold');
+			}
+
+			$j.each($newRow.find('td'),function (j, cell){
+				idTd = $j(cell).attr('id');
+				if(dataRow.hasOwnProperty(idTd))
+				{
+					var cont = dataRow[idTd];
+					if(!isNaN(cont))
+					{
+						cont = accounting.formatNumber(cont);
+					} 
+					$j(cell).html(cont).addClass(idTd).removeAttr('id');
+				}
+			});
+
+			$table.append($newRow);
+		});
+
+		$j('#exportStage').append($table);
+
+		fn_hideSpinner();
+	}
+</script>
+</apex:page>

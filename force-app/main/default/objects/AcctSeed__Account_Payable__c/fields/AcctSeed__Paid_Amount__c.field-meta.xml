@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>AcctSeed__Paid_Amount__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <inlineHelpText>Sum of amount paid on all associated cash disbursements</inlineHelpText>
+    <label>Paid Amount</label>
+    <summarizedField>AcctSeed__AP_Disbursement__c.AcctSeed__Paid_Amount__c</summarizedField>
+    <summaryForeignKey>AcctSeed__AP_Disbursement__c.AcctSeed__Account_Payable__c</summaryForeignKey>
+    <summaryOperation>sum</summaryOperation>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Summary</type>
+</CustomField>

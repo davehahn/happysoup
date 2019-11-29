@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Return_date_required</fullName>
+    <active>true</active>
+    <description>Return date is required if Departure Date is set</description>
+    <errorConditionFormula>AND( 
+  ISNULL( Return_Date__c ), 
+  NOT( ISNULL( Departure_Date__c ) ) 
+)</errorConditionFormula>
+    <errorMessage>Return date is required if Departure Date is set</errorMessage>
+</ValidationRule>

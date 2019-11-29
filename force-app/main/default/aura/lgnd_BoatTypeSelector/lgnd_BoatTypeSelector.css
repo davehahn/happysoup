@@ -1,0 +1,43 @@
+.THIS .boat-type-selector {
+  margin-bottom: 1.5rem;
+  margin-top: 0.25rem;
+}
+
+.THIS .boat-type-selector .slds-popover_tooltip {
+  position: absolute;
+  display: none;
+}
+
+.THIS .boat-type-selector .slds-popover_tooltip.open {
+  display:initial;
+}
+
+.THIS .boat-type-selector a {
+  width: 46px;
+  height: 46px;
+  background: #e0e5ee;
+  display: block;
+  line-height: 46px;
+  text-align:center;
+  border-radius: 4px;
+  position: relative;
+  margin-left:0.7rem;
+}
+
+.THIS .boat-type-selector a:hover,
+.THIS .boat-type-selector a.pending {
+  background: #4bca81;
+}
+
+.THIS .boat-type-selector a.active {
+  background: #0070d2;
+}
+
+.THIS .boat-type-selector a img {
+  width: 30px;
+  height: 30px;
+  position: absolute;
+  margin:auto;
+  top: calc( 50% - 15px);
+  left: calc(50% - 15px);
+}

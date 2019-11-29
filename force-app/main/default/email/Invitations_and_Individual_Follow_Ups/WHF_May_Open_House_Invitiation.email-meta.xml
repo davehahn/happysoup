@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <description>A letter inviting Salespeople&#39;s prospects to the May Open House in WHF</description>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>Legend_Letterhead</letterhead>
+    <name>WHF May Open House Invitation</name>
+    <style>freeForm</style>
+    <subject>Come Visit us this Weekend!</subject>
+    <textOnly>Hi {!Account.FirstName},
+
+Spring has finally arrived and we would love if you came to celebrate the changing weather with us this weekend in Whitefish for our first official Open House of the Season!
+
+The Showroom is set, displaying our line up of boats, our Pontoon Alley is ready to view, and we&#39;ve got a BBQ going just for you!  Come take advantage of the last of the Pontoon Event Savings, have a bite to eat and even enter your name for a chance to win an iPad!  This weekend is sure to be a blast for everyone!
+
+Please feel free to send me an email or give me a call to set up a time that you might want to come see (and, of course, play in) our boats.  I want to be sure that I can give you a full demonstration of the memories that you could be creating this summer on the water!
+
+From all of us here at Legend Boats, we truly hope to see you there!
+
+Yours in Boating,
+
+{!User.Name}
+{!User.Title}
+
+{!User.Email}
+{!User.Phone}
+
+www.legendboats.com</textOnly>
+    <type>html</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

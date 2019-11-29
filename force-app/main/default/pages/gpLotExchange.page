@@ -1,0 +1,501 @@
+<apex:page standardController="Lot_Exchange__c" extensions="gcLotExchange_Ext" cache="false" docType="html-5.0" showChat="false" showHeader="true" sidebar="false">
+<head>
+<style>
+.link{
+    cursor:pointer;
+    text-decoration:underline;
+}
+table{
+    border-collapse:collapse;
+}
+tr.total td{
+    font-weight: bold;
+}
+div.pq-grid-footer{
+    display:none;
+}
+tr.pq-row-select td{
+    background-color:yellow;
+}
+</style>
+
+<apex:stylesheet value="{!URLFOR($Resource.GMBLJS__jQueryUI,'/jquery-ui/jquery-ui.min.css')}"/>
+<apex:stylesheet value="{!URLFOR($Resource.GMBLJS__pqGridPro241,'/pqgrid.min.css')}"/>
+</head>
+
+<body>
+<apex:form >
+    <apex:actionFunction name="rerenderInMoves" reRender="inMoves"/>
+    <apex:actionFunction name="rerenderOutMoves" reRender="outMoves"/>
+</apex:form>
+	<apex:outputPanel id="detailContainer">
+    	<apex:detail subject="{!Id}" relatedList="false" id="theDetail" inlineEdit="true"/>
+	</apex:outputPanel>
+
+    <apex:pageBlock title="Transferred Serials">
+        
+        <apex:pageBlockButtons location="top">
+            <button type="button" class="btn" id="btnLaunchSearch" onclick="launchSearchSerial();">Search Serial to Transfer Lot</button>
+        </apex:pageBlockButtons>
+
+        <div>
+     		<div id="lines"></div>
+        </div>
+
+    </apex:pageBlock>
+    <apex:relatedList id="outMoves" subject="{!Id}" list="Outbound_Inventory_Movements__r" />
+    <apex:relatedList id="inMoves" subject="{!Id}" list="Inbound_Inventory_Movements__r" />
+</body>
+
+<apex:includeScript value="{!$Resource.GMBLJS__jQuery}"/>
+<apex:includeScript value="{!URLFOR($Resource.GMBLJS__jQueryUI,'/jquery-ui/jquery-ui.min.js')}"/>
+<apex:includeScript value="{!URLFOR($Resource.GMBLJS__pqGridPro241,'/pqgrid.min.js')}"/>
+<apex:includeScript value="{!URLFOR($Resource.GMBLJS__pqGridPro241,'/touch-punch/touch-punch.min.js')}"/>
+<apex:includeScript value="{!$Resource.GMBLJS__accountingJS}"/>
+<apex:includeScript value="{!$Resource.GMBLJS__gsrGrid2}"/>
+
+<script>function setFocusOnLoad() {}</script>
+<script type="text/javascript">
+    $j = jQuery.noConflict();
+
+    $j(document).ready(function()
+    {
+    	initGrid_lines();
+    	refreshAll();
+    });
+
+    function refreshAll()
+    {
+        refreshGrid_lines();
+        rerenderInMoves();
+        rerenderOutMoves();
+    }
+
+    var parentSerial;
+
+    function initGrid_lines()
+    {
+        var gridObj = { title:"",
+                        collapsible:{on:false,collapsed:false,toggle:false},
+                        columnTemplate: {sortable:true,editable:false, minWidth:80},
+                        dataModel:{data:[], sorting:'local', location:'local'}, 
+                        dragColumns:{enabled:false},
+                        editable:false,
+                        editModel: {clicksToEdit:1, saveKey: jQuery.ui.keyCode.ENTER, keyUpDown: false, onSave:null, onBlur:'save'},
+                        //editModel:{clicksToEdit:1, pressToEdit:false, filterKeys:true, keyUpDown:true, saveKey:$j.ui.keyCode.ENTER},
+                        //filterModel:{on:true, mode:'AND', header:true},
+                        freezeCols:0,
+                        freezeRows:0,
+                        height:200,
+                        historyModel:{on:false},
+                        hoverMode:'row',
+                        hwrap:false,
+                        numberCell:{show:true},
+                        pageModel: {type:null},
+                        pasteModel:{on:false},
+                        resizable: false,
+                        roundCorners: false,
+                        scrollModel: {autoFit:true},
+                        selectionModel: { type: null},
+                        showBottom:true,
+                        showHeader:true,
+                        showTitle:false,
+                        showTop:true,
+                        showToolbar:false,
+                        sortable:true,
+                        swipeModel:{on:false},
+                        virtualX: false,
+                        //virtualXHeader: false,
+                        virtualY: false,
+                        width:'auto',
+                        wrap:false};
+
+        gridObj.colModel=[{dataIndx:'action',               title:'Action',         align:'center', maxWidth: 60},
+                          {dataIndx:'productName',          title:'Product', width:220, hidden:{!IF(Lot_Exchange__c.Exchange_Type__c == 'Product',true,false)}},
+                          {dataIndx:'inboundName',          title:'Inbound Move'},
+                          {dataIndx:'outboundName',         title:'Outbound Move'},
+                          {dataIndx:'productNameFrom',      title:'Product From', width:220, hidden:{!IF(Lot_Exchange__c.Exchange_Type__c == 'Product',false,true)}},
+                          {dataIndx:'lotNameFrom',          title:'Old Lot'},
+                          {dataIndx:'productName',          title:'Product To', width:220, hidden:{!IF(Lot_Exchange__c.Exchange_Type__c == 'Product',false,true)}},
+                          {dataIndx:'lotNameTo',            title:'New Lot'},
+                          {dataIndx:'serialNameOld',        title:'Serial Old'},
+                          {dataIndx:'serialNameNew',        title:'Serial New'},
+                          {dataIndx:"scrollSpacer", minWidth:15, maxWidth:15}];
+
+        //gGrid.initFormat(gridObj.colModel);
+        //gGrid.initFilter(gridObj.colModel);
+
+        $j.each(gridObj.colModel, function(i,col)
+        {
+            if(col.dataIndx == 'action')
+            {
+                $j.extend(col,{
+                    render:function(ui)
+                    {
+                        if(ui.rowData.isTotal || ui.rowData.periodIsOpen == 'false') return '';
+                        return '<span class="link" onclick="reverseExchange(\''+ui.rowData.idOutbound+'\',\''+ui.rowData.idSerialNew+'\');">Undo</span>';
+                    }
+                });                 
+            }
+            else if(col.dataIndx == 'productNameFrom')
+            {
+                $j.extend(col,{
+                    render:function(ui)
+                    {
+                        if (ui.rowData.isTotal || !ui.rowData.idProductFrom) return '';
+
+                        var myHTML = ui.rowData.productNameFrom;
+                        
+                        if({!$ObjectType.Product2.accessible})
+                            return '<a href=\"/'+ui.rowData.idProductFrom+'\" target=\"_blank\">'+myHTML+'</a>';
+
+                        return myHTML;
+                    }
+                });                 
+            }
+            else if(col.dataIndx == 'productNameTo')
+            {
+                $j.extend(col,{
+                    render:function(ui)
+                    {
+                        if (ui.rowData.isTotal || !ui.rowData.idProductTo) return '';
+
+                        var myHTML = ui.rowData.productNameTo;
+                        
+                        if({!$ObjectType.Product2.accessible})
+                            return '<a href=\"/'+ui.rowData.idProductTo+'\" target=\"_blank\">'+myHTML+'</a>';
+
+                        return myHTML;
+                    }
+                });                 
+            }
+            else if(col.dataIndx == 'productName')
+            {
+                $j.extend(col,{
+                    render:function(ui)
+                    {
+                        if (ui.rowData.isTotal || !ui.rowData.idProduct) return '';
+
+                        var myHTML = ui.rowData.productName;
+                        
+                        if({!$ObjectType.Product2.accessible})
+                            return '<a href=\"/'+ui.rowData.idProduct+'\" target=\"_blank\">'+myHTML+'</a>';
+
+                        return myHTML;
+                    }
+                });                 
+            }
+            else if(col.dataIndx == 'inboundName')
+            {
+                $j.extend(col,{
+                    render:function(ui)
+                    {
+                        if (ui.rowData.isTotal) return '';
+                        return '<a href=\"/'+ui.rowData.idInbound+'\" target=\"_blank\">'+ui.rowData.inboundName+'</a>';
+                    }
+                });                 
+            }
+            else if(col.dataIndx == 'outboundName')
+            {
+                $j.extend(col,{
+                    render:function(ui)
+                    {
+                        if (ui.rowData.isTotal) return '';
+                        return '<a href=\"/'+ui.rowData.idOutbound+'\" target=\"_blank\">'+ui.rowData.outboundName+'</a>';
+                    }
+                });                 
+            }
+            else if(col.dataIndx == 'lotNameFrom')
+            {
+                $j.extend(col,{
+                    render:function(ui)
+                    {
+                        if (ui.rowData.isTotal) return '';
+                        return '<a href=\"/'+ui.rowData.idLotFrom+'\" target=\"_blank\">'+ui.rowData.lotNameFrom+'</a>';
+                    }
+                });                 
+            }
+            else if(col.dataIndx == 'lotNameTo')
+            {
+                $j.extend(col,{
+                    render:function(ui)
+                    {
+                        if (ui.rowData.isTotal) return '';
+                        return '<a href=\"/'+ui.rowData.idLotTo+'\" target=\"_blank\">'+ui.rowData.lotNameTo+'</a>';
+                    }
+                });                 
+            } 
+            else if(col.dataIndx == 'serialNameOld')
+            {
+                $j.extend(col,{
+                    render:function(ui)
+                    {
+                        if (ui.rowData.isTotal) return '';
+                        return '<a href=\"/'+ui.rowData.idSerialOld+'\" target=\"_blank\">'+ui.rowData.serialNameOld+'</a>';
+                    }
+                });                 
+            } 
+            else if(col.dataIndx == 'serialNameNew')
+            {
+                $j.extend(col,{
+                    render:function(ui)
+                    {
+                        if (ui.rowData.isTotal) return '';
+                        return '<a href=\"/'+ui.rowData.idSerialNew+'\" target=\"_blank\">'+ui.rowData.serialNameNew+'</a>';
+                    }
+                });                 
+            }  
+        });
+
+        var $gridDiv = $j('#lines');
+
+        $gridDiv.pqGrid(gridObj);
+    }
+
+    function refreshGrid_lines(){
+
+        var $gridDiv = $j('#lines');
+        $gridDiv.pqGrid('showLoading');
+
+        Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.gcLotExchange_Ext.retrieveTransferredSerials}',
+            '{!Id}',
+            function(result,event){
+                if(event.status)
+                {
+                    gGrid.refreshGrid_callback($gridDiv,result);
+                }
+                else
+                {
+                    alert(event.message); 
+                }
+        		$gridDiv.pqGrid('hideLoading');
+            },
+            {buffer:true, escape:true, timeout:120000});
+    }
+
+    function reverseExchange(idOutMove,idSerialNew)
+    {
+        var $gridDiv = $j('#lines');
+        $gridDiv.pqGrid('showLoading');
+
+        Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.gcLotExchange_Ext.reverseTransfer}',
+            idOutMove,idSerialNew,'{!Id}',
+            function(result,event){
+                if(event.status)
+                {
+                    refreshAll();
+                }
+                else
+                {
+                    alert(event.message); 
+                }
+                $gridDiv.pqGrid('hideLoading');
+            },
+            {buffer:true, escape:true, timeout:120000});        
+    }
+
+    function startTransferSingle(idSerial, rowIndx)
+    {
+    	startTransfer([idSerial], rowIndx);
+    }
+
+    function transferSerials()
+    {
+    	var listIdSerial = [];
+    	var $gridDiv = $j('#serialSearchResults');
+        var rows = $gridDiv.pqGrid('selection', { type: 'row', method: 'getSelection' });
+        jQuery.each(rows, function(i,row)
+        {
+        	listIdSerial.push(row.rowData.idSerial);
+        });
+        if(listIdSerial.length)
+        	startTransfer(listIdSerial, 'na');
+    }
+
+    function startTransfer(listSerial, rowIndx)
+    {
+        var $gridDiv = $j('#serialSearchResults');
+        $gridDiv.pqGrid('showLoading');
+
+        Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.gcLotExchange_Ext.startTransfer}',
+            listSerial,'{!Id}',
+            function(result,event){
+                if(event.status)
+                {
+                	if(rowIndx == 'na')
+                	{
+                		refreshGrid_searchSerial();
+                	}
+                	else
+                	{
+                    	$gridDiv.pqGrid('deleteRow',{rowIndx:rowIndx});
+                    	$gridDiv.pqGrid('removeData',{rowIndx:rowIndx});
+                    	$gridDiv.pqGrid('refresh');
+                    }
+                    refreshAll();
+                }
+                else
+                {
+                    alert(event.message); 
+                }
+                $gridDiv.pqGrid('hideLoading');
+            },
+            {buffer:true, escape:true, timeout:120000});        
+    }
+
+    function launchSearchSerial()
+    {
+        var $dialogDiv = $j('<div style=\"z-index:100 !important;\"></div>');
+        var $gridDiv = $j('<div id=\"serialSearchResults\"></div>');
+        $dialogDiv.append($gridDiv);
+        var $buttonHolder = $j('<div></div>');
+        $buttonHolder.css({'width':'100%','text-align':'right'});
+        $buttonHolder.append('<button type="button" onclick="transferSerials()">Transfer lot of Selected Serials</button>');
+        $dialogDiv.prepend($buttonHolder)
+
+        $dialogDiv.dialog({
+            autoOpen: false,
+            height: 310,
+            width: '95%',
+            modal: true,
+            position:{my:'center bottom', at:'center top', of:'#lines'},
+            close:function(){
+            	$gridDiv.pqGrid('destroy'); 
+            	$gridDiv.remove(); 
+            	$dialogDiv.dialog('destroy'); 
+            	$dialogDiv.remove(); 
+            },
+            open:function(){
+            	initGrid_searchSerial($gridDiv);
+            	refreshGrid_searchSerial();
+            },
+            title: ''
+        });
+
+        $dialogDiv.dialog('open');
+    }
+
+    function initGrid_searchSerial($gridDiv)
+    {
+        var gridObj = { title:"",
+                        collapsible:{on:false,collapsed:false,toggle:false},
+                        columnTemplate: {sortable:true, minWidth:80},
+                        dataModel:{data:[], sorting:'local', location:'local', sortDir:'up', sortIndx:'productName'}, 
+                        dragColumns:{enabled:false},
+                        editable:false,
+                        filterModel:{on:true, mode:'AND', header:true},
+                        freezeCols:0,
+                        freezeRows:0,
+                        height:215,
+                        historyModel:{on:false},
+                        hoverMode:'row',
+                        hwrap:false,
+                        numberCell:{show:false},
+                        pageModel: {type:null},
+                        pasteModel:{on:false},
+                        resizable: true,
+                        roundCorners: false,
+                        scrollModel: {autoFit:true},
+                        selectionModel: { type: null},
+                        showBottom:true,
+                        showHeader:true,
+                        showTitle:false,
+                        showTop:true,
+                        showToolbar:false,
+                        sortable:false,
+                        swipeModel:{on:false},
+                        virtualX: false,
+                        //virtualXHeader: false,
+                        virtualY: false,
+                        width:'auto',
+                        wrap:false};
+
+        gridObj.colModel=[{dataIndx:'productRecordTypeName',title:'Record Type'},
+                          {dataIndx:'productFamily',                title:'Product Family'},
+        				  {dataIndx:'productName',                  title:'Product Name'},
+                          {dataIndx:'productCode',                  title:'Product Code'},
+                          {dataIndx:'lotName',						title:'Lot', maxWidth:100},
+                          {dataIndx:'serialName',					title:'Serial Number',	gFilter:'text'},
+                          {dataIndx:'action',                       title:'Action',         align:'center', maxWidth:80, sortable:false},
+                          {dataIndx:"state", title: "", minWidth:70, maxWidth:70, align: "center", cb:{header: false, all: false}, 
+						  	type: 'checkBoxSelection', resizable: false, sortable: false, editable: false},
+                          {dataIndx:"scrollSpacer", minWidth:15, maxWidth:15}];
+
+
+        gGrid.initFormat(gridObj.colModel);
+        gGrid.initFilter(gridObj.colModel);
+
+        $j.each(gridObj.colModel, function(i,col)
+        {
+            if(col.dataIndx == 'serialName')
+            {
+                $j.extend(col,{
+                    render:function(ui)
+                    {
+                        if (ui.rowData.isTotal || !ui.rowData.idSerial) return '';
+                        
+                        if({!$ObjectType.GMBLASERP__Serial_Number__c.accessible})
+                            return '<a href=\"/'+ui.rowData.idSerial+'\" target=\"_blank\">'+ui.rowData.serialName+'</a>';
+                        else
+                            return ui.rowData.serialName;
+                    }
+                });                 
+            } 
+
+            else if(col.dataIndx == 'nestName')
+            {
+                $j.extend(col,{
+                    render:function(ui)
+                    {
+                        if (ui.rowData.isTotal || !ui.rowData.idNest) return '';
+                        
+                        if({!$ObjectType.GMBLASERP__Serial_Number__c.accessible})
+                            return '<a href=\"/'+ui.rowData.idNest+'\" target=\"_blank\">'+ui.rowData.nestName+'</a>';
+                        else
+                            return ui.rowData.nestName;
+                    }
+                });                 
+            } 
+
+            else if(col.dataIndx == 'action')
+            {
+                $j.extend(col,{
+                    render:function(ui)
+                    {
+                        if(ui.rowData.isTotal) return '';
+                        return '<button type="button" class="btn" onclick=\"startTransferSingle(\''+ui.rowData.idSerial+'\','+ui.rowIndx+')\">Transfer</button>';
+                    }
+                });
+            }
+        });
+
+        $gridDiv.pqGrid(gridObj);    
+    }
+
+    function refreshGrid_searchSerial(){
+        var $gridDiv = $j('#serialSearchResults');
+        $gridDiv.pqGrid('showLoading');
+
+        Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.gcLotExchange_Ext.searchSerial}',
+            '{!Lot_Exchange__c.Lot_From__c}',
+            function(result,event)
+            {
+                if(event.status)
+                {
+                    gGrid.refreshGrid_callback($gridDiv,result);
+                }
+                else 
+                {
+                    alert(event.message);
+                }
+                $gridDiv.pqGrid('hideLoading');
+            },
+            {buffer:true, escape:true, timeout:120000});
+    }
+
+</script>
+</apex:page>

@@ -1,0 +1,16 @@
+<design:component label="Form: Address Component">
+	<design:attribute name="location" 
+										label="Your Location" 
+										description="Enter your geocoordinates. This gives preference to addresses in your area."	 
+										default="46.3845690,-81.2905780" />
+
+	<design:attribute name="radius" 	
+										label="Radius" 
+										description="This gives addresses within the radius of your geocoordinates preference. Default is 50km."	 
+										default="50000" />
+
+	<design:attribute name="apiKey" 	
+										label="* Google Places API key" 
+										description="Get yours here: https://developers.google.com/places/web-service/get-api-key"
+										default="YOUR_API_KEY" />
+</design:component>

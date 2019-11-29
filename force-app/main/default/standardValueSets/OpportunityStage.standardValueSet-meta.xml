@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<StandardValueSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <sorted>false</sorted>
+    <standardValue>
+        <fullName>Nurturing</fullName>
+        <default>false</default>
+        <description>If a customer is not planning on buying for a period of time and you want to remain on their radar, this will send the customer to Marketing for a nurturing drip campaign</description>
+        <label>Nurturing</label>
+        <closed>false</closed>
+        <forecastCategory>Pipeline</forecastCategory>
+        <probability>10</probability>
+        <won>false</won>
+    </standardValue>
+    <standardValue>
+        <fullName>Quoting</fullName>
+        <default>false</default>
+        <label>Quoting</label>
+        <closed>false</closed>
+        <forecastCategory>Pipeline</forecastCategory>
+        <probability>30</probability>
+        <won>false</won>
+    </standardValue>
+    <standardValue>
+        <fullName>Negotiation/Review</fullName>
+        <default>false</default>
+        <label>Negotiation/Review</label>
+        <closed>false</closed>
+        <forecastCategory>Pipeline</forecastCategory>
+        <probability>50</probability>
+        <won>false</won>
+    </standardValue>
+    <standardValue>
+        <fullName>Prospecting</fullName>
+        <default>false</default>
+        <description>At this stage, a lead has been nurtured and determine to be serious enough to assign to a sales person</description>
+        <label>Prospecting</label>
+        <closed>false</closed>
+        <forecastCategory>Pipeline</forecastCategory>
+        <probability>20</probability>
+        <won>false</won>
+    </standardValue>
+    <standardValue>
+        <fullName>Qualification</fullName>
+        <default>false</default>
+        <description>At this stage, a memory maker is to get in contact with the prospect to qualify them</description>
+        <label>Qualification</label>
+        <closed>false</closed>
+        <forecastCategory>Pipeline</forecastCategory>
+        <probability>30</probability>
+        <won>false</won>
+    </standardValue>
+    <standardValue>
+        <fullName>Sales Manager Approval Pending</fullName>
+        <default>false</default>
+        <description>Must send to sales manager for approval</description>
+        <label>Sales Manager Approval Pending</label>
+        <closed>false</closed>
+        <forecastCategory>Pipeline</forecastCategory>
+        <probability>71</probability>
+        <won>false</won>
+    </standardValue>
+    <standardValue>
+        <fullName>Business Office Approval Pending</fullName>
+        <default>false</default>
+        <description>Business office submitting finance application. If approved, must ensure there is a significant deposit for cash deals or deal is solid for finance deals before requesting tagging</description>
+        <label>Business Office Approval Pending</label>
+        <closed>false</closed>
+        <forecastCategory>Pipeline</forecastCategory>
+        <probability>75</probability>
+        <won>false</won>
+    </standardValue>
+    <standardValue>
+        <fullName>Tagging Pending</fullName>
+        <default>false</default>
+        <description>Deal has been approved, has significant deposit, just awaiting to be assigned serial numbers</description>
+        <label>Tagging Pending</label>
+        <closed>false</closed>
+        <forecastCategory>Pipeline</forecastCategory>
+        <probability>85</probability>
+        <won>false</won>
+    </standardValue>
+    <standardValue>
+        <fullName>Orientation Specialist Add-On Call</fullName>
+        <default>false</default>
+        <label>Orientation Specialist Add-On Call</label>
+        <closed>false</closed>
+        <forecastCategory>Pipeline</forecastCategory>
+        <probability>90</probability>
+        <won>false</won>
+    </standardValue>
+    <standardValue>
+        <fullName>Pending Work Order</fullName>
+        <default>false</default>
+        <label>Pending Work Order</label>
+        <closed>false</closed>
+        <forecastCategory>Pipeline</forecastCategory>
+        <probability>90</probability>
+        <won>false</won>
+    </standardValue>
+    <standardValue>
+        <fullName>Pending Rigging</fullName>
+        <default>false</default>
+        <description>Waiting for boat to be rigged</description>
+        <label>Pending Rigging</label>
+        <closed>false</closed>
+        <forecastCategory>Pipeline</forecastCategory>
+        <probability>95</probability>
+        <won>false</won>
+    </standardValue>
+    <standardValue>
+        <fullName>Pending Inspection</fullName>
+        <default>false</default>
+        <description>Boat built, but not yet inspected by memory maker to ensure everything is perfect</description>
+        <label>Pending Inspection</label>
+        <closed>false</closed>
+        <forecastCategory>Pipeline</forecastCategory>
+        <probability>95</probability>
+        <won>false</won>
+    </standardValue>
+    <standardValue>
+        <fullName>Pending Pickup</fullName>
+        <default>false</default>
+        <description>Ready for customer pickup</description>
+        <label>Pending Pickup</label>
+        <closed>false</closed>
+        <forecastCategory>Pipeline</forecastCategory>
+        <probability>95</probability>
+        <won>false</won>
+    </standardValue>
+    <standardValue>
+        <fullName>Picked Up / Won</fullName>
+        <default>false</default>
+        <description>Customer has picked up the product</description>
+        <label>Picked Up / Won</label>
+        <closed>true</closed>
+        <forecastCategory>Closed</forecastCategory>
+        <probability>100</probability>
+        <won>true</won>
+    </standardValue>
+    <standardValue>
+        <fullName>Closed Lost</fullName>
+        <default>false</default>
+        <label>Closed Lost</label>
+        <closed>true</closed>
+        <forecastCategory>Omitted</forecastCategory>
+        <probability>0</probability>
+        <won>false</won>
+    </standardValue>
+    <standardValue>
+        <fullName>Pending Delivery</fullName>
+        <default>false</default>
+        <description>Boats on order by dealers that have not yet been delivered</description>
+        <label>Pending Delivery</label>
+        <closed>false</closed>
+        <forecastCategory>Pipeline</forecastCategory>
+        <probability>95</probability>
+        <won>false</won>
+    </standardValue>
+    <standardValue>
+        <fullName>Delivered / Won</fullName>
+        <default>false</default>
+        <description>Products have been delivered to the dealer</description>
+        <label>Delivered / Won</label>
+        <closed>true</closed>
+        <forecastCategory>Closed</forecastCategory>
+        <probability>100</probability>
+        <won>true</won>
+    </standardValue>
+    <standardValue>
+        <fullName>Needs Analysis</fullName>
+        <default>false</default>
+        <label>Needs Analysis</label>
+        <closed>false</closed>
+        <forecastCategory>Pipeline</forecastCategory>
+        <probability>20</probability>
+        <won>false</won>
+    </standardValue>
+    <standardValue>
+        <fullName>Value Proposition</fullName>
+        <default>false</default>
+        <label>Value Proposition</label>
+        <closed>false</closed>
+        <forecastCategory>Pipeline</forecastCategory>
+        <probability>50</probability>
+        <won>false</won>
+    </standardValue>
+    <standardValue>
+        <fullName>Id. Decision Makers</fullName>
+        <default>false</default>
+        <label>Id. Decision Makers</label>
+        <closed>false</closed>
+        <forecastCategory>Pipeline</forecastCategory>
+        <probability>60</probability>
+        <won>false</won>
+    </standardValue>
+    <standardValue>
+        <fullName>Perception Analysis</fullName>
+        <default>false</default>
+        <label>Perception Analysis</label>
+        <closed>false</closed>
+        <forecastCategory>Pipeline</forecastCategory>
+        <probability>70</probability>
+        <won>false</won>
+    </standardValue>
+    <standardValue>
+        <fullName>Proposal/Price Quote</fullName>
+        <default>false</default>
+        <label>Proposal/Price Quote</label>
+        <closed>false</closed>
+        <forecastCategory>Pipeline</forecastCategory>
+        <probability>75</probability>
+        <won>false</won>
+    </standardValue>
+    <standardValue>
+        <fullName>Closed Won</fullName>
+        <default>false</default>
+        <label>Closed Won</label>
+        <closed>true</closed>
+        <forecastCategory>Closed</forecastCategory>
+        <probability>100</probability>
+        <won>true</won>
+    </standardValue>
+    <standardValue>
+        <fullName>Parts to be Picked</fullName>
+        <default>false</default>
+        <description>Order received and awaiting parts to be picked to fill order</description>
+        <label>Parts to be Picked</label>
+        <closed>false</closed>
+        <forecastCategory>Pipeline</forecastCategory>
+        <probability>80</probability>
+        <won>false</won>
+    </standardValue>
+    <standardValue>
+        <fullName>Alternative Quote</fullName>
+        <default>false</default>
+        <description>To be used when a customer purchases a different or updated Opportunity</description>
+        <label>Alternative Quote</label>
+        <closed>true</closed>
+        <forecastCategory>Omitted</forecastCategory>
+        <probability>0</probability>
+        <won>false</won>
+    </standardValue>
+    <standardValue>
+        <fullName>Boat Specialist Add On Call</fullName>
+        <default>false</default>
+        <label>Boat Specialist Add On Call</label>
+        <closed>false</closed>
+        <forecastCategory>Pipeline</forecastCategory>
+        <probability>90</probability>
+        <won>false</won>
+    </standardValue>
+    <standardValue>
+        <fullName>Sent to ERP</fullName>
+        <default>false</default>
+        <label>Sent to ERP</label>
+        <closed>true</closed>
+        <forecastCategory>Closed</forecastCategory>
+        <probability>100</probability>
+        <won>true</won>
+    </standardValue>
+    <standardValue>
+        <fullName>Pending ERP</fullName>
+        <default>false</default>
+        <label>Pending ERP</label>
+        <closed>false</closed>
+        <forecastCategory>Pipeline</forecastCategory>
+        <probability>95</probability>
+        <won>false</won>
+    </standardValue>
+</StandardValueSet>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Fee_Product__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <description>The Actual Fee Product</description>
+    <externalId>false</externalId>
+    <label>Fee_Product</label>
+    <lookupFilter>
+        <active>true</active>
+        <filterItems>
+            <field>Product2.RecordType.Name</field>
+            <operation>equals</operation>
+            <value>Fees</value>
+        </filterItems>
+        <isOptional>false</isOptional>
+    </lookupFilter>
+    <referenceTo>Product2</referenceTo>
+    <relationshipLabel>Fee_Product_Maps</relationshipLabel>
+    <relationshipName>Fee_Product_Maps</relationshipName>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

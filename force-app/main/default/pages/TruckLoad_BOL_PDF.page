@@ -1,0 +1,422 @@
+<apex:page StandardController="Truck_Trip__c"
+           extensions="TripBuilderController"
+           action="{!initBOL_PDF}"
+           showHeader="false"
+           sidebar="false"
+           applyBodyTag="false"
+           renderAs="pdf">
+
+  <head>
+    <style type="text/css">
+
+      @page {
+        size:portrait;
+        margin:0.25cm;
+        border:0;
+        padding:0;
+        font-family: sans-serif;
+         @bottom-center{content: element(footer);}
+      }
+
+
+      body{
+        margin:0 auto;
+        border:1px solid white;
+        padding:0;
+        font-size: 12px;
+      }
+
+      .bol-container {
+        width: 100%;
+        page-break-after: always;
+      }
+
+      .bol-container .logo {
+        text-align: center;
+        margin-bottom: 5px;
+      }
+
+      .bol-container .signatures {
+        page-break-before: avoid;
+      }
+
+      .bol-container h1 {
+        width: 100%;
+        display:block;
+        height: 20px;
+        line-height: 20px;
+        font-size: 16px;
+        font-weight: bold;
+        text-align: center;
+      }
+
+      .bol-container table {
+        border-collapse: collapse;
+        width: 100%;
+      }
+
+      .bol-container table tr td > table tr td {
+        border: none;
+      }
+
+      .bol-container table tr td {
+        border: 1px solid #565;
+        padding:5px;
+      }
+
+      .bol-container table tr td.no-padding {
+        padding: 0;
+      }
+
+      .bol-container table tr td div {
+        margin-bottom: 3px;
+      }
+      .bol-container table tr td div:last-child {
+        margin-bottom: 0;
+      }
+
+      .bol-container table.no-border tr td {
+        border: none;
+      }
+
+      .vTop {
+        vertical-align: top;
+      }
+      .b-bottom {
+        border-bottom: 1px solid #565 !important;
+      }
+      .no-border-b {
+        border-bottom: none !important;
+      }
+
+      .b-right {
+        border-right: 1px solid #565 !important;
+      }
+
+      .empty-row td {
+        height: 25px;
+      }
+
+      .fine-print {
+        font-size: 10px;
+      }
+
+      .bold {
+        font-weight: bold;
+      }
+
+      .empty-cell {
+        width: 100%;
+        height: 25px;
+      }
+
+      .large-print {
+        font-size: 14px;
+        font-weight: bold;
+      }
+
+      .signature {
+        height: 20px;
+        width: 100%;
+        border-bottom: 1px solid #565;
+      }
+
+      .w5 {
+        width: 5%;
+      }
+      .w10 {
+        width: 10%;
+      }
+      .w15 {
+        width: 15%;
+      }
+      .w20 {
+        width: 20%;
+      }
+      .w25 {
+        width: 25%;
+      }
+      .w30 {
+        width: 30%;
+      }
+      .w33 {
+        width: 33.33%;
+      }
+      .w40 {
+        width: 40%;
+      }
+      .w50 {
+        width: 50%;
+      }
+      .w60 {
+        width: 60%;
+      }
+      .w66 {
+        width: 66.66%;
+      }
+      .w80 {
+        width: 80%;
+      }
+
+    </style>
+  </head>
+
+  <body>
+
+    <apex:repeat value="{!bolWrappers}" var="bol">
+      <div class="bol-container">
+        <div class="logo">
+          <img src="{!URLFOR($Resource.LegendPDF,'image/logo_250x30.png')}" />
+        </div>
+        <table>
+          <tr>
+            <td class="w33">
+              <div class="bold">Departure Date</div>
+              <div>
+                <apex:outputText value="{0,date,yyyy'-'MM'-'dd}">
+                  <apex:param value="{!bol.departureDate}" />
+                </apex:outputText>
+              </div>
+            </td>
+            <td class="w33">
+              <div class="bold">Bill of Lading # {!bol.bolNumber}</div>
+              <div>NOT NEGOTIABLE</div>
+            </td>
+            <td class="w33">
+              <div class="bold">Expected Delivery Date</div>
+              <div>
+                <apex:outputText value="{0,date,yyyy'-'MM'-'dd}">
+                  <apex:param value="{!bol.deliveryDate}" />
+                </apex:outputText>
+              </div>
+            </td>
+          </tr>
+        </table>
+
+        <table>
+          <tr>
+            <td class="w50">
+              <table class="no-border">
+                <tr>
+                  <td class="bold w20 vTop">Ship From</td>
+                  <td class="w80">
+                    <div>Legend Boats - A Division of Duhamel &amp; Dewar</div>
+                    <div>4795 Regional Road #55</div>
+                    <div>Whitefish, Ontario, POM 3E0</div>
+                  </td>
+                </tr>
+              </table>
+            </td>
+
+            <td class="w50">
+              <table class="no-border">
+                <tr>
+                  <td class="bold w20 vTop">Ship To</td>
+                  <td class="w80">
+                    <div>{!bol.accountName}</div>
+                    <div>{!bol.shipTo_Street}</div>
+                    <div>{!bol.shipTo_City}, {!bol.shipTo_State}, {!bol.shipTo_PostalCode}</div>
+                    <div>{!bol.phone}</div>
+                    <div>{!bol.email}</div>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+
+        <table>
+          <tr>
+            <td class="w50 vTop no-padding">
+              <table>
+                <tr>
+                  <td class="w50 b-bottom b-right">
+                    <div class="bold">Legend Driver</div>
+                    <div>{!bol.driver}</div>
+                  </td>
+                  <td class="w50 b-bottom">
+                    <div class="bold">Mileage Start OD:</div>
+                    <div class="bold">Mileage End OD:</div>
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan="2">
+                    <div class="bold">Special Instructions:</div>
+                    <div>{!bol.notes}</div>
+                  </td>
+                </tr>
+              </table>
+            </td>
+
+            <td class="w50">
+              <div class="bold">Reason for delay loading / unloading:</div>
+              <div class="empty-cell"></div>
+              <div class="bold">Reason for delay on route:</div>
+              <div class="empty-cell"></div>
+            </td>
+          </tr>
+        </table>
+
+        <h1>LOAD INFORMATION</h1>
+
+        <table>
+          <thead>
+            <tr>
+              <td class="w5">Invoice</td>
+              <td class="w20">Model</td>
+              <td class="w15">Boat Ser. #</td>
+              <td class="w15">Accessories</td>
+              <td class="w5">Rcvr's Initial</td>
+              <td class="w15">Trailer Ser. #</td>
+              <td class="w15">Motor Ser. #</td>
+              <td class="w5">Rcvr's<br />Initial</td>
+              <td class="w5">Loading Crew Initial</td>
+            </tr>
+          </thead>
+          <tbody>
+            <apex:repeat value="{!bol.items}" var="item">
+              <tr>
+                <td>{!item.orderNumber}</td>
+                <td>{!item.boat.Name}</td>
+                <td>{!item.boat.SerialNumber}</td>
+                <td></td>
+                <td></td>
+                <td>{!item.trailer.SerialNumber}</td>
+                <td>
+                  <apex:outputPanel layout="none" rendered="{!item.motors.size > 0}">
+                    <apex:repeat value="{!item.motors}" var="motor">
+                      <div>
+                        {!motor.SerialNumber}
+                      </div>
+                    </apex:repeat>
+                  </apex:outputPanel>
+                </td>
+                <td></td>
+                <td></td>
+              </tr>
+            </apex:repeat>
+          </tbody>
+        </table>
+
+        <table>
+          <thead>
+            <tr>
+              <td class="w20">Invoice</td>
+              <td class="w20">Location of Goods</td>
+              <td class="w20">Description</td>
+              <td class="w5">Rcvr's Initial</td>
+              <td class="w5">Loading Crew Initial</td>
+              <td class="w30">Damages, Shortages or Modifications</td>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="empty-row">
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td class="no-border-b"></td>
+            </tr>
+            <tr class="empty-row">
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td class="no-border-b"></td>
+            </tr>
+            <tr class="empty-row">
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td class="no-border-b"></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <table>
+          <tr>
+            <td class="w60">
+              <table>
+                <tr>
+                  <td colspan="4" class="vTop no-padding no-border fine-print">
+                    All boats have been secured, whinch straps tight and locked, safety chain secured to all boats, bunks leveled, tie downs secured on each boat, horseshows on axle, horseshows cabled, cables tightened, coupler secured and pinned. Ball mounts are pinned, ball mount cotter key, utilities 4 straps each, carpet on straps, carpet on rachets. cross straps secure, bars pinned and keyed.
+                  </td>
+                </tr>
+                <tr>
+                  <td class="w25">
+                    Loading crew signature
+                  </td>
+                  <td class="w25">
+                    <div class="signature"></div>
+                  </td>
+                  <td class="w25">
+                    Driver signature
+                  </td>
+                  <td class="w25">
+                    <div class="signature"></div>
+                  </td>
+                </tr>
+              </table>
+            </td>
+            <td class="w40">
+              <table>
+                <tr>
+                  <td class="w40 no-border-b">
+                    Payment Terms:
+                  </td>
+                  <td class="w20 no-border-b">
+                    Prepaid [  ]
+                  </td>
+                  <td class="w40 no-border-b">
+                    Customer Cheque [  ]
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan="3">
+                    <div style="display:inline-block; height:25px; line-height: 25px; position: relative; top: -10px;" class="w33 bold">
+                      Collect Amount
+                    </div>
+                    <div style="display:inline-block; height:25px; width:50%; border: 1px solid #565;"></div>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+
+        <table class="signatures">
+          <tr>
+            <td class="w33 no-border-b bold">Shipper Signature/Date</td>
+            <td class="w33 no-border-b bold">Carrier or Driver Signature/Date</td>
+            <td class="w33 no-border-b bold">Consignee Signature/Recieved Date</td>
+          </tr>
+          <tr>
+            <td class="w33 empty-cell"></td>
+            <td class="w33 empty-cell"></td>
+            <td class="w33 empty-cell"></td>
+          </tr>
+          <tr>
+            <td class="w33 vTop fine-print">
+              This is to certify that the above named materials are properly classified, packaged, marked andlabeled, and arein proper condition for transportation according to the applicable government regulations.
+            </td>
+            <td class="w33 vTop fine-print">
+              Carrier acknowledges receipt of packages. Carrier has the DOT emergency response guidebook or equivalent documentation in the vehicle and accepts load as meeting all applicable safety regulations. Property described is received in good order, except as noted.
+            </td>
+            <td class="w33 vTop fine-print">
+              I hereby certify that this load was received in good condition and all parts, accessries and additional equipment was received unless stated above. I hereby agree to keep the shrink wrap package free and clear of ice andsnow to prevent damage.  It is the cosignee's responsibility to unload goods at their location.  Snow and ice accumulationof any kind will result in boat damage and will not be covered under warranty.  It is responsibility to ensure any road salt and debris is immediately cleaned off of the Legend product in order to avoid any corrosive damage. Shrink-wrap or Transhield covers should be removed within 90 days of shipment and should be ventilated to avoid condensation and corrosion. Warranty claims for damage or corrosion made after delivery unfortunately do not fall under our warranty program.
+            </td>
+          </tr>
+        </table>
+
+
+      </div>
+    </apex:repeat>
+
+  </body>
+
+
+</apex:page>

@@ -1,0 +1,80 @@
+<aura:component controller="BusinessOffice_Controller">
+
+  <aura:attribute name="recordId" type="String" />
+  <aura:attribute name="pricebookId" type="String" />
+  <aura:attribute name="pricebookName" type="String" />
+  <aura:attribute name="institutionOptions" type="List" />
+  <aura:attribute name="financingInstitution" type="String" />
+  <aura:attribute name="isUpdateable" type="Boolean" default="false" />
+  <aura:attribute name="termError" type="Boolean" default="false" />
+
+   <ltng:require scripts="{!join(',', $Resource.Libraries +'/js/LightningApex.js',
+                                     $Resource.Libraries +'/js/LightningUtils.js') }"
+                afterScriptsLoaded="{!c.doInit}" />
+
+  <aura:handler event="c:BusinessOffice_Insurance_ChangedEvent_dh"
+                action="{!c.handleChange}" />
+  <aura:handler event="c:lgnd_FinanceCalculator_ChangedEvent_dh"
+                action="{!c.handleChange}" />
+
+  <div class="slds-spinner_container slds-hide" aura:id="fi-spinner">
+    <div role="status" class="slds-spinner slds-spinner_medium">
+      <span class="slds-assistive-text">Loading</span>
+      <div class="slds-spinner__dot-a"></div>
+      <div class="slds-spinner__dot-b"></div>
+    </div>
+  </div>
+
+  <aura:method name="reInit" action="{!c.reInit}" />
+
+  <lightning:layout >
+    <lightning:layoutItem size="8"
+                          smallDeviceSize="12"
+                          mediumDeviceSize="8"
+                          largeDeviceSize="8"
+                          padding="horizontal-small">
+      <c:BusinessOffice_Insurance_dh recordId="{!v.recordId}"
+                                     pricebookId="{!v.pricebookId}"
+                                     pricebookName="{!v.pricebookName}"
+                                     aura:id="insurance_CMP" />
+    </lightning:layoutItem>
+
+    <lightning:layoutItem size="4"
+                          smallDeviceSize="12"
+                          mediumDeviceSize="4"
+                          largeDeviceSize="4"
+                          padding="horizontal-small">
+
+      <div class="slds-clearfix">
+        <div class="slds-float_right slds-m-top_small slds-m-bottom_large">
+          <lightning:button label="Reset"
+                            disabled="{! or(not(v.isUpdateable), v.termError)}"
+                            onclick="{!c.reset}" />
+          <lightning:button label="Update"
+                            onclick="{!c.doUpdate}"
+                            variant="brand"
+                            disabled="{! or(not(v.isUpdateable), v.termError)}"/>
+        </div>
+      </div>
+
+      <aura:if isTrue="{! not( empty( v.institutionOptions ) )}">
+        <div class="slds-card fin-intitution">
+          <lightning:select label="Financing Institution"
+                            value="{!v.financingInstitution}"
+                            onchange="{!c.handleChange}">
+            <option value="">-- Select Financing Institution --</option>
+            <aura:iteration items="{!v.institutionOptions}" var="fi_opt">
+              <option value="{!fi_opt.Id}">{!fi_opt.Name}</option>
+            </aura:iteration>
+          </lightning:select>
+        </div>
+      </aura:if>
+
+      <c:lgnd_FinanceCalculator recordId="{!v.recordId}"
+                                termError="{!v.termError}"
+                                aura:id="finCalc_CMP" />
+    </lightning:layoutItem>
+
+  </lightning:layout>
+
+</aura:component>

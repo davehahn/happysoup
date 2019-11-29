@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>AcctSeed__Accounting_Period_Is_Required</fullName>
+    <active>true</active>
+    <description>A billing cash receipt must contain a value for the accounting period field.</description>
+    <errorConditionFormula>ISBLANK(AcctSeed__Accounting_Period__c)</errorConditionFormula>
+    <errorDisplayField>AcctSeed__Accounting_Period__c</errorDisplayField>
+    <errorMessage>A billing cash receipt must contain a value for the accounting period field.</errorMessage>
+</ValidationRule>

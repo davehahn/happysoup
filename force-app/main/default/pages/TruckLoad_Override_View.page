@@ -1,0 +1,1011 @@
+<apex:page standardController="Truck_Load__c"
+           extensions="Truck_Load_Ext"
+           action="{!init}"
+           docType="html-5.0"
+           showHeader="true"
+           sidebar="true">
+
+  <apex:stylesheet value="{!URLFOR($Resource.LGND_SLDS_203, 'assets/styles/salesforce-lightning-design-system-vf.min.css')}" />
+
+  <style type="text/css">
+    .lgnd {
+      margin-bottom: 3rem;
+    }
+
+    .slds-page-header h2 {
+      font-size: 1rem !important;
+      font-weight: 300 !important;
+    }
+
+    .header-detail {
+      margin-top: 1rem;
+    }
+
+    .header-detail > div p:first-child {
+      font-weight: 300;
+      font-size: 0.7rem;
+    }
+    .header-detail > div p:last-child {
+      font-size: 1rem;
+    }
+
+    .serials-table td {
+      line-height: 35px;
+      vertical-align: middle;
+      width: 50%;
+    }
+    .serials-table tr td:last-child {
+      text-align: right;
+    }
+
+    .serial-search .slds-spinner_container {
+      display: none;
+    }
+
+    .serial-search.busy .slds-spinner_container {
+      display:block;
+    }
+
+    .serial-search.busy span {
+      visibility: hidden;
+    }
+
+    #page-indicator {
+      display:none;
+    }
+
+    .slds-dropdown-trigger > button > img {
+      transition: 0.6s;
+      transform-style: preserve-3d;
+      width: 20px;
+      height: 20px;
+    }
+
+    .slds-dropdown-trigger.slds-is-open > button > img {
+      -webkit-transform: rotateX(180deg);
+    }
+
+    .mobile-menu {
+      display: none;
+    }
+
+    .slds-modal label {
+      line-height: 2rem !important;
+      text-align: right;
+      width: 100%;
+      padding-right: 0.5rem;
+      font-size: 0.9rem !important;
+    }
+
+    #serial-filter {
+      border-radius: .25rem .25rem 0 0;
+      border-bottom: none;
+    }
+
+    .serial-list {
+      width: 100%;
+      border: 1px solid #CCC;
+      min-height: 6rem;
+      max-height: 12rem;
+      overflow-y: auto;
+    }
+
+    .serial-list a {
+      display: block;
+      width: 100%;
+      font-weight: 300;
+      line-height: 2rem;
+      padding-left: 1.5rem;
+      text-decoration: none;
+    }
+
+    .serial-list a.selected {
+      background: green;
+      color: #FFF;
+      text-decoration: none;
+    }
+
+    .serial-list a > .highlight {
+      font-weight: bold;
+    }
+
+    .serial-list a:hover {
+      text-decoration: none;
+    }
+
+    .serial-list a:not(.selected):hover {
+      color: #FFF;
+      background: #00AAF9;
+    }
+
+    @media only screen and (max-width: 64.0625em) {
+      .mobile-menu {
+        display: block;
+      }
+    }
+
+    .uploadFile {
+      display: none;
+    }
+
+    #scan-message {
+      line-height: 2rem;
+      text-align: center;
+      margin-top: -1rem;
+      color: #0C0;
+    }
+
+    #scan-message.fail {
+      color: #F00;
+    }
+
+    #interactive.viewport {
+      width: 320px;
+      height: 240px;
+    }
+
+    /* line 6, ../sass/_viewport.scss */
+    #interactive.viewport canvas, video {
+      float: left;
+      width: 320px;
+      height: 240px;
+    }
+    /* line 10, ../sass/_viewport.scss */
+    #interactive.viewport canvas.drawingBuffer, video.drawingBuffer {
+      margin-left: -320px;
+    }
+
+  </style>
+
+  <div class="lgnd">
+    <div class="slds-backdrop"></div>
+    <div id="page-indicator" class="slds-spinner_container">
+      <div class="slds-spinner--brand slds-spinner slds-spinner--large" role="alert">
+        <span class="slds-assistive-text">Loading</span>
+        <div class="slds-spinner__dot-a"></div>
+        <div class="slds-spinner__dot-b"></div>
+      </div>
+    </div>
+
+    <div class="slds-page-header" role="banner">
+      <!-- <h1 id="testOutput"></h1> -->
+      <div class="slds-grid slds-wrap">
+
+        <div class="slds-col slds-has-flexi-truncate">
+          <div class="slds-media slds-no-space slds-grow">
+            <div class="slds-media__figure">
+              <img src="{!URLFOR($Resource.LGND_SLDS_203, 'assets/icons/custom/custom98_60.png')}" style="background: #00AAF9"/>
+            </div>
+            <div class="slds-media__body">
+              <p class="slds-text-title--caps slds-line-height--reset">Truck Load</p>
+              <h1 class="slds-page-header__title slds-m-right--small slds-align-middle slds-truncate">
+                {!truckLoad.Destination__c}
+              </h1>
+              <h2 class="slds-page-header__title slds-m-right--small slds-align-middle slds-truncate">{!truckLoad.Name}</h2>
+            </div>
+          </div>
+        </div>
+        <div class="slds-col slds-no-flex slds-grid slds-align-top">
+
+
+          <div class=" slds-large-show">
+            <div class="slds-button-group" role="group">
+              <a href="{!URLFOR($Action.Truck_Load__c.Edit , truckLoad.Id)}" class="slds-button slds-button--neutral">Edit Details</a>
+              <a href="{!URLFOR($Action.Truck_Load__c.Edit_Load , truckLoad.Id)}" class="slds-button slds-button--neutral">Edit Load</a>
+              <a href="{!URLFOR($Action.Truck_Load__c.Delete , truckLoad.Id)}" class="slds-button slds-button--neutral">Delete</a>
+              <a href="{!URLFOR($Action.Truck_Load__c.Print_Serial_Picklist_PDF , truckLoad.Id)}" class="slds-button slds-button--neutral" target="_blank">Print Checklist PDF</a>
+            </div>
+          </div>
+
+          <div class="mobile-menu">
+            <div class="slds-dropdown-trigger slds-dropdown-trigger--click">
+              <button class="slds-button slds-button--icon-border-filled" aria-haspopup="true">
+                <img src="{!URLFOR($Resource.LGND_SLDS_203, 'assets/icons/utility/down_60.png')}"/>
+                <span class="slds-assistive-text">Show More</span>
+              </button>
+              <div class="slds-dropdown slds-dropdown--right">
+                <ul class="dropdown__list" role="menu">
+                  <li class="slds-dropdown__item" role="presentation">
+                    <a href="{!URLFOR($Action.Truck_Load__c.Edit , truckLoad.Id)}" role="menuitem" tabindex="-1">
+                      <span class="slds-truncate">Edit Details</span>
+                    </a>
+                  </li>
+                  <li class="slds-dropdown__item" role="presentation">
+                    <a href="{!URLFOR($Action.Truck_Load__c.Edit_Load , truckLoad.Id)}" role="menuitem" tabindex="-1">
+                      <span class="slds-truncate">Edit Load</span>
+                    </a>
+                  </li>
+                  <li class="slds-dropdown__item" role="presentation">
+                    <a href="{!URLFOR($Action.Truck_Load__c.Delete , truckLoad.Id)}" role="menuitem" tabindex="-1">
+                      <span class="slds-truncate">Delete</span>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+      <div class="slds-grid slds-wrap header-detail">
+        <div class="slds-p-horizontal--small slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--3-of-12">
+          <div class="slds-grid slds-wrap">
+            <p class="slds-text-title slds-truncate slds-m-bottom--none slds-p-horizontal--small slds-size--1-of-3 slds-medium-size--1-of-1 slds-large-size--1-of-1" title="Field 1">Driver</p>
+            <p class="slds-text-body--regular slds-truncate slds-p-horizontal--small slds-size--2-of-3 slds-medium-size--1-of-1 slds-large-size--1-of-1">{!truckLoad.Driver__c}</p>
+          </div>
+        </div>
+        <div class="slds-p-horizontal--small slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--3-of-12">
+          <div class='slds-grid slds-wrap'>
+            <p class="slds-text-title slds-truncate slds-m-bottom--none slds-p-horizontal--small slds-size--1-of-3 slds-medium-size--1-of-1 slds-large-size--1-of-1">Truck / Trailer</p>
+            <p class="slds-text-body--regular slds-p-horizontal--small slds-size--2-of-3 slds-medium-size--1-of-1 slds-large-size--1-of-1">{!truckLoad.Truck__c} / {!truckLoad.Trailer__c}</p>
+          </div>
+        </div>
+        <div class="slds-p-horizontal--small slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--2-of-12">
+          <div class='slds-grid slds-wrap'>
+            <p class="slds-text-title slds-truncate slds-m-bottom--none slds-p-horizontal--small slds-size--1-of-3 slds-medium-size--1-of-1 slds-large-size--1-of-1">Departure Date</p>
+            <p class="slds-text-body--regular slds-p-horizontal--small slds-size--2-of-3 slds-medium-size--1-of-1 slds-large-size--1-of-1">
+              <apex:outputText value="{0, date, MMMM d','  yyyy}">
+                <apex:param value="{!truckLoad.Departure_Date2__c}" />
+              </apex:outputText>
+            </p>
+          </div>
+        </div>
+        <div class="slds-p-horizontal--small slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--2-of-12">
+          <div class="slds-grid slds-wrap">
+            <p class="slds-text-title slds-truncate slds-m-bottom--none slds-p-horizontal--small slds-size--1-of-3 slds-medium-size--1-of-1 slds-large-size--1-of-1" style="font-weight: 300">Delivery Date</p>
+            <p class="slds-text-body--regular slds-p-horizontal--small slds-size--2-of-3 slds-medium-size--1-of-1 slds-large-size--1-of-1" style="font-size:1rem">
+              <apex:outputText value="{0, date, MMMM d','  yyyy}">
+                <apex:param value="{!truckLoad.Delivery_Date2__c}" />
+              </apex:outputText>
+            </p>
+          </div>
+        </div>
+        <div class="slds-p-horizontal--small slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--2-of-12">
+          <div class="slds-grid slds-wrap">
+            <p class="slds-text-title slds-truncate slds-m-bottom--none slds-p-horizontal--small slds-size--1-of-3 slds-medium-size--1-of-1 slds-large-size--1-of-1" style="font-weight: 300">Return Date</p>
+            <p class="slds-text-body--regular slds-p-horizontal--small slds-size--2-of-3 slds-medium-size--1-of-1 slds-large-size--1-of-1" style="font-size:1rem">
+              <apex:outputText value="{0, date, MMMM d','  yyyy}">
+                <apex:param value="{!truckLoad.Return_Date2__c}" />
+              </apex:outputText>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slds-grid slds-wrap slds-grid--pull-padded">
+
+      <apex:repeat value="{!truckLoadContents}" var="item">
+        <div class="slds-p-horizontal--small slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-4"  style="margin-top:2rem">
+          <div class="slds-card">
+            <div class="slds-card__header slds-grid">
+              <header class="slds-media slds-media--center slds-has-flexi-truncate">
+                <div class="slds-media__figure">
+                  <img src="{!URLFOR($Resource.LGND_SLDS_203, 'assets/icons/custom/custom63_60.png')}" class="slds-icon  slds-icon-custom-custom63" />
+                </div>
+                <div class="slds-media__body slds-truncate">
+                  <h2>
+                    <a href="{!URLFOR($Action.AcctSeed__Project__c.View, item.erpId)}" class="slds-text-link--reset">
+                      <span class="slds-text-heading--small">{!item.erpName}</span>
+                    </a><br />
+                     <a href="javascript:void(0);" class="slds-text-link--reset">
+                      <span class="slds-text-heading--xsmall">{!item.accountName}</span>
+                    </a>
+                    <p class="slds-float--right">Truck Pos. {!item.truckPosition}</p>
+                  </h2>
+                </div>
+              </header>
+              <div class="slds-no-flex">
+                <!-- <button class="slds-button slds-button--neutral">New</button> -->
+              </div>
+            </div>
+            <div class="slds-card__body">
+              <table class="slds-table slds-table--bordered slds-table--cell-buffer slds-table--fixed-layout serials-table slds-no-row-hover">
+                <tbody>
+                  <apex:repeat value="{!item.materials}" var="material">
+                    <tr>
+                      <td class="slds-truncate">
+                        {!material.Product_Name__c}
+                      </td>
+                      <td>
+                        <apex:outputPanel layout="none" rendered="{!material.GMBLASERP__Serial_Number__c != null}">
+                          <a href="#" class="serial-search"
+                                      data-material-id="{!material.Id}"
+                                      data-model-name="{!material.Product_Name__c}"
+                                      data-serial-id="{!material.GMBLASERP__Serial_Number__c}">
+                            <div class="slds-spinner_container">
+                              <div class="slds-spinner slds-spinner--small" role="alert">
+                                <span class="slds-assistive-text">Loading</span>
+                                <div class="slds-spinner__dot-a"></div>
+                                <div class="slds-spinner__dot-b"></div>
+                              </div>
+                            </div>
+                            <span>{!material.GMBLASERP__Serial_Number__r.Name}</span>
+                          </a>
+                        </apex:outputPanel>
+                        <apex:outputPanel layout="none" rendered="{!material.GMBLASERP__Serial_Number__c = null}">
+                          <a href="#" class="slds-button slds-button--neutral slds-button--x-small serial-search"
+                                      data-material-id="{!material.Id}"
+                                      data-model-name="{!material.Product_Name__c}">
+                            <div class="slds-spinner_container">
+                              <div class="slds-spinner slds-spinner--small" role="alert">
+                                <span class="slds-assistive-text">Loading</span>
+                                <div class="slds-spinner__dot-a"></div>
+                                <div class="slds-spinner__dot-b"></div>
+                              </div>
+                            </div>
+                            <span>Select Serial</span>
+                          </a>
+                        </apex:outputPanel>
+                      </td>
+                    </tr>
+                  </apex:repeat>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="slds-card__footer"></div>
+          </div>
+        </div>
+      </apex:repeat>
+
+    </div>
+
+    <div role="dialog" tabindex="-1" class="slds-modal" id="barcodeScanner">
+      <div class="slds-modal__container">
+        <div class="slds-modal__header">
+          <h2 id="header43" class="slds-text-heading--medium slds-truncate">Barcode Scan</h2>
+        </div>
+        <div class="slds-modal__content slds-p-around--medium slds-grid slds-wrap">
+          <div class="slds-form-element" style="margin: 0 auto 1rem auto;">
+            <div class="slds-form-element__control">
+              <select id="cameraSelect" class="slds-input" />
+            </div>
+          </div>
+          <div id="interactive" class="viewport"></div>
+        </div>
+        <div class="slds-modal__footer">
+          <button data-action="cancel" class="slds-button slds-button--neutral">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script id="serial-cell" type="text/x-handlebars-template">
+    <td>
+      {{#if this.idSerial}}
+        <a href="#" class="serial-search"
+                    data-material-id="{{this.idMaterial}}"
+                    data-model-name="{{this.ProductName}}"
+                    data-serial-id="{{this.idSerial}}">
+          <div class="slds-spinner_container">
+            <div class="slds-spinner slds-spinner--small" role="alert">
+              <span class="slds-assistive-text">Loading</span>
+              <div class="slds-spinner__dot-a"></div>
+              <div class="slds-spinner__dot-b"></div>
+            </div>
+          </div>
+          <span>{{this.serialName}}</span>
+        </a>
+      {{else}}
+        <a href="#" class="slds-button slds-button--neutral slds-button--x-small serial-search"
+                    data-material-id="{{this.idMaterial}}"
+                    data-model-name="{{this.ProductName}}">
+          <div class="slds-spinner_container">
+            <div class="slds-spinner slds-spinner--small" role="alert">
+              <span class="slds-assistive-text">Loading</span>
+              <div class="slds-spinner__dot-a"></div>
+              <div class="slds-spinner__dot-b"></div>
+            </div>
+          </div>
+          <span>Select Serial</span>
+        </a>
+      {{/if}}
+    </td>
+  </script>
+
+  <script id="serial-selector" type="text/x-handlebars-template">
+
+    <div role="dialog" tabindex="-1" class="slds-modal" id="serialSelector">
+      <div class="slds-modal__container">
+        <div class="slds-modal__header">
+          <h2 id="header43" class="slds-text-heading--medium slds-truncate">{{modelName}}</h2>
+        </div>
+        <div class="slds-modal__content slds-p-around--medium slds-grid slds-wrap">
+          <div class="slds-col slds-size--1-of-1">
+            <div id="scan-message"></div>
+          </div>
+          <div class="slds-col slds-size--3-of-12">
+            <div class="slds-form-element">
+              <label class="slds-form-element__label" for="text-input-01">Filter</label>
+            </div>
+            <div class="slds-form-element">
+              <label class="slds-form-element__label" for="text-input-01">Serials</label>
+            </div>
+          </div>
+
+          <div class="slds-col slds-size--9-of-12">
+            <div class="slds-form-element">
+              <div class="slds-form-element__control">
+                <input type="file" accept="image/*" capture="camera" id="barCodeInput" class="uploadFile"/>
+                <input id="serial-filter" class="slds-input" type="text"/>
+              </div>
+            </div>
+
+            <div class="serial-list">
+              {{#if currentSerial}}
+                <a href="#" data-serial-id="" data-serial-name="" class="serial-link">Clear Serial</a>
+              {{/if}}
+              {{#each selectOptions}}
+                <a href="#" data-serial-id="{{this.idSerial}}" data-serial-name="{{this.serialName}}" class="serial-link">{{this.serialName}}</a>
+              {{/each}}
+            </div>
+          </div>
+
+        </div>
+        <div class="slds-modal__footer">
+          <button data-action="cancel" class="slds-button slds-button--neutral">Cancel</button>
+          <button data-action="create" class="slds-button slds-button--neutral slds-button--brand">Save</button>
+          {{#if barCodeEnabled }}
+            <button data-action="scan" class="slds-button slds-button--neutral slds-float--left">Scan</button>
+          {{/if}}
+        </div>
+      </div>
+    </div>
+
+  </script>
+
+  <apex:includeScript value="{!URLFOR($Resource.jQuery)}" />
+  <apex:includeScript value="{! URLFOR($Resource.UtilJS) }" />
+  <apex:includeScript value="{!URLFOR($Resource.Libraries, 'js/handlebars.min-latest.js')}" />
+  <apex:includeScript value="{!URLFOR($Resource.Libraries, 'js/QuaggaJS/quagga.js')}" />
+  <!-- <apex:includeScript value="{!URLFOR($Resource.Libraries, 'js/QuaggaJS/file_input.js')}" /> -->
+  <script type="text/javascript">
+
+  (function($) {
+
+    var SerialPicker, StaticBarCodeReader, SerialBarcodeReader;
+
+    SerialPicker = {
+
+      barcodeReaderAbility: null,
+      Reader: null,
+      hb_select_serial_modal: Handlebars.compile( $('#serial-selector').html() ),
+      hb_serial_cell: Handlebars.compile( $('#serial-cell').html() ),
+      $pageIndicator: $('#page-indicator'),
+      $backDrop:  $('.slds-backdrop'),
+
+      init: function()
+      {
+        this.barcodeReaderAbility = this._determineBarcodeReaderAbility();
+        this.attachSetSerialListeners.call(this);
+      },
+
+       _determineBarcodeReaderAbility: function()
+      {
+        var gum = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
+        return determineUI("{!$User.UITheme}") === 'sf1'
+         ? gum === undefined ? 'static' : 'stream'
+         : null;
+        //return 'static';
+      },
+
+      attachSetSerialListeners: function()
+      {
+        var self = this;
+
+        $('.lgnd').on('click', '.serial-search', function(e) {
+          e.preventDefault();
+          var $this = $(this);
+
+          self.selectData = {
+            $link: $this,
+            matId: $this.data('material-id'),
+            serId: $this.data('serial-id'),
+            modelName: $this.data('model-name'),
+            serials: null
+          };
+
+          self.fetchSerials.call(self);
+
+        });
+
+      },
+
+      fetchSerials: function() {
+        var self = this;
+
+        self.selectData.$link.addClass('busy');
+        Truck_Load_Ext.searchSerialForMaterial( self.selectData.matId, function(result, event) {
+          self.selectData.$link.removeClass('busy');
+          if( event.status)
+          {
+            self.selectData.serials = result;
+            self.SerialSelectModal.appendModal.call(self);
+          }
+          else
+          {
+            alert( event.message );
+          }
+        });
+
+      },
+
+      _setSerial: function( matId, serId )
+      {
+        var dfd = new $.Deferred();
+        Truck_Load_Ext.setSerialOnMaterial(matId, serId, function(result, event) {
+          if( event.status )
+          {
+            dfd.resolve(result);
+          }
+          else
+          {
+            dfd.reject(event.message);
+          }
+        });
+        return dfd.promise();
+      },
+
+      SerialSelectModal:
+      {
+        appendModal: function()
+        {
+          var self = this,
+              serialModal = self.SerialSelectModal;
+
+          $('.lgnd').append(
+            self.hb_select_serial_modal( {
+              modelName: self.selectData.modelName,
+              currentSerial: self.selectData.serId,
+              selectOptions: self.selectData.serials,
+              barCodeEnabled: self.barcodeReaderAbility
+            } )
+          );
+
+          serialModal.$dialog = $('#serialSelector');
+          serialModal.$availableSerials = $('.serial-link');
+          serialModal.$filter = $('#serial-filter');
+
+          // Select the current serial number if it exists
+          if( self.selectData.serId !== null && self.selectData.serId !== '' )
+          {
+            $('a[data-serial-id="'+self.selectData.serId+'"]').addClass('selected');
+          }
+          serialModal.attachModalListeners.call(self);
+          serialModal.openModal.call(self);
+        },
+
+        attachModalListeners: function()
+        {
+          var self = this;
+
+          self.SerialSelectModal.addButtonListener.call(self);
+          self.SerialSelectModal.addFilterListener.call(self);
+          self.SerialSelectModal.addSerialSelectListener.call(self);
+        },
+
+        addButtonListener: function()
+        {
+          var self = this,
+              serialModal = self.SerialSelectModal;
+
+          serialModal.$dialog.find('button')
+          .on('click', function(e) {
+            e.preventDefault();
+            var action = $(this).data('action');
+
+            if( action === 'create' )
+            {
+              serialModal.setSerial.call(self);
+            }
+            if( action === 'cancel' )
+            {
+              serialModal.removeModal.call(self);
+            }
+            if( action === 'scan' )
+            {
+              if( self.barcodeReaderAbility === 'stream' )
+              {
+                StreamBarCodeReader.init( serialModal.$filter, serialModal.$dialog );
+              }
+              if( self.barcodeReaderAbility === 'static' )
+              {
+                StaticBarCodeReader.init( serialModal.$filter );
+              }
+              if( self.barcodeReaderAbility === null )
+              {
+                alert( 'barcode reader is not available' );
+              }
+            }
+
+          })
+        },
+
+        addFilterListener: function()
+        {
+          var self = this,
+              serialModal = self.SerialSelectModal;
+
+          serialModal.$filter.on('keyup', function(e) {
+            e.preventDefault();
+            var $this = $(this),
+                qString = $this.val(),
+                regex,
+                $link;
+
+            $.each(serialModal.$availableSerials, function(idx, ele) {
+              $link = $(ele);
+              if( $link.data('serial-name').toLowerCase().indexOf( qString.toLowerCase() ) < 0 )
+              {
+                $link.hide();
+              }
+              else
+              {
+                if( $link.data('serial-name') === qString )
+                {
+                  $link.addClass('selected').siblings().removeClass('selected');
+                  self.selectData.serId = $link.data('serial-id');
+                }
+                regex = new RegExp(qString, "gi");
+                $link.html( $link.data('serial-name').replace(regex, "<span class='highlight'>"+qString+"</span>") )
+                .show();
+              }
+            });
+          });
+
+        },
+
+        addSerialSelectListener: function()
+        {
+          var self = this,
+              serialModal = self.SerialSelectModal;
+
+          serialModal.$availableSerials.on('click', function(e) {
+            e.preventDefault();
+            var $this = $(this);
+            self.selectData.serId = $this.data('serial-id');
+            $this.addClass('selected')
+            .siblings().removeClass('selected');
+          });
+        },
+
+        // serialNumberFound: function(serialNumber)
+        // {
+        //   var self = this,
+        //       serialModal = self.SerialSelectModal;
+        //   serialModal.$availableSerials.removeClass('selected').each( function(idx, ele) {
+        //     var $ele = $(ele);
+        //     if( $ele.data('serial-name'))
+        //   });
+        // }
+
+        openModal: function()
+        {
+          var self = this,
+              serialModal = self.SerialSelectModal;
+
+          serialModal.$dialog.addClass('slds-fade-in-open');
+          self.$backDrop.addClass('slds-backdrop--open');
+        },
+
+        removeModal: function()
+        {
+          var self = this,
+              serialModal = self.SerialSelectModal;
+          serialModal.$dialog.remove();
+          self.$pageIndicator.hide();
+          self.$backDrop.removeClass('slds-backdrop--open');
+        },
+
+        setSerial: function()
+        {
+          var self = this,
+              serialModal = self.SerialSelectModal;
+
+          serialModal.$dialog.removeClass('slds-fade-in-open');
+          self.$backDrop.removeClass('slds-backdrop--open');
+          self.$pageIndicator.show();
+
+          self._setSerial( self.selectData.matId, self.selectData.serId )
+          .then( function(material) {
+            self.selectData.$link.parent('td').replaceWith( self.hb_serial_cell(material) );
+            serialModal.removeModal.call(self);
+          })
+          .fail( function(message) {
+            alert(message);
+            serialModal.$dialog.addClass('slds-fade-in-open');
+            self.$backDrop.addClass('slds-backdrop--open');
+            self.$pageIndicator.hide();
+          });
+        }
+
+      }// /SerialSelectModal
+
+    };// /SerialPicker
+
+    StaticBarCodeReader = {
+
+      init: function( $output )
+      {
+        var self = this;
+
+        self.$output = $output;
+        self.$messages = $('#scan-message');
+        self.$barcodeInput = $("#barCodeInput");
+        self.$output.val('').trigger('keyup');
+        self.attachListeners.call(self);
+        self.$barcodeInput.trigger('click');
+        return self;
+      },
+
+      attachListeners: function()
+      {
+        var self = this;
+
+        self.$barcodeInput.on("change", function(e) {
+          var $this = $(this);
+          if (e.target.files && e.target.files.length) {
+              //BarCodeApp.decode(URL.createObjectURL(e.target.files[0]));
+            self.readCode.call(self, URL.createObjectURL(e.target.files[0]) );
+          }
+        });
+      },
+
+      detatchListeners: function()
+      {
+        this.$barcodeInput.off('change');
+      },
+
+      readCode: function( barcodeSource )
+      {
+        var self = this;
+
+        self.$messages.removeClass('fail').html('Reading Bar Code ...');
+        Quagga.decodeSingle({
+            inputStream: {
+                size: 800,
+                singleChannel: false
+            },
+            locator: {
+                patchSize: "medium",
+                halfSample: false
+            },
+            decoder: {
+                readers: ["code_128_reader", "code_39_reader", "upc_reader"] // List of active readers
+            },
+            multiple: false,
+            locate: true, // try to locate the barcode in the image
+            src: barcodeSource// or 'data:image/jpg;base64,' + data
+        },
+        function(result) {
+          self.onReadCodeComplete.call(self, result)
+        } );
+      },
+
+      onReadCodeComplete: function(result)
+      {
+        var self = this;
+
+        self.detatchListeners();
+        if(result && result.codeResult) {
+            self.$output.val(result.codeResult.code).trigger('keyup');
+            self.$messages.html('');
+        } else {
+            self.$messages.addClass('fail').html('Barcode not detected!!');
+            self.$output.val('').trigger('keyup');
+        }
+      }
+
+    };// /StaticBarCodeReader
+
+    StreamBarCodeReader = {
+
+      init: function( $output, $selectDialog )
+      {
+        var self = this;
+
+        self.lastResult = null;
+        self.$cameraSelect = $('#cameraSelect');
+        self.$output = $output;
+        self.$dialog = $('#barcodeScanner');
+        self.$selectDialog = $selectDialog;
+
+        if( self.cameras === undefined )
+        {
+          self.getCameras.call(self)
+          .then( function(cameras) {
+            self.cameras = cameras;
+            self.setup.call(self);
+          })
+          .fail( function(err) {
+            console.log(err.name + ": " + err.message);
+          });
+        }
+        else
+        {
+          self.setup.call(self);
+        }
+      },
+
+      setup: function()
+      {
+        var self = this;
+        self.$selectDialog.removeClass('slds-fade-in-open');
+        self.$dialog.addClass('slds-fade-in-open');
+        self.attachListeners.call(self);
+        self.populateAndSelectCamera.call(self);
+        self.enableScanner.call(self);
+      },
+
+      attachListeners: function()
+      {
+        var self = this;
+        self.$cameraSelect.on('change', function() {
+          self.cameraId = $(this).val();
+          Quagga.stop();
+          self.enableScanner.call(self);
+        });
+        self.$dialog.find('button').on('click', function(e) {
+          e.preventDefault();
+          self.closeModal.call(self);
+        });
+      },
+
+      closeModal: function()
+      {
+        Quagga.stop();
+        this.detachListeners.call(this);
+        this.$selectDialog.addClass('slds-fade-in-open')
+        this.$dialog.removeClass('slds-fade-in-open');
+      },
+
+      detachListeners: function()
+      {
+        this.$cameraSelect.off('change');
+        this.$dialog.find('button').off('click');
+      },
+
+      enableScanner: function()
+      {
+        var self = this;
+        console.log( self.cameraId );
+
+        Quagga.init({
+          inputStream: {
+                type : "LiveStream",
+                constraints: {
+                    width: 640,
+                    height: 480,
+                    facingMode: "environment",
+                    deviceId: this.cameraId
+                }
+            },
+            locator: {
+                patchSize: "medium",
+                halfSample: true
+            },
+            numOfWorkers: 4,
+            decoder: {
+                readers : ["code_128_reader", "code_39_reader", "upc_reader"]
+            },
+            locate: true
+          }, function(err) {
+          if (err) {
+              return self.handleError(err);
+          }
+          Quagga.start();
+        });
+        self.setOnDetected.call(self);
+        self.setOnProcessed();
+      },
+
+      getCameras: function()
+      {
+        var self = this,
+            videoSelect = self.$cameraSelect[0],
+            cameras = [],
+            dfd = new $.Deferred();
+
+        navigator.mediaDevices.enumerateDevices()
+        .then(function(devices) {
+          devices.forEach(function(device) {
+            //var option = document.createElement('option');
+            if( device.kind === "videoinput" )
+            {
+              cameras.push(device);
+            }
+          });
+          dfd.resolve(cameras);
+        })
+        .catch(function(err) {
+          dfd.reject(err)
+        });
+        return dfd.promise();
+
+      },
+
+      populateAndSelectCamera: function()
+      {
+        var self = this,
+            selectedCameraId;
+        self.$cameraSelect.html('');
+        self.cameras.forEach( function( camera) {
+          var option = document.createElement('option')
+          option.value = camera.deviceId;
+          option.label = camera.label;
+          self.$cameraSelect[0].appendChild(option);
+          if( selectedCameraId === undefined && camera.label.toLowerCase().indexOf('back') >= 0 )
+          {
+            selectedCameraId = camera.deviceId;
+          }
+        });
+        if( selectedCameraId === undefined )
+        {
+          selectedCameraId = self.cameras[0].deviceId;
+        }
+        self.cameraId = selectedCameraId;
+        self.$cameraSelect.val(selectedCameraId);
+      },
+
+      handleError: function(err)
+      {
+        console.log(err);
+      },
+
+      setOnProcessed: function()
+      {
+        Quagga.onProcessed(function(result) {
+          var drawingCtx = Quagga.canvas.ctx.overlay,
+              drawingCanvas = Quagga.canvas.dom.overlay;
+
+          if (result)
+          {
+            if (result.boxes) {
+                drawingCtx.clearRect(0, 0, parseInt(drawingCanvas.getAttribute("width")), parseInt(drawingCanvas.getAttribute("height")));
+                result.boxes.filter(function (box) {
+                    return box !== result.box;
+                }).forEach(function (box) {
+                    Quagga.ImageDebug.drawPath(box, {x: 0, y: 1}, drawingCtx, {color: "green", lineWidth: 2});
+                });
+            }
+
+            if (result.box) {
+                Quagga.ImageDebug.drawPath(result.box, {x: 0, y: 1}, drawingCtx, {color: "#00F", lineWidth: 2});
+            }
+
+            if (result.codeResult && result.codeResult.code) {
+                Quagga.ImageDebug.drawPath(result.line, {x: 'x', y: 'y'}, drawingCtx, {color: 'red', lineWidth: 3});
+            }
+          }
+        });
+      },
+
+      setOnDetected: function()
+      {
+        var self = this, code;
+
+        Quagga.onDetected(function(result) {
+          code = result.codeResult.code;
+          if( self.lastResult !== code )
+          {
+            self.lastResult = code;
+            self.$output.val(code).trigger('keyup');
+            self.closeModal.call(self);
+          }
+        });
+      }
+    }
+
+    $('.slds-dropdown-trigger button').on('click', function(e) {
+      $(this).parent().toggleClass('slds-is-open');
+    });
+
+    SerialPicker.init();
+
+  })(jQuery.noConflict());
+
+  </script>
+
+</apex:page>

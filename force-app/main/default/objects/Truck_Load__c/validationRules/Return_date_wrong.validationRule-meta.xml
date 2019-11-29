@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Return_date_wrong</fullName>
+    <active>true</active>
+    <description>Return date can not be before departure date</description>
+    <errorConditionFormula>Departure_Date2__c  &gt;  Return_Date2__c</errorConditionFormula>
+    <errorDisplayField>Return_Date2__c</errorDisplayField>
+    <errorMessage>Return Date can not be before Departure Date</errorMessage>
+</ValidationRule>

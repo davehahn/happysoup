@@ -1,0 +1,79 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,force:lightningQuickAction" access="global" controller="AccountReceivableReport_ar" >
+    <aura:attribute name="transactionData" type="Object[]" />   
+    <aura:attribute name="periodOptions" type="sObject[]" />
+    <aura:attribute name="idPeriod" type="String" />
+    <aura:attribute name="idSelectedAccount" type="String" />
+    <aura:attribute name="cssCustomStyle" type="String" />
+    <aura:attribute name="donotLoad" type="Boolean" default="false" />
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    <aura:handler name="change" value="{!v.idPeriod}" action="{!c.retrieveAccountDetails}"/>
+    <aura:handler name="RemoveComponent" action="{!c.removeComponent}" event="c:AccountBilling_ar"/>
+    <style>{!v.cssCustomStyle}</style>
+    <lightning:card >
+        <aura:set attribute="title"></aura:set>
+        <div class="slds-grid">
+            <div class="slds-col slds-size_1-of-3 slds-text-align_right"><lightning:button label="&larr; Previous Period" onclick="{!c.previousPeriod}"/>&nbsp;</div>
+            <div class="slds-col slds-size_1-of-3 period-selector">
+                <lightning:select aura:id="selectPeriod" name="periods" label="" value="{!v.idPeriod}">
+                    <aura:iteration items="{!v.periodOptions}" var="pr">
+                        <option value="{!pr.Id}" text="{!pr.Name}"></option>
+                    </aura:iteration>
+                </lightning:select>
+            </div>
+            <div class="slds-col slds-size_1-of-3">&nbsp;<lightning:button label="Next Period &rarr;" onclick="{!c.nextPeriod}"/></div>
+        </div> 
+    </lightning:card>    
+    <lightning:card >
+        <aura:set attribute="title"></aura:set>
+        <table class="slds-table slds-table_bordered slds-table_cell-buffer">
+            <thead>
+                <tr class="slds-text-title_caps">
+                    <th class="slds-is-sortable" scope="col" width="20%" data-label="accountName" onclick="{!c.sortTry}">
+                        <span class="slds-truncate" title="Account Name">Account Name</span>
+                    </th>
+                    <th scope="col" width="30%" class="slds-is-sortable slds-text-align_right" data-label="billingBalance" onclick="{!c.sortTry}">
+                        <span class="slds-truncate" title="Billing Balance">Billing Balance</span>
+                    </th>
+                    <th scope="col" width="30%" class="slds-is-sortable slds-text-align_right" data-label="receiptBalance" onclick="{!c.sortTry}">
+                        <span class="slds-truncate" title="Receipt Balance">Receipt Balance</span>
+                    </th>
+                    <th scope="col" width="30%" class="slds-is-sortable slds-text-align_right" data-label="actualBalance" onclick="{!c.sortTry}">
+                        <span class="slds-truncate" title="Actual Balance">Actual Balance</span>                    
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <aura:iteration items="{!v.transactionData}" var="a">
+                    <tr>
+                        <th scope="row" data-label="Account Name">
+                            <a href="{!'#/sObject/'+ a.accountId + '/view'}">{#a.accountName}</a>
+                        </th>
+                        <th data-label="Billing Balance" class="slds-text-align_right">
+                            <div class="slds-truncate" title="{#a.billingBalance}">
+                                <a data-idaccount="{!a.accountId}" onclick="{!c.createBillComponent}" href="javascript:void(0);">
+                                    <lightning:formattedNumber value="{#a.billingBalance}" style="currency" currencyCode="CAD" />
+                                </a>
+                            </div>
+                        </th>
+                        <th data-label="Receipt Balance" class="slds-text-align_right">
+                            <div class="slds-truncate" title="{#a.receiptBalance}">
+                                <a data-idaccount="{!a.accountId}" onclick="{!c.createReceiptComponent}" href="javascript:void(0);">
+                                    <lightning:formattedNumber value="{#a.receiptBalance}" style="currency" currencyCode="CAD" />
+                                </a>
+                            </div>
+                        </th>
+                        <th data-label="Actual Balance" class="slds-text-align_right">
+                            <div class="slds-truncate" title="{#a.actualBalance}">
+                                <lightning:formattedNumber value="{#a.actualBalance}" style="currency" currencyCode="CAD" />
+                            </div>
+                        </th>
+                    </tr>
+                </aura:iteration>
+            </tbody>
+        </table>
+    </lightning:card>
+    <div aura:id="cmpBody">
+        {!v.body}
+    </div>
+    <lightning:spinner aura:id="spinner" />
+</aura:component>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>Legend_Letterhead</letterhead>
+    <name>Happy Holidays!</name>
+    <style>freeForm</style>
+    <subject>Happy Holidays!</subject>
+    <textOnly>Season&#39;s Greetings, {!Contact.FirstName}!
+
+Wishing you a very safe and happy holiday season from your family here at Legend Boats!
+
+Yours in boating,
+
+{!User.Name}
+{!User.Title}
+
+{!User.Email}
+{!User.Phone}
+
+
+{!User.Address}</textOnly>
+    <type>html</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

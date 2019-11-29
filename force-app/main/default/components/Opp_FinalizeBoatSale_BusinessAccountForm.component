@@ -1,0 +1,98 @@
+<apex:component >
+
+  <apex:attribute name="acct"
+                  description="Business Account for the Opportunity"
+                  type="Account"/>
+  <apex:attribute name="buyer"
+                  description="Contact on Account with OpportunityContactRole = Buyer on Opp"
+                  type="Contact"/>
+  <apex:attribute name="coBuyer"
+                  description="Contact on Account with OpportunityContactRole = Co-Buyer on Opp"
+                  type="Contact"/>
+
+  <sffd:row styleClass="acct_fields"><!-- Accounting Fields -->
+    <sffd:column cols="large-6"><!-- Left Accounting Column -->
+      <sffd:row >
+        <sffd:column cols="large-4">
+          <label class="large-only-right">Name: </label>
+        </sffd:column>
+
+        <sffd:column cols="large-8">
+          <apex:inputField value="{!acct.Name}" required="true"/>
+        </sffd:column>
+      </sffd:row>
+    </sffd:column>
+
+    <sffd:column cols="large-6"><!-- Right Accounting Column -->
+      <sffd:row >
+        <sffd:column cols="large-4">
+          <label class="large-only-right">Phone: </label>
+        </sffd:column>
+
+        <sffd:column cols="large-8">
+          <apex:inputField value="{!acct.Phone}" required="true"/>
+        </sffd:column>
+      </sffd:row>
+    </sffd:column>
+
+  </sffd:row>
+
+  <sffd:row ><!-- Contact Fields -->
+
+    <sffd:column cols="large-6"><!-- Buyer Contact Details -->
+
+      <apex:outputPanel layout="none" rendered="{! !ISNULL(buyer) }">
+        <sffd:row >
+          <sffd:column cols="large-11 large-offset-1">
+            <h4 class="lgnd">Buyer</h4>
+          </sffd:column>
+        </sffd:row>
+
+        <apex:repeat value="{!$ObjectType.Contact.FieldSets['BuyerFields']}" var="f">
+          <sffd:row >
+            <sffd:column cols="large-4">
+              <label class="large-only-right">
+                {!f.Label}
+              </label>
+            </sffd:column>
+            <sffd:column cols="large-8">
+              <apex:inputField value="{!buyer[f]}"
+                               required="{!!contains(f.label, 'Phone')}"
+                               showDatePicker="{!f.Type = 'date'}" />
+            </sffd:column>
+          </sffd:row>
+        </apex:repeat>
+      </apex:outputPanel>
+
+    </sffd:column>
+
+    <sffd:column cols="large-6"><!-- CoBuyer Contact Details -->
+
+      <apex:outputPanel layout="none" rendered="{! !ISNULL(coBuyer) }">
+        <sffd:row >
+          <sffd:column cols="large-11 large-offset-1">
+            <h4 class="lgnd">Co Buyer</h4>
+          </sffd:column>
+        </sffd:row>
+
+        <apex:repeat value="{!$ObjectType.Contact.FieldSets['BuyerFields']}" var="f">
+          <sffd:row >
+            <sffd:column cols="large-4">
+              <label class="large-only-right">
+                {!f.Label}
+              </label>
+            </sffd:column>
+            <sffd:column cols="large-8">
+              <apex:inputField value="{!coBuyer[f]}"
+                               required="{!!contains(f.label, 'Phone')}"
+                               showDatePicker="{!f.Type = 'date'}" />
+            </sffd:column>
+          </sffd:row>
+        </apex:repeat>
+      </apex:outputPanel>
+
+    </sffd:column>
+
+  </sffd:row>
+
+</apex:component>

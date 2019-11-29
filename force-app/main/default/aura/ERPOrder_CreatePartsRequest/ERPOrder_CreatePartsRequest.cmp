@@ -1,0 +1,174 @@
+<aura:component controller="ERPOrder_CreatePartsRequestController" implements="force:appHostable,flexipage:availableForAllPageTypes,force:hasRecordId">
+
+  <aura:attribute name="recordId" type="String" />
+  <aura:attribute name="stage" type="String" />
+  <aura:attribute name="caseWrappers" type="List" />
+  <aura:attribute name="hasCases" type="Boolean" default="false" />
+  <aura:attribute name="hasMultipleCases" type="Boolean" default="false" />
+  <aura:attribute name="modalOpen" type="Boolean" default="false" />
+  <aura:attribute name="materials" type="List" />
+  <aura:attribute name="notes" type="String" />
+
+  <aura:attribute name="steps" type="Array" />
+  <aura:attribute name="currentStep" type="String" />
+
+  <aura:handler event="force:refreshView" action="{!c.afterScripts}" />
+  <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+
+  <ltng:require scripts="{!join(',', $Resource.Libraries +'/js/LightningApex.js',
+                                     $Resource.Libraries +'/js/LightningUtils.js') }"
+                afterScriptsLoaded="{!c.afterScripts}" />
+
+  <c:Lgnd_Spinner_dh aura:id="spinner" />
+
+  <aura:if isTrue="{! or( equals(v.stage, 'Parts Required'), v.hasCases ) }">
+    <lightning:layout multipleRows="true">
+
+      <lightning:layoutItem size="12"
+                            smallDeviceSize="12"
+                            mediumDeviceSize="10"
+                            largeDeviceSize="10"
+                            padding="horizontal-small"
+                            class="slds-col_bump-left">
+        <aura:if isTrue="{!v.hasCases}">
+          <aura:if isTrue="{! not( v.hasMultipleCases ) }">
+            <c:Case_PartsRequestDetailCard_dh caseWrapper="{!v.caseWrappers[0]}" />
+          </aura:if>
+          <aura:if isTrue="{! v.hasMultipleCases }">
+            <lightning:accordion>
+              <aura:iteration items="{!v.caseWrappers}" var="caseWrapper">
+                <lightning:accordionSection label="{! join('', ' Parts Request - #',
+                                                               caseWrapper.caseNumber,
+                                                               '    - ',
+                                                               caseWrapper.status) }"
+                                            class="slds-card">
+                  <c:Case_PartsRequestDetailCard_dh caseWrapper="{!caseWrapper}" />
+                </lightning:accordionSection>
+              </aura:iteration>
+            </lightning:accordion>
+          </aura:if>
+        </aura:if>
+      </lightning:layoutItem>
+      <lightning:layoutItem size="12"
+                            smallDeviceSize="12"
+                            mediumDeviceSize="2"
+                            largeDeviceSize="2"
+                            padding="horizontal-small">
+        <aura:if isTrue="{! equals(v.stage, 'Parts Required') }">
+          <div class="slds-clearfix">
+            <lightning:button label="Create Parts Request"
+                              onclick="{!c.openModel}"
+                              class="slds-float_right" />
+          </div>
+        </aura:if>
+      </lightning:layoutItem>
+    </lightning:layout>
+  </aura:if>
+
+  <aura:if isTrue="{!v.modalOpen}">
+    <section role="dialog" class="slds-modal slds-modal_medium slds-fade-in-open">
+      <div class="slds-modal__container">
+        <header class="slds-modal__header">
+          <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">
+            Create Parts Request
+          </h2>
+        </header>
+        <div class="slds-modal__content slds-p-around_medium">
+
+          <!-- Select Parts -->
+          <aura:if isTrue="{! equals(v.currentStep, v.steps[0]) }">
+            <table class="slds-table slds-table_bordered slds-table_cell-buffer">
+              <thead>
+                <tr class="slds-text-title_caps">
+                  <th scope="col">
+                    <div class="slds-truncate slds-text-align_left" title="Product">Product</div>
+                  </th>
+                  <th scope="col">
+                    <div class="slds-truncate slds-text-align_center" title="Task">Task</div>
+                  </th>
+                  <th scope="col">
+                    <div class="slds-truncate slds-text-align_center" title="Quantity Ordered">Qty Ordered</div>
+                  </th>
+                  <th scope="col">
+                    <div class="slds-truncate slds-text-align_center" title="Quantity WIP'd">Qty WIP'd</div>
+                  </th>
+                  <th scope="col"  style="width:4rem">
+                    <div class="slds-truncate" title="Quintity Required">Qty Required</div>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <aura:iteration items="{!v.materials}" var="mat">
+                  <tr>
+                    <th scope="row" data-label="Product">
+                      <div class="slds-truncate slds-text-align_left">{!mat.productName}</div>
+                    </th>
+                    <th scope="row" data-label="Task">
+                      <div class="slds-truncate slds-text-align_center">{!mat.taskName}</div>
+                    </th>
+                    <th scope="row" data-label="Quantity Ordered">
+                      <div class="slds-truncate slds-text-align_center">{!mat.quantityOrdered}</div>
+                    </th>
+                    <th scope="row" data-label="Quantity WIP'd">
+                      <div class="slds-truncate slds-text-align_center">{!mat.quantityAllocated}</div>
+                    </th>
+                    <th scope="row" data-label="Quantity Requried">
+                      <lightning:input type="number"
+                                       value="{!mat.quantityRequired}"
+                                       class="slds-text-align_center"
+                                       variant="label-hidden" />
+                    </th>
+                  </tr>
+                </aura:iteration>
+              </tbody>
+            </table>
+          </aura:if>
+
+          <!-- Add Notes -->
+          <aura:if isTrue="{! equals(v.currentStep, v.steps[1]) }">
+            <lightning:textarea name="notes" label="Internal Notes" value="{!v.notes}" />
+          </aura:if>
+
+        </div>
+
+        <footer class="slds-modal__footer slds-grid slds-grid_align-spread">
+          <!-- Cancel Button -->
+          <lightning:button label="Cancel"
+                            variant="neutral"
+                            onclick="{!c.closeModal}"
+                            class="slds-m-right_small" />
+          <!-- Progress Indicator -->
+          <lightning:progressIndicator currentStep="{!v.currentStep}" type="base">
+              <lightning:progressStep label="{!v.steps[0]}"
+                                      title="{!v.steps[0]}"
+                                      value="{!v.steps[0]}"/>
+              <lightning:progressStep label="{!v.steps[1]}"
+                                      title="{!v.steps[1]}"
+                                      value="{!v.steps[1]}"/>
+          </lightning:progressIndicator>
+          <!-- Back Button -->
+          <lightning:button label="Back"
+                            variant="neutral"
+                            onclick="{!c.handleStepBack}"
+                            disabled="{! equals( v.currentStep, v.steps[0] )}"
+                            class="slds-m-left_small" />
+          <!-- Next Button -->
+          <aura:if isTrue="{! !equals( v.currentStep, v.steps[ 1 ] )}">
+            <lightning:button label="Next"
+                              variant="brand"
+                              onclick="{!c.handleStepNext}" />
+          </aura:if>
+          <!-- Create Button -->
+          <aura:if isTrue="{! equals( v.currentStep, v.steps[1] )}">
+            <lightning:button label="Create Parts Request"
+                              variant="success"
+                              onclick="{!c.submitRequest}" />
+          </aura:if>
+        </footer>
+      </div>
+    </section>
+    <div class="slds-backdrop slds-backdrop_open"></div>
+  </aura:if>
+
+
+</aura:component>

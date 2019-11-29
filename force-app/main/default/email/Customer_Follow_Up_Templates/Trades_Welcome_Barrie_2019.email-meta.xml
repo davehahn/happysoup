@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <description>An email sent to existing Legend customers who&#39;s boats are older than 5 years asking them to consider trading in and trading up</description>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>Legend_Letterhead</letterhead>
+    <name>Trades Welcome - Barrie 2019</name>
+    <style>freeForm</style>
+    <subject>That&#39;s a nice lookin&#39; boat you got there..</subject>
+    <textOnly>Dear {!Account.FirstName},
+
+I sincerely hope that you&#39;ve been enjoying your time with your Legend Boat so far.  You&#39;ve had more than a few summers together and from our experience, you and your boat have probably been through some awesome adventures together!
+
+Actually, based on your time of ownership, we understand many of our customers are looking to upgrade. Boat values have increased drastically over the last 2 years and many of our customers have been exploring the idea of upgrading their current Legend. Are you curious as to how much your boat would be worth? It turns out it may be worth a little more than thought! 
+
+Interest rates are at the lowest they have been (3.99%). It&#39;s probably not too far off to expect that you could get into a brand new Legend Boat for less of a monthly payment than you are making right now!
+
+I just wanted to reach out and see how you might feel about trading in your boat for a brand new Legend?  Your current boat would act as a pretty decent deposit for it! We know it can be sad to say good-bye to an old friend, but we also know how much fun it can be to welcome a new friend into your life.
+
+If you&#39;d like to know how much your boat is worth, please feel free to call or email me back.  If not, I totally understand that you&#39;re not done enjoying your boat yet and I hope that you two enjoy another season together!
+
+Yours in Boating,
+
+{!User.Name}
+{!User.Title}
+{!User.Email}
+
+www.legendboats.com
+
+{!User.Phone}
+{!User.Address}</textOnly>
+    <type>html</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

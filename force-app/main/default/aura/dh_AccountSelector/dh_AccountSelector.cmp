@@ -1,0 +1,100 @@
+<aura:component >
+
+  <aura:attribute name="accountId"          type="String"                                     />
+  <aura:attribute name="searchQuery"        type="String"                                     />
+  <aura:attribute name="selectionMade"      type="Boolean"    default="false"                 />
+  <aura:attribute name="AccountName"        type="String"                                     />
+  <aura:attribute name="AccountPhone"       type="String"                                     />
+  <aura:attribute name="AccountStreet"      type="String"                                     />
+  <aura:attribute name="AccountCity"        type="String"                                     />
+  <aura:attribute name="AccountZip"         type="String"                                     />
+  <aura:attribute name="AccountState"       type="String"                                     />
+  <aura:attribute name="AccountCountry"     type="String"                                     />
+  <aura:attribute name="AccountType"        type="String"     default="Account"               />
+  <aura:attribute name="accountScope"       type="String"                                     />
+  <aura:attribute name="showAccountCard"    type="Boolean"    default="false"                 />
+  <aura:attribute name="allowNew"           type="Boolean"    default="true"                  />
+  <aura:attribute name="isCreatingNew"      type="Boolean"    default="false"                 />
+  <aura:attribute name="label"              type="String"     default="Find Customer"         />
+  <aura:attribute name="accountIcon"        type="String"                                     />
+  <aura:attribute name="showUseAccountButton" type="Boolean" default="true" />
+
+
+  <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+  <aura:handler name="change" value="{!v.showAccountCard}" action="{!c.toggleAccountCard}" />
+  <aura:handler name="lgnd_registration_event"
+                event="c:lgnd_registration_event"
+                action="{!c.handleCreateAccount}" />
+  <aura:handler name="lgnd_account_created"
+                event="c:lgnd_account_created"
+                action="{!c.handleAccountCreated}" />
+
+  <aura:registerEvent name="accountSelectedEvent" type="c:dh_AccountSelector_Selected_Event" />
+
+
+
+  <aura:if isTrue="{! not( v.isCreatingNew )}">
+    <c:lgnd_account_search accountId="{!v.accountId}"
+                          searchQuery="{!v.searchQuery}"
+                          selectionMade="{!v.selectionMade}"
+                          aura:id="lgnd_account_search"
+                          AccountName="{!v.AccountName}"
+                          AccountPhone="{!v.AccountPhone}"
+                          AccountStreet="{!v.AccountStreet}"
+                          AccountCity="{!v.AccountCity}"
+                          AccountZip="{!v.AccountZip}"
+                          AccountState="{!v.AccountState}"
+                          AccountCountry="{!v.AccountCountry}"
+                          AccountType="{!v.AccountType}"
+                          scope="{!v.accountScope}"
+                          showAccountCard="{!v.showAccountCard}"
+                          fieldLabel="{!v.label}"
+                          allowNew="{!v.allowNew}" />
+
+    <lightning:card title="{!v.AccountName}"
+                    iconName="{!v.accountIcon}"
+                    class="slds-hide slds-m-top_medium"
+                    aura:id="account-card">
+        <aura:set attribute="actions">
+          <aura:if isTrue="{!v.showUseAccountButton}">
+            <lightning:button label="Use Account" onclick="{!c.accountSelected}" variant="brand" />
+          </aura:if>
+        </aura:set>
+
+      <div class="slds-card__body slds-card__body_inner no-overflow">
+        <table class="slds-table">
+         <!--  <tr>
+            <th>Name</th>
+            <td>{!v.AccountName}</td>
+          </tr> -->
+          <tr>
+            <th>Phone</th>
+            <td>{!v.AccountPhone}</td>
+          </tr>
+          <tr>
+            <th style="vertical-align:top">Address</th>
+            <td>
+              {!v.AccountStreet}<br/>
+              {!v.AccountCity + ', ' + v.AccountState}<br/>
+              {!v.AccountCountry + '  ' + v.AccountZip}
+            </td>
+          </tr>
+        </table>
+      </div>
+
+    </lightning:card>
+  </aura:if>
+
+  <aura:if isTrue="{! v.isCreatingNew }">
+    <c:lgnd_account_createForm accountId="{!v.accountId}"
+                               searchQuery="{!v.searchQuery}"
+                               selectionMade="{!v.selectionMade}"
+                               showAccountCard="{!v.showAccountCard}"
+                               createLead="false" />
+  </aura:if>
+
+
+
+
+
+</aura:component>

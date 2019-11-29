@@ -1,0 +1,35 @@
+<aura:component implements="force:hasRecordId,flexipage:availableForAllPageTypes">
+  <aura:attribute name="recordId" type="String" />
+  <aura:attribute name="pickListField" type="String" required="true" />
+  <aura:attribute name="pathType" type="String" required="true" default="linear" />
+  <aura:attribute name="title" type="String" />
+  <aura:attribute name="record" type="Object"/>
+  <aura:attribute name="simpleRecord" type="Object"/>
+  <aura:attribute name="recordError" type="String"/>
+
+  <ltng:require scripts="{!$Resource.Libraries +'/js/LightningUtils.js' }" />
+  <aura:handler event="force:refreshView" action="{!c.reloadRecord}" />
+
+    <force:recordData aura:id="recordHandler"
+      recordId="{!v.recordId}"
+      layoutType="FULL"
+      targetRecord="{!v.record}"
+      targetFields="{!v.simpleRecord}"
+      targetError="{!v.recordError}"
+      mode="EDIT"
+      />
+
+
+  <div class="slds-card">
+    <lightning:spinner alternativeText="Loading"
+                       size="small"
+                       aura:id="spinner"
+                       class="slds-hide" />
+    <h1 class="slds-text-title_caps slds-text-align_center">{!v.title}</h1>
+    <lightning:picklistPath aura:id="picklistPath" recordId="{!v.recordId}"
+        picklistFieldApiName="{!v.pickListField}"
+        variant="{!v.pathType}"
+        onselect="{!c.handleSelect}">
+    </lightning:picklistPath>
+  </div>
+</aura:component>

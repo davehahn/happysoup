@@ -1,0 +1,372 @@
+<apex:page showHeader="true" applyBodyTag="false" renderAs="pdf">
+	<apex:stylesheet value="https://fonts.googleapis.com/css?family=Montserrat"/>
+	<head>
+		<style>
+			@page { 
+				size:portrait; 
+				margin: 0.5in 0.5in 0.5in 0.5in;
+				@bottom-center{content: element(footer);}
+	    }
+
+			.footer {
+				display: block;
+				padding: 5px;
+				position: running(footer);
+				font-size: 8pt;
+        width:100%;
+        text-align: center;
+			}
+			.pagenumber:before {
+				content: counter(page);
+			}
+			.pagecount:before {
+				content: counter(pages);
+			}
+
+	    body {
+	    	font-family: 'Montserrat', Helvetica, Arial, sans-serif;
+	    	font-size: 10pt;
+	    	color: #333;
+	    }
+
+	    table {
+	    	border-spacing: 0;
+	    }
+
+	    .content h1 {
+    		font-size: 14pt;
+    		font-weight: bold;
+    		text-align: center;
+    		padding: 2em 0 1em 0;
+    	}
+
+    	.logo {
+    		text-align: right;
+    	}
+    	.logo img {
+    		width: 55%;
+    	}
+
+	    th, td {
+	    	padding: 4pt;
+	    	font-weight: normal;
+	    	font-size: 8pt;
+	    }
+
+	    table.summary {
+	    	width: 100%;
+	    	margin: 1em 0;
+	    }
+	    table.summary table { width: 100%; }
+	    table.summary td {
+	    	width: 60%;
+	    	padding: 0;
+	    }
+	    	table.summary table td {
+	    		padding: 5pt 4pt;
+	    	}
+	    table.summary td+td {
+	    	width: 40%;
+	    }
+	    table.summary tr.last th,
+	    table.summary tr.last td {
+	    	font-weight: bold;
+	    	background: #c6f0ff;
+	    }
+
+	    .master { 
+	    	margin: 2em 0;
+	    }
+
+	    .master th {
+	    	border-top: 0.5pt solid #00b1f0;
+	    	font-weight: bold;
+	    	background: #c6f0ff;
+	    }
+	    	.master th.tableHeader {
+	    		border-top: 2pt solid #00b1f0;
+	    		padding: 5pt 4pt;
+	    		font-weight: bold;
+	    		background: none;
+	    		font-size: 10pt;
+	    		color: #002938;
+	    	}
+	    .master td {
+	    	border-top: 0.5pt solid #7fddff;
+	    }
+	    	.master .erp td {
+	    		border-top: none;
+	    		padding-left: 2em;
+	    		padding-top: 0;
+	    	}
+	    	.master .subtotal td {
+	    		border-top: none;
+	    		padding-top: 0;
+	    	}
+
+	    .txt { text-align: left; }
+	    .num { text-align: right; }
+	    .header {}
+	    	.header .logo {
+	    		float: right;
+	    	}
+	    	.header .address {
+	    		font-size: 8pt;
+	    		float: left;
+	    	}
+
+	    .content {
+	    	clear: both;
+	    }
+	    	.content table.master {
+	    		width: 100%;
+	    	}
+	  </style>
+	</head>
+	<body>
+		<div class="header">
+			<div class="logo"><img src="https://legendboats--full--c.cs96.visual.force.com/resource/1532610568000/X2015LegendLogoRoundEdgeHorizontalbl?isdtp=p1" alt="Legend Boats" /></div>
+			<div class="address">
+				Legend Boats<br/>
+				4795 Regional Road 55<br/>
+				Whitefish, ON  P0M 3E0<br/>
+				Canada
+			</div>
+		</div>
+		<div class="footer">
+      <div>Page <span class="pagenumber"/> of <span class="pagecount"/></div>
+    </div>
+		<div class="content">
+			<h1>Account Statement</h1>
+
+			<table class="summary">
+				<tr>
+					<td>
+						Bourque's Auto Sales<br/>
+						110, Hwy 11 West<br/>
+						Cochrane, ON  P0L 1C0<br/>
+						Canada
+					</td>
+					<td>
+						<table>
+							<tr>
+								<th>Statement Date</th>
+								<td class="num">June 28, 2018</td>
+							</tr>
+							<tr>
+								<th>Reference Number</th>
+								<td class="num">20180928023</td>
+							</tr>
+							<tr class="last">
+								<th>Amount Owing:</th>
+								<td class="num">$4,268.60</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+			</table>
+
+			<table class="master">
+				<tr>
+					<th class="tableHeader" colspan="9">Billings</th>
+				</tr>
+				<tr>
+					<th class="txt">ID</th>
+					<th class="txt">Type</th>
+					<th class="num">Date Issued</th>
+					<th class="txt">Reference</th>
+					<th class="num">Due Date</th>
+					<th class="num">Total</th>
+					<th class="num">Paid</th>
+					<th class="num">Financed</th>
+					<th class="num">Balance</th>
+				</tr>
+				<tr>
+					<td class="txt">00017141</td>
+					<td class="txt">Invoice</td>
+					<td class="num">01/06/2018</td>
+					<td class="txt">Partner Reference #</td>
+					<td class="num">02/06/2018</td>
+					<td class="num">$2,922.30</td>
+					<td class="num">$1,500.00</td>
+					<td class="num">$0.00</td>
+					<td class="num">$1,422.30</td>
+				</tr>
+				<tr class="erp">
+					<td colspan="8">
+						<strong>&raquo; ERP Order</strong>: 25776-Bour_20180605
+					</td>
+				</tr>
+				<tr>
+					<td class="txt">00017132</td>
+					<td class="txt">Credit Memo</td>
+					<td class="num">01/06/2018</td>
+					<td class="txt">Partner Reference #</td>
+					<td class="num">02/06/2018</td>
+					<td class="num"></td>
+					<td class="num">$23.50</td>
+					<td class="num"></td>
+					<td class="num">$-23.50</td>
+				</tr>
+				<tr class="erp">
+					<td colspan="8">
+						<strong>&raquo; ERP Order</strong>: 25776-Bour_20180605
+					</td>
+				</tr>
+				<tr>
+					<td class="txt">00017143</td>
+					<td class="txt">Invoice</td>
+					<td class="num">01/06/2018</td>
+					<td class="txt">Partner Reference #</td>
+					<td class="num">02/06/2018</td>
+					<td class="num">$2,922.30</td>
+					<td class="num">$1,500.00</td>
+					<td class="num">$1,422.30</td>
+					<td class="num">$0.00</td>
+				</tr>
+				<tr class="erp">
+					<td colspan="8">
+						<strong>&raquo; ERP Order</strong>: 25776-Bour_20180605
+					</td>
+				</tr>
+				<tr>
+					<td class="txt">00017128</td>
+					<td class="txt">Credit Memo</td>
+					<td class="num">01/06/2018</td>
+					<td class="txt">Partner Reference #</td>
+					<td class="num">02/06/2018</td>
+					<td class="num"></td>
+					<td class="num">$52.50</td>
+					<td class="num"></td>
+					<td class="num">$-52.50</td>
+				</tr>
+				<tr class="erp">
+					<td colspan="8">
+						<strong>&raquo; ERP Order</strong>: 25776-Bour_20180605
+					</td>
+				</tr>
+				<tr>
+					<td class="txt">00017145</td>
+					<td class="txt">Invoice</td>
+					<td class="num">01/06/2018</td>
+					<td class="txt">Partner Reference #</td>
+					<td class="num">02/06/2018</td>
+					<td class="num">$2,922.30</td>
+					<td class="num">$0.00</td>
+					<td class="num">$0.00</td>
+					<td class="num">$2,922.30</td>
+				</tr>
+				<tr class="erp">
+					<td colspan="8">
+						<strong>&raquo; ERP Order</strong>: 25776-Bour_20180605
+					</td>
+				</tr>
+				<tr>
+					<td class="num" colspan="5"><strong>Totals:</strong></td>
+					<td class="num"><strong>$8,766.90</strong></td>
+					<td class="num"><strong>$3,076.00</strong></td>
+					<td class="num"><strong>$1,422.30</strong></td>
+					<td class="num"><strong>$4,268.60</strong></td>
+				</tr>
+			</table>
+
+			<table class="master">
+				<tr>
+					<th class="tableHeader" colspan="8">Payment Receipts</th>
+				</tr>
+				<tr>
+					<th class="txt">ID</th>
+					<th class="txt">Type</th>
+					<th class="num">Date Issued</th>
+					<th class="txt">Reference</th>
+					<th class="num"></th>
+					<th class="num">Received</th>
+					<th class="num">Applied</th>
+					<th class="num">Balance</th>
+				</tr>
+				<tr>
+					<td class="txt">CR-10961</td>
+					<td class="txt">Cash Receipt</td>
+					<td class="num">01/06/2018</td>
+					<td class="txt">Partner Reference #</td>
+					<td class="num"></td>
+					<td class="num">$1,000.00</td>
+					<td class="num">$1,000.00</td>
+					<td class="num">$0.00</td>
+				</tr>
+				<tr>
+					<td class="txt">CR-10962</td>
+					<td class="txt">Financing</td>
+					<td class="num">01/06/2018</td>
+					<td class="txt">Wells Fargo Capital Finance Corporation Canada</td>
+					<td class="num"></td>
+					<td class="num">$1,422.30</td>
+					<td class="num">$1,422.30</td>
+					<td class="num">$0.00</td>
+				</tr>
+				<tr>
+					<td class="txt">CR-10963</td>
+					<td class="txt">Cash Receipt</td>
+					<td class="num">01/06/2018</td>
+					<td class="txt">Partner Reference #</td>
+					<td class="num"></td>
+					<td class="num">$1,500.00</td>
+					<td class="num">$1,500.00</td>
+					<td class="num">$0.00</td>
+				</tr>
+				<tr>
+					<td colspan="5" class="num"><strong>Totals:</strong></td>
+					<td class="num"><strong>$4,422.30</strong></td>
+					<td class="num"><strong>$4,422.30</strong></td>
+					<td class="num"><strong>$0.00</strong></td>
+				</tr>
+			</table>
+
+			<table class="master">
+				<tr>
+					<th class="tableHeader" colspan="8">Application of Credits &amp; Receipts</th>
+				</tr>
+				<tr>
+					<th class="txt">Date</th>
+					<th class="txt">Credit or Receipt</th>
+					<th class="txt">Applied To</th>
+					<th class="num">Total</th>
+					<th class="num">Applied</th>
+					<th class="num">Unapplied</th>
+				</tr>
+				<tr>
+					<td class="txt">01/06/2018</td>
+					<td class="txt">CR-10961</td>
+					<td class="txt">00017141</td>
+					<td class="num">$1,000.00</td>
+					<td class="num">$1,000.00</td>
+					<td class="num">$0.00</td>
+				</tr>
+				<tr>
+					<td class="txt">01/06/2018</td>
+					<td class="txt">Credit Memo: 00017125</td>
+					<td class="txt">00017141</td>
+					<td class="num">$500.00</td>
+					<td class="num">$500.00</td>
+					<td class="num">$0.00</td>
+				</tr>
+				<tr>
+					<td class="txt">01/06/2018</td>
+					<td class="txt">CR-10962</td>
+					<td class="txt">00017143</td>
+					<td class="num">$1,500.00</td>
+					<td class="num">$1,500.00</td>
+					<td class="num">$0.00</td>
+				</tr>
+				<tr>
+					<td class="txt">01/06/2018</td>
+					<td class="txt">CR-10963</td>
+					<td class="txt">00017143</td>
+					<td class="num">$1,422.30</td>
+					<td class="num">$1,422.30</td>
+					<td class="num">$0.00</td>
+				</tr>
+			</table>
+		</div>
+	</body>
+</apex:page>

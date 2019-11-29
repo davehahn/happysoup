@@ -1,0 +1,280 @@
+<aura:component controller="RegistrationExt"
+								access="global"
+								implements="forceCommunity:availableForAllPageTypes,flexipage:availableForAllPageTypes">
+
+  <aura:attribute name="registration" 					type="Registration__c" 														/>
+	<aura:attribute name="NestedItems" 						type="List"																				/>
+	<aura:attribute name="MotorUpgrades" 					type="List"																				/>
+	<aura:attribute name="title" 									type="String" 		default="Product Registration"	/>
+	<aura:attribute name="acctLabel"							type="String" 		default="Customer"							/>
+	<aura:attribute name="serno" 									type="String" 																		/>
+	<aura:attribute name="sernoId" 								type="String" 																		/>
+	<aura:attribute name="nestId" 								type="String" 																		/>
+	<aura:attribute name="accountId" 							type="Id" 																		/>
+	<aura:attribute name="searchQuery" 						type="String" 																		/>
+	<aura:attribute name="errorMessage"						type="String" 																		/>
+	<aura:attribute name="ProductName"        		type="String" 																		/>
+	<aura:attribute name="ProductId"        			type="String" 																		/>
+	<aura:attribute name="ProductDescription" 		type="String" 																		/>
+	<aura:attribute name="ProductType"        		type="String" 																		/>
+	<aura:attribute name="ProductLocation"    		type="String" 																		/>
+	<aura:attribute name="AccountName"     				type="String" 																		/>
+	<aura:attribute name="AccountPhone"    				type="String" 																		/>
+	<aura:attribute name="AccountStreet"   				type="String" 																		/>
+	<aura:attribute name="AccountCity"     				type="String" 																		/>
+	<aura:attribute name="AccountZip"      				type="String" 																		/>
+	<aura:attribute name="AccountState"    				type="String" 																		/>
+	<aura:attribute name="AccountCountry"  				type="String" 																		/>
+	<aura:attribute name="AccountType"  					type="String"			default="Account" 							/>
+	<aura:attribute name="accountScope"			 			type="String" 		default="customer"							/>
+	<aura:attribute name="context"  							type="String"   	default="unlimited"					    />
+	<aura:attribute name="regLabel" 							type="String"   	default="Register"					    />
+	<aura:attribute name="MotorUpgrade"						type="String"																			/>
+	<aura:attribute name="MotorSerial"						type="String"																			/>
+	<aura:attribute name="caseId" 								type="String" 																		/>
+	<aura:attribute name="RestrictToThisProduct" 	type="String"                     								/>
+	<aura:attribute name="DeliveryDate"						type="Date"																				/>
+	<aura:attribute name="hideSernoSearch" 				type="Boolean" 		default="false" 								/>
+	<aura:attribute name="productRegistered" 			type="Boolean" 		default="false" 								/>
+	<aura:attribute name="canBeNest"							type="Boolean"		default="false"									/>
+	<aura:attribute name="showProductCard"				type="Boolean" 		default="false" 								/>
+	<aura:attribute name="showAccountCard"				type="Boolean" 		default="false" 								/>
+	<aura:attribute name="selectionMade" 					type="Boolean" 		default="false" 								/>
+	<aura:attribute name="sernoSelected" 					type="Boolean" 		default="false" 								/>
+	<aura:attribute name="redirectToRecord" 			type="Boolean" 		default="true" 									/>
+	<aura:attribute name="regInProcess" 					type="Boolean" 		default="false" 								/>
+	<aura:attribute name="paymentMethod"					type="String"			default="Cash"									/>
+	<aura:attribute name="salesPeople"						type="List"																				/>
+	<aura:attribute name="memoryMaker"						type="String"																			/>
+
+
+	<ltng:require scripts="{! join(',', $Resource.Libraries +'/js/LightningApex.js',
+                          						$Resource.Libraries +'/js/LightningUtils.js') }"
+                afterScriptsLoaded="{!c.doInit}"  />
+
+	<aura:handler name="lgnd_registration_event" event="c:lgnd_registration_event" action="{!c.lgndRegistrationEvent}" />
+
+	<aura:handler name="change" value="{!v.accountId}" action="{!c.accountCreated}" />
+
+	<aura:handler name="change" value="{!v.showAccountCard}" action="{!c.toggleAccountCard}" />
+	<aura:handler name="change" value="{!v.errorMessage}" action="{!c.toggleMessage}" />
+	<aura:handler name="change" value="{!v.ProductId}" action="{!c.populateUpgrades}" />
+	<aura:handler name="change" value="{!v.canBeNest}" action="{!c.clearUpgrades}" />
+
+	<div class="slds-grid slds-wrap">
+		<div class="slds-size_1-of-1">
+			<lightning:spinner aura:id="registrationSpinner" class="slds-hide" />
+		</div>
+		<lightning:card title="{!v.title}" iconName="action:add_relationship" class="slds-p-horizontal_small slds-size_1-of-1">
+			<div aura:id="registration">
+				<div class="slds-grid slds-wrap">
+					<div class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_error slds-hide" aura:id="alert" role="alert">
+					  <span class="slds-assistive-text">error</span>
+					  <p>{!v.errorMessage}</p>
+					</div>
+					<aura:if isTrue="{!v.productRegistered}">
+						<div class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_info" aura:id="success" role="alert">
+						  <span class="slds-assistive-text">success</span>
+						  <p>Product has been registered. High five!</p>
+						</div>
+					</aura:if>
+					<div class="slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_6-of-12">
+						<div class="{! v.hideSernoSearch == true ? 'slds-hide' : '' }">
+							<div class="slds-p-horizontal_small">
+								<c:lgnd_serno_search serno="{!v.serno}"
+																		sernoId="{!v.sernoId}"
+																		nestId="{!v.nestId}"
+																		showProductCard="{!v.showProductCard}"
+																		ProductName="{!v.ProductName}"
+																		ProductId="{!v.ProductId}"
+																		ProductDescription="{!v.ProductDescription}"
+																		ProductType="{!v.ProductType}"
+																		ProductLocation="{!v.ProductLocation}"
+																		selectionMade="{!v.sernoSelected}"
+																		canBeNest="{!v.canBeNest}"
+																		errorMessage="{!v.errorMessage}"
+																		context="{!v.context}"
+																		RestrictToThisProduct="{!v.RestrictToThisProduct}"
+																		aura:id="sernoSearch" />
+							</div>
+						</div>
+						<div class="{! v.hideSernoSearch != true ? 'slds-hide' : '' }">
+							<div class="slds-p-horizontal_small">
+								<lightning:input type="text" label="Serial Number" name="search" value="{!v.serno}" readonly="true" disabled="true" />
+							</div>
+						</div>
+						<article class="{! v.showProductCard == true ? 'slds-card' : 'slds-hide' }" aura:id="product-card" id="product-card">
+						  <div class="slds-card__header slds-grid">
+						    <header class="slds-media slds-media_center slds-has-flexi-truncate">
+						      <div class="slds-media__figure">
+						         <lightning:icon iconName="custom:custom55" />
+						      </div>
+						      <div class="slds-media__body">
+						        <h2>
+						          <a href="javascript:void(0);" class="slds-card__header-link slds-truncate" title="[object Object]">
+						            <span class="slds-text-heading_small">Product</span>
+						          </a>
+						        </h2>
+						      </div>
+						    </header>
+						  </div>
+						  <div class="slds-card__body slds-card__body_inner no-overflow">
+						  	<table class="slds-table">
+						  		<tr>
+						  			<th>Name</th>
+						  			<td title="{!v.ProductName}">{!v.ProductName}</td>
+						  		</tr>
+						  		<tr>
+						  			<th>Type</th>
+						  			<td>{!v.ProductType}</td>
+						  		</tr>
+						  	</table>
+						  </div>
+						</article>
+					</div>
+					<div class="slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_6-of-12">
+						<div class="slds-p-horizontal_small">
+							<c:lgnd_account_search accountId="{!v.accountId}"
+																		searchQuery="{!v.searchQuery}"
+																		selectionMade="{!v.selectionMade}"
+																		showAccountCard="{!v.showAccountCard}"
+																		aura:id="lgnd_account_search"
+																		AccountName="{!v.AccountName}"
+																		AccountPhone="{!v.AccountPhone}"
+																		AccountStreet="{!v.AccountStreet}"
+																		AccountCity="{!v.AccountCity}"
+																		AccountZip="{!v.AccountZip}"
+																		AccountState="{!v.AccountState}"
+																		AccountCountry="{!v.AccountCountry}"
+																		AccountType="{!v.AccountType}"
+																		scope="{!v.accountScope}"
+																		fieldLabel="{!v.acctLabel}" />
+						</div>
+						<article class="slds-card slds-hide" aura:id="account-card" id="account-card">
+						  <div class="slds-card__header slds-grid">
+						    <header class="slds-media slds-media_center slds-has-flexi-truncate">
+						      <div class="slds-media__figure">
+						         <lightning:icon iconName="standard:person_account" />
+						      </div>
+						      <div class="slds-media__body">
+						        <h2>
+						          <a href="javascript:void(0);" class="slds-card__header-link slds-truncate" title="[object Object]">
+						            <span class="slds-text-heading_small">Account</span>
+						          </a>
+						        </h2>
+						      </div>
+						    </header>
+						  </div>
+						  <div class="slds-card__body slds-card__body_inner no-overflow">
+						  	<table class="slds-table">
+						  		<tr>
+						  			<th>Name</th>
+						  			<td>{!v.AccountName}</td>
+						  		</tr>
+						  		<tr>
+						  			<th>Phone</th>
+						  			<td>{!v.AccountPhone}</td>
+						  		</tr>
+						  		<tr>
+						  			<th>Address</th>
+						  			<td>
+						  				{!v.AccountStreet}<br/>
+						  				{!v.AccountCity + ', ' + v.AccountState}<br/>
+						  				{!v.AccountCountry + '  ' + v.AccountZip}
+						  			</td>
+						  		</tr>
+						  	</table>
+						  </div>
+						</article>
+					</div>
+
+					<aura:if isTrue="{! and(v.MotorUpgrades.length gt 0, v.canBeNest)}">
+						<aura:if isTrue="{! v.accountScope != 'dealer'}">
+							<div class="slds-size_1-of-1">
+								<div style="margin: 0 0.75rem 0.75rem 0.75rem">
+									<article class="slds-card" style="padding: 0.75rem">
+										<h4>Motor {!v.accountScope}</h4>
+								    <lightning:select name="selectItem" label="Select an item" value="{!v.MotorUpgrade}">
+							        <option value="">choose one...</option>
+					          	<aura:iteration items="{!v.MotorUpgrades}" var="upgrade">
+						            <option value="{!upgrade.Id}">{!upgrade.Name}</option>
+						          </aura:iteration>
+								    </lightning:select>
+								    <aura:if isTrue="{! v.MotorUpgrade != '' }">
+								    	<lightning:input label="Motor Serial Number" value="{!v.MotorSerial}" />
+								    </aura:if>
+									</article>
+								</div>
+							</div>
+						</aura:if>
+					</aura:if>
+
+					<div class="slds-size_1-of-1">
+						<c:lgnd_nested_items nestId="{!v.nestId}"
+																 NestedItems="{!v.NestedItems}"
+																 sernoSelected="{!v.sernoSelected}"
+																 canBeNest="{!v.canBeNest}" />
+					</div>
+
+					<div class="slds-large-size_1-of-2 slds-medium-size_1-of-2 slds-small-size_1-of-1">
+						<div style="margin: 0.75rem">
+							<article class="slds-card" id="deliveryDate" style="padding: 0.75rem">
+								<h4>Delivery Date</h4>
+								<ui:inputDate aura:id="dateField"
+															label="When is the customer picking up their boat?"
+															value="{! v.DeliveryDate }"
+															displayDatePicker="true"/>
+							</article>
+						</div>
+					</div>
+
+					<!-- <aura:if isTrue="{! !empty(v.salesPeople) }"> -->
+						<div class="slds-large-size_1-of-2 slds-medium-size_1-of-2 slds-small-size_1-of-1">
+							<div style="margin: 0.75rem">
+								<article class="slds-card" id="salesPerson" style="padding: 0.75rem">
+									<h4>Memory Maker</h4>
+									<lightning:select label="Who made the sale?" value="{!v.memoryMaker}">
+										<option value="">- Select -</option>
+										<aura:iteration items="{!v.salesPeople}" var="sp">
+											<option value="{!sp.Id}">{! join(' ', sp.FirstName, sp.LastName)}</option>
+										</aura:iteration>
+									</lightning:select>
+								</article>
+							</div>
+						</div>
+					<!-- </aura:if> -->
+
+					<div class="slds-size_1-of-1">
+						<div style="margin: 0.75rem">
+							<article class="slds-card" id="paymentMethod" style="padding: 0.75rem">
+								<h4>Payment Method</h4>
+								<lightning:select name="paymentMethod" label="Was this a cash or finance deal?" value="{!v.paymentMethod}">
+									<option value="Cash">Cash</option>
+									<option value="Finance">Finance</option>
+								</lightning:select>
+							</article>
+						</div>
+					</div>
+				</div>
+
+				<div class="slds-size_1-of-1 slds-p-horizontal_small">
+					<div class="slds-p-around_large slds-float_right">
+			    	<aura:if isTrue="{!v.context == 'limited'}">
+			    		<lightning:button variant="base" label="Cancel" onclick="{!c.cancelRegister}" aura:id="buttonCancelRegister" />
+			    	</aura:if>&nbsp;
+			    	<lightning:button variant="brand" label="{!v.regLabel}" onclick="{!c.clickRegister}" aura:id="buttonClickRegister" />
+			    </div>
+				</div>
+			</div>
+
+			<div class="slds-hide" aura:id="accountCreationForm">
+				<c:lgnd_account_createForm accountId="{!v.accountId}"
+																	 searchQuery="{!v.searchQuery}"
+																	 selectionMade="{!v.selectionMade}"
+																	 showAccountCard="{!v.showAccountCard}" />
+			</div>
+
+		</lightning:card>
+
+	</div>
+</aura:component>

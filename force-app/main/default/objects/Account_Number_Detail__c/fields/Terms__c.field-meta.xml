@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Terms__c</fullName>
+    <description>Payment Terms</description>
+    <externalId>false</externalId>
+    <label>Payment Terms</label>
+    <required>false</required>
+    <trackFeedHistory>true</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <controllingField>Type__c</controllingField>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Payment in full by April 1st</fullName>
+                <default>false</default>
+                <label>Payment in full by April 1st</label>
+            </value>
+            <value>
+                <fullName>1/2 April 1st, 1/2 May 1st</fullName>
+                <default>false</default>
+                <label>Payment In Full by May 1st</label>
+            </value>
+            <value>
+                <fullName>1/3 April 1st, 1/3 May 1st, 1/3 June 1st</fullName>
+                <default>false</default>
+                <label>Payment In Full by June 1st</label>
+            </value>
+            <value>
+                <fullName>Cash in Advance - 2%</fullName>
+                <default>false</default>
+                <label>Cash in Advance - 2%</label>
+            </value>
+            <value>
+                <fullName>Cash in Advance - 4%</fullName>
+                <default>false</default>
+                <label>Cash in Advance - 4%</label>
+            </value>
+            <value>
+                <fullName>Cash in Advance - 6%</fullName>
+                <default>false</default>
+                <label>Cash in Advance - 6%</label>
+            </value>
+            <value>
+                <fullName>Finance</fullName>
+                <default>false</default>
+                <label>Finance</label>
+            </value>
+            <value>
+                <fullName>Cash</fullName>
+                <default>false</default>
+                <label>Cash</label>
+            </value>
+            <value>
+                <fullName>On Account</fullName>
+                <default>false</default>
+                <label>On Account</label>
+            </value>
+        </valueSetDefinition>
+        <valueSettings>
+            <controllingFieldValue>Boats</controllingFieldValue>
+            <valueName>Finance</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Boats</controllingFieldValue>
+            <controllingFieldValue>Parts</controllingFieldValue>
+            <valueName>Cash</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Parts Booking Order</controllingFieldValue>
+            <valueName>Payment in full by April 1st</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Parts Booking Order</controllingFieldValue>
+            <valueName>1/2 April 1st, 1/2 May 1st</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Parts Booking Order</controllingFieldValue>
+            <valueName>1/3 April 1st, 1/3 May 1st, 1/3 June 1st</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Parts Booking Order</controllingFieldValue>
+            <valueName>Cash in Advance - 2%</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Parts Booking Order</controllingFieldValue>
+            <valueName>Cash in Advance - 4%</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Parts Booking Order</controllingFieldValue>
+            <valueName>Cash in Advance - 6%</valueName>
+        </valueSettings>
+    </valueSet>
+</CustomField>

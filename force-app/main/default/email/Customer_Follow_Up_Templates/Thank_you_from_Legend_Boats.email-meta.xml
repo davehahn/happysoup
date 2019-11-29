@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>Legend_Letterhead</letterhead>
+    <name>Thank you from Legend Boats</name>
+    <style>freeForm</style>
+    <subject>Thank you from Legend Boats</subject>
+    <textOnly>Dear {!Account.FirstName},
+I&#39;d like to take this time to thank you again for choosing Legend Boats to help you create a lifetime of memories on the water.
+
+At Legend, we firmly believe that the purchase of a boat is just the beginning of our relationship with you.  I can personally assure you that we are totally committed to making sure your boating experience is nothing less than the best at all times.  Since you&#39;ve placed your confidence with us, everyone here at Legend Boats realizes that your satisfaction is the key to our future.
+
+Please give me a call any time you have a question or special request; I specialize in making your life easier.
+
+From all of us here at Legend, thank you.
+
+Sincerely,
+
+{!User.Name}
+{!User.Title}
+
+{!User.Email}
+{!User.Phone}
+legendboats.com
+
+{!User.Address}</textOnly>
+    <type>html</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

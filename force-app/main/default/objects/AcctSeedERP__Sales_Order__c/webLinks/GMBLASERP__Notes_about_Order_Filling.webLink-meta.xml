@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebLink xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>GMBLASERP__Notes_about_Order_Filling</fullName>
+    <availability>online</availability>
+    <displayType>link</displayType>
+    <linkType>javascript</linkType>
+    <masterLabel>Notes about Order Filling</masterLabel>
+    <openType>onClickJavaScript</openType>
+    <protected>false</protected>
+    <url>var msg = &quot;1) When the [Fill] button is clicked, an attempt is made to allocate inventory (using an Outbound Inventory Movement) for each Sales Order Line for which the Product is a non-serialized, non-lot-tracked inventory product, and for which inventory is available in the selected warehouse. If a Fill Date is specified, that date will be used for the inventory movements.  If a Fill Date is not specified, today\&#39;s date will be used.  Inventory levels must be sufficiently high on the Fill Date (and also on today\&#39;s date, if the two are not equal) in order for an order line to be completely filled.  2) When the [Unfill] button is clicked, all Outbound Inventory Movements that are in a period that is open are deleted.  3) When the [Create Billing] button is clicked, a new billing is created, with a billing line for each Sales Order line.  The rate of the Billing Line is the Unit Price of the Sales Order Line.  The Quantity of the Billing Line is the difference between the quantity that has already been filled for that Sales Order Line (or, in the case of a non-inventory product, the quantity that has been ordered) and the quantity that has already been billed for that Sales Order Line.&quot;;
+alert(msg);</url>
+</WebLink>

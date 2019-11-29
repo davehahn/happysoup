@@ -1,0 +1,12 @@
+<aura:component >
+  <aura:attribute name="isVisible" type="Boolean" default="false" />
+
+  <aura:method name="toggle" action="{!c.toggle}" />
+
+  <aura:if isTrue="{!v.isVisible}">
+    <div class="lgnd-spinner">
+      <img src="{! $Resource.LegendLoadingIndicator2017}" />
+    </div>
+  </aura:if>
+
+</aura:component>

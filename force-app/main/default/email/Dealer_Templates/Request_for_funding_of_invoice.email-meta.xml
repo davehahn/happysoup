@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <description>Request for funding of invoice</description>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>Legend_Letterhead</letterhead>
+    <name>Request for funding of invoice</name>
+    <style>freeForm</style>
+    <subject>Request to fund invoicing - {!AcctSeed__Project__c.AcctSeedERP__Work_Order_Number__c}</subject>
+    <textOnly>{!Account.Name}
+
+Please process the attached invoice for funding.
+
+Invoice Number: {!AcctSeed__Project__c.Name}
+
+
+If there are any questions or concerns please contact our Dealer Care Team.
+
+Thank-you,</textOnly>
+    <type>html</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

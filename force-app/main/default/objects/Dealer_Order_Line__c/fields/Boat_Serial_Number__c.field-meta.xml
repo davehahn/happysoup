@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Boat_Serial_Number__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <description>The serial number of the Boat Tagged on the associated ERP</description>
+    <externalId>false</externalId>
+    <label>Boat_Serial Number</label>
+    <referenceTo>GMBLASERP__Serial_Number__c</referenceTo>
+    <relationshipLabel>Dealer Order Lines</relationshipLabel>
+    <relationshipName>Dealer_Order_Lines</relationshipName>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

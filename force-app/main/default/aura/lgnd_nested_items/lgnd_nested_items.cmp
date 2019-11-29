@@ -1,0 +1,68 @@
+<aura:component controller="RegistrationExt">
+	<aura:attribute type="String" 												name="nestId" 												/>
+	<aura:attribute type="GMBLASERP__Serial_Number__c[]"	name="NestedItems" 										/>
+	<aura:attribute type="Boolean" 												name="sernoSelected"	default="false"	/>
+	<aura:attribute type="String" 												name="newSerno" 		 									/>
+	<aura:attribute type="String" 												name="newSernoId" 	 									/>
+	<aura:attribute type="String" 												name="stage" 	 				default=""			/>
+	<aura:attribute type="String" 												name="holdingCell" 	 	default=""			/>
+	<aura:attribute type="String"													name="errorMessage"				 						/>
+	<aura:attribute type="Boolean"												name="canBeNest"			default="true"	/>
+	<aura:attribute type="String"   											name="context"        default="limited"    />
+
+	<aura:handler name="change" value="{!v.nestId}" action="{!c.updateNestedItems}" />
+	<aura:if isTrue="{!and(v.canBeNest)}">
+		<div style="margin: 0 0.75rem">
+			<article class="slds-card" style="padding: 0.75rem">
+				<h4>Associated Inventory</h4>
+				<aura:if isTrue="{!v.NestedItems.length > 0}">
+					<p><small>The following products were initially sold as a package with this product. Should they be transferred as well?</small></p>
+					<aura:set attribute="else">
+						<p><small>No other products are currently packaged with this one.</small></p>
+					</aura:set>
+				</aura:if>
+				<br/>
+				<div class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_error slds-hide" aura:id="alert" role="alert">
+				  <span class="slds-assistive-text">error</span>
+				  <p>{!v.errorMessage}</p>
+				</div>
+				<table class="slds-table">
+					<aura:if isTrue="{!v.NestedItems.length > 0}">
+						<tr class="slds-text-title_caps slds-line-height_reset">
+							<th>Serial Number</th>
+							<th>Type</th>
+							<th>Product</th>
+							<th></th>
+						</tr>
+					</aura:if>
+					<aura:iteration items="{!v.NestedItems}" var="item" indexVar="i">
+						<tr aura:id="{!item.Id}" class="record" id="{!item.Id}">
+							<td>{!item.Name}</td>
+							<td>{!item.Product_Record_Type__c}</td>
+							<td>{!item.Product_Name__c}</td>
+							<td>
+								<lightning:button variant="neutral" label="Replace" value="{!item.Id}" onclick="{!c.replaceNestedItem}" />
+								&nbsp;
+								<lightning:button variant="neutral" label="Remove" value="{!i}" onclick="{!c.removeFromNest}" />
+							</td>
+						</tr>
+					</aura:iteration>
+					<tr id="addNestedItemButton">
+						<td colspan="5">
+							<lightning:button variant="neutral" label="+ Add Item" onclick="{!c.addNestedItem}" />
+						</td>
+					</tr>
+					<tr class="slds-hide" id="addItem">
+						<td colspan="3" class="no-label">
+							<c:lgnd_serno_search serno="{!v.newSerno}" sernoId="{!v.newSernoId}" context="{!v.context}" placeholder="Search by serial number" skipCard="true" />
+						</td>
+						<td>
+							<lightning:button variant="neutral" label="Submit" onclick="{!c.addToNestedItems}" />&nbsp;
+							<lightning:button variant="bare" label="Cancel" onclick="{!c.cancelAddingNestedItem}" />
+						</td>
+					</tr>
+				</table>
+			</article>
+		</div>
+	</aura:if>
+</aura:component>

@@ -1,0 +1,292 @@
+<aura:component controller="Rigger_Schedule_mp" implements="force:hasRecordId,lightning:actionOverride">
+
+	<ltng:require scripts="{!join(',', $Resource.Libraries +'/js/LightningApex.js',
+                                     $Resource.Libraries +'/js/LightningUtils.js') }" />
+	<aura:attribute type="Id" name="selectedJobId" access="global"/>
+	<aura:attribute type="Rigger_Job__c" name="job" />
+	<aura:attribute type="String" name="title" />
+	<aura:attribute type="Boolean" name="loading" default="true" />
+
+	<aura:registerEvent name="riggingItemDropped" type="c:Rigging_ItemDropped_Event" />
+
+	<aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+	
+	<section class="{! if(v.loading, 'slds-modal__container loading', 'slds-modal__container')}" aura:id="job-form">
+		<div class="slds-page-header">
+			<div class="slds-page-header__row">
+				<div class="slds-page-header__col-title">
+					<div class="slds-media">
+						<div class="slds-media__figure">
+							<lightning:icon iconName="custom:custom19" />
+						</div>
+						<div class="slds-media__body">
+							<div class="slds-page-header__name">
+								<div class="slds-page-header__name-title">
+									<h1>
+										<span>{!v.job.ERP_Order__r.Job_Status__c}</span>
+										<span class="slds-page-header__title slds-truncate">{!v.title}</span>
+									</h1>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="slds-page-header__col-actions">
+					<div class="slds-page-header__controls">
+						<div class="slds-page-header__control">
+							<ul class="slds-button-group-list">
+								<li>
+									<aura:if isTrue="{! and( !v.loading, v.job.Id != null) }">
+										<a href="{!'/one/one.app?#/sObject/'+ v.job.Id + '/view'}"
+											 target="_blank"
+											 class="slds-button slds-button_neutral">
+											View Job
+										</a>
+									</aura:if>
+								</li>
+								<li>
+									<aura:if isTrue="{!and( !v.loading, v.job.ERP_Order__c != null)}">
+										<a href="{!'/one/one.app?#/sObject/'+ v.job.ERP_Order__c + '/view'}"
+											 target="_blank"
+											 class="slds-button slds-button_neutral">
+											View ERP
+										</a>
+									</aura:if>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="slds-modal__content slds-p-around_medium"> 
+			<div aura:id="formSpinner" class="formSpinner"><lightning:spinner /></div>
+			<aura:if isTrue="{!v.job.Placeholder__c == false}">
+				<p class="lgnd-element">
+					<table>
+						<tr>
+							<td width="48%">
+								{!v.job.ERP_Order__r.GMBLASERP__Warehouse__r.Name}
+							</td>
+							<td width="6%"></td>
+							<td width="48%">
+								<aura:if isTrue="{!v.job.ERP_Order__r.RecordType.Name == 'Legend Service Work Order'}">
+									<lightning:select name="parking" label="Parking Spot" value="{!v.job.ERP_Order__r.Parking_Spot__c}">
+										<option value="" text="-- Select --"></option>
+										<option value="1" text="1"></option>
+										<option value="2" text="2"></option>
+										<option value="3" text="3"></option>
+										<option value="4" text="4"></option>
+										<option value="5" text="5"></option>
+										<option value="6" text="6"></option>
+										<option value="7" text="7"></option>
+										<option value="8" text="8"></option>
+										<option value="9" text="9"></option>
+										<option value="10" text="10"></option>
+										<option value="11" text="11"></option>
+										<option value="12" text="12"></option>
+										<option value="13" text="13"></option>
+										<option value="14" text="14"></option>
+										<option value="15" text="15"></option>
+										<option value="16" text="16"></option>
+										<option value="17" text="17"></option>
+										<option value="18" text="18"></option>
+										<option value="19" text="19"></option>
+										<option value="20" text="20"></option>
+										<option value="21" text="21"></option>
+										<option value="22" text="22"></option>
+										<option value="23" text="23"></option>
+										<option value="24" text="24"></option>
+										<option value="25" text="25"></option>
+										<option value="26" text="26"></option>
+										<option value="27" text="27"></option>
+										<option value="28" text="28"></option>
+										<option value="29" text="29"></option>
+										<option value="30" text="30"></option>
+										<option value="31" text="31"></option>
+										<option value="32" text="32"></option>
+										<option value="33" text="33"></option>
+										<option value="34" text="34"></option>
+										<option value="35" text="35"></option>
+										<option value="36" text="36"></option>
+										<option value="37" text="37"></option>
+										<option value="38" text="38"></option>
+										<option value="39" text="39"></option>
+										<option value="40" text="40"></option>
+										<option value="41" text="41"></option>
+										<option value="42" text="42"></option>
+										<option value="43" text="43"></option>
+										<option value="44" text="44"></option>
+										<option value="45" text="45"></option>
+										<option value="46" text="46"></option>
+										<option value="47" text="47"></option>
+										<option value="48" text="48"></option>
+										<option value="49" text="49"></option>
+										<option value="50" text="50"></option>
+									</lightning:select>
+								</aura:if>
+							</td>
+						</tr>
+					</table>
+				</p>
+				<p class="lgnd-element">
+					<table>
+						<tr style="vertical-align:top;">
+							<td width="48%">
+								<aura:if isTrue="{!v.job.ERP_Order__r.RecordType.Name != 'Legend Service Work Order'}">
+									<lightning:input type="Number" name="Expected Time" label="Expected Time" value="{!v.job.ExpectedTime__c}" />
+									<aura:set attribute="else">
+										<lightning:input type="Number" name="Expected Time" label="Expected Time (Locked, see ERP Tasks)" value="{!v.job.ExpectedTime__c}" disabled="true" />
+									</aura:set>
+								</aura:if>
+							</td>
+							<td width="6%"></td>
+							<td width="48%">
+<!--								<lightning:input type="Number" name="Actual Time" label="Actual Time" value="{!v.job.ActualTime__c}" />-->
+								<lightning:input type="Number"
+																 name="Warranty Time"
+																 label="Warranty Time (Minutes)"
+																 value="{!v.job.Warranty_Time__c}" />
+								<lightning:input type="Number"
+																 name="Non Warranty Time"
+																 label="Non Warranty Time (Minutes)"
+																 value="{!v.job.Non_Warranty_Time__c}"
+																 class="slds-m-top_small" />
+							</td>
+						</tr>
+					</table>
+				</p>
+
+				<aura:if isTrue="{! and(v.job.ERP_Order__r.Serial_Number__c != null, v.job.ERP_Order__r.Serial_Number__r.Lot_Exchange__c == null)}">
+					<p class="lgnd-element">
+						<lightning:select name="status" label="Product Status (Serial Number)" value="{!v.job.ERP_Order__r.Serial_Number__r.Status__c}">
+							<option value="" text="-- Select --"></option>
+							<option value="Specials List" text="Specials List"></option>
+							<option value="Used" text="Used"></option>
+							<option value="Display Model" text="Display Model"></option>
+							<option value="To Be Repaired" text="To Be Repaired"></option>
+							<option value="Return to Supplier" text="Return to Supplier"></option>
+							<option value="At Supplier" text="At Supplier"></option>
+							<option value="Demo" text="Demo"></option>
+							<option value="Ready for Dealer" text="Ready for Dealer"></option>
+							<option value="Ready for Barrie" text="Ready for Barrie"></option>
+							<option value="Ready for Montreal" text="Ready for Montreal"></option>
+							<option value="Ready for Whitefish" text="Ready for Whitefish"></option>
+						</lightning:select>
+					</p>
+				</aura:if>
+				<aura:if isTrue="{!v.job.ERP_Order__c != null}">
+					<p class="lgnd-element">
+            <lightning:recordEditForm onload="{!c.initializeStatus}"
+																				recordId="{!v.job.ERP_Order__c}"
+																				recordTypeId="{!v.job.ERP_Order__r.RecordTypeId}"
+																				objectApiName="AcctSeed__Project__c">
+							<lightning:inputField aura:id="jobStatus" fieldName="Job_Status__c" onchange="{!c.updateJobStatus}"/>
+						</lightning:recordEditForm>
+					</p>
+					<p class="lgnd-element">
+						<lightning:select name="status" label="Shipping Status (ERP)" value="{!v.job.ERP_Order__r.Shipping_Status__c}">
+							<option value="" text="-- Select --"></option>
+							<option value="No shipment needed" text="No shipment needed"></option>
+							<option value="Items to be shipped to Barrie" text="Items to be shipped to Barrie"></option>
+							<option value="Items to be shipped to Montreal" text="Items to be shipped to Montreal"></option>
+							<option value="Items to be shipped to Whitefish" text="Items to be shipped to Whitefish"></option>
+							<option value="Ready to ship to Barrie" text="Ready to ship to Barrie"></option>
+							<option value="Ready to ship to Montreal" text="Ready to ship to Montreal"></option>
+							<option value="Ready to ship to Whitefish" text="Ready to ship to Whitefish"></option>
+							<option value="All items shipped" text="All items shipped"></option>
+						</lightning:select>
+					</p>
+				</aura:if>
+			</aura:if>
+			<aura:if isTrue="{!v.job.Placeholder__c}">
+				<table class="slds-table slds-table_bordered">
+					<tbody>
+						<tr>
+							<th>Name</th>
+							<td>{!v.job.Model__r.Model_Year__c} {!v.product.Name}</td>
+						</tr>
+						<tr>
+							<th>Description</th>
+							<td>{!v.job.Model__r.Description__c}</td>
+						</tr>
+						<tr>
+							<th>Family</th>
+							<td>{!v.job.Model__r.Family}</td>
+						</tr>
+						<tr>
+							<th>Product Type</th>
+							<td>{!v.job.Model__r.Product_Type__c}</td>
+						</tr>
+						<tr>
+							<th>Series</th>
+							<td>{!v.job.Model__r.Series__c}</td>
+						</tr>
+						<tr>
+							<th>Rigging Time</th>
+							<td>{!v.job.Model__r.Rigging_Time__c} hour(s)</td>
+						</tr>
+						<tr>
+							<th>Propeller</th>
+							<td>{!v.job.Model__r.Propeller__c}</td>
+						</tr>
+						<tr>
+							<th>Fuel Tank</th>
+							<td>{!v.job.Model__r.Fuel_Tank__c}</td>
+						</tr>
+						<tr>
+							<th>Standard Motor</th>
+							<td>{!v.job.Model__r.Standard_Motor__r.Name}</td>
+						</tr>
+						<tr>
+							<th>Standard Trailer</th>
+							<td>{!v.job.Model__r.Standard_Trailer__r.Name}</td>
+						</tr>
+						<tr>
+							<th>Standard Trolling Motor</th>
+							<td>{!v.job.Model__r.Standard_Trolling_Motor__r.Name}</td>
+						</tr>
+						<tr>
+							<td colspan="2"><lightning:input type="text" label="Notes" value="{!v.job.Notes__c}" /></td>
+						</tr>
+					</tbody>
+				</table>
+			</aura:if>
+			<aura:if isTrue="{!v.job.ERP_Order__c != null}">
+				<p class="lgnd-element">
+					<lightning:input type="text" label="Rigging Status" value="{!v.job.ERP_Order__r.Rigging_Status__c}" />
+				</p>
+			</aura:if>
+			<aura:if isTrue="{!v.job.ActualStart__c != null}">
+				<p class="lgnd-element">
+					Start time: <lightning:formattedDateTime value="{!v.job.ActualStart__c}" year="numeric" month="numeric" day="numeric"  hour="2-digit" minute="2-digit" timeZoneName="short" />
+				</p>
+			</aura:if>
+			<aura:if isTrue="{!v.job.ActualEnd__c != null}">
+				<p class="lgnd-element">
+					End time: <lightning:formattedDateTime value="{!v.job.ActualEnd__c}" year="numeric" month="numeric" day="numeric"  hour="2-digit" minute="2-digit" timeZoneName="short" />
+				</p>
+			</aura:if>
+		</div>
+
+		<footer class="slds-modal__footer">
+			<button class="slds-button slds-button_brand"
+							onclick="{!c.save}"
+							disabled="{!v.loading}">
+				Save
+			</button>
+			<button class="slds-button slds-button_neutral"
+							onclick="{!c.saveToBacklog}"
+							disabled="{!v.loading}">
+				Save to Backlog
+			</button>
+			<button class="slds-button slds-button_bare"
+							onclick="{!c.back}"
+							disabled="{!v.loading}">
+				Back
+			</button>
+		</footer>
+
+	</section>
+</aura:component>

@@ -1,0 +1,64 @@
+<tr class="{{ rowTypeClass item }}">
+   {{ quantity_cell item }}
+  <td class="w35">{{{item.Description__c}}}</td>
+
+<!--   <td>{{this.ProductRecordType}} / {{this.ProductFamily}}</td> -->
+  <td class="w8">
+
+      {{#if item.IsInsurance__c}}
+        $ {{item.Retail_Price__c}}
+      {{else}}
+        {{#unless item.CustomItem__c}}
+          $ {{item.Sale_Price__c}} ea.
+        {{/unless}}
+      {{/if}}
+
+  </td>
+  <td class="w8">
+    {{#if item.CommissionableAmount__c }}
+      $ {{item.CommissionableAmount__c }}
+    {{/if}}
+  </td>
+  <td class="w8">
+    {{#if item.CommissionRate__c}}
+      {{item.CommissionRate__c}} %
+    {{/if}}
+   </td>
+  <td class="amount w8">
+    {{#if item.CalculatedCommissionAmount__c}}
+      $ {{item.CalculatedCommissionAmount__c}}
+    {{/if}}
+  </td>
+  <td class="w10">
+    {{#if item.AppliedCommissionRate__c}}
+       {{item.AppliedCommissionRate__c}} %
+    {{/if}}
+   </td>
+  <td class="amount w10">$ {{item.AppliedCommissionAmount__c}}</td>
+
+  <td class="w3 {{ status-display-class item.RecordStage__c }}">
+    <div class="slds-dropdown-trigger">
+      <button class="slds-button slds-button--icon-border-filled" aria-haspopup="true">
+        <i class="fa fa-chevron-down" />
+        <span class="slds-assistive-text">Show More</span>
+      </button>
+      <div class="slds-dropdown slds-dropdown--right slds-dropdown--menu">
+        <ul class="slds-dropdown__list" role="menu">
+          <li id="menu-0-0" class="slds-dropdown__item">
+            <a href="" role="menuitem" class="editItem" data-id="{{item.Id}}">
+              <p class="slds-truncate">Edit</p>
+            </a>
+          </li>
+          {{#if item.CustomItem__c}}
+          <li id="menu-1-1" class="slds-dropdown__item">
+            <a href="" role="menuitem" class="removeItem" data-id="{{item.Id}}">
+              <p class="slds-truncate">Delete</p>
+            </a>
+          </li>
+          {{/if}}
+        </ul>
+      </div>
+    </div>
+  </td>
+
+</tr>

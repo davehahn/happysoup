@@ -1,0 +1,127 @@
+<apex:component controller="viewSurveyResultsComponentController" >
+  <apex:stylesheet value="{!URLFOR($Resource.FontAwesome, 'font-awesome-4.0.3/css/font-awesome.min.css')}" />
+  <style type="text/css">
+    .flex_container {
+      display:flex;
+      flex-direction:row;
+      flex-wrap: wrap;
+      justify-content:space-around;
+      padding:1rem;
+      background:#FFF;
+    }
+
+    .flex_container a {
+      text-decoration: none;
+      display:block;
+      border:3px solid #FFF;
+      width:10rem;
+      height:10rem;
+      padding:1rem;
+      background:#E7E7E7;
+      margin:5px;
+      color:#777;
+    }
+
+    .flex_container a div.iconRow {
+      text-align:center;
+      width: 5rem;
+      height: 4rem;
+      margin:auto;
+      font-size:4rem;
+    }
+
+    .flex_container a div.nameRow {
+      text-align:center;
+      font-size:1.2rem;
+      padding:10px;
+    }
+
+    .flex_container a div.dateRow {
+      text-align:center;
+      font-size:0.8rem;
+      padding:10px;
+    }
+
+    .flex_container a:hover {
+      color:#333;
+      background:#F3F3F3;
+      text-decoration: none;
+    }
+
+    /*   Flipper stuff */
+    .flip-container {
+      -webkit-perspective: 1000;
+    }
+  /* flip the pane when hovered */
+  .flex_container a:hover .flip-container .flipper {
+    -webkit-transform: rotateY(180deg);
+  }
+
+  .flip-container, .front, .back {
+    width: 5rem;
+    height: 4rem;
+  }
+
+  /* flip speed goes here */
+  .flipper {
+    transition: 0.6s;
+    transform-style: preserve-3d;
+
+    position: relative;
+  }
+
+  /* hide back of pane during swap */
+  .front, .back {
+    -webkit-backface-visibility: hidden;
+
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+
+  /* front pane, placed above back */
+  .front {
+    z-index: 2;
+  }
+
+  /* back, initially hidden pane */
+  .back {
+    -webkit-transform: rotateY(180deg);
+  }
+
+  </style>
+<apex:attribute name="surveyId" description="The survey to use"
+                  type="Id" required="required" assignTo="{!surveyId}"/>
+                <apex:form >
+                <apex:outputPanel style="width:100%">
+  <apex:commandButton style="float:right" onclick="window.open('{!results}');" value="{!$Label.LABS_SF_View_Results_In_New_Window}" /> <BR />
+
+ <BR />
+ <BR />
+
+  </apex:outputPanel>
+  </apex:form>
+  <!-- <apex:iframe src="{!results}&output=embed" scrolling="true" /> -->
+  <div class="flex_container">
+
+      <apex:repeat value="{!surveysTaken}" var="st">
+
+        <apex:outputLink value="/apex/SurveyCompletedPage?id={!st.Id}" styleClass="flex_item">
+          <div class="iconRow flip-container">
+            <div class="flipper">
+              <div class="front">
+                <i class="fa fa-pencil-square-o"></i>
+              </div>
+              <div class="back">
+                <i class="fa fa-search"></i>
+              </div>
+            </div>
+          </div>
+          <div class="nameRow">{!st.Contact__r.Name}</div>
+          <div class="dateRow">{!st.CreatedDate}</div>
+        </apex:outputLink>
+
+      </apex:repeat>
+  </div>
+
+ </apex:component>

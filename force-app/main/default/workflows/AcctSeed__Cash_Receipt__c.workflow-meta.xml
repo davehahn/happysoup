@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workflow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <rules>
+        <fullName>Notify Accounting New AccordD</fullName>
+        <actions>
+            <name>New_AccordD_Cash_Receipt</name>
+            <type>Task</type>
+        </actions>
+        <active>true</active>
+        <booleanFilter>1 OR 2</booleanFilter>
+        <criteriaItems>
+            <field>AcctSeed__Cash_Receipt__c.Payment_Method__c</field>
+            <operation>equals</operation>
+            <value>Accord D</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>AcctSeed__Cash_Receipt__c.AcctSeed__Payment_Reference__c</field>
+            <operation>contains</operation>
+            <value>Accord</value>
+        </criteriaItems>
+        <description>Notifies Accounting on new AccordD financing Cash Receipt creation</description>
+        <triggerType>onCreateOnly</triggerType>
+    </rules>
+    <tasks>
+        <fullName>New_AccordD_Cash_Receipt</fullName>
+        <assignedTo>cmclean@legendboats.com</assignedTo>
+        <assignedToType>user</assignedToType>
+        <description>New AccordD Cash Receipt created. Do your thing to ensure all is good.</description>
+        <dueDateOffset>0</dueDateOffset>
+        <notifyAssignee>false</notifyAssignee>
+        <priority>Normal</priority>
+        <protected>false</protected>
+        <status>Open</status>
+        <subject>New AccordD Cash Receipt</subject>
+    </tasks>
+</Workflow>

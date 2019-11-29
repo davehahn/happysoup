@@ -1,0 +1,189 @@
+<project name="Retrieve and Deploy SFDC metadata" default="deployEmptyCheckOnly" basedir=".." xmlns:sf="antlib:com.salesforce">
+
+   <!-- USED to help create a "cleaning" type task to remove entries in Metadata
+
+    EXAMPLE
+
+    <target name="clean">
+      <replaceregexp match="&lt;classAccesses&gt;\s*&lt;apexClass&gt;batchCreateQCInsuranceRates&lt;/apexClass&gt;\s*&lt;enabled&gt;(.+?)&lt;/enabled&gt;\s*&lt;/classAccesses&gt;\s*" replace="" flags="gm" byline="false">
+        <fileset dir="${basedir}/src/profiles" includes="*.profile"/>
+      </replaceregexp>
+    </target>
+
+    this removes: *** could be anything here true or false
+    <classAccesses>
+      <apexClass>batchCreateQCInsuranceRates</apexClass>
+      <enabled>***</enabled>
+    </classAccesses>
+
+    not sure which always works as a wildcard match between tag
+    - &lt;tagName&gt;(.+?)&lt;/tagName&gt;
+      <tagName>(.+?)</tagName
+           OR
+    - &lt;tagName&gt;[\s\S]*?&lt;/tagName&gt;
+      <tagName>[\s\S]*?</tagName>
+  -->
+
+  <taskdef uri="antlib:com.salesforce"
+      resource="com/salesforce/antlib.xml"
+      classpath="${basedir}/build/lib/ant-salesforce.jar"/>
+
+
+    <property file="${basedir}/build/build.properties"/>
+    <property environment="env"/>
+
+<!--    <target name="removeUnwantedMetadatFiles">-->
+<!--      <echo>Removing unwanted Metadat files</echo>-->
+<!--      <move file="${basedir}/src" toFile="${basedir}_temp"/>-->
+<!--      <mkdir dir="${basedir}/src"/>-->
+<!--      <copy todir="${basedir}/src">-->
+<!--        <fileset dir="${basedir}_temp">-->
+<!--          &lt;!&ndash; <exclude name="layouts/EntityMilestone-Object Milestone Layout.layout"/> &ndash;&gt;-->
+<!--          <exclude name="layouts/Entitlement-Entitlement Layout.layout"/>-->
+<!--          <exclude name="layouts/EnvironmentHubInvitation-Hub Invitation Layout.layout"/>-->
+<!--          <exclude name="layouts/SsoUserMapping-Single Sign-On User Mapping Layout.layout"/>-->
+<!--          <exclude name="layouts/SignupRequest-Signup Request Layout.layout"/>-->
+<!--          <exclude name="layouts/EnvironmentHubMemberRel-Environment Hub Member Relationship Layout.layout"/>-->
+<!--          <exclude name="layouts/EnvironmentHubMember-Hub Member Layout.layout"/>-->
+<!--          <exclude name="layouts/LiveChatTranscriptWaiting-Live Chat Transcript %28Waiting%29 Layout.layout" />-->
+<!--          <exclude name="layouts/LiveChatTranscriptActive-Live Chat Transcript %28In Progress%29 Layout.layout" />-->
+<!--          <exclude name="layouts/LiveAgentSession-Live Agent Session Layout.layout" />-->
+<!--          <exclude name="layouts/LiveChatTranscript-Live Chat Transcript Layout.layout" />-->
+<!--          <exclude name="layouts/LiveChatTranscriptEvent-Live Chat Transcript Event Layout.layout" />-->
+<!--          <exclude name="layouts/LiveChatVisitor-Live Chat Visitor Layout.layout" />-->
+<!--          <exclude name="layouts/Opportunity-Opportunity Layout.layout" />-->
+<!--          <exclude name="profiles/Insights Integration User.profile" />-->
+<!--          <exclude name="profiles/SalesforceIQ Integration User.profile" />-->
+<!--          <exclude name="profiles/Customer Community Plus User.profile" />-->
+<!--          <exclude name="quickActions/SendEmail.quickAction" />-->
+<!--          &lt;!&ndash; Marketing cloud Journey Builder stuff &ndash;&gt;-->
+<!--          <exclude name="flows/JBSystem*" />-->
+<!--          &lt;!&ndash; FROM SUMMER 19 UPDATE &ndash;&gt;-->
+<!--          <exclude name="layouts/ChannelProgram-Channel Program Layout.layout" />-->
+<!--          <exclude name="layouts/ChannelProgramMember-Channel Program Member Layout.layout" />-->
+<!--          <exclude name="layouts/FlowInterview-Flow Interview Layout.layout" />-->
+<!--          <exclude name="layouts/ChannelProgramLevel-Channel Program Level Layout.layout" />-->
+<!--        </fileset>-->
+<!--      </copy>-->
+<!--      <delete dir="${basedir}_temp"/>-->
+<!--    </target>-->
+
+
+<!--    <target name="cleanFlexiPages">-->
+<!--      <echo>Cleaning Flexipages</echo>-->
+<!--      &lt;!&ndash; removes Einstein Insights component from Lead flexipage &ndash;&gt;-->
+<!--      <replaceregexp match="&lt;componentInstances&gt;\s*&lt;componentName&gt;runtime_sales_leadiq:recordHomeInsightsContainer&lt;/componentName&gt;\s*&lt;/componentInstances&gt;\s*" replace="" flags="gm" byline="false">-->
+<!--        <fileset dir="${basedir}/src/flexipages" includes="Lead_Record_Page.flexipage"/>-->
+<!--      </replaceregexp>-->
+<!--    </target>-->
+
+    <target name="cleaningProfiles">
+      <echo>Cleaning Profiles</echo>
+      <!-- Removes SsoUserMapping-Single Sign-On User Mapping Layout Layout from profiles -->
+<!--      <replaceregexp match="&lt;layoutAssignments&gt;\s*&lt;layout&gt;SsoUserMapping-Single Sign-On User Mapping Layout&lt;/layout&gt;\s*&lt;/layoutAssignments&gt;\s*" replace="" flags="gm" byline="false">-->
+<!--        <fileset dir="${basedir}/src/profiles" includes="*.profile"/>-->
+<!--      </replaceregexp>-->
+
+      <!-- Removes SignupRequest-Signup Request Layout Layout from profiles -->
+<!--      <replaceregexp match="&lt;layoutAssignments&gt;\s*&lt;layout&gt;SignupRequest-Signup Request Layout&lt;/layout&gt;\s*&lt;/layoutAssignments&gt;\s*" replace="" flags="gm" byline="false">-->
+<!--        <fileset dir="${basedir}/src/profiles" includes="*.profile"/>-->
+<!--      </replaceregexp>-->
+
+      <!-- Removes EnvironmentHubInvitation-Hub Invitation Layout from profiles -->
+<!--      <replaceregexp match="&lt;layoutAssignments&gt;\s*&lt;layout&gt;EnvironmentHubInvitation-Hub Invitation Layout&lt;/layout&gt;\s*&lt;/layoutAssignments&gt;\s*" replace="" flags="gm" byline="false">-->
+<!--        <fileset dir="${basedir}/src/profiles" includes="*.profile"/>-->
+<!--      </replaceregexp>-->
+
+      <!-- Removes EnvironmentHubMember-Hub Member Layout from profiles -->
+<!--      <replaceregexp match="&lt;layoutAssignments&gt;\s*&lt;layout&gt;EnvironmentHubMember-Hub Member Layout&lt;/layout&gt;\s*&lt;/layoutAssignments&gt;\s*" replace="" flags="gm" byline="false">-->
+<!--        <fileset dir="${basedir}/src/profiles" includes="*.profile"/>-->
+<!--      </replaceregexp>-->
+
+      <!-- Removes EnvironmentHubMemberRel-Environment Hub Member Relationship Layout from profiles -->
+<!--      <replaceregexp match="&lt;layoutAssignments&gt;\s*&lt;layout&gt;EnvironmentHubMemberRel-Environment Hub Member Relationship Layout&lt;/layout&gt;\s*&lt;/layoutAssignments&gt;\s*" replace="" flags="gm" byline="false">-->
+<!--        <fileset dir="${basedir}/src/profiles" includes="*.profile"/>-->
+<!--      </replaceregexp>-->
+
+      <!-- Remove Packaging2PromoteVersion from profiles -->
+      <replaceregexp match="&lt;userPermissions&gt;\s*&lt;enabled&gt;[\S\s]*?&lt;/enabled&gt;\s*&lt;name&gt;Packaging2PromoteVersion&lt;/name&gt;\s*&lt;/userPermissions&gt;\s*" replace="" flags="gm" byline="false">
+        <fileset dir="${basedir}/force-app/main/default/profiles" includes="*.xml"/>
+      </replaceregexp>
+
+      <!-- Remove ManageRealm from profiles -->
+      <replaceregexp match="&lt;userPermissions&gt;\s*&lt;enabled&gt;[\S\s]*?&lt;/enabled&gt;\s*&lt;name&gt;ManageRealm&lt;/name&gt;\s*&lt;/userPermissions&gt;\s*" replace="" flags="gm" byline="false">
+        <fileset dir="${basedir}/force-app/main/default/profiles" includes="*.xml"/>
+      </replaceregexp>
+
+       <!-- Remove EditBillingInfo from profiles -->
+      <replaceregexp match="&lt;userPermissions&gt;\s*&lt;enabled&gt;[\S\s]*?&lt;/enabled&gt;\s*&lt;name&gt;EditBillingInfo&lt;/name&gt;\s*&lt;/userPermissions&gt;\s*" replace="" flags="gm" byline="false">
+        <fileset dir="${basedir}/force-app/main/default/profiles" includes="*.xml"/>
+      </replaceregexp>
+
+      <!-- Remove ManageSandboxes from profiles -->
+      <replaceregexp match="&lt;userPermissions&gt;\s*&lt;enabled&gt;[\S\s]*?&lt;/enabled&gt;\s*&lt;name&gt;ManageSandboxes&lt;/name&gt;\s*&lt;/userPermissions&gt;\s*" replace="" flags="gm" byline="false">
+        <fileset dir="${basedir}/force-app/main/default/profiles" includes="*.xml"/>
+      </replaceregexp>
+
+       <!-- Remove SendExternalEmailAvailable from profiles -->
+      <replaceregexp match="&lt;userPermissions&gt;\s*&lt;enabled&gt;[\S\s]*?&lt;/enabled&gt;\s*&lt;name&gt;SendExternalEmailAvailable&lt;/name&gt;\s*&lt;/userPermissions&gt;\s*" replace="" flags="gm" byline="false">
+        <fileset dir="${basedir}/force-app/main/default/profiles" includes="*.xml"/>
+      </replaceregexp>
+
+      <!-- Remove ViewFlowUsageAndFlowEventData from profiles -->
+<!--      <replaceregexp match="&lt;userPermissions&gt;\s*&lt;enabled&gt;[\S\s]*?&lt;/enabled&gt;\s*&lt;name&gt;ViewFlowUsageAndFlowEventData&lt;/name&gt;\s*&lt;/userPermissions&gt;\s*" replace="" flags="gm" byline="false">-->
+<!--        <fileset dir="${basedir}/src/profiles" includes="*.profile"/>-->
+<!--      </replaceregexp>-->
+
+    </target>
+
+<!--    <target name="cleanPermissionSets">-->
+<!--      <echo>Cleaning Permissionsets</echo>-->
+
+<!--      &lt;!&ndash; remove EnvironmentHubInvitation from permissionSets &ndash;&gt;-->
+<!--      <replaceregexp match="&lt;objectPermissions&gt;\s*&lt;allowCreate&gt;false&lt;/allowCreate&gt;\s*&lt;allowDelete&gt;false&lt;/allowDelete&gt;\s*&lt;allowEdit&gt;false&lt;/allowEdit&gt;\s*&lt;allowRead&gt;true&lt;/allowRead&gt;\s*&lt;modifyAllRecords&gt;false&lt;/modifyAllRecords&gt;\s*&lt;object&gt;EnvironmentHubInvitation&lt;/object&gt;\s*&lt;viewAllRecords&gt;true&lt;/viewAllRecords&gt;\s*&lt;/objectPermissions&gt;\s*" replace="" flags="gm" byline="false">-->
+<!--        <fileset dir="${basedir}/src/permissionsets" includes="*.permissionset"/>-->
+<!--      </replaceregexp>-->
+
+<!--      &lt;!&ndash; remove SignupRequest from permissionSets &ndash;&gt;-->
+<!--      <replaceregexp match="&lt;objectPermissions&gt;\s*&lt;allowCreate&gt;false&lt;/allowCreate&gt;\s*&lt;allowDelete&gt;false&lt;/allowDelete&gt;\s*&lt;allowEdit&gt;false&lt;/allowEdit&gt;\s*&lt;allowRead&gt;true&lt;/allowRead&gt;\s*&lt;modifyAllRecords&gt;false&lt;/modifyAllRecords&gt;\s*&lt;object&gt;SignupRequest&lt;/object&gt;\s*&lt;viewAllRecords&gt;true&lt;/viewAllRecords&gt;\s*&lt;/objectPermissions&gt;\s*" replace="" flags="gm" byline="false">-->
+<!--        <fileset dir="${basedir}/src/permissionsets" includes="*.permissionset"/>-->
+<!--      </replaceregexp>-->
+
+<!--      &lt;!&ndash; remove EnvironmentHubMember from permissionSets &ndash;&gt;-->
+<!--      <replaceregexp match="&lt;objectPermissions&gt;\s*&lt;allowCreate&gt;false&lt;/allowCreate&gt;\s*&lt;allowDelete&gt;false&lt;/allowDelete&gt;\s*&lt;allowEdit&gt;false&lt;/allowEdit&gt;\s*&lt;allowRead&gt;true&lt;/allowRead&gt;\s*&lt;modifyAllRecords&gt;false&lt;/modifyAllRecords&gt;\s*&lt;object&gt;EnvironmentHubMember&lt;/object&gt;\s*&lt;viewAllRecords&gt;true&lt;/viewAllRecords&gt;\s*&lt;/objectPermissions&gt;\s*" replace="" flags="gm" byline="false">-->
+<!--        <fileset dir="${basedir}/src/permissionsets" includes="*.permissionset"/>-->
+<!--      </replaceregexp>-->
+
+<!--    </target>-->
+
+<!--    <target name="removeListViews">-->
+<!--      <property name="path" value="${basedir}/src/objects"/>-->
+<!--      <replaceregexp match="&lt;listViews&gt;\s*[\s\S]*?\s*&lt;/listViews&gt;\s*" replace="" flags="gm" byline="false">-->
+<!--        <fileset dir="${path}" includes="*.object"/>-->
+<!--      </replaceregexp>-->
+<!--    </target>-->
+
+<!--    <target name="cleanObjects">-->
+<!--      <echo>Cleaning Objects</echo>-->
+<!--      &lt;!&ndash; removes IqScore field from Lead object &ndash;&gt;-->
+<!--      <replaceregexp match="&lt;columns&gt;LEAD_SCORE&lt;/columns&gt;\s*" replace="" flags="gm" byline="false">-->
+<!--        <fileset dir="${basedir}/src/objects" includes="Lead.object"/>-->
+<!--      </replaceregexp>-->
+<!--      <replaceregexp match="&lt;fields&gt;\s*&lt;fullName&gt;IqScore&lt;/fullName&gt;\s*&lt;/fields&gt;\s*" replace="" flags="gm" byline="false">-->
+<!--        <fileset dir="${basedir}/src/objects" includes="Lead.object"/>-->
+<!--      </replaceregexp>-->
+<!--    </target>-->
+
+    <target name="doMetadataClean">
+      <echo>Cleaning metadata to exclude unwanted files</echo>
+<!--      <antcall target="removeUnwantedMetadatFiles" />-->
+<!--      <antcall target="cleanFlexiPages" />-->
+      <antcall target="cleaningProfiles" />
+      <!--<antcall target="cleanPermissionSets" /> -->
+<!--      <antcall target="cleanObjects" />-->
+<!--      <antcall target="removeListViews"/>-->
+      <!-- <antcall target="fixSummer19" /> -->
+    </target>
+
+
+</project>

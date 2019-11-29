@@ -1,0 +1,82 @@
+<aura:component controller="Product_Controller_mp"
+                implements="lightning:availableForFlowScreens,force:appHostable,flexipage:availableForAllPageTypes,forceCommunity:availableForAllPageTypes">
+
+  <aura:attribute name="query" type="String" />
+  <aura:attribute name="products" type="List" default="[]"/>
+  <aura:attribute name="selectionId" type="String" access="global" />
+  <aura:attribute name="pause" type="Boolean" default="false" />
+  <aura:attribute name="showRetailPrice" type="Boolean" default="true" />
+  <aura:attribute name="showPartnerPrice" type="Boolean" default="true" />
+  <aura:attribute name="actAsUserType" type="String" />
+
+  <aura:handler name="change" value="{!v.query}" action="{!c.search}"/>
+  <aura:handler name="change" value="{!v.selectionId}" action="{!c.handleSelectionChange}" />
+
+  <ltng:require scripts="{!join(',', $Resource.Libraries +'/js/LightningApex.js',
+                         						 $Resource.Libraries +'/js/LightningUtils.js') }" />
+
+	<div class="slds-form-element">
+	  <div class="slds-combobox_container">
+	  	<div class="slds-combobox slds-dropdown-trigger slds-dropdown-trigger--click slds-is-closed" aria-expanded="true" aria-haspopup="listbox" role="combobox" aura:id="name_combobox">
+	      <div class="slds-form-element">
+	      	<lightning:input type="search"
+				          			   placeholder="Search by Name or Product Code"
+				          			   value="{!v.query}"
+				          			   variant="label-hidden"/>
+      	</div>
+	      <div id="listbox-unique-id" role="listbox">
+	        <ul class="slds-listbox slds-listbox_vertical slds-dropdown slds-dropdown_fluid" role="presentation">
+	          <aura:iteration items="{!v.products}" var="item" indexVar="i">
+			        <li role="option" class="slds-listbox__item
+			        												 slds-border_top
+			        												 slds-p-top_small
+			        												 slds-padding-bottom_small" data-address-id="{!i}">
+			        	<a 	href="javascript:void(0);"
+			        			role="option"
+			        			id="{!'listbox-option-unique-id-' + i}"
+			        			onclick="{!c.clickProduct}"
+			        			data-name="{!item.Name}"
+			        			data-productid="{!item.Id}">
+			            <span class="slds-media slds-listbox__option slds-listbox__option_entity slds-listbox__option_has-meta" role="option">
+			            	<span class="slds-media__figure">
+			                <span class="slds-icon_container slds-icon-standard-account" title="Product">
+			                  <aura:unescapedHtml value="{!item.Default_Image_Thumb}" />
+			                </span>
+			              </span>
+			              <span class="slds-media__body">
+			                <span class="slds-listbox__option-text slds-listbox__option-text_entity">{!item.Name}</span>
+			                <span class="slds-listbox__option-meta slds-listbox__option-meta_entity">
+											  <p>{!item.ProductCode}</p>
+											  <p>{!item.Description}</p>
+											  <div class="slds-border_top slds-m-top_xx-small slds-p-top_xx-small slds-grid slds-wrap">
+												  <aura:if isTrue="{!v.showRetailPrice}">
+												  	<div class="slds-col slds-size_3-of-12"></div>
+												  	<div class="slds-col slds-size_3-of-12">Retail:</div>
+												  	<div class="slds-col slds-size_6-of-12">
+												  		<lightning:formattedNumber value="{!item.retailPrice}"
+												  															 style="currency"
+												  															 currencyCode="CAD"/>
+												  	</div>
+												  </aura:if>
+												  <aura:if isTrue="{!v.showPartnerPrice}">
+												  	<div class="slds-col slds-size_3-of-12"></div>
+												  	<div class="slds-col slds-size_3-of-12">Partner:</div>
+													  <div class="slds-col slds-size_6-of-12">
+													  	<lightning:formattedNumber value="{!item.partnerPrice}"
+													  														 style="currency"
+													  														 currencyCode="CAD"/>
+													  </div>
+												  </aura:if>
+												</div>
+											</span>
+			              </span>
+			            </span>
+			          </a>
+			        </li>
+			      </aura:iteration>
+			    </ul>
+	  		</div>
+	  	</div>
+	  </div>
+	</div>
+</aura:component>

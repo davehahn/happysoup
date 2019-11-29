@@ -1,0 +1,47 @@
+<aura:component controller="CPQ_Controller_dh">
+  <aura:attribute name="productFamily" type="String" default=""/>
+  <aura:attribute name="productRecordType" type="String" default=""/>
+  <aura:attribute name="activePricebookId" type="String" />
+  <aura:attribute name="value" type="String" default=""/>
+  <aura:attribute name="productSelectOptions" type="List" />
+
+  <ltng:require scripts="{!join(',', $Resource.Libraries +'/js/LightningApex.js',
+                                     $Resource.Libraries +'/js/LightningUtils.js') }"
+                afterScriptsLoaded="{!c.doInit}" />
+
+  <aura:handler name="boatTypeSelected"
+                event="c:CPQ_BoatTypeSelectorChange_Event"
+                action="{!c.handleTypeSelected}" />
+
+  <aura:registerEvent name="majorProductSelected" type="c:CPQ_MajorProductSelected_Event" />
+  <c:Lgnd_Spinner_dh aura:id="spinner" />
+  <div class="slds-card">
+    <!-- Boat Type Selector -->
+    <c:CPQ_BoatTypeSelector family="{!v.productFamily}"
+                            productRecordType="{!v.productRecordType}"
+                            allowTrailers="false"
+                            allowMotors="false"
+                            allowTrollingMotors="false"
+                            aura:id="productTypeSelector-CMP" />
+
+    <!-- Product Selector -->
+    <aura:if isTrue="{!!empty(v.productSelectOptions)}">
+      <lightning:select name="boat-select"
+                        label="{!'Select ' + v.productRecordType}"
+                        value="{!v.value}"
+                        onchange="{!c.handleValueChange}">
+        <option value=""> -- None -- </option>
+        <aura:iteration items="{!v.productSelectOptions}" var="prod">
+          <aura:if isTrue="{! equals(v.value, prod.id)}">
+            <option value="{!prod.id}" text="{!prod.name}" selected="true"></option>
+            <aura:set attribute="else">
+              <option value="{!prod.id}" text="{!prod.name}"></option>
+            </aura:set>
+          </aura:if>
+        </aura:iteration>
+      </lightning:select>
+    </aura:if>
+    <!-- /Product Selector -->
+  </div>
+
+</aura:component>

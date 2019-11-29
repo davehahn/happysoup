@@ -1,0 +1,11 @@
+<apex:page showHeader="true" 
+	sidebar="true" 
+	standardController="AcctSeed__Billing__c"
+	extensions="gcBilling_Clone"
+	recordSetVar="Billings" 
+	action="{!init}">
+	<apex:pageMessages escape="false"/>
+	<apex:form >
+		<div style="text-align: center;"><apex:commandButton action="{!back}" value="Go Back"></apex:commandButton></div>
+	</apex:form>
+</apex:page>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <description>Thanking Opportunities for visiting TIBS</description>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>Legend_Letterhead</letterhead>
+    <name>Matt - TIBS Thank You</name>
+    <style>freeForm</style>
+    <subject>Thank You for visiting Legend Boats</subject>
+    <textOnly>Hi {!Account.FirstName},
+
+I would like to thank you for your time and for visiting the Legend Boats booth at the Toronto Boat Show.
+
+If you have any further questions about Legend, or boating questions in general then feel free to send me an email. The only silly question is the one not asked.
+
+Thank you again and I am excited for you to start making memories on the water!
+
+
+Yours in Boating,
+
+{!User.Name}
+{!User.Title}
+
+{!User.Email}
+
+legendboats.com
+{!User.Phone}
+{!User.Address}</textOnly>
+    <type>html</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

@@ -1,0 +1,276 @@
+<apex:page applyBodyTag="false" renderAs="pdf">
+    <head>
+        <style type="text/css" media="print">
+            @page {
+                size:8.50in 11in;
+                /*margin: 1.5in 0.5in 0.5in 0.20in;*/
+                margin: 0.20in 0.20in 0.50in 0.20in;
+                @top-right {
+                    content: element(header);
+                }
+                @bottom-left {
+                    content: element(footer);
+                }
+            }
+            @media print{
+	            div.page-break{
+	            	page-break-after: always;
+			  		counter-increment: sections;
+	            }
+            }
+            div.header {
+                position: running(header);
+            }
+            div.content {
+                position: relative;
+                margin: 1.3in 0.3in 0.3in 0in;
+            }
+            div.footer {
+                display: block;
+                padding: 5px;
+                padding-top: 0;
+                position: running(footer);
+            }
+            .pagenumber:before {
+                content: counter(page);
+            }
+            .pagecount:before {
+                content: counter(pages);
+            }
+            body {
+                font-family: Dialog;
+                font-size: 12px;
+                margin: 0px;
+            }
+            .headerTitle{
+            	font-family: serif;
+            	font-style: italic;
+            	font-weight: bold;
+            	font-size: 3.5em;
+            	text-align: right;
+            	padding-right: 0.3in;
+            	padding-top: 25px;
+            	padding-bottom: 50px;
+            }
+            .headerFootBorder{
+            	height: 25px;
+            	border: none;
+            	border-top: 1.75px solid #dcdcde;
+            	border-right: 1.75px solid #dcdcde;
+            	margin-right: 0.3in;
+            }
+            .sub-header-one{
+            	margin-top: 0.5in;
+            	font-family: sans-serif;
+            	font-weight: bolder;
+            	font-size: 26px;
+            	text-align: left;
+            	padding-left: 2px;
+            	padding-bottom: 15px;
+            	/*text-transform: scale(.7,1);*/
+            	transform: scale(.5,1);
+            }
+            .logoSpace{
+            	width: 170px;
+            	vertical-align: bottom;
+            }
+            table.mainContent p{
+            	text-align: justify;
+            	font-size: 1.1em;
+            	line-height: 1.2em;
+            	width: 97%;
+            }
+            table.secondContent p{
+            	width: 96%;
+            }
+            table.secondContent p,
+            table.secondContent div{
+            	text-align: justify;
+            	font-size: 12px;
+            	line-height: 1em;
+            }
+            .bolder{
+            	font-weight: bold;
+            }
+            .underliner{
+            	text-decoration: underline;
+            }
+            .justifying{
+            	text-align: justify;
+            	text-justify: inter-word;
+            }
+            .noDecoration{
+            	text-align: left;
+            	font-weight: normal;
+            	text-decoration: none;
+            }
+            .footerText{
+            	font-size: 8px;
+            }
+            .sub-sub-header{
+            	margin-bottom: 3px;
+            }
+            div.content table ol{
+            	margin: 0;
+            	padding: 0;
+            	counter-reset: list
+            }
+            div.content table li{
+            	list-style: none;
+            	margin-bottom: 2px;
+            }
+            div.content table li:before {
+			    /*counter-increment: alpha;
+			    content:"(" counter(alpha, lower-alpha)") ";*/
+			    content: "(" counter(list, lower-alpha) ") ";
+  				counter-increment: list;
+  				position: relative;
+			}
+            div.content table li div{
+            	margin-left: 25px;
+            	margin-top: -13px;
+            	text-align: justify;
+            }
+            span.headerTitleLeft{
+            	font-family: serif;
+            	font-style: italic;
+            	font-weight: bold;
+            	font-size: 3.5em;
+            	text-align: left;
+            	width: 100%;
+            }
+            span.headerSubTitle{
+            	font-family: SansSerif;
+            	font-size: 1.35em;
+            	margin-left: 30px;
+            }
+            table.first-form table{
+            	border-collapse: collapse;
+            }
+            div.form-content{
+            	margin-top:  1.0in;
+            }
+            div.form-content table.first-form td{
+            	vertical-align: top;
+            	font-size: 6px;
+            }
+            table.first-form table td{
+            	text-align: left;
+            	vertical-align: top;
+            	box-shadow: none;
+            	border-width: medium;
+            	border:1px black solid;
+            	height: 35px;
+            	font-size: 6px;
+            	padding: 2px 2px 0 2px;
+            }
+            td.left-image{
+            	border: 1px #000 solid;
+            	background: #000;
+            	width: 25px;
+            	text-align: center;
+            	vertical-align: middle;
+            }
+            table.innerTable, table.innerTable td{
+            	border: none !important;
+            	margin: 0 !important;
+            	padding: 0 !important;
+            }
+            .center{
+            	text-align: center;
+            }
+            .form-back-color{
+            	padding: 1px;
+            	background: #dcdcde;
+            }
+            .form-text{
+            	font-weight: bold;
+            	font-size: 10px;
+            }
+            .form-large-text{
+            	font-size: 14px;
+            }
+            .form-normal-text{
+            	font-size: 12px;
+            }
+            .form-medium-text{
+            	font-size: 10px;
+            }
+            .form-presmall-text{
+            	font-size: 9px;
+            }
+            .form-small-text{
+            	font-size: 8px;
+            }
+            .form-xsmall-text{
+            	font-size: 6px;
+            }
+            .initials{
+            	border-width: thin;
+            	border-top: 1px solid;
+            }
+            div.overliner{
+            	border-width: medium;
+            	border-top: 1px solid black;
+            	height: 1px !important;
+            }
+            div.overliner-white{
+            	border-width: medium;
+            	border-top: 1px solid white;
+            	height: 1px !important;
+            }
+            .bottom-content{
+            	margin-left: 10px;
+            }
+            .bottom-content ul, .bottom-content ol{
+            	margin-left: 10px;
+            }
+            .small-top-gap{
+            	margin-top: 3px;
+            }
+            .certificate{
+            	border: 1px solid black;
+            	padding: 2px;
+            	width: 150px;
+            	height: 35px;
+            	float: right;
+            }
+            table.no-bottom-table{
+            	border-collapse: collapse;
+            }
+            table.no-bottom-table td{
+            	border-bottom: none !important;
+            	vertical-align: middle !important;
+            }
+            table.no-bottom-table td.no-left{
+            	border-left: none !important;
+            }
+            table.no-bottom-table td.no-right{
+            	border-right: none !important;
+            }
+            table.no-top {
+                border-color: collapse;
+            }
+            table.no-top td {
+                border-top:none !important;
+            }
+            .content-reset-section{
+                counter-reset: section;
+            }
+            .sections:before {
+			  content: counter(sections);                  /* Display the value of section counter */
+			}
+            .section:before {
+			  content: counter(section);                  /* Display the value of section counter */
+			  counter-increment: section;
+			}
+
+        </style>
+    </head>
+
+    <body>
+        <c:InsurancePDFComp_II_TopPages />
+        <c:InsurancePDFComp_II_Form />
+        <c:InsurancePDFComp_II_BottomPages />
+    </body>
+</apex:page>

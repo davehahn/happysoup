@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>AcctSeedERP__Outbound_Less_Than_Equal_Inbound</fullName>
+    <active>false</active>
+    <description>Ensure outbound inventory movements are less than or equal to outbound inventory movements</description>
+    <errorConditionFormula>(AcctSeedERP__Manufacturing_Quantity__c +  AcctSeedERP__Purchasing_Quantity__c +  AcctSeedERP__Inbound_Quantity__c) &lt; ( AcctSeedERP__Sales_Order_Quantity__c +  AcctSeedERP__Outbound_Quantity__c)</errorConditionFormula>
+    <errorMessage>The aggregate outbound quantity on the inventory balance cannot be more than the aggregate inbound quantity</errorMessage>
+</ValidationRule>

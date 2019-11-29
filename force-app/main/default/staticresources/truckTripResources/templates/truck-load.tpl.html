@@ -1,0 +1,22 @@
+<div class="slds-grid button-row">
+  <div class="slds-col slds-size--1-of-1">
+    <a href="{{ pdfURL }}" class="slds-button slds-button--neutral" target="_blank">Print PDF</a>
+    <a href="{{ bolPDF_URL }}" class="slds-button slds-button--neutral" target="_blank">Print BOL</a>
+  </div>
+</div>
+<div class="slds-grid slds-wrap truck-row">
+ {{#each truckPositions }}
+    <div class="slds-col slds-size--3-of-12 ">
+      <h1> Position: {{this}} <span class="slds-badge" style="margin-left: 1rem">{{itemCount this ../items}}</span></h1>
+      <div class="drop-container truck-cell" data-truck-position="{{ this }}">
+        {{ truckLoadItem this ../items }}
+      </div>
+    </div>
+  {{/each}}
+
+  <div class="slds-col slds-size--3-of-12 cab ">
+    <div class="top"></div>
+    <div class="bottom"></div>
+  </div>
+
+</div>

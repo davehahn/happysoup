@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>AcctSeed__Project_Task_Required_With_Project</fullName>
+    <active>true</active>
+    <description>Rule ensures a Project Task is Required if the Project field is used.</description>
+    <errorConditionFormula>NOT(ISBLANK(AcctSeed__Project__c)) &amp;&amp; ISBLANK(AcctSeed__Project_Task__c)</errorConditionFormula>
+    <errorDisplayField>AcctSeed__Project_Task__c</errorDisplayField>
+    <errorMessage>A project task is required if a project is selected.</errorMessage>
+</ValidationRule>

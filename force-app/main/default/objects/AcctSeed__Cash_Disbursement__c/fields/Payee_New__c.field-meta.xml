@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Payee_New__c</fullName>
+    <externalId>false</externalId>
+    <formula>IF( NOT(ISBLANK(AcctSeed__Vendor__c)) , IF(AcctSeed__Vendor__r.IsPersonAccount,AcctSeed__Vendor__r.FirstName &amp; &quot; &quot; &amp; AcctSeed__Vendor__r.LastName,AcctSeed__Vendor__r.Name), 
+IF( NOT(ISBLANK(AcctSeed__Contact__c)) , AcctSeed__Contact__r.FirstName &amp; &quot; &quot; &amp; AcctSeed__Contact__r.LastName, 
+IF( NOT(ISBLANK(AcctSeed__Employee__c)) , AcctSeed__Employee__r.FirstName &amp; &quot; &quot; &amp; AcctSeed__Employee__r.LastName, 
+&quot;&quot; )))</formula>
+    <label>Payee</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

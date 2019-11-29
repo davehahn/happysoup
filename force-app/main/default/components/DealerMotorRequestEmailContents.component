@@ -1,0 +1,69 @@
+<apex:component controller="EmailComponentController" access="global">
+  <apex:attribute name="orderId"
+                  description="The Id of the Dealer Order"
+                  type="String"
+                  assignTo="{!recordId}"
+                  access="global" />
+
+  <apex:attribute name="accountId"
+                  description="The Id of the Account of the Dealer Order"
+                  type="String"
+                  assignTo="{!acctId}"
+                  access="global" />
+
+  <div style="width: 90%; margin: auto;">
+    <p style="font-weight:bold; font-size:14px; line-height: 18px; padding:0; margin:0;">
+      {!accountDetails.Name}
+    </p>
+    <p style="font-size:14px; line-height: 18px; padding:0; margin:0;">
+      {!accountDetails.BillingStreet},
+       {!accountDetails.BillingCity}
+    </p>
+    <p style="font-size:14px; line-height: 18px; padding:0; margin:0;">
+      {!accountDetails.BillingState},
+      {!accountDetails.BillingCountry}
+    </p>
+     <p style="font-size:14px; line-height: 18px; padding:0; margin:0;">
+      {!accountDetails.BillingPostalCode}
+    </p>
+  </div>
+
+
+  <table style="width: 90%; margin: 20px auto; border-collapse: collapse;">
+    <thead>
+      <tr>
+        <td style="line-height: 24px; font-size: 15px; font-weight:bold; text-align: center; border-bottom: 1px solid #CCC;">
+          Quantity
+        </td>
+        <td style="line-height: 24px; font-size: 15px; font-weight:bold; text-align: center; border-bottom: 1px solid #CCC;">
+          Motor Request Number
+        </td>
+        <td style="line-height: 24px; font-size: 15px; font-weight:bold; text-align: center; border-bottom: 1px solid #CCC;">
+          Name
+        </td>
+        <td style="line-height: 24px; font-size: 15px; font-weight:bold; text-align: center; border-bottom: 1px solid #CCC;">
+          Product Code
+        </td>
+      </tr>
+    </thead>
+    <tbody>
+      <apex:repeat value="{!dealerMotorRequests}" var="req">
+        <tr>
+          <td style="line-height: 22px; font-size: 13px; text-align: center; border-bottom: 1px solid #CCC;">
+            {!req.quantity}
+          </td>
+          <td style="line-height: 22px; font-size: 13px; text-align: center; border-bottom: 1px solid #CCC;">
+            {!req.requestNumber}
+          </td>
+          <td style="line-height: 22px; font-size: 13px; text-align: center; border-bottom: 1px solid #CCC;">
+            {!req.motorModel}
+          </td>
+          <td style="line-height: 22px; font-size: 13px; text-align: center; border-bottom: 1px solid #CCC;">
+            {!req.motorProductCode}
+          </td>
+        </tr>
+      </apex:repeat>
+    </tbody>
+  </table>
+
+</apex:component>

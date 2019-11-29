@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>AcctSeed__Billed_Hours__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <inlineHelpText>The total number of hours which has been billed.</inlineHelpText>
+    <label>Billed Hours</label>
+    <summarizedField>AcctSeed__Time_Card_Line__c.AcctSeed__Total_Hours__c</summarizedField>
+    <summaryFilterItems>
+        <field>AcctSeed__Time_Card_Line__c.AcctSeed__Billed__c</field>
+        <operation>equals</operation>
+        <value>True</value>
+    </summaryFilterItems>
+    <summaryForeignKey>AcctSeed__Time_Card_Line__c.AcctSeed__Time_Card__c</summaryForeignKey>
+    <summaryOperation>sum</summaryOperation>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Summary</type>
+</CustomField>

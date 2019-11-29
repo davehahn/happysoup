@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <description>For All Involved to ensure there is nothing outstanding on the Account</description>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>Legend_Letterhead</letterhead>
+    <name>Customer Follow Up 7 Days before Pickup</name>
+    <style>freeForm</style>
+    <subject>Ensure the Proper Communication is Discussed with the Customer when contacting as Boat Specialist</subject>
+    <textOnly>Hello {!AcctSeed__Project__c.Boat_Specialist__c}, {!AcctSeed__Project__c.Salesperson__c},{!AcctSeed__Project__c.Business_Manager__c},
+
+You are receiving this email to ensure it is being looked after that
+
+{!AcctSeed__Project__c.AcctSeed__Account__c} (ERP Account Name)
+{!Account.Name} (Account Name)
+
+
+on ERP {!AcctSeed__Project__c.Name}
+
+Does not have a balance on their account.
+
+You are receiving this email 7 days prior to {!AcctSeed__Project__c.Delivery_Date__c}</textOnly>
+    <type>html</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

@@ -1,0 +1,68 @@
+<apex:component controller="BoatBuilderOptionSelect">
+
+
+
+  <apex:attribute name="begin_at"
+                  description="The minimum value of select"
+                  type="Integer"
+                  assignTo="{!startNum}"
+                  required="true" />
+  <apex:attribute name="end_at"
+                  description="The maximum value of select"
+                  type="Integer"
+                  assignTo="{!endNum}"
+                  required="true" />
+  <apex:attribute name="onOptionChange"
+                  description="javascript to fire onthe change event"
+                  type="String"
+                  required="false" />
+  <apex:attribute name="selectId"
+                  description="HTML id of the select"
+                  type="String"
+                  required="false" />
+  <apex:attribute name="selectValue"
+                  description="select value"
+                  type="Integer"
+                  required="false" />
+  <apex:attribute name="parent_product_id"
+                  description="The parent product Id of a sub product"
+                  type="String"
+                  required="false" />
+  <apex:attribute name="productType"
+                  description="recordType of product"
+                  type="String"
+                  required="false" />
+
+  <apex:variable var="checkOrSelect" value="{!IF(end_at == 1, 'check', 'select')}" />
+
+  <apex:outputPanel layout="none" rendered="{!checkOrSelect == 'select'}">
+
+    <select id="{!selectId}"
+            data-parent-id="{!parent_product_id}"
+            data-product-type="{!productType}"
+            onchange="{!onOptionChange}"
+            class="optionSelect">
+      <apex:variable value="{!optionsFromRangeHtml}" var="selectOptions" />
+      <apex:repeat value="{!selectOptions}" var="optKey" >
+        <apex:variable value="{!IF(optKey == selectValue, 'true', 'false')}" var="selected" />
+        <option value="{!optKey}" data-selected="{!selected}" >{!optKey}</option>
+      </apex:repeat>
+    </select>
+
+  </apex:outputPanel>
+
+  <apex:outputPanel layout="none" rendered="{!checkOrSelect == 'check'}" >
+
+    <input type="checkbox"
+           id="{!selectId}"
+           onChange="{!onOptionChange}"
+           class="optionSelect"
+           data-parent-id="{!parent_product_id}"
+           data-product-type="{!productType}"
+           data-disabled="{!IF(begin_at == 1, 'disabled', '')}"
+           data-checked="{!IF(selectValue == 1, 'checked', '')}"
+            />
+
+  </apex:outputPanel>
+
+</apex:component>

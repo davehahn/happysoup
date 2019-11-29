@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workflow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <alerts>
+        <fullName>Notify_Jeff_Duhamel_of_Survey_Completion</fullName>
+        <description>Notify Jeff Duhamel of Survey Completion</description>
+        <protected>false</protected>
+        <recipients>
+            <recipient>jduhamel@legendboats.com</recipient>
+            <type>user</type>
+        </recipients>
+        <senderType>DefaultWorkflowUser</senderType>
+        <template>Surveys/Survey_Completed</template>
+    </alerts>
+    <alerts>
+        <fullName>Notify_Managers_of_Survey_Completion</fullName>
+        <description>Notify Managers of Survey Completion</description>
+        <protected>false</protected>
+        <recipients>
+            <field>BoatSpecialist_Manager__c</field>
+            <type>userLookup</type>
+        </recipients>
+        <recipients>
+            <field>Sales_Person_Manager__c</field>
+            <type>userLookup</type>
+        </recipients>
+        <senderType>DefaultWorkflowUser</senderType>
+        <template>Surveys/Survey_Completed</template>
+    </alerts>
+</Workflow>

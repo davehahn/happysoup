@@ -1,0 +1,37 @@
+.THIS .slds-page-header {
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.THIS .slds-modal__content {
+  position:relative;
+}
+
+.THIS .formSpinner {
+  display:none;
+	position: absolute;
+	height: 100%;
+	width: 100%;
+	top:0;
+	left:0;
+	background-color: rgba(255, 255, 255, 0.25);
+}
+
+
+
+.THIS.loading .slds-modal__content {
+  border-top-left-radius: var(--lwc-borderRadiusMedium,0.25rem);
+  border-top-right-radius: var(--lwc-borderRadiusMedium,0.25rem);
+}
+
+.THIS.loading .formSpinner {
+  display: initial;
+}
+
+.THIS .lgnd-element {
+	margin: 1em 0
+}
+
+.THIS .lgnd-element input {
+	margin: 0;
+}

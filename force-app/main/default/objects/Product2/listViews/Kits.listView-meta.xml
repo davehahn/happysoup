@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Kits</fullName>
+    <columns>PRODUCT2.NAME</columns>
+    <columns>PRODUCT2.CUSTOMER_PRODUCT_ID</columns>
+    <columns>PRODUCT2.DESCRIPTION</columns>
+    <columns>PRODUCT2.FAMILY</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>Composite_Type__c</field>
+        <operation>equals</operation>
+        <value>Kit</value>
+    </filters>
+    <label>Kits</label>
+    <language>en_US</language>
+</ListView>

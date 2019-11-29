@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <description>An email sent to Whitefish customers who have not yet purchased extended warranty</description>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>Legend_Letterhead</letterhead>
+    <name>Extended Warranty Whitefish</name>
+    <style>freeForm</style>
+    <subject>Extended Mercury Warranty</subject>
+    <textOnly>Hi there {!Account.FirstName},
+
+I hope you and your family had a great  summer on your new boat! Hopefully you haven&#39;t had reason to bring your motor in to be serviced because I noticed that you didn&#39;t take the Extended Warranty on your Mercury motor when you took ownership of your boat.
+
+The investment in Extended Warranty is often less than the cost of the first major repair that would be covered under warranty. For a short window of time I can still qualify you for the original Extended Warranty rates as discussed.
+
+I would like to give you another opportunity to protect your new Mercury engine and consider the Extended Warranty again.
+
+Thank you again for being a valued member of the Legend Family, please feel free to call me if you have any questions and, of course, if you would like to take advantage of this offer!
+
+Yours in Boating,
+
+{!User.Name}
+Business Office Manager</textOnly>
+    <type>html</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

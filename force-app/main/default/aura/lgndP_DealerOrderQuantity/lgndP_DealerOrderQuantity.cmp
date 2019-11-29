@@ -1,0 +1,17 @@
+<aura:component >
+  <aura:registerEvent name="navEvent" type="c:lgndP_DealerOrderNav_Event" />
+  <h3>Quantity</h3>
+  <div style="height: 300px"></div>
+  <div class="slds-modal__footer">
+       <!--  <lightning:button label="Cancel" onclick="{!c.toggleForm}" /> -->
+    <lightning:button label="Back"
+                      iconName="utility:chevronleft"
+                      iconPosition="left"
+                      onclick="{!c.navBack}" />
+    <lightning:button label="Next"
+                      variant="brand"
+                      iconName="utility:chevronright"
+                      iconPosition="right"
+                      onclick="{!c.navNext}" />
+  </div>
+</aura:component>

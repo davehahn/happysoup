@@ -1,0 +1,31 @@
+<apex:page showHeader="true" standardStylesheets="false" sidebar="false" docType="html-5.0">
+  <apex:slds />
+  <apex:includeLightning />
+
+  <div class="slds-scope">
+    <div class="slds-page-header">
+      <div class="slds-media">
+        <div class="slds-media__figure">
+          <span class="slds-icon_container slds-icon-custom-custom54" title="">
+            <img src="{!URLFOR( $Resource.SLDS202, '/assets/icons/custom/custom54_60.png')}" style="width: 40px;" />
+          </span>
+        </div>
+        <div class="slds-media__body">
+          <h1 class="slds-page-header__title slds-text-heading_medium">Retail Sales Tool</h1>
+        </div>
+      </div>
+    </div>
+    <div id="lightning" style="margin-top:1rem;"></div>
+  </div>
+
+  <script>
+    $Lightning.use("c:Retail_Sales_Tool_vfApp_dh", function() {
+      $Lightning.createComponent("c:Retail_Sales_Tool_dh",
+        {label: ''},
+        "lightning",
+        function(cmp) {}
+      );
+    });
+  </script>
+
+</apex:page>

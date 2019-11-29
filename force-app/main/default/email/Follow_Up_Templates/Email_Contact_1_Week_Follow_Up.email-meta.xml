@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>Legend_Letterhead</letterhead>
+    <name>Email Contact 1 Week Follow Up</name>
+    <style>freeForm</style>
+    <subject>Legend Boats - The Water is Calling</subject>
+    <textOnly>Hi {!Account.FirstName},
+
+I hope my last e-mail was helpful.  I am quite interested in helping you get onto the water so please don&#39;t misconstrue my persistence as being pushy.
+
+I would like to extend an invitation to you to come check out what we have to offer in person.   What would be a good time for you to come visit us?
+
+At Legend Boats, we pride ourselves in product knowledge.  You are about to make a very important decision and I want to make sure you are armed with all the necessary information.
+
+Thanks again for considering Legend as you shop for a new boat.
+
+
+At your service,
+
+
+{!User.Name}
+{!User.Title}
+
+{!User.Email}
+{!User.Phone}
+legendboats.com
+
+{!User.Address}</textOnly>
+    <type>html</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

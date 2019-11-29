@@ -1,0 +1,243 @@
+<apex:page standardcontroller="Survey__c" extensions="ViewSurveyController" cache="false" sidebar="false" showheader="false">
+
+<sffd:Resources />
+<style>
+    <apex:outputText value="{!surveyContainerCss}" />
+
+    h4 {
+        display:block;
+        width:100%;
+        text-align:center;
+        padding-top:25px;
+        opacity:0.6;
+    }
+
+    h4 img {
+        max-width:40%;
+        min-width:350px;
+        margin-bottom:10px;
+    }
+
+    .surveyHeader {
+        font-weight:400;
+        margin-bottom:1rem;
+        padding: 1.2em 3em;
+        line-height: 23px;
+        border-bottom:1px solid #000;
+        border-top:1px solid #000;
+        color: #525252;
+        font-style: italic;
+        font-size: 1.1em;
+    }
+
+    .question {
+        font-weight:300;
+        line-height:1.35rem;
+        padding-right:10px;
+    }
+
+    .question.hasError {
+        color:red;
+    }
+
+    .questionRow {
+        background:#FFF;
+        padding:1rem 0;
+    }
+
+    .questionRow.error {
+        border:1px solid red;
+    }
+
+    .questionRow.error .question {
+        color:red;
+    }
+
+    .questionRow:nth-child(even){
+        background:#F3F3F3;
+    }
+
+    table[role=presentation] {
+        border:none;
+        background:inherit;
+        margin-bottom:0.5rem;
+        width:100%;
+    }
+
+    table[role=presentation] tr {
+        background:inherit;
+    }
+
+    table[role=presentation] td {
+      padding:10px 10px 0 10px;
+    }
+
+    table[role=presentation] input[type=radio] {
+        margin: 0 0 3px 0;
+    }
+
+    table[role=presentation] label {
+        margin-left: 0.2rem;
+        font-weight:300;
+    }
+
+    #text textarea {
+        height:7rem;
+    }
+
+    .buttonRow {
+        margin-top:2rem;
+    }
+
+    .buttonRow .button {
+        background-image: none;
+    }
+
+</style>
+
+<apex:variable value="{!thankYouRendered}" var="lthankYouRendered" />
+<!-- <div id="survey_container"> -->
+<apex:outputPanel layout="block" id="theForm">
+    <apex:form >
+        <apex:outputPanel layout="block"
+                          id="seeSurvey"
+                          rendered="true"
+                          styleclass="row" >
+            <div class="large-12 columns">
+                <h4>
+                    <apex:image value="{!URLFOR($Resource.LegendLogo)}" /><br />
+                    <apex:outputField value="{!Survey__c.Name}" rendered="{!Survey__c.Hide_Survey_Name__c == false}" />
+                </h4>
+            </div>
+        </apex:outputPanel>
+
+        <div class="row">
+            <div class="large-8 large-offset-2 end">
+                <apex:messages styleClass="alert-box alert"/>
+            </div>
+        </div>
+
+        <apex:outputPanel layout="block"
+                          styleClass="row"
+                          rendered="{!surveyHeader != null && (thankYouRendered == false || thankYouRendered == null) }">
+
+            <div class="large-12 columns surveyHeader">
+                <apex:outputText value="{!surveyHeader}" escape="false" />
+            </div>
+
+        </apex:outputPanel>
+
+        <apex:outputPanel layout="block"
+                          styleclass="row"
+                          rendered="{!lthankYouRendered == false}" >
+            <div id="qList" class="large-12 columns">
+
+                <apex:repeat value="{!allQuestions}" var="qPreview" id="aQPreview">
+
+                <div id="{!qPreview.id}" class="{!IF(qPreview.hasError, 'row questionRow error', 'row questionRow')}">
+
+                    <div class="large-5 columns">
+                        <div class="question">
+                            <!-- <span class="questionNumber">{!qPreview.orderNumber}</span> -->
+                            {!qPreview.question}
+                            <!-- change rendered to {!qPreview.required} back to stock -->
+                            <apex:outputPanel rendered="false" styleClass="requiredText">
+                                ({!$Label.LABS_SF_Required})
+                            </apex:outputPanel>
+                        </div>
+                    </div>
+                    <div class="large-7 columns">
+                         <div id="radio">
+                          <apex:selectRadio layout="pageDirection" rendered="{!qPreview.renderSelectRadio}" value="{!qPreview.selectedOption}" >
+                            <apex:selectOptions value="{!qPreview.singleOptions}"/>
+                          </apex:selectRadio>
+                        </div>
+                        <div id="checkbox">
+                          <apex:selectCheckboxes layout="pageDirection" rendered="{!qPreview.renderSelectCheckboxes}" value="{!qPreview.selectedOptions}" >
+                            <apex:selectOptions value="{!qPreview.multiOptions}"/>
+                          </apex:selectCheckboxes>
+                        </div>
+                        <div id="text">
+                           <apex:inputTextArea cols="50" rows="10" rendered="{!qPreview.renderFreeText}" value="{!qPreview.choices}"/>
+                        </div>
+                        <div id="row">
+                             <apex:outputPanel layout="block"
+                                              styleClass="row"
+                                              rendered="{!qPreview.renderSelectRow}">
+                                <apex:outputPanel layout="block"
+                                                  styleClass="large-12 columns"
+                                                  rendered="{!qPreview.renderRowLabels}" >
+                                    <span style="font-size:0.8em;color:#F05B5B;" class="left">
+                                        {!qPreview.rowLabelLeft}
+                                    </span>
+                                    <span style="font-size:0.8em;color:#3CD33C;" class="right">
+                                        {!qPreview.rowLabelRight}
+                                    </span>
+                                </apex:outputPanel>
+                            </apex:outputPanel>
+                            <apex:outputPanel layout="block"
+                                              styleClass="row"
+                                              rendered="{!qPreview.renderSelectRow}">
+                                <div class="large-12 columns">
+                                  <apex:selectRadio rendered="{!qPreview.renderSelectRow}" value="{!qPreview.selectedOption}">
+                                    <apex:selectOptions value="{!qPreview.rowOptions}"/>
+                                  </apex:selectRadio>
+                                </div>
+                            </apex:outputPanel>
+                        </div>
+                        <!-- IN ORDER TO ADD A QUESTION TYPE YOU MUST CHANG THE JAVASCRIPT BELOW AS WELL -->
+
+                    </div>
+                </div>  <!-- qPreview.id  foundation.row-->
+
+                </apex:repeat>
+
+            </div> <!-- qList -->
+
+
+        </apex:outputPanel>
+        <apex:outputPanel rendered="{!lthankYouRendered == false}" layout="none">
+            <apex:outputPanel rendered="{!isInternal}" >
+                {!$Label.LABS_SF_Answer_as}:
+                <apex:selectRadio value="{!anonymousAnswer}">
+                    <apex:selectOptions value="{!anonymousOrUser}" />
+                    <apex:actionSupport event="onchange" rerender="hiddenAnonymousAnswer"/>
+                </apex:selectRadio>
+                <apex:inputHidden value="{!anonymousAnswer}" id="hiddenAnonymousAnswer"/>
+                <BR />
+            </apex:outputPanel>
+
+            <div class="row">
+                <div class="large-8 large-offset-2 end">
+                    <apex:messages styleClass="alert-box alert"/>
+                </div>
+            </div>
+
+            <div class="row buttonRow">
+                <div class="large-12 columns">
+                    <apex:commandLink action="{!submitResults}"
+                                styleclass="fd_button success right"
+                                value="{!$Label.LABS_SF_SubmitSurvey}"
+                                rerender="theForm,seeSurvey" />
+                </div>
+            </div>
+        </apex:outputPanel>
+
+
+     <!--   // <script type="text/javascript">
+        //     $j = jQuery.noConflict();
+        //     $j('.columns .button').removeClass('btn');
+        // </script> -->
+
+    </apex:form>
+
+     <!-- {!thankYouRendered == true} -->
+        <apex:outputPanel rendered="{!lthankYouRendered == true}" layout="none">
+            <c:SurveyThankYou tyText="{!surveyThankYouText}" />
+        </apex:outputPanel>
+
+
+
+</apex:outputPanel>
+
+</apex:page>

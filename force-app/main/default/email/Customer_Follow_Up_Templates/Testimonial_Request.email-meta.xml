@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <description>Asking your customer if they have any interesting pictures or stories from their experiences in their new Legend Boat</description>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>Legend_Letterhead</letterhead>
+    <name>Testimonial Request</name>
+    <style>freeForm</style>
+    <subject>We Hope You&#39;re Having Fun</subject>
+    <textOnly>Hi {!Account.FirstName},
+
+I hope you&#39;ve been enjoying your boating season so far!  I just wanted to reach out and see if you were interested in sharing any of your boating experiences with us.  These can be boating stories, fishing stories (like the one that got away, we&#39;ve all got one!) or even pictures of you and your friends and family enjoying your boat.
+
+Please feel free to send these directly to me and, with your consent, they may even end up being featured on the Legend Boats website!
+
+Thank you for your time and, as always, please feel free to let me know if you have any questions regarding your boat or anything boating related.
+
+Yours in Boating,
+
+{!Opportunity.OwnerFullName}
+{!Opportunity.OwnerTitle}
+
+{!Opportunity.OwnerEmail}
+{!Opportunity.OwnerPhone}
+
+www.legendboats.com</textOnly>
+    <type>html</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

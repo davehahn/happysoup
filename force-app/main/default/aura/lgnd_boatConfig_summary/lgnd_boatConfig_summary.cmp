@@ -1,0 +1,207 @@
+<aura:component access="global">
+
+  <!-- Attributes -->
+  <aura:attribute name="boat" type="Object"  access="global"/>
+  <aura:attribute name="trailer" type="Object" access="global"/>
+  <aura:attribute name="motor" type="Object" access="global"/>
+  <aura:attribute name="trollingMotor" type="Object" access="global"/>
+  <aura:attribute name="options" type="Object" access="global"/>
+  <aura:attribute name="motorOptions" type="List" />
+  <aura:attribute name="optionsList" type="Object" access="global"/>
+  <aura:attribute name="fees" type="Object" access="global"/>
+  <aura:attribute name="feeList" type="Object" access="global"/>
+  <aura:attribute name="discounts" type="Array" access="global" />
+  <aura:attribute name="quantity" type="Integer" default="1" access="global"/>
+  <aura:attribute name="total" type="Decimal" default="0" access="global"/>
+
+  <!-- Events -->
+  <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+
+  <aura:handler event="c:lgnd_BoatConfig_configChange_Event"
+                action="{!c.handleConfigChange}" />
+
+<!--   <aura:handler name="change" value="{!v.quantity}" action="{!c.handleQuantityChange}" /> -->
+
+  <!-- <aura:if isTrue="{!v.total > 0}"> -->
+  <div class="summary-container">
+
+      <aura:If isTrue="{!!empty(v.boat)}">
+        <div class="slds-grid slds-wrap main-line">
+          <div class="slds-col slds-size--1-of-1 slds-medium-size--9-of-12 slds-large-size--9-of-12">
+            {!v.boat.name}
+          </div>
+          <div class="slds-col slds-size--1-of-1 slds-medium-size--3-of-12 slds-large-size--3-of-12 slds-text-align--right">
+            <lightning:formattedNumber value="{!v.boat.cost}" style="currency" currencyCode="CAD" />
+          </div>
+        </div>
+      </aura:If>
+
+      <aura:If isTrue="{!!empty(v.motor)}">
+        <div class="{!'slds-grid slds-wrap ' + (empty(v.boat) ? 'main-line' : 'sub-line')}">
+          <div class="slds-col">
+            {!v.motor.name}
+          </div>
+          <div class="slds-col slds-text-align--right">
+            <!-- <span>{!v.trailerCost}</span> -->
+            <aura:if isTrue="{!empty(v.motor.cost)}">
+              <span class="small-main-line-text">Legend - Mercury Special Programs</span>
+              <aura:set attribute="else">
+                <lightning:formattedNumber value="{!v.motor.cost}" style="currency" currencyCode="CAD" />
+              </aura:set>
+            </aura:if>
+          </div>
+        </div>
+        <aura:if isTrue="{! not( empty ( v.motorOptions ) ) }">
+          <aura:iteration items="{!v.motorOptions}" var="mOpt">
+              <aura:if isTrue="{!mOpt.isSelected}">
+                <div class="slds-grid slds-wrap">
+                  <div class="slds-col slds-size--1-of-1 slds-medium-size--9-of-12 slds-large-size--9-of-12">
+                    <span style="padding: 0 10px;">-</span>{!mOpt.name}
+                  </div>
+                  <div class="slds-col slds-size--1-of-1 slds-medium-size--3-of-12 slds-large-size--3-of-12 slds-text-align--right">
+                    <lightning:formattedNumber value="{!mOpt.cost}" style="currency" currencyCode="CAD" />
+                  </div>
+                </div>
+              </aura:if>
+            </aura:iteration>
+        </aura:if>
+      </aura:If>
+
+      <aura:If isTrue="{!!empty(v.trailer)}">
+        <div class="{!'slds-grid slds-wrap ' + (empty(v.boat) ? 'main-line' : 'sub-line')}">
+          <div class="slds-col slds-size--1-of-1 slds-medium-size--9-of-12 slds-large-size--9-of-12">
+            {!v.trailer.name}
+          </div>
+          <div class="slds-col slds-size--1-of-1 slds-medium-size--3-of-12 slds-large-size--3-of-12 slds-text-align--right">
+            <!-- <span>{!v.trailerCost}</span> -->
+            <aura:if isTrue="{!empty(v.trailer.cost)}">
+              <span>Included</span>
+              <aura:set attribute="else">
+                <lightning:formattedNumber value="{!v.trailer.cost}" style="currency" currencyCode="CAD" />
+              </aura:set>
+            </aura:if>
+          </div>
+        </div>
+      </aura:If>
+
+      <aura:If isTrue="{!!empty(v.trollingMotor)}">
+        <div class="{!'slds-grid slds-wrap ' + (empty(v.boat) ? 'main-line' : 'sub-line')}">
+          <div class="slds-col slds-size--1-of-1 slds-medium-size--9-of-12 slds-large-size--9-of-12">
+            {!v.trollingMotor.name}
+          </div>
+          <div class="slds-col slds-size--1-of-1 slds-medium-size--3-of-12 slds-large-size--3-of-12 slds-text-align--right">
+            <!-- <span>{!v.trailerCost}</span> -->
+            <aura:if isTrue="{!empty(v.trollingMotor.cost)}">
+              <span>Included</span>
+              <aura:set attribute="else">
+                <lightning:formattedNumber value="{!v.trollingMotor.cost}" style="currency" currencyCode="CAD" />
+              </aura:set>
+            </aura:if>
+          </div>
+        </div>
+      </aura:If>
+
+      <!-- <aura:renderIf isTrue="{!!empty(v.optionsList)}"> -->
+        <!-- <label class="slds-form-element__label">Options</label> -->
+        <aura:iteration items="{!v.optionsList}" var="opt">
+          <aura:if isTrue="{!opt.isSelected}">
+            <div class="slds-grid slds-wrap">
+              <div class="slds-col slds-size--1-of-1 slds-medium-size--9-of-12 slds-large-size--9-of-12">
+                <div class="slds-truncate">{!opt.name}</div>
+              </div>
+              <div class="slds-col slds-size--1-of-1 slds-medium-size--3-of-12 slds-large-size--3-of-12 slds-text-align--right">
+                <lightning:formattedNumber value="{!opt.cost}" style="currency" currencyCode="CAD" />
+              </div>
+            </div>
+            <aura:iteration items="{!opt.subOptions}" var="subOpt">
+              <aura:if isTrue="{!subOpt.isSelected}">
+                <div class="slds-grid slds-wrap">
+                  <div class="slds-col slds-size--1-of-1 slds-medium-size--9-of-12 slds-large-size--9-of-12">
+                    <span style="padding: 0 10px;">-</span>{!subOpt.name}
+                  </div>
+                  <div class="slds-col slds-size--1-of-1 slds-medium-size--3-of-12 slds-large-size--3-of-12 slds-text-align--right">
+                    <lightning:formattedNumber value="{!subOpt.cost}" style="currency" currencyCode="CAD" />
+                  </div>
+                </div>
+              </aura:if>
+            </aura:iteration>
+          </aura:if>
+        </aura:iteration>
+      <!-- </aura:renderIf> -->
+
+      <!-- <aura:renderIf isTrue="{!!empty(v.feeList)}"> -->
+        <!-- <label class="slds-form-element__label">Fees</label> -->
+        <aura:iteration items="{!v.feeList}" var="fee">
+          <div class="slds-grid slds-wrap">
+            <div class="slds-col slds-size--1-of-1 slds-medium-size--9-of-12 slds-large-size--9-of-12">
+              <div class="slds-truncate">{!fee.name}</div>
+            </div>
+            <div class="slds-col slds-size--1-of-1 slds-medium-size--3-of-12 slds-large-size--3-of-12 slds-text-align--right">
+              <lightning:formattedNumber value="{!fee.cost}" style="currency" currencyCode="CAD" />
+            </div>
+          </div>
+        </aura:iteration>
+
+        <aura:iteration items="{!v.discounts}" var="disc">
+          <div class="slds-grid slds-wrap">
+            <div class="slds-col slds-size--1-of-1 slds-medium-size--9-of-12 slds-large-size--9-of-12">
+              <div class="slds-truncate">{!disc.name}</div>
+            </div>
+            <div class="slds-col slds-size--1-of-1 slds-medium-size--3-of-12 slds-large-size--3-of-12 slds-text-align--right">
+              <lightning:formattedNumber value="{!disc.amount}" style="currency" currencyCode="CAD" />
+            </div>
+          </div>
+        </aura:iteration>
+      <!-- </aura:renderIf> -->
+
+      <div class="slds-grid slds-wrap quantity-line">
+        <div class="slds-col slds-size--6-of-12 slds-medium-size--9-of-12 slds-large-size--9-of-12 slds-text-align--right">
+          Quantity
+        </div>
+        <div class="slds-col slds-size--6-of-12 slds-medium-size--3-of-12 slds-large-size--3-of-12 slds-text-align--right">
+          <div class="slds-grid quantity-selector">
+            <div class="slds-col slds-size--4-of-12">
+              <div class="slds-form-element">
+              <lightning:buttonIcon iconName="utility:down"
+                                    class="left"
+                                    alternativeText="Decrease"
+                                    iconClass="dark"
+                                    disabled="{!v.quantity == 1}"
+                                    onclick="{!c.quantityDown}"/>
+              </div>
+            </div>
+            <div class="slds-col slds-size--4-of-12">
+              <lightning:input type="number"
+                               min="1"
+                               disabled="true"
+                               name="quantity"
+                               variant="label-hidden"
+                               label="Quantity"
+                               value="{!v.quantity}"
+                               class="quantity-select"/>
+            </div>
+            <div class="slds-col slds-size--4-of-12 slds-text-align--left">
+              <div class="slds-form-element">
+              <lightning:buttonIcon iconName="utility:up"
+                                    class="right"
+                                    alternativeText="Increase"
+                                    iconClass="dark"
+                                    onclick="{!c.quantityUp}"/>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="slds-grid total-line">
+        <div class="slds-col slds-size--12-of-12 slds-text-align--right">
+          <!-- <c:lgnd_Odometer amount="{!v.total}" /> -->
+          <!-- {!v.total} -->
+          <lightning:formattedNumber value="{!v.total}" style="currency" currencyCode="CAD" />
+        </div>
+      </div>
+
+  </div>
+  <!-- </aura:if> -->
+
+</aura:component>

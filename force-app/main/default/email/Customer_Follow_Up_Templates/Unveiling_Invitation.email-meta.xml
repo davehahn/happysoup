@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <description>An email inviting Xcalibur customers to the unveiling of the X Series</description>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>Legend_Letterhead</letterhead>
+    <name>Unveiling Invitation</name>
+    <style>freeForm</style>
+    <subject>Something Exciting is Happening Today!</subject>
+    <textOnly>Dear {!Account.FirstName},
+
+I hope you&#39;ve been enjoying your time on the water with your Legend so far!  For an added thank you for choosing Legend Boats, we&#39;re inviting you to be one of the first people in Canada to view our brand new, truly innovative boat and pontoon lineups as well as our new rebranded logo!
+
+A focus group last night turned up amazing results, so we wanted to keep the momentum going all day TODAY, Saturday, October 3rd in the Exhibit Hall of Science North in Sudbury.
+
+Please feel free to let me know if you&#39;re interested in coming out to view the new Legend products, we would love to hear your opinion!
+
+Always Yours in Boating,
+
+{!User.Name}
+{!User.Title}
+
+{!User.Email}
+{!User.Phone}</textOnly>
+    <type>html</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

@@ -1,0 +1,17 @@
+{{#each schedulables }}
+  <div class="schedulable"
+       data-event-id='{{this.Id}}'>
+    <div>
+      <a href="#" class="trip-lookup" data-trip-id="{{this.Id}}">
+        <span class="slds-icon__container slds-icon-custom-legend">
+          <svg aria-hidden="true" class="slds-icon  slds-icon--medium">
+            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{{ ../icons.truckLoad}}"></use>
+          </svg>
+        </span>
+      </a>
+    </div>
+    <p class="slds-truncate">
+      {{this.Name}} - {{this.Destination__c}}
+    </p>
+  </div>
+{{/each}}

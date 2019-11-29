@@ -1,0 +1,104 @@
+<aura:component controller="BusinessOffice_Controller">
+
+  <aura:attribute name="recordId" type="String" />
+  <aura:attribute name="pricebookId" type="String" />
+  <aura:attribute name="pricebookName" type="String" />
+  <aura:attribute name="originalInitComplete" type="Boolean" default="false" />
+
+  <aura:attribute name="term" type="Integer" />
+  <aura:attribute name="finTerm" type="Integer" />
+  <aura:attribute name="amort" type="Integer" />
+  <aura:attribute name="intrestRate" type="Decimal" />
+  <aura:attribute name="preInsuranceAmount" type="Decimal" />
+  <aura:attribute name="deposit" type="Decimal" default="0" />
+  <aura:attribute name="taxZoneId" type="String" />
+  <aura:attribute name="insuranceTaxRate" type="Decimal" />
+  <aura:attribute name="plans" type="InsurancePlan__c[]" />
+  <aura:attribute name="planId" type="String" default="" />
+  <aura:attribute name="planOptions" type="Object" />
+  <aura:attribute name="selectedItems" type="Object" />
+  <aura:attribute name="loading" type="Boolean" default="true" />
+  <aura:attribute name="saving" type="Boolean" default="false" />
+  <aura:attribute name="planSelectDisabled" type="Boolean" default="false" />
+  <aura:attribute name="hasChanges" type="Boolean" default="false" />
+  <aura:attribute name="staleData" type="Boolean" default="false" />
+  <aura:attribute name="hasResidualValue" type="Boolean" />
+  <!-- temperary until we get Quebec sorted out -->
+  <aura:attribute name="isFromQuebec" type="Boolean" />
+
+  <ltng:require scripts="{!join(',', $Resource.Libraries +'/js/LightningApex.js',
+                                     $Resource.Libraries +'/js/LightningUtils.js') }"
+                afterScriptsLoaded="{!c.doInit}" />
+
+  <aura:handler name="change" value="{!v.planId}" action="{!c.getPlanOptions}" />
+  <aura:handler event="force:refreshView" action="{!c.doInit}" />
+  <aura:handler name="planItemChanged"
+                event="c:BusinessOffice_InsurancePlanItem_ChangedEvent_dh"
+                action="{!c.handleChange}" />
+  <aura:handler event="c:lgnd_FinanceCalculator_ChangedEvent_dh"
+                action="{!c.loadParamsChanged}" />
+  <aura:registerEvent name="insuranceChange" type="c:BusinessOffice_Insurance_ChangedEvent_dh" />
+
+  <aura:method name="remoteUpdate" action="{!c.remoteUpdate}" />
+  <aura:method name="reInit" action="{!c.reInit}" />
+
+  <div class="slds-card">
+
+    <aura:if isTrue="{! or(v.loading, v.saving) }">
+      <div class="slds-spinner_container">
+        <div role="status" class="slds-spinner slds-spinner_medium">
+          <span class="slds-assistive-text">Loading</span>
+          <div class="slds-spinner__dot-a"></div>
+          <div class="slds-spinner__dot-b"></div>
+        </div>
+      </div>
+    </aura:if>
+
+    <aura:if isTrue="{! not(v.loading) }">
+      <aura:if isTrue="{! not(empty(v.plans)) }">
+        <div class="slds-grid slds-grid_pull-padded-small">
+          <div class="slds-col slds-size_4-of-12 slds-p-horizontal_small"></div>
+          <div class="slds-col slds-size_4-of-12 slds-p-horizontal_small">
+            <lightning:select name="planSelect"
+                              label="Select a plan"
+                              value="{!v.planId}"
+                              disabled="{!v.planSelectDisabled}">
+              <option value="">- Select Plan -</option>
+              <aura:iteration items="{!v.plans}" var="plan">
+                <option value="{!plan.Id}">{!plan.Name}</option>
+              </aura:iteration>
+            </lightning:select>
+          </div>
+          <div class="slds-col slds-size_4-of-12 slds-p-horizontal_small"></div>
+        </div>
+      </aura:if>
+
+      <aura:if isTrue="{! not( empty(v.planOptions))}">
+        <aura:iteration items="{!v.planOptions}" var="opts">
+          <div class="slds-text-heading_small">{!opts.groupName}</div>
+          <table class="{!'slds-table slds-table_bordered slds-m-bottom_small ' + if(v.staleData,'stale-data','') }" role="grid">
+            <tbody>
+              <aura:iteration items="{!opts.planItems}" var="item">
+                <aura:if isTrue="{! or( equals(item.isResidual, 'false'), and(equals(item.isResidual,'true'), v.hasResidualValue ) )}">
+                <c:BusinessOffice_InsurancePlanItem_dh productId="{!item.Id}"
+                                                       pricebookEntryId="{!item.PricebookEntryId}"
+                                                       isResidual="{!item.isResidual}"
+                                                       lineItem="{!item.lineItem}"
+                                                       term="{!v.term}"
+                                                       finTerm="{!v.finTerm}"
+                                                       taxZoneId="{!v.taxZoneId}"
+                                                       hasChanged="{!v.hasChanges}"
+                                                       isFromQuebec="{!v.isFromQuebec}"
+                                                       aura:id="insurance-item"/>
+                </aura:if>
+              </aura:iteration>
+            </tbody>
+          </table>
+        </aura:iteration>
+      </aura:if>
+
+    </aura:if>
+
+  </div>
+
+</aura:component>

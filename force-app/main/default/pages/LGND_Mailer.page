@@ -1,0 +1,62 @@
+<apex:page controller="LGND_MailerController"
+           action="{!init}"
+           docType="html-5.0"
+           standardStylesheets="false"
+           showheader="false"
+           sidebar="false">
+
+  <apex:stylesheet value="{!URLFOR($Resource.Foundation, 'css/foundation.min.css')}" />
+  <apex:stylesheet value="{!URLFOR($Resource.LGND_Mailer, 'css/lgnd_mailer.min.css')}" />
+
+  <div class="wrapper">
+
+    <div class="indicator">
+      <div class="load-bar">
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+      </div>
+    </div>
+
+    <div class="overlay"></div>
+
+    <div class="form-wrapper">
+
+      <input type="hidden" class="emailFormField" data-email-attr="aws_s3_object_id" value="{!awsS3ObjectId}"></input>
+
+      <apex:outputPanel layout="none" rendered="{!templateId != null}">
+        <label>Template</label>
+        <select id="templateSelect">
+          <apex:repeat value="{!templates}" var="t">
+            <option value="{!t.Id}">{!t.Name}</option>
+          </apex:repeat>
+        </select>
+      </apex:outputPanel>
+
+      <label>To</label>
+      <input type="text" class="emailFormField" data-email-attr="toAddresses" value="{!toAddresses}"></input>
+
+      <label>Subject</label>
+      <input type="text" class="emailFormField" data-email-attr="subject" value="{!defaultSubject}"></input>
+
+      <label>Body</label>
+      <textarea class="emailFormField" data-email-attr="body">{!defaultBody}</textarea>
+
+    </div>
+
+    <div class="button-row">
+      <a href="#" id="sendEmail" class="button tiny success">Send</a>
+    </div>
+
+  </div>
+
+  <apex:includeScript value="{!URLFOR($Resource.jQuery)}"  />
+  <apex:includeScript value="{!URLFOR($Resource.LGND_Mailer, 'js/lgnd_mailer.js')}"  />
+
+  <script type="text/javascript">
+
+    LGND_Mailer.init("{!objectId}");
+
+  </script>
+
+</apex:page>

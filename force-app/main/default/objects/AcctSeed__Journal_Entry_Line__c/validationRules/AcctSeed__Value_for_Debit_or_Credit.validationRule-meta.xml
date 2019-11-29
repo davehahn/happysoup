@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>AcctSeed__Value_for_Debit_or_Credit</fullName>
+    <active>true</active>
+    <description>Verifies debit and credit fields are not blank</description>
+    <errorConditionFormula>ISBLANK(AcctSeed__Debit__c) &amp;&amp; ISBLANK(AcctSeed__Credit__c)</errorConditionFormula>
+    <errorMessage>A journal entry line must contain a value for either the debit or a credit field</errorMessage>
+</ValidationRule>

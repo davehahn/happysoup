@@ -1,0 +1,267 @@
+<apex:page controller="RetailSchedule"
+           showHeader="false"
+           sidebar="false"
+           applyHtmlTag="false"
+           applyBodyTag="false"
+           docType="html-5.0">
+
+
+  <html xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+
+    <head>
+      <title>Retail Schedule</title>
+      <apex:stylesheet value="{!URLFOR($Resource.LGND_SLDS_214, 'assets/styles/salesforce-lightning-design-system-vf.css')}" />
+      <c:lgnd_slds_resources />
+      <apex:stylesheet value="{!URLFOR($Resource.Libraries, 'css/lgnd-toggle-checkbox.min.css')}" />
+      <apex:stylesheet value="{!URLFOR($Resource.pickupCalendar, 'css/fullcalendar.min.css')}" />
+      <apex:stylesheet value="{!URLFOR($Resource.pickupCalendar, 'css/pickup_calendar.min.css')}" />
+      <apex:stylesheet value="{!URLFOR($Resource.RetailScheduleResources, 'css/retail-schedule.min.css')}" />
+    </head>
+
+    <body class="lgnd">
+
+      <div class="slds">
+
+        <div id="notifications" class="notifications"></div>
+
+        <div class="slds-page-header" role="banner">
+          <p class="slds-text-heading--label custom">Retail Schedule</p>
+          <div class="slds-grid slds-align-middle">
+            <div class="slds-col slds-no-flex">
+              <a href="#" id="returnBtn" class="slds-button slds-button--neutral" style="display:none;">
+                <svg aria-hidden="true" class="slds-button__icon slds-button__icon--small">
+                  <use xlink:href="{!URLFOR($Resource.LDS_12_2, '/assets/icons/utility-sprite/svg/symbols.svg#chevronleft')}"></use>
+                </svg>
+                Return
+              </a>
+            </div>
+            <div class="slds-col slds-no-flex">
+              <button class="slds-button slds-button--neutral" data-cal-control="today">Today</button>
+            </div>
+            <div class="slds-col slds-no-flex">
+              <div class="slds-button-group prev-next" role="group">
+                <button class="slds-button slds-button--icon-border-filled" data-cal-control="prev">
+                  <svg aria-hidden="true" class="slds-button__icon slds-button__icon--small">
+                    <use xlink:href="{!URLFOR($Resource.LDS_12_2, '/assets/icons/utility-sprite/svg/symbols.svg#chevronleft')}"></use>
+                  </svg>
+                </button>
+                <button class="slds-button slds-button--icon-border-filled" data-cal-control="next">
+                  <svg aria-hidden="true" class="slds-button__icon slds-button__icon--small">
+                    <use xlink:href="{!URLFOR($Resource.LDS_12_2, '/assets/icons/utility-sprite/svg/symbols.svg#chevronright')}"></use>
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <div class="slds-col slds-no-flex">
+              <p id="calTitle"></p>
+            </div>
+
+            <div class="slds-col slds-no-flex slds-container--right">
+
+              <div class="slds-grid">
+
+                <div class="slds-col slds-no-flex">
+                  <!-- <a href="{!URLFOR($Page.TruckTripBuilder)}" class="slds-button slds-button--neutral">New Trip</a> -->
+                  <div class="slds-dropdown-trigger">
+                    <button class="slds-button slds-button--icon-border-filled viewSelector" aria-haspopup="true">
+                      <svg aria-hidden="true" class="slds-button__icon slds-button__icon--large">
+                        <use xlink:href="{!URLFOR($Resource.LDS_12_2, '/assets/icons/standard-sprite/svg/symbols.svg#event')}"></use>
+                      </svg>
+                      <svg aria-hidden="true" class="slds-button__icon slds-button__icon--x-small ">
+                        <use xlink:href="{!URLFOR($Resource.LDS_12_2, '/assets/icons/utility-sprite/svg/symbols.svg#down')}"></use>
+                      </svg>
+                      <span class="slds-assistive-text">Show More</span>
+                    </button>
+                    <div class="slds-dropdown slds-dropdown--right slds-dropdown--menu">
+                      <ul class="slds-dropdown__list" role="menu">
+                        <li id="menu-0-0" class="slds-dropdown__item">
+                          <a href="" role="menuitem" data-cal-control="changeView" data-cal-view="month">
+                            <p class="slds-truncate">Month</p>
+                          </a>
+                        </li>
+                        <li id="menu-1-1" class="slds-dropdown__item">
+                          <a href="" role="menuitem" data-cal-control="changeView" data-cal-view="agendaWeek">
+                            <p class="slds-truncate">Week</p>
+                          </a>
+                        </li>
+                        <li id="menu-2-2" class="slds-dropdown__item">
+                          <a href="" role="menuitem" data-cal-control="changeView" data-cal-view="agendaDay">
+                            <p class="slds-truncate">Day</p>
+                          </a>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div><!-- /.slds-page-header -->
+
+        <div class="cal-container">
+
+          <div class="column">
+            <div id="calendar"></div>
+          </div>
+
+          <div class="column">
+            <h1>Event selection</h1>
+            <div class="toggles">
+              <apex:repeat value="{!storeLocations}" var="location">
+                <div>
+                  <label>{!location}</label>
+                  <div class="legend_switch">
+                    <input id="lg-toggle-{!LOWER(location)}"
+                           class="lg-toggle lg-toggle-round cal-toggle small"
+                           type="checkbox"
+                           data-state="active"
+                           data-store-location="{!location}" />
+                    <label for="lg-toggle-{!LOWER(location)}">
+                      <i class="fa fa-spin fa-circle-o-notch"></i>
+                    </label>
+                  </div>
+                </div>
+              </apex:repeat>
+            </div>
+
+            <h1>Scheduables</h1>
+            <div id="scheduables">
+              <div class="scheduable-list">
+                <apex:repeat value="{!scheduables}" var="sched">
+                  <div class="scheduable {!LOWER( sched.storeLocation )}"
+                       style="{!IF(sched.storeLocation = '', '', 'display:none')}"
+                       data-event-id='{!sched.Id}'>
+                    <div class="icon-container">
+                      <a href="#" class="" data-erp-id="{!sched.Id}">
+                        <apex:outputPanel layout="none" rendered="{!sched.origin = 'erp'}">
+                          <span class="slds-icon__container slds-icon-custom-custom92">
+                            <svg aria-hidden="true" class="slds-icon  slds-icon--medium">
+                              <use xlink:href="{!URLFOR($Resource.LGND_SLDS_214,'/assets/icons/custom-sprite/svg/symbols.svg#custom92')}"></use>
+                            </svg>
+                          </span>
+                        </apex:outputPanel>
+                        <apex:outputPanel layout="none" rendered="{!sched.origin = 'opportunity'}">
+                          <span class="slds-icon__container slds-icon-standard-opportunity">
+                            <svg aria-hidden="true" class="slds-icon  slds-icon--medium">
+                              <use xlink:href="{!URLFOR($Resource.LGND_SLDS_214,'/assets/icons/standard-sprite/svg/symbols.svg#opportunity')}"></use>
+                            </svg>
+                          </span>
+                        </apex:outputPanel>
+                      </a>
+                    </div>
+                    <div class="sched-details">
+                      <p class="slds-truncate">{!sched.Name}</p>
+                      <p class="slds-truncate">{!sched.BoatName}</p>
+                    </div>
+
+                  </div>
+                </apex:repeat>
+              </div>
+              <div class="unscheduleDropZone">
+                <svg aria-hidden="true" class="slds-button__icon slds-button__icon--large">
+                  <use xlink:href="{!URLFOR($Resource.LDS_12_2, '/assets/icons/utility-sprite/svg/symbols.svg#delete')}"></use>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- /.cal-container -->
+
+        <div aria-hidden="false" role="dialog" class="slds-modal">
+          <div class="slds-modal__container" id="modalContent"></div>
+        </div>
+        <div class="slds-backdrop"></div>
+
+      </div><!-- /.slds -->
+
+
+      <apex:includeScript value="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0/handlebars.min.js"/>
+      <apex:includeScript value="{!URLFOR($Resource.pickupCalendar, 'js/lib/jquery.min.js')}" />
+      <apex:includeScript value="{!URLFOR($Resource.pickupCalendar, 'js/lib/jquery-ui.min.js')}" />
+      <apex:includeScript value="{!URLFOR($Resource.pickupCalendar, 'js/lib/moment.min.js')}" />
+      <apex:includeScript value="{!URLFOR($Resource.pickupCalendar, 'js/lib/fullcalendar.min.js')}" />
+      <apex:includeScript value="{!URLFOR($Resource.aljs, 'jquery/jquery.aljs-init.min.js')}" />
+      <apex:includeScript value="{!URLFOR($Resource.aljs, 'jquery/jquery.aljs-datepicker.min.js')}" />
+      <apex:includeScript value="{!URLFOR($Resource.sldsCombobox, 'js/sldsComboBox.js')}" />
+      <apex:includeScript value="{!URLFOR($Resource.RetailScheduleResources, 'js/LGND_Calendar.js')}" />
+      <apex:includeScript value="{!URLFOR($Resource.RetailScheduleResources, 'js/retailSchedule.js')}" />
+      <apex:includeScript value="{!URLFOR($Resource.RetailScheduleResources, 'js/retailScheduleHelper.js')}" />
+
+      <script type="text/javascript">
+
+        (function($) {
+
+          var templateURLs = {
+            'indicator': "{!URLFOR($Resource.pickupCalendar, 'templates/indicator.tpl.html')}",
+            'notification': "{!URLFOR($Resource.pickupCalendar, 'templates/notification.tpl.html')}",
+            'edit_pickup': "{!URLFOR($Resource.RetailScheduleResources, 'templates/edit_pickup.tpl.html')}",
+            'scheduable': "{!URLFOR($Resource.RetailScheduleResources, 'templates/scheduable.tpl.html')}"
+          };
+
+          LGND.iconURLs = {
+            'close': "{!URLFOR($Resource.LGND_SLDS_214, '/assets/icons/action-sprite/svg/symbols.svg#close')}",
+            'spinner': "{!URLFOR($Resource.LGND_SLDS_214, '/assets/images/spinners/slds_spinner_brand.gif')}",
+            'calendar': "{!URLFOR($Resource.LGND_SLDS_214, '/assets/icons/utility-sprite/svg/symbols.svg#event')}",
+            'arrowDown': "{!URLFOR($Resource.LGND_SLDS_214, '/assets/icons/utility-sprite/svg/symbols.svg#down')}",
+            'erp': "{!URLFOR($Resource.LGND_SLDS_214, '/assets/icons/custom-sprite/svg/symbols.svg#custom92')}"
+          };
+          LGND.slds_asset_path = "{!URLFOR($Resource.LGND_SLDS_214, 'assets/')}";
+          LGND.scheduleSettings = {
+            storeLocations: {!storeLocationsJSON},
+            pickupSelectOptions: {!pickupLocationsJSON},
+            comboBoxAssetLocation: "{!URLFOR($Resource.sldsCombobox)}",
+            activeStores: {!activeStoresJSON},
+            calStartDate: '{!calendarStartDate}',
+            activeErpId : '{!activeRecordId}'
+          };
+
+          $.aljsInit({
+            assetsLocation: '{!URLFOR($Resource.LGND_SLDS_214)}'
+          });
+
+          if( typeof sforce == 'undefined'  )
+          {
+            $('#returnBtn').show().on('click', function(e) {
+              e.preventDefault();
+              if(window.history.length <= 1)
+              {
+                window.location.assign('/');
+              }
+              else
+              {
+                window.history.back();
+              }
+            });
+          }
+
+          $.when( LGND.HandlebarsHelpers.templateLoader( templateURLs) )
+          .done( function( tmpls ) {
+            LGND.templates = tmpls;
+            new RetailSchedule();
+            setScheduablesHeight();
+          });
+
+
+
+          function setScheduablesHeight()
+          {
+            var totalHeight = $('#calendar').height(),
+              h1Height = $('.column > h1:first').outerHeight(true),
+              togglesHeight = $('.toggles').outerHeight(true),
+              scheduablesHeight = totalHeight - ( 2* h1Height ) - togglesHeight;
+            $('#scheduables').css({'max-height': scheduablesHeight +'px', 'height': scheduablesHeight +'px', 'overflow-y': 'auto'});
+          }
+
+        })(jQuery.noConflict());
+      </script>
+
+    </body>
+
+  </html>
+
+</apex:page>

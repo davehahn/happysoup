@@ -1,0 +1,23 @@
+<div class="row-fluid date-filter">
+
+  <div class="col-lg-6">
+    <a class="incrementer" data-function="decrease" data-control='year' ng-click="filterClick($event)">
+      <i class="fa fa-chevron-down"></i>
+    </a>
+    <select id="year" class="form-control" ng-model="year" ng-options="opt.label for opt in years track by opt.value"></select>
+    <a class="incrementer" data-function="increase" data-control='year' ng-click="filterClick($event)">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+  </div>
+
+  <div class="col-lg-6">
+    <a class="incrementer" data-function="decrease" data-control='month' ng-click="filterClick($event)">
+      <i class="fa fa-chevron-left"></i>
+    </a>
+    <select id="month" class="form-control" ng-model="month" ng-options="opt.label for opt in months track by opt.value"></select>
+    <a class="incrementer" data-function="increase" data-control='month' ng-click="filterClick($event)">
+      <i class="fa fa-chevron-right"></i>
+    </a>
+  </div>
+
+</div>

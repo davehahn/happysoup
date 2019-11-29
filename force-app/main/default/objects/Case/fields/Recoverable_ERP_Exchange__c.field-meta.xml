@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Recoverable_ERP_Exchange__c</fullName>
+    <description>Field that shows the difference in recoverable ERP profit due to exchange</description>
+    <externalId>false</externalId>
+    <formula>IF(Recoverable_ERP__c  &lt;&gt; null  &amp;&amp;  Case_Exchange_Rate__c  &lt;&gt; 0, Recoverable_ERP__r.Profit__c  *  (Case_Exchange_Rate__c - 1), 0)</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Recoverable ERP Exchange</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Currency</type>
+</CustomField>

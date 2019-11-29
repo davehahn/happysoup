@@ -1,0 +1,71 @@
+<div id="status-path-container-{{comRecord.Id}}"
+     class="status-path-container {{ status-path-container-class comRecord.Is_Disputed__c }}">
+  <div class="disputed-path">
+    Currently Disputed by {{ comRecord.DisputedBy__r.Name }}
+  </div>
+  <div class="slds-grid status-path" data-record-id="{{comRecord.Id}}">
+  <div class="slds-tabs--path" role="application">
+    <ul class="slds-tabs--path__nav" role="tablist">
+    <li class="slds-tabs--path__item {{status-link-class comRecord.Stage__c 'New'}}" role="presentation">
+        <a class="slds-tabs--path__link"
+           role="tab"
+           href="javascript:void(0);"
+           data-status-number="0">
+          <span class="slds-tabs--path__stage">
+            <i class="fa fa-check" />
+          </span>
+          <span class="slds-tabs--path__title">New</span>
+        </a>
+      </li>
+      <li class="slds-tabs--path__item {{status-link-class comRecord.Stage__c 'Reviewed'}}" role="presentation">
+        <a class="slds-tabs--path__link"
+           role="tab"
+           href="javascript:void(0);"
+           data-status-number="1"
+           data-approved-by="{{comRecord.ReviewedBy__r.Name}}"
+           data-approved-on="{{comRecord.ReviewedOn__c}}">
+          <span class="slds-tabs--path__stage">
+            <i class="fa fa-check" />
+          </span>
+          <span class="slds-tabs--path__title">Reviewed</span>
+        </a>
+      </li>
+      <li class="slds-tabs--path__item {{status-link-class comRecord.Stage__c 'Approved'}}" role="presentation">
+        <a class="slds-tabs--path__link"
+           role="tab"
+           href="javascript:void(0);"
+           data-status-number="2"
+           data-approved-by="{{comRecord.ApprovedBy__r.Name}}"
+           data-approved-on="{{comRecord.ApprovedOn__c}}">
+          <span class="slds-tabs--path__stage">
+            <i class="fa fa-check" />
+          </span>
+          <span class="slds-tabs--path__title">Approved</span>
+        </a>
+      </li>
+      <li class="slds-tabs--path__item {{status-link-class comRecord.Stage__c 'Sales Accepted'}}" role="presentation">
+        <a class="slds-tabs--path__link"
+           role="tab"
+           href="javascript:void(0);"
+           data-status-number="3"
+           data-approved-by="{{comRecord.AcceptedBy__r.Name}}"
+           data-approved-on="{{comRecord.AcceptedOn__c}}"
+           data-was-auto-accepted="{{comRecord.Was_Auto_Accepted__c}}">
+          <span class="slds-tabs--path__stage">
+            <i class="fa fa-check" />
+          </span>
+          <span class="slds-tabs--path__title">Sales Accepted</span>
+        </a>
+         <!-- <div class="slds-popover slds-popover--tooltip slds-nubbin--bottom-left" role="tooltip" id="help" style="position:absolute;top:0px;left:15px;">
+          <div class="slds-popover__body">Approved Name and Date</div>
+        </div> -->
+      </li>
+    </ul>
+  </div>
+  <!-- <button class="slds-button slds-button--brand slds-path__mark-complete slds-no-flex slds-m-horizontal--small">
+    <i class="fa fa-check" />
+    Delete Record
+  </button> -->
+  </div>
+</div>
+

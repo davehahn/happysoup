@@ -1,0 +1,106 @@
+<apex:page showHeader="true"
+      sidebar="true"
+      docType="html-5.0"
+      standardController="Product2"
+      extensions="BoatRiggingChecklist_Controller">
+
+  <c:LegendFormResources includeSFFD="true" includeFontAwesome="true" />
+  <apex:stylesheet value="{!URLFOR($Resource.LegendDetailHeader, 'css/main_header_detail.min.css')}" />
+  <apex:stylesheet value="{!URLFOR($Resource.Product2Resources, 'css/boat-rigging-checklist-builder.min.css')}" />
+
+  <div class="recordTitle gray no-details">
+
+    <div class="titleContainer">
+      <img src="{!URLFOR($Resource.LDS_Icons, 'salesforce-lightning-design-system-icons/action/following_60.png')}" alt="" class="rigging-checklist"/>
+      <h6>Boat Rigging Checklist</h6>
+      <h5>{!Product2.Name}</h5>
+    </div>
+
+    <a href="/{!product2.Id}" class="lgnd_btn radius return">Done</a>
+
+    <dl class="tabs" data-tab="true" style="padding-top:20px;">
+      <apex:repeat value="{!categories}" var="cat">
+        <dd class="tab-title">
+          <a href="#{!cat}">{!categories[cat]}</a>
+        </dd>
+      </apex:repeat>
+    </dl>
+
+  </div>
+
+  <div class="tabs-content">
+
+    <apex:repeat value="{!categories}" var="cat">
+      <div class="content" id="{!cat}">
+
+        <div class="flex-row">
+
+          <div class="flex-column available">
+            <h3>Available</h3>
+
+            <ul id="{!cat}-available-list" class="available-list item-list" data-drop-target="{!cat}-active-list">
+              <apex:repeat value="{!availableItems[categories[cat]]}" var="item">
+                <li>
+                  <div>
+                    {!item.Description__c}
+                  </div>
+                  <a href="#"
+                     class="addItem actionLink"
+                     data-item-id="{!item.Id}"
+                     data-action="addItem">
+                    <i class="fa fa-arrow-right"></i>
+                  </a>
+                </li>
+              </apex:repeat>
+            </ul>
+
+          </div>
+
+          <div class="flex-column active">
+            <h3>
+              Active
+              <a href="#" class='createItem' data-category='{!categories[cat]}'><i class="fa fa-plus"></i></a>
+            </h3>
+
+            <ul id="{!cat}-active-list" class="active-list sortable item-list" data-drop-target="{!cat}-available-list">
+              <apex:repeat value="{!activeItems[categories[cat]]}" var="item">
+                <li data-checklist-map-id="{!item.Id}">
+                  <a href="#" class="editItem" data-item-id="{!item.CheckList_Item__c}">
+                    {!item.Checklist_Item__r.Description__c}
+                  </a>
+                  <a href="#"
+                     class="removeItem actionLink"
+                     data-item-id="{!item.Checklist_Item__c}"
+                     data-action="removeItem">
+                    <i class="fa fa-close"></i>
+                  </a>
+                </li>
+              </apex:repeat>
+            </ul>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </apex:repeat>
+
+  </div>
+
+  <script src="{!URLFOR($Resource.LegendDetailHeader, 'js/jQuery.LGND.menu_button.js')}" />
+  <script src="{!URLFOR($Resource.jQueryUI, 'jquery-ui.min.js')}" />
+  <script src="{!URLFOR($Resource.Product2Resources, 'js/dual-list-selector.js')}" />
+  <script type="text/javascript">
+
+    var activeTab = document.querySelectorAll('.tab-title')[0],
+        activeContent = document.querySelectorAll('.content')[0];
+
+    activeTab.className += ' active';
+    activeContent.className += ' active';
+
+    DualListSelector.init( "{!productId}" );
+
+  </script>
+
+</apex:page>

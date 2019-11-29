@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Finance_Gross_Compound_Payment__c</fullName>
+    <businessStatus>Active</businessStatus>
+    <externalId>false</externalId>
+    <formula>IF(( Finance_Annual_Interest__c == 0 ),
+  ( GrossFinanceAmount__c / Finance_Ammortization__c ),
+  ( ( Finance_Compound_Interest__c )* GrossFinanceAmount__c ) / (1 - (1+Finance_Compound_Interest__c)^(- ( Finance_Ammortization__c *  
+    Finance_Compound__c  / 12 ) ) )
+)</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Finance Gross Compound Payment</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Currency</type>
+</CustomField>

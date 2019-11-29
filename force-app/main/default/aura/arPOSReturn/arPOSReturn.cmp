@@ -1,0 +1,330 @@
+<aura:component implements="forceCommunity:availableForAllPageTypes,force:appHostable,flexipage:availableForAllPageTypes" access="global" controller="arPOSReturn">
+		<aura:attribute name="listData" type="sObject[]" />
+		<aura:attribute name="erpProducts" type="sObject[]" />
+		<aura:attribute name="materials" type="arPOSReturn.materialData[]" />
+		<aura:attribute name="materialsAdded" type="list" />
+		<aura:attribute name="HideIt" type="boolean" default="true"/>
+		<aura:attribute name="canBereturned" type="boolean" default="false"/>
+		<aura:attribute name="noFoundMessage" type="string" default=""/>
+		<aura:attribute name="isERPList" type="boolean" default="false"/>
+		<aura:attribute name="erpColumns" type="List" />
+		<aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+		<aura:attribute name="erpId" type="Id" />
+		<aura:attribute name="accountId" type="Id" />
+		<aura:attribute name="idFilter" type="Id" />
+		<aura:attribute name="grandTotal" type="Decimal" default="0"/>
+		<aura:attribute name="cdOptions" type="String[]" />
+		<aura:attribute name="cdType" type="String" />
+		<aura:attribute name="whOptions" type="sObject[]" />
+		<aura:attribute name="idWarehouse" type="String" />
+		<aura:attribute name="cssCustomStyle" type="String" />
+		<aura:attribute name="disableProcess" type="boolean" default="false"/>
+		<style>{!v.cssCustomStyle}</style>
+		<aura:handler name="filterSelectedEvent" event="c:filterSelectedEvent" action="{!c.handleFilterSelected}" />
+		<!-- <aura:handler name="accountSelectedEvent" event="c:dh_AccountSelector_Selected_Event" action="{!c.handleAccountSelected}" /> -->
+		<aura:if isTrue="{!v.canBereturned}">
+		<div class="slds-card content">
+			<br/>
+					<div role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+						<div class="slds-modal__container">
+							<div class="slds-modal__header">
+								<h2 id="header99" class="slds-text-heading--medium">Return ERP Order Items</h2>
+							</div>
+							<div class="slds-modal__content slds-p-around--medium">
+								<div class="slds-form slds-form_stacked slds-m-horizontal_large">
+										<div class="slds-form-element">
+											<lightning:select name="cdTypes" value="{!v.cdType}" label="Select Disbursement Type">
+												<aura:iteration items="{!v.cdOptions}" var="option">
+													<option value="{!option}" text="{!option}"></option>
+												</aura:iteration>
+											</lightning:select>
+										</div>
+										<div class="slds-form-element">
+											<lightning:select name="warehouses" value="{!v.idWarehouse}" label="Select Warehouse">
+												<aura:iteration items="{!v.whOptions}" var="whs">
+													<option value="{!whs.idWarehouse}" text="{!whs.warehouseName}"></option>
+												</aura:iteration>
+											</lightning:select>
+										</div>
+								</div>
+							</div>
+							<div class="slds-modal__footer">
+								<lightning:button disabled="{!v.disableProcess}" label="Process Return" onclick="{!c.processReturn}"/>
+								<button class="slds-button slds-button--neutral" onclick="{!c.closeModal}" >Close</button>
+							</div>
+						</div>
+					</div>
+					<div class="slds-backdrop slds-backdrop--open"></div>
+			<br/>
+		</div>
+		</aura:if>
+		<div class="content">
+		<aura:if isTrue="{!v.HideIt}">
+		<div class="slds-card content">
+			<br/>
+			<lightning:layout horizontalAlign="center">
+				<lightning:layoutItem size="6" smallDeviceSize="12" mediumDeviceSize="8" largeDeviceSize="6">
+					 <!-- <c:dh_AccountSelector showAccountCard="false" allowNew="false" /> -->
+					 <c:arSearchProject />
+				</lightning:layoutItem>
+			</lightning:layout>
+			<br/>
+		</div>
+		</aura:if>
+		<aura:if isTrue="{!v.isERPList}">
+			<div class="slds-card content">
+			<div class="slds-grid slds-wrap slds-grid_pull-padded-small" >
+
+				<!-- <div class="slds-col
+												slds-size_6-of-12
+												slds-medium-size_4-of-12
+												slds-large-size_3-of-12
+												slds-p-horizontal_small
+												slds-border_right
+												filter-container
+												c-menu
+												c-menu- -slide-left"
+								 aura:id="filter-container" >
+					<div>
+						<div aura:id="test-element"></div>
+						<aura:iteration items="{!v.listData}" var="pdt" indexVar="index">
+							<div class="slds-grid slds-wrap slds-card slds-p-around_medium search-result">
+								<div class="slds-col slds-size_4-of-4">
+									<div class="slds-clearfix">
+											<span class='slds-float_left'>{!pdt.Name}</span>
+									</div>
+									<div class='slds-clearfix'>
+										<div class="slds-text-body_small slds-text-color_weak">
+											{!pdt.RecordType.Name}<br/>
+											<span class="slds-pill"><c:lgnd_currencyDisplay value="{!pdt.Grand_Total__c}" zeroLabel="0.00" /></span>
+										</div>
+									</div>
+									<br />
+									<div class='slds-clearfix'>
+											<button class="slds-button slds-button_neutral slds-float_left"
+															onclick="{!c.searchAgain}">
+												Search Again
+											</button><button class="slds-button slds-button- -brand slds-float_right"
+															onclick="{!c.searchERPproducts}"
+															data-erpaccid="{!pdt.AcctSeed__Account__c}"
+															data-erpid="{!pdt.Id}">
+												See Products
+											</button>
+									</div>
+								</div>
+							</div>
+						</aura:iteration>
+						<div><ui:outputText value="{!v.noFoundMessage}"/></div>
+					</div>
+				</div> -->
+				<!-- search results -->
+						<div class="slds-col
+												slds-size_2-of-3
+												slds-medium-size_3-of-3
+												slds-border_right
+												slds-large-size_2-of-3
+												slds-p-horizontal_small" >
+							<div class="slds-clearfix">
+								<aura:iteration items="{!v.listData}" var="pdt" indexVar="index">
+								<div class="slds-page-header forceHighlightsStencilDesktop slds-m-bottom_medium">
+									<div class="slds-grid primaryFieldRow">
+										<div class="slds-grid slds-col slds-has-flexi-truncate slds-media--center">
+											<span class="slds-media__figure">
+												<span class="slds-icon_container slds-icon-standard-account" title="ERP Order">
+													<lightning:icon iconName="custom:custom68" />
+													<span class="slds-assistive-text">ERP Order</span>
+												</span>
+											</span>
+											<div class="slds-media__body">
+												<p class="entityNameTitle slds-breadcrumb__item slds-line-height--reset">ERP Order</p>
+												<h1 class="slds-page-header__title slds-m-right--small slds-truncate slds-align-middle">
+												{!pdt.Name}
+												</h1>
+											</div>
+										</div>
+										<div class="slds-col slds-no-flex slds-grid slds-align-middle actionsContainer">
+											<button class="slds-button slds-button--neutral not-selected slds-not-selected uiButton"
+															onclick="{!c.searchAgain}">
+												Search Again
+											</button>
+										</div>
+									</div>
+								</div>
+								</aura:iteration>
+							</div>
+							<section>
+							<div>
+										<table class="slds-table slds-table_bordered slds-table_cell-buffer">
+											<thead>
+												<tr class="slds-text-title_caps">
+													<th scope="col" width="15%">
+														<div class="slds-truncate" title="Name">Product Name</div>
+													</th>
+													<th scope="col" width="20%">
+														<div class="slds-truncate" title="Record Type">Product Type</div>
+													</th>
+													<th scope="col" width="15%" class="slds-text-align_right">
+														<div class="slds-truncate" title="Quantity">Quantity</div>
+													</th>
+													<th scope="col" width="20%" class="slds-text-align_right">
+														<div class="slds-truncate" title="UP">Unit Price</div>
+													</th>
+													<th scope="col" width="20%">
+														<div class="slds-truncate" title="Action">&nbsp;</div>
+													</th>
+												</tr>
+											</thead>
+											<tbody>
+												<aura:iteration items="{!v.erpProducts}" var="prod" indexVar="index">
+														<tr>
+															<td data-label="Name">
+																	<div class="slds-truncate slds-truncate_container_75" ><a href="{!'/one/one.app?#/sObject/'+ prod.productId + '/view'}" target="_blank">
+																		{#prod.productName}
+																	</a>
+																</div>
+															</td>
+															<td data-label="Type">
+																	{#prod.productType}
+															</td>
+															<td data-label="UP" class="slds-text-align_right">
+																<div class="slds-truncate" title="Ordered/Allocated Quantity">
+																		<lightning:formattedNumber value="{#prod.returnQuantity}" />
+																</div>
+															</td>
+															<td data-label="UP" class="slds-text-align_right">
+																<div class="slds-truncate" title="{#prod.pricePerQuantity}">
+																	<lightning:formattedNumber value="{#prod.pricePerQuantity}" style="currency" currencyCode="CAD" />
+																</div>
+															</td>
+															<td class="slds-text-align_right">
+																<button class="slds-button" data-matlid="{#prod.matId}" data-indx="{#index}" onclick="{! c.returnThisProduct }">Return</button>
+															</td>
+														</tr>
+												</aura:iteration>
+											</tbody>
+										</table>
+							</div>
+						</section>
+						</div>
+						<!-- The return section -->
+						<div class="slds-col
+												slds-size_1-of-3
+												slds-medium-size_1-of-3
+												slds-large-size_1-of-3
+												slds-p-horizontal_small
+												cart-container
+												c-menu
+												c-menu--slide-right"
+								 aura:id="cart-container" >
+
+							<section>
+									<div class="slds-grid slds-wrap slds-m-bottom_medium" style="line-height:3rem">
+										<div class="slds-col slds-size_6-of-12">
+											<div style="line-height:2rem;font-size:1.2rem" class="slds-p-left_small">Total Amount</div>
+											<!-- <div class="slds-p-left_small" style="line-height:1rem; font-size: 9pt;color: grey;">
+												Plus shipping and taxes
+											</div> -->
+										</div>
+										<div class="slds-col
+																slds-size_6-of-12"
+													style="font-size:1rem;">
+											<div class="slds-p-right_x-small
+																	slds-p-left_x-small
+																	slds-border_top
+																	slds-border_right
+																	slds-border_bottom
+																	slds-border_left
+																	slds-clearfix"
+														style="line-height:3rem;font-size:1.5rem;">
+												<span class="slds-float_left" style="color:#AAA;font-size:1.25rem;">$</span>
+												<span class="slds-float_right">{!v.grandTotal}</span>
+											</div>
+										</div>
+									</div>
+									<aura:iteration items="{!v.materials}" var="mat" indexVar="index1">
+										<div class="slds-card slds-p-around_x-small cart-item">
+
+											<div class="slds-grid slds-wrap">
+												<div class="slds-col slds-size--6-of-6">
+													<div class="slds-text-heading_medium">
+														{!mat.projectName}
+													</div>
+												</div>
+											</div>
+											<div class="slds-grid slds-wrap">
+												<div class="slds-col slds-size--6-of-6">
+													{!mat.productName}
+													<aura:if isTrue="{!mat.serialNumber != ''}">
+													<div class="slds-text-body_small slds-text-color_weak">
+															{!mat.serialNumber}
+													</div>
+													</aura:if>
+												</div>
+											</div>
+
+											<div class="slds-grid slds-wrap slds-m-top_small amount-line">
+												<div class="slds-col slds-size_3-of-12">
+													<input class="{!'slds-input inputWidth inputNumber'+index1}"
+																 data-recordId="{!index1}"
+																 value="{!mat.returnQuantity}"
+																 onkeyup="{!c.calculateTotalAmount}"
+																 onchange="{!c.calculateTotalAmount}"
+																 type="number" />
+												</div>
+												<div class="slds-col slds-size_1-of-12 slds-text-align_center">
+													x
+												</div>
+												<div class="slds-col slds-size_3-of-12 slds-text-align_center">
+													<c:lgnd_currencyDisplay value="{!mat.pricePerQuantity}"
+																									zeroLabel="0.00" />
+												</div>
+												<div class="slds-col slds-size_1-of-12 slds-text-align_center">
+													=
+												</div>
+												<div class="slds-col
+																		slds-size_4-of-12
+																		slds-text-align_right
+																		slds-p-right_x-small
+																		slds-border_top
+																		slds-border_right
+																		slds-border_bottom
+																		slds-border_left">
+													<span>
+														$ {!mat.totalPrice}
+													</span>
+												</div>
+											</div>
+
+											<div class="slds-clearfix slds-m-top_x-small slds-m-right_x-small">
+													<a href="javascript:void(0);"
+														 class="slds-text-color_error slds-text-body_small slds-float_right"
+														 data-recordId="{!mat.matId}"
+														 onclick="{!c.removeFromList}">
+														Remove
+													</a>
+											</div>
+
+										</div>
+
+									</aura:iteration>
+									<br/>
+										<div class="slds-clearfix slds-m-bottom_medium slds-text-align_center">
+												<lightning:button label="Return Materials"
+																					variant="brand"
+																					onclick="{!c.returnAllMaterials}"
+																					class="slds-float_right slds-button_success" />
+										</div>
+
+							</section>
+
+						</div>
+					 </div>
+			<br/>
+			</div>
+		</aura:if>
+		<br/>
+		<br/>
+	</div>
+		<lightning:spinner aura:id="spinner" />
+
+</aura:component>

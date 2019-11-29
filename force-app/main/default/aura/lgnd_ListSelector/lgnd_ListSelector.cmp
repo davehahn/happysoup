@@ -1,0 +1,43 @@
+<aura:component >
+  <aura:attribute name="value" type="String" />
+  <aura:attribute name="listOptions" type="Object" />
+  <aura:attribute name="listNames" type="Object" />
+  <aura:attribute name="filterMap" type="Object" />
+
+  <!-- Events -->
+  <aura:registerEvent name="listChanged" type="c:lgnd_ListSelector_Event" />
+
+  <!-- Methods -->
+  <aura:method name="doInit" access="public" />
+
+   <h1 class="slds-page-header__title slds-p-right_x-small">
+    <div class="slds-dropdown-trigger slds-dropdown-trigger_click" aura:id="theMenu">
+      <button class="slds-button slds-button_reset slds-type-focus slds-truncate" aria-haspopup="true" onclick="{!c.toggleMenu}">
+        <span class="slds-grid slds-has-flexi-truncate slds-grid_vertical-align-center">
+          <span class="slds-truncate" title="this should match My Leads">{!v.value}</span>
+          <lightning:icon iconName="utility:down" size="x-small" class="slds-m-left--small"/>
+        </span>
+      </button>
+      <div class="slds-dropdown slds-dropdown_left">
+        <ul class="slds-dropdown__list" role="menu">
+          <aura:iteration items="{!v.listNames}" var="opt">
+            <li class="slds-dropdown__item" role="presentation">
+              <a href="javascript:void(0);"
+                 role="menuitem"
+                 data-list-name="{!opt}"
+                 onclick="{!c.selectList}">
+                <span class="slds-truncate" title="Menu Item One">
+                  <lightning:icon iconName="utility:check"
+                                  size="x-small"
+                                  class="{!v.value == opt ? 'slds-m-right--small' : 'slds-icon--selected slds-m-right--small'}" />
+                  {!opt}
+                </span>
+              </a>
+            </li>
+          </aura:iteration>
+        </ul>
+      </div>
+    </div>
+  </h1>
+
+</aura:component>

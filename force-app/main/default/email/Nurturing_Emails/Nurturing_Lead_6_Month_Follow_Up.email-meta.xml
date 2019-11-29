@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <description>Sent automatically to a customer in the Nurturing stage after 6 months</description>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>Legend_Letterhead</letterhead>
+    <name>Nurturing Lead 6 Month Follow Up</name>
+    <style>freeForm</style>
+    <subject>Drop me a line, you might just catch me!</subject>
+    <textOnly>Hi {!Account.FirstName},
+
+I thought I would touch base with you again and see how you&#39;re doing.  If you want to continue our discussion from before, please feel free to drop me a line. I&#39;m always happy to chat with you and answer any questions you may have.  Even if you have a quirky fishing or boating story that you want to share, I would love to hear it!
+
+As before, if you are no longer considering a long, happy life with Legend Boats, please let me know.
+
+Thanks again
+
+Yours in Boating,
+
+{!User.Name}
+{!User.Title}
+
+{!User.Email}
+{!User.Phone}
+
+www.legendboats.com
+
+{!User.Address}</textOnly>
+    <type>html</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

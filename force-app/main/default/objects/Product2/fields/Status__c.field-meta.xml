@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Status__c</fullName>
+    <description>Field used to determine status of a part</description>
+    <externalId>false</externalId>
+    <label>Status</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>true</trackHistory>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Pending_Approval</fullName>
+                <default>true</default>
+                <label>Pending Approval</label>
+            </value>
+            <value>
+                <fullName>Approved for Use</fullName>
+                <default>false</default>
+                <label>Approved for Use</label>
+            </value>
+            <value>
+                <fullName>Do_Not_Use</fullName>
+                <default>false</default>
+                <label>Do Not Use</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

@@ -1,0 +1,11 @@
+<apex:page showHeader="true" 
+	sidebar="true" 
+	standardController="AcctSeed__Cash_Receipt__c"
+	extensions="gcCashReceipt_Actions"
+	recordSetVar="CashReceipts" 
+	action="{!init}">
+	<apex:pageMessages escape="false"/>
+	<apex:form >
+		<div style="text-align: center;"><apex:commandButton action="{!back}" value="Go Back"></apex:commandButton></div>
+	</apex:form>
+</apex:page>

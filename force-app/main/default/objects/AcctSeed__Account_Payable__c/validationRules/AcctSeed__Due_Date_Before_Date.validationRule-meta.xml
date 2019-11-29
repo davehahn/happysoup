@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>AcctSeed__Due_Date_Before_Date</fullName>
+    <active>true</active>
+    <errorConditionFormula>AcctSeed__Due_Date__c &lt; AcctSeed__Date__c</errorConditionFormula>
+    <errorDisplayField>AcctSeed__Due_Date__c</errorDisplayField>
+    <errorMessage>The due date can not be earlier then the issue date</errorMessage>
+</ValidationRule>

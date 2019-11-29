@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <description>Sent automatically to a customer in the Nurturing stage after 3 months</description>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>Legend_Letterhead</letterhead>
+    <name>Nurturing Lead 3 Month Follow Up</name>
+    <style>freeForm</style>
+    <subject>The Water is Calling!</subject>
+    <textOnly>Hi {!Account.FirstName},
+
+I hope all has been well with you.  It&#39;s been a little while since I&#39;ve heard from you, so I just wanted to let you know that I&#39;m still here for you, if you wish to continue our discussion.
+
+As always, please feel free to call or email me with any questions, or even drop by the Dealership, it would be great to see you!  However, if circumstances have changed and you&#39;re no longer pursuing an enjoyable life out on the water, please just let me know.
+
+Thanks and I hope to hear from you soon!
+
+Yours in Boating,
+
+{!User.Name}
+{!User.Title}
+
+{!User.Email}
+{!User.Phone}
+
+www.legendboats.com
+
+{!User.Address}</textOnly>
+    <type>html</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

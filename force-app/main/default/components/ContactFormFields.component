@@ -1,0 +1,223 @@
+<apex:component >
+
+  <style type="text/css">
+    #searchInd {
+      color:#27C527;
+      display:none;
+      position:absolute;
+      top: -20px;
+    }
+  </style>
+
+  <apex:attribute name="contact"
+                  type="Contact"
+                  description="The contact object we are working with"
+                  required="true" />
+
+  <apex:attribute name="isOpportunityCoBuyer"
+                  type="Boolean"
+                  required="true"
+                  description="boolean flag to determine it this a opportunity co-buyer" />
+
+
+<!--
+     _______.___________.    ___      .__   __.  _______       ___      .______       _______
+    /       |           |   /   \     |  \ |  | |       \     /   \     |   _  \     |       \
+   |   (====`===|  |====`  /  ^  \    |   \|  | |  .==.  |   /  ^  \    |  |_)  |    |  .==.  |
+    \   \       |  |      /  /_\  \   |  . `  | |  |  |  |  /  /_\  \   |      /     |  |  |  |
+.====)   |      |  |     /  _____  \  |  |\   | |  '=='  | /  _____  \  |  |\  \====.|  '=='  |
+|_______/       |__|    /__/     \__\ |__| \__| |_______/ /__/     \__\ | _| `._____||_______/
+
+-->
+
+  <sffd:row >
+
+    <sffd:column cols="large-6"><!-- *********** Left Column -->
+
+      <sffd:row >
+
+        <sffd:column cols="large-4 small-12">
+          <label class="large-only-right">First Name</label>
+        </sffd:column>
+        <sffd:column cols="large-2 small-4">
+          <apex:inputField id="Salutation" value="{!contact.Salutation}"></apex:inputField>
+        </sffd:column>
+        <sffd:column cols="large-6 small-8">
+          <span id="searchInd">
+            Searching ....  <i class=" fa fa-spinner fa-spin"></i>
+          </span>
+          <apex:inputField value="{!contact.FirstName}"
+                           styleClass="comboBox"
+                           html-placeholder="First Name / Search"
+                           rendered="{!isOpportunityCoBuyer}"></apex:inputField>
+          <apex:inputField value="{!contact.FirstName}"
+                           html-placeholder="First Name"
+                           rendered="{!!isOpportunityCoBuyer}"></apex:inputField>
+        </sffd:column>
+
+      </sffd:row>
+
+      <apex:repeat value="{!$ObjectType.Contact.FieldSets['Standard_Left']}" var="f">
+        <sffd:row >
+          <sffd:column cols="large-4">
+            <label class="large-only-right">{!f.Label}</label>
+          </sffd:column>
+          <sffd:column cols="large-8" styleClass="{!f.type}">
+            <apex:inputField value="{!Contact[f]}"
+                             rendered="{!f.type != 'date'}">
+            </apex:inputField>
+            <apex:inputField value="{!Contact[f]}"
+                             rendered="{!f.type == 'date'}"
+                             showDatePicker="true">
+            </apex:inputField>
+          </sffd:column>
+        </sffd:row>
+      </apex:repeat>
+
+    </sffd:column><!-- *********** /Left Column -->
+
+
+    <sffd:column cols="large-6"><!-- ************* Right Column -->
+
+      <apex:repeat value="{!$ObjectType.Contact.FieldSets['Standard_Right']}" var="f">
+        <sffd:row >
+          <sffd:column cols="large-4">
+            <label class="large-only-right">{!f.Label}</label>
+          </sffd:column>
+          <sffd:column cols="large-8" styleClass="{!f.type}">
+            <apex:inputField value="{!Contact[f]}"
+                             rendered="{!f.type != 'date'}">
+            </apex:inputField>
+            <apex:inputField value="{!Contact[f]}"
+                             rendered="{!f.type == 'date'}"
+                             showDatePicker="true">
+            </apex:inputField>
+          </sffd:column>
+        </sffd:row>
+      </apex:repeat>
+
+    </sffd:column><!-- *************** /Right Column -->
+
+  </sffd:row>
+<!--
+
+      _      ______   ______   _______    ________   ______   ______
+     / \    |_   _ `.|_   _ `.|_   __ \  |_   __  |.' ____ \.' ____ \
+    / _ \     | | `. \ | | `. \ | |__) |   | |_ \_|| (___ \_| (___ \_|
+   / ___ \    | |  | | | |  | | |  __ /    |  _| _  _.____`. _.____`.
+ _/ /   \ \_ _| |_.' /_| |_.' /_| |  \ \_ _| |__/ || \____) | \____) |
+|____| |____|______.'|______.'|____| |___|________| \______.'\______.'
+
+-->
+
+  <h3 class="lgnd">Address Information</h3>
+
+  <sffd:row >
+
+    <sffd:column cols="large-6"><!-- ************* left Column -ADRESS INFO -->
+
+      <apex:repeat value="{!$ObjectType.Contact.FieldSets['Address_Left']}" var="f">
+        <sffd:row >
+          <sffd:column cols="large-4">
+            <label class="large-only-right">{!f.Label}</label>
+          </sffd:column>
+          <sffd:column cols="large-8" styleClass="{!f.type}">
+            <apex:inputField value="{!Contact[f]}"
+                             rendered="{!f.type != 'date'}">
+            </apex:inputField>
+            <apex:inputField value="{!Contact[f]}"
+                             rendered="{!f.type == 'date'}"
+                             showDatePicker="true">
+            </apex:inputField>
+          </sffd:column>
+        </sffd:row>
+      </apex:repeat>
+
+    </sffd:column><!-- ************* left Column -ADRESS INFO -->
+
+    <sffd:column cols="large-6"><!-- ************* right Column -ADRESS INFO -->
+
+      <apex:repeat value="{!$ObjectType.Contact.FieldSets['Address_Right']}" var="f">
+        <sffd:row >
+          <sffd:column cols="large-4">
+            <label class="large-only-right">{!f.Label}</label>
+          </sffd:column>
+          <sffd:column cols="large-8" styleClass="{!f.type}">
+            <apex:inputField value="{!Contact[f]}"
+                             rendered="{!f.type != 'date'}">
+            </apex:inputField>
+            <apex:inputField value="{!Contact[f]}"
+                             rendered="{!f.type == 'date'}"
+                             showDatePicker="true">
+            </apex:inputField>
+          </sffd:column>
+        </sffd:row>
+      </apex:repeat>
+
+    </sffd:column><!-- ************* right Column -ADRESS INFO -->
+
+  </sffd:row>
+<!--
+
+     ___       _______   _______   __  .___________.__    ______   .__   __.      ___       __
+    /   \     |       \ |       \ |  | |           |  |  /  __  \  |  \ |  |     /   \     |  |
+   /  ^  \    |  .==.  ||  .==.  ||  | `====|  |===|  | |  |  |  | |   \|  |    /  ^  \    |  |
+  /  /_\  \   |  |  |  ||  |  |  ||  |     |  |    |  | |  |  |  | |  . `  |   /  /_\  \   |  |
+ /  _____  \  |  '=='  ||  '=='  ||  |     |  |    |  | |  `=='  | |  |\   |  /  _____  \  |  `====.
+/__/     \__\ |_______/ |_______/ |__|     |__|    |__|  \______/  |__| \__| /__/     \__\ |_______|
+
+
+-->
+  <h3 class="lgnd">Additional Information</h3>
+
+  <sffd:row >
+
+    <sffd:column cols="large-6"><!-- ************* left Column -ADDITIONAL INFO -->
+
+       <apex:repeat value="{!$ObjectType.Contact.FieldSets['Additional_Info_Left']}" var="f">
+        <sffd:row >
+          <sffd:column cols="large-4">
+            <label class="large-only-right">{!f.Label}</label>
+          </sffd:column>
+          <sffd:column cols="large-8" styleClass="{!f.type}">
+            <apex:inputField value="{!Contact[f]}"
+                             rendered="{!f.type != 'date'}">
+            </apex:inputField>
+            <apex:inputField value="{!Contact[f]}"
+                             rendered="{!f.type == 'date'}"
+                             showDatePicker="true">
+            </apex:inputField>
+          </sffd:column>
+        </sffd:row>
+      </apex:repeat>
+
+    </sffd:column><!-- ************* left Column -ADDITIONAL INFO -->
+
+    <sffd:column cols="large-6"><!-- ************* right Column -ADDITIONAL INFO -->
+
+     <apex:repeat value="{!$ObjectType.Contact.FieldSets['Additional_Info_Right']}" var="f">
+        <apex:outputPanel layout="none" rendered="{!NOT( AND(f.type == 'textarea', isOpportunityCoBuyer) )}">
+        <sffd:row >
+          <sffd:column cols="large-4">
+            <label class="large-only-right">{!f.Label}</label>
+          </sffd:column>
+          <sffd:column cols="large-8" styleClass="{!f.type}">
+            <apex:inputField value="{!Contact[f]}"
+                             rendered="{!f.type != 'date'}">
+            </apex:inputField>
+            <apex:inputField value="{!Contact[f]}"
+                             rendered="{!f.type == 'date'}"
+                             showDatePicker="true">
+            </apex:inputField>
+          </sffd:column>
+        </sffd:row>
+        </apex:outputPanel>
+      </apex:repeat>
+
+    </sffd:column><!-- ************* right Column -ADDITIONAL INFO -->
+
+  </sffd:row>
+
+
+
+</apex:component>

@@ -1,0 +1,135 @@
+<aura:component controller="Pricebook2_CloneController_dh"
+                implements="force:appHostable,flexipage:availableForAllPageTypes,force:hasRecordId">
+
+  <aura:attribute name="recordId" type="String" />
+  <aura:attribute name="origPricebookName" type="String" />
+  <aura:attribute name="pricebook" type="Pricebook2" />
+  <aura:attribute name="cloneFeesAsWell" type="Boolean" default="false" />
+  <aura:attribute name="cloneEntriesAsWell" type="Boolean" default="false" />
+  <aura:attribute name="cloneUpgradesAsWell" type="Boolean" default="false" />
+  <aura:attribute name="scriptsLoaded" type="Boolean" default="false" />
+  <aura:attribute name="modalOpen" type="Boolean" default="false" />
+
+  <ltng:require styles="{!$Resource.Libraries + '/css/lightningOverrides.min.css'}"
+                scripts="{!join(',', $Resource.Libraries +'/js/LightningApex.js',
+                                     $Resource.Libraries +'/js/LightningUtils.js') }"
+                afterScriptsLoaded="{!c.afterScripts}" />
+
+  <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+
+  <c:Lgnd_Spinner_dh aura:id="spinner" />
+
+  <lightning:layout class="{! join(' ', 'slds-clearfix', if( v.scriptsLoaded, 'slds-show', 'slds-hide'))}">
+    <lightning:button variant="neutral"
+                      label="Clone Pricebook"
+                      onclick="{!c.openModal}"
+                      class="slds-float_right" />
+  </lightning:layout>
+
+
+  <aura:if isTrue="{!v.modalOpen}">
+    <section role="dialog" class="slds-modal slds-fade-in-open">
+      <div class="slds-modal__container">
+        <header class="slds-modal__header">
+          <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">
+            Clone {!v.origPricebookName}
+          </h2>
+        </header>
+        <div class="slds-modal__content slds-p-around_medium">
+
+          <lightning:layout multipleRows="true" horizontalAlign="center" verticalAlign="center">
+
+            <lightning:layoutItem size="12" class="slds-m-bottom_medium">
+              <lightning:input type="text"
+                               label="Pricebook Name"
+                               value="{!v.pricebook.Name}" />
+            </lightning:layoutItem>
+
+            <lightning:layoutItem size="12" class="slds-m-bottom_medium">
+              <lightning:input type="text"
+                               label="Pricebook Description"
+                               value="{!v.pricebook.Description}" />
+            </lightning:layoutItem>
+
+            <lightning:layoutItem size="6">
+              <lightning:layout >
+                <lightning:layoutItem size="6">
+                  <label class="slds-form-element__label slds-float_right slds-m-right_small">Activate Pricebook?</label>
+                </lightning:layoutItem>
+                <lightning:layoutItem size="6">
+                  <lightning:Input type="toggle"
+                                   variant="label-hidden"
+                                   label="Activate Pricebook"
+                                   checked="{!v.pricebook.IsActive}"
+                                   messageToggleActive="Yes"
+                                   messageToggleInactive="No"
+                                   class="slds-m-bottom_medium" />
+                </lightning:layoutItem>
+              </lightning:layout>
+            </lightning:layoutItem>
+
+            <lightning:layoutItem size="6">
+              <lightning:layout >
+                <lightning:layoutItem size="6">
+                  <label class="slds-form-element__label slds-float_right slds-m-right_small">Clone Product Entries?</label>
+                </lightning:layoutItem>
+                <lightning:layoutItem size="6">
+                  <lightning:Input type="toggle"
+                                   variant="label-hidden"
+                                   label="Clone Fees"
+                                   checked="{!v.cloneEntriesAsWell}"
+                                   messageToggleActive="Yes"
+                                   messageToggleInactive="No"
+                                   class="slds-m-bottom_medium" />
+                </lightning:layoutItem>
+              </lightning:layout>
+            </lightning:layoutItem>
+
+            <lightning:layoutItem size="6">
+              <lightning:layout >
+                <lightning:layoutItem size="6">
+                  <label class="slds-form-element__label slds-float_right slds-m-right_small">Clone Fees?</label>
+                </lightning:layoutItem>
+                <lightning:layoutItem size="6">
+                  <lightning:Input type="toggle"
+                                   variant="label-hidden"
+                                   label="Clone Fees"
+                                   checked="{!v.cloneFeesAsWell}"
+                                   messageToggleActive="Yes"
+                                   messageToggleInactive="No" />
+                </lightning:layoutItem>
+              </lightning:layout>
+            </lightning:layoutItem>
+
+            <lightning:layoutItem size="6">
+              <lightning:layout >
+                <lightning:layoutItem size="6">
+                  <label class="slds-form-element__label slds-float_right slds-m-right_small">Clone Upgrades?</label>
+                </lightning:layoutItem>
+                <lightning:layoutItem size="6">
+                  <lightning:Input type="toggle"
+                                   variant="label-hidden"
+                                   title="Clone all the upgrades associated with this Pricebook"
+                                   label="Clone Upgrades"
+                                   checked="{!v.cloneUpgradesAsWell}"
+                                   messageToggleActive="Yes"
+                                   messageToggleInactive="No" />
+                </lightning:layoutItem>
+              </lightning:layout>
+            </lightning:layoutItem>
+
+          </lightning:layout>
+
+        </div>
+        <footer class="slds-modal__footer">
+          <lightning:button label="Cancel" variant="neutral" onclick="{!c.closeModal}" />
+          <lightning:button label="Save" variant="brand" onclick="{!c.doClone}" />
+        </footer>
+      </div>
+    </section>
+    <div class="slds-backdrop slds-backdrop_open"></div>
+  </aura:if>
+
+
+
+</aura:component>

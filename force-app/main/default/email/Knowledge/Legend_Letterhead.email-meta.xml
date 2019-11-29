@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <description>Test</description>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>Legend_Letterhead</letterhead>
+    <name>Legend Letterhead</name>
+    <style>formalLetter</style>
+    <subject>Thank You - Trade Show Visitor</subject>
+    <textOnly>Hi {!Contact.FirstName},
+
+I just wanted to send you a quick email to thank you for your time.  I know the show can be overwhelming with all of the options, so I am glad you took the time to consider Legend Boats as your choice in boating.
+
+Sincerely,
+
+{!User.FirstName} {!User.LastName}
+{!User.Email}
+{!User.Phone}
+
+{!Lead.Image__c}</textOnly>
+    <type>html</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

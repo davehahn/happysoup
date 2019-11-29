@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <description>Alerting Managers and appropriate parties that we are losing a deal, so that every opportunity can be taken to save the deal</description>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>Legend_Letterhead</letterhead>
+    <name>Closed Lost Deal</name>
+    <style>freeForm</style>
+    <subject>Closed Lost Deal</subject>
+    <textOnly>Hi everyone,
+
+This is just to alert you that the stage for the Opportunity {!Opportunity.Name} has been changed to Closed Lost due to {!Opportunity.Reason_Lost__c}, {!Opportunity.Other_Reason_Lost__c}.
+
+Please see if you can save the deal, if not, please make sure that serial numbers are unpicked (if applicable), the deal is moved back to Quotes in IEM and the boat is returned to the Specials List (if applicable)
+
+Accounting, if requested and authorized, you may refund the deposit as well
+
+Thanks and good luck!</textOnly>
+    <type>html</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

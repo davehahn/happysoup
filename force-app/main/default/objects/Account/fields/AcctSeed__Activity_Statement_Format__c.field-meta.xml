@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>AcctSeed__Activity_Statement_Format__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <inlineHelpText>Used to configure formatting and display of fields in Activity Statement PDF. Overrides the default Activity Statement defined in Accounting Settings.</inlineHelpText>
+    <label>Activity Statement Format</label>
+    <lookupFilter>
+        <active>true</active>
+        <filterItems>
+            <field>AcctSeed__Billing_Format__c.AcctSeed__Type__c</field>
+            <operation>equals</operation>
+            <value>Activity Statement</value>
+        </filterItems>
+        <isOptional>true</isOptional>
+    </lookupFilter>
+    <referenceTo>AcctSeed__Billing_Format__c</referenceTo>
+    <relationshipLabel>Accounts (Activity Statement Format)</relationshipLabel>
+    <relationshipName>Accounts1</relationshipName>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <type>Lookup</type>
+</CustomField>

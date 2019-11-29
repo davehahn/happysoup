@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>trac_LVM__c</fullName>
+    <externalId>false</externalId>
+    <formula>HYPERLINK(&quot;/00T/e?who_id=&quot; + Id + &quot;&amp;retURL=/&quot; + Id + &quot;&amp;tsk5=Left Message with &quot; + FirstName + &quot; &quot; + LastName + &quot;&amp;tsk4=&quot; + TEXT(DAY(TODAY())) + &quot;/&quot; + TEXT(MONTH(TODAY())) + &quot;/&quot; + TEXT(YEAR(TODAY())) + &quot;&amp;tsk12=Completed&quot;, IMAGE(&quot;/resource/trac_QuickActions/Mail.png&quot;, &quot;LVM&quot;) , &quot;_parent&quot;)</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>LVM</label>
+    <required>false</required>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

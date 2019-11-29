@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>AcctSeed__GL_Account_Variable_3__c</fullName>
+    <deleteConstraint>Restrict</deleteConstraint>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <inlineHelpText>Traditional Sub-General Ledger account segment used to report on divisions, departments, geographies, cost centers, profit centers or business units.</inlineHelpText>
+    <label>GL Variable 3</label>
+    <lookupFilter>
+        <active>true</active>
+        <errorMessage>The Accounting Variable must have a Type of &quot;GL Account Variable 3&quot; and must have a status of Active. One or more of these conditions have not been met.</errorMessage>
+        <filterItems>
+            <field>AcctSeed__Accounting_Variable__c.AcctSeed__Type__c</field>
+            <operation>equals</operation>
+            <value>GL Account Variable 3</value>
+        </filterItems>
+        <filterItems>
+            <field>AcctSeed__Accounting_Variable__c.AcctSeed__Active__c</field>
+            <operation>equals</operation>
+            <value>True</value>
+        </filterItems>
+        <isOptional>false</isOptional>
+    </lookupFilter>
+    <referenceTo>AcctSeed__Accounting_Variable__c</referenceTo>
+    <relationshipLabel>Journal Entry Lines (GL Account Variable 3)</relationshipLabel>
+    <relationshipName>Journal_Entry_Lines2</relationshipName>
+    <required>false</required>
+    <trackHistory>true</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

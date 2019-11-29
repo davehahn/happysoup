@@ -1,0 +1,303 @@
+<apex:page controller="gcLegendMRP_parts" showHeader="true" sidebar="true" cache="false" readOnly="true">
+
+<head>
+<style>
+tr.pq-row-select td{
+    background-color:yellow;
+}
+tr.total td{
+    font-weight: bold;
+}
+div.pq-grid-footer{
+    display:none;
+}
+</style>
+
+<apex:stylesheet value="{!URLFOR($Resource.GMBLJS__jQueryUI,'/jquery-ui/jquery-ui.min.css')}"/>
+<apex:stylesheet value="{!URLFOR($Resource.GMBLJS__pqGridPro241,'/pqgrid.min.css')}"/>
+
+</head>
+<body>
+    <div style="width:98%; margin:0 auto">
+        <table width="100%">
+        	<tr>
+        		<td width="15%"></td>
+        		<td width="70%" style="text-align:center">
+        			<span style="font-size:larger; font-weight:bold" id="myTitle">Parts Required for Pre-Rigging</span>
+        		</td>
+        		<td  width="15%" style="text-align:right">
+
+        		</td>
+        	</tr>
+            <tr>
+                <td colspan="3">
+                	<br/>
+                	Select one or more rows in the top grid, to view parts quantities in the bottom grid.
+                    <div id="hulls"></div>
+                    <br/>
+                    <div id="parts"></div>
+                </td>
+            </tr>
+            <tr>
+            	<td colspan="3">
+<!--             	<span style="font-weight:bold">INSTRUCTIONS:</span><br/>
+            	The purpose of this page is to create new Manufacturing Projects, for boats that have been received but not yet finished.<br/>
+            	The top grid lists all of the unimproved boats that are currently in inventory.<br/>
+            	To create a manufacturing project out of a boat that appears in the top grid, check the checkbox in the rightmost column to highlight the row, and then click the "Build Selected Boats" button.<br/>
+            	The bottom grid simply displays the manufacturing projects that have been created today.<br/>
+            	For a more flexible view of existing manufacturing projects, navigate to the Projects tab, and select or create an appropriate list view of Projects. -->
+
+            	</td>
+            </tr>
+        </table>
+    </div>
+</body>
+
+<apex:includeScript value="{!$Resource.GMBLJS__jQuery}"/>
+<apex:includeScript value="{!URLFOR($Resource.GMBLJS__jQueryUI,'/jquery-ui/jquery-ui.min.js')}"/>
+<apex:includeScript value="{!$Resource.GMBLJS__accountingJS}"/>
+<apex:includeScript value="{!$Resource.GMBLJS__ExcellentExport}"/>
+
+<apex:includeScript value="{!URLFOR($Resource.GMBLJS__pqGridPro241,'/pqgrid.min.js')}"/>
+
+<apex:includeScript value="{!$Resource.GMBLJS__gsrSpinner}"/>
+<apex:includeScript value="{!$Resource.GMBLJS__gsrGrid2}"/>
+
+
+<script>function setFocusOnLoad() {}</script>
+<script type="text/javascript">
+
+    $j = jQuery.noConflict();
+
+    $j(document).ready(function()
+    {
+        initGrid_hulls();
+        initGrid_parts();
+        refreshAll();
+
+
+    });
+
+    function refreshAll()
+    {
+    	refreshGrid_hulls();
+    	refreshGrid_parts();
+    }
+
+    function initGrid_hulls()
+    {
+        var gridObj = {title:"Boats",
+                        collapsible:{on:false,collapsed:false,toggle:false},
+                        columnTemplate: {minWidth:10, sortable:true},
+                        dataModel:{data:[], sorting:'local', location:'local', sortDir:'up', sortIndx:'productName'}, 
+                        detailModel:{cache:false},
+                        dragColumns:{enabled:false},
+                        editable:false,
+                        //filterModel:{on:true, mode:'AND', header:true, type:'local'},
+                        freezeCols:0,
+                        freezeRows:0,
+                        height:300,
+                        historyModel:{on:false},
+                        hoverMode:'row',
+                        hwrap:false,
+                        numberCell:{show:true},
+                        pageModel: {type:null},
+                        pasteModel:{on:false},
+                        resizable: true,
+                        roundCorners: false,
+                        scrollModel: {autoFit:true},
+                        selectionModel: {type:'row', mode:'range', fireSelectChange:true},
+                        showBottom:true,
+                        showHeader:true,
+                        showTitle:true,
+                        showTop:true,
+                        showToolbar:true,
+                        sortable:true,
+                        swipeModel:{on:false},
+                        track:false,
+                        virtualX: false,
+                        //virtualXHeader: false,
+                        virtualY: false,
+                        width:'auto',
+                        wrap:false};
+
+        gridObj.colModel=[{dataIndx:"productName",			title:"Product Name",		gFilter:"text"},
+        				  {dataIndx:"productCode",			title:"Product Code",		gFilter:"text"},
+        				  {dataIndx:"qtyUnreceived",		title:"Unreceived<br/>Boats",			dataType:'float',	gFormat:'number',	align:'center',	gTotal:true},
+        				  {dataIndx:"qtyAvailable",			title:"New<br/>Boats",				dataType:'float',	gFormat:'number',	align:'center', gTotal:true},
+        				  {dataIndx:"qtyBuilding",			title:"Boats<br/>in Pre-Rigging",			dataType:'float',	gFormat:'number',	align:'center', gTotal:true},
+                          {dataIndx:"scrollSpacer", minWidth:15, maxWidth:15}];
+
+        gGrid.initFormat(gridObj.colModel);
+        gGrid.initFilter(gridObj.colModel);
+
+        $j.each(gridObj.colModel, function(i,col)
+        {
+            if(col.dataIndx == 'qtyUnreceived' || col.dataIndx == 'qtyAvailable' || col.dataIndx == 'qtyBuilding')
+            {
+                $j.extend(col,{
+                    render:function(ui)
+                    {
+                        if(ui.rowData.isTotal) return;
+                        if(parseFloat(ui.rowData[ui.dataIndx]) == 0) return '';
+                        return accounting.formatNumber(ui.rowData[ui.dataIndx]);
+                    }
+                });             
+            }
+        });
+
+        var $gridDiv = $j('#hulls');
+
+        $gridDiv.pqGrid(gridObj);
+
+        gGrid.appendExportLink($gridDiv);
+
+        gGrid.appendButtonClearSelection($gridDiv);
+
+        $gridDiv.on('pqgridrefresh', function(event, ui)
+        {
+            gGrid.refreshTotal($j(this),ui.pageData);
+        });
+
+        $gridDiv.on('pqgridselectchange',function(event,ui)
+        {
+            refreshGrid_parts();
+        });
+
+        gridObj = null;
+    }
+
+    function refreshGrid_hulls()
+    {
+        var $gridDiv = $j('#hulls');
+        $gridDiv.pqGrid('showLoading');
+
+        Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.gcLegendMRP_parts.retrieveBoats}',
+            function(result,event){
+                if(event.status){
+                    gGrid.refreshGrid_callback($gridDiv,result);
+                }
+                else{
+                    alert(event.message); 
+                }
+                $gridDiv.pqGrid('hideLoading');
+            },
+            {buffer:true, escape:true, timeout:120000});
+    }
+
+    function initGrid_parts()
+    {
+        var gridObj = {title:"Parts",
+                        collapsible:{on:false,collapsed:false,toggle:false},
+                        columnTemplate: {minWidth:10, sortable:true},
+                        dataModel:{data:[], sorting:'local', location:'local', sortDir:'up', sortIndx:'productName'}, 
+                        detailModel:{cache:false},
+                        dragColumns:{enabled:false},
+                        editable:false,
+                        //filterModel:{on:true, mode:'AND', header:true, type:'local'},
+                        freezeCols:0,
+                        freezeRows:0,
+                        height:300,
+                        historyModel:{on:false},
+                        hoverMode:'row',
+                        hwrap:false,
+                        numberCell:{show:true},
+                        pageModel: {type:null},
+                        pasteModel:{on:false},
+                        resizable: true,
+                        roundCorners: false,
+                        scrollModel: {autoFit:true},
+                        selectionModel: {type:'null'},
+                        showBottom:true,
+                        showHeader:true,
+                        showTitle:true,
+                        showTop:true,
+                        showToolbar:true,
+                        sortable:true,
+                        swipeModel:{on:false},
+                        track:false,
+                        virtualX: false,
+                        //virtualXHeader: false,
+                        virtualY: false,
+                        width:'auto',
+                        wrap:false};
+
+        gridObj.colModel=[{dataIndx:"productName",			title:"Product Name",		gFilter:"text"},
+        				  {dataIndx:"productCode",			title:"Product Code",		gFilter:"text"},
+        				  {dataIndx:"qtyForBoatsUnreceived",		title:"Parts Reqd For<br/>Unreceived Boats",			dataType:'float',	gFormat:'number',	align:'center',	gTotal:true},
+        				  {dataIndx:"qtyForBoatsAvailable",			title:"Parts Reqd For<br/>New Boats",				dataType:'float',	gFormat:'number',	align:'center', gTotal:true},
+        				  {dataIndx:"qtyUnreceived",			title:"Unreceived<br/>Part Purchases",			dataType:'float',	gFormat:'number',	align:'center', gTotal:true},
+        				  {dataIndx:"qtyAvailable",			title:"Current<br/>Parts Inventory",			dataType:'float',	gFormat:'number',	align:'center', gTotal:true},
+        				  {dataIndx:"qtyToOrder",			title:"Suggested<br/>Parts Order Qty",			dataType:'float',	gFormat:'number',	align:'center', gTotal:true},
+                          {dataIndx:"scrollSpacer", minWidth:15, maxWidth:15}];
+
+        gGrid.initFormat(gridObj.colModel);
+        gGrid.initFilter(gridObj.colModel);
+
+        $j.each(gridObj.colModel, function(i,col)
+        {
+            if(col.dataIndx == 'qtyUnreceived' || col.dataIndx == 'qtyAvailable' || col.dataIndx == 'qtyForBoatsUnreceived' || col.dataIndx == 'qtyForBoatsAvailable' || col.dataIndx == 'qtyToOrder')
+            {
+                $j.extend(col,{
+                    render:function(ui)
+                    {
+                        if(ui.rowData.isTotal) return;
+                        if(parseFloat(ui.rowData[ui.dataIndx]) == 0) return '';
+                        return accounting.formatNumber(ui.rowData[ui.dataIndx]);
+                    }
+                });             
+            }
+        });
+
+        var $gridDiv = $j('#parts');
+
+        $gridDiv.pqGrid(gridObj);
+
+        gGrid.appendExportLink($gridDiv);
+
+        $gridDiv.on('pqgridrefresh', function(event, ui){
+            gGrid.refreshTotal($j(this),ui.pageData);
+        });
+
+        gridObj = null;
+    }
+
+    function refreshGrid_parts()
+    {
+        var $gridDiv = $j('#parts');
+        $gridDiv.pqGrid('showLoading');
+
+
+        var productArray = [];
+        $j.each($j('#hulls').pqGrid( "selection",{type:'row', method:'getSelection'}), function(i,row)
+        {
+            productArray.push(row.rowData);
+        });
+
+        if(productArray.length == 0)
+        {
+            gGrid.refreshGrid_callback($gridDiv,[]);
+            $gridDiv.pqGrid('hideLoading');
+        }
+        else
+        {
+        Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.gcLegendMRP_parts.retrieveParts}',
+            productArray,
+            function(result,event){
+                if(event.status){
+                    gGrid.refreshGrid_callback($gridDiv,result);
+                }
+                else{
+                    alert(event.message); 
+                }
+                $gridDiv.pqGrid('hideLoading');
+            },
+            {buffer:true, escape:true, timeout:120000});
+    	}
+    }
+
+</script>
+
+</apex:page>

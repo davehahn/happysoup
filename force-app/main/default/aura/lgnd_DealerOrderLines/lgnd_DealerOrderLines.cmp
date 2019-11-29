@@ -1,0 +1,97 @@
+<aura:component controller="DealerOrder_Ext"
+                implements="force:appHostable,flexipage:availableForAllPageTypes,forceCommunity:availableForAllPageTypes,force:hasRecordId"
+                access="global">
+
+  <aura:attribute name="recordId" type="Id" access="global" />
+  <aura:attribute name="dealerOrder" type="Dealer_Order__c" access="global" />
+  <aura:attribute name="isEditing" type="Boolean" default="false" access="global"/>
+  <aura:attribute name="isViewing" type="Boolean" default="false" access="global"/>
+  <aura:attribute name="currentView" type="String" default="list" />
+  <aura:attribute name="userType" type="String" />
+  <aura:attribute name="detailsBtnText" type="String" default="More Details" />
+  <aura:attribute name="promotionMessage" type="Map" default="{}" />
+  <aura:attribute name="busyMessage" type="String" />
+
+  <!-- EVENTS -->
+  <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+  <aura:handler name="actionEvent"
+                event="c:lgndP_DealerOrderLinesTableAction_Event"
+                action="{!c.handleAction}" />
+  <aura:handler event="c:lgndP_BusyIndicator_Event"
+                action="{!c.handleIndicator}" />
+
+  <aura:handler name="change" value="{!v.isEditing}" action="{!c.handleEditChange}" />
+  <aura:handler name="change" value="{!v.isViewing}" action="{!c.handleViewChange}" />
+  <aura:handler event="force:refreshView" action="{!c.doInit}" />
+
+  <div>
+    <div class="slds-spinner_container toggle" aura:id="busy-indicator">
+      <div role="status" class="slds-spinner slds-spinner--medium">
+        <span class="slds-assistive-text">Loading</span>
+        <div class="slds-spinner__dot-a"></div>
+        <div class="slds-spinner__dot-b"></div>
+      </div>
+      <aura:if isTrue="{! !empty(v.busyMessage)}">
+        <div class="spinner-text">{!v.busyMessage} ..</div>
+      </aura:if>
+    </div>
+
+    <!-- +++++ DISCOUNT NOTIFICATION CENTER +++++++ -->
+    <aura:if isTrue="{!not(empty(v.promotionMessage))}">
+      <aura:if isTrue="{!not(empty(v.promotionMessage.success))}">
+        <lightning:layout horizontalAlign="center">
+          <lightning:layoutItem size="12"
+                                largeDeviceSize="4"
+                                mediumDeviceSize="6"
+                                smallDeviceSize="12">
+            <div class="promotion-message slds-theme_alert-texture slds-theme_success" role="alert">
+              <h2>Congratulations!</h2>
+              <div><aura:unescapedHtml value="{!v.promotionMessage.success}" /></div>
+            </div>
+          </lightning:layoutItem>
+        </lightning:layout>
+      </aura:if>
+      <aura:if isTrue="{!not(empty(v.promotionMessage.errors))}">
+        <lightning:layout horizontalAlign="center">
+          <lightning:layoutItem size="12"
+                                largeDeviceSize="4"
+                                mediumDeviceSize="6"
+                                smallDeviceSize="12">
+            <div class="promotion-message slds-theme_alert-texture slds-theme_warning" role="alert">
+              <h2>You can save money!</h2>
+              <ul>
+                <aura:iteration items="{!v.promotionMessage.errors}" var="err">
+                  <li>{!err}</li>
+                </aura:iteration>
+              </ul>
+            </div>
+          </lightning:layoutItem>
+        </lightning:layout>
+      </aura:if>
+    </aura:if>
+    <!-- ====== DISCOUNT NOTIFICATION CENTER ======= -->
+
+    <aura:if isTrue="{!equals(v.currentView, 'list')}">
+      <c:lgndP_DealerOrderLinesList dealerOrder="{!v.dealerOrder}"
+                                     userType="{!v.userType}"
+                                     aura:id="dealerOrderLines--Cmp" />
+    </aura:if>
+
+    <aura:if isTrue="{!equals(v.currentView, 'edit')}">
+      <c:lgndP_DealerOrderBuildBoat dealerOrder="{!v.dealerOrder}"
+                                    inOrderView="true"
+                                    isEditing="{!v.isEditing}"
+                                    promotionMessage="{!v.promotionMessage}"
+                                    busyMessage="{!v.busyMessage}"
+                                    isFactoryStore="{!v.dealerOrder.Account__r.Is_Internal__c}"
+                                    aura:id="dealerOrderBuildBoat--Cmp" />
+    </aura:if>
+
+    <aura:if isTrue="{!equals(v.currentView, 'view')}">
+      <c:lgndP_DealerOrderLineView dealerOrder="{!v.dealerOrder}"
+                                   isViewing="{!v.isViewing}"
+                                   aura:id="dealerOrderLineView--Cmp" />
+    </aura:if>
+  </div>
+
+</aura:component>

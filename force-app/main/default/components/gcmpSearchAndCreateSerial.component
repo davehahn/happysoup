@@ -1,0 +1,350 @@
+<apex:component controller="gcProject_Ext" layout="none">
+<apex:attribute name="idProject" type="string" required="true" description="Id of the Project."/>
+<script type="text/javascript">
+    function launchSearchExistingSerial()
+    {
+        var $dialogDiv = $j('<div id=\"existingSerialSearchDialog\" style=\"z-index:100 !important;\"></div>');
+        var $gridDiv = $j('<div id=\"existingSerialSearchResults\"></div>');
+        $dialogDiv.append($gridDiv);
+
+        $dialogDiv.dialog({
+            autoOpen: false,
+            height: 285,
+            width: '95%',
+            modal: true,
+            //dialogClass: "existingSerialSearchDialog",
+            position:{my:'center top', at:'center top', of:'#btnFindExistingSerial'},
+            close:function(){$gridDiv.pqGrid('destroy'); $gridDiv.remove(); $dialogDiv.dialog('destroy'); $dialogDiv.remove(); refreshGrid_serials();},
+            open:function(){initGrid_searchExistingSerial($gridDiv);},
+            title: ''
+        });
+
+        $dialogDiv.dialog('open');
+        $dialogDiv.parent().find('.ui-dialog-title').html('Search Serials:&nbsp;&nbsp;<input id=\"inputSearchExistingSerial\" type=\"text\" length=\"20\" onkeyup=\"onKeyUpSearchExistingSerial(event)\"/>&nbsp;<span style=\"font-weight:normal; font-size:smaller; font-style:italic\">enter a partial product name, product code, product family, or serial number, and then click [enter]</span>');
+        $j('#inputSearchExistingSerial').focus();
+        $j('#inputSearchExistingSerial').on('click',function(){$j(this).focus();});
+    }
+
+    function onKeyUpSearchExistingSerial(e)
+    {
+        if (e.which == 13){
+            searchExistingSerial();
+        }
+    }
+
+    function searchExistingSerial()
+    {   
+        var searchString = $j('#inputSearchExistingSerial').val();
+        if(searchString.trim().length > 0){
+            refreshGrid_searchExistingSerial(searchString);
+        }
+        else return;
+    }
+
+    function initGrid_searchExistingSerial($gridDiv)
+    {
+        var gridObj = { title:"",
+                        collapsible:{on:false,collapsed:false,toggle:false},
+                        columnTemplate: {sortable:true, minWidth:80},
+                        dataModel:{data:[], sorting:'local', location:'local', sortDir:'up', sortIndx:'productName'}, 
+                        dragColumns:{enabled:false},
+                        editable:false,
+                        filterModel:{on:true, mode:'AND', header:true},
+                        freezeCols:0,
+                        freezeRows:0,
+                        height:215,
+                        historyModel:{on:false},
+                        hoverMode:'row',
+                        hwrap:false,
+                        numberCell:{show:false},
+                        pageModel: {type:null},
+                        pasteModel:{on:false},
+                        resizable: true,
+                        roundCorners: false,
+                        scrollModel: {autoFit:true},
+                        selectionModel: { type: null},
+                        showBottom:true,
+                        showHeader:true,
+                        showTitle:false,
+                        showTop:true,
+                        showToolbar:false,
+                        sortable:true,
+                        swipeModel:{on:false},
+                        virtualX: false,
+                        //virtualXHeader: false,
+                        virtualY: false,
+                        width:'auto',
+                        wrap:false};
+
+        gridObj.colModel=[{dataIndx:'productRecordTypeName',title:'Record Type', gFilter:'text'},
+                          {dataIndx:'productFamily',                title:'Product Family',	gFilter:'text', maxWidth:150},
+        				  {dataIndx:'productName',                  title:'Product Name',	gFilter:'text'},
+                          {dataIndx:'productCode',                  title:'Product Code',   gFilter:'text', maxWidth:150},
+                          {dataIndx:'lotName',						title:'Lot',			gFilter:'text'},
+                          {dataIndx:'serialName',					title:'Serial Number',	gFilter:'text'},
+                          {dataIndx:'action',                       title:'Action',                 align:'center', maxWidth:120, sortable:false},
+                          {dataIndx:"scrollSpacer", minWidth:15, maxWidth:15}];
+
+
+        //gGrid.initFormat(gridObj.colModel);
+        gGrid.initFilter(gridObj.colModel);
+
+        $j.each(gridObj.colModel, function(i,col)
+        {
+            if(col.dataIndx == 'serialName')
+            {
+                $j.extend(col,{
+                    render:function(ui)
+                    {
+                        if (ui.rowData.isTotal || !ui.rowData.idSerial) return '';
+                        
+                        if({!$ObjectType.GMBLASERP__Serial_Number__c.accessible})
+                            return '<a href=\"/'+ui.rowData.idSerial+'\" target=\"_blank\">'+ui.rowData.serialName+'</a>';
+                        else
+                            return ui.rowData.serialName;
+                    }
+                });                 
+            }  
+
+            else if(col.dataIndx == 'action')
+            {
+                $j.extend(col,{
+                    render:function(ui)
+                    {
+                        if(ui.rowData.isTotal) return '';
+                        return '<button type="button" class="btn" onclick=\"addSerial(\''+ui.rowData.idSerial+'\','+ui.rowIndx+')\">Add</button>';
+                    }
+                });
+            }
+        });
+
+        $gridDiv.pqGrid(gridObj);    
+        refreshGrid_searchExistingSerial('preload');
+    }
+
+    function refreshGrid_searchExistingSerial(searchString){
+        var $gridDiv = $j('#existingSerialSearchResults');
+        $gridDiv.pqGrid('showLoading');
+
+        Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.gcProject_Ext.searchExistingSerial}',
+            searchString, '{!idProject}',
+            function(result,event)
+            {
+                if(event.status)
+                {
+                    gGrid.refreshGrid_callback($gridDiv,result);
+                }
+                else 
+                {
+                    alert(event.message);
+                }
+                $gridDiv.pqGrid('hideLoading');
+            },
+            {buffer:true, escape:true, timeout:120000});
+    }
+
+    function addSerial(idSerial, rowIndx)
+    {
+        var $gridDiv = $j('#existingSerialSearchResults');
+        $gridDiv.pqGrid('showLoading');
+        Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.gcProject_Ext.updateProjectSerial}',
+            '{!idProject}', idSerial,
+            function(result,event)
+            {
+                if(event.status)
+                {
+                    $gridDiv.pqGrid('hideLoading');
+                    $j("#existingSerialSearchDialog").dialog('destroy');
+                    rerenderDetail();
+                    refreshAll();
+                }
+                else 
+                {
+                    alert(event.message);
+                }
+            },
+            {buffer:true, escape:true, timeout:120000});               
+    }
+
+    /// Create Serial functionality
+    function launchCreateNewSerial(isNest)
+    {
+	    var $pdForm = $j('#serial-number-form div').clone();
+	    var titlePlus = (isNest == '0'?'Motor, Trailer etc.':'Boat');
+	    $j("<div>")
+	      .html($pdForm)
+	      .dialog({
+	        autoOpen: true,
+	        width: 550,
+	        modal: true,
+	        title: 'Add Serial Number for '+titlePlus,
+	        open: function(){
+	        	$pdForm.find('#isNest').val(isNest);
+		        $pdForm.find('#selectProduct').autocomplete({
+		            minLength: 2,
+		            autoFocus: true,
+		            source: function (request, response) {
+		                $pdForm.find('#selectProductId').val('');
+		                $pdForm.find('#productIsLotTracked').val('true');
+		                Visualforce.remoting.Manager.invokeAction(
+		                    '{!$RemoteAction.gcProject_Ext.searchProductForSerial}',
+		                     request.term, isNest,
+		                    function (result, event) {
+		                        if (event.status) {
+		                            $j.each(result,function(k,item){
+		                                if(item.label == undefined)
+		                                    result[k].label = item.Name;
+		                                if(item.value == undefined)
+		                                    result[k].value = item.Id;
+		                            })  
+		                            response(result);
+		                        } else {
+		                            alert(event.message);
+		                        }
+		                    }, {
+		                        buffer: true,
+		                        escape: true,
+		                        timeout: 120000
+		                    });
+		            },
+		            focus: function (event, ui) {
+		                $pdForm.find('#selectProduct').val(ui.item.Name);
+		                return false;
+		            },
+		            select: function (event, ui) {
+		                $pdForm.find('#selectProduct').val(ui.item.Name);
+		                $pdForm.find('#selectProductId').val(ui.item.Id);
+		                $pdForm.find('#productIsLotTracked').val(ui.item.GMBLASERP__Lot_Tracked__c);
+		                return false;
+		            },
+		        });
+				/*$pdForm.find('#productTypeSelect').change(function(){
+					if($j(this).val() == 'nonlegend')
+					{
+						$pdForm.find('#selectProduct').val('');
+						$pdForm.find('#selectProductId').val('');
+						//$pdForm.find('#productIsLotTracked').val('');
+						$pdForm.find('#selectProduct').parents('tr').hide();
+						//$pdForm.find('#selectLot').parents('tr').hide();
+					}
+					else
+					{
+						$pdForm.find('#selectProduct').parents('tr').show();
+						//$pdForm.find('#selectLot').parents('tr').show();
+					}
+				});*/
+
+	        },
+	        buttons:{
+	          Cancel:function(){
+	            $j(this).dialog('close');
+	            $j(this).remove();
+	          },
+	          Save:function(){
+	            var $form = $j(this).find('form');
+	            fn_saveSerial($form,$j(this));
+	            //$j(this).dialog('close');
+	            //$j(this).remove();
+	          }
+	        }
+	      });
+    }
+
+    function fn_saveSerial($frm,$dialog)
+    {
+    	var isNest = $j.trim($frm.find('#isNest').val());
+    	//var productTypeSelect = $j.trim($frm.find('#productTypeSelect').val());
+    	var idProduct = $frm.find('#selectProductId').val();
+    	var selectProduct = $frm.find('#selectProduct').val();
+    	var selectLot = $j.trim($frm.find('#selectLot').val());
+    	var productIsLotTracked = $frm.find('#productIsLotTracked').val();
+        var serialNumber = $j.trim($frm.find('#serialNumber').val());
+    	var modelYear = $j.trim($frm.find('#modelYear').val());
+    	var serialDescription = $j.trim($frm.find('#serialDescription').val());
+
+    	/*if(productTypeSelect == 'legend')
+    	{
+    		if(idProduct == '')
+    		{
+    			showMessage('Error','A product must be selected from search for a legend product.');
+    			return false;
+    		}
+    	}*/
+		if(idProduct == '')
+		{
+			showMessage('Error','A product must be selected from search for a legend product.');
+			$frm.find('#selectProduct').focus();
+			return false;
+		}
+		else if(productIsLotTracked == 'true' && selectLot == '')
+		{
+			showMessage('Error','A lot must be sepcified for this product.');
+			$frm.find('#selectLot').focus();
+			return false;
+		}
+		else if(serialNumber == '')
+		{
+			showMessage('Error','Serial number is required.');
+			$frm.find('#serialNumber').focus();
+			return false;
+   		}
+		
+
+    	var map = {};
+    	map.isNest = isNest;
+    	map.idProduct = idProduct;
+    	map.selectLot = selectLot;
+        map.serialNumber = serialNumber;
+    	map.modelYear = modelYear;
+    	map.serialDescription = serialDescription;
+    	map.productIsLotTracked = productIsLotTracked;
+
+        gSpinner.show();
+        Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.gcProject_Ext.addNewSerial}',
+            '{!idProject}', map,
+            function(result,event)
+            {
+                if(event.status)
+                {
+                    gSpinner.hide();
+                    $dialog.dialog('close');
+	            	$dialog.remove();
+	            	if(isNest == '1')
+	            	{
+                    	rerenderDetail();
+                    	refreshAll();
+                	}
+                	else
+                		refreshGrid_serials();
+                }
+                else 
+                {
+                    gSpinner.hide();
+                    alert(event.message);
+                }
+            },
+            {buffer:true, escape:true, timeout:120000});
+    	return false;
+    }
+
+    function showMessage(title,message){
+		$j("<div>")
+			.html(message)
+			.dialog({
+				autoOpen: true,
+				width: 350,
+				modal: true,
+				title: title,
+				buttons:{
+					Ok:function(){
+						$j(this).dialog('close');
+						$j(this).remove();
+					}
+				}
+			});
+	}
+</script>
+</apex:component>

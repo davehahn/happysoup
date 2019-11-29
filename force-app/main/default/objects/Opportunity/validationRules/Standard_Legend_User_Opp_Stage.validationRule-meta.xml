@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Standard_Legend_User_Opp_Stage</fullName>
+    <active>false</active>
+    <description>Standard Legend User can only change Stage field in Opportunity</description>
+    <errorConditionFormula>AND( 
+!ISCHANGED( StageName ), 
+$Profile.Id = &quot;00ei0000001Vjzz&quot; 
+)</errorConditionFormula>
+    <errorMessage>You can only change Stage field in Opportunity records.</errorMessage>
+</ValidationRule>

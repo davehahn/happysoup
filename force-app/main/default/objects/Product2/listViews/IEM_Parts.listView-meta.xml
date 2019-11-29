@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>IEM_Parts</fullName>
+    <booleanFilter>1 OR 2</booleanFilter>
+    <columns>PRODUCT2.NAME</columns>
+    <columns>PRODUCT2.CUSTOMER_PRODUCT_ID</columns>
+    <columns>PRODUCT2.DESCRIPTION</columns>
+    <columns>PRODUCT2.FAMILY</columns>
+    <columns>IEM_Id__c</columns>
+    <columns>IEM_Unique_Part_Number__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>IEM_Unique_Part_Number__c</field>
+        <operation>notEqual</operation>
+    </filters>
+    <filters>
+        <field>IEM_Id__c</field>
+        <operation>notEqual</operation>
+    </filters>
+    <label>IEM Parts</label>
+    <language>en_US</language>
+</ListView>

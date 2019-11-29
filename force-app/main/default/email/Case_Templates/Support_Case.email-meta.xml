@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <description>Notification email for support case submissions</description>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>Legend_Letterhead</letterhead>
+    <name>Support Case</name>
+    <style>freeForm</style>
+    <subject>New Support Case Submitted</subject>
+    <textOnly>The following new Support Case has been created by {!Case.CreatedBy}
+
+
+Priority:
+{!Case.Priority}
+
+Type:
+{!Case.Type}
+
+Reason:
+{!Case.Reason}
+
+Subject: {!Case.Subject}
+
+Description:
+{!Case.Description}
+
+
+Please review the case at the following link as soon as you can.
+{!Case.Link}
+
+Thanks</textOnly>
+    <type>html</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

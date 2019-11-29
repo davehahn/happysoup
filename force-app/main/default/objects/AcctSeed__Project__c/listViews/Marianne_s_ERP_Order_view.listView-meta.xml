@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Marianne_s_ERP_Order_view</fullName>
+    <columns>AcctSeed__Status__c</columns>
+    <columns>NAME</columns>
+    <columns>AcctSeedERP__Work_Order_Number__c</columns>
+    <columns>Serial_Number__c</columns>
+    <columns>GMBLASERP__Pricebook__c</columns>
+    <columns>Boat_Product__c</columns>
+    <columns>Serial_Product__c</columns>
+    <columns>Salesperson__c</columns>
+    <columns>Grand_Total__c</columns>
+    <columns>RECORDTYPE</columns>
+    <columns>CREATED_DATE</columns>
+    <columns>Stage__c</columns>
+    <columns>isDealerBookingOrder__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>AcctSeed__Status__c</field>
+        <operation>notEqual</operation>
+        <value>Completed</value>
+    </filters>
+    <filters>
+        <field>RECORDTYPE</field>
+        <operation>equals</operation>
+        <value>AcctSeed__Project__c.PartnerBoatSale</value>
+    </filters>
+    <filters>
+        <field>Stage__c</field>
+        <operation>notEqual</operation>
+        <value>Picked up / Won,Delivered,Closed Lost,Delivered / Won</value>
+    </filters>
+    <label>Marianne&#39;s ERP Order view for Dealers</label>
+</ListView>

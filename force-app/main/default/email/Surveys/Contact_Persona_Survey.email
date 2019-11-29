@@ -1,0 +1,31 @@
+<messaging:emailTemplate subject="Tell us what your ultimate boating experience would be and get 5% off your next Legend Accessories purchase!" recipientType="Contact" relatedToType="Contact">
+<messaging:htmlEmailBody >
+<br></br>
+<apex:image id="Logo" value="https://c.na15.content.force.com/servlet/servlet.ImageServer?id=015i000000BrVqB&oid=00Di0000000aRhm&lastMod=1469807933000" 
+height="45" width="297" style="display:block; margin: auto"/>
+<br></br>
+<br></br>
+Hello {!relatedTo.FirstName}
+<br></br>
+<br></br>
+<p>
+Thank you so much for your continued interest in Legend Boats.  Now that you've gotten a chance to learn more about us, we'd like to learn more about you!  We need your assistance in order to create better products and material so that you can have the best possible boating experience in the future!  The following survey will help us in getting to know the real people that take ownership of our boats, meaning we'll be able to give you what you really want, not just what we assume you need.
+</p>
+<p>
+This survey shouldn't take longer than 15 minutes to complete and as a reward for telling us a bit about yourself, 
+<b>you will receive 5% off of your next parts purchase**</b> in any of our corporate stores!
+</p>
+<p>
+Please select either the English or French Legend Boats Persona Survey found below.
+</p>
+<a href="http://legendboats.force.com/surveys/TakeSurvey?id=a1ai000000H8e3sAAB&cId={!relatedTo.Id}&caId=none">English</a>
+ | 
+<a href="http://legendboats.force.com/surveys/TakeSurvey?id=a1ai000000H911mAAB&cId={!relatedTo.Id}&caId=none">French</a>
+<p>
+Thank you so much for your time.   Happy Boating!
+</p>
+<p style="font-size:10px">
+** 5% discount applies at Legend Corporate stores only
+</p>
+</messaging:htmlEmailBody>
+</messaging:emailTemplate>

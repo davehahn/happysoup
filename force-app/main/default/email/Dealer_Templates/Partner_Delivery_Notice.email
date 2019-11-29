@@ -1,0 +1,7 @@
+<messaging:emailTemplate subject="Legend Boats Delivery Notice" recipientType="Contact" relatedToType="Truck_Destination__c">
+<messaging:htmlEmailBody >
+
+    <c:PartnerDeliveryNotice destinationId="{!relatedTo.Id}" accountId="{!relatedTo.Account__c}" />
+
+</messaging:htmlEmailBody>
+</messaging:emailTemplate>

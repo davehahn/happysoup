@@ -1,0 +1,139 @@
+.THIS {
+  position:absolute;
+  left:0;
+  width: 100%;
+}
+
+.THIS table,
+.THIS .slds-page-header,
+.THIS .pagination {
+  width: 95%;
+  margin: 0 auto;
+}
+
+.THIS table thead tr th a {
+  padding-left:0;
+  padding-right:0;
+}
+
+.THIS table thead tr th a svg {
+  visibility:hidden;
+}
+
+.THIS table thead tr th.slds-is-sortable a.slds-th__action:hover {
+  background: transparent;
+}
+
+.THIS table thead tr th a.isSorted svg,
+.THIS table thead tr th a:hover svg {
+  visibility: visible;
+}
+
+.THIS table tbody tr td div a {
+  color: #038fc1;
+}
+
+.THIS table tbody tr td .boolean svg {
+  fill: #038fc1;
+}
+
+.THIS table.loading tbody tr td div,
+.THIS table.loading tbody tr td span {
+  background: #F4F6F9;
+  color:transparent;
+  width: 98%;
+  margin:auto;
+  min-height: 1.5rem;
+  border-radius: 4px;
+  display:block;
+}
+
+.THIS table.loading tbody tr td[role=gridcell],
+.THIS table.loading tbody tr td div a,
+.THIS table.loading tbody tr td .slds-icon_container svg,
+.THIS .pagination.loading {
+  /*visibility:hidden;*/
+}
+
+
+.THIS .pagination {
+  padding-top: 0.5rem;
+}
+
+.THIS .pagination .slds-col:first-child {
+  padding-left: 1rem;
+}
+
+.THIS .pagination .slds-col:first-child + .slds-col {
+  text-align:center;
+}
+
+.THIS .pagination .slds-col:last-child .slds-button-group {
+  float:right;
+}
+
+.THIS .pagination .slds-form-element,
+.THIS .pagination .slds-form-element .slds-form-element__label,
+.THIS .pagination .slds-form-element .slds-form-element__control {
+  display: inline-block;
+  line-height:initial;
+}
+
+.THIS .pagination .slds-form-element .slds-form-element__control {
+  margin-right: 10px;
+}
+
+.THIS tr.nest td {
+  border-top: 1px solid #ccc;
+  /*background-color: #f8f8f8;*/
+}
+
+.THIS tr.nest td {
+  font-weight: bold;
+}
+
+.THIS tr.nested {
+  font-weight: 300;
+  color: #666;
+}
+
+.THIS .arrow {
+  color: #ccc;
+}
+
+.THIS .sernoFilter label {
+  display: none;
+}
+
+@media (max-width: 640px) {
+
+  .THIS table {
+    border-top: 3px solid #ddd;
+  }
+
+  .THIS .slds-text-title_caps {
+    display: none;
+  }
+
+  .THIS table tr {
+    border-bottom: 1px solid #ddd;
+  }
+
+  .THIS tr.nested td {
+    border-top: 1px solid #eee;
+  }
+
+  .THIS table tr.th {
+    display: none;
+  } 
+
+  .THIS table td {
+    display: block;
+    width: 100%;
+  }
+
+  .THIS table td:last-child {
+    padding-bottom: 3em;
+  }
+
+}

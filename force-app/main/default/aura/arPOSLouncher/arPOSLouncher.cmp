@@ -1,0 +1,73 @@
+<aura:component access="global" implements="force:appHostable,flexipage:availableForAllPageTypes">
+  <aura:attribute name="currentPosFunction" type="String" default="menu" />
+
+  <aura:if isTrue="{! equals(v.currentPosFunction, 'menu')}">
+    <div>
+      <lightning:layout horizontalAlign="center" verticalAlign="center">
+        <lightning:layoutItem size="12"
+                              smallDeviceSize="12"
+                              mediumDeviceSize="12"
+                              largeDeviceSize="8"
+                              padding="around-small"
+                              class="slds-card min-height-container">
+          <h1 class="slds-text-heading_medium
+                     slds-m-bottom_medium
+                     slds-p-bottom_small
+                     slds-text-align_center
+                     slds-border_bottom">What would You like to do?</h1>
+
+          <ul class="slds-grid slds-grid_pull-padded slds-wrap slds-grid_vertical-align-center slds-grid_align-center">
+            <li class="slds-p-horizontal_small slds-size_1-of-1 slds-medium-size_1-of-3">
+              <a href="javascript:void(0);"
+                 class="slds-app-launcher__tile slds-text-link_reset"
+                 data-account-type="business"
+                 onclick="{!c.openAppSales}">
+                <div class="slds-app-launcher__tile-figure">
+                  <span class="slds-avatar slds-avatar_large">
+                    <abbr class="slds-avatar__initials slds-icon-custom-27">CS</abbr>
+                  </span>
+                </div>
+                <div class="slds-app-launcher__tile-body">
+                  <span class="slds-text-link">Sale</span>
+                  <p>
+                    Create a Counter Sale
+                  </p>
+                </div>
+              </a>
+            </li>
+
+            <li class="slds-p-horizontal_small slds-size_1-of-1 slds-medium-size_1-of-3">
+              <a href="javascript:void(0);"
+                 class="slds-app-launcher__tile slds-text-link_reset"
+                 data-account-type="customer"
+                 onclick="{!c.navigateToPOS}">
+                <div class="slds-app-launcher__tile-figure">
+                  <span class="slds-avatar slds-avatar_large">
+                    <abbr class="slds-avatar__initials slds-icon-custom-59">CSR</abbr>
+                  </span>
+                 </div>
+                <div class="slds-app-launcher__tile-body">
+                  <span class="slds-text-link">Return</span>
+                  <p>
+                    Return Inventory from Sale
+                  </p>
+                </div>
+              </a>
+            </li>
+
+          </ul>
+
+        </lightning:layoutItem>
+      </lightning:layout>
+    </div>
+  </aura:if>
+
+  <aura:if isTrue="{! equals( v.currentPosFunction, 'cs')}">
+    <c:lgndP_DealerPartsOrderForm saleType="Retail" />
+  </aura:if>
+
+  <aura:if isTrue="{! equals( v.currentPosFunction, 'csr')}">
+    <c:arPOSReturn />
+  </aura:if>
+
+</aura:component>

@@ -1,0 +1,37 @@
+<aura:component implements="forceCommunity:availableForAllPageTypes,force:hasRecordId">
+
+  <aura:attribute name="recordId" type="String" />
+  <aura:attribute name="documentIdField" type="String" />
+  <aura:attribute name="docURL" type="String" />
+  <aura:attribute name="record" type="Object" />
+  <aura:attribute name="targetFields" type="Object" />
+  <aura:attribute name="error" type="String" />
+  <aura:attribute name="recordLoaded" type="String" />
+
+  <force:recordData aura:id="erpRecordLoader"
+    recordId="{!v.recordId}"
+    fields="LastDocumentID__c"
+    targetFields="{!v.record}"
+    targetError="{!v.error}"
+    recordUpdated="{!c.handleRecordUpdate}" />
+
+  <aura:if isTrue="{!v.recordLoaded}">
+    <aura:if isTrue="{! !empty( v.docURL )}">
+      <iframe height="800px"
+          name="InvoicePDF"
+          src="{! v.docURL }"
+          width="100%">
+      </iframe>
+    </aura:if>
+
+    <aura:if isTrue="{! empty( v.docURL )}">
+      <div class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_warning" role="alert">
+        <span class="slds-assistive-text">Sorry</span>
+        <lightning:icon iconName="utility:ban" class="slds-m-right_x-small" size="x-small" />
+        <h2>Invoice has not yet been created. Check back Soon</h2>
+      </div>
+    </aura:if>
+  </aura:if>
+
+
+</aura:component>

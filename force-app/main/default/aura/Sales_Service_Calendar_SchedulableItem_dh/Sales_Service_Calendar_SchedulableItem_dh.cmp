@@ -1,0 +1,28 @@
+<aura:component >
+
+  <aura:attribute name="record" type="object" />
+  <aura:attribute name="showDetails" type="Boolean" default="false" />
+
+  <lightning:layout >
+    <lightning:layoutItem size="2" padding="around-small">
+      <a href="javascript:void()" onclick="{!c.toggleDetails}"
+                                  data-cal-type="{!v.record.calId}"
+                                  data-record-id="{!v.record.Id}">
+        <lightning:icon iconName="{!v.record.iconName}" />
+      </a>
+    </lightning:layoutItem>
+    <lightning:layoutItem size="10" padding="around-small">
+      <div class="slds-card slds-p-around_small">
+        <p class="slds-truncate">{!v.record.Name}</p>
+        <p class="slds-truncate">{!v.record.boatName}</p>
+      </div>
+    </lightning:layoutItem>
+  </lightning:layout>
+  <aura:if isTrue="{!v.showDetails}" >
+    <lightning:layout class="details">
+      <lightning:layoutItem size="12">
+        <c:Sales_Service_Calendar_ServiceTaskList_dh erpId="{!v.record.Id}" />
+      </lightning:layoutItem>
+    </lightning:layout>
+  </aura:if>
+</aura:component>

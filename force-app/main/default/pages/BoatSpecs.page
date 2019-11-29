@@ -1,0 +1,88 @@
+<apex:page standardController="Product2" extensions="Product2DetailsExt">
+<style type="text/css">
+
+  .btn__c {
+    text-decoration:none;
+    padding:5px;
+    margin-right:10px;
+  }
+
+  .btn__c:hover {
+    text-decoration: none;
+  }
+
+
+</style>
+<apex:form >
+<apex:actionFunction name="togEdit" action="{!editSpecs}" rerender="specsContainer" />
+<apex:actionFunction name="saveSpecs" action="{!saveSpecs}" rerender="specsContainer" />
+<apex:outputPanel id="specsContainer" layout="none" rendered="{!hasSpecs}">
+
+  <apex:pageBlock mode="maindetail" rendered="{!NOT(renderEdit)}">
+
+    <div style="text-align:center;margin: 4px 0 20px;">
+      <apex:outputLink value="#" onclick="togEdit()" styleClass="btn btn__c">
+        Edit Specs
+      </apex:outputLink>
+    </div>
+
+   <!--  <apex:repeat value="{!boatTypeValues}" var="bType"> -->
+
+        <apex:pageBlockSection rendered="{!hasSpecs}"
+                               columns="2"
+                               collapsible="false">
+
+          <apex:repeat value="{!$ObjectType.Product2.FieldSets[SUBSTITUTE(Product2.Family, ' ', '_')+'_Specifications']}" var="f">
+            <apex:outputField label="{!f.Label}" value="{!Product2[f]}" />
+          </apex:repeat>
+
+        </apex:pageBlockSection>
+
+      <!-- </apex:repeat> -->
+  </apex:pageBlock>
+
+  <apex:pageBlock mode="mainDetail" rendered="{!renderEdit}">
+    <div style="text-align:center;margin: 4px 0 20px;">
+      <apex:outputLink value="#" onclick="togEdit()" styleClass="btn btn__c">
+        Cancel
+      </apex:outputLink>
+      <apex:outputLink value="#" onclick="saveSpecs()" styleClass="btn btn__c">
+        Save
+      </apex:outputLink>
+    </div>
+
+   <!-- <apex:repeat value="{!boatTypeValues}" var="bType"> -->
+
+      <apex:pageBlockSection rendered="{!hasSpecs}"
+                             columns="2"
+                             collapsible="false">
+
+        <apex:repeat value="{!$ObjectType.Product2.FieldSets[SUBSTITUTE(Product2.Family, ' ', '_')+'_Specifications']}" var="f">
+          <apex:inputField label="{!f.Label}" value="{!Product2[f]}" />
+        </apex:repeat>
+
+      </apex:pageBlockSection>
+
+    <!-- </apex:repeat> -->
+
+  </apex:pageBlock>
+</apex:outputPanel>
+
+  <apex:pageBlock rendered="{!NOT(hasSpecs)}"
+                  mode="mainDetail">
+    <div style="width:40%;
+                margin:0px auto;
+                padding:25px;
+                text-align:center;">
+
+      <p style="padding:10px 0px;font-size:1.5em;color:#FF9B9E;">
+        Product Family must be set to one of the following for Specifications to exist! <br /><br />
+        "Full WindShield", "Pontoon", "Side Console", "Deck Boat" or "Utility"
+      </p>
+
+    </div>
+
+  </apex:pageBlock>
+
+</apex:form>
+</apex:page>

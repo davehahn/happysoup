@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <description>Auto email sent to dealers when they create a part inquiry</description>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>Legend_Letterhead</letterhead>
+    <name>Auto Confirmation Part Inquiry Case Created</name>
+    <style>freeForm</style>
+    <subject>Parts Inquiry Case {!Case.CaseNumber} Has Been Created</subject>
+    <textOnly>Thank you for submitting case {!Case.CaseNumber}. This case has been received and someone from the Legend Dealer Care team will respond shortly.
+
+Thank you,
+
+Legend Dealer Care Team</textOnly>
+    <type>html</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

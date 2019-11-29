@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>AcctSeed__Billing_Format__c</fullName>
+    <deleteConstraint>Restrict</deleteConstraint>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <inlineHelpText>Used to configure formatting and display of fields in Billing PDF.</inlineHelpText>
+    <label>Billing Format</label>
+    <lookupFilter>
+        <active>true</active>
+        <filterItems>
+            <field>AcctSeed__Billing_Format__c.AcctSeed__Type__c</field>
+            <operation>equals</operation>
+            <value>Billing</value>
+        </filterItems>
+        <infoMessage>The type on the PDF Format must be Billing</infoMessage>
+        <isOptional>true</isOptional>
+    </lookupFilter>
+    <referenceTo>AcctSeed__Billing_Format__c</referenceTo>
+    <relationshipLabel>Billings</relationshipLabel>
+    <relationshipName>Project_Billings</relationshipName>
+    <required>false</required>
+    <trackHistory>true</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

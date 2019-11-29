@@ -1,0 +1,36 @@
+.THIS .slds-modal__content {
+  max-height:400px;
+  overflow-y:auto
+}
+
+.THIS table tbody tr td:first-child span {
+  font-weight:bold;
+}
+
+.THIS .sub-item {
+  margin-left: 1rem;
+  padding-top: 0.5rem;
+  position: relative;
+  line-height: 1rem;
+  font-weight: normal;
+}
+
+.THIS .sub-item:before {
+  position:absolute;
+  content:'';
+  bottom: calc(50% - 0.25rem);
+  left: -1rem;
+  width: 0.9rem;
+  height: 100%;
+  border: 1px solid #CCC;
+  border-right-color: transparent;
+  border-top-color: transparent;
+}
+
+.THIS table tbody tr td p:first-of-type {
+  padding-top: 0;
+}
+
+.THIS table tbody tr td p:first-of-type:before {
+  bottom:5% !important;
+}

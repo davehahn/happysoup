@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <description>To use if sending a quote to a new opportunity</description>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>Legend_Letterhead</letterhead>
+    <name>1) Quote Template</name>
+    <style>freeForm</style>
+    <subject>Thank you for your Time</subject>
+    <textOnly>Hi {!Account.FirstName},
+
+I would like to thank you for your time discussing our product line.  As discussed, your quote is attached below.  Please note that these prices are valid while supplies last.
+
+If you have any questions regarding this quote or if you would like to make any modifications to your quote, please do not hesitate to let me know.
+
+Thank you again and I am excited for you to start making memories on the water!
+
+
+Yours in Boating,
+
+{!User.Name}
+{!User.Title}
+
+{!User.Email}
+
+legendboats.com
+{!User.Phone}
+{!User.Address}</textOnly>
+    <type>html</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

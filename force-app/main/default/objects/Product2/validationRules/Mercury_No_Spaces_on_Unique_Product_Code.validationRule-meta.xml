@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Mercury_No_Spaces_on_Unique_Product_Code</fullName>
+    <active>true</active>
+    <description>This is to prevent Mercury parts from containing spaces</description>
+    <errorConditionFormula>CONTAINS( Unique_Product_Code__c, &quot; &quot;) &amp;&amp; CONTAINS (AcctSeedERP__Default_Vendor__r.Name, &quot;Mercury&quot;)</errorConditionFormula>
+    <errorMessage>The Unique Product Code cannot contain spaces</errorMessage>
+</ValidationRule>

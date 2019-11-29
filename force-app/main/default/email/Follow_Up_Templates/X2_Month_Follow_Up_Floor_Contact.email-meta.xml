@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>Legend_Letterhead</letterhead>
+    <name>6) 2 Month Follow Up - Floor Contact</name>
+    <style>freeForm</style>
+    <subject>Legend Boats - Making Memories</subject>
+    <textOnly>Hi {!Account.FirstName},
+
+It&#39;s been a little while since we had the opportunity to discuss getting you on the water.  Buying a boat is a major purchase and I can certainly appreciate the necessity of taking the time to think it over.
+
+You may be interested in the many financing opportunities available for your consideration.  I&#39;d be happy to discuss all the options available to you.
+
+If you have any questions or concerns, please give me a call.  As I said before, I want to help you in any way I can.
+
+
+Best Regards,
+
+{!User.Name}
+{!User.Title}
+
+{!User.Email}
+{!User.Phone}
+legendboats.com
+
+{!User.Address}</textOnly>
+    <type>html</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

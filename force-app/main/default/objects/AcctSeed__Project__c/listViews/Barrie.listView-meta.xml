@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Barrie</fullName>
+    <columns>NAME</columns>
+    <columns>AcctSeed__Account__c</columns>
+    <columns>CREATED_DATE</columns>
+    <columns>RECORDTYPE</columns>
+    <columns>Stage__c</columns>
+    <columns>AcctSeed__Status__c</columns>
+    <columns>Grand_Total__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>RECORDTYPE</field>
+        <operation>equals</operation>
+        <value>AcctSeed__Project__c.Service,AcctSeed__Project__c.BoatSale</value>
+    </filters>
+    <filters>
+        <field>GL_Account_Variable_1__c</field>
+        <operation>equals</operation>
+        <value>Retail Barrie</value>
+    </filters>
+    <filters>
+        <field>AcctSeed__Status__c</field>
+        <operation>notEqual</operation>
+        <value>Completed,Inactive,Ready For Accounting</value>
+    </filters>
+    <label>Barrie Open RO&#39;s</label>
+</ListView>

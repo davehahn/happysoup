@@ -1,0 +1,84 @@
+<aura:component controller="Promotion_mp"
+								implements="force:hasRecordId,forceCommunity:availableForAllPageTypes"
+								access="global">
+
+	<aura:attribute name="recordId" type="String"/>
+	<aura:attribute name="claim" type="Object" />
+	<aura:attribute name="files" type="String[]" />
+	<aura:attribute name="stage" type="Integer" />
+	<aura:attribute name="regId" type="Id" />
+	<aura:attribute name="requirements" type="String[]"  />
+	<aura:attribute name="done" type="Boolean" default="false" />
+	<aura:attribute name="AccountId" type="String" />
+	<aura:attribute name="regInProcess" type="Boolean" default="false" />
+
+	<ltng:require scripts="{!join(',', $Resource.Libraries +'/js/LightningApex.js',
+                         $Resource.Libraries +'/js/LightningUtils.js') }"
+    afterScriptsLoaded="{!c.doInit}" />
+
+		<div class="slds-scope" style="position: relative">
+			<c:Lgnd_Spinner_dh aura:id="spinner" />
+			<aura:if isTrue="{!v.done}">
+				<div class="container">
+						<div class="{! (v.stage == 0) ? 'stage' : 'slds-hide' }">
+							<h3>This claim has been closed.</h3>
+							<p>If you have any questions about your claim, please contact your dealer care representative.</p>
+						</div>
+						<div class="{! (v.stage == 1) ? 'stage' : 'slds-hide' }" id="stage-1">
+							<h3>Pending registration.</h3>
+							<p>To submit this claim:</p>
+							<ol>
+								<li><lightning:button onclick="{!c.openRegistrationForm}" variant="base">Register a boat to this customer.</lightning:button></li>
+								<li>Have the necessary documentation ready for upload.</li>
+								<li>Come back to this page to start the process. (This message will have changed once the boat is registered.)</li>
+							</ol>
+						</div>
+						<div class="{! (v.stage == 2) ? 'stage' : 'slds-hide' }" id="stage-2">
+							<h3>Documentation required</h3>
+							<p>To claim this rebate, the following documentation is needed:</p>
+							<ul>
+								<aura:iteration items="{! v.requirements }" var="item">
+					        <li>{!item}</li>
+					    	</aura:iteration>
+							</ul>
+							<lightning:fileUpload label="Upload"
+		        												name="fileUploader"
+		        												multiple="true"
+		        												accept=".pdf, .png, .jpg"
+		        												recordId="{!v.recordId}"
+		        												onuploadfinished="{!c.handleUploadFinished}"/>
+		        	<ul>
+		        		<aura:iteration items="{!v.files}" var="file">
+		        			<li>{!file.name}</li>
+		        		</aura:iteration>
+		        	</ul>
+							<button class="slds-button lgnd-button" onclick="{!c.goToStep3}">Submit Claim</button>
+						</div>
+						<div class="{! (v.stage == 3) ? 'stage' : 'slds-hide' }" id="stage-3">
+							<h3>This rebate claim is currently under review.</h3>
+							<p>If you have any questions about your claim, please contact your dealer care representative.</p>
+						</div>
+						<div class="{! (v.stage == 4) ? 'stage' : 'slds-hide' }" id="stage-4">
+							<h3>Approved!</h3>
+							<p>This rebate claim has been approved and your credit will be provided shortly.</p>
+						</div>
+						<div class="{! (v.stage == 5) ? 'stage' : 'slds-hide' }" id="stage-5">
+							<h3>Paid!</h3>
+							<p>Thank you for doing business with Legend Boats.</p>
+						</div>
+					<!--aura:if isTrue="{! empty(v.regId) }">
+						<div class="stage" id="stage-waiting">
+							<h3>Pending registration.</h3>
+							<p>To submit this claim:</p>
+							<ol>
+								<li><lightning:button onclick="{!c.openRegistrationForm}" variant="base">Register a boat to this customer.</lightning:button></li>
+								<li>Have the necessary documentation ready for upload.</li>
+								<li>Come back to this page to start the process. (This message will have changed once the boat is registered.)</li>
+							</ol>
+						</div>
+					</aura:if-->
+				</div>
+			</aura:if>
+		</div>
+
+</aura:component>

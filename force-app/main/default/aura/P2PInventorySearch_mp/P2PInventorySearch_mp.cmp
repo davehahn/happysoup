@@ -1,0 +1,46 @@
+<aura:component controller="P2PInventorySearch_mp"
+								implements="forceCommunity:availableForAllPageTypes">
+
+	<aura:attribute name="regsByBoat" type="Object" />
+  <aura:attribute name="boatSelectOpts" type="List" />
+  <aura:attribute name="dealers" type="list" />
+
+	<ltng:require scripts="{!join(',', $Resource.Libraries +'/js/LightningApex.js',
+                          					 $Resource.Libraries +'/js/LightningUtils.js') }"
+    						afterScriptsLoaded="{!c.doInit}" />
+
+  <div>
+
+    <c:Lgnd_Spinner_dh aura:id="spinner" />
+
+    <aura:if isTrue="{! not( empty( v.boatSelectOpts ) ) }">
+      <!-- <div class="slds-align_absolute-center slds-m-top_medium slds-m-bottom_medium"> -->
+        <lightning:select label=""
+                          onchange="{!c.handleBoatChange}"
+                          variant="label-hidden"
+                          class="slds-m-bottom_small">
+          <option value="">- Select Boat -</option>
+          <aura:iteration items="{!v.boatSelectOpts}" var="boat">
+            <optgroup label="{!boat.family}">
+              <aura:iteration items="{!boat.options}" var="opt">
+                <option value="{!opt}">{!opt}</option>
+              </aura:iteration>
+            </optgroup>
+          </aura:iteration>
+        </lightning:select>
+      <!-- </div> -->
+    </aura:if>
+
+    <aura:if isTrue="{! not( empty( v.dealers ) ) }">
+      <lightning:layout multipleRows="true">
+        <aura:iteration items="{!v.dealers}" var="dealer">
+          <lightning:layoutItem size="12">
+            <c:P2PInventorySearch_AccountCard dealer="{!dealer}" />
+          </lightning:layoutItem>
+        </aura:iteration>
+      </lightning:layout>
+    </aura:if>
+
+  </div>
+
+</aura:component>

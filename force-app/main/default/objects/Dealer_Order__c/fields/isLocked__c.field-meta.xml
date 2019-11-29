@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>isLocked__c</fullName>
+    <externalId>false</externalId>
+    <formula>OR( ISPICKVAL( Stage__c , &#39;Approved&#39;), ISPICKVAL( Stage__c, &#39;Processed&#39; ) )</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>isLocked</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

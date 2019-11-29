@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>AP_with_Penny_Balance</fullName>
+    <columns>NAME</columns>
+    <columns>AcctSeed__Payment_Status__c</columns>
+    <columns>Payee_New__c</columns>
+    <columns>AcctSeed__Age__c</columns>
+    <columns>AcctSeed__Balance__c</columns>
+    <columns>Balance_Actual__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>AcctSeed__Status__c</field>
+        <operation>equals</operation>
+        <value>Posted</value>
+    </filters>
+    <filters>
+        <field>Balance_Actual__c</field>
+        <operation>notEqual</operation>
+        <value>0</value>
+    </filters>
+    <filters>
+        <field>Balance_Actual__c</field>
+        <operation>lessThan</operation>
+        <value>0.01</value>
+    </filters>
+    <filters>
+        <field>Balance_Actual__c</field>
+        <operation>greaterThan</operation>
+        <value>-0.01</value>
+    </filters>
+    <label>AP with Penny Balance</label>
+</ListView>

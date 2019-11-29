@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>Legend_Letterhead</letterhead>
+    <name>Opportunity to Win $10,000</name>
+    <style>freeForm</style>
+    <subject>Opportunity to Win $10,000 at the Toronto International Boat Show!</subject>
+    <textOnly>Hey {!Account.FirstName},
+
+I hope all has been well with you since we last spoke.  I&#39;ve talked to so many people since the Boat Show started that I&#39;m not sure if I mentioned that you can win $10,000 by buying a boat at the Toronto International Boat Show!
+
+When you purchase a Legend Boat, your name is entered into a draw to win $10,000 to put towards the purchase of your new baby.
+
+Just thought I would share with you since these are incredible savings!
+
+Please let me know if you wish to take advantage of this opportunity.
+
+Thanks and have a great day!
+
+Yours in Boating,
+
+{!User.Name}
+{!User.Title}
+
+{!User.Email}
+{!User.Phone}
+www.legendboats.com</textOnly>
+    <type>html</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

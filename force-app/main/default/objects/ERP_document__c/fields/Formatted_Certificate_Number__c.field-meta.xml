@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Formatted_Certificate_Number__c</fullName>
+    <externalId>false</externalId>
+    <formula>IF(TEXT(Report_Type__c) == &#39;Companion Maxum&#39;, (&#39;LBB&#39; &amp;  LPAD( TEXT(Certificate_Number__c) , 5 ,&#39;0&#39;)),
+	(IF(TEXT(Report_Type__c) == &#39;Companion II&#39;, (&#39;LBD&#39; &amp;  LPAD( TEXT(Certificate_Number__c) , 5 ,&#39;0&#39;)),
+		(IF(TEXT(Report_Type__c) == &#39;Advantage 70-P&#39;, (LPAD( TEXT(Certificate_Number__c) , 5 ,&#39;0&#39;)),&#39;&#39;)))))</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Formatted Certificate Number</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

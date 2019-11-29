@@ -1,0 +1,85 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes">
+
+  <aura:attribute name="saleType" type="String" />
+  <aura:attribute name="fromCPQ" type="Boolean" default="false" />
+  <aura:attribute name="makeAccountTaxExempt" type="Boolean" default="false" />
+
+  <aura:handler event="c:Retail_Sales_Tool_OppCreated_Event" action="{!c.handleOppCreated}"/>
+
+  <aura:if isTrue="{! empty(v.saleType)}">
+    <div>
+      <lightning:layout horizontalAlign="center" verticalAlign="center">
+        <lightning:layoutItem size="12"
+                              smallDeviceSize="12"
+                              mediumDeviceSize="12"
+                              largeDeviceSize="8"
+                              padding="around-small"
+                              class="slds-card min-height-container">
+          <h1 class="slds-text-heading_medium
+                     slds-m-bottom_medium
+                     slds-p-bottom_small
+                     slds-text-align_center
+                     slds-border_bottom">Who are you Selling to?</h1>
+
+          <ul class="slds-grid slds-grid_pull-padded slds-wrap slds-grid_vertical-align-center slds-grid_align-center">
+            <li class="slds-p-horizontal_small slds-size_1-of-1 slds-medium-size_1-of-3">
+              <a href="javascript:void(0);"
+                 class="slds-app-launcher__tile slds-text-link_reset"
+                 data-account-type="business"
+                 onclick="{!c.handleSaleTypeSelect}">
+                <div class="slds-app-launcher__tile-figure">
+                  <lightning:icon iconName="standard:account" />
+                </div>
+                <div class="slds-app-launcher__tile-body">
+                  <span class="slds-text-link">Business</span>
+                  <p>
+                    Sell to a Business Account
+                  </p>
+                </div>
+              </a>
+            </li>
+
+            <li class="slds-p-horizontal_small slds-size_1-of-1 slds-medium-size_1-of-3">
+              <a href="javascript:void(0);"
+                 class="slds-app-launcher__tile slds-text-link_reset"
+                 data-account-type="customer"
+                 onclick="{!c.handleSaleTypeSelect}">
+                <div class="slds-app-launcher__tile-figure">
+                  <lightning:icon iconName="standard:person_account" />
+                </div>
+                <div class="slds-app-launcher__tile-body">
+                  <span class="slds-text-link">Customer</span>
+                  <p>
+                    Sell to a Person Account
+                  </p>
+                </div>
+              </a>
+            </li>
+
+          </ul>
+
+        </lightning:layoutItem>
+      </lightning:layout>
+    </div>
+  </aura:if>
+
+  <aura:if isTrue="{! equals(v.saleType, 'customer')}">
+    <c:Retail_Sales_Tool_PersonForm_dh saleType="{!v.saleType}"
+                                       fromCPQ="{!v.fromCPQ}"
+                                       makeAccountTaxExempt="{!v.makeAccountTaxExempt}" />
+  </aura:if>
+
+  <aura:if isTrue="{! equals(v.saleType, 'business')}">
+    <lightning:layout horizontalAlign="center" verticalAlign="center">
+      <lightning:layoutItem size="12"
+                            smallDeviceSize="12"
+                            mediumDeviceSize="12"
+                            largeDeviceSize="8">
+        <c:Retail_Sales_Tool_BusinessForm_dh saleType="{!v.saleType}"
+                                             fromCPQ="{!v.fromCPQ}"
+                                             makeAccountTaxExempt="{!v.makeAccountTaxExempt}" />
+      </lightning:layoutItem>
+    </lightning:layout>
+  </aura:if>
+
+</aura:component>

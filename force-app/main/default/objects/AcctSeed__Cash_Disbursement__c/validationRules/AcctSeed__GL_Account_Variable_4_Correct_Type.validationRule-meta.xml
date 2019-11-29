@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>AcctSeed__GL_Account_Variable_4_Correct_Type</fullName>
+    <active>true</active>
+    <description>Ensures the GL Variable 4 field is of type GL Variable 4</description>
+    <errorConditionFormula>NOT(ISBLANK( AcctSeed__GL_Account_Variable_4__c )) &amp;&amp; TEXT(AcctSeed__GL_Account_Variable_4__r.AcctSeed__Type__c) != &quot;GL Account Variable 4&quot;</errorConditionFormula>
+    <errorDisplayField>AcctSeed__GL_Account_Variable_4__c</errorDisplayField>
+    <errorMessage>The GL Variable must have a Type of &quot;GL Account Variable 4&quot;.</errorMessage>
+</ValidationRule>

@@ -1,0 +1,154 @@
+<apex:page controller="gcPrintCheck" sidebar="false" showHeader="false" applyHtmlTag="false" standardStylesheets="false" renderAs="pdf">
+    <html>
+        <head>
+            <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+            <style> 
+            @page { 
+                size: auto;
+                margin-top: 4mm; 
+                margin-bottom:0; 
+                margin-right: 10mm;
+            } 
+            body {
+                font-family: Arial Unicode MS;
+                font-size: 15px;
+                margin:0px
+            }
+            .rightAlign
+            {
+            	text-align: right;
+            }
+            .leftAlign
+            {
+            	text-align: left;
+            }
+            .centerAlign
+            {
+            	text-align: center;
+            }
+            .textBold
+            {
+            	font-weight: bold;
+            }
+            .apDataList
+            {
+            	font-size: 12px;
+            }
+            .apDataList td,
+            .apDataList th
+            {
+            	height: 21px;
+            }
+            .firstAPList
+            {
+            	height: 375px;
+            }
+            .amountInWord
+            {
+            	padding: 25px 0 8px 0;
+            }
+            .address
+            {
+            	padding-left: 25px;
+            	font-size: 12px;
+            	height: 190px;
+            }
+            @media print {
+              div.page-break { 
+                page-break-before: always;
+              }
+            }
+            </style>
+        </head>
+        <body>
+            <apex:repeat value="{!listCDWraps}" var="cdWrap">
+            <div class="page-break"></div>
+            <table class="" width="100%" cellspacing="2">
+            	<tr>
+            		<td colspan="2">
+            			<apex:outputText rendered="{!IF(cdWrap.totalAP > 10,true,false)}">
+            				Displaying only 10 of {!cdWrap.totalAP} Account Payable records.
+            			</apex:outputText>
+            		</td>
+            		<td class="rightAlign">Check:&nbsp;{!cdWrap.cashDisbMap['check']}</td>
+            	</tr>
+            	<tr>
+            		<td width="65%">Payee:&nbsp;{!cdWrap.cashDisbMap['payee']}</td>
+            		<td width="15%">Date:&nbsp;{!cdWrap.cashDisbMap['date']}</td>
+            		<td class="rightAlign" width="20%">Amount:&nbsp;$<apex:outputText value="{0,number,###,###,##0.00}"><apex:param value="{!VALUE(cdWrap.cashDisbMap['amount'])}" /></apex:outputText></td>
+            	</tr>
+            	<tr><td colspan="3">
+		            <table width="100%" class="apDataList firstAPList" cellspacing="0">
+			            <tr>
+			            	<th>Our Reference</th>
+			            	<th>Date</th>
+			            	<th>Type</th>
+			            	<th>Your Reference</th>
+			            	<th class="rightAlign">Amount</th>
+			            	<th class="rightAlign">Discount</th>
+			            	<th class="rightAlign">Net Amount</th>
+			            </tr>
+			            <apex:repeat value="{!cdWrap.apList}" var="ap">
+				            <tr>
+				            	<td>{!ap['apName']}</td>
+				            	<td>{!ap['apDate']}</td>
+				            	<td>{!ap['apType']}</td>
+				            	<td>{!ap['apRef']}</td>
+				            	<td class="rightAlign"><apex:outputText value="{0,number,###,###,##0.00}"><apex:param value="{!VALUE(ap['apAmount'])}" /></apex:outputText></td>
+				            	<td class="rightAlign"><apex:outputText value="{0,number,###,###,##0.00}"><apex:param value="{!VALUE(ap['apDiscount'])}" /></apex:outputText></td>
+				            	<td class="rightAlign"><apex:outputText value="{0,number,###,###,##0.00}"><apex:param value="{!VALUE(ap['apNet'])}" /></apex:outputText></td>
+				            </tr>
+			            </apex:repeat>
+		            </table>
+		        </td></tr>
+            	<tr>
+            		<td width="65%">&nbsp;</td>
+            		<td width="15%">{!cdWrap.cashDisbMap['date']}</td>
+            		<td class="rightAlign" width="20%">$<apex:outputText value="{0,number,###,###,##0.00}"><apex:param value="{!VALUE(cdWrap.cashDisbMap['amount'])}" /></apex:outputText></td>
+            	</tr>
+            	<tr><td colspan="3">
+            		<div class="amountInWord">{!cdWrap.cashDisbMap['amountInWord']}</div>
+            	</td></tr>
+            	<tr><td colspan="3">
+            		<div class="address">
+            			{!cdWrap.cashDisbMap['payee']}<br/>{!cdWrap.cashDisbMap['payeeStreet']}<br/>{!cdWrap.cashDisbMap['payeeCSZ']}<br/>{!cdWrap.cashDisbMap['payeeCountry']}
+            		</div>
+            	</td></tr>
+            	<tr>
+            		<td colspan="2">Please detach and retain this portion of the check for your records.</td>
+            		<td class="rightAlign">Check:&nbsp;{!cdWrap.cashDisbMap['check']}</td>
+            	</tr>
+            	<tr>
+            		<td width="65%">Payee:&nbsp;{!cdWrap.cashDisbMap['payee']}</td>
+            		<td width="15%">Date:&nbsp;{!cdWrap.cashDisbMap['date']}</td>
+            		<td class="rightAlign" width="20%">Amount:&nbsp;$<apex:outputText value="{0,number,###,###,##0.00}"><apex:param value="{!VALUE(cdWrap.cashDisbMap['amount'])}" /></apex:outputText></td>
+            	</tr>
+            	<tr><td colspan="3">
+		            <table width="100%" class="apDataList" cellspacing="0">
+			            <tr>
+			            	<th>Our Reference</th>
+			            	<th>Date</th>
+			            	<th>Type</th>
+			            	<th>Your Reference</th>
+			            	<th class="rightAlign">Amount</th>
+			            	<th class="rightAlign">Discount</th>
+			            	<th class="rightAlign">Net Amount</th>
+			            </tr>
+			            <apex:repeat value="{!cdWrap.apList}" var="ap">
+				            <tr>
+				            	<td>{!ap['apName']}</td>
+				            	<td>{!ap['apDate']}</td>
+				            	<td>{!ap['apType']}</td>
+				            	<td>{!ap['apRef']}</td>
+				            	<td class="rightAlign"><apex:outputText value="{0,number,###,###,##0.00}"><apex:param value="{!VALUE(ap['apAmount'])}" /></apex:outputText></td>
+				            	<td class="rightAlign"><apex:outputText value="{0,number,###,###,##0.00}"><apex:param value="{!VALUE(ap['apDiscount'])}" /></apex:outputText></td>
+				            	<td class="rightAlign"><apex:outputText value="{0,number,###,###,##0.00}"><apex:param value="{!VALUE(ap['apNet'])}" /></apex:outputText></td>
+				            </tr>
+			            </apex:repeat>
+		            </table>
+		        </td></tr>
+		    </table>
+            </apex:repeat>
+        </body>
+    </html>
+</apex:page>

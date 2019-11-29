@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <description>Google Review Request</description>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>Legend_Letterhead</letterhead>
+    <name>Partagez votre expérience!</name>
+    <style>freeForm</style>
+    <subject>Partagez votre expérience!</subject>
+    <textOnly>Bonjour {!Contact.FirstName},
+
+
+En espérant que vous profitez pleinement sur l’eau. SVP, n’hésitez pas à communiquer avec moi en tout temps  si il y a autre chose que je puisse faire pour rendre votre expérience des plus belle. Nous apprécierons beaucoup si vous pouviez nous faire parvenir une photo mémorable avec votre nouveau bateau Legend. Nous pourrions l’ajouter à Notre Album souvenir Legend!
+
+
+
+Merci!
+
+
+
+{!User.Name}
+
+
+
+{!User.Email}</textOnly>
+    <type>html</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

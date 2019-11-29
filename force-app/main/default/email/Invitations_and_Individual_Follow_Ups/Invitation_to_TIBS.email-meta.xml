@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <description>An email inviting all potential boat owners to TIBS!</description>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>Legend_Letterhead</letterhead>
+    <name>Invitation to TIBS</name>
+    <style>freeForm</style>
+    <subject>Come Visit us at the Toronto International Boat Show!</subject>
+    <textOnly>Hello {!Account.FirstName},
+
+I hope you&#39;ve had a great Fall and that you&#39;re ready for your Holiday Season!  I just wanted to extend to you an invitation to come see us at the Toronto International Boat Show.
+
+Legend Boats has an Award Winning Booth that is different every year and we want you to come see what we&#39;ve cooked up this time.  We will have nearly every one of our boats on display, plus lots of great extras for you to check out.
+
+Let me know if you&#39;re interested and I&#39;ll see what I can do about maybe scoring you a free ticket...
+
+From all of us here at Legend Boats, we hope you have safe and happy Holidays!
+
+Yours in Boating,
+
+{!User.Name}
+{!User.Title}
+
+{!User.Email}
+{!User.Phone}</textOnly>
+    <type>html</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

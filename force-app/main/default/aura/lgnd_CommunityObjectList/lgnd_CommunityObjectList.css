@@ -1,0 +1,96 @@
+.THIS {
+  position:absolute;
+  left:0;
+  width: 100%;
+  margin-bottom: 3rem;
+}
+
+.THIS table,
+.THIS .slds-page-header,
+.THIS .pagination {
+  width: 95%;
+  margin: 0 auto;
+}
+
+.THIS table thead tr th a {
+  padding-left:0;
+  padding-right:0;
+}
+
+.THIS table thead tr th a svg {
+  visibility:hidden;
+}
+
+.THIS table thead tr th.slds-is-sortable a.slds-th__action:hover {
+  background: transparent;
+}
+
+.THIS table thead tr th a svg {
+  margin-left: 0.5rem;
+}
+
+.THIS table thead tr th a.isSorted svg,
+.THIS table thead tr th a:hover svg {
+  visibility: visible;
+}
+
+.THIS table tbody tr td div a {
+  color: #038fc1;
+}
+
+.THIS table tbody tr td .boolean svg {
+  fill: #038fc1;
+}
+
+.THIS table.loading tbody tr td div,
+.THIS table.loading tbody tr td span {
+  background: #F4F6F9;
+  color:transparent;
+  width: 98%;
+  margin:auto;
+  min-height: 1.5rem;
+  border-radius: 4px;
+  display:block;
+}
+
+.THIS table.loading tbody tr td[role=gridcell],
+.THIS table.loading tbody tr td div a,
+.THIS table.loading tbody tr td .slds-icon_container svg,
+.THIS .pagination.loading {
+  visibility:hidden;
+}
+
+
+.THIS .pagination {
+  padding-top: 0.5rem;
+}
+
+.THIS .pagination .slds-col:first-child {
+  padding-left: 1rem;
+}
+
+.THIS .pagination .slds-col:first-child + .slds-col {
+  text-align:center;
+}
+
+.THIS .pagination .slds-col:last-child .slds-button-group {
+  float:right;
+}
+
+.THIS .pagination .slds-form-element,
+.THIS .pagination .slds-form-element .slds-form-element__label,
+.THIS .pagination .slds-form-element .slds-form-element__control {
+  display: inline-block;
+  line-height:initial;
+}
+
+.THIS .pagination .slds-form-element .slds-form-element__control {
+  margin-right: 10px;
+}
+
+@media only screen and (max-width:48em) {
+  .THIS .action-cell {
+    text-align: right;
+    overflow: visible;
+  }
+}

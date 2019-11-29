@@ -1,0 +1,49 @@
+<aura:component>
+  <aura:attribute name="dealer" type="Object" />
+  <aura:attribute name="showDetails" type="Boolean" default="false" />
+
+  <article class="slds-card">
+    <div class="slds-card__header slds-grid">
+      <header class="slds-media slds-media_center slds-has-flexi-truncate">
+        <div class="slds-media__figure">
+          <aura:if isTrue="{! empty(v.dealer.photoURL) }">
+            <lightning:icon iconName="standard:account" />
+          </aura:if>
+          <aura:if isTrue="{! !empty(v.dealer.photoURL) }">
+            <img src="{! v.dealer.photoURL }" />
+          </aura:if>
+        </div>
+        <div class="slds-media__body">
+          <h2 class="slds-card__header-title">
+            <span>{! v.dealer.name }</span>
+          </h2>
+          <p>{!v.dealer.city}, {!v.dealer.state}</p>
+        </div>
+        <div class="slds-no-flex">
+          <div class="slds-dropdown-trigger slds-dropdown-trigger_click slds-is-open">
+            <lightning:buttonIcon iconName="{! if(v.showDetails, 'utility:up', 'utility:down')}"
+                                  size="small"
+                                  onclick="{!c.toggleDetails}"
+                                  alternativeText="{! if(v.showDetails, 'Hide Details', 'More Details')}" />
+          </div>
+        </div>
+      </header>
+    </div>
+    <aura:if isTrue="{! v.showDetails}">
+      <div class="slds-card__body slds-card__body_inner">
+        <lightning:layout multipleRows="true">
+          <lightning:layoutItem padding="horizontal-small"
+                                size="12"
+                                class="slds-text-align_left">
+            <p>{!v.dealer.phone}</p>
+            <p class="slds-m-bottom_small">{!v.dealer.email}</p>
+            <p>{!v.dealer.street}</p>
+            <p>{!v.dealer.city}, {!v.dealer.state}</p>
+            <p>{!v.dealer.postalCode}</p>
+          </lightning:layoutItem>
+        </lightning:layout>
+      </div>
+    </aura:if>
+  </article>
+
+</aura:component>

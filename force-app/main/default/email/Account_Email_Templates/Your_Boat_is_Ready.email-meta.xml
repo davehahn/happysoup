@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>Legend_Letterhead</letterhead>
+    <name>Your Boat is Ready!</name>
+    <style>freeForm</style>
+    <subject>Your Boat Can&#39;t Wait to Meet you!</subject>
+    <textOnly>Hey {!Account.FirstName},
+
+Check it out, your boat is just about finished in the Shop!  I&#39;ve taken a good look at it and I&#39;m pleased to say, your new boat looks perfect and it tells me it can&#39;t wait to see you on {!Opportunity.Delivery_Date__c}.
+
+I hope you&#39;re well and that this helps you envision your lives together on the water!  We&#39;ll see you soon!
+
+Yours in Boating,
+
+{!User.Name} and your {!Opportunity.BoatId__c}</textOnly>
+    <type>html</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

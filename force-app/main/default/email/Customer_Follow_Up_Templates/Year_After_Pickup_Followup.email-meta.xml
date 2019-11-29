@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <description>An email for the salesperson to send out 1 year after pickup</description>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>Legend_Letterhead</letterhead>
+    <name>Year After Pickup Followup</name>
+    <style>freeForm</style>
+    <subject>Happy 1 Year Legend Anniversary!</subject>
+    <textOnly>Hey {!Contact.FirstName},
+
+It&#39;s been about a year since you picked up your boat and I just wanted to congratulate you again on being part of our elite family and I also wanted to see how the past year was with your new boat.
+
+Please feel free to share any insights, questions, comments and/or pics of your and your family on the water with us.  We always love to learn what our Legend Family Members are up to on the water, and of course, we&#39;re always looking to get better at everything we do, so any feedback you can give is incredibly welcome :)
+
+Thank you again for everything and I hope to hear back from you soon
+
+All the best and always yours in boating,
+
+{!User.Name}
+{!User.Title}
+
+www.legendboats.com</textOnly>
+    <type>html</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

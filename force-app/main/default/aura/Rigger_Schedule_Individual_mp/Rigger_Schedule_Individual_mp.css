@@ -1,0 +1,15 @@
+.THIS .timerBtn:before {
+  content: 'Start'
+}
+
+.THIS .job-card lightning-spinner {
+  display:none;
+}
+
+.THIS .job-card.busy lightning-spinner {
+  display:initial;
+}
+
+.THIS .timerBtn.active:before {
+  content: 'Pause'
+}

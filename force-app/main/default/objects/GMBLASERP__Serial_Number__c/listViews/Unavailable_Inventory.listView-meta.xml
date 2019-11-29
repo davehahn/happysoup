@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Unavailable_Inventory</fullName>
+    <columns>NAME</columns>
+    <columns>Available__c</columns>
+    <columns>Product_Name__c</columns>
+    <columns>GMBLASERP__Inventory_Balance__c</columns>
+    <columns>GMBLASERP__Product__c</columns>
+    <columns>Location__c</columns>
+    <columns>GMBLASERP__Lot__c</columns>
+    <columns>Nest__c</columns>
+    <columns>Status__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>Available__c</field>
+        <operation>equals</operation>
+        <value>0</value>
+    </filters>
+    <label>Unavailable Inventory</label>
+    <language>en_US</language>
+</ListView>

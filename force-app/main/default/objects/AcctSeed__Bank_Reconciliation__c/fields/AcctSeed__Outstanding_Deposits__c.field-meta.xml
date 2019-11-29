@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>AcctSeed__Outstanding_Deposits__c</fullName>
+    <deprecated>false</deprecated>
+    <description>This field is deprecated and no longer used.</description>
+    <externalId>false</externalId>
+    <label>zDep-Outstanding Deposits</label>
+    <summarizedField>AcctSeed__Bank_Reconciliation_Line__c.AcctSeed__Amount__c</summarizedField>
+    <summaryFilterItems>
+        <field>AcctSeed__Bank_Reconciliation_Line__c.AcctSeed__Amount__c</field>
+        <operation>greaterThan</operation>
+        <value>0</value>
+    </summaryFilterItems>
+    <summaryForeignKey>AcctSeed__Bank_Reconciliation_Line__c.AcctSeed__Bank_Reconciliation__c</summaryForeignKey>
+    <summaryOperation>sum</summaryOperation>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Summary</type>
+</CustomField>

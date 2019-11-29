@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>AcctSeed__Value_for_Labor_GL_Account</fullName>
+    <active>false</active>
+    <description>Verifies labor gl account field is not blank.</description>
+    <errorConditionFormula>ISBLANK( AcctSeed__Labor_GL_Account__c )</errorConditionFormula>
+    <errorMessage>A project task must contain a value for the labor gl account field.</errorMessage>
+</ValidationRule>

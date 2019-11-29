@@ -1,0 +1,73 @@
+<aura:component controller="lgnd_serno_search" 
+								implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome"
+								access="global">
+
+<aura:attribute type="String"   name="serno" 		                                  />
+<aura:attribute type="String"   name="sernoName"                                  />
+<aura:attribute type="String"   name="sernoLabel"          default="Serial Number" />
+<aura:attribute type="Object"   name="items" 					                            />
+<aura:attribute type="Boolean"  name="selectionMade" 	     default="false"        />
+<aura:attribute type="Boolean"  name="pauseSearch"         default="false"        />
+<aura:attribute type="Integer"  name="count"               default="0"            />
+<aura:attribute type="String"   name="sernoId" 				                            />
+<aura:attribute type="String"   name="nestId"                                     />
+<aura:attribute type="Boolean"  name="showProductCard"     default="false"        />
+<aura:attribute type="String"   name="ProductName"                                />
+<aura:attribute type="String"   name="ProductId"                                  />
+<aura:attribute type="String"   name="RestrictToThisProduct"                      />
+<aura:attribute type="String"   name="ProductDescription"                         />
+<aura:attribute type="String"   name="ProductType"                                />
+<aura:attribute type="String"   name="ProductLocation"                            />
+<aura:attribute type="String"   name="placeholder"         default="Start typing" />
+<aura:attribute type="Boolean"  name="canBeNest"           default="false"        />
+<aura:attribute type="String"   name="errorMessage"                               />
+<aura:attribute type="String"   name="context"             default="unlimited"    />
+<aura:attribute type="Boolean"  name="skipCard"            default="false"        />
+<aura:attribute type="Id"       name="accountId"                                  />
+<aura:attribute type="String"   name="accountName"                                />
+<aura:attribute type="String"   name="lot"                 default="0"            />
+
+
+<aura:handler name="change" value="{!v.serno}" action="{!c.search}" />
+<aura:handler name="change" value="{!v.sernoId}" action="{!c.getCard}" />
+
+<div class="slds-form-element">
+  <div class="slds-combobox_container">
+  	<div class="slds-combobox slds-dropdown-trigger slds-dropdown-trigger--click slds-is-closed" aria-expanded="true" aria-haspopup="listbox" role="combobox" aura:id="name_combobox">
+      <div class="slds-form-element">
+      	<lightning:input type="search" name="Search" label="{!v.sernoLabel}" placeholder="{!v.placeholder}" value="{!v.serno}" aura:id="search" />
+      </div>
+      <div id="listbox-unique-id" role="listbox">
+        <ul class="slds-listbox slds-listbox_vertical slds-dropdown slds-dropdown_fluid" role="presentation">
+          <aura:iteration items="{!v.items}" var="item" indexVar="i">
+            <li role="option" class="slds-listbox__item" data-address-id="{!i}">
+            	<a 	href="javascript:void(0);" 
+            			role="option" 
+            			id="{!'listbox-option-unique-id-' + i}" 
+            			onclick="{!c.clickSerialNumber}" 
+            			data-name="{!item.Name}"
+            			data-sernoid="{!item.Id}">
+	              <span class="slds-media slds-listbox__option slds-listbox__option_entity slds-listbox__option_has-meta" role="option">
+	              	<span class="slds-media__figure">
+	                  <span class="slds-icon_container slds-icon-standard-account" title="Product">
+	                    <lightning:icon iconName="custom:custom55" />
+	                    <span class="slds-assistive-text">Product</span>
+	                  </span>
+	                </span>
+	                <span class="slds-media__body">
+	                  <span class="slds-listbox__option-text slds-listbox__option-text_entity">{!item.Name}</span>
+	                  <span class="slds-listbox__option-meta slds-listbox__option-meta_entity">
+										   {!item.Description__c}
+										</span>
+	                </span>
+	              </span>
+	            </a>
+            </li>
+          </aura:iteration>
+        </ul>
+      </div><!-- role[listbox] -->
+    </div><!-- .slds-combobox -->
+  </div><!-- .slds-combobox_container -->
+</div>
+
+</aura:component>

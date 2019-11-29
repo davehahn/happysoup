@@ -1,0 +1,21 @@
+<aura:component>
+  <aura:attribute name="recordId" type="String" />
+  <aura:attribute name="syncedQuoteId" type="String" />
+  <aura:attribute name="selectedQuoteId" type="String" />
+  <aura:attribute name="quotes" type="Quote[]" />
+
+  <aura:method name='quoteUpdated' action="{!c.handleQuoteUpdated}">
+    <aura:attribute type="Quote" name="updatedQuote" />
+  </aura:method>
+
+  <div>
+    <aura:if isTrue="{! !empty(v.selectedQuoteId )}">
+      <aura:iteration items="{!v.quotes}" var="quote">
+        <c:Opportunity_QuoteList_Card quote="{! quote }"
+                                      syncedQuoteId="{! v.syncedQuoteId }"
+                                      selectedQuoteId="{! v.selectedQuoteId }" />
+      </aura:iteration>
+    </aura:if>
+  </div>
+
+</aura:component>

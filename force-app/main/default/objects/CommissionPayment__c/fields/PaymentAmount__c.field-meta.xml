@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>PaymentAmount__c</fullName>
+    <externalId>false</externalId>
+    <formula>IF( OR(ISPICKVAL( CommissionRecord__r.Type__c , &#39;Retail Sales&#39;), ISPICKVAL( CommissionRecord__r.Type__c, &#39;Business Office&#39;)),
+ CommissionRecord__r.CommissionTotal__c  *  PaymentPercent__c * Owner__r.Commission_Percentage__c,
+ CommissionRecord__r.CommissionTotal__c  *  PaymentPercent__c )</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Payment Amount</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Currency</type>
+</CustomField>

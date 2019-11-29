@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <description>Email alert to notify parts department that we are oversold on a product</description>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>Legend_Letterhead</letterhead>
+    <name>Oversold Product Alert</name>
+    <style>freeForm</style>
+    <subject>Oversold Product Alert!</subject>
+    <textOnly>It seems that we have oversold on a product.  Please look into this and see if we should be placing an order right away in order to avoid disappointing a customer in the future.  Here is the product information:
+
+Product Name: {!Product2.Name}
+Product Code: {!Product2.Unique_Product_Code__c}
+
+Product Description:
+{!Product2.Description}
+
+
+It appears that with our current inventory, after all Purchase Orders have arrived and all ERP Orders are filled, we will have {!Product2.MRP_Quantity__c} of this product available.
+
+You can click on the link below to access this product in our inventory planning tool to get more details and investigate further.
+
+{!Product2.Inventory_MRP_Report__c}</textOnly>
+    <type>html</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

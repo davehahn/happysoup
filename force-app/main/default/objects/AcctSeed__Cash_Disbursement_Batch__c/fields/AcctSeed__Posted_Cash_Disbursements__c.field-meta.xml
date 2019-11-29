@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>AcctSeed__Posted_Cash_Disbursements__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <inlineHelpText>Number of cash disbursements posted in the cash disbursement batch.</inlineHelpText>
+    <label>Posted Cash Disbursements</label>
+    <summaryFilterItems>
+        <field>AcctSeed__Cash_Disbursement__c.AcctSeed__Status__c</field>
+        <operation>equals</operation>
+        <value>Posted</value>
+    </summaryFilterItems>
+    <summaryForeignKey>AcctSeed__Cash_Disbursement__c.AcctSeed__Cash_Disbursement_Batch__c</summaryForeignKey>
+    <summaryOperation>count</summaryOperation>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Summary</type>
+</CustomField>

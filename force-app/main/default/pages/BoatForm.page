@@ -1,0 +1,94 @@
+<apex:page standardController="Product2" extensions="Product2Ext" showHeader="true" sidebar="true">
+  <style type="text/css">
+
+    textarea {
+      width:80%;
+      height:50px;
+    }
+
+  </style>
+  <apex:form >
+  <apex:messages />
+    <apex:pageBlock mode="edit" title="Product Edit">
+
+      <apex:pageBlockButtons >
+        <apex:commandButton action="{!cancel}" value="Cancel" />
+        <apex:commandButton action="{!save}" value="Save" />
+        <apex:commandButton action="{!saveWithOptions}"
+                            value="Save With Boat Options/Features"
+                            rendered="{!renderDeepCloneButton}" />
+      </apex:pageBlockButtons>
+
+      <apex:pageBlockSection columns="2" title="Product Information">
+        <apex:outputText label="Record Type" value="Boat" />
+        <apex:repeat value="{!$ObjectType.Product2.FieldSets['Boat_Standard_Fields']}" var="f">
+
+          <apex:inputField label="{!f.Label}"
+                           value="{!Product2[f]}"
+                           rendered="{!f.Label != 'Boat Type'}" />
+
+         <!--  <apex:pageBlockSectionItem rendered="{!f.Label == 'Boat Type'}">
+            <apex:outputLabel value="Boat Type" for="boatTypeSelect" />
+            <apex:actionRegion >
+              <apex:selectList multiselect="false"
+                               size="1"
+                               value="{!boatType}"
+                               id="boatTypeSelect" >
+                    <apex:selectOptions value="{!boatTypes}" />
+                    <apex:actionSupport id="boatType" event="onchange"  rerender="specs" />
+              </apex:selectList>
+            </apex:actionRegion>
+          </apex:pageBlockSectionItem> -->
+
+
+        </apex:repeat>
+
+      </apex:pageBlockSection>
+
+      <apex:outputPanel id="specs" layout="none">
+
+        <apex:pageBlockSection rendered="{!Product2.Family!= null}" columns="1" collapsible="false">
+         <!--  <apex:repeat value="{!boatTypeValues}" var="bType">
+ -->
+            <apex:pageBlockSection title="{!Product2.Family} Specifications"
+
+                                   collapsible="false">
+
+              <apex:repeat value="{!$ObjectType.Product2.FieldSets[SUBSTITUTE(Product2.Family, ' ', '_')+'_Specifications']}" var="f">
+
+                <apex:inputField label="{!f.Label}"
+                           value="{!Product2[f]}" />
+
+              </apex:repeat>
+
+            </apex:pageBlockSection>
+
+        <!--   </apex:repeat> -->
+        </apex:pageBlockSection>
+
+      </apex:outputPanel>
+
+      <apex:pageBlockSection columns="2" title="NMMA Information">
+        <apex:repeat value="{!$ObjectType.Product2.FieldSets['Boat_NMMA_Fields']}" var="f">
+
+          <apex:inputField label="{!f.Label}"
+                           value="{!Product2[f]}" />
+
+        </apex:repeat>
+
+      </apex:pageBlockSection>
+
+    <apex:pageBlockSection columns="2" title="Rigging Information">
+        <apex:repeat value="{!$ObjectType.Product2.FieldSets['Boat_Rigging_Fields']}" var="f">
+
+          <apex:inputField label="{!f.Label}"
+                           value="{!Product2[f]}" />
+
+        </apex:repeat>
+
+      </apex:pageBlockSection>
+
+    </apex:pageBlock>
+
+  </apex:form>
+</apex:page>

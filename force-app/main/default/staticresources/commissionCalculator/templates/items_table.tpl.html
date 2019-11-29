@@ -1,0 +1,37 @@
+<table class='slds-table slds-table--bordered slds-table--cell-buffer slds-no-row-hover commissionTable'>
+
+    <thead>
+      <tr class="slds-text-title--caps">
+        {{ quantity_header this }}
+        <td class="w35">Product</td>
+        <td class="w8">Sale Price</td>
+        <td class="w8">Commissionable</td>
+        <td class="w8">Std. Rate</td>
+        <td class="w8 hasTotal">Calc. Comm</td>
+        <td class="w10">Applied Rate</td>
+        <td class="w10 hasTotal">Applied Comm.</td>
+        <td class="w3 {{ status-display-class this.Stage__c }}"></td>
+      </tr>
+    </thead>
+
+    {{ table_body this.CommissionLineItems__r }}
+
+    <tfoot>
+      <tr>
+        {{ quantity_footer this }}
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td data-total="true"></td>
+          <td class="{{ status-display-class this.Stage__c }}">
+            <button href="#" class="slds-button slds-button--icon-border-filled newItem" data-record='{"Id": "{{this.Id}}", "Department__c": "{{this.Type__c }}" }' >
+              <i class="fa fa-plus"></i>
+            </button>
+          </td>
+      </tr>
+    </tfoot>
+
+  </table>

@@ -1,0 +1,498 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workflow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <alerts>
+        <fullName>A_New_Warranty_case_has_been_creaated</fullName>
+        <description>A New Warranty case has been created</description>
+        <protected>false</protected>
+        <recipients>
+            <recipient>melcorcoran@legendboats.com</recipient>
+            <type>user</type>
+        </recipients>
+        <senderType>DefaultWorkflowUser</senderType>
+        <template>Customer_Follow_Up_Templates/Auto_Warranty_New_Case_Created</template>
+    </alerts>
+    <alerts>
+        <fullName>A_New_Warranty_case_has_been_created</fullName>
+        <description>A New Warranty case has been created</description>
+        <protected>false</protected>
+        <recipients>
+            <recipient>melcorcoran@legendboats.com</recipient>
+            <type>user</type>
+        </recipients>
+        <senderType>DefaultWorkflowUser</senderType>
+        <template>Customer_Follow_Up_Templates/Auto_Warranty_New_Case_Created</template>
+    </alerts>
+    <alerts>
+        <fullName>Notify_Salesforce_Case_Team_of_new_Case</fullName>
+        <description>Notify Salesforce Case Team of new Case</description>
+        <protected>false</protected>
+        <recipients>
+            <recipient>dhahn1@legendboats.com</recipient>
+            <type>user</type>
+        </recipients>
+        <recipients>
+            <recipient>jdewar@legendboats.com</recipient>
+            <type>user</type>
+        </recipients>
+        <recipients>
+            <recipient>lturcott@legendboats.com</recipient>
+            <type>user</type>
+        </recipients>
+        <recipients>
+            <recipient>sdaoust@legendboats.com</recipient>
+            <type>user</type>
+        </recipients>
+        <senderType>CurrentUser</senderType>
+        <template>Case_Templates/Salesforce_Issue</template>
+    </alerts>
+    <fieldUpdates>
+        <fullName>Set_Case_Exchange_Rate</fullName>
+        <description>Used to set the exchange rate on a warranty case when it is closed to determine the Candian Profit</description>
+        <field>Case_Exchange_Rate__c</field>
+        <formula>IF( Recoverable_ERP__r.AcctSeed__Account__r.BillingCountry = &#39;United States&#39;,  $Setup.Legend_Settings__c.Budgeted_Exchange_Rate__c ,1)</formula>
+        <name>Set Case Exchange Rate</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Formula</operation>
+        <protected>false</protected>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>Update_Case_Owner</fullName>
+        <field>OwnerId</field>
+        <lookupValue>Warranty_Cases</lookupValue>
+        <lookupValueType>Queue</lookupValueType>
+        <name>Update Case Owner</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>LookupValue</operation>
+        <protected>false</protected>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>Update_Case_Owner_to_Parts_Inquiry_queue</fullName>
+        <field>OwnerId</field>
+        <lookupValue>Parts_Inquiry_Cases</lookupValue>
+        <lookupValueType>Queue</lookupValueType>
+        <name>Update Case Owner to Parts Inquiry queue</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>LookupValue</operation>
+        <protected>false</protected>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>Warranty_ERP_to_Closed</fullName>
+        <description>Will update the ERP status to Closed when a Warranty claim is Denied</description>
+        <field>Status</field>
+        <literalValue>Closed</literalValue>
+        <name>Warranty ERP to Closed</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+    </fieldUpdates>
+    <rules>
+        <fullName>New Part Inquiry Case from Community</fullName>
+        <actions>
+            <name>Update_Case_Owner_to_Parts_Inquiry_queue</name>
+            <type>FieldUpdate</type>
+        </actions>
+        <active>true</active>
+        <criteriaItems>
+            <field>Case.RecordTypeId</field>
+            <operation>equals</operation>
+            <value>PartInquiry</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Case.Status</field>
+            <operation>equals</operation>
+            <value>New</value>
+        </criteriaItems>
+        <description>Changes the owner of the case to the Part Inquiry queue</description>
+        <triggerType>onCreateOnly</triggerType>
+    </rules>
+    <rules>
+        <fullName>New Promotion Case - Pending Documentation</fullName>
+        <actions>
+            <name>New_Promotion_Case</name>
+            <type>Task</type>
+        </actions>
+        <active>true</active>
+        <criteriaItems>
+            <field>Case.Status</field>
+            <operation>equals</operation>
+            <value>Pending documentation</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Case.RecordTypeId</field>
+            <operation>equals</operation>
+            <value>Promotion</value>
+        </criteriaItems>
+        <triggerType>onCreateOnly</triggerType>
+    </rules>
+    <rules>
+        <fullName>New Promotion Case Pending Review</fullName>
+        <actions>
+            <name>A_new_Promotion_has_been_created_Pending_Review</name>
+            <type>Task</type>
+        </actions>
+        <active>true</active>
+        <criteriaItems>
+            <field>Case.Status</field>
+            <operation>equals</operation>
+            <value>Pending review</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Case.RecordTypeId</field>
+            <operation>equals</operation>
+            <value>Promotion</value>
+        </criteriaItems>
+        <triggerType>onCreateOnly</triggerType>
+    </rules>
+    <rules>
+        <fullName>New Warranty Case</fullName>
+        <active>true</active>
+        <criteriaItems>
+            <field>Case.RecordTypeId</field>
+            <operation>equals</operation>
+            <value>Warranty</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Case.Status</field>
+            <operation>equals</operation>
+            <value>New</value>
+        </criteriaItems>
+        <description>Email notification that a new warranty case has been created to the dealer care inbox</description>
+        <triggerType>onCreateOnly</triggerType>
+        <workflowTimeTriggers>
+            <actions>
+                <name>A_New_Warranty_case_has_been_created</name>
+                <type>Alert</type>
+            </actions>
+            <timeLength>1</timeLength>
+            <workflowTimeTriggerUnit>Hours</workflowTimeTriggerUnit>
+        </workflowTimeTriggers>
+    </rules>
+    <rules>
+        <fullName>New Warranty Case from Community</fullName>
+        <actions>
+            <name>Update_Case_Owner</name>
+            <type>FieldUpdate</type>
+        </actions>
+        <active>true</active>
+        <criteriaItems>
+            <field>Case.RecordTypeId</field>
+            <operation>equals</operation>
+            <value>Warranty</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Case.Status</field>
+            <operation>equals</operation>
+            <value>New</value>
+        </criteriaItems>
+        <description>Sets the owner to Warranty Group</description>
+        <triggerType>onCreateOnly</triggerType>
+    </rules>
+    <rules>
+        <fullName>Notifies Parts team of a new Part Inquiry Case</fullName>
+        <actions>
+            <name>New_Part_Inquiry</name>
+            <type>Task</type>
+        </actions>
+        <actions>
+            <name>New_Part_Inquiry_Mel</name>
+            <type>Task</type>
+        </actions>
+        <active>true</active>
+        <criteriaItems>
+            <field>Case.RecordTypeId</field>
+            <operation>equals</operation>
+            <value>PartInquiry</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Case.Status</field>
+            <operation>equals</operation>
+            <value>New</value>
+        </criteriaItems>
+        <description>Notifies Parts team of a new Part Inquiry Case</description>
+        <triggerType>onCreateOrTriggeringUpdate</triggerType>
+    </rules>
+    <rules>
+        <fullName>Notify DSM on Hull Returns</fullName>
+        <actions>
+            <name>Warranty_Case_Delay_Reason_set_to_Hull_Return</name>
+            <type>Task</type>
+        </actions>
+        <actions>
+            <name>Warranty_Case_Delay_Reason_set_to_Hull_Return2</name>
+            <type>Task</type>
+        </actions>
+        <active>true</active>
+        <criteriaItems>
+            <field>Case.RecordTypeId</field>
+            <operation>equals</operation>
+            <value>Warranty</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Case.Delay_Reasons__c</field>
+            <operation>equals</operation>
+            <value>Hull Return</value>
+        </criteriaItems>
+        <description>Notify DSM when Case Delay Reason is set to &#39;Hull Return&#39;</description>
+        <triggerType>onCreateOrTriggeringUpdate</triggerType>
+    </rules>
+    <rules>
+        <fullName>Salesforce Issue Created</fullName>
+        <actions>
+            <name>Notify_Salesforce_Case_Team_of_new_Case</name>
+            <type>Alert</type>
+        </actions>
+        <active>false</active>
+        <criteriaItems>
+            <field>Case.RecordTypeId</field>
+            <operation>equals</operation>
+            <value>Salesforce</value>
+        </criteriaItems>
+        <description>Internal user submitted a Case detailing an issue or enhancement to the Salesforce software</description>
+        <triggerType>onCreateOnly</triggerType>
+    </rules>
+    <rules>
+        <fullName>Set Case Exchange Rate</fullName>
+        <actions>
+            <name>Set_Case_Exchange_Rate</name>
+            <type>FieldUpdate</type>
+        </actions>
+        <active>true</active>
+        <criteriaItems>
+            <field>Case.Status</field>
+            <operation>equals</operation>
+            <value>Closed</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Case.RecordTypeId</field>
+            <operation>equals</operation>
+            <value>Warranty</value>
+        </criteriaItems>
+        <description>Used to determine what the case exchange rate should be set as</description>
+        <triggerType>onCreateOrTriggeringUpdate</triggerType>
+    </rules>
+    <rules>
+        <fullName>Task on Part Order Case Created Montreal</fullName>
+        <actions>
+            <name>Review_new_Part_Order_Request_Case</name>
+            <type>Task</type>
+        </actions>
+        <active>true</active>
+        <criteriaItems>
+            <field>Case.RecordTypeId</field>
+            <operation>equals</operation>
+            <value>Part Order Request</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Case.ERP_Warehouse__c</field>
+            <operation>equals</operation>
+            <value>Montreal</value>
+        </criteriaItems>
+        <description>Task assigned that a new Part Order Case has been created for Montreal</description>
+        <triggerType>onCreateOnly</triggerType>
+    </rules>
+    <rules>
+        <fullName>Task on Part Order Case Created Whitefish</fullName>
+        <actions>
+            <name>Please_Review_the_new_Part_Order_Case_that_was_Created</name>
+            <type>Task</type>
+        </actions>
+        <active>true</active>
+        <criteriaItems>
+            <field>Case.RecordTypeId</field>
+            <operation>equals</operation>
+            <value>Part Order Request</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Case.ERP_Warehouse__c</field>
+            <operation>equals</operation>
+            <value>Whitefish</value>
+        </criteriaItems>
+        <description>Task assigned that a new Part Order Case has been created for Whitefish</description>
+        <triggerType>onCreateOnly</triggerType>
+    </rules>
+    <rules>
+        <fullName>Task on Part Order Created Barrie</fullName>
+        <actions>
+            <name>Review_new_Part_Order_Request_Barrie</name>
+            <type>Task</type>
+        </actions>
+        <active>true</active>
+        <criteriaItems>
+            <field>Case.RecordTypeId</field>
+            <operation>equals</operation>
+            <value>Part Order Request</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Case.ERP_Warehouse__c</field>
+            <operation>equals</operation>
+            <value>Barrie</value>
+        </criteriaItems>
+        <description>Task Assigned that a new Part Order has been placed for Barrie</description>
+        <triggerType>onCreateOrTriggeringUpdate</triggerType>
+    </rules>
+    <rules>
+        <fullName>Warranty Part Return from Dealer</fullName>
+        <actions>
+            <name>Parts_Returned_from_Dealer</name>
+            <type>Task</type>
+        </actions>
+        <active>true</active>
+        <criteriaItems>
+            <field>Case.Type</field>
+            <operation>equals</operation>
+            <value>Warranty</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Case.Status</field>
+            <operation>equals</operation>
+            <value>Parts Returned</value>
+        </criteriaItems>
+        <description>This status to be set when parts returned from dealer, will let case owner know</description>
+        <triggerType>onCreateOrTriggeringUpdate</triggerType>
+    </rules>
+    <tasks>
+        <fullName>A_new_Promotion_has_been_created_Pending_Review</fullName>
+        <assignedTo>melcorcoran@legendboats.com</assignedTo>
+        <assignedToType>user</assignedToType>
+        <description>This case is ready for your review .</description>
+        <dueDateOffset>0</dueDateOffset>
+        <notifyAssignee>false</notifyAssignee>
+        <priority>Normal</priority>
+        <protected>false</protected>
+        <status>Open</status>
+        <subject>A new Promotion has been created - Pending Review</subject>
+    </tasks>
+    <tasks>
+        <fullName>A_new_inquiry_has_been_submitted</fullName>
+        <assignedTo>epaulino@legendboats.com</assignedTo>
+        <assignedToType>user</assignedToType>
+        <description>A new part inquiry has been created.</description>
+        <dueDateOffset>0</dueDateOffset>
+        <notifyAssignee>false</notifyAssignee>
+        <priority>Normal</priority>
+        <protected>false</protected>
+        <status>Open</status>
+        <subject>A new  inquiry has been submitted</subject>
+    </tasks>
+    <tasks>
+        <fullName>New_Part_Inquiry</fullName>
+        <assignedTo>dealerparts+luc@legendboats.com</assignedTo>
+        <assignedToType>user</assignedToType>
+        <description>A new part inquiry has been placed for your review.</description>
+        <dueDateOffset>0</dueDateOffset>
+        <notifyAssignee>false</notifyAssignee>
+        <priority>Normal</priority>
+        <protected>false</protected>
+        <status>Open</status>
+        <subject>New Part Inquiry</subject>
+    </tasks>
+    <tasks>
+        <fullName>New_Part_Inquiry_Mel</fullName>
+        <assignedTo>melcorcoran@legendboats.com</assignedTo>
+        <assignedToType>user</assignedToType>
+        <description>There is a new Part inquiry Case for your review.
+
+Please note, both you and Luc are getting the same notification.</description>
+        <dueDateOffset>0</dueDateOffset>
+        <notifyAssignee>false</notifyAssignee>
+        <priority>Normal</priority>
+        <protected>false</protected>
+        <status>Open</status>
+        <subject>New Part Inquiry</subject>
+    </tasks>
+    <tasks>
+        <fullName>New_Promotion_Case</fullName>
+        <assignedTo>melcorcoran@legendboats.com</assignedTo>
+        <assignedToType>user</assignedToType>
+        <description>There is a new Promotion in the Queue for your review. A Pending Documentation Case.</description>
+        <dueDateOffset>0</dueDateOffset>
+        <notifyAssignee>false</notifyAssignee>
+        <priority>Normal</priority>
+        <protected>false</protected>
+        <status>Open</status>
+        <subject>New Promotion Case - Pending Documentation</subject>
+    </tasks>
+    <tasks>
+        <fullName>New_Question_on_Partner_Community</fullName>
+        <assignedTo>melcorcoran@legendboats.com</assignedTo>
+        <assignedToType>user</assignedToType>
+        <description>There is a new question on the partner community site that needs to be addressed.</description>
+        <dueDateOffset>0</dueDateOffset>
+        <notifyAssignee>false</notifyAssignee>
+        <priority>Normal</priority>
+        <protected>false</protected>
+        <status>Open</status>
+        <subject>New Question on Partner Community</subject>
+    </tasks>
+    <tasks>
+        <fullName>Parts_Returned_from_Dealer</fullName>
+        <assignedToType>owner</assignedToType>
+        <description>Requested Warranty return parts have been received.</description>
+        <dueDateOffset>0</dueDateOffset>
+        <notifyAssignee>false</notifyAssignee>
+        <priority>Normal</priority>
+        <protected>false</protected>
+        <status>Open</status>
+        <subject>Parts Returned from Dealer</subject>
+    </tasks>
+    <tasks>
+        <fullName>Please_Review_the_new_Part_Order_Case_that_was_Created</fullName>
+        <assignedTo>aseltzer@legendboats.com</assignedTo>
+        <assignedToType>user</assignedToType>
+        <description>A new Part Order Request case was created.  Please review and place the order as soon as possible.</description>
+        <dueDateOffset>0</dueDateOffset>
+        <notifyAssignee>false</notifyAssignee>
+        <priority>Normal</priority>
+        <protected>false</protected>
+        <status>Open</status>
+        <subject>Review new Part Order Request</subject>
+    </tasks>
+    <tasks>
+        <fullName>Review_new_Part_Order_Request_Barrie</fullName>
+        <assignedTo>mpeverill@legendboats.com</assignedTo>
+        <assignedToType>user</assignedToType>
+        <description>A new Part Order Request case was created.  Please review and place the order as soon as possible.</description>
+        <dueDateOffset>0</dueDateOffset>
+        <notifyAssignee>false</notifyAssignee>
+        <priority>Normal</priority>
+        <protected>false</protected>
+        <status>Open</status>
+        <subject>Review new Part Order Request Case</subject>
+    </tasks>
+    <tasks>
+        <fullName>Review_new_Part_Order_Request_Case</fullName>
+        <assignedTo>bgrenier@legendboats.com</assignedTo>
+        <assignedToType>user</assignedToType>
+        <description>A new Part Order Request case was created.  Please review and place the order as soon as possible.</description>
+        <dueDateOffset>0</dueDateOffset>
+        <notifyAssignee>false</notifyAssignee>
+        <priority>Normal</priority>
+        <protected>false</protected>
+        <status>Open</status>
+        <subject>Review new Part Order Request Case</subject>
+    </tasks>
+    <tasks>
+        <fullName>Warranty_Case_Delay_Reason_set_to_Hull_Return</fullName>
+        <assignedTo>jdavis@legendboats.com</assignedTo>
+        <assignedToType>user</assignedToType>
+        <description>Delay Reason has been set to &#39;Hull Return&#39; on a Warranty Case.</description>
+        <dueDateOffset>0</dueDateOffset>
+        <notifyAssignee>false</notifyAssignee>
+        <priority>Normal</priority>
+        <protected>false</protected>
+        <status>Open</status>
+        <subject>Warranty Case: Delay Reason set to &#39;Hull Return&#39;</subject>
+    </tasks>
+    <tasks>
+        <fullName>Warranty_Case_Delay_Reason_set_to_Hull_Return2</fullName>
+        <assignedTo>rfraser@legendboats.com</assignedTo>
+        <assignedToType>user</assignedToType>
+        <description>Delay Reason has been set to &#39;Hull Return&#39; on a Warranty Case.</description>
+        <dueDateOffset>0</dueDateOffset>
+        <notifyAssignee>false</notifyAssignee>
+        <priority>Normal</priority>
+        <protected>false</protected>
+        <status>Open</status>
+        <subject>Warranty Case: Delay Reason set to &#39;Hull Return&#39;</subject>
+    </tasks>
+</Workflow>

@@ -1,0 +1,25 @@
+
+<div class="row">
+  <div class="column large-7">
+    <label>Filter</label>
+    <input type="text" class="feeFilter"></input>
+  </div>
+  <div class="column large-5">
+    <label>Current Province</label>
+    <select>
+      {{#each provinces}}
+        {{{feeSelectOption this ../province }}}
+      {{/each}}
+    </select>
+  </div>
+</div>
+
+<div class="row">
+  <div class="column large-12 table-container">
+    <table>
+      {{ availableFees provinceFees }}
+    </table>
+  </div>
+</div>
+
+

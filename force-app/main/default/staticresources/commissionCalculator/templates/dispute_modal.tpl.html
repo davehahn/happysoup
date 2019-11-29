@@ -1,0 +1,29 @@
+<div role="dialog" tabindex="-1" aria-labelledby="header43" class="slds-modal slds-fade-in-open">
+  <div class="slds-modal__container">
+    <div class="slds-modal__header">
+      <button class="slds-button slds-button--icon-inverse slds-modal__close">
+        <svg aria-hidden="true" class="slds-button__icon slds-button__icon--large">
+          <use xlink:href="/assets/icons/action-sprite/svg/symbols.svg#close"></use>
+        </svg>
+        <span class="slds-assistive-text">Close</span>
+      </button>
+      <h2 id="header43" class="slds-text-heading--medium">Reason for your Dispute</h2>
+    </div>
+    <div class="slds-modal__content slds-p-around--medium">
+      <div>
+        <textarea rows="5" id="dispute-reason" />
+      </div>
+    </div>
+    <div class="slds-modal__footer">
+      <button class="slds-button slds-button--neutral"
+              data-btn-action="cancel">
+        Cancel
+      </button>
+      <button class="slds-button slds-button--neutral slds-button--brand"
+              data-btn-action="save"
+              data-record-id="{{recordId}}"
+              disabled="true">Save</button>
+    </div>
+  </div>
+</div>
+<div class="slds-backdrop slds-backdrop--open"></div>

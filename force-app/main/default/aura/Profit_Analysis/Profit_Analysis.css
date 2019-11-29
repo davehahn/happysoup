@@ -1,0 +1,34 @@
+/**
+ * Created by dave on 2019-11-06.
+ */
+.THIS {
+  position: relative;
+  min-height:600px;
+}
+
+.THIS .lgnd-spinner {
+  position:absolute !important;
+}
+
+.THIS .slds-table tbody tr td > span {
+  margin-left:5px;
+  font-size: 0.7rem;
+}
+
+.THIS .slds-table tbody tr.component-row td {
+  border:none;
+}
+
+.THIS .slds-table tbody tr.component-row td:first-child:before {
+  position: absolute;
+      content: '';
+      border-left: 1px solid #ccc;
+      border-bottom: 1px solid #CCC;
+      width: calc(100% - 3rem);
+      height: 50%;
+      left: 0;
+      top: 0;
+      box-sizing: border-box;
+      margin-left: 2rem;
+      margin-right: 1rem
+}

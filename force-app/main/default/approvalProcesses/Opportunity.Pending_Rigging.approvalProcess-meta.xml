@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ApprovalProcess xmlns="http://soap.sforce.com/2006/04/metadata">
+    <active>false</active>
+    <allowRecall>true</allowRecall>
+    <allowedSubmitters>
+        <submitter>lturcott@legendboats.com</submitter>
+        <type>user</type>
+    </allowedSubmitters>
+    <approvalPageFields>
+        <field>Name</field>
+        <field>Owner</field>
+        <field>Delivery_Date__c</field>
+        <field>BoatId__c</field>
+    </approvalPageFields>
+    <approvalStep>
+        <allowDelegate>false</allowDelegate>
+        <approvalActions>
+            <action>
+                <name>Rigging_Approval</name>
+                <type>Alert</type>
+            </action>
+        </approvalActions>
+        <assignedApprover>
+            <approver>
+                <name>bmacarthur@legendboats.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>FirstResponse</whenMultipleApprovers>
+        </assignedApprover>
+        <entryCriteria>
+            <criteriaItems>
+                <field>Opportunity.Payment_Method__c</field>
+                <operation>equals</operation>
+                <value>Finance</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Opportunity.Finance_Status__c</field>
+                <operation>equals</operation>
+                <value>Approved,Approved with Conditions</value>
+            </criteriaItems>
+            <criteriaItems>
+                <field>Opportunity.StageName</field>
+                <operation>equals</operation>
+                <value>Pending Rigging</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>ApproveRecord</ifCriteriaNotMet>
+        <label>Submit for Approval</label>
+        <name>Submit_for_Approval</name>
+    </approvalStep>
+    <description>Requesting Approval to build a boat.</description>
+    <emailTemplate>Sales_Process/Ready_to_build</emailTemplate>
+    <enableMobileDeviceAccess>false</enableMobileDeviceAccess>
+    <entryCriteria>
+        <criteriaItems>
+            <field>Opportunity.Payment_Method__c</field>
+            <operation>equals</operation>
+            <value>Finance</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Opportunity.Finance_Status__c</field>
+            <operation>equals</operation>
+            <value>Approved,Approved with Conditions</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Opportunity.StageName</field>
+            <operation>equals</operation>
+            <value>Pending Rigging</value>
+        </criteriaItems>
+    </entryCriteria>
+    <finalApprovalRecordLock>true</finalApprovalRecordLock>
+    <finalRejectionRecordLock>false</finalRejectionRecordLock>
+    <label>Pending Rigging</label>
+    <nextAutomatedApprover>
+        <useApproverFieldOfRecordOwner>false</useApproverFieldOfRecordOwner>
+        <userHierarchyField>Manager</userHierarchyField>
+    </nextAutomatedApprover>
+    <recordEditability>AdminOnly</recordEditability>
+    <showApprovalHistory>false</showApprovalHistory>
+</ApprovalProcess>

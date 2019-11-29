@@ -1,0 +1,46 @@
+.THIS .no-label label:not(.slds-checkbox__label),
+.THIS .no-label .slds-form-element__label {
+  display:none;
+}
+
+.THIS td:first-child {
+  width: 5%;
+}
+
+.THIS td:first-child + td {
+  width: 50%;
+}
+
+.THIS td:first-child + td + td {
+  width: 15%;
+}
+
+.THIS td:first-child + td + td + td {
+  width: 15%;
+  text-align: center;
+}
+
+.THIS td:first-child + td + td + td + td {
+  width: 15%;
+  text-align: center;
+}
+
+.THIS.has-changes td .slds-input.slds-is-disabled {
+  background-color:#ff6161;
+  border-color:#d20303;
+  color: #EFEFEF;
+}
+
+.THIS.term-range-error td {
+  opacity: 0.2;
+ }
+
+ .THIS.term-range-error.is-selected td {
+  opacity:1;
+  background: #c23934;
+  color:white;
+ }
+
+ .THIS.term-range-error.is-selected td select {
+  color: #c23934;
+ }

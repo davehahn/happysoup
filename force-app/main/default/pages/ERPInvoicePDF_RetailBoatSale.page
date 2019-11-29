@@ -1,0 +1,1374 @@
+<apex:page controller="ERPInvoicePDF" showHeader="false" sidebar="false" standardStylesheets="false" renderAs="pdf">
+
+<apex:stylesheet value="{!URLFOR($Resource.LegendPDF,'css/invoicePDF.min.css')}" />
+<apex:stylesheet value="{!URLFOR($Resource.LegendPDF,'css/invoice_page.css')}" />
+
+
+  <div class="invoicePageOne" style="position:relative">
+    <!-- +++++++++++++++++++++++++++++++++++++++ HEADER 1 ++++++++++++++++++++++++ -->
+    <div class="row header1">
+
+      <div class="left" >
+        <img src="{!URLFOR($Resource.LegendPDF,'image/logo_250x30.png')}" />
+      </div>
+
+      <div class="right">
+
+        <div>
+          <img src="{!URLFOR($Resource.LegendPDF,'Icons/Email.png')}" />
+          <p>info@legendboats.com</p>
+        </div>
+
+        <div>
+            <img src="{!URLFOR($Resource.LegendPDF,'Icons/Phone.png')}" />
+            <p>
+              phone
+              <span style="float:right;padding-right:25px;">
+                {!warehouse.Phone__c}
+              </span>
+            </p>
+             <p>
+              toll free
+              <span style="float:right;padding-right:25px;">
+                {!warehouse.Toll_Free__c}
+              </span>
+            </p>
+            <p>
+              fax
+              <span style="float:right;padding-right:25px;">
+                {!warehouse.Fax__c}
+              </span>
+            </p>
+        </div>
+
+        <div style="position:relative">
+          <img src="{!URLFOR($Resource.LegendPDF,'Icons/WorldWideWeb.png')}" />
+          <p>www.legendboats.com</p>
+          <p class="invoice_number">Invoice #<br />{!invoiceName}</p>
+        </div>
+
+      </div><!--header right close -->
+    </div>
+    <!-- ==================================== /HEADER 1 ============================  -->
+
+    <!-- +++++++++++++++++++++++++++++++++++ HEADER 2 ++++++++++++++++++++++++++++++ -->
+    <div class="row header2 {!IF(soldToBusiness, 'business', 'person')}">
+
+      <apex:outputPanel layout="none" rendered="{!!soldToBusiness}">
+        <div>
+          <p>
+            <img src="{!URLFOR($Resource.LegendPDF,'Icons/Invoice.png')}" />
+            INVOICE TO:
+          </p>
+        </div>
+      </apex:outputPanel>
+
+      <apex:outputPanel layout="none" rendered="{!soldToBusiness}">
+        <div>
+          <p class="for-business">
+            <img src="{!URLFOR($Resource.LegendPDF,'Icons/Invoice.png')}" />
+            Sales Agreement:
+          </p>
+          <p class="company_name">
+            {!UPPER(projectAccount.Name)}
+          </p>
+          <p class="company_address">
+            {!projectAccount.BillingStreet}<br />
+            {!projectAccount.BillingCity},
+            {!projectAccount.BillingState}
+            {!projectAccount.BillingPostalCode},
+            {!projectAccount.BillingCountry}<br />
+            <img src="{!URLFOR($Resource.LegendPDF,'Icons/Cell.png')}" />{!projectAccount.Phone}
+          </p>
+        </div>
+      </apex:outputPanel>
+
+      <div>
+        <div>
+          <div class="blockSummary">
+            <table>
+              <tr>
+                <td>
+                  <img src="{!URLFOR($Resource.LegendPDF,'image/dollar_trans.png')}" width="25" height="25" />
+                </td>
+                <td>
+                  <img src="{!URLFOR($Resource.LegendPDF,'image/calendar_trans.png')}" width="25" height="25" />
+                </td>
+                <td>
+                  <img src="{!URLFOR($Resource.LegendPDF,'image/calendar_trans.png')}" width="25" height="25" />
+                </td>
+              </tr>
+
+            </table>
+
+            <div style="">
+              <table>
+                  <tr>
+                      <td style="">
+                          <p>Total Due:</p>
+                          <apex:outputText value="${0, number, ###,###,###,##0.00}">
+                            <apex:param value="{!erpOrder.Grand_Total__c - IF(ISNULL(erpOrder.Deposit__c), 0, erpOrder.Deposit__c)}"/>
+                          </apex:outputText>
+                      </td>
+                      <td style="">
+                          <p>Invoice Date:</p>
+                          <p>{!invoiceDate}</p>
+                      </td>
+                      <td style="">
+                          <p>Delivery Date:</p>
+                          <p>{!deliveryDate}</p>
+                      </td>
+                  </tr>
+              </table>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+    <!-- ================================= /HEADER 2 =================================== -->
+
+
+    <!-- +++++++++++++++++++++++++++++++++ CUSTOMER INFO +++++++++++++++++++++++++++++++++ -->
+    <div class="row customer_info">
+
+      <!-- +++++++++++++++++ BUYER INFO +++++++++++++++++++++ -->
+      <!-- +++++ Person Account +++++ -->
+      <apex:outputPanel layout="none" rendered="{!!soldToBusiness}">
+        <div class="col col40" style="margin-bottom:10px;">
+          <p class="buyer_name">
+            {!UPPER(projectAccount.Name)}
+          </p>
+          <p class="buyer_address">
+            {!address}
+          </p>
+          <div class="buyer_details">
+            <table>
+              <tr>
+                <td class="icon">
+                  <img src="{!URLFOR($Resource.LegendPDF,'Icons/Email.png')}" />
+                </td>
+                <td>
+                  {!projectAccount.personEmail}
+                </td>
+                <td class="icon">
+                  <img src="{!URLFOR($Resource.LegendPDF,'Icons/Birthday.png')}" />
+                </td>
+                <td>
+                  {!birthday}
+                </td>
+              </tr>
+              <tr>
+                <td class="icon">
+                  <img src="{!URLFOR($Resource.LegendPDF,'Icons/Cell.png')}" />
+                </td>
+                <td>
+                  {!projectAccount.Phone}
+                </td>
+                <td class="icon">
+                  <img src="{!URLFOR($Resource.LegendPDF,'Icons/DriverLicense.png')}" />
+                </td>
+                <td>
+                  {!projectAccount.Drivers_License__c}
+                </td>
+              </tr>
+            </table>
+            <apex:outputPanel layout="none" rendered="{! buyer.Contact.Tax_Exempt_Status_Card_Number__c != null}">
+              <table>
+                <tr>
+                  <td style="width: 20%;font-size:10px;color:#777; font-weight: bold;">
+                    Tax Ex. #
+                  </td>
+                  <td style="width:80%;font-size:10px;color:#777;">
+                    {! buyer.Contact.Tax_Exempt_Status_Card_Number__c }
+                  </td>
+                </tr>
+              </table>
+            </apex:outputPanel>
+          </div>
+        </div>
+      </apex:outputPanel>
+      <!-- +++++ Business Account +++++ -->
+      <apex:outputPanel layout="none" rendered="{!soldToBusiness}">
+        <div class="col col40">
+          <p class="buyer_name">
+            {!UPPER(buyer.Contact.Name)}
+          </p>
+          <div class="buyer_details">
+            <table>
+              <tr>
+                <td class="icon">
+                  <img src="{!URLFOR($Resource.LegendPDF,'Icons/Email.png')}" />
+                </td>
+                <td>
+                  {!buyer.Contact.Email}
+                </td>
+                <td class="icon">
+                   <img src="{!URLFOR($Resource.LegendPDF,'Icons/Birthday.png')}" />
+                </td>
+                <td>
+                  <apex:outputText value="{0, date, MMMM dd yyyy}">
+                    <apex:param value="{!buyer.Contact.Birthdate}" />
+                  </apex:outputText>
+                </td>
+              </tr>
+              <tr>
+                <td class="icon">
+                  <img src="{!URLFOR($Resource.LegendPDF,'Icons/Cell.png')}" />
+                </td>
+                <td>
+                  {!buyer.Contact.Phone}
+                </td>
+                <td class="icon">
+                  <img src="{!URLFOR($Resource.LegendPDF,'Icons/DriverLicense.png')}" />
+                </td>
+                <td>
+
+                </td>
+              </tr>
+            </table>
+            <apex:outputPanel layout="none" rendered="{! buyer.Contact.Tax_Exempt_Status_Card_Number__c != null}">
+              <table>
+                <tr>
+                  <td style="width: 20%;font-size:10px;color:#777; font-weight: bold;">
+                    Tax Ex. #
+                  </td>
+                  <td style="width:80%;font-size:10px;color:#777;">
+                    {! buyer.Contact.Tax_Exempt_Status_Card_Number__c }
+                  </td>
+                </tr>
+              </table>
+            </apex:outputPanel>
+          </div>
+        </div>
+      </apex:outputPanel>
+      <!-- ================== /BUYER INFO ================== -->
+
+      <!-- ++++++++++++++++++ CO-BUYER INFO ++++++++++++++++ -->
+      <div class="col col40" >
+        <apex:outputPanel layout="none" rendered="{!cobuyer != null}">
+          <p class="buyer_name">
+            {!UPPER(cobuyer.Contact.Name)}
+          </p>
+          <apex:outputPanel layout="none" rendered="{!!soldToBusiness}">
+            <p class="buyer_address">
+              {!cobuyer.Contact.MailingStreet},
+              {!cobuyer.Contact.MailingCity},
+              {!cobuyer.Contact.MailingState}
+              {!cobuyer.Contact.MailingPostalCode},
+              {!cobuyer.Contact.MailingCountry}
+            </p>
+          </apex:outputPanel>
+          <div class="buyer_details">
+            <table>
+              <tr>
+                <td class="icon">
+                  <img src="{!URLFOR($Resource.LegendPDF,'Icons/Email.png')}" />
+                </td>
+                <td>
+                  {!cobuyer.Contact.Email}
+                </td>
+                <td class="icon">
+                  <img src="{!URLFOR($Resource.LegendPDF,'Icons/Birthday.png')}" />
+                </td>
+                <td>
+                  <apex:outputText value="{0, date, MMMM dd yyyy}">
+                    <apex:param value="{!cobuyer.Contact.Birthdate}" />
+                  </apex:outputText>
+                </td>
+              </tr>
+              <tr>
+                <td class="icon">
+                  <img src="{!URLFOR($Resource.LegendPDF,'Icons/Cell.png')}" />
+                </td>
+                <td>
+                  {!cobuyer.Contact.Phone}
+                </td>
+                <td class="icon">
+                  <img src="{!URLFOR($Resource.LegendPDF,'Icons/DriverLicense.png')}" />
+                </td>
+                <td>
+                   {!cobuyer.Contact.Drivers_License__c}
+                </td>
+              </tr>
+            </table>
+            <apex:outputPanel layout="none" rendered="{! cobuyer.Contact.Tax_Exempt_Status_Card_Number__c != null}">
+              <table>
+                <tr>
+                  <td style="width: 20%;font-size:10px;color:#777; font-weight: bold;">
+                    Tax Ex. #
+                  </td>
+                  <td style="width:80%;font-size:10px;color:#777;">
+                    {! cobuyer.Contact.Tax_Exempt_Status_Card_Number__c }
+                  </td>
+                </tr>
+              </table>
+            </apex:outputPanel>
+          </div>
+        </apex:outputPanel>
+        <apex:outputPanel layout="none" rendered="{!cobuyer = null}">
+          &nbsp;
+        </apex:outputPanel>
+      </div>
+      <!-- ================= /CO-BUYER INFO ================= -->
+
+
+      <!-- ++++++++++++++++ MEMORY MAKER ++++++++++++++++++++ -->
+      <div class="col memory_maker" style="border-left:1px solid #CCC; width:19.8%;">
+        <p>
+          YOUR MEMORY MAKER
+        </p>
+        <p>
+          {!erpOrder.Salesperson__r.Name}
+        </p>
+      </div>
+      <!-- ================ /MEMORY MAKER =================== -->
+
+    </div>
+    <!-- ================================== /CUSTOMER INFO =============================== -->
+
+
+    <!-- +++++++++++++++++++++++++++++++++++ MAJOR ITEMS TABLE +++++++++++++++++++++++++++++++ -->
+    <div class="major_items">
+
+      <table class="itemsTable">
+          <thead>
+            <tr>
+
+              <td>Item Description</td>
+              <td></td>
+            </tr>
+          </thead>
+          <apex:variable value="{!1}" var="rowCount" />
+          <tbody>
+            <apex:outputPanel layout="none" rendered="{!boat.Product_Name__c != null}">
+              <tr class="{!IF(MOD(rowCount,2)=0,'even','odd')}">
+                <td class="w5">{!boat.GMBLASERP__Serial_Number__r.GMBLASERP__Lot__r.Name}</td>
+                <td class="10">{!boat.AcctSeedERP__Product__r.Make__c}</td>
+                <td class="w44">{!boat.Product_Name__c}</td>
+                <td class="w25">{!boat.GMBLASERP__Serial_Number__r.name}</td>
+                <td class="w15 right">
+                  <apex:outputText value="${0, number, ###,###,###,##0.00}">
+                    <apex:param value="{!boat.GMBLASERP__Total_Price__c}"/>
+                  </apex:outputText>
+                </td>
+              </tr>
+              <apex:variable var="rowCount" value="{!rowCount+1}" />
+            </apex:outputPanel>
+
+           <apex:outputPanel layout="none" rendered="{!motors.size > 0}">
+             <apex:repeat value="{!motors}" var="motor">
+                <tr class="{!IF(MOD(rowCount,2)=0,'even','odd')}">
+                  <td class="w5">{!motor.GMBLASERP__Serial_Number__r.GMBLASERP__Lot__r.Name}</td>
+                  <td class="10">{!motor.AcctSeedERP__Product__r.Make__c}</td>
+                  <td class="w44">{!motor.Product_Name__c}</td>
+                  <td class="w25">{!motor.GMBLASERP__Serial_Number__r.name}</td>
+                  <td class="w15 right">
+                    <apex:outputText value="${0, number, ###,###,###,##0.00}">
+                      <apex:param value="{!motor.GMBLASERP__Total_Price__c}"/>
+                    </apex:outputText>
+                  </td>
+                </tr>
+                <apex:variable var="rowCount" value="{!rowCount+1}" />
+              </apex:repeat>
+            </apex:outputPanel>
+
+            <apex:outputPanel layout="none" rendered="{!trailer.Product_Name__c != null}">
+              <tr class="{!IF(MOD(rowCount,2)=0,'even','odd')}">
+                <td class="w5">{!trailer.GMBLASERP__Serial_Number__r.GMBLASERP__Lot__r.Name}</td>
+                <td class="10">{!trailer.AcctSeedERP__Product__r.Make__c}</td>
+                <td class="w44">{!trailer.Product_Name__c}</td>
+                <td class="w25">{!trailer.GMBLASERP__Serial_Number__r.name}</td>
+                <td class="w15 right">
+                  <apex:outputText value="${0, number, ###,###,###,##0.00}">
+                    <apex:param value="{!trailer.GMBLASERP__Total_Price__c}"/>
+                  </apex:outputText>
+                </td>
+              </tr>
+              <apex:variable var="rowCount" value="{!rowCount+1}" />
+            </apex:outputPanel>
+
+             <apex:outputPanel layout="none" rendered="{!trollingMotors.size > 0}">
+             <apex:repeat value="{!trollingMotors}" var="trollingMotor">
+                <tr class="{!IF(MOD(rowCount,2)=0,'even','odd')}">
+                  <td class="w5">{!trollingMotor.GMBLASERP__Serial_Number__r.GMBLASERP__Lot__r.Name}</td>
+                  <td class="10">{!trollingMotor.AcctSeedERP__Product__r.Make__c}</td>
+                  <td class="w44">{!trollingMotor.Product_Name__c}</td>
+                  <td class="w25">{!trollingMotor.GMBLASERP__Serial_Number__r.name}</td>
+                  <td class="w15 right">
+                    <apex:outputText value="${0, number, ###,###,###,##0.00}">
+                      <apex:param value="{!trollingMotor.GMBLASERP__Total_Price__c}"/>
+                    </apex:outputText>
+                  </td>
+                </tr>
+              </apex:repeat>
+            </apex:outputPanel>
+          </tbody>
+        </table>
+    </div>
+    <!-- ================================== /MAJOR ITEMS TABLE ================================== -->
+
+    <!-- +++++++++++++++++++++++++++++++++ INVOICE BODY ++++++++++++++++++++++++++++++++++++++++ -->
+    <div class="row invoice_body">
+
+      <!-- ++++++++++++++++++++++++++++++ LEFT COLUMN ++++++++++++++++++++++ -->
+      <div class="col col60 summary_table invoice">
+
+        <apex:outputPanel layout="none">
+          <table class="itemsTable">
+            <thead>
+              <tr>
+                <td colspan="3">Options &amp; Accessories</td>
+              </tr>
+            </thead>
+            <tbody>
+              <apex:variable value="{!1}" var="rowCount" />
+              <apex:variable value="{!0}" var="OptionsAcc" />
+                  <apex:outputPanel layout="none">
+                    <apex:repeat value="{!oppAccList}" var="oppAcc">
+                      <tr class="{!IF(MOD(rowCount,2)=0,'even','odd')}">
+                        <td class="w5">
+                        <apex:outputText value="{!oppAcc.quantity}"/>
+                        </td>
+                        <td class="w60">
+                          <apex:outputText value="{!oppAcc.description}"/>
+                        </td>
+                        <td class="w35 right">
+                          <apex:outputText value="{!IF(oppAcc.price != 0,' ${0, number, ###,###,###,##0.00}','Included')} ">
+                            <apex:param value="{!oppAcc.price}"/>
+                        </apex:outputText>
+                        </td>
+                      </tr>
+                      <apex:variable value="{!rowCount+1}" var="rowCount" />
+                      <apex:variable value="{!OptionsAcc + oppAcc.price}" var="OptionsAcc" />
+                      <apex:outputPanel layout="none" rendered="{!oppAcc.includedFeatures.size > 0}">
+                        <apex:repeat value="{!oppAcc.includedFeatures}" var="feature">
+                          <tr class="{!IF(MOD(rowCount,2)=0,'even','odd')}">
+                          <td class="w5">
+
+                          </td>
+                          <td class="w60">
+                            <div style="display:inline-block; padding: 0 5px 0 10px;">
+                              -
+                            </div>
+                            <apex:outputText value="{!feature.description}"/>
+                          </td>
+                          <td class="w35 right">
+                            <apex:outputText value="{!IF(feature.price != 0,' ${0, number, ###,###,###,##0.00}','Included')} ">
+                              <apex:param value="{!feature.price}"/>
+                          </apex:outputText>
+                          </td>
+                        </tr>
+                        <apex:variable value="{!rowCount+1}" var="rowCount" />
+                      </apex:repeat>
+                      </apex:outputPanel>
+                    </apex:repeat>
+                  </apex:outputPanel>
+              <tr class="subTotal">
+                <td colspan="2">
+                  Sub Total
+                </td>
+                <td class="w35 right">
+                  <apex:outputText value="${0, number, ###,###,###,##0.00}">
+                    <apex:param value="{!OptionsAcc}"/>
+                  </apex:outputText>
+                </td>
+              </tr>
+              <apex:variable value="{!rowCount+1}" var="rowCount" />
+            </tbody>
+          </table>
+        </apex:outputPanel><!-- /Additional Fees -->
+
+      </div>
+      <!-- ================================ LEFT COLUMN ======================= -->
+
+      <!-- ++++++++++++++++++++++++++++++++ RIGHT COLUMN ++++++++++++++++++ -->
+      <div style="width:39.8%; display:inline-block; float:right; border-left:1px solid #DDD">
+
+        <!-- ++++++++++++++++++++++++++++ ADDITIONAL FEES ++++++++++++++++++++++ -->
+
+        <apex:outputPanel layout="none">
+          <table class="itemsTable">
+            <thead>
+              <tr>
+                <td colspan="3">Additional Fees</td>
+              </tr>
+            </thead>
+            <tbody>
+              <apex:variable value="{!1}" var="rowCount" />
+              <apex:variable value="{!0}" var="feeTotal" />
+                  <apex:outputPanel layout="none">
+                    <apex:repeat value="{!feesList}" var="fees">
+                      <tr class="{!IF(MOD(rowCount,2)=0,'even','odd')}">
+                        <td class="w5">
+
+                        </td>
+                        <td class="w60">
+                          <apex:outputText value="{!fees.Product_Name__c}"/>
+                        </td>
+                        <td class="w35 right">
+                          <apex:outputText value="{!IF(fees.GMBLASERP__Total_Price__c != 0,' ${0, number, ###,###,###,##0.00}','$Included')} ">
+                            <apex:param value="{!fees.GMBLASERP__Total_Price__c}"/>
+                        </apex:outputText>
+                        </td>
+                      </tr>
+                      <apex:variable value="{!rowCount+1}" var="rowCount" />
+                      <apex:variable value="{!feeTotal + fees.GMBLASERP__Total_Price__c}" var="feeTotal" />
+                    </apex:repeat>
+                  </apex:outputPanel>
+              <tr class="subTotal">
+                <td colspan="2">
+                  Sub Total
+                </td>
+                <td class="w35 right">
+                  <apex:outputText value="${0, number, ###,###,###,##0.00}">
+                    <apex:param value="{!feeTotal}"/>
+                  </apex:outputText>
+                </td>
+              </tr>
+              <apex:variable value="{!rowCount+1}" var="rowCount" />
+            </tbody>
+          </table>
+        </apex:outputPanel><!-- /Additional Fees -->
+
+        <!-- =========================== ADDITIONAL FEES ======================= -->
+
+        <!-- +++++++++++++++++++++++++++ PROTECTION PRODUCTS AND SERVICES ++++++ -->
+        <apex:outputPanel layout="none" rendered="{!OR(protectionServicesList.size > 0, insuranceList.size > 0)}">
+          <table class="itemsTable" style="margin-top:10px;">
+            <thead>
+              <tr>
+                <td colspan="3">Protection Products and Services</td>
+              </tr>
+            </thead>
+            <tbody>
+              <apex:variable value="{!1}" var="rowCount" />
+              <apex:variable value="{!0}" var="protectProd" />
+                  <apex:outputPanel layout="none">
+                    <apex:repeat value="{!protectionServicesList}" var="protect">
+                      <tr class="{!IF(MOD(rowCount,2)=0,'even','odd')}">
+                        <td class="w5">
+
+                        </td>
+                        <td class="w60">
+                          <apex:outputText value="{!protect.Product_Name__c}"/>
+                        </td>
+                        <td class="w35 right">
+                          <apex:outputText value="{!IF(protect.GMBLASERP__Total_Price__c != 0,' ${0, number, ###,###,###,##0.00}','$Included')} ">
+                            <apex:param value="{!protect.GMBLASERP__Total_Price__c}"/>
+                        </apex:outputText>
+                        </td>
+                      </tr>
+                      <apex:variable value="{!rowCount+1}" var="rowCount" />
+                      <apex:variable value="{!protectProd + protect.GMBLASERP__Total_Price__c}" var="protectProd" />
+                    </apex:repeat>
+                    <apex:repeat value="{!insuranceList}" var="insurance">
+                      <tr class="{!IF(MOD(rowCount,2)=0,'even','odd')}">
+                        <td class="w5">
+
+                        </td>
+                        <td class="w60">
+                          <apex:outputText value="{!insurance.Product_Name__c}"/>
+                        </td>
+                        <td class="w35 right">
+                          <apex:outputText value="{!IF(insurance.GMBLASERP__Total_Price__c != 0,' ${0, number, ###,###,###,##0.00}','$Included')} ">
+                            <apex:param value="{!insurance.GMBLASERP__Total_Price__c}"/>
+                        </apex:outputText>
+                        </td>
+                      </tr>
+                      <apex:variable value="{!rowCount+1}" var="rowCount" />
+                      <apex:variable value="{!protectProd + insurance.GMBLASERP__Total_Price__c}" var="protectProd" />
+                    </apex:repeat>
+                  </apex:outputPanel>
+              <tr class="subTotal">
+                <td colspan="2">
+                  Sub Total
+                </td>
+                <td class="w35 right">
+                  <apex:outputText value="${0, number, ###,###,###,##0.00}">
+                    <apex:param value="{!protectProd}"/>
+                  </apex:outputText>
+                </td>
+              </tr>
+              <apex:variable value="{!rowCount+1}" var="rowCount" />
+            </tbody>
+          </table>
+        </apex:outputPanel>
+
+        <!-- ========================== PROTECTION PRODUCTS AND SERVICES ======== -->
+
+        <!-- +++++++++++++++++++++++++++ BUNDLES ++++++ -->
+        <apex:outputPanel layout="none" rendered="{! bundlesList.size > 0 }">
+          <table class="itemsTable" style="margin-top:10px;">
+            <thead>
+              <tr>
+                <td colspan="3">Package Bundles</td>
+              </tr>
+            </thead>
+            <tbody>
+              <apex:variable value="{!1}" var="rowCount" />
+              <apex:variable value="{!0}" var="bundleTotal" />
+              <apex:outputPanel layout="none">
+                <apex:repeat value="{!bundlesList}" var="protect">
+                  <tr class="{!IF(MOD(rowCount,2)=0,'even','odd')}">
+                    <td class="w5">
+
+                    </td>
+                    <td class="w60">
+                      <apex:outputText value="{!protect.Product_Name__c}"/>
+                    </td>
+                    <td class="w35 right">
+                      <apex:outputText value="{!IF(protect.GMBLASERP__Total_Price__c != 0,' ${0, number, ###,###,###,##0.00}','$Included')} ">
+                        <apex:param value="{!protect.GMBLASERP__Total_Price__c}"/>
+                    </apex:outputText>
+                    </td>
+                  </tr>
+                  <apex:variable value="{!rowCount+1}" var="rowCount" />
+                  <apex:variable value="{!bundleTotal + protect.GMBLASERP__Total_Price__c}" var="bundleTotal" />
+                </apex:repeat>
+              </apex:outputPanel>
+              <tr class="subTotal">
+                <td colspan="2">
+                  Sub Total
+                </td>
+                <td class="w35 right">
+                  <apex:outputText value="${0, number, ###,###,###,##0.00}">
+                    <apex:param value="{!bundleTotal}"/>
+                  </apex:outputText>
+                </td>
+              </tr>
+              <apex:variable value="{!rowCount+1}" var="rowCount" />
+            </tbody>
+          </table>
+        </apex:outputPanel>
+
+        <!-- ========================== BUNDLES ======== -->
+
+        <!-- +++++++++++++++++++++++++++  SPECIAL SAVINGS ++++++++++++++++++++++ -->
+        <apex:outputPanel layout="none" rendered="{!discountList.size > 0}">
+       <!--  <table class="itemsTable" style="margin-top:{!10 + (13*(31 - 4 - rowCount - discountItems.size))}px;"> -->
+         <table class="itemsTable" style="margin-top:10px;">
+          <thead>
+            <tr>
+              <td colspan="2">Special Savings</td>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- <apex:variable value="{!1}" var="rowCount" /> -->
+            <apex:repeat value="{!discountList}" var="part">
+              <tr class="{!IF(MOD(rowCount,2)=0,'even','odd')}">
+                <td class="w70">
+                  {!part.AcctSeedERP__Comment__c}
+                </td>
+                <td class="w30 right">
+                  <apex:outputText value="${0, number, ###,###,###,##0.00}">
+                      <apex:param value="{!part.GMBLASERP__Total_Price__c}"/>
+                    </apex:outputText>
+                </td>
+              </tr>
+              <apex:variable value="{!rowCount+1}" var="rowCount" />
+            </apex:repeat>
+            <tr class="total_savings">
+              <td class="w70">
+                Total Saving
+              </td>
+              <td class="w30 right">
+                <apex:outputText value="${0, number, ###,###,###,##0.00}"
+                                 rendered="{!totalSaving != null}">
+                  <apex:param value="{!totalSaving}"/>
+                </apex:outputText>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        </apex:outputPanel>
+        <!-- ========================== SPECIAL SAVINGS =========================== -->
+
+      </div>
+      <!-- ================================ /RIGHT COLUMN ==================== -->
+
+    </div>
+    <!-- ============================= INVOICE BODY ============================= -->
+
+    <!-- +++++++++++++++++++++++++++++ TRADE-IN INFORMATION +++++++++++++++++++++ -->
+    <div class="row tradin_info">
+
+      <div class="col col60">
+        <table class="itemsTable">
+          <thead>
+            <tr>
+              <td colspan="3">Trade-In Information</td>
+              <td>Serial Number</td>
+            </tr>
+          </thead>
+          <tbody>
+            <apex:variable value="{!1}" var="rowCount" />
+            <apex:repeat value="{!tradeInItem}" var="item">
+              <tr class="{!IF(MOD(rowCount,2)=0,'even','odd')}">
+                <td class="w10">{!item.Model_Year__c}</td>
+                <td class="w20">{!item.Make__c}</td>
+                <td class="w40">{!item.Model__c}</td>
+                <td class="w30">{!item.Serial_Number__c}</td>
+              </tr>
+              <apex:variable var="rowCount" value="{!rowCount+1}" />
+            </apex:repeat>
+
+            <apex:outputPanel layout="none" rendered="{!rowCount == 2}">
+              <tr class="even">
+                <td class="w10">&nbsp;</td>
+                <td class="w20">&nbsp;</td>
+                <td class="w40">&nbsp;</td>
+                <td class="w30">&nbsp;</td>
+              </tr>
+              <apex:variable var="rowCount" value="{!rowCount+1}" />
+            </apex:outputPanel>
+            <apex:outputPanel layout="none" rendered="{!rowCount == 3}">
+              <tr class="odd">
+                <td class="w10">&nbsp;</td>
+                <td class="w20">&nbsp;</td>
+                <td class="w40">&nbsp;</td>
+                <td class="w30">&nbsp;</td>
+              </tr>
+              <apex:variable var="rowCount" value="{!rowCount+1}" />
+            </apex:outputPanel>
+            <apex:outputPanel layout="none" rendered="{!rowCount == 4}">
+              <tr class="even">
+                <td class="w10">&nbsp;</td>
+                <td class="w20">&nbsp;</td>
+                <td class="w40">&nbsp;</td>
+                <td class="w30">&nbsp;</td>
+              </tr>
+              <apex:variable var="rowCount" value="{!rowCount+1}" />
+            </apex:outputPanel>
+            <apex:outputPanel layout="none" rendered="{!rowCount == 5}">
+              <tr class="odd">
+                <td class="w10">&nbsp;</td>
+                <td class="w20">&nbsp;</td>
+                <td class="w40">&nbsp;</td>
+                <td class="w30">&nbsp;</td>
+              </tr>
+              <apex:variable var="rowCount" value="{!rowCount+1}" />
+            </apex:outputPanel>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="col col40">
+        <table class="itemsTable">
+          <thead>
+            <tr>
+              <td colspan="2">Trade-In Value</td>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="odd">
+              <td class="w75">Trade-In Allowance *</td>
+              <td class="w25 right">
+                <apex:outputText value="-${0, number, ###,###,###,##0.00}"
+                                 rendered="{!tradeInValue != null}">
+                  <apex:param value="{!tradeInValue}"/>
+                </apex:outputText>
+              </td>
+            </tr>
+            <tr class="even">
+              <td class="w75">Lien on Trade</td>
+              <td class="w25 right">
+                <apex:outputText value="${0, number, ###,###,###,##0.00}"
+                                 rendered="{!tradeInLien != null}">
+                  <apex:param value="{!tradeInLien}"/>
+                </apex:outputText>
+              </td>
+            </tr>
+            <tr class="odd">
+              <td colspan="2">* Trade in allowance pending appraisal and inspection</td>
+            </tr>
+            <tr class="subTotal">
+              <td class="w75">Net Trade-In Value</td>
+              <td class="w25 right">
+                <apex:outputText value="${0, number, ###,###,###,##0.00}"
+                                 rendered="{!totalTrade != null}">
+                  <apex:param value="{!totalTrade}"/>
+                </apex:outputText>
+              </td>
+            </tr>
+            <tr class="odd">
+              <td class="w75">&nbsp;</td>
+              <td class="w25 right">&nbsp;</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+    <div class="row tradein_fine_print">
+      <div class="large-12 column">
+        <p>
+          Title to the above described product shall be transfered to buyer when buyer has made payment in full for the product.  The parties to this agreement are aware that the trade-in allowence or the purchase price shown above may require adjustment pursuant to the provisions of paragraphs 8, 9, 10, 11, and 12 of the Terms and Conditions following this document.
+          <br /><span style="float:right">&nbsp;  INITIAL HERE PLEASE: ________</span>
+        </p>
+      </div>
+    </div>
+    <!-- =========================== TRADE-IN INFORMATION ======================= -->
+
+    <!-- +++++++++++++++++++++ CUSTOMER NOTES AND FINANCE INFORMATION +++++++++++++++++++++++++ -->
+    <div class="row customer_notes">
+
+      <!-- +++++++++++++++++++++++++++++++ CUSTOMER NOTES +++++++++++++++++++++++++ -->
+      <div class="col col70">
+        <div class="notes_container">
+          <p>
+            <apex:outputField value="{!erpOrder.Customer_Notes__c}" />
+          </p>
+        </div>
+        <div>
+          <b>Please Remember:</b> 2" Ball at 18" height, flat 4-wiring, balance to be paid by certified funds
+        </div>
+      </div>
+      <!-- ================================= CUSTOMER NOTES ========================= -->
+
+      <!-- +++++++++++++++++++++++++++++++ FINAnCIAL DETAILS ++++++++++++++++++++++ -->
+      <div class="col col30 finacial_details">
+        <apex:outputPanel layout="none">
+        <div class="fd_container">
+          <p class="title">Financial Details</p>
+          <p>
+            Terms in Months
+            <span>{!erpOrder.Finance_Term__c}</span>
+          </p>
+          <p>
+            Annual Interest Rate
+            <span>{!erpOrder.Finance_Annual_Interest__c}</span>
+          </p>
+          <p>
+            Amortization in Months
+            <span>{!erpOrder.Finance_Ammortization__c}</span>
+          </p>
+          <p>
+            Number of Payments Per Year
+            <span>{!erpOrder.Finance_Payments_Per_Year__c}</span>
+          </p>
+          <p class="summary">
+            {!paymentString}
+            <span>
+              <apex:outputText value="${0, number, ###,###,###,##0.00}">
+                <apex:param value="{!paymentAmount}"/>
+              </apex:outputText>
+            </span>
+          </p>
+        </div>
+        </apex:outputPanel>
+      </div>
+      <!-- =============================== FINACIAL DETAILS ======================= -->
+
+
+    </div>
+    <!-- =================== CUSTOMER NOTES AND FINANCE INFORMATION ============================ -->
+
+
+
+    <!-- +++++++++++++++++++++++++++ SIGNATURES AND SUMMARY +++++++++++++++++++++++ -->
+    <div class="row signatures_and_summary">
+
+      <!-- ++++++++++++++++++++ SIGNATURES AND STUFF ++++++++++++++++++++++++++++ -->
+      <div class="col col70">
+
+        <div class="row">
+
+          <div class="col col70">
+            <div class="row">
+              <div class="col col49 signature_container">
+                <p>&nbsp;</p>
+                <p>{!buyer.Contact.Name}</p>
+                <p style="">Customer Signature</p>
+              </div>
+
+               <apex:outputPanel layout="none" rendered="{!cobuyer != null}">
+                <div class="col col49 signature_container">
+                  <p>&nbsp;</p>
+                  <p>{!cobuyer.Contact.Name}</p>
+                  <p>Co Buyer Signature</p>
+                </div>
+              </apex:outputPanel>
+
+            </div>
+
+            <apex:outputPanel layout="none">
+              <div class="row temp_disclaimer">
+                <div class="col col75">
+                <p class="details">{! $Setup.Legend_Settings__c.Invoice_temp_disclaimer__c }</p>
+                </div>
+                <div class="col col20">
+                  <p class="initial">INITIAL: ________</p>
+                </div>
+              </div>
+            </apex:outputPanel>
+          </div>
+
+          <div class="col col25 payment_info" style="margin: 15px 0% 0 0%">
+            <div>
+              <img src="{!URLFOR($Resource.LegendPDF,'Icons/CreditCard.png')}" />
+              <p>Card Payment</p>
+              <p>
+                We accept up to $2000 by: <br/>
+                Visa, Mastercard, Debit
+              </p>
+              <p >
+                <span style="">Terms:</span>
+                Balance due within 30 days by certified funds or money transfer.<br />
+                After 30 days, a 2% interest per month will apply to unpaid balances
+              </p>
+            </div>
+          </div>
+
+
+        </div>
+
+      </div>
+      <!-- ==================== SIGNATURES AND STUFF ============================ -->
+
+      <!-- ++++++++++++++++++++++++++++ COST SUMMARY ++++++++++++++++++++++++++++ -->
+      <div class="col col30 right">
+        <table class="costSummary">
+          <tr>
+            <td>SUB TOTAL:</td>
+            <td>
+              <apex:outputText value="${0, number, ###,###,###,##0.00}">
+                    <apex:param value="{!subTotal}"/>
+               </apex:outputText>
+            </td>
+          </tr>
+          <apex:outputPanel layout="none" rendered="{!IF(totalSaving = 0, false, true)}">
+          <tr>
+            <td class="decrease">SAVINGS:</td>
+            <td class="decrease">
+                <apex:outputText value="${0, number, ###,###,###,##0.00}"
+                                 rendered="{!totalSaving != null}">
+                  <apex:param value="{!totalSaving}"/>
+                </apex:outputText>
+            </td>
+          </tr>
+          </apex:outputPanel>
+          <tr>
+            <td>TOTAL BEFORE TAX:</td>
+            <td>
+              <apex:outputText value="${0, number, ###,###,###,##0.00}">
+                        <apex:param value="{!erpOrder.Order_Item_Total__c}"/>
+                  </apex:outputText>
+            </td>
+          </tr>
+         <!-- OverRide Custom Taxes -->
+          <apex:outputPanel layout="none" rendered="{!erpOrder.Tax_is_Harmonized__c == true}">
+            <tr>
+              <td> TAX (HST): {! erpOrder.Tax_Rate_Provincial__c + erpOrder.Tax_Rate_Federal__c}%: </td>
+              <td>
+                  <apex:outputText value="${0, number, ###,###,###,##0.00}">
+                        <apex:param value="{!erpOrder.Tax_Amount_Provincial__c + erpOrder.Tax_Amount_Federal__c}"/>
+                  </apex:outputText>
+               </td>
+            </tr>
+          </apex:outputPanel>
+
+          <apex:outputPanel layout="none" rendered="{!erpOrder.Tax_is_Harmonized__c != true}">
+            <tr>
+              <td> TAX (GST): {!erpOrder.Tax_Rate_Federal__c}%: </td>
+              <td>
+                  <apex:outputText value="${0, number, ###,###,###,##0.00}">
+                        <apex:param value="{!erpOrder.Tax_Amount_Federal__c}"/>
+                  </apex:outputText>
+               </td>
+            </tr>
+          </apex:outputPanel>
+
+          <apex:outputPanel layout="none" rendered="{!erpOrder.Tax_is_Harmonized__c != true}">
+            <tr>
+              <td> TAX ({!provTAxInfo.taxName}): {!erpOrder.Tax_Rate_Provincial__c}%: </td>
+              <td>
+                  <apex:outputText value="${0, number, ###,###,###,##0.00}">
+                        <apex:param value="{!erpOrder.Tax_Amount_Provincial__c}"/>
+                  </apex:outputText>
+               </td>
+            </tr>
+          </apex:outputPanel>
+          <apex:outputPanel layout="none" rendered="{!IF(erpOrder.Tax_Amount_Retail__c > 0,true, false)}">
+            <tr>
+              <td> TAX (RST): {!erpOrder.Tax_Rate_Retail__c}%: </td>
+              <td>
+                  <apex:outputText value="${0, number, ###,###,###,##0.00}">
+                        <apex:param value="{!erpOrder.Tax_Amount_Retail__c}"/>
+                  </apex:outputText>
+               </td>
+            </tr>
+          </apex:outputPanel>
+          <tr>
+            <td>DEPOSIT <span class="deposit_method">by {!erpOrder.Deposit_Method__c}</span>:</td>
+            <td class="">
+               <apex:outputText value="- ${0, number, ###,###,###,##0.00}">
+                <apex:param value="{!NULLVALUE( erpOrder.Deposit__c  , 0 ) }"/>
+              </apex:outputText>
+            </td>
+          </tr>
+
+            <!-- Seperate taxes -->
+
+          <tr class="total">
+            <td>Total Due:</td>
+            <td>
+              <apex:outputText value="${0, number, ###,###,###,##0.00}">
+                <apex:param value="{!erpOrder.Grand_Total__c - IF(ISNULL(erpOrder.Deposit__c), 0, erpOrder.Deposit__c)}"/>
+              </apex:outputText>
+            </td>
+          </tr>
+        </table>
+
+        <!-- Dealer Signature -->
+        <div class="row">
+          <div class="col col100 signature_container">
+            <p style="margin-top:50px;">&nbsp;</p>
+            <p></p>
+            <p style="padding-bottom: 5px;">Dealer Signature</p>
+          </div>
+        </div>
+        <!-- /Dealer Signature -->
+      </div>
+      <!-- ============================ COST SUMMARY ============================ -->
+
+    </div>
+    <!-- =========================== /SIGNATURES AND SUMMARY ====================== -->
+    <div class="row">
+      <div class="disclaimer" style="border-bottom: none;">
+        I,or we, hereby acknowledge receipt of a copy of this order and that I, or we, have read the
+        Terms and Conditions following this Agreement. I, or we, also agree that the balance will be paid by cash, certified cheque, bankdraft or by execution of a security agreement, all of which is subject to acceptance by a financing agency approved by the dealer.  Buyer acknowledges that the year and model may not be exactly as shown above.  All prices subject to managers approval.
+      </div>
+      <div class="thankyou">
+        Thank you for choosing Legend to help you create memories on the water!
+      </div>
+    </div>
+
+    <!-- ++++++++++++++++++++++++++++ FOOTER +++++++++++++++++++++++++++++++++++ -->
+    <div class="footer-left">
+      <div class="logo">
+        <img src="{!URLFOR($Resource.LegendPDF,'image/logo_220x26.png')}" />
+      </div>
+    </div>
+
+    <div class="footer-center">
+      <div class="address">
+        {!storeAddress}
+      </div>
+    </div>
+
+    <div class="footer-right">
+      <div class="tax_numbers">
+        <apex:repeat value="{!taxNumbers}" var="tn">
+          <div><b>{!tn.DeveloperName}#</b> {!tn.Tax_Number__c}</div>
+        </apex:repeat>
+      </div>
+    </div>
+
+    <!-- <div class="row pdf_footer footer">
+
+
+
+      <div class="thankyou">
+        Thank you for choosing Legend to help you create memories on the water!
+      </div>
+
+      <div class="col col30 logo">
+        <img src="{!URLFOR($Resource.LegendPDF,'image/logo_220x26.png')}" />
+      </div>
+
+      <div class="col col33 address">
+        <p>
+          {!address}
+        </p>
+      </div>
+
+      <div class="col col33 tax_numbers">
+        <p>
+          <span>HST# 10150-9867</span>
+          <span>PST# 11158735</span>
+          <span>QST# 11158735</span>
+        </p>
+      </div>
+
+    </div> -->
+    <!-- ============================ FOOTER ================================== -->
+
+  </div><!-- /Header Wrapper page Break -->
+
+<!-- +++++++++++++++++++++++++++++++++++++++ TERMS AND CONDITIONS PAGE ++++++++++++++++++++++++ -->
+
+  <div class="invoicePageTwo">
+    <h5>Terms and Conditions</h5>
+    <div class="additional_terms_container">
+
+      <div class="column left">
+        <p>
+          It is further agreed by and between the parties as follows;
+        </p>
+        <p>
+          <b>1.</b> The following terms and conditions are part of the Agreement described on the reverse side hereof, and have been mutually agreed upon by and between the parties.
+        </p>
+        <p>
+          <b>2.</b> Title to the Purchased Equipment shall be retained by Dealer until the Purchase Price has been paid in full and Buyer agrees that Dealer shall have a security interest, as defined in the Personal Property Security Act of Ontario (the “PPSA") in respect of the same until the Purchase Price is paid in full and shall be entitled to register under the PPSA to protect its interest. Upon payment in full, Dealer shall transfer title to the Purchased Equipment to Buyer and discharge all PPSA registrations. Notwithstanding the foregoing it shall be the purchasers responsibility to obtain insurance coverage from the date of delivery of the purchased equipment. The Dealer, at it's sole discretion, will have the option to rescind agreement of sale up until the pick up date, without penalty, and if chosen, will refund all deposits in full to the buyer.
+        </p>
+        <h6>
+          NEW EQUIPMENT
+        </h6>
+        <p>
+          <b>3.</b> Buyer acknowledges that, where the Purchased Equipment is new equipment, Dealer is a dealer in the equipment of the Manufacturer. The Manufacturer reserves the right to change the price to its dealers and Dealer therefore reserves the right to change the Purchase Price. Where the change in the Purchase Price results in an increase to the Purchase Price, Buyer may cancel their order, unless the increase is solely attributable to a fluctuation or variation in any international money exchange rate and / or customs and excise duties and taxes and / or any applicable tax. Where Buyer cancels their order subsequent to having transferred title to the Trade-ln Equipment, if unsold by Dealer, shall be reconveyed to Buyer upon Buyer paying all reasonable charges incurred by Dealer for any storage and repairs; if the Trade-ln Equipment has been sold by Dealer, Dealer shall pay Buyer all sale proceeds in respect of it less a selling commission of 15% on the gross sale price and any expenses incurred by Dealer in storing, insuring, reconditioning, repairing or advertising the Trade-In Equipment. The reconveyance of the Trade-In Equipment or the payment of the sale proceeds from it, as provided above, shall be a full discharge of all of Buyer’s claims in respect of the Trade-ln Equipment.
+        </p>
+        <p>
+          <b>4.</b> The Manufacturer of any equipment in which Dealer trades has the right to make any changes to model, design, parts or accessory as it, in its sole discretion, sees fit. Buyer agrees to accept the Purchased Equipment, subject to all such changes made by the Manufacturer, provided these changes shall not affect the quality, integrity or value of the Purchased Equipment. ln no case shall Buyer require Dealer or the Manufacturer to provide any of the Purchased Equipment, with any optional model, design, parts or accessory changes.
+
+        </p>
+        <p>
+          <b>5.</b> Dealer shall not be liable for any loss or damages caused by the delay of the Manufacturer in supplying the Purchased Equipment or any accident, strike, fire or any other cause beyond Dealer’s control which might affect delivery and / or supply of the Purchased Equipment.
+        </p>
+        <p>
+          <b>6.</b> Dealer agrees to assign the benefit of any warranties received in respect of the Purchased Equipment from the Manufacturer to Buyer upon completion. Dealer agrees to provide to Buyer copies of the Manufacturer's warranty material and documentation. Buyer acknowledges having inspected the Purchased Equipment and is satisfied that the Purchased Equipment is of a quality and kind satisfactory to them and is fit for their purposes.
+        </p>
+        <p>
+          <b>7.</b> Buyer fully understands that any Manufacturers warranties which may be provided may not provide for service calls and the full responsibility of transporting the Purchased Equipment for repairs shall be that of Buyer.
+        </p>
+        <h6>TRADE-IN EQUIPMENT</h6>
+        <p>
+          <b>8.</b> Buyer shall be responsible for delivering to Dealer the Trade-ln Equipment along with all relevant title documents, Buyer warrants that they are now rightfully and absolutely possessed of and entitled to the Trade-ln Equipment and has good right to assign and transfer the same unto Dealer, free and clear from all former and other interests whatsoever and that they will at all times hereinafter do or cause to be done all such further acts to ensure the free transfer of the Trade-In Equipment to Dealer in the manner aforesaid. Buyer warrants that all taxes levied on the Trade-ln Equipment have been paid in full.
+        </p>
+        <p>
+          Buyer further represents and warrants that any boat delivered to Dealer as Trade-In Equipment is seaworthy and that its accessories and equipment are in good working order and, without limitation, that the engine block, manifolds and cylinder head on any boat engine delivered as or part of the Trade-ln Equipment are not cracked or otherwise defective, and is the year, make and model as described on the reverse Side.
+        </p>
+        <p>
+          <b>9.</b> If it is discovered that the Trade-In Equipment is subject to a charge, lien or encumbrance or claim of any kind (other than as disclosed herein) Dealer shall have the option of:
+        </p>
+        <ol type="a">
+          <li>Paying the claim and all costs incurred in settling the claim and seeking immediate reimbursement from Buyer; or
+          </li>
+          <li>Adding the amount of the claim plus the costs of settling such claim to the Purchase Price and collecting it as such.</li>
+        </ol>
+      </div><!-- /left column -->
+
+      <div class="column right">
+        <p>
+          <b>10.</b> lf the Trade-In Equipment is not licenced and registered in the Province where this agreement is executed, Buyer shall immediately licence and register it in the said Province, failing which Dealer shall be entitled to so licence and register it, and the expenses incurred in respect thereof will be for the account of Buyer or, at the option of Dealer, may be added to the Purchase Price and collected as such.
+        </p>
+        <p>
+          <b>11.</b> lt is acknowledged by Buyer that the trade-in allowance for the Trade-ln Equipment is based on appraisals and / or representations and warranties made by Buyer to Dealer. Dealer shall have the right to inspect and / or re-appraise the Trade-In Equipment within 30 days of its delivery to Dealer. lf in Dealer’s opinion the Trade-ln Equipment is found to be improperly appraised or defective or in unacceptable condition, Dealer shall, within this 30 day period, have the option of:
+        </p>
+        <ol type="a">
+          <li>rescinding this Agreement; or</li>
+          <li>making all necessary repairs to put the Trade-ln Equipment into marketable condition and billing directly therefor or adding the repair costs to the Purchase Price and collecting it as such; or</li>
+          <li>charging the trade-in allowance allowed to Buyer.</li>
+        </ol>
+        <p>
+          ln the event that Buyer has not taken delivery of the Equipment, the trade-in allowance is decreased by more than 10%, Buyer shall have the right to rescind this agreement provided Buyer pays Dealer’s reasonable cost incurred in respect of the agreement and any expenses incurred by Dealer in storing, insuring, reconditioning, repairing or advertising any of the Trade-In Equipment. ln the event that Buyer has taken delivery to the Purchased Equipment, Buyer agrees to accept the new trade-in allowance as determined by Dealer.
+        </p>
+        <p>
+          <b>12.</b> The Trade-in Equipment shall become Dealer’s property upon; (a) execution of this agreement, and (b) delivery to Dealer of Trade-ln Equipment
+        </p>
+        <h6>USED EQUIPMENT</h6>
+        <p>
+          <b>13.</b> Where Buyer is purchasing Equipment which is “used” and / or which Dealer is brokering for sale, Buyer acknowledges that they buy the Purchased Equipment on an “as is, where is” basis. Buyer acknowledges having inspected the Purchased Equipment and all accessories and is satisfied that the Purchased Equipment is of a quality and kind satisfactory to them and is fit for their purposes.
+        </p>
+        <h6>GENERAL</h6>
+        <p>
+          <b>14.</b> EXCEPT AS IMPLIED BY PROVINCIAL LAW, DEALER EXPRESSLY DISCLAIMS ALL WARRANTIES, EXPRESSED OR IMPLIED, INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE, IN RESPECT OF ANY OF EQUIPMENT SOLD HEREUNDER.
+        </p>
+        <p>
+          <b>15.</b> Unless otherwise provided herein, Dealer is not responsible for providing transportation to Buyer for any reason whatsoever, whether for the transportation of Trade-ln Equipment to Dealer or the transportation of the Purchased Equipment to the Buyer.
+        </p>
+        <p>
+          <b>16.</b> Unless otherwise agreed in writing, the parties hereto agree that this Agreement shall be completed within 30 days of the date hereof, falling which Dealer, at its sole option, shall be entitled to rescind the Agreement. In such event, Buyer shall be required to pay all reasonable cost of Dealer incurred in repairing any Trade-In Equipment or purchased Equipment and in pursuing completion of this transaction, failing which Buyer hereby irrevocably constitutes and appoints Dealer their attorney to sell any Trade-In Equipment in Dealers possession and deduct from the proceeds, all reasonable accounts of Dealer.
+        </p>
+        <p>
+          <b>17.</b> Where Dealer is in possession of the Purchased Equipment (once title has passed to Buyer) or the Trade-In Equipment, Dealer shall not be deemed to be a bailee of those goods; rather Buyer shall be a licensee of the space, from time to time designated by Dealer, where the Purchased Equipment or Trade-ln Equipment is parked, stored or displayed. Dealer assumes no duty to care for the Purchased Equipment or Trade-ln Equipment or to prevent loss or damage thereto except when actually conducting repairs thereon.
+        </p>
+        <p>
+          <b>18.</b> This Agreement and the affairs of the parties shall be governed by the laws of the Province in which agreement is executed and the venue for any legal dispute shall be the jurisdiction in which Dealer is located.
+        </p>
+        <p>
+          <b>19.</b> This Agreement shall constitute the entire agreement between the parties and there is no representation, warranty, condition or collateral agreement affecting this Agreement other than as expressed herein
+        </p>
+        <p>
+          <b>20.</b> Buyer Further agrees to pay 2% per month (24% per annum) on any balance left owing after the boat has been delivered.
+        </p>
+
+      </div><!-- /right column -->
+
+      <div class="full">
+        <h6>ACCEPTANCE OF DELIVERY</h6>
+        <p>
+          The purchaser acknowledges having delivery of the marine vehicle and optional equipment described in this contract and declares being totally satisfied with it in all respects and agrees to pay for it in full upon delivery. The purchaser further agrees that he has received a full demonstration of all products and items described on this contract and is fully aware of all operational aspects of each and every item, appliance, and unit supplied with this purchase.
+        </p>
+      </div><!-- acceptance of delivery -->
+
+      <h5 class="left">Customer Acknowledgements</h5>
+      <div class="full">
+        <p>
+          By signigning below, I cerify That I have been advised of the benefits, coverage, terms, and conditions of the
+          following options and have elected, of my own free will to decline them.
+        </p>
+      </div>
+
+      <div class="full">
+
+        <table class="customer_ack">
+          <tbody>
+            <tr>
+              <td>
+                <div>Credit Life Protection</div>
+                <div>Pays off the balance of your vehicle loan in the event of death</div>
+              </td>
+              <td>
+                <div class="checkbox"></div>
+                <div>Insurance Declined</div>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <div>Critical Illness Protection</div>
+                <div>
+                  Pays off the balance of your vehicle loan in the event of: Heart Attck, Malignant cancer,
+                  Transplant, Stroke, Paralysis or Bypass surgery.
+                </div>
+              </td>
+              <td>
+                <div class="checkbox"></div>
+                <div>Insurance Declined</div>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <div>Sickness and Injury Protection</div>
+                <div>
+                  Makes your vehicle loan payment for you if you are unable to work at <u>your</u>
+                   job.  Pays in addition to any workplace or private plans.
+                </div>
+              </td>
+              <td>
+                <div class="checkbox"></div>
+                <div>Insurance Declined</div>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <div>Loss of Employment</div>
+                <div>
+                  Makes your vehicle loan payment for you if you involuntarily lose your job.
+                  Also includes accidental injury coverage.
+                </div>
+              </td>
+              <td>
+                <div class="checkbox"></div>
+                <div>Insurance Declined</div>
+              </td>
+            </tr>
+             <tr>
+              <td>
+                <div>Extended Warranty Protection</div>
+                <div>
+                  Covers any and all applicable, nessessary repairs which are incurred after
+                  any applicable dealer warranty expires.
+                </div>
+              </td>
+              <td>
+                <div class="checkbox"></div>
+                <div>Warranty Declined</div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+      </div>
+
+      <div class="full">
+
+
+        <div class="col w40">
+          <div class="line"></div>
+          <div class="label">
+            <span>{!buyer.Contact.Name }</span> - Debtor
+          </div>
+        </div>
+
+        <div class="col w20 top">
+          <div class="line"></div>
+          <div class="label">Date</div>
+        </div>
+
+      </div>
+
+    </div><!-- /.additional_terms_container -->
+  </div>
+
+<!-- ======================================= /TERMS AND CONDITIONS ============================ -->
+
+<!-- ++++++++++++++++++++++++++++++++++++ 3RD PARTY AUTHORIZATION  ++++++++++++++++++++++++++++ -->
+
+  <div class="invoicePageThree">
+    <div class="authorization_form">
+
+      <h1>
+        Third Party Authorization Letter
+      </h1>
+
+      <div class="content">
+        <p>
+          <!-- Person Account -->
+          <apex:outputPanel layout="none" rendered="{!!soldToBusiness}">
+            I, <span>{!projectAccount.Name }</span>, of <span>{!projectAccount.BillingStreet}, {!projectAccount.BillingCity}, {!projectAccount.BillingState}, {!projectAccount.BillingPostalCode}</span> hereby authorize Duhamel and Dewar - Legend Boats to apply for a Pleasure Craft License on my behalf and to provide Service Canada or Service New Brunswick with any personal information that may be required to issue the said license in my name for a :
+          </apex:outputPanel>
+          <!-- Business Account -->
+          <apex:outputPanel layout="none" rendered="{!soldToBusiness}">
+            I, <span>{!buyer.Contact.Name }</span>, representing <span>{!projectAccount.Name}</span>, located at <span>{!projectAccount.BillingStreet}, {!projectAccount.BillingCity}, {!projectAccount.BillingState}, {!projectAccount.BillingPostalCode}</span> hereby authorize Duhamel and Dewar - Legend Boats to apply for a Pleasure Craft License on my behalf and to provide Service Canada or Service New Brunswick with any personal information that may be required to issue the said license in my name for a :
+          </apex:outputPanel>
+        </p>
+        <p class="align-center boat_make">
+          <strong>{!boat.GMBLASERP__Serial_Number__r.GMBLASERP__Lot__r.Name} {!boat.Product_Name__c}</strong>
+        </p>
+        <p class='align-center'>bearing Hull Identification Number:</p>
+        <p class="boat_num"></p>
+        <p>
+          and/or authorize Duhamel and Dewar - Legend Boats the right to act on my behalf in matters relating to my trailer licensing with the Ontario Ministry of Transportation.
+        </p>
+        <p>
+          In addition, I agree to receive contact from a Legend Insurance representative to review the available options of this program.
+        </p>
+      </div>
+
+      <div class="signatures">
+        <p></p>
+        <span>Signature of Owner</span>
+        <p></p>
+        <span>Date</span>
+      </div>
+
+      <div class="auth_footer">
+        <img src="{!URLFOR($Resource.LegendPDF,'image/logo_300w.png')}" />
+        <h2>A Duhamel and Dewar Company</h2>
+        <p>
+          4805 Regional Road 55 - Whitefish, Ontario – P0M 3E0 - PH: 705.866.2821 - TF: 1.800.461.4050 – FX: 705.866.2616
+        </p>
+        <p>
+          2375 Industrial Park Road, Innisfil, Ontario -  L9S 3W1 - PH: 705-431-6922 TF:  1.800.459.8448  FAX: 705.431.6924
+        </p>
+        <p>
+          3255 Chemin D’Oka, Ste-Marthe-sur-le-Lac, Quebec -  J0N 1P0 - PH: 450.875.2323
+        </p>
+        <p>
+          web: www.legendboats.com - email: info@legendboats.com
+        </p>
+      </div>
+
+    </div>
+
+  </div>
+
+<!-- =================================== /3RD PARTY AUTHORIZATION ============================= -->
+
+
+
+</apex:page>

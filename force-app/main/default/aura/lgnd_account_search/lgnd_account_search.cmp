@@ -1,0 +1,142 @@
+<aura:component controller="lgnd_account_search"
+								implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,lightning:availableForFlowScreens"
+								access="global">
+
+  <aura:attribute name="searchQuery" 		 type="String" />
+  <aura:attribute name="accountList" 		 type="Object" access="public"/>
+  <aura:attribute name="selectionMade" 	 type="Boolean" default="false" />
+  <aura:attribute name="accountId" 			 type="String" access="global" />
+  <aura:attribute name="showAccountCard" type="Boolean" default="false" />
+  <aura:attribute name="AccountName"     type="String" />
+  <aura:attribute name="AccountPhone"    type="String" />
+  <aura:attribute name="AccountStreet"   type="String" />
+  <aura:attribute name="AccountCity"     type="String" />
+  <aura:attribute name="AccountZip"      type="String" />
+  <aura:attribute name="AccountState"    type="String" />
+  <aura:attribute name="AccountCountry"  type="String" />
+  <aura:attribute name="AccountType"     type="String" default="Account" />
+  <aura:attribute name="scope"           type="String" default="customer" />
+  <aura:attribute name="fieldLabel"      type="String"  default="Account or Lead" />
+  <aura:attribute name="allowNew"        type="Boolean" default="true" />
+  <aura:attribute name="selectorOnly"    type="Boolean" default="false" />
+  <aura:attribute name="isPerson"        type="Boolean" default="true" />
+
+  <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+  <aura:handler name="change" value="{!v.searchQuery}" action="{!c.lookupContacts}" />
+  <aura:handler name="change" value="{!v.accountList}" action="{!c.close}" />
+  <aura:handler name="change" value="{!v.scope}" action="{!c.handleScopeChange}" />
+
+  <aura:registerEvent name="lgnd_registration_event" type="c:lgnd_registration_event"/>
+  <aura:registerEvent name="accountSearchCleared" type="c:lgnd_account_search_cleared_Event"/>
+  <aura:registerEvent name="accountSelected" type="c:lgnd_account_search_selected_Event"/>
+
+  <aura:method name="disableSearch" action="{!c.disableSearch}" access="public" />
+  <aura:method name="enableSearch"  action="{!c.enableSearch}"  access="public" />
+
+  <ltng:require scripts="{!join(',', $Resource.Libraries +'/js/LightningApex.js',
+                                       $Resource.Libraries +'/js/LightningUtils.js') }" />
+
+  <div class="slds-form-element">
+    <div class="slds-combobox_container">
+    	<div class="slds-combobox slds-dropdown-trigger slds-dropdown-trigger--click slds-is-closed" aria-expanded="true" aria-haspopup="listbox" role="combobox" aura:id="name_combobox">
+        <div class="slds-form-element">
+        	<lightning:input type="search" name="Search" label="{!v.fieldLabel}" placeholder="Start typing" value="{!v.searchQuery}" aura:id="search" />
+        </div>
+        <div id="listbox-unique-id" role="listbox">
+          <ul class="slds-listbox slds-listbox_vertical slds-dropdown slds-dropdown_fluid" role="presentation">
+
+            <!-- DEALERS AND SUPPLIERS -->
+            <aura:if isTrue="{! not(v.isPerson)}">
+              <aura:iteration items="{!v.accountList}" var="item" indexVar="i">
+                <li role="option" class="slds-listbox__item" data-address-id="{!i}">
+                  <a  href="javascript:void(0);"
+                      role="option"
+                      id="{!'listbox-option-unique-id-' + i}"
+                      onclick="{!c.clickAccount}"
+                      data-name="{!item.Name}"
+                      data-accountid="{!item.Id}"
+                      data-type="Account">
+                    <span class="slds-media slds-listbox__option slds-listbox__option_entity slds-listbox__option_has-meta" role="option">
+                      <span class="slds-media__figure">
+                        <span class="slds-icon_container slds-icon-standard-account" title="Account">
+                          <lightning:icon iconName="standard:account" />
+                          <span class="slds-assistive-text">Account</span>
+                        </span>
+                      </span>
+                      <span class="slds-media__body">
+                        <span class="slds-listbox__option-text slds-listbox__option-text_entity">{!item.Name}</span>
+                        <span class="slds-listbox__option-meta slds-listbox__option-meta_entity">{!item.BillingAddress.street}</span>
+                      </span>
+                    </span>
+                  </a>
+                </li>
+              </aura:iteration>
+            </aura:if>
+
+            <!-- PERSON ACCOUNTS AND LEADS -->
+            <aura:if isTrue="{! v.isPerson }">
+              <aura:iteration items="{!v.accountList[0]}" var="item" indexVar="i">
+                <li role="option" class="slds-listbox__item" data-address-id="{!i}">
+                  <a  href="javascript:void(0);"
+                      role="option"
+                      id="{!'listbox-option-unique-id-' + i}"
+                      onclick="{!c.clickAccount}"
+                      data-name="{!item.Name}"
+                      data-accountid="{!item.Id}"
+                      data-type="Account">
+                    <span class="slds-media slds-listbox__option slds-listbox__option_entity slds-listbox__option_has-meta" role="option">
+                      <span class="slds-media__figure">
+                        <span class="slds-icon_container slds-icon-standard-account" title="Account">
+                          <lightning:icon iconName="standard:person_account" />
+                          <span class="slds-assistive-text">Account</span>
+                        </span>
+                      </span>
+                      <span class="slds-media__body">
+                        <span class="slds-listbox__option-text slds-listbox__option-text_entity">{!item.Name}</span>
+                        <span class="slds-listbox__option-meta slds-listbox__option-meta_entity">{!item.BillingAddress.street}</span>
+                      </span>
+                    </span>
+                  </a>
+                </li>
+              </aura:iteration>
+              <aura:iteration items="{!v.accountList[1]}" var="item" indexVar="i">
+                <li role="option" class="slds-listbox__item" data-address-id="{!i}">
+                  <a  href="javascript:void(0);"
+                      role="option"
+                      id="{!'listbox-option-unique-id-' + i}"
+                      onclick="{!c.clickAccount}"
+                      data-name="{!item.Name}"
+                      data-accountid="{!item.Id}"
+                      data-type="Lead">
+                    <span class="slds-media slds-listbox__option slds-listbox__option_entity slds-listbox__option_has-meta" role="option">
+                      <span class="slds-media__figure">
+                        <span class="slds-icon_container slds-icon-standard-account" title="Lead">
+                          <lightning:icon iconName="standard:lead" />
+                          <span class="slds-assistive-text">Lead</span>
+                        </span>
+                      </span>
+                      <span class="slds-media__body">
+                        <span class="slds-listbox__option-text slds-listbox__option-text_entity">{!item.Name}</span>
+                        <span class="slds-listbox__option-meta slds-listbox__option-meta_entity">{!item.Address.street}</span>
+                      </span>
+                    </span>
+                  </a>
+                </li>
+              </aura:iteration>
+            </aura:if>
+
+            <aura:if isTrue="{!v.allowNew}">
+              <li role="option" class="slds-listbox__item" id="createNew">
+                  <span class="slds-listbox__option_entity slds-listbox__option_has-meta" role="option">
+                    <span class="slds-media__body">
+                      <lightning:button variant="neutral" label="Create new account" onclick="{!c.clickCreateNewAccount}" />
+                    </span>
+                  </span>
+              </li>
+            </aura:if>
+          </ul>
+        </div><!-- role[listbox] -->
+      </div><!-- .slds-combobox -->
+    </div><!-- .slds-combobox_container -->
+  </div>
+</aura:component>

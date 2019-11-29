@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ApprovalProcess xmlns="http://soap.sforce.com/2006/04/metadata">
+    <active>true</active>
+    <allowRecall>false</allowRecall>
+    <allowedSubmitters>
+        <type>creator</type>
+    </allowedSubmitters>
+    <approvalPageFields>
+        <field>Unique_Product_Code__c</field>
+        <field>Name</field>
+        <field>Description</field>
+        <field>Family</field>
+        <field>Unit_of_Measurement__c</field>
+        <field>AcctSeed__Unit_Cost__c</field>
+    </approvalPageFields>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>epaulino@legendboats.com</name>
+                <type>user</type>
+            </approver>
+            <approver>
+                <name>mguitard@legendboats.com</name>
+                <type>user</type>
+            </approver>
+            <approver>
+                <name>sboothe@legendboats.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>FirstResponse</whenMultipleApprovers>
+        </assignedApprover>
+        <label>Step 1</label>
+        <name>Step_1</name>
+    </approvalStep>
+    <description>Product approval process for all products that are not boat, motor, trailer or trolling motor</description>
+    <emailTemplate>Parts_Related/Product_Creation_Approval_Request</emailTemplate>
+    <enableMobileDeviceAccess>false</enableMobileDeviceAccess>
+    <entryCriteria>
+        <criteriaItems>
+            <field>Product2.RecordType</field>
+            <operation>notEqual</operation>
+            <value>Boat,Motor,Trailer,Trolling Motor</value>
+        </criteriaItems>
+    </entryCriteria>
+    <finalApprovalActions>
+        <action>
+            <name>Part_Creation_Approved_Email</name>
+            <type>Alert</type>
+        </action>
+        <action>
+            <name>Set_Approved_For_Use</name>
+            <type>FieldUpdate</type>
+        </action>
+    </finalApprovalActions>
+    <finalApprovalRecordLock>false</finalApprovalRecordLock>
+    <finalRejectionActions>
+        <action>
+            <name>Part_Creation_Rejection_Email</name>
+            <type>Alert</type>
+        </action>
+    </finalRejectionActions>
+    <finalRejectionRecordLock>false</finalRejectionRecordLock>
+    <label>Product Creation Approval No Serials</label>
+    <postTemplate>Product_Creation_Approval</postTemplate>
+    <recordEditability>AdminOrCurrentApprover</recordEditability>
+    <showApprovalHistory>true</showApprovalHistory>
+</ApprovalProcess>

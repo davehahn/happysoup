@@ -1,0 +1,163 @@
+<div class="slds-modal__header">
+  <h2 class="slds-text-heading--medium">New Event</h2>
+
+  <button class="slds-button slds-button--icon-inverse slds-modal__close close-modal">
+    <svg aria-hidden="true" class="slds-button__icon slds-button__icon--large">
+      <use xlink:href="{{icons.close}}"></use>
+    </svg>
+    <span class="slds-assistive-text">Close</span>
+  </button>
+</div>
+
+<div class="slds-modal__content">
+<form id="new-form">
+  <div class="slds-grid slds-grid--pull-padded slds-grid--align-center">
+
+        <div class="slds-col--padded slds-size--5-of-12">
+          <label class="slds-form-element__label" for="date">Start</label>
+          <div class="slds-grid" style="margin:0;">
+
+            <div class="slds-col slds-size--7-of-12">
+              <div class="slds-form-element">
+                <div class="slds-input-has-icon slds-input-has-icon--right">
+                  <svg aria-hidden="true" class="slds-input__icon slds-icon-text-default">
+                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{{icons.calendar}}"></use>
+                  </svg>
+                  <input class="slds-input has-datepicker"
+                         value="{{eventData.startDate}}"
+                         type="text"
+                         data-field-name="start-date"
+                         placeholder="Pick a Date"
+                         label="Date Picker Label"
+                         data-required>
+                </div>
+              </div>
+            </div>
+
+            <div class="slds-col slds-size--5-of-12">
+              <div class="slds-form-element">
+                <div class="slds-input-has-icon slds-input-has-icon--right">
+                  <svg aria-hidden="true" class="slds-input__icon slds-icon-text-default">
+                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{{icons.arrowDown}}"></use>
+                  </svg>
+                  <input class="slds-input is-combobox"
+                         type="text"
+                         value="{{eventData.startTime}}"
+                         data-field-name='start-time'
+                         data-required />
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="slds-col--padded slds-size--5-of-12">
+          <label class="slds-form-element__label" for="date">End</label>
+          <div class="slds-grid" style="margin:0;">
+
+            <div class="slds-col slds-size--7-of-12">
+              <div class="slds-form-element">
+                <div class="slds-input-has-icon slds-input-has-icon--right">
+                  <svg aria-hidden="true" class="slds-input__icon slds-icon-text-default">
+                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{{icons.calendar}}"></use>
+                  </svg>
+                  <input class="slds-input has-datepicker"
+                         value="{{eventData.endDate}}"
+                         type="text"
+                         data-required
+                         data-field-name="end-date"
+                         placeholder="Pick a Date"
+                         label="Date Picker Label">
+                </div>
+              </div>
+            </div>
+
+            <div class="slds-col slds-size--5-of-12">
+              <div class="slds-form-element">
+                <div class="slds-input-has-icon slds-input-has-icon--right">
+                  <svg aria-hidden="true" class="slds-input__icon slds-icon-text-default">
+                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{{icons.arrowDown}}"></use>
+                  </svg>
+                  <input class="slds-input is-combobox"
+                         data-dropdown-pos="right"
+                         data-required
+                         type="text"
+                         value="{{eventData.endTime}}"
+                         data-field-name="end-time" />
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+  </div>
+
+  <div class="slds-grid slds-grid--pull-padded slds-grid--align-center form-row">
+    <div class="slds-col--padded slds-size--10-of-12">
+      <div class="slds-form-element">
+        <label class="slds-form-element__label" for="subject">Subject</label>
+        <div class="slds-form-element__control">
+          <input id="subject" class="slds-input" type="text" placeholder="Event Subject" data-field-name="subject" data-required/>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slds-grid slds-grid--pull-padded slds-grid--align-center form-row">
+
+    <div class="slds-col--padded slds-size--5-of-12">
+      <div class="slds-form-element">
+        <label class="slds-form-element__label" for="type">Type</label>
+        <div class="slds-form-element__control">
+          <div class="slds-select_container">
+            <select id="type" class="slds-select" data-field-name="type">
+              <option value="">Select Event Type</option>
+              {{#each eventTypes}}
+              <option value="{{this}}">{{this}}</option>
+              {{/each}}
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slds-col--padded slds-size--5-of-12">
+      <div class="slds-form-element">
+        <label class="slds-form-element__label" for="calendarId">Calendar</label>
+        <div class="slds-form-element__control">
+          <div class="slds-select_container">
+            <select id="type" class="slds-select" data-field-name="owner" data-required="true">
+              <option value="">Select Calendar</option>
+              {{#each calOptions}}
+              <option value="{{this.Id}}">{{this.Name}}</option>
+              {{/each}}
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="slds-grid slds-grid--pull-padded slds-grid--align-center form-row">
+    <div class="slds-col--padded slds-size--10-of-12">
+      <div class="slds-form-element">
+        <label class="slds-form-element__label" for="description">Description</label>
+        <div class="slds-form-element__control">
+          <textarea id="description" class="slds-textarea" type="text" placeholder="Event Description" data-field-name="description"></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</form>
+</div>
+
+<div class="slds-modal__footer">
+  <div class="slds-x-small-buttons--horizontal">
+    <button class="slds-button slds-button--neutral close-modal">Cancel</button>
+    <button data-form-submit-btn="new-form" class="slds-button slds-button--neutral slds-button--brand">Save</button>
+  </div>
+</div>

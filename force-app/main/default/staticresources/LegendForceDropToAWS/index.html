@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+ <title>ComboBox Demo</title>
+  <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+  <script src="jQuery.LegendForce.DropToAWS.js" type="text/javascript"></script>
+  <script src="foundation.min.js" type="text/javascript"></script>
+  <link href="normalize.css" media="screen" rel="stylesheet" type="text/css">
+  <link href="foundation.min.css" media="screen" rel="stylesheet" type="text/css">
+  <link href='http://fonts.googleapis.com/css?family=Lato:300,400' rel='stylesheet' type='text/css'>
+  <link href="LegendForceDropToAWS.min.css" media="screen" rel="stylesheet" type="text/css">
+</head>
+<body>
+
+  <style type="text/css">
+
+     .headerNav {
+      width: 100%;
+      height: 5rem;
+      line-height: 5rem;
+      padding: 0;
+      margin: 0;
+      background: #FFF;
+      text-align: center;
+      margin-bottom: 10px;
+      position:relative;
+      z-index:10;
+    }
+
+    .headerNav .title,
+    #newImageForm h1 {
+      color: #363636;
+      font-size: 2.5rem;
+      font-family: 'Lato', serif;
+      font-weight:300;
+    }
+
+    #newImageForm h1 {
+      width: 100%;
+      display: block;
+      font-weight: 300;
+      border-bottom: 1px solid #0C97CE;
+      color: #0C97CE;
+      padding-left: 2rem;
+      padding-bottom: 1rem;
+    }
+
+    .headerNav a {
+      float:right;
+      margin-right:20px;
+      margin-top:1rem;
+    }
+
+    .full_row {
+      width: 95%;
+      margin:auto;
+    }
+
+
+
+  </style>
+
+  <div class="headerNav">
+    <span class="title"> Upload To AWS</span>
+    <a href="#" class="button small ">
+     Cancel
+    </a>
+    <a href="#" id="submitButton" class="button success small ">
+      Upload Files
+    </a>
+  </div>
+
+  <div class="full_row"  id="dragandrophandler" style="">
+
+      <div class="instruction">
+        <div>Drop Files to Upload</div>
+      </div>
+      <div class="indicator">
+        <div>Processing Files ....</div>
+      </div>
+      <div  id="filesContainer"></div>
+
+  </div>
+
+  <div id="descriptionModal" class="reveal-modal" data-reveal>
+    <h2></h2>
+
+    <div class="row">
+
+      <div class="large-3 columns">
+        <img id="preview"></img>
+      </div>
+
+      <div class="large-9 columns">
+
+        <div class="row">
+
+          <div class="large-1 columns">
+            <label>English</label>
+          </div>
+
+          <div class="large-11 columns">
+            <textarea id="engDesc" class="description"></textarea>
+          </div>
+
+        </div>
+
+        <div class="row">
+
+          <div class="large-1 columns">
+            <label>French</label>
+          </div>
+
+          <div class="large-11 columns">
+            <textarea id="frDesc" class="description"></textarea>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div class="row button_row">
+      <div class="large-12 columns">
+        <a href="#" id="saveDesc" class="button success small right">Save</a>
+      </div>
+    </div>
+    <a class="close-reveal-modal">&#215;</a>
+
+  </div>
+
+
+
+<script type="text/javascript">
+
+  $(document).foundation();
+
+  $('#dragandrophandler').legendForceDropToAWS({
+    aws_FileKey: 'AWSTest3/',
+    aws_Acl: 'public-read',
+    aws_AccessKey: 'AKIAIP3JLPNYR3XYSJ2Q',
+    aws_Policy: 'eyAiZXhwaXJhdGlvbiI6ICIyMDE3LTEyLTEyVDEyOjAwOjAwLjAwMFoiLCJjb25kaXRpb25zIjogWyB7ImJ1Y2tldCI6ICJzYW5kYm94bGVnZW5kYm9hdHNtYXJrZXRpbmciIH0sIFsic3RhcnRzLXdpdGgiLCAiJGtleSIsICJwcm9kdWN0X2ltYWdlcy8iXSwgIHsiYWNsIjogInB1YmxpYy1yZWFkIiB9LCBbInN0YXJ0cy13aXRoIiwgIiRDb250ZW50LVR5cGUiLCAiIl1dfQ==',
+    aws_Signature: 'TyBM/DDFPG4xbu+9x+40zeTPIzM=',
+    fileTypeOnly: 'image',
+    uploadUrl: 'http://sandboxlegendboatsmarketing.s3.amazonaws.com/'
+  });
+
+
+</script>
+
+
+</body>
+
+</html>
+
+
+
+
+
+
+

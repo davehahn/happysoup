@@ -1,0 +1,407 @@
+<apex:page standardController="Opportunity"
+           extensions="OpportunityExt"
+           showHeader="true"
+           sidebar="true"
+           docType="html-5.0">
+
+  <c:LegendFormResources includeFontAwesome="true" includeComboBox="true" />
+
+  <div class="legendStyled">
+    <h1 class="lgnd">{!opportunity.Name} - Final Information</h1>
+
+    <div class="row">
+      <div id="errorContainer" class="large-8 large-offset-2 columns">
+        <apex:messages styleClass="alert-box alert"/>
+      </div>
+    </div>
+    <apex:form >
+    <apex:messages />
+    <apex:actionFunction name="finalSave"
+                        action="{!finalSave}">
+    </apex:actionFunction>
+
+    <apex:actionFunction name="finalSaveAndSubmit"
+                        action="{!finalSaveAndSubmit}">
+    </apex:actionFunction>
+    <!-- <apex:actionFunction name="buildInvoiceAndSubmit"
+                         action="{!buildInvoiceAndSubmit}">
+    </apex:actionFunction> -->
+
+    <apex:inputHidden value="{!current_opportunity.Account.Id}" />
+
+    <h4 class="lgnd">Account Information</h4>
+    <apex:outputPanel layout="none"
+                      rendered="{!current_opportunity.Account.IsPersonAccount}">
+      <c:Opp_FinalizeBoatSale_PersonAccountForm acct="{!current_opportunity.Account}" />
+    </apex:outputPanel>
+
+    <apex:outputPanel layout="none"
+                      rendered="{!!current_opportunity.Account.IsPersonAccount}">
+      <c:Opp_FinalizeBoatSale_BusinessAccountForm acct="{!current_opportunity.Account}"
+                                                  buyer="{!buyer}"
+                                                  coBuyer="{!coBuyer}" />
+    </apex:outputPanel>
+
+    <sffd:row ><!-- Account Address Fields -->
+
+      <sffd:column cols="large-6"  id="billingAddressFields"><!-- Billing Address -->
+
+        <sffd:row >
+          <sffd:column cols="large-11 large-offset-1">
+            <h4 class="lgnd">Billing Address</h4>
+          </sffd:column>
+        </sffd:row>
+
+        <apex:repeat value="{!$ObjectType.Account.FieldSets['BillingAddressFields']}" var="f">
+          <sffd:row >
+            <sffd:column cols="large-4">
+              <label class="large-only-right">
+                {!SUBSTITUTE( SUBSTITUTE(f.Label, 'Billing ', ''), 'Code', '' )}
+              </label>
+            </sffd:column>
+            <sffd:column cols="large-8">
+              <apex:inputField value="{!current_opportunity.Account[f]}"
+                               required="true"
+                               html-data-clone-attr="{!f.Label}"
+                               html-data-value="{!current_opportunity.Account[f]}">
+              </apex:inputField>
+            </sffd:column>
+          </sffd:row>
+
+        </apex:repeat>
+
+        <sffd:row >
+
+          <sffd:column cols="large-12">
+            <a href="#" id="cloneAddress" class="fd_button small aqua invert right icon-right">
+              Copy to Shipping
+              <i class="fa fa-chevron-right"></i>
+            </a>
+          </sffd:column>
+
+        </sffd:row>
+
+      </sffd:column><!-- /Billing Address -->
+
+      <sffd:column cols="large-6" id="shippingAddressFields"><!-- Shipping Address -->
+
+        <sffd:row >
+          <sffd:column cols="large-11 large-offset-1">
+            <h4 class="lgnd">Shipping Address</h4>
+          </sffd:column>
+        </sffd:row>
+
+        <apex:repeat value="{!$ObjectType.Account.FieldSets['ShippingAddressFields']}" var="f">
+          <sffd:row >
+            <sffd:column cols="large-4">
+              <label class="large-only-right">
+                {!SUBSTITUTE( SUBSTITUTE(f.Label, 'Shipping ', ''), 'Code', '' )}
+              </label>
+            </sffd:column>
+            <sffd:column cols="large-8" styleClass="{!f.type}">
+              <apex:inputField value="{!current_opportunity.Account[f]}"
+                               styleClass="cloneable"
+                               html-data-clone-attr="{!f.Label}"
+                               html-data-value="{!current_opportunity.Account[f]}">
+              </apex:inputField>
+            </sffd:column>
+          </sffd:row>
+        </apex:repeat>
+
+      </sffd:column><!-- /Shipping Address -->
+
+    </sffd:row><!-- / Accounting Address Fields -->
+
+    <div style="width:100%;height:1px;color:#555;content:'';"></div>
+
+    <h4 class="lgnd">Opportunity Information</h4>
+
+    <sffd:row ><!-- Opportunity Fields -->
+
+      <sffd:column cols="large-6"><!-- Left Opportunity Column -->
+
+        <sffd:row >
+          <sffd:column cols="large-4">
+            <label class="large-only-right">Boat Model Year: </label>
+          </sffd:column>
+
+          <sffd:column cols="large-2">
+            <apex:inputField value="{!current_opportunity.Boat_Model_Year__c}"  required="true"/>
+          </sffd:column>
+
+          <sffd:column cols="large-4">
+            <label class="large-only-right">Trailer Model Year: </label>
+          </sffd:column>
+
+          <sffd:column cols="large-2">
+            <apex:inputField value="{!current_opportunity.Trailer_Model_Year__c}" />
+          </sffd:column>
+        </sffd:row>
+
+        <!-- <sffd:row >
+          <sffd:column cols="large-4">
+            <label class="large-only-right">Delivery Date: </label>
+          </sffd:column>
+
+          <sffd:column cols="large-8">
+            <apex:inputField value="{!current_opportunity.Delivery_Date__c}" />
+          </sffd:column>
+        </sffd:row> -->
+
+        <sffd:row >
+          <sffd:column cols="large-4">
+            <label class="large-only-right">Pickup Location: </label>
+          </sffd:column>
+
+          <sffd:column cols="large-8">
+            <apex:inputField value="{!current_opportunity.Pickup_Location__c}"  required="true"/>
+          </sffd:column>
+        </sffd:row>
+
+        <sffd:row >
+          <sffd:column cols="large-4">
+            <label class="large-only-right">On Water Orientation: </label>
+          </sffd:column>
+
+          <sffd:column cols="large-8">
+            <div class="legend-switch">
+              <apex:inputField value="{!current_opportunity.On_Water_Orientation__c}" styleClass="lg-toggle lg-toggle-round" />
+              <label></label>
+            </div>
+          </sffd:column>
+        </sffd:row>
+
+      </sffd:column><!-- /Left OpportunityColumn -->
+
+      <sffd:column cols="large-6"><!-- Right Opportunity Column -->
+
+       <sffd:row >
+          <sffd:column cols="large-4">
+            <label class="large-only-right">Payment Method: </label>
+          </sffd:column>
+
+          <sffd:column cols="large-8">
+            <apex:inputField value="{!current_opportunity.Payment_Method__c}"  required="true"/>
+          </sffd:column>
+        </sffd:row>
+
+        <sffd:row >
+          <sffd:column cols="large-4">
+            <label class="large-only-right">Deposit ($): </label>
+          </sffd:column>
+
+          <sffd:column cols="large-8">
+            <apex:inputField value="{!current_opportunity.Deposit__c}" required="true"/>
+          </sffd:column>
+        </sffd:row>
+
+        <sffd:row >
+          <sffd:column cols="large-4">
+            <label class="large-only-right">Deposit Method: </label>
+          </sffd:column>
+
+          <sffd:column cols="large-8">
+            <apex:inputField value="{!current_opportunity.Deposit_Method__c}"
+                             id="DepositMethod"
+                             html-data-is-controller="true"
+                             html-data-controlled-field-id="otherDepositMethod" />
+          </sffd:column>
+        </sffd:row>
+
+        <sffd:row id="otherDepositMethod" style="display:none">
+          <sffd:column cols="large-4">
+            <label class="large-only-right">Other Deposit Method: </label>
+          </sffd:column>
+
+          <sffd:column cols="large-8">
+            <apex:inputField value="{!current_opportunity.Deposit_Method_Other__c}" />
+          </sffd:column>
+        </sffd:row>
+
+      </sffd:column><!-- /Left Opportunity Column -->
+
+    </sffd:row><!-- /Opportunity Fields -->
+
+    <h4 class="lgnd">Customer Notes</h4>
+    <sffd:row >
+      <sffd:column cols="large-10 large-offset-1 end">
+        <apex:inputField value="{!current_opportunity.Customer_Notes__c}" />
+      </sffd:column>
+    </sffd:row>
+
+    <sffd:row styleClass="formBtnRow" style="margin-bottom: 25px;">
+
+      <sffd:column cols="large-6 large-offset-6">
+
+        <!-- THIS WAS USED FOR THE PROCESS WHICH CREATED THE INVOICE PDF AUTOMATICALLY -->
+        <!-- <apex:commandLink id="finalSaveAndSubmit"
+                            oncomplete="buildInvoiceAndSubmit()"
+                            styleClass="fd_button small success invert right"
+                            rendered="{!current_opportunity.StageName == 'Quoting'}" >
+            Save and Submit for Approval
+        </apex:commandLink> -->
+        <apex:outputPanel rendered="{!canSubmitForApproval}">
+          <a href="#" class="fd_button small success invert right" id="finalSaveAndSubmitBtn">
+            Save and Submit for Approval
+          </a>
+        </apex:outputPanel>
+      <!--   <apex:outputLink id="finalSaveAndSubmit"
+                          value="#"
+                          styleClass="fd_button small success invert right"
+                          rendered="{!canSubmitForApproval}" >
+            Save and Submit for Approval
+        </apex:outputLink> -->
+        <a href="#" class="fd_button small aqua invert right" id="finalSave"> Save </a>
+       <!--  <apex:outputLink id="finalSave"
+                            value="#"
+                            styleClass="fd_button small aqua invert right">
+            Save
+        </apex:outputLink> -->
+        <a href="/{!Opportunity.Id}" class="fd_button small orange invert right">Cancel</a>
+      </sffd:column>
+
+    </sffd:row><!-- /formBtnRow -->
+    </apex:form>
+  </div>
+
+  <div id="successModal" class="reveal-modal small" data-reveal="true">
+    <h2><i class="fa fa-thumbs-o-up"></i>The Deal has been submitted.</h2>
+
+    <div>
+      <span>What would you like to do now?</span>
+      <div>
+        <a href="/{!current_opportunity.Id}" class="fd_button small success invert">Return to Opportunity</a>
+        <a href="/apex/pickupCalendar?oppId={!current_opportunity.Id}" class="fd_button invert small">Schedule Pick Up</a>
+      </div>
+    </div>
+
+  </div>
+
+  <script type="text/javascript">
+
+  $j = jQuery.noConflict();
+
+  $j('#finalSave').on('click', function(e){
+    e.preventDefault();
+    $j(this).attr('disabled', true);
+    if( validateForm() )
+    {
+      finalSave();
+    }
+  });
+
+  $j('#finalSaveAndSubmitBtn').on('click', function(e){
+    e.preventDefault();
+    $j(this).attr('disabled', true);
+    if( validateForm() )
+    {
+      finalSaveAndSubmit();
+    }
+  });
+
+  var $s_inputs,
+      $d_inputs;
+
+  $j('select[data-is-controller="true"]').on('change', function(e) {
+    console.log('deposit method changed');
+    var $this = $j(this),
+        fId = $this.data('controlled-field-id'),
+        value = $this.val();
+    if( value === 'Other' )
+    {
+      $j('[id*="'+fId+'"]').slideDown();
+    }
+    else
+    {
+      $j('[id*="'+fId+'"]').slideUp().val('');
+    }
+  });
+
+
+  $j('#cloneAddress').on('click', function(e){
+    e.preventDefault();
+    $s_inputs = $j('[id*="billingAddressFields"]').filter(':input');
+    $d_inputs = $j('[id*="shippingAddressFields"]').filter(':input');
+    var sourceData = {};
+
+    $s_inputs.each( function(i,e) {
+      if( $j(e).data('clone-attr') === undefined )
+      {
+        sourceData[ 'Province' ] = $j(e).val();
+      }
+      else
+      {
+        sourceData[ $j(e).data('clone-attr').split('Billing')[1].replace(/ /g,'') ] = $j(e).val();
+      }
+    });
+    //first time throught the State/Province option are not popultated until the Country is selected
+    $d_inputs.each( function(i,e){
+      if( $j(e).data('clone-attr') != undefined )
+      {
+        $j(e).val( sourceData[ $j(e).data('clone-attr').split('Shipping')[1].replace(/ /g,'') ] ).trigger('change');
+      }
+    });
+    //refetch the destination inputs
+    $d_inputs = $j('[id*="shippingAddressFields"]').filter(':input');
+    //loop through again, the State/Province field will be the only element without 'data-clone-attr' (don't know why)
+    $d_inputs.each( function(i,e){
+      if( $j(e).data('clone-attr') === undefined )
+      {
+        var v = sourceData[ 'Province' ] === undefined ?  sourceData['State/ProvinceCode'] : sourceData['Province'];
+        $j(e).val( v );
+      }
+      else if( $j(e).data('clone-attr').split('Shipping')[1].replace(/ /g,'') === 'State/ProvinceCode')
+      {
+        $j(e).val( sourceData[ $j(e).data('clone-attr').split('Shipping')[1].replace(/ /g,'') ] );
+      }
+    });
+  });
+
+  function validateForm() {
+    $j('.alert-box').remove();
+    var $ri = $j('.requiredInput').find(':input'),
+      valid = true;
+      $j.each($ri, function(i,el) {
+        if($j(el).val() === '')
+        {
+          valid = false;
+          $j(el).addClass('error');
+        }
+        else
+        {
+          $j(el).removeClass('error');
+        }
+      });
+      if(valid)
+      {
+        $j('.alert-box').remove();
+      }
+      else
+      {
+        var err = $j('<div></div');
+        err.addClass('alert-box alert')
+        .css('display','none')
+        .html('Please fill out All required fields');
+
+        $j('#errorContainer').append(err);
+        err.slideDown();
+      }
+      return valid;
+  }
+
+  $j(function() {
+    $j('select[data-is-controller="true"]').trigger('change');
+
+    editor.on('instanceReady', function(event) {
+      event.editor.resize('100%', '200');
+    });
+
+    $j('input.lg-toggle').each(function(idx, ele){
+      var $this = $j(ele);
+      $this.next('label').prop('for', $this.prop('id') );
+    })
+  })
+
+  </script>
+
+</apex:page>

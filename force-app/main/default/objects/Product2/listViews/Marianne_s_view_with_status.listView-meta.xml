@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Marianne_s_view_with_status</fullName>
+    <columns>PRODUCT2.NAME</columns>
+    <columns>PRODUCT2.CUSTOMER_PRODUCT_ID</columns>
+    <columns>Unique_Product_Code__c</columns>
+    <columns>IEM_Unique_Part_Number__c</columns>
+    <columns>PRODUCT2.DESCRIPTION</columns>
+    <columns>PRODUCT2.FAMILY</columns>
+    <columns>DH_isUsed__c</columns>
+    <columns>Status__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>Status__c</field>
+        <operation>notEqual</operation>
+        <value>Approved for Use,Garbage</value>
+    </filters>
+    <filters>
+        <field>PRODUCT2.RECORD_TYPE</field>
+        <operation>equals</operation>
+        <value>Product2.Part</value>
+    </filters>
+    <filters>
+        <field>PRODUCT2.CUSTOMER_PRODUCT_ID</field>
+        <operation>notContain</operation>
+        <value>RRO,DAM</value>
+    </filters>
+    <filters>
+        <field>PRODUCT2.NAME</field>
+        <operation>notContain</operation>
+        <value>damage,damaged</value>
+    </filters>
+    <filters>
+        <field>PRODUCT2.DESCRIPTION</field>
+        <operation>notContain</operation>
+        <value>damage,damaged</value>
+    </filters>
+    <label>Marianne&#39;s view with status</label>
+    <language>en_US</language>
+</ListView>

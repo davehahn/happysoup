@@ -1,0 +1,502 @@
+<aura:component controller="DealerPartsOrderController" implements="forceCommunity:availableForAllPageTypes,force:appHostable,flexipage:availableForAllPageTypes" >
+
+
+    <aura:attribute name="saleType" type="String" default="Partner" />
+    <aura:attribute name="isSelectingAccount" type="Boolean" default="false" />
+    <aura:attribute name="erpOrderId" type="String" default=""/>
+    <aura:attribute name="activePriceBookId" type="Id" default=""/>
+    <aura:attribute name="isSaveable" type="Boolean" default="false" />
+    <aura:attribute name="removedMaterialIds" type="String" default=""/>
+    <aura:attribute name="searchKey" type="String" default=""/>
+    <aura:attribute name="noFoundMessage" type="String" default=""/>
+    <aura:attribute name="productFamily" type="String[]" default=""/>
+    <aura:attribute name="boatModel" type="List"/>
+    <aura:attribute name="selectedBoatModel" type="String" default="All Models"/>
+    <aura:attribute name="grandTotal" type="Decimal" default="0"/>
+    <aura:attribute name="isFound" type="Boolean" default="false"/>
+    <aura:attribute name="count" type="Integer" default="2" />
+    <aura:attribute name="Index" type="Integer" default="0" />
+    <aura:attribute name="productDescription" type="String" />
+    <aura:attribute name="products" type="List"/>
+    <aura:attribute name="materials" type="List"/>
+    <aura:attribute name="erpOrder"
+                    type="AcctSeed__Project__c"
+                    default="{ 'sobjectType'  : 'AcctSeed__Project__c',
+                               'Name' : '',
+                               'AcctSeed__Status__c' : 'Active'}"/>
+    <aura:attribute name="internalPoNumber" type="String" />
+    <aura:attribute name="lstProdFamily"
+                    type="List" />
+    <aura:attribute name="listIndex" type="String"/>
+    <aura:attribute name="campaign" type="String"/>
+    <aura:attribute name="lead" type="String"/>
+
+    <ltng:require scripts="{!join(',', $Resource.Libraries +'/js/LightningApex.js',
+                                       $Resource.Libraries +'/js/LightningUtils.js') }"
+                afterScriptsLoaded="{!c.doInit}" />
+
+    <aura:handler event="c:lgndP_DealerPartsOrderReload_Event" action="{!c.doInit}"/>
+
+    <aura:handler name="change"  value="{!v.searchKey}" action="{!c.searchKeyOnEnter}" />
+    <aura:handler name="change" value="{!v.materials}" action="{!c.materialChanged}" />
+    <aura:handler name="accountSelectedEvent"
+                  event="c:dh_AccountSelector_Selected_Event"
+                  action="{!c.handlePersonAccountSelected}" />
+    <aura:handler name="partCreatedEvent"
+                  event="c:Product_PartCreated_Event_dh"
+                  action="{!c.handlePartCreatedInSalesforceSuccess}" />
+
+    <div class="slds-spinner_container slds-hide" aura:id="busy-indicator">
+      <div role="status" class="slds-spinner slds-spinner--medium">
+        <span class="slds-assistive-text">Loading</span>
+        <div class="slds-spinner__dot-a"></div>
+        <div class="slds-spinner__dot-b"></div>
+      </div>
+    </div>
+
+    <c:Lgnd_Spinner_dh aura:id="spinner" />
+
+    <!-- Already in Cart Warnning modal -->
+    <div class="modalWindow HideModelBox" aura:id="MyModalSec">
+        <div class="slds-modal slds-fade-in-open" aria-hidden="false" role="dialog">
+          <div class="slds-modal__container">
+              <span class="Box-Shadow">
+                  <header class="slds-modal__header">
+                      <h2 class="slds-text-heading_medium slds-hyphenate">
+                        Product is already in your Cart.
+                      </h2>
+                  </header>
+                  <div class="slds-modal__content slds-p-around--medium" style="text-align:center">
+                      Would you like to add another?
+                  </div>
+                  <div class="slds-modal__footer">
+                      <button class="{!'slds-button slds-button--brand footer-button inputWidth inputNumber'+index1}" data-recordId="{!index1}" onclick="{!c.addProduct}">Yes</button>
+                      <button class="slds-button slds-button--brand footer-button"  onclick="{!c.closeWindow}">No</button>
+                  </div>
+
+              </span>
+          </div>
+        </div>
+        <div class="slds-backdrop slds-backdrop--open"></div>
+    </div>
+
+    <!-- ADD PRODUCT TO SALESFORCE MODAL -->
+    <section class="slds-hide" aura:id="product-create-modal">
+      <div role="dialog" class="slds-modal slds-fade-in-open">
+        <div class="slds-modal__container">
+          <header class="slds-modal__header">
+            <lightning:buttonIcon iconName="utility:close"
+                                  class="slds-modal__close slds-button_icon-inverse"
+                                  onclick="{!c.closeProductModal}"
+                                  alternativeText="Close Modal" />
+            <h2 class="slds-text-heading_medium slds-hyphenate">Add To Salesforce</h2>
+          </header>
+          <div class="slds-modal__content slds-p-around_medium" aura:id="product-form">
+          </div>
+        </div>
+      </div>
+      <div class="slds-backdrop slds-backdrop--open"></div>
+    </section>
+
+
+    <!-- INVENTORY LOCATION MODAL -->
+    <section class="slds-hide" aura:id="location-modal">
+      <div role="dialog" class="slds-modal slds-fade-in-open">
+        <div class="slds-modal__container">
+          <header class="slds-modal__header">
+            <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Inventory Information</h2>
+          </header>
+          <div class="slds-modal__content slds-p-around_medium" aura:id="location-modal-details">
+          </div>
+          <footer class="slds-modal__footer">
+            <button class="slds-button slds-button_neutral" onclick="{!c.closeBinLocationsModal}">Close</button>
+          </footer>
+        </div>
+      </div>
+      <div class="slds-backdrop slds-backdrop--open"></div>
+    </section>
+
+    <!-- PARTNER REFERENCE NUMBER MODAL -->
+    <section class="slds-hide" aura:id="po-number-modal">
+      <div role="dialog" class="slds-modal slds-fade-in-open">
+        <div class="slds-modal__container">
+          <header class="slds-modal__header">
+            <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Add Partner Reference #</h2>
+          </header>
+          <div class="slds-modal__content slds-p-around_medium">
+            <lightning:input type="text"
+                            label="Add a reference # to help track your order"
+                             value="{!v.internalPoNumber}" />
+          </div>
+          <footer class="slds-modal__footer slds-clearfix">
+            <lightning:button label="Cancel"
+                              class="slds-float_left"
+                              onclick="{!c.closePoNumberModal}" />
+            <lightning:button label="Create Order"
+                              onclick="{!c.submit}"
+                              class="slds-float_right slds-button_success" />
+            <lightning:button label="Save for Later"
+                              variant="brand"
+                              onclick="{!c.submitAsDraft}"
+                              class="slds-float_right" />
+          </footer>
+        </div>
+      </div>
+      <div class="slds-backdrop slds-backdrop--open"></div>
+    </section>
+
+    <aura:if isTrue="{! not(v.isSelectingAccount) }">
+      <div aura:id="createForm">
+
+        <div class="slds-card content">
+          <!-- header -->
+          <div class="slds-page-header slds-m-bottom_small slds-p-top_small" role="banner">
+              <div class="slds-grid slds-wrap slds-grid_vertical-align-end">
+                <div class="slds-col slds-size_2-of-12">
+                  <div class="mobile-menu-control">
+                    <lightning:buttonIcon iconName="utility:filterList"
+                                          variant="border"
+                                          size="medium"
+                                          alternativeText="filter"
+                                          class="menu-button"
+                                          onclick="{!c.toggleFilterMenu}" />
+                  </div>
+                </div>
+                <div class="slds-col slds-size_8-of-12">
+                  <lightning:input type="search"
+                                   name="Search"
+                                   label="Find a Product"
+                                   placeholder="Enter part name or decription..."
+                                   value="{!v.searchKey}"
+                                   aura:id="searchElem"
+                                   class="search-input" />
+                </div>
+                <div class="slds-col slds-size_2-of-12 slds-is-relative">
+                  <aura:if isTrue="{! equals('Partner', v.saleType) }">
+                    <lightning:button label="Cancel"
+                                      onclick="{!c.cancelReload}"
+                                      class="cancel-button" />
+                  </aura:if>
+                  <div class="mobile-menu-control">
+                    <div class="cart-count">{!v.materials.length}</div>
+                    <lightning:buttonIcon iconName="utility:moneybag"
+                                          variant="border"
+                                          size="medium"
+                                          class="slds-float_right menu-button"
+                                          alternativeText="filter"
+                                          onclick="{!c.toggleCart}" />
+                  </div>
+                </div>
+              </div>
+          </div>
+
+          <!-- content -->
+          <div class="slds-grid slds-wrap slds-p-bottom_small" >
+            <div aura:id="menu-mask" class="c-mask" onclick="{!c.closeMenus}"></div>
+            <!-- filters -->
+            <div class="slds-col
+                        slds-size_4-of-12
+                        slds-medium-size_4-of-12
+                        slds-large-size_3-of-12
+                        slds-p-horizontal_small
+                        slds-border_right
+                        filter-container
+                        c-menu
+                        c-menu--slide-left"
+                 aura:id="filter-container" >
+
+              <section>
+                <!-- Filter Area Start-->
+                <div>Boat Model</div>
+                <div class='slds-m-bottom_small'>
+                  <ui:inputSelect value="{!v.selectedBoatModel}" change="{!c.getProductsFromBoat}">
+                      <aura:iteration items="{!v.boatModel}" var="boat">
+                          <ui:inputSelectOption text="{!boat.value}" label="{!boat.label}"/>
+                      </aura:iteration>
+                  </ui:inputSelect>
+                </div>
+                <div class="slds-m-bottom_small">Product Family </div>
+                <div>
+                  <table>
+                    <aura:iteration items="{!v.lstProdFamily}" var="pdt" indexVar="index">
+                     <tr>
+                        <td>
+                          <ui:inputCheckbox value="{!pdt.isSelected}" change="{!c.SelctCheckbox}"/>
+                        </td>
+                        <td>
+                          <div class="slds-truncate slds-text-body_small slds-m-left_small">
+                            {!pdt.prodFamilyName}
+                          </div>
+                        </td>
+                      </tr>
+                    </aura:iteration>
+                  </table>
+                </div>
+                <!-- Filter Area End-->
+              </section>
+            </div>
+
+            <!-- search results -->
+            <div class="slds-col
+                        slds-size_12-of-12
+                        slds-medium-size_12-of-12
+                        slds-large-size_6-of-12
+                        slds-p-horizontal_small
+                        slds-border_left
+                        slds-border_right
+                        search-results-container" >
+              <div>
+                <div aura:id="test-element"></div>
+                <aura:iteration items="{!v.products}" var="pdt" indexVar="index">
+                  <div class="slds-grid slds-wrap slds-card slds-p-around_medium search-result">
+
+                    <div class="slds-col slds-size_2-of-6">
+                        <!-- <img src="{!pdt.pdtImgUrl}" alt="No Product Image"/> -->
+                        <aura:unescapedHtml value="{!pdt.ImageURL}" />
+                    </div>
+
+                    <div class="slds-col slds-size_4-of-6">
+                      <div class="slds-clearfix">
+                          <aura:if isTrue="{! not( empty( pdt.Family ) )}">
+                            <span class='slds-pill slds-float_left'>{!pdt.Family}</span>
+                          </aura:if>
+                          <!-- ADD TO CART BUTTON -->
+                          <aura:if isTrue="{! not(pdt.isMercuryProduct ) }">
+                            <button class="slds-button slds-button--brand slds-float_right"
+                                    onclick="{!c.addToList}"
+                                    data-recordId="{!index}">
+                              Add to Cart
+                            </button>
+                          </aura:if>
+                          <!-- LOCATE BUTTON -->
+                          <aura:if isTrue="{! and( equals( v.saleType, 'Retail'), not(pdt.isMercuryProduct ) ) }">
+                            <button class="slds-button slds-button--neutral slds-float_right slds-m-right_small"
+                                    onclick="{!c.showBinLocations}"
+                                    data-record-id="{!pdt.Id}">
+                              Locate
+                            </button>
+                          </aura:if>
+                          <!-- CREATE SALESFORCE PRODUCT BUTTON -->
+                          <aura:if isTrue="{! and( equals( v.saleType, 'Retail'),
+                                                   pdt.isMercuryProduct ) }">
+                            <button class="slds-button slds-button--brand slds-float_right"
+                                    onclick="{!c.createSalesforcePart}"
+                                    data-record-id="{!pdt.Id}">
+                              Create Part in Salesforce
+                            </button>
+                          </aura:if>
+                      </div>
+                      <div class='slds-grid slds-wrap slds-m-top_medium'>
+                        <div class="slds-col slds-size_10-of-12 bold">
+                          {!pdt.Name}
+                        </div>
+                        <div class="slds-col slds-size_2-of-12 slds-text-align_right bold">
+                          <c:lgnd_currencyDisplay value="{!pdt.UnitPrice}" zeroLabel="0.00" />
+                        </div>
+                      </div>
+                      <div class="slds-text-body_small slds-text-color_weak">
+                        {!pdt.ProductCode}
+                      </div>
+                      <div class="slds-m-top_small slds-text-body_small slds-text-color_weak">
+                        {!pdt.Description}
+                      </div>
+                    </div>
+
+                  </div>
+
+
+
+                </aura:iteration>
+
+                <!--aura:renderIf isTrue="{!v.listSize == 0}"-->
+                <div><ui:outputText value="{!v.noFoundMessage}"/>
+                </div>
+                <!--/aura:renderIf-->
+
+              </div>
+            </div>
+
+            <!-- Cart -->
+            <div class="slds-col
+                        slds-size_3-of-12
+                        slds-medium-size_3-of-12
+                        slds-large-size_3-of-12
+                        slds-p-horizontal_small
+                        slds-border_left
+                        cart-container
+                        c-menu
+                        c-menu--slide-right"
+                 aura:id="cart-container" >
+
+              <section>
+                  <div class='slds-m-bottom_small title'>My Cart</div>
+
+                  <div class="slds-grid slds-wrap slds-m-bottom_medium" style="line-height:3rem">
+                    <div class="slds-col slds-size_6-of-12">
+                      <div style="line-height:2rem;font-size:1.2rem" class="slds-p-left_small">Order Total</div>
+                      <div class="slds-p-left_small" style="line-height:1rem; font-size: 9pt;color: grey;">
+                        Plus shipping and taxes
+                      </div>
+                    </div>
+                    <div class="slds-col
+                                slds-size_6-of-12"
+                          style="font-size:1rem;">
+                       <!-- <c:lgnd_currencyDisplay value="{!v.grandTotal}" zeroLabel="0" /> -->
+                      <div class="slds-p-right_x-small
+                                  slds-p-left_x-small
+                                  slds-border_top
+                                  slds-border_right
+                                  slds-border_bottom
+                                  slds-border_left
+                                  slds-clearfix"
+                            style="line-height:3rem;font-size:1.5rem;">
+                        <span class="slds-float_left" style="color:#AAA;font-size:1.25rem;">$</span>
+                        <span class="slds-float_right">{!v.grandTotal}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <aura:if isTrue="{! equals('Partner', v.saleType) }">
+                    <div class="slds-clearfix slds-m-bottom_medium">
+                      <aura:if isTrue="{! v.isSaveable }">
+                        <lightning:button label="Save"
+                                          onclick="{!c.addPoNumber}"
+                                          class="slds-float_right slds-button_success" />
+                       <!--  <lightning:button label="Save for Later"
+                                          variant="brand"
+                                          onclick="{!c.submitAsDraft}"
+                                          class="slds-float_left" /> -->
+                      </aura:if>
+                    </div>
+                  </aura:if>
+
+                  <aura:if isTrue="{! equals('Retail', v.saleType) }">
+                    <div class="slds-clearfix slds-m-bottom_medium">
+                      <aura:if isTrue="{! v.isSaveable }">
+                        <lightning:button label="Create ERP"
+                                          variant="brand"
+                                          onclick="{!c.selectAccount}"
+                                          class="slds-float_right slds-button_success" />
+                      </aura:if>
+                    </div>
+                  </aura:if>
+
+                  <aura:iteration items="{!v.materials}" var="mat" indexVar="index1">
+                    <div class="slds-card slds-p-around_x-small cart-item">
+
+                      <div class="slds-grid slds-wrap">
+                        <div class="slds-col slds-size--2-of-6">
+                          <aura:unescapedHtml value="{!mat.matImgUrl}" />
+                            <!-- <img src="{!mat.matImgUrl}" alt="No Product Image" width="80" height="80" border="0"/> -->
+                        </div>
+                        <div class="slds-col slds-size--4-of-6">
+                          <div class="bold">
+                            {!mat.pdtName}
+                          </div>
+                          <div class="slds-text-body_small slds-text-color_weak">
+                              {!mat.pdtcode}
+                          </div>
+                          <aura:if isTrue="{!mat.AvailableQuantitySelf > 0}">
+                          <div class="slds-text-body_small slds-theme_success slds-align_absolute-center">
+                              Available in {!mat.warehouseName}: {!mat.AvailableQuantitySelf}
+                          </div>
+                          <aura:set attribute="else">
+                          <div class="slds-text-body_small slds-theme_warning slds-align_absolute-center">
+                              Available in {!mat.warehouseName}: {!mat.AvailableQuantitySelf}
+                          </div>                            
+                          </aura:set>
+                          </aura:if>
+                        </div>
+                      </div>
+
+                      <div class="slds-grid slds-wrap slds-m-top_small amount-line">
+                        <div class="slds-col slds-size_3-of-12">
+                          <input class="{!'slds-input inputWidth inputNumber'+index1}"
+                                 data-recordId="{!index1}"
+                                 value="{!mat.matQuantity}"
+                                 onkeyup="{!c.multiplyQuanPdts}"
+                                 onchange="{!c.multiplyQuanPdts}"
+                                 type="number" />
+                        </div>
+                        <div class="slds-col slds-size_1-of-12 slds-text-align_center">
+                          x
+                        </div>
+                        <div class="slds-col slds-size_3-of-12 slds-text-align_center">
+                          <c:lgnd_currencyDisplay value="{!mat.pricePerQuantity}"
+                                                  zeroLabel="0.00" />
+                        </div>
+                        <div class="slds-col slds-size_1-of-12 slds-text-align_center">
+                          =
+                        </div>
+                        <div class="slds-col
+                                    slds-size_4-of-12
+                                    slds-text-align_right
+                                    slds-p-right_x-small
+                                    slds-border_top
+                                    slds-border_right
+                                    slds-border_bottom
+                                    slds-border_left">
+                          <span>$ {!mat.totalPrice}</span>
+                        </div>
+                      </div>
+
+                      <div class="slds-clearfix slds-m-top_x-small slds-m-right_x-small">
+                          <a href="javascript:void(0);"
+                             class="slds-text-color_error slds-text-body_small slds-float_right"
+                             data-recordId="{!index1}"
+                             onclick="{!c.removeFromList}">
+                            Remove
+                          </a>
+                      </div>
+
+                    </div>
+
+                  </aura:iteration>
+
+              </section>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </aura:if>
+
+    <aura:if isTrue="{! v.isSelectingAccount }">
+      <lightning:card title="Select an Account"
+                      iconName="standard:person_account"
+                      class="slds-p-bottom_large">
+
+        <aura:set attribute="actions">
+          <lightning:button label="Cancel" onclick="{!c.cancelAccountSelection}"/>
+        </aura:set>
+
+        <lightning:layout horizontalAlign="center">
+          <lightning:layoutItem size="6" smallDeviceSize="12" mediumDeviceSize="8" largeDeviceSize="6">
+            <p>What brought you in today? (Optional)</p>
+            <br/>
+            <div class="slds-grid">
+              <div class="slds-size_1-of-2 slds-p-horizontal_medium">
+                <c:CampaignSelector_mp campaign="{!v.campaign}" />
+              </div>
+              <div class="slds-size_1-of-2 slds-p-horizontal_medium">
+                <c:LeadSourceSelector_mp lead="{!v.lead}" />
+              </div>
+            </div>
+          </lightning:layoutItem>
+        </lightning:layout>
+
+        <lightning:layout horizontalAlign="center">
+          <lightning:layoutItem size="6" smallDeviceSize="12" mediumDeviceSize="8" largeDeviceSize="6">
+            <br/>
+            <p>Account</p>
+            <br/>
+            <div class="slds-grid">
+              <div class="slds-size_1-of-1 slds-p-horizontal_medium">
+                <c:dh_AccountSelector />
+              </div>
+            </div>
+          </lightning:layoutItem>
+        </lightning:layout>
+      </lightning:card>
+    </aura:if>
+</aura:component>

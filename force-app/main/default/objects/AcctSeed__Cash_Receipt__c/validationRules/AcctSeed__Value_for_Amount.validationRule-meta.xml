@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>AcctSeed__Value_for_Amount</fullName>
+    <active>true</active>
+    <description>Verifies amount field is not blank.</description>
+    <errorConditionFormula>ISBLANK( AcctSeed__Amount__c )</errorConditionFormula>
+    <errorDisplayField>AcctSeed__Amount__c</errorDisplayField>
+    <errorMessage>You must enter a value</errorMessage>
+</ValidationRule>

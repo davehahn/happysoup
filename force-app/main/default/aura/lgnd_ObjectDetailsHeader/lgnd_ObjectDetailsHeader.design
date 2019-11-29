@@ -1,0 +1,34 @@
+<design:component >
+  <design:attribute name="sObjectName"
+                    label="sObject Name"
+                    description="API name of the sObject this detail is about"
+                    required="true" />
+  <design:attribute name="title"
+                    label="List Title"
+                    description="Title of the list"
+                    required="true" />
+  <design:attribute name="iconName"
+                    label="Icon Name"
+                    description="Name of icon on top left of header from SLDS. Example: standard:account"
+                    required="true" />
+  <design:attribute name="nameField"
+                    label="Name Field"
+                    description="Field API Name for field you would like to use as the record Name"
+                    required="true" />
+  <design:attribute name="displayFields"
+                    label="Fields To Display"
+                    description="Comma seperated list of field to display in the header. specify Label:APIName:FORMAT. FORMAT is used to assist in displaying data. If left off STRING will be assumed.  FORMAT can be STRING,DATETIME,CURRENCY.   Example Stage:Stage__c,Created On:CreatedDate:DATETIME "/>
+  <design:attribute name="canEditFormula"
+                    label="Allowed to Edit Formula"
+                    description="A comma seperated List containing fieldName:MATCHING_RULE:value to determine if we should show the edit.delete buttons. MATCHING_RULE can be EQUALS,NOTEQUALS, CONTAINS.  example:  Stage__c:EQUALS:Draft" />
+  <design:attribute name="listViewURL"
+                    label="List View URL"
+                    description="The URL for the list view of this object"
+                    required="true" />
+  <design:attribute name="editURL"
+                    label="Edit View URL"
+                    description="The URL for the edit view of this object.  If left blank default editing will take place" />
+  <design:attribute name="alwaysEditFields"
+                    label="Always Editable Fields"
+                    description="Comma seperated list of fields that are always editable regardless of canEditFormula. If empty canEditFormula will determine Edit button visibility alone" />
+</design:component>

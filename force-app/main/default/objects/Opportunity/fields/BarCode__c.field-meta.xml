@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>BarCode__c</fullName>
+    <externalId>false</externalId>
+    <formula>IF(  InvoiceNumber__c == NULL,
+NULL,
+IMAGE(&quot;https://www.barcodesinc.com/generator/image.php?code=&quot;+  InvoiceNumber__c  +&quot;&amp;style=68&amp;type=C128B&amp;width=200&amp;height=50&amp;xres=1&amp;font=3&quot; ,&quot;Barcode&quot;)
+)</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>BarCode</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

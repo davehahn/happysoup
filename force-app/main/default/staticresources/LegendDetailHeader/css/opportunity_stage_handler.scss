@@ -1,0 +1,304 @@
+$indicatorRingColor: #FFF;
+
+.oppStageChangerContainer {
+  width: 100%;
+  margin:0;
+  padding:0;
+  min-height: 56px;
+  background: #FFF;
+
+  .oppStageChanger {
+    min-height: 56px;
+    margin-top:0;
+    margin-bottom:0;
+    padding-top: 20px;
+    padding-bottom:15px;
+    text-align:center;
+    font-family: 'Lato' ,sans-serif;
+    visibility: hidden;
+    background: #FFF;
+
+    a {
+      text-decoration: none;
+      line-height:36px;
+      padding:0 7px 0 0;
+      margin-right:38px;
+      position:relative;
+      display:-webkit-inline-flex;
+      display:-moz-inline-flex;
+      display:inline-flex;
+      height:36px;
+      -webkit-transition: all 0.5s;
+      -moz-transition: all 0.5s;
+      -o-transition: all 0.5s;
+      background:#00AAE9;
+      color:#FFF;
+      border-color:#00AAE9;
+
+      // &:hover {
+      //   background:#4EFA62;
+      //   text-decoration: none;
+      //   color:#000;
+      //   cursor:default;
+      // }/* /:hover */
+
+       &:first-child {
+        padding-left:18px;
+        border-radius: 20px 0 0 20px;
+
+        &:before {
+          border-width:0;
+        }
+      } /* /:first-child */
+
+      &:last-child {
+        border-radius: 0 20px 20px 0;
+        margin-right:0;
+        padding-right:15px;
+        /*padding-right:18px;*/
+        &:after {
+          border-width: 0;
+        }
+      }
+
+      &:before {
+        left: -36px;
+        top: 50%;
+        border: solid transparent;
+        content: " ";
+        height: 0;
+        width: 0;
+        position: absolute;
+        border-color: rgba(136, 183, 213, 0);
+        border-top-color: inherit;
+        border-bottom-color: inherit;
+        border-right-color: inherit;
+        border-width: 18px;
+        margin-top: -18px;
+      }/* /:before */
+
+      &:after {
+        left: 100%;
+        top: 50%;
+        border: solid transparent;
+        content: " ";
+        height: 0;
+        width: 0;
+        position: absolute;
+        border-color: rgba(136, 183, 213, 0);
+        border-left-color: inherit;
+        border-width: 18px;
+        margin-top: -18px;
+      }/* /:after */
+
+
+      span.status-badge {
+        position: absolute;
+        right:-3px;
+        top:-10px;
+        background: #FFF;
+        padding:3px 5px;
+        border-radius:12px;
+        opacity:0;
+        color:#00E01B;
+        line-height:12px;
+        font-size:1em;
+        z-index:10;
+        border:1px solid #00E01B;
+        -webkit-transition: all 0.5s;
+        -moz-transition: all 0.5s;
+        -o-transition: all 0.5s;
+      } /* /span.status-badge */
+
+      span:not(.status-badge) {
+        display:inline-block;
+        width:100%;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        margin:0;
+        padding:0;
+      }/* /.span:not(.status-badge) */
+
+      img {
+        position: relative;
+        top:-2px;
+        left:6px;
+        width:0px;
+        margin-left:5px;
+        -webkit-transition: all 0.5s;
+        -moz-transition: all 0.5s;
+        -o-transition: all 0.5s;
+
+        &.display {
+          width:16px;
+          top:3px;
+        }
+      }/* /img */
+
+      &.available {
+        background:#3E9A85;
+        color:#FFF;
+        border-color:#3E9A85;
+        width:auto;
+        text-align:center;
+        pointer-events: default;
+
+        &.unclickable,
+        &.unclickable:hover {
+          background:#3E9A85;
+          color:#FFF;
+          border-color:#3E9A85;
+          cursor:default;
+        }/* / .unclickable */
+
+        // &:hover {
+        //   background:#4EFA62;
+        //   border-color:#4EFA62;
+        //   text-decoration: none;
+        //   color:#FFF;
+        //   cursor: pointer;
+        // }
+
+      }/* /.available */
+
+      &.complete {
+        background:#00E01B;
+        color:#FFF;
+        border-color:#00E01B;
+        cursor: default;
+
+        span.status-badge {
+          opacity:1;
+
+          &:before {
+            content: "\2713";
+          }
+
+        }
+
+        &.retractable {
+          pointer-events: auto !important;
+
+          &:hover {
+            background:#F53737;
+            color:#FFF;
+            border-color:#F53737;
+            cursor: pointer;
+
+            span.status-badge {
+              background: #FFF;
+              padding:3px 5px;
+              color: #F53737;
+              border-color: #F53737;
+
+              &:before {
+                content:'';
+              }
+
+              &:after {
+                content:"\2717";
+              }
+
+            }/* /span */
+
+          }/* .retractable:hover */
+
+        }/* .retractable */
+
+
+      }/* /.complete */
+
+      &.disabled {
+        background:#00AAE9;
+        color:#FFF;
+        border-color:#00AAE9;
+        &:hover {
+          cursor:default;
+        }
+
+      }/* /.disabled */
+
+      .change-indicator {
+        display:inline-block;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        position: relative;
+        /*top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);*/
+        font-size: 0;
+        li {
+          height: 0;
+          position: relative;
+          /*top: 50%;
+          left: 0;*/
+          display:inline-block;
+          width: 0;
+          margin: 0;
+          height: 10px;
+          width: 10px;
+          border: 3px solid $indicatorRingColor;
+          border-radius: 100%;
+          transform: transformZ(0);
+          animation: LOADING 2s infinite;
+          &:nth-child(1n) {
+            left: -20px;
+            animation-delay: 0s;
+          }
+          &:nth-child(2n) {
+            left: 0;
+            animation-delay: 0.2s;
+          }
+          &:nth-child(3n) {
+            left: 20px;
+            animation-delay: 0.4s;
+          }
+        }
+      }/* /.change-indicator */
+
+    } /* /a */
+
+    &.loaded {
+      visibility: visible;
+
+      a:not(.available) {}
+
+    } /* /.btnContainer.loaded */
+
+  }/* /.oppStageChanger */
+
+}/* /.oppStageChangerContainer */
+
+@keyframes  LOADING {
+  0%   {
+    transform: scale(0.5);
+    background: $indicatorRingColor;
+  }
+  50%   {
+    transform: scale(1);
+    background: transparent;
+  }
+  100% {
+    transform: scale(0.5);
+    background: $indicatorRingColor;
+  }
+}
+
+@keyframes  LOADINGREV {
+  0%   {
+    transform: scale(0.5);
+    background: transparent;
+  }
+  50%   {
+    transform: scale(1);
+    background: $indicatorRingColor;
+  }
+  100% {
+    transform: scale(0.5);
+    background: transparent;
+  }
+}
+
+

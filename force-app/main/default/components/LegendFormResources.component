@@ -1,0 +1,159 @@
+<apex:component >
+
+  <apex:attribute name="includeFontAwesome"
+                  description="Should we Include Font-Awesome"
+                  type="Boolean"
+                  required="false" />
+  <apex:attribute name="includeHandlebars"
+                  description="Include handlebars.js"
+                  type="Boolean"
+                  required="false" />
+  <apex:attribute name="includeComboBox"
+                  description="Include the resources for the LegendForceComboBox"
+                  type="Boolean"
+                  required="false" />
+
+  <apex:attribute name="includeSFFD"
+                  type="Boolean"
+                  description="Include the SFFD Resources"
+                  required="false"
+                  default="true" />
+
+  <apex:outputPanel layout="none" rendered="{!includeSFFD == true}">
+    <sffd:Resources />
+  </apex:outputPanel>
+
+  <apex:stylesheet value="{!URLFOR($Resource.LegendStyles)}" />
+  <apex:stylesheet value="{!URLFOR($Resource.LegendFormStyles)}" />
+
+  <apex:outputPanel layout="none" rendered="{!includeFontAwesome != null && includeFontAwesome == true}">
+    <apex:stylesheet value="{!URLFOR($Resource.FontAwesome420, 'font-awesome-4.2.0/css/font-awesome.min.css')}" />
+  </apex:outputPanel>
+
+  <apex:outputPanel layout="none" rendered="{!includeComboBox != null && includeComboBox == true}">
+    <apex:stylesheet value="{!URLFOR($Resource.LegendForceComboBox, 'LegendForceComboBox.css')}" />
+    <apex:includeScript value="{!URLFOR($Resource.LegendForceComboBox, 'jQuery.LegendForceComboBox.js')}" />
+  </apex:outputPanel>
+
+  <apex:outputPanel layout="none" rendered="{!includeHandlebars != null && includeHandlebars == true}">
+   <apex:includeScript value="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0/handlebars.min.js"/>
+
+   <script type="text/javascript">
+   (function($, document, window, undefined)
+    {
+
+      window.LGND = {
+
+        HandlebarsHelpers: {
+
+          templateLoader: function(templateMap)
+          {
+            var requests = [],
+             dfd = new $.Deferred(),
+             tmpls = {};
+            $.each(templateMap, function(name, url) {
+              requests.push($.ajax({
+                url: url,
+                cache: true,
+                success: function(data) {
+                  tmpls[name] = Handlebars.compile(data);
+                }
+              }));
+            });
+
+            $.when.apply(undefined, requests).done(function() {
+              dfd.resolve(tmpls);
+            });
+
+            return dfd.promise();
+          }
+
+        }// /HandleBarsHelpers
+
+      };
+
+    })(jQuery.noConflict(), document, window);
+   </script>
+  </apex:outputPanel>
+
+  <div id="LGND-Alert" class="LGND-alert reveal-modal tiny" data-reveal="true" data-options="close_on_background_click:false;">
+
+    <h2>
+      <i class="fa fa-exclamation-triangle"></i>
+      <span></span>
+    </h2>
+    <p></p>
+    <div>
+      <a href="#" class="fd_button small invert">OK</a>
+    </div>
+  </div>
+
+  <div id="LGND-Confirm" class="LGND-alert confirm reveal-modal tiny" data-reveal="true" data-options="close_on_background_click:false;">
+    <h2></h2>
+    <p></p>
+    <div>
+      <a href="#" class="fd_button small success invert" data-response="true">OK</a>
+      <a href="#" class="fd_button small invert" data-response="false">Cancel</a>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+
+  (function($, document, window, undefined) {
+
+    if( window.LGND === undefined ) window.LGND = {};
+    var LGND = window.LGND;
+
+    LGND.alert = function(title, message){
+      var $alert = $('#LGND-Alert');
+      $alert.find('h2 span').html(title)
+      .parent().next().html(message)
+      .next().on('click', 'a', function(e) {
+        e.preventDefault();
+        $alert.foundation('reveal', 'close');
+        $(this).off('click');
+      });
+      $alert.foundation('reveal', 'open');
+    }
+
+    LGND.confirm = function(title, message)
+    {
+      var $confirm = $('#LGND-Confirm'),
+      dfd = new $.Deferred();
+      $confirm.find('h2').html(title)
+      .next().html(message);
+      $confirm.find('a').on('click', function(e) {
+        $confirm.foundation('reveal', 'close');
+        e.preventDefault();
+        $(this).off('click');
+        dfd.resolve($(this).data('response') );
+      });
+      $confirm.foundation('reveal', 'open');
+      return dfd.promise();
+    };
+
+     $('body').on({
+       focusin: function(){
+          $j(this).parent().next().find('.postfix').addClass('focus');
+        },
+        focusout: function(){
+          $j(this).parent().next().find('.postfix').removeClass('focus');
+        }
+      }, 'input.has-postfix')
+      .on({
+        focusin: function(){
+          $j(this).parent().prev().find('.prefix').addClass('focus');
+        },
+        focusout: function(){
+          $j(this).parent().prev().find('.prefix').removeClass('focus');
+        }
+      }, 'input.has-prefix');
+
+
+  })(jQuery.noConflict(), document, window);
+
+  </script>
+
+
+
+</apex:component>

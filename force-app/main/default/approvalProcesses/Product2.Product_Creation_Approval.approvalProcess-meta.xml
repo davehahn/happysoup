@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ApprovalProcess xmlns="http://soap.sforce.com/2006/04/metadata">
+    <active>false</active>
+    <allowRecall>false</allowRecall>
+    <allowedSubmitters>
+        <type>creator</type>
+    </allowedSubmitters>
+    <approvalPageFields>
+        <field>Unique_Product_Code__c</field>
+        <field>Name</field>
+        <field>Description</field>
+        <field>Family</field>
+        <field>Unit_of_Measurement__c</field>
+        <field>AcctSeed__Unit_Cost__c</field>
+    </approvalPageFields>
+    <approvalStep>
+        <allowDelegate>true</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>epaulino@legendboats.com</name>
+                <type>user</type>
+            </approver>
+            <approver>
+                <name>jdewar@legendboats.com</name>
+                <type>user</type>
+            </approver>
+            <approver>
+                <name>mmcrae@legendboats.com</name>
+                <type>user</type>
+            </approver>
+            <approver>
+                <name>sboothe@legendboats.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>FirstResponse</whenMultipleApprovers>
+        </assignedApprover>
+        <description>Product approval for non-serialized items</description>
+        <entryCriteria>
+            <criteriaItems>
+                <field>Product2.RecordType</field>
+                <operation>notEqual</operation>
+                <value>Boat,Motor,Trailer,Trolling Motor</value>
+            </criteriaItems>
+        </entryCriteria>
+        <ifCriteriaNotMet>GotoNextStep</ifCriteriaNotMet>
+        <label>Step 1</label>
+        <name>Step_1</name>
+    </approvalStep>
+    <approvalStep>
+        <allowDelegate>false</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>mduhamel@legendboats.com</name>
+                <type>user</type>
+            </approver>
+            <approver>
+                <name>sboothe@legendboats.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>FirstResponse</whenMultipleApprovers>
+        </assignedApprover>
+        <description>Approval Process if products have serial numbers (boats, motors, trailers, trolling motors)</description>
+        <entryCriteria>
+            <criteriaItems>
+                <field>Product2.RecordType</field>
+                <operation>equals</operation>
+                <value>Boat,Motor,Trailer,Trolling Motor</value>
+            </criteriaItems>
+        </entryCriteria>
+        <label>Products with Serials</label>
+        <name>Products_with_Serials</name>
+        <rejectBehavior>
+            <type>RejectRequest</type>
+        </rejectBehavior>
+    </approvalStep>
+    <description>Product approval process</description>
+    <emailTemplate>Parts_Related/Product_Creation_Approval_Request</emailTemplate>
+    <enableMobileDeviceAccess>false</enableMobileDeviceAccess>
+    <finalApprovalActions>
+        <action>
+            <name>Activate_Part</name>
+            <type>FieldUpdate</type>
+        </action>
+        <action>
+            <name>Part_Creation_Approved_Email</name>
+            <type>Alert</type>
+        </action>
+        <action>
+            <name>Set_Approved_For_Use</name>
+            <type>FieldUpdate</type>
+        </action>
+    </finalApprovalActions>
+    <finalApprovalRecordLock>false</finalApprovalRecordLock>
+    <finalRejectionRecordLock>false</finalRejectionRecordLock>
+    <initialSubmissionActions>
+        <action>
+            <name>Ensure_Inactive</name>
+            <type>FieldUpdate</type>
+        </action>
+    </initialSubmissionActions>
+    <label>Product Creation Approval</label>
+    <postTemplate>Product_Creation_Approval</postTemplate>
+    <recordEditability>AdminOnly</recordEditability>
+    <showApprovalHistory>true</showApprovalHistory>
+</ApprovalProcess>

@@ -1,0 +1,47 @@
+<messaging:emailTemplate subject="Your Ownership Experience" recipientType="Contact" relatedToType="Opportunity">
+<messaging:htmlEmailBody >
+<html>
+
+    <h1 style="width:100%; margin: 10px 0; border-bottom: 2px solid #00aaf9; padding-bottom:5px;">
+        <img src="https://na15.salesforce.com/servlet/servlet.ImageServer?id=015i0000006pR7C&oid=00Di0000000aRhm"
+             style="padding:10px 15px; height: 45px; width: 300px;" />
+    </h1>
+    
+    <div style="width: 95%; margin: auto;">
+        <p style="line-height: 25px; margin: 20px 0; font-size: 18px;">
+            Hi there {!relatedTo.Account.Name},
+        </p>
+        
+        <p style="line-height: 25px; margin: 20px 0; font-size: 18px;">
+            We're thrilled that you're able to get out on the water this summer!  It's unfortunate that we couldn't get you enjoying a new Legend Boat, but we'd still like to hear about your experience with us.  
+        </p>
+        
+        <p style="line-height: 25px; margin: 20px 0; font-size: 18px;">
+            Please click 
+            <a href="http://legendboats.force.com/surveys/TakeSurvey?id=a1ai000000H7oE3AAJ&cId={!relatedTo.Account.PersonContactId}&oppId={!relatedTo.Id}">
+                here
+            </a> 
+            to let us know your thoughts
+        </p>
+        
+        <p style="line-height: 25px; margin: 20px 0; font-size: 18px;">
+            Thank you so much for your time, and as always, please feel free to call us if you have any questions or further comments.
+        </p>
+        
+        <p style="line-height: 25px; margin: 20px 0; font-size: 18px;">
+            We sincerely hope that you have fun with your new boat this summer!
+        </p>
+        
+        <p style="line-height: 25px; margin: 20px 0; font-size: 18px;">
+            Yours in Boating,
+        </p>
+ 
+ 
+        {!relatedTo.Owner.Name}<br />
+        {!relatedTo.Owner.Title}
+        
+    </div>
+    
+</html>
+</messaging:htmlEmailBody>
+</messaging:emailTemplate>

@@ -1,0 +1,64 @@
+<div id="trip-header" class="slds-page-header" role="banner">
+  <div class="slds-grid">
+    <div class="slds-col slds-has-flexi-truncate">
+      <div class="slds-media slds-no-space slds-grow">
+        <div class="slds-media__figure">
+          <img src="{{ icons.trip }}" class="slds-icon slds-icon--large slds-icon-custom-custom31"/>
+        </div>
+        <div class="slds-media__body">
+          <p class="slds-text-title--caps slds-line-height--reset">Truck Trip Builder</p>
+          <h1 class="slds-page-header__title slds-m-right--small slds-align-middle slds-truncate">
+            {{{ record.Name }}}
+          </h1>
+        </div>
+      </div>
+    </div>
+    <div class="slds-col slds-no-flex slds-grid slds-align-top">
+      <div class="slds-button-group" role="group">
+        {{#ifNull record.truckLoadSchedule }}
+        <a href="#" data-header-btn="cancel" class="slds-button slds-button--neutral">Cancel</a>
+        {{/ifNull}}
+        {{#ifHasPermission 'canCreateDestinations' }}
+        <a href="#" data-header-btn="new_destination" class="slds-button slds-button--neutral">Add Destination</a>
+        {{/ifHasPermission}}
+        {{#ifHasPermission 'canDeleteTrips'}}
+        <a href="#" data-header-btn="delete_trip" class="slds-button slds-button--neutral">Delete</a>
+        {{/ifHasPermission}}
+        {{#ifHasPermission 'canEditTrips'}}
+        <a href="#" data-header-btn="edit_trip" class="slds-button slds-button--neutral">Edit</a>
+        {{/ifHasPermission}}
+      </div>
+    </div>
+  </div>
+  <div class="slds-grid slds-wrap header-detail slds-m-top--medium">
+    <div class="slds-p-horizontal--small slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--3-of-12">
+      <div class="slds-grid slds-wrap">
+        <p class="slds-text-title slds-truncate slds-m-bottom--none slds-p-horizontal--small slds-size--1-of-3 slds-medium-size--1-of-1 slds-large-size--1-of-1" title="Field 1">Driver</p>
+        <p class="slds-text-body--regular slds-truncate slds-p-horizontal--small slds-size--2-of-3 slds-medium-size--1-of-1 slds-large-size--1-of-1">{{record.Truck_Driver__r.Name}}</p>
+      </div>
+    </div>
+    <div class="slds-p-horizontal--small slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--3-of-12">
+      <div class='slds-grid slds-wrap'>
+        <p class="slds-text-title slds-truncate slds-m-bottom--none slds-p-horizontal--small slds-size--1-of-3 slds-medium-size--1-of-1 slds-large-size--1-of-1">Truck / Trailer</p>
+        <p class="slds-text-body--regular slds-p-horizontal--small slds-size--2-of-3 slds-medium-size--1-of-1 slds-large-size--1-of-1">{{record.Truck__c}} / {{record.Trailer__c}}</p>
+      </div>
+    </div>
+    <div class="slds-p-horizontal--small slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--2-of-12">
+      <div class='slds-grid slds-wrap'>
+        <p class="slds-text-title slds-truncate slds-m-bottom--none slds-p-horizontal--small slds-size--1-of-3 slds-medium-size--1-of-1 slds-large-size--1-of-1">Departure Date</p>
+        <p class="slds-text-body--regular slds-p-horizontal--small slds-size--2-of-3 slds-medium-size--1-of-1 slds-large-size--1-of-1 .slds-text-heading--small">
+          {{ toDateString record.Departure_Date__c }}
+        </p>
+      </div>
+    </div>
+    <div class="slds-p-horizontal--small slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--2-of-12">
+      <div class="slds-grid slds-wrap">
+        <p class="slds-text-title slds-truncate slds-m-bottom--none slds-p-horizontal--small slds-size--1-of-3 slds-medium-size--1-of-1 slds-large-size--1-of-1" style="font-weight: 300">Return Date</p>
+        <p class="slds-text-body--regular slds-p-horizontal--small slds-size--2-of-3 slds-medium-size--1-of-1 slds-large-size--1-of-1 .slds-text-heading--small">
+          {{ toDateString record.Return_Date__c }}
+        </p>
+      </div>
+    </div>
+  </div>
+
+</div>

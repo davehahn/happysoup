@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>false</available>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>Legend_Letterhead</letterhead>
+    <name>TIBS Next Day Sales Manager</name>
+    <style>freeForm</style>
+    <subject>I Hope You Enjoyed the Show</subject>
+    <textOnly>Hello {!Opportunity.Account},
+
+I&#39;m glad you made it to the Toronto Sportsman Show. I wanted to take this time to thank you again for becoming part of our Legend Family! I also wanted to let you know that if your Memory Maker is unavailable for any reason whatsoever, you can contact me for anything you need.
+
+At Legend, we are always striving to create the ultimate customer experience, from buying to boating. I have attached a link to a quick feedback form with 7 short questions and I would really appreciate if you took a few minutes to share your feelings about your Legend experience here at the show.
+
+https://legendboats.getfeedback.com/r/xl7rHtIk?ContactID={!Contact.Id}&amp;AccountID={!Account.Id}&amp;OpportunityName={!Opportunity.Account}
+
+
+
+Thank you again and I look forward to seeing you in the Spring.
+
+Yours in Boating,
+
+{!User.Username}
+Sales Manager
+
+{!User.Email}
+1(800) 459-8448</textOnly>
+    <type>html</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

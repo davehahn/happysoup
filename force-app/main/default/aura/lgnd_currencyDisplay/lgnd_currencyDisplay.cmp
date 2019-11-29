@@ -1,0 +1,19 @@
+<aura:component >
+  <aura:attribute name="value" type="String" required="true" />
+  <aura:attribute name="zeroLabel" type="String" required="true" />
+  <aura:attribute name="displayValue" type="String" />
+  <aura:attribute name="isZero" type="Boolean" default="false" />
+
+  <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+
+  <aura:if isTrue="{! !v.isZero}">
+    <lightning:formattedNumber value="{!v.displayValue}"
+                               style="currency"
+                               currencyCode="CAD" />
+  </aura:if>
+  <aura:if isTrue="{!v.isZero}">
+    {!v.displayValue}
+  </aura:if>
+
+
+</aura:component>

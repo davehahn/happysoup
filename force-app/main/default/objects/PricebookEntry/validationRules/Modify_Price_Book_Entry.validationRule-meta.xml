@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Modify_Price_Book_Entry</fullName>
+    <active>true</active>
+    <description>Leverages the Permission Set &quot;Can Modify Price Book Entry&quot; to only allow assigned users and Sys Admins access to modifying the List Price field.</description>
+    <errorConditionFormula>ISCHANGED(UnitPrice) 
+&amp;&amp; 
+$Profile.Name != &#39;System Administrator&#39;
+&amp;&amp; 
+$Permission.Can_Modify_Price_Book_Entry = FALSE</errorConditionFormula>
+    <errorDisplayField>UnitPrice</errorDisplayField>
+    <errorMessage>Only authorized users may perform changes to the List Price field.</errorMessage>
+</ValidationRule>

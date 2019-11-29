@@ -1,0 +1,92 @@
+<apex:page standardController="Opportunity"
+           extensions="OpportunityExt_OppDoc"
+           showHeader="false" sidebar="false">
+
+  <apex:stylesheet value="{!URLFOR($Resource.OpportunityResources, 'css/opportunity_documents.min.css')}" />
+  <c:LegendFormResources />
+
+  <div style="width:100; padding:0; margin:0; clear:both; overflow:hidden">
+    <apex:outputPanel layout="none">
+      <a href="/apex/OpportunityDocumentBuilder?id={!Opportunity.Id}&docType=invoice" class="lgnd_btn radius" style="float:right; margin-right:15px;">Create Sale Agreement</a>
+    </apex:outputPanel>
+    <a href="/apex/OpportunityDocumentBuilder?id={!Opportunity.Id}&docType=quote" class="lgnd_btn radius" style="float:right; margin-right:15px;">Create Quote</a>
+  </div>
+
+  <div class="docContainer">
+
+    <apex:repeat value="{!docs}" var="doc" >
+
+      <div class="docItem {!LOWER(SUBSTITUTE(doc.Document_Type__c, ' ', '_'))} {!IF(doc.Document_Id__c = Opportunity.Invoice_Document_Id__c, 'current-invoice', '')}">
+        <div class="main">
+          <div class="current-indicator"></div>
+          <p>{!SUBSTITUTE(doc.Name,'.pdf', '')}</p>
+        </div>
+        <div class="layer">
+          <div>
+            <a href="#" class="delete" data-doc-id="{!doc.Id}"></a>
+            <div class="links">
+              <apex:outputLink value="/servlet/servlet.FileDownload?file={!doc.Document_Id__c}"
+                               target="_blank"
+                               styleClass="view" />
+              <apex:outputLink value="/_ui/core/email/author/EmailAuthor?p3_lkid={!doc.Opportunity__c}&doc_id={!doc.Document_Id__c}&retURL={!doc.Opportunity__c}&p2_lkid={!acctId}"
+                               target="_parent"
+                               styleClass="email" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </apex:repeat>
+
+  </div>
+  <script src="{!URLFOR($Resource.Foundation, 'js/foundation.min.js')}" />
+  <script type="text/javascript">
+
+  if( typeof($j) === undefined )
+  {
+    var $j = jQuery.noConflict();
+  }
+
+  $j(function(){
+    $j('.layer').on('click', 'a.delete', function(e) {
+      e.preventDefault();
+      var $this= $j(this),
+          $item = $this.closest('.docItem'),
+          docId = $this.data('doc-id');
+      LGND.confirm('Permanently Delete Document?', 'Are you sure?')
+      .done(function(response) {
+        if(response)
+        {
+          $item.append( indicator() );
+          OpportunityExt_OppDoc.deleteDoc( docId, function(events, result) {
+            console.log(result);
+            if( result.statusCode === 200 )
+            {
+              $item.addClass('deleting');
+              setTimeout( function() {
+                $item.remove();
+              }, 600);
+            }
+            else
+            {
+              LGND.alert('An Error Has Occurred', result.message);
+              $item.find('.delete_indicator').remove();
+            }
+        });
+        }
+      });
+    });
+
+  });
+
+  function indicator()
+  {
+    return $j('<div></div>')
+    .addClass('delete_indicator')
+    .append( $j('<i class="fa fa-spinner fa-spin"></i>') );
+  }
+
+
+  </script>
+
+</apex:page>

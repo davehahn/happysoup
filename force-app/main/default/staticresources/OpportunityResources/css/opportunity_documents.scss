@@ -1,0 +1,207 @@
+$invoiceBGRD: #1FB335;
+$quoteBGRD: #00AAF9;
+$authBGRD: #FFB224;
+
+
+.docContainer {
+  width: 95%;
+  margin:auto;
+  display:flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: flex-start;
+  align-content: flex-start;
+}
+
+.docItem {
+  color: #FFF;
+  font-family: 'Lato' sans-serif;
+  font-weight: 300;
+  padding:10px;
+  margin:1.5rem;
+  height:190px;
+  width: 170px;
+  background-size: 70px 80px;
+  background-position: 50% 85%;
+  background-repeat: no-repeat;
+  position:relative;
+  overflow: hidden;
+  border-radius:10px;
+  -webkit-transition:all 0.5s ease-in-out;
+  -moz-transition:oall 0.5s ease-in-out;
+  -o-transition:all 0.5s ease-in-out;
+  transition:all 0.5s ease-in-out;
+
+  .main {
+    padding: 10px 20px 20px 20px;
+    position: absolute;
+    top:0;
+    left:0;
+    height:100%;
+    width:100%;
+    z-index: 10;
+    .current-indicator {
+      display:none;
+    }
+  }
+
+  .layer {
+    position:absolute;
+    left:0;
+    top:100%;
+    height: 100%;
+    width:100%;
+    z-index:11;
+    background-color: rgba(255,255,255,0.9);
+    -webkit-transition:all 0.5s ease-in-out;
+    -moz-transition:oall 0.5s ease-in-out;
+    -o-transition:all 0.5s ease-in-out;
+    transition:all 0.5s ease-in-out;
+
+    & > div {
+      position:relative;
+      height:100%;
+      width:100%;
+      overflow:hidden;
+
+      a.delete {
+        position:relative;
+        display:block;
+        height: 51px;
+        width:51px;
+        padding: 17px;
+        left:100%;
+        top:0;
+        margin-left:-51px;
+        border-radius: 0 0 0 10px;
+        background-size: 30px 30px;
+        background-position: 50% 50%;
+        background-repeat: no-repeat;
+        background-image: url("../img/remove.svg");
+        background-color: #FF5858;
+      }
+
+      .links {
+        display:flex;
+        position:absolute;
+        top:80%;
+        margin-top: -86px;
+
+        a {
+          display:block;
+          height: 55px;
+          width:55px;
+          margin: 15px;
+          background-size: 30px 30px;
+          background-position: 50% 50%;
+          background-repeat: no-repeat;
+          border-radius: 30px;
+
+          &.email {
+             background-image: url("../img/email.svg");
+          }
+          &.view {
+             background-image: url("../img/view.svg");
+          }
+        }
+      }
+
+    }
+  }/* /.layer */
+
+  .delete_indicator {
+    position:absolute;
+    left:0;
+    top:0;
+    height: 100%;
+    width:100%;
+    z-index:12;
+    background-color: rgba(255,255,255,0.9);
+
+    i {
+      position:absolute;
+      font-size: 76px;
+      height:76px;
+      width: 76px;
+      top:50%;
+      left: 50%;
+      margin-left: -38px;
+      margin-top: -38px;
+      color: #FF5E5E;
+    }
+  }/* /.delete_indicator */
+
+  &.invoice {
+    background-image: url("../img/invoice_pdf.svg");
+    background-color: lighten( $invoiceBGRD, 30% );
+
+    .layer {
+      .links {
+        a {
+          background-color: $invoiceBGRD;
+        }
+      }
+    }
+  }
+
+  &.quote {
+    background-image: url("../img/quote_pdf.svg");
+    background-color: lighten( $quoteBGRD, 30% );
+
+    .layer {
+      .links {
+        a {
+          background-color: $quoteBGRD;
+        }
+      }
+    }
+  }
+
+  &.3rd_party_authorization {
+    background-color: lighten( $authBGRD, 30% );
+
+    .layer {
+      .links {
+        a {
+          background-color: $authBGRD;
+        }
+      }
+    }
+  }
+
+  &.current-invoice {
+    .main .current-indicator {
+      display:block;
+      position:absolute;
+      left:99px;
+      top:78px;
+      height: 40px;
+      width:40px;
+      background-color: rgba(245, 253, 16, 0.6);
+      border-radius: 30px;
+      background-size: 30px 30px;
+      background-position: 50% 50%;
+      background-repeat: no-repeat;
+      background-image: url("../img/lightning.svg");
+    }
+    .layer a.delete {
+      display:none;
+    }
+  }
+
+  &:hover {
+
+    .layer {
+      top: 0;
+    }
+  }
+
+  &.deleting {
+    width: 0;
+    padding-left:0;
+    padding-right:0;
+    margin-left:0;
+    margin-right:0
+  }
+}

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>AcctSeedERP__Product_Cannot_Be_Changed_If_Allocated</fullName>
+    <active>true</active>
+    <description>the product cannot be changed if inventory movements have been allocated to the material</description>
+    <errorConditionFormula>NOT(ISNEW()) &amp;&amp; PRIORVALUE(AcctSeedERP__Product__c) != AcctSeedERP__Product__c &amp;&amp;  AcctSeedERP__Quantity_Allocated__c &gt; 0</errorConditionFormula>
+    <errorDisplayField>AcctSeedERP__Product__c</errorDisplayField>
+    <errorMessage>You cannot change the product if the quantity allocated is greater than 0</errorMessage>
+</ValidationRule>

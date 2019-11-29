@@ -1,0 +1,24 @@
+<aura:component controller="Rigger_Schedule_mp" implements="force:appHostable,flexipage:availableForAllPageTypes" access="global">
+	<aura:attribute type="String" name="city" default="Whitefish" />
+	<aura:attribute type="String" name="team" />
+	<aura:attribute type="Employee__c[]" name="riggers" />
+
+	<aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+	<aura:handler name="change" value="{!v.team}" action="{!c.teamChange}"/>
+
+	<div class="slds-grid slds-wrap slds-grid_pull-padded">
+
+		<div class="slds-p-around_small slds-size_1-of-1">
+			<div class="slds-float_right">
+				Team: <a onclick="{!c.setTeamAll}">All</a> | <a onclick="{!c.setTeamProduction}">Production</a> | <a onclick="{!c.setTeamService}">Service</a>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				Warehouse: <a href="?city=Whitefish">Whitefish</a> | <a href="?city=Barrie">Barrie</a> | <a href="?city=Montreal">Montreal</a> | <a href="?city=Wholesale">Wholesale</a>
+			</div>
+			<h1 id="city">{!v.city} Rigger Schedule: {!v.team}</h1>
+		</div>
+
+		<aura:iteration items="{!v.riggers}" var="rigger">
+			<c:Rigger_Schedule_TV_Individual_mp rigger="{!rigger}" />
+		</aura:iteration>
+	</div>
+</aura:component>

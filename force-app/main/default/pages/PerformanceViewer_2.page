@@ -1,0 +1,425 @@
+<apex:page docType="html-5.0" showHeader="false" sidebar="false" standardController="Performance_Tracker__c" tabStyle="Performance_Tracker__c" extensions="mobilePerformanceViewerController">          
+    <apex:stylesheet value="{!URLFOR($Resource.jQueryMobile, 'jquery.mobile-1.3.0.min.css')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.jQueryMobile, 'jquery-1.9.1.min.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.jQueryMobile, 'jquery.mobile-1.3.0.min.js')}"/>
+    <script src="/sforce/one/30.0/api.js"></script>
+    <head>
+        <style>
+        .ui-btn-corner-all{-moz-border-radius:0 !important;-webkit-border-radius: 0; border-radius: 0 ;}
+        .ui-corner-all{-moz-border-radius:0 !important;-webkit-border-radius: 0; border-radius: 0 ;}
+        </style>
+        <title>Performance Tracker</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+        <script type="text/javascript">
+            function fillOptions(id,result,defaultValue){
+                var el = $j('#'+id);
+                $j('#'+id).html(result);
+                if(defaultValue != null && defaultValue !=''){
+                    el.val(defaultValue).attr('selected', true).siblings('option').removeAttr('selected');
+                }
+                el.selectmenu("refresh", true);
+                
+            }
+            
+            // getBoats            
+            function getBoats(boatFamily,defaultValue){
+                //alert(boatFamily);
+                $j.mobile.showPageLoadingMsg("c","Processing Request....");
+                   Visualforce.remoting.Manager.invokeAction(
+                       '{!$RemoteAction.mobilePerformanceViewerController.getBoats}',
+                       boatFamily,
+                       function(result, event)
+                       {
+                       if(event.status){
+                           fillOptions('bModel',result,defaultValue);
+                           fillOptions('mTested','<option value="">Select Motor</option>','');
+                           fillOptions('pTested','<option value="">Select Propeller</option>','');
+                           var bType = $j("#bType").val();
+                           //alert('--->bType '+bType );
+                           if(bType != "Select a Boat Type"){
+                               showElement('boatModel');
+                           }
+                           else{
+                               hideElement('boatModel');
+                           }
+                           hideElement('motorTested');
+                           hideElement('propellerTested');
+                       }
+                       $j.mobile.hidePageLoadingMsg();
+                       },{escape:false}
+                       );
+            }
+            
+            //getMotors
+            function getMotors(boatId,defaultValue){
+                
+                $j.mobile.showPageLoadingMsg("c","Processing Request....");
+                   Visualforce.remoting.Manager.invokeAction(
+                       '{!$RemoteAction.mobilePerformanceViewerController.getMotors}',
+                       boatId,
+                       function(result, event)
+                       {
+                       if(event.status){
+                           fillOptions('mTested',result,defaultValue);
+                           fillOptions('pTested','<option value="">Select Propeller</option>','');
+                           var bModel = $j("#bModel").val();
+                           //alert('--->bModel->'+bModel+'<-');
+                           if(bModel != ""){
+                               showElement('motorTested');
+                           }
+                           else{
+                               hideElement('motorTested');
+                           }
+                           hideElement('propellerTested');
+                       }
+                       $j.mobile.hidePageLoadingMsg();
+                       },{escape:false}
+                       );
+            }
+            
+            //getPropellers
+            function getPropellers(defaultValue){
+                 $j.mobile.showPageLoadingMsg("c","Processing Request....");
+                   Visualforce.remoting.Manager.invokeAction(
+                       '{!$RemoteAction.mobilePerformanceViewerController.getPropellers}',
+                       'Propellers',
+                       function(result, event)
+                       {
+                       if(event.status){
+                           fillOptions('pTested',result,defaultValue);
+                           var mTested = $j("#mTested").val();
+                           //alert('--->mTested '+mTested );
+                           if(mTested != ""){
+                               showElement('propellerTested');
+                           }
+                           else{
+                               hideElement('propellerTested');
+                           }
+                                               
+                       }
+                       $j.mobile.hidePageLoadingMsg();
+                       },{escape:false}
+                       );
+            }
+            //getOptions
+            function getOptions(elementId,fieldName){
+                
+                //$j.mobile.showPageLoadingMsg("c","Processing Request....");
+                   Visualforce.remoting.Manager.invokeAction(
+                       '{!$RemoteAction.mobilePerformanceViewerController.getOptions}',
+                       fieldName,
+                       function(result, event)
+                       {
+                       if(event.status){
+                           fillOptions(elementId,result);
+                           
+                       }
+                       //$j.mobile.hidePageLoadingMsg();
+                       },{escape:false}
+                       );
+            }
+            var $j = jQuery.noConflict(); 
+            var existingRecord;
+            $j(document).ready(function() {
+                regBtnClickHandlers();
+                hideElement('boatModel');
+                hideElement('motorTested');
+                hideElement('propellerTested');
+                initializePage();
+                // populate the value if it comes for edit the existing record
+                var recordId = "{!$CurrentPage.parameters.id}";
+                //alert(recordId);
+                if(recordId && recordId !=''){
+                    Visualforce.remoting.Manager.invokeAction(
+                       '{!$RemoteAction.mobilePerformanceViewerController.getRecord}',
+                       recordId,
+                       function(result, event)
+                       {
+                       if(event.status){
+                            existingRecord = result;
+                            populateDetails(result);
+                           
+                           
+                       }
+                       },{escape:false}
+                       );
+                }
+                
+            });
+            
+            function initializePage(){
+                $j.mobile.showPageLoadingMsg("c","Loading page....");
+                getOptions('nPeople','Number_of_People__c');
+                getOptions('mRPM','Max_RPM__c');
+                getOptions('mSpeed','Max_Speed__c');
+                getOptions('eHoleNo','Engine_Hole_Number__c');
+                getOptions('fLevel','Fuel_Level__c');
+                getOptions('fLevel','Fuel_Level__c');
+                getOptions('tToPlane','Time_to_Plane_Seconds__c');
+                $j.mobile.hidePageLoadingMsg();
+            }
+            function hideElement(id){
+                $j('#'+id).hide();
+            }
+            function showElement(id){
+                $j('#'+id).show();
+            }
+            function displayError(e){
+                console.log(e);
+                $j('#error').html(e[0].message);
+            }
+            function populateDetails(record){
+                //alert($j("#recordId"));
+                $j("#recordId").val(record.recordId);
+                selectOption('bType',record.boatType);
+                console.log(record);
+                if(record.boatType != "Select a Boat Type" && record.boatType != ''){
+                    getBoats(record.boatType,record.boatModelTested);
+                }
+                if(record.boatModelTested != "Select a Boat Model" && record.boatModelTested != ''){
+                    getMotors(record.boatModelTested,record.motorTested);
+                }
+                //selectOption('mTested',record.motorTested);
+                
+                if(record.motorTested != "Select Motor" && record.motorTested !=''){
+                    getPropellers(record.propellerTested);
+                }
+        
+                //$j("#pTested").val(record.propellerTested);
+                selectOption('pTested',record.propellerTested);
+                //$j("#fLevel").val(record.fuelLevel);
+                selectOption('fLevel',record.fuelLevel);
+                //$j("#nPeople").val(record.noOfPeople);
+                selectOption('nPeople',record.noOfPeople);
+                //$j("#eHoleNo").val(record.engineHoleNumber);
+                selectOption('eHoleNo',record.engineHoleNumber);
+                //$j("#mSpeed").val(record.maxSpeed);
+                selectOption('mSpeed',record.maxSpeed);
+                //$j("#mRPM").val(record.maxRPM);
+                selectOption('mRPM',record.maxRPM);
+                //$j("#tToPlane").val(record.timeToPlane);
+                selectOption('tToPlane',record.timeToPlane);
+                
+            }
+            function selectOption(id,selectedValue){
+                var el = $j('#'+id);
+                //$j('#'+id).html(result);
+                el.val(selectedValue).attr('selected', true).siblings('option').removeAttr('selected');
+                el.selectmenu("refresh", true);
+                
+            }
+           function regBtnClickHandlers() {
+                
+                  $j('#save').click(function(e) {
+                        
+                        var record = new Object();
+                        record.recordId = $j("#recordId").val();
+                        if(record.recordId == ""){
+                            record.recordId = null;
+                        }
+                        record.boatType = $j("#bType").val();
+                        if(record.boatType == "Select a Boat Type" || record.boatType == ''){
+                            record.boatType = null;
+                            alert("Please select the boat type");
+                            //$j.mobile.hidePageLoadingMsg();
+                            return;
+                        }
+                        record.boatModelTested = $j("#bModel").val();
+                        if(record.boatModelTested == "Select a Boat Model" || record.boatModelTested == ''){
+                            record.boatModelTested = null;
+                            alert("Please select the boat type and boat model");
+                            //$j.mobile.hidePageLoadingMsg();
+                            return;
+                        }
+                        record.motorTested = $j("#mTested").val();
+                        if(record.motorTested == "Select Motor" || record.motorTested==''){
+                            record.motorTested = null;
+                        }
+                        record.propellerTested = $j("#pTested").val();
+                        if(record.propellerTested == "Select Propeller" || record.propellerTested == ''){
+                            record.propellerTested = null;
+                        }
+                        record.fuelLevel = $j("#fLevel").val();
+                        record.noOfPeople = $j("#nPeople").val();
+                        record.engineHoleNumber = $j("#eHoleNo").val();
+                        record.maxSpeed = $j("#mSpeed").val();
+                        record.maxRPM = $j("#mRPM").val();
+                        record.timeToPlane = $j("#tToPlane").val();
+                        //alert(record.serialize());
+                        $j.mobile.showPageLoadingMsg("c","Processing Request....");
+                        Visualforce.remoting.Manager.invokeAction(
+                       '{!$RemoteAction.mobilePerformanceViewerController.createPerformance}',record,
+                       function(result, event,status)
+                       {
+                           if(event.status){
+                            //$j.mobile.hidePageLoadingMsg();
+                           if( (typeof sforce != 'undefined') && (sforce != null) ) {
+                                // Salesforce1 navigation
+                                sforce.one.navigateToSObject(result);
+                            }
+                            else {
+                                // Set the window's URL using a Visualforce expression
+                                
+                                window.top.location.href='/'+result;
+                            }
+                            
+                           }
+                           else{
+                           alert(event.message + "\n<pre>" + event.where + "</pre>");
+                           
+                           }
+                           $j.mobile.hidePageLoadingMsg();
+                        },{escape: true}
+                     );
+                    });
+                   
+                $j('#back2Performance').click(function(e) {
+                    if( (typeof sforce != 'undefined') && (sforce != null) ) {
+                                // Salesforce1 navigation
+                                //sforce.one.navigateToSObject(result);
+                                sforce.one.navigateToURL("/{!$ObjectType.Performance_Tracker__c.keyPrefix}/o");
+                            }
+                            else {
+                                // Set the window's URL using a Visualforce expression
+                                
+                                window.top.location.href="/{!$ObjectType.Performance_Tracker__c.keyPrefix}/o";
+                            }
+                   
+                });
+        
+            }
+
+            function hideAddressBar()
+            {
+                
+                if (navigator.userAgent.match(/Android/i)) {
+                    window.scrollTo(0,0); // reset in case prev not scrolled  
+                    var nPageH = $(document).height();
+                    var nViewH = window.outerHeight;
+                    if (nViewH > nPageH) {
+                      nViewH = nViewH / window.devicePixelRatio;
+                      $('BODY').css('height',nViewH + 'px');
+                    }
+                    window.scrollTo(0,1);
+                }
+                    
+                /*if(!window.location.hash)
+                {
+                    alert('document.height = ' + document.height + ' window.outerHeight = ' + window.outerHeight);
+                    if(document.height <= window.outerHeight)
+                    {
+                        document.body.style.height = (window.outerHeight + 100) +'px';
+                        setTimeout( function(){ window.scrollTo(0, 1); }, 100 );
+                    }
+                    else
+                    {
+                        setTimeout( function(){ window.scrollTo(0, 1); }, 100 );
+                    }
+                }*/
+            }
+            window.addEventListener("load", hideAddressBar );
+            window.addEventListener("orientationchange", hideAddressBar );
+            
+            $j(window).scroll(function(){
+                //if you reach the top
+                //alert('Am I in scroll?');
+                if ($j(window).scrollTop() == 0)   
+                //scroll back down  
+                {window.scrollTo(0,1)}
+            });
+           
+        </script>    
+    </head>
+
+    <body> 
+        <input type="hidden" id="recordId" />
+        <div data-role="page" data-theme="c" id="detailpage">
+            <div data-role="header" data-position="fixed">
+                <a href='#' id="back2Performance" class='ui-btn-left' data-icon='arrow-l'>Back</a>
+                <h1>Performance Tracker</h1>
+            </div>
+            <div data-role="content">
+                <div data-role="fieldcontain" id="boat">
+                    <label for="bType">Boat:</label>
+                    <select name="bType" id="bType" onchange="getBoats(this.value,'');"> 
+                        <option value="">Select a Boat Type</option>
+                        <option value="Full Windshield">Full Windshield</option>
+                        <option value="Pontoon">Pontoon</option>
+                        <option value="Side Console">Side Console</option>
+                        <option value="Utility">Utility</option>
+                    </select>
+                </div>
+                <div data-role="fieldcontain" id="boatModel">
+                    <label for="bModel">Boat Model Tested:</label>
+                    <select name="bModel" id="bModel" onchange="getMotors(this.value,'');">
+                        <option value="">Select a Boat Model</option>
+                    </select>
+                </div>
+                <div data-role="fieldcontain" id="motorTested">
+                    <label for="mTested">Motor Tested:</label>
+                    <select name="mTested" id="mTested" onchange="getPropellers('');">
+                        <option value="">Select Motor</option>
+                    </select>
+                </div>
+                <div data-role="fieldcontain" id="propellerTested">
+                    <label for="pTested">Propeller Tested:</label>
+                    <select name="pTested" id="pTested">
+                        <option value="">Select Propeller</option>
+                    </select>
+                </div>
+                <div data-role="fieldcontain" id="fuelLevel">
+                    <label for="fLevel">Fuel Level:</label>
+                    <select name="fLevel" id="fLevel">
+                        <!-- <option value="1/4 Tank">1/4 Tank</option>
+                        <option value="1/2 Tank">1/2 Tank</option>
+                        <option value="3/4 Tank">3/4 Tank</option>
+                        <option value="Full Tank">Full Tank</option>-->
+                    </select>
+                </div>
+                <div data-role="fieldcontain" id="numOfPeople">
+                    <label for="nPeople">Number of People:</label>
+                    <select name="nPeople" id="nPeople">
+                        
+                    </select>
+                </div>
+                <div data-role="fieldcontain" id="engineHoleNo">
+                    <label for="eHoleNo">Engine Hole Number:</label>
+                    <select name="eHoleNo" id="eHoleNo">
+                        <!-- <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>-->
+                    </select>
+                </div>
+                <div data-role="fieldcontain" id="maxSpeed">
+                    <label for="mSpeed">Max Speed (MPH):</label>
+                    <select name="mSpeed" id="mSpeed">
+                        
+                    </select>
+                    
+                </div>
+                <div data-role="fieldcontain" id="maxRPM">
+                    <label for="mRPM">Max RPM:</label>
+                    <select name="mRPM" id="mRPM">
+                        
+                    </select>
+                </div>
+                <div data-role="fieldcontain" id="timeToPlane">
+                    <label for="tToPlane">Time to Plane (Seconds):</label>
+                    <select name="tToPlane" id="tToPlane">
+                    </select>
+                    <!-- <input name="tToPlane" id="tToPlane"/> -->
+                </div>
+                <h2 style="color:red" id="error"></h2><br/>
+                <input type="hidden" id="contactId" />
+                
+                <button id="save" data-role="button" data-icon="check" data-inline="true"  class="save">Save</button>
+                <!-- <button id="delete" data-role="button" data-icon="delete" data-inline="true" class="destroy">Delete</button>data-theme="b"-->
+            </div>    
+        </div>  
+    </body> 
+    <script>
+    //populateDetails(existingRecord); 
+    </script>   
+</apex:page>

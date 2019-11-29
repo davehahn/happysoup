@@ -1,0 +1,276 @@
+<apex:page showHeader="true"
+           sidebar="true"
+           docType="html-5.0"
+           standardController="Opportunity"
+           extensions="OpportunityExt,ContactRemoter">
+
+
+  <sffd:Resources />
+
+  <apex:stylesheet value="{!URLFOR($Resource.LegendStyles)}" />
+  <apex:stylesheet value="{!URLFOR($Resource.LegendFormStyles)}" />
+  <apex:stylesheet value="{!URLFOR($Resource.LegendForceComboBox, 'LegendForceComboBox.css')}" />
+  <apex:stylesheet value="{!URLFOR($Resource.FontAwesome, 'font-awesome-4.0.3/css/font-awesome.min.css')}" />
+  <apex:includeScript value="{!URLFOR($Resource.LegendForceComboBox, 'jQuery.LegendForceComboBox.js')}" />
+  <script type='text/javascript' src='/canvas/sdk/js/publisher.js'/>
+  <style type="text/css">
+    body {
+      margin:0 !important;
+      background:#FFFFFF !important;
+      font-family:'Lato', sans-serif;
+    }
+
+    .fixedHeader {
+      width:100%;
+      background:#0070C9;
+      color:#FFF;
+      height:50px;
+      line-height:50px;
+      font-size:25px;
+      text-align:center;
+      position:fixed;
+      top:0;
+      font-weight:300;
+    }
+
+    .fixedHeader > .saveButton,
+    .fixedFooter > .saveButton {
+      position: absolute;
+      right: 6px;
+      font-size: 18px;
+      color: #EBEBEB;
+      font-weight: 300;
+      border: 1px solid #E9E9E9;
+      line-height: 26px;
+      padding: 5px 18px;
+      margin-top: 6px;
+      text-decoration: none;
+      background: #57C04D;
+    }
+
+    .svBtn {
+      position:relative;
+      left:84%;
+      font-size: 1.08em;
+      background-color: #8AB529;
+      border: 1px solid #6C8049;
+      background-image: -ms-linear-gradient(top,#8AB529 0,#87AC31 100%);
+      background-image: -moz-linear-gradient(top,#8AB529 0,#87AC31 100%);
+      background-image: -webkit-linear-gradient(top,#8AB529 0,#87AC31 100%);
+      background-image: linear-gradient(top,#8AB529 0,#87AC31 100%);
+      padding:8px 20px;
+      height: 30px;
+      color: #FFF;
+      -moz-border-radius: 3px;
+      border-radius: 2px;
+      -moz-box-shadow: 0 1px 2px 0 #adadad;
+      -webkit-box-shadow: 0 1px 2px 0 #ADADAD;
+      box-shadow: 0 1px 2px 0 #ADADAD;
+      margin: 0;
+    }
+
+    .svBtn:hover {
+      text-decoration:none;
+      color:#FFF;
+    }
+
+    .fixedHeader > .saveButton:hover {
+      border-color:#FFF;
+      color:#FFF;
+    }
+
+    .fixedFooter {
+      width:100%;
+      background:#F7F7F7;
+      border-top:1px solid #D2D2D2;
+      height:55px;
+      line-height:55px;
+      position:fixed;
+      bottom:0;
+    }
+
+    .max500 {
+      max-height:445px;
+      padding-top:10px;
+      overflow:auto;
+      margin-bottom:55px;
+    }
+  </style>
+
+  <div id="contentContainer">
+
+  <c:LegendMainAjaxIndicator id="ajaxInd" />
+
+  <sffd:row >
+    <sffd:column cols="large-8 large-offset-2">
+      <apex:messages styleClass="alert-box alert"/>
+    </sffd:column>
+  </sffd:row>
+
+  <apex:form id="coBuyerForm" styleClass="legendForm">
+
+    <apex:actionFunction name="selectContact"
+                        action="{!selectContact}"
+                        rerender="contactFields"
+                        oncomplete="contactSelectComplete()"
+                        immediate="true"  >
+      <apex:param name="contactId" value="" />
+    </apex:actionFunction>
+
+    <apex:actionFunction action="{!saveCoBuyer}"
+                         name="saveCoBuyer"
+                         rerender="contactFields"
+                         oncomplete="refreshFeed()" />
+
+
+    <apex:outputPanel id="contactFields">
+      <c:ContactFormFields contact="{!cont}" isOpportunityCoBuyer="true" />
+    </apex:outputPanel>
+
+   <!--  <sffd:row styleClass="formBtnRow">
+
+      <sffd:column cols="large-4 large-offset-8">
+        <apex:commandLink action="{!saveCoBuyer}"
+                            styleClass="fd_button small invert success right"
+                            value="Save"
+                            target="_parent"/>
+        <apex:commandLink action="{!cancel}"
+                     styleClass="fd_button small invert cancelLink right"
+                     value="Cancel">
+          </apex:commandLink>
+        </sffd:column>
+
+    </sffd:row> -->
+
+  </apex:form>
+
+  </div>
+
+  <div class="fixedFooter desktopOnly" >
+    <a href="#" class="svBtn">Save</a>
+  </div>
+
+
+  <script type="text/javascript">
+
+    $j = jQuery.noConflict();
+
+    var isSfOne = function() { return typeof sforce != 'undefined' && sforce != null; }
+
+
+
+    function init() {
+
+      if( isSfOne() ){
+        console.log('initialized on Salesforce One');
+        $j('.desktopOnly').hide();
+        $j('.phone input').prop('type', 'tel');
+        $j('.email input').prop('type', 'email');
+        Sfdc.canvas.publisher.subscribe({name: "publisher.showPanel",
+              onData:function(e) {
+                  Sfdc.canvas.publisher.publish({name:"publisher.setValidForSubmit", payload:"true"});
+          }});
+          Sfdc.canvas.publisher.subscribe({ name: "publisher.post",
+              onData: function(e) {
+                  saveCoBuyer();
+                  Sfdc.canvas.publisher.publish({ name: "publisher.close",
+                      payload:{ refresh:"true" }});
+          }});
+        } else {
+          initDatePickerHack();
+          $j('[id*="contentContainer"]').addClass('max500');
+        }
+
+      // initialize the comboBox
+      $j('.comboBox').legendForceComboBox({
+        idFieldName: 'Id',
+        textFieldName: 'Name',
+        searchFunction: function(queryString){
+          return contactSearch(queryString);
+        },
+        selectHandler: function(id, text){
+          $j('#ajaxInd').show();
+          selectContact(id);
+        }
+      });
+
+      $j('.svBtn').on('click', function(e){
+        e.preventDefault();
+        $j('#ajaxInd').show();
+        saveCoBuyer();
+      });
+
+    }// /init
+
+    function contactSearch(queryString){
+      var self,
+        indc = $j('#searchInd');
+        indc.show();
+      return $j.Deferred( function() {
+        self = this;
+        ContactRemoter.findContacts(queryString, '{!excludedIds}' , function( events, result){
+          indc.hide();
+          if(result.statusCode === 200){
+            self.resolve(result.result);
+          }
+        });
+      });
+    }
+
+    function contactSelectComplete(){
+      $j('#ajaxInd').hide();
+    }
+
+    //this is to position the datePicker when a dateInput gains focus
+    //it also moves the datePicker as the contentContainer is scrolled
+    //so the datepicker is always aligned at the bottom of the input
+    function initDatePickerHack(){
+      $j('.dateInput input').on({
+        focusin: function(e){
+          var $this = $j(this),
+            $content = $j('#contentContainer'),
+            sTop = $content.scrollTop(),
+            oTop = $this.offset().top,
+            h = $this.outerHeight(),
+            $datePicker = $j('#datePicker');
+          console.log( 'lets start this hack to move the datepicker');
+          setTimeout(function() {
+              console.log('lets move it to top: ' + (oTop +h) );
+            $datePicker.css({'top': oTop + h});
+          }, 300);
+          $content.on('scroll.movCal', function(){
+            var diff = $j(this).scrollTop() - sTop;
+            $datePicker.css('top', oTop + h - diff);
+          })
+        },
+        focusout: function(e) {
+          $j('#contentContainer').off('scroll.movCal');
+        }
+      })
+    }
+
+    function refreshFeed() {
+      console.log("refreshing the feed");
+      if( !isSfOne() ){
+        var url = window.location.origin + '/{!Opportunity.Id}'
+        console.log("not in SF1");
+        //if( !isSfOne() ){
+           // Sfdc.canvas.publisher.publish({name: 'publisher.clearPanelState', payload: {refresh: true} });
+          // Sfdc.canvas.publisher.publish({name : 'publisher.refresh', payload: {feed:true, objectFields: true, objectRelatedLists: {} }});
+        // window.top.location.href = url;
+        //}
+        if( $j('.errorMsg').length > 0 ){
+          console.log("Form Validation error");
+          $j('#ajaxInd').hide();
+          init();
+        }else{
+          window.top.location.href = url;
+        }
+      }
+    }
+
+   init();
+
+  </script>
+
+</apex:page>

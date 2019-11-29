@@ -1,0 +1,42 @@
+/*
+This stylesheet contains CSS ovreides to return native Salesforce Elements Back to
+their original state after foundation mucks with them.
+This MUST be included AFTER foundation.css
+*/
+
+
+/* this is the site wide search on top */
+#phSearchInput {
+  display:inline-block;
+}
+
+/* this is the top nav bar */
+.zen ul {
+  font-size:inherit;
+}
+
+/* SideBar stuff */
+#sidebarDiv {
+  font-size:0.9em;
+  line-height: inherit;
+}
+
+#sidebarDiv .sidebarModuleHeader h2{
+  color:#FFF;
+}
+
+/* date picker stuff */
+#datePicker .dateBar img {
+  margin:0;
+}
+
+#datePicker select {
+  width:auto;
+  padding:0 15px;
+  vertical-align: inherit;
+}
+
+#datePicker th {
+  padding: 5px;
+  font-weight: 900;
+}

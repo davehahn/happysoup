@@ -1,0 +1,47 @@
+<messaging:emailTemplate subject="Your Legend Experience" recipientType="Contact" relatedToType="Opportunity">
+<messaging:htmlEmailBody >
+<html>
+
+    <h1 style="width:100%; margin: 10px 0; border-bottom: 2px solid #00aaf9; padding-bottom:5px;">
+        <img src="https://na15.salesforce.com/servlet/servlet.ImageServer?id=015i0000006pR7C&oid=00Di0000000aRhm"
+             style="padding:10px 15px; height: 45px; width: 300px;" />
+    </h1>
+    
+    <div style="width: 95%; margin: auto;">
+        <p style="line-height: 25px; margin: 20px 0; font-size: 18px;">
+            Hello and thank you for your interest in Legend Boats!
+        </p>
+        
+        <p style="line-height: 25px; margin: 20px 0; font-size: 18px;">
+            We know that taking ownership of a new boat from Legend didn't work out the way that we both hoped this time.  However, it would be greatly appreciated if you could let us know about your experience with us regardless. 
+        </p>
+        
+        <p style="line-height: 25px; margin: 20px 0; font-size: 18px;">
+            Please click 
+            <a href="http://legendboats.force.com/surveys/TakeSurvey?id=a1ai000000H7o3AAAR&cId={!relatedTo.Account.PersonContactId}&oppId={!relatedTo.Id}">
+                here
+            </a> 
+            to let us know your thoughts
+        </p>
+        
+        <p style="line-height: 25px; margin: 20px 0; font-size: 18px;">
+            Thank you for your time, and as always, please feel free to call us if you have any questions or further comments.
+        </p>
+        
+        <p style="line-height: 25px; margin: 20px 0; font-size: 18px;">
+            We sincerely hope that you still get a chance to enjoy the water this summer! 
+        </p>
+        
+        <p style="line-height: 25px; margin: 20px 0; font-size: 18px;">
+            Yours in Boating,
+        </p>
+ 
+ 
+        {!relatedTo.Owner.Name}<br />
+        {!relatedTo.Owner.Title}
+        
+    </div>
+    
+</html>
+</messaging:htmlEmailBody>
+</messaging:emailTemplate>

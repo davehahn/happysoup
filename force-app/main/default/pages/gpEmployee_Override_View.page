@@ -1,0 +1,314 @@
+<apex:page StandardController="Employee__c" extensions="gcEmployee_Ext" showHeader="true" sidebar="true" cache="false" docType="html-5.0">
+
+<head>
+<style>
+.link{
+    cursor:pointer;
+    text-decoration:underline;
+}
+table{
+    border-collapse:collapse;
+}
+tr.total td{
+    font-weight: bold;
+}
+div.pq-grid-footer{
+    display:none;
+}
+.btn-disable{
+    cursor: default;
+    pointer-events: none;
+
+    /*Button disabled - CSS color class*/
+    color: #c0c0c0;
+    background-color: #ffffff;
+}
+tr.pq-row-select td{
+    background-color:yellow;
+}
+.highlight{
+    background-color: yellow;
+}
+.tcv1NonWork
+{
+    background-color: #ADD8E6;
+}
+.tcv2NonDirect
+{
+    background-color: #90EE90;
+}
+</style>
+
+<apex:stylesheet value="{!URLFOR($Resource.GMBLJS__jQueryUI,'/jquery-ui/jquery-ui.min.css')}"/>
+<apex:stylesheet value="{!URLFOR($Resource.GMBLJS__pqGridPro241,'/pqgrid.min.css')}"/>
+
+</head>
+
+<!--javascript is deliberately include ABOVE the HTML body, because the c:gcmpTimeCardLine depends on these libraries as well.-->
+<apex:includeScript value="{!$Resource.GMBLJS__jQuery}"/>
+<apex:includeScript value="{!URLFOR($Resource.GMBLJS__jQueryUI,'/jquery-ui/jquery-ui.min.js')}"/>
+<apex:includeScript value="{!URLFOR($Resource.GMBLJS__pqGridPro241,'/pqgrid.min.js')}"/>
+<apex:includeScript value="{!URLFOR($Resource.GMBLJS__pqGridPro241,'/touch-punch/touch-punch.min.js')}"/>
+<apex:includeScript value="{!$Resource.GMBLJS__accountingJS}"/>
+<apex:includeScript value="{!$Resource.GMBLJS__ExcellentExport}"/>
+<apex:includeScript value="{!$Resource.GMBLJS__gsrGrid2}"/>
+<apex:includeScript value="{!$Resource.GMBLJS__dateJSENUS}"/>
+
+<script>function setFocusOnLoad() {}</script>
+<script type="text/javascript">
+
+    $j = jQuery.noConflict();
+
+    $j(document).ready(function()
+    {
+        $j('.ptBody').remove(); //remove this page label, to avoid confusion when the time card period is changed by the code on this page.
+        initGrid_timeCardPeriods();
+        refreshGrid_timeCardPeriods();
+        //initComponent_timeCardLines();
+    });
+
+    accounting.settings = {
+        currency: {
+            symbol : "$",   // default currency symbol is '$'
+            format: "%s%v", // controls output: %s = symbol, %v = value/number (can be object: see below)
+            decimal : ".",  // decimal point separator
+            thousand: ",",  // thousands separator
+            precision : 2   // decimal places
+        },
+        number: {
+            precision : 2,  // default precision on numbers is 0
+            thousand: ",",
+            decimal : "."
+        }
+    }
+</script>
+
+<body>
+    <div style="margin:0 auto; width:100%">
+
+        <div id="detailDiv">
+            <apex:outputPanel id="detailContainer">
+                <apex:pageMessages />
+
+                <apex:detail id="detail" subject="{!Id}" relatedList="true" inlineEdit="false"/>
+
+            </apex:outputPanel>
+        </div>
+
+        <apex:form >
+            <apex:actionFunction name="rerenderRelatedLists" reRender="relatedListContainer"/>
+        </apex:form>
+
+        <apex:pageBlock mode="edit" title="Time Card Periods">
+            <apex:pageBlockButtons location="top">
+                <span style="font-style:italic; font-weight:normal;">single-click a row, to view or refresh the employee's time card lines in the grid below</span>
+            </apex:pageBlockButtons>
+            <div id="timeCardPeriods"></div>
+            <div style="text-align:center; font-style:italic">drag here ^^^ to resize the grid</div>
+        </apex:pageBlock>
+
+        <!--<c:gcmpTimeCardLines />-->
+        <c:gcmpTimeCardLines rendered="{!IF($CurrentPage.parameters.bulkEdit='0',true,false)}"/>
+        <c:gcmpTimeCardLines_bulkEdit rendered="{!IF($CurrentPage.parameters.bulkEdit='0',false,true)}"/>
+
+
+        <apex:outputPanel id="relatedListContainer" rendered="false">
+            <apex:relatedList subject="{!Id}" list="Employee_Wage_Rates__r" id="listWageRates"/>
+        </apex:outputPanel>
+
+        <!-- <apex:relatedList subject="{!Id}" list="CombinedAttachments"/> -->
+        <apex:relatedList subject="{!Id}" list="OpenActivities" />
+        <apex:relatedList subject="{!Id}" list="ActivityHistories" />
+
+    </div>
+</body>
+
+<script type="text/javascript">
+
+    function initGrid_timeCardPeriods()
+    {
+        var hideDollars = ({!$Permission.EmployeePageTimeCardPeriodsDollarsView} == false);
+        var gridObj = { title:"",
+                        collapsible:{on:false,collapsed:false,toggle:false},
+                        columnTemplate: {sortable:true, minWidth:100, maxWidth:100, align:'center'},
+                        dataModel:{data:[], sorting:'local', location:'local', sortDir:'Down', sortIndx:'startDate'}, 
+                        dragColumns:{enabled:false},
+                        editable:false,
+                        filterModel:{on:false, mode:'AND', header:false},
+                        freezeCols:0,
+                        freezeRows:0,
+                        height:300,
+                        historyModel:{on:false},
+                        hoverMode:'row',
+                        hwrap:false,
+                        numberCell:{show:true},
+                        pageModel: {type:null},
+                        pasteModel:{on:false},
+                        resizable: true,
+                        roundCorners: false,
+                        scrollModel: {autoFit:true},
+                        selectionModel: { type: 'row', mode:'single'},
+                        showBottom:true,
+                        showHeader:true,
+                        showTitle:true,
+                        showTop:true,
+                        showToolbar:false,
+                        sortable:true,
+                        swipeModel:{on:false},
+                        virtualX: false,
+                        //virtualXHeader: false,
+                        virtualY: false,
+                        width:'auto',
+                        wrap:false};
+
+        gridObj.colModel=[  {dataIndx:'timeCardPeriodName',     title:'Period Name'},
+                            {dataIndx:'startDate',              title:'Start Date',     dataType:'date', sortType: function (rowData1, rowData2, dataIndx) {return sortDateTime(rowData1, rowData2,'startDate');}},
+                            {dataIndx:'endDate',                title:'End Date',       dataType:'date', sortType: function (rowData1, rowData2, dataIndx) {return sortDateTime(rowData1, rowData2,'endDate');}},
+                            {dataIndx:'status',                 title:'Period Status'},
+
+                            {dataIndx:'hoursRT',        title:'Regular<br/>Hours',      gFormat:'number',   gTotal:true, dataType:'float'},
+                            {dataIndx:'hoursOT',        title:'Overtime<br/>Hours',     gFormat:'number',   gTotal:true, dataType:'float'},
+                            {dataIndx:'hoursDT',        title:'Double-Time<br/>Hours',  gFormat:'number',   gTotal:true, dataType:'float'},
+                            {dataIndx:'PTO',            title:'PTO<br/>',               gFormat:'number',   gTotal:true, dataType:'float'},                         
+                            {dataIndx:'HOLIDAY',        title:'Holiday<br/>Time',       gFormat:'number',   gTotal:true, dataType:'float'},
+                            {dataIndx:'BEREAVEMENT',    title:'Bereavement<br/>Leave',  gFormat:'number',   gTotal:true, dataType:'float'},
+                            {dataIndx:'hours',          title:'Total<br/>Hrs',          gFormat:'number',   gTotal:true, dataType:'float'},
+                            {dataIndx:'wages',          title:'Gross<br/>Pay',          gFormat:'money',    gTotal:true, dataType:'float', hidden:hideDollars},
+                            {dataIndx:"scrollSpacer", minWidth:15, maxWidth:15}];
+
+        gGrid.initFormat(gridObj.colModel);
+
+        $j.each(gridObj.colModel, function(i,col)
+        {
+            var dataIndx = col.dataIndx;
+            if(dataIndx == 'hoursRT' || 
+               dataIndx == 'hoursOT' ||
+               dataIndx == 'hoursDT' ||
+               dataIndx == 'PTO'     ||
+               dataIndx == 'HOLIDAY' ||
+               dataIndx == 'BEREAVEMENT' ||
+               dataIndx == 'hours')
+            {
+                $j.extend(col,{
+                    render:function(ui)
+                    {
+                        if( (!ui.rowData[dataIndx] || parseFloat(ui.rowData[dataIndx]) == 0) && !ui.rowData.isTotal) return '-';
+                        return accounting.formatNumber(ui.rowData[dataIndx]);
+                    }
+                });             
+            }            
+        });
+
+
+        var $gridDiv = $j('#timeCardPeriods');
+
+        $gridDiv.pqGrid(gridObj);
+
+        gGrid.appendExportLink($gridDiv);
+
+        $gridDiv.on('pqgridrefresh', function(event, ui)
+        {
+            gGrid.refreshTotal($j(this),ui.pageData);
+        });
+        $gridDiv.on('pqgridrefreshrow', function(event, ui)
+        {
+            //refresh the grid, to refresh totals
+            $j(this).pqGrid('refresh');
+        });
+
+        $gridDiv.on('pqgridrowclick', function(event, ui)
+        {
+            idTimeCard = null;
+            if(ui.rowData.idTimeCard)
+            {
+                idTimeCard = ui.rowData.idTimeCard;
+                if($j('#timeCardLines').children().length == 0)
+                    initComponent_timeCardLines();
+                else
+                    refreshColumns();
+                    //refreshGrid_lines();
+                //retrieveEmployeeName();
+            }
+            else
+            {
+                //$j('#timeCardLines').pqGrid('showLoading');
+                Visualforce.remoting.Manager.invokeAction(
+                    '{!$RemoteAction.gcEmployee_Ext.findOrCreateTimeCard}',
+                    '{!Id}',ui.rowData.idTimeCardPeriod,
+                    function(result,event){
+                        if(event.status){
+                           idTimeCard = result;
+                            if($j('#timeCardLines').children().length == 0)
+                                initComponent_timeCardLines();
+                            else
+                                //refreshGrid_lines();
+                                refreshColumns();
+                        }
+                        else
+                        {
+                            alert(event.message);
+                        }
+                       // $j('#timeCardLines').pqGrid('hideLoading');
+                    },
+                    {buffer:true, escape:true, timeout:120000});                
+            }
+        });
+
+    }
+
+    function refreshGrid_timeCardPeriods(){
+        
+        var $gridDiv = $j('#timeCardPeriods');
+        $gridDiv.pqGrid('showLoading');
+
+        Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.gcEmployee_Ext.retrieveTimeCardPeriods}',
+            '{!Id}',null,
+            function(result,event){
+                if(event.status){
+                    gGrid.refreshGrid_callback($gridDiv,result);
+                }
+                else
+                {
+                    alert(event.message);
+                }
+                $gridDiv.pqGrid('hideLoading');
+            },
+            {buffer:true, escape:true, timeout:120000});
+    }
+
+    function refreshRow_timeCardPeriod(idTC)
+    {
+        var $gridDiv = $j('#timeCardPeriods');
+        $gridDiv.pqGrid('showLoading');
+
+        Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.gcEmployee_Ext.retrieveTimeCardPeriods}',
+            '{!Id}',idTC,
+            function(result,event){
+                if(event.status){
+
+                    //cycle over the rows to find the row for that employee
+                    jQuery.each($gridDiv.pqGrid('option','dataModel.data'),function(i,row)
+                    {
+                        if(result.length > 0 && row.idTimeCardPeriod == result[0].idTimeCardPeriod)
+                        {
+                           var rowIndx = $gridDiv.pqGrid( "getRowIndx", { rowData : row } ).rowIndx;
+                           jQuery.extend(row,result[0]);
+                           $gridDiv.pqGrid("refreshRow",{rowIndx:rowIndx});
+                           return false;
+                        }
+                    });
+                }
+                else
+                {
+                    alert(event.message);
+                }
+                $gridDiv.pqGrid('hideLoading');
+            },
+            {buffer:true, escape:true, timeout:120000});
+    }
+
+</script>
+
+</apex:page>

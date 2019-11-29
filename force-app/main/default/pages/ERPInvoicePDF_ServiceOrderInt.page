@@ -1,0 +1,803 @@
+<apex:page showHeader="false"
+           sidebar="false"
+           controller="ERPInvoicePDF"
+           renderAs="pdf"
+           applyBodyTag="false">
+  <head>
+    <apex:stylesheet value="{!URLFOR($Resource.LegendPDF,'css/invoicePDF.min.css')}" />
+    <apex:stylesheet value="{!URLFOR($Resource.LegendPDF,'css/service_order_page.min.css')}" />
+    <style>
+      @page {
+        size:portrait;
+        margin-right:0.25in;
+        margin-left:0.25in;
+        margin-top:0.5in;
+        margin-bottom:0.5in;
+        border:0;
+        padding:0;
+      }
+      .pagebreak{ page-break-before: always; }
+      .nobreak {
+        page-break-inside: avoid;
+      }
+      table.itemsTable tbody tr td {
+        padding: 0;
+      }
+      table.itemsTable tr.task-title td {
+        padding: 3pt 5pt;
+        border: 0.5pt solid #777;
+      }
+      table.itemsTable.service-order tbody {
+        page-break-inside: avoid;
+      }
+      table.itemsTable.service-order tbody tr td table.ccc-table tr.cause td
+      div.page table.ccc-table tr.cause td {
+        min-height: 50px;
+      }
+      table.itemsTable.service-order tbody tr td table.ccc-table tr.correction td,
+      div.page table.ccc-table tr.correction td {
+        height: 75px;
+      }
+      .page {
+        page-break-before: always;
+        margin-top: 0.25in;
+        font-size: 8pt;
+      }
+      table.info {
+        width: 100%;
+        border-spacing: 0;
+        border: 0.25pt solid #777;
+      }
+      table.info td {
+        border: 0.25pt solid #777;
+        padding: 5pt;
+      }
+      table.ersatzCheckbox {}
+        table.ersatzCheckbox td {
+          border: 0.5pt solid #000;
+          width: 10pt;
+          max-width: 10pt;
+          height: 12pt;
+          font-size: 12pt;
+          overflow: hidden;
+        }
+      .diagnostics table.checks {
+        width: 100%;
+        font-size: 8pt;
+      }
+      .diagnostics table.checks > tr > td {
+        width: 3%;
+      }
+      .diagnostics table.checks > tr > td+td {
+        width: 45%;
+      }
+      .diagnostics table.checks > tr > td+td+td {
+        width: 3%;
+      }
+      .diagnostics table.checks > tr > td+td+td+td {
+        width: 45%;
+      }
+      .diagnostics table.suggestions {
+        width: 100%;
+        border-spacing: 0;
+        border: 0.25pt solid #777;
+        font-size: 8pt;
+      }
+      .diagnostics table.suggestions td {
+        border: 0.25pt solid #777;
+        padding: 5pt;
+        vertical-align: top;
+        width: 50%;
+      }
+      .diagnostics table.suggestions .concern td {
+        height: 100pt;
+      }
+      .diagnostics table.suggestions .cost td {
+        height: inherit;
+      }
+      .diagnostics .fake-input {
+        border: 0.25pt solid #777;
+        padding: 0.25em;
+        height: 1.5em;
+      }
+      table.itemsTable .spacer td {
+        border: none;
+      }
+      table.itemsTable.service-order tbody tr td table.ccc-table,
+      div.page table.ccc-table {
+        width: 100% !important;
+        page-break-inside: avoid !important;
+        padding: 0 !important;
+        margin: 0 0 12pt 0 !important;
+        border-spacing: 0 !important;
+        border: 0.5pt solid #777 !important;
+      }
+      table.itemsTable.service-order tbody tr td table.ccc-table > tbody > tr > th,
+      table.itemsTable.service-order tbody tr td table.ccc-table > tbody > tr > td,
+      div.page table.ccc-table > tbody > tr > th,
+      div.page table.ccc-table > tbody > tr > td {
+        vertical-align: top !important;
+        padding: 3pt 5pt !important;
+        border: 0.25pt solid #777 !important;
+      }
+      table.itemsTable.service-order tbody tr td table.ccc-table tr th,
+      div.page table.ccc-table tr th {
+        font-weight: bold;
+        color: #666;
+      }
+      table.ccc-table strong {
+        color: #666;
+      }
+      table.itemsTable.service-order tbody tr td table.ccc-table tr.complaint th,
+      table.itemsTable.service-order tbody tr td table.ccc-table tr.cause th,
+      div.page table.ccc-table tr.complaint th,
+      div.page table.ccc-table tr.cause th  {
+        min-height: 50px !important;
+      }
+      table.itemsTable.service-order tbody tr td table.ccc-table tr.correction td,
+      div.page table.ccc-table tr.correction td {
+        height: 75px !important;
+      }
+      table.itemsTable.service-order tbody tr td table.ccc-table tr th,
+      table.itemsTable.service-order tbody tr td table.ccc-table tr td,
+      div.page table.ccc-table tr th,
+      div.page table.ccc-table tr td {
+        vertical-align: top !important;
+        border: 0.25pt solid #777;
+        padding: 3pt;
+      }
+      table.itemsTable.service-order tbody tr td table.ccc-table tr.needs > td,
+      div.page table.ccc-table tr.needs > td {
+        padding: 0;
+        border-spacing: 0
+        border: 0;
+      }
+      table.labourPartsNotes {
+        border-spacing: 0;
+      }
+      table.labourPartsNotes,
+      table.labourPartsNotes td {
+      }
+      table.labourPartsNotes > td {
+      }
+      table.itemsTable.service-order tbody tr td table.ccc-table table.noborder {
+        width: 100%;
+      }
+      table.itemsTable.service-order tbody tr td table.ccc-table table.noborder td {
+        border: 0;
+      }
+
+      table.itemsTable.service-order tbody tr td table.ccc-table table.parts-list {
+        border-collapse: collapse;
+      }
+
+      table.itemsTable.service-order tbody tr td table.ccc-table table.parts-list tr {
+        line-height: 15px;
+      }
+
+      table.itemsTable.service-order tbody tr td table.ccc-table table.parts-list tr td {
+        padding: 0;
+        border-bottom:1px solid #CCC;
+      }
+
+      table.itemsTable.service-order tbody tr td table.ccc-table table.parts-list tr.hasKitParts td {
+        border-bottom:0;
+      }
+
+      table.itemsTable.service-order tbody tr td table.ccc-table table.parts-list tr td table.kitParts {
+        border-collapse: collapse;
+        width:98%;
+        margin-left:10px;
+      }
+    </style>
+  </head>
+  <body>
+  <div id="footerRight">
+    <span>Page</span>
+    <span>Invoice #{!invoiceName}</span>
+  </div>
+
+  <div id="footerLeft">
+    <img src="{!URLFOR($Resource.LegendPDF,'image/logo_220x26.png')}" />
+  </div>
+
+  <div id="footerCenter">
+    <p class="address">
+      {!storeAddress}
+    </p>
+    <p class="tax_numbers">
+      <apex:repeat value="{!taxNumbers}" var="tn">
+        <span><b>{!tn.DeveloperName}#</b> {!tn.Tax_Number__c}</span>
+      </apex:repeat>
+    </p>
+  </div>
+
+
+  <div class="service-order-erp">
+    <!-- +++++++++++++++++++++++++++++++++++++++ HEADER 1 ++++++++++++++++++++++++ -->
+    <div class="row header1 hcf">
+
+      <div class="left" >
+        <img src="{!URLFOR($Resource.LegendPDF,'image/logo_250x30.png')}" />
+      </div>
+
+      <div class="right">
+
+        <div>
+          <img src="{!URLFOR($Resource.LegendPDF,'Icons/Email.png')}" />
+          <p>info@legendboats.com</p>
+        </div>
+
+        <div>
+          <img src="{!URLFOR($Resource.LegendPDF,'Icons/Phone.png')}" />
+          <p>
+            phone
+            <span style="float:right;padding-right:25px;">
+                {!warehouse.Phone__c}
+              </span>
+          </p>
+          <p>
+            toll free
+            <span style="float:right;padding-right:25px;">
+                {!warehouse.Toll_Free__c}
+              </span>
+          </p>
+          <p>
+            fax
+            <span style="float:right;padding-right:25px;">
+                {!warehouse.Fax__c}
+              </span>
+          </p>
+        </div>
+
+        <div style="position:relative">
+          <img src="{!URLFOR($Resource.LegendPDF,'image/web.png')}" />
+          <p>www.legendboats.com</p>
+          <!--  <img src="https://www.barcodesinc.com/generator/image.php?code=INV-10812&amp;style=68&amp;type=C128B&amp;width=150&amp;height=40&amp;xres=1&amp;font=3" alt="Barcode" border="0"/> -->
+          <!-- <p class="invoice_number">{!invoiceName}</p> -->
+          <p style="width: 100%; padding-top: 5px; font-size: 12px; text-align: center">
+            Memory Builder
+          </p>
+          <p style="width: 100%; font-size: 14px; font-weight: bold; text-align: center">
+            {!erpOrder.Salesperson__r.name}
+          </p>
+        </div>
+
+      </div><!--header right close -->
+    </div>
+    <!-- ==================================== /HEADER 1 ============================  -->
+
+    <!-- +++++++++++++++++++++++++++++++++++ HEADER 2 ++++++++++++++++++++++++++++++ -->
+    <div class="row header2" style="overflow: visible">
+
+      <div class="customer-info">
+        <apex:outputPanel layout="none" rendered="{!NOT(ISNULL(projectAccount))}">
+          <p>
+            <img src="{!URLFOR($Resource.LegendPDF,'Icons/Invoice.png')}" />
+            INVOICE TO:
+          </p>
+          <p class="buyer_name">
+            {!projectAccount.name}
+          </p>
+          <p class="buyer_address">
+            {!projectAccount.BillingStreet}, {!projectAccount.BillingCity} <br />
+            {!projectAccount.BillingState}, {!projectAccount.BillingPostalCode}, {!projectAccount.BillingCountry}
+          </p>
+          <p class="buyer_phone">
+            {!projectAccount.phone}
+          </p>
+          <p class="buyer_email">
+            {!projectAccount.PersonEmail}
+          </p>
+        </apex:outputPanel>
+      </div>
+
+      <div>
+        <div>
+
+          <div class="blockSummary">
+            <table>
+              <tr>
+                <td>
+                  <img src="{!URLFOR($Resource.LegendPDF,'image/flag-whitebg.png')}" width="25" height="25" />
+                </td>
+                <td>
+                  <img src="{!URLFOR($Resource.LegendPDF,'image/calendar_trans.png')}" width="25" height="25" style="padding-left: 2pt" />
+                </td>
+                <td>
+                  <img src="{!URLFOR($Resource.LegendPDF,'image/invoice2_trans.png')}" width="25" height="25" style="padding-left: 5pt" />
+                </td>
+              </tr>
+
+            </table>
+
+            <div style="">
+              <table>
+                <tr>
+                  <td style="">
+                    <p>Parking Spot:</p>
+                    <p>{!erpOrder.Parking_Spot__c}&nbsp;</p>
+                  </td>
+                  <td style="">
+                    <p>Invoice Date:</p>
+                    <p>{!invoiceDate}</p>
+                  </td>
+                  <td style="">
+                    <p>Invoice #:</p>
+                    <p>{!invoiceName}</p>
+                  </td>
+                </tr>
+              </table>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+    <!-- ================================= /HEADER 2 =================================== -->
+
+
+    <!-- +++++++++++++++++++++++++++++++++ SERIAL INFO +++++++++++++++++++++++++++++++++ -->
+    <div class="row serial-info">
+
+      <table class="itemsTable">
+
+        <thead>
+        <tr>
+          <td class="w15">Type</td>
+          <td class="w15">Year</td>
+          <td class="w40">Make/Model</td>
+          <td class="w30">Serial Number</td>
+        </tr>
+        </thead>
+
+        <tbody>
+        <apex:repeat value="{!serialNumbers}" var="sn">
+          <tr>
+            <td>{!sn['Type']}</td>
+            <td>{!sn['Year']}</td>
+            <td>{!sn['MakeAndModel']}</td>
+            <td>{!sn['SerialNumber']}</td>
+          </tr>
+        </apex:repeat>
+        </tbody>
+
+      </table>
+
+    </div>
+    <!-- ================================== /SERIAL INFO =============================== -->
+
+    <div class="diagnostics">
+
+      <h2>Standard Checks</h2>
+      <table class="checks">
+        <tr>
+          <td>
+            <table class="ersatzCheckbox">
+              <tr><td></td></tr>
+            </table>
+          </td>
+          <td>Test battery</td>
+          <td>
+            <table class="ersatzCheckbox">
+              <tr><td></td></tr>
+            </table>
+          </td>
+          <td>Check fuel condition</td>
+        </tr>
+        <tr>
+          <td>
+            <table class="ersatzCheckbox">
+              <tr><td></td></tr>
+            </table>
+          </td>
+          <td>Test all electronics</td>
+          <td>
+            <table class="ersatzCheckbox">
+              <tr><td></td></tr>
+            </table>
+          </td>
+          <td>Check fuel line condition</td>
+        </tr>
+        <tr>
+          <td>
+            <table class="ersatzCheckbox">
+              <tr><td></td></tr>
+            </table>
+          </td>
+          <td>Check fuses</td>
+          <td>
+            <table class="ersatzCheckbox">
+              <tr><td></td></tr>
+            </table>
+          </td>
+          <td>Check nodes</td>
+        </tr>
+        <tr>
+          <td>
+            <table class="ersatzCheckbox">
+              <tr><td></td></tr>
+            </table>
+          </td>
+          <td>Check for propeller &amp; hub Damage</td>
+          <td>
+            <table class="ersatzCheckbox">
+              <tr><td></td></tr>
+            </table>
+          </td>
+          <td>Check tire condition</td>
+        </tr>
+        <tr>
+          <td>
+            <table class="ersatzCheckbox">
+              <tr><td></td></tr>
+            </table>
+          </td>
+          <td>Check trailer straps</td>
+          <td colspan="2" rowspan="2">
+            <apex:form >
+              <table width="100%">
+                <tr>
+                  <td width="50%">
+                    Ignition Key #<br/>
+                    <div class="fake-input">{!ignitionKeyNumber}</div>
+                  </td>
+                  <td width="50%">
+                    Compartment Key #<br/>
+                    <div class="fake-input">{!compartmentKeyNumber}</div>
+                  </td>
+                </tr>
+              </table>
+            </apex:form>
+          </td>
+        </tr>
+        <tr></tr>
+      </table>
+
+      <h2>Technical Suggestions</h2>
+      <table class="suggestions">
+        <tr class="concern">
+          <td>A. Initial Customer Concern</td>
+          <td>B. Safety Concern</td>
+        </tr>
+        <tr class="cost">
+          <td>Price A =</td>
+          <td>Price A + B =</td>
+        </tr>
+        <tr class="concern">
+          <td>C. Convenience Item</td>
+          <td>D. Accessory Item</td>
+        </tr>
+        <tr class="cost">
+          <td>Price A + B + C =</td>
+          <td>Price A + B + C + D =</td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- +++++++++++++++++++++++++++++++++++++++ HEADER 1 ++++++++++++++++++++++++ -->
+    <div class="row header1 hcf pagebreak">
+
+      <div class="left" >
+        <img src="{!URLFOR($Resource.LegendPDF,'image/logo_250x30.png')}" />
+      </div>
+
+      <div class="right">
+
+        <div>
+          <img src="{!URLFOR($Resource.LegendPDF,'Icons/Email.png')}" />
+          <p>info@legendboats.com</p>
+        </div>
+
+        <div>
+          <img src="{!URLFOR($Resource.LegendPDF,'Icons/Phone.png')}" />
+          <p>
+            phone
+            <span style="float:right;padding-right:25px;">
+                {!warehouse.Phone__c}
+              </span>
+          </p>
+          <p>
+            toll free
+            <span style="float:right;padding-right:25px;">
+                {!warehouse.Toll_Free__c}
+              </span>
+          </p>
+          <p>
+            fax
+            <span style="float:right;padding-right:25px;">
+                {!warehouse.Fax__c}
+              </span>
+          </p>
+        </div>
+
+        <div style="position:relative">
+          <img src="{!URLFOR($Resource.LegendPDF,'image/web.png')}" />
+          <p>www.legendboats.com</p>
+          <!--  <img src="https://www.barcodesinc.com/generator/image.php?code=INV-10812&amp;style=68&amp;type=C128B&amp;width=150&amp;height=40&amp;xres=1&amp;font=3" alt="Barcode" border="0"/> -->
+          <!-- <p class="invoice_number">{!invoiceName}</p> -->
+          <p style="width: 100%; padding-top: 5px; font-size: 12px; text-align: center">
+            Memory Builder
+          </p>
+          <p style="width: 100%; font-size: 14px; font-weight: bold; text-align: center">
+            {!erpOrder.Salesperson__r.name}
+          </p>
+        </div>
+
+      </div><!--header right close -->
+    </div>
+    <!-- ==================================== /HEADER 1 ============================  -->
+
+    <!-- +++++++++++++++++++++++++++++++++++ HEADER 2 ++++++++++++++++++++++++++++++ -->
+    <div class="row header2" style="overflow: visible; padding-top: 10pt">
+
+      <div class="customer-info">
+        <apex:outputPanel layout="none" rendered="{!NOT(ISNULL(projectAccount))}">
+          <p>
+            <img src="{!URLFOR($Resource.LegendPDF,'Icons/Invoice.png')}" />
+            INVOICE TO:
+          </p>
+          <p class="buyer_name">
+            {!projectAccount.name}
+          </p>
+          <p class="buyer_address">
+            {!projectAccount.BillingStreet}, {!projectAccount.BillingCity} <br />
+            {!projectAccount.BillingState}, {!projectAccount.BillingPostalCode}, {!projectAccount.BillingCountry}
+          </p>
+          <p class="buyer_phone">
+            {!projectAccount.phone}
+          </p>
+          <p class="buyer_email">
+            {!projectAccount.PersonEmail}
+          </p>
+        </apex:outputPanel>
+      </div>
+
+      <div>
+        <div>
+
+          <div class="blockSummary">
+            <table>
+              <tr>
+                <td>
+                  <img src="{!URLFOR($Resource.LegendPDF,'image/flag-whitebg.png')}" width="25" height="25" />
+                </td>
+                <td>
+                  <img src="{!URLFOR($Resource.LegendPDF,'image/calendar_trans.png')}" width="25" height="25" style="padding-left: 2pt" />
+                </td>
+                <td>
+                  <img src="{!URLFOR($Resource.LegendPDF,'image/invoice2_trans.png')}" width="25" height="25" style="padding-left: 5pt" />
+                </td>
+              </tr>
+
+            </table>
+
+            <div style="">
+              <table>
+                <tr>
+                  <td style="">
+                    <p>Parking Spot:</p>
+                    <p>{!erpOrder.Parking_Spot__c}&nbsp;</p>
+                  </td>
+                  <td style="">
+                    <p>Invoice Date:</p>
+                    <p>{!invoiceDate}</p>
+                  </td>
+                  <td style="">
+                    <p>Invoice #:</p>
+                    <p>{!invoiceName}</p>
+                  </td>
+                </tr>
+              </table>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+    <!-- ================================= /HEADER 2 =================================== -->
+
+
+    <!-- +++++++++++++++++++++++++++++++++ SERIAL INFO +++++++++++++++++++++++++++++++++ -->
+    <div class="row serial-info">
+
+      <table class="itemsTable">
+
+        <thead>
+        <tr>
+          <td class="w15">Type</td>
+          <td class="w15">Year</td>
+          <td class="w40">Make/Model</td>
+          <td class="w30">Serial Number</td>
+        </tr>
+        </thead>
+
+        <tbody>
+        <apex:repeat value="{!serialNumbers}" var="sn">
+          <tr>
+            <td>{!sn['Type']}</td>
+            <td>{!sn['Year']}</td>
+            <td>{!sn['MakeAndModel']}</td>
+            <td>{!sn['SerialNumber']}</td>
+          </tr>
+        </apex:repeat>
+        </tbody>
+
+      </table>
+
+    </div>
+    <!-- ================================== /SERIAL INFO =============================== -->
+
+    <!-- +++++++++++++++++++++++++++++++++++ ITEMS ++++++++++++++++++++++++++++++ -->
+
+    <table class="itemsTable hasKits service-order" style="margin-bottom:25px;margin-top: 20px;">
+      <apex:repeat value="{!taskLineItems}" var="task">
+        <tbody>
+        <tr class="task-title">
+          <td colspan="2">
+            {!task.internalName}
+            <apex:outputText rendered="{!erpOrder.Internal_Labour_Service__c}">
+              &nbsp;&nbsp;&nbsp;&nbsp;{!task.taskGLV1}&nbsp;-&nbsp;{!task.taskGLV2}
+            </apex:outputText>
+          </td>
+        </tr>
+        <!-- <apex:outputPanel layout="none" rendered="{!task.renderCCC}"> -->
+        <tr>
+          <td>
+            <table class="ccc-table">
+              <tr class="complaint">
+                <th style="width:10%">Complaint</th>
+                <td>{!task.complaint}</td>
+              </tr>
+              <tr class="cause">
+                <th>Cause</th>
+                <td>{!task.cause}</td>
+              </tr>
+              <tr class="correction">
+                <th>Correction</th>
+                <td>{!task.correction}</td>
+              </tr>
+              <tr class="needs">
+                <td colspan="2">
+                  <table class="labourPartsNotes" width="100%">
+                    <tr>
+                      <td width="15%">
+                        <strong>Estimated Labour</strong><br/>
+                        {!task.duration}
+                      </td>
+                      <td width="15%"><strong>Actual Labour</strong></td>
+                      <td width="70%">
+                        <strong>Parts Required</strong>
+                        <table class="noborder parts-list">
+                          <apex:repeat value="{!task.taskParts}" var="part">
+                            <tr class="{!IF( part.hasKitParts, 'part hasKitParts', 'part')}">
+                              <td>{!part.productCode}</td>
+                              <td>{!part.description}</td>
+                              <td>{!part.quantity}</td>
+                            </tr>
+                            <apex:outputPanel layout="none" styleClass="kit-contents" rendered="{!part.hasKitParts}">
+                              <tr>
+                                <td colspan="3" style="border-bottom:0;margin-left:2%;">
+                                  <table class="kitParts">
+                                    <apex:repeat value="{!part.kitParts}" var="kitPart">
+                                      <tr>
+                                        <td style="padding-left:5px;">{!kitPart.productCode}</td>
+                                        <td><apex:outputText value="{!kitPart.description}" escape="false"></apex:outputText></td>
+                                        <td>{!kitPart.Quantity}</td>
+                                      </tr>
+                                    </apex:repeat>
+                              </table>
+                                </td>
+                              </tr>
+                            </apex:outputPanel>
+                          </apex:repeat>
+                        </table>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <!-- </apex:outputPanel> -->
+        <tr class="spacer"><td></td></tr>
+        </tbody>
+      </apex:repeat>
+    </table>
+
+    <!-- ================================= /ITEMS ===================================== -->
+    <div class="nobreak">
+      <!-- +++++++++++++++++++++++ KEY NUMBER INFO +++++++++++++++++++++++++++++++++++++ -->
+      <div class="row key-info">
+        <div class="col col20 label">
+          Ignition Key #
+        </div>
+        <div class="col col30">
+          <div class="fake-input">
+            {!ignitionKeyNumber}
+          </div>
+        </div>
+        <div class="col col20 label">
+          Compartment Key #
+        </div>
+        <div class="col col30">
+          <div class="fake-input" style="">
+            {!compartmentKeyNumber}
+          </div>
+        </div>
+      </div>
+      <!-- ======================= KEY NUMBER INFO ===================================== -->
+
+      <!-- +++++++++++++++++++++++++++++ NOTES AND TOTALS +++++++++++++++++++++++++++++ -->
+      <div class="row signatures_and_summary">
+        <div class="col col50">
+          <h2>Customer Notes:</h2>
+          <div class="notes_container">
+            <p>
+              <apex:outputText escape="false" value="{!customerNotes}" />
+            </p>
+          </div>
+          <div class="disclaimer-container no-border">
+            <div class="signature_container">
+              <p></p>
+              <p>Final Check Completed By:</p>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="col col50">
+          <h2 stye="width: 100%;">All Items on Work Order Fixed?
+            <span style="display:inline-block; float:right; padding-right: 5%;">YES / NO</span>
+          </h2>
+          <div class="notes_container" style="min-height: 120px;">
+            <p></p>
+          </div>
+        </div>
+      </div>
+      <!-- ============================= /NOTES AND TOTALS ======================== -->
+    </div>
+
+    <div class="page">
+      <h1>Additional Concerns</h1>
+      <apex:repeat value="{!cccList}" var="i">
+        <table class="ccc-table">
+          <tr class="complaint">
+            <th style="width: 10%">Complaint</th>
+            <td colspan="2"></td>
+          </tr>
+          <tr class="cause">
+            <th>Cause</th>
+            <td colspan="2"></td>
+          </tr>
+          <tr class="correction">
+            <th>Correction</th>
+            <td colspan="2"></td>
+          </tr>
+          <tr class="needs">
+            <td colspan="3">
+              <table class="labourPartsNotes" width="100%">
+                <tr>
+                  <td width="15%"><strong>Estimated Labour</strong><br/>&nbsp;<br/>&nbsp;<br/>&nbsp;</td>
+                  <td width="15%"><strong>Actual Labour</strong><br/>&nbsp;</td>
+                  <td width="70%"><strong>Parts Required</strong><br/>&nbsp;</td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+      </apex:repeat>
+    </div>
+
+  </div>
+
+  </body>
+
+</apex:page>

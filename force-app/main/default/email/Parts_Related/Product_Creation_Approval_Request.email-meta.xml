@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <description>Email template for Product Creation approval request</description>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>Legend_Letterhead</letterhead>
+    <name>Product Creation Approval Request</name>
+    <style>freeForm</style>
+    <subject>Please Approve this Product Creation Request</subject>
+    <textOnly>Hello {!ApprovalRequest.Process_Approver}
+
+Please approve this Product Creation Request from {!Approval_Requesting_User.Username}
+
+Here are a few details about the product:
+
+Vendor: {!Product2.AcctSeedERP__Default_Vendor__c}
+
+Type: {!Product2.Name}
+Family: {!Product2.Family}
+Code: {!Product2.ProductCode}
+Unique Product Code: {!Product2.Unique_Product_Code__c}
+Name: {!Product2.Name}
+Product Description: {!Product2.Description}
+Vendor: {!Product2.AcctSeedERP__Default_Vendor__c}
+French Description: {!Product2.Description_FR__c}
+Barcode: {!Product2.00Ni000000GsG3j}
+
+Unit Cost: {!Product2.AcctSeed__Unit_Cost__c}
+Unit of Measurement: {!Product2.Unit_of_Measurement__c}
+
+Hopefully everything looks great and all of the information is complete for you.  Here&#39;s a link in case you want to have a closer look...
+
+{!Product2.Link}
+
+Thank you!</textOnly>
+    <type>html</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

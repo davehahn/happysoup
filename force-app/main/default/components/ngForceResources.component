@@ -1,0 +1,114 @@
+<apex:component >
+
+  <apex:attribute name="includeBootStrap"
+                  description="Include the BootStrap resources"
+                  type="Boolean"
+                  required="false" />
+  <apex:attribute name="includeMaterial"
+                  description="Include the Google Material Design resources"
+                  type="Boolean"
+                  required="false" />
+  <apex:attribute name="includeOdometer"
+                  description="Include the resources for the Odometer"
+                  type="Boolean"
+                  required="false" />
+  <apex:attribute name="includejQuery"
+                  type="Boolean"
+                  description="Include jQuery"
+                  required="false" />
+  <apex:attribute name="includeInfiniteScroll"
+                  type="Boolean"
+                  description="Include the infinite-scroll directive"
+                  required="false" />
+
+
+  <!--
+    This is just an error box that is rendered if both BootStrap and
+    Google Material are selected
+  -->
+  <apex:outputPanel layout="block"
+                    rendered="{!includeBootStrap == true && includeMaterial == true}"
+                    style="width:50%;
+                           margin:1rem auto;
+                           border:1px solid red;
+                           color:red;
+                           padding:20px;
+                           text-align:center;
+                           font-size:1.2rem;
+                           line-height: 1.75rem;">
+    Both BootStrap and Google Material resources are included! <br />
+    Please include only one in your ngForceResources component declaration.
+  </apex:outputPanel>
+  <!-- BootStrap Styles -->
+  <apex:outputPanel layout="none"
+                    rendered="{!includeBootStrap != null && includeBootStrap == true && includeMaterial != true}">
+    <apex:stylesheet value="{!URLFOR($Resource.ngForce, '/css/bootstrap.min.css')}" />
+  </apex:outputPanel>
+
+  <!-- Google Material Styles -->
+  <apex:outputPanel layout="none"
+                    rendered="{!includeMaterial != null && includeMaterial == true && includeBootstrap != true}">
+    <apex:stylesheet value="{!URLFOR($Resource.ngForce, '/css/angular-material.min.css')}" />
+    <apex:stylesheet value="{!URLFOR($Resource.ngForce, '/css/angular-material-icons.css')}" />
+  </apex:outputPanel>
+
+  <!-- Odometer Styles -->
+  <apex:outputPanel layout="none" rendered="{!includeOdometer != null && includeOdometer == true}">
+    <apex:stylesheet value="{!URLFOR($Resource.ngForce, '/css/odometer-theme-minimal.css')}" />
+  </apex:outputPanel>
+
+  <apex:stylesheet value="{!URLFOR($Resource.ngForce, '/css/font-awesome.min.css')}" />
+
+  <!-- NON-Angular js libraries -->
+  <apex:includeScript value="{!URLFOR($Resource.ngForce, '/js/lib/lo-dash.compat.js')}" />
+      <!-- jQuery -->
+  <apex:outputPanel layout="none"
+                    rendered="{!(includejQuery != null && includejQuery == true) || (includeInfiniteScroll != null && includeInfiniteScroll == true)}">
+    <apex:includeScript value="{!URLFOR($Resource.ngForce, '/js/lib/jquery-1.11.3.min.js')}" />
+  </apex:outputPanel>
+
+  <!-- ANGULAR -->
+  <apex:includeScript value="{!URLFOR($Resource.ngForce, '/js/ng/angular.min.js')}" />
+  <apex:includeScript value="{!URLFOR($Resource.ngForce, '/js/ng/angular-resource.min.js')}" />
+  <apex:includeScript value="{!URLFOR($Resource.ngForce, '/js/ng/angular-route.min.js')}" />
+  <apex:includeScript value="{!URLFOR($Resource.ngForce, '/js/ng/angular-animate.min.js')}" />
+  <apex:includeScript value="{!URLFOR($Resource.ngForce, '/js/ng/angular-aria.min.js')}" />
+
+  <!-- Third-Party Angular Modules -->
+
+  <apex:includeScript value="{!URLFOR($Resource.ngForce, '/js/ng/angular-local-storage.min.js')}" />
+
+  <!-- Bootstrap Directives -->
+  <apex:outputPanel layout="none"
+                    rendered="{!includeBootStrap != null && includeBootStrap == true && includeMaterial != true}">
+    <apex:includeScript value="{!URLFOR($Resource.ngForce, '/js/lib/ui-bootstrap-tpls-0.12.1.min.js')}" />
+  </apex:outputPanel>
+
+  <!-- Google Material Directives -->
+  <apex:outputPanel layout="none"
+                    rendered="{!includeMaterial != null && includeMaterial == true && includeBootstrap != true}">
+    <apex:includeScript value="{!URLFOR($Resource.ngForce, '/js/ng/angular-material.min.js')}" />
+    <apex:includeScript value="{!URLFOR($Resource.ngForce, '/js/ng/angular-material-icons.min.js')}" />
+  </apex:outputPanel>
+
+  <!-- Odometer Directive -->
+  <apex:outputPanel layout="none" rendered="{!includeOdometer != null && includeOdometer == true}">
+    <apex:includeScript value="{!URLFOR($Resource.ngForce, '/js/lib/odometer.min.js')}" />
+    <apex:includeScript value="{!URLFOR($Resource.ngForce, '/js/ng/angular-odometer.js')}" />
+  </apex:outputPanel>
+
+
+
+  <!-- Infinite-Scroll directives -->
+  <apex:outputPanel layout="none" rendered="{!includeInfiniteScroll != null && includeInfiniteScroll == true}">
+    <apex:includeScript value="{!URLFOR($Resource.ngForce, '/js/ng/ng-infinite-scroll.js')}" />
+  </apex:outputPanel>
+
+  <apex:includeScript value="{!URLFOR($Resource.ngForce, '/js/lib/safeApply.js')}"/>
+  <apex:includeScript value="{!URLFOR($Resource.ngForce, '/js/lib/restangular.js')}"/>
+
+  <!-- ngForce -->
+  <apex:includeScript value="{!URLFOR($Resource.ngForce, 'js/ngforce/ngForce.min.js')}"/>
+ <!--  <apex:includeScript value="{!URLFOR($Resource.ngForce, 'js/ngforce/ngForce-visualForceRemoting.js')}"/> -->
+
+</apex:component>

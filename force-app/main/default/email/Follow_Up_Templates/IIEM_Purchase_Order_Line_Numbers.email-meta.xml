@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <description>This is an email that includes the Purchase Order Name and Purchase order Line Count for Data Entry Clerks</description>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>Legend_Letterhead</letterhead>
+    <name>IIEM Purchase Order Line Numbers</name>
+    <style>freeForm</style>
+    <subject>Parts partially or fully received for Creation in IEM</subject>
+    <textOnly>{!AcctSeedERP__Purchase_Order__c.Name}
+
+{!AcctSeedERP__Purchase_Order__c.AcctSeedERP__Line_Count__c}</textOnly>
+    <type>html</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

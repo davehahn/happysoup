@@ -1,0 +1,52 @@
+<aura:component>
+  <aura:attribute name="vendor" type="Map" />
+  <aura:attribute name="tableCols" type="List" />
+
+  <ltng:require scripts="{!join(',', $Resource.Libraries +'/js/LightningApex.js',
+                                     $Resource.Libraries +'/js/LightningUtils.js') }" />
+
+
+  <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+  <aura:registerEvent name="vendorPartsSelected" type="c:Case_CreatePO_VenderPartsSelected_Event" />
+
+  <div>
+    <h3>
+      <span>
+        {!v.vendor.name}
+      </span>
+    </h3>
+
+    <div class="slds-p-around_small slds-m-bottom_small parts-container">
+      <lightning:layout>
+        <lightning:layoutItem size="9" padding="around-small">
+          <table class="slds-table slds-table_bordered slds-table_cell-buffer slds-m-top_small slds-m-bottom_small">
+            <tbody>
+              <aura:iteration items="{!v.vendor.caseParts}" var="cp">
+                <tr>
+                  <td>
+                    <lightning:input type="checkbox"
+                                     aura:id="rowSelect"
+                                     variant="label-hidden"
+                                     value="{!cp.Id}"
+                                     checked="{!not(empty(v.vendor.id))}" />
+                  </td>
+                  <td>{!cp.Product__r.ProductCode}</td>
+                  <td>{!cp.Product__r.Name}</td>
+                  <td>{!cp.Quantity__c}</td>
+                </tr>
+              </aura:iteration>
+            </tbody>
+          </table>
+
+        </lightning:layoutItem>
+        <lightning:layoutItem size="3" padding="around-small">
+          <lightning:button variant="neutral"
+                            label="Create PO"
+                            class="slds-float_right"
+                            onclick="{!c.handleCreatePO}" />
+        </lightning:layoutItem>
+      </lightning:layout>
+    </div>
+  </div>
+
+</aura:component>

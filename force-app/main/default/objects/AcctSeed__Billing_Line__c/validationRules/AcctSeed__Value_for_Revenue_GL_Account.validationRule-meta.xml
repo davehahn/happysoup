@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>AcctSeed__Value_for_Revenue_GL_Account</fullName>
+    <active>true</active>
+    <description>Verifies Revenue GL Account field is not blank</description>
+    <errorConditionFormula>ISBLANK( AcctSeed__Revenue_GL_Account__c )</errorConditionFormula>
+    <errorDisplayField>AcctSeed__Revenue_GL_Account__c</errorDisplayField>
+    <errorMessage>A billing line must contain a value for the revenue GL account field.</errorMessage>
+</ValidationRule>

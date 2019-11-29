@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>Legend_Letterhead</letterhead>
+    <name>Finance Approved</name>
+    <style>freeForm</style>
+    <subject>Your Finance Deal was Approved!</subject>
+    <textOnly>Hello {!Opportunity.OwnerFirstName},
+
+{!Account.Name} has been approved through the bank.  This boat will soon be tagged and on it&#39;s way to the water!
+
+Thank you and please let me know if you have any questions regarding this deal.
+
+{!User.Name}
+{!User.Title}</textOnly>
+    <type>html</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

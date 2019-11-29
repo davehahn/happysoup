@@ -1,0 +1,63 @@
+<!--
+ - Created by dave on 2019-10-21.
+ -->
+
+<aura:component controller="SerialNumber_RegisterWithSupplier_Ctrl"
+                implements="force:lightningQuickAction,force:hasRecordId">
+
+  <ltng:require scripts="{!join(',', $Resource.Libraries +'/js/LightningApex.js',
+                                     $Resource.Libraries +'/js/LightningUtils.js') }"
+                afterScriptsLoaded="{!c.doInit}" />
+
+  <aura:attribute name="recordId" type="String" />
+  <aura:attribute name="registration" type="Registration__c" />
+  <aura:attribute name="serialNumber" type="GMBLASERP__Serial_Number__c" />
+  <aura:attribute name="loaded" type="Boolean" default="false" />
+
+  <div>
+    <c:Lgnd_Spinner_dh aura:id="spinner" />
+    <aura:if isTrue="{! v.loaded }">
+
+      <aura:if isTrue="{! v.serialNumber.IsRegisteredWithSupplier__c }">
+        <div class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_warning">
+          This Serial Number has already been registered with the Supplier on
+          <span class="slds-p-left_xx-small"><lightning:formattedDateTime value="{!v.serialNumber.RegisteredWithSupplierDate__c}" /></span>
+        </div>
+      </aura:if>
+
+      <aura:if isTrue="{! not(v.serialNumber.IsRegisteredWithSupplier__c) }">
+
+        <aura:if isTrue="{! empty(v.registration)}">
+          <div class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_warning">
+            This serial number has not yet been registered to a Customer, therefore you can not register it
+            with the Supplier.
+          </div>
+        </aura:if>
+
+        <aura:if isTrue="{! !empty(v.registration) }">
+          <div class="slds-m-bottom_small"> Register to {!v.serialNumber.GMBLASERP__Product__r.AcctSeedERP__Default_Vendor__r.Name } using the following customer:</div>
+          <div class="slds-border_right slds-border_left slds-border_top slds-border_bottom slds-p-around_small">
+            <p class="slds-align_absolute-center slds-m-bottom_x-small">
+              {!v.registration.Account__r.Name}
+            </p>
+            <p class="slds-align_absolute-center slds-m-bottom_x-small">
+              {!v.registration.Account__r.PersonEmail}
+            </p>
+            <p class="slds-align_absolute-center slds-m-bottom_x-small">
+              {!v.registration.Account__r.BillingStreet}, {!v.registration.Account__r.BillingCity}
+            </p>
+            <p class="slds-align_absolute-center">
+              {!v.registration.Account__r.BillingStateCode}, {!v.registration.Account__r.BillingCountry},
+              {!v.registration.Account__r.BillingPostalCode}
+            </p>
+          </div>
+          <div class="slds-align_absolute-center slds-m-top_small">
+            <lightning:button label="Register"
+                              onclick="{!c.doRegistration}"/>
+          </div>
+        </aura:if>
+      </aura:if>
+    </aura:if>
+
+  </div>
+</aura:component>

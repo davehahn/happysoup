@@ -1,0 +1,227 @@
+<form id="edit-form">
+<div class="slds-modal__header">
+  <h2 class="slds-text-heading--medium">
+    <input value="{{eventData.subject}}" data-field-name="Subject" data-required></input>
+  </h2>
+
+  <button class="slds-button slds-button--icon-inverse slds-modal__close close-modal">
+    <svg aria-hidden="true" class="slds-button__icon slds-button__icon--large">
+      <use xlink:href="{{icons.close}}"></use>
+    </svg>
+    <span class="slds-assistive-text">Close</span>
+  </button>
+</div>
+
+<div class="slds-modal__content">
+
+  <input type="hidden" value="{{eventData.Id}}" data-field-name="Id" />
+
+  <div class="slds-grid slds-grid--pull-padded slds-grid--align-center">
+
+    <div class="slds-col--padded slds-size--5-of-12">
+      <label class="slds-form-element__label" for="date">Start</label>
+      <div class="slds-grid" style="margin:0;">
+
+        <div class="slds-col slds-size--7-of-12">
+          <div class="slds-form-element">
+            <div class="slds-input-has-icon slds-input-has-icon--right">
+              <svg aria-hidden="true" class="slds-input__icon slds-icon-text-default">
+                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{{icons.calendar}}"></use>
+              </svg>
+              <input class="slds-input has-datepicker"
+                     value="{{eventData.startDate}}"
+                     type="text"
+                     data-field-name="start-date"
+                     data-required
+                     placeholder="Pick a Date"
+                     label="Date Picker Label">
+            </div>
+          </div>
+        </div>
+
+        <div class="slds-col slds-size--5-of-12">
+          <div class="slds-form-element">
+            <div class="slds-input-has-icon slds-input-has-icon--right">
+              <svg aria-hidden="true" class="slds-input__icon slds-icon-text-default">
+                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{{icons.arrowDown}}"></use>
+              </svg>
+              <input class="slds-input is-combobox"
+                     type="text"
+                     value="{{eventData.startTime}}"
+                     data-field-name='start-time'
+                     data-required />
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="slds-col--padded slds-size--5-of-12">
+      <label class="slds-form-element__label" for="date">End</label>
+      <div class="slds-grid" style="margin:0;">
+
+        <div class="slds-col slds-size--7-of-12">
+          <div class="slds-form-element">
+            <div class="slds-input-has-icon slds-input-has-icon--right">
+              <svg aria-hidden="true" class="slds-input__icon slds-icon-text-default">
+                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{{icons.calendar}}"></use>
+              </svg>
+              <input class="slds-input has-datepicker"
+                     value="{{eventData.endDate}}"
+                     type="text"
+                     data-field-name="end-date"
+                     data-required
+                     placeholder="Pick a Date"
+                     label="Date Picker Label">
+            </div>
+          </div>
+        </div>
+
+        <div class="slds-col slds-size--5-of-12">
+          <div class="slds-form-element">
+            <div class="slds-input-has-icon slds-input-has-icon--right">
+              <svg aria-hidden="true" class="slds-input__icon slds-icon-text-default">
+                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{{icons.arrowDown}}"></use>
+              </svg>
+              <input class="slds-input is-combobox"
+                     data-dropdown-pos="right"
+                     type="text"
+                     value="{{eventData.endTime}}"
+                     data-field-name="end-time"
+                     data-required />
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+<!--   <div class="slds-grid slds-grid--pull-padded slds-grid--align-center form-row">
+    <div class="slds-col--padded slds-size--10-of-12">
+      <div class="slds-form-element">
+        <label class="slds-form-element__label" for="subject">Subject</label>
+        <div class="slds-form-element__control">
+          <input id="subject" class="slds-input" type="text" placeholder="Event Subject" data-field-name="subject" value="{{eventData.subject}}"/>
+        </div>
+      </div>
+    </div>
+  </div> -->
+
+  {{#ifHasNoOpportunity eventData.hasOpportunity}}
+  <div class="slds-grid slds-grid--pull-padded slds-grid--align-center form-row">
+
+    <div class="slds-col--padded slds-size--5-of-12">
+      <div class="slds-form-element">
+        <label class="slds-form-element__label" for="type">Type</label>
+        <div class="slds-form-element__control">
+          <div class="slds-select_container">
+            <select id="type" class="slds-select" data-field-name="type" value="{{eventData.type}}">
+              <option value="">Select Event Type</option>
+              {{#each eventTypes}}
+                {{ optionBuilder this this ../eventData.type }}
+              {{/each}}
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slds-col--padded slds-size--5-of-12">
+      <div class="slds-form-element">
+        <label class="slds-form-element__label" for="calendarId">Calendar</label>
+        <div class="slds-form-element__control">
+          <div class="slds-select_container">
+            <select id="type" class="slds-select" data-field-name="owner" data-required>
+              <option value="">Select Calendar</option>
+              {{#each calOptions}}
+                {{optionBuilder this.Name this.Id ../eventData.owner }}
+              <!--<option value="{{this.Id}}">{{this.Name}}</option>-->
+              {{/each}}
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  {{/ifHasNoOpportunity}}
+
+  <div class="slds-grid slds-grid--pull-padded slds-grid--align-center form-row">
+    <div class="slds-col--padded slds-size--10-of-12">
+      <div class="slds-form-element">
+        <label class="slds-form-element__label" for="description">Description / Notes</label>
+        <div class="slds-form-element__control">
+          <textarea id="description" class="slds-textarea" type="text" data-field-name="description">{{eventData.description}}</textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  {{#ifHasOpportunity eventData.hasOpportunity}}
+  <div class="slds-card">
+    <div class="slds-card__header">
+      <div class="slds-media slds-media--center slds-has-flexi-truncate">
+        <div class="slds-media__figure">
+          <svg aria-hidden="true" class="slds-icon slds-icon-standard-opportunity slds-icon--medium">
+            <use xlink:href="{{icons.opportunity}}"></use>
+          </svg>
+        </div>
+        <div class="slds-media__body">
+          <h2 class="slds-text-heading--small slds-truncate">{{oppName eventData}}</h2>
+        </div>
+      </div>
+    </div>
+    <div class="slds-card__body">
+      <div class="slds-grid">
+
+        <div class="slds-col--padded slds-size--1-of-2">
+          <div class="field-detail">
+            <label>Account Name</label>
+            <p class="slds-has-flexi-truncate">{{eventData.accountName}}</p>
+          </div>
+          <div class="field-detail">
+            <label>Stage</label>
+            <p class="slds-has-flexi-truncate">{{eventData.oppDetails.Stage}}</p>
+          </div>
+          <div class="field-detail">
+            <label>Payment Method</label>
+            <p class="slds-has-flexi-truncate">{{eventData.oppDetails.PaymentMethod}}</p>
+          </div>
+        </div>
+
+        <div class="slds-col--padded slds-size--1-of-2">
+          <div class="field-detail">
+            <label>Amount</label>
+            <p>$ {{eventData.oppDetails.Amount}}</p>
+          </div>
+          <div class="field-detail">
+            <label>Memory Maker</label>
+            <p>{{eventData.oppDetails.MemoryMaker}}</p>
+          </div>
+          <div class="field-detail">
+            <label>Boat Specialist</label>
+            <p>{{eventData.oppDetails.BoatSpecialist}}</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  {{/ifHasOpportunity}}
+
+</div>
+</form>
+
+<div class="slds-modal__footer">
+  <div class="slds-x-small-buttons--horizontal">
+    {{#ifHasNoOpportunity eventData.hasOpportunity}}
+    <button data-event-delete="{{eventData.Id}}" class="slds-button slds-button--neutral slds-theme--error">Delete</button>
+    {{/ifHasNoOpportunity}}
+    <button class="slds-button slds-button--neutral close-modal">Cancel</button>
+    <button data-form-submit-btn="edit-form" class="slds-button slds-button--neutral slds-button--brand">Save</button>
+  </div>
+</div>

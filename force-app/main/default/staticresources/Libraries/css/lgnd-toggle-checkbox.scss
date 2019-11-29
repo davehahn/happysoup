@@ -1,0 +1,104 @@
+/* ++++++++++++++++++++ Checkbox Toggle Switch +++++++++++++++++ */
+
+.lg-toggle {
+  position: absolute;
+  margin-left: -9999px;
+  visibility: hidden;
+  box-sizing: border-box;
+
+  & + label {
+    display: block;
+    position: relative;
+    cursor: pointer;
+    outline: none;
+    user-select: none;
+    box-sizing: border-box;
+  }
+}
+
+input.lg-toggle-round {
+
+  & + label {
+    padding: 2px;
+    width: 60px;
+    height: 30px;
+    background-color: #dddddd;
+    border-radius: 60px;
+
+    &:before,
+    &:after {
+      display: block;
+      position: absolute;
+      top: 1px;
+      left: 1px;
+      bottom: 1px;
+      content: "";
+    }
+
+    &:before {
+      right: 1px;
+      background-color: #f1f1f1;
+      border-radius: 60px;
+      transition: background 0.4s;
+    }
+
+    &:after {
+      width: 29px;
+      background-color: #fff;
+      border-radius: 100%;
+      transition: margin 0.4s;
+    }
+
+    & > i {
+      display:none;
+      position:absolute;
+      top:8px;
+      z-index:1;
+      left:9px;
+      color:#999;
+    }
+  }
+
+  &:checked + label {
+    & > i {
+      left:38px;
+      color:#8ce196;
+    }
+    &:before {
+      background-color: #8ce196;
+    }
+    &:after {
+      margin-left: 29px;
+    }
+  }
+
+  &.busy + label > i {
+    display:inline-block;
+  }
+
+  &.small {
+
+    & + label {
+      width: 30px;
+      height: 15px;
+      border-radius: 40px;
+
+      &:before {
+        border-radius: 15px;
+      }
+      &:after {
+        width: 14px;
+      }
+    }
+
+    &:checked + label {
+      &:after {
+        margin-left: 14px;
+      }
+    }
+
+  }/* /.small */
+
+}
+
+/* ========================= /Checkbox Toggle Switch ================ */

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <description>An email to our Legend Insurance Company when a deal is ready to go</description>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>Legend_Letterhead</letterhead>
+    <name>Legend Insurance</name>
+    <style>freeForm</style>
+    <subject>A New Member of the Legend Family!</subject>
+    <textOnly>Hello,
+
+We&#39;ve helped another new Legend Family Member out onto the water!
+
+
+Customer Info:
+
+{!Account.Name}
+{!Account.Billing Address}
+
+
+Deal Details:
+
+Boat Model: {!Opportunity.Boat_Model_Year__c} {!Opportunity.Product_Make__c} {!Opportunity.BoatId__c}
+Total Amount: {!Opportunity.Boat_Insurance_Total__c}
+Delivery Date: {!Opportunity.Delivery_Date__c}
+Financing Institution: {!Opportunity.00Ni000000HObhK}
+
+
+You can contact {!Account.FirstName} with a quote at:
+
+
+E-mail: {!Account.PersonEmail}
+Phone Number: {!Account.Phone}
+Mobile: {!Account.PersonMobilePhone}
+Other Phone: {!Account.PersonOtherPhone}
+
+
+If you have any questions about this deal, please do not hesitate to contact {!Opportunity.Business_Manager__c}.
+
+Thanks so much and best of luck helping this customer stay safe on the water!</textOnly>
+    <type>html</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

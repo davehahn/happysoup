@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>Legend_Letterhead</letterhead>
+    <name>BOM Notification on ERP Deilvered</name>
+    <style>freeForm</style>
+    <subject>This ERP for {!AcctSeed__Project__c.AcctSeed__Account__c} has been set to Delivered.</subject>
+    <textOnly>Well hello Lisa, the following ERP has been marked as delivered:
+
+ERP Order: {!AcctSeed__Project__c.Name}
+
+Account: {!AcctSeed__Project__c.AcctSeed__Account__c}
+
+Pickup Location: {!AcctSeed__Project__c.Pickup_Location__c}
+
+Delivery Date: {!AcctSeed__Project__c.Delivery_Date__c}
+
+BOM: {!AcctSeed__Project__c.Business_Manager__c}</textOnly>
+    <type>html</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

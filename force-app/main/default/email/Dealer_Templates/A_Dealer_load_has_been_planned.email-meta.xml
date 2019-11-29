@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <description>A new dealer load has now been scheduled</description>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>Legend_Letterhead</letterhead>
+    <name>A Dealer load has been planned</name>
+    <style>freeForm</style>
+    <subject>A new dealer load has been planned/scheduled</subject>
+    <textOnly>Hello Team,
+
+A corresponding dealer load has now been scheduled for delivery. 
+Dealer load: {!Truck_Trip__c.Name} 
+Departure date: {!Truck_Trip__c.Departure_Date__c}
+Link to the trip: {!Truck_Trip__c.Link}
+
+Please ensure the product is scheduled to be rigged as necessary.
+Start preparing any parts available for shipment.
+Notify the dealer of the pending shipment.
+Tag the boats accordingly.
+Begin preparing the dealer invoices.
+
+Thanks for all you do!</textOnly>
+    <type>html</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

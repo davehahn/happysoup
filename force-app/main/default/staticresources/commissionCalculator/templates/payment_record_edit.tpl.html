@@ -1,0 +1,45 @@
+<div class="slds-card slds-card--narrow"
+     data-payment-record-id="{{this.Id}}"
+     data-commission-record-id="{{this.CommissionRecord__c}}"
+     data-owner-commission-percent="{{this.Owner__r.Commission_Percentage__c}}">
+
+  <div class="slds-card__header slds-grid">
+    <header class="slds-media slds-media--center slds-has-flexi-truncate">
+      <div class="slds-media__figure">
+        <img src="{{this.Owner__r.SmallPhotoUrl}}" style=""/>
+      </div>
+      <div class="slds-media__body slds-truncate">
+        <h2>
+          <span class="slds-text-heading--medium">{{this.Owner__r.Name}}</span>
+        </h2>
+      </div>
+    </header>
+  </div>
+  <div class="slds-card__body">
+    {{#if this.Id}}
+      <input type="hidden" data-attribute-name="Id" value="{{this.Id}}">
+    {{/if}}
+    <input type="hidden" data-attribute-name="CommissionRecord__c" value="{{this.CommissionRecord__c}}">
+    <input type="hidden" data-attribute-name="Owner__c" value="{{this.Owner__c}}">
+    <div class="amounts">
+      <p class="total_amount">
+        {{commissionPercentageIndicator this}}
+        <span>$ {{this.PaymentAmount__c}}</span>
+      </p>
+
+      <div class="row collapse percent-input">
+        <div class="column large-2 large-offset-2">
+          <span class="prefix"><a href="#" data-action="decrease"> <i class="fa fa-chevron-down"></i></a></span>
+        </div>
+        <div class="column large-4">
+          <input class="payment_percent" type="text" data-attribute-name="PaymentPercent__c" value="{{this.PaymentPercent__c}}" disabled="disabled">
+        </div>
+         <div class="column large-2 end">
+          <span class="postfix"><a href="#" data-action="increase"> <i class="fa fa-chevron-up"></i></a></span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+

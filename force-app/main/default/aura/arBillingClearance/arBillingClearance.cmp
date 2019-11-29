@@ -1,0 +1,110 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,force:lightningQuickAction" access="global" controller="arBillingClearance" >
+    <aura:attribute name="listERPBills" type="Object[]" />
+    <aura:attribute name="searchText" type="String" />
+    <aura:attribute name="clearingReference" type="String" />
+    <aura:attribute name="selectedBillingId" type="String" />
+    <aura:attribute name="clearingAmount" type="Decimal" default="0.00"  />
+    <aura:attribute name="columns" type="List" />
+    <aura:attribute name="hasSelections" type="boolean" default="false"/>
+    <aura:attribute name="btnDisabled" type="boolean" default="true"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    <aura:handler name="change" value="{!v.searchText}" action="{!c.onSearch}" />
+    <lightning:card >
+        <aura:set attribute="title">
+            Search by ERP Order Name, ERP Order Number, Billing Name or Customer Name
+        </aura:set>
+
+        <div class="slds-form slds-form_stacked slds-m-horizontal_large">
+            <div class="slds-form-element">
+                <div class="slds-form-element__control">
+                    <ui:inputText aura:id="searchInput" label="" updateon="keyup" keyup="{!c.searchInputKeyUp}"  />
+                </div>
+            </div>
+        </div>
+        
+    </lightning:card>
+    <lightning:card >
+        <aura:set attribute="title">
+            Billings Found
+        </aura:set>
+        <div class="slds-form slds-form_stacked slds-m-horizontal_large">
+            <div class="slds-form-element">
+    	       <!--lightning:datatable aura:id="billingTable" data="{! v.listERPBills }" columns="{! v.columns }" keyField="Id" onrowselection="{!c.rowSelected}"/-->
+               <table class="slds-table slds-table_bordered slds-table_cell-buffer">
+                      <thead>
+                        <tr class="slds-text-title_caps">
+                          <th scope="col" width="5%">
+                            <div class="slds-truncate" title="Action">&nbsp;</div>
+                          </th>
+                          <th scope="col">
+                            <div class="slds-truncate" title="Name">Billing Name</div>
+                          </th>
+                          <th scope="col">
+                            <div class="slds-truncate" title="Name">ERP Order</div>
+                          </th>
+                          <th scope="col">
+                            <div class="slds-truncate" title="Name">Customer</div>
+                          </th>
+                          <th scope="col" width="15%" class="slds-text-align_right">
+                            <div class="slds-truncate" title="Balance">Balance</div>
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <aura:iteration items="{!v.listERPBills}" var="a">
+                            <tr>
+                              <td align="left">
+                                <button class="slds-button slds-button--neutral" data-idbill="{!a.idBill}" data-amount="{!a.billBalance}" onclick="{!c.openModal}">Clear</button>
+                              </td>
+                              <td scope="row" data-label="Name">
+                                  <a href="{!'/one/one.app?#/sObject/'+ a.idBill + '/view'}" target="_blank">{#a.Name}</a>
+                              </td>
+                              <td scope="row" data-label="ERP Order">
+                                  <a href="{!'/one/one.app?#/sObject/'+ a.idProject + '/view'}" target="_blank">{#a.billProject}</a>
+                              </td>
+                              <td scope="row" data-label="Customer">
+                                  <a href="{!'/one/one.app?#/sObject/'+ a.idCustomer + '/view'}" target="_blank">{#a.billCustomer}</a>
+                              </td>
+                              <td data-label="Amount" class="slds-text-align_right">
+                                <div class="slds-truncate" title="{#a.billBalance}">
+                                  <lightning:formattedNumber value="{#a.billBalance}" style="currency" currencyCode="CAD" />
+                                </div>
+                              </td>
+                            </tr>
+                        </aura:iteration>
+                      </tbody>
+                    </table>
+           </div>
+       </div>
+    </lightning:card>
+    <aura:if isTrue="{!v.hasSelections}"> 
+          <div role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+              <div class="slds-modal__header">
+                <h2 id="header99" class="slds-text-heading--medium">Billing Clearance</h2>
+              </div>
+              <div class="slds-modal__content slds-p-around--medium">
+                <div class="slds-form slds-form_stacked slds-m-horizontal_large">
+                    <div class="slds-form-element">
+                        <div class="slds-form-element__control">
+                          <lightning:input aura:id="clearanceReference" type="text" label="AP Reference" onchange="{!c.validate}" value="{!v.clearingReference}"/>
+                        </div>
+                    </div>
+                    <div class="slds-form-element">
+                        <div class="slds-form-element__control">
+                          <lightning:input aura:id="clearingAmountInput" type="text" label="Amount Received" onchange="{!c.validate}" value="{!v.clearingAmount}"/>
+                        </div>
+                    </div>
+                </div>
+              </div>
+              <div class="slds-modal__footer">
+                <lightning:button label="Process Clearance" onclick="{!c.processClearance}" disabled="{!v.btnDisabled}" />
+                <button class="slds-button slds-button--neutral" onclick="{!c.closeModal}" >Close</button>
+              </div>
+            </div>
+          </div>
+          <div class="slds-backdrop slds-backdrop--open"></div>
+     </aura:if>
+    <lightning:spinner aura:id="spinner" />
+    <br/>
+</aura:component>

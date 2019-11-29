@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>AcctSeed__Cash_Application_Adjustment_Amount__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <inlineHelpText>The amount adjusted for payment discount or small balance write off in the process of cash receipt and application.</inlineHelpText>
+    <label>Cash Application Adjustment Amount</label>
+    <summarizedField>AcctSeed__Billing_Cash_Receipt__c.AcctSeed__Adjustment_Amount__c</summarizedField>
+    <summaryForeignKey>AcctSeed__Billing_Cash_Receipt__c.AcctSeed__Billing__c</summaryForeignKey>
+    <summaryOperation>sum</summaryOperation>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Summary</type>
+</CustomField>

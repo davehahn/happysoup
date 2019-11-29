@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Modified__c</fullName>
+    <externalId>false</externalId>
+    <formula>AND(Manufacturing_Inventory_Movement__r.AcctSeedERP__Movement_Date__c = DATE(2017,9,29),  DATEVALUE(Manufacturing_Inventory_Movement__r.LastModifiedDate) = DATE(2018,1,16),   Manufacturing_Inventory_Movement__r.LastModifiedBy.CommunityNickname = &#39;rubel&#39;)</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Modified</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

@@ -1,0 +1,430 @@
+<apex:page standardController="Opportunity"
+           extensions="RetailCounterSaleController"
+           showHeader="true"
+           sidebar="false"
+           docType="html-5.0">
+
+  <c:LegendFormResources includeFontAwesome="true"
+                         includeComboBox="true"
+                         includeHandlebars="true" />
+  <apex:stylesheet value="{!URLFOR($Resource.GlobalResources, 'css/bouncing-indicator.min.css')}" />
+  <apex:stylesheet value="{!URLFOR($Resource.OpportunityResources, 'css/CounterSale.min.css')}" />
+  <c:LegendMainAjaxIndicator id="ajaxInd" />
+
+  <div id="feeModal">
+    <h1> Add a Fee </h1>
+    <div class="bouncingIndicator">
+      <div class="sk-spinner">
+        <div class="sk-bounce1"></div>
+        <div class="sk-bounce2"></div>
+        <div class="sk-bounce3"></div>
+      </div>
+      <div class="indicator_message">Loading ...</div>
+    </div>
+    <div id="feeContent"></div>
+    <div class="row btnRow">
+      <div class="column large-12 right">
+        <a href="#" class="fd_button small success right" id="addFeeBtn">Add Fees</a>
+      </div>
+    </div>
+  </div>
+
+  <apex:form >
+    <div class="legendStyled">
+      <h1 class="lgnd" style="border-bottom:none;"> Retail Counter Sale </h1>
+
+      <h3 class="lgnd">
+        <a href="#acctFields" class="lgnd-accordion-ctrl">
+          <i class="fa fa-chevron-up"></i>
+        </a>
+        Account Information
+      </h3>
+
+      <div class="row acct_Fields" id="acctFields">
+        <input class="acctField" type="hidden" id="acct_Id" data-sf-field="Id"></input>
+        <sffd:column cols="large-4"> <!-- account details left column -->
+          <sffd:row ><!-- First Name -->
+
+            <sffd:column cols="large-12">
+              <label>First Name: </label>
+              <sffd:row styleClass="collapse">
+                <sffd:column cols="large-11 small-11">
+                  <input type="text" class="has-postfix acctField" data-sf-field="FirstName"></input>
+                </sffd:column>
+
+                <sffd:column cols="large-1 small-1">
+                  <span class="postfix transparent"><i class="fa fa-search "></i></span>
+                </sffd:column>
+
+              </sffd:row>
+
+            </sffd:column>
+          </sffd:row>
+
+          <sffd:row ><!--Last Name -->
+            <sffd:column cols="large-12" styleClass="requiredInput">
+              <label>Last Name: </label>
+              <input id="acct_LastName" type="text" class='acctField' data-sf-field="LastName"></input>
+            </sffd:column>
+          </sffd:row>
+
+
+
+        </sffd:column>
+        <sffd:column cols="large-4"> <!-- account details right column -->
+
+          <sffd:row ><!-- email -->
+            <sffd:column cols="large-12">
+              <label>Email: </label>
+              <input id="acct_PersonEmail" type="text" class='acctField' data-sf-field="PersonEmail"></input>
+            </sffd:column>
+          </sffd:row>
+
+          <sffd:row ><!-- phone -->
+            <sffd:column cols="large-12">
+              <label> Phone: </label>
+              <input id="acct_Phone" type="text"  onblur="formatPhone(this)" class='acctField' data-sf-field="Phone"></input>
+            </sffd:column>
+          </sffd:row>
+
+          <sffd:row ><!-- mobile phone -->
+            <sffd:column cols="large-12">
+              <label>Mobile Phone: </label>
+              <input id="acct_PersonMobilePhone" type="text" onblur="formatPhone(this)" class='acctField' data-sf-field="PersonMobilePhone"></input>
+            </sffd:column>
+          </sffd:row>
+
+        </sffd:column>
+        <sffd:column cols="large-4">
+
+          <sffd:row >
+            <sffd:column cols="large-12">
+              <label> Street: </label>
+              <input type="text" class='acctField' data-sf-field="BillingStreet"></input>
+            </sffd:column>
+          </sffd:row>
+
+          <sffd:row >
+            <sffd:column cols="large-6">
+              <label> City: </label>
+              <input type="text" class='acctField' data-sf-field="BillingCity"></input>
+            </sffd:column>
+            <sffd:column cols="large-6">
+              <label> Postal Code: </label>
+              <input type="text" class='acctField' data-sf-field="BillingPostalCode"></input>
+             <!--  <input type="text" class='acctField' data-sf-field="BillingState"></input> -->
+            </sffd:column>
+          </sffd:row>
+
+          <sffd:row >
+            <sffd:column cols="large-6">
+              <label> Country: </label>
+               <apex:inputField value="{!opp.Account.BillingCountryCode}"
+                                styleClass="acctField"
+                                html-data-sf-field="BillingCountryCode"></apex:inputField>
+              <!-- <input type="text" class='acctField' data-sf-field="BillingCountry"></input> -->
+            </sffd:column>
+            <sffd:column cols="large-6">
+              <label> State/Province: </label>
+              <span class="acctField" data-sf-field="BillingStateCode">
+                <apex:inputField value="{!opp.Account.BillingStateCode}"></apex:inputField>
+              </span>
+            </sffd:column>
+          </sffd:row>
+
+        </sffd:column>
+      </div>
+
+      <div id="productSection">
+        <h3 class="lgnd">Sale Information</h3>
+
+        <sffd:row styleClass="labelRow">
+          <sffd:column cols="large-4 large-offset-6">
+            <label>Price Book</label>
+          </sffd:column>
+          <sffd:column cols="large-2">
+            <label>Payment Method</label>
+          </sffd:column>
+        </sffd:row>
+
+        <sffd:row >
+          <sffd:column cols="large-6">
+
+            <sffd:row styleClass="collapse">
+
+              <sffd:column cols="large-1 small-1">
+                 <span class="prefix"><i class="fa fa-search "></i></span>
+              </sffd:column>
+
+              <sffd:column cols="large-11 small-11">
+                <span id="searchInd">
+                  Searching ....  <i class=" fa fa-spinner fa-spin"></i>
+                </span>
+                <input id="productSearch" type="text" class="has-prefix"></input>
+              </sffd:column>
+
+            </sffd:row>
+
+          </sffd:column>
+
+          <sffd:column cols="large-4">
+            <select id="priceBook">
+            <apex:repeat value="{!priceBooks}" var="pb">
+              <option value="{!pb.Id}">{!pb.Name}</option>
+            </apex:repeat>
+            </select>
+          </sffd:column>
+
+<!--           <sffd:column cols="large-1">
+            <sffd:row styleClass="collapse">
+              <sffd:column cols="large-8">
+                <input type="number" id="taxRate" class="has-postfix"></input>
+              </sffd:column>
+              <sffd:column cols="large-4">
+                <span class="postfix transparent">%</span>
+              </sffd:column>
+            </sffd:row>
+          </sffd:column> -->
+
+          <sffd:column cols="large-2" styleClass="requiredInput">
+            <apex:inputField value="{!opp.Payment_Method__c}" id="paymentMethod" />
+           <!--  <select id="paymentMethod">
+              <option value=""></option>
+            <apex:repeat value="{!paymentMethodsOptions}" var="key">
+              <option value="{!paymentMethodsOptions[key]}">{!key}</option>
+            </apex:repeat>
+            </select> -->
+          </sffd:column>
+
+         <!--  <sffd:column cols="large-1" style="display:none">
+            <label class="large-only-right">Tax</label>
+          </sffd:column>
+
+          <sffd:column cols="large-1" style="display:none">
+
+            <sffd:row styleClass="collapse">
+              <sffd:column cols="large-8">
+                <input type="number" id="taxRate" value="13" class="has-postfix"></input>
+              </sffd:column>
+              <sffd:column cols="large-4">
+                <span class="postfix transparent">%</span>
+              </sffd:column>
+            </sffd:row>
+
+          </sffd:column> -->
+
+        </sffd:row>
+
+        <sffd:row >
+
+          <sffd:column cols="large-5 large-offset-1 end">
+
+            <div class="detailsContainer">
+
+              <sffd:row styleClass="resultC">
+                <sffd:column cols="large-12">
+                  <div id="name" class=""></div>
+                </sffd:column>
+              </sffd:row>
+
+              <sffd:row >
+                <sffd:column cols="large-6">
+                  <table>
+                   <tr class="resultC">
+                      <td>Code:</td>
+                      <td id="code" class=""></td>
+                    </tr>
+                    <tr class="resultC">
+                      <td>Type:</td>
+                      <td id="type" class=""></td>
+                    </tr>
+                    <tr class="resultC">
+                      <td>Family:</td>
+                      <td id="family" class=""></td>
+                    </tr>
+                  </table>
+                </sffd:column>
+
+                <sffd:column cols="large-6" styleClass="resultC">
+                  <div class="priceContainer">
+                    <i class="fa fa-dollar"></i>
+                    <span id="price" class=""></span>
+                  </div>
+                </sffd:column>
+              </sffd:row>
+
+              <sffd:row styleClass="resultC">
+                <sffd:column cols="large-12">
+                  <div class="descriptionContainer">
+                    <div>Description</div>
+                    <div id="description" class=""></div>
+                  </div>
+                </sffd:column>
+              </sffd:row>
+
+            </div>
+
+          </sffd:column>
+
+        </sffd:row>
+
+        <sffd:row >
+
+          <sffd:column cols="large-12" style="position:relative">
+            <div id="taxForm">
+              <h1>Change Tax Rate</h1>
+
+              <div class="row">
+                <div class="column large-10">
+                  <apex:selectList value="{!opp.taxationProvince__c}"
+                                   html-data-id="provTaxSelect"
+                                   size="1">
+                    <apex:selectOptions value="{!provinceOptions}" />
+                  </apex:selectList>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="column large-6">
+                  <apex:outputPanel layout="none">
+                    <input id="totalTaxRate"
+                           value="{!currentTaxRate}"
+                           type="text"
+                           data-is-disabled="{!!opp.TaxOverRide__c}" />
+                  </apex:outputPanel>
+                </div>
+                <div class="column large-6">
+                  <apex:inputField html-data-id="taxOverRide" value="{!opp.TaxOverRide__c}" />
+                  <label style="display: inline-block">Over Ride</label>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="column large-6 large-offset-3 end" style="text-align:center">
+                  <a href="" id="updateTaxes" class="lgnd_btn radius">Update</a>
+                </div>
+              </div>
+
+            </div>
+
+            <table style="width:100%" id="selectedProducts" class="fd_table">
+              <thead>
+                <tr>
+                  <td>Name</td>
+                  <td>Quantity</td>
+                  <td>Retail Price</td>
+                  <td>Sale Price</td>
+                  <td>Total</td>
+                </tr>
+              </thead>
+              <tbody>
+
+              </tbody>
+              <tfoot>
+                <tr class="taxRow">
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td>Taxes <a href="" id="editTaxRate">({!currentTaxRate}%)</a>
+
+                  </td>
+                  <td><i class="fa fa-dollar"></i><span id="taxTotal"></span></td>
+                </tr>
+                <tr class="totalRow">
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td>Total</td>
+                  <td><i class="fa fa-dollar"></i><span id="saleTotal"></span></td>
+                </tr>
+              </tfoot>
+            </table>
+
+          </sffd:column>
+
+        </sffd:row>
+
+       </div>
+
+      <sffd:row styleClass="formBtnRow">
+
+        <sffd:column cols="large-6">
+          <a href="#" id="addFees" class="fd_button small invert">Add Fee</a>
+        </sffd:column>
+
+        <sffd:column cols="large-6">
+          <a href="#" id="save" class="fd_button small invert success right saveBtn">
+            Save
+          </a>
+          <a href="" id="cancelBtn" class="fd_button small invert right">Cancel</a>
+        </sffd:column>
+
+      </sffd:row>
+    </div>
+  </apex:form>
+
+  <script src="{!URLFOR($Resource.UtilJS)}" />
+  <script src="{!URLFOR($Resource.OpportunityResources, 'js/CounterSale.js')}" />
+  <script type="text/javascript">
+
+    (function($) {
+
+      var opp = JSON.parse('{!JSENCODE(opportunityJSON)}'),
+          provincialTaxRates = JSON.parse('{!JSENCODE(provincialTaxRates)}'),
+          pbId = opp.Pricebook2Id,
+          currentTaxRate = '{!currentTaxRate}',
+          uiEnv = determineUI("{!$User.UITheme}"),
+          pMethod = typeof( opp.Payment_Method__c ) === 'string' ? opp.Payment_Method__c : 'Pending',
+          tmpls = {
+            'feeContent': "{!URLFOR($Resource.OpportunityResources, 'templates/RetailCounterSale/fee-content.tpl.html')}",
+            'availableFees': "{!URLFOR($Resource.OpportunityResources, 'templates/RetailCounterSale/available-fees.tpl.html')}"
+          };
+
+      $('#cancelBtn').on('click', function(e){
+        e.preventDefault();
+        if( uiEnv === 'classic' )
+        {
+          window.history.back();
+        }
+        else
+        {
+          sforce.one.back();
+        }
+      });
+
+
+      $('#priceBook').val( pbId );
+      //$('#taxRate').val( currentTaxRate );
+
+      CounterSale.uiEnv = uiEnv;
+      CounterSale.currentTaxRate = currentTaxRate;
+      CounterSale.taxationProvince = opp.taxationProvince__c;
+      CounterSale.taxOverRide = opp.TaxOverRide__c;
+      CounterSale.provincialTaxRates = provincialTaxRates;
+
+      $.when( LGND.HandlebarsHelpers.templateLoader(tmpls) ).done( function( tpls ) {
+        CounterSale.feeTemplates = tpls;
+      });
+
+      if( opp.Id )
+      {
+        $('#paymentMethod').val( pMethod );
+        CounterSale.accountFunctions.selectAccount( opp.Account );
+        CounterSale.opportunityId = opp.Id;
+
+        if( '{!lineItemsJSON}' )
+        {
+          $.each( JSON.parse('{!JSENCODE(lineItemsJSON)}'), function(indx, li){
+            CounterSale.productFunctions.addItemToTable( li );
+          });
+        }
+      };
+
+      $j('.acct_Fields input[type="text"]').first().focus();
+
+    })(jQuery.noConflict());
+
+
+  </script>
+
+</apex:page>

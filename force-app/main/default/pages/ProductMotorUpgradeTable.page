@@ -1,0 +1,20 @@
+<apex:page standardController="Product2" extensions="ProductMotorExt" showHeader="true" sidebar="true">
+  <apex:stylesheet value="{!URLFOR($Resource.LegendStyles)}" />
+
+  <apex:pageBlock >
+    <div class="two_col">
+      <div class='left w85'>
+        <div class="optionTableContainer">
+            <apex:pageBlockTable value="{!motorUpgrades}" var="motor" id="motor_upgrades">
+              <apex:column headerValue="Name" value="{!motor.To_Product__r.Name}" />
+              <apex:column headerValue="Upgrade Cost" value="{!motor.Price__c}" />
+            </apex:pageBlockTable>
+          </div>
+      </div>
+      <div class='right w15'>
+        <apex:outputLink value="/apex/ProductUpgradeChart" target="_parent" styleClass="btn" style="position:relative;top:10px;">Edit Chart</apex:outputLink>
+      </div>
+    </div>
+</apex:pageBlock>
+
+</apex:page>

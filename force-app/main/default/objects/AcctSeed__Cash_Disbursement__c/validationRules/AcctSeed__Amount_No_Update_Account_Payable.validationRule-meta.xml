@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>AcctSeed__Amount_No_Update_Account_Payable</fullName>
+    <active>true</active>
+    <description>The amount cannot be edited if there are associated account payable records</description>
+    <errorConditionFormula>AcctSeed__AP_Voucher_Count__c &gt; 0 &amp;&amp; ISCHANGED(AcctSeed__Amount__c)</errorConditionFormula>
+    <errorDisplayField>AcctSeed__Amount__c</errorDisplayField>
+    <errorMessage>You cannot edit the amount field if the cash disbursement is sourced from account payable records</errorMessage>
+</ValidationRule>

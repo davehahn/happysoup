@@ -1,0 +1,470 @@
+<aura:component controller="RetailSalesToolController_dh">
+  <ltng:require scripts="{!join(',', $Resource.Libraries +'/js/LightningApex.js',
+                                     $Resource.Libraries +'/js/LightningUtils.js') }"
+                afterScriptsLoaded="{!c.afterScripts}" />
+
+  <aura:attribute name="fromCPQ" type="Boolean" default="false" />
+  <aura:attribute name="opportunityId" type="String" />
+  <aura:attribute name="steps" type="Array" />
+  <aura:attribute name="currentStep" type="String" />
+  <aura:attribute name="selectOptions" type="Object" />
+  <aura:attribute name="business" type="Object" />
+  <aura:attribute name="opp" type="Object" />
+  <aura:attribute name="saleType" type="String" />
+  <aura:attribute name="showBusinessForm" type="Boolean" default="false" />
+  <aura:attribute name="activeContact" type="Object" />
+  <aura:attribute name="activeContactNum" type="Integer"/>
+  <aura:attribute name="showContactForm" type="Boolean" default="false" />
+  <aura:attribute name="makeAccountTaxExempt" type="Boolean" default="false" />
+
+  <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+  <aura:handler name="accountSelected"
+                event="c:lgnd_account_search_selected_Event"
+                action="{!c.handleAccountSelected}" />
+  <aura:handler name="accountSearchCleared"
+                event="c:lgnd_account_search_cleared_Event"
+                action="{!c.handleAccountSearchCleared}" />
+  <aura:handler name="lgnd_registration_event"
+                event="c:lgnd_registration_event"
+                action="{!c.handleCreateAccount}" />
+
+  <c:Lgnd_Spinner_dh aura:id="spinner" />
+
+<!-- PROGRESS INDICATOR -->
+  <lightning:layout horizontalAlign="center" verticalAlign="center" class="slds-m-bottom_small">
+    <lightning:layoutItem size="12" padding="around-small" class="slds-card">
+      <lightning:progressIndicator currentStep="{!v.currentStep}" type="base">
+          <lightning:progressStep label="{!v.steps[0]}"
+                                  title="{!v.steps[0]}"
+                                  value="{!v.steps[0]}"/>
+          <lightning:progressStep label="{!v.steps[1]}"
+                                  title="{!v.steps[1]}"
+                                  value="{!v.steps[1]}"/>
+          <lightning:progressStep label="{!v.steps[2]}"
+                                  title="{!v.steps[2]}"
+                                  value="{!v.steps[2]}"/>
+      </lightning:progressIndicator>
+    </lightning:layoutItem>
+  </lightning:layout>
+
+<!-- STEP 1 ( Account Search and initial details ) ************* -->
+  <aura:if isTrue="{! equals(v.currentStep, v.steps[0]) }">
+    <div>
+      <lightning:layout multipleRows="true" horizontalAlign="center" verticalAlign="center">
+        <lightning:layoutItem size="12" padding="around-small" class="slds-card min-height-container">
+          <h1 class="slds-text-heading_medium
+                   slds-m-bottom_medium
+                   slds-p-bottom_small
+                   slds-text-align_center
+                   slds-border_bottom">Find or Create your Business Account</h1>
+
+          <c:lgnd_account_search scope="business"
+                                 selectorOnly="true"
+                                 fieldLabel="Search Current Accounts" />
+
+          <aura:if isTrue="{!v.showBusinessForm}">
+            <div class='slds-m-top_small'>
+              <lightning:layout multipleRows="true">
+
+                <!-- Name -->
+                <lightning:layoutItem size="12"
+                                      smallDeviceSize="12"
+                                      mediumDeviceSize="6"
+                                      largeDeviceSize="6"
+                                      class="slds-p-around_x-small">
+                  <lightning:input type="text"
+                                   label="Account Name"
+                                   required="true"
+                                   value="{!v.business.name}"
+                                   aura:id="required-form-1"
+                                   messageWhenValueMissing="Account Name is required" />
+                </lightning:layoutItem>
+
+                <!-- Email -->
+                <lightning:layoutItem size="12"
+                                  smallDeviceSize="12"
+                                  mediumDeviceSize="6"
+                                  largeDeviceSize="6"
+                                  class="slds-p-around_x-small">
+                  <lightning:input type="email"
+                                   label="Email"
+                                   value="{!v.business.email}"
+                                   messageWhenValueMissing="Email is required" />
+                </lightning:layoutItem>
+
+
+                <!-- Phone # -->
+                <lightning:layoutItem size="12"
+                                  smallDeviceSize="12"
+                                  mediumDeviceSize="6"
+                                  largeDeviceSize="6"
+                                  class="slds-p-around_x-small">
+                  <lightning:input type="tel"
+                                   label="Phone"
+                                   value="{!v.business.phone}"
+                                   aura:id="required-form-1"
+                                   required="true"
+                                   pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
+                                   messageWhenValueMissing="Phone is required"
+                                   messageWhenPatternMismatch="Please match required format ###-###-####"/>
+                </lightning:layoutItem>
+
+                <!-- Phone # -->
+                <lightning:layoutItem size="12"
+                                  smallDeviceSize="12"
+                                  mediumDeviceSize="6"
+                                  largeDeviceSize="6"
+                                  class="slds-p-around_x-small">
+                  <lightning:input type="tel"
+                                   label="Fax"
+                                   value="{!v.business.fax}"
+                                   aura:id="required-form-1"
+                                   pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
+                                   messageWhenPatternMismatch="Please match required format ###-###-####"/>
+                </lightning:layoutItem>
+
+                <!-- Left side - Address -->
+                <lightning:layoutItem size="12"
+                                      smallDeviceSize="12"
+                                      mediumDeviceSize="12"
+                                      largeDeviceSize="6">
+                  <h2 class="slds-text-heading_small
+                              slds-m-top_small
+                              slds-m-bottom_small">Billing Address</h2>
+                  <c:lgnd_form_address street="{!v.business.billingStreet}"
+                                       city="{!v.business.billingCity}"
+                                       province="{!v.business.billingState}"
+                                       province_code="{!v.business.billingStateCode}"
+                                       country="{!v.business.billingCountry}"
+                                       country_code="{!v.business.billingCountryCode}"
+                                       zip="{!v.business.billingPostalCode}" />
+                </lightning:layoutItem>
+
+                <!-- Right Side - Address Fields -->
+                <lightning:layoutItem size="12"
+                                      smallDeviceSize="12"
+                                      mediumDeviceSize="12"
+                                      largeDeviceSize="6">
+
+                   <h2 class="slds-text-heading_small
+                              slds-m-top_small
+                              slds-m-bottom_small">Shipping Address</h2>
+                   <c:lgnd_form_address street="{!v.business.shippingStreet}"
+                                        city="{!v.business.shippingCity}"
+                                        province="{!v.business.shippingState}"
+                                        province_code="{!v.business.shippingStateCode}"
+                                        country="{!v.business.shippingCountry}"
+                                        country_code="{!v.business.shippingCountryCode}"
+                                        zip="{!v.business.shippingPostalCode}" />
+                </lightning:layoutItem>
+              </lightning:layout>
+            </div>
+          </aura:if>
+
+          </lightning:layoutItem>
+      </lightning:layout>
+    </div>
+  </aura:if>
+
+<!--  STEP 2 ( Contacts ) ************ -->
+    <aura:if isTrue="{!and( v.showBusinessForm, equals(v.currentStep, v.steps[1]) )}">
+      <div>
+        <lightning:layout horizontalAlign="center" verticalAlign="center">
+            <lightning:layoutItem size="12" padding="around-small" class="slds-card min-height-container">
+
+              <h1 class="slds-text-heading_medium
+                     slds-m-bottom_medium
+                     slds-p-bottom_small
+                     slds-text-align_center
+                     slds-border_bottom">Account Contacts</h1>
+
+              <!-- Contacts PILL List -->
+              <aura:if isTrue="{! !empty(v.business.contacts)}">
+                <div class="slds-pill_container contacts">
+                  <aura:iteration items="{!v.business.contacts}" var="contact" indexVar="idx">
+                    <aura:if isTrue="{! !empty(contact.label)}">
+                      <span class="{! join(' ', 'slds-pill', 'slds-pill_link', if( equals( v.activeContact.label, contact.label), 'selected', '' ) )}" aura:id="contact-pill">
+                        <a href="javascript:void(0);"
+                          class="{!join(' ', 'slds-pill__action', if(!(empty(contact.id)), 'no-delete', ''))}"
+                          title="{!join( ' ', contact.firstName, contact.lastName)}"
+                          onclick="{!c.contactPillClick}"
+                          data-contact-number="{!idx}">
+                          <span class="slds-pill__label">{!contact.label}</span>
+                        </a>
+                        <button class="slds-button
+                                       slds-button_icon
+                                       slds-button_icon
+                                       slds-pill__remove"
+                                title="Remove"
+                                onclick="{!c.handleRemoveContact}"
+                                data-contact-number="{!idx}">
+                          <lightning:icon iconName="utility:close" />
+                          <span class="slds-assistive-text">Remove</span>
+                        </button>
+                      </span>
+                    </aura:if>
+                  </aura:iteration>
+                </div>
+              </aura:if>
+
+              <!-- Contact Form -->
+              <aura:if isTrue="{!v.showContactForm}">
+                <lightning:layout multipleRows="true">
+                  <!-- First Name -->
+                   <lightning:layoutItem size="12"
+                                    smallDeviceSize="12"
+                                    mediumDeviceSize="6"
+                                    largeDeviceSize="6"
+                                    class="slds-p-around_x-small">
+                    <lightning:input type="text"
+                                     label="First Name"
+                                     required="{! empty(v.activeContact.id)}"
+                                     value="{!v.activeContact.firstName}"
+                                     aura:id="required-form-2"
+                                     onchange="{!c.handleUpdateContactLabel}"
+                                     messageWhenValueMissing="First Name is required" />
+                  </lightning:layoutItem>
+
+                  <!-- Last Name -->
+                  <lightning:layoutItem size="12"
+                                    smallDeviceSize="12"
+                                    mediumDeviceSize="6"
+                                    largeDeviceSize="6"
+                                    class="slds-p-around_x-small">
+                    <lightning:input type="text"
+                                     label="Last Name"
+                                     required="{! empty(v.activeContact.id)}"
+                                     value="{!v.activeContact.lastName}"
+                                     aura:id="required-form-2"
+                                     onchange="{!c.handleUpdateContactLabel}"
+                                     messageWhenValueMissing="Last Name is required" />
+                  </lightning:layoutItem>
+
+                  <!-- Phone # -->
+                  <lightning:layoutItem size="12"
+                                    smallDeviceSize="12"
+                                    mediumDeviceSize="6"
+                                    largeDeviceSize="6"
+                                    class="slds-p-around_x-small">
+                    <lightning:input type="tel"
+                                     label="Phone"
+                                     value="{!v.activeContact.phone}"
+                                     aura:id="required-form-2"
+                                     required="{! if( !empty(v.activeContact.id),
+                                                      false,
+                                                      if( and( empty(v.activeContact.mobilePhone),
+                                                               empty(v.activeContact.id)
+                                                             ),
+                                                          true,
+                                                          false
+                                                        )
+                                                    )}"
+                                     pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
+                                     messageWhenValueMissing="One of Phone/Mobile Phone is required"
+                                     messageWhenPatternMismatch="Please match required format ###-###-####"/>
+                  </lightning:layoutItem>
+
+                  <!-- Mobile Phone # -->
+                  <lightning:layoutItem size="12"
+                                        smallDeviceSize="12"
+                                        mediumDeviceSize="6"
+                                        largeDeviceSize="6"
+                                        class="slds-p-around_x-small">
+                    <lightning:input type="tel"
+                                     label="Mobile Phone"
+                                     required="{! if( !empty(v.activeContact.id),
+                                                      false,
+                                                      if( and( empty(v.activeContact.phone),
+                                                               empty(v.activeContact.id)
+                                                             ),
+                                                          true,
+                                                          false
+                                                        )
+                                                    )}"
+                                     value="{!v.activeContact.mobilePhone}"
+                                     aura:id="required-form-2"
+                                     pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
+                                     messageWhenValueMissing="One of Phone/Mobile Phone is required"
+                                     messageWhenPatternMismatch="Please match required format ###-###-####" />
+                  </lightning:layoutItem>
+
+                  <!-- Email -->
+                  <lightning:layoutItem size="12"
+                                    smallDeviceSize="12"
+                                    mediumDeviceSize="4"
+                                    largeDeviceSize="4"
+                                    class="slds-p-around_x-small">
+                    <lightning:input type="email"
+                                     label="Email"
+                                     required="{! empty(v.activeContact.id)}"
+                                     value="{!v.activeContact.email}"
+                                     aura:id="required-form-2"
+                                     messageWhenValueMissing="Email is required" />
+                  </lightning:layoutItem>
+
+                  <!-- Title -->
+                  <lightning:layoutItem size="12"
+                                    smallDeviceSize="12"
+                                    mediumDeviceSize="4"
+                                    largeDeviceSize="4"
+                                    class="slds-p-around_x-small">
+                    <lightning:input type="text"
+                                     label="Title"
+                                     value="{!v.activeContact.title}"/>
+                  </lightning:layoutItem>
+
+                  <!-- Buyer Type -->
+                  <lightning:layoutItem size="12"
+                                        smallDeviceSize="12"
+                                        mediumDeviceSize="4"
+                                        largeDeviceSize="4"
+                                        class="slds-p-around_x-small">
+                    <lightning:select label="Buyer Type"
+                                      value="{!v.activeContact.contactRoleType}">
+                      <option value="">Not Involved in Sale</option>
+                      <option value="buyer">Buyer</option>
+                      <option value="cobuyer">Co Buyer</option>
+                    </lightning:select>
+                  </lightning:layoutItem>
+
+                </lightning:layout>
+              </aura:if>
+
+              <lightning:layout >
+                <lightning:layoutItem size="12" class="slds-p-around_x-small">
+                  <div class="slds-align_absolute-center">
+                    <lightning:button label="Add Contact"
+                                      variant="neutral"
+                                      onclick="{!c.addContact}" />
+                  </div>
+                </lightning:layoutItem>
+              </lightning:layout>
+
+            </lightning:layoutItem>
+        </lightning:layout>
+      </div>
+    </aura:if>
+
+<!-- STEP 3 ( Opportunity Fields ) *********** -->
+  <aura:if isTrue="{!and( v.showBusinessForm, equals(v.currentStep, v.steps[2]) )}">
+    <div>
+      <lightning:layout horizontalAlign="center" verticalAlign="center">
+        <lightning:layoutItem size="12" padding="around-small" class="slds-card min-height-container">
+
+          <h1 class="slds-text-heading_medium
+               slds-m-bottom_medium
+               slds-p-bottom_small
+               slds-text-align_center
+               slds-border_bottom">Opportunity</h1>
+
+          <lightning:layout multipleRows="true">
+
+            <aura:if isTrue="{! not(empty(v.selectOptions.priceBooks)) }">
+              <lightning:layoutItem size="12"
+                                smallDeviceSize="12"
+                                mediumDeviceSize="6"
+                                largeDeviceSize="6"
+                                class="slds-p-around_x-small">
+                <lightning:select label="Price Book"
+                                  value="{!v.opp.priceBook}">
+                  <aura:iteration items="{!v.selectOptions.priceBooks}" var='opt'>
+                    <aura:if isTrue="{!equals( v.opp.priceBook, opt.value)}">
+                      <option value="{!opt.value}" selected="selected">{!opt.label}</option>
+                      <aura:set attribute="else">
+                        <option value="{!opt.value}">{!opt.label}</option>
+                      </aura:set>
+                    </aura:if>
+                  </aura:iteration>
+                </lightning:select>
+              </lightning:layoutItem>
+            </aura:if>
+
+            <aura:if isTrue="{! not(empty(v.selectOptions.campaigns)) }">
+              <lightning:layoutItem size="12"
+                                smallDeviceSize="12"
+                                mediumDeviceSize="6"
+                                largeDeviceSize="6"
+                                class="slds-p-around_x-small">
+                <lightning:select label="Campaign Source"
+                                  value="{!v.opp.campaignSource}"
+                                  aura:id="required-form-3"
+                                  required="true"
+                                  messageWhenValueMissing="Campaign Source is required">
+                  <aura:iteration items="{!v.selectOptions.campaigns}" var='optGroup'>
+                    <option value="">What brought you in today?</option>
+                    <optgroup label="{!optGroup.groupName}">
+                      <aura:iteration items="{!optGroup.options}" var="opt">
+                        <option value="{!opt.value}">{!opt.label}</option>
+                      </aura:iteration>
+                    </optgroup>
+                  </aura:iteration>
+                </lightning:select>
+              </lightning:layoutItem>
+            </aura:if>
+
+            <lightning:layoutItem size="12"
+                              smallDeviceSize="12"
+                              mediumDeviceSize="6"
+                              largeDeviceSize="6"
+                              class="slds-p-around_x-small">
+              <lightning:select label="Lead Source"
+                                value="{!v.opp.leadSource}">
+                <option value="">Where did you originally hear about Legend?</option>
+                <aura:iteration items="{!v.selectOptions.leadSource}" var='opt'>
+                  <option value="{!opt.value}">{!opt.label}</option>
+                </aura:iteration>
+              </lightning:select>
+            </lightning:layoutItem>
+
+            <lightning:layoutItem size="12"
+                              smallDeviceSize="12"
+                              mediumDeviceSize="6"
+                              largeDeviceSize="6"
+                              class="slds-p-around_x-small">
+              <lightning:input type="date"
+                               label="Close Date"
+                               required="true"
+                               value="{!v.opp.closeDate}"
+                               aura:id="required-form-3" />
+            </lightning:layoutItem>
+
+          </lightning:layout>
+        </lightning:layoutItem>
+      </lightning:layout>
+    </div>
+  </aura:if>
+
+<!-- BUTTONS ******* -->
+  <lightning:layout horizontalAlign="center" verticalAlign="center">
+    <lightning:layoutItem size="12">
+
+      <div class="slds-modal__footer">
+       <!-- Back Button -->
+        <lightning:button label="Back"
+                          variant="neutral"
+                          onclick="{!c.handleBack}"
+                          iconName="utility:chevronleft"
+                          iconPosition="left"
+                          class="slds-float_left" />
+
+        <aura:if isTrue="{! not( equals(v.currentStep, v.steps[2]) )}">
+          <lightning:button label="Next"
+                            variant="brand"
+                            iconName="utility:chevronright"
+                            iconPosition="right"
+                            onclick="{!c.handleNext}" />
+        </aura:if>
+
+        <aura:if isTrue="{! equals(v.currentStep, v.steps[2])}">
+          <lightning:button label="{!if( v.fromCPQ,
+                                         'Create Quote',
+                                         'Build your Boat' )}"
+                            variant="brand"
+                            iconName="utility:chevronright"
+                            iconPosition="right"
+                            onclick="{!c.handleContinue}" />
+        </aura:if>
+      </div>
+    </lightning:layoutItem>
+  </lightning:layout>
+</aura:component>

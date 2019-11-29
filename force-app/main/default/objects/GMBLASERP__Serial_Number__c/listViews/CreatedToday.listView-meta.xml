@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>CreatedToday</fullName>
+    <columns>NAME</columns>
+    <columns>Available__c</columns>
+    <columns>Location__c</columns>
+    <columns>GMBLASERP__Lot__c</columns>
+    <columns>GMBLASERP__Product__c</columns>
+    <columns>Nest__c</columns>
+    <columns>GMBLASERP__Inventory_Balance__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>CREATED_DATE</field>
+        <operation>equals</operation>
+        <value>TODAY</value>
+    </filters>
+    <label>CreatedToday</label>
+    <language>en_US</language>
+</ListView>

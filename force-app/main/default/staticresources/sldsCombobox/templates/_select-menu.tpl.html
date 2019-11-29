@@ -1,0 +1,11 @@
+<div class="slds-dropdown slds-dropdown--{{dropdownPos}}" style="{{eleStyle}}">
+  <ul class="dropdown__list slds-dropdown--length-5" role="menu">
+  {{#each selectOptions}}
+    <li class="{{ selectOptionClass this ../current_value}}">
+      <a href="#void" class="slds-combobox-select-option" role="menuitem" data-select-value="{{this}}">
+        <p>{{this}}</p>
+      </a>
+    </li>
+  {{/each}}
+  </ul>
+</div>

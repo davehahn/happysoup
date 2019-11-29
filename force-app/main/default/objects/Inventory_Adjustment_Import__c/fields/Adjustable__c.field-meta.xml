@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Adjustable__c</fullName>
+    <externalId>false</externalId>
+    <formula>IF(AND( OR(Adjustment_Quantity__c &lt;&gt; 0,  Adjustment_Per_Unit__c &lt;&gt; 0), Product__c != null,  Warehouse__c != null, Product__r.AcctSeed__Inventory_Product__c,   Matched_With_Product__c,  !Serialized__c,  !Lot_Tracked__c), true, false)</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Adjustable</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

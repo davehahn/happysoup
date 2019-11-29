@@ -1,0 +1,24 @@
+<messaging:emailTemplate subject="Votre Expérience comme propriétaire du nouveau bateau" recipientType="Contact" relatedToType="Opportunity">
+<messaging:htmlEmailBody >
+Bonjour {!relatedTo.Account.FirstName},
+<br></br>
+<br></br>
+On est très heureux d'apprendre que vous avez bien profité de l’eau cette été! Et même si nous aurions bien aimé que ce soit un bateau Legend, n’hésitez pas de partager avec nous vos commentaires et expériences avec notre équipe.
+<br></br>
+<br></br>
+Chez Legend, notre premier but est toujours de maximiser l’expérience avec nos client, dès l’achat de votre bateau jusqu'à votre première expérience sur l’eau. Nous avons inclus un lien avec 7 petites questions pour que vous puissiez partager votre expérience avec nous pendant le Salon.
+<br></br>
+<br></br>
+
+<a href="http://legendboats.force.com/surveys/TakeSurvey?id=a1ai000000H9hp4&cId={!relatedTo.Account.PersonContactId}&oppId={!relatedTo.Id}">Cliquez ici pour partager vos commentaires.</a>
+<br></br>
+<br></br>
+Merci beaucoup d’avoir pris le temps et n’hésitez pas à communiquer avec nous si vous avez des questions ou commentaires additionnels.
+<br></br>
+<br></br>
+En vous souhaitant beaucoup de plaisirs cette été sur votre nouveau bateau!
+<br></br>
+<br></br>
+Bien à vous (sur l’eau)
+</messaging:htmlEmailBody>
+</messaging:emailTemplate>

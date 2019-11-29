@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <description>To notify a Salesperson that their Deal was rejected by Management</description>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>Legend_Letterhead</letterhead>
+    <name>Deal Rejected</name>
+    <style>freeForm</style>
+    <subject>Please Revise Deal</subject>
+    <textOnly>Hi {!Opportunity.OwnerFirstName},
+
+I have reviewed your Invoice for {!Account.Name} and have found inconsistencies.  Please see the notes I have made in the Approval area and revise the deal as needed.
+
+If you have any questions, please call me.
+
+Thank you
+
+{!User.Name}
+{!User.Title}</textOnly>
+    <type>html</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

@@ -1,0 +1,104 @@
+.THIS .hidden {
+  visibility: hidden;
+  width:0;
+  height:0;
+}
+
+.THIS .loading {
+  visibility: hidden;
+}
+
+.THIS .iframe-container {
+  width:100%;
+  height: 100%;
+  min-height:800px;
+  background: #53575a;
+  z-index: 2;
+  position: relative;
+}
+
+.THIS .iframe-container iframe {
+  position: absolute;
+}
+
+.THIS .iframe-container .pdf-loading {
+  position: absolute;
+  color: #FFF;
+  left: calc(50% - 125px);
+  width: 250px;
+  height: 200px;
+  top: calc( 50% - 100px);
+  text-align: center;
+  font-size: 2rem;
+}
+
+.THIS .quote-list-toggle {
+  display: none;
+  width:100%;
+}
+
+.THIS .modile-selected-quote-header {
+  display: none;
+}
+
+.THIS .quote-container {
+  position:relative;
+}
+
+.THIS.c-mask {
+  position: fixed;
+  z-index: 11;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+  width: 0;
+  height: 0;
+  background-color: #6D6D6D;
+  opacity: 0;
+  transition: opacity 0.3s, width 0s 0.3s, height 0s 0.3s;
+}
+
+.THIS.c-mask.open {
+  width: 100%;
+  height: 100%;
+  opacity: 0.7;
+  transition: opacity 0.3s;
+}
+
+@media only screen and (max-width:1024px) {
+  .THIS .quote-list-toggle {
+    display: initial;
+  }
+
+  .THIS .quote-list-container {
+    position: fixed;
+    left: 0;
+    width: 90%;
+    max-width: 500px;
+    top: 0;
+    z-index: 1200;
+    height: 100%;
+    background: #FFF;
+    padding-top: 2rem;
+    transition: transform 0.3s;
+    overflow: hidden;
+    overflow-y: auto;
+    transform: translateX(-110%);
+  }
+  .THIS .quote-list-container.open {
+    transform: translateX(0px);
+  }
+
+  .THIS .modile-selected-quote-header {
+    display: initial;
+    position:absolute;
+    width: 96%;
+    z-index:10;
+  }
+
+  .THIS .iframe-container {
+    position:absolute;
+    top:100px;
+    background: transparent;
+  }
+}

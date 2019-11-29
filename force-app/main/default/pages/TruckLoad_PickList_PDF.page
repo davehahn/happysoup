@@ -1,0 +1,653 @@
+<apex:page StandardController="Truck_Trip__c"
+           extensions="TripBuilderController"
+           action="{!initTruckLoadPDF}"
+           showHeader="false"
+           sidebar="false"
+           applyBodyTag="false"
+           renderAs="pdf">
+
+  <head>
+    <style type="text/css">
+
+      @page {
+        size:landscape;
+        margin:0.25cm;
+        margin-bottom: 3cm;
+        border:0;
+        padding:0;
+         @bottom-center{content: element(footer);}
+      }
+
+
+      body{
+        margin:0 auto;
+        border:1px solid white;
+        padding:0;
+      }
+
+      table{
+          width:100%;
+          table-layout: fixed;
+          border-collapse:collapse;
+      }
+
+      .header table tbody tr td p {
+        font-size: 11px;
+      }
+
+      .runningHeader{
+        width:100%;
+        border:1px solid white;
+        border-bottom-color: #666;
+        margin-bottom: 10px;
+      }
+
+      .runningFooter {
+        text-align:center;
+        page-break-inside: avoid;
+        position: running(footer);
+        width:100%;
+        border:1px solid white;
+      }
+
+      .erp-order {
+        page-break-inside: avoid;
+        display: inline-block;
+        width: 48%;
+        margin: 0;
+      }
+
+      .truck-container {
+        width: 100%;
+      }
+
+      .truck-cell {
+        min-height: 200px;
+        page-break-inside: avoid;
+        margin:0.15% auto;
+        padding: 5px;
+        border: 1px solid #666;
+        display:inline-block;
+      }
+
+      .truck-cell .cell-header {
+        width: 100%;
+        margin:0;
+        padding:0;
+        overflow:hidden;
+        clear:both;
+        margin-top: 20px;
+      }
+
+      .truck-cell .cell-header:first-child {
+        margin-top: 0;
+      }
+
+      .truck-cell .cell-header > div:first-child {
+        float:left;
+        width: 23%;
+        display: inline-block;
+        margin:0;
+        padding:0;
+        background: #000;
+        color: #FFF;
+        text-align: center;
+        line-height: 31px;
+        font-size: 20px;
+        margin-right: 2%;
+      }
+
+      .truck-cell .cell-header > div:first-child + div {
+        float:left;
+        width: 75%;
+        display: inline-block;
+        margin:0;
+        padding:0;
+      }
+
+      .truck-cell h1 {
+        display:block;
+        font-size: 12px;
+        font-weight: bold;
+        margin:0;
+        padding:0;
+        margin-top: 5px;
+        padding-top: 0px;
+        border-top: 1px solid #666;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .truck-cell h1:first-child {
+        border-top-color: transparent;
+      }
+
+      .truck-cell h2 {
+        display:block;
+        font-size: 11px;
+        margin-bottom:10px;
+        padding-bottom: 3px;
+        border-bottom: 1px solid #666;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+
+    </style>
+  </head>
+
+  <body>
+
+    <div class="runningHeader">
+      <div class="header">
+        <h1 style="width: 100%; text-align: center; line-height: 40px; font-size: 25px; font-weight:bold">{!trip.Name}</h1>
+        <table stype="width: 100%; margin-bottom: 10px;">
+        <tr style="margin-bottom: 10px;">
+          <td style="width: 20%; text-align:center">
+            <p style="font-weight: bold; font-size: 14px;margin:0;padding;0">Driver:</p>
+            <p style="font-size: 11px;margin:0;padding:0 0 5px 0">{!trip.Truck_Driver__r.Name}</p>
+          </td>
+          <td style="width: 20%; text-align:center">
+            <p style="font-weight: bold; font-size: 14px;margin:0;padding;0">Truck:</p>
+            <p style="font-size: 11px;margin:0;padding:0 0 5px 0">{!trip.Truck__c}</p>
+          </td>
+          <td style="width: 20%; text-align:center">
+            <p style="font-weight: bold; font-size: 14px;margin:0;padding;0">Trailer:</p>
+            <p style="font-size: 11px;margin:0;padding:0 0 5px 0">{!trip.Trailer__c}</p>
+          </td>
+          <td style="width: 20%; text-align:center">
+            <p style="font-weight: bold; font-size: 14px;margin:0;padding;0">Departure Date:</p>
+            <p style="font-size: 11px;margin:0;padding:0 0 5px 0">
+              <apex:outputText value="{0, date, MMMM d','  yyyy}">
+                <apex:param value="{!trip.Departure_Date__c}" />
+              </apex:outputText>
+            </p>
+          </td>
+          <td style="width: 20%; text-align:center">
+            <p style="font-weight: bold; font-size: 14px;margin:0;padding;0">Return Date:</p>
+            <p style="font-size: 11px;margin:0;padding:0 0 5px 0;">
+              <apex:outputText value="{0, date, MMMM d','  yyyy}">
+                <apex:param value="{!trip.Return_Date__c}" />
+              </apex:outputText>
+            </p>
+          </td>
+        </tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="truck-container">
+      <table>
+        <tr>
+          <td>
+            <apex:variable value="{!itemsMap['1']}" var="list1" />
+            <apex:outputPanel layout="none" rendered="{!list1.size > 0}">
+              <div class="truck-cell">
+                <apex:repeat value="{!list1}" var="erp">
+                  <div class="cell-header">
+                    <div>1</div>
+                    <div>
+                      <h1>{!erp.ErpWrapper.Name}</h1>
+                     <!--  <h2>{!erp.accountName}</h2> -->
+                    </div>
+                  </div>
+                  <table style="width:100%; border-collapse: collapse;">
+                    <tbody>
+                      <apex:repeat value="{!erp.ErpWrapper.MaterialWrappers}" var="material">
+                      <tr>
+                        <td style="width: 100%;font-size: 12px; font-weight: bold;padding-top: 7px;">
+                          {!material.Name}:
+                        </td>
+                      </tr>
+                      <tr>
+                        <td style="width:100%; border-bottom: 1px solid #666; padding-top: 7px;font-size: 14px; text-align: center;">
+                          {!material.SerialNumber}
+                        </td>
+                      </tr>
+                      </apex:repeat>
+                    </tbody>
+                  </table>
+                </apex:repeat>
+              </div>
+            </apex:outputPanel>
+            <apex:outputPanel layout="none" rendered="{!list1.size = 0}">
+              <div class="truck-cell">
+                  <div class="cell-header">
+                    <div>1</div>
+                    <div>
+                      <h1></h1>
+                      <h2></h2>
+                    </div>
+                  </div>
+                  <table style="width:100%; border-collapse: collapse;">
+                    <tbody>
+
+                      <tr>
+                        <td style="width: 50%;font-size: 10px; padding-top: 7px;">
+
+                        </td>
+                        <td style="width:50%; border-bottom: 1px solid #666; padding-top: 7px;font-size: 10px; text-align: center;">
+
+                        </td>
+                      </tr>
+
+                    </tbody>
+                  </table>
+              </div>
+            </apex:outputPanel>
+          </td>
+          <td>
+            <apex:variable value="{!itemsMap['2']}" var="list2" />
+            <apex:outputPanel layout="none" rendered="{!list2.size > 0}">
+              <div class="truck-cell">
+                <apex:repeat value="{!list2}" var="erp">
+                  <div class="cell-header">
+                    <div>2</div>
+                    <div>
+                      <h1>{!erp.ErpWrapper.Name}</h1>
+                     <!--  <h2>{!erp.accountName}</h2> -->
+                    </div>
+                  </div>
+                  <table style="width:100%; border-collapse: collapse;">
+                    <tbody>
+                      <apex:repeat value="{!erp.ErpWrapper.MaterialWrappers}" var="material">
+                      <tr>
+                        <td style="width: 100%;font-size: 12px; font-weight: bold;padding-top: 7px;">
+                          {!material.Name}:
+                        </td>
+                      </tr>
+                      <tr>
+                        <td style="width:100%; border-bottom: 1px solid #666; padding-top: 7px;font-size: 14px; text-align: center;">
+                          {!material.SerialNumber}
+                        </td>
+                      </tr>
+                      </apex:repeat>
+                    </tbody>
+                  </table>
+                </apex:repeat>
+              </div>
+            </apex:outputPanel>
+            <apex:outputPanel layout="none" rendered="{!list2.size = 0}">
+              <div class="truck-cell">
+                  <div class="cell-header">
+                    <div>2</div>
+                    <div>
+                      <h1></h1>
+                      <h2></h2>
+                    </div>
+                  </div>
+                  <table style="width:100%; border-collapse: collapse;">
+                    <tbody>
+
+                      <tr>
+                        <td style="width: 50%;font-size: 10px; padding-top: 7px;">
+
+                        </td>
+                        <td style="width:50%; border-bottom: 1px solid #666; padding-top: 7px;font-size: 14px; text-align: center;">
+
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+              </div>
+            </apex:outputPanel>
+          </td>
+          <td>
+            <apex:variable value="{!itemsMap['3']}" var="list3" />
+            <apex:outputPanel layout="none" rendered="{!list3.size > 0}">
+              <div class="truck-cell">
+                <apex:repeat value="{!list3}" var="erp">
+                  <div class="cell-header">
+                    <div>3</div>
+                    <div>
+                      <h1>{!erp.ErpWrapper.Name}</h1>
+                     <!--  <h2>{!erp.accountName}</h2> -->
+                    </div>
+                  </div>
+                  <table style="width:100%; border-collapse: collapse;">
+                   <tbody>
+                      <apex:repeat value="{!erp.ErpWrapper.MaterialWrappers}" var="material">
+                      <tr>
+                        <td style="width: 100%;font-size: 12px; font-weight: bold;padding-top: 7px;">
+                          {!material.Name}:
+                        </td>
+                      </tr>
+                      <tr>
+                        <td style="width:100%; border-bottom: 1px solid #666; padding-top: 7px;font-size: 14px; text-align: center;">
+                          {!material.SerialNumber}
+                        </td>
+                      </tr>
+                      </apex:repeat>
+                    </tbody>
+                  </table>
+                </apex:repeat>
+              </div>
+            </apex:outputPanel>
+            <apex:outputPanel layout="none" rendered="{!list3.size = 0}">
+              <div class="truck-cell">
+                  <div class="cell-header">
+                    <div>3</div>
+                    <div>
+                      <h1></h1>
+                      <h2></h2>
+                    </div>
+                  </div>
+                  <table style="width:100%; border-collapse: collapse;">
+                    <tbody>
+
+                      <tr>
+                        <td style="width: 50%;font-size: 10px; padding-top: 7px;">
+
+                        </td>
+                        <td style="width:50%; border-bottom: 1px solid #666; padding-top: 7px;font-size: 14px; text-align: center;">
+
+                        </td>
+                      </tr>
+
+                    </tbody>
+                  </table>
+              </div>
+            </apex:outputPanel>
+          </td>
+          <td>
+            <apex:variable value="{!itemsMap['4']}" var="list4" />
+            <apex:outputPanel layout="none" rendered="{!list4.size > 0}">
+              <div class="truck-cell">
+                <apex:repeat value="{!list4}" var="erp">
+                  <div class="cell-header">
+                    <div>4</div>
+                    <div>
+                      <h1>{!erp.ErpWrapper.Name}</h1>
+                     <!--  <h2>{!erp.accountName}</h2> -->
+                    </div>
+                  </div>
+                  <table style="width:100%; border-collapse: collapse;">
+                   <tbody>
+                      <apex:repeat value="{!erp.ErpWrapper.MaterialWrappers}" var="material">
+                      <tr>
+                        <td style="width: 100%;font-size: 12px; font-weight: bold;padding-top: 7px;">
+                          {!material.Name}:
+                        </td>
+                      </tr>
+                      <tr>
+                        <td style="width:100%; border-bottom: 1px solid #666; padding-top: 7px;font-size: 14px; text-align: center;">
+                          {!material.SerialNumber}
+                        </td>
+                      </tr>
+                      </apex:repeat>
+                    </tbody>
+                  </table>
+                </apex:repeat>
+              </div>
+            </apex:outputPanel>
+            <apex:outputPanel layout="none" rendered="{!list4.size = 0}">
+              <div class="truck-cell">
+                  <div class="cell-header">
+                    <div>4</div>
+                    <div>
+                      <h1></h1>
+                      <h2></h2>
+                    </div>
+                  </div>
+                  <table style="width:100%; border-collapse: collapse;">
+                    <tbody>
+
+                      <tr>
+                        <td style="width: 50%;font-size: 10px; padding-top: 7px;">
+
+                        </td>
+                        <td style="width:50%; border-bottom: 1px solid #666; padding-top: 7px;font-size: 14px; text-align: center;">
+
+                        </td>
+                      </tr>
+
+                    </tbody>
+                  </table>
+              </div>
+            </apex:outputPanel>
+
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <apex:variable value="{!itemsMap['5']}" var="list5" />
+            <apex:outputPanel layout="none" rendered="{!list5.size > 0}">
+              <div class="truck-cell">
+                <apex:repeat value="{!list5}" var="erp">
+                  <div class="cell-header">
+                    <div>5</div>
+                    <div>
+                      <h1>{!erp.ErpWrapper.Name}</h1>
+                     <!--  <h2>{!erp.accountName}</h2> -->
+                    </div>
+                  </div>
+                  <table style="width:100%; border-collapse: collapse;">
+                   <tbody>
+                      <apex:repeat value="{!erp.ErpWrapper.MaterialWrappers}" var="material">
+                      <tr>
+                        <td style="width: 100%;font-size: 12px; font-weight: bold;padding-top: 7px;">
+                          {!material.Name}:
+                        </td>
+                      </tr>
+                      <tr>
+                        <td style="width:100%; border-bottom: 1px solid #666; padding-top: 7px;font-size: 14px; text-align: center;">
+                          {!material.SerialNumber}
+                        </td>
+                      </tr>
+                      </apex:repeat>
+                    </tbody>
+                  </table>
+                </apex:repeat>
+              </div>
+            </apex:outputPanel>
+            <apex:outputPanel layout="none" rendered="{!list5.size = 0}">
+              <div class="truck-cell">
+                  <div class="cell-header">
+                    <div>5</div>
+                    <div>
+                      <h1></h1>
+                      <h2></h2>
+                    </div>
+                  </div>
+                  <table style="width:100%; border-collapse: collapse;">
+                    <tbody>
+
+                      <tr>
+                        <td style="width: 50%;font-size: 10px; padding-top: 7px;">
+
+                        </td>
+                        <td style="width:50%; border-bottom: 1px solid #666; padding-top: 7px;font-size: 14px; text-align: center;">
+
+                        </td>
+                      </tr>
+
+                    </tbody>
+                  </table>
+              </div>
+            </apex:outputPanel>
+          </td>
+          <td>
+            <apex:variable value="{!itemsMap['6']}" var="list6" />
+            <apex:outputPanel layout="none" rendered="{!list6.size > 0}">
+              <div class="truck-cell">
+                <apex:repeat value="{!list6}" var="erp">
+                  <div class="cell-header">
+                    <div>6</div>
+                    <div>
+                      <h1>{!erp.ErpWrapper.Name}</h1>
+                     <!--  <h2>{!erp.accountName}</h2> -->
+                    </div>
+                  </div>
+                  <table style="width:100%; border-collapse: collapse;">
+                    <tbody>
+                      <apex:repeat value="{!erp.ErpWrapper.MaterialWrappers}" var="material">
+                      <tr>
+                        <td style="width: 100%;font-size: 12px; font-weight: bold;padding-top: 7px;">
+                          {!material.Name}:
+                        </td>
+                      </tr>
+                      <tr>
+                        <td style="width:100%; border-bottom: 1px solid #666; padding-top: 7px;font-size: 14px; text-align: center;">
+                          {!material.SerialNumber}
+                        </td>
+                      </tr>
+                      </apex:repeat>
+                    </tbody>
+                  </table>
+                </apex:repeat>
+              </div>
+            </apex:outputPanel>
+            <apex:outputPanel layout="none" rendered="{!list6.size = 0}">
+              <div class="truck-cell">
+                  <div class="cell-header">
+                    <div>6</div>
+                    <div>
+                      <h1></h1>
+                      <h2></h2>
+                    </div>
+                  </div>
+                  <table style="width:100%; border-collapse: collapse;">
+                    <tbody>
+
+                      <tr>
+                        <td style="width: 50%;font-size: 10px; padding-top: 7px;">
+
+                        </td>
+                        <td style="width:50%; border-bottom: 1px solid #666; padding-top: 7px;font-size: 14px; text-align: center;">
+
+                        </td>
+                      </tr>
+
+                    </tbody>
+                  </table>
+              </div>
+            </apex:outputPanel>
+          </td>
+          <td>
+            <apex:variable value="{!itemsMap['7']}" var="list7" />
+            <apex:outputPanel layout="none" rendered="{!list7.size > 0}">
+              <div class="truck-cell">
+                <apex:repeat value="{!list7}" var="erp">
+                  <div class="cell-header">
+                    <div>7</div>
+                    <div>
+                      <h1>{!erp.ErpWrapper.Name}</h1>
+                     <!--  <h2>{!erp.accountName}</h2> -->
+                    </div>
+                  </div>
+                  <table style="width:100%; border-collapse: collapse;">
+                    <tbody>
+                      <apex:repeat value="{!erp.ErpWrapper.MaterialWrappers}" var="material">
+                      <tr>
+                        <td style="width: 100%;font-size: 12px; font-weight: bold;padding-top: 7px;">
+                          {!material.Name}:
+                        </td>
+                      </tr>
+                      <tr>
+                        <td style="width:100%; border-bottom: 1px solid #666; padding-top: 7px;font-size: 14px; text-align: center;">
+                          {!material.SerialNumber}
+                        </td>
+                      </tr>
+                      </apex:repeat>
+                    </tbody>
+                  </table>
+                </apex:repeat>
+              </div>
+            </apex:outputPanel>
+            <apex:outputPanel layout="none" rendered="{!list7.size = 0}">
+              <div class="truck-cell">
+                  <div class="cell-header">
+                    <div>7</div>
+                    <div>
+                      <h1></h1>
+                      <h2></h2>
+                    </div>
+                  </div>
+                  <table style="width:100%; border-collapse: collapse;">
+                    <tbody>
+
+                      <tr>
+                        <td style="width: 50%;font-size: 10px; padding-top: 7px;">
+
+                        </td>
+                        <td style="width:50%; border-bottom: 1px solid #666; padding-top: 7px;font-size: 10px; text-align: center;">
+
+                        </td>
+                      </tr>
+
+                    </tbody>
+                  </table>
+              </div>
+            </apex:outputPanel>
+          </td>
+        </tr>
+      </table>
+
+    </div>
+
+              <!-- <table style="width:100%; border-collapse: collapse;margin-top: 15px;">
+                <tr>
+                  <td style="width: 40%; font-size: 10px; padding-left: 10px;">
+                    Lock Pin (Coupler)
+                  </td>
+                  <td style="width: 10%; border-bottom: 1px solid #666;">
+                  </td>
+                  <td style="width: 40%; font-size: 10px; padding-left: 20px;">
+                    Legend Straps
+                  </td>
+                  <td style="width: 10%; border-bottom: 1px solid #666;">
+                  </td>
+                </tr>
+                <tr>
+                  <td style="width: 40%; font-size: 10px; padding-left: 10px;">
+                    Lock Pin (Knob)
+                  </td>
+                  <td style="width: 10%; border-bottom: 1px solid #666;">
+                  </td>
+                  <td style="width: 40%; font-size: 10px; padding-left: 20px;">
+                    Tightened Cables
+                  </td>
+                  <td style="width: 10%; border-bottom: 1px solid #666;">
+                  </td>
+                </tr>
+                <tr>
+                  <td style="width: 40%; font-size: 10px; padding-left: 10px;">
+                    Horseshoes
+                  </td>
+                  <td style="width: 10%; border-bottom: 1px solid #666;">
+                  </td>
+                  <td style="width: 40%; font-size: 10px; padding-left: 20px;">
+                    Ratchet Straps
+                  </td>
+                  <td style="width: 10%; border-bottom: 1px solid #666;">
+                  </td>
+                </tr>
+                <tr>
+                  <td style="width: 40%; font-size: 10px; padding-left: 10px;">
+                    6" eyebolts
+                  </td>
+                  <td style="width: 10%; border-bottom: 1px solid #666;">
+                  </td>
+                  <td style="width: 40%">
+                  </td>
+                  <td style="width: 10%;">
+                  </td>
+                </tr>
+              </table> -->
+
+    <div class="runningFooter">
+      <div class="footer">
+        <p style="width: 25%; line-height: 25px; font-size: 14px; display: inline-block">
+        Loaded by:
+        </p>
+        <p style="width: 35%; display: inline-block; line-height: 25px; border-bottom: 1px solid #666">
+          &nbsp;
+        </p>
+      </div>
+    </div>
+
+  </body>
+
+</apex:page>

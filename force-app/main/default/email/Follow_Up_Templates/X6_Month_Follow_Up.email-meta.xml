@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>Legend_Letterhead</letterhead>
+    <name>8) 6 Month Follow Up</name>
+    <style>freeForm</style>
+    <subject>Enjoy the Water</subject>
+    <textOnly>Hey {!Account.FirstName},
+
+I&#39;ve known you for the better part of a year now and I hope I&#39;m not over-stepping my bounds when I say that I want you as part of the Legend Family!
+
+Being a member is great, you have access to experienced Service Personnel, on-hand Mercury Technicians, answers to any question you could ever have throughout the life of your boat, and also...your new boat itself!
+
+Please help me help you into a new Legend Boat this year.  A quality, Canadian boat is always in style!
+
+Always Yours in Boating,
+
+{!User.Name}
+{!User.Title}
+
+{!User.Email}
+{!User.Phone}
+legendboats.com</textOnly>
+    <type>html</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <description>Part of Approval Process for Factory Boat Orders</description>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>Legend_Letterhead</letterhead>
+    <name>Factory Partner Boat Sale Approval</name>
+    <style>freeForm</style>
+    <subject>There is a new Factory Boat Sale for your Approval</subject>
+    <textOnly>Hello Marc,
+
+Please see this ERP for review and approval.
+
+https://legendboats.lightning.force.com/lightning/r/AcctSeed__Project__c/{!AcctSeed__Project__c.Id}/view</textOnly>
+    <type>html</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

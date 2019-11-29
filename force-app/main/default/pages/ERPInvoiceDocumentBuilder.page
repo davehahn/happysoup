@@ -1,0 +1,623 @@
+<apex:page Controller="ERPInvoiceDocumentBuilder"
+           docType="html-5.0"
+           showHeader="true"
+           sidebar="true">
+
+  <apex:stylesheet value="{!URLFOR($Resource.LGND_SLDS_214, 'assets/styles/salesforce-lightning-design-system-vf.min.css')}" />
+
+  <style type="text/css">
+
+    .slds-page-header {
+      padding-bottom: 0.4rem;
+    }
+
+    .header-detail p.slds-text-heading--large {
+      font-size: 1.25rem;
+    }
+
+    .serials-table td {
+      line-height: 35px;
+      vertical-align: middle;
+      width: 50%;
+    }
+
+    .serials-table tr td:last-child {
+      text-align: right;
+    }
+
+    .serial-search .slds-spinner_container {
+      display: none;
+    }
+
+    .serial-search.busy .slds-spinner_container {
+      display:block;
+    }
+
+    .serial-search.busy span {
+      visibility: hidden;
+    }
+
+    #page-indicator {
+      display:none;
+    }
+
+    .slds-dropdown-trigger > button > img {
+      transition: 0.6s;
+      transform-style: preserve-3d;
+      width: 20px;
+      height: 20px;
+    }
+
+    .slds-dropdown-trigger.slds-is-open > button > img {
+      -webkit-transform: rotateX(180deg);
+    }
+
+    .mobile-menu {
+      display: none;
+    }
+
+/*    .slds-modal label {
+      line-height: 2rem !important;
+      text-align: right;
+      width: 100%;
+      padding-right: 0.5rem;
+      font-size: 0.9rem !important;
+    }*/
+
+    #serial-filter {
+      border-radius: .25rem .25rem 0 0;
+      border-bottom: none;
+    }
+
+    .serial-list {
+      width: 100%;
+      border: 1px solid #CCC;
+      min-height: 6rem;
+      max-height: 12rem;
+      overflow-y: auto;
+    }
+
+    .serial-list a {
+      display: block;
+      width: 100%;
+      font-weight: 300;
+      line-height: 2rem;
+      padding-left: 1.5rem;
+      text-decoration: none;
+    }
+
+    .serial-list a.selected {
+      background: green;
+      color: #FFF;
+      text-decoration: none;
+    }
+
+    .serial-list a > .highlight {
+      font-weight: bold;
+    }
+
+    .serial-list a:hover {
+      text-decoration: none;
+    }
+
+    .serial-list a:not(.selected):hover {
+      color: #FFF;
+      background: #00AAF9;
+    }
+    #viewerIframe.temp_hidden {
+      opacity:0;
+    }
+
+  </style>
+
+  <div class="lgnd" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <div class="slds-backdrop"></div>
+    <div id="page-indicator" class="slds-spinner_container">
+      <div class="slds-spinner--brand slds-spinner slds-spinner--large" role="alert">
+        <span class="slds-assistive-text">Loading</span>
+        <div class="slds-spinner__dot-a"></div>
+        <div class="slds-spinner__dot-b"></div>
+      </div>
+    </div>
+
+    <apex:form >
+      <apex:actionFunction name="setupNew"
+                           action="{!setupNew}"
+                           rerender="thePage"
+                           oncomplete="setupNewComplete()" />
+      <apex:actionFunction name="cancelNewSetup"
+                           action="{!cancelNewSetup}"
+                           rerender="thePage"
+                           oncomplete="cancelComplete()" />
+    </apex:form>
+
+
+    <apex:outputPanel id="thePage">
+      <div class="slds-page-header" role="banner">
+        <!-- <h1 id="testOutput"></h1> -->
+        <div class="slds-grid slds-wrap">
+
+          <div class="slds-col slds-has-flexi-truncate">
+            <div class="slds-media slds-no-space slds-grow">
+              <div class="slds-media__figure">
+                <img src="{!URLFOR($Resource.LGND_SLDS_203, 'assets/icons/custom/custom98_60.png')}" style="background: #00AAF9"/>
+              </div>
+              <div class="slds-media__body">
+                <p class="slds-text-title--caps slds-line-height--reset">ERP Order</p>
+                <h1 class="slds-page-header__title slds-m-right--small slds-align-middle slds-truncate">
+                 {!erpOrder.name}</h1>
+              </div>
+            </div>
+          </div>
+
+          <div class="slds-col slds-no-flex slds-grid slds-align-top">
+
+
+            <div class=" slds-large-show">
+              <div class="slds-button-group" role="group">
+                <a href="/{!erpOrderID}" class="slds-button slds-button--neutral">Return to ERP</a>
+                <apex:outputPanel layout="none" rendered="{!AND(creatingNew, hasDocHistory)}">
+                  <a href="#" class="slds-button slds-button--neutral page-action" data-action="cancel">Cancel</a>
+                </apex:outputPanel>
+                <apex:outputPanel layout="none" rendered="{!creatingNew}">
+                  <a href="#" class="slds-button slds-button--neutral page-action" data-action="saveNew">Save</a>
+                </apex:outputPanel>
+                <apex:outputPanel layout="none" rendered="{!creatingNew}">
+                  <a href="#" class="slds-button slds-button--neutral page-action" data-action="createNewAndEmail">Save &amp; Email</a>
+                </apex:outputPanel>
+                <apex:outputPanel layout="none" rendered="{!NOT(creatingNew)}">
+                  <a href="#" class="slds-button slds-button--neutral page-action" data-action="createNew">Create New</a>
+                </apex:outputPanel>
+                <apex:outputPanel layout="none" rendered="{!AND( NOT(ISNULL(accountId)), NOT(creatingNew) )}">
+                  <a href="#" class="slds-button slds-button--neutral page-action" data-action="emailExisting">Email</a>
+                </apex:outputPanel>
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+        <div class="slds-grid slds-wrap header-detail" style="margin-top:0.75rem">
+
+          <div class="slds-p-horizontal--small slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-4">
+            <div class="slds-grid slds-wrap">
+              <p class="slds-text-title slds-truncate slds-m-bottom--none slds-p-horizontal--small slds-size--1-of-3 slds-medium-size--1-of-1 slds-large-size--1-of-1" title="Field 1">Account Name:</p>
+              <p class="slds-text-body--regular slds-truncate slds-p-horizontal--small slds-size--2-of-3 slds-medium-size--1-of-1 slds-large-size--1-of-1 slds-text-heading--large">{!erpOrder.AcctSeed__Account__r.name}</p>
+            </div>
+          </div>
+
+          <div class="slds-p-horizontal--small slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-4">
+            <div class='slds-grid slds-wrap'>
+              <p class="slds-text-title slds-truncate slds-m-bottom--none slds-p-horizontal--small slds-size--1-of-3 slds-medium-size--1-of-1 slds-large-size--1-of-1">ERP Order Number:</p>
+              <p class="slds-text-body--regular slds-p-horizontal--small slds-size--2-of-3 slds-medium-size--1-of-1 slds-large-size--1-of-1 slds-text-heading--large">{!erpOrder.AcctSeedERP__Work_Order_Number__c}</p>
+            </div>
+          </div>
+
+          <div class="slds-p-horizontal--small slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-4">
+            <apex:outputPanel layout="none" rendered="{!AND( hasInternalCopy, creatingNew ) }">
+              <div class='slds-grid slds-wrap'>
+                <p class="slds-text-title slds-truncate slds-m-bottom--none slds-p-horizontal--small slds-size--1-of-3 slds-medium-size--1-of-1 slds-large-size--1-of-1">Version:</p>
+                <p class="slds-text-body--regular slds-p-horizontal--small slds-size--2-of-3 slds-medium-size--1-of-1 slds-large-size--1-of-1">
+                  <div class="slds-form-element">
+                    <div class="slds-form-element__control">
+                      <div class="slds-select_container">
+                        <select id="version-select" class="slds-select">
+                          <option value="customer">Customer</option>
+                          <option value="internal">Internal</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                </p>
+              </div>
+            </apex:outputPanel>
+          </div>
+
+          <div class="slds-p-horizontal--small slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--1-of-4">
+            <apex:outputPanel layout="none" rendered="{!creatingNew}">
+              <div class='slds-grid slds-wrap'>
+                <p class="slds-text-title slds-truncate slds-m-bottom--none slds-p-horizontal--small slds-size--1-of-3 slds-medium-size--1-of-1 slds-large-size--1-of-1">Language:</p>
+                <p class="slds-text-body--regular slds-p-horizontal--small slds-size--2-of-3 slds-medium-size--1-of-1 slds-large-size--1-of-1">
+                  <div class="slds-form-element">
+                    <div class="slds-form-element__control">
+                      <div class="slds-select_container">
+                        <select id="language-select" class="slds-select">
+                          <option value="english">English</option>
+                          <option value="french">French</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                </p>
+              </div>
+            </apex:outputPanel>
+          </div>
+
+        </div>
+      </div>
+
+      <div style="width: 100%; text-align: center;">
+
+        <div style="width: 850px !important; display:inline-block; margin-top: 30px; ">
+          <div style="width: 100% !important;" >
+            <iframe height="800px"
+                    id="pdfIframe"
+                    name="InvoicePDF"
+                    width="100%">
+            </iframe>
+          </div>
+        </div>
+
+        <apex:outputPanel layout="none" rendered="{!NOT( creatingNew )}">
+          <div style="width: calc(100% - 850px); height: 200px; margin-top:30px; float: left;">
+          <h2 style="font-size: 1.25rem">Document Archive</h2>
+          <div class="slds-table--edit_container slds-is-relative">
+            <table class="slds-table slds-table--bordered slds-table--fixed-layout" style="width: 98%;">
+              <thead>
+                <tr class="slds-text-title--caps">
+                  <th scope="col">
+                    <div class="slds-truncate">Document Name</div>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <apex:repeat value="{!erpDocuments}" var="doc">
+                  <tr data-document-id="{!doc.DocumentID__c}">
+                    <td>
+                      <div class="slds-truncate">{!doc.Name}</div>
+                    </td>
+                  </tr>
+                </apex:repeat>
+              </tbody>
+            </table>
+          </div>
+          </div>
+        </apex:outputPanel>
+
+      </div>
+    </apex:outputPanel>
+
+  </div>
+
+  <script id="toast" type="text/x-handlebars-template">
+    <div class="slds-notify_container" style="top:-100px;">
+      <div class="slds-notify slds-notify--toast slds-theme--{{{ toastTheme }}}" role="alert">
+        <button class="slds-button slds-notify__close slds-button--icon-inverse" title="Close">
+          <svg class="slds-button__icon slds-button__icon--large" aria-hidden="true">
+            <use xlink:href="{!URLFOR($Resource.LGND_SLDS_214, '/assets/icons/utility-sprite/svg/symbols.svg#close')}"></use>
+          </svg>
+          <span class="slds-assistive-text">Close</span>
+        </button>
+        <div class="slds-notify__content">
+          <h2 class="slds-text-heading--small">{{{ message }}}</h2>
+        </div>
+      </div>
+    </div>
+  </script>
+
+  <script id="email-modal" type="text/x-handlebars-template">
+    <div role="dialog" tabindex="-1" aria-labelledby="header43" class="slds-modal" id="email-form">
+      <div class="slds-modal__container">
+        <div class="slds-modal__header">
+          <button class="slds-button slds-modal__close slds-button--icon-inverse" title="Close">
+            <svg class="slds-button__icon slds-button__icon--large" aria-hidden="true">
+              <use xlink:href="{!URLFOR($Resource.LGND_SLDS_214, '/assets/icons/utility-sprite/svg/symbols.svg#close')}"></use>
+            </svg>
+          </button>
+          <h2 id="header43" class="slds-text-heading--medium">Send Email</h2>
+        </div>
+        <div class="slds-modal__content slds-p-around--medium">
+
+          <div class="slds-form-element">
+            <label class="slds-form-element__label" for="toAddresses">To:<span style="font-size: 9px;">( comma seperated )</span></label>
+            <div class="slds-form-element__control">
+              <input type="text" id="toAddresses" class="slds-input" data-field-name="toAddresses" value="{{{ toAddresses }}}"/>
+            </div>
+          </div>
+
+          <div class="slds-form-element" style="margin-top: 15px;">
+            <label class="slds-form-element__label" for="ccAddresses">CC:<span style="font-size: 9px;">( comma seperated )</span></label>
+            <div class="slds-form-element__control">
+              <input type="text" id="ccAddresses" class="slds-input" data-field-name="ccAddresses"/>
+            </div>
+          </div>
+
+          <div class="slds-form-element" style="margin-top: 15px;">
+            <label class="slds-form-element__label" for="subject">Subject:</label>
+            <div class="slds-form-element__control">
+              <input type="text" id="subject" class="slds-input" data-field-name="subject" value="Legend Boats Invoice
+              "/>
+            </div>
+          </div>
+
+          <div class="slds-form-element" style="margin-top: 15px;">
+            <label class="slds-form-element__label" for="body">Message</label>
+            <div class="slds-form-element__control">
+              <textarea id="body" class="slds-textarea" data-field-name="message" style="min-height: 100px;"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="slds-modal__footer">
+          <button class="slds-button slds-button--neutral slds-modal__close">Cancel</button>
+          <button class="slds-button slds-button--brand" data-action="send">Send</button>
+        </div>
+      </div>
+    </div>
+  </script>
+
+
+  <apex:includeScript value="{!URLFOR($Resource.Libraries, 'js/jquery-3.1.1.min.js')}" />
+  <apex:includeScript value="{!URLFOR($Resource.Libraries, 'js/handlebars.min-latest.js')}" />
+  <apex:includeScript value="{! URLFOR($Resource.UtilJS) }" />
+
+  <script>
+
+    // (function($) {
+      var $j =  jQuery.noConflict(),
+          $indicator = $j('#page-indicator'),
+          currentUI = determineUI( "{!$User.UITheme}" ),
+          lang = "{!language}",
+          erpId = "{!erpOrderID}",
+          accountId= "{!accountId}",
+          pageName = "{!docType}",
+          version = "{!version}",
+          recordType = "{!erpRecordType}",
+          currentDocumentId = "{!currentDocumentId}",
+          toast = Handlebars.compile( $j('#toast').html() ),
+          emailForm = Handlebars.compile( $j('#email-modal').html() );
+
+      if( currentDocumentId.length > 0 )
+      {
+        insertPdf( '/servlet/servlet.FileDownload?file=' + currentDocumentId );
+        initDocTable();
+      }
+      else
+      {
+        initSelects();
+        insertPdf( '/apex/'+pageName+'?erpOrderId='+erpId );
+      }
+
+      initActionButtons();
+
+      $j('.lgnd').on('click', '.slds-notify__close', function(e) {
+        e.preventDefault();
+        var $cont = $j(this).closest('.slds-notify_container');
+        $cont.animate({ top: "-=100"}, 500, function() {
+          $cont.remove();
+        })
+      });
+
+      $j('.lgnd').on( 'click', '.slds-modal__close', function(e) {
+        var $modal = $j(this).closest('.slds-modal');
+        $modal.removeClass(' slds-fade-in-open')
+        $j('.slds-backdrop').removeClass('slds-backdrop--open');
+        setTimeout( function() { $modal.remove(); }, 1000);
+      });
+
+      function urlforCurrentDoc( docId )
+      {
+        return '/servlet/servlet.FileDownload?file=' + currentDocumentId;
+      }
+
+      function initSelects()
+      {
+        $j('#language-select').val(lang)
+        .on('change', function() {
+          $indicator.show();
+          lang = $j(this).val();
+          ERPInvoiceDocumentBuilder.fetchPdfName( recordType, lang, version, function(result, event) {
+            if( event.status )
+            {
+              pageName = result;
+              insertPdf( "/apex/"+result+"?erpOrderId="+erpId );
+            }
+            else
+            {
+              showToast( 'error', event.message);
+            }
+          });
+        });
+
+        $j('#version-select').val( version )
+        .on('change', function() {
+          $indicator.show();
+          version = $j(this).val();
+          ERPInvoiceDocumentBuilder.fetchPdfName( recordType, lang, version, function(result, event) {
+            if( event.status )
+            {
+              pageName = result;
+              insertPdf( "/apex/"+result+"?erpOrderId="+erpId+"&version="+version );
+            }
+            else
+            {
+              showToast( 'error', event.message);
+            }
+          });
+        });
+      }
+
+      function initDocTable()
+      {
+        $j('[data-document-id="'+currentDocumentId+'"]').addClass('slds-is-selected');
+        $j('[data-document-id]').on('click', function() {
+          var $this = $j(this);
+          if( $this.data('document-id') === currentDocumentId )
+            return false;
+          $indicator.show();
+          currentDocumentId = $this.data('document-id');
+          $this.addClass('slds-is-selected')
+          .siblings('tr').removeClass('slds-is-selected');
+          insertPdf( urlforCurrentDoc() );
+        })
+      }
+
+      function setupNewComplete()
+      {
+        initSelects();
+        insertPdf( '/apex/'+pageName+'?erpOrderId='+erpId+"&version="+version );
+      }
+
+      function cancelComplete()
+      {
+        console.log( currentDocumentId );
+        initDocTable();
+        insertPdf( urlforCurrentDoc() );
+      }
+
+      function initActionButtons()
+      {
+        $j('.lgnd').on( 'click', '.page-action', function(e) {
+          e.preventDefault();
+          $indicator.show();
+          var action = $j(this).data('action');
+          if( action === 'saveNew' )
+            createNewPDF();
+          if( action === 'createNew' )
+            setupNew(); //actionFunction
+          if( action === 'createNewAndEmail' )
+            createAndEmailPDF();
+          if( action === 'emailExisting' )
+            emailExistingPDF();
+          if( action === 'cancel' )
+            cancelNewSetup(); //actionFunction
+        });
+      }
+
+      function createNewPDF()
+      {
+        ERPInvoiceDocumentBuilder.savePDF( erpId, pageName, function( result, event) {
+          $indicator.hide();
+          if( event.status )
+          {
+            if( currentUI === 'classic' )
+            {
+              window.top.location = result;
+            }
+            else
+            {
+              sforce.one.navigateToURL( result );
+            }
+          }
+          else
+          {
+            showToast( 'error', event.message);
+          }
+        });
+      }
+
+      function createAndEmailPDF()
+      {
+        fetchEmailAddresses()
+        .then( function( addresses ) {
+          openEmailModal( addresses )
+          .then( enableEmailForm );
+        })
+        .fail( function( message ) {
+          showToast( 'error', message);
+        });
+      }
+
+      function emailExistingPDF()
+      {
+        fetchEmailAddresses()
+        .then( function( addresses ) {
+          openEmailModal( addresses )
+          .then( enableEmailForm( currentDocumentId ) );
+        })
+        .fail( function( message ) {
+          showToast( 'error', message);
+        });
+      }
+
+      function fetchEmailAddresses()
+      {
+        var dfd = new $j.Deferred();
+        ERPInvoiceDocumentBuilder.fetchEmailAddresses( accountId, function( result, event ) {
+          $indicator.hide();
+          if( event.status )
+          {
+            dfd.resolve( result.join(',') );
+          }
+          else
+          {
+            dfd.reject( event.message );
+          }
+        });
+        return dfd.promise();
+      }
+
+      function openEmailModal( toAddresses )
+      {
+        var dfd = new $j.Deferred();
+        $j('.lgnd').append( emailForm( {toAddresses: toAddresses} ) );
+        $j('.slds-backdrop').addClass('slds-backdrop--open');
+        $j('#email-form').addClass('slds-fade-in-open')
+        dfd.resolve();
+        return dfd.promise();
+     }
+
+      function enableEmailForm( documentId )
+      {
+        var data = {};
+        $j('#email-form').find( 'button[data-action]')
+        .on('click', function(e) {
+          e.preventDefault();
+          $j.each( $j(this).closest('.slds-modal').find('[data-field-name]'), function(idx, ele) {
+            var $this = $j(ele);
+            data[ $this.data('field-name') ] = $this.val();
+          });
+          data.pageName = pageName;
+          data.erpId = erpId;
+          if( typeof(documentId) !== 'undefined' )
+            data.documentId = documentId;
+          console.log(data)
+          sendEmail( data );
+        });
+      }
+
+
+      function insertPdf( url )
+      {
+        var iframe = document.getElementById('pdfIframe');
+        iframe.onload = function() {
+           $indicator.hide();
+         };
+        iframe.src = url;
+      }
+
+      function sendEmail( data )
+      {
+        var $emailForm = $j('#email-form'),
+            $backDrop = $j('.slds-backdrop');
+
+        $backDrop.removeClass('slds-backdrop--open');
+        $emailForm.removeClass('slds-fade-in-open');
+        $indicator.show();
+        ERPInvoiceDocumentBuilder.emailPDF( JSON.stringify(data), function( result, event ) {
+          $indicator.hide();
+          if( event.status )
+          {
+            showToast( 'success', 'Email sent successfully.');
+            $emailForm.remove();
+          }
+          else
+          {
+            showToast( 'error', event.message);
+            $backDrop.addClass('slds-backdrop--open');
+            $emailForm.addClass('slds-fade-in-open');
+          }
+        });
+      }
+
+      function showToast( state, message )
+      {
+        $j('.lgnd').append( toast({ message: message, toastTheme: state} ) );
+        $j('.slds-notify_container').animate({top: "0"}, 500)
+      }
+
+    // })( jQuery.noConflict() );
+  </script>
+</apex:page>

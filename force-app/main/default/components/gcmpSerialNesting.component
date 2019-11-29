@@ -1,0 +1,491 @@
+<apex:component controller="gcSerialNumber_Ext" allowDML="true" access="global">
+<apex:attribute name="idNest"             type="string"   required="true"   access="global" description="The Id of the Serial Number that is the Nest."/>
+
+<head>
+<style>
+.link{
+    cursor:pointer;
+    text-decoration:underline;
+}
+table{
+    /*width:100%;*/
+    border-collapse:collapse;
+}
+tr.total td{
+    font-weight: bold;
+}
+div.pq-grid-footer{
+    display:none;
+}
+</style>
+
+<apex:stylesheet value="{!URLFOR($Resource.GMBLJS__jQueryUI,'/jquery-ui/jquery-ui.min.css')}"/>
+<apex:stylesheet value="{!URLFOR($Resource.GMBLJS__pqGridPro241,'/pqgrid.min.css')}"/>
+
+</head>
+
+<body>
+    <div id="thePageBlock" style="display:none;">
+        <apex:pageBlock mode="mainDetail" title="">
+            
+            <apex:pageBlockButtons location="top">
+                <button type="button" class="btn" id="btnLaunchSearch" onclick="launchSearchSerial();">Nest an Existing Motor, Trailer etc.</button>                
+            </apex:pageBlockButtons>
+
+            <div><div id="lines"></div></div>
+
+        </apex:pageBlock>
+    </div>
+    <div id="theMessageDiv" style="display:none;">
+
+    </div>
+</body>
+
+<apex:includeScript value="{!$Resource.GMBLJS__jQuery}"/>
+<apex:includeScript value="{!URLFOR($Resource.GMBLJS__jQueryUI,'/jquery-ui/jquery-ui.min.js')}"/>
+<apex:includeScript value="{!URLFOR($Resource.GMBLJS__pqGridPro241,'/pqgrid.min.js')}"/>
+<apex:includeScript value="{!URLFOR($Resource.GMBLJS__pqGridPro241,'/touch-punch/touch-punch.min.js')}"/>
+<apex:includeScript value="{!$Resource.GMBLJS__accountingJS}"/>
+<apex:includeScript value="{!$Resource.GMBLJS__gsrGrid2}"/>
+
+<script>function setFocusOnLoad() {}</script>
+<script type="text/javascript">
+    $j = jQuery.noConflict();
+
+    $j(document).ready(function()
+    {
+        checkCanBeNest();   
+    });
+
+    function refreshAll()
+    {
+        refreshGrid_lines();
+    }
+
+    var parentSerial;
+
+    function checkCanBeNest(){
+
+        if(!'{!idNest}')
+        {
+            jQuery('#theMessageDiv').text('The Nest Id is blank.');
+            jQuery('#theMessageDiv').show();
+            return;
+        }
+
+        Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.gcSerialNumber_Ext.retrieveSerials}',
+            ['{!idNest}'],
+            function(result,event){
+                if(event.status)
+                {
+                    if(result.length == 0)
+                    {
+                        jQuery('#theMessageDiv').text('The Nest Id is not valid.');
+                        jQuery('#theMessageDiv').show();
+                    }
+                    else
+                    {
+                        parentSerial = result[0];
+                        if(parentSerial.canBeNest == 'true' || parentSerial.hasChildren == 'true')
+                        {
+                            jQuery('#thePageBlock').show();
+                            initGrid_lines();
+                            refreshAll(); 
+                        }
+                        else
+                        {
+                            jQuery('#theMessageDiv').text('The parent Serial Number cannot be a Nest for other Serial Numbers.');
+                            jQuery('#theMessageDiv').show();
+                        }
+                    }
+                }
+                else
+                {
+                    alert(event.message); 
+                }
+            },
+            {buffer:true, escape:true, timeout:120000});
+    }
+
+
+    function initGrid_lines()
+    {
+        var gridObj = { title:"",
+                        collapsible:{on:false,collapsed:false,toggle:false},
+                        columnTemplate: {sortable:true,editable:false, minWidth:80},
+                        dataModel:{data:[], sorting:'local', location:'local'}, 
+                        dragColumns:{enabled:false},
+                        editable:false,
+                        editModel: {clicksToEdit:1, saveKey: jQuery.ui.keyCode.ENTER, keyUpDown: false, onSave:null, onBlur:'save'},
+                        //editModel:{clicksToEdit:1, pressToEdit:false, filterKeys:true, keyUpDown:true, saveKey:$j.ui.keyCode.ENTER},
+                        //filterModel:{on:true, mode:'AND', header:true},
+                        freezeCols:0,
+                        freezeRows:0,
+                        height:200,
+                        historyModel:{on:false},
+                        hoverMode:'row',
+                        hwrap:false,
+                        numberCell:{show:true},
+                        pageModel: {type:null},
+                        pasteModel:{on:false},
+                        resizable: false,
+                        roundCorners: false,
+                        scrollModel: {autoFit:true},
+                        selectionModel: { type: null},
+                        showBottom:true,
+                        showHeader:true,
+                        showTitle:false,
+                        showTop:true,
+                        showToolbar:false,
+                        sortable:true,
+                        swipeModel:{on:false},
+                        virtualX: false,
+                        //virtualXHeader: false,
+                        virtualY: false,
+                        width:'auto',
+                        wrap:false};
+
+        gridObj.colModel=[{dataIndx:'action',               title:'Action',         align:'center'},
+        				  {dataIndx:'productRecordTypeName',title:'Record Type'},
+        				  {dataIndx:'productFamily',		title:'Product Family'},
+                          {dataIndx:'productName',          title:'Product Name'},
+                          {dataIndx:'productCode',          title:'Product Code'},
+                          {dataIndx:'lotName',              title:'Lot'},
+                          {dataIndx:'serialName',           title:'Serial Number'},
+                          {dataIndx:'status',				title:'Location'},
+                          {dataIndx:"scrollSpacer", minWidth:15, maxWidth:15}];
+
+        //gGrid.initFormat(gridObj.colModel);
+        //gGrid.initFilter(gridObj.colModel);
+
+        $j.each(gridObj.colModel, function(i,col)
+        {
+            if(col.dataIndx == 'action')
+            {
+                $j.extend(col,{
+                    render:function(ui)
+                    {
+                        if(ui.rowData.isTotal) return '';
+
+                        var myHTML = '';
+
+                        if({!$ObjectType.GMBLASERP__Serial_Number__c.accessible})
+                            myHTML +=  '<a href=\"/'+ui.rowData.idSerial+'\" target=\"_top\">view</a>';
+
+						myHTML += '&nbsp;&nbsp;<span class="link" onclick="deNest(\''+ui.rowData.idSerial+'\','+ui.rowIndx+');">de-nest</span>';
+
+                        return myHTML;
+                    }
+                });             
+            }
+            
+            else if(col.dataIndx == 'productName')
+            {
+                $j.extend(col,{
+                    render:function(ui)
+                    {
+                        if (ui.rowData.isTotal || !ui.rowData.idProduct) return '';
+
+                        var myHTML = ui.rowData.productName;
+                        
+                        if({!$ObjectType.Product2.accessible})
+                            return '<a href=\"/'+ui.rowData.idProduct+'\" target=\"_blank\">'+myHTML+'</a>';
+
+                        return myHTML;
+                    }
+                });                 
+            }
+
+            else if(col.dataIndx == 'productCode')
+            {
+                $j.extend(col,{
+                    render:function(ui)
+                    {
+                        if (ui.rowData.isTotal || !ui.rowData.productCode) return '';
+
+                        var myHTML = ui.rowData.productCode;
+                        
+                        if({!$ObjectType.Product2.accessible})
+                            return '<a href=\"/'+ui.rowData.idProduct+'\" target=\"_blank\">'+myHTML+'</a>';
+
+                        return myHTML;
+                    }
+                });                 
+            }
+
+            else if(col.dataIndx == 'lotName')
+            {
+                $j.extend(col,{
+                    render:function(ui)
+                    {
+                        if (ui.rowData.isTotal || !ui.rowData.idLot) return '';
+
+                        if({!$ObjectType.GMBLASERP__Lot__c.accessible})
+                            return '<a href=\"/'+ui.rowData.idLot+'\" target=\"_blank\">'+ui.rowData.lotName+'</a>';
+                        else
+                            return ui.rowData.lotName;
+                    }
+                });                 
+            }
+
+            else if(col.dataIndx == 'serialName')
+            {
+                $j.extend(col,{
+                    render:function(ui)
+                    {
+                        if (ui.rowData.isTotal || !ui.rowData.idSerial) return '';
+                        
+                        if({!$ObjectType.GMBLASERP__Serial_Number__c.accessible})
+                            return '<a href=\"/'+ui.rowData.idSerial+'\" target=\"_blank\">'+ui.rowData.serialName+'</a>';
+                        else
+                            return ui.rowData.serialName;
+                    }
+                });                 
+            }  
+            else if(col.dataIndx == 'status')
+            {
+            	$j.extend(col,{
+            		render:function(ui)
+            		{
+            			if(ui.rowData.isTotal) return '';
+                        if(ui.rowData.warehouseName) return ui.rowData.warehouseName;
+                        else return 'out';
+            		}
+            	});
+            }  
+        });
+
+        var $gridDiv = $j('#lines');
+
+        $gridDiv.pqGrid(gridObj);
+    }
+
+    function refreshGrid_lines(){
+
+        var $gridDiv = $j('#lines');
+        $gridDiv.pqGrid('showLoading');
+
+        Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.gcSerialNumber_Ext.retrieveNestedSerials}',
+            '{!idNest}',
+            function(result,event){
+                if(event.status)
+                {
+                    gGrid.refreshGrid_callback($gridDiv,result);
+                }
+                else
+                {
+                    alert(event.message); 
+                }
+        		$gridDiv.pqGrid('hideLoading');
+            },
+            {buffer:true, escape:true, timeout:120000});
+    }
+
+    function deNest(idSerial, rowIndx)
+    {
+        var $gridDiv = $j('#lines');
+        $gridDiv.pqGrid('showLoading');
+
+        Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.gcSerialNumber_Ext.updateNest}',
+            idSerial, null,
+            function(result,event){
+                if(event.status)
+                {
+                    $gridDiv.pqGrid( "deleteRow", {rowIndx: rowIndx} );
+                    $gridDiv.pqGrid( "removeData", {rowIndx: rowIndx} );
+                }
+                else
+                {
+                    alert(event.message); 
+                }
+        		$gridDiv.pqGrid('hideLoading');
+            },
+            {buffer:true, escape:true, timeout:120000});    	
+    }
+
+    function nest(idSerial, rowIndx)
+    {
+        var $gridDiv = $j('#serialSearchResults');
+        $gridDiv.pqGrid('showLoading');
+
+        Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.gcSerialNumber_Ext.updateNest}',
+            idSerial,'{!idNest}',
+            function(result,event){
+                if(event.status)
+                {
+                    $gridDiv.pqGrid('deleteRow',{rowIndx:rowIndx});
+                    $gridDiv.pqGrid('removeData',{rowIndx:rowIndx});
+                    $gridDiv.pqGrid('addRow',{rowIndx:rowIndx, rowData:result, checkEditable:false, source:'add'});
+                    refreshAll();
+                }
+                else
+                {
+                    alert(event.message); 
+                }
+                $gridDiv.pqGrid('hideLoading');
+            },
+            {buffer:true, escape:true, timeout:120000});        
+    }
+
+    function launchSearchSerial()
+    {
+        var $dialogDiv = $j('<div style=\"z-index:100 !important;\"></div>');
+        var $gridDiv = $j('<div id=\"serialSearchResults\"></div>');
+        $dialogDiv.append($gridDiv);
+
+        $dialogDiv.dialog({
+            autoOpen: false,
+            height: 285,
+            width: '95%',
+            modal: true,
+            position:{my:'center bottom', at:'center top', of:'#lines'},
+            close:function(){$gridDiv.pqGrid('destroy'); $gridDiv.remove(); $dialogDiv.dialog('destroy'); $dialogDiv.remove(); refreshAll();},
+            open:function(){initGrid_searchSerial($gridDiv);},
+            title: ''
+        });
+
+        $dialogDiv.dialog('open');
+        $dialogDiv.parent().find('.ui-dialog-title').html('Search Serials:&nbsp;&nbsp;<input id=\"inputSearchString\" type=\"text\" length=\"20\" onkeyup=\"onKeyUpSearch(event)\"/>&nbsp;<span style=\"font-weight:normal; font-size:smaller; font-style:italic\">enter a partial product name, product code, product family, or serial number, and then click [enter]</span>');
+        $j('#inputSearchString').focus();
+    }
+
+    function onKeyUpSearch(e)
+    {
+        if (e.which == 13){
+            searchSerial();
+        }
+    }
+
+    function searchSerial()
+    {   
+        var searchString = $j('#inputSearchString').val();
+        if(searchString.trim().length > 0){
+            refreshGrid_searchSerial(searchString);
+        }
+        else return;
+    }
+
+    function initGrid_searchSerial($gridDiv)
+    {
+        var gridObj = { title:"",
+                        collapsible:{on:false,collapsed:false,toggle:false},
+                        columnTemplate: {sortable:true, minWidth:80},
+                        dataModel:{data:[], sorting:'local', location:'local', sortDir:'up', sortIndx:'productName'}, 
+                        dragColumns:{enabled:false},
+                        editable:false,
+                        filterModel:{on:true, mode:'AND', header:true},
+                        freezeCols:0,
+                        freezeRows:0,
+                        height:215,
+                        historyModel:{on:false},
+                        hoverMode:'row',
+                        hwrap:false,
+                        numberCell:{show:false},
+                        pageModel: {type:null},
+                        pasteModel:{on:false},
+                        resizable: true,
+                        roundCorners: false,
+                        scrollModel: {autoFit:true},
+                        selectionModel: { type: null},
+                        showBottom:true,
+                        showHeader:true,
+                        showTitle:false,
+                        showTop:true,
+                        showToolbar:false,
+                        sortable:false,
+                        swipeModel:{on:false},
+                        virtualX: false,
+                        //virtualXHeader: false,
+                        virtualY: false,
+                        width:'auto',
+                        wrap:false};
+
+        gridObj.colModel=[{dataIndx:'productRecordTypeName',title:'Record Type', gFilter:'text'},
+                          {dataIndx:'productFamily',                title:'Product Family',	gFilter:'text', maxWidth:150},
+        				  {dataIndx:'productName',                  title:'Product Name',	gFilter:'text'},
+                          {dataIndx:'productCode',                  title:'Product Code',   gFilter:'text', maxWidth:150},
+                          {dataIndx:'lotName',						title:'Lot',			gFilter:'text'},
+                          {dataIndx:'serialName',					title:'Serial Number',	gFilter:'text'},
+                          {dataIndx:'nestName',                     title:'Current Nest',   gFilter:'text'},
+                          {dataIndx:'action',                       title:'Action',                 align:'center', maxWidth:120, sortable:false},
+                          {dataIndx:"scrollSpacer", minWidth:15, maxWidth:15}];
+
+
+        gGrid.initFormat(gridObj.colModel);
+        gGrid.initFilter(gridObj.colModel);
+
+        $j.each(gridObj.colModel, function(i,col)
+        {
+            if(col.dataIndx == 'serialName')
+            {
+                $j.extend(col,{
+                    render:function(ui)
+                    {
+                        if (ui.rowData.isTotal || !ui.rowData.idSerial) return '';
+                        
+                        if({!$ObjectType.GMBLASERP__Serial_Number__c.accessible})
+                            return '<a href=\"/'+ui.rowData.idSerial+'\" target=\"_blank\">'+ui.rowData.serialName+'</a>';
+                        else
+                            return ui.rowData.serialName;
+                    }
+                });                 
+            } 
+
+            else if(col.dataIndx == 'nestName')
+            {
+                $j.extend(col,{
+                    render:function(ui)
+                    {
+                        if (ui.rowData.isTotal || !ui.rowData.idNest) return '';
+                        
+                        if({!$ObjectType.GMBLASERP__Serial_Number__c.accessible})
+                            return '<a href=\"/'+ui.rowData.idNest+'\" target=\"_blank\">'+ui.rowData.nestName+'</a>';
+                        else
+                            return ui.rowData.nestName;
+                    }
+                });                 
+            } 
+
+            else if(col.dataIndx == 'action')
+            {
+                $j.extend(col,{
+                    render:function(ui)
+                    {
+                        if(ui.rowData.isTotal) return '';
+                        if(ui.rowData.idNest == '{!idNest}') return 'nested here';                       
+                        return '<button type="button" class="btn" onclick=\"nest(\''+ui.rowData.idSerial+'\','+ui.rowIndx+')\">Nest Here</button>';
+                    }
+                });
+            }
+        });
+
+        $gridDiv.pqGrid(gridObj);    
+    }
+
+    function refreshGrid_searchSerial(searchString){
+        var $gridDiv = $j('#serialSearchResults');
+        $gridDiv.pqGrid('showLoading');
+
+        Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.gcSerialNumber_Ext.searchSerial}',
+            searchString,
+            function(result,event)
+            {
+                if(event.status)
+                {
+                    gGrid.refreshGrid_callback($gridDiv,result);
+                }
+                else 
+                {
+                    alert(event.message);
+                }
+                $gridDiv.pqGrid('hideLoading');
+            },
+            {buffer:true, escape:true, timeout:120000});
+    }
+</script>
+</apex:component>

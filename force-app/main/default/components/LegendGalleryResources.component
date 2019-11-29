@@ -1,0 +1,19 @@
+<apex:component >
+
+  <c:LegendFormResources includeFontAwesome="true"
+                         includeHandlebars="true"
+                         includeComboBox="false" />
+
+  <apex:stylesheet value="{!URLFOR($Resource.LegendGallery, 'legend_gallery.min.css')}" />
+  <apex:stylesheet value="{!URLFOR($Resource.slickJS, 'slickJS/slick.css')}" />
+  <apex:stylesheet value="{!URLFOR($Resource.slickJS, 'slickJS/slick-theme.css')}" />
+
+  <c:LegendGalleryRemoter />
+  <c:HNDLBRS_Image_Gallery_Templates />
+
+  <apex:includeScript value="{!URLFOR($Resource.slickJS, 'slickJS/slick.min.js')}" />
+  <apex:includeScript value="{!URLFOR($Resource.jQueryRowGrid)}" />
+  <apex:includeScript value="{!URLFOR($Resource.LegendGallery, 'awsDropTarget.js')}" />
+  <apex:includeScript value="{!URLFOR($Resource.LegendGallery, 'legend_gallery.js')}" />
+
+</apex:component>

@@ -1,0 +1,16 @@
+<tbody>
+
+  {{#each lineItems}}<!-- this is an object of arrays of items {first: [], second[].....} -->
+    {{#if this.length }}
+      {{#each this}}
+        {{tableRow this}}
+      {{/each}}
+      <!-- <tr class='emptyRow'><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr> -->
+    {{/if}}
+  {{/each}}
+
+</tbody>
+
+<!--
+{recordStage: recordStage, lineItems: {first: [], second: [] }}
+-->

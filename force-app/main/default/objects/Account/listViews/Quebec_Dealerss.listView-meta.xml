@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Quebec_Dealerss</fullName>
+    <columns>ACCOUNT.NAME</columns>
+    <columns>ACCOUNT.ADDRESS1_STATE_CODE</columns>
+    <columns>PC_EMAIL</columns>
+    <columns>ACCOUNT.PHONE1</columns>
+    <columns>ACCOUNT.CREATED_DATE</columns>
+    <columns>ACCOUNT.TYPE</columns>
+    <columns>CORE.USERS.ALIAS</columns>
+    <columns>Yard_Size__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>ACCOUNT.TYPE</field>
+        <operation>equals</operation>
+        <value>Dealer</value>
+    </filters>
+    <filters>
+        <field>ACCOUNT.RECORDTYPE</field>
+        <operation>equals</operation>
+        <value>Account.Dealer</value>
+    </filters>
+    <filters>
+        <field>ACCOUNT.ADDRESS2_STATE_CODE</field>
+        <operation>equals</operation>
+        <value>QC</value>
+    </filters>
+    <label>Quebec Dealers</label>
+    <language>en_US</language>
+    <sharedTo>
+        <allInternalUsers/>
+    </sharedTo>
+</ListView>

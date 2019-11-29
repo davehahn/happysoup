@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Return_date_can_not_be_empty</fullName>
+    <active>true</active>
+    <description>Return date can not be empty if Departure date is selcted</description>
+    <errorConditionFormula>AND( 
+  NOT( ISNULL(Departure_Date2__c) ), 
+  ISNULL(Return_Date2__c) 
+)</errorConditionFormula>
+    <errorDisplayField>Return_Date2__c</errorDisplayField>
+    <errorMessage>Return Date must be set if Departure Date is set</errorMessage>
+</ValidationRule>

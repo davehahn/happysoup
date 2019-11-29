@@ -1,0 +1,143 @@
+.THIS {
+  /*border: 1px solid #d8dde6;*/
+  /*margin:0 -1rem;*/
+  /*position: relative;*/
+  /*min-height: 300px;*/
+  background: #FFF;
+}
+
+.THIS.loaded .slds-spinner_container {
+  display:none;
+}
+
+
+.THIS .no-images {
+  height: 9.5rem;
+  line-height: 9.5rem;
+  color: rgb(84, 105, 141);
+  font-size: 1.25rem;
+  position: relative;
+  width: 100%;
+  top: calc( 50% - 1.25rem);
+  text-align:center;
+  display:none;
+  text-align:center;
+}
+
+.THIS.loaded .no-images {
+  display: block;
+}
+
+.THIS #filesContainer {
+  margin-top:0.5rem;
+}
+
+.THIS .statusbar {
+  min-height: initial;
+  line-height: initial;
+  padding:0;
+  font-family: inherit;
+  padding: 0.5rem 0;
+  position:relative;
+}
+
+.THIS .statusbar .filename {
+  display:inline-block;
+  width:75%;
+  margin-bottom: 0.5rem;
+}
+
+.THIS .statusbar .filesize {
+  display:inline-block;
+  width:25%;
+  text-align:right;
+  position:absolute;
+  right:0;
+  bottom:0.5rem;
+}
+
+
+.THIS .statusbar .progressBar {
+  display:inline-block;
+  width:75%;
+  margin: 0;
+  top:initial;
+  height:1rem;
+  border-color: #F3F3F3;
+
+}
+
+.THIS .statusbar .buttons {
+  display: block;
+  float:none;
+  margin-top: 0.5rem;
+  position:absolute;
+  top:0;
+  right:0;
+}
+
+.THIS .statusbar .buttons input[type=checkbox] + label {
+  margin-right:0;
+  margin-left: 0.25rem;
+}
+
+.THIS .statusbar .buttons .removeBtn {
+  font-size:10px;
+  padding: 0 9px;
+  line-height:1.25rem;
+}
+
+.THIS .imageContainer a {
+  display:block;
+  text-align: center;
+}
+
+.THIS .imageContainer a img {
+  height: 300px;
+}
+
+.THIS.full-image {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 100px;
+  bottom: 0;
+  padding: 0;
+  margin: 0;
+  background: rgba( 0,0,0, 0.8);
+  z-index: 7000;
+  display:none;
+}
+
+.THIS.full-image.open {
+  display: initial;
+}
+
+.THIS.full-image .image-container {
+  margin: auto;
+  text-align:center;
+  position:relative;
+}
+
+.THIS.full-image .image-loading {
+  font-size: 2rem;
+  line-height: 2.5rem;
+  height: 2.5rem;
+  text-align:center;
+  position: relative;
+  top: calc( 50% - 1.25rem);
+  color: #FFF;
+}
+
+.THIS.full-image.loaded .image-loading {
+  display: none;
+}
+
+.THIS.full-image .image-container img {
+  height: 100%;
+  display:none;
+}
+
+.THIS.full-image.loaded .image-container img{
+  display: initial;
+}

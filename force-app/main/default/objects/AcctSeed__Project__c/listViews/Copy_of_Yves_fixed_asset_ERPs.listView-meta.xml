@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Copy_of_Yves_fixed_asset_ERPs</fullName>
+    <columns>NAME</columns>
+    <columns>Fixed_Asset__c</columns>
+    <columns>Stage__c</columns>
+    <columns>AcctSeed__Status__c</columns>
+    <columns>Description__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>RECORDTYPE</field>
+        <operation>equals</operation>
+        <value>AcctSeed__Project__c.LegendFixedAsset</value>
+    </filters>
+    <label>Fixed asset ERP history</label>
+</ListView>

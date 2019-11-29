@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <description>Notification that Part(s) are required</description>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>Legend_Letterhead</letterhead>
+    <name>ERP Order with parts Retail Dept</name>
+    <style>freeForm</style>
+    <subject>ERP Order with Parts Required {!AcctSeed__Project__c.Name}</subject>
+    <textOnly>Hi Flavio and/or Elvis, the following account {!AcctSeed__Project__c.AcctSeed__Account__c} has an ERP that has parts required {!AcctSeed__Product_Part__c.Name}. 
+
+Please investigate.</textOnly>
+    <type>html</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

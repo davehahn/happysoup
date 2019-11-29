@@ -1,0 +1,51 @@
+<div data-truck-delivery-item-id="{{ this.Id}}"
+    class="slds-item">
+  <div class="slds-tile slds-tile--board">
+    <div class="slds-grid ">
+      <div class="slds-col slds-has-flexi-truncate">
+        <div class="slds-no-space slds-grow">
+          {{#each this.ErpWrapper.MaterialWrappers }}
+          <div class="slds-grid product-row {{shippingRequiredClass this}}">
+            <div class="slds-col slds-has-flexi-truncate">
+              <p class="slds-text-heading--small slds-truncate">
+                {{{this.Name}}}
+              </p>
+            </div>
+            <div class="slds-col slds-no-flex">
+              <p class="slds-text-body--small">{{ serialNumber this.SerialNumber }}</p>
+            </div>
+          </div>
+          {{/each}}
+        </div>
+      </div>
+      <div class="slds-col slds-no-flex slds-grid slds-align-top slds-m-left--x-small">
+
+        <div class="slds-dropdown-trigger">
+          <button class="slds-button slds-button--icon-border-filled slds-button--icon-x-small" aria-haspopup="true">
+            <svg aria-hidden="true" class="slds-button__icon">
+              <use xlink:href="{{downArrowUrl}}"></use>
+            </svg>
+          </button>
+          <div class="slds-dropdown slds-dropdown--right slds-dropdown--menu">
+            <ul class="slds-dropdown__list" role="menu">
+              <li class="slds-dropdown__item">
+                <a href="#" role="menuitem" data-erp-id="{{this.ErpWrapper.Id}}">
+                  <p class="slds-truncate">View Order</p>
+                </a>
+              </li>
+              {{#ifHasPermission 'canEditMaterials'}}
+              <li class="slds-dropdown__item">
+                <a href="#" role="menuitem" data-destination-id="{{this.Id}}">
+                  <p class="slds-truncate">Set Serial</p>
+                </a>
+              </li>
+              {{/ifHasPermission}}
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p>{{this.ErpWrapper.Name}}</p>
+    <p style="font-weight:300">{{this.ErpWrapper.OrderDate}}</p>
+  </div>
+</div>

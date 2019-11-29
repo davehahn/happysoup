@@ -1,0 +1,106 @@
+<aura:component>
+
+  <aura:attribute name="caseWrapper" type="Object" />
+
+  <div class="slds-card">
+    <!-- Parts Ordered -->
+    <lightning:layout multipleRows="true">
+      <lightning:layoutItem size="12" smallDeviceSize="12" mediumDeviceSize="12" largeDeviceSize="6" padding="horizontal-small">
+        <!-- Case Parts Request Header -->
+        <div class="slds-page-header">
+          <div class="slds-grid">
+            <div class="slds-col slds-has-flexi-truncate">
+              <div class="slds-media slds-no-space slds-grow">
+                <div class="slds-media__figure">
+                  <lightning:icon iconName="standard:case" />
+                </div>
+                <div class="slds-media__body">
+                  <nav>
+                    <ol class="slds-breadcrumb slds-line-height_reset">
+                      <li class="slds-breadcrumb__item">
+                        <span>Parts Request</span>
+                      </li>
+                    </ol>
+                  </nav>
+                  <h1 class="slds-page-header__title slds-m-right_small slds-align-middle slds-truncate">
+                    <a href="{! '/' + v.caseWrapper.caseId }">{!v.caseWrapper.caseNumber}</a>
+                  </h1>
+                </div>
+              </div>
+            </div>
+            <div class="slds-col slds-no-flex slds-grid slds-align-top">
+              <span class="slds-badge slds-badge_inverse">{!v.caseWrapper.status}</span>
+            </div>
+          </div>
+        </div>
+        <!-- /Case Parts Request Header -->
+        <!-- Case Details -->
+        <lightning:layout class="slds-m-top_small slds-m-bottom_small" multipleRows="true">
+          <lightning:layoutItem size="12"
+                                smallDeviceSize="12"
+                                mediumDeviceSize="4"
+                                largeDeviceSize="4"
+                                padding="horizontal-small">
+            <p class="slds-text-title_caps slds-truncate slds-m-bottom_xx-small">
+              Submitted By:
+            </p>
+            <p class="slds-text-body_regular slds-truncate">
+              {!v.caseWrapper.createdBy}
+            </p>
+          </lightning:layoutItem>
+          <lightning:layoutItem size="12"
+                        smallDeviceSize="12"
+                        mediumDeviceSize="4"
+                        largeDeviceSize="4"
+                        padding="horizontal-small">
+            <p class="slds-text-title_caps slds-truncate slds-m-bottom_xx-small"
+               title="Submitted By:">
+              Submitted On:
+            </p>
+            <p class="slds-text-body_regular slds-truncate">
+              {!v.caseWrapper.createdDate}
+            </p>
+          </lightning:layoutItem>
+        </lightning:layout>
+        <!-- /Case Details -->
+      </lightning:layoutItem>
+
+      <lightning:layoutItem size="12" smallDeviceSize="12" mediumDeviceSize="12" largeDeviceSize="6" padding="around-small">
+        <p class="slds-text-title_caps slds-truncate slds-m-bottom_xx-small"
+           title="Parts Ordered:">
+          Parts Ordered:
+        </p>
+        <table class="slds-table slds-table_bordered slds-table_cell-buffer">
+          <thead>
+            <tr class="slds-text-title_caps">
+              <th scope="col" style="width: 15%;">
+                <div class="slds-truncate slds-text-align_left" title="Quantity">Quantity</div>
+              </th>
+              <th scope="col" style="width: 65%;">
+                <div class="slds-truncate slds-text-align_left" title="Part">Part</div>
+              </th>
+              <th scope="col" style="width: 20%;">
+                <div class="slds-truncate slds-text-align_center" title="ETA">ETA</div>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <aura:iteration items="{!v.caseWrapper.caseParts}" var="casePart">
+              <tr>
+                <td class="slds-text-align_left">
+                  {!casePart.quantity}
+                </td>
+                <td class="slds-text-align_left">
+                  {!casePart.productName}
+                </td>
+                <td class="slds-text-align_center">
+                  {!casePart.eta}
+                </td>
+              </tr>
+            </aura:iteration>
+          </tbody>
+        </table>
+      </lightning:layoutItem>
+    </lightning:layout>
+  </div>
+</aura:component>

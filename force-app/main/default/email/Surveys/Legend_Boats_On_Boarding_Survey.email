@@ -1,0 +1,21 @@
+<messaging:emailTemplate subject="Share your Experience!" recipientType="Contact" relatedToType="AcctSeed__Project__c">
+<messaging:htmlEmailBody >
+Hello {!urlencode(recipient.Account.FirstName)}, and thank you for choosing Legend Boats!
+<br></br>
+<br></br>
+We are always working to make your ownership experience as amazing as possible, so we would love to hear from you.
+<br></br>
+<br></br>
+This survey is only 7 questions short and shouldn't take more than a couple of minutes to complete.  Your feedback is very important to us and we promise that every comment will be used to help create the best memories possible!  
+<br></br>
+<br></br>
+For taking the time to fill out this survey, you will automatically be entered into a draw to win your first year's winterization completely free! 
+<br></br>
+<br></br>
+
+<a href="https://legendboats.getfeedback.com/r/KY3DLsd4?Contact_ID={!urlencode(recipient.ID)}&Account_ID={!urlencode(recipient.Account.Id)}&LastName={!urlencode(recipient.Account.LastName)}&Email={!urlencode(recipient.Account.PersonEmail)}&Account={!urlencode(recipient.Account.Name)}&SalesPerson={!urlencode(relatedTo.Salesperson__r.Name)}&PickupLocation={!urlencode(relatedTo.Pickup_Location__c)}&ERPORDER:ID={!urlencode(relatedTo.AcctSeedERP__Work_Order_Number__c)}&DELIVERYDATE={!relatedTo.Delivery_Date__c}&STAGE={!urlencode(relatedTo.Stage__c)}">Please Click Here to Begin the Survey</a>
+<br></br>
+<br></br>
+Thank you so much for your time.   Happy Boating!
+</messaging:htmlEmailBody>
+</messaging:emailTemplate>

@@ -1,0 +1,55 @@
+<div>
+  <div class="slds-page-header" role="banner">
+    <div class="slds-grid">
+      <div class="slds-col slds-has-flexi-truncate">
+        <div class="slds-media slds-no-space slds-grow">
+          <div class="slds-media__figure">
+            <svg aria-hidden="true" class="slds-icon slds-icon-custom-custom31">
+              <use xlink:href="{{assetPath}}icons/custom-sprite/svg/symbols.svg#custom31"></use>
+            </svg>
+          </div>
+          <div class="slds-media__body">
+            <p class="slds-text-title--caps slds-line-height--reset">Trip Details</p>
+            <h1 class="slds-text-heading--small slds-m-right--small slds-align-middle slds-truncate" title="this should match the Record Title">{{ trip.Name }}</h1>
+          </div>
+        </div>
+      </div>
+      <div class="slds-col slds-no-flex slds-grid slds-align-top">
+        <button class="slds-button slds-button--neutral slds-not-selected view-trip" aria-live="assertive" data-trip-id="{{trip.Id}}">
+          View
+        </button>
+      </div>
+    </div>
+  </div>
+
+
+
+
+    <ul class="destination-list">
+      {{#each trip.Destinations__r}}
+      <li>
+        <div class="slds-media">
+          <div class="slds-media__body">
+            <div class="slds-media slds-media--timeline {{ destinationClass this.Type__c }}">
+              <div class="slds-media__figure slds-timeline__icon">
+                <div class="slds-icon_container">
+                  {{ destinationTypeIcon this.Type__c }}
+                </div>
+              </div>
+              <div class="slds-media__body">
+                <div class="slds-media">
+                  <div class="slds-media__body">
+                    <h3 class="slds-truncate" title="{{ this.Account__r.Name }}">{{{ this.Account__r.Name }}}</h3>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </li>
+      {{/each}}
+    </ul>
+
+
+
+</div>

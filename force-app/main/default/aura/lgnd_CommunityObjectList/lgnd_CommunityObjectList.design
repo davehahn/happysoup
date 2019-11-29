@@ -1,0 +1,11 @@
+<design:component >
+    <design:attribute name="sObjectName" label="sObject Name" description="The API Name of the sObject to list" />
+    <design:attribute name="title" label="List Title" description="Title of the list" />
+    <design:attribute name="newURL" label="New URL" description="The action followed by the New button" />
+    <design:attribute name="iconName" label="Icon Name" description="Name of icon on top left of header from SLDS. Example: standard:account" />
+    <design:attribute name="listNames" label="List Names" description="Comma seperated list of Name of list followed by a ':' and then a query to represent the filter logic.  Example: Pending Review:Stage__c = 'Pending Review'" />
+    <design:attribute name="fields" label="Field Names" description="Comma seperated list of fields to display on the table. FORMAT is: Table Column Label:Field_Api_Name:FieldType, EXAMPLE: Serial Number:SerialNumber__r.Name:STRING NOTE: Name field is always included" />
+    <design:attribute name="globalFilter" label="Global Filter" description="A query filter that will be run on all lists ie: isCurrent = true" />
+    <design:attribute name="accountIdentityField" label="Account Identity Field" description="The lookup field with a reference to the Account of the currently logged user" />
+    <design:attribute name="viewURL" label="View URL" description="URL to record view. IF left blank, standard record view will be displayed" />
+</design:component>

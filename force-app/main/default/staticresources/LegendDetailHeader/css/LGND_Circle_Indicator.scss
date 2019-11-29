@@ -1,0 +1,124 @@
+/*  CIRCULAR PERCENTAGE INDICATOR */
+
+$size: 100px;
+$green: #81CE97;
+
+
+@mixin circle($size) {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  left: calc(50% - #{$size/2});
+  top: calc(50% - #{$size/2});
+  width: $size;
+  height: $size;
+}
+
+$track_color: #ccc;
+.progress-container {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  top: 0px;
+  left: 0px;
+  background: rgba(130, 130, 130, 0.0);
+}
+
+.progress-pie-chart {
+  width: $size;
+  height: $size;
+  border-radius: 50%;
+  background-color: $track_color;
+  position: relative;
+  box-sizing:content-box;
+  -webkit-box-sizing:content-box;
+  -moz-box-sizing:content-box;
+   margin: #{$size/-2} auto 0;
+   top:50%;
+  &.gt-50 {
+    background-color: #81CE97;
+  }
+
+}
+.ppc-progress {
+  @include circle($size);
+  clip: rect(0, $size, $size, #{$size/2});
+  left: calc(50% - #{$size/2});
+  top: calc(50% - #{$size/2});
+   box-sizing:content-box;
+  -webkit-box-sizing:content-box;
+  -moz-box-sizing:content-box;
+
+  .ppc-progress-fill {
+    @include circle($size);
+    clip: rect(0, #{$size/2}, $size, 0);
+    background: #81CE97;
+    transform: rotate(60deg);
+    box-sizing:content-box;
+    -webkit-box-sizing:content-box;
+    -moz-box-sizing:content-box;
+    -webkit-transition-duration: 0.7s;
+    -moz-transition-duration: 0.7s;
+    -o-transition-duration: 0.7s;
+    transition-duration: 0.7s;
+    -webkit-transition-property: -webkit-transform;
+    -moz-transition-property: -moz-transform;
+    -o-transition-property: -o-transform;
+    transition-property: transform;
+  }
+  .gt-50 & {
+    clip: rect(0, #{$size/2}, $size, 0);
+    .ppc-progress-fill {
+      clip: rect(0, $size, $size, #{$size/2});
+      background: $track_color;
+    }
+  }
+}
+.ppc-percents {
+  @include circle(#{$size/1.15});
+  background: #fff;
+  text-align: center;
+  display: table;
+   box-sizing:content-box;
+  -webkit-box-sizing:content-box;
+  -moz-box-sizing:content-box;
+
+  span.percent-value {
+    display: inline-block;
+    font-size: #{$size/4};
+    font-weight: 300;
+    color: #81CE97;
+    padding:0 !important;
+    margin:10px 0 !important;
+    box-sizing:content-box;
+    -webkit-box-sizing:content-box;
+    -moz-box-sizing:content-box;
+  }
+
+  span.percent-sign {
+    color: #81CE97;
+    padding:0 !important;
+    display:inline-block;
+    margin-left: 3px;
+  }
+
+ /* span.label {
+    display: block;
+    font-size: #{$size/4};
+    font-weight: 300;
+    color: #81CE97;
+    padding:0 !important;
+    margin:10px 0 !important;
+    box-sizing:content-box;
+    -webkit-box-sizing:content-box;
+    -moz-box-sizing:content-box;
+  }  */
+
+}
+.pcc-percents-wrapper {
+  display: table-cell;
+  vertical-align: middle;
+   box-sizing:content-box;
+  -webkit-box-sizing:content-box;
+  -moz-box-sizing:content-box;
+}

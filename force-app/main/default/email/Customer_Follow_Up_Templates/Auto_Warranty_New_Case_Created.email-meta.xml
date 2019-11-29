@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <description>Internal email to customers a new warranty case was created.</description>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>Legend_Letterhead</letterhead>
+    <name>Auto Warranty New Case Created</name>
+    <style>freeForm</style>
+    <subject>New Warranty Case {!Case.CaseNumber} Has Been Created.</subject>
+    <textOnly>Please contact the customer as soon as possible.
+
+{!Account.Name}
+{!Account.Phone}</textOnly>
+    <type>html</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

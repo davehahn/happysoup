@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>Legend_Letterhead</letterhead>
+    <name>Email Contact 1 Month Follow Up</name>
+    <style>freeForm</style>
+    <subject>Legend Boats - The Memories are Waiting</subject>
+    <textOnly>Hi {!Account.FirstName},
+
+I am hopeful you are still considering becoming the proud owner of a new Legend Boat, however, if your time frame has changed or you are no longer considering ownership of a boat, please give me a call.
+
+I appreciate the opportunity to be of service in your boating needs. If I can help in any way whatsoever, please do not hesitate to let me know.
+
+The market is constantly changing and if you&#39;d like, I will gladly keep you informed as new incentives or financing plans become available.
+
+
+Thanks again for your interest in Legend.
+
+Best Regards,
+
+{!User.Name}
+{!User.Title}
+
+{!User.Email}
+{!User.Phone}
+legendboats.com
+
+{!User.Address}</textOnly>
+    <type>html</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

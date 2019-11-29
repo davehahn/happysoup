@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <description>Thank you letter</description>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>Legend_Letterhead</letterhead>
+    <name>Lettre de remerciement Bateaux Legend</name>
+    <style>freeForm</style>
+    <subject>Lettre de remerciement Bateaux Legend</subject>
+    <textOnly>Bonjour {!Contact.FirstName}
+
+
+J’aimerais vous remercier d’avoir choisis bateaux Legend et de nous avoir fait confiance avec vos futures souvenirs et expériences sur l’eau.
+
+
+Chez Legend, nous croyons fermement que l’achat de votre bateau est simplement le début d’une longue relation. Je vous donne ma garantie personnelle que je serai toujours engagé à 100% à mettre tous les efforts nécessaires pour assurer que votre expérience sur l’eau soit la meilleur.  Puisque que vous nous avez fait confiance avec votre achat, toute l’équipe Légende apprécie votre loyauté et comprennent très bien que  la satisfaction de chaque client est la clé de notre succès.
+
+
+N’hésitez pas à communiquer avec moi en tout temps si vous avez des questions ou demandes spéciales.
+
+
+
+Mes priorité seront toujours de vous satisfaire et rendre votre expérience la plus agréable possible.
+
+
+Vous trouverez en pièce jointe une superbe photo de vous prise durant votre visite chez Legend. En espérant que le reste de votre journée sera aussi mémorable! De toute l’équipe Legend, nous vous disons Merci!
+
+
+
+Cordialement,
+
+
+
+{!User.Name}
+{!User.Title}
+
+{!User.Email}
+{!User.Phone}
+legendboats.com
+
+{!User.Address}</textOnly>
+    <type>html</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

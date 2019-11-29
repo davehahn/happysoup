@@ -1,0 +1,340 @@
+<apex:component controller="EmailComponentController" access="global">
+
+<style type="text/css">
+
+  .row {
+    width: 90%; clear:both; overflow:hidden; margin: 1rem;
+  }
+
+  .col {
+    float: left;display: inline-block;
+  }
+
+  .col-50 {
+    width: 44%;margin: 0 1.5%;text-align:center;
+  }
+
+  .col-100 {
+    width: 100%;
+  }
+
+  .label {
+    font-size: 14px;font-weight: bold;margin-bottom: 0.25rem;
+  }
+
+  .label + div {
+    font-size: 13px;
+  }
+
+  table thead tr td {
+    font-size:14px;font-weight:bold;padding: 5px;background: #EFEFEF;
+  }
+
+  table tbody tr td {
+    font-size: 13px;padding: 8px 0;
+  }
+
+  td.right {
+    text-align: right;
+  }
+
+  .center {
+    text-align:center;
+  }
+
+  .large-text-area {
+    min-height: 10px;border: 1px solid #CCC;border-radius: 4px;padding: 0.75rem;
+  }
+
+</style>
+
+  <apex:attribute name="erpId"
+                  description="The Id of the Warranty ERP"
+                  type="String"
+                  assignTo="{!recordId}"
+                  access="global" />
+
+  <apex:variable var="details" value="{!caseEmailDetails}" />
+
+  <apex:outputPanel rendered="{! NOT( ISNULL(details.supplierClaimNumber) )}">
+    <div style=" width: 90%; clear:both; overflow:hidden; margin: 1rem;">
+      <div style="float: left;display: inline-block;width: 44%;margin: 0 1.5%;text-align:center;">
+        <div style="font-size: 14px;font-weight: bold;margin-bottom: 0.25rem;">Supplier Claim Number</div>
+        <div style="min-height: 10px;border: 1px solid #CCC;border-radius: 4px;padding: 0.75rem;font-size: 13px;">{!details.supplierClaimNumber}</div>
+      </div>
+      <div style="float: left;display: inline-block;width: 44%;margin: 0 1.5%;text-align:center;">
+      </div>
+    </div>
+  </apex:outputPanel>
+
+  <div style=" width: 90%; clear:both; overflow:hidden; margin: 1rem;">
+    <div style="float: left;display: inline-block;width: 44%;margin: 0 1.5%;text-align:center;">
+      <div style="font-size: 14px;font-weight: bold;margin-bottom: 0.25rem;">Claim Number</div>
+      <div style="min-height: 10px;border: 1px solid #CCC;border-radius: 4px;padding: 0.75rem;font-size: 13px;">{!details.claimNumber}</div>
+    </div>
+    <div style="float: left;display: inline-block;width: 44%;margin: 0 1.5%;text-align:center;">
+      <div style="font-size: 14px;font-weight: bold;margin-bottom: 0.25rem;">Serial Number</div>
+      <div style="min-height: 10px;border: 1px solid #CCC;border-radius: 4px;padding: 0.75rem;font-size: 13px;">{!details.serialNumber}</div>
+    </div>
+  </div>
+
+  <div style=" width: 90%; clear:both; overflow:hidden; margin: 1rem;">
+    <div style="float: left;display: inline-block;width: 44%;margin: 0 1.5%;text-align:center;">
+      <div style="font-size: 14px;font-weight: bold;margin-bottom: 0.25rem;">Date of Purchase</div>
+      <div style="min-height: 10px;border: 1px solid #CCC;border-radius: 4px;padding: 0.75rem;font-size: 13px;">
+        <apex:outputText value="{0, date, MMMM d','  yyyy}">
+          <apex:param value="{!details.purchaseDate}" />
+        </apex:outputText>
+      </div>
+    </div>
+    <div style="float: left;display: inline-block;width: 44%;margin: 0 1.5%;text-align:center;">
+      <div style="font-size: 14px;font-weight: bold;margin-bottom: 0.25rem;">Date of Failure</div>
+      <div style="min-height: 10px;border: 1px solid #CCC;border-radius: 4px;padding: 0.75rem;font-size: 13px;">
+        <apex:outputText value="{0, date, MMMM d','  yyyy}">
+          <apex:param value="{!details.failureDate}" />
+        </apex:outputText>
+      </div>
+    </div>
+  </div>
+
+  <div style=" width: 90%; clear:both; overflow:hidden; margin: 1rem;">
+    <div style="float: left;display: inline-block;width: 44%;margin: 0 1.5%;text-align:center;">
+      <div style="font-size: 14px;font-weight: bold;margin-bottom: 0.25rem;">Customer Name</div>
+      <div style="min-height: 10px;border: 1px solid #CCC;border-radius: 4px;padding: 0.75rem;font-size: 13px;">{!details.customerName}</div>
+    </div>
+    <div style="float: left;display: inline-block;width: 44%;margin: 0 1.5%;text-align:center;">
+      <div style="font-size: 14px;font-weight: bold;margin-bottom: 0.25rem;">Customer Address</div>
+      <div style="min-height: 10px;border: 1px solid #CCC;border-radius: 4px;padding: 0.75rem;font-size: 13px;">
+        {!details.customerStreet}, {!details.customerCity} <br />
+        {!details.customerState}, {!details.customerCountry} <br />
+        {!details.customerPostalCode}
+      </div>
+    </div>
+  </div>
+
+  <apex:variable var="claimCount" value="{!1}" />
+  <apex:repeat value="{!details.claimDetails}" var="claimDetail">
+    <h1 style="font-size:20px; border-bottom:1px solid #CCC;font-weight:bold;">Complaint #{!claimCount}</h1>
+    <!-- CLAIM DESCRIPTION -->
+    <div style=" width: 90%; clear:both; overflow:hidden; margin: 1rem;">
+      <div style="width: 100%">
+          <div style="font-size: 14px;font-weight: bold;margin-bottom: 0.25rem;">Description</div>
+          <div style="min-height: 10px;border: 1px solid #CCC;border-radius: 4px;padding: 0.75rem;font-size: 13px;">{!claimDetail.description}</div>
+      </div>
+    </div>
+
+    <!-- CLAIM CORRECTION -->
+    <div style=" width: 90%; clear:both; overflow:hidden; margin: 1rem;">
+      <div style="width: 100%">
+          <div style="font-size: 14px;font-weight: bold;margin-bottom: 0.25rem;">Correction</div>
+          <div style="min-height: 10px;border: 1px solid #CCC;border-radius: 4px;padding: 0.75rem;font-size: 13px;">{!claimDetail.correction}</div>
+      </div>
+    </div>
+
+    <!-- PART LINES -->
+    <apex:outputPanel rendered="{! claimDetail.partLines.size > 0 }">
+      <div style=" width: 90%; clear:both; overflow:hidden; margin: 1rem;">
+        <div style="width: 100%">
+          <div style="font-size: 14px;font-weight: bold;margin-bottom: 0.25rem;">Parts</div>
+          <table style="width:100%; border-collapse: collapse;">
+            <thead>
+              <tr style="border-top: 1px solid #CCC; border-bottom: 1px solid #CCC;">
+                <td style="width:10%;font-size:14px;font-weight:bold;padding: 5px;background: #EFEFEF;">Quantity</td>
+                <td style="width:50%;font-size:14px;font-weight:bold;padding: 5px;background: #EFEFEF;">Part Name</td>
+                <td style="width:10%;font-size:14px;font-weight:bold;padding: 5px;background: #EFEFEF;">Part #</td>
+                <td style="width:15%;font-size:14px;font-weight:bold;padding: 5px;background: #EFEFEF;text-align:right;">Price</td>
+                <td style="width:15%;font-size:14px;font-weight:bold;padding: 5px;background: #EFEFEF;text-align:right;">Total</td>
+              </tr>
+            </thead>
+            <tbody>
+              <apex:repeat value="{!claimDetail.partLines}" var="part">
+                <tr style="border-bottom: 1px solid #CCC;">
+                  <td style="font-size: 13px;padding: 8px 0;">
+                    <apex:outputText value="{0, number,###,###,##0.00}">
+                      <apex:param value="{!part.quantity}" />
+                    </apex:outputText>
+                  </td>
+                  <td style="font-size: 13px;padding: 8px 0;">{!part.productName}</td>
+                  <td style="font-size: 13px;padding: 8px 0;">{!part.productCode}</td>
+                  <td style="font-size: 13px;padding: 8px 0;text-align:right;">
+                    <apex:outputText value="${0, number, ###,###,##0.00}">
+                      <apex:param value="{!part.unitCost}" />
+                    </apex:outputText>
+                  </td>
+                  <td style="font-size: 13px;padding: 8px 0;text-align:right;">
+                    <apex:outputText value="${0, number,###,###,##0.00}">
+                      <apex:param value="{!part.total}" />
+                    </apex:outputText>
+                  </td>
+                </tr>
+              </apex:repeat>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </apex:outputPanel>
+
+    <!-- LABOUR LINES -->
+    <apex:outputPanel rendered="{! claimDetail.labourLines.size > 0 }">
+      <div style=" width: 90%; clear:both; overflow:hidden; margin: 1rem;">
+        <div style="width: 100%">
+          <div style="font-size: 14px;font-weight: bold;margin-bottom: 0.25rem;">Labour</div>
+          <table style="width:100%; border-collapse: collapse;">
+            <thead>
+              <tr style="border-top: 1px solid #CCC; border-bottom: 1px solid #CCC;">
+                <td style="width:20%;font-size:14px;font-weight:bold;padding: 5px;background: #EFEFEF;">Hours</td>
+                <td style="width:50%;font-size:14px;font-weight:bold;padding: 5px;background: #EFEFEF;">Name</td>
+                <td style="width:15%;font-size:14px;font-weight:bold;padding: 5px;background: #EFEFEF; text-align:right;">Rate</td>
+                <td style="width:15%;font-size:14px;font-weight:bold;padding: 5px;background: #EFEFEF; text-align:right;">Total</td>
+              </tr>
+            </thead>
+            <tbody>
+              <apex:repeat value="{!claimDetail.labourLines}" var="part">
+                <tr style="border-bottom: 1px solid #CCC;">
+                  <td style="font-size: 13px;padding: 8px 0;">
+                    <apex:outputText value="{0, number,###,###,##0.00}">
+                      <apex:param value="{!part.quantity}" />
+                    </apex:outputText>
+                  </td>
+                   <td style="font-size: 13px;padding: 8px 0;">{!part.productName}</td>
+                  <td style="font-size: 13px;padding: 8px 0;text-align:right;">
+                    <apex:outputText value="${0, number, ###,###,##0.00}">
+                      <apex:param value="{!part.unitCost}" />
+                    </apex:outputText>
+                  </td>
+                  <td style="font-size: 13px;padding: 8px 0;text-align:right;">
+                    <apex:outputText value="${0, number,###,###,##0.00}">
+                      <apex:param value="{!part.total}" />
+                    </apex:outputText>
+                  </td>
+                </tr>
+              </apex:repeat>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </apex:outputPanel>
+
+    <!-- FREIGHT LINES -->
+    <apex:outputPanel rendered="{! claimDetail.freightLines.size > 0 }">
+      <div style=" width: 90%; clear:both; overflow:hidden; margin: 1rem;">
+        <div style="width: 100%">
+          <table style="width:100%; border-collapse: collapse;">
+            <thead>
+              <tr style="border-top: 1px solid #CCC; border-bottom: 1px solid #CCC;">
+                <td style="width:75%;font-size:14px;font-weight:bold;padding: 5px;background: #EFEFEF;">Shipping Method</td>
+                <td style="width:25%;font-size:14px;font-weight:bold;padding: 5px;background: #EFEFEF;text-align:right;">Amount</td>
+              </tr>
+            </thead>
+            <tbody>
+              <apex:repeat value="{!claimDetail.freightLines}" var="part">
+                <tr style="border-bottom: 1px solid #CCC;">
+                  <td style="font-size: 13px;padding: 8px 0;">{!part.comment}</td>
+                  <td style="font-size: 13px;padding: 8px 0;text-align:right;">
+                    <apex:outputText value="${0, number,###,###,##0.00}">
+                      <apex:param value="{!part.total}" />
+                    </apex:outputText>
+                  </td>
+                </tr>
+              </apex:repeat>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </apex:outputPanel>
+
+    <!-- SUBLET LINES -->
+    <apex:outputPanel rendered="{! claimDetail.subletLines.size > 0}">
+      <div style=" width: 90%; clear:both; overflow:hidden; margin: 1rem;">
+        <div style="width: 100%">
+          <table style="width:100%; border-collapse: collapse;">
+            <thead>
+              <tr style="border-top: 1px solid #CCC; border-bottom: 1px solid #CCC;">
+                <td style="width:75%;font-size:14px;font-weight:bold;padding: 5px;background: #EFEFEF;">Sublet Company</td>
+                <td style="width:25%;font-size:14px;font-weight:bold;padding: 5px;background: #EFEFEF;text-align:right;">Amount</td>
+              </tr>
+            </thead>
+            <tbody>
+              <apex:repeat value="{!claimDetail.subletLines}" var="part">
+                <tr style="border-bottom: 1px solid #CCC;">
+                  <td style="font-size: 13px;padding: 8px 0;">{!part.comment}</td>
+                  <td style="font-size: 13px;padding: 8px 0;text-align:right;">
+                    <apex:outputText value="${0, number,###,###,##0.00}">
+                      <apex:param value="{!part.total}" />
+                    </apex:outputText>
+                  </td>
+                </tr>
+              </apex:repeat>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </apex:outputPanel>
+
+    <apex:variable var="claimCount" value="{!claimCount + 1}" />
+  </apex:repeat>
+
+  <div style=" width: 90%; clear:both; overflow:hidden; margin: 1rem;">
+    <div style="width: 100%">
+      <table style="width:100%; border-collapse: collapse;">
+        <tbody>
+          <tr style="">
+            <td style="font-size: 15px;padding: 8px 0 2px 0; width:75%;text-align:right">Parts Total:</td>
+            <td style="width: 25%; font-size: 15px;padding: 8px 0 2px 0;text-align:right;">
+              <apex:outputText value="${0, number,###,###,##0.00}">
+                <apex:param value="{!details.partsTotal}" />
+              </apex:outputText>
+            </td>
+          </tr>
+          <tr style="">
+            <td style="font-size: 15px;padding: 2px 0; width:75%;text-align:right">Labour Total:</td>
+            <td style="width: 25%; font-size: 15px;padding: 2px 0;text-align:right;">
+              <apex:outputText value="${0, number,###,###,##0.00}">
+                <apex:param value="{!details.labourTotal}" />
+              </apex:outputText>
+            </td>
+          </tr>
+          <tr style="">
+            <td style="font-size: 15px;padding: 2px 0; width:75%;text-align:right">Freight Total:</td>
+            <td style="width: 25%; font-size: 15px;padding: 2px 0;text-align:right;">
+              <apex:outputText value="${0, number,###,###,##0.00}">
+                <apex:param value="{!details.freightTotal}" />
+              </apex:outputText>
+            </td>
+          </tr>
+          <tr style="">
+            <td style="font-size: 15px;padding: 2px 0; width:75%;text-align:right">Sublet Total:</td>
+            <td style="width: 25%; font-size: 15px;padding: 2px 0;text-align:right;">
+              <apex:outputText value="${0, number,###,###,##0.00}">
+                <apex:param value="{!details.subletTotal}" />
+              </apex:outputText>
+            </td>
+          </tr>
+          <tr style="">
+            <td style="margin-top:5px; font-size: 19px;padding: 4px 0;font-weight:bold; width:75%;text-align:right">Total:</td>
+            <td style="margin-top:5px; width: 25%; font-size: 19px; font-weight:bold;padding: 4px 0;text-align:right; border-top: 1px solid #CCC">
+              <apex:outputText value="${0, number,###,###,##0.00}">
+                <apex:param value="{!details.total}" />
+              </apex:outputText>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <apex:outputPanel rendered="{! details.imageURLS.size > 0 }">
+    <div style=" width: 90%; clear:both; overflow:hidden; margin: 1rem;">
+      <div style="width: 100%">
+        <div style="font-size: 14px;font-weight: bold;margin-bottom: 0.25rem;">Images</div>
+        <ul style="width:100%;">
+          <apex:repeat value="{!details.imageURLS}" var="img">
+            <li>
+              <a href="{!img['URL']}">{!img['Name']}</a>
+            </li>
+          </apex:repeat>
+        </ul>
+      </div>
+    </div>
+  </apex:outputPanel>
+</apex:component>

@@ -1,0 +1,113 @@
+<aura:component controller="lgnd_FileUploadController"
+                implements="forceCommunity:availableForAllPageTypes,force:appHostable,flexipage:availableForAllPageTypes,force:hasRecordId">
+
+<ltng:require styles="{!join(',',
+                      $Resource.FontAwesome420 + '/font-awesome-4.2.0/css/font-awesome.min.css',
+                      $Resource.LegendForceDropToAWS + '/LegendForceDropToAWS.min.css')}"
+              scripts="{!join(',',
+                       $Resource.LegendForceDropToAWS + '/jquery.js',
+                       $Resource.LegendForceDropToAWS + '/jQuery.LegendForce.DropToAWS.js')}"
+              afterScriptsLoaded="{!c.autoInit}" />
+
+<aura:attribute name="isMobile"       type="Boolean" />
+<aura:attribute name="recordId"       type="Id" />
+<aura:attribute name="allowDefault"   type="Boolean" default="false" />
+<aura:attribute name="allowDescriptions" type="Boolean" default="true" />
+<aura:attribute name="fullImagePreview"   type="Boolean" default="false" />
+<aura:attribute name="hasFiles"      type="Boolean" />
+<aura:attribute name="LegendGallery"  type="Object" access="public" />
+<aura:attribute name="dropToAWS"      type="Object" />
+<aura:attribute name="dataForSF"      type="Array" default="[]" />
+<aura:attribute name="externalImageButton" type="Boolean" default="false" />
+
+<aura:method name="init"      action="{!c.init}"      access="public"/>
+<aura:method name="initWithId"      action="{!c.initWithId}"      access="public">
+  <aura:attribute name="recordId" type="String" />
+</aura:method>
+<aura:method name="addImages" action="{!c.addImages}" access="public" />
+<aura:method name="doUpload"  action="{!c.doUpload}"  access="public"/>
+
+<aura:registerEvent name="initComplete" type="c:lgnd_FileUpload_AWS_Initialized_Event"/>
+
+<aura:registerEvent name="createSfRecordEvent"
+                    type="c:lgnd_FileUpload_AWS_CreateRecords_Event"/>
+
+<aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+<aura:handler name="createSfRecordEvent"
+              type="c:lgnd_FileUpload_AWS_CreateRecords_Event"
+              action="{!c.handleCreateSfRecordEvent}" />
+
+<aura:registerEvent name="allComplete" type="c:lgnd_FileUpload_AWS_Complete_Event"/>
+
+<div class="slds-scope">
+
+
+  <div class="slds-row" id="dragandrophandler">
+    <div id="filesContainer"></div>
+    <aura:if isTrue="{! not(v.externalImageButton)}">
+      <div id="dragDropContainer">
+        <div class="instruction">
+          <div>
+            Drop Files to Upload<br/>
+            <br/>
+            <button id="openFileFinder" class="slds-button slds-button--brand" >Browse...</button>
+          </div>
+        </div>
+        <div class="indicator">
+          <div>Processing Files ....<i class="fa fa-spin fa-cog"></i></div>
+        </div>
+      </div>
+    </aura:if>
+  </div>
+
+
+  <div id="descriptionModal" class="reveal-modal" data-reveal="true" style="display:none">
+    <h2></h2>
+
+    <div class="slds-row">
+
+      <div class="slds-col slds-size_3-of-12">
+        <img id="preview"></img>
+      </div>
+
+      <div class="slds-col slds-size_9-of-12">
+
+        <div class="slds-row">
+
+          <div class="slds-col slds-size_1-of-12">
+            <label>English</label>
+          </div>
+
+          <div class="slds-col slds-size_11-of-12">
+            <textarea id="engDesc" class="description"></textarea>
+          </div>
+
+        </div>
+
+        <div class="slds-row">
+
+          <div class="slds-col slds-size_1-of-12">
+            <label>French</label>
+          </div>
+
+          <div class="slds-col slds-size_11-of-12">
+            <textarea id="frDesc" class="description"></textarea>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="slds-row button_row">
+      <div class="slds-col slds-size_12-of-12">
+        <a href="#" id="saveDesc" class="fd_button success small invert right">Save</a>
+      </div>
+    </div>
+    <a class="close-reveal-modal">&#215;</a>
+
+  </div>
+
+</div>
+</aura:component>

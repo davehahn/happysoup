@@ -1,0 +1,85 @@
+<apex:component controller="EmailComponentController" access="global">
+  <apex:attribute name="destinationId"
+                  description="The Id of the Truck Destination"
+                  type="String"
+                  assignTo="{!recordId}"
+                  access="global" />
+
+  <apex:attribute name="accountId"
+                  description="The Id of the Account of the Truck Destination"
+                  type="String"
+                  assignTo="{!acctId}"
+                  access="global" />
+
+  <div style="text-align:center;margin: 15px 0;">
+    <apex:outputPanel layout="none" rendered="{! !isFrench}">
+      <apex:image style="width:300px;" value="{!domain}/servlet/servlet.ImageServer?{! englishImage }" />
+    </apex:outputPanel>
+    <apex:outputPanel layout="none" rendered="{! isFrench}">
+      <apex:image style="width:300px;" value="{!domain}/servlet/servlet.ImageServer?{! frenchImage }" />
+    </apex:outputPanel>
+  </div>
+
+
+  <apex:outputPanel layout="none" rendered="{! !isPickup }">
+    <p style="color:#333; margin:20px auto; width: 90%;">
+      <apex:outputPanel rendered="{! !isFrench}">
+        Please be advised that we have scheduled a delivery of the following product to arrive at your location {! deliveryDate }.<br /><br />
+        Thank you,
+      </apex:outputPanel>
+      <apex:outputPanel rendered="{! isFrench }">
+        Veuillez noter que nous avons cédulé la livraison du produit suivant à votre emplacement {! deliveryDate }.<br /><br />
+        Merci,
+      </apex:outputPanel>
+    </p>
+  </apex:outputPanel>
+
+  <apex:outputPanel layout="none" rendered="{! isPickup }">
+    <p style="color:#333; margin:20px auto; width: 90%;">
+      <apex:outputPanel rendered="{! !isFrench}">
+        Good Day,<br /><br />
+        I am please to announce that the following product(s) are ready for pick up.
+      </apex:outputPanel>
+      <apex:outputPanel rendered="{! isFrench }">
+        Bonne journée,<br /><br />
+        Je suis heureux d’annoncer que le produit suivant est prêt à être ramassé.
+      </apex:outputPanel>
+    </p>
+  </apex:outputPanel>
+
+  <div style="color:#333">
+    <table style="width: 90%; margin: 20px auto; border-collapse: collapse;">
+      <apex:repeat value="{!deliveryItems}" var="item">
+        <tr>
+          <td style="padding:6px 0;border-bottom:1px solid #DDD;">
+            <div>{!item.productName}</div>
+            <apex:repeat value="{!item.nestedItems}" var="nItem">
+              <div style="line-height:20px;padding-left:10px;margin:0;position:relative">
+                <div style="width:10px;height:10px;display:inline-block;position:relative; border-left:1px solid #DDD;border-bottom:1px solid #DDD; top:0px;">&nbsp;</div>
+                <div style="margin-left:5px;display:inline-block">{!nItem}</div>
+              </div>
+            </apex:repeat>
+          </td>
+        </tr>
+      </apex:repeat>
+    </table>
+
+    <p style="width: 90%; margin: 20px auto;">
+      <apex:outputText value="{!notes}" escape="false" />
+    </p>
+
+  </div>
+
+  <apex:outputPanel layout="none" rendered="{! isPickup }">
+    <p style="color:#333; margin:20px auto; width: 90%;">
+      <apex:outputPanel rendered="{! !isFrench}">
+        In order that we are prepared for your arrival, please advise which date you will be here.<br /><br />
+        Thank you
+      </apex:outputPanel>
+      <apex:outputPanel rendered="{! isFrench }">
+        Afin que nous soyons prêts pour votre arrivée, veuillez indiquer la date à laquelle vous serez ici. <br /><br />
+        Merci.
+      </apex:outputPanel>
+    </p>
+  </apex:outputPanel>
+</apex:component>

@@ -1,0 +1,100 @@
+<apex:page showHeader="true"
+           sidebar="false"
+           docType="html-5.0"></apex:page>
+
+<!-- <apex:page showHeader="true"
+           sidebar="false"
+           tabStyle="Product2"
+           docType="html-5.0"
+           controller="LegendGallery">
+
+  <c:MarketingImageRemoter />
+
+  <c:LegendGalleryResources />
+
+  <c:LegendMainAjaxIndicator id="ajaxInd" />
+  <div class="headerNav">
+    <span class="title"> Select Images For {!currentObject.Name}</span>
+    <apex:outputLink value="/apex/ProductAWSImageGallery?productId={!currentObject.Id}"
+                     styleClass="fd_button small invert cancelLink">
+      Cancel
+    </apex:outputLink>
+    <a href="#"
+       class="fd_button small success invert addSelectedButton"
+       id="addSelectedButton">
+      Add <span>0</span> Selected
+    </a>
+  </div>
+
+  <div class="photo_container"></div>
+
+  <script type="text/javascript">
+    $j = jQuery.noConflict();
+
+    var selectedImages = [];
+
+    //setup click handler for adding selected button
+    $j('.headerNav').on('click', '#addSelectedButton', function(e){
+      e.preventDefault();
+      var origin = window.location.origin;
+      $j('#ajaxInd').show();
+      LegendGalleryRemoter.createAssociations( "{!currentObject.Id}", selectedImages, function(events, result){
+        if( result.statusCode === 200 ){
+          origin += result.result;
+          window.top.location.href = origin;
+        }
+        else {
+          $j('#ajaxInd').hide();
+          alert(result.message);
+        }
+      });
+    });
+
+    LegendGallery.init({
+      selectable: true,
+      SF_parentId: '{!currentObject.Id}',
+      images_per_page: parseInt("{!imageLimit}"),
+      indicator: '#ajaxInd',
+      header: '.headerNav:first',
+      container: '.photo_container:first',
+      row_grid_options: {
+        minMargin: 10,
+        maxMargin: 25,
+        itemSelector: ".marketing_image",
+        resize: true
+      },
+      retrieveImages: function() {
+        console.log(this);
+        var dfd = new $j.Deferred();
+        MarketingImageRemoter.fetchAvailableImages(this.pagination_offset, this.images_per_page, "{!currentObject.Id}", function( events, result ) {
+          if( result.statusCode == 200 ){
+            dfd.resolve(result.result);
+          } else {
+            dfd.resolve();
+          }
+        });
+        return dfd.promise();
+      },
+      onSelected: function(marketingImageId) {
+        selectedImages.push( marketingImageId );
+        updateAddButton();
+      },
+      onUnSelected: function(marketingImageId) {
+        selectedImages.splice( selectedImages.indexOf(marketingImageId), 1 );
+        updateAddButton();
+      }
+    });
+
+    function updateAddButton() {
+      var $link = $j('#addSelectedButton')
+      if( selectedImages.length > 0 ){
+        $link.addClass('active').children('span').html(selectedImages.length);
+      } else {
+        $link.removeClass('active');
+      }
+    }
+
+  </script>
+
+</apex:page>
+ -->

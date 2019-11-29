@@ -1,0 +1,319 @@
+<apex:component controller="RetailCounterSaleController" allowDML="true">
+  <apex:attribute name="opportunityId"
+                  description="The opp Object Id"
+                  type="String"
+                  required="true"
+                  assignTo="{!oppId}" />
+
+  <div class="header row">
+
+    <div class="large-5 medium-3 small-12 columns logo">
+    <!--  <span id="logo"></span> -->
+      <div class="header-contact">
+        <img src="{!URLFOR($Resource.LegendLogo)}" class="headerLogo print-only" />
+        <img src="{!URLFOR($Resource.LegendLogo)}" class="headerLogo screen-only" />
+        <div class="signature">
+          <p>Your Memory Maker
+          <span>{!opp.owner.FirstName} {!opp.Owner.LastName}</span>
+          <a id="changeOwnerLink" href="/{!opp.Id}/a?retURL=%2F{!opp.Id}">[Change]</a>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="large-2 medium-3 small-15 large-offset-1 columns">
+      <div class="header-contact">
+        <i class="fa fa-envelope"></i>
+        <p>info@legendboats.com<br />
+           customercare@legendboats.com<br />
+           sales@legendboats.com
+        </p>
+      </div>
+    </div>
+
+    <div class="large-2 medium-3 small-12 columns">
+      <div class="header-contact">
+        <i class="fa fa-phone"></i>
+        <p>phone <span style="padding-left:25px;">{!lgnd_store.Phone }</span><br />
+        toll free<span style="padding-left:22px;">{!lgnd_store.TollFree }</span><br />
+        fax<span style="padding-left:44px;">{!lgnd_store.Fax }</span></p>
+      </div>
+    </div>
+
+    <div class="large-2 medium-3 small-12 columns">
+      <div class="header-contact" style="border-right:none;">
+        <i class="fa fa-globe"></i>
+        <p>www.legendboats.com</p>
+      </div>
+    </div>
+
+  </div><!--header-->
+
+
+  <div class="header-bottom row">
+
+    <div class="large-2 medium-12 columns header-bottom-left">
+
+      <h3>
+        <i class="fa fa-file-text"></i>
+        INVOICE TO:
+      </h3>
+    </div>
+    <div class="large-4 medium-5 columns header-bottom-left">
+      <h2>
+        <a href="/{!opp.Account.id}"
+          id="lookup{!opp.Account.id}opp4"
+          onblur="LookupHoverDetail.getHover('lookup{!opp.Account.id}opp4').hide();"
+          onfocus="LookupHoverDetail.getHover('lookup{!opp.Account.id}opp4', '/{!opp.Account.id}/m?retURL=/{!opp.Account.id}&isAjaxRequest=1').show();"
+          onmouseout="LookupHoverDetail.getHover('lookup{!opp.Account.id}opp4').hide();"
+          onmouseover="LookupHoverDetail.getHover('lookup{!opp.Account.id}opp4', '/{!opp.Account.id}/m?retURL=/{!opp.Account.id}&isAjaxRequest=1').show();">
+          {!opp.Account.Name}
+          </a>
+      </h2>
+      <p style="margin-bottom:10px;line-height:22px;">
+        {!opp.Account.BillingStreet}, {!opp.Account.BillingCity}<br />
+        {!opp.Account.BillingState}, {!opp.Account.BillingCountry}<br />
+        {!opp.Account.BillingPostalCode}
+      </p>
+
+      <p class="email" style="margin-bottom:10px;">
+        <i class="fa fa-envelope"></i>
+        {!opp.ContactEmail__c}
+      </p>
+      <p class="mobilePhone">
+        <i class="fa fa-mobile"></i>
+        {!opp.Account.PersonMobilePhone}
+      </p>
+
+    </div>
+
+    <div class="large-6 medium-7 columns invoice-header">
+
+      <!-- <h1>INVOICE</h1> -->
+      <div class="row">
+        <div class="laerge-12 medium-12 columns">
+          <table style="fd_table margin-bottom:4px;">
+            <thead>
+              <tr>
+                <td>
+                  <div class="circle">
+                    <i class="fa fa-dollar"></i>
+                  </div>
+                </td>
+                <td>
+                  <div class="circle">
+                    <i class="fa fa-calendar"></i>
+                  </div>
+                </td>
+                <td>
+                  <div class="circle">
+                   <i class="fa fa-barcode"></i>
+                  </div>
+                </td>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  Total Due:<br />
+                  <strong>
+                    <apex:outputText value="${0, number, ###,###,###,##0.00}">
+                      <apex:param value="{!opp.Total_Amount__c}"/>
+                   </apex:outputText>
+                  </strong>
+                </td>
+                <td>
+                  Invoice Date:<br />
+                  <strong>
+                    <apex:outputText value="{0, date, dd MMMM yyyy}">
+                          <apex:param value="{!opp.CreatedDate}" />
+                    </apex:outputText>
+                  </strong>
+                </td>
+                <td>
+                  Invoice #:<br />
+                  <strong>{!opp.InvoiceNumber__c}</strong>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="large-6 medium-6 large-offset-6 medium-offset-6 columns">
+          <div id="bcTarget" class="right" data-code="{!opp.InvoiceNumber__c}"></div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div><!--header-bottom-->
+
+  <div class="row">
+    <div class="large-12 medium-12 columns">
+      <table class="fd_table products-table counterSale">
+        <thead>
+          <tr>
+            <th>Item Description</th>
+            <th>Quantity</th>
+            <th>Unit Price</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <apex:repeat value="{!lineItems}" var="oli">
+            <tr>
+              <td>
+                <span>{!oli.productCode}</span> <span><apex:outputText value="{!oli.NameFR}" escape="false"></apex:outputText></span>
+                <apex:outputPanel layout="block" styleClass="kit-contents" rendered="{!oli.isKit}">
+                  <table>
+                    <apex:repeat value="{!oli.kitComponents}" var="comp">
+                      <tr>
+                        <td>{!comp.From_Product__r.Unique_Product_Code__c}</td>
+                        <td><apex:outputText value="{!comp.From_Product__r.Name_FR__c}" escape="false"></apex:outputText></td>
+                        <td>{!comp.Standard__c}</td>
+                      </tr>
+                    </apex:repeat>
+                  </table>
+                </apex:outputPanel>
+              </td>
+              <td>{!oli.Quantity}</td>
+              <td>
+                <apex:outputText value="${0, number, ###,###,###,##0.00}">
+                  <apex:param value="{!oli.UnitPrice}"/>
+                </apex:outputText>
+              </td>
+              <td>
+                <apex:outputText value="${0, number, ###,###,###,##0.00}">
+                  <apex:param value="{!oli.UnitPrice * oli.Quantity}"/>
+               </apex:outputText>
+              </td>
+
+            </tr>
+
+          </apex:repeat>
+
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+
+  <div class="row">
+    <div class="large-5 medium-5 small-12 columns bottom-left show-for-medium-up ">
+      <table class="fd_table">
+        <thead>
+          <tr>
+            <th>Payment Method: {!opp.Payment_Method__c}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <i class="fa fa-credit-card"></i>
+              <p><strong>Card Payment</strong></p>
+              <p>We Accept:</p>
+              <p>Visa, Master card, Debit</p>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="large-4 medium-6 small-12 large-offset-3 medium-offset-1 columns totals">
+      <table class="fd_table">
+        <tbody>
+          <tr>
+            <td>SUB TOTAL:</td>
+            <td>
+              <apex:outputText value="${0, number, ###,###,###,##0.00}">
+                <apex:param value="{!opp.Amount}"/>
+              </apex:outputText>
+            </td>
+          </tr>
+          <!-- OverRiden Custom Taxes -->
+          <apex:outputPanel layout="none" rendered="{!opp.TaxOverRide__c == true}">
+          <tr>
+            <td>Tax: <span style="font-size:0.8rem;">({!currentTaxRate}%)</span> </td>
+            <td>
+              <apex:outputText value="${0, number, ###,###,###,##0.00}">
+                <apex:param value="{!opp.TotalTaxes__c}"/>
+              </apex:outputText>
+            </td>
+          </tr>
+          </apex:outputPanel>
+          <!-- Standard Provincial Taxes -->
+            <!-- Combined Taxs -->
+            <apex:outputPanel layout="none" rendered="{!AND(provTaxRate.displaySeperate__c == false, opp.TaxOverRide__c == false)}">
+              <tr>
+                <td>TAX: {!provTaxRate.ProvincialName__c}
+                  <span style="font-size:0.8rem;">({!currentTaxRate}%)</span>:
+                </td>
+                <td>
+                  <apex:outputText value="${0, number, ###,###,###,##0.00}">
+                    <apex:param value="{!opp.TotalTaxes__c}"/>
+                  </apex:outputText>
+                </td>
+              </tr>
+            </apex:outputPanel>
+            <!-- seperate taxes -->
+          <apex:outputPanel layout="none" rendered="{!AND(provTaxRate.displaySeperate__c == true, opp.TaxOverRide__c == false)}">
+            <tr>
+              <td>TAX: GST <span style="font-size:0.8rem;">({!fedTaxRate}%)</span>:</td>
+              <td>
+                <apex:outputText value="${0, number, ###,###,###,##0.00}">
+                  <!-- <apex:param value="{!boatBuilder.runningTaxes}"/> -->
+                  <apex:param value="{!opp.FederalTaxAmount__c}"/>
+                </apex:outputText>
+              </td>
+            </tr>
+          </apex:outputPanel>
+          <apex:outputPanel layout="none" rendered="{!AND(provTaxRate.displaySeperate__c == true, opp.TaxOverRide__c == false, provTaxRate.ProvincialRate__c > 0)}">
+            <tr>
+              <td>TAX: {!provTaxRate.ProvincialName__c}
+                <span style="font-size:0.8rem;">({!provTaxRate.ProvincialRate__c}%):</span>
+              </td>
+              <td>
+                <apex:outputText value="${0, number, ###,###,###,##0.00}">
+                  <!-- <apex:param value="{!boatBuilder.runningTaxes}"/> -->
+                  <apex:param value="{!opp.ProvincialTaxTotal__c}"/>
+                </apex:outputText>
+              </td>
+            </tr>
+          </apex:outputPanel>
+
+        </tbody>
+        <tfoot>
+          <tr>
+            <td>Total Due:</td>
+            <td><apex:outputText value="${0, number, ###,###,###,##0.00}">
+                <apex:param value="{!opp.Total_Amount__c}"/>
+              </apex:outputText></td>
+          </tr>
+        </tfoot>
+      </table>
+
+    </div>
+  </div>
+
+    <!--This section enables for smaller screens and phones-->
+  <div class="large-5 medium-5 small-12 columns bottom-left show-for-small-only">
+    <table class="fd_table">
+      <thead>
+        <tr>
+          <th>Payment Method: {!opp.Payment_method__c}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <i class="fa fa-credit-card"></i>
+            <p><strong>Card Payment</strong></p>
+            <p>We Accept:</p>
+            <p>Visa, Master card, Debit</p>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</apex:component>

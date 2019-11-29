@@ -1,0 +1,204 @@
+
+@import url(https://fonts.googleapis.com/css?family=Lato:300,400);
+@page {
+    size:A4;
+    margin-top: 0.5cm;
+    margin-left: 0cm;
+    margin-right: 0cm;
+    margin-bottom: 0.5cm;
+}
+
+.row {
+  width:100%;
+  overflow:hidden;
+  clear:both;
+
+  & > .col {
+    display:inline-block;
+    float:left;
+
+    &.right {
+      float:right;
+    }
+    &.col20 {
+      width: 20%;
+    }
+    &.col25 {
+      width:25%;
+    }
+    &.col30 {
+      width: 30%;
+    }
+     &.col35 {
+      width:35%;
+    }
+    &.col40 {
+      width:40%;
+    }
+    &.col50 {
+      width:50%;
+    }
+    &.col60 {
+      width:60%;
+    }
+    &.col65 {
+      width:65%;
+    }
+    &.col70 {
+      width:70%;
+    }
+    &.col75 {
+      width:75%;
+    }
+    &.col80 {
+      width: 80%;
+    }
+
+  }
+
+}// /.row
+
+
+
+.authorization_form {
+  width:100%;
+  font-family: 'Lato', sans-serif;
+
+  h1 {
+    text-align: center;
+    display:block;
+    width:100%;
+    margin:50px 0;
+    font-size: 22px;
+    font-family: inherit;
+  }
+
+  .content {
+    margin: 0 25px;
+    font-family: inherit;
+    p {
+      margin: 20px 0;
+      line-height: 35px;
+      font-size:16px;
+
+      span {
+        font-weight: bold;
+        padding: 0 15px;
+        border-bottom: 1px solid #999;
+      }// /span
+
+      &.boat_make {
+        margin: auto;
+        padding: 0 15px;
+        max-width:100%;
+        min-width: 50%;
+        width:50%;
+        height: 30px;
+        border-bottom: 1px solid #999;
+      }
+
+      &.boat_num {
+        margin: auto;
+        padding: 0 15px;
+        border-bottom: 1px solid #999;
+        max-width:100%;
+        min-width: 50%;
+        width:50%;
+        height: 30px;
+      }
+
+    }// /p
+  }// /.content
+
+  .signatures {
+    margin: 50px 60px 0;
+    p {
+      margin-top: 30px;
+      margin-bottom: 5px;
+      content:'';
+      border-bottom: 1px solid #999;
+      width:50%;
+      height: 30px;
+      &.signature {
+        height: 75px;
+        margin-top:0px;
+        img {
+          height: 75px;
+        }
+      }
+      &.date {
+        font-size: 16px;
+        line-height: 30px;
+        padding-left: 20px;
+      }
+    }
+    span {
+      font-size: 14px;
+    }
+  }
+
+  .auth_footer {
+    text-align: center;
+    margin: 40px 0px 0px 0px;
+
+    h2 {
+
+      display:block;
+      width:100%;
+      margin:10px 0 15px;
+      font-size: 14px;
+      font-family: inherit;
+    }
+    p {
+      text-align: center;
+      width: 100%;
+      margin: auto;
+      font-size: 10px;
+      line-height: 16px;
+    }
+  }// /.header
+
+  .align-center {
+    text-align: center;
+  }
+
+}
+
+.signature-modal {
+  padding: 0;
+
+  h2 {
+    margin: 1rem 0;
+    width: 100%;
+    text-align: center;
+    display: block;
+    color: #888;
+  }
+  .sig_container {
+    height:175px;
+    width: 96%;
+    border: 1px solid #CCC;
+    position:relative;
+    margin: 2rem auto;
+    canvas {
+      width: 100%;
+      height: 100%;
+      position:absolute;
+      top:0;
+      bottom:0;
+    }
+  }
+
+  .btn-container {
+    line-height: 75px;
+    height: 75px;
+    border-top: 1px solid #BBB;
+    background: #EFEFEF;
+    padding:0 1rem;
+    text-align: right;
+    a {
+      margin-bottom: 0;
+    }
+  }
+
+}

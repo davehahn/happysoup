@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <description>A letter inviting Salespeople&#39;s prospects to the June Open House in Barrie</description>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>Legend_Letterhead</letterhead>
+    <name>Barrie June Open House Invitation</name>
+    <style>freeForm</style>
+    <subject>Come Visit us this Weekend!</subject>
+    <textOnly>Hi {!Account.FirstName},
+
+Summer is in view and we&#39;re more excited than ever to get you out on the water and enjoying the boating lifestyle! This weekend marks the second Legend Boats Open House of the year, and believe me, it&#39;s going to be awesome!
+
+The Showroom is stocked, displaying our newest, most innovative lineups and we&#39;ve added something new for this open house: The Legend Boats Deal Dock! This is where we&#39;ve set up all of the boats that are dripping in savings!
+
+Come take advantage of our best deals yet, and even enter your name for a chance to win an iPad!  This weekend is going to be amazing, but it&#39;ll be truly Legendary with you!
+
+Please feel free to send me an email or give me a call to set up a time that you might want to come see (and, of course, play in) our boats.  I want to be sure that I can give you a full demonstration of the memories that you could be creating this summer on the water!
+
+From all of us here at Legend Boats, we truly hope to see you there!
+
+Yours in Boating,
+
+{!User.Name}
+{!User.Title}
+
+{!User.Email}
+{!User.Phone}
+
+www.legendboats.com</textOnly>
+    <type>html</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

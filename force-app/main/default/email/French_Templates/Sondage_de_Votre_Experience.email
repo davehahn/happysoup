@@ -1,0 +1,18 @@
+<messaging:emailTemplate subject="Partager votre expérience" recipientType="Contact" relatedToType="Opportunity">
+<messaging:htmlEmailBody >
+Bonjour {!relatedTo.Account.FirstName},
+<br></br>
+<br></br>
+Nous travaillons fort  pour rendre votre expérience de livraison aussi magique que possible, c’est pourquoi nous aimerions avoir vos impressions. Ce sondage a seulement 7 courtes questions et ne devrait pas vous prendre plus que quelques minutes. Vos impressions sont très importantes pour nous et nous promettons que chaque commentaire sera utilisé pour améliorer la création des meilleurs souvenirs possibles! 
+<br></br>
+<br></br>
+Pour avoir pris le temps de remplir ce sondage, vous serez automatiquement inscrit au tirage au sort pour gagner votre première hivernage!
+<br></br>
+<br></br>
+
+<a href="http://legendboats.force.com/surveys/TakeSurvey?id=a1ai000000H9hyZ&cId={!relatedTo.Account.PersonContactId}&oppId={!relatedTo.Id}">S’il vous plaît cliquez ici pour commencer le questionnaire.</a>
+<br></br>
+<br></br>
+Merci beaucoup pour votre temps. Bonne Navigation!
+</messaging:htmlEmailBody>
+</messaging:emailTemplate>

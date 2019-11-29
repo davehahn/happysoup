@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>TotalTaxes__c</fullName>
+    <externalId>false</externalId>
+    <formula>IF( PricebookEntry.Product2.Taxable__c,
+  IF( IsInsurance__c,
+    IF( ISPICKVAL(Opportunity.taxationProvince__c , &#39;Quebec&#39;), 0,  TotalPrice *  Opportunity.ProvincialTaxRate__c ),
+    TotalPrice * ( Opportunity.ProvincialTaxRate__c +   $Setup.Legend_Settings__c.FederalTaxRate__c ) ),
+  0 )</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>TotalTaxes</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <type>Currency</type>
+</CustomField>

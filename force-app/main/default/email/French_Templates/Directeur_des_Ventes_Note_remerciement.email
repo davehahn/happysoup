@@ -1,0 +1,29 @@
+<messaging:emailTemplate subject="Bienvenue à la grande famille Legend" recipientType="Contact" relatedToType="Opportunity">
+<messaging:htmlEmailBody >
+Bonjour {!relatedTo.Account.FirstName},
+<br></br>
+<br></br>
+Nous somme très heureux de vous avoir rencontré dans notre salle de montre. Nous aimerions vous remercier d’avoir accepté de faire partie de la grande famille Legend. Dans le cas où nos spécialistes seraient dans l'impossibilité de vous servir, n’hésitez pas à m'appeler directement en tout  temps.
+<br></br>
+<br></br>
+Chez Legend, notre premier but est toujours de maximiser l’expérience avec nos client, dès l’achat de votre bateau jusqu'à votre première expérience sur l’eau. Nous avons inclus un lien avec 7 petites questions pour que vous puissiez partager votre expérience Legend avec nous.
+<br></br>
+<br></br>
+
+<a href="http://legendboats.force.com/surveys/TakeSurvey?id=a1ai000000H9huM&cId={!relatedTo.Account.PersonContactId}&oppId={!relatedTo.Id}">Cliquez ici pour partager vos commentaires</a>
+<br></br>
+<br></br>
+Merci encore et au plaisir de vous rencontrer très bientôt.
+<br></br>
+<br></br>
+Bien à vous sur l’eau
+<br></br>
+<br></br>
+Benoit Grenier
+<br></br>
+<br></br>
+bgrenier@legendboats.com
+<br></br>
+(514) 416-0817
+</messaging:htmlEmailBody>
+</messaging:emailTemplate>

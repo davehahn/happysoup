@@ -1,0 +1,21 @@
+<design:component>
+  <design:attribute name="cmpTitle"
+                    label="Component Title"
+                    description="The main title of the component"
+                    default="Find Closest Legend Partner" />
+  <design:attribute name="inputLabel"
+                    label="Label"
+                    description="The label on top the input field"
+                    default="Enter Postal Code or City" />
+  <design:attribute name="partnerCount"
+                    label="Number of Partners to Display"
+                    description="The number of Partners to display as 'Closest'"
+                    default="1" />
+  <design:attribute name="mapView"
+                    label="Display as Map"
+                    description="If True the results will be rendered in a Map, if False, the results are rendered as a simple list"
+                    default="True" />
+  <design:attribute name="excludedAccountIds"
+                    label="Excluded Account Id's"
+                    description="A comma seperated list of Account Id's that should be excluded from the results" />
+</design:component>

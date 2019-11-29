@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Status_Denied_Reason_Required</fullName>
+    <active>true</active>
+    <errorConditionFormula>AND(ISPICKVAL(Status,&quot;Denied&quot;),ISBLANK(TEXT(Denied_Reasons__c) ))</errorConditionFormula>
+    <errorDisplayField>Status</errorDisplayField>
+    <errorMessage>Please select a Denied Reason</errorMessage>
+</ValidationRule>

@@ -1,0 +1,74 @@
+.THIS .cal-select .slds-button span:first-child svg {
+  height:1.5rem;
+  width:1.5rem;
+}
+
+.THIS .cal-container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow:hidden;
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+.THIS .cal-container .cal-side-header {
+  padding-bottom: calc( 0.5rem - 1px);
+}
+
+
+.THIS .cal-container > .calendar {
+  width: 100%;
+  box-sizing: border-box;
+  z-index:99;
+  background: #FFF;
+  -webkit-transition: width 0.5s;
+  transition: width 0.5s;
+  position:relative;
+}
+
+.THIS .cal-container > .calendar-filters {
+  z-index:98;
+  width:300px;
+  position:absolute;
+  right:-300px;
+  -webkit-transition: all 0.5s;
+  transition: all 0.5s;
+  top:0;
+  background: #FFF;
+}
+
+.THIS .cal-container > .scheduable-list {
+  z-index:97;
+  width:400px;
+  position:absolute;
+  right:-400px;
+  -webkit-transition: all 0.5s;
+  transition: all 0.5s;
+  top:0;
+  background: #FFF;
+  overflow-y: scroll;
+}
+
+.THIS .cal-container.filter-open > .calendar {
+  width: calc( 100% - 300px );
+}
+
+.THIS .cal-container.scheduable-open > .calendar {
+  width: calc( 100% - 400px );
+}
+
+.THIS .cal-container.scheduable-open .scheduable-list {
+  z-index:101;
+  right:0;
+}
+
+.THIS .cal-container.filter-open .calendar-filters {
+  z-index:99;
+  right:0;
+}
+
+.THIS .slds-popover.slds-popover--tooltip {
+  text-align:center;
+}

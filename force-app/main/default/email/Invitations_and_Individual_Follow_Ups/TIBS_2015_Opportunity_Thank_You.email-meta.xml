@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <description>A letter to sent to every open TIBS 2015 Opportunity at the end of the Show</description>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>Legend_Letterhead</letterhead>
+    <name>TIBS 2015 Opportunity Thank You</name>
+    <style>freeForm</style>
+    <subject>Thanks for Visiting!</subject>
+    <textOnly>Hi {!Account.FirstName},
+
+I just want to take this opportunity to thank you for visiting the Legend Boats booth at the 2015 Toronto International Boat Show!  It was a pleasure to spend some time getting to know you and to go over our product line with you.  We sincerely hope that you are able to get out on the water this summer.
+
+You may have missed the Boat Show deals, but don&#39;t worry, our All-In Pricing is always competitive and our quality is unmatched.  Not to mention, we always have fun at Legend Boats and would be honoured if you decided to join our Family this year.
+
+I hope you enjoyed your time at the Show and that we hear from you soon. You are always welcome at our fully-heated indoor Showroom, where I can spend some more time one-on-one with you to be sure I answer all of your questions and get you as excited about boating this summer as I am!
+
+Please feel free to call me if you think of any last minute questions or even concerns.  I love to explain why Legend Boats is the best brand out there.  Present me any challenge you can think of!
+
+From all of us here at Legend Boat, thank you for coming to see us at the Toronto International Boat Show.
+
+Yours in Boating,
+
+{!Opportunity.OwnerFullName}
+{!Opportunity.OwnerTitle}
+
+{!Opportunity.OwnerEmail}
+{!Opportunity.OwnerPhone}
+
+www.legendboats.com</textOnly>
+    <type>html</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

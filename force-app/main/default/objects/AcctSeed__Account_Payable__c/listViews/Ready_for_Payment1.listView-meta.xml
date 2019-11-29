@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Ready_for_Payment1</fullName>
+    <columns>NAME</columns>
+    <columns>AcctSeed__Date__c</columns>
+    <columns>Payee_New__c</columns>
+    <columns>AcctSeed__Payee_Reference__c</columns>
+    <columns>AcctSeed__Balance__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>Payee_New__c</field>
+        <operation>contains</operation>
+    </filters>
+    <filters>
+        <field>AcctSeed__Balance__c</field>
+        <operation>notEqual</operation>
+        <value>0</value>
+    </filters>
+    <filters>
+        <field>GMBLASG__Posted__c</field>
+        <operation>equals</operation>
+        <value>1</value>
+    </filters>
+    <label>My Payments ready to pay</label>
+    <sharedTo>
+        <role>Accounting</role>
+    </sharedTo>
+</ListView>

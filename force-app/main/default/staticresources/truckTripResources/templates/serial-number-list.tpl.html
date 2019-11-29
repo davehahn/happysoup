@@ -1,0 +1,48 @@
+<div class="slds-grid slds-wrap">
+  <div class="slds-col slds-size--1-of-1">
+    <div id="scan-message"></div>
+  </div>
+  <div class="slds-col slds-size--1-of-12">
+    <div class="slds-form-element">
+      <label class="slds-form-element__label" for="text-input-01">Filter</label>
+    </div>
+    <div class="slds-form-element">
+      <label class="slds-form-element__label" for="text-input-01">Serials</label>
+    </div>
+  </div>
+
+  <div class="slds-col slds-size--11-of-12">
+    <div class="slds-form-element">
+      <div class="slds-form-element__control">
+        <!--<input type="file" accept="image/*" capture="camera" id="barCodeInput" class="uploadFile"/>-->
+        <input id="serial-filter" class="slds-input" type="text"/>
+      </div>
+    </div>
+    <div class="serial-list-header">
+      <div>Year</div>
+      <div>Serial Number</div>
+      <div>Warehouse</div>
+      <div>Rigged?</div>
+      <div>Avl?</div>
+    </div>
+
+    <div class="serial-list">
+      {{#if currentSerial}}
+        <a href="#" data-serial-id=""
+                    data-serial-name=""
+                    class="serial-link clear-serial">Clear Serial</a>
+      {{/if}}
+      {{#each selectOptions}}
+        <a href="#" data-serial-id="{{this.idSerial}}" data-serial-name="{{this.serialName}}" data-serial-available="{{this.IsAvailable}}" class="serial-link">
+          <div>
+            <div>{{ this.lotName }}</div>
+            <div>{{ this.serialName }}</div>
+            <div>{{ this.warehouseName }}</div>
+            <div>{{ this.IsDealerRigged }}</div>
+            <div>{{ this.IsAvailable }}</div>
+          </div>
+        </a>
+      {{/each}}
+    </div>
+  </div>
+</div>

@@ -1,0 +1,465 @@
+<apex:page controller="RetailSalesToolController"
+           docType="html-5.0"
+           showHeader="true"
+           sidebar="false">
+
+  <head><meta name="viewport" content="width=device-width, initial-scale=1,minimum-scale=1, maximum-scale=1, user-scalable=no"/> </head>
+  <sffd:Resources />
+  <apex:stylesheet value="{!URLFOR($Resource.LegendStyles)}" />
+  <apex:stylesheet value="{!URLFOR($Resource.LegendFormStyles)}" />
+  <apex:stylesheet value="{!URLFOR($Resource.LegendForceComboBox, 'LegendForceComboBox.css')}" />
+  <apex:stylesheet value="{!URLFOR($Resource.FontAwesome, 'font-awesome-4.0.3/css/font-awesome.min.css')}" />
+  <apex:includeScript value="{!URLFOR($Resource.LegendForceComboBox, 'jQuery.LegendForceComboBox.js')}" />
+
+  <style type="text/css">
+
+    #viewer {
+      height: 350px;
+      overflow: hidden;
+      margin: 0 auto;
+    }
+
+    #contentContainer {
+      -webkit-transition:all 0.75s ease-in-out;
+      -moz-transition:all 0.75s ease-in-out;
+      -o-transition:all 0.75s ease-in-out;
+      transition:all 0.75s ease-in-out;
+    }
+
+    #contentContainer.showAccountForm {
+      -webkit-transform: translateX(0);
+      -moz-transform: translateX(0);
+      -o-transform: translateX(0);
+      transform: translateX(0);
+    }
+
+    #contentContainer.showOpportunityForm {
+      -webkit-transform: translateX(-50%);
+      -moz-transform: translateX(-50%);
+      -o-transform: translateX(-50%);
+      transform: translateX(-50%);
+    }
+
+    .slideContent {
+      position:relative;
+    }
+
+    .button_row.bottom {
+      position:absolute;
+      bottom:0px;
+      /*left:50%;
+      margin-left: -40rem;*/
+    }
+
+    .slideContent {
+      height:350px;
+      float:left;
+    }
+
+    .field_label {
+      padding-right:0;
+      margin-bottom:0.5em;
+    }
+
+    .field_label div {
+      color: #B8B8B8;
+      font-size: 1.2em;
+      margin-top: 0.8em;
+      display:inline-block;
+    }
+
+    .field_label input[type=checkbox] {
+      margin-left:0.5em;
+    }
+
+    input[type="tel"] {
+      display:inline-block;
+      max-width:3rem;
+    }
+
+    input[type="tel"]:last-child {
+      max-width:4rem;
+    }
+
+    .telInputs span {
+      margin:0 5px;
+    }
+
+  #searchInd {
+    color:#27C527;
+    display:none;
+    position:absolute;
+    top: -13px;
+    left: 30px;
+  }
+
+
+
+  </style>
+
+    <script type="text/javascript">
+
+    $j = jQuery.noConflict();
+
+    var docWidth;
+
+    $j(function() {
+      var isMobile = sfOneView();
+      docWidth = $j(document).width();
+      //initAccountFinder();
+      $j('#viewer').css('width', docWidth);
+      $j('#contentContainer').css('width', 2 * docWidth);
+      $j('.slideContent').css('width', docWidth);
+
+      // $j('input[type="tel"]').keypress(function(e) {
+      //   if (e.which !== 0) {
+      //     console.log("Charcter was typed. It was: " + String.fromCharCode(e.which));
+      //     if (this.value.length == this.maxLength) {
+      //       var $next = $j(this).parent().next('.telInputs');
+      //       if ($next.length) {
+      //         $j(this).parent().next('.telInputs').children('input:first').focus();
+      //       } else {
+      //         $j(this).parent().next().children('input[type="checkbox"]:first').focus();
+      //        }
+      //     }
+      //   }
+      // });
+
+      //phone number auto tab fields
+      $j('input[type="tel"]').on('keyup', function(e) {
+        console.log(e.keyCode)
+        if( e.keyCode > 95 && e.keyCode < 106 ){
+          if (this.value.length == this.maxLength) {
+            var $next = $j(this).nextAll('input[type="tel"]:first');
+            if ($next.length){
+                $j(this).nextAll('input[type="tel"]:first').focus();
+            } else {
+                $j(this).parent().next().children('input[type="checkbox"]:first').focus();
+            }
+          }
+        }
+      });
+
+      // Form submit handler
+      $j('[id*="retailSaleForm"]').on('submit', function(e){
+        e.preventDefault();
+        var data = {},
+            origin = window.location.origin;
+
+        data.acctId = $j('[id*="acctId"]').val();
+        data.firstName = $j('[id*="firstName"]').val();
+        data.lastName = $j('[id*="lastName"]').val();
+        data.email = $j('[id*="email"]').val();
+        data.phoneOne = $j('#phone_one').val();
+        data.phoneTwo = $j('#phone_two').val();
+        data.phoneThree = $j('#phone_three').val();
+        data.mobilePhone = $j('#mobile_phone').prop("checked") ? "True" : "False";
+        data.oppLeadSource = $j('[id*="leadSource"]').val();
+        data.oppCampaignId = $j('[id*="campaignSource"]').val();
+        data.oppCloseDate = $j('[id*="closeDate"]').val();
+        if( phoneNumberValid(data) ){
+          $j('#ajaxInd').show();
+          RetailSalesToolController.createSale(JSON.stringify(data), function( events, results ) {
+            if(results.statusCode === 200){
+              origin += results.result;
+              if(sfOneView() === true){
+                sforce.one.navigateToURL(results.result);
+              }
+              else{
+                window.top.location.href = origin;
+              }
+            }
+            else {
+              $j('#ajaxInd').hide();
+              alert(results.message);
+            }
+          });
+        } else {
+          alert('Phone Number is invalid');
+        }
+      })
+/* add a focusin event to all no comboBox inputs to close any combobox
+   and add a keydown event to catch the 'Enter' key to prevent the form from submitting
+   */
+      .find('input:not(.comboBox)').on({
+        focusin: function() {
+          $j('.comboBox').legendForceComboBox('close');
+        },
+        keydown: function(e) {
+          if(e.keyCode === 13){
+            e.preventDefault();
+          }
+        }
+      });
+
+      // this is the .slideNav button Handler
+      $j('.slideNav').on('click', function(e) {
+        e.preventDefault();
+        var $firstName,
+            $lastName,
+            data = {},
+            klass = $j(this).data('content-class');
+        if( klass === 'showOpportunityForm'){
+          $firstName = $j('[id*="firstName"]');
+          $lastName = $j('[id*="lastName"]');
+          data.phoneOne = $j('#phone_one').val();
+          data.phoneTwo = $j('#phone_two').val();
+          data.phoneThree = $j('#phone_three').val();
+          if($firstName.val() === '' || $lastName.val() === '' || !phoneNumberValid(data) ){
+            return false;
+          }
+        }
+        $j('#contentContainer').removeClass()
+          .addClass( klass );
+      })
+
+      // initialize the comboBox
+      $j('.comboBox').legendForceComboBox({
+        idFieldName: 'Id',
+        textFieldName: 'Name',
+        searchFunction: function(queryString){
+          return accountSearch(queryString);
+        },
+        selectHandler: function(id, text){
+          doAccountSelect(id);
+        }
+      });
+
+      //setup the Opportunity Selects Placeholder data cause that is what the boss wants
+      $j('[id*="campaignSource"] option:first').html("What brought you in today?");
+      $j('[id*="closeDate"]').attr({'placeholder': "When would you like to be boating by?",
+                                    'required': 'required'});
+      $j('[id*="leadSource"] option:first').html('Where did you originally hear about Legend?');
+      $j('select.withPlaceholder').on('change', function(){
+        setSelectPlaceHolder($j(this));
+      });
+      //some crap to deal with the way salesforce positions the DatePicker
+      //and the way I am doing the sliding forms
+      $j('[id*="closeDate"]').on("focusin", function(){
+        var p = $j(this).position();
+        setTimeout(function() {
+          $j('#datePicker').css({'top': p.top, 'left': p.left});
+        }, 300)
+
+      })
+      $j('select.withPlaceholder').each(function(ind, ele) {
+        setSelectPlaceHolder($j(ele));
+      })
+
+
+    });// /pageload
+
+    //this handles the account search for the LegendForceComboBox jquery plugin
+    function accountSearch(queryString){
+      var self,
+        indc = $j('#searchInd');
+        indc.show();
+      return $j.Deferred( function() {
+        self = this;
+        RetailSalesToolController.findAccounts(queryString, function(events, result) {
+          indc.hide();
+          if(result.statusCode === 200){
+            self.resolve(result.result);
+          }
+        });
+      });
+    }
+
+    // this handles the function actualy selecting the account for the LegendForceComboBox jQuery Plugin
+    function doAccountSelect(accountId){
+      var phone,
+          origin = window.location.origin;
+      $j('#ajaxInd').show();
+      RetailSalesToolController.selectAccount(accountId, function( events, results) {
+        if(results.statusCode === 200){
+          if(results.result.PersonHomePhone){
+            phone = splitPhoneNumber(results.result.PersonHomePhone);
+          }
+          else if(results.result.PersonMobilePhone){
+            phone = splitPhoneNumber(results.result.PersonMobilePhone);
+            $j('#mobile_phone').prop("checked", true);
+          }
+          $j('[id*="acct"]').val(results.result.Id);
+          $j('[id*="firstName"]').val(results.result.FirstName);
+          $j('[id*="lastName"]').val(results.result.LastName);
+          $j('[id*="email"]').val(results.result.PersonEmail);
+          if(phone){
+            $j('#phone_one').val(phone[0]);
+            $j('#phone_two').val(phone[1]);
+            $j('#phone_three').val(phone[2]);
+          }
+          $j('#ajaxInd').hide();
+          $j('#contentContainer').removeClass().addClass('showOpportunityForm');
+        }
+      });
+    }
+
+
+    function phoneNumberValid(data){
+      if(data.phoneOne.length === 0 && data.phoneTwo.length === 0 && data.phoneThree.length === 0){
+        return true;
+      }
+      if( (data.phoneOne.length > 0 && data.phoneOne.length === 3 && !isNaN(data.phoneOne)) &&
+          (data.phoneTwo.length > 0 && data.phoneTwo.length === 3 && !isNaN(data.phoneTwo)) &&
+          (data.phoneThree.length > 0 && data.phoneThree.length === 4 && !isNaN(data.phoneThree)) ) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+
+    function setSelectPlaceHolder($select) {
+      if($select.val() === '' || $select.val() === undefined){
+        $select.addClass('placeHolder');
+      } else {
+        $select.removeClass('placeHolder');
+      }
+    }
+
+    function sfOneView() {
+      return typeof sforce != 'undefined' && sforce != null;
+    }
+
+    function splitPhoneNumber(pn) {
+      var n = pn.replace(/[-() ]/g,'');
+      return [n.substr(0,3), n.substr(3,3), n.substr(6,4)];
+    }
+
+  </script>
+
+
+  <c:LegendMainAjaxIndicator id="ajaxInd" />
+  <div class="row">
+    <div class="large-8 large-offset-2 columns">
+      <apex:messages styleClass="alert-box alert"/>
+    </div>
+  </div>
+
+  <apex:form id="retailSaleForm">
+
+  <div id="viewer">
+    <div id="contentContainer" class="showAccountForm">
+
+      <div class="slideContent"><!-- AccountForm -->
+        <h3 class="lead">Enter Account Information</h3>
+        <apex:inputHidden value="{!newPerson.acctId}"
+                          id="acctId" />
+<!-- First/Last Name Fields -->
+        <sffd:row >
+
+          <sffd:column cols="large-5 small-12">
+            <span id="searchInd">
+              Searching ....  <i class=" fa fa-spinner fa-spin"></i>
+            </span>
+            <apex:inputText value="{!newPerson.firstName}"
+                            id="firstName"
+                            required="true"
+                            styleClass="comboBox"
+                            html-placeholder="Search / First Name"/>
+          </sffd:column>
+
+          <sffd:column cols="large-7 small-12">
+            <apex:inputText value="{!newPerson.lastName}"
+                            id="lastName"
+                            required="true"
+                            html-placeholder="Last Name" />
+          </sffd:column>
+
+        </sffd:row>
+<!-- Email Fields -->
+        <sffd:row >
+
+          <sffd:column cols="large-12">
+            <apex:inputText value="{!newPerson.email}"
+                            id="email"
+                            html-placeholder="Email" />
+          </sffd:column>
+
+        </sffd:row>
+
+<!-- Phone number fields -->
+
+        <sffd:row styleClass="phone_number">
+
+          <sffd:column cols="large-7 small-7" styleClass="telInputs">
+            <input type="tel" maxLength="3" id="phone_one" placeholder="555"/>
+            <span>-</span>
+            <input type="tel" maxLength="3" id="phone_two" placeholder="555" />
+            <span>-</span>
+            <input type="tel" maxLength="4" id="phone_three" placeholder="5555" />
+          </sffd:column>
+
+          <sffd:column cols="large-5 small-5"
+                       styleClass="field_label"
+                       style="padding:0">
+            <div>Mobile?</div>
+            <input type="checkbox" id="mobile_phone" />
+          </sffd:column>
+
+        </sffd:row>
+
+
+        <sffd:row styleClass="button_row bottom">
+          <sffd:column cols="large-12" styleClass="clearfix">
+            <a href="#" class="fd_button small success right slideNav"
+                        data-content-class="showOpportunityForm">
+              Continue <i class="fa fa-chevron-right"></i>
+            </a>
+          </sffd:column>
+        </sffd:row>
+
+      </div><!-- /AccountForm -->
+
+      <div class="slideContent"><!-- OpportunityForm -->
+        <h3 class="lead">Enter Opportunity Information</h3>
+
+        <sffd:row >
+          <sffd:column cols="large-12 small-12">
+            <apex:inputField id="leadSource"
+                             styleClass="withPlaceholder"
+                            value="{!opp.LeadSource}"
+                            required="false" />
+          </sffd:column>
+          <sffd:column cols="large-12 small-12">
+            <!-- <apex:inputField value="{!opp.CampaignId}"
+                           label="Primary Champaign Source"
+                           id="campaignSource"
+                           required="fasle" /> -->
+            <apex:selectList id="campaignSource" size="1" styleClass="withPlaceholder">
+              <apex:selectOptions value="{!campaignOptions}" />
+            </apex:selectList>
+          </sffd:column>
+
+        </sffd:row>
+
+        <sffd:row >
+
+          <sffd:column cols="large-12">
+            <apex:inputField value="{!opp.CloseDate}"
+                            id="closeDate"
+                            required="true"
+                            showDatePicker="true" />
+          </sffd:column>
+
+        </sffd:row>
+
+        <sffd:row styleClass="button_row bottom">
+          <sffd:column cols="large-12" styleClass="clearfix">
+            <apex:commandButton action="#"
+                                value="Continue"
+                                styleClass="fd_button small success right" />
+            <a href="#" class="fd_button small slideNav"
+                        data-content-class="showAccountForm">
+              <i class="fa fa-chevron-left"></i> Back
+            </a>
+          </sffd:column>
+        </sffd:row>
+
+      </div><!-- /Opportunity Form -->
+
+    </div><!-- /#contentContainer -->
+  </div><!-- /#viewer -->
+
+  </apex:form>
+
+</apex:page>

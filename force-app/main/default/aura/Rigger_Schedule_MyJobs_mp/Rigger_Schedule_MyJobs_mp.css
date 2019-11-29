@@ -1,0 +1,128 @@
+.THIS .slds-box {
+	background: #fff;
+}
+
+.THIS .dropzone {
+	height: 50px;
+	width: 100%;
+	border: 1px dashed #ccc;
+	border-radius: 0.25em;
+	text-align: center;
+	line-height: 50px;
+	color: #ccc;
+	margin: 10px 0 0 0;
+}
+
+.THIS h1 {
+	font-size: 18px;
+}
+
+.THIS .backlog {
+	background: #333;
+	border-color: #333;
+}
+	.THIS .backlog h1 {color: #fff;}
+
+.THIS .done {
+	background: #14a8dc;
+	border-color: #14a8dc;
+}
+	.THIS .done h1 {color: #fff;}
+	.THIS .done .dropzone { color: #fff; }
+
+.THIS .dragItem {
+	margin: 10px 0 0 0;
+	background: linear-gradient(0deg, #eee, #fff);
+}
+
+	.THIS .dragItem:hover {
+		background: linear-gradient(0deg, #dfdfdf, #fdfdfd);
+	}
+
+	.THIS .dragItem.dueToday {
+		background: linear-gradient(0deg, #90EE90, #fff);
+	}
+
+	.THIS .dragItem.dueDateMissed {
+		background: linear-gradient(0deg, #ffbbbb, #fff);
+		border-color: #ff9999;
+	}
+
+.THIS .grey {
+	color: #ccc;
+}
+	.THIS h1 .grey {
+		font-size: 0.75em;
+	}
+
+.THIS dt {
+	font-weight: bold;
+}
+.THIS dd {
+	margin: 0 0 0.5em 0;
+}
+
+.THIS .age {
+	float: right;
+	text-align: center;
+	line-height: 1;
+	font-size: 0.75em;
+}
+	.THIS .age span {
+		font-size: 2.5em;
+		font-weight: bold;
+		display: block;
+	}
+
+.THIS .slds-card {
+	padding: 0.65em;
+}
+.THIS .slds-box,
+.THIS .slds-p-around_small {
+	padding: 0.5em;
+}
+.THIS .slds-box {
+	position: relative;
+	overflow: hidden;
+}
+.THIS .overlay {
+	position: absolute;
+	width: 100%; /* Full width (cover the whole page) */
+  height: 100%; /* Full height (cover the whole page) */
+  top: 0; 
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0,0,0,0); /* Black background with opacity */
+  z-index: 2; /* Specify a stack order in case you're using a different order for other elements */
+  cursor: pointer; /* Add a pointer on hover */
+}
+.THIS .pull-right { float: right; }
+.THIS .heavy { font-weight: bold; }
+.THIS .toggle {
+    display: none;
+}
+.THIS .initials {
+	float: right;
+	background: #14a8dc;
+	color: #fff;
+	border-radius: 100%;
+	padding: 0.5em;
+	font-weight: bold;
+}
+.THIS .RecordType {
+	padding: 0.25em 0.5em 0 0.5em;
+	margin: -0.6em -0.6em 0.5em -0.6em;
+	background: #999;
+	color: #fff;
+	text-align: center;
+}
+
+	.THIS .dueToday .RecordType {
+		background: #90EE90;
+		color: #000;
+	}
+
+	.THIS .dueDateMissed .RecordType {
+		background: #ff0000;
+	}

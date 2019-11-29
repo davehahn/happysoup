@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Delivery_date_wrong</fullName>
+    <active>true</active>
+    <description>Delivery date can not be before departure date OR after return date</description>
+    <errorConditionFormula>OR( Delivery_Date2__c   &gt;  Return_Date2__c,
+     Departure_Date2__c &gt;  Delivery_Date2__c )</errorConditionFormula>
+    <errorDisplayField>Delivery_Date2__c</errorDisplayField>
+    <errorMessage>Delivery Date can not before Departure Date OR after Return Date</errorMessage>
+</ValidationRule>

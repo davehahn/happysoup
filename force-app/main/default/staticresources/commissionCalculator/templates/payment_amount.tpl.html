@@ -1,0 +1,14 @@
+<div class="amounts">
+  {{#if this.PaymentAmount__c}}
+
+    <p class="total_amount">
+      {{commissionPercentageIndicator this }}
+      $ {{this.PaymentAmount__c}}
+    </p>
+  {{else}}
+    <p class="total_amount"> $ 0</p>
+  {{/if}}
+  <p class="percent">{{this.PaymentPercent__c}} %</p>
+
+</div>
+

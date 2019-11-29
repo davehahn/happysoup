@@ -1,0 +1,474 @@
+<apex:page standardController="Truck_Load__c"
+  extensions="Truck_Load_Ext"
+  action="{!initLoadBuilder}"
+  docType="html-5.0"
+  showHeader="true"
+  sidebar="true">
+
+  <apex:stylesheet value="{!URLFOR($Resource.LGND_SLDS_203, 'assets/styles/salesforce-lightning-design-system-vf.min.css')}" />
+  <apex:stylesheet value="{!URLFOR($Resource.DragulaJS, 'dragula.min.css')}" />
+  <style type="text/css">
+    body.hasMotif {
+      margin: 0;
+    }
+
+    #page-indicator {
+      display: none;
+    }
+
+    .header-detail {
+      margin-top: 1rem;
+    }
+
+    .header-detail > div p:first-child {
+      font-weight: 300;
+      font-size: 0.7rem;
+    }
+
+    .header-detail > div p:last-child {
+      font-size: 1rem;
+    }
+
+    h1.list-heading {
+      width: 100%;
+      margin-top: 1.5rem;
+      text-align: center;
+      font-size: 1.75rem;
+      font-family: "Salesforce Sans",Arial,sans-serif;
+      line-height:2.5rem;
+      color:#16325c;
+    }
+
+    .filter-row {
+      margin-top: 1rem;
+    }
+
+    #available {
+      border: 1px solid #DADADA;
+      border-radius: 3px;
+      max-height: 200px;
+      min-height: 200px;
+      overflow-y: auto;
+      margin: 1rem 0;
+      padding:  0.25rem;
+      background: #f7f9fb;
+    }
+
+    #available > div.slds-item {
+      width: 25%;
+      box-sizing: border-box;
+    }
+
+    .truck-row > div h1 {
+      width: 100%;
+      display: block;
+      text-align: center;
+      line-height: 2rem;
+      font-size: 0.85rem;
+      color: #0070d2;
+      background: #f7f9fb;
+      border: 1px solid #d8dde6;
+      border-bottom: none;
+    }
+
+    .truck-cell {
+      border: 1px solid #d8dde6;
+      border-bottom: none;
+      height: 200px;
+      overflow-y: auto;
+      padding: 10px !important;
+    }
+
+   .truck-row > div:nth-child(odd) h1 {
+      border-right: none;
+    }
+
+    .truck-row > div {
+      margin-bottom: 1px;
+      border-bottom: 1px solid #d8dde6;
+    }
+
+    .truck-row > div:nth-child(odd) .truck-cell {
+      border-right: none;
+    }
+
+    .truck-row > div.cab {
+      height: calc(200px + 2rem) ;
+      border-bottom: none;
+      position:relative;
+      border-left: 1px solid #d8dde6;
+      overflow: hidden;
+    }
+
+    .truck-row > div.cab .top {
+      width: 115px;
+      height:100px;
+      background: #f7f9fb;
+    }
+
+    .truck-row > div.cab .top:before {
+      content: '';
+      position:absolute;
+      border: 100px solid transparent;
+      border-left-color: #f7f9fb;
+      left: 115px;
+    }
+
+    .truck-row > div.cab .top:after {
+      content: '';
+      position: absolute;
+      border: 80px solid transparent;
+      border-left-color: white;
+      border-bottom-color: #f7f9fb;
+      left: 115px;
+      top:14px;
+      z-index:1;
+    }
+
+    .truck-row > div.cab .bottom {
+       z-index:2;
+      position:relative;
+      width: 100%;
+      max-width: 350px;
+      height: 135px;
+      background: #f7f9fb;
+      border-radius: 0 25% 0 0;
+    }
+
+    .truck-row > div.cab .bottom:before {
+      content: '';
+      position: absolute;
+      background: white;
+      width: 45%;
+      height: 100%;
+      left:45%;
+      top: 60px;
+      border-radius: 50%
+    }
+
+    .truck-row > div.cab .bottom:after {
+      content: '';
+      position:absolute;
+      background: #FFF;
+      height: 85px;
+      width:28%;
+      top:-85px;
+      left: 5%;
+    }
+
+
+
+    div.slds-item {
+      margin-top: 0.25rem;
+    }
+
+
+    div.slds-item > div {
+      padding: 0.5rem;
+      margin: 0 0.25rem 0.25rem 0.25rem;
+      font-family: "Salesforce Sans",Arial,sans-serif;
+      line-height:1.5;
+      color:#16325c;
+      list-style-type: none;
+      border: 1px solid #d8dde6;
+      border-radius: .25rem;
+      background-clip: padding-box;
+      background: #fff;
+    }
+
+    div.slds-item > div:hover {
+      cursor: move;
+      background: #e2fff0;
+    }
+
+    .btn-row {
+      margin-top: 1rem;
+      border-top: 1px solid #DADADA;
+      padding: 1rem 0;
+    }
+  </style>
+
+  <div class="lgnd" id="lgnd-container">
+
+    <div id="page-indicator" class="slds-spinner_container">
+      <div class="slds-spinner--brand slds-spinner slds-spinner--large" role="alert">
+        <span class="slds-assistive-text">Loading</span>
+        <div class="slds-spinner__dot-a"></div>
+        <div class="slds-spinner__dot-b"></div>
+      </div>
+    </div>
+
+    <div class="slds-page-header" role="banner">
+      <!-- <h1 id="testOutput"></h1> -->
+      <div class="slds-grid slds-wrap">
+
+        <div class="slds-col slds-has-flexi-truncate">
+          <div class="slds-media slds-no-space slds-grow">
+            <div class="slds-media__figure">
+              <img src="{!URLFOR($Resource.LGND_SLDS_203, 'assets/icons/custom/custom98_60.png')}" style="background: #00AAF9"/>
+            </div>
+            <div class="slds-media__body">
+              <p class="slds-text-title--caps slds-line-height--reset">Truck Load</p>
+              <h1 class="slds-page-header__title slds-m-right--small slds-align-middle slds-truncate">{!truckLoad.Name}</h1>
+            </div>
+          </div>
+        </div>
+        <div class="slds-col slds-no-flex slds-grid slds-align-top">
+          <div class="slds-button-group" role="group">
+            <a href="{!URLFOR($Action.Truck_Load__c.View, truckLoad.Id)}" class="slds-button slds-button--neutral">
+              Cancel
+            </a>
+            <a href="#" class="slds-button slds-button--neutral" id="saveBtn">Save</a>
+          </div>
+        </div>
+
+      </div>
+            <div class="slds-grid slds-wrap header-detail">
+        <div class="slds-p-horizontal--small slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--3-of-12">
+          <div class="slds-grid slds-wrap">
+            <p class="slds-text-title slds-truncate slds-m-bottom--none slds-p-horizontal--small slds-size--1-of-3 slds-medium-size--1-of-1 slds-large-size--1-of-1" title="Field 1">Driver</p>
+            <p class="slds-text-body--regular slds-truncate slds-p-horizontal--small slds-size--2-of-3 slds-medium-size--1-of-1 slds-large-size--1-of-1">{!truckLoad.Driver__c}</p>
+          </div>
+        </div>
+        <div class="slds-p-horizontal--small slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--3-of-12">
+          <div class='slds-grid slds-wrap'>
+            <p class="slds-text-title slds-truncate slds-m-bottom--none slds-p-horizontal--small slds-size--1-of-3 slds-medium-size--1-of-1 slds-large-size--1-of-1">Truck / Trailer</p>
+            <p class="slds-text-body--regular slds-p-horizontal--small slds-size--2-of-3 slds-medium-size--1-of-1 slds-large-size--1-of-1">{!truckLoad.Truck__c} / {!truckLoad.Trailer__c}</p>
+          </div>
+        </div>
+        <div class="slds-p-horizontal--small slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--2-of-12">
+          <div class='slds-grid slds-wrap'>
+            <p class="slds-text-title slds-truncate slds-m-bottom--none slds-p-horizontal--small slds-size--1-of-3 slds-medium-size--1-of-1 slds-large-size--1-of-1">Departure Date</p>
+            <p class="slds-text-body--regular slds-p-horizontal--small slds-size--2-of-3 slds-medium-size--1-of-1 slds-large-size--1-of-1">
+              <apex:outputText value="{0, date, MMMM d','  yyyy}">
+                <apex:param value="{!truckLoad.Departure_Date2__c}" />
+              </apex:outputText>
+            </p>
+          </div>
+        </div>
+        <div class="slds-p-horizontal--small slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--2-of-12">
+          <div class="slds-grid slds-wrap">
+            <p class="slds-text-title slds-truncate slds-m-bottom--none slds-p-horizontal--small slds-size--1-of-3 slds-medium-size--1-of-1 slds-large-size--1-of-1" style="font-weight: 300">Delivery Date</p>
+            <p class="slds-text-body--regular slds-p-horizontal--small slds-size--2-of-3 slds-medium-size--1-of-1 slds-large-size--1-of-1" style="font-size:1rem">
+              <apex:outputText value="{0, date, MMMM d','  yyyy}">
+                <apex:param value="{!truckLoad.Delivery_Date2__c}" />
+              </apex:outputText>
+            </p>
+          </div>
+        </div>
+        <div class="slds-p-horizontal--small slds-size--1-of-1 slds-medium-size--1-of-2 slds-large-size--2-of-12">
+          <div class="slds-grid slds-wrap">
+            <p class="slds-text-title slds-truncate slds-m-bottom--none slds-p-horizontal--small slds-size--1-of-3 slds-medium-size--1-of-1 slds-large-size--1-of-1" style="font-weight: 300">Return Date</p>
+            <p class="slds-text-body--regular slds-p-horizontal--small slds-size--2-of-3 slds-medium-size--1-of-1 slds-large-size--1-of-1" style="font-size:1rem">
+              <apex:outputText value="{0, date, MMMM d','  yyyy}">
+                <apex:param value="{!truckLoad.Return_Date2__c}" />
+              </apex:outputText>
+            </p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+<!-- +++++++++++++ Filter Row +++++++++++++++ -->
+    <div class='slds-grid filter-row'>
+      <div class="slds-col--padded slds-size--3-of-12">
+        <div class="slds-form-element">
+          <div class="slds-form-element__control">
+            <div class="slds-select_container">
+              <select id="accountFilter" class="slds-select resultFilter">
+                <option value="all">All Accounts</option>
+                <apex:repeat value="{!accountFilterOptions}" var="acctKey">
+                  <option value="{!accountFilterOptions[acctKey]}">{!acctKey}</option>
+                </apex:repeat>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="slds-col--padded slds-size--3-of-12">
+        <div class="slds-form-element">
+          <div class="slds-form-element__control">
+            <div class="slds-select_container">
+              <select id="boatFilter" class="slds-select resultFilter">
+                <option value="all">All Boats</option>
+                <apex:repeat value="{!boatFilterOptions}" var="boatName">
+                  <option value="{!boatName}">{!boatName}</option>
+                </apex:repeat>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="slds-col--padded slds-size--3-of-12"></div>
+      <div class="slds-col--padded slds-size--3-of-12"></div>
+    </div>
+<!-- ========== Filter Row =================== -->
+
+<!-- ++++++++++ Available Row ++++++++++++++++ -->
+
+      <div id="available" class="slds-grid slds-wrap slds-grid--pull-padded slds-grid--align-spread drop-container" data-type="available">
+        <apex:repeat value="{!availableErpOrders}" var="erpOrder">
+          <div data-erp-id="{!erpOrder.ErpId}"
+              data-account-id="{!erpOrder.AccountId}"
+              data-boat-name="{!erpOrder.BoatName}"
+              class="slds-item">
+            <div class="slds-tile slds-tile--board">
+              <p class="slds-text-heading--medium">
+                {!erpOrder.BoatName} /
+                <span class="slds-text-heading--small">{!erpOrder.TrailerName}</span>
+              </p>
+              <p>{!erpOrder.ErpName}</p>
+              <p>{!erpOrder.AccountName}</p>
+              <p style="font-weight:300">{!erpOrder.ErpDate}</p>
+            </div>
+          </div>
+        </apex:repeat>
+      </div>
+
+<!-- ======= Available Row =========== -->
+
+<!-- +++++++++ Truck Row +++++++++++++ -->
+
+    <div class="slds-grid slds-wrap truck-row">
+      <apex:repeat value="{!truckPositions}" var="pos">
+        <div class="slds-col slds-size--3-of-12 ">
+          <h1> Position: {!pos} </h1>
+          <div class="drop-container truck-cell" data-truck-position="{!pos}" data-type="selected" >
+            <apex:repeat value="{!selectedErpOrders[pos]}" var="erpOrder">
+              <div data-erp-id="{!erpOrder.ErpId}"
+                  data-truck-load-line-id="{!erpOrder.TruckLoadLineId}"
+                  data-account-id="{!erpOrder.AccountId}"
+                  class="slds-item">
+                <div class="slds-tile slds-tile--board">
+                  <p class="slds-text-heading--medium">
+                    {!erpOrder.BoatName} /
+                    <span class="slds-text-heading--small">{!erpOrder.TrailerName}</span>
+                  </p>
+                  <p>{!erpOrder.ErpName}</p>
+                  <p>{!erpOrder.AccountName}</p>
+                  <p style="font-weight:300">{!erpOrder.ErpDate}</p>
+                </div>
+              </div>
+            </apex:repeat>
+          </div>
+        </div>
+      </apex:repeat>
+
+      <div class="slds-col slds-size--3-of-12 cab ">
+        <div class="top"></div>
+        <div class="bottom"></div>
+      </div>
+    </div>
+
+  </div>
+
+
+  <apex:includeScript value="{!URLFOR($Resource.jQuery)}" />
+  <apex:includeScript value="{! URLFOR($Resource.UtilJS) }" />
+  <apex:includeScript value="{!URLFOR($Resource.DragulaJS, 'dragula.min.js')}" />
+  <script type="text/javascript">
+
+  (function($, window, document, undefined){
+    var truckLoadId = "{!truckload.Id}",
+         dragContainers = [];
+
+    $('.resultFilter').on('change', function(e) {
+      e.preventDefault();
+      filterAvailable();
+    });
+
+    var containers = document.querySelectorAll('.drop-container');
+
+    for( var i=0; i < containers.length; i++ )
+    {
+      dragContainers.push( containers[i] );
+    }
+
+    dragula(dragContainers, {
+      revertOnSpill: true,
+      mirrorContainer: document.getElementById('lgnd-container')
+    })
+    .on('drop', function(el, container, source) {
+      console.log( el );
+      console.log( container );
+      console.log( source );
+      if( $(container).data('type') === 'selected' )//we are selecting
+      {
+        console.log( container.offsetHeight );
+        console.log( 'we selected ' + $(el).data('erp-id') );
+      }
+      if( $(container).data('type') === 'available' )//we are removing
+      {
+        console.log( 'we removed ' + $(el).data('erp-id') );
+      }
+    });
+
+    $('#saveBtn').on('click', function(e) {
+      e.preventDefault();
+      var selectedIds = [],
+          selectedData = {},
+          toDelete = [];
+      $('#page-indicator').show();
+      $('[data-type="selected"]').each( function(idx, truckCell) {
+        var $cell = $(truckCell),
+            truckPos = $cell.data('truck-position')
+            lines = $cell.children('.slds-item');
+        if( lines.length > 0 )
+        {
+          selectedData[truckPos] = [];
+          lines.each( function(lineCount, li) {
+            var $li = $(li);
+            if( $li.data('erp-id') )
+            {
+              selectedData[truckPos].push( {erpId: $li.data('erp-id'),
+                                            truckLoadLineId: $li.data('truck-load-line-id'),
+                                            truckLoadId: truckLoadId });
+            }
+          });
+        }
+
+      });
+      $('#available div.slds-item').each( function(idx, ele) {
+        if( $(ele).data('truck-load-line-id') )
+        {
+          toDelete.push( $(ele).data('truck-load-line-id') );
+        }
+      });
+
+      Truck_Load_Ext.createLines( selectedData, toDelete, function(result, event){
+       if( event.status )
+        {
+          if( determineUI("{!$User.UITheme}") === 'classic' )
+          {
+            window.top.location.href = window.location.origin +'/'+ truckLoadId;
+          }
+          else
+          {
+            sforce.one.navigateToSObject(truckLoadId);
+          }
+        }
+      });
+    });
+
+    function filterAvailable()
+    {
+      var acctValue = $('#accountFilter').val(),
+          boatValue = $('#boatFilter').val(),
+          $erpOrders = $('#available > div.slds-item');
+
+      $erpOrders.hide()
+      .each( function(idx, ele) {
+        if( ( $(ele).data('account-id') === acctValue || acctValue ==='all' ) &&
+            ( $(ele).data('boat-name') === boatValue || boatValue ==='all' ) )
+        {
+          $(ele).show();
+        }
+      });
+
+    }
+
+  })(jQuery.noConflict(), window, document);
+  </script>
+
+</apex:page>

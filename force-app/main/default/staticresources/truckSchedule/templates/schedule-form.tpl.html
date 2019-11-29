@@ -1,0 +1,153 @@
+<div class="slds-modal__header">
+  <h2 class="slds-text-heading--medium slds-truncate">
+    <div class="slds-media__figure">
+      <svg aria-hidden="true" class="slds-icon slds-icon-custom-legend slds-icon--medium">
+        <use xlink:href="{{icons.truckLoad}}"></use>
+      </svg>
+    </div>
+    {{eventData.name}} - {{eventData.destination}}
+  </h2>
+
+  <button class="slds-button slds-button--icon-inverse slds-modal__close close-modal">
+    <svg aria-hidden="true" class="slds-button__icon slds-button__icon--large">
+      <use xlink:href="{{icons.close}}"></use>
+    </svg>
+    <span class="slds-assistive-text">Close</span>
+  </button>
+</div>
+
+<div class="slds-modal__content">
+
+  <form id="schedule-form" class="slds-form">
+    <input type="hidden" value="{{eventData.id}}" data-field-name="Id" />
+
+    <div class="slds-grid slds-grid--pull-padded slds-grid--align-center">
+
+      <div class="slds-col--padded slds-size--4-of-12">
+        <label class="slds-form-element__label" for="date"> Departure Date</label>
+        <div class="slds-form-element">
+          <div class="slds-input-has-icon slds-input-has-icon--right">
+            <svg aria-hidden="true" class="slds-input__icon slds-icon-text-default">
+              <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{{icons.calendar}}"></use>
+            </svg>
+            <input class="slds-input has-datepicker"
+                   value="{{eventData.startDate}}"
+                   type="text"
+                   data-field-name="Departure_Date2__c"
+                   placeholder="Pick a Date"
+                   label="Date Picker Label">
+          </div>
+        </div>
+      </div>
+
+      <div class="slds-col--padded slds-size--4-of-12">
+        <label class="slds-form-element__label" for="date"> Delivery Date</label>
+        <div class="slds-form-element">
+          <div class="slds-input-has-icon slds-input-has-icon--right">
+            <svg aria-hidden="true" class="slds-input__icon slds-icon-text-default">
+              <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{{icons.calendar}}"></use>
+            </svg>
+            <input class="slds-input has-datepicker"
+                   value="{{eventData.deliveryDate}}"
+                   type="text"
+                   data-field-name="Delivery_Date2__c"
+                   placeholder="Pick a Date"
+                   label="Date Picker Label">
+          </div>
+        </div>
+      </div>
+
+      <div class="slds-col--padded slds-size--4-of-12">
+        <label class="slds-form-element__label" for="date"> Return Date</label>
+        <div class="slds-form-element">
+          <div class="slds-input-has-icon slds-input-has-icon--right">
+            <svg aria-hidden="true" class="slds-input__icon slds-icon-text-default">
+              <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{{icons.calendar}}"></use>
+            </svg>
+            <input id="test" class="slds-input has-datepicker"
+                   value="{{eventData.endDate}}"
+                   type="text"
+                   data-field-name="Return_Date2__c"
+                   placeholder="Pick a Date"
+                   label="Date Picker Label">
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="slds-grid slds-grid--pull-padded">
+
+      <div class="slds-col--padded slds-size-4-of-12">
+
+        <div class="slds-form-element">
+          <label class="slds-form-element__label" for="driver">Driver</label>
+          <div class="slds-form-element__control">
+            <div class="slds-select_container">
+              <select id="driver" class="slds-select" data-opp-field data-field-name="Driver__c" value="{{eventData.driver}}">
+                <option value="">Select Driver</option>
+                {{#each driverOptions}}
+                  {{optionBuilder this this ../eventData.driver }}
+                {{/each}}
+              </select>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="slds-col--padded slds-size-4-of-12">
+
+        <div class="slds-form-element">
+          <label class="slds-form-element__label" for="truck">Truck</label>
+          <div class="slds-form-element__control">
+            <div class="slds-select_container">
+              <select id="truck" class="slds-select" data-opp-field data-field-name="Truck__c" value="">
+                <option value="">Select Truck</option>
+                {{#each truckOptions}}
+                  {{optionBuilder this this ../eventData.truck }}
+                {{/each}}
+              </select>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="slds-col--padded slds-size-4-of-12">
+
+        <div class="slds-form-element">
+          <label class="slds-form-element__label" for="trailer">Trailer</label>
+          <div class="slds-form-element__control">
+            <div class="slds-select_container">
+              <select id="trailer" class="slds-select" data-opp-field data-field-name="Trailer__c" value="">
+                <option value="">Select Trailer</option>
+                {{#each trailerOptions}}
+                  {{optionBuilder this this ../eventData.trailer }}
+                {{/each}}
+              </select>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="slds-card">
+      <div class="slds-card__body">
+        {{truckLayout trailerPositions eventData.loadContents}}
+      </div>
+    </div>
+
+  </form>
+
+
+</div>
+
+<div class="slds-modal__footer">
+  <div class="slds-x-small-buttons--horizontal">
+    <a href="/apex/TruckLoadPicker?id={{eventData.id}}" class="slds-button slds-button--neutral" style="float:left">View Load</a>
+    <button class="slds-button slds-button--neutral close-modal">Cancel</button>
+    <button data-form-submit-btn="schedule-form" class="slds-button slds-button--neutral slds-button--brand">Save</button>
+  </div>
+</div>

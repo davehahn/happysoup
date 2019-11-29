@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Availability_Bar__c</fullName>
+    <externalId>false</externalId>
+    <formula>&quot;&lt;div style=&#39;width:95%; background-color:lightblue; float:left; position:absolute; height:25px; top:0;&#39;&gt;&lt;div style=&#39;background-color: rgb(&quot; &amp; TEXT( MFLOOR(255 * (100 - (Availability_Percentage__c * 100))/100)) &amp; &#39;,&#39; &amp;  TEXT(IF(MFLOOR(255 * Availability_Percentage__c) &gt; 255 , 255, MFLOOR(255 * Availability_Percentage__c))) &amp; &#39;,&#39; &amp; &quot;0); width:&quot; &amp; TEXT(IF((Availability_Percentage__c * 100) &lt;= 100, (Availability_Percentage__c * 100) , 100)) &amp; &quot;%; height:25px;&#39;&gt;&lt;/div&gt;&lt;/div&gt;&quot;</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Availability Bar</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

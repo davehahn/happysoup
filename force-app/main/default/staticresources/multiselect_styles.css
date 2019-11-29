@@ -1,0 +1,78 @@
+ @import url(https://fonts.googleapis.com/css?family=Lato:300,400);
+
+
+ /* Let's get this party started */
+    ::-webkit-scrollbar {
+        width: 10px;
+    }
+
+    /* Track */
+    ::-webkit-scrollbar-track {
+        -webkit-border-radius: 0;
+        border-radius: 0;
+    }
+
+    /* Handle */
+    ::-webkit-scrollbar-thumb {
+        -webkit-border-radius: 0;
+        border-radius: 0;
+        background: rgba(23,151,192,0.3);
+        -webkit-box-shadow: inset 0 0 6px rgba(46, 79, 250, 0.36);
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(23,151,192,0.5);
+    }
+
+    ::-webkit-scrollbar-thumb:window-inactive {
+      background: rgba(23,151,192,0.2);
+    }
+
+table.layout {
+  width:100%;
+}
+
+table.layout tr td.selectCell {
+  width:40%;
+  font-family: dialog;
+}
+
+table.layout tr td.buttonCell {
+  width:5%;
+}
+
+table.layout .selectTitle {
+  line-height: 21px;
+  font-size: 13px;
+  background-image: linear-gradient(to top, #64B8D3, #B8EAFD);
+  padding: 0px;
+  margin: 0px;
+  color: #155B7E;
+  border: 1px solid #1797C0;
+  border-bottom:none;
+  border-radius: 3px 3px 0px 0px;
+  font-family: 'Lato', sans-serif, dialog;
+}
+
+table.layout select.multilist {
+  width:100%;
+  min-height:300px;
+  max-height:400px;
+  margin: 0px;
+  border: 1px solid #1797C0;
+  font-size:12px;
+  border-radius:0px 0px 3px 3px;
+  font-family: 'Lato', sans-serif, dialog;
+}
+
+table.layout select.multilist option:hover {
+  background: rgba(193, 243, 250, 0.5) !important;
+}
+
+table.layout select.multilist:focus {
+  outline: none;
+}
+
+table.layout td.buttonCell  {
+  color:#1797C0;
+}

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ApprovalProcess xmlns="http://soap.sforce.com/2006/04/metadata">
+    <active>true</active>
+    <allowRecall>false</allowRecall>
+    <allowedSubmitters>
+        <type>owner</type>
+    </allowedSubmitters>
+    <approvalPageFields>
+        <field>Name</field>
+        <field>Owner</field>
+        <field>RecordType</field>
+        <field>AcctSeedERP__Quantity_Ordered__c</field>
+    </approvalPageFields>
+    <approvalStep>
+        <allowDelegate>false</allowDelegate>
+        <assignedApprover>
+            <approver>
+                <name>sboothe@legendboats.com</name>
+                <type>user</type>
+            </approver>
+            <whenMultipleApprovers>FirstResponse</whenMultipleApprovers>
+        </assignedApprover>
+        <description>Allows Approval on submission</description>
+        <label>Approval Step 1</label>
+        <name>Approval_Step_1</name>
+    </approvalStep>
+    <description>Created for Marc Duhamel to approve Orders</description>
+    <emailTemplate>Dealer_Templates/Factory_Partner_Boat_Sale_Approval</emailTemplate>
+    <enableMobileDeviceAccess>false</enableMobileDeviceAccess>
+    <entryCriteria>
+        <criteriaItems>
+            <field>AcctSeed__Project__c.RecordType</field>
+            <operation>equals</operation>
+            <value>Partner Boat Sale</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>AcctSeed__Project__c.Name</field>
+            <operation>contains</operation>
+            <value>Legend</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>AcctSeed__Project__c.Stage__c</field>
+            <operation>equals</operation>
+            <value>Pending Review</value>
+        </criteriaItems>
+    </entryCriteria>
+    <finalApprovalActions>
+        <action>
+            <name>Update_to_Plan_Load</name>
+            <type>FieldUpdate</type>
+        </action>
+    </finalApprovalActions>
+    <finalApprovalRecordLock>false</finalApprovalRecordLock>
+    <finalRejectionRecordLock>false</finalRejectionRecordLock>
+    <label>Partner Boat Sale - Factory Store Approv</label>
+    <recordEditability>AdminOnly</recordEditability>
+    <showApprovalHistory>false</showApprovalHistory>
+</ApprovalProcess>

@@ -1,0 +1,637 @@
+<apex:page controller="GMBLASG.gcAccountingPeriod" extensions="gcAgedAR" showHeader="true" sidebar="true">
+
+<head>
+<style>
+.spinner {
+    background: rgba(0,0,0,.2);
+    background-image: url('/img/loading32.gif');
+    background-repeat: no-repeat;
+    background-attachment: fixed;       
+    background-position: center;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 9998;
+}
+.modal {
+    background: rgba(0,0,0,.2);
+    background-repeat: no-repeat;
+    background-attachment: fixed;       
+    background-position: center;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 100;
+}
+tr.hoverBlue:hover td{background:#00EEFF !important;}
+tr.total td {font-weight: bold}
+td.total{font-weight: bold}
+.link{
+    cursor:pointer;
+    text-decoration:underline;
+    color: blue;
+}
+
+tr.pq-grid-row:not(.total) td.pq-grid-cell.drillThru:hover
+{
+    cursor:pointer;
+    text-decoration:underline;
+    color: blue;
+}
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+div.pq-grid-footer{
+    display:none;
+}
+div.ageFilter{
+    text-align: center;
+}
+div.ageFilter span{
+    font-size: 16px;
+}
+</style>
+
+<apex:includeScript value="{!$Resource.GMBLJS__jQuery}"/>
+<apex:stylesheet value="{!URLFOR($Resource.GMBLJS__jQueryUI,'/jquery-ui/jquery-ui.min.css')}"/>
+<apex:includeScript value="{!URLFOR($Resource.GMBLJS__jQueryUI,'/jquery-ui/jquery-ui.min.js')}"/>
+<apex:includeScript value="{!$Resource.GMBLJS__accountingJS}"/>
+<apex:includeScript value="{!$Resource.GMBLJS__ExcellentExport}"/>
+<apex:stylesheet value="{!URLFOR($Resource.GMBLJS__pqGridPro,'/pqgrid.min.css')}"/>
+<apex:includeScript value="{!URLFOR($Resource.GMBLJS__pqGridPro,'/pqgrid.min.js')}"/>
+
+<script>function setFocusOnLoad() {}</script>
+<script type="text/javascript">
+    $j = jQuery.noConflict();
+
+    var spinner = +0;
+    var period = {};
+
+    $j(document).ready(function()
+    {
+        fn_initGrid_summary();
+        fn_initGrid_detail();
+
+        period.Id = '{!$CurrentPage.parameters.idPeriod}';
+        if(period.Id)
+            fn_periodThis(period.Id);
+        else
+            fn_periodCurr();
+    });
+    function fn_refreshAll()
+    {
+        $j('#periodName').html(period.Name).attr('href','/'+period.Id);
+
+        fn_refreshGrid_summary();
+        fn_refreshGrid_detail();
+    }
+
+    accounting.settings = {
+        currency: {
+            symbol : "$",   // default currency symbol is '$'
+            format: "%s%v", // controls output: %s = symbol, %v = value/number (can be object: see below)
+            decimal : ".",  // decimal point separator
+            thousand: ",",  // thousands separator
+            precision : 2   // decimal places
+        },
+        number: {
+            precision : 2,  // default precision on numbers is 0
+            thousand: ",",
+            decimal : "."
+        }
+    }
+    function fn_periodPrev()
+    {
+        fn_showSpinner();
+        Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.gcAccountingPeriod.periodPrev}',
+            period.Id,
+            function(result,event){if(event.status) {period=result; fn_refreshAll(); fn_hideSpinner();} else {alert(event.message); fn_hideSpinner();}});           
+    }
+    function fn_periodNext()
+    {
+        fn_showSpinner();
+
+        Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.gcAccountingPeriod.periodNext}',
+            period.Id,
+            function(result,event){if(event.status) {period=result; fn_refreshAll(); fn_hideSpinner();} else {alert(event.message); fn_hideSpinner();}});           
+    }
+    function fn_periodCurr()
+    {
+        fn_showSpinner();
+
+        Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.gcAccountingPeriod.periodCurr}',
+            function(result,event){if(event.status) {period=result; fn_refreshAll(); fn_hideSpinner();} else {alert(event.message); fn_hideSpinner();}});           
+    }
+    function fn_periodThis(idPeriod)
+    {   
+        fn_showSpinner();
+
+        Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.gcAccountingPeriod.periodThis}',
+            idPeriod,
+            function(result,event){if(event.status) {period=result; fn_refreshAll(); fn_hideSpinner();} else {alert(event.message); fn_hideSpinner();}});           
+    }
+    function fn_showSpinner()
+    {
+        spinner ++;
+        if(spinner > 0)
+        $j('#spinner').show();
+    }
+    function fn_hideSpinner()
+    {
+        spinner --;
+        if(spinner <= 0)
+        {
+            $j('#spinner').hide();
+            spinner = +0;
+        }
+    }
+    function HtmlDecode(s)
+    {
+        return $j('<div>').html(s).text();
+    }
+    function fn_refreshTotal($gridDiv,pageData)
+    {
+        var totalRow = {isTotal:true, pq_rowcls:'total'};
+        var totalColumns = [];
+        $j.each($gridDiv.pqGrid('getColModel'), function(i,col)
+        {
+            if(col.gTotal)
+            {
+                totalRow[col.dataIndx] = +0;
+                totalColumns.push(col.dataIndx);
+            }
+            else
+            {
+                totalRow[col.dataIndx] = null;
+            }
+        });
+
+        //aggregate the totals
+        $j.each(pageData, function(i,row)
+        {
+            $j.each(totalColumns, function(j,dataIndx)
+            {
+                if(!isNaN(row[dataIndx]))
+                    totalRow[dataIndx] += parseFloat(row[dataIndx]);
+            });
+        });
+
+        if($gridDiv.find('.pq-grid-summary').length == 0)
+            $j("<div class='pq-grid-summary'></div>").prependTo($gridDiv.find('.pq-grid-bottom'));
+        $gridDiv.pqGrid("createTable", {data:[totalRow], $cont: $gridDiv.find('div.pq-grid-summary')});     
+    }
+
+    function fn_refreshGrid_callback($gridDiv, listObj)
+    {
+        /*
+        any rows that are filtered out will not be removed from the grid when clearing dataModel.data
+        so, to clear all data, we must first undo all filters.
+        in order to ensure that the filter values can be restored, we clone the col model
+        */
+
+        //reset all of the filter values, to expose all of the data
+        $j.each($gridDiv.pqGrid('getColModel'), function(i,col)
+        {
+            if(col.gFilter)
+            {    
+                 var selector = 'select[name=' + '\"' + col.dataIndx + '\"' + ']';
+
+                 var select = $gridDiv.find(selector).get(0);
+                 if(select && select.value != '')
+                 {
+                    select.value = '';
+                    select.dispatchEvent(new Event('change'));
+                 }
+
+                 col.filter.cache = null;
+                 col.filter.options=null;
+            }
+        });     
+
+        //refresh the data
+        var data = [];
+
+        $j.each(listObj, function(i,obj)
+        {
+            data.push(obj.mapProperty);
+        });
+        $gridDiv.pqGrid('option','dataModel.data', data);
+
+        var currentSummeryState = $j("#summerizeBy").val();
+        //if there is new data, refresh the filter options, and refresh the data and view
+        if(listObj.length > 0)
+        {
+            $j.each($gridDiv.pqGrid('option','colModel'), function(i,col)
+            {
+                if(currentSummeryState == 'idAP' && col.dataIndx == 'nameAP'){
+                    col.hidden=false;
+                }else if(currentSummeryState != 'idAP' && col.dataIndx == 'nameAP'){
+                    col.hidden=true;
+                }
+                
+                if(col.gFilter == true)
+                {
+                    //data that will be filtered needs to be clean
+                    $j.each($gridDiv.pqGrid('option','dataModel.data'), function(i,rowData)
+                    {
+                        rowData[col.dataIndx] = HtmlDecode(rowData[col.dataIndx]);
+                    });
+
+                    col.filter.value = '';
+                    col.filter.cache = null;
+                    col.filter.options = $gridDiv.pqGrid('getData',{dataIndx:[col.dataIndx]});
+                }
+            });
+            $gridDiv.pqGrid('refreshDataAndView');
+            $gridDiv.pqGrid('refreshView');
+        }
+        else //there's no data, so just refresh the view
+        {
+            $gridDiv.pqGrid('refreshView');
+        }
+        fn_hideSpinner();
+        return; 
+    }
+
+
+    function fn_initFormat(colModel)
+    {
+        $j.each(colModel, function(i,col)
+        {
+            if(col.gFormat == 'number')
+            {
+                $j.extend(col,{
+                    align:'center',
+                    render: function(ui)
+                    {
+                        var cont = eval('ui.rowData.'+ui.dataIndx);
+                        if (cont != null && !isNaN(cont))
+                            return accounting.formatNumber(cont);
+                    }
+                });
+            }
+            else if(col.gFormat == 'money')
+            {
+                $j.extend(col,{
+                    align:'right',
+                    halign:'right',
+                    render: function(ui)
+                    {
+                        var cont = eval('ui.rowData.'+ui.dataIndx);
+                        if (cont && cont != null && !isNaN(cont))
+                            return accounting.formatMoney(cont);
+                    }
+                });
+            }
+            else if(col.gFormat == 'checkbox')
+            {
+                $j.extend(col,{
+                    align:'center',
+                    halign:'center',
+                    render: function(ui)
+                    {
+                        if(ui.rowData.pq_rowcls && ui.rowData.pq_rowcls.indexOf('total') >= 0) return;
+
+                        var cont = eval('ui.rowData.'+ui.dataIndx);
+                        var $wrap = $j('<wrap>').append($j('<input>').attr('type','checkbox').attr('disabled','disabled'));
+                        if(cont == 'true')
+                        {
+                            $wrap.children().first().attr('checked','checked');
+                            return $wrap.html();
+                        }
+                        else
+                        {
+                            return $wrap.html();
+                        }
+                    }
+                });             
+            }
+        });
+    }
+    function fn_initFilter(colModel)
+    {
+        $j.each(colModel, function(i,col)
+        {
+            if(col.gFilter)
+            {
+                $j.extend(col,{
+                    filter:
+                    {
+                        type:'select',
+                        condition: 'equal',
+                        prepend: { '': '--All--' },
+                        valueIndx: col.dataIndx,
+                        labelIndx: col.dataIndx,
+                        listeners: ['change'],
+                        value:'',
+                        cache:null,
+                        options:null
+                    }
+                });
+            }
+        });
+    }
+
+    function fn_initGrid_summary()
+    {
+        var gridObj = {title:"AR Summary&nbsp;&nbsp;<a download='export.xls' href='#' onclick='return fn_export($j(\"#summary\"),this);$j(\"#exportStage\").empty();'>Export XLS</a>",
+                        collapsible:{on:false,collapsed:false},
+                        columnTemplate: {minWidth:10, sortable:true},
+                        dataModel:{data:[], sorting:'local', location:'local', sortDir:'up', sortIndx:'payeeName'}, 
+                        dragColumns:{enabled:false},
+                        editable:false,
+                        filterModel:{on:false, mode:'AND', header:false},
+                        freezeCols:0,
+                        freezeRows:0,
+                        height:500,
+                        historyModel:{on:false},
+                        hoverMode:'row',
+                        hwrap:false,
+                        numberCell:{show:false},
+                        pageModel: {type:null},
+                        pasteModel:{on:false},
+                        resizable: true,
+                        roundCorners: false,
+                        scrollModel: {autoFit:true},
+                        selectionModel: {type:'row', mode:'range', fireSelectChange:true},
+                        showBottom:true,
+                        showHeader:true,
+                        showTitle:true,
+                        showTop:true,
+                        showToolbar:true,
+                        sortable:true,
+                        swipeModel:{on:false},
+                        virtualX: false,
+                        virtualXHeader: false,
+                        virtualY: false,
+                        width:'auto',
+                        wrap:false};
+
+        gridObj.colModel=[{dataIndx:"payeeName",    title:"Account",    align:"left",   dataType:"string"},
+                          {dataIndx:"decBalance",   title:"Balance",    align:"right",  dataType:"float", gFormat:'money', gTotal:true},
+                          {dataIndx:"decCurrent",   title:"Current",    align:"right",  dataType:"float", gFormat:'money', gTotal:true},
+                          {dataIndx:"dec01",        title:"1-30 days",  align:"right",  dataType:"float", gFormat:'money', gTotal:true},
+                          {dataIndx:"dec31",        title:"31-60 days",     align:"right",  dataType:"float", gFormat:'money', gTotal:true},
+                          {dataIndx:"dec61",        title:"61-90 days",     align:"right",  dataType:"float", gFormat:'money', gTotal:true},
+                          {dataIndx:"dec91",        title:"91+ days",   align:"right",  dataType:"float", gFormat:'money', gTotal:true}];
+
+        fn_initFormat(gridObj.colModel);
+        fn_initFilter(gridObj.colModel);
+
+        var $gridDiv = $j('#summary');
+
+        $gridDiv.pqGrid(gridObj);
+
+        $gridDiv.on('pqgridrefresh', function(event, ui)
+        {
+            fn_refreshTotal($j(this),ui.pageData);
+        });
+
+        $gridDiv.on('pqgridselectchange',function(event,ui)
+        {
+            fn_refreshGrid_detail();
+        });
+    }
+
+    function fn_refreshGrid_summary()
+    {
+        fn_showSpinner();
+        var $gridDiv = $j('#summary');
+        var filterBy = 'dueDate';
+        if($j("#issueDate").is(":checked"))
+            filterBy = 'issueDate';
+        
+        Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.gcAgedAR.retrieveAgedArSummary}',
+            period.Id, filterBy,
+            function(result,event){if(event.status) fn_refreshGrid_callback($gridDiv,result);else {alert(event.message); fn_hideSpinner();}},
+            {buffer:true, escape:true, timeout:120000});    
+    }
+
+
+    function fn_initGrid_detail()
+    {
+        var gridObj = {title:"AR Detail&nbsp;&nbsp;<a download='export.xls' href='#' onclick='return fn_export($j(\"#detail\"),this);$j(\"#exportStage\").empty();'>Export XLS</a>",
+                        collapsible:{on:false,collapsed:false},
+                        columnTemplate: {minWidth:10, sortable:true},
+                        dataModel:{data:[], sorting:'local', location:'local', sortDir:['up','up'], sortIndx:['payeeName','recordName']}, 
+                        dragColumns:{enabled:false},
+                        editable:false,
+                        filterModel:{on:false, mode:'AND', header:false},
+                        freezeCols:0,
+                        freezeRows:0,
+                        height:300,
+                        historyModel:{on:false},
+                        hoverMode:'row',
+                        hwrap:false,
+                        numberCell:{show:false},
+                        pageModel: {type:null},
+                        pasteModel:{on:false},
+                        resizable: true,
+                        roundCorners: false,
+                        scrollModel: {autoFit:true},
+                        selectionModel: {type: null},
+                        showBottom:true,
+                        showHeader:true,
+                        showTitle:true,
+                        showTop:true,
+                        showToolbar:true,
+                        sortable:true,
+                        swipeModel:{on:false},
+                        virtualX: false,
+                        virtualXHeader: false,
+                        virtualY: false,
+                        width:'auto',
+                        wrap:false};
+
+        gridObj.colModel=[{dataIndx:"payeeName",    title:"Account",    align:"left",   dataType:"string"},
+                          {dataIndx:"recordName",   title:"Record",     align:"left",   dataType:"string"},
+                          {dataIndx:"recordDate",   title:"Date",       align:"center", dataType:"date"},
+                          {dataIndx:"decTotal",     title:"Total",      align:"right",  dataType:"float", gFormat:'money'},
+                          {dataIndx:"decBalance",   title:"Balance",    align:"right",  dataType:"float", gFormat:'money', gTotal:true},
+                          {dataIndx:"decCurrent",   title:"Current",    align:"right",  dataType:"float", gFormat:'money', gTotal:true},
+                          {dataIndx:"dec01",        title:"1-30 days",  align:"right",  dataType:"float", gFormat:'money', gTotal:true},
+                          {dataIndx:"dec31",        title:"31-60 days",     align:"right",  dataType:"float", gFormat:'money', gTotal:true},
+                          {dataIndx:"dec61",        title:"61-90 days",     align:"right",  dataType:"float", gFormat:'money', gTotal:true},
+                          {dataIndx:"dec91",        title:"91+ days",   align:"right",  dataType:"float", gFormat:'money', gTotal:true}];
+
+        fn_initFormat(gridObj.colModel);
+        fn_initFilter(gridObj.colModel);
+
+        $j.each(gridObj.colModel, function(i,col)
+        {
+            if(col.dataIndx == 'recordName')
+            {
+                $j.extend(col,{
+                    render: function(ui)
+                    {
+                        if(ui.rowData.isTotal || ui.rowData.recordName == null) return '';
+                        var strHTML = '<a href=\"/' + ui.rowData.idRecord + '\" target=\"_blank\">'+ui.rowData.recordName+'</a>';
+                        return strHTML;
+                    }
+                });
+            }
+        });
+
+        var $gridDiv = $j('#detail');
+
+        $gridDiv.pqGrid(gridObj);
+
+        $gridDiv.on('pqgridrefresh', function(event, ui)
+        {
+            fn_refreshTotal($j(this),ui.pageData);
+        });
+    }
+
+    function fn_refreshGrid_detail()
+    {
+        fn_showSpinner();
+        var $gridDiv = $j('#detail');
+
+        //collect the ids of the select warehouses
+        var listIdPayee = [];
+        $j.each($j('#summary').pqGrid( "selection",{type:'row', method:'getSelection'}), function(i,row)
+        {
+            listIdPayee.push(row.rowData.idPayee);
+        });
+
+        //if no products or warehouses are selected, then empty the grid, otherwise refresh the grid.
+        if(listIdPayee.length == 0)
+        {
+            fn_refreshGrid_callback($gridDiv,[]);
+        }
+        else
+        {
+            var filterBy = 'dueDate';
+            if($j("#issueDate").is(":checked"))
+                filterBy = 'issueDate';
+            
+            Visualforce.remoting.Manager.invokeAction(
+                '{!$RemoteAction.gcAgedAR.retrieveAgedArDetail}',
+                period.Id, filterBy,listIdPayee,
+                function(result,event){if(event.status) fn_refreshGrid_callback($gridDiv,result);else {alert(event.message); fn_hideSpinner();}},
+                {buffer:true, escape:true, timeout:120000});
+        }
+    }
+
+    function fn_export($gridDiv,aTag)
+    {
+        fn_createExportTable($gridDiv);
+        return ExcellentExport.excel(aTag, 'exportTable', 'AgedAR');
+    }
+
+
+    function fn_createExportTable($gridDiv)
+    {
+        fn_showSpinner();
+
+        var grid = $gridDiv.pqGrid('getInstance').grid;
+        var tableData = grid.option('dataModel').data; //console.log(tableData);
+        var colModel = grid.getColModel();
+
+        var $rowTemplate = $j('<tr></tr>');
+        var $header = $j('<tr></tr>');
+
+        //build-up the header row
+        //build-up a template detail row
+        $j.each(colModel, function(i,col)
+        {
+            var $newTD = $j('<td></td>');
+            var $newTH = $j('<th style="border:1px solid black"></th>');
+            if(!col.hidden && col.dataIndx != 'scrollSpacer')
+            {
+                $header.append($newTH.clone().addClass(col.dataIndx).html(col.title));
+                $rowTemplate.append($newTD.clone().attr('id',col.dataIndx));
+            }
+        });
+
+        //create the table
+        $j('#exportStage').html('');
+        $table = $j('<table></table>');
+        $table.attr('id','exportTable');
+
+        //add the header row
+        $table.append('<tr><td colspan="10" style="font-size:larger; font-weight:bold;">Aged AR</td></tr>');
+        $table.append($header);
+
+        //create and add the detail rows
+        $j.each(tableData, function(i, dataRow){
+            var $newRow = $rowTemplate.clone();
+            
+            if(dataRow.hasOwnProperty('pq_rowcls') && dataRow.pq_rowcls=='total')
+            {
+                $newRow.css('font-weight','bold');
+            }
+
+            $j.each($newRow.find('td'),function (j, cell){
+                idTd = $j(cell).attr('id');
+                if(dataRow.hasOwnProperty(idTd))
+                {
+                    var cont = dataRow[idTd];
+                    if(!isNaN(cont))
+                    {
+                        cont = accounting.formatNumber(cont);
+                    }
+                    if(dataRow.hasOwnProperty('pq_rowcls') && dataRow.pq_rowcls=='total' && $j.inArray(idTd,['MTD','Q1','Q2','Q3','Q4','YTD'])== -1 && cont==0){
+                        $j(cell).html('').addClass(idTd).removeAttr('id');
+                    } else {
+                        $j(cell).html(cont).addClass(idTd).removeAttr('id');
+                    }
+                }
+            });
+
+            $table.append($newRow);
+        });
+
+        $j('#exportStage').append($table);
+
+        fn_hideSpinner();
+    }
+
+</script>
+</head>
+    <div id="spinner" class="spinner" style="display:none;"></div>
+    <div id="modal" class="modal" style="display:none;"></div>  
+    
+    <div style="margin:0 auto; width:90%;">
+        <apex:form >
+            <div style="text-align:center;">
+                <br/>
+                <span style="font-size:large">Aged AR (including unapplied) as of <a id="periodName" class="link"></a>&nbsp;Period Close</span>
+                <br/><br/>
+                <input type="button" value="<< prev period <<"      onclick="fn_periodPrev();"/>
+                <input type="button" value="Go to Current Period"   onclick="fn_periodCurr();"/>
+                <input type="button" value=">> next period >>"      onclick="fn_periodNext();"/>
+                <br/><br/>
+            </div>
+            <div class="ageFilter">
+            <span>Aged by:&nbsp;&nbsp;</span>
+            <label><input type="radio" name="dateFilterType" value="due" checked="checked" onclick="fn_refreshAll();" />&nbsp;<span>Due Date</span></label>&nbsp;&nbsp;&nbsp;
+            <label><input type="radio" name="dateFilterType" value="issue" id="issueDate" onclick="fn_refreshAll();" />&nbsp;
+            <span>Issue Date</span></label>
+            </div>
+        </apex:form>
+
+        <table>
+        <tr>
+            <td>
+                <span style="font-style:italic;">Select rows in the top grid, to refresh the detail in the bottom grid.</span>
+                <div id="summary"></div>
+                <br/><br/>
+                <div id="detail"></div>
+            </td>
+        </tr>
+
+        </table>
+    </div>
+<div id="exportStage" style="display:none;"></div>
+</apex:page>

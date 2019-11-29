@@ -1,0 +1,30 @@
+<table class="slds-table slds-table--bordered slds-table--cell-buffer">
+  <tbody>
+    {{#each erpOrders}}
+      <tr>
+        <td>
+          <div class="slds-form-element">
+            <div class="slds-form-element__control">
+              <span class="slds-checkbox">
+                {{ checkbox this 'isSelected' false }}
+                <label class="slds-checkbox__label" for="{{ this.Id }}_isSelected">
+                  <span class="slds-checkbox--faux"></span>
+                 <!--  <span class="slds-form-element__label">Checkbox Label</span> -->
+                </label>
+              </span>
+            </div>
+          </div>
+        </td>
+        <td>{{ this.OrderDate }}</td>
+        <td>{{ this.Name }}</td>
+        <td>{{ this.Stage }}</td>
+        <td>{{ boatAndTrailerNames this }}</td>
+        <td>
+          <span class="slds-icon_container booking-order">
+            {{ bookingOrder this }}
+          </span>
+        </td>
+      </tr>
+    {{/each}}
+  </tbody>
+</table>

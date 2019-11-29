@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Partner_Boat_Pricing</fullName>
+    <columns>PRODUCT2.ACTIVE</columns>
+    <columns>PRODUCT.NAME</columns>
+    <columns>PRODUCT.CUSTOMER_PRODUCT_ID</columns>
+    <columns>PRODUCT2.FAMILY_ENUM</columns>
+    <columns>PRODUCT.DEFAULT_PRICE</columns>
+    <columns>PRODUCT.ACTIVE</columns>
+    <filterScope>Queue</filterScope>
+    <filters>
+        <field>PRODUCT2.RECORD_TYPE</field>
+        <operation>equals</operation>
+        <value>Product2.Boat</value>
+    </filters>
+    <label>Partner Boat Pricing</label>
+    <language>en_US</language>
+    <queue>2016 - August 15, 2015 Partner Pricebook</queue>
+</ListView>

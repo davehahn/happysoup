@@ -1,0 +1,137 @@
+
+/*  CIRCULAR PERCENTAGE INDICATOR */
+
+$size: 150px;
+$track_color: #ccc;
+$ind_grn: #81CE97;
+$ind_blue: #00AAF9;
+$ind_blk: #3A4449;
+
+@mixin circle($size) {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  left: calc(50% - #{$size/2});
+  top: calc(50% - #{$size/2});
+  width: $size;
+  height: $size;
+}
+
+
+.progress-container {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  top: 0px;
+  left: 0px;
+  background: rgba(130, 130, 130, 0.0);
+
+  .progress-pie-chart {
+    width: $size;
+    height: $size;
+    border-radius: 50%;
+    background-color: $track_color;
+    position: relative;
+    box-sizing:content-box;
+    -webkit-box-sizing:content-box;
+    -moz-box-sizing:content-box;
+    margin-left:auto;
+    margin-right: auto;
+    margin-bottom: 0;
+    margin-top: calc( -1 * #{$size/2} );
+    top:50%;
+
+    .ppc-progress {
+      @include circle($size);
+      clip: rect(0, $size, $size, #{$size/2});
+       box-sizing:content-box;
+      -webkit-box-sizing:content-box;
+      -moz-box-sizing:content-box;
+
+      .ppc-progress-fill {
+        @include circle($size);
+        clip: rect(0, #{$size/2}, $size, 0);
+        background: $ind_grn;
+        transform: rotate(60deg);
+        box-sizing:content-box;
+        -webkit-box-sizing:content-box;
+        -moz-box-sizing:content-box;
+      }
+
+    }/* /.ppc-progress */
+
+    .ppc-percents {
+      @include circle(#{$size/1.15});
+      background: #fff;
+      text-align: center;
+      display: table;
+       box-sizing:content-box;
+      -webkit-box-sizing:content-box;
+      -moz-box-sizing:content-box;
+
+      .pcc-percents-wrapper {
+        display: table-cell;
+        vertical-align: middle;
+         box-sizing:content-box;
+        -webkit-box-sizing:content-box;
+        -moz-box-sizing:content-box;
+
+        span {
+          display: block;
+          font-size: 30px;
+          font-weight: 300;
+          color: #81CE97;
+          padding:0 !important;
+          margin:10px 0 !important;
+          box-sizing:content-box;
+          -webkit-box-sizing:content-box;
+          -moz-box-sizing:content-box;
+
+          &:first-child {
+            font-size: 15px;
+          }
+
+        }
+
+      }/* /.ppc-percents-wrapper */
+
+    }/* /.ppc-percents */
+
+    &.gt-50 {
+      background-color: $ind_grn;
+
+      .ppc-progress {
+        clip: rect(0, #{$size/2}, $size, 0);
+        .ppc-progress-fill {
+          clip: rect(0, $size, $size, #{$size/2});
+          background: $track_color;
+        }
+      }
+    }
+
+  }/* /.progress-pie-chart */
+
+  &.invert {
+    .progress-pie-chart {
+      background-color: $ind_grn;
+
+      .ppc-progress {
+        .ppc-progress-fill {
+          background: $track_color;
+        }
+      }
+
+      &.gt-50 {
+        background-color: $track_color;
+        .ppc-progress {
+          .ppc-progress-fill {
+            background: $ind_grn;
+          }
+        }
+      }
+
+    }
+  }
+
+}/* /.progress-container */
+

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Trailers</fullName>
+    <columns>NAME</columns>
+    <columns>Available__c</columns>
+    <columns>Dealer_Rigged__c</columns>
+    <columns>Location_Status__c</columns>
+    <columns>GMBLASERP__Lot__c</columns>
+    <columns>GMBLASERP__Product__c</columns>
+    <columns>Nest__c</columns>
+    <columns>GMBLASERP__Inventory_Balance__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>Product_Record_Type__c</field>
+        <operation>equals</operation>
+        <value>Trailer</value>
+    </filters>
+    <filters>
+        <field>Dealer_Rigged__c</field>
+        <operation>equals</operation>
+        <value>1</value>
+    </filters>
+    <label>Trailers Rigged</label>
+</ListView>

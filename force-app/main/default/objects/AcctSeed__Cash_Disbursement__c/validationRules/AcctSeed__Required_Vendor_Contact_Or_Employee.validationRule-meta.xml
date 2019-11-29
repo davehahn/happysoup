@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>AcctSeed__Required_Vendor_Contact_Or_Employee</fullName>
+    <active>false</active>
+    <errorConditionFormula>ISBLANK(AcctSeed__Vendor__c) &amp;&amp; ISBLANK(AcctSeed__Contact__c) &amp;&amp; ISBLANK(AcctSeed__Employee__c)</errorConditionFormula>
+    <errorMessage>You must specify a contact, vendor or employee as the payee.</errorMessage>
+</ValidationRule>

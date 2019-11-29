@@ -1,0 +1,290 @@
+<apex:page controller="ProductFeatureCtr" tabStyle="Product2">
+    <apex:includeScript value="{!URLFOR($Resource.jQuery)}"  />
+    <apex:stylesheet value="{!URLFOR($Resource.LegendStyles)}" />
+    <apex:stylesheet value="{!URLFOR($Resource.multiselect_styles)}" />
+    <script language="javascript">
+        $j = jQuery.noConflict();
+
+        $j(function() {
+          enableNewFeature();
+          $j("[id*=productFeatureForm]").on({
+            keydown: function(e) {
+              if(e.keyCode === 13){
+                e.preventDefault();
+              }
+            }
+          });
+        })
+
+        function enableNewFeature(){
+          $j('.newFeatureBtn').off('click')
+          .on('click', function(e) {
+            e.preventDefault();
+            createFeature(this);
+          });
+        }
+
+        function createFeature(link) {
+          var $link = $j(link),
+            $inputs = $link.parent().find('input'),
+            value,
+            category;
+            $inputs.each( function() {
+              switch( $j(this).data('feature-attribute') ){
+                case 'description__c':
+                  value = this.value;
+                  break;
+                case 'category__c':
+                  category = this.value;
+                  break;
+              }
+            });
+          if(value && category){
+            $j('#ajaxInd').show();
+            ProductFeatureCtr.createNewFeature(value, category, updateSelectedFromResult);
+          }
+        }
+
+        function updateSelectedFromResult(result, events) {
+          if(result){
+            var tabId = result.Category__c.split(' ').join('_').toLowerCase() + '_tab',
+              $select = $j('[id*="'+tabId+'"]').find('[id*="rightList"]').first(), //the selected features list
+              $hiddenRightInput = $j('[id*="'+tabId+'"]').find('[id*="rightHidden"]').first(), //the hidden input which gets submitted ( comes from the MultiSelectPickList component )
+              inputString = $hiddenRightInput.val();
+            //append the result to the selected List
+            $select.append($j('<option>', {
+                value: result.Id,
+                text: result.description__c
+            }));
+            //add the result to the hidden input value as done in the original MultiSelectPicklist.component (line 121 )
+            if(inputString.length > 0) {
+              inputString += '&';
+            }
+            inputString += encodeURIComponent(result.Id) + '&'
+              + encodeURIComponent(result.description__c);
+            $hiddenRightInput.show().val(inputString);
+            //clear the text input box
+            $j('input[data-feature-attribute="description__c"]').val('');
+          } else {
+            console.log(events);
+          }
+          $j('#ajaxInd').hide();
+        }
+
+    </script>
+
+    <style type="text/css">
+
+      .newfeatureContainer {
+        width:85%;
+        margin-left:2%;
+        padding: 1%;
+        font-family: dialog;
+      }
+
+      .newfeatureContainer label {
+        font-size: 16px;
+        width:10%;
+        line-height: 26px;
+        display: inline-block;
+        text-align: center;
+        position: relative;
+        padding: 0px;
+        color: #1797C0;
+      }
+
+      .newfeatureContainer input {
+        width:75%;
+        line-height: 26px;
+        font-size: 12px;
+        padding: 0px 8px;
+        margin: 0px;
+        border: none;
+        display: inline-block;
+        border-left: 1px solid #1797C0;
+        border-top: 1px solid #1797C0;
+        border-bottom: 1px solid #1797C0;
+        border-radius: 3px 0px 0px 3px;
+      }
+
+      .newfeatureContainer input:focus {
+        outline:none;
+      }
+
+      .newfeatureContainer a {
+        line-height: 26px;
+        font-size: 14px;
+        font-weight:bolder;
+        margin: 0px;
+        display: inline-block;
+        padding: 0px 10px;
+        position: relative;
+        border-radius: 0px 3px 3px 0px;
+        left: -3px;
+        border: 1px solid #1797C0;
+        border-left:none;
+        color: #155B7E;
+        background-image: linear-gradient(to top, #1797C0, #64D3FF);
+        text-decoration:none;
+      }
+
+      .newfeatureContainer a:hover {
+        background-image: linear-gradient(to bottom, #1797C0, #64D3FF) !important;
+        color:#F9FDFF !important;
+        text-decoration: none;
+      }
+
+    </style>
+    <c:LegendMainAjaxIndicator id="ajaxInd" />
+    <apex:sectionHeader title="Feature Edit" subtitle="{!product.Name}" />
+    <apex:form id="productFeatureForm">
+
+
+        <apex:pageBlock title="Feature Edit">
+
+            <apex:pageBlockButtons >
+                <apex:commandButton action="{!cancel}" value="Cancel" />
+                <apex:commandButton action="{!save}" value="Save" />
+            </apex:pageBlockButtons>
+
+              <div class="tabContainer blue">
+                <apex:tabPanel switchType="client"
+                     contentClass="optionSelector"
+                     inActiveTabClass="inActiveTab__c"
+                     tabClass="tab__c big">
+
+                <apex:tab name="Construction"
+                          label="Construction"
+                          id="construction_tab"
+                          onComplete="enableNewFeature()">
+
+                  <c:MultiselectPicklist leftLabel="Available Features"
+                    leftOptions="{!availableConstructionFeatures}"
+                    rightLabel="Selected Features"
+                    rightOptions="{!selectedConstructionFeatures}"
+                    size="20"/>
+
+                  <div class="newfeatureContainer">
+                    <label for="new_feature">New Feature</label>
+                    <input type="text" data-feature-attribute="description__c"></input>
+                    <input type="hidden" data-feature-attribute="category__c" value="Construction"></input>
+                    <a href="#" class="newFeatureBtn" >+</a>
+                  </div>
+
+                </apex:tab>
+
+              <apex:tab name="Console"
+                    label="Console"
+                    id="console_tab"
+                    onComplete="enableNewFeature()">
+
+                <c:MultiselectPicklist leftLabel="Available Features"
+                    leftOptions="{!availableConsoleFeatures}"
+                    rightLabel="Selected Features"
+                    rightOptions="{!selectedConsoleFeatures}"
+                    size="20"/>
+
+                  <div class="newfeatureContainer">
+                    <label for="new_feature">New Feature</label>
+                    <input type="text" data-feature-attribute="description__c"></input>
+                    <input type="hidden" data-feature-attribute="category__c" value="Console"></input>
+                    <a href="#" class="newFeatureBtn" >+</a>
+                  </div>
+
+              </apex:tab>
+
+               <apex:tab name="Livewells" label="Livewells" id="livewells_tab">
+
+                  <c:MultiselectPicklist leftLabel="Available Features"
+                    leftOptions="{!availableLivewellFeatures}"
+                    rightLabel="Selected Features"
+                    rightOptions="{!selectedLivewellFeatures}"
+                    size="20"/>
+
+                  <div class="newfeatureContainer">
+                    <label for="new_feature">New Feature</label>
+                    <input type="text" data-feature-attribute="description__c"></input>
+                    <input type="hidden" data-feature-attribute="category__c" value="Livewells"></input>
+                    <a href="#" class="newFeatureBtn" >+</a>
+                  </div>
+
+              </apex:tab>
+
+               <apex:tab name="Seating" label="Seating" id="seating_tab">
+
+                  <c:MultiselectPicklist leftLabel="Available Features"
+                    leftOptions="{!availableSeatingFeatures}"
+                    rightLabel="Selected Features"
+                    rightOptions="{!selectedSeatingFeatures}"
+                    size="20"/>
+
+                  <div class="newfeatureContainer">
+                    <label for="new_feature">New Feature</label>
+                    <input type="text" data-feature-attribute="description__c"></input>
+                    <input type="hidden" data-feature-attribute="category__c" value="Seating"></input>
+                    <a href="#" class="newFeatureBtn" >+</a>
+                  </div>
+
+              </apex:tab>
+
+               <apex:tab name="Decks and Storage" label="Decks and Storage" id="decks_and_storage_tab">
+
+                  <c:MultiselectPicklist leftLabel="Available Features"
+                    leftOptions="{!availableDeckFeatures}"
+                    rightLabel="Selected Features"
+                    rightOptions="{!selectedDeckFeatures}"
+                    size="20"/>
+
+                  <div class="newfeatureContainer">
+                    <label for="new_feature">New Feature</label>
+                    <input type="text" data-feature-attribute="description__c"></input>
+                    <input type="hidden" data-feature-attribute="category__c" value="Decks and Storage"></input>
+                    <a href="#" class="newFeatureBtn" >+</a>
+                  </div>
+
+              </apex:tab>
+
+              <apex:tab name="Safety" label="Safety" id="safety_tab">
+
+                  <c:MultiselectPicklist leftLabel="Available Features"
+                    leftOptions="{!availableSafetyFeatures}"
+                    rightLabel="Selected Features"
+                    rightOptions="{!selectedSafetyFeatures}"
+                    size="20"/>
+
+                  <div class="newfeatureContainer">
+                    <label for="new_feature">New Feature</label>
+                    <input type="text" data-feature-attribute="description__c"></input>
+                    <input type="hidden" data-feature-attribute="category__c" value="Safety"></input>
+                    <a href="#" class="newFeatureBtn" >+</a>
+                  </div>
+
+              </apex:tab>
+
+               <apex:tab name="Additional Features" label="Additional Features" id="additional_features_tab">
+
+                  <c:MultiselectPicklist leftLabel="Available Features"
+                    leftOptions="{!availableAdditionalFeatures}"
+                    rightLabel="Selected Features"
+                    rightOptions="{!selectedAdditionalFeatures}"
+                    size="20"/>
+
+                  <div class="newfeatureContainer">
+                    <label for="new_feature">New Feature</label>
+                    <input type="text" data-feature-attribute="description__c"></input>
+                    <input type="hidden" data-feature-attribute="category__c" value="Additional Features"></input>
+                    <a href="#" class="newFeatureBtn" >+</a>
+                  </div>
+
+              </apex:tab>
+
+
+
+
+             </apex:tabPanel>
+           </div>
+
+        </apex:pageBlock>
+    </apex:form>
+
+</apex:page>

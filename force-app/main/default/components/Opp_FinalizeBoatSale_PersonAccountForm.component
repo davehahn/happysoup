@@ -1,0 +1,114 @@
+<apex:component >
+  <apex:attribute name="acct"
+                  description="Person Account for the Opportunity"
+                  type="Account"/>
+
+  <sffd:row styleClass="acct_fields"><!-- Accounting Fields -->
+
+      <sffd:column cols="large-6"><!-- Left Accounting Column -->
+
+        <sffd:row >
+          <sffd:column cols="large-4">
+            <label class="large-only-right">First Name: </label>
+          </sffd:column>
+
+          <sffd:column cols="large-4">
+            <!-- <input id="acct_FirstName" type="text"></input> -->
+            <apex:inputField value="{!acct.FirstName}" required="true"/>
+          </sffd:column>
+
+          <sffd:column cols="large-2">
+            <label class="large-only-right">M. Initial: </label>
+          </sffd:column>
+
+          <sffd:column cols="large-2">
+            <apex:inputField value="{!acct.MiddleName}" />
+          </sffd:column>
+        </sffd:row>
+
+        <sffd:row >
+          <sffd:column cols="large-4">
+            <label class="large-only-right">Last Name: </label>
+          </sffd:column>
+
+          <sffd:column cols="large-8">
+            <!-- <input id="acct_LastName" type="text"></input> -->
+            <apex:inputField value="{!acct.LastName}" required="true"/>
+          </sffd:column>
+        </sffd:row>
+         <sffd:row >
+          <sffd:column cols="large-4">
+            <label class="large-only-right">Email: </label>
+          </sffd:column>
+
+          <sffd:column cols="large-8">
+            <!-- <input id="acct_PersonEmail" type="text"></input> -->
+            <apex:inputField value="{!acct.PersonEmail}" required="true"/>
+          </sffd:column>
+        </sffd:row>
+
+        <sffd:row >
+          <sffd:column cols="large-4">
+            <label class="large-only-right">Drivers Lic. #: </label>
+          </sffd:column>
+
+          <sffd:column cols="large-8">
+            <!-- <input id="acct_Drivers_License__c" type="text"></input> -->
+            <apex:inputField value="{!acct.Drivers_License__c}" required="true"/>
+          </sffd:column>
+        </sffd:row>
+
+      </sffd:column><!-- /Left Accounting Column -->
+
+      <sffd:column cols="large-6"><!-- Right Accounting Column -->
+
+        <sffd:row >
+          <sffd:column cols="large-4">
+            <label class="large-only-right">Phone: </label>
+          </sffd:column>
+
+          <sffd:column cols="large-8">
+            <!-- <input id="acct_Phone" type="text"></input> -->
+            <apex:inputField value="{!acct.Phone}" required="true"/>
+          </sffd:column>
+        </sffd:row>
+
+        <sffd:row >
+          <sffd:column cols="large-4">
+            <label class="large-only-right">Mobile Phone: </label>
+          </sffd:column>
+
+          <sffd:column cols="large-8">
+            <!-- <input id="acct_PersonMobilePhone" type="text"></input> -->
+            <apex:inputField value="{!acct.PersonMobilePhone}" />
+          </sffd:column>
+        </sffd:row>
+
+        <sffd:row >
+          <sffd:column cols="large-4">
+            <label class="large-only-right">Birthday: </label>
+          </sffd:column>
+
+          <sffd:column cols="large-8">
+            <apex:inputField value="{!acct.PersonBirthdate}"
+                              showDatePicker="true"
+                              required="true" />
+          </sffd:column>
+        </sffd:row>
+
+        <sffd:row >
+          <sffd:column cols="large-4">
+            <label class="large-only-right">Sex: </label>
+          </sffd:column>
+
+          <sffd:column cols="large-8">
+            <!-- <input id="acct_PersonMobilePhone" type="text"></input> -->
+            <apex:inputField value="{!acct.Sex__c}" required="true"/>
+          </sffd:column>
+        </sffd:row>
+
+      </sffd:column><!-- /Left Accounting Column -->
+
+    </sffd:row><!-- /Accounting Fields -->
+
+</apex:component>

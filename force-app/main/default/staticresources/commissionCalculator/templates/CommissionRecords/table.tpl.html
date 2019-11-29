@@ -1,0 +1,29 @@
+ <table class='fd_table commissionTable'>
+
+   <thead>
+     <tr>
+       <td>Opportunity Name</td>
+       <td>Type</td>
+       <td>Stage</td>
+       <td>Invoice</td>
+     </tr>
+   </thead>
+
+   <tbody>
+   {{#each this}}
+    <tr>
+      <td>
+        <a href="/apex/CommissionCalculator?opportunity_id={{this.OpportunityId}}&retURL=/apex/CommissionRecords_Office">{{this.OpportunityName}}</a>
+      </td>
+      <td>{{this.Type}}</td>
+      <td>{{this.Stage}}</td>
+      <td>
+        {{#if this.InvoiceId}}
+          <a href="/servlet/servlet.FileDownload?file={{this.InvoiceId}}" rel="_blank">Invoice</a>
+        {{/if}}
+      </td>
+    </tr>
+   {{/each}}
+   </tbody>
+
+ </table>

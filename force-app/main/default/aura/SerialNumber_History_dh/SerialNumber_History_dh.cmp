@@ -1,0 +1,149 @@
+<aura:component controller="SerialNumber_History_Controller_dh"
+                implements="flexipage:availableForAllPageTypes,forceCommunity:availableForAllPageTypes,force:hasRecordId">
+
+  <ltng:require scripts="{!join(',', $Resource.Libraries + '/js/LightningApex.js',
+                                     $Resource.Libraries + '/js/LightningUtils.js') }"
+                afterScriptsLoaded="{!c.afterScripts}" />
+
+  <aura:attribute name="recordId" type="String" />
+  <aura:attribute name="dataLoaded" type="Boolean" />
+  <aura:attribute name="currentRegistration" type="Registration__c" />
+  <aura:attribute name="registrations" type="Registration__c[]" />
+
+  <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+
+  <c:Lgnd_Spinner_dh aura:id="spinner" />
+
+  <div class="slds-m-top_large">
+    <aura:if isTrue="{!v.dataLoaded}">
+      <aura:if isTrue="{! and( empty(v.currentRegistration), empty(v.registrations) )}">
+        No Registrations
+      </aura:if>
+      <aura:if isTrue="{! !empty(v.currentRegistration) }">
+        <div class="slds-card">
+          <div class="slds-card__header slds-grid">
+            <header class="slds-media slds-media_center slds-has-flexi-truncate">
+              <div class="slds-media__figure">
+                <lightning:icon iconName="action:add_relationship" size="small" />
+              </div>
+              <div class="slds-media__body">
+                <h2 class="slds-card__header-title">
+                  <p class="slds-card__header-link slds-truncate">
+                    <span>Current Registration</span>
+                  </p>
+                </h2>
+              </div>
+            </header>
+          </div>
+          <div class="slds-card__body slds-card__body_inner">
+            <lightning:layout>
+              <lightning:layoutItem size="4">
+                <aura:if isTrue="{!v.currentRegistration.Account__r.IsPersonAccount}">
+                  <a href="javascript:void()"
+                     class="slds-text-title_caps"
+                     onclick="{!c.navToAccount}"
+                     data-account-id="{!v.currentRegistration.Account__c}">
+                    {!v.currentRegistration.Account__r.Name}
+                  </a>
+                </aura:if>
+                <aura:if isTrue="{! not(v.currentRegistration.Account__r.IsPersonAccount)}">
+                  <p class="slds-text-title_caps">{!v.currentRegistration.Account__r.Name}</p>
+                </aura:if>
+                <p class="slds-text-body_small">{!v.currentRegistration.Account__r.BillingStreet}</p>
+                <p class="slds-text-body_small">{!v.currentRegistration.Account__r.BillingCity}</p>
+                <p class="slds-text-body_small">
+                  {!v.currentRegistration.Account__r.BillingState},
+                  {!v.currentRegistration.Account__r.BillingCountry}
+                </p>
+                <p class="slds-text-body_small">{!v.currentRegistration.Account__r.BillingPostalCode}</p>
+              </lightning:layoutItem>
+              <lightning:layoutItem size="4">
+                <p class="slds-text-title slds-truncate slds-m-bottom_xx-small">
+                  Registered By:
+                </p>
+                <p class="slds-text-body_regular slds-truncate">
+                  <span>{!v.currentRegistration.RegisteredByAccount__r.Name}</span>
+                  <aura:if isTrue="{! !empty(v.currentRegistration.Registered_Date__c) }">
+                    <span> on</span>
+                    <p>
+                      <ui:outputDate value="{!v.currentRegistration.Registered_Date__c}" />
+                    </p>
+                  </aura:if>
+                </p>
+              </lightning:layoutItem>
+              <lightning:layoutItem size="4">
+                  <p class="slds-text-title slds-truncate slds-m-bottom_x-small">
+                    Motor:
+                  </p>
+                  <p class="slds-text-body_regular slds-truncate">
+                    {!v.currentRegistration.Registered_Motor__r.Name}
+                  </p>
+                  <p class="slds-text-title slds-truncate slds-m-bottom_x-small">
+                    Motor Serial:
+                  </p>
+                  <p class="slds-text-body_regular slds-truncate">
+                    {!v.currentRegistration.Registered_Motor_Serial__c}
+                  </p>
+              </lightning:layoutItem>
+            </lightning:layout>
+          </div>
+        </div>
+      </aura:if>
+      <aura:if isTrue="{! !empty(v.registrations) }">
+        <div class="slds-card">
+          <div class="slds-card__header slds-grid">
+            <header class="slds-media slds-media_center slds-has-flexi-truncate">
+              <div class="slds-media__figure">
+                <lightning:icon iconName="action:add_relationship" size="small" />
+              </div>
+              <div class="slds-media__body">
+                <h2 class="slds-card__header-title">
+                  <p class="slds-card__header-link slds-truncate">
+                    <span>Prior Registrations</span>
+                  </p>
+                </h2>
+              </div>
+            </header>
+          </div>
+          <div class="slds-card__body slds-card__body_inner">
+            <table class="slds-table slds-table_bordered slds-table_cell-buffer">
+              <thead>
+                <tr class="slds-text-title_caps">
+                  <th scope="col">
+                    <div class="slds-truncate" title="Registered To">Registered To</div>
+                  </th>
+                  <th scope="col">
+                    <div class="slds-truncate" title="Registered By">Registered By</div>
+                  </th>
+                  <th scope="col">
+                    <div class="slds-truncate" title="Delivery Date">Delivery Date</div>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <aura:iteration items="{!v.registrations}" var="reg">
+                  <tr>
+                    <td data-label="Registered To">
+                      <div class="slds-truncate" title="{!reg.Account__r.Name}">{!reg.Account__r.Name}</div>
+                    </td>
+                    <td data-label="Registered By">
+                      <div class="slds-truncate" title="{!reg.RegisteredByAccount__r.Name}">{!reg.RegisteredByAccount__r.Name}</div>
+                    </td>
+                    <td data-label="Delivery Date">
+                      <div class="slds-truncate">
+                        <ui:outputDate value="{!reg.Delivery_Date__c}" />
+                      </div>
+                    </td>
+                  </tr>
+                </aura:iteration>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </aura:if>
+
+    </aura:if>
+  </div>
+
+
+</aura:component>

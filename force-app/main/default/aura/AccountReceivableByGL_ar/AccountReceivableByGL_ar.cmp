@@ -1,0 +1,120 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,force:lightningQuickAction" access="global" controller="AccountReceivableReportByGL_ar" >
+    <aura:attribute name="transactionData" type="Object[]" />
+    <aura:attribute name="periodOptions" type="sObject[]" />
+    <aura:attribute name="accountTypes" type="Object[]" />
+    <aura:attribute name="idPeriod" type="String" />
+    <aura:attribute name="idAccRecordType" type="String" />
+    <aura:attribute name="idSelectedAccount" type="String" />
+    <aura:attribute name="donotLoad" type="Boolean" default="false" />
+   	<aura:attribute name="listData" type="Object[]" />
+    <aura:attribute name="listTitle" type="String" />
+    <aura:attribute name="isOpen" type="boolean" default="false"/>
+    <aura:attribute name="columns" type="List" />
+    <aura:attribute name="cssCustomStyle" type="String" />
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    <aura:handler name="change" value="{!v.idPeriod}" action="{!c.retrieveAccountDetails}"/>
+    <aura:handler name="change" value="{!v.idAccRecordType}" action="{!c.retrieveAccountDetails}"/>
+    <aura:handler name="RemoveComponent" action="{!c.removeComponent}" event="c:AccountBilling_ar"/>
+    <style>{!v.cssCustomStyle}</style>
+    <lightning:card >
+        <aura:set attribute="title"></aura:set>
+        <div class="slds-grid">
+            <div class="slds-col slds-size_1-of-3 slds-text-align_right"><lightning:button label="&larr; Previous Period" onclick="{!c.previousPeriod}"/>&nbsp;</div>
+            <div class="slds-col slds-size_1-of-3 period-selector">
+                <lightning:select aura:id="selectPeriod" name="periods" label="" value="{!v.idPeriod}">
+                    <aura:iteration items="{!v.periodOptions}" var="pr">
+                        <option value="{!pr.Id}" text="{!pr.Name}"></option>
+                    </aura:iteration>
+                </lightning:select>
+            </div>
+            <div class="slds-col slds-size_1-of-3">&nbsp;<lightning:button label="Next Period &rarr;" onclick="{!c.nextPeriod}"/></div>
+        </div>
+        <!-- <div class="slds-grid">
+            <div class="slds-col slds-size_1-of-3 slds-text-align_right">&nbsp;</div>
+            <div class="slds-col slds-size_1-of-3 account-type-selector slds-text-align_center">
+                <lightning:select aura:id="selectAccType" name="accountRecTypes" label="" value="{!v.idAccRecordType}">
+                    <option value="" text="-Select Account Type-"></option>
+                    <aura:iteration items="{!v.accountTypes}" var="rt">
+                        <option value="{!rt.Id}" text="{!rt.Name}"></option>
+                    </aura:iteration>
+                </lightning:select>
+            </div>
+            <div class="slds-col slds-size_1-of-3">&nbsp;</div>
+        </div> -->
+    </lightning:card>
+    <lightning:card >
+        <aura:set attribute="title"></aura:set>
+        <table class="slds-table slds-table_bordered slds-table_cell-buffer">
+            <thead>
+                <tr class="slds-text-title_caps">
+                    <th class="slds-is-sortable" scope="col" width="20%" data-label="accountName" onclick="{!c.sortTry}">
+                        <span class="slds-truncate" title="Account Name">Account Name</span>
+                    </th>
+                    <th scope="col" width="30%" class="slds-is-sortable slds-text-align_right" data-label="billingBalance" onclick="{!c.sortTry}">
+                        <span class="slds-truncate" title="AR Control GL Amount">AR Control GL Amount</span>
+                    </th>
+                    <th scope="col" width="30%" class="slds-is-sortable slds-text-align_right" data-label="receiptBalance" onclick="{!c.sortTry}">
+                        <span class="slds-truncate" title="Unapplied GL Amount">Unapplied GL Amount</span>
+                    </th>
+                    <th scope="col" width="30%" class="slds-is-sortable slds-text-align_right" data-label="actualBalance" onclick="{!c.sortTry}">
+                        <span class="slds-truncate" title="Actual Balance">Actual Balance</span>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <aura:iteration items="{!v.transactionData}" var="a">
+                    <tr>
+                        <th scope="row" data-label="Account Name">
+                            <a href="{!'#/sObject/'+ a.accountId + '/view'}">{#a.accountName}</a>
+                        </th>
+                        <th data-label="AR Control Amount" class="slds-text-align_right">
+                            <div class="slds-truncate" title="{#a.billingBalance}">
+                                <a data-idaccount="{!a.accountId}" data-type="arcontrol" onclick="{!c.openModal}" href="javascript:void(0);">
+                                    <lightning:formattedNumber value="{#a.billingBalance}" style="currency" currencyCode="CAD" />
+                                </a>
+                            </div>
+                        </th>
+                        <th data-label="Unapplied Amount" class="slds-text-align_right">
+                            <div class="slds-truncate" title="{#a.receiptBalance}">
+                                <a data-idaccount="{!a.accountId}" data-type="unapplied" onclick="{!c.openModal}" href="javascript:void(0);">
+                                    <lightning:formattedNumber value="{#a.receiptBalance}" style="currency" currencyCode="CAD" />
+                                </a>
+                            </div>
+                        </th>
+                        <th data-label="Actual Balance" class="slds-text-align_right">
+                            <div class="slds-truncate" title="{#a.actualBalance}">
+                                <lightning:formattedNumber value="{#a.actualBalance}" style="currency" currencyCode="CAD" />
+                            </div>
+                        </th>
+                    </tr>
+                </aura:iteration>
+            </tbody>
+        </table>
+    </lightning:card>
+    <aura:if isTrue="{!v.isOpen}">
+       <!--###### MODAL BOX Start From Here ######-->
+        <div role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container" style="z-index:10000;">
+              <!-- ###### MODAL BOX HEADER Part Start From Here ######-->
+              <c:Toaster aura:id="toast" />
+              <div class="slds-modal__header">
+                <h2 id="header99" class="slds-text-heading--medium">{!v.listTitle}</h2>
+              </div>
+              <!--###### MODAL BOX BODY Part Start From Here ######-->
+              <div class="slds-modal__content slds-p-around--medium">
+                <lightning:datatable aura:id="billDataTable"
+                         data="{! v.listData }"
+                         columns="{! v.columns }"
+                         keyField="Id"/>
+              </div>
+              <!--###### MODAL BOX FOOTER Part Start From Here ######-->
+            <div class="slds-modal__footer">
+                <button class="slds-button slds-button--neutral" onclick="{!c.closeModal}" >Close</button>
+            </div>
+        </div>
+    </div>
+        <div class="slds-backdrop slds-backdrop--open"></div>
+        <!--###### MODAL BOX Part END Here ######-->
+     </aura:if>
+    <lightning:spinner aura:id="spinner" />
+</aura:component>

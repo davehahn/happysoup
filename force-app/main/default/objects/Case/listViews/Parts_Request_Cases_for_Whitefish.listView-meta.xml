@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Parts_Request_Cases_for_Whitefish</fullName>
+    <columns>CASES.CASE_NUMBER</columns>
+    <columns>CORE.USERS.ALIAS</columns>
+    <columns>ERP_Order__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>CASES.RECORDTYPE</field>
+        <operation>equals</operation>
+        <value>Case.Part_Order_Request</value>
+    </filters>
+    <filters>
+        <field>ERP_Warehouse__c</field>
+        <operation>equals</operation>
+        <value>Whitefish</value>
+    </filters>
+    <filters>
+        <field>CASES.STATUS</field>
+        <operation>equals</operation>
+        <value>Parts Required,Parts On Order</value>
+    </filters>
+    <label>Parts Request Cases for Whitefish</label>
+    <sharedTo>
+        <role>Parts_and_Service_Advisor</role>
+    </sharedTo>
+</ListView>

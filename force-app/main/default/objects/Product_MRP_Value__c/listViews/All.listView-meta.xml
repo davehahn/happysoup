@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>All</fullName>
+    <columns>NAME</columns>
+    <columns>Product__c</columns>
+    <columns>Warehouse__c</columns>
+    <columns>MRP_Quantity_Available__c</columns>
+    <columns>Last_Year_Season_Consumption__c</columns>
+    <columns>Availability_Bar__c</columns>
+    <columns>Availability_Percentage__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>Last_Year_Season_Consumption__c</field>
+        <operation>notEqual</operation>
+        <value>0</value>
+    </filters>
+    <filters>
+        <field>Availability_Percentage__c</field>
+        <operation>lessThan</operation>
+        <value>100</value>
+    </filters>
+    <label>Product Order Planning</label>
+</ListView>

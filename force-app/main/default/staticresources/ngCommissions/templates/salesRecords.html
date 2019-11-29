@@ -1,0 +1,117 @@
+<div class="row-fluid filter-label-row">
+
+  <div class="col-lg-3">
+    <label>Select Stage</label>
+  </div>
+
+  <div class="col-lg-6 center">
+    <label>Date Filter</label>
+  </div>
+
+  <div class="col-lg-3">
+    <label>Search</label>
+  </div>
+
+</div>
+
+<div class="row-fluid">
+
+  <div class="col-lg-3">
+    <stage-selector selected-stage="ComRec.queryParams.selectedStage"></stage-selector>
+  </div>
+
+  <div class="col-lg-6">
+    <date-filter  month="ComRec.queryParams.currentMonth" year="ComRec.queryParams.currentYear"></date-filter>
+  </div>
+
+  <div class="col-lg-3">
+    <input type="text" class="form-control" ng-model="searchValue"></input>
+  </div>
+
+</div>
+
+<div class="row-fluid">
+
+  <div class="col-lg-12" >
+
+    <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">
+      <span ng-bind-html="alert.msg"></span>
+    </alert>
+
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <td class="bottom w10">Date</td>
+          <td class="bottom w20">Record Name</td>
+          <td class="w20">Comm. Type</td>
+          <td class="w25">Stage</td>
+          <td class="w10">Percent</td>
+          <td class="w10">Amount</td>
+          <td class="w5"></td>
+        </tr>
+      </thead>
+
+       <tbody>
+
+        <tr class="indicator" ng-show="ComRec.loading">
+          <td colspan="6">
+            <div class="load-bar">
+              <div class="bar"></div>
+              <div class="bar"></div>
+              <div class="bar"></div>
+            </div>
+          </td>
+        </tr>
+        <tr class="empty" ng-show="!hasRecords && !ComRec.loading">
+          <td colspan="6">
+            <div class='no-records'>
+              No Records Found
+            </div>
+          </td>
+        </tr>
+
+        <tr ng-repeat="record in resultValue=(ComRec.records | filter:searchValue) " ng-show="hasRecords && !ComRec.loading">
+          <td class="middle">{{record.CreatedDate}}</td>
+          <td class="middle">
+            <a href="/servlet/servlet.FileDownload?file={{record.InvoiceId}}"
+               target="_blank"
+               ng-if="record.InvoiceId">
+              <i class="fa fa-file-pdf-o"></i>
+            </a>
+            <parent-record-link comrecord="{{record}}" />
+            <span> - {{record.AccountName}}</span>
+          </td>
+          <td class="middle"> {{ record.CommissionType }}</td>
+          <td class="middle {{record.RecordStage | removeSpaces}}">
+            <span popover-html-unsafe="{{record | approvalPopOver}}"
+                  popover-trigger="mouseenter"
+                  popover-placement="left">
+              {{record.RecordStage}}
+            </span>
+          </td>
+          <td>{{record.PaymentPercent}} %</td>
+          <td>$ {{record.PaymentAmount}}</td>
+          <td>
+             <a href="" ng-click="viewComm('comrecord_id', record.RecordId)" class="row-btn green">
+               <i class="fa fa-search"></i>
+             </a>
+          </td>
+        </tr>
+       </tbody>
+
+       <tfoot ng-show="hasRecords && !ComRec.loading">
+         <tr>
+           <td></td>
+           <td></td>
+           <td></td>
+           <td></td>
+           <td>$ {{resultValue | sumOfValue:'PaymentAmount'}}</td>
+           <td></td>
+         </tr>
+       </tfoot>
+   </table>
+
+
+  </div><!--/span-->
+</div><!--/row-->
+

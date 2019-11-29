@@ -1,0 +1,661 @@
+<apex:page StandardController="AcctSeed__Time_Card_Period__c" extensions="gcTimeCardPeriod_Ext" showHeader="true" sidebar="true" cache="false" docType="html-5.0">
+
+<head>
+<style>
+.link{
+    cursor:pointer;
+    text-decoration:underline;
+}
+table{
+    border-collapse:collapse;
+}
+tr.total td{
+    font-weight: bold;
+}
+div.pq-grid-footer{
+    display:none;
+}
+.btn-disable{
+    cursor: default;
+    pointer-events: none;
+
+    /*Button disabled - CSS color class*/
+    color: #c0c0c0;
+    background-color: #ffffff;
+}
+tr.pq-row-select td{
+    background-color:yellow;
+}
+.highlight{
+    background-color: yellow;
+}
+.tcv1NonWork
+{
+    background-color: #ADD8E6;
+}
+.tcv2NonDirect
+{
+    background-color: #90EE90;
+}
+</style>
+
+<apex:stylesheet value="{!URLFOR($Resource.GMBLJS__jQueryUI,'/jquery-ui/jquery-ui.min.css')}"/>
+<apex:stylesheet value="{!URLFOR($Resource.GMBLJS__pqGridPro241,'/pqgrid.min.css')}"/>
+
+</head>
+
+<!--javascript is deliberately include ABOVE the HTML body, because the c:gcmpTimeCardLine depends on these libraries as well.-->
+<apex:includeScript value="{!$Resource.GMBLJS__jQuery}"/>
+<apex:includeScript value="{!URLFOR($Resource.GMBLJS__jQueryUI,'/jquery-ui/jquery-ui.min.js')}"/>
+<apex:includeScript value="{!URLFOR($Resource.GMBLJS__pqGridPro241,'/pqgrid.min.js')}"/>
+<apex:includeScript value="{!URLFOR($Resource.GMBLJS__pqGridPro241,'/touch-punch/touch-punch.min.js')}"/>
+<apex:includeScript value="{!$Resource.GMBLJS__accountingJS}"/>
+<apex:includeScript value="{!$Resource.GMBLJS__ExcellentExport}"/>
+<apex:includeScript value="{!$Resource.GMBLJS__gsrGrid2}"/>
+<apex:includeScript value="{!$Resource.GMBLJS__dateJSENUS}"/>
+
+<script>function setFocusOnLoad() {}</script>
+<script type="text/javascript">
+
+    $j = jQuery.noConflict();
+
+    $j(document).ready(function()
+    {
+        $j('.ptBody').remove(); //remove this page label, to avoid confusion when the time card period is changed by the code on this page.
+        initGrid_employees();
+        refreshGrid_employees();
+        initComponent_timeCardLines();
+
+        initGrid_timeCardDays();
+        refreshGrid_timeCardDays();
+    });
+
+    accounting.settings = {
+        currency: {
+            symbol : "$",   // default currency symbol is '$'
+            format: "%s%v", // controls output: %s = symbol, %v = value/number (can be object: see below)
+            decimal : ".",  // decimal point separator
+            thousand: ",",  // thousands separator
+            precision : 2   // decimal places
+        },
+        number: {
+            precision : 2,  // default precision on numbers is 0
+            thousand: ",",
+            decimal : "."
+        }
+    }
+
+    function pqDatePicker(ui) {
+        var $this = $j(this);
+        $this
+            //.css({ zIndex: 3, position: "relative" })
+            .datepicker({
+                yearRange: "-20:+0", //20 years prior to present.
+                changeYear: true,
+                changeMonth: true,
+                //showButtonPanel: true,
+                onClose: function (evt, ui) {
+                    $j(this).focus();
+                }
+            });
+        //default From date
+        //$this.filter(".pq-from").datepicker("option", "defaultDate", new Date("01/01/1996"));
+        //default To date
+        //$this.filter(".pq-to").datepicker("option", "defaultDate", new Date("12/31/1998"));
+    }
+</script>
+
+<body>
+    <div style="margin:0 auto; width:100%">
+
+        <div id="detailDiv">
+            <apex:outputPanel id="detailContainer">
+                <apex:pageMessages />
+
+                <apex:detail id="detail" subject="{!idTimeCardPeriod}" relatedList="false" inlineEdit="false"/>
+                
+                <script>
+                    var $btnPrev = jQuery(                   '<button class=\"btn\" onclick=\"goToPeriodPrev();\">&nbsp;&lt;&lt;&lt;&nbsp;Go To Prev Period&nbsp;&lt;&lt;&lt;&nbsp;</button><span>&nbsp;</span>');
+                    var $btnNext = jQuery('<span>&nbsp;</span><button class=\"btn\" onclick=\"goToPeriodNext();\">&nbsp;&gt;&gt;&gt;&nbsp;Go To Next Period&nbsp;&gt;&gt;&gt;&nbsp;</button>');
+                    jQuery('#detailDiv').find('.pbButton, .pbButtonb').prepend($btnPrev);               
+                    jQuery('#detailDiv').find('.pbButton, .pbButtonb').append($btnNext);
+                </script>
+
+                <script>
+                    //a controller variable named idTimeCardPeriod is initialized by the constructor
+                    //it is here translated to a javascript variable
+                    idTimeCardPeriod = '{!idTimeCardPeriod}';
+                    idTimeCard = null;
+
+                    //after using goToPeriodPrev or goToPeriodNext, the URL no longer has the Id of the time card period that the user is viewing.
+                    //if the user clicks a page refresh, they will be returned to the original time card period, which will be confusing.
+                    //so we replace the url Id parameter with the Id of the time card period that the user is currently viewing.
+
+                    var newURL = window.location.pathname+'?id='+idTimeCardPeriod;
+                    window.history.pushState("","",newURL);
+
+                    //the first time that this page section is rendered, the refreshGrid_employees function does not exist yet.
+                    //the first time that this page section is rendered, refreshGrid_employees is instead called by the document ready function
+                    if(typeof refreshGrid_employees !== 'undefined')
+                        refreshGrid_employees();
+                    if(typeof refreshColumns !== 'undefined')
+                        refreshColumns();
+                    if(typeof refreshGrid_timeCardDays !== 'undefined')
+                        refreshGrid_timeCardDays();                    
+                </script>
+            </apex:outputPanel>
+        </div>
+
+        <apex:form >
+            <apex:actionFunction name="goToPeriodNext" reRender="detailContainer,relatedListContainer" action="{!goToPeriodNext}"/>
+            <apex:actionFunction name="goToPeriodPrev" reRender="detailContainer,relatedListContainer" action="{!goToPeriodPrev}"/>
+            <apex:actionFunction name="rerenderRelatedLists" reRender="relatedListContainer"/>
+        </apex:form>
+
+        <apex:pageBlock mode="edit" title="Time Cards">
+            <apex:pageBlockButtons location="top">
+                <span style="font-style:italic; font-weight:normal;">single-click a row, to view or refresh the employee's time card lines in the grid below</span>
+            </apex:pageBlockButtons>
+            <div id="employees"></div>
+            <div style="text-align:center; font-style:italic">drag here ^^^ to resize the grid</div>
+        </apex:pageBlock>
+
+        <c:gcmpTimeCardLines_bulkEdit idTimeCardPeriod="{!idTimeCardPeriod}" />
+
+        <apex:outputPanel id="relatedListContainer">
+            <!--<apex:relatedList subject="{!idTimeCardPeriod}" list="AcctSeed__Time_Cards__r" id="listTimeCards"/>-->
+            <!--<apex:relatedList subject="{!idTimeCardPeriod}" list="Journal_Entries__r" id="listJournalEntries"/>-->
+            <!-- <apex:relatedList subject="{!idTimeCardPeriod}" list="CombinedAttachments" id="listCombinedAttachments"/> -->
+            <apex:relatedList subject="{!Id}" list="OpenActivities" />
+            <apex:relatedList subject="{!Id}" list="ActivityHistories" />
+        </apex:outputPanel>
+
+        <apex:pageBlock mode="edit" title="Payroll Export">
+            <apex:pageBlockButtons location="top">
+                <button type="button" class="btn" onclick="refreshGrid_timeCardDays();">Refresh</button>  
+            </apex:pageBlockButtons>
+            <div id="timeCardDays"></div>
+            <div style="text-align:center; font-style:italic">drag here ^^^ to resize the grid</div>
+        </apex:pageBlock>
+
+
+    </div>
+</body>
+
+<script type="text/javascript">
+
+    function initGrid_employees()
+    {
+        var showDollars = {!$Permission.TimeCardPeriodPageTimeCardsDollarsView};
+        var gridObj = { title:"",
+                        collapsible:{on:false,collapsed:false,toggle:false},
+                        columnTemplate: {sortable:true, minWidth:100, maxWidth:100},
+                        dataModel:{data:[], sorting:'local', location:'local', sortDir:'up', sortIndx:'userName'}, 
+                        dragColumns:{enabled:false},
+                        editable:false,
+                        filterModel:{on:true, mode:'AND', header:true},
+                        freezeCols:0,
+                        freezeRows:0,
+                        height:300,
+                        historyModel:{on:false},
+                        hoverMode:'row',
+                        hwrap:false,
+                        numberCell:{show:true},
+                        pageModel: {type:null},
+                        pasteModel:{on:false},
+                        resizable: true,
+                        roundCorners: false,
+                        scrollModel: {autoFit:true},
+                        selectionModel: { type: 'row', mode:'single'},
+                        showBottom:true,
+                        showHeader:true,
+                        showTitle:true,
+                        showTop:true,
+                        showToolbar:false,
+                        sortable:true,
+                        swipeModel:{on:false},
+                        virtualX: false,
+                        //virtualXHeader: false,
+                        virtualY: false,
+                        width:'auto',
+                        wrap:false};
+        //// filter:{type: "textbox", condition: 'begin', listeners: ['keyup'], init:clearSelectionAndLines}}
+        gridObj.colModel=[  {dataIndx:'userName',       title:'Employee', maxWidth:null, gFilter:'text'},
+                            {dataIndx:'glv2Name',       title:'Dep\'t (GLV2)', maxWidth:150, gFilter:'select'},
+                            {dataIndx:'hoursRT',        title:'Regular<br/>Hours',      align:'center',     gFormat:'number',   gTotal:true, dataType:'float'},
+                            {dataIndx:'hoursOT',        title:'Overtime<br/>Hours',     align:'center',     gFormat:'number',   gTotal:true, dataType:'float'},
+                            {dataIndx:'hoursDT',        title:'Double-Time<br/>Hours',  align:'center',     gFormat:'number',   gTotal:true, dataType:'float'},
+                            {dataIndx:'PTO',            title:'PTO<br/>',               align:'center',     gFormat:'number',   gTotal:true, dataType:'float'},                         
+                            {dataIndx:'HOLIDAY',        title:'Holiday<br/>Time',      align:'center',     gFormat:'number',   gTotal:true, dataType:'float'},
+                            {dataIndx:'BEREAVEMENT',    title:'Bereavement<br/>Leave',      align:'center',     gFormat:'number',   gTotal:true, dataType:'float'},
+                            {dataIndx:'hours',          title:'Total<br/>Hrs',          align:'center',     gFormat:'number',   gTotal:true, dataType:'float'},
+                            {dataIndx:'wages',            title:'Gross<br/>Pay',          align:'center',     gFormat:'money',    gTotal:true, dataType:'float', hidden:!showDollars},
+                            {dataIndx:"scrollSpacer", minWidth:15, maxWidth:15}];
+
+        gGrid.initFormat(gridObj.colModel);
+        gGrid.initFilter(gridObj.colModel);
+
+        $j.each(gridObj.colModel, function(i,col)
+        {
+            var dataIndx = col.dataIndx;
+            if(dataIndx == 'hoursRT' || 
+               dataIndx == 'hoursOT' ||
+               dataIndx == 'hoursDT' ||
+               dataIndx == 'PTO'     ||
+               dataIndx == 'HOLIDAY' ||
+               dataIndx == 'BEREAVEMENT' ||
+               dataIndx == 'hours')
+            {
+                $j.extend(col,{
+                    render:function(ui)
+                    {
+                        if( (!ui.rowData[dataIndx] || parseFloat(ui.rowData[dataIndx]) == 0) && !ui.rowData.isTotal) return '-';
+                        return accounting.formatNumber(ui.rowData[dataIndx]);
+                    }
+                });             
+            }
+            else if(dataIndx == 'wages')
+            {
+                $j.extend(col,{
+                    render:function(ui)
+                    {
+                        if( (!ui.rowData[dataIndx] || parseFloat(ui.rowData[dataIndx]) == 0) && !ui.rowData.isTotal) return '-';
+                        return accounting.formatMoney(ui.rowData[dataIndx]);
+                    }
+                });             
+            }  
+
+            //clear the selection of any rows, whenever the filtering changes
+            if(col.filter && col.filter.listeners)
+            {
+                if(col.filter.type == 'textbox')
+                col.filter.listeners = [{'keyup':function(event,ui)
+                                            {
+                                                clearTCLines();
+                                                gGrid.clearSelection($gridDiv);
+                                                $gridDiv.pqGrid( "filter", {data: [{ dataIndx: col.dataIndx, condition: 'contain', value: ui.value }]});
+                                            }
+                                        }];
+                else if(col.filter.type == 'select')
+                col.filter.listeners = [{'change':function(event,ui)
+                                            {
+                                                clearTCLines();
+                                                gGrid.clearSelection($gridDiv);
+                                                $gridDiv.pqGrid( "filter", {data: [{ dataIndx: col.dataIndx, condition: 'equal', value: ui.value }]});
+                                            }
+                                        }];
+            }
+        });
+
+
+        var $gridDiv = $j('#employees');
+
+        $gridDiv.pqGrid(gridObj);
+
+        gGrid.appendExportLink($gridDiv);
+
+        $gridDiv.on('pqgridrefresh', function(event, ui)
+        {
+            gGrid.refreshTotal($j(this),ui.pageData);
+
+        });
+        $gridDiv.on('pqgridrefreshrow', function(event, ui)
+        {
+            //refresh the grid, to refresh totals
+            $j(this).pqGrid('refresh');
+        });
+
+        $gridDiv.on('pqgridrowclick', function(event, ui)
+        {
+            if(ui.rowData.idTC)
+            {
+                idTimeCard = ui.rowData.idTC;
+                refreshGrid_lines();
+                retrieveEmployeeName();
+            }
+            else
+            {
+                $j('#timeCardLines').pqGrid('showLoading');
+                Visualforce.remoting.Manager.invokeAction(
+                    '{!$RemoteAction.gcTimeCardPeriod_Ext.findOrCreateTimeCard}',
+                    ui.rowData.idUser,idTimeCardPeriod,
+                    function(result,event){
+                        if(event.status){
+                           idTimeCard = result;
+                           refreshGrid_lines();
+                           retrieveEmployeeName();
+                           //rerenderRelatedLists();
+                        }
+                        else
+                        {
+                            alert(event.message);
+                        }
+                        $j('#timeCardLines').pqGrid('hideLoading');
+                    },
+                    {buffer:true, escape:true, timeout:120000});                
+            }
+        });
+    }
+
+    function clearTCLines()
+    {
+        var data = [];
+        $j('#timeCardLines').pqGrid('option','dataModel.data', data);
+        $j('#timeCardLines').pqGrid('refreshDataAndView');
+    }
+
+    function refreshGrid_employees(){
+        
+        var $gridDiv = $j('#employees');
+        $gridDiv.pqGrid('showLoading');
+
+        Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.gcTimeCardPeriod_Ext.retrieveEmployees}',
+            idTimeCardPeriod,
+            function(result,event){
+                if(event.status){
+                    gGrid.refreshGrid_callback($gridDiv,result);
+                }
+                else
+                {
+                    alert(event.message);
+                }
+                $gridDiv.pqGrid('hideLoading');
+            },
+            {buffer:true, escape:true, timeout:120000});
+    }
+
+    function refreshRow_employee(idTC)
+    {
+        var $gridDiv = $j('#employees');
+        $gridDiv.pqGrid('showLoading');
+
+        Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.gcTimeCardPeriod_Ext.retrieveEmployees}',
+            idTC,
+            function(result,event){
+                if(event.status){
+
+                    //cycle over the rows to find the row for that employee
+                    jQuery.each($gridDiv.pqGrid('option','dataModel.data'),function(i,row)
+                    {
+                        if(result.length > 0 && row.idUser == result[0].idUser)
+                        {
+                           var rowIndx = $gridDiv.pqGrid( "getRowIndx", { rowData : row } ).rowIndx;
+                           jQuery.extend(row,result[0]);
+                           $gridDiv.pqGrid("refreshRow",{rowIndx:rowIndx});
+                           return false;
+                        }
+                    });
+                }
+                else
+                {
+                    alert(event.message);
+                }
+                $gridDiv.pqGrid('hideLoading');
+            },
+            {buffer:true, escape:true, timeout:120000});
+    }
+
+
+
+
+    function initGrid_timeCardDays()
+    {
+        var showDollars = {!$Permission.TimeCardPeriodPageExportDollarsView};
+        var gridObj = { title:"",
+                        collapsible:{on:false,collapsed:false,toggle:false},
+                        columnTemplate: {sortable:true, minWidth:100, maxWidth:100},
+                        dataModel:{data:[], sorting:'local', location:'local'}, 
+                        dragColumns:{enabled:false},
+                        editable:false,
+                        filterModel:{on:true, mode:'AND', header:true},
+                        freezeCols:0,
+                        freezeRows:0,
+                        height:300,
+                        historyModel:{on:false},
+                        hoverMode:'row',
+                        hwrap:false,
+                        numberCell:{show:true},
+                        pageModel: {type:null},
+                        pasteModel:{on:false},
+                        resizable: true,
+                        roundCorners: false,
+                        scrollModel: {autoFit:true},
+                        selectionModel: { type: 'row', mode:'single'},
+                        showBottom:true,
+                        showHeader:true,
+                        showTitle:true,
+                        showTop:true,
+                        showToolbar:false,
+                        sortable:true,
+                        swipeModel:{on:false},
+                        virtualX: false,
+                        //virtualXHeader: false,
+                        virtualY: false,
+                        width:'auto',
+                        wrap:false};
+        //// filter:{type: "textbox", condition: 'begin', listeners: ['keyup'], init:clearSelectionAndLines}}
+        gridObj.colModel=[  {dataIndx:'employeeName',           title:'Employee',       maxWidth:null, gFilter:'text'},
+                            {dataIndx:'timeCardDate',           title:'WorkDate',       dataType:'date', align:'center', minWidth:160},
+                            {dataIndx:'hours',                  title:'Hours',          align:'center',     gFormat:'number', dataType:'float'},
+                            {dataIndx:'inTime',                 title:'InTime',         minWidth:100, align:'center'},
+                            {dataIndx:'outTime',                title:'OutTime',        minWidth:100, align:'center'},
+                            {dataIndx:'lunch',                  title:'Lunch',          minWidth:100, align:'center', hidden:true},   
+                            {dataIndx:'rate',                   title:'PayRate', dataType:'float', gFormat:'number',hidden:!showDollars},
+                            {dataIndx:"scrollSpacer", minWidth:15, maxWidth:15}];
+
+        gGrid.initFormat(gridObj.colModel);
+        gGrid.initFilter(gridObj.colModel);
+
+        $j.each(gridObj.colModel, function(i,col)
+        {
+            var dataIndx = col.dataIndx;
+
+            if(dataIndx == 'timeCardDate'){
+                col.filter = { type: 'textbox', condition: "between", init: pqDatePicker, listeners: ['change'] };
+            }
+        });
+
+        var $gridDiv = $j('#timeCardDays');
+
+        $gridDiv.pqGrid(gridObj);
+
+        // gGrid.appendExportLink($gridDiv);
+        appendExportXlsLink($gridDiv);
+        appendExportCsvLink($gridDiv);
+
+        $gridDiv.on('pqgridrefresh', function(event, ui)
+        {
+            gGrid.refreshTotal($j(this),ui.pageData);
+
+        });
+    }
+
+    function refreshGrid_timeCardDays(){
+        
+        var $gridDiv = $j('#timeCardDays');
+        $gridDiv.pqGrid('showLoading');
+
+        Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.gcTimeCardPeriod_Ext.retrieveTimeCardDays}',
+            idTimeCardPeriod,
+            function(result,event){
+                if(event.status){
+                    gGrid.refreshGrid_callback($gridDiv,result);
+                }
+                else
+                {
+                    alert(event.message);
+                }
+                $gridDiv.pqGrid('hideLoading');
+            },
+            {buffer:true, escape:true, timeout:120000});
+    }
+
+    function appendExportXlsLink(gridDiv)
+    {
+        var exportLink = jQuery('<a download="export.xls" href="#">Export to Excel</a>');
+        exportLink.on('click',function(){
+            exportGridXls(gridDiv,this);
+        });
+
+        gridDiv.find('div.pq-grid-title').append('&nbsp;&nbsp;');
+        gridDiv.find('div.pq-grid-title').append(exportLink);
+        exportLink = null;
+    }
+
+    function exportGridXls(gridDiv, aTag)
+    {
+        gridDiv.pqGrid('showLoading');
+
+        var $rowTemplate = jQuery('<tr></tr>');
+        var $header = jQuery('<tr></tr>');
+
+        var dataIndexNumber = [];
+        var dataIndexMoney = [];
+        var totals = {};
+
+        //build-up the header row
+        //build-up a template detail row
+        jQuery.each(gridDiv.pqGrid('getColModel'), function(i,col)
+        {
+            var $newTD = jQuery('<td></td>');
+            var $newTH = jQuery('<th style="border:1px solid black"></th>');
+            //var $newTF = jQuery('<td style="font-weight:bold"></td>');
+            if(!col.hidden && col.dataIndx != 'scrollSpacer')
+            {
+                $header.append($newTH.clone().addClass(col.dataIndx).html(col.title));
+                $rowTemplate.append($newTD.clone().attr('id',col.dataIndx));
+            }
+
+            if(col.gFormat == 'money')
+               dataIndexMoney.push(col.dataIndx);
+            else if(col.gFormat == 'number')
+               dataIndexNumber.push(col.dataIndx);
+
+            if(col.gTotal == true)
+               totals[col.dataIndx] = +0;
+
+            $newTD = null;
+            $newTH = null;
+        });
+
+        //create the table
+        $table = jQuery('<table></table>');
+        $table.attr('id','exportTable');
+
+        //add the header row
+        $table.append($header);
+
+        //create and add the detail rows
+        jQuery.each(gridDiv.pqGrid('option','dataModel.data'), function(i, dataRow){
+            var $newRow = $rowTemplate.clone();
+            
+            if(dataRow.hasOwnProperty('pq_rowcls') && dataRow.pq_rowcls=='total')
+            {
+                $newRow.css('font-weight','bold');
+            }
+
+            jQuery.each($newRow.find('td'),function (j, cell){
+                var idTd = jQuery(cell).attr('id');
+                if(dataRow.hasOwnProperty(idTd))
+                {
+                    var cont = dataRow[idTd];
+
+                    if(totals.hasOwnProperty(idTd) && !isNaN(cont))
+                        totals[idTd] = totals[idTd] + parseFloat(cont);
+                    
+                    if(jQuery.inArray(idTd,dataIndexMoney) >= 0 )
+                        cont = accounting.formatMoney(cont);
+                    else if(jQuery.inArray(idTd,dataIndexNumber) >= 0)
+                        cont = accounting.formatNumber(cont);
+
+                    if(dataRow.hasOwnProperty('pq_rowcls') && dataRow.pq_rowcls=='total' && cont==0){
+                        jQuery(cell).html('').addClass(idTd).removeAttr('id');
+                    } else {
+                        jQuery(cell).html(cont).addClass(idTd).removeAttr('id');
+                    }
+
+                    cont = null;
+                }
+                idTd = null
+            });
+
+            $table.append($newRow);
+            $newRow = null;
+        });
+
+        var $exportStage = jQuery('<div></div>');
+        $exportStage.append($table);
+        jQuery(document.body).append($exportStage);
+        ExcellentExport.excel(aTag, 'exportTable','');
+        $exportStage.remove();
+
+        gridDiv.pqGrid('hideLoading');
+    }
+
+    function appendExportCsvLink(gridDiv){
+        var exportLink = $j('<a href="#">Export to CSV</a>');
+        exportLink.click(function(){
+            exportGridCsv(gridDiv);
+            return false;
+        });
+        gridDiv.find('div.pq-grid-title').append('&nbsp;&nbsp;');
+        gridDiv.find('div.pq-grid-title').append(exportLink);
+    }
+
+    function exportGridCsv(gridDiv){
+        gridDiv.pqGrid('showLoading');
+
+        var pos = 0;
+        var delim = '';
+        var indexItems = []
+        var csvData = '';
+
+        var prepVal = function(val){
+            if(!val) return '';
+            val.replace('"', '""');
+            return '"' + val + '"';
+        }
+
+        // Add the header row
+        pos = 0;
+        $j.each(gridDiv.pqGrid('getColModel'), function(i, col){
+            if(!col.hidden && col.dataIndx != 'scrollSpacer'){
+                indexItems.push(col.dataIndx);
+                delim = (pos > 0) ? ',' : '';
+                csvData += delim + prepVal(col.title);
+                pos++;
+            }
+        });
+        csvData += '\n';
+
+        //Add the detail rows
+        $j.each(gridDiv.pqGrid('option','dataModel.data'), function(i2, row){
+            if(row.hasOwnProperty('pq_rowcls') && row.pq_rowcls == 'total') return true;
+
+            pos = 0;
+            $j.each(indexItems, function(i3, idx){
+                delim = (pos > 0) ? ',' : '';
+                csvData += delim + prepVal(row[idx]);
+                pos++;
+            });
+
+            csvData += '\n';
+        });
+
+        // Create and click the link
+        var a = document.createElement('a');
+        a.href = 'data:attachment/csv,' +  encodeURIComponent(csvData);
+        a.target = '_blank';
+        a.download = 'export.csv';
+        document.body.appendChild(a);
+        a.click();
+
+        gridDiv.pqGrid('hideLoading');
+    }
+
+</script>
+
+</apex:page>

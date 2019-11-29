@@ -1,0 +1,102 @@
+<apex:page showHeader="true"
+           sidebar="false"
+           docType="html-5.0"></apex:page>
+
+<!-- <apex:page showHeader="true"
+           sidebar="false"
+           docType="html-5.0"
+           controller="LegendGallery"
+           action="{!constructor}">
+
+  <c:MarketingImageRemoter />
+
+  <c:LegendGalleryResources />
+
+  <div class="headerNav">
+    <span class="title"> {!currentObject.Name} Marketing Images</span>
+    <apex:outputLink value="/{!currentObject.Id}"
+                     styleClass="fd_button small invert cancelLink">
+      Cancel
+    </apex:outputLink>
+    <apex:outputLink value="/apex/Product_AddImages?id={!currentObject.Id}"
+                     styleClass="fd_button small invert success selectLink">
+      Upload New Image(s)
+    </apex:outputLink>
+    <apex:outputLink value="/apex/Product_SelectImages?id={!currentObject.Id}"
+                     styleClass="fd_button small invert yellow selectLink">
+      Select Images
+    </apex:outputLink>
+  </div>
+
+  <c:LegendMainAjaxIndicator id="ajaxInd" />
+
+  <sffd:row >
+    <sffd:column cols="large-8 large-offset-2">
+      <apex:messages styleClass="alert-box alert"/>
+    </sffd:column>
+  </sffd:row>
+
+  <div class="photo_container"></div>
+
+  <div id="overlay"></div>
+
+  <div id="viewer"></div>
+
+  <script type="text/javascript">
+
+   $j = jQuery.noConflict();
+
+    window.awsSetting = {
+
+    }
+
+    LegendGallery.init({
+      awsSettings: {
+        aws_FileKey: '{!s3Policy.FileKey}',
+        aws_Bucket: "{!s3Policy.Bucket}",
+        aws_Acl: '{!s3Policy.Acl}',
+        aws_AccessKey: '{!s3Policy.AuthKey}',
+        aws_Policy: '{!s3Policy.Policy}',
+        aws_Signature: '{!s3Policy.Signature}',
+        fileTypeOnly: 'image',
+        uploadUrl: 'https://{!s3Policy.Bucket}.s3.amazonaws.com/'
+      },
+      zoomable: true,
+      SF_parentId: '{!currentObject.Id}',
+      defaultImageId: '{!currentObject.Default_Marketing_Image}',
+      images_per_page: parseInt("{!imageLimit}"),
+      indicator: '#ajaxInd',
+      header: '.headerNav:first',
+      container: '.photo_container:first',
+      viewer: '#viewer',
+      overlay: '#overlay',
+      row_grid_options: {
+        minMargin: 10,
+        maxMargin: 25,
+        itemSelector: ".marketing_image",
+        resize: true
+      },
+      retrieveImages: function(){
+        var dfd = new $j.Deferred(),
+        data = {};
+        MarketingImageRemoter.fetchAssociatedImages(this.pagination_offset, parseInt('{!imageLimit}'), this.SF_parentId, function( events, result ) {
+          if( result.statusCode == 200 )
+          {
+            // $j.each(result.result, function(k,v) {
+            //   data[k] = v.AWS_S3_Object__r;
+            // });
+            dfd.resolve(result.result);
+          } else {
+            dfd.resolve();
+          }
+        });
+        return dfd.promise();
+      }
+    });
+
+  </script>
+
+
+
+</apex:page>
+ -->

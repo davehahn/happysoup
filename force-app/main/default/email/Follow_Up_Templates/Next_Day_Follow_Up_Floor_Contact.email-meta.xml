@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>Legend_Letterhead</letterhead>
+    <name>2) Next Day Follow Up - Floor Contact</name>
+    <style>freeForm</style>
+    <subject>Legend Boats - Pleasure to Meet you</subject>
+    <textOnly>Hi {!Account.FirstName},
+
+It was great meeting you!  I appreciate you taking the time to stop in.  I hope that I was able to answer all of your questions.  If there is something I missed or some additional information you require, please give me a call. My goal is to help as many people onto the water as possible so they can enjoy the boating lifestyle.
+
+Once again, thank you for visiting Legend Boats.  I hope to see you again very soon.
+
+Best Regards,
+
+
+{!User.Name}
+{!User.Title}
+
+{!User.Email}
+{!User.Phone}
+legendboats.com
+
+{!User.Address}</textOnly>
+    <type>html</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

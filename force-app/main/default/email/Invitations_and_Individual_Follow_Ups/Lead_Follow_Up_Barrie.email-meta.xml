@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <description>Notification of a new Lead in Barrie</description>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>Legend_Letterhead</letterhead>
+    <name>Lead Follow-Up Barrie</name>
+    <style>freeForm</style>
+    <subject>There&#39;s a New Lead in Barrie!</subject>
+    <textOnly>Hi {!Receiving_User.FirstName},
+
+This is to notify you that a new Lead has come in.
+
+Please assign someone to follow-up with {!Lead.Name} at {!Lead.Email} or {!Lead.Phone}
+
+Thank you
+
+{!User.Name}</textOnly>
+    <type>html</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

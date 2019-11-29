@@ -1,0 +1,228 @@
+.THIS {
+  border: 1px solid #d8dde6 !important;
+  padding: 0 1rem 1.5rem 1rem;
+  position:relative;
+}
+.THIS h1{
+    line-height: 2.5rem;
+    background: #f3f2f2;
+    text-align: center;
+    font-size: 1rem;
+    border-bottom: 1px solid #d8dde6;
+    padding-bottom: 0;
+    color:  rgb(84, 105, 141);
+}
+
+.THIS .slds-spinner_container.toggle {
+  display:none;
+}
+
+.THIS .slds-grid:last-child {
+  margin-top: 1.5rem;
+}
+
+.THIS .remaining {
+  margin: 0.5rem 0;
+  border-top: 1px solid #d8dde6;
+  padding: 0.5rem 0 0.25rem;
+  border-bottom: 1px solid #d8dde6;
+}
+
+.THIS .payment-cell {
+  color: #108A63;
+  text-align: center;
+}
+
+.THIS .payment-cell span:first-child {
+  font-size:0.75rem;
+  display:block;
+}
+
+.THIS .payment-cell span:first-child + span span{
+  font-size:1.5rem
+}
+
+.THIS label {
+  margin-bottom: -.25rem;
+}
+
+.THIS .range-row {
+  margin-top: 0.25rem;
+}
+
+.THIS .range-row .value-container {
+  text-align: center;
+}
+
+.THIS .range-row label {
+  padding-left:1rem;
+}
+
+.THIS .ir-deposit-row {
+  margin-top: 0.5rem;
+}
+
+.THIS .ir-deposit-row .slds-form-element__control {
+  padding: 0.25rem 0.5rem;
+  border: 1px solid #d8dde6;
+  border-radius: 4px;
+}
+
+.THIS .ir-deposit-row .slds-form-element__control .un-stylize {
+  display:inline-block;
+  width:75%;
+}
+
+.THIS .ir-deposit-row .slds-form-element__control .un-stylize label {
+  display: none;
+}
+
+.THIS .ir-deposit-row .slds-form-element__control .un-stylize .slds-input,
+.THIS .ir-deposit-row .slds-form-element__control .un-stylize .slds-form-element__control {
+  border: none;
+  padding: 0;
+  text-align: center;
+}
+
+.THIS .ir-deposit-row span {
+  display: inline-block;
+  font-size: 1.5rem;
+  color: #0070d2;
+  vertical-align: top;
+}
+
+.THIS .ir-deposit-row input {
+  border: none;
+  font-size: 1.5rem;
+  color: #0070d2;
+  padding:0;
+  margin:0;
+  text-align: center;
+}
+
+
+.THIS input[type=range] {
+  -webkit-appearance: none;
+  width: 100%;
+  margin:  0;
+  border:none;
+}
+
+.THIS input[type=range]:active,
+.THIS input[type=range]:focus,
+.THIS .ir-deposit-row input:active,
+.THIS .ir-deposit-row input:focus {
+   border:none;
+   box-shadow: none;
+   outline:none;
+}
+.THIS input[type=range]::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 3.6px;
+  cursor: pointer;
+  box-shadow: 0px 0px 0px #006600, 0px 0px 0px #008000;
+  background: #0070d2;
+  border-radius: 0px;
+  border: 0px solid #010101;
+}
+.THIS input[type=range]::-webkit-slider-thumb {
+  box-shadow: 1px 1px 1px rgba(0, 0, 0, 0), 0px 0px 1px rgba(13, 13, 13, 0);
+  border: 1px solid #0070d2;
+  height: 24px;
+  width: 8px;
+  border-radius: 2px;
+  background: #ffffff;
+  cursor: pointer;
+  -webkit-appearance: none;
+  margin-top: -10.2px;
+}
+.THIS input[type=range]:focus::-webkit-slider-runnable-track {
+  background: #007eeb;
+}
+.THIS input[type=range]::-moz-range-track {
+  width: 100%;
+  height: 3.6px;
+  cursor: pointer;
+  box-shadow: 0px 0px 0px #006600, 0px 0px 0px #008000;
+  background: #0070d2;
+  border-radius: 0px;
+  border: 0px solid #010101;
+}
+.THIS input[type=range]::-moz-range-thumb {
+  box-shadow: 1px 1px 1px rgba(0, 0, 0, 0), 0px 0px 1px rgba(13, 13, 13, 0);
+  border: 1px solid #d8dde6;
+  height: 24px;
+  width: 8px;
+  border-radius: 2px;
+  background: #ffffff;
+  cursor: pointer;
+}
+.THIS input[type=range]::-ms-track {
+  width: 100%;
+  height: 3.6px;
+  cursor: pointer;
+  background: transparent;
+  border-color: transparent;
+  color: transparent;
+}
+.THIS .slds-grid.term-error{
+  opacity:0.2;
+}
+
+.THIS .slds-notify {
+  z-index:1;
+  top:4rem;
+  padding: 2rem 0;
+}
+
+.THIS input[type=range]::-ms-fill-lower {
+  background: #0062b9;
+  border: 0px solid #010101;
+  border-radius: 0px;
+  box-shadow: 0px 0px 0px #006600, 0px 0px 0px #008000;
+}
+.THIS input[type=range]::-ms-fill-upper {
+  background: #0070d2;
+  border: 0px solid #010101;
+  border-radius: 0px;
+  box-shadow: 0px 0px 0px #006600, 0px 0px 0px #008000;
+}
+.THIS input[type=range]::-ms-thumb {
+  box-shadow: 1px 1px 1px rgba(0, 0, 0, 0), 0px 0px 1px rgba(13, 13, 13, 0);
+  border: 0.1px solid #d8dde6;
+  height: 24px;
+  width: 8px;
+  border-radius: 2px;
+  background: #ffffff;
+  cursor: pointer;
+  height: 3.6px;
+}
+.THIS input[type=range]:focus::-ms-fill-lower {
+  background: #0070d2;
+}
+.THIS input[type=range]:focus::-ms-fill-upper {
+  background: #007eeb;
+}
+
+.THIS .range-value {
+  display: inline;
+  height: 100%;
+  text-align: center;
+  font-size: 1.5rem;
+  position:relative;
+  top: 15px;
+  color: #0070d2;
+}
+
+.THIS .range-value + span {
+  display: inline;
+  height: 100%;
+  text-align: center;
+  padding-top: 13%;
+  font-size: .75rem;
+  font-weight:300;
+  position:relative;
+  top:5px;
+  padding-left:0.25rem;
+  color:#0070d2;
+}

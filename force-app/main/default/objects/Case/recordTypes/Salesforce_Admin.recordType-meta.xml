@@ -1,0 +1,324 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RecordType xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Salesforce_Admin</fullName>
+    <active>true</active>
+    <businessProcess>Admin Salesforce</businessProcess>
+    <label>Salesforce Admin</label>
+    <picklistValues>
+        <picklist>Claim_Type__c</picklist>
+        <values>
+            <fullName>Canvas</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Decals</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Electrical</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Flooring</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Fuel</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Furniture</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Gauges</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Hull</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Other</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Shipping Damage</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Windshield</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Delay_Reasons__c</picklist>
+        <values>
+            <fullName>Waiting for more information from partner</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Waiting for part numbers or info from supplier</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Waiting for part numbers to be created in Salesforce</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Waiting for part return from partner</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Waiting for supplier approval</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Denied_Reasons__c</picklist>
+        <values>
+            <fullName>Duplicate claim</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Lack of information provided</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Misuse or abuse</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Not original owner</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Not warranty</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Warranty expires %286 year Wow%29</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Goodwill_Reasons__c</picklist>
+        <values>
+            <fullName>Dealer error covered by DSM</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Rigging damage</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Rigging error</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Shipping damage</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Supplier denied coverage</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Yard damage</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Origin</picklist>
+        <values>
+            <fullName>Email</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Internal</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Phone</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Web</fullName>
+            <default>true</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Part_Order_Status__c</picklist>
+        <values>
+            <fullName>Back Ordered</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Ordered</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Pending Review</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Received</fullName>
+            <default>true</default>
+        </values>
+        <values>
+            <fullName>Shipped</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Priority</picklist>
+        <values>
+            <fullName>High</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Low</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Medium</fullName>
+            <default>true</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Reason</picklist>
+        <values>
+            <fullName>Bug</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Complex functionality</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Existing problem</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Instructions not clear</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Missing Requirement</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>New Feature</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>New problem</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>User didn%27t attend training</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Shipping_Company__c</picklist>
+        <values>
+            <fullName>Canada Post</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>FedEx</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Loomis %2F DHL</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Manitoulin Transport</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>On Load</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Other</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Purolator</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>UPS</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Type</picklist>
+        <values>
+            <fullName>Other</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Problem</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Product</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Question</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Salesforce Implementation</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Shipping</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Warranty</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Vendors__c</picklist>
+        <values>
+            <fullName>Apex</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Goodwill</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Highwater</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Jensen</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Midwest</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Prospect</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Smoker</fullName>
+            <default>true</default>
+        </values>
+        <values>
+            <fullName>V3</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+</RecordType>

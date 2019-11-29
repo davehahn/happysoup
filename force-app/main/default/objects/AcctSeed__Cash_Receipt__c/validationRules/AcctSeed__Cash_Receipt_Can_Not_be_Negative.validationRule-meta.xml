@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>AcctSeed__Cash_Receipt_Can_Not_be_Negative</fullName>
+    <active>true</active>
+    <errorConditionFormula>AcctSeed__Amount__c &lt;0</errorConditionFormula>
+    <errorDisplayField>AcctSeed__Amount__c</errorDisplayField>
+    <errorMessage>A cash receipt can not be for a negative amount</errorMessage>
+</ValidationRule>

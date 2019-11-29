@@ -1,0 +1,35 @@
+<h1 class="slds-text-heading--medium" style="width: 90%; margin-left: 8%; margin-right: 2%; text-align: center; margin-bottom: 1.5rem;"> Special Delivery Instructions </h1>
+
+{{#each instructions }}
+<div class="instructions-container" style="">
+  <div class="slds-page-header">
+    <div class="slds-grid">
+      <div class="slds-col slds-has-flexi-truncate">
+        <div class="slds-media slds-no-space slds-grow">
+          <div class="slds-media__figure">
+            {{ svgIcon 'icons/standard-sprite/svg/symbols.svg#account' 'slds-icon-standard-account'}}
+          </div>
+          <div class="slds-media__body">
+            <p class="slds-text-title--caps slds-line-height--reset">Account</p>
+            <h1 class="slds-page-header__title slds-m-right--small slds-align-middle slds-truncate" title="this should match the Record Title">{{{ this.accountName }}}</h1>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="instruction-content" style="margin:0; padding:1rem;">
+    <h3  class="slds-section__title">Instructions</h3>
+    <div>
+      {{{this.specialInstructions}}}
+    </div>
+    <h3  class="slds-section__title">Unloading Tools</h3>
+    <div>
+      <ul>
+        {{#each this.shippingTools}}
+          <li>{{{this}}}</li>
+        {{/each}}
+      </ul>
+    </div>
+  </div>
+</div>
+{{/each}}

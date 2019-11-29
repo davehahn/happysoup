@@ -1,0 +1,11 @@
+<apex:page showHeader="true" 
+	sidebar="true" 
+	standardController="AcctSeed__Account_Payable__c"
+	extensions="gcAccountPayable_Clone"
+	recordSetVar="Payables" 
+	action="{!init}">
+	<apex:pageMessages escape="false"/>
+	<apex:form >
+		<div style="text-align: center;"><apex:commandButton action="{!back}" value="Go Back"></apex:commandButton></div>
+	</apex:form>
+</apex:page>

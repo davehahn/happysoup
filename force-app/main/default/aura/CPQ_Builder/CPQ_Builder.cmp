@@ -1,0 +1,109 @@
+<aura:component controller="CPQ_Controller_dh">
+  <ltng:require scripts="{!join(',', $Resource.Libraries +'/js/LightningApex.js',
+                                     $Resource.Libraries +'/js/LightningUtils.js') }" />
+
+  <aura:attribute name="cpq" type="Object" />
+  <aura:attribute name="allowSavings"
+                  type="Boolean"
+                  default="false" />
+  <aura:attribute name="allowCustomProducts"
+                  type="Boolean"
+                  default="false" />
+  <aura:attribute name="allowTradeIns"
+                  type="Boolean"
+                  default="false" />
+  <aura:attribute name="includeCostForCustomProducts"
+                  type="Boolean"
+                  default="false" />
+
+  <aura:handler name="boatTypeSelected"
+                event="c:CPQ_BoatTypeSelectorChange_Event"
+                action="{!c.handleBoatTypeSelected}" />
+
+  <aura:handler name="majorProductSelected"
+                event="c:CPQ_MajorProductSelected_Event"
+                action="{!c.handleMajorProductSelected}" />
+
+  <aura:handler name="optionChanged"
+               event="c:CPQ_OptionLine_ChangeEvent"
+               action="{!c.handleOptionChange}" />
+
+  <c:CPQ_Utils aura:id="CpqUtils" />
+
+  <c:Lgnd_Spinner_dh aura:id="spinner" />
+
+  <div class="slds-card">
+    <div>
+    <lightning:tabset variant="scoped">
+      <lightning:tab label="Boat" id="boat">
+        <c:CPQ_MajorProductSelector aura:id="majorSelector"
+                                    activePricebookId="{!v.cpq.activePricebookId}"
+                                    productFamily="{!v.cpq.baseProductFamily}"
+                                    productRecordType="{!v.cpq.baseProductRecordType_Name}"
+                                    value="{!v.cpq.boatId}" />
+
+        <aura:if isTrue="{! not(empty(v.cpq.theBoat))}">
+          <!-- Motor Selector -->
+          <c:CPQ_UpgradeSelector_dh cpq="{!v.cpq}"
+                                    upgradeType="Motor"
+                                    valueId="{!v.cpq.motorId}"
+                                    value="{!v.cpq.theMotor}"
+                                    parentProductId="{!v.cpq.theBoat.id}"
+                                    aura:id="upgradeSelector" />
+          <!-- /Motor Selector -->
+          <!-- Trailer Selector -->
+          <c:CPQ_UpgradeSelector_dh cpq="{!v.cpq}"
+                                    upgradeType="Trailer"
+                                    valueId="{!v.cpq.trailerId}"
+                                    value="{!v.cpq.theTrailer}"
+                                    parentProductId="{!v.cpq.theBoat.id}"
+                                    aura:id="upgradeSelector" />
+          <!-- /Trailer Selector -->
+          <!-- Trolling Motor Selector -->
+          <c:CPQ_UpgradeSelector_dh cpq="{!v.cpq}"
+                                    upgradeType="Trolling Motor"
+                                    valueId="{!v.cpq.trollingMotorId}"
+                                    value="{!v.cpq.theTrollingMotor}"
+                                    parentProductId="{!v.cpq.theBoat.id}"
+                                    aura:id="upgradeSelector" />
+          <!-- /Trolling Motor Selector -->
+        </aura:if>
+      </lightning:tab>
+
+      <!-- Options Selector -->
+      <aura:if isTrue="{! not(empty(v.cpq.theBoat))}">
+        <lightning:tab label="Options" id="options">
+          <c:CPQ_OptionsSelector_dh cpq="{!v.cpq}" />
+        </lightning:tab>
+      </aura:if>
+      <!-- /Options Selector -->
+
+      <!-- Savings -->
+      <aura:if isTrue="{! and( not(empty(v.cpq.theBoat)), v.allowSavings )}">
+        <lightning:tab label="Savings" id="savings">
+          <c:CPQ_SavingsSelector cpq="{!v.cpq}" />
+        </lightning:tab>
+      </aura:if>
+
+      <!-- Custom Product Selector -->
+      <aura:if isTrue="{! and( not(empty(v.cpq.theBoat)), v.allowCustomProducts )}">
+        <lightning:tab label="Custom Products" id="custom-products">
+          <c:CPQ_PartnerCustomProductSelector cpq="{!v.cpq}"
+                                              includeCost="{!v.includeCostForCustomProducts}" />
+        </lightning:tab>
+      </aura:if>
+      <!-- /Custom Product Selector -->
+
+      <!-- Trade In Selector -->
+      <aura:if isTrue="{! and( not(empty(v.cpq.theBoat)), v.allowTradeIns )}">
+        <lightning:tab label="Trade Ins" id="trade-ins">
+          <c:CPQ_TradeInSelector cpq="{!v.cpq}" />
+        </lightning:tab>
+      </aura:if>
+      <!-- /Trade In Selector -->
+
+
+    </lightning:tabset>
+  </div>
+  </div>
+</aura:component>

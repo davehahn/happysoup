@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>Legend_Letterhead</letterhead>
+    <name>Order Approval Status: Approved by Legend</name>
+    <style>freeForm</style>
+    <subject>Order Approval Status: Approved by Legend</subject>
+    <textOnly>Hey {!Contact.FirstName},
+
+The Order Approval Status for {!Account.Name} has been updated to Approved by Legend.
+
+Go request your Financing for {!Account.Boat_Order_Grand_Total__c} plus freight and taxes.
+
+Thanks!</textOnly>
+    <type>html</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

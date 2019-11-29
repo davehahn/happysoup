@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Driver_required_if_scheduled</fullName>
+    <active>true</active>
+    <description>Driver is required if we have a Departure Date scheduled</description>
+    <errorConditionFormula>AND( ISNULL(Truck_Driver__c), NOT(ISNULL( Departure_Date__c ) ) )</errorConditionFormula>
+    <errorMessage>You must select a driver if the departure date is set</errorMessage>
+</ValidationRule>

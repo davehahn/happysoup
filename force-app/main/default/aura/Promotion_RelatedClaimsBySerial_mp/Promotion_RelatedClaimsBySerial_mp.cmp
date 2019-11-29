@@ -1,0 +1,47 @@
+<aura:component controller="Promotion_mp"
+								implements="force:hasRecordId,forceCommunity:availableForAllPageTypes"
+								access="global">
+
+	<aura:attribute type="Id"			  name="recordId" />
+  <aura:attribute type="Object[]" name="promotions" />
+  <aura:attribute type="Integer"  name="attempts" default="0" />
+	<aura:attribute type="Object[]" name="claims" />
+
+	<ltng:require scripts="{!join(',', $Resource.Libraries +'/js/LightningApex.js',
+                         $Resource.Libraries +'/js/LightningUtils.js') }"
+    						afterScriptsLoaded="{!c.doInit}" />
+
+  <aura:if isTrue="{! !empty(v.promotions) }">
+    <div class="slds-scope">
+      <div class="slds-box" style="position: relative">
+        <lightning:spinner aura:id="spinner" class="slds-hide" />
+        <aura:if isTrue="{!v.promotions.length gt 1}">
+          <h1>Available Promotions to Claim</h1>
+          <p>The following promotions are available to claim. <strong>Click the promotion to get started</strong>:</p>
+          <aura:set attribute="else">
+            <h1>Available Promotion to Claim</h1>
+            <p>The following promotion is available to claim. <strong>Click the promotion to get started</strong>:</p>
+          </aura:set>
+        </aura:if>
+        <aura:iteration items="{!v.promotions}" var="p">
+          <br/>
+          <lightning:button value="{!p.Id}" onclick="{!c.createClaim}" label="{!p.Promotion__r.Name}" />
+          </aura:iteration>
+      </div>
+    </div>
+  </aura:if>
+
+  <aura:if isTrue="{!v.claims.length gt 0}">
+    <div class="slds-scope">
+      <div class="slds-box" style="position: relative">
+        <h1>Open Claims</h1>
+        <p>The following claims have been created for this registration:</p>
+
+        <aura:iteration items="{!v.claims}" var="c">
+          <br/>
+          <a href="{! '/s/case/' + c.Id }">{!c.Promotion_Item__r.Promotion__r.Name}</a><br/>
+        </aura:iteration>
+      </div>
+    </div>
+  </aura:if>
+</aura:component>

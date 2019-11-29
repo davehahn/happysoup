@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <description>Sent after boat shows such as TIBS, SFBS, TSS, CLS, Salond du Bateaux, Salon Expert Chasse, Spring Fishing</description>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>Legend_Letterhead</letterhead>
+    <name>Legend Boat Show Experience</name>
+    <style>freeForm</style>
+    <subject>Welcome to the Legend Family {!Account.FirstName}!</subject>
+    <textOnly>Hello {!Contact.FirstName}, thank you for choosing Legend Boats!
+
+
+We are always working to make your ownership experience as amazing as possible, so we would love to hear from you.
+
+This survey is only 7 questions short and shouldn&#39;t take more than a couple of minutes to complete. Your feedback is very important to us and we promise that every comment will be used to help create the best memories possible!
+
+For taking the time to fill out this survey, you will automatically be entered into a draw to win your first year&#39;s winterization completely free!
+
+https://legendboats.getfeedback.com/r/KY3DLsd4?ContactID={!Contact.Id}&amp;AccountID={!Account.Id}
+
+
+Thank you so much for your time. Happy Boating!</textOnly>
+    <type>html</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

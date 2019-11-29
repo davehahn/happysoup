@@ -1,0 +1,141 @@
+<apex:page showHeader="true"
+           sidebar="true"
+           Controller="BoatRiggingChecklistController">
+  <sffd:Resources />
+  <apex:stylesheet value="{!URLFOR($Resource.LegendStyles)}" />
+  <apex:stylesheet value="{!URLFOR($Resource.Product2Resources, 'css/boat-rigging-checklist.min.css')}" />
+
+  <apex:pageBlock rendered="{!!hasRiggingChecklistItems}"
+                  mode="mainDetail">
+      <div style="width:40%;
+                margin:0px auto;
+                padding:25px;
+                text-align:center;">
+
+      <p style="padding:10px 0px;font-size:1.5em;color:#00AAF9;">
+        This Product currently has no checklist items.
+      </p>
+
+      <apex:outputLink value="/apex/BoatRiggingChecklist_Edit?Id={!currentProduct.Id}"
+                       target="_parent" styleClass="lgnd_btn radius"
+                       style="position:relative;top:10px;">
+        Build Checklist
+      </apex:outputLink>
+
+    </div>
+
+  </apex:pageBlock>
+
+  <apex:outputPanel layout="none" rendered="{!hasRiggingChecklistItems}">
+    <div class="rigging-checklist-container" id="checklist">
+
+      <div class="flex-container header">
+        <div class="box-50">
+          <h1>
+            <img src="{!URLFOR($Resource.LegendLogo)}" class="" />
+          </h1>
+        </div>
+        <div class="box-50">
+          <div class="btn-container">
+            <apex:outputLink value="/apex/BoatRiggingChecklist_Edit?Id={!currentProduct.Id}"
+                           target="_parent" styleClass="lgnd_btn radius">
+              Edit Checklist
+            </apex:outputLink>
+            <a href="#" class="lgnd_btn radius" id="printChecklist">Print</a>
+          </div>
+          <div class="employee-details">
+            <div class="fake-input-inline">
+              <label>Rigged By:</label>
+              <div></div>
+            </div>
+            <div class="fake-input-inline">
+              <label>Inspected By:</label>
+              <div></div>
+            </div>
+          </div>
+        </div>
+        <div class="box-100">
+          <h2>{! currentProductName } - Boat Rigging Checklist</h2>
+        </div>
+      </div>
+
+      <div class="flex-container form-details">
+        <div class="box">
+
+          <div class="fake-input">
+            <label>Boat Serial #</label>
+            <div>{!boatSerialNumber}</div>
+          </div>
+          <div class="fake-input">
+            <label>Trailer Serial #</label>
+            <div>{!trailerSerialNumber}</div>
+          </div>
+          <div class="fake-input">
+            <label>Trolling Motor Serial #</label>
+            <div>{!trollingMotorSerialNumber}</div>
+          </div>
+
+        </div>
+        <div class="box">
+
+          <div class="fake-input shift-right">
+            <label>Ignition Key #</label>
+            <div>{!ignitionKeyNumber}</div>
+          </div>
+          <div class="fake-input shift-right">
+            <label>Compartment Key #</label>
+            <div>{!compartmentKeyNumber}</div>
+          </div>
+
+        </div>
+      </div>
+
+
+
+        <apex:repeat value="{!riggingChecklistItems}" var="category">
+        <h3>{!category}</h3>
+        <div class="flex-container">
+          <apex:repeat value="{!riggingChecklistItems[ category ]}" var="description">
+            <div class="box">
+              <div class="checklist-item">
+                <span>{!description}</span>
+                <!-- <i class="fa fa-square-o"></i> -->
+                <div class="checkbox"></div>
+              </div>
+            </div>
+          </apex:repeat>
+        </div>
+        </apex:repeat>
+
+
+
+    </div>
+  </apex:outputPanel>
+
+  <apex:includeScript value="https://code.jquery.com/jquery-migrate-1.2.1.min.js" />
+  <apex:includeScript value="{!URLFOR($Resource.jQueryPrintElement)}"/>
+
+  <script type="text/javascript">
+
+    var $j = jQuery.noConflict();
+
+    $j('#printChecklist').on('click', function(e){
+      e.preventDefault();
+
+      $j('#checklist').printElement({
+        pageTitle: 'Checklist',
+        leaveOpen:true,
+        printMode:'popup',
+        printBodyOptions:
+        {
+        styleToAdd:'padding:0;margin:0;'
+
+        },
+        overrideElementCSS:[
+          {href: "{!URLFOR($Resource.FontAwesome, 'font-awesome-4.0.3/css/font-awesome.min.css')}", media: 'all'},
+          { href:"{!URLFOR($Resource.Product2Resources, 'css/boat-rigging-checklist-print.min.css')}", media:'all'}]
+      });
+    });
+  </script>
+
+</apex:page>

@@ -1,0 +1,439 @@
+<apex:page showHeader="false" sidebar="false" controller="ERPInvoicePDF" renderAs="pdf">
+
+  <apex:stylesheet value="{!URLFOR($Resource.LegendPDF,'css/invoicePDF.min.css')}" />
+  <apex:stylesheet value="{!URLFOR($Resource.LegendPDF,'css/service_order_page.min.css')}" />
+
+ <div id="footerRight">
+    <span>Page</span>
+    <span>Invoice #{!invoiceName}</span>
+  </div>
+
+  <div id="footerLeft">
+    <img src="{!URLFOR($Resource.LegendPDF,'image/logo_220x26.png')}" />
+  </div>
+
+  <div id="footerCenter">
+    <p class="address">
+      {!storeAddress}
+    </p>
+    <p class="tax_numbers">
+      <apex:repeat value="{!taxNumbers}" var="tn">
+        <span><b>{!tn.DeveloperName}#</b> {!tn.Tax_Number__c}</span>
+      </apex:repeat>
+    </p>
+  </div>
+
+
+  <div class="service-order-erp">
+    <!-- +++++++++++++++++++++++++++++++++++++++ HEADER 1 ++++++++++++++++++++++++ -->
+    <div class="row header1">
+
+      <div class="left" >
+        <img src="{!URLFOR($Resource.LegendPDF,'image/logo_250x30.png')}" />
+      </div>
+
+      <div class="right">
+
+        <div>
+          <img src="{!URLFOR($Resource.LegendPDF,'Icons/Email.png')}" />
+          <p>info@legendboats.com</p>
+        </div>
+
+        <div>
+          <img src="{!URLFOR($Resource.LegendPDF,'Icons/Phone.png')}" />
+           <p>
+            phone
+            <span style="float:right;padding-right:25px;">
+              {!warehouse.Phone__c}
+            </span>
+          </p>
+           <p>
+            toll free
+            <span style="float:right;padding-right:25px;">
+              {!warehouse.Toll_Free__c}
+            </span>
+          </p>
+          <p>
+            fax
+            <span style="float:right;padding-right:25px;">
+              {!warehouse.Fax__c}
+            </span>
+          </p>
+        </div>
+
+        <div style="position:relative">
+          <img src="{!URLFOR($Resource.LegendPDF,'image/web.png')}" />
+          <p>www.legendboats.com</p>
+         <!--  <img src="https://www.barcodesinc.com/generator/image.php?code=INV-10812&amp;style=68&amp;type=C128B&amp;width=150&amp;height=40&amp;xres=1&amp;font=3" alt="Barcode" border="0"/> -->
+          <!-- <p class="invoice_number">{!invoiceName}</p> -->
+          <p style="width: 100%; padding-top: 5px; font-size: 12px; text-align: center">
+            Memory Builder
+          </p>
+          <p style="width: 100%; font-size: 14px; font-weight: bold; text-align: center">
+            {!erpOrder.Salesperson__r.name}
+          </p>
+        </div>
+
+      </div><!--header right close -->
+    </div>
+    <!-- ==================================== /HEADER 1 ============================  -->
+
+    <!-- +++++++++++++++++++++++++++++++++++ HEADER 2 ++++++++++++++++++++++++++++++ -->
+    <div class="row header2" style="overflow: visible">
+
+      <div class="customer-info">
+        <p>
+          <img src="{!URLFOR($Resource.LegendPDF,'Icons/Invoice.png')}" />
+          INVOICE TO:
+        </p>
+        <p class="buyer_name">
+         {!projectAccount.name}
+        </p>
+        <p class="buyer_address">
+          {!projectAccount.BillingStreet}, {!projectAccount.BillingCity} <br />
+          {!projectAccount.BillingState}, {!projectAccount.BillingPostalCode}, {!projectAccount.BillingCountry}
+        </p>
+        <p class="buyer_phone">
+          {!projectAccount.phone}
+        </p>
+        <p class="buyer_email">
+          {!projectAccount.PersonEmail}
+        </p>
+      </div>
+
+      <div>
+        <div>
+          <div class="blockSummary">
+            <table>
+              <tr>
+                <td>
+                  <img src="{!URLFOR($Resource.LegendPDF,'image/dollar_trans.png')}" width="25" height="25" />
+                </td>
+                <td>
+                  <img src="{!URLFOR($Resource.LegendPDF,'image/calendar_trans.png')}" width="25" height="25" />
+                </td>
+                <td>
+                  <img src="{!URLFOR($Resource.LegendPDF,'image/invoice2_trans.png')}" width="25" height="25" />
+                </td>
+              </tr>
+
+            </table>
+
+            <div style="">
+              <table>
+                <tr>
+                    <td style="">
+                        <p>Total Sale:</p>
+                        <apex:outputText value="${0, number, ###,###,###,##0.00}">
+                              <apex:param value="{!erpOrder.Grand_Total__c - IF(ISNULL(erpOrder.Deposit__c), 0, erpOrder.Deposit__c)}"/>
+                        </apex:outputText>
+                    </td>
+                    <td style="">
+                        <p>{!invoiceDateLabel}:</p>
+                        <p>{!invoiceDate}</p>
+                    </td>
+                    <td style="">
+                        <p>Invoice #:</p>
+                        <p>{!invoiceName}</p>
+                    </td>
+                </tr>
+              </table>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+    <!-- ================================= /HEADER 2 =================================== -->
+
+
+    <!-- +++++++++++++++++++++++++++++++++ SERIAL INFO +++++++++++++++++++++++++++++++++ -->
+    <div class="row serial-info">
+
+      <table class="itemsTable">
+
+        <thead>
+          <tr>
+           <td class="w15">Type</td>
+           <td class="w15">Year</td>
+           <td class="w40">Make/Model</td>
+           <td class="w30">Serial Number</td>
+          </tr>
+        </thead>
+
+        <tbody>
+          <apex:repeat value="{!serialNumbers}" var="sn">
+            <tr>
+              <td>{!sn['Type']}</td>
+              <td>{!sn['Year']}</td>
+              <td>{!sn['MakeAndModel']}</td>
+              <td>{!sn['SerialNumber']}</td>
+            </tr>
+          </apex:repeat>
+        </tbody>
+
+      </table>
+
+    </div>
+    <!-- ================================== /SERIAL INFO =============================== -->
+
+    <!-- +++++++++++++++++++++++++++++++++++ ITEMS ++++++++++++++++++++++++++++++ -->
+
+    <table class="itemsTable hasKits service-order" style="margin-bottom:25px;margin-top: 20px;">
+      <tbody>
+        <apex:repeat value="{!taskLineItems}" var="task">
+          <tr class="task-title">
+            <td colspan="5">
+              {!task.name}
+              <apex:outputText rendered="{!erpOrder.Internal_Labour_Service__c}">
+                &nbsp;&nbsp;&nbsp;&nbsp;{!task.taskGLV1}&nbsp;-&nbsp;{!task.taskGLV2}
+              </apex:outputText>
+            </td>
+          </tr>
+          <apex:outputPanel layout="none" rendered="{!task.renderCCC}">
+            <tr>
+              <td colspan="5">
+                <table class="ccc-table">
+                  <tr style="{!IF(task.hasComplaint,'','display:none')}">
+                    <td class="w10 bold">Complaint</td>
+                    <td class="w80">{!task.complaint}</td>
+                  </tr>
+                  <tr style="{!IF(task.hasCause,'','display:none')}">
+                    <td class="w10 bold">Cause</td>
+                    <td class="w80">{!task.cause}</td>
+                  </tr>
+                  <tr style="{!IF(task.hasCorrection,'','display:none')}">
+                    <td class="w10 bold">Correction</td>
+                    <td class="w80">{!task.correction}</td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </apex:outputPanel>
+          <apex:repeat value="{!task.taskParts}" var="part">
+            <tr>
+              <td class="w70" style="vertical-align: top;padding: 5px 0;">
+                <table style="width: 100%; margin:0; padding: 0; border-collapse: collapse;">
+                  <tr>
+                    <td style="width: 20%; text-align:left; padding-left:0;">{!part.productCode}</td>
+                    <td style="vertical-align: top;">
+                      {!part.description}
+                      <apex:outputText rendered="{!AND(erpOrder.Internal_Labour_Service__c,part.commentText != null)}">
+                        <br/><i>{!part.commentText}</i>
+                      </apex:outputText>
+                    </td>
+                  </tr>
+                </table>
+                <apex:outputPanel layout="block" styleClass="kit-contents" rendered="{!part.hasKitParts}" style=":padding-bottom: 5px;">
+                  <table class="kitParts">
+                    <apex:repeat value="{!part.kitParts}" var="kitPart">
+                      <tr>
+                        <td>{!kitPart.productCode}</td>
+                        <td><apex:outputText value="{!kitPart.description}" escape="false"></apex:outputText></td>
+                        <td style="text-align:right;padding-right: 7px">{!kitPart.Quantity}</td>
+                      </tr>
+                    </apex:repeat>
+                  </table>
+                </apex:outputPanel>
+              </td>
+              <td class="w10" style="text-align: center; vertical-align: top;padding: 5px 0;">{!part.quantity}</td>
+              <td class="w10 right" style="vertical-align: top;padding: 5px 0;">
+                <apex:outputText value="${0, number, ###,###,###,##0.00}">
+                  <apex:param value="{!part.unitPrice}"/>
+                </apex:outputText>
+              </td>
+              <td class="w10 right" style="vertical-align: top;padding: 5px 0;">
+                <apex:outputText value="${0, number, ###,###,###,##0.00}">
+                  <apex:param value="{!part.price}"/>
+                </apex:outputText>
+              </td>
+            </tr>
+          </apex:repeat>
+        </apex:repeat>
+      </tbody>
+    </table>
+
+    <!-- ================================= /ITEMS ===================================== -->
+
+    <!-- +++++++++++++++++++++++++++++ NOTES AND TOTALS +++++++++++++++++++++++++++++ -->
+    <div class="row signatures_and_summary">
+      <div class="col col65">
+        <h2>Notes:</h2>
+        <div class="notes_container">
+          <p>
+            <apex:outputText escape="false" value="{!customerNotes}" />
+          </p>
+        </div>
+        <div class="disclaimer-container">
+          <apex:outputPanel rendered="{!!hideServiceDisclaimer}">
+            <p>
+              I hearby authorize the repair work hereinafter set forth to be done along with the necessary
+              material and agree that you are not responsible for lost or damage to vehicle or articles left
+              in vehicle in case of fire, theft, or any other cause beyond your control or for any delays
+              caused by unavailability of parts or delays in parts shipments by the supplier or transporter.
+              I hereby grant you and/or your employees permission to operate the vehicle herein described on
+              streets, highways or elsewhere for the purpose of testing and/or inspection. An express mechanic's
+              lien is hereby acknowledged on above vehicle to secure the amount of repairs thereto.
+            </p>
+            <p>
+              <strong>STATEMENT OF DISCLAIMER: </strong> Any warranties on product sold hereby are those made by the manufacturer. The seller hereby expressly disclaims all warranties, either expess or implied, including any implied warranty of merchantabilityor fitness for other purpose, and neither assumes nor authorizes any other person to assume for it any liability in connection with the sale of said products.  Any limitation contained herein does not apply where prohibited by law.
+            </p>
+            <p>
+                <strong>Terms:</strong>
+                Balance due within 30 days by certified funds or money transfer. After 30 days, a 2% interest per month will apply to unpaid balances              
+            </p>
+
+            <div class="signature_container">
+              <p>
+                <span>
+                  <apex:outputText value="{0, date, MMM dd'/'yy}">
+                    <apex:param value="{!NOW()}" />
+                  </apex:outputText>
+                </span>
+              </p>
+              <p>Customer Signature</p>
+            </div>
+          </apex:outputPanel>
+        </div>
+
+
+      </div>
+      <div class="col col35 right">
+        <table class="costSummary">
+          <tr class="header-line">
+            <td colspan="2" style="padding-top:0;">Sub Total</td>
+          </tr>
+
+          <tr>
+            <td style="padding-top:5px;">Parts Total:</td>
+            <td style="padding-top:5px;">
+              <apex:outputText value="${0, number, ###,###,###,##0.00}">
+                        <apex:param value="{!partsTotal}"/>
+                  </apex:outputText>
+            </td>
+          </tr>
+
+          <tr>
+            <td>Labour Total:</td>
+            <td>
+              <apex:outputText value="${0, number, ###,###,###,##0.00}">
+                        <apex:param value="{!labourTotal}"/>
+                  </apex:outputText>
+            </td>
+          </tr>
+         <!-- OverRide Custom Taxes -->
+          <apex:outputPanel layout="none" rendered="{!erpOrder.Tax_is_Harmonized__c == true}">
+            <tr>
+              <td> Tax (HST) {! erpOrder.Tax_Rate_Provincial__c + erpOrder.Tax_Rate_Federal__c}%: </td>
+              <td>
+                  <apex:outputText value="${0, number, ###,###,###,##0.00}">
+                        <apex:param value="{!erpOrder.Tax_Amount_Provincial__c + erpOrder.Tax_Amount_Federal__c}"/>
+                  </apex:outputText>
+               </td>
+            </tr>
+          </apex:outputPanel>
+
+          <apex:outputPanel layout="none" rendered="{!erpOrder.Tax_is_Harmonized__c != true}">
+            <tr>
+              <td> TAX ({!provTAxInfo.taxName}): {!erpOrder.Tax_Rate_Provincial__c}% </td>
+              <td>
+                  <apex:outputText value="${0, number, ###,###,###,##0.00}">
+                        <apex:param value="{!erpOrder.Tax_Amount_Provincial__c}"/>
+                  </apex:outputText>
+               </td>
+            </tr>
+          </apex:outputPanel>
+
+          <apex:outputPanel layout="none" rendered="{!erpOrder.Tax_is_Harmonized__c != true}">
+            <tr>
+              <td> TAX (GST): {!erpOrder.Tax_Rate_Federal__c}% </td>
+              <td>
+                  <apex:outputText value="${0, number, ###,###,###,##0.00}">
+                        <apex:param value="{!erpOrder.Tax_Amount_Federal__c}"/>
+                  </apex:outputText>
+               </td>
+            </tr>
+          </apex:outputPanel>
+          <!-- Seperate taxes -->
+
+          <!-- +++++ Payments +++++ -->
+          <apex:outputPanel layout="none" rendered="{!paymentTotal > 0}">
+            <tr class="header-line">
+              <td colspan="2">Payments</td>
+            </tr>
+
+            <tr>
+              <td colspan="2">
+                <table>
+                  <apex:repeat value="{!payments}" var="payment">
+                    <tr>
+                      <td style="text-align:left;">
+                        <apex:outputText value="{0, date, MMM dd'/'yy}">
+                          <apex:param value="{!payment.AcctSeed__Receipt_Date__c}" />
+                        </apex:outputText>
+                      </td>
+                      <td style="text-align:left;">
+                        {!payment.Payment_Method__c}
+                      </td>
+                      <td style="text-align:right !important;">
+                        <apex:outputText value="${0, number, ###,###,###,##0.00}">
+                          <apex:param value="{!payment.AcctSeed__Amount__c}"/>
+                        </apex:outputText>
+                      </td>
+                    </tr>
+                  </apex:repeat>
+                </table>
+              </td>
+            </tr>
+          </apex:outputPanel>
+          <!-- ===== Payments ===== -->
+          <apex:outputText rendered="{!IF(apReturns.size > 0,true,false)}">
+          <tr class="header-line">
+            <td colspan="2">Returns</td>
+          </tr>
+
+          <tr>
+            <td colspan="2">
+              <table>
+                <apex:repeat value="{!apReturns}" var="returns">
+                  <tr>
+                    <td style="text-align:left;">
+                      <apex:outputText value="{0, date, MMM dd'/'yy}">
+                        <apex:param value="{!returns.AcctSeed__Disbursement_Date__c}" />
+                      </apex:outputText>
+                    </td>
+                    <td style="text-align:left;">
+                      {!returns.AcctSeed__Type__c}
+                    </td>
+                    <td style="text-align:right !important;">
+                      <apex:outputText value="${0, number, ###,###,###,##0.00}">
+                        <apex:param value="{!returns.AcctSeed__Amount__c}"/>
+                      </apex:outputText>
+                    </td>
+                  </tr>
+                </apex:repeat>
+              </table>
+            </td>
+          </tr>
+          </apex:outputText>
+
+          <tr class="total">
+            <td>Total Sale:</td>
+            <td style="padding-right: 3px;">
+              <apex:outputText value="${0, number, ###,###,###,##0.00}">
+                <apex:param value="{!erpOrder.Grand_Total__c - paymentTotal - returnTotal}"/>
+              </apex:outputText>
+            </td>
+          </tr>
+
+        </table>
+      </div>
+    </div>
+    <!-- ============================= /NOTES AND TOTALS ======================== -->
+
+  </div>
+
+</apex:page>

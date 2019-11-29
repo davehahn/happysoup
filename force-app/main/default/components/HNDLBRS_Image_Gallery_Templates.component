@@ -1,0 +1,279 @@
+<apex:component >
+
+<!-- ******************** THUMB TEMPLATE *********************** -->
+
+ <script id="thumbTemplate" type="text/x-handlebars-template">
+    <div id="{{this.GalleryImageId}}" class="{{containerClass this}}" style="height:200px; width: {{boxWidth this}}">
+      <a href="{{this.URL_Gallery}}" class="imageLink" data-image-data-id="{{this.GalleryImageId}}">
+        <img height="200px" width="{{boxWidth this}}" data-src="{{this.URL_Gallery}}"></img>
+        <div>
+          Loading Image .....
+          <i class="fa fa-spinner fa-spin"></i>
+        </div>
+      </a>
+      <div class="{{overlayClass}}">
+        {{selectLink this}}
+      </div>
+      <span>Default</span>
+    </div>
+  </script>
+
+  <!-- **************** VIEWER TEMPLATE ********************* -->
+
+  <script id="viewerTemplate" type="text/x-handlebars-template">
+
+    <div id="zoomIndicator" class="zoomIndicator">
+      <div>loading...<i class="fa fa-spin fa-cog"></i></div>
+    </div>
+
+    <div id="viewerWrapper" class="viewerWrapper">
+      <div><!-- left column  -->
+
+        <div id="imageContainer" class="imageContainer defaultImage">
+
+          <div class="imageFunctions">
+            <div id="imgMenuButtons">
+              <a id="" data-href="versions"><i class="fa fa-code-fork"></i>Versions</a>
+              <a id="showEditForm" data-href="edit"><i class="fa fa-edit"></i>Edit</a>
+              <a id="" data-href="delete"><i class="fa fa-times"></i>Delete</a>
+              <a id="" data-href="default">{{ defaultLinkContent }}</a>
+            </div>
+            <div>
+              <a href="#" id="menuCtrl"><i class="fa fa-bars"></i></a>
+            </div>
+          </div><!-- .imageFunctions -->
+          <span>Default</span>
+
+        </div><!-- #imageContainer -->
+
+      </div><!-- /left column -->
+
+      <div><!-- right column  -->
+
+        <div id="detailsContainer" class="detailsContainer">
+          <div>Image Name :
+            <span id="imageName" class="imageDetails">
+              {{this.GalleryImageName}}
+            </span>
+          </div>
+          <div>Image Dimensions :
+            <span id="imageDimensions" class="imageDetails">
+              {{this.Image_Width}} x {{this.Image_Height}}
+            </span>
+          </div>
+          <div>External Link :
+            <span id="AWS_links" class="imageDetails">
+              <a id="s500" href="{{this.URL_500x500}}" target="_blank">500x500</a>
+              <a id="700w" href="{{this.URL_700w}}" target="_blank">700 Wide</a>
+              <a id="1280w" href="{{this.URL_1280w}}" target="_blank">1280 Wide</a>
+              <a id="original" href="{{this.URL_Original}}" target="_blank">Original</a>
+            </span>
+          </div>
+          <div id="descriptionContainer">
+            {{> descriptions}}
+          </div>
+
+        </div><!-- /detailsContainer -->
+
+      </div><!-- /right column -->
+
+    </div><!-- viewerWrapper -->
+
+    <div id="imageForm" class="imageForm page-overlay">
+      <h2>Edit Image</h2>
+
+      <div class="row">
+        <div class="large-10 large-offset-1 end columns">
+
+          <dl class="tabs" data-tab="true">
+            <dd class="active"><a href="#descriptions">Description</a></dd>
+            <dd><a href="#associations" id="imageAssociations">Associations</a></dd>
+          </dl>
+          <div class="tabs-content">
+            <div class="content active" id="descriptions">
+
+              <div class="row">
+
+                <div class="large-12 end columns">
+                  <label class="">English</label><br />
+                  <textarea id="engDesc"></textarea>
+                </div>
+
+              </div><!-- english row -->
+
+              <div class="row">
+
+                <div class="large-12 end columns">
+                  <label class="">French</label><br />
+                  <textarea id="frDesc"></textarea>
+                </div>
+
+              </div><!-- french row -->
+
+            </div><!-- panel1 -->
+
+            <div class="content" id="associations">
+              <div class="loadingContentIndicator">
+                <p>Fetching Associated Products... <i class="fa fa-spin fa-cog"></i></p>
+              </div>
+              <div id="associationResults" class="associationResults">
+                <ul></ul>
+              </div>
+            </div><!-- panel2 -->
+
+          </div><!-- tabs-content -->
+
+        </div><!-- large-10 column -->
+
+      </div><!-- row -->
+
+      <div class="row buttons">
+        <div class="large-10 large-offset-1 end">
+          <a href="#" class="fd_button right closePageOverlay">Close</a>
+          <a href="#" id="submitForm" class="fd_button success  right">Save</a>
+        </div>
+      </div>
+
+    </div><!-- imageForm -->
+
+    <div id="imageVersions" class="imageVersions page-overlay">
+      <h2> Image Versions  <a href="#"  class="fd_button left success invert closePageOverlay">Close</a></h2>
+      <div class="row slider-container">
+
+        <div class="column large-12 drop-zone">
+
+          <div class="waiting">
+            <div>Drop File to Upload</div>
+            <i class="fa fa-cloud-upload"></i>
+          </div>
+
+          <div class="uploading">
+            <div>Reading File .....</div>
+            <i class="fa fa-spinner fa-spin"></i>
+          </div>
+
+        </div>
+
+        <div class="column large-12 slider">
+
+          <div class="slider-for">
+            {{#each this.ImageVersions}}
+              {{imageVersionView this}}
+            {{/each}}
+          </div>
+
+          <div class="slider-nav">
+            {{#each this.ImageVersions}}
+              <div>
+                <img src="{{ this.AWS_S3_Object__r.URL_Gallery__c }}"></img>
+              </div>
+            {{/each}}
+          </div>
+
+        </div>
+      </div>
+
+    </div><!-- /imageVersions -->
+
+    <div id="deleteModal" class="reveal-modal small" data-reveal="true">
+      <h2>Delete Image <i class="fa fa-exclamation-circle"></i></h2>
+
+      <div>
+        <span>How would you like to delete this image?</span>
+        <div>
+          <a data-href="cancel" class="fd_button  small">Cancel</a>
+          <a data-href="thisProduct" class="fd_button alert small">This Product Only</a>
+          <a data-href="allProducts" class="fd_button  invert alert small">All Products</a>
+        </div>
+      </div>
+
+    </div><!-- deleteModal -->
+
+
+
+  </script>
+
+  <!-- *****************  IMAGE VERSION VIEW (BIG) TEMPLATE ********* -->
+
+  <script id="image_version_view" type="text/x-handlebars-template">
+    <div class="{{ activeImage this.AWS_S3_Object__c }}">
+      <img src="{{ this.AWS_S3_Object__r.URL_1280w__c }}"></img>
+      <div class="image-overlay">
+        <div class="busy-indicator">
+          <i class=" fa fa-spinner fa-spin"></i>
+        </div>
+        <div class="active-indicator">Active</div>
+        <div class="controls">
+          <div class="set-active left"
+                data-record-id="{{this.Legend_Gallery_Image__c}}"
+                data-aws-id="{{this.AWS_S3_Object__c}}">
+            <div>Set Active</div>
+            <i class="fa fa-square-o"></i>
+            <i class="fa fa-check-square-o"></i>
+          </div>
+          <i class="fa fa-close right delete-image" data-aws-id="{{ this.AWS_S3_Object__c }}"></i>
+        </div>
+        <div class="info">
+
+          <div>
+            <span>Uploaded By:</span>
+            {{this.CreatedBy.Name}}
+            <span>on</span>
+            {{ toDateString this.CreatedDate}}
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </script>
+
+  <!--  ***** IMAGE DESCRIPTION TEMPLATE ************* -->
+
+  <script id="imageDescriptionTemplate" type="text/x-handlebars-template">
+    Image Description :
+    {{#if this.ENG_Description}}
+    <div id="engImageDescription" class="imageDetails description">
+      {{this.ENG_Description}}
+    </div>
+    {{/if}}
+    {{#if this.FR_Description}}
+    <div id="frImageDescription" class="imageDetails description">
+      {{ this.FR_Description }}
+    </div>
+    {{/if}}
+  </script>
+
+  <!-- ************ ASSOCIATION RESULTS TEMPLATE ***************** -->
+
+  <script id="associationResultsTmp" type="text/x-handlebars-template">
+    <ul class="search-results">
+      <!-- use the '.' character to iterate over the top level list -->
+      {{#each .}}
+        {{> association }}
+      <!-- fallback if no results -->
+      {{else}}
+          <li class="search-result no-results">No Results</li>
+      {{/each}}
+    </ul>
+  </script>
+
+  <script id="associationTmp" type="text/x-handlebars-template">
+    <li class="search-result">
+      <a href="/{{this.parentId}}">
+          {{this.parentName}}
+      </a>
+      <a href="/apex/LegendImageGallery?id={{this.parentId}}">
+        <i class="fa fa-image"></i>
+        <span>Visit Gallery</span>
+      </a>
+      <a href="#" class="unAssociateImage"
+                  data-gallery-image-id="{{this.galleryImageId}}"
+                  data-product-id="{{this.parentId}}">
+        <i class="fa fa-unlink"></i>
+        <span>Remove this association</span>
+      </a>
+    </li>
+  </script>
+
+</apex:component>

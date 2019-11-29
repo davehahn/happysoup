@@ -1,0 +1,156 @@
+<apex:page standardController="AcctSeed__Cash_Receipt__c" extensions="gcCashReceipt_Refund" showHeader="true" sidebar="false">
+<head>
+<style>
+tr.pq-row-select td{
+    background-color:yellow;
+}
+tr.total td{
+    font-weight: bold;
+}
+div.pq-grid-footer{
+    display:none;
+}
+.green
+{
+    background-color: #c5e0b2;
+}
+.yellow
+{
+    background-color: #fff3cb;
+}
+.silver
+{
+    background-color: #C0C0C0;
+}
+.red
+{
+    color: #ff0000;
+}
+.link
+{
+    text-decoration:underline;
+    cursor:pointer;
+}
+.editLink
+{
+    color:blue;
+}
+</style>
+<apex:stylesheet value="{!URLFOR($Resource.GMBLJS__jQueryUI,'/jquery-ui/jquery-ui.min.css')}"/>
+<apex:stylesheet value="{!URLFOR($Resource.GMBLJS__pqGridPro241,'/pqgrid.min.css')}"/>
+
+</head>
+<body>
+    <div id="spinner" class="spinner" style="display:none;"></div>
+    <div id="modal" class="modal" style="display:none;"></div>
+    <apex:pageBlock id="cashReceiptDetail" title="Cash Receipt Detail">
+        <apex:pageBlockButtons location="top">
+            <button class="btn" onclick="window.location.href = '/{!AcctSeed__Cash_Receipt__c.Id}'">Back To Cash Receipt</button>
+        </apex:pageBlockButtons>
+        <apex:outputPanel id="detailSection">
+        <apex:pageBlockSection collapsible="false" columns="2" title="{!AcctSeed__Cash_Receipt__c.Name}">
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="{!$ObjectType.AcctSeed__Cash_Receipt__c.fields.Name.Label}"/>
+                <apex:outputField value="{!AcctSeed__Cash_Receipt__c.Name}"/>
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="{!$ObjectType.AcctSeed__Cash_Receipt__c.fields.AcctSeed__Purpose__c.Label}"/>
+                <apex:outputField value="{!AcctSeed__Cash_Receipt__c.AcctSeed__Purpose__c}"/>
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="{!$ObjectType.AcctSeed__Cash_Receipt__c.fields.AcctSeed__Account__c.Label}"/>
+                <apex:outputField value="{!AcctSeed__Cash_Receipt__c.AcctSeed__Account__c}"/>
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="{!$ObjectType.AcctSeed__Cash_Receipt__c.fields.AcctSeed__Payment_Reference__c.Label}"/>
+                <apex:outputField value="{!AcctSeed__Cash_Receipt__c.AcctSeed__Payment_Reference__c}"/>
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="{!$ObjectType.AcctSeed__Cash_Receipt__c.fields.AcctSeed__Amount__c.Label}"/>
+                <apex:outputField value="{!AcctSeed__Cash_Receipt__c.AcctSeed__Amount__c}"/>
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="{!$ObjectType.AcctSeed__Cash_Receipt__c.fields.AcctSeed__Applied_Amount__c.Label}"/>
+                <apex:outputField value="{!AcctSeed__Cash_Receipt__c.AcctSeed__Applied_Amount__c}"/>
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+                <apex:outputLabel value="{!$ObjectType.AcctSeed__Cash_Receipt__c.fields.AcctSeed__Balance__c.Label}"/>
+                <apex:outputField value="{!AcctSeed__Cash_Receipt__c.AcctSeed__Balance__c}"/>
+            </apex:pageBlockSectionItem>
+        </apex:pageBlockSection>
+        </apex:outputPanel>
+    </apex:pageBlock>
+    
+    <br />
+    <div style="margin:0 auto;">
+        <apex:pageBlock mode="edit" title="Create Refund">
+            <div style="margin: 5px;">
+                <apex:form >
+                <table align="center" cellpadding="5">
+                    <tr>
+                        <td>Refund Amount:</td>
+                        <td>
+                            <td><input class="amountField" type="text" name="refundAmount" id="refundAmount" value="{!AcctSeed__Cash_Receipt__c.AcctSeed__Balance__c}" /></td>
+                        </td>
+                        <td align="center"><button class="btn" onclick="createRefund();return false;">Create Refund</button></td>
+                    </tr>
+                </table>
+                </apex:form>
+            </div>
+        </apex:pageBlock>
+    </div>
+<div id="exportStage" style="display:none;"></div>
+</body>
+<apex:includeScript value="{!$Resource.GMBLJS__jQuery}"/>
+<apex:includeScript value="{!URLFOR($Resource.GMBLJS__jQueryUI,'/jquery-ui/jquery-ui.min.js')}"/>
+<apex:includeScript value="{!URLFOR($Resource.GMBLJS__pqGridPro241,'/pqgrid.min.js')}"/>
+<apex:includeScript value="{!URLFOR($Resource.GMBLJS__pqGridPro241,'/touch-punch/touch-punch.min.js')}"/>
+<apex:includeScript value="{!$Resource.GMBLJS__accountingJS}"/>
+<apex:includeScript value="{!$Resource.GMBLJS__ExcellentExport}"/>
+<apex:includeScript value="{!$Resource.GMBLJS__gsrSpinner}"/>
+<apex:includeScript value="{!$Resource.GMBLJS__gsrGrid2}"/>
+
+<script>function setFocusOnLoad() {}</script>
+<script type="text/javascript">
+    $j = jQuery.noConflict();
+    var currentTheme = "{!$User.UITheme}";
+
+    function createRefund() {
+        var reg = /^[+-]?(?=.)(?:\d+,)*\d*(?:\.\d+)?$/;
+        if($j('#refundAmount').val() == '' || !reg.test($j('#refundAmount').val())){
+            alert('Please enter Refund Amount.');
+            $j('#refundAmount').focus();
+            return;
+        }
+
+        var refundAmount = parseFloat($j('#refundAmount').val());
+        var availableBalance = parseFloat({!AcctSeed__Cash_Receipt__c.AcctSeed__Balance__c});
+        if(refundAmount <= 0){
+            alert('Refund amount must be positive.')
+            return;
+        }else if(refundAmount > availableBalance){
+            alert('Refund Amount cannot be more than available balance.')
+            return;
+        }
+                            
+        gSpinner.show();
+        Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.gcCashReceipt_Refund.createRefund}',
+            '{!Id}', refundAmount,
+            function(result,event){
+                if(event.status){
+                    var url = '/'+result;
+                    if(currentTheme == 'Theme4d')
+                        sforce.one.navigateToURL(url);
+                    else
+                        window.location.href = url;
+                }
+                else{
+                    alert(event.message); 
+                }
+                gSpinner.hide();
+            },
+            {buffer:true, escape:true, timeout:120000});                
+    }
+</script>
+</apex:page>

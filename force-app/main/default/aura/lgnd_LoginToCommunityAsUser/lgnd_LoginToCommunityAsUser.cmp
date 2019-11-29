@@ -1,0 +1,77 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,force:hasRecordId" controller="lgnd_LoginToCommunityAsUser_Controller">
+	<aura:attribute type="String" name="legendAccountId" />
+	<aura:attribute type="String" name="dealerAccountId" />
+	<aura:attribute type="String" name="setupId" />
+	<!-- <aura:attribute type="String" name="userId" /> -->
+	<aura:attribute type="Object" name="communityAccounts" />
+	<aura:attribute type="Object" name="accountUsers" />
+	<aura:attribute type="String" name="selectedAccount" default="0"/>
+	<aura:attribute name="recordId" type="Id" />
+	<aura:attribute type="String" name="menuTitle" default="-- None selected --" />
+	<aura:attribute type="Boolean" name="userHasPermission" />
+
+	<aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+	<aura:if isTrue="{!v.userHasPermission}">
+
+		<div>
+			<aura:if isTrue="{!v.communityAccounts.length == 0}">
+				<p><em>No Community users found.</em></p>
+			</aura:if>
+
+			<div style="margin-bottom: 0">Select Account:</div>
+			<div class="slds-dropdown-trigger slds-dropdown-trigger_click" aura:id="theMenu">
+		    <button class="slds-button slds-button_reset slds-type-focus slds-truncate" aria-haspopup="true" onclick="{!c.toggleMenu}">
+		      <span class="slds-grid slds-has-flexi-truncate slds-grid_vertical-align-center">
+		        <span class="slds-truncate">
+		        	{!v.menuTitle}
+		        </span>
+		      </span>
+		    </button>
+		    <div class="slds-dropdown slds-dropdown_left">
+			    <ul class="slds-dropdown__list" role="menu">
+						<aura:iteration items="{!v.communityAccounts}" var="u">
+							<li class="slds-dropdown__item" role="presentation">
+		            <a href="javascript:void(0);"
+		               role="menuitem"
+		               data-id="{!u.id}"
+		               data-name="{!u.account.Name}"
+		               onclick="{!c.showUsers}">
+		              <span class="slds-truncate" title="Menu Item One">
+		                <lightning:icon iconName="standard:account"
+		                                size="x-small"
+		                                class="slds-m-right--small" />
+		                {!u.account.Name}
+		              </span>
+		            </a>
+		          </li>
+						</aura:iteration>
+					</ul>
+				</div>
+			</div>
+
+			<aura:if isTrue="{!v.accountUsers.length > 0}">
+				<br/>
+				<br/>
+				<h2>Login to Community as:</h2>
+				<br/>
+				<aura:iteration items="{!v.accountUsers}" var="u">
+					<p>
+						<a href="javascript:void(0);" onclick="{!c.click}" data-id="{!u.Id}">
+							<lightning:icon iconName="standard:user" size="x-small" />&nbsp;{!u.Name}
+						</a>
+					</p>
+					<br/>
+				</aura:iteration>
+			</aura:if>
+		</div>
+
+	</aura:if>
+
+	<aura:if isTrue="{! !v.userHasPermission}">
+		<p>Woah nelly, you don't have permission for this.</p>
+	</aura:if>
+
+	
+
+</aura:component>

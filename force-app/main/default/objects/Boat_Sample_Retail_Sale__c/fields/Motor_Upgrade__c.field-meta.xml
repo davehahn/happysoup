@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Motor_Upgrade__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <externalId>false</externalId>
+    <label>Motor Upgrade</label>
+    <lookupFilter>
+        <active>true</active>
+        <filterItems>
+            <field>Product2.RecordType.Name</field>
+            <operation>equals</operation>
+            <value>Motor</value>
+        </filterItems>
+        <isOptional>false</isOptional>
+    </lookupFilter>
+    <referenceTo>Product2</referenceTo>
+    <relationshipLabel>Boat Sample Retails Sales (Motor Upgrade)</relationshipLabel>
+    <relationshipName>Sample_Retails_Sale_Motor_Upgrades</relationshipName>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

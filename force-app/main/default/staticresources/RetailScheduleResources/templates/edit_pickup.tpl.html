@@ -1,0 +1,148 @@
+<form id="edit-pickup-form">
+<div class="slds-modal__header">
+  <h2 class="slds-text-heading--medium">
+    {{{eventData.accountName}}} - {{{eventData.boatName}}}
+  </h2>
+
+  <button class="slds-button slds-button--icon-inverse slds-modal__close close-modal">
+    <svg aria-hidden="true" class="slds-button__icon slds-button__icon--large">
+      <use xlink:href="{{icons.close}}"></use>
+    </svg>
+    <span class="slds-assistive-text">Close</span>
+  </button>
+</div>
+
+<div class="slds-modal__content">
+
+  <input type="hidden" value="{{eventData.Id}}" data-field-name="Id" />
+
+  <div class="slds-grid slds-grid--align-center">
+
+    <div class="slds-col--padded slds-size--5-of-12 slds-form-element">
+      <label class="slds-form-element__label" for="date">Pick Up Date</label>
+      <div class="slds-grid" style="margin:0;">
+
+        <div class="slds-col slds-size--7-of-12">
+          <div class="slds-form-element">
+            <div class="slds-input-has-icon slds-input-has-icon--right">
+              <svg aria-hidden="true" class="slds-input__icon slds-icon-text-default">
+                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{{icons.calendar}}"></use>
+              </svg>
+              <input class="slds-input has-datepicker"
+                     value="{{eventData.startDate}}"
+                     type="text"
+                     data-field-name="start-date"
+                     data-required
+                     placeholder="Pick a Date"
+                     label="Date Picker Label">
+            </div>
+          </div>
+        </div>
+
+        <div class="slds-col slds-size--5-of-12">
+          <div class="slds-form-element">
+            <div class="slds-input-has-icon slds-input-has-icon--right">
+              <svg aria-hidden="true" class="slds-input__icon slds-icon-text-default">
+                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{{icons.arrowDown}}"></use>
+              </svg>
+              <input class="slds-input is-combobox"
+                     type="text"
+                     value="{{eventData.startTime}}"
+                     data-field-name='start-time'
+                     data-required />
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="slds-col--padded slds-size--4-of-12">
+      <div class="slds-form-element">
+        <label class="slds-form-element__label">Pickup Loaction</label>
+        <div class="slds-form-element__control">
+          <div class="slds-select_container">
+            <select id="type" class="slds-select" data-field-name="Pickup_Location__c" data-required>
+              {{#each pickupOptions}}
+                {{optionBuilder this ../eventData.pickupLocation }}
+              {{/each}}
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slds-col--padded slds-size--3-of-12">
+      <div class="slds-form-element">
+        <label class="slds-form-element__label">On Water Orientation</label>
+        <div class="slds-form-element__control">
+          {{switchInput 'On_Water_Orientation__c' eventData.onWaterOrientation}}
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="slds-card">
+    <div class="slds-card__header">
+      <div class="slds-media slds-media--center slds-has-flexi-truncate">
+        <div class="slds-media__figure">
+          {{objectIcon eventData.origin }}
+        </div>
+        <div class="slds-media__body">
+          <h2 class="slds-text-heading--small slds-truncate">
+            <a href="/{{eventData.Id}}">{{ eventData.Name }}</a>
+          </h2>
+        </div>
+      </div>
+    </div>
+    <div class="slds-card__body">
+      <div class="slds-grid">
+
+        <div class="slds-col--padded slds-size--1-of-2">
+          <div class="field-detail">
+            <label>Account Name</label>
+            <p class="slds-has-flexi-truncate">{{{eventData.accountName}}}</p>
+          </div>
+          <div class="field-detail">
+            <label>Stage</label>
+            <p class="slds-has-flexi-truncate">{{eventData.stage}}</p>
+          </div>
+          <div class="field-detail">
+            <label>Payment Method</label>
+            <p class="slds-has-flexi-truncate">{{eventData.paymentMethod}}</p>
+          </div>
+          <div class="field-detail">
+            <label>Payment Status</label>
+            <p class="slds-has-flexi-truncate">{{eventData.paymentStatus}}</p>
+          </div>
+        </div>
+
+        <div class="slds-col--padded slds-size--1-of-2">
+          <div class="field-detail">
+            <label>Amount</label>
+            <p>$ {{eventData.amount}}</p>
+          </div>
+          <div class="field-detail">
+            <label>Memory Maker</label>
+            <p>{{eventData.memoryMaker}}</p>
+          </div>
+          <div class="field-detail">
+            <label>Boat Specialist</label>
+            <p>{{eventData.boatSpecialist}}</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</div>
+</form>
+
+<div class="slds-modal__footer">
+  <div class="slds-x-small-buttons--horizontal">
+    <button class="slds-button slds-button--neutral close-modal">Cancel</button>
+    <button data-form-submit-btn="edit-pickup-form" class="slds-button slds-button--neutral slds-button--brand">Save</button>
+  </div>
+</div>

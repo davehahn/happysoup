@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>Legend_Letterhead</letterhead>
+    <name>7) 3 Month Follow Up</name>
+    <style>freeForm</style>
+    <subject>I Hope All is Well</subject>
+    <textOnly>Hey {!Account.FirstName},
+
+I just wanted to check in and see how you were doing.  It&#39;s been a while since we first met and I showed you through our line-up of Legend Boats, so if you need a refresher or a new Quote, I&#39;ll be sure to send one your way. Also, if, for whatever reason, you are no longer in the market for buying a boat, please let me know.
+
+My goal in emailing you is to ensure that you&#39;re not missing out on owning a great Canadian product and that you get to take advantage of all of the special attributes that go along with it.
+
+Once again, it is a pleasure to work through this process with you.  I hope this finds you well and that we get a chance to chat soon.
+
+Yours in Boating,
+
+{!User.Name}
+{!User.Title}
+
+{!User.Email}
+{!User.Phone}
+legendboats.com</textOnly>
+    <type>html</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

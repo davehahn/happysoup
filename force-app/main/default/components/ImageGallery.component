@@ -1,0 +1,418 @@
+<apex:component >
+
+  <apex:attribute name="objectType"
+                  description="SObject Type (parentId of attachment)"
+                  type="String"
+                  required="true" />
+  <apex:attribute name="objectId"
+                  description="SObject ID (parentId of attachment)"
+                  type="String"
+                  required="true" />
+  <apex:attribute name="defaultImageFieldName"
+                  description="The field on the SOboject where the default image Id is stored"
+                  type="String"
+                  required="false" />
+  <apex:attribute name="defaultImageId"
+                  description="Default Image ID (attachmentId) of the SObject"
+                  type="String"
+                   />
+
+
+  <c:RemoteTk />
+  <apex:includeScript value="{!URLFOR($Resource.jQuery)}"  />
+  <script type="text/javascript">
+    // Get a reference to jQuery that we can work with
+    $j = jQuery.noConflict();
+
+    // Get an instance of the RemoteTK client
+
+    var client = new remotetk.Client(),
+        objectId = "{!objectId}",
+        objectType = '{!objectType}',
+        defaultImageFieldName = '{!defaultImageFieldName}',
+        queryString = "SELECT Name, Id, ContentType FROM Attachment WHERE ParentId = '" + objectId + "' AND ContentType LIKE '%image%'",
+        defaultImageId = "{!defaultImageId}",
+        firstImageId = null,
+        $viewer,
+        defaultClass,
+        renderViewer = false,
+        imageLoadedDeferred = $j.Deferred(),
+        pageLoadedDeferred = $j.Deferred();
+
+    $j(document).ready(function() {
+      pageLoadedDeferred.resolve();
+      if(defaultImageFieldName){
+        console.log(defaultImageFieldName);
+      }else{
+        console.log('filed name not defined');
+      }
+    });
+
+    $j.when(pageLoadedDeferred).then( function() {
+      $viewer = $j('#viewer');
+      $viewer.data('defaultImageId', defaultImageId);
+      client.query(queryString, function(response){
+
+        if(response.records.length > 0){
+          renderViewer = true;
+          for(var i=0; i < response.records.length; i++){
+            defaultClass = response.records[i].Id === defaultImageId
+            ? 'default'
+            : 'non-default'
+            if( response.records[i].ContentType.indexOf('image') !== -1){
+              $j('#images').append( $j("<li id='image_"
+                + response.records[i].Id
+                + "' class='"
+                + defaultClass
+                + "''><span></span><a data-image-id='"
+                + response.records[i].Id
+                + "' href='/servlet/servlet.FileDownload?file="
+                + response.records[i].Id
+                + "'><img src='/servlet/servlet.FileDownload?file="
+                + response.records[i].Id
+                + "'></img></a></li>") );
+              if(firstImageId === null){
+                firstImageId = response.records[i].Id;
+              }
+            }
+          }
+          if( firstImageId ){
+            $viewer.data('currentImageId', firstImageId)
+            .append( $j("<img src='/servlet/servlet.FileDownload?file=" + firstImageId + "'></img>") );
+            if( firstImageId === defaultImageId ){
+              $viewer.addClass('default');
+            }
+          }
+        }
+        imageLoadedDeferred.resolve();
+      });
+    });
+
+    $j.when(imageLoadedDeferred, pageLoadedDeferred).then(function() {
+      var $setLink = $j('#defaultSet a:first'),
+        $offLink = $j('#defaultTrue a:first');
+
+      loadViewer();
+      $j('#images').on('click', 'a', function(e) {
+        var $this = $j(this);
+         e.preventDefault();
+         $viewer.data('currentImageId', $this.data('image-id') )
+         .removeClass('default')
+         .find('img').attr('src', this.href );
+         if( $this.data('image-id') === $viewer.data('defaultImageId') ){
+          $viewer.addClass('default');
+         }
+      });
+
+      if(defaultImageFieldName){
+
+        $setLink.on('click', function(e){
+          e.preventDefault();
+          $viewer.addClass('busy');
+          var imageId = $viewer.data('currentImageId'),
+            params = new Object;
+          params[defaultImageFieldName] = imageId;
+          client.update(objectType, objectId, params, function(result){
+            $viewer.data('defaultImageId', imageId)
+            .addClass('default');
+            $j('li.default').removeClass('default').addClass('non-default');
+            $j('#image_'+imageId).removeClass('non-default').addClass('default');
+            $viewer.removeClass('busy');
+          }, function(error){
+            alert(error[0].message);
+            $viewer.removeClass('busy');
+          } );
+        });
+
+        $offLink.on('click', function(e){
+          e.preventDefault();
+          $viewer.addClass('busy');
+          var params = new Object;
+          params[defaultImageFieldName] = null;
+          client.update(objectType, objectId, params, function(){
+            $j('li.default').removeClass('default').addClass('non-default');
+            $viewer.data('defaultImageId', null)
+            .removeClass('default');
+            $viewer.removeClass('busy');
+          }, function(){
+            alert(error[0].message);
+            $viewer.removeClass('busy');
+          } );
+        });
+      }
+
+    });
+
+    function loadViewer() {
+      if(renderViewer){
+        $j('#nullImage').hide();
+        $j('#gallery_container').show();
+        if(!defaultImageFieldName) {
+          $viewer.addClass('noDefault');
+        }
+      } else {
+        $j('#nullImage img')
+        .show();
+      }
+    }
+
+  </script>
+
+  <!-- Include the RemoteTK component -->
+  <style type="text/css">
+
+    /* Let's get this party started */
+    ::-webkit-scrollbar {
+        width: 10px;
+    }
+
+    /* Track */
+    ::-webkit-scrollbar-track {
+        -webkit-border-radius: 0;
+        border-radius: 0;
+    }
+
+    /* Handle */
+    ::-webkit-scrollbar-thumb {
+        -webkit-border-radius: 0;
+        border-radius: 0;
+        background: rgba(13,209,178,0.8);
+        -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(13,209,178,1);
+    }
+
+    ::-webkit-scrollbar-thumb:window-inactive {
+      background: rgba(13,209,178,0.4);
+    }
+
+    #gallery_container {
+      display:none;
+      height:100%;
+    }
+
+    #nullImage {
+      text-align:center;
+      height:100%;
+      width:100%;
+    }
+
+    #nullImage img {
+      height:80%;
+      margin-top: 2%;
+      display:none;
+    }
+
+    #viewer {
+      display:inline-block;
+      height:100%;
+      width:89%;
+      text-align:center;
+      overflow-x:auto;
+      overflow-y:hidden;
+      -webkit-transition: all 0.5s;
+      -moz-transition: all 0.5s;
+      -o-transition: all 0.5s;
+      position:relative;
+    }
+
+    #viewer.busy {
+      opacity:0.2;
+    }
+
+    #viewer img {
+      height:100%;
+      margin:auto;
+
+    }
+
+    #viewer.default img{
+
+    }
+
+
+    #defaultSet {
+      position: absolute;
+      color: #FFF;
+      background: #000;
+      padding: 7px 10px;
+      top: 0px;
+      width: 150px;
+      text-align: center;
+      font-weight: bold;
+      left:50%;
+      margin-left: -75px;
+    }
+
+    #defaultTrue {
+      display:none;
+      position: absolute;
+      color: #FFF;
+      background: #0C0;
+      width:4em;
+      height:2em;
+      line-height:2em;
+      top: 0px;
+      width: 150px;
+      text-align: center;
+      font-weight: bold;
+      left:50%;
+      margin-left: -75px;
+    }
+
+    #defaultSet a, #defaultTrue a {
+      display:block;
+      height:100%;
+      width:100%;
+      text-decoration:none;
+      color: inherit;
+      padding:0;
+      margin:0;
+    }
+
+    #viewer.default #defaultTrue {
+      display:block;
+    }
+
+    #viewer.default #defaultSet {
+      display:none;
+    }
+
+    #viewer.noDefault #defaultSet,  #viewer.noDefault #defaultTrue {
+      display:none;
+    }
+
+    #defaultTrue span:first-child + span {
+      display:none;
+    }
+
+    #defaultTrue:hover span:first-child {
+      display:none;
+    }
+
+    #defaultTrue:hover span:first-child + span {
+      display:inline;
+    }
+
+    #images {
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding: 0 0 0 10px;
+      margin:0;
+      padding-right:5px;
+      white-space: nowrap;
+      width:11%;
+      height: 100%;
+      position:fixed;
+      right:0px;
+      display:inline-block;
+    }
+
+    #images li {
+      list-style-type: none;
+      padding:0;
+      margin:0;
+
+      position:relative;
+      overflow:hidden;
+    }
+
+    #images li span {
+      display:none;
+      position: absolute;
+      background: #0C0;
+      color: #FFF;
+      z-index: 1;
+      -webkit-transform: rotate(-45deg);
+      -moz-transform: rotate(-45deg);
+      -o-transform: rotate(-45deg);
+      -ms-transform: rotate(-45deg);
+      transform: rotate(-45deg);
+      top: 5%;
+      left: -16%;
+      width: 60%;
+      line-height: 20px;
+      font-size: 0.7em;
+      text-align: center;
+      letter-spacing: 1px;
+    }
+
+    #images li span:before {
+      content: "Default";
+    }
+
+    #images li.default span {
+      display:inline;
+    }
+
+    #images li a {
+      text-decoration:none;
+      display:block;
+    }
+
+    #image li:first-child {
+      padding-left:0px;
+      margin-left:0px;
+    }
+
+    #images li a img {
+      width: 100%;
+      height:auto;
+      opacity:0.7;
+      margin-bottom:6px;
+      box-sizing: border-box;
+      -moz-box-sizing: border-box;
+      -webkit-box-sizing: border-box;
+    }
+
+    #images li:last-child a img {
+      margin-bottom:0px;
+    }
+
+    #images li.default a img {
+      border: 1px solid #0C0;
+    }
+
+    #images li a:hover img {
+      opacity: 1;
+    }
+
+
+
+    @media all and (max-width: 1200px) {
+
+      #viewer {
+      }
+
+      #images {
+        width:8%;
+      }
+
+      #images li span {
+        line-height: 13px;
+        top: 4%;
+      }
+
+      #images li span:before {
+        content: "D";
+      }
+    }
+
+  </style>
+
+  <div id="nullImage">
+    <img src="{!$Resource.noImage}" />
+  </div>
+
+  <div id="gallery_container">
+    <div id="viewer">
+      <div id="defaultTrue"><a href="#"><span>DEFAULT</span><span>REMOVE DEFAULT</span></a></div>
+      <div id="defaultSet"><a href="#">SET AS DEFAULT</a></div>
+    </div>
+    <ul id="images">
+    </ul>
+  </div>
+
+</apex:component>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <description>Requesting the Business Office Manager to review Opportunity File and change stage to &quot;Tagging Pending&quot; when ready</description>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>Legend_Letterhead</letterhead>
+    <name>Whitefish Business Manager Approval</name>
+    <style>freeForm</style>
+    <subject>Business Office Manager Approval</subject>
+    <textOnly>Hey Jeff,
+
+The following deal has been approved by the Sales Manager.  Please review and if this deal meets the standard requirements, please push it through to tagging pending.  If this deal does not meet the standard requirements, please work with the Sales Manager and Salesperson to ensure this client has the best chance of getting their boat this summer!
+
+{!Opportunity.Account}
+{!Account.PersonMailingAddress}
+{!Account.PersonMailingCity}
+
+
+{!Opportunity.Sales_Department__c}
+{!Opportunity.Payment_Method__c}
+
+
+{!Opportunity.Amount}
+{!Opportunity.00Ni000000CfHVq}
+{!Opportunity.Total_Amount__c}
+
+{!Opportunity.Deposit__c}  by {!Opportunity.Deposit_Method__c}
+
+Thank you</textOnly>
+    <type>html</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

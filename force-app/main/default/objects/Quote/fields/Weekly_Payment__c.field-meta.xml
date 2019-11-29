@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Weekly_Payment__c</fullName>
+    <externalId>false</externalId>
+    <formula>( ( Finance_Annual_Interest__c / 12 )* Grand_Total__c ) / (1 - (1+(Finance_Annual_Interest__c / 12 ))^(- ( Finance_Ammortization__c * 12 / 12 ) ) ) / ( 52 / 12 )</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Weekly Payment</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <type>Currency</type>
+</CustomField>

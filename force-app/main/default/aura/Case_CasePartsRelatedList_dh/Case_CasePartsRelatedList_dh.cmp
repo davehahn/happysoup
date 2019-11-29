@@ -1,0 +1,189 @@
+<aura:component controller="CaseLexController" implements="force:appHostable,flexipage:availableForAllPageTypes,force:hasRecordId,flexipage:availableForRecordHome">
+
+  <aura:attribute name="recordId" type="String" />
+  <aura:attribute name="caseRecord" type="Object"/>
+  <aura:attribute name="caseParts" type="Case_Part__c[]" />
+  <aura:attribute name="casePartsCount" type="Integer" default="0" />
+  <aura:attribute name="tableCols" type="List" />
+  <aura:attribute name="loaded" type="Boolean" default="false" />
+  <aura:attribute name="modalOpen" type="Boolean" />
+  <aura:attribute name="parts" type="Case_Part__c[]" />
+  <aura:attribute name="error" type="String" />
+  <aura:attribute name="isLocked" type="Boolean" default="false" />
+  <aura:attribute name="canCreate" type="Boolean" default="true" />
+  <aura:attribute name="canDelete" type="Boolean" default="true" />
+  <force:recordData aura:id="recordLoader" recordId="{!v.recordId}" fields="Status" targetFields="{!v.caseRecord}" />
+  <ltng:require scripts="{!$Resource.Libraries +'/js/LightningApex.js'}"
+                afterScriptsLoaded="{!c.afterScripts}" />
+
+
+  <aura:handler event="force:refreshView" action="{!c.afterScripts}" />
+
+  <c:lgnd_Confirm aura:id="lgnd-confirm"/>
+  <lightning:spinner variant="brand" size="large" class="slds-hide" aura:id="spinner" />
+
+  <aura:if isTrue="{!v.error != null}">
+    <div class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_error">
+      {!v.error}
+    </div>
+  </aura:if>
+
+  <article class="slds-card slds-card_boundary forceRelatedListCardDesktop">
+
+    <!-- HEADER -->
+    <div class="slds-card__header slds-grid">
+      <header class="slds-media slds-media--center slds-has-flexi-truncate">
+        <div class="slds-media__figure">
+          <aura:if isTrue="{!not(v.loaded)}">
+            <div role="status" class="slds-spinner
+                                      slds-spinner_x-small
+                                      slds-spinner_brand
+                                      slds-is-relative">
+              <span class="slds-assistive-text">Loading</span>
+              <div class="slds-spinner__dot-a"></div>
+              <div class="slds-spinner__dot-b"></div>
+            </div>
+          </aura:if>
+          <aura:if isTrue="{!v.loaded}">
+            <lightning:icon iconName="standard:case" size="small" />
+          </aura:if>
+        </div>
+        <div class="slds-media__body">
+          <h2>
+            <a href="javascript:void(0);"
+               class="slds-card__header-link baseCard__header-title-container">
+              <span class="slds-text-heading--small slds-truncate slds-m-right--xx-small">
+                Case Parts
+              </span>
+              <aura:if isTrue="{!v.loaded}">
+                <span class="slds-text-heading--small slds-shrink-none slds-m-right--xx-small">
+                  ({!v.casePartsCount})
+                </span>
+              </aura:if>
+            </a>
+          </h2>
+        </div>
+      </header>
+      <aura:if isTrue="{!v.caseRecord.Status != 'Approved'}">
+      <div class="slds-no-flex">
+        <div class="actionsContainer">
+          <aura:if isTrue="{! and( v.canCreate, not(v.isLocked) )}">
+            <lightning:button label="New" onclick="{!c.openNewForm}"/>
+          </aura:if>
+        </div>
+      </div>
+      </aura:if>
+    </div>
+
+    <!-- BODY -->
+    <div class="slds-card__body">
+      <aura:if isTrue="{! not( empty(v.caseParts) )}">
+        <table class="slds-table slds-table_bordered slds-table_cell-buffer">
+          <thead>
+            <tr class="slds-text-title_caps">
+              <th scope="col">
+                <div class="slds-truncate" title="Case Part Name">Case Part Name</div>
+              </th>
+              <th scope="col">
+                <div class="slds-truncate" title="Quantity">Claim Quantity</div>
+              </th>
+              <th scope="col">
+                <div class="slds-truncate" title="Order Quantity">Order Quantity</div>
+              </th>
+              <th scope="col">
+                <div class="slds-truncate" title="Product">Product</div>
+              </th>
+              <th scope="col">
+                <div class="slds-truncate" title="Product Code">Product Code</div>
+              </th>
+              <aura:if isTrue="{! not(v.isLocked)}">
+                 <th scope="col" style="width: 3.25rem;">
+                  <div class="slds-th__action">
+                    <span class="slds-assistive-text">Actions</span>
+                  </div>
+                </th>
+              </aura:if>
+            </tr>
+          </thead>
+          <tbody>
+            <aura:iteration items="{!v.caseParts}" var="cp">
+              <tr>
+                <th scope="row" data-label="Case Part Name">
+                  <div class="slds-truncate" title="{!cp.Name}">
+                    <a href="javascript:void(0);">{!cp.Name}</a>
+                  </div>
+                </th>
+                <td data-label="Claim Quantity">
+                  <div class="slds-truncate" title="{!cp.Quantity__c}">{!cp.Quantity__c}</div>
+                </td>
+                <td data-label="Order Quantity">
+                  <div class="slds-truncate" title="{!cp.Order_Quantity__c}">{!cp.Order_Quantity__c}</div>
+                </td>
+                <td data-label="Product">
+                  <div class="slds-truncate" title="{!cp.Product__r.Name}">
+                    <a href="javascript:void(0);"
+                       onclick="{!c.viewProduct}"
+                       data-record-id="{!cp.Product__c}">
+                      {!cp.Product__r.Name}
+                    </a>
+                  </div>
+                </td>
+                <td data-label="Product Code">
+                  <div class="slds-truncate" title="{!cp.Product__r.Unique_Product_Code__c}">{!cp.Product__r.Unique_Product_Code__c}</div>
+                </td>
+                <aura:if isTrue="{! not(v.isLocked)}">
+                  <td>
+                    <lightning:buttonMenu menuAlignment="right"
+                                          iconSize="x-small"
+                                          onselect="{!c.handleTableAction }">
+                      <lightning:menuItem label="Edit" value="{! 'edit:' + cp.Id }" />
+                      <aura:if isTrue="{! v.canDelete}">
+                        <lightning:menuItem label="Delete" value="{! 'delete:' + cp.Id }" />
+                      </aura:if>
+                  </lightning:buttonMenu>
+                  </td>
+                </aura:if>
+              </tr>
+            </aura:iteration>
+          </tbody>
+        </table>
+      </aura:if>
+    </div>
+
+    <!-- FOOTER -->
+   <!--  <aura:if isTrue="{! not( empty(v.caseParts) )}">
+      <a href="javascript:void(0);" onclick="{!c.gotoRelatedList}">
+        <div class="slds-card__footer">
+          <span class="view-all-label">View All</span>
+        </div>
+      </a>
+    </aura:if> -->
+
+  </article>
+
+  <aura:if isTrue="{!v.modalOpen}">
+    <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+      <div class="slds-modal__container">
+        <header class="slds-modal__header">
+          <lightning:buttonIcon iconName="utility:close"
+                                class="slds-modal__close slds-button_icon-inverse"
+                                variant="bare"
+                                size="large"
+                                onclick="{! c.closeNewForm }"
+                                alternativeText="Close window" />
+          <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Add Case Parts</h2>
+        </header>
+        <div class="slds-modal__content slds-p-around_medium">
+          <c:CasePart_AddForm_dh caseId="{!v.recordId}" parts="{!v.parts}" aura:id="casePartsForm" />
+        </div>
+        <footer class="slds-modal__footer">
+          <button class="slds-button slds-button_neutral" onclick="{! c.closeNewForm }">Cancel</button>
+          <button class="slds-button slds-button_brand" onclick="{!c.saveParts}">Save</button>
+        </footer>
+      </div>
+    </section>
+    <div class="slds-backdrop slds-backdrop_open"></div>
+  </aura:if>
+
+
+</aura:component>

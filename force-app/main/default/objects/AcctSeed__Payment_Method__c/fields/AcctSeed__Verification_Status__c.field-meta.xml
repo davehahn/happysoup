@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>AcctSeed__Verification_Status__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <label>Verification Status</label>
+    <required>false</required>
+    <trackHistory>true</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>new</fullName>
+                <default>false</default>
+                <label>new</label>
+            </value>
+            <value>
+                <fullName>validated</fullName>
+                <default>false</default>
+                <label>validated</label>
+            </value>
+            <value>
+                <fullName>verified</fullName>
+                <default>false</default>
+                <label>verified</label>
+            </value>
+            <value>
+                <fullName>verification_failed</fullName>
+                <default>false</default>
+                <label>verification_failed</label>
+            </value>
+            <value>
+                <fullName>errored</fullName>
+                <default>false</default>
+                <label>errored</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

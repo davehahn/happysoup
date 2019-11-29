@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>Legend_Letterhead</letterhead>
+    <name>Pending Rigging</name>
+    <style>freeForm</style>
+    <subject>Work Order Ready</subject>
+    <textOnly>Hey {!Receiving_User.FirstName},
+
+The Work Order for {!Account.Name} has been prepared.  You may now proceed to build their {!Opportunity.BoatId__c} to the required specifications.  Once complete, let Lisa know to change the Stage to Pending Salesperson Inspection.  They will inspect the boat closer to the Delivery Date.
+
+Thanks!</textOnly>
+    <type>html</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

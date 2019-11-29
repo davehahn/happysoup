@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>AcctSeed__Payee_Country__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <formula>IF(NOT(ISBLANK(AcctSeed__Payee_Country2__c)), AcctSeed__Payee_Country2__c,
+IF(NOT(ISBLANK(AcctSeed__Vendor__c)), AcctSeed__Vendor__r.BillingCountry,
+IF(NOT(ISBLANK(AcctSeed__Contact__c)),AcctSeed__Contact__r.MailingCountry,
+IF(NOT(ISBLANK(AcctSeed__Employee__c)),AcctSeed__Employee__r.Country,
+&quot;&quot;))))</formula>
+    <label>Payee Country</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

@@ -1,0 +1,272 @@
+$no-driver-bg: #ECECEC;
+$no-driver-bg-dark: #919291;
+
+$event-text-color: #3C3C3C;
+$event-border-color: #C7C7C7;
+
+$drivers: (
+  mike-rancourt: #E7FFF1,
+  luc-broullette: #D4F1FF,
+  hopefully-norman: #ffa9b7,
+  'new-driver': #fdfdd5,
+  dealer-pick-up: #ffb9a6,
+  outside-carrier-flatbed: #EC9AEE,
+  campion: #EDCEB9
+);
+
+$truckColor: #FFF;
+
+.toggles {
+
+  & > div {
+    position:relative;
+    line-height: 1.5rem;
+    margin-top:9px;
+    & > label {
+      border-width:1px;
+      border-style:solid;
+      border-radius: 4px;
+    }
+
+    div.legend_switch {
+      position:absolute;
+      right: 10px;
+      top:7px;
+      input.lg-toggle-round:checked + label:before {
+        background-color: #2370d2;
+      }
+    }
+  }
+}
+
+
+
+.fc-content-skeleton > table > tbody > tr > td.fc-event-container > a.fc-event > .fc-content > .fc-title {
+  display:inline-block;
+  white-space: nowrap !important;
+  max-width: 100%;
+  overflow:hidden;
+  text-overflow: ellipsis;
+}
+
+.slds {
+  position: relative;
+  z-index: 80;
+}
+
+.slds-icon-custom-legend {
+  background: #00AAF9;
+}
+
+.slds .slds-modal__content .slds-card .slds-card__body {
+  padding: 0;
+}
+
+.slds .slds-modal .slds-modal__header h2 .slds-media__figure {
+  position: absolute;
+  left: 1rem;
+}
+
+.slds .slds-modal__content .slds-form label {
+  margin-bottom: 0;
+  margin-top: 8px;
+}
+
+.slds .slds-modal__content .slds-form .error {
+  margin-bottom: 0 !important;
+}
+
+.slds .slds-modal__content .slds-card {
+  padding-left:0;
+  padding-right:0;
+}
+
+/*
+@each $name, $color in $drivers {
+  #lg-toggle-#{$name}:checked + label {
+    background: darken($color, 50%);
+    &:before {
+      background: $color;
+    }
+    &:after {
+      background: darken($color, 50%);
+    }
+  }
+}
+*/
+
+.fc {
+
+  .fc-event {
+    background-color: #d6d6d6;
+    border-color: #9c9c9c;
+    span.fc-time {
+      background: #9c9c9c;
+      color: #FFF;
+    }
+
+    &:hover {
+      color: #FFF !important;
+      background-color: #00e760 !important;
+      border-color: #00e760 !important;
+    }
+
+   /* &.no-driver {
+      background: $no-driver-bg;
+      border-color: $no-driver-bg-dark;
+      span.fc-time {
+        background: $no-driver-bg-dark;
+        color: #FFF;
+      }
+      &:hover {
+        background: $no-driver-bg-dark;
+        color: #FFF;
+        span.fc-time {
+          color: $event-text-color;
+          background: #FFF;
+        }
+      }
+    }
+  */
+    /* ++++++++++++++++ /driver specific event class ++++++++++++++++ */
+   /* @each $name, $color in $drivers {
+      &.#{$name} {
+        background: $color;
+        border-color: darken( $color, 50%);
+        span.fc-time {
+          background: darken($color, 50%);
+          color: #FFF;
+        }
+        &:hover {
+          background: darken($color, 50%);
+          color: #FFF;
+          span.fc-time {
+            color: $event-text-color;
+            background: #FFF;
+          }
+        }
+      }
+    }
+    */
+    /* =============== /driver specific event class ================ */
+
+  }// /.fc-event
+
+}// /.fc
+
+.schedulable {
+  padding: 0.5rem 0.75rem;
+  margin: 0.5rem 1rem;
+  display: flex;
+  align-items: center;
+  background: #f4f6f9;
+  border-radius: 5px;
+  cursor: move;
+  position:relative;
+  z-index:99;
+
+  & > div {
+    height: 100%;
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+  }
+  a.trip-lookup {
+
+    // &:before {
+    //   content: '';
+    //   position: absolute;
+    //   height: 100%;
+    //   width: 20px;
+    //   background: transparent;
+    //   left: -20px;
+    // }
+  }
+
+  & > p {
+    background: #FFF;
+    margin-left: 0.75rem;
+    padding: 0.5rem 0.5rem 0.5rem 1rem;
+    border-radius: 4px;
+    display: inline-block;
+    width: 100%;
+  }
+  &.processing {
+    visibility: hidden;
+  }
+}
+
+#trip_edit {
+  #trip-backdrop {
+    width: 120%;
+    left: -10%;
+  }
+  & > .slds-modal__container > .slds-modal__header {
+    padding: 0;
+    border: none;
+  }
+  #trip-dialog {
+    position: absolute;
+    width: 80%;
+    left: 10%;
+  }
+
+  #trip-content {
+    div[role="tabpanel"] {
+      height: 60vh;
+      overflow-y: auto;
+    }
+  }
+}
+
+.trip-details {
+  background: #FFF;
+  border: 1px solid #d8dde6;
+  width: 350px;
+  min-height: 200px;
+  padding: 5px;
+  position: fixed;
+  visibility: hidden;
+  z-index: 100;
+  border-radius: 4px;
+  &.open {
+    visibility: visible;
+  }
+  &:before {
+    content:'';
+    position: absolute;
+    border: 14px solid transparent;
+    left: 100%;
+    z-index: 100;
+    top: calc(100px - 14px);
+    border-left-color: #d8dde6;
+  }
+
+  &:after {
+    content:'';
+    position: absolute;
+    border: 12px solid transparent;
+    left: 100%;
+    z-index: 101;
+    top: calc(100px - 12px);
+    border-left-color: #fff;
+  }
+
+  .slds-spinner--large {
+    position: absolute;
+    left: calc(50% - 34px);
+    top: calc(50% - 34px);
+  }
+
+  .slds-page--header {
+    padding: 0.5rem !important;
+  }
+
+  ul {
+    margin: 0.5rem;
+    margin-top: 1.5rem;
+
+  }
+
+
+}

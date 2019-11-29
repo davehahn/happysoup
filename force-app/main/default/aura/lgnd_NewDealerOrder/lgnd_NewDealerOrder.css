@@ -1,0 +1,66 @@
+.THIS {
+  margin: 0;
+  padding:0;
+  padding-bottom: 3rem;
+}
+
+.THIS.slds-spinner_container .spinner-text {
+  position: absolute;
+  text-align: center;
+  width: 300px;
+  top: 55%;
+  left: calc( 50% - 150px );
+  color: #999;
+}
+
+.THIS .promotion-message {
+   border-radius: 5px;
+   margin:0.5rem;
+   padding:0.5rem;
+   text-align:center;
+ }
+
+.THIS .promotion-message h2 {
+ width: 100%;
+ margin-bottom:0.25rem;
+ font-size:1.2rem;
+ font-weight:bold;
+ text-align:center;
+}
+
+@media only screen and (max-width:480px) {
+  .THIS .slds-modal__container {
+    margin: 0;
+    -webkit-justify-content: flex-start;
+    justify-content: flex-start;
+    padding:0;
+  }
+
+  .THIS .slds-modal__container .slds-modal__content {
+    height: 100vh;
+    position:relative;
+  }
+
+  .THIS.slds-modal__footer,
+  .THIS .slds-modal__footer {
+    position: fixed;
+    width: 100%;
+    bottom: 1rem;
+    margin: -1rem;
+    background:  rgb(244, 246, 249);
+    box-shadow: none;
+  }
+}
+
+.THIS .newButton {
+  float: right;
+}
+
+.THIS.toggle,
+.THIS .toggle {
+  display: none;
+}
+
+.THIS .slds-tabs--path svg {
+  fill: #FFF;
+}

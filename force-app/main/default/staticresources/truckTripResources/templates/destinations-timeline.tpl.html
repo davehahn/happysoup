@@ -1,0 +1,84 @@
+<ul class="destination-list">
+{{#each destinations}}
+  <li id="{{ @key }}">
+    <span class="slds-assistive-text">{{this.Type}}</span>
+    <div class="slds-media">
+      <div class="slds-media__body">
+        <div class="slds-media slds-media--timeline {{ destinationClass this.Type }}">
+          <div class="slds-media__figure slds-timeline__icon">
+            <div class="slds-icon_container">
+              {{ destinationTypeIcon this.Type }}
+            </div>
+          </div>
+          <div class="slds-media__body">
+            <div class="slds-media">
+              <!-- <div class="slds-media__figure">
+                <label class="slds-checkbox" for="mark-complete">
+                  <input name="checkbox" type="checkbox" id="mark-complete" />
+                  <span class="slds-checkbox--faux"></span>
+                  <span class="slds-form-element__label slds-assistive-text">mark-complete</span>
+                </label>
+              </div> -->
+              <div class="slds-media__body">
+                <h3 class="slds-truncate">
+                {{{ this.AccountName }}}
+                {{ noticeIndicator this.NotificationSent }}
+              </h3>
+                {{#each this.erpWrappers }}
+                  <div class="item-container TEST">
+                  {{#each this.MaterialWrappers}}
+                    {{ destinationMaterialRow this }}
+                  {{/each}}
+                  </div>
+                {{/each}}
+                {{#ifNotNull this.Notes }}
+                <div class="item-container">
+                  <p class="slds-text-body--small">{{{ this.Notes }}}</p>
+                </div>
+                {{/ifNotNull}}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="slds-media__figure slds-media__figure--reverse">
+        <div class="slds-timeline__actions">
+          <p class="slds-timeline__date">{{ toDateString this.Delivery_Date }}</p>
+          {{#ifHasPermission 'canEditDestinations, canDeleteDestinations'}}
+          <div class="slds-dropdown-trigger">
+            <button class="slds-button slds-button--icon-border-filled slds-button--icon-x-small" aria-haspopup="true">
+              <svg aria-hidden="true" class="slds-button__icon">
+                <use xlink:href="{{downArrowUrl}}"></use>
+              </svg>
+            </button>
+            <div class="slds-dropdown slds-dropdown--right slds-dropdown--menu">
+              <ul class="slds-dropdown__list" role="menu">
+                <li class="slds-dropdown__item">
+                  {{#ifHasPermission 'canEditDestinations'}}
+                  <a href="#" role="menuitem" data-function="edit" data-id="{{this.Id}}">
+                    <p class="slds-truncate">Edit</p>
+                  </a>
+                  {{/ifHasPermission}}
+                </li>
+                <li class="slds-dropdown__item">
+                  {{#ifHasPermission 'canDeleteDestinations'}}
+                  <a href="#" role="menuitem" data-function="delete" data-id="{{this.Id}}">
+                    <p class="slds-truncate">Delete</p>
+                  </a>
+                  {{/ifHasPermission}}
+                </li>
+                <li class="slds-dropdown__item">
+                  <a href="#" role="menuitem" data-function="send-notice" data-id="{{this.Id}}">
+                    <p class="slds-truncate">Send Notice</p>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+          {{/ifHasPermission}}
+        </div>
+      </div>
+    </div>
+  </li>
+  {{/each}}
+</ul>

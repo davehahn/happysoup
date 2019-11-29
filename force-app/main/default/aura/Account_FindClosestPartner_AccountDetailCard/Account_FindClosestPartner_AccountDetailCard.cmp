@@ -1,0 +1,45 @@
+<aura:component>
+
+  <aura:attribute name="acct" type="Map" />
+  <aura:attribute name="originAddress" type="String" />
+
+  <div class="slds-card slds-m-top_medium">
+    <div class="slds-card__header slds-grid">
+      <header class="slds-media slds-media_center slds-has-flexi-truncate">
+        <div class="slds-media__figure">
+          <lightning:icon iconName="{!v.acct.icon}" />
+        </div>
+        <div class="slds-media__body">
+          <div class="slds-text-heading_small">
+            {!v.acct.name}
+          </div>
+          <div>
+            <span>{!v.acct.location.Street},</span>
+            <span class="slds-p-left_xx-small">{!v.acct.location.City}</span><br />
+            <span class="slds-p-left_xx-small">{!v.acct.location.State},</span>
+            <span class="slds-p-left_xx-small">{!v.acct.location.Country},</span>
+            <span  class="slds-p-left_xx-small">{!v.acct.location.PostalCode}</span> <br />
+            <span>{!v.acct.phone}</span><br />
+            <!-- <span>{!v.acct.email}</span><br /> -->
+            <span>
+              <a href="{!v.acct.website}" onclick="{!c.navToWebsite}">
+                {!v.acct.website}
+              </a>
+            </span>
+          </div>
+        </div>
+        <div class="slds-no-flex">
+          <div class="slds-badge">{!v.acct.distance}</div>
+          <aura:if isTrue="{! !empty(v.originAddress)}">
+            <lightning:buttonIcon iconName="utility:location"
+                                  onclick="{!c.showDirections}"
+                                  class="slds-float_right slds-m-top_small" />
+            </aura:if>
+        </div>
+      </header>
+    </div>
+    <div class="slds-card__body slds-card__body_inner">
+
+    </div>
+  </div>
+</aura:component>

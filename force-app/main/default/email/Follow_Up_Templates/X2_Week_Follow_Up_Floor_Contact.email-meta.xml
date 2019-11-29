@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>Legend_Letterhead</letterhead>
+    <name>4) 2 Week Follow Up - Floor Contact</name>
+    <style>freeForm</style>
+    <subject>Legend Boats - The Water is Calling</subject>
+    <textOnly>Hi {!Account.FirstName},
+
+I hope all has been well.  I wanted you to know I like to make every effort to provide my customers with the best possible service when they are considering ownership of a new boat.  While I certainly don&#39;t wish to appear &quot;pushy&quot; in my attempt to provide the best experience, I do take great pride in my work.
+
+Because of this, I am always trying to learn more about myself and how I can improve what I do.  Would you help me with this by considering the following questions?  Your comments are very important to me.
+
+1. What did you like the most about Legend Boats and the
+boat we looked at?
+
+2. What did you like the least?
+
+3. Did you feel I took your needs and special circumstances into consideration?
+
+4. What can I do to better serve you?
+
+5. Have you purchased another make or model?
+
+Thank you very much for your time and comments.
+
+
+At your service,
+
+
+{!User.Name}
+{!User.Title}
+
+{!User.Email}
+{!User.Phone}
+legendboats.com
+
+{!User.Address}</textOnly>
+    <type>html</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

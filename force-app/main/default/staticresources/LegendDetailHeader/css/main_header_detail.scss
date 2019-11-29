@@ -1,0 +1,325 @@
+/* Salesforce Image background colors */
+img {
+  &.account {
+    background: #7F8DE1;
+  }
+  &.opportunity {
+     background-color:#E5C130;
+  }
+  &.user {
+     background: #59A4D2;
+     border-radius:20px;
+  }
+  &.rigging-checklist {
+    background: #E55A30;
+    padding: 9px 7px 7px 9px;
+  }
+}
+
+i.boat_icon {
+  width: 2.2rem;
+  background-color: #00AAF9;
+  background-size: 1.6rem;
+  background-position: 50% 50%;
+  background-repeat: no-repeat;
+
+  &.fullwindshield {
+    background-image: url("../img/fullwindshield.svg");
+  }
+  &.pontoon {
+    background-image: url("../img/pontoon.svg");
+  }
+  &.sideconsole {
+    background-image: url("../img/sideconsole.svg");
+  }
+  &.utility {
+    background-image: url("../img/utility.svg");
+  }
+}
+
+
+
+  #menuBtnContainer {
+    position:absolute;
+    top:0;
+    right:0;
+    margin-top:20px;
+    margin-right: 15px;
+  }
+
+  .recordTitle {
+    /*height:192px;*/
+    width:100%;
+    margin:0;
+    padding: 0;
+    position:relative;
+    background: #FFF;
+    margin-top: 15px;
+    z-index:98;
+
+    img {
+      margin-top:8px;
+      max-height:100px;
+      max-width:150px;
+    }
+
+    label {
+      cursor: default;
+    }
+
+    .titleContainer {
+      width:100%;
+      clear:both;
+      overflow:hidden;
+      padding-left:30px;
+
+      img {
+        height:50px;
+        width:50px;
+        display:inline-block;
+        float:left;
+        margin: 15px 15px 0 0;
+      }
+    }
+
+    h5 {
+      font-family: 'Lato' sans-serif;
+      font-weight: 400 !important;
+      font-size: 1.4rem !important;
+      line-height: 1.4rem !important;
+      color: #555 !important;
+      display: block;
+      margin-bottom:10px !important;
+      padding-top: 15px !important;
+      padding-left:30px !important;
+
+      span {
+        padding-left:15px;
+        color:#00AAF9;
+      }
+    }
+
+    h6 {
+      font-family: 'Lato' sans-serif;
+      font-weight: 300;
+      color: #555;
+      display: block;
+      font-size: 0.9rem;
+      padding: 0;
+      margin: 0;
+      padding-left: 30px;
+      margin-top: 15px;
+      margin-bottom: -15px;
+    }
+
+
+    .detailsContainer {
+      width: 100%;
+      margin: 10px 0 0 0;
+      padding-bottom: 10px;
+      clear: both;
+      -webkit-transition: all 0.5s;
+      -moz-transition: all 0.5s;
+      -o-transition: all 0.5s;
+
+      & > div:not(.row) {
+        display: inline-block;
+        float:left;
+
+        &.col-one {
+          padding:0 70px;
+        }/* . col-one */
+
+        &.col-two {
+          margin-top: 10px;
+          margin-left:0;
+          width:calc(100% - 290px);
+            p {
+            margin:0.5rem;
+            width: 100%;
+            color: #555;
+            font-size: 0.9rem;
+            line-height: 1rem;
+
+            span {
+              display:inline-block;
+
+              a {
+                color: inherit;
+                text-decoration: none;
+                &:hover {
+                  text-decoration: none;
+                  font-weight: 400;
+                  color:#3D3D3D;
+                }
+              }
+
+              &:first-child {
+                width: 140px;
+                text-align: left;
+                font-family: 'Lato' sans-serif;
+                font-weight: 400;
+                padding-right:10px;
+
+                & + span{
+                  width: 50%;
+                  text-align: left;
+                  font-family: 'Lato' sans-serif;
+                  font-weight: 300;
+                  padding-left:10px;
+                }
+
+              }
+
+            }/* /.col-two p span*/
+
+          }/* /.col-two p */
+
+        }/* .col-two */
+
+      }/* /.recordTile > div > div */
+
+      & > .row {
+        width: 100%;
+        margin:1.5rem auto 0 auto;
+        max-width: initial;
+
+        .column {
+          margin:10px 0;
+          padding-left:30px;
+
+          &.field-details {
+            img, i {
+              height:2rem;
+              display:inline-block;
+              float:left;
+              margin:5px 10px 0 0;
+
+              & + div {
+                display:inline-block;
+                float:left;
+              }
+            }
+
+            label {
+              color: #666;
+              font-size:0.8rem;
+              font-weight: 300;
+              text-align: left;
+              & + div {
+                font-size: 1.1rem;
+                color: #333;
+              }
+            }
+          }
+        }
+
+        &.stage_name_container {
+          margin:0;
+          label {
+            width:100%;
+            text-align:center;
+            font-size: 1.3rem;
+            font-weight: 400;
+            color: #81CE97;
+          }
+        }
+      }
+
+    }/* /.recordTile > .detailsContainer */
+
+    .oppStageContainer {
+      background: #FFF;
+
+      &.row {
+        width: 100%;
+        margin:auto;
+        max-width: initial;
+      }
+
+    }/* /.recordTitle > .oppStageContainer */
+
+    dl.tabs {
+      /*position:absolute;*/
+      margin-top:0;
+      /*bottom:0px;*/
+      width: 100%;
+      border-bottom: 1px solid #DADADA;
+      margin-left: 0;
+      padding-left: 1rem;
+      background: #FFF;
+      -webkit-transition:all 0.5s ease-in-out;
+      -moz-transition:all 0.5s ease-in-out;
+      -o-transition:all 0.5s ease-in-out;
+      transition:all 0.5s ease-in-out;
+      clear:both;
+
+      dd.tab-title {
+        border-bottom: 3px solid transparent;
+        margin-bottom: -1px !important;
+
+        & a {
+          border:none;
+          color:#777;
+          background: transparent;
+          text-align:center;
+        }
+
+        &:last-child a {
+          border:none;
+        }
+
+        &.active {
+          border-top: none;
+          border-bottom-color:#00aaf9;
+          background: inherit;
+          color: #00AAF9;
+
+          a {
+            color: inherit;
+            padding-top:8px;
+          }
+
+        }
+
+        &:not(.active){
+
+          &:hover {
+            border-bottom-color: #B3E6FE;
+            a {
+              color: #000;
+            }
+          }
+        }
+
+      }/* /.tab-title */
+
+    }/* /.recordTitle dl.tabs */
+
+    &.gray {
+      background: #FAFAFA;
+      border-top: 1px solid #DEDEDE;
+
+      .detailsContainer {
+        border-bottom: 1px solid #DEDEDE;
+      }
+    }
+
+    &.no-details .titleContainer {
+      padding-bottom:10px;
+      border-bottom: 1px solid #DADADA;
+    }
+
+    &.shrink {
+
+      .detailsContainer {
+        height: 0;
+        padding:0;
+        clear:both;
+        overflow: hidden;
+      }
+    }
+
+  }/* /.recordTitle */
+
+

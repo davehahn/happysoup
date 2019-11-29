@@ -1,0 +1,193 @@
+<apex:page standardController="Opportunity"
+          extensions="OpportunityDetailExt"
+           docType="html-5.0"
+           showHeader="true"
+           sidebar="true">
+
+      <sffd:Resources />
+      <apex:stylesheet value="{!URLFOR($Resource.LegendStyles)}" />
+      <apex:stylesheet value="{!URLFOR($Resource.FontAwesome420, 'font-awesome-4.2.0/css/font-awesome.min.css')}" />
+      <apex:stylesheet value="{!URLFOR($Resource.LegendDetailHeader, 'css/main_header_detail.min.css')}" />
+      <apex:stylesheet value="{!URLFOR($Resource.LegendDetailHeader, 'css/jQuery.LGND.menu_btn.min.css')}" />
+      <apex:stylesheet value="{!URLFOR($Resource.LegendDetailHeader, 'css/opportunity_stage_handler.min.css')}" />
+      <apex:stylesheet value="{!URLFOR($Resource.LegendDetailHeader, 'css/LGND_Circle_Indicator.min.css')}" />
+      <apex:stylesheet value="{!URLFOR($Resource.OdometerJs, 'css/odometer-theme-default.css')}" />
+
+      <script type='text/javascript' src='/canvas/sdk/js/publisher.js'/>
+      <script src="{!URLFOR($Resource.OdometerJs, 'odometer.min.js')}" />
+      <script src="{!URLFOR($Resource.LegendDetailHeader, 'js/jQuery.LGND.menu_button.js')}" />
+      <script src="{!URLFOR($Resource.LegendDetailHeader, 'js/TopButtonRowBuilder.js')}" />
+      <script>
+        function refreshFeed() {
+          console.log('refresh feed');
+          Sfdc.canvas.publisher.publish({name : 'publisher.refresh', payload :{feed:true}});
+        }
+      </script>
+      <script src="{!URLFOR($Resource.LegendDetailHeader, 'js/opportunityStageChanger.js')}" />
+      <script src="{!URLFOR($Resource.LegendDetailHeader, 'js/LGND_Circle_Indicator.js')}" />
+
+
+      <div class="recordTitle gray">
+        <div class="titleContainer">
+          <img src="{!URLFOR($Resource.LDS_Icons, 'salesforce-lightning-design-system-icons/standard/opportunity_60.png')}" alt="" class="opportunity"/>
+          <h6>Opportunity</h6>
+          <h5>{!Opportunity.Name}</h5>
+        </div>
+
+        <div id="menuBtnContainer"></div>
+
+        <div class="detailsContainer">
+          <div class="row">
+            <div class="column large-3 field-details">
+              <img src="{!URLFOR($Resource.LDS_Icons, 'salesforce-lightning-design-system-icons/standard/account_60.png')}" alt="" class="account" />
+              <div>
+                <label>Account</label>
+                <div>{!Opportunity.Account.Name}</div>
+              </div>
+            </div>
+            <div class="column large-2 field-details">
+<!--               <img src="{!URLFOR($Resource.LDS_Icons, 'salesforce-lightning-design-system-icons/utility/dayview_60.png')}" alt="" class=""/> -->
+              <div>
+                <label>Delivery Date</label>
+                <div>
+                  <apex:outputLink value="{!$Page.Retail_Schedule}" rendered="{!Opportunity.Probability > 69}">
+                    <apex:outputText value="{!formattedDeliveryDate}" />
+                    <apex:param name="active-id" value="{!Opportunity.Id}" />
+                  </apex:outputLink>
+
+                </div>
+              </div>
+            </div>
+            <div class="column large-2">
+              <div id="probabilityContainer"></div>
+            </div>
+            <div class="column large-2 field-details">
+              <label>
+                Amount
+                <apex:outputPanel rendered="{!Opportunity.Payment_Method__c != null}">
+                  ({!Opportunity.Payment_Method__c})
+                </apex:outputPanel>
+              </label>
+              <div>
+                <apex:outputText value="{0, number, $#,###,###.00}">
+                  <apex:param value="{!Opportunity.Amount}" />
+                </apex:outputText>
+              </div>
+            </div>
+            <div class="column large-3 field-details">
+              <img src="{!URLFOR($Resource.LDS_Icons, 'salesforce-lightning-design-system-icons/standard/user_60.png')}" alt="" class="user"/>
+              <div>
+                <label>Owner</label>
+                <div>{!Opportunity.Owner.Name}</div>
+              </div>
+            </div>
+
+          </div>
+          <div class="row stage_name_container">
+            <div class="column large-4 field-details">
+              <apex:outputPanel layout="none" rendered="{!boat != null}">
+                <i class="boat_icon {!LOWER(SUBSTITUTE(boat.Family, ' ', '' ))}" />
+                <div class="">
+                  <label>Boat Model</label>
+                  <div>{!boat.Name}</div>
+                </div>
+              </apex:outputPanel>
+            </div>
+            <div class="column large-4">
+               <label id="stageName">{!Opportunity.StageName}</label>
+            </div>
+            <div class="column large-3 large-offset-1 field-details">
+              <img src="{!URLFOR($Resource.LDS_Icons, 'salesforce-lightning-design-system-icons/utility/location_60.png')}" alt="" class=""/>
+              <div>
+                <label>Pickup Location</label>
+                <div>{!Opportunity.Pickup_Location__c}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="oppStageChangerContainer">
+          <c:OpportunityStageChanger opp="{!Opportunity}" />
+        </div>
+
+        <dl class="tabs" data-tab="true">
+
+          <dd class="tab-title active">
+            <a href="#details">Details</a>
+          </dd>
+          <dd class="tab-title">
+            <a href="#chatter">Feed</a>
+          </dd>
+         <!--  <apex:outputPanel layout="none" rendered="{!hasCommission}">
+            <dd class="tab-title">
+              <a href="#commissions">Commissions</a>
+            </dd>
+          </apex:outputPanel> -->
+
+          <apex:outputPanel layout="none">
+            <dd class="tab-title">
+              <a href="#docs">Quotes &amp; Agreements</a>
+            </dd>
+          </apex:outputPanel>
+        </dl>
+      </div>
+      <div class="tabs-content">
+
+        <div class="content active" id="details" style="margin-top:25px">
+          <apex:detail subject="{!Opportunity.Id}" title="false" />
+
+
+
+
+        </div>
+
+        <apex:outputPanel layout="none">
+          <div class="content" id="docs" style="margin-top:25px">
+            <apex:include pageName="OpportunityQIpdfs" />
+          </div>
+        </apex:outputPanel>
+
+        <div class="content" id="chatter" style="margin-top:25px">
+          <chatter:feedWithFollowers entityId="{!Opportunity.Id}" showHeader="false" />
+        </div>
+
+        <!-- <apex:outputPanel layout="none" rendered="{!hasCommission}">
+          <div class="content" id="commissions" style="margin-top:25px; overflow:hidden;">
+            <apex:include pageName="CommissionCalculator" />
+          </div>
+        </apex:outputPanel> -->
+
+      </div>
+
+      <script type="text/javascript">
+
+        if( $j === undefined )
+        {
+          var $j = jQuery.noConflict();
+        }
+
+        $j(function() {
+          //Visualforce.remoting.timeout = 120000; // Set timeout at page level
+          TopButtonRowBuilder.init(3, 'menuBtnContainer', 'left');
+
+
+
+          $j(window).on('scroll', function() {
+            var $this = $j(this),
+                $header = $j('.recordTitle'),
+                scrollDiff = $this.scrollTop() - 128;
+            if( $this.scrollTop() >= 50 &&  !$header.hasClass('shrink') )
+            {
+              $header.addClass('shrink');
+            }
+            if( $this.scrollTop() < 50 && $header.hasClass('shrink') )
+            {
+              $header.removeClass('shrink');
+            }
+
+          })
+
+        });
+
+      </script>
+</apex:page>

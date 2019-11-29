@@ -1,0 +1,134 @@
+.THIS thead tr th {
+  padding: 1rem;
+}
+
+.THIS tbody tr td {
+  vertical-align: middle;
+}
+
+.THIS tbody tr td:last-child {
+  vertical-align: top;
+  padding-right: 0;
+}
+
+.THIS tbody tr td:first-child {
+  background:token(colorBackground);
+  padding-left:0;
+  text-align:center;
+}
+
+.THIS .slds-grid {
+  font-weight: 300;
+  line-height: 1.5rem;
+}
+
+.THIS .slds-grid:not(.total-row):hover {
+  background: #f4f6f9;
+}
+
+.THIS .slds-grid.boat {
+  font-size: 1rem;
+}
+
+.THIS .slds-grid.fee-row {
+  color:#0070d2;
+}
+
+.THIS .slds-grid.discount-row {
+  color:#44b944;
+}
+
+.THIS .slds-grid.border-top {
+  border-top: 1px solid #d8dde6;
+}
+
+/*.THIS .slds-grid.sub-total-row {
+  font-weight: normal;
+  line-height: 2rem;
+  background:token(colorBackground);
+}*/
+
+/*.THIS .slds-grid.transparent {
+  background:transparent;
+}*/
+
+/*.THIS .slds-grid.discount-total-row {
+  font-weight: normal;
+  line-height: 2rem;
+  background: t(colorBackgroundRowNew);
+  margin-bottom: 0;
+}*/
+
+.THIS .slds-grid .slds-col.sub-total-cell {
+  line-height: 2rem;
+  font-weight:normal;
+  font-size: 0.9rem;
+}
+
+.THIS .slds-grid .slds-col.sub-total-cell.grey {
+   background:#e0edff;
+}
+
+.THIS .slds-grid .slds-col.sub-total-cell.green {
+   background: t(colorBackgroundRowNew);
+}
+
+.THIS .slds-grid .slds-col.total-cell {
+  background: t(colorBackgroundToast);
+  line-height: 2rem;
+  color: #FFF;
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+.THIS .majorItem {
+  font-weight:bold;
+}
+
+.THIS .sub-item {
+  margin-left: 1rem;
+  padding-top: 0.5rem;
+  position: relative;
+  line-height: 1.5rem;
+  font-weight: 300;
+}
+
+.THIS .sub-item:before {
+  position:absolute;
+  content:'';
+  bottom: calc(50% - 0.25rem);
+  left: -1rem;
+  width: 0.9rem;
+  height: 60%;
+  border: 1px solid #16325c;
+  border-right-color: transparent;
+  border-top-color: transparent;
+}
+
+.THIS .slds-grid.fee-row .sub-item:before {
+  border-bottom-color: #0070d2;
+  border-left-color: #0070d2;
+}
+
+.THIS .slds-grid.discount-row .sub-item:before {
+  border-bottom-color: #44b944;
+  border-left-color: #44b944;
+}
+
+.THIS .slds-grid .sub-item:first-child {
+  padding-top: 0;
+}
+
+.THIS .slds-grid .sub-item:first-child:before {
+  bottom:50%;
+}
+
+.THIS .slds-grid:hover .sub-item:before {
+  display:none;
+}
+
+.THIS .notes-container {
+  white-space: initial;
+    border: 1px solid rgb(244, 244, 244);
+    border-radius: 4px;
+}

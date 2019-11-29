@@ -1,0 +1,82 @@
+<apex:component layout="none">
+
+  <style type="text/css">
+
+    .content {
+      margin-top:4rem;
+      font-weight:300;
+    }
+
+    .tyText {
+
+    }
+
+    .footerContainer {
+
+      position:fixed;
+      bottom:0%;
+      width:100%;
+    }
+
+    .footer {
+      padding:2rem;
+      background:#FFF;
+      border-top:1px solid #000;
+      color:#000;
+      text-align:center;
+    }
+
+    .footer a {
+      color:#000;
+      text-decoration:none;
+      opacity:0.6;
+      font-weight:300;
+    }
+
+    .footer a:hover {
+      text-decoration:none;
+      color:#000;
+      opacity:1;
+    }
+
+    .footer a img {
+      height:50px;
+    }
+
+  </style>
+
+  <apex:attribute name="tyText"
+                  description="Thankyou text set in survey builder"
+                  type="String"
+                  required="false" />
+
+  <div class="row content">
+    <div class="large-8 large-offset-2 columns">
+      <apex:outputText value="{!tyText}"  escape="false"  styleClass="tyText" />
+    </div>
+  </div>
+
+  <div class="footerContainer">
+    <div class="row footer">
+      <div class="large-4 columns">
+        <a href="http://legendboats.com">
+          <apex:image value="{!URLFOR($Resource.LegendL)}" />
+          legendboats.com
+        </a>
+      </div>
+      <div class="large-4 columns">
+        <a href="http://www.facebook.com/LegendBoats">
+          <apex:image value="{!URLFOR($Resource.facebookLogoBlack100)}" />
+          facebook.com/LegendBoats
+        </a>
+      </div>
+      <div class="large-4 columns">
+        <a href="http://twitter.com/legendboatsca">
+          <apex:image value="{!URLFOR($Resource.twitterLogoBlack100)}" />
+          @LegendBoatsCA
+        </a>
+      </div>
+    </div>
+  </div>
+
+</apex:component>

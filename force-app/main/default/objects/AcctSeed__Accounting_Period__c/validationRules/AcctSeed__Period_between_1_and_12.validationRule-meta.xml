@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>AcctSeed__Period_between_1_and_12</fullName>
+    <active>false</active>
+    <description>The Accounting Period must be a numerical value between 1 and 12.</description>
+    <errorConditionFormula>OR(VALUE(RIGHT(Name, 2))&gt;12, VALUE(RIGHT(Name, 2))&lt;1)</errorConditionFormula>
+    <errorDisplayField>Name</errorDisplayField>
+    <errorMessage>The Accounting Period must be a numerical value between 1 and 12.</errorMessage>
+</ValidationRule>

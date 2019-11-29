@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Change_Serial_Number_Value</fullName>
+    <active>true</active>
+    <description>Prevents any standard user from changing the serial number</description>
+    <errorConditionFormula>ISCHANGED(Name) 
+&amp;&amp;
+$Profile.Name != &#39;System Administrator&#39;
+&amp;&amp;
+$Permission.Can_Modify_Serial_Number_Value = FALSE</errorConditionFormula>
+    <errorDisplayField>Name</errorDisplayField>
+    <errorMessage>You do not have Permission to change the Serial Number</errorMessage>
+</ValidationRule>

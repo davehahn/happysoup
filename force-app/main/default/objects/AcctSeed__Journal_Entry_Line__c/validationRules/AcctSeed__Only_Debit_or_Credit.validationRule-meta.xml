@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>AcctSeed__Only_Debit_or_Credit</fullName>
+    <active>true</active>
+    <description>Only a debit or a credit can be entered.</description>
+    <errorConditionFormula>NOT(OR(ISBLANK(AcctSeed__Debit__c), ISBLANK(AcctSeed__Credit__c)))</errorConditionFormula>
+    <errorMessage>Only a value for debit or credit can be entered on a single journal entry line</errorMessage>
+</ValidationRule>

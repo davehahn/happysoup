@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>NPS_Score__c</fullName>
+    <externalId>false</externalId>
+    <formula>IF( ISPICKVAL(Type__c, &#39;NPS--Horizontal&#39;), 
+(( NPS_Promoter_Count__c /  Total_Responses__c ) * 100 ) - ((  NPS_Detractor_Count__c /  Total_Responses__c  ) * 100 ) ,
+NULL)</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>NPS Score</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

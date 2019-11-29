@@ -1,0 +1,75 @@
+<apex:page standardController="Product2" extensions="ProductBoatExt">
+  <sffd:Resources />
+  <apex:stylesheet value="{!URLFOR($Resource.LegendStyles)}" />
+
+    <apex:pageBlock rendered="{!!hasFeatures}"
+                  mode="mainDetail">
+      <div style="width:40%;
+                margin:0px auto;
+                padding:25px;
+                text-align:center;">
+
+      <p style="padding:10px 0px;font-size:1.5em;color:#00AAF9;">
+        This Product currently has no features.
+      </p>
+
+      <apex:outputLink value="/apex/ProductFeatureSelect?Id={!Product2.Id}"
+                       target="_parent" styleClass="lgnd_btn radius"
+                       style="position:relative;top:10px;">
+        Add Features
+      </apex:outputLink>
+
+    </div>
+
+  </apex:pageBlock>
+
+  <apex:outputPanel layout="none" rendered="{!hasFeatures}">
+
+    <div style="position:relative;">
+    <apex:outputLink value="/apex/ProductFeatureSelect?Id={!Product2.Id}"
+                    target="_parent"
+                    styleClass="lgnd_btn radius"
+                    style="position:absolute; top:-8px; right:0; margin-right: 35px;">
+      Edit Features
+    </apex:outputLink>
+
+    <div class="tabContainer blue" style="padding-top:15px;">
+
+      <dl class="tabs small features" data-tab='true'>
+        <apex:repeat value="{!productFeatures}" var="key">
+          <dd>
+            <a href="#{!SUBSTITUTE( LOWER(key), ' ', '_' ) }_feature">
+              {!key}
+            </a>
+          </dd>
+        </apex:repeat>
+      </dl>
+
+      <div class="tabs-content" style="border-top: 1px solid #CCC;">
+        <apex:repeat value="{!productFeatures}" var="key">
+          <div class="content" id="{!SUBSTITUTE( LOWER(key), ' ', '_' ) }_feature">
+            <apex:dataList value="{!productFeatures[key]}"
+                         var="feature"
+                         type="square"
+                         styleClass="featureList">
+              <apex:outputText value="{!feature}" />
+            </apex:dataList>
+          </div>
+        </apex:repeat>
+      </div>
+
+    </div>
+  </div>
+  </apex:outputPanel>
+
+  <script type="text/javascript">
+  (function($){
+    //$(document).foundation();
+    var $firstFTab = $('.tabs.features dd:first a');
+    $firstFTab.parent().addClass('active');
+    $( $firstFTab.attr('href') ).addClass('active');
+  })(jQuery.noConflict())
+  </script>
+
+
+</apex:page>

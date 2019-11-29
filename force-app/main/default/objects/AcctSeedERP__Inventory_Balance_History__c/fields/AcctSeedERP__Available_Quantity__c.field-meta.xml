@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>AcctSeedERP__Available_Quantity__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <formula>AcctSeedERP__Purchasing_Quantity__c + AcctSeedERP__Inbound_Quantity__c - AcctSeedERP__Sales_Order_Quantity__c - AcctSeedERP__Manufacturing_Quantity__c - AcctSeedERP__Outbound_Quantity__c</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Available Quantity</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>6</scale>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

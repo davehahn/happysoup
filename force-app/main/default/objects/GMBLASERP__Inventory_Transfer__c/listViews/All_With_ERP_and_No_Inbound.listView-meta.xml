@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>All_With_ERP_and_No_Inbound</fullName>
+    <columns>NAME</columns>
+    <columns>ERP_Order__c</columns>
+    <columns>GMBLASERP__Warehouse_From__c</columns>
+    <columns>GMBLASERP__Warehouse_To__c</columns>
+    <columns>GMBLASERP__Outbound_Date__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>ERP_Order__c</field>
+        <operation>notEqual</operation>
+    </filters>
+    <filters>
+        <field>GMBLASERP__Inbound_Date__c</field>
+        <operation>equals</operation>
+    </filters>
+    <label>All With ERP and No Inbound</label>
+</ListView>

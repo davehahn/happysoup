@@ -1,0 +1,171 @@
+$event-text-color: #3C3C3C;
+$activeErpPickupEvent-bg: #F6A8F7;
+$activeErpPickupEvent-bg-dark: darken( $activeErpPickupEvent-bg, 50%);
+
+$calendars: (
+  barrie-retail: #D4F1FF,
+  barrie-service: #D4F1FF,
+  montreal-retail: #ffa9b7,
+  montreal-service: #ffa9b7,
+  whitefish-retail: #E7FFF1,
+  whitefish-service: #E7FFF1
+);
+
+@each $name, $color in $calendars {
+  .#{$name} .slds-form-element .slds-form-element__control .slds-checkbox_toggle  {
+    border-width:1px;
+    border-style: solid;
+    @if( str-index( $name, '-service') ) {
+      border-color: $color;
+      background: darken($color, 50%);
+      color: #DEDEDE;
+    } @else {
+       border-color: darken($color, 50%);
+       background: $color;
+    }
+    padding-left:0.55rem;
+    height: calc(1.5rem + 2px );
+    line-height: 1.5rem;
+    border-radius: 4px 15px 15px 4px;
+    [type=checkbox]:checked + .slds-checkbox_faux_container .slds-checkbox_faux {
+      @if( str-index( $name, '-service') ) {
+        border-color: darken($color, 50%);
+        background-color: $color;
+        &:after {
+          border-bottom-color: darken($color, 50%);
+          border-right-color: darken($color, 50%);
+        }
+      } @else {
+        border-color: darken($color, 50%);
+        background-color: darken($color, 50%);
+      }
+
+    }
+    .slds-form-element__label {
+      line-height:1.5rem;
+      padding: 0 0.5rem;
+      @if( str-index( $name, '-service') ) {
+        color: #FCFCFC;
+      } @else {
+         color: #3C3C3C;
+      }
+
+    }
+  }
+}
+
+.fc.fc-unthemed {
+  .fc-time-grid .fc-slats td { height: 2.5em }
+  .fc-view:not(.fc-month-view ) {
+    .fc-event {
+      -webkit-transition:left 0.25s ease-in-out, opacity 0.25s ease-in-out, right 0.25s ease-in-out;
+      -moz-transition:left 0.25s ease-in-out, opacity 0.25s ease-in-out, right 0.25s ease-in-out;
+      -o-transition:left 0.25s ease-in-out, opacity 0.25s ease-in-out, right 0.25s ease-in-out;
+      transition:left 0.25s ease-in-out, opacity 0.25s ease-in-out, right 0.25s ease-in-out;
+      }
+  }
+
+  .fc-event {
+    color: $event-text-color;
+
+    /* ++++++++++++++++ locationr specific event class ++++++++++++++++ */
+    @each $name, $color in $calendars {
+      &.#{$name} {
+        @if( str-index( $name, '-service') ) {
+          background: darken( $color, 50%);
+          border-color: $color;
+          color:#FFF;
+          span.fc-time {
+            background: $color;
+            color: $event-text-color;
+          }
+          // &:hover {
+          //   background: $color;
+          //   color: $event-text-color;
+          //   border-color:darken( $color, 50%);
+          //   span.fc-time {
+          //     color: $event-text-color;
+          //     background: #FFF;
+          //   }
+          // }
+        } @else {
+          background: $color;
+          border-color: darken( $color, 50%);
+          span.fc-time {
+            background: darken($color, 50%);
+            color: #FFF;
+          }
+          // &:hover {
+          //   background: darken($color, 50%);
+          //   color: #FFF;
+          //   span.fc-time {
+          //     color: $event-text-color;
+          //     background: #FFF;
+          //   }
+          // }
+        }
+      }
+    }
+    /* =============== /location specific event class ================ */
+
+    &.activeErp {
+      background: $activeErpPickupEvent-bg;
+      border-color: $activeErpPickupEvent-bg-dark;
+      span.fc-time {
+        background: $activeErpPickupEvent-bg-dark;
+        color: #FFF;
+      }
+      &:hover {
+        background: $activeErpPickupEvent-bg-dark;
+        color: #FFF;
+        span.fc-time {
+          color: $event-text-color;
+          background: #FFF;
+        }
+      }
+    }
+
+    span {
+      line-height: 25px;
+    }
+
+    span.fc-time {
+      padding: 2px 5px;
+      background: #FFF;
+      border-radius: 17px;
+    }
+
+    &:hover {
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+  }// /.fc-event
+
+  .fc-toolbar {
+    line-height:60px;
+    height: 60px;
+    margin:0;
+  }
+  .fc-today {
+    background: #FAFAFB;
+  }
+
+  .fc-view.fc-agenda-view .fc-head ,
+  .fc-view.fc-month-view .fc-head{
+    line-height: 40px;
+
+    .fc-head-container .fc-widget-header {
+      border-color: transparent;
+    }
+  }
+
+  .fc-body .fc-widget-content .fc-day-grid .fc-row.fc-week {
+    border-right-width: 0px !important;
+  }
+
+  .fc-month-view .fc-widget-content .fc-day-grid-container .fc-day-grid .fc-week .fc-title {
+    white-space: normal;
+  }
+
+}// /.fc

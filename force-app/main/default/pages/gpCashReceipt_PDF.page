@@ -1,0 +1,172 @@
+<apex:page standardController="AcctSeed__Cash_Receipt__c" extensions="gcCashReceipt_PDF" applyBodyTag="false" renderAs="pdf">
+    <head>
+        <style type="text/css" media="print">
+            @page {
+                size:8in 5in; 
+                @top-right {
+                    content: element(header);
+                }
+                @bottom-left {
+                    content: element(footer);
+                }
+                margin-top:200px;
+            }
+            div.header {
+                position: running(header);
+            }
+            div.content {
+                position: relative;
+            }
+            div.footer {
+                display: block;
+                padding: 5px;
+                position: running(footer);
+            }
+            .pagenumber:before {
+                content: counter(page);
+            }
+            .pagecount:before {
+                content: counter(pages);
+            }
+            body {
+                font-family: "Arial""Sans-Serif";
+                font-size: 12px;
+                margin: 0px;
+            }
+            .tableHeader {
+                font-weight: bold;
+                background-color: #DADADA;
+                height: 20px;
+                padding: 6px;
+                vertical-align: top;
+            }
+            .colHeader {
+                font-weight: bold;
+                background-color: #DADADA;
+                height: 20px;
+                width: 130px;
+                padding: 6px;
+                text-align: right;
+                margin-bottom: 2px; 
+            }
+            .colValue {
+                font-weight: bold;
+                height: 20px;
+                padding: 6px;
+                margin-bottom: 2px; 
+            }
+            .columnHeader {
+                text-align: right;
+            }
+            .tableRow {
+                border-bottom: 2px solid #DADADA;
+                padding: 6px;
+                vertical-align:text-top;
+            }
+            .tableRowNoBorder {
+                padding: 6px;
+                vertical-align:text-top;
+            }
+            .tableRowAmount {
+                background-color: #DADADA;
+                padding: 4px;
+            }            
+            .alignRight {
+                text-align: right
+            }
+        </style>
+    </head>
+
+    <body>
+        <div class="header">
+            <table style="width:100%">
+                <tr>
+                    <td style="vertical-align:top">
+                        <table style="width:300px;border-collapse:collapse;">
+                            <tr>
+                                <td>
+                                    <apex:outputText value="{!$Organization.Name}" />
+                                </td>
+                            </tr>                            
+                            <tr>
+                                <td>
+                                    <apex:outputText value="{!$Organization.Street}" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <apex:outputText value="{!$Organization.City & IF(ISBLANK($Organization.City),'',', ') & $Organization.State & ' ' & $Organization.PostalCode}" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <apex:outputText value="{!$Organization.Country}" rendered="{!!ISBLANK($Organization.Country)}" />
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td style="width:350px;">&nbsp;
+                    </td>
+                    <td style="vertical-align:top;text-align:right">
+                        <img src="{!$Resource.LegendLogo}" width="300" />
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="footer" style="display: none;">
+            <div>Page&nbsp;<span class="pagenumber" />&nbsp;of&nbsp;<span class="pagecount" />
+            </div>
+        </div>
+        <div class="content">
+            <table style="width:100%;" cellspacing="2" cellpadding="0">
+                <tr>
+                    <td class="colHeader">Receipt Date:</td>
+                    <td class="colValue">
+                        <apex:outputText value="{!mapCashReceipt['receiptDate']}" />
+                    </td>
+                    <td class="colHeader">Payment Reference:</td>
+                    <td class="colValue">
+                        <apex:outputText value="{!mapCashReceipt['payRef']}" />
+                    </td>
+                </tr>
+                <tr>
+                    <td class="colHeader">Account:</td>
+                    <td class="colValue">
+                        <apex:outputText value="{!mapCashReceipt['accountName']}" />
+                    </td>
+                    <td class="colHeader">Payment Method:</td>
+                    <td class="colValue">
+                        <apex:outputText value="{!mapCashReceipt['payMethod']}" />
+                    </td>
+                </tr>
+                <tr>
+                    <td class="colHeader">Receipt Number:</td>
+                    <td class="colValue" colspan="3">
+                        <apex:outputText value="{!mapCashReceipt['crName']}" />
+                    </td>
+                </tr>
+                <tr>
+                    <td class="colHeader">ERP Order:</td>
+                    <td class="colValue" colspan="3">
+                        <apex:outputText value="{!mapCashReceipt['projectName']}" />
+                    </td>
+                </tr>
+                <tr><td colspan="4" style="height: 40px;">&nbsp;</td></tr>
+                <tr>
+                    <td colspan="4">
+                        <table width="100%">
+                            <tr>
+                                <td><div class="tableRowAmount" style="font-size: 16px; text-align: center;">Received by</div></td>
+                                <td><div class="tableRowAmount" style="font-size: 16px; text-align: center;">Receipt Amount</div></td>
+                            </tr>
+                            <tr>
+                                <td><div style="font-size: 16px; text-align: center;"><apex:outputText value="{!mapCashReceipt['ownerName']}" /></div></td>
+                                <td><div style="font-size: 16px; text-align: center;">$<apex:outputText value="{0,number,###,###,##0.00}"><apex:param value="{!VALUE(mapCashReceipt['crAmount'])}" /></apex:outputText></div></td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </body>
+</apex:page>

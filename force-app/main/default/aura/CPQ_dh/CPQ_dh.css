@@ -1,0 +1,134 @@
+.THIS {
+  overflow-x: hidden;
+  overflow-y:auto;
+  min-height:800px;
+}
+.THIS .cpq-header {
+  z-index:1000;
+}
+
+.THIS .content {
+  position: relative;
+  z-index: 999;
+}
+
+.THIS .content.readonly .builder {
+  visibility: hidden;
+  height:0;
+  overflow:hidden;
+}
+
+.THIS .sticky {
+  position: fixed;
+  top: 0;
+  width: 95%;
+  box-shadow: 0 6px 3px -3px #959595;
+}
+
+/*.THIS .sticky + .content {
+  padding-top: 10px;
+}*/
+
+.THIS .slds-page-header.slds-page-header_record-home {
+  background: #eaeaea;
+  border-radius: 0.25rem 0.25rem 0 0;
+}
+
+.THIS .slds-page-header.slds-page-header_record-home h1,
+.THIS .slds-page-header.slds-page-header_record-home h1 + p {
+  color:#6F6F6F;
+}
+
+.THIS .content-hidden {
+  display:none;
+}
+
+.THIS .menu {
+  display:initial;
+}
+
+.THIS .mobile-menu {
+  display: none
+}
+
+.THIS .mobile-visible,
+.THIS .mobile-hidden {
+  visibility: visible;
+  height: initial;
+}
+
+.THIS .payment-calculator {
+  position: absolute;
+  z-index: 10000;
+  background-color: #FFF;
+  transition: transform 0.3s;
+  width: 90%;
+  max-width: 450px;
+  /*height: 100%;*/
+  overflow: hidden;
+  top: 0;
+  right: 0;
+  transform: translateX(110%);
+  border-radius: 10px 0 0 10px;
+}
+
+.THIS .payment-calculator.open {
+  transform: translateX(0.75rem);
+}
+
+.THIS .c-mask {
+  position: fixed;
+  z-index: 9999;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+  width: 0;
+  height: 0;
+  background-color: #6D6D6D;
+  opacity: 0;
+  transition: opacity 0.3s, width 0s 0.3s, height 0s 0.3s;
+}
+
+.THIS .c-mask.open {
+  width: 100%;
+  height: 100%;
+  opacity: 0.7;
+  transition: opacity 0.3s;
+}
+
+@media only screen and (max-width:1024px) {
+  .THIS {
+    width:100%;
+    margin: 0;
+  }
+
+  .THIS .sticky {
+    width:100%;
+  }
+
+  .THIS .menu {
+    display:none;
+  }
+
+  .THIS .mobile-menu {
+    display: initial
+  }
+
+  .THIS .mobile-hidden,
+  .THIS .mobile-visible {
+    padding:0;
+  }
+
+  .THIS .mobile-hidden {
+    visibility: hidden;
+    height:0;
+    overflow:hidden;
+  }
+
+  .THIS .payment-calculator {
+    position: fixed;
+    height:100%;
+    /*width:75%;
+    max-width:450px;*/
+  }
+}

@@ -1,0 +1,196 @@
+<apex:page showHeader="true"
+           sidebar="false"
+           docType="html-5.0"
+           tabStyle="Product2"
+           controller="LegendImageGalleryController">
+
+  <c:LegendGalleryResources />
+
+  <c:LegendFormResources includeFontAwesome="true" includeComboBox="false" />
+
+  <apex:stylesheet value="{!URLFOR($Resource.LegendForceDropToAWS, 'LegendForceDropToAWS.min.css')}" />
+
+  <!-- <script src="https://sdk.amazonaws.com/js/aws-sdk-2.0.11.min.js"></script> -->
+  <apex:includeScript value="{!URLFOR($Resource.LegendForceDropToAWS, 'jQuery.LegendForce.DropToAWS.js')}" />
+
+  <style type="text/css">
+
+    .headerNav {
+      width: 100%;
+      height: 5rem;
+      line-height: 5rem;
+      padding: 0;
+      margin: 0;
+      background: #FFF;
+      text-align: center;
+      margin-bottom: 10px;
+      position:relative;
+      z-index:10;
+    }
+
+    .headerNav .title,
+    #newImageForm h1 {
+      color: #363636;
+      font-size: 2.5rem;
+      font-family: 'Lato', serif;
+      font-weight:300;
+    }
+
+    #newImageForm h1 {
+      width: 100%;
+      display: block;
+      font-weight: 300;
+      border-bottom: 1px solid #0C97CE;
+      color: #0C97CE;
+      padding-left: 2rem;
+      padding-bottom: 1rem;
+    }
+
+    .headerNav a {
+      float:right;
+      margin-right:20px;
+      margin-top:1rem;
+    }
+
+  </style>
+
+
+
+  <div class="headerNav">
+    <span class="title"> Upload New Images For {!lgndGallery.currentObject.Name}</span>
+    <apex:outputLink value="/apex/LegendImageGallery?id={!lgndGallery.currentObject.Id}"
+                     styleClass="fd_button small invert cancelLink">
+      Cancel
+    </apex:outputLink>
+    <a href="#" id="submitButton" class="fd_button success small invert">
+        Upload Files
+      </a>
+  </div>
+
+  <div class="row full_row"  id="dragandrophandler">
+
+     <div class="instruction">
+        <div>Drop Files to Upload</div>
+      </div>
+      <div class="indicator">
+        <div>Processing Files ....<i class="fa fa-spin fa-cog"></i></div>
+      </div>
+      <div  id="filesContainer"></div>
+
+  </div>
+
+  <div id="descriptionModal" class="reveal-modal" data-reveal="true">
+    <h2></h2>
+
+    <div class="row">
+
+      <div class="large-3 columns">
+        <img id="preview"></img>
+      </div>
+
+      <div class="large-9 columns">
+
+        <div class="row">
+
+          <div class="large-1 columns">
+            <label>English</label>
+          </div>
+
+          <div class="large-11 columns">
+            <textarea id="engDesc" class="description"></textarea>
+          </div>
+
+        </div>
+
+        <div class="row">
+
+          <div class="large-1 columns">
+            <label>French</label>
+          </div>
+
+          <div class="large-11 columns">
+            <textarea id="frDesc" class="description"></textarea>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="row button_row">
+      <div class="large-12 columns">
+        <a href="#" id="saveDesc" class="fd_button success small invert right">Save</a>
+      </div>
+    </div>
+    <a class="close-reveal-modal">&#215;</a>
+
+  </div>
+
+  <div id="successModal" class="reveal-modal small" data-reveal="true">
+    <h2><i class="fa fa-thumbs-o-up"></i> All Images Successfully Uploaded</h2>
+
+    <div>
+      <span>What would you like to do now?</span>
+      <div>
+        <a href="#" class="fd_button small success invert closeModal">Upload More</a>
+        <a href="/apex/LegendImageGallery?id={!lgndGallery.currentObject.Id}" class="fd_button invert small">Return to Gallery</a>
+      </div>
+    </div>
+
+  </div>
+
+  <script type="text/javascript">
+
+    $j = jQuery.noConflict();
+
+    /********* DragAndDrop file uploader handler *****/
+
+    $j('[id*="dragandrophandler"]').legendForceDropToAWS({
+      aws_FileKey: '{!lgndGallery.s3Policy.FileKey}',
+      aws_Acl: '{!lgndGallery.s3Policy.Acl}',
+      aws_AccessKey: '{!lgndGallery.s3Policy.AuthKey}',
+      aws_Policy: '{!lgndGallery.s3Policy.Policy}',
+      aws_Signature: '{!lgndGallery.s3Policy.Signature}',
+      fileTypeOnly: 'image',
+      uploadUrl: 'https://{!lgndGallery.s3Policy.Bucket}.s3.amazonaws.com/',
+      onUploadComplete: function(fileName, isDefault, descriptions, imgWidth, imgHeight) {
+        var self,
+         //$photoCont = $j('.photo_container'),
+        SF_ImageData = {};
+        SF_ImageData.File_Name = fileName;
+        SF_ImageData.isDefault = isDefault;
+        SF_ImageData.descriptions = descriptions;
+        SF_ImageData.parentObjectId = '{!lgndGallery.currentObject.Id}';
+        SF_ImageData.Bucket_Name = '{!lgndGallery.s3Policy.Bucket}';
+        SF_ImageData.Path = '{!lgndGallery.s3Policy.FileKey}';
+        SF_ImageData.Image_Width = imgWidth;
+        SF_ImageData.Image_Height = imgHeight;
+        return new Promise( function(resolve, reject) {
+           LegendGalleryRemoter.createRecord(JSON.stringify(SF_ImageData), function( events, result) {
+            if( result.statusCode === 200 ){
+              console.log('image uploaded')
+              resolve();
+            } else {
+              reject('Record not created, there was an error. Check the log');
+            }
+          });
+        });
+      },
+      onAllComplete: function() {
+        //$j('#newImageForm').foundation('reveal', 'close');
+        //alert("All images uploaded")
+        $j('#successModal').foundation('reveal', 'open');
+      }
+    });
+
+    $j('.closeModal').on('click', function(e) {
+      e.preventDefault();
+      $j(this).closest('.reveal-modal').foundation('reveal', 'close');
+    });
+
+  </script>
+
+
+
+</apex:page>

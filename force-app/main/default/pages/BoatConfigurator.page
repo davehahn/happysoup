@@ -1,0 +1,3154 @@
+<apex:page controller="BoatBuilder"
+           docType="html-5.0"
+           showHeader="{!!isPublicView}"
+           tabStyle="opportunity"
+           sidebar="false"
+           cache="false"
+           title="Boat Configurator"
+           id="boatConfig">
+  <head><meta name="viewport" content="width=device-width, initial-scale=1,minimum-scale=1, maximum-scale=1, user-scalable=no"/> </head>
+  <sffd:Resources />
+  <c:LegendFormResources includeFontAwesome="true"
+                         includeHandlebars="true"
+                         includeComboBox="true" />
+  <apex:stylesheet value="{!URLFOR($Resource.LegendDetailHeader, 'css/jQuery.LGND.menu_btn.min.css')}" />
+  <apex:stylesheet value="{!URLFOR($Resource.OpportunityResources, 'css/CounterSale.min.css')}" />
+  <!-- <apex:stylesheet value="{!URLFOR($Resource.LegendStyles)}" />
+  <apex:stylesheet value="{!URLFOR($Resource.LegendFormStyles)}" /> -->
+  <apex:stylesheet value="{!URLFOR($Resource.BoatBuilderStyles)}" />
+  <apex:stylesheet value="{!URLFOR($Resource.LegendInvoice,'stylesheets/style.min.css')}" />
+
+  <!-- <apex:stylesheet value="{!URLFOR($Resource.LegendForceComboBox, 'LegendForceComboBox.css')}" /> -->
+  <apex:stylesheet value="{!URLFOR($Resource.BoatTypeSelector, 'BoatTypeSelector/css/boatTypeSelector.min.css')}" />
+  <!-- <apex:stylesheet value="{!URLFOR($Resource.FontAwesome420, 'font-awesome-4.2.0/css/font-awesome.min.css')}" /> -->
+  <!-- <apex:includeScript value="{!URLFOR($Resource.fancySelect, 'fancySelect/fancySelect.js')}"  /> -->
+  <apex:includeScript value="https://code.jquery.com/jquery-migrate-1.2.1.min.js" />
+  <apex:includeScript value="{!URLFOR($Resource.jQueryPrintElement)}"/>
+  <!-- <apex:includeScript value="{!URLFOR($Resource.LegendForceComboBox, 'jQuery.LegendForceComboBox.js')}" /> -->
+  <apex:includeScript value="{!URLFOR($Resource.BoatTypeSelector, 'BoatTypeSelector/js/boatTypeSelector.js')}" />
+  <apex:includeScript value="{!URLFOR($Resource.jQuery_Barcode)}"/>
+  <apex:includescript value="{!URLFOR($Resource.CkEditor,
+ 'ckeditor/ckeditor.js')}" />
+  <apex:includeScript value="{!URLFOR($Resource.LegendDetailHeader, 'js/jQuery.LGND.menu_button.js')}" />
+
+  <c:ProductRemoter />
+
+  <style type="text/css">
+
+    .noSidebarCell {
+      padding: 0;
+    }
+
+    input {
+      box-shadow: none !important;
+    }
+
+    #summaryContainer {
+      background:#fff;
+    }
+
+      .button-row {
+        max-width:98%;
+      }
+
+    .button-row a {
+        float:right;
+        margin-bottom:5px;
+        margin-right:1.25rem;
+      }
+
+    .legendInvoice {
+      margin:auto;
+      width:95%;
+    }
+
+    .header-bottom .invoice-header table .circle {
+      background: none;
+    }
+
+    .headerLogo.print-only {
+      display:none;
+    }
+
+    .legendInvoice i {
+      color:#1BA3E2;;
+    }
+
+    .email i {
+      font-size:16px !important;
+    }
+
+    #bcTarget {
+      width:100%;
+      text-align:right;
+    }
+
+  </style>
+
+
+
+  <c:LegendMainAjaxIndicator id="ajaxInd" />
+
+  <apex:outputPanel layout="none" rendered="{!renderBuilder}" id="boatBuilder">
+
+    <div id="pageContainer" class="row fullRow">
+
+      <!-- ++++++++++++++ Tax Form ++++++++++++++ -->
+      <div id="tax-form" data-is-open='false'>
+        <h1>Change Tax Rate</h1>
+        <apex:form >
+          <div class="row">
+            <div class="column large-12">
+              <apex:selectList value="{!provTaxRate.id}"
+                               html-data-id="provTaxSelect"
+                               size="1">
+                <apex:selectOptions value="{!provinceOptions}" />
+              </apex:selectList>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="column large-12">
+              <div class="row">
+                <div class="column large-6">
+                  <label>Over Ride Tax</label>
+                </div>
+                <div class="column large-6">
+                  <apex:inputField html-data-id="taxOverRide" value="{!opportunity.Tax_Override__c}" />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="column large-12">
+              <div class="row">
+                <div class="column large-6">
+                  <label>Tax Rate (Federal) </label>
+                </div>
+                <div class="column large-6">
+                  <apex:outputPanel layout="none" rendered="{!opportunity.Tax_Override__c == false}">
+                    <input id="fedTaxRate" value="{!opportunity.Tax_Rate_Federal__c}" type="text" data-is-disabled="true" />
+                  </apex:outputPanel>
+                  <apex:outputPanel layout="none" rendered="{!opportunity.Tax_Override__c == true}">
+                    <input id="fedTaxRate" value="{!opportunity.Tax_Rate_Federal__c}" type="text" />
+                  </apex:outputPanel>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="column large-12">
+              <div class="row">
+                <div class="column large-6">
+                  <label>Tax Rate (Provincial)</label>
+                </div>
+                <div class="column large-6">
+                  <apex:outputPanel layout="none" rendered="{!opportunity.Tax_Override__c == false}">
+                    <input id="provTaxRate" value="{!opportunity.Tax_Rate_Provincial__c}" type="text" data-is-disabled="true" />
+                  </apex:outputPanel>
+                  <apex:outputPanel layout="none" rendered="{!opportunity.Tax_Override__c == true}">
+                    <input id="provTaxRate" value="{!opportunity.Tax_Rate_Provincial__c}" type="text" />
+                  </apex:outputPanel>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="column large-12">
+              <div class="row">
+                <div class="column large-6">
+                  <label>Tax Rate (Retail)</label>
+                </div>
+                <div class="column large-6">
+                  <apex:outputPanel layout="none" rendered="{!opportunity.Tax_Override__c == false}">
+                    <input id="retTaxRate" value="{!opportunity.Tax_Rate_Retail__c}" type="text" data-is-disabled="true" />
+                  </apex:outputPanel>
+                  <apex:outputPanel layout="none" rendered="{!opportunity.Tax_Override__c == true}">
+                    <input id="retTaxRate" value="{!opportunity.Tax_Rate_Retail__c}" type="text" />
+                  </apex:outputPanel>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row submit-btn">
+            <div class="column large-6 large-offset-3 end" style="text-align:center">
+              <a href="" id="updateTaxes" class="lgnd_btn radius">Update</a>
+            </div>
+          </div>
+
+        </apex:form>
+      </div>
+      <!-- ============= /Tax Form ============= -- >
+
+      <!-- ++++++++++++++++++++++++ SIDE BAR +++++++++++++++++++++ -->
+      <div id="sideNav" class="large-2 columns">
+        <!-- +++++++++++ Boat Type Selector -->
+        <div id="slideSelector" class="sliding_row">
+
+          <div class="box sld_trigger">
+            <a href="#" id="slideTrigger"><i class="fa fa-plus"></i></a>
+          </div>
+
+          <div class="box sliding sliding1 utility_boat">
+            <a href="#" class="selectOption" data-boat-type="Utility"></a>
+          </div>
+
+          <div class="box sliding sliding2 side_console_boat">
+            <a href="#" class="selectOption" data-boat-type="Side Console"></a>
+          </div>
+
+          <div class="box sliding sliding3 full_windshield_boat">
+            <a href="#" class="selectOption" data-boat-type="Full Windshield"></a>
+          </div>
+
+          <div class="box sliding sliding4 pontoon_boat">
+            <a href="#" class="selectOption" data-boat-type="Pontoon"></a>
+          </div>
+
+          <div class="box sliding sliding5 deck_boat">
+            <a href="#" class="selectOption" data-boat-type="Deck Boat"></a>
+          </div>
+
+          <div class="box sliding sliding6 loose_item">
+            <a href="#" class="selectOption" data-boat-type="LooseItem">
+              <i class="fa fa-anchor"></i>
+            </a>
+          </div>
+
+        </div>
+        <!-- ========== /Boat Type Selector -->
+
+        <!-- +++++++++++++++ SIDE DETAILS CONTAINER ++++++++++++++++++ -->
+        <div id="sideDetails">
+
+          <!-- +++++++++++++++++++++++ Total Summary ++++++++++++++++++++++ -->
+          <apex:outputPanel id="runningPrice"  rendered="{!runningPrice != null}">
+
+            <div class="total">
+              <div class="border-bottom">
+                <span>Sub Total</span>
+                <apex:outputText value="${0, number, ###,###,###,##0.00}">
+                  <apex:param value="{!runningPrice + discountTotal + trade_in_package.totalValue}"/>
+               </apex:outputText>
+              </div>
+              <apex:outputPanel layout="none" rendered="{!discountItems != null}" >
+                <div>
+                  <span>Special Savings</span>
+                  <apex:outputText value=" ${0, number, ###,###,###,##0.00}">
+                    <apex:param value="{!discountTotal}"/>
+                 </apex:outputText>
+                </div>
+              </apex:outputPanel>
+              <apex:outputPanel layout="none">
+                <div>
+                  <span>Trade In Amount</span>
+                  <apex:outputText value=" ${0, number, ###,###,###,##0.00}">
+                    <apex:param value="{!trade_in_package.totalValue}"/>
+                 </apex:outputText>
+                </div>
+              </apex:outputPanel>
+              <div class="border-top">
+                <span>Pre-Tax Total</span>
+                <apex:outputText value="${0, number, ###,###,###,##0.00}">
+                  <apex:param value="{!runningPrice}"/>
+               </apex:outputText>
+              </div>
+              <div>
+                <span>Tax Rate</span>
+                <a href="" class="taxRate" id="editTaxRate">
+                  <apex:outputText value="{!totalTaxRateDisplay}%"></apex:outputText>
+                </a>
+              </div>
+              <div>
+                <span>Taxes</span>
+                <apex:outputText value="${0, number, ###,###,###,##0.00}">
+                  <apex:param value="{!runningTaxes}"/>
+               </apex:outputText>
+              </div>
+              <div>
+                <span>Total</span>
+                <apex:outputText value="${0, number, ###,###,###,##0.00}">
+                  <apex:param value="{!runningPrice + runningTaxes}"/>
+               </apex:outputText>
+              </div>
+            </div>
+
+          </apex:outputPanel>
+          <!-- ================= Toatl Summary ============================= -->
+
+          <!-- ++++++++++++++++ Slider Control Buttons +++++++++++++++++++++ -->
+          <apex:outputPanel layout="block"  rendered="{!selectedBoat != null && (isEditable || isPublicView)}"  id="cubeCtrs">
+            <ul>
+              <li>
+                <a href="#" class="slideNavCtr" data-show-class="showConfig">
+                  <i class="fa fa-gears"></i>
+                  <span>Configure</span>
+                </a>
+              </li>
+              <apex:outputPanel layout="none" rendered="{!!isDealerOrder}">
+              <li>
+                <a href="#" class="slideNavCtr" data-show-class="showTradeIn">
+                  <i class="fa fa-cubes"></i>
+                  <span>Savings / Trades / Fees</span>
+                </a>
+              </li>
+              </apex:outputPanel>
+              <apex:outputPanel layout="none" rendered="{!isDealerOrder}">
+              <li>
+                <a href="#" class="slideNavCtr" data-show-class="showTradeIn">
+                  <i class="fa fa-cubes"></i>
+                  <span>Discounts / Fees</span>
+                </a>
+              </li>
+              </apex:outputPanel>
+              <li>
+                <a href="#discount" class="slideNavCtr" data-show-class="showDiscount">
+                  <i class="fa fa-pencil-square-o"></i>
+                  <span>Special Notes</span>
+                </a>
+              </li>
+              <li>
+                <a href="#summary" class="slideNavCtr" data-show-class="showSummary">
+                  <i class="fa fa-file-text-o"></i>
+                  <span>Summary</span>
+                </a>
+              </li>
+            </ul>
+          </apex:outputPanel>
+
+
+          <!-- ================ /Slider Control Buttons ====================== -->
+
+          <!-- ++++++++++++++++ FORM BUTTONS ++++++++++++++++++++++++++++++++ -->
+          <apex:outputPanel layout="block" id="actionButtons" style="margin-top:2rem; text-align:center" rendered="{!!isPublicView}">
+            <apex:outputLink onClick="cancel()"
+                                value="#"
+                                styleClass="fd_button small">
+                Cancel
+            </apex:outputLink><br />
+            <apex:outputLink id="saveBoatConfig"
+                    value="#"
+                    styleClass="fd_button gold small"
+                    rendered="{!selectedBoat != null && isEditable && isValid && hasChanged && isDealerOrder}" >
+                        Save Boat Config
+            </apex:outputLink><br />
+
+             <apex:outputLink id="saveToPDF"
+                              value="#"
+                              styleClass="fd_button aqua small"
+                              rendered="{!selectedBoat != null && isEditable && isValid && !isDealerOrder}" >
+                              <i class="fa fa-file-pdf-o"></i>
+                                  English Snapshot
+            </apex:outputLink><br />
+
+            <apex:outputLink id="saveToFrenchPDF"
+                              value="#"
+                              styleClass="fd_button aqua small"
+                              rendered="{!selectedBoat != null && isEditable && isValid && !isDealerOrder}" >
+                              <i class="fa fa-file-pdf-o"></i>
+                                  French Snapshot
+            </apex:outputLink><br />
+
+            <apex:outputLink id="saveToOpportunity"
+                              value="#"
+                              styleClass="fd_button gold small"
+                              rendered="{!selectedBoat != null && isEditable && isValid && hasChanged && !isDealerOrder}" >
+                                  Save To Opportunity
+            </apex:outputLink><br />
+
+            <apex:outputLink id="saveAndFinalize"
+                             value="#"
+                             styleClass="fd_button success small"
+                             rendered="{!selectedBoat != null && isEditable && isValid && !isDealerOrder}" >
+                             Save And Finalize
+            </apex:outputLink>
+          </apex:outputPanel>
+          <!-- ================= /FORM BUTTONS ============================ -->
+
+        </div>
+        <!-- =============== /SIDE DETAILS CONTAINER ==================== -->
+      </div>
+      <!-- ================== /SIDE BAR =============================== -->
+
+      <!-- ++++++++++++++++++++++++ CONTENT CONTAINER +++++++++++++++++++++ -->
+      <div class="large-10 columns" id="contentContainer">
+
+        <div id="slideViewer">
+
+          <div id="slideContainer" class="{!defaultView}">
+
+            <!-- ++++++++++++++++++++++ BOAT CONFIGURATOR PAGE ++++++++++++++++++++++ -->
+            <div class="slideContent">
+              <apex:form id="boatConfigForm">
+
+                <apex:sectionHeader title="Boat Configurator" subtitle="{!opportunity.Name}" rendered="{!!isPublicView}" />
+                <apex:outputPanel layout="block"
+                                styleClass="row"
+                                rendered="{!isPublicView}">
+                  <div class="large-12 columns">
+                    <h4>
+                        <apex:image value="{!URLFOR($Resource.LegendLogo)}" />
+                    </h4>
+                  </div>
+                </apex:outputPanel>
+
+                <div class="large-6 large-offset-3 columns end">
+                  <apex:pageMessages />
+                </div>
+
+                <!--
+                  ______   ______   .__   __.  _______  __    _______ .______
+                 /      | /  __  \  |  \ |  | |   ____||  |  /  _____||   _  \
+                |  ,===='|  |  |  | |   \|  | |  |__   |  | |  |  __  |  |_)  |
+                |  |     |  |  |  | |  . `  | |   __|  |  | |  | |_ | |      /
+                |  `====.|  `=='  | |  |\   | |  |     |  | |  |__| | |  |\  \====.
+                 \______| \______/  |__| \__| |__|     |__|  \______| | _| `._____|
+                -->
+
+                <!-- This the javascript function that gets called when ever an option quantity
+                     select is changed. The select calls an actual javascript function then the
+                     javascript function calls this on our Apex Class -->
+                <apex:actionFunction name="updateOption"
+                               action="{!productOptionsChanged}"
+                               rerender="summary_list, runningPrice, actionButtons"
+                               oncomplete="summaryUpdateComplete()" >
+                  <apex:param name="productId" value=""  />
+                  <apex:param name="quantity" value="" />
+                  <apex:param name="parentProductId" value="" />
+                  <apex:param name="productType" value="" />
+                </apex:actionFunction>
+
+                 <apex:actionFunction name="updateTaxes"
+                                     action="{!updateTaxes}"
+                                     rerender="summary_list, runningPrice, actionButtons, fees_list"
+                                     oncomplete="summaryUpdateComplete()">
+                  <!--<apex:param name="tax_rate" value="" />-->
+                  <apex:param name="tax_zone" value="" />
+                  <apex:param name="over_ride" value="" />
+                  <apex:param name="federal_over_ride_rate" value="" />
+                  <apex:param name="provincial_over_ride_rate" value="" />
+                  <apex:param name="retail_over_ride_rate" value="" />
+                </apex:actionFunction>
+
+                <apex:actionFunction name="addAdditionalFee"
+                                     action="{!addAdditionalFee}"
+                                     rerender="summary_list, runningPrice, actionButtons, fees_list"
+                                     oncomplete="summaryUpdateComplete()">
+                  <apex:param name="fee_product_id" value="" />
+                </apex:actionFunction>
+
+                <apex:actionFunction name="updateFeeItemAmount"
+                                     action="{!updateFeeItemAmount}"
+                                     rerender="summary_list, runningPrice, actionButtons, fees_list"
+                                     oncomplete="summaryUpdateComplete()">
+                  <apex:param name="fee_parent" value="" />
+                  <apex:param name="province" value="" />
+                  <apex:param name="fee_id" value="" />
+                  <apex:param name="amount" value="" />
+                </apex:actionFunction>
+
+                <apex:actionFunction name="deleteFeeItem"
+                                     action="{!deleteFeeItem}"
+                                     rerender="summary_list, runningPrice, actionButtons, fees_list"
+                                     oncomplete="summaryUpdateComplete()">
+                  <apex:param name="fee_parent" value="" />
+                  <apex:param name="province" value="" />
+                  <apex:param name="fee_id" value="" />
+                </apex:actionFunction>
+
+                <apex:actionFunction name="saveAndReturn"
+                                     action="{!saveAndReturn}"
+                                     oncomplete="returnToOpp()"
+                                     rerender="">
+                  <apex:param name="customerNotes" value="" />
+                </apex:actionFunction>
+
+                <apex:actionFunction name="saveBoatConfig"
+                                action="{!saveBoatConfig}"
+                                onComplete="returnToDealerOrder()">
+                  <apex:param name="customerNotes" value="" />
+                </apex:actionFunction>
+
+                <apex:actionFunction name="saveAndFinalize"
+                                     action="{!saveAndFinalize}"
+                                     oncomplete="goToFinalize()"
+                                     rerender="">
+                  <apex:param name="customerNotes" value="" />
+                </apex:actionFunction>
+
+                <apex:actionFunction name="saveToPDF"
+                                     action="{!savePDF}"
+                                     rerender=""
+                                     oncomplete="doPDFattach()">
+                  <apex:param name="customerNotes" value="" />
+                </apex:actionFunction>
+
+                 <apex:actionFunction name="saveToFrenchPDF"
+                                     action="{!savePDF}"
+                                     rerender=""
+                                     oncomplete="doFrenchPDFattach()">
+                  <apex:param name="customerNotes" value="" />
+                </apex:actionFunction>
+
+                 <apex:actionFunction name="doFrenchPDFattach"
+                                 action="{!doFrenchPDFattach}" />
+
+                <apex:actionFunction name="doPDFattach"
+                                 action="{!doPDFAttach}" />
+
+                <apex:actionFunction name="cancel"
+                                     action="{!cancel}">
+                </apex:actionFunction>
+
+                <apex:actionFunction name="selectBoatType"
+                                      reRender="boatBuilder, summary, runningPrice, actionButtons"
+                                      action="{!selectProductFamily}"
+                                      oncomplete="boatSelectionComplete()">
+                  <apex:param name="boatType" value="" />
+                </apex:actionFunction>
+
+                 <!-- This is the javascript function that gets called when we create a trade in record -->
+                <apex:actionFunction name="updateTradeInRecord"
+                                     action="{!updateTradeInRecord}"
+                                     rerender="tradeInContainer, summary_list, runningPrice, actionButtons"
+                                     onComplete="tradeInCompleted()">
+                  <apex:param name="totalValue" value="" />
+                  <apex:param name="lienAmount" value="" />
+                </apex:actionFunction>
+
+                <!-- This function gets called when adding a Trade In Litem to the Trade In Record -->
+                <apex:actionFunction name="addTradeInLineItem"
+                                      reRender="tradeInLineItems, summary_list, actionButtons"
+                                      action="{!addTradeInLineItem}"
+                                      oncomplete="tradeInLineItemComplete()">
+                  <apex:param name="jsonData" value="" />
+                </apex:actionFunction>
+
+                 <!-- This function gets called when updating a Trade In Litem to the Trade In Record -->
+                <apex:actionFunction name="updateTradeInLineItem"
+                                      reRender="tradeInLineItems, summary_list, actionButtons"
+                                      action="{!updateTradeInLineItem}"
+                                      oncomplete="tradeInLineItemComplete()">
+                  <apex:param name="jsonData" value="" />
+                </apex:actionFunction>
+
+                <!-- This gets called when we remove a Trade In Line Item from the Trade In Record -->
+                <apex:actionFunction name="removeTradeInLineItem"
+                                     action="{!removeTradeInLineItem}"
+                                     rerender="tradeInLineItems, summary_list, actionButtons"
+                                     oncomplete="tradeInLineItemComplete()">
+                  <apex:param name="itemId" value="" />
+                </apex:actionFunction>
+
+                <!-- This is the javascript function that gets called when we create a new discount -->
+                <apex:actionFunction name="createDiscount"
+                                     action="{!createDiscount}"
+                                     rerender="discountList, summary_list, runningPrice, actionButtons"
+                                     onComplete="discountCreated()">
+                  <apex:param name="discountDescription" value="" />
+                  <apex:param name="discountAmount" value="" />
+                  <!-- <apex:param name="jsonData" value="" /> -->
+                </apex:actionFunction>
+
+                 <!-- This is the javascript function that gets called when we update a discount -->
+                <apex:actionFunction name="updateDiscount"
+                                     action="{!updateDiscount}"
+                                     rerender="discountList, summary_list, runningPrice, actionButtons"
+                                     onComplete="discountCreated()">
+                  <apex:param name="discountId" value="" />
+                  <apex:param name="discountDescription" value="" />
+                  <apex:param name="discountAmount" value="" />
+                  <!-- <apex:param name="jsonData" value="" /> -->
+                </apex:actionFunction>
+                <!-- This is the javascript function that gets called when we remove a new discount -->
+                <apex:actionFunction name="removeDiscount"
+                                     action="{!removeDiscount}"
+                                     rerender="discountList, summary_list, runningPrice, actionButtons"
+                                     onComplete="discountCreated()">
+                  <apex:param name="discountId" value="" />
+                </apex:actionFunction>
+
+                <!-- This is the javascript used to add an additional (arbitrary) Product -->
+                <apex:actionFunction name="addAdditionalAccessory"
+                                     action="{!addAdditionalAccessory}"
+                                     rerender="additionalAccessoriesContainer, summary_list, runningPrice, actionButtons"
+                                     onComplete="additionalAccessoryFunctionComplete()">
+                  <apex:param name="productId" value="" />
+                  <apex:param name="quantity" value="" />
+                  <apex:param name="salePrice" value="" />
+                </apex:actionFunction>
+
+                <apex:actionFunction name="removeAdditionalAccessory"
+                                     action="{!removeAdditionalAccessory}"
+                                     rerender="additionalAccessoriesContainer, summary_list,  runningPrice, actionButtons"
+                                     onComplete="additionalAccessoryFunctionComplete()">
+                  <apex:param name="aaId" value="" />
+                </apex:actionFunction>
+
+                <!-- +++++++++++++++++++ MAIN BOAT BUILDER CONTAINER ++++++++++++++++++++ -->
+                <div id="mainBoatBuilderContainer" class="boat_builder_table">
+
+                  <!-- +++++++++++++++++++++ BOAT TYPE SELECTOR ++++++++++++++++++++++ -->
+                  <apex:outputPanel rendered="{!selectedProductFamily == null}">
+                    <div id="originalSelector">
+                      <div class="large-12 columns" style="margin-bottom:1rem;">
+                        <span class="fieldLabel">Select Boat Style</span>
+                      </div>
+                      <div class="row">
+
+                        <div class="large-2 columns">
+                          <div class="box utility_boat">
+                            <a href="#" class="" data-boat-type="Utility"></a>
+                          </div>
+                        </div>
+
+                        <div class="large-2 columns">
+                          <div class="box side_console_boat">
+                            <a href="#" class="" data-boat-type="Side Console"></a>
+                          </div>
+                        </div>
+
+                        <div class="large-2 columns">
+                          <div class="box full_windshield_boat">
+                            <a href="#" class="" data-boat-type="Full Windshield"></a>
+                          </div>
+                        </div>
+
+                        <div class="large-2 columns">
+                          <div class="box pontoon_boat">
+                            <a href="#" class="" data-boat-type="Pontoon"></a>
+                          </div>
+                        </div>
+
+                        <div class="large-2 columns">
+                          <div class="box deck_boat">
+                            <a href="#" class="" data-boat-type="Deck Boat"></a>
+                          </div>
+                        </div>
+
+                        <div class="large-2 end columns">
+                          <div class="box loose_item">
+                            <a href="#" class="" data-boat-type="LooseItem">
+                              <i class="fa fa-anchor"></i>
+                            </a>
+                          </div>
+                        </div>
+
+                      </div>
+                    </div>
+                  </apex:outputPanel>
+                  <!-- ==================== BOAT TYPE SELECTOR ======================= -->
+
+                  <!-- +++++++++++++++++++++++++ BOAT SELECTOR ++++++++++++++++++++++++++++ -->
+                  <apex:outputPanel layout="none"  rendered="{!selectedProductFamily != null && !isLooseItemSale}" >
+                    <div class="row">
+                      <div class="large-12 columns">
+                        <span class="fieldLabel">Boat</span>
+                      </div>
+                    </div>
+                    <div class="row selectorRow">
+
+                      <apex:outputPanel layout="block"
+                                        id="boatSelector"
+                                        styleClass="large-4 end columns">
+
+                        <!-- <span class="fieldLabel">Boat Model:</span> -->
+                        <apex:selectList value="{!selectedBoatId}" size="1" >
+
+                          <apex:selectOptions value="{!boatSelectItems}" />
+                           <apex:actionSupport event="onchange"
+                                               reRender="boatBuilder, summary, runningPrice"
+                                               action="{!selectBoatFromSelector}"
+                                               onsubmit="summaryUpdateStart()"
+                                               oncomplete="boatSelectionComplete()"/>
+                        </apex:selectList>
+
+                      </apex:outputPanel><!-- .large-4 columns -->
+
+                    </div>
+                  </apex:outputPanel>
+                  <!-- ========================== END BOAT SELECTOR ==================== -->
+
+                  <!-- ++++++++++++++++++++++++++++ MOTOR SELECTOR +++++++++++++++++++++++ -->
+                  <apex:outputPanel rendered="{!renderMotorSelector}" layout="none" id="motorSelector">
+                    <div class="row">
+                      <div class="large-12 columns">
+                        <span class="fieldLabel">Motor</span>
+                      </div>
+                    </div>
+                    <div class="row selectorRow">
+                      <div class="large-4 columns">
+                       <!--  <span class="fieldLabel">Available Motors:</span> -->
+                        <apex:selectList value="{!selectedMotorId}" multiselect="false" size="1" rendered="{!motorSelectItems.size > 0}" >
+                          <apex:selectOptions value="{!motorSelectItems}" />
+                          <apex:actionSupport event="onchange"
+                                              reRender="summary_list, boatBuilder, runningPrice"
+                                              onsubmit="upgradeChanged('motorOptions');"
+                                              onComplete="boatSelectionComplete()"
+                                              action="{!selectMotor}" />
+                        </apex:selectList>
+                      </div><!-- column -->
+                      <div class="large-8 columns">
+                        <apex:outputPanel id="motorOptions">
+                          <apex:outputPanel rendered="{!availableMotorOptions != null}">
+                            <!-- <span class="fieldLabel">{!selectedMotor.Name} Options</span> -->
+                            <table class="fd_table optionSelectTable smaller">
+                              <apex:repeat value="{!availableMotorOptions}" var="key">
+                              <tr>
+                                <td class="desc">{!availableMotorOptions[key].Name}: </td>
+                                <td>
+                                  <apex:outputPanel rendered="{!availableMotorOptions[key].PricebookEntries.size != 0}"
+                                                    layout="none" >
+                                    $ {!availableMotorOptions[key].PricebookEntries[0].UnitPrice}
+                                  </apex:outputPanel>
+                                </td>
+                                <td><c:BoatBuilderOptionSelect begin_at="{!availableMotorOptions[key].From_Product_Options__r[0].Standard__c}"
+                                    end_at="{!availableMotorOptions[key].From_Product_Options__r[0].Maximum__c}"
+                                    selectId="{!key}"
+                                    productType="motor"
+                                    selectValue="{!IF(CONTAINS(selectedPartsIdList['motor'], ':'+key+':'), selectedItemsMap['motor'][key].Quantity, availableMotorOptions[key].From_Product_Options__r[0].Standard__c)}"
+                                    onOptionChange="optionChanged(this)" />
+                                </td>
+                              </tr>
+                              </apex:repeat>
+                            </table>
+                          </apex:outputPanel>
+                        </apex:outputPanel>
+                      </div><!-- column -->
+                    </div><!-- row -->
+                  </apex:outputPanel>
+                  <!-- ============================== END MOTOR SELECTOR ============================= -->
+
+                  <!-- +++++++++++++++++++++++++++ TRAILOR SELECTOR +++++++++++++++++++++++++ -->
+                  <apex:outputPanel rendered="{!renderTrailerSelector}" layout="none">
+                    <div class="row">
+                      <div class="large-12 columns">
+                        <span class="fieldLabel">Trailer</span>
+                      </div>
+                    </div>
+                    <div class="row selectorRow">
+                      <div class="large-4 columns">
+                        <!-- <span class="fieldLabel">Available Trailers:</span> -->
+                        <apex:selectList value="{!selectedTrailerId}" id="trailerSelector" multiselect="false" size="1" rendered="{!trailerSelectItems.size > 0}">
+
+                          <apex:selectOptions value="{!trailerSelectItems}" />
+                          <apex:actionSupport event="onchange"
+                                              onsubmit="upgradeChanged('trailerOptions');"
+                                              onComplete="boatSelectionComplete()"
+                                              reRender="summary_list, boatBuilder, runningPrice"
+                                              action="{!selectTrailer}"/>
+
+                        </apex:selectList>
+                      </div><!-- column -->
+                      <div class="large-8 columns">
+                        <apex:outputPanel id="trailerOptions">
+                          <apex:outputPanel rendered="{!availableTrailerOptions != null}">
+                            <!-- <span class="fieldLabel">{!selectedTrailer.Name} Options</span> -->
+                            <table class="fd_table optionSelectTable smaller">
+                              <apex:repeat value="{!availableTrailerOptions}" var="key">
+                              <tr>
+                                <td class="desc">{!availableTrailerOptions[key].Name}: </td>
+                                <td>
+                                  <apex:outputPanel rendered="{!availableTrailerOptions[key].PricebookEntries.size != 0}"
+                                                    layout="none" >
+                                    $ {!availableTrailerOptions[key].PricebookEntries[0].UnitPrice}
+                                  </apex:outputPanel>
+                                </td>
+                                <td>
+                                  <c:BoatBuilderOptionSelect begin_at="{!availableTrailerOptions[key].From_Product_Options__r[0].Standard__c}"
+                                    end_at="{!availableTrailerOptions[key].From_Product_Options__r[0].Maximum__c}"
+                                    selectId="{!key}"
+                                    productType="trailer"
+                                    selectValue="{!IF(CONTAINS(selectedPartsIdList['trailer'], ':'+key+':'), selectedItemsMap['trailer'][key].Quantity, availableTrailerOptions[key].From_Product_Options__r[0].Standard__c)}"
+                                    onOptionChange="optionChanged(this)" />
+                                </td>
+                              </tr>
+                              </apex:repeat>
+                            </table>
+                          </apex:outputPanel>
+                        </apex:outputPanel>
+                      </div><!-- /column -->
+                    </div><!-- /row -->
+                  </apex:outputPanel>
+                  <!-- ============================== END TRAILOR SELECTOR ========================== -->
+
+                  <!-- ++++++++++++++++++++++++++ TROLLING MOTOR SELECTOR +++++++++++++++++++++++++ -->
+                  <apex:outputPanel rendered="{!renderTrollingMotorSelector}" layout="none">
+                    <div class="row">
+                      <div class="large-12 columns">
+                        <span class="fieldLabel">Trolling Motor</span>
+                      </div>
+                    </div>
+                    <div class="row selectorRow">
+                      <div class="large-4 columns">
+                        <!-- <span class="fieldLabel">Available Trolling Motors:</span> -->
+                        <apex:selectList value="{!selectedTrollingMotorId}" id="trollingMotorSelector" multiselect="false" size="1" rendered="{!trollingMotorSelectItems.size > 0}">
+                          <apex:selectOptions value="{!trollingMotorSelectItems}" />
+                          <apex:actionSupport event="onchange"
+                                              reRender="summary_list, boatBuilder, runningPrice"
+                                              onsubmit="upgradeChanged('trollingMotorOptions')"
+                                              onComplete="boatSelectionComplete()"
+                                              action="{!selectTrollingMotor}"/>
+                        </apex:selectList>
+                      </div><!-- column -->
+                      <div class="large-8 columns">
+                        <apex:outputPanel id="trollingMotorOptions">
+                          <apex:outputPanel rendered="{!availableTrollingMotorOptions != null}">
+                            <!-- <span class="fieldLabel">{!selectedTrollingMotor.Name} Options</span> -->
+                            <table class="fd_table optionSelectTable smaller">
+                              <apex:repeat value="{!availableTrollingMotorOptions}" var="key">
+                              <tr>
+                                <td class="desc">{!availableTrollingMotorOptions[key].Name}: </td>
+                                <td>
+                                  <apex:outputPanel rendered="{!availableTrollingMotorOptions[key].PricebookEntries.size != 0}"
+                                                    layout="none" >
+                                    $ {!availableTrollingMotorOptions[key].PricebookEntries[0].UnitPrice}
+                                  </apex:outputPanel>
+                                </td>
+                                <td><c:BoatBuilderOptionSelect begin_at="{!availableTrollingMotorOptions[key].From_Product_Options__r[0].Standard__c}"
+                                    end_at="{!availableTrollingMotorOptions[key].From_Product_Options__r[0].Maximum__c}"
+                                    selectId="{!availableTrollingMotorOptions[key].Id}"
+                                    productType="trolling motor"
+                                    selectValue="{!IF(CONTAINS(selectedPartsIdList['trolling motor'], ':'+key+':'), selectedItemsMap['trolling motor'][key].Quantity, availableTrollingMotorOptions[key].From_Product_Options__r[0].Standard__c)}"
+                                    onOptionChange="optionChanged(this)" />
+                                </td>
+                              </tr>
+                              </apex:repeat>
+                            </table>
+                          </apex:outputPanel>
+                        </apex:outputPanel>
+                      </div>
+                    </div>
+                  </apex:outputPanel>
+                  <!-- ========================= TROLLING END MOTOR SELECTOR ======================== -->
+
+                  <!-- ++++++++++++++++++++++++ PROTECTION AND SERVICES SELECTOR +++++++++++++++++++++ -->
+                  <apex:outputPanel id="p_and_s"  layout="none" rendered="{!renderProtectionOptionList}">
+
+                    <div class="row">
+                      <div class="large-12 columns">
+                        <span class="fieldLabel">Protection &amp; Services</span>
+                      </div>
+                    </div>
+
+                    <apex:outputPanel id="protection_selector" layout="block" styleClass="row selectorRow">
+
+                      <div class="large-12 columns">
+
+                        <dl class="tabs small" data-tab='true'>
+                          <apex:repeat value="{!availableProtectionOptions}" var="family">
+                            <dd>
+                              <a href="#{!SUBSTITUTE( LOWER(family), ' ', '_' ) }">{!family}</a>
+                            </dd>
+                          </apex:repeat>
+                        </dl>
+
+                        <div class="tabs-content">
+
+                          <apex:repeat value="{!availableProtectionOptions}" var="family">
+
+                            <div class="content" id="{!SUBSTITUTE( LOWER(family), ' ', '_' ) }">
+
+                              <apex:variable value="{!availableProtectionOptions[family]}" var="pp_options" />
+                              <table class="fd_table optionSelectTable">
+                                <apex:repeat value="{!pp_options}" var="key">
+                                  <tr>
+                                    <td class="desc">{!pp_options[key].protectionProduct.Name}:</td>
+                                    <td>
+                                      <apex:outputPanel rendered="{!pp_options[key].protectionProduct.PricebookEntries.size != 0}"
+                                                        layout="none" >
+                                        $ {!pp_options[key].protectionProduct.PricebookEntries[0].UnitPrice}
+                                      </apex:outputPanel>
+                                    </td>
+                                    <td><c:BoatBuilderOptionSelect begin_at="{!pp_options[key].protectionProduct.From_Product_Options__r[0].Standard__c}"
+                                          end_at="{!pp_options[key].protectionProduct.From_Product_Options__r[0].Maximum__c}"
+                                          selectId="{!key}"
+                                          productType="protection"
+                                          selectValue="{!IF(CONTAINS(selectedPartsIdList['protection'], ':'+key+':'), selectedItemsMap['protection'][key].Quantity, pp_options[key].protectionProduct.From_Product_Options__r[0].Standard__c)}"
+                                          onOptionChange="optionChanged(this)" />
+                                    </td>
+                                  </tr>
+                                 <!--  <apex:outputPanel layout="none"
+                                                    rendered="{!AND(family == 'Maintenance Package', pp_options[key].protectionProduct.To_Product_Options__r.size > 0) }">
+                                    <tr class="subOptionsContainer" id="{!key}_subOptions" style="display:{!IF(CONTAINS(selectedPartsIdList['boat'], ':'+key+':'), 'table-row', 'none')}">
+                                      <td  colspan="3">
+                                        <table class="fd_table  subOptions">
+                                          <apex:repeat value="{!subOptions[key]}" var="subOption">
+                                            <apex:outputPanel layout="none" rendered="{!subOption.isAvailable}">
+                                              <tr>
+                                                <td class="desc">{!subOption.name}: </td>
+                                                <td>$ {!subOption.price}</td>
+                                                <td><c:BoatBuilderOptionSelect begin_at="{!subOption.standard}"
+                                                        end_at="{!subOption.maximum}"
+                                                        selectId="{!subOption.id}"
+                                                        productType="protection"
+                                                        selectValue="{!IF(CONTAINS(selectedPartsIdList['boat'], key + subOption.id), selectedItemsMap['boat'][key].subItems[subOption.Id].Quantity, subOption.standard)}"
+                                                        parent_product_id="{!key}"
+                                                        onOptionChange="optionChanged(this)" />
+                                                </td>
+                                              </tr>
+                                            </apex:outputPanel>
+                                          </apex:repeat>
+                                        </table>
+                                      </td>
+                                    </tr>
+                                  </apex:outputPanel> -->
+                                  <!-- subOptions row -->
+                                </apex:repeat>
+                              </table>
+
+                            </div>
+
+                          </apex:repeat>
+
+                        </div>
+
+                      </div>
+
+                    </apex:outputPanel>
+
+                  </apex:outputPanel>
+                  <!-- ======================== /PROTECTION AND SERVICES SELECTOR ======================= -->
+
+                  <!-- ++++++++++++++++++++++++++ OPTION SELECTION +++++++++++++++++++++++ -->
+                  <apex:outputPanel id="options" rendered="{!selectedBoat != null && renderOptionSelect == true}" layout="none">
+                    <div class="row">
+                      <div class="large-12 columns">
+                        <span class="fieldLabel">Options &amp; Accessories</span>
+                      </div>
+                    </div>
+
+                    <apex:outputPanel id="options_selector" layout="block" styleClass="row selectorRow">
+
+                      <div class="large-12 columns">
+
+                        <dl class="tabs small" data-tab='true'>
+                          <apex:repeat value="{!availableBoatOptions}" var="pFamily">
+                            <dd><a href="#{!familyNames[pFamily]}">{!pFamily}</a></dd>
+                          </apex:repeat>
+
+                          <apex:outputPanel layout="none">
+                            <dd><a href="#additionalAccessories">Additional Accessories</a></dd>
+                          </apex:outputPanel>
+                        </dl>
+
+                        <!-- +++++++++++++++++++++++++++++ Tab Content Container ++++++++++++++++++++++++ -->
+                        <div class="tabs-content">
+
+                          <apex:repeat value="{!availableBoatOptions}" var="pFamily">
+                            <div class="content" id="{!familyNames[pFamily]}">
+                              <table class="fd_table optionSelectTable">
+                                <apex:variable value="{!availableBoatOptions[pFamily]}" var="product_options" />
+                                <apex:repeat value="{!product_options}" var="key">
+                                  <tr class="mainRow">
+                                    <td class="desc">{!product_options[key].Name}: </td>
+                                    <td>
+                                      <apex:outputPanel rendered="{!product_options[key].PricebookEntries.size != 0}"
+                                                    layout="none" >
+                                        $ {!product_options[key].PricebookEntries[0].UnitPrice}
+                                      </apex:outputPanel>
+                                    </td>
+                                    <td>
+                                      <c:BoatBuilderOptionSelect begin_at="{!product_options[key].From_Product_Options__r[0].Standard__c}"
+                                      end_at="{!product_options[key].From_Product_Options__r[0].Maximum__c}"
+                                      selectId="{!key}"
+                                      productType="Boat"
+                                      selectValue="{!IF(CONTAINS(selectedPartsIdList['boat'], ':'+key+':'), selectedItemsMap['boat'][key].Quantity, product_options[key].From_Product_Options__r[0].Standard__c)}"
+                                      onOptionChange="optionChanged(this)" />
+                                    </td>
+                                  </tr>
+                                  <apex:outputPanel layout="none" rendered="{!product_options[key].To_Product_Options__r.size > 0 }">
+                                    <tr class="subOptionsContainer" id="{!key}_subOptions" style="display:{!IF(CONTAINS(selectedPartsIdList['boat'], ':'+key+':'), 'table-row', 'none')}">
+                                      <td  colspan="3">
+                                        <table class="fd_table  subOptions">
+                                          <apex:repeat value="{!subOptions[key]}" var="subOption">
+                                            <apex:outputPanel layout="none" rendered="{!subOption.isAvailable}">
+                                              <tr>
+                                                <td class="desc">{!subOption.name}: </td>
+                                                <td>$ {!subOption.price}</td>
+                                                <td><c:BoatBuilderOptionSelect begin_at="{!subOption.standard}"
+                                                        end_at="{!subOption.maximum}"
+                                                        selectId="{!subOption.id}"
+                                                        productType="Boat"
+                                                        selectValue="{!IF(CONTAINS(selectedPartsIdList['boat'], key + subOption.id), selectedItemsMap['boat'][key].subItems[subOption.Id].Quantity, subOption.standard)}"
+                                                        parent_product_id="{!key}"
+                                                        onOptionChange="optionChanged(this)" />
+                                                </td>
+                                              </tr>
+                                            </apex:outputPanel>
+                                          </apex:repeat>
+                                        </table>
+                                      </td>
+                                    </tr>
+                                  </apex:outputPanel> <!-- subOptions row -->
+                                </apex:repeat>
+                              </table>
+                            </div>
+                          </apex:repeat>
+
+                          <!-- ++++++++++++++++++++++++++++ Additional Accessories Tab Content +++++++++++++++++++ -->
+                          <div class="content" id="additionalAccessories" style="position:relative">
+                            <apex:outputPanel layout="block" id="additionalAccessoriesContainer">
+                              <div class="row" style="position:relative;margin-top:1em;">
+                                <div class="large-4 columns" >
+                                  <span>Product</span>
+                                  <div class="row collapse">
+                                    <div class='column large-11 small-11'>
+                                      <input type="text" class="has-postfix comboBox" autocomplete="off" style="position:relative"/>
+                                    </div>
+                                    <div class='column large-1 small-1'>
+                                      <span class="postfix transparent"><i class="fa fa-search product-search-indcator"></i></span>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="large-2 columns">
+                                  <div>Quantity</div>
+                                  <input type="text" id="additionAccessory_quantity"/>
+                                </div>
+                                <div class="large-2 columns">
+                                  <div>Retail Price</div>
+                                  <input type="text" id="additionAccessory_retailPrice" disabled="true" style="background:#FFF"/>
+                                </div>
+                                <div class="large-2 columns">
+                                  <div>Sale Price</div>
+                                  <input type="text" id="additionAccessory_salePrice"/>
+                                </div>
+                                <div class="large-2 columns">
+                                  <a href="#" class="fd_button small success" id="additionalAccessory_save" style="padding: 0.65rem 0.75rem; display:block; max-width:100px; margin:10px auto auto auto" >
+                                    <i class="fa fa-plus"></i>Add
+                                  </a>
+                                </div>
+                              </div>
+
+                              <!-- DETAILS CONTAINER FOR COMBOBOX  -->
+                              <div class='row'>
+                                <div class="column large-5 large-offset-1 end">
+                                  <div class="detailsContainer">
+                                    <sffd:row styleClass="resultC">
+                                      <sffd:column cols="large-12">
+                                        <div id="name" class=""></div>
+                                      </sffd:column>
+                                    </sffd:row>
+
+                                    <sffd:row >
+                                      <sffd:column cols="large-6">
+                                        <table>
+                                         <tr class="resultC">
+                                            <td>Code:</td>
+                                            <td id="code" class=""></td>
+                                          </tr>
+                                          <tr class="resultC">
+                                            <td>Type:</td>
+                                            <td id="type" class=""></td>
+                                          </tr>
+                                          <tr class="resultC">
+                                            <td>Family:</td>
+                                            <td id="family" class=""></td>
+                                          </tr>
+                                        </table>
+                                      </sffd:column>
+
+                                      <sffd:column cols="large-6" styleClass="resultC">
+                                        <div class="priceContainer">
+                                          <i class="fa fa-dollar"></i>
+                                          <span id="price" class=""></span>
+                                        </div>
+                                      </sffd:column>
+                                    </sffd:row>
+
+                                    <sffd:row styleClass="resultC">
+                                      <sffd:column cols="large-12">
+                                        <div class="descriptionContainer">
+                                          <div>Description</div>
+                                          <div id="description" class=""></div>
+                                        </div>
+                                      </sffd:column>
+                                    </sffd:row>
+
+                                  </div>
+                                </div>
+                              </div>
+                              <!-- /DETAILS CONTAINER -->
+
+                              <apex:outputPanel layout="none" rendered="{!additionalAccessories != null}">
+                                <table class="fd_table optionSelectTable additionalAccessories">
+                                  <thead>
+                                    <tr>
+                                      <td>Product Description</td>
+                                      <td>Quantity</td>
+                                      <td>Sale Price</td>
+                                      <td>Total Price</td>
+                                      <td></td>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    <apex:repeat value="{!additionalAccessories}" var="acc">
+                                    <tr>
+                                      <td class="desc">{!acc.productName}</td>
+                                      <td>
+                                        {!acc.quantity}
+                                      </td>
+                                      <td>
+                                        $ {!acc.UnitPrice}
+                                      </td>
+                                      <td>
+                                        $ {!acc.totalPrice}
+                                      </td>
+                                      <td>
+                                        <a href="#" class="deleteAdditionalAccessory" data-aa-id="{!acc.id}"><i class="fa fa-trash-o"></i></a>
+                                      </td>
+                                    </tr>
+                                    </apex:repeat>
+                                  </tbody>
+                                </table>
+                              </apex:outputPanel>
+                            </apex:outputPanel>
+                          </div>
+                          <!-- =========================== /Additional Accessories Tab Content ================= -->
+
+                        </div>
+                        <!-- =========================== /tab Content container ================================ -->
+
+                      </div><!-- column -->
+                    </apex:outputPanel><!-- row -->
+                  </apex:outputPanel>
+                  <!-- ========================= /OPTION SELECTION =========================== -->
+                </div>
+                <!-- ================== MAIN BOATBUILDER CONTAINER ======================== -->
+              </apex:form>
+            </div>
+            <!-- ==================== /BOAT CONFIGURATOR PAGE ======================= -->
+
+            <!-- ++++++++++++++++++++ DISCOUNT AND TRADE INS PAGE +++++++++++++++++++++++++++++++++ -->
+            <div class="slideContent">
+              <!--discounts containter -->
+              <div style="width:98%; height:98%; margin:auto;">
+                <h4>
+                  <apex:image value="{!URLFOR($Resource.LegendLogo)}" />
+                </h4>
+
+               <dl class="tabs" data-tab="true">
+                  <dd class="active"><a href="#discounts">Savings</a></dd>
+                  <dd><a href="#fees">Fees</a></dd>
+                  <apex:outputPanel layout="none" rendered="{!!isDealerOrder}">
+                    <dd><a href="#trade_in">Trade In Information</a></dd>
+                  </apex:outputPanel>
+               </dl>
+
+               <div class="tabs-content">
+
+                  <div id="discounts" class="content active">
+                    <apex:outputPanel id="discountList">
+
+                      <table class="fd_table" style="width:100%;border-collapse:collapse;margin-top:20px;">
+                        <thead>
+                          <tr>
+                            <td style="width:70%;">Description</td>
+                            <td style="width:15%;">Amount Saved</td>
+                            <td style="width:15%;"></td>
+                          </tr>
+                        </thead>
+
+                        <tbody>
+                          <apex:repeat value="{!justDiscountItems}" var="item">
+                          <!--<apex:variable value="{!discountItems[key]}" var="item" />-->
+                            <tr>
+                              <td class="data_cell" data-field-name="description" data-field-value="{!item.description}">{!item.description}</td>
+                              <td class="data_cell" data-field-name="amount" data-field-value="{!item.amount}">$ {!item.amount}</td>
+                              <td>
+                                <a href="#" class="fd_button alert tiny invert removeDiscountItem" style="display:table-cell;float:right;margin:0" data-id="{!item.id}">
+                                  <i class="fa fa-trash" style="padding:0;font-size:1rem;"></i>
+                                </a>
+                                <a href="#" class="fd_button tiny invert editDiscountItem" style="display:table-cell;float:right;margin:0 10px 0 0" data-id="{!item.Id}">
+                                  <i class="fa fa-edit" style="padding:0;font-size:1rem;"></i>
+                                </a>
+                              </td>
+                            </tr>
+                          </apex:repeat>
+
+                          <tr>
+                            <td>
+                              <input type="text" class="discountItemField" data-field-name="description" style="width:95%;margin:0;"></input>
+                            </td>
+                            <td>
+                              <div class="row collapse">
+                                <div class="large-1 column">
+                                  <span class="prefix">
+                                    <i class="fa fa-dollar"></i>
+                                  </span>
+                                </div>
+                                <div class="large-11 column">
+                                  <input type="text" class="discountItemField mustBeNumber" data-field-name="amount" style="width:95%;margin:0;"></input>
+                                </div>
+                              </div>
+                            </td>
+                            <td>
+                              <a href="#" id="createDiscount" class="fd_button success tiny invert" style="display:table-cell;float:right;margin:0">
+                                <i class="fa fa-plus" style="padding:0;font-size:1rem;"></i>
+                              </a>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+
+                    </apex:outputPanel>
+                  </div><!-- /tab content discounts -->
+
+                  <div id="fees" class="content">
+                    <apex:outputPanel layout="block" id="fees_list">
+                      <div class="row">
+                        <div class="column large-12">
+                          <h4 style="margin:0;padding:25px 0 5px 25px; text-align:left;">Applied Fees ( {!opportunity.GL_Account_Variable_3__r.Name} )</h4>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="column large-12">
+
+                          <table class="fd_table applied-fees-table">
+                            <thead>
+                              <tr>
+                                <td>Description</td>
+                                <td>Amount</td>
+                                <td></td>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <apex:repeat value="{!provinceFeesMap}" var="feeKey">
+                                <apex:repeat value="{!provinceFeesMap[feeKey]}" var="prov">
+                                    <apex:outputPanel layout="none" rendered="{!prov = opportunity.GL_Account_Variable_3__r.Name}">
+                                      <apex:repeat value="{!provinceFeesMap[feeKey][prov]}" var="feeItem">
+                                      <tr data-fee-id="{!feeItem.Id}" data-province="{!prov}" data-fee-parent="{!feeKey}">
+                                        <td>
+                                          <apex:outputText value="{!feeItem.description}" />
+                                        </td>
+                                        <td class='input-cell'>
+                                          <span>
+                                            <apex:outputText value="$ {!feeItem.cost}" rendered="{!feeItem.cost != 0}"/>
+                                            <apex:outputText value="$ Included" rendered="{!feeItem.cost == 0}"/>
+                                          </span>
+                                          <input type="text" value="{!feeItem.cost}" />
+                                        </td>
+                                        <td>
+                                          <apex:outputPanel layout="none" rendered="{!feeKey == 'additional'}">
+                                          <div class="dropMenu">
+                                            <i class="fa fa-caret-down"></i>
+                                            <ul>
+                                              <li><a href="" data-action="edit" data-default-visable="true">Edit</a></li>
+                                              <li><a href="" data-action="delete" data-default-visable="true">Delete</a></li>
+                                              <li><a href="" data-action="cancel" data-default-visable="false">Cancel</a></li>
+                                              <li><a href="" data-action="save" data-default-visable="false">Save</a></li>
+                                            </ul>
+                                          </div>
+                                          </apex:outputPanel>
+                                        </td>
+                                      </tr>
+                                      </apex:repeat>
+                                    </apex:outputPanel>
+                                  </apex:repeat>
+                                </apex:repeat>
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+
+                      <div class="row">
+                        <div class="column large-12">
+                          <h4 style="margin:0;padding:25px 0 5px 25px; text-align:left;">All Fees</h4>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="column large-12">
+                          <table class="fd_table" style="width:100%;margin:0;border-bottom: none;">
+                            <thead>
+                              <tr>
+                                <td>
+                                  <span>Description</span>
+                                  <input type="text" id="feeFilter" style="display:inline-block; width: 35%; margin: 0; margin-left: 15px; height: 1.75rem;" data-result-table-id="allFeesTable"  data-all-fees="{!allFees}"></input>
+                                </td>
+                                <td>Amount</td>
+                              </tr>
+                            </thead>
+                          </table>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="column large-12">
+                          <div style="max-height:300px; overflow:auto; border-bottom: 1px solid #DDD; border-right: 1px solid #DDD;">
+                          <table class="fd_table" style="width:100%;margin-bottom:0;" id="allFeesTable">
+                            <tbody>
+                              <apex:repeat value="{!allFees}" var="feeItem">
+                                <tr>
+                                  <td >
+                                    <a href="#" class="availableFee" data-fee-product="{!feeItem.Fee_Product__c}">
+                                      <apex:outputText value="{!feeItem.Fee_Product__r.Name}" />
+                                    </a>
+                                  </td>
+                                  <td>
+                                    <apex:outputText value="$ {!feeItem.Amount__c}"/>
+                                  </td>
+                                </tr>
+                              </apex:repeat>
+                            </tbody>
+                          </table>
+                          </div>
+                        </div>
+                      </div>
+                    </apex:outputPanel>
+                  </div>
+
+
+                  <div id="trade_in" class="content">
+                    <apex:outputPanel id="tradeInContainer">
+                    <!-- +++++++++++++++++ TRADE IN RECORD FORM ++++++++++++++++++++ -->
+                        <div class="row trade_in_form" style="margin-top:30px;">
+
+                          <div class="large-4 large-offset-1 column">
+
+                            <div class="row">
+                              <div class="large-5 column">
+                                <label class="large-only-right">Total Trade In Value</label>
+                              </div>
+                              <div class="large-7 column">
+                                <div class="row collapse">
+                                  <div class="large-2 column">
+                                    <span class="prefix">
+                                      <i class="fa fa-dollar"></i>
+                                    </span>
+                                  </div>
+                                  <div class="large-10 column">
+                                    <input type="text" id="tradeInTotal" value="{!trade_in_package.value}"></input>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+
+                          </div>
+
+                          <div class="large-3  column">
+
+                            <div class="row">
+
+                              <div class="large-5 column">
+                                <label class="large-only-right">Lien on Trade</label>
+                              </div>
+
+                              <div class="large-7 column">
+
+                                <div class="row collapse">
+                                  <div class="large-2 column">
+                                    <span class="prefix">
+                                      <i class="fa fa-dollar"></i>
+                                    </span>
+                                  </div>
+                                  <div class="large-10 column">
+                                    <input type="text" id="tradeInLien" value="{!trade_in_package.lienAmount}"></input>
+                                  </div>
+                                </div>
+
+                              </div>
+
+                            </div>
+
+                          </div>
+
+                          <div class="large-2 end column">
+                            <a href="#" id="tradeInSave" class="fd_button success small" style="display:none"> Save </a>
+                          </div>
+
+                        </div>
+                    <!-- =========================== /TRADE IN FORM =================== -->
+                    </apex:outputPanel>
+
+                    <apex:outputPanel id="tradeInLineItems">
+
+                      <div style="width:100%;margin:auto;margin-top:20px;">
+                      <h3 style="max-width:100%;">Trade In Items</h3>
+                      <table class="fd_table" style="width:100%;border-collapse:collapse;margin-top:20px;">
+
+                        <thead>
+                          <tr>
+                            <td>Model Year</td>
+                            <td>Manufacturer</td>
+                            <td>Model</td>
+                            <td>Serial Number</td>
+                            <td></td>
+                          </tr>
+                        </thead>
+
+                        <tbody>
+                          <apex:repeat value="{!tradeInPackageItems}" var="tiItem">
+                          <!--<apex:variable value="{!trade_in_package.items[key]}" var="tiItem" />-->
+                          <apex:outputPanel layout="none" rendered="{!!tiItem.isDeleted}">
+                          <tr>
+                            <td class="data_cell" data-field-name="modelYear" data-field-value="{!tiItem.modelYear}">{!tiItem.modelYear}</td>
+                            <td class="data_cell" data-field-name="make" data-field-value="{!tiItem.make}">{!tiItem.make}</td>
+                            <td class="data_cell" data-field-name="model" data-field-value="{!tiItem.model}">{!tiItem.model}</td>
+                            <td class="data_cell" data-field-name="serialNumber" data-field-value="{!tiItem.serialNumber}">{!tiItem.serialNumber}</td>
+                            <td>
+                              <a href="#" class="fd_button alert tiny invert removeTradeInItem" style="display:table-cell;float:right;margin:0" data-id="{!tiItem.id}">
+                                <i class="fa fa-trash" style="padding:0;font-size:1rem;"></i>
+                              </a>
+                              <a href="#" class="fd_button tiny invert editTradeInItem" style="display:table-cell;float:right;margin:0 10px 0 0" data-id="{!tiItem.Id}">
+                                <i class="fa fa-edit" style="padding:0;font-size:1rem;"></i>
+                              </a>
+                            </td>
+                          </tr>
+                          </apex:outputPanel>
+                          </apex:repeat>
+
+                          <tr>
+                            <td>
+                              <input type="text" class="tradeInItemField" data-field-name="modelYear" style="width:95%;margin:0;"></input>
+                            </td>
+                            <td>
+                              <input type="text" class="tradeInItemField" data-field-name="make" style="width:95%;margin:0;"></input>
+                            </td>
+                            <td>
+                              <input type="text" class="tradeInItemField" data-field-name="model" style="width:95%;margin:0;"></input>
+                            </td>
+                            <td>
+                              <input type="text" class="tradeInItemField" data-field-name="serialNumber" style="width:95%;margin:0;"></input>
+                            </td>
+                            <td>
+                              <a href="#" id="add_trade_in_item" class="fd_button success tiny invert" style="display:table-cell;float:right;margin:0">
+                                <i class="fa fa-plus" style="padding:0;font-size:1rem;"></i>
+                              </a>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                      </div>
+
+                    </apex:outputPanel>
+                  </div><!-- /tab content trade_in -->
+
+                </div>
+
+              </div>
+            </div>
+            <!-- ================== /DISCOUNT AND TRADE INS PAGE ==================================== -->
+
+            <!-- +++++++++++++++++++++ CUSTOMER NOTES PAGE +++++++++++++++++++++++++++++++ -->
+            <div class="slideContent">
+              <div style="width:98%; height:98%; margin:auto;margin-bottom:20px;">
+                <h4>
+                  <apex:image value="{!URLFOR($Resource.LegendLogo)}" /><br />
+                  Special Notes
+                </h4>
+                <apex:form >
+                  <sffd:row >
+                    <sffd:column cols="large-10 large-offset-1 end">
+                      <apex:inputTextArea value="{!opportunity.Customer_Notes__c}"
+                                          id="customerNotes"
+                                          styleClass="ckeditor"
+                                          richtext="false"
+                                          rows="10"/>
+                    </sffd:column>
+                  </sffd:row>
+                </apex:form>
+              </div>
+            </div>
+            <!-- ====================== /CUSTOMER NOTES PAGE ================================ -->
+
+            <!-- +++++++++++++++++++++++++ SUMMARY PAGE +++++++++++++++++++++++++++++ -->
+            <div id="summaryContainer" class="slideContent">
+              <apex:outputPanel id="summary">
+                <apex:outputPanel rendered="{!selectedBoat != null}">
+
+                  <!-- +++++++++++++++++ SUMMARY BUTTONS +++++++++++++++ -->
+                  <div class="row" style="margin-top:10px;">
+                    <div class="large-12 columns">
+                      <!-- <a href="apex/quoteViewer?id={!Opportunity.Id}" id="pdfSummary" class="fd_button small invert">
+                          <i class="fa fa-print"></i>PDF
+                        </a> -->
+                        <a href="#" id="printSummary" class="fd_button small invert success">
+                          <i class="fa fa-print"></i>Print
+                        </a>
+                    </div>
+                  </div>
+
+                  <!-- ++++++++++++++++++ INVOICE STYLE SUMMARY HEADER +++++++++ -->
+                  <div id="invoice" class="legendInvoice">
+                    <div class="header row">
+
+                      <div class="large-5 medium-3 small-12 columns logo">
+                      <!--  <span id="logo"></span> -->
+                        <div class="header-contact">
+                          <img src="{!URLFOR($Resource.LegendLogo)}" class="headerLogo print-only" />
+                          <img src="{!URLFOR($Resource.LegendLogo)}" class="headerLogo screen-only" />
+                          <div class="signature">
+                            <p>Your Memory Maker
+                            <span>{!Opportunity.owner.FirstName} {!Opportunity.Owner.LastName}</span>
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="large-2 medium-3 small-15 large-offset-1 columns">
+                        <div class="header-contact">
+                          <i class="fa fa-envelope"></i>
+                          <p>info@legendboats.com<br />
+                             customercare@legendboats.com<br />
+                             sales@legendboats.com
+                          </p>
+                        </div>
+                      </div>
+
+                      <div class="large-2 medium-3 small-12 columns">
+                        <div class="header-contact">
+                          <i class="fa fa-phone"></i>
+                          <p>phone <span style="padding-left:25px;">{! warehouse.Phone__c }</span><br />
+                          toll free<span style="padding-left:22px;">{! warehouse.Toll_Free__c }</span><br />
+                          fax<span style="padding-left:44px;">{! warehouse.Fax__c }</span></p>
+                        </div>
+                      </div>
+
+                      <div class="large-2 medium-3 small-12 columns">
+                        <div class="header-contact" style="border-right:none;">
+                          <i class="fa fa-globe"></i>
+                          <p>www.legendboats.com</p>
+                        </div>
+                      </div>
+
+                    </div><!--header-->
+
+                    <div class="header-bottom row">
+
+                      <div class="large-2 medium-12 columns header-bottom-left">
+
+                        <h3>
+                          <i class="fa fa-file-text"></i>
+                          INVOICE TO:
+                        </h3>
+                      </div>
+                      <div class="large-4 medium-5 columns header-bottom-left">
+                        <h2>
+                          <a href="/{!Opportunity.Account.id}"
+                            id="lookup{!Opportunity.Account.id}opp4"
+                            onblur="LookupHoverDetail.getHover('lookup{!Opportunity.Account.id}opp4').hide();"
+                            onfocus="LookupHoverDetail.getHover('lookup{!Opportunity.Account.id}opp4', '/{!Opportunity.Account.id}/m?retURL=/{!Opportunity.Account.id}&isAjaxRequest=1').show();"
+                            onmouseout="LookupHoverDetail.getHover('lookup{!Opportunity.Account.id}opp4').hide();"
+                            onmouseover="LookupHoverDetail.getHover('lookup{!Opportunity.Account.id}opp4', '/{!Opportunity.Account.id}/m?retURL=/{!Opportunity.Account.id}&isAjaxRequest=1').show();">
+                            {!Opportunity.Account.Name}
+                            </a>
+                        </h2>
+                        <p style="margin-bottom:10px;line-height:22px;">
+                          {!Opportunity.Account.BillingStreet}, {!Opportunity.Account.BillingCity}<br />
+                          {!Opportunity.Account.BillingPostalCode}, {!Opportunity.Account.BillingCountry}
+                        </p>
+
+                        <p class="email" style="margin-bottom:10px;">
+                          <i class="fa fa-envelope"></i>
+                          {!Opportunity.ContactEmail__c}
+                        </p>
+                        <p class="mobilePhone">
+                          <i class="fa fa-mobile"></i>
+                          {!Opportunity.Account.PersonMobilePhone}
+                        </p>
+
+                      </div>
+
+                      <div class="large-6 medium-7 columns invoice-header">
+
+                        <!-- <h1>INVOICE</h1> -->
+                        <div class="row">
+                          <div class="laerge-12 medium-12 columns">
+                            <table style="fd_table margin-bottom:4px;">
+                              <thead>
+                                <tr>
+                                  <td>
+                                    <div class="circle">
+                                      <i class="fa fa-dollar"></i>
+                                    </div>
+                                  </td>
+                                  <td>
+                                    <div class="circle">
+                                      <i class="fa fa-calendar"></i>
+                                    </div>
+                                  </td>
+                                  <td>
+                                    <div class="circle">
+                                     <i class="fa fa-barcode"></i>
+                                    </div>
+                                  </td>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <tr>
+                                  <td>
+                                    Total Due:<br />
+                                    <strong>
+                                      <apex:outputText value="${0, number, ###,###,###,##0.00}"
+                                         rendered="{!runningPrice != null}">
+                                        <apex:param value="{!runningPrice + runningTaxes}"/>
+                                     </apex:outputText>
+                                    </strong>
+                                  </td>
+                                  <td>
+                                    Invoice Date:<br />
+                                    <strong>
+                                      <apex:outputText value="{0, date, dd MMMM yyyy}">
+                                            <apex:param value="{!NOW()}" />
+                                      </apex:outputText>
+                                    </strong>
+                                  </td>
+                                  <td>
+                                    Invoice #:<br />
+                                    <strong>{!Opportunity.InvoiceNumber__c}</strong>
+                                  </td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </div>
+
+                          <div class="large-6 medium-6 large-offset-6 medium-offset-6 columns">
+                            <div id="bcTarget" class="right" data-code="{!Opportunity.InvoiceNumber__c}"></div>
+                          </div>
+
+                        </div>
+
+                      </div>
+
+                    </div><!--header-bottom-->
+                  </div>
+                  <!-- ================== INVOICE STYLE SUMMARY HEADER ========= -->
+
+                  <!-- ++++++++++++++++++ INVOICE STYLE SUMMARY CONTENT +++++++++ -->
+                  <apex:outputPanel id="summary_list">
+
+                    <div class="summary_table">
+                      <h3>Boat</h3>
+                      <p>
+                        <apex:outputText value="{!selectedBoat.Name}" />
+                        <span>
+                          <apex:outputText value=" ${!basePrice}" rendered="{!basePrice != null}" />
+                        </span>
+                      </p>
+
+                      <!-- ++++++++++++++++ MOTOR SUMMARY ++++++++++++++ -->
+                      <apex:outputPanel layout="none" rendered="{!selectedMotor != null}">
+                        <h3>Motor</h3>
+                        <p>
+                          <apex:outputText value=" {!selectedMotor.Name}"
+                                       rendered="{!selectedMotor != null}" />
+                          <span>
+                            <apex:outputText value="$ {!motorUpgradePrice}"
+                                       rendered="{!motorUpgradePrice != null}" />
+                          </span>
+                        </p>
+                        <!-- <apex:variable value="{!selectedItemsMap['motor']}" var="items" /> -->
+                        <apex:repeat value="{!selectedMotorOptions}" var="motorItem">
+
+                          <p class="subItem">
+                            <span class="quantity">
+                              {!motorItem.quantity}
+                            </span>
+                            <apex:outputText value="{!motorItem.description}" />
+                            <span>
+                              <apex:outputText value="$ {!motorItem.upgrade_cost}" />
+                            </span>
+                          </p>
+                        </apex:repeat>
+                      </apex:outputPanel>
+
+                      <!-- +++++++++++++++++ TRAILER SUMMARY +++++++++++++++ -->
+                      <apex:outputPanel layout="none" rendered="{!selectedTrailer != null}">
+                        <h3>Trailer</h3>
+                        <p>
+                          <apex:outputText value=" {!selectedTrailer.Name}"
+                                       rendered="{!selectedTrailer != null}" />
+                          <span>
+                            <apex:outputText value="$ {!trailerUpgradePrice}"
+                                       rendered="{!trailerUpgradePrice != null}" />
+                          </span>
+                        </p>
+                        <!-- <apex:variable value="{!selectedItemsMap['trailer']}" var="items" /> -->
+                        <apex:repeat value="{!selectedTrailerOptions}" var="trailerItem">
+
+                          <p class="subItem">
+                            <span class="quantity">
+                              {!trailerItem.quantity}
+                            </span>
+                            <apex:outputText value="{!trailerItem.description}" />
+                            <span>
+                              <apex:outputText value="$ {!trailerItem.upgrade_cost} " />
+                            </span>
+                          </p>
+                        </apex:repeat>
+                      </apex:outputPanel>
+
+                      <!-- +++++++++++++++++++ TROLLING MOTOR SUMMARY ++++++++++++ -->
+                      <apex:outputPanel layout="none" rendered="{!selectedTrollingMotor != null}">
+                        <h3>Trolling Motor</h3>
+                        <p>
+                          <apex:outputText value=" {!selectedTrollingMotor.Name}"
+                                       rendered="{!selectedTrollingMotor != null}" />
+                          <span>
+                            <apex:outputText value="$ {!trollingMotorUpgradePrice}"
+                                       rendered="{!trollingMotorUpgradePrice != null}" />
+                          </span>
+                        </p>
+                        <!-- <apex:variable value="{!selectedItemsMap['trolling motor']}" var="items" /> -->
+                        <apex:repeat value="{!selectedTrollingMotorOptions}" var="tmItem">
+
+                          <p class="subItem">
+                            <span class="quantity">
+                              {!tmItem.quantity}
+                            </span>
+                            <apex:outputText value="{!tmItem.description}" />
+                            <span>
+                              <apex:outputText value="$ {!tmItem.upgrade_cost} " />
+                            </span>
+                          </p>
+                        </apex:repeat>
+                      </apex:outputPanel>
+
+                      <!-- +++++++++++++++++++++ OPTION LINE ITEMS ++++++++++++++++++ -->
+                      <apex:outputPanel layout="none" >
+
+                        <apex:outputPanel rendered="{!renderSummaryOptionList}">
+
+                          <h3>Options &amp; Accessories</h3>
+                         <!--  <apex:variable value="{!selectedItemsMap['boat']}" var="items" /> -->
+                          <apex:repeat value="{!selectedBoatOptions}" var="boatItem">
+
+                            <p>
+                              <span class='quantity'>
+                                {!boatItem.quantity}
+                              </span>
+                              <apex:outputText value="{!boatItem.description}" />
+                              <span>
+                                <apex:outputText value="$ {!boatItem.upgrade_cost}" />
+                              </span>
+                            </p>
+                            <!-- <apex:repeat value="{!boatItem.subItems}" var="subkey">
+                              <apex:variable value="{!boatItem.subItems[subkey]}"
+                                             var="subItem" /> -->
+
+                            <apex:repeat value="{!boatItem.subItemValues}" var="subItem">
+                              <p class="subItem">
+                                <span class="quantity">
+                                  <apex:outputText value="{!subItem.quan}" />
+                                </span>
+                                <apex:outputText value="{!subItem.description}" />
+                                <span>
+                                  <apex:outputText value="$ {!subItem.upgrade_cost}" />
+                                </span>
+                              </p>
+                            </apex:repeat>
+                            <apex:outputPanel layout="none" rendered="{!boatItem.features.size>0}">
+                              <apex:repeat value="{!boatItem.features}" var="feature">
+                                <p class="subItem">
+                                  <!-- <span class="quantity">
+                                    <apex:outputText value="1" />
+                                  </span> -->
+                                  <apex:outputText value="{!feature}" />
+                                  <span>
+                                    <apex:outputText value="$ Included" />
+                                  </span>
+                                </p>
+                              </apex:repeat>
+                            </apex:outputPanel>
+
+                          </apex:repeat>
+
+                        </apex:outputPanel>
+
+                      </apex:outputPanel><!-- option line items -->
+
+                      <!-- +++++++++++++++++++++ ADDITIONAL ACCESSORIES ++++++++++++++ -->
+                      <apex:outputPanel layout="none" rendered="{!additionalAccessories != null}">
+                        <apex:outputPanel >
+                          <h3>Additional Accessories</h3>
+                          <apex:repeat value="{!additionalAccessories}" var="item">
+                            <p>
+                              <span class="quantity">
+                                  {!item.quantity}
+                                </span>
+                              <apex:outputText value="{!item.productName}, (${!item.unitPrice} ea.)" />
+                              <span>
+                                <apex:outputText value="$ {!item.totalPrice}" />
+                              </span>
+                            </p>
+                          </apex:repeat>
+                        </apex:outputPanel>
+                      </apex:outputPanel>
+
+                      <!-- ++++++++++++++++++++ PROTECTION AND SERVICES PRODUCTS ++++++++++++++++++++++ -->
+                      <apex:outputPanel rendered="{!renderProtectionOptionList}">
+
+                          <h3>Protection &amp; Services</h3>
+                          <!-- <apex:variable value="{!selectedItemsMap['protection']}" var="p_items" /> -->
+                          <apex:repeat value="{!selectedProtectionOptions}" var="p_item">
+                            <!-- <div class="option_and_accessories_line_item"> -->
+                            <p>
+                              <span class='quantity'>
+
+                              </span>
+                              <apex:outputText value="{!p_item.description}" />
+                              <span>
+                                <apex:outputText value="$ {!p_item.upgrade_cost}" />
+                              </span>
+                            </p>
+                            <apex:repeat value="{!p_item.subItemValues}" var="subpItem">
+                              <!-- <apex:variable value="{!p_items[key].subItems[subkey]}"
+                                             var="subItem" /> -->
+                              <p class="subItem">
+                                <span class="quantity">
+                                  {!subpItem.quan}
+                                </span>
+                                <apex:outputText value="{!subpItem.description}" />
+                                <span>
+                                  <apex:outputText value="$ {!subpItem.upgrade_cost}" />
+                                </span>
+                              </p>
+                            </apex:repeat>
+                          <!-- </div> -->
+                          </apex:repeat>
+                          <!-- INSURANCE ITEMS AS OF AUG 15/2016-->
+                          <apex:repeat value="{!insuranceItems}" var="iItem">
+                          <p>
+                            <span class="quantity"></span>
+                            <apex:outputText value="{!iItem.PricebookEntry.Product2.Name + ' - ' + iItem.InsuranceCoverage__c}" />
+                            <span>
+                              <apex:outputText value="$ {!iItem.UnitPrice}" />
+                            </span>
+                          </p>
+                          </apex:repeat>
+
+                        </apex:outputPanel>
+
+                      <!-- ==================== /PROTECTION AND SERVICES PRODUCTS ===================== -->
+
+                      <!-- +++++++++++++++++++++ ADDITIONAL FEES +++++++++++++++++++++ -->
+                      <apex:outputPanel layout="none" rendered="{!renderSummaryFees}">
+                        <apex:outputPanel >
+                          <h3>Additional Fees</h3>
+                          <apex:repeat value="{!provinceFeesMap}" var="feeKey">
+                            <apex:repeat value="{!provinceFeesMap[feeKey]}" var="prov">
+                                <apex:outputPanel layout="none" rendered="{!prov = opportunity.GL_Account_Variable_3__r.Name}">
+                                  <apex:repeat value="{!provinceFeesMap[feeKey][prov]}" var="feeItem">
+                                    <p>
+                                      <span class="quantity">
+                                          {!feeItem.quantity}
+                                        </span>
+                                      <apex:outputText value="{!feeItem.description}" />
+                                      <span>
+                                        <apex:outputText value="$ {!feeItem.total}" rendered="{!feeItem.total != 0}"/>
+                                        <apex:outputText value="$ Included" rendered="{!feeItem.total == 0}"/>
+                                      </span>
+                                    </p>
+                                  </apex:repeat>
+                                </apex:outputPanel>
+                            </apex:repeat>
+                          </apex:repeat>
+                        </apex:outputPanel>
+                      </apex:outputPanel>
+
+                      <!-- ++++++ SUB TOTAL ++++-->
+                      <p class="total_row sub_total">
+                        <span>
+                          <span>Sub Total:</span>
+                          <apex:outputText value="${0, number, ###,###,###,##0.00}"
+                                           rendered="{!runningPrice != null}">
+                            <apex:param value="{!runningPrice + discountTotal + trade_in_package.totalValue}"/>
+                         </apex:outputText>
+                        </span>
+                      </p>
+
+                      <!-- +++++++++++++++++++++ DISCOUNTS +++++++++++++++++++++++++++ -->
+                      <apex:outputPanel layout="none"  rendered="{!renderDiscountSummary}">
+                        <apex:outputPanel >
+                        <h3>Special Savings</h3>
+                        <apex:repeat value="{!justDiscountItems}" var="discount">
+                          <!--<apex:variable value="{!discountItems[key]}" var="discount" />-->
+                            <p>
+                              <span class="quantity">
+
+                                </span>
+                              <apex:outputText value="{!discount.description}" />
+                              <span>
+                                <apex:outputText value="$ ({!discount.amount})" />
+                              </span>
+                            </p>
+
+                        </apex:repeat>
+                        </apex:outputPanel>
+
+                        <p class="total_row total_savings">
+                          <span class="quantity"></span>
+                          <span>
+                            <span>Total Savings:</span>
+                            <apex:outputText value="${0, number, ###,###,###,##0.00}"
+                                             rendered="{!discountTotal != null}">
+                              <apex:param value="{!discountTotal}"/>
+                           </apex:outputText>
+                          </span>
+                        </p>
+                      </apex:outputPanel><!-- /Discoints -->
+
+                      <!-- +++++++++++++++++++++ TRADE IN INFORMATION +++++++++++++++++++++++++++ -->
+                      <apex:outputPanel layout="none"  rendered="{!trade_in_package.totalValue != 0}">
+                        <apex:outputPanel >
+                        <h3>Trade In Information</h3>
+                        <apex:repeat value="{!tradeInPackageItems}" var="tiItem">
+                          <!--<apex:variable value="{!trade_in_package.items[key]}" var="tiItem" />-->
+                            <p class="trade_in_item">
+                              <span class="quantity">
+                                {!tiItem.modelYear}
+                              </span>
+                                {!tiItem.make} - {!tiItem.model}
+                              <!-- <apex:outputText value="{!discount.description}" /> -->
+                              <span>
+
+                                <!-- <apex:outputText value="$ ({!discount.amount})" /> -->
+                              </span>
+                            </p>
+
+                          </apex:repeat>
+                        </apex:outputPanel>
+
+                        <p class="total_row minor_total">
+                          <span class="quantity" style="font-weight:normal"></span>
+                          <span>
+                            <span>Trade In Allowance:</span>
+                            <!-- <apex:outputText value="${!runningPrice}"
+                                             rendered="{!runningPrice != null}" /> -->
+                            <apex:outputText value="${0, number, ###,###,###,##0.00}">
+                              <apex:param value="{!trade_in_package.value}"/>
+                           </apex:outputText>
+                          </span>
+                        </p>
+                        <p class="total_row minor_total">
+                          <span class="quantity"></span>
+                          <span>
+                            <span>Lien On Trade:</span>
+                            <!-- <apex:outputText value="${!runningPrice}"
+                                             rendered="{!runningPrice != null}" /> -->
+                            <apex:outputText value="${0, number, ###,###,###,##0.00}">
+                              <apex:param value="{!trade_in_package.lienAmount}"/>
+                           </apex:outputText>
+                          </span>
+                        </p>
+                        <p class="total_row total_savings">
+                          <span class="quantity"></span>
+                          <span>
+                            <span>Total Trade In Value:</span>
+                            <!-- <apex:outputText value="${!runningPrice}"
+                                             rendered="{!runningPrice != null}" /> -->
+                            <apex:outputText value="${0, number, ###,###,###,##0.00}">
+                              <apex:param value="{!trade_in_package.totalValue}"/>
+                           </apex:outputText>
+                          </span>
+                        </p>
+                      </apex:outputPanel><!-- /Trade In Information -->
+
+                      <!-- +++++++++++ BEFORE TAXES ++++++++++++ -->
+                      <p class="total_row sub_total ">
+                        <span>
+                          <span>Before Taxes:</span>
+                          <apex:outputText value="${0, number, ###,###,###,##0.00}"
+                                           rendered="{!runningPrice!= null}">
+                            <apex:param value="{!runningPrice}"/>
+                         </apex:outputText>
+                        </span>
+                      </p>
+
+                      <!-- ++++++++++++++ TAXES +++++++++++++ -->
+                      <p class="total_row ">
+                        <span>
+                          <span>Taxes:</span>
+                          <apex:outputText value="${0, number, ###,###,###,##0.00}"
+                                           rendered="{!runningTaxes!= null}">
+                            <apex:param value="{!runningTaxes}"/>
+                         </apex:outputText>
+                        </span>
+                      </p>
+
+                      <!-- ++++++++++++++ TAXES +++++++++++++ -->
+                      <apex:outputPanel layout="none" rendered="{!insuranceTaxes != null || insuranceTaxes > 0}">
+                      <p class="total_row ">
+                        <span>
+                          <span>Insurance Taxes:</span>
+                          <apex:outputText value="${0, number, ###,###,###,##0.00}">
+                            <apex:param value="{!insuranceTaxes }"/>
+                         </apex:outputText>
+                        </span>
+                      </p>
+                      </apex:outputPanel>
+
+                      <!-- ++++++++++++ GRAND TOTAL ++++++++++++++ -->
+                      <p class="total_row grand_total">
+                        <span>
+                          <span>Grand Total:</span>
+                          <apex:outputText value="${0, number, ###,###,###,##0.00}"
+                                           rendered="{!runningPrice != null}">
+                            <apex:param value="{!runningPrice + runningTaxes}"/>
+                         </apex:outputText>
+                        </span>
+                      </p>
+
+                    </div> <!-- .summary_table -->
+
+                  </apex:outputPanel>
+                  <!-- ================= /INVOICE STYLE SUMMARY CONTENT ======== -->
+
+                  <!-- +++++++++++++++++++++ SIGNATURES ++++++++++++++++++++ -->
+                  <div id="summarySignatures">
+                    <div>
+                      <div class="sigRow">
+                        <div>Buyer : ({!opportunity.Account.Name})</div>
+                        <div></div>
+                      </div>
+                      <apex:repeat value="{!opportunity.OpportunityContactRoles}" var="contactRole">
+                        <div class="sigRow">
+                          <div>Co Buyer : ({!contactRole.Contact.Name})</div>
+                          <div></div>
+                        </div>
+                      </apex:repeat>
+                      <div class="sigRow">
+                        <div>Date : </div>
+                        <div class="date">
+                          <apex:outputText value="{0,date,E', 'MMM' 'dd', 'yyyy}">
+                              <apex:param value="{!TODAY()}" />
+                          </apex:outputText>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- ================== /SIGNATURES ====================== -->
+
+                </apex:outputPanel>
+              </apex:outputPanel><!-- /summary -->
+            </div>
+            <!-- ========================/SUMMARY PAGE ==================== -->
+
+          </div><!-- /#slideContainer -->
+        </div><!-- /slideViewer -->
+      </div>
+      <!-- ======================= /CONTENTS CONTAINER ==================== -->
+
+    </div><!-- /pageContainer -->
+
+  </apex:outputPanel><!-- boatBuilder -->
+
+
+  <c:HNDLBRS_Boat_Configurator_templates />
+
+  <apex:includeScript value="{! URLFOR($Resource.UtilJS) }" />
+
+  <script type="text/javascript">
+    $j = jQuery.noConflict();
+    var hbTemplates = {},
+     oppId = "{!opportunity_id}",
+     dealerOrderId = "{!dealerOrderId}",
+     dealerOrderLineId = "{!workingDealerOrderLine.Id}",
+     pricebookId = "{!pb2Id}",
+     defaultFedTaxRate = "{!defaultFedTaxRate}",
+     provincialTaxInfo = {!provincialTaxInfo};
+console.log( provincialTaxInfo );
+     CKEDITOR.config.removePlugins = 'maximize, image';
+     CKEDITOR.config.enterMode = CKEDITOR.ENTER_BR;
+
+    $j(function() {
+      console.log(dealerOrderLineId);
+      var w = $j('#contentContainer').width();
+      $j('#slideContainer').css('width', 4*w);
+      $j('#slideViewer').css('width',w);
+      $j('.slideContent').css('width', w);
+      init();
+      enableTaxForm();
+      boatSelectorInit("{!selectedProductFamily}");
+      // completely crazy hack as safari was displaying the sliding panels stacked and then moving them inline
+        setTimeout( function() {
+          $j('#slideContainer').css('visibility', 'visible');
+        }, 1200 );
+
+      hbTemplates['tradeInItemEditForm'] = Handlebars.compile( $j('#tradeInItemEditTemplate').html() );
+      hbTemplates['tradeInItemRow'] = Handlebars.compile( $j('#tradeInItemRow').html() );
+      hbTemplates['discountItemEditForm'] = Handlebars.compile( $j('#discountItemEditFormTemplate').html() );
+      hbTemplates['discountItemRow'] = Handlebars.compile( $j('#discountItemRowTemplate').html() );
+
+      $j('.lgnd-menu-btn').lgndMenuBtn();
+    });
+
+    function ReloadCKEditor() {
+       for(name in CKEDITOR.instances)
+       {
+           delete CKEDITOR.instances[name];
+       }
+       CKEDITOR.replaceAll();
+    }
+
+    function findProvincialTaxRate( taxZoneId )
+    {
+      var result;
+      $j.each( provincialTaxInfo, function( prov, zoneData ) {
+        if( zoneData.id === taxZoneId )
+          result = zoneData;
+      });
+      return result;
+    }
+
+    function init() {
+      var self = this,
+        dfd = new $j.Deferred();
+
+      setContentHeight();
+      summaryPrintHandler();
+
+      /* setup for the fees */
+      $j(document).on('keyup', '#feeFilter', function() {
+        var $input = $j(this),
+            query = $input.val().toLowerCase(),
+            $resultTable = $j('#' + $input.data('result-table-id') );
+        if( query == '' )
+        {
+          $resultTable.find('tr').css('display', 'table-row');
+        }
+        else
+        {
+          $resultTable.find('tbody > tr > td:first-child').each( function(idx, ele) {
+            if( $j(ele).html().toLowerCase().indexOf( query ) < 0 )
+            {
+              $j(ele).parent().css('display', 'none');
+            }
+            else
+            {
+              $j(ele).parent().css('display', 'table-row');
+            }
+          });
+        }
+
+      });
+
+      /* available fees click handler */
+      $j(document).on('click', '.availableFee', function(e) {
+        e.preventDefault();
+        summaryUpdateStart();
+        addAdditionalFee( $j(this).data('fee-product') );
+      });
+
+      /* fees line item edit amount click handler */
+      $j(document).on('click', '.dropMenu', function(e) {
+        e.preventDefault();
+        var $this = $j(this);
+
+        if( $this.hasClass('open') )
+        {
+          closeDropMenu($this);
+          return;
+        }
+        openDropMenu($this);
+      });
+
+       /* we want to intercept the 'Enter' key and submit the discount form if pressed */
+      $j('[id*="boatConfigForm"]').on('keydown', function(e) {
+        if(e.keyCode === 13){
+          e.preventDefault();
+          //$submitBtn.click();
+        }
+      });
+
+      /*
+        if the cube controls are displayed then the boat has been selected
+        and we can initialize everything else we need on the page
+      */
+      if( $j('[id*="cubeCtrs"]').length > 0 ){
+        initOptionSelectors( $j('#mainBoatBuilderContainer') );
+        setTabContentHeight();
+        setOptionTableRowColor();
+        initTradeInForm();
+        initDiscountForm();
+        if( pricebookId != null || pricebookId != undefined || pricebookId.length > 0)
+        {
+          initAdditionalAccessories();
+        }
+        //initCubeControls();
+        initSlideNav();
+        initActionButtons();
+
+        //set the first Tab displayed in the Option Configuration active
+        $j('.tabs').each( function(i, tabContainer){
+          $j(tabContainer).find('dd:first').addClass('active');
+          $j(tabContainer).next().find('.content:first').addClass('active');
+        });
+        // $j('.tabs dd:first').addClass('active');
+        // $j('.tabs-content .content:first').addClass('active');
+
+
+        $j(document).foundation();
+
+        // completely crazy hack as safari was displaying the sliding panels stacked and then moving them inline
+
+      }
+    }
+
+    function closeDropMenu( $menuCtrl )
+    {
+      $menuCtrl.removeClass('open')
+      .find('a').off('click.dropMenuAction');
+    }
+
+    function openDropMenu( $menuCtrl )
+    {
+      $menuCtrl.addClass('open')
+      .find('a')
+      .on('click.dropMenuAction', dropMenuActionHandler );
+    }
+
+
+    function dropMenuActionHandler(e) {
+      e.preventDefault();
+      var $this = $j(this),
+          $parentRow = $this.closest('tr'),
+          action = $this.data('action');
+      switch( action ) {
+        case 'edit':
+          $parentRow.addClass('editing')
+          .find('td.input-cell input').focus();
+          break;
+
+        case 'cancel':
+          $parentRow.removeClass('editing');
+          break;
+
+        case 'save':
+          summaryUpdateStart();
+          updateFeeItemAmount( $parentRow.data('fee-parent'),
+                               $parentRow.data('province'),
+                               $parentRow.data('fee-id'),
+                               $parentRow.find('.input-cell input').val()
+                              );
+          break;
+
+        case 'delete':
+          summaryUpdateStart();
+          deleteFeeItem( $parentRow.data('fee-parent'),
+                         $parentRow.data('province'),
+                         $parentRow.data('fee-id')
+                       );
+      }
+
+    }
+
+    function enableTaxForm()
+    {
+      var $taxForm = $j('#tax-form'),
+          sideWidth = $j('#sideNav').width(),
+          toggleForm = function()
+          {
+            var leftPos;
+
+            if( $taxForm.hasClass('open') )
+            {
+              $taxForm.removeClass('open');
+              leftPos = 0;
+            }
+            else
+            {
+              $taxForm.addClass('open');
+              leftPos = sideWidth + 15; //15 extra for the arrow
+            }
+
+            $taxForm.animate({'left': leftPos}, 500, function() {
+              console.log('time to enable form');
+            });
+          }
+      //check to se if we should disable the province select
+      // if( $j('[data-id="provTaxSelect"]').data('is-disabled') )
+      // {
+      //   $j('[data-id="provTaxSelect"]').attr('disabled', 'true');
+      // }
+      $j.each( $j('#tax-form [data-is-disabled="true"]'), function( idx, ele ) {
+        $j(ele).attr('disabled', ' true');
+      });
+
+      $j(document).on('click', '#editTaxRate', function(e) {
+        e.preventDefault();
+        toggleForm();
+      });
+
+      $j(document).on('change', '[data-id="provTaxSelect"]', function(e) {
+        var $this = $j(this);
+        if( !$j('[data-id="taxOverRide"]').is(':checked') )
+        {
+          var provTaxData = findProvincialTaxRate( $this.val() );
+          $j('#provTaxRate').val( provTaxData.rate  );
+          $j('#retTaxRate').val( provTaxData.retailRate  );
+        }
+      })
+      .on('click', '#updateTaxes', function(e) {
+        e.preventDefault();
+        var $p_taxInput = $j('#provTaxRate'),
+            $f_taxInput = $j('#fedTaxRate'),
+            $r_taxInput = $j('#retTaxRate'),
+            taxZone = $j('[data-id="provTaxSelect"]').val(),
+            p_rate = $p_taxInput.val(),
+            f_rate = $f_taxInput.val(),
+            r_rate = $r_taxInput.val(),
+            overRide = $j('[data-id="taxOverRide"]').is(':checked');
+        $p_taxInput.removeClass('error');
+        $f_taxInput.removeClass('error');
+        $r_taxInput.removeClass('error');
+        if(overRide == true && ( typeof(p_rate) == 'undefined' || p_rate == '' ) )
+        {
+          $p_taxInput.addClass('error');
+          return false;
+        }
+        if(overRide == true && ( typeof(f_rate) == 'undefined' || f_rate == '' ) )
+        {
+          $f_taxInput.addClass('error');
+          return false;
+        }
+        if(overRide == true && ( typeof(r_rate) == 'undefined' || r_rate == '' ) )
+        {
+          $r_taxInput.addClass('error');
+          return false;
+        }
+        summaryUpdateStart();
+        updateTaxes(taxZone, overRide, f_rate, p_rate, r_rate);
+      })
+      .on('change', '[data-id="taxOverRide"]', function(e) {
+        e.preventDefault();
+
+        var $this = $j(this),
+            provRateData,
+            $p_input = $j('#provTaxRate'),
+            $f_input = $j('#fedTaxRate'),
+            $r_input = $j('#retTaxRate'),
+            $select = $j('[data-id="provTaxSelect"]');
+
+        if( $this.is(':checked') )
+        {
+          $p_input.removeAttr('disabled');
+          $f_input.removeAttr('disabled');
+          $r_input.removeAttr('disabled');
+          //$select.attr('disabled', 'true');
+        }
+        else
+        {
+          //$select.removeAttr('disabled');
+          provRateData = findProvincialTaxRate( $select.val() );
+          $p_input.attr('disabled', 'true')
+          .val( provRateData.rate );
+          $r_input.attr('disabled', 'true')
+          .val( provRateData.retailRate );
+          $f_input.attr('disabled', 'true')
+          .val( defaultFedTaxRate );
+        }
+      });
+    }
+
+    function returnToOpp()
+    {
+      console.log('return to opp');
+      if( determineUI("{!$User.UITheme}") === 'classic' )
+      {
+        console.log('classsic view');
+        window.top.location.href = window.location.origin + '/' +oppId;
+      }
+      else
+      {
+        console.log('LEX view');
+        sforce.one.navigateToSObject(oppId);
+      }
+    }
+
+    function returnToDealerOrder()
+    {
+      var returnId = dealerOrderLineId === '' ? dealerOrderId : dealerOrderLineId;
+      console.log( returnId );
+      if( determineUI("{!$User.UITheme}") === 'classic' )
+      {
+        console.log('classsic view');
+        window.top.location.href = window.location.origin + '/' +returnId;
+      }
+      else
+      {
+        console.log('LEX view');
+        sforce.one.navigateToSObject(returnId);
+      }
+    }
+
+    function goToFinalize()
+    {
+      if( determineUI("{!$User.UITheme}") === 'classic' )
+      {
+        window.top.location.href = "{!$Page.RetailBoatSale_Finalize}"+"?id="+oppId;
+      }
+      else
+      {
+        sforce.one.navigateToURL('{!$Page.RetailBoatSale_Finalize}?id='+oppId);
+      }
+    }
+
+    function initActionButtons()
+    {
+      $j('[id*="saveBoatConfig"]').off('click').on('click', function(e) {
+        e.preventDefault();
+        var textareaId = $j('textarea[id*="customerNotes"]').attr('id'),
+          customer_notes = CKEDITOR.instances[textareaId].getData();
+
+        if( !$j(this).attr('disabled') === true )
+        {
+          summaryUpdateStart();
+          $j(this).attr('disable', true);
+          saveBoatConfig( customer_notes );
+        }
+      });
+
+
+      $j('[id*="saveToOpportunity"]').off('click').on('click', function(e) {
+        e.preventDefault();
+        var textareaId = $j('textarea[id*="customerNotes"]').attr('id'),
+          customer_notes = CKEDITOR.instances[textareaId].getData();
+        //var customer_notes = $j('textarea[id*="customerNotes"]').val();
+        if(!$j(this).attr('disabled') === true){
+          summaryUpdateStart();
+          $j(this).attr('disabled', true);
+          saveAndReturn(  customer_notes  );
+          // BoatBuilder.saveAndReturn( customer_notes, function( events, result) {
+          //   if( event.status )
+          //   {
+          //     if( determineUI("{!$User.UITheme}") === 'classic' )
+          //     {
+          //       window.top.location.href = result.result;
+          //     }
+          //     else
+          //     {
+          //       sforce.one.navigateToURL(result.result);
+          //     }
+          //   }
+          // });
+        }
+      });
+
+      $j('[id*="saveAndFinalize"]').off('click').on('click', function(e) {
+        e.preventDefault();
+         var textareaId = $j('textarea[id*="customerNotes"]').attr('id'),
+           customer_notes = CKEDITOR.instances[textareaId].getData();
+        //var customer_notes = $j('textarea[id*="customerNotes"]').val();
+        if(!$j(this).attr('disabled') === true){
+          $j(this).attr('disabled', true);
+          summaryUpdateStart();
+          saveAndFinalize(customer_notes);
+        }
+      });
+
+      $j('[id*="saveToPDF"]').off('click').on('click', function(e) {
+        e.preventDefault();
+        var textareaId = $j('textarea[id*="customerNotes"]').attr('id'),
+           customer_notes = CKEDITOR.instances[textareaId].getData();
+        $j('#ajaxInd').show();
+        if(!$j(this).attr('disabled') === true){
+          $j(this).attr('disabled', true);
+          saveToPDF(customer_notes);
+        }
+      });
+
+      $j('[id*="saveToFrenchPDF"]').off('click').on('click', function(e) {
+        e.preventDefault();
+        var textareaId = $j('textarea[id*="customerNotes"]').attr('id'),
+           customer_notes = CKEDITOR.instances[textareaId].getData();
+        $j('#ajaxInd').show();
+        if(!$j(this).attr('disabled') === true){
+          $j(this).attr('disabled', true);
+          console.log(customer_notes);
+          saveToFrenchPDF(customer_notes);
+        }
+      });
+    }
+
+    function buildBarcode(){
+      var $barCodeTarget = $j('#bcTarget'),
+      barCodeValue = $barCodeTarget.data('code');
+
+      $barCodeTarget.barcode( barCodeValue, "code128", {
+        color: '#000',
+        showHRI: false
+      });
+    }
+
+    function pdfCreated() {
+      $j('#ajaxInd').hide();
+      console.log("pdf created successfully");
+    }
+
+    function boatSelectorInit(selected) {
+      var btSelectHandler = function(boatType){
+        $j('#sideDetails').animate({'margin-top': '200px'},250);
+        summaryUpdateStart();
+        selectBoatType(boatType); // defined in apex:actionFunction
+      },
+      bts = new BTSelector(btSelectHandler);
+      console.log( typeof(selected) );
+      bts.init(selected);
+    }
+
+    function initAdditionalAccessories() {
+      // init the product search combo box
+      $j('.comboBox').legendForceComboBox({
+        idFieldName: 'Id',
+        textFieldName: 'Name',
+        searchFunction: function(queryString){
+          console.log(queryString);
+          return productSearch(queryString);
+        },
+        quickSelectHandler: function(result)
+        {
+          var handleResult = function(check, fieldResult, $field){
+            if(check){
+              $field.html(fieldResult)
+              .closest('.resultC').show();
+            }
+            else {
+              $field.html('')
+              .closest('.resultC').hide();
+            }
+          },
+          $container = $j('.detailsContainer');
+
+          if(result){
+            $container.show();
+            handleResult( result.Name, result.Name, $j('#name') );
+            handleResult( result.ProductCode, result.ProductCode, $j('#code') );
+            handleResult( result.RecordType, result.RecordType, $j('#type') );
+            handleResult( result.Family, result.Family, $j('#family') );
+            handleResult( result.Description, result.Description, $j('#description') );
+            handleResult( result.UnitPrice, result.UnitPrice.toFixed(2), $j('#price') );
+          }
+          else {
+             $container.hide();
+          }
+        },
+        selectHandler: function(id, text) {
+          var $this = $j(this);
+          ProductRemoter.selectProduct(pricebookId, id, function(events, results){
+            $this.val(results.result.Name);
+            $j('#additionAccessory_quantity').val(1);
+            $j('#additionAccessory_retailPrice').val(results.result.PricebookEntries[0].UnitPrice);
+            $j('#additionAccessory_salePrice').val(results.result.PricebookEntries[0].UnitPrice);
+            $j('#additionalAccessory_save').data('productId', results.result.Id);
+          });
+        },
+        onClose: function() {
+         $j('.detailsContainer').hide();
+        }
+      });
+
+      // init the save button
+      $j('#additionalAccessory_save').on('click', function(e) {
+        e.preventDefault();
+        if( $j(this).data('productId') ){
+          $j('#ajaxInd').show();
+          addAdditionalAccessory(
+            $j(this).data('productId'),
+            $j('#additionAccessory_quantity').val(),
+            $j('#additionAccessory_salePrice').val()
+          );
+        }
+      });
+
+
+      // init the remove link click handler
+      $j('.additionalAccessories').on('click', 'a.deleteAdditionalAccessory', function(e) {
+        e.preventDefault();
+        $j('#ajaxInd').show();
+        console.log("I want to delete a product with ID = " + $j(this).data('aa-id') );
+        removeAdditionalAccessory( $j(this).data('aa-id') );
+      });
+    }
+
+    function additionalAccessoryFunctionComplete() {
+      initActionButtons();
+      initAdditionalAccessories();
+      $j('#ajaxInd').hide();
+    }
+
+    function productSearch(queryString) {
+      var self,
+          indc = $j('.product-search-indcator'),
+          excludes = ['Boat'];
+
+      indc.removeClass('fa-search').addClass('fa-spinner fa-spin');
+      return $j.Deferred( function() {
+        self = this;
+        ProductRemoter.excludedProductSearch(pricebookId, queryString, excludes, function(events, result) {
+          if(result.statusCode === 200){
+            indc.removeClass('fa-spinner fa-spin').addClass('fa-search');
+            self.resolve(result.result);
+          }
+        })
+      });
+    }
+
+    function summaryPrintHandler() {
+      $j(document).on('click', '#printSummary', function(e){
+        e.preventDefault();
+        $j('#summaryContainer').printElement({
+            pageTitle: '{!summaryTitle}',
+            leaveOpen:true,
+            printMode:'popup',
+            printBodyOptions:
+            {
+            styleToAdd:'padding:0;margin:0;'
+            },
+            overrideElementCSS:[
+              {href: "{!URLFOR($Resource.FontAwesome, 'font-awesome-4.0.3/css/font-awesome.min.css')}", media: 'all'},
+              { href:"{!URLFOR($Resource.BoatBuilderSummaryPrintCss)}", media:'all'},
+              { href:"{!URLFOR($Resource.LegendInvoice, 'stylesheets/style.min.css')}", media:'all'},
+              { href:"{!URLFOR($Resource.LegendInvoice, 'stylesheets/print.min.css')}", media:'all'}
+              ]
+            });
+      })
+    }
+
+    function initTradeInForm()
+    {
+      var $button = $j('#tradeInSave'),
+          totalV = $j('#tradeInTotal').val(),
+          lien = $j('#tradeInLien').val(),
+          currentValue = totalV,
+          currentLien = lien;
+
+      console.log("total Trade in value = " + totalV);
+      console.log("lien amount = " + lien);
+      // Trade In Form Save Button
+      $button.on('click', function(e) {
+        e.preventDefault();
+        summaryUpdateStart();
+        updateTradeInRecord( $j('#tradeInTotal').val(), $j('#tradeInLien').val() );
+      });
+
+      $j('#tradeInTotal').on({
+        keydown: function(e){
+          if( !isNumberKey(e) )
+          {
+            e.preventDefault();
+          }
+        },
+        keyup: function(e) {
+          var total = $j(this).val();
+          currentValue = total;
+          if( parseFloat( total ) === parseFloat( totalV ) )
+          {
+            $button.hide();
+            $j(this).closest('.row').removeClass('changed');
+          }
+          else
+          {
+            $button.show();
+            $j(this).closest('.row').addClass('changed');
+          }
+        }
+      });
+
+      //Trade in information form save button
+      $j('#tradeInLien').on({
+        keydown: function(e){
+          if( !isNumberKey(e) )
+          {
+            e.preventDefault();
+          }
+        },
+        keyup: function(e) {
+          var thisVal = $j(this).val();
+          currentLien = thisVal;
+          if( parseFloat( thisVal ) === parseFloat( lien ) )
+          {
+            $j(this).closest('.row').removeClass('changed');
+            if( parseFloat( totalV ) === parseFloat( currentValue ) )
+            {
+              $button.hide();
+            }
+          }
+          else if( currentValue > 0 || totalV > 0 )
+          {
+            $button.show()
+            $j(this).closest('.row').addClass('changed');
+          }
+          else
+          {
+            $j(this).closest('.row').addClass('changed');
+          }
+        }
+      });
+
+      initTradeInItemsTable();
+    }
+
+    function initTradeInItemsTable()
+    {
+      $j('#add_trade_in_item').on('click', function(e) {
+        e.preventDefault();
+        summaryUpdateStart();
+        var $inputs = $j('.tradeInItemField'),
+            $ele,
+            data = {};
+        $j.each($inputs, function(idx, ele){
+          $ele = $j(ele);
+          data[$ele.data('field-name')] = $ele.val();
+        });
+        addTradeInLineItem( JSON.stringify(data) );
+
+      });
+
+      $j('[id*="tradeInLineItems"]')
+      //Edit LineItem Handler
+      .on('click', '.editTradeInItem', function(e) {
+        e.preventDefault();
+        var $this = $j(this)
+          $row = $this.closest('tr'),
+          data = {};
+        console.log('this is the edit trade in line item button');
+
+        data['Id'] = $this.data('id');
+        $row.find('.data_cell')
+        .each( function(idx, ele){
+          var $ele = $j(ele);
+          data[$ele.data('field-name')] = $ele.data('field-value');
+        });
+        console.log(data);
+        $row.replaceWith( hbTemplates['tradeInItemEditForm'](data) );
+        $j('#tradeInItemEditForm').data('old-data', data);
+      })
+      //Update LineItem Handler
+      .on('click', '.updateTradeInItemEdit', function(e) {
+        e.preventDefault();
+        console.log('Update the line item');
+        summaryUpdateStart();
+        var $this = $j(this),
+          $row = $this.closest('tr'),
+          $inputs = $row.find('input.tradeInItemField'),
+          $ele,
+          data = {};
+
+        $j.each($inputs, function(idx, ele){
+          $ele = $j(ele);
+          data[$ele.data('field-name')] = $ele.val();
+        });
+        console.log(data);
+        updateTradeInLineItem( JSON.stringify(data) );
+      })
+      //Cancel Edit Handler
+      .on('click', '.cancelTradeInItemEdit', function(e) {
+        e.preventDefault();
+        console.log('cancel edit click');
+        var $this = $j(this),
+        $row = $this.closest('tr');
+        $row.replaceWith( hbTemplates['tradeInItemRow']($row.data('old-data') ) );
+      })
+      //Remove LineItem Handler
+      .on('click', '.removeTradeInItem', function(e){
+        e.preventDefault();
+        summaryUpdateStart();
+        removeTradeInLineItem( $j(this).data('id') );
+      });
+    }
+
+    function isNumberKey(evt)
+    {
+      var charCode = (evt.which) ? evt.which : evt.keyCode;
+      if (charCode != 46 && charCode > 31
+        && (charCode < 48 || charCode > 57)
+        && charCode != 190 && charCode != 110 && (charCode > 105 || charCode < 96) )
+         return false;
+
+      return true;
+    }
+
+    function tradeInCompleted()
+    {
+      $j('.summary_table').removeClass('busy');
+      $j('input, select').not(':input[type="submit"], :input[type="button"], :input[data-disabled="disabled"]').removeAttr('disabled');
+      $j('#ajaxInd').hide();
+      initActionButtons();
+      initTradeInForm();
+    }
+
+    function tradeInLineItemComplete()
+    {
+      $j('.summary_table').removeClass('busy');
+      $j('input, select').not(':input[type="submit"], :input[type="button"], :input[data-disabled="disabled"]').removeAttr('disabled');
+      $j('#ajaxInd').hide();
+      initActionButtons();
+      initTradeInItemsTable();
+    }
+
+    function initDiscountForm() {
+
+      var validateForm = function($inputs){
+        var valid = true;
+
+        $inputs.removeClass('error').each( function( idx, ele ) {
+          var $input = $j(ele);
+          if( $input.val() == '' )
+          {
+            $input.addClass('error');
+            valid = false;
+          }
+          if( $input.hasClass('mustBeNumber') && $input.val().length > 0 )
+          {
+            if( isNaN( $input.val() ) ){
+              $input.addClass('error')
+              .next().html('Amount Must Be a Number');
+              valid = false;
+            }
+          }
+        });
+        return valid;
+      }
+
+      $j('#createDiscount').on('click', function(e) {
+        e.preventDefault();
+        var data = {},
+        $inputs = $j(this).closest('tr').find('.discountItemField');
+        console.log('click clack')
+
+        if(  validateForm($inputs) )
+        {
+          $inputs.each( function(idx, ele) {
+            data[$j(ele).data('field-name')] = $j(ele).val();
+          });
+          console.log(data);
+          summaryUpdateStart();
+          createDiscount(data['description'], data['amount']);
+        }
+      });
+
+      $j('[id*="discountList"]')
+      //edit Discount item
+      .on('click', '.editDiscountItem', function(e) {
+        e.preventDefault();
+        console.log( 'edit discount Item' );
+        var $this = $j(this),
+          $row = $this.closest('tr'),
+          data = {};
+
+        data['id'] = $this.data('id');
+        $row.find('.data_cell')
+        .each( function(idx, ele){
+          var $ele = $j(ele);
+          data[$ele.data('field-name')] = $ele.data('field-value');
+        });
+        console.log(data);
+        $row.replaceWith( hbTemplates['discountItemEditForm'](data) );
+        $j('#discountItemEditForm').data('old-data', data);
+      })
+      //update Discount item
+      .on('click', '.updateDiscountItem', function(e) {
+        e.preventDefault();
+        console.log( 'update discount item' );
+        var $this = $j(this),
+          $row = $this.closest('tr'),
+          $inputs = $row.find('.discountItemField'),
+          data = {};
+
+        if( validateForm($inputs) )
+        {
+          $inputs.each( function(idx, ele){
+            var $ele = $j(ele);
+            data[$ele.data('field-name')] = $ele.val();
+          });
+          summaryUpdateStart();
+          console.log(data);
+          updateDiscount(data['id'], data['description'], data['amount']);
+        }
+      })
+      //cancel Discount Item
+      .on('click', '.cancelEditDiscountItem', function(e) {
+        e.preventDefault();
+        console.log( 'cancel edit dicount item' );
+        var $this = $j(this),
+          $row = $this.closest('tr');
+        $row.replaceWith( hbTemplates['discountItemRow']($row.data('old-data')));
+      })
+      .on('click', '.removeDiscountItem', function(e) {
+        e.preventDefault();
+        summaryUpdateStart();
+        removeDiscount( $j(this).data('id') );
+      })
+
+      // var $submitBtn = $j('#createDiscount'),
+      //      error = false,
+      //      $desc = $j('#discountDescription'),
+      //      $amount = $j('#discountAmount');
+
+      // console.log("setup the discount page stuff");
+
+      /* remove discount link click handler */
+      // removeDiscountHandler();
+
+      /* submit button click handler */
+      // $submitBtn.on('click', function(e) {
+      //   e.preventDefault();
+
+      //   $desc.removeClass('error');
+      //   $amount.removeClass('error');
+
+      //   if($desc.val() === ''){
+      //     $j('#discountDescription').addClass('error');
+      //     error = true;
+      //   }
+
+      //   if($amount.val() === ''){
+      //     $j('#discountAmount').addClass('error');
+      //     error = true;
+      //   }
+
+      //   if( isNaN( $amount.val() ) ){
+      //     $j('#discountAmount').addClass('error')
+      //     .next().html('Amount Must Be a Number');
+      //     error = true;
+      //   }
+
+      //   if (error) return;
+
+      //   summaryUpdateStart();
+      //   createDiscount($desc.val(), $amount.val());
+      // });
+    }
+
+    function removeDiscountHandler() {
+      $j('.deleteDiscount').on('click', function(e) {
+        e.preventDefault();
+        var id = $j(this).data('discount-id');
+        summaryUpdateStart();
+        // $j(this).closest('p').slideUp(400, function() {
+        //   this.remove();
+        // });
+        removeDiscount(id);
+      });
+    }
+
+    function discountCreated() {
+      $j('.summary_table').removeClass('busy');
+      $j('input, select').not(':input[type="submit"], :input[type="button"], :input[data-disabled="disabled"]').removeAttr('disabled');
+      $j('#ajaxInd').hide();
+      $j('.discount_form input[type="text"]').val('').removeClass('error');
+      //removeDiscountHandler();
+      initActionButtons();
+      initDiscountForm();
+    }
+
+    function initOptionSelectors( $container ){
+      $container.find('.optionSelect option[data-selected="true"]').each(function() {
+        $j(this).attr('selected', 'selected');
+      });
+
+      $container.find('input[type="checkbox"].optionSelect').each(function() {
+        var $this = $j(this);
+        if($this.data('disabled') === 'disabled'){
+          $this.attr('disabled', 'disabled');
+        }
+        if($this.data('checked') === 'checked'){
+          $this.attr('checked', 'checked');
+        }
+      });
+    }
+
+    function initSlideNav() {
+      $j('.slideNavCtr').each(function(idx, ele) {
+        if( $j(ele).data('show-class') === "{!defaultView}" ){
+          $j(ele).addClass('active');
+        }
+      });
+      $j('.slideNavCtr').on('click', function(e) {
+        e.preventDefault();
+        var $this = $j(this),
+          showClass = $this.data('show-class');
+        $j('#slideContainer').removeClass()
+         .addClass( showClass );
+
+        $this.closest('ul').find('li a').removeClass('active');
+        $this.addClass('active');
+        $j('#slideViewer').scrollTop(0);
+        $j(document).scrollTop(0);
+      });
+    }
+
+    function setTabContentHeight(){
+      console.log("Setting Tab Content Height ");
+      var highest,
+        $tabContainers = $j('.tabs-content'),
+        $contentEles;
+      $j.each( $tabContainers, function(idx, container) {
+        hightest = 0;
+        $contentEles = $j(container).find('.content');
+        $j.each( $contentEles, function(i,e) {
+          if( $j(e).height() > highest){
+            highest = $j(e).height();
+          }
+        });
+        $contentEles.css('height', highest);
+      });
+
+    }
+
+    function setContentHeight(){
+      console.log("Setting Content Height");
+
+      var h = 0,
+        wh = $j(window).height(),
+        minH = $j('#sideDetails').outerHeight() + 220,
+        publicView = "{!isPublicView}";
+
+      $j('.slideContent').each(function(idx, ele) {
+        if( $j(ele).height() > h) {
+          h = $j(ele).height();
+        }
+      });
+      console.log('window - ' + wh);
+      console.log('content - ' + h);
+      console.log('minH - ' + minH);
+      h = wh > h ? wh : h;
+      h = h > minH ? h : minH;
+      // if(publicView === 'false' || publicView === false){
+      //   h = h * 0.8;
+      // }
+      console.log(h);
+      //$j('#slideContainer').css('height', h);
+      $j('#pageContainer').css('height', h);
+    }
+
+    function setOptionTableRowColor() {
+      console.log("Setting option tab color row");
+      var subRowCount,
+        $tables = $j('table.optionSelectTable:not(.smaller)'),
+        $rows,
+        currentRow;
+
+      $j.each($tables, function(i, ele){
+        subRowCount = 0;
+        $rows = $j(ele).children('tbody').children('tr');
+        $j.each($rows, function(idx, row) {
+          if( $j(row).hasClass('subOptionsContainer') ){
+            subRowCount++;
+          } else {
+            currentRow = (idx + subRowCount) % 2 === 1 ? 'even' : 'odd';
+          }
+          $j(row).addClass(currentRow);
+        });
+      });
+    }
+
+    function upgradeChanged(eleId) {
+      $j('[id*="' + eleId +'"]').parent().addClass('show_when_update_complete');
+      summaryUpdateStart();
+    }
+
+    function summaryUpdateStart() {
+      console.log("Starting update");
+      $j('.summary_table').addClass('busy');
+      $j('input, select').not(':input[type=submit], :input[type=button]').each(function(idx, ele) {
+        $j(ele).data('was-disabled', ele.hasAttribute('disabled') )
+        .attr('disabled', 'disabled');
+      });
+      $j('#ajaxInd').show();
+    }
+
+    function savingPDF() {
+      $j('.summary_table').addClass('busy');
+      //$j('input, select').not(':input[type=submit], :input[type=button]').attr('disabled', 'disabled');
+      $j('#ajaxInd').show();
+    }
+
+    function pdfSavingComplete() {
+      $j('.summary_table').removeClass('busy');
+      $j('input, select').not(':input[type=submit], :input[type=button]').removeAttr('disabled');
+      $j('#ajaxInd').hide();
+    }
+
+    function boatSelectionComplete(){
+      console.log("Boat Selection Complete");
+      $j('.summary_table').removeClass('busy');
+      init();
+      // initCubeControls();
+      // initDiscountForm();
+      // setTabContentHeight();
+      // setContentHeight();
+      // setOptionTableRowColor();
+     // $j(document).foundation();
+      $j('.fd_button').removeClass('btn button');
+      $j('input, select').not(':input[type=submit], :input[type=button]').removeAttr('disabled');
+      $j('#ajaxInd').hide();
+      initOptionSelectors( $j('#mainBoatBuilderContainer') );
+      ReloadCKEditor();
+    }
+
+    function summaryUpdateComplete(){
+      console.log('Update Complete');
+      var $hideContainer = $j('.hide_when_update_complete'),
+        $showContainer =$j('.show_when_update_complete');
+      $j('.summary_table').removeClass('busy');
+      $j('input, select').not(':input[type="submit"], :input[type="button"], :input[data-disabled="disabled"]')
+      .each( function( idx, ele ) {
+        if( $j(ele).data('was-disabled') == false )
+        {
+          $j(ele).removeAttr('disabled');
+        }
+       });
+      $j('#ajaxInd').hide();
+      if($hideContainer.length > 0){
+        $hideContainer.each(function() {
+          $j(this).hide().removeClass('hide_when_update_complete');
+          // $j(this).find('input[type="checkbox"]').prop('checked', false);
+          // $j(this).find('select')
+          // .removeProp('selected')
+          // .find(':first')
+          // .prop('selected','selected');
+        });
+        $j(document).foundation('reflow');
+         //set the first Tab displayed in the Option Configuration active
+        $j('.tabs dd:first').addClass('active');
+        $j('.tabs-content .content:first').addClass('active');
+
+      }
+
+      if($showContainer.length > 0){
+        $showContainer.each(function() {
+          $j(this).show()
+          .removeClass('show_when_update_complete');
+          console.log($j(this))
+          initOptionSelectors( $j(this) );
+        })
+      }
+       initActionButtons();
+    }
+
+    function optionChanged(select) {
+      summaryUpdateStart();
+      var $this = $j(select),
+          tagName = $this.get(0).tagName,
+          productId = $this.attr('id'),
+          parentProductId = $this.data('parent-id'),
+          productType = $this.data('product-type'),
+          $subOptionsContainer = $j('#' + productId + '_subOptions'),
+          quantity;
+console.log( productId +', '+ quantity+', '+  parentProductId+', '+  productType)
+      if(tagName === 'INPUT'){
+        quantity = select.checked ? 1 : 0;
+      }
+      if(tagName === 'SELECT'){
+        quantity = $this.val();
+      }
+      if(quantity != null){
+        if($subOptionsContainer.length > 0){
+          quantity == 0 ?
+            //hide the row and zero checks and selects
+            $subOptionsContainer.addClass('hide_when_update_complete') :
+            //show the row
+            $subOptionsContainer.addClass('show_when_update_complete');
+        }
+        //this is defined by apex:actionFunction
+        updateOption(productId, quantity, parentProductId, productType);
+      }
+    }
+  </script>
+
+</apex:page>

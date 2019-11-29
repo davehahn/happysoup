@@ -1,0 +1,360 @@
+<apex:page StandardController="AcctSeed__Project__c" extensions="gcProject_TimeCardLedger" showHeader="false" sidebar="false" cache="false" docType="html-5.0">
+	
+<head>
+<style>
+table{
+	border-collapse:collapse;
+}
+tr.total td{
+	font-weight: bold;
+}
+div.pq-grid-footer{
+	display:none;
+}
+/*.ui-state-highlight{
+	background-color: #fcfaee;
+}*/
+tr.pq-row-select td {
+    background-color: yellow;
+}
+</style>
+<apex:stylesheet value="{!URLFOR($Resource.GMBLJS__jQueryUI,'/jquery-ui/jquery-ui.min.css')}"/>
+<apex:stylesheet value="{!URLFOR($Resource.GMBLJS__pqGridPro241,'/pqgrid.min.css')}"/>
+</head> 
+
+<body>
+	<div style="margin:0 auto; width:100%">
+		<div id="grid"></div>
+	</div>
+</body>
+
+<apex:includeScript value="{!$Resource.GMBLJS__jQuery}"/>
+<apex:includeScript value="{!URLFOR($Resource.GMBLJS__jQueryUI,'/jquery-ui/jquery-ui.min.js')}"/>
+<apex:includeScript value="{!URLFOR($Resource.GMBLJS__pqGridPro241,'/pqgrid.min.js')}"/>
+<apex:includeScript value="{!URLFOR($Resource.GMBLJS__pqGridPro241,'/touch-punch/touch-punch.min.js')}"/>
+<apex:includeScript value="{!$Resource.GMBLJS__accountingJS}"/>
+<apex:includeScript value="{!$Resource.GMBLJS__ExcellentExport}"/>
+<apex:includeScript value="{!$Resource.GMBLJS__gsrGrid2}"/>
+<apex:includeScript value="{!$Resource.GMBLJS__dateJSENUS}"/>
+
+<script>function setFocusOnLoad() {}</script>
+<script type="text/javascript">
+
+	$j = jQuery.noConflict();
+
+	$j(document).ready(function()
+	{
+		initGrid();
+		refreshGrid();
+	});
+
+	accounting.settings = {
+		currency: {
+			symbol : "$",   // default currency symbol is '$'
+			format: "%s%v", // controls output: %s = symbol, %v = value/number (can be object: see below)
+			decimal : ".",  // decimal point separator
+			thousand: ",",  // thousands separator
+			precision : 2   // decimal places
+		},
+		number: {
+			precision : 2,  // default precision on numbers is 0
+			thousand: ",",
+			decimal : "."
+		}
+	}
+
+	function pqDatePicker(ui) {
+		var $this = $j(this);
+		$this
+		//.css({ zIndex: 3, position: "relative" })
+			.datepicker({
+				yearRange: "-20:+0", //20 years prior to present.
+				changeYear: true,
+				changeMonth: true,
+				//showButtonPanel: true,
+				onClose: function (evt, ui) {
+					$j(this).focus();
+				}
+			});
+		//default From date
+		//$this.filter(".pq-from").datepicker("option", "defaultDate", new Date("01/01/1996"));
+		//default To date
+		//$this.filter(".pq-to").datepicker("option", "defaultDate", new Date("12/31/1998"));
+	}
+
+
+	function initGrid()
+	{
+		var hideDollars = ({!$Permission.ProjectPageTimeCardLedgerDollarsView} == false);
+		var gridObj = { title:"Time Card Ledger",
+						collapsible:{on:false,collapsed:false,toggle:false},
+						columnTemplate: {sortable:false, sorting:'local'},
+						dataModel:{data:[], sorting:'local', location:'local', sortDir:['down','up','up'], sortIndx:['timeCardDate','glv3Name','tcv2Name']}, 
+						dragColumns:{enabled:false},
+						editable:false,
+						filterModel:{on:true, mode:'AND', header:true},
+						freezeCols:0,
+						freezeRows:0,
+						height:250,
+						historyModel:{on:false},
+						hoverMode:'row',
+						hwrap:false,
+						numberCell:{show:true},
+						pageModel: {type:null},
+						pasteModel:{on:false},
+						resizable: true,
+						roundCorners: false,
+						scrollModel: {autoFit:true},
+						selectionModel: { type: null},
+						showBottom:true,
+						showHeader:true,
+						showTitle:true,
+						showTop:true,
+						showToolbar:false,
+						sortable:false,
+						swipeModel:{on:false},
+						virtualX: false,
+						//virtualXHeader: false,
+						virtualY: false,
+						width:'auto',
+						wrap:false};
+
+		gridObj.colModel=[
+							{dataIndx:'projectTaskName',	title:'Project Task',	gFilter:'select'},
+							{dataIndx:'workOrderName',		title:'Work Order',		gFilter:'select'},
+							{dataIndx:'glv3Name',			title:'GLV3',			gFilter:'select'},
+							{dataIndx:'tcv1Name',			title:'TCV1',			gFilter:'select'},
+							{dataIndx:'tcv2Name',			title:'TCV2',			gFilter:'select'},
+							{dataIndx:'timeCardDate',		title:'Date',			dataType:'date', align:'center', minWidth:120},						
+							{dataIndx:'employeeName',		title:'Employee',		gFilter:'select'},
+							{dataIndx:'hoursRT', 			title:'Hours RT', 		dataType:'float', gFormat:'number', gTotal:true, minWidth:80, maxWidth:80},							
+							{dataIndx:'hoursOT', 			title:'Hours OT', 		dataType:'float', gFormat:'number', gTotal:true, minWidth:80, maxWidth:80},	
+							{dataIndx:'hoursDT', 			title:'Hours DT', 		dataType:'float', gFormat:'number', gTotal:true, minWidth:80, maxWidth:80},	
+							{dataIndx:'hours', 				title:'Hours All', 		dataType:'float', gFormat:'number', gTotal:true, minWidth:80, maxWidth:80},	
+							{dataIndx:'wages', 				title:'Wages', 			dataType:'float', gFormat:'money',  gTotal:true, minWidth:80, maxWidth:80, hidden:hideDollars},
+							{dataIndx:'burden', 			title:'Burden', 		dataType:'float', gFormat:'money',  gTotal:true, minWidth:80, maxWidth:80, hidden:hideDollars},
+
+							{dataIndx:"scrollSpacer", minWidth:15, maxWidth:15}];
+
+		gGrid.initFormat(gridObj.colModel);
+		gGrid.initFilter(gridObj.colModel);
+
+		$j.each(gridObj.colModel, function(i,col)
+		{
+			var dataIndx = col.dataIndx;
+
+			if(dataIndx.substring(0,5) == 'hours')
+			{
+				$j.extend(col,{
+					render:function(ui)
+					{
+						if(!ui.rowData.isTotal && parseFloat(ui.rowData[dataIndx]) == +0) return '-';
+						else return accounting.formatNumber(ui.rowData[dataIndx]);
+					}
+				});
+			}
+			else if(dataIndx == 'timeCardDate')
+				col.filter = { type: 'textbox', condition: "between", init: pqDatePicker, listeners: ['change'] };  
+		});
+
+		var $gridDiv = $j('#grid');
+
+		$gridDiv.pqGrid(gridObj);
+		gGrid.appendExportLink($gridDiv);
+		//initPayrollReportBtn($gridDiv);
+
+		$gridDiv.on('pqgridrefresh', function(event, ui)
+		{
+			gGrid.refreshTotal($j(this),ui.pageData);
+		});
+	}
+
+	function initPayrollReportBtn(gridDiv){
+
+		var showDollars = {!$Permission.ProjectPageTimeCardLedgerDollarsView};
+		if(!showDollars) return;
+
+		var btn = $j('<input type="button" class="btn" value="Create Payroll Report">');
+		btn.click(launchDialog_PayrollReport);
+
+		var gridTitle = gridDiv.find('div.pq-grid-title');
+		gridTitle.append('&nbsp;&nbsp;&nbsp;');
+		gridTitle.append(btn);
+	}
+
+	function refreshGrid(){
+
+		var $gridDiv = $j('#grid');
+		$gridDiv.pqGrid('showLoading');
+
+		Visualforce.remoting.Manager.invokeAction(
+			'{!$RemoteAction.gcProject_TimeCardLedger.retrieveTimeCardLedger}',
+			'{!AcctSeed__Project__c.Id}',
+			function(result,event){
+				if(event.status)
+				{
+					gGrid.refreshGrid_callback($gridDiv,result);
+				}
+				else 
+				{
+					alert(event.message);
+				}
+				$gridDiv.pqGrid('hideLoading');
+			},
+			{buffer:true, escape:true, timeout:120000});
+	}
+
+	function launchDialog_PayrollReport(){
+
+		var firstCertifiedPeriod = '{!AcctSeed__Project__c.First_Certified_Period__c}';
+		if(!firstCertifiedPeriod){
+			alert('Please specify a First Certified Period on the project.');
+			return;
+		}
+
+		var dlgDiv = $j('<div id="dlgPayrollReport" style="z-index:100 !important;"></div>');
+
+		var markup = '';
+		markup += '<div id="gridTimeCardPeriod"></div>';
+
+		dlgDiv.append($j(markup));
+
+		dlgDiv.dialog({
+			autoOpen: false,
+			height: 'auto',
+			width: 680,
+			modal: true,
+			position:{my:'center top', at:'center top', of:'#grid'},
+			close:function(){dlgDiv.dialog('destroy'); dlgDiv.remove();},
+			open:function(){},
+			title: 'Payroll Report',
+			buttons: [
+					{text: "Preview Report", click: previewPayrollReport}
+				]
+		});
+
+		dlgDiv.dialog('open');
+		initGrid_PayrollReport();
+		refreshGrid_PayrollReport();
+	}
+
+	function initGrid_PayrollReport(){
+		var gridObj = {
+			title:"Time Card Periods",
+			collapsible:{on:false,collapsed:false,toggle:false},
+			columnTemplate: {sortable:false, sorting:'local'},
+			dataModel:{data:[], sorting:'local', location:'local', sortDir:['down'], sortIndx:['tcpName']}, 
+			dragColumns:{enabled:false},
+			editable:false,
+			filterModel:{on:true, mode:'AND', header:true},
+			freezeCols:0,
+			freezeRows:0,
+			height:150,
+			historyModel:{on:false},
+			hoverMode:'row',
+			hwrap:false,
+			numberCell:{show:false},
+			pageModel: {type:null},
+			pasteModel:{on:false},
+			resizable: true,
+			roundCorners: false,
+			scrollModel: {autoFit:true},
+			selectionModel: { type: 'row', mode:'single'},
+			showBottom:false,
+			showHeader:true,
+			showTitle:false,
+			showTop:false,
+			showToolbar:false,
+			sortable:true,
+			swipeModel:{on:false},
+			virtualX: false,
+			//virtualXHeader: false,
+			virtualY: false,
+			width:'auto',
+			wrap:false};
+
+		gridObj.colModel=[
+			{dataIndx:'tcpName', title:'Period', gFilter:'text'},
+			{dataIndx:'tcpStartDate', title:'Start Date', dataType:'date'},
+			{dataIndx:'tcpEndDate', title:'End Date', dataType:'date'}
+			// {dataIndx:"scrollSpacer", minWidth:15, maxWidth:15}
+		];
+
+		gGrid.initFormat(gridObj.colModel);
+		gGrid.initFilter(gridObj.colModel);
+
+		// $j.each(gridObj.colModel, function(i,col)
+		// {
+		// 	var dataIndx = col.dataIndx;
+
+		// 	if(dataIndx.substring(0,5) == 'hours')
+		// 	{
+		// 		$j.extend(col,{
+		// 			render:function(ui)
+		// 			{
+		// 				if(!ui.rowData.isTotal && parseFloat(ui.rowData[dataIndx]) == +0) return '-';
+		// 				else return accounting.formatNumber(ui.rowData[dataIndx]);
+		// 			}
+		// 		});
+		// 	}
+		// 	else if(dataIndx == 'timeCardDate')
+		// 		col.filter = { type: 'textbox', condition: "between", init: pqDatePicker, listeners: ['change'] };  
+		// });
+
+		var $gridDiv = $j('#gridTimeCardPeriod');
+
+		$gridDiv.pqGrid(gridObj);
+
+		$gridDiv.on('pqgridrefresh', function(event, ui)
+		{
+			gGrid.refreshTotal($j(this),ui.pageData);
+		});
+	}
+
+	function refreshGrid_PayrollReport(){
+
+		var firstCertifiedPeriod = '{!AcctSeed__Project__c.First_Certified_Period__c}';
+		if(!firstCertifiedPeriod) return;
+
+		var gridDiv = $j('#gridTimeCardPeriod');
+		gridDiv.pqGrid('showLoading');
+
+		Visualforce.remoting.Manager.invokeAction(
+			'{!$RemoteAction.gcProject_TimeCardLedger.retrieveTimeCardPeriods}', firstCertifiedPeriod,
+			function(result,event){
+				if(event.status)
+				{
+					gGrid.refreshGrid_callback(gridDiv,result);
+				}
+				else 
+				{
+					alert(event.message);
+				}
+				gridDiv.pqGrid('hideLoading');
+			},
+			{buffer:true, escape:true, timeout:120000});
+	}
+
+	function previewPayrollReport(){
+		var gridDiv = $j('#gridTimeCardPeriod');
+		var selection = gridDiv.pqGrid('selection', { type: 'row', method: 'getSelection'});
+		if (selection.length == 0){
+			alert('Please select a Time Card Period.');
+			return;
+		}
+
+		var tcpId = selection[0].rowData.tcpId;
+		var projectId = '{!AcctSeed__Project__c.Id}';
+
+		var url = '';
+		url += '/apex/gpCertifiedPayroll';
+		url += '?idProject=' + projectId;
+		url += '&idTimeCardPeriod=' + tcpId;
+		window.open(url, '_blank');
+
+		// var dlgDiv = $j('#dlgPayrollReport');
+		// dlgDiv.dialog('close');
+	}
+
+</script>
+</apex:page>

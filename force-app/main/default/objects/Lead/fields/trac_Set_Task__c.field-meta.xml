@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>trac_Set_Task__c</fullName>
+    <externalId>false</externalId>
+    <formula>HYPERLINK(&quot;/00T/e?&amp;who_id=&quot; + Id + &quot;&amp;retURL=/&quot; + Id, IMAGE(&quot;/resource/trac_QuickActions/Notes.png&quot;,&quot;Task&quot;) , &quot;_parent&quot;)</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Set Task</label>
+    <required>false</required>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

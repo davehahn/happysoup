@@ -1,0 +1,61 @@
+<aura:component controller="BusinessOffice_Controller" implements="force:appHostable,flexipage:availableForAllPageTypes,force:hasRecordId">
+
+  <ltng:require scripts="{!join(',', $Resource.Libraries +'/js/LightningApex.js',
+                                     $Resource.Libraries +'/js/LightningUtils.js') }"
+                afterScriptsLoaded="{!c.doInit}" />
+
+  <aura:attribute name="recordId" type="String" />
+  <aura:attribute name="pricebookId" type="String" />
+  <aura:attribute name="pricebookName" type="String" />
+  <aura:attribute name="loading" type="Boolean" default="true" />
+  <aura:attribute name="canViewInsuranceDocs" type="Boolean" default="false" />
+
+  <aura:handler event="force:refreshView" action="{!c.doInit}" />
+
+  <div class="slds-card">
+
+    <aura:if isTrue="{!v.loading}">
+      <div class="slds-spinner_container">
+        <div role="status" class="slds-spinner slds-spinner_medium">
+          <span class="slds-assistive-text">Loading</span>
+          <div class="slds-spinner__dot-a"></div>
+          <div class="slds-spinner__dot-b"></div>
+        </div>
+      </div>
+    </aura:if>
+
+    <aura:if isTrue="{!not(v.loading)}">
+      <lightning:tabset variant="scoped">
+
+        <lightning:tab label="Financing &amp; Insurance" onactive="{!c.reInitInsurance}">
+          <c:BusinessOffice_FI_dh recordId="{!v.recordId}"
+                                  pricebookId="{!v.pricebookId}"
+                                  pricebookName="{!v.pricebookName}"
+                                  aura:id="fi_CMP" />
+        </lightning:tab>
+
+         <lightning:tab label="PPSA Fee">
+          <c:BusinessOffice_PPSA_dh recordId="{!v.recordId}"
+                                    pricebookId="{!v.pricebookId}"
+                                    pricebookName="{!v.pricebookName}" />
+        </lightning:tab>
+
+        <lightning:tab label="Warranty &amp; Service">
+          <c:BusinessOffice_WarrService_dh recordId="{!v.recordId}"
+                                           pricebookId="{!v.pricebookId}"
+                                           pricebookName="{!v.pricebookName}" />
+        </lightning:tab>
+
+        <aura:if isTrue="{!v.canViewInsuranceDocs}">
+          <lightning:tab label="Insurance Documents" onactive="{!c.reInitInsuranceDocs}">
+            <c:arInsuranceDocuments recordId="{!v.recordId}"
+                                    aura:id="insurDocs_CMP" />
+          </lightning:tab>
+        </aura:if>
+
+      </lightning:tabset>
+    </aura:if>
+
+  </div>
+
+</aura:component>

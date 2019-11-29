@@ -1,0 +1,116 @@
+<apex:component >
+
+<!-- +++++++++++++++++ Trade In Edit Form Row ++++++++++++++++++++++++ -->
+<script id="tradeInItemEditTemplate" type="text/handlebars-template">
+  <tr id="tradeInItemEditForm">
+    <td>
+      <input type="text" class="tradeInItemField" data-field-name="modelYear" style="width:95%;margin:0;" value="{{this.modelYear}}">
+      </input>
+      <input type="hidden" class="tradeInItemField" data-field-name="Id" value="{{this.Id}}"></input>
+    </td>
+    <td>
+      <input type="text" class="tradeInItemField" data-field-name="make" style="width:95%;margin:0;" value="{{this.make}}">
+      </input>
+    </td>
+    <td>
+      <input type="text" class="tradeInItemField" data-field-name="model" style="width:95%;margin:0;" value="{{this.model}}">
+      </input>
+    </td>
+    <td>
+      <input type="text" class="tradeInItemField" data-field-name="serialNumber" style="width:95%;margin:0;" value="{{this.serialNumber}}">
+      </input>
+    </td>
+    <td>
+      <a href="#" class="fd_button tiny invert cancelTradeInItemEdit" style="display:table-cell;float:right;margin:0">
+        <i class="fa fa-times" style="padding:0;font-size:1rem;"></i>
+      </a>
+      <a href="#" class="fd_button success tiny invert updateTradeInItemEdit" style="display:table-cell;float:right;margin:0 10px 0 0">
+        <i class="fa fa-save" style="padding:0;font-size:1rem;"></i>
+      </a>
+    </td>
+  </tr>
+</script>
+<!-- ====================== /Trade In Edit Form Row ========================= -->
+
+<!-- +++++++++++++++++++ Trade In Item Table Row ++++++++++++++++++++++++++++ -->
+<script id="tradeInItemRow" type="text/handlebars-template">
+  <tr>
+    <td class="data_cell" data-field-name="modelYear" data-field-value="{{this.modelYear}}">{{this.modelYear}}</td>
+    <td class="data_cell" data-field-name="make" data-field-value="{{this.make}}">{{this.make}}</td>
+    <td class="data_cell" data-field-name="model" data-field-value="{{this.model}}">{{this.model}}</td>
+    <td class="data_cell" data-field-name="serialNumber" data-field-value="{{this.serialNumber}}">{{this.serialNumber}}</td>
+    <td>
+      <a href="#" class="fd_button alert tiny invert removeTradeInItem" style="display:table-cell;float:right;margin:0" data-id="{{this.id}}">
+        <i class="fa fa-trash" style="padding:0;font-size:1rem;"></i>
+      </a>
+      <a href="#" class="fd_button tiny invert editTradeInItem" style="display:table-cell;float:right;margin:0 10px 0 0" data-id="{{this.Id}}">
+        <i class="fa fa-edit" style="padding:0;font-size:1rem;"></i>
+      </a>
+    </td>
+  </tr>
+</script>
+<!-- ===================== /Trade In Item Table Row =========================== -->
+
+<!-- ++++++++++++++++++++++++ Discount Edit Form Row ++++++++++++++++++++++++++ -->
+<script id="discountItemEditFormTemplate" type="text/handlebars-template">
+  <tr id="discountItemEditForm">
+    <td>
+      <input type="text"
+             class="discountItemField"
+             data-field-name="description"
+             style="width:95%;margin:0;"
+             value="{{this.description}}"
+             tabindex="1"></input>
+      <input type="hidden" class="discountItemField" data-field-name="id" value="{{this.id}}" />
+    </td>
+    <td>
+      <div class="row collapse">
+        <div class="large-2 column">
+          <span class="prefix">
+            <i class="fa fa-dollar"></i>
+          </span>
+        </div>
+        <div class="large-10 column">
+          <input type="text"
+                 class="discountItemField mustBeNumber"
+                 data-field-name="amount"
+                 style="width:95%;margin:0;"
+                 value="{{this.amount}}"
+                 tabindex="2"></input>
+        </div>
+      </div>
+    </td>
+    <td>
+      <a href="#" class="fd_button tiny invert cancelEditDiscountItem"
+                  style="display:table-cell;float:right;margin:0"
+                  tabindex="4">
+        <i class="fa fa-times" style="padding:0;font-size:1rem;"></i>
+      </a>
+      <a href="#" class="fd_button success tiny invert updateDiscountItem"
+                  style="display:table-cell;float:right;margin:0 10px 0 0"
+                  tabindex="3">
+        <i class="fa fa-save" style="padding:0;font-size:1rem;"></i>
+      </a>
+    </td>
+  </tr>
+</script>
+<!-- ======================== /Discount Edit Form Row ========================= -->
+
+<!-- ++++++++++++++++++++++++ Discount Item Table Row +++++++++++++++++++++++++ -->
+<script id="discountItemRowTemplate" type="text/handlebars-template">
+  <tr>
+    <td class="data_cell" data-field-name="description" data-field-value="{{this.description}}">{{this.description}}</td>
+    <td class="data_cell" data-field-name="amount" data-field-value="{{this.amount}}">$ {{this.amount}}</td>
+    <td>
+      <a href="#" class="fd_button alert tiny invert removeDiscountItem" style="display:table-cell;float:right;margin:0" data-id="{{this.id}}">
+        <i class="fa fa-trash" style="padding:0;font-size:1rem;"></i>
+      </a>
+      <a href="#" class="fd_button tiny invert editDiscountItem" style="display:table-cell;float:right;margin:0 10px 0 0" data-id="{{this.Id}}">
+        <i class="fa fa-edit" style="padding:0;font-size:1rem;"></i>
+      </a>
+    </td>
+  </tr>
+</script>
+<!-- ======================= /Discount Item Table Row ========================= -->
+
+</apex:component>

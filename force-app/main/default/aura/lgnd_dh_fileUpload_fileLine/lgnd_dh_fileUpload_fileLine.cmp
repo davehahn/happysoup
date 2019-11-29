@@ -1,0 +1,26 @@
+<aura:component controller="lgnd_FileUploadController" access="public">
+
+  <aura:attribute name="file" type="object" />
+  <aura:attribute name="uploadActive" type="Boolean" default="false" />
+  <aura:attribute name="amountComplete" type="Integer" default="0" />
+
+  <aura:method name="doUpload" access="public">
+    <aura:attribute name="objectId" type="String" />
+  </aura:method>
+
+  <aura:registerEvent name="uploadComplete"
+                      type="c:lgnd_dh_fileUpload_fileLine_Complete_Event" />
+
+  <aura:if isTrue="{!v.uploadActive}">
+    <div class="{! 'slds-progress-bar
+                    slds-progress-bar_large' +
+                    if( equals(v.amountComplete, 100), ' complete', '')}"
+         role="progressbar">
+      <span class="slds-progress-bar__value" style="{! 'width:' + v.amountComplete + '%;'}">
+      </span>
+    </div>
+    <aura:set attribute="else">
+      <span>{!v.file.name}</span>
+    </aura:set>
+  </aura:if>
+</aura:component>

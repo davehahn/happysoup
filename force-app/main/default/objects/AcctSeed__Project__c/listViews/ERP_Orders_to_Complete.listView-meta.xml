@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>ERP_Orders_to_Complete</fullName>
+    <columns>NAME</columns>
+    <columns>AcctSeedERP__Work_Order_Number__c</columns>
+    <columns>RECORDTYPE</columns>
+    <columns>AcctSeed__Account__c</columns>
+    <columns>GMBLASERP__Warehouse__c</columns>
+    <columns>Serial_Number__c</columns>
+    <columns>Grand_Total__c</columns>
+    <columns>AcctSeed__Status__c</columns>
+    <columns>CREATED_DATE</columns>
+    <columns>LAST_UPDATE</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>CREATED_DATE</field>
+        <operation>lessOrEqual</operation>
+        <value>6/4/2017 12:00 AM</value>
+    </filters>
+    <filters>
+        <field>AcctSeed__Status__c</field>
+        <operation>notEqual</operation>
+        <value>Completed</value>
+    </filters>
+    <filters>
+        <field>RECORDTYPE</field>
+        <operation>equals</operation>
+        <value>AcctSeed__Project__c.BoatSale</value>
+    </filters>
+    <label>ERP Orders to Complete</label>
+    <language>en_US</language>
+</ListView>

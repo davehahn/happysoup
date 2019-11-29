@@ -1,0 +1,844 @@
+<apex:component controller="InsurancePDFComp_Controller">
+    <div class="header">
+    	<div>&nbsp;</div>
+	    <div>
+        	<div style="float: left; padding-right: 20px;"><br/><img src="{!URLFOR($Resource.InsuranceDocumentResources, 'img/advantage-finan-group.jpg')}" title="Advantage Finance Group Logo" width="140" /></div>
+        	<div style="padding-top: 8px;">
+    			<div class="headerTitleLeft">ADVANTAGE</div>
+    			<div class="headerSubTitle">Insurance Application and/or Certificate of Insurance</div>
+    		</div>
+    	</div>
+    </div>
+	<div class="footer">
+        <div style="float: left;" class="footerText">
+        	FORM C7742E LASER LTR (JAN/2017) <span style="margin-left: 70px;" class="center">iA Financial Group is a business name and trademark of Industrial Alliance Insurance and Financial Services Inc.</span>
+        </div>
+        <div class="footerText" style="float: right;">Page&nbsp;<span class="pagenumber" />/<span class="pagecount" /></div>
+    </div>
+    <div class="form-content">
+    	<table cellpadding="0" cellspacing="0" border="0" class="first-form" width="100%">
+    		<tr>
+    			<td style="width: 55%; padding-right: 15px; font-size: 0.45em;" class="justifying">
+    				<div><span class="bolder">INSURER:</span> Industrial Alliance Insurance and Financial Services Inc.</div>
+    				<span class="privacy-header bolder">PRIVACY NOTICE:</span>
+    				<span>We will collect and retain all personal information concerning your insurance and claims. The information will be used for purposes of underwriting, marketing, administration and cancellation of your Certificate and investigation of claims. We will only access your file on a need to know basis and it will be kept at 2165 West Broadway, Vancouver, BC, V6B 5H6. It can be reviewed and/or rectified by written request. iA Financial Group, its affiliates and their agents may use and share your personal information with each other so that you can benefit from personalized offers and improved products and services. If you do not wish your information to be shared within the iA Financial Group, please contact the Insurer.</span>
+    			</td>
+    			<td valign="top" align="right">
+    				<table cellpadding="0" cellspacing="0" border="0">
+    					<tr>
+	    					<td style="width: 33%;">
+	    						REQUESTED EFFECTIVE DATE OF INSURANCE
+	    						<div class="form-text">
+	    							<apex:outputText value="{0, date, dd/MM/yyyy}"><apex:param value="{!formData.requestedEffectiveInsuranceDate}" /></apex:outputText>
+	    						</div>
+	    					</td>
+	    					<td style="width: 33%;">
+	    						PLAN
+	    						<div class="form-text">{!formData.advantagePlan}</div>
+	    					</td>
+	    					<td style="width: 33%;">
+	    						CERTIFICATE NO.
+	    						<div class="form-text">LBE{!formData.certificateNo}</div>
+	    					</td>
+	    				</tr>
+    				</table>
+    			</td>
+    		</tr>
+    	</table>
+    	<br/>
+    	<table cellpadding="0" cellspacing="0" border="0" class="first-form" width="100%">
+    		<tr>
+    			<td valign="top">
+    				<table cellpadding="0" cellspacing="0" border="0" width="100%">
+    					<tr style="height: 1px !important; visibility: hidden;">
+	    					<td style="width: 25%; height: 1px; padding: 0; margin: 0; border: none;"></td>
+	    					<td style="width: 25%; height: 1px; padding: 0; margin: 0; border: none;"></td>
+	    					<td style="width: 25%; height: 1px; padding: 0; margin: 0; border: none;"></td>
+	    					<td style="width: 25%; height: 1px; padding: 0; margin: 0; border: none;"></td>
+	    				</tr>
+			    		<tr>
+			    			<td colspan="4" class="sectionHeader">GENERAL INFORMATION</td>
+			    		</tr>
+    					<tr>
+	    					<td colspan="2">
+	    						GROUP POLICYHOLDER
+	    						<div class="form-text">{!formData.groupPolicyHolder}</div>
+	    					</td>
+	    					<td>
+	    						RETAILER NO.
+	    						<div class="form-text">{!formData.retailerNo}</div>
+	    					</td>
+	    					<td>
+	    						SOFTWARE COMPANY
+	    						<div class="form-text">{!formData.softwareCompany}</div>
+	    					</td>
+	    				</tr>
+    					<tr>
+	    					<td>
+	    						STOCK NO.
+	    						<div class="form-text">{!formData.stockNo}</div>
+	    					</td>
+	    					<td>
+	    						VEHICLE IDENTIFICATION NO.
+	    						<div class="form-text">{!formData.vehicleIdentificationNo}</div>
+	    					</td>
+	    					<td colspan="2">
+	    						FOR INTERNAL USE
+	    						<div class="form-text">&nbsp;</div>
+	    					</td>
+	    				</tr>
+    					<tr>
+	    					<td colspan="3" class="noPadMarg noBorder">
+	    						<table width="100%" cellpadding="0" cellspacing="0">
+	    							<tr>
+		    							<td width="45%">
+				    						<div class="form-back-color">DEBTOR SURNAME</div>
+				    						<div class="form-text">{!formData.surnameDebtor}&nbsp;</div>
+				    						<div class="form-xsmall-text">ONE PERSON ONLY</div>
+		    							</td>
+		    							<td width="35%">
+				    						FIRST NAME
+				    						<div class="form-text">{!formData.firstNameDebtor}</div>
+		    							</td>
+		    							<td>
+				    						GENDER
+				    						<div>
+				    							&nbsp;F
+				    							<img src="{!IF(formData.genderDebtor == 'Female',
+				    																 URLFOR($Resource.InsuranceDocumentResources, 'img/checkbox_checked.jpeg'),
+				    																 URLFOR($Resource.InsuranceDocumentResources, 'img/checkbox_unchecked.jpeg') )}" />
+				    							&nbsp;M
+				    							<img src="{!IF(formData.genderDebtor == 'Male',
+				    																 URLFOR($Resource.InsuranceDocumentResources, 'img/checkbox_checked.jpeg'),
+				    																 URLFOR($Resource.InsuranceDocumentResources, 'img/checkbox_unchecked.jpeg') )}" />
+				    						</div>
+		    							</td>
+		    						</tr>
+	    						</table>
+	    					</td>
+	    					<td>
+	    						DATE OF BIRTH
+	    						<div class="form-text"><apex:outputText value="{0, date, dd/MM/yyyy}"><apex:param value="{!formData.birthDateDebtor}" /></apex:outputText></div>
+	    					</td>
+	    				</tr>
+	    				<tr>
+	    					<td style="border-right: none !important;" colspan="2">
+	    						APT./STREET ADDRESS
+	    						<div class="form-text">{!formData.streetAddressDebtor}</div>
+	    					</td>
+	    					<td style="border-left: none !important;" colspan="2" class="noPadMarg">
+	    						<table width="100%" cellpadding="0" cellspacing="0">
+	    							<tr>
+		    							<td class="noBorder" width="70%">
+		    								CITY
+		    								<div class="form-text">{!formData.cityDebtor}</div>
+		    							</td>
+		    							<td class="noBorder" width="15%">
+		    								PROVINCE
+		    								<div class="form-text">{!formData.provinceDebtor}</div>
+		    							</td>
+		    							<td class="noBorder" width="15%">
+		    								POSTAL CODE
+		    								<div class="form-text">{!formData.postalCodeDebtor}</div>
+		    							</td>
+		    						</tr>
+	    						</table>
+	    					</td>
+	    				</tr>
+    					<tr>
+	    					<td>
+	    						TAX EXEMPT - IF APPLICABLE, ATTACH PROOF OF STATUS
+	    						<img src="{!IF(formData.statusCardNoDebtor != '',
+	    																 URLFOR($Resource.InsuranceDocumentResources, 'img/checkbox_checked.jpeg'),
+	    																 URLFOR($Resource.InsuranceDocumentResources, 'img/checkbox_unchecked.jpeg') )}" />
+                                STATUS CARD NO.:<span class="form-text">{!formData.statusCardNoDebtor}</span>
+	    					</td>
+	    					<td>
+	    						TELEPHONE
+	    						<div class="form-text">{!formData.telephoneDebtor}</div>
+	    					</td>
+	    					<td colspan="2">
+	    						EMAIL
+	    						<div class="form-text">{!formData.emailDebtor}</div>
+	    					</td>
+	    				</tr>
+    					<tr>
+    						<td colspan="3" class="noPadMarg noBorder">
+	    						<table width="100%" cellpadding="0" cellspacing="0">
+	    							<tr>
+		    							<td width="45%">
+				    						<div class="form-back-color">CO-DEBTOR SURNAME</div>
+				    						<div class="form-text">{!formData.surnameCoDebtor}&nbsp;</div>
+				    						<div class="form-xsmall-text">ONE PERSON ONLY (MAY BE INSURED EVEN IF DEBTOR IS NOT INSURED)</div>
+		    							</td>
+		    							<td width="35%">
+				    						FIRST NAME
+				    						<div class="form-text">{!formData.firstNameCoDebtor}</div>
+		    							</td>
+		    							<td>
+				    						GENDER
+				    						<div>
+				    							&nbsp;F
+				    							<img src="{!IF(formData.genderCoDebtor == 'Female',
+				    																 URLFOR($Resource.InsuranceDocumentResources, 'img/checkbox_checked.jpeg'),
+				    																 URLFOR($Resource.InsuranceDocumentResources, 'img/checkbox_unchecked.jpeg') )}" />
+				    							&nbsp;M
+				    							<img src="{!IF(formData.genderCoDebtor == 'Male',
+				    																 URLFOR($Resource.InsuranceDocumentResources, 'img/checkbox_checked.jpeg'),
+				    																 URLFOR($Resource.InsuranceDocumentResources, 'img/checkbox_unchecked.jpeg') )}" />
+				    						</div>
+		    							</td>
+		    						</tr>
+	    						</table>
+	    					</td>
+	    					<td>
+	    						DATE OF BIRTH
+	    						<div class="form-text"><apex:outputText value="{0, date, dd/MM/yyyy}"><apex:param value="{!formData.birthDateCoDebtor}" /></apex:outputText></div>
+	    					</td>
+	    				</tr>
+	    				<tr>
+	    					<td style="border-right: none !important;" colspan="2">
+	    						APT./STREET ADDRESS
+	    						<div class="form-text">{!formData.streetAddressCoDebtor}</div>
+	    					</td>
+	    					<td style="border-left: none !important;" colspan="2" class="noPadMarg">
+	    						<table width="100%" cellpadding="0" cellspacing="0">
+	    							<tr>
+		    							<td class="noBorder" width="70%">
+		    								CITY
+		    								<div class="form-text">{!formData.cityCoDebtor}</div>
+		    							</td>
+		    							<td class="noBorder" width="15%">
+		    								PROVINCE
+		    								<div class="form-text">{!formData.provinceCoDebtor}</div>
+		    							</td>
+		    							<td class="noBorder" width="15%">
+		    								POSTAL CODE
+		    								<div class="form-text">{!formData.postalCodeCoDebtor}</div>
+		    							</td>
+		    						</tr>
+	    						</table>
+	    					</td>
+	    				</tr>
+    					<tr>
+	    					<td>
+	    						TAX EXEMPT - IF APPLICABLE, ATTACH PROOF OF STATUS
+	    						<img src="{!IF(formData.statusCardNoCoDebtor != '',
+	    																 URLFOR($Resource.InsuranceDocumentResources, 'img/checkbox_checked.jpeg'),
+	    																 URLFOR($Resource.InsuranceDocumentResources, 'img/checkbox_unchecked.jpeg') )}" />
+                                STATUS CARD NO.:<span class="form-text">{!formData.statusCardNoCoDebtor}</span>
+	    					</td>
+	    					<td>
+	    						TELEPHONE
+	    						<div class="form-text">{!formData.postalCodeCoDebtor}</div>
+	    					</td>
+	    					<td colspan="2">
+	    						EMAIL
+	    						<div class="form-text">{!formData.emailCoDebtor}</div>
+	    					</td>
+	    				</tr>
+	    				<tr>
+	    					<td colspan="4" class="noPadMarg">
+	    						<table width="100%" cellpadding="0" cellspacing="0">
+	    							<tr>
+	    								<td width="35%" class="sectionHeader">FINANCING INFORMATION</td>
+	    								<td class="noBorder">
+	    									<img src="{!IF(formData.purchaseFinanceInformation,
+	    																 URLFOR($Resource.InsuranceDocumentResources, 'img/checkbox_checked.jpeg'),
+	    																 URLFOR($Resource.InsuranceDocumentResources, 'img/checkbox_unchecked.jpeg') )}" />
+	    									<span class="form-medium-text">PURCHASE</span>
+	    								</td>
+	    								<td class="noBorder form-medium-text">
+	    									<img src="{!IF(formData.leaseFinanceInformation,
+	    																 URLFOR($Resource.InsuranceDocumentResources, 'img/checkbox_checked.jpeg'),
+	    																 URLFOR($Resource.InsuranceDocumentResources, 'img/checkbox_unchecked.jpeg') )}" />
+	    									<span class="form-medium-text">LEASE</span>
+	    								</td>
+	    								<td class="noBorder form-medium-text">
+	    									<img src="{!IF(formData.otherFinanceInformation,
+	    																 URLFOR($Resource.InsuranceDocumentResources, 'img/checkbox_checked.jpeg'),
+	    																 URLFOR($Resource.InsuranceDocumentResources, 'img/checkbox_unchecked.jpeg') )}" />
+	    									<span class="form-medium-text">OTHER</span><span class="underliner">&nbsp;{!formData.otherFinanceInformationName}&nbsp;</span>
+	    								</td>
+	    							</tr>
+	    						</table>
+	    					</td>
+	    				</tr>
+	    				<tr>
+	    					<td colspan="2">
+	    						FINANCIAL INSTITUTION NAME
+	    						<div class="form-text">{!formData.financialInstitution}</div>
+	    					</td>
+	    					<td colspan="2"><div class="form-back-color">FOR INTERNAL USE</div></td>
+	    				</tr>
+	    				<tr>
+	    					<td style="border-right: none !important;" colspan="2">
+	    						STREET ADDRESS
+	    						<div class="form-text">{!formData.financialInstitutionStreet}</div>
+	    					</td>
+	    					<td style="border-left: none !important;" colspan="2" class="noPadMarg">
+	    						<table width="100%" cellpadding="0" cellspacing="0">
+	    							<tr>
+		    							<td class="noBorder" width="70%">
+		    								CITY
+		    								<div class="form-text">{!formData.financialInstitutionCity}</div>
+		    							</td>
+		    							<td class="noBorder" width="15%">
+		    								PROVINCE
+		    								<div class="form-text">{!formData.financialInstitutionState}</div>
+		    							</td>
+		    							<td class="noBorder" width="15%">
+		    								POSTAL CODE
+		    								<div class="form-text">{!formData.financialInstitutionPostalCode}</div>
+		    							</td>
+		    						</tr>
+	    						</table>
+	    					</td>
+	    				</tr>
+	    				<tr>
+	    					<td>
+	    						FIRST PAYMENT DATE
+	    						<div class="form-text"><apex:outputText value="{0, date, dd/MM/yyyy}"><apex:param value="{!formData.firstPaymentDate}" /></apex:outputText></div>
+	    					</td>
+	    					<td>
+	    						FINANCE TERM IN MONTHS
+	    						<div class="form-text"><apex:outputText value="{0,number,###,###,##0}"><apex:param value="{!formData.financeTerm}" /></apex:outputText></div>
+	    						<div class="form-xsmall-text">MAXIMUM: 240 MONTHS</div>
+	    					</td>
+	    					<td>
+	    						AMORTIZATION TERM IN MONTHS
+	    						<div class="form-text"><apex:outputText value="{0,number,###,###,##0}"><apex:param value="{!formData.amortizationTerm}" /></apex:outputText></div>
+	    						<div class="form-xsmall-text">MAXIMUM: 240 MONTHS</div>
+	    					</td>
+	    					<td>
+	    						INTEREST RATE
+	    						<div style="" class="form-text"><apex:outputText value="{0,number,###,###,##0.00}"><apex:param value="{!formData.interestRate}" /></apex:outputText>%</div>
+	    					</td>
+	    				</tr>
+	    				<tr>
+	    					<td>
+	    						MONTHLY PAYMENT
+	    						<div class="form-text">$<apex:outputText value="{0,number,###,###,##0.00}"><apex:param value="{!formData.monthlyPayment_wo_Insurance}" /></apex:outputText></div>
+	    						<div class="form-xsmall-text">EXCLUDING INSURANCE</div>
+	    					</td>
+	    					<td>
+	    						FINANCED AMOUNT
+	    						<div class="form-text">$<apex:outputText value="{0,number,###,###,##0.00}"><apex:param value="{!formData.preInsuranceAmount}" /></apex:outputText></div>
+	    						<div class="form-xsmall-text">EXCLUDING INSURANCE</div>
+	    					</td>
+	    					<td>
+	    						TOTAL AMOUNT OF LOAN INSURED
+	    						<div class="form-text">$<apex:outputText value="{0,number,###,###,##0.00}"><apex:param value="{!formData.financedAmountWithIntrest}" /></apex:outputText></div>
+	    						<div class="form-xsmall-text">INCLUDING INSURANCE, INTEREST AND APPLICABLE TAXES</div>
+	    					</td>
+	    					<td>
+	    						RESIDUAL VALUE (IF APPLICABLE)
+	    						<div class="form-text">$<apex:outputText value="{0,number,###,###,##0.00}"><apex:param value="{!formData.residualValue}" /></apex:outputText></div>
+	    						<div class="form-xsmall-text">INCLUDING SALES TAX, IF APPLICABLE</div>
+	    					</td>
+	    				</tr>
+	    				<tr>
+	    					<td colspan="4" class="noPadMarg">
+	    						<table width="100%" cellpadding="0" cellspacing="0">
+	    							<tr>
+	    								<td width="20%" class="sectionHeader">LIFE INSURANCE</td>
+	    								<td class="no-left no-right">
+			                  <div class="form-medium-text">INSURED:
+			                    &nbsp;
+			                    <img src="{!IF(formData.debtorOnlyLIC,
+																 URLFOR($Resource.InsuranceDocumentResources, 'img/checkbox_checked.jpeg'),
+																 URLFOR($Resource.InsuranceDocumentResources, 'img/checkbox_unchecked.jpeg') )}" />
+			                    &nbsp;
+			                    Debtor
+			                  </div>
+			                </td>
+			                <td class="no-left no-right">
+			                  <div class="form-medium-text">
+			                    &nbsp;
+			                    <img src="{!IF(formData.coDebtorOnlyLIC,
+																 URLFOR($Resource.InsuranceDocumentResources, 'img/checkbox_checked.jpeg'),
+																 URLFOR($Resource.InsuranceDocumentResources, 'img/checkbox_unchecked.jpeg') )}" />
+			                    &nbsp;
+			                    Co–Debtor
+			                  </div>
+			                </td>
+			                <td class="no-left no-right">
+			                  <div class="form-medium-text">
+			                    &nbsp;
+			                    <img src="{!IF(formData.bothLIC,
+																 URLFOR($Resource.InsuranceDocumentResources, 'img/checkbox_checked.jpeg'),
+																 URLFOR($Resource.InsuranceDocumentResources, 'img/checkbox_unchecked.jpeg') )}" />
+			                    &nbsp;Both
+			                  </div>
+			                </td>
+				    					<td class="no-left" style="padding: 0 !important; margin:0 !important; text-align: center; height: 25px; vertical-align: bottom !important;">
+											  <span class="initials">DEBTOR INITIALS</span>&nbsp;&nbsp;&nbsp;&nbsp;
+											  <span class="initials">CO-DEBTOR INITIALS</span>
+				    					</td>
+				    					<td>
+				    						INSURANCE TERM
+				    						<div class="form-text"><apex:outputText value="{0,number,###,###,##0}"><apex:param value="{!formData.insuranceTermLIC}" /></apex:outputText>&nbsp;</div>
+				    						<div class="form-xsmall-text">MONTHS</div>
+				    					</td>
+				    					<td>
+				    						EXPIRY DATE OF INSURANCE
+				    						<div class="form-text"><apex:outputText value="{0, date, dd/MM/yyyy}"><apex:param value="{!formData.expiryInsuranceDate}" /></apex:outputText></div>
+				    					</td>
+			  						</tr>
+						  		</table>
+						    </td>
+	    				</tr>
+	    				<tr>
+	    					<td colspan="4" class="noPadMarg">
+	    						<table width="100%" cellpadding="0" cellspacing="0">
+	    							<tr>
+	    								<td style="height: 15px;" class="noBorder" colspan="4">
+	    									<div class="form-small-text">SELECT ONE OPTION (If Amortization or Finance Term is greater than insurance term, select “Plus” insurance)</div>
+	    								</td>
+	    							</tr>
+	    							<tr>
+	    								<td class="noBorder" width="25%">
+	    									&nbsp;
+						                    <img src="{!IF( AND( AND( !formData.insuranceDeclinedLIC, formData.insuranceDeclinedLOE), !formData.insuranceIsTruncated),
+	    																 URLFOR($Resource.InsuranceDocumentResources, 'img/checkbox_checked.jpeg'),
+	    																 URLFOR($Resource.InsuranceDocumentResources, 'img/checkbox_unchecked.jpeg') )}" />
+						                    &nbsp;LIFE INSURANCE ONLY
+	    								</td>
+	    								<td class="noBorder" width="25%">
+						                    &nbsp;
+						                    <img src="{!IF( AND( AND( !formData.insuranceDeclinedLIC, !formData.insuranceDeclinedLOE), !formData.insuranceIsTruncated),
+	    																 URLFOR($Resource.InsuranceDocumentResources, 'img/checkbox_checked.jpeg'),
+	    																 URLFOR($Resource.InsuranceDocumentResources, 'img/checkbox_unchecked.jpeg') )}" />
+						                    &nbsp;LIFE + INVOLUNTARY UNEMPLOYMENT INSURANCE
+	    								</td>
+	    								<td class="noBorder" width="20%">
+						                    &nbsp;
+						                    <img src="{!IF(AND( AND( !formData.insuranceDeclinedLIC, formData.insuranceDeclinedLOE), formData.insuranceIsTruncated),
+	    																 URLFOR($Resource.InsuranceDocumentResources, 'img/checkbox_checked.jpeg'),
+	    																 URLFOR($Resource.InsuranceDocumentResources, 'img/checkbox_unchecked.jpeg') )}" />
+						                    &nbsp;LIFE PLUS INSURANCE ONLY
+	    								</td>
+	    								<td class="noBorder" width="30%">
+						                    &nbsp;
+						                    <img src="{!IF( AND( AND( !formData.insuranceDeclinedLIC, !formData.insuranceDeclinedLOE), formData.insuranceIsTruncated),
+	    																 URLFOR($Resource.InsuranceDocumentResources, 'img/checkbox_checked.jpeg'),
+	    																 URLFOR($Resource.InsuranceDocumentResources, 'img/checkbox_unchecked.jpeg') )}" />
+						                    &nbsp;LIFE PLUS + INVOLUNTARY UNEMPLOYMENT INSURANCE
+	    								</td>
+	    							</tr>
+	    						</table>
+	    					</td>
+	    				</tr>
+	    				<tr>
+	    					<td>
+	    						INSURED FINANCED AMOUNT
+	    						<div class="form-text">$<apex:outputText value="{0,number,###,###,##0.00}"><apex:param value="{!formData.insuredFinancedAmountLIC}" /></apex:outputText>&nbsp;</div>
+	    						<div class="form-xsmall-text">EXCLUDING INTEREST</div>
+	    					</td>
+	    					<td>
+	    						INSURED RESIDUAL VALUE
+	    						<div class="form-text">$<apex:outputText value="{0,number,###,###,##0.00}"><apex:param value="{!formData.insuredResidualValueLIC}" /></apex:outputText>&nbsp;</div>
+	    						<div class="form-xsmall-text">IF APPLICABLE</div>
+	    					</td>
+	    					<td>
+	    						INSURANCE PREMIUM
+	    						<div class="form-text">$<apex:outputText value="{0,number,###,###,##0.00}"><apex:param value="{!formData.lifePremiumLIC}" /></apex:outputText>&nbsp;</div>
+	    					</td>
+	    					<td>
+	    						RESIDUAL INSURANCE PREMIUM
+	    						<div class="form-text">$<apex:outputText value="{0,number,###,###,##0.00}"><apex:param value="{!formData.residualLifePremiumLIC}" /></apex:outputText>&nbsp;</div>
+	    						<div class="form-xsmall-text">IF APPLICABLE</div>
+	    					</td>
+	    				</tr>
+	    				<tr>
+	    					<td colspan="4" class="noPadMarg">
+	    						<table width="100%" cellpadding="0" cellspacing="0">
+	    							<tr>
+				    					<td>
+				    						INVOLUNTARY UNEMPLOYMENT WAITING PERIOD (IF SELECTED)
+				    						<apex:outputPanel rendered="{! !formData.insuranceDeclinedLOE}">
+				    							<div class="form-text">
+				    								{!formData.waitingPeriodLOE}-DAY {!formData.typeWaitingPeriodLOE}</div>
+				    						</apex:outputPanel>
+				    					</td>
+				    					<td>
+				    						<div>INVOLUNTARY UNEMPLOYMENT MAXIMUM NUMBER OF INSURED MONTHLY PAYMENTS (IF SELECTED)</div>
+				    						<div>
+				    							SELECT ONE OPTION:
+				    							&nbsp;
+				    							<img src="{!IF(formData.insuredMonthlyPaymentLOE = 3,
+	    																 URLFOR($Resource.InsuranceDocumentResources, 'img/checkbox_checked.jpeg'),
+	    																 URLFOR($Resource.InsuranceDocumentResources, 'img/checkbox_unchecked.jpeg') )}" />
+						                    	&nbsp;3
+				    							<img src="{!IF(formData.insuredMonthlyPaymentLOE = 6,
+	    																 URLFOR($Resource.InsuranceDocumentResources, 'img/checkbox_checked.jpeg'),
+	    																 URLFOR($Resource.InsuranceDocumentResources, 'img/checkbox_unchecked.jpeg') )}" />
+						                    	&nbsp;6
+				    						</div>
+				    					</td>
+				    					<td>
+				    						INVOLUNTARY UNEMPLOYMENT INSURED MONTHLY PAYMENT (IF SELECTED)
+				    						<div class="form-text">$<apex:outputText value="{0,number,###,###,##0.00}"><apex:param value="{!formData.monthlyPayment}" /></apex:outputText>&nbsp;</div>
+				    						<div class="form-xsmall-text">INCLUDING INSURANCE, INTEREST AND APPLICABLE TAXES</div>
+				    					</td>
+				    				</tr>
+				    			</table>
+			    			</td>
+	    				</tr>
+	    				<tr>
+	    					<td colspan="4" class="noPadMarg form-back-color" style="height: 20px;">
+	    						<div class="form-xsmall-text">&nbsp;Maximum Amount of Insurance (Insured Financed Amount plus Insured Residual Value): $1,000,000 (ages 18-55), $250,000 (ages 56-70). If an option with Involuntary Unemployment is selected, Maximum Amount of Insurance (Insured Monthly Payment): $5,000/month (ages 18-70).&nbsp;</div><div class="form-xsmall-text">
+	    						&nbsp;Maximum Insurance term for Life: 180 months. Maximum Insurance Term for Life and Involuntary Unemployment combined: 120 months. Minimum Insurance Premium (including residual Insurance Term): $75&nbsp;</div>
+	    					</td>
+	    				</tr>
+	    				<tr>
+	    					<td colspan="4" class="noPadMarg">
+	    						<table width="100%" cellpadding="0" cellspacing="0">
+	    							<tr>
+	    								<td width="20%" class="sectionHeader">CRITICAL ILLNESS (CI) INSURANCE</td>
+	    								<td class="no-left no-right">
+						                  <div class="form-medium-text">INSURED:
+						                    &nbsp;
+						                    <img src="{!IF(formData.debtorOnlyCIC,
+	    																 URLFOR($Resource.InsuranceDocumentResources, 'img/checkbox_checked.jpeg'),
+	    																 URLFOR($Resource.InsuranceDocumentResources, 'img/checkbox_unchecked.jpeg') )}" />
+						                    &nbsp;
+						                    Debtor
+						                  </div>
+						                </td>
+						                <td class="no-left no-right">
+						                  <div class="form-medium-text">
+						                    &nbsp;
+						                    <img src="{!IF(formData.coDebtorOnlyCIC,
+																			 URLFOR($Resource.InsuranceDocumentResources, 'img/checkbox_checked.jpeg'),
+																			 URLFOR($Resource.InsuranceDocumentResources, 'img/checkbox_unchecked.jpeg') )}" />
+						                    &nbsp;
+						                    Co–Debtor
+						                  </div>
+						                </td>
+						                <td class="no-left no-right">
+						                  <div class="form-medium-text">
+						                    &nbsp;
+						                    <img src="{!IF(formData.bothCIC,
+	    																 URLFOR($Resource.InsuranceDocumentResources, 'img/checkbox_checked.jpeg'),
+	    																 URLFOR($Resource.InsuranceDocumentResources, 'img/checkbox_unchecked.jpeg') )}" />
+						                    &nbsp;Both
+						                  </div>
+						                </td>
+				    					<td class="no-left" style="padding: 0 !important; margin:0 !important; text-align: center; height: 25px; vertical-align: bottom !important;">
+											  <span class="initials">DEBTOR INITIALS</span>&nbsp;&nbsp;&nbsp;&nbsp;
+											  <span class="initials">CO-DEBTOR INITIALS</span>
+				    					</td>
+				    					<td>
+				    						INSURANCE TERM
+				    						<div class="form-text"><apex:outputText value="{0,number,###,###,##0}"><apex:param value="{!formData.insuranceTermCIC}" /></apex:outputText>&nbsp;</div>
+				    						<div class="form-xsmall-text">MONTHS</div>
+				    					</td>
+				    					<td>
+				    						EXPIRY DATE OF INSURANCE
+				    						<div class="form-text">
+				    							<apex:outputText value="{0, date, dd/MM/yyyy}"><apex:param value="{!formData.expiryDateLifeCIInsuranceDate}" /></apex:outputText>
+				    						</div>
+				    					</td>
+			  						</tr>
+						  		</table>
+						    </td>
+	    				</tr>
+						<tr>
+							<td colspan="2">
+								<div class="form-small-text">SELECT ONE OPTION (If Amortization or Finance Term is greater than insurance term, select “Plus” insurance)</div>
+								<div>
+									&nbsp;
+									<img src="{!IF( AND( !formData.insuranceDeclinedCIC, !formData.insuranceIsTruncated ),
+	    																 URLFOR($Resource.InsuranceDocumentResources, 'img/checkbox_checked.jpeg'),
+	    																 URLFOR($Resource.InsuranceDocumentResources, 'img/checkbox_unchecked.jpeg') )}" />
+			                    	&nbsp;CI INSURANCE ONLY&nbsp;
+			                    	<img src="{!IF( AND( !formData.insuranceDeclinedCIC, formData.insuranceIsTruncated ),
+	    																 URLFOR($Resource.InsuranceDocumentResources, 'img/checkbox_checked.jpeg'),
+	    																 URLFOR($Resource.InsuranceDocumentResources, 'img/checkbox_unchecked.jpeg') )}" />
+			                    	&nbsp;CI PLUS INSURANCE
+								</div>
+							</td>
+							<td>
+	    						INSURED FINANCED AMOUNT
+	    						<div class="form-text">$<apex:outputText value="{0,number,###,###,##0.00}"><apex:param value="{!formData.insuredFinancedAmountCIC}" /></apex:outputText></div>
+	    						<div class="form-xsmall-text">EXCLUDING INTEREST</div>
+							</td>
+							<td>
+	    						INSURANCE PREMIUM
+	    						<div class="form-text">$<apex:outputText value="{0,number,###,###,##0.00}"><apex:param value="{!formData.ciPremiumCIC}" /></apex:outputText></div>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="2" class="form-back-color">
+								<div class="form-xsmall-text">Maximum Amount of Insurance (Insured Financed Amount plus Insured Residual Value): $500,000 (ages 18-55), $250,000 (ages 56-60). Maximum Insurance term: 180 months. Minimum Insurance Premium (including residual Insurance Term): $75</div>
+							</td>
+							<td>
+	    						INSURED RESIDUAL VALUE
+	    						<div class="form-text">$<apex:outputText value="{0,number,###,###,##0.00}"><apex:param value="{!formData.insuredResidualValueCIC}" /></apex:outputText></div>
+	    						<div class="form-xsmall-text">IF APPLICABLE</div>
+							</td>
+							<td>
+	    						RESIDUAL INSURANCE PREMIUM
+	    						<div class="form-text">$<apex:outputText value="{0,number,###,###,##0.00}"><apex:param value="{!formData.residualCIPremiumCIC}" /></apex:outputText></div>
+	    						<div class="form-xsmall-text">IF APPLICABLE</div>
+							</td>
+						</tr>
+						<tr>
+	    					<td colspan="4" class="noPadMarg">
+	    						<table width="100%" cellpadding="0" cellspacing="0">
+	    							<tr>
+	    								<td width="20%" class="sectionHeader">DISABILITY INSURANCE</td>
+	    								<td class="no-left no-right">
+						                  <div class="form-medium-text">INSURED:
+						                    &nbsp;
+						                    <img src="{!IF(formData.debtorOnlyDIC,
+	    																 URLFOR($Resource.InsuranceDocumentResources, 'img/checkbox_checked.jpeg'),
+	    																 URLFOR($Resource.InsuranceDocumentResources, 'img/checkbox_unchecked.jpeg') )}" />
+						                    &nbsp;
+						                    Debtor
+						                  </div>
+						                </td>
+						                <td class="no-left no-right">
+						                  <div class="form-medium-text">
+						                    &nbsp;
+						                    <img src="{!IF(formData.coDebtorOnlyDIC,
+																			 URLFOR($Resource.InsuranceDocumentResources, 'img/checkbox_checked.jpeg'),
+																			 URLFOR($Resource.InsuranceDocumentResources, 'img/checkbox_unchecked.jpeg') )}" />
+						                    &nbsp;
+						                    Co–Debtor
+						                  </div>
+						                </td>
+						                <td class="no-left no-right">
+						                  <div class="form-medium-text">
+						                    &nbsp;
+						                    <img src="{!IF(formData.bothDIC,
+	    																 URLFOR($Resource.InsuranceDocumentResources, 'img/checkbox_checked.jpeg'),
+	    																 URLFOR($Resource.InsuranceDocumentResources, 'img/checkbox_unchecked.jpeg') )}" />
+						                    &nbsp;Both
+						                  </div>
+						                </td>
+				    					<td class="no-left" style="padding: 0 !important; margin:0 !important; text-align: center; height: 25px; vertical-align: bottom !important;">
+											  <span class="initials">DEBTOR INITIALS</span>&nbsp;&nbsp;&nbsp;&nbsp;
+											  <span class="initials">CO-DEBTOR INITIALS</span>
+				    					</td>
+				    					<td>
+				    						INSURANCE TERM
+				    						<div class="form-text"><apex:outputText value="{0,number,###,###,##0}"><apex:param value="{!formData.insuranceTermDIC}" /></apex:outputText>&nbsp;</div>
+				    						<div class="form-xsmall-text">MONTHS</div>
+				    					</td>
+				    					<td>
+				    						EXPIRY DATE OF INSURANCE
+				    						<div class="form-text">
+				    							<apex:outputText value="{0, date, dd/MM/yyyy}"><apex:param value="{!formData.expiryDateDisabilityInsuranceDate}" /></apex:outputText>
+				    						</div>
+				    					</td>
+			  						</tr>
+						  		</table>
+						    </td>
+	    				</tr>
+	    				<tr>
+	    					<td colspan="4" class="noPadMarg">
+	    						<table width="100%" cellpadding="0" cellspacing="0">
+	    							<tr>
+	    								<td>
+			    							<div class="form-medium-text">WAITING PERIOD</div>
+			    							<div class="form-text" style="text-align: right;">{!formData.waitingPeriodDIC} Days</div>
+			    						</td>
+			    						<td>
+			    							SELECT ONE OPTION:
+			    						</td>
+			    						<td>
+			    							&nbsp;
+						                    <img src="{!IF(formData.typeWaitingPeriodDIC == 'Elimination',
+	    																 URLFOR($Resource.InsuranceDocumentResources, 'img/checkbox_checked.jpeg'),
+	    																 URLFOR($Resource.InsuranceDocumentResources, 'img/checkbox_unchecked.jpeg') )}" />
+						                    &nbsp;ELIMINATION
+						                    <div>The Insurance <span class="bolder">DOES NOT</span> cover the Waiting Period</div>
+			    						</td>
+			    						<td>
+			    							&nbsp;
+						                    <img src="{!IF(formData.typeWaitingPeriodDIC == 'Retroactive',
+	    																 URLFOR($Resource.InsuranceDocumentResources, 'img/checkbox_checked.jpeg'),
+	    																 URLFOR($Resource.InsuranceDocumentResources, 'img/checkbox_unchecked.jpeg') )}" />
+						                    &nbsp;RETROACTIVE
+						                    <div>The Insurance <span class="bolder">DOES</span> cover the Waiting Period</div>
+			    						</td>
+			    					</tr>
+			    				</table>
+			    			</td>
+	    				</tr>
+						<tr>
+							<td colspan="4" class="noPadMarg">
+								<table cellspacing="0" cellpadding="0" width="100%" border="0" class="form-vxsmall-text">
+									<tr>
+										<td style="width:60%;">
+											<div class="form-small-text">&nbsp;MAXIMUM NUMBER OF INSURED MONTHLY PAYMENTS SELECT ONE OPTION</div>
+											<div>
+												<table cellspacing="0" cellpadding="0" width="100%" border="0" class="form-vxsmall-text">
+													<tr>
+														<td class="noBorder form-vxsmall-text">
+															&nbsp;<img src="{!IF(formData.fullTermInsuranceDIC,
+				    																 URLFOR($Resource.InsuranceDocumentResources, 'img/checkbox_checked.jpeg'),
+				    																 URLFOR($Resource.InsuranceDocumentResources, 'img/checkbox_unchecked.jpeg') )}" />
+									                    	&nbsp;FULL TERM INSURANCE&nbsp;
+														</td>
+														<td class="noBorder form-vxsmall-text">
+									                    	&nbsp;<img src="{!IF(formData.recurringInsuranceDIC,
+				    																 URLFOR($Resource.InsuranceDocumentResources, 'img/checkbox_checked.jpeg'),
+				    																 URLFOR($Resource.InsuranceDocumentResources, 'img/checkbox_unchecked.jpeg') )}" />
+									                    	&nbsp;RECURRING INSURANCE
+									                    	<div class="form-vxsmall-text">(6 PER CLAIM)</div>
+														</td>
+														<td class="noBorder form-vxsmall-text">
+									                    	<div class="form-vxsmall-text">
+									                    	&nbsp;<img src="{!IF(formData.variableInsuranceDIC,
+				    																 URLFOR($Resource.InsuranceDocumentResources, 'img/checkbox_checked.jpeg'),
+				    																 URLFOR($Resource.InsuranceDocumentResources, 'img/checkbox_unchecked.jpeg') )}" />
+									                    	&nbsp;VARIABLE INSURANCE
+									                    	<br/>
+									                    		SELECT ONE OPTION
+									                    		&nbsp;<img src="{!IF(formData.variable12InsuranceDIC,
+				    																 URLFOR($Resource.InsuranceDocumentResources, 'img/checkbox_checked.jpeg'),
+				    																 URLFOR($Resource.InsuranceDocumentResources, 'img/checkbox_unchecked.jpeg') )}" />&nbsp;12
+									                    		&nbsp;<img src="{!IF(formData.variable24InsuranceDIC,
+				    																 URLFOR($Resource.InsuranceDocumentResources, 'img/checkbox_checked.jpeg'),
+				    																 URLFOR($Resource.InsuranceDocumentResources, 'img/checkbox_unchecked.jpeg') )}" />&nbsp;24
+									                    	</div>
+														</td>
+								    					<td class="noBorder form-vxsmall-text" style="padding: 0 !important; margin:0 !important; text-align: center; height: 25px; vertical-align: bottom !important;">
+															  <span class="initials">DEBTOR INITIALS</span>
+								    					</td>
+								    					<td class="noBorder form-vxsmall-text" style="padding: 0 !important; margin:0 !important; text-align: center; height: 25px; vertical-align: bottom !important;">
+															  <span class="initials">CO-DEBTOR INITIALS</span>
+								    					</td>
+													</tr>
+												</table>
+											</div>
+										</td>
+										<td style="width:20%;">
+				    						INSURED MONTHLY PAYMENT
+				    						<div class="form-text">$<apex:outputText value="{0,number,###,###,##0.00}"><apex:param value="{!formData.monthlyPayment}" /></apex:outputText></div>
+				    						<div class="form-xsmall-text">INCLUDING INSURANCE, INTEREST AND APPLICABLE TAXES</div>
+										</td>
+										<td style="width:20%;">
+				    						INSURANCE PREMIUM
+				    						<div class="form-text">$<apex:outputText value="{0,number,###,###,##0.00}"><apex:param value="{!formData.disabilityPremiumDIC}" /></apex:outputText></div>
+										</td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+	    				<tr>
+	    					<td colspan="4" class="noPadMarg form-back-color" style="height: 20px;">
+	    						<div class="form-xsmall-text">&nbsp;Maximum Amount of Insurance (Insured Monthly Payment): $5,000/month (ages 18-64). Aggregate Maximum: $500,000&nbsp;</div><div class="form-xsmall-text">
+	    						&nbsp;Maximum Insurance term: 120 months (ages 18-59), 84 months (ages 60-64). Minimum Insurance Premium: $75&nbsp;</div>
+	    					</td>
+	    				</tr>
+	    				<tr>
+	    					<td colspan="3" rowspan="3">
+	    						<table cellpadding="0" cellspacing="0" border="0" width="100%">
+	    							<tr>
+	    								<td colspan="4" class="noBorder">
+				    						<div class="bolder form-small-text">WAIVER</div>
+				    						<div class="form-xsmall-text">I certify that I have been given the opportunity to become insured under the present Certificate and that after careful consideration, I have decided that I do not wish to apply.</div>
+	    								</td>
+	    							</tr>
+	    							<tr>
+	    								<td class="noBorder" style="padding-top: 11px;">
+				    						<div style="height: 15px;" class="bolder">
+				    							DEBTOR:
+				    						</div>
+				    						<div style="height: 15px;" class="bolder">
+				    							CO-DEBTOR:
+				    						</div>
+	    								</td>
+	    								<td class="noBorder">
+				    						<div style="height: 15px;">
+				    							I decline the &nbsp;
+				    							<img src="{!IF(formData.insuranceDeclinedLIC,
+				    																 URLFOR($Resource.InsuranceDocumentResources, 'img/checkbox_checked.jpeg'),
+				    																 URLFOR($Resource.InsuranceDocumentResources, 'img/checkbox_unchecked.jpeg') )}" />
+				    							&nbsp;LIFE INSURANCE&nbsp;&nbsp;
+				    							<img src="{!IF(formData.insuranceDeclinedCIC,
+				    																 URLFOR($Resource.InsuranceDocumentResources, 'img/checkbox_checked.jpeg'),
+				    																 URLFOR($Resource.InsuranceDocumentResources, 'img/checkbox_unchecked.jpeg') )}" />
+				    							&nbsp;CI INSURANCE&nbsp;&nbsp;
+				    							<img src="{!IF(formData.insuranceDeclinedDIC,
+				    																 URLFOR($Resource.InsuranceDocumentResources, 'img/checkbox_checked.jpeg'),
+				    																 URLFOR($Resource.InsuranceDocumentResources, 'img/checkbox_unchecked.jpeg') )}" />
+				    							&nbsp;DISABILITY INSURANCE&nbsp;
+				    						</div>
+				    						<div style="height: 15px;">
+				    							I decline the &nbsp;
+				    							<img src="{!IF(formData.coDebtorOnlyLIC,
+				    																 URLFOR($Resource.InsuranceDocumentResources, 'img/checkbox_checked.jpeg'),
+				    																 URLFOR($Resource.InsuranceDocumentResources, 'img/checkbox_unchecked.jpeg') )}" />
+				    							&nbsp;LIFE INSURANCE&nbsp;&nbsp;
+				    							<img src="{!IF(formData.coDebtorOnlyCIC,
+				    																 URLFOR($Resource.InsuranceDocumentResources, 'img/checkbox_checked.jpeg'),
+				    																 URLFOR($Resource.InsuranceDocumentResources, 'img/checkbox_unchecked.jpeg') )}" />
+				    							&nbsp;CI INSURANCE&nbsp;&nbsp;
+				    							<img src="{!IF(formData.coDebtorOnlyDIC,
+				    																 URLFOR($Resource.InsuranceDocumentResources, 'img/checkbox_checked.jpeg'),
+				    																 URLFOR($Resource.InsuranceDocumentResources, 'img/checkbox_unchecked.jpeg') )}" />
+				    							&nbsp;DISABILITY INSURANCE&nbsp;
+				    						</div>
+	    								</td>
+				    					<td class="noBorder" style="padding: 0 !important; margin:0 !important; text-align: center; vertical-align: middle !important;">
+											  <span class="initials">DEBTOR INITIALS</span>
+				    					</td>
+				    					<td class="noBorder" style="padding: 0 !important; margin:0 !important; text-align: center; vertical-align: middle !important;">
+											  <span class="initials">CO-DEBTOR INITIALS</span>
+				    					</td>
+	    							</tr>
+	    						</table>
+	    						<table>
+						    		<tr>
+						    			<td class="noBorder" style="width:38%">
+							    			<div class="form-text">X</div>
+							    			<div class="overliner"></div>
+							    			<div class="form-small-text">DEBTOR</div>
+						    			</td>
+						    			<td class="noBorder" style="width:12%">
+							    			<div class="form-text">&nbsp;</div>
+							    			<div class="overliner"></div>
+							    			<div class="form-small-text">DATE (DD/MMM/YYYY)</div>
+						    			</td>
+						    			<td class="noBorder" style="width:38%">
+							    			<div class="form-text">X</div>
+							    			<div class="overliner"></div>
+							    			<div class="form-small-text">CO-DEBTOR</div>
+						    			</td>
+						    			<td class="noBorder" style="width:12%">
+							    			<div class="form-text">&nbsp;</div>
+							    			<div class="overliner"></div>
+							    			<div class="form-small-text">DATE (DD/MMM/YYYY)</div>
+						    			</td>
+						    		</tr>
+	    						</table>
+	    					</td>
+	    					<td>
+	    						TOTAL INSURANCE PREMIUM
+	    						<div class="form-text">$<apex:outputText value="{0,number,###,###,##0.00}"><apex:param value="{!formData.totalPremium}" /></apex:outputText></div>
+	    					</td>
+	    				</tr>
+	    				<tr>
+	    					<td>
+	    						SALES TAX
+	    						<div class="form-text">$<apex:outputText value="{0,number,###,###,##0.00}"><apex:param value="{!formData.salesTax}" /></apex:outputText></div>
+	    					</td>
+	    				</tr>
+	    				<tr>
+	    					<td>
+	    						TOTAL COST
+	    						<div class="form-text">$<apex:outputText value="{0,number,###,###,##0.00}"><apex:param value="{!formData.totalCost}" /></apex:outputText></div>
+	    					</td>
+	    				</tr>
+	    			</table>
+    			</td>
+    		</tr>
+    	</table>
+
+    </div>
+</apex:component>
