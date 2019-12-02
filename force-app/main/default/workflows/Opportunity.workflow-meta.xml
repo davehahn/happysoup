@@ -893,18 +893,18 @@
         <triggerType>onCreateOrTriggeringUpdate</triggerType>
         <workflowTimeTriggers>
             <actions>
-                <name>X1_Year_After_Pickup_Followup</name>
-                <type>Task</type>
-            </actions>
-            <timeLength>365</timeLength>
-            <workflowTimeTriggerUnit>Days</workflowTimeTriggerUnit>
-        </workflowTimeTriggers>
-        <workflowTimeTriggers>
-            <actions>
                 <name>Day_After_Pickup_Followup</name>
                 <type>Task</type>
             </actions>
             <timeLength>1</timeLength>
+            <workflowTimeTriggerUnit>Days</workflowTimeTriggerUnit>
+        </workflowTimeTriggers>
+        <workflowTimeTriggers>
+            <actions>
+                <name>X1_Year_After_Pickup_Followup</name>
+                <type>Task</type>
+            </actions>
+            <timeLength>365</timeLength>
             <workflowTimeTriggerUnit>Days</workflowTimeTriggerUnit>
         </workflowTimeTriggers>
     </rules>
@@ -1538,7 +1538,7 @@
                 <type>Task</type>
             </actions>
             <offsetFromField>Opportunity.Delivery_Date__c</offsetFromField>
-            <timeLength>330</timeLength>
+            <timeLength>90</timeLength>
             <workflowTimeTriggerUnit>Days</workflowTimeTriggerUnit>
         </workflowTimeTriggers>
         <workflowTimeTriggers>
@@ -1547,7 +1547,7 @@
                 <type>Task</type>
             </actions>
             <offsetFromField>Opportunity.Delivery_Date__c</offsetFromField>
-            <timeLength>90</timeLength>
+            <timeLength>330</timeLength>
             <workflowTimeTriggerUnit>Days</workflowTimeTriggerUnit>
         </workflowTimeTriggers>
     </rules>
@@ -1578,6 +1578,11 @@
         <triggerType>onCreateOrTriggeringUpdate</triggerType>
         <workflowTimeTriggers>
             <offsetFromField>Opportunity.Delivery_Date__c</offsetFromField>
+            <timeLength>-14</timeLength>
+            <workflowTimeTriggerUnit>Days</workflowTimeTriggerUnit>
+        </workflowTimeTriggers>
+        <workflowTimeTriggers>
+            <offsetFromField>Opportunity.Delivery_Date__c</offsetFromField>
             <timeLength>90</timeLength>
             <workflowTimeTriggerUnit>Days</workflowTimeTriggerUnit>
         </workflowTimeTriggers>
@@ -1587,11 +1592,6 @@
                 <type>Task</type>
             </actions>
             <timeLength>330</timeLength>
-            <workflowTimeTriggerUnit>Days</workflowTimeTriggerUnit>
-        </workflowTimeTriggers>
-        <workflowTimeTriggers>
-            <offsetFromField>Opportunity.Delivery_Date__c</offsetFromField>
-            <timeLength>-14</timeLength>
             <workflowTimeTriggerUnit>Days</workflowTimeTriggerUnit>
         </workflowTimeTriggers>
     </rules>
@@ -1669,6 +1669,10 @@
     </rules>
     <rules>
         <fullName>Follow Up Queue</fullName>
+        <actions>
+            <name>The_Next_Day_Follow_Up</name>
+            <type>Task</type>
+        </actions>
         <active>false</active>
         <criteriaItems>
             <field>Opportunity.StageName</field>
@@ -1678,7 +1682,7 @@
         <description>Time-Based Follow ups that are created at specific intervals throughout the year, as long as the prospect remains in Quoting</description>
         <triggerType>onCreateOrTriggeringUpdate</triggerType>
         <workflowTimeTriggers>
-            <timeLength>180</timeLength>
+            <timeLength>7</timeLength>
             <workflowTimeTriggerUnit>Days</workflowTimeTriggerUnit>
         </workflowTimeTriggers>
         <workflowTimeTriggers>
@@ -1686,19 +1690,7 @@
             <workflowTimeTriggerUnit>Days</workflowTimeTriggerUnit>
         </workflowTimeTriggers>
         <workflowTimeTriggers>
-            <timeLength>270</timeLength>
-            <workflowTimeTriggerUnit>Days</workflowTimeTriggerUnit>
-        </workflowTimeTriggers>
-        <workflowTimeTriggers>
-            <timeLength>90</timeLength>
-            <workflowTimeTriggerUnit>Days</workflowTimeTriggerUnit>
-        </workflowTimeTriggers>
-        <workflowTimeTriggers>
             <timeLength>30</timeLength>
-            <workflowTimeTriggerUnit>Days</workflowTimeTriggerUnit>
-        </workflowTimeTriggers>
-        <workflowTimeTriggers>
-            <timeLength>360</timeLength>
             <workflowTimeTriggerUnit>Days</workflowTimeTriggerUnit>
         </workflowTimeTriggers>
         <workflowTimeTriggers>
@@ -1706,7 +1698,19 @@
             <workflowTimeTriggerUnit>Days</workflowTimeTriggerUnit>
         </workflowTimeTriggers>
         <workflowTimeTriggers>
-            <timeLength>7</timeLength>
+            <timeLength>90</timeLength>
+            <workflowTimeTriggerUnit>Days</workflowTimeTriggerUnit>
+        </workflowTimeTriggers>
+        <workflowTimeTriggers>
+            <timeLength>180</timeLength>
+            <workflowTimeTriggerUnit>Days</workflowTimeTriggerUnit>
+        </workflowTimeTriggers>
+        <workflowTimeTriggers>
+            <timeLength>270</timeLength>
+            <workflowTimeTriggerUnit>Days</workflowTimeTriggerUnit>
+        </workflowTimeTriggers>
+        <workflowTimeTriggers>
+            <timeLength>360</timeLength>
             <workflowTimeTriggerUnit>Days</workflowTimeTriggerUnit>
         </workflowTimeTriggers>
     </rules>
@@ -1975,11 +1979,11 @@
         </criteriaItems>
         <triggerType>onCreateOrTriggeringUpdate</triggerType>
         <workflowTimeTriggers>
-            <timeLength>180</timeLength>
+            <timeLength>90</timeLength>
             <workflowTimeTriggerUnit>Days</workflowTimeTriggerUnit>
         </workflowTimeTriggers>
         <workflowTimeTriggers>
-            <timeLength>90</timeLength>
+            <timeLength>180</timeLength>
             <workflowTimeTriggerUnit>Days</workflowTimeTriggerUnit>
         </workflowTimeTriggers>
     </rules>
@@ -2270,6 +2274,17 @@
         <subject>Follow up with Nurturing Lead</subject>
     </tasks>
     <tasks>
+        <fullName>Next_Day_Follow_Up</fullName>
+        <assignedToType>owner</assignedToType>
+        <description>To notify the Salesperson to contact their new Prospect one day after quoting.</description>
+        <dueDateOffset>1</dueDateOffset>
+        <notifyAssignee>false</notifyAssignee>
+        <priority>Normal</priority>
+        <protected>false</protected>
+        <status>Open</status>
+        <subject>Next Day Follow-Up</subject>
+    </tasks>
+    <tasks>
         <fullName>Next_Day_Follow_Up_Phone_Call</fullName>
         <assignedToType>owner</assignedToType>
         <description>This deal has been Sales Manager approved.  Call the customer to congratulate them and address any outstanding questions.</description>
@@ -2406,6 +2421,38 @@
         <subject>Tagging Pending</subject>
     </tasks>
     <tasks>
+        <fullName>The_Next_Day_Follow_Up</fullName>
+        <assignedToType>owner</assignedToType>
+        <dueDateOffset>0</dueDateOffset>
+        <notifyAssignee>false</notifyAssignee>
+        <priority>Normal</priority>
+        <protected>false</protected>
+        <status>Open</status>
+        <subject>The Next Day Follow-Up</subject>
+    </tasks>
+    <tasks>
+        <fullName>X1_Month_Follow_Up</fullName>
+        <assignedToType>owner</assignedToType>
+        <description>To notify the Salesperson to contact their Prospect 1 month after quoting.</description>
+        <dueDateOffset>0</dueDateOffset>
+        <notifyAssignee>false</notifyAssignee>
+        <priority>Normal</priority>
+        <protected>false</protected>
+        <status>Open</status>
+        <subject>1 Month Follow-Up</subject>
+    </tasks>
+    <tasks>
+        <fullName>X1_Week_Follow_Up</fullName>
+        <assignedToType>owner</assignedToType>
+        <description>To notify the Salesperson to follow up with their Prospect 1 week after quoting.</description>
+        <dueDateOffset>0</dueDateOffset>
+        <notifyAssignee>false</notifyAssignee>
+        <priority>Normal</priority>
+        <protected>false</protected>
+        <status>Open</status>
+        <subject>1 Week Follow-Up</subject>
+    </tasks>
+    <tasks>
         <fullName>X1_Year_After_Pickup_Followup</fullName>
         <assignedToType>owner</assignedToType>
         <dueDateOffset>1</dueDateOffset>
@@ -2414,6 +2461,61 @@
         <protected>false</protected>
         <status>Open</status>
         <subject>1 Year After Pickup Followup</subject>
+    </tasks>
+    <tasks>
+        <fullName>X1_Year_Follow_Up</fullName>
+        <assignedToType>owner</assignedToType>
+        <description>To notify the Salesperson to contact their Prospect 1 year after quoting.</description>
+        <dueDateOffset>360</dueDateOffset>
+        <notifyAssignee>false</notifyAssignee>
+        <priority>Normal</priority>
+        <protected>false</protected>
+        <status>Open</status>
+        <subject>1 Year Follow-Up</subject>
+    </tasks>
+    <tasks>
+        <fullName>X2_Month_Follow_Up</fullName>
+        <assignedToType>owner</assignedToType>
+        <description>To notify the Salesperson to contact their Prospect 2 months after quoting.</description>
+        <dueDateOffset>0</dueDateOffset>
+        <notifyAssignee>false</notifyAssignee>
+        <priority>Normal</priority>
+        <protected>false</protected>
+        <status>Open</status>
+        <subject>2 Month Follow-Up</subject>
+    </tasks>
+    <tasks>
+        <fullName>X2_Week_Follow_Up</fullName>
+        <assignedToType>owner</assignedToType>
+        <description>To notify the Salesperson to contact their Prospect 2 weeks after quoting.</description>
+        <dueDateOffset>0</dueDateOffset>
+        <notifyAssignee>false</notifyAssignee>
+        <priority>Normal</priority>
+        <protected>false</protected>
+        <status>Open</status>
+        <subject>2 Week Follow-Up</subject>
+    </tasks>
+    <tasks>
+        <fullName>X3_Month_Follow_Up</fullName>
+        <assignedToType>owner</assignedToType>
+        <description>To notify the Salesperson to contact their Prospect 3 months after quoting.</description>
+        <dueDateOffset>0</dueDateOffset>
+        <notifyAssignee>false</notifyAssignee>
+        <priority>Normal</priority>
+        <protected>false</protected>
+        <status>Open</status>
+        <subject>3 Month Follow-Up</subject>
+    </tasks>
+    <tasks>
+        <fullName>X3_Week_Follow_Up</fullName>
+        <assignedToType>owner</assignedToType>
+        <description>To notify the Salesperson to contact their Prospect 3 weeks after quoting.</description>
+        <dueDateOffset>0</dueDateOffset>
+        <notifyAssignee>false</notifyAssignee>
+        <priority>Normal</priority>
+        <protected>false</protected>
+        <status>Open</status>
+        <subject>3 Week Follow-Up</subject>
     </tasks>
     <tasks>
         <fullName>X45_Day_Inspection_Barrie</fullName>
@@ -2436,5 +2538,27 @@
         <protected>false</protected>
         <status>Open</status>
         <subject>50 Point Inspection Barrie</subject>
+    </tasks>
+    <tasks>
+        <fullName>X6_Month_Follow_Up</fullName>
+        <assignedToType>owner</assignedToType>
+        <description>To notify the Salesperson to contact their Prospect 6 months after quoting.</description>
+        <dueDateOffset>180</dueDateOffset>
+        <notifyAssignee>false</notifyAssignee>
+        <priority>Normal</priority>
+        <protected>false</protected>
+        <status>Open</status>
+        <subject>6 Month Follow-Up</subject>
+    </tasks>
+    <tasks>
+        <fullName>X9_Month_Follow_Up</fullName>
+        <assignedToType>owner</assignedToType>
+        <description>To notify the Salesperson to contact their Prospect 9 months after quoting.</description>
+        <dueDateOffset>270</dueDateOffset>
+        <notifyAssignee>false</notifyAssignee>
+        <priority>Normal</priority>
+        <protected>false</protected>
+        <status>Open</status>
+        <subject>9 Month Follow-Up</subject>
     </tasks>
 </Workflow>

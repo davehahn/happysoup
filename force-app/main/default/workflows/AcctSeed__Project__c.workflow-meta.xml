@@ -1040,16 +1040,7 @@
         </actions>
         <active>true</active>
         <description>Notifies Service Manager and Team when a Retail boat Is scheduled or rescheduled for Pickup (Delivery Date)</description>
-        <formula>OR( 
- AND(
-  ISPICKVAL(Pickup_Location__c,&quot;Barrie - Pick-up&quot;), 
-  ISCHANGED(Delivery_Date__c) 
- ),
- AND( 
-  ISPICKVAL(Pickup_Location__c,&quot;Barrie - Delivery&quot;), 
-  ISCHANGED(Delivery_Date__c) 
- )
-)</formula>
+        <formula>OR(   AND(   ISPICKVAL(Pickup_Location__c,&quot;Barrie - Pick-up&quot;),    ISCHANGED(Delivery_Date__c)   ),  AND(    ISPICKVAL(Pickup_Location__c,&quot;Barrie - Delivery&quot;),    ISCHANGED(Delivery_Date__c)   ) )</formula>
         <triggerType>onAllChanges</triggerType>
     </rules>
     <rules>
@@ -1106,6 +1097,34 @@
             <timeLength>-24</timeLength>
             <workflowTimeTriggerUnit>Hours</workflowTimeTriggerUnit>
         </workflowTimeTriggers>
+    </rules>
+    <rules>
+        <fullName>Boat Numbers Order Submission</fullName>
+        <actions>
+            <name>Boat_Numbers_Order_Submission_Email</name>
+            <type>Alert</type>
+        </actions>
+        <active>true</active>
+        <criteriaItems>
+            <field>AcctSeed__Project__c.RecordTypeId</field>
+            <operation>equals</operation>
+            <value>Retail Boat Sale</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>AcctSeed__Project__c.WarehouseName__c</field>
+            <operation>contains</operation>
+            <value>Whitefish</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>AcctSeed__Project__c.Boat_numbers_erp__c</field>
+            <operation>notEqual</operation>
+        </criteriaItems>
+        <criteriaItems>
+            <field>AcctSeed__Project__c.Oppy_Boat_Model__c</field>
+            <operation>notContain</operation>
+            <value>Loose</value>
+        </criteriaItems>
+        <triggerType>onCreateOrTriggeringUpdate</triggerType>
     </rules>
     <rules>
         <fullName>Boat Numbers Order Submission - Barrie</fullName>
@@ -1279,6 +1298,26 @@
             <value>Barrie</value>
         </criteriaItems>
         <description>Particular notification asked for by Emma Whiteside</description>
+        <triggerType>onCreateOrTriggeringUpdate</triggerType>
+    </rules>
+    <rules>
+        <fullName>Create Task and Assign to Cherlynn when ERP Status is Completed</fullName>
+        <actions>
+            <name>Review_Trade_in_ERP_for_Finished_Good_movement</name>
+            <type>Task</type>
+        </actions>
+        <active>true</active>
+        <criteriaItems>
+            <field>AcctSeed__Project__c.RecordTypeId</field>
+            <operation>equals</operation>
+            <value>Legend Trade In</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>AcctSeed__Project__c.AcctSeed__Status__c</field>
+            <operation>equals</operation>
+            <value>Completed</value>
+        </criteriaItems>
+        <description>Create Task and Assign to Cherlynn when Trade In ERP Status is set to Completed</description>
         <triggerType>onCreateOrTriggeringUpdate</triggerType>
     </rules>
     <rules>
@@ -1868,16 +1907,7 @@
         </actions>
         <active>true</active>
         <description>Notifies Service Manager and Team when a Retail boat Is scheduled or rescheduled for Pickup (Delivery Date)</description>
-        <formula>OR( 
- AND(
-  ISPICKVAL(Pickup_Location__c,&quot;Montreal - Pick-up&quot;), 
-  ISCHANGED(Delivery_Date__c) 
- ),
- AND( 
-  ISPICKVAL(Pickup_Location__c,&quot;Montreal - Delivery&quot;), 
-  ISCHANGED(Delivery_Date__c) 
- )
-)</formula>
+        <formula>OR(   AND(   ISPICKVAL(Pickup_Location__c,&quot;Montreal - Pick-up&quot;),    ISCHANGED(Delivery_Date__c)   ),  AND(    ISPICKVAL(Pickup_Location__c,&quot;Montreal - Delivery&quot;),    ISCHANGED(Delivery_Date__c)   ) )</formula>
         <triggerType>onAllChanges</triggerType>
     </rules>
     <rules>
@@ -3904,16 +3934,7 @@
         </actions>
         <active>true</active>
         <description>Notifies Service Manager and Team when a Retail boat Is scheduled or rescheduled for Pickup (Delivery Date)</description>
-        <formula>OR( 
- AND(
-  ISPICKVAL(Pickup_Location__c,&quot;Whitefish - Pick-up&quot;), 
-  ISCHANGED(Delivery_Date__c) 
- ),
- AND( 
-  ISPICKVAL(Pickup_Location__c,&quot;Whitefish - Delivery&quot;), 
-  ISCHANGED(Delivery_Date__c) 
- )
-)</formula>
+        <formula>OR(   AND(   ISPICKVAL(Pickup_Location__c,&quot;Whitefish - Pick-up&quot;),    ISCHANGED(Delivery_Date__c)   ),  AND(    ISPICKVAL(Pickup_Location__c,&quot;Whitefish - Delivery&quot;),    ISCHANGED(Delivery_Date__c)   ) )</formula>
         <triggerType>onAllChanges</triggerType>
     </rules>
     <rules>
@@ -4704,6 +4725,18 @@ Please complete other tasks associated to this Partner Boat Sale and finalize th
         <protected>false</protected>
         <status>Open</status>
         <subject>Retail boat in Pending Standard Rigging Stage</subject>
+    </tasks>
+    <tasks>
+        <fullName>Review_Trade_in_ERP_for_Finished_Good_movement</fullName>
+        <assignedTo>cmclean@legendboats.com</assignedTo>
+        <assignedToType>user</assignedToType>
+        <description>Request by Cherlynn</description>
+        <dueDateOffset>0</dueDateOffset>
+        <notifyAssignee>false</notifyAssignee>
+        <priority>Normal</priority>
+        <protected>false</protected>
+        <status>Open</status>
+        <subject>Review Trade in ERP for Finished Good movement</subject>
     </tasks>
     <tasks>
         <fullName>Schedule_this_Boat_in_for_Service_Barrie</fullName>
