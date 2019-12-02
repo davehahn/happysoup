@@ -13,7 +13,7 @@ pipelines:
             - ant -buildfile build/build.xml doMetadataClean
             - echo $DEPLOY_KEY | base64 --decode > deploy.key
             - sfdx force:auth:jwt:grant -i $PROD_CONSUMER_KEY -u $PROD_USERNAME -f deploy.key --setalias ci-deploy-prod --instanceurl $PROD_URL
-            - sfdx heber:staticresources:deploy -u ci-deploy
+            - sfdx heber:staticresources:deploy -u ci-deploy-prod
             - sfdx force:source:deploy --testlevel RunLocalTests --targetusername ci-deploy-prod -p force-app/main/default -w 120
     release:
       - step:
@@ -24,7 +24,7 @@ pipelines:
             - ant -buildfile build/build.xml doMetadataClean
             - echo $DEPLOY_KEY | base64 --decode > deploy.key
             - sfdx force:auth:jwt:grant -i $TESTING_CONSUMER_KEY -u $TESTING_USERNAME -f deploy.key --setalias ci-deploy-testing --instanceurl $TESTING_URL
-            - sfdx heber:staticresources:deploy -u ci-deploy
+            - sfdx heber:staticresources:deploy -u ci-deploy-testing
             - sfdx force:source:deploy --testlevel RunLocalTests --targetusername ci-deploy-testing -p force-app/main/default -w 120
       - step:
           name: Deploy to UAT
@@ -35,7 +35,7 @@ pipelines:
             - ant -buildfile build/build.xml doMetadataClean
             - echo $DEPLOY_KEY | base64 --decode > deploy.key
             - sfdx force:auth:jwt:grant -i $UAT_CONSUMER_KEY -u $UAT_USERNAME -f deploy.key --setalias ci-deploy-uat --instanceurl $UAT_URL
-            - sfdx heber:staticresources:deploy -u ci-deploy
+            - sfdx heber:staticresources:deploy -u ci-deploy-uat
             - sfdx force:source:deploy --testlevel RunLocalTests --targetusername ci-deploy-uat -p force-app/main/default -w 120
       - step:
           name: Pull Request to Production Repo
