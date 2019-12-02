@@ -77,8 +77,13 @@
 <!--      </replaceregexp>-->
 <!--    </target>-->
 
-    <target name="cleaningProfiles">
-      <echo>Cleaning Profiles</echo>
+    <target name="cleanFiles">
+      <echo>Cleaning Files</echo>
+      <!-- Removes icon from Accounting Seed Accounting home tab -->
+      <replaceregexp match="&lt;icon&gt;(.+?)&lt;/icon&gt;\s*" replace="" flags="gm" byline="true">
+        <fileset dir="${basedir}/force-app/main/default/tabs" includes="*.xml"/>
+      </replaceregexp>
+
       <!-- Removes SsoUserMapping-Single Sign-On User Mapping Layout Layout from profiles -->
 <!--      <replaceregexp match="&lt;layoutAssignments&gt;\s*&lt;layout&gt;SsoUserMapping-Single Sign-On User Mapping Layout&lt;/layout&gt;\s*&lt;/layoutAssignments&gt;\s*" replace="" flags="gm" byline="false">-->
 <!--        <fileset dir="${basedir}/src/profiles" includes="*.profile"/>-->
@@ -178,7 +183,7 @@
       <echo>Cleaning metadata to exclude unwanted files</echo>
 <!--      <antcall target="removeUnwantedMetadatFiles" />-->
 <!--      <antcall target="cleanFlexiPages" />-->
-      <antcall target="cleaningProfiles" />
+      <antcall target="cleanFiles" />
       <!--<antcall target="cleanPermissionSets" /> -->
 <!--      <antcall target="cleanObjects" />-->
 <!--      <antcall target="removeListViews"/>-->
