@@ -12,35 +12,42 @@ pipelines:
             - echo 'Deploy to Production'
             - ant -buildfile build/build.xml doMetadataClean
             - echo $DEPLOY_KEY | base64 --decode > deploy.key
-            - sfdx force:auth:jwt:grant -i $PROD_CUSTOMER_KEY -u $PROD_USERNAME -f deploy.key --setalias ci-deploy --instanceurl https://test.salesforce.com
+            - sfdx force:auth:jwt:grant -i $PROD_CONSUMER_KEY -u $PROD_USERNAME -f deploy.key --setalias ci-deploy-prod --instanceurl $PROD_URL
             - sfdx heber:staticresources:deploy -u ci-deploy
-            #- sfdx force:source:deploy --targetusername ci-deploy -p force-app/main/default -w 120
-            - sfdx force:source:deploy --testlevel RunLocalTests --targetusername ci-deploy -p force-app/main/default -w 120
-#    release:
-#      - step:
-#          name: Deploy to Testing
-#          deployment: test
-#          script:
-#            - echo 'Deploy to Testing Complete'
-#            - ant -buildfile build/build.xml deployCode -Dsfdc.username=$SFDC_USERNAME -Dsfdc.password=$SFDC_PASS$SFDC_TOKEN -Dsfdc.serverurl=https://$SFDC_SANDBOX_SERVERURL
-#      - step:
-#          name: Deploy to UAT
-#          deployment: staging
-#          trigger: manual
-#          script:
-#            - echo 'Deploy to UAT'
-#            - ant -buildfile build/build.xml deployCode -Dsfdc.username=$SFDC_USERNAME -Dsfdc.password=$SFDC_PASS$SFDC_TOKEN -Dsfdc.serverurl=https://$SFDC_SANDBOX_SERVERURL
-#      - step:
-#          name: Pull Request to Production Repo
-#          deployment: production
-#          trigger: manual
-#          script:
-#            # - echo 'Creating Pull Request to Production'
-#            # - chmod +x pr_2_production.sh
-#            # - ./pr_2_production.sh master
-#            - echo 'Merging release into master'
-#            - git config --add remote.origin.fetch +refs/heads/*:refs/remotes/origin/*
-#            - git fetch
-#            - git checkout master
-#            - git merge $BITBUCKET_BRANCH
-#            - git push origin master
+            - sfdx force:source:deploy --testlevel RunLocalTests --targetusername ci-deploy-prod -p force-app/main/default -w 120
+    release:
+      - step:
+          name: Deploy to Testing
+          deployment: test
+          script:
+            - echo 'Deploy to Testing'
+            - ant -buildfile build/build.xml doMetadataClean
+            - echo $DEPLOY_KEY | base64 --decode > deploy.key
+            - sfdx force:auth:jwt:grant -i $TESTING_CONSUMER_KEY -u $TESTING_USERNAME -f deploy.key --setalias ci-deploy-testing --instanceurl $TESTING_URL
+            - sfdx heber:staticresources:deploy -u ci-deploy
+            - sfdx force:source:deploy --testlevel RunLocalTests --targetusername ci-deploy-testing -p force-app/main/default -w 120
+      - step:
+          name: Deploy to UAT
+          deployment: staging
+          trigger: manual
+          script:
+            - echo 'Deploy to UAT'
+            - ant -buildfile build/build.xml doMetadataClean
+            - echo $DEPLOY_KEY | base64 --decode > deploy.key
+            - sfdx force:auth:jwt:grant -i $UAT_CONSUMER_KEY -u $UAT_USERNAME -f deploy.key --setalias ci-deploy-uat --instanceurl $UAT_URL
+            - sfdx heber:staticresources:deploy -u ci-deploy
+            - sfdx force:source:deploy --testlevel RunLocalTests --targetusername ci-deploy-uat -p force-app/main/default -w 120
+      - step:
+          name: Pull Request to Production Repo
+          deployment: production
+          trigger: manual
+          script:
+            # - echo 'Creating Pull Request to Production'
+            # - chmod +x pr_2_production.sh
+            # - ./pr_2_production.sh master
+            - echo 'Merging release into master'
+            - git config --add remote.origin.fetch +refs/heads/*:refs/remotes/origin/*
+            - git fetch
+            - git checkout master
+            - git merge $BITBUCKET_BRANCH
+            - git push origin master
