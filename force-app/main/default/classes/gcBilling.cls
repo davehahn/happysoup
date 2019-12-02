@@ -94,8 +94,8 @@ public without sharing class gcBilling {
 				}
 			}
 		}
-		Prepaid_Services_mp.handleProjectPrepaids( projectsToCreditPrepaids,
-																							 projectsToCleanPrepaids );
+		if(!projectsToCreditPrepaids.isEmpty() || !projectsToCleanPrepaids.isEmpty())
+			Prepaid_Services_mp.handleProjectPrepaids( projectsToCreditPrepaids, projectsToCleanPrepaids );
 	}
 
 

@@ -4,7 +4,7 @@
         <processMetadataValues>
             <name>textJson</name>
             <value>
-                <stringValue>{&quot;mentions&quot;:[{&quot;name&quot;:&quot;Jesse Davis&quot;,&quot;id&quot;:&quot;005i0000002c3RpAAI&quot;},{&quot;name&quot;:&quot;Dan Rowe&quot;,&quot;id&quot;:&quot;005i0000002c3PuAAI&quot;},{&quot;name&quot;:&quot;Robert Beaucage&quot;,&quot;id&quot;:&quot;0051Y000008JRWkQAO&quot;}],&quot;message&quot;:&quot;@[005i0000002c3RpAAI] @[005i0000002c3PuAAI]  @[0051Y000008JRWkQAO]  This warranty claim for {![Case].Account.Name} has been denied&quot;}</stringValue>
+                <stringValue>{&quot;mentions&quot;:[{&quot;name&quot;:&quot;Jesse Davis&quot;,&quot;id&quot;:&quot;005i0000002c3RpAAI&quot;},{&quot;name&quot;:&quot;Dan Rowe&quot;,&quot;id&quot;:&quot;005i0000002c3PuAAI&quot;},{&quot;name&quot;:&quot;Robert Beaucage&quot;,&quot;id&quot;:&quot;0051Y000008JRWkQAO&quot;}],&quot;message&quot;:&quot;@[005i0000002c3RpAAI] @[005i0000002c3PuAAI]  @[0051Y000008JRWkQAO]  @[Ryan Fraser]​  This warranty claim for {![Case].Account.Name} has been denied&quot;}</stringValue>
             </value>
         </processMetadataValues>
         <name>myRule_1_A1</name>
@@ -16,7 +16,7 @@
         <inputParameters>
             <name>text</name>
             <value>
-                <stringValue>@[005i0000002c3RpAAI] @[005i0000002c3PuAAI]  @[0051Y000008JRWkQAO]  This warranty claim for {!myVariable_current.Account.Name} has been denied</stringValue>
+                <stringValue>@[005i0000002c3RpAAI] @[005i0000002c3PuAAI]  @[0051Y000008JRWkQAO]  @[Ryan Fraser]​  This warranty claim for {!myVariable_current.Account.Name} has been denied</stringValue>
             </value>
         </inputParameters>
         <inputParameters>
@@ -48,13 +48,19 @@
                 <processMetadataValues>
                     <name>inputDataType</name>
                     <value>
-                        <stringValue>String</stringValue>
+                        <stringValue>ID</stringValue>
+                    </value>
+                </processMetadataValues>
+                <processMetadataValues>
+                    <name>leftHandSideReferenceTo</name>
+                    <value>
+                        <stringValue>RecordType</stringValue>
                     </value>
                 </processMetadataValues>
                 <processMetadataValues>
                     <name>leftHandSideType</name>
                     <value>
-                        <stringValue>String</stringValue>
+                        <stringValue>ID</stringValue>
                     </value>
                 </processMetadataValues>
                 <processMetadataValues>
@@ -66,13 +72,13 @@
                 <processMetadataValues>
                     <name>rightHandSideType</name>
                     <value>
-                        <stringValue>String</stringValue>
+                        <stringValue>ID</stringValue>
                     </value>
                 </processMetadataValues>
-                <leftValueReference>myVariable_current.RecordType.Name</leftValueReference>
+                <leftValueReference>myVariable_current.RecordTypeId</leftValueReference>
                 <operator>EqualTo</operator>
                 <rightValue>
-                    <stringValue>Warranty</stringValue>
+                    <stringValue>0121Y000001O6XbQAK</stringValue>
                 </rightValue>
             </conditions>
             <conditions>
@@ -180,13 +186,19 @@
                 <processMetadataValues>
                     <name>inputDataType</name>
                     <value>
-                        <stringValue>String</stringValue>
+                        <stringValue>ID</stringValue>
+                    </value>
+                </processMetadataValues>
+                <processMetadataValues>
+                    <name>leftHandSideReferenceTo</name>
+                    <value>
+                        <stringValue>RecordType</stringValue>
                     </value>
                 </processMetadataValues>
                 <processMetadataValues>
                     <name>leftHandSideType</name>
                     <value>
-                        <stringValue>String</stringValue>
+                        <stringValue>ID</stringValue>
                     </value>
                 </processMetadataValues>
                 <processMetadataValues>
@@ -198,13 +210,13 @@
                 <processMetadataValues>
                     <name>rightHandSideType</name>
                     <value>
-                        <stringValue>String</stringValue>
+                        <stringValue>ID</stringValue>
                     </value>
                 </processMetadataValues>
-                <leftValueReference>myVariable_old.RecordType.Name</leftValueReference>
+                <leftValueReference>myVariable_old.RecordTypeId</leftValueReference>
                 <operator>EqualTo</operator>
                 <rightValue>
-                    <stringValue>Warranty</stringValue>
+                    <stringValue>0121Y000001O6XbQAK</stringValue>
                 </rightValue>
             </conditions>
             <conditions>
@@ -278,7 +290,7 @@
             <label>Previously Met - Prev</label>
         </rules>
     </decisions>
-    <interviewLabel>Chatter_to_Jesse_on_All_Cases_Denied-4_InterviewLabel</interviewLabel>
+    <interviewLabel>Chatter_to_Jesse_on_All_Cases_Denied-6_InterviewLabel</interviewLabel>
     <label>Chatter to Jesse on All Cases Denied</label>
     <processMetadataValues>
         <name>ObjectType</name>

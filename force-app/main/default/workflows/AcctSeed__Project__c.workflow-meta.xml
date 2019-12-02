@@ -571,6 +571,17 @@
         <template>Parts_Related/Notify_Barrie_Parts_and_Service_department_stage_Pick_and_Pack</template>
     </alerts>
     <alerts>
+        <fullName>Notify_Boat_Specialist_they_are_assigned_to_the_ERP</fullName>
+        <description>Notify Boat Specialist they are assigned to the ERP</description>
+        <protected>false</protected>
+        <recipients>
+            <field>Boat_Specialist__c</field>
+            <type>userLookup</type>
+        </recipients>
+        <senderType>CurrentUser</senderType>
+        <template>Sales_Process/You_have_been_assigned_as_the_Boat_Specialist_for_this_ERP</template>
+    </alerts>
+    <alerts>
         <fullName>One_yr_after_pickuo_retail_boat_sale</fullName>
         <description>Email sent to customer 1 year after delivery date</description>
         <protected>false</protected>
@@ -1040,7 +1051,16 @@
         </actions>
         <active>true</active>
         <description>Notifies Service Manager and Team when a Retail boat Is scheduled or rescheduled for Pickup (Delivery Date)</description>
-        <formula>OR(   AND(   ISPICKVAL(Pickup_Location__c,&quot;Barrie - Pick-up&quot;),    ISCHANGED(Delivery_Date__c)   ),  AND(    ISPICKVAL(Pickup_Location__c,&quot;Barrie - Delivery&quot;),    ISCHANGED(Delivery_Date__c)   ) )</formula>
+        <formula>OR( 
+ AND(
+  ISPICKVAL(Pickup_Location__c,&quot;Barrie - Pick-up&quot;), 
+  ISCHANGED(Delivery_Date__c) 
+ ),
+ AND( 
+  ISPICKVAL(Pickup_Location__c,&quot;Barrie - Delivery&quot;), 
+  ISCHANGED(Delivery_Date__c) 
+ )
+)</formula>
         <triggerType>onAllChanges</triggerType>
     </rules>
     <rules>
@@ -1097,34 +1117,6 @@
             <timeLength>-24</timeLength>
             <workflowTimeTriggerUnit>Hours</workflowTimeTriggerUnit>
         </workflowTimeTriggers>
-    </rules>
-    <rules>
-        <fullName>Boat Numbers Order Submission</fullName>
-        <actions>
-            <name>Boat_Numbers_Order_Submission_Email</name>
-            <type>Alert</type>
-        </actions>
-        <active>true</active>
-        <criteriaItems>
-            <field>AcctSeed__Project__c.RecordTypeId</field>
-            <operation>equals</operation>
-            <value>Retail Boat Sale</value>
-        </criteriaItems>
-        <criteriaItems>
-            <field>AcctSeed__Project__c.WarehouseName__c</field>
-            <operation>contains</operation>
-            <value>Whitefish</value>
-        </criteriaItems>
-        <criteriaItems>
-            <field>AcctSeed__Project__c.Boat_numbers_erp__c</field>
-            <operation>notEqual</operation>
-        </criteriaItems>
-        <criteriaItems>
-            <field>AcctSeed__Project__c.Oppy_Boat_Model__c</field>
-            <operation>notContain</operation>
-            <value>Loose</value>
-        </criteriaItems>
-        <triggerType>onCreateOrTriggeringUpdate</triggerType>
     </rules>
     <rules>
         <fullName>Boat Numbers Order Submission - Barrie</fullName>
@@ -1298,26 +1290,6 @@
             <value>Barrie</value>
         </criteriaItems>
         <description>Particular notification asked for by Emma Whiteside</description>
-        <triggerType>onCreateOrTriggeringUpdate</triggerType>
-    </rules>
-    <rules>
-        <fullName>Create Task and Assign to Cherlynn when ERP Status is Completed</fullName>
-        <actions>
-            <name>Review_Trade_in_ERP_for_Finished_Good_movement</name>
-            <type>Task</type>
-        </actions>
-        <active>true</active>
-        <criteriaItems>
-            <field>AcctSeed__Project__c.RecordTypeId</field>
-            <operation>equals</operation>
-            <value>Legend Trade In</value>
-        </criteriaItems>
-        <criteriaItems>
-            <field>AcctSeed__Project__c.AcctSeed__Status__c</field>
-            <operation>equals</operation>
-            <value>Completed</value>
-        </criteriaItems>
-        <description>Create Task and Assign to Cherlynn when Trade In ERP Status is set to Completed</description>
         <triggerType>onCreateOrTriggeringUpdate</triggerType>
     </rules>
     <rules>
@@ -1907,7 +1879,16 @@
         </actions>
         <active>true</active>
         <description>Notifies Service Manager and Team when a Retail boat Is scheduled or rescheduled for Pickup (Delivery Date)</description>
-        <formula>OR(   AND(   ISPICKVAL(Pickup_Location__c,&quot;Montreal - Pick-up&quot;),    ISCHANGED(Delivery_Date__c)   ),  AND(    ISPICKVAL(Pickup_Location__c,&quot;Montreal - Delivery&quot;),    ISCHANGED(Delivery_Date__c)   ) )</formula>
+        <formula>OR( 
+ AND(
+  ISPICKVAL(Pickup_Location__c,&quot;Montreal - Pick-up&quot;), 
+  ISCHANGED(Delivery_Date__c) 
+ ),
+ AND( 
+  ISPICKVAL(Pickup_Location__c,&quot;Montreal - Delivery&quot;), 
+  ISCHANGED(Delivery_Date__c) 
+ )
+)</formula>
         <triggerType>onAllChanges</triggerType>
     </rules>
     <rules>
@@ -3934,7 +3915,16 @@
         </actions>
         <active>true</active>
         <description>Notifies Service Manager and Team when a Retail boat Is scheduled or rescheduled for Pickup (Delivery Date)</description>
-        <formula>OR(   AND(   ISPICKVAL(Pickup_Location__c,&quot;Whitefish - Pick-up&quot;),    ISCHANGED(Delivery_Date__c)   ),  AND(    ISPICKVAL(Pickup_Location__c,&quot;Whitefish - Delivery&quot;),    ISCHANGED(Delivery_Date__c)   ) )</formula>
+        <formula>OR( 
+ AND(
+  ISPICKVAL(Pickup_Location__c,&quot;Whitefish - Pick-up&quot;), 
+  ISCHANGED(Delivery_Date__c) 
+ ),
+ AND( 
+  ISPICKVAL(Pickup_Location__c,&quot;Whitefish - Delivery&quot;), 
+  ISCHANGED(Delivery_Date__c) 
+ )
+)</formula>
         <triggerType>onAllChanges</triggerType>
     </rules>
     <rules>
@@ -4725,18 +4715,6 @@ Please complete other tasks associated to this Partner Boat Sale and finalize th
         <protected>false</protected>
         <status>Open</status>
         <subject>Retail boat in Pending Standard Rigging Stage</subject>
-    </tasks>
-    <tasks>
-        <fullName>Review_Trade_in_ERP_for_Finished_Good_movement</fullName>
-        <assignedTo>cmclean@legendboats.com</assignedTo>
-        <assignedToType>user</assignedToType>
-        <description>Request by Cherlynn</description>
-        <dueDateOffset>0</dueDateOffset>
-        <notifyAssignee>false</notifyAssignee>
-        <priority>Normal</priority>
-        <protected>false</protected>
-        <status>Open</status>
-        <subject>Review Trade in ERP for Finished Good movement</subject>
     </tasks>
     <tasks>
         <fullName>Schedule_this_Boat_in_for_Service_Barrie</fullName>

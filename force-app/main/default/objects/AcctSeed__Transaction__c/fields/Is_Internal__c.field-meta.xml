@@ -5,7 +5,9 @@
     <formula>IF(OR(
   AND(
     NOT( ISBLANK(AcctSeed__Journal_Entry_Line__c) ),
-    ISBLANK( AcctSeed__Journal_Entry_Line__r.AcctSeed__Project__c ) ),
+    ISBLANK( AcctSeed__Journal_Entry_Line__r.AcctSeed__Project__c ),
+    NOT( ISBLANK(  AcctSeed__Journal_Entry_Line__r.AcctSeed__Journal_Entry__r.Project__c ) ) 
+  ),
   AND(
       NOT( ISBLANK( AcctSeed__Billing_Line__c ) ),
       AcctSeed__Billing_Line__r.AcctSeed__Project__r.AcctSeed__Account__r.Is_Internal__c )
