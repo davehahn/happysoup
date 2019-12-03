@@ -11,6 +11,12 @@ pipelines:
           script:
             - echo 'Deploy to Production'
             - ant -buildfile build/build.xml doMetadataClean
+            - echo 'Removing Lead/Opportunity list view files'
+            - rm -fR force-app/main/default/objects/Lead/listviews
+            - rm -fR force-app/main/default/objects/Opportunity/listviews
+            - echo 'Removing Lead/Opportunity IqScore field'
+            - rm -f force-app/main/default/objects/Lead/fields/IqScore.field-meta.xml
+            - rm -f force-app/main/default/objects/Opportunity/fields/IqScore.field-meta.xml
             - echo $DEPLOY_KEY | base64 --decode > deploy.key
             - sfdx force:auth:jwt:grant -i $PROD_CONSUMER_KEY -u $PROD_USERNAME -f deploy.key --setalias ci-deploy-prod --instanceurl $PROD_URL
             - sfdx heber:staticresources:deploy -u ci-deploy-prod
@@ -22,6 +28,12 @@ pipelines:
           script:
             - echo 'Deploy to Testing'
             - ant -buildfile build/build.xml doMetadataClean
+            - echo 'Removing Lead/Opportunity list view files'
+            - rm -fR force-app/main/default/objects/Lead/listviews
+            - rm -fR force-app/main/default/objects/Opportunity/listviews
+            - echo 'Removing Lead/Opportunity IqScore field'
+            - rm -f force-app/main/default/objects/Lead/fields/IqScore.field-meta.xml
+            - rm -f force-app/main/default/objects/Opportunity/fields/IqScore.field-meta.xml
             - echo $DEPLOY_KEY | base64 --decode > deploy.key
             - sfdx force:auth:jwt:grant -i $TESTING_CONSUMER_KEY -u $TESTING_USERNAME -f deploy.key --setalias ci-deploy-testing --instanceurl $TESTING_URL
             - sfdx heber:staticresources:deploy -u ci-deploy-testing
@@ -34,6 +46,12 @@ pipelines:
             - echo 'Deploy to UAT'
             - ant -buildfile build/build.xml doMetadataClean
             - echo $DEPLOY_KEY | base64 --decode > deploy.key
+            - echo 'Removing Lead/Opportunity list view files'
+            - rm -fR force-app/main/default/objects/Lead/listviews
+            - rm -fR force-app/main/default/objects/Opportunity/listviews
+            - echo 'Removing Lead/Opportunity IqScore field'
+            - rm -f force-app/main/default/objects/Lead/fields/IqScore.field-meta.xml
+            - rm -f force-app/main/default/objects/Opportunity/fields/IqScore.field-meta.xml
             - sfdx force:auth:jwt:grant -i $UAT_CONSUMER_KEY -u $UAT_USERNAME -f deploy.key --setalias ci-deploy-uat --instanceurl $UAT_URL
             - sfdx heber:staticresources:deploy -u ci-deploy-uat
             - sfdx force:source:deploy --testlevel RunLocalTests --targetusername ci-deploy-uat -p force-app/main/default -w 120

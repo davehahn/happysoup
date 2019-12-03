@@ -1,14 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomApplication xmlns="http://soap.sforce.com/2006/04/metadata">
-    <actionOverrides>
-        <actionName>View</actionName>
-        <comment>Action override created by Lightning App Builder during activation.</comment>
-        <content>Lead_Record_Page_Einstein</content>
-        <formFactor>Large</formFactor>
-        <skipRecordTypeSelect>false</skipRecordTypeSelect>
-        <type>Flexipage</type>
-        <pageOrSobjectType>Lead</pageOrSobjectType>
-    </actionOverrides>
     <brand>
         <headerColor>#2EB0ED</headerColor>
         <logo>X2015LegendLogoVerticalAlign1</logo>
@@ -1276,6 +1267,42 @@
         <recordType>Case.Part_Order_Request</recordType>
         <type>Flexipage</type>
         <profile>Admin</profile>
+    </profileActionOverrides>
+    <profileActionOverrides>
+        <actionName>View</actionName>
+        <content>Translation</content>
+        <formFactor>Large</formFactor>
+        <pageOrSobjectType>Case</pageOrSobjectType>
+        <recordType>Case.Translation</recordType>
+        <type>Flexipage</type>
+        <profile>Admin</profile>
+    </profileActionOverrides>
+    <profileActionOverrides>
+        <actionName>View</actionName>
+        <content>Translation</content>
+        <formFactor>Large</formFactor>
+        <pageOrSobjectType>Case</pageOrSobjectType>
+        <recordType>Case.Translation</recordType>
+        <type>Flexipage</type>
+        <profile>Legend Standard User - New</profile>
+    </profileActionOverrides>
+    <profileActionOverrides>
+        <actionName>View</actionName>
+        <content>Translation</content>
+        <formFactor>Large</formFactor>
+        <pageOrSobjectType>Case</pageOrSobjectType>
+        <recordType>Case.Translation</recordType>
+        <type>Flexipage</type>
+        <profile>Legend Admin User - New</profile>
+    </profileActionOverrides>
+    <profileActionOverrides>
+        <actionName>View</actionName>
+        <content>Translation</content>
+        <formFactor>Large</formFactor>
+        <pageOrSobjectType>Case</pageOrSobjectType>
+        <recordType>Case.Translation</recordType>
+        <type>Flexipage</type>
+        <profile>Legend Platform</profile>
     </profileActionOverrides>
     <tabs>standard-home</tabs>
     <tabs>Point_of_Sale</tabs>
