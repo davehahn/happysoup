@@ -1116,6 +1116,7 @@ public with sharing class ERPInvoicePDF {
     {
       if(billingInvoice)
       {
+        if( this.mapMatlBill == null ) fetchBillings();
         if(!this.mapMatlBill.containsKey(mat.Id)) continue;
         PartLineItem pl = new PartLineItem(mat);
         MaterialBilling mb = this.mapMatlBill.get(mat.Id);
@@ -1126,6 +1127,7 @@ public with sharing class ERPInvoicePDF {
         parentMap.put(mat.Id, pl);
       }else if(transferSlip)
       {
+        if( this.mapMatlTransfer == null ) fetchTransfers();
         if(!this.mapMatlTransfer.containsKey(mat.Id)) continue;
         PartLineItem pl = new PartLineItem(mat);
         MaterialTransfer mb = this.mapMatlTransfer.get(mat.Id);
