@@ -12,8 +12,8 @@ pipelines:
             - echo 'Deploy to Production'
             - ant -buildfile build/build.xml doMetadataClean
             - echo 'Removing Lead/Opportunity list view files'
-            - rm -fR force-app/main/default/objects/Lead/listviews
-            - rm -fR force-app/main/default/objects/Opportunity/listviews
+            - rm -fR force-app/main/default/objects/Lead/listViews
+            - rm -fR force-app/main/default/objects/Opportunity/listViews
             - echo 'Removing Lead/Opportunity IqScore field'
             - rm -f force-app/main/default/objects/Lead/fields/IqScore.field-meta.xml
             - rm -f force-app/main/default/objects/Opportunity/fields/IqScore.field-meta.xml
@@ -29,8 +29,8 @@ pipelines:
             - echo 'Deploy to Testing'
             - ant -buildfile build/build.xml doMetadataClean
             - echo 'Removing Lead/Opportunity list view files'
-            - rm -fR force-app/main/default/objects/Lead/listviews
-            - rm -fR force-app/main/default/objects/Opportunity/listviews
+            - rm -fR force-app/main/default/objects/Lead/listViews
+            - rm -fR force-app/main/default/objects/Opportunity/listViews
             - echo 'Removing Lead/Opportunity IqScore field'
             - rm -f force-app/main/default/objects/Lead/fields/IqScore.field-meta.xml
             - rm -f force-app/main/default/objects/Opportunity/fields/IqScore.field-meta.xml
@@ -47,8 +47,8 @@ pipelines:
             - ant -buildfile build/build.xml doMetadataClean
             - echo $DEPLOY_KEY | base64 --decode > deploy.key
             - echo 'Removing Lead/Opportunity list view files'
-            - rm -fR force-app/main/default/objects/Lead/listviews
-            - rm -fR force-app/main/default/objects/Opportunity/listviews
+            - rm -fR force-app/main/default/objects/Lead/listViews
+            - rm -fR force-app/main/default/objects/Opportunity/listViews
             - echo 'Removing Lead/Opportunity IqScore field'
             - rm -f force-app/main/default/objects/Lead/fields/IqScore.field-meta.xml
             - rm -f force-app/main/default/objects/Opportunity/fields/IqScore.field-meta.xml
