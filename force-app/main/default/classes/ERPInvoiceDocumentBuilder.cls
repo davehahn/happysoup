@@ -105,8 +105,8 @@ global with sharing class ERPInvoiceDocumentBuilder {
 
     this.erpRecordType = erpOrder.RecordTypeId;
     if(erpOrder.RecordTypeId == gcConstants.idRtProjectCounterSale
-        || erpOrder.RecordTypeId == gcConstants.idRtPartnerPartsOrder
-        || (erpOrder.Internal_warranty__c && erpOrder.RecordTypeId == gcConstants.idRtProjectWarranty))
+        || erpOrder.RecordTypeId == gcConstants.idRtPartnerPartsOrder )
+       // || (erpOrder.Internal_warranty__c && erpOrder.RecordTypeId == gcConstants.idRtProjectWarranty))
         this.showCreateNew = false;
     ////this.erpSaleType = erpOrder.Sale_Type__c;
     if( rt_with_internal_copy.contains( this.erpRecordType ) )

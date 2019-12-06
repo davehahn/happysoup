@@ -806,8 +806,9 @@ public with sharing class ERPInvoicePDF {
         setupForBoatSale();
     }
     /*   Counter Sale    */
-    if( this.erpOrder.RecordTypeId == counterSaleRtId ||
-        this.erpOrder.RecordTypeId == partnerPartOrder )
+    if( this.erpOrder.RecordTypeId == counterSaleRtId || this.erpOrder.RecordTypeId == partnerPartOrder )
+//      || ( this.erpOrder.RecordTypeId == warrantyRtId &&
+//          this.erpOrder.Internal_Warranty__c  ))
     {
       System.debug( 'setting up for counterSale' );
       setupForCounterSale();
@@ -1102,15 +1103,20 @@ public with sharing class ERPInvoicePDF {
     Boolean transferSlip = false;
     if(this.billId != null
       || erpOrder.RecordTypeId == gcConstants.idRtProjectCounterSale
-      || (erpOrder.RecordTypeId == gcConstants.idRtPartnerPartsOrder && !erpOrder.Internal_Partner_Parts_Order__c))
+      || (erpOrder.RecordTypeId == gcConstants.idRtPartnerPartsOrder
+          && !erpOrder.Internal_Partner_Parts_Order__c))
+    {
       billingInvoice = true;
+    }
 
     if(this.transferId != null
-      || (erpOrder.RecordTypeId == gcConstants.idRtProjectWarranty
-        && erpOrder.Internal_Warranty__c)
+//      || (erpOrder.RecordTypeId == gcConstants.idRtProjectWarranty
+//        && erpOrder.Internal_Warranty__c)
       || (erpOrder.RecordTypeId == gcConstants.idRtPartnerPartsOrder
         && erpOrder.Internal_Partner_Parts_Order__c))
+    {
       transferSlip = true;
+    }
 
     for( AcctSeedERP__Material__c mat : materials )
     {
@@ -1172,6 +1178,7 @@ public with sharing class ERPInvoicePDF {
           parentMap.get( parentId ).kitParts.addAll( kitPartsMap.get( parentId ) );
       }
     }
+
     return parentMap.values();
   }
 

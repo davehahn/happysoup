@@ -14,15 +14,18 @@ public with sharing class Bot_SearchKB
   }
 
   public String language;
+  public String emptyResponse;
 
   public Bot_SearchKB( String lang )
   {
     switch on lang {
       when 'english' {
         this.language = 'en_US';
+        this.emptyResponse = 'No results found.';
       }
       when 'french' {
         this.language = 'fr';
+        this.emptyResponse = 'Aucun résultat trouvé.';
       }
     }
   }
@@ -34,7 +37,7 @@ public with sharing class Bot_SearchKB
 
     // Build the SOSL query
     String sQuery = 'FIND \'' + sKeyword +
-      '\' IN ALL FIELDS RETURNING KnowledgeArticleVersion(Id, Title, UrlName WHERE PublishStatus = \'Online\' AND Language = \''+ this.language +'\' AND IsVisibleInPkb = true) WITH SNIPPET (target_length=255) LIMIT 3';
+      '\' IN ALL FIELDS RETURNING KnowledgeArticleVersion(Id, Title, UrlName WHERE PublishStatus = \'Online\' AND Language = \''+ this.language +'\' AND IsVisibleInPkb = true ) WITH SNIPPET (target_length=255) LIMIT 3';
 
     // Perform the SOSL search
     Search.SearchResults searchResults = Search.find(sQuery);
@@ -52,7 +55,7 @@ public with sharing class Bot_SearchKB
       sFAQSearchResult = sFAQSearchResult + sArticleSummary;
     }
 
-    if (sFAQSearchResult == '') sFAQSearchResult = 'No results found.';
+    if (sFAQSearchResult == '') sFAQSearchResult = this.emptyResponse;
 
     // Build the output structure containing the results
     List<FAQSearchOutput> faqSearchOutputs = new List<FAQSearchOutput>();
@@ -64,7 +67,7 @@ public with sharing class Bot_SearchKB
 
   /** Helper method that summarizes the article */
   private String summarizeArticleForBot(String sArticleBaseUrl,
-    KnowledgeArticleVersion article)
+                                        KnowledgeArticleVersion article)
   {
     String sSummary, sURL;
     sURL = sArticleBaseUrl + article.UrlName;
