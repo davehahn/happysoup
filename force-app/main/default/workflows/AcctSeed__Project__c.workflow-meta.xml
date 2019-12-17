@@ -17,9 +17,25 @@
     </alerts>
     <alerts>
         <fullName>Boat_Numbers_Order_Submission_Email</fullName>
-        <ccEmails>jmaltais@legendboats.com</ccEmails>
-        <description>Boat Numbers Order Submission Email</description>
+        <ccEmails>info@armoreddecal.com</ccEmails>
+        <description>Boat Numbers Order Submission Email Barrie</description>
         <protected>false</protected>
+        <recipients>
+            <recipient>jwinter@legendboats.com</recipient>
+            <type>user</type>
+        </recipients>
+        <senderType>DefaultWorkflowUser</senderType>
+        <template>Sales_Process/Boat_Numbers_Order</template>
+    </alerts>
+    <alerts>
+        <fullName>Boat_Numbers_Order_Submission_Email_Whitefish</fullName>
+        <ccEmails>creative@hiamedia.com</ccEmails>
+        <description>Boat Numbers Order Submission Email Whitefish</description>
+        <protected>false</protected>
+        <recipients>
+            <recipient>bfram@legendboats.com</recipient>
+            <type>user</type>
+        </recipients>
         <senderType>DefaultWorkflowUser</senderType>
         <template>Sales_Process/Boat_Numbers_Order</template>
     </alerts>
@@ -1127,55 +1143,23 @@
             <type>Alert</type>
         </actions>
         <active>true</active>
-        <criteriaItems>
-            <field>AcctSeed__Project__c.RecordTypeId</field>
-            <operation>equals</operation>
-            <value>Retail Boat Sale</value>
-        </criteriaItems>
-        <criteriaItems>
-            <field>AcctSeed__Project__c.WarehouseName__c</field>
-            <operation>contains</operation>
-            <value>Barrie</value>
-        </criteriaItems>
-        <criteriaItems>
-            <field>AcctSeed__Project__c.Boat_numbers_erp__c</field>
-            <operation>notEqual</operation>
-        </criteriaItems>
-        <criteriaItems>
-            <field>AcctSeed__Project__c.Oppy_Boat_Model__c</field>
-            <operation>notContain</operation>
-            <value>Loose</value>
-        </criteriaItems>
         <description>Sends boat numbers to the boat number supplier by location when boat numbers are entered on the Retail Boat Sale ERP.</description>
+        <formula>RecordType.Name = &quot;Retail Boat Sale&quot; &amp;&amp; 
+CONTAINS(WarehouseName__c, &quot;Barrie&quot;) &amp;&amp; NOT(ISBLANK(Boat_numbers_erp__c)) &amp;&amp; NOT(CONTAINS(Oppy_Boat_Model__c, &quot;Loose&quot;)) &amp;&amp; 
+NOT(ISPICKVAL(Serial_Number__r.Status__c, &quot;Used&quot;))</formula>
         <triggerType>onCreateOrTriggeringUpdate</triggerType>
     </rules>
     <rules>
         <fullName>Boat Numbers Order Submission - Whtiefish</fullName>
         <actions>
-            <name>Boat_Numbers_Order_Submission_Email</name>
+            <name>Boat_Numbers_Order_Submission_Email_Whitefish</name>
             <type>Alert</type>
         </actions>
         <active>true</active>
-        <criteriaItems>
-            <field>AcctSeed__Project__c.RecordTypeId</field>
-            <operation>equals</operation>
-            <value>Retail Boat Sale</value>
-        </criteriaItems>
-        <criteriaItems>
-            <field>AcctSeed__Project__c.WarehouseName__c</field>
-            <operation>contains</operation>
-            <value>Whitefish</value>
-        </criteriaItems>
-        <criteriaItems>
-            <field>AcctSeed__Project__c.Boat_numbers_erp__c</field>
-            <operation>notEqual</operation>
-        </criteriaItems>
-        <criteriaItems>
-            <field>AcctSeed__Project__c.Oppy_Boat_Model__c</field>
-            <operation>notContain</operation>
-            <value>Loose</value>
-        </criteriaItems>
         <description>Sends boat numbers to the boat number supplier by location when boat numbers are entered on the Retail Boat Sale ERP.</description>
+        <formula>RecordType.Name = &quot;Retail Boat Sale&quot; &amp;&amp; 
+CONTAINS(WarehouseName__c, &quot;Whitefish&quot;) &amp;&amp; NOT(ISBLANK(Boat_numbers_erp__c)) &amp;&amp; NOT(CONTAINS(Oppy_Boat_Model__c, &quot;Loose&quot;)) &amp;&amp; 
+NOT(ISPICKVAL(Serial_Number__r.Status__c, &quot;Used&quot;))</formula>
         <triggerType>onCreateOrTriggeringUpdate</triggerType>
     </rules>
     <rules>

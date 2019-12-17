@@ -198,7 +198,8 @@ public without sharing class gcProduct {
 					if(p.AcctSeed__Revenue_GL_Account__c == null)
 					   p.AcctSeed__Revenue_GL_Account__c = mapGL.get('SalesParts');
 
-					p.AcctSeed__Inventory_Type__c = null;
+					//commented out as Hibiscus forces this field to be set
+					//p.AcctSeed__Inventory_Type__c = null;
 
 				}
 			}

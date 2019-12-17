@@ -15,6 +15,15 @@
         <senderType>CurrentUser</senderType>
         <template>Invitations_and_Individual_Follow_Ups/Lead_Follow_Up_Barrie</template>
     </alerts>
+    <fieldUpdates>
+        <fullName>UpdateLeadPartnerEmail</fullName>
+        <field>PartnerEmail__c</field>
+        <formula>Closest_Partner__r.AccountEmail__c</formula>
+        <name>UpdateLeadPartnerEmail</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Formula</operation>
+        <protected>false</protected>
+    </fieldUpdates>
     <rules>
         <fullName>Dealer Lead Olark Follow Up</fullName>
         <actions>
@@ -44,6 +53,16 @@
         </criteriaItems>
         <description>When answering the phone, if you refer a customer to a Dealer Sales Department, notify the Dealer to call this customer.  Once the Lead is input into Salesforce, you are to follow up with the customer after 24 hours.</description>
         <triggerType>onCreateOnly</triggerType>
+    </rules>
+    <rules>
+        <fullName>UpdateLeadPartnerEmail</fullName>
+        <actions>
+            <name>UpdateLeadPartnerEmail</name>
+            <type>FieldUpdate</type>
+        </actions>
+        <active>true</active>
+        <formula>NOT(ISBLANK(Closest_Partner__c))</formula>
+        <triggerType>onCreateOrTriggeringUpdate</triggerType>
     </rules>
     <tasks>
         <fullName>Follow_Up_with_Dealer_Lead</fullName>

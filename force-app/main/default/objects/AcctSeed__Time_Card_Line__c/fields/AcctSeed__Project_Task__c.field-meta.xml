@@ -5,10 +5,19 @@
     <deprecated>false</deprecated>
     <externalId>false</externalId>
     <label>Project Task</label>
+    <lookupFilter>
+        <active>true</active>
+        <filterItems>
+            <field>AcctSeed__Project_Task__c.AcctSeed__Project__c</field>
+            <operation>equals</operation>
+            <valueField>$Source.AcctSeed__Project__c</valueField>
+        </filterItems>
+        <isOptional>false</isOptional>
+    </lookupFilter>
     <referenceTo>AcctSeed__Project_Task__c</referenceTo>
     <relationshipLabel>Time Card Lines</relationshipLabel>
     <relationshipName>Time_Card_Line_Details</relationshipName>
-    <required>false</required>
+    <required>true</required>
     <trackHistory>false</trackHistory>
     <trackTrending>false</trackTrending>
     <type>Lookup</type>

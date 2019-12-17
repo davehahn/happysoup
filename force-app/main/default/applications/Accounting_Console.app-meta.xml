@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomApplication xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionOverrides>
+        <actionName>View</actionName>
+        <comment>Action override created by Lightning App Builder during activation.</comment>
+        <content>Lead_Record_Page_Einstein</content>
+        <formFactor>Large</formFactor>
+        <skipRecordTypeSelect>false</skipRecordTypeSelect>
+        <type>Flexipage</type>
+        <pageOrSobjectType>Lead</pageOrSobjectType>
+    </actionOverrides>
     <brand>
         <headerColor>#04CE0A</headerColor>
         <logo>LegendLsmall</logo>
@@ -12,6 +21,42 @@
     <isNavPersonalizationDisabled>false</isNavPersonalizationDisabled>
     <label>Accounting Console</label>
     <navType>Console</navType>
+    <profileActionOverrides>
+        <actionName>View</actionName>
+        <content>Account_Record_Page_Acc_Console</content>
+        <formFactor>Large</formFactor>
+        <pageOrSobjectType>Account</pageOrSobjectType>
+        <recordType>PersonAccount.PersonAccount</recordType>
+        <type>Flexipage</type>
+        <profile>Legend Force User New</profile>
+    </profileActionOverrides>
+    <profileActionOverrides>
+        <actionName>View</actionName>
+        <content>Account_Record_Page_Acc_Console</content>
+        <formFactor>Large</formFactor>
+        <pageOrSobjectType>Account</pageOrSobjectType>
+        <recordType>Account.Supplier</recordType>
+        <type>Flexipage</type>
+        <profile>Legend Force User New</profile>
+    </profileActionOverrides>
+    <profileActionOverrides>
+        <actionName>View</actionName>
+        <content>Account_Record_Page_Acc_Console</content>
+        <formFactor>Large</formFactor>
+        <pageOrSobjectType>Account</pageOrSobjectType>
+        <recordType>Account.Business_Account</recordType>
+        <type>Flexipage</type>
+        <profile>Legend Force User New</profile>
+    </profileActionOverrides>
+    <profileActionOverrides>
+        <actionName>View</actionName>
+        <content>Account_Record_Page_Acc_Console</content>
+        <formFactor>Large</formFactor>
+        <pageOrSobjectType>Account</pageOrSobjectType>
+        <recordType>Account.Dealer</recordType>
+        <type>Flexipage</type>
+        <profile>Legend Force User New</profile>
+    </profileActionOverrides>
     <profileActionOverrides>
         <actionName>View</actionName>
         <content>Journal_Entry_Record_LGND</content>
