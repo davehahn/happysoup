@@ -28,10 +28,10 @@ public with sharing class DealerPartOrdersStatement_Controller {
 	public DealerPartOrdersStatement_Controller(ApexPages.StandardController c) {
 		accountId = ApexPages.currentPage().getParameters().get('Account');
 		firstOfMonth = System.Date.today().toStartOfMonth();
+		dueDate = firstOfMonth.addDays(14);
 		getAccount(accountId);
 		getMonth();
 		getBillings();
-		dueDate = firstOfMonth.addDays(14);
 	}
 
   public static ContentDocumentLink[] attachStatements(List<Id> accountIds){
@@ -141,7 +141,7 @@ public with sharing class DealerPartOrdersStatement_Controller {
 												Name,
 												AcctSeed__Balance__c,
 												AcctSeed__Date__c,
-												AcctSeed__Due_Date2__c,
+												Lgnd_Due_Date__c,
 												AcctSeed__Total__c,
 												AcctSeed__Received_Amount__c,
 												AcctSeed__Cash_Application_Adjustment_Amount__c,
@@ -202,24 +202,24 @@ public with sharing class DealerPartOrdersStatement_Controller {
 		currentItems.billings = new List<BillingWrapper>();
 		futureItems.billings = new List<BillingWrapper>();
 
-		Date firstOfLastMonth = firstOfMonth.addMonths( -1 );
+		Date overDueDate = dueDate.addMonths( -1 );
 
 		for (BillingWrapper bw : wrappedBillings) {
 			if ( bw.billing.AcctSeed__Balance__c != 0 ) {
-				if ( bw.billing.AcctSeed__Date__c >= firstOfMonth )
+				if ( bw.billing.Lgnd_Due_Date__c > dueDate )
 				{
 					futureItems.billings.add(bw);
 					futureItems.balance += bw.billing.AcctSeed__Balance__c;
 				}
-				else if ( bw.billing.AcctSeed__Date__c >= firstOfLastMonth )
-				{
-					currentItems.billings.add(bw);
-					currentItems.balance += bw.billing.AcctSeed__Balance__c;
-				}
-				else if ( bw.billing.AcctSeed__Date__c < firstOfLastMonth )
+				else if ( bw.billing.Lgnd_Due_Date__c < overDueDate )
 				{
 					overdueItems.billings.add(bw);
 					overdueItems.balance += bw.billing.AcctSeed__Balance__c;
+				}
+				else
+				{
+					currentItems.billings.add(bw);
+					currentItems.balance += bw.billing.AcctSeed__Balance__c;
 				}
 			}
 		}

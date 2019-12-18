@@ -41,6 +41,7 @@ public without sharing class gcBilling {
 		{
 			if(boolIsInsert)
 			{
+				setDueDate( listNew );
 			}
 			if(boolIsUpdate)
 			{
@@ -62,6 +63,18 @@ public without sharing class gcBilling {
 			if(boolIsDelete)
 			{
 
+			}
+		}
+	}
+
+	private static void setDueDate( List<AcctSeed__Billing__c> listNew )
+	{
+		Date dueDate = Date.today().addMonths(1).toStartOfMonth().addDays(14);
+		for( AcctSeed__Billing__c bill : listNew )
+		{
+			if( bill.Lgnd_Due_Date__c == null )
+			{
+				bill.Lgnd_Due_Date__c = dueDate;
 			}
 		}
 	}

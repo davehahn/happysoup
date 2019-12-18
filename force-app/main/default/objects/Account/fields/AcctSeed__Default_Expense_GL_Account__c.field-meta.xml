@@ -6,6 +6,15 @@
     <externalId>false</externalId>
     <inlineHelpText>If this field is populated and this account is selected as the vendor on an account payable, the account payable line Expense GL Account field will be populated with this value dynamically.</inlineHelpText>
     <label>Default Expense GL Account</label>
+    <lookupFilter>
+        <active>true</active>
+        <filterItems>
+            <field>AcctSeed__GL_Account__c.AcctSeed__Type__c</field>
+            <operation>notEqual</operation>
+            <value>Cash Flow</value>
+        </filterItems>
+        <isOptional>true</isOptional>
+    </lookupFilter>
     <referenceTo>AcctSeed__GL_Account__c</referenceTo>
     <relationshipLabel>Accounts</relationshipLabel>
     <relationshipName>Accounts</relationshipName>

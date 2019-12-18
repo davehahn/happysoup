@@ -384,7 +384,7 @@
 			<apex:outputPanel layout="none" rendered="{! futureItems['count'] > 0}">
 				<table class="master">
 					<tr>
-						<th class="tableHeader" colspan="8">Due Later</th>
+						<th class="tableHeader" colspan="9">Due Later</th>
 					</tr>
 					<tr>
 						<th class="txt">Billing</th>
@@ -392,7 +392,7 @@
 						<th class="num">Billing Date</th>
 						<th class="txt">Partner Reference</th>
 						<th class="num">Invoice #</th>
-						<!-- <th class="num">Due Date</th> -->
+						<th class="num">Due Date</th>
 						<th class="num">Total</th>
 						<th class="num">Paid</th>
 						<th class="num">Balance</th>
@@ -410,11 +410,11 @@
 								<td class="num">
 									{! bl['erp']['AcctSeedERP__Work_Order_Number__c'] }
 								</td>
-							<!-- <td class="num">
+							<td class="num">
 								<apex:outputText value="{0, date, MM/dd/yyyy}">
-								    <apex:param value="{! bl['billing']['AcctSeed__Due_Date2__c'] }" />
+								    <apex:param value="{! bl['billing']['Lgnd_Due_Date__c'] }" />
 								</apex:outputText>
-							</td> -->
+							</td>
 							<td class="num">
 								<apex:outputText value="{0, Number, Currency}">
 								    <apex:param value="{! bl['billing']['AcctSeed__Total__c'] }" />
@@ -435,7 +435,7 @@
 						</tr>
 					</apex:repeat>
 					<tr>
-						<td class="num" colspan="7"><strong>Due Later:</strong></td>
+						<td class="num" colspan="8"><strong>Due Later:</strong></td>
 						<td class="num">
 							<strong>
 								<apex:outputText value="{0, Number, Currency}">

@@ -78,11 +78,11 @@ private class DealerPartOrdersStatement_Test {
 			);
 		}
 		//current
-		billings[0].AcctSeed__Date__c = Date.today().toStartOfMonth().addDays(-15);
+		billings[0].Lgnd_Due_Date__c = Date.today().toStartOfMonth().addDays(-15);
 		//overdue
-		billings[1].AcctSeed__Date__c = Date.today().toStartOfMonth().addMonths(-1).addDays(-15);
+		billings[1].Lgnd_Due_Date__c = Date.today().toStartOfMonth().addMonths(-1).addDays(-15);
 		//future
-		billings[2].AcctSeed__Date__c = Date.today();
+		billings[2].Lgnd_Due_Date__c = Date.today();
 		insert billings;
 
 		List<AcctSeed__Billing_Line__c> billingLines = new List<AcctSeed__Billing_Line__c>();

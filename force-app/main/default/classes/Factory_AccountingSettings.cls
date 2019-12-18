@@ -145,7 +145,7 @@ public class Factory_AccountingSettings {
       AcctSeed__Billing_Activity_Statement_Format__c = billingActivityStatementFormat.Id,
       AcctSeed__Billing_Outstanding_Statement_Format__c = billingOutstandingStatementFormat.Id
     );
-    //rec.AcctSeed__Inventory_Valuation_Method__c = 'Standard Cost';
+    rec.AcctSeed__Inventory_Valuation_Method__c = 'Standard Cost';
     insert rec;
   }
 }

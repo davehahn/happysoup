@@ -190,16 +190,16 @@ public without sharing class gcProduct {
 				}
 				else
 				{
-					p.AcctSeed__Inventory_GL_Account__c = null;
+					if(p.AcctSeed__Inventory_Type__c != 'Purchased' && p.AcctSeed__Inventory_Type__c != 'Raw Materials') {
+						p.AcctSeed__Inventory_Type__c = null;
+						p.AcctSeed__Inventory_GL_Account__c = null;
+					}
 
 					if(p.AcctSeed__Expense_GL_Account__c == null)
 					   p.AcctSeed__Expense_GL_Account__c = mapGL.get('CogsParts');
 
 					if(p.AcctSeed__Revenue_GL_Account__c == null)
 					   p.AcctSeed__Revenue_GL_Account__c = mapGL.get('SalesParts');
-
-					p.AcctSeed__Inventory_Type__c = null;
-
 				}
 			}
 		}
