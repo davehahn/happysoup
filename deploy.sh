@@ -2,6 +2,7 @@
 
 if [[ -z $1 ]]; then
   echo "You need to supply a sfdx org alias"
+  exit 1
 fi
 cmd=$(pwd)
 mkdir ~/.deploy_root
