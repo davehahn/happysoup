@@ -21,7 +21,7 @@ pipelines:
             - rm -f force-app/main/default/layouts/LiveChatTranscriptActive-Live\ Chat\ Transcript\ %28In\ Progress%29\ Layout.layout-meta.xml
             - rm -f force-app/main/default/layouts/LiveChatTranscriptWaiting-Live\ Chat\ Transcript\ %28Waiting%29\ Layout.layout-meta.xml
             - echo $DEPLOY_KEY | base64 --decode > deploy.key
-            - sfdx force:auth:jwt:grant -i $SFDC_CONSUMER_KEY -u $SFDC_USERNAME -f deploy.key --setalias ci-deploy-prod --instanceurl $SFDC_URL
+            - sfdx force:auth:jwt:grant -i $PRODUCTION_CONSUMER_KEY -u $PRODUCTION_USERNAME -f deploy.key --setalias ci-deploy-testing --instanceurl $PRODUCTION_URL
             - sfdx heber:staticresources:deploy -u ci-deploy-prod
             - sfdx force:source:deploy --testlevel RunLocalTests --targetusername ci-deploy-prod -p force-app/main/default -w 120
     release:
@@ -41,7 +41,7 @@ pipelines:
             - rm -f force-app/main/default/layouts/LiveChatTranscriptActive-Live\ Chat\ Transcript\ %28In\ Progress%29\ Layout.layout-meta.xml
             - rm -f force-app/main/default/layouts/LiveChatTranscriptWaiting-Live\ Chat\ Transcript\ %28Waiting%29\ Layout.layout-meta.xml
             - echo $DEPLOY_KEY | base64 --decode > deploy.key
-            - sfdx force:auth:jwt:grant -i $PRODUCTION_CONSUMER_KEY -u $PRODUCTION_USERNAME -f deploy.key --setalias ci-deploy-testing --instanceurl $PRODUCTION_URL
+            - sfdx force:auth:jwt:grant -i $SFDC_CONSUMER_KEY -u $SFDC_USERNAME -f deploy.key --setalias ci-deploy-prod --instanceurl $SFDC_URL
             - sfdx heber:staticresources:deploy -u ci-deploy-testing
             - sfdx force:source:deploy --testlevel RunLocalTests --targetusername ci-deploy-testing -p force-app/main/default -w 120
       #      - step:
