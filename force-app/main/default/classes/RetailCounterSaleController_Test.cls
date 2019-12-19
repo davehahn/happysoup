@@ -149,21 +149,24 @@ private class RetailCounterSaleController_Test {
                                 ProductCode='fee345',
                                 IsActive=true,
                                 AcctSeed__Accounting_Type__c = 'Taxable Product') );
+    Boolean orig = gcProduct.disableTrigger;
+    gcProduct.disableTrigger = true;
     insert products;
+    gcProduct.disableTrigger = orig;
 
     pbs = new List<Pricebook2>();
     pbs.add( new Pricebook2( Name = '2014', IsActive = true) );
     pbs.add( new Pricebook2( Name = '2015', IsActive = true) );
     insert pbs;
 
-    Pricebook2 stdPb = [SELECT Id, Name from Pricebook2 WHERE IsStandard = true];
+    //Pricebook2 stdPb = [SELECT Id, Name from Pricebook2 WHERE IsStandard = true];
     List<PricebookEntry> pbEntries = new List<PricebookEntry>();
     List<Product_Fee_Amount__c> feeAmounts = new List<Product_Fee_Amount__c>();
     for(Product2 p : products)
     {
       pbEntries.add( new PricebookEntry(
         Product2Id = p.Id,
-        Pricebook2Id = stdPb.Id,
+        Pricebook2Id = Test.getStandardPricebookId(),
         UnitPrice = 0,
         IsActive = true
         ));

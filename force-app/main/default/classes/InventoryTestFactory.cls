@@ -4,7 +4,7 @@
 */
 
 
-@isTest (seeAllData=true)
+@isTest
 public class InventoryTestFactory {
   static AcctSeed__GL_Account__c revenueAccount;
   static AcctSeed__GL_Account__c expenseAccount;
@@ -72,7 +72,10 @@ public class InventoryTestFactory {
                                 isActive = true);
       products.add(p);
     }
+    Boolean orig = gcProduct.disableTrigger;
+    gcProduct.disableTrigger = true;
     insert products;
+    gcProduct.disableTrigger = orig;
     insertStandardPBEntries(products);
     return products;
   }
@@ -124,9 +127,11 @@ public class InventoryTestFactory {
   /* use this method to build anything but Parts */
   public List<Product2> insertTestProducts(Integer count, String record_type) {
     List<Product2> products = buildTestProducts(count, record_type);
+    Boolean orig = gcProduct.disableTrigger;
+    gcProduct.disableTrigger = true;
     insert products;
+    gcProduct.disableTrigger = orig;
     List<PricebookEntry> pbEntries = new List<PricebookEntry>();
-    //Pricebook2 standardPb = getStandardPricebook();
     Decimal price = 100;
     for(Product2 p : products){
       PricebookEntry pb = new PricebookEntry();
@@ -146,9 +151,11 @@ public class InventoryTestFactory {
      family (ie accessory) */
   public List<Product2> insertTestProducts(Integer count, String record_type, String family) {
     List<Product2> products = buildTestProducts(count, record_type, family);
+    Boolean orig = gcProduct.disableTrigger;
+    gcProduct.disableTrigger = true;
     insert products;
+    gcProduct.disableTrigger = orig;
     List<PricebookEntry> pbEntries = new List<PricebookEntry>();
-    //Pricebook2 standardPb = getStandardPricebook();
     Decimal price = 100;
     for(Product2 p : products){
       PricebookEntry pb = new PricebookEntry();

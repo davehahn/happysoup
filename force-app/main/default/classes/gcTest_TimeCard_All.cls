@@ -85,9 +85,9 @@ private class gcTest_TimeCard_All{
     Account customer = Factory_Account.insertCustomerAccounts(1)[0];
     AcctSeedERP__Warehouse__c wh = [SELECT Id FROM AcctSeedERP__Warehouse__c WHERE Name Like '%Whitefish%' LIMIT 1];
     AcctSeed__Project__c erp = Factory_ERPOrder.insertServiceOrders( customer,
-      wh,
-      DateTime.now(),
-      new List<GMBLASERP__Serial_Number__c>{ serial } )[0];
+                                                                     wh,
+                                                                     DateTime.now(),
+                                                                     new List<GMBLASERP__Serial_Number__c>{ serial } )[0];
     AcctSeed__Project_Task__c task = Factory_ERPOrder.buildProjectTask( erp.Id, 'Test Task');
     insert task;
     AcctSeed__Time_Card_Line__c tcl = new AcctSeed__Time_Card_Line__c(

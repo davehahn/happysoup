@@ -5,9 +5,9 @@ public class Factory_User {
   public static Map<String, Id> profileMap;
 
   public static User newUser( String fName,
-    String lName,
-    String profName,
-    AcctSeedERP__Warehouse__c wh )
+                              String lName,
+                              String profName,
+                              AcctSeedERP__Warehouse__c wh )
   {
     User u = buildUser(fName, lName, findProfileId(profName) );
     if( wh != null )

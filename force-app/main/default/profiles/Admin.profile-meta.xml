@@ -5140,6 +5140,16 @@
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
+        <editable>false</editable>
+        <field>AcctSeedERP__Purchase_Price__c.AcctSeedERP__Product__c</field>
+        <readable>false</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>AcctSeedERP__Purchase_Price__c.AcctSeedERP__Vendor__c</field>
+        <readable>false</readable>
+    </fieldPermissions>
+    <fieldPermissions>
         <editable>true</editable>
         <field>AcctSeedERP__Sales_Order_Inventory_Movement__c.AcctSeedERP__GL_Account_Variable_1__c</field>
         <readable>true</readable>
@@ -8673,6 +8683,11 @@
         <editable>true</editable>
         <field>AcctSeed__Integrity_Report_Entry__c.AcctSeed__Source_Record__c</field>
         <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>AcctSeed__Inventory_Cost__c.AcctSeed__Product__c</field>
+        <readable>false</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
@@ -23109,6 +23124,9 @@
         <layout>AcctSeedERP__Purchase_Order__c-AcctSeedERP__Purchase Order Layout</layout>
     </layoutAssignments>
     <layoutAssignments>
+        <layout>AcctSeedERP__Purchase_Price__c-AcctSeedERP__Purchase Price Layout</layout>
+    </layoutAssignments>
+    <layoutAssignments>
         <layout>AcctSeedERP__Sales_Order_Inventory_Movement__c-AcctSeedERP__Sales Order Inventory Movement Layout</layout>
     </layoutAssignments>
     <layoutAssignments>
@@ -23251,6 +23269,9 @@
     </layoutAssignments>
     <layoutAssignments>
         <layout>AcctSeed__Integrity_Report_Entry__c-AcctSeed__Integrity Check Entry Layout</layout>
+    </layoutAssignments>
+    <layoutAssignments>
+        <layout>AcctSeed__Inventory_Cost__c-AcctSeed__Inventory Cost Layout</layout>
     </layoutAssignments>
     <layoutAssignments>
         <layout>AcctSeed__Journal_Entry_Line__c-AcctSeed__Journal Entry Line Layout</layout>
@@ -24301,6 +24322,15 @@
         <allowEdit>true</allowEdit>
         <allowRead>true</allowRead>
         <modifyAllRecords>true</modifyAllRecords>
+        <object>AcctSeedERP__Purchase_Price__c</object>
+        <viewAllRecords>true</viewAllRecords>
+    </objectPermissions>
+    <objectPermissions>
+        <allowCreate>true</allowCreate>
+        <allowDelete>true</allowDelete>
+        <allowEdit>true</allowEdit>
+        <allowRead>true</allowRead>
+        <modifyAllRecords>true</modifyAllRecords>
         <object>AcctSeedERP__Sales_Order_Inventory_Movement__c</object>
         <viewAllRecords>true</viewAllRecords>
     </objectPermissions>
@@ -24716,6 +24746,15 @@
         <allowRead>true</allowRead>
         <modifyAllRecords>true</modifyAllRecords>
         <object>AcctSeed__Integrity_Report_Entry__c</object>
+        <viewAllRecords>true</viewAllRecords>
+    </objectPermissions>
+    <objectPermissions>
+        <allowCreate>true</allowCreate>
+        <allowDelete>true</allowDelete>
+        <allowEdit>true</allowEdit>
+        <allowRead>true</allowRead>
+        <modifyAllRecords>true</modifyAllRecords>
+        <object>AcctSeed__Inventory_Cost__c</object>
         <viewAllRecords>true</viewAllRecords>
     </objectPermissions>
     <objectPermissions>
