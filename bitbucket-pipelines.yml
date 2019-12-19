@@ -17,6 +17,9 @@ pipelines:
             - echo 'Removing Lead/Opportunity IqScore field'
             - rm -f force-app/main/default/objects/Lead/fields/IqScore.field-meta.xml
             - rm -f force-app/main/default/objects/Opportunity/fields/IqScore.field-meta.xml
+            - echo 'Removing troublesome LiveChatTranscript layouts'
+            - rm -f force-app/main/default/layouts/LiveChatTranscriptActive-Live\ Chat\ Transcript\ %28In\ Progress%29\ Layout.layout-meta.xml
+            - rm -f force-app/main/default/layouts/LiveChatTranscriptWaiting-Live\ Chat\ Transcript\ %28Waiting%29\ Layout.layout-meta.xml
             - echo $DEPLOY_KEY | base64 --decode > deploy.key
             - sfdx force:auth:jwt:grant -i $PROD_CONSUMER_KEY -u $PROD_USERNAME -f deploy.key --setalias ci-deploy-prod --instanceurl $PROD_URL
             - sfdx heber:staticresources:deploy -u ci-deploy-prod
@@ -34,6 +37,9 @@ pipelines:
             - echo 'Removing Lead/Opportunity IqScore field'
             - rm -f force-app/main/default/objects/Lead/fields/IqScore.field-meta.xml
             - rm -f force-app/main/default/objects/Opportunity/fields/IqScore.field-meta.xml
+            - echo 'Removing troublesome LiveChatTranscript layouts'
+            - rm -f force-app/main/default/layouts/LiveChatTranscriptActive-Live\ Chat\ Transcript\ %28In\ Progress%29\ Layout.layout-meta.xml
+            - rm -f force-app/main/default/layouts/LiveChatTranscriptWaiting-Live\ Chat\ Transcript\ %28Waiting%29\ Layout.layout-meta.xml
             - echo $DEPLOY_KEY | base64 --decode > deploy.key
             - sfdx force:auth:jwt:grant -i $TESTING_CONSUMER_KEY -u $TESTING_USERNAME -f deploy.key --setalias ci-deploy-testing --instanceurl $TESTING_URL
             - sfdx heber:staticresources:deploy -u ci-deploy-testing
@@ -52,6 +58,9 @@ pipelines:
             - echo 'Removing Lead/Opportunity IqScore field'
             - rm -f force-app/main/default/objects/Lead/fields/IqScore.field-meta.xml
             - rm -f force-app/main/default/objects/Opportunity/fields/IqScore.field-meta.xml
+            - echo 'Removing troublesome LiveChatTranscript layouts'
+            - rm -f force-app/main/default/layouts/LiveChatTranscriptActive-Live\ Chat\ Transcript\ %28In\ Progress%29\ Layout.layout-meta.xml
+            - rm -f force-app/main/default/layouts/LiveChatTranscriptWaiting-Live\ Chat\ Transcript\ %28Waiting%29\ Layout.layout-meta.xml
             - sfdx force:auth:jwt:grant -i $UAT_CONSUMER_KEY -u $UAT_USERNAME -f deploy.key --setalias ci-deploy-uat --instanceurl $UAT_URL
             - sfdx heber:staticresources:deploy -u ci-deploy-uat
             - sfdx force:source:deploy --testlevel RunLocalTests --targetusername ci-deploy-uat -p force-app/main/default -w 120

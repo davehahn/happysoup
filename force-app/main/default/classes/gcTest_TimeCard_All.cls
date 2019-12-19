@@ -43,10 +43,13 @@ private class gcTest_TimeCard_All{
 
   private static AcctSeed__Time_Card__c insertTimeCard( AcctSeed__Time_Card_Period__c tcp )
   {
+    User employee = Factory_User.newUser( 'TestFirst', 'TestLast', 'Standard User', null );
+    insert employee;
     AcctSeed__Ledger__c ledger = [SELECT Id FROM AcctSeed__Ledger__c LIMIT 1];
     AcctSeed__Time_Card__c tc = new AcctSeed__Time_Card__c(
       AcctSeed__Ledger__c = ledger.Id,
-      AcctSeed__Time_Card_Period__c = tcp.Id
+      AcctSeed__Time_Card_Period__c = tcp.Id,
+      AcctSeed__Employee__c = employee.Id
     );
     insert tc;
     return tc;
@@ -78,8 +81,19 @@ private class gcTest_TimeCard_All{
 
   private static AcctSeed__Time_Card_Line__c insertTimeCardLine( AcctSeed__Time_Card__c tc )
   {
+    GMBLASERP__Serial_Number__c serial = Factory_SerialNumber.insertFullSerial('Boat', 'Pontoon', 'TEST7474');
+    Account customer = Factory_Account.insertCustomerAccounts(1)[0];
+    AcctSeedERP__Warehouse__c wh = [SELECT Id FROM AcctSeedERP__Warehouse__c WHERE Name Like '%Whitefish%' LIMIT 1];
+    AcctSeed__Project__c erp = Factory_ERPOrder.insertServiceOrders( customer,
+      wh,
+      DateTime.now(),
+      new List<GMBLASERP__Serial_Number__c>{ serial } )[0];
+    AcctSeed__Project_Task__c task = Factory_ERPOrder.buildProjectTask( erp.Id, 'Test Task');
+    insert task;
     AcctSeed__Time_Card_Line__c tcl = new AcctSeed__Time_Card_Line__c(
-      AcctSeed__Time_Card__c = tc.Id
+      AcctSeed__Time_Card__c = tc.Id,
+      AcctSeed__Project__c = erp.Id,
+      AcctSeed__Project_Task__c = task.Id
     );
     //gcTimeCardLine.disableTrigger = true;
     insert tcl;
