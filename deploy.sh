@@ -34,10 +34,9 @@ echoOut 'Removing troublesome LiveChatTranscript layouts'
 rm -f force-app/main/default/layouts/LiveChatTranscriptActive-Live\ Chat\ Transcript\ %28In\ Progress%29\ Layout.layout-meta.xml
 rm -f force-app/main/default/layouts/LiveChatTranscriptWaiting-Live\ Chat\ Transcript\ %28Waiting%29\ Layout.layout-meta.xml
 echoOut 'Removing Accounting Home1 tab'
-rm -f force-app/main/default/tabs/AcctSeed__Accounting_Home1.tab
+rm -f force-app/main/default/tabs/AcctSeed__Accounting_Home1.tab-meta.xml
 echoOut 'Running ant doMetadataClean'
 ant -buildfile build/build.xml doMetadataClean
-git commit -am 'post metadata clean'
 echoOut 'Deploying static resources'
 sfdx heber:staticresources:deploy -u $1
 echo 'Deploying the remaining metadata'
