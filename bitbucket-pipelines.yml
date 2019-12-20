@@ -10,40 +10,18 @@ pipelines:
           name: Deploy to Production
           script:
             - echo 'Deploy to Production'
-            - ant -buildfile build/build.xml doMetadataClean
-            - echo 'Removing Lead/Opportunity list view files'
-            - rm -fR force-app/main/default/objects/Lead/listViews
-            - rm -fR force-app/main/default/objects/Opportunity/listViews
-            - echo 'Removing Lead/Opportunity IqScore field'
-            - rm -f force-app/main/default/objects/Lead/fields/IqScore.field-meta.xml
-            - rm -f force-app/main/default/objects/Opportunity/fields/IqScore.field-meta.xml
-            - echo 'Removing troublesome LiveChatTranscript layouts'
-            - rm -f force-app/main/default/layouts/LiveChatTranscriptActive-Live\ Chat\ Transcript\ %28In\ Progress%29\ Layout.layout-meta.xml
-            - rm -f force-app/main/default/layouts/LiveChatTranscriptWaiting-Live\ Chat\ Transcript\ %28Waiting%29\ Layout.layout-meta.xml
-            - echo $DEPLOY_KEY | base64 --decode > deploy.key
-            - sfdx force:auth:jwt:grant -i $PRODUCTION_CONSUMER_KEY -u $PRODUCTION_USERNAME -f deploy.key --setalias ci-deploy-prod --instanceurl $PRODUCTION_URL
-            - sfdx heber:staticresources:deploy -u ci-deploy-prod
-            - sfdx force:source:deploy --testlevel RunLocalTests --targetusername ci-deploy-prod -p force-app/main/default -w 120
+            - chmod +x deploy.sh
+            - chmod +x local_deploy.sh
+            - ./deploy.sh $DEPLOY_KEY $PRODUCTION_USERNAME $PRODUCTION_CONSUMER_KEY $PRODUCTION_URL
     release:
       - step:
           name: Deploy to Testing
           deployment: staging
           script:
             - echo 'Deploy to Testing'
-            - ant -buildfile build/build.xml doMetadataClean
-            - echo 'Removing Lead/Opportunity list view files'
-            - rm -fR force-app/main/default/objects/Lead/listViews
-            - rm -fR force-app/main/default/objects/Opportunity/listViews
-            - echo 'Removing Lead/Opportunity IqScore field'
-            - rm -f force-app/main/default/objects/Lead/fields/IqScore.field-meta.xml
-            - rm -f force-app/main/default/objects/Opportunity/fields/IqScore.field-meta.xml
-            - echo 'Removing troublesome LiveChatTranscript layouts'
-            - rm -f force-app/main/default/layouts/LiveChatTranscriptActive-Live\ Chat\ Transcript\ %28In\ Progress%29\ Layout.layout-meta.xml
-            - rm -f force-app/main/default/layouts/LiveChatTranscriptWaiting-Live\ Chat\ Transcript\ %28Waiting%29\ Layout.layout-meta.xml
-            - echo $DEPLOY_KEY | base64 --decode > deploy.key
-            - sfdx force:auth:jwt:grant -i $SFDC_CONSUMER_KEY -u $SFDC_USERNAME -f deploy.key --setalias ci-deploy-testing --instanceurl $SFDC_URL
-            - sfdx heber:staticresources:deploy -u ci-deploy-testing
-            - sfdx force:source:deploy --testlevel RunLocalTests --targetusername ci-deploy-testing -p force-app/main/default -w 120
+            - chmod +x deploy.sh
+            - chmod +x local_deploy.sh
+            - ./deploy.sh $DEPLOY_KEY $SFDC_USERNAME $SFDC_CONSUMER_KEY $SFDC_URL
       #      - step:
       #          name: Deploy to UAT
       #          deployment: uat
@@ -83,36 +61,15 @@ pipelines:
           name: Deploy to FSL UAT
           script:
             - echo 'Deploy to FSL UAT'
-            - ant -buildfile build/build.xml doMetadataClean
-            - echo 'Removing Lead/Opportunity list view files'
-            - rm -fR force-app/main/default/objects/Lead/listViews
-            - rm -fR force-app/main/default/objects/Opportunity/listViews
-            - echo 'Removing Lead/Opportunity IqScore field'
-            - rm -f force-app/main/default/objects/Lead/fields/IqScore.field-meta.xml
-            - rm -f force-app/main/default/objects/Opportunity/fields/IqScore.field-meta.xml
-            - echo 'Removing troublesome LiveChatTranscript layouts'
-            - rm -f force-app/main/default/layouts/LiveChatTranscriptActive-Live\ Chat\ Transcript\ %28In\ Progress%29\ Layout.layout-meta.xml
-            - rm -f force-app/main/default/layouts/LiveChatTranscriptWaiting-Live\ Chat\ Transcript\ %28Waiting%29\ Layout.layout-meta.xml
-            - echo $DEPLOY_KEY | base64 --decode > deploy.key
-            - sfdx force:auth:jwt:grant -i $FSL_UAT_CONSUMER_KEY -u $FSL_UAT_USERNAME -f deploy.key --setalias ci-deploy-fsl-uat --instanceurl $FSL_UAT_URL
-            - sfdx heber:staticresources:deploy -u ci-deploy-testing
-            - sfdx force:source:deploy --testlevel RunLocalTests --targetusername ci-deploy-fsl-uat -p force-app/main/default -w 120
+            - chmod +x deploy.sh
+            - chmod +x local_deploy.sh
+            - ./deploy.sh $DEPLOY_KEY $FSL_UAT_USERNAME $FSL_UAT_CONSUMER_KEY $FSL_UAT_URL
+
     fsl-release:
       - step:
           name: Deploy to FSL Merge
           script:
             - echo 'Deploy to FSL Merge'
-            - ant -buildfile build/build.xml doMetadataClean
-            - echo 'Removing Lead/Opportunity list view files'
-            - rm -fR force-app/main/default/objects/Lead/listViews
-            - rm -fR force-app/main/default/objects/Opportunity/listViews
-            - echo 'Removing Lead/Opportunity IqScore field'
-            - rm -f force-app/main/default/objects/Lead/fields/IqScore.field-meta.xml
-            - rm -f force-app/main/default/objects/Opportunity/fields/IqScore.field-meta.xml
-            - echo 'Removing troublesome LiveChatTranscript layouts'
-            - rm -f force-app/main/default/layouts/LiveChatTranscriptActive-Live\ Chat\ Transcript\ %28In\ Progress%29\ Layout.layout-meta.xml
-            - rm -f force-app/main/default/layouts/LiveChatTranscriptWaiting-Live\ Chat\ Transcript\ %28Waiting%29\ Layout.layout-meta.xml
-            - echo $DEPLOY_KEY | base64 --decode > deploy.key
-            - sfdx force:auth:jwt:grant -i $FSL_RELEASE_CONSUMER_KEY -u $FSL_RELEASE_USERNAME -f deploy.key --setalias ci-deploy-fsl-release --instanceurl $FSL_RELEASE_URL
-            - sfdx heber:staticresources:deploy -u ci-deploy-testing
-            - sfdx force:source:deploy --testlevel RunLocalTests --targetusername ci-deploy-fls-release -p force-app/main/default -w 120
+            - chmod +x deploy.sh
+            - chmod +x local_deploy.sh
+            - ./deploy.sh $DEPLOY_KEY $FSL_RELEASE_USERNAME $FSL_RELEASE_CONSUMER_KEY $FSL_RELEASE_URL
