@@ -23,34 +23,14 @@
             <template>Customer_Follow_Up_Templates/Auto_Part_Inquiry_New_Case_Created</template>
         </ruleEntry>
         <ruleEntry>
-            <assignedTo>dhahn1@legendboats.com</assignedTo>
-            <assignedToType>User</assignedToType>
-            <criteriaItems>
-                <field>Case.RecordTypeId</field>
-                <operation>equals</operation>
-                <value>Salesforce</value>
-            </criteriaItems>
-            <template>Case_Templates/Salesforce_Issue</template>
-        </ruleEntry>
-        <ruleEntry>
             <assignedTo>Development</assignedTo>
             <assignedToType>Queue</assignedToType>
             <criteriaItems>
                 <field>Case.RecordTypeId</field>
                 <operation>equals</operation>
-                <value>Development</value>
+                <value>Salesforce</value>
             </criteriaItems>
-            <template>Case_Templates/Salesforce_Issue</template>
-        </ruleEntry>
-        <ruleEntry>
-            <assignedTo>Salesforce_Admin</assignedTo>
-            <assignedToType>Queue</assignedToType>
-            <criteriaItems>
-                <field>Case.RecordTypeId</field>
-                <operation>equals</operation>
-                <value>Salesforce Admin</value>
-            </criteriaItems>
-            <template>Case_Templates/Salesforce_Issue</template>
+            <template>Case_Templates/Support_Case</template>
         </ruleEntry>
         <ruleEntry>
             <assignedTo>Report_Request</assignedTo>

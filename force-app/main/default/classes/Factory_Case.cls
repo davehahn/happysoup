@@ -18,6 +18,18 @@ public class Factory_Case {
     );
   }
 
+  public static Case buildSalesforceCase()
+  {
+    return new Case(
+      RecordTypeId = LGND_Utilities.recordTypeIdFromName('Case', 'Salesforce'),
+      Type = 'Service',
+      Priority = 'High',
+      Reason = 'Bug',
+      Subject = 'Salesforce bug',
+      Description = 'Salesforce bug in unit test'
+    );
+  }
+
   public static Case createWarrantyCase(Account acct)
   {
 

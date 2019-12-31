@@ -29,6 +29,33 @@
   margin: 1rem;
 }
 
+.THIS.current-step-one .step-one {
+  display:initial;
+}
+
+.THIS.current-step-one .step-two,
+.THIS.current-step-one .step-three {
+  display:none;
+}
+
+.THIS.current-step-two .step-two {
+  display:initial;
+}
+
+.THIS.current-step-two .step-one,
+.THIS.current-step-two .step-three {
+  display:none;
+}
+
+.THIS.current-step-three .step-three {
+  display:initial;
+}
+
+.THIS.current-step-three .step-one,
+.THIS.current-step-three .step-two {
+  display:none;
+}
+
 .THIS .slds-form-element {
   margin-bottom: 0.5rem;
 }
@@ -54,8 +81,14 @@
   margin-bottom:10px;
 }
 
-.THIS .slds-button.submit-button {
+.THIS .button-container {
   position:absolute;
-  bottom:10px;
-  right: 1rem;
+  left:0;
+  width:100%;
+  padding: 1rem;
+  bottom:0;
+}
+
+.THIS .button-container .next {
+  float:right;
 }

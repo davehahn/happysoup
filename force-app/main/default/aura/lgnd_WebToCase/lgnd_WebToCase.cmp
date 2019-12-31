@@ -1,31 +1,36 @@
 <aura:component implements="force:appHostable,flexipage:availableForAllPageTypes" controller="CaseLexController">
   <!-- ATTRIBUTES -->
+
+  <ltng:require scripts="{!join(',', $Resource.Libraries +'/js/LightningApex.js',
+                                     $Resource.Libraries +'/js/LightningUtils.js') }"
+                afterScriptsLoaded="{!c.doInit}" />
+
   <aura:attribute name="orgId" type="String" access="GLOBAL" />
   <aura:attribute name="url" type="String" access="GLOBAL" />
-
-   <aura:attribute name="caseId" type="String" />
-  <aura:attribute name="userName" type="String" />
-  <aura:attribute name="userEmail" type="String" />
-  <aura:attribute name="contactId" type="String" />
+  <aura:attribute name="acceptedImageTypes" type="List" default="['.jpg', '.jpeg', '.png']"/>
+  <aura:attribute name="caseId" type="String" />
   <aura:attribute name="subject" type="String" />
   <aura:attribute name="description" type="String" />
+  <aura:attribute name="stepsToRepeat" type="String" />
+  <aura:attribute name="jiraProjectName" type="String" />
+  <aura:attribute name="jiraProjectOptions" type="List" />
   <aura:attribute name="type" type="String" />
-  <aura:attribute name="typeOptions" type="Object" />
+  <aura:attribute name="typeOptions" type="List" default="['Accounting', 'Logistics', 'Marketing', 'Parts', 'Sales', 'Service']" />
   <aura:attribute name="reason" type="String" />
-  <aura:attribute name="reasonOptions" type="Object" />
+  <aura:attribute name="reasonOptions" type="List" default="['Bug', 'New Feature']" />
   <aura:attribute name="priority" type="String" />
   <aura:attribute name="priorityOptions" type="Object" />
   <aura:attribute name="retUrl" type="String" />
   <aura:attribute name="toastContent" type="Object" />
   <aura:attribute name="formValid" type="Boolean" default="false" />
-  <aura:attribute name="fileUploadInitd" type="Boolean" default="false" />
+  <aura:attribute name="currentStep" type="String" default="one" />
+  <aura:attribute name="uploadedFiles" type="Map" />
 
-  <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
   <aura:registerEvent name="beginComplete" type="c:lgnd_dh_fileUploadBegin_Event" />
 
   <lightning:utilityBarAPI aura:id="utilitybar" />
 
-  <div>
+  <div class="{!'current-step-'+v.currentStep}">
 
     <div class="slds-spinner_container hidden" aura:id="busy-indicator">
       <div role="status" class="slds-spinner slds-spinner--medium">
@@ -37,63 +42,46 @@
 
     <c:toast content="{!v.toastContent}" isThemeReverse="false" containerId="toast" isToast="true"/>
 
-    <!-- <input type="hidden" name="orgid" value="{!v.orgId}" />
-    <input type="hidden" name="retURL" value="{!v.retUrl}" />
-    <input type="hidden" name="contact" value="{!v.contactId}" />
-    <input type="hidden"  id="external" name="external" value="0" /><br /> -->
+    <!-- Step One Fields -->
+    <div class="step-one">
 
-    <!--  NOTE: These fields are optional debugging elements. Please uncomment    -->
-    <!--  these lines if you wish to test in debug mode.                          -->
-    <!--  <input type="hidden" name="debug" value=1>                              -->
-    <!--  <input type="hidden" name="debugEmail" value="dhahn@legendboats.com">   -->
+      <lightning:layout>
 
-    <!-- <lightning:input label="User Name"
-                     name="name"
-                     value="{!v.userName}"
-                     disabled="true" />
+        <lightning:layoutItem size="6">
+          <lightning:select name="jiraProject"
+                            label="Select Project"
+                            value="{!v.jiraProjectName}"
+                            required="true"
+                            aura:id="requiredField"
+                            messageWhenValueMissing="Project is Required"
+                            onchange="{!c.checkValidity}">
+            <option value="">choose one...</option>
+            <aura:iteration items="{!v.jiraProjectOptions}" var="p">
+              <option value="{!p}" text="{!p}"></option>
+            </aura:iteration>
+          </lightning:select>
+        </lightning:layoutItem>
 
-    <lightning:input type="email"
-                     label="Email"
-                     name="email"
-                     value="{!v.userEmail}"
-                     disabled="true" /> -->
+        <lightning:layoutItem size="6">
+          <lightning:select name="type"
+                    label="Select Type"
+                    value="{!v.type}"
+                    required="true"
+                    aura:id="requiredField"
+                    messageWhenValueMissing="Type is Required"
+                    onchange="{!c.checkValidity}">
+            <option value="">choose one...</option>
+            <aura:iteration items="{!v.typeOptions}" var="t">
+              <option value="{!t}" text="{!t}"></option>
+            </aura:iteration>
+          </lightning:select>
+        </lightning:layoutItem>
 
-    <lightning:tabset >
+      </lightning:layout>
 
-        <lightning:tab label="Details">
+      <lightning:layout>
 
-          <div class="slds-grid">
-            <div class="slds-col">
-              <lightning:select name="type"
-                        label="Select Type"
-                        value="{!v.type}"
-                        required="true"
-                        aura:id="requiredField"
-                        messageWhenValueMissing="Type is Required"
-                        onchange="{!c.checkValidity}">
-                <option value="">choose one...</option>
-                <aura:iteration items="{!v.typeOptions}" var="t">
-                  <option value="{!t}" text="{!t}"></option>
-                </aura:iteration>
-              </lightning:select>
-            </div>
-
-            <div class="slds-col">
-              <lightning:select name="type"
-                        label="Select Priority"
-                        value="{!v.priority}"
-                        required="true"
-                        aura:id="requiredField"
-                        messageWhenValueMissing="Priority is Required"
-                        onchange="{!c.checkValidity}">
-                <option value="">choose one...</option>
-                <aura:iteration items="{!v.priorityOptions}" var="p">
-                  <option value="{!p}" text="{!p}"></option>
-                </aura:iteration>
-              </lightning:select>
-            </div>
-          </div>
-
+        <lightning:layoutItem size="6">
           <lightning:select name="reason"
                             label="Select Reason"
                             value="{!v.reason}"
@@ -106,41 +94,106 @@
               <option value="{!r}" text="{!r}"></option>
             </aura:iteration>
           </lightning:select>
+        </lightning:layoutItem>
 
-          <lightning:input label="Subject"
-                           name="subject"
-                           value="{!v.subject}"
-                           required="true"
-                           aura:id="requiredField"
-                           messageWhenValueMissing="Subject is Required"
-                           onchange="{!c.checkValidity}" />
-
-          <lightning:textarea name="description"
-                              value="{!v.description}"
-                              label="Description of issue"
-                              maxlength="1000"
-                              required="true"
-                              aura:id="requiredField"
-                              messageWhenValueMissing="Description is Required"
-                              onchange="{!c.checkValidity}" />
-        </lightning:tab>
-
-        <lightning:tab label="Attachments" onactive="{!c.attachmentsActive}">
-          <c:lgnd_dh_fileUpload />
-        </lightning:tab>
-
-    </lightning:tabset>
+        <lightning:layoutItem size="6">
+          <lightning:select name="type"
+                            label="Select Priority"
+                            value="{!v.priority}"
+                            required="true"
+                            aura:id="requiredField"
+                            messageWhenValueMissing="Priority is Required"
+                            onchange="{!c.checkValidity}">
+            <option value="">choose one...</option>
+            <aura:iteration items="{!v.priorityOptions}" var="p">
+              <option value="{!p}" text="{!p}"></option>
+            </aura:iteration>
+          </lightning:select>
+        </lightning:layoutItem>
+      </lightning:layout>
 
 
 
+      <lightning:input label="Subject"
+                       name="subject"
+                       value="{!v.subject}"
+                       required="true"
+                       aura:id="requiredField"
+                       messageWhenValueMissing="Subject is Required"
+                       onchange="{!c.checkValidity}" />
 
-    <lightning:button variant="brand"
-                      label="Submit"
-                      onclick="{! c.submitCase }"
-                      class="submit-button"
-                      disabled="{!!v.formValid}" />
+      <lightning:textarea name="description"
+                          value="{!v.description}"
+                          label="Description of issue"
+                          maxlength="1000"
+                          required="true"
+                          aura:id="requiredField"
+                          messageWhenValueMissing="Description is Required"
+                          onchange="{!c.checkValidity}" />
 
-   <!--  </form> -->
+      <div class="button-container">
+        <lightning:button variant="brand"
+                          label="Next"
+                          class="next"
+                          value="two"
+                          disabled="{!!v.formValid}"
+                          onclick="{!c.handleNav}" />
+      </div>
+
+    </div>
+
+    <!-- Step Two Fields -->
+    <div class="step-two">
+
+      <lightning:inputRichText value="{!v.stepsToRepeat}"
+                               label="Steps to Reproduce"
+                               labelVisible="true"
+                               disabledCategories="FORMAT_FONT,INSERT_CONTENT,REMOVE_FORMATTING"/>
+      <div class="button-container">
+        <lightning:button label="Back"
+                          value="one"
+                          class="back"
+                          onclick="{!c.handleNav}" />
+        <lightning:button variant="brand"
+                          label="Next"
+                          class="next"
+                          onclick="{!c.submitCase}" />
+      </div>
+    </div>
+
+    <!-- Step Three Fields -->
+    <div class="step-three">
+
+      <lightning:fileUpload name="screenShots"
+                            label="Upload any applicable Screen Shots"
+                            multiple="true"
+                            accept="{!v.acceptedImageTypes}"
+                            recordId="{!v.caseId}"
+                            onuploadfinished="{!c.handleFileUploadSuccess}"/>
+      <aura:if isTrue="{! !empty(v.uploadedFiles)}">
+        <p class="slds-m-top_small slds-m-bottom_x-small slds-border_bottom slds-text-heading_small slds-text-title_caps">
+          Uploaded Files
+        </p>
+        <ul>
+          <aura:iteration items="{!v.uploadedFiles}" var="file">
+            <li>{!file.name}</li>
+          </aura:iteration>
+        </ul>
+      </aura:if>
+
+      <div class="button-container">
+        <lightning:button label="Back"
+                          value="two"
+                          class="back"
+                          onclick="{!c.handleNav}" />
+        <lightning:button variant="brand"
+                          label="Finish"
+                          class="next"
+                          onclick="{! c.handleFinish }"
+                          disabled="{!!v.formValid}" />
+      </div>
+    </div>
+
   </div>
 
 </aura:component>

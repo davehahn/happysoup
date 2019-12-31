@@ -11,16 +11,34 @@ private class Case_TriggerHandler_Test {
     Factory_CustomSettings.setupInventorySettings();
   }
 
-		static void init() {
-				c = new Case();
-		}
+	static void init() {
+			c = new Case();
+	}
 
-		static void initForWarranty()
-		{
-			dealer = AccountFactory.buildDealerAccount('Testy McDealer');
-			insert dealer;
-			partner = Factory_User.createPartnerUser( dealer );
+	static void initForWarranty()
+	{
+		dealer = AccountFactory.buildDealerAccount('Testy McDealer');
+		insert dealer;
+		partner = Factory_User.createPartnerUser( dealer );
+	}
+
+	public class JiraSuccessCalloutMock implements HttpCalloutMock {
+		public HTTPResponse respond(HTTPRequest req) {
+			HttpResponse response = new HttpResponse();
+			response.setStatusCode(200);
+			return response;
 		}
+	}
+
+	@isTest
+	static void newSalesforceCase()
+	{
+		Test.setMock(HttpCalloutMock.class, new JiraSuccessCalloutMock());
+		Case c = Factory_Case.buildSalesforceCase();
+		insert c;
+		c.Description = 'this is the new description';
+		update c;
+	}
 
 		@isTest
 		static void partnerWarrantyCreate_Test()
