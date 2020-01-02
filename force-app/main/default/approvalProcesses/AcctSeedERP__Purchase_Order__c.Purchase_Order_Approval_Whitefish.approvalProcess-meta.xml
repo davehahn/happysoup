@@ -103,6 +103,10 @@
             <type>FieldUpdate</type>
         </action>
         <action>
+            <name>Uncheck_In_Approval_PO</name>
+            <type>FieldUpdate</type>
+        </action>
+        <action>
             <name>Your_purchase_order_has_been_approved</name>
             <type>Alert</type>
         </action>
@@ -114,6 +118,10 @@
             <type>FieldUpdate</type>
         </action>
         <action>
+            <name>Uncheck_In_Approval_PO</name>
+            <type>FieldUpdate</type>
+        </action>
+        <action>
             <name>Your_purchase_order_has_been_rejected</name>
             <type>Alert</type>
         </action>
@@ -121,11 +129,21 @@
     <finalRejectionRecordLock>false</finalRejectionRecordLock>
     <initialSubmissionActions>
         <action>
+            <name>Check_In_Approval_PO</name>
+            <type>FieldUpdate</type>
+        </action>
+        <action>
             <name>Set_Pending_Approval</name>
             <type>FieldUpdate</type>
         </action>
     </initialSubmissionActions>
     <label>Purchase Order Approval - Whitefish</label>
+    <recallActions>
+        <action>
+            <name>Uncheck_In_Approval_PO</name>
+            <type>FieldUpdate</type>
+        </action>
+    </recallActions>
     <recordEditability>AdminOnly</recordEditability>
     <showApprovalHistory>true</showApprovalHistory>
 </ApprovalProcess>
