@@ -71,9 +71,13 @@ public with sharing class JiraConnect
   {
     switch on this.recordSobjectType
     {
-      when 'Case'
+//      when 'Case'
+//      {
+//       createIssuesFromCases();
+//      }
+      when 'System_Issue__c'
       {
-       createIssuesFromCases();
+        createJiraIssue();
       }
     }
   }
@@ -82,9 +86,13 @@ public with sharing class JiraConnect
   {
     switch on this.recordSobjectType
     {
-      when 'Case'
+//      when 'Case'
+//      {
+//        updateIssuesFromCases();
+//      }
+      when 'System_Issue__c'
       {
-        updateIssuesFromCases();
+        updateJiraIssues();
       }
       when 'ContentDocumentLink'
       {
@@ -93,30 +101,29 @@ public with sharing class JiraConnect
     }
   }
 
-  private void createIssuesFromCases()
+  private void createJiraIssue()
   {
-    Map<String, Map<String,List<Case>>> toCreateIssuesMap = new Map<String, Map<String, List<Case>>>();
-    for( Case c : (List<Case>)this.newRecords )
+    Map<String, Map<String,List<System_Issue__c>>> toCreateIssuesMap = new Map<String, Map<String, List<System_Issue__c>>>();
+    for( System_Issue__c si : (List<System_Issue__c>)this.newRecords )
     {
-      if(  c.RecordTypeId == salesforceCaseRtId &&
-           c.Jira_Project_Name__c != null &&
-           jiraProjectMap.containsKey( c.Jira_Project_Name__c ) )
+      if( si.Jira_Project__c != null &&
+          jiraProjectMap.containsKey( si.Jira_Project__c ) )
       {
-        JiraProject jiraPro = jiraProjectMap.get( c.Jira_Project_Name__c );
+        JiraProject jiraPro = jiraProjectMap.get( si.Jira_Project__c );
         if( !toCreateIssuesMap.containsKey( jiraPro.jiraId ) )
         {
           toCreateIssuesMap.put( jiraPro.jiraId,
-                                 new Map<String, List<Case>>() );
+            new Map<String, List<System_Issue__c>>() );
         }
-        if( jiraPro.issueMap.containsKey( c.Reason ) )
+        if( jiraPro.issueMap.containsKey( si.Type__c ) )
         {
-          if( !toCreateIssuesMap.get( jiraPro.jiraId ).containsKey( jiraPro.issueMap.get( c.Reason ) ) )
+          if( !toCreateIssuesMap.get( jiraPro.jiraId ).containsKey( jiraPro.issueMap.get( si.Type__c ) ) )
           {
-            toCreateIssuesMap.get( jiraPro.jiraId ).put( jiraPro.issueMap.get( c.Reason ), new List<Case>() );
+            toCreateIssuesMap.get( jiraPro.jiraId ).put( jiraPro.issueMap.get( si.Type__c ), new List<System_Issue__c>() );
           }
           toCreateIssuesMap.get( jiraPro.jiraId )
-            .get( jiraPro.issueMap.get( c.Reason ) )
-            .add( c );
+            .get( jiraPro.issueMap.get( si.Type__c ) )
+            .add( si );
         }
       }
     }
@@ -129,46 +136,97 @@ public with sharing class JiraConnect
           projId,
           issueId,
           toCreateIssuesMap.get( projId ).get( issueId ),
-          (List<Case>)oldRecords );
+          (List<System_Issue__c>)this.oldRecords );
       }
     }
   }
 
-  private void updateIssuesFromCases()
+//  private void createIssuesFromCases()
+//  {
+//    Map<String, Map<String,List<Case>>> toCreateIssuesMap = new Map<String, Map<String, List<Case>>>();
+//    for( Case c : (List<Case>)this.newRecords )
+//    {
+//      if(  c.RecordTypeId == salesforceCaseRtId &&
+//           c.Jira_Project_Name__c != null &&
+//           jiraProjectMap.containsKey( c.Jira_Project_Name__c ) )
+//      {
+//        JiraProject jiraPro = jiraProjectMap.get( c.Jira_Project_Name__c );
+//        if( !toCreateIssuesMap.containsKey( jiraPro.jiraId ) )
+//        {
+//          toCreateIssuesMap.put( jiraPro.jiraId,
+//                                 new Map<String, List<Case>>() );
+//        }
+//        if( jiraPro.issueMap.containsKey( c.Reason ) )
+//        {
+//          if( !toCreateIssuesMap.get( jiraPro.jiraId ).containsKey( jiraPro.issueMap.get( c.Reason ) ) )
+//          {
+//            toCreateIssuesMap.get( jiraPro.jiraId ).put( jiraPro.issueMap.get( c.Reason ), new List<Case>() );
+//          }
+//          toCreateIssuesMap.get( jiraPro.jiraId )
+//            .get( jiraPro.issueMap.get( c.Reason ) )
+//            .add( c );
+//        }
+//      }
+//    }
+//    for( String projId : toCreateIssuesMap.keySet() )
+//    {
+//      for( String issueId : toCreateIssuesMap.get( projId ).keySet() )
+//      {
+//        System.debug('creating JIRA issue for project ' + projId + ' issue type ' + issueId );
+//        JCFS.API.createJiraIssue(
+//          projId,
+//          issueId,
+//          toCreateIssuesMap.get( projId ).get( issueId ),
+//          (List<Case>)oldRecords );
+//      }
+//    }
+//  }
+
+  private void updateJiraIssues()
   {
-    doUpdateFromCases( (List<Case>)this.newRecords, (List<Case>)this.oldRecords );
+    doJiraIssueUpdate( this.newRecords, this.oldRecords );
   }
 
-  private void doUpdateFromCases( List<Case> newRecords, List<Case> oldRecords )
+  private void doJiraIssueUpdate( List<SObject> newRecords, List<SObject> oldRecords )
   {
-    List<Case> toUpdate = new List<Case>();
-    for( Case c : newRecords )
-    {
-      if( c.RecordTypeId == salesforceCaseRtId )
-      {
-        toUpdate.add( c );
-      }
-    }
-    if( toUpdate.size() > 0 )
-    {
-      JCFS.API.pushUpdatesToJira( toUpdate, oldRecords );
-    }
+    JCFS.API.pushUpdatesToJira( newRecords, oldRecords );
   }
+
+//  private void updateIssuesFromCases()
+//  {
+//    doUpdateFromCases( (List<Case>)this.newRecords, (List<Case>)this.oldRecords );
+//  }
+
+//  private void doUpdateFromCases( List<Case> newRecords, List<Case> oldRecords )
+//  {
+//    List<Case> toUpdate = new List<Case>();
+//    for( Case c : newRecords )
+//    {
+//      if( c.RecordTypeId == salesforceCaseRtId )
+//      {
+//        toUpdate.add( c );
+//      }
+//    }
+//    if( toUpdate.size() > 0 )
+//    {
+//      JCFS.API.pushUpdatesToJira( toUpdate, oldRecords );
+//    }
+//  }
 
   private void updatePushFilesToJira()
   {
-    Set<Id> caseIds = new Set<Id>();
+    Set<Id> systemIssueIds = new Set<Id>();
     for( ContentDocumentLink cdl : (List<ContentDocumentLink>)this.newRecords )
     {
-      if( String.valueOf( cdl.LinkedEntityId.getSobjectType() ) == 'Case' )
+      if( String.valueOf( cdl.LinkedEntityId.getSobjectType() ) == 'System_Issue__c' )
       {
-        caseIds.add( cdl.LinkedEntityId );
+        systemIssueIds.add( cdl.LinkedEntityId );
       }
     }
-    if( caseIds.size() > 0 )
+    if( systemIssueIds.size() > 0 )
     {
-      List<Case> cases = [SELECT Id, RecordTypeId FROm Case WHERE Id IN :caseIds];
-      doUpdateFromCases( cases, null );
+      List<System_Issue__c> systemIssues = [SELECT Id FROM System_Issue__c WHERE Id IN :systemIssueIds];
+      doJiraIssueUpdate( (List<SObject>)systemIssues, null );
     }
   }
 }

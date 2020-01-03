@@ -1144,9 +1144,7 @@
         </actions>
         <active>true</active>
         <description>Sends boat numbers to the boat number supplier by location when boat numbers are entered on the Retail Boat Sale ERP.</description>
-        <formula>RecordType.Name = &quot;Retail Boat Sale&quot; &amp;&amp; 
-CONTAINS(WarehouseName__c, &quot;Barrie&quot;) &amp;&amp; NOT(ISBLANK(Boat_numbers_erp__c)) &amp;&amp; NOT(CONTAINS(Oppy_Boat_Model__c, &quot;Loose&quot;)) &amp;&amp; 
-NOT(ISPICKVAL(Serial_Number__r.Status__c, &quot;Used&quot;))</formula>
+        <formula>RecordType.Name = &quot;Retail Boat Sale&quot; &amp;&amp;  CONTAINS(WarehouseName__c, &quot;Barrie&quot;) &amp;&amp; NOT(ISBLANK(Boat_numbers_erp__c)) &amp;&amp; NOT(CONTAINS(Oppy_Boat_Model__c, &quot;Loose&quot;)) &amp;&amp;  NOT(ISPICKVAL(Serial_Number__r.Status__c, &quot;Used&quot;))</formula>
         <triggerType>onCreateOrTriggeringUpdate</triggerType>
     </rules>
     <rules>
@@ -1157,9 +1155,7 @@ NOT(ISPICKVAL(Serial_Number__r.Status__c, &quot;Used&quot;))</formula>
         </actions>
         <active>true</active>
         <description>Sends boat numbers to the boat number supplier by location when boat numbers are entered on the Retail Boat Sale ERP.</description>
-        <formula>RecordType.Name = &quot;Retail Boat Sale&quot; &amp;&amp; 
-CONTAINS(WarehouseName__c, &quot;Whitefish&quot;) &amp;&amp; NOT(ISBLANK(Boat_numbers_erp__c)) &amp;&amp; NOT(CONTAINS(Oppy_Boat_Model__c, &quot;Loose&quot;)) &amp;&amp; 
-NOT(ISPICKVAL(Serial_Number__r.Status__c, &quot;Used&quot;))</formula>
+        <formula>RecordType.Name = &quot;Retail Boat Sale&quot; &amp;&amp;  CONTAINS(WarehouseName__c, &quot;Whitefish&quot;) &amp;&amp; NOT(ISBLANK(Boat_numbers_erp__c)) &amp;&amp; NOT(CONTAINS(Oppy_Boat_Model__c, &quot;Loose&quot;)) &amp;&amp;  NOT(ISPICKVAL(Serial_Number__r.Status__c, &quot;Used&quot;))</formula>
         <triggerType>onCreateOrTriggeringUpdate</triggerType>
     </rules>
     <rules>
@@ -3400,6 +3396,50 @@ NOT(ISPICKVAL(Serial_Number__r.Status__c, &quot;Used&quot;))</formula>
         <triggerType>onCreateOrTriggeringUpdate</triggerType>
     </rules>
     <rules>
+        <fullName>User Task Boat Specialist Assigned Alexander</fullName>
+        <actions>
+            <name>You_ve_been_assigned_as_Boat_Specialist_to_this_ERP_Dave_Alexander</name>
+            <type>Task</type>
+        </actions>
+        <active>true</active>
+        <criteriaItems>
+            <field>AcctSeed__Project__c.RecordTypeId</field>
+            <operation>equals</operation>
+            <value>Retail Boat Sale</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>AcctSeed__Project__c.Boat_Specialist__c</field>
+            <operation>contains</operation>
+            <value>Alexander</value>
+        </criteriaItems>
+        <description>Sends task to Boat Specialist that they are assigned as Boat Specialist.</description>
+        <triggerType>onCreateOrTriggeringUpdate</triggerType>
+    </rules>
+    <rules>
+        <fullName>User Task Boat Specialist Assigned Deseve</fullName>
+        <actions>
+            <name>This_ERP_has_Been_Created_You_can_Start_Pick_and_Pack_Process</name>
+            <type>Task</type>
+        </actions>
+        <actions>
+            <name>You_have_been_assigned_as_the_Boat_Specialist_for_this_ERP</name>
+            <type>Task</type>
+        </actions>
+        <active>true</active>
+        <criteriaItems>
+            <field>AcctSeed__Project__c.RecordTypeId</field>
+            <operation>equals</operation>
+            <value>Retail Boat Sale</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>AcctSeed__Project__c.Boat_Specialist__c</field>
+            <operation>contains</operation>
+            <value>Louis</value>
+        </criteriaItems>
+        <description>Sends task to Boat Specialist that they are assigned as Boat Specialist. Also sends a notification to Parts Dept. that they can begin Pick and Pack Process</description>
+        <triggerType>onCreateOrTriggeringUpdate</triggerType>
+    </rules>
+    <rules>
         <fullName>User Task Boat Specialist Assigned Deseve Start Pick and Pack</fullName>
         <actions>
             <name>This_ERP_has_Been_Created_You_can_Start_Pick_and_Pack_Process</name>
@@ -3417,6 +3457,174 @@ NOT(ISPICKVAL(Serial_Number__r.Status__c, &quot;Used&quot;))</formula>
             <value>Louis</value>
         </criteriaItems>
         <description>Sends task to Boat Specialist that they are assigned as Boat Specialist. Also sends a notification to Parts Dept. that they can begin Pick and Pack Process</description>
+        <triggerType>onCreateOrTriggeringUpdate</triggerType>
+    </rules>
+    <rules>
+        <fullName>User Task Boat Specialist Assigned Lafreniere</fullName>
+        <actions>
+            <name>You_ve_been_assigned_as_Boat_Specialist_to_this_ERP_Don_Levac</name>
+            <type>Task</type>
+        </actions>
+        <active>true</active>
+        <criteriaItems>
+            <field>AcctSeed__Project__c.RecordTypeId</field>
+            <operation>equals</operation>
+            <value>Retail Boat Sale</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>AcctSeed__Project__c.Boat_Specialist__c</field>
+            <operation>contains</operation>
+            <value>Lafreniere</value>
+        </criteriaItems>
+        <description>Sends task to Boat Specialist that they are assigned as Boat Specialist.</description>
+        <triggerType>onCreateOrTriggeringUpdate</triggerType>
+    </rules>
+    <rules>
+        <fullName>User Task Boat Specialist Assigned Lariviere</fullName>
+        <actions>
+            <name>You_ve_been_assigned_as_Boat_Specialist_to_this_ERP_Scott_Dormer</name>
+            <type>Task</type>
+        </actions>
+        <active>true</active>
+        <criteriaItems>
+            <field>AcctSeed__Project__c.RecordTypeId</field>
+            <operation>equals</operation>
+            <value>Retail Boat Sale</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>AcctSeed__Project__c.Boat_Specialist__c</field>
+            <operation>contains</operation>
+            <value>lariviere</value>
+        </criteriaItems>
+        <description>Sends task to Boat Specialist that they are assigned as Boat Specialist.</description>
+        <triggerType>onCreateOrTriggeringUpdate</triggerType>
+    </rules>
+    <rules>
+        <fullName>User Task Boat Specialist Assigned Milne</fullName>
+        <actions>
+            <name>You_ve_been_assigned_as_Boat_Specialist_to_this_ERP_Brandon_Milne</name>
+            <type>Task</type>
+        </actions>
+        <active>true</active>
+        <criteriaItems>
+            <field>AcctSeed__Project__c.RecordTypeId</field>
+            <operation>equals</operation>
+            <value>Retail Boat Sale</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>AcctSeed__Project__c.Boat_Specialist__c</field>
+            <operation>contains</operation>
+            <value>Milne</value>
+        </criteriaItems>
+        <description>Sends task to Boat Specialist that they are assigned as Boat Specialist.</description>
+        <triggerType>onCreateOrTriggeringUpdate</triggerType>
+    </rules>
+    <rules>
+        <fullName>User Task Boat Specialist Assigned Taylor</fullName>
+        <actions>
+            <name>You_have_been_assigned_as_the_Boat_Specialist_for_this_ERP_Taylor</name>
+            <type>Task</type>
+        </actions>
+        <active>true</active>
+        <criteriaItems>
+            <field>AcctSeed__Project__c.RecordTypeId</field>
+            <operation>equals</operation>
+            <value>Retail Boat Sale</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>AcctSeed__Project__c.Boat_Specialist__c</field>
+            <operation>contains</operation>
+            <value>Taylor</value>
+        </criteriaItems>
+        <description>Sends task to Boat Specialist that they are assigned as Boat Specialist.</description>
+        <triggerType>onCreateOrTriggeringUpdate</triggerType>
+    </rules>
+    <rules>
+        <fullName>User Task Boat Specialist Assigned Tessier</fullName>
+        <actions>
+            <name>You_have_been_assigned_as_the_Boat_Specialist_for_this_ERP_Grant</name>
+            <type>Task</type>
+        </actions>
+        <active>false</active>
+        <criteriaItems>
+            <field>AcctSeed__Project__c.RecordTypeId</field>
+            <operation>equals</operation>
+            <value>Retail Boat Sale</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>AcctSeed__Project__c.Boat_Specialist__c</field>
+            <operation>contains</operation>
+            <value>Tessier</value>
+        </criteriaItems>
+        <description>Sends task to Boat Specialist that they are assigned as Boat Specialist.</description>
+        <triggerType>onCreateOrTriggeringUpdate</triggerType>
+    </rules>
+    <rules>
+        <fullName>User Task Boat Specialist Assigned Thew</fullName>
+        <actions>
+            <name>You_ve_been_assigned_as_Boat_Specialist_to_this_ERP_Chris_Thew</name>
+            <type>Task</type>
+        </actions>
+        <active>true</active>
+        <criteriaItems>
+            <field>AcctSeed__Project__c.RecordTypeId</field>
+            <operation>equals</operation>
+            <value>Retail Boat Sale</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>AcctSeed__Project__c.Boat_Specialist__c</field>
+            <operation>contains</operation>
+            <value>Thew</value>
+        </criteriaItems>
+        <description>Sends task to Boat Specialist that they are assigned as Boat Specialist.</description>
+        <triggerType>onCreateOrTriggeringUpdate</triggerType>
+    </rules>
+    <rules>
+        <fullName>User Task Boat Specialist Gather Parts Dagenais</fullName>
+        <active>false</active>
+        <criteriaItems>
+            <field>AcctSeed__Project__c.RecordTypeId</field>
+            <operation>equals</operation>
+            <value>Retail Boat Sale</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>AcctSeed__Project__c.Boat_Specialist__c</field>
+            <operation>contains</operation>
+            <value>Dagenais</value>
+        </criteriaItems>
+        <description>Sends task to Boat Specialist that they are assigned as Boat Specialist.</description>
+        <triggerType>onCreateOrTriggeringUpdate</triggerType>
+    </rules>
+    <rules>
+        <fullName>User Task Boat Specialist Gather Parts Middaugh</fullName>
+        <active>false</active>
+        <criteriaItems>
+            <field>AcctSeed__Project__c.RecordTypeId</field>
+            <operation>equals</operation>
+            <value>Retail Boat Sale</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>AcctSeed__Project__c.Boat_Specialist__c</field>
+            <operation>contains</operation>
+            <value>Middaugh</value>
+        </criteriaItems>
+        <description>Sends task to Gather Parts as was just tagged to be the Boat Specialist</description>
+        <triggerType>onCreateOrTriggeringUpdate</triggerType>
+    </rules>
+    <rules>
+        <fullName>User Task Boat Specialist Gather Parts StGermain</fullName>
+        <active>false</active>
+        <criteriaItems>
+            <field>AcctSeed__Project__c.RecordTypeId</field>
+            <operation>equals</operation>
+            <value>Retail Boat Sale</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>AcctSeed__Project__c.Boat_Specialist__c</field>
+            <operation>contains</operation>
+            <value>germain</value>
+        </criteriaItems>
+        <description>Sends task to Boat Specialist that they are assigned as Boat Specialist.</description>
         <triggerType>onCreateOrTriggeringUpdate</triggerType>
     </rules>
     <rules>
@@ -4935,6 +5143,134 @@ Please note, Luc and Elvis also get this notification.</description>
         <protected>false</protected>
         <status>Open</status>
         <subject>Warranty or Partner Parts Order has Stage Parts to be ordered</subject>
+    </tasks>
+    <tasks>
+        <fullName>You_have_been_assigned_as_the_Boat_Specialist_for_this_ERP</fullName>
+        <assignedTo>ldeseve@legendboats.com</assignedTo>
+        <assignedToType>user</assignedToType>
+        <description>You have been assigned as Boat Specialist for this Retail ERP.
+
+Please review the ERP and get with the Salesperson to review the ERP and ensure everything is correct.
+
+Also, take this opportunity to call the customer to introduce yourself.</description>
+        <dueDateOffset>0</dueDateOffset>
+        <notifyAssignee>false</notifyAssignee>
+        <priority>Normal</priority>
+        <protected>false</protected>
+        <status>Open</status>
+        <subject>You have been assigned as the Boat Specialist for this ERP</subject>
+    </tasks>
+    <tasks>
+        <fullName>You_have_been_assigned_as_the_Boat_Specialist_for_this_ERP_Grant</fullName>
+        <assignedTo>bfram@legendboats.com</assignedTo>
+        <assignedToType>user</assignedToType>
+        <description>You have been assigned as Boat Specialist for this Retail ERP.
+
+Please review the ERP and get with the Salesperson to review the ERP and ensure everything is correct.
+
+Also, take this opportunity to call the customer to introduce yourself.</description>
+        <dueDateOffset>0</dueDateOffset>
+        <notifyAssignee>false</notifyAssignee>
+        <priority>Normal</priority>
+        <protected>false</protected>
+        <status>Open</status>
+        <subject>You have been assigned as the Boat Specialist for this ERP</subject>
+    </tasks>
+    <tasks>
+        <fullName>You_have_been_assigned_as_the_Boat_Specialist_for_this_ERP_Taylor</fullName>
+        <assignedTo>jtaylor@legendboats.com</assignedTo>
+        <assignedToType>user</assignedToType>
+        <description>You have been assigned as Boat Specialist for this Retail ERP.
+
+Please review the ERP and get with the Salesperson to review the ERP and ensure everything is correct.
+
+Also, take this opportunity to call the customer to introduce yourself.</description>
+        <dueDateOffset>0</dueDateOffset>
+        <notifyAssignee>false</notifyAssignee>
+        <priority>Normal</priority>
+        <protected>false</protected>
+        <status>Open</status>
+        <subject>You have been assigned as the Boat Specialist for this ERP</subject>
+    </tasks>
+    <tasks>
+        <fullName>You_ve_been_assigned_as_Boat_Specialist_to_this_ERP_Brandon_Milne</fullName>
+        <assignedTo>bmilne@legendboats.com</assignedTo>
+        <assignedToType>user</assignedToType>
+        <description>You have been assigned as Boat Specialist for this Retail ERP.
+
+Please review the ERP and get with the Salesperson to review the ERP and ensure everything is correct.
+
+Also, take this opportunity to call the customer to introduce yourself.</description>
+        <dueDateOffset>0</dueDateOffset>
+        <notifyAssignee>false</notifyAssignee>
+        <priority>Normal</priority>
+        <protected>false</protected>
+        <status>Open</status>
+        <subject>You have been assigned as Boat Specialist to this ERP Brandon Milne</subject>
+    </tasks>
+    <tasks>
+        <fullName>You_ve_been_assigned_as_Boat_Specialist_to_this_ERP_Chris_Thew</fullName>
+        <assignedTo>cthew@legendboats.com</assignedTo>
+        <assignedToType>user</assignedToType>
+        <description>You have been assigned as Boat Specialist for this Retail ERP.
+
+Please review the ERP and get with the Salesperson to review the ERP and ensure everything is correct.
+
+Also, take this opportunity to call the customer to introduce yourself.</description>
+        <dueDateOffset>0</dueDateOffset>
+        <notifyAssignee>false</notifyAssignee>
+        <priority>Normal</priority>
+        <protected>false</protected>
+        <status>Open</status>
+        <subject>You have been assigned as Boat Specialist to this ERP Chris Thew</subject>
+    </tasks>
+    <tasks>
+        <fullName>You_ve_been_assigned_as_Boat_Specialist_to_this_ERP_Dave_Alexander</fullName>
+        <assignedTo>d_alexander@legendboats.com</assignedTo>
+        <assignedToType>user</assignedToType>
+        <description>You have been assigned as Boat Specialist for this Retail ERP.
+
+Please review the ERP and get with the Salesperson to review the ERP and ensure everything is correct.
+
+Also, take this opportunity to call the customer to introduce yourself.</description>
+        <dueDateOffset>0</dueDateOffset>
+        <notifyAssignee>false</notifyAssignee>
+        <priority>Normal</priority>
+        <protected>false</protected>
+        <status>Open</status>
+        <subject>You have been assigned as Boat Specialist to this ERP Dave Alexander</subject>
+    </tasks>
+    <tasks>
+        <fullName>You_ve_been_assigned_as_Boat_Specialist_to_this_ERP_Don_Levac</fullName>
+        <assignedTo>bfram@legendboats.com</assignedTo>
+        <assignedToType>user</assignedToType>
+        <description>You have been assigned as Boat Specialist for this Retail ERP.
+
+Please review the ERP and get with the Salesperson to review the ERP and ensure everything is correct.
+
+Also, take this opportunity to call the customer to introduce yourself.</description>
+        <dueDateOffset>0</dueDateOffset>
+        <notifyAssignee>false</notifyAssignee>
+        <priority>Normal</priority>
+        <protected>false</protected>
+        <status>Open</status>
+        <subject>You have been assigned as Boat Specialist to this ERP Alex Lafreniere</subject>
+    </tasks>
+    <tasks>
+        <fullName>You_ve_been_assigned_as_Boat_Specialist_to_this_ERP_Scott_Dormer</fullName>
+        <assignedTo>bfram@legendboats.com</assignedTo>
+        <assignedToType>user</assignedToType>
+        <description>You have been assigned as Boat Specialist for this Retail ERP.
+
+Please review the ERP and get with the Salesperson to review the ERP and ensure everything is correct.
+
+Also, take this opportunity to call the customer to introduce yourself.</description>
+        <dueDateOffset>0</dueDateOffset>
+        <notifyAssignee>false</notifyAssignee>
+        <priority>Normal</priority>
+        <protected>false</protected>
+        <status>Open</status>
+        <subject>You have been assigned as Boat Specialist to this ERP Tommy Lariviere</subject>
     </tasks>
     <tasks>
         <fullName>Your_Warranty_Claim_has_been_Approved</fullName>

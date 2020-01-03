@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>All_Reported_Bugs</fullName>
+    <columns>NAME</columns>
+    <columns>Reported_By__c</columns>
+    <columns>Department__c</columns>
+    <columns>Subject__c</columns>
+    <columns>Status__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>Type__c</field>
+        <operation>equals</operation>
+        <value>Bug</value>
+    </filters>
+    <label>All Reported Bugs</label>
+</ListView>

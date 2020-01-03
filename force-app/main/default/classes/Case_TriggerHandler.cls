@@ -41,7 +41,7 @@ public without sharing class Case_TriggerHandler extends TriggerHandler
     makeCommentOnErpAboutCaseNumber( (List<Case>)Trigger.new );
     handleSubletLines( (List<Case>)Trigger.new, null );
     enforceAssignmentRules( Trigger.newMap.keySet() );
-    new JiraConnect( Trigger.new, Trigger.oldMap ).createIssues();
+    //new JiraConnect( Trigger.new, Trigger.oldMap ).createIssues();
   }
 
   protected override void afterUpdate()
@@ -52,7 +52,7 @@ public without sharing class Case_TriggerHandler extends TriggerHandler
                            (Map<Id, Case>)Trigger.oldMap );
     handleSubletLines( (List<Case>)Trigger.new,
                        (Map<Id, Case>)Trigger.oldMap );
-    new JiraConnect( Trigger.new, Trigger.oldMap ).updateIssues();
+    //new JiraConnect( Trigger.new, Trigger.oldMap ).updateIssues();
   }
 
   protected override void afterDelete()
