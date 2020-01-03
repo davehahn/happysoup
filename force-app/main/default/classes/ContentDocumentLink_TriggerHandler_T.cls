@@ -13,17 +13,17 @@ private class ContentDocumentLink_TriggerHandler_T
   }
 
   @IsTest
-  static void salesforceCaseAfterInsert_Test()
+  static void systemIssueAfterInsert_Test()
   {
-    Case c = Factory_Case.buildSalesforceCase();
-    insert c;
+    System_Issue__c issue = Factory_SystemIssue.buildIssue();
+    insert issue;
     ContentVersion contentVersion = new ContentVersion(PathOnClient = 'PathOnClient', VersionData = Blob.valueOf('Test'));
     insert contentVersion;
     ContentVersion createdContentVersion = [SELECT ContentDocumentId FROM ContentVersion WHERE Id = :contentVersion.Id];
     ContentDocumentLink randomContentDocumentLink =
       new ContentDocumentLink(
         ContentDocumentId = createdContentVersion.ContentDocumentId,
-        LinkedEntityId = c.Id,
+        LinkedEntityId = issue.Id,
         ShareType = 'V'
       );
     JCFS.JiraTriggerTestHelper.testAfterInsert(randomContentDocumentLink);

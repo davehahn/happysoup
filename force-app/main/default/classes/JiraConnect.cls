@@ -4,17 +4,6 @@
 
 public with sharing class JiraConnect
 {
-  private Id salesforceCaseRtId = LGND_Utilities.recordTypeIdFromName('Case', 'Salesforce');
-
-//  private Map<Id, String> caseRecordTypeToJiraProjectMap = new Map<Id, String>
-//  {
-//    salesforceCaseRtId => '10403'
-//  };
-
-//  private Map<String, String> caseTypeToJiraIssueMap = new Map<String, String>{
-//    'Bug' => '10004',
-//    'New Feature' => '10101'
-//  };
 
   public static  Map<String, JiraProject> jiraProjectMap{
     get {
@@ -23,7 +12,7 @@ public with sharing class JiraConnect
         jiraProjectMap = new Map<String, JiraProject>();
         for( Jira_Project_Type__mdt jpt : [ SELECT MasterLabel,
                                                    Jira_Project_Id__c,
-                                            ( SELECT Case_Reason__c,
+                                            ( SELECT Type__c,
                                                      Jira_Issue_Id__c
                                               FROM Jira_Issue_Types__r)
                                             FROM Jira_Project_Type__mdt ] )
@@ -49,7 +38,7 @@ public with sharing class JiraConnect
       this.issueMap = new Map<String, String>();
       for( Jira_Issue_Type__mdt it : jpt.Jira_Issue_Types__r )
       {
-        this.issueMap.put( it.Case_Reason__c, it.Jira_Issue_Id__c );
+        this.issueMap.put( it.Type__c, it.Jira_Issue_Id__c );
       }
     }
   }

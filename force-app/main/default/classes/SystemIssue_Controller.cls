@@ -14,7 +14,6 @@ public with sharing class SystemIssue_Controller
       'jiraProjectOptions' => LGND_Utilities.getPicklistValues('System_Issue__c', 'Jira_Project__c'),
       'departmentOptions' => LGND_Utilities.getPicklistValues('System_Issue__c', 'Department__c')
     };
-    System.debug( result );
     return JSON.serialize( result );
   }
 
