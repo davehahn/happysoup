@@ -1,5 +1,6 @@
 <aura:component implements="force:hasRecordId,flexipage:availableForAllPageTypes">
   <aura:attribute name="recordId" type="String" />
+  <aura:attribute name="readOnly" type="Boolean" default="false" />
   <aura:attribute name="pickListField" type="String" required="true" />
   <aura:attribute name="pathType" type="String" required="true" default="linear" />
   <aura:attribute name="title" type="String" />

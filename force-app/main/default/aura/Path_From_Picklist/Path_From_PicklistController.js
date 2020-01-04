@@ -4,8 +4,14 @@
     var fieldName = component.get('v.pickListField'),
         fieldValue = event.getParam('detail').value,
         spinner = component.find('spinner'),
-        simpleRecord = component.get('v.simpleRecord');
+        simpleRecord = component.get('v.simpleRecord'),
+        readOnly = component.get('v.readOnly');
 
+    if( readOnly )
+    {
+      event.preventDefault();
+      return;
+    }
     simpleRecord[fieldName] = fieldValue;
     component.set('v.simpleRecord', simpleRecord );
     $A.util.toggleClass(spinner, "slds-hide");

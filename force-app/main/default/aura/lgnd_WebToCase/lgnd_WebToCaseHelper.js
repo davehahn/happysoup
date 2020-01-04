@@ -1,4 +1,10 @@
 ({
+  doInit: function( component )
+  {
+    var action = component.get('c.initData');
+    return new LightningApex( this, action ).fire();
+  },
+
   isFormValid: function( component )
   {
     return component.find('requiredField').reduce(function (validSoFar, inputCmp) {
@@ -7,46 +13,41 @@
         }, true);
   },
 
+  submitCase: function( component )
+  {
+    var data = {
+          'caseType': component.get('v.type'),
+          'reason': component.get('v.reason'),
+          'priority': component.get('v.priority'),
+          'subject': component.get('v.subject'),
+          'description': component.get('v.description'),
+          'stepsToReproduce': component.get('v.stepsToRepeat'),
+          'jiraProjectName': component.get('v.jiraProjectName')
+        },
+        action = component.get('c.saveTheCase');
+
+    action.setParams({
+      jsonData: JSON.stringify( data )
+    });
+
+    return new LightningApex( this, action ).fire();
+  },
+
   caseCreateComplete: function( component )
   {
     var indicator = component.find('busy-indicator'),
-        toast = $A.get("e.force:showToast"),
         utilityAPI = component.find("utilitybar");
     component.set('v.type', '');
     component.set('v.priority', '');
     component.set('v.subject', '');
     component.set('v.description', '');
     component.set('v.reason', '');
+    component.set('v.stepsToRepeat', '');
     component.set('v.formValid', false);
+    component.set('v.currentStep', 'one');
     $A.util.toggleClass( indicator, 'hidden' );
-    toast.setParams({
-      message: "Issue Logged Successfully!",
-      type: "success"
-    })
-    .fire();
+    LightningUtils.showToast('success', 'Success', 'Issue Logged Successfully!')
     utilityAPI.minimizeUtility();
-  },
-
-  uploadFiles: function( component )
-  {
-    var caseId = component.get('v.caseId'),
-        isAttachmentsInitd = component.get('v.fileUploadInitd'),
-        beginEvt = $A.get('e.c:lgnd_dh_fileUploadBegin_Event');
-
-    return new Promise( function( resolve, reject ) {
-      if( isAttachmentsInitd )
-      {
-        component.addEventHandler("c:lgnd_dh_fileUploadComplete_Event", function(auraEvent) {
-          resolve();
-        });
-        beginEvt.setParams({
-          objectId: caseId
-        })
-        .fire();
-      }
-      else
-        resolve();
-    });
   }
 
 })

@@ -11,16 +11,17 @@ private class Case_TriggerHandler_Test {
     Factory_CustomSettings.setupInventorySettings();
   }
 
-		static void init() {
-				c = new Case();
-		}
+	static void init() {
+			c = new Case();
+	}
 
-		static void initForWarranty()
-		{
-			dealer = AccountFactory.buildDealerAccount('Testy McDealer');
-			insert dealer;
-			partner = Factory_User.createPartnerUser( dealer );
-		}
+	static void initForWarranty()
+	{
+		dealer = AccountFactory.buildDealerAccount('Testy McDealer');
+		insert dealer;
+		partner = Factory_User.createPartnerUser( dealer );
+	}
+	
 
 		@isTest
 		static void partnerWarrantyCreate_Test()

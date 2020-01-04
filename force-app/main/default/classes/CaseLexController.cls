@@ -7,10 +7,18 @@ public with sharing class CaseLexController {
     public List<String> reasonOptions { get; set; }
     public List<String> claimTypeOptions { get; set; }
     public List<String> priorityOptions { get; set; }
+    public List<String> jiraProjectOptions { get; set; }
     public String userName { get; set; }
     public String userEmail { get; set; }
     public String userId {get; set; }
-    public DataWrapper(){}
+    public DataWrapper()
+    {
+      this.typeOptions = LGND_Utilities.getPicklistValues('Case', 'Type');
+      this.reasonOptions = LGND_Utilities.getPicklistValues('Case', 'Reason');
+      this.priorityOptions = LGND_Utilities.getPicklistValues('Case', 'Priority');
+      this.claimTypeOptions = LGND_Utilities.getPicklistValues('Case', 'Claim_Type__c');
+      this.jiraProjectOptions = LGND_Utilities.getPicklistValues('Case', 'Jira_Project_Name__c');
+    }
   }
 
   public class SubmitDataWrapper {
@@ -29,6 +37,8 @@ public with sharing class CaseLexController {
     public String priority { get; set; }
     public String subject { get; set; }
     public String description { get; set; }
+    public String stepsToReproduce { get; set; }
+    public String jiraProjectName { get; set; }
     public SubmitDataWrapper(){}
   }
 
@@ -47,10 +57,6 @@ public with sharing class CaseLexController {
     dw.userName = cu.Name;
     dw.userEmail = cu.Email;
     dw.userId = cu.Id;
-    dw.typeOptions = LGND_Utilities.getPicklistValues('Case', 'Type');
-    dw.reasonOptions = LGND_Utilities.getPicklistValues('Case', 'Reason');
-    dw.priorityOptions = LGND_Utilities.getPicklistValues('Case', 'Priority');
-    dw.claimTypeOptions = LGND_Utilities.getPicklistValues('Case', 'Claim_Type__c');
     return JSON.serialize( dw );
   }
 
@@ -158,8 +164,18 @@ public with sharing class CaseLexController {
       Claim_Type__c = data.claimType,
       Date_Failure__c = data.failureDate,
       Serial_Number__c = data.serialId,
-      AccountId = data.accountId
+      AccountId = data.accountId,
+      Steps_To_Reproduce__c = data.stepsToReproduce,
+      Jira_Project_name__c = data.jiraProjectName
     );
+    try
+    {
+      AssignmentRule ar = [SELECT Id FROM AssignmentRule WHERE SobjectType = 'Case' AND Active = true LIMIT 1];
+      Database.DMLOptions dmlOpts = new Database.DMLOptions();
+      dmlOpts.assignmentRuleHeader.assignmentRuleId = ar.Id;
+      c.setOptions(dmlOpts);
+    }
+    catch(Exception e){}
     insert c;
     return JSON.serialize( c );
   }

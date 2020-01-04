@@ -3,90 +3,31 @@
     <fullName>Salesforce</fullName>
     <active>true</active>
     <businessProcess>Salesforce</businessProcess>
+    <compactLayoutAssignment>Salesforce_Issue</compactLayoutAssignment>
     <label>Salesforce</label>
     <picklistValues>
         <picklist>Claim_Type__c</picklist>
         <values>
-            <fullName>Electrical</fullName>
-            <default>false</default>
-        </values>
-        <values>
-            <fullName>Shipping Damage</fullName>
+            <fullName>Other</fullName>
             <default>false</default>
         </values>
     </picklistValues>
     <picklistValues>
         <picklist>Delay_Reasons__c</picklist>
         <values>
-            <fullName>Waiting for more information from partner</fullName>
-            <default>false</default>
-        </values>
-        <values>
-            <fullName>Waiting for part numbers or info from supplier</fullName>
-            <default>false</default>
-        </values>
-        <values>
-            <fullName>Waiting for part numbers to be created in Salesforce</fullName>
-            <default>false</default>
-        </values>
-        <values>
-            <fullName>Waiting for part return from partner</fullName>
-            <default>false</default>
-        </values>
-        <values>
-            <fullName>Waiting for supplier approval</fullName>
+            <fullName>Pause for Season</fullName>
             <default>false</default>
         </values>
     </picklistValues>
     <picklistValues>
         <picklist>Denied_Reasons__c</picklist>
         <values>
-            <fullName>Duplicate claim</fullName>
-            <default>false</default>
-        </values>
-        <values>
-            <fullName>Lack of information provided</fullName>
-            <default>false</default>
-        </values>
-        <values>
-            <fullName>Misuse or abuse</fullName>
-            <default>false</default>
-        </values>
-        <values>
-            <fullName>Not original owner</fullName>
-            <default>false</default>
-        </values>
-        <values>
             <fullName>Not warranty</fullName>
-            <default>false</default>
-        </values>
-        <values>
-            <fullName>Warranty expires %286 year Wow%29</fullName>
             <default>false</default>
         </values>
     </picklistValues>
     <picklistValues>
         <picklist>Goodwill_Reasons__c</picklist>
-        <values>
-            <fullName>Dealer error covered by DSM</fullName>
-            <default>false</default>
-        </values>
-        <values>
-            <fullName>Rigging damage</fullName>
-            <default>false</default>
-        </values>
-        <values>
-            <fullName>Rigging error</fullName>
-            <default>false</default>
-        </values>
-        <values>
-            <fullName>Shipping damage</fullName>
-            <default>false</default>
-        </values>
-        <values>
-            <fullName>Supplier denied coverage</fullName>
-            <default>false</default>
-        </values>
         <values>
             <fullName>Yard damage</fullName>
             <default>false</default>
@@ -102,15 +43,7 @@
     <picklistValues>
         <picklist>Part_Order_Status__c</picklist>
         <values>
-            <fullName>Back Ordered</fullName>
-            <default>false</default>
-        </values>
-        <values>
             <fullName>Received</fullName>
-            <default>true</default>
-        </values>
-        <values>
-            <fullName>Shipped</fullName>
             <default>false</default>
         </values>
     </picklistValues>
@@ -121,7 +54,15 @@
             <default>false</default>
         </values>
         <values>
+            <fullName>Highest</fullName>
+            <default>false</default>
+        </values>
+        <values>
             <fullName>Low</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Lowest</fullName>
             <default>false</default>
         </values>
         <values>
@@ -133,11 +74,7 @@
         <picklist>Reason</picklist>
         <values>
             <fullName>Bug</fullName>
-            <default>false</default>
-        </values>
-        <values>
-            <fullName>Missing Requirement</fullName>
-            <default>false</default>
+            <default>true</default>
         </values>
         <values>
             <fullName>New Feature</fullName>
@@ -147,46 +84,34 @@
     <picklistValues>
         <picklist>Type</picklist>
         <values>
-            <fullName>Other</fullName>
+            <fullName>Accounting</fullName>
             <default>false</default>
         </values>
         <values>
-            <fullName>Salesforce Implementation</fullName>
+            <fullName>Logistics</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Marketing</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Parts</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Sales</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Service</fullName>
             <default>false</default>
         </values>
     </picklistValues>
     <picklistValues>
         <picklist>Vendors__c</picklist>
         <values>
-            <fullName>Apex</fullName>
-            <default>false</default>
-        </values>
-        <values>
-            <fullName>Goodwill</fullName>
-            <default>false</default>
-        </values>
-        <values>
-            <fullName>Highwater</fullName>
-            <default>false</default>
-        </values>
-        <values>
-            <fullName>Jensen</fullName>
-            <default>false</default>
-        </values>
-        <values>
-            <fullName>Midwest</fullName>
-            <default>false</default>
-        </values>
-        <values>
-            <fullName>Prospect</fullName>
-            <default>false</default>
-        </values>
-        <values>
             <fullName>Smoker</fullName>
-            <default>true</default>
-        </values>
-        <values>
-            <fullName>V3</fullName>
             <default>false</default>
         </values>
     </picklistValues>
