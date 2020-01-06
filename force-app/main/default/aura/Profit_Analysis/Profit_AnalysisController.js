@@ -16,7 +16,9 @@
           component.set('v.allowedToView', false);
           component.set('v.lineItems', null );
           component.set('v.saleItems', null );
-                    component.set('v.businessOfficeItems', null );
+          component.set('v.businessOfficeItems', null );
+          component.set('v.salesItemsTotal', null );
+          component.set('v.businessOfficeItemsTotal', null );
         }
         else
         {
@@ -25,6 +27,8 @@
           component.set('v.businessOfficeItems', result.businessOfficeItems );
           component.set('v.selectedPbId', result.pbId );
           component.set('v.pbOptions', result.pbOptions );
+          component.set('v.salesItemsTotal', result.saleItemsTotal );
+          component.set('v.businessOfficeItemsTotal', result.businessOfficeTotal );
           helper.setTotals( component );
         }
       }),
