@@ -101,7 +101,9 @@ public with sharing class Profit_Analysis_Controller
     public String pbId;
     public List<Map<String, String>> pbOptions;
     public List<DataWrapper> saleItems;
+    public Decimal saleItemsTotal;
     public List<DataWrapper> businessOfficeItems;
+    public Decimal businessOfficeTotal;
     public List<DataWrapper> items;
     private Set<Id> businessOfficeProductRTs = new Set<Id>{
       LGND_Constants.productRtId_Protection,
@@ -113,7 +115,9 @@ public with sharing class Profit_Analysis_Controller
       this.pbOptions = new List<Map<String,String>>();
       this.items = new List<DataWrapper>();
       this.saleItems = new List<DataWrapper>();
+      this.saleItemsTotal = 0;
       this.businessOfficeItems = new List<DataWrapper>();
+      this.businessOfficeTotal = 0;
       this.pbId = pbId;
       if( this.pbId == null )
         createPbOptions( recordId );
@@ -194,9 +198,15 @@ public with sharing class Profit_Analysis_Controller
       for( DataWrapper dw : this.items )
       {
         if( this.businessOfficeProductRTs.contains( dw.productRecordTypeId ) )
-          this.businessOfficeItems.add( dw );
+        {
+          this.businessOfficeItems.add(dw);
+          this.businessOfficeTotal += dw.saleTotal;
+        }
         else
-          this.saleItems.add( dw );
+        {
+          this.saleItems.add(dw);
+          this.saleItemsTotal += dw.saleTotal;
+        }
       }
     }
 
