@@ -1312,30 +1312,6 @@
         <triggerType>onCreateOrTriggeringUpdate</triggerType>
     </rules>
     <rules>
-        <fullName>Customer Satisfaction Survey ERP</fullName>
-        <active>false</active>
-        <criteriaItems>
-            <field>AcctSeed__Project__c.Stage__c</field>
-            <operation>equals</operation>
-            <value>Delivered</value>
-        </criteriaItems>
-        <criteriaItems>
-            <field>AcctSeed__Project__c.RecordTypeId</field>
-            <operation>equals</operation>
-            <value>Retail Boat Sale</value>
-        </criteriaItems>
-        <description>Sends out a Cust Sat survey when stage changed to &quot;Delivered&quot;</description>
-        <triggerType>onCreateOrTriggeringUpdate</triggerType>
-        <workflowTimeTriggers>
-            <actions>
-                <name>Sends_Retail_Boat_Experience_Survey</name>
-                <type>Alert</type>
-            </actions>
-            <timeLength>1</timeLength>
-            <workflowTimeTriggerUnit>Days</workflowTimeTriggerUnit>
-        </workflowTimeTriggers>
-    </rules>
-    <rules>
         <fullName>DC Order Submitted</fullName>
         <active>false</active>
         <criteriaItems>

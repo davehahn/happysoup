@@ -11,6 +11,8 @@
   <aura:attribute name="allowedToView" type="Boolean" default="true" />
   <aura:attribute name="lineItems" type="Object" />
   <aura:attribute name="saleItems" type="List" />
+  <aura:attribute name="salesItemsTotal" type="Decimal" />
+  <aura:attribute name="businessOfficeItemsTotal" type="Decimal" />
   <aura:attribute name="businessOfficeItems" type="List" />
   <aura:attribute name="saleTotal" type="Decimal" />
   <aura:attribute name="factoryPbTotal" type="Decimal" />
@@ -63,7 +65,19 @@
           <div class="slds-page-header__col-details">
             <ul class="slds-page-header__detail-row">
               <li class="slds-page-header__detail-block">
-                <div class="slds-text-title slds-truncate">Sale Total</div>
+                <div class="slds-text-title slds-truncate">Sales Total</div>
+                <div class="slds-truncate">
+                  <lightning:formattedNumber style="currency" value="{!v.salesItemsTotal}" maximumFractionDigits="2" />
+                </div>
+              </li>
+              <li class="slds-page-header__detail-block">
+                <div class="slds-text-title slds-truncate">Business Office Total</div>
+                <div class="slds-truncate">
+                  <lightning:formattedNumber style="currency" value="{!v.businessOfficeItemsTotal}" maximumFractionDigits="2" />
+                </div>
+              </li>
+              <li class="slds-page-header__detail-block">
+                <div class="slds-text-title slds-truncate">Grand Total</div>
                 <div class="slds-truncate">
                   <lightning:formattedNumber style="currency" value="{!v.saleTotal}" maximumFractionDigits="2" />
                 </div>
