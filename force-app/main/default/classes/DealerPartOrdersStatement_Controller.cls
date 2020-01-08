@@ -27,8 +27,8 @@ public with sharing class DealerPartOrdersStatement_Controller {
 
 	public DealerPartOrdersStatement_Controller(ApexPages.StandardController c) {
 		accountId = ApexPages.currentPage().getParameters().get('Account');
-		firstOfMonth = System.Date.today().toStartOfMonth();
-		dueDate = firstOfMonth.addDays(14);
+		firstOfMonth = Date.today().toStartOfMonth();
+		dueDate = Date.newInstance( firstOfMonth.year(), firstOfMonth.month(), 15 );
 		getAccount(accountId);
 		getMonth();
 		getBillings();
@@ -211,7 +211,7 @@ public with sharing class DealerPartOrdersStatement_Controller {
 					futureItems.billings.add(bw);
 					futureItems.balance += bw.billing.AcctSeed__Balance__c;
 				}
-				else if ( bw.billing.Lgnd_Due_Date__c < overDueDate )
+				else if ( bw.billing.Lgnd_Due_Date__c <= overDueDate )
 				{
 					overdueItems.billings.add(bw);
 					overdueItems.balance += bw.billing.AcctSeed__Balance__c;

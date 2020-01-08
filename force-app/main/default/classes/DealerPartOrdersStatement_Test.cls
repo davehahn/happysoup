@@ -77,12 +77,14 @@ private class DealerPartOrdersStatement_Test {
 				)
 			);
 		}
+		Date thisMonth = Date.today();
+		Date lastMonth = Date.today().toStartOfMonth().addMonths(-1);
 		//current
-		billings[0].Lgnd_Due_Date__c = Date.today().toStartOfMonth().addDays(-15);
+		billings[0].Lgnd_Due_Date__c = Date.newInstance(thisMonth.year(), thisMonth.month(), 15);
 		//overdue
-		billings[1].Lgnd_Due_Date__c = Date.today().toStartOfMonth().addMonths(-1).addDays(-15);
+		billings[1].Lgnd_Due_Date__c = Date.newInstance(lastMonth.year(), lastMonth.month(), 15);
 		//future
-		billings[2].Lgnd_Due_Date__c = Date.today().addMonths(1);
+		billings[2].Lgnd_Due_Date__c = Date.newInstance(thisMonth.year(), thisMonth.addMonths(1).month(), 15);
 		insert billings;
 
 		List<AcctSeed__Billing_Line__c> billingLines = new List<AcctSeed__Billing_Line__c>();
@@ -114,9 +116,9 @@ private class DealerPartOrdersStatement_Test {
 		DealerPartOrdersStatement_Controller statement = new DealerPartOrdersStatement_Controller(sc);
   	Test.stopTest();
 
-		System.assertEquals( 1, statement.overdueItems.count );
-		System.assertEquals( 1, statement.currentItems.count );
-		System.assertEquals( 1, statement.futureItems.count );
+		System.assertEquals( 1, statement.overdueItems.count, 'Should have 1 overdue item' );
+		System.assertEquals( 1, statement.currentItems.count, 'Should have 1 current item' );
+		System.assertEquals( 1, statement.futureItems.count, 'Should have 1 future item' );
 	}
 
 	@isTest static void attachStatements_And_notifyDealers_Test()
