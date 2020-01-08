@@ -27,18 +27,18 @@ pipelines:
           script:
             - echo 'Validating deploy'
             - chmod +x pipeline_validate.sh
-            - ./pipeline_validate.sh $DEPLOY_KEY $SFDC_USERNAME $SFDC_CONSUMER_KEY $SFDC_URL
+            - ./pipeline_validate.sh $DEPLOY_KEY $VALIDATE_USERNAME $VALIDATE_CONSUMER_KEY $VALIDATE_URL
     feature/*:
       - step:
           name: Validate Deploy
           script:
             - echo 'Validating deploy'
             - chmod +x pipeline_validate.sh
-            - ./pipeline_validate.sh $DEPLOY_KEY $SFDC_USERNAME $SFDC_CONSUMER_KEY $SFDC_URL
+            - ./pipeline_validate.sh $DEPLOY_KEY $VALIDATE_USERNAME $VALIDATE_CONSUMER_KEY $VALIDATE_URL
     declarative/*:
       - step:
           name: Validate Deploy
           script:
             - echo 'Validating deploy'
             - chmod +x pipeline_validate.sh
-            - ./pipeline_validate.sh $DEPLOY_KEY $SFDC_USERNAME $SFDC_CONSUMER_KEY $SFDC_URL
+            - ./pipeline_validate.sh $DEPLOY_KEY $PRODUCTION_USERNAME $PRODUCTION_CONSUMER_KEY $PRODUCTION_URL
