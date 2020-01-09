@@ -10,26 +10,16 @@
     helper.fetchData( component )
     .then(
       $A.getCallback( function( result ) {
-        console.log( JSON.parse( JSON.stringify( result ) ) );
         if( result === 'denied' )
         {
           component.set('v.allowedToView', false);
           component.set('v.lineItems', null );
           component.set('v.saleItems', null );
           component.set('v.businessOfficeItems', null );
-          component.set('v.salesItemsTotal', null );
-          component.set('v.businessOfficeItemsTotal', null );
         }
         else
         {
-          component.set('v.lineItems', result.items);
-          component.set('v.saleItems', result.saleItems );
-          component.set('v.businessOfficeItems', result.businessOfficeItems );
-          component.set('v.selectedPbId', result.pbId );
-          component.set('v.pbOptions', result.pbOptions );
-          component.set('v.salesItemsTotal', result.saleItemsTotal );
-          component.set('v.businessOfficeItemsTotal', result.businessOfficeTotal );
-          helper.setTotals( component );
+          helper.setResultValues( component, result );
         }
       }),
       $A.getCallback( function( err ) {
@@ -43,6 +33,7 @@
 
   handleIncludeChange: function( component, event, helper )
   {
+    console.log( 'toggle checked' );
     helper.setTotals( component );
   },
 
@@ -55,8 +46,7 @@
     .then(
       $A.getCallback( function( result )
       {
-        component.set('v.lineItems', result );
-        helper.setTotals( component );
+        helper.setResultValues( component, result );
       }),
       $A.getCallback( function( err ){
         LightningUtils.errorToast( err );

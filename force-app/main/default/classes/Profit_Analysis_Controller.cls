@@ -47,6 +47,20 @@ public with sharing class Profit_Analysis_Controller
     public Decimal riggingCost;
     public List<DataWrapper> kitParts;
 
+    public DataWrapper( Product_Fee_Amount__c pfa )
+    {
+      this.include = true;
+      this.quantity = 1;
+      this.productName = pfa.Fee_Product__r.Name;
+      this.salePrice = 0;
+      this.saleTotal = 0;
+      this.factoryPb = pfa.Amount__c;
+      this.factoryPbTotal = pfa.Amount__c;
+      this.riggingTime = 0;
+      this.riggingCost = 0;
+      this.kitParts = new List<DataWrapper>();
+    }
+
     public DataWrapper( OpportunityLineItem oli, Decimal riggingRate )
     {
       this.include = true;
@@ -104,6 +118,7 @@ public with sharing class Profit_Analysis_Controller
     public Decimal saleItemsTotal;
     public List<DataWrapper> businessOfficeItems;
     public Decimal businessOfficeTotal;
+    //public List<Map<String, String>> freightCharges;
     public List<DataWrapper> items;
     private Set<Id> businessOfficeProductRTs = new Set<Id>{
       LGND_Constants.productRtId_Protection,
@@ -115,12 +130,9 @@ public with sharing class Profit_Analysis_Controller
       this.pbOptions = new List<Map<String,String>>();
       this.items = new List<DataWrapper>();
       this.saleItems = new List<DataWrapper>();
-      this.saleItemsTotal = 0;
       this.businessOfficeItems = new List<DataWrapper>();
-      this.businessOfficeTotal = 0;
       this.pbId = pbId;
-      if( this.pbId == null )
-        createPbOptions( recordId );
+      createPbOptions( recordId );
       buildItems( recordId );
     }
 
@@ -200,12 +212,10 @@ public with sharing class Profit_Analysis_Controller
         if( this.businessOfficeProductRTs.contains( dw.productRecordTypeId ) )
         {
           this.businessOfficeItems.add(dw);
-          this.businessOfficeTotal += dw.saleTotal;
         }
         else
         {
           this.saleItems.add(dw);
-          this.saleItemsTotal += dw.saleTotal;
         }
       }
     }
@@ -216,7 +226,8 @@ public with sharing class Profit_Analysis_Controller
       for( Pricebook2 pb : [SELECT Id, Name FROM Pricebook2 WHERE Name LIKE '%Factory%'] )
       {
         this.addPbOption( pb );
-        if( recordPbYear != null && pb.Name.contains( recordPbYear ) )
+        if( this.pbId == null &&
+          recordPbYear != null && pb.Name.contains( recordPbYear ) )
         {
           this.pbId = pb.Id;
         }
@@ -290,6 +301,38 @@ public with sharing class Profit_Analysis_Controller
       }
       this.setPricebookValuesOnItems();
       this.sortAndGroupItems();
+      this.buildFreightCharges();
+    }
+
+    private void buildFreightCharges()
+    {
+      List<DataWrapper> freights = new List<DataWrapper>();
+      String prov = 'Ontario';
+      Set<Id> productIds = new Set<Id>();
+      Set<Id> feeProdIds = new Set<Id>();
+      for( DataWrapper dw : this.items )
+      {
+        System.debug('item product Id = ' + dw.productId );
+        productIds.add( dw.productId );
+      }
+      for( Product_Fee_Map__c pfm : [ SELECT Id, Fee_Product__c, Fee_Product__r.Name
+                                      FROM Product_Fee_Map__c
+                                      WHERE Parent_Product__c IN :productIds
+                                      AND Fee_Product__r.Family = 'Freight'] )
+      {
+        System.debug('Fee Product Name = ' + pfm.Fee_Product__r.Name );
+        feeProdIds.add( pfm.Fee_Product__c );
+      }
+      for( Product_Fee_Amount__c pfa : [SELECT Id, Amount__c, Fee_Product__r.Name
+                                        FROM Product_Fee_Amount__c
+                                        WHERE Fee_Product__c IN :feeProdIds
+                                        AND Province__c = :prov
+                                        AND Price_Book__c = :this.pbId] )
+      {
+        freights.add( new DataWrapper( pfa ) );
+      }
+      this.items.addAll( freights );
+      this.saleItems.addAll( freights );
     }
 
     private List<DataWrapper> buildForOpportunity( String recordId )
@@ -364,7 +407,7 @@ public with sharing class Profit_Analysis_Controller
     try
     {
       ResultWrapper rw = new ResultWrapper( recordId, pbId );
-      return JSON.serialize( rw.items );
+      return JSON.serialize( rw );
     }
     catch( Exception e )
     {
