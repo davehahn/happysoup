@@ -23,6 +23,8 @@
   <aura:attribute name="costProfit" type="Decimal" />
   <aura:attribute name="costProfitPercent" type="Decimal" />
   <aura:attribute name="riggingLabourTotal" type="Decimal" />
+  <aura:attribute name="currentTab" type="String" />
+  <aura:attribute name="customItem" type="Map"  />
 
   <ltng:require scripts="{!join(',', $Resource.Libraries +'/js/LightningApex.js',$Resource.Libraries +'/js/LightningUtils.js') }"
                 afterScriptsLoaded="{!c.doInit}" />
@@ -91,19 +93,19 @@
               </li>
               <!-- Factory PB -->
               <li class="slds-page-header__detail-block">
-                <div class="slds-text-title slds-truncate">Factory PB Total</div>
+                <div class="slds-text-title slds-truncate">Total Cost</div>
                 <div class="slds-truncate">
                   <lightning:formattedNumber style="currency" value="{!v.factoryPbTotal}" maximumFractionDigits="2" />
                 </div>
               </li>
               <li class="slds-page-header__detail-block">
-                <div class="slds-text-title slds-truncate">Factory PB Gross Margin</div>
+                <div class="slds-text-title slds-truncate">Gross Margin</div>
                 <div class="slds-truncate">
                   <lightning:formattedNumber style="currency" value="{!v.factoryPbProfit}" maximumFractionDigits="2" />
                 </div>
               </li>
               <li class="slds-page-header__detail-block">
-                <div class="slds-text-title slds-truncate">Factory PB Gross Margin %</div>
+                <div class="slds-text-title slds-truncate">Gross Margin %</div>
                 <div class="slds-truncate">
                   <lightning:formattedNumber style="percent" value="{!v.factoryPbProfitPercent}" maximumFractionDigits="3" /></div>
               </li>
@@ -114,7 +116,7 @@
       <!-- TABLE -->
       <div>
         <lightning:tabset variant="scoped">
-          <lightning:tab label="Sales">
+          <lightning:tab label="Sales" id="sales" onactive="{!c.handleTabChange}">
             <table class="slds-table slds-table_cell-buffer slds-table_bordered">
               <thead>
                 <tr>
@@ -122,8 +124,7 @@
                   <th class="slds-text-align_left">Quantity</th>
                   <th class="slds-text-align_left">Product</th>
                   <th class="slds-text-align_center">Sale</th>
-                  <th class="slds-text-align_center">Factory Pricebook</th>
-                  <!--              <th class="slds-text-align_center">Landed Unit Cost</th>-->
+                  <th class="slds-text-align_center">Cost</th>
                   <th class="slds-text-align_center">Rigging Labour</th>
                   <th class="slds-text-align_center">Total</th>
               </tr>
@@ -156,6 +157,14 @@
                   </td>
                   <td class="slds-text-align_center">
                     <lightning:formattedNumber style="currency" value="{! item.saleTotal - item.factoryPbTotal - item.riggingCost}" />
+                    <aura:if isTrue="{! !empty(item.customItem) }">
+                      <lightning:buttonIcon iconName="utility:delete"
+                                            variant="bare"
+                                            size="medium"
+                                            class="slds-float_right"
+                                            onclick="{!c.handleRemoveCustomItem}"
+                                            value="{! item.id }" />
+                    </aura:if>
                   </td>
                 </tr>
                 <aura:if isTrue="{! !empty(item.kitParts) }">
@@ -190,26 +199,10 @@
                   </aura:iteration>
                 </aura:if>
               </aura:iteration>
-<!--              &lt;!&ndash; Factory Freight Items &ndash;&gt;-->
-<!--              <aura:iteration items="{!v.freightItems}" var="fItem" >-->
-<!--                <tr>-->
-<!--                  <td></td>-->
-<!--                  <td>1</td>-->
-<!--                  <td>{!fItem.name}</td>-->
-<!--                  <td class="slds-text-align_center">$0.00</td>-->
-<!--                  <td class="slds-text-align_center">-->
-<!--                    <lightning:formattedNumber style="currency" value="{!fItem.amount}" />-->
-<!--                  </td>-->
-<!--                  <td></td>-->
-<!--                  <td class="slds-text-align_center">-->
-<!--                    <lightning:formattedNumber style="currency" value="{!fItem.amount * - 1 }" />-->
-<!--                  </td>-->
-<!--                </tr>-->
-<!--              </aura:iteration>-->
               </tbody>
             </table>
           </lightning:tab>
-          <lightning:tab label="Business Office">
+          <lightning:tab label="Business Office" id="business_office" onactive="{!c.handleTabChange}">
             <table class="slds-table slds-table_cell-buffer slds-table_bordered">
               <thead>
               <tr>
@@ -217,8 +210,7 @@
                 <th class="slds-text-align_left">Quantity</th>
                 <th class="slds-text-align_left">Product</th>
                 <th class="slds-text-align_center">Sale</th>
-                <th class="slds-text-align_center">Factory Pricebook</th>
-                <!--              <th class="slds-text-align_center">Landed Unit Cost</th>-->
+                <th class="slds-text-align_center">Cost</th>
                 <th class="slds-text-align_center">Rigging Labour</th>
                 <th class="slds-text-align_center">Total</th>
               </tr>
@@ -243,12 +235,6 @@
                       <span>(<lightning:formattedNumber style="currency" value="{!item.factoryPb}" />ea.)</span>
                     </aura:if>
                   </td>
-                  <!--                <td class="slds-text-align_center">-->
-                  <!--                  <lightning:formattedNumber style="currency" value="{!item.costTotal}" />-->
-                  <!--                  <aura:if isTrue="{! item.quantity > 1 }">-->
-                  <!--                    <span>(<lightning:formattedNumber style="currency" value="{!item.costPrice}" />ea.)</span>-->
-                  <!--                  </aura:if>-->
-                  <!--                </td>-->
                   <td class="slds-text-align_center">
                     <aura:if isTrue="{! item.riggingTime > 0 }">
                       <lightning:formattedNumber style="currency" value="{!item.riggingCost}" />
@@ -257,6 +243,14 @@
                   </td>
                   <td class="slds-text-align_center">
                     <lightning:formattedNumber style="currency" value="{! item.saleTotal - item.factoryPbTotal - item.riggingCost}" />
+                    <aura:if isTrue="{! !empty(item.customItem) }">
+                      <lightning:buttonIcon iconName="utility:delete"
+                                            variant="bare"
+                                            size="medium"
+                                            class="slds-float_right"
+                                            onclick="{!c.handleRemoveCustomItem}"
+                                            value="{! item.id }" />
+                    </aura:if>
                   </td>
                 </tr>
                 <aura:if isTrue="{! !empty(item.kitParts) }">
@@ -278,12 +272,6 @@
                           <span>(<lightning:formattedNumber style="currency" value="{!subItem.factoryPb}" />ea.)</span>
                         </aura:if>
                       </td>
-                      <!--                    <td class="slds-text-align_center">-->
-                      <!--                      <lightning:formattedNumber style="currency" value="{!subItem.costTotal}" />-->
-                      <!--                      <aura:if isTrue="{! subItem.quantity > 1 }">-->
-                      <!--                        <span>(<lightning:formattedNumber style="currency" value="{!subItem.costPrice}" />ea.)</span>-->
-                      <!--                      </aura:if>-->
-                      <!--                    </td>-->
                       <td class="slds-text-align_center">
                         <aura:if isTrue="{! subItem.riggingTime > 0 }">
                           <lightning:formattedNumber style="currency" value="{!subItem.riggingCost}" />
@@ -302,6 +290,30 @@
           </lightning:tab>
         </lightning:tabset>
 
+      </div>
+      <!-- CustomItemForm -->
+      <div>
+        <div class="slds-text-title_caps slds-text-title_bold slds-m-top_small slds-m-left_large">Add an Item</div>
+        <lightning:layout verticalAlign="center" class="slds-box slds-box_xx-small">
+          <lightning:layoutItem size="5" padding="around-small">
+            <lightning:input type="text" label="Description" value="{!v.customItem.productName}" />
+          </lightning:layoutItem>
+          <lightning:layoutItem size="2" padding="around-small">
+            <lightning:input type="number" label="Sale Price" value="{!v.customItem.saleTotal}" />
+          </lightning:layoutItem>
+          <lightning:layoutItem size="2" padding="around-small">
+            <lightning:input type="number" label="Cost" value="{!v.customItem.factoryPbTotal}" />
+          </lightning:layoutItem>
+          <lightning:layoutItem size="2" padding="around-small">
+            <lightning:input type="number" label="Labour" value="{!v.customItem.riggingCost}" />
+          </lightning:layoutItem>
+          <lightning:layoutItem size="1" padding="around-small">
+            <lightning:button label="Add"
+                              class="slds-m-top_large"
+                              onclick="{!c.addCustomItem}"
+                              disabled="{! empty(v.customItem.productName)}"/>
+          </lightning:layoutItem>
+        </lightning:layout>
       </div>
     </aura:if>
 
