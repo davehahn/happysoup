@@ -10,6 +10,7 @@
     helper.fetchData( component )
     .then(
       $A.getCallback( function( result ) {
+        helper.defaultCustomItem( component );
         if( result === 'denied' )
         {
           component.set('v.allowedToView', false);
@@ -31,9 +32,13 @@
     }));
   },
 
+  handleTabChange: function( component, event, helper )
+  {
+    component.set('v.currentTab', event.getSource().get('v.id') );
+  },
+
   handleIncludeChange: function( component, event, helper )
   {
-    console.log( 'toggle checked' );
     helper.setTotals( component );
   },
 
@@ -55,5 +60,52 @@
     .finally( $A.getCallback( function() {
       spinner.toggle();
     }))
+  },
+
+  addCustomItem: function( component, event, helper )
+  {
+    var item = component.get('v.customItem'),
+        type = component.get('v.currentTab'),
+        varString;
+
+    if( type === 'sales' )
+    {
+      varString = 'v.saleItems';
+    }
+    if( type === 'business_office' )
+    {
+      varString = 'v.businessOfficeItems';
+    }
+
+    var items = component.get(varString);
+    items.push( item );
+    component.set(varString, items );
+
+    helper.setTotals( component );
+    helper.defaultCustomItem( component );
+  },
+
+  handleRemoveCustomItem: function( component, event, helper )
+  {
+    let id = event.getSource().get('v.value'),
+        type = component.get('v.currentTab'),
+        varString, items, filtered;
+
+    if( type === 'sales' )
+    {
+      varString = 'v.saleItems';
+    }
+    if( type === 'business_office' )
+    {
+      varString = 'v.businessOfficeItems';
+    }
+
+    items = component.get(varString);
+    filtered = items.filter( function( value, index, arr )
+    {
+      return value.id !== id;
+    });
+    component.set(varString, filtered );
+    helper.setTotals( component );
   }
 });

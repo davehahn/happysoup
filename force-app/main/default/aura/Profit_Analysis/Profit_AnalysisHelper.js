@@ -3,6 +3,20 @@
  */
 
 ({
+  defaultCustomItem: function( component )
+  {
+    component.set('v.customItem', {
+      id: Math.random().toString(36).substr(2, 9),
+      include: true,
+      quantity: 1,
+      productName: '',
+      saleTotal: 0,
+      factoryPbTotal: 0,
+      riggingCost: 0,
+      customItem: true
+    });
+  },
+
   fetchData: function( component )
   {
     var action = component.get('c.fetchData');
@@ -24,8 +38,6 @@
 
   setResultValues: function( component, result )
   {
-    console.log('helper.setResultValue');
-    console.log( JSON.parse( JSON.stringify(result)));
     component.set('v.lineItems', result.items);
     component.set('v.saleItems', result.saleItems );
     component.set('v.businessOfficeItems', result.businessOfficeItems );
@@ -36,38 +48,33 @@
 
   setTotals: function( component )
   {
-    var lineItems = component.get('v.lineItems'),
-        grandTotal=0, salesTotal=0, boTotal=0, factoryPbTotal=0, riggingTotal=0;
+    var grandTotal=0, salesTotal=0, boTotal=0, factoryPbTotal=0, riggingTotal=0;
     for( let li of component.get('v.saleItems') )
     {
       if( li.include )
       {
-        grandTotal += li.saleTotal;
-        //costTotal += li.costTotal;
-        salesTotal += li.saleTotal;
-        factoryPbTotal += li.factoryPbTotal;
-        riggingTotal += li.riggingCost;
+        grandTotal += parseFloat( li.saleTotal );
+        salesTotal += parseFloat( li.saleTotal );
+        factoryPbTotal += parseFloat( li.factoryPbTotal );
+        riggingTotal += parseFloat( li.riggingCost );
       }
     }
     for( let li of component.get('v.businessOfficeItems') )
     {
       if( li.include )
       {
-        grandTotal += li.saleTotal;
-        //costTotal += li.costTotal;
-        boTotal += li.saleTotal;
-        factoryPbTotal += li.factoryPbTotal;
-        riggingTotal += li.riggingCost;
+        grandTotal += parseFloat( li.saleTotal );
+        boTotal += parseFloat( li.saleTotal );
+        factoryPbTotal += parseFloat( li.factoryPbTotal );
+        riggingTotal += parseFloat( li.riggingCost );
       }
     }
+
     component.set('v.saleTotal', grandTotal);
     component.set('v.salesItemsTotal', salesTotal );
     component.set('v.businessOfficeItemsTotal', boTotal);
-//    component.set('v.costTotal', costTotal);
     component.set('v.riggingLabourTotal', riggingTotal);
     component.set('v.factoryPbTotal', factoryPbTotal);
-//    component.set('v.costProfit', saleTotal - costTotal - riggingTotal );
-//    component.set('v.costProfitPercent', 1 - ( (costTotal+riggingTotal)/saleTotal )  );
     component.set('v.factoryPbProfit', grandTotal - factoryPbTotal - riggingTotal );
     component.set('v.factoryPbProfitPercent', 1 - ( (factoryPbTotal+riggingTotal)/grandTotal )  );
   }
