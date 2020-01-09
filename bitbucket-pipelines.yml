@@ -4,6 +4,14 @@ image:
   password: $DOCKER_HUB_PASSWORD
   email: $DOCKER_HUB_EMAIL
 pipelines:
+  custom:
+    validate:
+      - step:
+          name: Validate Deploy
+          script:
+            - echo 'Validating deploy'
+            - chmod +x pipeline_validate.sh
+            - ./pipeline_validate.sh $DEPLOY_KEY $VALIDATE_USERNAME $VALIDATE_CONSUMER_KEY $VALIDATE_URL
   branches:
     master:
       - step:
@@ -21,20 +29,20 @@ pipelines:
             - echo 'Deploy to Production'
             - chmod +x pipeline_deploy.sh
             - ./pipeline_deploy.sh $DEPLOY_KEY $SFDC_USERNAME $SFDC_CONSUMER_KEY $SFDC_URL
-    bugfix/*:
-      - step:
-          name: Validate Deploy
-          script:
-            - echo 'Validating deploy'
-            - chmod +x pipeline_validate.sh
-            - ./pipeline_validate.sh $DEPLOY_KEY $VALIDATE_USERNAME $VALIDATE_CONSUMER_KEY $VALIDATE_URL
-    feature/*:
-      - step:
-          name: Validate Deploy
-          script:
-            - echo 'Validating deploy'
-            - chmod +x pipeline_validate.sh
-            - ./pipeline_validate.sh $DEPLOY_KEY $VALIDATE_USERNAME $VALIDATE_CONSUMER_KEY $VALIDATE_URL
+#    bugfix/*:
+#      - step:
+#          name: Validate Deploy
+#          script:
+#            - echo 'Validating deploy'
+#            - chmod +x pipeline_validate.sh
+#            - ./pipeline_validate.sh $DEPLOY_KEY $VALIDATE_USERNAME $VALIDATE_CONSUMER_KEY $VALIDATE_URL
+#    feature/*:
+#      - step:
+#          name: Validate Deploy
+#          script:
+#            - echo 'Validating deploy'
+#            - chmod +x pipeline_validate.sh
+#            - ./pipeline_validate.sh $DEPLOY_KEY $VALIDATE_USERNAME $VALIDATE_CONSUMER_KEY $VALIDATE_URL
     declarative/*:
       - step:
           name: Validate Deploy
