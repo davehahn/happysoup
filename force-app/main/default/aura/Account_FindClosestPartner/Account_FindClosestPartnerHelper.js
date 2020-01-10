@@ -1,4 +1,23 @@
 ({
+  findClosestDealer: function( component )
+  {
+    var spinner = component.find('spinner');
+    spinner.toggle();
+    this.doClosestDealer( component )
+    .then(
+      $A.getCallback( function( results ) {
+        component.set('v.mapMarkers', results.mapMarkers);
+        component.set('v.originAddress', results.origin_address );
+      }),
+      $A.getCallback( function( err ) {
+        LightningUtils.errorToast( err );
+      })
+    )
+    .finally( $A.getCallback( function() {
+      spinner.toggle();
+    }));
+  },
+
   doClosestDealer: function( component )
   {
     var action = component.get('c.findClosestPartner'),

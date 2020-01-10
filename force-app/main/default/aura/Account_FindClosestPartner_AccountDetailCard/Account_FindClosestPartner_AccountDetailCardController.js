@@ -7,6 +7,7 @@
 
   showDirections: function( component, event, helper )
   {
+
     var origin,
         acct = component.get('v.acct'),
         url = 'https://google.com/maps/dir/';
