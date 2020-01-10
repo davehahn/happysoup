@@ -29,9 +29,11 @@
     </h2>
     <lightning:layout class="lookup-field">
       <lightning:layoutItem size="11" class="slds-m-bottom_small ">
-        <lightning:input label="{!v.inputLabel}"
-                         type="text"
-                         value="{!v.lookupValue}" />
+        <span onkeyup="{!c.checkForEnter}">
+          <lightning:input label="{!v.inputLabel}"
+                           type="text"
+                           value="{!v.lookupValue}"/>
+        </span>
         </lightning:layoutItem>
         <lightning:layoutItem size="1">
           <lightning:buttonIcon iconName="utility:search"
@@ -41,48 +43,32 @@
         </lightning:layoutItem>
     </lightning:layout>
 
-    <aura:if isTrue="{! !empty(v.mapMarkers)}">
 
-      <!-- <lightning:layout>
-        <lightning:layoutItem size="12"
-                              class="slds-m-bottom_small">
-          <lightning:radioGroup name="Result Count"
-                                label="Result Count"
-                                options="{! v.partnerCountOptions }"
-                                value="{! v.partnerCount }"
-                                onchange="{!c.handleCountChange}"
-                                type="button"/>
-        </lightning:layoutItem>
-      </lightning:layout> -->
 
-      <aura:if isTrue="{! !empty(v.mapMarkers) }">
+    <aura:if isTrue="{! !empty(v.mapMarkers) }">
 
-        <aura:if isTrue="{!v.mapView}" >
-          <!-- <div class="slds-p-around_small slds-theme_success slds-text-align_center">
-            Closest partner is {!v.mapMarkers[0].name} and is approximately {!v.mapMarkers[0].duration} ( {!v.mapMarkers[0].distance} ) away.
-          </div> -->
+      <aura:if isTrue="{!v.mapView}" >
 
-          <lightning:map
-            mapMarkers="{! v.mapMarkers }"
-            markersTitle="Closest Partners"
-            zoomLevel="{!v.zoomLevel}"
-            center="true" />
+        <lightning:map
+          mapMarkers="{! v.mapMarkers }"
+          markersTitle="Closest Partners"
+          zoomLevel="{!v.zoomLevel}"
+          center="true" />
 
-            <aura:if isTrue="{! equals( v.partnerCount, 1 )}">
-              <c:Account_FindClosestPartner_AccountDetailCard acct="{!v.mapMarkers[0]}" />
-            </aura:if>
-        </aura:if>
+          <aura:if isTrue="{! equals( v.partnerCount, 1 )}">
+            <c:Account_FindClosestPartner_AccountDetailCard acct="{!v.mapMarkers[0]}" />
+          </aura:if>
       </aura:if>
-
-      <aura:if isTrue="{! not(v.mapView)}" >
-        <aura:iteration items="{!v.mapMarkers}" var="marker">
-          <c:Account_FindClosestPartner_AccountDetailCard
-            acct="{!marker}"
-            originAddress="{!v.originAddress}" />
-        </aura:iteration>
-      </aura:if>
-
     </aura:if>
+
+    <aura:if isTrue="{! not(v.mapView)}" >
+      <aura:iteration items="{!v.mapMarkers}" var="marker">
+        <c:Account_FindClosestPartner_AccountDetailCard
+          acct="{!marker}"
+          originAddress="{!v.originAddress}" />
+      </aura:iteration>
+    </aura:if>
+
   </div>
 
 </aura:component>

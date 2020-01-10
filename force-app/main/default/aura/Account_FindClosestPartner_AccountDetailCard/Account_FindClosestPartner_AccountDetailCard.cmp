@@ -16,10 +16,10 @@
           <div>
             <span>{!v.acct.location.Street},</span>
             <span class="slds-p-left_xx-small">{!v.acct.location.City}</span><br />
-            <span class="slds-p-left_xx-small">{!v.acct.location.State},</span>
+            <span>{!v.acct.location.State},</span>
             <span class="slds-p-left_xx-small">{!v.acct.location.Country},</span>
             <span  class="slds-p-left_xx-small">{!v.acct.location.PostalCode}</span> <br />
-            <span>{!v.acct.phone}</span><br />
+            <span><a href="{!'tel:' + v.acct.phone}">{!v.acct.phone}</a></span><br />
             <!-- <span>{!v.acct.email}</span><br /> -->
             <span>
               <a href="{!v.acct.website}" onclick="{!c.navToWebsite}">

@@ -7,24 +7,17 @@
     }
   },
 
+  checkForEnter: function( component, event, helper )
+  {
+    if( event.which === 13 )
+    {
+      helper.findClosestDealer( component );
+    }
+  },
+
   findClosestDealer: function( component, event, helper )
   {
-    var spinner = component.find('spinner');
-    spinner.toggle();
-    helper.doClosestDealer( component )
-    .then(
-      $A.getCallback( function( results ) {
-        console.log( results );
-        component.set('v.mapMarkers', results.mapMarkers);
-        component.set('v.originAddress', results.origin_address );
-      }),
-      $A.getCallback( function( err ) {
-        LightningUtils.errorToast( err );
-      })
-    )
-    .finally( $A.getCallback( function() {
-      spinner.toggle();
-    }));
+    helper.findClosestDealer( component );
   },
 
   handleCountChange:function( component, event, helper )
