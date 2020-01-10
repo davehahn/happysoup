@@ -46,6 +46,7 @@ public with sharing class Profit_Analysis_Controller
     public Decimal riggingTime;
     public Decimal riggingCost;
     public List<DataWrapper> kitParts;
+    public String province;
 
     public DataWrapper( Product_Fee_Amount__c pfa )
     {
@@ -59,6 +60,7 @@ public with sharing class Profit_Analysis_Controller
       this.riggingTime = 0;
       this.riggingCost = 0;
       this.kitParts = new List<DataWrapper>();
+      this.province = pfa.Province__c;
     }
 
     public DataWrapper( OpportunityLineItem oli, Decimal riggingRate )
@@ -113,35 +115,34 @@ public with sharing class Profit_Analysis_Controller
 
   public class ResultWrapper {
     public String pbId;
+    public String currentProvince;
     public List<Map<String, String>> pbOptions;
+    public List<String> provinceOptions;
     public List<DataWrapper> saleItems;
-    public Decimal saleItemsTotal;
     public List<DataWrapper> businessOfficeItems;
-    public Decimal businessOfficeTotal;
-    //public List<Map<String, String>> freightCharges;
     public List<DataWrapper> items;
     private Set<Id> businessOfficeProductRTs = new Set<Id>{
       LGND_Constants.productRtId_Protection,
       LGND_Constants.productRtId_Bundle,
       LGND_Constants.productRtId_Insurance
     };
-    public ResultWrapper( String recordId, String pbId )
+    private String sObjectId;
+    private String sObjectName;
+    private String pricebookName;
+
+    public ResultWrapper( String recordId, String pbId, String province )
     {
+      this.sObjectId = recordId;
+      this.sObjectName = LGND_Utilities.sObjectNameFromId( Id.valueOf( recordId ) );
       this.pbOptions = new List<Map<String,String>>();
       this.items = new List<DataWrapper>();
       this.saleItems = new List<DataWrapper>();
       this.businessOfficeItems = new List<DataWrapper>();
       this.pbId = pbId;
-      createPbOptions( recordId );
-      buildItems( recordId );
-    }
-
-    public void addPbOption( Pricebook2 pb )
-    {
-      this.pbOptions.add( new Map<String, String>{
-        'id' => pb.Id,
-        'name' => pb.Name
-      });
+      this.currentProvince = province;
+      createOptions();
+      findTheRecordAndSetDefaults();
+      buildItems();
     }
 
     public void addItems( List<DataWrapper> items )
@@ -205,6 +206,56 @@ public with sharing class Profit_Analysis_Controller
       this.separateByDepartments();
     }
 
+    private void findTheRecordAndSetDefaults()
+    {
+      switch on this.sObjectName
+      {
+        when 'Opportunity'
+        {
+          Opportunity opp = [ SELECT Id, GL_Account_Variable_3__r.Name, Pricebook2.Name FROM Opportunity WHERE Id = :this.sObjectId ];
+          this.pricebookName = opp.Pricebook2.Name;
+          if( this.currentProvince == null )
+          {
+            this.currentProvince = opp.GL_Account_Variable_3__r.Name;
+          }
+        }
+        when 'AcctSeed__Project__c'
+        {
+          AcctSeed__Project__c project = [ SELECT Id, GL_Account_Variable_3__r.Name, GMBLASERP__Pricebook__r.Name FROM AcctSeed__Project__c WHERE Id = :this.sObjectId ];
+          this.pricebookName = project.GMBLASERP__Pricebook__r.Name;
+          if( this.currentProvince == null )
+          {
+            this.currentProvince = project.GL_Account_Variable_3__r.Name;
+          }
+        }
+      }
+      if( this.currentProvince == null )
+      {
+        this.currentProvince = 'Ontario';
+      }
+      if( this.pbId == null )
+      {
+        setCurrentPb();
+      }
+    }
+
+    private void setCurrentPB()
+    {
+      String recordPbYear =  findRecordPricebookYear();
+      for(Map<String, String> pbOpt : this.pbOptions )
+      {
+        if(pbOpt.get('name').contains( recordPbYear) )
+        {
+          this.pbId = pbOpt.get('id');
+          break;
+        }
+      }
+      if( this.pbId == null )
+      {
+        this.pbId = Legend_Settings__c.getOrgDefaults().Default_Factory_Pricebook__c;
+      }
+    }
+
     private void separateByDepartments()
     {
       for( DataWrapper dw : this.items )
@@ -220,52 +271,25 @@ public with sharing class Profit_Analysis_Controller
       }
     }
 
-    private void createPbOptions( String recordId )
+    private void createOptions()
     {
-      String recordPbYear =  findRecordPricebookYear( recordId );
       for( Pricebook2 pb : [SELECT Id, Name FROM Pricebook2 WHERE Name LIKE '%Factory%'] )
       {
-        this.addPbOption( pb );
-        if( this.pbId == null &&
-          recordPbYear != null && pb.Name.contains( recordPbYear ) )
-        {
-          this.pbId = pb.Id;
-        }
+        this.pbOptions.add( new Map<String, String>{
+          'id' => pb.Id,
+          'name' => pb.Name
+        });
       }
-      if( this.pbId == null )
-        this.pbId = Legend_Settings__c.getOrgDefaults().Default_Factory_Pricebook__c;
+      this.provinceOptions = LGND_Utilities.getPicklistValues('Product_Fee_Amount__c', 'Province__c' );
     }
 
-    private String findRecordPricebookYear( String recordId )
+    private String findRecordPricebookYear()
     {
-      String objType = LGND_Utilities.sObjectNameFromId( Id.valueOf( recordId ) );
-      String pbName;
-      switch on objType
-      {
-        when 'Opportunity'
-        {
-          try
-          {
-            pbName = [SELECT Pricebook2.Name FROM Opportunity WHERE Id = :recordId LIMIT 1].Pricebook2.Name;
-          }
-          catch( Exception e ){}
-        }
-        when 'AcctSeed__Project__c'
-        {
-          try
-          {
-            AcctSeed__Project__c erp = [SELECT GMBLASERP__Pricebook__r.Name FROM AcctSeed__Project__c WHERE Id = :recordId LIMIT 1];
-            System.debug(erp.GMBLASERP__Pricebook__r.Name );
-            pbName = erp.GMBLASERP__Pricebook__r.Name;
-          }
-          catch( Exception e ){}
-        }
-      }
-      if( pbName != null )
+      if( this.pricebookName != null )
       {
         try
         {
-          return pbName.remove(' ').split('-')[0];
+          return this.pricebookName.remove(' ').split('-')[0];
         }
         catch( Exception e ){}
       }
@@ -285,18 +309,17 @@ public with sharing class Profit_Analysis_Controller
       return result;
     }
 
-    private void buildItems( String recordId )
+    private void buildItems()
     {
-      String objType = LGND_Utilities.sObjectNameFromId( Id.valueOf( recordId ) );
-      switch on objType
+      switch on this.sObjectName
       {
         when 'Opportunity'
         {
-          this.addItems( buildForOpportunity( recordId ) );
+          this.addItems( buildForOpportunity() );
         }
         when 'AcctSeed__Project__c'
         {
-          this.addItems( buildForERP( recordId ) );
+          this.addItems( buildForERP() );
         }
       }
       this.setPricebookValuesOnItems();
@@ -307,12 +330,10 @@ public with sharing class Profit_Analysis_Controller
     private void buildFreightCharges()
     {
       List<DataWrapper> freights = new List<DataWrapper>();
-      String prov = 'Ontario';
       Set<Id> productIds = new Set<Id>();
       Set<Id> feeProdIds = new Set<Id>();
       for( DataWrapper dw : this.items )
       {
-        System.debug('item product Id = ' + dw.productId );
         productIds.add( dw.productId );
       }
       for( Product_Fee_Map__c pfm : [ SELECT Id, Fee_Product__c, Fee_Product__r.Name
@@ -320,13 +341,12 @@ public with sharing class Profit_Analysis_Controller
                                       WHERE Parent_Product__c IN :productIds
                                       AND Fee_Product__r.Family = 'Freight'] )
       {
-        System.debug('Fee Product Name = ' + pfm.Fee_Product__r.Name );
         feeProdIds.add( pfm.Fee_Product__c );
       }
-      for( Product_Fee_Amount__c pfa : [SELECT Id, Amount__c, Fee_Product__r.Name
+      for( Product_Fee_Amount__c pfa : [SELECT Id, Amount__c, Fee_Product__r.Name, Province__c
                                         FROM Product_Fee_Amount__c
                                         WHERE Fee_Product__c IN :feeProdIds
-                                        AND Province__c = :prov
+                                        AND Province__c = :this.currentProvince
                                         AND Price_Book__c = :this.pbId] )
       {
         freights.add( new DataWrapper( pfa ) );
@@ -335,7 +355,7 @@ public with sharing class Profit_Analysis_Controller
       this.saleItems.addAll( freights );
     }
 
-    private List<DataWrapper> buildForOpportunity( String recordId )
+    private List<DataWrapper> buildForOpportunity()
     {
       List<DataWrapper> result = new List<DataWrapper>();
       List<OpportunityLineItem> olis = [ SELECT Id,
@@ -349,7 +369,7 @@ public with sharing class Profit_Analysis_Controller
                                                 Product2.Rigging_Time__c,
                                                 Product2.AcctSeedERP__Serialized__c
                                           FROM OpportunityLineItem
-                                          WHERE OpportunityId = :recordId
+                                          WHERE OpportunityId = :this.sObjectId
                                           AND Product2.AcctSeed__Revenue_GL_Account__r.AcctSeed__Type__c  = 'Revenue'];
       for( OpportunityLineItem oli : olis )
       {
@@ -358,7 +378,7 @@ public with sharing class Profit_Analysis_Controller
       return result;
     }
 
-    private List<DataWrapper> buildForERP( String recordId )
+    private List<DataWrapper> buildForERP()
     {
       List<DataWrapper> result = new List<DataWrapper>();
       List<AcctSeedERP__Material__c> materials = [ SELECT Id,
@@ -374,7 +394,7 @@ public with sharing class Profit_Analysis_Controller
                                                           AcctSeedERP__Product__r.AcctSeed__Revenue_GL_Account__r.AcctSeed__Type__c,
                                                           Material__c
                                                         FROM AcctSeedERP__Material__c
-                                                        WHERE AcctSeedERP__Project__c = :recordId
+                                                        WHERE AcctSeedERP__Project__c = :this.sObjectId
                                                         AND AcctSeedERP__Product__r.AcctSeed__Revenue_GL_Account__r.AcctSeed__Type__c  = 'Revenue'];
       for( AcctSeedERP__Material__c mat : materials )
       {
@@ -385,29 +405,13 @@ public with sharing class Profit_Analysis_Controller
   }
 
   @AuraEnabled
-  public static String fetchData( String recordId )
+  public static String fetchData( String recordId, String pbId, String province )
   {
     if( !LGND_Utilities.CustomPermissions.canViewGrossMargin )
       return 'denied';
     try
     {
-      return JSON.serialize(new ResultWrapper(recordId, null));
-    }
-    catch( Exception e )
-    {
-      AuraHandledException ae = new AuraHandledException( e.getMessage() );
-      ae.setMessage( e.getMessage() );
-      throw ae;
-    }
-  }
-
-  @AuraEnabled
-  public static String updateData( String recordId, String pbId )
-  {
-    try
-    {
-      ResultWrapper rw = new ResultWrapper( recordId, pbId );
-      return JSON.serialize( rw );
+      return JSON.serialize(new ResultWrapper(recordId, pbId, province) );
     }
     catch( Exception e )
     {
