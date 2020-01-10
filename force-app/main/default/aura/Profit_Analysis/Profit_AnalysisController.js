@@ -42,12 +42,14 @@
     helper.setTotals( component );
   },
 
-  handlePbChange: function( component, event, helper )
+  handleConfigChange: function( component, event, helper )
   {
     var spinner = component.find('spinner'),
-        pbId = event.getSource().get('v.value');
+        pbId = component.get('v.selectedPbId'),
+        prov = component.get('v.selectedProvince') ;
+
     spinner.toggle();
-    helper.updateItems( component, pbId )
+    helper.fetchData( component, pbId, prov )
     .then(
       $A.getCallback( function( result )
       {

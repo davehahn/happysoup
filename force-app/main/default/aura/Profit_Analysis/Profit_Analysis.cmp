@@ -8,13 +8,14 @@
   <aura:attribute name="recordId" type="String" />
   <aura:attribute name="selectedPbId" type="String" />
   <aura:attribute name="pbOptions" type="List" />
+  <aura:attribute name="provinceOptions" type="List" />
+  <aura:attribute name="selectedProvince" type="String" />
   <aura:attribute name="allowedToView" type="Boolean" default="true" />
   <aura:attribute name="lineItems" type="Object" />
   <aura:attribute name="saleItems" type="List" />
   <aura:attribute name="salesItemsTotal" type="Decimal" />
   <aura:attribute name="businessOfficeItemsTotal" type="Decimal" />
   <aura:attribute name="businessOfficeItems" type="List" />
-<!--  <aura:attribute name="freightItems" type="List" />-->
   <aura:attribute name="saleTotal" type="Decimal" />
   <aura:attribute name="factoryPbTotal" type="Decimal" />
   <aura:attribute name="factoryPbProfit" type="Decimal" />
@@ -54,13 +55,33 @@
             </div>
           </div>
           <div class="slds-page-header__col-actions">
-            <lightning:select value="{!v.selectedPbId}"
-                              label="Factory Pricebook"
-                              onchange="{!c.handlePbChange}">
-              <aura:iteration items="{!v.pbOptions}" var="opt">
-                <option value="{!opt.id}">{!opt.name}</option>
-              </aura:iteration>
-            </lightning:select>
+            <lightning:layout>
+
+              <lightning:layoutItem padding="horizontal-small">
+                <lightning:select value="{!v.selectedProvince}"
+                                  label="Province"
+                                  onchange="{!c.handleConfigChange}">
+                  <aura:iteration items="{!v.provinceOptions}" var="opt">
+                    <option value="{!opt}">{!opt}</option>
+                  </aura:iteration>
+                </lightning:select>
+              </lightning:layoutItem>
+
+              <lightning:layoutItem padding="horizontal-small">
+                <lightning:select value="{!v.selectedPbId}"
+                                  label="Factory Pricebook"
+                                  onchange="{!c.handleConfigChange}">
+                  <aura:iteration items="{!v.pbOptions}" var="opt">
+                    <aura:if isTrue="{!equals(v.selectedPbId, opt.id)}">
+                      <option value="{!opt.id}" selected="true">{!opt.name}</option>
+                    </aura:if>
+                    <aura:if isTrue="{! !equals(v.selectedPbId, opt.id)}">
+                      <option value="{!opt.id}">{!opt.name}</option>
+                    </aura:if>
+                  </aura:iteration>
+                </lightning:select>
+              </lightning:layoutItem>
+            </lightning:layout>
           </div>
         </div>
 

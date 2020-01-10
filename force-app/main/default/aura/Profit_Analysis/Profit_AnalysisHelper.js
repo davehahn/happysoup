@@ -17,32 +17,30 @@
     });
   },
 
-  fetchData: function( component )
+  fetchData: function( component, pbId, province )
   {
-    var action = component.get('c.fetchData');
-    action.setParams({
-      recordId: component.get('v.recordId')
-    });
+    var action = component.get('c.fetchData'),
+        pbId = typeof( pbId ) === 'undefined' ? null : pbId,
+        province = typeof( province ) === 'undefined' ? null : province,
+        params = {
+          recordId: component.get('v.recordId'),
+          pbId: pbId,
+          province: province
+        };
+    action.setParams(params);
     return new LightningApex( this, action ).fire();
-  },
-
-  updateItems: function( component, pbId )
-  {
-     var action= component.get('c.updateData');
-     action.setParams({
-       recordId: component.get('v.recordId'),
-       pbId: pbId
-     });
-     return new LightningApex( this, action ).fire();
   },
 
   setResultValues: function( component, result )
   {
+    console.log( JSON.parse( JSON.stringify( result ) ) );
+    component.set('v.pbOptions', result.pbOptions );
+    component.set('v.provinceOptions', result.provinceOptions );
     component.set('v.lineItems', result.items);
     component.set('v.saleItems', result.saleItems );
     component.set('v.businessOfficeItems', result.businessOfficeItems );
     component.set('v.selectedPbId', result.pbId );
-    component.set('v.pbOptions', result.pbOptions );
+    component.set('v.selectedProvince', result.currentProvince );
     this.setTotals( component );
   },
 
