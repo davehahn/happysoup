@@ -69,7 +69,19 @@
     var item = component.get('v.customItem'),
         type = component.get('v.currentTab'),
         varString;
-
+    if( !helper.isFormValid( component) )
+    {
+      return;
+    }
+    for( let field of ['saleTotal', 'factoryPbTotal', 'riggingCost'] )
+    {
+      if( typeof( item[field] ) === 'undefined' ||
+          item[field] == null ||
+          item[field] === '' )
+      {
+        item[field] = 0;
+      }
+    }
     if( type === 'sales' )
     {
       varString = 'v.saleItems';

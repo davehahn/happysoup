@@ -26,10 +26,10 @@
   <aura:attribute name="riggingLabourTotal" type="Decimal" />
   <aura:attribute name="currentTab" type="String" />
   <aura:attribute name="customItem" type="Map"  />
+  <aura:attribute name="customItemValid" type="Boolean" default="false" />
 
   <ltng:require scripts="{!join(',', $Resource.Libraries +'/js/LightningApex.js',$Resource.Libraries +'/js/LightningUtils.js') }"
                 afterScriptsLoaded="{!c.doInit}" />
-
 
   <div class="slds-card">
     <c:Lgnd_Spinner_dh aura:id="spinner" />
@@ -56,7 +56,6 @@
           </div>
           <div class="slds-page-header__col-actions">
             <lightning:layout>
-
               <lightning:layoutItem padding="horizontal-small">
                 <lightning:select value="{!v.selectedProvince}"
                                   label="Province"
@@ -315,24 +314,65 @@
       <!-- CustomItemForm -->
       <div>
         <div class="slds-text-title_caps slds-text-title_bold slds-m-top_small slds-m-left_large">Add an Item</div>
-        <lightning:layout verticalAlign="center" class="slds-box slds-box_xx-small">
-          <lightning:layoutItem size="5" padding="around-small">
-            <lightning:input type="text" label="Description" value="{!v.customItem.productName}" />
+        <lightning:layout verticalAlign="start" class="slds-box slds-box_xx-small">
+          <lightning:layoutItem size="4" padding="around-small">
+            <lightning:input type="text"
+                             label="Description"
+                             value="{!v.customItem.productName}"
+                             required="true"
+                             aura:id="customItemField"
+                             messageWhenValueMissing="Description is required"/>
           </lightning:layoutItem>
           <lightning:layoutItem size="2" padding="around-small">
-            <lightning:input type="number" label="Sale Price" value="{!v.customItem.saleTotal}" />
+            <lightning:input type="number"
+                             label="Sale Price"
+                             value="{!v.customItem.saleTotal}"
+                             required="{! and( empty(v.customItem.factoryPbTotal), empty(v.customItem.riggingCost))}"
+                             aura:id="customItemField"
+                             messageWhenValueMissing="One of Sale Price, Cost or Rigging Cost is required"/>
           </lightning:layoutItem>
           <lightning:layoutItem size="2" padding="around-small">
-            <lightning:input type="number" label="Cost" value="{!v.customItem.factoryPbTotal}" />
+            <lightning:input type="number"
+                             label="Cost"
+                             value="{!v.customItem.factoryPbTotal}"
+                             required="{! and( empty(v.customItem.saleTotal), empty(v.customItem.riggingCost))}"
+                             aura:id="customItemField"
+                             messageWhenValueMissing="One of Sale Price, Cost, or Rigging Cost is required"/>
           </lightning:layoutItem>
-          <lightning:layoutItem size="2" padding="around-small">
-            <lightning:input type="number" label="Labour" value="{!v.customItem.riggingCost}" />
+          <lightning:layoutItem size="3" padding="around-small">
+            <label class="slds-form-element__label slds-no-flex">
+              Rigging Labour ( Time (hrs) / Cost )
+            </label>
+            <lightning:layout>
+              <lightning:layoutItem size="4">
+                <lightning:input type="number"
+                                 variant="label-hidden"
+                                 label="Rigging Time"
+                                 value="{!v.customItem.riggingTime}"
+                                 required="{! !empty(v.customItem.riggingCost)}"
+                                 aura:id="customItemField"
+                                 messageWhenValueMissing="Rigging Time is required"/>
+              </lightning:layoutItem>
+              <lightning:layoutItem size="8">
+                <lightning:input type="number"
+                                 variant="label-hidden"
+                                 label="Rigging Cost"
+                                 value="{!v.customItem.riggingCost}"
+                                 required="{! or( and( empty(v.customItem.saleTotal),
+                                                       empty(v.customItem.factoryPbTotal)
+                                                     ),
+                                                  not(empty(v.customItem.riggingTime)))}"
+                                 aura:id="customItemField"
+                                 messageWhenValueMissing="{! if( !empty(v.customItem.riggingCost),
+                                                                'Rigging Cost is required',
+                                                                'One of Sale Price, Cost or Rigging Cost is required')}"/>
+              </lightning:layoutItem>
+            </lightning:layout>
           </lightning:layoutItem>
           <lightning:layoutItem size="1" padding="around-small">
             <lightning:button label="Add"
                               class="slds-m-top_large"
-                              onclick="{!c.addCustomItem}"
-                              disabled="{! empty(v.customItem.productName)}"/>
+                              onclick="{!c.addCustomItem}"/>
           </lightning:layoutItem>
         </lightning:layout>
       </div>
