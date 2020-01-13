@@ -10,9 +10,10 @@
       include: true,
       quantity: 1,
       productName: '',
-      saleTotal: 0,
-      factoryPbTotal: 0,
-      riggingCost: 0,
+      saleTotal: null,
+      factoryPbTotal: null,
+      riggingCost: null,
+      riggingTime: null,
       customItem: true
     });
   },
@@ -75,6 +76,16 @@
     component.set('v.factoryPbTotal', factoryPbTotal);
     component.set('v.factoryPbProfit', grandTotal - factoryPbTotal - riggingTotal );
     component.set('v.factoryPbProfitPercent', 1 - ( (factoryPbTotal+riggingTotal)/grandTotal )  );
+  },
+
+  isFormValid: function( component )
+  {
+    return component.find('customItemField').reduce(function (validSoFar, inputCmp) {
+        inputCmp.showHelpMessageIfInvalid();
+        console.log( inputCmp.get('v.label') );
+        console.log( inputCmp.get('v.validity').valid )
+        return validSoFar && inputCmp.get('v.validity').valid;
+    }, true);
   }
 
 });
