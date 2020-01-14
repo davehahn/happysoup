@@ -4,6 +4,7 @@
   <aura:attribute name="options" type="Array" />
   <aura:attribute name="selectOptions" type="Array" />
   <aura:attribute name="value" type="Array" default="[]" />
+  <aura:attribute name="apexValue" type="String" default="" />
   <aura:attribute name="scriptsLoaded" type="Boolean" default="false" />
 
   <aura:handler name="init" value="{!this}" action="{!c.doInit}" />

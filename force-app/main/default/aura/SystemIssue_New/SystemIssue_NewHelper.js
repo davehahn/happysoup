@@ -20,7 +20,8 @@
 
   doSubmit: function( component )
   {
-    var action = component.get('c.createIssue');
+    var action = component.get('c.createIssue'),
+        issue = component.get('v.issue');
     action.setParams({
       issue: component.get('v.issue')
     });

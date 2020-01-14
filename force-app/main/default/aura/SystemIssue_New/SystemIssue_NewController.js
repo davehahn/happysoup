@@ -6,7 +6,7 @@
   doInit: function( component, event, helper )
   {
     var spinner = component.find("spinner");
-    spinner.toggle();
+    //spinner.toggle();
     helper.doInit( component )
     .then(
       $A.getCallback( function(result) {
@@ -14,14 +14,23 @@
         component.set('v.typeOptions', result.typeOptions );
         component.set('v.priorityOptions', result.priorityOptions );
         component.set('v.jiraProjectOptions', result.jiraProjectOptions );
-        component.set('v.departmentOptions', result.departmentOptions );
+        let dOpts = [];
+        for( let dOpt of result.departmentOptions )
+        {
+          dOpts.push({
+            label: dOpt,
+            value: dOpt
+          });
+        }
+        component.set('v.departmentOptions', dOpts);
+        component.set('v.loaded', true);
       }),
       $A.getCallback( function( err ) {
         LightningUtils.errorToast( err );
         helper.doCancel( component );
       })
     ).finally( $A.getCallback( function() {
-      spinner.toggle();
+      //spinner.toggle();
     }))
   },
 

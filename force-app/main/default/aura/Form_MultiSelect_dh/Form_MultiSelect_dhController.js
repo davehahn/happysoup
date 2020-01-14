@@ -4,6 +4,7 @@
     console.log('multi select do init');
     var value = component.get('v.value'),
         options = component.get('v.options');
+        console.log( JSON.parse( JSON.stringify(options )));
     if( options === undefined || options === null)
     {
       options = [];
