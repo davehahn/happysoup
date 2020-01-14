@@ -71,6 +71,9 @@
         <connector>
             <targetReference>Upload_Attachment</targetReference>
         </connector>
+        <faultConnector>
+            <targetReference>Error_Validation</targetReference>
+        </faultConnector>
         <inputAssignments>
             <field>AcctSeed__Account_Payable__c</field>
             <value>
@@ -106,6 +109,9 @@
         <connector>
             <targetReference>Create_AP_Line</targetReference>
         </connector>
+        <faultConnector>
+            <targetReference>Error_Validation</targetReference>
+        </faultConnector>
         <inputAssignments>
             <field>AcctSeed__Date__c</field>
             <value>
@@ -147,8 +153,8 @@
     <recordLookups>
         <name>Validate_Accounting_Period</name>
         <label>Validate Accounting Period</label>
-        <locationX>384</locationX>
-        <locationY>50</locationY>
+        <locationX>386</locationX>
+        <locationY>58</locationY>
         <assignNullValuesIfNoRecordsFound>true</assignNullValuesIfNoRecordsFound>
         <connector>
             <targetReference>Period_Status</targetReference>
@@ -169,8 +175,8 @@
     <screens>
         <name>Error</name>
         <label>Error - Period Closed</label>
-        <locationX>500</locationX>
-        <locationY>231</locationY>
+        <locationX>364</locationX>
+        <locationY>346</locationY>
         <allowBack>false</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
@@ -186,10 +192,26 @@
         <showHeader>true</showHeader>
     </screens>
     <screens>
+        <name>Error_Validation</name>
+        <label>Error - Validation</label>
+        <locationX>582</locationX>
+        <locationY>220</locationY>
+        <allowBack>false</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>false</allowPause>
+        <fields>
+            <name>APCreationError</name>
+            <fieldText>&lt;p&gt;&lt;b style=&quot;color: rgb(36, 39, 41); background-color: rgb(255, 255, 255); font-size: 15px; font-family: Arial, &amp;quot;Helvetica Neue&amp;quot;, Helvetica, sans-serif;&quot;&gt;Error on creation:&lt;/b&gt;&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot;color: rgb(250, 0, 0); background-color: rgb(255, 255, 255); font-size: 15px; font-family: Arial, &amp;quot;Helvetica Neue&amp;quot;, Helvetica, sans-serif;&quot;&gt;{!$Flow.FaultMessage}&lt;/span&gt;&lt;/p&gt;</fieldText>
+            <fieldType>DisplayText</fieldType>
+        </fields>
+        <showFooter>true</showFooter>
+        <showHeader>true</showHeader>
+    </screens>
+    <screens>
         <name>Select_Vendor</name>
         <label>Select Vendor</label>
-        <locationX>242</locationX>
-        <locationY>50</locationY>
+        <locationX>251</locationX>
+        <locationY>58</locationY>
         <allowBack>false</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
