@@ -8,6 +8,7 @@
     this.fetchInitial( component )
     .then(
       $A.getCallback( function(result ) {
+        console.log( JSON.parse( JSON.stringify(result)));
         var deposit = result.deposit === null ? 0 : result.deposit,
             selectedItems = result.selectedItems;
         // if there are already selected insurance items

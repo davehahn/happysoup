@@ -256,7 +256,7 @@ public class OpportunityTriggerHandler {
           {
             Map<String, String> data = new Map<String, String>();
             data.put('amount', String.ValueOf( opp.Pre_Insurance_Total__c) );
-            data.put('deposit', String.ValueOf( opp.Deposit__c) );
+            data.put('deposit', opp.Deposit__c == null ? '0' : String.ValueOf( opp.Deposit__c) );
             data.put('finTerm', String.ValueOf( opp.Finance_Term__c) );
             data.put('amort', String.ValueOf( opp.Finance_Ammortization__c) );
             data.put('insTerm', String.ValueOf( opp.Insurance_Term__c) );
