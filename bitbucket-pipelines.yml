@@ -49,4 +49,4 @@ pipelines:
           script:
             - echo 'Validating deploy'
             - chmod +x pipeline_validate.sh
-            - ./pipeline_validate.sh $DEPLOY_KEY $PRODUCTION_USERNAME $PRODUCTION_CONSUMER_KEY $PRODUCTION_URL
+            - ./pipeline_validate.sh $DEPLOY_KEY $VALIDATE_USERNAME $VALIDATE_CONSUMER_KEY $VALIDATE_URL
