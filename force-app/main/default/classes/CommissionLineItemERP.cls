@@ -39,13 +39,11 @@ public with sharing class CommissionLineItemERP {
     {
       for( Id erpId : comRecordMap.keySet() )
       {
-        System.debug( '&&&&& erpId = ' + erpId );
         if( erp_Materials_Map.containsKey( erpId ) )
         {
           for( AcctSeedERP__Material__c mat : erp_Materials_Map.get( erpId ) )
           {
             CommissionLineItem__c cli = newFromProjectMaterial(mat);
-            System.debug( '&&&&& cli = ' + cli);
             CommissionLineItem__c allInAdjustment = null;
             CommissionLineItem__c bonusLine = null;
             if( cli != null )
@@ -175,7 +173,6 @@ public with sharing class CommissionLineItemERP {
       for( CommissionLineItem__c cli : clis )
       {
         cli.hasChanged__c = true;
-        System.debug('&&&&&' + cli.CommissionRecord__c );
         if( !changesMap.containsKey( cli.CommissionRecord__c) )
           changesMap.put( cli.CommissionRecord__c, new List<String>() );
         if( matId_toCreate.contains( cli.Material__c) )

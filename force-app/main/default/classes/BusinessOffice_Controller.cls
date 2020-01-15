@@ -21,7 +21,7 @@ public with sharing class BusinessOffice_Controller {
              (SELECT Id,
                      AcctSeedERP__Product__r.InsurancePlan__r.Name
               FROM AcctSeedERP__Project_Materials__r
-              WHERE AcctSeedERP__Project_Task__r.IsInsurance__c = true
+              WHERE AcctSeedERP__Project_Task__r.Name LIKE 'Business Office'
               LIMIT 1)
             FROM AcctSeed__Project__c
             WHERE Id = :recordId];
@@ -257,12 +257,12 @@ public with sharing class BusinessOffice_Controller {
       try {
         task = [SELECT Id FROM AcctSeed__Project_Task__c
                 WHERE AcctSeed__Project__c = :parentId
-                AND Name LIKE '%Oppy Line Items%' ];
+                AND Name LIKE '%Retail Sale%' ];
       }
       catch( Exception e )
       {
         task = new AcctSeed__Project_Task__c(
-          Name = 'Oppy Line Items',
+          Name = 'Retail Sale',
           DisplayOnCustomerInvoice__c = true,
           AcctSeed__Project__c = parentId
         );
@@ -392,10 +392,11 @@ public with sharing class BusinessOffice_Controller {
                                                   GMBLASERP__Unit_Price__c,
                                                   Insurance_Coverage__c,
                                                   Insurance_Rate__c
-                                           FROM AcctSeedERP__Materials__r )
+                                           FROM AcctSeedERP__Materials__r
+                                           WHERE AcctSeedERP__Product__r.RecordTypeId = :LGND_Constants.productRtId_Insurance)
                                         FROM AcctSeed__Project_Task__c
                                         WHERE AcctSeed__Project__c = :recordId
-                                        AND IsInsurance__c = true] )
+                                        AND Name LIKE '%Business Office%'] )
       {
         if( t.AcctSeedERP__Materials__r.size() > 0 )
           this.planId = t.AcctSeedERP__Materials__r[0].AcctSeedERP__Product__r.InsurancePlan__c;
@@ -524,12 +525,12 @@ public with sharing class BusinessOffice_Controller {
       task = [SELECT Id
               FROM AcctSeed__Project_Task__c
               WHERE AcctSeed__Project__c = :parentRecordId
-              AND IsInsurance__c = true
+              AND Name Like '%Business Office%'
               LIMIT 1];
     }
     catch(Exception e) {
       task = new AcctSeed__Project_Task__c(
-        Name = 'Insurance Items',
+        Name = 'Business Office',
         DisplayOnCustomerInvoice__c = true,
         IsInsurance__c = true,
         AcctSeed__Project__c = parentRecordId
@@ -708,12 +709,12 @@ public with sharing class BusinessOffice_Controller {
       task = [SELECT Id
               FROM AcctSeed__Project_Task__c
               WHERE AcctSeed__Project__c = :recordId
-              AND Name LIKE '%Protection and Services%'
+              AND Name LIKE '%Business Office%'
               LIMIT 1];
     }
     catch(Exception e) {
       task = new AcctSeed__Project_Task__c(
-        Name = 'Protection and Services',
+        Name = 'Business Office',
         DisplayOnCustomerInvoice__c = true,
         AcctSeed__Project__c = recordId
       );

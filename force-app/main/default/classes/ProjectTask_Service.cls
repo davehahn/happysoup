@@ -28,5 +28,21 @@ public with sharing class ProjectTask_Service
     insert tasks;
   }
 
+  public static Map<String, AcctSeed__Project_Task__c> insertDefaultRetailBoatSaleTasks( AcctSeed__Project__c project )
+  {
+    Map<String, AcctSeed__Project_Task__c> tasks = new Map<String, AcctSeed__Project_Task__c>{
+      'Retail Sale' => new AcctSeed__Project_Task__c(
+        Name = 'Retail Sale',
+        DisplayOnCustomerInvoice__c = true,
+        AcctSeed__Project__c = project.Id ),
+      'Business Office' => new AcctSeed__Project_Task__c(
+        Name = 'Business Office',
+        DisplayOnCustomerInvoice__c = true,
+        AcctSeed__Project__c = project.Id)
+    };
+    insert tasks.values();
+    return tasks;
+  }
+
 
 }
