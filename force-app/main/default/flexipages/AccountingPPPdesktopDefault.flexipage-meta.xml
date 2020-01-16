@@ -3,48 +3,21 @@
     <flexiPageRegions>
         <componentInstances>
             <componentInstanceProperties>
-                <name>context</name>
-                <value>GLOBAL</value>
-            </componentInstanceProperties>
-            <componentName>forceChatter:publisher</componentName>
-        </componentInstances>
-        <componentInstances>
-            <componentInstanceProperties>
-                <name>cmpTitle</name>
-                <value>Find Closest Legend Partner</value>
+                <name>cacheAge</name>
+                <value>1440</value>
             </componentInstanceProperties>
             <componentInstanceProperties>
-                <name>excludedAccountIds</name>
-                <value>001i000000cy9B9AAI</value>
+                <name>reportName</name>
+                <value>Payments_due_in_next_7_days</value>
             </componentInstanceProperties>
             <componentInstanceProperties>
-                <name>inputLabel</name>
-                <value>Search by Postal Code or City</value>
-            </componentInstanceProperties>
-            <componentInstanceProperties>
-                <name>mapView</name>
+                <name>showRefreshButton</name>
                 <value>true</value>
             </componentInstanceProperties>
-            <componentInstanceProperties>
-                <name>partnerCount</name>
-                <value>5</value>
-            </componentInstanceProperties>
-            <componentName>Account_FindClosestPartner</componentName>
+            <componentName>flexipage:reportChart</componentName>
         </componentInstances>
         <mode>Replace</mode>
         <name>top</name>
-        <type>Region</type>
-    </flexiPageRegions>
-    <flexiPageRegions>
-        <componentInstances>
-            <componentInstanceProperties>
-                <name>context</name>
-                <value>TO</value>
-            </componentInstanceProperties>
-            <componentName>forceChatter:exposedFeed</componentName>
-        </componentInstances>
-        <mode>Replace</mode>
-        <name>bottomLeft</name>
         <type>Region</type>
     </flexiPageRegions>
     <flexiPageRegions>
@@ -55,8 +28,13 @@
             <componentName>home:eventContainer</componentName>
         </componentInstances>
         <componentInstances>
-            <componentName>runtime_approval_process:pendingApprovalCard</componentName>
+            <componentName>home:recentRecordContainer</componentName>
         </componentInstances>
+        <mode>Replace</mode>
+        <name>bottomLeft</name>
+        <type>Region</type>
+    </flexiPageRegions>
+    <flexiPageRegions>
         <componentInstances>
             <componentInstanceProperties>
                 <name>flowLayout</name>
@@ -68,19 +46,50 @@
             </componentInstanceProperties>
             <componentName>flowruntime:interview</componentName>
         </componentInstances>
+        <componentInstances>
+            <componentName>runtime_approval_process:pendingApprovalCard</componentName>
+        </componentInstances>
+        <componentInstances>
+            <componentInstanceProperties>
+                <name>context</name>
+                <value>TO</value>
+            </componentInstanceProperties>
+            <componentName>forceChatter:exposedFeed</componentName>
+        </componentInstances>
         <mode>Replace</mode>
         <name>bottomRight</name>
         <type>Region</type>
     </flexiPageRegions>
     <flexiPageRegions>
         <componentInstances>
+            <componentInstanceProperties>
+                <name>enableInlineEdit</name>
+                <value>true</value>
+            </componentInstanceProperties>
+            <componentInstanceProperties>
+                <name>entityName</name>
+                <value>AcctSeed__Account_Payable__c</value>
+            </componentInstanceProperties>
+            <componentInstanceProperties>
+                <name>filterName</name>
+                <value>Payments_due_in_next_7_days</value>
+            </componentInstanceProperties>
+            <componentInstanceProperties>
+                <name>hideActionBar</name>
+                <value>false</value>
+            </componentInstanceProperties>
+            <componentInstanceProperties>
+                <name>hideSearchBar</name>
+                <value>false</value>
+            </componentInstanceProperties>
+            <componentInstanceProperties>
+                <name>pageSize</name>
+                <value>3</value>
+            </componentInstanceProperties>
+            <componentName>flexipage:filterListCard</componentName>
+        </componentInstances>
+        <componentInstances>
             <componentName>home:heroChart</componentName>
-        </componentInstances>
-        <componentInstances>
-            <componentName>home:assistant</componentName>
-        </componentInstances>
-        <componentInstances>
-            <componentName>home:recentRecordContainer</componentName>
         </componentInstances>
         <componentInstances>
             <componentInstanceProperties>
@@ -105,7 +114,7 @@
         <name>sidebar</name>
         <type>Region</type>
     </flexiPageRegions>
-    <masterLabel>desktopDefault</masterLabel>
+    <masterLabel>AccountingPPPdesktopDefault</masterLabel>
     <parentFlexiPage>home__desktopDefault</parentFlexiPage>
     <template>
         <name>home:desktopTemplate</name>
