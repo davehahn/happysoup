@@ -89,7 +89,7 @@
         <inputAssignments>
             <field>AcctSeed__Expense_GL_Account__c</field>
             <value>
-                <stringValue>a0yi0000002E2c3AAC</stringValue>
+                <elementReference>Selected_GLAccount</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -146,6 +146,12 @@
             <field>GL_Account_Variable_2__c</field>
             <value>
                 <elementReference>SelectedGLV2</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Internal_Comment__c</field>
+            <value>
+                <elementReference>Internal_Comments</elementReference>
             </value>
         </inputAssignments>
         <object>AcctSeed__Account_Payable__c</object>
@@ -355,6 +361,40 @@
             <isRequired>true</isRequired>
             <scale>0</scale>
         </fields>
+        <fields>
+            <name>Internal_Comments</name>
+            <fieldText>Internal Comments</fieldText>
+            <fieldType>LargeTextArea</fieldType>
+            <isRequired>false</isRequired>
+        </fields>
+        <fields>
+            <name>GLAccount_Lookup</name>
+            <extensionName>flowruntime:lookup</extensionName>
+            <fieldType>ComponentInstance</fieldType>
+            <inputParameters>
+                <name>objectApiName</name>
+                <value>
+                    <stringValue>AcctSeed__Account_Payable_Line__c</stringValue>
+                </value>
+            </inputParameters>
+            <inputParameters>
+                <name>fieldApiName</name>
+                <value>
+                    <stringValue>APL_GL_Account__c</stringValue>
+                </value>
+            </inputParameters>
+            <inputParameters>
+                <name>label</name>
+                <value>
+                    <stringValue>Catagory</stringValue>
+                </value>
+            </inputParameters>
+            <isRequired>true</isRequired>
+            <outputParameters>
+                <assignToReference>Selected_GLAccount</assignToReference>
+                <name>recordId</name>
+            </outputParameters>
+        </fields>
         <showFooter>true</showFooter>
         <showHeader>true</showHeader>
     </screens>
@@ -430,6 +470,13 @@
     </variables>
     <variables>
         <name>PeriodStatus</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>Selected_GLAccount</name>
         <dataType>String</dataType>
         <isCollection>false</isCollection>
         <isInput>false</isInput>
