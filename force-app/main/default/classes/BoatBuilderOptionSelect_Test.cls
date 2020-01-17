@@ -18,7 +18,7 @@ private class BoatBuilderOptionSelect_Test {
     bbos.startNum = 1;
     bbos.endNum = 10;
 
-    Map<Integer, String> selects = bbos.getOptionsFromRangeHtml();
+    Map<Decimal, String> selects = bbos.getOptionsFromRangeHtml();
 
     System.assertEquals(10, selects.size() );
     System.assertEquals('5', selects.get(5) );

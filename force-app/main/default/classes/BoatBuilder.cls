@@ -15,7 +15,7 @@ public with sharing class BoatBuilder {
     public String productName { get; set; }
     public String productNameFR { get; set; }
     public String productPricebookEntryId { get; set; }
-    public Integer quantity { get; set; }
+    public Decimal quantity { get; set; }
     public Decimal unitPrice { get; set; }
     public Decimal taxRate { get; set; }
     public Decimal totalPrice {
@@ -63,7 +63,7 @@ public with sharing class BoatBuilder {
     public String description { get; set; }
     public String description_FR { get; set; }
     public String priceBookEntryId { get; set; }
-    public Integer quantity { get; set; }
+    public Decimal quantity { get; set; }
     public Decimal taxRate { get; set; }
     public Decimal total {
       get {
@@ -694,7 +694,7 @@ public with sharing class BoatBuilder {
       a.productName = pbe.Product2.Name;
       a.productNameFR = pbe.Product2.Name_FR__c;
       a.productPriceBookEntryId = pbe.Id;
-      a.quantity = Integer.valueOf( params.get('quantity') );
+      a.quantity = Decimal.valueOf( params.get('quantity') );
       a.unitPrice = Decimal.valueOf( params.get('salePrice') );
       a.taxRate = findTaxRate(pbe.Product2.Taxable__c);
       additionalAccessories.add( a );
@@ -1693,8 +1693,8 @@ public with sharing class BoatBuilder {
     Trade_In_Record__c tradeInRecord = buildTradeInRecord(opportunity);
 
     try {
-      upsert lineItemMap.get('upsert');
       delete lineItemMap.get('delete');
+      upsert lineItemMap.get('upsert');
       if( tradeInRecord.Total_Value__c > 0  )
       {
         upsert tradeInRecord;
@@ -1720,20 +1720,20 @@ public with sharing class BoatBuilder {
     result.put('upsert', new List<OpportunityLineItem>() );
     result.put('delete', new List<OpportunityLineItem>() );
     OpportunityLineItem[] currentLIs = buildOppLineItems(opportunity.Id);
-    Map<Id, OpportunityLineItem> origMap = build_PBE_OLI_map( opportunity.OpportunityLineItems );
-    Map<Id, OpportunityLineItem> currentMap = build_PBE_OLI_map( currentLIs );
+    Map<String, OpportunityLineItem> origMap = build_PBE_OLI_map( opportunity.OpportunityLineItems );
+    Map<String, OpportunityLineItem> currentMap = build_PBE_OLI_map( currentLIs );
     /*
     first we will see it there items in the original map that are NOT in
     the currentMap and put then in the 'delete' result map as these must have been removed
     UNLESS it is an insurance Item and Discount Items are skipped and ALL
     Discount items will be deleted
     */
-    for( Id pbeId : origMap.keySet() )
+    for( String key : origMap.keySet() )
     {
-      if( !currentMap.containsKey( pbeId ) &&
-          !origMap.get( pbeId).isInsurance__c )
+      if( !currentMap.containsKey( key ) &&
+        !origMap.get( key ).isInsurance__c )
       {
-        result.get('delete').add( origMap.get( pbeId ) );
+        result.get('delete').add( origMap.get( key ) );
       }
     }
     /* we now need to add all discount items  to the to be deleted list */
@@ -1747,32 +1747,41 @@ public with sharing class BoatBuilder {
     we will set the OpportunityLineItem.Id from the original map.
     Then regardles of the above we will add it to the 'upsert' result
     */
-    for( Id pbeId : currentMap.keySet() )
+    for( String key : currentMap.keySet() )
     {
-      if( origMap.containsKey( pbeId ) &&
-          origMap.get( pbeId ).ParentProductId__c == currentMap.get( pbeId ).ParentProductId__c )
+      if( origMap.containsKey( key ) )
       {
-        currentMap.get( pbeId ).Id = origMap.get( pbeId ).Id;
+        currentMap.get( key ).Id = origMap.get( key ).Id;
       }
-      result.get('upsert').add( currentMap.get( pbeId ) );
+      result.get('upsert').add( currentMap.get( key ) );
     }
 
     /* we now add all the discounts */
     for( OpportunityLineItem oli : currentLIs )
     {
       if( oli.isDiscount__c == true )
-        result.get('upsert').add( oli );
+      {
+        result.get('upsert').add(oli);
+      }
     }
     return result;
   }
 
-  private Map<Id, OpportunityLineItem> build_PBE_OLI_map( OpportunityLineItem[] olis )
+  private Map<String, OpportunityLineItem> build_PBE_OLI_map( OpportunityLineItem[] olis )
   {
-    Map<Id, OpportunityLineItem> result = new Map<Id, OpportunityLineItem>();
+    Map<String, OpportunityLineItem> result = new Map<String, OpportunityLineItem>();
     for( OpportunityLineItem oli : olis)
     {
+      String key;
       if( oli.isDiscount__c != true )
-        result.put( oli.PricebookEntryId, oli);
+      {
+        key = oli.PricebookEntryId;
+        if (oli.ParentProductId__c != null)
+        {
+          key += ':' + oli.ParentProductId__c;
+        }
+        result.put(key, oli);
+      }
     }
     return result;
   }
@@ -1836,6 +1845,7 @@ public with sharing class BoatBuilder {
 
   private List<OpportunityLineItem> buildOppLineItems(ID oppId)
   {
+    System.debug('buildOppLineItems');
     List<OpportunityLineItem> olItems = new List<OpportunityLineItem>();
     String description;
     OpportunityLineItem oli;
@@ -1965,6 +1975,7 @@ public with sharing class BoatBuilder {
     if( discountItems != null ){
       PricebookEntry discountProductPBE = findDiscountProduct();
       for(Discount d : discountItems.values() ){
+        System.debug( d );
         olItems.add(new OpportunityLineItem(
           BoatBuilderItem__c = true,
           OpportunityId = oppId,
@@ -2309,7 +2320,7 @@ public with sharing class BoatBuilder {
   private void updateAdditionalFees( String prevSelectedId,
                                      String curSelectedId,
                                      List<Product_Fee_Map__c> pfms,
-                                     Integer quantity )
+                                     Decimal quantity )
   {
 
     Set<String> feeProductIds = new Set<String>();
@@ -2615,7 +2626,7 @@ public with sharing class BoatBuilder {
 
   private void updateSelectedItems(Product2 product, String productType, String quantity){
     if( selectedItemsMap.get(productType).containsKey(product.Id) ){
-      if( Integer.valueOf(quantity) == 0 ){
+      if( Decimal.valueOf(quantity) == 0 ){
         //remove the entry in the fee map if there is one
         if( provinceFeesMap.containsKey(product.Id) ){
           provinceFeesMap.remove(product.Id);
@@ -2630,19 +2641,19 @@ public with sharing class BoatBuilder {
          //remove the selected product
          selectedItemsMap.get(productType).remove(product.Id);
       } else {
-        selectedItemsMap.get(productType).get(product.Id).quantity = Integer.valueOf(quantity);
+        selectedItemsMap.get(productType).get(product.Id).quantity = Decimal.valueOf(quantity);
         //update the quantity in the feeMap if there is an entry
         if( provinceFeesMap.containsKey(product.Id) ){
           if( provinceFeesMap.get(product.Id).containsKey('opportunity.GL_Account_Variable_3__r.Name') )
           {
             for( FeeItem fi : provinceFeesMap.get(product.Id).get(opportunity.GL_Account_Variable_3__r.Name) ){
-              fi.quantity = Integer.valueOf(quantity);
+              fi.quantity = Decimal.valueOf(quantity);
             }
           }
         }
       }
     } else {
-      addSelectedItem(product, productType, Integer.valueOf(quantity) );
+      addSelectedItem(product, productType, Decimal.valueOf(quantity) );
     }
   }
 
@@ -2743,7 +2754,7 @@ public with sharing class BoatBuilder {
     }
   }
 
-  private void addSelectedItem(Product2 p, String productType, Integer quantity){
+  private void addSelectedItem(Product2 p, String productType, Decimal quantity){
     BoatBuilderLineItem li = new BoatBuilderLineItem();
     li.description = p.Name;
     li.description_FR = p.Name_FR__c;
@@ -2776,8 +2787,8 @@ public with sharing class BoatBuilder {
           sli.description = i.name;
           sli.description_FR = i.name_FR;
           sli.product_id = i.id;
-          sli.quantity = Integer.valueOf(i.standard);
-          sli.quan = Integer.valueOf(i.standard);
+          sli.quantity = i.standard;
+          sli.quan = i.standard;
           sli.quantity_included = Integer.valueOf(i.standard);
           sli.individual_price =  i.price;
           sli.product_family = i.productFamily;
@@ -2786,7 +2797,7 @@ public with sharing class BoatBuilder {
           li.subItems.put(i.id, sli);
         }
         if( i.feeProducts.size() > 0 ){
-          updateAdditionalFees(null, i.id, i.feeProducts, Integer.valueOf(i.standard) );
+          updateAdditionalFees(null, i.id, i.feeProducts, i.standard );
         }
       }
     }
@@ -3339,7 +3350,7 @@ public with sharing class BoatBuilder {
           a.productName = oli.PricebookEntry.Product2.Name;
           a.productNameFR = oli.PricebookEntry.Product2.Name_FR__c;
           a.productPriceBookEntryId = oli.PricebookEntry.Id;
-          a.quantity = Integer.valueOf( oli.quantity );
+          a.quantity = oli.quantity;
           a.unitPrice = oli.unitPrice;
           a.taxRate = findTaxRate(oli.PricebookEntry.Product2.Taxable__c);
           additionalAccessories.add( a );

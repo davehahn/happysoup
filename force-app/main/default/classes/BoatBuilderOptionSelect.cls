@@ -1,7 +1,7 @@
 public with sharing class BoatBuilderOptionSelect {
 
-  public Integer startNum { get; set; }
-  public Integer endNum { get; set; }
+  public Decimal startNum { get; set; }
+  public Decimal endNum { get; set; }
 
     public BoatBuilderOptionSelect() {
 
@@ -9,17 +9,40 @@ public with sharing class BoatBuilderOptionSelect {
 
   public List<SelectOption> getOptionsFromRange() {
     List<SelectOption> selectOptions = new List<SelectOption>();
-    for(Integer i=startNum; i <= endNum; i++) {
-      selectOptions.add( new SelectOption(String.valueOf(i), String.valueOf(i)) );
+    if( isWholeNumber( endNum ) )
+    {
+      for (Decimal i = startNum; i <= endNum; i++)
+      {
+        selectOptions.add(new SelectOption(String.valueOf(i), String.valueOf(i)));
+      }
+    }
+    else
+    {
+      selectOptions.add(new SelectOption(String.valueOf(startNum), String.valueOf(startNum)));
+      selectOptions.add(new SelectOption(String.valueOf(endNum), String.valueOf(endNum)));
     }
     return selectOptions;
   }
 
-  public Map<Integer,String> getOptionsFromRangeHtml() {
-    Map<Integer, String> selectOptions = new Map<Integer, String>();
-    for(Integer i=startNum; i <= endNum; i++) {
-      selectOptions.put(i, String.valueOf(i));
+  public Map<Decimal,String> getOptionsFromRangeHtml() {
+    Map<Decimal, String> selectOptions = new Map<Decimal, String>();
+    if( isWholeNumber( endNum ) )
+    {
+      for (Decimal i = startNum; i <= endNum; i++)
+      {
+        selectOptions.put(i, String.valueOf(i));
+      }
+    }
+    else
+    {
+      selectOptions.put(startNum, String.valueOf(startNum));
+      selectOptions.put(endNum, String.valueOf(endNum));
     }
     return selectOptions;
+  }
+
+  private Boolean isWholeNumber( Decimal value )
+  {
+    return ( value - value.round(System.RoundingMode.FLOOR) ) == 0;
   }
 }
