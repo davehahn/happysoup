@@ -1749,7 +1749,8 @@ public with sharing class BoatBuilder {
     */
     for( Id pbeId : currentMap.keySet() )
     {
-      if( origMap.containsKey( pbeId ) )
+      if( origMap.containsKey( pbeId ) &&
+          origMap.get( pbeId ).ParentProductId__c == currentMap.get( pbeId ).ParentProductId__c )
       {
         currentMap.get( pbeId ).Id = origMap.get( pbeId ).Id;
       }
