@@ -107,6 +107,10 @@
     <finalApprovalRecordLock>true</finalApprovalRecordLock>
     <finalRejectionActions>
         <action>
+            <name>Revert_PO_Stage</name>
+            <type>FieldUpdate</type>
+        </action>
+        <action>
             <name>Uncheck_In_Approval_PO</name>
             <type>FieldUpdate</type>
         </action>
@@ -132,6 +136,10 @@
         <userHierarchyField>Manager</userHierarchyField>
     </nextAutomatedApprover>
     <recallActions>
+        <action>
+            <name>Revert_PO_Stage</name>
+            <type>FieldUpdate</type>
+        </action>
         <action>
             <name>Uncheck_In_Approval_PO</name>
             <type>FieldUpdate</type>
