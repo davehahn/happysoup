@@ -55,6 +55,10 @@ public with sharing class PartnerLocator
       result += '<br />' + acct.BillingCity + ', ' + acct.BillingState;
       result += '<br />' + acct.BillingPostalCode;
       result += '<br />' + acct.Phone;
+      if( acct.AccountEmail__c != null )
+      {
+        result += '<div style="margin-top:0.5rem">' + acct.AccountEmail__c + '</div>';
+      }
       return result;
     }
 
