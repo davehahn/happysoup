@@ -7,6 +7,7 @@
   <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
 
   <aura:attribute type="String" name="cmpTitle" />
+  <aura:attribute type="String" name="cmpTitleAlign" default="left" />
   <aura:attribute type="String" name="inputLabel" />
   <aura:attribute type="String" name="lookupValue" />
   <aura:attribute type="String" name="originAddress" />
@@ -22,23 +23,22 @@
 
     <c:Lgnd_Spinner_dh aura:id="spinner" />
 
-    <h2 class="header-title-container slds-m-bottom_medium">
-      <span class="slds-card__header-title slds-truncate">
-        {!v.cmpTitle}
-      </span>
+    <h2 class="{!'slds-card__header-title slds-truncate slds-m-bottom_xx-small slds-text-align_'+ v.cmpTitleAlign}">
+      {!v.cmpTitle}
     </h2>
     <lightning:layout class="lookup-field">
       <lightning:layoutItem size="11" class="slds-m-bottom_small ">
         <span onkeyup="{!c.checkForEnter}">
           <lightning:input label="{!v.inputLabel}"
+                           variant="label-hidden"
                            type="text"
+                           placeholder="{!v.inputLabel}"
                            value="{!v.lookupValue}"/>
         </span>
         </lightning:layoutItem>
         <lightning:layoutItem size="1">
           <lightning:buttonIcon iconName="utility:search"
                                 alternativeText="Search"
-                                class="slds-m-top_large"
                                 onclick="{!c.findClosestDealer}" />
         </lightning:layoutItem>
     </lightning:layout>
