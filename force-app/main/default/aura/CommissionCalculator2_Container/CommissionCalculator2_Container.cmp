@@ -1,0 +1,14 @@
+<!--
+ - Created by dave on 2020-02-10.
+ -->
+
+<aura:component description="CommissionCalculator2_Container"
+                implements="force:appHostable,flexipage:availableForAllPageTypes,force:hasRecordId">
+
+  <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+
+  <aura:attribute name="recordId" type="String" />
+
+  <c:commissionCalculator2 aura:id="calc" recordId="{!v.recordId}" />
+
+</aura:component>

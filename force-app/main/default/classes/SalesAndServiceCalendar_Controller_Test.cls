@@ -54,15 +54,21 @@ private class SalesAndServiceCalendar_Controller_Test {
 
   private static AcctSeed__Project__c[] unscheduledERPs()
   {
-    return Factory_ERPOrder.insertRetailBoatSales( customer,
+    Boolean orig = gcProjectTask.ignoreCommissions;
+    gcProjectTask.ignoreCommissions = true;
+    List<AcctSeed__Project__c> erps = Factory_ERPOrder.insertRetailBoatSales( customer,
                                             barrieWarehouse,
                                             null,
                                             unscheduled_serials );
+    gcProjectTask.ignoreCommissions = orig;
+    return erps;
   }
 
   private static AcctSeed__Project__c[] barrieERPs(String type)
   {
     AcctSeed__Project__c[] result;
+    Boolean orig = gcProjectTask.ignoreCommissions;
+    gcProjectTask.ignoreCommissions = true;
     System.runAs( barrieUser )
     {
       if(type == 'retail')
@@ -78,6 +84,7 @@ private class SalesAndServiceCalendar_Controller_Test {
       else
         result = new List<AcctSeed__Project__c>();
     }
+    gcProjectTask.ignoreCommissions = orig;
     return result;
   }
 
@@ -97,23 +104,29 @@ private class SalesAndServiceCalendar_Controller_Test {
 
   private static void whitefishERPs()
   {
+    Boolean orig = gcProjectTask.ignoreCommissions;
+    gcProjectTask.ignoreCommissions = true;
     System.runAs( whitefishUser )
     {
       Factory_ERPOrder.insertRetailBoatSales( customer,
                                               whitefishWarehouse,
                                               DateTime.now(),
                                               wf_serials );
+      gcProjectTask.ignoreCommissions = orig;
     }
   }
 
   private static void montrealERPs()
   {
+    Boolean orig = gcProjectTask.ignoreCommissions;
+    gcProjectTask.ignoreCommissions = true;
     System.runAs( montrealUser )
     {
       Factory_ERPOrder.insertRetailBoatSales( customer,
                                               montrealWarehouse,
                                               DateTime.now(),
                                               m_serials );
+      gcProjectTask.ignoreCommissions = orig;
     }
   }
 
@@ -216,7 +229,7 @@ private class SalesAndServiceCalendar_Controller_Test {
   {
     setup();
     setupSerials();
-    whitefishERPs();
+    //whitefishERPs();
     AcctSeed__Project__c[] erps = barrieERPs('retail');
     Opportunity[] opps = barrieOpportunities();
     Integer recCount = erps.size() + opps.size();
@@ -225,8 +238,6 @@ private class SalesAndServiceCalendar_Controller_Test {
       Test.startTest();
       DateTime s = DateTime.now().addDays( -3 );
       DateTime e = s.addDays( 7 );
-      System.debug( 'Start.getTime() ' + String.valueOf( s.getTime() ) );
-      System.debug( 'Start.formatLong() ' + s.formatLong() );
       String jsonResult = SalesAndServiceCalendar_Controller.fetchScheduledRecords(
         String.valueOf( s.getTime() ),
         String.valueOf( e.getTime() ),

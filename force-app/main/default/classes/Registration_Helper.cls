@@ -106,6 +106,7 @@ public with sharing class Registration_Helper {
   {
     if( !Test.isRunningTest() )
     {
+      System.debug('why is this running');
       setRegistrationDateOnSerial( newMap.values(), oldMap );
       createPartnerCustomers( newMap.values() );
       new Promise( new AfterInsert_recordChanges() )

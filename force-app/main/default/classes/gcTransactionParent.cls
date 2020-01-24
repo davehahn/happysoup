@@ -106,9 +106,15 @@ public without sharing class gcTransactionParent {
 					}
 				}
 				if(p.GL_Account_Variable_2__c != null){
-					if(!p.Internal_Labour_Service__c && !p.Internal_Partner_Boat_Sale__c && !p.Internal_Warranty__c)
+					if(!p.Internal_Labour_Service__c &&
+						 !p.Internal_Partner_Boat_Sale__c &&
+						 !p.Internal_Warranty__c &&
+							obj.get(prefix + 'GL_Account_Variable_2__c') == null )
+					{
 						obj.put(prefix + 'GL_Account_Variable_2__c', p.GL_Account_Variable_2__c);
-					else if(obj.get(prefix + 'GL_Account_Variable_2__c') == null){
+					}
+					else if(obj.get(prefix + 'GL_Account_Variable_2__c') == null)
+					{
 						obj.put(prefix + 'GL_Account_Variable_2__c', p.GL_Account_Variable_2__c);
 					}
 				}

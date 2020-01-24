@@ -1,0 +1,48 @@
+<!--
+ - Created by dave on 2020-02-24.
+ -->
+
+<!-- Commission Record Header -->
+<template>
+
+  <template if:true={selectedRecord}>
+    <div class="slds-page-header">
+      <div class="slds-page-header__row">
+      <div class="slds-page-header__col-title">
+        <div class="slds-media">
+          <div class="slds-media__figure">
+            <lightning-icon icon-name="custom:custom17"></lightning-icon>
+          </div>
+          <div class="slds-media__body">
+            <div class="slds-page-header__name">
+              <div class="slds-page-header__name-title">
+                <h1>
+                  <span>{title}</span>
+                  <span class="slds-page-header__title slds-truncate"
+                        title={selectedRecord.taskName}>
+                    {selectedRecord.taskName}
+                  </span>
+                </h1>
+              </div>
+              <div class="slds-page-header__name-switcher">
+                <lightning-button-menu title="Select Commission Record"
+                                       variant="bare"
+                                       value={selectedRecord.id}
+                                       onselect={handleMenuSelect}
+                                       disabled={menuDisabled}>
+                  <template for:each={menuItems} for:item="item">
+                    <lightning-menu-item key={item.id}
+                                         value={item.id}
+                                         label={item.name}
+                                         checked={item.selected}></lightning-menu-item>
+                  </template>
+                </lightning-button-menu>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+  </template>
+</template>

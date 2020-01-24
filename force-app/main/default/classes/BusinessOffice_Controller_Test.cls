@@ -74,7 +74,7 @@ private class BusinessOffice_Controller_Test {
     erpInit();
     if( createPPSA )
     {
-      orderTask = Factory_ERPOrder.buildProjectTask( erp.Id, 'Oppy Line Items');
+      orderTask = Factory_ERPOrder.buildProjectTask( erp.Id, 'Retail Sale');
       insert orderTask;
       ppsa_mat = new AcctSeedERP__Material__c(
         AcctSeedERP__Project__c = erp.Id,
@@ -371,7 +371,7 @@ private class BusinessOffice_Controller_Test {
     erpInit();
     if( insuranceProducts != null && insuranceProducts.size() > 0 )
     {
-      orderTask = Factory_ERPOrder.buildProjectTask( erp.Id, 'Insurance Items');
+      orderTask = Factory_ERPOrder.buildProjectTask( erp.Id, 'Business Office');
       orderTask.isInsurance__c = true;
       insert orderTask;
       AcctSeedERP__Material__c[] mats = new List<AcctSeedERP__Material__c>();
@@ -397,10 +397,12 @@ private class BusinessOffice_Controller_Test {
     insuranceProductsByPlanId = new Map<Id, List<Product2>>();
     insurancePlans = new List<InsurancePlan__c>();
     insurancePlans.add( new InsurancePlan__c(
-      Name = 'Insurance Plan One'
+      Name = 'Insurance Plan One',
+      Profit_Percent__c = 50
     ));
     insurancePlans.add( new InsurancePlan__c(
-      Name = 'Insurance Plan Two'
+      Name = 'Insurance Plan Two',
+      Profit_Percent__c = 50
     ));
     insert insurancePlans;
     insuranceProductsByPlanId.put( insurancePlans[0].Id, new List<Product2>() );
@@ -408,28 +410,28 @@ private class BusinessOffice_Controller_Test {
     insuranceProductsByPlanId.get( insurancePlans[0].Id ).add(
       Factory_Product.createInsuranceProduct( 'Life Insurance Coverage',
                                               'Life (One)',
-                                              insurancePLans[0].Id,
+                                              insurancePlans[0].Id,
                                               false,
                                               customPb.Id )
     );
     insuranceProductsByPlanId.get( insurancePlans[0].Id ).add(
       Factory_Product.createInsuranceProduct( 'Life Insurance Coverage',
                                               'Life Residual (One)',
-                                              insurancePLans[0].Id,
+                                              insurancePlans[0].Id,
                                               true,
                                               customPb.Id )
     );
     insuranceProductsByPlanId.get( insurancePlans[1].Id ).add(
       Factory_Product.createInsuranceProduct( 'Life Insurance Coverage',
                                               'Life (Two)',
-                                              insurancePLans[1].Id,
+                                              insurancePlans[1].Id,
                                               false,
                                               customPb.Id )
     );
     insuranceProductsByPlanId.get( insurancePlans[1].Id ).add(
       Factory_Product.createInsuranceProduct( 'Life Insurance Coverage',
                                               'Life Residual (Two)',
-                                              insurancePLans[1].Id,
+                                              insurancePlans[1].Id,
                                               true,
                                               customPb.Id )
     );

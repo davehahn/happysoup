@@ -3,6 +3,7 @@
 BLUE=`tput setaf 4`
 RESET=`tput sgr0`
 TESTLEVEL='RunLocalTest'
+CHECKONLY=false
 
 echoOut() {
   echo "${BLUE}$1${RESET}"
@@ -22,6 +23,13 @@ else
   echoOut "Deployment running with --testlevel=$2"
 fi
 
+if [ ! -z $3 ] && [ $3 = true ]
+then
+  CHECKONLY=true
+fi
+
+
+
 echoOut 'Removing Lead list views'
 rm -fR force-app/main/default/objects/Lead/listViews
 echoOut 'Removing Opportunity list views'
@@ -40,4 +48,11 @@ ant -buildfile build/build.xml doMetadataClean
 echoOut 'Deploying static resources'
 sfdx heber:staticresources:deploy -u $1
 echo 'Deploying the remaining metadata'
-sfdx force:source:deploy --testlevel $TESTLEVEL --targetusername $1 -p force-app/main/default -g -w 120
+
+if [ "$CHECKONLY" = true ]
+then
+  echoOut 'VALIDATING ONLY'
+  sfdx force:source:deploy --testlevel $TESTLEVEL --checkonly --targetusername $1 -p force-app/main/default -g -w 120
+else
+  sfdx force:source:deploy --testlevel $TESTLEVEL --targetusername $1 -p force-app/main/default -g -w 120
+fi

@@ -11,6 +11,17 @@ global without sharing class gcProjectTask {
 		}
 	}
 
+	global static Boolean ignoreCommissions {
+		get{
+			if(ignoreCommissions == null) return false;
+			else return ignoreCommissions;
+		}
+		set{
+			if(value == null) ignoreCommissions = false;
+			else ignoreCommissions = value;
+		}
+	}
+
 	global static Boolean disableUpdateMaterialSpec{
 		get{
 			if(disableUpdateMaterialSpec == null) return false;
@@ -55,7 +66,9 @@ global without sharing class gcProjectTask {
 			}
 			if(boolIsDelete)
 			{
-
+				CommissionRecord2_Service service = new CommissionRecord2_Service();
+				service.addTasksToRemove( oldMap.values() );
+				service.deleteRecords();
 			}
 		}
 		else //i.e. trigger.isAfter
@@ -63,10 +76,12 @@ global without sharing class gcProjectTask {
 			if(boolIsInsert)
 			{
 				reName(newMap.keySet());
+				handleCommissionRecords( listNew, oldMap );
 			}
 			if(boolIsUpdate)
 			{
 				reName(newMap.keySet());
+				handleCommissionRecords( listNew, oldMap );
 			}
 			if(boolIsDelete)
 			{
@@ -74,6 +89,55 @@ global without sharing class gcProjectTask {
 			}
 		}
 	}
+
+	private static void handleCommissionRecords( List<AcctSeed__Project_Task__c> newList,
+																							 Map<Id, AcctSeed__Project_Task__c> oldMap )
+	{
+		Set<Id> acceptableProjectRecordTypes = new Set<Id>{
+			gcConstants.idRtProjectService,
+			gcConstants.idRtProjectBoatSale,
+			gcConstants.idRtProjectCounterSale
+		};
+		if( !ignoreCommissions )
+		{
+			CommissionRecord2_Service service = new CommissionRecord2_Service();
+			for (AcctSeed__Project_Task__c t : newList)
+			{
+				Boolean addTask = false;
+				if (t.Id != null && oldMap.containsKey(t.Id))
+				{
+					//Update taking place
+					AcctSeed__Project_Task__c oldTask = oldMap.get(t.Id);
+					if (t.DisplayOnCustomerInvoice__c == true &&
+						oldTask.DisplayOnCustomerInvoice__c == false)
+					{
+						addTask = true;
+					}
+					if( t.DisplayOnCustomerInvoice__c == false &&
+						  oldTask.DisplayOnCustomerInvoice__c == true )
+					{
+						service.addTaskToRemove( t );
+					}
+					if (t.Commission_Calculation_Method__c != oldTask.Commission_Calculation_Method__c)
+					{
+						addTask = true;
+					}
+				}
+				else
+				{
+					//Insert taking place
+					if(t.DisplayOnCustomerInvoice__c && acceptableProjectRecordTypes.contains( t.Project_RecordTypeId__c ) )
+					{
+						addTask = true;
+					}
+				}
+				if (addTask)
+					service.addTask(t);
+			}
+			service.saveRecords();
+			service.deleteRecords();
+		}
+ 	}
 
 	global static void updateAndValidate
 		(map<Id,AcctSeed__Project_Task__c> oldMap,

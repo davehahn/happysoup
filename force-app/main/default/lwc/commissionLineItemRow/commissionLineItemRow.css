@@ -1,0 +1,58 @@
+/**
+ * Created by dave on 2020-02-11.
+ */
+:host {
+ display: contents;
+}
+
+tr td {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+tr.kit-row td {
+  border:none;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+tr.kit-row td:first-child {
+  content:'';
+}
+
+tr.kit-row td:first-child:before {
+  position: absolute;
+  content: '';
+  border-left: 1px solid #ccc;
+  border-bottom: 1px solid #CCC;
+  width: 100%;
+  height: 100%;
+  left: 25%;
+  top: -50%;
+  box-sizing: border-box;
+}
+
+tr.kit-row[data-row-num="0"] td:first-child:before {
+  top: -8px;
+}
+
+tr:not(.kit-row) td:first-child > span {
+  border-radius: 5rem;
+  border: 1px solid #CCC;
+  padding: 1px 5px;
+}
+
+tr:not(.kit-row):hover td:first-child > span,
+tr.sub-hover td:first-child > span{
+  background:#0C0;
+  color:#FFF;
+}
+
+td:not(:first-child) > span {
+  margin-left:5px;
+  font-size: 0.7rem;
+}
+
+tr td:first-child {
+  padding-left:0.5rem;
+}

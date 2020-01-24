@@ -348,7 +348,11 @@ private class Registration_T
     GMBLASERP__Serial_Number__c ser = Factory_SerialNumber.insertFullSerial('Boat', 'Pontoon', 'Test-151');
     AcctSeedERP__Warehouse__c wfWarehouse = [ SELECT Id, Name FROM AcctSeedERP__Warehouse__c
                                               WHERE Name LIKE '%Whitefish%' ];
+    Boolean orig = gcProjectTask.ignoreCommissions;
+    gcProjectTask.ignoreCommissions = true;
+    gcProject.disableJob = true;
     AcctSeed__Project__c erp = Factory_ERPOrder.insertRetailBoatSale( c, wfWarehouse, DateTime.now().addDays(10), ser);
+    gcProjectTask.ignoreCommissions = orig;
     Registration__c reg = Factory_Registration.buildRegistration( null, c.Id, ser.Id );
     reg.ErpOrder__c = erp.Id;
     wfUser = Factory_User.newUser('WhiteFish', 'User', 'System Administrator', wfWarehouse );
@@ -357,13 +361,13 @@ private class Registration_T
     {
       Test.startTest();
       insert reg;
-      Test.stopTest();
       reg = [ SELECT Id,
                      RegisteredByAccount__c,
                      isCurrent__c,
                      Uniqueifier__c
               FROM Registration__c
               WHERE Id = :reg.Id ];
+      Test.stopTest();
       System.assertEquals( true, reg.isCurrent__c, 'Registration should be current');
       System.assertEquals( Legend_Settings__c.getOrgDefaults().LegendWhitefishAccountId__c,
                            reg.RegisteredByAccount__c );
