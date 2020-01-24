@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Description_required_for_custom_line_ite</fullName>
+    <active>false</active>
+    <description>Make sure the description is provided if this is a custom line item</description>
+    <errorConditionFormula>ISNULL(Description__c) &amp;&amp; ISNULL( Material__c )</errorConditionFormula>
+    <errorDisplayField>Description__c</errorDisplayField>
+    <errorMessage>A Description is required</errorMessage>
+</ValidationRule>

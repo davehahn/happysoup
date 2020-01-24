@@ -98,8 +98,8 @@ public without sharing class gcProject {
     {
       if(boolIsInsert)
       {
-        if(!disableCommission)
-          CommissionRecordERP.createRecords( newMap.keySet() );
+//        if(!disableCommission)
+//          CommissionRecordERP.createRecords( newMap.keySet() );
 
         if(!disableJob)
           Rigger_Schedule_mp.createJobFromERP_Future(newMap.keySet());
@@ -108,8 +108,8 @@ public without sharing class gcProject {
       {
         notifyOnOwnerChange( newMap, oldMap );
         rename(newMap.keySet());
-        if(!disableCommission)
-          CommissionRecordERP.erpChanged( newMap, oldMap);
+//        if(!disableCommission)
+//          CommissionRecordERP.erpChanged( newMap, oldMap);
         if(!disableRegistration)
           RegistrationExt.handleRegistrationsFromERP(newMap, oldMap);
         recalculateInsuranceItems( listNew, oldMap );
@@ -156,6 +156,12 @@ public without sharing class gcProject {
       Set<Id> setIdProject = new Set<Id>();
       for(AcctSeed__Project__c p : listNew)
       {
+        //added Mar 2020
+        //specify all ERPs use v2 of Commission Records
+        if(boolIsInsert)
+        {
+          p.Uses_V2_Commissions__c = true;
+        }
         /// Sales Person Related checkings
         AcctSeed__Project__c oldRec = oldMap.get(p.Id);
 

@@ -1,0 +1,35 @@
+<!--
+ - Created by dave on 2020-02-21.
+ -->
+
+<!-- Commission Payments -->
+<template>
+  <div>
+    <div class="error-message" if:true={errorMessage}>
+      <div class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_error" role="alert">
+        <span class="slds-assistive-text">error</span>
+        <lightning-icon icon-name="utility:error"
+                        size="x-small"
+                        variant="inverse"
+                        class="slds-m-right_x-small"></lightning-icon>
+        <h2>{errorMessage}</h2>
+      </div>
+    </div>
+
+    <lightning-layout multiple-rows="true" class={stateClass}>
+    <template for:each={payments.data} for:item="p">
+      <lightning-layout-item key={p.Id}
+                             padding="around-small"
+                             size="12"
+                             small-device-size="12"
+                             medium-device-size="4"
+                             large-device-size="3">
+        <c-commission-payment-card payment={p}
+                                   is-editing={isEditing}
+                                   onpaymentdispute={handlePaymentDispute}></c-commission-payment-card>
+      </lightning-layout-item>
+    </template>
+  </lightning-layout>
+
+  </div>
+</template>

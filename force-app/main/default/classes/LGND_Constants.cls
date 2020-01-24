@@ -14,6 +14,29 @@ public with sharing class LGND_Constants {
     set;
   }
 
+  /* Labour Rates */
+
+  public static final Decimal retailLabourRate
+  {
+    get
+    {
+      if( retailLabourRate == null )
+      {
+        try
+        {
+          Labour_Rate__mdt rate = [SELECT Hourly_Rate__c FROM Labour_Rate__mdt WHERE DeveloperName = 'Retail'];
+          retailLabourRate = rate.Hourly_Rate__c;
+        }
+        catch( Exception e )
+        {
+          throw new LGND_Constants.LGND_Constants_Exception('No Retail Labour Rate set.  Please have your administrator set a Retail Labour rate in Labour Rates Custom Metadata Type');
+        }
+      }
+      return retailLabourRate;
+    }
+    set;
+  }
+
   public static Set<String> mercuryDiscountBoatIds {
     get {
       if( mercuryDiscountBoatIds == null )
@@ -190,6 +213,16 @@ public with sharing class LGND_Constants {
     set;
   }
 
+  public static Id productRtId_Fees{
+    get {
+      if( productRtId_Fees == null ) fetchProductRecordTypes();
+      if( productRtId_Fees == null )
+        throw new LGND_Utilities.LGND_Exception('Product Record Type with API Name [Fees] does not exist');
+      return productRtId_Fees;
+    }
+    set;
+  }
+
   private static void fetchProductRecordTypes()
   {
     for(RecordType rt :
@@ -203,7 +236,8 @@ public with sharing class LGND_Constants {
            DeveloperName = 'Part' OR
            DeveloperName = 'Package_Bundle' OR
            DeveloperName = 'Protection_and_Services' OR
-           DeveloperName = 'Insurance'))])
+           DeveloperName = 'Insurance' OR
+           DeveloperName = 'Fees'))])
     {
       if(rt.SobjectType == 'Product2')
       {
@@ -223,8 +257,128 @@ public with sharing class LGND_Constants {
           productRtId_Protection = rt.Id;
         else if(rt.DeveloperName == 'Insurance')
           productRtId_Insurance = rt.Id;
+        else if(rt.DeveloperName == 'Fees')
+          productRtId_Fees = rt.Id;
       }
     }
   }
+
+  /* GLV2's */
+
+  public static Id GLV2Id_AccountingAndAdmin {
+    get {
+      if( GLV2Id_AccountingAndAdmin == null ) fetchGLV2s();
+      return GLV2Id_AccountingAndAdmin;
+    }
+    set{
+      GLV2Id_AccountingAndAdmin = value;
+    }
+  }
+
+  public static Id GLV2Id_BusinessOffice {
+    get {
+      if( GLV2Id_BusinessOffice == null ) fetchGLV2s();
+      return GLV2Id_BusinessOffice;
+    }
+    set{
+      GLV2Id_BusinessOffice = value;
+    }
+  }
+
+  public static Id GLV2Id_IT {
+    get {
+      if( GLV2Id_IT == null ) fetchGLV2s();
+      return GLV2Id_IT;
+    }
+    set{
+      GLV2Id_IT = value;
+    }
+  }
+
+  public static Id GLV2Id_Logistics {
+    get {
+      if( GLV2Id_Logistics == null ) fetchGLV2s();
+      return GLV2Id_Logistics;
+    }
+    set{
+      GLV2Id_Logistics = value;
+    }
+  }
+
+  public static Id GLV2Id_Marketing {
+    get {
+      if( GLV2Id_Marketing == null ) fetchGLV2s();
+      return GLV2Id_Marketing;
+    }
+    set{
+      GLV2Id_Marketing = value;
+    }
+  }
+
+  public static Id GLV2Id_PartsAndService {
+    get {
+      if( GLV2Id_PartsAndService == null ) fetchGLV2s();
+      return GLV2Id_PartsAndService;
+    }
+    set{
+      GLV2Id_PartsAndService = value;
+    }
+  }
+
+  public static Id GLV2Id_Production {
+    get {
+      if( GLV2Id_Production == null ) fetchGLV2s();
+      return GLV2Id_Production;
+    }
+    set{
+      GLV2Id_Production = value;
+    }
+  }
+
+  public static Id GLV2Id_Sales {
+    get {
+      if( GLV2Id_Sales == null ) fetchGLV2s();
+      return GLV2Id_Sales;
+    }
+    set{
+      GLV2Id_Sales = value;
+    }
+  }
+
+  public static Id GLV2Id_Warranty {
+    get {
+      if( GLV2Id_Warranty == null ) fetchGLV2s();
+      return GLV2Id_Warranty;
+    }
+    set{
+      GLV2Id_Warranty = value;
+    }
+  }
+
+  private static void fetchGLV2s()
+  {
+    for( AcctSeed__Accounting_Variable__c var : [ SELECT Id, Name FROM AcctSeed__Accounting_Variable__c WHERE AcctSeed__Type__c = 'GL Account Variable 2'] )
+    {
+      if( var.Name == 'Accounting & Admin' )
+        GLV2Id_AccountingAndAdmin = var.Id;
+      if( var.Name == 'Business Office' )
+        GLV2Id_BusinessOffice = var.Id;
+      if( var.Name == 'IT' )
+        GLV2Id_IT = var.Id;
+      if( var.Name == 'Logistics' )
+        GLV2Id_Logistics = var.Id;
+      if( var.Name == 'Marketing' )
+        GLV2Id_Marketing = var.Id;
+      if( var.Name == 'Parts + Service' )
+        GLV2Id_PartsAndService = var.Id;
+      if( var.Name == 'Production' )
+        GLV2Id_Production = var.Id;
+      if( var.Name == 'Sales' )
+        GLV2Id_Sales = var.Id;
+      if( var.Name == 'Warranty' )
+        GLV2Id_Warranty = var.Id;
+    }
+  }
+
 
 }

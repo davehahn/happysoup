@@ -276,6 +276,9 @@ public with sharing class LGND_Utilities {
         ConnectApi.MentionSegmentInput mentionSegmentInput = new ConnectApi.MentionSegmentInput();
         mentionSegmentInput.id = uid;
         messageBodyInput.messageSegments.add( mentionSegmentInput );
+        ConnectApi.TextSegmentInput textSegment = new ConnectApi.TextSegmentInput();
+        textSegment.text = ' ';
+        messageBodyInput.messageSegments.add( textSegment );
       }
     }
 

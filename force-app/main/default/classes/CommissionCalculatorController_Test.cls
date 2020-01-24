@@ -26,6 +26,8 @@ private class CommissionCalculatorController_Test {
     System.runAs( u )
     {
       project = ProjectTestFactory.insertCounterSale();
+      CommissionRecordERP.createRecords( new Set<Id>{ project.Id } );
+      CommissionLineItemERP.createRecordsFromERPs( new Set<Id>{ project.Id } );
       PageReference pageRef = Page.CommissionCalculator;
       pageRef.getParameters().put('erp_order_id', project.Id);
       Test.setCurrentPage(pageRef);
@@ -55,7 +57,8 @@ private class CommissionCalculatorController_Test {
     System.runAs( u )
     {
       project = ProjectTestFactory.insertCounterSale();
-      System.debug( project );
+      CommissionRecordERP.createRecords( new Set<Id>{ project.Id } );
+      CommissionLineItemERP.createRecordsFromERPs( new Set<Id>{ project.Id } );
       List<CommissionRecord__c> recs = [SELECT Id FROM CommissionRecord__c WHERE ERP_Order__c = :project.Id];
       System.assertEquals(1, recs.size() );
       List<CommissionRecord__c> comRecords = CommissionCalculatorController.fetchRecords(project.Id, 'ERP_Order__c');
@@ -96,6 +99,9 @@ private class CommissionCalculatorController_Test {
   {
     project = ProjectTestFactory.insertCounterSale();
     boatSale = ProjectTestFactory.insertBoatSale();
+    Set<Id> erpIds = new Set<Id>{ project.Id, boatSale.Id };
+    CommissionRecordERP.createRecords( erpIds );
+    CommissionLineItemERP.createRecordsFromERPs( erpIds );
     List<CommissionRecord__c> comRecords = CommissionCalculatorController.fetchRecords(boatSale.Id, 'Erp_Order__c');
     CommissionRecord__c salesRecord;
     CommissionRecord__c boRecord;

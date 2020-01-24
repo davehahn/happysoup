@@ -88,43 +88,53 @@ private class Prepaid_Services_TEST {
 		t.Name = 'test task';
 		t.Complaint_dh__c = 'Everything is not awesome.';
 		t.Estimated_Duration__c = 3;
+		Boolean orig = gcProjectTask.ignoreCommissions;
+		gcProjectTask.ignoreCommissions = true;
 		insert t;
+		gcProjectTask.ignoreCommissions = orig;
+		List<AcctSeedERP__Material__c> mats = new List<AcctSeedERP__Material__c>();
 
-		AcctSeedERP__Material__c m = new AcctSeedERP__Material__c();
-		m.AcctSeedERP__Project__c = project.Id;
-		m.AcctSeedERP__Product__c = pack.Id;
-		m.AcctSeedERP__Quantity_per_Unit__c = 1;
-		m.AcctSeedERP__Project_Task__c = t.Id;
-		m.isPrepaid__c = true;
-		insert m;
+		mats.add( new AcctSeedERP__Material__c(
+			AcctSeedERP__Project__c = project.Id,
+			AcctSeedERP__Product__c = pack.Id,
+			AcctSeedERP__Quantity_per_Unit__c = 1,
+			AcctSeedERP__Project_Task__c = t.Id,
+			isPrepaid__c = true
+		));
 
-		AcctSeedERP__Material__c m2 = new AcctSeedERP__Material__c();
-		m2.AcctSeedERP__Project__c = project.Id;
-		m2.AcctSeedERP__Product__c = bundle.Id;
-		m2.AcctSeedERP__Quantity_per_Unit__c = 1;
-		m2.AcctSeedERP__Project_Task__c = t.Id;
-		m2.isPrepaid__c = true;
-		insert m2;
+		mats.add( new AcctSeedERP__Material__c(
+			AcctSeedERP__Project__c = project.Id,
+			AcctSeedERP__Product__c = bundle.Id,
+			AcctSeedERP__Quantity_per_Unit__c = 1,
+			AcctSeedERP__Project_Task__c = t.Id,
+			isPrepaid__c = true
+		));
+
+		insert mats;
 	}
 
 	private static void initPrepaids() {
-		ps = new Prepaid_Service__c();
-		ps.Account__c = account.Id;
-		ps.ERP_Order__c = project.Id;
-		ps.Product__c = pack.Id;
-		ps.Quantity__c = 5;
-		insert ps;
+		List<Prepaid_Service__c> ppss = new List<Prepaid_Service__c>();
+		ppss.add( new Prepaid_Service__c(
+			Account__c = account.Id,
+			ERP_Order__c = project.Id,
+			Product__c = pack.Id,
+			Quantity__c = 5
+		));
 
-		ps = [SELECT Id, Account__c, ERP_Order__c, Product__c, Name, Quantity__c FROM Prepaid_Service__c WHERE Id = :ps.Id];
+		//ps = [SELECT Id, Account__c, ERP_Order__c, Product__c, Name, Quantity__c FROM Prepaid_Service__c WHERE Id = :ps.Id];
 
-		ps2 = new Prepaid_Service__c();
-		ps2.Account__c = account.Id;
-		ps2.ERP_Order__c = project.Id;
-		ps2.Product__c = bundle.Id;
-		ps2.Quantity__c = 5;
-		insert ps2;
+		ppss.add( new Prepaid_Service__c(
+			Account__c = account.Id,
+			ERP_Order__c = project.Id,
+			Product__c = bundle.Id,
+			Quantity__c = 5
+		));
+		insert ppss;
+		ps = ppss[0];
+		ps2 = ppss[1];
 
-		ps2 = [SELECT Id, Account__c, ERP_Order__c, Product__c, Name, Quantity__c FROM Prepaid_Service__c WHERE Id = :ps2.Id];
+		//ps2 = [SELECT Id, Account__c, ERP_Order__c, Product__c, Name, Quantity__c FROM Prepaid_Service__c WHERE Id = :ps2.Id];
 	}
 
 	@isTest static void PrepaidServiceClass_test() {
@@ -200,17 +210,15 @@ private class Prepaid_Services_TEST {
 	@isTest static void handleProjectPrepaids_test() {
 		init();
 		initProjects();
-
+		initPrepaids();
 		Test.StartTest();
-
-			Set<Id> projectsToCredit = new Set<Id>();
-			Set<Id> projectsToClean = new Set<Id>();
-			projectsToCredit.add(project.Id);
-			Prepaid_Services_mp.handleProjectPrepaids(projectsToCredit, projectsToClean);
-
+		Set<Id> projectsToCredit = new Set<Id>();
+		Set<Id> projectsToClean = new Set<Id>();
+		projectsToCredit.add(project.Id);
+		Prepaid_Services_mp.handleProjectPrepaids(projectsToCredit, projectsToClean);
+		Prepaid_Service__c[] preps = [SELECT Id FROM Prepaid_Service__c WHERE Account__c = :account.Id];
 		Test.StopTest();
 
-		Prepaid_Service__c[] preps = [SELECT Id FROM Prepaid_Service__c WHERE Account__c = :account.Id];
 		System.assert(preps.size() > 0);
 	}
 
@@ -218,9 +226,10 @@ private class Prepaid_Services_TEST {
 		init();
 		initProjects();
 		initPrepaids();
-
+		Test.startTest();
 		String prepaidString = Prepaid_Services_mp.getPrepaidsOnAccount(account.Id);
 		Prepaid_Services_mp.PrepaidService[] prepaids = (List<Prepaid_Services_mp.PrepaidService>)JSON.deserialize(prepaidString, List<Prepaid_Services_mp.PrepaidService>.class);
+		Test.stopTest();
 		System.assert(prepaids.size() > 0);
 	}
 
