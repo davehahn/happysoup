@@ -6,6 +6,7 @@
     this.doClosestDealer( component )
     .then(
       $A.getCallback( function( results ) {
+        console.log( JSON.parse( JSON.stringify( results ) ) );
         component.set('v.mapMarkers', results.mapMarkers);
         component.set('v.originAddress', results.origin_address );
       }),

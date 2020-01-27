@@ -56,16 +56,15 @@
           center="true" />
 
           <aura:if isTrue="{! equals( v.partnerCount, 1 )}">
-            <c:Account_FindClosestPartner_AccountDetailCard acct="{!v.mapMarkers[0]}" />
+            <c:accountFindClosestPartnerDetailsCard acct="{!v.mapMarkers[0]}" />
           </aura:if>
       </aura:if>
     </aura:if>
 
     <aura:if isTrue="{! not(v.mapView)}" >
       <aura:iteration items="{!v.mapMarkers}" var="marker">
-        <c:Account_FindClosestPartner_AccountDetailCard
-          acct="{!marker}"
-          originAddress="{!v.originAddress}" />
+        <c:accountFindClosestPartnerDetailsCard originAddress="{!v.originAddress}"
+                                                acct="{!marker}" />
       </aura:iteration>
     </aura:if>
 

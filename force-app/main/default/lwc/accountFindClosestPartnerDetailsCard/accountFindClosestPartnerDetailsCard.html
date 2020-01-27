@@ -1,0 +1,56 @@
+<!--
+ - Created by dave on 2020-01-26.
+ -->
+
+<!-- Account Find Closest Partner Details Card -->
+<template>
+  <div class="slds-card slds-m-top_medium">
+    <div class="slds-card__header slds-grid">
+      <header class="slds-media slds-media_center slds-has-flexi-truncate">
+        <div class="slds-media__figure">
+          <lightning-icon icon-name={acct.icon}
+                          alternative-text="account"></lightning-icon>
+        </div>
+        <div class="slds-media__body">
+          <div class="slds-text-heading_small">
+            {acct.name}
+          </div>
+          <div>
+            <span>{acct.location.Street},</span>
+            <span class="slds-p-left_xx-small">{acct.location.City}</span><br />
+            <span>{acct.location.State},</span>
+            <span class="slds-p-left_xx-small">{acct.location.Country},</span>
+            <span  class="slds-p-left_xx-small">{acct.location.PostalCode}</span> <br />
+            <span>
+              <a href={teleHref}>
+                {acct.phone}
+              </a>
+            </span><br />
+            <span>
+              <a href={emailHref}>
+                {acct.email}
+              </a>
+            </span><br />
+            <span>
+              <a href={acct.website} onclick={navToWebsite}>
+                {acct.website}
+              </a>
+            </span>
+          </div>
+        </div>
+        <div class="slds-no-flex">
+          <div class="slds-badge">{acct.distance}</div>
+          <template if:true={originAddress}>
+            <lightning-button-icon icon-name="utility:location"
+                                   alternative-text='Directions'
+                                   onclick={showDirections}
+                                   class="slds-float_right slds-m-top_small"></lightning-button-icon>
+          </template>
+        </div>
+      </header>
+    </div>
+    <div class="slds-card__body slds-card__body_inner">
+
+    </div>
+  </div>
+</template>

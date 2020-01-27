@@ -10,7 +10,6 @@ public with sharing class Account_FindClosestPartner {
       locator.exclude( excludedAccountIds );
     try
     {
-      System.debug( locator );
       return JSON.serialize(locator.execute(lookupValue, resultCount));
     }
     catch( Exception e )
