@@ -147,7 +147,7 @@
     <description>Used to document all aggregate bank reconciliation activity for a defined period. This includes detail information such as outstanding and cleared deposit and disbursement activity.</description>
     <enableActivities>true</enableActivities>
     <enableBulkApi>true</enableBulkApi>
-    <enableFeeds>false</enableFeeds>
+    <enableFeeds>true</enableFeeds>
     <enableHistory>true</enableHistory>
     <enableLicensing>false</enableLicensing>
     <enableReports>true</enableReports>
@@ -159,6 +159,7 @@
     <nameField>
         <displayFormat>BR-{00000}</displayFormat>
         <label>Bank Reconciliation Name</label>
+        <trackFeedHistory>false</trackFeedHistory>
         <trackHistory>false</trackHistory>
         <type>AutoNumber</type>
     </nameField>

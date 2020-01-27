@@ -2,6 +2,18 @@
 <FlexiPage xmlns="http://soap.sforce.com/2006/04/metadata">
     <flexiPageRegions>
         <componentInstances>
+            <componentInstanceProperties>
+                <name>collapsed</name>
+                <value>false</value>
+            </componentInstanceProperties>
+            <componentInstanceProperties>
+                <name>hideChatterActions</name>
+                <value>false</value>
+            </componentInstanceProperties>
+            <componentInstanceProperties>
+                <name>numVisibleActions</name>
+                <value>3</value>
+            </componentInstanceProperties>
             <componentName>force:highlightsPanel</componentName>
         </componentInstances>
         <mode>Replace</mode>
@@ -13,9 +25,25 @@
             <componentName>runtime_sales_social:socialPanel</componentName>
         </componentInstances>
         <componentInstances>
+            <componentInstanceProperties>
+                <name>displayOption</name>
+                <value>BOTH</value>
+            </componentInstanceProperties>
             <componentName>runtime_sales_merge:mergeCandidatesPreviewCard</componentName>
         </componentInstances>
         <componentInstances>
+            <componentInstanceProperties>
+                <name>relatedListComponentOverride</name>
+                <value>NONE</value>
+            </componentInstanceProperties>
+            <componentInstanceProperties>
+                <name>rowsToDisplay</name>
+                <value>10</value>
+            </componentInstanceProperties>
+            <componentInstanceProperties>
+                <name>showActionBar</name>
+                <value>true</value>
+            </componentInstanceProperties>
             <componentName>force:relatedListContainer</componentName>
         </componentInstances>
         <mode>Replace</mode>
@@ -75,6 +103,13 @@
     </flexiPageRegions>
     <flexiPageRegions>
         <componentInstances>
+            <componentName>arAccountStatement</componentName>
+        </componentInstances>
+        <name>Facet-484624d4-c6e5-4f0c-b41e-8e6fca81acfb</name>
+        <type>Facet</type>
+    </flexiPageRegions>
+    <flexiPageRegions>
+        <componentInstances>
             <componentName>runtime_sales_activities:activityPanel</componentName>
         </componentInstances>
         <mode>Replace</mode>
@@ -90,6 +125,17 @@
         <type>Facet</type>
     </flexiPageRegions>
     <flexiPageRegions>
+        <componentInstances>
+            <componentInstanceProperties>
+                <name>body</name>
+                <value>Facet-484624d4-c6e5-4f0c-b41e-8e6fca81acfb</value>
+            </componentInstanceProperties>
+            <componentInstanceProperties>
+                <name>title</name>
+                <value>Balance</value>
+            </componentInstanceProperties>
+            <componentName>flexipage:tab</componentName>
+        </componentInstances>
         <componentInstances>
             <componentInstanceProperties>
                 <name>active</name>
