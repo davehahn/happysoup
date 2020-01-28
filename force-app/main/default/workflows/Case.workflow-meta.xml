@@ -23,6 +23,21 @@
         <template>Customer_Follow_Up_Templates/Auto_Warranty_New_Case_Created</template>
     </alerts>
     <alerts>
+        <fullName>Email_Warranty_Manager_of_Internal_Delay</fullName>
+        <description>Email Warranty Manager of Internal Delay</description>
+        <protected>false</protected>
+        <recipients>
+            <recipient>drowe@legendboats.com</recipient>
+            <type>user</type>
+        </recipients>
+        <recipients>
+            <recipient>rfraser@legendboats.com</recipient>
+            <type>user</type>
+        </recipients>
+        <senderType>CurrentUser</senderType>
+        <template>Warranty/Warranty_Case_Internal_Delay</template>
+    </alerts>
+    <alerts>
         <fullName>Notify_Salesforce_Case_Team_of_new_Case</fullName>
         <description>Notify Salesforce Case Team of new Case</description>
         <protected>false</protected>
@@ -233,6 +248,26 @@
             <value>Hull Return</value>
         </criteriaItems>
         <description>Notify DSM when Case Delay Reason is set to &#39;Hull Return&#39;</description>
+        <triggerType>onCreateOrTriggeringUpdate</triggerType>
+    </rules>
+    <rules>
+        <fullName>Notify Warranty Manager of Internal Delay</fullName>
+        <actions>
+            <name>Email_Warranty_Manager_of_Internal_Delay</name>
+            <type>Alert</type>
+        </actions>
+        <active>true</active>
+        <criteriaItems>
+            <field>Case.RecordTypeId</field>
+            <operation>equals</operation>
+            <value>Warranty</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>Case.Delay_Reasons__c</field>
+            <operation>equals</operation>
+            <value>Internal Delay</value>
+        </criteriaItems>
+        <description>Notify Warranty Managers when a Warranty Case&#39;s delay reason is &#39;Internal Delay&#39;</description>
         <triggerType>onCreateOrTriggeringUpdate</triggerType>
     </rules>
     <rules>

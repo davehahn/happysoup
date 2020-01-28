@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <description>Email Warranty Manager of Internal Delay</description>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>Legend_Letterhead</letterhead>
+    <name>Warranty Case Internal Delay</name>
+    <style>freeForm</style>
+    <subject>Internal Delays with Warranty Case  {!Case.CaseNumber} - {!Case.Subject}</subject>
+    <textOnly>Hi,
+
+The following Warranty Case has been marked as {!Case.Delay_Reasons__c}.
+
+Warranty Case: {!Case.CaseNumber} - {!Case.Subject}
+Delay Reason: {!Case.Delay_Reasons__c}
+
+
+URL: {!Case.Link}</textOnly>
+    <type>html</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>
