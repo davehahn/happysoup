@@ -159,7 +159,7 @@
         <defaultConnectorLabel>default</defaultConnectorLabel>
         <rules>
             <name>myRule_1</name>
-            <conditionLogic>1 AND (2 OR 3) AND 4 AND 5 AND 6 AND 7 AND 8 AND 9 AND 10</conditionLogic>
+            <conditionLogic>1 AND (2 OR 3) AND 5 AND 6 AND 7 AND 8 AND 9 AND 10 AND (4 OR 11)</conditionLogic>
             <conditions>
                 <processMetadataValues>
                     <name>inputDataType</name>
@@ -291,9 +291,9 @@
                     </value>
                 </processMetadataValues>
                 <leftValueReference>myVariable_current.WarehouseName__c</leftValueReference>
-                <operator>NotEqualTo</operator>
+                <operator>Contains</operator>
                 <rightValue>
-                    <stringValue>Montreal</stringValue>
+                    <stringValue>Whitefish</stringValue>
                 </rightValue>
             </conditions>
             <conditions>
@@ -480,6 +480,37 @@
                 <operator>EqualTo</operator>
                 <rightValue>
                     <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <processMetadataValues>
+                    <name>inputDataType</name>
+                    <value>
+                        <stringValue>String</stringValue>
+                    </value>
+                </processMetadataValues>
+                <processMetadataValues>
+                    <name>leftHandSideType</name>
+                    <value>
+                        <stringValue>String</stringValue>
+                    </value>
+                </processMetadataValues>
+                <processMetadataValues>
+                    <name>operatorDataType</name>
+                    <value>
+                        <stringValue>String</stringValue>
+                    </value>
+                </processMetadataValues>
+                <processMetadataValues>
+                    <name>rightHandSideType</name>
+                    <value>
+                        <stringValue>String</stringValue>
+                    </value>
+                </processMetadataValues>
+                <leftValueReference>myVariable_current.WarehouseName__c</leftValueReference>
+                <operator>Contains</operator>
+                <rightValue>
+                    <stringValue>Barrie</stringValue>
                 </rightValue>
             </conditions>
             <connector>
@@ -842,7 +873,7 @@
         <defaultConnectorLabel>default</defaultConnectorLabel>
         <rules>
             <name>myPreWaitRule_myWait_myRule_1</name>
-            <conditionLogic>1 AND (2 OR 3) AND 4 AND 5 AND 6 AND 7 AND 8 AND 9 AND 10</conditionLogic>
+            <conditionLogic>1 AND (2 OR 3) AND 5 AND 6 AND 7 AND 8 AND 9 AND 10 AND (4 OR 11)</conditionLogic>
             <conditions>
                 <processMetadataValues>
                     <name>inputDataType</name>
@@ -974,9 +1005,9 @@
                     </value>
                 </processMetadataValues>
                 <leftValueReference>myVariable_current.WarehouseName__c</leftValueReference>
-                <operator>NotEqualTo</operator>
+                <operator>Contains</operator>
                 <rightValue>
-                    <stringValue>Montreal</stringValue>
+                    <stringValue>Whitefish</stringValue>
                 </rightValue>
             </conditions>
             <conditions>
@@ -1163,6 +1194,37 @@
                 <operator>EqualTo</operator>
                 <rightValue>
                     <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <processMetadataValues>
+                    <name>inputDataType</name>
+                    <value>
+                        <stringValue>String</stringValue>
+                    </value>
+                </processMetadataValues>
+                <processMetadataValues>
+                    <name>leftHandSideType</name>
+                    <value>
+                        <stringValue>String</stringValue>
+                    </value>
+                </processMetadataValues>
+                <processMetadataValues>
+                    <name>operatorDataType</name>
+                    <value>
+                        <stringValue>String</stringValue>
+                    </value>
+                </processMetadataValues>
+                <processMetadataValues>
+                    <name>rightHandSideType</name>
+                    <value>
+                        <stringValue>String</stringValue>
+                    </value>
+                </processMetadataValues>
+                <leftValueReference>myVariable_current.WarehouseName__c</leftValueReference>
+                <operator>Contains</operator>
+                <rightValue>
+                    <stringValue>Barrie</stringValue>
                 </rightValue>
             </conditions>
             <connector>
@@ -1537,7 +1599,7 @@
         </rules>
         <rules>
             <name>myRule_1_pmetrule</name>
-            <conditionLogic>1 AND (2 OR 3) AND 4 AND 5 AND 6 AND 7 AND 8 AND 9 AND 10</conditionLogic>
+            <conditionLogic>1 AND (2 OR 3) AND 5 AND 6 AND 7 AND 8 AND 9 AND 10 AND (4 OR 11)</conditionLogic>
             <conditions>
                 <processMetadataValues>
                     <name>inputDataType</name>
@@ -1669,9 +1731,9 @@
                     </value>
                 </processMetadataValues>
                 <leftValueReference>myVariable_old.WarehouseName__c</leftValueReference>
-                <operator>NotEqualTo</operator>
+                <operator>Contains</operator>
                 <rightValue>
-                    <stringValue>Montreal</stringValue>
+                    <stringValue>Whitefish</stringValue>
                 </rightValue>
             </conditions>
             <conditions>
@@ -1858,6 +1920,37 @@
                 <operator>EqualTo</operator>
                 <rightValue>
                     <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <processMetadataValues>
+                    <name>inputDataType</name>
+                    <value>
+                        <stringValue>String</stringValue>
+                    </value>
+                </processMetadataValues>
+                <processMetadataValues>
+                    <name>leftHandSideType</name>
+                    <value>
+                        <stringValue>String</stringValue>
+                    </value>
+                </processMetadataValues>
+                <processMetadataValues>
+                    <name>operatorDataType</name>
+                    <value>
+                        <stringValue>String</stringValue>
+                    </value>
+                </processMetadataValues>
+                <processMetadataValues>
+                    <name>rightHandSideType</name>
+                    <value>
+                        <stringValue>String</stringValue>
+                    </value>
+                </processMetadataValues>
+                <leftValueReference>myVariable_old.WarehouseName__c</leftValueReference>
+                <operator>Contains</operator>
+                <rightValue>
+                    <stringValue>Barrie</stringValue>
                 </rightValue>
             </conditions>
             <label>Previously Met - Prev</label>
@@ -2215,7 +2308,7 @@
             <label>Previously Met - Prev</label>
         </rules>
     </decisions>
-    <interviewLabel>Counter_Sale_or_Service_Survey_Send_Process-14_InterviewLabel</interviewLabel>
+    <interviewLabel>Counter_Sale_or_Service_Survey_Send_Process-15_InterviewLabel</interviewLabel>
     <label>Counter Sale or Service Survey Send Process</label>
     <processMetadataValues>
         <name>ObjectType</name>
