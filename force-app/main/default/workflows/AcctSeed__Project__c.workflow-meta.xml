@@ -801,6 +801,7 @@
         <notifyAssignee>false</notifyAssignee>
         <operation>Formula</operation>
         <protected>false</protected>
+        <reevaluateOnChange>true</reevaluateOnChange>
     </fieldUpdates>
     <fieldUpdates>
         <fullName>Locked_If_Competed</fullName>
@@ -1462,7 +1463,7 @@
             <type>FieldUpdate</type>
         </actions>
         <active>true</active>
-        <booleanFilter>(1 AND 2) OR (3 AND 4)</booleanFilter>
+        <booleanFilter>1 AND 2</booleanFilter>
         <criteriaItems>
             <field>AcctSeed__Project__c.Job_Status__c</field>
             <operation>equals</operation>
@@ -1471,15 +1472,6 @@
         <criteriaItems>
             <field>AcctSeed__Project__c.Completed_Date__c</field>
             <operation>equals</operation>
-        </criteriaItems>
-        <criteriaItems>
-            <field>AcctSeed__Project__c.Job_Status__c</field>
-            <operation>notEqual</operation>
-            <value>Completed</value>
-        </criteriaItems>
-        <criteriaItems>
-            <field>AcctSeed__Project__c.Completed_Date__c</field>
-            <operation>notEqual</operation>
         </criteriaItems>
         <description>Timestamp the the ERP when complete</description>
         <triggerType>onCreateOrTriggeringUpdate</triggerType>
