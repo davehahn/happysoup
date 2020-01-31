@@ -30,14 +30,14 @@
                 <stringValue>Sends_FR_Service_Survey</stringValue>
             </value>
         </processMetadataValues>
-        <name>myWaitEvent_myWait_myRule_3_event_0_SA1</name>
+        <name>myWaitEvent_myWait_myRule_4_event_0_SA1</name>
         <label>Send FR Service Survey</label>
-        <locationX>300</locationX>
+        <locationX>400</locationX>
         <locationY>200</locationY>
         <actionName>AcctSeed__Project__c.Sends_FR_Service_Survey</actionName>
         <actionType>emailAlert</actionType>
         <connector>
-            <targetReference>myWaitEvent_myWait_myRule_3_event_0_SA2</targetReference>
+            <targetReference>myWaitEvent_myWait_myRule_4_event_0_SA2</targetReference>
         </connector>
         <inputParameters>
             <name>SObjectRowId</name>
@@ -63,15 +63,15 @@
         </connector>
     </assignments>
     <assignments>
-        <name>myWaitAssignment_myWait_myRule_3</name>
-        <label>myWaitAssignment_myWait_myRule_3</label>
+        <name>myWaitAssignment_myWait_myRule_4</name>
+        <label>myWaitAssignment_myWait_myRule_4</label>
         <locationX>0</locationX>
         <locationY>0</locationY>
         <assignmentItems>
             <assignToReference>cancelWaits</assignToReference>
             <operator>Add</operator>
             <value>
-                <stringValue>myWait_myRule_3</stringValue>
+                <stringValue>myWait_myRule_4</stringValue>
             </value>
         </assignmentItems>
         <connector>
@@ -111,35 +111,35 @@
         </connector>
     </assignments>
     <assignments>
-        <name>myWaitEvent_myWait_myRule_3_event_0_postWaitExecutionAssignment</name>
-        <label>myWaitEvent_myWait_myRule_3_event_0_postWaitExecutionAssignment</label>
+        <name>myWaitEvent_myWait_myRule_4_event_0_postWaitExecutionAssignment</name>
+        <label>myWaitEvent_myWait_myRule_4_event_0_postWaitExecutionAssignment</label>
         <locationX>0</locationX>
         <locationY>0</locationY>
         <assignmentItems>
-            <assignToReference>myWaitEvent_myWait_myRule_3_event_0_postActionExecutionVariable</assignToReference>
+            <assignToReference>myWaitEvent_myWait_myRule_4_event_0_postActionExecutionVariable</assignToReference>
             <operator>Assign</operator>
             <value>
                 <booleanValue>true</booleanValue>
             </value>
         </assignmentItems>
         <connector>
-            <targetReference>myWait_myRule_3</targetReference>
+            <targetReference>myWait_myRule_4</targetReference>
         </connector>
     </assignments>
     <assignments>
-        <name>myWaitEvent_myWait_myRule_3_event_1_postWaitExecutionAssignment</name>
-        <label>myWaitEvent_myWait_myRule_3_event_1_postWaitExecutionAssignment</label>
+        <name>myWaitEvent_myWait_myRule_4_event_1_postWaitExecutionAssignment</name>
+        <label>myWaitEvent_myWait_myRule_4_event_1_postWaitExecutionAssignment</label>
         <locationX>0</locationX>
         <locationY>0</locationY>
         <assignmentItems>
-            <assignToReference>myWaitEvent_myWait_myRule_3_event_1_postActionExecutionVariable</assignToReference>
+            <assignToReference>myWaitEvent_myWait_myRule_4_event_1_postActionExecutionVariable</assignToReference>
             <operator>Assign</operator>
             <value>
                 <booleanValue>true</booleanValue>
             </value>
         </assignmentItems>
         <connector>
-            <targetReference>myWait_myRule_3</targetReference>
+            <targetReference>myWait_myRule_4</targetReference>
         </connector>
     </assignments>
     <decisions>
@@ -154,7 +154,7 @@
         <locationX>50</locationX>
         <locationY>0</locationY>
         <defaultConnector>
-            <targetReference>myDecision2</targetReference>
+            <targetReference>myDecision3</targetReference>
         </defaultConnector>
         <defaultConnectorLabel>default</defaultConnectorLabel>
         <rules>
@@ -526,13 +526,13 @@
                 <numberValue>1.0</numberValue>
             </value>
         </processMetadataValues>
-        <name>myDecision2</name>
-        <label>myDecision2</label>
+        <name>myDecision3</name>
+        <label>myDecision3</label>
         <locationX>50</locationX>
         <locationY>0</locationY>
         <defaultConnectorLabel>default</defaultConnectorLabel>
         <rules>
-            <name>myRule_3</name>
+            <name>myRule_4</name>
             <conditionLogic>1 AND (2 OR 3) AND 4 AND 5 AND 6 AND 7 AND 8 AND 9 AND 10</conditionLogic>
             <conditions>
                 <processMetadataValues>
@@ -857,7 +857,7 @@
                 </rightValue>
             </conditions>
             <connector>
-                <targetReference>myRule_3_pmetdec</targetReference>
+                <targetReference>myRule_4_pmetdec</targetReference>
             </connector>
             <label>Check criteria FR</label>
         </rules>
@@ -1234,16 +1234,16 @@
         </rules>
     </decisions>
     <decisions>
-        <name>myPreWaitDecision_myWait_myRule_3</name>
-        <label>myPreWaitDecision_myWait_myRule_3</label>
+        <name>myPreWaitDecision_myWait_myRule_4</name>
+        <label>myPreWaitDecision_myWait_myRule_4</label>
         <locationX>0</locationX>
         <locationY>0</locationY>
         <defaultConnector>
-            <targetReference>myWaitAssignment_myWait_myRule_3</targetReference>
+            <targetReference>myWaitAssignment_myWait_myRule_4</targetReference>
         </defaultConnector>
         <defaultConnectorLabel>default</defaultConnectorLabel>
         <rules>
-            <name>myPreWaitRule_myWait_myRule_3</name>
+            <name>myPreWaitRule_myWait_myRule_4</name>
             <conditionLogic>1 AND (2 OR 3) AND 4 AND 5 AND 6 AND 7 AND 8 AND 9 AND 10</conditionLogic>
             <conditions>
                 <processMetadataValues>
@@ -1570,7 +1570,7 @@
             <connector>
                 <targetReference>myPreWaitDecision_myWait_myRule_1</targetReference>
             </connector>
-            <label>myPreWaitRule_myWait_myRule_3</label>
+            <label>myPreWaitRule_myWait_myRule_4</label>
         </rules>
     </decisions>
     <decisions>
@@ -1579,7 +1579,7 @@
         <locationX>100</locationX>
         <locationY>100</locationY>
         <defaultConnector>
-            <targetReference>myWait_myRule_1</targetReference>
+            <targetReference>myRule_1_A1</targetReference>
         </defaultConnector>
         <defaultConnectorLabel>Not Previously Met</defaultConnectorLabel>
         <rules>
@@ -1593,7 +1593,7 @@
                 </rightValue>
             </conditions>
             <connector>
-                <targetReference>myWait_myRule_1</targetReference>
+                <targetReference>myRule_1_A1</targetReference>
             </connector>
             <label>Previously Met - Null</label>
         </rules>
@@ -1957,16 +1957,16 @@
         </rules>
     </decisions>
     <decisions>
-        <name>myRule_3_pmetdec</name>
+        <name>myRule_4_pmetdec</name>
         <label>Previously Met Decision</label>
-        <locationX>300</locationX>
+        <locationX>400</locationX>
         <locationY>100</locationY>
         <defaultConnector>
-            <targetReference>myWait_myRule_3</targetReference>
+            <targetReference>myRule_4_A1</targetReference>
         </defaultConnector>
         <defaultConnectorLabel>Not Previously Met</defaultConnectorLabel>
         <rules>
-            <name>myRule_3_pmetnullrule</name>
+            <name>myRule_4_pmetnullrule</name>
             <conditionLogic>or</conditionLogic>
             <conditions>
                 <leftValueReference>myVariable_old</leftValueReference>
@@ -1976,12 +1976,12 @@
                 </rightValue>
             </conditions>
             <connector>
-                <targetReference>myWait_myRule_3</targetReference>
+                <targetReference>myRule_4_A1</targetReference>
             </connector>
             <label>Previously Met - Null</label>
         </rules>
         <rules>
-            <name>myRule_3_pmetrule</name>
+            <name>myRule_4_pmetrule</name>
             <conditionLogic>1 AND (2 OR 3) AND 4 AND 5 AND 6 AND 7 AND 8 AND 9 AND 10</conditionLogic>
             <conditions>
                 <processMetadataValues>
@@ -2308,7 +2308,29 @@
             <label>Previously Met - Prev</label>
         </rules>
     </decisions>
-    <interviewLabel>Counter_Sale_or_Service_Survey_Send_Process-15_InterviewLabel</interviewLabel>
+    <formulas>
+        <processMetadataValues>
+            <name>originalFormula</name>
+            <value>
+                <stringValue>Now() + 1</stringValue>
+            </value>
+        </processMetadataValues>
+        <name>formula_2_myRule_1_A1_0780747876</name>
+        <dataType>DateTime</dataType>
+        <expression>Now() + 1</expression>
+    </formulas>
+    <formulas>
+        <processMetadataValues>
+            <name>originalFormula</name>
+            <value>
+                <stringValue>Now() + 1</stringValue>
+            </value>
+        </processMetadataValues>
+        <name>formula_5_myRule_4_A1_0225652726</name>
+        <dataType>DateTime</dataType>
+        <expression>Now() + 1</expression>
+    </formulas>
+    <interviewLabel>Counter_Sale_or_Service_Survey_Send_Process-16_InterviewLabel</interviewLabel>
     <label>Counter Sale or Service Survey Send Process</label>
     <processMetadataValues>
         <name>ObjectType</name>
@@ -2335,6 +2357,172 @@
         </value>
     </processMetadataValues>
     <processType>Workflow</processType>
+    <recordUpdates>
+        <processMetadataValues>
+            <name>evaluationType</name>
+            <value>
+                <stringValue>always</stringValue>
+            </value>
+        </processMetadataValues>
+        <processMetadataValues>
+            <name>extraTypeInfo</name>
+        </processMetadataValues>
+        <processMetadataValues>
+            <name>isChildRelationship</name>
+            <value>
+                <booleanValue>false</booleanValue>
+            </value>
+        </processMetadataValues>
+        <processMetadataValues>
+            <name>reference</name>
+            <value>
+                <stringValue>[AcctSeed__Project__c]</stringValue>
+            </value>
+        </processMetadataValues>
+        <processMetadataValues>
+            <name>referenceTargetField</name>
+        </processMetadataValues>
+        <name>myRule_1_A1</name>
+        <label>Update Survey Send Date</label>
+        <locationX>100</locationX>
+        <locationY>200</locationY>
+        <connector>
+            <targetReference>myWait_myRule_1</targetReference>
+        </connector>
+        <filters>
+            <processMetadataValues>
+                <name>implicit</name>
+                <value>
+                    <booleanValue>true</booleanValue>
+                </value>
+            </processMetadataValues>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>myVariable_current.Id</elementReference>
+            </value>
+        </filters>
+        <inputAssignments>
+            <processMetadataValues>
+                <name>dataType</name>
+                <value>
+                    <stringValue>DateTime</stringValue>
+                </value>
+            </processMetadataValues>
+            <processMetadataValues>
+                <name>isRequired</name>
+                <value>
+                    <booleanValue>false</booleanValue>
+                </value>
+            </processMetadataValues>
+            <processMetadataValues>
+                <name>leftHandSideLabel</name>
+                <value>
+                    <stringValue>Survey Send Date</stringValue>
+                </value>
+            </processMetadataValues>
+            <processMetadataValues>
+                <name>leftHandSideReferenceTo</name>
+                <value>
+                    <stringValue/>
+                </value>
+            </processMetadataValues>
+            <processMetadataValues>
+                <name>rightHandSideType</name>
+                <value>
+                    <stringValue>Formula</stringValue>
+                </value>
+            </processMetadataValues>
+            <field>Survey_Send_Date__c</field>
+            <value>
+                <elementReference>formula_2_myRule_1_A1_0780747876</elementReference>
+            </value>
+        </inputAssignments>
+        <object>AcctSeed__Project__c</object>
+    </recordUpdates>
+    <recordUpdates>
+        <processMetadataValues>
+            <name>evaluationType</name>
+            <value>
+                <stringValue>always</stringValue>
+            </value>
+        </processMetadataValues>
+        <processMetadataValues>
+            <name>extraTypeInfo</name>
+        </processMetadataValues>
+        <processMetadataValues>
+            <name>isChildRelationship</name>
+            <value>
+                <booleanValue>false</booleanValue>
+            </value>
+        </processMetadataValues>
+        <processMetadataValues>
+            <name>reference</name>
+            <value>
+                <stringValue>[AcctSeed__Project__c]</stringValue>
+            </value>
+        </processMetadataValues>
+        <processMetadataValues>
+            <name>referenceTargetField</name>
+        </processMetadataValues>
+        <name>myRule_4_A1</name>
+        <label>Update Survey Send Date</label>
+        <locationX>400</locationX>
+        <locationY>200</locationY>
+        <connector>
+            <targetReference>myWait_myRule_4</targetReference>
+        </connector>
+        <filters>
+            <processMetadataValues>
+                <name>implicit</name>
+                <value>
+                    <booleanValue>true</booleanValue>
+                </value>
+            </processMetadataValues>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>myVariable_current.Id</elementReference>
+            </value>
+        </filters>
+        <inputAssignments>
+            <processMetadataValues>
+                <name>dataType</name>
+                <value>
+                    <stringValue>DateTime</stringValue>
+                </value>
+            </processMetadataValues>
+            <processMetadataValues>
+                <name>isRequired</name>
+                <value>
+                    <booleanValue>false</booleanValue>
+                </value>
+            </processMetadataValues>
+            <processMetadataValues>
+                <name>leftHandSideLabel</name>
+                <value>
+                    <stringValue>Survey Send Date</stringValue>
+                </value>
+            </processMetadataValues>
+            <processMetadataValues>
+                <name>leftHandSideReferenceTo</name>
+                <value>
+                    <stringValue/>
+                </value>
+            </processMetadataValues>
+            <processMetadataValues>
+                <name>rightHandSideType</name>
+                <value>
+                    <stringValue>Formula</stringValue>
+                </value>
+            </processMetadataValues>
+            <field>Survey_Send_Date__c</field>
+            <value>
+                <elementReference>formula_5_myRule_4_A1_0225652726</elementReference>
+            </value>
+        </inputAssignments>
+        <object>AcctSeed__Project__c</object>
+    </recordUpdates>
     <recordUpdates>
         <processMetadataValues>
             <name>evaluationType</name>
@@ -2609,12 +2797,12 @@
         <processMetadataValues>
             <name>referenceTargetField</name>
         </processMetadataValues>
-        <name>myWaitEvent_myWait_myRule_3_event_0_SA2</name>
+        <name>myWaitEvent_myWait_myRule_4_event_0_SA2</name>
         <label>Update Survey Flag</label>
-        <locationX>300</locationX>
+        <locationX>400</locationX>
         <locationY>300</locationY>
         <connector>
-            <targetReference>myWaitEvent_myWait_myRule_3_event_0_SA3</targetReference>
+            <targetReference>myWaitEvent_myWait_myRule_4_event_0_SA3</targetReference>
         </connector>
         <filters>
             <processMetadataValues>
@@ -2692,12 +2880,12 @@
         <processMetadataValues>
             <name>referenceTargetField</name>
         </processMetadataValues>
-        <name>myWaitEvent_myWait_myRule_3_event_0_SA3</name>
+        <name>myWaitEvent_myWait_myRule_4_event_0_SA3</name>
         <label>Check X30 Flag</label>
-        <locationX>300</locationX>
+        <locationX>400</locationX>
         <locationY>400</locationY>
         <connector>
-            <targetReference>myWaitEvent_myWait_myRule_3_event_0_postWaitExecutionAssignment</targetReference>
+            <targetReference>myWaitEvent_myWait_myRule_4_event_0_postWaitExecutionAssignment</targetReference>
         </connector>
         <filters>
             <processMetadataValues>
@@ -2775,12 +2963,12 @@
         <processMetadataValues>
             <name>referenceTargetField</name>
         </processMetadataValues>
-        <name>myWaitEvent_myWait_myRule_3_event_1_SA1</name>
+        <name>myWaitEvent_myWait_myRule_4_event_1_SA1</name>
         <label>Uncheck X30 Flag</label>
-        <locationX>300</locationX>
+        <locationX>400</locationX>
         <locationY>200</locationY>
         <connector>
-            <targetReference>myWaitEvent_myWait_myRule_3_event_1_postWaitExecutionAssignment</targetReference>
+            <targetReference>myWaitEvent_myWait_myRule_4_event_1_postWaitExecutionAssignment</targetReference>
         </connector>
         <filters>
             <processMetadataValues>
@@ -2833,7 +3021,7 @@
         </inputAssignments>
         <object>Account</object>
     </recordUpdates>
-    <startElementReference>myPreWaitDecision_myWait_myRule_3</startElementReference>
+    <startElementReference>myPreWaitDecision_myWait_myRule_4</startElementReference>
     <status>Active</status>
     <variables>
         <name>cancelWaits</name>
@@ -2879,7 +3067,7 @@
         </value>
     </variables>
     <variables>
-        <name>myWaitEvent_myWait_myRule_3_event_0_postActionExecutionVariable</name>
+        <name>myWaitEvent_myWait_myRule_4_event_0_postActionExecutionVariable</name>
         <dataType>Boolean</dataType>
         <isCollection>false</isCollection>
         <isInput>false</isInput>
@@ -2889,7 +3077,7 @@
         </value>
     </variables>
     <variables>
-        <name>myWaitEvent_myWait_myRule_3_event_1_postActionExecutionVariable</name>
+        <name>myWaitEvent_myWait_myRule_4_event_1_postActionExecutionVariable</name>
         <dataType>Boolean</dataType>
         <isCollection>false</isCollection>
         <isInput>false</isInput>
@@ -2986,8 +3174,8 @@
         </waitEvents>
     </waits>
     <waits>
-        <name>myWait_myRule_3</name>
-        <label>myWait_myRule_3</label>
+        <name>myWait_myRule_4</name>
+        <label>myWait_myRule_4</label>
         <locationX>0</locationX>
         <locationY>0</locationY>
         <defaultConnectorLabel>defaultLabel</defaultConnectorLabel>
@@ -2998,17 +3186,17 @@
                     <stringValue>now</stringValue>
                 </value>
             </processMetadataValues>
-            <name>myWaitEvent_myWait_myRule_3_event_0</name>
+            <name>myWaitEvent_myWait_myRule_4_event_0</name>
             <conditionLogic>and</conditionLogic>
             <conditions>
-                <leftValueReference>myWaitEvent_myWait_myRule_3_event_0_postActionExecutionVariable</leftValueReference>
+                <leftValueReference>myWaitEvent_myWait_myRule_4_event_0_postActionExecutionVariable</leftValueReference>
                 <operator>EqualTo</operator>
                 <rightValue>
                     <booleanValue>false</booleanValue>
                 </rightValue>
             </conditions>
             <connector>
-                <targetReference>myWaitEvent_myWait_myRule_3_event_0_SA1</targetReference>
+                <targetReference>myWaitEvent_myWait_myRule_4_event_0_SA1</targetReference>
             </connector>
             <eventType>AlarmEvent</eventType>
             <inputParameters>
@@ -3029,7 +3217,7 @@
                     <numberValue>1.0</numberValue>
                 </value>
             </inputParameters>
-            <label>myWaitEvent_myWait_myRule_3_event_0</label>
+            <label>myWaitEvent_myWait_myRule_4_event_0</label>
         </waitEvents>
         <waitEvents>
             <processMetadataValues>
@@ -3038,17 +3226,17 @@
                     <stringValue>now</stringValue>
                 </value>
             </processMetadataValues>
-            <name>myWaitEvent_myWait_myRule_3_event_1</name>
+            <name>myWaitEvent_myWait_myRule_4_event_1</name>
             <conditionLogic>and</conditionLogic>
             <conditions>
-                <leftValueReference>myWaitEvent_myWait_myRule_3_event_1_postActionExecutionVariable</leftValueReference>
+                <leftValueReference>myWaitEvent_myWait_myRule_4_event_1_postActionExecutionVariable</leftValueReference>
                 <operator>EqualTo</operator>
                 <rightValue>
                     <booleanValue>false</booleanValue>
                 </rightValue>
             </conditions>
             <connector>
-                <targetReference>myWaitEvent_myWait_myRule_3_event_1_SA1</targetReference>
+                <targetReference>myWaitEvent_myWait_myRule_4_event_1_SA1</targetReference>
             </connector>
             <eventType>AlarmEvent</eventType>
             <inputParameters>
@@ -3069,7 +3257,7 @@
                     <numberValue>29.0</numberValue>
                 </value>
             </inputParameters>
-            <label>myWaitEvent_myWait_myRule_3_event_1</label>
+            <label>myWaitEvent_myWait_myRule_4_event_1</label>
         </waitEvents>
     </waits>
 </Flow>
