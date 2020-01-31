@@ -15,6 +15,9 @@
   <aura:attribute name="includeCostForCustomProducts"
                   type="Boolean"
                   default="false" />
+  <aura:attribute name="enableTrollingMotors"
+                  type="Boolean"
+                  default="true" />
 
   <aura:handler name="boatTypeSelected"
                 event="c:CPQ_BoatTypeSelectorChange_Event"
@@ -60,12 +63,14 @@
                                     aura:id="upgradeSelector" />
           <!-- /Trailer Selector -->
           <!-- Trolling Motor Selector -->
-          <c:CPQ_UpgradeSelector_dh cpq="{!v.cpq}"
-                                    upgradeType="Trolling Motor"
-                                    valueId="{!v.cpq.trollingMotorId}"
-                                    value="{!v.cpq.theTrollingMotor}"
-                                    parentProductId="{!v.cpq.theBoat.id}"
-                                    aura:id="upgradeSelector" />
+          <aura:if isTrue="{!v.enableTrollingMotors}">
+            <c:CPQ_UpgradeSelector_dh cpq="{!v.cpq}"
+                                      upgradeType="Trolling Motor"
+                                      valueId="{!v.cpq.trollingMotorId}"
+                                      value="{!v.cpq.theTrollingMotor}"
+                                      parentProductId="{!v.cpq.theBoat.id}"
+                                      aura:id="upgradeSelector" />
+          </aura:if>
           <!-- /Trolling Motor Selector -->
         </aura:if>
       </lightning:tab>
