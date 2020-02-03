@@ -259,13 +259,6 @@
             </outputParameters>
         </fields>
         <fields>
-            <name>Invoice_Number</name>
-            <dataType>String</dataType>
-            <fieldText>Invoice Number</fieldText>
-            <fieldType>InputField</fieldType>
-            <isRequired>false</isRequired>
-        </fields>
-        <fields>
             <name>GLV1_Lookup</name>
             <extensionName>flowruntime:lookup</extensionName>
             <fieldType>ComponentInstance</fieldType>
@@ -298,16 +291,6 @@
                 <assignToReference>SelectedGLV1</assignToReference>
                 <name>recordId</name>
             </outputParameters>
-        </fields>
-        <fields>
-            <name>Issue_Date</name>
-            <dataType>Date</dataType>
-            <defaultValue>
-                <elementReference>TodayDate</elementReference>
-            </defaultValue>
-            <fieldText>Issue Date</fieldText>
-            <fieldType>InputField</fieldType>
-            <isRequired>false</isRequired>
         </fields>
         <fields>
             <name>GLV2_Lookup</name>
@@ -344,28 +327,12 @@
             </outputParameters>
         </fields>
         <fields>
-            <name>Due_Date</name>
-            <dataType>Date</dataType>
-            <defaultValue>
-                <elementReference>TodayPlus10</elementReference>
-            </defaultValue>
-            <fieldText>Due Date</fieldText>
-            <fieldType>InputField</fieldType>
-            <isRequired>false</isRequired>
-        </fields>
-        <fields>
             <name>Subtotal</name>
             <dataType>Number</dataType>
             <fieldText>Subtotal before Sales Taxes</fieldText>
             <fieldType>InputField</fieldType>
             <isRequired>true</isRequired>
             <scale>0</scale>
-        </fields>
-        <fields>
-            <name>Internal_Comments</name>
-            <fieldText>Internal Comments</fieldText>
-            <fieldType>LargeTextArea</fieldType>
-            <isRequired>false</isRequired>
         </fields>
         <fields>
             <name>GLAccount_Lookup</name>
@@ -394,6 +361,39 @@
                 <assignToReference>Selected_GLAccount</assignToReference>
                 <name>recordId</name>
             </outputParameters>
+        </fields>
+        <fields>
+            <name>Invoice_Number</name>
+            <dataType>String</dataType>
+            <fieldText>Invoice Number</fieldText>
+            <fieldType>InputField</fieldType>
+            <isRequired>false</isRequired>
+        </fields>
+        <fields>
+            <name>Issue_Date</name>
+            <dataType>Date</dataType>
+            <defaultValue>
+                <elementReference>TodayDate</elementReference>
+            </defaultValue>
+            <fieldText>Issue Date</fieldText>
+            <fieldType>InputField</fieldType>
+            <isRequired>false</isRequired>
+        </fields>
+        <fields>
+            <name>Due_Date</name>
+            <dataType>Date</dataType>
+            <defaultValue>
+                <elementReference>TodayPlus10</elementReference>
+            </defaultValue>
+            <fieldText>Due Date</fieldText>
+            <fieldType>InputField</fieldType>
+            <isRequired>false</isRequired>
+        </fields>
+        <fields>
+            <name>Internal_Comments</name>
+            <fieldText>Internal Comments</fieldText>
+            <fieldType>LargeTextArea</fieldType>
+            <isRequired>false</isRequired>
         </fields>
         <showFooter>true</showFooter>
         <showHeader>true</showHeader>
