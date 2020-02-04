@@ -19,7 +19,8 @@
 					<select id="elAccountOptions"></select>
 				</apex:pageBlockSectionItem>
 				<apex:inputField value="{!cdHolder.AcctSeed__GL_Account_Variable_1__c}"/>
-				
+				<apex:inputField value="{!cdHolder.AcctSeed__Cash_Flow_Category__c}"/>
+
 				<apex:inputField onchange="showHideCheckNumber(this)" value="{!cdHolder.AcctSeed__Type__c}" id="txnType"/>
 				<apex:inputField value="{!cdHolder.AcctSeed__Check_Number__c}" id="elCheckNum"/>
 

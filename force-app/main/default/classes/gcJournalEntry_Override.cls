@@ -24,6 +24,7 @@ public with sharing class gcJournalEntry_Override {
         List<Map<String,String>> listGLV2 = new List<Map<String,String>>();
         List<Map<String,String>> listGLV3 = new List<Map<String,String>>();
         List<Map<String,String>> listGLV4 = new List<Map<String,String>>();
+        List<Map<String,String>> listCFC = new List<Map<String,String>>();
         listGLV1.add(new Map<String,String>{'value'=>'','text'=>''});
         listGLV2.add(new Map<String,String>{'value'=>'','text'=>''});
         listGLV3.add(new Map<String,String>{'value'=>'','text'=>''});
@@ -32,6 +33,7 @@ public with sharing class gcJournalEntry_Override {
         mapListGLVariables.put('glv2List',listGLV2);
         mapListGLVariables.put('glv3List',listGLV3);
         mapListGLVariables.put('glv4List',listGLV4);
+        mapListGLVariables.put('cfcList',listCFC);
 
         for(AcctSeed__Accounting_Variable__c glv : 
         		[SELECT Id, 
@@ -53,6 +55,21 @@ public with sharing class gcJournalEntry_Override {
             	listGLV3.add(mapKV);
             else if(glv.AcctSeed__Type__c.equals('GL Account Variable 4'))
             	listGLV4.add(mapKV);
+        }
+
+		for(AcctSeed__GL_Account__c glv :
+        		[SELECT Id,
+        			Name,
+        			AcctSeed__Type__c
+        		FROM AcctSeed__GL_Account__c
+        		WHERE AcctSeed__Active__c = true
+        			AND AcctSeed__Type__c = 'Cash Flow'
+        		ORDER BY Name])
+        {
+            Map<String,String> mapKV = new Map<String,String>();
+            mapKV.put('value', glv.Id);
+            mapKV.put('text', glv.Name);
+			listCFC.add(mapKV);
         }
 
         return  JSON.serializePretty(mapListGLVariables);		
@@ -142,8 +159,10 @@ public with sharing class gcJournalEntry_Override {
 					AcctSeed__Units__c, 
 					AcctSeed__Date__c, 
 					AcctSeed__GL_Account__c, 
-					AcctSeed__GL_Account__r.Name, 
-					AcctSeed__GL_Account_Variable_1__c, 
+					AcctSeed__GL_Account__r.Name,
+					AcctSeed__Cash_Flow_Category__c,
+					AcctSeed__Cash_Flow_Category__r.Name,
+					AcctSeed__GL_Account_Variable_1__c,
 					AcctSeed__GL_Account_Variable_1__r.Name, 
 					AcctSeed__GL_Account_Variable_2__c, 
 					AcctSeed__GL_Account_Variable_2__r.Name, 
@@ -168,6 +187,8 @@ public with sharing class gcJournalEntry_Override {
 			m.put('taskName', jel.AcctSeed__Project_Task__r.Name);
 			m.put('idGLAccount', jel.AcctSeed__GL_Account__c);
 			m.put('gLAccountName', jel.AcctSeed__GL_Account__r.Name);
+			m.put('idCFC', jel.AcctSeed__Cash_Flow_Category__c);
+			m.put('cfcName', jel.AcctSeed__Cash_Flow_Category__r.Name);
 			m.put('idGLV1', jel.AcctSeed__GL_Account_Variable_1__c);
 			m.put('gLV1Name', jel.AcctSeed__GL_Account_Variable_1__r.Name);
 			m.put('idGLV2', jel.AcctSeed__GL_Account_Variable_2__c);
@@ -236,6 +257,7 @@ public with sharing class gcJournalEntry_Override {
 					idLine = m.get('idLine');
 
 				String idGL = m.get('idGLAccount');
+				String idCFC = m.get('idCFC');
 				String idGLV1 = m.get('idGLV1');
 				String idGLV2 = m.get('idGLV2');
 				String idGLV3 = m.get('idGLV3');
@@ -260,9 +282,10 @@ public with sharing class gcJournalEntry_Override {
 														AcctSeed__Project__c = (idProject == ''?null:idProject),
 														AcctSeed__Project_Task__c = (idTask == ''?null:idTask), 
 														AcctSeed__Date__c = jelDate, 
-														AcctSeed__GL_Account__c = idGL, 
-														AcctSeed__GL_Account_Variable_1__c = (idGLV1 == ''?null:idGLV1), 
-														AcctSeed__GL_Account_Variable_2__c = (idGLV2 == ''?null:idGLV2), 
+														AcctSeed__GL_Account__c = idGL,
+														AcctSeed__Cash_Flow_Category__c = (idCFC == ''?null:idCFC),
+														AcctSeed__GL_Account_Variable_1__c = (idGLV1 == ''?null:idGLV1),
+														AcctSeed__GL_Account_Variable_2__c = (idGLV2 == ''?null:idGLV2),
 														AcctSeed__GL_Account_Variable_3__c = (idGLV3 == ''?null:idGLV3), 
 														AcctSeed__GL_Account_Variable_4__c = (idGLV4 == ''?null:idGLV4), 
 														AcctSeed__Journal_Entry__c = idJE,

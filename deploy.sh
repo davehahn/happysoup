@@ -40,4 +40,4 @@ ant -buildfile build/build.xml doMetadataClean
 echoOut 'Deploying static resources'
 sfdx heber:staticresources:deploy -u $1
 echo 'Deploying the remaining metadata'
-sfdx force:source:deploy --testlevel $TESTLEVEL --targetusername $1 -p force-app/main/default -w 120
+sfdx force:source:deploy --testlevel $TESTLEVEL --targetusername $1 -p force-app/main/default -g -w 120

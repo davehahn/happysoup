@@ -390,13 +390,24 @@ input.autoComplete
                         {dataIndx:"idTask",         hidden:true},
                         {dataIndx:'gLAccountName',  title:'GL Account', align:'left', editable:function(ui){return (ui.rowData != undefined && ui.rowData.jePosted == 'true')?false:true;}, editor:{ type: 'textbox', cls: 'autoComplete', select: true}},
                         {dataIndx:"idGLAccount",    hidden:true},
+                        {dataIndx:"idCFC",         hidden:true},
+                        {dataIndx:"cfcName",           title:"{!$ObjectType.AcctSeed__Journal_Entry_Line__c.fields.AcctSeed__Cash_Flow_Category__c.Label}",
+                            editor: {
+                                type: 'select',
+                                //init:autoCompleteGlv1,
+                                valueIndx: "value",
+                                labelIndx: "text",                                      
+                                mapIndices: {"text": "cfcName", "value": "idCFC"},
+                                options: glVariables.cfcList
+                            }, editable:function(ui){return (ui.rowData != undefined && ui.rowData.jePosted == 'true')?false:true;}
+                        },
                         {dataIndx:"idGLV1",         hidden:true},
                         {dataIndx:"gLV1Name",           title:"{!$ObjectType.AcctSeed__Journal_Entry_Line__c.fields.AcctSeed__GL_Account_Variable_1__c.Label}",
                             editor: {
                                 type: 'select',
                                 //init:autoCompleteGlv1,
                                 valueIndx: "value",
-                                labelIndx: "text",                                      
+                                labelIndx: "text",
                                 mapIndices: {"text": "gLV1Name", "value": "idGLV1"},
                                 options: glVariables.glv1List
                             }, editable:function(ui){return (ui.rowData != undefined && ui.rowData.jePosted == 'true')?false:true;}
