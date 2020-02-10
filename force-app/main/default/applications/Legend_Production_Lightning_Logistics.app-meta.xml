@@ -9,6 +9,23 @@
         <type>Flexipage</type>
         <pageOrSobjectType>Lead</pageOrSobjectType>
     </actionOverrides>
+    <actionOverrides>
+        <actionName>View</actionName>
+        <comment>Action override created by Lightning App Builder during activation.</comment>
+        <content>Cash_Disbursement_Record_Home_Custom</content>
+        <formFactor>Large</formFactor>
+        <skipRecordTypeSelect>false</skipRecordTypeSelect>
+        <type>Flexipage</type>
+        <pageOrSobjectType>AcctSeed__Cash_Disbursement__c</pageOrSobjectType>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Tab</actionName>
+        <content>desktopDefault</content>
+        <formFactor>Large</formFactor>
+        <skipRecordTypeSelect>false</skipRecordTypeSelect>
+        <type>Flexipage</type>
+        <pageOrSobjectType>standard-home</pageOrSobjectType>
+    </actionOverrides>
     <brand>
         <headerColor>#0070D2</headerColor>
         <shouldOverrideOrgTheme>false</shouldOverrideOrgTheme>
@@ -20,6 +37,33 @@
     <navType>Standard</navType>
     <profileActionOverrides>
         <actionName>View</actionName>
+        <content>Translation</content>
+        <formFactor>Large</formFactor>
+        <pageOrSobjectType>Case</pageOrSobjectType>
+        <recordType>Case.Translation</recordType>
+        <type>Flexipage</type>
+        <profile>Legend Standard User - New</profile>
+    </profileActionOverrides>
+    <profileActionOverrides>
+        <actionName>View</actionName>
+        <content>Translation</content>
+        <formFactor>Large</formFactor>
+        <pageOrSobjectType>Case</pageOrSobjectType>
+        <recordType>Case.Translation</recordType>
+        <type>Flexipage</type>
+        <profile>Legend Admin User - New</profile>
+    </profileActionOverrides>
+    <profileActionOverrides>
+        <actionName>View</actionName>
+        <content>Translation</content>
+        <formFactor>Large</formFactor>
+        <pageOrSobjectType>Case</pageOrSobjectType>
+        <recordType>Case.Translation</recordType>
+        <type>Flexipage</type>
+        <profile>Legend Platform</profile>
+    </profileActionOverrides>
+    <profileActionOverrides>
+        <actionName>View</actionName>
         <content>ERP_Record_Page</content>
         <formFactor>Large</formFactor>
         <pageOrSobjectType>AcctSeed__Project__c</pageOrSobjectType>
@@ -651,30 +695,11 @@
     </profileActionOverrides>
     <profileActionOverrides>
         <actionName>View</actionName>
-        <content>Translation</content>
+        <content>System_Issue_Admin</content>
         <formFactor>Large</formFactor>
-        <pageOrSobjectType>Case</pageOrSobjectType>
-        <recordType>Case.Translation</recordType>
+        <pageOrSobjectType>System_Issue__c</pageOrSobjectType>
         <type>Flexipage</type>
-        <profile>Legend Standard User - New</profile>
-    </profileActionOverrides>
-    <profileActionOverrides>
-        <actionName>View</actionName>
-        <content>Translation</content>
-        <formFactor>Large</formFactor>
-        <pageOrSobjectType>Case</pageOrSobjectType>
-        <recordType>Case.Translation</recordType>
-        <type>Flexipage</type>
-        <profile>Legend Admin User - New</profile>
-    </profileActionOverrides>
-    <profileActionOverrides>
-        <actionName>View</actionName>
-        <content>Translation</content>
-        <formFactor>Large</formFactor>
-        <pageOrSobjectType>Case</pageOrSobjectType>
-        <recordType>Case.Translation</recordType>
-        <type>Flexipage</type>
-        <profile>Legend Platform</profile>
+        <profile>Admin</profile>
     </profileActionOverrides>
     <tabs>standard-home</tabs>
     <tabs>System_Issue__c</tabs>
@@ -692,5 +717,6 @@
     <tabs>Dealer_Order__c</tabs>
     <tabs>General_Information__kav</tabs>
     <tabs>Inventory_Allocations_Wholesale</tabs>
+    <tabs>Boat_Appraisal__c</tabs>
     <uiType>Lightning</uiType>
 </CustomApplication>
