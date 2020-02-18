@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <fullName>Current_NPS_Rating__c</fullName>
     <externalId>false</externalId>
     <formula>IF( NPS__c &gt;8, 1,  IF( NPS__c &lt;7, -1, 0))</formula>

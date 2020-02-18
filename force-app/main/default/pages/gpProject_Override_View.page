@@ -325,9 +325,7 @@ input.dateSelector{
             <apex:pageBlockButtons location="top" rendered="{!!isInternalWarranty}">
                 <button type="button" class="btn" id="btnLaunchSearchSerial" onclick="launchSearchSerial();">Nest an Existing Motor, Trailer etc.</button>
                 <button type="button" class="btn" id="btnLaunchCreateSerial" onclick="launchCreateNewSerial('0');">Create a New Motor, Trailer etc.</button>
-                <apex:outputText rendered="{!!isManufacturing}">
                 <button type="button" style="{!IF(isTradeIn,'display:none','')}" class="btn" id="btnAddToERPItes" onclick="addToERPOrderItems();">Add To ERP Order Items</button>
-                </apex:outputText>
             </apex:pageBlockButtons>
 
             <div><div id="serials"></div></div>
@@ -373,9 +371,7 @@ input.dateSelector{
                 <button type="button" class="btn" id="btnNewMaterial"       onclick="launchNewMaterial();">New ERP Order Item</button>
                 <apex:outputText rendered="{!!isInternalWarranty}">
                     <button type="button" class="btn" id="pickListPdfButton"    onclick="previewPDF_pickList();" >Pick List PDF</button>
-                    <apex:outputText rendered="{!!isManufacturing}">
                     <button type="button" style="{!IF(OR(isTradeIn,isCounterSale,isPartnerPartsOrder,isFixedAsset),'display:none','')}" class="btn" id="btnAddToERPItes" onclick="nestERPOrderItemSerials();">Nest ERP Order Items</button>
-                    </apex:outputText>
                 </apex:outputText>
             </apex:pageBlockButtons>
 

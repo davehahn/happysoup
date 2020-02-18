@@ -1,12 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Flow xmlns="http://soap.sforce.com/2006/04/metadata">
     <actionCalls>
-        <name>SalesforceObjdb866f803cd1c66425e51013c32161bc_FireJBTrigger</name>
-        <label>SalesforceObjdb866f803cd1c66425e51013c32161bc_FireJBTrigger</label>
+        <name>SalesforceObj6a473c76f5f0ffac7e3434ebe970381f_FireJBTrigger</name>
+        <label>SalesforceObj6a473c76f5f0ffac7e3434ebe970381f_FireJBTrigger</label>
         <locationX>0</locationX>
         <locationY>0</locationY>
         <actionName>et4ae5__JBintFireBulkEvent</actionName>
         <actionType>apex</actionType>
+        <connector>
+            <targetReference>JB_Decision_Null_Check_SalesforceObj93b0a6b90d8b4c5f67160fcc19e5ceec</targetReference>
+        </connector>
+        <faultConnector>
+            <targetReference>JB_Decision_Null_Check_SalesforceObj93b0a6b90d8b4c5f67160fcc19e5ceec</targetReference>
+        </faultConnector>
         <inputParameters>
             <name>ContactKey</name>
             <value>
@@ -28,7 +34,7 @@
         <inputParameters>
             <name>EventDefinitionKey</name>
             <value>
-                <stringValue>SalesforceObjdb866f803cd1c66425e51013c32161bc</stringValue>
+                <stringValue>SalesforceObj6a473c76f5f0ffac7e3434ebe970381f</stringValue>
             </value>
         </inputParameters>
         <inputParameters>
@@ -52,18 +58,144 @@
         <inputParameters>
             <name>EventDataConfig</name>
             <value>
-                <stringValue>{&quot;objects&quot;:[{&quot;relationshipIdName&quot;:&quot;&quot;,&quot;referenceObject&quot;:&quot;&quot;,&quot;isPolymorphic&quot;:false,&quot;relationshipName&quot;:&quot;&quot;,&quot;dePrefix&quot;:&quot;Lead:&quot;,&quot;fields&quot;:[&quot;Id&quot;,&quot;Email&quot;,&quot;LastName&quot;,&quot;FirstName&quot;,&quot;HasOptedOutOfEmail&quot;,&quot;Closest_Partner__c&quot;]}]}</stringValue>
+                <stringValue>{&quot;objects&quot;:[{&quot;relationshipIdName&quot;:&quot;&quot;,&quot;referenceObject&quot;:&quot;&quot;,&quot;isPolymorphic&quot;:false,&quot;relationshipName&quot;:&quot;&quot;,&quot;dePrefix&quot;:&quot;Lead:&quot;,&quot;fields&quot;:[&quot;Id&quot;,&quot;Email&quot;,&quot;LeadSource&quot;,&quot;PartnerAccountId&quot;,&quot;HasOptedOutOfEmail&quot;,&quot;Preferred_Language__c&quot;,&quot;Marketing_Cloud_Session_ID__c&quot;]},{&quot;relationshipIdName&quot;:null,&quot;referenceObject&quot;:&quot;Account&quot;,&quot;isPolymorphic&quot;:false,&quot;relationshipName&quot;:&quot;PartnerAccount&quot;,&quot;dePrefix&quot;:&quot;Lead:PartnerAccount:&quot;,&quot;fields&quot;:[&quot;Id&quot;,&quot;Lead_Contact_Email__c&quot;]},{&quot;relationshipIdName&quot;:null,&quot;referenceObject&quot;:&quot;Account&quot;,&quot;isPolymorphic&quot;:false,&quot;relationshipName&quot;:&quot;Closest_Partner__r&quot;,&quot;dePrefix&quot;:&quot;Lead:Closest_Partner__r:&quot;,&quot;fields&quot;:[&quot;Id&quot;,&quot;Lead_Contact_Email__c&quot;]}]}</stringValue>
+            </value>
+        </inputParameters>
+    </actionCalls>
+    <actionCalls>
+        <name>SalesforceObj8a83d17b4b0f3b61ac683767e0bd9dac_FireJBTrigger</name>
+        <label>SalesforceObj8a83d17b4b0f3b61ac683767e0bd9dac_FireJBTrigger</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <actionName>et4ae5__JBintFireBulkEvent</actionName>
+        <actionType>apex</actionType>
+        <inputParameters>
+            <name>ContactKey</name>
+            <value>
+                <stringValue>{
+  &quot;relationshipIdName&quot;: &quot;Id&quot;,
+  &quot;relationshipName&quot;: &quot;&quot;,
+  &quot;isPolymorphic&quot;: false,
+  &quot;referenceObjectName&quot;: &quot;Lead&quot;
+}</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>SalesforceObjectId</name>
+            <value>
+                <elementReference>new_object.Id</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>SalesforceObjectName</name>
+            <value>
+                <stringValue>Lead</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>EventDefinitionKey</name>
+            <value>
+                <stringValue>SalesforceObj8a83d17b4b0f3b61ac683767e0bd9dac</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>OwnerMID</name>
+            <value>
+                <stringValue>100024423</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>VersionNumber</name>
+            <value>
+                <stringValue>3.0</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>ContactPersonType</name>
+            <value>
+                <stringValue>Lead</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>EventDataConfig</name>
+            <value>
+                <stringValue>{&quot;objects&quot;:[{&quot;relationshipIdName&quot;:&quot;&quot;,&quot;referenceObject&quot;:&quot;&quot;,&quot;isPolymorphic&quot;:false,&quot;relationshipName&quot;:&quot;&quot;,&quot;dePrefix&quot;:&quot;Lead:&quot;,&quot;fields&quot;:[&quot;Id&quot;,&quot;Email&quot;,&quot;LeadSource&quot;,&quot;PartnerAccountId&quot;,&quot;HasOptedOutOfEmail&quot;,&quot;Preferred_Language__c&quot;,&quot;Marketing_Cloud_Session_ID__c&quot;]},{&quot;relationshipIdName&quot;:null,&quot;referenceObject&quot;:&quot;Account&quot;,&quot;isPolymorphic&quot;:false,&quot;relationshipName&quot;:&quot;PartnerAccount&quot;,&quot;dePrefix&quot;:&quot;Lead:PartnerAccount:&quot;,&quot;fields&quot;:[&quot;Id&quot;,&quot;Lead_Contact_Email__c&quot;]},{&quot;relationshipIdName&quot;:null,&quot;referenceObject&quot;:&quot;Account&quot;,&quot;isPolymorphic&quot;:false,&quot;relationshipName&quot;:&quot;Closest_Partner__r&quot;,&quot;dePrefix&quot;:&quot;Lead:Closest_Partner__r:&quot;,&quot;fields&quot;:[&quot;Id&quot;,&quot;Lead_Contact_Email__c&quot;]}]}</stringValue>
+            </value>
+        </inputParameters>
+    </actionCalls>
+    <actionCalls>
+        <name>SalesforceObj93b0a6b90d8b4c5f67160fcc19e5ceec_FireJBTrigger</name>
+        <label>SalesforceObj93b0a6b90d8b4c5f67160fcc19e5ceec_FireJBTrigger</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <actionName>et4ae5__JBintFireBulkEvent</actionName>
+        <actionType>apex</actionType>
+        <connector>
+            <targetReference>JB_Decision_Null_Check_SalesforceObj8a83d17b4b0f3b61ac683767e0bd9dac</targetReference>
+        </connector>
+        <faultConnector>
+            <targetReference>JB_Decision_Null_Check_SalesforceObj8a83d17b4b0f3b61ac683767e0bd9dac</targetReference>
+        </faultConnector>
+        <inputParameters>
+            <name>ContactKey</name>
+            <value>
+                <stringValue>{&quot;relationshipIdName&quot;:&quot;Id&quot;,&quot;relationshipName&quot;:&quot;&quot;,&quot;isPolymorphic&quot;:false,&quot;referenceObjectName&quot;:&quot;Lead&quot;}</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>SalesforceObjectId</name>
+            <value>
+                <elementReference>new_object.Id</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>SalesforceObjectName</name>
+            <value>
+                <stringValue>Lead</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>EventDefinitionKey</name>
+            <value>
+                <stringValue>SalesforceObj93b0a6b90d8b4c5f67160fcc19e5ceec</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>OwnerMID</name>
+            <value>
+                <stringValue>100024423</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>VersionNumber</name>
+            <value>
+                <stringValue>3.0</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>ContactPersonType</name>
+            <value>
+                <stringValue>Lead</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>EventDataConfig</name>
+            <value>
+                <stringValue>{&quot;objects&quot;:[{&quot;relationshipIdName&quot;:null,&quot;referenceObject&quot;:&quot;Account&quot;,&quot;isPolymorphic&quot;:false,&quot;relationshipName&quot;:&quot;Closest_Partner__r&quot;,&quot;dePrefix&quot;:&quot;Lead:Closest_Partner__r:&quot;,&quot;fields&quot;:[&quot;Id&quot;,&quot;Lead_Contact_Email__c&quot;]},{&quot;relationshipIdName&quot;:&quot;&quot;,&quot;referenceObject&quot;:&quot;&quot;,&quot;isPolymorphic&quot;:false,&quot;relationshipName&quot;:&quot;&quot;,&quot;dePrefix&quot;:&quot;Lead:&quot;,&quot;fields&quot;:[&quot;Id&quot;,&quot;Email&quot;,&quot;HasOptedOutOfEmail&quot;,&quot;Preferred_Language__c&quot;]}]}</stringValue>
             </value>
         </inputParameters>
     </actionCalls>
     <decisions>
-        <name>JB_Decision_Null_Check_SalesforceObjdb866f803cd1c66425e51013c32161bc</name>
-        <label>JB_Decision_Null_Check_SalesforceObjdb866f803cd1c66425e51013c32161bc</label>
+        <name>JB_Decision_Null_Check_SalesforceObj6a473c76f5f0ffac7e3434ebe970381f</name>
+        <label>JB_Decision_Null_Check_SalesforceObj6a473c76f5f0ffac7e3434ebe970381f</label>
         <locationX>0</locationX>
         <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>JB_Decision_Null_Check_SalesforceObj93b0a6b90d8b4c5f67160fcc19e5ceec</targetReference>
+        </defaultConnector>
         <defaultConnectorLabel>default</defaultConnectorLabel>
         <rules>
-            <name>JB_SalesforceObjdb866f803cd1c66425e51013c32161bc_Parameters_Null</name>
+            <name>JB_SalesforceObj6a473c76f5f0ffac7e3434ebe970381f_Parameters_Null</name>
             <conditionLogic>1</conditionLogic>
             <conditions>
                 <leftValueReference>old_object</leftValueReference>
@@ -73,37 +205,134 @@
                 </rightValue>
             </conditions>
             <connector>
-                <targetReference>JB_SalesforceObjdb866f803cd1c66425e51013c32161bc_Decision</targetReference>
+                <targetReference>JB_SalesforceObj6a473c76f5f0ffac7e3434ebe970381f_Decision</targetReference>
             </connector>
-            <label>JB_SalesforceObjdb866f803cd1c66425e51013c32161bc_Parameters_Null</label>
+            <label>JB_SalesforceObj6a473c76f5f0ffac7e3434ebe970381f_Parameters_Null</label>
         </rules>
     </decisions>
     <decisions>
-        <name>JB_SalesforceObjdb866f803cd1c66425e51013c32161bc_Decision</name>
-        <label>JB_SalesforceObjdb866f803cd1c66425e51013c32161bc_Decision</label>
+        <name>JB_Decision_Null_Check_SalesforceObj8a83d17b4b0f3b61ac683767e0bd9dac</name>
+        <label>JB_Decision_Null_Check_SalesforceObj8a83d17b4b0f3b61ac683767e0bd9dac</label>
         <locationX>0</locationX>
         <locationY>0</locationY>
         <defaultConnectorLabel>default</defaultConnectorLabel>
         <rules>
-            <name>SalesforceObjdb866f803cd1c66425e51013c32161bc</name>
+            <name>JB_SalesforceObj8a83d17b4b0f3b61ac683767e0bd9dac_Parameters_Null</name>
             <conditionLogic>1</conditionLogic>
             <conditions>
-                <leftValueReference>new_object.Id</leftValueReference>
+                <leftValueReference>old_object</leftValueReference>
                 <operator>IsNull</operator>
                 <rightValue>
-                    <booleanValue>false</booleanValue>
+                    <booleanValue>true</booleanValue>
                 </rightValue>
             </conditions>
             <connector>
-                <targetReference>SalesforceObjdb866f803cd1c66425e51013c32161bc_FireJBTrigger</targetReference>
+                <targetReference>JB_SalesforceObj8a83d17b4b0f3b61ac683767e0bd9dac_Decision</targetReference>
             </connector>
-            <label>SalesforceObjdb866f803cd1c66425e51013c32161bc</label>
+            <label>JB_SalesforceObj8a83d17b4b0f3b61ac683767e0bd9dac_Parameters_Null</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>JB_Decision_Null_Check_SalesforceObj93b0a6b90d8b4c5f67160fcc19e5ceec</name>
+        <label>JB_Decision_Null_Check_SalesforceObj93b0a6b90d8b4c5f67160fcc19e5ceec</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>JB_Decision_Null_Check_SalesforceObj8a83d17b4b0f3b61ac683767e0bd9dac</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>default</defaultConnectorLabel>
+        <rules>
+            <name>JB_SalesforceObj93b0a6b90d8b4c5f67160fcc19e5ceec_Parameters_Null</name>
+            <conditionLogic>1</conditionLogic>
+            <conditions>
+                <leftValueReference>old_object</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>JB_SalesforceObj93b0a6b90d8b4c5f67160fcc19e5ceec_Decision</targetReference>
+            </connector>
+            <label>JB_SalesforceObj93b0a6b90d8b4c5f67160fcc19e5ceec_Parameters_Null</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>JB_SalesforceObj6a473c76f5f0ffac7e3434ebe970381f_Decision</name>
+        <label>JB_SalesforceObj6a473c76f5f0ffac7e3434ebe970381f_Decision</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>JB_Decision_Null_Check_SalesforceObj93b0a6b90d8b4c5f67160fcc19e5ceec</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>default</defaultConnectorLabel>
+        <rules>
+            <name>SalesforceObj6a473c76f5f0ffac7e3434ebe970381f</name>
+            <conditionLogic>1</conditionLogic>
+            <conditions>
+                <leftValueReference>new_object.Description</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Marketing Cloud New Lead For Dealers</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>SalesforceObj6a473c76f5f0ffac7e3434ebe970381f_FireJBTrigger</targetReference>
+            </connector>
+            <label>SalesforceObj6a473c76f5f0ffac7e3434ebe970381f</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>JB_SalesforceObj8a83d17b4b0f3b61ac683767e0bd9dac_Decision</name>
+        <label>JB_SalesforceObj8a83d17b4b0f3b61ac683767e0bd9dac_Decision</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnectorLabel>default</defaultConnectorLabel>
+        <rules>
+            <name>SalesforceObj8a83d17b4b0f3b61ac683767e0bd9dac</name>
+            <conditionLogic>1</conditionLogic>
+            <conditions>
+                <leftValueReference>new_object.Description</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Marketing Cloud New Lead For Dealers Boat Builder</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>SalesforceObj8a83d17b4b0f3b61ac683767e0bd9dac_FireJBTrigger</targetReference>
+            </connector>
+            <label>SalesforceObj8a83d17b4b0f3b61ac683767e0bd9dac</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>JB_SalesforceObj93b0a6b90d8b4c5f67160fcc19e5ceec_Decision</name>
+        <label>JB_SalesforceObj93b0a6b90d8b4c5f67160fcc19e5ceec_Decision</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>JB_Decision_Null_Check_SalesforceObj8a83d17b4b0f3b61ac683767e0bd9dac</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>default</defaultConnectorLabel>
+        <rules>
+            <name>SalesforceObj93b0a6b90d8b4c5f67160fcc19e5ceec</name>
+            <conditionLogic>1</conditionLogic>
+            <conditions>
+                <leftValueReference>new_object.Description</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Created with Freedom To Choose Marketing Journey</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>SalesforceObj93b0a6b90d8b4c5f67160fcc19e5ceec_FireJBTrigger</targetReference>
+            </connector>
+            <label>SalesforceObj93b0a6b90d8b4c5f67160fcc19e5ceec</label>
         </rules>
     </decisions>
     <label>JBSystemFlow_Lead</label>
     <processType>AutoLaunchedFlow</processType>
-    <startElementReference>JB_Decision_Null_Check_SalesforceObjdb866f803cd1c66425e51013c32161bc</startElementReference>
-    <status>Obsolete</status>
+    <startElementReference>JB_Decision_Null_Check_SalesforceObj6a473c76f5f0ffac7e3434ebe970381f</startElementReference>
+    <status>Active</status>
     <variables>
         <name>new_object</name>
         <dataType>SObject</dataType>
