@@ -12,7 +12,7 @@
         <name>Appraisal_Source</name>
         <label>Appraisal Source</label>
         <locationX>396</locationX>
-        <locationY>385</locationY>
+        <locationY>469</locationY>
         <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
         <rules>
             <name>From_Opportunity</name>
@@ -46,10 +46,48 @@
         </rules>
     </decisions>
     <decisions>
+        <description>Check to see if a trade record was already created</description>
+        <name>Existing_Trade</name>
+        <label>Existing Trade</label>
+        <locationX>2090</locationX>
+        <locationY>467</locationY>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>Trade_Record_Exists</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>tradeRecordId</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Trade_Already_Exists</targetReference>
+            </connector>
+            <label>Trade Record Exists</label>
+        </rules>
+        <rules>
+            <name>Trade_Record_Not_Exist</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>tradeRecordId</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Create_Trade_Record</targetReference>
+            </connector>
+            <label>Trade Record Not Exist</label>
+        </rules>
+    </decisions>
+    <decisions>
         <name>Item_Appraisal_Decision</name>
         <label>Item Appraisal Decision</label>
         <locationX>917</locationX>
-        <locationY>861</locationY>
+        <locationY>945</locationY>
         <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
         <rules>
             <name>All_Items</name>
@@ -259,7 +297,7 @@
         <name>Item_Appraisal_Decision_0</name>
         <label>Item Appraisal Decision</label>
         <locationX>1007</locationX>
-        <locationY>50</locationY>
+        <locationY>134</locationY>
         <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
         <rules>
             <name>All_Items_0</name>
@@ -460,7 +498,7 @@
         <name>Item_Appraisal_Decision_0_0</name>
         <label>Item Appraisal Decision</label>
         <locationX>1201</locationX>
-        <locationY>652</locationY>
+        <locationY>736</locationY>
         <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
         <rules>
             <name>All_Items_0_0</name>
@@ -650,6 +688,216 @@
             </conditions>
             <connector>
                 <targetReference>Trailer_Screen_1</targetReference>
+            </connector>
+            <label>Motor and Trailer</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Item_Appraisal_Decision_0_0_0</name>
+        <label>Item Appraisal Decision</label>
+        <locationX>2451</locationX>
+        <locationY>468</locationY>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>All_Items_0_0_0</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Appraise_Boat</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>Appraise_Motor</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>Appraise_Trailer</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Create_Trade_in_Item_Boat</targetReference>
+            </connector>
+            <label>All Items</label>
+        </rules>
+        <rules>
+            <name>Boat_Only_0_0_0</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Appraise_Boat</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>Appraise_Motor</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>Appraise_Trailer</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Create_Trade_in_Item_Boat_0</targetReference>
+            </connector>
+            <label>Boat Only</label>
+        </rules>
+        <rules>
+            <name>Motor_Only_0_0_0</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Appraise_Boat</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>Appraise_Motor</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>Appraise_Trailer</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Create_Trade_in_Item_Motor_0</targetReference>
+            </connector>
+            <label>Motor Only</label>
+        </rules>
+        <rules>
+            <name>Trailer_Only_0_0_0</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Appraise_Boat</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>Appraise_Motor</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>Appraise_Trailer</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Create_Trade_in_Item_Trailer_0</targetReference>
+            </connector>
+            <label>Trailer Only</label>
+        </rules>
+        <rules>
+            <name>Boat_and_Motor_0_0_0</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Appraise_Boat</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>Appraise_Motor</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>Appraise_Trailer</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Create_Trade_in_Item_Boat_0_0</targetReference>
+            </connector>
+            <label>Boat and Motor</label>
+        </rules>
+        <rules>
+            <name>Boat_and_Trailer_0_0_0</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Appraise_Boat</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>Appraise_Motor</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>Appraise_Trailer</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Create_Trade_in_Item_Boat_0_0_0</targetReference>
+            </connector>
+            <label>Boat and Trailer</label>
+        </rules>
+        <rules>
+            <name>Motor_and_Trailer_0_0_0</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Appraise_Boat</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>Appraise_Motor</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>Appraise_Trailer</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Create_Trade_in_Item_Motor_0_0_0</targetReference>
             </connector>
             <label>Motor and Trailer</label>
         </rules>
@@ -996,7 +1244,7 @@
         <name>Create_Appraisal</name>
         <label>Create Appraisal</label>
         <locationX>1673</locationX>
-        <locationY>381</locationY>
+        <locationY>465</locationY>
         <assignRecordIdToReference>appraisalId</assignRecordIdToReference>
         <connector>
             <targetReference>Capture_Signature</targetReference>
@@ -1405,11 +1653,509 @@
         </inputAssignments>
         <object>Boat_Appraisal__c</object>
     </recordCreates>
+    <recordCreates>
+        <name>Create_Trade_in_Item_Boat</name>
+        <label>Create Trade in Item Boat</label>
+        <locationX>2448</locationX>
+        <locationY>50</locationY>
+        <assignRecordIdToReference>TradeInLineBoatId</assignRecordIdToReference>
+        <connector>
+            <targetReference>Create_Trade_in_Item_Motor</targetReference>
+        </connector>
+        <inputAssignments>
+            <field>Make__c</field>
+            <value>
+                <elementReference>Boat_Make</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Model_Year__c</field>
+            <value>
+                <elementReference>Boat_Year</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Model__c</field>
+            <value>
+                <elementReference>Boat_Model</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Serial_Number__c</field>
+            <value>
+                <elementReference>Boat_Serial_Number</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Trade_In_Record__c</field>
+            <value>
+                <elementReference>tradeRecordId</elementReference>
+            </value>
+        </inputAssignments>
+        <object>Trade_In_Item__c</object>
+    </recordCreates>
+    <recordCreates>
+        <name>Create_Trade_in_Item_Boat_0</name>
+        <label>Create Trade in Item Boat</label>
+        <locationX>2578</locationX>
+        <locationY>202</locationY>
+        <assignRecordIdToReference>TradeInLineBoatId</assignRecordIdToReference>
+        <inputAssignments>
+            <field>Make__c</field>
+            <value>
+                <elementReference>Boat_Make</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Model_Year__c</field>
+            <value>
+                <elementReference>Boat_Year</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Model__c</field>
+            <value>
+                <elementReference>Boat_Model</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Serial_Number__c</field>
+            <value>
+                <elementReference>Boat_Serial_Number</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Trade_In_Record__c</field>
+            <value>
+                <elementReference>tradeRecordId</elementReference>
+            </value>
+        </inputAssignments>
+        <object>Trade_In_Item__c</object>
+    </recordCreates>
+    <recordCreates>
+        <name>Create_Trade_in_Item_Boat_0_0</name>
+        <label>Create Trade in Item Boat</label>
+        <locationX>3028</locationX>
+        <locationY>325</locationY>
+        <assignRecordIdToReference>TradeInLineBoatId</assignRecordIdToReference>
+        <connector>
+            <targetReference>Create_Trade_in_Item_Motor_0_0</targetReference>
+        </connector>
+        <inputAssignments>
+            <field>Make__c</field>
+            <value>
+                <elementReference>Boat_Make</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Model_Year__c</field>
+            <value>
+                <elementReference>Boat_Year</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Model__c</field>
+            <value>
+                <elementReference>Boat_Model</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Serial_Number__c</field>
+            <value>
+                <elementReference>Boat_Serial_Number</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Trade_In_Record__c</field>
+            <value>
+                <elementReference>tradeRecordId</elementReference>
+            </value>
+        </inputAssignments>
+        <object>Trade_In_Item__c</object>
+    </recordCreates>
+    <recordCreates>
+        <name>Create_Trade_in_Item_Boat_0_0_0</name>
+        <label>Create Trade in Item Boat</label>
+        <locationX>3027</locationX>
+        <locationY>504</locationY>
+        <assignRecordIdToReference>TradeInLineBoatId</assignRecordIdToReference>
+        <connector>
+            <targetReference>Create_Trade_in_Item_Trailer_0_0</targetReference>
+        </connector>
+        <inputAssignments>
+            <field>Make__c</field>
+            <value>
+                <elementReference>Boat_Make</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Model_Year__c</field>
+            <value>
+                <elementReference>Boat_Year</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Model__c</field>
+            <value>
+                <elementReference>Boat_Model</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Serial_Number__c</field>
+            <value>
+                <elementReference>Boat_Serial_Number</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Trade_In_Record__c</field>
+            <value>
+                <elementReference>tradeRecordId</elementReference>
+            </value>
+        </inputAssignments>
+        <object>Trade_In_Item__c</object>
+    </recordCreates>
+    <recordCreates>
+        <name>Create_Trade_in_Item_Motor</name>
+        <label>Create Trade in Item Motor</label>
+        <locationX>2571</locationX>
+        <locationY>50</locationY>
+        <assignRecordIdToReference>TradeInLineMotorId</assignRecordIdToReference>
+        <connector>
+            <targetReference>Create_Trade_in_Item_Trailer</targetReference>
+        </connector>
+        <inputAssignments>
+            <field>Make__c</field>
+            <value>
+                <elementReference>Motor_Make</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Model_Year__c</field>
+            <value>
+                <elementReference>Motor_Year</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Model__c</field>
+            <value>
+                <elementReference>Motor_Model</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Serial_Number__c</field>
+            <value>
+                <elementReference>Motor_Serial_Number</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Trade_In_Record__c</field>
+            <value>
+                <elementReference>tradeRecordId</elementReference>
+            </value>
+        </inputAssignments>
+        <object>Trade_In_Item__c</object>
+    </recordCreates>
+    <recordCreates>
+        <name>Create_Trade_in_Item_Motor_0</name>
+        <label>Create Trade in Item Motor</label>
+        <locationX>2719</locationX>
+        <locationY>205</locationY>
+        <assignRecordIdToReference>TradeInLineMotorId</assignRecordIdToReference>
+        <inputAssignments>
+            <field>Make__c</field>
+            <value>
+                <elementReference>Motor_Make</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Model_Year__c</field>
+            <value>
+                <elementReference>Motor_Year</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Model__c</field>
+            <value>
+                <elementReference>Motor_Model</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Serial_Number__c</field>
+            <value>
+                <elementReference>Motor_Serial_Number</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Trade_In_Record__c</field>
+            <value>
+                <elementReference>tradeRecordId</elementReference>
+            </value>
+        </inputAssignments>
+        <object>Trade_In_Item__c</object>
+    </recordCreates>
+    <recordCreates>
+        <name>Create_Trade_in_Item_Motor_0_0</name>
+        <label>Create Trade in Item Motor</label>
+        <locationX>3148</locationX>
+        <locationY>326</locationY>
+        <assignRecordIdToReference>TradeInLineMotorId</assignRecordIdToReference>
+        <inputAssignments>
+            <field>Make__c</field>
+            <value>
+                <elementReference>Motor_Make</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Model_Year__c</field>
+            <value>
+                <elementReference>Motor_Year</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Model__c</field>
+            <value>
+                <elementReference>Motor_Model</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Serial_Number__c</field>
+            <value>
+                <elementReference>Motor_Serial_Number</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Trade_In_Record__c</field>
+            <value>
+                <elementReference>tradeRecordId</elementReference>
+            </value>
+        </inputAssignments>
+        <object>Trade_In_Item__c</object>
+    </recordCreates>
+    <recordCreates>
+        <name>Create_Trade_in_Item_Motor_0_0_0</name>
+        <label>Create Trade in Item Motor</label>
+        <locationX>3019</locationX>
+        <locationY>660</locationY>
+        <assignRecordIdToReference>TradeInLineMotorId</assignRecordIdToReference>
+        <connector>
+            <targetReference>Create_Trade_in_Item_Trailer_0_0_0</targetReference>
+        </connector>
+        <inputAssignments>
+            <field>Make__c</field>
+            <value>
+                <elementReference>Motor_Make</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Model_Year__c</field>
+            <value>
+                <elementReference>Motor_Year</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Model__c</field>
+            <value>
+                <elementReference>Motor_Model</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Serial_Number__c</field>
+            <value>
+                <elementReference>Motor_Serial_Number</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Trade_In_Record__c</field>
+            <value>
+                <elementReference>tradeRecordId</elementReference>
+            </value>
+        </inputAssignments>
+        <object>Trade_In_Item__c</object>
+    </recordCreates>
+    <recordCreates>
+        <name>Create_Trade_in_Item_Trailer</name>
+        <label>Create Trade in Item Trailer</label>
+        <locationX>2707</locationX>
+        <locationY>50</locationY>
+        <assignRecordIdToReference>TradeInLineTrailerId</assignRecordIdToReference>
+        <inputAssignments>
+            <field>Make__c</field>
+            <value>
+                <elementReference>Trailer_Make</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Model_Year__c</field>
+            <value>
+                <elementReference>Trailer_Year</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Model__c</field>
+            <value>
+                <elementReference>Trailer_Model</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Trade_In_Record__c</field>
+            <value>
+                <elementReference>tradeRecordId</elementReference>
+            </value>
+        </inputAssignments>
+        <object>Trade_In_Item__c</object>
+    </recordCreates>
+    <recordCreates>
+        <name>Create_Trade_in_Item_Trailer_0</name>
+        <label>Create Trade in Item Trailer</label>
+        <locationX>2855</locationX>
+        <locationY>203</locationY>
+        <assignRecordIdToReference>TradeInLineTrailerId</assignRecordIdToReference>
+        <inputAssignments>
+            <field>Make__c</field>
+            <value>
+                <elementReference>Trailer_Make</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Model_Year__c</field>
+            <value>
+                <elementReference>Trailer_Year</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Model__c</field>
+            <value>
+                <elementReference>Trailer_Model</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Trade_In_Record__c</field>
+            <value>
+                <elementReference>tradeRecordId</elementReference>
+            </value>
+        </inputAssignments>
+        <object>Trade_In_Item__c</object>
+    </recordCreates>
+    <recordCreates>
+        <name>Create_Trade_in_Item_Trailer_0_0</name>
+        <label>Create Trade in Item Trailer</label>
+        <locationX>3164</locationX>
+        <locationY>505</locationY>
+        <assignRecordIdToReference>TradeInLineTrailerId</assignRecordIdToReference>
+        <inputAssignments>
+            <field>Make__c</field>
+            <value>
+                <elementReference>Trailer_Make</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Model_Year__c</field>
+            <value>
+                <elementReference>Trailer_Year</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Model__c</field>
+            <value>
+                <elementReference>Trailer_Model</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Trade_In_Record__c</field>
+            <value>
+                <elementReference>tradeRecordId</elementReference>
+            </value>
+        </inputAssignments>
+        <object>Trade_In_Item__c</object>
+    </recordCreates>
+    <recordCreates>
+        <name>Create_Trade_in_Item_Trailer_0_0_0</name>
+        <label>Create Trade in Item Trailer</label>
+        <locationX>3162</locationX>
+        <locationY>660</locationY>
+        <assignRecordIdToReference>TradeInLineTrailerId</assignRecordIdToReference>
+        <inputAssignments>
+            <field>Make__c</field>
+            <value>
+                <elementReference>Trailer_Make</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Model_Year__c</field>
+            <value>
+                <elementReference>Trailer_Year</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Model__c</field>
+            <value>
+                <elementReference>Trailer_Model</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Trade_In_Record__c</field>
+            <value>
+                <elementReference>tradeRecordId</elementReference>
+            </value>
+        </inputAssignments>
+        <object>Trade_In_Item__c</object>
+    </recordCreates>
+    <recordCreates>
+        <name>Create_Trade_Record</name>
+        <label>Create Trade Record</label>
+        <locationX>2311</locationX>
+        <locationY>466</locationY>
+        <assignRecordIdToReference>tradeRecordId</assignRecordIdToReference>
+        <connector>
+            <targetReference>Item_Appraisal_Decision_0_0_0</targetReference>
+        </connector>
+        <inputAssignments>
+            <field>Lien_Amount__c</field>
+            <value>
+                <elementReference>Lien_on_Trade</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Opportunity__c</field>
+            <value>
+                <elementReference>opportunityId</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Total_Value__c</field>
+            <value>
+                <elementReference>Estimated_Trade_Value_Before_Inspection</elementReference>
+            </value>
+        </inputAssignments>
+        <object>Trade_In_Record__c</object>
+    </recordCreates>
+    <recordLookups>
+        <name>Get_Trade_Record</name>
+        <label>Get Trade Record</label>
+        <locationX>1944</locationX>
+        <locationY>465</locationY>
+        <assignNullValuesIfNoRecordsFound>true</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Existing_Trade</targetReference>
+        </connector>
+        <filters>
+            <field>Opportunity__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>opportunityId</elementReference>
+            </value>
+        </filters>
+        <object>Trade_In_Record__c</object>
+        <outputAssignments>
+            <assignToReference>tradeRecordId</assignToReference>
+            <field>Id</field>
+        </outputAssignments>
+    </recordLookups>
     <recordLookups>
         <name>getAccData</name>
         <label>getAccData</label>
         <locationX>404</locationX>
-        <locationY>576</locationY>
+        <locationY>660</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
             <targetReference>Appraisal_Item_Selection</targetReference>
@@ -1435,7 +2181,7 @@
         <name>getOppAccountData</name>
         <label>getOppAccountData</label>
         <locationX>298</locationX>
-        <locationY>383</locationY>
+        <locationY>467</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
             <targetReference>Appraisal_Source</targetReference>
@@ -1457,7 +2203,7 @@
         <name>getOppData</name>
         <label>getOppData</label>
         <locationX>156</locationX>
-        <locationY>383</locationY>
+        <locationY>467</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
             <targetReference>getOppAccountData</targetReference>
@@ -1483,7 +2229,7 @@
         <name>Appraisal_Item_Selection</name>
         <label>Appraisal Item Selection</label>
         <locationX>540</locationX>
-        <locationY>574</locationY>
+        <locationY>658</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>true</allowPause>
@@ -1523,7 +2269,7 @@
         <name>Boat_Screen_1</name>
         <label>Boat Screen 1</label>
         <locationX>600</locationX>
-        <locationY>381</locationY>
+        <locationY>465</locationY>
         <allowBack>false</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
@@ -1579,7 +2325,7 @@
         <name>Boat_Screen_2</name>
         <label>Boat Screen 2</label>
         <locationX>721</locationX>
-        <locationY>381</locationY>
+        <locationY>465</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
@@ -1682,7 +2428,7 @@
         <name>Boat_Screen_3</name>
         <label>Boat Screen 3</label>
         <locationX>839</locationX>
-        <locationY>381</locationY>
+        <locationY>465</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
@@ -1804,7 +2550,7 @@
         <name>Boat_Screen_4</name>
         <label>Boat Screen 4</label>
         <locationX>959</locationX>
-        <locationY>381</locationY>
+        <locationY>465</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
@@ -1940,10 +2686,13 @@
         <name>Capture_Signature</name>
         <label>Capture Signature</label>
         <locationX>1802</locationX>
-        <locationY>381</locationY>
+        <locationY>465</locationY>
         <allowBack>false</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
+        <connector>
+            <targetReference>Get_Trade_Record</targetReference>
+        </connector>
         <fields>
             <name>Warning</name>
             <fieldText>&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;table class=&quot;ql-table-blob&quot; style=&quot;border: none; width: 552pt; table-layout: fixed;&quot;&gt;&lt;colgroup&gt;&lt;col&gt;&lt;/colgroup&gt;&lt;tbody&gt;&lt;tr style=&quot;height: 0pt;&quot;&gt;&lt;td style=&quot;border-width: 1pt; border-style: solid; border-color: rgb(0, 0, 0); vertical-align: top; padding: 5pt; overflow: hidden; overflow-wrap: break-word;&quot;&gt;&lt;p dir=&quot;ltr&quot; style=&quot;line-height: 1.2; margin: 2.15pt 5.25pt 0pt 4.25pt; text-align: justify;&quot;&gt;&lt;span style=&quot;font-size: 10.5pt; font-family: &amp;quot;Proxima Nova&amp;quot;, sans-serif; color: rgb(35, 31, 32); background-color: transparent; font-variant-numeric: normal; font-variant-east-asian: normal; vertical-align: baseline; white-space: pre-wrap;&quot;&gt;The statements made on this appraisal are true &amp;amp; accurate to the best of my knowledge. I understand and agree that this appraisal is approximate only &amp;amp; subject to a visual &amp;amp; running inspection or any adjustment due to any false criteria as described above on value by Legend Boats (Duhamel and Dewar Inc.) as being absolute and just &amp;amp; must be agreed to by both parties. Customer is responsible to pay for any repairs and the remedy any issues or problems not described above or a new trade value would have to be determined between both parties.&amp;nbsp;&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;</fieldText>
@@ -1974,7 +2723,7 @@
         <name>Final_Appraisal_Screen</name>
         <label>Final Appraisal Screen</label>
         <locationX>1542</locationX>
-        <locationY>381</locationY>
+        <locationY>465</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
@@ -2022,6 +2771,14 @@
             <scale>0</scale>
         </fields>
         <fields>
+            <name>Lien_on_Trade</name>
+            <dataType>Currency</dataType>
+            <fieldText>Lien on Trade</fieldText>
+            <fieldType>InputField</fieldType>
+            <isRequired>false</isRequired>
+            <scale>0</scale>
+        </fields>
+        <fields>
             <name>Internet_Search_Value</name>
             <dataType>Currency</dataType>
             <fieldText>Internet Search Value</fieldText>
@@ -2036,7 +2793,7 @@
         <name>Motor_Screen_1</name>
         <label>Motor Screen 1</label>
         <locationX>1069</locationX>
-        <locationY>381</locationY>
+        <locationY>465</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
@@ -2115,7 +2872,7 @@
         <name>Motor_Screen_2</name>
         <label>Motor Screen 2</label>
         <locationX>1186</locationX>
-        <locationY>381</locationY>
+        <locationY>465</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
@@ -2203,10 +2960,26 @@
         <showHeader>true</showHeader>
     </screens>
     <screens>
+        <name>Trade_Already_Exists</name>
+        <label>Trade Already Exists</label>
+        <locationX>2099</locationX>
+        <locationY>637</locationY>
+        <allowBack>false</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>false</allowPause>
+        <fields>
+            <name>Trade_Exists_Error</name>
+            <fieldText>&lt;p&gt;&lt;b style=&quot;color: rgb(244, 0, 0); --darkmode-inline-color:#db3c3c;&quot; data-darkmode-inline-color=&quot;&quot;&gt;Error adding Trade in Items to this Opportunity. Trade-In Items appear to have already been added manually in the Boat Configurator. &lt;/b&gt;&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;&lt;b style=&quot;color: rgb(2, 255, 44);&quot;&gt;Appraisal Successfully Created&lt;/b&gt;&lt;/p&gt;</fieldText>
+            <fieldType>DisplayText</fieldType>
+        </fields>
+        <showFooter>true</showFooter>
+        <showHeader>true</showHeader>
+    </screens>
+    <screens>
         <name>Trailer_Screen_1</name>
         <label>Trailer Screen 1</label>
         <locationX>1300</locationX>
-        <locationY>381</locationY>
+        <locationY>465</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
@@ -2263,7 +3036,7 @@
         <name>Trailer_Screen_2</name>
         <label>Trailer Screen 2</label>
         <locationX>1417</locationX>
-        <locationY>381</locationY>
+        <locationY>465</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
@@ -2334,13 +3107,7 @@
         <showFooter>true</showFooter>
         <showHeader>true</showHeader>
     </screens>
-    <start>
-        <locationX>50</locationX>
-        <locationY>383</locationY>
-        <connector>
-            <targetReference>getOppData</targetReference>
-        </connector>
-    </start>
+    <startElementReference>getOppData</startElementReference>
     <status>Active</status>
     <variables>
         <name>accountId</name>
@@ -2375,6 +3142,34 @@
         <dataType>String</dataType>
         <isCollection>false</isCollection>
         <isInput>true</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>TradeInLineBoatId</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>TradeInLineMotorId</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>TradeInLineTrailerId</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>tradeRecordId</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
         <isOutput>false</isOutput>
     </variables>
 </Flow>
