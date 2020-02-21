@@ -91,6 +91,17 @@
         <protected>false</protected>
     </fieldUpdates>
     <fieldUpdates>
+        <fullName>Update_Support_Case_Status_to_Accepted</fullName>
+        <description>Updates the Customer Support Case status to Accepted when a user accepts the case from the queue</description>
+        <field>Status</field>
+        <literalValue>Accepted</literalValue>
+        <name>Update Support Case Status to Accepted</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+        <reevaluateOnChange>true</reevaluateOnChange>
+    </fieldUpdates>
+    <fieldUpdates>
         <fullName>Warranty_ERP_to_Closed</fullName>
         <description>Will update the ERP status to Closed when a Warranty claim is Denied</description>
         <field>Status</field>
@@ -100,6 +111,23 @@
         <operation>Literal</operation>
         <protected>false</protected>
     </fieldUpdates>
+    <rules>
+        <fullName>Customer Support Case Accepted from Queue</fullName>
+        <actions>
+            <name>Update_Support_Case_Status_to_Accepted</name>
+            <type>FieldUpdate</type>
+        </actions>
+        <active>true</active>
+        <description>Triggers a status field update when a Customer Support Case is accepted from the queue</description>
+        <formula>AND(
+ISPICKVAL(PRIORVALUE(Status),&quot;New&quot;),
+RecordType.Name = &quot;Customer Community&quot;,
+ISCHANGED(OwnerId),
+LEFT(PRIORVALUE(OwnerId), 3) = &#39;00G&#39;,
+LEFT(OwnerId, 3) = &#39;005&#39;
+)</formula>
+        <triggerType>onAllChanges</triggerType>
+    </rules>
     <rules>
         <fullName>New Part Inquiry Case from Community</fullName>
         <actions>
