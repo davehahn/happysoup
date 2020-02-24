@@ -23,16 +23,6 @@
             <template>Customer_Follow_Up_Templates/Auto_Part_Inquiry_New_Case_Created</template>
         </ruleEntry>
         <ruleEntry>
-            <assignedTo>Development</assignedTo>
-            <assignedToType>Queue</assignedToType>
-            <criteriaItems>
-                <field>Case.RecordTypeId</field>
-                <operation>equals</operation>
-                <value>Salesforce</value>
-            </criteriaItems>
-            <template>Case_Templates/Support_Case</template>
-        </ruleEntry>
-        <ruleEntry>
             <assignedTo>Report_Request</assignedTo>
             <assignedToType>Queue</assignedToType>
             <criteriaItems>
@@ -113,20 +103,6 @@
                 <operation>equals</operation>
                 <value>Translation</value>
             </criteriaItems>
-        </ruleEntry>
-    </assignmentRule>
-    <assignmentRule>
-        <fullName>New Salesforce Case</fullName>
-        <active>false</active>
-        <ruleEntry>
-            <assignedTo>bfram@legendboats.com</assignedTo>
-            <assignedToType>User</assignedToType>
-            <criteriaItems>
-                <field>Case.RecordTypeId</field>
-                <operation>equals</operation>
-                <value>Salesforce</value>
-            </criteriaItems>
-            <template>Case_Templates/Salesforce_Issue</template>
         </ruleEntry>
     </assignmentRule>
 </AssignmentRules>
