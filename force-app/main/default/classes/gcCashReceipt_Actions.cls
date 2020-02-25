@@ -99,7 +99,9 @@ public with sharing class gcCashReceipt_Actions {
         	/// Create a new BILL
 		 	Id idAccount = (new list<Id>(setIdAccounts))[0];
 		 	AcctSeed__Billing__c newBill = new AcctSeed__Billing__c(
-		 			AcctSeed__Customer__c = idAccount	
+		 			AcctSeed__Customer__c = idAccount/*,
+					AcctSeed__Billing_Format__c = 'a0e1D0000016neKQAQ',
+					AcctSeed__Ledger__c = 'a121D000001muWMQAY'*/
 		 		);
 
 		 	insert newBill;
@@ -109,7 +111,8 @@ public with sharing class gcCashReceipt_Actions {
 		 	AcctSeed__Account_Payable__c accountPayable = new AcctSeed__Account_Payable__c(
 		 															AcctSeed__Vendor__c = idAccount,
 		 															AcctSeed__Payee_Reference__c = payeeRef,
-		 															AcctSeed__Date__c = Date.today()
+		 															AcctSeed__Date__c = Date.today()/*,
+																	AcctSeed__Ledger__c = 'a121D000001muWMQAY'*/
 		 														);
 		 	insert accountPayable;
 
@@ -117,6 +120,7 @@ public with sharing class gcCashReceipt_Actions {
 		 	List<AcctSeed__Billing_Line__c> listBLines = new List<AcctSeed__Billing_Line__c>();
 		 	List<AcctSeed__Account_Payable_Line__c> listAPLines = new List<AcctSeed__Account_Payable_Line__c>();
 		 	List<AcctSeed__Billing_Cash_Receipt__c> listBCM = new List<AcctSeed__Billing_Cash_Receipt__c>();
+			Decimal refundAmount = 0;
 		 	for(AcctSeed__Cash_Receipt__c cr : listCashReceipts)
 		 	{
 		 		/// Create a Billing Line for Each Cash Receipt
@@ -141,6 +145,7 @@ public with sharing class gcCashReceipt_Actions {
 				listBCM.add(bcm);
 
 				/// Create an Account Payable Line for Each Cash Receipt
+				refundAmount += cr.AcctSeed__Balance__c.setScale(6);
 		 		AcctSeed__Account_Payable_Line__c payLine = new AcctSeed__Account_Payable_Line__c(
 		 															AcctSeed__Account_Payable__c = accountPayable.Id, 
 		 															AcctSeed__Amount__c = cr.AcctSeed__Balance__c.setScale(6), 
@@ -167,8 +172,83 @@ public with sharing class gcCashReceipt_Actions {
 		 	if(!listAPLines.isEmpty())
 		 		insert listAPLines;
 
+			AcctSeed.AccountPayablePostService.postAccountPayables(new List<AcctSeed__Account_Payable__c>{accountPayable});
+			////// Added Code for disbursement
+			Decimal startingCheckNumber = null;
+			Boolean noChequeRequired = false;
+			String paymentMethod = 'Check';
+			if(!paymentMethod.equals('Check')){
+				startingCheckNumber = 0;
+				noChequeRequired = true;
+			}
+
+			if(startingCheckNumber == null && !noChequeRequired)
+			{
+				startingCheckNumber = 0;
+				for(AcctSeed__Cash_Disbursement__c cd : [
+					SELECT Id, AcctSeed__Check_Number__c
+					FROM AcctSeed__Cash_Disbursement__c
+					WHERE AcctSeed__Check_Number__c != null
+					ORDER BY AcctSeed__Check_Number__c DESC
+					LIMIT 1])
+				{
+					startingCheckNumber = cd.AcctSeed__Check_Number__c;
+				}
+				startingCheckNumber += 1;
+			}
+			AcctSeed__Cash_Disbursement_Batch__c cashDisbursementBatch = new AcctSeed__Cash_Disbursement_Batch__c(
+				AcctSeed__Starting_Check_Number__c = startingCheckNumber,
+				Name = 'Refund Batch' + String.valueOf(System.now())
+			);
+			insert cashDisbursementBatch;
+
+			Id idGlMerchantDebitCredit = gcConstants.idGlMerchantDebitCredit;
+			Id idGlCashFloat = gcConstants.idGlCashFloat;
+			Id idGlRBCCDN = gcConstants.idGlRBCCDN;
+			Id idGlBank = idGlRBCCDN;
+
+			/*if(paymentMethod == 'Credit Card'
+				|| paymentMethod == 'Visa'
+				|| paymentMethod == 'Debit')
+				idGlBank = idGlMerchantDebitCredit;
+			else if(paymentMethod == 'Cheque'
+				|| paymentMethod == 'Check'
+				|| paymentMethod == 'Draft')
+				idGlBank = idGlRBCCDN;
+			else if(paymentMethod == 'Cash')
+				idGlBank = idGlCashFloat;
+			else
+				idGlBank = idGlRBCCDN;*/
+			AcctSeed__Cash_Disbursement__c disbursement = new AcctSeed__Cash_Disbursement__c(
+				AcctSeed__Cash_Disbursement_Batch__c = cashDisbursementBatch.Id,
+				AcctSeed__Disbursement_Date__c = Date.today(),
+				AcctSeed__Type__c = paymentMethod,
+				AcctSeed__Amount__c = refundAmount,
+				AcctSeed__Source__c = 'Account Payable',
+				AcctSeed__Bank_Account__c = idGlBank,//cr.AcctSeed__Bank_Account__c,
+				AcctSeed__Vendor__c = idAccount,
+				AcctSeed__Status__c = 'Approved',
+				AcctSeed__Reference__c = idAccount + '- refund',
+				AcctSeed__Debit_GL_Account__c = gcConstants.idGlAPayable,
+				AcctSeed__Payment_Status__c = 'Paid'/*,
+				AcctSeed__Ledger__c = 'a121D000001muWMQAY'*/
+			);
+
+			insert disbursement;
+
+			AcctSeed.PostResult[] postResults = AcctSeed.CashDisbursementPostService.postCashDisbursements(new List<AcctSeed__Cash_Disbursement__c>{disbursement});
+
+			AcctSeed__AP_Disbursement__c apdisbursement = new AcctSeed__AP_Disbursement__c(
+				AcctSeed__Cash_Disbursement__c = disbursement.Id,
+				AcctSeed__Paid_Amount__c = disbursement.AcctSeed__Amount__c,
+				AcctSeed__Account_Payable__c = accountPayable.Id
+			);
+			insert apdisbursement;
+			/////////////////
+
 			String msg = 'Billing has been created and a total Cash Receipt Balance of $'+String.valueOf(crTotal.setScale(2))+' has been applied. <a target="_blank" href="/'+newBill.Id+'">Click here to view Bill detail.</a>';
 					msg += '<br />Account Payable has been created. <a target="_blank" href="/'+accountPayable.Id+'">Click here to view AP detail.</a>';
+					msg += '<br />Cash Disbursement has been created. <a target="_blank" href="/'+disbursement.Id+'">Click here to view CD detail.</a>';
 		 	ApexPages.addMessage(new ApexPages.message(ApexPages.Severity.CONFIRM, msg));
 		 	return;
 		}catch(Exception e){

@@ -428,7 +428,9 @@ public without sharing class arAccountStatement {
 					Tax_is_Harmonized__c = false,
 					Tax_Rate_Federal__c = 0,
 					Tax_Rate_Provincial__c = 0,
-					Tax_Rate_Retail__c = 0
+					Tax_Rate_Retail__c = 0/*,
+					AcctSeed__Billing_Format__c = 'a0e1D0000016neKQAQ',
+					AcctSeed__Ledger__c = 'a121D000001muWMQAY'*/
 				);
 				insert bill;
 
@@ -442,6 +444,7 @@ public without sharing class arAccountStatement {
 				);
 				insert bl;
 				AcctSeed.BillingPostService.postBillings(new List<AcctSeed__Billing__c>{bill});
+				Id idAccountingPeriod = [SELECT AcctSeed__Accounting_Period__c FROM AcctSeed__Billing__c WHERE Id =:bill.Id][0].AcctSeed__Accounting_Period__c;
 				List<AcctSeed__Billing_Cash_Receipt__c> listBCR = new List<AcctSeed__Billing_Cash_Receipt__c>();
 				for(AcctSeed__Cash_Receipt__c cr : 
 					[SELECT Id,
@@ -480,6 +483,7 @@ public without sharing class arAccountStatement {
 					}
 
 					AcctSeed__Billing_Cash_Receipt__c bcr = new AcctSeed__Billing_Cash_Receipt__c(
+						AcctSeed__Accounting_Period__c = idAccountingPeriod,
 						AcctSeed__Applied_Amount__c = currentAmount,
 						AcctSeed__Billing__c = bill.Id,
 						AcctSeed__Cash_Receipt__c = cr.Id
@@ -492,7 +496,6 @@ public without sharing class arAccountStatement {
 				}
 				/// After processing if there are still balance left then
 				if(refundAmountLeft > 0){
-					Id idAccountingPeriod = [SELECT AcctSeed__Accounting_Period__c FROM AcctSeed__Billing__c WHERE Id =:bill.Id][0].AcctSeed__Accounting_Period__c;
 					List<AcctSeed__Billing_Credit_Memo__c> listBCM = new List<AcctSeed__Billing_Credit_Memo__c>();
 
 					for(AcctSeed__Billing__c negBill : 
@@ -540,7 +543,8 @@ public without sharing class arAccountStatement {
 																		Tax_Rate_Federal__c = 0,
 																		Tax_Rate_Provincial__c = 0,
 																		Tax_Rate_Retail__c = 0,
-																		AcctSeed__Date__c = Date.today()
+																		AcctSeed__Date__c = Date.today()/*,
+																		AcctSeed__Ledger__c = 'a121D000001muWMQAY'*/
 																	);
 				insert accountPayable;
 
@@ -618,7 +622,8 @@ public without sharing class arAccountStatement {
 					AcctSeed__Status__c = 'Approved',
 					AcctSeed__Reference__c = 'refund_'+ System.now().format(),
 					AcctSeed__Debit_GL_Account__c = gcConstants.idGlAPayable,
-					AcctSeed__Payment_Status__c = 'Paid'
+					AcctSeed__Payment_Status__c = 'Paid'/*,
+					AcctSeed__Ledger__c = 'a121D000001muWMQAY'*/
 				);
 
 				insert disbursement;
