@@ -11,5 +11,36 @@
                 <operation>notEqual</operation>
             </criteriaItems>
         </ruleEntry>
+        <ruleEntry>
+            <assignedTo>Whitefish_Leads</assignedTo>
+            <assignedToType>Queue</assignedToType>
+            <formula>CONTAINS(Closest_Partner__r.Name, &quot;Legend Boats Whitefish&quot;)</formula>
+        </ruleEntry>
+        <ruleEntry>
+            <assignedTo>Barrie_Leads</assignedTo>
+            <assignedToType>Queue</assignedToType>
+            <formula>CONTAINS(Closest_Partner__r.Name, &quot;Legend Boats Barrie&quot;)</formula>
+        </ruleEntry>
+        <ruleEntry>
+            <assignedTo>Montreal_Leads</assignedTo>
+            <assignedToType>Queue</assignedToType>
+            <formula>CONTAINS(Closest_Partner__r.Name, &quot;Legend Boats Montreal&quot;)</formula>
+        </ruleEntry>
+        <ruleEntry>
+            <assignedTo>jdavis@legendboats.com</assignedTo>
+            <assignedToType>User</assignedToType>
+            <formula>AND(
+CONTAINS(Closest_Partner__r.Owner.FirstName, &quot;Jesse&quot;),
+CONTAINS(Closest_Partner__r.Owner.LastName, &quot;Davis&quot;)
+)</formula>
+        </ruleEntry>
+        <ruleEntry>
+            <assignedTo>rbeaucage@legendboats.com</assignedTo>
+            <assignedToType>User</assignedToType>
+            <formula>AND(
+CONTAINS(Closest_Partner__r.Owner.FirstName, &quot;Robert&quot;),
+CONTAINS(Closest_Partner__r.Owner.LastName, &quot;Beaucage&quot;)
+)</formula>
+        </ruleEntry>
     </assignmentRule>
 </AssignmentRules>
