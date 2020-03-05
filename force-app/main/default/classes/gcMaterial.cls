@@ -638,6 +638,7 @@ global without sharing class gcMaterial{
 	{
 		Set<Id> allErpIds = new Set<Id>();
 		Id partnerId = gcConstants.idRtProjectPartnerBoatSale;
+		Id serviceId = gcConstants.idRtProjectService;
 		for( String key : erpIdMap.keySet() )
 		{
 			allErpIds.addAll( erpIdMap.get(key) );
@@ -650,7 +651,8 @@ global without sharing class gcMaterial{
 			         											FROM AcctSeed__Project__c
 			         											WHERE Id IN :allErpIds] )
 		{
-			if( erpIdMap.get('unSet').contains(erp.Id) )
+			if( erpIdMap.get('unSet').contains(erp.Id) &&
+					erp.RecordTypeId != serviceId )
 			{
 				erp.Stage__c = 'Tagging Pending';
 				erps.add(erp);
