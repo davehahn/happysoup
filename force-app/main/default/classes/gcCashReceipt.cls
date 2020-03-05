@@ -135,6 +135,8 @@ public without sharing class gcCashReceipt {
 			cr.AcctSeed__Bank_Account__c = gcConstants.idGlGiftCards;
 		else if(paymentMethod == 'Legend Bucks')
 			cr.AcctSeed__Bank_Account__c = gcConstants.idGlLegendBucks;
+		else if(paymentMethod == 'Online Store')
+			cr.AcctSeed__Bank_Account__c = gcConstants.idGlMerchantOnline;
 		else
 			cr.AcctSeed__Bank_Account__c = gcConstants.idGlRBCCDN;
 	}
