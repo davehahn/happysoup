@@ -1,0 +1,42 @@
+<apex:page StandardController="Boat_Appraisal__c" Extensions="BoatAppraisal_Ext"
+           renderAs="pdf">
+           
+           <apex:stylesheet value="{!URLFOR($Resource.LegendPDF,'css/invoicePDF.min.css')}" />
+<apex:stylesheet value="{!URLFOR($Resource.LegendPDF,'css/invoice_page_size.min.css')}" />
+           
+    <apex:pageBlock title="Legend Boats - Boat Appraisal">
+        <apex:pageBlockSection title="Boat" columns="2">
+                 <apex:outputfield value="{!Boat_Appraisal__c.Name}"/>
+                <apex:outputfield value="{!Boat_Appraisal__c.Name}"/>
+                <apex:outputfield value="{!Boat_Appraisal__c.Name}"/>
+                <apex:outputfield value="{!Boat_Appraisal__c.Name}"/>
+        </apex:pageBlockSection>
+        
+        <apex:pageBlockSection title="Motor" columns="2">
+                 <apex:outputfield value="{!Boat_Appraisal__c.Name}"/>
+                <apex:outputfield value="{!Boat_Appraisal__c.Name}"/>
+                <apex:outputfield value="{!Boat_Appraisal__c.Name}"/>
+                <apex:outputfield value="{!Boat_Appraisal__c.Name}"/>
+        </apex:pageBlockSection>
+        
+        <apex:pageBlockSection title="Trailer" columns="2">
+                 <apex:outputfield value="{!Boat_Appraisal__c.Name}"/>
+                <apex:outputfield value="{!Boat_Appraisal__c.Name}"/>
+                <apex:outputfield value="{!Boat_Appraisal__c.Name}"/>
+                <apex:outputfield value="{!Boat_Appraisal__c.Name}"/>
+        </apex:pageBlockSection>
+        
+        <apex:pageBlockSection title="Valuation" columns="2">
+                 <apex:outputfield value="{!Boat_Appraisal__c.Name}"/>
+                <apex:outputfield value="{!Boat_Appraisal__c.Name}"/>
+                <apex:outputfield value="{!Boat_Appraisal__c.Name}"/>
+                <apex:outputfield value="{!Boat_Appraisal__c.Name}"/>
+        </apex:pageBlockSection>
+        
+        <apex:pageBlockSection title="Signature" columns="2">
+            <apex:outputPanel rendered="{! NOT( ISNULL(signatureId)) }">
+                <apex:image url="/servlet/servlet.FileDownload?file={!signatureId}" width="350" height="150" />
+            </apex:outputPanel>
+        </apex:pageBlockSection>
+    </apex:pageBlock>
+</apex:page>
