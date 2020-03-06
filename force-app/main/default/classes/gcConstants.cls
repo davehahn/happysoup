@@ -515,6 +515,15 @@ public without sharing class gcConstants {
 		set;
 	}
 
+	public static Id idGlMerchantOnline{
+		get{
+			if(idGlMerchantOnline == null) fetchGlAccounts();
+			if(idGlMerchantOnline == null) throw new gcException('A GL Account with Uniquefier [MerchantOnline] does not exist.');
+			return idGlMerchantOnline;
+		}
+		set;
+	}
+
 	private static void fetchGlAccounts()
 	{
 		List<String> listUniquefier = new list<String>{
@@ -547,7 +556,8 @@ public without sharing class gcConstants {
 			'InternalWarrantyClearing',
 			'LegendBucks',
 			'SalesBoats',
-			'PrepaidDeposit'
+			'PrepaidDeposit',
+			'MerchantOnline'
 		};
 
 		for(AcctSeed__GL_Account__c gl :
@@ -615,6 +625,8 @@ public without sharing class gcConstants {
 				idGlProductRevenue = gl.Id;
 			else if(gl.Uniquefier__c == 'PrepaidDeposit')
 				idGlPrepaidDeposit = gl.Id;
+			else if(gl.Uniquefier__c == 'MerchantOnline')
+				idGlMerchantOnline = gl.Id;
 		}
 	}
 
