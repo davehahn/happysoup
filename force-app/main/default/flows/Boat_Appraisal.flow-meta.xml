@@ -1247,7 +1247,7 @@
         <locationY>465</locationY>
         <assignRecordIdToReference>appraisalId</assignRecordIdToReference>
         <connector>
-            <targetReference>Capture_Signature</targetReference>
+            <targetReference>Upload_Photos</targetReference>
         </connector>
         <inputAssignments>
             <field>Aft_Side_Back_Curtains__c</field>
@@ -1313,6 +1313,12 @@
             <field>Boat_Year__c</field>
             <value>
                 <elementReference>Boat_Year</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Comparable_New__c</field>
+            <value>
+                <elementReference>Comparable_New</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -1565,6 +1571,24 @@
             <field>Number_of_Seats__c</field>
             <value>
                 <elementReference>Number_of_Seats</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Online_Listing_URL_1__c</field>
+            <value>
+                <elementReference>Online_Listing_URL_1</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Online_Listing_URL_2__c</field>
+            <value>
+                <elementReference>Online_Listing_URL_2</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Online_Listing_URL_3__c</field>
+            <value>
+                <elementReference>Online_Listing_URL_3</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -1897,7 +1921,7 @@
         <name>Create_Trade_in_Item_Motor_0_0</name>
         <label>Create Trade in Item Motor</label>
         <locationX>3148</locationX>
-        <locationY>326</locationY>
+        <locationY>325</locationY>
         <assignRecordIdToReference>TradeInLineMotorId</assignRecordIdToReference>
         <inputAssignments>
             <field>Make__c</field>
@@ -2040,7 +2064,7 @@
         <name>Create_Trade_in_Item_Trailer_0_0</name>
         <label>Create Trade in Item Trailer</label>
         <locationX>3164</locationX>
-        <locationY>505</locationY>
+        <locationY>504</locationY>
         <assignRecordIdToReference>TradeInLineTrailerId</assignRecordIdToReference>
         <inputAssignments>
             <field>Make__c</field>
@@ -2132,7 +2156,7 @@
     <recordLookups>
         <name>Get_Trade_Record</name>
         <label>Get Trade Record</label>
-        <locationX>1944</locationX>
+        <locationX>1993</locationX>
         <locationY>465</locationY>
         <assignNullValuesIfNoRecordsFound>true</assignNullValuesIfNoRecordsFound>
         <connector>
@@ -2154,8 +2178,8 @@
     <recordLookups>
         <name>getAccData</name>
         <label>getAccData</label>
-        <locationX>404</locationX>
-        <locationY>660</locationY>
+        <locationX>405</locationX>
+        <locationY>658</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
             <targetReference>Appraisal_Item_Selection</targetReference>
@@ -2685,7 +2709,7 @@
     <screens>
         <name>Capture_Signature</name>
         <label>Capture Signature</label>
-        <locationX>1802</locationX>
+        <locationX>1878</locationX>
         <locationY>465</locationY>
         <allowBack>false</allowBack>
         <allowFinish>true</allowFinish>
@@ -2763,9 +2787,58 @@
             <scale>0</scale>
         </fields>
         <fields>
-            <name>Estimated_Trade_Value_Before_Inspection</name>
+            <name>Online_Listing_URL_1</name>
+            <dataType>String</dataType>
+            <fieldText>Online Listing URL 1</fieldText>
+            <fieldType>InputField</fieldType>
+            <isRequired>false</isRequired>
+        </fields>
+        <fields>
+            <name>Online_Listing_URL_2</name>
+            <dataType>String</dataType>
+            <fieldText>Online Listing URL 2</fieldText>
+            <fieldType>InputField</fieldType>
+            <isRequired>false</isRequired>
+            <visibilityRule>
+                <conditionLogic>and</conditionLogic>
+                <conditions>
+                    <leftValueReference>Online_Listing_URL_1</leftValueReference>
+                    <operator>IsNull</operator>
+                    <rightValue>
+                        <booleanValue>false</booleanValue>
+                    </rightValue>
+                </conditions>
+            </visibilityRule>
+        </fields>
+        <fields>
+            <name>Online_Listing_URL_3</name>
+            <dataType>String</dataType>
+            <fieldText>Online Listing URL 3</fieldText>
+            <fieldType>InputField</fieldType>
+            <isRequired>false</isRequired>
+            <visibilityRule>
+                <conditionLogic>and</conditionLogic>
+                <conditions>
+                    <leftValueReference>Online_Listing_URL_2</leftValueReference>
+                    <operator>IsNull</operator>
+                    <rightValue>
+                        <booleanValue>false</booleanValue>
+                    </rightValue>
+                </conditions>
+            </visibilityRule>
+        </fields>
+        <fields>
+            <name>Internet_Search_Value</name>
             <dataType>Currency</dataType>
-            <fieldText>Estimated Value of Trade In before visual and running inspection</fieldText>
+            <fieldText>Internet Search Value</fieldText>
+            <fieldType>InputField</fieldType>
+            <isRequired>false</isRequired>
+            <scale>0</scale>
+        </fields>
+        <fields>
+            <name>Comparable_New</name>
+            <dataType>Currency</dataType>
+            <fieldText>Comparable New</fieldText>
             <fieldType>InputField</fieldType>
             <isRequired>false</isRequired>
             <scale>0</scale>
@@ -2779,9 +2852,9 @@
             <scale>0</scale>
         </fields>
         <fields>
-            <name>Internet_Search_Value</name>
+            <name>Estimated_Trade_Value_Before_Inspection</name>
             <dataType>Currency</dataType>
-            <fieldText>Internet Search Value</fieldText>
+            <fieldText>Estimated Value of Trade In before visual and running inspection</fieldText>
             <fieldType>InputField</fieldType>
             <isRequired>false</isRequired>
             <scale>0</scale>
@@ -3102,6 +3175,44 @@
             <dataType>String</dataType>
             <fieldText>Galvanized Trailer</fieldText>
             <fieldType>DropdownBox</fieldType>
+            <isRequired>true</isRequired>
+        </fields>
+        <showFooter>true</showFooter>
+        <showHeader>true</showHeader>
+    </screens>
+    <screens>
+        <name>Upload_Photos</name>
+        <label>Upload Photos</label>
+        <locationX>1778</locationX>
+        <locationY>465</locationY>
+        <allowBack>true</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>true</allowPause>
+        <connector>
+            <targetReference>Capture_Signature</targetReference>
+        </connector>
+        <fields>
+            <name>Upload_Package_Photos</name>
+            <extensionName>forceContent:fileUpload</extensionName>
+            <fieldType>ComponentInstance</fieldType>
+            <inputParameters>
+                <name>label</name>
+                <value>
+                    <stringValue>Upload Boat Package Photos</stringValue>
+                </value>
+            </inputParameters>
+            <inputParameters>
+                <name>recordId</name>
+                <value>
+                    <elementReference>appraisalId</elementReference>
+                </value>
+            </inputParameters>
+            <inputParameters>
+                <name>multiple</name>
+                <value>
+                    <booleanValue>true</booleanValue>
+                </value>
+            </inputParameters>
             <isRequired>true</isRequired>
         </fields>
         <showFooter>true</showFooter>
