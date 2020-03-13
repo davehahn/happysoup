@@ -6,31 +6,87 @@
            
     <apex:pageBlock title="Legend Boats - Boat Appraisal">
         <apex:pageBlockSection title="Boat" columns="2">
-                 <apex:outputfield value="{!Boat_Appraisal__c.Name}"/>
-                <apex:outputfield value="{!Boat_Appraisal__c.Name}"/>
-                <apex:outputfield value="{!Boat_Appraisal__c.Name}"/>
-                <apex:outputfield value="{!Boat_Appraisal__c.Name}"/>
+                <apex:outputfield value="{!Boat_Appraisal__c.Boat_Year__c}"/>
+                <apex:outputfield value="{!Boat_Appraisal__c.Is_Fiberglass_Blistering__c}"/>
+                <apex:outputfield value="{!Boat_Appraisal__c.Boat_Make__c}"/>
+                <apex:outputfield value="{!Boat_Appraisal__c.Condition_of_Paint__c}"/>                
+                <apex:outputfield value="{!Boat_Appraisal__c.Boat_Model__c}"/>
+                <apex:outputfield value="{!Boat_Appraisal__c.Condition_of_Decals__c}"/>
+                <apex:outputfield value="{!Boat_Appraisal__c.Boat_Serial_Number__c}"/>
+                <apex:outputfield value="{!Boat_Appraisal__c.Does_Boat_Have_A_Floor__c}"/>                
+                <apex:outputfield value="{!Boat_Appraisal__c.Boat_Length__c}"/>
+                <apex:outputfield value="{!Boat_Appraisal__c.Floor_Material__c}"/>
+                <apex:outputfield value="{!Boat_Appraisal__c.Boat_Material__c}"/>
+                <apex:outputfield value="{!Boat_Appraisal__c.Condition_of_Floor__c}"/>                
+                <apex:outputfield value="{!Boat_Appraisal__c.Does_Boat_Leak__c}"/>
+                <apex:outputfield value="{!Boat_Appraisal__c.Condition_of_Material__c}"/>
+                <apex:outputfield value="{!Boat_Appraisal__c.Any_Hull_Damage__c}"/>
+                <apex:outputfield value="{!Boat_Appraisal__c.Livewell_Working__c}"/>                
+                <apex:outputfield value="{!Boat_Appraisal__c.Windshield_screen__c}"/>
+                <apex:outputfield value="{!Boat_Appraisal__c.Condition_of_Material__c}"/>
+                <apex:outputfield value="{!Boat_Appraisal__c.Bilge_Pump_Working__c}"/>
+                <apex:outputfield value="{!Boat_Appraisal__c.Condition_of_Windshield__c}"/>                
+                <apex:outputfield value="{!Boat_Appraisal__c.Make_of_Fishfinder__c}"/>
+                <apex:outputfield value="{!Boat_Appraisal__c.Travel_Cover__c}"/>
+                <apex:outputfield value="{!Boat_Appraisal__c.Does_Fishfinder_Work__c}"/>
+                <apex:outputfield value="{!Boat_Appraisal__c.Condition_of_Cover__c}"/>               
+                <apex:outputfield value="{!Boat_Appraisal__c.Number_of_Seats__c}"/>
+                <apex:outputfield value="{!Boat_Appraisal__c.Condition_of_Top__c}"/>
+                <apex:outputfield value="{!Boat_Appraisal__c.Condition_of_Seats__c}"/>
+                <apex:outputfield value="{!Boat_Appraisal__c.Condition_of_Curtains__c}"/>
+                <apex:outputfield value="{!Boat_Appraisal__c.Condition_of_Trolling_Motor__c}"/>
+                <apex:outputfield value="{!Boat_Appraisal__c.Aft_Side_Back_Curtains__c}"/>
+                <apex:outputfield value="{!Boat_Appraisal__c.Trolling_Motor_Make__c}"/>
+                <apex:outputfield value="{!Boat_Appraisal__c.Problems_with_Current_Boat_Package__c}"/>  
+                <apex:outputfield value="{!Boat_Appraisal__c.Trolling_Motor_Model__c}"/>
+                <apex:outputfield value="{!Boat_Appraisal__c.Boat_Package_Problem_Description__c}"/>
         </apex:pageBlockSection>
         
         <apex:pageBlockSection title="Motor" columns="2">
-                 <apex:outputfield value="{!Boat_Appraisal__c.Name}"/>
-                <apex:outputfield value="{!Boat_Appraisal__c.Name}"/>
-                <apex:outputfield value="{!Boat_Appraisal__c.Name}"/>
-                <apex:outputfield value="{!Boat_Appraisal__c.Name}"/>
+                <apex:outputfield value="{!Boat_Appraisal__c.Motor_Year__c}"/>
+                <apex:outputfield value="{!Boat_Appraisal__c.Extended_Warranty__c}"/>
+                <apex:outputfield value="{!Boat_Appraisal__c.Motor_Make__c}"/>
+                <apex:outputfield value="{!Boat_Appraisal__c.Electric_Start__c}"/>               
+                <apex:outputfield value="{!Boat_Appraisal__c.Motor_Model__c}"/>
+                <apex:outputfield value="{!Boat_Appraisal__c.Battery__c}"/>
+                <apex:outputfield value="{!Boat_Appraisal__c.Motor_Serial_Number__c}"/>
+                <apex:outputfield value="{!Boat_Appraisal__c.Last_Maintenance_Date__c}"/>               
+                <apex:outputfield value="{!Boat_Appraisal__c.Horsepower__c}"/>
+                <apex:outputfield value="{!Boat_Appraisal__c.Type_of_Prop__c}"/>
+                <apex:outputfield value="{!Boat_Appraisal__c.Engine_Stroke_Type__c}"/>
+                <apex:outputfield value="{!Boat_Appraisal__c.Condition_of_Prop__c}"/>           
+                <apex:outputfield value="{!Boat_Appraisal__c.Does_Motor_Run_Well__c}"/>
+                <apex:outputfield value="{!Boat_Appraisal__c.Notes_on_Motor__c}"/>
+                <apex:outputfield value="{!Boat_Appraisal__c.Power_Tilt_Trim__c}"/>
+                <apex:outputfield value="{!Boat_Appraisal__c.Does_Tilt_Trim_Work__c}"/>
         </apex:pageBlockSection>
         
         <apex:pageBlockSection title="Trailer" columns="2">
-                 <apex:outputfield value="{!Boat_Appraisal__c.Name}"/>
-                <apex:outputfield value="{!Boat_Appraisal__c.Name}"/>
-                <apex:outputfield value="{!Boat_Appraisal__c.Name}"/>
-                <apex:outputfield value="{!Boat_Appraisal__c.Name}"/>
+                <apex:outputfield value="{!Boat_Appraisal__c.Trailer_Year__c}"/>
+                <apex:outputfield value="{!Boat_Appraisal__c.Load_Guides__c}"/>
+                <apex:outputfield value="{!Boat_Appraisal__c.Trailer_Make__c}"/>
+                <apex:outputfield value="{!Boat_Appraisal__c.Swing_Tongue__c}"/>               
+                <apex:outputfield value="{!Boat_Appraisal__c.Trailer_Model__c}"/>
+                <apex:outputfield value="{!Boat_Appraisal__c.Jack_and_Dolly__c}"/>
+                <apex:outputfield value="{!Boat_Appraisal__c.Trailer_Capacity__c}"/>
+                <apex:outputfield value="{!Boat_Appraisal__c.Galvanized_Trailer__c}"/>               
+                <apex:outputfield value="{!Boat_Appraisal__c.Trailer_Type__c}"/>
+                <apex:outputfield value="{!Boat_Appraisal__c.Do_Lights_Work__c}"/>
+                <apex:outputfield value="{!Boat_Appraisal__c.Condition_of_Trailer__c}"/>
+                <apex:outputfield value="{!Boat_Appraisal__c.Condition_of_Tires__c}"/>
         </apex:pageBlockSection>
         
         <apex:pageBlockSection title="Valuation" columns="2">
-                 <apex:outputfield value="{!Boat_Appraisal__c.Name}"/>
+                <apex:outputfield value="{!Boat_Appraisal__c.Comparable_New__c}"/>
                 <apex:outputfield value="{!Boat_Appraisal__c.Name}"/>
-                <apex:outputfield value="{!Boat_Appraisal__c.Name}"/>
-                <apex:outputfield value="{!Boat_Appraisal__c.Name}"/>
+                <apex:outputfield value="{!Boat_Appraisal__c.Family_Friend_Boat_Value__c}"/>
+                <apex:outputfield value="{!Boat_Appraisal__c.Customer__c}"/>              
+                <apex:outputfield value="{!Boat_Appraisal__c.Internet_Search_Value__c}"/>
+                <apex:outputfield value="{!Boat_Appraisal__c.Related_to_Opportunity__c}"/>
+                <apex:outputfield value="{!Boat_Appraisal__c.Estimated_Trade_Value_Before_Inspection__c}"/>
+                <apex:outputfield value="{!Boat_Appraisal__c.Online_Listing_URL_1__c}"/>
+                <apex:outputfield value="{!Boat_Appraisal__c.Online_Listing_URL_2__c}"/>
+                <apex:outputfield value="{!Boat_Appraisal__c.Online_Listing_URL_3__c}"/>             
         </apex:pageBlockSection>
         
         <apex:pageBlockSection title="Signature" columns="2">
