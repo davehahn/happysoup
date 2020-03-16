@@ -360,6 +360,17 @@
         <template>Invitations_and_Individual_Follow_Ups/X90_Day_No_Contact_E_mail_Notification</template>
     </alerts>
     <alerts>
+        <fullName>Notify_BOM_to_Submit_Lien_Payout_Statement</fullName>
+        <description>Notify BOM to Submit Lien Payout Statement</description>
+        <protected>false</protected>
+        <recipients>
+            <field>Business_Manager__c</field>
+            <type>userLookup</type>
+        </recipients>
+        <senderType>DefaultWorkflowUser</senderType>
+        <template>To_Do_Notification_Templates/Notify_BOM_to_Submit_Lien_Payout_Statement</template>
+    </alerts>
+    <alerts>
         <fullName>Notify_Henry_of_New_Whitefish_Opportunity</fullName>
         <description>Notify Henry of New Whitefish Opportunity</description>
         <protected>false</protected>
