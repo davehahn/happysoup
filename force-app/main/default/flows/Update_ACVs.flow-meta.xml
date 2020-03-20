@@ -3,7 +3,7 @@
     <assignments>
         <name>Assign_Loop_Values</name>
         <label>Assign Loop Values</label>
-        <locationX>620</locationX>
+        <locationX>619</locationX>
         <locationY>235</locationY>
         <assignmentItems>
             <assignToReference>varDisplayTextLoop</assignToReference>
@@ -221,7 +221,7 @@
             <assignToReference>varDisplayTextSummary</assignToReference>
             <operator>Add</operator>
             <value>
-                <elementReference>Individual_IIM.AcctSeedERP__Unit_Cost__c</elementReference>
+                <elementReference>NewACV</elementReference>
             </value>
         </assignmentItems>
         <assignmentItems>
@@ -288,12 +288,12 @@
                 </rightValue>
             </conditions>
             <connector>
-                <targetReference>Assign_Summary_Values</targetReference>
+                <targetReference>Get_New_ACV_0</targetReference>
             </connector>
             <label>False</label>
         </rules>
     </decisions>
-    <description>Flow available on the Trade ERP record type to provide managers the ability to update the ACVs with ease.</description>
+    <description>Flow available on the Trade ERP record type to provide managers the ability to update the ACVs with ease. Bug Fixed.</description>
     <interviewLabel>Update ACVs {!$Flow.CurrentDateTime}</interviewLabel>
     <label>Update ACVs</label>
     <loops>
@@ -372,6 +372,28 @@
             <field>AcctSeedERP__Unit_Cost__c</field>
         </outputAssignments>
     </recordLookups>
+    <recordLookups>
+        <name>Get_New_ACV_0</name>
+        <label>Get New ACV</label>
+        <locationX>339</locationX>
+        <locationY>582</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Assign_Summary_Values</targetReference>
+        </connector>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>iimID</elementReference>
+            </value>
+        </filters>
+        <object>AcctSeedERP__Inbound_Inventory_Movement__c</object>
+        <outputAssignments>
+            <assignToReference>NewACV</assignToReference>
+            <field>AcctSeedERP__Unit_Cost__c</field>
+        </outputAssignments>
+    </recordLookups>
     <recordUpdates>
         <name>Update_New_ACV_Values</name>
         <label>Update New ACV Values</label>
@@ -390,7 +412,7 @@
         <inputAssignments>
             <field>AcctSeedERP__Unit_Cost__c</field>
             <value>
-                <elementReference>ACV</elementReference>
+                <elementReference>New_ACV_Value</elementReference>
             </value>
         </inputAssignments>
         <object>AcctSeedERP__Inbound_Inventory_Movement__c</object>
@@ -442,8 +464,8 @@
     <screens>
         <name>DisplaySummary</name>
         <label>DisplaySummary</label>
-        <locationX>376</locationX>
-        <locationY>50</locationY>
+        <locationX>377</locationX>
+        <locationY>58</locationY>
         <allowBack>false</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
