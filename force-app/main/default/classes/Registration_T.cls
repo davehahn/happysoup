@@ -37,11 +37,15 @@ private class Registration_T
     GMBLASERP__Serial_Number__c motorSerial = Factory_SerialNumber.insertFullSerial( 'Motor', 'Remote', 'TEST666MOTOR');
     AcctSeedERP__Warehouse__c wfWarehouse = wfWarehouse = [ SELECT Id, Name FROM AcctSeedERP__Warehouse__c
                                                              WHERE Name LIKE '%Whitefish%' LIMIT 1];
+    Boolean orig = gcProjectTask.ignoreCommissions;
+    gcProjectTask.ignoreCommissions = true;
+    gcProject.disableJob = true;
     AcctSeed__Project__c retailERP = Factory_ERPOrder.insertRetailBoatSale( customer,
                                                        wfWarehouse,
                                                        DateTime.now().addDays(10),
                                                        boatSerial,
                                                        motorSerial);
+    gcProjectTask.ignoreCommissions = orig;
     List<Registration__c> regs = new List<Registration__c>();
     regs.add( Factory_Registration.buildRegistration( null, customer.Id, boatSerial.Id ) );
     regs[0].ErpOrder__c = retailERP.Id;
