@@ -978,9 +978,10 @@
     </fieldUpdates>
     <fieldUpdates>
         <fullName>Update_Stage_Pending_Rigging</fullName>
+        <description>Updates Trade-In ERP stage to Pending Pick and Pack. It used to update to Pending Rigging.</description>
         <field>Stage__c</field>
-        <literalValue>Pending Rigging</literalValue>
-        <name>Update Stage Pending Rigging</name>
+        <literalValue>Pending Pick and Pack</literalValue>
+        <name>Update Stage Pending Pick and Pack</name>
         <notifyAssignee>false</notifyAssignee>
         <operation>Literal</operation>
         <protected>false</protected>
@@ -2065,7 +2066,7 @@
         <triggerType>onCreateOrTriggeringUpdate</triggerType>
     </rules>
     <rules>
-        <fullName>Notify Emilie Arbour on Trade-In ERP Stage Pending Inspection or Delivered</fullName>
+        <fullName>Notify Emilie Arbour on Trade-In ERP Stage Pending Inspection or Ready for Sale</fullName>
         <actions>
             <name>Trade_In_ERP_Stage_has_been_updated</name>
             <type>Task</type>
@@ -2085,7 +2086,7 @@
         <criteriaItems>
             <field>AcctSeed__Project__c.Stage__c</field>
             <operation>equals</operation>
-            <value>Delivered</value>
+            <value>Ready for Sale</value>
         </criteriaItems>
         <triggerType>onCreateOrTriggeringUpdate</triggerType>
     </rules>
@@ -5062,7 +5063,7 @@ Please note, Luc and Elvis also get this notification.</description>
         <fullName>Trade_In_ERP_Stage_has_been_updated</fullName>
         <assignedTo>earbour@legendboats.com</assignedTo>
         <assignedToType>user</assignedToType>
-        <description>Trade-In EPR Stage has been updated to Pending Inspection or Delivered. Please review the record.</description>
+        <description>Trade-In EPR Stage has been updated to Pending Inspection or Ready for Sale. Please review the record.</description>
         <dueDateOffset>0</dueDateOffset>
         <notifyAssignee>false</notifyAssignee>
         <priority>Normal</priority>
