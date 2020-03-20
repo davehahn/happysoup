@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <description>Reminder the BOM to check and ensure financing is approved and to pay out the lien if applicable</description>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>Legend_Letterhead</letterhead>
+    <name>BOM Reminder Ensure Financing is Approved and Pay Out the Lien if Applicable</name>
+    <style>freeForm</style>
+    <subject>Ensure Financing is Approved and Pay Out the Lien if Applicable for this Trade ERP</subject>
+    <textOnly>The following Trade-In ERP stage has been set to {!AcctSeed__Project__c.Stage__c}
+
+Trade-In ERP Order URL: {!AcctSeed__Project__c.Link}
+
+This is a reminder to check and ensure financing is approved and to pay out the lien if applicable.
+
+Thanks for being awesome!</textOnly>
+    <type>html</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

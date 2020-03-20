@@ -153,6 +153,14 @@
     </entryCriteria>
     <finalApprovalActions>
         <action>
+            <name>BOM_Trade_ERP_Pending_Pick_and_Pack_or_Pending_Inspection</name>
+            <type>Alert</type>
+        </action>
+        <action>
+            <name>Trade_ERP_Inspection_Approval_Approved</name>
+            <type>Alert</type>
+        </action>
+        <action>
             <name>Update_Stage_Pending_Rigging</name>
             <type>FieldUpdate</type>
         </action>
@@ -160,12 +168,20 @@
     <finalApprovalRecordLock>false</finalApprovalRecordLock>
     <finalRejectionActions>
         <action>
+            <name>Trade_ERP_Inspection_Approval_Denied</name>
+            <type>Alert</type>
+        </action>
+        <action>
             <name>Update_Stage_Pending_Appraisal</name>
             <type>FieldUpdate</type>
         </action>
     </finalRejectionActions>
     <finalRejectionRecordLock>false</finalRejectionRecordLock>
     <initialSubmissionActions>
+        <action>
+            <name>Update_Initial_Submitter</name>
+            <type>FieldUpdate</type>
+        </action>
         <action>
             <name>Update_Stage_Pending_Auth</name>
             <type>FieldUpdate</type>
