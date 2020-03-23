@@ -31,6 +31,11 @@ public with sharing class LGND_Utilities {
         return hasPermission( 'Can_Reopen_Closed_Commissions');
       }
     }
+    public Boolean canViewAllCommissionRecord {
+      get {
+        return hasPermission( 'Can_View_All_Commissions');
+      }
+    }
     public Boolean canViewGrossMargin {
       get {
         return hasPermission( 'Can_View_Gross_Margin');

@@ -51,7 +51,10 @@ public with sharing class CommissionRecord2_Selector
                     Calculation_Method__c,
                     Status__c,
                     Approved_By__c,
-                    Approved_By__r.Name
+                    Approved_By__r.Name,
+              ( SELECT Id,
+                Owner__c
+              FROM Commission_Payments__r )
               FROM CommissionRecord2__c
               WHERE Project__c = :erpId
               ORDER BY Project_Task__r.Name ];
@@ -69,7 +72,10 @@ public with sharing class CommissionRecord2_Selector
       Calculation_Method__c,
       Status__c,
       Approved_By__c,
-      Approved_By__r.Name
+      Approved_By__r.Name,
+      ( SELECT Id,
+        Owner__c
+      FROM Commission_Payments__r )
     FROM CommissionRecord2__c
     WHERE Project_Task__c = :taskId
     ORDER BY Project_Task__r.Name ];

@@ -9,7 +9,6 @@
     helper.getRecords( component )
     .then(
       $A.getCallback( function( result ) {
-        console.log( JSON.parse( JSON.stringify(result )));
         component.set('v.commissionRecords', result );
       }),
       $A.getCallback( function( err ) {

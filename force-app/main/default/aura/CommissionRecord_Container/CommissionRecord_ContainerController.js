@@ -3,6 +3,43 @@
  */
 
 ({
+  onRender: function( component, event, helper )
+  {
+    let feed = component.find('feed'),
+        record = component.get('v.record');
+
+    if( record && record.isViewable && typeof( feed ) !== 'undefined' )
+    {
+      feed.set('v.body', []);
+
+      helper.addPublisher( component, record.id, feed )
+      .then(
+        $A.getCallback( function(r) {
+          console.log(r);
+          component.set('v.publisherLoaded', true );
+          return helper.addFeed( component, record.id, feed );
+        })
+      )
+      .then(
+        $A.getCallback( function(r) {
+          console.log(r);
+          component.set('v.feedLoaded', true );
+          return result;
+        })
+      )
+      .catch(
+        $A.getCallback( function( error ) {
+          console.log( error);
+        })
+      );
+    }
+  },
+
+  handleRecordChange: function( component, event, helper )
+  {
+    helper.setRecordVisibility( component );
+  },
+
   doInit: function( component, event, helper )
   {
     helper.doInit( component );
