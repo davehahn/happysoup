@@ -17,7 +17,9 @@ public class CommissionWrapper
     @AuraEnabled public String projectId;
     @AuraEnabled public String taskId;
     @AuraEnabled public String taskName;
+    @AuraEnabled public Boolean isViewable;
 
+    @AuraEnabled public Boolean canViewAllCommissions = LGND_Utilities.CustomPermissions.canViewAllCommissionRecord;
     @AuraEnabled public Boolean canUndoApproved = LGND_Utilities.CustomPermissions.canReOpenCommissionRecord;
     @AuraEnabled public Boolean canChangeStage = Schema.sObjectType.CommissionRecord2__c.fields.Status__c.isUpdateable();
 
@@ -35,6 +37,24 @@ public class CommissionWrapper
       this.projectId = cRec.Project__c;
       this.taskId = cRec.Project_Task__c;
       this.taskName = cRec.Project_Task__r.Name;
+      this.isViewable = checkAccess( cRec.Commission_Payments__r );
+    }
+
+    private Boolean checkAccess( List<CommissionPayment2__c> payments )
+    {
+      if( this.canViewAllCommissions )
+        return true;
+      Boolean result = false;
+      Id userId = UserInfo.getUserId();
+      for( CommissionPayment2__c p : payments )
+      {
+        if( userId == p.Owner__c )
+        {
+          result = true;
+          break;
+        }
+      }
+      return result;
     }
   }
 

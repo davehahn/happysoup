@@ -12,13 +12,26 @@
     .then(
       $A.getCallback( function( result ) {
         component.set('v.record', result );
-        var currentIdx = self.recordStatues.indexOf( result.status );
-        component.set('v.statusLabel', self.recordStatues[ currentIdx + 1 ] );
       }),
       $A.getCallback( function( error ) {
         LightningUtils.errorToast(error);
       })
     );
+  },
+
+  setRecordVisibility: function( component )
+  {
+    let record = component.get('v.record');
+    if( record.isViewable )
+    {
+      component.set('v.errorMessage', null);
+      var currentIdx = this.recordStatues.indexOf( record.status );
+      component.set('v.statusLabel', this.recordStatues[ currentIdx + 1 ] );
+    }
+    else
+    {
+      component.set('v.errorMessage', 'You can only view your own Commission Records');
+    }
   },
 
   fetchRecord: function( component )
