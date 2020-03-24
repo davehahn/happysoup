@@ -24,7 +24,6 @@
         $A.getCallback( function(r) {
           console.log(r);
           component.set('v.feedLoaded', true );
-          return result;
         })
       )
       .catch(

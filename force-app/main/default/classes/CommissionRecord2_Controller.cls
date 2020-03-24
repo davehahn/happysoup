@@ -189,6 +189,10 @@ public with sharing class CommissionRecord2_Controller
       {
         results = CommissionRecord2_Selector.allByProjectTaskId( recordId );
       }
+      when 'CommissionRecord2__c'
+      {
+        results = CommissionRecord2_Selector.allById( new Set<Id>{recordId} );
+      }
     }
     return results;
   }

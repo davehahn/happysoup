@@ -265,8 +265,8 @@ public with sharing class Dealer_Order_Line_Ext {
 
   public static void deleteErps( Set<Id> erpIds )
   {
-    AcctSeed__Project__c[] erps = [SELECT Id FROM AcctSeed__Project__c WHERE Id IN :erpIds];
-    delete erps;
+      delete [SELECT Id FROM AcctSeed__Project_Task__c WHERE AcctSeed__Project__c IN:erpIds];
+      delete [SELECT Id FROM AcctSeed__Project__c WHERE Id IN :erpIds];
   }
 
   private static void deleteLegendTransferRequests( Set<Id> transferIds )

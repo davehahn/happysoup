@@ -18,6 +18,7 @@
   <aura:attribute name="publisherLoaded" type="Boolean" default="false" />
   <aura:attribute name="feedLoaded" type="Boolean" default="false" />
   <aura:attribute name="errorMessage" type="String" />
+  <aura:attribute name="renderFeed" type="Boolean" default="true" />
 
   <aura:handler name="change" value="{!v.record}" action="{!c.handleRecordChange}" />
   <aura:handler name="render" value="{!this}" action="{!c.onRender}"/>
@@ -81,18 +82,27 @@
                           ondisputedpayments="{!c.handleDisputedPayments}"
                           aura:id="payments" />
 
-    <lightning:tabset>
+    <aura:if isTrue="{!v.renderFeed}">
+      <lightning:tabset>
 
-      <lightning:tab label="Details">
-        <c:commissionLineItems commissionRecordId="{!v.record.id}"
-                               renderRatePaymentColumns="{!equals(v.record.calculationMethod, 'Revenue')}"
-                               aura:id="commissionLines" />
-      </lightning:tab>
+        <lightning:tab label="Details">
+          <c:commissionLineItems commissionRecordId="{!v.record.id}"
+                                 renderRatePaymentColumns="{!equals(v.record.calculationMethod, 'Revenue')}"
+                                 aura:id="commissionLines" />
+        </lightning:tab>
 
-      <lightning:tab label="Feed" aura:id="feed" >
-      </lightning:tab>
+        <lightning:tab label="Feed" aura:id="feed" >
+        </lightning:tab>
 
-    </lightning:tabset>
+      </lightning:tabset>
+    </aura:if>
+
+    <aura:if isTrue="{! !v.renderFeed}">
+      <c:commissionLineItems commissionRecordId="{!v.record.id}"
+                             renderRatePaymentColumns="{!equals(v.record.calculationMethod, 'Revenue')}"
+                             aura:id="commissionLines" />
+    </aura:if>
+
   </aura:if>
 
 

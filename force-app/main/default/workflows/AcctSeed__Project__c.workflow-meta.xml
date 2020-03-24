@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Workflow xmlns="http://soap.sforce.com/2006/04/metadata">
     <alerts>
+        <fullName>BOM_Trade_ERP_Pending_Pick_and_Pack_or_Pending_Inspection</fullName>
+        <description>BOM Trade ERP Pending Pick and Pack or Pending Inspection</description>
+        <protected>false</protected>
+        <recipients>
+            <field>Salesperson__c</field>
+            <type>userLookup</type>
+        </recipients>
+        <senderType>CurrentUser</senderType>
+        <template>To_Do_Notification_Templates/BOM_Reminder_Ensure_Financing_is_Approved_and_Pay_Out_the_Lien_if_Applicable</template>
+    </alerts>
+    <alerts>
         <fullName>Barrie_Notification_Assign_Boat_Specialist_Retail_ERP</fullName>
         <description>Barrie Notification Assign Boat Specialist Retail ERP</description>
         <protected>false</protected>
@@ -771,6 +782,28 @@
         <template>Parts_Related/ERP_Order_with_parts</template>
     </alerts>
     <alerts>
+        <fullName>Trade_ERP_Inspection_Approval_Approved</fullName>
+        <description>Trade ERP Inspection Approval Approved</description>
+        <protected>false</protected>
+        <recipients>
+            <field>Initial_Submitter_Email__c</field>
+            <type>email</type>
+        </recipients>
+        <senderType>CurrentUser</senderType>
+        <template>To_Do_Notification_Templates/Trade_In_Recommendations_Approved</template>
+    </alerts>
+    <alerts>
+        <fullName>Trade_ERP_Inspection_Approval_Denied</fullName>
+        <description>Trade ERP Inspection Approval Denied</description>
+        <protected>false</protected>
+        <recipients>
+            <field>Initial_Submitter_Email__c</field>
+            <type>email</type>
+        </recipients>
+        <senderType>CurrentUser</senderType>
+        <template>To_Do_Notification_Templates/Trade_In_Recommendations_Declined</template>
+    </alerts>
+    <alerts>
         <fullName>Whitefish_Notification_Assign_Boat_Specialist_Retail_ERP</fullName>
         <description>Whitefish Notification Assign Boat Specialist Retail ERP</description>
         <protected>false</protected>
@@ -956,6 +989,15 @@
         <name>Update Field</name>
         <notifyAssignee>false</notifyAssignee>
         <operation>Literal</operation>
+        <protected>false</protected>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>Update_Initial_Submitter</fullName>
+        <field>Initial_Submitter_Email__c</field>
+        <formula>$User.Email</formula>
+        <name>Update Initial Submitter</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Formula</operation>
         <protected>false</protected>
     </fieldUpdates>
     <fieldUpdates>
