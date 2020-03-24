@@ -6,7 +6,9 @@ public with sharing class CommissionLineItem2_Service
 {
   public static Decimal grossMarginRate = 0.10;
   public static Decimal insuranceAndWarrantyRate = 0.30;
+  public static Decimal protectionAndServiceRate = 0.30;
   public static Decimal partsRate = 0.05;
+  public static Decimal maintenancePackageRate = 0.5;
   public static Decimal warrantyProfitPercent = 0.50;
 
   public class RateCostCalculator
@@ -20,6 +22,7 @@ public with sharing class CommissionLineItem2_Service
     private Map<Id, Product2> protectionAndServicesProducts;
     private Map<Id, Product2> warrantyProducts;
     private Map<Id, Product2> insuranceProducts;
+    private Map<Id, Product2> maintenancePackages;
     private Map<Id, Product2> feeProducts;
     private Map<String, Decimal> feeCostAmount;
     private Map<String, Decimal> product_cost_map;
@@ -45,7 +48,7 @@ public with sharing class CommissionLineItem2_Service
         }
         else if( this.protectionAndServicesProducts.containsKey( cli.Product__c ) )
         {
-          rate = insuranceAndWarrantyRate;
+          rate = protectionAndServiceRate;
         }
         else if( this.insuranceProducts.containsKey( cli.Product__c ) )
         {
@@ -115,14 +118,15 @@ public with sharing class CommissionLineItem2_Service
       this.protectionAndServicesProducts = new Map<Id, Product2>();
       this.warrantyProducts = new Map<Id, Product2>();
       this.insuranceProducts = new Map<Id, Product2>();
+      this.maintenancePackages = new Map<Id, Product2>();
       this.feeProducts = new Map<Id, Product2>();
       for( Product2 p : [ SELECT Id,
-        InsurancePlan__c,
-        InsurancePlan__r.Profit_Percent__c,
-        RecordTypeId,
-        Family
-      FROM Product2
-      WHERE Id IN :this.prodIds ] )
+                                  InsurancePlan__c,
+                                  InsurancePlan__r.Profit_Percent__c,
+                                  RecordTypeId,
+                                  Family
+                                FROM Product2
+                                WHERE Id IN :this.prodIds ] )
       {
         if( p.InsurancePlan__c != null)
         {
@@ -132,9 +136,13 @@ public with sharing class CommissionLineItem2_Service
         {
           this.warrantyProducts.put( p.Id, p );
         }
+        else if( p.Family != null && p.Family.contains('Maintenance Package') )
+        {
+          this.maintenancePackages.put( p.Id, p );
+        }
         else if( p.RecordTypeId == LGND_Constants.productRtId_Protection )
         {
-          this.protectionAndServicesProducts.put( p.Id, p );
+          this.protectionAndServicesProducts.put(p.Id, p);
         }
         else if( p.RecordTypeId == LGND_Constants.productRtId_Fees )
         {

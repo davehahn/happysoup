@@ -11,6 +11,8 @@
     self.fetchRecord( component )
     .then(
       $A.getCallback( function( result ) {
+        console.log( JSON.parse( JSON.stringify( result ) ) );
+        console.log(result.id);
         component.set('v.record', result );
       }),
       $A.getCallback( function( error ) {

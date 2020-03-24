@@ -16,7 +16,10 @@ public with sharing class CommissionRecord2_Selector
                     Project_Task__r.Name,
                     Status__c,
                     Approved_By__c,
-                    Approved_By__r.Name
+                    Approved_By__r.Name,
+            ( SELECT Id,
+              Owner__c
+              FROM Commission_Payments__r )
               FROM CommissionRecord2__c
               WHERE Id IN :crIds ];
   }
