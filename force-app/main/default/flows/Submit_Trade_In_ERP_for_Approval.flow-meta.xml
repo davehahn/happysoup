@@ -19,6 +19,7 @@
                 <elementReference>ERPId</elementReference>
             </value>
         </inputParameters>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
     </actionCalls>
     <actionCalls>
         <name>Montreal_Trade_In_Approval</name>
@@ -35,6 +36,21 @@
         </inputParameters>
         <inputParameters>
             <name>objectId</name>
+            <value>
+                <elementReference>ERPId</elementReference>
+            </value>
+        </inputParameters>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </actionCalls>
+    <actionCalls>
+        <name>Notify_BOM_Pay_out_Lien_if_Applicable</name>
+        <label>Notify BOM Pay out Lien if Applicable</label>
+        <locationX>551</locationX>
+        <locationY>876</locationY>
+        <actionName>AcctSeed__Project__c.BOM_Trade_ERP_Pending_Pick_and_Pack_or_Pending_Inspection</actionName>
+        <actionType>emailAlert</actionType>
+        <inputParameters>
+            <name>SObjectRowId</name>
             <value>
                 <elementReference>ERPId</elementReference>
             </value>
@@ -59,6 +75,7 @@
                 <elementReference>ERPId</elementReference>
             </value>
         </inputParameters>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
     </actionCalls>
     <choices>
         <name>No</name>
@@ -210,6 +227,9 @@
         <label>Update ERP Stage</label>
         <locationX>551</locationX>
         <locationY>728</locationY>
+        <connector>
+            <targetReference>Notify_BOM_Pay_out_Lien_if_Applicable</targetReference>
+        </connector>
         <filters>
             <field>Id</field>
             <operator>EqualTo</operator>
@@ -248,7 +268,13 @@
         <showFooter>true</showFooter>
         <showHeader>true</showHeader>
     </screens>
-    <startElementReference>getRecordId</startElementReference>
+    <start>
+        <locationX>50</locationX>
+        <locationY>575</locationY>
+        <connector>
+            <targetReference>getRecordId</targetReference>
+        </connector>
+    </start>
     <status>Active</status>
     <variables>
         <name>ERPId</name>
