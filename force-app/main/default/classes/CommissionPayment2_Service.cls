@@ -82,21 +82,24 @@ public with sharing class CommissionPayment2_Service
     Set<Id> commissionRecordIds = new Set<Id>();
     commissionRecordIds.addAll( resolved );
     commissionRecordIds.addAll( unApproved );
-    List<CommissionPayment2__c> payments = CommissionPayment2_Selector.allByCommissionRecordIds( commissionRecordIds );
-    for( CommissionPayment2__c payment : payments )
+    if( commissionRecordIds.size() > 0 )
     {
-      if( resolved.contains( payment.Commission_Record2__c ) &&
-          payment.Status__c == 'Disputed' )
+      List<CommissionPayment2__c> payments = CommissionPayment2_Selector.allByCommissionRecordIds(commissionRecordIds);
+      for (CommissionPayment2__c payment : payments)
       {
-        payment.Status__c = 'New';
+        if (resolved.contains(payment.Commission_Record2__c) &&
+          payment.Status__c == 'Disputed')
+        {
+          payment.Status__c = 'New';
+        }
+        if (unApproved.contains(payment.Commission_Record2__c) &&
+          payment.Commission_Record2__r.Status__c != 'Disputed')
+        {
+          payment.Status__c = 'New';
+        }
       }
-      if( unApproved.contains( payment.Commission_Record2__c ) &&
-          payment.Commission_Record2__r.Status__c != 'Disputed' )
-      {
-        payment.Status__c = 'New';
-      }
+      update payments;
     }
-    update payments;
   }
 
   @Future
