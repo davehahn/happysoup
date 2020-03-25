@@ -89,16 +89,16 @@ public with sharing class CommissionPayment2_Selector extends Application_Select
     return (List<CommissionPayment2__c>)selector.query();
   }
 
-  public static List<CommissionPayment2__c> allDisputedByCommissionRecordIdsAndStatus( Set<Id> cRecIds, String status )
-  {
-    CommissionPayment2_Selector selector = new CommissionPayment2_Selector();
-    selector.addWhere( whereInClauseBuilder(
-      'Commission_Record2__c',
-      (Set<String>)JSON.deserialize( JSON.serialize(cRecIds), Set<String>.class )
-    ))
-      .addWhere('Status__c = \'' + status + '\'')
-      .addOrderBy('Owner__r.Name ASC');
-    return (List<CommissionPayment2__c>)selector.query();
-  }
+//  public static List<CommissionPayment2__c> allDisputedByCommissionRecordIdsAndStatus( Set<Id> cRecIds, String status )
+//  {
+//    CommissionPayment2_Selector selector = new CommissionPayment2_Selector();
+//    selector.addWhere( whereInClauseBuilder(
+//      'Commission_Record2__c',
+//      (Set<String>)JSON.deserialize( JSON.serialize(cRecIds), Set<String>.class )
+//    ))
+//      .addWhere('Status__c = \'' + status + '\'')
+//      .addOrderBy('Owner__r.Name ASC');
+//    return (List<CommissionPayment2__c>)selector.query();
+//  }
 
 }

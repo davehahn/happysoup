@@ -209,7 +209,10 @@ public with sharing class CommissionRecord2_Service
     ConnectApi.BatchInput batchInput = new ConnectApi.BatchInput(feedItemInput);
     batchInputs.add(batchInput);
 
-    ConnectApi.ChatterFeeds.postFeedElementBatch(Network.getNetworkId(), batchInputs);
+    if( !Test.isRunningTest() )
+    {
+      ConnectApi.ChatterFeeds.postFeedElementBatch(Network.getNetworkId(), batchInputs);
+    }
 
   }
 

@@ -93,6 +93,10 @@ public virtual class Application_Selector
   {
     if( matchers == null || matchers.size() == 0 )
       return null;
+
+    if( matchers != null && matchers.size() == 1 )
+      return field + ' = \'' + new List<String>(matchers)[0] + '\'';
+
     String w = field + ' IN (';
     for( Object m : matchers )
     {

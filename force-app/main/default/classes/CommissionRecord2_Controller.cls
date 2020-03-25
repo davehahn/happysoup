@@ -40,10 +40,6 @@ public with sharing class CommissionRecord2_Controller
 
       CommissionRecord2__c record = CommissionRecord2_Selector.allById( new Set<Id>{recordId} )[0];
 
-//      if( record.Status__c == 'Approved' &&
-//          !LGND_Utilities.CustomPermissions.canReOpenCommissionRecord )
-//        throw new CommissionRecord2_Exception('You do not have permission to re-open an Approved Commission Record');
-
       record.Status__c = status;
       update record;
 
