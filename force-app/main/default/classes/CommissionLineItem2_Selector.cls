@@ -30,6 +30,7 @@ public with sharing class CommissionLineItem2_Selector extends Application_Selec
       'Material__r.Material__c'
     };
   }
+
   public static List<CommissionLineItem2__c> allById( Set<Id> ids )
   {
     CommissionLineItem2_Selector selector = new CommissionLineItem2_Selector();

@@ -22,6 +22,28 @@ private class CommissionRecord2_Controller_T
     project = [SELECT Id FROM AcctSeed__Project__c LIMIT 1];
   }
 
+  private static void createPermissionSetForStatusField( Id userId)
+  {
+    PermissionSet pr = new PermissionSet(
+      Label = 'Status PM',
+      Name = 'Status_PM'
+    );
+    insert pr;
+    FieldPermissions fp = new FieldPermissions(
+      ParentId = pr.Id,
+      Field = 'CommissionRecord2__c.Status__c',
+      SobjectType = 'CommissionRecord2__c',
+      PermissionsEdit = true,
+      PermissionsRead = true
+    );
+    insert fp;
+    PermissionSetAssignment pm = new PermissionSetAssignment(
+      AssigneeId = userId,
+      PermissionSetId = pr.Id
+    );
+    insert pm;
+  }
+
   @IsTest
   static void fetchCommissionRecords_Test()
   {
@@ -63,19 +85,25 @@ private class CommissionRecord2_Controller_T
   static void updateCommissionRecordStatus_Test()
   {
     init();
-    CommissionRecord2__c commissionRecord = [SELECT Id, Status__c FROM CommissionRecord2__c WHERE Project__c = :project.Id LIMIT 1];
-    System.assertEquals( 'New', commissionRecord.Status__c );
-    Test.startTest();
-    CommissionWrapper.Record wrapper =
-      CommissionRecord2_Controller.updateCommissionRecordStatus(
-        commissionRecord.Id,
-        'Reviewed'
-      );
-    Test.stopTest();
+    User u = Factory_User.newuser('Test', 'User', 'System Administrator', null);
+    insert u;
+    createPermissionSetForStatusField( u.Id );
+    System.runAs( u )
+    {
+      CommissionRecord2__c commissionRecord = [SELECT Id, Status__c FROM CommissionRecord2__c WHERE Project__c = :project.Id LIMIT 1];
+      System.assertEquals('New', commissionRecord.Status__c);
+      Test.startTest();
+      CommissionWrapper.Record wrapper =
+        CommissionRecord2_Controller.updateCommissionRecordStatus(
+          commissionRecord.Id,
+          'Reviewed'
+        );
+      Test.stopTest();
 
-    commissionRecord = [SELECT Id, Status__c FROM CommissionRecord2__c WHERE Project__c = :project.Id LIMIT 1];
-    System.assertEquals( 'Reviewed', commissionRecord.Status__c );
-    System.assertEquals( wrapper.status, commissionRecord.Status__c );
+      commissionRecord = [SELECT Id, Status__c FROM CommissionRecord2__c WHERE Project__c = :project.Id LIMIT 1];
+      System.assertEquals('Reviewed', commissionRecord.Status__c);
+      System.assertEquals(wrapper.status, commissionRecord.Status__c);
+    }
   }
 
   @IsTest

@@ -33,8 +33,8 @@ public with sharing class CommissionRecord2_Controller
   @AuraEnabled
   public static CommissionWrapper.Record updateCommissionRecordStatus( String recordId, String status )
   {
-    try
-    {
+    //try
+    //{
       if( !Schema.sObjectType.CommissionRecord2__c.fields.Status__c.isUpdateable() )
         throw new CommissionRecord2_Exception('You do not have access to change the Status of Commission Records');
 
@@ -46,11 +46,11 @@ public with sharing class CommissionRecord2_Controller
       return new CommissionWrapper.Record(
         CommissionRecord2_Selector.allById( new Set<Id>{record.Id} )[0]
       );
-    }
-    catch( Exception e )
-    {
-      throw new AuraHandledException( e.getMessage() );
-    }
+   // }
+    //catch( Exception e )
+    //{
+   //   throw new AuraHandledException( e.getMessage() );
+   // }
   }
 
   @AuraEnabled(Cacheable=true)
