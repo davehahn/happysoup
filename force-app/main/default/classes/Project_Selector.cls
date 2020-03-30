@@ -5,8 +5,4 @@
 public with sharing class Project_Selector
 {
 
-  public static List<AcctSeed__Project__c> selectAllById_forCommission( Set<Id> ids )
-  {
-    
-  }
 }
