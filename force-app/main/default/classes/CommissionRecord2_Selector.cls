@@ -135,6 +135,7 @@ public with sharing class CommissionRecord2_Selector extends Application_Selecto
     return new Map<Id, CommissionRecord2__c>([
       SELECT Id,
             Project_Task__c,
+            Project_Task__r.Name,
             Project_Task__r.AcctSeed__GL_Account_Variable_2__c,
             Project_Task__r.AcctSeed__Project__r.Business_Manager__c,
             Project_Task__r.AcctSeed__Project__r.Salesperson__c

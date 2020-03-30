@@ -41,10 +41,12 @@ public with sharing class CommissionPayment2_Service
         CommissionRecord2__c cr = commRecMap.get( payment.Commission_Record2__c );
         if( payment.Owner__c == null )
         {
-          if (cr.Project_Task__r.AcctSeed__GL_Account_Variable_2__c == LGND_Constants.GLV2Id_BusinessOffice)
+          if( cr.Project_Task__r.AcctSeed__GL_Account_Variable_2__c == LGND_Constants.GLV2Id_BusinessOffice )
           {
             payment.Owner__c = cr.Project_Task__r.AcctSeed__Project__r.Business_Manager__c;
-          } else
+          }
+          else if( cr.Project_Task__r.AcctSeed__GL_Account_Variable_2__c == LGND_Constants.GLV2Id_Sales &&
+                   cr.Project_Task__r.Name.contains( 'Retail Sale' ) )
           {
             payment.Owner__c = cr.Project_Task__r.AcctSeed__Project__r.Salesperson__c;
           }
