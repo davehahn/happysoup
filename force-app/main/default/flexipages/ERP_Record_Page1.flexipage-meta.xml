@@ -35,39 +35,17 @@
                 <name>relatedListComponentOverride</name>
                 <value>NONE</value>
             </componentInstanceProperties>
+            <componentInstanceProperties>
+                <name>rowsToDisplay</name>
+                <value>10</value>
+            </componentInstanceProperties>
+            <componentInstanceProperties>
+                <name>showActionBar</name>
+                <value>true</value>
+            </componentInstanceProperties>
             <componentName>force:relatedListContainer</componentName>
         </componentInstances>
-        <componentInstances>
-            <componentInstanceProperties>
-                <name>parentFieldApiName</name>
-                <value>AcctSeed__Project__c.Id</value>
-            </componentInstanceProperties>
-            <componentInstanceProperties>
-                <name>relatedListApiName</name>
-                <value>Warranty_Cases__r</value>
-            </componentInstanceProperties>
-            <componentInstanceProperties>
-                <name>relatedListComponentOverride</name>
-                <value>NONE</value>
-            </componentInstanceProperties>
-            <componentName>force:relatedListSingleContainer</componentName>
-        </componentInstances>
-        <componentInstances>
-            <componentInstanceProperties>
-                <name>parentFieldApiName</name>
-                <value>AcctSeed__Project__c.Id</value>
-            </componentInstanceProperties>
-            <componentInstanceProperties>
-                <name>relatedListApiName</name>
-                <value>Warranty_Recoverable_Cases__r</value>
-            </componentInstanceProperties>
-            <componentInstanceProperties>
-                <name>relatedListComponentOverride</name>
-                <value>NONE</value>
-            </componentInstanceProperties>
-            <componentName>force:relatedListSingleContainer</componentName>
-        </componentInstances>
-        <name>facet-e61af1cc-3688-4dd2-8f67-d5e2c2736167</name>
+        <name>Facet-096be160-a376-4907-b7f7-5c0c9bb57303</name>
         <type>Facet</type>
     </flexiPageRegions>
     <flexiPageRegions>
@@ -86,36 +64,28 @@
             </componentInstanceProperties>
             <componentInstanceProperties>
                 <name>showLabel</name>
-                <value>true</value>
+                <value>false</value>
             </componentInstanceProperties>
             <componentName>flexipage:visualforcePage</componentName>
         </componentInstances>
-        <name>facet-0b97ce6c-1680-4292-ab28-a9bfd0f39227</name>
+        <name>Facet-d15bbc36-2a90-459d-ad9e-13b69c13a15b</name>
         <type>Facet</type>
     </flexiPageRegions>
     <flexiPageRegions>
         <componentInstances>
             <componentName>forceChatter:recordFeedContainer</componentName>
         </componentInstances>
-        <name>facet-9182e249-088a-4cb0-bb92-7e254cb7b8a2</name>
+        <name>Facet-22cf418b-a677-4a8b-8a9d-851f34a3f4b2</name>
         <type>Facet</type>
     </flexiPageRegions>
     <flexiPageRegions>
         <componentInstances>
-            <componentName>runtime_sales_activities:activityPanel</componentName>
+            <componentName>CommissionCalculator2_Container</componentName>
         </componentInstances>
-        <name>facet-42e7b10b-18fd-48f4-be49-aec32703ea57</name>
-        <type>Facet</type>
-    </flexiPageRegions>
-    <flexiPageRegions>
         <componentInstances>
             <componentInstanceProperties>
                 <name>height</name>
                 <value>800</value>
-            </componentInstanceProperties>
-            <componentInstanceProperties>
-                <name>label</name>
-                <value>Commission</value>
             </componentInstanceProperties>
             <componentInstanceProperties>
                 <name>pageName</name>
@@ -123,11 +93,25 @@
             </componentInstanceProperties>
             <componentInstanceProperties>
                 <name>showLabel</name>
-                <value>true</value>
+                <value>false</value>
             </componentInstanceProperties>
             <componentName>flexipage:visualforcePage</componentName>
+            <visibilityRule>
+                <criteria>
+                    <leftValue>{!Record.Uses_V2_Commissions__c}</leftValue>
+                    <operator>EQUAL</operator>
+                    <rightValue>false</rightValue>
+                </criteria>
+            </visibilityRule>
         </componentInstances>
-        <name>facet-9a6c334f-7cd7-485d-9bac-00e4cbff17cc</name>
+        <name>Facet-nzxa1wnwb1</name>
+        <type>Facet</type>
+    </flexiPageRegions>
+    <flexiPageRegions>
+        <componentInstances>
+            <componentName>runtime_sales_activities:activityPanel</componentName>
+        </componentInstances>
+        <name>Facet-5bf3052e-b090-4166-aa68-6e6796d6dda0</name>
         <type>Facet</type>
     </flexiPageRegions>
     <flexiPageRegions>
@@ -137,48 +121,48 @@
                 <value>800</value>
             </componentInstanceProperties>
             <componentInstanceProperties>
-                <name>label</name>
-                <value>Invoices</value>
-            </componentInstanceProperties>
-            <componentInstanceProperties>
                 <name>pageName</name>
                 <value>ERPInvoiceDocumentBuilder_LEX</value>
             </componentInstanceProperties>
             <componentInstanceProperties>
                 <name>showLabel</name>
-                <value>true</value>
+                <value>false</value>
             </componentInstanceProperties>
             <componentName>flexipage:visualforcePage</componentName>
         </componentInstances>
-        <name>facet-622ae552-da87-4bcd-b912-0f8fe27c55c7</name>
+        <name>Facet-c565d587-62b2-4290-86be-80a974af37a6</name>
         <type>Facet</type>
     </flexiPageRegions>
     <flexiPageRegions>
         <componentInstances>
             <componentName>BusinessOfficeTools_dh</componentName>
         </componentInstances>
-        <name>facet-2bc969f6-6210-41de-af28-9e61105d6130</name>
+        <name>Facet-8ba3db48-ce47-4956-94c5-27334c06df4d</name>
         <type>Facet</type>
     </flexiPageRegions>
     <flexiPageRegions>
         <componentInstances>
             <componentName>Flow_FinalizeSales_Container_mp</componentName>
         </componentInstances>
-        <name>Facet-e1fe1b80-bb71-4b02-99cd-97d726364d3b</name>
+        <name>Facet-94c15a93-78d7-4a32-9091-8f7efb2c48d3</name>
         <type>Facet</type>
     </flexiPageRegions>
     <flexiPageRegions>
         <componentInstances>
             <componentName>Profit_Analysis</componentName>
         </componentInstances>
-        <name>Facet-f1b88a18-a9cc-48f7-b56f-fa01bf4c5eb0</name>
+        <name>Facet-db939e71-df5e-4d6c-971b-ddb37158519e</name>
         <type>Facet</type>
     </flexiPageRegions>
     <flexiPageRegions>
         <componentInstances>
             <componentInstanceProperties>
+                <name>active</name>
+                <value>false</value>
+            </componentInstanceProperties>
+            <componentInstanceProperties>
                 <name>body</name>
-                <value>facet-e61af1cc-3688-4dd2-8f67-d5e2c2736167</value>
+                <value>Facet-096be160-a376-4907-b7f7-5c0c9bb57303</value>
             </componentInstanceProperties>
             <componentInstanceProperties>
                 <name>title</name>
@@ -193,7 +177,7 @@
             </componentInstanceProperties>
             <componentInstanceProperties>
                 <name>body</name>
-                <value>facet-0b97ce6c-1680-4292-ab28-a9bfd0f39227</value>
+                <value>Facet-d15bbc36-2a90-459d-ad9e-13b69c13a15b</value>
             </componentInstanceProperties>
             <componentInstanceProperties>
                 <name>title</name>
@@ -204,7 +188,7 @@
         <componentInstances>
             <componentInstanceProperties>
                 <name>body</name>
-                <value>facet-9182e249-088a-4cb0-bb92-7e254cb7b8a2</value>
+                <value>Facet-22cf418b-a677-4a8b-8a9d-851f34a3f4b2</value>
             </componentInstanceProperties>
             <componentInstanceProperties>
                 <name>title</name>
@@ -215,18 +199,7 @@
         <componentInstances>
             <componentInstanceProperties>
                 <name>body</name>
-                <value>facet-42e7b10b-18fd-48f4-be49-aec32703ea57</value>
-            </componentInstanceProperties>
-            <componentInstanceProperties>
-                <name>title</name>
-                <value>Standard.Tab.activity</value>
-            </componentInstanceProperties>
-            <componentName>flexipage:tab</componentName>
-        </componentInstances>
-        <componentInstances>
-            <componentInstanceProperties>
-                <name>body</name>
-                <value>facet-9a6c334f-7cd7-485d-9bac-00e4cbff17cc</value>
+                <value>Facet-nzxa1wnwb1</value>
             </componentInstanceProperties>
             <componentInstanceProperties>
                 <name>title</name>
@@ -237,7 +210,18 @@
         <componentInstances>
             <componentInstanceProperties>
                 <name>body</name>
-                <value>facet-622ae552-da87-4bcd-b912-0f8fe27c55c7</value>
+                <value>Facet-5bf3052e-b090-4166-aa68-6e6796d6dda0</value>
+            </componentInstanceProperties>
+            <componentInstanceProperties>
+                <name>title</name>
+                <value>Standard.Tab.activity</value>
+            </componentInstanceProperties>
+            <componentName>flexipage:tab</componentName>
+        </componentInstances>
+        <componentInstances>
+            <componentInstanceProperties>
+                <name>body</name>
+                <value>Facet-c565d587-62b2-4290-86be-80a974af37a6</value>
             </componentInstanceProperties>
             <componentInstanceProperties>
                 <name>title</name>
@@ -248,7 +232,7 @@
         <componentInstances>
             <componentInstanceProperties>
                 <name>body</name>
-                <value>facet-2bc969f6-6210-41de-af28-9e61105d6130</value>
+                <value>Facet-8ba3db48-ce47-4956-94c5-27334c06df4d</value>
             </componentInstanceProperties>
             <componentInstanceProperties>
                 <name>title</name>
@@ -259,7 +243,7 @@
         <componentInstances>
             <componentInstanceProperties>
                 <name>body</name>
-                <value>Facet-e1fe1b80-bb71-4b02-99cd-97d726364d3b</value>
+                <value>Facet-94c15a93-78d7-4a32-9091-8f7efb2c48d3</value>
             </componentInstanceProperties>
             <componentInstanceProperties>
                 <name>title</name>
@@ -270,7 +254,7 @@
         <componentInstances>
             <componentInstanceProperties>
                 <name>body</name>
-                <value>Facet-f1b88a18-a9cc-48f7-b56f-fa01bf4c5eb0</value>
+                <value>Facet-db939e71-df5e-4d6c-971b-ddb37158519e</value>
             </componentInstanceProperties>
             <componentInstanceProperties>
                 <name>title</name>
@@ -278,14 +262,14 @@
             </componentInstanceProperties>
             <componentName>flexipage:tab</componentName>
         </componentInstances>
-        <name>facet-770b770f-7b34-478b-a1c1-8e96fa441db6</name>
+        <name>Facet-4699740e-8981-4a42-93a6-07994be403cf</name>
         <type>Facet</type>
     </flexiPageRegions>
     <flexiPageRegions>
         <componentInstances>
             <componentInstanceProperties>
                 <name>tabs</name>
-                <value>facet-770b770f-7b34-478b-a1c1-8e96fa441db6</value>
+                <value>Facet-4699740e-8981-4a42-93a6-07994be403cf</value>
             </componentInstanceProperties>
             <componentName>flexipage:tabset</componentName>
         </componentInstances>

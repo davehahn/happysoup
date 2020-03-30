@@ -67,20 +67,23 @@ global without sharing class gcMaterial{
 			if(boolIsDelete)
 			{
 				cascadeDeleteKitMaterial(oldMap.keySet());
-				CommissionLineItemERP.deleteRecords( oldMap.keySet() );
+				CommissionLineItem2_Service service = new CommissionLineItem2_Service();
+				service.addMaterials( oldMap.keySet() );
+				service.deleteRecords();
 			}
 		}
 		else //i.e. trigger.isAfter
 		{
 			if(boolIsInsert)
 			{
-				System.debug('gcMaterial after insert trigger');
-				CommissionLineItemERP.createRecords( newMap.keySet() );
+				CommissionLineItem2_Service service = new CommissionLineItem2_Service();
+				service.addMaterials( newMap.keySet() );
+				service.saveRecords();
 				insertKitParts(newMap.keySet());
 			}
 			if(boolIsUpdate)
 			{
-				System.debug(' gcMaterial after Update Trigger ' );
+				CommissionLineItem2_Service.syncMaterials( listNew, oldMap );
 				Id retailRtId = gcConstants.idRtProjectBoatSale;
 				/// Product Kitting
 				set<Id> setIdUpdateMatl = new set<Id>();
@@ -102,7 +105,6 @@ global without sharing class gcMaterial{
 					{
 						serialNowSet.add( matl.Id );
 						erpsToChangeStage.get('nowSet').add(matl.AcctSeedERP__Project__c);
-						System.debug( matl.ERP_RecordTypeId__c + ' == ' + retailRtId);
 						if( matl.ERP_RecordTypeId__c == retailRtId )
 							serialSetOnMaterial.add( matl );
 					}
@@ -113,8 +115,6 @@ global without sharing class gcMaterial{
 					}
 				}
 				updateErpStage( erpsToChangeStage );
-				//updateReservedForRetail( serialSetOnMaterial );
-				CommissionLineItemERP.materialChanged( newMap, oldMap );
 				/// Product Kitting
                 if(!setIdUpdateMatl.isEmpty())
                     updateMaterialSpec(setIdUpdateMatl);
@@ -221,17 +221,17 @@ global without sharing class gcMaterial{
                         		|| (task.Id != oldTask.Id && (oldTask.Locked__c || task.Locked__c))))
                         {
                         	AcctSeedERP__Material__c oldMatl = oldMap.get(matl.Id);
-							if(matl.AcctSeedERP__Quantity_per_Unit__c != oldMatl.AcctSeedERP__Quantity_per_Unit__c
-								|| ((matl.GMBLASERP__Unit_Price__c == null?0:matl.GMBLASERP__Unit_Price__c).setScale(6) != (oldMatl.GMBLASERP__Unit_Price__c == null?0:oldMatl.GMBLASERP__Unit_Price__c).setScale(6))
-								|| matl.Quantity_Specified_Override__c != oldMatl.Quantity_Specified_Override__c
-								|| matl.AcctSeedERP__Product__c != oldMatl.AcctSeedERP__Product__c
-								|| (matl.GMBLASERP__Serial_Number__c != oldMatl.GMBLASERP__Serial_Number__c && !allowUntagRetail)
-								|| matl.GMBLASERP__Lot__c != oldMatl.GMBLASERP__Lot__c
-								|| matl.AcctSeedERP__Project__c != oldMatl.AcctSeedERP__Project__c
-								|| matl.AcctSeedERP__Project_Task__c != oldMatl.AcctSeedERP__Project_Task__c)
-							{
-								matl.addError('Cannot modify quantity, unit price, Tax, ERP Order, ERP Order task, Serial number, Lot or product. The parent ERP Order or the Task is locked.');
-							}
+													if(matl.AcctSeedERP__Quantity_per_Unit__c != oldMatl.AcctSeedERP__Quantity_per_Unit__c
+														|| ((matl.GMBLASERP__Unit_Price__c == null?0:matl.GMBLASERP__Unit_Price__c).setScale(6) != (oldMatl.GMBLASERP__Unit_Price__c == null?0:oldMatl.GMBLASERP__Unit_Price__c).setScale(6))
+														|| matl.Quantity_Specified_Override__c != oldMatl.Quantity_Specified_Override__c
+														|| matl.AcctSeedERP__Product__c != oldMatl.AcctSeedERP__Product__c
+														|| (matl.GMBLASERP__Serial_Number__c != oldMatl.GMBLASERP__Serial_Number__c && !allowUntagRetail)
+														|| matl.GMBLASERP__Lot__c != oldMatl.GMBLASERP__Lot__c
+														|| matl.AcctSeedERP__Project__c != oldMatl.AcctSeedERP__Project__c
+														|| matl.AcctSeedERP__Project_Task__c != oldMatl.AcctSeedERP__Project_Task__c)
+													{
+														matl.addError('Cannot modify quantity, unit price, Tax, ERP Order, ERP Order task, Serial number, Lot or product. The parent ERP Order or the Task is locked.');
+													}
                         }
                         /// Added later to not allow change of PT or P
                         if(boolIsUpdate)
@@ -239,7 +239,10 @@ global without sharing class gcMaterial{
                         	AcctSeedERP__Material__c oldMatl = oldMap.get(matl.Id);
                         	if(oldMatl.AcctSeedERP__Project__c != matl.AcctSeedERP__Project__c
                         		|| matl.AcctSeedERP__Project_Task__c != oldMatl.AcctSeedERP__Project_Task__c)
-                        		matl.addError('Cannot modify ERP Order or ERP Order task. If required delete the ERP Order Item and add again.');
+													{
+														System.debug('Yup hitting an error here for some reason');
+														matl.addError('Cannot modify ERP Order or ERP Order task. If required delete the ERP Order Item and add again.');
+													}
                         }
                         if(project.Internal_Partner_Boat_Sale__c){
                         	if(matl.AcctSeedERP__GL_Account_Variable_1__c == null)
@@ -704,7 +707,6 @@ global without sharing class gcMaterial{
 
             listMatlKit.add(matlKit);
         }
-System.debug('Kit Parts = ' + listMatlKit );
         for(Product2 kit :
             [SELECT Id,
                     (SELECT Id,
@@ -893,7 +895,6 @@ System.debug('Kit Parts = ' + listMatlKit );
 
 	public static void updateRetailMaterialSerial(Map<Id,Map<Id,Id>> mapProjectProductSerial)
 	{
-		System.debug(loggingLevel.error,'mapProjectProductSerial:'+mapProjectProductSerial);
 		List<AcctSeedERP__Material__c> listMatlUpdate = new List<AcctSeedERP__Material__c>();
 		for(AcctSeedERP__Material__c matl :
 			[SELECT Id,
@@ -934,7 +935,6 @@ System.debug('Kit Parts = ' + listMatlKit );
 		}
 
 		if(!listMatlUpdate.isEmpty()){
-			System.debug(loggingLevel.Error, 'listMatlUpdate:'+listMatlUpdate);
 			Boolean oldVal = gcMaterial.disableTrigger;
 			gcMaterial.disableTrigger = true;
 			update listMatlUpdate;

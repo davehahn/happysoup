@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Required_Profit_Percent</fullName>
+    <active>true</active>
+    <description>The Profit Percent is required</description>
+    <errorConditionFormula>ISBLANK( Profit_Percent__c )</errorConditionFormula>
+    <errorDisplayField>Dump_Id__c</errorDisplayField>
+    <errorMessage>Profit Percent is required</errorMessage>
+</ValidationRule>

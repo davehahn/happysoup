@@ -70,7 +70,9 @@ public class Flow_FinalizeSales_Test {
 
     // Create ERP
     erp = Factory_ERPOrder.insertRetailBoatSale(customer, warehouse, entryDate.AcctSeed__Start_Date__c.addDays(2), serialNumber);
-
+		// Create CommissionRecords
+		CommissionRecordERP.createRecords( new Set<Id>{ erp.Id } );
+		CommissionLineItemERP.createRecordsFromERPs( new Set<Id>{ erp.Id } );
     // Create User
     user = Factory_User.newUser('Tom', 'Bombadil', 'System Administrator', warehouse);
     insert user;

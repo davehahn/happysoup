@@ -97,7 +97,9 @@ private class arInsuranceDocuments_Test {
 		insuranceProductsByPlanId = new Map<Id, List<Product2>>();
 		insurancePlans = new List<InsurancePlan__c>();
 		insurancePlans.add( new InsurancePlan__c(
-		  Name = 'Insurance Plan One'
+		  Name = 'Insurance Plan One',
+			Profit_Percent__c = 50
+
 		));
 		insert insurancePlans;
 		insuranceProductsByPlanId.put( insurancePlans[0].Id, new List<Product2>() );

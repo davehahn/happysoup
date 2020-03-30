@@ -1,0 +1,172 @@
+<!--
+ - Created by dave on 2020-02-05.
+ -->
+
+<!-- Commission Line Items -->
+<template>
+
+  <template if:true={showAddLineForm}>
+    <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+      <div class="slds-modal__container">
+        <header class="slds-modal__header">
+          <h2 class="slds-modal__title slds-hyphenate">{formHeaderText}</h2>
+        </header>
+        <div class="slds-modal__content slds-p-around_medium">
+
+          <lightning-layout multiple-rows="true">
+            <lightning-layout-item size="12"
+                                   padding="around-small">
+              <lightning-input type="text"
+                               name="description"
+                               label="Description"
+                               onchange={handleNewLineItemChange}
+                               value={activeLineItem.description}
+                               message-when-value-missing="Description is required"
+                               required></lightning-input>
+            </lightning-layout-item>
+            <lightning-layout-item size="12"
+                                   padding="around-small">
+              <lightning-input type="text"
+                               name="comment"
+                               label="Comment"
+                               onchange={handleNewLineItemChange}
+                               value={activeLineItem.comment}></lightning-input>
+            </lightning-layout-item>
+            <lightning-layout-item size="4"
+                                   padding="around-small">
+              <lightning-input type="number"
+                               name="quantity"
+                               label="Quantity"
+                               onchange={handleNewLineItemChange}
+                               value={activeLineItem.quantity}
+                               message-when-value-missing="Quantity is required"
+                               required></lightning-input>
+            </lightning-layout-item>
+            <template if:true={renderRatePaymentColumns}>
+              <lightning-layout-item size="4"
+                                     padding="around-small">
+                <lightning-input type="number"
+                                 name="commissionRate"
+                                 label="Commission Rate"
+                                 formatter="percent"
+                                 step="0.01"
+                                 onchange={handleNewLineItemChange}
+                                 value={activeLineItem.commissionRate}></lightning-input>
+              </lightning-layout-item>
+            </template>
+            <lightning-layout-item size="4"
+                                   padding="around-small">
+              <lightning-input type="number"
+                               name="salePrice"
+                               label="Sale Price"
+                               formatter="currency"
+                               onchange={handleNewLineItemChange}
+                               value={activeLineItem.salePrice}></lightning-input>
+            </lightning-layout-item>
+            <lightning-layout-item size="4"
+                                   padding="around-small">
+              <lightning-input type="number"
+                               name="unitCost"
+                               label="Cost"
+                               formatter="currency"
+                               onchange={handleNewLineItemChange}
+                               value={activeLineItem.unitCost}></lightning-input>
+            </lightning-layout-item>
+            <lightning-layout-item size="4"
+                                   padding="around-small">
+              <lightning-input type="number"
+                               name="labourCost"
+                               label="Labour Cost"
+                               formatter="currency"
+                               onchange={handleNewLineItemChange}
+                               value={activeLineItem.labourCost}></lightning-input>
+            </lightning-layout-item>
+          </lightning-layout>
+
+        </div>
+        <footer class="slds-modal__footer">
+          <lightning-button label="Cancel"
+                            onclick={handleCancelLineAdd}
+                            class="slds-m-right_x-small"></lightning-button>
+          <lightning-button label={saveBtnText}
+                            variant="brand"
+                            onclick={handleSaveLineItem}
+                            disabled={lineItemFormValid}></lightning-button>
+        </footer>
+      </div>
+    </section>
+    <div class="slds-backdrop slds-backdrop_open"></div>
+  </template>
+
+  <c-legend-spinner></c-legend-spinner>
+
+  <template if:true={lineItems}>
+
+    <table class="slds-table slds-table_cell-buffer slds-table_bordered">
+      <thead>
+      <tr>
+        <th>#</th>
+        <th class="slds-text-align_center">Quan.</th>
+        <th class="slds-text-align_left">Product</th>
+        <th class="slds-text-align_center">Sale</th>
+        <th class="slds-text-align_center">Cost</th>
+        <th class="slds-text-align_center">Labour Cost</th>
+        <th class="slds-text-align_center">Profit</th>
+        <template if:true={renderRatePaymentColumns}>
+          <th class="slds-text-align_center">Rate</th>
+          <th class="slds-text-align_center">Payment</th>
+        </template>
+        <th></th>
+      </tr>
+      </thead>
+      <tbody>
+        <template for:each={lineItems} for:item="line" for:index="idx">
+          <c-commission-line-item-row key={line.id}
+                                      line-item={line}
+                                      line-number={idx}
+                                      render-rate-payment-columns={renderRatePaymentColumns}
+                                      onlineaction={handleLineAction}></c-commission-line-item-row>
+        </template>
+      </tbody>
+      <tfoot>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td class="slds-text-align_center">
+            <lightning-formatted-number value={totalSale}
+                                        format-style="currency"
+                                        currency-code="CAD"></lightning-formatted-number>
+
+          </td>
+          <td class="slds-text-align_center">
+            <lightning-formatted-number value={totalCost}
+                                        format-style="currency"
+                                        currency-code="CAD"></lightning-formatted-number>
+          </td>
+          <td class="slds-text-align_center">
+            <lightning-formatted-number value={totalLabour}
+                                        format-style="currency"
+                                        currency-code="CAD"></lightning-formatted-number>
+          </td>
+          <td class="slds-text-align_center">
+            <lightning-formatted-number value={totalProfit}
+                                        format-style="currency"
+                                        currency-code="CAD"></lightning-formatted-number>
+          </td>
+          <template if:true={renderRatePaymentColumns}>
+            <td></td>
+            <td class="slds-text-align_center">
+              <lightning-formatted-number value={totalPayment}
+                                          format-style="currency"
+                                          currency-code="CAD"></lightning-formatted-number>
+            </td>
+          </template>
+          <td></td>
+        </tr>
+      </tfoot>
+    </table>
+
+  </template>
+
+</template>

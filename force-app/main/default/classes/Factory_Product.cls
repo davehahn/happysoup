@@ -192,13 +192,12 @@ public with sharing class Factory_Product {
     return ppsa;
   }
 
-  public static Product2 createInsuranceProduct( String family,
-                                                 String name,
-                                                 Id insurancePlanId,
-                                                 Boolean isResidual,
-                                                 Id pbId )
+  public static Product2 buildInsuranceProduct( String family,
+                                                String name,
+                                                Id insurancePlanId,
+                                                Boolean isResidual )
   {
-    Product2 p = new Product2(
+    return new Product2(
       RecordTypeId = LGND_Utilities.recordTypeIdFromName('Product2', 'Insurance'),
       Name = name,
       Family = family,
@@ -214,6 +213,15 @@ public with sharing class Factory_Product {
       AcctSeedERP__Serialized__c = false,
       GMBLASERP__Lot_Tracked__c = false
     );
+  }
+
+  public static Product2 createInsuranceProduct( String family,
+                                                 String name,
+                                                 Id insurancePlanId,
+                                                 Boolean isResidual,
+                                                 Id pbId )
+  {
+    Product2 p = buildInsuranceProduct( family, name, insurancePlanId, isResidual );
     //Boolean orig = gcProduct.disableTrigger;
     //gcProduct.disableTrigger = true;
     insert p;
