@@ -35,6 +35,12 @@ rm -f force-app/main/default/layouts/LiveChatTranscriptActive-Live\ Chat\ Transc
 rm -f force-app/main/default/layouts/LiveChatTranscriptWaiting-Live\ Chat\ Transcript\ %28Waiting%29\ Layout.layout-meta.xml
 echoOut 'Removing Accounting Home1 tab'
 rm -f force-app/main/default/tabs/AcctSeed__Accounting_Home1.tab-meta.xml
+echoOut 'removing mcdm_15__ weblinks from Account'
+rm -f force-app/main/default/objects/Account/webLinks/mcdm_15__*
+echoOut 'removing mcdm_15__ weblinks from Lead'
+rm -f force-app/main/default/objects/Lead/webLinks/mcdm_15__*
+echoOut 'removing mcdm_15__ weblinks from Contact'
+rm -f force-app/main/default/objects/Contact/webLinks/mcdm_15__*
 echoOut 'Running ant doMetadataClean'
 ant -buildfile build/build.xml doMetadataClean
 echoOut 'Deploying static resources'
