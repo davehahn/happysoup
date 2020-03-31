@@ -203,55 +203,55 @@ global without sharing class gcMaterial{
 				price(listNew, oldMap);
 				for(AcctSeedERP__Material__c matl : listNew)
 				{
-                    AcctSeed__Project__c project;
-                    if(matl.AcctSeedERP__Project__c != null)
-                    {
-                        project = mapProject.get(matl.AcctSeedERP__Project__c);
-                        AcctSeed__Project_Task__c task = mapProjectTask.get(matl.AcctSeedERP__Project_Task__c);
-                       	AcctSeed__Project_Task__c oldTask;
-                       	if(boolIsUpdate)
-                       		oldTask = mapProjectTask.get(oldMap.get(matl.Id).AcctSeedERP__Project_Task__c);
-                        if(project.Locked__c && boolIsInsert)
-                        	matl.addError('Cannot add material on a locked ERP Order.');
-                        if(task != null && task.Locked__c && boolIsInsert)
-                        	matl.addError('Cannot add material on a locked ERP Order Task.');
-                        if(boolIsUpdate
-                        	&& (project.Locked__c
-                        		|| (task.Locked__c && oldTask.Locked__c)
-                        		|| (task.Id != oldTask.Id && (oldTask.Locked__c || task.Locked__c))))
-                        {
-                        	AcctSeedERP__Material__c oldMatl = oldMap.get(matl.Id);
-							if(matl.AcctSeedERP__Quantity_per_Unit__c != oldMatl.AcctSeedERP__Quantity_per_Unit__c
-								|| ((matl.GMBLASERP__Unit_Price__c == null?0:matl.GMBLASERP__Unit_Price__c).setScale(6) != (oldMatl.GMBLASERP__Unit_Price__c == null?0:oldMatl.GMBLASERP__Unit_Price__c).setScale(6))
-								|| matl.Quantity_Specified_Override__c != oldMatl.Quantity_Specified_Override__c
-								|| matl.AcctSeedERP__Product__c != oldMatl.AcctSeedERP__Product__c
-								|| (matl.GMBLASERP__Serial_Number__c != oldMatl.GMBLASERP__Serial_Number__c && !allowUntagRetail)
-								|| matl.GMBLASERP__Lot__c != oldMatl.GMBLASERP__Lot__c
-								|| matl.AcctSeedERP__Project__c != oldMatl.AcctSeedERP__Project__c
-								|| matl.AcctSeedERP__Project_Task__c != oldMatl.AcctSeedERP__Project_Task__c)
+					AcctSeed__Project__c project;
+					if(matl.AcctSeedERP__Project__c != null)
+					{
+							project = mapProject.get(matl.AcctSeedERP__Project__c);
+							AcctSeed__Project_Task__c task = mapProjectTask.get(matl.AcctSeedERP__Project_Task__c);
+							AcctSeed__Project_Task__c oldTask;
+							if(boolIsUpdate)
+								oldTask = mapProjectTask.get(oldMap.get(matl.Id).AcctSeedERP__Project_Task__c);
+							if(project.Locked__c && boolIsInsert)
+								matl.addError('Cannot add material on a locked ERP Order.');
+							if(task != null && task.Locked__c && boolIsInsert)
+								matl.addError('Cannot add material on a locked ERP Order Task.');
+							if(boolIsUpdate
+								&& (project.Locked__c
+									|| (task.Locked__c && oldTask.Locked__c)
+									|| (task.Id != oldTask.Id && (oldTask.Locked__c || task.Locked__c))))
 							{
-								matl.addError('Cannot modify quantity, unit price, Tax, ERP Order, ERP Order task, Serial number, Lot or product. The parent ERP Order or the Task is locked.');
+								AcctSeedERP__Material__c oldMatl = oldMap.get(matl.Id);
+								if(matl.AcctSeedERP__Quantity_per_Unit__c != oldMatl.AcctSeedERP__Quantity_per_Unit__c
+									|| ((matl.GMBLASERP__Unit_Price__c == null?0:matl.GMBLASERP__Unit_Price__c).setScale(6) != (oldMatl.GMBLASERP__Unit_Price__c == null?0:oldMatl.GMBLASERP__Unit_Price__c).setScale(6))
+									|| matl.Quantity_Specified_Override__c != oldMatl.Quantity_Specified_Override__c
+									|| matl.AcctSeedERP__Product__c != oldMatl.AcctSeedERP__Product__c
+									|| (matl.GMBLASERP__Serial_Number__c != oldMatl.GMBLASERP__Serial_Number__c && !allowUntagRetail)
+									|| matl.GMBLASERP__Lot__c != oldMatl.GMBLASERP__Lot__c
+									|| matl.AcctSeedERP__Project__c != oldMatl.AcctSeedERP__Project__c
+									|| matl.AcctSeedERP__Project_Task__c != oldMatl.AcctSeedERP__Project_Task__c)
+								{
+									matl.addError('Cannot modify quantity, unit price, Tax, ERP Order, ERP Order task, Serial number, Lot or product. The parent ERP Order or the Task is locked.');
+								}
 							}
-                        }
-                        /// Added later to not allow change of PT or P
-                        if(boolIsUpdate)
-                        {
-                        	AcctSeedERP__Material__c oldMatl = oldMap.get(matl.Id);
-                        	if(oldMatl.AcctSeedERP__Project__c != matl.AcctSeedERP__Project__c
-                        		|| matl.AcctSeedERP__Project_Task__c != oldMatl.AcctSeedERP__Project_Task__c)
-                        		matl.addError('Cannot modify ERP Order or ERP Order task. If required delete the ERP Order Item and add again.');
-                        }
-                        if(project.Internal_Partner_Boat_Sale__c){
-                        	if(matl.AcctSeedERP__GL_Account_Variable_1__c == null)
-                        		matl.AcctSeedERP__GL_Account_Variable_1__c = gcConstants.idGlv1Wholesale;
-                        	if(matl.AcctSeedERP__GL_Account_Variable_2__c == null)
-                        		matl.AcctSeedERP__GL_Account_Variable_2__c = gcConstants.idGlv2Sales;
-                        }
+							/// Added later to not allow change of PT or P
+							if(boolIsUpdate)
+							{
+								AcctSeedERP__Material__c oldMatl = oldMap.get(matl.Id);
+								if(oldMatl.AcctSeedERP__Project__c != matl.AcctSeedERP__Project__c
+									|| matl.AcctSeedERP__Project_Task__c != oldMatl.AcctSeedERP__Project_Task__c)
+									matl.addError('Cannot modify ERP Order or ERP Order task. If required delete the ERP Order Item and add again.');
+							}
+							if(project.Internal_Partner_Boat_Sale__c){
+								if(matl.AcctSeedERP__GL_Account_Variable_1__c == null)
+									matl.AcctSeedERP__GL_Account_Variable_1__c = gcConstants.idGlv1Wholesale;
+								if(matl.AcctSeedERP__GL_Account_Variable_2__c == null)
+									matl.AcctSeedERP__GL_Account_Variable_2__c = gcConstants.idGlv2Sales;
+							}
 
-                        if(project.Warranty_Type__c == 'Warranty' && matl.GMBLASERP__Unit_Price__c != null && matl.GMBLASERP__Unit_Price__c > 0){
-                        	matl.GMBLASERP__Unit_Price__c = matl.GMBLASERP__Unit_Price__c * -1;
-                        }
-                    }
+							if(project.Warranty_Type__c == 'Warranty' && matl.GMBLASERP__Unit_Price__c != null && matl.GMBLASERP__Unit_Price__c > 0){
+								matl.GMBLASERP__Unit_Price__c = matl.GMBLASERP__Unit_Price__c * -1;
+							}
+					}
 
 					if(boolIsUpdate)
 					{

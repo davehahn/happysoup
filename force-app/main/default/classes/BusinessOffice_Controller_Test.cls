@@ -74,7 +74,7 @@ private class BusinessOffice_Controller_Test {
     erpInit();
     if( createPPSA )
     {
-      orderTask = Factory_ERPOrder.buildProjectTask( erp.Id, 'Oppy Line Items');
+      orderTask = Factory_ERPOrder.buildProjectTask( erp.Id, 'Retail Sale');
       insert orderTask;
       ppsa_mat = new AcctSeedERP__Material__c(
         AcctSeedERP__Project__c = erp.Id,
