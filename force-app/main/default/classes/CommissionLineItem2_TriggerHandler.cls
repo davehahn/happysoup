@@ -66,9 +66,7 @@ public without sharing class CommissionLineItem2_TriggerHandler extends TriggerH
     {
       if( cli.Product__c != null )
       {
-        Map<String, Decimal> resultMap = rateCalculator.calculate(cli);
-        cli.Commission_Rate__c = resultMap.get('rate');
-        cli.Cost__c = resultMap.get('cost');
+        rateCalculator.calculate(cli);
       }
     }
   }
@@ -80,9 +78,20 @@ public without sharing class CommissionLineItem2_TriggerHandler extends TriggerH
     {
       Decimal riggingTime = cli.Product_Retail_Rigging_Time__c == null ? 0 : cli.Product_Retail_Rigging_Time__c;
       if( cli.Labour_Cost__c == null )
+      {
         cli.Labour_Cost__c = LGND_Constants.retailLabourRate * riggingTime;
+      }
+
       cli.Profit__c = (cli.Sale_Price__c - cli.Cost__c - cli.Labour_Cost__c) * cli.Quantity__c;
-      cli.Payment_Amount__c = cli.Profit__c * cli.Commission_Rate__c;
+
+      if( cli.Payment_Based_on_Profit__c )
+      {
+        cli.Payment_Amount__c = cli.Profit__c * cli.Commission_Rate__c;
+      }
+      else
+      {
+        cli.Payment_Amount__c = cli.Sale_Price__c * cli.Quantity__c * cli.Commission_Rate__c;
+      }
     }
   }
 

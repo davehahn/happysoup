@@ -10,6 +10,8 @@ public with sharing class CommissionLineItem2_Service
   public static Decimal partsRate = 0.05;
   public static Decimal maintenancePackageRate = 0.5;
   public static Decimal warrantyProfitPercent = 0.50;
+  public static Decimal maintenancePackageProfitPercent = 0.50;
+  public static Decimal protectionAndServiceProfitPercent = 0.50;
 
   public class RateCostCalculator
   {
@@ -33,11 +35,11 @@ public with sharing class CommissionLineItem2_Service
       init();
     }
 
-    public Map<String, Decimal> calculate( CommissionLineItem2__c cli )
+    public void calculate( CommissionLineItem2__c cli )
     {
-      Map<String, Decimal> result = new Map<String, Decimal>();
       Decimal cost = 0;
       Decimal rate = partsRate;
+      Boolean paymentBasedOnProfit = false;
       CommissionRecord2__c comRec = this.commissionRecord_map.get( cli.CommissionRecord2__c);
       if( cli.Product__c != null )
       {
@@ -45,19 +47,33 @@ public with sharing class CommissionLineItem2_Service
         {
           rate = insuranceAndWarrantyRate;
           cost = cli.Sale_Price__c * warrantyProfitPercent;
+          paymentBasedOnProfit = true;
+        }
+        else if( this.maintenancePackages.containsKey( cli.Product__c ) )
+        {
+          rate = maintenancePackageRate;
+          cost = cli.Sale_Price__c * maintenancePackageProfitPercent;
+          paymentBasedOnProfit = true;
         }
         else if( this.protectionAndServicesProducts.containsKey( cli.Product__c ) )
         {
           rate = protectionAndServiceRate;
+          cost = cli.Sale_Price__c * protectionAndServiceProfitPercent;
+          paymentBasedOnProfit = true;
         }
         else if( this.insuranceProducts.containsKey( cli.Product__c ) )
         {
           cost = cli.Sale_Price__c * ( ( 100 - insuranceProducts.get( cli.Product__c ).InsurancePlan__r.Profit_Percent__c ) / 100 );
           rate = insuranceAndWarrantyRate;
+          paymentBasedOnProfit = true;
         }
-        else if( comRec.Calculation_Method__c == 'Gross Margin' )
+        else
         {
-          rate = grossMarginRate;
+          if( comRec.Calculation_Method__c == 'Gross Margin' )
+          {
+            rate = grossMarginRate;
+            paymentBasedOnProfit = true;
+          }
           String key = String.valueOf(comRec.Factory_Pricebook__c);
           key += ':';
           key += String.valueOf(cli.Product__c);
@@ -72,9 +88,9 @@ public with sharing class CommissionLineItem2_Service
           }
         }
       }
-      result.put('rate', rate);
-      result.put('cost', cost);
-      return result;
+      cli.Cost__c = cost;
+      cli.Commission_Rate__c = rate;
+      cli.Payment_Based_on_Profit__c = paymentBasedOnProfit;
     }
 
     private void init()
