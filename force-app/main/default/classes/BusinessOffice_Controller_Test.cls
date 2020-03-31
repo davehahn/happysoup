@@ -371,7 +371,7 @@ private class BusinessOffice_Controller_Test {
     erpInit();
     if( insuranceProducts != null && insuranceProducts.size() > 0 )
     {
-      orderTask = Factory_ERPOrder.buildProjectTask( erp.Id, 'Insurance Items');
+      orderTask = Factory_ERPOrder.buildProjectTask( erp.Id, 'Business Office');
       orderTask.isInsurance__c = true;
       insert orderTask;
       AcctSeedERP__Material__c[] mats = new List<AcctSeedERP__Material__c>();
