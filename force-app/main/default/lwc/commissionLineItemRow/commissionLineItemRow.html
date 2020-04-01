@@ -14,6 +14,7 @@
     <td class="slds-text-align_center">
       <lightning-formatted-number value={lineItem.totalSale}
                                   format-style="currency"
+                                  class={salePriceClass}
                                   currency-code="CAD"></lightning-formatted-number>
       <template if:true={renderEachSalePrice}>
                 <span>
@@ -45,6 +46,7 @@
     <td class="slds-text-align_center">
       <lightning-formatted-number value={lineItem.profit}
                                   format-style="currency"
+                                  class={profitClass}
                                   currency-code="CAD"></lightning-formatted-number>
     </td>
     <template if:true={renderRatePaymentColumns}>
@@ -73,6 +75,7 @@
       <c-commission-line-item-row key={kitPart.id}
                                   line-item={kitPart}
                                   line-number={idx}
+                                  record-calculation-method={recordCalculationMethod}
                                   is-child-row="true"></c-commission-line-item-row>
     </template>
   </template>

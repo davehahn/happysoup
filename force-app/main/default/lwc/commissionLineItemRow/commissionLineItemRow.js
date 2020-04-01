@@ -10,10 +10,16 @@ export default class CommissionLineItemRow extends LightningElement {
   @api lineNumber;
   @api isChildRow=false;
   @api renderRatePaymentColumns;
+  @api recordCalculationMethod;
 
   get rowClass()
   {
     return this.isChildRow ? 'kit-row' : 'row';
+  }
+
+  get renderRatePaymentColumns()
+  {
+    return this.recordCalculationMethod === 'Revenue';
   }
 
   get itemNumber()
@@ -24,6 +30,22 @@ export default class CommissionLineItemRow extends LightningElement {
   get shouldDisplayComment()
   {
     return this.lineItem.comment && this.lineItem.description !== this.lineItem.comment;
+  }
+
+  get salePriceClass()
+  {
+    if( this.isChildRow ) return '';
+    return this.recordCalculationMethod === 'Gross Margin' ?
+      '' :
+      this.lineItem.basedOnProfit ? '' : 'used-for-payment-calculation';
+  }
+
+  get profitClass()
+  {
+    if( this.isChildRow ) return '';
+    return this.recordCalculationMethod === 'Gross Margin' ?
+      '' :
+      this.lineItem.basedOnProfit ? 'used-for-payment-calculation' : '';
   }
 
   get renderEachSalePrice()

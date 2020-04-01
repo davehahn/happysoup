@@ -124,6 +124,7 @@ public class CommissionWrapper
     @AuraEnabled public Decimal profit;
     @AuraEnabled public Decimal commissionRate;
     @AuraEnabled public Decimal payment;
+    @AuraEnabled public Boolean basedOnProfit;
     @AuraEnabled public Boolean hasMultiple;
     @AuraEnabled public List<LineItem> kitParts;
     @AuraEnabled public String matId;
@@ -149,6 +150,7 @@ public class CommissionWrapper
       this.labourCost = cli.Labour_Cost__c;
       this.profit = cli.Profit__c;
       this.commissionRate = cli.Commission_Rate__c;
+      this.basedOnProfit = cli.Payment_Based_on_Profit__c;
       this.payment = cli.Payment_Amount__c;
       this.hasMultiple = cli.Quantity__c > 1;
       this.matId = cli.Material__c;

@@ -20,6 +20,7 @@ public with sharing class CommissionLineItem2_Selector extends Application_Selec
       'Labour_Cost__c',
       'Product_Retail_Rigging_Time__c',
       'Profit__c',
+      'Payment_Based_on_Profit__c',
       'Payment_Amount__c',
       'Description__c',
       'Product__c',

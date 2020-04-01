@@ -87,7 +87,7 @@
 
         <lightning:tab label="Details">
           <c:commissionLineItems commissionRecordId="{!v.record.id}"
-                                 renderRatePaymentColumns="{!equals(v.record.calculationMethod, 'Revenue')}"
+                                 recordCalculationMethod="{!v.record.calculationMethod}"
                                  aura:id="commissionLines" />
         </lightning:tab>
 

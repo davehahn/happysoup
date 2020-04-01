@@ -16,7 +16,7 @@ export default class CommissionLineItems extends LightningElement {
   @wire(CurrentPageReference) pageRef;
 
   @api commissionRecordId;
-  @api renderRatePaymentColumns;
+  @api recordCalculationMethod;
   wiredLineItems;
   @track showAddLineForm=false;
   @track activeLineItem;
@@ -34,6 +34,7 @@ export default class CommissionLineItems extends LightningElement {
     this.wiredLineItems = result;
     if( result.data )
     {
+      console.log( JSON.parse(JSON.stringify(result.data )));
       this.lineItems = [...result.data];
       this.reCalcTotals();
     }
@@ -59,6 +60,11 @@ export default class CommissionLineItems extends LightningElement {
   @api commissionRecordStatusChanged()
   {
     return refreshApex( this.wiredLineItems );
+  }
+
+  get renderRatePaymentColumns()
+  {
+    return this.recordCalculationMethod === 'Revenue';
   }
 
   get lineItemFormValid()

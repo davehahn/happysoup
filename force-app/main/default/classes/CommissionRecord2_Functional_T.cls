@@ -185,8 +185,8 @@ private class CommissionRecord2_Functional_T
     System.assertEquals( 1, commissionRecords.size() );
     System.assertEquals( 10, commissionLineItems.size() );
     System.assertEquals( 1000, commissionLineItems[0].Sale_Price__c );
-    System.assertEquals( 1000, commissionLineItems[0].Profit__c );
-    System.assertEquals( 0, commissionLineItems[0].Cost__c );
+    System.assertEquals( 0, commissionLineItems[0].Profit__c );
+    System.assertEquals( 1000, commissionLineItems[0].Cost__c );
     System.assertEquals( 'From Unit Test', commissionLineItems[0].Comment__c );
     System.assertEquals( 1, commissionLineItems[0].Quantity__c );
     System.assertEquals( CommissionLineItem2_Service.partsRate, commissionLineItems[0].Commission_Rate__c );
@@ -343,8 +343,8 @@ private class CommissionRecord2_Functional_T
     System.assertEquals( 'Revenue', commissionRecords[0].Calculation_Method__c );
     System.assertEquals( 10, commissionLineItems.size() );
     System.assertEquals( 1000, commissionLineItems[0].Sale_Price__c );
-    System.assertEquals( 1000, commissionLineItems[0].Profit__c );
-    System.assertEquals( 0, commissionLineItems[0].Cost__c );
+    System.assertEquals( 500, commissionLineItems[0].Profit__c );
+    System.assertEquals( 500, commissionLineItems[0].Cost__c );
     System.assertEquals( 'From Unit Test', commissionLineItems[0].Comment__c );
     System.assertEquals( 1, commissionLineItems[0].Quantity__c );
     System.assertEquals( CommissionLineItem2_Service.partsRate, commissionLineItems[0].Commission_Rate__c );
