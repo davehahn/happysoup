@@ -53,6 +53,8 @@ echoOut 'Running ant doMetadataClean'
 ant -buildfile build/build.xml doMetadataClean
 echoOut 'Deploying static resources'
 sfdx heber:staticresources:deploy -u $1
+echoOut 'modifying .forceignore to not deploy staticresources'
+echo -e "\nforce-app/main/default/staticresources" >> .forceignore
 echo 'Deploying the remaining metadata'
 
 if [ "$CHECKONLY" = true ]
