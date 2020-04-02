@@ -17,7 +17,7 @@ public without sharing class CommissionRecord2_TriggerHandler extends TriggerHan
 
   protected override void beforeInsert()
   {
-    setProject_CalculationMethod_RetailPB( (List<CommissionRecord2__c>)Trigger.new );
+    setValuesFromProjectTask( (List<CommissionRecord2__c>)Trigger.new );
     setFactoryPB( (List<CommissionRecord2__c>)Trigger.new );
   }
 
@@ -33,6 +33,7 @@ public without sharing class CommissionRecord2_TriggerHandler extends TriggerHan
   protected override void afterInsert()
   {
     CommissionPayment2_Service.createInitialPayments( Trigger.newMap.keySet() );
+    CommissionLineItem2_Service.createDefaultLineItems( (List<CommissionRecord2__c>)Trigger.new );
   }
 
   protected override void afterUpdate()
@@ -77,7 +78,7 @@ public without sharing class CommissionRecord2_TriggerHandler extends TriggerHan
 //  {
 //  }
 
-  private static void setProject_CalculationMethod_RetailPB( List<CommissionRecord2__c> listNew )
+  private static void setValuesFromProjectTask( List<CommissionRecord2__c> listNew )
   {
     Map<Id, CommissionRecord2__c> taskIdMap = new Map<Id, CommissionRecord2__c>();
     for( CommissionRecord2__c cr : listNew )
@@ -87,6 +88,7 @@ public without sharing class CommissionRecord2_TriggerHandler extends TriggerHan
     for( AcctSeed__Project_Task__c task : [ SELECT Id,
                                                     AcctSeed__Project__c,
                                                     AcctSeed__Project__r.GMBLASERP__Pricebook__c,
+                                                    AcctSeed__GL_Account_Variable_2__c,
                                                     Commission_Calculation_Method__c
                                             FROM AcctSeed__Project_Task__c
                                             WHERE Id IN :taskIdMap.keySet() ] )
@@ -94,6 +96,7 @@ public without sharing class CommissionRecord2_TriggerHandler extends TriggerHan
       taskIdMap.get( task.Id ).Project__c = task.AcctSeed__Project__c;
       taskIdMap.get( task.Id ).Retail_Pricebook__c = task.AcctSeed__Project__r.GMBLASERP__Pricebook__c;
       taskIdMap.get( task.Id ).Calculation_Method__c = task.Commission_Calculation_Method__c;
+      taskIdMap.get( task.Id ).Department_GLV2__c = task.AcctSeed__GL_Account_Variable_2__c;
     }
   }
 

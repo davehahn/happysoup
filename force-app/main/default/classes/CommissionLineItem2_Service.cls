@@ -333,6 +333,39 @@ public with sharing class CommissionLineItem2_Service
     }
   }
 
+  public static void createDefaultLineItems( List<CommissionRecord2__c> commissionRecords )
+  {
+    List<CommissionLineItem2__c> defaults = new List<CommissionLineItem2__c>();
+    for( CommissionRecord2__c record : commissionRecords )
+    {
+      if( record.Department_GLV2__c == LGND_Constants.GLV2Id_BusinessOffice )
+      {
+        defaults.add( new CommissionLineItem2__c(
+          Description__c = 'Admin Fee',
+          Quantity__c = 1,
+          Sale_Price__c = 199,
+          Cost__c = 0,
+          Labour_Cost__c = 0,
+          CommissionRecord2__c = record.Id,
+          Commission_Rate__c = 0.20
+        ));
+        defaults.add( new CommissionLineItem2__c(
+          Description__c = 'Bank Reserve',
+          Quantity__c = 1,
+          Sale_Price__c = 0,
+          Cost__c = 0,
+          Labour_Cost__c = 0,
+          CommissionRecord2__c = record.Id,
+          Commission_Rate__c = 0.20
+        ));
+      }
+    }
+    if( defaults.size() > 0 )
+    {
+      insert defaults;
+    }
+  }
+
   public static void makeChatterPostsAboutChanges( Map<Id, List<String>> changeMap )
   {
     List<ConnectApi.BatchInput> batchInputs = new List<ConnectApi.BatchInput>();
