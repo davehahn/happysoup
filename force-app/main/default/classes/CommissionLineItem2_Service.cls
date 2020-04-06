@@ -272,11 +272,15 @@ public with sharing class CommissionLineItem2_Service
 
   private void processMaterials()
   {
+    Set<Id> nonRevenueRtIds = new Set<Id>{
+      LGND_Constants.productRtId_Protection,
+      LGND_Constants.productRtId_Bundle
+    };
     Set<Id> taskIds_toFindComRecord = new Set<Id>();
     for( AcctSeedERP__Material__c mat :  Material_Selector.selectAllByIds( this.allMaterialIds ) )
     {
       if( mat.AcctSeedERP__Product__r.AcctSeed__Revenue_GL_Account__r.AcctSeed__Type__c == 'Revenue' ||
-         ( mat.AcctSeedERP__Product__r.RecordTypeId == LGND_Constants.productRtId_Protection  &&
+         ( nonRevenueRtIds.contains( mat.AcctSeedERP__Product__r.RecordTypeId ) &&
            mat.AcctSeedERP__Product__r.Family == 'Maintenance Package') )
        {
         if (!this.taskId_materials_map.containsKey(mat.AcctSeedERP__Project_Task__c))
