@@ -22,6 +22,12 @@ else
   echoOut "Deployment running with --testlevel=$2"
 fi
 
+if [ -z "`git log master..`" ]
+then
+  echoOut "Must be a new Branch - Exiting"
+  exit 0
+fi
+
 echoOut 'Removing Lead list views'
 rm -fR force-app/main/default/objects/Lead/listViews
 echoOut 'Removing Opportunity list views'
