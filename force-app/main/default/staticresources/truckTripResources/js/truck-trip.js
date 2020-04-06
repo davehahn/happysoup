@@ -21,6 +21,8 @@
 
     function _populateValuesFromSF_TruckTrip( SF_TruckTrip )
     {
+        console.log('SF_TruckTrip');
+        console.log(SF_TruckTrip);
       if( typeof(SF_TruckTrip) === 'undefined' )
       {
         this.Id = null;
@@ -28,6 +30,7 @@
         this.Truck_Driver__c = null;
         this.Truck_Driver__r = null;
         this.Departure_Date__c = null;
+        this.Distance_KM__c = null;
         this.Return_Date__c = null;
         this.Trailer__c = null;
         this.Truck__c = null;
@@ -39,6 +42,7 @@
         this.Truck_Driver__c = SF_TruckTrip.Truck_Driver__c;
         this.Truck_Driver__r = SF_TruckTrip.Truck_Driver__r;
         this.Departure_Date__c = SF_TruckTrip.Departure_Date__c;
+        this.Distance_KM__c = SF_TruckTrip.Distance_KM__c;
         this.Return_Date__c = SF_TruckTrip.Return_Date__c;
         this.Trailer__c = SF_TruckTrip.Trailer__c;
         this.Truck__c = SF_TruckTrip.Truck__c;
@@ -56,6 +60,7 @@
         Departure_Date__c: this.Departure_Date__c === null ? null : moment( this.Departure_Date__c ).format('YYYY-MM-DD'),
         Return_Date__c: this.Return_Date__c === null ? null : moment( this.Return_Date__c ).format('YYYY-MM-DD'),
         Trailer__c: this.Trailer__c,
+        Distance_KM__c: this.Distance_KM__c,
         Truck__c: this.Truck__c
       };
     }
@@ -215,6 +220,8 @@
 
       function dataValid(d)
       {
+          console.log('d');
+          console.log(d);
         var result = true,
             errorFields = [];
         $('.error').removeClass('error');
@@ -262,6 +269,16 @@
         updateData( $this.data('attribute-name'), $this.val() );
       });
 
+      //populate distance
+      $('.trip-form .has-distance').each( function(idx, ele ) {
+        var $ele = $(ele);
+        $ele.val( $ele.data('init-value') ).change();
+      })
+      .on('change', function() {
+        var $this = $(this);
+        updateData( $this.data('attribute-name'), $this.val() );
+      });
+
       // date selects
       $('.trip-form .has-datepicker').each( function( idx, ele ){
         var $ele = $(ele),
@@ -281,6 +298,8 @@
       $('[data-trip-form-btn]').on('click', function(e) {
         e.preventDefault();
         console.log('save button click');
+        console.log(data);
+
         var funct = $(this).data('trip-form-btn');
         if( funct === 'save' )
         {
@@ -315,6 +334,8 @@
       var self = this;
       TripHelper.hideModal();
       TripHelper.addPageIndicator();
+      console.log('data');
+      console.log(data);
       TripHelper.saveTrip( data )
       .then( function( record ) {
         $('#trip-header').replaceWith(
