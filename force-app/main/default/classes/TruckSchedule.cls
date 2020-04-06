@@ -8,6 +8,7 @@ public with sharing class TruckSchedule {
     public String truckDriverId { get; set; }
     public String truck { get; set; }
     public String trailer { get; set; }
+    public Decimal distance { get; set; }
     public Date startDateTime { get; set; }
     public String startDate { get; set; }
     //public Date deliveryDateTime { get; set; }
@@ -47,6 +48,7 @@ public with sharing class TruckSchedule {
         this.truckDriverId = trip.Truck_Driver__c;
         this.truck = trip.Truck__c;
         this.trailer = trip.Trailer__c;
+        this.distance = trip.Distance_KM__c;
         this.startDateTime = trip.Departure_Date__c;
         this.startDate = dateToString( trip.Departure_Date__c );
         this.endDateTime = trip.Return_Date__c;
@@ -181,6 +183,7 @@ public with sharing class TruckSchedule {
     List<Truck_Trip__c> trips = [SELECT Id,
                                         Name,
                                         Driver__c,
+                                        Distance_KM__c,
                                         Truck_Driver__c,
                                         Truck__c,
                                         Trailer__c,
@@ -208,7 +211,7 @@ public with sharing class TruckSchedule {
   {
     if( Schema.sObjectType.Truck_Trip__c.isUpdateable() )
     {
-      Truck_Trip__c trip = [SELECT Id, Departure_Date__c, Return_Date__c, Truck__c, Trailer__c, Truck_Driver__c
+      Truck_Trip__c trip = [SELECT Id, Distance_KM__c, Departure_Date__c, Return_Date__c, Truck__c, Trailer__c, Truck_Driver__c
                           FROM Truck_Trip__c
                           WHERE Id = : tripId];
       trip.Departure_Date__c = trip.Departure_Date__c.addDays( numDays );
@@ -228,7 +231,7 @@ public with sharing class TruckSchedule {
   {
     if( Schema.sObjectType.Truck_Trip__c.isUpdateable() )
     {
-      Truck_Trip__c trip = [SELECT Id, Departure_Date__c, Return_Date__c, Truck__c, Trailer__c, Truck_Driver__c
+      Truck_Trip__c trip = [SELECT Id, Distance_KM__c, Departure_Date__c, Return_Date__c, Truck__c, Trailer__c, Truck_Driver__c
                           FROM Truck_Trip__c
                           WHERE Id = : tripId];
       trip.Return_Date__c = trip.Return_Date__c.addDays( numDays );
@@ -249,6 +252,7 @@ public with sharing class TruckSchedule {
     {
       Truck_Trip__c trip = [SELECT Id FROM Truck_Trip__c WHERE Id = :tripId];
       trip.Driver__c = null;
+      trip.Distance_KM__c = null;
       trip.Departure_Date__c = null;
       trip.Return_Date__c = null;
       trip.Truck__c = null;
