@@ -61,6 +61,7 @@
                                name="salePrice"
                                label="Sale Price"
                                formatter="currency"
+                               step="0.01"
                                onchange={handleNewLineItemChange}
                                value={activeLineItem.salePrice}></lightning-input>
             </lightning-layout-item>
@@ -70,6 +71,7 @@
                                name="unitCost"
                                label="Cost"
                                formatter="currency"
+                               step="0.01"
                                onchange={handleNewLineItemChange}
                                value={activeLineItem.unitCost}></lightning-input>
             </lightning-layout-item>
@@ -79,6 +81,7 @@
                                name="labourCost"
                                label="Labour Cost"
                                formatter="currency"
+                               step="0.01"
                                onchange={handleNewLineItemChange}
                                value={activeLineItem.labourCost}></lightning-input>
             </lightning-layout-item>
