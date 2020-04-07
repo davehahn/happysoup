@@ -6,6 +6,8 @@
     <aura:attribute name="disbursementFound" type="AcctSeed__Cash_Disbursement__c[]" />
     <aura:attribute name="receiptFound" type="AcctSeed__Cash_Receipt__c[]" />
     <aura:attribute name="journalFound" type="AcctSeed__Journal_Entry__c[]" />
+    <aura:attribute name="periodOptions" type="sObject[]" />
+    <aura:attribute name="idPeriod" type="String" />
 
     <aura:attribute name="searchBalance" type="String" />
    
@@ -14,6 +16,7 @@
 
     <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
     <aura:handler name="change" value="{!v.searchBalance}" action="{!c.onSearch}" />
+    <aura:handler name="change" value="{!v.idPeriod}" action="{!c.periodChanged}" />
 
     <c:Toaster aura:id="toast" />
     
@@ -23,9 +26,25 @@
         </aura:set>
 
         <div class="slds-form slds-form_stacked slds-m-horizontal_large">
-            <div class="slds-form-element">
-                <div class="slds-form-element__control">
-                    <ui:inputText aura:id="balanceInput" label="" updateon="keyup" keyup="{!c.balanceInputKeyUp}"  />
+            <div class="slds-grid">
+                <div class="slds-form-element slds-col slds-size_1-of-3">
+                    <div class="slds-form-element__control period-selector">
+                        <lightning:select aura:id="selectPeriod" name="periods" label="Select Period" value="{!v.idPeriod}" onchange="">
+                            <aura:iteration items="{!v.periodOptions}" var="pr">
+                                <option value="{!pr.Id}" text="{!pr.Name}"></option>
+                            </aura:iteration>
+                        </lightning:select>
+                    </div>
+                </div>
+                <div class="slds-form-element slds-col slds-size_1-of-3">
+                    <div class="slds-form-element__control">
+                        <ui:inputText aura:id="balanceInput" value="{!v.searchBalance}" label="Enter Amount" updateon="keyup" keyup="{!c.balanceInputKeyUp}"  />
+                    </div>
+                </div>
+                <div class="slds-form-element slds-col slds-size_1-of-3">
+                    <div class="slds-form-element__control"><div>&nbsp;</div><div style="margin-top:5px;"></div>
+                        <lightning:button variant="brand" label="Search" onclick="{!c.onSearch}"/>
+                    </div>
                 </div>
             </div>
         </div>
