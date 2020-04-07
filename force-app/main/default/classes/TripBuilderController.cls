@@ -379,6 +379,7 @@ public with sharing class TripBuilderController {
         Trailer__c = null,
         Truck__c = null,
         Truck_Driver__c = null,
+          Distance_KM__c = null,
         Departure_Date__c = null,
         Return_Date__c = null);
     }
@@ -425,6 +426,7 @@ public with sharing class TripBuilderController {
                    Truck__c,
                    Truck_Driver__r.Name,
                    Departure_Date__c,
+        Distance_KM__c,
                    Return_Date__c,
               (SELECT Id,
                       Name,
@@ -548,6 +550,8 @@ public with sharing class TripBuilderController {
   @RemoteAction
   public static Truck_Trip__c saveTrip( String JSONdata )
   {
+    System.debug('JSONdata');
+    System.debug(JSONdata);
     if( Schema.sObjectType.Truck_Trip__c.isUpdateable() )
     {
       Truck_Trip__c t = (Truck_Trip__c)JSON.deserialize( JSONdata, Truck_Trip__c.class );
@@ -880,7 +884,7 @@ public with sharing class TripBuilderController {
   {
     try
     {
-      return [SELECT Id, Name, Trailer__c, Truck__c, Truck_Driver__c, Truck_Driver__r.Name, Departure_Date__c, Return_Date__c,
+      return [SELECT Id, Name, Distance_KM__c, Trailer__c, Truck__c, Truck_Driver__c, Truck_Driver__r.Name, Departure_Date__c, Return_Date__c,
               (SELECT Id, Account__r.Name,  Type__c, Delivery_Date__c, Travel_Days__c FROM Destinations__r )
                 FROM Truck_Trip__c
                 WHERE Id = :tripId];
@@ -893,6 +897,7 @@ public with sharing class TripBuilderController {
         Trailer__c = null,
         Truck__c = null,
         Driver__c = null,
+          Distance_KM__c = null,
         Departure_Date__c = null,
         Return_Date__c = null );
     }
