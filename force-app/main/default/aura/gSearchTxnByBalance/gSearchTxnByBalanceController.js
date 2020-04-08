@@ -1,11 +1,21 @@
 ({
-	doInit: function(component, event, helper) {
+    doInit: function(component, event, helper) {
+        helper.runAction(component, "c.getPeriods", {}, function(response) {
+            var results = response.getReturnValue();
+            component.set("v.periodOptions", results);
+            component.set("v.idPeriod",results[0].Id);
+        });
         helper.toggleSpinner(component, false);
-	},
+    },
     balanceInputKeyUp: function(component, event, helper) {
 		if (event.getParams().keyCode == 13) {
            	component.set("v.searchBalance", component.find("balanceInput").get("v.value"));
 	    }
+    },
+    periodChanged: function(component, event, helper) {
+      var val = component.find("balanceInput").get("v.value");
+      if(val == '' || val == null) return;
+      component.set("v.searchBalance", val);
     },
     onSearch: function(component, event, helper) {
         var searchNumber = component.get("v.searchBalance");
@@ -17,7 +27,8 @@
         helper.toggleSpinner(component, true);
 
         helper.runAction(component, "c.getMatchedTxn", {
-            srcBalance: searchNumber
+            srcBalance: searchNumber,
+            idPeriod:component.get("v.idPeriod")
         }, function(response) {
             var results = response.getReturnValue();
             component.set("v.txnFound", results.transactions);
