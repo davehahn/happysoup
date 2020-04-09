@@ -12,12 +12,12 @@
       <img src={logo}>
     </div>
     <div class="center">
-      <a href="javascript:void(0);">Boat 1</a>
-      <a href="javascript:void(0);">Boat 2</a>
-      <a href="javascript:void(0);">Boat 3</a>
+      <a data-menu-number="0" onclick={navToBoat}>Boat 1</a>
+      <a data-menu-number="1" onclick={navToBoat}>Boat 2</a>
+      <a data-menu-number="2" onclick={navToBoat}>Boat 3</a>
     </div>
     <div class="right">
-      <a href="javascript:void(0);" class="sign-in">Sign In</a>
+      <a class="sign-in" onclick={handleSignIn}>Sign In</a>
       <lightning-button-icon icon-name="utility:rows"
                              variant="bare"
                              size="large"
@@ -32,10 +32,10 @@
                              size="large"
                              onclick={toggleMenu}></lightning-button-icon>
     </div>
-    <a href="javascript:void(0);">Boat 1</a>
-    <a href="javascript:void(0);">Boat 2</a>
-    <a href="javascript:void(0);">Boat 3</a>
-    <a href="javascript:void(0);" class="sign-in">Sign In</a>
+    <a data-menu-number="0" onclick={navToBoat}>Boat 1</a>
+    <a data-menu-number="1" onclick={navToBoat}>Boat 2</a>
+    <a data-menu-number="2" onclick={navToBoat}>Boat 3</a>
+    <a class="sign-in" onclick={handleSignIn}>Sign In</a>
   </div>
 
 
