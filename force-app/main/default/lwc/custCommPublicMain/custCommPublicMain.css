@@ -1,0 +1,148 @@
+/**
+ * Created by dave on 2020-04-09.
+ */
+
+:host {
+  overflow-x: hidden;
+}
+
+.overlay {
+  position: fixed;
+  height:100%;
+  width: 100%;
+  background: #EDEDED;
+  opacity: 0.8;
+  z-index:90;
+  display:none;
+}
+
+.overlay.open {
+  display:block;
+}
+
+
+.main-nav {
+  background:transparent;
+  width:100%;
+  position:relative;
+  top:0;
+  display:flex;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: stretch;
+}
+
+.main-nav .left {
+  flex-grow: 1;
+  text-align: left;
+  margin-left: 1rem;
+  width: 25%;
+  line-height: 3rem;
+}
+
+.main-nav .center {
+  flex-grow: 2;
+  text-align: center;
+  width: 50%;
+  line-height: 3rem;
+}
+
+.main-nav .right {
+  flex-grow: 1;
+  text-align:right;
+  margin-right:1rem;
+  width: 25%;
+  line-height: 3rem;
+}
+
+.main-nav img {
+  height: 1.5rem;
+  position: absolute;
+  left: 0;
+  margin-top: 0.75rem;
+  margin-left:0.5rem;
+}
+
+.main-nav a {
+  color: #504F51;
+  font-size: 1rem;
+  padding: 0 1rem;
+  display:inline-block;
+  text-transform: uppercase;
+}
+
+.main-nav a:hover {
+  text-decoration:none;
+  color: #2AB2F0;
+  font-weight: 400;
+}
+
+.main-nav lightning-button-icon {
+  position:relative;
+  top: -3px;
+  margin-left:0.5rem;
+}
+
+.slide-menu {
+  position:fixed;
+  width:300px;
+  height:100%;
+  z-index: 100;
+  background: #504F51;
+  top: 0;
+  left: 100%;
+  transition: .3s;
+}
+
+.slide-menu.open {
+  left: calc( 100% - 300px );
+}
+
+.slide-menu .close-menu {
+  line-height: 3rem;
+  text-align:right;
+}
+
+.slide-menu a {
+  line-height: 3rem;
+  color: #D6D6D6;
+  display:block;
+  font-size: 1rem;
+  border-top:1px solid #5A5A5A;
+  padding-left:0.75rem;
+  font-weight: 300;
+  text-transform: uppercase;
+}
+
+.slide-menu a.sign-in {
+  display:none;
+}
+
+.slide-menu a:hover {
+  text-decoration: none;
+  background:  #5A5A5A;
+}
+
+.slide-menu a:last-child {
+  border-bottom:1px solid #5A5A5A;
+}
+
+@media screen and (max-width: 768px) {
+
+  .main-nav .left,
+  .main-nav .right {
+    width:50%;
+  }
+
+  .main-nav .center {
+    display:none;
+  }
+
+  .main-nav a.sign-in {
+    display:none;
+  }
+
+  .slide-menu a.sign-in {
+    display:block;
+  }
+}
