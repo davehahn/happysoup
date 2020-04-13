@@ -1,0 +1,146 @@
+<!--
+ - Created by dave on 2020-04-10.
+ -->
+
+<!-- Cust Comm Order Builder -->
+<template>
+
+  <div class="modal-container">
+    <div class="modal-content">
+      <div class="modal-content_body">
+        <div class="modal-content_sidebar">
+
+        </div>
+        <div class="modal-content_main">
+
+          <span class="modal-content_close">
+            <lightning-button-icon icon-name="utility:close"
+                                   variant="bare"
+                                   size="large"
+                                   onclick={handleCloseModal}></lightning-button-icon>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="config-header">
+
+    <div class="branding">
+      <h1 class="main-logo">
+        <img src={logo} onclick={handleHomeNav}>
+      </h1>
+    </div>
+
+    <div class="config-nav">
+      <ul class="config-nav-list">
+        <li class="config-nav-item config-nav-item_selected" onclick={handleNav} data-nav-name="motor">
+          <h2 class="config-nav-title">Motor</h2>
+        </li>
+        <li class="config-nav-item" onclick={handleNav} data-nav-name="trailer">
+          <h2 class="config-nav-title">Trailer</h2>
+        </li>
+        <li class="config-nav-item" onclick={handleNav} data-nav-name="package">
+          <h2 class="config-nav-title">Package</h2>
+        </li>
+        <li class="config-nav-item" onclick={handleNav} data-nav-name="electronics">
+          <h2 class="config-nav-title">Electronics</h2>
+        </li>
+        <li class="config-nav-item" onclick={handleNav} data-nav-name="payment">
+          <h2 class="config-nav-title">Payment</h2>
+        </li>
+      </ul>
+    </div>
+
+    <div class="language-select">
+
+    </div>
+
+  </div>
+
+  <div class="config-content">
+
+    <div class="config-page config-page_selected" data-page="motor">
+      <h1 class="slds-text-heading_large">Motor</h1>
+    </div>
+
+    <div class="config-page" data-page="trailer">
+      <h1 class="slds-text-heading_large">Trailer</h1>
+    </div>
+
+    <div class="config-page" data-page="package">
+      <h1 class="slds-text-heading_large">Package</h1>
+    </div>
+
+    <div class="config-page" data-page="electronics">
+      <h1 class="slds-text-heading_large">Electronics</h1>
+    </div>
+
+    <div class="config-page" data-page="payment">
+      <h1 class="slds-text-heading_large">Payment</h1>
+    </div>
+
+  </div>
+
+  <div class="config-footer">
+    <div class="config-footer_content">
+
+      <div class="config-footer_item finance-type">
+        <div class="financetype-selector_container">
+          <div class="financetype-selector_button"
+               role="button"
+               tabindex="0"
+               onclick={openFinanceSelect}>
+            {paymentType}
+          </div>
+          <ul class="financetype-selector_options" role="tablist">
+            <li role="tab"
+                tabindex="-1"
+                class="financetype-selector_option selected"
+                data-value="cash"
+                onclick={handlePaymentTypeSelect}>
+              cash
+            </li>
+            <li role="tab"
+                tabindex="-1"
+                class="financetype-selector_option"
+                data-value="loan"
+                onclick={handlePaymentTypeSelect}>
+              loan
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="config-footer_item finance-prices">
+        <div class="config-footer_price">
+          <div class="amount">$39,999</div>
+          <div>Purchase price</div>
+        </div>
+        <div class="config-footer_savings">
+          <div class="amount">$6,700</div>
+          <div>Monthly Payment</div>
+        </div>
+        <div class="config-footer_details-link">
+          <a onclick={handleOpenModal}>Show Details</a>
+        </div>
+      </div>
+
+      <div class="config-footer_item">
+        <div class="config-footer_delivery">
+          <div>Delivery - Line 1</div>
+          <div>Delivery - Line 1</div>
+        </div>
+      </div>
+
+      <div class="config-footer_item">
+        <button disabled={buttonDisabled}
+                onclick={handleNext}>
+          {buttonText}
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+</template>
