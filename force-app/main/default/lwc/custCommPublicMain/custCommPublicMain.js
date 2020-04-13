@@ -35,7 +35,7 @@ export default class CustCommPublicMain extends NavigationMixin(LightningElement
     event.preventDefault();
     let page = this.pageMap[event.target.dataset.menuNumber],
         params = {
-          recordId: page.recordId
+          c__recordId: page.recordId
         };
 
     this.navigateToCommunityPage( page.pageName, params );
@@ -43,7 +43,13 @@ export default class CustCommPublicMain extends NavigationMixin(LightningElement
 
   handleSignIn( event )
   {
-    this.navigateToCommunityPage( 'my-home', {} );
+    //this.navigateToCommunityPage( 'my-home', {} );
+    this[NavigationMixin.Navigate]({
+      type: 'comm__loginPage',
+         attributes: {
+             actionName: 'login'
+         }
+    });
   }
 
   navigateToCommunityPage( pageName, params )
