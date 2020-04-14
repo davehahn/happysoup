@@ -5,142 +5,311 @@
 <!-- Cust Comm Order Builder -->
 <template>
 
-  <div class="modal-container">
-    <div class="modal-content">
-      <div class="modal-content_body">
-        <div class="modal-content_sidebar">
+  <div class="lgnd-order-builder">
 
-        </div>
-        <div class="modal-content_main">
+    <div class="modal-container">
+      <div class="modal-content">
+        <div class="modal-content_body">
+          <div class="modal-content_sidebar">
 
-          <span class="modal-content_close">
-            <lightning-button-icon icon-name="utility:close"
-                                   variant="bare"
-                                   size="large"
-                                   onclick={handleCloseModal}></lightning-button-icon>
-          </span>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="config-header">
-
-    <div class="branding">
-      <h1 class="main-logo">
-        <img src={logo} onclick={handleHomeNav}>
-      </h1>
-    </div>
-
-    <div class="config-nav">
-      <ul class="config-nav-list">
-        <li class="config-nav-item config-nav-item_selected" onclick={handleNav} data-nav-name="motor">
-          <h2 class="config-nav-title">Motor</h2>
-        </li>
-        <li class="config-nav-item" onclick={handleNav} data-nav-name="trailer">
-          <h2 class="config-nav-title">Trailer</h2>
-        </li>
-        <li class="config-nav-item" onclick={handleNav} data-nav-name="package">
-          <h2 class="config-nav-title">Package</h2>
-        </li>
-        <li class="config-nav-item" onclick={handleNav} data-nav-name="electronics">
-          <h2 class="config-nav-title">Electronics</h2>
-        </li>
-        <li class="config-nav-item" onclick={handleNav} data-nav-name="payment">
-          <h2 class="config-nav-title">Payment</h2>
-        </li>
-      </ul>
-    </div>
-
-    <div class="language-select">
-
-    </div>
-
-  </div>
-
-  <div class="config-content">
-
-    <div class="config-page config-page_selected" data-page="motor">
-      <h1 class="slds-text-heading_large">Motor</h1>
-    </div>
-
-    <div class="config-page" data-page="trailer">
-      <h1 class="slds-text-heading_large">Trailer</h1>
-    </div>
-
-    <div class="config-page" data-page="package">
-      <h1 class="slds-text-heading_large">Package</h1>
-    </div>
-
-    <div class="config-page" data-page="electronics">
-      <h1 class="slds-text-heading_large">Electronics</h1>
-    </div>
-
-    <div class="config-page" data-page="payment">
-      <h1 class="slds-text-heading_large">Payment</h1>
-    </div>
-
-  </div>
-
-  <div class="config-footer">
-    <div class="config-footer_content">
-
-      <div class="config-footer_item finance-type">
-        <div class="financetype-selector_container">
-          <div class="financetype-selector_button"
-               role="button"
-               tabindex="0"
-               onclick={openFinanceSelect}>
-            {paymentType}
           </div>
-          <ul class="financetype-selector_options" role="tablist">
-            <li role="tab"
-                tabindex="-1"
-                class="financetype-selector_option selected"
-                data-value="cash"
-                onclick={handlePaymentTypeSelect}>
-              cash
+          <div class="modal-content_main">
+
+            <span class="modal-content_close">
+              <button onclick={handleModalClose}>
+                <i class="slds-icon-close" ></i>
+              </button>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="config-header">
+
+      <div class="branding">
+        <h1 class="main-logo">
+          <img src={logo} onclick={handleHomeNav}>
+        </h1>
+      </div>
+
+      <div class="config-nav">
+        <ul class="config-nav-list">
+          <template for:each={processPages} for:item="page">
+            <li key={page.label} class={page.class} onclick={handleNav} data-nav-name={page.label}>
+              <h2 class="config-nav-title">{page.label}</h2>
             </li>
-            <li role="tab"
-                tabindex="-1"
-                class="financetype-selector_option"
-                data-value="loan"
-                onclick={handlePaymentTypeSelect}>
-              loan
-            </li>
-          </ul>
-        </div>
+          </template>
+<!--          <li class="config-nav-item config-nav-item_selected" onclick={handleNav} data-nav-name="performance">-->
+<!--            <h2 class="config-nav-title">performance</h2>-->
+<!--          </li>-->
+<!--          <li class="config-nav-item" onclick={handleNav} data-nav-name="trailering">-->
+<!--            <h2 class="config-nav-title">trailering</h2>-->
+<!--          </li>-->
+<!--          <li class="config-nav-item" onclick={handleNav} data-nav-name="electronics">-->
+<!--            <h2 class="config-nav-title">electronics</h2>-->
+<!--          </li>-->
+<!--          <li class="config-nav-item" onclick={handleNav} data-nav-name="payment">-->
+<!--            <h2 class="config-nav-title">payment</h2>-->
+<!--          </li>-->
+        </ul>
       </div>
 
-      <div class="config-footer_item finance-prices">
-        <div class="config-footer_price">
-          <div class="amount">$39,999</div>
-          <div>Purchase price</div>
-        </div>
-        <div class="config-footer_savings">
-          <div class="amount">$6,700</div>
-          <div>Monthly Payment</div>
-        </div>
-        <div class="config-footer_details-link">
-          <a onclick={handleOpenModal}>Show Details</a>
-        </div>
-      </div>
+      <div class="language-select">
 
-      <div class="config-footer_item">
-        <div class="config-footer_delivery">
-          <div>Delivery - Line 1</div>
-          <div>Delivery - Line 1</div>
-        </div>
-      </div>
-
-      <div class="config-footer_item">
-        <button disabled={buttonDisabled}
-                onclick={handleNext}>
-          {buttonText}
-        </button>
       </div>
 
     </div>
+
+    <div class="config-content">
+
+      <!-- PERFORMANCE -->
+      <div class="config-page config-page_selected" data-page="performance">
+        <div class="config-page_left">
+          <h1 class="slds-m-top_large slds-text-heading_large slds-text-align_center">Performance</h1>
+        </div>
+        <div class="config-page_right">
+
+        </div>
+      </div>
+
+      <!-- TRAILERING -->
+      <div class="config-page" data-page="trailering">
+        <div class="config-page_left">
+            <h1 class="slds-m-top_large slds-text-heading_large slds-text-align_center">Trailering</h1>
+        </div>
+        <div class="config-page_right">
+
+        </div>
+      </div>
+
+      <!-- ELECTRONICS -->
+      <div class="config-page" data-page="electronics">
+        <div class="config-page_left">
+          <h1 class="slds-m-top_large slds-text-heading_large slds-text-align_center">Electronics</h1>
+        </div>
+        <div class="config-page_right">
+
+        </div>
+      </div>
+
+
+      <!-- PAYMENT -->
+      <div class="config-page" data-page="payment">
+        <div class="config-page_left">
+          <div class="edit-config" onclick={handleEditConfig}>
+            <i class="slds-icon-chevronleft"></i>
+            <span>Edit Design</span>
+          </div>
+          <div class="account-details">
+            <div class="form-header">Enter Account Details</div>
+            <lightning-layout multiple-rows="true">
+
+              <lightning-layout-item padding="horizontal-small"
+                                      size="12"
+                                      small-device-size="12"
+                                      medium-device-size="6"
+                                      large-device-size="6">
+                <div class="form-input">
+                  <label>First Name</label>
+                  <input label="First Name" type="text">
+                </div>
+              </lightning-layout-item>
+
+              <lightning-layout-item padding="horizontal-small"
+                                     size="12"
+                                     small-device-size="12"
+                                     medium-device-size="6"
+                                     large-device-size="6">
+                <div class="form-input">
+                  <label>Last Name</label>
+                  <input label="Last Name" type="text">
+                </div>
+              </lightning-layout-item>
+
+              <lightning-layout-item padding="horizontal-small"
+                                     size="12"
+                                     small-device-size="12"
+                                     medium-device-size="6"
+                                     large-device-size="6">
+                <div class="form-input">
+                  <label>Email Address</label>
+                  <input label="Email Address" type="text">
+                </div>
+              </lightning-layout-item>
+
+              <lightning-layout-item padding="horizontal-small"
+                                     size="12"
+                                     small-device-size="12"
+                                     medium-device-size="6"
+                                     large-device-size="6">
+                <div class="form-input">
+                  <label>Phone Number</label>
+                  <input label="Phone Number" type="text">
+                </div>
+              </lightning-layout-item>
+
+            </lightning-layout>
+          </div>
+
+          <div class="payment-details">
+            <div class="form-header">
+              Payment
+            </div>
+            <div class="payment-disclaimer">
+              Due today to complete your order: $3,200.
+            </div>
+          </div>
+
+          <div class="payment-form">
+            <div class="form-header">
+              Payment Card Details
+            </div>
+            <lightning-layout multiple-rows="true">
+
+              <lightning-layout-item padding="horizontal-small"
+                                                             size="12"
+                                                             small-device-size="12"
+                                                             medium-device-size="12"
+                                                             large-device-size="12">
+              <div class="form-input">
+                <label>Name On Card</label>
+                <input label="Name On Card" type="text">
+              </div>
+            </lightning-layout-item>
+
+              <lightning-layout-item padding="horizontal-small"
+                                     size="12"
+                                     small-device-size="12"
+                                     medium-device-size="12"
+                                     large-device-size="12">
+                <div class="form-input">
+                  <label>Card Number</label>
+                  <input label="Card Number" type="text">
+                </div>
+              </lightning-layout-item>
+
+              <lightning-layout-item padding="horizontal-small"
+                                     size="12"
+                                     small-device-size="12"
+                                     medium-device-size="6"
+                                     large-device-size="6">
+                <div class="form-input">
+                  <label>Expiration Month</label>
+                  <input label="Expiration Month" type="text">
+                </div>
+              </lightning-layout-item>
+
+              <lightning-layout-item padding="horizontal-small"
+                                     size="12"
+                                     small-device-size="12"
+                                     medium-device-size="6"
+                                     large-device-size="6">
+                <div class="form-input">
+                  <label>Expiration Year</label>
+                  <input label="Expiration Year" type="text">
+                </div>
+              </lightning-layout-item>
+
+              <lightning-layout-item padding="horizontal-small"
+                                     size="12"
+                                     small-device-size="12"
+                                     medium-device-size="6"
+                                     large-device-size="6">
+                <div class="form-input">
+                  <label>CVV</label>
+                  <input label="CVV" type="text">
+                </div>
+              </lightning-layout-item>
+
+              <lightning-layout-item padding="horizontal-small"
+                                     size="12"
+                                     small-device-size="12"
+                                     medium-device-size="6"
+                                     large-device-size="6">
+                <div class="form-input">
+                  <label>Billing Postal Code</label>
+                  <input label="Billing Postal Code" type="text">
+                </div>
+              </lightning-layout-item>
+
+            </lightning-layout>
+
+            <div class="payment-disclaimer">
+              I allow Legend Boats to save my payment instrument information for future transactions pursuant to the <a>Payment Terms for Services</a>
+            </div>
+          </div>
+
+        </div>
+        <div class="config-page_right">
+
+        </div>
+      </div>
+
+    </div>
+
+    <div class="config-footer">
+      <div class="config-footer_content">
+
+        <div class="config-footer_item finance-type">
+          <div class="financetype-selector_container">
+            <div class="financetype-selector_button"
+                 role="button"
+                 tabindex="0"
+                 onclick={openFinanceSelect}>
+              {paymentType}
+              <i class="slds-icon-chevrondown"></i>
+            </div>
+            <ul class="financetype-selector_options" role="tablist">
+              <li role="tab"
+                  tabindex="-1"
+                  class="financetype-selector_option selected"
+                  data-value="cash"
+                  onclick={handlePaymentTypeSelect}>
+                cash
+              </li>
+              <li role="tab"
+                  tabindex="-1"
+                  class="financetype-selector_option"
+                  data-value="loan"
+                  onclick={handlePaymentTypeSelect}>
+                loan
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="config-footer_item finance-prices">
+          <div class="config-footer_price">
+            <div class="amount">$39,999</div>
+            <div>Purchase price</div>
+          </div>
+          <div class="config-footer_savings">
+            <div class="amount">$6,700</div>
+            <div>Monthly Payment</div>
+          </div>
+          <div class="config-footer_details-link">
+            <a onclick={handleOpenModal}>Show Details</a>
+          </div>
+        </div>
+
+        <div class="config-footer_item">
+          <div class="config-footer_delivery">
+            <div>Delivery - Line 1</div>
+            <div>Delivery - Line 1</div>
+          </div>
+        </div>
+
+        <div class="config-footer_item">
+          <button disabled={buttonDisabled}
+                  onclick={handleNext}>
+            {buttonText}
+          </button>
+        </div>
+
+      </div>
+    </div>
+
   </div>
 
 </template>
