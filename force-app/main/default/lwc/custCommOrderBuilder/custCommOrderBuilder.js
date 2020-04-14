@@ -4,6 +4,8 @@
 
 import { LightningElement, wire, track } from 'lwc';
 import { CurrentPageReference, NavigationMixin } from 'lightning/navigation';
+import { loadStyle } from 'lightning/platformResourceLoader';
+import sldsIconFont from '@salesforce/resourceUrl/sldsIconFont';
 import LOGO from '@salesforce/resourceUrl/LegendLogo';
 
 export default class CustCommOrderBuilder extends NavigationMixin(LightningElement) {
@@ -12,18 +14,35 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
   logo = LOGO;
   orderValid=false;
   pages = [
-    'motor',
-    'trailer',
-    'package',
+    'performance',
+    'trailering',
     'electronics',
     'payment'
   ];
-  @track currentPage = 'motor';
+  @track currentPage = 'performance';
   @track paymentType='cash';
 
   @wire(CurrentPageReference)
   setCurrentPageReference(currentPageReference) {
     this.recordId = currentPageReference.state.c__recordId;
+  }
+
+  renderedCallback()
+  {
+    loadStyle( this, sldsIconFont + '/style.css')
+    .then(()=>{});
+  }
+
+  get processPages()
+  {
+    return this.pages.map( page => {
+      return {
+        label: page,
+        class: this.currentPage === page ?
+          'config-nav-item config-nav-item_selected' :
+          'config-nav-item'
+      }
+    });
   }
 
   get buttonText()
@@ -65,11 +84,20 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
   handleCloseModal()
   {
     this.toggleModal( false );
+    this.template.querySelector('.modal-container').removeEventListener('click');
   }
 
   handleOpenModal()
   {
     this.toggleModal( true );
+    this.template.querySelector('.modal-container').addEventListener('click', () => {
+      this.toggleModal(false);
+    });
+  }
+
+  handleEditConfig()
+  {
+    this.doPageChange('performance');
   }
 
   toggleModal( shouldOpen )
@@ -87,16 +115,16 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
   handleNext()
   {
     this.onPaymentPage() ?
-      this.submitOrder() :
-      this.doPageChange( this.pages[ this.pages.indexOf( this.currentPage ) +1 ] );
+    this.submitOrder() :
+    this.doPageChange( this.pages[ this.pages.indexOf( this.currentPage ) +1 ] );
   }
 
   doPageChange( page )
   {
     this.currentPage = page;
     /* nav */
-    this.template.querySelector('.config-nav-item_selected').classList.remove('config-nav-item_selected');
-    this.template.querySelector(`[data-nav-name="${this.currentPage}"]` ).classList.add('config-nav-item_selected');
+    //this.template.querySelector('.config-nav-item_selected').classList.remove('config-nav-item_selected');
+    //this.template.querySelector(`[data-nav-name="${this.currentPage}"]` ).classList.add('config-nav-item_selected');
     /* content */
     this.template.querySelector('.config-page_selected').classList.remove('config-page_selected');
     this.template.querySelector(`[data-page="${this.currentPage}"]` ).classList.add('config-page_selected');
