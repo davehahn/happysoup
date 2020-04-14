@@ -84,6 +84,24 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
     });
   }
 
+  renderedCallback()
+  {
+    loadStyle( this, sldsIconFont + '/style.css')
+    .then(()=>{});
+  }
+
+  get processPages()
+  {
+    return this.pages.map( page => {
+      return {
+        label: page,
+        class: this.currentPage === page ?
+          'config-nav-item config-nav-item_selected' :
+          'config-nav-item'
+      }
+    });
+  }
+
   get buttonText()
   {
     return this.onPaymentPage() ? 'Place Order' : 'Next';
