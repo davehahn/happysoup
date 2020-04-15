@@ -1,0 +1,49 @@
+<!--
+ - Created by dave on 2020-04-15.
+ -->
+
+<apex:page showHeader="false"
+           sidebar="false"
+           applyHtmlTag="false"
+           applyBodyTag="false"
+           docType="html-5.0">
+
+  <style>
+
+    .square-payment-form {
+      background: transparent;
+      width: 100%;
+      height: 100%;
+    }
+
+    .form-element {
+      margin-bottom: 24px;
+    }
+
+    .form-element label {
+      color: #666;
+      font-size: 14px;
+      margin: 0 20px 8px;
+      display: block;
+    }
+
+    .form-element input {
+      background: #FFF;
+      border: 1px solid transparent;
+      padding: 10px 20px;
+      border-radius: 20px;
+      width: 100%;
+      font-size: 14px;
+      color: #666;
+    }
+
+    .form-element input:focus {
+      outline: none;
+      border: 1px solid #CCC;
+    }
+
+  </style>
+
+  <c:Square_PaymentForm />
+
+</apex:page>
