@@ -10,40 +10,55 @@
 
   <style>
 
-    .square-payment-form {
-      background: transparent;
-      width: 100%;
-      height: 100%;
+    .sqr-payment-container {
+      background: #F4F4F4;
     }
 
-    .form-element {
-      margin-bottom: 24px;
-    }
-
-    .form-element label {
-      color: #666;
-      font-size: 14px;
-      margin: 0 20px 8px;
-      display: block;
-    }
-
-    .form-element input {
+    .sqr-payment-input {
       background: #FFF;
       border: 1px solid transparent;
       padding: 10px 20px;
       border-radius: 20px;
-      width: 100%;
       font-size: 14px;
       color: #666;
+      width:calc( 100% - 1.5rem );
+      height: 39px;
+      margin: 0 0.75rem 24px 0.75rem;
+      box-sizing: border-box;
     }
 
-    .form-element input:focus {
+    .sqr-payment-input--focus {
       outline: none;
       border: 1px solid #CCC;
     }
 
+    .sqr-payment-container label {
+      color: #666;
+      font-size: 14px;
+      margin: 0 33px 8px;
+      display: block;
+    }
+
   </style>
 
+  <script>
+
+    window.addEventListener('message', function(event) {
+      if( event.origin === window.location.origin )
+      {
+        const data = {
+          attr1: 'firstAttr',
+          attr2: 6000,
+          attr3: 'another'
+        };
+
+        window.parent.postMessage(data, window.location.origin );
+      }
+    });
+
+  </script>
+
   <c:Square_PaymentForm />
+
 
 </apex:page>
