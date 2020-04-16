@@ -52,6 +52,13 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
   {
     loadStyle( this, sldsIconFont + '/style.css')
     .then(()=>{});
+
+    window.addEventListener('resize', (event) => {
+      console.log('resizing window bitches');
+      console.log( event );
+      console.log( event.currentTarget.outerWidth );
+    });
+
   }
 
   get processPages()
@@ -133,6 +140,11 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
     this.currentPage = page;
     this.template.querySelector('.config-page_selected').classList.remove('config-page_selected');
     this.template.querySelector(`[data-page="${this.currentPage}"]` ).classList.add('config-page_selected');
+
+    if( this.currentPage === 'payment')
+    {
+      this.template.querySelector('[data-id="square-payment-container"]').src = '/apex/Square_PaymentForm_CustomerCommunity';
+    }
   }
 
   toggleModal( shouldOpen )
