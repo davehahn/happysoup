@@ -41,6 +41,23 @@
 
   </style>
 
+  <script>
+
+    window.addEventListener('message', function(event) {
+      if( event.origin === window.location.origin )
+      {
+        const data = {
+          attr1: 'firstAttr',
+          attr2: 6000,
+          attr3: 'another'
+        };
+
+        window.parent.postMessage(data, window.location.origin );
+      }
+    });
+
+  </script>
+
   <c:Square_PaymentForm />
 
   <script>

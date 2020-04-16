@@ -66,17 +66,31 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
     });
   }
 
+  constructor()
+  {
+    super();
+    this.origin = window.location.origin;
+    window.addEventListener('message', (event) => {
+      if( event.origin === this.origin )
+      {
+        console.log( JSON.parse( JSON.stringify( event.data ) ) );
+      }
+    });
+    window.addEventListener('resize', (event) => {
+      console.log( event.currentTarget.outerWidth )
+      this.setIframeHeight( event.currentTarget.outerWidth );
+    });
+  }
+
+  connectedCallback()
+  {
+    this.setIframeHeight( window.outerWidth );
+  }
+
   renderedCallback()
   {
     loadStyle( this, sldsIconFont + '/style.css')
     .then(()=>{});
-
-    window.addEventListener('resize', (event) => {
-      console.log('resizing window bitches');
-      console.log( event );
-      console.log( event.currentTarget.outerWidth );
-    });
-
   }
 
   get processPages()
@@ -89,6 +103,13 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
           'config-nav-item'
       }
     });
+  }
+
+  get paymentPageURL()
+  {
+    const paymentApexPage = '/apex/Square_PaymentForm_CustomerCommunity';
+    const urlString = window.location.href;
+    return urlString.substring(0, urlString.indexOf("/s") ) + paymentApexPage;
   }
 
   get buttonText()
@@ -158,11 +179,6 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
     this.currentPage = page;
     this.template.querySelector('.config-page_selected').classList.remove('config-page_selected');
     this.template.querySelector(`[data-page="${this.currentPage}"]` ).classList.add('config-page_selected');
-
-    if( this.currentPage === 'payment')
-    {
-      this.template.querySelector('[data-id="square-payment-container"]').src = '/apex/Square_PaymentForm_CustomerCommunity';
-    }
   }
 
   toggleModal( shouldOpen )
