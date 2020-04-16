@@ -4,86 +4,192 @@
 
 <apex:component>
 
+  <script type="text/javascript" src="https://js.squareupsandbox.com/v2/paymentform">
+  </script>
+
   <apex:slds />
 
   <div class="slds-scope">
-
-    <div class="slds-grid slds-wrap square-payment-form">
-
+    <div class="slds-grid slds-wrap sqr-payment-container">
       <div class="slds-col
                   slds-size_1-of-1
                   slds-small-size_1-of-1
-                  slds-medium-size_1-of-1
-                  slds-large-size_1-of-1
+                  slds-medium-size_1-of-2
+                  slds-large-size_1-of-2
                   slds-p-left_small
-                  slds-p-right_small
-                  form-element">
-        <label>Name On Card</label>
-        <input type="text" label="Name On Card" />
-      </div>
-
-      <div class="slds-col
-                  slds-size_1-of-1
-                  slds-small-size_1-of-1
-                  slds-medium-size_1-of-1
-                  slds-large-size_1-of-1
-                  slds-p-left_small
-                  slds-p-right_small
-                  form-element">
+                  slds-p-right_small">
         <label>Card Number</label>
-        <input type="text" label="Card Number" />
+        <div id="sq-card-number"></div>
       </div>
-
       <div class="slds-col
                   slds-size_1-of-1
                   slds-small-size_1-of-1
                   slds-medium-size_1-of-2
                   slds-large-size_1-of-2
                   slds-p-left_small
-                  slds-p-right_small
-                  form-element">
-        <label>Expiration Month</label>
-        <input type="text" label="Expiration Month" />
+                  slds-p-right_small">
+        <label>Expiration Date</label>
+        <div id="sq-expiration-date"></div>
       </div>
-
       <div class="slds-col
                   slds-size_1-of-1
                   slds-small-size_1-of-1
                   slds-medium-size_1-of-2
                   slds-large-size_1-of-2
                   slds-p-left_small
-                  slds-p-right_small
-                  form-element">
-        <label>Expiration Year</label>
-        <input type="text" label="Expiration Year" />
-      </div>
-
-      <div class="slds-col
-                  slds-size_1-of-1
-                  slds-small-size_1-of-1
-                  slds-medium-size_1-of-2
-                  slds-large-size_1-of-2
-                  slds-p-left_small
-                  slds-p-right_small
-                  form-element">
+                  slds-p-right_small">
         <label>CVV</label>
-        <input type="text" label="CVV" />
+        <div id="sq-cvv"></div>
       </div>
-
       <div class="slds-col
                   slds-size_1-of-1
                   slds-small-size_1-of-1
                   slds-medium-size_1-of-2
                   slds-large-size_1-of-2
                   slds-p-left_small
-                  slds-p-right_small
-                  form-element">
+                  slds-p-right_small">
         <label>Billing Postal Code</label>
-        <input type="text" label="Billing Postal Code" />
+        <div id="sq-postal-code"></div>
       </div>
-
+      <!--        <button id="sq-creditcard" class="button-credit-card" onclick="onGetCardNonce(event)">Pay Invoice</button>-->
     </div>
-
   </div>
+
+  <script type="text/javascript">
+
+     const paymentForm = new SqPaymentForm({
+
+       applicationId: "sandbox-sq0idb-MAljdFjMUyHd7LoGIT0s0A",
+       inputClass: 'sqr-payment-input',
+       inputStyles: [{
+         fontSize: '14px',
+         color: '#666'
+       }],
+       autoBuild: false,
+       cardNumber: {
+         elementId: 'sq-card-number'
+       },
+       cvv: {
+         elementId: 'sq-cvv',
+         placeholder: ''
+       },
+       expirationDate: {
+           elementId: 'sq-expiration-date',
+           placeholder: 'MM/YY'
+       },
+       postalCode: {
+           elementId: 'sq-postal-code',
+           placeholder: ''
+       },
+
+       callbacks: {
+
+         cardNonceResponseReceived: function (errors, nonce, cardData) {
+         if (errors) {
+
+             console.error('Encountered errors:');
+             errors.forEach(function (error) {
+                 console.error('  ' + error.message);
+             });
+             alert('Encountered errors, check browser developer console for more details');
+             return;
+         }
+             alert(`The generated nonce is:\n${nonce}`);
+
+         }
+       }
+     });
+
+     paymentForm.build();
+
+
+    function onGetCardNonce(event) {
+      event.preventDefault();
+      paymentForm.requestCardNonce();
+    }
+
+  </script>
+
+<!--  <apex:slds />-->
+
+<!--  <div class="slds-scope">-->
+
+<!--    <div class="slds-grid slds-wrap square-payment-form">-->
+
+<!--      <div class="slds-col-->
+<!--                  slds-size_1-of-1-->
+<!--                  slds-small-size_1-of-1-->
+<!--                  slds-medium-size_1-of-1-->
+<!--                  slds-large-size_1-of-1-->
+<!--                  slds-p-left_small-->
+<!--                  slds-p-right_small-->
+<!--                  form-element">-->
+<!--        <label>Name On Card</label>-->
+<!--        <input type="text" label="Name On Card" />-->
+<!--      </div>-->
+
+<!--      <div class="slds-col-->
+<!--                  slds-size_1-of-1-->
+<!--                  slds-small-size_1-of-1-->
+<!--                  slds-medium-size_1-of-1-->
+<!--                  slds-large-size_1-of-1-->
+<!--                  slds-p-left_small-->
+<!--                  slds-p-right_small-->
+<!--                  form-element">-->
+<!--        <label>Card Number</label>-->
+<!--        <input type="text" label="Card Number" />-->
+<!--      </div>-->
+
+<!--      <div class="slds-col-->
+<!--                  slds-size_1-of-1-->
+<!--                  slds-small-size_1-of-1-->
+<!--                  slds-medium-size_1-of-2-->
+<!--                  slds-large-size_1-of-2-->
+<!--                  slds-p-left_small-->
+<!--                  slds-p-right_small-->
+<!--                  form-element">-->
+<!--        <label>Expiration Month</label>-->
+<!--        <input type="text" label="Expiration Month" />-->
+<!--      </div>-->
+
+<!--      <div class="slds-col-->
+<!--                  slds-size_1-of-1-->
+<!--                  slds-small-size_1-of-1-->
+<!--                  slds-medium-size_1-of-2-->
+<!--                  slds-large-size_1-of-2-->
+<!--                  slds-p-left_small-->
+<!--                  slds-p-right_small-->
+<!--                  form-element">-->
+<!--        <label>Expiration Year</label>-->
+<!--        <input type="text" label="Expiration Year" />-->
+<!--      </div>-->
+
+<!--      <div class="slds-col-->
+<!--                  slds-size_1-of-1-->
+<!--                  slds-small-size_1-of-1-->
+<!--                  slds-medium-size_1-of-2-->
+<!--                  slds-large-size_1-of-2-->
+<!--                  slds-p-left_small-->
+<!--                  slds-p-right_small-->
+<!--                  form-element">-->
+<!--        <label>CVV</label>-->
+<!--        <input type="text" label="CVV" />-->
+<!--      </div>-->
+
+<!--      <div class="slds-col-->
+<!--                  slds-size_1-of-1-->
+<!--                  slds-small-size_1-of-1-->
+<!--                  slds-medium-size_1-of-2-->
+<!--                  slds-large-size_1-of-2-->
+<!--                  slds-p-left_small-->
+<!--                  slds-p-right_small-->
+<!--                  form-element">-->
+<!--        <label>Billing Postal Code</label>-->
+<!--        <input type="text" label="Billing Postal Code" />-->
+<!--      </div>-->
+
+<!--    </div>-->
+
+<!--  </div>-->
 
 </apex:component>
