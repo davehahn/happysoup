@@ -16,9 +16,8 @@
         </script>
     </head>
     <body>
-    <br /> <br />
     <div id="form-container">
-        <img src="{!$Resource.LegendLogo}" style="width: 70%; display: block; margin: 0 auto; padding-bottom: 25px;" />
+        <img src="{!$Resource.LegendLogo}" style="width: 70%; display: block; margin: 0 auto; padding-top: 200px; padding-bottom: 15px;" />
         <div id="sq-card-number"></div>
         <div class="third" id="sq-expiration-date"></div>
         <div class="third" id="sq-cvv"></div>
@@ -83,6 +82,7 @@
        event.preventDefault();
 
        paymentForm.requestCardNonce();
+
 
      }
 
