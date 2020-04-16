@@ -10,9 +10,10 @@ import LOGO from '@salesforce/resourceUrl/LegendLogo';
 
 export default class CustCommOrderBuilder extends NavigationMixin(LightningElement) {
 
+  origin;
   recordId;
   logo = LOGO;
-  orderValid=false;
+  orderValid=true;
   pages = [
     'performance',
     'trailering',
@@ -21,23 +22,38 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
   ];
   @track currentPage = 'performance';
   @track paymentType='cash';
+  @track iframeHeight;
 
   @wire(CurrentPageReference)
   setCurrentPageReference(currentPageReference) {
     this.recordId = currentPageReference.state.c__recordId;
   }
 
+  constructor()
+  {
+    super();
+    this.origin = window.location.origin;
+    window.addEventListener('message', (event) => {
+      if( event.origin === this.origin )
+      {
+        console.log( JSON.parse( JSON.stringify( event.data ) ) );
+      }
+    });
+    window.addEventListener('resize', (event) => {
+      console.log( event.currentTarget.outerWidth )
+      this.setIframeHeight( event.currentTarget.outerWidth );
+    });
+  }
+
+  connectedCallback()
+  {
+    this.setIframeHeight( window.outerWidth );
+  }
+
   renderedCallback()
   {
     loadStyle( this, sldsIconFont + '/style.css')
     .then(()=>{});
-
-    window.addEventListener('resize', (event) => {
-      console.log('resizing window bitches');
-      console.log( event );
-      console.log( event.currentTarget.outerWidth );
-    });
-
   }
 
   get processPages()
@@ -50,6 +66,13 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
           'config-nav-item'
       }
     });
+  }
+
+  get paymentPageURL()
+  {
+    const paymentApexPage = '/apex/Square_PaymentForm_CustomerCommunity';
+    const urlString = window.location.href;
+    return urlString.substring(0, urlString.indexOf("/s") ) + paymentApexPage;
   }
 
   get buttonText()
@@ -107,6 +130,11 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
     this.doPageChange('performance');
   }
 
+  setIframeHeight( w )
+  {
+    this.iframeHeight = w >= 1401 ? 'height:184px' : 'height:368px';
+  }
+
   toggleModal( shouldOpen )
   {
     if( shouldOpen )
@@ -135,17 +163,17 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
     /* content */
     this.template.querySelector('.config-page_selected').classList.remove('config-page_selected');
     this.template.querySelector(`[data-page="${this.currentPage}"]` ).classList.add('config-page_selected');
-
-    if( this.currentPage === 'payment')
-    {
-      this.template.querySelector('[data-id="square-payment-container"]').src = '/apex/Square_PaymentForm_CustomerCommunity';
-    }
   }
 
   submitOrder()
   {
+
+    const data = { paymentAmount: 6000 };
+    const iframe = this.template.querySelector('[data-id="square-payment-container"]').contentWindow;
+
+    iframe.postMessage(data, this.origin);
     console.log('Submit Order');
-    return;
+
   }
 
   onPaymentPage()
