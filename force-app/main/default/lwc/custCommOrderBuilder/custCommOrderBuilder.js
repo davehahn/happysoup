@@ -66,26 +66,26 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
     });
   }
 
-  constructor()
-  {
-    super();
-    this.origin = window.location.origin;
-    window.addEventListener('message', (event) => {
-      if( event.origin === this.origin )
-      {
-        console.log( JSON.parse( JSON.stringify( event.data ) ) );
-      }
-    });
-    window.addEventListener('resize', (event) => {
-      console.log( event.currentTarget.outerWidth )
-      this.setIframeHeight( event.currentTarget.outerWidth );
-    });
-  }
+//  constructor()
+//  {
+//    super();
+//    this.origin = window.location.origin;
+//    window.addEventListener('message', (event) => {
+//      if( event.origin === this.origin )
+//      {
+//        console.log( JSON.parse( JSON.stringify( event.data ) ) );
+//      }
+//    });
+//    window.addEventListener('resize', (event) => {
+//      console.log( event.currentTarget.outerWidth )
+//      this.setIframeHeight( event.currentTarget.outerWidth );
+//    });
+//  }
 
-  connectedCallback()
-  {
-    this.setIframeHeight( window.outerWidth );
-  }
+//  connectedCallback()
+//  {
+//    this.setIframeHeight( window.outerWidth );
+//  }
 
   renderedCallback()
   {
@@ -105,12 +105,12 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
     });
   }
 
-  get paymentPageURL()
-  {
-    const paymentApexPage = '/apex/Square_PaymentForm_CustomerCommunity';
-    const urlString = window.location.href;
-    return urlString.substring(0, urlString.indexOf("/s") ) + paymentApexPage;
-  }
+//  get paymentPageURL()
+//  {
+//    const paymentApexPage = '/apex/Square_PaymentForm_CustomerCommunity';
+//    const urlString = window.location.href;
+//    return urlString.substring(0, urlString.indexOf("/s") ) + paymentApexPage;
+//  }
 
   get buttonText()
   {
