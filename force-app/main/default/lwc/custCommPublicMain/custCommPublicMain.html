@@ -12,9 +12,10 @@
       <img src={logo}>
     </div>
     <div class="center">
-      <a data-menu-number="0" onclick={navToBoat}>Boat 1</a>
-      <a data-menu-number="1" onclick={navToBoat}>Boat 2</a>
-      <a data-menu-number="2" onclick={navToBoat}>Boat 3</a>
+      <template for:each={boatMap} for:item="boat">
+        <a key={boat.recordId} data-record-id={boat.recordId} onclick={navToBoat}>{boat.name}</a>
+      </template>
+
     </div>
     <div class="right">
       <a class="sign-in" onclick={handleSignIn}>Sign In</a>
@@ -32,9 +33,9 @@
                              size="large"
                              onclick={toggleMenu}></lightning-button-icon>
     </div>
-    <a data-menu-number="0" onclick={navToBoat}>Boat 1</a>
-    <a data-menu-number="1" onclick={navToBoat}>Boat 2</a>
-    <a data-menu-number="2" onclick={navToBoat}>Boat 3</a>
+    <template for:each={boatMap} for:item="boat">
+      <a key={boat.recordId} data-record-id={boat.recordId} onclick={navToBoat}>{boat.name}</a>
+    </template>
     <a class="sign-in" onclick={handleSignIn}>Sign In</a>
   </div>
 

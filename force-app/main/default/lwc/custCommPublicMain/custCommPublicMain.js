@@ -9,20 +9,20 @@ import LOGO from '@salesforce/resourceUrl/LegendLogo';
 export default class CustCommPublicMain extends NavigationMixin(LightningElement) {
 
   logo = LOGO;
-  pageMap = [
+  boatMap = [
     {
-      pageName: 'boat1page',
+      name: 'Boat 1',
       recordId: 'recordIdOne'
     },
     {
-      pageName: 'boat2page',
+      name: 'Boat 2',
       recordId: 'recordIdTwo'
     },
     {
-      pageName: 'boat3page',
+      name: 'Boat 3',
       recordId: 'recordIdThree'
     }
-  ]
+  ];
 
   toggleMenu()
   {
@@ -33,12 +33,13 @@ export default class CustCommPublicMain extends NavigationMixin(LightningElement
   navToBoat( event )
   {
     event.preventDefault();
-    let page = this.pageMap[event.target.dataset.menuNumber],
+
+    let page = 'order-builder',
         params = {
-          c__recordId: page.recordId
+          c__recordId: event.target.dataset.recordId
         };
 
-    this.navigateToCommunityPage( page.pageName, params );
+    this.navigateToCommunityPage( page, params );
   }
 
   handleSignIn( event )

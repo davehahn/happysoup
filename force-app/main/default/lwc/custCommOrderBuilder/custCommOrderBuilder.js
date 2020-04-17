@@ -27,28 +27,8 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
   @wire(CurrentPageReference)
   setCurrentPageReference(currentPageReference) {
     this.recordId = currentPageReference.state.c__recordId;
+    console.log( this.recordId );
   }
-
-//  constructor()
-//  {
-//    super();
-//    this.origin = window.location.origin;
-//    window.addEventListener('message', (event) => {
-//      if( event.origin === this.origin )
-//      {
-//        console.log( JSON.parse( JSON.stringify( event.data ) ) );
-//      }
-//    });
-//    window.addEventListener('resize', (event) => {
-//      console.log( event.currentTarget.outerWidth )
-//      this.setIframeHeight( event.currentTarget.outerWidth );
-//    });
-//  }
-
-//  connectedCallback()
-//  {
-//    this.setIframeHeight( window.outerWidth );
-//  }
 
   renderedCallback()
   {
@@ -67,13 +47,6 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
       }
     });
   }
-
-//  get paymentPageURL()
-//  {
-//    const paymentApexPage = '/apex/Square_PaymentForm_CustomerCommunity';
-//    const urlString = window.location.href;
-//    return urlString.substring(0, urlString.indexOf("/s") ) + paymentApexPage;
-//  }
 
   get buttonText()
   {
@@ -130,10 +103,19 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
     this.doPageChange('performance');
   }
 
-//  setIframeHeight( w )
-//  {
-//    this.iframeHeight = w >= 1401 ? 'height:184px' : 'height:368px';
-//  }
+  handleNext()
+  {
+    this.onPaymentPage() ?
+    this.submitOrder() :
+    this.doPageChange( this.pages[ this.pages.indexOf( this.currentPage ) +1 ] );
+  }
+
+  doPageChange( page )
+  {
+    this.currentPage = page;
+    this.template.querySelector('.config-page_selected').classList.remove('config-page_selected');
+    this.template.querySelector(`[data-page="${this.currentPage}"]` ).classList.add('config-page_selected');
+  }
 
   toggleModal( shouldOpen )
   {
@@ -147,27 +129,8 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
     }
   }
 
-  handleNext()
-  {
-    this.onPaymentPage() ?
-    this.submitOrder() :
-    this.doPageChange( this.pages[ this.pages.indexOf( this.currentPage ) +1 ] );
-  }
-
-  doPageChange( page )
-  {
-    this.currentPage = page;
-    /* nav */
-    //this.template.querySelector('.config-nav-item_selected').classList.remove('config-nav-item_selected');
-    //this.template.querySelector(`[data-nav-name="${this.currentPage}"]` ).classList.add('config-nav-item_selected');
-    /* content */
-    this.template.querySelector('.config-page_selected').classList.remove('config-page_selected');
-    this.template.querySelector(`[data-page="${this.currentPage}"]` ).classList.add('config-page_selected');
-  }
-
   submitOrder()
   {
-    console.log('submitOrder');
     const spinner = this.template.querySelector('c-legend-spinner');
     spinner.toggle();
     this.template.querySelector('c-square-payment-form').doPostToSquare( 2000 )
@@ -180,6 +143,7 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
     })
     .finally( () => {
       spinner.toggle();
+      alert( 'Figure out what to do now!!!!!');
     });
   }
 
