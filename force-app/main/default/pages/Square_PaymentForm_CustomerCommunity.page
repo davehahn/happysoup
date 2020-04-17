@@ -1,0 +1,147 @@
+<!--
+ - Created by dave on 2020-04-15.
+ -->
+
+<apex:page showHeader="false"
+           sidebar="false"
+           applyHtmlTag="false"
+           applyBodyTag="false"
+           docType="html-5.0">
+
+  <style>
+
+    .sqr-payment-container {
+      background: #F4F4F4;
+    }
+
+    .sqr-payment-input {
+      background: #FFF;
+      border: 1px solid transparent;
+      padding: 10px 20px;
+      border-radius: 20px;
+      font-size: 14px;
+      color: #666;
+      width:calc( 100% - 1.5rem );
+      height: 39px;
+      margin: 0 0.75rem 24px 0.75rem;
+      box-sizing: border-box;
+    }
+
+    .sqr-payment-input.sqr-payment-input--error {
+      border-color: red;
+    }
+
+    .sqr-payment-input--focus {
+      outline: none;
+      border: 1px solid #CCC;
+    }
+
+    .sqr-payment-container label {
+      color: #666;
+      font-size: 14px;
+      margin: 0 33px 8px;
+      display: block;
+    }
+
+
+  </style>
+
+  <c:Square_PaymentForm />
+
+  <script>
+
+    window.addEventListener('message', function(event) {
+      if( event.origin === window.location.origin &&
+          event.data.messageType === 'doPayment' )
+      {
+        console.log( event.data );
+        doPostPayment( event.data.paymentAmount )
+        .then( (result) =>
+        {
+          const message = {
+            status: 'success',
+            response: result
+          };
+          window.parent.postMessage(message, window.location.origin );
+        })
+        .catch( (errors) => {
+          const message = {
+            status: 'error',
+            errors: errors
+          };
+          window.parent.postMessage(message, window.location.origin );
+        });
+      }
+    });
+
+  </script>
+
+  <c:Square_PaymentForm />
+
+  <script>
+
+    window.addEventListener('message', function(event) {
+      if( event.origin === window.location.origin &&
+          event.data.messageType === 'doPayment' )
+      {
+        console.log( event.data );
+        doPostPayment( event.data.paymentAmount )
+        .then( (result) =>
+        {
+          window.parent.postMessage(result, window.location.origin );
+        });
+      }
+    });
+
+  </script>
+
+  <c:Square_PaymentForm />
+
+  <script>
+
+    window.addEventListener('message', function(event) {
+      if( event.origin === window.location.origin &&
+          event.data.messageType === 'doPayment' )
+      {
+        console.log( event.data );
+        doPostPayment( event.data.paymentAmount )
+        .then( (result) =>
+        {
+          const message = {
+            status: 'success',
+            response: result
+          };
+          window.parent.postMessage(message, window.location.origin );
+        })
+        .catch( (errors) => {
+          const message = {
+            status: 'error',
+            errors: errors
+          };
+          window.parent.postMessage(message, window.location.origin );
+        });
+      }
+    });
+
+  </script>
+
+  <c:Square_PaymentForm />
+
+  <script>
+
+    window.addEventListener('message', function(event) {
+      if( event.origin === window.location.origin &&
+          event.data.messageType === 'doPayment' )
+      {
+        console.log( event.data );
+        doPostPayment( event.data.paymentAmount )
+        .then( (result) =>
+        {
+          window.parent.postMessage(result, window.location.origin );
+        });
+      }
+    });
+
+  </script>
+
+</apex:page>

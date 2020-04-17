@@ -1,0 +1,43 @@
+<!--
+ - Created by dave on 2020-04-09.
+ -->
+
+<!-- Cust Comm Public Main -->
+<template>
+
+  <div class="overlay" onclick={toggleMenu}></div>
+
+  <div class="main-nav">
+    <div class="left">
+      <img src={logo}>
+    </div>
+    <div class="center">
+      <template for:each={boats.data} for:item="boat">
+        <a key={boat.id} data-record-id={boat.id} onclick={navToBoat}>{boat.name}</a>
+      </template>
+
+    </div>
+    <div class="right">
+<!--      <a class="sign-in" onclick={handleSignIn}>Sign In</a>-->
+      <lightning-button-icon icon-name="utility:rows"
+                             variant="bare"
+                             size="large"
+                             onclick={toggleMenu}></lightning-button-icon>
+    </div>
+  </div>
+
+  <div class="slide-menu">
+    <div class="close-menu">
+      <lightning-button-icon icon-name="utility:close"
+                             variant="bare"
+                             size="large"
+                             onclick={toggleMenu}></lightning-button-icon>
+    </div>
+    <template for:each={boats.data} for:item="boat">
+      <a key={boat.id} data-record-id={boat.id} onclick={navToBoat}>{boat.name}</a>
+    </template>
+<!--    <a class="sign-in" onclick={handleSignIn}>Sign In</a>-->
+  </div>
+
+
+</template>
