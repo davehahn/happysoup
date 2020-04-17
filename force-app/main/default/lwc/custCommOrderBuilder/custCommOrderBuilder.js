@@ -48,27 +48,6 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
     });
   }
 
-//  constructor()
-//  {
-//    super();
-//    this.origin = window.location.origin;
-//    window.addEventListener('message', (event) => {
-//      if( event.origin === this.origin )
-//      {
-//        console.log( JSON.parse( JSON.stringify( event.data ) ) );
-//      }
-//    });
-//    window.addEventListener('resize', (event) => {
-//      console.log( event.currentTarget.outerWidth )
-//      this.setIframeHeight( event.currentTarget.outerWidth );
-//    });
-//  }
-
-//  connectedCallback()
-//  {
-//    this.setIframeHeight( window.outerWidth );
-//  }
-
   renderedCallback()
   {
     loadStyle( this, sldsIconFont + '/style.css')
@@ -86,13 +65,6 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
       }
     });
   }
-
-//  get paymentPageURL()
-//  {
-//    const paymentApexPage = '/apex/Square_PaymentForm_CustomerCommunity';
-//    const urlString = window.location.href;
-//    return urlString.substring(0, urlString.indexOf("/s") ) + paymentApexPage;
-//  }
 
   get buttonText()
   {
@@ -149,7 +121,6 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
     this.doPageChange('performance');
   }
 
-<<<<<<< HEAD
   handleNext()
   {
     this.onPaymentPage() ?
@@ -163,12 +134,6 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
     this.template.querySelector('.config-page_selected').classList.remove('config-page_selected');
     this.template.querySelector(`[data-page="${this.currentPage}"]` ).classList.add('config-page_selected');
   }
-=======
-//  setIframeHeight( w )
-//  {
-//    this.iframeHeight = w >= 1401 ? 'height:184px' : 'height:368px';
-//  }
->>>>>>> Square Payment form now in its own LWC
 
   toggleModal( shouldOpen )
   {
@@ -184,10 +149,6 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
 
   submitOrder()
   {
-<<<<<<< HEAD
-=======
-    console.log('submitOrder');
->>>>>>> Square Payment form now in its own LWC
     const spinner = this.template.querySelector('c-legend-spinner');
     spinner.toggle();
     this.template.querySelector('c-square-payment-form').doPostToSquare( 2000 )
@@ -200,10 +161,7 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
     })
     .finally( () => {
       spinner.toggle();
-<<<<<<< HEAD
       alert( 'Figure out what to do now!!!!!');
-=======
->>>>>>> Square Payment form now in its own LWC
     });
   }
 
