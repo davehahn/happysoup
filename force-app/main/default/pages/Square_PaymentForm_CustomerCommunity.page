@@ -41,24 +41,23 @@
 
   </style>
 
+  <c:Square_PaymentForm />
+
   <script>
 
     window.addEventListener('message', function(event) {
-      if( event.origin === window.location.origin )
+      if( event.origin === window.location.origin &&
+          event.data.messageType === 'doPayment' )
       {
-        const data = {
-          attr1: 'firstAttr',
-          attr2: 6000,
-          attr3: 'another'
-        };
-
-        window.parent.postMessage(data, window.location.origin );
+        console.log( event.data );
+        doPostPayment( event.data.paymentAmount )
+        .then( (result) =>
+        {
+          window.parent.postMessage(result, window.location.origin );
+        });
       }
     });
 
   </script>
-
-  <c:Square_PaymentForm />
-
 
 </apex:page>
