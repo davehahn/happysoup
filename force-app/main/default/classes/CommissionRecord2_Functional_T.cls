@@ -286,8 +286,8 @@ private class CommissionRecord2_Functional_T
     System.assertEquals( 250, commissionLineItems[0].Profit__c );
     System.assertEquals( 'From Unit Test', commissionLineItems[0].Comment__c );
     System.assertEquals( 1, commissionLineItems[0].Quantity__c );
-    System.assertEquals( CommissionLineItem2_Service.insuranceAndWarrantyRate, commissionLineItems[0].Commission_Rate__c );
-    System.assertEquals( ( 250 * CommissionLineItem2_Service.insuranceAndWarrantyRate ), commissionLineItems[0].Payment_Amount__c );
+    System.assertEquals( CommissionLineItem2_Service.insuranceRate, commissionLineItems[0].Commission_Rate__c );
+    System.assertEquals( ( 250 * CommissionLineItem2_Service.insuranceRate ), commissionLineItems[0].Payment_Amount__c );
   }
 
   @IsTest
