@@ -275,9 +275,12 @@ public with sharing class CommissionLineItem2_Service
     Set<Id> taskIds_toFindComRecord = new Set<Id>();
     for( AcctSeedERP__Material__c mat :  Material_Selector.selectAllByIds( this.allMaterialIds ) )
     {
-      if( mat.AcctSeedERP__Product__r.AcctSeed__Revenue_GL_Account__r.AcctSeed__Type__c == 'Revenue' ||
-         ( nonRevenueRtIds.contains( mat.AcctSeedERP__Product__r.RecordTypeId ) &&
-           mat.AcctSeedERP__Product__r.Family == 'Maintenance Package') )
+      if( mat.Material__c == null && // added to ignore any kit parts
+          ( mat.AcctSeedERP__Product__r.AcctSeed__Revenue_GL_Account__r.AcctSeed__Type__c == 'Revenue' ||
+            ( nonRevenueRtIds.contains( mat.AcctSeedERP__Product__r.RecordTypeId ) &&
+              mat.AcctSeedERP__Product__r.Family == 'Maintenance Package')
+          )
+        )
        {
         if (!this.taskId_materials_map.containsKey(mat.AcctSeedERP__Project_Task__c))
         {

@@ -18,6 +18,7 @@ public with sharing class Material_Selector {
   public static List<AcctSeedERP__Material__c> selectAllByIds( Set<Id> matIds )
   {
     return [ SELECT Id,
+                    Material__c,
                     AcctSeedERP__Project_Task__c,
                     AcctSeedERP__Product__c,
                     AcctSeedERP__Product__r.AcctSeed__Revenue_GL_Account__r.AcctSeed__Type__c,
