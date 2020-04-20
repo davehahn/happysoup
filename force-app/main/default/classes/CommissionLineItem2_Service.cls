@@ -5,13 +5,11 @@
 public with sharing class CommissionLineItem2_Service
 {
   public static Decimal grossMarginRate = 0.10;
-  public static Decimal insuranceAndWarrantyRate = 0.30;
+  public static Decimal insuranceRate = 0.30;
+  public static Decimal warrantyRate = 0.30;
   public static Decimal protectionAndServiceRate = 0.30;
   public static Decimal partsRate = 0.05;
   public static Decimal maintenancePackageRate = 0.5;
-  public static Decimal warrantyProfitPercent = 0.50;
-  public static Decimal maintenancePackageProfitPercent = 0.50;
-  public static Decimal protectionAndServiceProfitPercent = 0.50;
 
   public class RateCostCalculator
   {
@@ -41,30 +39,35 @@ public with sharing class CommissionLineItem2_Service
       Decimal rate = partsRate;
       Boolean paymentBasedOnProfit = false;
       CommissionRecord2__c comRec = this.commissionRecord_map.get( cli.CommissionRecord2__c);
+
       if( cli.Product__c != null )
       {
+        String factoryPB_Product_Key = String.valueOf(comRec.Factory_Pricebook__c);
+        factoryPB_Product_Key += ':';
+        factoryPB_Product_Key += String.valueOf(cli.Product__c);
+        if( this.product_cost_map.containsKey(factoryPB_Product_Key) )
+        {
+          cost = this.product_cost_map.get(factoryPB_Product_Key);
+        }
         if( this.warrantyProducts.containsKey( cli.Product__c ) )
         {
-          rate = insuranceAndWarrantyRate;
-          cost = cli.Sale_Price__c * warrantyProfitPercent;
+          rate = warrantyRate;
           paymentBasedOnProfit = true;
         }
         else if( this.maintenancePackages.containsKey( cli.Product__c ) )
         {
           rate = maintenancePackageRate;
-          cost = cli.Sale_Price__c * maintenancePackageProfitPercent;
           paymentBasedOnProfit = true;
         }
         else if( this.protectionAndServicesProducts.containsKey( cli.Product__c ) )
         {
           rate = protectionAndServiceRate;
-          cost = cli.Sale_Price__c * protectionAndServiceProfitPercent;
           paymentBasedOnProfit = true;
         }
         else if( this.insuranceProducts.containsKey( cli.Product__c ) )
         {
           cost = cli.Sale_Price__c * ( ( 100 - insuranceProducts.get( cli.Product__c ).InsurancePlan__r.Profit_Percent__c ) / 100 );
-          rate = insuranceAndWarrantyRate;
+          rate = insuranceRate;
           paymentBasedOnProfit = true;
         }
         else
@@ -74,17 +77,10 @@ public with sharing class CommissionLineItem2_Service
             rate = grossMarginRate;
             paymentBasedOnProfit = true;
           }
-          String key = String.valueOf(comRec.Factory_Pricebook__c);
-          key += ':';
-          key += String.valueOf(cli.Product__c);
-          if( this.product_cost_map.containsKey(key) )
+          factoryPB_Product_Key += ':' + comRec.TaxProvince__c;
+          if( this.feeCostAmount.containsKey( factoryPB_Product_Key ) )
           {
-            cost = this.product_cost_map.get(key);
-          }
-          key += ':' + comRec.TaxProvince__c;
-          if( this.feeCostAmount.containsKey( key ) )
-          {
-            cost = this.feeCostAmount.get( key );
+            cost = this.feeCostAmount.get( factoryPB_Product_Key );
           }
         }
       }
