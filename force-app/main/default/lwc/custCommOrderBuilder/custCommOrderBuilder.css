@@ -152,6 +152,7 @@
   display: grid;
   min-height: 65px;
   width: 100%;
+  max-width: 320px;
   align-items: center;
   flex: 1;
 }
@@ -243,6 +244,7 @@
   clear: both;
   transition: 0.5s;
   height:90px;
+  font-weight: 300;
 }
 
 .config-footer_content,
@@ -400,7 +402,7 @@
 .config-footer_savings div
 {
   margin-top: 3px;
-  font-size: 13px;
+  font-size: 14px;
   color: #fff;
   cursor: pointer;
   align-self: center;
@@ -522,6 +524,9 @@
   position: relative;
   max-height: 100%;
   width: 100%;
+  /* TEMP */
+  background: rgba(0, 0, 0, 0.03);
+  min-height: 400px;
 }
 
 .config-page[data-page="payment"] .config-page_left {
@@ -548,6 +553,12 @@
   display: flex;
   justify-content: center;
   overflow-y: auto;
+  background-color: #FFF;
+  /* TEMP */
+  min-height: 600px;
+}
+.config-page_right .right_heading{
+    width: 100%;
 }
 
 .edit-config {
@@ -615,5 +626,133 @@
   border: 1px solid #CCC;
 }
 
+/*
+
+.___  ___.  _______  _______   __       ___           ______      __    __   _______ .______       __   _______     _______.
+|   \/   | |   ____||       \ |  |     /   \         /  __  \    |  |  |  | |   ____||   _  \     |  | |   ____|   /       |
+|  \  /  | |  |__   |  .--.  ||  |    /  ^  \       |  |  |  |   |  |  |  | |  |__   |  |_)  |    |  | |  |__     |   (----`
+|  |\/|  | |   __|  |  |  |  ||  |   /  /_\  \      |  |  |  |   |  |  |  | |   __|  |      /     |  | |   __|     \   \
+|  |  |  | |  |____ |  '--'  ||  |  /  _____  \     |  `--'  '--.|  `--'  | |  |____ |  |\  \----.|  | |  |____.----)   |
+|__|  |__| |_______||_______/ |__| /__/     \__\     \_____\_____\\______/  |_______|| _| `._____||__| |_______|_______/
 
 
+*/
+@media screen and (max-width: 64em){
+    /* force scroll and height of main container */
+    .lgnd-order-builder:not([data-current="payment"]){
+        overflow: auto;
+        height: auto; min-height: 100vh;
+    }
+    /* hide main navigation */
+    .config-nav{
+        display: none;
+    }
+    /* stack paged content */
+    .config-content:not([data-current="payment"]),
+    .config-page:not([data-page="payment"]),
+    .config-page.config-page_selected:not([data-page="payment"]){
+        display: block;
+        height: auto;
+    }
+    .config-content[data-current="payment"]
+    .config-page:not([data-page="payment"]),
+    .config-content[data-current="payment"]
+    .config-page.config-page_selected:not([data-page="payment"]){
+        display: none;
+    }
+    .config-content:not([data-current="payment"]) .config-page_left{
+        border-right: 0 none;
+    }
+
+    .slds-small-size_12-of-12, .slds-small-size--12-of-12 {
+        width: 100%;
+    }
+
+    /* expand right rail to full width */
+    .config-page_right{
+        width: 100%; max-width: 100%;
+    }
+    /* center right rail heading */
+    .config-page_right .right_heading{
+        text-align: center;
+    }
+    /* hide footer items */
+    .config-footer_item.finance-type, .config-footer_savings, .config-footer_details-link{
+        display: none;
+    }
+    .config-footer_item:nth-child(3){
+        min-width: fit-content;
+    }
+}
+
+@media screen and (max-width: 54em){
+    .lgnd-order-builder[data-current="payment"]{
+        overflow: auto;
+        height: auto; min-height: 100vh;
+        padding-bottom: 0;
+    }
+    .config-content[data-current="payment"]{
+        display: block;
+        height: auto;
+        position: static;
+    }
+    .config-page.config-page_selected[data-page="payment"]{
+        flex-wrap: wrap;
+        flex-direction: column-reverse;
+        height: auto;
+    }
+    .config-page.config-page_selected[data-page="payment"] .config-page_left{
+        height: auto;
+        flex-basis: auto;
+        position: static;
+    }
+    .config-page.config-page_selected[data-page="payment"] .config-page_right{
+        min-width: 100%;
+        flex-basis: auto;
+        flex-grow: unset;
+    }
+    .edit-config{
+        position: absolute; top: 1.5em; left: 1.5em;
+        margin: 0; z-index: 1;
+    }
+    .lgnd-order-builder[data-current="payment"] .config-footer{
+        position: static;
+        background-color: none;
+        color: #000;
+        display: block;
+    }
+}
+
+@media screen and (max-width: 640px){
+    .config-footer{
+        height: auto;
+        background-color: #333333e8;
+    }
+    .config-footer_content{
+        display: block;
+        height: auto;
+    }
+    .config-footer_item.finance-prices{
+        display: block;
+        border: none;
+        text-align: center;
+    }
+    .config-footer_price, .config-footer_savings{
+        display: block;
+        margin: 0 0 0.5em;
+    }
+    .config-footer_price .amount,
+    .config-footer_price .label,
+    .config-footer_savings .amount,
+    .config-footer_savings .label{
+        display: inline;
+        font-size: 16px;
+        margin-right: 0.25em;
+    }
+    .config-footer_delivery{
+        display: none;
+    }
+    .config-footer_item:last-child{
+        margin: 0 auto;
+    }
+}

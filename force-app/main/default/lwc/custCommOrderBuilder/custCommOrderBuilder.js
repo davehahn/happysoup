@@ -153,6 +153,10 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
     this.doPageChange( this.pages[ this.pages.indexOf( this.currentPage ) +1 ] );
   }
 
+  jumpToPayment(){
+      this.doPageChange( 'payment' );
+  }
+
   doPageChange( page )
   {
     this.currentPage = page;
