@@ -24,11 +24,21 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
   @track currentPage = 'performance';
   @track paymentType='cash';
   @track iframeHeight;
+  isMobile = false;
 
   @wire(CurrentPageReference)
   setCurrentPageReference(currentPageReference) {
     this.recordId = currentPageReference.state.c__recordId;
     console.log( this.recordId );
+  }
+
+  connectedCallback()
+  {
+    window.addEventListener('resize', (event) => {
+      this.isMobile = (event.currentTarget.outerWidth < 1024) ? true : false;
+    });
+
+    this.isMobile = (window.outerWidth < 1024) ? true : false;
   }
 
   renderedCallback()
@@ -127,6 +137,10 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
     this.onPaymentPage() ?
     this.submitOrder() :
     this.doPageChange( this.pages[ this.pages.indexOf( this.currentPage ) +1 ] );
+  }
+
+  jumpToPayment(){
+      this.doPageChange( 'payment' );
   }
 
   doPageChange( page )

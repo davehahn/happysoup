@@ -7,7 +7,7 @@
 
   <c-legend-spinner></c-legend-spinner>
 
-  <div class="lgnd-order-builder">
+  <div class="lgnd-order-builder" data-current={currentPage}>
 
     <div class="modal-container">
       <div class="modal-content">
@@ -51,15 +51,15 @@
 
     </div>
 
-    <div class="config-content">
+    <div class="config-content" data-current={currentPage}>
 
       <!-- PERFORMANCE -->
       <div class="config-page config-page_selected" data-page="performance">
         <div class="config-page_left">
           <h1 class="slds-m-top_large slds-text-heading_large slds-text-align_center">Performance</h1>
         </div>
-        <div class="config-page_right">
-
+        <div class="config-page_right slds-p-around_xx-large">
+          <h2 class="right_heading slds-text-heading_medium">Select Your Performance</h2>
         </div>
       </div>
 
@@ -69,7 +69,9 @@
             <h1 class="slds-m-top_large slds-text-heading_large slds-text-align_center">Trailering</h1>
         </div>
         <div class="config-page_right">
-
+          <div class="config-page_right slds-p-around_xx-large">
+            <h2 class="right_heading slds-text-heading_medium">Select Your Trailering</h2>
+          </div>
         </div>
       </div>
 
@@ -79,7 +81,9 @@
           <h1 class="slds-m-top_large slds-text-heading_large slds-text-align_center">Electronics</h1>
         </div>
         <div class="config-page_right">
-
+          <div class="config-page_right slds-p-around_xx-large">
+            <h2 class="right_heading slds-text-heading_medium">Select Your Electronics</h2>
+          </div>
         </div>
       </div>
 
@@ -166,8 +170,8 @@
           </div>
 
         </div>
-        <div class="config-page_right">
-
+        <div class="config-page_right slds-p-around_xx-large">
+          <h2 class="right_heading slds-text-heading_medium">Your Boat</h2>
         </div>
       </div>
 
@@ -207,11 +211,11 @@
         <div class="config-footer_item finance-prices">
           <div class="config-footer_price">
             <div class="amount">$39,999</div>
-            <div>Purchase price</div>
+            <div class="label">Purchase Price</div>
           </div>
           <div class="config-footer_savings">
             <div class="amount">$6,700</div>
-            <div>Monthly Payment</div>
+            <div class="label">Monthly Payment</div>
           </div>
           <div class="config-footer_details-link">
             <a onclick={handleOpenModal}>Show Details</a>
@@ -225,12 +229,22 @@
           </div>
         </div>
 
-        <div class="config-footer_item">
-          <button disabled={buttonDisabled}
-                  onclick={handleNext}>
-            {buttonText}
-          </button>
-        </div>
+        <template if:false={isMobile}>
+          <div class="config-footer_item">
+            <button disabled={buttonDisabled}
+                    onclick={handleNext}>
+              {buttonText}
+            </button>
+          </div>
+        </template>
+        <template if:true={isMobile}>
+          <div class="config-footer_item">
+            <button disabled={buttonDisabled}
+                    onclick={jumpToPayment}>
+              {buttonText}
+            </button>
+          </div>
+        </template>
 
       </div>
     </div>
