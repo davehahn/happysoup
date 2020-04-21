@@ -18,6 +18,7 @@ public with sharing class Factory_ERPOrderTask
     AcctSeed__Project_Task__c task = buildProjectTask( erpId, 'Retail Sale' );
     task.AcctSeed__GL_Account_Variable_2__c = LGND_Constants.GLV2Id_Sales;
     task.Commission_Calculation_Method__c = 'Gross Margin';
+    task.Is_Retail_Boat_Sale__c = true;
     return task;
   }
 

@@ -2132,6 +2132,31 @@
         <triggerType>onCreateOrTriggeringUpdate</triggerType>
     </rules>
     <rules>
+        <fullName>Notify Emilie Arbour on Trade-In ERP Stage Pending Inspection or Delivered</fullName>
+        <actions>
+            <name>Trade_In_ERP_Stage_has_been_updated</name>
+            <type>Task</type>
+        </actions>
+        <active>true</active>
+        <booleanFilter>(1 AND 2) OR (1 AND 3)</booleanFilter>
+        <criteriaItems>
+            <field>AcctSeed__Project__c.RecordTypeId</field>
+            <operation>equals</operation>
+            <value>Legend Trade In</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>AcctSeed__Project__c.Stage__c</field>
+            <operation>equals</operation>
+            <value>Pending Inspection</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>AcctSeed__Project__c.Stage__c</field>
+            <operation>equals</operation>
+            <value>Delivered</value>
+        </criteriaItems>
+        <triggerType>onCreateOrTriggeringUpdate</triggerType>
+    </rules>
+    <rules>
         <fullName>Notify Emilie Arbour on Trade-In ERP Stage Pending Inspection or Ready for Sale</fullName>
         <actions>
             <name>Trade_In_ERP_Stage_has_been_updated</name>

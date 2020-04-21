@@ -20,6 +20,7 @@ public with sharing class Material_Selector {
     return [ SELECT Id,
                     Material__c,
                     AcctSeedERP__Project_Task__c,
+                    AcctSeedERP__Project_Task__r.Commission_Override_Project_Task__c,
                     AcctSeedERP__Product__c,
                     AcctSeedERP__Product__r.AcctSeed__Revenue_GL_Account__r.AcctSeed__Type__c,
                     AcctSeedERP__Product__r.RecordTypeId,

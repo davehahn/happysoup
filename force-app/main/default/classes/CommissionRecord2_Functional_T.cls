@@ -230,6 +230,68 @@ private class CommissionRecord2_Functional_T
   }
 
   @IsTest
+  static void newTaskThatAppliesToRetailSale_Test()
+  {
+    setup_Project_Task_Products('Gross Margin', 1000, 500 );
+    task.Is_Retail_Boat_Sale__c = true;
+    Boolean orig = gcProjectTask.disableTrigger;
+    gcProjectTask.disableTrigger = true;
+    update task;
+    gcProjectTask.disableTrigger = orig;
+    List<AcctSeedERP__Material__c> materials = new List<AcctSeedERP__Material__c>();
+    for( Product2 p : products )
+    {
+      materials.add( new AcctSeedERP__Material__c(
+        AcctSeedERP__Product__c = p.Id,
+        AcctSeedERP__Project__c = project.Id,
+        AcctSeedERP__Project_Task__c = task.Id,
+        AcctSeedERP__Quantity_Per_Unit__c = 1,
+        GMBLASERP__Unit_Price__c = 1000,
+        AcctSeedERP__Comment__c = 'From Unit Test'
+      ));
+    }
+
+    AcctSeed__Project_Task__c retailRigTask = new AcctSeed__Project_Task__c(
+      AcctSeed__Project__c = project.Id,
+      DisplayOnCustomerInvoice__c = false,
+      Commission_Calculation_Method__c = 'Revenue',
+      Name = 'Retail Rig',
+      Commission_Override_Project_Task__c = task.Id
+    );
+
+    insert retailRigTask;
+
+    for( Product2 p : Factory_Product.createNonSerializedProducts( 'Part', 'Electronics', 2 ) )
+    {
+      materials.add( new AcctSeedERP__Material__c(
+        AcctSeedERP__Product__c = p.Id,
+        AcctSeedERP__Project__c = project.Id,
+        AcctSeedERP__Project_Task__c = retailRigTask.Id,
+        AcctSeedERP__Quantity_Per_Unit__c = 1,
+        GMBLASERP__Unit_Price__c = 1000,
+        AcctSeedERP__Comment__c = 'From Unit Test'
+      ));
+    }
+
+    Test.startTest();
+    insert materials;
+    Test.stopTest();
+
+    List<CommissionRecord2__c> commissionRecords = [ SELECT Id FROM CommissionRecord2__c WHERE Project_Task__c = :task.Id ];
+    List<CommissionLineItem2__c> commissionLineItems = [ SELECT Id, Sale_Price__c, Profit__c, Cost__c, Commission_Rate__c, Comment__c, Payment_Amount__c, Quantity__c FROM CommissionLineItem2__c WHERE CommissionRecord2__c = :commissionRecords[0].Id ];
+    System.assertEquals( 1, commissionRecords.size() );
+    System.assertEquals( 12, commissionLineItems.size() );
+    System.assertEquals( 1000, commissionLineItems[0].Sale_Price__c );
+    System.assertEquals( 500, commissionLineItems[0].Cost__c );
+    System.assertEquals( 500, commissionLineItems[0].Profit__c );
+    System.assertEquals( 'From Unit Test', commissionLineItems[0].Comment__c );
+    System.assertEquals( 1, commissionLineItems[0].Quantity__c );
+    System.assertEquals( CommissionLineItem2_Service.grossMarginRate, commissionLineItems[0].Commission_Rate__c );
+    System.assertEquals( ( 500 * CommissionLineItem2_Service.grossMarginRate ), commissionLineItems[0].Payment_Amount__c );
+
+  }
+
+  @IsTest
   static void insertMaterials_InsuranceProducts_Test()
   {
     project = [SELECT Id FROM AcctSeed__Project__c LIMIT 1];

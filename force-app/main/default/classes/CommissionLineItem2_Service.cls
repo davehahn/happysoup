@@ -281,13 +281,25 @@ public with sharing class CommissionLineItem2_Service
               mat.AcctSeedERP__Product__r.Family == 'Maintenance Package')
           )
         )
-       {
-        if (!this.taskId_materials_map.containsKey(mat.AcctSeedERP__Project_Task__c))
+      {
+        if( mat.AcctSeedERP__Project_Task__r.Commission_Override_Project_Task__c != null )
         {
-          taskIds_toFindComRecord.add(mat.AcctSeedERP__Project_Task__c);
-          this.taskId_materials_map.put(mat.AcctSeedERP__Project_Task__c, new Set<AcctSeedERP__Material__c>());
+          if (!this.taskId_materials_map.containsKey(mat.AcctSeedERP__Project_Task__r.Commission_Override_Project_Task__c))
+          {
+            taskIds_toFindComRecord.add(mat.AcctSeedERP__Project_Task__r.Commission_Override_Project_Task__c);
+            this.taskId_materials_map.put(mat.AcctSeedERP__Project_Task__r.Commission_Override_Project_Task__c, new Set<AcctSeedERP__Material__c>());
+          }
+          this.taskId_materials_map.get(mat.AcctSeedERP__Project_Task__r.Commission_Override_Project_Task__c).add(mat);
         }
-        this.taskId_materials_map.get(mat.AcctSeedERP__Project_Task__c).add(mat);
+        else
+        {
+          if (!this.taskId_materials_map.containsKey(mat.AcctSeedERP__Project_Task__c))
+          {
+            taskIds_toFindComRecord.add(mat.AcctSeedERP__Project_Task__c);
+            this.taskId_materials_map.put(mat.AcctSeedERP__Project_Task__c, new Set<AcctSeedERP__Material__c>());
+          }
+          this.taskId_materials_map.get(mat.AcctSeedERP__Project_Task__c).add(mat);
+        }
       }
     }
     if( taskIds_toFindComRecord.size() > 0 )
