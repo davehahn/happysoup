@@ -9,6 +9,7 @@ public with sharing class CommissionLineItem2_Service
   public static Decimal warrantyRate = 0.30;
   public static Decimal protectionAndServiceRate = 0.30;
   public static Decimal partsRate = 0.05;
+  public static Decimal packageBundleRate = 0.05;
   public static Decimal maintenancePackageRate = 0.5;
 
   public class RateCostCalculator
@@ -23,6 +24,7 @@ public with sharing class CommissionLineItem2_Service
     private Map<Id, Product2> warrantyProducts;
     private Map<Id, Product2> insuranceProducts;
     private Map<Id, Product2> maintenancePackages;
+    private Map<Id, Product2> packageBundles;
     private Map<Id, Product2> feeProducts;
     private Map<String, Decimal> feeCostAmount;
     private Map<String, Decimal> product_cost_map;
@@ -63,6 +65,10 @@ public with sharing class CommissionLineItem2_Service
         {
           rate = protectionAndServiceRate;
           paymentBasedOnProfit = true;
+        }
+        else if( this.packageBundles.containsKey( cli.Product__c ) )
+        {
+          rate = packageBundleRate;
         }
         else if( this.insuranceProducts.containsKey( cli.Product__c ) )
         {
@@ -131,6 +137,7 @@ public with sharing class CommissionLineItem2_Service
       this.warrantyProducts = new Map<Id, Product2>();
       this.insuranceProducts = new Map<Id, Product2>();
       this.maintenancePackages = new Map<Id, Product2>();
+      this.packageBundles = new Map<Id, Product2>();
       this.feeProducts = new Map<Id, Product2>();
       for( Product2 p : [ SELECT Id,
                                   InsurancePlan__c,
@@ -147,6 +154,10 @@ public with sharing class CommissionLineItem2_Service
         else if( p.Family != null && p.Family.contains('Warranty') )
         {
           this.warrantyProducts.put( p.Id, p );
+        }
+        else if( p.RecordTypeId == LGND_Constants.productRtId_Bundle )
+        {
+          this.packageBundles.put( p.Id, p );
         }
         else if( p.Family != null && p.Family.contains('Maintenance Package') )
         {

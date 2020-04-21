@@ -46,6 +46,16 @@ public with sharing class ProjectTask_Service
         Commission_Calculation_Method__c = 'Revenue' )
     };
     insert tasks.values();
+    AcctSeed__Project_Task__c retailRig = new AcctSeed__Project_Task__c(
+      Name = 'Retail Rig',
+      DisplayOnCustomerInvoice__c = false,
+      AcctSeed__Project__c = project.Id,
+      Is_Retail_Boat_Sale__c = true,
+      AcctSeed__GL_Account_Variable_2__c = LGND_Constants.GLV2Id_Sales,
+      Commission_Calculation_Method__c = 'Gross Margin',
+      Commission_Override_Project_Task__c = tasks.get('Retail Sale').Id );
+    insert retailRig;
+    tasks.put('Retail Rig', retailRig );
     return tasks;
   }
 
