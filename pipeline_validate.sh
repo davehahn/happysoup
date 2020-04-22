@@ -1,7 +1,7 @@
 #!/bin/bash
 if [ -z "`git log master..`" ]
 then
-  echoOut "Must be a new Branch - Exiting"
+  echo "Must be a new Branch - Exiting"
   exit 0
 fi
 
