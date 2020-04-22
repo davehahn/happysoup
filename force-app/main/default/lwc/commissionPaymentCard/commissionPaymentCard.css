@@ -1,0 +1,53 @@
+/**
+ * Created by dave on 2020-02-21.
+ */
+.slds-modal textarea {
+  min-height:120px;
+}
+
+lightning-card {
+  display:block;
+  padding: 0 1rem;
+  border: 1px solid var(--lwc-colorBorder);
+  border-radius: var(--lwc-borderRadiusMedium);
+  position:relative;
+}
+
+lightning-card .accepted {
+  position: absolute;
+  padding:0.25rem 0.3rem;
+  right:-2.25rem;
+  top: -1.25rem;
+}
+
+lightning-card .status-menu {
+  position:absolute;
+  right: calc( -1rem - 1px );
+  top: calc( -0.25rem + 3px );
+}
+
+lightning-card .remove-payment {
+  position: absolute;
+  padding:0.25rem 0.3rem;
+  right:-1.75rem;
+  top: -1rem;
+  border: 1px solid var(--lwc-colorBorder);
+  border-radius: 5rem;
+  background: #FFF;
+}
+
+lightning-card .remove-payment lightning-button-icon {
+  position:relative;
+  top: -1px;
+}
+
+
+lightning-card p.amount {
+  text-align: center;
+  font-size: 1.5rem;
+}
+
+lightning-card p.owner-name {
+  font-size:1.25rem;
+}
+

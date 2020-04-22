@@ -71,9 +71,12 @@ private class SerialNumberHistorySearch_Test{
     Account cust = Factory_Account.insertFullPersonAccount('TestFname', 'TestLname');
     GMBLASERP__Serial_Number__c ser = Factory_SerialNumber.insertFullSerial('Boat','Pontoon','0987654321');
     Boolean orig = gcProject.disableTrigger;
+    Boolean origTask = gcProjectTask.ignoreCommissions;
     gcProject.disableTrigger = true;
+    gcProjectTask.ignoreCommissions = true;
     AcctSeed__Project__c erp = Factory_ERPOrder.insertRetailBoatSale( cust, wh, DateTime.now(), ser);
     gcProject.disableTrigger = orig;
+    gcProjectTask.ignoreCommissions = origTask;
     AcctSeed__Project_Task__c erpTask = [SELECT Id FROM AcctSeed__Project_Task__c WHERE AcctSeed__Project__c =:erp.Id LIMIT 1][0];
 
     //GMBLASERP__Serial_Number__c serial = [SELECT Id, GMBLASERP__Inventory_Balance__c FROM GMBLASERP__Serial_Number__c WHERE Id=:ser.Id][0];

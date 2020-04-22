@@ -25,9 +25,7 @@ public virtual class TriggerHandler {
   }
 
   public void run() {
-    System.debug( 'Should ' + getHandlerName() + ' run ? - ' + validateRun() );
     if(!validateRun()) return;
-    System.debug('trigger is running');
     if(Trigger.isBefore) {
       this.bulkBefore();
     }

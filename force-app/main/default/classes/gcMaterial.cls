@@ -67,20 +67,23 @@ global without sharing class gcMaterial{
 			if(boolIsDelete)
 			{
 				cascadeDeleteKitMaterial(oldMap.keySet());
-				CommissionLineItemERP.deleteRecords( oldMap.keySet() );
+				CommissionLineItem2_Service service = new CommissionLineItem2_Service();
+				service.addMaterials( oldMap.keySet() );
+				service.deleteRecords();
 			}
 		}
 		else //i.e. trigger.isAfter
 		{
 			if(boolIsInsert)
 			{
-				System.debug('gcMaterial after insert trigger');
-				CommissionLineItemERP.createRecords( newMap.keySet() );
+				CommissionLineItem2_Service service = new CommissionLineItem2_Service();
+				service.addMaterials( newMap.keySet() );
+				service.saveRecords();
 				insertKitParts(newMap.keySet());
 			}
 			if(boolIsUpdate)
 			{
-				System.debug(' gcMaterial after Update Trigger ' );
+				CommissionLineItem2_Service.syncMaterials( listNew, oldMap );
 				Id retailRtId = gcConstants.idRtProjectBoatSale;
 				/// Product Kitting
 				set<Id> setIdUpdateMatl = new set<Id>();
@@ -102,7 +105,6 @@ global without sharing class gcMaterial{
 					{
 						serialNowSet.add( matl.Id );
 						erpsToChangeStage.get('nowSet').add(matl.AcctSeedERP__Project__c);
-						System.debug( matl.ERP_RecordTypeId__c + ' == ' + retailRtId);
 						if( matl.ERP_RecordTypeId__c == retailRtId )
 							serialSetOnMaterial.add( matl );
 					}
@@ -113,8 +115,6 @@ global without sharing class gcMaterial{
 					}
 				}
 				updateErpStage( erpsToChangeStage );
-				//updateReservedForRetail( serialSetOnMaterial );
-				CommissionLineItemERP.materialChanged( newMap, oldMap );
 				/// Product Kitting
                 if(!setIdUpdateMatl.isEmpty())
                     updateMaterialSpec(setIdUpdateMatl);
@@ -704,7 +704,6 @@ global without sharing class gcMaterial{
 
             listMatlKit.add(matlKit);
         }
-System.debug('Kit Parts = ' + listMatlKit );
         for(Product2 kit :
             [SELECT Id,
                     (SELECT Id,
@@ -893,7 +892,6 @@ System.debug('Kit Parts = ' + listMatlKit );
 
 	public static void updateRetailMaterialSerial(Map<Id,Map<Id,Id>> mapProjectProductSerial)
 	{
-		System.debug(loggingLevel.error,'mapProjectProductSerial:'+mapProjectProductSerial);
 		List<AcctSeedERP__Material__c> listMatlUpdate = new List<AcctSeedERP__Material__c>();
 		for(AcctSeedERP__Material__c matl :
 			[SELECT Id,
@@ -934,7 +932,6 @@ System.debug('Kit Parts = ' + listMatlKit );
 		}
 
 		if(!listMatlUpdate.isEmpty()){
-			System.debug(loggingLevel.Error, 'listMatlUpdate:'+listMatlUpdate);
 			Boolean oldVal = gcMaterial.disableTrigger;
 			gcMaterial.disableTrigger = true;
 			update listMatlUpdate;

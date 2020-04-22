@@ -73,7 +73,7 @@ private class Project_Service_T
     Test.startTest();
     AcctSeed__Project__c project = Project_Service.newFromOpportunityId( opp.Id );
     Test.stopTest();
-    checkResults( project.Id, 2, 9, 0 );
+    checkResults( project.Id, 3, 9, 0 );
   }
 
   @IsTest
@@ -84,7 +84,7 @@ private class Project_Service_T
     Test.startTest();
     AcctSeed__Project__c project = Project_Service.newFromOpportunityId( opp.Id );
     Test.stopTest();
-    checkResults( project.Id, 2, 11, 0 );
+    checkResults( project.Id, 3, 11, 0 );
   }
 
   @IsTest
@@ -95,7 +95,7 @@ private class Project_Service_T
     Test.startTest();
     AcctSeed__Project__c project = Project_Service.newFromOpportunityId( opp.Id );
     Test.stopTest();
-    checkResults( project.Id, 2, 9, 3 );
+    checkResults( project.Id, 3, 9, 3 );
   }
 
   private static void checkResults( Id projectId,
@@ -121,7 +121,7 @@ private class Project_Service_T
     List<AcctSeedERP__Material__c> retailMaterials = [ SELECT Id FROM AcctSeedERP__Material__c WHERE AcctSeedERP__Project_Task__c = :retailSale.Id ];
     List<AcctSeedERP__Material__c> boMaterials = [ SELECT Id FROM AcctSeedERP__Material__c WHERE AcctSeedERP__Project_Task__c = :businessOffice.Id ];
 
-    System.assertEquals( taskSize, tasks.size(), 'There should be 2 Project Tasks' );
+    System.assertEquals( taskSize, tasks.size(), 'There should be 3 Project Tasks' );
     System.assertEquals( retailSaleMatSize, retailMaterials.size(), 'There should be 9 Retail Sales materials' );
     System.assertEquals( businessOfficeMatSize, boMaterials.size(), 'There should be 2 Business Office materials' );
   }

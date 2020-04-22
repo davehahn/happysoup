@@ -1387,6 +1387,30 @@
         <triggerType>onCreateOrTriggeringUpdate</triggerType>
     </rules>
     <rules>
+        <fullName>Customer Satisfaction Survey ERP</fullName>
+        <active>false</active>
+        <criteriaItems>
+            <field>AcctSeed__Project__c.Stage__c</field>
+            <operation>equals</operation>
+            <value>Delivered</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>AcctSeed__Project__c.RecordTypeId</field>
+            <operation>equals</operation>
+            <value>Retail Boat Sale</value>
+        </criteriaItems>
+        <description>Sends out a Cust Sat survey when stage changed to &quot;Delivered&quot;</description>
+        <triggerType>onCreateOrTriggeringUpdate</triggerType>
+        <workflowTimeTriggers>
+            <actions>
+                <name>Sends_Retail_Boat_Experience_Survey</name>
+                <type>Alert</type>
+            </actions>
+            <timeLength>1</timeLength>
+            <workflowTimeTriggerUnit>Days</workflowTimeTriggerUnit>
+        </workflowTimeTriggers>
+    </rules>
+    <rules>
         <fullName>DC Order Submitted</fullName>
         <active>false</active>
         <criteriaItems>
@@ -2105,6 +2129,31 @@
             <value>Legend Service Work Order</value>
         </criteriaItems>
         <description>Notifies Braedon MacArthur on Stage Delivered on ERP</description>
+        <triggerType>onCreateOrTriggeringUpdate</triggerType>
+    </rules>
+    <rules>
+        <fullName>Notify Emilie Arbour on Trade-In ERP Stage Pending Inspection or Delivered</fullName>
+        <actions>
+            <name>Trade_In_ERP_Stage_has_been_updated</name>
+            <type>Task</type>
+        </actions>
+        <active>true</active>
+        <booleanFilter>(1 AND 2) OR (1 AND 3)</booleanFilter>
+        <criteriaItems>
+            <field>AcctSeed__Project__c.RecordTypeId</field>
+            <operation>equals</operation>
+            <value>Legend Trade In</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>AcctSeed__Project__c.Stage__c</field>
+            <operation>equals</operation>
+            <value>Pending Inspection</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>AcctSeed__Project__c.Stage__c</field>
+            <operation>equals</operation>
+            <value>Delivered</value>
+        </criteriaItems>
         <triggerType>onCreateOrTriggeringUpdate</triggerType>
     </rules>
     <rules>

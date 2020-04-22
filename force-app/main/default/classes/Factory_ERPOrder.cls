@@ -251,11 +251,7 @@ public class Factory_ERPOrder {
 
   public static AcctSeed__Project_Task__c buildProjectTask( Id erpId, String taskName )
   {
-    return new AcctSeed__Project_Task__c(
-        AcctSeed__Project__c = erpId,
-        DisplayOnCustomerInvoice__c = true,
-        Name = taskName
-    );
+    return Factory_ERPOrderTask.buildProjectTask( erpId, taskName );
   }
 
   public static AcctSeedERP__Material__c[] buildMaterials( Id erpId,
