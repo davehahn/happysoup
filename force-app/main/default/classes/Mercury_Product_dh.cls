@@ -181,7 +181,8 @@ public with sharing class Mercury_Product_dh {
         UseStandardPrice = false,
         Product2Id = prodId,
         Pricebook2Id = pbId,
-        UnitPrice = price
+        UnitPrice = price,
+        IsActive = true
       );
     }
 
