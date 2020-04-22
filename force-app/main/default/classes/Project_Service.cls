@@ -43,7 +43,7 @@ public with sharing class Project_Service
     update opp;
     OpportunityTriggerHandler.disableTrigger = oldOppyTriggerVal;
     /// Lock the task now
-    AcctSeed__Project_Task__c salesTask =  projectTasks.get('Retail Sale');
+    AcctSeed__Project_Task__c salesTask =  [SELECT Id, Name FROM AcctSeed__Project_Task__c WHERE Id = :projectTasks.get('Retail Sale').Id ];
     salesTask.Locked__c = true;
     Boolean oldTaskVal = gcProjectTask.disableTrigger;
     gcProjectTask.disableTrigger = true;

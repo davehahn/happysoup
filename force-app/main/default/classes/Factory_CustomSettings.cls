@@ -106,17 +106,20 @@ public class Factory_CustomSettings {
     result.put( 'retail', new Pricebook2(
       Name = 'Retail PB',
       isActive = true,
+      Sales_Year__c = String.valueOf( Date.today().year() ),
       RecordTypeId = LGND_Utilities.recordTypeIdFromName('Pricebook2', 'Sales')
     ));
     result.put( 'partner', new Pricebook2(
       Name = 'Partner PB',
       isActive = true,
+      Sales_Year__c = String.valueOf( Date.today().year() ),
       RecordTypeId = LGND_Utilities.recordTypeIdFromName('Pricebook2', 'Dealer')
     ));
     result.put( 'factory', new Pricebook2(
       Name = 'Factory PB',
       isActive = true,
-      RecordTypeId = LGND_Utilities.recordTypeIdFromName('Pricebook2', 'Dealer')
+      Sales_Year__c = String.valueOf( Date.today().year() ),
+      RecordTypeId = LGND_Utilities.recordTypeIdFromName('Pricebook2', 'Factory')
     ));
     insert result.values();
     return result;

@@ -1,0 +1,109 @@
+<!--
+ - Created by dave on 2020-02-27.
+ -->
+
+<aura:component controller="CommissionRecord2_Controller"
+                implements="force:appHostable,flexipage:availableForAllPageTypes,force:hasRecordId">
+
+  <ltng:require scripts="{!join(',', $Resource.Libraries +'/js/LightningApex.js',
+                                     $Resource.Libraries +'/js/LightningUtils.js')}"
+                afterScriptsLoaded="{!c.doInit}"/>
+
+  <aura:attribute name="recordId" type="String" />
+  <aura:attribute name="record" type="Object" />
+  <aura:attribute name="linesLoaded" type="Boolean" default="false" />
+  <aura:attribute name="isEditing" type="Boolean" default="false" />
+  <aura:attribute name="paymentsValid" type="Boolean" default="true" />
+  <aura:attribute name="statusLabel" type="String" />
+  <aura:attribute name="publisherLoaded" type="Boolean" default="false" />
+  <aura:attribute name="feedLoaded" type="Boolean" default="false" />
+  <aura:attribute name="errorMessage" type="String" />
+  <aura:attribute name="renderFeed" type="Boolean" default="true" />
+
+  <aura:handler name="change" value="{!v.record}" action="{!c.handleRecordChange}" />
+  <aura:handler name="render" value="{!this}" action="{!c.onRender}"/>
+
+  <aura:if isTrue="{! !empty(v.errorMessage)}" >
+    <div class="error-container">
+      <div class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_error">
+        <lightning:icon iconName="utility:block_visitor"
+                        size="small"
+                        variant="inverse"
+                        class="slds-icon-utility-error slds-m-right_medium" />
+        <h2>{!v.errorMessage}</h2>
+      </div>
+    </div>
+  </aura:if>
+
+  <aura:if isTrue="{! empty(v.errorMessage) }">
+    <c:Lgnd_Spinner_dh aura:id="spinner" />
+
+    <lightning:layout>
+      <!-- PROGRESS INDICATOR / PATH -->
+      <lightning:layoutItem class="slds-m-top_small" size="8" padding="around-small">
+        <lightning:progressIndicator currentStep="{!v.record.status}" type="path" variant="base">
+          <lightning:progressStep label="New" value="New" onclick="{!c.handleStatusClick}" />
+          <lightning:progressStep label="Reviewed" value="Reviewed" onclick="{!c.handleStatusClick}" />
+          <aura:if isTrue="{! !equals(v.record.status, 'Disputed')}">
+            <lightning:progressStep label="Approved" value="Approved" onclick="{!c.handleStatusClick}" />
+          </aura:if>
+          <aura:if isTrue="{! equals(v.record.status, 'Disputed') }">
+            <lightning:progressStep label="Disputed" value="Disputed" class="slds-is-lost"/>
+            <lightning:progressStep label="Resolve" value="Approved"  onclick="{!c.handleStatusClick}" />
+          </aura:if>
+        </lightning:progressIndicator>
+      </lightning:layoutItem>
+
+      <!-- BUTTONS -->
+      <lightning:layoutItem class="slds-m-top_small" size="4" padding="around-small" >
+        <aura:if isTrue="{! and( !equals( v.record.status, 'Approved'), !equals(v.record.status, 'Disputed') ) }">
+          <lightning:buttonGroup class="slds-float_right">
+          <lightning:button label="{! if(v.isEditing, 'Cancel', 'Edit Payments')}"
+                            onclick="{!c.handlePaymentEdit}" />
+          <aura:if isTrue="{! !v.isEditing}">
+            <lightning:button label="Add Line Item"
+                              onclick="{!c.handleAddLineItem}" />
+          </aura:if>
+          <aura:if isTrue="{!v.isEditing}">
+            <lightning:button label="Add Payment"
+                              onclick="{!c.handleAddPayment}" />
+            <lightning:button label="Update Payments"
+                              onclick="{!c.handlePaymentUpdate}"
+                              disabled="{! !v.paymentsValid}" />
+          </aura:if>
+        </lightning:buttonGroup>
+        </aura:if>
+      </lightning:layoutItem>
+    </lightning:layout>
+
+    <c:commissionPayments commissionRecordId="{!v.record.id}"
+                          onpaymentchange="{!c.handlePaymentChange}"
+                          onpaymentupdatecomplete="{!c.handlePaymentUpdateComplete}"
+                          ondisputedpayments="{!c.handleDisputedPayments}"
+                          aura:id="payments" />
+
+    <aura:if isTrue="{!v.renderFeed}">
+      <lightning:tabset>
+
+        <lightning:tab label="Details">
+          <c:commissionLineItems commissionRecordId="{!v.record.id}"
+                                 recordCalculationMethod="{!v.record.calculationMethod}"
+                                 aura:id="commissionLines" />
+        </lightning:tab>
+
+        <lightning:tab label="Feed" aura:id="feed" >
+        </lightning:tab>
+
+      </lightning:tabset>
+    </aura:if>
+
+    <aura:if isTrue="{! !v.renderFeed}">
+      <c:commissionLineItems commissionRecordId="{!v.record.id}"
+                             renderRatePaymentColumns="{!equals(v.record.calculationMethod, 'Revenue')}"
+                             aura:id="commissionLines" />
+    </aura:if>
+
+  </aura:if>
+
+
+</aura:component>

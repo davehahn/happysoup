@@ -382,8 +382,6 @@ public without sharing class gcSerialNumber{
 			/// These checkings can be done in one shot but did it separately for readability
 			if(sn.Location__c == 'Out')
 			{
-				System.debug('Fuck Me SERIOUSLY');
-				System.debug(loggingLevel.error,'Case:out');
 				sn.Available_Retail__c = false;
 				sn.Available_Wholesale__c = false;
 				addInUpdate = true;

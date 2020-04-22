@@ -24,7 +24,9 @@ public with sharing class Material_Service
         return buildInsuranceMaterial( oli );
       }
       if( LGND_Constants.productRtId_Protection == oli.Product2.RecordTypeId ||
-          oli.Product2.Family == 'Extended Warranty' )
+          oli.Product2.Family == 'Extended Warranty' ||
+          LGND_Constants.productRtId_Bundle == oli.Product2.RecordTypeId ||
+        ( oli.Product2.Family != null && oli.Product2.Family.contains('Maintenance Package') ) )
       {
         return buildProtectionAndServicesMaterial( oli );
       }

@@ -527,12 +527,26 @@ global without sharing class gcProject_Ext {
     {
       ERPOrderTaskNames__c taskNameSetting = ERPOrderTaskNames__c.getInstance(taskName);
       Boolean showInInvoice = false;
+      Id commissionRecordOverride = null;
       if(taskNameSetting != null && taskNameSetting.Show_In_Invoice__c)
         showInInvoice = true;
+      if(taskNameSetting != null && taskNameSetting.Commission_Applies_to_Retail_Sale__c )
+      {
+        try
+        {
+          commissionRecordOverride = [
+            SELECT Id FROM AcctSeed__Project_Task__c
+            WHERE AcctSeed__Project__c = :idProject
+            AND Is_Retail_Boat_Sale__c = true
+            LIMIT 1].Id;
+        }
+        catch( Exception e ){}
+      }
       AcctSeed__Project_Task__c task = new AcctSeed__Project_Task__c(
         Name = taskName,
         AcctSeed__Project__c = idProject,
-        DisplayOnCustomerInvoice__c = showInInvoice
+        DisplayOnCustomerInvoice__c = showInInvoice,
+        Commission_Override_Project_Task__c = commissionRecordOverride
       );
       insert task;
       return retrieveTasks(idProject);

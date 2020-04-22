@@ -22,6 +22,14 @@ else
   echoOut "Deployment running with --testlevel=$2"
 fi
 
+if [ -z $3 ]
+then
+  echoOut 'Deployment running'
+else
+  CHECKONLY=true
+  echoOut "Validating Only"
+fi
+
 cmd=$(pwd)
 mkdir ~/.deploy_root
 cd ~/.deploy_root

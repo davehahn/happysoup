@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workflow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fieldUpdates>
+        <fullName>Commission_Record2_Expire_Acceptance</fullName>
+        <description>Flags the record as the no longer acceptable by Sales</description>
+        <field>Sales_Acceptable_Expired__c</field>
+        <literalValue>1</literalValue>
+        <name>Commission Record2 Expire Acceptance</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+    </fieldUpdates>
+    <rules>
+        <fullName>Commission Record2  Sales Acceptance Expired</fullName>
+        <active>true</active>
+        <criteriaItems>
+            <field>CommissionRecord2__c.Status__c</field>
+            <operation>equals</operation>
+            <value>Approved</value>
+        </criteriaItems>
+        <description>Marks the record as Expired 7 days after it is approved, and will auto accept all payment records</description>
+        <triggerType>onCreateOrTriggeringUpdate</triggerType>
+        <workflowTimeTriggers>
+            <actions>
+                <name>Commission_Record2_Expire_Acceptance</name>
+                <type>FieldUpdate</type>
+            </actions>
+            <timeLength>7</timeLength>
+            <workflowTimeTriggerUnit>Days</workflowTimeTriggerUnit>
+        </workflowTimeTriggers>
+    </rules>
+</Workflow>
