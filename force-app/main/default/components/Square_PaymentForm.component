@@ -2,7 +2,7 @@
  - Created by dave on 2020-04-15.
  -->
 
-<apex:component>
+<apex:component controller="SquarePaymentForm_Controller">
 
   <script type="text/javascript" src="https://js.squareupsandbox.com/v2/paymentform">
   </script>
@@ -56,10 +56,11 @@
   </div>
 
   <script type="text/javascript">
+    let payment_resolve, payment_reject, _paymentAmount;
 
     const paymentForm = new SqPaymentForm(
     {
-      applicationId: "sandbox-sq0idb-MAljdFjMUyHd7LoGIT0s0A",
+      applicationId: "{!applicationId}",
       inputClass: 'sqr-payment-input',
       inputStyles:
       [{
@@ -96,10 +97,20 @@
             errors.forEach( (error) => {
               console.error('  ' + error.message);
             });
-            alert('Encountered errors, check browser developer console for more details');
+            payment_reject(errors);
             return;
           }
-          alert(`The generated nonce is:\n${nonce}`);
+          SquarePaymentForm_Controller.postToSquare( _paymentAmount, nonce, function( events, result ) {
+            if( result.statusCode === 200 )
+            {
+              payment_resolve( result.result );
+            }
+            else
+            {
+              alert(result.message);
+            }
+          });
+
         }
       }
     });
@@ -108,20 +119,15 @@
 
     function doPostPayment( paymentAmount )
     {
-      console.log( 'doPostPayment' );
-      console.log( paymentAmount );
+
+      payment_reject = undefined;
+      payment_resolve = undefined;
+      _paymentAmount = paymentAmount;
 
       return new Promise( ( resolve, reject ) => {
-        //paymentForm.requestCardNonce();
-        setTimeout( () => {
-          const data = {
-            attr1: 'firstAttr',
-            attr2: 6000,
-            attr3: 'another'
-          };
-
-          resolve( data );
-        }, 1000);
+        payment_resolve = resolve;
+        payment_reject = reject;
+        paymentForm.requestCardNonce();
       });
     }
 
