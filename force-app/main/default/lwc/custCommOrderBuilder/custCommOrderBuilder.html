@@ -59,6 +59,7 @@
       <div class="config-page config-page_selected" data-page="performance">
         <div class="config-page_left">
           <h1 class="vh">Performance</h1>
+          <c-cust-comm-order-boat-image size="large"></c-cust-comm-order-boat-image>
           <c-cust-comm-order-motor-stats></c-cust-comm-order-motor-stats>
         </div>
         <div class="config-page_right slds-p-around_xx-large">
@@ -72,10 +73,15 @@
       <div class="config-page" data-page="trailering">
         <div class="config-page_left">
             <h1 class="vh">Trailering</h1>
+            <template if:false={isMobile}>
+              <c-cust-comm-order-boat-image size="large"></c-cust-comm-order-boat-image>
+            </template>
         </div>
         <div class="config-page_right">
           <div class="config-page_right slds-p-around_xx-large">
-            <h2 class="right_heading">Select Your Trailering</h2>
+            <h2 class="right_heading">Trailering Package</h2>
+            <c-cust-comm-order-options options-title="Select Your Trailer" selections="one" selection-scope="global"></c-cust-comm-order-options>
+            <c-cust-comm-order-options selections="one" selection-scope="global"></c-cust-comm-order-options>
           </div>
         </div>
       </div>
@@ -84,10 +90,14 @@
       <div class="config-page" data-page="electronics">
         <div class="config-page_left">
           <h1 class="vh">Electronics</h1>
+          <template if:false={isMobile}>
+            <c-cust-comm-order-boat-image size="large"></c-cust-comm-order-boat-image>
+          </template>
         </div>
         <div class="config-page_right">
           <div class="config-page_right slds-p-around_xx-large">
-            <h2 class="right_heading">Select Your Electronics</h2>
+            <h2 class="right_heading">Electronics</h2>
+            <c-cust-comm-order-options options-title="Terrova 55 Tech Package" selections="one" selection-scope="global"></c-cust-comm-order-options>
           </div>
         </div>
       </div>
@@ -176,7 +186,9 @@
 
         </div>
         <div class="config-page_right slds-p-around_xx-large">
+          <c-cust-comm-order-boat-image size="small"></c-cust-comm-order-boat-image>
           <h2 class="right_heading slds-text-heading_medium">Your Boat</h2>
+          <p class="right_delivery">Estimated Deliver: 5-8 weeks</p>
         </div>
       </div>
 
@@ -220,7 +232,7 @@
           </div>
           <div class="config-footer_savings">
             <div class="amount">$6,700</div>
-            <div class="label">Monthly Payment</div>
+            <div class="label">Preferred equipment package savings</div>
           </div>
           <div class="config-footer_details-link">
             <a onclick={handleOpenModal}>Show Details</a>
@@ -229,8 +241,7 @@
 
         <div class="config-footer_item">
           <div class="config-footer_delivery">
-            <div>Delivery - Line 1</div>
-            <div>Delivery - Line 1</div>
+            <div>Estimated Deliver: 5-8 weeks</div>
           </div>
         </div>
 
