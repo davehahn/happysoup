@@ -2,7 +2,7 @@
  - Created by dave on 2020-04-15.
  -->
 
-<apex:component>
+<apex:component controller="SquarePaymentForm_Controller">
 
   <script type="text/javascript" src="https://js.squareupsandbox.com/v2/paymentform">
   </script>
@@ -56,10 +56,11 @@
   </div>
 
   <script type="text/javascript">
+    let _resolve, _reject, _paymentAmount;
 
     const paymentForm = new SqPaymentForm(
     {
-      applicationId: "sandbox-sq0idb-MAljdFjMUyHd7LoGIT0s0A",
+      applicationId: "{!applicationId}",
       inputClass: 'sqr-payment-input',
       inputStyles:
       [{
@@ -90,16 +91,23 @@
       {
         cardNonceResponseReceived: function (errors, nonce, cardData)
         {
+
           if (errors)
           {
-            console.error('Encountered errors:');
-            errors.forEach( (error) => {
-              console.error('  ' + error.message);
-            });
-            alert('Encountered errors, check browser developer console for more details');
-            return;
+            _reject( errors );
           }
-          alert(`The generated nonce is:\n${nonce}`);
+          SquarePaymentForm_Controller.postToSquare( _paymentAmount, nonce, function( events, result ) {
+            if( result.statusCode === 200 )
+            {
+              _resolve( JSON.parse(result.result) );
+            }
+            else
+            {
+              console.log(result.message);
+              _reject( [{message: result.message}] );
+            }
+          }, {escape: false});
+
         }
       }
     });
@@ -108,20 +116,15 @@
 
     function doPostPayment( paymentAmount )
     {
-      console.log( 'doPostPayment' );
-      console.log( paymentAmount );
+
+      _reject = undefined;
+      _resolve = undefined;
+      _paymentAmount = paymentAmount;
 
       return new Promise( ( resolve, reject ) => {
-        //paymentForm.requestCardNonce();
-        setTimeout( () => {
-          const data = {
-            attr1: 'firstAttr',
-            attr2: 6000,
-            attr3: 'another'
-          };
-
-          resolve( data );
-        }, 1000);
+        _resolve = resolve;
+        _reject = reject;
+        paymentForm.requestCardNonce();
       });
     }
 

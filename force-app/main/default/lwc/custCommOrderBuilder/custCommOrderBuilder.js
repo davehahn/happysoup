@@ -4,6 +4,7 @@
 
 import { LightningElement, wire, track } from 'lwc';
 import { CurrentPageReference, NavigationMixin } from 'lightning/navigation';
+import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import { loadStyle } from 'lightning/platformResourceLoader';
 import sldsIconFont from '@salesforce/resourceUrl/sldsIconFont';
 import LOGO from '@salesforce/resourceUrl/LegendLogo';
@@ -158,10 +159,19 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
     })
     .catch( ( error ) => {
       console.log( error );
+      error.forEach( (err) => {
+        const event = new ShowToastEvent({
+          title: "Please fix the following error",
+          message:  err.message,
+          variant: 'error',
+          mode: 'sticky'
+        });
+        this.dispatchEvent( event );
+      });
     })
     .finally( () => {
       spinner.toggle();
-      alert( 'Figure out what to do now!!!!!');
+      //alert( 'Figure out what to do now!!!!!');
     });
   }
 
