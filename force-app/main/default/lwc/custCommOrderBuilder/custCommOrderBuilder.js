@@ -6,6 +6,7 @@ import { LightningElement, wire, track } from 'lwc';
 import { CurrentPageReference, NavigationMixin } from 'lightning/navigation';
 import { loadStyle } from 'lightning/platformResourceLoader';
 import sldsIconFont from '@salesforce/resourceUrl/sldsIconFont';
+import gothamFonts from '@salesforce/resourceUrl/GothamHTF';
 import LOGO from '@salesforce/resourceUrl/LegendLogo';
 
 export default class CustCommOrderBuilder extends NavigationMixin(LightningElement) {
@@ -43,6 +44,8 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
   renderedCallback()
   {
     loadStyle( this, sldsIconFont + '/style.css')
+    .then(()=>{});
+    loadStyle( this, gothamFonts + '/fonts.css')
     .then(()=>{});
   }
 

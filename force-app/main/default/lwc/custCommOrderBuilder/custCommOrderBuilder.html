@@ -56,21 +56,24 @@
       <!-- PERFORMANCE -->
       <div class="config-page config-page_selected" data-page="performance">
         <div class="config-page_left">
-          <h1 class="slds-m-top_large slds-text-heading_large slds-text-align_center">Performance</h1>
+          <h1 class="vh">Performance</h1>
+
         </div>
         <div class="config-page_right slds-p-around_xx-large">
-          <h2 class="right_heading slds-text-heading_medium">Select Your Performance</h2>
+          <h2 class="right_heading">Select Your Performance</h2>
+            <c-cust-comm-order-options options-title="Standard Performance"></c-cust-comm-order-options>
+            <c-cust-comm-order-options options-title="Enhanced Performance"></c-cust-comm-order-options>
         </div>
       </div>
 
       <!-- TRAILERING -->
       <div class="config-page" data-page="trailering">
         <div class="config-page_left">
-            <h1 class="slds-m-top_large slds-text-heading_large slds-text-align_center">Trailering</h1>
+            <h1 class="vh">Trailering</h1>
         </div>
         <div class="config-page_right">
           <div class="config-page_right slds-p-around_xx-large">
-            <h2 class="right_heading slds-text-heading_medium">Select Your Trailering</h2>
+            <h2 class="right_heading">Select Your Trailering</h2>
           </div>
         </div>
       </div>
@@ -78,11 +81,11 @@
       <!-- ELECTRONICS -->
       <div class="config-page" data-page="electronics">
         <div class="config-page_left">
-          <h1 class="slds-m-top_large slds-text-heading_large slds-text-align_center">Electronics</h1>
+          <h1 class="vh">Electronics</h1>
         </div>
         <div class="config-page_right">
           <div class="config-page_right slds-p-around_xx-large">
-            <h2 class="right_heading slds-text-heading_medium">Select Your Electronics</h2>
+            <h2 class="right_heading">Select Your Electronics</h2>
           </div>
         </div>
       </div>
@@ -233,7 +236,7 @@
           <div class="config-footer_item">
             <button disabled={buttonDisabled}
                     onclick={handleNext}>
-              {buttonText}
+              {buttonText}?
             </button>
           </div>
         </template>
@@ -241,7 +244,7 @@
           <div class="config-footer_item">
             <button disabled={buttonDisabled}
                     onclick={jumpToPayment}>
-              {buttonText}
+              {buttonText}!
             </button>
           </div>
         </template>
