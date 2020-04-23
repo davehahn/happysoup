@@ -56,7 +56,7 @@
   </div>
 
   <script type="text/javascript">
-    let payment_resolve, payment_reject, _paymentAmount;
+    let _resolve, _reject, _paymentAmount;
 
     const paymentForm = new SqPaymentForm(
     {
@@ -94,22 +94,24 @@
           if (errors)
           {
             console.error('Encountered errors:');
+            console.log(errors);
             errors.forEach( (error) => {
               console.error('  ' + error.message);
             });
             payment_reject(errors);
-            return;
+            _reject( errors );
           }
           SquarePaymentForm_Controller.postToSquare( _paymentAmount, nonce, function( events, result ) {
             if( result.statusCode === 200 )
             {
-              payment_resolve( result.result );
+              _resolve( JSON.parse(result.result) );
             }
             else
             {
               alert(result.message);
+              _reject( [{message: result.message}] );
             }
-          });
+          }, {escape: false});
 
         }
       }
@@ -120,13 +122,13 @@
     function doPostPayment( paymentAmount )
     {
 
-      payment_reject = undefined;
-      payment_resolve = undefined;
+      _reject = undefined;
+      _resolve = undefined;
       _paymentAmount = paymentAmount;
 
       return new Promise( ( resolve, reject ) => {
-        payment_resolve = resolve;
-        payment_reject = reject;
+        _resolve = resolve;
+        _reject = reject;
         paymentForm.requestCardNonce();
       });
     }
