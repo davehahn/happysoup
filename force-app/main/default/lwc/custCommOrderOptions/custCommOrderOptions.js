@@ -9,6 +9,8 @@ import gothamFonts from '@salesforce/resourceUrl/GothamHTF';
 
 export default class CustCommOrderOptions extends LightningElement {
     @api optionsTitle;
+    @api selections;
+    @api selectionScope;
 
     renderedCallback()
     {
