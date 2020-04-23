@@ -47,7 +47,10 @@ export default class SquarePaymentForm extends LightningElement {
         if( event.origin === this.origin )
         {
           window.removeEventListener('message', messageHandler );
-          resolve( event.data );
+          if( event.data.status === 'success' )
+            resolve( event.data.response );
+          if( event.data.status === 'error' )
+            reject( event.data.errors );
         }
       };
       window.addEventListener('message', messageHandler );
