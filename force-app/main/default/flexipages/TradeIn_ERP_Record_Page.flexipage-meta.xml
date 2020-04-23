@@ -7,12 +7,20 @@
                 <value>false</value>
             </componentInstanceProperties>
             <componentInstanceProperties>
+                <name>hideChatterActions</name>
+                <value>false</value>
+            </componentInstanceProperties>
+            <componentInstanceProperties>
                 <name>numVisibleActions</name>
                 <value>3</value>
             </componentInstanceProperties>
             <componentName>force:highlightsPanel</componentName>
         </componentInstances>
         <componentInstances>
+            <componentInstanceProperties>
+                <name>hideHeader</name>
+                <value>false</value>
+            </componentInstanceProperties>
             <componentName>force:relatedListQuickLinksContainer</componentName>
         </componentInstances>
         <componentInstances>
@@ -86,6 +94,10 @@
                 <name>pageName</name>
                 <value>gpProject_Override_View</value>
             </componentInstanceProperties>
+            <componentInstanceProperties>
+                <name>showLabel</name>
+                <value>true</value>
+            </componentInstanceProperties>
             <componentName>flexipage:visualforcePage</componentName>
         </componentInstances>
         <name>facet-0b97ce6c-1680-4292-ab28-a9bfd0f39227</name>
@@ -107,6 +119,16 @@
     </flexiPageRegions>
     <flexiPageRegions>
         <componentInstances>
+            <componentName>CommissionCalculator2_Container</componentName>
+            <visibilityRule>
+                <criteria>
+                    <leftValue>{!Record.Uses_V2_Commissions__c}</leftValue>
+                    <operator>EQUAL</operator>
+                    <rightValue>true</rightValue>
+                </criteria>
+            </visibilityRule>
+        </componentInstances>
+        <componentInstances>
             <componentInstanceProperties>
                 <name>height</name>
                 <value>800</value>
@@ -119,7 +141,18 @@
                 <name>pageName</name>
                 <value>CommissionCalculator</value>
             </componentInstanceProperties>
+            <componentInstanceProperties>
+                <name>showLabel</name>
+                <value>true</value>
+            </componentInstanceProperties>
             <componentName>flexipage:visualforcePage</componentName>
+            <visibilityRule>
+                <criteria>
+                    <leftValue>{!Record.Uses_V2_Commissions__c}</leftValue>
+                    <operator>EQUAL</operator>
+                    <rightValue>false</rightValue>
+                </criteria>
+            </visibilityRule>
         </componentInstances>
         <name>facet-9a6c334f-7cd7-485d-9bac-00e4cbff17cc</name>
         <type>Facet</type>
@@ -137,6 +170,10 @@
             <componentInstanceProperties>
                 <name>pageName</name>
                 <value>ERPInvoiceDocumentBuilder_LEX</value>
+            </componentInstanceProperties>
+            <componentInstanceProperties>
+                <name>showLabel</name>
+                <value>true</value>
             </componentInstanceProperties>
             <componentName>flexipage:visualforcePage</componentName>
         </componentInstances>
@@ -228,7 +265,7 @@
         <name>main</name>
         <type>Region</type>
     </flexiPageRegions>
-    <masterLabel>Service ERP Record Page</masterLabel>
+    <masterLabel>Trade In ERP Record Page</masterLabel>
     <sobjectType>AcctSeed__Project__c</sobjectType>
     <template>
         <name>flexipage:recordHomeSingleColTemplateDesktop</name>

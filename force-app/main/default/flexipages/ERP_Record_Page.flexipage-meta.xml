@@ -7,6 +7,10 @@
                 <value>false</value>
             </componentInstanceProperties>
             <componentInstanceProperties>
+                <name>hideChatterActions</name>
+                <value>false</value>
+            </componentInstanceProperties>
+            <componentInstanceProperties>
                 <name>numVisibleActions</name>
                 <value>3</value>
             </componentInstanceProperties>
@@ -90,6 +94,16 @@
     </flexiPageRegions>
     <flexiPageRegions>
         <componentInstances>
+            <componentName>CommissionCalculator2_Container</componentName>
+            <visibilityRule>
+                <criteria>
+                    <leftValue>{!Record.Uses_V2_Commissions__c}</leftValue>
+                    <operator>EQUAL</operator>
+                    <rightValue>true</rightValue>
+                </criteria>
+            </visibilityRule>
+        </componentInstances>
+        <componentInstances>
             <componentInstanceProperties>
                 <name>height</name>
                 <value>800</value>
@@ -107,6 +121,13 @@
                 <value>true</value>
             </componentInstanceProperties>
             <componentName>flexipage:visualforcePage</componentName>
+            <visibilityRule>
+                <criteria>
+                    <leftValue>{!Record.Uses_V2_Commissions__c}</leftValue>
+                    <operator>EQUAL</operator>
+                    <rightValue>false</rightValue>
+                </criteria>
+            </visibilityRule>
         </componentInstances>
         <name>facet-9a6c334f-7cd7-485d-9bac-00e4cbff17cc</name>
         <type>Facet</type>
