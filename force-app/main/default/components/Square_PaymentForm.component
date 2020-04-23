@@ -91,14 +91,9 @@
       {
         cardNonceResponseReceived: function (errors, nonce, cardData)
         {
+
           if (errors)
           {
-            console.error('Encountered errors:');
-            console.log(errors);
-            errors.forEach( (error) => {
-              console.error('  ' + error.message);
-            });
-            payment_reject(errors);
             _reject( errors );
           }
           SquarePaymentForm_Controller.postToSquare( _paymentAmount, nonce, function( events, result ) {
@@ -108,7 +103,7 @@
             }
             else
             {
-              alert(result.message);
+              console.log(result.message);
               _reject( [{message: result.message}] );
             }
           }, {escape: false});
