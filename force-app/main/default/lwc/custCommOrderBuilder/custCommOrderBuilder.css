@@ -5,6 +5,13 @@
   counter-reset: menuCounter;
   --legend-blue: #2AB2F0
 }
+.vh{
+    position: absolute;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    height: 1px; width: 1px;
+    margin: -1px; padding: 0; border: 0;
+}
 
 .lgnd-order-builder {
   position: absolute;
@@ -648,6 +655,9 @@
         display: none;
     }
     /* stack paged content */
+    .config-content{
+        padding-bottom: 90px;
+    }
     .config-content:not([data-current="payment"]),
     .config-page:not([data-page="payment"]),
     .config-page.config-page_selected:not([data-page="payment"]){
@@ -723,7 +733,7 @@
     }
 }
 
-@media screen and (max-width: 640px){
+@media screen and (max-width: 40em){
     .config-footer{
         height: auto;
         background-color: #333333e8;
