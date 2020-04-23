@@ -7,6 +7,7 @@ import { CurrentPageReference, NavigationMixin } from 'lightning/navigation';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import { loadStyle } from 'lightning/platformResourceLoader';
 import sldsIconFont from '@salesforce/resourceUrl/sldsIconFont';
+import gothamFonts from '@salesforce/resourceUrl/GothamHTF';
 import LOGO from '@salesforce/resourceUrl/LegendLogo';
 import fetchBoat from '@salesforce/apex/OnlineBoatReservation_Controller.fetchBoat';
 
