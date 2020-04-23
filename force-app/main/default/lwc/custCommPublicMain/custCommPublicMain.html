@@ -12,8 +12,8 @@
       <img src={logo}>
     </div>
     <div class="center">
-      <template for:each={boatMap} for:item="boat">
-        <a key={boat.recordId} data-record-id={boat.recordId} onclick={navToBoat}>{boat.name}</a>
+      <template for:each={boats.data} for:item="boat">
+        <a key={boat.Id} data-record-id={boat.Id} onclick={navToBoat}>{boat.Name}</a>
       </template>
 
     </div>
@@ -33,8 +33,8 @@
                              size="large"
                              onclick={toggleMenu}></lightning-button-icon>
     </div>
-    <template for:each={boatMap} for:item="boat">
-      <a key={boat.recordId} data-record-id={boat.recordId} onclick={navToBoat}>{boat.name}</a>
+    <template for:each={boats.data} for:item="boat">
+      <a key={boat.Id} data-record-id={boat.Id} onclick={navToBoat}>{boat.Name}</a>
     </template>
     <a class="sign-in" onclick={handleSignIn}>Sign In</a>
   </div>

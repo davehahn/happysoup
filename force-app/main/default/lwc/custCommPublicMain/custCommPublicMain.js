@@ -2,13 +2,15 @@
  * Created by dave on 2020-04-09.
  */
 
-import { LightningElement } from 'lwc';
+import { LightningElement, wire } from 'lwc';
 import { NavigationMixin } from 'lightning/navigation';
 import LOGO from '@salesforce/resourceUrl/LegendLogo';
+import fetchBoats from '@salesforce/apex/OnlineBoatReservation_Controller.fetchBoats';
 
 export default class CustCommPublicMain extends NavigationMixin(LightningElement) {
 
   logo = LOGO;
+  @wire( fetchBoats ) boats;
   boatMap = [
     {
       name: 'Boat 1',
