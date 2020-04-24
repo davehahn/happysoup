@@ -185,8 +185,9 @@
         </div>
         <div class="config-page_right slds-p-around_xx-large">
           <c-cust-comm-order-boat-image size="small"></c-cust-comm-order-boat-image>
-          <h2 class="right_heading slds-text-heading_medium">Your Boat</h2>
+          <h2 class="right_heading slds-text-heading_medium">Your X18</h2>
           <p class="right_delivery">Estimated Deliver: 5-8 weeks</p>
+          <c-cust-comm-order-summary></c-cust-comm-order-summary>
         </div>
       </div>
 
@@ -247,7 +248,7 @@
           <div class="config-footer_item">
             <button disabled={buttonDisabled}
                     onclick={handleNext}>
-              {buttonText}?
+              {buttonText}
             </button>
           </div>
         </template>
@@ -255,7 +256,7 @@
           <div class="config-footer_item">
             <button disabled={buttonDisabled}
                     onclick={jumpToPayment}>
-              {buttonText}!
+              {buttonText}
             </button>
           </div>
         </template>
