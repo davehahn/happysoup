@@ -4,8 +4,13 @@
                 afterScriptsLoaded="{!c.afterScripts}" />
 
   <aura:attribute name="fromCPQ" type="Boolean" default="false" />
+  <aura:attribute name="showPop" type="Boolean" default="false" />
+  <aura:attribute name="hasSelections" type="Boolean" default="false" />
   <aura:attribute name="opportunityId" type="String" />
   <aura:attribute name="steps" type="Array" />
+  <aura:attribute name="columns" type="List" />
+  <aura:attribute name="listData" type="sObject[]" />
+  <aura:attribute name="dupAccounts" type="String" />
   <aura:attribute name="currentStep" type="String" />
   <aura:attribute name="selectOptions" type="Object" />
   <aura:attribute name="customer" type="Object" />
@@ -531,6 +536,59 @@
                             onclick="{!c.handleContinue}" />
         </aura:if>
       </div>
+    </lightning:layoutItem>
+  </lightning:layout>
+  <lightning:layout horizontalAlign="center" verticalAlign="center">
+    <lightning:layoutItem size="12"
+                          smallDeviceSize="12"
+                          mediumDeviceSize="12"
+                          largeDeviceSize="8">
+    <aura:if isTrue="{!v.showPop}">
+      <div role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+        <div class="slds-modal__container">
+          <!-- ###### MODAL BOX HEADER Part Start From Here ######-->
+          <div class="slds-modal__header">
+            <h2 id="header99" class="slds-text-heading--medium">Duplicate records</h2>
+          </div>
+          <!--###### MODAL BOX BODY Part Start From Here ######-->
+          <div class="slds-modal__content slds-p-around--medium">
+<!--              <lightning:datatable aura:id="otherDataTable"-->
+<!--                                   data="{! v.listData }"-->
+<!--                                   columns="{! v.columns }"-->
+<!--                                   keyField="Id"-->
+<!--                                   onrowselection="{!c.rowSelected}"/>-->
+            <ul class="slds-has-dividers_bottom-space">
+              <aura:iteration items="{!v.listData}" var="acc">
+              <li class="slds-item">
+                <lightning:tile  label="{!acc.Name}" href="/bruce.html">
+                  <aura:set attribute="media">
+                    <lightning:icon iconName="standard:account" title="{!acc.Name}" />
+                  </aura:set>
+                  <ul class="slds-list_horizontal slds-has-dividers_right">
+                    <li class="slds-item">{!acc.PersonEmail}</li>
+                    <li class="slds-item">{!acc.Phone}</li>
+                    <li class="slds-item">{!acc.BillingStreet}</li>
+                  </ul>
+                  <ul class="slds-list_horizontal slds-has-dividers_right">
+                    <li class="slds-item">&nbsp;</li>
+                    <li class="slds-item">
+                      <lightning:button class="slds-button slds-button--brand" label=" Select " title="{!acc.Id}" onclick="{!c.handleAccountSelection}" />
+                    </li>
+                  </ul>
+                </lightning:tile>
+              </li>
+              </aura:iteration>
+            </ul>
+          </div>
+          <!--###### MODAL BOX FOOTER Part Start From Here ######-->
+          <div class="slds-modal__footer">
+<!--            <lightning:button class="slds-button slds-button&#45;&#45;brand" label=" Save " onclick="{!c.handleSaveAfterAccountSelection}" disabled="{! not(v.hasSelections)}" />-->
+            <button class="slds-button slds-button--neutral" onclick="{!c.closeModel}" >Close</button>
+          </div>
+        </div>
+      </div>
+      <div class="slds-backdrop slds-backdrop--open"></div>
+    </aura:if>
     </lightning:layoutItem>
   </lightning:layout>
 </aura:component>

@@ -492,6 +492,36 @@ public without sharing class RetailSalesToolController_dh
   }
 
   @AuraEnabled
+  public static String checkDuplicate( String customerJSON)
+  {
+    List<Account> listAcc = new List<Account>();
+    Customer c = (Customer)JSON.deserialize( customerJSON, Customer.class );
+    c.fillCountryAndState();
+    Account acct = c.revertToAccount();
+    List<Account_Matching_Field__mdt> listFields = queryDuplicateFields();
+    if(!listFields.isEmpty()) {
+      String query = ' SELECT Id, Name, PersonEmail, Phone, BillingStreet, BillingCity, BillingState, BillingCountry ';
+      query += ' FROM Account WHERE ';
+      String whereClause = '';
+      for (Account_Matching_Field__mdt amf : listFields) {
+        if(whereClause == '')
+            whereClause += amf.DeveloperName + ' = \'' + acct.get(amf.DeveloperName) + '\'';
+        else
+            whereClause += ' and ' + amf.DeveloperName + ' = \'' + acct.get(amf.DeveloperName)  + '\'';
+      }
+      query += whereClause;
+      System.debug('whereClause');
+      System.debug(whereClause);
+      System.debug('query');
+      System.debug(query);
+      for (Account acc : Database.query(query)) {
+        listAcc.add(acc);
+      }
+    }
+    return JSON.serialize(listAcc);
+  }
+
+  @AuraEnabled
   public static String createSale( String customerJSON, String oppJSON )
   {
     User u = [SELECT Id, Sales_Department__c FROM User WHERE Id = :UserInfo.getUserId()];
@@ -501,7 +531,8 @@ public without sharing class RetailSalesToolController_dh
     OppWrapper oppFields = (OppWrapper)JSON.deserialize( oppJSON, OppWrapper.class);
     Opportunity opp;
     Schema.sObjectType entityType = c.id == null ? null : Id.valueOf(c.id).getSObjectType();
-    if( entityType == null || entityType == Lead.sObjectType)
+    System.debug('entityType:'+entityType);
+    if(entityType == Lead.sObjectType)
     {
       Lead ld = c.revertToLead();
       upsert ld;
@@ -515,15 +546,21 @@ public without sharing class RetailSalesToolController_dh
         update acct;
       }
     }
-    else if( entityType == Account.sObjectType )
+    else if( entityType == null || entityType == Account.sObjectType )
     {
-      Account acct = c.revertToAccount();
-      System.debug( acct );
-      update acct;
-      opp = new Opportunity(
-        Name = buildOppName( c.firstName + ' ' + c.lastName ),
-        AccountId = acct.Id
-      );
+//      try {
+        Account acct = c.revertToAccount();
+        System.debug(acct);
+        upsert acct;
+        opp = new Opportunity(
+            Name = buildOppName(c.firstName + ' ' + c.lastName),
+            AccountId = acct.Id
+        );
+//      }catch(Exception e){
+//        if(e.getMessage().contains('DUPLICATES_DETECTED')){
+//
+//        }
+//      }
     }
     else {
       throw new AuraHandledException('The Id specified must be either a Lead or an Account');
@@ -822,6 +859,16 @@ public without sharing class RetailSalesToolController_dh
               WHERE Id = : leadId
               AND isConverted = false];
     return JSON.serialize( new Customer( l ) );
+  }
+
+  private static List<Account_Matching_Field__mdt> queryDuplicateFields() {
+    return [
+        SELECT
+            Id,
+            DeveloperName,
+            Wrapper_Field_Name__c
+        FROM Account_Matching_Field__mdt
+    ];
   }
 
 }
