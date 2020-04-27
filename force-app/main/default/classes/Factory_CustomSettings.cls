@@ -63,6 +63,15 @@ public class Factory_CustomSettings {
       }
     }
     insert ups;
+
+    Id feeRtId = [SELECT Id FROM RecordType WHERE DeveloperName = 'Fees' AND SobjectType = 'Product2'].Id;
+    Product2 ppsa = new Product2(
+      RecordTypeId = feeRtId,
+      Family = 'Bank Registration PPSA Fee',
+      IsActive = true,
+      Name = 'PPSA Fee'
+    );
+    insert ppsa;
   }
 
   public static Map<String,Account> buildLegendAccounts()
