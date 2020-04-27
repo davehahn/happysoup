@@ -23,6 +23,10 @@ public with sharing class Material_Service
       {
         return buildInsuranceMaterial( oli );
       }
+      if( oli.Product2Id == LGND_Constants.ppsaProductId )
+      {
+        return buildPPSAMaterial( oli );
+      }
       if( LGND_Constants.productRtId_Protection == oli.Product2.RecordTypeId ||
           oli.Product2.Family == 'Extended Warranty' ||
           LGND_Constants.productRtId_Bundle == oli.Product2.RecordTypeId ||
@@ -52,6 +56,15 @@ public with sharing class Material_Service
       mat.AcctSeedERP__Project_Task__c = this.businessOfficeTaskId;
       mat.Insurance_Rate__c = oli.Insurance_Rate__c;
       mat.Insurance_Coverage__c = oli.InsuranceCoverage__c;
+      mat.GMBLASERP__Price_Override__c = true;
+      return mat;
+    }
+
+    private AcctSeedERP__Material__c buildPPSAMaterial( OpportunityLineItem oli )
+    {
+      System.debug( 'BUILDING PPSA MATERIAL' );
+      AcctSeedERP__Material__c mat = buildStandardMaterial( oli );
+      mat.AcctSeedERP__Project_Task__c = this.businessOfficeTaskId;
       mat.GMBLASERP__Price_Override__c = true;
       return mat;
     }

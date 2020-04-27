@@ -42,4 +42,51 @@ private class CommissionRecord2_TriggerHandler_T
     System.assertEquals( retailPB, record.Retail_Pricebook__c, 'Retail PB should be set' );
     System.assertEquals( project.Id, record.Project__c, 'Project Id should be set' );
   }
+
+  @IsTest
+  static void status_Tests()
+  {
+    AcctSeed__Project__c project = [SELECT Id FROM AcctSeed__Project__c LIMIT 1];
+    List<AcctSeed__Project_Task__c> tasks = Factory_ERPOrderTask.insertDefaultRetailBoatSaleTasks( project.Id );
+    User u = Factory_User.newUser('TestFirst', 'TestLast', 'System Administrator', null );
+    insert u;
+    System.runAs( u )
+    {
+      CommissionRecord2__c record = new CommissionRecord2__c(
+        Project_Task__c = tasks[0].Id
+      );
+      insert record;
+      record = [
+        SELECT Id, Status__c, Approved_on__c, Approved_By__c, Reviewed_By__c, Previously_Approved_On__c
+        FROM CommissionRecord2__c
+        WHERE Id = :record.Id ];
+      System.assertEquals('New', record.Status__c, 'Status should be New');
+      record.Status__c = 'Reviewed';
+      update record;
+      record = [
+        SELECT Id, Status__c, Approved_on__c, Approved_By__c, Reviewed_By__c, Previously_Approved_On__c
+        FROM CommissionRecord2__c
+        WHERE Id = :record.Id ];
+      System.assertEquals( u.Id, record.Reviewed_By__c );
+      record.Status__c = 'Approved';
+      update record;
+      record = [
+        SELECT Id, Status__c, Approved_on__c, Approved_By__c, Reviewed_By__c, Previously_Approved_On__c
+        FROM CommissionRecord2__c
+        WHERE Id = :record.Id ];
+      System.assertEquals( u.Id, record.Reviewed_By__c );
+      System.assertEquals( u.Id, record.Approved_By__c );
+      System.assert( record.Approved_On__c != null );
+      record.Status__c = 'Disputed';
+      update record;
+      record = [
+        SELECT Id, Status__c, Approved_on__c, Approved_By__c, Reviewed_By__c, Previously_Approved_On__c
+        FROM CommissionRecord2__c
+        WHERE Id = :record.Id ];
+      System.assert( record.Approved_By__c == null );
+      System.assert( record.Approved_On__c == null );
+      System.assert( record.Previously_Approved_On__c != null );
+
+    }
+  }
 }
