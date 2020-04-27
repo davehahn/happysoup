@@ -21,14 +21,12 @@ public with sharing class BusinessOffice_Controller {
              (SELECT Id,
                      AcctSeedERP__Product__r.InsurancePlan__r.Name
               FROM AcctSeedERP__Project_Materials__r
-              WHERE AcctSeedERP__Project_Task__r.Name LIKE 'Business Office'
+              WHERE AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_2__c = :LGND_Constants.GLV2Id_BusinessOffice
               LIMIT 1)
             FROM AcctSeed__Project__c
             WHERE Id = :recordId];
       pbId = erp.GMBLASERP__Pricebook__c;
     }
-
-    //List<Account> institutions = [SELECT Id, Name, BillingStreet, BillingState FROM Account WHERE Type = 'Financing Institution'];
 
     if( pbId != null )
     {
@@ -61,20 +59,6 @@ public with sharing class BusinessOffice_Controller {
       this.options = new List<Account>();
     }
   }
-
-  //@AuraEnabled
-  //public static String fetchFinancialInstitutionOptions( String recordId )
-  //{
-  //  String objType = objType( recordId );
-  //  String query = 'SELECT Id, Financing_Institution__c FROM ';
-  //  query += objType;
-  //  query += ' WHERE Id = \'' + recordId +'\' LIMIT 1';
-  //  sObject record = Database.query( query );
-  //  FinancingInstitutionDetails result = new FinancingInstitutionDetails();
-  //  result.value = String.valueOf( record.get('Financing_Institution__c') );
-  //  result.options = LGND_Utilities.getPicklistValues( objType( recordId ), 'Financing_Institution__c' );
-  //  return JSON.serialize( result );
-  //}
 
   @AuraEnabled
   public static String fetchFinancialInstitutionOptions( String recordId )
@@ -195,8 +179,7 @@ public with sharing class BusinessOffice_Controller {
       return [SELECT Id
               FROM PricebookEntry
               WHERE Pricebook2Id = :pbId
-              AND Product2.Family = 'Bank Registration PPSA Fee'
-              AND Product2.RecordType.Name = 'Fees'
+              AND Product2Id = :LGND_Constants.ppsaProductId
               LIMIT 1 ].Id;
     }
     catch(Exception e)
@@ -239,6 +222,7 @@ public with sharing class BusinessOffice_Controller {
                                      String parentId,
                                      String pricebookEntryId )
   {
+    System.debug( '***LINE ID**** = ' + lineId);
     Map<String, String> result = new Map<String, String>();
     if( lineId != null && ( value == null || value == '' || Decimal.valueOf(value) == 0 )  )
     {
@@ -257,15 +241,12 @@ public with sharing class BusinessOffice_Controller {
       try {
         task = [SELECT Id FROM AcctSeed__Project_Task__c
                 WHERE AcctSeed__Project__c = :parentId
-                AND Name LIKE '%Retail Sale%' ];
+                AND AcctSeed__GL_Account_Variable_2__c = :LGND_Constants.GLV2Id_BusinessOffice
+                LIMIT 1];
       }
       catch( Exception e )
       {
-        task = new AcctSeed__Project_Task__c(
-          Name = 'Retail Sale',
-          DisplayOnCustomerInvoice__c = true,
-          AcctSeed__Project__c = parentId
-        );
+        task = ProjectTask_Service.buildBusinessOfficeTask( parentId );
         insert task;
       }
       AcctSeedERP__Material__c mat = new AcctSeedERP__Material__c(
@@ -396,7 +377,7 @@ public with sharing class BusinessOffice_Controller {
                                            WHERE AcctSeedERP__Product__r.RecordTypeId = :LGND_Constants.productRtId_Insurance)
                                         FROM AcctSeed__Project_Task__c
                                         WHERE AcctSeed__Project__c = :recordId
-                                        AND Name LIKE '%Business Office%'] )
+                                        AND AcctSeed__GL_Account_Variable_2__c = :LGND_Constants.GLV2Id_BusinessOffice] )
       {
         if( t.AcctSeedERP__Materials__r.size() > 0 )
           this.planId = t.AcctSeedERP__Materials__r[0].AcctSeedERP__Product__r.InsurancePlan__c;

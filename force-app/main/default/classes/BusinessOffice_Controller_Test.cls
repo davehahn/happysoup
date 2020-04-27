@@ -74,7 +74,8 @@ private class BusinessOffice_Controller_Test {
     erpInit();
     if( createPPSA )
     {
-      orderTask = Factory_ERPOrder.buildProjectTask( erp.Id, 'Retail Sale');
+      orderTask = Factory_ERPOrder.buildProjectTask( erp.Id, 'Business Office');
+      orderTask.AcctSeed__GL_Account_Variable_2__c = LGND_Constants.GLV2Id_BusinessOffice;
       insert orderTask;
       ppsa_mat = new AcctSeedERP__Material__c(
         AcctSeedERP__Project__c = erp.Id,
@@ -372,6 +373,7 @@ private class BusinessOffice_Controller_Test {
     if( insuranceProducts != null && insuranceProducts.size() > 0 )
     {
       orderTask = Factory_ERPOrder.buildProjectTask( erp.Id, 'Business Office');
+      orderTask.AcctSeed__GL_Account_Variable_2__c = LGND_Constants.GLV2Id_BusinessOffice;
       orderTask.isInsurance__c = true;
       insert orderTask;
       AcctSeedERP__Material__c[] mats = new List<AcctSeedERP__Material__c>();
