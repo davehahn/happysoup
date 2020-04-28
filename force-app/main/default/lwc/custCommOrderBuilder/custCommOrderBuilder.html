@@ -38,13 +38,13 @@
       </div>
 
       <div class="config-nav">
-        <ul class="config-nav-list">
+        <ol class="config-nav-list">
           <template for:each={processPages} for:item="page">
             <li key={page.label} class={page.class} onclick={handleNav} data-nav-name={page.label}>
               <h2 class="config-nav-title">{page.label}</h2>
             </li>
           </template>
-        </ul>
+        </ol>
       </div>
 
       <div class="language-select">
