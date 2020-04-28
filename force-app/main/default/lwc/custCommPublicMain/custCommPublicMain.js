@@ -15,15 +15,15 @@ export default class CustCommPublicMain extends NavigationMixin(LightningElement
   logo = LOGO;
   boatMap = [
     {
-      name: 'Boat 1',
+      name: '18 XTR',
       recordId: 'recordIdOne'
     },
     {
-      name: 'Boat 2',
+      name: 'X18',
       recordId: 'recordIdTwo'
     },
     {
-      name: 'Boat 3',
+      name: 'F19',
       recordId: 'recordIdThree'
     }
   ];
