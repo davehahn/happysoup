@@ -5,8 +5,12 @@
 import { LightningElement } from 'lwc';
 import { NavigationMixin } from 'lightning/navigation';
 import LOGO from '@salesforce/resourceUrl/LegendLogo';
+import { loadStyle, loadScript } from 'lightning/platformResourceLoader';
+import gothamFonts from '@salesforce/resourceUrl/GothamHTF';
 
 export default class CustCommPublicMain extends NavigationMixin(LightningElement) {
+
+  isMobile = false;
 
   logo = LOGO;
   boatMap = [
@@ -23,6 +27,21 @@ export default class CustCommPublicMain extends NavigationMixin(LightningElement
       recordId: 'recordIdThree'
     }
   ];
+
+  connectedCallback()
+    {
+      window.addEventListener('resize', (event) => {
+        this.isMobile = (event.currentTarget.outerWidth < 1024) ? true : false;
+      });
+
+      this.isMobile = (window.outerWidth < 1024) ? true : false;
+    }
+
+    renderedCallback()
+    {
+      loadStyle( this, gothamFonts + '/fonts.css')
+      .then(()=>{});
+    }
 
   toggleMenu()
   {

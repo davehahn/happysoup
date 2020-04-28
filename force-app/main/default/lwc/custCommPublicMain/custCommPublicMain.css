@@ -25,11 +25,13 @@
   background:transparent;
   width:100%;
   position:relative;
+  z-index: 2;
   top:0;
   display:flex;
   flex-wrap: nowrap;
   justify-content: center;
   align-items: stretch;
+  font-family: 'gotham_htf', Montserrat, Lato, Helvetica, Arial, sans-serif;
 }
 
 .main-nav .left {
@@ -45,6 +47,9 @@
   text-align: center;
   width: 50%;
   line-height: 3rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .main-nav .right {
@@ -53,6 +58,9 @@
   margin-right:1rem;
   width: 25%;
   line-height: 3rem;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
 }
 
 .main-nav img {
@@ -65,7 +73,7 @@
 
 .main-nav a {
   color: #504F51;
-  font-size: 1rem;
+  font-size: 0.875rem;
   padding: 0 1rem;
   display:inline-block;
   text-transform: uppercase;
@@ -82,7 +90,9 @@
   top: -3px;
   margin-left:0.5rem;
 }
-
+.slds-button__icon_large, .slds-button__icon--large{
+    width: 1rem; height: 1rem;
+}
 .slide-menu {
   position:fixed;
   width:300px;
