@@ -11,20 +11,6 @@ export default class CustCommPublicMain extends NavigationMixin(LightningElement
 
   logo = LOGO;
   @wire( fetchBoats ) boats;
-  boatMap = [
-    {
-      name: 'Boat 1',
-      recordId: 'recordIdOne'
-    },
-    {
-      name: 'Boat 2',
-      recordId: 'recordIdTwo'
-    },
-    {
-      name: 'Boat 3',
-      recordId: 'recordIdThree'
-    }
-  ];
 
   toggleMenu()
   {
