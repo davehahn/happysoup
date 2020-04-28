@@ -7,16 +7,19 @@
 
   <div class="overlay" onclick={toggleMenu}></div>
 
-  <div class="main-nav">
+  <nav class="main-nav">
     <div class="left">
       <img src={logo}>
     </div>
-    <div class="center">
-      <template for:each={boats.data} for:item="boat">
-        <a key={boat.id} data-record-id={boat.id} onclick={navToBoat}>{boat.name}</a>
-      </template>
 
-    </div>
+    <ul class="center">
+      <template for:each={boatMap} for:item="boat">
+        <li key={boat.recordId}>
+          <a data-record-id={boat.recordId} onclick={navToBoat}>{boat.name}</a>
+        </li>
+      </template>
+    </ul>
+
     <div class="right">
 <!--      <a class="sign-in" onclick={handleSignIn}>Sign In</a>-->
       <lightning-button-icon icon-name="utility:rows"
@@ -24,7 +27,7 @@
                              size="large"
                              onclick={toggleMenu}></lightning-button-icon>
     </div>
-  </div>
+  </nav>
 
   <div class="slide-menu">
     <div class="close-menu">
@@ -39,5 +42,6 @@
 <!--    <a class="sign-in" onclick={handleSignIn}>Sign In</a>-->
   </div>
 
+  <c-cust-comm-public-slider></c-cust-comm-public-slider>
 
 </template>

@@ -9,8 +9,25 @@ import fetchBoats from '@salesforce/apex/OnlineBoatReservation_Controller.fetchB
 
 export default class CustCommPublicMain extends NavigationMixin(LightningElement) {
 
+  isMobile = false;
+
   logo = LOGO;
   @wire( fetchBoats ) boats;
+
+  connectedCallback()
+    {
+      window.addEventListener('resize', (event) => {
+        this.isMobile = (event.currentTarget.outerWidth < 1024) ? true : false;
+      });
+
+      this.isMobile = (window.outerWidth < 1024) ? true : false;
+    }
+
+    renderedCallback()
+    {
+      loadStyle( this, gothamFonts + '/fonts.css')
+      .then(()=>{});
+    }
 
   toggleMenu()
   {

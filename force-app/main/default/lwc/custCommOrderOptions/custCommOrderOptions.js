@@ -3,6 +3,8 @@
  */
 
 import { LightningElement, api } from 'lwc';
+import { loadStyle } from 'lightning/platformResourceLoader';
+import gothamFonts from '@salesforce/resourceUrl/GothamHTF';
 
 export default class CustCommOrderOptions extends LightningElement {
     @api optionsTitle;
