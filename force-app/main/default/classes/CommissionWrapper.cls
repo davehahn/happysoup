@@ -119,6 +119,7 @@ public class CommissionWrapper
     @AuraEnabled public Decimal unitCost;
     @AuraEnabled public Decimal totalSale;
     @AuraEnabled public Decimal totalCost;
+    @AuraEnabled public Decimal totalLabour;
     @AuraEnabled public Decimal quantity;
     @AuraEnabled public Decimal labourCost;
     @AuraEnabled public Decimal profit;
@@ -148,6 +149,7 @@ public class CommissionWrapper
       this.totalCost = cli.Total_Cost__c;
       this.quantity = cli.Quantity__c;
       this.labourCost = cli.Labour_Cost__c;
+      this.totalLabour = cli.Total_Labour__c;
       this.profit = cli.Profit__c;
       this.commissionRate = cli.Commission_Rate__c;
       this.basedOnProfit = cli.Payment_Based_on_Profit__c;

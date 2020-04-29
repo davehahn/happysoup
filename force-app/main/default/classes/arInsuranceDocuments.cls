@@ -7,7 +7,7 @@ public without sharing class arInsuranceDocuments {
             [SELECT Id,
              	Name,
                 GL_Account_Variable_3__r.Name,
-             	(SELECT Id, AcctSeedERP__Product__r.InsurancePlan__r.Name FROM AcctSeedERP__Project_Materials__r WHERE AcctSeedERP__Project_Task__r.IsInsurance__c = true LIMIT 1)
+             	(SELECT Id, AcctSeedERP__Product__r.InsurancePlan__r.Name FROM AcctSeedERP__Project_Materials__r WHERE AcctSeedERP__Product__r.RecordTypeId = :LGND_Constants.productRtId_Insurance LIMIT 1)
              FROM AcctSeed__Project__c
              WHERE Id =:idProject])
         {

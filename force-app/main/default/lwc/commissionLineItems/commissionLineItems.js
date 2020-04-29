@@ -87,7 +87,7 @@ export default class CommissionLineItems extends LightningElement {
     const doCalc = (item) => {
       this.totalSale += item.totalSale;
       this.totalCost += item.totalCost;
-      this.totalLabour += item.labourCost;
+      this.totalLabour += item.totalLabour;
       this.totalProfit += parseFloat(item.profit);
       this.totalPayment += parseFloat(item.payment);
     };

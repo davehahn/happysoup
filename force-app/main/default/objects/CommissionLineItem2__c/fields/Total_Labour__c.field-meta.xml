@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>Descriptor__c</fullName>
+    <fullName>Total_Labour__c</fullName>
     <externalId>false</externalId>
-    <formula>IF( ISBLANK( Product__c ),  Description__c ,  Product__r.Name )</formula>
+    <formula>Quantity__c * ( NULLVALUE(  Labour_Cost__c , 0 ))</formula>
     <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
-    <label>Descriptor</label>
+    <label>Total Labour</label>
+    <precision>18</precision>
     <required>false</required>
+    <scale>2</scale>
     <trackHistory>false</trackHistory>
     <trackTrending>false</trackTrending>
-    <type>Text</type>
-    <unique>false</unique>
+    <type>Currency</type>
 </CustomField>

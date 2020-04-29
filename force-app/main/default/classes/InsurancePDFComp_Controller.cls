@@ -64,7 +64,7 @@ public with sharing class InsurancePDFComp_Controller {
                                              AcctSeedERP__Product__r.Insurance_Waiting_Period_Type__c,
                                              AcctSeedERP__Product__r.Max_Num_of_Insured_Monthly_Payments__c
                                              FROM AcctSeedERP__Project_Materials__r
-                                             WHERE AcctSeedERP__Project_Task__r.IsInsurance__c = true)
+                                             WHERE AcctSeedERP__Product__r.RecordTypeId = :LGND_Constants.productRtId_Insurance )
                                             FROM AcctSeed__Project__c
                                             WHERE Id =:idProject];
             formData.insuranceIsTruncated = project.Finance_Term__c > project.Insurance_Term__c;
