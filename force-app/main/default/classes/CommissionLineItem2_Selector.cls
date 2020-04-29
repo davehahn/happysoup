@@ -18,6 +18,7 @@ public with sharing class CommissionLineItem2_Selector extends Application_Selec
       'Cost__c',
       'Total_Cost__c',
       'Labour_Cost__c',
+      'Total_Labour__c',
       'Product_Retail_Rigging_Time__c',
       'Profit__c',
       'Payment_Based_on_Profit__c',

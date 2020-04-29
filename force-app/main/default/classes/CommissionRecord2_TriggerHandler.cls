@@ -118,23 +118,27 @@ public without sharing class CommissionRecord2_TriggerHandler extends TriggerHan
     {
       for (CommissionRecord2__c record : listNew)
       {
-        if (oldMap.get(record.Id).Status__c != record.Status__c)
+        CommissionRecord2__c oRecord = oldMap.get(record.Id);
+        if ( oRecord.Status__c != record.Status__c)
         {
           if( record.Status__c == 'Reviewed' )
           {
             record.Reviewed_By__c = UserInfo.getUserId();
           }
-          if (record.Status__c == 'Approved')
+          if(record.Status__c == 'Approved')
           {
             record.Approved_By__c = UserInfo.getUserId();
+            record.Approved_On__c = DateTime.now();
           }
-          if (oldMap.get(record.Id).Status__c == 'Reviewed')
+          if(oRecord.Status__c == 'Reviewed' && record.Status__c != 'Approved' )
           {
             record.Reviewed_By__c = null;
           }
-          if (oldMap.get(record.Id).Status__c == 'Approved')
+          if(oRecord.Status__c == 'Approved')
           {
             record.Approved_By__c = null;
+            record.Approved_On__c = null;
+            record.Previously_Approved_on__c = oRecord.Approved_On__c;
           }
         }
       }

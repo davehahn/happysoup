@@ -2,27 +2,15 @@
  * Created by dave on 2020-04-09.
  */
 
-import { LightningElement } from 'lwc';
+import { LightningElement, wire } from 'lwc';
 import { NavigationMixin } from 'lightning/navigation';
 import LOGO from '@salesforce/resourceUrl/LegendLogo';
+import fetchBoats from '@salesforce/apex/OnlineBoatReservation_Controller.fetchBoats';
 
 export default class CustCommPublicMain extends NavigationMixin(LightningElement) {
 
   logo = LOGO;
-  boatMap = [
-    {
-      name: 'Boat 1',
-      recordId: 'recordIdOne'
-    },
-    {
-      name: 'Boat 2',
-      recordId: 'recordIdTwo'
-    },
-    {
-      name: 'Boat 3',
-      recordId: 'recordIdThree'
-    }
-  ];
+  @wire( fetchBoats ) boats;
 
   toggleMenu()
   {
@@ -42,16 +30,15 @@ export default class CustCommPublicMain extends NavigationMixin(LightningElement
     this.navigateToCommunityPage( page, params );
   }
 
-  handleSignIn( event )
-  {
-    //this.navigateToCommunityPage( 'my-home', {} );
-    this[NavigationMixin.Navigate]({
-      type: 'comm__loginPage',
-         attributes: {
-             actionName: 'login'
-         }
-    });
-  }
+//  handleSignIn( event )
+//  {
+//    this[NavigationMixin.Navigate]({
+//      type: 'comm__loginPage',
+//         attributes: {
+//             actionName: 'login'
+//         }
+//    });
+//  }
 
   navigateToCommunityPage( pageName, params )
   {

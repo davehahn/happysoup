@@ -67,6 +67,49 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
     });
   }
 
+  renderedCallback()
+  {
+    loadStyle( this, sldsIconFont + '/style.css')
+    .then(()=>{});
+  }
+
+  get processPages()
+  {
+    return this.pages.map( page => {
+      return {
+        label: page,
+        class: this.currentPage === page ?
+          'config-nav-item config-nav-item_selected' :
+          'config-nav-item'
+      }
+    });
+  }
+
+  renderedCallback()
+  {
+    loadStyle( this, sldsIconFont + '/style.css')
+    .then(()=>{});
+
+    window.addEventListener('resize', (event) => {
+      console.log('resizing window bitches');
+      console.log( event );
+      console.log( event.currentTarget.outerWidth );
+    });
+
+  }
+
+  get processPages()
+  {
+    return this.pages.map( page => {
+      return {
+        label: page,
+        class: this.currentPage === page ?
+          'config-nav-item config-nav-item_selected' :
+          'config-nav-item'
+      }
+    });
+  }
+
   get buttonText()
   {
     return this.onPaymentPage() ? 'Place Order' : 'Next';
@@ -134,6 +177,11 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
     this.currentPage = page;
     this.template.querySelector('.config-page_selected').classList.remove('config-page_selected');
     this.template.querySelector(`[data-page="${this.currentPage}"]` ).classList.add('config-page_selected');
+
+    if( this.currentPage === 'payment')
+    {
+      this.template.querySelector('[data-id="square-payment-container"]').src = '/apex/Square_PaymentForm_CustomerCommunity';
+    }
   }
 
   toggleModal( shouldOpen )

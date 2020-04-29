@@ -12,13 +12,13 @@
       <img src={logo}>
     </div>
     <div class="center">
-      <template for:each={boatMap} for:item="boat">
-        <a key={boat.recordId} data-record-id={boat.recordId} onclick={navToBoat}>{boat.name}</a>
+      <template for:each={boats.data} for:item="boat">
+        <a key={boat.id} data-record-id={boat.id} onclick={navToBoat}>{boat.name}</a>
       </template>
 
     </div>
     <div class="right">
-      <a class="sign-in" onclick={handleSignIn}>Sign In</a>
+<!--      <a class="sign-in" onclick={handleSignIn}>Sign In</a>-->
       <lightning-button-icon icon-name="utility:rows"
                              variant="bare"
                              size="large"
@@ -33,10 +33,10 @@
                              size="large"
                              onclick={toggleMenu}></lightning-button-icon>
     </div>
-    <template for:each={boatMap} for:item="boat">
-      <a key={boat.recordId} data-record-id={boat.recordId} onclick={navToBoat}>{boat.name}</a>
+    <template for:each={boats.data} for:item="boat">
+      <a key={boat.id} data-record-id={boat.id} onclick={navToBoat}>{boat.name}</a>
     </template>
-    <a class="sign-in" onclick={handleSignIn}>Sign In</a>
+<!--    <a class="sign-in" onclick={handleSignIn}>Sign In</a>-->
   </div>
 
 

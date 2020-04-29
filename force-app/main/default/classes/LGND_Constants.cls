@@ -62,6 +62,30 @@ public with sharing class LGND_Constants {
   	private set;
   }
 
+  /* SPECIAL PRODUCTS ++++++++++++++++... */
+  public static Id ppsaProductId {
+    get {
+      if( ppsaProductId == null )
+      {
+        try
+        {
+          ppsaProductId = [
+            SELECT Id
+            FROM Product2
+            WHERE Family = 'Bank Registration PPSA Fee'
+            AND RecordTypeId = :productRtId_Fees
+          ].Id;
+        }
+        catch( Exception e )
+        {
+          throw new LGND_Constants_Exception('A PPSA Product was not found. Please contact your administrator with this error and where you encountered it');
+        }
+      }
+      return ppsaProductId;
+    }
+    private set;
+  }
+
   public static Id savingsProductId {
     get {
       if( savingsProductId == null )

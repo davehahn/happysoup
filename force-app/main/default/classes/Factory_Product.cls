@@ -61,6 +61,24 @@ public with sharing class Factory_Product {
     return prods;
   }
 
+  public static Product2[] createSerializedProducts_AvailableOnline( String recordTypeName,
+                                                                     String family,
+                                                                     Integer count )
+  {
+    Product2[] prods = new List<Product2>();
+    for( Integer i=0; i<count; i++ )
+    {
+      Product2 p =  buildSerializedProduct( recordTypeName, family );
+      p.Available_Online__c = true;
+      prods.add( p );
+    }
+    Boolean orig = gcProduct.disableTrigger;
+    gcProduct.disableTrigger = true;
+    insert prods;
+    gcProduct.disableTrigger = orig;
+    return prods;
+  }
+
   public static Product2 createNonSerializedProduct( String recordTypeName,
                                                      String family )
   {
@@ -169,23 +187,33 @@ public with sharing class Factory_Product {
   public static Product2 createPPSA( Id pbId )
   {
     buildGlAccounts();
-    Product2 ppsa = new Product2(
-      RecordTypeId = LGND_Utilities.recordTypeIdFromName('Product2', 'Fees'),
-      Name = 'PPSA Fee',
-      Family = 'Bank Registration PPSA Fee',
-      IsActive = true,
-      AcctSeed__Revenue_GL_Account__c = revenueAccount.Id,
-      AcctSeed__Expense_GL_Account__c = expenseAccount.Id,
-      AcctSeed__Inventory_Product__c = false,
-      AcctSeed__Inventory_Type__c = null,
-      Unique_Product_Code__c = 'ppsa-' + LGND_Utilities.generateRandomString(6),
-      AcctSeed__Unit_Cost__c = 0,
-      AcctSeedERP__Serialized__c = false,
-      GMBLASERP__Lot_Tracked__c = false
-    );
+    Product2 ppsa;
+    try {
+      ppsa = [
+        SELECT Id, Name, Family, RecordTypeId, RecordType.Name
+        FROM Product2
+        WHERE Id = :LGND_Constants.ppsaProductId ];
+    }
+    catch( Exception e )
+    {
+      ppsa = new Product2(
+        RecordTypeId = LGND_Utilities.recordTypeIdFromName('Product2', 'Fees'),
+        Name = 'PPSA Fee',
+        Family = 'Bank Registration PPSA Fee',
+        IsActive = true
+      );
+    }
+    ppsa.AcctSeed__Revenue_GL_Account__c = revenueAccount.Id;
+    ppsa.AcctSeed__Expense_GL_Account__c = expenseAccount.Id;
+    ppsa.AcctSeed__Inventory_Product__c = false;
+    ppsa.AcctSeed__Inventory_Type__c = null;
+    ppsa.Unique_Product_Code__c = 'ppsa-' + LGND_Utilities.generateRandomString(6);
+    ppsa.AcctSeed__Unit_Cost__c = 0;
+    ppsa.AcctSeedERP__Serialized__c = false;
+    ppsa.GMBLASERP__Lot_Tracked__c = false;
     //Boolean orig = gcProduct.disableTrigger;
     //gcProduct.disableTrigger = true;
-    insert ppsa;
+    upsert ppsa;
     //gcProduct.disableTrigger = orig;
     Factory_PricebookEntry.createStandardEntries( new Set<Id>{ppsa.Id}, 0 );
     insert Factory_PricebookEntry.buildEntry( ppsa.Id, pbId, 0 );

@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>Descriptor__c</fullName>
+    <fullName>Default_Gallery_Image_Original__c</fullName>
     <externalId>false</externalId>
-    <formula>IF( ISBLANK( Product__c ),  Description__c ,  Product__r.Name )</formula>
+    <formula>IF( Default_Image_Id__c == NULL ,
+&quot;/resource/defaultProductImage&quot;,
+Legend_Gallery_Image__r.Active_S3_Object__r.URL_Original__c
+)</formula>
     <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
-    <label>Descriptor</label>
+    <label>Default Gallery Image Original</label>
     <required>false</required>
     <trackHistory>false</trackHistory>
-    <trackTrending>false</trackTrending>
     <type>Text</type>
     <unique>false</unique>
 </CustomField>
