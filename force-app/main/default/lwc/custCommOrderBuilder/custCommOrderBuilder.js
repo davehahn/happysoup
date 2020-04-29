@@ -24,6 +24,26 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
     'payment'
   ];
   @track currentPage = 'performance';
+
+ 	 modalPages = [
+		{
+			title: 'Premium Package',
+			label: 'premium-package',
+			class: 'modal-nav-item modal-nav-item_selected'
+		},
+		{
+			title: 'Payment Calculator',
+			label: 'payment-calculator',
+			class: 'modal-nav-item'
+		},
+		{
+			title: 'Deliver Timing',
+			label: 'delivery',
+			class: 'modal-nav-item'
+		},
+	];
+	@track currentModalPage = 'premium-package';
+
   @track paymentType='cash';
   @track iframeHeight;
   @track boat;
@@ -70,6 +90,8 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
   renderedCallback()
   {
     loadStyle( this, sldsIconFont + '/style.css')
+    .then(()=>{});
+    loadStyle( this, gothamFonts + '/fonts.css')
     .then(()=>{});
 
     window.addEventListener('resize', (event) => {
@@ -137,10 +159,28 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
   handleOpenModal()
   {
     this.toggleModal( true );
-    this.template.querySelector('.modal-container').addEventListener('click', () => {
-      this.toggleModal(false);
+    this.template.querySelector('.modal-container').addEventListener('click', (e) => {
+      if(e.target.classList.contains('modal-container')){
+      	this.toggleModal(false);
+      }
     });
   }
+
+	handleModalNav( event )
+	{
+		this.doModalPageChange( event.currentTarget );
+	}
+	doModalPageChange( page )
+	{
+	  let pageName = page.dataset.modalNavName;
+		this.currentModalPage = pageName;
+
+		this.template.querySelector('.modal-nav-item_selected').classList.remove('modal-nav-item_selected');
+		this.template.querySelector( `[data-modal-nav-name="${this.currentModalPage}"]` ).classList.add('modal-nav-item_selected');
+
+		this.template.querySelector('.modal-page_selected').classList.remove('modal-page_selected');
+		this.template.querySelector( `[data-modal-page="${this.currentModalPage}"]` ).classList.add('modal-page_selected');
+	}
 
   handleEditConfig()
   {
