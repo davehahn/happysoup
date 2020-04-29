@@ -74,6 +74,11 @@ public without sharing class gcCashDisbursement {
 			String glv1Name = usr.GL_Account_Variable_1__c;
 			for(AcctSeed__Cash_Disbursement__c cd : listNew)
 			{
+                //cd.AcctSeed__Ledger__c = 'a121D000001muWMQAY';
+				//if(cd.AcctSeed__Cash_Flow_Category__c == null){
+					if(cd.AcctSeed__Reference__c != null && cd.AcctSeed__Reference__c.contains('refund'))
+						cd.AcctSeed__Cash_Flow_Category__c = gcConstants.idGlRevenueCF;
+				//}
 				if(boolIsUpdate){
 					AcctSeed__Cash_Disbursement__c oldRec = oldMap.get(cd.Id);
 					if(cd.GMBLASG__Posted__c && 
