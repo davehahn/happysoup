@@ -14,11 +14,26 @@
         <div class="modal-content_body">
           <div class="modal-content_sidebar">
 
+            <ul class="sidebar_nav">
+              <template for:each={modalPages} for:item="modalPage">
+                <li key={modalPage.label} class={modalPage.class} onclick={handleModalNav} data-modal-nav-name={modalPage.label}>
+                  <h3 class="modal-nav-title">{modalPage.title}</h3>
+                </li>
+              </template>
+            </ul>
           </div>
           <div class="modal-content_main">
-
+            <div class="modal-page modal-page_selected" data-modal-page="premium-package">
+              <h4>Premium Package</h4>
+            </div>
+            <div class="modal-page" data-modal-page="payment-calculator">
+              <h4>Payment Calculator</h4>
+            </div>
+            <div class="modal-page" data-modal-page="delivery">
+              <h4>Delivery Timing</h4>
+            </div>
             <span class="modal-content_close">
-              <button onclick={handleModalClose}>
+              <button onclick={handleCloseModal}>
                 <i class="slds-icon-close" ></i>
               </button>
             </span>
