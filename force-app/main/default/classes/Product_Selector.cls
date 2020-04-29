@@ -15,7 +15,8 @@ public with sharing class Product_Selector extends Application_Selector
       'RecordTypeId',
       'RecordType.Name',
       'ProductCode',
-      'Description'
+      'Description',
+      'Default_Gallery_Image_Original__c'
     };
   }
 

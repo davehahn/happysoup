@@ -22,8 +22,50 @@
       margin: auto;
     }
 
-    table.upgrades {
-      margin-top: 0;
+    .optionTableContainer table.upgrades {
+     margin-top: 0;
+    }
+
+    .optionTableContainer table tr {
+      line-height: initial;
+      padding: 15px 0;
+    }
+
+    .optionTableContainer table td {
+      vertical-align: middle;
+      border-bottom:none;
+    }
+
+    .optionTableContainer table tbody tr {
+      border-left: 1px solid #CCC;
+      border-right: 1px solid #CCC;
+      border-bottom: 1px solid #CCC;
+    }
+
+    .optionTableContainer table tbody tr td {
+      border-left: none !important;
+      border-right: none !important;
+      border-top: none !important;
+      padding: 0 10px;
+    }
+
+    .optionTableContainer table.options thead tr td:first-child,
+    .optionTableContainer table.options tbody tr td:first-child {
+      width: 20%;
+    }
+
+    .optionTableContainer table.options thead tr td:first-child + td,
+    .optionTableContainer table.options tbody tr td:first-child + td {
+      width: 50%;
+    }
+
+    .optionTableContainer table tbody tr td:first-child p {
+      line-height: initial;
+    }
+
+    .optionTableContainer table tbody tr td p {
+      line-height: initial;
+      margin-bottom:0;
     }
 
     /* CSS LOADING INDICATOR */
@@ -235,80 +277,71 @@
 
         <div class="content upgrade-content" id="trailers">
           <apex:outputPanel id="trailerOptions">
-          <div class="optionTableContainer">
-
-            <div class="two_col">
-              <div class="left w25">
-              <label style="margin:10px 0 0 5px;">Pricebook</label>
-                <apex:selectlist value="{!selectedPb}" size="1"  onchange="pbSelectChanged(this, 'trailerUpgrades')">
-                  <apex:selectOptions value="{!pricebookOptions}" />
-                </apex:selectlist>
+            <div class="optionTableContainer">
+              <div class="pb-select-container">
+                <label style="margin:10px 0 0 5px;">Pricebook</label>
+                  <apex:selectlist value="{!selectedPb}" size="1"  onchange="pbSelectChanged(this, 'trailerUpgrades')">
+                    <apex:selectOptions value="{!pricebookOptions}" />
+                  </apex:selectlist>
               </div>
-              <div class="right w75">
-
+              <div>
                 <table class="fixed-header-scrollable upgrades" id="trailerUpgrades">
-                  <thead>
-                    <tr>
-                      <td>Name</td>
-                      <td>Upgrade Cost</td>
-                      <td>Web Visable</td>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <apex:repeat value="{!productUpgradeMap['Trailer']}" var="option">
+                    <thead>
                       <tr>
-                        <td>{!option.productName}</td>
-                        <td>
-                          <!-- no upgrade and no upgrade cost PRICEBOOK PRICE -->
-                          <apex:outputText value="{!'$ ' + option.cost}"
-                                           rendered="{!option.productUpgradeId == null && option.upgradeCostId == null }" />
-                          <!-- has upgrade but upgrade cost not set -->
-                              <apex:outputLink value="#"
-                                           rendered="{!option.productUpgradeId != null && option.upgradeCostId == null }"
-                                           styleClass="upgradeCreateLink"
-                                           html-data-product-upgrade-id="{!option.productUpgradeId}"
-                                           html-data-price-book-id="{!selectedPb}">
-                            $ {!option.cost}
-                          </apex:outputLink>
-                          <!-- everything is set here we will be editing the upgrade price -->
-                          <apex:outputlink value="#"
-                                           rendered="{!option.productUpgradeId != null && option.upgradeCostId != null }"
-                                           styleClass="upgradeEditLink"
-                                           html-data-edit-id="{!option.upgradeCostId}">
-                            $ {!option.cost}
-                          </apex:outputLink>
-                        </td>
-                        <td>
-                          <a href="#" class="displayOnWebLink" data-value="{!option.displayOnWeb}" data-option-id="{!option.optionId}">
-                            <i class="fa fa-check"></i>
-                          </a>
-                        </td>
+                        <td>Name</td>
+                        <td>Upgrade Cost</td>
+                        <td>Web Visable</td>
                       </tr>
-                    </apex:repeat>
-                  </tbody>
-                </table>
-
+                    </thead>
+                    <tbody>
+                      <apex:repeat value="{!productUpgradeMap['Trailer']}" var="option">
+                        <tr>
+                          <td>{!option.productName}</td>
+                          <td>
+                            <!-- no upgrade and no upgrade cost PRICEBOOK PRICE -->
+                            <apex:outputText value="{!'$ ' + option.cost}"
+                                             rendered="{!option.productUpgradeId == null && option.upgradeCostId == null }" />
+                            <!-- has upgrade but upgrade cost not set -->
+                                <apex:outputLink value="#"
+                                             rendered="{!option.productUpgradeId != null && option.upgradeCostId == null }"
+                                             styleClass="upgradeCreateLink"
+                                             html-data-product-upgrade-id="{!option.productUpgradeId}"
+                                             html-data-price-book-id="{!selectedPb}">
+                              $ {!option.cost}
+                            </apex:outputLink>
+                            <!-- everything is set here we will be editing the upgrade price -->
+                            <apex:outputlink value="#"
+                                             rendered="{!option.productUpgradeId != null && option.upgradeCostId != null }"
+                                             styleClass="upgradeEditLink"
+                                             html-data-edit-id="{!option.upgradeCostId}">
+                              $ {!option.cost}
+                            </apex:outputLink>
+                          </td>
+                          <td>
+                            <a href="#" class="displayOnWebLink" data-value="{!option.displayOnWeb}" data-option-id="{!option.optionId}">
+                              <i class="fa fa-check"></i>
+                            </a>
+                          </td>
+                        </tr>
+                      </apex:repeat>
+                    </tbody>
+                  </table>
               </div>
 
             </div>
-
-          </div>
           </apex:outputPanel>
         </div>
 
         <div class="content upgrade-content" id="trolling_motors">
           <apex:outputPanel id="trollingMotorOptions">
-          <div class="optionTableContainer">
-
-            <div class="two_col">
-              <div class="left w25">
-              <label style="margin:10px 0 0 5px;">Pricebook</label>
+            <div class="optionTableContainer">
+              <div class="pb-select-container">
+                <label style="margin:10px 0 0 5px;">Pricebook</label>
                 <apex:selectlist value="{!selectedPb}" size="1" onchange="pbSelectChanged(this, 'trollingMotorUpgrades')">
                   <apex:selectOptions value="{!pricebookOptions}" />
                 </apex:selectlist>
               </div>
-              <div class="right w75">
-
+              <div>
                 <table class="fixed-header-scrollable upgrades" id="trollingMotorUpgrades">
                   <thead>
                     <tr>
@@ -350,12 +383,9 @@
                     </apex:repeat>
                   </tbody>
                 </table>
-
               </div>
 
             </div>
-
-          </div>
           </apex:outputPanel>
         </div>
         <!-- ======================= /UPGRADE PRODUCTS =============== -->

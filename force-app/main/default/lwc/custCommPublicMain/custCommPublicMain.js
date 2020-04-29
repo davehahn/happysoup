@@ -30,16 +30,15 @@ export default class CustCommPublicMain extends NavigationMixin(LightningElement
     this.navigateToCommunityPage( page, params );
   }
 
-  handleSignIn( event )
-  {
-    //this.navigateToCommunityPage( 'my-home', {} );
-    this[NavigationMixin.Navigate]({
-      type: 'comm__loginPage',
-         attributes: {
-             actionName: 'login'
-         }
-    });
-  }
+//  handleSignIn( event )
+//  {
+//    this[NavigationMixin.Navigate]({
+//      type: 'comm__loginPage',
+//         attributes: {
+//             actionName: 'login'
+//         }
+//    });
+//  }
 
   navigateToCommunityPage( pageName, params )
   {
