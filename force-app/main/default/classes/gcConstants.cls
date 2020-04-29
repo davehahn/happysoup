@@ -524,6 +524,15 @@ public without sharing class gcConstants {
 		set;
 	}
 
+	public static Id idGlRevenueCF{
+		get{
+			if(idGlRevenueCF == null) fetchGlAccounts();
+			if(idGlRevenueCF == null) throw new gcException('A Cash Flow GL Account with Uniquefier [RevenueCF] does not exist.');
+			return idGlRevenueCF;
+		}
+		set;
+	}
+
 	private static void fetchGlAccounts()
 	{
 		List<String> listUniquefier = new list<String>{
@@ -557,7 +566,8 @@ public without sharing class gcConstants {
 			'LegendBucks',
 			'SalesBoats',
 			'PrepaidDeposit',
-			'MerchantOnline'
+			'MerchantOnline',
+			'RevenueCF'
 		};
 
 		for(AcctSeed__GL_Account__c gl :
@@ -627,6 +637,8 @@ public without sharing class gcConstants {
 				idGlPrepaidDeposit = gl.Id;
 			else if(gl.Uniquefier__c == 'MerchantOnline')
 				idGlMerchantOnline = gl.Id;
+			else if(gl.Uniquefier__c == 'RevenueCF')
+				idGlRevenueCF = gl.Id;
 		}
 	}
 
