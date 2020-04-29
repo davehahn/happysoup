@@ -150,6 +150,7 @@ global with sharing class gcAccountPayable_payBatch {
 		Date disbursementDate = cdHolder.AcctSeed__Disbursement_Date__c;
 		Id idGlBank = cdHolder.AcctSeed__Bank_Account__c;
 		Id idGlV1 = cdHolder.AcctSeed__GL_Account_Variable_1__c;
+		Id idCashFlowCategory = cdHolder.AcctSeed__Cash_Flow_Category__c;
 		//Id idGlBank = selectedAcc;
 		Id idGlDiscount = null;
 		String accountType = cdHolder.AcctSeed__Type__c;
@@ -226,7 +227,8 @@ global with sharing class gcAccountPayable_payBatch {
 					AcctSeed__Type__c = accountType,
 					AcctSeed__Disbursement_Date__c = disbursementDate,
 					AcctSeed__Debit_GL_Account__c = gcConstants.idGlAPayable,
-					AcctSeed__GL_Account_Variable_1__c = idGlV1
+					AcctSeed__GL_Account_Variable_1__c = idGlV1,
+					AcctSeed__Cash_Flow_Category__c = idCashFlowCategory
 					//AcctSeed__Check_Number__c = nextCheckNumber
 				);
 				//nextCheckNumber += 1;
@@ -291,7 +293,8 @@ global with sharing class gcAccountPayable_payBatch {
 
 			//Let the Cash Disbursement know it is from AP
 			//gcCashDisbursement.isApDisbursement = true;
-
+			System.debug('listCD');
+			System.debug(listCD);
 			insert listCD;
 			
 			//Reset the Cash Disbursement
