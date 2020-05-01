@@ -5,10 +5,12 @@
 <!-- Cust Comm Order Builder -->
 <template>
 
-  <c-legend-spinner></c-legend-spinner>
+  <template if:false={boatDetailsLoaded}>
+    <c-legend-spinner visible="true"></c-legend-spinner>
+  </template>
 
-  <div class="lgnd-order-builder">
-
+  <div class="lgnd-order-builder" if:true={boatDetailsLoaded}>
+    <c-legend-spinner></c-legend-spinner>
     <div class="modal-container">
       <div class="modal-content">
         <div class="modal-content_body">

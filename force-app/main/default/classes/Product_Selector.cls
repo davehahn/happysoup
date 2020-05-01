@@ -28,4 +28,24 @@ public with sharing class Product_Selector extends Application_Selector
       .addWhere('Available_Online__c = true');
     return (List<Product2>)selector.query();
   }
+
+  public static List<Product2> allWithFullDetailsById( Set<Id> productIds )
+  {
+    Product_Selector selector = new Product_Selector();
+    selector
+      .addWhere( whereInClauseBuilder(
+      'Id',
+      (Set<String>)JSON.deserialize( JSON.serialize(productIds), Set<String>.class)
+    ));
+    return (List<Product2>)selector.query();
+  }
+
+  public static Product2 getOnlineBoat( String recordId )
+  {
+    Product_Selector selector = new Product_Selector();
+    selector.addWhere('Id = \'' + recordId + '\'')
+      .addChildQuery( '(SELECT From_Product__c, From_Product__r.Name, Standard__c, Maximum__c FROM To_Product_Options__r WHERE Available_Online__c = true)');
+    List<Sobject> results = selector.query();
+    return (Product2)results[0];
+  }
 }

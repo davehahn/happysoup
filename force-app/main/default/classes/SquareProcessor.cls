@@ -26,7 +26,7 @@ public with sharing class SquareProcessor
     request.setMethod( 'POST' );
     request.setHeader( 'Authorization', 'Bearer ' + authToken );
     request.setHeader( 'Content-Type', 'application/json' );
-    request.setHeader( 'Square-Version', '2020-03-25' );
+    request.setHeader( 'Square-Version', squareVersion );
     request.setBody( jsonData );
 
     try

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Not_Both_Product_and_Product_Option</fullName>
+    <active>true</active>
+    <description>You can not have a lookup to both a Product and a Product Option</description>
+    <errorConditionFormula>AND(
+NOT( ISBLANK( Product__c )),
+NOT( ISBLANK(  Product_Option__c ))
+)</errorConditionFormula>
+    <errorMessage>You CAN NOT associate Marketing Content to BOTH a Product and a Product Option.  Please select only one.</errorMessage>
+</ValidationRule>

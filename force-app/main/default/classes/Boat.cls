@@ -1,26 +1,26 @@
 public without sharing class Boat {
 
-	public String Id { get; set; }
-  public String Name { get; set; }
-  public String Family { get; set; }
-  public Map<String, String> DefaultImages { get; set; }
+	@AuraEnabled public String Id { get; set; }
+  @AuraEnabled public String Name { get; set; }
+  @AuraEnabled public String Family { get; set; }
+  @AuraEnabled public Map<String, String> DefaultImages { get; set; }
   //public Decimal CurrentPrice { get; set; }
-  public Decimal RetailPrice { get; set; }
-  public Decimal PartnerPrice { get; set; }
-  public String DefaultImage { get; set; }
+  @AuraEnabled public Decimal RetailPrice { get; set; }
+  @AuraEnabled public Decimal PartnerPrice { get; set; }
+  @AuraEnabled public String DefaultImage { get; set; }
   /* other boat related detail fields */
   //public Map<String, Decimal> Prices { get; set; }
-  public UpgradeProduct StandardMotor { get; set; }
-  public SampleRetailSale SampleRetailSale { get; set; }
-  public UpgradeProduct StandardTrailer { get; set; }
-  public UpgradeProduct StandardTrollingMotor { get; set; }
-  public Map<String, List<PartProduct>> OptionalProducts { get; set; }
-  public List<UpgradeProduct> MotorUpgrades { get; set; }
-  public List<UpgradeProduct> TrailerUpgrades { get; set; }
-  public List<UpgradeProduct> TrollingMotorUpgrades { get; set; }
-  public List<MarketingImage> MarketingImages { get; set; }
-  public Map<string, List<String>> Features { get; set; }
-  public Map<String, List<FeeProduct>> Fees { get; set; }
+  @AuraEnabled public UpgradeProduct StandardMotor { get; set; }
+  @AuraEnabled public SampleRetailSale SampleRetailSale { get; set; }
+  @AuraEnabled public UpgradeProduct StandardTrailer { get; set; }
+  @AuraEnabled public UpgradeProduct StandardTrollingMotor { get; set; }
+  @AuraEnabled public Map<String, List<PartProduct>> OptionalProducts { get; set; }
+  @AuraEnabled public List<UpgradeProduct> MotorUpgrades { get; set; }
+  @AuraEnabled public List<UpgradeProduct> TrailerUpgrades { get; set; }
+  @AuraEnabled public List<UpgradeProduct> TrollingMotorUpgrades { get; set; }
+  @AuraEnabled public List<MarketingImage> MarketingImages { get; set; }
+  @AuraEnabled public Map<string, List<String>> Features { get; set; }
+  @AuraEnabled public Map<String, List<FeeProduct>> Fees { get; set; }
   static Map<Id, Product2> allProductOptions;
   static String retailPartnerFilter;
 
@@ -439,16 +439,16 @@ public without sharing class Boat {
   /* -------------------- UpgradeProduct Class ------------------------ */
   public Class UpgradeProduct {
 
-    public String Id { get; set; }
-    public String Name { get; set; }
-    public String Family { get; set; }
-    public String DefaultImage { get; set; }
-    public Decimal RetailPrice { get; set; }
-    public Decimal PartnerPrice { get; set; }
-    public Decimal RetailUpgradeCost { get; set; }
-    public Decimal PartnerUpgradeCost { get; set; }
+    @AuraEnabled public String Id { get; set; }
+    @AuraEnabled public String Name { get; set; }
+    @AuraEnabled public String Family { get; set; }
+    @AuraEnabled public String DefaultImage { get; set; }
+    @AuraEnabled public Decimal RetailPrice { get; set; }
+    @AuraEnabled public Decimal PartnerPrice { get; set; }
+    @AuraEnabled public Decimal RetailUpgradeCost { get; set; }
+    @AuraEnabled public Decimal PartnerUpgradeCost { get; set; }
     /* other motor related detail fields */
-    public Map<String, List<PartProduct>> OptionalProducts { get; set; }
+    @AuraEnabled public Map<String, List<PartProduct>> OptionalProducts { get; set; }
 
     public UpgradeProduct(Product2 m) {
       this.Name = m.Name;
@@ -542,10 +542,10 @@ public without sharing class Boat {
   /* -------------------- FeeProduct Class ------------------------- */
   public Class FeeProduct {
 
-    public String Id { get; set; }
-    public String Name { get; set; }
-    public Decimal RetailPrice { get; set; }
-    public Decimal PartnerPrice { get; set; }
+    @AuraEnabled public String Id { get; set; }
+    @AuraEnabled public String Name { get; set; }
+    @AuraEnabled public Decimal RetailPrice { get; set; }
+    @AuraEnabled public Decimal PartnerPrice { get; set; }
    // public Map<String,Decimal> Prices { get; set; }
 
     public FeeProduct(Product2 p)
@@ -584,16 +584,16 @@ public without sharing class Boat {
   /* -------------------- PartProduct Class ------------------------ */
   public Class PartProduct {
 
-    public String Id { get; set; }
-    public String Name { get; set; }
-    public Boolean HasOptions { get; set; }
-    public Decimal CurrentPrice { get; set; }
-    public Decimal RetailPrice { get; set; }
-    public Decimal PartnerPrice { get; set; }
-    public String DefaultImage { get; set; }
+    @AuraEnabled public String Id { get; set; }
+    @AuraEnabled public String Name { get; set; }
+    @AuraEnabled public Boolean HasOptions { get; set; }
+    @AuraEnabled public Decimal CurrentPrice { get; set; }
+    @AuraEnabled public Decimal RetailPrice { get; set; }
+    @AuraEnabled public Decimal PartnerPrice { get; set; }
+    @AuraEnabled public String DefaultImage { get; set; }
     //public Map<String, Decimal> Prices { get; set ;}
-    public Integer QuantityStandard { get; set; }
-    public Integer MaximumQuantity { get; set; }
+    @AuraEnabled public Integer QuantityStandard { get; set; }
+    @AuraEnabled public Integer MaximumQuantity { get; set; }
     /* other motor related detail fields */
     //spublic Map<String,List<PartProduct>> OptionalProducts { get; set; }
 
@@ -646,14 +646,14 @@ public without sharing class Boat {
   }
 
   public Class MarketingImage {
-    public String Name { get; set; }
-    public String EngDescription { get; set; }
-    public String FrDescription { get; set; }
-    public String AWS_Url_200_high { get; set; }
-    public String AWS_Url_500x500 { get; set; }
-    public String AWS_Url_700_wide { get; set; }
-    public String AWS_Url_1280_wide { get; set; }
-    public String AWS_Url_fullsize { get; set; }
+    @AuraEnabled public String Name { get; set; }
+    @AuraEnabled public String EngDescription { get; set; }
+    @AuraEnabled public String FrDescription { get; set; }
+    @AuraEnabled public String AWS_Url_200_high { get; set; }
+    @AuraEnabled public String AWS_Url_500x500 { get; set; }
+    @AuraEnabled public String AWS_Url_700_wide { get; set; }
+    @AuraEnabled public String AWS_Url_1280_wide { get; set; }
+    @AuraEnabled public String AWS_Url_fullsize { get; set; }
 
     public MarketingImage(Legend_Gallery_Image_Map__c lgim)
     {

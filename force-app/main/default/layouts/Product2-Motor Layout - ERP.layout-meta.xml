@@ -384,7 +384,17 @@
         </platformActionListItems>
     </platformActionList>
     <relatedLists>
-        <relatedList>RelatedEntityHistoryList</relatedList>
+        <fields>NAME</fields>
+        <fields>Label__c</fields>
+        <fields>Content__c</fields>
+        <relatedList>Marketing_Content__c.Product__c</relatedList>
+    </relatedLists>
+    <relatedLists>
+        <fields>NAME</fields>
+        <fields>From_Product__c</fields>
+        <fields>Standard__c</fields>
+        <fields>Maximum__c</fields>
+        <relatedList>Product_Option__c.To_Product__c</relatedList>
     </relatedLists>
     <relatedLists>
         <fields>NAME</fields>
@@ -394,15 +404,24 @@
     </relatedLists>
     <relatedLists>
         <fields>NAME</fields>
-        <relatedList>Product_Option__c.From_Product__c</relatedList>
+        <fields>AcctSeed__Product_Part__c</fields>
+        <fields>Product_Code__c</fields>
+        <fields>Product_Family__c</fields>
+        <fields>AcctSeed__Quantity__c</fields>
+        <relatedList>AcctSeed__Product_Part__c.AcctSeed__Product__c</relatedList>
+        <sortField>NAME</sortField>
+        <sortOrder>Asc</sortOrder>
+    </relatedLists>
+    <relatedLists>
+        <relatedList>RelatedPricebookEntryList</relatedList>
     </relatedLists>
     <relatedLists>
         <fields>NAME</fields>
-        <relatedList>Product_Option__c.To_Product__c</relatedList>
+        <fields>Fee_Product__c</fields>
+        <relatedList>Product_Fee_Map__c.Parent_Product__c</relatedList>
     </relatedLists>
     <relatedLists>
-        <fields>NAME</fields>
-        <relatedList>GMBLASERP__Lot__c.GMBLASERP__Product__c</relatedList>
+        <relatedList>RelatedEntityHistoryList</relatedList>
     </relatedLists>
     <relatedLists>
         <excludeButtons>New</excludeButtons>
@@ -416,18 +435,7 @@
     </relatedLists>
     <relatedLists>
         <fields>NAME</fields>
-        <fields>AcctSeed__Product_Part__c</fields>
-        <fields>Product_Code__c</fields>
-        <fields>Product_Family__c</fields>
-        <fields>AcctSeed__Quantity__c</fields>
-        <relatedList>AcctSeed__Product_Part__c.AcctSeed__Product__c</relatedList>
-        <sortField>NAME</sortField>
-        <sortOrder>Asc</sortOrder>
-    </relatedLists>
-    <relatedLists>
-        <fields>NAME</fields>
-        <fields>AcctSeed__Product__c</fields>
-        <relatedList>AcctSeed__Product_Part__c.AcctSeed__Product_Part__c</relatedList>
+        <relatedList>GMBLASERP__Lot__c.GMBLASERP__Product__c</relatedList>
     </relatedLists>
     <relatedLists>
         <fields>NAME</fields>
@@ -455,14 +463,6 @@
     </relatedLists>
     <relatedLists>
         <relatedList>RelatedStandardPriceList</relatedList>
-    </relatedLists>
-    <relatedLists>
-        <relatedList>RelatedPricebookEntryList</relatedList>
-    </relatedLists>
-    <relatedLists>
-        <fields>NAME</fields>
-        <fields>Fee_Product__c</fields>
-        <relatedList>Product_Fee_Map__c.Parent_Product__c</relatedList>
     </relatedLists>
     <relatedLists>
         <fields>TASK.SUBJECT</fields>
