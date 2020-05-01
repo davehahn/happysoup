@@ -192,7 +192,9 @@ public class Flow_FinalizeSales_Test {
 
 	@isTest static void getBillings_test() {
 		init();
+		Test.startTest();
 		String billingsString = Flow_FinalizeSales.getBillings(customerId, 45.0, erp.Id);
+		Test.stopTest();
 		AcctSeed__Billing__c[] billings = (List<AcctSeed__Billing__c>)JSON.deserialize( billingsString, List<AcctSeed__Billing__c>.class );
 		System.assert( billings.size() > 0 );
 	}
