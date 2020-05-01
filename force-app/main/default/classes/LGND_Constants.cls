@@ -106,6 +106,29 @@ public with sharing class LGND_Constants {
     private set;
   }
 
+  /* ACCOUNT RECORD TYPES ++++++++++++ .. */
+
+  public static Id accountRtId_Dealer {
+    get {
+      if( accountRtId_Dealer == null ) fetchAccountRecordTypes();
+      if( accountRtId_Dealer == null )
+        throw new LGND_Utilities.LGND_Exception('Account Record Type with API Name [Dealer] does not exist');
+      return accountRtId_Dealer;
+    }
+    set;
+  }
+
+  private static void fetchAccountRecordTypes()
+  {
+    for(RecordType rt : [ SELECT Id, DeveloperName, SobjectType
+                          FROM RecordType
+                          WHERE SobjectType = 'Account' ])
+    {
+      if( rt.DeveloperName == 'Dealer' )
+        accountRtId_Dealer = rt.Id;
+    }
+  }
+
   /* ++++++++++++++++++ PRICEBOOKS +++++++++++++++++++++ */
 
   public static Id retailPricebookId {
