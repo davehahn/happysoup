@@ -10,7 +10,7 @@ public with sharing class CommissionLineItem2_Service
   public static Decimal protectionAndServiceRate = 0.30;
   public static Decimal partsRate = 0.05;
   public static Decimal packageBundleRate = 0.05;
-  public static Decimal maintenancePackageRate = 0.5;
+  public static Decimal maintenancePackageRate = 0.05;
 
   public class RateCostCalculator
   {

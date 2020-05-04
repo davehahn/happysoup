@@ -526,44 +526,49 @@ private class CommissionRecord2_Functional_T
   @IsTest
   static void paymentAmount_GrossMarginDefault_Test()
   {
-    setup_Project_Task_Products('Gross Margin', 1000, 500);
-    List<AcctSeedERP__Material__c> materials = new List<AcctSeedERP__Material__c>();
-    for (Product2 p : products)
+    User u = Factory_User.newUser( 'tster', 'lastname', 'System Administrator', null );
+    insert u;
+    System.runAs( u )
     {
-      materials.add(new AcctSeedERP__Material__c(
-        AcctSeedERP__Product__c = p.Id,
-        AcctSeedERP__Project__c = project.Id,
-        AcctSeedERP__Project_Task__c = task.Id,
-        AcctSeedERP__Quantity_Per_Unit__c = 1,
-        GMBLASERP__Unit_Price__c = 1000,
-        AcctSeedERP__Comment__c = 'From Unit Test'
-      ));
+      setup_Project_Task_Products('Gross Margin', 1000, 500);
+      List<AcctSeedERP__Material__c> materials = new List<AcctSeedERP__Material__c>();
+      for (Product2 p : products)
+      {
+        materials.add(new AcctSeedERP__Material__c(
+          AcctSeedERP__Product__c = p.Id,
+          AcctSeedERP__Project__c = project.Id,
+          AcctSeedERP__Project_Task__c = task.Id,
+          AcctSeedERP__Quantity_Per_Unit__c = 1,
+          GMBLASERP__Unit_Price__c = 1000,
+          AcctSeedERP__Comment__c = 'From Unit Test'
+        ));
+      }
+
+      insert materials;
+
+      CommissionRecord2__c commRec = [
+        SELECT Id
+        FROM CommissionRecord2__c
+        WHERE Project_Task__c = :task.Id
+      ];
+      CommissionPayment2__c[] commPayments = [
+        SELECT Id,
+          Gross_Margin_Payment_Percent__c,
+          Owner__c,
+          Split_Percent__c,
+          Use_Gross_Margin_Calculation__c,
+          Amount__c
+        FROM CommissionPayment2__c
+        WHERE Commission_Record2__c = :commRec.Id
+      ];
+      // 10 parts * $500 profit * default gross margin commission payment percent
+      Decimal expectedAmount = 10 * 500 * (CommissionPayment2_Service.defaultGrossMarginPaymentPercent / 100);
+      System.assertEquals(1, commPayments.size());
+      System.assertEquals(true, commPayments[0].Use_Gross_Margin_Calculation__c);
+      System.assertEquals(100, commPayments[0].Split_Percent__c);
+      System.assertEquals(CommissionPayment2_Service.defaultGrossMarginPaymentPercent, commPayments[0].Gross_Margin_Payment_Percent__c);
+      System.assertEquals(expectedAmount, commPayments[0].Amount__c);
     }
-
-    insert materials;
-
-    CommissionRecord2__c commRec = [
-      SELECT Id
-      FROM CommissionRecord2__c
-      WHERE Project_Task__c = :task.Id
-    ];
-    CommissionPayment2__c[] commPayments = [
-      SELECT Id,
-        Gross_Margin_Payment_Percent__c,
-        Owner__c,
-        Split_Percent__c,
-        Use_Gross_Margin_Calculation__c,
-        Amount__c
-      FROM CommissionPayment2__c
-      WHERE Commission_Record2__c = :commRec.Id
-    ];
-    // 10 parts * $500 profit * default gross margin commission payment percent
-    Decimal expectedAmount = 10 * 500 * ( CommissionPayment2_Service.defaultGrossMarginPaymentPercent / 100 );
-    System.assertEquals( 1, commPayments.size() );
-    System.assertEquals( true, commPayments[0].Use_Gross_Margin_Calculation__c );
-    System.assertEquals( 100, commPayments[0].Split_Percent__c );
-    System.assertEquals( CommissionPayment2_Service.defaultGrossMarginPaymentPercent, commPayments[0].Gross_Margin_Payment_Percent__c );
-    System.assertEquals( expectedAmount, commPayments[0].Amount__c );
   }
 
   @IsTest
