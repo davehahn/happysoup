@@ -1,14 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <RecordType xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>Report_Request</fullName>
+    <fullName>Service_Appointment</fullName>
     <active>true</active>
-    <businessProcess>Report Request</businessProcess>
-    <description>Queue for report requests/modifications</description>
-    <label>Report Request</label>
+    <businessProcess>Service Appointment</businessProcess>
+    <label>Service Appointment</label>
     <picklistValues>
         <picklist>Claim_Type__c</picklist>
         <values>
+            <fullName>Audio</fullName>
+            <default>false</default>
+        </values>
+        <values>
             <fullName>Canvas</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Control %2F Cabling</fullName>
             <default>false</default>
         </values>
         <values>
@@ -17,6 +24,10 @@
         </values>
         <values>
             <fullName>Electrical</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Fishfinder</fullName>
             <default>false</default>
         </values>
         <values>
@@ -40,11 +51,31 @@
             <default>false</default>
         </values>
         <values>
+            <fullName>Lights</fullName>
+            <default>false</default>
+        </values>
+        <values>
             <fullName>Other</fullName>
             <default>false</default>
         </values>
         <values>
+            <fullName>Paint</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Parts</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Plumbing</fullName>
+            <default>false</default>
+        </values>
+        <values>
             <fullName>Shipping Damage</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Trailer</fullName>
             <default>false</default>
         </values>
         <values>
@@ -56,7 +87,7 @@
         <picklist>Contact_Language__c</picklist>
         <values>
             <fullName>English</fullName>
-            <default>false</default>
+            <default>true</default>
         </values>
         <values>
             <fullName>Français</fullName>
@@ -65,6 +96,22 @@
     </picklistValues>
     <picklistValues>
         <picklist>Delay_Reasons__c</picklist>
+        <values>
+            <fullName>Hull Return</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Internal Delay</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Pause for Season</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Waiting for Parts to Ship</fullName>
+            <default>false</default>
+        </values>
         <values>
             <fullName>Waiting for more information from partner</fullName>
             <default>false</default>
@@ -120,6 +167,10 @@
             <default>false</default>
         </values>
         <values>
+            <fullName>No Charge Bulk Supply</fullName>
+            <default>false</default>
+        </values>
+        <values>
             <fullName>Rigging damage</fullName>
             <default>false</default>
         </values>
@@ -150,7 +201,43 @@
     <picklistValues>
         <picklist>Origin</picklist>
         <values>
+            <fullName>Email</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Facebook</fullName>
+            <default>false</default>
+        </values>
+        <values>
             <fullName>Internal</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Legend Counter Sale</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Legend Partner Parts Order</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Legend Service Work Order</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Phone</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Submit for Translation</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Twitter</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Web</fullName>
             <default>true</default>
         </values>
     </picklistValues>
@@ -180,12 +267,24 @@
     <picklistValues>
         <picklist>Priority</picklist>
         <values>
+            <fullName>--None--</fullName>
+            <default>true</default>
+        </values>
+        <values>
             <fullName>High</fullName>
             <default>false</default>
         </values>
         <values>
+            <fullName>Highest</fullName>
+            <default>false</default>
+        </values>
+        <values>
             <fullName>Low</fullName>
-            <default>true</default>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Lowest</fullName>
+            <default>false</default>
         </values>
         <values>
             <fullName>Medium</fullName>
@@ -195,8 +294,40 @@
     <picklistValues>
         <picklist>Reason</picklist>
         <values>
+            <fullName>Bug</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Complex functionality</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Existing problem</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Instructions not clear</fullName>
+            <default>false</default>
+        </values>
+        <values>
             <fullName>Job Requirement</fullName>
-            <default>true</default>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Missing Requirement</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>New Feature</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>New problem</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>User didn%27t attend training</fullName>
+            <default>false</default>
         </values>
     </picklistValues>
     <picklistValues>
@@ -252,7 +383,39 @@
     <picklistValues>
         <picklist>Type</picklist>
         <values>
+            <fullName>Accounting</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Bug</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Feature Request</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Logistics</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Marketing</fullName>
+            <default>false</default>
+        </values>
+        <values>
             <fullName>Other</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Parts</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Problem</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Product</fullName>
             <default>false</default>
         </values>
         <values>
@@ -261,21 +424,65 @@
         </values>
         <values>
             <fullName>Report Creation</fullName>
-            <default>true</default>
+            <default>false</default>
         </values>
         <values>
             <fullName>Report Enhancement</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Sales</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Salesforce Implementation</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Service</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Shipping</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Warranty</fullName>
             <default>false</default>
         </values>
     </picklistValues>
     <picklistValues>
         <picklist>Vendors__c</picklist>
         <values>
+            <fullName>ASA Electronic</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Advanced Textiles</fullName>
+            <default>false</default>
+        </values>
+        <values>
             <fullName>Apex</fullName>
             <default>false</default>
         </values>
         <values>
+            <fullName>Avalon-Tahoe</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Billing Another Dealer</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Camco Manufacturing</fullName>
+            <default>false</default>
+        </values>
+        <values>
             <fullName>Convertex</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Detmar</fullName>
             <default>false</default>
         </values>
         <values>
@@ -287,7 +494,15 @@
             <default>false</default>
         </values>
         <values>
+            <fullName>Internal Damage</fullName>
+            <default>false</default>
+        </values>
+        <values>
             <fullName>Jensen</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Maslack</fullName>
             <default>false</default>
         </values>
         <values>
@@ -295,7 +510,15 @@
             <default>false</default>
         </values>
         <values>
+            <fullName>Polar Kraft</fullName>
+            <default>false</default>
+        </values>
+        <values>
             <fullName>Prospect</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Shipping Damage</fullName>
             <default>false</default>
         </values>
         <values>
@@ -304,6 +527,10 @@
         </values>
         <values>
             <fullName>V3</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Wondee Autoparts</fullName>
             <default>false</default>
         </values>
     </picklistValues>
