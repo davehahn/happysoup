@@ -364,10 +364,10 @@ div.pq-grid-footer{
             alert('Please enter Values in all fields.')
             return;
         }
-        else if(receiptAmount < 0){
+        /*else if(receiptAmount < 0){
             alert('Receipt amount cannot be negative.')
             return;
-        }
+        }*/
         else if(financeCharge < 0 && bankCharge < 0){
             alert('Both Dealer Reserved and Bank Fees cannot be negative.')
             return;
@@ -389,7 +389,12 @@ div.pq-grid-footer{
                     }
                     else
                     {
-                        var url = '/apex/ACCTSEED__BankDepositManager?id='+result;
+                        var arr = result.split('__');
+                        var url;
+                        if(arr.length > 0 && arr[0] == 'disbursement')
+                            url = '/'+arr[1];
+                        else
+                            url = '/apex/ACCTSEED__BankDepositManager?id='+result;
                         if(currentTheme == 'Theme4d')
                             sforce.one.navigateToURL(url);
                         else
