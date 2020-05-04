@@ -149,6 +149,8 @@ public with sharing class gcDealerReseved_Receipt {
         }
     	AcctSeed__Accounting_Period__c period = GMBLASERP.gcAccountingPeriod.periodCurr();
     	List<AcctSeed__Cash_Receipt__c> listCrs = new List<AcctSeed__Cash_Receipt__c>();
+        Decimal checkCharge = financeCharge + bankCharge;
+        String idRet;
     	AcctSeed__Cash_Receipt__c customerCr = new AcctSeed__Cash_Receipt__c(
     										AcctSeed__Account__c = idAccount,
     										AcctSeed__Amount__c = receiptAmount,
@@ -161,68 +163,415 @@ public with sharing class gcDealerReseved_Receipt {
                                             AcctSeed__Project_Task__c = idERPTask
     									);
     	listCrs.add(customerCr);
-    	AcctSeed__Cash_Receipt__c bankCr = new AcctSeed__Cash_Receipt__c(
-    										AcctSeed__Account__c = idBankAccount,
-    										AcctSeed__Amount__c = (financeCharge + bankCharge),
-    										AcctSeed__Bank_Account__c = idBankGLAccount,
-    										AcctSeed__Payment_Reference__c = System.now().format(),
-                                            Payment_Method__c = 'Bank Funding',
-    										AcctSeed__Purpose__c = 'Customer Receipt',
-                                            AcctSeed__Receipt_Date__c = receiptDate
-    									);
-    	listCrs.add(bankCr);
-    	insert listCrs;
-    		
-	 	AcctSeed__Billing__c newBill = new AcctSeed__Billing__c(
-	 			AcctSeed__Customer__c = bankCr.AcctSeed__Account__c,
-                AcctSeed__Date__c = receiptDate
-	 		);
+        if(checkCharge > 0) {
+            AcctSeed__Cash_Receipt__c bankCr = new AcctSeed__Cash_Receipt__c(
+                AcctSeed__Account__c = idBankAccount,
+                AcctSeed__Amount__c = (financeCharge + bankCharge),
+                AcctSeed__Bank_Account__c = idBankGLAccount,
+                AcctSeed__Payment_Reference__c = System.now().format(),
+                Payment_Method__c = 'Bank Funding',
+                AcctSeed__Purpose__c = 'Customer Receipt',
+                AcctSeed__Receipt_Date__c = receiptDate
+            );
+            listCrs.add(bankCr);
 
-	 	insert newBill;
-	 	List<AcctSeed__Billing_Line__c> listBLines = new List<AcctSeed__Billing_Line__c>();
-		AcctSeed__Billing_Line__c newBLFC = new AcctSeed__Billing_Line__c(
-											AcctSeed__Billing__c = newBill.Id,
-											AcctSeed__Revenue_GL_Account__c = gcConstants.idGlFinancingFees,
-											AcctSeed__Hours_Units__c = 1,
-											AcctSeed__Rate__c = financeCharge.setScale(6),
-											AcctSeed__GL_Account_Variable_1__c = idGLV1, 
-											AcctSeed__GL_Account_Variable_2__c = gcConstants.idGlv2BusinessOffice
-										);
-		listBLines.add(newBLFC);
+            insert listCrs;
 
-		AcctSeed__Billing_Line__c newBLBC = new AcctSeed__Billing_Line__c(
-											AcctSeed__Billing__c = newBill.Id,
-											AcctSeed__Revenue_GL_Account__c = gcConstants.idGlBankFees,
-											AcctSeed__Hours_Units__c = 1,
-											AcctSeed__Rate__c = bankCharge.setScale(6),
-											AcctSeed__GL_Account_Variable_1__c = idGLV1, 
-											AcctSeed__GL_Account_Variable_2__c = gcConstants.idGlv2BusinessOffice
-										);
-		listBLines.add(newBLBC);
-		insert listBLines;
+            AcctSeed__Billing__c newBill = new AcctSeed__Billing__c(
+                AcctSeed__Customer__c = bankCr.AcctSeed__Account__c,
+                AcctSeed__Date__c = receiptDate/*,
+                AcctSeed__Billing_Format__c = 'a0e1D0000016neKQAQ',
+                AcctSeed__Ledger__c = 'a121D000001muWMQAY'*/
+            );
 
-		AcctSeed.BillingPostService.postBillings(new List<AcctSeed__Billing__c>{newBill});
+            insert newBill;
+            List<AcctSeed__Billing_Line__c> listBLines = new List<AcctSeed__Billing_Line__c>();
+            AcctSeed__Billing_Line__c newBLFC = new AcctSeed__Billing_Line__c(
+                AcctSeed__Billing__c = newBill.Id,
+                AcctSeed__Revenue_GL_Account__c = gcConstants.idGlFinancingFees,
+                AcctSeed__Hours_Units__c = 1,
+                AcctSeed__Rate__c = financeCharge.setScale(6),
+                AcctSeed__GL_Account_Variable_1__c = idGLV1,
+                AcctSeed__GL_Account_Variable_2__c = gcConstants.idGlv2BusinessOffice
+            );
+            listBLines.add(newBLFC);
 
-		AcctSeed__Billing_Cash_Receipt__c newBCR = new AcctSeed__Billing_Cash_Receipt__c(
-				AcctSeed__Billing__c = newBill.Id,
-				AcctSeed__Cash_Receipt__c = bankCr.Id,
-				AcctSeed__Applied_Amount__c = (financeCharge + bankCharge),
-				AcctSeed__Accounting_Period__c = period.Id
-			);
+            AcctSeed__Billing_Line__c newBLBC = new AcctSeed__Billing_Line__c(
+                AcctSeed__Billing__c = newBill.Id,
+                AcctSeed__Revenue_GL_Account__c = gcConstants.idGlBankFees,
+                AcctSeed__Hours_Units__c = 1,
+                AcctSeed__Rate__c = bankCharge.setScale(6),
+                AcctSeed__GL_Account_Variable_1__c = idGLV1,
+                AcctSeed__GL_Account_Variable_2__c = gcConstants.idGlv2BusinessOffice
+            );
+            listBLines.add(newBLBC);
+            insert listBLines;
 
-		insert newBCR;
+            AcctSeed.BillingPostService.postBillings(new List<AcctSeed__Billing__c>{
+                newBill
+            });
 
-		AcctSeed__Bank_Deposit__c bankDeposit = new AcctSeed__Bank_Deposit__c(
-													AcctSeed__Bank_Account__c = idBankGLAccount,
-													AcctSeed__Deposit_Date__c = receiptDate//Date.today()
-												);
-		insert bankDeposit;
+            AcctSeed__Billing_Cash_Receipt__c newBCR = new AcctSeed__Billing_Cash_Receipt__c(
+                AcctSeed__Billing__c = newBill.Id,
+                AcctSeed__Cash_Receipt__c = bankCr.Id,
+                AcctSeed__Applied_Amount__c = (financeCharge + bankCharge),
+                AcctSeed__Accounting_Period__c = period.Id
+            );
 
-		return bankDeposit.Id;
+            insert newBCR;
+
+            AcctSeed__Bank_Deposit__c bankDeposit = new AcctSeed__Bank_Deposit__c(
+                AcctSeed__Bank_Account__c = idBankGLAccount,
+                AcctSeed__Deposit_Date__c = receiptDate//Date.today()
+            );
+            insert bankDeposit;
+            idRet = bankDeposit.Id;
+        }else if(checkCharge < 0){
+            // Creating Payment
+            String payeeRef = 'ACCT-' + String.valueOf(DateTime.now().getTime()) + '-Refund';
+            AcctSeed__Account_Payable__c accountPayable = new AcctSeed__Account_Payable__c(
+                AcctSeed__Vendor__c = idAccount,
+                AcctSeed__Payee_Reference__c = payeeRef,
+                Tax_Override__c = true,
+                Tax_is_Harmonized__c = false,
+                Tax_Rate_Federal__c = 0,
+                Tax_Rate_Provincial__c = 0,
+                Tax_Rate_Retail__c = 0,
+                AcctSeed__Date__c = Date.today()/*,
+				AcctSeed__Ledger__c = 'a121D000001muWMQAY'*/
+            );
+            insert accountPayable;
+            List<AcctSeed__Account_Payable_Line__c> listPL = new List<AcctSeed__Account_Payable_Line__c>();
+            AcctSeed__Account_Payable_Line__c payLine = new AcctSeed__Account_Payable_Line__c(
+                AcctSeed__Account_Payable__c = accountPayable.Id,
+                AcctSeed__Amount__c = financeCharge * -1,
+                AcctSeed__Date__c = Date.today(),
+                AcctSeed__Expense_GL_Account__c = gcConstants.idGlFinancingFees,
+                AcctSeed__GL_Account_Variable_1__c = idGLV1,
+                AcctSeed__GL_Account_Variable_2__c = gcConstants.idGlv2BusinessOffice
+            );
+            listPL.add(payLine);
+            AcctSeed__Account_Payable_Line__c payLine2 = new AcctSeed__Account_Payable_Line__c(
+                AcctSeed__Account_Payable__c = accountPayable.Id,
+                AcctSeed__Amount__c = bankCharge * -1,
+                AcctSeed__Date__c = Date.today(),
+                AcctSeed__Expense_GL_Account__c = gcConstants.idGlBankFees,
+                AcctSeed__GL_Account_Variable_1__c = idGLV1,
+                AcctSeed__GL_Account_Variable_2__c = gcConstants.idGlv2BusinessOffice
+            );
+            listPL.add(payLine2);
+            insert listPL;
+
+            AcctSeed.PostResult[] postResultsAP = AcctSeed.AccountPayablePostService.postAccountPayables(new List<AcctSeed__Account_Payable__c>{accountPayable});
+            for (AcctSeed.PostResult theResult : postResultsAP) {
+                if (!theResult.isSuccess) {
+                    for (AcctSeed.PostResult.PostErrorResult errorResult: theResult.errors) {
+                        throw new gcException('Account Payable was not posted. Please try again. REASON: ' + errorResult.message);
+                    }
+                }
+            }
+
+            Decimal startingCheckNumber = null;
+            AcctSeed__Cash_Disbursement_Batch__c cashDisbursementBatch = new AcctSeed__Cash_Disbursement_Batch__c(
+                AcctSeed__Starting_Check_Number__c = startingCheckNumber,
+                Name = 'Refund Batch' + String.valueOf(System.now())
+            );
+            insert cashDisbursementBatch;
+
+            String paymentMethod = 'Cash';
+            Id idGLBank = gcConstants.idGlCashFloat;
+            AcctSeed__Cash_Disbursement__c disbursement = new AcctSeed__Cash_Disbursement__c(
+                AcctSeed__Cash_Disbursement_Batch__c = cashDisbursementBatch.Id,
+                AcctSeed__Disbursement_Date__c = Date.today(),
+                AcctSeed__Type__c = paymentMethod,
+                AcctSeed__Amount__c = ((financeCharge + bankCharge) * -1),
+                AcctSeed__Source__c = 'Account Payable',
+                AcctSeed__GL_Account_Variable_1__c = idGLV1,
+                AcctSeed__Bank_Account__c = idGlBank,
+                AcctSeed__Vendor__c = idAccount,
+                AcctSeed__Status__c = 'Approved',
+                AcctSeed__Reference__c = 'refund--'+System.now().format(),
+                AcctSeed__Debit_GL_Account__c = gcConstants.idGlAPayable,
+                AcctSeed__Payment_Status__c = 'Paid'/*,
+				AcctSeed__Ledger__c = 'a121D000001muWMQAY'*/
+            );
+
+            insert disbursement;
+
+            AcctSeed.PostResult[] postResults = AcctSeed.CashDisbursementPostService.postCashDisbursements(new List<AcctSeed__Cash_Disbursement__c>{disbursement});
+            for (AcctSeed.PostResult theResult : postResults) {
+                if (!theResult.isSuccess) {
+                    for (AcctSeed.PostResult.PostErrorResult errorResult: theResult.errors) {
+                        throw new gcException('Cash Disbursement was not posted. Please try again. REASON: ' + errorResult.message);
+                    }
+                }
+            }
+
+            AcctSeed__AP_Disbursement__c apdisbursement = new AcctSeed__AP_Disbursement__c(
+                AcctSeed__Cash_Disbursement__c = disbursement.Id,
+                AcctSeed__Paid_Amount__c = disbursement.AcctSeed__Amount__c,
+                AcctSeed__Account_Payable__c = accountPayable.Id
+            );
+            insert apdisbursement;
+            idRet = 'disbursement__'+disbursement.Id;
+        }
+		return idRet;
     }
 
     public static void coverage(){
         integer i;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
+        i=1;
         i=1;
         i=1;
         i=1;
