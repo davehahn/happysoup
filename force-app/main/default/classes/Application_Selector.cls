@@ -89,6 +89,13 @@ public virtual class Application_Selector
     return queryString;
   }
 
+  public static String whereInClauseBuilder( String field, Set<Id> matchers )
+  {
+    Set<String> stringMatchers =
+      (Set<String>)JSON.deserialize( JSON.serialize(matchers), Set<String>.class);
+    return whereInClauseBuilder( field, stringMatchers );
+  }
+
   public static String whereInClauseBuilder( String field, Set<String> matchers )
   {
     if( matchers == null || matchers.size() == 0 )

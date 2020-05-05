@@ -5,6 +5,12 @@
 public with sharing class Product_Selector extends Application_Selector
 {
 
+  private static List<String> boatFields = new List<String>{
+    'Standard_Motor__c',
+    'Standard_Trailer__c',
+    'Standard_Trolling_Motor__c'
+  };
+
   public Product_Selector()
   {
     this.sObjectName = 'Product2';
@@ -35,7 +41,7 @@ public with sharing class Product_Selector extends Application_Selector
     selector
       .addWhere( whereInClauseBuilder(
       'Id',
-      (Set<String>)JSON.deserialize( JSON.serialize(productIds), Set<String>.class)
+       productIds
     ));
     return (List<Product2>)selector.query();
   }
@@ -43,8 +49,10 @@ public with sharing class Product_Selector extends Application_Selector
   public static Product2 getOnlineBoat( String recordId )
   {
     Product_Selector selector = new Product_Selector();
-    selector.addWhere('Id = \'' + recordId + '\'')
-      .addChildQuery( '(SELECT From_Product__c, From_Product__r.Name, Standard__c, Maximum__c FROM To_Product_Options__r WHERE Available_Online__c = true)');
+    selector
+      .addFields( boatFields )
+      .addWhere('Id = \'' + recordId + '\'')
+      .addChildQuery( '(SELECT From_Product__c, To_Product__c, From_Product__r.Name, Standard__c, Maximum__c FROM To_Product_Options__r WHERE Available_Online__c = true)');
     List<Sobject> results = selector.query();
     return (Product2)results[0];
   }
