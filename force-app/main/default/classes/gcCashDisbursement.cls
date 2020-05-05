@@ -76,7 +76,7 @@ public without sharing class gcCashDisbursement {
 			{
                 //cd.AcctSeed__Ledger__c = 'a121D000001muWMQAY';
 				//if(cd.AcctSeed__Cash_Flow_Category__c == null){
-					if(cd.AcctSeed__Reference__c != null && cd.AcctSeed__Reference__c.contains('refund'))
+					if(cd.AcctSeed__Reference__c != null && cd.AcctSeed__Reference__c.contains('refund') && !cd.GMBLASG__Posted__c)
 						cd.AcctSeed__Cash_Flow_Category__c = gcConstants.idGlRevenueCF;
 				//}
 				if(boolIsUpdate){
