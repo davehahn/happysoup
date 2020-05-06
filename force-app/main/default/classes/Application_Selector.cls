@@ -4,6 +4,8 @@
 
 public virtual class Application_Selector
 {
+  public class SelectorException extends Exception {}
+
   protected String sObjectName;
   protected List<String> fields;
   private List<String> whereClause;
@@ -24,6 +26,25 @@ public virtual class Application_Selector
       return this;
     }
     this.whereClause.add( 'AND ' + whereClause );
+    return this;
+  }
+
+  public Application_Selector addWhere( String whereClause, String operator )
+  {
+    Set<String> acceptableOperators = new Set<String>{'AND', 'OR'};
+    if( operator != null && !acceptableOperators.contains( operator ) )
+      throw new SelectorException(' An invalid operator was specified. Acceptable values are null, \'AND\' or \'OR\'');
+
+    if( whereClause == null || whereClause.length() == 0 )
+      return this;
+    if( this.whereClause == null ||
+        this.whereClause.size() == 0 ||
+        operator == null )
+    {
+      this.whereClause = new List<String>{'WHERE ' + whereClause };
+      return this;
+    }
+    this.whereClause.add( operator + ' ' + whereClause );
     return this;
   }
 
@@ -55,8 +76,7 @@ public virtual class Application_Selector
     }
     catch( Exception e )
     {
-      System.debug( e.getMessage() );
-      return new List<SObject>();
+      throw new SelectorException( e.getMessage() );
     }
   }
 
@@ -78,14 +98,12 @@ public virtual class Application_Selector
     queryString += ' FROM ' + this.sObjectName;
     for( String clause : this.whereClause )
     {
-      System.debug( clause );
       queryString += ' ' + clause;
     }
     if( this.orderBy != null )
     {
       queryString += ' ORDER BY ' + this.orderBy;
     }
-    System.debug( queryString );
     return queryString;
   }
 

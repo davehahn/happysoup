@@ -25,7 +25,6 @@ public with sharing class OnlineBoatReservation_Controller
   public static OnlineBoat fetchBoat( String boatId )
   {
     OnlineBoat b = new OnlineBoat( boatId );
-    System.debug( b );
     return b;
   }
 }

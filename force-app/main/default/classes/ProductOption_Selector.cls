@@ -11,7 +11,10 @@ public with sharing class ProductOption_Selector extends Application_Selector
     this.fields = new List<String>{
       'Id',
       'From_Product__c',
+      'From_Product__r.Name',
+      'From_Product__r.RecordTypeId',
       'To_Product__c',
+      'To_Product__r.Name',
       'Standard__c',
       'Maximum__c'
     };

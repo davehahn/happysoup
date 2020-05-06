@@ -51,8 +51,7 @@ public with sharing class Product_Selector extends Application_Selector
     Product_Selector selector = new Product_Selector();
     selector
       .addFields( boatFields )
-      .addWhere('Id = \'' + recordId + '\'')
-      .addChildQuery( '(SELECT From_Product__c, To_Product__c, From_Product__r.Name, Standard__c, Maximum__c FROM To_Product_Options__r WHERE Available_Online__c = true)');
+      .addWhere('Id = \'' + recordId + '\'');
     List<Sobject> results = selector.query();
     return (Product2)results[0];
   }
