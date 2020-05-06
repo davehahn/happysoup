@@ -43,7 +43,6 @@
       display: block;
     }
 
-
   </style>
 
   <c:Square_PaymentForm />
@@ -70,74 +69,6 @@
             errors: errors
           };
           window.parent.postMessage(message, window.location.origin );
-        });
-      }
-    });
-
-  </script>
-
-  <c:Square_PaymentForm />
-
-  <script>
-
-    window.addEventListener('message', function(event) {
-      if( event.origin === window.location.origin &&
-          event.data.messageType === 'doPayment' )
-      {
-        console.log( event.data );
-        doPostPayment( event.data.paymentAmount )
-        .then( (result) =>
-        {
-          window.parent.postMessage(result, window.location.origin );
-        });
-      }
-    });
-
-  </script>
-
-  <c:Square_PaymentForm />
-
-  <script>
-
-    window.addEventListener('message', function(event) {
-      if( event.origin === window.location.origin &&
-          event.data.messageType === 'doPayment' )
-      {
-        console.log( event.data );
-        doPostPayment( event.data.paymentAmount )
-        .then( (result) =>
-        {
-          const message = {
-            status: 'success',
-            response: result
-          };
-          window.parent.postMessage(message, window.location.origin );
-        })
-        .catch( (errors) => {
-          const message = {
-            status: 'error',
-            errors: errors
-          };
-          window.parent.postMessage(message, window.location.origin );
-        });
-      }
-    });
-
-  </script>
-
-  <c:Square_PaymentForm />
-
-  <script>
-
-    window.addEventListener('message', function(event) {
-      if( event.origin === window.location.origin &&
-          event.data.messageType === 'doPayment' )
-      {
-        console.log( event.data );
-        doPostPayment( event.data.paymentAmount )
-        .then( (result) =>
-        {
-          window.parent.postMessage(result, window.location.origin );
         });
       }
     });

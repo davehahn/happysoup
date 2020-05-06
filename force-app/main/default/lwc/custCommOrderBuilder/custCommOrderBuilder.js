@@ -8,6 +8,7 @@ import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import { loadStyle } from 'lightning/platformResourceLoader';
 import sldsIconFont from '@salesforce/resourceUrl/sldsIconFont';
 import LOGO from '@salesforce/resourceUrl/LegendLogo';
+import fetchBoat from '@salesforce/apex/OnlineBoatReservation_Controller.fetchBoat';
 
 export default class CustCommOrderBuilder extends NavigationMixin(LightningElement) {
 
@@ -24,6 +25,7 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
   @track currentPage = 'performance';
   @track paymentType='cash';
   @track iframeHeight;
+  @track boat;
 
   @wire(CurrentPageReference)
   setCurrentPageReference(currentPageReference) {
@@ -31,46 +33,25 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
     console.log( this.recordId );
   }
 
-  renderedCallback()
+  @wire( fetchBoat, { boatId: '$recordId'} )
+  wiredFetchBoat( { error, data } )
   {
-    loadStyle( this, sldsIconFont + '/style.css')
-    .then(()=>{});
+    if( data )
+    {
+      console.log('data returned');
+      console.log( data  );
+      this.boat = data;
+    }
+    else if( error )
+    {
+      console.log( error );
+    }
   }
 
-  get processPages()
+  get boatDetailsLoaded()
   {
-    return this.pages.map( page => {
-      return {
-        label: page,
-        class: this.currentPage === page ?
-          'config-nav-item config-nav-item_selected' :
-          'config-nav-item'
-      }
-    });
-  }
-
-  renderedCallback()
-  {
-    loadStyle( this, sldsIconFont + '/style.css')
-    .then(()=>{});
-  }
-
-  get processPages()
-  {
-    return this.pages.map( page => {
-      return {
-        label: page,
-        class: this.currentPage === page ?
-          'config-nav-item config-nav-item_selected' :
-          'config-nav-item'
-      }
-    });
-  }
-
-  renderedCallback()
-  {
-    loadStyle( this, sldsIconFont + '/style.css')
-    .then(()=>{});
+    console.log(`Boat Details Loaded ? - ${this.boat != null}`);
+    return this.boat != null;
   }
 
   get processPages()
@@ -91,65 +72,11 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
     .then(()=>{});
 
     window.addEventListener('resize', (event) => {
-      console.log('resizing window bitches');
-      console.log( event );
-      console.log( event.currentTarget.outerWidth );
-    });
+          console.log('resizing window bitches');
+          console.log( event );
+          console.log( event.currentTarget.outerWidth );
+        });
 
-  }
-
-  get processPages()
-  {
-    return this.pages.map( page => {
-      return {
-        label: page,
-        class: this.currentPage === page ?
-          'config-nav-item config-nav-item_selected' :
-          'config-nav-item'
-      }
-    });
-  }
-
-  renderedCallback()
-  {
-    loadStyle( this, sldsIconFont + '/style.css')
-    .then(()=>{});
-  }
-
-  get processPages()
-  {
-    return this.pages.map( page => {
-      return {
-        label: page,
-        class: this.currentPage === page ?
-          'config-nav-item config-nav-item_selected' :
-          'config-nav-item'
-      }
-    });
-  }
-
-  renderedCallback()
-  {
-    loadStyle( this, sldsIconFont + '/style.css')
-    .then(()=>{});
-  }
-
-  get processPages()
-  {
-    return this.pages.map( page => {
-      return {
-        label: page,
-        class: this.currentPage === page ?
-          'config-nav-item config-nav-item_selected' :
-          'config-nav-item'
-      }
-    });
-  }
-
-  renderedCallback()
-  {
-    loadStyle( this, sldsIconFont + '/style.css')
-    .then(()=>{});
   }
 
   get processPages()
