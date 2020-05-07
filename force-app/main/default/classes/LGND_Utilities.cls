@@ -113,6 +113,17 @@ public with sharing class LGND_Utilities {
       .getRecordTypeId();
   }
 
+  public static String toCamelCase( String text )
+  {
+    String[] split = new List<String>();
+    for( String s : text.split(' ') )
+    {
+      split.add( s.capitalize() );
+    }
+    text = String.join( split, '');
+    return text.uncapitalize();
+  }
+
   public static Set<Id> getIdSetFromList( sObject[] objects )
   {
     Set<Id> result = new Set<Id>();

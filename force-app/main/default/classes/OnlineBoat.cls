@@ -299,6 +299,11 @@ public without sharing class OnlineBoat
 
   private Map<String, List<OnlineOptionalProduct>> buildOptions( List<Product_Option__c> options )
   {
+    Set<Id> prodRts = new Set<Id>{
+      LGND_Constants.productRtId_Motor,
+      LGND_Constants.productRtId_Trailer,
+      LGND_Constants.productRtId_TrollingMotor
+    };
     Map<String, List<OnlineOptionalProduct>> result = new Map<String, List<OnlineOptionalProduct>>();
     for( Product_Option__c opt : options )
     {
@@ -312,9 +317,6 @@ public without sharing class OnlineBoat
       }
       else
       {
-        if (!result.containsKey(prod.Family))
-          result.put(prod.family, new List<OnlineOptionalProduct>());
-
         OnlineOptionalProduct oop = new OnlineOptionalProduct(prod, opt, pbe);
         if( this.optionOwnerMap.containsKey( oop.id ) )
         {
@@ -330,7 +332,17 @@ public without sharing class OnlineBoat
         {
           oop.addKitContents( this.productPartMap.get( prod.Id ) );
         }
-        result.get(prod.Family).add( oop );
+
+        String label;
+        if( prodRts.contains( prod.RecordType.Id ) )
+          label = prod.RecordType.Name;
+        else
+          label = prod.Family;
+
+        label = LGND_Utilities.toCamelCase( label );
+        if (!result.containsKey(label))
+          result.put(label, new List<OnlineOptionalProduct>());
+        result.get(label).add( oop );
       }
     }
     return result;
