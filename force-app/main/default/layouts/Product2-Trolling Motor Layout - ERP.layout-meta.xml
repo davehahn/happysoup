@@ -315,6 +315,11 @@
             <sortOrder>6</sortOrder>
         </platformActionListItems>
         <platformActionListItems>
+            <actionName>Gallery</actionName>
+            <actionType>CustomButton</actionType>
+            <sortOrder>9</sortOrder>
+        </platformActionListItems>
+        <platformActionListItems>
             <actionName>Update_MRP_Quantity</actionName>
             <actionType>CustomButton</actionType>
             <sortOrder>7</sortOrder>
@@ -324,12 +329,37 @@
             <actionType>CustomButton</actionType>
             <sortOrder>8</sortOrder>
         </platformActionListItems>
-        <platformActionListItems>
-            <actionName>Gallery</actionName>
-            <actionType>CustomButton</actionType>
-            <sortOrder>9</sortOrder>
-        </platformActionListItems>
     </platformActionList>
+    <relatedLists>
+        <fields>NAME</fields>
+        <fields>Label__c</fields>
+        <fields>Content__c</fields>
+        <relatedList>Marketing_Content__c.Product__c</relatedList>
+    </relatedLists>
+    <relatedLists>
+        <fields>NAME</fields>
+        <fields>From_Product__c</fields>
+        <fields>Standard__c</fields>
+        <fields>Maximum__c</fields>
+        <fields>Available_Online__c</fields>
+        <relatedList>Product_Option__c.To_Product__c</relatedList>
+    </relatedLists>
+    <relatedLists>
+        <fields>NAME</fields>
+        <fields>AcctSeed__Product_Part__c</fields>
+        <fields>Product_Code__c</fields>
+        <fields>Product_Family__c</fields>
+        <fields>AcctSeed__Quantity__c</fields>
+        <relatedList>AcctSeed__Product_Part__c.AcctSeed__Product__c</relatedList>
+        <sortField>NAME</sortField>
+        <sortOrder>Asc</sortOrder>
+    </relatedLists>
+    <relatedLists>
+        <relatedList>RelatedEntityHistoryList</relatedList>
+    </relatedLists>
+    <relatedLists>
+        <relatedList>RelatedPricebookEntryList</relatedList>
+    </relatedLists>
     <relatedLists>
         <fields>CREATED_DATE</fields>
         <fields>NAME</fields>
@@ -338,17 +368,6 @@
         <fields>AcctSeedERP__Quantity_Needed__c</fields>
         <fields>AcctSeedERP__Quantity_Allocated__c</fields>
         <relatedList>AcctSeedERP__Material__c.AcctSeedERP__Product__c</relatedList>
-    </relatedLists>
-    <relatedLists>
-        <relatedList>RelatedEntityHistoryList</relatedList>
-    </relatedLists>
-    <relatedLists>
-        <fields>NAME</fields>
-        <relatedList>Product_Option__c.From_Product__c</relatedList>
-    </relatedLists>
-    <relatedLists>
-        <fields>NAME</fields>
-        <relatedList>Product_Option__c.To_Product__c</relatedList>
     </relatedLists>
     <relatedLists>
         <fields>NAME</fields>
@@ -362,25 +381,7 @@
         <relatedList>AcctSeedERP__Purchase_Order_Line__c.AcctSeedERP__Product__c</relatedList>
     </relatedLists>
     <relatedLists>
-        <fields>NAME</fields>
-        <fields>AcctSeed__Product_Part__c</fields>
-        <fields>Product_Code__c</fields>
-        <fields>Product_Family__c</fields>
-        <fields>AcctSeed__Quantity__c</fields>
-        <relatedList>AcctSeed__Product_Part__c.AcctSeed__Product__c</relatedList>
-        <sortField>NAME</sortField>
-        <sortOrder>Asc</sortOrder>
-    </relatedLists>
-    <relatedLists>
-        <fields>NAME</fields>
-        <fields>AcctSeed__Product__c</fields>
-        <relatedList>AcctSeed__Product_Part__c.AcctSeed__Product_Part__c</relatedList>
-    </relatedLists>
-    <relatedLists>
         <relatedList>RelatedStandardPriceList</relatedList>
-    </relatedLists>
-    <relatedLists>
-        <relatedList>RelatedPricebookEntryList</relatedList>
     </relatedLists>
     <relatedLists>
         <fields>TASK.SUBJECT</fields>
