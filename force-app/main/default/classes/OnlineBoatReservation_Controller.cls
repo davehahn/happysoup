@@ -24,7 +24,10 @@ public with sharing class OnlineBoatReservation_Controller
   @AuraEnabled(Cacheable=true)
   public static OnlineBoat fetchBoat( String boatId )
   {
-    OnlineBoat b = new OnlineBoat( boatId );
+
+    OnlineBoat b = new OnlineBoat(
+      Product_Selector.getOnlineBoat( boatId )
+    );
     return b;
   }
 }

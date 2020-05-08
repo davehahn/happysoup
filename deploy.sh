@@ -64,6 +64,11 @@ if [ "$CHECKONLY" = true ]
 then
   echoOut 'VALIDATING ONLY'
   sfdx force:source:deploy --testlevel $TESTLEVEL --checkonly --targetusername $1 -p force-app/main/default -g -w 120
+  echoOut 're-enable original .forceignore'
+  rm -f .forceignore
+  mv .forceignore.orig .forceignore
+  echoOut 'Deploying ExperienceBundles'
+  sfdx force:source:deploy --testlevel NoTestRun --checkonly --targetusername $1 -p force-app/main/default/experiences -g -w 120
 else
   sfdx force:source:deploy --testlevel $TESTLEVEL --targetusername $1 -p force-app/main/default -g -w 120
   echoOut 're-enable original .forceignore'

@@ -2,26 +2,16 @@
  * Created by dave on 2020-04-29.
  */
 
-public without sharing class OnlineBoat
+public virtual class OnlineBoat extends Online_Product
 {
-  @AuraEnabled public String id;
-  @AuraEnabled public String name;
-  @AuraEnabled public String details;
-  @AuraEnabled public String imageURL;
-  @AuraEnabled public String pricebookEntryId;
-  @AuraEnabled public Decimal retailPrice;
-  @AuraEnabled public OnlineStandardProduct standardMotor;
-  @AuraEnabled public List<OnlineProductUpgrade> motorUpgrades;
-  @AuraEnabled public OnlineStandardProduct standardTrailer;
-  @AuraEnabled public List<OnlineProductUpgrade> trailerUpgrades;
-  @AuraEnabled public OnlineStandardProduct standardTrollingMotor;
-  @AuraEnabled public Map<String, List<OnlineOptionalProduct>> optionalProducts;
-  @AuraEnabled public List<OnlineProductUpgrade> trollingMotorUpgrades;
-  @AuraEnabled public OnlinePremiumPackage premiumPackage;
-  @AuraEnabled public List<OnlineMarketingContent> marketingContent;
-  @AuraEnabled public Map<String, List<OnlineProvincialFee>> additionalFees;
-
-  private Product2 boatProduct;
+  @AuraEnabled public Online_Product.Standard standardMotor;
+  @AuraEnabled public List<Online_Product.Upgrade> motorUpgrades;
+  @AuraEnabled public Online_Product.Standard standardTrailer;
+  @AuraEnabled public List<Online_Product.Upgrade> trailerUpgrades;
+  @AuraEnabled public Online_Product.Standard standardTrollingMotor;
+  @AuraEnabled public List<Online_Product.Upgrade> trollingMotorUpgrades;
+  @AuraEnabled public Online_Product.PremiumPackage premiumPackage;
+  
   private Set<Id> allProductIds;
   private Set<Id> allProductOptionIds;
   private Map<Id, Product2> allProductsMap;
@@ -35,8 +25,9 @@ public without sharing class OnlineBoat
   private Map<Id, List<Product_Option__c>> optionOwnerMap;// parentProductId => List<Options>
   private Map<Id, List<Product_Upgrade__c>> product_upgradeMap;// standardId => List<Upgrades>
 
-  public OnlineBoat( Id boatId )
+  public OnlineBoat( Product2 boat )
   {
+    super( boat );
     this.allProductIds = new Set<Id>();
     this.allProductOptionIds = new Set<Id>();
     this.marketingContentMap = new Map<Id, List<Marketing_Content__c>>();
@@ -45,47 +36,41 @@ public without sharing class OnlineBoat
     this.product_upgradeMap = new Map<Id, List<Product_Upgrade__c>>();
     this.productFee_Map = new Map<Id, List<Product_Fee_Amount__c>>();
     this.optionalUpgradeIds = new Set<Id>();
-    this.id = boatId;
+
     init();
   }
 
   private void init()
   {
-    this.boatProduct = Product_Selector.getOnlineBoat( this.id );
-    this.allProductIds.add( this.boatProduct.Id );
+    this.allProductIds.add( this.sfProduct.Id );
     this.standardProductIds = new Set<Id>();
-    if( this.boatProduct.Standard_Motor__c != null )
-      this.standardProductIds.add( this.boatProduct.Standard_Motor__c );
-    if( this.boatProduct.Standard_Trailer__c != null )
-      this.standardProductIds.add( this.boatProduct.Standard_Trailer__c );
-    if( this.boatProduct.Standard_Trolling_Motor__c != null )
-      this.standardProductIds.add( this.boatProduct.Standard_Trolling_Motor__c );
+    if( this.sfProduct.Standard_Motor__c != null )
+      this.standardProductIds.add( this.sfProduct.Standard_Motor__c );
+    if( this.sfProduct.Standard_Trailer__c != null )
+      this.standardProductIds.add( this.sfProduct.Standard_Trailer__c );
+    if( this.sfProduct.Standard_Trolling_Motor__c != null )
+      this.standardProductIds.add( this.sfProduct.Standard_Trolling_Motor__c );
 
     this.allProductIds.addAll( this.standardProductIds );
-    this.optionalProducts = new Map<String, List<OnlineOptionalProduct>>();
-    this.marketingContent = new List<OnlineMarketingContent>();
-    this.additionalFees = new Map<String, List<OnlineProvincialFee>>();
     this.productPartMap = new Map<Id, List<AcctSeed__Product_Part__c>>();
 
-    this.motorUpgrades = new List<OnlineProductUpgrade>();
-    this.trailerUpgrades = new List<OnlineProductUpgrade>();
-    this.trollingMotorUpgrades = new List<OnlineProductUpgrade>();
+    this.motorUpgrades = new List<Online_Product.Upgrade>();
+    this.trailerUpgrades = new List<Online_Product.Upgrade>();
+    this.trollingMotorUpgrades = new List<Online_Product.Upgrade>();
 
     getOptionsForStandardProductsAndBoatOptions();
     buildUpgradeMap();
 
-    fetchAllProductDetails();
     fetchAllMarketingContent();
     fetchAllProductParts();
     fetchAllFees();
+    fetchAllProductDetails();
     fetchAllPrices();
     setBoatDetails();
   }
 
   private void setBoatDetails()
   {
-    this.name = this.boatProduct.Name;
-    this.imageURL = this.boatProduct.Default_Gallery_Image_Original__c;
 
     if( this.pricebookEntryMap.containsKey( this.Id ) )
     {
@@ -94,72 +79,13 @@ public without sharing class OnlineBoat
       this.retailPrice = pbe.UnitPrice;
     }
 
-    this.standardMotor = setStandardProduct( this.boatProduct.Standard_Motor__c );
-    this.standardTrailer = setStandardProduct( this.boatProduct.Standard_Trailer__c );
-    this.standardTrollingMotor = setStandardProduct( this.boatProduct.Standard_Trolling_Motor__c );
+    this.standardMotor = setStandardProduct( this.sfProduct.Standard_Motor__c );
+    this.standardTrailer = setStandardProduct( this.sfProduct.Standard_Trailer__c );
+    this.standardTrollingMotor = setStandardProduct( this.sfProduct.Standard_Trolling_Motor__c );
 
     buildUpgrades();
 
-    if( this.optionOwnerMap.containsKey( this.id ) )
-    {
-      this.optionalProducts = buildOptions( this.optionOwnerMap.get( this.id ) );
-    }
-
-    if( this.marketingContentMap.containsKey( this.id ) )
-    {
-      for( Marketing_Content__c mc : this.marketingContentMap.get( this.id ) )
-      {
-        this.marketingContent.add( new OnlineMarketingContent( mc ) );
-      }
-    }
-
-    if( this.productFee_Map.containsKey( this.id ) )
-    {
-      for( Product_Fee_Amount__c pfa : this.productFee_Map.get( this.id ) )
-      {
-        if( !this.additionalFees.containsKey( pfa.Province__c ) && pfa.Province__c != null )
-          this.additionalFees.put( pfa.Province__c, new List<OnlineProvincialFee>() );
-        this.additionalFees.get( pfa.Province__c ).add( new OnlineProvincialFee( pfa ) );
-      }
-    }
-
-  }
-
-  private OnlineStandardProduct setStandardProduct( Id standardId )
-  {
-    if( standardId != null &&
-        this.allProductsMap.containsKey( standardId ) &&
-        this.pricebookEntryMap.containsKey( standardId ) )
-    {
-       OnlineStandardProduct result = new OnlineStandardProduct(
-        this.allProductsMap.get( standardId ),
-        this.pricebookEntryMap.get( standardId )
-      );
-      if( this.optionOwnerMap.containsKey( standardId ) )
-      {
-        result.optionalProducts = buildOptions(
-          this.optionOwnerMap.get( standardId )
-        );
-      }
-      if( this.marketingContentMap.containsKey( standardId ) )
-      {
-        result.addMarketingContent( this.marketingContentMap.get( standardId ) );
-      }
-      if( this.product_optionMap.containsKey( standardId ) )
-      {
-        Product_Option__c opt = this.product_optionMap.get( standardId );
-        if( this.marketingContentMap.containsKey( opt.Id ) )
-        {
-          result.addMarketingContent( this.marketingContentMap.get( opt.Id ) );
-        }
-      }
-      if( this.productFee_Map.containsKey( standardId ) )
-      {
-        result.addProvincialFees( this.productFee_Map.get( standardId ) );
-      }
-      return result;
-    }
-    return null;
+    populate( this );
   }
 
   private void buildOptionMap( List<Product_Option__c> options )
@@ -172,11 +98,11 @@ public without sharing class OnlineBoat
       this.product_optionMap.put( opt.From_Product__c , opt );
 
       if( ( opt.From_Product__r.RecordTypeId == LGND_Constants.productRtId_Motor &&
-            this.boatProduct.Standard_Motor__c != null ) ||
+            this.sfProduct.Standard_Motor__c != null ) ||
           ( opt.From_Product__r.RecordTypeId == LGND_Constants.productRtId_Trailer &&
-            this.boatProduct.Standard_Trailer__c != null ) ||
+            this.sfProduct.Standard_Trailer__c != null ) ||
           ( opt.From_Product__r.RecordTypeId == LGND_Constants.productRtId_TrollingMotor &&
-            this.boatProduct.Standard_Trolling_Motor__c != null ) )
+            this.sfProduct.Standard_Trolling_Motor__c != null ) )
       {
         this.optionalUpgradeIds.add(opt.From_Product__c);
       }
@@ -232,12 +158,12 @@ public without sharing class OnlineBoat
 
   private void fetchAllProductParts()
   {
-    System.debug( ProductPart_Selector.allForPartKitsByParentIds( this.allProductIds ) );
     for( AcctSeed__Product_Part__c pp : ProductPart_Selector.allForPartKitsByParentIds( this.allProductIds ) )
     {
       if( !this.productPartMap.containsKey( pp.AcctSeed__Product__c ) )
         this.productPartMap.put( pp.AcctSeed__Product__c, new List<AcctSeed__Product_Part__c>() );
       this.productPartMap.get( pp.AcctSeed__Product__c ).add( pp );
+      this.allProductIds.add( pp.AcctSeed__Product_Part__c );
     }
   }
 
@@ -282,6 +208,7 @@ public without sharing class OnlineBoat
     for( Product_Fee_Amount__c pfa : [ SELECT Id, Province__c, Amount__c, Fee_Product__c, Fee_Product__r.Name FROM Product_Fee_Amount__c WHERE Fee_Product__c IN :fee_parent_map.keySet() AND Price_Book__c = :retailPbId ])
     {
       this.productFee_Map.get( fee_parent_map.get( pfa.Fee_Product__c ) ).add( pfa );
+      this.allProductIds.add( pfa.Fee_Product__c );
     }
   }
 
@@ -294,92 +221,71 @@ public without sharing class OnlineBoat
     }
   }
 
+  private Online_Product.Standard setStandardProduct( Id standardId )
+  {
+    if( standardId != null &&
+      this.allProductsMap.containsKey( standardId ) &&
+      this.pricebookEntryMap.containsKey( standardId ) )
+    {
+      Online_Product.Standard result = new Online_Product.Standard(
+        this.allProductsMap.get( standardId ),
+        this.pricebookEntryMap.get( standardId )
+      );
+      populate( result );
+      return result;
+    }
+    return null;
+  }
+
   private void buildUpgrades()
   {
     for( Id standardId : this.product_upgradeMap.keySet() )
     {
-      List<OnlineProductUpgrade> upgrades = new List<OnlineProductUpgrade>();
+      List<Online_Product.Upgrade> upgrades = new List<Online_Product.Upgrade>();
       for( Product_Upgrade__c pu : this.product_upgradeMap.get( standardId ) )
       {
         if( this.allProductsMap.containsKey( pu.To_Product__c ) )
         {
-          OnlineProductUpgrade upgrade = new OnlineProductUpgrade(
+          Online_Product.Upgrade upgrade = new Online_Product.Upgrade(
             this.allProductsMap.get( pu.To_Product__c ),
             pu,
             this.pricebookEntryMap.get( this.Id ).UnitPrice
           );
-          if( this.optionOwnerMap.containsKey( pu.To_Product__c ) )
-          {
-            upgrade.optionalProducts = buildOptions( this.optionOwnerMap.get( pu.To_Product__c ) );
-          }
-          if( this.marketingContentMap.containsKey( upgrade.id ) )
-          {
-            upgrade.addMarketingContent( this.marketingContentMap.get( upgrade.id ) );
-          }
-          if( this.product_optionMap.containsKey( upgrade.id ) )
-          {
-            Product_Option__c opt = this.product_optionMap.get( upgrade.id );
-            if( this.marketingContentMap.containsKey( opt.Id ) )
-            {
-              upgrade.addMarketingContent( this.marketingContentMap.get( opt.Id ) );
-            }
-          }
-          if( this.productFee_Map.containsKey( upgrade.id ) )
-          {
-            upgrade.addProvincialFees( this.productFee_Map.get( upgrade.Id ) );
-          }
+          populate( upgrade );
           upgrades.add( upgrade );
         }
       }
-      if( standardId == this.boatProduct.Standard_Motor__c )
+      if( standardId == this.sfProduct.Standard_Motor__c )
         this.motorUpgrades.addAll( upgrades );
-      if( standardId == this.boatProduct.Standard_Trailer__c )
+      if( standardId == this.sfProduct.Standard_Trailer__c )
         this.trailerUpgrades.addAll( upgrades );
-      if( standardId == this.boatProduct.Standard_Trolling_Motor__c )
+      if( standardId == this.sfProduct.Standard_Trolling_Motor__c )
         this.trollingMotorUpgrades.addAll( upgrades );
     }
   }
 
-  private Map<String, List<OnlineOptionalProduct>> buildOptions( List<Product_Option__c> options )
+  private Map<String, List<Online_Product.Option>> buildOptions( List<Product_Option__c> options )
   {
     Set<Id> prodRts = new Set<Id>{
       LGND_Constants.productRtId_Motor,
       LGND_Constants.productRtId_Trailer,
       LGND_Constants.productRtId_TrollingMotor
     };
-    Map<String, List<OnlineOptionalProduct>> result = new Map<String, List<OnlineOptionalProduct>>();
+    Map<String, List<Online_Product.Option>> result = new Map<String, List<Online_Product.Option>>();
     for( Product_Option__c opt : options )
     {
       Product2 prod = this.allProductsMap.get( opt.From_Product__c );
       PricebookEntry pbe = this.pricebookEntryMap.get( opt.From_Product__c );
       if( opt.To_Product__c == this.id && prod.Family == 'Premium Package' )
       {
-        this.premiumPackage = new OnlinePremiumPackage( prod, pbe );
+        this.premiumPackage = new Online_Product.PremiumPackage( prod, pbe );
         if( this.marketingContentMap.containsKey( prod.Id ) )
           this.premiumPackage.addMarketingContent( this.marketingContentMap.get( prod.Id ) );
       }
       else
       {
-        OnlineOptionalProduct oop = new OnlineOptionalProduct(prod, opt, pbe);
-        if( this.optionOwnerMap.containsKey( oop.id ) )
-        {
-          oop.optionalProducts = buildOptions( this.optionOwnerMap.get( oop.id ) );
-        }
-
-        if( this.marketingContentMap.containsKey( prod.Id ) )
-          oop.addMarketingContent( this.marketingContentMap.get( prod.Id ) );
-        if( this.marketingContentMap.containsKey( opt.Id ) )
-          oop.addMarketingContent( this.marketingContentMap.get( opt.Id ) );
-
-        if( this.productPartMap.containsKey( prod.Id ) )
-        {
-          oop.addKitContents( this.productPartMap.get( prod.Id ) );
-        }
-
-        if( this.productFee_Map.containsKey( prod.Id ) )
-        {
-          oop.addProvincialFees( this.productFee_Map.get( prod.Id ) );
-        }
+        Online_Product.Option oop = new Online_Product.Option(prod, opt, pbe);
+        populate( oop );
 
         String label;
         if( prodRts.contains( prod.RecordType.Id ) )
@@ -389,194 +295,58 @@ public without sharing class OnlineBoat
 
         label = LGND_Utilities.toCamelCase( label );
         if (!result.containsKey(label))
-          result.put(label, new List<OnlineOptionalProduct>());
+          result.put(label, new List<Online_Product.Option>());
         result.get(label).add( oop );
       }
     }
     return result;
   }
 
-  public virtual class OnlineProduct
+  private void populate( Online_Product op)
   {
-    @AuraEnabled public String id;
-    @AuraEnabled public String name;
-    @AuraEnabled public String details;
-    @AuraEnabled public Decimal retailPrice;
-    @AuraEnabled public String pricebookEntryId;
-    @AuraEnabled public String imageURL;
-    @AuraEnabled public Map<String, List<OnlineOptionalProduct>> optionalProducts;
-    @AuraEnabled public List<OnlineKitContent> kitContents;
-    @AuraEnabled public List<OnlineMarketingContent> marketingContent;
-    @AuraEnabled public Map<String, List<OnlineProvincialFee>> additionalFees;
-
-    public OnlineProduct( Product2 prod )
+    if( this.optionOwnerMap.containsKey( op.id ) )
     {
-      this.id = prod.Id;
-      this.name = prod.Name;
-      this.imageURL = prod.Default_Gallery_Image_Original__c;
-      this.optionalProducts = new Map<String, List<OnlineOptionalProduct>>();
-      this.marketingContent = new List<OnlineMarketingContent>();
-      this.additionalFees = new Map<String, List<OnlineProvincialFee>>();
+      op.optionalProducts = buildOptions( this.optionOwnerMap.get( op.id ) );
     }
 
-    public OnlineProduct( Product2 prod, PricebookEntry pbe )
+    if( this.marketingContentMap.containsKey( op.id ) )
     {
-      this.id = prod.Id;
-      this.name = prod.Name;
-      this.imageURL = prod.Default_Gallery_Image_Original__c;
-      this.optionalProducts = new Map<String, List<OnlineOptionalProduct>>();
-      this.pricebookEntryId = pbe.Id;
-      this.retailPrice = pbe.UnitPrice;
-      this.marketingContent = new List<OnlineMarketingContent>();
-      this.additionalFees = new Map<String, List<OnlineProvincialFee>>();
+      op.addMarketingContent( this.marketingContentMap.get( op.id ) );
     }
 
-    public void addMarketingContent( List<Marketing_Content__c> marketingContent )
+    if( this.product_optionMap.containsKey( op.id ) )
     {
-      for( Marketing_Content__c mc : marketingContent )
+      Product_Option__c opt = this.product_optionMap.get( op.id );
+      if( this.marketingContentMap.containsKey( opt.Id ) )
       {
-        this.marketingContent.add( new OnlineMarketingContent( mc ) );
+        op.addMarketingContent( this.marketingContentMap.get( opt.Id ) );
       }
     }
 
-    public void addKitContents( List<AcctSeed__Product_Part__c> productParts )
+    if( this.productFee_Map.containsKey( op.id ) )
     {
-      if( this.kitContents == null )
-        this.kitContents = new List<OnlineKitContent>();
-      for( AcctSeed__Product_Part__c pp : productParts )
+      for( Product_Fee_Amount__c pfa : this.productFee_Map.get( op.id ) )
       {
-        this.kitContents.add( new OnlineKitContent( pp ) );
+        Product2 prod = this.allProductsMap.get( pfa.Fee_Product__c );
+        PricebookEntry pbe = this.pricebookEntryMap.containsKey( pfa.Fee_Product__c ) ?
+          this.pricebookEntryMap.get( pfa.Fee_Product__c ) : null;
+        op.addAdditionalFee( prod, pbe, pfa );
       }
     }
 
-    public void addProvincialFees( List<Product_Fee_Amount__c> feeAmounts )
+    if( this.productPartMap.containsKey( op.id ) )
     {
-      for( Product_Fee_Amount__c pfa : feeAmounts )
+      for( AcctSeed__Product_Part__c pp : this.productPartMap.get( op.id ) )
       {
-        if( pfa.Province__c != null && !this.additionalFees.containsKey( pfa.Province__c ) )
-          this.additionalFees.put( pfa.Province__c, new List<OnlineProvincialFee>() );
-        this.additionalFees.get( pfa.Province__c ).add( new OnlineProvincialFee( pfa ) );
+        Product2 prod = this.allProductsMap.get( pp.AcctSeed__Product_Part__c );
+        PricebookEntry pbe = this.pricebookEntryMap.containsKey( pp.AcctSeed__Product_Part__c ) ?
+          this.pricebookEntryMap.get( pp.AcctSeed__Product_Part__c ) : null;
+        op.addKitComponent( prod, pbe, pp );
       }
     }
+
   }
 
-  public virtual class OnlineStandardProduct extends OnlineProduct
-  {
-    public OnlineStandardProduct( Product2 prod, PricebookEntry pbe )
-    {
-      super( prod, pbe );
-      this.retailPrice = 0.00;
-    }
-  }
-
-  public virtual class OnlineProductUpgrade extends OnlineProduct
-  {
-    @AuraEnabled public Decimal RetailUpgradeCost;
-    @AuraEnabled public Decimal WeeklyUpgradeCost;
-
-    public OnlineProductUpgrade( Product2 prod, Product_Upgrade__c upgrade, Decimal boatPrice )
-    {
-      super( prod );
-      this.RetailUpgradeCost = upgrade.Product_Upgrade_Costs__r[0].Cost__c;
-      this.WeeklyUpgradeCost = calcWeeklyCost( boatPrice );
-    }
-
-    private Decimal calcWeeklyCost( Decimal boatPrice )
-    {
-      /* calculate using this.RetailUpgradeCost and ParentRetailPrice */
-      if( this.RetailUpgradeCost != null )
-      {
-        PaymentCalculator pc = new PaymentCalculator( this.RetailUpgradeCost + boatPrice );
-        return pc.calculateWeeklyPayment( this.RetailUpgradeCost );
-      }
-      return null;
-    }
-  }
-
-  public virtual class OnlineOptionalProduct extends OnlineProduct
-  {
-    @AuraEnabled public Decimal standard;
-    @AuraEnabled public Decimal maximum;
-
-    public OnlineOptionalProduct( Product2 prod, Product_Option__c opt, PricebookEntry pbe )
-    {
-      super( prod, pbe );
-      this.standard = opt.Standard__c;
-      this.maximum = opt.Maximum__c;
-    }
-  }
-
-  public virtual class OnlinePremiumPackage extends OnlineProduct
-  {
-    @AuraEnabled public  Decimal value;
-    @AuraEnabled public Map<String, List<String>> contents;
-
-    public OnlinePremiumPackage( Product2 prod, PricebookEntry pbe )
-    {
-      super( prod, pbe );
-      this.retailPrice = 0;
-      this.value = pbe.UnitPrice;
-      this.contents = new Map<String, List<String>>();
-      processContents();
-    }
-
-    private void processContents()
-    {
-      for( Product_Feature_Map__c pfmap : [
-        SELECT
-          Id,
-          Feature_Id__r.description__c,
-          Feature_Id__r.description_fr__c,
-          Feature_Id__r.Category__c
-        FROM Product_Feature_Map__c
-        WHERE Product_Id__c = :this.id ] )
-      {
-        if( !this.contents.containsKey( pfmap.Feature_Id__r.Category__c) )
-          this.contents.put(  pfmap.Feature_Id__r.Category__c, new List<String>() );
-        this.contents.get(  pfmap.Feature_Id__r.Category__c ).add( pfmap.Feature_Id__r.description__c );
-      }
-    }
-  }
-
-  public virtual class OnlineMarketingContent
-  {
-    @AuraEnabled public String label;
-    @AuraEnabled public String content;
-
-    public OnlineMarketingContent( Marketing_Content__c mc )
-    {
-      this.label = mc.Label__c;
-      this.content = mc.Content__c;
-    }
-  }
-
-  public virtual class OnlineKitContent
-  {
-    @AuraEnabled public String name;
-    @AuraEnabled public Decimal quantity;
-
-    public OnlineKitContent( AcctSeed__Product_Part__c pp )
-    {
-      this.name = pp.AcctSeed__Product_Part__r.Name;
-      this.quantity = pp.AcctSeed__Quantity__c;
-    }
-  }
-
-  public virtual class OnlineProvincialFee
-  {
-    @AuraEnabled public String province;
-    @AuraEnabled public String feeProductId;
-    @AuraEnabled public String name;
-    @AuraEnabled public Decimal amount;
-
-    public OnlineProvincialFee( Product_Fee_Amount__c feeAmount )
-    {
-      this.province = feeAmount.Province__c;
-      this.feeProductId = feeAmount.Fee_Product__c;
-      this.name = feeAmount.Fee_Product__r.Name;
-      this.amount = feeAmount.Amount__c;
-    }
-  }
 }
 
 
