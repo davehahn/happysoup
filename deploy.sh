@@ -53,8 +53,11 @@ echoOut 'Running ant doMetadataClean'
 ant -buildfile build/build.xml doMetadataClean
 echoOut 'Deploying static resources'
 sfdx heber:staticresources:deploy -u $1
-echoOut 'modifying .forceignore to not deploy staticresources'
+echoOut 'make a copy of .forceignore'
+cp .forceignore .forceignore.orig
+echoOut 'modifying .forceignore to not deploy staticresources or experiences'
 echo -e "\nforce-app/main/default/staticresources" >> .forceignore
+echo -e "\nforce-app/main/default/experiences" >> .forceignore
 echo 'Deploying the remaining metadata'
 
 if [ "$CHECKONLY" = true ]
@@ -63,4 +66,9 @@ then
   sfdx force:source:deploy --testlevel $TESTLEVEL --checkonly --targetusername $1 -p force-app/main/default -g -w 120
 else
   sfdx force:source:deploy --testlevel $TESTLEVEL --targetusername $1 -p force-app/main/default -g -w 120
+  echoOut 're-enable original .forceignore'
+  rm -f .forceignore
+  mv .forceignore.orig .forceignore
+  echoOut 'Deploying ExperienceBundles'
+  sfdx force:source:deploy --testlevel NoTestRun --targetusername $1 -p force-app/main/default/experiences -g -w 120
 fi
