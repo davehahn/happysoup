@@ -1691,7 +1691,7 @@
             <name>Emails_Customer_the_What_to_Expect_Cash_Email_Template</name>
             <type>Alert</type>
         </actions>
-        <active>true</active>
+        <active>false</active>
         <criteriaItems>
             <field>AcctSeed__Project__c.RecordTypeId</field>
             <operation>equals</operation>
@@ -1711,7 +1711,7 @@
             <name>Emails_Customer_the_What_to_Expect_Finance_Email_Template</name>
             <type>Alert</type>
         </actions>
-        <active>true</active>
+        <active>false</active>
         <criteriaItems>
             <field>AcctSeed__Project__c.RecordTypeId</field>
             <operation>equals</operation>
@@ -4986,6 +4986,20 @@ Thank you, you&#39;re awesome!</description>
         <description>This dealer created a parts request.  Please have back parts pack it up.
 
 Please note, Luc and Elvis also get this notification.</description>
+        <dueDateOffset>0</dueDateOffset>
+        <notifyAssignee>false</notifyAssignee>
+        <priority>Normal</priority>
+        <protected>false</protected>
+        <status>Open</status>
+        <subject>This Dealer Created a Parts Request</subject>
+    </tasks>
+    <tasks>
+        <fullName>This_Dealer_Created_a_Parts_Request_RF</fullName>
+        <assignedTo>rfraser@legendboats.com</assignedTo>
+        <assignedToType>user</assignedToType>
+        <description>This dealer created a parts request.  Please have back parts pack it up.
+
+Please note, Luc and Elvis and Mel also get this notification.</description>
         <dueDateOffset>0</dueDateOffset>
         <notifyAssignee>false</notifyAssignee>
         <priority>Normal</priority>
