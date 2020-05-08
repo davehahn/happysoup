@@ -19,6 +19,7 @@ public without sharing class OnlineBoat
   @AuraEnabled public List<OnlineProductUpgrade> trollingMotorUpgrades;
   @AuraEnabled public OnlinePremiumPackage premiumPackage;
   @AuraEnabled public List<OnlineMarketingContent> marketingContent;
+  @AuraEnabled public Map<String, List<OnlineProvincialFee>> additionalFees;
 
   private Product2 boatProduct;
   private Set<Id> allProductIds;
@@ -29,6 +30,7 @@ public without sharing class OnlineBoat
   private Set<Id> optionalUpgradeIds;
   private Map<Id, List<Marketing_Content__c>> marketingContentMap;
   private Map<Id, List<AcctSeed__Product_Part__c>> productPartMap;
+  private Map<Id, List<Product_Fee_Amount__c>> productFee_Map;
   private Map<Id, Product_Option__c> product_optionMap; // optionalProductId => Option
   private Map<Id, List<Product_Option__c>> optionOwnerMap;// parentProductId => List<Options>
   private Map<Id, List<Product_Upgrade__c>> product_upgradeMap;// standardId => List<Upgrades>
@@ -41,6 +43,7 @@ public without sharing class OnlineBoat
     this.product_optionMap = new Map<Id, Product_Option__c>();
     this.optionOwnerMap = new Map<Id, List<Product_Option__c>>();
     this.product_upgradeMap = new Map<Id, List<Product_Upgrade__c>>();
+    this.productFee_Map = new Map<Id, List<Product_Fee_Amount__c>>();
     this.optionalUpgradeIds = new Set<Id>();
     this.id = boatId;
     init();
@@ -61,6 +64,7 @@ public without sharing class OnlineBoat
     this.allProductIds.addAll( this.standardProductIds );
     this.optionalProducts = new Map<String, List<OnlineOptionalProduct>>();
     this.marketingContent = new List<OnlineMarketingContent>();
+    this.additionalFees = new Map<String, List<OnlineProvincialFee>>();
     this.productPartMap = new Map<Id, List<AcctSeed__Product_Part__c>>();
 
     this.motorUpgrades = new List<OnlineProductUpgrade>();
@@ -73,8 +77,8 @@ public without sharing class OnlineBoat
     fetchAllProductDetails();
     fetchAllMarketingContent();
     fetchAllProductParts();
+    fetchAllFees();
     fetchAllPrices();
-    buildUpgrades();
     setBoatDetails();
   }
 
@@ -94,6 +98,8 @@ public without sharing class OnlineBoat
     this.standardTrailer = setStandardProduct( this.boatProduct.Standard_Trailer__c );
     this.standardTrollingMotor = setStandardProduct( this.boatProduct.Standard_Trolling_Motor__c );
 
+    buildUpgrades();
+
     if( this.optionOwnerMap.containsKey( this.id ) )
     {
       this.optionalProducts = buildOptions( this.optionOwnerMap.get( this.id ) );
@@ -106,6 +112,17 @@ public without sharing class OnlineBoat
         this.marketingContent.add( new OnlineMarketingContent( mc ) );
       }
     }
+
+    if( this.productFee_Map.containsKey( this.id ) )
+    {
+      for( Product_Fee_Amount__c pfa : this.productFee_Map.get( this.id ) )
+      {
+        if( !this.additionalFees.containsKey( pfa.Province__c ) && pfa.Province__c != null )
+          this.additionalFees.put( pfa.Province__c, new List<OnlineProvincialFee>() );
+        this.additionalFees.get( pfa.Province__c ).add( new OnlineProvincialFee( pfa ) );
+      }
+    }
+
   }
 
   private OnlineStandardProduct setStandardProduct( Id standardId )
@@ -135,6 +152,10 @@ public without sharing class OnlineBoat
         {
           result.addMarketingContent( this.marketingContentMap.get( opt.Id ) );
         }
+      }
+      if( this.productFee_Map.containsKey( standardId ) )
+      {
+        result.addProvincialFees( this.productFee_Map.get( standardId ) );
       }
       return result;
     }
@@ -246,6 +267,24 @@ public without sharing class OnlineBoat
     }
   }
 
+  private void fetchAllFees()
+  {
+    Id retailPbId = LGND_Constants.retailPricebookId;
+    Map<Id, Id> fee_parent_map = new Map<Id, Id>();
+    for( Product_Fee_Map__c pfm : ProductFeeMap_Selector.allProductFeeMapsByParentProductId( this.allProductIds ) )
+    {
+
+      if( !this.productFee_Map.containsKey( pfm.Parent_Product__c ) )
+        this.productFee_Map.put( pfm.Parent_Product__c, new List<Product_Fee_Amount__c>() );
+      fee_parent_map.put( pfm.Fee_Product__c, pfm.Parent_Product__c );
+    }
+
+    for( Product_Fee_Amount__c pfa : [ SELECT Id, Province__c, Amount__c, Fee_Product__c, Fee_Product__r.Name FROM Product_Fee_Amount__c WHERE Fee_Product__c IN :fee_parent_map.keySet() AND Price_Book__c = :retailPbId ])
+    {
+      this.productFee_Map.get( fee_parent_map.get( pfa.Fee_Product__c ) ).add( pfa );
+    }
+  }
+
   private void fetchAllPrices()
   {
     this.pricebookEntryMap = new Map<Id, PricebookEntry>();
@@ -284,6 +323,10 @@ public without sharing class OnlineBoat
             {
               upgrade.addMarketingContent( this.marketingContentMap.get( opt.Id ) );
             }
+          }
+          if( this.productFee_Map.containsKey( upgrade.id ) )
+          {
+            upgrade.addProvincialFees( this.productFee_Map.get( upgrade.Id ) );
           }
           upgrades.add( upgrade );
         }
@@ -333,6 +376,11 @@ public without sharing class OnlineBoat
           oop.addKitContents( this.productPartMap.get( prod.Id ) );
         }
 
+        if( this.productFee_Map.containsKey( prod.Id ) )
+        {
+          oop.addProvincialFees( this.productFee_Map.get( prod.Id ) );
+        }
+
         String label;
         if( prodRts.contains( prod.RecordType.Id ) )
           label = prod.RecordType.Name;
@@ -359,6 +407,7 @@ public without sharing class OnlineBoat
     @AuraEnabled public Map<String, List<OnlineOptionalProduct>> optionalProducts;
     @AuraEnabled public List<OnlineKitContent> kitContents;
     @AuraEnabled public List<OnlineMarketingContent> marketingContent;
+    @AuraEnabled public Map<String, List<OnlineProvincialFee>> additionalFees;
 
     public OnlineProduct( Product2 prod )
     {
@@ -367,6 +416,7 @@ public without sharing class OnlineBoat
       this.imageURL = prod.Default_Gallery_Image_Original__c;
       this.optionalProducts = new Map<String, List<OnlineOptionalProduct>>();
       this.marketingContent = new List<OnlineMarketingContent>();
+      this.additionalFees = new Map<String, List<OnlineProvincialFee>>();
     }
 
     public OnlineProduct( Product2 prod, PricebookEntry pbe )
@@ -378,6 +428,7 @@ public without sharing class OnlineBoat
       this.pricebookEntryId = pbe.Id;
       this.retailPrice = pbe.UnitPrice;
       this.marketingContent = new List<OnlineMarketingContent>();
+      this.additionalFees = new Map<String, List<OnlineProvincialFee>>();
     }
 
     public void addMarketingContent( List<Marketing_Content__c> marketingContent )
@@ -395,6 +446,16 @@ public without sharing class OnlineBoat
       for( AcctSeed__Product_Part__c pp : productParts )
       {
         this.kitContents.add( new OnlineKitContent( pp ) );
+      }
+    }
+
+    public void addProvincialFees( List<Product_Fee_Amount__c> feeAmounts )
+    {
+      for( Product_Fee_Amount__c pfa : feeAmounts )
+      {
+        if( pfa.Province__c != null && !this.additionalFees.containsKey( pfa.Province__c ) )
+          this.additionalFees.put( pfa.Province__c, new List<OnlineProvincialFee>() );
+        this.additionalFees.get( pfa.Province__c ).add( new OnlineProvincialFee( pfa ) );
       }
     }
   }
@@ -498,6 +559,22 @@ public without sharing class OnlineBoat
     {
       this.name = pp.AcctSeed__Product_Part__r.Name;
       this.quantity = pp.AcctSeed__Quantity__c;
+    }
+  }
+
+  public virtual class OnlineProvincialFee
+  {
+    @AuraEnabled public String province;
+    @AuraEnabled public String feeProductId;
+    @AuraEnabled public String name;
+    @AuraEnabled public Decimal amount;
+
+    public OnlineProvincialFee( Product_Fee_Amount__c feeAmount )
+    {
+      this.province = feeAmount.Province__c;
+      this.feeProductId = feeAmount.Fee_Product__c;
+      this.name = feeAmount.Fee_Product__r.Name;
+      this.amount = feeAmount.Amount__c;
     }
   }
 }
