@@ -12,6 +12,13 @@
     height: 1px; width: 1px;
     margin: -1px; padding: 0; border: 0;
 }
+button{
+  background: none;
+  border: 0 none;
+}
+button:focus{
+  outline: none;
+}
 
 .lgnd-order-builder {
   position: absolute;
@@ -96,6 +103,47 @@
   background-color: #FFF;
   border-radius: 8px 0 0 8px;
 }
+.sidebar_logo{
+  width: 50%; margin: 2.5vw auto;
+}
+
+.sidebar_nav{
+  margin: 0 auto;
+  padding: 12.5;
+}
+.sidebar_nav::before{
+ 	content: ''; display: block;
+ 	width: 75%; height: 1px;
+ 	background: #ddd;
+ 	margin: 0 auto 1em;
+}
+.modal-nav-item{
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 1em 12.5%;
+}
+.modal-nav-title{
+  background: none; border: 0 none;
+}
+.modal-nav-title h3{
+  font-weight: 400;
+  font-size: 1.125em;
+	opacity: 0.5;
+	transition: all 0.2s;
+}
+.model-nav-title:focus{
+  outline: none;
+}
+.modal-nav-title:hover h3, .modal-nav-title:focus h3{
+  opacity: 0.85;
+}
+.modal-nav-item.modal-nav-item_selected{
+  border-right: 3px solid var(--legend-blue);
+}
+.modal-nav-item.modal-nav-item_selected .modal-nav-title h3, .modal-nav-item.modal-nav-item_selected .modal-nav-title:hover h3, .modal-nav-item.modal-nav-item_selected .modal-nav-title:focus h3{
+  opacity: 1;
+}
 
 .modal-content_main {
   font-size: 15px;
@@ -115,11 +163,15 @@
   overflow-y: auto;
   overflow-x: hidden;
   z-index: 1;
-  padding: 2.5%;
+  padding: 10%;
   transition: all 0.2s;
 }
 .modal-content_main .modal-page.modal-page_selected{
 	z-index: 2;
+}
+.modal-content_main .modal-page h4{
+  font-size: 1.5em;
+  font-weight: 600;
 }
 
 .modal-content_close {
@@ -136,8 +188,8 @@
 }
 
 .modal-content_close button i {
-  color: #000;
-  font-size: 25px;
+  color: rgb(51, 51, 51);
+  font-size: 20px;
 }
 
 .modal-container.open + div.config-header {
@@ -204,8 +256,15 @@
   list-style-type: none;
 }
 
-.config-nav-item {
+.config-nav-list li{
   flex-grow: 1;
+  min-width: 165px;
+	max-width: 225px;
+}
+
+.config-nav-item {
+  display: block;
+  width: 100%;
   text-align: center;
   cursor: pointer;
   color: #000;
@@ -213,8 +272,6 @@
   font-size: 14px;
   transition: opacity .15s ease-in-out;
   transform: translateZ(0);
-  min-width: 165px;
-  max-width: 225px;
   counter-increment: menuCounter;
 }
 

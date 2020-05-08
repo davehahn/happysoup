@@ -2,16 +2,22 @@
  * Created by Tim on 2020-04-24.
  */
 
-import { LightningElement } from 'lwc';
+import { LightningElement, wire, track } from 'lwc';
+import { NavigationMixin } from 'lightning/navigation';
 import { loadStyle, loadScript } from 'lightning/platformResourceLoader';
 import swiperJS from '@salesforce/resourceUrl/SwiperJS';
+import fetchBoats from '@salesforce/apex/OnlineBoatReservation_Controller.fetchBoats';
 
-export default class CustCommPublicSlider extends LightningElement {
+export default class CustCommPublicSlider extends NavigationMixin(LightningElement) {
+	//@wire( fetchBoats ) boats;
+	@track boats;
+	@track boatsErrors;
 	swipe;
   swipeInit = false;
-  activeTitle = 'X18';
-  activeLink = 'order-builder?c__recordId=recordIdTwo';
+  activeTitle;
+  activeLink;
   config = {
+    init: false,
     slidesPerView: 1,
 		initialSlide: 1,
 		centeredSlides: true,
@@ -29,23 +35,6 @@ export default class CustCommPublicSlider extends LightningElement {
 			clickable: true,
 		},
 	};
-	slides = [
-	  {
-	    title: '18 XTR',
-	    id: 'order-builder?c__recordId=recordIdOne',
-	    image: 'https://legend-marketing.s3.amazonaws.com/2020/misc/x18.png'
-   },
-   {
-			title: 'X18',
-			id: 'order-builder?c__recordId=recordIdTwo',
-			image: 'https://legend-marketing.s3.amazonaws.com/2020/misc/x18.png'
-		},
-		{
-			title: 'F19',
-			id: 'order-builder?c__recordId=recordIdThree',
-			image: 'https://legend-marketing.s3.amazonaws.com/2020/misc/x18.png'
-	 },
- ];
 
 	renderedCallback()
 	{
@@ -58,9 +47,42 @@ export default class CustCommPublicSlider extends LightningElement {
      	loadScript( this, swiperJS + '/swiper.min.js'),
 			loadStyle( this, swiperJS + '/swiper.min.css')
    ]).then(()=>{
-			this.renderGlide();
+     	fetchBoats()
+     		.then(result => {
+     		  console.log('result:', result);
+     		  this.boats = result;
+     		  this.renderGlide();
+       	}).catch(error => {
+       	  console.log('error: ' + error );
+					this.boatsErrors = error;
+       	});
 		}).catch((error) => {
 				this.error = error;
+		});
+	}
+
+	navToBoat( event )
+	{
+		event.preventDefault();
+
+		let page = 'order-builder',
+				params = {
+					c__recordId: event.target.dataset.recordId
+				};
+
+		this.navigateToCommunityPage( page, params );
+	}
+
+	navigateToCommunityPage( pageName, params )
+	{
+		console.log( pageName );
+		console.log( params );
+		this[NavigationMixin.Navigate]({
+				type: 'comm__namedPage',
+				attributes: {
+						pageName: pageName
+				},
+				state: params
 		});
 	}
 
@@ -73,11 +95,12 @@ export default class CustCommPublicSlider extends LightningElement {
 		swipeWrapper.className = 'swiper-wrapper';
 		this.template.querySelector('.swiper-container').appendChild(swipeWrapper);
 
-		const slides = this.slides;
+		const slides = this.boats;
+		console.log('slides:', slides);
 		slides.forEach((slide) => {
 			const newSlide = document.createElement('div');
 			newSlide.className = 'swiper-slide';
-			newSlide.setAttribute('data-title', slide.title);
+			newSlide.setAttribute('data-title', slide.name);
 			newSlide.setAttribute('data-prodID', slide.id);
 			this.template.querySelector('.swiper-wrapper').appendChild(newSlide);
 
@@ -86,7 +109,7 @@ export default class CustCommPublicSlider extends LightningElement {
 			boatWrapper.setAttribute('data-prodID', slide.id);
 			this.template.querySelector('div[data-prodID="' + slide.id + '"]').appendChild(boatWrapper);
 			const newImage = document.createElement('img');
-			newImage.setAttribute('src', slide.image);
+			newImage.setAttribute('src', slide.imageURL);
 			this.template.querySelector('div.boat[data-prodID="' + slide.id + '"]').appendChild(newImage);
   	})
 
@@ -96,11 +119,14 @@ export default class CustCommPublicSlider extends LightningElement {
 
 		this.swipe = new Swiper(swiper, this.config);
 		//this.swipe.slideTo(1);
+		this.swipe.on('init', () => {
+			let currSlide = this.swipe.realIndex;
+			this.activeTitle = this.swipe.slides[currSlide].getAttribute('data-title');
+			this.activeLink = this.swipe.slides[currSlide].getAttribute('data-prodID');
+		});
+		this.swipe.init();
 		this.swipe.on('transitionEnd', () => {
 		  let currSlide = this.swipe.realIndex;
-		  console.log('swipe transition ended');
-			console.log(currSlide);
-			console.log(this.swipe.slides[currSlide].getAttribute('data-title'));
 		  this.activeTitle = this.swipe.slides[currSlide].getAttribute('data-title');
 			this.activeLink = this.swipe.slides[currSlide].getAttribute('data-prodID');
   	});

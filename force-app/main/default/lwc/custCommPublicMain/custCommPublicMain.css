@@ -5,6 +5,13 @@
 :host {
   overflow-x: hidden;
 }
+button{
+  background: none;
+  border: 0 none;
+}
+button:focus{
+  outline: none;
+}
 
 .overlay {
   position: fixed;
@@ -43,7 +50,7 @@
   transition: 0.5s;
 }
 
-.branding {
+.branding, .right {
   max-width: 200px;
   align-items: center;
   flex: 1;
@@ -51,7 +58,7 @@
 
 .branding .main-logo {
   cursor: pointer;
-  margin-left: 15px;
+  margin-left: 1em;
 }
 
 .config-nav {
@@ -103,6 +110,11 @@
   margin: 0;
 }
 
+.right{
+  text-align: right;
+  padding-right: 1em;
+}
+
 .language-select {
   cursor: pointer;
   display: flex;
@@ -136,7 +148,7 @@
   text-align:right;
 }
 
-.slide-menu a {
+.slide-menu button {
   line-height: 3rem;
   color: #D6D6D6;
   display:block;
@@ -151,12 +163,12 @@
   display:none;
 }
 
-.slide-menu a:hover {
+.slide-menu button:hover, .slide-menu button:focus {
   text-decoration: none;
   background:  #5A5A5A;
 }
 
-.slide-menu a:last-child {
+.slide-menu button:last-child {
   border-bottom:1px solid #5A5A5A;
 }
 

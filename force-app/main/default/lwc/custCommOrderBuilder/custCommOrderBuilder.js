@@ -16,6 +16,7 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
   origin;
   recordId;
   logo = LOGO;
+  vertLogo = VLOGO;
   orderValid=true;
   pages = [
     'performance',
@@ -37,7 +38,7 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
 			class: 'modal-nav-item'
 		},
 		{
-			title: 'Deliver Timing',
+			title: 'Delivery Timing',
 			label: 'delivery',
 			class: 'modal-nav-item'
 		},

@@ -15,11 +15,13 @@
       <div class="modal-content">
         <div class="modal-content_body">
           <div class="modal-content_sidebar">
-
+            <div class="sidebar_logo">
+              <img src={vertLogo}>
+            </div>
             <ul class="sidebar_nav">
               <template for:each={modalPages} for:item="modalPage">
-                <li key={modalPage.label} class={modalPage.class} onclick={handleModalNav} data-modal-nav-name={modalPage.label}>
-                  <h3 class="modal-nav-title">{modalPage.title}</h3>
+                <li key={modalPage.label}>
+                  <button class={modalPage.class} onclick={handleModalNav} data-modal-nav-name={modalPage.label}><h3 class="modal-nav-title">{modalPage.title}</h3></button>
                 </li>
               </template>
             </ul>
@@ -55,8 +57,8 @@
       <div class="config-nav">
         <ol class="config-nav-list">
           <template for:each={processPages} for:item="page">
-            <li key={page.label} class={page.class} onclick={handleNav} data-nav-name={page.label}>
-              <h2 class="config-nav-title">{page.label}</h2>
+            <li key={page.label}>
+              <button class={page.class} onclick={handleNav} data-nav-name={page.label}><h2 class="config-nav-title">{page.label}</h2></button>
             </li>
           </template>
         </ol>

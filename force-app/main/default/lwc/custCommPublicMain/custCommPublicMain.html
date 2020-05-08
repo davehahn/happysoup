@@ -17,9 +17,9 @@
 
     <div class="config-nav">
       <ul class="config-nav-list">
-        <template for:each={boatMap} for:item="boat">
-          <li key={boat.recordId} class="config-nav-item">
-            <a class="config-nav-title" data-record-id={boat.recordId} onclick={navToBoat}>{boat.name}</a>
+        <template for:each={boats.data} for:item="boat">
+          <li key={boat.id} class="config-nav-item">
+            <button class="config-nav-title" data-record-id={boat.id} onclick={navToBoat}>{boat.name}</button>
           </li>
         </template>
       </ul>
@@ -43,7 +43,7 @@
                              onclick={toggleMenu}></lightning-button-icon>
     </div>
     <template for:each={boats.data} for:item="boat">
-      <a key={boat.id} data-record-id={boat.id} onclick={navToBoat}>{boat.name}</a>
+      <button key={boat.id} data-record-id={boat.id} onclick={navToBoat}>{boat.name}</button>
     </template>
 <!--    <a class="sign-in" onclick={handleSignIn}>Sign In</a>-->
   </div>
