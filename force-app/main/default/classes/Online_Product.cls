@@ -182,12 +182,5 @@ public virtual class Online_Product
       this.pricebookEntryId = pbe == null ? null : pbe.Id;
     }
 
-//    public ProvincialFee( Product_Fee_Amount__c feeAmount )
-//    {
-//      this.province = feeAmount.Province__c;
-//      this.feeProductId = feeAmount.Fee_Product__c;
-//      this.name = feeAmount.Fee_Product__r.Name;
-//      this.amount = feeAmount.Amount__c;
-//    }
   }
 }
