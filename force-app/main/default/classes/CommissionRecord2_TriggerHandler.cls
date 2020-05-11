@@ -116,6 +116,7 @@ public without sharing class CommissionRecord2_TriggerHandler extends TriggerHan
   {
     if( canUpdateStatus(listNew, oldMap) )
     {
+      Set<Id> setId = new Set<Id>();
       for (CommissionRecord2__c record : listNew)
       {
         CommissionRecord2__c oRecord = oldMap.get(record.Id);
@@ -129,6 +130,7 @@ public without sharing class CommissionRecord2_TriggerHandler extends TriggerHan
           {
             record.Approved_By__c = UserInfo.getUserId();
             record.Approved_On__c = DateTime.now();
+            setId.add(record.Id);
           }
           if(oRecord.Status__c == 'Reviewed' && record.Status__c != 'Approved' )
           {
@@ -149,9 +151,11 @@ public without sharing class CommissionRecord2_TriggerHandler extends TriggerHan
   {
     Set<Id> resolved = new Set<Id>();
     Set<Id> approved = new Set<Id>();
+    Set<Id> disApproved = new Set<Id>();
     Set<Id> unApproved = new Set<Id>();
     Map<Id, Id> wasReviewed = new Map<Id, Id>();
     Map<Id, Id> wasApproved = new Map<Id, Id>();
+    Set<Id> setId = new Set<Id>();
     for( CommissionRecord2__c record : listNew )
     {
       CommissionRecord2__c oldRecord = oldMap.get( record.Id );
@@ -169,6 +173,11 @@ public without sharing class CommissionRecord2_TriggerHandler extends TriggerHan
           oldRecord.Status__c != 'Disputed' )
         {
           approved.add( record.Id );
+        }
+        if( record.Status__c != 'Approved' &&
+            oldRecord.Status__c == 'Approved' )
+        {
+          disApproved.add( record.Id );
         }
         if( record.Status__c == 'New' )
         {
@@ -192,6 +201,11 @@ public without sharing class CommissionRecord2_TriggerHandler extends TriggerHan
     if( approved.size() > 0 )
     {
       CommissionRecord2_Service.postApprovedMessage( approved );
+      JournalEntry_Service.takeExpenseFuture(approved);
+    }
+    if( disApproved.size() > 0 )
+    {
+      JournalEntry_Service.unTakeExpenseFuture(disApproved);
     }
   }
 
