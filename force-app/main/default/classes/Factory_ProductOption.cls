@@ -39,4 +39,20 @@ public with sharing class Factory_ProductOption {
     );
   }
 
+  public static Product_Option__c buildProductOption(
+    Id parentId,
+    Id childId,
+    Integer standard,
+    Integer maximum,
+    Boolean availableOnline)
+  {
+    return new Product_Option__c(
+      To_Product__c = parentId,
+      From_Product__c = childId,
+      Maximum__c = maximum,
+      Standard__c = standard,
+      Available_Online__c = availableOnline
+    );
+  }
+
 }

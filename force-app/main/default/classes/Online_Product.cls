@@ -58,8 +58,6 @@ public virtual class Online_Product
 
   public void addAdditionalFee( Product2 prod, PricebookEntry pbe, Product_Fee_Amount__c pfa )
   {
-    if( this.additionalFees == null )
-      this.additionalFees = new Map<String, List<ProvincialFee>>();
     if( pfa.Province__c != null && !this.additionalFees.containsKey( pfa.Province__c ) )
       this.additionalFees.put( pfa.Province__c, new List<ProvincialFee>() );
     this.additionalFees.get( pfa.Province__c ).add( new ProvincialFee( prod, pbe, pfa ) );
@@ -182,12 +180,5 @@ public virtual class Online_Product
       this.pricebookEntryId = pbe == null ? null : pbe.Id;
     }
 
-//    public ProvincialFee( Product_Fee_Amount__c feeAmount )
-//    {
-//      this.province = feeAmount.Province__c;
-//      this.feeProductId = feeAmount.Fee_Product__c;
-//      this.name = feeAmount.Fee_Product__r.Name;
-//      this.amount = feeAmount.Amount__c;
-//    }
   }
 }

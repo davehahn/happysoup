@@ -54,6 +54,7 @@ public class Factory_TestData {
     {
       result.add( new Product2(
         Name = uni,
+        RecordTypeId = LGND_Constants.productRtId_Fees,
         ProductCode = uni,
         Unique_Product_Code__c = uni,
         isActive = true,

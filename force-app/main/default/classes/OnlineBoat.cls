@@ -116,28 +116,35 @@ public virtual class OnlineBoat extends Online_Product
         this.optionOwnerMap.get(opt.To_Product__c).add(opt);
       }
     }
-    List<Product_Option__c> childOptions =
-      ProductOption_Selector.allChildOptions_AvailableOnline( parentIds );
-    if( childOptions.size() > 0 )
-      buildOptionMap( childOptions );
+    if( parentIds.size() > 0 )
+    {
+      List<Product_Option__c> childOptions =
+        ProductOption_Selector.allChildOptions_AvailableOnline(parentIds);
+      if (childOptions.size() > 0)
+        buildOptionMap(childOptions);
+    }
   }
 
   private void buildUpgradeMap()
   {
     Set<Id> ids = new Set<Id>();
-    for( Product_Upgrade__c pu :
-         ProductUpgrade_Selector.allUpgradesByStandardIdsWithRetailCost( this.standardProductIds, this.optionalUpgradeIds ) )
+    if( this.standardProductIds.size() > 0 && this.optionalUpgradeIds.size() > 0 )
     {
-      if( pu.Product_Upgrade_Costs__r.size() > 0 )
+      for (Product_Upgrade__c pu :
+        ProductUpgrade_Selector.allUpgradesByStandardIdsWithRetailCost(this.standardProductIds, this.optionalUpgradeIds))
       {
-        if( !this.product_upgradeMap.containsKey(pu.From_Product__c) )
-          this.product_upgradeMap.put( pu.From_Product__c, new List<Product_Upgrade__c>() );
-        this.product_upgradeMap.get( pu.From_Product__c ).add( pu );
-        this.allProductIds.add( pu.To_Product__c );
-        ids.add( pu.To_Product__c );
+        if (pu.Product_Upgrade_Costs__r.size() > 0)
+        {
+          if (!this.product_upgradeMap.containsKey(pu.From_Product__c))
+            this.product_upgradeMap.put(pu.From_Product__c, new List<Product_Upgrade__c>());
+          this.product_upgradeMap.get(pu.From_Product__c).add(pu);
+          this.allProductIds.add(pu.To_Product__c);
+          ids.add(pu.To_Product__c);
+        }
       }
+      if (ids.size() > 0)
+        buildOptionMap(ProductOption_Selector.allChildOptions_AvailableOnline(ids));
     }
-    buildOptionMap( ProductOption_Selector.allChildOptions_AvailableOnline( ids ) );
   }
 
   private void getOptionsForStandardProductsAndBoatOptions()

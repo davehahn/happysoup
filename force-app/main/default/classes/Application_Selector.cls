@@ -80,7 +80,7 @@ public virtual class Application_Selector
     }
   }
 
-  private String buildQueryString()
+  public String buildQueryString()
   {
     String queryString = 'SELECT ';
     for( String field : this.fields )
@@ -116,8 +116,8 @@ public virtual class Application_Selector
 
   public static String whereInClauseBuilder( String field, Set<String> matchers )
   {
-    if( matchers == null || matchers.size() == 0 )
-      return null;
+    if( matchers == null || matchers.size() == 0  )
+      throw new SelectorException( 'WhereInClauseBuilder called with no matchers');
 
     if( matchers != null && matchers.size() == 1 )
       return field + ' = \'' + new List<String>(matchers)[0] + '\'';
