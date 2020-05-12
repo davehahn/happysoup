@@ -51,8 +51,11 @@ public with sharing class Product_Selector extends Application_Selector
     Product_Selector selector = new Product_Selector();
     selector
       .addFields( boatFields )
-      .addWhere('Id = \'' + recordId + '\'');
+      .addWhere('Id = \'' + recordId + '\'')
+      .addWhere( 'Available_online__c = true', 'AND');
     List<Sobject> results = selector.query();
-    return (Product2)results[0];
+    if( results.size() > 0 )
+      return (Product2)results[0];
+    return null;
   }
 }

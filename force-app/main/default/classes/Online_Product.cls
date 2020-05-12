@@ -58,8 +58,6 @@ public virtual class Online_Product
 
   public void addAdditionalFee( Product2 prod, PricebookEntry pbe, Product_Fee_Amount__c pfa )
   {
-    if( this.additionalFees == null )
-      this.additionalFees = new Map<String, List<ProvincialFee>>();
     if( pfa.Province__c != null && !this.additionalFees.containsKey( pfa.Province__c ) )
       this.additionalFees.put( pfa.Province__c, new List<ProvincialFee>() );
     this.additionalFees.get( pfa.Province__c ).add( new ProvincialFee( prod, pbe, pfa ) );
