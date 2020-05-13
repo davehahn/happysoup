@@ -9,6 +9,7 @@ import { loadStyle } from 'lightning/platformResourceLoader';
 import sldsIconFont from '@salesforce/resourceUrl/sldsIconFont';
 import gothamFonts from '@salesforce/resourceUrl/GothamHTF';
 import LOGO from '@salesforce/resourceUrl/LegendLogo';
+import VLOGO from '@salesforce/resourceUrl/LegendLogoVertical';
 import fetchBoat from '@salesforce/apex/OnlineBoatReservation_Controller.fetchBoat';
 
 export default class CustCommOrderBuilder extends NavigationMixin(LightningElement) {
@@ -18,6 +19,7 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
   logo = LOGO;
   vertLogo = VLOGO;
   orderValid=true;
+  isMobile = false;
   pages = [
     'performance',
     'trailering',
@@ -96,11 +98,12 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
     .then(()=>{});
 
     window.addEventListener('resize', (event) => {
-          console.log('resizing window bitches');
-          console.log( event );
-          console.log( event.currentTarget.outerWidth );
-        });
-
+			console.log('resizing window bitches');
+			console.log( event );
+			console.log( event.currentTarget.outerWidth );
+			this.isMobile = (event.currentTarget.outerWidth < 1024) ? true : false;
+		});
+		this.isMobile = (window.outerWidth < 1024) ? true : false;
   }
 
   get processPages()
