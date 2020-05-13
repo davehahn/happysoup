@@ -80,14 +80,11 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
 
   get processPages()
   {
-    return this.pages.map( page => {
-      return {
-        label: page,
-        class: this.currentPage === page ?
-          'config-nav-item config-nav-item_selected' :
-          'config-nav-item'
-      }
+    window.addEventListener('resize', (event) => {
+      this.isMobile = (event.currentTarget.outerWidth < 1024) ? true : false;
     });
+
+    this.isMobile = (window.outerWidth < 1024) ? true : false;
   }
 
   renderedCallback()

@@ -31,6 +31,21 @@ export default class CustCommPublicMain extends NavigationMixin(LightningElement
       .then(()=>{});
     }
 
+  connectedCallback()
+    {
+      window.addEventListener('resize', (event) => {
+        this.isMobile = (event.currentTarget.outerWidth < 1024) ? true : false;
+      });
+
+      this.isMobile = (window.outerWidth < 1024) ? true : false;
+    }
+
+    renderedCallback()
+    {
+      loadStyle( this, gothamFonts + '/fonts.css')
+      .then(()=>{});
+    }
+
   toggleMenu()
   {
     this.template.querySelector('.overlay').classList.toggle('open');
