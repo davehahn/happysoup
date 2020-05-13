@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>Legend_Letterhead</letterhead>
+    <name>Legend Customer Payment Notification</name>
+    <style>formalLetter</style>
+    <subject>Legend Boat - Payment Request</subject>
+    <textOnly>Hi {!Square_Transaction__c.00N0U000005xYe4},
+Your total is {!Square_Transaction__c.Amount__c} and can be paid immediately using the following button:</textOnly>
+    <type>html</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

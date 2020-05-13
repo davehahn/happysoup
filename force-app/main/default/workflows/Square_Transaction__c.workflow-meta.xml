@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workflow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <alerts>
+        <fullName>Send_Customer_Square_Payment_Confirmation</fullName>
+        <description>Send Customer Square Payment Confirmation</description>
+        <protected>false</protected>
+        <recipients>
+            <field>Email__c</field>
+            <type>email</type>
+        </recipients>
+        <senderType>DefaultWorkflowUser</senderType>
+        <template>Customer_Follow_Up_Templates/Your_payment_was_received</template>
+    </alerts>
+    <alerts>
+        <fullName>Send_Customer_Square_Payment_Form</fullName>
+        <description>Send Customer Square Payment Form</description>
+        <protected>false</protected>
+        <recipients>
+            <field>Email__c</field>
+            <type>email</type>
+        </recipients>
+        <senderType>CurrentUser</senderType>
+        <template>Customer_Follow_Up_Templates/Legend_Customer_Payment_Notification</template>
+    </alerts>
+</Workflow>
