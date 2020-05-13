@@ -191,6 +191,7 @@ public class CommissionWrapper
   public class Payment
   {
     @AuraEnabled public String id;
+    @AuraEnabled public String cType;
     @AuraEnabled public String owner;
     @AuraEnabled public String ownerId;
     @AuraEnabled public String avatarURL;
@@ -209,6 +210,7 @@ public class CommissionWrapper
     public Payment( CommissionPayment2__c p )
     {
       this.id = p.Id;
+      this.cType = p.Type__c;
       this.owner = p.Owner__r.Name;
       this.ownerId = p.Owner__c;
       this.commissionRecordId = p.Commission_Record2__c;
@@ -229,6 +231,7 @@ public class CommissionWrapper
         Id = this.id,
         Owner__c = this.ownerId,
         Split_Percent__c = this.split,
+        Type__c = this.cType,
         Commission_Record2__c = this.commissionRecordId
       );
     }
