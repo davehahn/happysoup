@@ -29,7 +29,8 @@ then
 fi
 
 
-
+echoOut 'Removing stupid Case Language field'
+rm -f force-app/main/default/objects/Case/fields/Language.field-meta.xml
 echoOut 'Removing Lead list views'
 rm -fR force-app/main/default/objects/Lead/listViews
 echoOut 'Removing Opportunity list views'

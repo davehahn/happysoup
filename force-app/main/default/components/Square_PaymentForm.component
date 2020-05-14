@@ -95,7 +95,18 @@
           SquarePaymentForm_Controller.postToSquare( _paymentAmount, nonce, function( events, result ) {
             if( result.statusCode === 200 )
             {
-              _resolve( JSON.parse(result.result) );
+              const response = JSON.parse( result.result );
+              if( response.errors )
+              {
+                setErrorClassOnInput( response.errors );
+                let errs = [];
+                response.errors.forEach( e => errs.push( { message: e.detail } ) );
+                _reject( errs );
+              }
+              else
+              {
+                _resolve( JSON.parse( response.payment ) );
+              }
             }
             else
             {
@@ -122,6 +133,20 @@
         _reject = reject;
         paymentForm.requestCardNonce();
       });
+    }
+
+    function setErrorClassOnInput( errors )
+    {
+      errors.forEach( err => {
+        if( err.code === 'CVV_FAILURE')
+          document.getElementById('sq-cvv').classList.add('sqr-payment-input--error');
+        if( err.code === 'ADDRESS_VERIFICATION_FAILURE' )
+          document.getElementById('sq-postal-code').classList.add('sqr-payment-input--error');
+        if( err.code === 'INVALID_EXPIRATION' )
+          document.getElementById('sq-expiration-date').classList.add('sqr-payment-input--error');
+        if( err.code === 'GENERIC_DECLINE' )
+          document.getElementById('sq-card-number').classList.add('sqr-payment-input--error');
+      })
     }
 
   </script>

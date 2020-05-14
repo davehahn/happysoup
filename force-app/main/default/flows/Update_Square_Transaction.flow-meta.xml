@@ -1,29 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Flow xmlns="http://soap.sforce.com/2006/04/metadata">
     <actionCalls>
-        <name>Post_Cash_Receipt</name>
-        <label>Post Cash Receipt</label>
-        <locationX>862</locationX>
-        <locationY>49</locationY>
-        <actionName>PostCashReceiptFromFlow</actionName>
-        <actionType>apex</actionType>
-        <inputParameters>
-            <name>CashReceiptId</name>
-            <value>
-                <elementReference>CashReceiptId</elementReference>
-            </value>
-        </inputParameters>
-    </actionCalls>
-    <actionCalls>
         <name>Send_Confirmation_Email</name>
         <label>Send Confirmation Email</label>
-        <locationX>736</locationX>
-        <locationY>48</locationY>
+        <locationX>648</locationX>
+        <locationY>50</locationY>
         <actionName>Square_Transaction__c.Send_Customer_Square_Payment_Confirmation</actionName>
         <actionType>emailAlert</actionType>
-        <connector>
-            <targetReference>Post_Cash_Receipt</targetReference>
-        </connector>
         <inputParameters>
             <name>SObjectRowId</name>
             <value>
@@ -55,7 +38,7 @@
         <name>Create_Cash_Receipt</name>
         <label>Create Cash Receipt</label>
         <locationX>483</locationX>
-        <locationY>48</locationY>
+        <locationY>50</locationY>
         <assignRecordIdToReference>CashReceiptId</assignRecordIdToReference>
         <connector>
             <targetReference>Send_Confirmation_Email</targetReference>
@@ -88,12 +71,6 @@
             <field>AcctSeed__Receipt_Date__c</field>
             <value>
                 <elementReference>today</elementReference>
-            </value>
-        </inputAssignments>
-        <inputAssignments>
-            <field>AcctSeed__Status__c</field>
-            <value>
-                <stringValue>Posted</stringValue>
             </value>
         </inputAssignments>
         <inputAssignments>
