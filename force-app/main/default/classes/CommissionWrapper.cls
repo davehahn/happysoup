@@ -210,7 +210,7 @@ public class CommissionWrapper
     public Payment( CommissionPayment2__c p )
     {
       this.id = p.Id;
-      this.cType = p.Type__c;
+      this.cType = p.Type__c == null ? 'Standard' : p.Type__c;
       this.owner = p.Owner__r.Name;
       this.ownerId = p.Owner__c;
       this.commissionRecordId = p.Commission_Record2__c;

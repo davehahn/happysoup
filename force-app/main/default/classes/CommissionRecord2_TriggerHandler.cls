@@ -151,6 +151,7 @@ public without sharing class CommissionRecord2_TriggerHandler extends TriggerHan
   {
     Set<Id> resolved = new Set<Id>();
     Set<Id> approved = new Set<Id>();
+    Set<Id> approvedNow = new Set<Id>();
     Set<Id> disApproved = new Set<Id>();
     Set<Id> unApproved = new Set<Id>();
     Map<Id, Id> wasReviewed = new Map<Id, Id>();
@@ -179,6 +180,11 @@ public without sharing class CommissionRecord2_TriggerHandler extends TriggerHan
         {
           disApproved.add( record.Id );
         }
+        if( record.Status__c == 'Approved' &&
+            oldRecord.Status__c != 'Approved' )
+        {
+          approvedNow.add( record.Id );
+        }
         if( record.Status__c == 'New' )
         {
           if( oldRecord.Status__c == 'Reviewed' )
@@ -201,7 +207,10 @@ public without sharing class CommissionRecord2_TriggerHandler extends TriggerHan
     if( approved.size() > 0 )
     {
       CommissionRecord2_Service.postApprovedMessage( approved );
-      JournalEntry_Service.takeExpenseFuture(approved);
+    }
+    if( approvedNow.size() > 0 )
+    {
+      JournalEntry_Service.takeExpenseFuture(approvedNow);
     }
     if( disApproved.size() > 0 )
     {

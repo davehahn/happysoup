@@ -20,6 +20,7 @@ public with sharing class JournalEntry_Service {
                 Journal_Entry__c,
                 Project__c,
                 Project__r.RecordTypeId,
+                Project__r.Delivery_Date__c,
                 Project__r.AcctSeedERP__Work_Order_Number__c,
                 Project__r.GL_Account_Variable_1__c,
                 Project__r.GL_Account_Variable_2__c,
@@ -37,9 +38,11 @@ public with sharing class JournalEntry_Service {
             for (CommissionPayment2__c cp : cr.Commission_Payments__r) {
                 mapUserGLV4.put(cp.Owner__c, null);
             }
+            Datetime dt = cr.Project__r.Delivery_Date__c;
+            if(dt == null) dt = Date.today();
             mapProjectJE.put(cr.Project__c, new AcctSeed__Journal_Entry__c(
                 Name = 'Commission Payment - ' + cr.Project_Task__r.Name,
-                AcctSeed__Journal_Date__c = Date.today(),
+                AcctSeed__Journal_Date__c = dt.date(),
                 AcctSeed__Status__c = 'Approved',
                 Commission_Record__c = cr.Id,
                 Project__c = cr.Project__c));
@@ -52,6 +55,8 @@ public with sharing class JournalEntry_Service {
 
         insert mapProjectJE.values();
         for (CommissionRecord2__c cr : listCR) {
+            Datetime dt = cr.Project__r.Delivery_Date__c;
+            if(dt == null) dt = Date.today();
             for (CommissionPayment2__c cp : cr.Commission_Payments__r) {
                 Decimal amt = cp.Amount__c.setScale(6);
                 Id idDebitGL = gcConstants.idGlCommissionExpense;
@@ -68,7 +73,7 @@ public with sharing class JournalEntry_Service {
                     AcctSeed__GL_Account__c = idDebitGL,
                     AcctSeed__Project__c = idProject,
                     AcctSeed__Project_Task__c = idProjectTask,
-                    AcctSeed__Date__c = cogsDate,
+                    AcctSeed__Date__c = dt.date(),
                     AcctSeed__Units__c = 1,
                     Commission_Payment__c = cp.Id,
                     AcctSeed__GL_Account_Variable_1__c = idGlv1,
@@ -82,7 +87,7 @@ public with sharing class JournalEntry_Service {
                     AcctSeed__GL_Account__c = idCreditGL,
                     AcctSeed__Project__c = idProject,
                     AcctSeed__Project_Task__c = idProjectTask,
-                    AcctSeed__Date__c = cogsDate,
+                    AcctSeed__Date__c = dt.date(),
                     AcctSeed__Units__c = 1,
                     Commission_Payment__c = cp.Id,
                     AcctSeed__GL_Account_Variable_1__c = idGlv1,
@@ -97,6 +102,7 @@ public with sharing class JournalEntry_Service {
         if (!listJEL.isEmpty()) {
             insert listJEL;
             update listCR;
+            AcctSeed.PostResult[] postResults = AcctSeed.JournalEntryPostService.postJournalEntries(mapProjectJE.values());
             System.debug(LoggingLevel.ERROR,'listCR:'+listCR);
         }
     }

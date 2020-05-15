@@ -50,9 +50,12 @@
         <lightning-layout-item size="2">
           <lightning-avatar src={payment.avatarURL}></lightning-avatar>
         </lightning-layout-item>
-        <lightning-layout-item size="10">
+        <lightning-layout-item size="7">
           <p class="owner-name">{payment.owner}</p>
         </lightning-layout-item>
+        <!--<lightning-layout-item size="3">
+          <p class="type-name">{payment.cType}</p>
+        </lightning-layout-item>-->
       </lightning-layout>
 
       <p class="amount">
@@ -91,7 +94,21 @@
                                value-field="Name"
                                onselect={handleOwnerSelect}></c-live-lookup-input>
         </lightning-layout-item>
-      </lightning-layout>
+        </lightning-layout>
+        <!--<lightning-layout>
+          <lightning-layout-item size="2">
+            &nbsp;
+          </lightning-layout-item>
+        <lightning-layout-item size="10">
+          <lightning-combobox
+                  name="cType"
+                  label="Type"
+                  value={payment.cType}
+                  placeholder="Select Type"
+                  options={options}
+                  onchange={handleTypeChange} ></lightning-combobox>
+        </lightning-layout-item>
+      </lightning-layout>-->
       <p class="amount">
         <lightning-formatted-number value={payment.amount}
                                     format-style="currency"
@@ -102,14 +119,15 @@
 <!--        <b>Split: </b>-->
 <!--        {payment.split}%-->
 <!--      </p>-->
-
+      <!--<template if:true={renderSplit}>-->
       <lightning-slider label="Split %"
                         size="xx-small"
 
                         value={payment.split}
                         onchange={handleSpitPercentChange}></lightning-slider>
-
+      <!--</template>-->
     </lightning-card>
+
   </template>
 
 
