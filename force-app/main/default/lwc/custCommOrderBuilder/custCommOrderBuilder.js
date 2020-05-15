@@ -46,6 +46,7 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
 		},
 	];
 	@track currentModalPage = 'premium-package';
+	premiumPackage;
 
   @track paymentType='cash';
   @track iframeHeight;
@@ -222,6 +223,23 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
       this.template.querySelector('.modal-container').classList.remove('open');
     }
   }
+
+  get premiumPackValue(){
+    return this.boat.premiumPackage.value;
+  }
+	get premiumPackItems(){
+		const contents = this.boat.premiumPackage.contents;
+		const sections = Object.entries(contents);
+		let packItems = [];
+		for(const [section, parts] of sections){
+			const items = Object.values(parts);
+			for(const item of items){
+				packItems.push(item);
+			}
+		}
+
+		return packItems;
+	}
 
   submitOrder()
   {
