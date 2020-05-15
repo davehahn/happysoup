@@ -278,8 +278,8 @@ public with sharing class gcDealerReseved_Receipt {
             );
             insert cashDisbursementBatch;
 
-            String paymentMethod = 'Cash';
-            Id idGLBank = gcConstants.idGlCashFloat;
+            String paymentMethod = 'Direct Deposit';
+            Id idGLBank = gcConstants.idGlRBCCDN;
             AcctSeed__Cash_Disbursement__c disbursement = new AcctSeed__Cash_Disbursement__c(
                 AcctSeed__Cash_Disbursement_Batch__c = cashDisbursementBatch.Id,
                 AcctSeed__Disbursement_Date__c = Date.today(),

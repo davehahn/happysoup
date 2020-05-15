@@ -367,10 +367,19 @@ public with sharing class Registration_Helper {
       }
       if( body.length() > 0 )
       {
+        List<String> toAddrs = new List<String>();
+        try
+        {
+          toAddrs.add([SELECT Address FROM OrgWideEmailAddress WHERE DisplayName = 'Dealer Care' LIMIT 1].Address);
+        }
+        catch( Exception e )
+        {
+          toAddrs.add( 'dealercare@legendboats.com' );
+        }
         Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
         mail.setHtmlBody( body );
         mail.setSubject( 'Registering Serial Number(s) with Supplier failed');
-        mail.setToAddresses( new List<String>{ UserInfo.getUserEmail() });
+        mail.setToAddresses( toAddrs );
         if( !Test.isRunningTest() )
           Messaging.sendEmail( new List<Messaging.SingleEmailMessage>{ mail });
       }

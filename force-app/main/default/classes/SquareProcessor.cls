@@ -4,13 +4,48 @@
 
 public with sharing class SquareProcessor
 {
+  public class SquareException extends Exception {}
 
-  private final String authToken = 'EAAAEBS8sBvun_wtPAepQabVBYbDm37LdYRNt76G2AXmcLUDSJmK9eJUnHOgxjLF';
-  private final String squareVersion = '2020-03-25';
+  private static Boolean inSandbox
+  {
+    get
+    {
+      if (inSandbox == null)
+      {
+        inSandbox = Test.isRunningTest() || LGND_Constants.runningInASandbox;
+      }
+      return inSandbox;
+    }
+    private set{}
+  }
+
+  private static Square_Setting__mdt squareSettings
+  {
+    get
+    {
+      if( squareSettings == null )
+      {
+        try
+        {
+          squareSettings = [
+            SELECT ApplicationId__c, AuthToken__c, Version__c, PaymentEndpoint__c
+            FROM Square_Setting__mdt
+            WHERE IsSandbox__c = :inSandbox
+          ];
+        }
+        catch( Exception e )
+        {
+          String env = inSandbox ? 'Sandbox' : 'Product';
+          throw new SquareException( 'Square setting for ' + env + ' not found. Please contact your administrator' );
+        }
+      }
+      return squareSettings;
+    }
+    private set{}
+  }
 
   public SquareProcessor()
   {
-
   }
 
   public PaymentResponse postPayment( Decimal amount, String nonce )
@@ -22,11 +57,11 @@ public with sharing class SquareProcessor
     System.debug( jsonData );
     Http http = new Http();
     HttpRequest request = new HttpRequest();
-    request.setEndpoint( paymentEndpoint() );
+    request.setEndpoint( squareSettings.PaymentEndpoint__c );
     request.setMethod( 'POST' );
-    request.setHeader( 'Authorization', 'Bearer ' + authToken );
+    request.setHeader( 'Authorization', 'Bearer ' + squareSettings.AuthToken__c );
     request.setHeader( 'Content-Type', 'application/json' );
-    request.setHeader( 'Square-Version', squareVersion );
+    request.setHeader( 'Square-Version', squareSettings.Version__c );
     request.setBody( jsonData );
 
     try
@@ -34,9 +69,7 @@ public with sharing class SquareProcessor
       HttpResponse response = http.send(request);
       String jsonResponse = response.getBody();
       jsonResponse = jsonResponse.replace('"currency":', '"currency_type":');
-      System.debug( jsonResponse );
       PaymentResponse r = (PaymentResponse)JSON.deserialize( jsonResponse, PaymentResponse.class );
-      System.debug( r );
       return r;
     }
     catch( System.CalloutException e )
@@ -48,18 +81,9 @@ public with sharing class SquareProcessor
 
   }
 
-  private String paymentEndpoint()
-  {
-    return LGND_Constants.runningInASandbox ?
-      'https://connect.squareupsandbox.com/v2/payments' :
-      '';
-  }
-
   public static String getApplicationId()
   {
-    return LGND_Constants.runningInASandbox ?
-      'sandbox-sq0idb-8c_eJLCqyHQgNAqxAEwagw' :
-      'theproductionversionofthis';
+    return squareSettings.ApplicationId__c;
   }
 
   public class Payment {
@@ -76,6 +100,7 @@ public with sharing class SquareProcessor
 
 
   public class PaymentResponse {
+    public List<PaymentError> errors;
     public PaymentResult payment;
     public PaymentResponse(){}
   }
@@ -94,6 +119,14 @@ public with sharing class SquareProcessor
     public String receipt_number;
     public String receipt_url;
     public PaymentResult(){}
+  }
+
+  public class PaymentError
+  {
+    public String code;
+    public String detail;
+    public String category;
+    public PaymentError(){}
   }
 
   public class PaymentAmount {
