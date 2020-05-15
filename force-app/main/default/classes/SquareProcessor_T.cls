@@ -60,7 +60,20 @@ private class SquareProcessor_T
 
 
   @IsTest
-  static void getApplication
+  static void getApplication_Test()
+  {
+    Square_Setting__mdt sqrSettings =
+      [ SELECT ApplicationId__c
+        FROM Square_Setting__mdt
+        WHERE IsSandbox__c = true
+        LIMIT 1 ];
+
+    Test.startTest();
+    String appId = SquareProcessor.getApplicationId();
+    Test.stopTest();
+
+    System.assertEquals( sqrSettings.ApplicationId__c, appId );
+  }
 
   @IsTest
   static void postPayment_Success_Test()
