@@ -1,0 +1,173 @@
+<apex:page showHeader="false"
+           sidebar="false"
+           applyHtmlTag="false"
+           applyBodyTag="false"
+           docType="html-5.0"
+           StandardController="Square_Transaction__c"
+           extensions="RunSquarePaymentFlow">
+
+    <style>
+
+
+    .sqr-payment-container {
+      background: #ffffff;
+    }
+
+    .sqr-payment-input {
+      background: #FFF;
+      border: 1px solid transparent;
+      padding: 10px 20px;
+      border-radius: 20px;
+      font-size: 14px;
+      color: #666;
+      width:calc( 100% - 1.5rem );
+      height: 39px;
+      margin: 0 0.75rem 24px 0.75rem;
+      box-sizing: border-box;
+      border-color: #808080;
+    }
+
+    .sqr-payment-input.sqr-payment-input--error {
+      border-color: red;
+    }
+
+    .sqr-payment-input--focus {
+      outline: none;
+      border: 1px solid #CCC;
+    }
+
+    .sqr-payment-container label {
+      color: #666;
+      font-size: 14px;
+      margin: 0 33px 8px;
+      display: block;
+    }
+
+
+.round-button{
+  display: block;
+  position: relative; margin: 0 auto 1.5em;
+  width: -moz-fit-content;
+  width: fit-content;
+  padding: 0.5em 0.5em;
+  z-index: 2;
+  font-family: 'gotham-medium';
+  font-size: 1.35em;
+  font-weight: 600;
+  background: #00b2ed none !important;
+  border: 1px solid #00b2ed;
+  color: #FFF;
+  border-radius: 60px;
+  margin-left: 25px;
+
+}
+
+.round-button:hover:enabled{
+    background-color: #049dd1 !important;
+    background: none;
+}
+
+@media all and (max-width: 600px) {
+    .orderDetails {
+        max-width: 100% !important;
+        padding: 10px;
+        margin-bottom: 35px;
+        margin-left: 35px;
+    }
+}
+
+.orderDetails {
+        max-width: 30%;
+        padding: 10px;
+        margin-bottom: 35px;
+        margin-left: 35px;
+}
+
+  </style>
+<div class="orderDetails">
+  <h1>Order Details</h1>
+
+  <br /><br />
+  <b>Account:</b> {!Square_Transaction__c.Account__r.Name}
+  <br /><hr />
+  <b>Payment Status:</b> {!Square_Transaction__c.sqStatus__c}
+  <br /><hr />
+  <b>Description:</b> {!Square_Transaction__c.Description__c}
+  <br /><hr />
+  <b>Notes:</b> {!Square_Transaction__c.Notes__c}
+  <br /><hr />
+  <b>Amount Due:</b> ${!Square_Transaction__c.Amount__c}
+</div>
+
+    <c:Square_PaymentForm />
+    <button id="submit-button" class="round-button">Pay Now</button>
+
+
+  <apex:form>
+    <apex:actionFunction name="RunSquarePaymentAction" action="{!start}" rerender="">
+      <apex:param name="sqOrderId" value=""/>
+      <apex:param name="sqCaptureDate" value="" />
+      <apex:param name="sqReceiptURL" value="" />
+      <apex:param name="sqReceiptNum" value="" />
+    </apex:actionFunction>
+  </apex:form>
+
+  <script>
+
+
+var total = {!Square_Transaction__c.Amount__c};
+
+   document.getElementById("submit-button").addEventListener("click",(event) => {
+       document.getElementById("submit-button").disabled = true;
+       event.preventDefault();
+       doPostPayment( total )
+        .then( (result) =>
+        {
+          HandleSuccess(result);
+        })
+        .catch( (errors) => {
+          HandleErrors(errors);
+         });
+   });
+
+   function showToast(toastTitle, toastMessage, toastType) {
+            sforce.one.showToast({
+                "title": toastTitle,
+                "message": toastMessage,
+                "type": toastType
+            });
+        }
+
+  function HandleSuccess(result) {
+      console.log(result);
+      var toastTitle = "Payment Successful!"
+      var toastMessage = "Your payment was successful."
+      var toastType = "success"
+      var sqOrderId = result.payment.order_id;
+      var sqCaptureDate = result.payment.created_at;
+      var sqReceiptURL = result.payment.receipt_url;
+      var sqReceiptNum = result.payment.receipt_number;
+      RunSquarePaymentAction(sqOrderId, sqCaptureDate, sqReceiptURL, sqReceiptNum);
+      showToast(toastTitle, toastMessage, toastType);
+
+      window.setTimeout(function (){
+        window.top.location.href = "https://www.legendboats.com";
+      }, 5000);
+
+  }
+
+
+  function HandleErrors(errors) {
+      document.getElementById("submit-button").disabled = false;
+      console.log(errors);
+      var toastTitle = "Payment Error!"
+      var toastMessage = "Your payment was not successful. Please review your card details and try again."
+      var toastType = "error"
+      showToast(toastTitle, toastMessage, toastType);
+
+  }
+
+
+  </script>
+
+</apex:page>
