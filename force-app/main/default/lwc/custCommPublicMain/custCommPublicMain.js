@@ -6,11 +6,45 @@ import { LightningElement, wire } from 'lwc';
 import { NavigationMixin } from 'lightning/navigation';
 import LOGO from '@salesforce/resourceUrl/LegendLogo';
 import fetchBoats from '@salesforce/apex/OnlineBoatReservation_Controller.fetchBoats';
+import { loadStyle, loadScript } from 'lightning/platformResourceLoader';
+import gothamFonts from '@salesforce/resourceUrl/GothamHTF';
 
 export default class CustCommPublicMain extends NavigationMixin(LightningElement) {
 
+  isMobile = false;
+
   logo = LOGO;
   @wire( fetchBoats ) boats;
+
+  connectedCallback()
+    {
+      window.addEventListener('resize', (event) => {
+        this.isMobile = (event.currentTarget.outerWidth < 1024) ? true : false;
+      });
+
+      this.isMobile = (window.outerWidth < 1024) ? true : false;
+    }
+
+    renderedCallback()
+    {
+      loadStyle( this, gothamFonts + '/fonts.css')
+      .then(()=>{});
+    }
+
+  connectedCallback()
+    {
+      window.addEventListener('resize', (event) => {
+        this.isMobile = (event.currentTarget.outerWidth < 1024) ? true : false;
+      });
+
+      this.isMobile = (window.outerWidth < 1024) ? true : false;
+    }
+
+    renderedCallback()
+    {
+      loadStyle( this, gothamFonts + '/fonts.css')
+      .then(()=>{});
+    }
 
   toggleMenu()
   {

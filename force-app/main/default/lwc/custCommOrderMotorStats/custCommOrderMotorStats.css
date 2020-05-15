@@ -1,0 +1,65 @@
+/**
+ * Created by Tim on 2020-04-23.
+ */
+.motorStats{
+    position: absolute;
+    bottom: 0;
+    width: 90%;
+    max-width: 1024px;
+    left: 50%; transform: translateX(-50%);
+    text-align: center;
+}
+.motorStats_list{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.motorStats_item{
+    flex-grow: 1;
+    font-size: 3.75em;
+    font-weight: 300;
+    line-height: 1;
+    border-right: 2px solid #dadada;
+}
+.motorStats_item:last-of-type{
+    border-right: 0 none;
+}
+.motorStats_item span{
+    display: block;
+    font-size: 0.42em;
+    font-weight: normal;
+    color: #616161;
+}
+.motorStats_jargon{
+    display: block;
+    font-size: 1.125em;
+    color: #838383;
+    margin: 1em 0;
+}
+
+
+/*
+
+.___  ___.  _______  _______   __       ___           ______      __    __   _______ .______       __   _______     _______.
+|   \/   | |   ____||       \ |  |     /   \         /  __  \    |  |  |  | |   ____||   _  \     |  | |   ____|   /       |
+|  \  /  | |  |__   |  .--.  ||  |    /  ^  \       |  |  |  |   |  |  |  | |  |__   |  |_)  |    |  | |  |__     |   (----`
+|  |\/|  | |   __|  |  |  |  ||  |   /  /_\  \      |  |  |  |   |  |  |  | |   __|  |      /     |  | |   __|     \   \
+|  |  |  | |  |____ |  '--'  ||  |  /  _____  \     |  `--'  '--.|  `--'  | |  |____ |  |\  \----.|  | |  |____.----)   |
+|__|  |__| |_______||_______/ |__| /__/     \__\     \_____\_____\\______/  |_______|| _| `._____||__| |_______|_______/
+
+
+*/
+
+@media screen and (max-width: 64em){
+    .motorStats{
+        position: static;
+        transform: translateX(0);
+        margin: 2em auto 0;
+    }
+}
+
+@media screen and (max-width: 40em){
+    .motorStats_item{
+        font-size: 2.75em;
+    }
+}

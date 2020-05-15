@@ -15,12 +15,29 @@
       <div class="modal-content">
         <div class="modal-content_body">
           <div class="modal-content_sidebar">
-
+            <div class="sidebar_logo">
+              <img src={vertLogo}>
+            </div>
+            <ul class="sidebar_nav">
+              <template for:each={modalPages} for:item="modalPage">
+                <li key={modalPage.label}>
+                  <button class={modalPage.class} onclick={handleModalNav} data-modal-nav-name={modalPage.label}><h3 class="modal-nav-title">{modalPage.title}</h3></button>
+                </li>
+              </template>
+            </ul>
           </div>
           <div class="modal-content_main">
-
+            <div class="modal-page modal-page_selected" data-modal-page="premium-package">
+              <h4>Premium Package</h4>
+            </div>
+            <div class="modal-page" data-modal-page="payment-calculator">
+              <h4>Payment Calculator</h4>
+            </div>
+            <div class="modal-page" data-modal-page="delivery">
+              <h4>Delivery Timing</h4>
+            </div>
             <span class="modal-content_close">
-              <button onclick={handleModalClose}>
+              <button onclick={handleCloseModal}>
                 <i class="slds-icon-close" ></i>
               </button>
             </span>
@@ -38,13 +55,13 @@
       </div>
 
       <div class="config-nav">
-        <ul class="config-nav-list">
+        <ol class="config-nav-list">
           <template for:each={processPages} for:item="page">
-            <li key={page.label} class={page.class} onclick={handleNav} data-nav-name={page.label}>
-              <h2 class="config-nav-title">{page.label}</h2>
+            <li key={page.label}>
+              <button class={page.class} onclick={handleNav} data-nav-name={page.label}><h2 class="config-nav-title">{page.label}</h2></button>
             </li>
           </template>
-        </ul>
+        </ol>
       </div>
 
       <div class="language-select">
@@ -53,35 +70,52 @@
 
     </div>
 
-    <div class="config-content">
+    <div class="config-content" data-current={currentPage}>
 
       <!-- PERFORMANCE -->
       <div class="config-page config-page_selected" data-page="performance">
         <div class="config-page_left">
-          <h1 class="slds-m-top_large slds-text-heading_large slds-text-align_center">Performance</h1>
+          <h1 class="vh">Performance</h1>
+          <c-cust-comm-order-boat-image size="large"></c-cust-comm-order-boat-image>
+          <c-cust-comm-order-motor-stats></c-cust-comm-order-motor-stats>
         </div>
-        <div class="config-page_right">
-
+        <div class="config-page_right slds-p-around_xx-large">
+          <h2 class="right_heading">Select Your Performance</h2>
+            <c-cust-comm-order-options options-title="Standard Performance" selections="one" selection-scope="global"></c-cust-comm-order-options>
+            <c-cust-comm-order-options options-title="Enhanced Performance" selections="one" selection-scope="global"></c-cust-comm-order-options>
         </div>
       </div>
 
       <!-- TRAILERING -->
       <div class="config-page" data-page="trailering">
         <div class="config-page_left">
-            <h1 class="slds-m-top_large slds-text-heading_large slds-text-align_center">Trailering</h1>
+            <h1 class="vh">Trailering</h1>
+            <template if:false={isMobile}>
+              <c-cust-comm-order-boat-image size="large"></c-cust-comm-order-boat-image>
+            </template>
         </div>
         <div class="config-page_right">
-
+          <div class="config-page_right slds-p-around_xx-large">
+            <h2 class="right_heading">Trailering Package</h2>
+            <c-cust-comm-order-options options-title="Select Your Trailer" selections="one" selection-scope="global"></c-cust-comm-order-options>
+            <c-cust-comm-order-options selections="one" selection-scope="global"></c-cust-comm-order-options>
+          </div>
         </div>
       </div>
 
       <!-- ELECTRONICS -->
       <div class="config-page" data-page="electronics">
         <div class="config-page_left">
-          <h1 class="slds-m-top_large slds-text-heading_large slds-text-align_center">Electronics</h1>
+          <h1 class="vh">Electronics</h1>
+          <template if:false={isMobile}>
+            <c-cust-comm-order-boat-image size="large"></c-cust-comm-order-boat-image>
+          </template>
         </div>
         <div class="config-page_right">
-
+          <div class="config-page_right slds-p-around_xx-large">
+            <h2 class="right_heading">Electronics</h2>
+            <c-cust-comm-order-options options-title="Terrova 55 Tech Package" selections="one" selection-scope="global"></c-cust-comm-order-options>
+          </div>
         </div>
       </div>
 
@@ -168,8 +202,11 @@
           </div>
 
         </div>
-        <div class="config-page_right">
-
+        <div class="config-page_right slds-p-around_xx-large">
+          <c-cust-comm-order-boat-image size="small"></c-cust-comm-order-boat-image>
+          <h2 class="right_heading slds-text-heading_medium">Your X18</h2>
+          <p class="right_delivery">Estimated Deliver: 5-8 weeks</p>
+          <c-cust-comm-order-summary></c-cust-comm-order-summary>
         </div>
       </div>
 
@@ -209,11 +246,11 @@
         <div class="config-footer_item finance-prices">
           <div class="config-footer_price">
             <div class="amount">$39,999</div>
-            <div>Purchase price</div>
+            <div class="label">Purchase Price</div>
           </div>
           <div class="config-footer_savings">
             <div class="amount">$6,700</div>
-            <div>Monthly Payment</div>
+            <div class="label">Preferred equipment package savings</div>
           </div>
           <div class="config-footer_details-link">
             <a onclick={handleOpenModal}>Show Details</a>
@@ -222,17 +259,26 @@
 
         <div class="config-footer_item">
           <div class="config-footer_delivery">
-            <div>Delivery - Line 1</div>
-            <div>Delivery - Line 1</div>
+            <div>Estimated Deliver: 5-8 weeks</div>
           </div>
         </div>
 
-        <div class="config-footer_item">
-          <button disabled={buttonDisabled}
-                  onclick={handleNext}>
-            {buttonText}
-          </button>
-        </div>
+        <template if:false={isMobile}>
+          <div class="config-footer_item">
+            <button disabled={buttonDisabled}
+                    onclick={handleNext}>
+              {buttonText}
+            </button>
+          </div>
+        </template>
+        <template if:true={isMobile}>
+          <div class="config-footer_item">
+            <button disabled={buttonDisabled}
+                    onclick={jumpToPayment}>
+              {buttonText}
+            </button>
+          </div>
+        </template>
 
       </div>
     </div>

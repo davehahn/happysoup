@@ -7,7 +7,9 @@ import { CurrentPageReference, NavigationMixin } from 'lightning/navigation';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import { loadStyle } from 'lightning/platformResourceLoader';
 import sldsIconFont from '@salesforce/resourceUrl/sldsIconFont';
+import gothamFonts from '@salesforce/resourceUrl/GothamHTF';
 import LOGO from '@salesforce/resourceUrl/LegendLogo';
+import VLOGO from '@salesforce/resourceUrl/LegendLogoVertical';
 import fetchBoat from '@salesforce/apex/OnlineBoatReservation_Controller.fetchBoat';
 
 export default class CustCommOrderBuilder extends NavigationMixin(LightningElement) {
@@ -15,7 +17,9 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
   origin;
   recordId;
   logo = LOGO;
+  vertLogo = VLOGO;
   orderValid=true;
+  isMobile = false;
   pages = [
     'performance',
     'trailering',
@@ -23,6 +27,26 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
     'payment'
   ];
   @track currentPage = 'performance';
+
+ 	 modalPages = [
+		{
+			title: 'Premium Package',
+			label: 'premium-package',
+			class: 'modal-nav-item modal-nav-item_selected'
+		},
+		{
+			title: 'Payment Calculator',
+			label: 'payment-calculator',
+			class: 'modal-nav-item'
+		},
+		{
+			title: 'Delivery Timing',
+			label: 'delivery',
+			class: 'modal-nav-item'
+		},
+	];
+	@track currentModalPage = 'premium-package';
+
   @track paymentType='cash';
   @track iframeHeight;
   @track boat;
@@ -56,27 +80,27 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
 
   get processPages()
   {
-    return this.pages.map( page => {
-      return {
-        label: page,
-        class: this.currentPage === page ?
-          'config-nav-item config-nav-item_selected' :
-          'config-nav-item'
-      }
+    window.addEventListener('resize', (event) => {
+      this.isMobile = (event.currentTarget.outerWidth < 1024) ? true : false;
     });
+
+    this.isMobile = (window.outerWidth < 1024) ? true : false;
   }
 
   renderedCallback()
   {
     loadStyle( this, sldsIconFont + '/style.css')
     .then(()=>{});
+    loadStyle( this, gothamFonts + '/fonts.css')
+    .then(()=>{});
 
     window.addEventListener('resize', (event) => {
-          console.log('resizing window bitches');
-          console.log( event );
-          console.log( event.currentTarget.outerWidth );
-        });
-
+			console.log('resizing window bitches');
+			console.log( event );
+			console.log( event.currentTarget.outerWidth );
+			this.isMobile = (event.currentTarget.outerWidth < 1024) ? true : false;
+		});
+		this.isMobile = (window.outerWidth < 1024) ? true : false;
   }
 
   get processPages()
@@ -136,10 +160,28 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
   handleOpenModal()
   {
     this.toggleModal( true );
-    this.template.querySelector('.modal-container').addEventListener('click', () => {
-      this.toggleModal(false);
+    this.template.querySelector('.modal-container').addEventListener('click', (e) => {
+      if(e.target.classList.contains('modal-container')){
+      	this.toggleModal(false);
+      }
     });
   }
+
+	handleModalNav( event )
+	{
+		this.doModalPageChange( event.currentTarget );
+	}
+	doModalPageChange( page )
+	{
+	  let pageName = page.dataset.modalNavName;
+		this.currentModalPage = pageName;
+
+		this.template.querySelector('.modal-nav-item_selected').classList.remove('modal-nav-item_selected');
+		this.template.querySelector( `[data-modal-nav-name="${this.currentModalPage}"]` ).classList.add('modal-nav-item_selected');
+
+		this.template.querySelector('.modal-page_selected').classList.remove('modal-page_selected');
+		this.template.querySelector( `[data-modal-page="${this.currentModalPage}"]` ).classList.add('modal-page_selected');
+	}
 
   handleEditConfig()
   {
@@ -151,6 +193,10 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
     this.onPaymentPage() ?
     this.submitOrder() :
     this.doPageChange( this.pages[ this.pages.indexOf( this.currentPage ) +1 ] );
+  }
+
+  jumpToPayment(){
+      this.doPageChange( 'payment' );
   }
 
   doPageChange( page )
