@@ -56,7 +56,7 @@
 
       <!-- BUTTONS -->
       <lightning:layoutItem class="slds-m-top_small" size="4" padding="around-small" >
-        <aura:if isTrue="{! and( !equals( v.record.status, 'Approved'), !equals(v.record.status, 'Disputed') ) }">
+        <aura:if isTrue="{! !equals( v.record.status, 'Approved' ) }">
           <lightning:buttonGroup class="slds-float_right">
           <lightning:button label="{! if(v.isEditing, 'Cancel', 'Edit Payments')}"
                             onclick="{!c.handlePaymentEdit}" />
