@@ -57,6 +57,8 @@
         doPostPayment( event.data.paymentAmount )
         .then( (result) =>
         {
+          console.log( 'visualforce page' );
+          console.log( result )
           const message = {
             status: 'success',
             response: result
