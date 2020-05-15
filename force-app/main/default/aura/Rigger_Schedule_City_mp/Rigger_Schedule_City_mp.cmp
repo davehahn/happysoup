@@ -79,8 +79,8 @@
 													 class="noLabel"
 													 aura:id="backlogSearchInput" />
 
-					<div class="slds-grid">
-						<div class="slds-size_1-of-3">
+					<div class="slds-grid slds-wrap">
+						<div class="slds-size_1-of-1">
 						  <lightning:select name="select"
 						  									label=""
 						  									required="false"
@@ -96,12 +96,13 @@
 						    <option value="Placeholder" text="Placeholder"></option>
 						  </lightning:select>
 						</div>
-						<div class="slds-size_2-of-3">
+						<div class="slds-size_1-of-1">
 							<div class="slds-p-around_small">
 								<lightning:input type="checkbox"
 																 label="{!v.city + ' only'}"
 																 name="allCities"
 																 checked="{!v.limitToCity}"
+																 class="city-filter"
 																 onchange="{!c.filterBacklog}" />
 							</div>
 						</div>

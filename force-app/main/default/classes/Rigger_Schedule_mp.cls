@@ -551,6 +551,8 @@ public with sharing class Rigger_Schedule_mp {
 		//query += 'AND ERP_Order__r.AcctSeed__Status__c != \'Ready For Accounting\'';
 		query += 'AND ERP_Order__r.AcctSeed__Status__c != \'Completed\'';
 		query += 'AND ERP_Order__r.Stage__c != \'Delivered\'';
+		query += 'AND ERP_Order__r.Stage__c != \'Draft\'';
+		query += 'AND ERP_Order__r.Stage__c != \'Closed Lost\'';
 		query += 'AND ERP_Order__r.Job_Status__c != \'Completed\'';
 
 		if (filter != null && filter != '') {
