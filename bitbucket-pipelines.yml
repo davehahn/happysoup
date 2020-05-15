@@ -50,3 +50,10 @@ pipelines:
             - echo 'Validating deploy'
             - chmod +x pipeline_validate.sh
             - ./pipeline_validate.sh $DEPLOY_KEY $VALIDATE_USERNAME $VALIDATE_CONSUMER_KEY $VALIDATE_URL
+    customer-community:
+          - step:
+              name: Validate Customer Community
+              script:
+                - echo 'Validating Customer Community deploy'
+                - chmod +x pipeline_deploy.sh
+                - ./pipeline_deploy.sh $DEPLOY_KEY $BOAT_RESERVATION_STAGING_USERNAME $BOAT_RESERVATION_STAGING_CONSUMER_KEY $BOAT_RESERVATION_STAGING_URL
