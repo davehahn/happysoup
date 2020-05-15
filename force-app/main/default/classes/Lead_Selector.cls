@@ -23,7 +23,8 @@ public with sharing class Lead_Selector extends Application_Selector
     Lead_Selector selector = new Lead_Selector();
     selector
       .addWhere('IsConverted = false')
-      .addWhere( 'Email = \'' + email +'\'', 'AND' );
+      .addWhere( 'Email = \'' + email +'\'', 'AND' )
+      .addOrderBy( 'CreatedDate DESC' );
     return (List<Lead>)selector.query();
   }
 }
