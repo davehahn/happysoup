@@ -92,6 +92,27 @@ private class SquareProcessor_T
   }
 
   @IsTest
+  static void postPayment_Success_HelpCenterUser_Test()
+  {
+    Test.setMock( HttpCalloutMock.class, new SquareSuccessResponse() );
+    User u = Factory_User.buildUser('public', 'helpcenter', 'Legend Help Center Profile');
+    insert u;
+    System.runAs( u )
+    {
+      Test.startTest();
+      SquareProcessor square = new SquareProcessor();
+      SquareProcessor.PaymentResponse result =
+        square.postPayment(1000, 'some123random9r83stuff');
+      Test.stopTest();
+
+      System.assert(result != null, 'Response should not be null');
+      System.assert(result.errors == null, 'Response should not contain errors');
+      System.assertEquals(1000, result.payment.amount_money.amount);
+      System.assertEquals('COMPLETED', result.payment.status);
+    }
+  }
+
+  @IsTest
   static void postPayment_SquareError_Test()
   {
     Test.setMock( HttpCalloutMock.class, new SquareErrorResponse() );
