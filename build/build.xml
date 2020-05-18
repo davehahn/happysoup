@@ -139,6 +139,17 @@
         <fileset dir="${basedir}/force-app/main/default/profiles" includes="*.xml"/>
       </replaceregexp>
 
+      <!-- Remove all references to mcdm_15 fields -->
+      <replaceregexp match="&lt;fieldPermissions&gt;\s*&lt;editable&gt;(.+?)&lt;/editable&gt;\s*&lt;field&gt;(.*).mcdm_15__(.*)&lt;/field&gt;\s*&lt;readable&gt;(.+?)&lt;/readable&gt;\s*&lt;/fieldPermissions&gt;\s*" replace="" flags="gm" byline="false">
+        <fileset dir="${basedir}/force-app/main/default/profiles" includes="*.xml"/>
+      </replaceregexp>
+
+      <!-- Remove Stupid Case.Language Field -->
+      <replaceregexp match="&lt;fieldPermissions&gt;\s*&lt;editable&gt;(.+?)&lt;/editable&gt;\s*&lt;field&gt;Case.Language&lt;/field&gt;\s*&lt;readable&gt;(.+?)&lt;/readable&gt;\s*&lt;/fieldPermissions&gt;\s*" replace="" flags="gm" byline="false">
+        <fileset dir="${basedir}/force-app/main/default/profiles" includes="*.xml"/>
+      </replaceregexp>
+
+
       <!-- Remove ViewFlowUsageAndFlowEventData from profiles -->
 <!--      <replaceregexp match="&lt;userPermissions&gt;\s*&lt;enabled&gt;[\S\s]*?&lt;/enabled&gt;\s*&lt;name&gt;ViewFlowUsageAndFlowEventData&lt;/name&gt;\s*&lt;/userPermissions&gt;\s*" replace="" flags="gm" byline="false">-->
 <!--        <fileset dir="${basedir}/src/profiles" includes="*.profile"/>-->
