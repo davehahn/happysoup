@@ -184,6 +184,37 @@
         <fileset dir="${basedir}/force-app/main/default/profiles" includes="*.xml"/>
       </replaceregexp>
 
+      <!-- remove all references to flowAccesses -->
+      <replaceregexp match="&lt;flowAccesses&gt;\s*&lt;enabled&gt;(.+?)&lt;/enabled&gt;\s*&lt;flow&gt;(.+?)&lt;/flow&gt;\s*&lt;/flowAccesses&gt;\s*" replace="" flags="gm" byline="false">
+        <fileset dir="${basedir}/force-app/main/default/profiles" includes="*.xml"/>
+      </replaceregexp>
+
+      <!-- Remove LightningForgotPasswordController classAccess from profiles -->
+      <replaceregexp match="&lt;classAccesses&gt;\s*&lt;apexClass&gt;LightningForgotPasswordController(.*)&lt;/apexClass&gt;\s*&lt;enabled&gt;[\S\s]*?&lt;/enabled&gt;\s*&lt;/classAccesses&gt;\s*" replace="" flags="gm" byline="false">
+        <fileset dir="${basedir}/force-app/main/default/profiles" includes="*.xml"/>
+      </replaceregexp>
+
+      <!-- Remove LightningLoginFormController classAccess from profiles -->
+      <replaceregexp match="&lt;classAccesses&gt;\s*&lt;apexClass&gt;LightningLoginFormController(.*)&lt;/apexClass&gt;\s*&lt;enabled&gt;[\S\s]*?&lt;/enabled&gt;\s*&lt;/classAccesses&gt;\s*" replace="" flags="gm" byline="false">
+        <fileset dir="${basedir}/force-app/main/default/profiles" includes="*.xml"/>
+      </replaceregexp>
+
+      <!-- Remove LightningForgotPasswordController classAccess from profiles -->
+      <replaceregexp match="&lt;classAccesses&gt;\s*&lt;apexClass&gt;LightningForgotPasswordController(.*)&lt;/apexClass&gt;\s*&lt;enabled&gt;[\S\s]*?&lt;/enabled&gt;\s*&lt;/classAccesses&gt;\s*" replace="" flags="gm" byline="false">
+        <fileset dir="${basedir}/force-app/main/default/profiles" includes="*.xml"/>
+      </replaceregexp>
+
+      <!-- Remove LightningSelfRegisterController classAccess from profiles -->
+      <replaceregexp match="&lt;classAccesses&gt;\s*&lt;apexClass&gt;LightningSelfRegisterController(.*)&lt;/apexClass&gt;\s*&lt;enabled&gt;[\S\s]*?&lt;/enabled&gt;\s*&lt;/classAccesses&gt;\s*" replace="" flags="gm" byline="false">
+        <fileset dir="${basedir}/force-app/main/default/profiles" includes="*.xml"/>
+      </replaceregexp>
+
+      <!-- Remove WaterFallChartController classAccess from profiles -->
+      <replaceregexp match="&lt;classAccesses&gt;\s*&lt;apexClass&gt;WaterFallChartController(.*)&lt;/apexClass&gt;\s*&lt;enabled&gt;[\S\s]*?&lt;/enabled&gt;\s*&lt;/classAccesses&gt;\s*" replace="" flags="gm" byline="false">
+        <fileset dir="${basedir}/force-app/main/default/profiles" includes="*.xml"/>
+      </replaceregexp>
+
+
 
       <!-- Remove ViewFlowUsageAndFlowEventData from profiles -->
 <!--      <replaceregexp match="&lt;userPermissions&gt;\s*&lt;enabled&gt;[\S\s]*?&lt;/enabled&gt;\s*&lt;name&gt;ViewFlowUsageAndFlowEventData&lt;/name&gt;\s*&lt;/userPermissions&gt;\s*" replace="" flags="gm" byline="false">-->
