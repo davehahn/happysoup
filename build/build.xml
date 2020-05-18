@@ -184,6 +184,11 @@
         <fileset dir="${basedir}/force-app/main/default/profiles" includes="*.xml"/>
       </replaceregexp>
 
+      <!-- remove all references to flowAccesses -->
+      <replaceregexp match="&lt;flowAccesses&gt;\s*&lt;enabled&gt;(.+?)&lt;/enabled&gt;\s*&lt;flow&gt;(.+?)&lt;/flow&gt;\s*&lt;/flowAccesses&gt;\s*" replace="" flags="gm" byline="false">
+        <fileset dir="${basedir}/force-app/main/default/profiles" includes="*.xml"/>
+      </replaceregexp>
+
 
       <!-- Remove ViewFlowUsageAndFlowEventData from profiles -->
 <!--      <replaceregexp match="&lt;userPermissions&gt;\s*&lt;enabled&gt;[\S\s]*?&lt;/enabled&gt;\s*&lt;name&gt;ViewFlowUsageAndFlowEventData&lt;/name&gt;\s*&lt;/userPermissions&gt;\s*" replace="" flags="gm" byline="false">-->
