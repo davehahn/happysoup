@@ -1,4 +1,4 @@
-<project name="Retrieve and Deploy SFDC metadata" default="deployEmptyCheckOnly" basedir=".." xmlns:sf="antlib:com.salesforce">
+<project name="Retrieve and Deploy SFDC metadata" default="doMetadataClean" basedir=".." xmlns:sf="antlib:com.salesforce">
 
    <!-- USED to help create a "cleaning" type task to remove entries in Metadata
 
@@ -134,10 +134,87 @@
         <fileset dir="${basedir}/force-app/main/default/profiles" includes="*.xml"/>
       </replaceregexp>
 
-       <!-- Remove SendExternalEmailAvailable from profiles -->
+      <!-- Remove SendExternalEmailAvailable from profiles -->
       <replaceregexp match="&lt;userPermissions&gt;\s*&lt;enabled&gt;[\S\s]*?&lt;/enabled&gt;\s*&lt;name&gt;SendExternalEmailAvailable&lt;/name&gt;\s*&lt;/userPermissions&gt;\s*" replace="" flags="gm" byline="false">
         <fileset dir="${basedir}/force-app/main/default/profiles" includes="*.xml"/>
       </replaceregexp>
+
+      <!-- Remove SiteIframeWhiteListUrl-Whitelisted Domains for Inline Frames Layout from profiles -->
+      <replaceregexp match="&lt;layoutAssignments&gt;\s*&lt;layout&gt;SiteIframeWhiteListUrl-Whitelisted Domains for Inline Frames Layout&lt;/layout&gt;\s*&lt;/layoutAssignments&gt;\s*" replace="" flags="gm" byline="false">
+        <fileset dir="${basedir}/force-app/main/default/profiles" includes="*.xml"/>
+      </replaceregexp>
+
+      <!-- Remove mcdm_15__ classAccess from profiles -->
+      <replaceregexp match="&lt;classAccesses&gt;\s*&lt;apexClass&gt;mcdm_15__(.*)&lt;/apexClass&gt;\s*&lt;enabled&gt;[\S\s]*?&lt;/enabled&gt;\s*&lt;/classAccesses&gt;\s*" replace="" flags="gm" byline="false">
+        <fileset dir="${basedir}/force-app/main/default/profiles" includes="*.xml"/>
+      </replaceregexp>
+
+      <!-- Remove mcdm_15__ ExternalData Source from profiles -->
+      <replaceregexp match="&lt;externalDataSourceAccesses&gt;\s*&lt;enabled&gt;[\S\s]*?&lt;/enabled&gt;\s*&lt;externalDataSource&gt;mcdm_15__(.*)&lt;/externalDataSource&gt;\s*&lt;/externalDataSourceAccesses&gt;\s*" replace="" flags="gm" byline="false">
+        <fileset dir="${basedir}/force-app/main/default/profiles" includes="*.xml"/>
+      </replaceregexp>
+
+      <!-- Remove mcdm_15__ ObjectPermissions from profiles -->
+      <replaceregexp match="&lt;objectPermissions&gt;\s*&lt;allowCreate&gt;[\S\s]*?&lt;/allowCreate&gt;\s*&lt;allowDelete&gt;[\S\s]*?&lt;/allowDelete&gt;\s*&lt;allowEdit&gt;[\S\s]*?&lt;/allowEdit&gt;\s*&lt;allowRead&gt;[\S\s]*?&lt;/allowRead&gt;\s*&lt;modifyAllRecords&gt;[\S\s]*?&lt;/modifyAllRecords&gt;\s*&lt;object&gt;mcdm_15__(.*)&lt;/object&gt;\s*&lt;viewAllRecords&gt;[\S\s]*?&lt;/viewAllRecords&gt;\s*&lt;/objectPermissions&gt;\s*" replace="" flags="gm" byline="false">
+        <fileset dir="${basedir}/force-app/main/default/profiles" includes="*.xml"/>
+      </replaceregexp>
+
+      <!-- Remove mcdm_15__ LayoutAssignments from profiles -->
+      <replaceregexp match="&lt;layoutAssignments&gt;\s*&lt;layout&gt;mcdm_15__(.*)&lt;/layout&gt;\s*&lt;/layoutAssignments&gt;\s*" replace="" flags="gm" byline="false">
+        <fileset dir="${basedir}/force-app/main/default/profiles" includes="*.xml"/>
+      </replaceregexp>
+
+      <!-- Remove mcdm_15 fieldPermissions from profiles -->
+      <replaceregexp match="&lt;fieldPermissions&gt;\s*&lt;editable&gt;(.+?)&lt;/editable&gt;\s*&lt;field&gt;(.*).mcdm_15__(.*)&lt;/field&gt;\s*&lt;readable&gt;(.+?)&lt;/readable&gt;\s*&lt;/fieldPermissions&gt;\s*" replace="" flags="gm" byline="false">
+        <fileset dir="${basedir}/force-app/main/default/profiles" includes="*.xml"/>
+      </replaceregexp>
+
+      <!-- Remove mcdm_15__ pageAccess from profiles -->
+      <replaceregexp match="&lt;pageAccesses&gt;\s*&lt;apexPage&gt;mcdm_15__(.*)&lt;/apexPage&gt;\s*&lt;enabled&gt;[\S\s]*?&lt;/enabled&gt;\s*&lt;/pageAccesses&gt;\s*" replace="" flags="gm" byline="false">
+        <fileset dir="${basedir}/force-app/main/default/profiles" includes="*.xml"/>
+      </replaceregexp>
+
+      <!-- Remove mcdm_15__ tabVisibility from profiles -->
+      <replaceregexp match="&lt;tabVisibilities&gt;\s*&lt;tab&gt;mcdm_15__(.*)&lt;/tab&gt;\s*&lt;visibility&gt;[\S\s]*?&lt;/visibility&gt;\s*&lt;/tabVisibilities&gt;\s*" replace="" flags="gm" byline="false">
+        <fileset dir="${basedir}/force-app/main/default/profiles" includes="*.xml"/>
+      </replaceregexp>
+
+      <!-- Remove Stupid Case.Language Field -->
+      <replaceregexp match="&lt;fieldPermissions&gt;\s*&lt;editable&gt;(.+?)&lt;/editable&gt;\s*&lt;field&gt;Case.Language&lt;/field&gt;\s*&lt;readable&gt;(.+?)&lt;/readable&gt;\s*&lt;/fieldPermissions&gt;\s*" replace="" flags="gm" byline="false">
+        <fileset dir="${basedir}/force-app/main/default/profiles" includes="*.xml"/>
+      </replaceregexp>
+
+      <!-- remove all references to flowAccesses -->
+      <replaceregexp match="&lt;flowAccesses&gt;\s*&lt;enabled&gt;(.+?)&lt;/enabled&gt;\s*&lt;flow&gt;(.+?)&lt;/flow&gt;\s*&lt;/flowAccesses&gt;\s*" replace="" flags="gm" byline="false">
+        <fileset dir="${basedir}/force-app/main/default/profiles" includes="*.xml"/>
+      </replaceregexp>
+
+      <!-- Remove LightningForgotPasswordController classAccess from profiles -->
+      <replaceregexp match="&lt;classAccesses&gt;\s*&lt;apexClass&gt;LightningForgotPasswordController(.*)&lt;/apexClass&gt;\s*&lt;enabled&gt;[\S\s]*?&lt;/enabled&gt;\s*&lt;/classAccesses&gt;\s*" replace="" flags="gm" byline="false">
+        <fileset dir="${basedir}/force-app/main/default/profiles" includes="*.xml"/>
+      </replaceregexp>
+
+      <!-- Remove LightningLoginFormController classAccess from profiles -->
+      <replaceregexp match="&lt;classAccesses&gt;\s*&lt;apexClass&gt;LightningLoginFormController(.*)&lt;/apexClass&gt;\s*&lt;enabled&gt;[\S\s]*?&lt;/enabled&gt;\s*&lt;/classAccesses&gt;\s*" replace="" flags="gm" byline="false">
+        <fileset dir="${basedir}/force-app/main/default/profiles" includes="*.xml"/>
+      </replaceregexp>
+
+      <!-- Remove LightningForgotPasswordController classAccess from profiles -->
+      <replaceregexp match="&lt;classAccesses&gt;\s*&lt;apexClass&gt;LightningForgotPasswordController(.*)&lt;/apexClass&gt;\s*&lt;enabled&gt;[\S\s]*?&lt;/enabled&gt;\s*&lt;/classAccesses&gt;\s*" replace="" flags="gm" byline="false">
+        <fileset dir="${basedir}/force-app/main/default/profiles" includes="*.xml"/>
+      </replaceregexp>
+
+      <!-- Remove LightningSelfRegisterController classAccess from profiles -->
+      <replaceregexp match="&lt;classAccesses&gt;\s*&lt;apexClass&gt;LightningSelfRegisterController(.*)&lt;/apexClass&gt;\s*&lt;enabled&gt;[\S\s]*?&lt;/enabled&gt;\s*&lt;/classAccesses&gt;\s*" replace="" flags="gm" byline="false">
+        <fileset dir="${basedir}/force-app/main/default/profiles" includes="*.xml"/>
+      </replaceregexp>
+
+      <!-- Remove WaterFallChartController classAccess from profiles -->
+      <replaceregexp match="&lt;classAccesses&gt;\s*&lt;apexClass&gt;WaterFallChartController(.*)&lt;/apexClass&gt;\s*&lt;enabled&gt;[\S\s]*?&lt;/enabled&gt;\s*&lt;/classAccesses&gt;\s*" replace="" flags="gm" byline="false">
+        <fileset dir="${basedir}/force-app/main/default/profiles" includes="*.xml"/>
+      </replaceregexp>
+
+
 
       <!-- Remove ViewFlowUsageAndFlowEventData from profiles -->
 <!--      <replaceregexp match="&lt;userPermissions&gt;\s*&lt;enabled&gt;[\S\s]*?&lt;/enabled&gt;\s*&lt;name&gt;ViewFlowUsageAndFlowEventData&lt;/name&gt;\s*&lt;/userPermissions&gt;\s*" replace="" flags="gm" byline="false">-->
