@@ -87,8 +87,8 @@
         </div>
         <div class="config-page_right slds-p-around_xx-large">
           <h2 class="right_heading">Select Your Performance</h2>
-            <c-cust-comm-order-options options-title="Standard Performance" selections="one" selection-scope="global"></c-cust-comm-order-options>
-            <c-cust-comm-order-options options-title="Enhanced Performance" selections="one" selection-scope="global"></c-cust-comm-order-options>
+            <c-cust-comm-order-options options-title="Standard Performance" selections="one" selection-scope="global" options={boat.standardMotor} boat-retail-price={boat.retailPrice}></c-cust-comm-order-options>
+            <c-cust-comm-order-options options-title="Enhanced Performance" selections="one" selection-scope="global" options={boat.motorUpgrades} boat-retail-price={boat.retailPrice}></c-cust-comm-order-options>
         </div>
       </div>
 
@@ -103,8 +103,10 @@
         <div class="config-page_right">
           <div class="config-page_right slds-p-around_xx-large">
             <h2 class="right_heading">Trailering Package</h2>
+            <!--
             <c-cust-comm-order-options options-title="Select Your Trailer" selections="one" selection-scope="global"></c-cust-comm-order-options>
             <c-cust-comm-order-options selections="one" selection-scope="global"></c-cust-comm-order-options>
+            -->
           </div>
         </div>
       </div>
@@ -120,7 +122,9 @@
         <div class="config-page_right">
           <div class="config-page_right slds-p-around_xx-large">
             <h2 class="right_heading">Electronics</h2>
+            <!--
             <c-cust-comm-order-options options-title="Terrova 55 Tech Package" selections="one" selection-scope="global"></c-cust-comm-order-options>
+            -->
           </div>
         </div>
       </div>

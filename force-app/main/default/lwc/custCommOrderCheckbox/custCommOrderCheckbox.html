@@ -4,16 +4,18 @@
 
 <!-- Cust Comm Order Checkbox -->
 <template>
+    <!--
     <ul class="options_includedProducts">
         <li class="options_includedProduct">Bring a spring upon her cable</li>
         <li class="options_includedProduct">Belay yo-ho-ho</li>
         <li class="options_includedProduct">Blimey lee snow crow's nest rutters</li>
     </ul>
-    <input class="vh" type="checkbox" name="dummy" id="dummy">
-    <label class="options_label" for="dummy">
-        <!-- <small class="options_label_checkbox"></small> -->
-        <span class="options_label_name">90 ELPT 4-Stroke</span>
-        <span class="options_label_price">$39,999</span>
+    -->
+    <input class="vh" type="checkbox" name="dummy" id="dummy" data-sku={optionSku} data-km={optionKm} data-rpm={optionRpm}>
+    <label class="options_label" for="dummy" onclick={handleClick} data-sku={optionSku} data-km={optionKm} data-rpm={optionRpm}>
+        <small class="options_label_checkbox"></small>
+        <span class="options_label_name">{optionName}</span>
+        <span class="options_label_price">{optionPrice}</span>
     </label>
-    <p class="options_deck">Prow scuttle parrel provost Sail ho shrouds spirits boom mizzenmast yardarm. Pinnace holystone mizzenmast quarter crow's nest nipperkin grog yardarm hempen halter furl. Swab barque interloper chantey doubloon starboard grog black jack gangway rutters.</p>
+    <p class="options_deck"></p>
 </template>

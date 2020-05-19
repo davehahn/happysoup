@@ -8,12 +8,11 @@
         <h3 class="options_title">{optionsTitle}</h3>
         <fieldset>
             <ul class="options_list">
-                <li class="options_item">
-                    <c-cust-comm-order-checkbox></c-cust-comm-order-checkbox>
-                </li>
-                <li class="options_item">
-                    <c-cust-comm-order-checkbox></c-cust-comm-order-checkbox>
-                </li>
+                <template for:each={availableOptions} for:item="option">
+                    <li key={option.name} class="options_item">
+                        <c-cust-comm-order-checkbox option-sku={option.sku} option-name={option.name} option-price={option.price} option-km={option.km} option-rpm={option.rpm}></c-cust-comm-order-checkbox>
+                    </li>
+                </template>
             </ul>
         </fieldset>
     </section>
