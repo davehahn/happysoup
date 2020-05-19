@@ -16,13 +16,26 @@ export default class CommissionPaymentCard extends LightningElement {
   @api isEditing;
   @track showDisputeReason=false;
   @track disputeReason;
+  @track paymentType;
   _status;
   userSelectFields = ['Name', 'SmallPhotoUrl', 'Commission_Gross_Margin_Percent_Override__c'];
   userFilterFields = ['Name'];
 
+  get options() {
+      return [
+          { label: 'Standard', value: 'Standard' },
+          { label: 'Manager', value: 'Manager' }
+      ];
+  }
+
   get renderIndicator()
   {
     return this.payment.status !== 'New';
+  }
+
+  get renderSplit()
+  {
+    return this.paymentType === 'Standard';
   }
 
   get renderStatusMenu()
@@ -43,6 +56,13 @@ export default class CommissionPaymentCard extends LightningElement {
   get disputeFormInvalid()
   {
     return !this.disputeReason;
+  }
+
+  handleTypeChange(event) {
+      this.paymentType = event.detail.value;
+      if(this.paymentType != 'Standard'){
+        this.amount = 0;
+      }
   }
 
   handleDisputeReasonChange( event )
