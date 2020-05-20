@@ -227,10 +227,11 @@ public with sharing class gcDealerReseved_Receipt {
             insert bankDeposit;
             idRet = bankDeposit.Id;
         }else if(checkCharge < 0){
+            insert listCrs;
             // Creating Payment
             String payeeRef = 'ACCT-' + String.valueOf(DateTime.now().getTime()) + '-Refund';
             AcctSeed__Account_Payable__c accountPayable = new AcctSeed__Account_Payable__c(
-                AcctSeed__Vendor__c = idAccount,
+                AcctSeed__Vendor__c = idBankAccount,
                 AcctSeed__Payee_Reference__c = payeeRef,
                 Tax_Override__c = true,
                 Tax_is_Harmonized__c = false,
@@ -288,7 +289,7 @@ public with sharing class gcDealerReseved_Receipt {
                 AcctSeed__Source__c = 'Account Payable',
                 AcctSeed__GL_Account_Variable_1__c = idGLV1,
                 AcctSeed__Bank_Account__c = idGlBank,
-                AcctSeed__Vendor__c = idAccount,
+                AcctSeed__Vendor__c = idBankAccount,
                 AcctSeed__Status__c = 'Approved',
                 AcctSeed__Reference__c = 'refund--'+System.now().format(),
                 AcctSeed__Debit_GL_Account__c = gcConstants.idGlAPayable,
