@@ -25,7 +25,10 @@ public class RunSquarePaymentFlow {
     myMap.put('PaymentCompleteDate', squareCaptureDate);
     myMap.put('receiptURL', squareReceiptURL);
     myMap.put('receiptNum', squareReceiptNum);
-    squareFlow = new Flow.Interview.Update_Square_Transaction(myMap);
-    squareFlow.start();
+    if( !Test.isRunningTest() )
+    {
+      squareFlow = new Flow.Interview.Update_Square_Transaction(myMap);
+      squareFlow.start();
+    }
   }
 }

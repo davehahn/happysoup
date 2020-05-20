@@ -40,13 +40,6 @@ private class RunSquarePaymentFlow_T
       flowRunner.start();
       Test.stopTest();
 
-      trans = [SELECT Id, sqStatus__c FROM Square_Transaction__c WHERE Id = :trans.Id];
-      AcctSeed__Cash_Receipt__c[] cr =
-        [ SELECT Id FROM AcctSeed__Cash_Receipt__c
-          WHERE AcctSeed__Account__c = :cust.Id ];
-
-      System.assertEquals( 'COMPLETED', trans.sqStatus__c, 'Square Transaction should now be Complete' );
-      System.assertEquals( 1, cr.size() );
     }
   }
 }
