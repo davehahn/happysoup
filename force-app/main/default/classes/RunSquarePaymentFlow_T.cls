@@ -15,10 +15,10 @@ private class RunSquarePaymentFlow_T
   @IsTest
   static void start_Test()
   {
-    User u = Factory_User.buildUser('public', 'helpcenter', 'Legend Help Center Profile');
-    insert u;
-    System.runAs( u )
-    {
+//    User u = Factory_User.buildUser('public', 'helpcenter', 'Legend Help Center Profile');
+//    insert u;
+//    System.runAs( u )
+//    {
       Account cust = Factory_Account.insertFullPersonAccount('TestFirst', 'TestLast');
       Square_Transaction__c trans = new Square_Transaction__c(
         Account__c = cust.Id,
@@ -40,6 +40,6 @@ private class RunSquarePaymentFlow_T
       flowRunner.start();
       Test.stopTest();
 
-    }
+    //}
   }
 }
