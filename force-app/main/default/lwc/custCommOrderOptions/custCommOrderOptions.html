@@ -10,7 +10,19 @@
             <ul class="options_list">
                 <template for:each={availableOptions} for:item="option">
                     <li key={option.name} class="options_item">
-                        <c-cust-comm-order-checkbox option-sku={option.sku} option-name={option.name} option-price={option.price} option-km={option.km} option-rpm={option.rpm}></c-cust-comm-order-checkbox>
+                        <c-cust-comm-order-checkbox onoptionview={handleOptionView}
+                                                    option-input-type={option.inputType}
+                                                    option-page={page}
+                                                    option-init={option.init}
+                                                    option-sku={option.sku}
+                                                    option-name={option.name}
+                                                    option-price={option.price}
+                                                    option-km={option.km}
+                                                    option-rpm={option.rpm}
+                                                    option-images={option.images}
+                                                    option-blurb={option.blurb}>
+
+                        </c-cust-comm-order-checkbox>
                     </li>
                 </template>
             </ul>

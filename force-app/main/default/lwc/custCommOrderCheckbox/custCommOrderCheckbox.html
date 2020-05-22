@@ -11,11 +11,42 @@
         <li class="options_includedProduct">Blimey lee snow crow's nest rutters</li>
     </ul>
     -->
-    <input class="vh" type="checkbox" name="dummy" id="dummy" data-sku={optionSku} data-km={optionKm} data-rpm={optionRpm}>
-    <label class="options_label" for="dummy" onclick={handleClick} data-sku={optionSku} data-km={optionKm} data-rpm={optionRpm}>
-        <small class="options_label_checkbox"></small>
-        <span class="options_label_name">{optionName}</span>
-        <span class="options_label_price">{optionPrice}</span>
-    </label>
-    <p class="options_deck"></p>
+    <template if:false={optionInit}>
+        <div class="config-footer_item">
+            <input class="vh"
+                   type={optionInputType}
+                   name="option"
+                   id="option"
+                   data-sku={optionSku}
+                   data-km={optionKm}
+                   onchange={handleClick}
+                   data-rpm={optionRpm}>
+            <label class="options_label"
+                   for="option">
+                <small class="options_label_checkbox"></small>
+                <span class="options_label_name">{optionName}</span>
+                <span class="options_label_price">{optionPrice}</span>
+            </label>
+        </div>
+    </template>
+    <template if:true={optionInit}>
+        <div class="config-footer_item">
+            <input class="vh"
+                   type={optionInputType}
+                   name="option"
+                   id="optionInit"
+                   data-sku={optionSku}
+                   data-km={optionKm}
+                   onchange={handleClick}
+                   data-rpm={optionRpm}
+                    checked>
+            <label class="options_label"
+                   for="optionInit">
+                <small class="options_label_checkbox"></small>
+                <span class="options_label_name">{optionName}</span>
+                <span class="options_label_price">{optionPrice}</span>
+            </label>
+        </div>
+    </template>
+    <p class="options_deck">{optionBlurb}</p>
 </template>

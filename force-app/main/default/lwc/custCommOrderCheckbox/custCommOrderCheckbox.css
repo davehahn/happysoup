@@ -45,10 +45,12 @@
     position: relative;
 }
 
-input[type="checkbox"]:checked + .options_label{
+input[type="checkbox"]:checked + .options_label,
+input[type="radio"]:checked + .options_label{
     border-color: #00b4ee;
 }
-input[type="checkbox"]:checked + .options_label .options_label_checkbox::before, .options_label_checkbox::after{
+input[type="checkbox"]:checked + .options_label .options_label_checkbox::before, .options_label_checkbox::after,
+input[type="radio"]:checked + .options_label .options_label_checkbox::before, .options_label_checkbox::after{
     content: "";
     display: block;
     position: absolute;
@@ -56,13 +58,15 @@ input[type="checkbox"]:checked + .options_label .options_label_checkbox::before,
     border-radius: 100vh;
     background-color: #00b4ee;
 }
-input[type="checkbox"]:checked + .options_label .options_label_checkbox::before{
+input[type="checkbox"]:checked + .options_label .options_label_checkbox::before,
+input[type="radio"]:checked + .options_label .options_label_checkbox::before{
     width: 7px;
     transform: rotate(40deg);
     top: 55%;
     left: 20%;
 }
-input[type="checkbox"]:checked + .options_label .options_label_checkbox::after{
+input[type="checkbox"]:checked + .options_label .options_label_checkbox::after,
+input[type="radio"]:checked + .options_label .options_label_checkbox::after{
     width: 10px;
     transform: rotate(-50deg);
     top: 42%;

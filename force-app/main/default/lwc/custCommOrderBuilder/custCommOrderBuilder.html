@@ -82,13 +82,13 @@
       <div class="config-page config-page_selected" data-page="performance">
         <div class="config-page_left">
           <h1 class="vh">Performance</h1>
-          <c-cust-comm-order-boat-image size="large"></c-cust-comm-order-boat-image>
-          <c-cust-comm-order-motor-stats></c-cust-comm-order-motor-stats>
+          <c-cust-comm-order-boat-image motor-details={motorDetails} size="large"></c-cust-comm-order-boat-image>
+          <c-cust-comm-order-motor-stats motor-details={motorDetails}></c-cust-comm-order-motor-stats>
         </div>
         <div class="config-page_right slds-p-around_xx-large">
           <h2 class="right_heading">Select Your Performance</h2>
-            <c-cust-comm-order-options options-title="Standard Performance" selections="one" selection-scope="global" options={boat.standardMotor} boat-retail-price={boat.retailPrice}></c-cust-comm-order-options>
-            <c-cust-comm-order-options options-title="Enhanced Performance" selections="one" selection-scope="global" options={boat.motorUpgrades} boat-retail-price={boat.retailPrice}></c-cust-comm-order-options>
+            <c-cust-comm-order-options onupdateoptionview={handleUpdateOptionView} options-title="Standard Performance" selections="one" selection-scope="global" options={boat.standardMotor} boat-retail-price={boat.retailPrice} is-init="true" page={currentPage}></c-cust-comm-order-options>
+            <c-cust-comm-order-options onupdateoptionview={handleUpdateOptionView} options-title="Enhanced Performance" selections="one" selection-scope="global" options={boat.motorUpgrades} boat-retail-price={boat.retailPrice} page={currentPage}></c-cust-comm-order-options>
         </div>
       </div>
 

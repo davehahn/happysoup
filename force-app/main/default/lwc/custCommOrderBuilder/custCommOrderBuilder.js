@@ -20,6 +20,7 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
   vertLogo = VLOGO;
   orderValid=true;
   isMobile = false;
+  @track motorDetails;
   pages = [
     'performance',
     'trailering',
@@ -273,5 +274,9 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
     return this.pages.indexOf( this.currentPage ) + 1 === this.pages.length
   }
 
+	//Handle KM, RPM and Image swap when viewing Motor Options
+	 handleUpdateOptionView(event){
+	   this.motorDetails = JSON.parse(JSON.stringify(event.detail));
+  }
 
 }
