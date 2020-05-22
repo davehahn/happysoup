@@ -20,9 +20,10 @@ export default class CustCommOrderOptions extends LightningElement {
 	  if(this.options){
 	    const options = this.options;
 	    const keys = Object.keys(this.options);
-			let motorDetails = [];
+			let optionDetails = [];
 			const inputType = (this.selections === 'one') ? 'radio' : 'checkbox';
-
+			const strToReplace = ['Duv22L', 'Duv22L Galv'];
+			const replaceWith = ['Black Powder Coated Trailer', 'Galvanized Trailer'];
 	    if('id' in options){
 	      //single option details to array
 				let upgradePrice = parseInt(options['retailPrice']) + parseInt(this.boatRetailPrice);
@@ -37,6 +38,7 @@ export default class CustCommOrderOptions extends LightningElement {
 				let	rpm = null;
 				let images = [];
 				let blurb = null;
+				let includedProducts = [];
 				const init = (this.isInit) ? true : false;
 
 				if('marketingContent' in options){
@@ -59,11 +61,13 @@ export default class CustCommOrderOptions extends LightningElement {
 							});
 						} else if(label === 'blurb'){
 							 blurb = stripContent;
-     			 	}
+     			 	} else if(label === 'includedproducts'){
+     			 	  includedProducts = stripContent.split("|");
+         	 	}
     	 		}
     		}
 
-				motorDetails.push({
+				optionDetails.push({
 					'sku': sku,
 					'name': name,
 					'price': upgradePrice,
@@ -72,10 +76,11 @@ export default class CustCommOrderOptions extends LightningElement {
 					'init': init,
 					'inputType': inputType,
 					'images': images,
-					'blurb': blurb
+					'blurb': blurb,
+					'includedProducts': includedProducts,
 				});
-//				console.log('details: ', motorDetails);
-				return motorDetails;
+//				console.log('details: ', optionDetails);
+				return optionDetails;
 
      	} else {
      	  //return 'multiple options';
@@ -83,14 +88,24 @@ export default class CustCommOrderOptions extends LightningElement {
      	    if('id' in option){
      	      const name = option['name'];
      	      const sku = option['id'];
+//     	      console.log('sku: ', sku);
      	      const selections = this.selections;
      	      let upgradePrice = 0;
      	      let km = null;
 						let	rpm = null;
 						let images = [];
 						let blurb = null;
+						let includedProducts = [];
 
-     	      if('RetailUpgradeCost' in option){
+						if('retailPrice' in option){
+						  upgradePrice = parseInt(option['retailPrice']) + parseInt(this.boatRetailPrice);
+							upgradePrice = new Intl.NumberFormat('en-CA', {
+															style: 'currency',
+															currency: 'CAD',
+															minimumFractionDigits: 0
+															}).format(upgradePrice);
+      			}
+     	      else if('RetailUpgradeCost' in option){
 							upgradePrice = parseInt(option['RetailUpgradeCost']) + parseInt(this.boatRetailPrice);
 							upgradePrice = new Intl.NumberFormat('en-CA', {
 							  							style: 'currency',
@@ -119,11 +134,13 @@ export default class CustCommOrderOptions extends LightningElement {
 									});
 								} else if(label === 'blurb'){
 									blurb = unescape(stripContent);
-        				}
+        				} else if(label === 'includedproducts'){
+									includedProducts = stripContent.split("|");
+								}
 							}
 						}
 
-            motorDetails.push({
+            optionDetails.push({
               'sku': sku,
 							'name': name,
 							'price': upgradePrice,
@@ -131,17 +148,23 @@ export default class CustCommOrderOptions extends LightningElement {
 							'rpm': rpm,
 							'inputType': inputType,
 							'images': images,
-							'blurb': blurb
+							'blurb': blurb,
+							'includedProducts': includedProducts,
 						});
           } else {
             //console.log('no id');
           }
         }
-
-        return motorDetails;
+//				console.log('details: ', optionDetails);
+        return optionDetails;
       }
    	}
  	}
+
+ 	get hasOptionsTitle(){
+// 	  console.log('optionsTitle: ', this.optionsTitle);
+ 	  return (typeof this.optionsTitle !== 'undefined') ? true : false;
+  }
 
  	handleOptionView(event){
  	  const optionDetails = event.detail;

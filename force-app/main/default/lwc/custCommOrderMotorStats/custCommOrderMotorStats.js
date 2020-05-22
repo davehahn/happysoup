@@ -15,7 +15,7 @@ export default class CustCommOrderMotorStats extends LightningElement {
 		renderedCallback(){
 		  //console.log('in completed callback');
 			if(this.motorDetails){
-				console.log('previous Speed: ', this.previousSpeed);
+//				console.log('previous Speed: ', this.previousSpeed);
         			//const difference = this.motorDetails.motorSpeed - this.previousSpeed;
 
 
@@ -27,19 +27,19 @@ export default class CustCommOrderMotorStats extends LightningElement {
         			var interval = setInterval(function(){
 
         				const difference = self.motorDetails.motorSpeed - self.previousSpeed;
-        				console.log('counter: ', counter);
-        				console.log('startSpeed: ', startSpeed);
-        				console.log('motorSpeed: ', motorSpeed);
+//        				console.log('counter: ', counter);
+//        				console.log('startSpeed: ', startSpeed);
+//        				console.log('motorSpeed: ', motorSpeed);
         				if(counter <= Math.abs(difference)){
         					if(Math.sign(difference) === 1){
         						motorSpeed = motorSpeed + 1;
         						counter = counter + 1;
-        						console.log('add 1');
+//        						console.log('add 1');
         						self.motorSpeed = motorSpeed;
         					} else {
         						motorSpeed = motorSpeed - 1;
 										counter = counter + 1;
-										console.log('add 1');
+//										console.log('add 1');
 										self.motorSpeed = motorSpeed;
         					}
 

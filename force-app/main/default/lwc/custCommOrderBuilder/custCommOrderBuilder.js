@@ -226,7 +226,12 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
   }
 
   get premiumPackValue(){
-    return this.boat.premiumPackage.value;
+    const value = parseInt(this.boat.premiumPackage.value);
+    return new Intl.NumberFormat('en-CA', {
+    							  							style: 'currency',
+    							  							currency: 'CAD',
+    							  							minimumFractionDigits: 0
+    							  							}).format(value);
   }
 	get premiumPackItems(){
 		const contents = this.boat.premiumPackage.contents;
@@ -273,6 +278,12 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
   {
     return this.pages.indexOf( this.currentPage ) + 1 === this.pages.length
   }
+
+	get traileringOptions(){
+	  const options = [this.boat.standardTrailer, this.boat.trailerUpgrades];
+//	  console.log(JSON.parse(JSON.stringify(options)));
+		return options;
+ 	}
 
 	//Handle KM, RPM and Image swap when viewing Motor Options
 	 handleUpdateOptionView(event){

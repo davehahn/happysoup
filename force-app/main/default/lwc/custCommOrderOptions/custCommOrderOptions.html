@@ -4,7 +4,7 @@
 
 <!-- Cust Comm Order Options -->
 <template>
-    <section class="options">
+    <section class="options" data-has-title={hasOptionsTitle}>
         <h3 class="options_title">{optionsTitle}</h3>
         <fieldset>
             <ul class="options_list">
@@ -20,7 +20,8 @@
                                                     option-km={option.km}
                                                     option-rpm={option.rpm}
                                                     option-images={option.images}
-                                                    option-blurb={option.blurb}>
+                                                    option-blurb={option.blurb}
+                                                    option-included-products={option.includedProducts}>
 
                         </c-cust-comm-order-checkbox>
                     </li>
