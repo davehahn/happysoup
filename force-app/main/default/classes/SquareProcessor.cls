@@ -50,6 +50,7 @@ public with sharing class SquareProcessor
 
   public PaymentResponse postPayment( Decimal amount, String nonce )
   {
+    System.debug('SQUARE_PROCESSOR.postPayment');
     //Square only handle cents
     amount = amount * 100;
     String jsonData = JSON.serialize( new Payment( amount, nonce ) );
@@ -76,7 +77,7 @@ public with sharing class SquareProcessor
     {
       System.debug( 'Callout error: '+ e );
       System.debug( request.toString() );
-      return null;
+      throw new SquareException(e.getMessage() );
     }
 
   }

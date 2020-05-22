@@ -1162,6 +1162,26 @@ public without sharing class gcConstants {
 		}
 		set;
 	}
+
+	public static Id idActualLedger
+	{
+		get
+		{
+			if( idActualLedger == null )
+			{
+				try
+				{
+					idActualLedger = [SELECT AcctSeed__Default_Ledger__c FROM AcctSeed__Accounting_Settings__c LIMIT 1].AcctSeed__Default_Ledger__c;
+				}
+				catch( Exception e )
+				{
+					throw new gcException('A Defualt Ledger has not been setup.  Please set the default Ledger in Accounting Settings');
+				}
+			}
+			return idActualLedger;
+		}
+	}
+
 	/// Kept so that the other class does not throw errors
  	public static void coverage()
  	{

@@ -87,14 +87,16 @@
       {
         cardNonceResponseReceived: function (errors, nonce, cardData)
         {
-
+          console.log('cardNonceResponseReceived');
           if (errors)
           {
             _reject( errors );
           }
           SquarePaymentForm_Controller.postToSquare( _paymentAmount, nonce, function( events, result ) {
+            console.log( result );
             if( result.statusCode === 200 )
             {
+
               const response = JSON.parse( result.result );
               if( response.errors )
               {
@@ -105,7 +107,9 @@
               }
               else
               {
-                _resolve( JSON.parse( response.payment ) );
+                console.log('LOOK HERE');
+                console.log( response.payment );
+                _resolve(  response.payment );
               }
             }
             else

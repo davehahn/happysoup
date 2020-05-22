@@ -57,30 +57,7 @@
     <target name="cleanProfiles">
       <antcall target="remove_mcdm_15" />
       <antcall target="remove_et4ae5" />
-      <!-- Remove Packaging2PromoteVersion from profiles -->
-      <replaceregexp match="&lt;userPermissions&gt;\s*&lt;enabled&gt;[\S\s]*?&lt;/enabled&gt;\s*&lt;name&gt;Packaging2PromoteVersion&lt;/name&gt;\s*&lt;/userPermissions&gt;\s*" replace="" flags="gm" byline="false">
-        <fileset dir="${basedir}/force-app/main/default/profiles" includes="*.xml"/>
-      </replaceregexp>
-
-      <!-- Remove ManageRealm from profiles -->
-      <replaceregexp match="&lt;userPermissions&gt;\s*&lt;enabled&gt;[\S\s]*?&lt;/enabled&gt;\s*&lt;name&gt;ManageRealm&lt;/name&gt;\s*&lt;/userPermissions&gt;\s*" replace="" flags="gm" byline="false">
-        <fileset dir="${basedir}/force-app/main/default/profiles" includes="*.xml"/>
-      </replaceregexp>
-
-      <!-- Remove EditBillingInfo from profiles -->
-      <replaceregexp match="&lt;userPermissions&gt;\s*&lt;enabled&gt;[\S\s]*?&lt;/enabled&gt;\s*&lt;name&gt;EditBillingInfo&lt;/name&gt;\s*&lt;/userPermissions&gt;\s*" replace="" flags="gm" byline="false">
-        <fileset dir="${basedir}/force-app/main/default/profiles" includes="*.xml"/>
-      </replaceregexp>
-
-      <!-- Remove ManageSandboxes from profiles -->
-      <replaceregexp match="&lt;userPermissions&gt;\s*&lt;enabled&gt;[\S\s]*?&lt;/enabled&gt;\s*&lt;name&gt;ManageSandboxes&lt;/name&gt;\s*&lt;/userPermissions&gt;\s*" replace="" flags="gm" byline="false">
-        <fileset dir="${basedir}/force-app/main/default/profiles" includes="*.xml"/>
-      </replaceregexp>
-
-      <!-- Remove SendExternalEmailAvailable from profiles -->
-      <replaceregexp match="&lt;userPermissions&gt;\s*&lt;enabled&gt;[\S\s]*?&lt;/enabled&gt;\s*&lt;name&gt;SendExternalEmailAvailable&lt;/name&gt;\s*&lt;/userPermissions&gt;\s*" replace="" flags="gm" byline="false">
-        <fileset dir="${basedir}/force-app/main/default/profiles" includes="*.xml"/>
-      </replaceregexp>
+      <antcall target="remove_userPermissions" />
 
       <!-- Remove SiteIframeWhiteListUrl-Whitelisted Domains for Inline Frames Layout from profiles -->
       <replaceregexp match="&lt;layoutAssignments&gt;\s*&lt;layout&gt;SiteIframeWhiteListUrl-Whitelisted Domains for Inline Frames Layout&lt;/layout&gt;\s*&lt;/layoutAssignments&gt;\s*" replace="" flags="gm" byline="false">
@@ -152,6 +129,38 @@
       <!--      <replaceregexp match="&lt;userPermissions&gt;\s*&lt;enabled&gt;[\S\s]*?&lt;/enabled&gt;\s*&lt;name&gt;ViewFlowUsageAndFlowEventData&lt;/name&gt;\s*&lt;/userPermissions&gt;\s*" replace="" flags="gm" byline="false">-->
       <!--        <fileset dir="${basedir}/src/profiles" includes="*.profile"/>-->
       <!--      </replaceregexp>-->
+    </target>
+
+    <target name="remove_userPermissions">
+      <!-- Remove Packaging2PromoteVersion from profiles -->
+      <replaceregexp match="&lt;userPermissions&gt;\s*&lt;enabled&gt;[\S\s]*?&lt;/enabled&gt;\s*&lt;name&gt;Packaging2PromoteVersion&lt;/name&gt;\s*&lt;/userPermissions&gt;\s*" replace="" flags="gm" byline="false">
+        <fileset dir="${basedir}/force-app/main/default/profiles" includes="*.xml"/>
+      </replaceregexp>
+
+      <!-- Remove ManageRealm from profiles -->
+      <replaceregexp match="&lt;userPermissions&gt;\s*&lt;enabled&gt;[\S\s]*?&lt;/enabled&gt;\s*&lt;name&gt;ManageRealm&lt;/name&gt;\s*&lt;/userPermissions&gt;\s*" replace="" flags="gm" byline="false">
+        <fileset dir="${basedir}/force-app/main/default/profiles" includes="*.xml"/>
+      </replaceregexp>
+
+      <!-- Remove EditBillingInfo from profiles -->
+      <replaceregexp match="&lt;userPermissions&gt;\s*&lt;enabled&gt;[\S\s]*?&lt;/enabled&gt;\s*&lt;name&gt;EditBillingInfo&lt;/name&gt;\s*&lt;/userPermissions&gt;\s*" replace="" flags="gm" byline="false">
+        <fileset dir="${basedir}/force-app/main/default/profiles" includes="*.xml"/>
+      </replaceregexp>
+
+      <!-- Remove ManageSandboxes from profiles -->
+      <replaceregexp match="&lt;userPermissions&gt;\s*&lt;enabled&gt;[\S\s]*?&lt;/enabled&gt;\s*&lt;name&gt;ManageSandboxes&lt;/name&gt;\s*&lt;/userPermissions&gt;\s*" replace="" flags="gm" byline="false">
+        <fileset dir="${basedir}/force-app/main/default/profiles" includes="*.xml"/>
+      </replaceregexp>
+
+      <!-- Remove SendExternalEmailAvailable from profiles -->
+      <replaceregexp match="&lt;userPermissions&gt;\s*&lt;enabled&gt;[\S\s]*?&lt;/enabled&gt;\s*&lt;name&gt;SendExternalEmailAvailable&lt;/name&gt;\s*&lt;/userPermissions&gt;\s*" replace="" flags="gm" byline="false">
+        <fileset dir="${basedir}/force-app/main/default/profiles" includes="*.xml"/>
+      </replaceregexp>
+
+      <!-- Remove Einstein* from profiles -->
+      <replaceregexp match="&lt;userPermissions&gt;\s*&lt;enabled&gt;[\S\s]*?&lt;/enabled&gt;\s*&lt;name&gt;Einstein(.*)&lt;/name&gt;\s*&lt;/userPermissions&gt;\s*" replace="" flags="gm" byline="false">
+        <fileset dir="${basedir}/force-app/main/default/profiles" includes="*.xml"/>
+      </replaceregexp>
     </target>
 
     <target name="remove_mcdm_15">

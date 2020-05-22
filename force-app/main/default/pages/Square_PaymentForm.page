@@ -6,7 +6,10 @@
            StandardController="Square_Transaction__c"
            extensions="RunSquarePaymentFlow">
 
-    <style>
+  <apex:slds />
+  <apex:includeScript value="{!URLFOR($Resource.Libraries, 'js/handlebars.min-latest.js')}"/>
+
+  <style>
 
 
     .sqr-payment-container {
@@ -44,130 +47,212 @@
     }
 
 
-.round-button{
-  display: block;
-  position: relative; margin: 0 auto 1.5em;
-  width: -moz-fit-content;
-  width: fit-content;
-  padding: 0.5em 0.5em;
-  z-index: 2;
-  font-family: 'gotham-medium';
-  font-size: 1.35em;
-  font-weight: 600;
-  background: #00b2ed none !important;
-  border: 1px solid #00b2ed;
-  color: #FFF;
-  border-radius: 60px;
-  margin-left: 25px;
+    .round-button{
+      display: block;
+      position: relative; margin: 0 auto 1.5em;
+      width: -moz-fit-content;
+      width: fit-content;
+      padding: 0.5em 0.5em;
+      z-index: 2;
+      font-family: 'gotham-medium';
+      font-size: 1.35em;
+      font-weight: 600;
+      background: #00b2ed none !important;
+      border: 1px solid #00b2ed;
+      color: #FFF;
+      border-radius: 60px;
+      margin-left: 25px;
 
-}
-
-.round-button:hover:enabled{
-    background-color: #049dd1 !important;
-    background: none;
-}
-
-@media all and (max-width: 600px) {
-    .orderDetails {
-        max-width: 100% !important;
-        padding: 10px;
-        margin-bottom: 35px;
-        margin-left: 35px;
     }
-}
 
-.orderDetails {
-        max-width: 30%;
-        padding: 10px;
-        margin-bottom: 35px;
-        margin-left: 35px;
-}
+    .round-button:hover:enabled{
+        background-color: #049dd1 !important;
+        background: none;
+    }
+
+    @media all and (max-width: 600px) {
+        .orderDetails {
+            max-width: 100% !important;
+            padding: 10px;
+            margin-bottom: 35px;
+            margin-left: 35px;
+        }
+    }
+
+    .orderDetails {
+            max-width: 30%;
+            padding: 10px;
+            margin-bottom: 35px;
+            margin-left: 35px;
+    }
+
+    #spinner {
+      display:none;
+    }
+
+    #spinner.busy {
+      display:initial;
+    }
+
+    #toast-container {
+      display:none;
+    }
+
+    #toast-container.has-errors {
+      display: initial;
+    }
 
   </style>
-<div class="orderDetails">
-  <h1>Order Details</h1>
 
-  <br /><br />
-  <b>Account:</b> {!Square_Transaction__c.Account__r.Name}
-  <br /><hr />
-  <b>Payment Status:</b> {!Square_Transaction__c.sqStatus__c}
-  <br /><hr />
-  <b>Description:</b> {!Square_Transaction__c.Description__c}
-  <br /><hr />
-  <b>Notes:</b> {!Square_Transaction__c.Notes__c}
-  <br /><hr />
-  <b>Amount Due:</b> ${!Square_Transaction__c.Amount__c}
-</div>
+
+
+
+  <apex:outputPanel layout="none" rendered="{!Square_Transaction__c.sqStatus__c == 'INCOMPLETE'}">
+
+    <div class="slds-scope">
+      <div id="spinner" class="slds-spinner_container">
+        <div role="status" class="slds-spinner slds-spinner--medium">
+          <span class="slds-assistive-text">Loading</span>
+          <div class="slds-spinner__dot-a"></div>
+          <div class="slds-spinner__dot-b"></div>
+        </div>
+      </div>
+
+      <div id="toast-container"></div>
+    </div>
+
+    <div class="orderDetails">
+      <h1>Order Details</h1>
+
+      <br /><br />
+      <b>Account:</b> {!Square_Transaction__c.Account__r.Name}
+      <br /><hr />
+      <b>Payment Status:</b> {!Square_Transaction__c.sqStatus__c}
+      <br /><hr />
+      <b>Description:</b> {!Square_Transaction__c.Description__c}
+      <br /><hr />
+      <b>Notes:</b> {!Square_Transaction__c.Notes__c}
+      <br /><hr />
+      <b>Amount Due:</b> ${!Square_Transaction__c.Amount__c}
+    </div>
 
     <c:Square_PaymentForm />
     <button id="submit-button" class="round-button">Pay Now</button>
 
+    <script id="toast-msg" type="text/handlebars-template">
+    <div class="slds-notify_container slds-is-relative">
+      <div class="slds-notify slds-notify_toast slds-theme_{{state}}" role="status">
+        <div class="slds-notify__content" style="width:100%;">
+          <h2 class="slds-text-heading_small slds-m-bottom_small" style="text-align: center">
+            {{title}}
+          </h2>
+          <ul style="list-style:inside">
+            {{#each messages}}
+              <li>{{this.message}}</li>
+            {{/each}}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </script>
 
-  <apex:form>
-    <apex:actionFunction name="RunSquarePaymentAction" action="{!start}" rerender="">
-      <apex:param name="sqOrderId" value=""/>
-      <apex:param name="sqCaptureDate" value="" />
-      <apex:param name="sqReceiptURL" value="" />
-      <apex:param name="sqReceiptNum" value="" />
-    </apex:actionFunction>
-  </apex:form>
+    <script>
 
-  <script>
+      const total = {!Square_Transaction__c.Amount__c};
+      const toastSource = document.getElementById('toast-msg').innerHTML;
+      const toastTMPL = Handlebars.compile( toastSource );
+      const spinner = document.getElementById('spinner');
+      const toastContainer = document.getElementById('toast-container');
 
+      document.getElementById("submit-button").addEventListener("click",(event) => {
+        event.preventDefault();
+        spinner.classList.add('busy');
+        toastContainer.innerHTML = "";
 
-var total = {!Square_Transaction__c.Amount__c};
-
-   document.getElementById("submit-button").addEventListener("click",(event) => {
-       document.getElementById("submit-button").disabled = true;
-       event.preventDefault();
-       doPostPayment( total )
+        doPostPayment( total )
         .then( (result) =>
         {
-          HandleSuccess(result);
+          handleSuccess(result);
         })
         .catch( (errors) => {
-          HandleErrors(errors);
+          handleErrors(errors);
          });
-   });
 
-   function showToast(toastTitle, toastMessage, toastType) {
-            sforce.one.showToast({
-                "title": toastTitle,
-                "message": toastMessage,
-                "type": toastType
-            });
+      });
+
+      function showToast(toastTitle, toastMessages, toastType) {
+        const result = {
+          state: toastType,
+          title: toastTitle,
+          messages: toastMessages
         }
+        spinner.classList.remove('busy');
+        let ele = document.createElement('div');
+        ele.innerHTML = toastTMPL( result );
+        toastContainer.appendChild( ele );
+        toastContainer.classList.add('has-errors');
+      }
 
-  function HandleSuccess(result) {
-      console.log(result);
-      var toastTitle = "Payment Successful!"
-      var toastMessage = "Your payment was successful."
-      var toastType = "success"
-      var sqOrderId = result.payment.order_id;
-      var sqCaptureDate = result.payment.created_at;
-      var sqReceiptURL = result.payment.receipt_url;
-      var sqReceiptNum = result.payment.receipt_number;
-      RunSquarePaymentAction(sqOrderId, sqCaptureDate, sqReceiptURL, sqReceiptNum);
-      showToast(toastTitle, toastMessage, toastType);
+      function handleSuccess(result) {
+        RunSquarePaymentFlow.finalizeSquarePayment(
+          '{!Square_Transaction__c.Id}',
+          result.created_at,
+          result.order_id,
+          result.receipt_url,
+          result.receipt_number
+        , ( r, event ) => {
+          if( event.status )
+          {
+            showToast(
+              "Thank you!",
+              [{message: "Payment was successfully processed"}],
+              "success"
+            );
+            setTimeout( () => {
+              window.top.location.href = "https://www.legendboats.com";
+            }, 2500);
+          }
+          else
+          {
+            let errs =[{
+              message: event.message
+            }];
+            handleErrors( errs );
+          }
+        });
+      }
 
-      window.setTimeout(function (){
-        window.top.location.href = "https://www.legendboats.com";
-      }, 5000);
+      function handleErrors(errors) {
+        showToast(
+          "Payment Error!",
+          errors,
+          "error"
+        );
+      }
 
-  }
+    </script>
+  </apex:outputPanel>
+
+  <apex:outputPanel layout="none" rendered="{!Square_Transaction__c.sqStatus__c == 'COMPLETED'}">
+
+    <div class="slds-scope">
+      <div class="slds-notify_container slds-is-relative slds-m-top_large">
+        <div class="slds-notify slds-notify_toast slds-theme_success" role="status">
+          <div class="slds-notify__content" style="width:100%;">
+            <h2 class="slds-text-heading_small slds-text-align_center">
+              This payment has already been processed.<br/>
+              <b>Thank you!</b>
+            </h2>
+            <p class="slds-text-align_center slds-m-top_medium">
+              Come visit us at
+              <a href="http://legendboats.com"> Legend Boats</a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </apex:outputPanel>
 
 
-  function HandleErrors(errors) {
-      document.getElementById("submit-button").disabled = false;
-      console.log(errors);
-      var toastTitle = "Payment Error!"
-      var toastMessage = "Your payment was not successful. Please review your card details and try again."
-      var toastType = "error"
-      showToast(toastTitle, toastMessage, toastType);
-
-  }
-
-
-  </script>
 
 </apex:page>
