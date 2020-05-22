@@ -161,6 +161,11 @@
       <replaceregexp match="&lt;userPermissions&gt;\s*&lt;enabled&gt;[\S\s]*?&lt;/enabled&gt;\s*&lt;name&gt;Einstein(.*)&lt;/name&gt;\s*&lt;/userPermissions&gt;\s*" replace="" flags="gm" byline="false">
         <fileset dir="${basedir}/force-app/main/default/profiles" includes="*.xml"/>
       </replaceregexp>
+
+      <!-- Remove ViewUserPII from profiles -->
+      <replaceregexp match="&lt;userPermissions&gt;\s*&lt;enabled&gt;[\S\s]*?&lt;/enabled&gt;\s*&lt;name&gt;ViewUserPII&lt;/name&gt;\s*&lt;/userPermissions&gt;\s*" replace="" flags="gm" byline="false">
+        <fileset dir="${basedir}/force-app/main/default/profiles" includes="*.xml"/>
+      </replaceregexp>
     </target>
 
     <target name="remove_mcdm_15">
