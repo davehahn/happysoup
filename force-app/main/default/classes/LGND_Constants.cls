@@ -15,7 +15,6 @@ public with sharing class LGND_Constants {
   }
 
   /* Labour Rates */
-
   public static final Decimal retailLabourRate
   {
     get
@@ -178,7 +177,31 @@ public with sharing class LGND_Constants {
     private set;
   }
 
-/* +++++++++++++++++ PRODUCT RECORD TYPES ++++++++++++++++++ */
+  /* +++++++++++++++++ GOOGLE API KEYS +++++++++++++++++++++++ */
+
+  public static String googleMapsAPI_Key
+  {
+    get
+    {
+      if( googleMapsAPI_Key == null )
+        fetchGoogleAPIKeys();
+      if( googleMapsAPI_Key == null )
+        throw new LGND_Utilities.LGND_Exception('A Google API Key with Name [Maps] does not exist.');
+      return googleMapsAPI_Key;
+    }
+    private set;
+  }
+
+  private static void fetchGoogleAPIKeys()
+  {
+    for( GoogleAPIKey__mdt gKey : [ SELECT DeveloperName, Key__c FROM GoogleAPIKey__mdt ] )
+    {
+      if( gKey.DeveloperName == 'Maps' )
+        googleMapsAPI_Key = gKey.Key__c;
+    }
+  }
+
+  /* +++++++++++++++++ PRODUCT RECORD TYPES ++++++++++++++++++ */
 
   public static Id productRtId_Boat{
     get {

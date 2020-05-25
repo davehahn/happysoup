@@ -43,7 +43,7 @@ public class Factory_AccountingVariables {
   private static Map<String,AcctSeed__Accounting_Variable__c> insertGLV2s()
   {
     Map<String, AcctSeed__Accounting_Variable__c> variables = new Map<String, AcctSeed__Accounting_Variable__c>();
-    for( String n : new Set<String>{'Accounting & Administration',
+    for( String n : new Set<String>{'Accounting & Admin',
                                     'Business Office',
                                     'IT',
                                     'Logistics',
