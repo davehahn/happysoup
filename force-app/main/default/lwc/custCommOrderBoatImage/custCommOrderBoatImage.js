@@ -28,37 +28,30 @@ export default class CustCommOrderBoatImage extends LightningElement {
 //      }
 //    }
 
-    handleMotorSelection(detail){
-      console.log('motor selection');
-      console.log(this.page);
-      console.log(JSON.parse(JSON.stringify(detail)));
+		handleMotorSelection(detail){
 			if(detail.motorImage){
 				for(let image of detail.motorImage){
 					if(this.page === 'performance'){
-					  console.log('set performance boat image');
 						if(image.imageType === 'sideAngle'){
 							this.boatImage = 'https://' + image.imageURL;
 						}
 					}
 					if(this.page === 'trailering'){
-					  console.log('set trailering boat image');
 						if(image.imageType === 'backAngle'){
 							this.boatImage = 'https://' + image.imageURL;
 						}
 					}
 					if(this.page === 'electronics'){
-						console.log('set electronics boat image');
 						if(image.imageType === 'sideAngle'){
 							this.boatImage = 'https://' + image.imageURL;
 						}
 					}
 					if(this.page === 'summary'){
-						console.log('set summary boat image');
 						if(image.imageType === 'frontAngle'){
 							this.boatImage = 'https://' + image.imageURL;
 						}
 					}
 				}
-		 }
-	}
+			}
+		}
 }

@@ -11,6 +11,7 @@ export default class CustCommOrderOptions extends LightningElement {
   @api selections;
   @api selectionScope;
   @api options;
+  @api subSection;
   @api boatRetailPrice;
   @api isInit;
   @api page;
@@ -19,13 +20,19 @@ export default class CustCommOrderOptions extends LightningElement {
 	get availableOptions(){
 
 	  if(this.options){
-	    const options = this.options;
+	    let options = this.options;
 	    const keys = Object.keys(this.options);
 			let optionDetails = [];
 			const inputType = (this.selections === 'one') ? 'radio' : 'checkbox';
 
 	    if('id' in options){
 	      //single option details to array
+
+	      if(this.subSection){
+	        options = this.recompose(options, this.subSection);
+	        options = options[0];
+       	}
+
 	      let upgradePrice = 0;
 	      if(parseInt(options['retailPrice']) === 0){
 	      	upgradePrice = 'Included';
@@ -96,8 +103,15 @@ export default class CustCommOrderOptions extends LightningElement {
 
      	} else {
      	  //return 'multiple options';
-     	  for(const option of options){
+
+     	  for(let option of options){
      	    if('id' in option){
+
+     	      if(this.subSection){
+							option = this.recompose(option, this.subSection);
+							option = option[0];
+						}
+
 						let name = option['name'];
      	      const sku = option['id'];
 //     	      console.log('sku: ', sku);
@@ -195,6 +209,17 @@ export default class CustCommOrderOptions extends LightningElement {
 // 	  console.log('optionsTitle: ', this.optionsTitle);
  	  return (typeof this.optionsTitle !== 'undefined') ? true : false;
   }
+
+  recompose(obj,string){
+			var parts = string.split('.');
+			var newObj = obj[parts[0]];
+			if(parts[1]){
+					parts.splice(0,1);
+					var newString = parts.join('.');
+					return this.recompose(newObj,newString);
+			}
+			return newObj;
+	};
 
 // 	handleOptionView(event){
 // 	  const optionDetails = event.detail;
