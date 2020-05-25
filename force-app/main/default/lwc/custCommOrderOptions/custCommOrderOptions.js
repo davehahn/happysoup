@@ -14,6 +14,7 @@ export default class CustCommOrderOptions extends LightningElement {
   @api boatRetailPrice;
   @api isInit;
   @api page;
+  @api showOptionPrice;
 
 	get availableOptions(){
 
@@ -22,17 +23,21 @@ export default class CustCommOrderOptions extends LightningElement {
 	    const keys = Object.keys(this.options);
 			let optionDetails = [];
 			const inputType = (this.selections === 'one') ? 'radio' : 'checkbox';
-			const strToReplace = ['Duv22L', 'Duv22L Galv'];
-			const replaceWith = ['Black Powder Coated Trailer', 'Galvanized Trailer'];
+
 	    if('id' in options){
 	      //single option details to array
-				let upgradePrice = parseInt(options['retailPrice']) + parseInt(this.boatRetailPrice);
+	      let upgradePrice = 0;
+	      if(this.showOptionPrice){
+	        upgradePrice = parseInt(options['retailPrice']);
+       	} else{
+       	 	upgradePrice = parseInt(options['retailPrice']) + parseInt(this.boatRetailPrice);
+        }
 				upgradePrice = new Intl.NumberFormat('en-CA', {
         							  							style: 'currency',
         							  							currency: 'CAD',
         							  							minimumFractionDigits: 0
         							  							}).format(upgradePrice);
-				const name = options['name'];
+				let name = options['name'];
 				const sku = options['id'];
 				let km = null;
 				let	rpm = null;
@@ -63,7 +68,9 @@ export default class CustCommOrderOptions extends LightningElement {
 							 blurb = stripContent;
      			 	} else if(label === 'includedproducts'){
      			 	  includedProducts = stripContent.split("|");
-         	 	}
+         	 	} else if(label === 'customdisplayname'){
+         	 	  name = stripContent;
+            }
     	 		}
     		}
 
@@ -86,7 +93,7 @@ export default class CustCommOrderOptions extends LightningElement {
      	  //return 'multiple options';
      	  for(const option of options){
      	    if('id' in option){
-     	      const name = option['name'];
+						let name = option['name'];
      	      const sku = option['id'];
 //     	      console.log('sku: ', sku);
      	      const selections = this.selections;
@@ -98,7 +105,11 @@ export default class CustCommOrderOptions extends LightningElement {
 						let includedProducts = [];
 
 						if('retailPrice' in option){
-						  upgradePrice = parseInt(option['retailPrice']) + parseInt(this.boatRetailPrice);
+							if(this.showOptionPrice){
+								upgradePrice = parseInt(option['retailPrice']);
+							} else{
+								upgradePrice = parseInt(option['retailPrice']) + parseInt(this.boatRetailPrice);
+							}
 							upgradePrice = new Intl.NumberFormat('en-CA', {
 															style: 'currency',
 															currency: 'CAD',
@@ -106,7 +117,11 @@ export default class CustCommOrderOptions extends LightningElement {
 															}).format(upgradePrice);
       			}
      	      else if('RetailUpgradeCost' in option){
-							upgradePrice = parseInt(option['RetailUpgradeCost']) + parseInt(this.boatRetailPrice);
+     	        if(this.showOptionPrice){
+								upgradePrice = parseInt(option['RetailUpgradeCost']);
+							} else{
+								upgradePrice = parseInt(option['RetailUpgradeCost']) + parseInt(this.boatRetailPrice);
+							}
 							upgradePrice = new Intl.NumberFormat('en-CA', {
 							  							style: 'currency',
 							  							currency: 'CAD',
@@ -136,7 +151,9 @@ export default class CustCommOrderOptions extends LightningElement {
 									blurb = unescape(stripContent);
         				} else if(label === 'includedproducts'){
 									includedProducts = stripContent.split("|");
-								}
+								} else if(label === 'customdisplayname'){
+									name = stripContent;
+							 	}
 							}
 						}
 

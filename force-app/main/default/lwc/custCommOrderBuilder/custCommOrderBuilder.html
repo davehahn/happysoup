@@ -82,7 +82,7 @@
       <div class="config-page config-page_selected" data-page="performance">
         <div class="config-page_left">
           <h1 class="vh">Performance</h1>
-          <c-cust-comm-order-boat-image motor-details={motorDetails} size="large"></c-cust-comm-order-boat-image>
+          <c-cust-comm-order-boat-image motor-details={motorDetails} size="large" page='performance'></c-cust-comm-order-boat-image>
           <c-cust-comm-order-motor-stats motor-details={motorDetails}></c-cust-comm-order-motor-stats>
         </div>
         <div class="config-page_right slds-p-around_xx-large">
@@ -97,17 +97,15 @@
         <div class="config-page_left">
             <h1 class="vh">Trailering</h1>
             <template if:false={isMobile}>
-              <c-cust-comm-order-boat-image size="large"></c-cust-comm-order-boat-image>
+              <c-cust-comm-order-boat-image motor-details={motorDetails} size="large" page='trailering'></c-cust-comm-order-boat-image>
             </template>
         </div>
         <div class="config-page_right">
           <div class="config-page_right slds-p-around_xx-large">
             <h2 class="right_heading">Trailering Package</h2>
             <c-cust-comm-order-options options-title="Select Your Trailer" selections="one" selection-scope="global" options={boat.standardTrailer} boat-retail-price={boat.retailPrice} is-init="true" page='trailering'></c-cust-comm-order-options>
-            <c-cust-comm-order-options selections="one" selection-scope="global" options={boat.trailerUpgrades} boat-retail-price={boat.retailPrice} is-init="true" page='trailering'></c-cust-comm-order-options>
-            <!--
-            <c-cust-comm-order-options selections="one" selection-scope="global"></c-cust-comm-order-options>
-            -->
+            <c-cust-comm-order-options selections="one" selection-scope="global" options={boat.trailerUpgrades} boat-retail-price={boat.retailPrice} page='trailering'></c-cust-comm-order-options>
+            <c-cust-comm-order-options selections="multiple" selection-scope="local" options={boat.optionalProducts.canvas} show-option-price="true" boat-retail-price={boat.retailPrice} page='trailering'></c-cust-comm-order-options>
           </div>
         </div>
       </div>
@@ -117,7 +115,7 @@
         <div class="config-page_left">
           <h1 class="vh">Electronics</h1>
           <template if:false={isMobile}>
-            <c-cust-comm-order-boat-image size="large"></c-cust-comm-order-boat-image>
+            <c-cust-comm-order-boat-image motor-details={motorDetails} size="large" page='electronics'></c-cust-comm-order-boat-image>
           </template>
         </div>
         <div class="config-page_right">

@@ -2,9 +2,11 @@
  * Created by Tim on 2020-04-22.
  */
 
-import { LightningElement, api, track } from 'lwc';
+import { LightningElement, api, track, wire } from 'lwc';
+import { NavigationMixin, CurrentPageReference } from 'lightning/navigation';
+import { fireEvent } from 'c/pubsub';
 
-export default class CustCommOrderCheckbox extends LightningElement {
+export default class CustCommOrderCheckbox extends NavigationMixin(LightningElement) {
 	@api optionSku;
 	@api optionName;
 	@api optionPrice;
@@ -22,25 +24,16 @@ export default class CustCommOrderCheckbox extends LightningElement {
 	@track displayRPM;
 	@track displayKM;
 
-	renderedCallback(){
-   if(this.optionImages){
-//     console.log('images: ', JSON.parse(JSON.stringify(this.optionImages)));
-			for(let image of this.optionImages){
-				if(this.optionPage === 'performance'){
-					if(image.imageType === 'backAngle'){
-						this.displayImage = 'https://' + image.imageURL;
-					}
-				}
-			}
-   }
+	@wire(CurrentPageReference) pageRef;
 
+	renderedCallback(){
     if(this.optionInit){
-   	    this.handleClick();
-      }
+			this.handleClick();
+		}
  }
 
  get useCheckbox(){
-   return (this.optionInputType !== 'radio') ? true : false;;
+   return (this.optionInputType !== 'radio') ? true : false;
  }
 
  get optionInputName(){
@@ -60,7 +53,9 @@ export default class CustCommOrderCheckbox extends LightningElement {
 				'motorImage': this.displayImage,
      	}
    	});
-
    	this.dispatchEvent(selectEvent);
+
+   	console.log('click (images): ', JSON.parse(JSON.stringify(this.optionImages)));
+   	fireEvent(this.pageRef, 'motorSelection', this.optionImages	);
  	}
 }
