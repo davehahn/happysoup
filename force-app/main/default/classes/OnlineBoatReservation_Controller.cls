@@ -8,16 +8,12 @@ public with sharing class OnlineBoatReservation_Controller
   public virtual class AccountSaveResult
   {
     @AuraEnabled public Account record;
+    @AuraEnabled public String opportunityId;
     @AuraEnabled public String status;
     @AuraEnabled public String[] messages;
     @AuraEnabled public List<SObject> duplicateRecords;
 
     public AccountSaveResult(){}
-
-    public Boolean isSuccess()
-    {
-      return this.status == 'success';
-    }
 
     public void addDuplicate( SObject dup )
     {
@@ -45,13 +41,43 @@ public with sharing class OnlineBoatReservation_Controller
 
     private Account acct;
     private Lead lead;
+    private String[] errors;
 
     public Customer(){}
 
     public AccountSaveResult upsertToAccount()
     {
-      this.buildAccount();
-      return handleAccountUpsert();
+      if( isValid() )
+      {
+        this.buildAccount();
+        return handleAccountUpsert();
+      }
+      else
+      {
+        AccountSaveResult result = new AccountSaveResult();
+        result.status = 'error';
+        result.messages = this.errors;
+        return result;
+      }
+    }
+
+    private Boolean isValid()
+    {
+      String[] errs = new List<String>();
+      if( this.firstName == null )
+        errs.add( 'First Name is required' );
+      if( this.lastName == null )
+        errs.add( 'Last Name is required' );
+      if( this.email == null )
+        errs.add( 'Email is required' );
+      if( this.phone == null )
+        errs.add( 'Phone number is required' );
+      if( errs.size() > 0 )
+      {
+        this.errors = errs;
+        return false;
+      }
+      return true;
     }
 
     private void buildAccount()
@@ -75,54 +101,96 @@ public with sharing class OnlineBoatReservation_Controller
       return convertLead();
     }
 
+    private AccountSaveResult doAccountSave()
+    {
+      Database.UpsertResult saveResult =
+        Database.upsert(
+          this.acct,
+          Account.Fields.Id,
+          false
+        );
+
+      if (saveResult.isSuccess())
+      {
+        return handleSaveSuccess();
+      }
+      else
+      {
+        return handleErrors(saveResult.getErrors());
+      }
+    }
+
     private Boolean hasLead()
     {
+      if( this.lead != null ) return true;
       List<Lead> leads =
         Lead_Selector.allNonConvertedByEmail( this.acct.PersonEmail );
       if( leads.size() == 0 )
         return false;
       else
       {
-        if( leads.size() == 1 )
-        {
-          this.lead = leads[0];
-          return true;
-        }
-        else
-        {
-          // figure out what to do here not this
-          this.lead = leads[0];
-          return true;
-        }
+        this.lead = leads[0];
+        return true;
       }
+    }
+
+    private Boolean leadSynced()
+    {
+      if( this.firstName != this.lead.FirstName ) return false;
+      if( this.lastName != this.lead.LastName ) return false;
+      if( this.email != this.lead.Email ) return false;
+      if( this.phone != this.lead.Phone ) return false;
+      if( this.lead.Company != null ) return false;
+      return true;
+    }
+
+    private Account updateAccountDetails()
+    {
+      update this.acct;
+      return this.acct;
+    }
+
+    private String buildOppName()
+    {
+      Datetime today = Datetime.now();
+      String nameString = this.firstName + ' ' + this.lastName + ' - ';
+      nameString += today.format('yyyy.MM.dd-HHmm');
+      return nameString;
     }
 
     private AccountSaveResult convertLead()
     {
-      this.lead.FirstName = this.firstName;
-      this.lead.LastName = this.lastName;
-      this.lead.Email = this.email;
-      this.lead.Phone = this.phone;
-      this.lead.Company = null;
-      update this.lead;
+      if( !leadSynced() )
+      {
+        this.lead.FirstName = this.firstName;
+        this.lead.LastName = this.lastName;
+        this.lead.Email = this.email;
+        this.lead.Phone = this.phone;
+        this.lead.Company = null;
+        update this.lead;
+      }
 
       Database.LeadConvert lc = new Database.LeadConvert();
       lc.setLeadId( this.lead.Id );
       LeadStatus convertStatus = [ SELECT Id, ApiName FROM LeadStatus WHERE IsConverted = true LIMIT 1];
       lc.setConvertedStatus( convertStatus.ApiName );
-      lc.setDoNotCreateOpportunity( true );
+      lc.setOpportunityName( buildOppName() );
+      //lc.setDoNotCreateOpportunity( true );
+      if( this.acct != null && this.acct.Id != null )
+      {
+        lc.setAccountId( this.acct.Id );
+      }
       try
       {
         Database.LeadConvertResult leadConvertResult =
           Database.convertLead( lc );
         if( leadConvertResult.isSuccess() )
         {
+          this.acct.Id = leadConvertResult.getAccountId();
           AccountSaveResult result = new AccountSaveResult();
           result.status = 'success';
-          result.record = [
-            SELECT Id, FirstName, LastName, Phone, PersonEmail, RecordTypeId
-            FROM Account
-            WHERE Id = :leadConvertResult.getAccountId() ];
+          result.opportunityId = upsertOpportunity( leadConvertResult.getOpportunityId() ).Id;
+          result.record = updateAccountDetails();
           return result;
         }
         else
@@ -134,9 +202,7 @@ public with sharing class OnlineBoatReservation_Controller
       {
         if( e.getMessage().contains('DUPLICATES_DETECTED') )
         {
-          Savepoint sp = Database.setSavepoint();
           AccountSaveResult result = doAccountSave();
-          Database.rollback(sp);
           return result;
         }
         AccountSaveResult result = new AccountSaveResult();
@@ -145,29 +211,33 @@ public with sharing class OnlineBoatReservation_Controller
         return result;
       }
 
-
     }
 
-    private AccountSaveResult doAccountSave()
+    private AccountSaveResult forceAccountSave()
     {
-      Database.UpsertResult saveResult =
-        Database.upsert(
-          this.acct,
-          Account.Fields.Id,
-          false
-        );
-
+      Database.DMLOptions dml = new Database.DMLOptions();
+      dml.DuplicateRuleHeader.allowSave = true;
+      dml.DuplicateRuleHeader.runAsCurrentUser = true;
+      Database.SaveResult saveResult = Database.insert( this.acct, dml );
       if( saveResult.isSuccess() )
       {
-        AccountSaveResult result = new AccountSaveResult();
-        result.record = this.acct;
-        result.status = 'success';
-        return result;
+        if( this.lead != null )
+          return convertLead();
+        return handleSaveSuccess();
       }
       else
       {
         return handleErrors( saveResult.getErrors() );
       }
+    }
+
+    private AccountSaveResult handleSaveSuccess()
+    {
+      AccountSaveResult result = new AccountSaveResult();
+      result.record = this.acct;
+      result.status = 'success';
+      result.opportunityId = upsertOpportunity(null).Id;
+      return result;
     }
 
     private AccountSaveResult handleErrors( List<Database.Error> errors )
@@ -194,7 +264,41 @@ public with sharing class OnlineBoatReservation_Controller
           }
         }
       }
+      if( result.duplicateRecords != null )
+      {
+        if( result.duplicateRecords.size() == 1 )
+          this.acct.Id = (Id)result.duplicateRecords[0].get('Id');
+
+        if( result.duplicateRecords.size() > 1 )
+        {
+          for( SObject dup : result.duplicateRecords)
+          {
+            if( dup.get('Name') == this.firstName + ' ' + this.lastName )
+            {
+              this.acct.Id = (Id)dup.get('Id');
+              break;
+            }
+          }
+        }
+        return this.acct.Id == null ?
+          forceAccountSave() :
+          this.hasLead() ? convertLead() : doAccountSave();
+      }
       return result;
+    }
+
+    private Opportunity upsertOpportunity( Id oppId )
+    {
+      Opportunity opp = new Opportunity(
+        Id = oppId,
+        AccountId = this.acct.Id,
+        Name = buildOppName(),
+        StageName = 'Quoting',
+        CloseDate = Date.today().addMonths( 1 ),
+        Pricebook2Id = LGND_Constants.retailPricebookId
+      );
+      upsert opp;
+      return opp;
     }
   }
 
@@ -228,6 +332,22 @@ public with sharing class OnlineBoatReservation_Controller
   {
     Customer cust = (Customer)JSON.deserialize( customerJSON, Customer.class );
     return cust.upsertToAccount();
+  }
+
+  @AuraEnabled
+  public static void saveLineItems( String oppJSON, String olisJSON )
+  {
+    Opportunity opp =
+      (Opportunity)JSON.deserialize( oppJSON, Opportunity.class );
+    List<OpportunityLineItem> olis =
+      (List<OpportunityLineItem>)JSON.deserialize( olisJSON, List<OpportunityLineItem>.class );
+    update opp;
+    for( OpportunityLineItem oli : olis )
+    {
+      oli.OpportunityId = opp.Id;
+      oli.BoatBuilderItem__c = true;
+    }
+    insert olis;
   }
 
 

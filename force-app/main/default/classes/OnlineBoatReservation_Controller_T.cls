@@ -7,30 +7,156 @@ private class OnlineBoatReservation_Controller_T
 {
 
   static Factory_Boat boatFactory;
+  static Id personRT = LGND_Utilities.recordTypeIdFromName('Account', 'Person Account');
+  static Id retailPbId = LGND_Constants.retailPricebookId;
+  static String email = 'someone@someplace.somedomain';
+  static Map<String, String> custJSON = new Map<String, String>
+  {
+    'firstName' => 'TestFirst',
+    'lastName' => 'TestLast',
+    'phone' => '111-111-1111',
+    'email' => email
+  };
+  static Account acct = new Account(
+    FirstName = 'TestFirst',
+    LastName = 'TestLast',
+    Phone = '111-111-1111',
+    PersonEmail = email,
+    RecordTypeId = personRT
+  );
+  static Account acct1 = new Account(
+    FirstName = 'TestFirst1',
+    LastName = 'TestLast1',
+    Phone = '111-111-1111',
+    PersonEmail = email,
+    RecordTypeId = personRT
+  );
+  static Account acct2 = new Account(
+    FirstName = 'TestFirst1',
+    LastName = 'TestLast1',
+    Phone = '111-111-1111',
+    PersonEmail = email,
+    RecordTypeId = personRT
+  );
+
+  static Product2 boat;
+  static Product2 motor;
+  static Product2 trailer;
+  static Product2[] parts;
+  static Map<Id, PricebookEntry> pbEntryMap = new Map<Id, PricebookEntry>();
+  static Opportunity opp;
 
 
   @testSetup static void dataSetup()
   {
     new Factory_TestData();
     Factory_CustomSettings.setupInventorySettings();
-    Factory_Product.createSerializedProducts_AvailableOnline( 'Boat', 'Pontoon', 5 );
+    Factory_Product.createSerializedProducts_AvailableOnline('Boat', 'Pontoon', 5);
   }
 
   private static void dataSetupForFullBoat()
   {
     List<Map<String, String>> rtFamily = new List<Map<String, String>>();
-    rtFamily.add( new Map<String, String>{ 'recordTypeName' => 'Motor', 'family' => 'Remote'} );
-    rtFamily.add( new Map<String, String>{ 'recordTypeName' => 'Trailer', 'family' => 'Boat Trailer'} );
+    rtFamily.add(new Map<String, String>
+    {
+      'recordTypeName' => 'Motor', 'family' => 'Remote'
+    });
+    rtFamily.add(new Map<String, String>
+    {
+      'recordTypeName' => 'Trailer', 'family' => 'Boat Trailer'
+    });
 
-    boatFactory = new Factory_Boat( 'Full Windshield', LGND_Constants.retailPricebookId )
-      .addStandardProducts( rtFamily )
-      .addMotorUpgrades( 5 )
-      .addTrailerUpgrades( 5 )
+    boatFactory = new Factory_Boat('Full Windshield', LGND_Constants.retailPricebookId)
+      .addStandardProducts(rtFamily)
+      .addMotorUpgrades(5)
+      .addTrailerUpgrades(5)
       .addPremiumPackage()
       .addOptions();
-    boatFactory.addAdditionalFees( boatFactory.boat.Id );
-    boatFactory.addMarketingContent( boatFactory.boat.Id, 3 );
+    boatFactory.addAdditionalFees(boatFactory.boat.Id);
+    boatFactory.addMarketingContent(boatFactory.boat.Id, 3);
     boatFactory.finish();
+  }
+
+  private static void dataSetupForOpp()
+  {
+    insert acct;
+    opp = new Opportunity(
+      Name = 'Test Opportunity',
+      Pricebook2Id = retailPbId,
+      StageName = 'Quoting',
+      CloseDate = Date.today().addMonths( 1 ),
+      AccountId = acct.Id
+    );
+    insert opp;
+    boat = Factory_Product.createSerializedProduct( 'Boat', 'Full Windshield' );
+    motor = Factory_Product.createSerializedProduct( 'Motor', ' Remote' );
+    trailer = Factory_Product.createSerializedProduct( 'Trailer', 'Boat Trailer' );
+    parts = Factory_Product.createNonSerializedProducts( 'Part', 'Electronics', 5 );
+    List<Product2> allProds = new List<Product2>();
+    allProds.add( boat );
+    allProds.add( motor );
+    allProds.add( trailer );
+    allProds.addAll( parts );
+    Factory_PricebookEntry.insertStandardEntries( allProds, 0 );
+    List<PricebookEntry> pbes = new List<PricebookEntry>();
+    pbes.add( Factory_PricebookEntry.buildEntry( boat.Id, retailPbId, 30000 ) );
+    pbes.add( Factory_PricebookEntry.buildEntry( motor.Id, retailPbId, 10000 ) );
+    pbes.add( Factory_PricebookEntry.buildEntry( trailer.Id, retailPbId, 10000 ) );
+    pbes.addAll( Factory_PricebookEntry.buildEntries( parts, retailPbId, 100 ) );
+    insert pbes;
+    for( PricebookEntry pbe : pbes )
+    {
+      pbEntryMap.put( pbe.Product2Id, pbe );
+    }
+  }
+
+  private  static List<OpportunityLineItem> buildOpportunityLineItems()
+  {
+    List<OpportunityLineItem> olis = new List<OpportunityLineItem>();
+    olis.add( Factory_OpportunityLineItem.buildLineItem(
+      pbEntryMap.get( boat.Id ).Id,
+      null,
+      pbEntryMap.get( boat.Id ).UnitPrice,
+      1,
+      null
+    ));
+    olis.add( Factory_OpportunityLineItem.buildLineItem(
+      pbEntryMap.get( motor.Id ).Id,
+      null,
+      pbEntryMap.get( motor.Id ).UnitPrice,
+      1,
+      null
+    ));
+    olis.add( Factory_OpportunityLineItem.buildLineItem(
+      pbEntryMap.get( trailer.Id ).Id,
+      null,
+      pbEntryMap.get( trailer.Id ).UnitPrice,
+      1,
+      null
+    ));
+    olis.add( Factory_OpportunityLineItem.buildLineItem(
+      pbEntryMap.get( parts[0].Id ).Id,
+      null,
+      pbEntryMap.get( parts[0].Id ).UnitPrice,
+      1,
+      null
+    ));
+    olis.add( Factory_OpportunityLineItem.buildLineItem(
+      pbEntryMap.get( parts[1].Id ).Id,
+      null,
+      pbEntryMap.get( parts[1].Id ).UnitPrice,
+      1,
+      null
+    ));
+    olis.add( Factory_OpportunityLineItem.buildLineItem(
+      pbEntryMap.get( parts[2].Id ).Id,
+      null,
+      pbEntryMap.get( parts[2].Id ).UnitPrice,
+      1,
+      parts[1].Id
+    ));
+
+    return olis;
   }
 
   @IsTest
@@ -89,67 +215,88 @@ private class OnlineBoatReservation_Controller_T
   @IsTest
   static void createAccount_Pass_Test()
   {
-    Map<String, String> custJSON = new Map<String, String>{
-      'firstName' => 'TestFirst',
-      'lastName' => 'TestLast',
-      'phone' => '111-111-1111',
-      'email' => 'test@davetest.boom'
-    };
-
     Test.startTest();
     OnlineBoatReservation_Controller.AccountSaveResult result =
       OnlineBoatReservation_Controller.createAccount( JSON.serialize( custJSON ) );
     Test.stopTest();
 
+    Opportunity opp = [SELECT Id, StageName, CloseDate FROM Opportunity Where Id = :result.opportunityId ];
+
     System.assertEquals( 'success', result.status, 'Result status should be success' );
     System.assert( result.record != null, 'An account should be returned' );
+    System.assert( result.opportunityId != null, 'There should be an Opportunity Id');
+    System.assertEquals( 'Quoting', opp.StageName, 'Opportunity Stage should be Quoting' );
   }
 
   @IsTest
-  static void createAccount_Duplicate_Email_Test()
+  static void createAccount_ValidationFail_Test()
   {
-    Account acct = new Account(
-      FirstName = 'TestFirst1',
-      LastName = 'TestLast1',
-      Phone = '111-111-1111',
-      PersonEmail = 'test@davetest.boom',
-      RecordTypeId = LGND_Utilities.recordTypeIdFromName( 'Account', 'Person Account' )
-    );
-    insert acct;
+    custJSON.put('firstName', null);
+    custJSON.put('email', null);
+    Test.startTest();
+    OnlineBoatReservation_Controller.AccountSaveResult result =
+      OnlineBoatReservation_Controller.createAccount( JSON.serialize( custJSON ) );
+    Test.stopTest();
 
-    Map<String, String> custJSON = new Map<String, String>{
-      'firstName' => 'TestFirst',
-      'lastName' => 'TestLast',
-      'phone' => '111-111-1111',
-      'email' => acct.PersonEmail
-    };
+    System.assertEquals( 'error', result.status, ' Status should be error' );
+    System.assertEquals( 2, result.messages.size() );
+  }
+
+  @IsTest
+  static void createAccount_SingleAccountDuplicate_Test()
+  {
+    insert acct1;
     Test.startTest();
       OnlineBoatReservation_Controller.AccountSaveResult result =
         OnlineBoatReservation_Controller.createAccount( JSON.serialize( custJSON ) );
     Test.stopTest();
 
-    System.assertEquals( 'error', result.status, 'Result status should be error' );
-    System.assertEquals( 1, result.duplicateRecords.size(), 'Should have 1 duplicate record');
-    System.assertEquals( acct.Id, result.duplicateRecords[0].get('Id') );
+    Opportunity opp = [SELECT Id, StageName, CloseDate FROM Opportunity Where Id = :result.opportunityId ];
+
+    System.assertEquals( 'success', result.status, 'Result status should be success' );
+    System.assertEquals( acct1.Id, result.record.Id );
+    System.assertEquals( 'Quoting', opp.StageName, 'Opportunity Stage should be Quoting' );
+    System.assert( result.opportunityId != null, 'There should be an Opportunity Id');
+    System.assertEquals( custJSON.get('firstName'), result.record.FirstName );
+    System.assertNotEquals( acct1.FirstName, result.record.FirstName );
   }
 
   @IsTest
-  static void createAccount_WithSingleFoundLead_Pass_Test()
+  static void createAccount_MultipleAccountDuplicate_NoMatch_Test()
   {
-    String email = 'someone@someplace.somedomain';
+    insert acct1;
+    Database.DMLOptions dml = new Database.DMLOptions();
+    dml.DuplicateRuleHeader.allowSave = true;
+    dml.DuplicateRuleHeader.runAsCurrentUser = true;
+    Database.SaveResult sr = Database.insert(acct2, dml);
+
+    Test.startTest();
+    OnlineBoatReservation_Controller.AccountSaveResult result =
+      OnlineBoatReservation_Controller.createAccount( JSON.serialize( custJSON ) );
+    Test.stopTest();
+
+    Opportunity opp = [SELECT Id, StageName, CloseDate FROM Opportunity Where Id = :result.opportunityId ];
+    Map<Id,Account> accts = new Map<Id, Account>([SELECT Id FROM Account WHERE PersonEmail = :email ]);
+
+    System.assertEquals( 'success', result.status, 'Result status should be success' );
+    System.assertNotEquals( acct.Id, result.record.Id );
+    System.assertNotEquals( acct2.Id, result.record.Id );
+    System.assertEquals( 3, accts.size(), 'There should now be 3 Accounts with PersonEmail = ' + email );
+    System.assert( accts.containsKey( result.record.Id ) );
+    System.assert( result.opportunityId != null, 'There should be an Opportunity Id');
+    System.assertEquals( 'Quoting', opp.StageName, 'Opportunity Stage should be Quoting' );
+    System.assertEquals( custJSON.get('firstName'), result.record.FirstName );
+  }
+
+  @IsTest
+  static void createAccount_WithSingleFoundLead_Test()
+  {
     Lead l = new Lead(
       FirstName = 'TestFirst',
       LastName = 'TestLast',
       Email = email
     );
     insert l;
-
-    Map<String, String> custJSON = new Map<String, String>{
-      'firstName' => 'TestFirst',
-      'lastName' => 'TestLast',
-      'phone' => '111-111-1111',
-      'email' => email
-    };
 
     Test.startTest();
     OnlineBoatReservation_Controller.AccountSaveResult result =
@@ -160,34 +307,21 @@ private class OnlineBoatReservation_Controller_T
 
     System.assertEquals( 'success', result.status, 'Result status should be success' );
     System.assert( result.record != null, 'An account should be returned' );
+    System.assert( result.opportunityId != null, 'There should be an Opportunity Id');
     System.assert( l.IsConverted, 'Lead should be converted' );
   }
 
   @IsTest
-  static void createAccount_WithSingleFoundLead_Duplicate_Test()
+  static void createAccount_WithSingleFoundLeadAndAccount_Test()
   {
     String email = 'someone@someplace.somedomain';
     Lead l = new Lead(
-      FirstName = 'TestFirst',
-      LastName = 'TestLast',
+      FirstName = 'TestFirst-lead',
+      LastName = 'TestLast-lead',
       Email = email
     );
     insert l;
-    Account acct = new Account(
-      FirstName = 'TestFirst',
-      LastName = 'TestLast',
-      Phone = '111-111-1111',
-      PersonEmail = email,
-      RecordTypeId = LGND_Utilities.recordTypeIdFromName( 'Account', 'Person Account' )
-    );
     insert acct;
-
-    Map<String, String> custJSON = new Map<String, String>{
-      'firstName' => 'TestFirst',
-      'lastName' => 'TestLast',
-      'phone' => '111-111-1111',
-      'email' => email
-    };
 
     Test.startTest();
     OnlineBoatReservation_Controller.AccountSaveResult result =
@@ -195,13 +329,110 @@ private class OnlineBoatReservation_Controller_T
     Test.stopTest();
 
     l = [SELECT Id, IsConverted FROM Lead WHERE Id = :l.Id ];
+    Opportunity opp = [SELECT Id, StageName, CloseDate FROM Opportunity Where Id = :result.opportunityId ];
 
-    System.debug( result.duplicateRecords[0] );
-    System.assertEquals( 'error', result.status, 'Result status should be error' );
-    System.assertEquals( 1, result.duplicateRecords.size(), 'Should have 1 duplicate record');
-    System.assertEquals( acct.Id, result.duplicateRecords[0].get('Id') );
-    System.assert( !l.IsConverted, 'Lead should Not be converted' );
+    System.assertEquals( 'success', result.status, 'Result status should be success' );
+    System.assertEquals( acct.Id, result.record.Id );
+    System.assertEquals( 'Quoting', opp.StageName, 'Opportunity Stage should be Quoting' );
+    System.assert( result.opportunityId != null, 'There should be an Opportunity Id');
+    System.assertEquals( custJSON.get('firstName'), result.record.FirstName );
+    System.assert( l.IsConverted, 'Lead should be converted' );
   }
 
+  @IsTest
+  static void createAccount_WithSingleFoundLeadAndMultipleAccounts_NoMatch_Test()
+  {
+    Lead l = new Lead(
+      FirstName = 'TestFirst-lead',
+      LastName = 'TestLast-lead',
+      Email = email
+    );
+    insert l;
+    insert acct1;
+
+    Database.DMLOptions dml = new Database.DMLOptions();
+    dml.DuplicateRuleHeader.allowSave = true;
+    dml.DuplicateRuleHeader.runAsCurrentUser = true;
+    Database.SaveResult sr = Database.insert(acct2, dml);
+
+    Test.startTest();
+    OnlineBoatReservation_Controller.AccountSaveResult result =
+      OnlineBoatReservation_Controller.createAccount( JSON.serialize( custJSON ) );
+    Test.stopTest();
+
+    l = [SELECT Id, IsConverted FROM Lead WHERE Id = :l.Id ];
+    Opportunity opp = [SELECT Id, StageName, CloseDate FROM Opportunity Where Id = :result.opportunityId ];
+    Map<Id,Account> accts = new Map<Id, Account>([SELECT Id FROM Account WHERE PersonEmail = :email ]);
+
+    System.assertEquals( 'success', result.status, 'Result status should be success' );
+    System.assertNotEquals( acct.Id, result.record.Id );
+    System.assertNotEquals( acct2.Id, result.record.Id );
+    System.assertEquals( 3, accts.size(), 'There should now be 3 Accounts with PersonEmail = ' + email );
+    System.assert( accts.containsKey( result.record.Id ) );
+    System.assert( result.opportunityId != null, 'There should be an Opportunity Id');
+    System.assertEquals( 'Quoting', opp.StageName, 'Opportunity Stage should be Quoting' );
+    System.assertEquals( custJSON.get('firstName'), result.record.FirstName );
+    System.assert( l.IsConverted, 'Lead should be converted' );
+  }
+
+  @IsTest
+  static void createAccount_WithSingleFoundLeadAndMultipleAccounts_WithMatch_Test()
+  {
+
+    Lead l = new Lead(
+      FirstName = 'TestFirst',
+      LastName = 'TestLast',
+      Email = email
+    );
+    insert l;
+    insert acct;
+    Database.DMLOptions dml = new Database.DMLOptions();
+    dml.DuplicateRuleHeader.allowSave = true;
+    dml.DuplicateRuleHeader.runAsCurrentUser = true;
+    Database.SaveResult sr = Database.insert(acct2, dml);
+
+    Test.startTest();
+    OnlineBoatReservation_Controller.AccountSaveResult result =
+      OnlineBoatReservation_Controller.createAccount( JSON.serialize( custJSON ) );
+    Test.stopTest();
+
+    l = [SELECT Id, IsConverted FROM Lead WHERE Id = :l.Id ];
+    Opportunity opp = [SELECT Id, StageName, CloseDate FROM Opportunity Where Id = :result.opportunityId ];
+
+    System.assertEquals( 'success', result.status, 'Result status should be success' );
+    System.assertEquals( acct.Id, result.record.Id );
+    System.assert( result.opportunityId != null, 'There should be an Opportunity Id');
+    System.assertEquals( 'Quoting', opp.StageName, 'Opportunity Stage should be Quoting' );
+    System.assertEquals( custJSON.get('firstName'), result.record.FirstName );
+    System.assert( l.IsConverted, 'Lead should be converted' );
+  }
+
+  @IsTest
+  static void saveLineItems_Test()
+  {
+    dataSetupForOpp();
+    opp.Deposit__c = 500;
+    List<OpportunityLineItem> olis = buildOpportunityLineItems();
+
+    Test.startTest();
+    OnlineBoatReservation_Controller.saveLineItems(
+      JSON.serialize( opp ),
+      JSON.serialize( olis )
+    );
+    Test.stopTest();
+
+    Opportunity opp_r = [ SELECT Id, Deposit__c FROM Opportunity WHERE Id = :opp.Id ];
+    List<OpportunityLineItem> olis_r = [ SELECT Id, ParentProductId__c FROM OpportunityLineItem WHERE OpportunityId = :opp_r.Id ];
+    List<OpportunityLineItem> child_olis = new List<OpportunityLineItem>();
+    for( OpportunityLineItem oli : olis_r )
+    {
+      if( oli.ParentProductId__c != null )
+        child_olis.add( oli );
+    }
+
+    System.assertEquals( 500, opp_r.Deposit__c, 'Opportunity Deposit should be 500' );
+    System.assertEquals( 6, olis_r.size() );
+    System.assertEquals( 1, child_olis.size() );
+  }
 
 }

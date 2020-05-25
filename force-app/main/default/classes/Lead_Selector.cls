@@ -12,6 +12,7 @@ public with sharing class Lead_Selector extends Application_Selector
       'Id',
       'FirstName',
       'LastName',
+      'Phone',
       'Email',
       'Company',
       'IsConverted'
