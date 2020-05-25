@@ -45,17 +45,14 @@ export default class CustCommOrderCheckbox extends NavigationMixin(LightningElem
  }
 
 	handleClick(event){
-	  const selectEvent = new CustomEvent('optionview', {
-	    detail: {
-	      'motorSKU': this.optionSku,
-	      'motorSpeed': this.optionKm,
-	      'motorRPM': this.optionRpm,
-				'motorImage': this.displayImage,
-     	}
-   	});
-   	this.dispatchEvent(selectEvent);
 
-   	console.log('click (images): ', JSON.parse(JSON.stringify(this.optionImages)));
-   	fireEvent(this.pageRef, 'motorSelection', this.optionImages	);
+	  let details = {
+	    'motorSKU': this.optionSku,
+			'motorSpeed': this.optionKm,
+			'motorRPM': this.optionRpm,
+			'motorImage': this.optionImages,
+   	};
+
+   	fireEvent(this.pageRef, 'motorSelection', details	);
  	}
 }

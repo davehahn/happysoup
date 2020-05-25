@@ -27,16 +27,21 @@ export default class CustCommOrderOptions extends LightningElement {
 	    if('id' in options){
 	      //single option details to array
 	      let upgradePrice = 0;
-	      if(this.showOptionPrice){
-	        upgradePrice = parseInt(options['retailPrice']);
-       	} else{
-       	 	upgradePrice = parseInt(options['retailPrice']) + parseInt(this.boatRetailPrice);
+	      if(parseInt(options['retailPrice']) === 0){
+	      	upgradePrice = 'Included';
+       	} else {
+       	  if(this.showOptionPrice){
+						upgradePrice = parseInt(options['retailPrice']);
+					} else{
+						upgradePrice = parseInt(options['retailPrice']) + parseInt(this.boatRetailPrice);
+					}
+					upgradePrice = new Intl.NumberFormat('en-CA', {
+																				style: 'currency',
+																				currency: 'CAD',
+																				minimumFractionDigits: 0
+																				}).format(upgradePrice);
         }
-				upgradePrice = new Intl.NumberFormat('en-CA', {
-        							  							style: 'currency',
-        							  							currency: 'CAD',
-        							  							minimumFractionDigits: 0
-        							  							}).format(upgradePrice);
+
 				let name = options['name'];
 				const sku = options['id'];
 				let km = null;
@@ -105,28 +110,36 @@ export default class CustCommOrderOptions extends LightningElement {
 						let includedProducts = [];
 
 						if('retailPrice' in option){
-							if(this.showOptionPrice){
-								upgradePrice = parseInt(option['retailPrice']);
-							} else{
-								upgradePrice = parseInt(option['retailPrice']) + parseInt(this.boatRetailPrice);
-							}
-							upgradePrice = new Intl.NumberFormat('en-CA', {
-															style: 'currency',
-															currency: 'CAD',
-															minimumFractionDigits: 0
-															}).format(upgradePrice);
+						  if(parseInt(option['retailPrice']) === 0){
+								upgradePrice = 'Included';
+							} else {
+							  if(this.showOptionPrice){
+									upgradePrice = parseInt(option['retailPrice']);
+								} else{
+									upgradePrice = parseInt(option['retailPrice']) + parseInt(this.boatRetailPrice);
+								}
+								upgradePrice = new Intl.NumberFormat('en-CA', {
+																style: 'currency',
+																currency: 'CAD',
+																minimumFractionDigits: 0
+																}).format(upgradePrice);
+       				}
       			}
      	      else if('RetailUpgradeCost' in option){
-     	        if(this.showOptionPrice){
-								upgradePrice = parseInt(option['RetailUpgradeCost']);
-							} else{
-								upgradePrice = parseInt(option['RetailUpgradeCost']) + parseInt(this.boatRetailPrice);
-							}
-							upgradePrice = new Intl.NumberFormat('en-CA', {
-							  							style: 'currency',
-							  							currency: 'CAD',
-							  							minimumFractionDigits: 0
-							  							}).format(upgradePrice);
+     	        if(parseInt(option['RetailUpgradeCost']) === 0){
+     	          upgradePrice = 'Included';
+              } else {
+                if(this.showOptionPrice){
+									upgradePrice = parseInt(option['RetailUpgradeCost']);
+								} else{
+									upgradePrice = parseInt(option['RetailUpgradeCost']) + parseInt(this.boatRetailPrice);
+								}
+								upgradePrice = new Intl.NumberFormat('en-CA', {
+																style: 'currency',
+																currency: 'CAD',
+																minimumFractionDigits: 0
+																}).format(upgradePrice);
+              }
             }
 
 						if('marketingContent' in option){
@@ -183,12 +196,12 @@ export default class CustCommOrderOptions extends LightningElement {
  	  return (typeof this.optionsTitle !== 'undefined') ? true : false;
   }
 
- 	handleOptionView(event){
- 	  const optionDetails = event.detail;
- 	  //console.log(JSON.parse(JSON.stringify(optionDetails)));
-		const updateEvent = new CustomEvent('updateoptionview', {
-			detail: optionDetails
-  	});
-  	this.dispatchEvent(updateEvent);
-  }
+// 	handleOptionView(event){
+// 	  const optionDetails = event.detail;
+// 	  //console.log(JSON.parse(JSON.stringify(optionDetails)));
+//		const updateEvent = new CustomEvent('updateoptionview', {
+//			detail: optionDetails
+//  	});
+//  	this.dispatchEvent(updateEvent);
+//  }
 }

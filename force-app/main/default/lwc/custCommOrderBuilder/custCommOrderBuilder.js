@@ -286,8 +286,8 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
  	}
 
 	//Handle KM, RPM and Image swap when viewing Motor Options
-	 handleUpdateOptionView(event){
-	   this.motorDetails = JSON.parse(JSON.stringify(event.detail));
-  }
+//	 handleUpdateOptionView(event){
+//	   this.motorDetails = JSON.parse(JSON.stringify(event.detail));
+//  }
 
 }
