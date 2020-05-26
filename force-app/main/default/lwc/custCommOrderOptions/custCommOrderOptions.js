@@ -19,10 +19,11 @@ export default class CustCommOrderOptions extends LightningElement {
   @api page;
   @api parentPage;
   @api showOptionPrice;
+  @api triggerUiChange;
 
   @wire(CurrentPageReference) pageRef;
 
-	connectedCallback(){
+	renderedCallback(){
 		registerListener('motorSelection', this.handleMotorSelection, this);
 	}
 
@@ -240,8 +241,6 @@ export default class CustCommOrderOptions extends LightningElement {
 	}
 
 	handleMotorSelection(detail){
-	  //this.template.querySelector('').classList.remove('hide');
-	  console.log('parentPage: ', detail.optionParentPage);
 	  let relatedOptions = this.template.querySelectorAll(`[data-parentpage="${detail.optionParentPage}"]`);
 	  relatedOptions.forEach((option) => {
 			console.log(option.classList);

@@ -103,6 +103,7 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
 			this.isMobile = (event.currentTarget.outerWidth < 1024) ? true : false;
 		});
 		this.isMobile = (window.outerWidth < 1024) ? true : false;
+
   }
 
   get processPages()

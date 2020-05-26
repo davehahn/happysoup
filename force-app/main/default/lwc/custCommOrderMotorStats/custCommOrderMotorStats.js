@@ -18,11 +18,7 @@ export default class CustCommOrderMotorStats extends LightningElement {
     @wire(CurrentPageReference) pageRef;
 
 		connectedCallback(){
-			console.log('conPage: ', this.page);
 			registerListener('motorSelection', this.handleMotorStatsChange, this);
-		}
-		disconnectedCallback() {
-			unregisterAllListeners(this);
 		}
 
 		handleMotorStatsChange(detail){
@@ -32,9 +28,7 @@ export default class CustCommOrderMotorStats extends LightningElement {
 				var motorSpeed = parseInt(this.motorSpeed);
 				var self = this;
 				var interval = setInterval(function(){
-
 					const difference = detail.motorSpeed - self.previousSpeed;
-
 					if(counter <= Math.abs(difference)){
 						if(Math.sign(difference) === 1){
 							motorSpeed = motorSpeed + 1;
@@ -48,7 +42,7 @@ export default class CustCommOrderMotorStats extends LightningElement {
 
 					} else{
 						clearInterval(interval);
-						self.previousSpeed = self.motorDetails.motorSpeed;
+						self.previousSpeed = detail.motorSpeed;
 					}
 				}, 10);
 
@@ -56,10 +50,5 @@ export default class CustCommOrderMotorStats extends LightningElement {
 			}
   	}
 
-//		get motorRPM(){
-//			if(this.motorDetails){
-//				return this.motorDetails.motorRPM;
-//			}
-//		}
 
 }

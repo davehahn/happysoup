@@ -15,11 +15,9 @@ export default class CustCommOrderBoatImage extends LightningElement {
 		@wire(CurrentPageReference) pageRef;
 
 		connectedCallback(){
-		  console.log('conPage: ', this.page);
-			registerListener('motorSelection', this.handleImageChange, this);
-		}
-		disconnectedCallback() {
-			unregisterAllListeners(this);
+		  if(this.page !== 'undefined'){
+		  	registerListener('motorSelection', this.handleImageChange, this);
+    	}
 		}
 
 //    get boatImage(){
@@ -29,7 +27,7 @@ export default class CustCommOrderBoatImage extends LightningElement {
 //    }
 
 		handleImageChange(detail){
-			if(detail.optionImage){
+			if(detail.optionImage !== 'undefined'){
 				for(let image of detail.optionImage){
 					if(this.page === 'performance'){
 						if(image.imageType === 'sideAngle'){
