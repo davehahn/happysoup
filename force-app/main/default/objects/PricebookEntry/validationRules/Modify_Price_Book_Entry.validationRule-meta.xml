@@ -5,7 +5,7 @@
     <description>Leverages the Permission Set &quot;Can Modify Price Book Entry&quot; to only allow assigned users and Sys Admins access to modifying the List Price field.</description>
     <errorConditionFormula>ISCHANGED(UnitPrice) 
 &amp;&amp; 
-$Profile.Name != &#39;System Administrator&#39;
+$Profile.Name != &apos;System Administrator&apos;
 &amp;&amp; 
 $Permission.Can_Modify_Price_Book_Entry = FALSE</errorConditionFormula>
     <errorDisplayField>UnitPrice</errorDisplayField>

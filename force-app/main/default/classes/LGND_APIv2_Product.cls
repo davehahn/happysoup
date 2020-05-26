@@ -8,9 +8,15 @@ public with sharing class LGND_APIv2_Product {
   public String RecordTypeName { get; set; }
   public Map<String, String> DefaultImages { get; set; }
   public Decimal RetailPrice { get; set; }
-  public Static Decimal ParentRetailPrice { get; set; }
+  public Decimal RetailSpecialPrice { get; set; }
+  public String RetailSpecialPriceDescription { get; set; }
   public Decimal PartnerPrice { get; set; }
+  public Decimal PartnerSpecialPrice { get; set; }
+  public String PartnerSpecialPriceDescription { get; set; }
   public Decimal FactoryPrice { get; set; }
+  public Decimal FactorySpecialPrice { get; set; }
+  public String FactorySpecialPriceDescription { get; set; }
+  public Static Decimal ParentRetailPrice { get; set; }
   public String DefaultImage { get; set; }
   public UpgradeProduct StandardMotor { get; set; }
   public SampleRetailSale SampleRetailSale { get; set; }
@@ -163,7 +169,7 @@ public with sharing class LGND_APIv2_Product {
         {
           query += ', ' + standardTrollingMotorFields;
         }
-        query += ', (SELECT  Pricebook2Id, PriceBook2.Name, UnitPrice, CreatedDate FROM PricebookEntries WHERE Pricebook2.isStandard = false AND isActive = true AND Pricebook2.isActive = true ORDER BY CreatedDate DESC), ' +
+        query += ', (SELECT  Pricebook2Id, PriceBook2.Name, UnitPrice, Special_Price__c, Special_Price_Description__c, CreatedDate FROM PricebookEntries WHERE Pricebook2.isStandard = false AND isActive = true AND Pricebook2.isActive = true ORDER BY CreatedDate DESC), ' +
           '(SELECT Id, Feature_ID__r.Description__c, Feature_ID__r.Category__c FROM Product_Feature_Maps__r),' +
           '(SELECT Id, Standard__C, Maximum__c, displayOnWeb__c, isBiggestMotor__c, From_Product__r.Id, From_Product__r.Name, From_Product__r.RecordType.Name, From_Product__r.Family FROM To_Product_Options__r ORDER BY From_Product__r.Name),' +
           '(SELECT Id, Fee_Product__c FROM Parent_Product_Fee_Maps__r)';
@@ -211,14 +217,20 @@ public with sharing class LGND_APIv2_Product {
             {
               RetailPrice = pbe.UnitPrice;
               ParentRetailPrice = pbe.UnitPrice;
+              RetailSpecialPrice = pbe.Special_Price__c;
+              RetailSpecialPriceDescription = pbe.Special_Price_Description__c;
             }
             if( pricebookMap.get(pbe.Pricebook2Id) == 'partner' )
             {
               PartnerPrice = pbe.UnitPrice;
+              PartnerSpecialPrice = pbe.Special_Price__c;
+              PartnerSpecialPriceDescription = pbe.Special_Price_Description__c;
             }
             if( pricebookMap.get(pbe.Pricebook2Id) == 'factory' )
             {
               FactoryPrice = pbe.UnitPrice;
+              FactorySpecialPrice = pbe.Special_Price__c;
+              FactorySpecialPriceDescription = pbe.Special_Price_Description__c;
             }
           }
         }
@@ -241,7 +253,7 @@ public with sharing class LGND_APIv2_Product {
         standardIds.add(b.Standard_Trolling_Motor__r.Id);
 
         List<Product2> standards = [SELECT Id, Name, RecordType.Name, Default_Gallery_Image__c, Available_For_Mercury_Partner_Discount__c,
-                                  (SELECT Id, UnitPrice, Pricebook2Id FROM PricebookEntries WHERE isActive = true AND Pricebook2.isActive = true),
+                                  (SELECT Id, UnitPrice, Special_Price__c, Special_Price_Description__c, Pricebook2Id FROM PricebookEntries WHERE isActive = true AND Pricebook2.isActive = true),
                                   (SELECT Id, Standard__c, Maximum__c, From_Product__r.Id, From_Product__r.Name FROM To_Product_Options__r ORDER BY From_Product__r.Name)
                                  FROM Product2
                                  WHERE Id IN :standardIds
@@ -290,7 +302,7 @@ public with sharing class LGND_APIv2_Product {
           pIds.add(po.From_Product__c);
         }
         allProductOptions = new Map<Id, Product2>([SELECT Id, Name, Family, RecordType.Name, Default_Gallery_Image__c, Available_For_Mercury_Partner_Discount__c,
-                                (SELECT Id, UnitPrice, Pricebook2Id, Pricebook2.Name FROM PricebookEntries WHERE isActive = true AND Pricebook2.isActive = true),
+                                (SELECT Id, UnitPrice, Special_Price__c, Special_Price_Description__c, Pricebook2Id, Pricebook2.Name FROM PricebookEntries WHERE isActive = true AND Pricebook2.isActive = true),
                                 (SELECT Id, Standard__c, Maximum__c, displayOnWeb__c FROM From_Product_Options__r WHERE To_Product__c = :parentProduct.Id LIMIT 1),
                                 (SELECT Id, Standard__C, Maximum__c, displayOnWeb__c, From_Product__r.Id, From_Product__r.Name FROM To_Product_Options__r ORDER BY From_Product__r.Name),
                                 (SELECT Id, Price__c, From_Product__r.RecordType.Name FROM To_Product_Upgrades__r WHERE From_Product__c IN :standardIds ORDER BY Price__c ASC)
@@ -371,6 +383,8 @@ public with sharing class LGND_APIv2_Product {
                 Default_Gallery_Image__c,
           (SELECT Id,
                   UnitPrice,
+                  Special_Price__c,
+                  Special_Price_Description__c,
                   Pricebook2Id,
                   Pricebook2.Name
            FROM PricebookEntries
@@ -648,6 +662,10 @@ public with sharing class LGND_APIv2_Product {
     public String DefaultImage { get; set; }
     public Decimal RetailPrice { get; set; }
     public Decimal PartnerPrice { get; set; }
+    public Decimal RetailSpecialPrice { get; set; }
+    public String RetailSpecialPriceDescription { get; set; }
+    public Decimal PartnerSpecialPrice { get; set; }
+    public String PartnerSpecialPriceDescription { get; set; }
     public Decimal RetailUpgradeCost { get; set; }
     public Decimal PartnerUpgradeCost { get; set; }
     public Decimal WeeklyUpgradeCost { get; set; }
@@ -770,10 +788,14 @@ public with sharing class LGND_APIv2_Product {
           if( pricebookMap.get(pbe.Pricebook2Id) == 'retail' )
           {
             this.RetailPrice = pbe.UnitPrice;
+            this.RetailSpecialPrice = pbe.Special_Price__c;
+            this.RetailSpecialPriceDescription = pbe.Special_Price_Description__c;
           }
           if( pricebookMap.get(pbe.Pricebook2Id) == 'partner' )
           {
             this.PartnerPrice = pbe.UnitPrice;
+            this.PartnerSpecialPrice = pbe.Special_Price__c;
+            this.PartnerSpecialPriceDescription = pbe.Special_Price_Description__c;
             if( this.Family == 'Trailer' && excludedStandard == true )
               this.PartnerUpgradeCost = pbe.UnitPrice;
           }
@@ -815,7 +837,6 @@ public with sharing class LGND_APIv2_Product {
   public Class PremiumPackage {
     public String Id { get; set; }
     public String Name { get; set; }
-    public Decimal CurrentPrice { get; set; }
     public Decimal RetailPrice { get; set; }
     public Decimal PartnerPrice { get; set; }
     public String DefaultImage { get; set; }
@@ -952,16 +973,16 @@ public with sharing class LGND_APIv2_Product {
     public String Id { get; set; }
     public String Name { get; set; }
     public Boolean HasOptions { get; set; }
-    public Decimal CurrentPrice { get; set; }
     public Decimal RetailPrice { get; set; }
     public Decimal PartnerPrice { get; set; }
+    public Decimal RetailSpecialPrice { get; set; }
+    public String RetailSpecialPriceDescription { get; set; }
+    public Decimal PartnerSpecialPrice { get; set; }
+    public String PartnerSpecialPriceDescription { get; set; }
     public String DefaultImage { get; set; }
-    //public Map<String, Decimal> Prices { get; set ;}
     public Integer QuantityStandard { get; set; }
     public Integer MaximumQuantity { get; set; }
     public Boolean DisplayOnWeb { get; set; }
-    /* other motor related detail fields */
-    //spublic Map<String,List<PartProduct>> OptionalProducts { get; set; }
 
 
     public PartProduct(Product2 p) {
@@ -991,11 +1012,15 @@ public with sharing class LGND_APIv2_Product {
             if( pricebookMap.get(pbe.Pricebook2Id) == 'retail' )
             {
               this.RetailPrice = pbe.UnitPrice;
+              this.RetailSpecialPrice = pbe.Special_Price__c;
+              this.RetailSpecialPriceDescription = pbe.Special_Price_Description__c;
             }
             if( pricebookMap.get(pbe.Pricebook2Id) == 'partner' ||
                 pricebookMap.get(pbe.Pricebook2Id) == 'factory' )
             {
               this.PartnerPrice = pbe.UnitPrice;
+              this.PartnerSpecialPrice = pbe.Special_Price__c;
+              this.PartnerSpecialPriceDescription = pbe.Special_Price_Description__c;
             }
           }
         }
@@ -1208,6 +1233,10 @@ public with sharing class LGND_APIv2_Product {
     public String Name { get; set; }
     public Decimal RetailPrice { get; set; }
     public Decimal PartnerPrice { get; set; }
+    public Decimal RetailSpecialPrice { get; set; }
+    public String RetailSpecialPriceDescription { get; set; }
+    public Decimal PartnerSpecialPrice { get; set; }
+    public String PartnerSpecialPriceDescription { get; set; }
 
     public ExampleProduct(Product2 p) {
       this.Name = p.Name;
@@ -1227,11 +1256,15 @@ public with sharing class LGND_APIv2_Product {
             if( pricebookMap.get(pbe.Pricebook2Id) == 'retail' )
             {
               this.RetailPrice = pbe.UnitPrice;
+              this.RetailSpecialPrice = pbe.Special_Price__c;
+              this.RetailSpecialPriceDescription = pbe.Special_Price_Description__c;
             }
             if( pricebookMap.get(pbe.Pricebook2Id) == 'partner' ||
                 pricebookMap.get(pbe.Pricebook2Id) == 'factory' )
             {
               this.PartnerPrice = pbe.UnitPrice;
+              this.PartnerSpecialPrice = pbe.Special_Price__c;
+              this.PartnerSpecialPriceDescription = pbe.Special_Price_Description__c;
             }
           }
         }
