@@ -16,6 +16,7 @@ export default class CustCommOrderCheckbox extends NavigationMixin(LightningElem
 	@api optionPage;
 	@api optionInputType;
 	@api optionImages;
+	@api optionParentSku;
 	@api displayImage;
 	@api optionBlurb;
 	@api optionIncludedProducts;
@@ -47,11 +48,14 @@ export default class CustCommOrderCheckbox extends NavigationMixin(LightningElem
 	handleClick(event){
 
 	  let details = {
-	    'motorSKU': this.optionSku,
+	    'optionSKU': this.optionSku,
 			'motorSpeed': this.optionKm,
 			'motorRPM': this.optionRpm,
-			'motorImage': this.optionImages,
+			'optionImage': this.optionImages,
+			'optionParentPage': this.optionPage
    	};
+
+
 
    	fireEvent(this.pageRef, 'motorSelection', details	);
  	}

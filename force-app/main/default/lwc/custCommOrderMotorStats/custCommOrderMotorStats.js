@@ -19,13 +19,13 @@ export default class CustCommOrderMotorStats extends LightningElement {
 
 		connectedCallback(){
 			console.log('conPage: ', this.page);
-			registerListener('motorSelection', this.handleMotorSelection, this);
+			registerListener('motorSelection', this.handleMotorStatsChange, this);
 		}
 		disconnectedCallback() {
 			unregisterAllListeners(this);
 		}
 
-		handleMotorSelection(detail){
+		handleMotorStatsChange(detail){
 			if(detail){
 				var counter = 1;
 				var startSpeed = parseInt(this.previousSpeed);

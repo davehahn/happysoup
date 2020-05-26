@@ -9,7 +9,7 @@
         <fieldset>
             <ul class="options_list">
                 <template for:each={availableOptions} for:item="option">
-                    <li key={option.name} class="options_item">
+                    <li key={option.name} class={optionClasses} data-page={page} data-parentpage={parentPage} data-parentsku={option.parentSku}>
                         <c-cust-comm-order-checkbox
                                                     option-input-type={option.inputType}
                                                     option-page={page}

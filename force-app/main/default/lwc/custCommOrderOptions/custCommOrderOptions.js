@@ -2,7 +2,9 @@
  * Created by Tim on 2020-04-22.
  */
 
-import { LightningElement, api } from 'lwc';
+import { LightningElement, api, wire} from 'lwc';
+import { CurrentPageReference } from 'lightning/navigation';
+import { registerListener, unregisterAllListeners} from 'c/pubsub';
 import { loadStyle } from 'lightning/platformResourceLoader';
 import gothamFonts from '@salesforce/resourceUrl/GothamHTF';
 
@@ -15,11 +17,19 @@ export default class CustCommOrderOptions extends LightningElement {
   @api boatRetailPrice;
   @api isInit;
   @api page;
+  @api parentPage;
   @api showOptionPrice;
+
+  @wire(CurrentPageReference) pageRef;
+
+	connectedCallback(){
+		registerListener('motorSelection', this.handleMotorSelection, this);
+	}
 
 	get availableOptions(){
 
 	  if(this.options){
+	    let parentSku = null;
 	    let options = this.options;
 	    const keys = Object.keys(this.options);
 			let optionDetails = [];
@@ -29,6 +39,7 @@ export default class CustCommOrderOptions extends LightningElement {
 	      //single option details to array
 
 	      if(this.subSection){
+	        parentSku = options['id'];
 	        options = this.recompose(options, this.subSection);
 	        options = options[0];
        	}
@@ -97,6 +108,7 @@ export default class CustCommOrderOptions extends LightningElement {
 					'images': images,
 					'blurb': blurb,
 					'includedProducts': includedProducts,
+					'parentSku': parentSku
 				});
 //				console.log('details: ', optionDetails);
 				return optionDetails;
@@ -108,13 +120,13 @@ export default class CustCommOrderOptions extends LightningElement {
      	    if('id' in option){
 
      	      if(this.subSection){
+     	        parentSku = option['id'];
 							option = this.recompose(option, this.subSection);
 							option = option[0];
 						}
 
 						let name = option['name'];
      	      const sku = option['id'];
-//     	      console.log('sku: ', sku);
      	      const selections = this.selections;
      	      let upgradePrice = 0;
      	      let km = null;
@@ -194,6 +206,7 @@ export default class CustCommOrderOptions extends LightningElement {
 							'images': images,
 							'blurb': blurb,
 							'includedProducts': includedProducts,
+							'parentSku': parentSku
 						});
           } else {
             //console.log('no id');
@@ -221,12 +234,21 @@ export default class CustCommOrderOptions extends LightningElement {
 			return newObj;
 	};
 
-// 	handleOptionView(event){
-// 	  const optionDetails = event.detail;
-// 	  //console.log(JSON.parse(JSON.stringify(optionDetails)));
-//		const updateEvent = new CustomEvent('updateoptionview', {
-//			detail: optionDetails
-//  	});
-//  	this.dispatchEvent(updateEvent);
-//  }
+	get optionClasses()
+	{
+		return (this.subSection) ? 'options_item hide' : 'options_item';
+	}
+
+	handleMotorSelection(detail){
+	  //this.template.querySelector('').classList.remove('hide');
+	  console.log('parentPage: ', detail.optionParentPage);
+	  let relatedOptions = this.template.querySelectorAll(`[data-parentpage="${detail.optionParentPage}"]`);
+	  relatedOptions.forEach((option) => {
+			console.log(option.classList);
+			option.classList.add('hide');
+			if(option.getAttribute('data-parentsku') === detail.optionSKU){
+			  option.classList.remove('hide');
+   		}
+   	});
+ 	}
 }
