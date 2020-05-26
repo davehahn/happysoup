@@ -12,7 +12,12 @@ public with sharing class CommissionPayment2_Service
     for( Id crId : commissionRecordIds )
     {
       payments.add( new CommissionPayment2__c(
-        Commission_Record2__c = crId
+          Commission_Record2__c = crId,
+          Type__c = 'Standard'
+      ));
+      payments.add( new CommissionPayment2__c(
+          Commission_Record2__c = crId,
+          Type__c = 'Manager'
       ));
     }
     insert payments;
@@ -39,20 +44,24 @@ public with sharing class CommissionPayment2_Service
       if( commRecMap.containsKey( payment.Commission_Record2__c ) )
       {
         CommissionRecord2__c cr = commRecMap.get( payment.Commission_Record2__c );
-        if( payment.Owner__c == null )
-        {
-          if( cr.Project_Task__r.AcctSeed__GL_Account_Variable_2__c == LGND_Constants.GLV2Id_BusinessOffice )
-          {
-            payment.Owner__c = cr.Project_Task__r.AcctSeed__Project__r.Business_Manager__c;
-          }
-          else if( cr.Project_Task__r.AcctSeed__GL_Account_Variable_2__c == LGND_Constants.GLV2Id_Sales &&
-                   cr.Project_Task__r.Name.contains( 'Retail Sale' ) )
-          {
-            payment.Owner__c = cr.Project_Task__r.AcctSeed__Project__r.Salesperson__c;
-          }
-          if (payment.Owner__c == null)
-          {
-            payment.Owner__c = UserInfo.getUserId();
+        if( payment.Owner__c == null) {
+          if (payment.Type__c == 'Standard' || payment.Type__c == null) {
+            if (cr.Project_Task__r.AcctSeed__GL_Account_Variable_2__c == LGND_Constants.GLV2Id_BusinessOffice) {
+              payment.Owner__c = cr.Project_Task__r.AcctSeed__Project__r.Business_Manager__c;
+            } else if (cr.Project_Task__r.AcctSeed__GL_Account_Variable_2__c == LGND_Constants.GLV2Id_Sales &&
+                cr.Project_Task__r.Name.contains('Retail Sale')) {
+              payment.Owner__c = cr.Project_Task__r.AcctSeed__Project__r.Salesperson__c;
+            }
+            if (payment.Owner__c == null) {
+              payment.Owner__c = UserInfo.getUserId();
+            }
+          } else if (payment.Type__c == 'Manager'){
+            if (cr.Project_Task__r.AcctSeed__GL_Account_Variable_2__c == LGND_Constants.GLV2Id_BusinessOffice) {
+              payment.Owner__c = cr.Project_Task__r.AcctSeed__Project__r.Business_Manager__r.ManagerId;
+            } else if (cr.Project_Task__r.AcctSeed__GL_Account_Variable_2__c == LGND_Constants.GLV2Id_Sales &&
+                cr.Project_Task__r.Name.contains('Retail Sale')) {
+              payment.Owner__c = cr.Project_Task__r.AcctSeed__Project__r.Salesperson__r.ManagerId;
+            }
           }
         }
       }

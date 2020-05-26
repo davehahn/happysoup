@@ -135,10 +135,17 @@ public with sharing class CommissionRecord2_Selector extends Application_Selecto
   {
     return new Map<Id, CommissionRecord2__c>([
       SELECT Id,
+            Total_Payment_Amount__c,
             Project_Task__c,
             Project_Task__r.Name,
             Project_Task__r.AcctSeed__GL_Account_Variable_2__c,
             Project_Task__r.AcctSeed__Project__r.Business_Manager__c,
+            Project_Task__r.AcctSeed__Project__r.Business_Manager__r.ManagerId,
+            Project_Task__r.AcctSeed__Project__r.Business_Manager__r.Commission_Gross_Margin_Manager__c,
+            Project_Task__r.AcctSeed__Project__r.Business_Manager__r.Commission_Revenue_Manager__c,
+            Project_Task__r.AcctSeed__Project__r.Salesperson__r.Commission_Gross_Margin_Manager__c,
+            Project_Task__r.AcctSeed__Project__r.Salesperson__r.Commission_Revenue_Manager__c,
+            Project_Task__r.AcctSeed__Project__r.Salesperson__r.ManagerId,
             Project_Task__r.AcctSeed__Project__r.Salesperson__c
      FROM CommissionRecord2__c
      WHERE Id IN :crIds ]);
