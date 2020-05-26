@@ -7,6 +7,7 @@
   <aura:attribute name="allowService" type="Boolean" />
   <aura:attribute name="displayedRecords" type="List" />
   <aura:attribute name="activeCalendars" type="Array" />
+  <aura:attribute name="location" type="String" />
   <aura:attribute name="searchValue" type="String" default="" />
   <aura:attribute name="detailsOpen" type="Boolean" default="false" />
 
@@ -49,7 +50,7 @@
 
     <aura:iteration items="{!v.displayedRecords}" var="record">
 
-      <div class="{!join(' ', 'slds-card', 'schedulable', record.storeLocation, 'slds-p-bottom_x-small')}"
+      <div class="{!join(' ', 'slds-card', 'schedulable', record.calId, 'slds-p-bottom_x-small')}"
            data-record-id="{!record.Id}"
            data-cal-id="{!record.calId}">
 

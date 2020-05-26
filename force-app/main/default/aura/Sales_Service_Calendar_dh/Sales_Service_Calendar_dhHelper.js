@@ -33,6 +33,8 @@
       }),
 
       eventDrop: $A.getCallback( function( event, delta, revertFunc ) {
+        console.log( 'EVENT DROP' );
+        console.log( event );
         self.updateEventDate( component, event, revertFunc );
       }),
 
@@ -70,7 +72,7 @@
             endDate;
 
         if( ( calId.includes('retail') && allowedRetail ) ||
-            ( calId.includes('service') && allowedService ) )
+            ( ['service', 'trade','internal'].indexOf( calId ) >= 0 && allowedService ) )
         {
           if( date.hour() == 0 )
             date = moment( date.format() + ' 09:00:00');
@@ -147,41 +149,54 @@
     return la.fire();
   },
 
-  addAllEventSourcesByLocation: function( component, location )
+  addAllEventSourcesByLocation: function( component )
   {
-    var self = this,
-        calendars = component.get('v.calendars');
-    for( let cal of calendars )
-    {
-      if( cal.location === location )
-      {
-        for( let ct of cal.types )
-        {
-          self.addEventSource( component, ct.value );
-        }
-      }
-    }
+    component.get('v.eventTypes').forEach(  type => this.addEventSource( component, type.value ) );
   },
 
-	addEventSource : function( component, source )
+  addAllSelectedEventSourcesByLocation: function( component )
+  {
+    component.get('v.activeCalendars').forEach(  type => {
+      this.addEventSource( component, type )
+     });
+  },
+
+  removeAllEventSourcesByLocation: function( component )
+  {
+    return new Promise( (resolve) => {
+      component.get('v.eventTypes').forEach(  type => {
+        var eventSources = this.EventSources;
+        $('#cal').fullCalendar('removeEventSource', eventSources[type.value] );
+        $('label.event-type.' + type.value).removeClass('active');
+      });
+      this.EventSources = {};
+      resolve();
+    });
+  },
+
+	addEventSource : function( component, type )
   {
     var self = this,
+        location = component.get('v.selectedLocation'),
         calSelects = component.find('cal-select'),
         activeCalendars = component.get('v.activeCalendars');
 
-    activeCalendars.push( source );
-    component.set('v.activeCalendars', activeCalendars );
-
-    if( !self.EventSources.hasOwnProperty( source) )
-      self.EventSources[source] = self.buildEventSource( component, source.split(':')[0], source.split(':')[1] );
-
-    $('#cal').fullCalendar('addEventSource', self.EventSources[source] );
-    for( let cs of calSelects )
+    if( activeCalendars.indexOf( type ) < 0)
     {
-      if( cs.get('v.value') === source )
-        cs.set('v.checked', true);
+      activeCalendars.push( type );
+      component.set('v.activeCalendars', activeCalendars );
     }
 
+    if( !self.EventSources.hasOwnProperty( type ) )
+      self.EventSources[type] = self.buildEventSource( component, location, type );
+
+    $('#cal').fullCalendar('addEventSource', self.EventSources[type] );
+    for( let cs of calSelects )
+    {
+      if( cs.get('v.value') === type )
+        cs.set('v.checked', true);
+    }
+    $('label.event-type.' + type).addClass('active');
 	},
 
   removeEventSource : function( component, source )
@@ -191,6 +206,7 @@
     activeCalendars.splice( activeCalendars.indexOf(source), 1 );
     component.set('v.activeCalendars', activeCalendars );
     $('#cal').fullCalendar('removeEventSource', eventSources[source] );
+    $('label.event-type.' + source).removeClass('active');
   },
 
   buildEventSource: function( component, location, calType )
@@ -225,7 +241,7 @@
     });
     if( calType === 'retail' )
       editable = component.get('v.canEditRetailPickupDate');
-    if( calType === 'service' )
+    if( ['service','internal','trade'].indexOf(calType) >= 0 )
       editable = component.get('v.canEditServiceDate');
     la = new LightningApex( self, action )
 
@@ -235,8 +251,12 @@
         $A.getCallback( function( result ) {
           for( var i=0; i<result.length; i++)
           {
-            console.log( result[i]);
             var title =  result[i].eventType + ' (' + result[i].woNumber + ') ';
+            var className = calType.toLowerCase();
+            if( result[i].isRiggerJobScheduled )
+            {
+              className += ' rigger-job-scheduled';
+            }
             if( result[i].boatName != null )
               title += ' - ' + result[i].boatName;
             if( result[i].accountName != null )
@@ -250,7 +270,7 @@
               title: title,
               start: new Date( result[i].startDateTime ),
               end: new Date( result[i].endDateTime ),
-              className: location.toLowerCase() + '-' + calType.toLowerCase(),
+              className: className,
               calendarId: result[i].calId,
               editable: editable
             });
@@ -268,12 +288,14 @@
   {
     var componentMap = {
           'retail': "c:Sales_Service_Calendar_RetailEventDetails_dh",
-          'service': "c:Sales_Service_Calendar_ServiceEventDetails_dh"
+          'service': "c:Sales_Service_Calendar_ServiceEventDetails_dh",
+          'internal': "c:Sales_Service_Calendar_InternalDetails",
+          'trade': "c:Sales_Service_Calendar_TradeInDetails"
         },
         params = {
           recordId: calEvent.id
         };
-    this.openModal( component, componentMap[calEvent.calendarId.split(':')[1] ], params );
+    this.openModal( component, componentMap[calEvent.calendarId], params );
   },
 
   renderNewServiceEventForm: function( component, m_start, m_end )
@@ -295,13 +317,14 @@
         params,
         componentMap = {
           'retail': "c:Sales_Service_Calendar_RetailEventDetails_dh",
-          'service': "c:Sales_Service_Calendar_ServiceEventDetails_dh"
+          'service': "c:Sales_Service_Calendar_ServiceEventDetails_dh",
+          'internal': "c:Sales_Service_Calendar_InternalDetails",
+          'trade': "c:Sales_Service_Calendar_TradeInDetails"
         },
-        calSplit = calId.split(':'),
-        location = calSplit.length === 1 ? calId : calSplit[1];
-    if( Object.keys( componentMap ).indexOf( location ) < 0 )
+        location = component.get('v.selectedLocation');
+    if( Object.keys( componentMap ).indexOf( calId ) < 0 )
     {
-      LightningUtils.errorToast('Invalid calendar specified "' + location + '"');
+      LightningUtils.errorToast('Invalid calendar specified "' + calId + '"');
     }
     else
     {
@@ -310,7 +333,7 @@
         scheduleStartDate: startTime,
         scheduleEndDate: endTime
       };
-      self.openModal( component, componentMap[ location], params );
+      self.openModal( component, componentMap[calId], params );
     }
   },
 
@@ -342,7 +365,7 @@
   {
     var allowedRetail = component.get('v.canEditRetailPickupDate') === 'true',
         allowedService = component.get('v.canEditServiceDate') === 'true',
-        calType = calEvent.calendarId.split(':')[1],
+        calType = calEvent.calendarId,
         eventData = {
           Id: calEvent.id,
           calId: calEvent.calendarId,
@@ -355,7 +378,7 @@
 
     if( calType == 'retail' )
       action = component.get('c.updateRetailRecord');
-    else if( calType == 'service' )
+    else if( ['service', 'trade', 'internal'].indexOf( calType ) >= 0 )
       action = component.get('c.updateServiceRecord');
     else {
       LightningUtils.errorToast('Could not determine Event Type');
@@ -369,7 +392,7 @@
       revertFunc();
       return false;
     }
-    if( calType === 'service' && !allowedService )
+    if( ['service', 'trade', 'internal'].indexOf( calType ) >= 0 && !allowedService )
     {
       LightningUtils.errorToast('You do not have Permission to make this change');
       revertFunc();

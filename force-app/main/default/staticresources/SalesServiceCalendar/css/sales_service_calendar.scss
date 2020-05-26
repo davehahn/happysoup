@@ -1,55 +1,47 @@
-$event-text-color: #3C3C3C;
+$event-text-color: #FFF;
+$inactive-color: #b0adab;
 $activeErpPickupEvent-bg: #F6A8F7;
 $activeErpPickupEvent-bg-dark: darken( $activeErpPickupEvent-bg, 50%);
 
 $calendars: (
-  barrie-retail: #D4F1FF,
-  barrie-service: #D4F1FF,
-  montreal-retail: #ffa9b7,
-  montreal-service: #ffa9b7,
-  whitefish-retail: #E7FFF1,
-  whitefish-service: #E7FFF1
+  service: #008fd4,
+  trade: #a9001c,
+  retail: #0db504,
+  internal: #9300a1
 );
 
-@each $name, $color in $calendars {
-  .#{$name} .slds-form-element .slds-form-element__control .slds-checkbox_toggle  {
-    border-width:1px;
-    border-style: solid;
-    @if( str-index( $name, '-service') ) {
+label.event-type {
+  color: #FFF;
+  margin-left: 0.5rem;
+  line-height: 1.5rem;
+  width: 100%;
+  display: block;
+  padding-left: 0.5rem;
+  border-radius: 4px;
+  background-color: $inactive-color;
+  border-color: $inactive-color;
+  @each $name, $color in $calendars {
+    &.#{$name}.active {
+      background-color: $color;
+      border-color: lighten( $color, 50%);
+    }
+  }
+}
+
+lightning-input.slds-form-element {
+  input[type=checkbox]:focus + .slds-checkbox_faux_container .slds-checkbox_faux {
+    box-shadow: none;
+    border-color: transparent;
+    background-color: $inactive-color;
+  }
+  input[type=checkbox]:hover + .slds-checkbox_faux_container .slds-checkbox_faux,
+  input[type=checkbox]:active + .slds-checkbox_faux_container .slds-checkbox_faux {
+    background-color: $inactive-color;
+  }
+  @each $name, $color in $calendars {
+    &.#{$name} .slds-checkbox_toggle input[type=checkbox]:checked + .slds-checkbox_faux_container .slds-checkbox_faux {
+      background-color: $color;
       border-color: $color;
-      background: darken($color, 50%);
-      color: #DEDEDE;
-    } @else {
-       border-color: darken($color, 50%);
-       background: $color;
-    }
-    padding-left:0.55rem;
-    height: calc(1.5rem + 2px );
-    line-height: 1.5rem;
-    border-radius: 4px 15px 15px 4px;
-    [type=checkbox]:checked + .slds-checkbox_faux_container .slds-checkbox_faux {
-      @if( str-index( $name, '-service') ) {
-        border-color: darken($color, 50%);
-        background-color: $color;
-        &:after {
-          border-bottom-color: darken($color, 50%);
-          border-right-color: darken($color, 50%);
-        }
-      } @else {
-        border-color: darken($color, 50%);
-        background-color: darken($color, 50%);
-      }
-
-    }
-    .slds-form-element__label {
-      line-height:1.5rem;
-      padding: 0 0.5rem;
-      @if( str-index( $name, '-service') ) {
-        color: #FCFCFC;
-      } @else {
-         color: #3C3C3C;
-      }
-
     }
   }
 }
@@ -62,47 +54,20 @@ $calendars: (
       -moz-transition:left 0.25s ease-in-out, opacity 0.25s ease-in-out, right 0.25s ease-in-out;
       -o-transition:left 0.25s ease-in-out, opacity 0.25s ease-in-out, right 0.25s ease-in-out;
       transition:left 0.25s ease-in-out, opacity 0.25s ease-in-out, right 0.25s ease-in-out;
-      }
+    }
   }
 
   .fc-event {
     color: $event-text-color;
-
-    /* ++++++++++++++++ locationr specific event class ++++++++++++++++ */
+    padding: 0.1rem 0.25rem;
+    /* ++++++++++++++++ location specific event class ++++++++++++++++ */
     @each $name, $color in $calendars {
       &.#{$name} {
-        @if( str-index( $name, '-service') ) {
-          background: darken( $color, 50%);
-          border-color: $color;
-          color:#FFF;
-          span.fc-time {
-            background: $color;
-            color: $event-text-color;
-          }
-          // &:hover {
-          //   background: $color;
-          //   color: $event-text-color;
-          //   border-color:darken( $color, 50%);
-          //   span.fc-time {
-          //     color: $event-text-color;
-          //     background: #FFF;
-          //   }
-          // }
-        } @else {
+        background: $color;
+        border-color: lighten( $color, 50%);
+        span.fc-time {
           background: $color;
-          border-color: darken( $color, 50%);
-          span.fc-time {
-            background: darken($color, 50%);
-            color: #FFF;
-          }
-          // &:hover {
-          //   background: darken($color, 50%);
-          //   color: #FFF;
-          //   span.fc-time {
-          //     color: $event-text-color;
-          //     background: #FFF;
-          //   }
-          // }
+          color: #FFF;
         }
       }
     }
@@ -121,6 +86,45 @@ $calendars: (
         span.fc-time {
           color: $event-text-color;
           background: #FFF;
+        }
+      }
+    }
+
+    .fc-content {
+      &:before {
+        background: #fff;
+        border-radius: 5rem;
+        position: absolute;
+        width: 17px;
+        height: 16px;
+        content: "\274c";
+        top: 3px;
+        left: 0px;
+        font-size: 7px;
+        text-align: center;
+        vertical-align: middle;
+        line-height: 16px;
+      }
+      .fc-time {
+        margin-left: 25px;
+      }
+    }
+
+    &.rigger-job-scheduled {
+      .fc-content {
+        &:before {
+          content: '';
+        }
+        &:after {
+          content: "";
+          position: absolute;
+          transform: rotate(40deg);
+          height: 8px;
+          width: 4px;
+          border-bottom: 2px solid #08ff32;
+          border-right: 2px solid #08ff32;
+          top: 4px;
+          left: 5px;
         }
       }
     }

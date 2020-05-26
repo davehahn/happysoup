@@ -3,51 +3,42 @@
   {
     helper.EventSources = {};
     component.set('v.activeCalendars', [] );
-    var calendars = [
-      { location: 'Barrie',
-        types : [
-          { label: 'Retail',
-            name: 'barrieRetail',
-            value: 'barrie:retail',
-            className: 'barrie-retail'
-          },
-          { label: 'Service',
-            name: 'barrieService',
-            value: 'barrie:service',
-            className: 'barrie-service'
-          }
-        ]
+    component.set('v.selectedLocation', '');
+    const locations = [
+      {
+        label: 'Barrie',
+        value: 'barrie'
       },
-      { location: 'Montreal',
-        types : [
-          { label: 'Retail',
-            name: 'montrealRetail',
-            value: 'montreal:retail',
-            className: 'montreal-retail'
-          },
-          { label: 'Service',
-            name: 'montrealService',
-            value: 'montreal:service',
-            className: 'montreal-service'
-          }
-        ]
+      {
+        label: 'Montreal',
+        value:'montreal'
       },
-      { location: 'Whitefish',
-        types : [
-          { label: 'Retail',
-            name: 'whitefishRetail',
-            value: 'whitefish:retail',
-            className: 'whitefish-retail'
-          },
-          { label: 'Service',
-            name: 'whitefishService',
-            value: 'whitefish:service',
-            className: 'whitefish-service'
-          }
-        ]
+      {
+        label: 'Whitefish',
+        value: 'whitefish'
       }
     ];
-    component.set('v.calendars', calendars);
+    const eventTypes = [
+      {
+        label: 'Retail',
+        value: 'retail'
+      },
+      {
+        label: 'Service',
+        value: 'service'
+      },
+      {
+        label: 'Internal',
+        value: 'internal'
+      },
+      {
+        label: 'Trade In',
+        value: 'trade'
+      }
+
+    ];
+    component.set('v.eventTypes', eventTypes );
+    component.set('v.locations', locations);
   },
 
 	afterScripts : function(component, event, helper)
@@ -55,7 +46,6 @@
     helper.setupUserAndPermissions( component )
     .then(
       $A.getCallback( function( result ) {
-        console.log( result );
         component.set('v.canEditRetailPickupDate', result.editPickupDate);
         component.set('v.canEditServiceDate', result.editServiceDate);
         helper.initCalendar( component, result.canCreateERP === "true" );
@@ -63,7 +53,10 @@
         if( result.warehouse !== null &&
             result.warehouse !== undefined &&
             result.warehouse.length > 0 )
-          helper.addAllEventSourcesByLocation( component, result.warehouse );
+        {
+          component.set('v.selectedLocation', result.warehouse.toLowerCase() );
+          helper.addAllEventSourcesByLocation( component );
+        }
       }),
       $A.getCallback( function( err ) {
         LightningUtils.errorToast( err );
@@ -82,6 +75,21 @@
     $('#cal').fullCalendar( 'changeView', event.detail.menuItem.get('v.value') );
   },
 
+  handleLocationChange: function( component, event, helper )
+  {
+    const schedCMP = component.find('schedulables-CMP');
+    if( typeof( schedCMP ) !== 'undefined' )
+    {
+      console.log('Its open, update it');
+      schedCMP.set('v.location', component.get('v.selectedLocation') );
+      schedCMP.refresh();
+    }
+    helper.removeAllEventSourcesByLocation( component )
+    .then( $A.getCallback( function() {
+      helper.addAllSelectedEventSourcesByLocation( component );
+    }));
+  },
+
   filterToggle: function( component )
   {
     var isOpen = component.get('v.filterOpen');
@@ -91,7 +99,6 @@
 
   scheduableToggle: function( component )
   {
-    console.log('schedulable visiblity changed');
     var isOpen = component.get('v.schedulableOpen');
     component.set('v.filterOpen', false);
     component.set('v.schedulableOpen', !isOpen );
@@ -99,10 +106,8 @@
 
   handleSchedulableOpen: function( component )
   {
-    console.log('handling schedulable change')
     var schedList = component.find('schedulables'),
         isOpen = component.get('v.schedulableOpen');
-    console.log( isOpen );
     if( !isOpen )
     {
       setTimeout( function() {
@@ -116,6 +121,7 @@
         "c:Sales_Service_Calendar_Schedulables",
         {
           "aura:id": "schedulables-CMP",
+          location: component.get('v.selectedLocation'),
           activeCalendars: component.get('v.activeCalendars')
         },
         function( list, status, message )
@@ -138,7 +144,6 @@
 
   toggleEventSource: function( component, event, helper )
   {
-    console.log('tootle change');
     var val = event.getSource().get('v.value'),
         isChecked = event.getSource().get('v.checked');
     if( isChecked )

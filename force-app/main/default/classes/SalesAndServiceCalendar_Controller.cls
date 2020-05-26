@@ -9,10 +9,6 @@ public with sharing class SalesAndServiceCalendar_Controller {
     public Boolean onWaterOrientation { get; set; }
     public DateTime startDateTime     { get; set; }
     public DateTime endDateTime       { get; set; }
-    //public String startDate           { get; set; }
-    //public String startTime           { get; set; }
-    //public String endDate             { get; set; }
-    //public String endTime             { get; set; }
     public String pickupLocation      { get; set; }
     public String storeLocation       { get; set; }
     public String parkingSpot         { get; set; }
@@ -25,15 +21,41 @@ public with sharing class SalesAndServiceCalendar_Controller {
     public Decimal estimatedDuration  { get; set; }
     public String stage               { get; set; }
     public String jobStatus           { get; set; }
+    public Boolean hasRiggerJob       { get; set; }
+    public Boolean isRiggerJobScheduled { get; set ;}
 
     public EventData( AcctSeed__Project__c erp )
     {
-      Id service = gcConstants.idRtProjectService;
-      Id boatSale = gcConstants.idRtProjectBoatSale;
-      if( erp.RecordTypeId == boatSale )
+      this.origin = 'erp';
+      this.Name = erp.Name;
+      this.Id = erp.Id;
+      this.woNumber = erp.AcctSeedERP__Work_Order_Number__c;
+      this.accountName = erp.AcctSeed__Account__c == null ? null : erp.AcctSeed__Account__r.Name;
+      this.estimatedDuration = erp.Estimated_Service_Duration__c;
+      this.warehouseId = erp.GMBLASERP__Warehouse__c == null ? null : erp.GMBLASERP__Warehouse__c;
+      this.serialNumberId = erp.Serial_Number__c;
+      this.stage = erp.Stage__c;
+      this.parkingSpot = erp.Parking_Spot__c;
+      this.jobStatus = erp.Job_Status__c;
+      if( this.startDateTime != null && this.estimatedDuration != null )
+      {
+        this.endDateTime = this.startDateTime.addMinutes( Integer.valueOf( this.estimatedDuration * 60 ) );
+      }
+      this.boatName = erp.Serial_Product__c;
+      this.storeLocation = erp.WarehouseName__c;
+      this.hasRiggerJob = erp.Rigger_Jobs__r.size() > 0;
+      this.isRiggerJobScheduled = this.hasRiggerJob ?
+        erp.Rigger_Jobs__r[0].Employee__c != null :
+        false;
+
+      if( erp.RecordTypeId == gcConstants.idRtProjectBoatSale )
         buildBoatSaleEvent( erp );
-      if( erp.RecordTypeId == service )
+      if( erp.RecordTypeId == gcConstants.idRtProjectService )
         buildServiceEvent( erp );
+      if( erp.RecordTypeId == gcConstants.idRtTradeIn )
+        buildTradeInEvent( erp );
+      if( erp.RecordTypeId == gcConstants.idRtProjectManufacturing )
+        buildInternalEvent( erp );
     }
 
     public EventData( Opportunity opp )
@@ -49,64 +71,43 @@ public with sharing class SalesAndServiceCalendar_Controller {
       if( opp.BoatId__c != null )
         this.boatName = opp.BoatId__r.Name;
       this.startDateTime = opp.Delivery_Date__c;
-      //if( this.startDateTime != null )
-      //{
-      //  this.startDate = this.startDateTime.format('MM/dd/yy');
-      //  this.startTime = this.startDateTime.format('HH:mm');
-      //}
+      this.calId = 'retail';
       setStoreAndType(opp.Pickup_Location__c, null);
     }
 
     private void buildServiceEvent( AcctSeed__Project__c erp )
     {
-      this.origin = 'erp';
-      this.Name = erp.Name;
-      this.iconName = 'custom:custom19';
-      this.Id = erp.Id;
-      this.woNumber = erp.AcctSeedERP__Work_Order_Number__c;
-      this.accountName = erp.AcctSeed__Account__c == null ? null : erp.AcctSeed__Account__r.Name;
       this.startDateTime = erp.Service_Date__c;
-      this.estimatedDuration = erp.Estimated_Service_Duration__c;
-      this.warehouseId = erp.GMBLASERP__Warehouse__c == null ? null : erp.GMBLASERP__Warehouse__c;
-      this.serialNumberId = erp.Serial_Number__c;
-      this.stage = erp.Stage__c;
-      this.parkingSpot = erp.Parking_Spot__c;
-      this.jobStatus = erp.Job_Status__c;
-      if( this.startDateTime != null )
-      {
-        //this.startDate = this.startDateTime.format('MM/dd/yy');
-        //this.startTime = this.startDateTime.format('HH:mm');
-        if( this.estimatedDuration != null )
-        {
-          this.endDateTime = this.startDateTime.addMinutes( Integer.valueOf( this.estimatedDuration * 60 ) );
-        }
-      }
-      this.boatName = erp.Serial_Product__c;
-      this.storeLocation = erp.WarehouseName__c;
-      this.calId = this.storeLocation.toLowerCase() + ':service';
+      this.iconName = 'custom:custom19';
+      this.calId = 'service';
       this.eventType = 'SERVICE';
+    }
+
+    private void buildInternalEvent( AcctSeed__Project__c erp )
+    {
+      this.startDateTime = erp.Service_Date__c;
+      this.iconName = 'custom:custom67';
+      this.calId = 'internal';
+      this.eventType = 'INTERNAL';
+    }
+
+    private void buildTradeInEvent( AcctSeed__Project__c erp )
+    {
+      this.startDateTime = erp.Service_Date__c;
+      this.iconName = 'custom:custom76';
+      this.calId = 'trade';
+      this.eventType = 'TRADE IN';
     }
 
     private void buildBoatSaleEvent( AcctSeed__Project__c erp )
     {
-      this.origin = 'erp';
       this.iconName = 'custom:custom68';
-      this.Id = erp.Id;
-      this.Name = erp.Name;
-      this.woNumber = erp.AcctSeedERP__Work_Order_Number__c;
       this.pickupLocation = erp.Pickup_Location__c == null ? '' : erp.Pickup_Location__c;
-      this.accountName = erp.AcctSeed__Account__c == null ? null : erp.AcctSeed__Account__r.Name;
       this.onWaterOrientation = erp.On_Water_Orientation__c;
       if( erp.Boat_Product__c != null )
         this.boatName = erp.Boat_Product__r.Name;
       this.startDateTime = erp.Delivery_Date__c;
-      this.stage = erp.Stage__c;
-      this.jobStatus = erp.Job_Status__c;
-      //if( this.startDateTime != null )
-      //{
-      //  this.startDate = this.startDateTime.format('MM/dd/yy');
-      //  this.startTime = this.startDateTime.format('HH:mm');
-      //}
+      this.calId = 'retail';
       setStoreAndType(erp.Pickup_Location__c, erp.RecordTypeId );
     }
 
@@ -118,17 +119,14 @@ public with sharing class SalesAndServiceCalendar_Controller {
       else if( pickupLocation.contains( 'Barrie' ) )
       {
         this.storeLocation = 'Barrie';
-        this.calId = 'barrie:';
       }
       else if( pickupLocation.contains( 'Montreal' ) )
       {
         this.storeLocation = 'Montreal';
-        this.calId = 'montreal:';
       }
       else if( pickupLocation.contains( 'Whitefish' ) )
       {
         this.storeLocation = 'Whitefish';
-        this.calId = 'whitefish:';
       }
       else
       {
@@ -137,7 +135,6 @@ public with sharing class SalesAndServiceCalendar_Controller {
 
       if( pickupLocation != null )
       {
-        this.calId += 'retail';
         if( pickupLocation.contains('Delivery') )
           this.eventType = 'DELIVERY';
         else if( pickupLocation.contains('Pick-up') )
@@ -145,24 +142,12 @@ public with sharing class SalesAndServiceCalendar_Controller {
         else
           this.eventType ='';
       }
-      else {
-        if(this.calId == null)
-          this.calId = 'retail';
-        else
-          this.calId += 'retail';
-      }
     }
 
     public Integer compareTo(Object compareTo) {
-      // Cast argument to OpportunityWrapper
       EventData compareToData = (EventData)compareTo;
-      return compareToData.storeLocation.compareTo(this.storeLocation);
+      return compareToData.calId.compareTo(this.calId);
     }
-
-    //public void updateRecord()
-    //{
-
-    //}
 
   }
 
@@ -188,6 +173,10 @@ public with sharing class SalesAndServiceCalendar_Controller {
       return fetchRetailEvents( startAt, endAt, storeLocation );
     if( calendarType.toLowerCase() == 'service' )
       return fetchServiceEvents( startAt, endAt, storeLocation );
+    if( calendarType.toLowerCase() == 'internal' )
+      return fetchManufacturingEvents( startAt, endAt, storeLocation );
+    if( calendarType.toLowerCase() == 'trade' )
+      return fetchTradeInEvents( startAt, endAt, storeLocation );
 
     String errorMessage = 'Unrecoginized Calendar Specified';
     AuraHandledException err = new AuraHandledException(errorMessage);
@@ -263,101 +252,34 @@ public with sharing class SalesAndServiceCalendar_Controller {
   }
 
   @AuraEnabled
-  public static String fetchSchedulables()
+  public static String fetchSchedulables( String warehouseName )
   {
     Id boatSaleRT = gcConstants.idRtProjectBoatSale;
-    Id serviceRT = gcConstants.idRtProjectService;
+    Set<Id> rtIds = new Set<Id>{
+      gcConstants.idRtProjectService,
+      gcConstants.idRtProjectManufacturing,
+      gcConstants.idRtTradeIn
+    };
+    Set<String> excludedStages = new Set<String>{
+      'Closed Lost',
+      'Repair Completed',
+      'Delivered'
+    };
     Id oppBoatSaleRT = LGND_Utilities.recordTypeIdFromName('Opportunity', 'Retail');
     String usersStore = [SELECT Id, Warehouse__c FROM User WHERE Id = :UserInfo.getUserId()].Warehouse__c;
-    String pl_string = '%' + usersStore + '%';
+    String pl_string = '%' + warehouseName.capitalize() + '%';
     List<EventData> scheduables = new List<EventData>();
     /** RETAIL ERPS **/
-    for( AcctSeed__Project__c erp : [ SELECT Id,
-                                             RecordTypeId,
-                                             Name,
-                                             Job_Status__c,
-                                             Parking_Spot__c,
-                                             AcctSeedERP__Work_Order_Number__c,
-                                             Estimated_Service_Duration__c,
-                                             Stage__c,
-                                             Owner.Name,
-                                             Salesperson__r.Name,
-                                             AcctSeed__Account__r.Name,
-                                             AcctSeed__Account__c,
-                                             AcctSeed__Account__r.Boat_Specialist__c,
-                                             AcctSeed__Account__r.Boat_Specialist__r.Name,
-                                             Grand_Total__c,
-                                             Boat_Product__c,
-                                             Boat_Product__r.Name,
-                                             Serial_Number__c,
-                                             Pickup_Location__c,
-                                             Delivery_Date__c,
-                                             On_Water_Orientation__c,
-                                             Payment_Method__c,
-                                             Payment_Status__C
-                                      FROM AcctSeed__Project__c
-                                      WHERE Delivery_Date__c = null
-                                      //AND ( Pickup_Location__c LIKE :pl_string
-                                      //      OR Pickup_Location__c = null )
-                                      AND RecordTypeId = :boatSaleRT
-                                      AND AcctSeed__Status__c = 'Active'
-                                      AND Stage__c != 'Closed Lost'
-                                      ORDER BY Pickup_Location__c DESC ] )
+    for( AcctSeed__Project__c erp : Project_Selector.allUnScheduledByLocation_Retail( warehouseName) )
     {
       scheduables.add( new EventData( erp ) );
     }
-    /** SERVICE ERPS **/
-    for( AcctSeed__Project__c erp : [ SELECT Id,
-                                             RecordTypeId,
-                                             Name,
-                                             Job_Status__c,
-                                             Parking_Spot__c,
-                                             AcctSeedERP__Work_Order_Number__c,
-                                             GMBLASERP__Warehouse__c,
-                                             Estimated_Service_Duration__c,
-                                             Stage__c,
-                                             AcctSeed__Account__r.Name,
-                                             AcctSeed__Account__c,
-                                             AcctSeed__Account__r.Boat_Specialist__c,
-                                             AcctSeed__Account__r.Boat_Specialist__r.Name,
-                                             Grand_Total__c,
-                                             Serial_Number__c,
-                                             Serial_Product__c,
-                                             WarehouseName__c,
-                                             Service_Date__c
-                                      FROM AcctSeed__Project__c
-                                      WHERE Service_Date__c = null
-                                      AND RecordTypeId = :serviceRT
-                                      AND AcctSeed__Status__c = 'Active'
-                                      AND Stage__c != 'Repair Completed'
-                                      AND Stage__c != 'Delivered'
-                                      ORDER BY WarehouseName__c DESC ] )
+    /** SERVICE/MANUFACTURING/TRADEIN ERPS **/
+    for( AcctSeed__Project__c erp : Project_Selector.allUnScheduledByLocation_Service_TradeIn_Manufacturing( warehouseName ) )
     {
       scheduables.add( new EventData( erp ) );
     }
-    for( Opportunity opp : [ SELECT Id,
-                                    Name,
-                                    RecordTypeId,
-                                    Owner.Name,
-                                    AccountId,
-                                    Account.Name,
-                                    Account.Boat_Specialist__c,
-                                    Account.Boat_Specialist__r.Name,
-                                    Total_Amount__c,
-                                    BoatId__c,
-                                    StageName,
-                                    BoatId__r.Name,
-                                    Pickup_Location__c,
-                                    Delivery_Date__c,
-                                    On_Water_Orientation__c,
-                                    Payment_Method__c,
-                                    InvoiceNumber__c
-                             FROM Opportunity
-                             WHERE RecordTypeId = :oppBoatSaleRT
-                             AND Delivery_Date__c = null
-                             AND Probability > 69
-                             AND Probability < 100
-                             ORDER BY Pickup_Location__c DESC ])
+    for( Opportunity opp : Opportunity_Selector.allSchedulableRetailBoatSaleByLocation( warehouseName ) )
     {
       scheduables.add( new EventData( opp ) );
     }
@@ -553,16 +475,18 @@ public with sharing class SalesAndServiceCalendar_Controller {
   @AuraEnabled
   public static void updateRiggerJob(String erpId, String riggerId)
   {
-    System.debug(erpId + ' - ' + riggerId);
-    Rigger_Job__c job = [SELECT Id, Employee__c FROM Rigger_Job__c WHERE ERP_Order__c = :erpId];
-    if (job != null) {
-      if (riggerId == '') {
+    try
+    {
+      Rigger_Job__c job = [SELECT Id, Employee__c FROM Rigger_Job__c WHERE ERP_Order__c = :erpId];
+      if (riggerId == '')
+      {
         job.Employee__c = null;
       } else {
         job.Employee__c = riggerId;
       }
       update job;
     }
+    catch( Exception e ){}
   }
 
   @AuraEnabled
@@ -588,62 +512,15 @@ public with sharing class SalesAndServiceCalendar_Controller {
                                             String endAt,
                                             String storeLocation )
   {
-    Date sDateTime = DateTime.newInstance( Long.valueOf(startAt) ).date();
-    Date eDateTime = DateTime.newInstance( Long.valueOf(endAt) ).date();
-    System.debug( 'start = ' + sDateTime );
-    System.debug( 'end = ' + eDateTime );
+    Date sDate = DateTime.newInstance( Long.valueOf(startAt) ).date();
+    Date eDate = DateTime.newInstance( Long.valueOf(endAt) ).date();
     String pickupLocation = '%' + storeLocation + '%';
     List<EventData> result = new List<EventData>();
-    Id erpRT = gcConstants.idRtProjectBoatSale;
-    for( AcctSeed__Project__c erp : [SELECT Id,
-                                            Name,
-                                            AcctSeedERP__Work_Order_Number__c,
-                                            Stage__c,
-                                            Job_Status__c,
-                                            Owner.Name,
-                                            Salesperson__r.Name,
-                                            AcctSeed__Account__r.Name,
-                                            AcctSeed__Account__r.Boat_Specialist__r.Name,
-                                            Grand_Total__c,
-                                            Boat_Product__r.Name,
-                                            Pickup_Location__c,
-                                            Delivery_Date__c,
-                                            Serial_Number__c,
-                                            On_Water_Orientation__c,
-                                            Payment_Method__c,
-                                            Payment_Status__c,
-                                            RecordTypeId
-                                      FROM AcctSeed__Project__c
-                                      WHERE Delivery_Date__c >= :sDateTime
-                                      AND Delivery_Date__c <= :eDateTime
-                                      AND Stage__c != 'Closed Lost'
-                                      AND Pickup_Location__c LIKE :pickupLocation
-                                      AND RecordTypeId = :erpRT ] )
+    for( AcctSeed__Project__c erp : Project_Selector.allRetailBoatSaleByLocationByPickupDateRange( storeLocation, sDate, eDate ) )
     {
       result.add( new EventData( erp ) );
     }
-    for( Opportunity opp : [ SELECT Id,
-                                    Name,
-                                    Owner.Name,
-                                    AccountId,
-                                    Account.Name,
-                                    Account.Boat_Specialist__c,
-                                    Account.Boat_Specialist__r.Name,
-                                    Total_Amount__c,
-                                    BoatId__c,
-                                    StageName,
-                                    BoatId__r.Name,
-                                    Pickup_Location__c,
-                                    Delivery_Date__c,
-                                    On_Water_Orientation__c,
-                                    Payment_Method__c,
-                                    InvoiceNumber__c
-                             FROM Opportunity
-                             WHERE Delivery_Date__c >= :sDateTime
-                             AND Probability < 100
-                             AND Probability > 0
-                             AND Delivery_Date__c <= :eDateTime
-                             AND Pickup_Location__c LIKE :pickupLocation] )
+    for( Opportunity opp : Opportunity_Selector.allRetailBoatSaleByLocationAndDeliveryDateRange( storeLocation, sDate, eDate ) )
     {
       result.add( new EventData( opp ) );
     }
@@ -655,42 +532,53 @@ public with sharing class SalesAndServiceCalendar_Controller {
                                             String endAt,
                                             String storeLocation )
   {
-    Date sDateTime = DateTime.newInstance( Long.valueOf(startAt) ).date();
-    Date eDateTime = DateTime.newInstance( Long.valueOf(endAt) ).date();
-    System.debug( 'start = ' + sDateTime );
-    System.debug( 'end = ' + eDateTime );
+    Date sDate = DateTime.newInstance( Long.valueOf(startAt) ).date();
+    Date eDate = DateTime.newInstance( Long.valueOf(endAt) ).date();
     AcctSeedERP__Warehouse__c wh = [SELECT Id
                                     FROM AcctSeedERP__Warehouse__c
                                     WHERE Name = :storeLocation ];
     List<EventData> result = new List<EventData>();
-    Id erpRT = gcConstants.idRtProjectService;
-    for( AcctSeed__Project__c erp : [SELECT Id,
-                                            Name,
-                                            AcctSeedERP__Work_Order_Number__c,
-                                            Stage__c,
-                                            Owner.Name,
-                                            Job_Status__c,
-                                            Salesperson__r.Name,
-                                            AcctSeed__Account__r.Name,
-                                            AcctSeed__Account__r.Boat_Specialist__r.Name,
-                                            Grand_Total__c,
-                                            Serial_Number__c,
-                                            Serial_Product__c,
-                                            Pickup_Location__c,
-                                            Service_Date__c,
-                                            Estimated_Service_Duration__c,
-                                            WarehouseName__c,
-                                            GMBLASERP__Warehouse__c,
-                                            Payment_Method__c,
-                                            Payment_Status__c,
-                                            RecordTypeId,
-                                            Parking_Spot__c
-                                      FROM AcctSeed__Project__c
-                                      WHERE Service_Date__c >= :sDateTime
-                                      AND Service_Date__c <= :eDateTime
-                                      AND Stage__c != 'Closed Lost'
-                                      AND GMBLASERP__Warehouse__c = :wh.Id
-                                      AND RecordTypeId = :erpRT ] )
+    for( AcctSeed__Project__c erp :
+         Project_Selector.allByWarehouseAndRecordTypeAndServiceDateRange(
+           gcConstants.idRtProjectService, wh.Id, sDate, eDate
+         ))
+    {
+      result.add( new EventData( erp ) );
+    }
+    return JSON.serialize( result );
+  }
+
+  private static String fetchManufacturingEvents( String startAt,
+                                                  String endAt,
+                                                  String storeLocation )
+  {
+    Date sDate = DateTime.newInstance( Long.valueOf(startAt) ).date();
+    Date eDate = DateTime.newInstance( Long.valueOf(endAt) ).date();
+    AcctSeedERP__Warehouse__c wh = [SELECT Id
+                                    FROM AcctSeedERP__Warehouse__c
+                                    WHERE Name = :storeLocation ];
+    List<EventData> result = new List<EventData>();
+    Id erpRT = gcConstants.idRtProjectManufacturing;
+    for( AcctSeed__Project__c erp : Project_Selector.allByWarehouseAndRecordTypeAndServiceDateRange(
+      gcConstants.idRtProjectManufacturing, wh.Id, sDate, eDate ))
+    {
+      result.add( new EventData( erp ) );
+    }
+    return JSON.serialize( result );
+  }
+
+  private static String fetchTradeInEvents( String startAt,
+                                            String endAt,
+                                            String storeLocation )
+  {
+    Date sDate = DateTime.newInstance( Long.valueOf(startAt) ).date();
+    Date eDate = DateTime.newInstance( Long.valueOf(endAt) ).date();
+    AcctSeedERP__Warehouse__c wh = [SELECT Id
+                                    FROM AcctSeedERP__Warehouse__c
+                                    WHERE Name = :storeLocation ];
+    List<EventData> result = new List<EventData>();
+    for( AcctSeed__Project__c erp : Project_Selector.allByWarehouseAndRecordTypeAndServiceDateRange(
+      gcConstants.idRtTradeIn, wh.Id, sDate, eDate ))
     {
       result.add( new EventData( erp ) );
     }
@@ -699,57 +587,12 @@ public with sharing class SalesAndServiceCalendar_Controller {
 
   private static AcctSeed__Project__c retrieveERP( String erpId )
   {
-    return [SELECT Id,
-              Name,
-              AcctSeedERP__Work_Order_Number__c,
-              Parking_Spot__c,
-              Job_Status__c,
-              Stage__c,
-              Owner.Name,
-              Salesperson__r.Name,
-              AcctSeed__Account__r.Name,
-              AcctSeed__Account__c,
-              AcctSeed__Account__r.Boat_Specialist__c,
-              AcctSeed__Account__r.Boat_Specialist__r.Name,
-              Grand_Total__c,
-              Boat_Product__c,
-              Boat_Product__r.Name,
-              Pickup_Location__c,
-              Delivery_Date__c,
-              Service_Date__c,
-              Estimated_Service_Duration__c,
-              Serial_Product__c,
-              Serial_Number__c,
-              WarehouseName__c,
-              GMBLASERP__Warehouse__c,
-              On_Water_Orientation__c,
-              Payment_Method__c,
-              Payment_Status__c,
-              RecordTypeId
-       FROM AcctSeed__Project__c
-       WHERE Id = :erpId];
+    return Project_Selector.allByIds( new Set<Id>{erpId} )[0];
   }
 
   private static Opportunity retrieveOpp( String oppId )
   {
-    return [SELECT Id,
-                    Name,
-                    Owner.Name,
-                    AccountId,
-                    Account.Name,
-                    Account.Boat_Specialist__c,
-                    Account.Boat_Specialist__r.Name,
-                    Total_Amount__c,
-                    BoatId__c,
-                    StageName,
-                    BoatId__r.Name,
-                    Pickup_Location__c,
-                    Delivery_Date__c,
-                    On_Water_Orientation__c,
-                    Payment_Method__c,
-                    InvoiceNumber__c
-             FROM Opportunity
-             WHERE Id = :oppId];
+    return Opportunity_Selector.allByIds( new Set<Id>{oppId} )[0];
   }
 
 }

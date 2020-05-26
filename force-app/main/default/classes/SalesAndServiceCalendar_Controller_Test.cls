@@ -44,7 +44,6 @@ private class SalesAndServiceCalendar_Controller_Test {
 
   private static void setupSerials()
   {
-
     serials = Factory_SerialNumber.insertFullSerials( 12, 'Boat', 'Pontoon');
     b_serials = new List<GMBLASERP__Serial_Number__c> { serials[0], serials[1], serials[2] };
     wf_serials = new List<GMBLASERP__Serial_Number__c> { serials[3], serials[4], serials[5], serials[6] };
@@ -56,10 +55,21 @@ private class SalesAndServiceCalendar_Controller_Test {
   {
     Boolean orig = gcProjectTask.ignoreCommissions;
     gcProjectTask.ignoreCommissions = true;
-    List<AcctSeed__Project__c> erps = Factory_ERPOrder.insertRetailBoatSales( customer,
-                                            barrieWarehouse,
-                                            null,
-                                            unscheduled_serials );
+    List<GMBLASERP__Serial_Number__c> retailSerials = new List<GMBLASERP__Serial_Number__c>{
+      unscheduled_serials[0], unscheduled_serials[1]
+    };
+    List<GMBLASERP__Serial_Number__c> serviceSerials = new List<GMBLASERP__Serial_Number__c>{
+      unscheduled_serials[2], unscheduled_serials[3]
+    };
+    List<AcctSeed__Project__c> erps = new List<AcctSeed__Project__c>();
+    erps.addAll( Factory_ERPOrder.insertRetailBoatSales( customer,
+                                                          barrieWarehouse,
+                                                          null,
+                                                          retailSerials ) );
+    erps.addAll( Factory_ERPOrder.insertServiceOrders( customer,
+                                                          barrieWarehouse,
+                                                          null,
+                                                          serviceSerials ) );
     gcProjectTask.ignoreCommissions = orig;
     return erps;
   }
@@ -359,7 +369,7 @@ private class SalesAndServiceCalendar_Controller_Test {
                                                             null );
       Integer recCount = erps.size() + opps.size();
       Test.startTest();
-      String jsonResult = SalesAndServiceCalendar_Controller.fetchSchedulables();
+      String jsonResult = SalesAndServiceCalendar_Controller.fetchSchedulables( 'barrie' );
       List<SalesAndServiceCalendar_Controller.EventData> result =
         (List<SalesAndServiceCalendar_Controller.EventData>)JSON.deserialize( jsonResult,
                                                                               List<SalesAndServiceCalendar_Controller.EventData>.class);

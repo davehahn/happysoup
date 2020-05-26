@@ -1,7 +1,10 @@
 <aura:component controller="SalesAndServiceCalendar_Controller"
                 implements="force:appHostable,flexipage:availableForAllPageTypes">
 
-  <aura:attribute name="calendars" type="Array" />
+  <aura:attribute name="selectedLocation" type="String" />
+  <aura:attribute name="locations" type="Array" />
+  <aura:attribute name="eventTypes" type="Array" />
+
   <aura:attribute name="activeCalendars" type="Array" />
   <aura:attribute name="calTitle" type="String" />
   <aura:attribute name="calView" type="String" default="month" />
@@ -86,6 +89,19 @@
                                     class="slds-m-left_x-small" />
             </div>
 
+            <div class="slds-col slds-no-flex location-selector">
+              <aura:if isTrue="{! !empty(v.selectedLocation)}">
+                <lightning:select value="{!v.selectedLocation}"
+                                  variant="label-hidden"
+                                  class="slds-m-left_x-small"
+                                  onchange="{!c.handleLocationChange}">
+                  <aura:iteration items="{!v.locations}" var="loc">
+                    <option value="{!loc.value}">{!loc.label}</option>
+                  </aura:iteration>
+                </lightning:select>
+              </aura:if>
+            </div>
+
           </div>
 
         </div>
@@ -108,29 +124,25 @@
                    slds-p-top_x-small
                    slds-p-bottom_small
                    cal-side-header">Calendars</h1>
-
-        <aura:iteration items="{!v.calendars}" var="cal">
-          <div class="slds-card slds-p-around_small">
-            <h2 class="slds-text-heading_small
-                       slds-m-bottom_small">{!cal.location}</h2>
-            <lightning:layout horizontalAlign="space">
-              <aura:iteration items="{!cal.types}" var="calType">
-                <lightning:layoutItem >
-                  <lightning:input type="toggle"
-                                   label="{!calType.label}"
-                                   name="{!calType.name}"
-                                   value="{!calType.value}"
-                                   messageToggleInactive=""
-                                   messageToggleActive=""
-                                   onchange="{!c.toggleEventSource}"
-                                   class="{!calType.className}"
-                                   aura:id="cal-select"/>
-                </lightning:layoutItem>
-              </aura:iteration>
-            </lightning:layout>
-          </div>
-        </aura:iteration>
-
+        <lightning:layout horizontalAlign="space" multipleRows="true">
+          <aura:iteration items="{!v.eventTypes}" var="type">
+            <lightning:layoutItem size="8" class="slds-m-top_small">
+              <label class="{! join(' ', 'event-type', type.value)}">{!type.label}</label>
+            </lightning:layoutItem>
+            <lightning:layoutItem size="4" class="slds-m-top_small">
+              <lightning:input type="toggle"
+                               label="{!type.label}"
+                               name="{!type.value}"
+                               value="{!type.value}"
+                               messageToggleInactive=""
+                               messageToggleActive=""
+                               onchange="{!c.toggleEventSource}"
+                               class="{!join(' ', 'slds-float_right', 'slds-p-right_small', type.value)}"
+                               variant="label-hidden"
+                              aura:id="cal-select"/>
+            </lightning:layoutItem>
+          </aura:iteration>
+        </lightning:layout>
       </div>
 
       <div class="scheduable-list" aura:id="schedulable-list">
@@ -142,10 +154,6 @@
                    slds-p-bottom_small
                    cal-side-header">To Be Scheduled</h1>
         <div aura:id="schedulables"></div>
-       <!--  <c:Sales_Service_Calendar_Schedulables activeCalendars="{!v.activeCalendars}"
-                                               allowRetail="{!v.canEditRetailPickupDate}"
-                                               allowService="{!v.canEditServiceDate}"
-                                               aura:id="schedulables-CMP" /> -->
       </div>
     </div>
 

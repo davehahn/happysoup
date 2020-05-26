@@ -64,37 +64,14 @@
     component.getEvent("CloseModal").fire();
   },
 
+  handleUnschedule: function( component, event, helper )
+  {
+    helper.updateEventData( component, true );
+  },
+
   handleUpdate: function( component, event, helper )
   {
-    console.log('COMPONENT:');
-    console.log(component);
-    var erpId = component.get('v.recordId'),
-        riggerId = component.get('v.riggerId'),
-        action = component.get('c.updateRiggerJob');
-    console.log(action);
-    helper.updateEventData( component, component.get('v.eventData') )
-    .then(
-      $A.getCallback( function() {
-        console.log('try helper.updateRiggerJob');
-        // You may wonder why I'm passing on the action here, or the Erp and
-        // Rigger for that matter. Simple answer: I don't know. For some reason
-        // they come up as null in updateRiggerJob() unless I pass them along
-        // from here. I suspect something in updateEventData() manipulates the
-        // component. -- Mario, July 17, 2018
-        helper.updateRiggerJob( component, erpId, riggerId, action )
-        .then(
-          $A.getCallback( function() {
-            console.log('victory?');
-          }),
-          $A.getCallback( function( err ) {
-            LightningUtils.errorToast( err );
-          })
-        );
-      }),
-      $A.getCallback( function( err ) {
-        LightningUtils.errorToast( err );
-      })
-    );
+    helper.updateEventData( component );
   },
 
   warehouseChanged: function( component, event, helper )
