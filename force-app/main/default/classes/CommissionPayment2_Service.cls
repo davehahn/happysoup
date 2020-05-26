@@ -2,9 +2,10 @@
  * Created by dave on 2020-02-18.
  */
 
-public with sharing class setInitialValues
+public with sharing class CommissionPayment2_Service
 {
   public static Decimal defaultGrossMarginPaymentPercent = 10;
+  public static Decimal defaultGrossMarginPaymentPercentManager = 10;
 
   public static List<CommissionPayment2__c> createInitialPayments( Set<Id> commissionRecordIds )
   {
@@ -76,14 +77,21 @@ public with sharing class setInitialValues
       ownerIds.add( cp.Owner__c );
     }
     Map<Id, User> owners = new Map<Id, User>(
-      [SELECT Id, Commission_Gross_Margin_Percent_Override__c FROM User WHERE Id IN :ownerIds]
+      [SELECT Id, Commission_Gross_Margin_Percent_Override__c, Commission_Gross_Margin_Manager__c FROM User WHERE Id IN :ownerIds]
     );
     for( CommissionPayment2__c cp : payments )
     {
-      cp.Gross_Margin_Payment_Percent__c =
-        owners.get( cp.Owner__c).Commission_Gross_Margin_Percent_Override__c != null ?
-          owners.get( cp.Owner__c ).Commission_Gross_Margin_Percent_Override__c :
-          defaultGrossMarginPaymentPercent;
+      if (cp.Type__c == 'Standard') {
+        cp.Gross_Margin_Payment_Percent__c =
+            owners.get(cp.Owner__c).Commission_Gross_Margin_Percent_Override__c != null ?
+                owners.get(cp.Owner__c).Commission_Gross_Margin_Percent_Override__c :
+                defaultGrossMarginPaymentPercent;
+      }else{
+        cp.Gross_Margin_Payment_Percent__c =
+            owners.get(cp.Owner__c).Commission_Gross_Margin_Manager__c != null ?
+                owners.get(cp.Owner__c).Commission_Gross_Margin_Manager__c :
+                defaultGrossMarginPaymentPercentManager;
+      }
     }
 
   }

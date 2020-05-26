@@ -81,7 +81,8 @@ console.log( JSON.parse( JSON.stringify( record ) ) );
 
   handleAddPayment: function( component )
   {
-    component.find('payments').handleAddPayment();
+    var component.target
+    component.find('payments').handleAddPayment(typeCP);
   },
 
   handlePaymentChange: function( component, event )

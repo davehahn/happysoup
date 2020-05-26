@@ -114,7 +114,7 @@ export default class CommissionPayments extends LightningElement {
     this.validate();
   }
 
-  @api handleAddPayment()
+  @api handleAddPayment(typeCP)
   {
       let newP = {...this.payments.data[0]};
       let dup = [...this.payments.data];
