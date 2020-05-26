@@ -2,7 +2,7 @@
  * Created by dave on 2020-02-18.
  */
 
-public with sharing class CommissionPayment2_Service
+public with sharing class setInitialValues
 {
   public static Decimal defaultGrossMarginPaymentPercent = 10;
 
