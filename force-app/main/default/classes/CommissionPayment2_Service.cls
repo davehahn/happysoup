@@ -35,6 +35,7 @@ public with sharing class CommissionPayment2_Service
   {
     Set<Id> cRecIds = new Set<Id>();
     Set<Id> ownerIds = new Set<Id>();
+    Id managerId = [Select Id, ManagerId FROM User WHERE Id = :UserInfo.getUserId()].ManagerId;
     for( CommissionPayment2__c payment : payments )
     {
       cRecIds.add( payment.Commission_Record2__c );
@@ -63,6 +64,9 @@ public with sharing class CommissionPayment2_Service
                 cr.Project_Task__r.Name.contains('Retail Sale')) {
               payment.Owner__c = cr.Project_Task__r.AcctSeed__Project__r.Salesperson__r.ManagerId;
             }
+            if (payment.Owner__c == null) {
+              payment.Owner__c = managerId;
+            }
           }
         }
       }
@@ -81,16 +85,20 @@ public with sharing class CommissionPayment2_Service
     );
     for( CommissionPayment2__c cp : payments )
     {
-      if (cp.Type__c == 'Standard') {
-        cp.Gross_Margin_Payment_Percent__c =
-            owners.get(cp.Owner__c).Commission_Gross_Margin_Percent_Override__c != null ?
-                owners.get(cp.Owner__c).Commission_Gross_Margin_Percent_Override__c :
-                defaultGrossMarginPaymentPercent;
+      if(cp.Owner__c != null) {
+        if (cp.Type__c == 'Standard') {
+          cp.Gross_Margin_Payment_Percent__c =
+              owners.get(cp.Owner__c).Commission_Gross_Margin_Percent_Override__c != null ?
+                  owners.get(cp.Owner__c).Commission_Gross_Margin_Percent_Override__c :
+                  defaultGrossMarginPaymentPercent;
+        } else {
+          cp.Gross_Margin_Payment_Percent__c =
+              owners.get(cp.Owner__c).Commission_Gross_Margin_Manager__c != null ?
+                  owners.get(cp.Owner__c).Commission_Gross_Margin_Manager__c :
+                  defaultGrossMarginPaymentPercentManager;
+        }
       }else{
-        cp.Gross_Margin_Payment_Percent__c =
-            owners.get(cp.Owner__c).Commission_Gross_Margin_Manager__c != null ?
-                owners.get(cp.Owner__c).Commission_Gross_Margin_Manager__c :
-                defaultGrossMarginPaymentPercentManager;
+        throw new gcException('Owner not found');
       }
     }
 

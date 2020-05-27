@@ -35,7 +35,8 @@ export default class CommissionPaymentCard extends LightningElement {
 
   get renderSplit()
   {
-    return this.paymentType === 'Standard';
+    console.log(this.payment);
+    return this.payment.cType === 'Standard';
   }
 
   get renderStatusMenu()

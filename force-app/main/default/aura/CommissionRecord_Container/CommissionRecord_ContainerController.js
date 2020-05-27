@@ -79,10 +79,12 @@ console.log( JSON.parse( JSON.stringify( record ) ) );
     component.find('payments').handlePaymentEdit();
   },
 
-  handleAddPayment: function( component )
+  handleAddPayment: function( component, event )
   {
-    var component.target
-    component.find('payments').handleAddPayment(typeCP);
+    var selectedMenuItemValue = event.getParam("value");
+    console.log('selectedMenuItemValue');
+    console.log(selectedMenuItemValue);
+    component.find('payments').handleAddPayment(selectedMenuItemValue);
   },
 
   handlePaymentChange: function( component, event )
