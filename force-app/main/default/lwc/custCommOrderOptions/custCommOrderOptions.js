@@ -20,6 +20,7 @@ export default class CustCommOrderOptions extends LightningElement {
   @api parentPage;
   @api showOptionPrice;
   @api triggerUiChange;
+  @api addons;
 
   @wire(CurrentPageReference) pageRef;
 

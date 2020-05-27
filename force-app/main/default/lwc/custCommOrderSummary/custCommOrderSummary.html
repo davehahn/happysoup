@@ -6,5 +6,16 @@
 <template>
   <aside class="summary">
     <h3>Summary</h3>
+    <ul class="summary_list">
+      <template for:each={performanceItems} for:item="item">
+        <li class="summary_listItem" key={item.sku} data-id={item.sku}>{item.name}</li>
+      </template>
+      <template for:each={traileringItems} for:item="item">
+        <li class="summary_listItem" key={item.sku} data-id={item.sku}>{item.name}</li>
+      </template>
+      <template for:each={electronicsItems} for:item="item">
+        <li class="summary_listItem" key={item.sku} data-id={item.sku}>{item.name}</li>
+      </template>
+    </ul>
   </aside>
 </template>
