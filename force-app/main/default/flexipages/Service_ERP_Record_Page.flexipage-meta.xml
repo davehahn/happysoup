@@ -115,6 +115,13 @@
                 <value>true</value>
             </componentInstanceProperties>
             <componentName>flexipage:visualforcePage</componentName>
+            <visibilityRule>
+                <criteria>
+                    <leftValue>{!$Client.formFactor}</leftValue>
+                    <operator>EQUAL</operator>
+                    <rightValue>Large</rightValue>
+                </criteria>
+            </visibilityRule>
         </componentInstances>
         <name>facet-0b97ce6c-1680-4292-ab28-a9bfd0f39227</name>
         <type>Facet</type>
@@ -271,6 +278,16 @@
         <type>Facet</type>
     </flexiPageRegions>
     <flexiPageRegions>
+        <componentInstances>
+            <componentName>force:detailPanel</componentName>
+            <visibilityRule>
+                <criteria>
+                    <leftValue>{!$Client.formFactor}</leftValue>
+                    <operator>EQUAL</operator>
+                    <rightValue>Small</rightValue>
+                </criteria>
+            </visibilityRule>
+        </componentInstances>
         <componentInstances>
             <componentInstanceProperties>
                 <name>tabs</name>
