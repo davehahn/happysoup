@@ -100,15 +100,13 @@
               <c-cust-comm-order-boat-image size="large" page='trailering'></c-cust-comm-order-boat-image>
             </template>
         </div>
-        <div class="config-page_right">
-          <div class="config-page_right slds-p-around_xx-large">
-            <h2 class="right_heading">Trailering Package</h2>
-            <c-cust-comm-order-options options-title="Select Your Trailer" selections="one" selection-scope="global" options={boat.standardTrailer} boat-retail-price={boat.retailPrice} page='trailering'></c-cust-comm-order-options>
-            <c-cust-comm-order-options selections="one" selection-scope="global" options={boat.trailerUpgrades} show-option-price="true" boat-retail-price={boat.retailPrice} page='trailering'></c-cust-comm-order-options>
-            <c-cust-comm-order-options selections="multiple" selection-scope="local" options={boat.optionalProducts.canvas} show-option-price="true" boat-retail-price={boat.retailPrice} page='trailering'></c-cust-comm-order-options>
-            <c-cust-comm-order-options selections="multiple" selection-scope="local" options={boat.standardMotor} sub-section="optionalProducts.trailerAccessories" addons="true" show-option-price="true" boat-retail-price={boat.retailPrice} page='trailering' parent-page='performance'></c-cust-comm-order-options>
-            <c-cust-comm-order-options selections="multiple" selection-scope="local" options={boat.motorUpgrades} sub-section="optionalProducts.trailerAccessories" addons="true" show-option-price="true" boat-retail-price={boat.retailPrice} page='trailering' parent-page='performance'></c-cust-comm-order-options>
-          </div>
+        <div class="config-page_right slds-p-around_xx-large">
+          <h2 class="right_heading">Trailering Package</h2>
+          <c-cust-comm-order-options options-title="Select Your Trailer" selections="one" selection-scope="global" options={boat.standardTrailer} boat-retail-price={boat.retailPrice} page='trailering'></c-cust-comm-order-options>
+          <c-cust-comm-order-options selections="one" selection-scope="global" options={boat.trailerUpgrades} show-option-price="true" boat-retail-price={boat.retailPrice} page='trailering'></c-cust-comm-order-options>
+          <c-cust-comm-order-options selections="multiple" selection-scope="local" options={boat.optionalProducts.canvas} show-option-price="true" boat-retail-price={boat.retailPrice} page='trailering'></c-cust-comm-order-options>
+          <c-cust-comm-order-options selections="multiple" selection-scope="local" options={boat.standardMotor} sub-section="optionalProducts.trailerAccessories" addons="true" show-option-price="true" boat-retail-price={boat.retailPrice} page='trailering' parent-page='performance'></c-cust-comm-order-options>
+          <c-cust-comm-order-options selections="multiple" selection-scope="local" options={boat.motorUpgrades} sub-section="optionalProducts.trailerAccessories" addons="true" show-option-price="true" boat-retail-price={boat.retailPrice} page='trailering' parent-page='performance'></c-cust-comm-order-options>
         </div>
       </div>
 
@@ -120,11 +118,9 @@
             <c-cust-comm-order-boat-image size="large" page='electronics'></c-cust-comm-order-boat-image>
           </template>
         </div>
-        <div class="config-page_right">
-          <div class="config-page_right slds-p-around_xx-large">
-            <h2 class="right_heading">Electronics</h2>
-            <c-cust-comm-order-options options-title="Terrova 55 Tech Package" options={boat.optionalProducts.electronics} show-option-price="true" boat-retail-price={boat.retailPrice} page='electronics'></c-cust-comm-order-options>
-          </div>
+        <div class="config-page_right slds-p-around_xx-large">
+          <h2 class="right_heading">Electronics</h2>
+          <c-cust-comm-order-options options-title="Terrova 55 Tech Package" options={boat.optionalProducts.electronics} show-option-price="true" boat-retail-price={boat.retailPrice} page='electronics'></c-cust-comm-order-options>
         </div>
       </div>
 

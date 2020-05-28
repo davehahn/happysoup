@@ -60,6 +60,10 @@ export default class CustCommOrderCheckbox extends NavigationMixin(LightningElem
    return (this.optionIncludedProducts.length !== 0) ? true : false;
  }
 
+  get hasOptionsDeck(){
+    return (this.optionBlurb !== null) ? true : false;
+  }
+
  pageReady(detail){
    if(detail === 'ready'){
      console.log('summary is connected');
@@ -105,7 +109,9 @@ export default class CustCommOrderCheckbox extends NavigationMixin(LightningElem
 			'addon': this.optionIsAddon
   	}
 
-   	fireEvent(this.pageRef, 'motorSelection', details	);
+		if(this.optionPage === 'performance'){
+			fireEvent(this.pageRef, 'motorSelection', details	);
+		}
    	fireEvent(this.pageRef, 'updateSummary', summaryDetails);
    	fireEvent(this.pageRef, 'updatePurchasePrice', purchasePrice);
  	}

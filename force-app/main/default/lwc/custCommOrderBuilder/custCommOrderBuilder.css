@@ -3,7 +3,9 @@
  */
 :host {
   counter-reset: menuCounter;
-  --legend-blue: #2AB2F0
+  --legend-blue: #2AB2F0;
+  -webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
 }
 .vh{
     position: absolute;
@@ -268,7 +270,7 @@ button:focus{
   text-align: center;
   cursor: pointer;
   color: #000;
-  opacity: 1;
+  opacity: 0.5;
   font-size: 14px;
   transition: opacity .15s ease-in-out;
   transform: translateZ(0);
@@ -286,14 +288,13 @@ button:focus{
 
 .config-nav-item.config-nav-item_selected {
   box-shadow: inset 0 -5px 0 -1px var(--legend-blue);
+	opacity: 1;
 }
-
 .config-nav-item.config-nav-item_selected~.config-nav-item {
   opacity: 0.35;
 }
 
 .config-nav-title {
-  color: #000;
   font-size: 14px;
   font-family: var(--tds-sans-font_stack--medium);
   padding: 20px 0;
@@ -478,13 +479,14 @@ button:focus{
   white-space: normal;
   min-width: 110px;
   line-height: 1;
+  letter-spacing: 0.05em;
 }
 
 .config-footer_price div,
 .config-footer_savings div
 {
   margin-top: 3px;
-  font-size: 14px;
+  font-size: 12px;
   color: #fff;
   cursor: pointer;
   align-self: center;
@@ -505,7 +507,8 @@ button:focus{
 .config-footer_details-link a,
 .config-footer_details-link a:hover {
   color: #FFF;
-  text-decoration: underline
+  border-bottom: 1px solid $FFF;
+  padding-bottom: 0.15em;
 }
 
 .config-footer_delivery {
@@ -536,6 +539,7 @@ button:focus{
   min-width:200px;
   border: 3px solid transparent;
   text-transform: uppercase;
+  font-weight: 600;
   border-radius: 20px;
   color: #FFF;
   margin: 8px 0;
@@ -636,7 +640,7 @@ button:focus{
 }
 .config-page_right .right_heading{
     width: 100%;
-    font-size: 1.875em;
+    font-size: 1.5em;
 }
 .config-page[data-page="payment"] .config-page_right .right_heading{
     text-align: center;
@@ -725,6 +729,10 @@ button:focus{
 
 */
 @media screen and (max-width: 64em){
+  	.lgnd-order-builder{
+  		margin-bottom: 10xvw;
+   	}
+
     /* force scroll and height of main container */
     .lgnd-order-builder:not([data-current="payment"]){
         overflow: auto;
@@ -760,7 +768,8 @@ button:focus{
 
     /* expand right rail to full width */
     .config-page:not([data-page="payment"]) .config-page_right{
-        width: 100%; max-width: 100%;
+        width: 100%; max-width: 100%; min-width: 100%;
+        padding: 2em;
         display: block;
     }
     /* center right rail heading */
@@ -768,6 +777,9 @@ button:focus{
         text-align: center;
     }
     /* hide footer items */
+    .config-footer_item{
+      padding: 0 20px;
+    }
     .config-footer_item.finance-type, .config-footer_savings, .config-footer_details-link{
         display: none;
     }
@@ -837,7 +849,6 @@ button:focus{
     .config-footer_savings .amount,
     .config-footer_savings .label{
         display: inline;
-        font-size: 16px;
         margin-right: 0.25em;
     }
     .config-footer_delivery{

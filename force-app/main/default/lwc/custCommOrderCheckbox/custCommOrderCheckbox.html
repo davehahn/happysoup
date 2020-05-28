@@ -57,5 +57,7 @@
             </label>
         </div>
     </template>
-    <p class="options_deck">{optionBlurb}</p>
+    <template if:true={hasOptionsDeck}>
+        <p class="options_deck">{optionBlurb}</p>
+    </template>
 </template>

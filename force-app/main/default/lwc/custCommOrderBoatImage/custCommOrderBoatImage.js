@@ -30,7 +30,7 @@ export default class CustCommOrderBoatImage extends LightningElement {
 			if(detail.optionImage !== 'undefined'){
 				for(let image of detail.optionImage){
 					if(this.page === 'performance'){
-						if(image.imageType === 'sideAngle'){
+						if(image.imageType === 'frontAngle'){
 							this.boatImage = 'https://' + image.imageURL;
 						}
 					}

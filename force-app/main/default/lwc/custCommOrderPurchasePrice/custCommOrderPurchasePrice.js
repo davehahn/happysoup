@@ -22,8 +22,6 @@ export default class CustCommOrderPurchasePrice extends LightningElement {
 	@wire(CurrentPageReference) pageRef;
 
 	connectedCallback(){
-	  console.log('purchase price connected');
-
 		let defaultPayload = {
 			 'sku': this.boatSku,
 			 'price': this.boatRetailPrice
@@ -78,16 +76,13 @@ export default class CustCommOrderPurchasePrice extends LightningElement {
 			}
 		}
 
-		console.log(JSON.stringify(payload));
 		let itemMatrix = this.baseItem.concat(this.performanceItems, this.traileringItems, this.electronicsItems);
-		console.log('itemMatrix: ', JSON.stringify(itemMatrix));
+
 		let priceMatrix = [];
 		const reducer = (accumulator, currentValue) => accumulator + currentValue;
 		for(const item of itemMatrix){
 			priceMatrix.push(item.price);
   	}
-  	console.log('priceMatrix', priceMatrix);
-		console.log('reduced:', priceMatrix.reduce(reducer));
 		const sumTotal = priceMatrix.reduce(reducer)
 		this.totalPrice = new Intl.NumberFormat('en-CA', {
 														style: 'currency',
