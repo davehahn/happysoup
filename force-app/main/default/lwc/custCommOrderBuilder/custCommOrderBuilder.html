@@ -104,7 +104,7 @@
           <div class="config-page_right slds-p-around_xx-large">
             <h2 class="right_heading">Trailering Package</h2>
             <c-cust-comm-order-options options-title="Select Your Trailer" selections="one" selection-scope="global" options={boat.standardTrailer} boat-retail-price={boat.retailPrice} page='trailering'></c-cust-comm-order-options>
-            <c-cust-comm-order-options selections="one" selection-scope="global" options={boat.trailerUpgrades} boat-retail-price={boat.retailPrice} page='trailering'></c-cust-comm-order-options>
+            <c-cust-comm-order-options selections="one" selection-scope="global" options={boat.trailerUpgrades} show-option-price="true" boat-retail-price={boat.retailPrice} page='trailering'></c-cust-comm-order-options>
             <c-cust-comm-order-options selections="multiple" selection-scope="local" options={boat.optionalProducts.canvas} show-option-price="true" boat-retail-price={boat.retailPrice} page='trailering'></c-cust-comm-order-options>
             <c-cust-comm-order-options selections="multiple" selection-scope="local" options={boat.standardMotor} sub-section="optionalProducts.trailerAccessories" addons="true" show-option-price="true" boat-retail-price={boat.retailPrice} page='trailering' parent-page='performance'></c-cust-comm-order-options>
             <c-cust-comm-order-options selections="multiple" selection-scope="local" options={boat.motorUpgrades} sub-section="optionalProducts.trailerAccessories" addons="true" show-option-price="true" boat-retail-price={boat.retailPrice} page='trailering' parent-page='performance'></c-cust-comm-order-options>
@@ -123,7 +123,7 @@
         <div class="config-page_right">
           <div class="config-page_right slds-p-around_xx-large">
             <h2 class="right_heading">Electronics</h2>
-            <c-cust-comm-order-options options-title="Terrova 55 Tech Package" options={boat.optionalProducts.electronics} boat-retail-price={boat.retailPrice} page='electronics'></c-cust-comm-order-options>
+            <c-cust-comm-order-options options-title="Terrova 55 Tech Package" options={boat.optionalProducts.electronics} show-option-price="true" boat-retail-price={boat.retailPrice} page='electronics'></c-cust-comm-order-options>
           </div>
         </div>
       </div>
@@ -253,10 +253,7 @@
         </div>
 
         <div class="config-footer_item finance-prices">
-          <div class="config-footer_price">
-            <div class="amount">$39,999</div>
-            <div class="label">Purchase Price</div>
-          </div>
+          <c-cust-comm-order-purchase-price boat-sku={boat.id} boat-retail-price={boat.retailPrice}></c-cust-comm-order-purchase-price>
           <div class="config-footer_savings">
             <div class="amount">{premiumPackValue}</div>
             <div class="label">Preferred equipment package savings</div>
@@ -293,5 +290,4 @@
     </div>
 
   </div>
-
 </template>

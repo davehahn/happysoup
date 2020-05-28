@@ -46,21 +46,15 @@ export default class CustCommOrderOptions extends LightningElement {
 	        options = options[0];
        	}
 
-	      let upgradePrice = 0;
-	      if(parseInt(options['retailPrice']) === 0){
-	      	upgradePrice = 'Included';
-       	} else {
-       	  if(this.showOptionPrice){
-						upgradePrice = parseInt(options['retailPrice']);
-					} else{
-						upgradePrice = parseInt(options['retailPrice']) + parseInt(this.boatRetailPrice);
-					}
-					upgradePrice = new Intl.NumberFormat('en-CA', {
-																				style: 'currency',
-																				currency: 'CAD',
-																				minimumFractionDigits: 0
-																				}).format(upgradePrice);
-        }
+				const retailPrice = parseInt(options['retailPrice']);
+	      let displayPrice = 0;
+				if(this.showOptionPrice){
+					displayPrice = retailPrice;
+				} else{
+				  if(parseInt(retailPrice) !== 0){
+				   	displayPrice = retailPrice + parseInt(this.boatRetailPrice);
+      		}
+				}
 
 				let name = options['name'];
 				const sku = options['id'];
@@ -102,7 +96,8 @@ export default class CustCommOrderOptions extends LightningElement {
 				optionDetails.push({
 					'sku': sku,
 					'name': name,
-					'price': upgradePrice,
+					'retailPrice': retailPrice,
+					'displayPrice': displayPrice,
 					'km': km,
 					'rpm': rpm,
 					'init': init,
@@ -130,45 +125,19 @@ export default class CustCommOrderOptions extends LightningElement {
 						let name = option['name'];
      	      const sku = option['id'];
      	      const selections = this.selections;
-     	      let upgradePrice = 0;
      	      let km = null;
 						let	rpm = null;
 						let images = [];
 						let blurb = null;
 						let includedProducts = [];
 
-						if('retailPrice' in option){
-						  if(parseInt(option['retailPrice']) === 0){
-								upgradePrice = 'Included';
-							} else {
-							  if(this.showOptionPrice){
-									upgradePrice = parseInt(option['retailPrice']);
-								} else{
-									upgradePrice = parseInt(option['retailPrice']) + parseInt(this.boatRetailPrice);
-								}
-								upgradePrice = new Intl.NumberFormat('en-CA', {
-																style: 'currency',
-																currency: 'CAD',
-																minimumFractionDigits: 0
-																}).format(upgradePrice);
-       				}
-      			}
-     	      else if('RetailUpgradeCost' in option){
-     	        if(parseInt(option['RetailUpgradeCost']) === 0){
-     	          upgradePrice = 'Included';
-              } else {
-                if(this.showOptionPrice){
-									upgradePrice = parseInt(option['RetailUpgradeCost']);
-								} else{
-									upgradePrice = parseInt(option['RetailUpgradeCost']) + parseInt(this.boatRetailPrice);
-								}
-								upgradePrice = new Intl.NumberFormat('en-CA', {
-																style: 'currency',
-																currency: 'CAD',
-																minimumFractionDigits: 0
-																}).format(upgradePrice);
-              }
-            }
+						const retailPrice = ('retailPrice' in option) ? parseInt(option['retailPrice']) : (('RetailUpgradeCost' in option) ? parseInt(option['RetailUpgradeCost']) : '');
+						let displayPrice = 0;
+						if(this.showOptionPrice){
+							displayPrice = retailPrice;
+						} else{
+							displayPrice = retailPrice + parseInt(this.boatRetailPrice);
+						}
 
 						if('marketingContent' in option){
 							let marketingContent = option['marketingContent'];
@@ -201,7 +170,8 @@ export default class CustCommOrderOptions extends LightningElement {
             optionDetails.push({
               'sku': sku,
 							'name': name,
-							'price': upgradePrice,
+							'retailPrice': retailPrice,
+							'displayPrice': displayPrice,
 							'km': km,
 							'rpm': rpm,
 							'inputType': inputType,
@@ -244,7 +214,6 @@ export default class CustCommOrderOptions extends LightningElement {
 	handleMotorSelection(detail){
 	  let relatedOptions = this.template.querySelectorAll(`[data-parentpage="${detail.optionParentPage}"]`);
 	  relatedOptions.forEach((option) => {
-			console.log(option.classList);
 			option.classList.add('hide');
 			if(option.getAttribute('data-parentsku') === detail.optionSKU){
 			  option.classList.remove('hide');

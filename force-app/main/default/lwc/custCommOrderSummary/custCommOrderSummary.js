@@ -14,14 +14,11 @@ export default class CustCommOrderSummary extends LightningElement {
 	@track electronicsItems = [];
 
 	connectedCallback(){
-	  console.log('summary connected');
 		registerListener('updateSummary', this.updateSummary, this);
-
 		fireEvent(this.pageRef, 'summaryConnected', 'ready'	);
 	}
 
 	updateSummary(details){
-		console.log('update summary: ', details);
 		let payload = {
 			 'name': details.name,
 			 'sku': details.sku

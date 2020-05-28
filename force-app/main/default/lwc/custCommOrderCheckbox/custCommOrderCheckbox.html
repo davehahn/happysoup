@@ -22,6 +22,7 @@
                    data-km={optionKm}
                    data-rpm={optionRpm}
                    data-page={optionPage}
+                   data-retail-price={optionRetailPrice}
                    onchange={handleClick}>
             <label class="options_label"
                    for="option">
@@ -29,7 +30,7 @@
                     <small class="options_label_checkbox"></small>
                 </template>
                 <span class="options_label_name">{optionName}</span>
-                <span class="options_label_price">{optionPrice}</span>
+                <span class="options_label_price">{optionFormattedPrice}</span>
             </label>
         </div>
     </template>
@@ -43,6 +44,7 @@
                    data-km={optionKm}
                    data-rpm={optionRpm}
                    data-page={optionPage}
+                   data-retail-price={optionRetailPrice}
                    onchange={handleClick}
                     checked>
             <label class="options_label"
@@ -51,7 +53,7 @@
                     <small class="options_label_checkbox"></small>
                 </template>
                 <span class="options_label_name">{optionName}</span>
-                <span class="options_label_price">{optionPrice}</span>
+                <span class="options_label_price">{optionFormattedPrice}</span>
             </label>
         </div>
     </template>

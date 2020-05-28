@@ -9,7 +9,9 @@ import { fireEvent, registerListener, unregisterAllListeners} from 'c/pubsub';
 export default class CustCommOrderCheckbox extends NavigationMixin(LightningElement) {
 	@api optionSku;
 	@api optionName;
-	@api optionPrice;
+	@api optionRetailPrice;
+	@api optionDisplayPrice;
+	@api optionShowUpgradePrice;
 	@api optionKm;
 	@api optionRpm;
 	@api optionInit;
@@ -30,7 +32,7 @@ export default class CustCommOrderCheckbox extends NavigationMixin(LightningElem
 	@wire(CurrentPageReference) pageRef;
 
 	renderedCallback(){
-	  registerListener('summaryConnected', this.summaryReady, this);
+	  registerListener('purchasePriceConnected', this.pageReady, this);
  	}
 
  get useCheckbox(){
@@ -41,11 +43,24 @@ export default class CustCommOrderCheckbox extends NavigationMixin(LightningElem
    return 'option_' + this.optionPage;
  }
 
+ get optionFormattedPrice(){
+ 		let displayPrice = parseInt(this.optionDisplayPrice);
+    if(displayPrice === 0){
+   		return displayPrice = 'Included';
+		} else {
+			return displayPrice = new Intl.NumberFormat('en-CA', {
+																	style: 'currency',
+																	currency: 'CAD',
+																	minimumFractionDigits: 0
+																	}).format(displayPrice);
+	 }
+ }
+
  get hasIncludedProducts(){
    return (this.optionIncludedProducts.length !== 0) ? true : false;
  }
 
- summaryReady(detail){
+ pageReady(detail){
    if(detail === 'ready'){
      console.log('summary is connected');
      if(this.optionInit){
@@ -81,13 +96,17 @@ export default class CustCommOrderCheckbox extends NavigationMixin(LightningElem
 			'addon': this.optionIsAddon
 		};
 
-		if(init){
-		 console.log('init selection');
-		 console.log('details: ', details);
-		 console.log('summary details: ', summaryDetails);
+		let purchasePrice = {
+		  'sku': this.optionSku,
+			'price': this.optionRetailPrice,
+			'addToPrice': isChecked,
+			'section': this.optionPage,
+			'type': this.optionInputType,
+			'addon': this.optionIsAddon
   	}
 
    	fireEvent(this.pageRef, 'motorSelection', details	);
    	fireEvent(this.pageRef, 'updateSummary', summaryDetails);
+   	fireEvent(this.pageRef, 'updatePurchasePrice', purchasePrice);
  	}
 }
