@@ -29,12 +29,12 @@
           <div class="modal-content_main">
             <div class="modal-page modal-page_selected" data-modal-page="premium-package">
               <h4>Premium Package</h4>
-              <ul>
+              <ul class="premiumPackage">
                 <template for:each={premiumPackItems} for:item="item">
-                  <li key={item}>{item}</li>
+                  <li key={item} class="premiumPackage_item">{item}</li>
                 </template>
               </ul>
-              <p>Value: {premiumPackValue}</p>
+              <p class="premiumPackage_value">Value: <span>{premiumPackValue}</span></p>
             </div>
             <div class="modal-page" data-modal-page="payment-calculator">
               <h4>Payment Calculator</h4>
