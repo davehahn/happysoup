@@ -4,6 +4,7 @@
 :host {
   counter-reset: menuCounter;
   --legend-blue: #2AB2F0;
+  --legend-focus: rgba(42, 178, 240, 0.25);
   -webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 }
@@ -17,6 +18,7 @@
 button{
   background: none;
   border: 0 none;
+  outline: none;
 }
 button:focus{
   outline: none;
@@ -219,7 +221,7 @@ button:focus{
   text-align: right;
   font-size: 1.25em;
   font-weight: 600;
-  text-trans
+  text-transform: uppercase;
 }
 .premiumPackage_value span{
   font-size: 1.5em;
@@ -262,6 +264,13 @@ button:focus{
   cursor: pointer;
   width: 80%;
 }
+.branding .main-logo button{
+  background: none;
+  border: 0 none;
+}
+.branding .main-logo button:focus{
+  outline: 2px dashed #333;
+}
 
 .config-nav {
   width: 100%;
@@ -291,11 +300,19 @@ button:focus{
   text-align: center;
   cursor: pointer;
   color: #000;
-  opacity: 0.5;
+  opacity: 0.35;
   font-size: 14px;
   transition: opacity .15s ease-in-out;
   transform: translateZ(0);
   counter-increment: menuCounter;
+}
+.config-nav-item:hover{
+  background-color: #f2f2f2;
+  opacity: 0.65;
+}
+.config-nav-item:focus{
+  background-color: var(--legend-focus);
+  opacity: 1;
 }
 
 .config-nav-item h2 {
@@ -310,9 +327,6 @@ button:focus{
 .config-nav-item.config-nav-item_selected {
   box-shadow: inset 0 -5px 0 -1px var(--legend-blue);
 	opacity: 1;
-}
-.config-nav-item.config-nav-item_selected~.config-nav-item {
-  opacity: 0.35;
 }
 
 .config-nav-title {
@@ -387,6 +401,10 @@ button:focus{
   font-size: 13px;
   text-transform: uppercase;
   opacity: 1;
+}
+
+.financetype-selector_button:focus{
+  outline: 2px dashed #FFF;
 }
 
 .financetype-selector_button i {
@@ -528,8 +546,12 @@ button:focus{
 .config-footer_details-link a,
 .config-footer_details-link a:hover {
   color: #FFF;
-  border-bottom: 1px solid $FFF;
-  padding-bottom: 0.15em;
+  text-decoration: none;
+  border-bottom: 1px solid #FFF;
+  padding: 0.25em 0.25em 0.15em;
+}
+.config-footer_details-link a:focus{
+  outline: 2px dashed #FFF;
 }
 
 .config-footer_delivery {
@@ -567,12 +589,12 @@ button:focus{
   transition: 0.25s;
 }
 
-.config-footer_item button:hover {
+.config-footer_item button:hover, .config-footer_item button:focus{
   background-color: #0379af;
 }
 
 .config-footer_item button:focus {
-  outline:none;
+  outline: 2px dashed #FFF;
 }
 
 

@@ -31,7 +31,7 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
 
  	 modalPages = [
 		{
-			title: 'Premium Package',
+			title: 'Preferred Equipment Package',
 			label: 'premium-package',
 			class: 'modal-nav-item modal-nav-item_selected'
 		},
@@ -103,6 +103,9 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
 			this.isMobile = (event.currentTarget.outerWidth < 1024) ? true : false;
 		});
 		this.isMobile = (window.outerWidth < 1024) ? true : false;
+
+		console.log('rendered!');
+		this.unsetClickFocus();
 
   }
 
@@ -290,5 +293,23 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
 //	 handleUpdateOptionView(event){
 //	   this.motorDetails = JSON.parse(JSON.stringify(event.detail));
 //  }
+
+	unsetClickFocus(){
+	  let mouseDown = false;
+		const unsetFocus = this.template.querySelectorAll('[data-click-focus="unset"]');
+		unsetFocus.forEach((element) => {
+			element.addEventListener('mousedown', () => {
+				mouseDown = true;
+			});
+			element.addEventListener('mouseup', () => {
+				mouseDown = false;
+			});
+			element.addEventListener('focus', (event) => {
+				if (mouseDown) {
+					event.target.blur();
+				}
+			});
+		});
+ 	}
 
 }

@@ -43,13 +43,19 @@
     width: 20px; height: 20px;
     border: 1px solid #e5e5e5;
     border-radius: 3px;
+    background-color: #FFF;
     position: relative;
+}
+
+input[type="checkbox"]:focus + .options_label,
+input[type="radio"]:focus + .options_label{
+    background-color: var(--legend-focus);
 }
 
 input[type="checkbox"]:checked + .options_label,
 input[type="radio"]:checked + .options_label{
-    border: 1px solid #00b4ee;
-    box-shadow: 0 0 0 2px #00b4ee;
+    border: 1px solid #2AB2F0;
+    box-shadow: 0 0 0 2px #2AB2F0;
 }
 input[type="checkbox"]:checked + .options_label .options_label_price,
 input[type="radio"]:checked + .options_label .options_label_price{
@@ -64,7 +70,7 @@ input[type="radio"]:checked + .options_label .options_label_checkbox::before, .o
     position: absolute;
     height: 2.5px;
     border-radius: 100vh;
-    background-color: #00b4ee;
+    background-color: #2AB2F0;
 }
 input[type="checkbox"]:checked + .options_label .options_label_checkbox::before,
 input[type="radio"]:checked + .options_label .options_label_checkbox::before{
