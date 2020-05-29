@@ -98,6 +98,13 @@
     </flexiPageRegions>
     <flexiPageRegions>
         <componentInstances>
+            <componentName>force:detailPanel</componentName>
+        </componentInstances>
+        <name>facet-0b97ce6c-1680-4292-ab28-a9bfd0f39227</name>
+        <type>Facet</type>
+    </flexiPageRegions>
+    <flexiPageRegions>
+        <componentInstances>
             <componentInstanceProperties>
                 <name>height</name>
                 <value>800</value>
@@ -108,7 +115,7 @@
             </componentInstanceProperties>
             <componentInstanceProperties>
                 <name>pageName</name>
-                <value>gpProject_Override_View</value>
+                <value>ERP_Display_Related_Tables</value>
             </componentInstanceProperties>
             <componentInstanceProperties>
                 <name>showLabel</name>
@@ -123,7 +130,7 @@
                 </criteria>
             </visibilityRule>
         </componentInstances>
-        <name>facet-0b97ce6c-1680-4292-ab28-a9bfd0f39227</name>
+        <name>Facet-7e287cae-b182-4dc6-970d-222d6dd8e247</name>
         <type>Facet</type>
     </flexiPageRegions>
     <flexiPageRegions>
@@ -233,6 +240,17 @@
         <componentInstances>
             <componentInstanceProperties>
                 <name>body</name>
+                <value>Facet-7e287cae-b182-4dc6-970d-222d6dd8e247</value>
+            </componentInstanceProperties>
+            <componentInstanceProperties>
+                <name>title</name>
+                <value>ERP Items</value>
+            </componentInstanceProperties>
+            <componentName>flexipage:tab</componentName>
+        </componentInstances>
+        <componentInstances>
+            <componentInstanceProperties>
+                <name>body</name>
                 <value>facet-9182e249-088a-4cb0-bb92-7e254cb7b8a2</value>
             </componentInstanceProperties>
             <componentInstanceProperties>
@@ -278,16 +296,6 @@
         <type>Facet</type>
     </flexiPageRegions>
     <flexiPageRegions>
-        <componentInstances>
-            <componentName>force:detailPanel</componentName>
-            <visibilityRule>
-                <criteria>
-                    <leftValue>{!$Client.formFactor}</leftValue>
-                    <operator>EQUAL</operator>
-                    <rightValue>Small</rightValue>
-                </criteria>
-            </visibilityRule>
-        </componentInstances>
         <componentInstances>
             <componentInstanceProperties>
                 <name>tabs</name>

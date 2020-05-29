@@ -314,10 +314,9 @@ input.dateSelector{
         <apex:actionFunction name="rerenderAPLines" reRender="relatedListAPLines"/>
     </apex:form>
 
-    <apex:outputPanel id="detailContainer">
+   <!-- <apex:outputPanel id="detailContainer">
         <apex:detail subject="{!AcctSeed__Project__c.Id}" relatedList="false" id="theDetail" oncomplete="detailOnComplete()" inlineEdit="false"/>
-    </apex:outputPanel>
-
+    </apex:outputPanel> -->
 
 
     <div id="pageBlockSerials">
@@ -394,7 +393,16 @@ input.dateSelector{
 
 <div style="{!IF(!isInternalPartsOrder,'','display:none')}">
 <div style="{!IF(OR(isBoatSale,isPartnerBoatSale,isCounterSale,isPartnerPartsOrder,isService,isWarranty),'','display:none')}">
-   
+    <div>
+        <apex:outputPanel id="relatedListBillings">
+            <apex:relatedList subject="{!Id}" list="GMBLASERP__Billings__r" rendered="{!AND($ObjectType.AcctSeed__Billing__c.accessible,$ObjectType.AcctSeed__Billing__c.fields.GMBLASERP__Project__c.accessible)}"/>
+        </apex:outputPanel>
+    </div>
+    <div id="pageBlock_cash">
+        <apex:outputPanel id="relatedListCashReceipts" rendered="{!AND(!isInternalERP,!isInternalLabour)}">
+            <apex:relatedList subject="{!Id}" list="AcctSeed__Cash_Receipts__r" rendered="{!AND($ObjectType.AcctSeed__Cash_Receipt__c.accessible,$ObjectType.AcctSeed__Cash_Receipt__c.fields.AcctSeed__Project__c.accessible)}"/>
+        </apex:outputPanel>
+    </div>
     <div>
         <apex:outputPanel id="relatedListBillingLines">
             <apex:relatedList subject="{!Id}" list="AcctSeed__Billing_Lines__r" rendered="{!AND($ObjectType.AcctSeed__Billing_Line__c.accessible,$ObjectType.AcctSeed__Billing_Line__c.fields.AcctSeed__Project__c.accessible)}"/>
