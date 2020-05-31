@@ -78,8 +78,8 @@ private class Lead_TriggerHandler_T
     buildDealers();
     Lead personLead = buildLead( true );
     personLead.IP_City__c = 'Orillia';
-    Test.setMock( HttpCalloutMock.class, new Tests_CalloutMocks.GoogleDestinationsMatrixMock() );
     Test.startTest();
+    Test.setMock( HttpCalloutMock.class, new Tests_CalloutMocks.GoogleDestinationsMatrixMock() );
     insert personLead;
     Test.stopTest();
     Lead result = [SELECT Id, Closest_Partner__c FROM Lead WHERE Id = :personLead.Id ];
@@ -97,8 +97,8 @@ private class Lead_TriggerHandler_T
       l.IP_City__c = 'Orillia';
       leads.add( l );
     }
-    Test.setMock( HttpCalloutMock.class, new Tests_CalloutMocks.GoogleDestinationsMatrixMock() );
     Test.startTest();
+    Test.setMock( HttpCalloutMock.class, new Tests_CalloutMocks.GoogleDestinationsMatrixMock() );
     insert leads;
     Test.stopTest();
     Lead result = [SELECT Id, Closest_Partner__c FROM Lead WHERE Id = :leads[0].Id ];
@@ -111,8 +111,8 @@ private class Lead_TriggerHandler_T
     buildDealers();
     Lead personLead = buildLead( true );
     personLead.hubspot_IP_City_Lead__c = 'Orillia';
-    Test.setMock( HttpCalloutMock.class, new Tests_CalloutMocks.GoogleDestinationsMatrixMock() );
     Test.startTest();
+    Test.setMock( HttpCalloutMock.class, new Tests_CalloutMocks.GoogleDestinationsMatrixMock() );
     insert personLead;
     Test.stopTest();
     Lead result = [SELECT Id, Closest_Partner__c FROM Lead WHERE Id = :personLead.Id ];
@@ -125,8 +125,8 @@ private class Lead_TriggerHandler_T
     buildDealers();
     Lead personLead = buildLead( true );
     personLead.PostalCode = 'L3V3V3';
-    Test.setMock( HttpCalloutMock.class, new Tests_CalloutMocks.GoogleDestinationsMatrixMock() );
     Test.startTest();
+    Test.setMock( HttpCalloutMock.class, new Tests_CalloutMocks.GoogleDestinationsMatrixMock() );
     insert personLead;
     Test.stopTest();
     Lead result = [SELECT Id, Closest_Partner__c FROM Lead WHERE Id = :personLead.Id ];
@@ -141,8 +141,8 @@ private class Lead_TriggerHandler_T
     TriggerHandler.bypass('Lead_TriggerHandler');
     insert personLead;
     TriggerHandler.clearBypass('Lead_TriggerHandler');
-    Test.setMock( HttpCalloutMock.class, new Tests_CalloutMocks.GoogleDestinationsMatrixMock() );
     Test.startTest();
+    Test.setMock( HttpCalloutMock.class, new Tests_CalloutMocks.GoogleDestinationsMatrixMock() );
     personLead.IP_City__c = 'Orillia';
     update personLead;
     Test.stopTest();
@@ -158,8 +158,8 @@ private class Lead_TriggerHandler_T
     TriggerHandler.bypass('Lead_TriggerHandler');
     insert personLead;
     TriggerHandler.clearBypass('Lead_TriggerHandler');
-    Test.setMock( HttpCalloutMock.class, new Tests_CalloutMocks.GoogleDestinationsMatrixMock() );
     Test.startTest();
+    Test.setMock( HttpCalloutMock.class, new Tests_CalloutMocks.GoogleDestinationsMatrixMock() );
     personLead.hubspot_IP_City_Lead__c = 'Orillia';
     update personLead;
     Test.stopTest();
