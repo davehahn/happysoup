@@ -163,7 +163,8 @@ private class SalesAndServiceCalendar_Controller_Test {
       SalesAndServiceCalendar_Controller.fetchScheduledRecords( String.valueOf( sd.getTime() ),
                                                                 String.valueOf( ed.getTime() ),
                                                                 'Barrie',
-                                                                'testFail');
+                                                                'testFail',
+                                                                false );
     }
     catch( Exception err )
     {
@@ -197,7 +198,8 @@ private class SalesAndServiceCalendar_Controller_Test {
         String.valueOf( s.getTime() ),
         String.valueOf( e.getTime() ),
         'Whitefish',
-        'Retail'
+        'Retail',
+        false
       );
       List<SalesAndServiceCalendar_Controller.EventData> result =
         (List<SalesAndServiceCalendar_Controller.EventData>)JSON.deserialize( jsonResult,
@@ -224,7 +226,8 @@ private class SalesAndServiceCalendar_Controller_Test {
         String.valueOf( s.getTime() ),
         String.valueOf( e.getTime() ),
         'Montreal',
-        'Retail'
+        'Retail',
+        false
       );
       List<SalesAndServiceCalendar_Controller.EventData> result =
         (List<SalesAndServiceCalendar_Controller.EventData>)JSON.deserialize( jsonResult,
@@ -252,7 +255,8 @@ private class SalesAndServiceCalendar_Controller_Test {
         String.valueOf( s.getTime() ),
         String.valueOf( e.getTime() ),
         'Barrie',
-        'Retail'
+        'Retail',
+        false
       );
       List<SalesAndServiceCalendar_Controller.EventData> result =
         (List<SalesAndServiceCalendar_Controller.EventData>)JSON.deserialize( jsonResult,
@@ -281,13 +285,47 @@ private class SalesAndServiceCalendar_Controller_Test {
         String.valueOf( s.getTime() ),
         String.valueOf( e.getTime() ),
         'Barrie',
-        'Service'
+        'Service',
+        false
       );
       List<SalesAndServiceCalendar_Controller.EventData> result =
         (List<SalesAndServiceCalendar_Controller.EventData>)JSON.deserialize( jsonResult,
                                                                               List<SalesAndServiceCalendar_Controller.EventData>.class);
       Test.stopTest();
       System.assertEquals( erps.size(), result.size() );
+    }
+  }
+
+  @isTest
+  static void fetchScheduledRecords_Service_Barrie_ExcludeCompleted_Test()
+  {
+    setup();
+    setupSerials();
+    AcctSeed__Project__c[] erps = barrieERPs('service');
+    Boolean o = gcProject.disableTrigger;
+    gcProject.disableTrigger = true;
+    erps[0].Job_Status__c = 'Completed';
+    update erps[0];
+    gcProject.disableTrigger = o;
+    System.runAs( barrieUser )
+    {
+      Test.startTest();
+      DateTime s = DateTime.now().addDays( -3 );
+      DateTime e = s.addDays( 7 );
+      System.debug( 'Start.getTime() ' + String.valueOf( s.getTime() ) );
+      System.debug( 'Start.formatLong() ' + s.formatLong() );
+      String jsonResult = SalesAndServiceCalendar_Controller.fetchScheduledRecords(
+        String.valueOf( s.getTime() ),
+        String.valueOf( e.getTime() ),
+        'Barrie',
+        'Service',
+        true
+      );
+      List<SalesAndServiceCalendar_Controller.EventData> result =
+        (List<SalesAndServiceCalendar_Controller.EventData>)JSON.deserialize( jsonResult,
+          List<SalesAndServiceCalendar_Controller.EventData>.class);
+      Test.stopTest();
+      System.assertEquals( erps.size() - 1, result.size() );
     }
   }
 

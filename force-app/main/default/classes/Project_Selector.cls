@@ -71,7 +71,8 @@ public with sharing class Project_Selector Extends Application_Selector
 
   public static List<AcctSeed__Project__c> allRetailBoatSaleByLocationByPickupDateRange( String location,
                                                                                          Date startAt,
-                                                                                         Date endAt )
+                                                                                         Date endAt,
+                                                                                         Boolean excludeComplete )
   {
     String locString = '%' + location + '%';
     Project_Selector selector = new Project_Selector();
@@ -82,13 +83,18 @@ public with sharing class Project_Selector Extends Application_Selector
       .addWhere('Delivery_Date__c >= ' + toDateString( startAt ) )
       .addWhere('Delivery_Date__c <= ' + toDateString( endAt ) )
       .addChildQuery('(SELECT Id, Employee__c FROM Rigger_Jobs__r)');
+    if( excludeComplete )
+    {
+      selector.addWhere('Job_Status__c != \'Completed\'' );
+    }
     return selector.query();
   }
 
   public static List<AcctSeed__Project__c> allByWarehouseAndRecordTypeAndServiceDateRange( Id recordTypeId,
                                                                                            Id warehouseId,
                                                                                            Date startAt,
-                                                                                           Date endAt )
+                                                                                           Date endAt,
+                                                                                           Boolean excludeComplete )
   {
     Project_Selector selector = new Project_Selector();
     selector
@@ -98,6 +104,10 @@ public with sharing class Project_Selector Extends Application_Selector
       .addWhere('Service_Date__c >= ' + toDateString( startAt ) )
       .addWhere('Service_Date__c <= ' + toDateString( endAt ) )
       .addChildQuery('(SELECT Id, Employee__c FROM Rigger_Jobs__r)');
+    if( excludeComplete )
+    {
+      selector.addWhere('Job_Status__c != \'Completed\'' );
+    }
     return selector.query();
   }
 

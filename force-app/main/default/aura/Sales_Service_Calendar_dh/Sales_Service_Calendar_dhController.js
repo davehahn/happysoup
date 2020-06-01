@@ -90,6 +90,14 @@
     }));
   },
 
+  handleCompletedFilter: function( component, event, helper )
+  {
+    helper.removeAllEventSourcesByLocation( component )
+    .then( $A.getCallback( function() {
+      helper.addAllSelectedEventSourcesByLocation( component );
+    }));
+  },
+
   filterToggle: function( component )
   {
     var isOpen = component.get('v.filterOpen');
