@@ -1,3 +1,7 @@
+.THIS .slds-spinner_container {
+  z-index: 9999 !important;
+}
+
 .THIS .cal-select .slds-button span:first-child svg {
   height:1.5rem;
   width:1.5rem;
@@ -30,7 +34,7 @@
 
 .THIS .cal-container > .calendar-filters {
   z-index:98;
-  width:300px;
+  width:225px;
   position:absolute;
   right:-300px;
   -webkit-transition: all 0.5s;
@@ -52,7 +56,7 @@
 }
 
 .THIS .cal-container.filter-open > .calendar {
-  width: calc( 100% - 300px );
+  width: calc( 100% - 225px );
 }
 
 .THIS .cal-container.scheduable-open > .calendar {
@@ -60,7 +64,6 @@
 }
 
 .THIS .cal-container.scheduable-open .scheduable-list {
-  z-index:101;
   right:0;
 }
 
@@ -72,3 +75,8 @@
 .THIS .slds-popover.slds-popover--tooltip {
   text-align:center;
 }
+
+.THIS .location-selector label {
+  display:none;
+}
+
