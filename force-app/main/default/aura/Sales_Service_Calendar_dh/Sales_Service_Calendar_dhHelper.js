@@ -232,13 +232,15 @@
         la,
         editable = false,
         self = this,
-        events = [];
-    action.setParams({
-      startAt: start.toString(),
-      endAt: end.toString(),
-      storeLocation: location,
-      calendarType : calType
-    });
+        events = [],
+        params = {
+          startAt: start.toString(),
+          endAt: end.toString(),
+          storeLocation: location,
+          calendarType : calType,
+          excludeComplete: component.get('v.excludeCompleted')
+        };
+    action.setParams(params);
     if( calType === 'retail' )
       editable = component.get('v.canEditRetailPickupDate');
     if( ['service','internal','trade'].indexOf(calType) >= 0 )
@@ -256,6 +258,10 @@
             if( result[i].isRiggerJobScheduled )
             {
               className += ' rigger-job-scheduled';
+            }
+            if( result[i].isJobComplete )
+            {
+              className += ' job-complete';
             }
             if( result[i].boatName != null )
               title += ' - ' + result[i].boatName;

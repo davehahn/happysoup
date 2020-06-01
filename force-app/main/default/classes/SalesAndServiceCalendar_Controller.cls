@@ -21,6 +21,7 @@ public with sharing class SalesAndServiceCalendar_Controller {
     public Decimal estimatedDuration  { get; set; }
     public String stage               { get; set; }
     public String jobStatus           { get; set; }
+    public Boolean isJobComplete        { get; set; }
     public Boolean hasRiggerJob       { get; set; }
     public Boolean isRiggerJobScheduled { get; set ;}
 
@@ -37,6 +38,7 @@ public with sharing class SalesAndServiceCalendar_Controller {
       this.stage = erp.Stage__c;
       this.parkingSpot = erp.Parking_Spot__c;
       this.jobStatus = erp.Job_Status__c;
+      this.isJobComplete = this.jobStatus == 'Completed';
       if( this.startDateTime != null && this.estimatedDuration != null )
       {
         this.endDateTime = this.startDateTime.addMinutes( Integer.valueOf( this.estimatedDuration * 60 ) );
@@ -72,6 +74,7 @@ public with sharing class SalesAndServiceCalendar_Controller {
         this.boatName = opp.BoatId__r.Name;
       this.startDateTime = opp.Delivery_Date__c;
       this.calId = 'retail';
+      this.isJobComplete = false;
       setStoreAndType(opp.Pickup_Location__c, null);
     }
 
@@ -167,16 +170,17 @@ public with sharing class SalesAndServiceCalendar_Controller {
   public static String fetchScheduledRecords( String startAt,
                                               String endAt,
                                               String storeLocation,
-                                              String calendarType )
+                                              String calendarType,
+                                              Boolean excludeComplete)
   {
     if( calendarType.toLowerCase() == 'retail')
-      return fetchRetailEvents( startAt, endAt, storeLocation );
+      return fetchRetailEvents( startAt, endAt, storeLocation, excludeComplete );
     if( calendarType.toLowerCase() == 'service' )
-      return fetchServiceEvents( startAt, endAt, storeLocation );
+      return fetchServiceEvents( startAt, endAt, storeLocation, excludeComplete );
     if( calendarType.toLowerCase() == 'internal' )
-      return fetchManufacturingEvents( startAt, endAt, storeLocation );
+      return fetchManufacturingEvents( startAt, endAt, storeLocation, excludeComplete );
     if( calendarType.toLowerCase() == 'trade' )
-      return fetchTradeInEvents( startAt, endAt, storeLocation );
+      return fetchTradeInEvents( startAt, endAt, storeLocation, excludeComplete );
 
     String errorMessage = 'Unrecoginized Calendar Specified';
     AuraHandledException err = new AuraHandledException(errorMessage);
@@ -510,13 +514,13 @@ public with sharing class SalesAndServiceCalendar_Controller {
 
   private static String fetchRetailEvents ( String startAt,
                                             String endAt,
-                                            String storeLocation )
+                                            String storeLocation,
+                                            Boolean excludeComplete )
   {
     Date sDate = DateTime.newInstance( Long.valueOf(startAt) ).date();
     Date eDate = DateTime.newInstance( Long.valueOf(endAt) ).date();
-    String pickupLocation = '%' + storeLocation + '%';
     List<EventData> result = new List<EventData>();
-    for( AcctSeed__Project__c erp : Project_Selector.allRetailBoatSaleByLocationByPickupDateRange( storeLocation, sDate, eDate ) )
+    for( AcctSeed__Project__c erp : Project_Selector.allRetailBoatSaleByLocationByPickupDateRange( storeLocation, sDate, eDate, excludeComplete ) )
     {
       result.add( new EventData( erp ) );
     }
@@ -530,7 +534,8 @@ public with sharing class SalesAndServiceCalendar_Controller {
 
   private static String fetchServiceEvents( String startAt,
                                             String endAt,
-                                            String storeLocation )
+                                            String storeLocation,
+                                            Boolean excludeComplete )
   {
     Date sDate = DateTime.newInstance( Long.valueOf(startAt) ).date();
     Date eDate = DateTime.newInstance( Long.valueOf(endAt) ).date();
@@ -540,7 +545,7 @@ public with sharing class SalesAndServiceCalendar_Controller {
     List<EventData> result = new List<EventData>();
     for( AcctSeed__Project__c erp :
          Project_Selector.allByWarehouseAndRecordTypeAndServiceDateRange(
-           gcConstants.idRtProjectService, wh.Id, sDate, eDate
+           gcConstants.idRtProjectService, wh.Id, sDate, eDate, excludeComplete
          ))
     {
       result.add( new EventData( erp ) );
@@ -550,7 +555,8 @@ public with sharing class SalesAndServiceCalendar_Controller {
 
   private static String fetchManufacturingEvents( String startAt,
                                                   String endAt,
-                                                  String storeLocation )
+                                                  String storeLocation,
+                                                  Boolean excludeComplete )
   {
     Date sDate = DateTime.newInstance( Long.valueOf(startAt) ).date();
     Date eDate = DateTime.newInstance( Long.valueOf(endAt) ).date();
@@ -560,7 +566,7 @@ public with sharing class SalesAndServiceCalendar_Controller {
     List<EventData> result = new List<EventData>();
     Id erpRT = gcConstants.idRtProjectManufacturing;
     for( AcctSeed__Project__c erp : Project_Selector.allByWarehouseAndRecordTypeAndServiceDateRange(
-      gcConstants.idRtProjectManufacturing, wh.Id, sDate, eDate ))
+      gcConstants.idRtProjectManufacturing, wh.Id, sDate, eDate, excludeComplete ))
     {
       result.add( new EventData( erp ) );
     }
@@ -569,7 +575,8 @@ public with sharing class SalesAndServiceCalendar_Controller {
 
   private static String fetchTradeInEvents( String startAt,
                                             String endAt,
-                                            String storeLocation )
+                                            String storeLocation,
+                                            Boolean excludeComplete )
   {
     Date sDate = DateTime.newInstance( Long.valueOf(startAt) ).date();
     Date eDate = DateTime.newInstance( Long.valueOf(endAt) ).date();
@@ -578,7 +585,7 @@ public with sharing class SalesAndServiceCalendar_Controller {
                                     WHERE Name = :storeLocation ];
     List<EventData> result = new List<EventData>();
     for( AcctSeed__Project__c erp : Project_Selector.allByWarehouseAndRecordTypeAndServiceDateRange(
-      gcConstants.idRtTradeIn, wh.Id, sDate, eDate ))
+      gcConstants.idRtTradeIn, wh.Id, sDate, eDate, excludeComplete ))
     {
       result.add( new EventData( erp ) );
     }

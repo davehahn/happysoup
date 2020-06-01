@@ -69,6 +69,22 @@ lightning-input.slds-form-element {
           background: $color;
           color: #FFF;
         }
+        &.job-complete {
+          background: lighten( $color, 40%);
+          border-color: lighten( $color, 40%);
+          span.fc-time {
+            background: lighten( $color, 40%);
+            color: #FFF;
+          }
+          &:hover {
+            background: $color;
+            border-color: lighten( $color, 50%);
+            span.fc-time {
+              background: $color;
+              color: #FFF;
+            }
+          }
+        }
       }
     }
     /* =============== /location specific event class ================ */
@@ -128,6 +144,11 @@ lightning-input.slds-form-element {
         }
       }
     }
+
+//     &.job-complete {
+//       background-color:#B4B4B4;
+//       border-color: #999;
+//     }
 
     span {
       line-height: 25px;
