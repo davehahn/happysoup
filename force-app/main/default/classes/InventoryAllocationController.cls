@@ -1052,6 +1052,7 @@ public without sharing class InventoryAllocationController {
 
     @RemoteAction
     public static Map<String,List<Inventory>> retrieveWholeSaleData(List<String> listIdProduct, String lotName){
+        List<String> listLotName = new List<String>();
         Set<String> setProducts = new Set<String>();
         setProducts.addAll(listIdProduct);
         Map<String,Integer> whMapStock = new Map<String,Integer>();
