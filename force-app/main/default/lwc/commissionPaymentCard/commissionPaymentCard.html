@@ -63,10 +63,12 @@
                                     format-style="currency"
                                     currency-code="CAD"></lightning-formatted-number>
       </p>
+      <template if:true={renderSplit}>
       <p>
         <b>Split: </b>
         {payment.split}%
       </p>
+      </template>
     </lightning-card>
   </template>
 

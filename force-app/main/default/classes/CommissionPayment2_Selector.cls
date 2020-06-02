@@ -8,6 +8,10 @@ public with sharing class CommissionPayment2_Selector extends Application_Select
   public CommissionPayment2_Selector()
   {
     this.sObjectName = 'CommissionPayment2__c';
+    if(!hasManagerPermission()){
+      String whCl = ' Type__c != \'Manager\'';
+      this.whereClause = new List<String>{'WHERE ' + whCl };
+    }
     this.fields = new List<String>{
       'Id',
       'Owner__c',
@@ -26,6 +30,10 @@ public with sharing class CommissionPayment2_Selector extends Application_Select
     };
   }
 
+  public static Boolean hasManagerPermission(){
+    return CommissionRecord2_Controller.fetchManagerCustomPermission();
+  }
+
   public static List<CommissionPayment2__c> allByIds( Set<Id> ids )
   {
     CommissionPayment2_Selector selector = new CommissionPayment2_Selector();
@@ -35,7 +43,7 @@ public with sharing class CommissionPayment2_Selector extends Application_Select
         (Set<String>)JSON.deserialize( JSON.serialize(ids), Set<String>.class )
       )
     )
-    .addOrderBy('Owner__r.Name ASC');
+    .addOrderBy('Type__c, Owner__r.Name ASC');
     return (List<CommissionPayment2__c>)selector.query();
 //    return[
 //      SELECT
@@ -63,7 +71,7 @@ public with sharing class CommissionPayment2_Selector extends Application_Select
   {
     CommissionPayment2_Selector selector = new CommissionPayment2_Selector();
     selector.addWhere('Commission_Record2__c = \'' + cRecId + '\'' )
-    .addOrderBy( 'Owner__r.Name ASC' );
+    .addOrderBy( 'Type__c, Owner__r.Name ASC' );
     return (List<CommissionPayment2__c>)selector.query();
   }
 
@@ -74,7 +82,7 @@ public with sharing class CommissionPayment2_Selector extends Application_Select
       'Commission_Record2__c',
       (Set<String>)JSON.deserialize( JSON.serialize(commissionRecordIds), Set<String>.class )
     ))
-      .addOrderBy('Owner__r.Name ASC');
+      .addOrderBy('Type__c, Owner__r.Name ASC');
     return (List<CommissionPayment2__c>)selector.query();
   }
 
@@ -86,7 +94,7 @@ public with sharing class CommissionPayment2_Selector extends Application_Select
       (Set<String>)JSON.deserialize( JSON.serialize(commissionRecordIds), Set<String>.class )
     ))
       .addWhere('Status__c = \'New\'')
-      .addOrderBy('Owner__r.Name ASC');
+      .addOrderBy('Type__c, Owner__r.Name ASC');
     return (List<CommissionPayment2__c>)selector.query();
   }
 

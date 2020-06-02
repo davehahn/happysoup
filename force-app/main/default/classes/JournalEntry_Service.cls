@@ -11,6 +11,7 @@ public with sharing class JournalEntry_Service {
     public static void takeExpense(Set<Id> setIdFilter) {
         System.debug(LoggingLevel.ERROR,'setIdFilter:'+setIdFilter);
         Date cogsDate = Date.today();
+        String idActual = gcConstants.idActualLedger;
         list<AcctSeed__Journal_Entry_Line__c> listJEL = new list<AcctSeed__Journal_Entry_Line__c>();
         List<CommissionRecord2__c> listCR = new List<CommissionRecord2__c>();
         Map<Id, Id> mapUserGLV4 = new Map<Id, Id>();
@@ -54,6 +55,7 @@ public with sharing class JournalEntry_Service {
                 AcctSeed__Journal_Date__c = dt.date(),
                 AcctSeed__Status__c = 'Approved',
                 Commission_Record__c = cr.Id,
+                AcctSeed__Ledger__c = idActual,
                 Project__c = cr.Project__c));
             listCR.add(cr);
         }
