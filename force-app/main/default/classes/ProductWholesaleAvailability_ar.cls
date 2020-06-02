@@ -48,6 +48,12 @@ public without sharing class ProductWholesaleAvailability_ar {
     	Legend_Settings__c orgDefaults = Legend_Settings__c.getOrgDefaults();
     	String lotName = orgDefaults.Current_Program_Year__c;
     	if(lotName == null) return '';
+		try {
+			Decimal lotDec = Decimal.valueOf(lotName);
+
+		}catch(Exception e){
+
+		}
     	return JSON.serialize(InventoryAllocationController.retrieveWholeSaleData(new List<Id>{idProduct},lotName));
     }
 
