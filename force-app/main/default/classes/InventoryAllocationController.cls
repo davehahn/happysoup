@@ -55,13 +55,13 @@ public without sharing class InventoryAllocationController {
         Id idWarehouseWholesale = GMBLASERP__Inventory_Settings__c.getOrgDefaults().Wholesale_Warehouse_Id__c;
         Set<Id> setWHSId = new Set<Id>{idWarehouseTransit,idWarehouseAdjustment,idWarehouseWholesale};
         for(AcctSeedERP__Warehouse__c whs :
-          [SELECT Id, Name
-           FROM AcctSeedERP__Warehouse__c
-           WHERE Id NOT IN :setWHSId
-             ORDER BY Name
-             LIMIT 1])
+        [SELECT Id, Name
+        FROM AcctSeedERP__Warehouse__c
+        WHERE Id NOT IN :setWHSId
+        ORDER BY Name
+        LIMIT 1])
         {
-          this.filterWarehouse = whs.Id;
+            this.filterWarehouse = whs.Id;
         }
         this.filterYear = 'ALL';
         this.filterType = 'Boat';
@@ -79,20 +79,20 @@ public without sharing class InventoryAllocationController {
 
     public List<SelectOption> getAllWarehouses()
     {
-      List<SelectOption> listWarehouses = new List<SelectOption>();
-      Id idWarehouseTransit = GMBLASERP__Inventory_Settings__c.getOrgDefaults().GMBLASERP__Transit_Warehouse_Id__c;
-      Id idWarehouseAdjustment = GMBLASERP__Inventory_Settings__c.getOrgDefaults().GMBLASERP__Adjustment_Warehouse_Id__c;
-      Id idWarehouseWholesale = GMBLASERP__Inventory_Settings__c.getOrgDefaults().Wholesale_Warehouse_Id__c;
-      Set<Id> setWHSId = new Set<Id>{idWarehouseTransit,idWarehouseAdjustment,idWarehouseWholesale};
-      for(AcctSeedERP__Warehouse__c whs :
+        List<SelectOption> listWarehouses = new List<SelectOption>();
+        Id idWarehouseTransit = GMBLASERP__Inventory_Settings__c.getOrgDefaults().GMBLASERP__Transit_Warehouse_Id__c;
+        Id idWarehouseAdjustment = GMBLASERP__Inventory_Settings__c.getOrgDefaults().GMBLASERP__Adjustment_Warehouse_Id__c;
+        Id idWarehouseWholesale = GMBLASERP__Inventory_Settings__c.getOrgDefaults().Wholesale_Warehouse_Id__c;
+        Set<Id> setWHSId = new Set<Id>{idWarehouseTransit,idWarehouseAdjustment,idWarehouseWholesale};
+        for(AcctSeedERP__Warehouse__c whs :
         [SELECT Id, Name
-         FROM AcctSeedERP__Warehouse__c
-         WHERE Id NOT IN :setWHSId
-           ORDER BY Name])
-      {
-        listWarehouses.add(new selectOption(whs.Id, whs.Name));
-      }
-      return listWarehouses;
+        FROM AcctSeedERP__Warehouse__c
+        WHERE Id NOT IN :setWHSId
+        ORDER BY Name])
+        {
+            listWarehouses.add(new selectOption(whs.Id, whs.Name));
+        }
+        return listWarehouses;
     }
 
     public void constructor() {
@@ -117,97 +117,97 @@ public without sharing class InventoryAllocationController {
 
     private void buildMapERPMaterials()
     {
-      this.mapERPMaterial = new Map<Id,List<Material>>();
-      if(this.setIdERP == null || this.setIdERP.isEmpty()) return;
-      for( AcctSeedERP__Material__c objMaterial : [ SELECT Id, Name,
-                                                             AcctSeedERP__Product__c,
-                                                             AcctSeedERP__Product__r.Name,
-                                                             AcctSeedERP__Product__r.RecordType.Name,
-                                                             GMBLASERP__Serial_Number__c,
-                                                             GMBLASERP__Serial_Number__r.Name,
-                                                             GMBLASERP__Lot__c,
-                                                             GMBLASERP__Lot__r.Name,
-                                                             AcctSeedERP__Project__c,
-                                                             AcctSeedERP__Project__r.Name,
-                                                             AcctSeedERP__Project__r.AcctSeedERP__Work_Order_Number__c
-                                                      FROM AcctSeedERP__Material__c
-                                                      WHERE AcctSeedERP__Product__r.RecordType.Name != 'Boat'
-                                                        AND AcctSeedERP__Product__r.AcctSeedERP__Serialized__c = true
-                                                        AND AcctSeedERP__Project__c IN:this.setIdERP])
-      {
-        Material mat = new Material(objMaterial);
-        if(!this.mapERPMaterial.containsKey(objMaterial.AcctSeedERP__Project__c))
-          this.mapERPMaterial.put(objMaterial.AcctSeedERP__Project__c, new List<Material>());
+        this.mapERPMaterial = new Map<Id,List<Material>>();
+        if(this.setIdERP == null || this.setIdERP.isEmpty()) return;
+        for( AcctSeedERP__Material__c objMaterial : [ SELECT Id, Name,
+            AcctSeedERP__Product__c,
+            AcctSeedERP__Product__r.Name,
+            AcctSeedERP__Product__r.RecordType.Name,
+            GMBLASERP__Serial_Number__c,
+            GMBLASERP__Serial_Number__r.Name,
+            GMBLASERP__Lot__c,
+            GMBLASERP__Lot__r.Name,
+            AcctSeedERP__Project__c,
+            AcctSeedERP__Project__r.Name,
+            AcctSeedERP__Project__r.AcctSeedERP__Work_Order_Number__c
+        FROM AcctSeedERP__Material__c
+        WHERE AcctSeedERP__Product__r.RecordType.Name != 'Boat'
+        AND AcctSeedERP__Product__r.AcctSeedERP__Serialized__c = true
+        AND AcctSeedERP__Project__c IN:this.setIdERP])
+        {
+            Material mat = new Material(objMaterial);
+            if(!this.mapERPMaterial.containsKey(objMaterial.AcctSeedERP__Project__c))
+                this.mapERPMaterial.put(objMaterial.AcctSeedERP__Project__c, new List<Material>());
 
-        this.mapERPMaterial.get(objMaterial.AcctSeedERP__Project__c).add(mat);
-        System.debug(loggingLevel.error,'mat: '+JSON.serialize(mat));
-      }
-      System.debug(loggingLevel.error,'mapERPMaterial: '+JSON.serialize(this.mapERPMaterial));
+            this.mapERPMaterial.get(objMaterial.AcctSeedERP__Project__c).add(mat);
+            System.debug(loggingLevel.error,'mat: '+JSON.serialize(mat));
+        }
+        System.debug(loggingLevel.error,'mapERPMaterial: '+JSON.serialize(this.mapERPMaterial));
     }
 
     private void buildMapCanvasERP()
     {
-      if(this.allSerials == null || this.allSerials.isEmpty()) return;
-      this.allCanvas = new Map<String, List<Map<String,String>>>();
-      List<AcctSeedERP__Material__c> listMatl = new List<AcctSeedERP__Material__c>();
-      Map<String,Map<String,Decimal>> mapSerialCanvasQty = new Map<String,Map<String,Decimal>>();
-      for( AcctSeedERP__Material__c objMaterial : [ SELECT Id,
-                                                             AcctSeedERP__Product__c,
-                                                             AcctSeedERP__Product__r.Name,
-                                                             AcctSeedERP__Product__r.RecordType.Name,
-                                                             GMBLASERP__Lot__c,
-                                                             GMBLASERP__Lot__r.Name,
-                                                             AcctSeedERP__Project__c,
-                                                             AcctSeedERP__Project__r.AcctSeedERP__Work_Order_Number__c,
-                                                             AcctSeedERP__Project__r.Serial_Number__c,
-                                                             AcctSeedERP__Project__r.Serial_Number__r.Name,
-                                                             AcctSeedERP__Product__r.AcctSeed__Inventory_Product__c,
-                                                             AcctSeedERP__Quantity_Per_Unit__c,
-                                                             AcctSeedERP__Quantity_Allocated__c
-                                                      FROM AcctSeedERP__Material__c
-                                                      WHERE AcctSeedERP__Product__c != null
-                                                        AND AcctSeedERP__Product__r.Family IN ('Canvas','Boat Build Option')
-                                                        AND AcctSeedERP__Project__r.Serial_Number__c != null
-                                                        AND AcctSeedERP__Project__r.Serial_Number__c IN:this.allSerials])
-      {
-        listMatl.add(objMaterial);
-        if(!mapSerialCanvasQty.containsKey(objMaterial.AcctSeedERP__Project__r.Serial_Number__c))
-          mapSerialCanvasQty.put(objMaterial.AcctSeedERP__Project__r.Serial_Number__c,new Map<String,Decimal>());
-        if(!mapSerialCanvasQty.get(objMaterial.AcctSeedERP__Project__r.Serial_Number__c).containsKey(objMaterial.AcctSeedERP__Product__c))
-          mapSerialCanvasQty.get(objMaterial.AcctSeedERP__Project__r.Serial_Number__c).put(objMaterial.AcctSeedERP__Product__c,0);
-        
-        Decimal oldQty = mapSerialCanvasQty.get(objMaterial.AcctSeedERP__Project__r.Serial_Number__c).get(objMaterial.AcctSeedERP__Product__c);
-        Decimal curQty = objMaterial.AcctSeedERP__Quantity_Allocated__c == null ? 0 : objMaterial.AcctSeedERP__Quantity_Allocated__c;
-          if(!objMaterial.AcctSeedERP__Product__r.AcctSeed__Inventory_Product__c)
-              curQty = objMaterial.AcctSeedERP__Quantity_Per_Unit__c;
-        mapSerialCanvasQty.get(objMaterial.AcctSeedERP__Project__r.Serial_Number__c).put(objMaterial.AcctSeedERP__Product__c, oldQty + curQty);
-      }
+        if(this.allSerials == null || this.allSerials.isEmpty()) return;
+        this.allCanvas = new Map<String, List<Map<String,String>>>();
+        List<AcctSeedERP__Material__c> listMatl = new List<AcctSeedERP__Material__c>();
+        Map<String,Map<String,Decimal>> mapSerialCanvasQty = new Map<String,Map<String,Decimal>>();
+        for( AcctSeedERP__Material__c objMaterial : [ SELECT Id,
+            AcctSeedERP__Product__c,
+            AcctSeedERP__Product__r.Name,
+            AcctSeedERP__Product__r.RecordType.Name,
+            GMBLASERP__Lot__c,
+            GMBLASERP__Lot__r.Name,
+            AcctSeedERP__Project__c,
+            AcctSeedERP__Project__r.AcctSeedERP__Work_Order_Number__c,
+            AcctSeedERP__Project__r.Serial_Number__c,
+            AcctSeedERP__Project__r.Serial_Number__r.Name,
+            AcctSeedERP__Product__r.AcctSeed__Inventory_Product__c,
+            AcctSeedERP__Quantity_Per_Unit__c,
+            AcctSeedERP__Quantity_Allocated__c
+        FROM AcctSeedERP__Material__c
+        WHERE AcctSeedERP__Product__c != null
+        AND AcctSeedERP__Product__r.Family IN ('Canvas','Boat Build Option')
+        AND AcctSeedERP__Project__r.Serial_Number__c != null
+        AND AcctSeedERP__Project__r.Serial_Number__c IN:this.allSerials])
+        {
+            listMatl.add(objMaterial);
+            if(!mapSerialCanvasQty.containsKey(objMaterial.AcctSeedERP__Project__r.Serial_Number__c))
+                mapSerialCanvasQty.put(objMaterial.AcctSeedERP__Project__r.Serial_Number__c,new Map<String,Decimal>());
+            if(!mapSerialCanvasQty.get(objMaterial.AcctSeedERP__Project__r.Serial_Number__c).containsKey(objMaterial.AcctSeedERP__Product__c))
+                mapSerialCanvasQty.get(objMaterial.AcctSeedERP__Project__r.Serial_Number__c).put(objMaterial.AcctSeedERP__Product__c,0);
 
-      System.debug(loggingLevel.error,'mapSerialCanvasQty:'+mapSerialCanvasQty);
-      
-      for( AcctSeedERP__Material__c objMaterial : listMatl)
-      {
-        String uniqueCombo = objMaterial.AcctSeedERP__Project__r.Serial_Number__c;
-        if(mapSerialCanvasQty.get(uniqueCombo).get(objMaterial.AcctSeedERP__Product__c) == 0) continue;
+            Decimal oldQty = mapSerialCanvasQty.get(objMaterial.AcctSeedERP__Project__r.Serial_Number__c).get(objMaterial.AcctSeedERP__Product__c);
+            Decimal curQty = objMaterial.AcctSeedERP__Quantity_Allocated__c == null ? 0 : objMaterial.AcctSeedERP__Quantity_Allocated__c;
+            if(!objMaterial.AcctSeedERP__Product__r.AcctSeed__Inventory_Product__c)
+                curQty = objMaterial.AcctSeedERP__Quantity_Per_Unit__c;
+            mapSerialCanvasQty.get(objMaterial.AcctSeedERP__Project__r.Serial_Number__c).put(objMaterial.AcctSeedERP__Product__c, oldQty + curQty);
+        }
 
-        Map<String, String> pData = new Map<String, String>();
-        pData.put('Id', objMaterial.AcctSeedERP__Project__c );
-        pData.put('idCanvas', objMaterial.AcctSeedERP__Product__c );
-        pData.put('canvasName', objMaterial.AcctSeedERP__Product__r.Name );
-        pData.put('idLot', objMaterial.GMBLASERP__Lot__c );
-        pData.put('lotName', objMaterial.GMBLASERP__Lot__r.Name );
-        pData.put('idERP', objMaterial.AcctSeedERP__Project__r.AcctSeedERP__Work_Order_Number__c );
-        pData.put('erpName', objMaterial.AcctSeedERP__Project__r.AcctSeedERP__Work_Order_Number__c );
-        pData.put('idSerial', objMaterial.AcctSeedERP__Project__r.Serial_Number__c );
-        pData.put('serialName', objMaterial.AcctSeedERP__Project__r.Serial_Number__r.Name );
+        System.debug(loggingLevel.error,'mapSerialCanvasQty:'+mapSerialCanvasQty);
 
-        if( !this.allCanvas.containsKey( uniqueCombo ) )
-            this.allCanvas.put( uniqueCombo, new List<Map<String,String>>() );
+        for( AcctSeedERP__Material__c objMaterial : listMatl)
+        {
+            String uniqueCombo = objMaterial.AcctSeedERP__Project__r.Serial_Number__c;
+            if(mapSerialCanvasQty.get(uniqueCombo).get(objMaterial.AcctSeedERP__Product__c) == 0) continue;
 
-        this.allCanvas.get( uniqueCombo ).add( pData );
+            Map<String, String> pData = new Map<String, String>();
+            pData.put('Id', objMaterial.AcctSeedERP__Project__c );
+            pData.put('idCanvas', objMaterial.AcctSeedERP__Product__c );
+            pData.put('canvasName', objMaterial.AcctSeedERP__Product__r.Name );
+            pData.put('idLot', objMaterial.GMBLASERP__Lot__c );
+            pData.put('lotName', objMaterial.GMBLASERP__Lot__r.Name );
+            pData.put('idERP', objMaterial.AcctSeedERP__Project__r.AcctSeedERP__Work_Order_Number__c );
+            pData.put('erpName', objMaterial.AcctSeedERP__Project__r.AcctSeedERP__Work_Order_Number__c );
+            pData.put('idSerial', objMaterial.AcctSeedERP__Project__r.Serial_Number__c );
+            pData.put('serialName', objMaterial.AcctSeedERP__Project__r.Serial_Number__r.Name );
 
-        mapSerialCanvasQty.get(objMaterial.AcctSeedERP__Project__r.Serial_Number__c).put(objMaterial.AcctSeedERP__Product__c, 0);
-      }
+            if( !this.allCanvas.containsKey( uniqueCombo ) )
+                this.allCanvas.put( uniqueCombo, new List<Map<String,String>>() );
+
+            this.allCanvas.get( uniqueCombo ).add( pData );
+
+            mapSerialCanvasQty.get(objMaterial.AcctSeedERP__Project__r.Serial_Number__c).put(objMaterial.AcctSeedERP__Product__c, 0);
+        }
     }
 
     private void populateMapValues(String productId, String lotName){
@@ -268,172 +268,88 @@ public without sharing class InventoryAllocationController {
 
     private void buildOutstandingOrders()
     {
-      this.mapRetailSold = new Map<String, Integer>();
-      this.hoverOverRetailSoldDetails = new Map<String, Map<String, List<Map<String,String>>>>();
-      //this.mapDealerOrders = new Map<String, Integer>();
-      this.hoverOverDealerOrderDetails = new Map<String, Map<String, List<Map<String,String>>>>();
-      Map<Id,Boolean> mapRetailLinked = new Map<Id,Boolean>();
-      List<AcctSeedERP__Material__c> listRetailMaterials = new List<AcctSeedERP__Material__c>();
-      Set<Id> rts = new Set<Id>{ erpPartnerBoatSaleRtId, erpRetailBoatSaleRtId };
-      for( AcctSeedERP__Material__c objMaterial : [ SELECT Id,
-                                                             AcctSeedERP__Product__c,
-                                                             AcctSeedERP__Product__r.Name,
-                                                             AcctSeedERP__Product__r.RecordType.Name,
-                                                             GMBLASERP__Lot__c,
-                                                             GMBLASERP__Lot__r.Name,
-                                                             AcctSeedERP__Project__c,
-                                                             AcctSeedERP__Project__r.AcctSeed__Account__r.Name,
-                                                             AcctSeedERP__Project__r.AcctSeedERP__Work_Order_Number__c,
-                                                             AcctSeedERP__Project__r.Stage__c,
-                                                             AcctSeedERP__Project__r.CreatedDate,
-                                                             AcctSeedERP__Project__r.Delivery_Date__c,
-                                                             AcctSeedERP__Project__r.BoatModelYear__c,
-                                                             AcctSeedERP__Project__r.TrailerModelYear__c,
-                                                             AcctSeedERP__Project__r.Serial_Number__c,
-                                                             AcctSeedERP__Project__r.Serial_Number__r.Name
-                                                      FROM AcctSeedERP__Material__c
-                                                      WHERE AcctSeedERP__Project__r.RecordTypeId IN :rts
-                                                      AND AcctSeedERP__Project__r.Stage__c NOT IN ('Draft','Quoting','Delivered','Closed Lost')
-                                                      AND AcctSeedERP__Project__r.GMBLASERP__Warehouse__c =:this.filterWarehouse
-                                                      AND GMBLASERP__Serial_Number__c = null
-                                                      AND AcctSeedERP__Product__c != null ] )
-      {
-        //String uniqueCombo = getUniqueComboProject(objMaterial,objMaterial.AcctSeedERP__Product__r.RecordType.Name);
-        //populateMapValues(objMaterial.AcctSeedERP__Product__c, uniqueCombo);
-        //uniqueCombo = objMaterial.AcctSeedERP__Product__c + ( uniqueCombo == '' ? '' : ('-' + uniqueCombo) );
-
-        if( objMaterial.AcctSeedERP__Project__r.RecordTypeId == erpRetailBoatSaleRtId )
+        this.mapRetailSold = new Map<String, Integer>();
+        this.hoverOverRetailSoldDetails = new Map<String, Map<String, List<Map<String,String>>>>();
+        //this.mapDealerOrders = new Map<String, Integer>();
+        this.hoverOverDealerOrderDetails = new Map<String, Map<String, List<Map<String,String>>>>();
+        Map<Id,Boolean> mapRetailLinked = new Map<Id,Boolean>();
+        List<AcctSeedERP__Material__c> listRetailMaterials = new List<AcctSeedERP__Material__c>();
+        Set<Id> rts = new Set<Id>{ erpPartnerBoatSaleRtId, erpRetailBoatSaleRtId };
+        for( AcctSeedERP__Material__c objMaterial : [ SELECT Id,
+            AcctSeedERP__Product__c,
+            AcctSeedERP__Product__r.Name,
+            AcctSeedERP__Product__r.RecordType.Name,
+            GMBLASERP__Lot__c,
+            GMBLASERP__Lot__r.Name,
+            AcctSeedERP__Project__c,
+            AcctSeedERP__Project__r.AcctSeed__Account__r.Name,
+            AcctSeedERP__Project__r.AcctSeedERP__Work_Order_Number__c,
+            AcctSeedERP__Project__r.Stage__c,
+            AcctSeedERP__Project__r.CreatedDate,
+            AcctSeedERP__Project__r.Delivery_Date__c,
+            AcctSeedERP__Project__r.BoatModelYear__c,
+            AcctSeedERP__Project__r.TrailerModelYear__c,
+            AcctSeedERP__Project__r.Serial_Number__c,
+            AcctSeedERP__Project__r.Serial_Number__r.Name
+        FROM AcctSeedERP__Material__c
+        WHERE AcctSeedERP__Project__r.RecordTypeId IN :rts
+        AND AcctSeedERP__Project__r.Stage__c NOT IN ('Draft','Quoting','Delivered','Closed Lost')
+        AND AcctSeedERP__Project__r.GMBLASERP__Warehouse__c =:this.filterWarehouse
+        AND GMBLASERP__Serial_Number__c = null
+        AND AcctSeedERP__Product__c != null ] )
         {
-          //addToRetailERPOrders( uniqueCombo, objMaterial );
-          mapRetailLinked.put(objMaterial.AcctSeedERP__Project__c, false);
-          listRetailMaterials.add(objMaterial);
+            //String uniqueCombo = getUniqueComboProject(objMaterial,objMaterial.AcctSeedERP__Product__r.RecordType.Name);
+            //populateMapValues(objMaterial.AcctSeedERP__Product__c, uniqueCombo);
+            //uniqueCombo = objMaterial.AcctSeedERP__Product__c + ( uniqueCombo == '' ? '' : ('-' + uniqueCombo) );
+
+            if( objMaterial.AcctSeedERP__Project__r.RecordTypeId == erpRetailBoatSaleRtId )
+            {
+                //addToRetailERPOrders( uniqueCombo, objMaterial );
+                mapRetailLinked.put(objMaterial.AcctSeedERP__Project__c, false);
+                listRetailMaterials.add(objMaterial);
+            }
         }
-      }
 
-      if(!mapRetailLinked.isEmpty()){
-        for(AcctSeed__Project__c pr : [SELECT Id, (SELECT Id FROM ERP_Orders__r) FROM AcctSeed__Project__c WHERE Id IN:mapRetailLinked.keySet()])
-          if(!pr.ERP_Orders__r.isEmpty())
-            mapRetailLinked.put(pr.Id, true);
-      }
+        if(!mapRetailLinked.isEmpty()){
+            for(AcctSeed__Project__c pr : [SELECT Id, (SELECT Id FROM ERP_Orders__r) FROM AcctSeed__Project__c WHERE Id IN:mapRetailLinked.keySet()])
+                if(!pr.ERP_Orders__r.isEmpty())
+                    mapRetailLinked.put(pr.Id, true);
+        }
 
-      for( AcctSeedERP__Material__c objMaterial : listRetailMaterials){
-        if(mapRetailLinked.get(objMaterial.AcctSeedERP__Project__c)) continue;
-        String uniqueCombo = getUniqueComboProject(objMaterial,objMaterial.AcctSeedERP__Product__r.RecordType.Name);
-        populateMapValues(objMaterial.AcctSeedERP__Product__c, uniqueCombo);
-        uniqueCombo = objMaterial.AcctSeedERP__Product__c + ( uniqueCombo == '' ? '' : ('-' + uniqueCombo) );
-        addToRetailERPOrders( uniqueCombo, objMaterial );
-      }
+        for( AcctSeedERP__Material__c objMaterial : listRetailMaterials){
+            if(mapRetailLinked.get(objMaterial.AcctSeedERP__Project__c)) continue;
+            String uniqueCombo = getUniqueComboProject(objMaterial,objMaterial.AcctSeedERP__Product__r.RecordType.Name);
+            populateMapValues(objMaterial.AcctSeedERP__Product__c, uniqueCombo);
+            uniqueCombo = objMaterial.AcctSeedERP__Product__c + ( uniqueCombo == '' ? '' : ('-' + uniqueCombo) );
+            addToRetailERPOrders( uniqueCombo, objMaterial );
+        }
 
-      for(Opportunity objOpportunity : [select Id,
-                                         Name,
-                                         CreatedDate,
-                                         Delivery_Date__c,
-                                         BoatId__c,
-                                         BoatId__r.RecordType.Name,
-                                         Trailer_Model_Year__c,
-                                         Boat_Model_Year__c,
-                                         Account.Name,
-                                         StageName
-                                  from Opportunity
-                                  where Probability > 70 and Probability < 100
-                                  AND (Warehouse__c = null OR Warehouse__c =:this.filterWarehouse)
-                                  and BoatId__c != null and RecordType.Name = 'Retail'])
-      {
-        String uniqueCombo = getUniqueCombo(objOpportunity);
-        addToRetailOppOrders( uniqueCombo, objOpportunity );
-      }
+        for(Opportunity objOpportunity : [select Id,
+            Name,
+            CreatedDate,
+            Delivery_Date__c,
+            BoatId__c,
+            BoatId__r.RecordType.Name,
+            Trailer_Model_Year__c,
+            Boat_Model_Year__c,
+            Account.Name,
+            StageName
+        from Opportunity
+        where Probability > 70 and Probability < 100
+        AND (Warehouse__c = null OR Warehouse__c =:this.filterWarehouse)
+        and BoatId__c != null and RecordType.Name = 'Retail'])
+        {
+            String uniqueCombo = getUniqueCombo(objOpportunity);
+            addToRetailOppOrders( uniqueCombo, objOpportunity );
+        }
     }
 
     private void addToRetailERPOrders(String uniqueCombo, AcctSeedERP__Material__c objMaterial )
     {
-      if(mapRetailSold.containsKey(uniqueCombo))
-          mapRetailSold.put(uniqueCombo, mapRetailSold.get(uniqueCombo) + 1);
-      else
-          mapRetailSold.put(uniqueCombo, 1);
-
-      Map<String, String> pData = new Map<String, String>();
-      pData.put('Id', objMaterial.AcctSeedERP__Project__c );
-      pData.put('AccountName', objMaterial.AcctSeedERP__Project__r.AcctSeed__Account__r.Name);
-      pData.put('Name', objMaterial.AcctSeedERP__Project__r.AcctSeedERP__Work_Order_Number__c );
-      pData.put('idSerial', objMaterial.AcctSeedERP__Project__r.Serial_Number__c );
-      pData.put('serialName', objMaterial.AcctSeedERP__Project__r.Serial_Number__r.Name );
-      pData.put('Stage', objMaterial.AcctSeedERP__Project__r.Stage__c);
-      pData.put('CreatedDate', objMaterial.AcctSeedERP__Project__r.CreatedDate.format('MMM d, yyyy') );
-      pData.put('DeliveryDate', objMaterial.AcctSeedERP__Project__r.Delivery_Date__c != null ? objMaterial.AcctSeedERP__Project__r.Delivery_Date__c.format('MMM d, yyyy') : '');
-      pData.put('type', 'retailERP');
-
-      if( !hoverOverRetailSoldDetails.containsKey( uniqueCombo ) )
-          hoverOverRetailSoldDetails.put( uniqueCombo, new Map<String, List< Map<String,String>>>() );
-
-      if( !hoverOverRetailSoldDetails.get( uniqueCombo ).containsKey('ERP Orders') )
-          hoverOverRetailSoldDetails.get( uniqueCombo ).put( 'ERP Orders', new List<Map<String,String>>() );
-
-      hoverOverRetailSoldDetails.get( uniqueCombo ).get( 'ERP Orders' ).add( pData );
-    }
-
-    private void addToRetailOppOrders(String uniqueCombo, Opportunity objOpportunity )
-    {
-      if(mapRetailSold.containsKey(uniqueCombo))
-          mapRetailSold.put(uniqueCombo, mapRetailSold.get(uniqueCombo) + 1);
-      else
-          mapRetailSold.put(uniqueCombo, 1);
-
-      Map<String, String> pData = new Map<String, String>();
-      pData.put('Id', objOpportunity.Id );
-      pData.put('Name', objOpportunity.Name );
-      pData.put('AccountName', objOpportunity.Account.Name);
-      pData.put('Stage', objOpportunity.StageName);
-      pData.put('CreatedDate', objOpportunity.CreatedDate.format('MMM d, yyyy') );
-      pData.put('DeliveryDate', objOpportunity.Delivery_Date__c != null ? objOpportunity.Delivery_Date__c.format('MMM d, yyyy') : '');
-      pData.put('type', 'opportunity');
-
-      if( !hoverOverRetailSoldDetails.containsKey( uniqueCombo ) )
-          hoverOverRetailSoldDetails.put( uniqueCombo, new Map<String, List< Map<String,String>>>() );
-
-      if( !hoverOverRetailSoldDetails.get( uniqueCombo ).containsKey('Opportunities') )
-          hoverOverRetailSoldDetails.get( uniqueCombo ).put( 'Opportunities', new List<Map<String,String>>() );
-
-      hoverOverRetailSoldDetails.get( uniqueCombo ).get( 'Opportunities' ).add( pData );
-    }
-
-    private void buildWholeSaleERPOrders_Old()
-    {
-      this.mapERPRetailWholeSale = new Map<String, Integer>();
-      this.hoverOverWholeSaleERP = new Map<String, Map<String, List<Map<String,String>>>>();
-      Id idWarehouseWholesale = GMBLASERP__Inventory_Settings__c.getOrgDefaults().Wholesale_Warehouse_Id__c;
-      Set<Id> rts = new Set<Id>{ erpPartnerBoatSaleRtId, erpRetailBoatSaleRtId };
-      for( AcctSeedERP__Material__c objMaterial : [ SELECT Id,
-                                                       AcctSeedERP__Product__c,
-                                                       AcctSeedERP__Product__r.Name,
-                                                       AcctSeedERP__Product__r.RecordType.Name,
-                                                       GMBLASERP__Lot__c,
-                                                       GMBLASERP__Lot__r.Name,
-                                                       AcctSeedERP__Project__r.AcctSeed__Account__r.Name,
-                                                       AcctSeedERP__Project__r.AcctSeedERP__Work_Order_Number__c,
-                                                       AcctSeedERP__Project__r.Stage__c,
-                                                       AcctSeedERP__Project__r.CreatedDate,
-                                                       AcctSeedERP__Project__r.Delivery_Date__c,
-                                                       AcctSeedERP__Project__r.BoatModelYear__c,
-                                                       AcctSeedERP__Project__r.TrailerModelYear__c,
-                                                       AcctSeedERP__Project__r.Serial_Number__c,
-                                                       AcctSeedERP__Project__r.Serial_Number__r.Name
-                                                FROM AcctSeedERP__Material__c
-                                                WHERE AcctSeedERP__Project__r.RecordTypeId =:erpPartnerBoatSaleRtId
-                                                AND AcctSeedERP__Project__r.Stage__c NOT IN ('Draft','Quoting','Delivered','Closed Lost')
-                                                AND AcctSeedERP__Project__r.GMBLASERP__Warehouse__c =:idWarehouseWholesale
-                                                AND AcctSeedERP__Project__r.AcctSeed__Account__r.Warehouse__c =:this.filterWarehouse
-                                                AND GMBLASERP__Serial_Number__c = null
-                                                AND AcctSeedERP__Product__c != null
-                                                AND AcctSeedERP__Project__r.Locked__c = false] )
-      {
-        String uniqueCombo = getUniqueComboProject(objMaterial,objMaterial.AcctSeedERP__Product__r.RecordType.Name);
-        populateMapValues(objMaterial.AcctSeedERP__Product__c, uniqueCombo);
-        uniqueCombo = objMaterial.AcctSeedERP__Product__c + ( uniqueCombo == '' ? '' : ('-' + uniqueCombo) );
-        if(mapShipmentERP.containsKey(uniqueCombo) && mapShipmentERP.get(uniqueCombo).contains(objMaterial.AcctSeedERP__Project__c)) continue;
-        if(mapERPRetailWholeSale.containsKey(uniqueCombo))
-            mapERPRetailWholeSale.put(uniqueCombo, mapERPRetailWholeSale.get(uniqueCombo) + 1);
+        if(mapRetailSold.containsKey(uniqueCombo))
+            mapRetailSold.put(uniqueCombo, mapRetailSold.get(uniqueCombo) + 1);
         else
-            mapERPRetailWholeSale.put(uniqueCombo, 1);
+            mapRetailSold.put(uniqueCombo, 1);
 
         Map<String, String> pData = new Map<String, String>();
         pData.put('Id', objMaterial.AcctSeedERP__Project__c );
@@ -446,66 +362,150 @@ public without sharing class InventoryAllocationController {
         pData.put('DeliveryDate', objMaterial.AcctSeedERP__Project__r.Delivery_Date__c != null ? objMaterial.AcctSeedERP__Project__r.Delivery_Date__c.format('MMM d, yyyy') : '');
         pData.put('type', 'retailERP');
 
-        if( !hoverOverWholeSaleERP.containsKey( uniqueCombo ) )
-            hoverOverWholeSaleERP.put( uniqueCombo, new Map<String, List< Map<String,String>>>() );
+        if( !hoverOverRetailSoldDetails.containsKey( uniqueCombo ) )
+            hoverOverRetailSoldDetails.put( uniqueCombo, new Map<String, List< Map<String,String>>>() );
 
-        if( !hoverOverWholeSaleERP.get( uniqueCombo ).containsKey('ERP Orders') )
-            hoverOverWholeSaleERP.get( uniqueCombo ).put( 'ERP Orders', new List<Map<String,String>>() );
+        if( !hoverOverRetailSoldDetails.get( uniqueCombo ).containsKey('ERP Orders') )
+            hoverOverRetailSoldDetails.get( uniqueCombo ).put( 'ERP Orders', new List<Map<String,String>>() );
 
-        hoverOverWholeSaleERP.get( uniqueCombo ).get( 'ERP Orders' ).add( pData );
-      }
+        hoverOverRetailSoldDetails.get( uniqueCombo ).get( 'ERP Orders' ).add( pData );
+    }
+
+    private void addToRetailOppOrders(String uniqueCombo, Opportunity objOpportunity )
+    {
+        if(mapRetailSold.containsKey(uniqueCombo))
+            mapRetailSold.put(uniqueCombo, mapRetailSold.get(uniqueCombo) + 1);
+        else
+            mapRetailSold.put(uniqueCombo, 1);
+
+        Map<String, String> pData = new Map<String, String>();
+        pData.put('Id', objOpportunity.Id );
+        pData.put('Name', objOpportunity.Name );
+        pData.put('AccountName', objOpportunity.Account.Name);
+        pData.put('Stage', objOpportunity.StageName);
+        pData.put('CreatedDate', objOpportunity.CreatedDate.format('MMM d, yyyy') );
+        pData.put('DeliveryDate', objOpportunity.Delivery_Date__c != null ? objOpportunity.Delivery_Date__c.format('MMM d, yyyy') : '');
+        pData.put('type', 'opportunity');
+
+        if( !hoverOverRetailSoldDetails.containsKey( uniqueCombo ) )
+            hoverOverRetailSoldDetails.put( uniqueCombo, new Map<String, List< Map<String,String>>>() );
+
+        if( !hoverOverRetailSoldDetails.get( uniqueCombo ).containsKey('Opportunities') )
+            hoverOverRetailSoldDetails.get( uniqueCombo ).put( 'Opportunities', new List<Map<String,String>>() );
+
+        hoverOverRetailSoldDetails.get( uniqueCombo ).get( 'Opportunities' ).add( pData );
+    }
+
+    private void buildWholeSaleERPOrders_Old()
+    {
+        this.mapERPRetailWholeSale = new Map<String, Integer>();
+        this.hoverOverWholeSaleERP = new Map<String, Map<String, List<Map<String,String>>>>();
+        Id idWarehouseWholesale = GMBLASERP__Inventory_Settings__c.getOrgDefaults().Wholesale_Warehouse_Id__c;
+        Set<Id> rts = new Set<Id>{ erpPartnerBoatSaleRtId, erpRetailBoatSaleRtId };
+        for( AcctSeedERP__Material__c objMaterial : [ SELECT Id,
+            AcctSeedERP__Product__c,
+            AcctSeedERP__Product__r.Name,
+            AcctSeedERP__Product__r.RecordType.Name,
+            GMBLASERP__Lot__c,
+            GMBLASERP__Lot__r.Name,
+            AcctSeedERP__Project__r.AcctSeed__Account__r.Name,
+            AcctSeedERP__Project__r.AcctSeedERP__Work_Order_Number__c,
+            AcctSeedERP__Project__r.Stage__c,
+            AcctSeedERP__Project__r.CreatedDate,
+            AcctSeedERP__Project__r.Delivery_Date__c,
+            AcctSeedERP__Project__r.BoatModelYear__c,
+            AcctSeedERP__Project__r.TrailerModelYear__c,
+            AcctSeedERP__Project__r.Serial_Number__c,
+            AcctSeedERP__Project__r.Serial_Number__r.Name
+        FROM AcctSeedERP__Material__c
+        WHERE AcctSeedERP__Project__r.RecordTypeId =:erpPartnerBoatSaleRtId
+        AND AcctSeedERP__Project__r.Stage__c NOT IN ('Draft','Quoting','Delivered','Closed Lost')
+        AND AcctSeedERP__Project__r.GMBLASERP__Warehouse__c =:idWarehouseWholesale
+        AND AcctSeedERP__Project__r.AcctSeed__Account__r.Warehouse__c =:this.filterWarehouse
+        AND GMBLASERP__Serial_Number__c = null
+        AND AcctSeedERP__Product__c != null
+        AND AcctSeedERP__Project__r.Locked__c = false] )
+        {
+            String uniqueCombo = getUniqueComboProject(objMaterial,objMaterial.AcctSeedERP__Product__r.RecordType.Name);
+            populateMapValues(objMaterial.AcctSeedERP__Product__c, uniqueCombo);
+            uniqueCombo = objMaterial.AcctSeedERP__Product__c + ( uniqueCombo == '' ? '' : ('-' + uniqueCombo) );
+            if(mapShipmentERP.containsKey(uniqueCombo) && mapShipmentERP.get(uniqueCombo).contains(objMaterial.AcctSeedERP__Project__c)) continue;
+            if(mapERPRetailWholeSale.containsKey(uniqueCombo))
+                mapERPRetailWholeSale.put(uniqueCombo, mapERPRetailWholeSale.get(uniqueCombo) + 1);
+            else
+                mapERPRetailWholeSale.put(uniqueCombo, 1);
+
+            Map<String, String> pData = new Map<String, String>();
+            pData.put('Id', objMaterial.AcctSeedERP__Project__c );
+            pData.put('AccountName', objMaterial.AcctSeedERP__Project__r.AcctSeed__Account__r.Name);
+            pData.put('Name', objMaterial.AcctSeedERP__Project__r.AcctSeedERP__Work_Order_Number__c );
+            pData.put('idSerial', objMaterial.AcctSeedERP__Project__r.Serial_Number__c );
+            pData.put('serialName', objMaterial.AcctSeedERP__Project__r.Serial_Number__r.Name );
+            pData.put('Stage', objMaterial.AcctSeedERP__Project__r.Stage__c);
+            pData.put('CreatedDate', objMaterial.AcctSeedERP__Project__r.CreatedDate.format('MMM d, yyyy') );
+            pData.put('DeliveryDate', objMaterial.AcctSeedERP__Project__r.Delivery_Date__c != null ? objMaterial.AcctSeedERP__Project__r.Delivery_Date__c.format('MMM d, yyyy') : '');
+            pData.put('type', 'retailERP');
+
+            if( !hoverOverWholeSaleERP.containsKey( uniqueCombo ) )
+                hoverOverWholeSaleERP.put( uniqueCombo, new Map<String, List< Map<String,String>>>() );
+
+            if( !hoverOverWholeSaleERP.get( uniqueCombo ).containsKey('ERP Orders') )
+                hoverOverWholeSaleERP.get( uniqueCombo ).put( 'ERP Orders', new List<Map<String,String>>() );
+
+            hoverOverWholeSaleERP.get( uniqueCombo ).get( 'ERP Orders' ).add( pData );
+        }
     }
 
     private void buildWholeSaleERPOrders()
     {
-      this.mapERPRetailWholeSale = new Map<String, Integer>();
-      this.hoverOverWholeSaleERP = new Map<String, Map<String, List<Map<String,String>>>>();
-      Id idWarehouseWholesale = GMBLASERP__Inventory_Settings__c.getOrgDefaults().Wholesale_Warehouse_Id__c;
-      Set<Id> rts = new Set<Id>{ erpPartnerBoatSaleRtId, erpRetailBoatSaleRtId };
-      for( AcctSeedERP__Material__c objMaterial : [ SELECT Id, Name,
-                                                       AcctSeedERP__Product__c,
-                                                       AcctSeedERP__Product__r.Name,
-                                                       AcctSeedERP__Product__r.RecordType.Name,
-                                                       GMBLASERP__Lot__c,
-                                                       GMBLASERP__Lot__r.Name,
-                                                       GMBLASERP__Serial_Number__c,
-                                                       GMBLASERP__Serial_Number__r.Name,
-                                                       AcctSeedERP__Project__r.AcctSeed__Account__r.Name,
-                                                       AcctSeedERP__Project__r.AcctSeedERP__Work_Order_Number__c,
-                                                       AcctSeedERP__Project__r.AcctSeed__Status__c,
-                                                       AcctSeedERP__Project__r.Stage__c,
-                                                       AcctSeedERP__Project__r.CreatedDate,
-                                                       AcctSeedERP__Project__r.Delivery_Date__c,
-                                                       AcctSeedERP__Project__r.BoatModelYear__c,
-                                                       AcctSeedERP__Project__r.TrailerModelYear__c,
-                                                       AcctSeedERP__Project__r.Serial_Number__c,
-                                                       AcctSeedERP__Project__r.Serial_Number__r.Name
-                                                FROM AcctSeedERP__Material__c
-                                                WHERE AcctSeedERP__Project__r.RecordTypeId =:erpPartnerBoatSaleRtId
-                                                AND AcctSeedERP__Project__r.Stage__c NOT IN ('Draft','Quoting','Delivered','Closed Lost')
-                                                AND AcctSeedERP__Project__r.GMBLASERP__Warehouse__c =:idWarehouseWholesale
-                                                AND AcctSeedERP__Project__r.AcctSeed__Account__r.Warehouse__c =:this.filterWarehouse
-                                                AND AcctSeedERP__Product__c != null
-                                                AND AcctSeedERP__Product__r.RecordType.Name =:this.filterType
-                                                AND AcctSeedERP__Project__r.Locked__c = false] )
-      {
-        // This line is commented out to load all serials even if there are no serials. From Dave to Rubel on 8/Feb/2019
-        // if(objMaterial.AcctSeedERP__Product__r.RecordType.Name == 'Boat' && objMaterial.GMBLASERP__Serial_Number__c == null) continue;
-        if(objMaterial.AcctSeedERP__Product__r.RecordType.Name != 'Boat' && objMaterial.AcctSeedERP__Project__r.AcctSeed__Status__c == 'Completed') continue;
-        String uniqueCombo = getUniqueComboProject(objMaterial,objMaterial.AcctSeedERP__Product__r.RecordType.Name);
-        populateMapValues(objMaterial.AcctSeedERP__Product__c, uniqueCombo);
-        uniqueCombo = objMaterial.AcctSeedERP__Product__c + ( uniqueCombo == '' ? '' : ('-' + uniqueCombo) );
-        if(mapShipmentERP.containsKey(uniqueCombo) && mapShipmentERP.get(uniqueCombo).contains(objMaterial.AcctSeedERP__Project__c)) continue;
-        Shipment shipmnt = new Shipment(objMaterial);
-        List<Shipment> shipments = new List<Shipment>();
-        if(this.mapShipments.containsKey(uniqueCombo))
-          shipments = this.mapShipments.get(uniqueCombo);
-        else
-          this.mapShipments.put(uniqueCombo,shipments);
+        this.mapERPRetailWholeSale = new Map<String, Integer>();
+        this.hoverOverWholeSaleERP = new Map<String, Map<String, List<Map<String,String>>>>();
+        Id idWarehouseWholesale = GMBLASERP__Inventory_Settings__c.getOrgDefaults().Wholesale_Warehouse_Id__c;
+        Set<Id> rts = new Set<Id>{ erpPartnerBoatSaleRtId, erpRetailBoatSaleRtId };
+        for( AcctSeedERP__Material__c objMaterial : [ SELECT Id, Name,
+            AcctSeedERP__Product__c,
+            AcctSeedERP__Product__r.Name,
+            AcctSeedERP__Product__r.RecordType.Name,
+            GMBLASERP__Lot__c,
+            GMBLASERP__Lot__r.Name,
+            GMBLASERP__Serial_Number__c,
+            GMBLASERP__Serial_Number__r.Name,
+            AcctSeedERP__Project__r.AcctSeed__Account__r.Name,
+            AcctSeedERP__Project__r.AcctSeedERP__Work_Order_Number__c,
+            AcctSeedERP__Project__r.AcctSeed__Status__c,
+            AcctSeedERP__Project__r.Stage__c,
+            AcctSeedERP__Project__r.CreatedDate,
+            AcctSeedERP__Project__r.Delivery_Date__c,
+            AcctSeedERP__Project__r.BoatModelYear__c,
+            AcctSeedERP__Project__r.TrailerModelYear__c,
+            AcctSeedERP__Project__r.Serial_Number__c,
+            AcctSeedERP__Project__r.Serial_Number__r.Name
+        FROM AcctSeedERP__Material__c
+        WHERE AcctSeedERP__Project__r.RecordTypeId =:erpPartnerBoatSaleRtId
+        AND AcctSeedERP__Project__r.Stage__c NOT IN ('Draft','Quoting','Delivered','Closed Lost')
+        AND AcctSeedERP__Project__r.GMBLASERP__Warehouse__c =:idWarehouseWholesale
+        AND AcctSeedERP__Project__r.AcctSeed__Account__r.Warehouse__c =:this.filterWarehouse
+        AND AcctSeedERP__Product__c != null
+        AND AcctSeedERP__Product__r.RecordType.Name =:this.filterType
+        AND AcctSeedERP__Project__r.Locked__c = false] )
+        {
+            // This line is commented out to load all serials even if there are no serials. From Dave to Rubel on 8/Feb/2019
+            // if(objMaterial.AcctSeedERP__Product__r.RecordType.Name == 'Boat' && objMaterial.GMBLASERP__Serial_Number__c == null) continue;
+            if(objMaterial.AcctSeedERP__Product__r.RecordType.Name != 'Boat' && objMaterial.AcctSeedERP__Project__r.AcctSeed__Status__c == 'Completed') continue;
+            String uniqueCombo = getUniqueComboProject(objMaterial,objMaterial.AcctSeedERP__Product__r.RecordType.Name);
+            populateMapValues(objMaterial.AcctSeedERP__Product__c, uniqueCombo);
+            uniqueCombo = objMaterial.AcctSeedERP__Product__c + ( uniqueCombo == '' ? '' : ('-' + uniqueCombo) );
+            if(mapShipmentERP.containsKey(uniqueCombo) && mapShipmentERP.get(uniqueCombo).contains(objMaterial.AcctSeedERP__Project__c)) continue;
+            Shipment shipmnt = new Shipment(objMaterial);
+            List<Shipment> shipments = new List<Shipment>();
+            if(this.mapShipments.containsKey(uniqueCombo))
+                shipments = this.mapShipments.get(uniqueCombo);
+            else
+                this.mapShipments.put(uniqueCombo,shipments);
 
-        shipments.add(shipmnt);
-      }
-      System.debug(loggingLevel.error,'this.mapShipments:'+this.mapShipments);
+            shipments.add(shipmnt);
+        }
+        System.debug(loggingLevel.error,'this.mapShipments:'+this.mapShipments);
     }
 
     private void buildMapShipments()
@@ -516,42 +516,42 @@ public without sharing class InventoryAllocationController {
         if(this.filterType != 'Boat') return;
         String queryShip;
         if(this.filterType != 'Boat'){
-          queryShip = this.queryShipments + ' AND AcctSeedERP__Purchase_Order__r.Warehouse__c =:filterWarehouse AND AcctSeedERP__Product__c IN:allProducts order by deliverDate__c';
-          //queryShip = this.queryShipments + ' AND AcctSeedERP__Purchase_Order__r.Warehouse__c =:filterWarehouse AND AcctSeedERP__Product__c IN:allProducts AND AcctSeedERP__Quantity_Unreceived__c > 0 order by deliverDate__c';
+            queryShip = this.queryShipments + ' AND AcctSeedERP__Purchase_Order__r.Warehouse__c =:filterWarehouse AND AcctSeedERP__Product__c IN:allProducts order by deliverDate__c';
+            //queryShip = this.queryShipments + ' AND AcctSeedERP__Purchase_Order__r.Warehouse__c =:filterWarehouse AND AcctSeedERP__Product__c IN:allProducts AND AcctSeedERP__Quantity_Unreceived__c > 0 order by deliverDate__c';
         }else{
-          queryShip = this.queryShipments + ' AND AcctSeedERP__Project__c != null AND AcctSeedERP__Project__r.Stage__c NOT IN (\'Delivered\',\'Quoting\',\'Closed Lost\',\'Draft\') AND (AcctSeedERP__Project__r.GMBLASERP__Warehouse__c =:filterWarehouse OR AcctSeedERP__Project__r.AcctSeed__Account__r.Warehouse__c =:filterWarehouse) order by deliverDate__c';
+            queryShip = this.queryShipments + ' AND AcctSeedERP__Project__c != null AND AcctSeedERP__Project__r.Stage__c NOT IN (\'Delivered\',\'Quoting\',\'Closed Lost\',\'Draft\') AND (AcctSeedERP__Project__r.GMBLASERP__Warehouse__c =:filterWarehouse OR AcctSeedERP__Project__r.AcctSeed__Account__r.Warehouse__c =:filterWarehouse) order by deliverDate__c';
         }
         System.debug(loggingLevel.error,'queryShip:'+queryShip);
         for (AcctSeedERP__Purchase_Order_Line__c orderLine : Database.query(queryShip))
         {
-          System.debug(loggingLevel.error,'orderLine:'+orderLine.AcctSeedERP__Project__r.ERP_Serial_In_Inventory__c);
-          if(this.filterType == 'Boat'
-            && orderLine.AcctSeedERP__Project__c != null
-            && orderLine.AcctSeedERP__Project__r.Serial_Number__c != null
-            && !orderLine.AcctSeedERP__Project__r.ERP_Serial_In_Inventory__c){
-              System.debug(loggingLevel.error,'Quit From POL');
-              continue;
+            System.debug(loggingLevel.error,'orderLine:'+orderLine.AcctSeedERP__Project__r.ERP_Serial_In_Inventory__c);
+            if(this.filterType == 'Boat'
+                && orderLine.AcctSeedERP__Project__c != null
+                && orderLine.AcctSeedERP__Project__r.Serial_Number__c != null
+                && !orderLine.AcctSeedERP__Project__r.ERP_Serial_In_Inventory__c){
+                System.debug(loggingLevel.error,'Quit From POL');
+                continue;
             }
-          List<Shipment> shipments = new List<Shipment>();
-          Shipment shipmnt = new Shipment(orderLine);
-          System.debug(loggingLevel.error,'shipmnt:'+shipmnt);
-          String k = orderLine.AcctSeedERP__Product__c;
-          if(this.filterType == 'Boat')
-            k = orderLine.AcctSeedERP__Product__c + '-' + orderLine.GMBLASERP__Lot__r.Name;
+            List<Shipment> shipments = new List<Shipment>();
+            Shipment shipmnt = new Shipment(orderLine);
+            System.debug(loggingLevel.error,'shipmnt:'+shipmnt);
+            String k = orderLine.AcctSeedERP__Product__c;
+            if(this.filterType == 'Boat')
+                k = orderLine.AcctSeedERP__Product__c + '-' + orderLine.GMBLASERP__Lot__r.Name;
 
-          if (this.mapShipments.get(k) != null){
-              shipments = mapShipments.get(k);
-          }
+            if (this.mapShipments.get(k) != null){
+                shipments = mapShipments.get(k);
+            }
 
-          if(orderLine.AcctSeedERP__Project__c != null){
-            this.setIdERP.add(orderLine.AcctSeedERP__Project__c);
-            if(!mapShipmentERP.containsKey(k))
-              mapShipmentERP.put(k, new Set<Id>());
-            mapShipmentERP.get(k).add(orderLine.AcctSeedERP__Project__c);
-          }
+            if(orderLine.AcctSeedERP__Project__c != null){
+                this.setIdERP.add(orderLine.AcctSeedERP__Project__c);
+                if(!mapShipmentERP.containsKey(k))
+                    mapShipmentERP.put(k, new Set<Id>());
+                mapShipmentERP.get(k).add(orderLine.AcctSeedERP__Project__c);
+            }
 
-          shipments.add(shipmnt);
-          this.mapShipments.put(k,shipments);
+            shipments.add(shipmnt);
+            this.mapShipments.put(k,shipments);
         }
 
         System.debug(loggingLevel.error,'this.setIdERP:'+this.setIdERP);
@@ -563,9 +563,9 @@ public without sharing class InventoryAllocationController {
         this.listLotNames = new Set<String>();
         String lotQuery = ' SELECT Id, GMBLASERP__Product__c, Name FROM GMBLASERP__Lot__c WHERE GMBLASERP__Product__r.RecordType.Name =:filterType ';
         if(this.filterYear != 'All'){
-          listFilterYear = new List<String>();
-          listFilterYear = this.filterYear.split(',');
-          lotQuery += ' AND Name IN:listFilterYear ';
+            listFilterYear = new List<String>();
+            listFilterYear = this.filterYear.split(',');
+            lotQuery += ' AND Name IN:listFilterYear ';
         }
         List<String> lotNames = new List<String>();
         for (GMBLASERP__Lot__c objLot : Database.query(lotQuery))
@@ -574,8 +574,8 @@ public without sharing class InventoryAllocationController {
             lotNames.add(objLot.Name);
         }
         if(!lotNames.isEmpty()){
-          lotNames.sort();
-          listLotNames.addAll(lotNames);
+            lotNames.sort();
+            listLotNames.addAll(lotNames);
         }
         System.debug(loggingLevel.error,'filterType:'+filterType);
         System.debug(loggingLevel.error,'listLotNames:'+listLotNames);
@@ -584,8 +584,8 @@ public without sharing class InventoryAllocationController {
 
     private void buildMapStock()
     {
-      this.allSerials = new Set<ID>();
-      //if(this.filterType != 'Boat')
+        this.allSerials = new Set<ID>();
+        //if(this.filterType != 'Boat')
         //this.allProducts = new Set<ID>();
         //this.listLotNames = new Set<String>();
 
@@ -596,13 +596,13 @@ public without sharing class InventoryAllocationController {
 
         for (GMBLASERP__Serial_Number__c objSerialNumber : Database.query(this.generateDateQuery()))
         {
-          if(this.filterType != 'Boat')
-            allProducts.add(objSerialNumber.GMBLASERP__Product__c);
+            if(this.filterType != 'Boat')
+                allProducts.add(objSerialNumber.GMBLASERP__Product__c);
             //lotNames.add(objSerialNumber.GMBLASERP__Lot__r.Name);
             String k = objSerialNumber.GMBLASERP__Product__c;
             if(this.filterType == 'Boat'){
-              k = objSerialNumber.GMBLASERP__Product__c + '-' + objSerialNumber.GMBLASERP__Lot__r.name;
-              allSerials.add(objSerialNumber.Id);
+                k = objSerialNumber.GMBLASERP__Product__c + '-' + objSerialNumber.GMBLASERP__Lot__r.name;
+                allSerials.add(objSerialNumber.Id);
             }
             if(mapStock.containsKey(k)){
                 mapStock.put(k, mapStock.get(k) + 1);
@@ -610,18 +610,18 @@ public without sharing class InventoryAllocationController {
                 mapStock.put(k, 1);
             }
             if(this.filterType == 'Boat'){
-              if(mapProductIdToSetYear.containsKey(objSerialNumber.GMBLASERP__Product__c)){
-                 mapProductIdToSetYear.get(objSerialNumber.GMBLASERP__Product__c).add(objSerialNumber.GMBLASERP__Lot__r.name);
+                if(mapProductIdToSetYear.containsKey(objSerialNumber.GMBLASERP__Product__c)){
+                    mapProductIdToSetYear.get(objSerialNumber.GMBLASERP__Product__c).add(objSerialNumber.GMBLASERP__Lot__r.name);
 
-              }else{
-                      mapProductIdToSetYear.put(objSerialNumber.GMBLASERP__Product__c, new Set<String>{objSerialNumber.GMBLASERP__Lot__r.name});
+                }else{
+                    mapProductIdToSetYear.put(objSerialNumber.GMBLASERP__Product__c, new Set<String>{objSerialNumber.GMBLASERP__Lot__r.name});
 
-              }
-          }
-          if(!mapInventoryList.containsKey(k))
-            mapInventoryList.put(k,new List<SerialNumber>());
+                }
+            }
+            if(!mapInventoryList.containsKey(k))
+                mapInventoryList.put(k,new List<SerialNumber>());
 
-          mapInventoryList.get(k).add(new SerialNumber(objSerialNumber));
+            mapInventoryList.get(k).add(new SerialNumber(objSerialNumber));
         }
         //if(!lotNames.isEmpty()){
         //  lotNames.sort();
@@ -650,11 +650,11 @@ public without sharing class InventoryAllocationController {
 
         for (GMBLASERP__Serial_Number__c ser: Database.query(query)) {
             if(ser.location__c != null && ser.GMBLASERP__Product__c != null) {
-              String k = ser.GMBLASERP__Product__c + '-' + ser.location__c;
-              if(this.filterType == 'Boat'){
-                k = ser.GMBLASERP__Product__c + '-' + ser.location__c + '-' + ser.GMBLASERP__Lot__r.name;
-                allSerials.add(ser.Id);
-              }
+                String k = ser.GMBLASERP__Product__c + '-' + ser.location__c;
+                if(this.filterType == 'Boat'){
+                    k = ser.GMBLASERP__Product__c + '-' + ser.location__c + '-' + ser.GMBLASERP__Lot__r.name;
+                    allSerials.add(ser.Id);
+                }
 
                 if(mapProdLocations.get(k) != null) {
                     mapProdLocations.put(k, mapProdLocations.get(k)+1);
@@ -671,35 +671,35 @@ public without sharing class InventoryAllocationController {
         this.mapSpecialDamages = new map<String,Integer>();
         this.mapSpecialDamagesList = new map<String,List<SerialNumber>>();
         for(GMBLASERP__Serial_Number__c objSerialNumber :
-            [SELECT Id,
-              Name,
-              Current_Unit_Cost__c,
-              GMBLASERP__Product__c,
-              GMBLASERP__Product__r.Name,
-              Status__c,
-              Model_Year__c,
-              GMBLASERP__Lot__r.Name,
-              Nest__c,
-              Nest__r.Name,
-              (SELECT Id,
-                Name,
-                Current_Unit_Cost__c,
-                GMBLASERP__Product__c,
-                GMBLASERP__Product__r.Name,
-                Status__c,
-                Model_Year__c,
-                GMBLASERP__Lot__r.Name,
-                Nest__c,
-                Nest__r.Name
-              FROM Nested_Serial_Numbers__r)
-            FROM GMBLASERP__Serial_Number__c
-            WHERE Available_Retail__c = true
-              AND GMBLASERP__Inventory_Balance__r.AcctSeedERP__Warehouse__c =:this.filterWarehouse]){
+        [SELECT Id,
+            Name,
+            Current_Unit_Cost__c,
+            GMBLASERP__Product__c,
+            GMBLASERP__Product__r.Name,
+            Status__c,
+            Model_Year__c,
+            GMBLASERP__Lot__r.Name,
+            Nest__c,
+            Nest__r.Name,
+        (SELECT Id,
+            Name,
+            Current_Unit_Cost__c,
+            GMBLASERP__Product__c,
+            GMBLASERP__Product__r.Name,
+            Status__c,
+            Model_Year__c,
+            GMBLASERP__Lot__r.Name,
+            Nest__c,
+            Nest__r.Name
+        FROM Nested_Serial_Numbers__r)
+        FROM GMBLASERP__Serial_Number__c
+        WHERE Available_Retail__c = true
+        AND GMBLASERP__Inventory_Balance__r.AcctSeedERP__Warehouse__c =:this.filterWarehouse]){
 
             String uniqueCombo = objSerialNumber.GMBLASERP__Product__c + '-' + objSerialNumber.Status__c;
             if(this.filterType == 'Boat'){
-              uniqueCombo = objSerialNumber.GMBLASERP__Product__c + '-' + objSerialNumber.Status__c + '-' + objSerialNumber.GMBLASERP__Lot__r.Name;
-              allSerials.add(objSerialNumber.Id);
+                uniqueCombo = objSerialNumber.GMBLASERP__Product__c + '-' + objSerialNumber.Status__c + '-' + objSerialNumber.GMBLASERP__Lot__r.Name;
+                allSerials.add(objSerialNumber.Id);
             }
             if(mapSpecialDamages.containsKey(uniqueCombo)){
                 mapSpecialDamages.put(uniqueCombo, mapSpecialDamages.get(uniqueCombo) + 1);
@@ -707,7 +707,7 @@ public without sharing class InventoryAllocationController {
                 mapSpecialDamages.put(uniqueCombo, 1);
             }
             if(!mapSpecialDamagesList.containsKey(uniqueCombo))
-              mapSpecialDamagesList.put(uniqueCombo,new List<SerialNumber>());
+                mapSpecialDamagesList.put(uniqueCombo,new List<SerialNumber>());
 
             mapSpecialDamagesList.get(uniqueCombo).add(new SerialNumber(objSerialNumber));
         }
@@ -722,9 +722,9 @@ public without sharing class InventoryAllocationController {
         numberOfSpecials = 0;
 
         for (ProductLotReservation__c proLot : [SELECT Id,Product__c,Lot__r.Name, Reserved_For_Retail_Sale__c, Reserved_for_Display__c From ProductLotReservation__c]) {
-          String k = proLot.Product__c;
-          if(proLot.Lot__r.Name != null)
-            k = proLot.Product__c + '-' + proLot.Lot__r.Name;
+            String k = proLot.Product__c;
+            if(proLot.Lot__r.Name != null)
+                k = proLot.Product__c + '-' + proLot.Lot__r.Name;
             if(mapProdLot.containsKey(proLot.Product__c + '-' + proLot.Lot__r.Name)){
                 ProductLotReservation__c objProductLot = mapProdLot.get(proLot.Product__c + '-' + proLot.Lot__r.Name);
                 objProductLot.Reserved_For_Retail_Sale__c = (objProductLot.Reserved_For_Retail_Sale__c == null?0:objProductLot.Reserved_For_Retail_Sale__c) + (proLot.Reserved_For_Retail_Sale__c == null?0:proLot.Reserved_For_Retail_Sale__c);
@@ -740,8 +740,8 @@ public without sharing class InventoryAllocationController {
             if('All' == this.filterYear || this.filterType != 'Boat') {
                 if(mapProductIdToSetYear.containsKey(pro.Id) && this.filterType == 'Boat'){
                     for(String yearName : mapProductIdToSetYear.get(pro.Id)){
-                      if(yearName != null && yearName != '')
-                        initialiseProductList(yearName,pro);
+                        if(yearName != null && yearName != '')
+                            initialiseProductList(yearName,pro);
                     }
                 }else if(this.filterType != 'Boat'){
                     initialiseProductList('',pro);
@@ -749,26 +749,26 @@ public without sharing class InventoryAllocationController {
                 }
             }else if(this.filterType == 'Boat'){
                 for(String fy : listFilterYear)
-                  initialiseProductList(fy,pro);
+                    initialiseProductList(fy,pro);
             }
         }
     }
 
     private void initialiseProductList(String yearSelected, Product2 pro)
     {
-      String yearSection = '-' + yearSelected;
-      if(this.filterType != 'Boat')
-        yearSection = '';
+        String yearSection = '-' + yearSelected;
+        if(this.filterType != 'Boat')
+            yearSection = '';
 
         Inventory inv = new Inventory(pro);
         inv.inStock = (mapStock.containsKey(pro.Id + yearSection)?mapStock.get(pro.Id + yearSection):0);
         if(mapInventoryList.containsKey(pro.Id + yearSection)){
-          if(this.allCanvas != null)
-          for(SerialNumber sn : mapInventoryList.get(pro.Id + yearSection)){
-            if(this.allCanvas.containsKey(sn.serialID))
-              sn.listCanvas = this.allCanvas.get(sn.serialID);
-          }
-          inv.stockDetails = JSON.serialize(new Map<String,List<SerialNumber>>{pro.Name => mapInventoryList.get(pro.Id + yearSection)});
+            if(this.allCanvas != null)
+                for(SerialNumber sn : mapInventoryList.get(pro.Id + yearSection)){
+                    if(this.allCanvas.containsKey(sn.serialID))
+                        sn.listCanvas = this.allCanvas.get(sn.serialID);
+                }
+            inv.stockDetails = JSON.serialize(new Map<String,List<SerialNumber>>{pro.Name => mapInventoryList.get(pro.Id + yearSection)});
         }
 
         inv.reservedForDisplayed =  (mapProdLot.get(pro.Id + yearSection) != null && mapProdLot.get(pro.Id + yearSection).Reserved_for_Display__c != null?Integer.valueOf(mapProdLot.get(pro.Id + yearSection).Reserved_for_Display__c):0);
@@ -776,89 +776,89 @@ public without sharing class InventoryAllocationController {
         //System.debug(loggingLevel.error,'Found:'+pro.Id);
         Boolean shipmentAvailable = false;
         if (this.mapShipments.get(pro.Id + yearSection) != null) {
-          System.debug(loggingLevel.error,'Found:'+this.mapShipments.get(pro.Id + yearSection));
+            System.debug(loggingLevel.error,'Found:'+this.mapShipments.get(pro.Id + yearSection));
             //inv.shipments = this.mapShipments.get(pro.Id + yearSection);
             List<Shipment> lstShip = new List<Shipment>();
             lstShip = this.mapShipments.get(pro.Id + yearSection);
             Map<Date,Shipment> mapShipment = new Map<Date,Shipment>();
             for(Shipment sh : lstShip)
             {
-              if(!mapShipment.containsKey(sh.deliverDate)){
-                Map<String,List<ErpOrderObj>> dssh = new Map<String,List<ErpOrderObj>>();
-                if(sh.erpOrder != null)
-                  dssh = (Map<String,List<ErpOrderObj>>)JSON.deserialize(sh.erpOrder, Map<String,List<ErpOrderObj>>.class);
-                  System.debug(loggingLevel.error,'dssh:'+dssh);
-                  for(String k : dssh.keySet()){
-                    for(ErpOrderObj erp : dssh.get(k)){
-                      if(this.mapERPMaterial.containsKey(erp.erpId))
-                        System.debug(loggingLevel.error,'erp:'+erp);
-                        erp.erpMaterials = this.mapERPMaterial.get(erp.erpId);
-                        System.debug(loggingLevel.error,'erp.erpMaterials:'+erp.erpMaterials);
+                if(!mapShipment.containsKey(sh.deliverDate)){
+                    Map<String,List<ErpOrderObj>> dssh = new Map<String,List<ErpOrderObj>>();
+                    if(sh.erpOrder != null)
+                        dssh = (Map<String,List<ErpOrderObj>>)JSON.deserialize(sh.erpOrder, Map<String,List<ErpOrderObj>>.class);
+                    System.debug(loggingLevel.error,'dssh:'+dssh);
+                    for(String k : dssh.keySet()){
+                        for(ErpOrderObj erp : dssh.get(k)){
+                            if(this.mapERPMaterial.containsKey(erp.erpId))
+                                System.debug(loggingLevel.error,'erp:'+erp);
+                            erp.erpMaterials = this.mapERPMaterial.get(erp.erpId);
+                            System.debug(loggingLevel.error,'erp.erpMaterials:'+erp.erpMaterials);
+                        }
                     }
-                  }
-                  sh.erpOrder = JSON.serialize(dssh);
-                  System.debug(loggingLevel.error,'sh.erpOrder:'+sh.erpOrder);
-                mapShipment.put(sh.deliverDate,sh);
+                    sh.erpOrder = JSON.serialize(dssh);
+                    System.debug(loggingLevel.error,'sh.erpOrder:'+sh.erpOrder);
+                    mapShipment.put(sh.deliverDate,sh);
 
-              }else{
-                Shipment sh2 = mapShipment.get(sh.deliverDate);
-                sh2.quantity += sh.quantity;
-                sh2.orders += sh.orders;
-                sh2.available_retail = sh.available_retail;
-                Map<String,List<ErpOrderObj>> ds = new Map<String,List<ErpOrderObj>>();
-                Map<String,List<ErpOrderObj>> ds2 = new Map<String,List<ErpOrderObj>>();
-                if(sh.erpOrder != null || sh2.erpOrder != null){
-                  if(sh.erpOrder != null)
-                    ds = (Map<String,List<ErpOrderObj>>)JSON.deserialize(sh.erpOrder, Map<String,List<ErpOrderObj>>.class);
-                  if(sh2.erpOrder != null)
-                    ds2 = (Map<String,List<ErpOrderObj>>)JSON.deserialize(sh2.erpOrder, Map<String,List<ErpOrderObj>>.class);
+                }else{
+                    Shipment sh2 = mapShipment.get(sh.deliverDate);
+                    sh2.quantity += sh.quantity;
+                    sh2.orders += sh.orders;
+                    sh2.available_retail = sh.available_retail;
+                    Map<String,List<ErpOrderObj>> ds = new Map<String,List<ErpOrderObj>>();
+                    Map<String,List<ErpOrderObj>> ds2 = new Map<String,List<ErpOrderObj>>();
+                    if(sh.erpOrder != null || sh2.erpOrder != null){
+                        if(sh.erpOrder != null)
+                            ds = (Map<String,List<ErpOrderObj>>)JSON.deserialize(sh.erpOrder, Map<String,List<ErpOrderObj>>.class);
+                        if(sh2.erpOrder != null)
+                            ds2 = (Map<String,List<ErpOrderObj>>)JSON.deserialize(sh2.erpOrder, Map<String,List<ErpOrderObj>>.class);
 
-                  if(!ds.isEmpty())
-                  for(String k : ds.keySet()){
-                    if(ds2.containsKey(k))
-                      ds2.get(k).addAll(ds.get(k));
-                    else
-                      ds2.put(k,ds.get(k));
-                  }
-                  
-                  for(String k : ds2.keySet()){
-                    System.debug(loggingLevel.error,'ds2:'+ds2);
-                    for(ErpOrderObj erp : ds2.get(k)){
-                      if(this.mapERPMaterial.containsKey(erp.erpId))
-                        erp.erpMaterials = this.mapERPMaterial.get(erp.erpId);
+                        if(!ds.isEmpty())
+                            for(String k : ds.keySet()){
+                                if(ds2.containsKey(k))
+                                    ds2.get(k).addAll(ds.get(k));
+                                else
+                                    ds2.put(k,ds.get(k));
+                            }
+
+                        for(String k : ds2.keySet()){
+                            System.debug(loggingLevel.error,'ds2:'+ds2);
+                            for(ErpOrderObj erp : ds2.get(k)){
+                                if(this.mapERPMaterial.containsKey(erp.erpId))
+                                    erp.erpMaterials = this.mapERPMaterial.get(erp.erpId);
+                            }
+                        }
+
+                        sh2.erpOrder = JSON.serialize(ds2);
                     }
-                  }
 
-                  sh2.erpOrder = JSON.serialize(ds2);
+                    Map<String,List<ErpOrderObj>> ds3 = new Map<String,List<ErpOrderObj>>();
+                    Map<String,List<ErpOrderObj>> ds4 = new Map<String,List<ErpOrderObj>>();
+                    if(sh.soldErpOrder != null || sh2.soldErpOrder != null){
+                        if(sh.soldErpOrder != null)
+                            ds3 = (Map<String,List<ErpOrderObj>>)JSON.deserialize(sh.soldErpOrder, Map<String,List<ErpOrderObj>>.class);
+                        if(sh2.soldErpOrder != null)
+                            ds4 = (Map<String,List<ErpOrderObj>>)JSON.deserialize(sh2.soldErpOrder, Map<String,List<ErpOrderObj>>.class);
+
+                        if(!ds3.isEmpty())
+                            for(String k : ds3.keySet()){
+                                if(ds4.containsKey(k))
+                                    ds4.get(k).addAll(ds3.get(k));
+                                else
+                                    ds4.put(k,ds3.get(k));
+                            }
+
+                        for(String k : ds4.keySet()){
+                            System.debug(loggingLevel.error,'ds4:'+ds4);
+                            for(ErpOrderObj erp : ds4.get(k)){
+                                if(this.mapERPMaterial.containsKey(erp.erpId))
+                                    erp.erpMaterials = this.mapERPMaterial.get(erp.erpId);
+                            }
+                        }
+
+                        sh2.soldErpOrder = JSON.serialize(ds4);
+                    }
                 }
-
-                Map<String,List<ErpOrderObj>> ds3 = new Map<String,List<ErpOrderObj>>();
-                Map<String,List<ErpOrderObj>> ds4 = new Map<String,List<ErpOrderObj>>();
-                if(sh.soldErpOrder != null || sh2.soldErpOrder != null){
-                  if(sh.soldErpOrder != null)
-                    ds3 = (Map<String,List<ErpOrderObj>>)JSON.deserialize(sh.soldErpOrder, Map<String,List<ErpOrderObj>>.class);
-                  if(sh2.soldErpOrder != null)
-                    ds4 = (Map<String,List<ErpOrderObj>>)JSON.deserialize(sh2.soldErpOrder, Map<String,List<ErpOrderObj>>.class);
-
-                  if(!ds3.isEmpty())
-                  for(String k : ds3.keySet()){
-                    if(ds4.containsKey(k))
-                      ds4.get(k).addAll(ds3.get(k));
-                    else
-                      ds4.put(k,ds3.get(k));
-                  }
-
-                  for(String k : ds4.keySet()){
-                    System.debug(loggingLevel.error,'ds4:'+ds4);
-                    for(ErpOrderObj erp : ds4.get(k)){
-                      if(this.mapERPMaterial.containsKey(erp.erpId))
-                        erp.erpMaterials = this.mapERPMaterial.get(erp.erpId);
-                    }
-                  }
-
-                  sh2.soldErpOrder = JSON.serialize(ds4);
-                }
-              }
             }
             inv.shipments = mapShipment.values();
             inv.existNextShipments = true;
@@ -871,29 +871,29 @@ public without sharing class InventoryAllocationController {
 
         String damageKey =pro.Id + '-' + 'To Be Repaired' + yearSection;
         if (this.mapSpecialDamages.get(damageKey) != null) {
-           inv.damages = this.mapSpecialDamages.get(damageKey);
-           inv.showDamages = true;
-           numberOfDamages = this.mapSpecialDamages.get(damageKey);
-           inv.damagesDetails = JSON.serialize(new Map<String,List<SerialNumber>>{pro.Name => mapSpecialDamagesList.get(damageKey)});
-           System.debug(loggingLevel.error,'inv.damagesDetails:'+inv.damagesDetails);
+            inv.damages = this.mapSpecialDamages.get(damageKey);
+            inv.showDamages = true;
+            numberOfDamages = this.mapSpecialDamages.get(damageKey);
+            inv.damagesDetails = JSON.serialize(new Map<String,List<SerialNumber>>{pro.Name => mapSpecialDamagesList.get(damageKey)});
+            System.debug(loggingLevel.error,'inv.damagesDetails:'+inv.damagesDetails);
         }
 
         String demoKey =pro.Id + '-' + 'Demo' + yearSection;
         if (this.mapSpecialDamages.get(demoKey) != null) {
-           inv.demos = this.mapSpecialDamages.get(demoKey);
-           inv.showDemos = true;
-           numberOfDemos = this.mapSpecialDamages.get(demoKey);
-           inv.demosDetails = JSON.serialize(new Map<String,List<SerialNumber>>{pro.Name => mapSpecialDamagesList.get(demoKey)});
-           System.debug(loggingLevel.error,'inv.demosDetails:'+inv.demosDetails);
+            inv.demos = this.mapSpecialDamages.get(demoKey);
+            inv.showDemos = true;
+            numberOfDemos = this.mapSpecialDamages.get(demoKey);
+            inv.demosDetails = JSON.serialize(new Map<String,List<SerialNumber>>{pro.Name => mapSpecialDamagesList.get(demoKey)});
+            System.debug(loggingLevel.error,'inv.demosDetails:'+inv.demosDetails);
         }
 
         String usedKey =pro.Id + '-' + 'Used' + yearSection;
         if (this.mapSpecialDamages.get(usedKey) != null) {
-           inv.useds = this.mapSpecialDamages.get(usedKey);
-           inv.showUsed = true;
-           numberOfUsed = this.mapSpecialDamages.get(usedKey);
-           inv.usedsDetails = JSON.serialize(new Map<String,List<SerialNumber>>{pro.Name => mapSpecialDamagesList.get(usedKey)});
-           System.debug(loggingLevel.error,'inv.usedsDetails:'+inv.usedsDetails);
+            inv.useds = this.mapSpecialDamages.get(usedKey);
+            inv.showUsed = true;
+            numberOfUsed = this.mapSpecialDamages.get(usedKey);
+            inv.usedsDetails = JSON.serialize(new Map<String,List<SerialNumber>>{pro.Name => mapSpecialDamagesList.get(usedKey)});
+            System.debug(loggingLevel.error,'inv.usedsDetails:'+inv.usedsDetails);
         }
 
         String specialsListKey =pro.Id + '-' + 'Specials List' + yearSection;
@@ -920,7 +920,7 @@ public without sharing class InventoryAllocationController {
             inv.dealerOrderDetails = JSON.serialize( hoverOverDealerOrderDetails.get(pro.Id + yearSection) );
 
         if( hoverOverRetailSoldDetails.get(pro.Id + yearSection) != null )
-          inv.retailSoldDetails = JSON.serialize( hoverOverRetailSoldDetails.get(pro.Id + yearSection) );
+            inv.retailSoldDetails = JSON.serialize( hoverOverRetailSoldDetails.get(pro.Id + yearSection) );
 
         //if(mapERPRetailWholeSale.containsKey(pro.Id + yearSection))
         //  inv.wholesaleNonPOL = mapERPRetailWholeSale.get(pro.Id + yearSection);
@@ -941,17 +941,17 @@ public without sharing class InventoryAllocationController {
         else if(this.filterType == 'Boat')
             inv.productName = pro.Name + ' / ' + yearSelected;
         else
-          inv.productName = pro.Name;
+            inv.productName = pro.Name;
 
         inv.lotName = this.filterType == 'Boat' ? yearSelected : '';
 
 
         if (! yearSelected.contains('-'))
         {
-          if(this.filterType == 'Boat' && (inv.availabeForRetail <> 0 || inv.retailSold <> 0  || inv.specials <> 0 || inv.useds <> 0 || inv.damages <> 0 || inv.inStock <> 0 || inv.demos <> 0))
-           this.inventory.add(inv);
-          else if(this.filterType != 'Boat' && (inv.availabeForRetail <> 0 || inv.existNextShipments))
-            this.inventory.add(inv);
+            if(this.filterType == 'Boat' && (inv.availabeForRetail <> 0 || inv.retailSold <> 0  || inv.specials <> 0 || inv.useds <> 0 || inv.damages <> 0 || inv.inStock <> 0 || inv.demos <> 0))
+                this.inventory.add(inv);
+            else if(this.filterType != 'Boat' && (inv.availabeForRetail <> 0 || inv.existNextShipments))
+                this.inventory.add(inv);
         }
     }
 
@@ -984,12 +984,12 @@ public without sharing class InventoryAllocationController {
         if('All' == this.filterYear) {
             returnDateQuery = this.queryInv;
         } else if(this.filterType == 'Boat'){
-          if(listFilterYear == null){
-            listFilterYear = new List<String>();
-            listFilterYear = this.filterYear.split(',');
-          }
-          returnDateQuery = this.queryInv + ' AND GMBLASERP__Lot__r.name IN:listFilterYear ';
-          entroAlWhere = true;
+            if(listFilterYear == null){
+                listFilterYear = new List<String>();
+                listFilterYear = this.filterYear.split(',');
+            }
+            returnDateQuery = this.queryInv + ' AND GMBLASERP__Lot__r.name IN:listFilterYear ';
+            entroAlWhere = true;
         }else{
             returnDateQuery = this.queryInv;
             entroAlWhere = true;
@@ -1016,10 +1016,10 @@ public without sharing class InventoryAllocationController {
         }
         String uniquifier = productID + '-' + lotVal;
         List<ProductLotReservation__c> lstProductLotReservation = [select Id,
-                                                                          Reserved_For_Retail_Sale__c
-                                                                   from ProductLotReservation__c
-                                                                   where Product__c =: productID
-                                                                   and Lot__r.GMBLASERP__Uniquefier__c =: uniquifier];
+            Reserved_For_Retail_Sale__c
+        from ProductLotReservation__c
+        where Product__c =: productID
+        and Lot__r.GMBLASERP__Uniquefier__c =: uniquifier];
         //String lotId;
         //for(GMBLASERP__Lot__c objLot : [select Id from GMBLASERP__Lot__c where Name =: lotVal]){
         //    lotId = objLot.Id;
@@ -1027,8 +1027,8 @@ public without sharing class InventoryAllocationController {
         GMBLASERP__Lot__c lot;
         try {
             lot = [select Id
-                   from GMBLASERP__Lot__c
-                   where GMBLASERP__Uniquefier__c = :uniquifier];
+            from GMBLASERP__Lot__c
+            where GMBLASERP__Uniquefier__c = :uniquifier];
         }
         catch(Exception e)
         {
@@ -1052,7 +1052,13 @@ public without sharing class InventoryAllocationController {
 
     @RemoteAction
     public static Map<String,List<Inventory>> retrieveWholeSaleData(List<String> listIdProduct, String lotName){
-        List<String> listLotName = new List<String>();
+        System.debug('lotName');
+        System.debug(lotName);
+        String[] listLotName;
+        if(lotName != null)
+            listLotName = lotName.split(':');
+        System.debug('listLotName');
+        System.debug(listLotName);
         Set<String> setProducts = new Set<String>();
         setProducts.addAll(listIdProduct);
         Map<String,Integer> whMapStock = new Map<String,Integer>();
@@ -1060,113 +1066,122 @@ public without sharing class InventoryAllocationController {
         Map<String,Integer> whMapSpecialDamages = new Map<String,Integer>();
         Map<String,List<SerialNumber>> whMapSpecialDamagesList = new Map<String,List<SerialNumber>>();
         Id idWarehouseWholesale = GMBLASERP__Inventory_Settings__c.getOrgDefaults().Wholesale_Warehouse_Id__c;
+        Map<Id,Set<String>> mapListLot = new Map<Id,Set<String>>();
         for (GMBLASERP__Serial_Number__c objSerialNumber :
-              [SELECT Id,
-                  Name,
-                  Current_Unit_Cost__c,
-                  GMBLASERP__Product__c,
-                  GMBLASERP__Product__r.Name,
-                  GMBLASERP__Product__r.RecordType.Name,
-                  Model_Year__c,
-                  Status__c,
-                  GMBLASERP__Lot__c,
-                  GMBLASERP__Lot__r.Name,
-                  Nest__c,
-                  Nest__r.Name,
-                  (SELECT Id,
-                    Name,
-                    Current_Unit_Cost__c,
-                    GMBLASERP__Product__c,
-                    GMBLASERP__Product__r.Name,
-                    Status__c,
-                    Model_Year__c,
-                    GMBLASERP__Lot__r.Name,
-                    Nest__c,
-                    Nest__r.Name
-                  FROM Nested_Serial_Numbers__r)
-                FROM GMBLASERP__Serial_Number__c
-                WHERE Available_Wholesale__c = true
-                  AND GMBLASERP__Lot__r.Name =:lotName
-                  AND GMBLASERP__Product__c IN:setProducts
-                  AND GMBLASERP__Inventory_Balance__r.AcctSeedERP__Warehouse__c =:idWarehouseWholesale])
+        [SELECT Id,
+            Name,
+            Current_Unit_Cost__c,
+            GMBLASERP__Product__c,
+            GMBLASERP__Product__r.Name,
+            GMBLASERP__Product__r.RecordType.Name,
+            Model_Year__c,
+            Status__c,
+            GMBLASERP__Lot__c,
+            GMBLASERP__Lot__r.Name,
+            Nest__c,
+            Nest__r.Name,
+        (SELECT Id,
+            Name,
+            Current_Unit_Cost__c,
+            GMBLASERP__Product__c,
+            GMBLASERP__Product__r.Name,
+            Status__c,
+            Model_Year__c,
+            GMBLASERP__Lot__r.Name,
+            Nest__c,
+            Nest__r.Name
+        FROM Nested_Serial_Numbers__r)
+        FROM GMBLASERP__Serial_Number__c
+        WHERE Available_Wholesale__c = true
+        AND GMBLASERP__Lot__r.Name IN:listLotName
+        AND GMBLASERP__Product__c IN:setProducts
+        AND GMBLASERP__Inventory_Balance__r.AcctSeedERP__Warehouse__c =:idWarehouseWholesale])
         {
-          String flType = objSerialNumber.GMBLASERP__Product__r.RecordType.Name;
-          String k = objSerialNumber.GMBLASERP__Product__c;
-          if(flType == 'Boat')
-            k = objSerialNumber.GMBLASERP__Product__c + '-' + objSerialNumber.GMBLASERP__Lot__r.Name;
-          if(whMapStock.containsKey(k)){
-              whMapStock.put(k, whMapStock.get(k) + 1);
-          }else{
-              whMapStock.put(k, 1);
-          }
-          if(flType == 'Boat'){
-            if(whMapProductIdToSetYear.containsKey(objSerialNumber.GMBLASERP__Product__c)){
-               whMapProductIdToSetYear.get(objSerialNumber.GMBLASERP__Product__c).add(objSerialNumber.GMBLASERP__Lot__r.Name);
-            }else{
-              whMapProductIdToSetYear.put(objSerialNumber.GMBLASERP__Product__c, new Set<String>{objSerialNumber.GMBLASERP__Lot__r.Name});
+            String flType = objSerialNumber.GMBLASERP__Product__r.RecordType.Name;
+            String k = objSerialNumber.GMBLASERP__Product__c;
+            if(!mapListLot.containsKey(objSerialNumber.GMBLASERP__Product__c)){
+                mapListLot.put(objSerialNumber.GMBLASERP__Product__c,new Set<String>());
             }
-          }
-          /// Specials List
-          String uniqueCombo = objSerialNumber.GMBLASERP__Product__c + '-' + objSerialNumber.Status__c;
-          if(flType == 'Boat')
-            uniqueCombo = objSerialNumber.GMBLASERP__Product__c + '-' + objSerialNumber.Status__c + '-' + objSerialNumber.GMBLASERP__Lot__r.Name;
-          if(whMapSpecialDamages.containsKey(uniqueCombo)){
-              whMapSpecialDamages.put(uniqueCombo, whMapSpecialDamages.get(uniqueCombo) + 1);
-          }else{
-              whMapSpecialDamages.put(uniqueCombo, 1);
-          }
-          if(!whMapSpecialDamagesList.containsKey(uniqueCombo))
-            whMapSpecialDamagesList.put(uniqueCombo,new List<SerialNumber>());
+            mapListLot.get(objSerialNumber.GMBLASERP__Product__c).add(objSerialNumber.GMBLASERP__Lot__r.Name);
+            if(flType == 'Boat')
+                k = objSerialNumber.GMBLASERP__Product__c + '-' + objSerialNumber.GMBLASERP__Lot__r.Name;
+            if(whMapStock.containsKey(k)){
+                whMapStock.put(k, whMapStock.get(k) + 1);
+            }else{
+                whMapStock.put(k, 1);
+            }
+            if(flType == 'Boat'){
+                if(whMapProductIdToSetYear.containsKey(objSerialNumber.GMBLASERP__Product__c)){
+                    whMapProductIdToSetYear.get(objSerialNumber.GMBLASERP__Product__c).add(objSerialNumber.GMBLASERP__Lot__r.Name);
+                }else{
+                    whMapProductIdToSetYear.put(objSerialNumber.GMBLASERP__Product__c, new Set<String>{objSerialNumber.GMBLASERP__Lot__r.Name});
+                }
+            }
+            /// Specials List
+            String uniqueCombo = objSerialNumber.GMBLASERP__Product__c + '-' + objSerialNumber.Status__c;
+            if(flType == 'Boat')
+                uniqueCombo = objSerialNumber.GMBLASERP__Product__c + '-' + objSerialNumber.Status__c + '-' + objSerialNumber.GMBLASERP__Lot__r.Name;
+            if(whMapSpecialDamages.containsKey(uniqueCombo)){
+                whMapSpecialDamages.put(uniqueCombo, whMapSpecialDamages.get(uniqueCombo) + 1);
+            }else{
+                whMapSpecialDamages.put(uniqueCombo, 1);
+            }
+            if(!whMapSpecialDamagesList.containsKey(uniqueCombo))
+                whMapSpecialDamagesList.put(uniqueCombo,new List<SerialNumber>());
 
-          whMapSpecialDamagesList.get(uniqueCombo).add(new SerialNumber(objSerialNumber));
+            whMapSpecialDamagesList.get(uniqueCombo).add(new SerialNumber(objSerialNumber));
         }
         Map<String,List<Shipment>> whMapShipments = new Map<String,List<Shipment>>();
         for (AcctSeedERP__Purchase_Order_Line__c orderLine :
-              [SELECT Id,
-                Name,
-                AcctSeedERP__Quantity__c,
-                AcctSeedERP__Quantity_Unreceived__c,
-                Reserved__c,
-                deliverDate__c,
-                AcctSeedERP__Product__c,
-                AcctSeedERP__Product__r.RecordType.Name,
-                AcctSeedERP__Purchase_Order__r.Estimated_Time_of_Arrival_ETA__c,
-                GMBLASERP__Lot__r.Name,
-                AcctSeedERP__Project__c,
-                AcctSeedERP__Project__r.Retail_ERP__c,
-                AcctSeedERP__Project__r.Retail_ERP__r.AcctSeedERP__Work_Order_Number__c,
-                AcctSeedERP__Project__r.Retail_ERP__r.ERP_Serial_In_Inventory__c,
-                AcctSeedERP__Project__r.Retail_ERP__r.AcctSeed__Account__r.Name,
-                AcctSeedERP__Project__r.Retail_ERP__r.Serial_Number__c,
-                AcctSeedERP__Project__r.Retail_ERP__r.Serial_Number__r.Name,
-                AcctSeedERP__Project__r.Retail_ERP__r.Stage__c,
-                AcctSeedERP__Project__r.Retail_ERP__r.CreatedDate,
-                AcctSeedERP__Project__r.Retail_ERP__r.Delivery_Date__c,
-                AcctSeedERP__Project__r.Name,
-                AcctSeedERP__Project__r.AcctSeed__Account__c,
-                AcctSeedERP__Project__r.AcctSeed__Account__r.Name,
-                AcctSeedERP__Project__r.AcctSeedERP__Work_Order_Number__c,
-                AcctSeedERP__Project__r.Stage__c,
-                AcctSeedERP__Project__r.CreatedDate,
-                AcctSeedERP__Project__r.Delivery_Date__c,
-                AcctSeedERP__Project__r.BoatModelYear__c,
-                AcctSeedERP__Project__r.TrailerModelYear__c,
-                AcctSeedERP__Project__r.Serial_Number__c,
-                AcctSeedERP__Project__r.Serial_Number__r.Name,
-                AcctSeedERP__Project__r.ERP_Serial_In_Inventory__c
-              FROM AcctSeedERP__Purchase_Order_Line__c
-              WHERE (AcctSeedERP__Purchase_Order__r.Estimated_Time_of_Arrival_ETA__c != null OR deliverDate__c != null)
-                AND AcctSeedERP__Quantity_Unreceived__c > 0
-                AND ( (AcctSeedERP__Project__c != null
-                       AND
-                       AcctSeedERP__Project__r.GMBLASERP__Warehouse__c =:idWarehouseWholesale )
-                      OR (AcctSeedERP__Project__c = null
-                          AND (AcctSeedERP__Purchase_Order__r.Warehouse__c = null
-                               OR AcctSeedERP__Purchase_Order__r.Warehouse__c =:idWarehouseWholesale)))
-                    AND AcctSeedERP__Product__c IN: setProducts
-                    AND GMBLASERP__Lot__r.Name =:lotName
-              ORDER BY deliverDate__c])
+        [SELECT Id,
+            Name,
+            AcctSeedERP__Quantity__c,
+            AcctSeedERP__Quantity_Unreceived__c,
+            Reserved__c,
+            deliverDate__c,
+            AcctSeedERP__Product__c,
+            AcctSeedERP__Product__r.RecordType.Name,
+            AcctSeedERP__Purchase_Order__r.Estimated_Time_of_Arrival_ETA__c,
+            GMBLASERP__Lot__r.Name,
+            AcctSeedERP__Project__c,
+            AcctSeedERP__Project__r.Retail_ERP__c,
+            AcctSeedERP__Project__r.Retail_ERP__r.AcctSeedERP__Work_Order_Number__c,
+            AcctSeedERP__Project__r.Retail_ERP__r.ERP_Serial_In_Inventory__c,
+            AcctSeedERP__Project__r.Retail_ERP__r.AcctSeed__Account__r.Name,
+            AcctSeedERP__Project__r.Retail_ERP__r.Serial_Number__c,
+            AcctSeedERP__Project__r.Retail_ERP__r.Serial_Number__r.Name,
+            AcctSeedERP__Project__r.Retail_ERP__r.Stage__c,
+            AcctSeedERP__Project__r.Retail_ERP__r.CreatedDate,
+            AcctSeedERP__Project__r.Retail_ERP__r.Delivery_Date__c,
+            AcctSeedERP__Project__r.Name,
+            AcctSeedERP__Project__r.AcctSeed__Account__c,
+            AcctSeedERP__Project__r.AcctSeed__Account__r.Name,
+            AcctSeedERP__Project__r.AcctSeedERP__Work_Order_Number__c,
+            AcctSeedERP__Project__r.Stage__c,
+            AcctSeedERP__Project__r.CreatedDate,
+            AcctSeedERP__Project__r.Delivery_Date__c,
+            AcctSeedERP__Project__r.BoatModelYear__c,
+            AcctSeedERP__Project__r.TrailerModelYear__c,
+            AcctSeedERP__Project__r.Serial_Number__c,
+            AcctSeedERP__Project__r.Serial_Number__r.Name,
+            AcctSeedERP__Project__r.ERP_Serial_In_Inventory__c
+        FROM AcctSeedERP__Purchase_Order_Line__c
+        WHERE (AcctSeedERP__Purchase_Order__r.Estimated_Time_of_Arrival_ETA__c != null OR deliverDate__c != null)
+        AND AcctSeedERP__Quantity_Unreceived__c > 0
+        AND ( (AcctSeedERP__Project__c != null
+        AND
+        AcctSeedERP__Project__r.GMBLASERP__Warehouse__c =:idWarehouseWholesale )
+        OR (AcctSeedERP__Project__c = null
+        AND (AcctSeedERP__Purchase_Order__r.Warehouse__c = null
+        OR AcctSeedERP__Purchase_Order__r.Warehouse__c =:idWarehouseWholesale)))
+        AND AcctSeedERP__Product__c IN: setProducts
+        AND GMBLASERP__Lot__r.Name IN:listLotName
+        ORDER BY deliverDate__c])
         {
+            if(!mapListLot.containsKey(orderLine.AcctSeedERP__Product__c)){
+                mapListLot.put(orderLine.AcctSeedERP__Product__c,new Set<String>());
+            }
+            mapListLot.get(orderLine.AcctSeedERP__Product__c).add(orderLine.GMBLASERP__Lot__r.Name);
             List<Shipment> shipments = new List<Shipment>();
             Integer x;
             if(Integer.valueOf(orderLine.Reserved__c)!=null)
@@ -1195,109 +1210,119 @@ public without sharing class InventoryAllocationController {
         Map<String,Integer> whMapDealerOrders = new Map<String,Integer>();
         Set<Id> rts = new Set<Id>{ gcConstants.idRtProjectPartnerBoatSale, gcConstants.idRtProjectBoatSale };
         for( AcctSeedERP__Material__c mat : [ SELECT Id,
-                                                     AcctSeedERP__Product__c,
-                                                     AcctSeedERP__Product__r.Name,
-                                                     AcctSeedERP__Product__r.RecordType.Name,
-                                                     GMBLASERP__Lot__c,
-                                                     GMBLASERP__Lot__r.Name,
-                                                     AcctSeedERP__Project__r.AcctSeed__Account__r.Name,
-                                                     AcctSeedERP__Project__r.AcctSeedERP__Work_Order_Number__c,
-                                                     AcctSeedERP__Project__r.Stage__c,
-                                                     AcctSeedERP__Project__r.CreatedDate,
-                                                     AcctSeedERP__Project__r.Delivery_Date__c,
-                                                     AcctSeedERP__Project__r.BoatModelYear__c,
-                                                     AcctSeedERP__Project__r.TrailerModelYear__c,
-                                                     AcctSeedERP__Project__r.Serial_Number__c,
-                                                     AcctSeedERP__Project__r.Serial_Number__r.Name
-                                              FROM AcctSeedERP__Material__c
-                                              WHERE AcctSeedERP__Project__r.Stage__c NOT IN ('Draft','Quoting','Delivered','Closed Lost')
-                                              AND AcctSeedERP__Project__r.RecordTypeId =:gcConstants.idRtProjectPartnerBoatSale
-                                              AND GMBLASERP__Serial_Number__c = null
-                                              AND AcctSeedERP__Product__c != null ] )
+            AcctSeedERP__Product__c,
+            AcctSeedERP__Product__r.Name,
+            AcctSeedERP__Product__r.RecordType.Name,
+            GMBLASERP__Lot__c,
+            GMBLASERP__Lot__r.Name,
+            AcctSeedERP__Project__r.AcctSeed__Account__r.Name,
+            AcctSeedERP__Project__r.AcctSeedERP__Work_Order_Number__c,
+            AcctSeedERP__Project__r.Stage__c,
+            AcctSeedERP__Project__r.CreatedDate,
+            AcctSeedERP__Project__r.Delivery_Date__c,
+            AcctSeedERP__Project__r.BoatModelYear__c,
+            AcctSeedERP__Project__r.TrailerModelYear__c,
+            AcctSeedERP__Project__r.Serial_Number__c,
+            AcctSeedERP__Project__r.Serial_Number__r.Name
+        FROM AcctSeedERP__Material__c
+        WHERE AcctSeedERP__Project__r.Stage__c NOT IN ('Draft','Quoting','Delivered','Closed Lost')
+        AND AcctSeedERP__Project__r.RecordTypeId =:gcConstants.idRtProjectPartnerBoatSale
+        AND GMBLASERP__Serial_Number__c = null
+        AND AcctSeedERP__Product__c != null ] )
         {
-          String flType = mat.AcctSeedERP__Product__r.RecordType.Name;
-          String uniqueCombo = '';
-          if( flType == 'Boat' )
-          {
-              uniqueCombo = mat.GMBLASERP__Lot__c != null && mat.GMBLASERP__Lot__r.Name != '' ?
-                  mat.GMBLASERP__Lot__r.Name :
-                  mat.AcctSeedERP__Project__r.BoatModelYear__c != null ?
-                      mat.AcctSeedERP__Project__r.BoatModelYear__c :
-                      '';
-          }
-          if( flType == 'Trailer' )
-          {
-              uniqueCombo = mat.GMBLASERP__Lot__c != null && mat.GMBLASERP__Lot__r.Name != '' ?
-                  mat.GMBLASERP__Lot__r.Name :
-                  mat.AcctSeedERP__Project__r.TrailerModelYear__c != null ?
-                      mat.AcctSeedERP__Project__r.TrailerModelYear__c :
-                      '';
-          }
+            if(!mapListLot.containsKey(mat.AcctSeedERP__Product__c)){
+                mapListLot.put(mat.AcctSeedERP__Product__c,new Set<String>());
+            }
+            mapListLot.get(mat.AcctSeedERP__Product__c).add(mat.GMBLASERP__Lot__r.Name);
+            String flType = mat.AcctSeedERP__Product__r.RecordType.Name;
+            String uniqueCombo = '';
+            if( flType == 'Boat' )
+            {
+                uniqueCombo = mat.GMBLASERP__Lot__c != null && mat.GMBLASERP__Lot__r.Name != '' ?
+                    mat.GMBLASERP__Lot__r.Name :
+                    mat.AcctSeedERP__Project__r.BoatModelYear__c != null ?
+                        mat.AcctSeedERP__Project__r.BoatModelYear__c :
+                        '';
+            }
+            if( flType == 'Trailer' )
+            {
+                uniqueCombo = mat.GMBLASERP__Lot__c != null && mat.GMBLASERP__Lot__r.Name != '' ?
+                    mat.GMBLASERP__Lot__r.Name :
+                    mat.AcctSeedERP__Project__r.TrailerModelYear__c != null ?
+                        mat.AcctSeedERP__Project__r.TrailerModelYear__c :
+                        '';
+            }
 
-          if(whMapProductIdToSetYear.containsKey(mat.AcctSeedERP__Product__c)){
-              whMapProductIdToSetYear.get(mat.AcctSeedERP__Product__c).add(uniqueCombo);
-          }else{
-              whMapProductIdToSetYear.put(mat.AcctSeedERP__Product__c, new Set<String>{uniqueCombo});
-          }
+            if(whMapProductIdToSetYear.containsKey(mat.AcctSeedERP__Product__c)){
+                whMapProductIdToSetYear.get(mat.AcctSeedERP__Product__c).add(uniqueCombo);
+            }else{
+                whMapProductIdToSetYear.put(mat.AcctSeedERP__Product__c, new Set<String>{uniqueCombo});
+            }
 
-          uniqueCombo = mat.AcctSeedERP__Product__c + ( uniqueCombo == '' ? '' : ('-' + uniqueCombo) );
-          if(whMapDealerOrders.containsKey(uniqueCombo))
-            whMapDealerOrders.put(uniqueCombo, whMapDealerOrders.get(uniqueCombo) + 1);
-          else
-            whMapDealerOrders.put(uniqueCombo, 1);
+            uniqueCombo = mat.AcctSeedERP__Product__c + ( uniqueCombo == '' ? '' : ('-' + uniqueCombo) );
+            if(whMapDealerOrders.containsKey(uniqueCombo))
+                whMapDealerOrders.put(uniqueCombo, whMapDealerOrders.get(uniqueCombo) + 1);
+            else
+                whMapDealerOrders.put(uniqueCombo, 1);
         }
 
         /// Inventory Line
         List<Inventory> whInventory = new List<Inventory>();
         Integer numberOfDamages = 0;
         Integer numberOfSpecials = 0;
+        System.debug('mapListLot');
+        System.debug(mapListLot);
         for (Product2 pro : [SELECT Id, Name, RecordType.Name From Product2 WHERE Id IN:setProducts]) {
-          String yearSection = '-' + lotName;
-          if(pro.RecordType.Name != 'Boat')
-            yearSection = '';
+            System.debug(pro.Id);
+            if(mapListLot.get(pro.Id) != null)
+            for(String ln : mapListLot.get(pro.Id)) {
+                String yearSection = '-' + ln;
+                if (pro.RecordType.Name != 'Boat')
+                    yearSection = '';
 
-            Inventory inv = new Inventory(pro);
-            inv.inStock = (whMapStock.containsKey(pro.Id + yearSection)?whMapStock.get(pro.Id + yearSection):0);
-            if (whMapShipments.get(pro.Id + yearSection) != null) {
-                inv.shipments = whMapShipments.get(pro.Id + yearSection);
-                inv.existNextShipments = true;
-            }
-            if(inv.reservedForDisplayed == null)
-                inv.reservedForDisplayed = 0;
+                Inventory inv = new Inventory(pro);
+                inv.inStock = (whMapStock.containsKey(pro.Id + yearSection) ? whMapStock.get(pro.Id + yearSection) : 0);
+                if (whMapShipments.get(pro.Id + yearSection) != null) {
+                    inv.shipments = whMapShipments.get(pro.Id + yearSection);
+                    inv.existNextShipments = true;
+                }
+                if (inv.reservedForDisplayed == null)
+                    inv.reservedForDisplayed = 0;
 
-            String damageKey =pro.Id + '-' + 'To Be Repaired' + yearSection;
-            if (whMapSpecialDamages.get(damageKey) != null) {
-               inv.damages = whMapSpecialDamages.get(damageKey);
-            }
+                String damageKey = pro.Id + '-' + 'To Be Repaired' + yearSection;
+                if (whMapSpecialDamages.get(damageKey) != null) {
+                    inv.damages = whMapSpecialDamages.get(damageKey);
+                }
 
-            String demoKey =pro.Id + '-' + 'Demo' + yearSection;
-            if (whMapSpecialDamages.get(demoKey) != null) {
-               inv.demos = whMapSpecialDamages.get(demoKey);
-            }
+                String demoKey = pro.Id + '-' + 'Demo' + yearSection;
+                if (whMapSpecialDamages.get(demoKey) != null) {
+                    inv.demos = whMapSpecialDamages.get(demoKey);
+                }
 
-            String usedKey =pro.Id + '-' + 'Used' + yearSection;
-            if (whMapSpecialDamages.get(usedKey) != null) {
-               inv.useds = whMapSpecialDamages.get(usedKey);
-            }
+                String usedKey = pro.Id + '-' + 'Used' + yearSection;
+                if (whMapSpecialDamages.get(usedKey) != null) {
+                    inv.useds = whMapSpecialDamages.get(usedKey);
+                }
 
-            String specialsListKey =pro.Id + '-' + 'Specials List' + yearSection;
-            if (whMapSpecialDamages.get(specialsListKey) != null) {
-                inv.specials =  whMapSpecialDamages.get(specialsListKey);
-            }
+                String specialsListKey = pro.Id + '-' + 'Specials List' + yearSection;
+                if (whMapSpecialDamages.get(specialsListKey) != null) {
+                    inv.specials = whMapSpecialDamages.get(specialsListKey);
+                }
 
-            if (whMapDealerOrders.get(pro.Id + yearSection) != null)
-                inv.dealerOrders = whMapDealerOrders.get(pro.Id + yearSection);
+                if (whMapDealerOrders.get(pro.Id + yearSection) != null)
+                    inv.dealerOrders = whMapDealerOrders.get(pro.Id + yearSection);
 
-            Integer allSpecials = inv.specials == null ? 0 : inv.specials;
-            allSpecials += inv.damages == null ? 0 : inv.damages;
-            allSpecials += inv.useds == null ? 0 : inv.useds;
-            allSpecials += inv.demos == null ? 0 : inv.demos;
+                Integer allSpecials = inv.specials == null ? 0 : inv.specials;
+                allSpecials += inv.damages == null ? 0 : inv.damages;
+                allSpecials += inv.useds == null ? 0 : inv.useds;
+                allSpecials += inv.demos == null ? 0 : inv.demos;
 
-            inv.availabeToShipDelears = inv.inStock - allSpecials;
-            inv.netAvailable = inv.availabeToShipDelears - inv.dealerOrders;
+                inv.availabeToShipDelears = inv.inStock - allSpecials;
+                inv.netAvailable = inv.availabeToShipDelears - inv.dealerOrders;
 
-            if (!lotName.contains('-')){
-                whInventory.add(inv);
+                if (!ln.contains('-') || !lotName.contains('-')) {
+                    whInventory.add(inv);
+                }
             }
         }
         Map<String,List<Inventory>> mapWholesaleInventory = new Map<String,List<Inventory>>();
@@ -1306,53 +1331,53 @@ public without sharing class InventoryAllocationController {
                 Map<Date,Shipment> mapShipment = new Map<Date,Shipment>();
                 for(Shipment sh : inv.shipments)
                 {
-                  if(!mapShipment.containsKey(sh.deliverDate))
-                    mapShipment.put(sh.deliverDate,sh);
-                  else{
-                    Shipment sh2 = mapShipment.get(sh.deliverDate);
-                    sh2.quantity += sh.quantity;
-                    sh2.orders += sh.orders;
-                    sh2.available = sh.available;
-                    Map<String,List<ErpOrderObj>> ds = new Map<String,List<ErpOrderObj>>();
-                    Map<String,List<ErpOrderObj>> ds2 = new Map<String,List<ErpOrderObj>>();
-                    if(sh.erpOrder != null || sh2.erpOrder != null){
-                      if(sh.erpOrder != null)
-                        ds = (Map<String,List<ErpOrderObj>>)JSON.deserialize(sh.erpOrder, Map<String,List<ErpOrderObj>>.class);
-                      if(sh2.erpOrder != null)
-                        ds2 = (Map<String,List<ErpOrderObj>>)JSON.deserialize(sh2.erpOrder, Map<String,List<ErpOrderObj>>.class);
-                      ds2.putAll(ds);
-                      sh2.erpOrder = JSON.serialize(ds2);
+                    if(!mapShipment.containsKey(sh.deliverDate))
+                        mapShipment.put(sh.deliverDate,sh);
+                    else{
+                        Shipment sh2 = mapShipment.get(sh.deliverDate);
+                        sh2.quantity += sh.quantity;
+                        sh2.orders += sh.orders;
+                        sh2.available = sh.available;
+                        Map<String,List<ErpOrderObj>> ds = new Map<String,List<ErpOrderObj>>();
+                        Map<String,List<ErpOrderObj>> ds2 = new Map<String,List<ErpOrderObj>>();
+                        if(sh.erpOrder != null || sh2.erpOrder != null){
+                            if(sh.erpOrder != null)
+                                ds = (Map<String,List<ErpOrderObj>>)JSON.deserialize(sh.erpOrder, Map<String,List<ErpOrderObj>>.class);
+                            if(sh2.erpOrder != null)
+                                ds2 = (Map<String,List<ErpOrderObj>>)JSON.deserialize(sh2.erpOrder, Map<String,List<ErpOrderObj>>.class);
+                            ds2.putAll(ds);
+                            sh2.erpOrder = JSON.serialize(ds2);
+                        }
                     }
-                  }
                 }
                 inv.shipments = mapShipment.values();
                 Integer netAvail = inv.netAvailable;
                 if(netAvail <= 0){
-                  for(Shipment shi : inv.shipments){
-                      if(shi.quantity != null && netAvail != null)
-                      {
-                          shi.available = netAvail + shi.quantity;// - shi.orders;
-                          netAvail = shi.available;
-                      }
-                      if(netAvail > 0){
-                        inv.netAvailable = shi.available;
-                        inv.nextPositiveShipment = shi.deliverDate.format();
-                        inv.datePositiveShipment = shi.deliverDate;
-                        inv.datePositiveShipmentIsToday = shi.deliverDate == Date.today();
-                        break;
-                      }
-                  }
+                    for(Shipment shi : inv.shipments){
+                        if(shi.quantity != null && netAvail != null)
+                        {
+                            shi.available = netAvail + shi.quantity;// - shi.orders;
+                            netAvail = shi.available;
+                        }
+                        if(netAvail > 0){
+                            inv.netAvailable = shi.available;
+                            inv.nextPositiveShipment = shi.deliverDate.format();
+                            inv.datePositiveShipment = shi.deliverDate;
+                            inv.datePositiveShipmentIsToday = shi.deliverDate == Date.today();
+                            break;
+                        }
+                    }
                 }else{
-                  inv.nextPositiveShipment = Date.today().format();
-                  inv.datePositiveShipment = Date.today();
-                  inv.datePositiveShipmentIsToday = true;
+                    inv.nextPositiveShipment = Date.today().format();
+                    inv.datePositiveShipment = Date.today();
+                    inv.datePositiveShipmentIsToday = true;
                 }
             }
             if(inv.netAvailable <= 0){
-              inv.netAvailable = 0;
-              inv.nextPositiveShipment = null;
-              inv.datePositiveShipment = null;
-              inv.datePositiveShipmentIsToday = false;
+                inv.netAvailable = 0;
+                inv.nextPositiveShipment = null;
+                inv.datePositiveShipment = null;
+                inv.datePositiveShipmentIsToday = false;
             }
         }
         mapWholesaleInventory.put('Wholesale Inventory',whInventory);
@@ -1363,18 +1388,18 @@ public without sharing class InventoryAllocationController {
 
     @RemoteAction
     public static Boolean saveForDisplay(String productID,
-                                         Integer quantity,
-                                         String productName,
-                                         String lotVal) {
+        Integer quantity,
+        String productName,
+        String lotVal) {
         if(lotVal == '-1'){
             lotVal = productName.substringAfterLast('/ ');
         }
         String uniquifier = productID + '-' + lotVal;
         List<ProductLotReservation__c> lstProductLotReservation = [select Id,
-                                                                          Reserved_For_Retail_Sale__c
-                                                                   from ProductLotReservation__c
-                                                                   where Product__c =: productID
-                                                                   and Lot__r.GMBLASERP__Uniquefier__c =: uniquifier];
+            Reserved_For_Retail_Sale__c
+        from ProductLotReservation__c
+        where Product__c =: productID
+        and Lot__r.GMBLASERP__Uniquefier__c =: uniquifier];
 
         //String lotId;
         //for(GMBLASERP__Lot__c objLot : [select Id from GMBLASERP__Lot__c where Name =: lotVal]){
@@ -1383,8 +1408,8 @@ public without sharing class InventoryAllocationController {
         GMBLASERP__Lot__c lot;
         try {
             lot = [select Id
-                   from GMBLASERP__Lot__c
-                   where GMBLASERP__Uniquefier__c = :uniquifier];
+            from GMBLASERP__Lot__c
+            where GMBLASERP__Uniquefier__c = :uniquifier];
         }
         catch(Exception e)
         {
@@ -1410,126 +1435,126 @@ public without sharing class InventoryAllocationController {
     @RemoteAction @ReadOnly
     public static List<Map<String,String>> retrieveRetailERPOrders(String searchTxt, String idWholesaleERP)
     {
-      List<Map<String,String>> listProject = new List<Map<String,String>>();
+        List<Map<String,String>> listProject = new List<Map<String,String>>();
         searchTxt = '%'+searchTxt.replaceAll('[*]','%') +'%';
         AcctSeed__Project__c wholesaleProject;
         AcctSeedERP__Purchase_Order_Line__c pol;
         for(AcctSeed__Project__c p :
-          [SELECT Id,
-            (SELECT Id, GMBLASERP__Lot__c, GMBLASERP__Lot__r.Name, AcctSeedERP__Product__c FROM AcctSeedERP__Purchase_Order_Lines__r LIMIT 1)
-          FROM AcctSeed__Project__c
-          WHERE Locked__c = false
-            AND Id =:idWholesaleERP])
+        [SELECT Id,
+        (SELECT Id, GMBLASERP__Lot__c, GMBLASERP__Lot__r.Name, AcctSeedERP__Product__c FROM AcctSeedERP__Purchase_Order_Lines__r LIMIT 1)
+        FROM AcctSeed__Project__c
+        WHERE Locked__c = false
+        AND Id =:idWholesaleERP])
         {
-          wholesaleProject = p;
-          if(!p.AcctSeedERP__Purchase_Order_Lines__r.isEmpty())
-            pol = p.AcctSeedERP__Purchase_Order_Lines__r[0];
+            wholesaleProject = p;
+            if(!p.AcctSeedERP__Purchase_Order_Lines__r.isEmpty())
+                pol = p.AcctSeedERP__Purchase_Order_Lines__r[0];
         }
         if(pol == null) return listProject;
         Id idRtProjectBoatSale = gcConstants.idRtProjectBoatSale;
         for( AcctSeedERP__Material__c objMaterial : [SELECT Id,
-                                                             AcctSeedERP__Product__c,
-                                                             GMBLASERP__Lot__c,
-                                                             GMBLASERP__Lot__r.Name,
-                                                             AcctSeedERP__Project__c,
-                                                             AcctSeedERP__Project__r.Name,
-                                                             AcctSeedERP__Project__r.AcctSeedERP__Work_Order_Number__c
-                                                      FROM AcctSeedERP__Material__c
-                                                      WHERE AcctSeedERP__Product__c =:pol.AcctSeedERP__Product__c
-                                                        AND (AcctSeedERP__Project__r.Name like:searchTxt OR AcctSeedERP__Project__r.AcctSeedERP__Work_Order_Number__c like:searchTxt)
-                                                        AND (AcctSeedERP__Project__r.BoatModelYear__c =:pol.GMBLASERP__Lot__r.Name OR GMBLASERP__Lot__c =:pol.GMBLASERP__Lot__c)
-                                                        AND AcctSeedERP__Project__c !=:wholesaleProject.Id
-                                                        AND AcctSeedERP__Project__r.Serial_Number__c = null
-                                                        AND AcctSeedERP__Project__r.RecordTypeId =:idRtProjectBoatSale])
-      {
-          Map<String,String> m = new Map<String,String>();
-          m.put('label', objMaterial.AcctSeedERP__Project__r.Name);
-          m.put('idPr', objMaterial.AcctSeedERP__Project__c);
-          m.put('lotame',pol.GMBLASERP__Lot__r.Name);
-          m.put('idProduct',pol.AcctSeedERP__Product__c);
-          listProject.add(m);
-      }
-      return listProject;
+            AcctSeedERP__Product__c,
+            GMBLASERP__Lot__c,
+            GMBLASERP__Lot__r.Name,
+            AcctSeedERP__Project__c,
+            AcctSeedERP__Project__r.Name,
+            AcctSeedERP__Project__r.AcctSeedERP__Work_Order_Number__c
+        FROM AcctSeedERP__Material__c
+        WHERE AcctSeedERP__Product__c =:pol.AcctSeedERP__Product__c
+        AND (AcctSeedERP__Project__r.Name like:searchTxt OR AcctSeedERP__Project__r.AcctSeedERP__Work_Order_Number__c like:searchTxt)
+        AND (AcctSeedERP__Project__r.BoatModelYear__c =:pol.GMBLASERP__Lot__r.Name OR GMBLASERP__Lot__c =:pol.GMBLASERP__Lot__c)
+        AND AcctSeedERP__Project__c !=:wholesaleProject.Id
+        AND AcctSeedERP__Project__r.Serial_Number__c = null
+        AND AcctSeedERP__Project__r.RecordTypeId =:idRtProjectBoatSale])
+        {
+            Map<String,String> m = new Map<String,String>();
+            m.put('label', objMaterial.AcctSeedERP__Project__r.Name);
+            m.put('idPr', objMaterial.AcctSeedERP__Project__c);
+            m.put('lotame',pol.GMBLASERP__Lot__r.Name);
+            m.put('idProduct',pol.AcctSeedERP__Product__c);
+            listProject.add(m);
+        }
+        return listProject;
     }
 
     @RemoteAction
     public static Map<String,String> updateRetailERP(Id idWErp, Id idRERP, Boolean allowTagging)
     {
-      AcctSeed__Project__c wholesaleProject;
-      Set<Id> setIdRetailSerialProducts = new Set<Id>();
-      Set<Id> setIdWholesaleSerialProducts = new Set<Id>();
-      AcctSeedERP__Purchase_Order_Line__c pol;
-      for(AcctSeed__Project__c p :
+        AcctSeed__Project__c wholesaleProject;
+        Set<Id> setIdRetailSerialProducts = new Set<Id>();
+        Set<Id> setIdWholesaleSerialProducts = new Set<Id>();
+        AcctSeedERP__Purchase_Order_Line__c pol;
+        for(AcctSeed__Project__c p :
         [SELECT Id,
-          Retail_ERP__c,
-          (SELECT Id, AcctSeedERP__Product__c FROM AcctSeedERP__Project_Materials__r WHERE AcctSeedERP__Product__r.AcctSeedERP__Serialized__c = true),
-          (SELECT Id, GMBLASERP__Lot__c, GMBLASERP__Lot__r.Name, AcctSeedERP__Product__c FROM AcctSeedERP__Purchase_Order_Lines__r LIMIT 1)
+            Retail_ERP__c,
+        (SELECT Id, AcctSeedERP__Product__c FROM AcctSeedERP__Project_Materials__r WHERE AcctSeedERP__Product__r.AcctSeedERP__Serialized__c = true),
+        (SELECT Id, GMBLASERP__Lot__c, GMBLASERP__Lot__r.Name, AcctSeedERP__Product__c FROM AcctSeedERP__Purchase_Order_Lines__r LIMIT 1)
         FROM AcctSeed__Project__c
         WHERE Locked__c = false
-          AND Id =:idWErp])
-      {
-        wholesaleProject = p;
-        if(!p.AcctSeedERP__Purchase_Order_Lines__r.isEmpty())
-          pol = p.AcctSeedERP__Purchase_Order_Lines__r[0];
+        AND Id =:idWErp])
+        {
+            wholesaleProject = p;
+            if(!p.AcctSeedERP__Purchase_Order_Lines__r.isEmpty())
+                pol = p.AcctSeedERP__Purchase_Order_Lines__r[0];
 
-        for(AcctSeedERP__Material__c matl : p.AcctSeedERP__Project_Materials__r)
-          setIdRetailSerialProducts.add(matl.AcctSeedERP__Product__c);
-      }
-      if(pol == null) throw new InventoryAllocationException( 'The wholesale ERP does not have a related Purchase Order Line.');
-      if(!allowTagging)
-      for(AcctSeed__Project__c pr : 
-          [SELECT Id, 
-            (SELECT Id, AcctSeedERP__Product__c FROM AcctSeedERP__Project_Materials__r WHERE AcctSeedERP__Product__r.AcctSeedERP__Serialized__c = true),
-            Retail_ERP__c 
-          FROM AcctSeed__Project__c WHERE Id = :idRERP])
-      {
-        for(AcctSeedERP__Material__c matl : pr.AcctSeedERP__Project_Materials__r){
-          if(setIdRetailSerialProducts.contains(matl.AcctSeedERP__Product__c))
-            setIdWholesaleSerialProducts.add(matl.AcctSeedERP__Product__c);
-          else
-            throw new InventoryAllocationException( 'NOMATCH');
+            for(AcctSeedERP__Material__c matl : p.AcctSeedERP__Project_Materials__r)
+                setIdRetailSerialProducts.add(matl.AcctSeedERP__Product__c);
         }
-      }
-      System.debug(loggingLevel.error,'setIdWholesaleSerialProducts:'+setIdWholesaleSerialProducts);
-      System.debug(loggingLevel.error,'setIdRetailSerialProducts:'+setIdRetailSerialProducts);
-      if(setIdWholesaleSerialProducts.size() != setIdRetailSerialProducts.size() && !allowTagging)
-        throw new InventoryAllocationException( 'NOMATCH');
+        if(pol == null) throw new InventoryAllocationException( 'The wholesale ERP does not have a related Purchase Order Line.');
+        if(!allowTagging)
+            for(AcctSeed__Project__c pr :
+            [SELECT Id,
+            (SELECT Id, AcctSeedERP__Product__c FROM AcctSeedERP__Project_Materials__r WHERE AcctSeedERP__Product__r.AcctSeedERP__Serialized__c = true),
+                Retail_ERP__c
+            FROM AcctSeed__Project__c WHERE Id = :idRERP])
+            {
+                for(AcctSeedERP__Material__c matl : pr.AcctSeedERP__Project_Materials__r){
+                    if(setIdRetailSerialProducts.contains(matl.AcctSeedERP__Product__c))
+                        setIdWholesaleSerialProducts.add(matl.AcctSeedERP__Product__c);
+                    else
+                        throw new InventoryAllocationException( 'NOMATCH');
+                }
+            }
+        System.debug(loggingLevel.error,'setIdWholesaleSerialProducts:'+setIdWholesaleSerialProducts);
+        System.debug(loggingLevel.error,'setIdRetailSerialProducts:'+setIdRetailSerialProducts);
+        if(setIdWholesaleSerialProducts.size() != setIdRetailSerialProducts.size() && !allowTagging)
+            throw new InventoryAllocationException( 'NOMATCH');
         //throw new InventoryAllocationException( 'Number of wholesale ERP order lines for serialised items does not match with Retail ERP.');
 
-      wholesaleProject.Retail_ERP__c = idRERP;
+        wholesaleProject.Retail_ERP__c = idRERP;
 
-      update wholesaleProject;
-      Map<String,String> m = new Map<String,String>();
-      m.put('lotame',pol.GMBLASERP__Lot__r.Name);
-      m.put('idProduct',pol.AcctSeedERP__Product__c);
-      return m;
+        update wholesaleProject;
+        Map<String,String> m = new Map<String,String>();
+        m.put('lotame',pol.GMBLASERP__Lot__r.Name);
+        m.put('idProduct',pol.AcctSeedERP__Product__c);
+        return m;
     }
 
     @RemoteAction
     public static Map<String,String> clearRetailERP(Id idWErp)
     {
-      AcctSeed__Project__c wholesaleProject;
-      AcctSeedERP__Purchase_Order_Line__c pol;
-      for(AcctSeed__Project__c p :
+        AcctSeed__Project__c wholesaleProject;
+        AcctSeedERP__Purchase_Order_Line__c pol;
+        for(AcctSeed__Project__c p :
         [SELECT Id,
-          (SELECT Id, GMBLASERP__Lot__c, GMBLASERP__Lot__r.Name, AcctSeedERP__Product__c FROM AcctSeedERP__Purchase_Order_Lines__r LIMIT 1)
+        (SELECT Id, GMBLASERP__Lot__c, GMBLASERP__Lot__r.Name, AcctSeedERP__Product__c FROM AcctSeedERP__Purchase_Order_Lines__r LIMIT 1)
         FROM AcctSeed__Project__c
         WHERE Locked__c = false
-          AND Id =:idWErp])
-      {
-        wholesaleProject = p;
-        if(!p.AcctSeedERP__Purchase_Order_Lines__r.isEmpty())
-          pol = p.AcctSeedERP__Purchase_Order_Lines__r[0];
-      }
-      if(pol == null) throw new InventoryAllocationException( 'The wholesale ERP does not have a related Purchase Order Line.');
-      for(AcctSeed__Project__c pr : [SELECT Id, Locked__c, Retail_ERP__c, Serial_Number__c FROM AcctSeed__Project__c WHERE Id = :idWErp AND Retail_ERP__c != null]){
-        pr.Retail_ERP__c = null;
-        update pr;
-      }
-      Map<String,String> m = new Map<String,String>();
-      m.put('lotame',pol.GMBLASERP__Lot__r.Name);
-      m.put('idProduct',pol.AcctSeedERP__Product__c);
-      return m;
+        AND Id =:idWErp])
+        {
+            wholesaleProject = p;
+            if(!p.AcctSeedERP__Purchase_Order_Lines__r.isEmpty())
+                pol = p.AcctSeedERP__Purchase_Order_Lines__r[0];
+        }
+        if(pol == null) throw new InventoryAllocationException( 'The wholesale ERP does not have a related Purchase Order Line.');
+        for(AcctSeed__Project__c pr : [SELECT Id, Locked__c, Retail_ERP__c, Serial_Number__c FROM AcctSeed__Project__c WHERE Id = :idWErp AND Retail_ERP__c != null]){
+            pr.Retail_ERP__c = null;
+            update pr;
+        }
+        Map<String,String> m = new Map<String,String>();
+        m.put('lotame',pol.GMBLASERP__Lot__r.Name);
+        m.put('idProduct',pol.AcctSeedERP__Product__c);
+        return m;
     }
 
     @RemoteAction
@@ -1551,7 +1576,7 @@ public without sharing class InventoryAllocationController {
         return true;
     }
 
-        public class Inventory{
+    public class Inventory{
 
         public String productName                       {get;set;}
         public String lotName                           {get;set;}
@@ -1676,31 +1701,31 @@ public without sharing class InventoryAllocationController {
             this.deliverDateFormatted = this.deliverDate == null ? '' : Datetime.newInstance(this.deliverDate.year(), this.deliverDate.month(), this.deliverDate.day()).format('MMM d, yyyy');
             Integer x;
             if(Integer.valueOf(orderLine.Reserved__c)!=null)
-                 this.reserved = Integer.valueOf(orderLine.Reserved__c);
+                this.reserved = Integer.valueOf(orderLine.Reserved__c);
             else
                 this.reserved = 0;
 
             this.shipID = orderLine.Id;
             this.productID = orderLine.AcctSeedERP__Product__c;
             if(orderLine.AcctSeedERP__Product__c != null && orderLine.AcctSeedERP__Product__r.RecordType.Name == 'Boat')
-              this.quantity = Integer.valueOf(orderLine.AcctSeedERP__Quantity__c);
+                this.quantity = Integer.valueOf(orderLine.AcctSeedERP__Quantity__c);
             else
-              this.quantity = Integer.valueOf(orderLine.AcctSeedERP__Quantity_Unreceived__c);
+                this.quantity = Integer.valueOf(orderLine.AcctSeedERP__Quantity_Unreceived__c);
             this.available = available;
             this.reserved = reserved;
             this.orders = orderLine.AcctSeedERP__Project__r.Retail_ERP__c == null ? 0 : 1;
             if(orderLine.AcctSeedERP__Project__c != null)
-              this.erpOrder = JSON.serialize(new Map<String,List<ErpOrderObj>>{orderLine.Name => new List<ErpOrderObj>{new ErpOrderObj(orderLine.AcctSeedERP__Project__r, 'partnerERP')}});
+                this.erpOrder = JSON.serialize(new Map<String,List<ErpOrderObj>>{orderLine.Name => new List<ErpOrderObj>{new ErpOrderObj(orderLine.AcctSeedERP__Project__r, 'partnerERP')}});
             if(orderLine.AcctSeedERP__Project__r.Retail_ERP__c != null)
-              this.soldErpOrder = JSON.serialize(new Map<String,List<ErpOrderObj>>{'Retail ERP Orders' => new List<ErpOrderObj>{new ErpOrderObj(orderLine.AcctSeedERP__Project__r.Retail_ERP__r, 'retailERP')}});
+                this.soldErpOrder = JSON.serialize(new Map<String,List<ErpOrderObj>>{'Retail ERP Orders' => new List<ErpOrderObj>{new ErpOrderObj(orderLine.AcctSeedERP__Project__r.Retail_ERP__r, 'retailERP')}});
         }
 
         public Shipment(AcctSeedERP__Material__c orderLine) {
             this.deliverDate = null;
             this.deliverDateFormatted = '';
             if(orderLine.AcctSeedERP__Product__r.RecordType.Name != 'Boat' && orderLine.AcctSeedERP__Project__r.Delivery_Date__c != null){
-              this.deliverDate = orderLine.AcctSeedERP__Project__r.Delivery_Date__c.date();
-              this.deliverDateFormatted = orderLine.AcctSeedERP__Project__r.Delivery_Date__c.format('MMM d, yyyy');
+                this.deliverDate = orderLine.AcctSeedERP__Project__r.Delivery_Date__c.date();
+                this.deliverDateFormatted = orderLine.AcctSeedERP__Project__r.Delivery_Date__c.format('MMM d, yyyy');
             }
             this.reserved = 0;
             this.shipID = orderLine.Id;
@@ -1709,14 +1734,14 @@ public without sharing class InventoryAllocationController {
             this.available = available;
             this.orders = orderLine.AcctSeedERP__Project__c == null ? 0 : 1;
             if(orderLine.AcctSeedERP__Product__r.RecordType.Name != 'Boat')
-              this.orders = 0;
+                this.orders = 0;
             else if(this.deliverDate == null)
-              this.orders = 0;
+                this.orders = 0;
             this.soldErpOrder = null;
             if(orderLine.AcctSeedERP__Project__c != null && orderLine.AcctSeedERP__Product__r.RecordType.Name == 'Boat')
-              this.erpOrder = JSON.serialize(new Map<String,List<ErpOrderObj>>{'Unscheduled ERP' => new List<ErpOrderObj>{new ErpOrderObj(orderLine.AcctSeedERP__Project__r, 'partnerERP')}});
+                this.erpOrder = JSON.serialize(new Map<String,List<ErpOrderObj>>{'Unscheduled ERP' => new List<ErpOrderObj>{new ErpOrderObj(orderLine.AcctSeedERP__Project__r, 'partnerERP')}});
             else
-              this.erpOrder = JSON.serialize(new Map<String,List<ErpOrderObj>>{'ERP Order Lines' => new List<ErpOrderObj>{new ErpOrderObj(orderLine, 'erpMaterial')}});
+                this.erpOrder = JSON.serialize(new Map<String,List<ErpOrderObj>>{'ERP Order Lines' => new List<ErpOrderObj>{new ErpOrderObj(orderLine, 'erpMaterial')}});
         }
     }
 
@@ -1741,9 +1766,9 @@ public without sharing class InventoryAllocationController {
             this.totalUnitCost = '0';
             Decimal totalNested = 0;
             for(GMBLASERP__Serial_Number__c sr : serial.Nested_Serial_Numbers__r){
-              SerialNumber sn = new SerialNumber(sr);
-              totalNested += (sr.Current_Unit_Cost__c == null ? 0 : sr.Current_Unit_Cost__c);
-              this.listNested.add(sn);
+                SerialNumber sn = new SerialNumber(sr);
+                totalNested += (sr.Current_Unit_Cost__c == null ? 0 : sr.Current_Unit_Cost__c);
+                this.listNested.add(sn);
             }
             this.serialID = serial.Id;
             this.serialName = serial.Name;
@@ -1781,12 +1806,12 @@ public without sharing class InventoryAllocationController {
             this.erpId = erp.Id;
             this.erpName = erp.AcctSeedERP__Work_Order_Number__c;
             if(pErpType == 'partnerERP'){
-              AcctSeed__Project__c erpn = erp.clone(false,true,true);
-              this.retailErpId = erpn.Retail_ERP__c;
-              this.retailErpName = erpn.Retail_ERP__r.AcctSeedERP__Work_Order_Number__c;
+                AcctSeed__Project__c erpn = erp.clone(false,true,true);
+                this.retailErpId = erpn.Retail_ERP__c;
+                this.retailErpName = erpn.Retail_ERP__r.AcctSeedERP__Work_Order_Number__c;
             }else{
-              this.retailErpId = null;
-              this.retailErpName = null;
+                this.retailErpId = null;
+                this.retailErpName = null;
             }
             this.accountName = erp.AcctSeed__Account__r.Name;
             this.idSerial = erp.Serial_Number__c;

@@ -50,9 +50,10 @@ public without sharing class ProductWholesaleAvailability_ar {
     	if(lotName == null) return '';
 		try {
 			Decimal lotDec = Decimal.valueOf(lotName);
-
+			Decimal lotDecNext = lotDec+1;
+			lotName = lotName + ':' + String.valueOf(lotDecNext);
 		}catch(Exception e){
-
+			System.debug(e.getMessage());
 		}
     	return JSON.serialize(InventoryAllocationController.retrieveWholeSaleData(new List<Id>{idProduct},lotName));
     }
