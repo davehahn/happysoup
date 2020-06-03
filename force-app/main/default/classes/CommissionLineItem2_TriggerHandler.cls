@@ -118,7 +118,7 @@ public without sharing class CommissionLineItem2_TriggerHandler extends TriggerH
           }
           if( cli.Sale_Price__c != oldLine.Sale_Price__c )
           {
-            changes.add( 'The Sale Price on ' + cli.Descriptor__c + ' has changed from $' + cli.Sale_Price__c + ' to $' + oldLine.Sale_Price__c );
+            changes.add( 'The Sale Price on ' + cli.Descriptor__c + ' has changed from $' + oldLine.Sale_Price__c + ' to $' + cli.Sale_Price__c );
           }
         }
       }

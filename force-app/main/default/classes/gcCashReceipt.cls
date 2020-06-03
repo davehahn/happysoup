@@ -30,7 +30,11 @@ public without sharing class gcCashReceipt {
 		{
 			if(boolIsInsert)
 			{
-
+				for( AcctSeed__Cash_Receipt__c cr : listNew )
+				{
+					if( cr.AcctSeed__Ledger__c == null )
+						cr.AcctSeed__Ledger__c = gcConstants.idActualLedger;
+				}
 			}
 			if(boolIsUpdate)
 			{

@@ -4,7 +4,7 @@
     var link = event.currentTarget,
          calId = link.dataset.calType,
          eventType = calId.includes(':') ? calId.split(':')[1] : calId;
-    if( eventType === 'service' )
+    if( ['service', 'trade', 'internal'].indexOf( eventType ) >= 0 )
       component.set('v.showDetails', !component.get('v.showDetails') );
 	}
 })

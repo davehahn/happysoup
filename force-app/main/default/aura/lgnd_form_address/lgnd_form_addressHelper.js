@@ -8,8 +8,7 @@
 		action.setParams({
 			"searchTerm": searchTerm,
 			"location": location,
-			"radius": radius,
-			"apiKey": apiKey
+			"radius": radius
 		});
 		action.setCallback(this, function(response) {
 			this.doLayout(response, component);
@@ -46,13 +45,11 @@
 				country			= '',
 				zip 				= '',
 				placeId			= address.place_id,
-				action			= component.get("c.getDetails"),
-				apiKey			= component.get("v.apiKey");
+				action			= component.get("c.getDetails");
 
 		// Get Postal Code
 		action.setParams({
-			"placeId": placeId,
-			"apiKey": apiKey
+			"placeId": placeId
 		});
 		action.setCallback(this, function(response) {
 			var address = JSON.parse(response.getReturnValue()).result,

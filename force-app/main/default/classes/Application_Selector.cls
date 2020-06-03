@@ -131,4 +131,17 @@ public virtual class Application_Selector
     return w;
   }
 
+  public static String toDateString( Date d )
+  {
+    return toDateString( DateTime.newInstance(
+      d,
+      Time.newInstance(0, 0, 0, 0)
+    ));
+  }
+
+  public static String toDateString( DateTime dt )
+  {
+    return dt.format('yyyy-MM-dd\'T\'HH:mm:ss.\'000Z\'');
+  }
+
 }

@@ -533,6 +533,24 @@ public without sharing class gcConstants {
 		set;
 	}
 
+	public static Id idGlCommissionsPayable{
+		get{
+			if(idGlCommissionsPayable == null) fetchGlAccounts();
+			if(idGlCommissionsPayable == null) throw new gcException('A Cash Flow GL Account with Uniquefier [CommissionsPayable] does not exist.');
+			return idGlCommissionsPayable;
+		}
+		set;
+	}
+
+	public static Id idGlCommissionExpense{
+		get{
+			if(idGlCommissionExpense == null) fetchGlAccounts();
+			if(idGlCommissionExpense == null) throw new gcException('A Cash Flow GL Account with Uniquefier [CommissionExpense] does not exist.');
+			return idGlCommissionExpense;
+		}
+		set;
+	}
+
 	private static void fetchGlAccounts()
 	{
 		List<String> listUniquefier = new list<String>{
@@ -567,7 +585,9 @@ public without sharing class gcConstants {
 			'SalesBoats',
 			'PrepaidDeposit',
 			'MerchantOnline',
-			'RevenueCF'
+			'RevenueCF',
+			'CommissionsPayable',
+			'CommissionExpense'
 		};
 
 		for(AcctSeed__GL_Account__c gl :
@@ -639,6 +659,10 @@ public without sharing class gcConstants {
 				idGlMerchantOnline = gl.Id;
 			else if(gl.Uniquefier__c == 'RevenueCF')
 				idGlRevenueCF = gl.Id;
+			else if(gl.Uniquefier__c == 'CommissionExpense')
+				idGlCommissionExpense = gl.Id;
+			else if(gl.Uniquefier__c == 'CommissionsPayable')
+				idGlCommissionsPayable = gl.Id;
 		}
 	}
 
@@ -1138,6 +1162,26 @@ public without sharing class gcConstants {
 		}
 		set;
 	}
+
+	public static Id idActualLedger
+	{
+		get
+		{
+			if( idActualLedger == null )
+			{
+				try
+				{
+					idActualLedger = [SELECT AcctSeed__Default_Ledger__c FROM AcctSeed__Accounting_Settings__c LIMIT 1].AcctSeed__Default_Ledger__c;
+				}
+				catch( Exception e )
+				{
+					throw new gcException('A Defualt Ledger has not been setup.  Please set the default Ledger in Accounting Settings');
+				}
+			}
+			return idActualLedger;
+		}
+	}
+
 	/// Kept so that the other class does not throw errors
  	public static void coverage()
  	{

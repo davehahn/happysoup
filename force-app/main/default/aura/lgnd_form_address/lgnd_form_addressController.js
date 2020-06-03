@@ -22,7 +22,6 @@
 											{ value: "Canada",				label: "Canada" },
 											{ value: "Unite States",	label: "USA" }
 										];
-		component.set('v.apiKey', 'AIzaSyADJPE6bn9M5jPLrQW57nAAfYA3aBvNkmk');
 		component.set("v.provinces", provinces);
 		component.set("v.countries", countries);
 

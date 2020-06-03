@@ -1,48 +1,51 @@
-public class lgnd_form_address {
-	@AuraEnabled
-	public static String getPlaces (String searchTerm, String location, String radius, String apiKey) {
+public class lgnd_form_address
+{
 
-		String url =  'https://maps.googleapis.com/maps/api/place/autocomplete/json?' +
-									'input=' + EncodingUtil.urlEncode(searchTerm, 'UTF-8') +
-									'&types=address' +
-									'&location=' + location +
-									'&radius=' + radius +
-									'&key=' + apiKey;
+  private static final String googleApiKey = LGND_Constants.googleMapsAPI_Key;
 
-		String resultList = getHttp(url);
+  @AuraEnabled
+  public static String getPlaces (String searchTerm, String location, String radius) {
 
-		System.debug(resultList);
+    String url =  'https://maps.googleapis.com/maps/api/place/autocomplete/json?' +
+      'input=' + EncodingUtil.urlEncode(searchTerm, 'UTF-8') +
+      '&types=address' +
+      '&location=' + location +
+      '&radius=' + radius +
+      '&key=' + googleApiKey;
 
-		return resultList;
-	}
+    String resultList = getHttp(url);
 
-	@AuraEnabled
-	public static String getDetails (String placeId, String apiKey) {
+    System.debug(resultList);
 
-		String url =  'https://maps.googleapis.com/maps/api/place/details/json?' +
-									'placeid=' + EncodingUtil.urlEncode(placeId, 'UTF-8') +
-									'&key=' + apiKey;
+    return resultList;
+  }
 
-		String resultList = getHttp(url);
+  @AuraEnabled
+  public static String getDetails (String placeId) {
 
-		System.debug(resultList);
+    String url =  'https://maps.googleapis.com/maps/api/place/details/json?' +
+      'placeid=' + EncodingUtil.urlEncode(placeId, 'UTF-8') +
+      '&key=' + googleApiKey;
 
-		return resultList;
-	}
+    String resultList = getHttp(url);
 
-	private static String getHttp (String url) {
-	  HttpRequest req = new HttpRequest();
-	  Http http = new Http();
-	  req.setMethod('GET');
-	  req.setEndpoint(url);
-	  HTTPResponse res = http.send(req);
-	  return res.getBody();
-	}
+    System.debug(resultList);
 
-	public static void coverage()
-	{
-		Integer i = 0;
-		i=1;
+    return resultList;
+  }
+
+  private static String getHttp (String url) {
+    HttpRequest req = new HttpRequest();
+    Http http = new Http();
+    req.setMethod('GET');
+    req.setEndpoint(url);
+    HTTPResponse res = http.send(req);
+    return res.getBody();
+  }
+
+  public static void coverage()
+  {
+    Integer i = 0;
     i=1;
     i=1;
     i=1;
@@ -203,5 +206,6 @@ public class lgnd_form_address {
     i=1;
     i=1;
     i=1;
-	}
+    i=1;
+  }
 }

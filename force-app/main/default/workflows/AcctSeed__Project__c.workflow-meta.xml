@@ -595,7 +595,7 @@
         <description>Notify Barrie parts and service of Pick and Pack</description>
         <protected>false</protected>
         <recipients>
-            <recipient>llipka@legendboats.com</recipient>
+            <recipient>jmaltais@legendboats.com</recipient>
             <type>user</type>
         </recipients>
         <senderType>CurrentUser</senderType>
@@ -829,7 +829,7 @@
         <fullName>ERP_Order_Completed_TimeStamp</fullName>
         <description>Timestamp Completed Date on ERP with current DateTime</description>
         <field>Completed_Date__c</field>
-        <formula>IF( ISPICKVAL(Job_Status__c, &#39;Completed&#39;), NOW(), NULL )</formula>
+        <formula>IF( ISPICKVAL(Job_Status__c, &apos;Completed&apos;), NOW(), NULL )</formula>
         <name>ERP Order Completed TimeStamp</name>
         <notifyAssignee>false</notifyAssignee>
         <operation>Formula</operation>
@@ -1217,7 +1217,7 @@
             <name>Boat_Numbers_Order_Submission_Email</name>
             <type>Alert</type>
         </actions>
-        <active>true</active>
+        <active>false</active>
         <description>Sends boat numbers to the boat number supplier by location when boat numbers are entered on the Retail Boat Sale ERP.</description>
         <formula>RecordType.Name = &quot;Retail Boat Sale&quot; &amp;&amp;  CONTAINS(WarehouseName__c, &quot;Barrie&quot;) &amp;&amp; NOT(ISBLANK(Boat_numbers_erp__c)) &amp;&amp; NOT(CONTAINS(Oppy_Boat_Model__c, &quot;Loose&quot;)) &amp;&amp;  NOT(ISPICKVAL(Serial_Number__r.Status__c, &quot;Used&quot;))</formula>
         <triggerType>onCreateOrTriggeringUpdate</triggerType>
@@ -1228,7 +1228,7 @@
             <name>Boat_Numbers_Order_Submission_Email_Whitefish</name>
             <type>Alert</type>
         </actions>
-        <active>true</active>
+        <active>false</active>
         <description>Sends boat numbers to the boat number supplier by location when boat numbers are entered on the Retail Boat Sale ERP.</description>
         <formula>RecordType.Name = &quot;Retail Boat Sale&quot; &amp;&amp;  CONTAINS(WarehouseName__c, &quot;Whitefish&quot;) &amp;&amp; NOT(ISBLANK(Boat_numbers_erp__c)) &amp;&amp; NOT(CONTAINS(Oppy_Boat_Model__c, &quot;Loose&quot;)) &amp;&amp;  NOT(ISPICKVAL(Serial_Number__r.Status__c, &quot;Used&quot;))</formula>
         <triggerType>onCreateOrTriggeringUpdate</triggerType>
@@ -4161,7 +4161,7 @@ Thank you!</description>
         <priority>Normal</priority>
         <protected>false</protected>
         <status>Open</status>
-        <subject>Brandon&#39;s Add On Call ERP</subject>
+        <subject>Brandon&apos;s Add On Call ERP</subject>
     </tasks>
     <tasks>
         <fullName>Check_ACV_Values</fullName>
@@ -4273,7 +4273,7 @@ Thanks!  You rock!</description>
         <priority>Normal</priority>
         <protected>false</protected>
         <status>Open</status>
-        <subject>Dominic&#39;s Add On Call ERP</subject>
+        <subject>Dominic&apos;s Add On Call ERP</subject>
     </tasks>
     <tasks>
         <fullName>ERP_Changed_to_Closed_Lost</fullName>
@@ -4289,7 +4289,7 @@ Thanks!  You rock!</description>
     </tasks>
     <tasks>
         <fullName>ERP_Stage_has_been_moved_to_Pick_and_Pack</fullName>
-        <assignedTo>llipka@legendboats.com</assignedTo>
+        <assignedTo>jmaltais@legendboats.com</assignedTo>
         <assignedToType>user</assignedToType>
         <dueDateOffset>0</dueDateOffset>
         <notifyAssignee>false</notifyAssignee>
@@ -4313,13 +4313,13 @@ Thanks!  You rock!</description>
     <tasks>
         <fullName>Inspection_Task</fullName>
         <assignedToType>owner</assignedToType>
-        <description>It looks like your customer&#39;s boat is ready for inspection.  Please go and check it over as soon as possible.</description>
+        <description>It looks like your customer&apos;s boat is ready for inspection.  Please go and check it over as soon as possible.</description>
         <dueDateOffset>0</dueDateOffset>
         <notifyAssignee>false</notifyAssignee>
         <priority>Normal</priority>
         <protected>false</protected>
         <status>Open</status>
-        <subject>Inspect Your Customer&#39;s Boat</subject>
+        <subject>Inspect Your Customer&apos;s Boat</subject>
     </tasks>
     <tasks>
         <fullName>Montreal_Add_On_Call_ERP_Benoit</fullName>
@@ -4623,7 +4623,7 @@ Please complete other tasks associated to this Partner Boat Sale and finalize th
         <fullName>Please_review_all_areas_of_this_ERP_for_accuracy</fullName>
         <assignedTo>bmilne@legendboats.com</assignedTo>
         <assignedToType>user</assignedToType>
-        <description>This ERP is in Pending Scheduling and will need to have all areas of the ERP reviewed for accuracy including parts Wip&#39;d, notes are entered etc.</description>
+        <description>This ERP is in Pending Scheduling and will need to have all areas of the ERP reviewed for accuracy including parts Wip&apos;d, notes are entered etc.</description>
         <dueDateOffset>0</dueDateOffset>
         <notifyAssignee>false</notifyAssignee>
         <priority>Normal</priority>
@@ -4635,7 +4635,7 @@ Please complete other tasks associated to this Partner Boat Sale and finalize th
         <fullName>Please_review_all_areas_of_this_ERP_for_accuracy_Barrie</fullName>
         <assignedTo>bmilne@legendboats.com</assignedTo>
         <assignedToType>user</assignedToType>
-        <description>Please review all areas of this ERP for accuracy including Parts  WIP&#39;d, all information entered etc.</description>
+        <description>Please review all areas of this ERP for accuracy including Parts  WIP&apos;d, all information entered etc.</description>
         <dueDateOffset>0</dueDateOffset>
         <notifyAssignee>false</notifyAssignee>
         <priority>Normal</priority>
@@ -4647,7 +4647,7 @@ Please complete other tasks associated to this Partner Boat Sale and finalize th
         <fullName>Please_review_this_ERP_for_Accuracy</fullName>
         <assignedTo>mmatte@legendboats.com</assignedTo>
         <assignedToType>user</assignedToType>
-        <description>Please review this ERP for accuracy, all parts WIp&#39;d.  All notes added etc.</description>
+        <description>Please review this ERP for accuracy, all parts WIp&apos;d.  All notes added etc.</description>
         <dueDateOffset>0</dueDateOffset>
         <notifyAssignee>false</notifyAssignee>
         <priority>Normal</priority>
@@ -4911,7 +4911,7 @@ Please complete other tasks associated to this Partner Boat Sale and finalize th
         <assignedToType>user</assignedToType>
         <description>This deal has been approved to tag, go do your thing :)
 
-Thank you, you&#39;re awesome!</description>
+Thank you, you&apos;re awesome!</description>
         <dueDateOffset>1</dueDateOffset>
         <notifyAssignee>true</notifyAssignee>
         <priority>Normal</priority>
@@ -5060,7 +5060,7 @@ Please note, Luc and Elvis and Mel also get this notification.</description>
         <fullName>This_SWO_has_a_stage_Pending_PIckup_Dormer</fullName>
         <assignedTo>bfram@legendboats.com</assignedTo>
         <assignedToType>user</assignedToType>
-        <description>Your customer&#39;s boat has been inspected and is ready for pickup.  Please call and schedule a delivery date.</description>
+        <description>Your customer&apos;s boat has been inspected and is ready for pickup.  Please call and schedule a delivery date.</description>
         <dueDateOffset>0</dueDateOffset>
         <notifyAssignee>false</notifyAssignee>
         <priority>Normal</priority>

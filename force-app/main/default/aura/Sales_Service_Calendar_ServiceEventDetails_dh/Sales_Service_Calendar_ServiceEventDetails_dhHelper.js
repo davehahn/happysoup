@@ -31,33 +31,60 @@
     return la.fire();
   },
 
-  updateEventData: function( component, eventData )
+  updateEventData: function( component, isUnscheduling )
   {
-    console.log('helper.updateEventData');
     var self = this;
-    return new Promise(function(resolve, reject) {
-      $A.util.removeClass( component.find('spinner'), 'slds-hide' );
-      self.doUpdateEventData( component, eventData )
-      .then(
-        $A.getCallback( function() {
-          LightningUtils.showToast('success', 'Success!', 'The record was successfully updated');
-          component.getEvent("UpdateSuccess").fire();
-          console.log( 'event seemed to update');
-          resolve();
-        }),
-        $A.getCallback( function(err) {
-          $A.util.addClass( component.find('spinner'), 'slds-hide' );
-          LightningUtils.errorToast(err);
-          reject(err);
-        })
-      );
-    });
+//    return new Promise(function(resolve, reject) {
+//      $A.util.removeClass( component.find('spinner'), 'slds-hide' );
+//      self.doUpdateEventData( component, isUnscheduling )
+//      .then(
+//        $A.getCallback( function() {
+//          LightningUtils.showToast('success', 'Success!', 'The record was successfully updated');
+//          component.getEvent("UpdateSuccess").fire();
+//          resolve();
+//        }),
+//        $A.getCallback( function(err) {
+//          $A.util.addClass( component.find('spinner'), 'slds-hide' );
+//          LightningUtils.errorToast(err);
+//          console.log( 'updateEventData ERROR:');
+//          console.log( err );
+//          reject(err);
+//        })
+//      );
+//    });
+    $A.util.removeClass( component.find('spinner'), 'slds-hide' );
+    self.doUpdateEventData( component, isUnscheduling )
+    .then(
+      $A.getCallback( function() {
+        return self.updateRiggerJob( component );
+      })
+    )
+    .then(
+      $A.getCallback( function()
+      {
+        LightningUtils.showToast('success', 'Success!', 'The record was successfully updated');
+        component.getEvent("UpdateSuccess").fire();
+      })
+    )
+    .catch(
+      $A.getCallback( function(err) {
+        $A.util.addClass( component.find('spinner'), 'slds-hide' );
+        LightningUtils.errorToast(err);
+        console.log( 'updateEventData ERROR:');
+        console.log( err );
+      })
+    );
   },
 
-  doUpdateEventData: function( component, eventData )
+  doUpdateEventData: function( component, isUnscheduling )
   {
-    var action = component.get('c.updateServiceRecord'), la;
+    var action = component.get('c.updateServiceRecord'), la,
+        eventData = component.get('v.eventData');
 
+    if( typeof( isUnscheduling ) !== 'undefined' && isUnscheduling )
+    {
+      eventData.startDateTime = null;
+    }
     if( eventData.startDateTime === '' )
         eventData.startDateTime = null
 
@@ -82,9 +109,11 @@
     return la.fire();
   },
 
-  updateRiggerJob: function( component, erpId, riggerId, action )
+  updateRiggerJob: function( component )
   {
-    console.log('helper.updateRiggerJob');
+    var erpId = component.get('v.recordId'),
+        riggerId = component.get('v.riggerId'),
+        action = component.get('c.updateRiggerJob');
     action.setParams({
       "erpId": erpId,
       "riggerId": riggerId

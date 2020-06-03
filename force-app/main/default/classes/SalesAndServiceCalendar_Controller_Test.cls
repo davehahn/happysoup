@@ -44,7 +44,6 @@ private class SalesAndServiceCalendar_Controller_Test {
 
   private static void setupSerials()
   {
-
     serials = Factory_SerialNumber.insertFullSerials( 12, 'Boat', 'Pontoon');
     b_serials = new List<GMBLASERP__Serial_Number__c> { serials[0], serials[1], serials[2] };
     wf_serials = new List<GMBLASERP__Serial_Number__c> { serials[3], serials[4], serials[5], serials[6] };
@@ -56,10 +55,21 @@ private class SalesAndServiceCalendar_Controller_Test {
   {
     Boolean orig = gcProjectTask.ignoreCommissions;
     gcProjectTask.ignoreCommissions = true;
-    List<AcctSeed__Project__c> erps = Factory_ERPOrder.insertRetailBoatSales( customer,
-                                            barrieWarehouse,
-                                            null,
-                                            unscheduled_serials );
+    List<GMBLASERP__Serial_Number__c> retailSerials = new List<GMBLASERP__Serial_Number__c>{
+      unscheduled_serials[0], unscheduled_serials[1]
+    };
+    List<GMBLASERP__Serial_Number__c> serviceSerials = new List<GMBLASERP__Serial_Number__c>{
+      unscheduled_serials[2], unscheduled_serials[3]
+    };
+    List<AcctSeed__Project__c> erps = new List<AcctSeed__Project__c>();
+    erps.addAll( Factory_ERPOrder.insertRetailBoatSales( customer,
+                                                          barrieWarehouse,
+                                                          null,
+                                                          retailSerials ) );
+    erps.addAll( Factory_ERPOrder.insertServiceOrders( customer,
+                                                          barrieWarehouse,
+                                                          null,
+                                                          serviceSerials ) );
     gcProjectTask.ignoreCommissions = orig;
     return erps;
   }
@@ -153,7 +163,8 @@ private class SalesAndServiceCalendar_Controller_Test {
       SalesAndServiceCalendar_Controller.fetchScheduledRecords( String.valueOf( sd.getTime() ),
                                                                 String.valueOf( ed.getTime() ),
                                                                 'Barrie',
-                                                                'testFail');
+                                                                'testFail',
+                                                                false );
     }
     catch( Exception err )
     {
@@ -187,7 +198,8 @@ private class SalesAndServiceCalendar_Controller_Test {
         String.valueOf( s.getTime() ),
         String.valueOf( e.getTime() ),
         'Whitefish',
-        'Retail'
+        'Retail',
+        false
       );
       List<SalesAndServiceCalendar_Controller.EventData> result =
         (List<SalesAndServiceCalendar_Controller.EventData>)JSON.deserialize( jsonResult,
@@ -214,7 +226,8 @@ private class SalesAndServiceCalendar_Controller_Test {
         String.valueOf( s.getTime() ),
         String.valueOf( e.getTime() ),
         'Montreal',
-        'Retail'
+        'Retail',
+        false
       );
       List<SalesAndServiceCalendar_Controller.EventData> result =
         (List<SalesAndServiceCalendar_Controller.EventData>)JSON.deserialize( jsonResult,
@@ -242,7 +255,8 @@ private class SalesAndServiceCalendar_Controller_Test {
         String.valueOf( s.getTime() ),
         String.valueOf( e.getTime() ),
         'Barrie',
-        'Retail'
+        'Retail',
+        false
       );
       List<SalesAndServiceCalendar_Controller.EventData> result =
         (List<SalesAndServiceCalendar_Controller.EventData>)JSON.deserialize( jsonResult,
@@ -271,13 +285,47 @@ private class SalesAndServiceCalendar_Controller_Test {
         String.valueOf( s.getTime() ),
         String.valueOf( e.getTime() ),
         'Barrie',
-        'Service'
+        'Service',
+        false
       );
       List<SalesAndServiceCalendar_Controller.EventData> result =
         (List<SalesAndServiceCalendar_Controller.EventData>)JSON.deserialize( jsonResult,
                                                                               List<SalesAndServiceCalendar_Controller.EventData>.class);
       Test.stopTest();
       System.assertEquals( erps.size(), result.size() );
+    }
+  }
+
+  @isTest
+  static void fetchScheduledRecords_Service_Barrie_ExcludeCompleted_Test()
+  {
+    setup();
+    setupSerials();
+    AcctSeed__Project__c[] erps = barrieERPs('service');
+    Boolean o = gcProject.disableTrigger;
+    gcProject.disableTrigger = true;
+    erps[0].Job_Status__c = 'Completed';
+    update erps[0];
+    gcProject.disableTrigger = o;
+    System.runAs( barrieUser )
+    {
+      Test.startTest();
+      DateTime s = DateTime.now().addDays( -3 );
+      DateTime e = s.addDays( 7 );
+      System.debug( 'Start.getTime() ' + String.valueOf( s.getTime() ) );
+      System.debug( 'Start.formatLong() ' + s.formatLong() );
+      String jsonResult = SalesAndServiceCalendar_Controller.fetchScheduledRecords(
+        String.valueOf( s.getTime() ),
+        String.valueOf( e.getTime() ),
+        'Barrie',
+        'Service',
+        true
+      );
+      List<SalesAndServiceCalendar_Controller.EventData> result =
+        (List<SalesAndServiceCalendar_Controller.EventData>)JSON.deserialize( jsonResult,
+          List<SalesAndServiceCalendar_Controller.EventData>.class);
+      Test.stopTest();
+      System.assertEquals( erps.size() - 1, result.size() );
     }
   }
 
@@ -359,7 +407,7 @@ private class SalesAndServiceCalendar_Controller_Test {
                                                             null );
       Integer recCount = erps.size() + opps.size();
       Test.startTest();
-      String jsonResult = SalesAndServiceCalendar_Controller.fetchSchedulables();
+      String jsonResult = SalesAndServiceCalendar_Controller.fetchSchedulables( 'barrie' );
       List<SalesAndServiceCalendar_Controller.EventData> result =
         (List<SalesAndServiceCalendar_Controller.EventData>)JSON.deserialize( jsonResult,
                                                                               List<SalesAndServiceCalendar_Controller.EventData>.class);

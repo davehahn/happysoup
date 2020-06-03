@@ -4,7 +4,7 @@
 
 public with sharing class GoogleAPI
 {
-  private static final String googleApiKey = 'AIzaSyADJPE6bn9M5jPLrQW57nAAfYA3aBvNkmk';
+  private static final String googleApiKey = LGND_Constants.googleMapsAPI_Key;
 
   public class GoogleDestinationsResult {
     public String[] destination_addresses;
@@ -47,6 +47,7 @@ public with sharing class GoogleAPI
       url += '&destinations=' + EncodingUtil.urlEncode( this.destinations, 'UTF-8');
       url += '&key=' + googleApiKey;
       String gResult = getHttp(url);
+      System.debug( gResult );
       return (GoogleDestinationsResult)JSON.deserialize( gResult, GoogleDestinationsResult.class );
     }
 

@@ -11,6 +11,7 @@ public with sharing class CommissionPayment2_Selector extends Application_Select
     this.fields = new List<String>{
       'Id',
       'Owner__c',
+      'Type__c',
       'Owner__r.Name',
       'Owner__r.SmallPhotoUrl',
       'Amount__c',

@@ -20,6 +20,9 @@
 	fetchSchedulables : function( component )
   {
     var action = component.get('c.fetchSchedulables'), la;
+    action.setParams({
+      warehouseName: component.get('v.location')
+    });
     la = new LightningApex( this, action );
     return la.fire();
 	},
