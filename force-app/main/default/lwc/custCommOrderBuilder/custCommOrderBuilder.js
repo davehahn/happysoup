@@ -20,6 +20,7 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
   vertLogo = VLOGO;
   orderValid=true;
   isMobile = false;
+  @track motorDetails;
   pages = [
     'performance',
     'trailering',
@@ -30,7 +31,7 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
 
  	 modalPages = [
 		{
-			title: 'Premium Package',
+			title: 'Preferred Equipment Package',
 			label: 'premium-package',
 			class: 'modal-nav-item modal-nav-item_selected'
 		},
@@ -46,6 +47,7 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
 		},
 	];
 	@track currentModalPage = 'premium-package';
+	premiumPackage;
 
   @track paymentType='cash';
   @track iframeHeight;
@@ -101,6 +103,10 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
 			this.isMobile = (event.currentTarget.outerWidth < 1024) ? true : false;
 		});
 		this.isMobile = (window.outerWidth < 1024) ? true : false;
+
+		console.log('rendered!');
+		this.unsetClickFocus();
+
   }
 
   get processPages()
@@ -223,6 +229,28 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
     }
   }
 
+  get premiumPackValue(){
+    const value = parseInt(this.boat.premiumPackage.value);
+    return new Intl.NumberFormat('en-CA', {
+    							  							style: 'currency',
+    							  							currency: 'CAD',
+    							  							minimumFractionDigits: 0
+    							  							}).format(value);
+  }
+	get premiumPackItems(){
+		const contents = this.boat.premiumPackage.contents;
+		const sections = Object.entries(contents);
+		let packItems = [];
+		for(const [section, parts] of sections){
+			const items = Object.values(parts);
+			for(const item of items){
+				packItems.push(item);
+			}
+		}
+
+		return packItems;
+	}
+
   submitOrder()
   {
     const spinner = this.template.querySelector('c-legend-spinner');
@@ -255,5 +283,33 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
     return this.pages.indexOf( this.currentPage ) + 1 === this.pages.length
   }
 
+	get traileringOptions(){
+	  const options = [this.boat.standardTrailer, this.boat.trailerUpgrades];
+//	  console.log(JSON.parse(JSON.stringify(options)));
+		return options;
+ 	}
+
+	//Handle KM, RPM and Image swap when viewing Motor Options
+//	 handleUpdateOptionView(event){
+//	   this.motorDetails = JSON.parse(JSON.stringify(event.detail));
+//  }
+
+	unsetClickFocus(){
+	  let mouseDown = false;
+		const unsetFocus = this.template.querySelectorAll('[data-click-focus="unset"]');
+		unsetFocus.forEach((element) => {
+			element.addEventListener('mousedown', () => {
+				mouseDown = true;
+			});
+			element.addEventListener('mouseup', () => {
+				mouseDown = false;
+			});
+			element.addEventListener('focus', (event) => {
+				if (mouseDown) {
+					event.target.blur();
+				}
+			});
+		});
+ 	}
 
 }

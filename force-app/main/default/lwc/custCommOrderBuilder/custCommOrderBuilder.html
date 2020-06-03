@@ -28,7 +28,13 @@
           </div>
           <div class="modal-content_main">
             <div class="modal-page modal-page_selected" data-modal-page="premium-package">
-              <h4>Premium Package</h4>
+              <h4>Preferred Equipment Package</h4>
+              <ul class="premiumPackage">
+                <template for:each={premiumPackItems} for:item="item">
+                  <li key={item} class="premiumPackage_item">{item}</li>
+                </template>
+              </ul>
+              <p class="premiumPackage_value">Value: <span>{premiumPackValue}</span></p>
             </div>
             <div class="modal-page" data-modal-page="payment-calculator">
               <h4>Payment Calculator</h4>
@@ -50,7 +56,7 @@
 
       <div class="branding">
         <h1 class="main-logo">
-          <img src={logo} onclick={handleHomeNav}>
+          <button onclick={handleHomeNav} data-click-focus="unset"><img src={logo}></button>
         </h1>
       </div>
 
@@ -58,7 +64,7 @@
         <ol class="config-nav-list">
           <template for:each={processPages} for:item="page">
             <li key={page.label}>
-              <button class={page.class} onclick={handleNav} data-nav-name={page.label}><h2 class="config-nav-title">{page.label}</h2></button>
+              <button class={page.class} onclick={handleNav} data-click-focus="unset" data-nav-name={page.label}><h2 class="config-nav-title">{page.label}</h2></button>
             </li>
           </template>
         </ol>
@@ -76,13 +82,13 @@
       <div class="config-page config-page_selected" data-page="performance">
         <div class="config-page_left">
           <h1 class="vh">Performance</h1>
-          <c-cust-comm-order-boat-image size="large"></c-cust-comm-order-boat-image>
-          <c-cust-comm-order-motor-stats></c-cust-comm-order-motor-stats>
+          <c-cust-comm-order-boat-image size="large" page='performance'></c-cust-comm-order-boat-image>
+          <c-cust-comm-order-motor-stats motor-details={motorDetails}></c-cust-comm-order-motor-stats>
         </div>
         <div class="config-page_right slds-p-around_xx-large">
           <h2 class="right_heading">Select Your Performance</h2>
-            <c-cust-comm-order-options options-title="Standard Performance" selections="one" selection-scope="global"></c-cust-comm-order-options>
-            <c-cust-comm-order-options options-title="Enhanced Performance" selections="one" selection-scope="global"></c-cust-comm-order-options>
+            <c-cust-comm-order-options options-title="Standard Performance" selections="one" selection-scope="global" options={boat.standardMotor} boat-retail-price={boat.retailPrice} is-init="true" trigger-ui-change="true" page='performance'></c-cust-comm-order-options>
+            <c-cust-comm-order-options options-title="Enhanced Performance" selections="one" selection-scope="global" options={boat.motorUpgrades} boat-retail-price={boat.retailPrice} trigger-ui-change="true" page='performance'></c-cust-comm-order-options>
         </div>
       </div>
 
@@ -91,15 +97,16 @@
         <div class="config-page_left">
             <h1 class="vh">Trailering</h1>
             <template if:false={isMobile}>
-              <c-cust-comm-order-boat-image size="large"></c-cust-comm-order-boat-image>
+              <c-cust-comm-order-boat-image size="large" page='trailering'></c-cust-comm-order-boat-image>
             </template>
         </div>
-        <div class="config-page_right">
-          <div class="config-page_right slds-p-around_xx-large">
-            <h2 class="right_heading">Trailering Package</h2>
-            <c-cust-comm-order-options options-title="Select Your Trailer" selections="one" selection-scope="global"></c-cust-comm-order-options>
-            <c-cust-comm-order-options selections="one" selection-scope="global"></c-cust-comm-order-options>
-          </div>
+        <div class="config-page_right slds-p-around_xx-large">
+          <h2 class="right_heading">Trailering Package</h2>
+          <c-cust-comm-order-options options-title="Select Your Trailer" selections="one" selection-scope="global" is-init="true" options={boat.standardTrailer} boat-retail-price={boat.retailPrice} page='trailering'></c-cust-comm-order-options>
+          <c-cust-comm-order-options selections="one" selection-scope="global" options={boat.trailerUpgrades} show-option-price="true" boat-retail-price={boat.retailPrice} page='trailering'></c-cust-comm-order-options>
+          <c-cust-comm-order-options selections="multiple" selection-scope="local" options={boat.optionalProducts.canvas} show-option-price="true" boat-retail-price={boat.retailPrice} page='trailering'></c-cust-comm-order-options>
+          <c-cust-comm-order-options selections="multiple" selection-scope="local" options={boat.standardMotor} sub-section="optionalProducts.trailerAccessories" addons="true" show-option-price="true" boat-retail-price={boat.retailPrice} page='trailering' parent-page='performance'></c-cust-comm-order-options>
+          <c-cust-comm-order-options selections="multiple" selection-scope="local" options={boat.motorUpgrades} sub-section="optionalProducts.trailerAccessories" addons="true" show-option-price="true" boat-retail-price={boat.retailPrice} page='trailering' parent-page='performance'></c-cust-comm-order-options>
         </div>
       </div>
 
@@ -108,14 +115,12 @@
         <div class="config-page_left">
           <h1 class="vh">Electronics</h1>
           <template if:false={isMobile}>
-            <c-cust-comm-order-boat-image size="large"></c-cust-comm-order-boat-image>
+            <c-cust-comm-order-boat-image size="large" page='electronics'></c-cust-comm-order-boat-image>
           </template>
         </div>
-        <div class="config-page_right">
-          <div class="config-page_right slds-p-around_xx-large">
-            <h2 class="right_heading">Electronics</h2>
-            <c-cust-comm-order-options options-title="Terrova 55 Tech Package" selections="one" selection-scope="global"></c-cust-comm-order-options>
-          </div>
+        <div class="config-page_right slds-p-around_xx-large">
+          <h2 class="right_heading">Electronics</h2>
+          <c-cust-comm-order-options options-title="Terrova 55 Tech Package" options={boat.optionalProducts.electronics} show-option-price="true" boat-retail-price={boat.retailPrice} page='electronics'></c-cust-comm-order-options>
         </div>
       </div>
 
@@ -203,7 +208,7 @@
 
         </div>
         <div class="config-page_right slds-p-around_xx-large">
-          <c-cust-comm-order-boat-image size="small"></c-cust-comm-order-boat-image>
+          <c-cust-comm-order-boat-image size="small" page='summary'></c-cust-comm-order-boat-image>
           <h2 class="right_heading slds-text-heading_medium">Your X18</h2>
           <p class="right_delivery">Estimated Deliver: 5-8 weeks</p>
           <c-cust-comm-order-summary></c-cust-comm-order-summary>
@@ -220,6 +225,7 @@
             <div class="financetype-selector_button"
                  role="button"
                  tabindex="0"
+                 data-click-focus="unset"
                  onclick={openFinanceSelect}>
               {paymentType}
               <i class="slds-icon-chevrondown"></i>
@@ -244,16 +250,13 @@
         </div>
 
         <div class="config-footer_item finance-prices">
-          <div class="config-footer_price">
-            <div class="amount">$39,999</div>
-            <div class="label">Purchase Price</div>
-          </div>
+          <c-cust-comm-order-purchase-price boat-sku={boat.id} boat-retail-price={boat.retailPrice}></c-cust-comm-order-purchase-price>
           <div class="config-footer_savings">
-            <div class="amount">$6,700</div>
+            <div class="amount">{premiumPackValue}</div>
             <div class="label">Preferred equipment package savings</div>
           </div>
           <div class="config-footer_details-link">
-            <a onclick={handleOpenModal}>Show Details</a>
+            <a onclick={handleOpenModal} tabindex="0" data-click-focus="unset">Show Details</a>
           </div>
         </div>
 
@@ -266,6 +269,7 @@
         <template if:false={isMobile}>
           <div class="config-footer_item">
             <button disabled={buttonDisabled}
+                    data-click-focus="unset"
                     onclick={handleNext}>
               {buttonText}
             </button>
@@ -274,6 +278,7 @@
         <template if:true={isMobile}>
           <div class="config-footer_item">
             <button disabled={buttonDisabled}
+                    data-click-focus="unset"
                     onclick={jumpToPayment}>
               {buttonText}
             </button>
@@ -284,5 +289,4 @@
     </div>
 
   </div>
-
 </template>

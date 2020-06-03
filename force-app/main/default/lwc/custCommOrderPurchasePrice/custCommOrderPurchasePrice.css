@@ -1,0 +1,45 @@
+/**
+ * Created by Tim on 2020-05-27.
+ */
+.config-footer_price{
+  justify-content: center;
+  font-size: 15px;
+  margin-right: 3em;
+  white-space: normal;
+  min-width: 110px;
+  line-height: 1;
+}
+
+.config-footer_price div
+{
+  margin-top: 3px;
+  font-size: 12px;
+  color: #fff;
+  cursor: pointer;
+  align-self: center;
+}
+
+.config-footer_price .amount {
+  display: block;
+  color: #fff;
+  font-size: 19px;
+  align-self: center;
+  padding: 0;
+  margin: 0;
+  line-height: 1.25;
+  white-space: nowrap;
+}
+
+@media screen and (max-width: 40em){
+    .config-footer_price, .config-footer_savings{
+        display: block;
+        margin: 0 0 0.5em;
+    }
+    .config-footer_price .amount,
+    .config-footer_price .label,
+    .config-footer_savings .amount,
+    .config-footer_savings .label{
+        display: inline;
+        margin-right: 0.25em;
+    }
+}

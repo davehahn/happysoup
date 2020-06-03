@@ -2,14 +2,16 @@
  * Created by Tim on 2020-04-23.
  */
 .boatImage{
-    width: 90%;
+    width: 100%;
     margin: 0 auto;
     display: block;
+}
+.boatImage[data-page="performance"]{
+  padding-left: 7%;
 }
 
 @media screen and (max-width: 1024px){
     .boatImage[data-size="large"]{
         margin-top: 4em;
-        max-width: 800px;
     }
 }

@@ -5,16 +5,23 @@
 .options{
     margin-top: 4vw;
 }
+.options[data-has-title="false"]{
+  margin-top: 0;
+}
 .options_title{
-    font-size: 1.5em;
+    font-size: 1.125em;
     margin-bottom: 0.5em;
     font-family: 'gotham_htf';
+    font-weight: 600;
 }
 .options_list, .options_item{
     width: 100%;
 }
 .options_item{
     margin-bottom: 1.5em;
+}
+.options_item.hide{
+  display: none;
 }
 .options_item:last-of-type{
     margin-bottom: 0;
