@@ -67,7 +67,6 @@ export default class CustCommOrderCheckbox extends NavigationMixin(LightningElem
 
  pageReady(detail){
    if(detail === 'ready'){
-     console.log('summary is connected');
      if(this.optionInit){
 			this.handleClick(null, true);
 		 }
@@ -118,39 +117,29 @@ export default class CustCommOrderCheckbox extends NavigationMixin(LightningElem
  	}
 
  	unsetClickFocus(){
- 	  console.log('set up click focus');
 		let mouseDown = false;
 		const unsetFocus = this.template.querySelectorAll('[data-click-focus="unset"]');
 		unsetFocus.forEach((element) => {
 			element.addEventListener('mousedown', (event) => {
-			  console.log('mouseDown');
-			  console.log(event.target.tagName);
 				mouseDown = true;
 				if(event.target.tagName === "LABEL"){
 				  const targetID = event.target.getAttribute('for');
-				  console.log('targetID', targetID);
 					const target = querySelector('#' + targetID);
-					console.log('target: ', target);
 					this.blurFocus(target);
     		}
 			});
 			element.addEventListener('mouseup', () => {
-			  console.log('mouseup');
 				mouseDown = false;
 			});
 			element.addEventListener('focus', (event) => {
-			  console.log('focus');
 			  console.log(event.target.tagName);
 				if (mouseDown ) {
-				  console.log('and mousedown');
 					blurFocus(event.target);
 				}
 			});
 		});
 	}
 	blurFocus(target){
-	  console.log('in blur');
-	  console.log('blur: ', target);
 	  target.blur();
  	}
 }

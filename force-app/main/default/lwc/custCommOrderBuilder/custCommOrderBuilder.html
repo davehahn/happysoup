@@ -4,289 +4,293 @@
 
 <!-- Cust Comm Order Builder -->
 <template>
+  <main>
+    <template if:false={boatDetailsLoaded}>
+      <c-legend-spinner visible="true"></c-legend-spinner>
+    </template>
 
-  <template if:false={boatDetailsLoaded}>
-    <c-legend-spinner visible="true"></c-legend-spinner>
-  </template>
+    <div class="lgnd-order-builder" if:true={boatDetailsLoaded}>
+      <c-legend-spinner></c-legend-spinner>
 
-  <div class="lgnd-order-builder" if:true={boatDetailsLoaded}>
-    <c-legend-spinner></c-legend-spinner>
-    <div class="modal-container">
-      <div class="modal-content">
-        <div class="modal-content_body">
-          <div class="modal-content_sidebar">
-            <div class="sidebar_logo">
-              <img src={vertLogo}>
-            </div>
-            <ul class="sidebar_nav">
-              <template for:each={modalPages} for:item="modalPage">
-                <li key={modalPage.label}>
-                  <button class={modalPage.class} onclick={handleModalNav} data-modal-nav-name={modalPage.label}><h3 class="modal-nav-title">{modalPage.title}</h3></button>
-                </li>
-              </template>
-            </ul>
-          </div>
-          <div class="modal-content_main">
-            <div class="modal-page modal-page_selected" data-modal-page="premium-package">
-              <h4>Preferred Equipment Package</h4>
-              <ul class="premiumPackage">
-                <template for:each={premiumPackItems} for:item="item">
-                  <li key={item} class="premiumPackage_item">{item}</li>
-                </template>
-              </ul>
-              <p class="premiumPackage_value">Value: <span>{premiumPackValue}</span></p>
-            </div>
-            <div class="modal-page" data-modal-page="payment-calculator">
-              <h4>Payment Calculator</h4>
-            </div>
-            <div class="modal-page" data-modal-page="delivery">
-              <h4>Delivery Timing</h4>
-            </div>
-            <span class="modal-content_close">
-              <button onclick={handleCloseModal}>
-                <i class="slds-icon-close" ></i>
-              </button>
-            </span>
-          </div>
+      <header class="config-header">
+
+        <div class="branding">
+          <h1 class="main-logo">
+            <span class="vh">Legend Boats - Boat Builder</span>
+            <button onclick={handleHomeNav} data-click-focus="unset"><img src={logo}></button>
+          </h1>
         </div>
-      </div>
-    </div>
 
-    <div class="config-header">
+        <nav class="config-nav">
+          <h2 class="vh">Main Navigation</h2>
+          <ol class="config-nav-list">
+            <template for:each={processPages} for:item="page">
+              <li key={page.label}>
+                <button class={page.class} onclick={handleNav} data-click-focus="unset" data-nav-name={page.label}><h3 class="config-nav-title">{page.label}</h3></button>
+              </li>
+            </template>
+          </ol>
+        </nav>
 
-      <div class="branding">
-        <h1 class="main-logo">
-          <button onclick={handleHomeNav} data-click-focus="unset"><img src={logo}></button>
-        </h1>
-      </div>
+        <div class="language-select">
 
-      <div class="config-nav">
-        <ol class="config-nav-list">
-          <template for:each={processPages} for:item="page">
-            <li key={page.label}>
-              <button class={page.class} onclick={handleNav} data-click-focus="unset" data-nav-name={page.label}><h2 class="config-nav-title">{page.label}</h2></button>
-            </li>
-          </template>
-        </ol>
-      </div>
-
-      <div class="language-select">
-
-      </div>
-
-    </div>
-
-    <div class="config-content" data-current={currentPage}>
-
-      <!-- PERFORMANCE -->
-      <div class="config-page config-page_selected" data-page="performance">
-        <div class="config-page_left">
-          <h1 class="vh">Performance</h1>
-          <c-cust-comm-order-boat-image size="large" page='performance'></c-cust-comm-order-boat-image>
-          <c-cust-comm-order-motor-stats motor-details={motorDetails}></c-cust-comm-order-motor-stats>
         </div>
-        <div class="config-page_right slds-p-around_xx-large">
-          <h2 class="right_heading">Select Your Performance</h2>
+
+      </header>
+
+      <div class="config-content" data-current={currentPage}>
+
+        <!-- PERFORMANCE -->
+        <section class="config-page config-page_selected" data-page="performance">
+          <div class="config-page_left">
+            <h2 class="vh">Performance</h2>
+            <c-cust-comm-order-boat-image size="large" page='performance'></c-cust-comm-order-boat-image>
+            <c-cust-comm-order-motor-stats motor-details={motorDetails}></c-cust-comm-order-motor-stats>
+          </div>
+          <div class="config-page_right slds-p-around_xx-large">
+            <h3 class="right_heading">Select Your Performance</h3>
             <c-cust-comm-order-options options-title="Standard Performance" selections="one" selection-scope="global" options={boat.standardMotor} boat-retail-price={boat.retailPrice} is-init="true" trigger-ui-change="true" page='performance'></c-cust-comm-order-options>
             <c-cust-comm-order-options options-title="Enhanced Performance" selections="one" selection-scope="global" options={boat.motorUpgrades} boat-retail-price={boat.retailPrice} trigger-ui-change="true" page='performance'></c-cust-comm-order-options>
-        </div>
-      </div>
+          </div>
+        </section>
 
-      <!-- TRAILERING -->
-      <div class="config-page" data-page="trailering">
-        <div class="config-page_left">
-            <h1 class="vh">Trailering</h1>
+        <!-- TRAILERING -->
+        <section class="config-page" data-page="trailering">
+          <div class="config-page_left">
+            <h2 class="vh">Trailering</h2>
             <template if:false={isMobile}>
               <c-cust-comm-order-boat-image size="large" page='trailering'></c-cust-comm-order-boat-image>
             </template>
-        </div>
-        <div class="config-page_right slds-p-around_xx-large">
-          <h2 class="right_heading">Trailering Package</h2>
-          <c-cust-comm-order-options options-title="Select Your Trailer" selections="one" selection-scope="global" is-init="true" options={boat.standardTrailer} boat-retail-price={boat.retailPrice} page='trailering'></c-cust-comm-order-options>
-          <c-cust-comm-order-options selections="one" selection-scope="global" options={boat.trailerUpgrades} show-option-price="true" boat-retail-price={boat.retailPrice} page='trailering'></c-cust-comm-order-options>
-          <c-cust-comm-order-options selections="multiple" selection-scope="local" options={boat.optionalProducts.canvas} show-option-price="true" boat-retail-price={boat.retailPrice} page='trailering'></c-cust-comm-order-options>
-          <c-cust-comm-order-options selections="multiple" selection-scope="local" options={boat.standardMotor} sub-section="optionalProducts.trailerAccessories" addons="true" show-option-price="true" boat-retail-price={boat.retailPrice} page='trailering' parent-page='performance'></c-cust-comm-order-options>
-          <c-cust-comm-order-options selections="multiple" selection-scope="local" options={boat.motorUpgrades} sub-section="optionalProducts.trailerAccessories" addons="true" show-option-price="true" boat-retail-price={boat.retailPrice} page='trailering' parent-page='performance'></c-cust-comm-order-options>
-        </div>
+          </div>
+          <div class="config-page_right slds-p-around_xx-large">
+            <h3 class="right_heading">Trailering Package</h3>
+            <c-cust-comm-order-options options-title="Select Your Trailer" selections="one" selection-scope="global" is-init="true" options={boat.standardTrailer} boat-retail-price={boat.retailPrice} page='trailering'></c-cust-comm-order-options>
+            <c-cust-comm-order-options selections="one" selection-scope="global" options={boat.trailerUpgrades} show-option-price="true" boat-retail-price={boat.retailPrice} page='trailering'></c-cust-comm-order-options>
+            <c-cust-comm-order-options selections="multiple" selection-scope="local" options={boat.optionalProducts.canvas} show-option-price="true" boat-retail-price={boat.retailPrice} page='trailering'></c-cust-comm-order-options>
+            <c-cust-comm-order-options selections="multiple" selection-scope="local" options={boat.standardMotor} sub-section="optionalProducts.trailerAccessories" addons="true" show-option-price="true" boat-retail-price={boat.retailPrice} page='trailering' parent-page='performance'></c-cust-comm-order-options>
+            <c-cust-comm-order-options selections="multiple" selection-scope="local" options={boat.motorUpgrades} sub-section="optionalProducts.trailerAccessories" addons="true" show-option-price="true" boat-retail-price={boat.retailPrice} page='trailering' parent-page='performance'></c-cust-comm-order-options>
+          </div>
+        </section>
+
+        <!-- ELECTRONICS -->
+        <section class="config-page" data-page="electronics">
+          <div class="config-page_left">
+            <h2 class="vh">Electronics</h2>
+            <template if:false={isMobile}>
+              <c-cust-comm-order-boat-image size="large" page='electronics'></c-cust-comm-order-boat-image>
+            </template>
+          </div>
+          <div class="config-page_right slds-p-around_xx-large">
+            <h3 class="right_heading"><span class="vh">Choose Your</span> Electronics</h3>
+            <c-cust-comm-order-options options-title="Terrova 55 Tech Package" options={boat.optionalProducts.electronics} show-option-price="true" boat-retail-price={boat.retailPrice} page='electronics'></c-cust-comm-order-options>
+          </div>
+        </section>
+
+
+        <!-- PAYMENT -->
+        <section class="config-page" data-page="payment">
+          <h2 class="vh">Payment Form</h2>
+          <div class="config-page_left">
+            <button class="edit-config" onclick={handleEditConfig}>
+              <i class="slds-icon-chevronleft"></i>
+              <span>Edit Design</span>
+            </button>
+            <div class="account-details">
+              <h3 class="form-header">Enter Account Details</h3>
+              <lightning-layout multiple-rows="true">
+
+                <lightning-layout-item padding="horizontal-small"
+                                       size="12"
+                                       small-device-size="12"
+                                       medium-device-size="6"
+                                       large-device-size="6">
+                  <div class="form-input">
+                    <label>First Name</label>
+                    <input label="First Name" type="text">
+                  </div>
+                </lightning-layout-item>
+
+                <lightning-layout-item padding="horizontal-small"
+                                       size="12"
+                                       small-device-size="12"
+                                       medium-device-size="6"
+                                       large-device-size="6">
+                  <div class="form-input">
+                    <label>Last Name</label>
+                    <input label="Last Name" type="text">
+                  </div>
+                </lightning-layout-item>
+
+                <lightning-layout-item padding="horizontal-small"
+                                       size="12"
+                                       small-device-size="12"
+                                       medium-device-size="6"
+                                       large-device-size="6">
+                  <div class="form-input">
+                    <label>Email Address</label>
+                    <input label="Email Address" type="text">
+                  </div>
+                </lightning-layout-item>
+
+                <lightning-layout-item padding="horizontal-small"
+                                       size="12"
+                                       small-device-size="12"
+                                       medium-device-size="6"
+                                       large-device-size="6">
+                  <div class="form-input">
+                    <label>Phone Number</label>
+                    <input label="Phone Number" type="text">
+                  </div>
+                </lightning-layout-item>
+
+              </lightning-layout>
+            </div>
+
+            <div class="payment-details">
+              <h3 class="form-header">Payment</h3>
+              <div class="payment-disclaimer">
+                Due today to complete your order: $3,200.
+              </div>
+            </div>
+
+            <div class="payment-form">
+              <h3 class="form-header">Payment Card Details</h3>
+              <c-square-payment-form apex-page-name="/apex/Square_PaymentForm_CustomerCommunity"
+                                     is-responsive="true"
+                                     width-break-point="1401"
+                                     small-height="184"
+                                     large-height="368"></c-square-payment-form>
+              <div class="payment-disclaimer">
+                I allow Legend Boats to save my payment instrument information for future transactions pursuant to the <a href="#" target="_blank">Payment Terms for Services</a>
+              </div>
+            </div>
+
+          </div>
+
+          <aside class="config-page_right slds-p-around_xx-large">
+            <c-cust-comm-order-boat-image size="small" page='summary'></c-cust-comm-order-boat-image>
+            <h2 class="right_heading slds-text-heading_medium">Your X18</h2>
+            <p class="right_delivery">Estimated Deliver: 5-8 weeks</p>
+            <c-cust-comm-order-summary></c-cust-comm-order-summary>
+          </aside>
+
+        </section>
+
       </div>
 
-      <!-- ELECTRONICS -->
-      <div class="config-page" data-page="electronics">
-        <div class="config-page_left">
-          <h1 class="vh">Electronics</h1>
+      <div class="config-footer">
+        <div class="config-footer_content">
+
+          <div class="config-footer_item finance-type">
+            <div class="financetype-selector_container">
+              <div class="financetype-selector_button"
+                   role="button"
+                   tabindex="0"
+                   data-click-focus="unset"
+                   onclick={openFinanceSelect}>
+                {paymentType}
+                <i class="slds-icon-chevrondown"></i>
+              </div>
+              <ul class="financetype-selector_options" role="tablist">
+                <li role="tab"
+                    tabindex="-1"
+                    class="financetype-selector_option selected"
+                    data-value="cash"
+                    onclick={handlePaymentTypeSelect}>
+                  cash
+                </li>
+                <li role="tab"
+                    tabindex="-1"
+                    class="financetype-selector_option"
+                    data-value="loan"
+                    onclick={handlePaymentTypeSelect}>
+                  loan
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="config-footer_item finance-prices">
+            <c-cust-comm-order-purchase-price boat-sku={boat.id} boat-retail-price={boat.retailPrice}></c-cust-comm-order-purchase-price>
+            <div class="config-footer_savings">
+              <div class="amount">{premiumPackValue}</div>
+              <div class="label">Preferred equipment package savings</div>
+            </div>
+            <div class="config-footer_details-link">
+              <a onclick={handleOpenModal} tabindex="0" data-click-focus="unset">Show Details</a>
+            </div>
+          </div>
+
+          <div class="config-footer_item">
+            <div class="config-footer_delivery">
+              <div>Estimated Deliver: 5-8 weeks</div>
+            </div>
+          </div>
+
           <template if:false={isMobile}>
-            <c-cust-comm-order-boat-image size="large" page='electronics'></c-cust-comm-order-boat-image>
+            <div class="config-footer_item">
+              <button disabled={buttonDisabled}
+                      data-click-focus="unset"
+                      onclick={handleNext}>
+                {buttonText}
+              </button>
+            </div>
           </template>
-        </div>
-        <div class="config-page_right slds-p-around_xx-large">
-          <h2 class="right_heading">Electronics</h2>
-          <c-cust-comm-order-options options-title="Terrova 55 Tech Package" options={boat.optionalProducts.electronics} show-option-price="true" boat-retail-price={boat.retailPrice} page='electronics'></c-cust-comm-order-options>
-        </div>
-      </div>
-
-
-      <!-- PAYMENT -->
-      <div class="config-page" data-page="payment">
-        <div class="config-page_left">
-          <div class="edit-config" onclick={handleEditConfig}>
-            <i class="slds-icon-chevronleft"></i>
-            <span>Edit Design</span>
-          </div>
-          <div class="account-details">
-            <div class="form-header">Enter Account Details</div>
-            <lightning-layout multiple-rows="true">
-
-              <lightning-layout-item padding="horizontal-small"
-                                      size="12"
-                                      small-device-size="12"
-                                      medium-device-size="6"
-                                      large-device-size="6">
-                <div class="form-input">
-                  <label>First Name</label>
-                  <input label="First Name" type="text">
-                </div>
-              </lightning-layout-item>
-
-              <lightning-layout-item padding="horizontal-small"
-                                     size="12"
-                                     small-device-size="12"
-                                     medium-device-size="6"
-                                     large-device-size="6">
-                <div class="form-input">
-                  <label>Last Name</label>
-                  <input label="Last Name" type="text">
-                </div>
-              </lightning-layout-item>
-
-              <lightning-layout-item padding="horizontal-small"
-                                     size="12"
-                                     small-device-size="12"
-                                     medium-device-size="6"
-                                     large-device-size="6">
-                <div class="form-input">
-                  <label>Email Address</label>
-                  <input label="Email Address" type="text">
-                </div>
-              </lightning-layout-item>
-
-              <lightning-layout-item padding="horizontal-small"
-                                     size="12"
-                                     small-device-size="12"
-                                     medium-device-size="6"
-                                     large-device-size="6">
-                <div class="form-input">
-                  <label>Phone Number</label>
-                  <input label="Phone Number" type="text">
-                </div>
-              </lightning-layout-item>
-
-            </lightning-layout>
-          </div>
-
-          <div class="payment-details">
-            <div class="form-header">
-              Payment
+          <template if:true={isMobile}>
+            <div class="config-footer_item">
+              <button disabled={buttonDisabled}
+                      data-click-focus="unset"
+                      onclick={jumpToPayment}>
+                {buttonText}
+              </button>
             </div>
-            <div class="payment-disclaimer">
-              Due today to complete your order: $3,200.
-            </div>
-          </div>
+          </template>
 
-          <div class="payment-form">
-            <div class="form-header">
-              Payment Card Details
-            </div>
-            <c-square-payment-form apex-page-name="/apex/Square_PaymentForm_CustomerCommunity"
-                                   is-responsive="true"
-                                   width-break-point="1401"
-                                   small-height="184"
-                                   large-height="368"></c-square-payment-form>
-            <div class="payment-disclaimer">
-              I allow Legend Boats to save my payment instrument information for future transactions pursuant to the <a>Payment Terms for Services</a>
-            </div>
-          </div>
-
-        </div>
-        <div class="config-page_right slds-p-around_xx-large">
-          <c-cust-comm-order-boat-image size="small" page='summary'></c-cust-comm-order-boat-image>
-          <h2 class="right_heading slds-text-heading_medium">Your X18</h2>
-          <p class="right_delivery">Estimated Deliver: 5-8 weeks</p>
-          <c-cust-comm-order-summary></c-cust-comm-order-summary>
         </div>
       </div>
 
+      <aside class="modal-container">
+        <h2 class="vh">Additional Details Overlay</h2>
+        <div class="modal-content">
+          <div class="modal-content_body">
+            <nav class="modal-content_sidebar">
+              <h3 class="vh">Overlay Navigation</h3>
+              <div class="sidebar_logo">
+                <img src={vertLogo}>
+              </div>
+              <ul class="sidebar_nav">
+                <template for:each={modalPages} for:item="modalPage">
+                  <li key={modalPage.label}>
+                    <button class={modalPage.class} onclick={handleModalNav} data-modal-nav-name={modalPage.label}><h4 class="modal-nav-title">{modalPage.title}</h4></button>
+                  </li>
+                </template>
+              </ul>
+            </nav>
+            <article class="modal-content_main">
+              <section class="modal-page modal-page_selected" data-modal-page="premium-package">
+                <h3>Preferred Equipment Package</h3>
+                <ul class="premiumPackage">
+                  <template for:each={premiumPackItems} for:item="item">
+                    <li key={item} class="premiumPackage_item">{item}</li>
+                  </template>
+                </ul>
+                <p class="premiumPackage_value">Value: <span>{premiumPackValue}</span></p>
+              </section>
+              <section class="modal-page" data-modal-page="payment-calculator">
+                <h3>Payment Calculator</h3>
+              </section>
+              <section class="modal-page" data-modal-page="delivery">
+                <h3>Delivery Timing</h3>
+              </section>
+              <span class="modal-content_close">
+                <button onclick={handleCloseModal}>
+                  <i class="slds-icon-close" ></i>
+                </button>
+              </span>
+            </article>
+          </div>
+        </div>
+      </aside>
     </div>
-
-    <div class="config-footer">
-      <div class="config-footer_content">
-
-        <div class="config-footer_item finance-type">
-          <div class="financetype-selector_container">
-            <div class="financetype-selector_button"
-                 role="button"
-                 tabindex="0"
-                 data-click-focus="unset"
-                 onclick={openFinanceSelect}>
-              {paymentType}
-              <i class="slds-icon-chevrondown"></i>
-            </div>
-            <ul class="financetype-selector_options" role="tablist">
-              <li role="tab"
-                  tabindex="-1"
-                  class="financetype-selector_option selected"
-                  data-value="cash"
-                  onclick={handlePaymentTypeSelect}>
-                cash
-              </li>
-              <li role="tab"
-                  tabindex="-1"
-                  class="financetype-selector_option"
-                  data-value="loan"
-                  onclick={handlePaymentTypeSelect}>
-                loan
-              </li>
-            </ul>
-          </div>
-        </div>
-
-        <div class="config-footer_item finance-prices">
-          <c-cust-comm-order-purchase-price boat-sku={boat.id} boat-retail-price={boat.retailPrice}></c-cust-comm-order-purchase-price>
-          <div class="config-footer_savings">
-            <div class="amount">{premiumPackValue}</div>
-            <div class="label">Preferred equipment package savings</div>
-          </div>
-          <div class="config-footer_details-link">
-            <a onclick={handleOpenModal} tabindex="0" data-click-focus="unset">Show Details</a>
-          </div>
-        </div>
-
-        <div class="config-footer_item">
-          <div class="config-footer_delivery">
-            <div>Estimated Deliver: 5-8 weeks</div>
-          </div>
-        </div>
-
-        <template if:false={isMobile}>
-          <div class="config-footer_item">
-            <button disabled={buttonDisabled}
-                    data-click-focus="unset"
-                    onclick={handleNext}>
-              {buttonText}
-            </button>
-          </div>
-        </template>
-        <template if:true={isMobile}>
-          <div class="config-footer_item">
-            <button disabled={buttonDisabled}
-                    data-click-focus="unset"
-                    onclick={jumpToPayment}>
-              {buttonText}
-            </button>
-          </div>
-        </template>
-
-      </div>
-    </div>
-
-  </div>
+  </main>
 </template>
