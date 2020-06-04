@@ -335,6 +335,7 @@ button:focus{
   padding: 20px 0;
   display: inline-block;
   margin: 0;
+  text-transform: capitalize;
 }
 
 .language-select {
@@ -623,6 +624,7 @@ button:focus{
   justify-content: center;
   overflow: auto;
   position: absolute;
+  z-index: 1;
 }
 
 .config-page {
@@ -703,6 +705,9 @@ button:focus{
   color: #999;
   padding: 1%;
   font-size: 14px;
+}
+.edit-config:hover, .edit-config:focus{
+  text-decoration: underline;
 }
 
 .edit-config i {

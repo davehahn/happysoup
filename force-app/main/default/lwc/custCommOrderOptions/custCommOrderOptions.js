@@ -105,7 +105,7 @@ export default class CustCommOrderOptions extends LightningElement {
 						});
 					});
 				} else if(label === 'blurb'){
-					 blurb = stripContent;
+					 blurb = this.decodeHtml(stripContent);
 				} else if(label === 'includedproducts'){
 					includedProducts = stripContent.split("|");
 				} else if(label === 'customdisplayname'){
@@ -147,6 +147,12 @@ export default class CustCommOrderOptions extends LightningElement {
 			}
 			return newObj;
 	};
+
+	decodeHtml(html) {
+		var txt = document.createElement("textarea");
+		txt.innerHTML = html;
+		return txt.value;
+  }
 
 	get optionClasses()
 	{
