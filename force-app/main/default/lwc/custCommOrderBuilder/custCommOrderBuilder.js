@@ -230,25 +230,28 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
   }
 
   get premiumPackValue(){
-    const value = parseInt(this.boat.premiumPackage.value);
-    return new Intl.NumberFormat('en-CA', {
+    if(this.boat.premiumPackage.value){
+			const value = parseInt(this.boat.premiumPackage.value);
+			return new Intl.NumberFormat('en-CA', {
     							  							style: 'currency',
     							  							currency: 'CAD',
     							  							minimumFractionDigits: 0
     							  							}).format(value);
+		}
   }
 	get premiumPackItems(){
-		const contents = this.boat.premiumPackage.contents;
-		const sections = Object.entries(contents);
-		let packItems = [];
-		for(const [section, parts] of sections){
-			const items = Object.values(parts);
-			for(const item of items){
-				packItems.push(item);
+	  if(this.boat.premiumPackage.contents){
+			const contents = this.boat.premiumPackage.contents;
+			const sections = Object.entries(contents);
+			let packItems = [];
+			for(const [section, parts] of sections){
+				const items = Object.values(parts);
+				for(const item of items){
+					packItems.push(item);
+				}
 			}
+			return packItems;
 		}
-
-		return packItems;
 	}
 
   submitOrder()
@@ -285,14 +288,8 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
 
 	get traileringOptions(){
 	  const options = [this.boat.standardTrailer, this.boat.trailerUpgrades];
-//	  console.log(JSON.parse(JSON.stringify(options)));
 		return options;
  	}
-
-	//Handle KM, RPM and Image swap when viewing Motor Options
-//	 handleUpdateOptionView(event){
-//	   this.motorDetails = JSON.parse(JSON.stringify(event.detail));
-//  }
 
 	unsetClickFocus(){
 	  let mouseDown = false;
