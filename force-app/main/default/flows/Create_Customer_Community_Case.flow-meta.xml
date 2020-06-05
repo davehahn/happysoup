@@ -3,10 +3,19 @@
     <actionCalls>
         <name>Create_Customer_Case</name>
         <label>Create Customer Case</label>
-        <locationX>558</locationX>
-        <locationY>45</locationY>
+        <locationX>659</locationX>
+        <locationY>50</locationY>
         <actionName>Create_Customer_Case</actionName>
         <actionType>quickAction</actionType>
+        <connector>
+            <targetReference>Success</targetReference>
+        </connector>
+        <inputParameters>
+            <name>Chat_Transcript__c</name>
+            <value>
+                <elementReference>recordId</elementReference>
+            </value>
+        </inputParameters>
         <inputParameters>
             <name>ContactId</name>
             <value>
@@ -44,6 +53,12 @@
             </value>
         </inputParameters>
         <inputParameters>
+            <name>Service_Location__c</name>
+            <value>
+                <elementReference>Service_Location</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
             <name>Status</name>
             <value>
                 <stringValue>New</stringValue>
@@ -56,6 +71,114 @@
             </value>
         </inputParameters>
     </actionCalls>
+    <actionCalls>
+        <name>Create_Customer_Case_0</name>
+        <label>Create Customer Case</label>
+        <locationX>718</locationX>
+        <locationY>374</locationY>
+        <actionName>Create_Customer_Case</actionName>
+        <actionType>quickAction</actionType>
+        <connector>
+            <targetReference>Success</targetReference>
+        </connector>
+        <inputParameters>
+            <name>Chat_Transcript__c</name>
+            <value>
+                <elementReference>recordId</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>ContactId</name>
+            <value>
+                <elementReference>ContactId</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>Contact_Language__c</name>
+            <value>
+                <elementReference>Contact_Language_0</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>Description</name>
+            <value>
+                <elementReference>Description_0</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>SuppliedEmail</name>
+            <value>
+                <elementReference>CustomerEmailValue</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>SuppliedPhone</name>
+            <value>
+                <elementReference>PhoneNumberValue</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>Priority</name>
+            <value>
+                <elementReference>Priority_0</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>Service_Location__c</name>
+            <value>
+                <elementReference>Service_Location_0</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>Status</name>
+            <value>
+                <stringValue>New</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>Subject</name>
+            <value>
+                <elementReference>Subject_0</elementReference>
+            </value>
+        </inputParameters>
+    </actionCalls>
+    <decisions>
+        <name>Validate_Contact</name>
+        <label>Validate Contact</label>
+        <locationX>440</locationX>
+        <locationY>180</locationY>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>isValid</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>ContactId</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>GetContactDetails</targetReference>
+            </connector>
+            <label>isValid</label>
+        </rules>
+        <rules>
+            <name>isNotValid</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>ContactId</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Input</targetReference>
+            </connector>
+            <label>isNotValid</label>
+        </rules>
+    </decisions>
     <description>Used on Conversations</description>
     <dynamicChoiceSets>
         <name>CaseStatusPL</name>
@@ -81,6 +204,14 @@
         <picklistField>Priority</picklistField>
         <picklistObject>Case</picklistObject>
     </dynamicChoiceSets>
+    <dynamicChoiceSets>
+        <name>ServiceLocationChoices</name>
+        <dataType>Picklist</dataType>
+        <displayField xsi:nil="true"/>
+        <object xsi:nil="true"/>
+        <picklistField>Service_Location__c</picklistField>
+        <picklistObject>Case</picklistObject>
+    </dynamicChoiceSets>
     <interviewLabel>Create Customer Community Case {!$Flow.CurrentDateTime}</interviewLabel>
     <label>Create Customer Community Case</label>
     <processMetadataValues>
@@ -99,11 +230,11 @@
     <recordLookups>
         <name>Get_Record_Details</name>
         <label>Get Record Details</label>
-        <locationX>266</locationX>
-        <locationY>44</locationY>
+        <locationX>254</locationX>
+        <locationY>178</locationY>
         <assignNullValuesIfNoRecordsFound>true</assignNullValuesIfNoRecordsFound>
         <connector>
-            <targetReference>Input</targetReference>
+            <targetReference>Validate_Contact</targetReference>
         </connector>
         <filters>
             <field>Id</field>
@@ -118,11 +249,37 @@
             <field>ContactId</field>
         </outputAssignments>
     </recordLookups>
+    <recordLookups>
+        <name>GetContactDetails</name>
+        <label>GetContactDetails</label>
+        <locationX>450</locationX>
+        <locationY>374</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Input_0</targetReference>
+        </connector>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>ContactId</elementReference>
+            </value>
+        </filters>
+        <object>Contact</object>
+        <outputAssignments>
+            <assignToReference>CustomerEmailValue</assignToReference>
+            <field>Email</field>
+        </outputAssignments>
+        <outputAssignments>
+            <assignToReference>PhoneNumberValue</assignToReference>
+            <field>MobilePhone</field>
+        </outputAssignments>
+    </recordLookups>
     <screens>
         <name>Input</name>
         <label>Input</label>
-        <locationX>406</locationX>
-        <locationY>44</locationY>
+        <locationX>448</locationX>
+        <locationY>50</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>true</allowPause>
@@ -174,6 +331,14 @@
             </outputParameters>
         </fields>
         <fields>
+            <name>Service_Location</name>
+            <choiceReferences>ServiceLocationChoices</choiceReferences>
+            <dataType>String</dataType>
+            <fieldText>Service Location</fieldText>
+            <fieldType>DropdownBox</fieldType>
+            <isRequired>true</isRequired>
+        </fields>
+        <fields>
             <name>Contact_Language</name>
             <choiceReferences>Contact_Language_Choice</choiceReferences>
             <dataType>String</dataType>
@@ -206,10 +371,61 @@
         <showHeader>true</showHeader>
     </screens>
     <screens>
+        <name>Input_0</name>
+        <label>Input</label>
+        <locationX>580</locationX>
+        <locationY>374</locationY>
+        <allowBack>true</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>true</allowPause>
+        <connector>
+            <targetReference>Create_Customer_Case_0</targetReference>
+        </connector>
+        <fields>
+            <name>Service_Location_0</name>
+            <choiceReferences>ServiceLocationChoices</choiceReferences>
+            <dataType>String</dataType>
+            <fieldText>Service Location</fieldText>
+            <fieldType>DropdownBox</fieldType>
+            <isRequired>true</isRequired>
+        </fields>
+        <fields>
+            <name>Contact_Language_0</name>
+            <choiceReferences>Contact_Language_Choice</choiceReferences>
+            <dataType>String</dataType>
+            <fieldText>Contact Language</fieldText>
+            <fieldType>DropdownBox</fieldType>
+            <isRequired>true</isRequired>
+        </fields>
+        <fields>
+            <name>Priority_0</name>
+            <choiceReferences>PriorityPL</choiceReferences>
+            <dataType>String</dataType>
+            <fieldText>Priority</fieldText>
+            <fieldType>DropdownBox</fieldType>
+            <isRequired>true</isRequired>
+        </fields>
+        <fields>
+            <name>Subject_0</name>
+            <dataType>String</dataType>
+            <fieldText>Subject</fieldText>
+            <fieldType>InputField</fieldType>
+            <isRequired>true</isRequired>
+        </fields>
+        <fields>
+            <name>Description_0</name>
+            <fieldText>Description</fieldText>
+            <fieldType>LargeTextArea</fieldType>
+            <isRequired>false</isRequired>
+        </fields>
+        <showFooter>true</showFooter>
+        <showHeader>true</showHeader>
+    </screens>
+    <screens>
         <name>Landing</name>
         <label>Landing</label>
         <locationX>148</locationX>
-        <locationY>48</locationY>
+        <locationY>178</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>true</allowPause>
@@ -219,9 +435,25 @@
         <showFooter>true</showFooter>
         <showHeader>true</showHeader>
     </screens>
+    <screens>
+        <name>Success</name>
+        <label>Success</label>
+        <locationX>833</locationX>
+        <locationY>186</locationY>
+        <allowBack>true</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>true</allowPause>
+        <fields>
+            <name>SuccessMsg</name>
+            <fieldText>&lt;p&gt;&lt;b style=&quot;color: rgb(73, 240, 13);&quot;&gt;The case has been successfully created.&lt;/b&gt;&lt;/p&gt;</fieldText>
+            <fieldType>DisplayText</fieldType>
+        </fields>
+        <showFooter>true</showFooter>
+        <showHeader>true</showHeader>
+    </screens>
     <start>
         <locationX>51</locationX>
-        <locationY>48</locationY>
+        <locationY>178</locationY>
         <connector>
             <targetReference>Landing</targetReference>
         </connector>
