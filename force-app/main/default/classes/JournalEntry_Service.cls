@@ -146,6 +146,7 @@ public with sharing class JournalEntry_Service {
                 AcctSeed__Total_Credits__c,
                 AcctSeed__Total_Debits__c,
                 Commission_Record__c,
+                AcctSeed__Ledger__c,
                 Project__c,
                 AcctSeed__Journal_Date__c,
                 (SELECT
