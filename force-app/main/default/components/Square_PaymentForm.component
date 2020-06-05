@@ -1,58 +1,58 @@
 <apex:component controller="SquarePaymentForm_Controller">
 
-    <script type="text/javascript" src="https://js.squareupsandbox.com/v2/paymentform">
-    </script>
+  <script type="text/javascript" src="{!paymentFormJsUrl}">
+  </script>
 
-    <apex:slds />
+  <apex:slds />
 
-    <div class="slds-scope">
-        <div class="slds-grid slds-wrap sqr-payment-container">
-            <div class="slds-col
+  <div class="slds-scope">
+    <div class="slds-grid slds-wrap sqr-payment-container">
+      <div class="slds-col
                   slds-size_1-of-1
                   slds-small-size_1-of-1
                   slds-medium-size_1-of-2
                   slds-large-size_1-of-2
                   slds-p-left_small
                   slds-p-right_small">
-                <label>Card Number</label>
-                <div id="sq-card-number"></div>
-            </div>
-            <div class="slds-col
+        <label>Card Number</label>
+        <div id="sq-card-number"></div>
+      </div>
+      <div class="slds-col
                   slds-size_1-of-1
                   slds-small-size_1-of-1
                   slds-medium-size_1-of-2
                   slds-large-size_1-of-2
                   slds-p-left_small
                   slds-p-right_small">
-                <label>Expiration Date</label>
-                <div id="sq-expiration-date"></div>
-            </div>
-            <div class="slds-col
+        <label>Expiration Date</label>
+        <div id="sq-expiration-date"></div>
+      </div>
+      <div class="slds-col
                   slds-size_1-of-1
                   slds-small-size_1-of-1
                   slds-medium-size_1-of-2
                   slds-large-size_1-of-2
                   slds-p-left_small
                   slds-p-right_small">
-                <label>CVV</label>
-                <div id="sq-cvv"></div>
-            </div>
-            <div class="slds-col
+        <label>CVV</label>
+        <div id="sq-cvv"></div>
+      </div>
+      <div class="slds-col
                   slds-size_1-of-1
                   slds-small-size_1-of-1
                   slds-medium-size_1-of-2
                   slds-large-size_1-of-2
                   slds-p-left_small
                   slds-p-right_small">
-                <label>Billing Postal Code</label>
-                <div id="sq-postal-code"></div>
-            </div>
-            <!--        <button id="sq-creditcard" class="button-credit-card" onclick="onGetCardNonce(event)">Pay Invoice</button>-->
-        </div>
+        <label>Billing Postal Code</label>
+        <div id="sq-postal-code"></div>
+      </div>
+      <!--        <button id="sq-creditcard" class="button-credit-card" onclick="onGetCardNonce(event)">Pay Invoice</button>-->
     </div>
+  </div>
 
-    <script type="text/javascript">
-    let _resolve, _reject, _paymentAmount;
+  <script type="text/javascript">
+    let _resolve, _reject, _paymentAmount, _referenceId;
 
     const paymentForm = new SqPaymentForm(
     {
@@ -92,45 +92,51 @@
           {
             _reject( errors );
           }
-          SquarePaymentForm_Controller.postToSquare( _paymentAmount, nonce, function( events, result ) {
-            console.log( result );
-            if( result.statusCode === 200 )
-            {
-
-              const response = JSON.parse( result.result );
-              if( response.errors )
+          SquarePaymentForm_Controller.postToSquare(
+            _paymentAmount,
+            _referenceId,
+            nonce,
+            function( events, result ) {
+              console.log( result );
+              if( result.statusCode === 200 )
               {
-                setErrorClassOnInput( response.errors );
-                let errs = [];
-                response.errors.forEach( e => errs.push( { message: e.detail } ) );
-                _reject( errs );
+
+                const response = JSON.parse( result.result );
+                if( response.errors )
+                {
+                  setErrorClassOnInput( response.errors );
+                  let errs = [];
+                  response.errors.forEach( e => errs.push( { message: e.detail } ) );
+                  _reject( errs );
+                }
+                else
+                {
+                  console.log('LOOK HERE');
+                  console.log( response.payment );
+                  _resolve(  response.payment );
+                }
               }
               else
               {
-                console.log('LOOK HERE');
-                console.log( response.payment );
-                _resolve(  response.payment );
+                console.log(result.message);
+                _reject( [{message: result.message}] );
               }
-            }
-            else
-            {
-              console.log(result.message);
-              _reject( [{message: result.message}] );
-            }
-          }, {escape: false});
-
+            },
+            {escape: false}
+          );
         }
       }
     });
 
     paymentForm.build();
 
-    function doPostPayment( paymentAmount )
+    function doPostPayment( paymentAmount, referenceId )
     {
 
       _reject = undefined;
       _resolve = undefined;
       _paymentAmount = paymentAmount;
+      _referenceId = typeof(referenceId) === 'undefined' ? null : referenceId;
 
       return new Promise( ( resolve, reject ) => {
         _resolve = resolve;
