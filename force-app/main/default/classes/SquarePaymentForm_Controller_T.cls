@@ -5,6 +5,7 @@
 @IsTest
 private class SquarePaymentForm_Controller_T
 {
+  static final Boolean runningInASandbox = [SELECT IsSandbox FROM Organization LIMIT 1].IsSandbox;
 
   @testSetup static void dataSetup()
   {
@@ -40,6 +41,7 @@ private class SquarePaymentForm_Controller_T
     Test.startTest();
     String resultJSON = SquarePaymentForm_Controller.postToSquare(
       1000,
+      'recordId',
       'hfjsghfs87fsdgj'
     );
     Test.stopTest();
@@ -54,15 +56,21 @@ private class SquarePaymentForm_Controller_T
   }
 
   @IsTest
-  static void getApplicationId_Test()
+  static void getter_Tests()
   {
     Square_Setting__mdt settings = [
-      SELECT ApplicationId__c, AuthToken__c, Version__c, PaymentEndpoint__c
+      SELECT
+        ApplicationId__c,
+        AuthToken__c,
+        Version__c,
+        PaymentEndpoint__c,
+        Payment_Form_JS__c
       FROM Square_Setting__mdt
-      WHERE IsSandbox__c = true
+      WHERE IsSandbox__c = :runningInASandbox
     ];
     SquarePaymentForm_Controller ctr = new SquarePaymentForm_Controller();
 
     System.assertEquals( settings.ApplicationId__c, ctr.getApplicationId() );
+    System.assertEquals( settings.Payment_Form_JS__c, ctr.getPaymentFormJsUrl() );
   }
 }
