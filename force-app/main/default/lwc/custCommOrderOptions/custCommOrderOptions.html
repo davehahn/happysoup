@@ -5,7 +5,9 @@
 <!-- Cust Comm Order Options -->
 <template>
     <section class="options" data-has-title={hasOptionsTitle}>
-        <h3 class="options_title">{optionsTitle}</h3>
+        <template if:true={hasOptionsTitle}>
+            <h4 class="options_title">{optionsTitle}</h4>
+        </template>
         <fieldset>
             <ul class="options_list">
                 <template for:each={availableOptions} for:item="option">

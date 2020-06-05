@@ -15,16 +15,8 @@ export default class CustCommOrderBoatImage extends LightningElement {
 		@wire(CurrentPageReference) pageRef;
 
 		connectedCallback(){
-		  if(this.page !== 'undefined'){
-		  	registerListener('motorSelection', this.handleImageChange, this);
-    	}
+			registerListener('motorSelection', this.handleImageChange, this);
 		}
-
-//    get boatImage(){
-//      if(this.motorDetails){
-//        return this.motorDetails.optionImage;
-//      }
-//    }
 
 		handleImageChange(detail){
 			if(detail.optionImage !== 'undefined'){
