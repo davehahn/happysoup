@@ -1217,7 +1217,7 @@
             <name>Boat_Numbers_Order_Submission_Email</name>
             <type>Alert</type>
         </actions>
-        <active>false</active>
+        <active>true</active>
         <description>Sends boat numbers to the boat number supplier by location when boat numbers are entered on the Retail Boat Sale ERP.</description>
         <formula>RecordType.Name = &quot;Retail Boat Sale&quot; &amp;&amp;  CONTAINS(WarehouseName__c, &quot;Barrie&quot;) &amp;&amp; NOT(ISBLANK(Boat_numbers_erp__c)) &amp;&amp; NOT(CONTAINS(Oppy_Boat_Model__c, &quot;Loose&quot;)) &amp;&amp;  NOT(ISPICKVAL(Serial_Number__r.Status__c, &quot;Used&quot;))</formula>
         <triggerType>onCreateOrTriggeringUpdate</triggerType>
@@ -1228,7 +1228,7 @@
             <name>Boat_Numbers_Order_Submission_Email_Whitefish</name>
             <type>Alert</type>
         </actions>
-        <active>false</active>
+        <active>true</active>
         <description>Sends boat numbers to the boat number supplier by location when boat numbers are entered on the Retail Boat Sale ERP.</description>
         <formula>RecordType.Name = &quot;Retail Boat Sale&quot; &amp;&amp;  CONTAINS(WarehouseName__c, &quot;Whitefish&quot;) &amp;&amp; NOT(ISBLANK(Boat_numbers_erp__c)) &amp;&amp; NOT(CONTAINS(Oppy_Boat_Model__c, &quot;Loose&quot;)) &amp;&amp;  NOT(ISPICKVAL(Serial_Number__r.Status__c, &quot;Used&quot;))</formula>
         <triggerType>onCreateOrTriggeringUpdate</triggerType>
