@@ -83,7 +83,10 @@ public class Factory_ERPOrder {
         mats.add( buildMaterial( erp.Id, erpId_task_map.get( erp.Id ).Id, p.Id) );
       }
     }
+    origTrig = gcMaterial.disableTrigger;
+    gcMaterial.disableTrigger = true;
     insert mats;
+    gcMaterial.disableTrigger = origTrig;
     return erps;
   }
 

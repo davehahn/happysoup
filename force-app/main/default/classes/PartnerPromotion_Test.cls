@@ -9,35 +9,54 @@ private class PartnerPromotion_Test {
   static User partnerUser;
   static Dealer_Order__c dealerOrder;
   static List<AcctSeed__Project__c> erps;
+  static List<AcctSeed__Project__c> all_erps;
   static Product2 boat;
 
   @testSetup static void dataSetup() {
     new Factory_TestData();
     Factory_CustomSettings.setupInventorySettings();
+    Product2 b = Factory_Product.buildSerializedProduct('Boat', 'Utility');
+    b.Stack_Size__c = 3;
+    insert b;
+    Factory_PricebookEntry.createAllDefaultEntriesEntries( b.Id, 10000 );
+    Account p = Factory_Account.insertDealerAccounts(1)[0];
+    Factory_ERPOrder.createPartnerBoatSales( p, new List<Product2>{b}, 12 );
   }
 
-  static {
-    partner = Factory_Account.insertDealerAccounts(1)[0];
+  private static void setup()
+  {
+    partner = [SELECT Id, Name FROM Account WHERE RecordType.Name = 'Dealer' AND Name LIKE '%Dealer%' LIMIT 1];
     partnerUser = Factory_User.createPartnerUser( partner );
+    all_erps =  [SELECT Id FROM AcctSeed__Project__c WHERE AcctSeed__Account__c = :partner.Id ];
+    for( AcctSeed__Project__c erp : all_erps )
+    {
+      erp.OwnerId = partnerUser.Id;
+    }
+    Boolean o = gcProject.disableTrigger;
+    gcProject.disableTrigger = true;
+    update all_erps;
+    gcProject.disableTrigger = o;
   }
 
   private static void init( Integer erpCount )
   {
     dealerOrder = Factory_DealerOrder.createDealerOrder( partner );
-    boat = Factory_Product.buildSerializedProduct('Boat', 'Utility');
-    boat.Stack_Size__c = 3;
-    insert boat;
-    Factory_PricebookEntry.createAllDefaultEntriesEntries( boat.Id, 10000 );
-    erps = Factory_ERPOrder.createPartnerBoatSales( partner, new List<Product2>{boat}, erpCount );
+    boat = [ SELECT Id FROM Product2 WHERE RecordType.Name = 'Boat' AND Family = 'Utility' LIMIT 1];
+    erps = new List<AcctSeed__Project__c>();
+    for( Integer i=0; i<erpCount; i++ )
+    {
+      erps.add( all_erps[i] );
+    }
     Factory_DealerOrder.createDealerOrderLines( erps, dealerOrder, boat );
   }
 
   @IsTest
   static void SevenForSevenInit_Even_Test()
   {
+    setup();
     System.runAs( partnerUser )
     {
-      init(12);
+      init(12 );
       Test.startTest();
       PartnerPromotion.Seven4Seven_Promo promo = new PartnerPromotion.Seven4Seven_Promo( dealerOrder.Id );
       Test.stopTest();
@@ -54,6 +73,7 @@ private class PartnerPromotion_Test {
   @IsTest
   static void SevenForSevenInit_Odd_Test()
   {
+    setup();
     System.runAs( partnerUser )
     {
       init(11);
@@ -73,6 +93,7 @@ private class PartnerPromotion_Test {
   @IsTest
   static void SevenForSevenApply_Test()
   {
+    setup();
     System.runAs( partnerUser )
     {
       init(12);
