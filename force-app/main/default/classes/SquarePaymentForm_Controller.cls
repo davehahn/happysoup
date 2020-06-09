@@ -25,4 +25,4 @@ global with sharing class SquarePaymentForm_Controller
   }
 
 }
-}
+
