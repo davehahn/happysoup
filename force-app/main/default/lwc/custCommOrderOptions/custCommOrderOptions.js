@@ -91,6 +91,7 @@ export default class CustCommOrderOptions extends LightningElement {
 		let	rpm = null;
 		let images = [];
 		let blurb = null;
+		let swatch = null;
 		let includedProducts = [];
 
 
@@ -128,7 +129,9 @@ export default class CustCommOrderOptions extends LightningElement {
 					includedProducts = stripContent.split("|");
 				} else if(label === 'customdisplayname'){
 					name = stripContent;
-				}
+				} else if(label === 'swatch'){
+					swatch = stripContent;
+    		}
 			}
 		}
 
@@ -144,7 +147,8 @@ export default class CustCommOrderOptions extends LightningElement {
 			'images': images,
 			'blurb': blurb,
 			'includedProducts': includedProducts,
-			'parentSku': parentSku
+			'parentSku': parentSku,
+			'swatch': swatch
 		});
 //				console.log('details: ', optionDetails);
 		return optionDetails;

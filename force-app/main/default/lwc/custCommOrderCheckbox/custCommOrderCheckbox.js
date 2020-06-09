@@ -7,26 +7,17 @@ import { NavigationMixin, CurrentPageReference } from 'lightning/navigation';
 import { fireEvent, registerListener, unregisterAllListeners} from 'c/pubsub';
 
 export default class CustCommOrderCheckbox extends NavigationMixin(LightningElement) {
-	@api optionSku;
-	@api optionName;
-	@api optionRetailPrice;
-	@api optionDisplayPrice;
 	@api optionShowUpgradePrice;
-	@api optionKm;
-	@api optionRpm;
-	@api optionInit;
 	@api optionPage;
-	@api optionInputType;
-	@api optionImages;
 	@api optionParentSku;
 	@api optionIsAddon;
 	@api displayImage;
-	@api optionBlurb;
-	@api optionIncludedProducts;
 	@api optionTriggerUiChange;
 	@api optionBoatRetail;
 	@api optionLayout = 'standard';
 	@api optionGroupingName;
+
+	@api productOptions;
 	//@track useCheckbox;
 
 	@track displayRPM;
@@ -39,7 +30,7 @@ export default class CustCommOrderCheckbox extends NavigationMixin(LightningElem
  	}
 
  get useCheckbox(){
-   return (this.optionInputType !== 'radio') ? true : false;
+   return (this.productOptions.inputType !== 'radio') ? true : false;
  }
 
  get optionInputName(){
@@ -50,10 +41,10 @@ export default class CustCommOrderCheckbox extends NavigationMixin(LightningElem
  }
 
  get optionFormattedPrice(){
- 		let displayPrice = parseInt(this.optionDisplayPrice);
+ 		let displayPrice = this.productOptions.displayPrice;
     if(displayPrice === 0){
       if(this.optionPage === 'performance'){
-        displayPrice = parseInt(this.optionBoatRetail);
+        displayPrice = this.optionBoatRetail;
 				return displayPrice = new Intl.NumberFormat('en-CA', {
         																	style: 'currency',
         																	currency: 'CAD',
@@ -72,16 +63,21 @@ export default class CustCommOrderCheckbox extends NavigationMixin(LightningElem
  }
 
  get hasIncludedProducts(){
-   return (this.optionIncludedProducts.length !== 0) ? true : false;
+   return (this.productOptions.includedProducts.length !== 0) ? true : false;
  }
 
   get hasOptionsDeck(){
-    return (this.optionBlurb !== null) ? true : false;
+    return (this.productOptions.blurb !== null) ? true : false;
   }
+
+ get hasSwatch(){
+   return (this.productOptions.swatch !== null)
+   ? `background-image: url(${this.productOptions.swatch})` : '';
+ }
 
  pageReady(detail){
    if(detail === 'ready'){
-     if(this.optionInit){
+     if(this.productOptions.init){
 			this.handleChange(null, true);
 		 }
    }
@@ -100,30 +96,30 @@ export default class CustCommOrderCheckbox extends NavigationMixin(LightningElem
     }
 
 	  let details = {
-	    'optionSKU': this.optionSku,
-			'motorSpeed': this.optionKm,
-			'motorRPM': this.optionRpm,
-			'optionImage': this.optionImages,
+	    'optionSKU': this.productOptions.sku,
+			'motorSpeed': this.productOptions.km,
+			'motorRPM': this.productOptions.rpm,
+			'optionImage': this.productOptions.images,
 			'optionParentPage': this.optionPage,
-			'optionName': this.optionName,
-			'optionType': this.optionInputType
+			'optionName': this.productOptions.name,
+			'optionType': this.productOptions.inputType
    	};
 
    	let summaryDetails = {
-			'sku': this.optionSku,
-			'name': this.optionName,
+			'sku': this.productOptions.sku,
+			'name': this.productOptions.name,
 			'addToSummary': isChecked,
 			'section': this.optionPage,
-			'type': this.optionInputType,
+			'type': this.productOptions.inputType,
 			'addon': this.optionIsAddon
 		};
 
 		let purchasePrice = {
-		  'sku': this.optionSku,
-			'price': this.optionRetailPrice,
+		  'sku': this.productOptions.sku,
+			'price': this.productOptions.retailPrice,
 			'addToPrice': isChecked,
 			'section': this.optionPage,
-			'type': this.optionInputType,
+			'type': this.productOptions.inputType,
 			'addon': this.optionIsAddon
   	};
 

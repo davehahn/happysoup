@@ -21,7 +21,8 @@
     justify-content: flex-start;
     align-items: center;
     font-size: 1.05em;
-    border: 1px solid #e5e5e5;
+    border: 2px solid #FFF;
+    box-shadow: 0 0 0 1px #e5e5e5;
     border-radius: 100vw;
     box-sizing: border-box;
     padding: 0.75em 1em;
@@ -57,8 +58,8 @@ input[type="radio"]:focus + .options_label{
 
 input[type="checkbox"]:checked + .options_label,
 input[type="radio"]:checked + .options_label{
-    border: 1px solid #2AB2F0;
-    box-shadow: 0 0 0 2px #2AB2F0;
+    /*border: 1px solid #2AB2F0;*/
+    box-shadow: 0 0 0 3px #2AB2F0;
 }
 input[type="checkbox"]:checked + .options_label .options_label_price,
 input[type="radio"]:checked + .options_label .options_label_price{
@@ -101,6 +102,7 @@ input[type="radio"]:checked + .options_label .options_label_checkbox::after{
 	position: absolute;
 	display: none;
 }
+
 .options_label[data-layout-type="alt-swatch"] .options_label_name{
 	left: 0; bottom: 0;
 }
