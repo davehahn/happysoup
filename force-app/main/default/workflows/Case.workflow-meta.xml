@@ -60,11 +60,76 @@
         <senderType>CurrentUser</senderType>
         <template>Case_Templates/Salesforce_Issue</template>
     </alerts>
+    <alerts>
+        <fullName>Notify_Service_Team_of_new_Service_Case_Barrie</fullName>
+        <description>Notify Service Team of new Service Case Barrie</description>
+        <protected>false</protected>
+        <recipients>
+            <recipient>hnguyen@legendboats.com</recipient>
+            <type>user</type>
+        </recipients>
+        <recipients>
+            <recipient>jmaltais@legendboats.com</recipient>
+            <type>user</type>
+        </recipients>
+        <senderType>DefaultWorkflowUser</senderType>
+        <template>To_Do_Notification_Templates/Notify_Service_Team_of_new_Service_Case</template>
+    </alerts>
+    <alerts>
+        <fullName>Notify_Service_Team_of_new_Service_Case_Montreal</fullName>
+        <description>Notify Service Team of new Service Case Montreal</description>
+        <protected>false</protected>
+        <recipients>
+            <recipient>maxime@legendboats.com</recipient>
+            <type>user</type>
+        </recipients>
+        <recipients>
+            <recipient>mcollette@legendboats.com</recipient>
+            <type>user</type>
+        </recipients>
+        <senderType>DefaultWorkflowUser</senderType>
+        <template>To_Do_Notification_Templates/Notify_Service_Team_of_new_Service_Case</template>
+    </alerts>
+    <alerts>
+        <fullName>Notify_Service_Team_of_new_Service_Case_Whitefish</fullName>
+        <description>Notify Service Team of new Service Case Whitefish</description>
+        <protected>false</protected>
+        <recipients>
+            <recipient>alafreniere@legendboats.com</recipient>
+            <type>user</type>
+        </recipients>
+        <recipients>
+            <recipient>aseltzer@legendboats.com</recipient>
+            <type>user</type>
+        </recipients>
+        <recipients>
+            <recipient>atessier@legendboats.com</recipient>
+            <type>user</type>
+        </recipients>
+        <recipients>
+            <recipient>bfram@legendboats.com</recipient>
+            <type>user</type>
+        </recipients>
+        <recipients>
+            <recipient>jdewar@legendboats.com</recipient>
+            <type>user</type>
+        </recipients>
+        <recipients>
+            <recipient>jsanti@legendboats.com</recipient>
+            <type>user</type>
+        </recipients>
+        <recipients>
+            <recipient>kduhamel@legendboats.com</recipient>
+            <type>user</type>
+        </recipients>
+        <senderType>DefaultWorkflowUser</senderType>
+        <template>To_Do_Notification_Templates/Notify_Service_Team_of_new_Service_Case</template>
+    </alerts>
     <fieldUpdates>
         <fullName>Set_Case_Exchange_Rate</fullName>
         <description>Used to set the exchange rate on a warranty case when it is closed to determine the Candian Profit</description>
         <field>Case_Exchange_Rate__c</field>
-        <formula>IF( Recoverable_ERP__r.AcctSeed__Account__r.BillingCountry = &#39;United States&#39;,  $Setup.Legend_Settings__c.Budgeted_Exchange_Rate__c ,1)</formula>
+        <formula>IF( Recoverable_ERP__r.AcctSeed__Account__r.BillingCountry = &apos;United States&apos;,  $Setup.Legend_Settings__c.Budgeted_Exchange_Rate__c ,1)</formula>
         <name>Set Case Exchange Rate</name>
         <notifyAssignee>false</notifyAssignee>
         <operation>Formula</operation>
@@ -119,7 +184,7 @@
         </actions>
         <active>true</active>
         <description>Triggers a status field update when a Customer Support Case is accepted from the queue</description>
-        <formula>AND( ISPICKVAL(PRIORVALUE(Status),&quot;New&quot;), RecordType.Name = &quot;Customer Community&quot;, ISCHANGED(OwnerId), LEFT(PRIORVALUE(OwnerId), 3) = &#39;00G&#39;, LEFT(OwnerId, 3) = &#39;005&#39; )</formula>
+        <formula>AND( ISPICKVAL(PRIORVALUE(Status),&quot;New&quot;), RecordType.Name = &quot;Customer Community&quot;, ISCHANGED(OwnerId), LEFT(PRIORVALUE(OwnerId), 3) = &apos;00G&apos;, LEFT(OwnerId, 3) = &apos;005&apos; )</formula>
         <triggerType>onAllChanges</triggerType>
     </rules>
     <rules>
@@ -269,7 +334,7 @@
             <operation>equals</operation>
             <value>Hull Return</value>
         </criteriaItems>
-        <description>Notify DSM when Case Delay Reason is set to &#39;Hull Return&#39;</description>
+        <description>Notify DSM when Case Delay Reason is set to &apos;Hull Return&apos;</description>
         <triggerType>onCreateOrTriggeringUpdate</triggerType>
     </rules>
     <rules>
@@ -289,7 +354,7 @@
             <operation>equals</operation>
             <value>Internal Delay</value>
         </criteriaItems>
-        <description>Notify Warranty Managers when a Warranty Case&#39;s delay reason is &#39;Internal Delay&#39;</description>
+        <description>Notify Warranty Managers when a Warranty Case&apos;s delay reason is &apos;Internal Delay&apos;</description>
         <triggerType>onCreateOrTriggeringUpdate</triggerType>
     </rules>
     <rules>
@@ -398,7 +463,7 @@
             <type>FieldUpdate</type>
         </actions>
         <active>true</active>
-        <formula>AND( ISPICKVAL(PRIORVALUE(Status),&quot;New&quot;), RecordType.Name = &quot;Service Appointment&quot;, ISCHANGED(OwnerId), LEFT(PRIORVALUE(OwnerId), 3) = &#39;00G&#39;, LEFT(OwnerId, 3) = &#39;005&#39; )</formula>
+        <formula>AND( ISPICKVAL(PRIORVALUE(Status),&quot;New&quot;), RecordType.Name = &quot;Service Appointment&quot;, ISCHANGED(OwnerId), LEFT(PRIORVALUE(OwnerId), 3) = &apos;00G&apos;, LEFT(OwnerId, 3) = &apos;005&apos; )</formula>
         <triggerType>onAllChanges</triggerType>
     </rules>
     <rules>
@@ -558,24 +623,24 @@ Please note, both you and Luc are getting the same notification.</description>
         <fullName>Warranty_Case_Delay_Reason_set_to_Hull_Return</fullName>
         <assignedTo>jdavis@legendboats.com</assignedTo>
         <assignedToType>user</assignedToType>
-        <description>Delay Reason has been set to &#39;Hull Return&#39; on a Warranty Case.</description>
+        <description>Delay Reason has been set to &apos;Hull Return&apos; on a Warranty Case.</description>
         <dueDateOffset>0</dueDateOffset>
         <notifyAssignee>false</notifyAssignee>
         <priority>Normal</priority>
         <protected>false</protected>
         <status>Open</status>
-        <subject>Warranty Case: Delay Reason set to &#39;Hull Return&#39;</subject>
+        <subject>Warranty Case: Delay Reason set to &apos;Hull Return&apos;</subject>
     </tasks>
     <tasks>
         <fullName>Warranty_Case_Delay_Reason_set_to_Hull_Return2</fullName>
         <assignedTo>rfraser@legendboats.com</assignedTo>
         <assignedToType>user</assignedToType>
-        <description>Delay Reason has been set to &#39;Hull Return&#39; on a Warranty Case.</description>
+        <description>Delay Reason has been set to &apos;Hull Return&apos; on a Warranty Case.</description>
         <dueDateOffset>0</dueDateOffset>
         <notifyAssignee>false</notifyAssignee>
         <priority>Normal</priority>
         <protected>false</protected>
         <status>Open</status>
-        <subject>Warranty Case: Delay Reason set to &#39;Hull Return&#39;</subject>
+        <subject>Warranty Case: Delay Reason set to &apos;Hull Return&apos;</subject>
     </tasks>
 </Workflow>
