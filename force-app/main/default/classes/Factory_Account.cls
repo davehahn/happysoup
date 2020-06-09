@@ -115,7 +115,7 @@ public class Factory_Account {
       RecordTypeId = rTid,
       FirstName = fName,
       LastName = lName,
-      PersonEmail = fname + '@' + lname + '.com',
+      PersonEmail = fname.toLowerCase() + '@' + lname.toLowerCase() + '.com',
       Phone = '111-111-1111',
       PersonMobilePhone = '222-222-2222',
       Gender__pc = genders[0],

@@ -4,7 +4,7 @@
 
 <apex:component controller="SquarePaymentForm_Controller">
 
-  <script type="text/javascript" src="https://js.squareupsandbox.com/v2/paymentform">
+  <script type="text/javascript" src="{!paymentFormJsUrl}">
   </script>
 
   <apex:slds />
@@ -56,7 +56,7 @@
   </div>
 
   <script type="text/javascript">
-    let _resolve, _reject, _paymentAmount;
+    let _resolve, _reject, _paymentAmount, _referenceId;
 
     const paymentForm = new SqPaymentForm(
     {
@@ -96,45 +96,51 @@
           {
             _reject( errors );
           }
-          SquarePaymentForm_Controller.postToSquare( _paymentAmount, nonce, function( events, result ) {
-            console.log( result );
-            if( result.statusCode === 200 )
-            {
-
-              const response = JSON.parse( result.result );
-              if( response.errors )
+          SquarePaymentForm_Controller.postToSquare(
+            _paymentAmount,
+            _referenceId,
+            nonce,
+            function( events, result ) {
+              console.log( result );
+              if( result.statusCode === 200 )
               {
-                setErrorClassOnInput( response.errors );
-                let errs = [];
-                response.errors.forEach( e => errs.push( { message: e.detail } ) );
-                _reject( errs );
+
+                const response = JSON.parse( result.result );
+                if( response.errors )
+                {
+                  setErrorClassOnInput( response.errors );
+                  let errs = [];
+                  response.errors.forEach( e => errs.push( { message: e.detail } ) );
+                  _reject( errs );
+                }
+                else
+                {
+                  console.log('LOOK HERE');
+                  console.log( response.payment );
+                  _resolve(  response.payment );
+                }
               }
               else
               {
-                console.log('LOOK HERE');
-                console.log( response.payment );
-                _resolve(  response.payment );
+                console.log(result.message);
+                _reject( [{message: result.message}] );
               }
-            }
-            else
-            {
-              console.log(result.message);
-              _reject( [{message: result.message}] );
-            }
-          }, {escape: false});
-
+            },
+            {escape: false}
+          );
         }
       }
     });
 
     paymentForm.build();
 
-    function doPostPayment( paymentAmount )
+    function doPostPayment( paymentAmount, referenceId )
     {
 
       _reject = undefined;
       _resolve = undefined;
       _paymentAmount = paymentAmount;
+      _referenceId = typeof(referenceId) === 'undefined' ? null : referenceId;
 
       return new Promise( ( resolve, reject ) => {
         _resolve = resolve;

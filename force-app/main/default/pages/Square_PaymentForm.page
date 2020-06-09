@@ -159,17 +159,20 @@
     <script>
 
       const total = {!Square_Transaction__c.Amount__c};
+      const reference_id = "{!Square_Transaction__c.Id}";
       const toastSource = document.getElementById('toast-msg').innerHTML;
       const toastTMPL = Handlebars.compile( toastSource );
       const spinner = document.getElementById('spinner');
       const toastContainer = document.getElementById('toast-container');
+
+      console.log( reference_id );
 
       document.getElementById("submit-button").addEventListener("click",(event) => {
         event.preventDefault();
         spinner.classList.add('busy');
         toastContainer.innerHTML = "";
 
-        doPostPayment( total )
+        doPostPayment( total, reference_id )
         .then( (result) =>
         {
           handleSuccess(result);

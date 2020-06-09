@@ -3,7 +3,7 @@
     <fullName>Case_Profit__c</fullName>
     <description>Formula field to calculate the net profit or recovery of ERPs related to a case</description>
     <externalId>false</externalId>
-    <formula>Warranty_ERP__r.Profit__c +  Parts_Order_ERP__r.Profit__c + IF(  Recoverable_ERP__r.AcctSeed__Account__r.BillingCountry   = &#39;United States&#39;, Recoverable_ERP__r.Profit__c *  $Setup.Legend_Settings__c.Budgeted_Exchange_Rate__c ,  Recoverable_ERP__r.Profit__c )</formula>
+    <formula>Warranty_ERP__r.Profit__c +  Parts_Order_ERP__r.Profit__c + IF(  Recoverable_ERP__r.AcctSeed__Account__r.BillingCountry   = &apos;United States&apos;, Recoverable_ERP__r.Profit__c *  $Setup.Legend_Settings__c.Budgeted_Exchange_Rate__c ,  Recoverable_ERP__r.Profit__c )</formula>
     <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
     <label>Case Recovery</label>
     <precision>18</precision>

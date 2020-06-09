@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>Partner_Reference__c</fullName>
-    <description>Dealer&apos;s work order number, shown here for their own reference</description>
+    <fullName>Chat_Transcript__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
     <externalId>false</externalId>
-    <label>Partner Reference</label>
-    <length>100</length>
+    <label>Chat Transcript</label>
+    <referenceTo>LiveChatTranscript</referenceTo>
+    <relationshipLabel>Cases</relationshipLabel>
+    <relationshipName>Cases</relationshipName>
     <required>false</required>
     <trackFeedHistory>false</trackFeedHistory>
     <trackHistory>false</trackHistory>
     <trackTrending>false</trackTrending>
-    <type>Text</type>
-    <unique>false</unique>
+    <type>Lookup</type>
 </CustomField>

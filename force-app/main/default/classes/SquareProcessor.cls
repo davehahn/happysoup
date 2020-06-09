@@ -12,13 +12,14 @@ public with sharing class SquareProcessor
     {
       if (inSandbox == null)
       {
-        inSandbox = Test.isRunningTest() || LGND_Constants.runningInASandbox;
+        inSandbox = LGND_Constants.runningInASandbox;
       }
       return inSandbox;
     }
     private set{}
   }
 
+  @TestVisible
   private static Square_Setting__mdt squareSettings
   {
     get
@@ -28,14 +29,18 @@ public with sharing class SquareProcessor
         try
         {
           squareSettings = [
-            SELECT ApplicationId__c, AuthToken__c, Version__c, PaymentEndpoint__c
+            SELECT ApplicationId__c,
+                   AuthToken__c,
+                   Version__c,
+                   PaymentEndpoint__c,
+                   Payment_Form_JS__c
             FROM Square_Setting__mdt
             WHERE IsSandbox__c = :inSandbox
           ];
         }
         catch( Exception e )
         {
-          String env = inSandbox ? 'Sandbox' : 'Product';
+          String env = inSandbox ? 'Sandbox' : 'Production';
           throw new SquareException( 'Square setting for ' + env + ' not found. Please contact your administrator' );
         }
       }
@@ -48,12 +53,12 @@ public with sharing class SquareProcessor
   {
   }
 
-  public PaymentResponse postPayment( Decimal amount, String nonce )
+  public PaymentResponse postPayment( Decimal amount, String referenceId, String nonce )
   {
     System.debug('SQUARE_PROCESSOR.postPayment');
     //Square only handle cents
     amount = amount * 100;
-    String jsonData = JSON.serialize( new Payment( amount, nonce ) );
+    String jsonData = JSON.serialize( new Payment( amount, referenceId, nonce ) );
     jsonData = jsonData.replace('"currency_type":', '"currency":');
     System.debug( jsonData );
     Http http = new Http();
@@ -87,18 +92,86 @@ public with sharing class SquareProcessor
     return squareSettings.ApplicationId__c;
   }
 
+  public static String getPaymentFormJsUrl()
+  {
+    return squareSettings.Payment_Form_JS__c;
+  }
+
   public class Payment {
     public String idempotency_key;
     public String source_id;
+    public String reference_id;
+    public String note;
+    public String buyer_email_address;
     public PaymentAmount amount_money;
-    public Payment( Decimal amount, String nonce )
+    public CustomerAddress billing_address;
+    private Id accountId;
+    public Payment( Decimal amount, String referenceId, String nonce )
     {
       this.idempotency_key = LGND_Utilities.generateRandomString( 22 );
       this.source_id = nonce;
+      this.reference_id = referenceId;
       this.amount_money = new PaymentAmount( amount );
+      setReferenceSpecificFields();
+    }
+
+    private void setReferenceSpecificFields()
+    {
+      if( this.reference_id == null ) return;
+      String referenceType;
+      try {
+        referenceType = LGND_Utilities.sObjectNameFromId( this.reference_id );
+      }
+      catch( Exception e )
+      {
+        return;
+      }
+      switch on referenceType
+      {
+        when 'Square_Transaction__c'
+        {
+          handleSquareTransaction();
+        }
+      }
+      setAccountDetails();
+    }
+
+    private void handleSquareTransaction()
+    {
+      Square_Transaction__c sqT = [
+        SELECT
+          Id,
+          Description__c,
+          Account__c
+        FROM Square_Transaction__c
+        WHERE Id = :this.reference_id
+      ];
+      this.note = sqT.Description__c;
+      this.accountId = sqT.Account__c;
+    }
+
+    private void setAccountDetails()
+    {
+      if( this.accountId == null ) return;
+      Account acct = [
+        SELECT
+          Id,
+          FirstName,
+          LastName,
+          PersonEmail,
+          BillingStreet,
+          BillingCity,
+          BillingState,
+          BillingCountry,
+          BillingCountryCode,
+          BillingPostalCode
+        FROM Account
+        WHERE Id = :this.accountId
+      ];
+      this.buyer_email_address = acct.PersonEmail;
+      this.billing_address = new CustomerAddress( acct );
     }
   }
-
 
   public class PaymentResponse {
     public List<PaymentError> errors;
@@ -116,6 +189,7 @@ public with sharing class SquareProcessor
     public PaymentCardDetails card_details;
     public String location_id;
     public String order_id;
+    public String reference_id;
     public PaymentAmount total_money;
     public String receipt_number;
     public String receipt_url;
@@ -160,5 +234,29 @@ public with sharing class SquareProcessor
     public String card_type;
     public String bin;
     public PaymentCard(){}
+  }
+
+  public class CustomerAddress
+  {
+    public String address_line_1;
+    public String administrative_district_level_1;
+    public String administrative_district_level_2;
+    public String country;
+    public String first_name;
+    public String last_name;
+    public String locality;
+    public String postal_code;
+
+    public CustomerAddress( Account acct )
+    {
+      this.first_name = acct.FirstName;
+      this.last_name = acct.LastName;
+      this.address_line_1 = acct.BillingStreet;
+      this.administrative_district_level_1 = acct.BillingState;
+      this.administrative_district_level_2 = acct.BillingCountry;
+      this.country = acct.BillingCountryCode;
+      this.locality = acct.BillingCity;
+      this.postal_code = acct.BillingPostalCode;
+    }
   }
 }
