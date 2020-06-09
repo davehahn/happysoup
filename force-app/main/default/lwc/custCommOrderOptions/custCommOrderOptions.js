@@ -2,7 +2,7 @@
  * Created by Tim on 2020-04-22.
  */
 
-import { LightningElement, api, wire} from 'lwc';
+import { LightningElement, api, wire, track} from 'lwc';
 import { CurrentPageReference } from 'lightning/navigation';
 import { registerListener, unregisterAllListeners} from 'c/pubsub';
 import { loadStyle } from 'lightning/platformResourceLoader';
@@ -21,6 +21,14 @@ export default class CustCommOrderOptions extends LightningElement {
   @api showOptionPrice;
   @api triggerUiChange;
   @api addons;
+  @api layoutType;
+  @api groupingName;
+
+	@track swatchInfo = {
+	  'name': '',
+	  'price': '',
+	  'blurb': ''
+ 	};
 
   @wire(CurrentPageReference) pageRef;
 
@@ -38,25 +46,35 @@ export default class CustCommOrderOptions extends LightningElement {
 
 			if('id' in options){
 	      //single option details to array
-	      const parsedOption =  this.parseOption(options);
+	      const init = (this.isInit) ? true : false;
+	      const parsedOption =  this.parseOption(options, init);
 				return parsedOption;
      	} else {
      	  //return 'multiple options';
      	  let combinedOptions = [];
-     	  for(let option of options){
+     	  options.forEach((option, index) => {
      	    if('id' in option){
-     	      const parsedOption = this.parseOption(option);
-     	      combinedOptions.push(parsedOption[0]);
-          } else {
-            //console.log('no id');
-          }
-        }
+     	      let init = (this.isInit && index === 0) ? true : false;
+						const parsedOption = this.parseOption(option, init);
+						combinedOptions.push(parsedOption[0]);
+					} else {
+						//console.log('no id');
+					}
+        });
+//     	  for(let option of options){
+//     	    if('id' in option){
+//     	      const parsedOption = this.parseOption(option);
+//     	      combinedOptions.push(parsedOption[0]);
+//          } else {
+//            //console.log('no id');
+//          }
+//        }
         return combinedOptions;
       }
    	}
  	}
 
-	parseOption(option){
+	parseOption(option, init){
 	  let parentSku = null;
 	  let optionDetails = [];
 		const inputType = (this.selections === 'one') ? 'radio' : 'checkbox';
@@ -74,7 +92,7 @@ export default class CustCommOrderOptions extends LightningElement {
 		let images = [];
 		let blurb = null;
 		let includedProducts = [];
-		const init = (this.isInit) ? true : false;
+
 
 		const retailPrice = ('retailPrice' in option) ? parseInt(option['retailPrice']) : (('RetailUpgradeCost' in option) ? parseInt(option['RetailUpgradeCost']) : '');
 		let displayPrice = 0;
@@ -160,6 +178,7 @@ export default class CustCommOrderOptions extends LightningElement {
 	}
 
 	handleMotorSelection(detail){
+	  console.log('motor event fired');
 	  let relatedOptions = this.template.querySelectorAll(`[data-parentpage="${detail.optionParentPage}"]`);
 	  relatedOptions.forEach((option) => {
 			option.classList.add('hide');
@@ -168,4 +187,13 @@ export default class CustCommOrderOptions extends LightningElement {
    		}
    	});
  	}
+
+ 	handleSwatchChange(event){
+ 	  console.log('event detail: ', event.detail);
+ 	  const optionList = this.template.querySelector('.options_list');
+ 	  console.log(optionList.offsetHeight);
+ 	  console.log(optionList.offsetHeight + event.detail);
+ 	  optionList.style.marginBottom = event.detail + 'px';
+  }
+
 }

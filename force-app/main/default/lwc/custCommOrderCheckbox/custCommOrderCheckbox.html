@@ -23,9 +23,10 @@
                    data-rpm={optionRpm}
                    data-page={optionPage}
                    data-retail-price={optionRetailPrice}
-                   onchange={handleClick}>
+                   onchange={handleChange}>
             <label class="options_label"
                    data-click-focus="unset"
+                   data-layout-type={optionLayout}
                    for="option">
                 <template if:true={useCheckbox}>
                     <small class="options_label_checkbox"></small>
@@ -33,6 +34,9 @@
                 <span class="options_label_name">{optionName}</span>
                 <span class="options_label_price">{optionFormattedPrice}</span>
             </label>
+            <template if:true={hasOptionsDeck}>
+                <p class="options_deck" data-layout-type={optionLayout}>{optionBlurb}</p>
+            </template>
         </div>
     </template>
     <template if:true={optionInit}>
@@ -46,10 +50,11 @@
                    data-rpm={optionRpm}
                    data-page={optionPage}
                    data-retail-price={optionRetailPrice}
-                   onchange={handleClick}
+                   onchange={handleChange}
                     checked>
             <label class="options_label"
                    data-click-focus="unset"
+                   data-layout-type={optionLayout}
                    for="optionInit">
                 <template if:true={useCheckbox}>
                     <small class="options_label_checkbox"></small>
@@ -57,9 +62,9 @@
                 <span class="options_label_name">{optionName}</span>
                 <span class="options_label_price">{optionFormattedPrice}</span>
             </label>
+            <template if:true={hasOptionsDeck}>
+                <p class="options_deck" data-layout-type={optionLayout}>{optionBlurb}</p>
+            </template>
         </div>
-    </template>
-    <template if:true={hasOptionsDeck}>
-        <p class="options_deck">{optionBlurb}</p>
     </template>
 </template>
