@@ -20,7 +20,7 @@
 		var countries = [
 											{ value: "",							label: "--None--" },
 											{ value: "Canada",				label: "Canada" },
-											{ value: "Unite States",	label: "USA" }
+											{ value: "United States",	label: "USA" }
 										];
 		component.set("v.provinces", provinces);
 		component.set("v.countries", countries);
@@ -65,5 +65,10 @@
 
 	fillInAddress : function(component, event, helper) {
 		helper.fillInAddress(component, event);
-	}
+	},
+
+	isValid: function( component, event, helper )
+	{
+	  return helper.validateForm( component );
+  }
 })

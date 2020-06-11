@@ -5,6 +5,7 @@ private class RegistrationExt_Test {
   static GMBLASERP__Serial_Number__c serial;
   //static GMBLASERP__Serial_Number__c serial_motor;
   static Account customer;
+  static Account dealer;
 
   @testSetup static void dataSetup()
   {
@@ -15,49 +16,13 @@ private class RegistrationExt_Test {
 
   private static void init()
   {
-    Account dealer = AccountFactory.buildDealerAccount('Test Dealer UnitTester');
+    dealer = AccountFactory.buildDealerAccount('Test Dealer UnitTester');
     insert dealer;
     serial = Factory_SerialNumber.insertFullSerial( 'Boat',
                                                     'Pontoon',
                                                     '1234567890-UNIT-TESTER');
     erp = Factory_ERPOrder.createPartnerBoatSale( dealer, serial );
   }
-
-//  private static AcctSeedERP__Warehouse__c determineWarehouse()
-//  {
-//    User u = [SELECT GL_Account_Variable_1__c FROM User WHERE Id = :UserInfo.getUserId() ];
-//    try {
-//      return  [
-//        SELECT Id, Name, GL_Account_Variable_3__c
-//        FROM AcctSeedERP__Warehouse__c
-//        WHERE Name = :u.GL_Account_Variable_1__c
-//        LIMIT 1
-//      ];
-//    }
-//    catch( Exception e )
-//    {
-//      return [
-//        SELECT Id, Name, GL_Account_Variable_3__c
-//        FROM AcctSeedERP__Warehouse__c
-//        WHERE Name LIKE '%Whitefish%'
-//        LIMIT 1
-//      ];
-//    }
-//  }
-
-//  private static void initRetail()
-//  {
-//    init_toCustomer();
-//    serial_motor = Factory_SerialNumber.insertFullSerial( 'Motor',
-//      'Remote',
-//      '666TESTMOTOR666');
-//    AcctSeedERP__Warehouse__c wh = determineWarehouse();
-//    erp = Factory_ERPOrder.insertRetailBoatSale( customer,
-//                                                 wh,
-//                                                 null,
-//                                                 serial,
-//                                                 serial_motor );
-//  }
 
   private static void init_toCustomer()
   {
@@ -164,22 +129,74 @@ private class RegistrationExt_Test {
     System.assertEquals( 0, result.size() );
   }
 
+  @IsTest
+  static void fetchCustomer_Account_Test()
+  {
+    init_toCustomer();
+    String custJSON = RegistrationExt.fetchCustomer( customer.Id );
+    Customer.Person person =
+      (Customer.Person)JSON.deserialize( custJSON, Customer.Person.class );
+
+    System.assertEquals( customer.Id, person.id );
+    System.assertEquals( customer.FirstName, person.firstName );
+    System.assertEquals( customer.LastName, person.lastName );
+    System.assertEquals( customer.PersonEmail, person.email );
+  }
+
+  @IsTest
+  static void fetchCustomer_Lead_Test()
+  {
+    Lead l = new Lead(
+      FirstName = 'Tester',
+      LastName = 'LastTester',
+      Email = 'atester@someplace.somedomain',
+      Phone = '111-111-1111'
+    );
+    TriggerHandler.bypass('Lead_TriggerHandler');
+    insert l;
+    TriggerHandler.clearBypass('Lead_TriggerHandler');
+    String custJSON = RegistrationExt.fetchCustomer( l.Id );
+    Customer.Person person =
+      (Customer.Person)JSON.deserialize( custJSON, Customer.Person.class );
+
+    System.assertEquals( l.Id, person.id );
+    System.assertEquals( l.FirstName, person.firstName );
+    System.assertEquals( l.LastName, person.lastName );
+    System.assertEquals( l.Email, person.email );
+  }
+
   @isTest
-  static void createRegistrations_Test()
+  static void createRegistrations_Customer_Test()
   {
     init_toCustomer();
     DateTime dDate = DateTime.now();
+    Map<String, String> cust = new Map<String, String>
+    {
+      'type' => 'person',
+      'id' => customer.Id,
+      'firstName' => customer.FirstName,
+      'lastName' => customer.LastName,
+      'phone' => customer.Phone,
+      'email' => customer.PersonEmail,
+      'street' => customer.BillingStreet,
+      'city' => customer.BillingCity,
+      'state' => customer.BillingState,
+      'country' => customer.BillingCountry,
+      'postalCode' => customer.BillingPostalCode
+    };
     Test.startTest();
-    Registration__c result = RegistrationExt.createRegistration( String.valueOf(customer.Id),
-                                                                 String.valueOf(serial.Id),
-                                                                 new List<GMBLASERP__Serial_Number__c>(),
-                                                                 null,
-                                                                 '',
-                                                                 dDate,
-                                                                 null,
-                                                                 '',
-                                                                 'Cash'
-                                                                 );
+    Registration__c result = RegistrationExt.createRegistration(
+      String.valueOf(serial.Id),
+      JSON.serialize( cust ),
+      'person',
+      new List<GMBLASERP__Serial_Number__c>(),
+      null,
+      '',
+      dDate,
+      null,
+      '',
+      'Cash'
+    );
     Test.stopTest();
     serial = [SELECT Id, Retail_Registration_Date__c
               FROM GMBLASERP__Serial_Number__c
@@ -187,6 +204,38 @@ private class RegistrationExt_Test {
 
     System.assertEquals( result.SerialNumber__c, serial.Id );
     System.assertEquals( result.Account__c, customer.Id );
+  }
+
+  @isTest
+  static void createRegistrations_Dealer_Test()
+  {
+    init();
+    DateTime dDate = DateTime.now();
+    Map<String, String> cust = new Map<String, String>
+    {
+      'type' => 'dealer',
+      'id' => dealer.Id
+    };
+    Test.startTest();
+    Registration__c result = RegistrationExt.createRegistration(
+      String.valueOf(serial.Id),
+      JSON.serialize( cust ),
+      'dealer',
+      new List<GMBLASERP__Serial_Number__c>(),
+      null,
+      '',
+      dDate,
+      null,
+      '',
+      'Cash'
+    );
+    Test.stopTest();
+    serial = [SELECT Id, Retail_Registration_Date__c
+    FROM GMBLASERP__Serial_Number__c
+    WHERE Id = :serial.Id];
+
+    System.assertEquals( result.SerialNumber__c, serial.Id );
+    System.assertEquals( result.Account__c, dealer.Id );
   }
 
 }

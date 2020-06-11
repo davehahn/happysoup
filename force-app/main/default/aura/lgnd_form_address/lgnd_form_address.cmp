@@ -18,10 +18,13 @@
 	<aura:attribute name="zip"				 type="String" />
 	<aura:attribute name="componentId" type="String" default="addressSearch"/>
 	<aura:attribute name="inFocus"		 type="String" />
+	<aura:attribute name="allRequired" type="Boolean" default="false" />
 
 	<aura:handler name="init" value="{!this}" action="{!c.doInit}" />
 	<aura:handler name="change" value="{!v.search}" action="{!c.findPlaces}" />
 	<aura:handler name="render" value="{!this}" action="{!c.onRender}" />
+
+	<aura:method name="isValid" action="{!c.isValid}" access="public" />
 
 	<div class="lgnd_form_address" id="{!v.componentId}">
 
@@ -66,7 +69,11 @@
 		  </lightning:layoutItem>
 
 		  <lightning:layoutItem size="12" class="slds-p-around_x-small">
-		  	<lightning:textarea label="Street" value="{!v.street}" />
+		  	<lightning:textarea label="Street"
+														aura:id="required-field"
+														value="{!v.street}"
+														required="{!v.allRequired}"
+														messageWhenValueMissing="Street is required" />
 		  </lightning:layoutItem>
 
 		  <lightning:layoutItem size="12"
@@ -74,7 +81,12 @@
                             mediumDeviceSize="6"
                             largeDeviceSize="8"
                             class="slds-p-around_x-small">
-        <lightning:input type="text" label="City" value="{!v.city}" />
+        <lightning:input type="text"
+												 label="City"
+												 aura:id="required-field"
+												 value="{!v.city}"
+												 required="{!v.allRequired}"
+												 messageWhenValueMissing="City is required" />
       </lightning:layoutItem>
 
       <lightning:layoutItem size="12"
@@ -82,7 +94,12 @@
                             mediumDeviceSize="6"
                             largeDeviceSize="4"
                             class="slds-p-around_x-small">
-        <lightning:select name="select" label="State/Province" value="{!v.province_code}">
+        <lightning:select name="select"
+													label="State/Province"
+													aura:id="required-field"
+													value="{!v.province_code}"
+													required="{!v.allRequired}"
+													messageWhenValueMissing="Province is required">
 					<aura:iteration items="{!v.provinces}" var="item">
 						<option text="{!item.label}" value="{!item.value}" selected="{!item.selected}" />
 					</aura:iteration>
@@ -95,7 +112,12 @@
                             mediumDeviceSize="6"
                             largeDeviceSize="8"
                             class="slds-p-around_x-small">
-         <lightning:input type="text" label="Postal Code" value="{!v.zip}" />
+         <lightning:input type="text"
+													label="Postal Code"
+													aura:id="required-field"
+													value="{!v.zip}"
+													required="{!v.allRequired}"
+													messageWhenValueMissing="Postal Code is required" />
       </lightning:layoutItem>
 
       <lightning:layoutItem size="12"
@@ -103,7 +125,12 @@
                             mediumDeviceSize="6"
                             largeDeviceSize="4"
                             class="slds-p-around_x-small">
-        <lightning:select name="select" label="Country" value="{!v.country}">
+        <lightning:select name="select"
+													label="Country"
+													aura:id="required-field"
+													value="{!v.country}"
+													required="{!v.allRequired}"
+													messageWhenValueMissing="Country is required">
 					<aura:iteration items="{!v.countries}" var="item">
 						<option text="{!item.label}" value="{!item.value}" selected="{!item.selected}" />
 					</aura:iteration>
