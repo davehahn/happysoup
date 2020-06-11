@@ -9,26 +9,19 @@
             <h4 class="options_title">{optionsTitle}</h4>
         </template>
         <fieldset>
-            <ul class="options_list">
+            <ul class="options_list" data-layout-type={layoutType}>
                 <template for:each={availableOptions} for:item="option">
                     <li key={option.name} class={optionClasses} data-page={page} data-parentpage={parentPage} data-parentsku={option.parentSku}>
                         <c-cust-comm-order-checkbox
-                                                    option-input-type={option.inputType}
-                                                    option-page={page}
-                                                    option-init={option.init}
-                                                    option-sku={option.sku}
-                                                    option-name={option.name}
-                                                    option-retail-price={option.retailPrice}
-                                                    option-display-price={option.displayPrice}
-                                                    option-km={option.km}
-                                                    option-rpm={option.rpm}
-                                                    option-images={option.images}
-                                                    option-blurb={option.blurb}
-                                                    option-show-upgrade-price={showOptionPrice}
-                                                    option-trigger-ui-change={triggerUiChange}
-                                                    option-is-addon={addons}
-                                                    option-included-products={option.includedProducts}>
-
+                                product-options={option}
+                                option-page={page}
+                                option-show-upgrade-price={showOptionPrice}
+                                option-boat-retail={boatRetailPrice}
+                                option-trigger-ui-change={triggerUiChange}
+                                option-is-addon={addons}
+                                option-layout={layoutType}
+                                option-grouping-name={groupingName}
+                                onswatchchange={handleSwatchChange}>
                         </c-cust-comm-order-checkbox>
                     </li>
                 </template>

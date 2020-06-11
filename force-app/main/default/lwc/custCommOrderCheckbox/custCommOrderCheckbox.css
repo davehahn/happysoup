@@ -21,12 +21,16 @@
     justify-content: flex-start;
     align-items: center;
     font-size: 1.05em;
-    border: 1px solid #e5e5e5;
+    border: 2px solid #FFF;
+    box-shadow: 0 0 0 1px #e5e5e5;
     border-radius: 100vw;
     box-sizing: border-box;
     padding: 0.75em 1em;
     transition: all 0.2s;
     cursor: pointer;
+}
+.options_label[data-layout-type="alt-swatch"]{
+  width: 50px; height: 50px;
 }
 .options_label_name, .options_label_price{
     display: block;
@@ -54,8 +58,8 @@ input[type="radio"]:focus + .options_label{
 
 input[type="checkbox"]:checked + .options_label,
 input[type="radio"]:checked + .options_label{
-    border: 1px solid #2AB2F0;
-    box-shadow: 0 0 0 2px #2AB2F0;
+    /*border: 1px solid #2AB2F0;*/
+    box-shadow: 0 0 0 3px #2AB2F0;
 }
 input[type="checkbox"]:checked + .options_label .options_label_price,
 input[type="radio"]:checked + .options_label .options_label_price{
@@ -92,4 +96,28 @@ input[type="radio"]:checked + .options_label .options_label_checkbox::after{
     color: #5f5f5f;
     margin-top: 0.5em;
     padding: 0.5em 1.5em 1em;
+}
+
+.options_label[data-layout-type="alt-swatch"] .options_label_name, .options_label[data-layout-type="alt-swatch"] .options_label_price, .options_deck[data-layout-type="alt-swatch"]{
+	position: absolute;
+	display: none;
+}
+
+.options_label[data-layout-type="alt-swatch"] .options_label_name{
+	left: 0; bottom: 0;
+}
+.options_label[data-layout-type="alt-swatch"] .options_label_price{
+  right: 0; bottom: 0;
+}
+.options_deck[data-layout-type="alt-swatch"]{
+  width: 100%;
+	position: absolute;
+	left: 0;
+	bottom: -4em;
+	padding: 0 0 0 0.5em;
+}
+input[type="radio"]:checked + .options_label[data-layout-type="alt-swatch"] .options_label_name,
+input[type="radio"]:checked + .options_label[data-layout-type="alt-swatch"] .options_label_price,
+input[type="radio"]:checked + .options_label[data-layout-type="alt-swatch"] + .options_deck[data-layout-type="alt-swatch"]{
+  display: block;
 }

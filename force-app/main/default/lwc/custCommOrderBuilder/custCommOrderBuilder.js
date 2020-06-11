@@ -287,7 +287,7 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
   }
 
 	get traileringOptions(){
-	  const options = [this.boat.standardTrailer, this.boat.trailerUpgrades];
+	  const options = [this.boat.standardTrailer, this.boat.trailerUpgrades[0]];
 		return options;
  	}
 
