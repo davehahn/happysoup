@@ -28,6 +28,7 @@ button:focus{
   position: absolute;
   min-height: 100vh;
   overflow: hidden;
+  box-sizing: border-box;
   padding-top: 65px;
   padding-bottom: 90px;
   width: 100%;
@@ -777,9 +778,6 @@ button:focus{
 
 */
 @media screen and (max-width: 64em){
-  	.lgnd-order-builder{
-  		margin-bottom: 10xvw;
-   	}
 
     /* force scroll and height of main container */
     .lgnd-order-builder:not([data-current="payment"]){
@@ -814,6 +812,10 @@ button:focus{
         width: 100%;
     }
 
+		.config-page[data-page="electronics"]{
+			padding-bottom: 5em;
+  	}
+
     /* expand right rail to full width */
     .config-page:not([data-page="payment"]) .config-page_right{
         width: 100%; max-width: 100%; min-width: 100%;
@@ -845,7 +847,6 @@ button:focus{
     .config-content[data-current="payment"]{
         display: block;
         height: auto;
-        position: static;
     }
     .config-page.config-page_selected[data-page="payment"]{
         flex-wrap: wrap;
@@ -859,6 +860,8 @@ button:focus{
     }
     .config-page.config-page_selected[data-page="payment"] .config-page_right{
         min-width: 100%;
+        width: 100%;
+        padding-left: 5vw; padding-right: 5vw;
         flex-basis: auto;
         flex-grow: unset;
     }

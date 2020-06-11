@@ -197,7 +197,7 @@ export default class CustCommOrderOptions extends LightningElement {
  	  const optionList = this.template.querySelector('.options_list');
  	  console.log(optionList.offsetHeight);
  	  console.log(optionList.offsetHeight + event.detail);
- 	  optionList.style.marginBottom = event.detail + 'px';
+ 	  optionList.style.marginBottom = event.detail + 16 + 'px';
   }
 
 }
