@@ -58,7 +58,7 @@ private class lgnd_account_search_test {
 
     system.debug( all );
     System.assertEquals( 2, all.size() );
-    System.assertEquals( 10, ( all[0].size() + all[1].size() ) );
+    System.assertEquals( 20, ( all[0].size() + all[1].size() ) );
     System.assert( rpartners[0].size() > 0 );
     System.assert( rpeople[0].size() > 0 );
     System.assert( rleads[1].size() > 0 );
