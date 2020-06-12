@@ -11,6 +11,8 @@ import gothamFonts from '@salesforce/resourceUrl/GothamHTF';
 import LOGO from '@salesforce/resourceUrl/LegendLogo';
 import VLOGO from '@salesforce/resourceUrl/LegendLogoVertical';
 import fetchBoat from '@salesforce/apex/OnlineBoatReservation_Controller.fetchBoat';
+import createAccount from '@salesforce/apex/OnlineBoatReservation_Controller.createAccount';
+import saveLineItems from '@salesforce/apex/OnlineBoatReservation_Controller.saveLineItems';
 
 export default class CustCommOrderBuilder extends NavigationMixin(LightningElement) {
 
@@ -104,7 +106,6 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
 		});
 		this.isMobile = (window.outerWidth < 1024) ? true : false;
 
-		console.log('rendered!');
 		this.unsetClickFocus();
 
   }
@@ -258,27 +259,73 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
   {
     const spinner = this.template.querySelector('c-legend-spinner');
     spinner.toggle();
-    this.template.querySelector('c-square-payment-form').doPostToSquare( 2000 )
-    .then( (result) => {
-      console.log( 'submitOrder Result ');
-      console.log( JSON.parse( JSON.stringify( result ) ) );
+
+		const lli = this.template.querySelectorAll('lightning-layout-item');
+		let userData = {};
+		lli.forEach((item) => {
+		  let input = item.querySelector('input');
+		  if(!input){
+    		input = item.querySelector('select');
+     	}
+		  const dataId = input.getAttribute('data-id');
+			const value = input.value;
+			userData[dataId] = value;
+  	});
+		const userJSON = JSON.stringify(userData);
+		//userData = {'firstName': '', 'lastName': '', 'email': '', 'phone': ''}
+  	console.log('userJSON: ', userJSON);
+
+		createAccount({customerJSON: userJSON})
+		.catch( (error) => {
+			console.log('error: ', error);
+		})
+		.then( (result) => {
+			console.log('result', result);
+		  //accountInfo = {'Id': '', 'AccountId': ' '}
+		  const accountInfo = {
+		    'Id': '',
+		    'AccountId': ''
+    	};
+		  //lineItems = [{'PricebookEntryId': '', 'Quantity': '', 'UnitPrice': ''}, {'PricebookEntryId': '', 'Quantity': '', 'UnitPrice': ''}, ...]
+		  const lineItems = [
+		    {
+		    	'PriceBookEntryId': '',
+		    	'Quantity': '',
+		    	'UnitPrice': ''
+      	}
+    	];
+			//saveLineItems(accountInfo, lineItems);
+  	})
+  	.catch( (error) => {
+			console.log(error);
+   	})
+   	.finally( () => {
+   	  /*
+   	  this.template.querySelector('c-square-payment-form').doPostToSquare( 2000 )
+			.then( (result) => {
+				console.log( 'submitOrder Result ');
+				console.log( JSON.parse( JSON.stringify( result ) ) );
+			})
+			.catch( ( error ) => {
+				console.log( error );
+				error.forEach( (err) => {
+					const event = new ShowToastEvent({
+						title: "Please fix the following error",
+						message:  err.message,
+						variant: 'error',
+						mode: 'sticky'
+					});
+					this.dispatchEvent( event );
+				});
+			})
+			.finally( () => {
+				spinner.toggle();
+				//alert( 'Figure out what to do now!!!!!');
+			});
+			*/
     })
-    .catch( ( error ) => {
-      console.log( error );
-      error.forEach( (err) => {
-        const event = new ShowToastEvent({
-          title: "Please fix the following error",
-          message:  err.message,
-          variant: 'error',
-          mode: 'sticky'
-        });
-        this.dispatchEvent( event );
-      });
-    })
-    .finally( () => {
-      spinner.toggle();
-      //alert( 'Figure out what to do now!!!!!');
-    });
+
+
   }
 
   onPaymentPage()
