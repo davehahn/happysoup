@@ -297,6 +297,7 @@ public class OpportunityTriggerHandler {
     LGND_Utilities.ProvincialTax activeTaxZone;
     //Throw an exception if we do not have at least the tax zone for Ontario setup
     LGND_Utilities.ProvincialTax defaultTaxZone;
+    System.debug( provincialTaxInfo );
     try {
       defaultTaxZone = provincialTaxInfo.get('Ontario');
     }

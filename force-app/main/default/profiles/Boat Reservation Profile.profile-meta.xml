@@ -102,6 +102,11 @@
     <visible>false</visible>
   </applicationVisibilities>
   <applicationVisibilities>
+    <application>Legend_Developer</application>
+    <default>false</default>
+    <visible>false</visible>
+  </applicationVisibilities>
+  <applicationVisibilities>
     <application>Legend_Executive</application>
     <default>false</default>
     <visible>false</visible>
@@ -138,6 +143,11 @@
   </applicationVisibilities>
   <applicationVisibilities>
     <application>Legend_Sales</application>
+    <default>false</default>
+    <visible>false</visible>
+  </applicationVisibilities>
+  <applicationVisibilities>
+    <application>Legend_Service_Console</application>
     <default>false</default>
     <visible>false</visible>
   </applicationVisibilities>
@@ -3634,6 +3644,10 @@
     <enabled>false</enabled>
   </classAccesses>
   <classAccesses>
+    <apexClass>Factory_Boat</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
     <apexClass>Factory_CPQ</apexClass>
     <enabled>false</enabled>
   </classAccesses>
@@ -3695,6 +3709,10 @@
   </classAccesses>
   <classAccesses>
     <apexClass>Factory_ProductOption</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
+    <apexClass>Factory_ProductUpgrade</apexClass>
     <enabled>false</enabled>
   </classAccesses>
   <classAccesses>
@@ -4214,6 +4232,10 @@
     <enabled>false</enabled>
   </classAccesses>
   <classAccesses>
+    <apexClass>JournalEntry_Service</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
     <apexClass>JournalEntry_dh</apexClass>
     <enabled>false</enabled>
   </classAccesses>
@@ -4318,6 +4340,10 @@
     <enabled>false</enabled>
   </classAccesses>
   <classAccesses>
+    <apexClass>Lead_Selector</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
     <apexClass>Lead_TriggerHandler</apexClass>
     <enabled>false</enabled>
   </classAccesses>
@@ -4399,6 +4425,10 @@
   </classAccesses>
   <classAccesses>
     <apexClass>MarketingContent_Selector</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
+    <apexClass>MarketingContent_Selector_T</apexClass>
     <enabled>false</enabled>
   </classAccesses>
   <classAccesses>
@@ -4706,6 +4736,10 @@
     <enabled>true</enabled>
   </classAccesses>
   <classAccesses>
+    <apexClass>PricebookEntry_Selector_T</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
     <apexClass>Product2DetailsExt</apexClass>
     <enabled>false</enabled>
   </classAccesses>
@@ -4802,6 +4836,10 @@
     <enabled>true</enabled>
   </classAccesses>
   <classAccesses>
+    <apexClass>ProductOption_Selector_T</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
     <apexClass>ProductOptionsExt</apexClass>
     <enabled>false</enabled>
   </classAccesses>
@@ -4812,6 +4850,10 @@
   <classAccesses>
     <apexClass>ProductPart_Selector</apexClass>
     <enabled>true</enabled>
+  </classAccesses>
+  <classAccesses>
+    <apexClass>ProductPart_Selector_T</apexClass>
+    <enabled>false</enabled>
   </classAccesses>
   <classAccesses>
     <apexClass>ProductRemoter</apexClass>
@@ -4840,6 +4882,10 @@
   <classAccesses>
     <apexClass>ProductUpgrade_Selector</apexClass>
     <enabled>true</enabled>
+  </classAccesses>
+  <classAccesses>
+    <apexClass>ProductUpgrade_Selector_T</apexClass>
+    <enabled>false</enabled>
   </classAccesses>
   <classAccesses>
     <apexClass>ProductUpgrades</apexClass>
@@ -5074,6 +5120,14 @@
     <enabled>false</enabled>
   </classAccesses>
   <classAccesses>
+    <apexClass>RunSquarePaymentFlow</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
+    <apexClass>RunSquarePaymentFlow_T</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
     <apexClass>S3</apexClass>
     <enabled>false</enabled>
   </classAccesses>
@@ -5194,7 +5248,15 @@
     <enabled>true</enabled>
   </classAccesses>
   <classAccesses>
+    <apexClass>SquarePaymentForm_Controller_T</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
     <apexClass>SquareProcessor</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
+    <apexClass>SquareProcessor_T</apexClass>
     <enabled>false</enabled>
   </classAccesses>
   <classAccesses>
@@ -8298,6 +8360,18 @@
     <enabled>false</enabled>
   </classAccesses>
   <classAccesses>
+    <apexClass>guar__GuestAccessReportController</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
+    <apexClass>guar__GuestAccessReportControllerTest</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
+    <apexClass>guar__GuestAccessReportHelperWS</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
     <apexClass>importUpdateWithInboundBatch</apexClass>
     <enabled>false</enabled>
   </classAccesses>
@@ -8634,6 +8708,10 @@
     <enabled>false</enabled>
   </classAccesses>
   <classAccesses>
+    <apexClass>mcdm_15__BulkSendingSendableStatus</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
     <apexClass>mcdm_15__BusinessUnitAfterDeleteAdapterTest</apexClass>
     <enabled>false</enabled>
   </classAccesses>
@@ -8674,6 +8752,26 @@
     <enabled>false</enabled>
   </classAccesses>
   <classAccesses>
+    <apexClass>mcdm_15__CampaignMarketplaceBody</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
+    <apexClass>mcdm_15__CampaignMarketplaceBodyTest</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
+    <apexClass>mcdm_15__CampaignMarketplaceListView</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
+    <apexClass>mcdm_15__CampaignMarketplaceTitle</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
+    <apexClass>mcdm_15__CampaignMarketplaceTitleTest</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
     <apexClass>mcdm_15__CampaignMemberSelector</apexClass>
     <enabled>false</enabled>
   </classAccesses>
@@ -8706,6 +8804,22 @@
     <enabled>false</enabled>
   </classAccesses>
   <classAccesses>
+    <apexClass>mcdm_15__CampaignSendBatchCapAdapter</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
+    <apexClass>mcdm_15__CampaignSendBatchCapController</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
+    <apexClass>mcdm_15__CampaignSendBatchCapControllerTest</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
+    <apexClass>mcdm_15__CampaignSendBatchCapSelector</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
     <apexClass>mcdm_15__CommunityJourneyApprovalsAdapter</apexClass>
     <enabled>false</enabled>
   </classAccesses>
@@ -8715,6 +8829,10 @@
   </classAccesses>
   <classAccesses>
     <apexClass>mcdm_15__CommunityJourneyApprovalsControllerTest</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
+    <apexClass>mcdm_15__ConfigurationArguments</apexClass>
     <enabled>false</enabled>
   </classAccesses>
   <classAccesses>
@@ -8746,7 +8864,27 @@
     <enabled>false</enabled>
   </classAccesses>
   <classAccesses>
+    <apexClass>mcdm_15__ContentMarketplaceAdapter</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
+    <apexClass>mcdm_15__ContentMarketplaceController</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
+    <apexClass>mcdm_15__ContentMarketplaceControllerTest</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
+    <apexClass>mcdm_15__ContentMarketplaceRecord</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
     <apexClass>mcdm_15__ContextualFetchEmailPreview</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
+    <apexClass>mcdm_15__ContextualFetchSMSPreview</apexClass>
     <enabled>false</enabled>
   </classAccesses>
   <classAccesses>
@@ -8767,6 +8905,14 @@
   </classAccesses>
   <classAccesses>
     <apexClass>mcdm_15__CustomPermissionSelector</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
+    <apexClass>mcdm_15__DMAnalytics</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
+    <apexClass>mcdm_15__DMAnalyticsAdapter</apexClass>
     <enabled>false</enabled>
   </classAccesses>
   <classAccesses>
@@ -8887,6 +9033,10 @@
   </classAccesses>
   <classAccesses>
     <apexClass>mcdm_15__DomainObject</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
+    <apexClass>mcdm_15__EmailData</apexClass>
     <enabled>false</enabled>
   </classAccesses>
   <classAccesses>
@@ -9018,11 +9168,31 @@
     <enabled>false</enabled>
   </classAccesses>
   <classAccesses>
+    <apexClass>mcdm_15__ImageUploadAdapter</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
+    <apexClass>mcdm_15__ImageUploadController</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
+    <apexClass>mcdm_15__ImageUploadControllerTest</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
+    <apexClass>mcdm_15__ImageUploadSelector</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
     <apexClass>mcdm_15__InvalidJourneyApprovalFieldException</apexClass>
     <enabled>false</enabled>
   </classAccesses>
   <classAccesses>
     <apexClass>mcdm_15__InvalidJourneyExternalIdException</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
+    <apexClass>mcdm_15__InvocableScheduledSend</apexClass>
     <enabled>false</enabled>
   </classAccesses>
   <classAccesses>
@@ -9239,6 +9409,18 @@
   </classAccesses>
   <classAccesses>
     <apexClass>mcdm_15__JourneyResponse</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
+    <apexClass>mcdm_15__JourneyScheduleManager</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
+    <apexClass>mcdm_15__JourneyScheduleManagerImpl</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
+    <apexClass>mcdm_15__JourneyScheduleManagerImplTest</apexClass>
     <enabled>false</enabled>
   </classAccesses>
   <classAccesses>
@@ -9466,6 +9648,22 @@
     <enabled>false</enabled>
   </classAccesses>
   <classAccesses>
+    <apexClass>mcdm_15__MessageActivity</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
+    <apexClass>mcdm_15__MessageActivityFactory</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
+    <apexClass>mcdm_15__MessageActivityFactoryImpl</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
+    <apexClass>mcdm_15__MessagePreviewInformation</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
     <apexClass>mcdm_15__MessageSettingsBlock</apexClass>
     <enabled>false</enabled>
   </classAccesses>
@@ -9475,6 +9673,10 @@
   </classAccesses>
   <classAccesses>
     <apexClass>mcdm_15__Metadata</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
+    <apexClass>mcdm_15__MobileConnect</apexClass>
     <enabled>false</enabled>
   </classAccesses>
   <classAccesses>
@@ -9554,11 +9756,19 @@
     <enabled>false</enabled>
   </classAccesses>
   <classAccesses>
+    <apexClass>mcdm_15__MockCampaignSendBatchCapSelector</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
     <apexClass>mcdm_15__MockContentDocumentSelector</apexClass>
     <enabled>false</enabled>
   </classAccesses>
   <classAccesses>
     <apexClass>mcdm_15__MockContextualFetchEmailPreview</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
+    <apexClass>mcdm_15__MockContextualFetchSMSPreview</apexClass>
     <enabled>false</enabled>
   </classAccesses>
   <classAccesses>
@@ -9610,6 +9820,10 @@
     <enabled>false</enabled>
   </classAccesses>
   <classAccesses>
+    <apexClass>mcdm_15__MockImageUploadSelector</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
     <apexClass>mcdm_15__MockJourneyApprovalColumnFactoryImpl</apexClass>
     <enabled>false</enabled>
   </classAccesses>
@@ -9642,6 +9856,10 @@
     <enabled>false</enabled>
   </classAccesses>
   <classAccesses>
+    <apexClass>mcdm_15__MockJourneyScheduleManager</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
     <apexClass>mcdm_15__MockJourneySendSettings</apexClass>
     <enabled>false</enabled>
   </classAccesses>
@@ -9671,6 +9889,14 @@
   </classAccesses>
   <classAccesses>
     <apexClass>mcdm_15__MockMarketingCloudRestClientFactory</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
+    <apexClass>mcdm_15__MockMessageActivityFactoryImpl</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
+    <apexClass>mcdm_15__MockMobileConnect</apexClass>
     <enabled>false</enabled>
   </classAccesses>
   <classAccesses>
@@ -9726,6 +9952,10 @@
     <enabled>false</enabled>
   </classAccesses>
   <classAccesses>
+    <apexClass>mcdm_15__MockQueueableScheduledSender</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
     <apexClass>mcdm_15__MockQueueableSubmissionSend</apexClass>
     <enabled>false</enabled>
   </classAccesses>
@@ -9747,6 +9977,10 @@
   </classAccesses>
   <classAccesses>
     <apexClass>mcdm_15__MockQuickSendManager</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
+    <apexClass>mcdm_15__MockQuickSendOptySelector</apexClass>
     <enabled>false</enabled>
   </classAccesses>
   <classAccesses>
@@ -9774,7 +10008,27 @@
     <enabled>false</enabled>
   </classAccesses>
   <classAccesses>
+    <apexClass>mcdm_15__MockScheduledSendManager</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
+    <apexClass>mcdm_15__MockScheduledSendSelector</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
+    <apexClass>mcdm_15__MockSendCapLogSelector</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
+    <apexClass>mcdm_15__MockSendCapSelector</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
     <apexClass>mcdm_15__MockSendFromOptionsSelector</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
+    <apexClass>mcdm_15__MockSendSchedulingSettingsSelector</apexClass>
     <enabled>false</enabled>
   </classAccesses>
   <classAccesses>
@@ -9827,6 +10081,10 @@
   </classAccesses>
   <classAccesses>
     <apexClass>mcdm_15__MockUserSelector</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
+    <apexClass>mcdm_15__MockUserSelector2</apexClass>
     <enabled>false</enabled>
   </classAccesses>
   <classAccesses>
@@ -10090,6 +10348,18 @@
     <enabled>false</enabled>
   </classAccesses>
   <classAccesses>
+    <apexClass>mcdm_15__QueueableScheduledSender</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
+    <apexClass>mcdm_15__QueueableScheduledSenderImpl</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
+    <apexClass>mcdm_15__QueueableScheduledSenderTest</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
     <apexClass>mcdm_15__QueueableSubmissionSend</apexClass>
     <enabled>false</enabled>
   </classAccesses>
@@ -10190,6 +10460,26 @@
     <enabled>false</enabled>
   </classAccesses>
   <classAccesses>
+    <apexClass>mcdm_15__QuickSendMarketplaceBody</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
+    <apexClass>mcdm_15__QuickSendMarketplaceBodyTest</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
+    <apexClass>mcdm_15__QuickSendMarketplaceListView</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
+    <apexClass>mcdm_15__QuickSendMarketplaceTitle</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
+    <apexClass>mcdm_15__QuickSendMarketplaceTitleTest</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
     <apexClass>mcdm_15__QuickSendModalAdapter</apexClass>
     <enabled>false</enabled>
   </classAccesses>
@@ -10199,6 +10489,22 @@
   </classAccesses>
   <classAccesses>
     <apexClass>mcdm_15__QuickSendModalControllerTest</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
+    <apexClass>mcdm_15__QuickSendOptyDataProviderAdapter</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
+    <apexClass>mcdm_15__QuickSendOptyDataProviderController</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
+    <apexClass>mcdm_15__QuickSendOptyDataProviderTest</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
+    <apexClass>mcdm_15__QuickSendOptySelector</apexClass>
     <enabled>false</enabled>
   </classAccesses>
   <classAccesses>
@@ -10266,6 +10572,14 @@
     <enabled>false</enabled>
   </classAccesses>
   <classAccesses>
+    <apexClass>mcdm_15__RestContextualFetchSMSPreview</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
+    <apexClass>mcdm_15__RestContextualFetchSMSPreviewTest</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
     <apexClass>mcdm_15__RestDataExtensionManager</apexClass>
     <enabled>false</enabled>
   </classAccesses>
@@ -10310,6 +10624,14 @@
     <enabled>false</enabled>
   </classAccesses>
   <classAccesses>
+    <apexClass>mcdm_15__RestMobileConnect</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
+    <apexClass>mcdm_15__RestMobileConnectTest</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
     <apexClass>mcdm_15__RestP13nDataExtensionManager</apexClass>
     <enabled>false</enabled>
   </classAccesses>
@@ -10339,6 +10661,10 @@
   </classAccesses>
   <classAccesses>
     <apexClass>mcdm_15__RichTextBlock</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
+    <apexClass>mcdm_15__SMSData</apexClass>
     <enabled>false</enabled>
   </classAccesses>
   <classAccesses>
@@ -10386,6 +10712,94 @@
     <enabled>false</enabled>
   </classAccesses>
   <classAccesses>
+    <apexClass>mcdm_15__ScheduledSend</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
+    <apexClass>mcdm_15__ScheduledSendAdapter</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
+    <apexClass>mcdm_15__ScheduledSendController</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
+    <apexClass>mcdm_15__ScheduledSendControllerTest</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
+    <apexClass>mcdm_15__ScheduledSendException</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
+    <apexClass>mcdm_15__ScheduledSendManager</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
+    <apexClass>mcdm_15__ScheduledSendManagerImpl</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
+    <apexClass>mcdm_15__ScheduledSendResult</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
+    <apexClass>mcdm_15__ScheduledSendSelector</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
+    <apexClass>mcdm_15__ScheduledSendSelectorTest</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
+    <apexClass>mcdm_15__ScheduledSendTuple</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
+    <apexClass>mcdm_15__SendCapAdapter</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
+    <apexClass>mcdm_15__SendCapController</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
+    <apexClass>mcdm_15__SendCapControllerTest</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
+    <apexClass>mcdm_15__SendCapDuration</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
+    <apexClass>mcdm_15__SendCapLogAdapter</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
+    <apexClass>mcdm_15__SendCapLogController</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
+    <apexClass>mcdm_15__SendCapLogControllerTest</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
+    <apexClass>mcdm_15__SendCapLogSelector</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
+    <apexClass>mcdm_15__SendCapRemaining</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
+    <apexClass>mcdm_15__SendCapSelector</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
+    <apexClass>mcdm_15__SendCapSetting</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
     <apexClass>mcdm_15__SendFromOptionsController</apexClass>
     <enabled>false</enabled>
   </classAccesses>
@@ -10403,6 +10817,18 @@
   </classAccesses>
   <classAccesses>
     <apexClass>mcdm_15__SendFromSettingsDto</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
+    <apexClass>mcdm_15__SendSchedulingSettingsAdapter</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
+    <apexClass>mcdm_15__SendSchedulingSettingsController</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
+    <apexClass>mcdm_15__SendSchedulingSettingsSelector</apexClass>
     <enabled>false</enabled>
   </classAccesses>
   <classAccesses>
@@ -10431,6 +10857,10 @@
   </classAccesses>
   <classAccesses>
     <apexClass>mcdm_15__SettingsControllerTest</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
+    <apexClass>mcdm_15__SmsSubscriberResponse</apexClass>
     <enabled>false</enabled>
   </classAccesses>
   <classAccesses>
@@ -10534,6 +10964,14 @@
     <enabled>false</enabled>
   </classAccesses>
   <classAccesses>
+    <apexClass>mcdm_15__SoqlCampaignSendBatchCapSelector</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
+    <apexClass>mcdm_15__SoqlCampaignSendBatchCapSelectorTest</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
     <apexClass>mcdm_15__SoqlContentDocumentSelector</apexClass>
     <enabled>false</enabled>
   </classAccesses>
@@ -10583,6 +11021,14 @@
   </classAccesses>
   <classAccesses>
     <apexClass>mcdm_15__SoqlGreetingMappingSelectorTest</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
+    <apexClass>mcdm_15__SoqlImageUploadSelector</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
+    <apexClass>mcdm_15__SoqlImageUploadSelectorTest</apexClass>
     <enabled>false</enabled>
   </classAccesses>
   <classAccesses>
@@ -10682,7 +11128,39 @@
     <enabled>false</enabled>
   </classAccesses>
   <classAccesses>
+    <apexClass>mcdm_15__SoqlQuickSendOptySelector</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
+    <apexClass>mcdm_15__SoqlQuickSendOptySelectorTest</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
+    <apexClass>mcdm_15__SoqlScheduledSendSelector</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
+    <apexClass>mcdm_15__SoqlSendCapLogSelector</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
+    <apexClass>mcdm_15__SoqlSendCapLogSelectorTest</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
+    <apexClass>mcdm_15__SoqlSendCapSelector</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
+    <apexClass>mcdm_15__SoqlSendCapSelectorTest</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
     <apexClass>mcdm_15__SoqlSendFromOptionsSelector</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
+    <apexClass>mcdm_15__SoqlSendSchedulingSettingsSelector</apexClass>
     <enabled>false</enabled>
   </classAccesses>
   <classAccesses>
@@ -10799,6 +11277,14 @@
   </classAccesses>
   <classAccesses>
     <apexClass>mcdm_15__SubscriberKeySettingsSelector</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
+    <apexClass>mcdm_15__SubscriberOptInStatus</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
+    <apexClass>mcdm_15__SubscriberOptInStatusException</apexClass>
     <enabled>false</enabled>
   </classAccesses>
   <classAccesses>
@@ -10931,6 +11417,10 @@
   </classAccesses>
   <classAccesses>
     <apexClass>mcdm_15__VisualforceManagerImplTest</apexClass>
+    <enabled>false</enabled>
+  </classAccesses>
+  <classAccesses>
+    <apexClass>mcdm_15__unsortedTest</apexClass>
     <enabled>false</enabled>
   </classAccesses>
   <classAccesses>
@@ -14807,6 +15297,11 @@
   </fieldPermissions>
   <fieldPermissions>
     <editable>false</editable>
+    <field>AcctSeed__Accounting_Variable__c.User__c</field>
+    <readable>false</readable>
+  </fieldPermissions>
+  <fieldPermissions>
+    <editable>false</editable>
     <field>AcctSeed__Bank_Adjustment__c.AcctSeed__Purpose__c</field>
     <readable>false</readable>
   </fieldPermissions>
@@ -17182,6 +17677,11 @@
   </fieldPermissions>
   <fieldPermissions>
     <editable>false</editable>
+    <field>AcctSeed__Journal_Entry_Line__c.Commission_Payment__c</field>
+    <readable>false</readable>
+  </fieldPermissions>
+  <fieldPermissions>
+    <editable>false</editable>
     <field>AcctSeed__Journal_Entry_Line__c.Journal_Entry_Name__c</field>
     <readable>false</readable>
   </fieldPermissions>
@@ -17248,6 +17748,11 @@
   <fieldPermissions>
     <editable>false</editable>
     <field>AcctSeed__Journal_Entry__c.AcctSeed__Total_Debits__c</field>
+    <readable>false</readable>
+  </fieldPermissions>
+  <fieldPermissions>
+    <editable>false</editable>
+    <field>AcctSeed__Journal_Entry__c.Commission_Record__c</field>
     <readable>false</readable>
   </fieldPermissions>
   <fieldPermissions>
@@ -20606,6 +21111,11 @@
     <readable>false</readable>
   </fieldPermissions>
   <fieldPermissions>
+    <editable>false</editable>
+    <field>Case.Chat_Transcript__c</field>
+    <readable>false</readable>
+  </fieldPermissions>
+  <fieldPermissions>
     <editable>true</editable>
     <field>Case.Claim_Type__c</field>
     <readable>true</readable>
@@ -21387,6 +21897,11 @@
   </fieldPermissions>
   <fieldPermissions>
     <editable>false</editable>
+    <field>CommissionPayment2__c.Type__c</field>
+    <readable>false</readable>
+  </fieldPermissions>
+  <fieldPermissions>
+    <editable>false</editable>
     <field>CommissionPayment2__c.Use_Gross_Margin_Calculation__c</field>
     <readable>false</readable>
   </fieldPermissions>
@@ -21438,6 +21953,11 @@
   <fieldPermissions>
     <editable>false</editable>
     <field>CommissionRecord2__c.Factory_Pricebook__c</field>
+    <readable>false</readable>
+  </fieldPermissions>
+  <fieldPermissions>
+    <editable>false</editable>
+    <field>CommissionRecord2__c.Journal_Entry__c</field>
     <readable>false</readable>
   </fieldPermissions>
   <fieldPermissions>
@@ -27207,6 +27727,16 @@
   </fieldPermissions>
   <fieldPermissions>
     <editable>false</editable>
+    <field>PricebookEntry.Special_Price_Description__c</field>
+    <readable>false</readable>
+  </fieldPermissions>
+  <fieldPermissions>
+    <editable>false</editable>
+    <field>PricebookEntry.Special_Price__c</field>
+    <readable>false</readable>
+  </fieldPermissions>
+  <fieldPermissions>
+    <editable>false</editable>
     <field>PricebookEntry.Supplier_Product_Code__c</field>
     <readable>false</readable>
   </fieldPermissions>
@@ -28852,7 +29382,17 @@
   </fieldPermissions>
   <fieldPermissions>
     <editable>false</editable>
+    <field>Registration__c.Account_Name__c</field>
+    <readable>false</readable>
+  </fieldPermissions>
+  <fieldPermissions>
+    <editable>false</editable>
     <field>Registration__c.Account__c</field>
+    <readable>false</readable>
+  </fieldPermissions>
+  <fieldPermissions>
+    <editable>false</editable>
+    <field>Registration__c.ContactEmail__c</field>
     <readable>false</readable>
   </fieldPermissions>
   <fieldPermissions>
@@ -29639,6 +30179,96 @@
     <editable>true</editable>
     <field>Solution.SolutionNote</field>
     <readable>true</readable>
+  </fieldPermissions>
+  <fieldPermissions>
+    <editable>false</editable>
+    <field>Square_Setting__mdt.ApplicationId__c</field>
+    <readable>false</readable>
+  </fieldPermissions>
+  <fieldPermissions>
+    <editable>false</editable>
+    <field>Square_Setting__mdt.AuthToken__c</field>
+    <readable>false</readable>
+  </fieldPermissions>
+  <fieldPermissions>
+    <editable>false</editable>
+    <field>Square_Setting__mdt.IsSandbox__c</field>
+    <readable>false</readable>
+  </fieldPermissions>
+  <fieldPermissions>
+    <editable>false</editable>
+    <field>Square_Setting__mdt.PaymentEndpoint__c</field>
+    <readable>false</readable>
+  </fieldPermissions>
+  <fieldPermissions>
+    <editable>false</editable>
+    <field>Square_Setting__mdt.Payment_Form_JS__c</field>
+    <readable>false</readable>
+  </fieldPermissions>
+  <fieldPermissions>
+    <editable>false</editable>
+    <field>Square_Setting__mdt.Version__c</field>
+    <readable>false</readable>
+  </fieldPermissions>
+  <fieldPermissions>
+    <editable>false</editable>
+    <field>Square_Transaction__c.Account_FirstName__c</field>
+    <readable>false</readable>
+  </fieldPermissions>
+  <fieldPermissions>
+    <editable>false</editable>
+    <field>Square_Transaction__c.Account__c</field>
+    <readable>false</readable>
+  </fieldPermissions>
+  <fieldPermissions>
+    <editable>false</editable>
+    <field>Square_Transaction__c.Amount__c</field>
+    <readable>false</readable>
+  </fieldPermissions>
+  <fieldPermissions>
+    <editable>false</editable>
+    <field>Square_Transaction__c.Description__c</field>
+    <readable>false</readable>
+  </fieldPermissions>
+  <fieldPermissions>
+    <editable>false</editable>
+    <field>Square_Transaction__c.Email__c</field>
+    <readable>false</readable>
+  </fieldPermissions>
+  <fieldPermissions>
+    <editable>false</editable>
+    <field>Square_Transaction__c.Notes__c</field>
+    <readable>false</readable>
+  </fieldPermissions>
+  <fieldPermissions>
+    <editable>false</editable>
+    <field>Square_Transaction__c.isLocked__c</field>
+    <readable>false</readable>
+  </fieldPermissions>
+  <fieldPermissions>
+    <editable>false</editable>
+    <field>Square_Transaction__c.sqCreateDate__c</field>
+    <readable>false</readable>
+  </fieldPermissions>
+  <fieldPermissions>
+    <editable>false</editable>
+    <field>Square_Transaction__c.sqOrderID__c</field>
+    <readable>false</readable>
+  </fieldPermissions>
+  <fieldPermissions>
+    <editable>false</editable>
+    <field>Square_Transaction__c.sqReceiptNumber__c</field>
+    <readable>false</readable>
+  </fieldPermissions>
+  <fieldPermissions>
+    <editable>false</editable>
+    <field>Square_Transaction__c.sqReceiptURL__c</field>
+    <readable>false</readable>
+  </fieldPermissions>
+  <fieldPermissions>
+    <editable>false</editable>
+    <field>Square_Transaction__c.sqStatus__c</field>
+    <readable>false</readable>
   </fieldPermissions>
   <fieldPermissions>
     <editable>false</editable>
@@ -32577,6 +33207,16 @@
   </fieldPermissions>
   <fieldPermissions>
     <editable>false</editable>
+    <field>guar__GUAR_Setting__mdt.guar__AuraEnabledLabel__c</field>
+    <readable>false</readable>
+  </fieldPermissions>
+  <fieldPermissions>
+    <editable>false</editable>
+    <field>guar__GUAR_Setting__mdt.guar__Included_Objects__c</field>
+    <readable>false</readable>
+  </fieldPermissions>
+  <fieldPermissions>
+    <editable>false</editable>
     <field>mcdm_15__ApprovalsPageSettings__c.mcdm_15__Campaign__c</field>
     <readable>false</readable>
   </fieldPermissions>
@@ -32647,6 +33287,11 @@
   </fieldPermissions>
   <fieldPermissions>
     <editable>false</editable>
+    <field>mcdm_15__Bulk_Send_Job__c.mcdm_15__Campaign__c</field>
+    <readable>false</readable>
+  </fieldPermissions>
+  <fieldPermissions>
+    <editable>false</editable>
     <field>mcdm_15__Bulk_Send_Job__c.mcdm_15__Chunk_Error_Count__c</field>
     <readable>false</readable>
   </fieldPermissions>
@@ -32703,6 +33348,11 @@
   <fieldPermissions>
     <editable>false</editable>
     <field>mcdm_15__Bulk_Send_Job__c.mcdm_15__Quick_Send_Journey__c</field>
+    <readable>false</readable>
+  </fieldPermissions>
+  <fieldPermissions>
+    <editable>false</editable>
+    <field>mcdm_15__Bulk_Send_Job__c.mcdm_15__SendTime__c</field>
     <readable>false</readable>
   </fieldPermissions>
   <fieldPermissions>
@@ -32911,6 +33561,11 @@
     <readable>false</readable>
   </fieldPermissions>
   <fieldPermissions>
+    <editable>false</editable>
+    <field>mcdm_15__QuickSendJourney__c.mcdm_15__Description__c</field>
+    <readable>false</readable>
+  </fieldPermissions>
+  <fieldPermissions>
     <editable>true</editable>
     <field>mcdm_15__QuickSendJourney__c.mcdm_15__ExternalJourneyId__c</field>
     <readable>true</readable>
@@ -32923,6 +33578,86 @@
   <fieldPermissions>
     <editable>false</editable>
     <field>mcdm_15__QuickSendJourney__c.mcdm_15__LinkedBusinessUnit__c</field>
+    <readable>false</readable>
+  </fieldPermissions>
+  <fieldPermissions>
+    <editable>false</editable>
+    <field>mcdm_15__QuickSendJourney__c.mcdm_15__MessageType__c</field>
+    <readable>false</readable>
+  </fieldPermissions>
+  <fieldPermissions>
+    <editable>false</editable>
+    <field>mcdm_15__ScheduledSendSubmission__c.mcdm_15__Error__c</field>
+    <readable>false</readable>
+  </fieldPermissions>
+  <fieldPermissions>
+    <editable>false</editable>
+    <field>mcdm_15__ScheduledSendSubmission__c.mcdm_15__Status__c</field>
+    <readable>false</readable>
+  </fieldPermissions>
+  <fieldPermissions>
+    <editable>false</editable>
+    <field>mcdm_15__ScheduledSendSubmission__c.mcdm_15__SubmissionP13n__c</field>
+    <readable>false</readable>
+  </fieldPermissions>
+  <fieldPermissions>
+    <editable>false</editable>
+    <field>mcdm_15__ScheduledSendSubmission__c.mcdm_15__SubmissionSendSettings__c</field>
+    <readable>false</readable>
+  </fieldPermissions>
+  <fieldPermissions>
+    <editable>false</editable>
+    <field>mcdm_15__ScheduledSend__c.mcdm_15__Bulk_Send_Job__c</field>
+    <readable>false</readable>
+  </fieldPermissions>
+  <fieldPermissions>
+    <editable>false</editable>
+    <field>mcdm_15__ScheduledSend__c.mcdm_15__Error__c</field>
+    <readable>false</readable>
+  </fieldPermissions>
+  <fieldPermissions>
+    <editable>false</editable>
+    <field>mcdm_15__ScheduledSend__c.mcdm_15__External_Journey_Id__c</field>
+    <readable>false</readable>
+  </fieldPermissions>
+  <fieldPermissions>
+    <editable>false</editable>
+    <field>mcdm_15__ScheduledSend__c.mcdm_15__HasError__c</field>
+    <readable>false</readable>
+  </fieldPermissions>
+  <fieldPermissions>
+    <editable>false</editable>
+    <field>mcdm_15__ScheduledSend__c.mcdm_15__Has_Errors__c</field>
+    <readable>false</readable>
+  </fieldPermissions>
+  <fieldPermissions>
+    <editable>false</editable>
+    <field>mcdm_15__ScheduledSend__c.mcdm_15__MessageType__c</field>
+    <readable>false</readable>
+  </fieldPermissions>
+  <fieldPermissions>
+    <editable>false</editable>
+    <field>mcdm_15__ScheduledSend__c.mcdm_15__Queueable_Job_Id__c</field>
+    <readable>false</readable>
+  </fieldPermissions>
+  <fieldPermissions>
+    <editable>false</editable>
+    <field>mcdm_15__ScheduledSend__c.mcdm_15__Quick_Send_Journey__c</field>
+    <readable>false</readable>
+  </fieldPermissions>
+  <fieldPermissions>
+    <editable>false</editable>
+    <field>mcdm_15__ScheduledSend__c.mcdm_15__ResultJson__c</field>
+    <readable>false</readable>
+  </fieldPermissions>
+  <fieldPermissions>
+    <editable>false</editable>
+    <field>mcdm_15__ScheduledSend__c.mcdm_15__SendTime__c</field>
+    <readable>false</readable>
+  </fieldPermissions>
+  <fieldPermissions>
+    <editable>false</editable>
+    <field>mcdm_15__ScheduledSend__c.mcdm_15__Status__c</field>
     <readable>false</readable>
   </fieldPermissions>
   <fieldPermissions>
@@ -32962,6 +33697,11 @@
   </fieldPermissions>
   <fieldPermissions>
     <editable>false</editable>
+    <field>mcdm_15__SubmissionSendSettings__c.mcdm_15__MobileCustomField__c</field>
+    <readable>false</readable>
+  </fieldPermissions>
+  <fieldPermissions>
+    <editable>false</editable>
     <field>mcdm_15__SubmissionSendSettings__c.mcdm_15__RelatedRecordId__c</field>
     <readable>false</readable>
   </fieldPermissions>
@@ -32983,6 +33723,11 @@
   <fieldPermissions>
     <editable>false</editable>
     <field>mcdm_15__SubmissionSendSettings__c.mcdm_15__SendableRecordType__c</field>
+    <readable>false</readable>
+  </fieldPermissions>
+  <fieldPermissions>
+    <editable>false</editable>
+    <field>mcdm_15__SubmissionSendSettings__c.mcdm_15__SmsValue__c</field>
     <readable>false</readable>
   </fieldPermissions>
   <fieldPermissions>
@@ -33511,6 +34256,10 @@
   </flowAccesses>
   <flowAccesses>
     <enabled>false</enabled>
+    <flow>Send_Payment_Form</flow>
+  </flowAccesses>
+  <flowAccesses>
+    <enabled>false</enabled>
     <flow>Service_Appointment_Notification_Process</flow>
   </flowAccesses>
   <flowAccesses>
@@ -33563,7 +34312,19 @@
   </flowAccesses>
   <flowAccesses>
     <enabled>false</enabled>
+    <flow>Update_Square_Transaction</flow>
+  </flowAccesses>
+  <flowAccesses>
+    <enabled>false</enabled>
     <flow>Update_Translation_Case</flow>
+  </flowAccesses>
+  <flowAccesses>
+    <enabled>false</enabled>
+    <flow>Upload_Attachments</flow>
+  </flowAccesses>
+  <flowAccesses>
+    <enabled>false</enabled>
+    <flow>mcdm_15__MCDM_Schedule_Send</flow>
   </flowAccesses>
   <flowAccesses>
     <enabled>false</enabled>
@@ -34177,6 +34938,9 @@
     <layout>Global-Global Layout</layout>
   </layoutAssignments>
   <layoutAssignments>
+    <layout>GoogleApiKey__mdt-GoogleApiKey Layout</layout>
+  </layoutAssignments>
+  <layoutAssignments>
     <layout>HubSpot_Inc__HubSpot_Intelligence__c-HubSpot_Inc__HubSpot Intelligence Layout</layout>
   </layoutAssignments>
   <layoutAssignments>
@@ -34558,6 +35322,12 @@
     <layout>Solution-Solution Layout</layout>
   </layoutAssignments>
   <layoutAssignments>
+    <layout>Square_Setting__mdt-Square Setting Layout</layout>
+  </layoutAssignments>
+  <layoutAssignments>
+    <layout>Square_Transaction__c-Square Transaction Layout</layout>
+  </layoutAssignments>
+  <layoutAssignments>
     <layout>SurveyQuestionResponse__c-Survey Question Answer Layout</layout>
   </layoutAssignments>
   <layoutAssignments>
@@ -34744,6 +35514,9 @@
     <layout>et4ae5__abTest__c-et4ae5__AB Test Layout</layout>
   </layoutAssignments>
   <layoutAssignments>
+    <layout>guar__GUAR_Setting__mdt-guar__GUAR Setting Layout</layout>
+  </layoutAssignments>
+  <layoutAssignments>
     <layout>mcdm_15__ApprovalsPageSettings__c-mcdm_15__Approvals Page Settings Layout</layout>
   </layoutAssignments>
   <layoutAssignments>
@@ -34781,6 +35554,15 @@
   </layoutAssignments>
   <layoutAssignments>
     <layout>mcdm_15__QuickSendJourney__c-mcdm_15__Quick Send Journey Layout</layout>
+  </layoutAssignments>
+  <layoutAssignments>
+    <layout>mcdm_15__ScheduledSendSubmission__c-mcdm_15__MCDM ScheduledSubmission Layout</layout>
+  </layoutAssignments>
+  <layoutAssignments>
+    <layout>mcdm_15__ScheduledSend__c-mcdm_15__MCDM ScheduledSend</layout>
+  </layoutAssignments>
+  <layoutAssignments>
+    <layout>mcdm_15__SendCapLog__c-mcdm_15__MCDM Send Cap Log Layout</layout>
   </layoutAssignments>
   <layoutAssignments>
     <layout>mcdm_15__SubmissionP13n__c-mcdm_15__MCDM Submission P13n Layout</layout>
@@ -34849,10 +35631,10 @@
     <viewAllRecords>false</viewAllRecords>
   </objectPermissions>
   <objectPermissions>
-    <allowCreate>false</allowCreate>
+    <allowCreate>true</allowCreate>
     <allowDelete>false</allowDelete>
     <allowEdit>false</allowEdit>
-    <allowRead>false</allowRead>
+    <allowRead>true</allowRead>
     <modifyAllRecords>false</modifyAllRecords>
     <object>Account</object>
     <viewAllRecords>false</viewAllRecords>
@@ -35104,7 +35886,7 @@
     <allowCreate>false</allowCreate>
     <allowDelete>false</allowDelete>
     <allowEdit>false</allowEdit>
-    <allowRead>false</allowRead>
+    <allowRead>true</allowRead>
     <modifyAllRecords>false</modifyAllRecords>
     <object>AcctSeed__Accounting_Variable__c</object>
     <viewAllRecords>false</viewAllRecords>
@@ -35860,7 +36642,7 @@
     <allowCreate>false</allowCreate>
     <allowDelete>false</allowDelete>
     <allowEdit>false</allowEdit>
-    <allowRead>false</allowRead>
+    <allowRead>true</allowRead>
     <modifyAllRecords>false</modifyAllRecords>
     <object>Contact</object>
     <viewAllRecords>false</viewAllRecords>
@@ -36310,7 +37092,7 @@
     <allowCreate>false</allowCreate>
     <allowDelete>false</allowDelete>
     <allowEdit>false</allowEdit>
-    <allowRead>false</allowRead>
+    <allowRead>true</allowRead>
     <modifyAllRecords>false</modifyAllRecords>
     <object>Lead</object>
     <viewAllRecords>false</viewAllRecords>
@@ -36496,10 +37278,10 @@
     <viewAllRecords>false</viewAllRecords>
   </objectPermissions>
   <objectPermissions>
-    <allowCreate>false</allowCreate>
+    <allowCreate>true</allowCreate>
     <allowDelete>false</allowDelete>
     <allowEdit>false</allowEdit>
-    <allowRead>false</allowRead>
+    <allowRead>true</allowRead>
     <modifyAllRecords>false</modifyAllRecords>
     <object>Opportunity</object>
     <viewAllRecords>false</viewAllRecords>
@@ -36916,6 +37698,15 @@
     <allowRead>false</allowRead>
     <modifyAllRecords>false</modifyAllRecords>
     <object>Solution</object>
+    <viewAllRecords>false</viewAllRecords>
+  </objectPermissions>
+  <objectPermissions>
+    <allowCreate>false</allowCreate>
+    <allowDelete>false</allowDelete>
+    <allowEdit>false</allowEdit>
+    <allowRead>false</allowRead>
+    <modifyAllRecords>false</modifyAllRecords>
+    <object>Square_Transaction__c</object>
     <viewAllRecords>false</viewAllRecords>
   </objectPermissions>
   <objectPermissions>
@@ -37411,6 +38202,33 @@
     <allowRead>false</allowRead>
     <modifyAllRecords>false</modifyAllRecords>
     <object>mcdm_15__QuickSendJourney__c</object>
+    <viewAllRecords>false</viewAllRecords>
+  </objectPermissions>
+  <objectPermissions>
+    <allowCreate>false</allowCreate>
+    <allowDelete>false</allowDelete>
+    <allowEdit>false</allowEdit>
+    <allowRead>false</allowRead>
+    <modifyAllRecords>false</modifyAllRecords>
+    <object>mcdm_15__ScheduledSendSubmission__c</object>
+    <viewAllRecords>false</viewAllRecords>
+  </objectPermissions>
+  <objectPermissions>
+    <allowCreate>false</allowCreate>
+    <allowDelete>false</allowDelete>
+    <allowEdit>false</allowEdit>
+    <allowRead>false</allowRead>
+    <modifyAllRecords>false</modifyAllRecords>
+    <object>mcdm_15__ScheduledSend__c</object>
+    <viewAllRecords>false</viewAllRecords>
+  </objectPermissions>
+  <objectPermissions>
+    <allowCreate>false</allowCreate>
+    <allowDelete>false</allowDelete>
+    <allowEdit>false</allowEdit>
+    <allowRead>false</allowRead>
+    <modifyAllRecords>false</modifyAllRecords>
+    <object>mcdm_15__SendCapLog__c</object>
     <viewAllRecords>false</viewAllRecords>
   </objectPermissions>
   <objectPermissions>
@@ -38411,6 +39229,10 @@
   </pageAccesses>
   <pageAccesses>
     <apexPage>ERPPackingSlip_InternalPartOrder</apexPage>
+    <enabled>false</enabled>
+  </pageAccesses>
+  <pageAccesses>
+    <apexPage>ERP_Display_Related_Tables</apexPage>
     <enabled>false</enabled>
   </pageAccesses>
   <pageAccesses>
@@ -39482,6 +40304,10 @@
     <enabled>false</enabled>
   </pageAccesses>
   <pageAccesses>
+    <apexPage>guar__GuestAccessReport</apexPage>
+    <enabled>true</enabled>
+  </pageAccesses>
+  <pageAccesses>
     <apexPage>labs_survey_css</apexPage>
     <enabled>false</enabled>
   </pageAccesses>
@@ -39541,8 +40367,9 @@
   </recordTypeVisibilities>
   <recordTypeVisibilities>
     <default>false</default>
+    <personAccountDefault>true</personAccountDefault>
     <recordType>Account.GeoHack</recordType>
-    <visible>false</visible>
+    <visible>true</visible>
   </recordTypeVisibilities>
   <recordTypeVisibilities>
     <default>false</default>
@@ -39720,9 +40547,10 @@
     <visible>false</visible>
   </recordTypeVisibilities>
   <recordTypeVisibilities>
-    <default>false</default>
+    <default>true</default>
+    <personAccountDefault>true</personAccountDefault>
     <recordType>Opportunity.Retail</recordType>
-    <visible>false</visible>
+    <visible>true</visible>
   </recordTypeVisibilities>
   <recordTypeVisibilities>
     <default>false</default>
@@ -39740,9 +40568,10 @@
     <visible>false</visible>
   </recordTypeVisibilities>
   <recordTypeVisibilities>
-    <default>false</default>
+    <default>true</default>
+    <personAccountDefault>true</personAccountDefault>
     <recordType>PersonAccount.PersonAccount</recordType>
-    <visible>false</visible>
+    <visible>true</visible>
   </recordTypeVisibilities>
   <recordTypeVisibilities>
     <default>false</default>
@@ -40339,6 +41168,10 @@
   </tabVisibilities>
   <tabVisibilities>
     <tab>Search_Serial_Product_History</tab>
+    <visibility>Hidden</visibility>
+  </tabVisibilities>
+  <tabVisibilities>
+    <tab>Square_Transaction__c</tab>
     <visibility>Hidden</visibility>
   </tabVisibilities>
   <tabVisibilities>

@@ -2,7 +2,7 @@
  * Created by dave on 2020-05-13.
  */
 
-public with sharing class Lead_Selector extends Application_Selector
+public without sharing class Lead_Selector extends Application_Selector
 {
 
   public Lead_Selector()

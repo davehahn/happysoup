@@ -2,7 +2,7 @@
  * Created by dave on 2020-04-23.
  */
 
-public with sharing class OnlineBoatReservation_Controller
+public without sharing class OnlineBoatReservation_Controller
 {
 
   public virtual class AccountSaveResult
@@ -38,6 +38,7 @@ public with sharing class OnlineBoatReservation_Controller
     public String lastName;
     public String email;
     public String phone;
+    public String state;
 
     private Account acct;
     private Lead lead;
@@ -72,6 +73,8 @@ public with sharing class OnlineBoatReservation_Controller
         errs.add( 'Email is required' );
       if( this.phone == null )
         errs.add( 'Phone number is required' );
+      if( this.state == null )
+        errs.add( 'Province is required' );
       if( errs.size() > 0 )
       {
         this.errors = errs;
@@ -90,6 +93,7 @@ public with sharing class OnlineBoatReservation_Controller
       this.acct.LastName = this.lastName;
       this.acct.PersonEmail = this.email;
       this.acct.Phone = this.phone;
+      this.acct.BillingState = this.state;
     }
 
     private AccountSaveResult handleAccountUpsert()
@@ -175,6 +179,7 @@ public with sharing class OnlineBoatReservation_Controller
       LeadStatus convertStatus = [ SELECT Id, ApiName FROM LeadStatus WHERE IsConverted = true LIMIT 1];
       lc.setConvertedStatus( convertStatus.ApiName );
       lc.setOpportunityName( buildOppName() );
+      lc.setOwnerId( UserInfo.getUserId() );
       //lc.setDoNotCreateOpportunity( true );
       if( this.acct != null && this.acct.Id != null )
       {

@@ -1,4 +1,4 @@
-public with sharing class LGND_Utilities {
+public without sharing class LGND_Utilities {
 
   public class LGND_Exception extends Exception {}
 

@@ -3,13 +3,12 @@
     <sharingGuestRules>
         <fullName>Boat_Reservation_Access</fullName>
         <accessLevel>Read</accessLevel>
-        <description>Allows access to Boat Reservations community</description>
-        <label>Boat_Reservation_Access</label>
+        <label>Boat Reservation Access</label>
         <sharedTo>
             <guestUser>Boat_Reservation</guestUser>
         </sharedTo>
         <criteriaItems>
-            <field>Name</field>
+            <field>CreatedById</field>
             <operation>notEqual</operation>
             <value>null</value>
         </criteriaItems>
