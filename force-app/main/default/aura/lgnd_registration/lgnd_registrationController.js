@@ -2,15 +2,16 @@
 	doInit : function(component, event, helper) {
 		var accId = component.get('v.accountId'),
 				type = component.get('v.AccountType');
+		helper.resetCustomer( component );
 		helper.fetchContacts( component )
 		.then(
 			$A.getCallback( function( result ) {
 				console.log(  result );
 				component.set('v.salesPeople', result );
-				if (accId != null) {
-					helper.hideAccountForm(component, event);
-					helper.populateAccountCard(component, event, type);
-				}
+//				if (accId != null) {
+//					helper.hideAccountForm(component, event);
+//					helper.populateAccountCard(component, event, type);
+//				}
 			}),
 			$A.getCallback( function( err) {
 				LightningUtils.errorToast( err );
@@ -20,10 +21,13 @@
 
 	clickRegister : function(component, event, helper) {
 		console.log('clickRegister');
-		var regSpinner = component.find('registrationSpinner');
-		$A.util.toggleClass(regSpinner, 'slds-hide');
 
-		helper.createRegistration(component, event, regSpinner);
+		if( helper.formValid( component ) )
+		{
+      var regSpinner = component.find('registrationSpinner');
+      $A.util.toggleClass(regSpinner, 'slds-hide');
+      helper.createRegistration(component, event, regSpinner);
+    }
 	},
 
 	cancelRegister : function(component, event, helper) {
@@ -34,41 +38,38 @@
     document.getElementById('lgnd_inventory_list').classList.remove('slds-hide');
 	},
 
-	lgndRegistrationEvent : function(component, event, helper) {
-		var accountForm = component.find('accountCreationForm'),
-				registration = component.find('registration'),
-				registerBtn = component.find('buttonClickRegister'),
-				regEvt = event.getParam("event");
+  handleAccountSelected: function( component, event, helper )
+  {
+    var objectId = event.getParams().accountId,
+        spinner = component.find('registrationSpinner');
 
-		if (regEvt == 'new') {
-			registerBtn.set('v.disabled', true);
-			$A.util.removeClass(accountForm, 'slds-hide');
-			$A.util.addClass(registration, 'slds-hide');
-		} else {
-			registerBtn.set('v.disabled', false);
-			$A.util.addClass(accountForm, 'slds-hide');
-			component.find('lgnd_account_search').enableSearch();
-			$A.util.removeClass(registration, 'slds-hide');
-		}
-	},
+    $A.util.toggleClass(spinner, 'slds-hide');
+    helper.fetchCustomer( component, objectId )
+    .then(
+      $A.getCallback( function( result ) {
+        console.log( result );
+        component.set('v.Customer', result );
+        component.set('v.showAccountForm', true );
+      }),
+      $A.getCallback( function( err) {
+        LightningUtils.errorToast( err );
+      })
+    )
+    .finally( $A.getCallback( function() {
+      $A.util.toggleClass(spinner, 'slds-hide');
+    }));
+  },
 
-	accountCreated : function(component, event, helper) {
-		helper.hideAccountForm(component, event);
-		var type = component.get('v.AccountType');
-		if (component.get('v.accountId') != null) {
-			helper.populateAccountCard(component, event, type);
-		}
-	},
+  handleAccountSearchCleared: function( component, event, helper )
+  {
+    helper.resetCustomer( component );
+    component.set('v.showAccountForm', false);
+  },
 
-	toggleAccountCard : function(component, event, helper) {
-		if (component.get('v.accountId') != null) {
-			$A.util.removeClass(component.find('account-card'), 'slds-hide');
-		} else {
-			$A.util.addClass(component.find('account-card'), 'slds-hide');
-			component.set('v.MotorUpgrades', null);
-		}
-
-	},
+  handleCreateAccount: function( component, event, helper )
+  {
+    component.set('v.showAccountForm', true);
+  },
 
 	toggleProductCard : function(component, event, helper) {
 		component.set('v.showProductCard', true)

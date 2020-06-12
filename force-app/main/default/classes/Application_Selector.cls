@@ -27,6 +27,13 @@ public virtual class Application_Selector
     return this;
   }
 
+  public Application_Selector addWhereIdIn( Set<Id> ids )
+  {
+    Set<String> s_ids = (Set<String>)JSON.deserialize( JSON.serialize( ids ), Set<String>.class );
+    addWhere( whereInClauseBuilder('Id', s_ids ) );
+    return this;
+  }
+
   public Application_Selector addOrderBy( String orderBy )
   {
     this.orderBy = orderBy;
