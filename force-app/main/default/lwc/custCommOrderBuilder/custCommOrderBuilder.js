@@ -6,6 +6,7 @@ import { LightningElement, wire, track } from 'lwc';
 import { CurrentPageReference, NavigationMixin } from 'lightning/navigation';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import { loadStyle } from 'lightning/platformResourceLoader';
+import { fireEvent, registerListener, unregisterAllListeners} from 'c/pubsub';
 import sldsIconFont from '@salesforce/resourceUrl/sldsIconFont';
 import gothamFonts from '@salesforce/resourceUrl/GothamHTF';
 import LOGO from '@salesforce/resourceUrl/LegendLogo';
@@ -61,6 +62,8 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
     console.log( this.recordId );
   }
 
+  @wire(CurrentPageReference) pageRef;
+
   @wire( fetchBoat, { boatId: '$recordId'} )
   wiredFetchBoat( { error, data } )
   {
@@ -89,6 +92,10 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
     });
 
     this.isMobile = (window.outerWidth < 1024) ? true : false;
+  }
+
+  connectedCallback(){
+    registerListener('updateListItems', this.updateListItems, this);
   }
 
   renderedCallback()
@@ -255,6 +262,54 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
 		}
 	}
 
+	@track performanceItems = [];
+	@track traileringItems = [];
+	@track electronicsItems = [];
+	updateListItems(details){
+	  let payload = {
+			 'Product2Id': details.sku,
+			 'UnitPrice': details.price,
+			 'Quantity': 1
+		};
+		if(details.addToSummary){
+			//add item to list
+			if(details.type === 'radio'){
+				//replace the existing item for this section
+				if(details.addon){
+				} else {
+					if(details.section === 'performance'){
+						this.performanceItems.pop();
+						this.performanceItems.push(payload);
+					} else if(details.section === 'trailering'){
+						this.traileringItems.pop();
+						this.traileringItems.push(payload);
+					} else if(details.section === 'electronics'){
+						this.electronicsItems.pop();
+						this.electronicsItems.push(payload);
+					}
+				}
+			}	else {
+				//append the item to this section
+				if(details.section === 'performance'){
+					this.performanceItems.push(payload);
+				} else if(details.section === 'trailering'){
+					this.traileringItems.push(payload);
+				} else if(details.section === 'electronics'){
+					this.electronicsItems.push(payload);
+				}
+			}
+		} else {
+			//remove item from list
+			if(details.section === 'performance'){
+				this.performanceItems = this.performanceItems.filter(obj => obj.PricebookEntryId !== payload.PricebookEntryId);
+			} else if(details.section === 'trailering'){
+				this.traileringItems = this.traileringItems.filter(obj => obj.PricebookEntryId !== payload.PricebookEntryId);
+			} else if(details.section === 'electronics'){
+				this.electronicsItems = this.electronicsItems.filter(obj => obj.PricebookEntryId !== payload.PricebookEntryId);
+			}
+		}
+ 	}
+
   submitOrder()
   {
     const spinner = this.template.querySelector('c-legend-spinner');
@@ -271,35 +326,42 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
 			const value = input.value;
 			userData[dataId] = value;
   	});
+
+  	//userJSON = {'firstName': '', 'lastName': '', 'email': '', 'phone': ''}
 		const userJSON = JSON.stringify(userData);
-		//userData = {'firstName': '', 'lastName': '', 'email': '', 'phone': ''}
-  	console.log('userJSON: ', userJSON);
 
 		createAccount({customerJSON: userJSON})
 		.catch( (error) => {
 			console.log('error: ', error);
 		})
 		.then( (result) => {
-			console.log('result', result);
+		  console.log('createAccount: ', result);
 		  //accountInfo = {'Id': '', 'AccountId': ' '}
-		  const accountInfo = {
-		    'Id': '',
-		    'AccountId': ''
+		  let accountInfo = {
+		    'Id': result.opportunityId,
+		    'AccountId': result.record.Id
     	};
-		  //lineItems = [{'PricebookEntryId': '', 'Quantity': '', 'UnitPrice': ''}, {'PricebookEntryId': '', 'Quantity': '', 'UnitPrice': ''}, ...]
-		  const lineItems = [
-		    {
-		    	'PriceBookEntryId': '',
-		    	'Quantity': '',
-		    	'UnitPrice': ''
-      	}
-    	];
-			//saveLineItems(accountInfo, lineItems);
+    	accountInfo = JSON.stringify(accountInfo);
+			const boatLineItem = [{
+			  'Product2Id': this.boat.id,
+			  'UnitPrice': this.boat.retailPrice,
+			  'Quantity': 1,
+   		}];
+    	let lineItems = this.performanceItems.concat(this.traileringItems, this.electronicsItems, boatLineItem);
+    	lineItems = JSON.stringify(lineItems);
+		  //lineItems = [{'PricebookEntryId': '', 'Quantity': 1, 'UnitPrice': ''}, {'PricebookEntryId': '', 'Quantity': '', 'UnitPrice': ''}, ...]
+			console.log('accountInfo: ', accountInfo);
+			console.log('lineItems: ', lineItems);
+			saveLineItems({oppJSON: accountInfo, olisJSON: lineItems})
+			.then( (result) => {
+				console.log('lineItemsResult: ', result);
+   		});
   	})
   	.catch( (error) => {
-			console.log(error);
+			console.log('error: ', error);
    	})
-   	.finally( () => {
+//   	.finally( (result) => {
+//   	  console.log("finally: ", result);
    	  /*
    	  this.template.querySelector('c-square-payment-form').doPostToSquare( 2000 )
 			.then( (result) => {
@@ -323,7 +385,7 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
 				//alert( 'Figure out what to do now!!!!!');
 			});
 			*/
-    })
+//    })
 
 
   }

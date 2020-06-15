@@ -87,6 +87,7 @@ export default class CustCommOrderOptions extends LightningElement {
 
 		let name = option['name'];
 		const sku = option['id'];
+		const pricebookEntryId = option['pricebookEntryId'];
 		let km = null;
 		let	rpm = null;
 		let images = [];
@@ -137,6 +138,7 @@ export default class CustCommOrderOptions extends LightningElement {
 
 		optionDetails.push({
 			'sku': sku,
+			'pricebookEntryId': pricebookEntryId,
 			'name': name,
 			'retailPrice': retailPrice,
 			'displayPrice': displayPrice,
