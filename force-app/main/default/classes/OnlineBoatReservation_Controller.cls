@@ -299,8 +299,7 @@ public without sharing class OnlineBoatReservation_Controller
         AccountId = this.acct.Id,
         Name = buildOppName(),
         StageName = 'Quoting',
-        CloseDate = Date.today().addMonths( 1 ),
-        Pricebook2Id = LGND_Constants.retailPricebookId
+        CloseDate = Date.today().addMonths( 1 )
       );
       upsert opp;
       return opp;
@@ -346,6 +345,7 @@ public without sharing class OnlineBoatReservation_Controller
       (Opportunity)JSON.deserialize( oppJSON, Opportunity.class );
     List<OpportunityLineItem> olis =
       (List<OpportunityLineItem>)JSON.deserialize( olisJSON, List<OpportunityLineItem>.class );
+    System.debug( olis );
     update opp;
     for( OpportunityLineItem oli : olis )
     {

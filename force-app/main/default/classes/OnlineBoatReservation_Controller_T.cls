@@ -238,12 +238,14 @@ private class OnlineBoatReservation_Controller_T
         OnlineBoatReservation_Controller.createAccount(JSON.serialize(custJSON));
       Test.stopTest();
 
-      Opportunity opp = [SELECT Id, StageName, CloseDate FROM Opportunity Where Id = :result.opportunityId];
+      Opportunity opp = [SELECT Id, OwnerId, StageName,Pricebook2Id, CloseDate FROM Opportunity Where Id = :result.opportunityId];
 
       System.assertEquals('success', result.status, 'Result status should be success');
       System.assert(result.record != null, 'An account should be returned');
       System.assert(result.opportunityId != null, 'There should be an Opportunity Id');
       System.assertEquals('Quoting', opp.StageName, 'Opportunity Stage should be Quoting');
+      System.assertEquals( guest.Id, opp.OwnerId );
+      System.assertEquals( LGND_Constants.retailPricebookId, opp.Pricebook2Id );
     }
   }
 
