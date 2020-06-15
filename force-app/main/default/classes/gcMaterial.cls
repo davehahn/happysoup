@@ -22,6 +22,17 @@ global without sharing class gcMaterial{
 		}
 	}
 
+	global static Boolean doNotRunDeNesting{
+		get{
+			if(doNotRunDeNesting == null) return false;
+			else return doNotRunDeNesting;
+		}
+		set{
+			if(value == null) doNotRunDeNesting = false;
+			else doNotRunDeNesting = value;
+		}
+	}
+
 	global static Boolean allowUntagRetail{
 		get{
 			if(allowUntagRetail == null) return false;
@@ -377,7 +388,7 @@ global without sharing class gcMaterial{
 				}
 				if(matl.AcctSeedERP__Project__c != null)
 					setProjectSerial.add(matl.AcctSeedERP__Project__c);
-				if(boolIsUpdate
+				if(boolIsUpdate && !doNotRunDeNesting
 					&& oldMap.get(matl.Id).GMBLASERP__Serial_Number__c != null
 					&& matl.GMBLASERP__Serial_Number__c != oldMap.get(matl.Id).GMBLASERP__Serial_Number__c)
 					setIdSerialsDeNest.add(oldMap.get(matl.Id).GMBLASERP__Serial_Number__c);
