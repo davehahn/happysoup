@@ -2087,7 +2087,7 @@ input.dateSelector{
                     {
                         var myHTML = '';
                         if({!isPartnerBoatSale} || {!isBoatSale} || {!isWarranty}){
-                            if(ui.rowData.productIsInventory == 'true' && ui.rowData.mfgMoves == 'false' && parseFloat(ui.rowData.qtyMoved) == 0){
+                            if(ui.rowData.productIsInventory == 'true' && ui.rowData.productIsSerialized == 'false' && ui.rowData.mfgMoves == 'false' && parseFloat(ui.rowData.qtyMoved) == 0){
                                 if({!isPartnerBoatSale} && ui.rowData.productIsInventory == 'true' && ui.rowData.productIsSerialized == 'true'){
                                     // Do Nothing
                                 }else{
