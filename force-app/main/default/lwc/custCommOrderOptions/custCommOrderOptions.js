@@ -87,6 +87,7 @@ export default class CustCommOrderOptions extends LightningElement {
 
 		let name = option['name'];
 		const sku = option['id'];
+		const pricebookEntryId = option['pricebookEntryId'];
 		let km = null;
 		let	rpm = null;
 		let images = [];
@@ -137,6 +138,7 @@ export default class CustCommOrderOptions extends LightningElement {
 
 		optionDetails.push({
 			'sku': sku,
+			'pricebookEntryId': pricebookEntryId,
 			'name': name,
 			'retailPrice': retailPrice,
 			'displayPrice': displayPrice,
@@ -197,7 +199,7 @@ export default class CustCommOrderOptions extends LightningElement {
  	  const optionList = this.template.querySelector('.options_list');
  	  console.log(optionList.offsetHeight);
  	  console.log(optionList.offsetHeight + event.detail);
- 	  optionList.style.marginBottom = event.detail + 'px';
+ 	  optionList.style.marginBottom = event.detail + 16 + 'px';
   }
 
 }

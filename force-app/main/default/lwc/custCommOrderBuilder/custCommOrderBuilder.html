@@ -100,13 +100,14 @@
               <lightning-layout multiple-rows="true">
 
                 <lightning-layout-item padding="horizontal-small"
+                                       data-name="firstName"
                                        size="12"
                                        small-device-size="12"
                                        medium-device-size="6"
                                        large-device-size="6">
                   <div class="form-input">
                     <label>First Name</label>
-                    <input label="First Name" type="text">
+                    <input label="First Name" data-id="firstName" type="text">
                   </div>
                 </lightning-layout-item>
 
@@ -117,7 +118,7 @@
                                        large-device-size="6">
                   <div class="form-input">
                     <label>Last Name</label>
-                    <input label="Last Name" type="text">
+                    <input label="Last Name" data-id="lastName" type="text">
                   </div>
                 </lightning-layout-item>
 
@@ -128,7 +129,7 @@
                                        large-device-size="6">
                   <div class="form-input">
                     <label>Email Address</label>
-                    <input label="Email Address" type="text">
+                    <input label="Email Address" data-id="email" type="text">
                   </div>
                 </lightning-layout-item>
 
@@ -139,7 +140,34 @@
                                        large-device-size="6">
                   <div class="form-input">
                     <label>Phone Number</label>
-                    <input label="Phone Number" type="text">
+                    <input label="Phone Number" data-id="phone" type="text">
+                  </div>
+                </lightning-layout-item>
+
+                <lightning-layout-item padding="horizontal-small"
+                                       size="12"
+                                       small-device-size="12"
+                                       medium-device-size="6"
+                                       large-device-size="6">
+                  <div class="form-input form-input--select">
+                    <label>Province or Territory</label>
+                    <span></span>
+                    <select label="Province or Territory" data-id="state">
+                      <option value=""> -- Select One -- </option>
+                      <option value="Alberta">Alberta</option>
+                      <option value="British Columbia">British Columbia</option>
+                      <option value="Manitoba">Manitoba</option>
+                      <option value="New Brunswick">New Brunswick</option>
+                      <option value="Newfoundland and Labrador">Newfoundland and Labrador</option>
+                      <option value="Northwest Territories">Northwest Territories</option>
+                      <option value="Nova Scotia">Nova Scotia</option>
+                      <option value="Nunavut">Nunavut</option>
+                      <option value="Ontario">Ontario</option>
+                      <option value="Prince Edward Island">Prince Edward Island</option>
+                      <option value="Quebec">Quebec</option>
+                      <option value="Saskatchewan">Saskatchewan</option>
+                      <option value="Yukon">Yukon</option>
+                    </select>
                   </div>
                 </lightning-layout-item>
 

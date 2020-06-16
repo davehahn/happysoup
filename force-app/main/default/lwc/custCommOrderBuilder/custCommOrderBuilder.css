@@ -28,6 +28,7 @@ button:focus{
   position: absolute;
   min-height: 100vh;
   overflow: hidden;
+  box-sizing: border-box;
   padding-top: 65px;
   padding-bottom: 90px;
   width: 100%;
@@ -741,6 +742,7 @@ button:focus{
 
 .form-input {
   margin-bottom: 24px;
+  position: relative;
 }
 
 .form-input label {
@@ -750,13 +752,16 @@ button:focus{
   display: block;
 }
 
-.form-input input {
+.form-input input, .form-input--select span
+{
+  display: block;
   background: #FFF;
   border: 1px solid transparent;
   padding: 10px 20px;
   border-radius: 20px;
   width: 100%;
   font-size: 14px;
+  min-height: 38px;
   color: #666;
 }
 
@@ -764,6 +769,32 @@ button:focus{
   outline: none;
   border: 1px solid #CCC;
 }
+
+.form-input--select select{
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  width: 100%; height: 38px;
+  -webkit-appearance: none;
+  border: 0 none; background: none;
+  padding-left: 1.5em;
+}
+.form-input--select span::before{
+  display: block;
+  content: "\e928";
+  font-family: 'sldsicon' !important;
+	speak: none;
+	font-style: normal;
+	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
+	line-height: 1;
+	color: #999;
+	margin-right: 7px;
+	font-size: 14px;
+	position: absolute;
+	bottom: 10px; right: 1.5em;
+}
+
 
 /*
 
@@ -777,9 +808,6 @@ button:focus{
 
 */
 @media screen and (max-width: 64em){
-  	.lgnd-order-builder{
-  		margin-bottom: 10xvw;
-   	}
 
     /* force scroll and height of main container */
     .lgnd-order-builder:not([data-current="payment"]){
@@ -814,6 +842,10 @@ button:focus{
         width: 100%;
     }
 
+		.config-page[data-page="electronics"]{
+			padding-bottom: 5em;
+  	}
+
     /* expand right rail to full width */
     .config-page:not([data-page="payment"]) .config-page_right{
         width: 100%; max-width: 100%; min-width: 100%;
@@ -845,7 +877,6 @@ button:focus{
     .config-content[data-current="payment"]{
         display: block;
         height: auto;
-        position: static;
     }
     .config-page.config-page_selected[data-page="payment"]{
         flex-wrap: wrap;
@@ -859,6 +890,8 @@ button:focus{
     }
     .config-page.config-page_selected[data-page="payment"] .config-page_right{
         min-width: 100%;
+        width: 100%;
+        padding-left: 5vw; padding-right: 5vw;
         flex-basis: auto;
         flex-grow: unset;
     }

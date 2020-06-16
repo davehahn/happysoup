@@ -104,10 +104,12 @@ export default class CustCommOrderCheckbox extends NavigationMixin(LightningElem
 			'optionName': this.productOptions.name,
 			'optionType': this.productOptions.inputType
    	};
-
+		console.log('pricebookEntryId', this.productOptions.pricebookEntryId);
    	let summaryDetails = {
 			'sku': this.productOptions.sku,
+			'pricebookEntryId': this.productOptions.pricebookEntryId,
 			'name': this.productOptions.name,
+			'price': this.productOptions.retailPrice,
 			'addToSummary': isChecked,
 			'section': this.optionPage,
 			'type': this.productOptions.inputType,
@@ -128,6 +130,7 @@ export default class CustCommOrderCheckbox extends NavigationMixin(LightningElem
 		}
 
    	fireEvent(this.pageRef, 'updateSummary', summaryDetails);
+   	fireEvent(this.pageRef, 'updateListItems', summaryDetails);
    	fireEvent(this.pageRef, 'updatePurchasePrice', purchasePrice);
 
 		if(this.optionLayout === 'alt-swatch'){
