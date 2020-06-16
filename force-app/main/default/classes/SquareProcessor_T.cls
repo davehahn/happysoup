@@ -7,6 +7,7 @@ private class SquareProcessor_T
 {
 
   static final Boolean runningInASandbox = [SELECT IsSandbox FROM Organization LIMIT 1].IsSandbox;
+  static final String sqOrderId = 'jQa7fkUAAaGPFqg251PKrVexample';
 
   @testSetup static void dataSetup()
   {
@@ -16,6 +17,16 @@ private class SquareProcessor_T
 
   public class SquareSuccessResponse implements HttpCalloutMock
   {
+    private final String reference_id;
+    public SquareSuccessResponse()
+    {
+      this.reference_id = null;
+    }
+    public SquareSuccessResponse( String reference_id )
+    {
+      this.reference_id = reference_id;
+    }
+
     public HTTPResponse respond(HTTPRequest req)
     {
       String resString = '{"payment":{';
@@ -25,7 +36,7 @@ private class SquareProcessor_T
       resString += ' "status":"CAPTURED","card":{';
       resString += '"card_brand":"MASTERCARD","last_4":"5809","exp_month":9,"exp_year":2022,"fingerprint":"sq-1-..."},';
       resString += '"entry_method":"KEYED","cvv_status":"CVV_ACCEPTED","avs_status":"AVS_ACCEPTED","auth_result_code":"01721P"},';
-      resString += ' "location_id":"X9XWRESTK1CZ1","order_id":"jQa7fkUAAaGPFqg251PKrVexample","reference_id":"recordId",';
+      resString += ' "location_id":"X9XWRESTK1CZ1","order_id":"' + sqOrderId + '","reference_id":"' + reference_id + '",';
       resString += '"total_money":{"amount":1000,"currency":"CAD"}}}';
       HttpResponse res = new HttpResponse();
       res.setHeader('Content-Type', 'application/json');
@@ -153,13 +164,12 @@ private class SquareProcessor_T
     Test.startTest();
     SquareProcessor square = new SquareProcessor();
     SquareProcessor.PaymentResponse result =
-      square.postPayment( 1000, 'recordId', 'some123random9r83stuff' );
+      square.postPayment( 1000, null, 'some123random9r83stuff' );
     Test.stopTest();
 
     System.assert( result != null , 'Response should not be null');
     System.assert( result.errors == null, 'Response should not contain errors');
     System.assertEquals( 1000, result.payment.amount_money.amount );
-    System.assertEquals('recordId', result.payment.reference_id );
     System.assertEquals( 'COMPLETED', result.payment.status );
   }
 
@@ -174,7 +184,7 @@ private class SquareProcessor_T
       Test.startTest();
       SquareProcessor square = new SquareProcessor();
       SquareProcessor.PaymentResponse result =
-        square.postPayment(1000, 'recordId', 'some123random9r83stuff');
+        square.postPayment(1000, null, 'some123random9r83stuff');
       Test.stopTest();
 
       System.assert(result != null, 'Response should not be null');
@@ -182,6 +192,66 @@ private class SquareProcessor_T
       System.assertEquals(1000, result.payment.amount_money.amount);
       System.assertEquals('COMPLETED', result.payment.status);
     }
+  }
+
+  @IsTest
+  static void postPayment_Success_FromBoatReservation_Test()
+  {
+    User guest = Factory_User.createUser('Guest', 'BoatRes', 'Boat Reservation Profile');
+    Account acct;
+    Opportunity opp;
+    System.runAs( guest )
+    {
+      acct = new Account(
+        FirstName = 'TestFirst',
+        LastName = 'TestLast',
+        Phone = '111-111-1111',
+        PersonEmail = 'someone@someplace.somedomain',
+        RecordTypeId = LGND_Utilities.recordTypeIdFromName('Account', 'Person Account'),
+        BillingState = 'Ontario'
+      );
+      insert acct;
+      opp = new Opportunity(
+        Deposit__c = 500,
+        Name = 'Test Opportunity',
+        Pricebook2Id = LGND_Constants.retailPricebookId,
+        StageName = 'Quoting',
+        CloseDate = Date.today().addMonths( 1 ),
+        AccountId = acct.Id
+      );
+      insert opp;
+      Test.setMock( HttpCalloutMock.class, new SquareSuccessResponse( opp.Id ) );
+      Test.startTest();
+      SquareProcessor square = new SquareProcessor();
+      SquareProcessor.PaymentResponse result =
+        square.postPayment(1000, opp.Id, 'some123random9r83stuff');
+      Test.stopTest();
+
+      System.assert(result != null, 'Response should not be null');
+      System.assert(result.errors == null, 'Response should not contain errors');
+      System.assertEquals(1000, result.payment.amount_money.amount);
+      System.assertEquals('COMPLETED', result.payment.status);
+      System.assertEquals( opp.Id, result.payment.reference_id );
+    }
+
+    Square_Transaction__c[] sqTs = [
+      SELECT
+        Id,
+        Amount__c,
+        Account__c,
+        Description__c,
+        Notes__c,
+        sqOrderId__c,
+        sqStatus__c
+      FROM Square_Transaction__c
+      WHERE Account__c = :acct.Id ];
+
+    System.assertEquals( 1, sqTs.size(), 'Should be a Square_Transaction__c record');
+    System.assertEquals( acct.Id, sqTs[0].Account__c );
+    System.assertEquals( 1000, sqTs[0].Amount__c );
+    System.assertEquals( 'COMPLETED', sqTs[0].sqStatus__c );
+    System.assertEquals( opp.Name, sqTs[0].Description__c );
+    System.assertEquals( 'Deposit for Online Boat Reservation', sqTs[0].Notes__c );
   }
 
   @IsTest
