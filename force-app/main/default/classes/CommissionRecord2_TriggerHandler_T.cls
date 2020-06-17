@@ -71,22 +71,23 @@ private class CommissionRecord2_TriggerHandler_T
       record.Status__c = 'Approved';
       update record;
       record = [
-        SELECT Id, Status__c, Approved_on__c, Approved_By__c, Reviewed_By__c, Previously_Approved_On__c
+        SELECT Id, Status__c, Approved_on__c, Approved_By__c, Reviewed_By__c, Previously_Approved_On__c, Journal_Entry__c
         FROM CommissionRecord2__c
         WHERE Id = :record.Id ];
       System.assertEquals( u.Id, record.Reviewed_By__c );
       System.assertEquals( u.Id, record.Approved_By__c );
       System.assert( record.Approved_On__c != null );
+      System.assert( record.Journal_Entry__c != null );
       record.Status__c = 'Disputed';
       update record;
       record = [
-        SELECT Id, Status__c, Approved_on__c, Approved_By__c, Reviewed_By__c, Previously_Approved_On__c
+        SELECT Id, Status__c, Approved_on__c, Approved_By__c, Reviewed_By__c, Previously_Approved_On__c, Journal_Entry__c
         FROM CommissionRecord2__c
         WHERE Id = :record.Id ];
       System.assert( record.Approved_By__c == null );
       System.assert( record.Approved_On__c == null );
       System.assert( record.Previously_Approved_On__c != null );
-
+      System.assert( record.Journal_Entry__c == null );
     }
   }
 }
