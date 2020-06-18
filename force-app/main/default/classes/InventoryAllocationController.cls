@@ -73,10 +73,10 @@
             qs += ' AcctSeedERP__Project__r.Retail_ERP__c, AcctSeedERP__Project__r.Retail_ERP__r.ERP_Serial_In_Inventory__c, AcctSeedERP__Project__r.Retail_ERP__r.Name, AcctSeedERP__Project__r.Retail_ERP__r.AcctSeed__Account__r.Name, AcctSeedERP__Project__r.Retail_ERP__r.AcctSeedERP__Work_Order_Number__c, AcctSeedERP__Project__r.Retail_ERP__r.Stage__c, AcctSeedERP__Project__r.Retail_ERP__r.CreatedDate, AcctSeedERP__Project__r.Retail_ERP__r.Delivery_Date__c, AcctSeedERP__Project__r.Retail_ERP__r.BoatModelYear__c, AcctSeedERP__Project__r.Retail_ERP__r.Serial_Number__c, AcctSeedERP__Project__r.Retail_ERP__r.Serial_Number__r.Name, AcctSeedERP__Project__r.Retail_ERP__r.TrailerModelYear__c ';
             qs += ' from  AcctSeedERP__Purchase_Order_Line__c  Where AcctSeedERP__Purchase_Order__r.Estimated_Time_of_Arrival_ETA__c != null ';*/
 
-            String qs = 'Select Id, Name, AcctSeedERP__Product__r.RecordType.Name, AcctSeedERP__Quantity_Allocated__c, AcctSeedERP__Product__c, GMBLASERP__Lot__r.Name, ';
+            String qs = 'Select Id, Name, AcctSeedERP__Product__r.RecordType.Name, AcctSeedERP__Product__r.Name, AcctSeedERP__Quantity_Allocated__c, AcctSeedERP__Product__c, GMBLASERP__Lot__r.Name, GMBLASERP__Serial_Number__c, GMBLASERP__Serial_Number__r.Name, ';
             qs += ' AcctSeedERP__Project__c, AcctSeedERP__Project__r.Name, AcctSeedERP__Project__r.AcctSeed__Account__r.Name, AcctSeedERP__Project__r.AcctSeedERP__Work_Order_Number__c, AcctSeedERP__Project__r.Stage__c, AcctSeedERP__Project__r.CreatedDate, AcctSeedERP__Project__r.Delivery_Date__c, AcctSeedERP__Project__r.BoatModelYear__c, AcctSeedERP__Project__r.Serial_Number__c, AcctSeedERP__Project__r.ERP_Serial_In_Inventory__c, AcctSeedERP__Project__r.Serial_Number__r.Name, AcctSeedERP__Project__r.TrailerModelYear__c,  ';
             qs += ' AcctSeedERP__Project__r.Retail_ERP__c, AcctSeedERP__Project__r.Retail_ERP__r.ERP_Serial_In_Inventory__c, AcctSeedERP__Project__r.Retail_ERP__r.Name, AcctSeedERP__Project__r.Retail_ERP__r.AcctSeed__Account__r.Name, AcctSeedERP__Project__r.Retail_ERP__r.AcctSeedERP__Work_Order_Number__c, AcctSeedERP__Project__r.Retail_ERP__r.Stage__c, AcctSeedERP__Project__r.Retail_ERP__r.CreatedDate, AcctSeedERP__Project__r.Retail_ERP__r.Delivery_Date__c, AcctSeedERP__Project__r.Retail_ERP__r.BoatModelYear__c, AcctSeedERP__Project__r.Retail_ERP__r.Serial_Number__c, AcctSeedERP__Project__r.Retail_ERP__r.Serial_Number__r.Name, AcctSeedERP__Project__r.Retail_ERP__r.TrailerModelYear__c ';
-            qs += ' from  AcctSeedERP__Material__c Where AcctSeedERP__Project__r.Arrival_Date__c != null ';
+            qs += ' from  AcctSeedERP__Material__c Where AcctSeedERP__Project__c != null ';
 
             this.queryShipments = qs;
             this.queryProductOwner = 'SELECT AcctSeed__Account__r.name , Manufactured_Product_id__c From AcctSeed__Project__c WHERE Manufactured_Product_id__c in: allProducts and AcctSeed__Status__c = \'Completed\'';
@@ -538,10 +538,10 @@
               //queryShip = this.queryShipments + ' AND AcctSeedERP__Purchase_Order__r.Warehouse__c =:filterWarehouse AND AcctSeedERP__Product__c IN:allProducts order by deliverDate__c';
               //queryShip = this.queryShipments + ' AND AcctSeedERP__Purchase_Order__r.Warehouse__c =:filterWarehouse AND AcctSeedERP__Product__c IN:allProducts AND AcctSeedERP__Quantity_Unreceived__c > 0 order by deliverDate__c';
             }else{
-              queryShip = this.queryShipments + ' AND AcctSeedERP__Project__c != null AND AcctSeedERP__Project__r.Stage__c NOT IN (\'Delivered\',\'Quoting\',\'Closed Lost\',\'Draft\') AND (AcctSeedERP__Project__r.GMBLASERP__Warehouse__c =:filterWarehouse OR AcctSeedERP__Project__r.AcctSeed__Account__r.Warehouse__c =:filterWarehouse) order by AcctSeedERP__Project__r.Arrival_Date__c';
+              queryShip = this.queryShipments + ' AND AcctSeedERP__Project__r.Stage__c NOT IN (\'Delivered\',\'Quoting\',\'Closed Lost\',\'Draft\') AND (AcctSeedERP__Project__r.GMBLASERP__Warehouse__c =:filterWarehouse OR AcctSeedERP__Project__r.AcctSeed__Account__r.Warehouse__c =:filterWarehouse) order by AcctSeedERP__Project__r.Arrival_Date__c';
             }
             System.debug(loggingLevel.error,'queryShip:'+queryShip);
-            for (AcctSeedERP__Purchase_Order_Line__c orderLine : Database.query(queryShip))
+            for (AcctSeedERP__Material__c orderLine : Database.query(queryShip))
             {
               System.debug(loggingLevel.error,'orderLine:'+orderLine.AcctSeedERP__Project__r.ERP_Serial_In_Inventory__c);
               if(this.filterType == 'Boat'
@@ -968,7 +968,8 @@
 
             inv.lotName = this.filterType == 'Boat' ? yearSelected : '';
 
-
+            System.debug('inv-m');
+            System.debug(inv);
             if (! yearSelected.contains('-'))
             {
               if(this.filterType == 'Boat' && (inv.availabeForRetail <> 0 || inv.retailSold <> 0  || inv.specials <> 0 || inv.useds <> 0 || inv.damages <> 0 || inv.inStock <> 0 || inv.demos <> 0))
@@ -990,7 +991,7 @@
                         //    shi.available = shi.quantity + netAvail -shi.reserved;
                         //    netAvail = shi.available;
                         //}
-                        if( netAvailRetail != null && shi.reserved != null )
+                        if( netAvailRetail != null)
                         {
                             shi.available_retail = netAvailRetail + shi.quantity - shi.orders;
                             netAvailRetail = shi.available_retail;
@@ -1764,6 +1765,8 @@
             }
 
             public Shipment(AcctSeedERP__Material__c orderLine) {
+                System.debug('Mat Line');
+                System.debug(orderLine);
                 this.deliverDate = null;
                 this.deliverDateFormatted = '';
                 if(orderLine.AcctSeedERP__Product__r.RecordType.Name != 'Boat' && orderLine.AcctSeedERP__Project__r.Delivery_Date__c != null){
@@ -1776,12 +1779,13 @@
                 this.productId = orderLine.AcctSeedERP__Product__c;
                 this.quantity = 1;
                 this.available = available;
-                this.orders = orderLine.AcctSeedERP__Project__c == null ? 0 : 1;
+                this.orders = orderLine.AcctSeedERP__Project__r.Retail_ERP__c == null ? 0 : 1;
                 if(orderLine.AcctSeedERP__Product__r.RecordType.Name != 'Boat')
                   this.orders = 0;
-//                else if(this.deliverDate == null)
-//                  this.orders = 0;
                 this.soldErpOrder = null;
+                if(orderLine.AcctSeedERP__Project__r.Retail_ERP__c != null)
+                    this.soldErpOrder = JSON.serialize(new Map<String,List<ErpOrderObj>>{'Retail ERP Orders' => new List<ErpOrderObj>{new ErpOrderObj(orderLine.AcctSeedERP__Project__r.Retail_ERP__r, 'retailERP')}});
+
                 if(orderLine.AcctSeedERP__Project__c != null && orderLine.AcctSeedERP__Product__r.RecordType.Name == 'Boat') {
                     ErpOrderObj eo = new ErpOrderObj(orderLine.AcctSeedERP__Project__r, 'partnerERP');
                     eo.productId = orderLine.AcctSeedERP__Product__c;
