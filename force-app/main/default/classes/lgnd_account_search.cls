@@ -3,7 +3,7 @@ public class lgnd_account_search {
 	public static List<List<sObject>> searchAccounts(String query) {
 		System.debug(query);
 		Id rtId = LGND_Utilities.recordTypeIdFromName('Account', 'Person Account');
-		List<List<sObject>> accounts = [FIND :query IN ALL FIELDS RETURNING Account(Name, BillingAddress, Phone WHERE RecordTypeId = :rtId), Lead(Name, Address, Phone) LIMIT 10];
+		List<List<sObject>> accounts = [FIND :query IN ALL FIELDS RETURNING Account(Name, BillingAddress, Phone WHERE RecordTypeId = :rtId), Lead(Name, Address, Phone WHERE IsConverted = false) LIMIT 30];
 		return accounts;
 	}
 

@@ -449,6 +449,8 @@ public without sharing class gcProject {
           p.addError('ERP Order has underlying transactions. Business Unit (GLV1) may not be changed.');
         if(boolIsUpdate && p.GL_Account_Variable_2__c != oldRec.GL_Account_Variable_2__c && setProjectsWithTxn.contains(p.Id))
           p.addError('ERP Order has underlying transactions. Department (GLV2) may not be changed.');
+        if(boolIsUpdate && p.Stage__c != oldRec.Stage__c && p.Stage__c == 'Closed/Lost' && setProjectsWithTxn.contains(p.Id))
+          p.addError('ERP Order has underlying transactions. Stage may not be changed to Closed/Lost.');
 
         if(oppy != null)
         {
@@ -492,6 +494,8 @@ public without sharing class gcProject {
       Set<Id> setIdProjectsCompletedStatus = new Set<Id>();
       Set<Id> setIdProjectsCompletedToService = new Set<Id>();
       Set<Id> setIdRetailToBeTagged = new Set<Id>();
+      Set<Id> setIdProjectStageLost = new Set<Id>();
+
       List<AcctSeedERP__Material__c> listMaterials = new List<AcctSeedERP__Material__c>();
 
       if(boolIsUpdate || boolIsInsert)
@@ -532,6 +536,10 @@ public without sharing class gcProject {
           }
           if(boolIsUpdate && p.AcctSeed__Status__c != oldRec.AcctSeed__Status__c)
             setIdProjectsWithStatusChange.add(p.Id);
+          if(p.Stage__c == 'Closed/Lost'
+            && (boolIsUpdate && p.Stage__c != oldRec.Stage__c)) {
+            setIdProjectStageLost.add(p.Id);
+          }
           if(p.AcctSeed__Status__c == 'Completed'
             && (boolIsInsert
             || (boolIsUpdate && p.AcctSeed__Status__c != oldRec.AcctSeed__Status__c))){
@@ -540,7 +548,6 @@ public without sharing class gcProject {
               || p.RecordTypeId == gcConstants.idRtPartnerPartsOrder)
               && p.Service_ERP__c == null)
               setIdProjectsCompletedToService.add(p.Id);
-
           }
 
           if(boolIsUpdate && p.Retail_ERP__c != null){
@@ -592,6 +599,7 @@ public without sharing class gcProject {
       Set<Id> setCombinedId = new Set<Id>();
       setCombinedId.addAll(setIdProjectsWithStatusChange);
       setCombinedId.addAll(setIdRetailToBeTagged);
+      setCombinedId.addAll(setIdProjectStageLost);
       if(!setCombinedId.isEmpty())
       {
         for(AcctSeedERP__Material__c matl :
@@ -606,6 +614,10 @@ public without sharing class gcProject {
             setIdSerials.add(matl.GMBLASERP__Serial_Number__c);
           if(setIdRetailToBeTagged.contains(matl.AcctSeedERP__Project__c))
             listMaterials.add(matl);
+          if(setIdProjectStageLost.contains(matl.AcctSeedERP__Project__c)){
+            matl.GMBLASERP__Serial_Number__c = null;
+            listMaterials.add(matl);
+          }
         }
       }
 
@@ -613,8 +625,10 @@ public without sharing class gcProject {
       setIdSerials.remove(null);
       if(!setIdSerials.isEmpty() && !System.isBatch())
         gcSerialNumber.updateSerialIsAvailableFuture(setIdSerials);
-      if(!listMaterials.isEmpty())
+      if(!listMaterials.isEmpty()) {
+        gcMaterial.doNotRunDeNesting = true;
         update listMaterials;
+      }
 
       /// updating account
       if(!mapAccountUpdate.isEmpty()){

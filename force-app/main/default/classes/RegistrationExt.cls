@@ -1,16 +1,5 @@
 public with sharing class RegistrationExt {
 
-  public static Boolean disableRegistrationTrigger {
-    get {
-      if(disableRegistrationTrigger == null) return false;
-      else return disableRegistrationTrigger;
-    }
-    set {
-      if(value == null) disableRegistrationTrigger = false;
-      else disableRegistrationTrigger = value;
-    }
-  }
-
   public RegistrationExt(ApexPages.StandardController stdCtr) {
   }
 
@@ -36,54 +25,16 @@ public with sharing class RegistrationExt {
 			deleteRegistrationsFuture(regsToDelete_erpIds);
   }
 
-//  public static void triggerHandler(
-//		Map < Id, Registration__c > oldMap,
-//		Map < Id, Registration__c > newMap,
-//		List < Registration__c > listNew,
-//		Boolean boolIsBefore,
-//		Boolean boolIsInsert,
-//		Boolean boolIsUpdate,
-//		Boolean boolIsDelete )
-//  {
-//		if (disableRegistrationTrigger) return;
-//
-//		if (oldMap == null) oldMap = new Map < Id, Registration__c > ();
-//		if (newMap == null) newMap = new Map < Id, Registration__c > ();
-//		if (listNew == null) listNew = new List < Registration__c > ();
-//
-//		if (boolIsBefore)
-//		/* &&&&&&&   BEFORE    &&&&&&& */
-//		{
-//		  if (boolIsInsert) {
-////				Set <Id> serialIdNowNonCurrent = new Set < Id > ();
-////				for (Registration__c reg: listNew) {
-////				  reg.isCurrent__c = true;
-////				  reg.Registered_Date__c = DateTime.now();
-////				  if( reg.ErpOrder__c != null )
-////				  	reg.Uniqueifier__c = reg.ErpOrder__c + '_' + reg.SerialNumber__c;
-////				  serialIdNowNonCurrent.add(reg.SerialNumber__c);
-////				}
-////				setNonCurrent(serialIdNowNonCurrent);
-////				addRegistrationAccount(listNew);
-//		  }
-//		  if (boolIsUpdate) {
-//		  }
-//		  if (boolIsDelete) {
-//		  }
-//		} else {
-//		  /* &&&&&&&   AFTER   &&&&&&& */
-//		  if (boolIsInsert) {
-//				//createPartnerCustomers( listNew );
-//				//setRegistationDateOnSerial( listNew, oldMap );
-//				//System.enqueueJob( new RegistrationPopulateMotorQueue( newMap.keySet() ) );
-//		  }
-//		  if (boolIsUpdate) {
-//		  	setRegistationDateOnSerial( listNew, oldMap );
-//		  }
-//		  if (boolIsDelete) {
-//		  }
-//		}
-//  }
+	@AuraEnabled
+	public static String fetchCustomer( String recordId )
+	{
+		Schema.sObjectType entityType = Id.valueOf(recordId).getSObjectType();
+		if( entityType == Account.sObjectType )
+			return fetchAccount( recordId );
+		if( entityType == Lead.sObjectType )
+			return fetchLead( recordId );
+		return null;
+	}
 
   @AuraEnabled
   public static Contact[] fetchAccountContacts()
@@ -107,30 +58,78 @@ public with sharing class RegistrationExt {
   }
 
   @AuraEnabled
-  public static Registration__c createRegistration(String account,
-  																								 String serno,
-  																								 List<GMBLASERP__Serial_Number__c> NestedItems,
-  																								 String motor,
-  																								 String motorSerial,
-  																								 DateTime deliveryDate,
-  																								 String partnerMemoryMaker,
-  																								 String caseId,
-  																								 String paymentMethod ) {
-		if( LGND_Utilities.sObjectNameFromId( account ) == 'Lead' ) {
-			Lead lead = getDetailedLead(account);
-			account = lgnd_account_createForm.convertLead(lead, String.valueOf(lead.Phone)).Id;
+  public static Registration__c createRegistration( String serno,
+																										String customerJSON,
+																										String customerType,
+  																								  List<GMBLASERP__Serial_Number__c> NestedItems,
+  																								  String motor,
+  																								  String motorSerial,
+  																								  DateTime deliveryDate,
+  																								  String partnerMemoryMaker,
+  																								  String caseId,
+  																								  String paymentMethod ) {
+		Id customerId = updateCustomerData( customerType, customerJSON );
+		if( customerId != null )
+		{
+			return doRegistration(
+				serno,
+				customerId,
+				NestedItems,
+				motor,
+				motorSerial,
+				deliveryDate,
+				partnerMemoryMaker,
+				caseId,
+				paymentMethod );
 		}
+		throw new AuraHandledException('There was an error with the Customer data');
+  }
 
+	private static Id updateCustomerData( String type, String cJSON )
+	{
+		if( type == 'person' || type == null )
+		{
+			Customer.Person customer =
+				(Customer.Person)JSON.deserialize(
+					cJSON, Customer.person.class
+				);
+			Customer.AccountSaveResult result = customer.upsertRecord();
+			System.debug( result );
+			if( result.status == 'success' ) return result.record.Id;
+			throw new AuraHandledException( result.messages[0] );
+		}
+		if( type == 'dealer' )
+		{
+			Customer.Dealer customer =
+				(Customer.Dealer)JSON.deserialize(
+					cJSON, Customer.Dealer.class
+				);
+			return customer.id;
+		}
+		return null;
+	}
+
+	private static Registration__c doRegistration(
+		String serno,
+		String accountId,
+		List<GMBLASERP__Serial_Number__c> NestedItems,
+		String motor,
+		String motorSerial,
+		DateTime deliveryDate,
+		String partnerMemoryMaker,
+		String caseId,
+		String paymentMethod )
+	{
 		Registration__c registration = new Registration__c(
-			Account__c = account,
+			Account__c = accountId,
 			SerialNumber__c = serno,
-	    Delivery_Date__c = deliveryDate,
-	    Payment_Method__c = paymentMethod
-    );
-    if( !String.isBlank( partnerMemoryMaker ) )
-    {
-    	registration.Partner_Memory_Maker__c = partnerMemoryMaker;
-    }
+			Delivery_Date__c = deliveryDate,
+			Payment_Method__c = paymentMethod
+		);
+		if( !String.isBlank( partnerMemoryMaker ) )
+		{
+			registration.Partner_Memory_Maker__c = partnerMemoryMaker;
+		}
 		if (motor != null && motorSerial != null) {
 			registration.Registered_Motor__c = motor;
 			registration.Registered_Motor_Serial__c = motorSerial;
@@ -144,30 +143,30 @@ public with sharing class RegistrationExt {
 		Set<Id> nestedSerialIds = new Set<Id>();
 		// Register nested items, too
 		for (GMBLASERP__Serial_Number__c item : NestedItems) {
-		  regs.add(
-		  	new Registration__c(
-		  		Account__c = account,
-		  		SerialNumber__c = item.Id
-	  		)
-	  	);
-		  nestedSerialIds.add( item.Id );
+			regs.add(
+				new Registration__c(
+					Account__c = accountId,
+					SerialNumber__c = item.Id
+				)
+			);
+			nestedSerialIds.add( item.Id );
 		}
 
 		GMBLASERP__Serial_Number__c[] prods = [SELECT Id,
-																									Name,
-																									Nest__c
-																						 FROM GMBLASERP__Serial_Number__c
-																						WHERE Id IN :nestedSerialIds];
+			Name,
+			Nest__c
+		FROM GMBLASERP__Serial_Number__c
+		WHERE Id IN :nestedSerialIds];
 		if (prods.size() > 0) {
 			for( GMBLASERP__Serial_Number__c nestSerial : prods )
 			{
-		  	nestSerial.Nest__c = serno;
+				nestSerial.Nest__c = serno;
 			}
 		}
 		insert regs;
 		update prods;
 		return registration;
-  }
+	}
 
   private static Lead getDetailedLead(Id accId) {
   	return [SELECT BoatModel__c,
@@ -339,62 +338,6 @@ public with sharing class RegistrationExt {
   	return c;
   }
 
-//	public class RegistrationPopulateMotorQueue implements Queueable {
-//
-//		public final Set<Id> regIds;
-//
-//		public RegistrationPopulateMotorQueue( Set<Id> registrationIds )
-//		{
-//			this.regIds = registrationIds;
-//		}
-//
-//		public void execute( QueueableContext context )
-//		{
-//			Id pjRt = gcConstants.idRtProjectBoatSale;
-//			Id boatRt = LGND_Constants.productRtId_Boat;
-//			Id motorRt = LGND_Constants.productRtId_Motor;
-//			Map<Id, Registration__c> erpId_Reg_map = new Map<Id, Registration__c>();
-//			for( Registration__c reg : [ SELECT Id, ERPOrder__c
-//																	 FROM Registration__c
-//																	 WHERE Id IN :this.regIds
-//																	 AND ERPOrder__c <> null
-//																	 AND ERPOrder__r.RecordTypeId = :pjRt
-//																	 AND Registered_Motor__c = null
-//																	 AND SerialNumber__r.GMBLASERP__Product__r.RecordTypeId = :boatRt] )
-//			{
-//				erpId_Reg_map.put( reg.ERPOrder__c, reg );
-//			}
-//
-//			for( AcctSeedERP__Material__c mat : [ SELECT Id,
-//																									 AcctSeedERP__Project__c,
-//																									 AcctSeedERP__Product__c,
-//																									 GMBLASERP__Serial_Number__r.Name
-//																						FROM AcctSeedERP__Material__c
-//																						WHERE AcctSeedERP__Project__c IN :erpId_Reg_map.keySet()
-//																						AND AcctSeedERP__Product__r.RecordTypeId = :motorRt
-//																						AND AcctSeedERP__Product__r.Family <> 'Kicker Motor'] )
-//			{
-//				if( erpId_Reg_map.containsKey( mat.AcctSeedERP__Project__c ) )
-//				{
-//					erpId_Reg_map.get( mat.AcctSeedERP__Project__c ).Registered_Motor__c = mat.AcctSeedERP__Product__c;
-//					erpId_Reg_map.get( mat.AcctSeedERP__Project__c ).Registered_Motor_Serial__c = mat.GMBLASERP__Serial_Number__r.Name;
-//				}
-//			}
-//			update erpId_Reg_map.values();
-//		}
-//	}
-
-  /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
-//  private static void setNonCurrent(Set<Id> serialIds) {
-//		Registration__c[] toUpdate = new List<Registration__c>();
-//		for (Registration__c reg: [SELECT Id FROM Registration__c WHERE SerialNumber__c IN :serialIds]) {
-//		  reg.isCurrent__c = false;
-//		  toUpdate.add(reg);
-//		}
-//		if (toUpdate.size() > 0)
-//		  update toUpdate;
-//  }
-
   private static List<AcctSeed__Project__c> filterBoatSales(AcctSeed__Project__c[] erps) {
 		Set<Id> boatSaleIds = new Set<Id>{
 			gcConstants.idRtProjectBoatSale,
@@ -462,103 +405,42 @@ public with sharing class RegistrationExt {
 		delete regs;
   }
 
-//  private static void setRegistationDateOnSerial( List<Registration__c> listNew,
-//  									 														  Map<Id, Registration__c> oldMap )
-//  {
-//  	GMBLASERP__Serial_Number__c[] serials = new List<GMBLASERP__Serial_Number__c>();
-//  	for( Registration__c reg : listNew )
-//  	{
-//  		boolean include = false;
-//  		Registration__c oldReg;
-//  		if( oldMap.size() > 0 )
-//  		{
-//  			oldReg = oldMap.get( reg.Id );
-//  		}
-//  		if( reg.Registered_To_Customer__c )
-//  		{
-//  			include = true;
-//  			if( oldReg != null && reg.Delivery_Date__c == oldReg.Delivery_Date__c )
-//  				include = false;
-//  		}
-//  		if( include )
-//  		{
-//  			serials.add( new GMBLASERP__Serial_Number__c(
-//  				Id = reg.SerialNumber__c,
-//  				Retail_Registration_Date__c = reg.Delivery_Date__c
-//  			));
-//  		}
-//  	}
-//  	if( serials.size() > 0 )
-//  	{
-//  		Boolean orig = gcSerialNumber.disableTrigger;
-//  		gcSerialNumber.disableTrigger = true;
-//  		update serials;
-//  		gcSerialNumber.disableTrigger = orig;
-//  	}
-//  }
+	private static String fetchAccount( String acctId )
+	{
+		Boolean isPerson = [SELECT IsPersonAccount FROM Account WHERE Id = :acctId].IsPersonAccount;
+		if( isPerson )
+		{
+			Account acct = Account_Selector.allPersonAccountsByIds(new Set<Id>{acctId})[0];
+			return JSON.serialize(new Customer.Person(acct));
+		}
+		else
+		{
+			Account acct = Account_Selector.allByIds( new Set<Id>{acctId})[0];
+			return JSON.serialize( new Customer.Dealer( acct ) );
+		}
+	}
 
-//  private static void addRegistrationAccount(List<Registration__c> listNew) {
-//
-//		Id acctId;
-//		if( UserInfo.getUserType() == 'Standard' )
-//		{
-//		  User currentUser = [SELECT Id, Warehouse__c FROM User WHERE Id = :Userinfo.getUserId() ];
-//		  Legend_Settings__c orgDefaults = Legend_Settings__c.getOrgDefaults();
-//		  Map<String, Id> wareHouseMap = new Map<String, Id>{
-//				'Whitefish' => orgDefaults.LegendWhitefishAccountId__c,
-//				'Barrie' => orgDefaults.LegendBarrieAccountId__c,
-//				'Montreal' => orgDefaults.LegendMontrealAccountId__c,
-//				'Wholesale' => orgDefaults.LegendWholesaleAccountId__c
-//		  };
-//		  if( wareHouseMap.containsKey( currentUser.wareHouse__c ) ) {
-//				acctId = wareHouseMap.get( currentUser.Warehouse__c );
-//		  }
-//		}
-//		else
-//		{
-//		  Id contactId = [SELECT ContactId FROM User WHERE Id = :Userinfo.getUserId()].ContactId;
-//		  Contact ct = [SELECT AccountId, Account.BillingState FROM Contact WHERE Id = :contactId];
-//		  acctId = ct.AccountId;
-//		}
-//
-//		for (Registration__c reg: listNew) {
-//		  if( reg.RegisteredByAccount__c == null ) {
-//			reg.RegisteredByAccount__c = acctId;
-//		  }
-//		}
-//
-//  }
-
-//  private static void createPartnerCustomers(List<Registration__c> listNew)
-//  {
-//		Map<String, Registration__c> uniqueRegMap = new Map<String, Registration__c>();
-//		for ( Registration__c reg : listNew )
-//		{
-//		  uniqueRegMap.put( reg.RegisteredByAccount__c + '-' + reg.Account__c, reg);
-//		}
-//		Set<String> existing = new Set<String>();
-//		for( Partner_Customer__c pc : [SELECT Uniqueifier__c
-//																		 FROM Partner_Customer__c
-//																		WHERE Uniqueifier__c IN :uniqueRegMap.keySet() ] )
-//		{
-//		  existing.add(pc.Uniqueifier__c);
-//		}
-//		Partner_Customer__c[] pcs = new List<Partner_Customer__c>();
-//		for( String key : uniqueRegMap.keySet() )
-//		{
-//		  if( !existing.contains(key) )
-//		  {
-//			Registration__c reg = uniqueRegMap.get( key );
-//			pcs.add( new Partner_Customer__c (
-//			  Customer__c = reg.Account__c,
-//			  Partner__c = reg.RegisteredByAccount__c,
-//			  Uniqueifier__c = key
-//			));
-//		  }
-//		}
-//		insert pcs;
-//  }
-
+	private static String fetchLead( String leadId )
+	{
+		Lead l = [SELECT Id,
+			Email,
+			FirstName,
+			LastName,
+			Phone,
+			MobilePhone,
+			Preferred_Language__c,
+			Country,
+			CountryCode,
+			City,
+			State,
+			StateCode,
+			Street,
+			PostalCode
+		FROM Lead
+		WHERE Id = : leadId
+		AND isConverted = false];
+		return JSON.serialize( new Customer.Person( l ) );
+	}
 
   public static void coverage()
   {
@@ -1625,4 +1507,6 @@ public with sharing class RegistrationExt {
 		i=1;
 		i=1;
   }
+
+
 }

@@ -975,6 +975,9 @@ public with sharing class LGND_APIv2_Product {
     public Boolean HasOptions { get; set; }
     public Decimal RetailPrice { get; set; }
     public Decimal PartnerPrice { get; set; }
+    public Decimal FactoryPrice { get; set; }
+    public Decimal FactorySpecialPrice { get; set; }
+    public String FactorySpecialPriceDescription { get; set; }
     public Decimal RetailSpecialPrice { get; set; }
     public String RetailSpecialPriceDescription { get; set; }
     public Decimal PartnerSpecialPrice { get; set; }
@@ -1015,12 +1018,17 @@ public with sharing class LGND_APIv2_Product {
               this.RetailSpecialPrice = pbe.Special_Price__c;
               this.RetailSpecialPriceDescription = pbe.Special_Price_Description__c;
             }
-            if( pricebookMap.get(pbe.Pricebook2Id) == 'partner' ||
-                pricebookMap.get(pbe.Pricebook2Id) == 'factory' )
+            if( pricebookMap.get(pbe.Pricebook2Id) == 'partner' )
             {
               this.PartnerPrice = pbe.UnitPrice;
               this.PartnerSpecialPrice = pbe.Special_Price__c;
               this.PartnerSpecialPriceDescription = pbe.Special_Price_Description__c;
+            }
+            if( pricebookMap.get(pbe.Pricebook2Id) == 'factory' )
+            {
+              this.FactoryPrice = pbe.UnitPrice;
+              this.FactorySpecialPrice = pbe.Special_Price__c;
+              this.FactorySpecialPriceDescription = pbe.Special_Price_Description__c;
             }
           }
         }
