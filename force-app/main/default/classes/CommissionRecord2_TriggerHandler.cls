@@ -210,11 +210,11 @@ public without sharing class CommissionRecord2_TriggerHandler extends TriggerHan
     }
     if( approvedNow.size() > 0 )
     {
-      JournalEntry_Service.takeExpenseFuture(approvedNow);
+      JournalEntry_Service.takeExpense(approvedNow);
     }
     if( disApproved.size() > 0 )
     {
-      JournalEntry_Service.unTakeExpenseFuture(disApproved);
+      JournalEntry_Service.unTakeExpense(disApproved);
     }
   }
 

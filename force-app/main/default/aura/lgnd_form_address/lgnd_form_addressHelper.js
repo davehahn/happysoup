@@ -34,7 +34,8 @@
 	},
 
 	fillInAddress : function (component, event) {
-		var combobox 		= component.find('address_combobox'),
+		var self = this,
+		    combobox 		= component.find('address_combobox'),
 				id 					= event.currentTarget.dataset.addressId,
 				addressList = component.get("v.addressList"),
 				address 		= addressList[id] || '',
@@ -91,6 +92,7 @@
 				}
 				component.set('v.street', street_num + ' ' + street_name );
 				component.set("v.search", '');
+				self.validateForm( component );
 			}
 		});
 		$A.enqueueAction(action);
@@ -122,5 +124,21 @@
 
 		component.set('v.inFocus', selection);
 		document.getElementById('listbox-option-unique-id-' + selection).focus();
-	}
+	},
+
+	validateForm: function( component )
+	{
+	  if( !component.get('v.allRequired') ) return true;
+    var requiredFields = component.find('required-field');
+    if( requiredFields === null || requiredFields == undefined )
+      requiredFields = [];
+    // if we have a single field ( this will be an object not an array )
+    if( requiredFields.length === undefined )
+      requiredFields = [requiredFields];
+
+    return requiredFields.reduce(function (validSoFar, inputCmp) {
+      inputCmp.showHelpMessageIfInvalid();
+      return validSoFar && inputCmp.get('v.validity').valid;
+    }, true);
+  }
 })

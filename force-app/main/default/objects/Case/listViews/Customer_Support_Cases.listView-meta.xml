@@ -9,7 +9,12 @@
     <filters>
         <field>CASES.RECORDTYPE</field>
         <operation>equals</operation>
-        <value>Case.Customer_Community</value>
+        <value>Case.Customer_Community,Case.Service_Appointment</value>
+    </filters>
+    <filters>
+        <field>CASES.STATUS</field>
+        <operation>notEqual</operation>
+        <value>Closed</value>
     </filters>
     <label>All Customer Support Cases</label>
 </ListView>

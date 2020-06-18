@@ -36,7 +36,7 @@
         <processMetadataValues>
             <name>textJson</name>
             <value>
-                <stringValue>{&quot;mentions&quot;:[],&quot;message&quot;:&quot;@[{![AcctSeed__Project__c].Boat_Specialist__c}] Don&#39;t forget to update the Trade-In ERP Status when the trade package arrives! Thank you :)&quot;}</stringValue>
+                <stringValue>{&quot;mentions&quot;:[],&quot;message&quot;:&quot;@[{![AcctSeed__Project__c].Boat_Specialist__c}] Don&apos;t forget to update the Trade-In ERP Status when the trade package arrives! Thank you :)&quot;}</stringValue>
             </value>
         </processMetadataValues>
         <name>myWaitEvent_myWait_myRule_5_event_0_SA1</name>
@@ -51,7 +51,7 @@
         <inputParameters>
             <name>text</name>
             <value>
-                <stringValue>@[{!myVariable_current.Boat_Specialist__c}] Don&#39;t forget to update the Trade-In ERP Status when the trade package arrives! Thank you :)</stringValue>
+                <stringValue>@[{!myVariable_current.Boat_Specialist__c}] Don&apos;t forget to update the Trade-In ERP Status when the trade package arrives! Thank you :)</stringValue>
             </value>
         </inputParameters>
         <inputParameters>
@@ -928,18 +928,7 @@
                 <stringValue>Now()</stringValue>
             </value>
         </processMetadataValues>
-        <name>formula_10_myRule_7_A2_9344470079</name>
-        <dataType>DateTime</dataType>
-        <expression>Now()</expression>
-    </formulas>
-    <formulas>
-        <processMetadataValues>
-            <name>originalFormula</name>
-            <value>
-                <stringValue>Now()</stringValue>
-            </value>
-        </processMetadataValues>
-        <name>formula_11_myRule_7_A1_6005660697</name>
+        <name>formula_10_myRule_7_A2_9944938951</name>
         <dataType>DateTime</dataType>
         <expression>Now()</expression>
     </formulas>
@@ -950,18 +939,7 @@
                 <stringValue>Today()</stringValue>
             </value>
         </processMetadataValues>
-        <name>formula_12_myRule_7_A1_2142302245</name>
-        <dataType>Date</dataType>
-        <expression>Today()</expression>
-    </formulas>
-    <formulas>
-        <processMetadataValues>
-            <name>originalFormula</name>
-            <value>
-                <stringValue>Today()</stringValue>
-            </value>
-        </processMetadataValues>
-        <name>formula_2_myRule_1_A2_7262807265</name>
+        <name>formula_11_myRule_7_A1_0150268350</name>
         <dataType>Date</dataType>
         <expression>Today()</expression>
     </formulas>
@@ -972,7 +950,7 @@
                 <stringValue>Now()</stringValue>
             </value>
         </processMetadataValues>
-        <name>formula_3_myRule_1_A2_1913101124</name>
+        <name>formula_12_myRule_7_A1_1916222273</name>
         <dataType>DateTime</dataType>
         <expression>Now()</expression>
     </formulas>
@@ -983,11 +961,33 @@
                 <stringValue>Today()</stringValue>
             </value>
         </processMetadataValues>
-        <name>formula_9_myRule_7_A2_7412426748</name>
+        <name>formula_2_myRule_1_A2_7367627537</name>
         <dataType>Date</dataType>
         <expression>Today()</expression>
     </formulas>
-    <interviewLabel>Trade_In_ERP_Stage_Assignments-10_InterviewLabel</interviewLabel>
+    <formulas>
+        <processMetadataValues>
+            <name>originalFormula</name>
+            <value>
+                <stringValue>Now()</stringValue>
+            </value>
+        </processMetadataValues>
+        <name>formula_3_myRule_1_A2_6546238862</name>
+        <dataType>DateTime</dataType>
+        <expression>Now()</expression>
+    </formulas>
+    <formulas>
+        <processMetadataValues>
+            <name>originalFormula</name>
+            <value>
+                <stringValue>Today()</stringValue>
+            </value>
+        </processMetadataValues>
+        <name>formula_9_myRule_7_A2_2683384286</name>
+        <dataType>Date</dataType>
+        <expression>Today()</expression>
+    </formulas>
+    <interviewLabel>Trade_In_ERP_Stage_Assignments-11_InterviewLabel</interviewLabel>
     <label>Trade In ERP Stage Assignments</label>
     <processMetadataValues>
         <name>ObjectType</name>
@@ -1058,7 +1058,7 @@
             </processMetadataValues>
             <field>ActivityDate</field>
             <value>
-                <elementReference>formula_2_myRule_1_A2_7262807265</elementReference>
+                <elementReference>formula_2_myRule_1_A2_7367627537</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -1094,7 +1094,7 @@
             </processMetadataValues>
             <field>Description</field>
             <value>
-                <stringValue>This Trade-In ERP is now Pending Inspection. Please review the ERP and inspect the physical trade package. Remember to take pictures for resale! Change the ERP Stage to &#39;Ready for Sale&#39; once complete.</stringValue>
+                <stringValue>This Trade-In ERP is now Pending Inspection. Please review the ERP and inspect the physical trade package. Remember to take pictures for resale! Change the ERP Stage to &apos;Ready for Sale&apos; once complete.</stringValue>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -1238,7 +1238,7 @@
             </processMetadataValues>
             <field>ReminderDateTime</field>
             <value>
-                <elementReference>formula_3_myRule_1_A2_1913101124</elementReference>
+                <elementReference>formula_3_myRule_1_A2_6546238862</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -1428,7 +1428,7 @@
             </processMetadataValues>
             <field>ActivityDate</field>
             <value>
-                <elementReference>formula_12_myRule_7_A1_2142302245</elementReference>
+                <elementReference>formula_11_myRule_7_A1_0150268350</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -1596,7 +1596,7 @@
             </processMetadataValues>
             <field>ReminderDateTime</field>
             <value>
-                <elementReference>formula_11_myRule_7_A1_6005660697</elementReference>
+                <elementReference>formula_12_myRule_7_A1_1916222273</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -1734,7 +1734,7 @@
             </processMetadataValues>
             <field>WhatId</field>
             <value>
-                <elementReference>myVariable_current.Salesperson__c</elementReference>
+                <elementReference>myVariable_current.Id</elementReference>
             </value>
         </inputAssignments>
         <object>Task</object>
@@ -1777,7 +1777,7 @@
             </processMetadataValues>
             <field>ActivityDate</field>
             <value>
-                <elementReference>formula_9_myRule_7_A2_7412426748</elementReference>
+                <elementReference>formula_9_myRule_7_A2_2683384286</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -1945,7 +1945,7 @@
             </processMetadataValues>
             <field>ReminderDateTime</field>
             <value>
-                <elementReference>formula_10_myRule_7_A2_9344470079</elementReference>
+                <elementReference>formula_10_myRule_7_A2_9944938951</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>

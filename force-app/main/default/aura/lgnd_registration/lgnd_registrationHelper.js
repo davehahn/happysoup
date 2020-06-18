@@ -6,11 +6,62 @@
 	  return new LightningApex( this, action ).fire();
 	},
 
+	resetCustomer: function( component )
+	{
+	  component.set('v.Customer', {
+      id: '',
+      firstName: '',
+      lastName: '',
+      email: '',
+      phone: '',
+      mobilePhone: '',
+      street: '',
+      city: '',
+      state: '',
+      stateCode: '',
+      country: '',
+      postalCode: ''
+    });
+  },
+
+	fetchCustomer: function( component, objectId )
+	{
+	  var action = component.get('c.fetchCustomer');
+	  action.setParams({
+	    recordId: objectId
+    });
+    return new LightningApex( this, action ).fire();
+  },
+
+  formValid: function( component )
+  {
+    var requiredFields = component.find('required-form-1'),
+        addrForm = component.find('address-form');
+
+    if( component.get('v.accountScope') === 'dealer' ) return true;
+    if( typeof(addrForm) === 'undefined' )
+    {
+     LightningUtils.errorToast('Did you forget to select an account?');
+     return false;
+    }
+
+    if( requiredFields === null || requiredFields == undefined )
+      requiredFields = [];
+    // if we have a single field ( this will be an object not an array )
+    if( requiredFields.length === undefined )
+      requiredFields = [requiredFields];
+
+    return requiredFields.reduce(function (validSoFar, inputCmp) {
+      inputCmp.showHelpMessageIfInvalid();
+      return validSoFar && inputCmp.get('v.validity').valid;
+    }, addrForm.isValid() );
+  },
+
 	createRegistration : function(component, event, regSpinner) {
 		var self = this,
 				action 	= component.get("c.createRegistration"),
 				serno  	= component.get('v.sernoId'),
-				account = component.get('v.accountId'),
+				customer = component.get('v.Customer'),
 				nestedItems = component.get('v.NestedItems'),
 				motor = component.get('v.MotorUpgrade'),
 				motorSerial = component.get('v.MotorSerial'),
@@ -18,11 +69,11 @@
 				memoryMaker = component.get('v.memoryMaker'),
 				caseId = component.get('v.caseId'),
 				paymentMethod = component.get('v.paymentMethod');
-
-		if (serno != null && account != null) {
+		if (serno != null ) {
 			action.setParams({
 				"serno": serno,
-				"account": account,
+				"customerJSON": JSON.stringify( customer ),
+				"customerType": customer.type,
 				"NestedItems": nestedItems,
 				"motor": motor,
 				"motorSerial": motorSerial,
@@ -48,9 +99,6 @@
 		}
 		else if (serno == null) {
 			self.renderResults('serno', component, regSpinner);
-		}
-		else if (account == null) {
-			self.renderResults('account', component, regSpinner);
 		}
 		else {
 			self.renderResults(null, component, regSpinner);
@@ -81,9 +129,8 @@
 			component.set('v.errorMessage', 'Something went wrong. Try again?');
 		} else if (response == 'serno') {
 			component.set('v.errorMessage', 'Did you forget the serial number?');
-		} else if (response == 'account') {
-			component.set('v.errorMessage', 'Did you forget to select an account?');
-		} else if (response.error.length > 0) {
+		}  else if (response.error.length > 0) {
+		  console.log( JSON.parse( JSON.stringify( response.error ) ) );
 			component.set('v.errorMessage', response.error[0].pageErrors[0].message);
 		} else {
 			if (redirectToRecord) {
@@ -117,47 +164,6 @@
 
 		$A.util.toggleClass(regSpinner, 'slds-hide');
 		component.set('v.searchQuery','');
-	},
-
-	hideAccountForm : function(component, event) {
-		var accountForm = component.find('accountCreationForm'),
-				registerBtn = component.find('buttonClickRegister'),
-				registration = component.find('registration');
-
-		registerBtn.set('v.disabled', false);
-
-		$A.util.addClass(accountForm, 'slds-hide');
-		$A.util.removeClass(registration, 'slds-hide');
-
-		component.find('lgnd_account_search').enableSearch();
-	},
-
-	populateAccountCard : function(component, event) {
-		var accountDetails,
-				accountId = component.get("v.accountId"),
-				type = component.get("v.AccountType");
-
-		if (type == 'Account') {
-			accountDetails = component.get("c.getAccount");
-		} else if (type == 'Lead') {
-			accountDetails = component.get("c.getLead");
-		}
-
-		accountDetails.setParams({
-			"accountId": accountId
-		});
-		accountDetails.setCallback(this, function(response) {
-			var details = response.getReturnValue();
-			component.set('v.AccountName', details.Name);
-			component.set('v.AccountPhone', details.Phone);
-			component.set('v.AccountStreet', details.Street);
-			component.set('v.AccountCity', details.City);
-			component.set('v.AccountZip', details.PostalCode);
-			component.set('v.AccountState', details.State);
-			component.set('v.AccountCountry', details.Country);
-		});
-		$A.enqueueAction(accountDetails);
-		component.set('v.showAccountCard', true);
 	},
 
 	getUpgrades : function (component) {

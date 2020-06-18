@@ -274,6 +274,11 @@ public without sharing class gcSerialNumber{
 		Id idRtProjectCounterSale = gcConstants.idRtProjectCounterSale;
 		Id idRtProjectPartnerBoatSale = gcConstants.idRtProjectPartnerBoatSale;
 		Id idRtProjectBoatSale = gcConstants.idRtProjectBoatSale;
+		Set<Id> setRecordTypesToExclude = new Set<Id>();
+		setRecordTypesToExclude.add(idRtProjectPartnerBoatSale);
+		setRecordTypesToExclude.add(idRtProjectService);
+		setRecordTypesToExclude.add(idRtManufacturing);
+		setRecordTypesToExclude.add(idRtProjectWarranty);
 		List<GMBLASERP__Serial_Number__c> listSerialsToUpdate = new List<GMBLASERP__Serial_Number__c>();
 		CustomPermissionsReader cpr = new CustomPermissionsReader();
 		Boolean canDeNestSerialNumbers = false;
@@ -313,7 +318,6 @@ public without sharing class gcSerialNumber{
 			Boolean taggedInPartner = false;
 			Boolean taggedInInternalPartnerOrder = false;
 			Boolean taggedInRetailOrder = false;
-
 			if(!sn.Projects__r.isEmpty())
 			for(AcctSeed__Project__c p : sn.Projects__r)
 			{
@@ -323,7 +327,7 @@ public without sharing class gcSerialNumber{
 					taggedInPartner = true;
 				if(p.Internal_Partner_Boat_Sale__c && !p.Locked__c)
 					taggedInInternalPartnerOrder = true;
-				if(p.RecordTypeId != idRtProjectPartnerBoatSale && p.RecordTypeId != idRtManufacturing && p.RecordTypeId != idRtProjectWarranty && !p.Locked__c)
+				if(!setRecordTypesToExclude.contains(p.RecordTypeId) && !p.Locked__c)
 					taggedInRetailOrder = true;
 
 				/// If already in a Project // && p.Locked__c == false)
@@ -357,7 +361,7 @@ public without sharing class gcSerialNumber{
 						taggedInPartner = true;
 					if(matl.AcctSeedERP__Project__r.Internal_Partner_Boat_Sale__c && !matl.AcctSeedERP__Project__r.Locked__c)
 						taggedInInternalPartnerOrder = true;
-					if(matl.AcctSeedERP__Project__r.RecordTypeId != idRtProjectPartnerBoatSale && matl.AcctSeedERP__Project__r.RecordTypeId != idRtManufacturing && matl.AcctSeedERP__Project__r.RecordTypeId != idRtProjectWarranty && !matl.AcctSeedERP__Project__r.Locked__c)
+					if(!setRecordTypesToExclude.contains(matl.AcctSeedERP__Project__r.RecordTypeId) && !matl.AcctSeedERP__Project__r.Locked__c)
 						taggedInRetailOrder = true;
 
 					if(matl.AcctSeedERP__Project__r.RecordTypeId == idRtProjectCounterSale 

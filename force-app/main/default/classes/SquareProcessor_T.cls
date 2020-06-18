@@ -6,6 +6,8 @@
 private class SquareProcessor_T
 {
 
+  static final Boolean runningInASandbox = [SELECT IsSandbox FROM Organization LIMIT 1].IsSandbox;
+
   @testSetup static void dataSetup()
   {
     new Factory_TestData();
@@ -23,7 +25,7 @@ private class SquareProcessor_T
       resString += ' "status":"CAPTURED","card":{';
       resString += '"card_brand":"MASTERCARD","last_4":"5809","exp_month":9,"exp_year":2022,"fingerprint":"sq-1-..."},';
       resString += '"entry_method":"KEYED","cvv_status":"CVV_ACCEPTED","avs_status":"AVS_ACCEPTED","auth_result_code":"01721P"},';
-      resString += ' "location_id":"X9XWRESTK1CZ1","order_id":"jQa7fkUAAaGPFqg251PKrVexample",';
+      resString += ' "location_id":"X9XWRESTK1CZ1","order_id":"jQa7fkUAAaGPFqg251PKrVexample","reference_id":"recordId",';
       resString += '"total_money":{"amount":1000,"currency":"CAD"}}}';
       HttpResponse res = new HttpResponse();
       res.setHeader('Content-Type', 'application/json');
@@ -58,6 +60,27 @@ private class SquareProcessor_T
     }
   }
 
+  @IsTest
+  static void squareSettings_Test()
+  {
+    Square_Setting__mdt settings;
+    if( runningInASandbox )
+      settings =  [
+        SELECT ApplicationId__c, AuthToken__c, Version__c, PaymentEndpoint__c
+        FROM Square_Setting__mdt
+        WHERE IsSandbox__c = true
+      ];
+    else
+      settings =  [
+        SELECT ApplicationId__c, AuthToken__c, Version__c, PaymentEndpoint__c
+        FROM Square_Setting__mdt
+        WHERE IsSandbox__c = false
+      ];
+    System.assertEquals( settings.ApplicationId__c, SquareProcessor.squareSettings.ApplicationId__c );
+    System.assertEquals( settings.AuthToken__c, SquareProcessor.squareSettings.AuthToken__c );
+    System.assertEquals( settings.Version__c, SquareProcessor.squareSettings.Version__c );
+    System.assertEquals( settings.PaymentEndpoint__c, SquareProcessor.squareSettings.PaymentEndpoint__c );
+  }
 
   @IsTest
   static void getApplication_Test()
@@ -65,7 +88,7 @@ private class SquareProcessor_T
     Square_Setting__mdt sqrSettings =
       [ SELECT ApplicationId__c
         FROM Square_Setting__mdt
-        WHERE IsSandbox__c = true
+        WHERE IsSandbox__c = :runningInASandbox
         LIMIT 1 ];
 
     Test.startTest();
@@ -76,18 +99,67 @@ private class SquareProcessor_T
   }
 
   @IsTest
+  static void getPaymentFormJsUrl_Test()
+  {
+    Square_Setting__mdt sqrSettings =
+    [ SELECT Payment_Form_JS__c
+      FROM Square_Setting__mdt
+      WHERE IsSandbox__c = :runningInASandbox
+      LIMIT 1 ];
+
+    Test.startTest();
+    String jsURL = SquareProcessor.getPaymentFormJsUrl();
+    Test.stopTest();
+
+    System.assertEquals( sqrSettings.Payment_Form_JS__c, jsURL );
+  }
+
+  @IsTest
+  static void PaymentConstructor_SquareTransaction_Test()
+  {
+    String fake_nonce = '123thisisanonce456';
+    Account acct = Factory_Account.insertFullPersonAccount('Grumpy', 'McFloppyPants' );
+    Square_Transaction__c sqT = new Square_Transaction__c(
+      Account__c = acct.Id,
+      Amount__c = 10.00,
+      Description__c = 'Apex Unit Test',
+      Email__c = acct.PersonEmail
+    );
+    insert sqT;
+    Test.startTest();
+    SquareProcessor.Payment payment =
+      new SquareProcessor.Payment( sqt.Amount__c, sqT.Id, fake_nonce );
+    Test.stopTest();
+
+    System.assertEquals( fake_nonce, payment.source_id );
+    System.assertEquals( sqT.Id, payment.reference_id );
+    System.assertEquals( sqT.Description__c, payment.note );
+    System.assertEquals( sqT.Amount__c, payment.amount_money.amount );
+    System.assertEquals( acct.PersonEmail, payment.buyer_email_address );
+    System.assertEquals( acct.FirstName, payment.billing_address.first_name );
+    System.assertEquals( acct.LastName, payment.billing_address.last_name );
+    System.assertEquals( acct.BillingStreet, payment.billing_address.address_line_1 );
+    System.assertEquals( acct.BillingCity, payment.billing_address.locality );
+    System.assertEquals( acct.BillingState, payment.billing_address.administrative_district_level_1 );
+    System.assertEquals( acct.BillingCountry, payment.billing_address.administrative_district_level_2 );
+    System.assertEquals( 'CA', payment.billing_address.country );
+    System.assertEquals( acct.BillingPostalCode, payment.billing_address.postal_code );
+  }
+
+  @IsTest
   static void postPayment_Success_Test()
   {
     Test.setMock( HttpCalloutMock.class, new SquareSuccessResponse() );
     Test.startTest();
     SquareProcessor square = new SquareProcessor();
     SquareProcessor.PaymentResponse result =
-      square.postPayment( 1000, 'some123random9r83stuff' );
+      square.postPayment( 1000, 'recordId', 'some123random9r83stuff' );
     Test.stopTest();
 
     System.assert( result != null , 'Response should not be null');
     System.assert( result.errors == null, 'Response should not contain errors');
     System.assertEquals( 1000, result.payment.amount_money.amount );
+    System.assertEquals('recordId', result.payment.reference_id );
     System.assertEquals( 'COMPLETED', result.payment.status );
   }
 
@@ -102,7 +174,7 @@ private class SquareProcessor_T
       Test.startTest();
       SquareProcessor square = new SquareProcessor();
       SquareProcessor.PaymentResponse result =
-        square.postPayment(1000, 'some123random9r83stuff');
+        square.postPayment(1000, 'recordId', 'some123random9r83stuff');
       Test.stopTest();
 
       System.assert(result != null, 'Response should not be null');
@@ -119,7 +191,7 @@ private class SquareProcessor_T
     Test.startTest();
     SquareProcessor square = new SquareProcessor();
     SquareProcessor.PaymentResponse result =
-      square.postPayment( 1000, 'some123random9r83stuff' );
+      square.postPayment( 1000, 'recordId', 'some123random9r83stuff' );
     Test.stopTest();
 
     System.assert( result != null , 'Response should not be null');

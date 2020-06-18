@@ -1217,7 +1217,7 @@
             <name>Boat_Numbers_Order_Submission_Email</name>
             <type>Alert</type>
         </actions>
-        <active>false</active>
+        <active>true</active>
         <description>Sends boat numbers to the boat number supplier by location when boat numbers are entered on the Retail Boat Sale ERP.</description>
         <formula>RecordType.Name = &quot;Retail Boat Sale&quot; &amp;&amp;  CONTAINS(WarehouseName__c, &quot;Barrie&quot;) &amp;&amp; NOT(ISBLANK(Boat_numbers_erp__c)) &amp;&amp; NOT(CONTAINS(Oppy_Boat_Model__c, &quot;Loose&quot;)) &amp;&amp;  NOT(ISPICKVAL(Serial_Number__r.Status__c, &quot;Used&quot;))</formula>
         <triggerType>onCreateOrTriggeringUpdate</triggerType>
@@ -1228,7 +1228,7 @@
             <name>Boat_Numbers_Order_Submission_Email_Whitefish</name>
             <type>Alert</type>
         </actions>
-        <active>false</active>
+        <active>true</active>
         <description>Sends boat numbers to the boat number supplier by location when boat numbers are entered on the Retail Boat Sale ERP.</description>
         <formula>RecordType.Name = &quot;Retail Boat Sale&quot; &amp;&amp;  CONTAINS(WarehouseName__c, &quot;Whitefish&quot;) &amp;&amp; NOT(ISBLANK(Boat_numbers_erp__c)) &amp;&amp; NOT(CONTAINS(Oppy_Boat_Model__c, &quot;Loose&quot;)) &amp;&amp;  NOT(ISPICKVAL(Serial_Number__r.Status__c, &quot;Used&quot;))</formula>
         <triggerType>onCreateOrTriggeringUpdate</triggerType>
@@ -2672,6 +2672,10 @@
             <name>This_ERP_is_in_Pending_Rigging_Stage</name>
             <type>Task</type>
         </actions>
+        <actions>
+            <name>This_ERP_is_in_Pending_Rigging_Stage_Ben</name>
+            <type>Task</type>
+        </actions>
         <active>true</active>
         <booleanFilter>1 AND 2 AND (3 or 4)</booleanFilter>
         <criteriaItems>
@@ -4012,6 +4016,36 @@
         <triggerType>onCreateOnly</triggerType>
     </rules>
     <rules>
+        <fullName>Whitefish Retail - Pending Final Rigging %26 Pending Inspection</fullName>
+        <actions>
+            <name>Retail_ERP_has_been_moved_to_Pending_Final_Rigging_Pending_Inspection</name>
+            <type>Task</type>
+        </actions>
+        <active>true</active>
+        <booleanFilter>1 AND 2 AND (3 OR 4)</booleanFilter>
+        <criteriaItems>
+            <field>AcctSeed__Project__c.RecordTypeId</field>
+            <operation>equals</operation>
+            <value>Retail Boat Sale</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>AcctSeed__Project__c.WarehouseName__c</field>
+            <operation>contains</operation>
+            <value>Whitefish</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>AcctSeed__Project__c.Stage__c</field>
+            <operation>equals</operation>
+            <value>Pending Final Rigging</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>AcctSeed__Project__c.Stage__c</field>
+            <operation>equals</operation>
+            <value>Pending Inspection</value>
+        </criteriaItems>
+        <triggerType>onCreateOrTriggeringUpdate</triggerType>
+    </rules>
+    <rules>
         <fullName>Whitefish Retail Boat Pickup Notification on Delivery Date Change</fullName>
         <actions>
             <name>Notifies_WF_Team_that_a_Retail_Boat_has_been_Scheduled_or_Rescheduled</name>
@@ -4788,6 +4822,17 @@ Please complete other tasks associated to this Partner Boat Sale and finalize th
         <subject>Retail Boat Survey Sent</subject>
     </tasks>
     <tasks>
+        <fullName>Retail_ERP_has_been_moved_to_Pending_Final_Rigging_Pending_Inspection</fullName>
+        <assignedTo>bfram@legendboats.com</assignedTo>
+        <assignedToType>user</assignedToType>
+        <dueDateOffset>0</dueDateOffset>
+        <notifyAssignee>false</notifyAssignee>
+        <priority>Normal</priority>
+        <protected>false</protected>
+        <status>Open</status>
+        <subject>Retail ERP has been moved to Pending Final Rigging / Pending Inspection</subject>
+    </tasks>
+    <tasks>
         <fullName>Retail_Schedule_Pickup_Date_Added_or_Changed</fullName>
         <assignedTo>jmaltais@legendboats.com</assignedTo>
         <assignedToType>user</assignedToType>
@@ -5022,6 +5067,18 @@ Please note, Luc and Elvis and Mel also get this notification.</description>
     <tasks>
         <fullName>This_ERP_is_in_Pending_Rigging_Stage</fullName>
         <assignedTo>mmatte@legendboats.com</assignedTo>
+        <assignedToType>user</assignedToType>
+        <description>This ERP is in Pending RIgging Stage.</description>
+        <dueDateOffset>0</dueDateOffset>
+        <notifyAssignee>false</notifyAssignee>
+        <priority>Normal</priority>
+        <protected>false</protected>
+        <status>Open</status>
+        <subject>This ERP is in Pending Rigging Stage</subject>
+    </tasks>
+    <tasks>
+        <fullName>This_ERP_is_in_Pending_Rigging_Stage_Ben</fullName>
+        <assignedTo>bfram@legendboats.com</assignedTo>
         <assignedToType>user</assignedToType>
         <description>This ERP is in Pending RIgging Stage.</description>
         <dueDateOffset>0</dueDateOffset>
