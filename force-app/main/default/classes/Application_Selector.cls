@@ -38,14 +38,14 @@ public virtual class Application_Selector
     if( whereClause == null || whereClause.length() == 0 )
       return this;
     if( this.whereClause == null ||
-        this.whereClause.size() == 0 ||
-        operator == null )
+      this.whereClause.size() == 0 ||
+      operator == null )
     {
       this.whereClause = new List<String>{'WHERE ' + whereClause };
       return this;
     }
     this.whereClause.add( operator + ' ' + whereClause );
-    return thhis;
+    return this;
   }
 
   public Application_Selector addWhereIdIn( Set<Id> ids )
