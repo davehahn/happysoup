@@ -222,12 +222,12 @@ global without sharing class gcMaterial{
 							AcctSeed__Project_Task__c oldTask;
 							if(boolIsUpdate)
 								oldTask = mapProjectTask.get(oldMap.get(matl.Id).AcctSeedERP__Project_Task__c);
-							if(project.Locked__c && boolIsInsert)
+							if((project.Locked__c && !gcProject.disableLockedCheck) && boolIsInsert)
 								matl.addError('Cannot add material on a locked ERP Order.');
 							if(task != null && task.Locked__c && boolIsInsert)
 								matl.addError('Cannot add material on a locked ERP Order Task.');
 							if(boolIsUpdate
-								&& (project.Locked__c
+								&& ((project.Locked__c && !gcProject.disableLockedCheck)
 									|| (task.Locked__c && oldTask.Locked__c)
 									|| (task.Id != oldTask.Id && (oldTask.Locked__c || task.Locked__c))))
 							{
@@ -350,7 +350,7 @@ global without sharing class gcMaterial{
                     {
                         project = mapProject.get(matl.AcctSeedERP__Project__c);
                         AcctSeed__Project_Task__c task = mapProjectTask.get(matl.AcctSeedERP__Project_Task__c);
-                        if(project.Locked__c)
+                        if(project.Locked__c && !gcProject.disableLockedCheck)
                         	matl.addError('Materials Cannot be deleted from a locked ERP Order.');
                         if(task != null && task.Locked__c)
                         	matl.addError('Materials Cannot be deleted from a locked ERP Order Task.');
