@@ -121,3 +121,66 @@ input[type="radio"]:checked + .options_label[data-layout-type="alt-swatch"] .opt
 input[type="radio"]:checked + .options_label[data-layout-type="alt-swatch"] + .options_deck[data-layout-type="alt-swatch"]{
   display: block;
 }
+
+.detailedSummaryWrapper{
+  margin-top: 1.5em;
+}
+.detailedSummaryTrigger{
+  background: none; border: 0 none;
+  position: relative;
+  padding-left: 1.5em;
+}
+.detailedSummaryTrigger strong{
+  display: inline;
+  font-weight: normal;
+}
+.detailedSummaryTrigger::before{
+  content: ''; display: inline-block;
+  width: 1.25em; height: 1.25em; border: 2px solid #333;
+  border-radius: 100vh;
+  position: absolute;
+  top: 0.15em; left: 0;
+}
+.detailedSummaryTrigger strong::before, .detailedSummaryTrigger strong::after{
+  content: ''; display: block;
+  width: 1px; height: 6px;
+  background: #333;
+  position: absolute;
+  left: 0.5em; top: 0.5em;
+  transition: all 0.2s linear;
+}
+.detailedSummaryTrigger strong::after{
+	transform: rotate(90deg);
+}
+.detailedSummaryTrigger strong.open::before{
+  transform: rotate(90deg);
+}
+.detailedSummaryTrigger:hover{
+  text-decoration: underline;
+}
+.detailedSummaryTrigger:focus{
+  outline: 2px dashed #333;
+}
+.detailedSummary{
+  margin-top: 1.5em;
+  height: auto;
+  opacity: 1;
+  transition: all 0.2s linear;
+}
+.detailedSummary[data-state="collapsed"]{
+  height: 0; opacity: 0;
+  overflow: hidden;
+}
+.detailedSummary p{
+  width: 100%; padding: 0; margin: 0;
+}
+.detailedSummary p img{
+  display: block;
+  max-width: 325px; margin: 0 auto 1em;
+}
+.detailedSummary p b{
+  display: block;
+  font-weight: normal;
+  font-size: 1.25em; line-height: 1;
+  padding: 1em 0 0;
+}

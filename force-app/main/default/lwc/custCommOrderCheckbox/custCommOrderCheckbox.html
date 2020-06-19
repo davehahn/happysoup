@@ -67,4 +67,13 @@
             </template>
         </div>
     </template>
+
+    <template if:true={hasDetailedSummary}>
+        <div class="detailedSummaryWrapper">
+            <button class="detailedSummaryTrigger" onclick={showHideSummary}>
+                <strong lwc:dom="manual"></strong> {productOptions.name} details:
+            </button>
+            <div class="detailedSummary" data-state="collapsed" lwc:dom="manual"></div>
+        </div>
+    </template>
 </template>

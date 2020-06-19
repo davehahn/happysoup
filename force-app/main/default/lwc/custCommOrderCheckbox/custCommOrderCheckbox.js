@@ -27,6 +27,10 @@ export default class CustCommOrderCheckbox extends NavigationMixin(LightningElem
 
 	renderedCallback(){
 	  registerListener('purchasePriceConnected', this.pageReady, this);
+		console.log('hasSummary: ', this.template.querySelector('.detailedSummary'));
+		if(this.template.querySelector('.detailedSummary')){
+		  this.summaryFrag();
+  	}
  	}
 
  get useCheckbox(){
@@ -66,6 +70,10 @@ export default class CustCommOrderCheckbox extends NavigationMixin(LightningElem
    return (this.productOptions.includedProducts.length !== 0) ? true : false;
  }
 
+ get hasDetailedSummary(){
+   return (this.productOptions.detailedSummary !== null) ? true : false;
+ }
+
   get hasOptionsDeck(){
     return (this.productOptions.blurb !== null) ? true : false;
   }
@@ -73,6 +81,28 @@ export default class CustCommOrderCheckbox extends NavigationMixin(LightningElem
  get hasSwatch(){
    return (this.productOptions.swatch !== null)
    ? `background-image: url(${this.productOptions.swatch})` : '';
+ }
+
+summaryFrag(){
+  this.template.querySelector('.detailedSummaryTrigger strong').innerHTML = 'Show';
+	 this.template.querySelector('.detailedSummary').innerHTML = this.productOptions.detailedSummary;
+ }
+
+ showHideSummary(e){
+   const trigger = e.currentTarget;
+   const triggerActionText = trigger.querySelector('strong');
+   const summary = trigger.nextSibling;
+   const summaryState = summary.getAttribute('data-state');
+
+   if(summaryState === 'collapsed'){
+     summary.setAttribute('data-state', 'expanded');
+     triggerActionText.classList.add('open');
+     triggerActionText.innerHTML = 'Hide';
+   } else {
+     summary.setAttribute('data-state', 'collapsed');
+     triggerActionText.classList.remove('open');
+		 triggerActionText.innerHTML = 'Show';
+   }
  }
 
  pageReady(detail){
