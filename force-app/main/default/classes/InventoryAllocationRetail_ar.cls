@@ -47,8 +47,7 @@ public without sharing class InventoryAllocationRetail_ar {
 
         	mapInventoryList.get(k).add(new SerialNumber(objSerialNumber));
         }
-		System.debug('mapInventoryList');
-		System.debug(mapInventoryList);
+
         //// Specials List
         Map<String,Integer> mapSpecialDamages = new Map<String,Integer>();
         Map<String,List<SerialNumber>> mapSpecialDamagesList = new Map<String,List<SerialNumber>>();
@@ -91,18 +90,12 @@ public without sharing class InventoryAllocationRetail_ar {
         /// Shipments
         Map<String,List<Shipment>> mapShipments = new Map<String,List<Shipment>>();
         Map<String,Set<Id>> mapShipmentERP = new Map<String,Set<Id>>();
-        //String queryShipments = 'Select Id, Name, AcctSeedERP__Product__r.RecordType.Name, AcctSeedERP__Quantity__c, AcctSeedERP__Quantity_Unreceived__c, Reserved__c, deliverDate__c, AcctSeedERP__Product__c, AcctSeedERP__Purchase_Order__r.Estimated_Time_of_Arrival_ETA__c, GMBLASERP__Lot__r.Name, ';
-        //queryShipments += ' AcctSeedERP__Project__c, AcctSeedERP__Project__r.Name, AcctSeedERP__Project__r.AcctSeed__Account__r.Name, AcctSeedERP__Project__r.AcctSeedERP__Work_Order_Number__c, AcctSeedERP__Project__r.Stage__c, AcctSeedERP__Project__r.CreatedDate, AcctSeedERP__Project__r.Delivery_Date__c, AcctSeedERP__Project__r.BoatModelYear__c, AcctSeedERP__Project__r.Serial_Number__c, AcctSeedERP__Project__r.ERP_Serial_In_Inventory__c, AcctSeedERP__Project__r.Serial_Number__r.Name, AcctSeedERP__Project__r.TrailerModelYear__c, ';
-        //queryShipments += ' AcctSeedERP__Project__r.Retail_ERP__c, AcctSeedERP__Project__r.Retail_ERP__r.ERP_Serial_In_Inventory__c, AcctSeedERP__Project__r.Retail_ERP__r.Name, AcctSeedERP__Project__r.Retail_ERP__r.AcctSeed__Account__r.Name, AcctSeedERP__Project__r.Retail_ERP__r.AcctSeedERP__Work_Order_Number__c, AcctSeedERP__Project__r.Retail_ERP__r.Stage__c, AcctSeedERP__Project__r.Retail_ERP__r.CreatedDate, AcctSeedERP__Project__r.Retail_ERP__r.Delivery_Date__c, AcctSeedERP__Project__r.Retail_ERP__r.BoatModelYear__c, AcctSeedERP__Project__r.Retail_ERP__r.Serial_Number__c, AcctSeedERP__Project__r.Retail_ERP__r.Serial_Number__r.Name, AcctSeedERP__Project__r.Retail_ERP__r.TrailerModelYear__c ';
-        //queryShipments += ' from  AcctSeedERP__Purchase_Order_Line__c  Where AcctSeedERP__Purchase_Order__r.Estimated_Time_of_Arrival_ETA__c != null  AND AcctSeedERP__Project__c != null AND AcctSeedERP__Project__r.Stage__c != \'Delivered\' AND (AcctSeedERP__Project__r.GMBLASERP__Warehouse__c =:filterWarehouse OR AcctSeedERP__Project__r.AcctSeed__Account__r.Warehouse__c =:filterWarehouse) order by deliverDate__c';
+        String queryShipments = 'Select Id, Name, AcctSeedERP__Product__r.RecordType.Name, AcctSeedERP__Quantity__c, AcctSeedERP__Quantity_Unreceived__c, Reserved__c, deliverDate__c, AcctSeedERP__Product__c, AcctSeedERP__Purchase_Order__r.Estimated_Time_of_Arrival_ETA__c, GMBLASERP__Lot__r.Name, ';
+        queryShipments += ' AcctSeedERP__Project__c, AcctSeedERP__Project__r.Name, AcctSeedERP__Project__r.AcctSeed__Account__r.Name, AcctSeedERP__Project__r.AcctSeedERP__Work_Order_Number__c, AcctSeedERP__Project__r.Stage__c, AcctSeedERP__Project__r.CreatedDate, AcctSeedERP__Project__r.Delivery_Date__c, AcctSeedERP__Project__r.BoatModelYear__c, AcctSeedERP__Project__r.Serial_Number__c, AcctSeedERP__Project__r.ERP_Serial_In_Inventory__c, AcctSeedERP__Project__r.Serial_Number__r.Name, AcctSeedERP__Project__r.TrailerModelYear__c, ';
+        queryShipments += ' AcctSeedERP__Project__r.Retail_ERP__c, AcctSeedERP__Project__r.Retail_ERP__r.ERP_Serial_In_Inventory__c, AcctSeedERP__Project__r.Retail_ERP__r.Name, AcctSeedERP__Project__r.Retail_ERP__r.AcctSeed__Account__r.Name, AcctSeedERP__Project__r.Retail_ERP__r.AcctSeedERP__Work_Order_Number__c, AcctSeedERP__Project__r.Retail_ERP__r.Stage__c, AcctSeedERP__Project__r.Retail_ERP__r.CreatedDate, AcctSeedERP__Project__r.Retail_ERP__r.Delivery_Date__c, AcctSeedERP__Project__r.Retail_ERP__r.BoatModelYear__c, AcctSeedERP__Project__r.Retail_ERP__r.Serial_Number__c, AcctSeedERP__Project__r.Retail_ERP__r.Serial_Number__r.Name, AcctSeedERP__Project__r.Retail_ERP__r.TrailerModelYear__c ';
+        queryShipments += ' from  AcctSeedERP__Purchase_Order_Line__c  Where AcctSeedERP__Purchase_Order__r.Estimated_Time_of_Arrival_ETA__c != null  AND AcctSeedERP__Project__c != null AND AcctSeedERP__Project__r.Stage__c != \'Delivered\' AND (AcctSeedERP__Project__r.GMBLASERP__Warehouse__c =:filterWarehouse OR AcctSeedERP__Project__r.AcctSeed__Account__r.Warehouse__c =:filterWarehouse) order by deliverDate__c';
 
-		String queryShipments = 'Select Id, Name, AcctSeedERP__Product__r.RecordType.Name, AcctSeedERP__Product__r.Name, AcctSeedERP__Quantity_Allocated__c, AcctSeedERP__Product__c, GMBLASERP__Lot__r.Name, GMBLASERP__Serial_Number__c, GMBLASERP__Serial_Number__r.Name, ';
-		queryShipments += ' AcctSeedERP__Project__c, AcctSeedERP__Project__r.Name, AcctSeedERP__Project__r.AcctSeed__Account__r.Name, AcctSeedERP__Project__r.AcctSeedERP__Work_Order_Number__c, AcctSeedERP__Project__r.Stage__c, AcctSeedERP__Project__r.CreatedDate, AcctSeedERP__Project__r.Delivery_Date__c, AcctSeedERP__Project__r.BoatModelYear__c, AcctSeedERP__Project__r.Serial_Number__c, AcctSeedERP__Project__r.ERP_Serial_In_Inventory__c, AcctSeedERP__Project__r.Serial_Number__r.Name, AcctSeedERP__Project__r.TrailerModelYear__c,  ';
-		queryShipments += ' AcctSeedERP__Project__r.Retail_ERP__c, AcctSeedERP__Project__r.Retail_ERP__r.ERP_Serial_In_Inventory__c, AcctSeedERP__Project__r.Retail_ERP__r.Name, AcctSeedERP__Project__r.Retail_ERP__r.AcctSeed__Account__r.Name, AcctSeedERP__Project__r.Retail_ERP__r.AcctSeedERP__Work_Order_Number__c, AcctSeedERP__Project__r.Retail_ERP__r.Stage__c, AcctSeedERP__Project__r.Retail_ERP__r.CreatedDate, AcctSeedERP__Project__r.Retail_ERP__r.Delivery_Date__c, AcctSeedERP__Project__r.Retail_ERP__r.BoatModelYear__c, AcctSeedERP__Project__r.Retail_ERP__r.Serial_Number__c, AcctSeedERP__Project__r.Retail_ERP__r.Serial_Number__r.Name, AcctSeedERP__Project__r.Retail_ERP__r.TrailerModelYear__c ';
-		queryShipments += ' from  AcctSeedERP__Material__c Where AcctSeedERP__Product__c IN:allProducts AND (GMBLASERP__Lot__r.Name IN:listFilterYear OR AcctSeedERP__Project__r.BoatModelYear__c IN:listFilterYear) AND AcctSeedERP__Project__r.Stage__c != \'Delivered\' AND (AcctSeedERP__Project__r.GMBLASERP__Warehouse__c =:filterWarehouse OR AcctSeedERP__Project__r.AcctSeed__Account__r.Warehouse__c =:filterWarehouse) order by AcctSeedERP__Project__r.Arrival_Date__c';
-		System.debug('queryShipments');
-		System.debug(queryShipments);
-        for (AcctSeedERP__Material__c orderLine : Database.query(queryShipments))
+        for (AcctSeedERP__Purchase_Order_Line__c orderLine : Database.query(queryShipments))
         {
           if(orderLine.AcctSeedERP__Project__c != null 
             && orderLine.AcctSeedERP__Project__r.Serial_Number__c != null
@@ -127,8 +120,6 @@ public without sharing class InventoryAllocationRetail_ar {
           shipments.add(shipmnt);
           mapShipments.put(k,shipments);
         }
-        System.debug('mapShipments');
-        System.debug(mapShipments);
 
         /// Outstanding 
         Map<String,Integer> mapRetailSold = new Map<String,Integer>();
@@ -289,18 +280,7 @@ public without sharing class InventoryAllocationRetail_ar {
 		                                               AcctSeedERP__Project__r.BoatModelYear__c,
 		                                               AcctSeedERP__Project__r.TrailerModelYear__c,
 		                                               AcctSeedERP__Project__r.Serial_Number__c, 
-		                                               AcctSeedERP__Project__r.Serial_Number__r.Name,
-													AcctSeedERP__Project__r.Retail_ERP__r.ERP_Serial_In_Inventory__c,
-													AcctSeedERP__Project__r.Retail_ERP__r.Name,
-													AcctSeedERP__Project__r.Retail_ERP__r.AcctSeed__Account__r.Name,
-													AcctSeedERP__Project__r.Retail_ERP__r.AcctSeedERP__Work_Order_Number__c,
-													AcctSeedERP__Project__r.Retail_ERP__r.Stage__c,
-													AcctSeedERP__Project__r.Retail_ERP__r.CreatedDate,
-													AcctSeedERP__Project__r.Retail_ERP__r.Delivery_Date__c,
-													AcctSeedERP__Project__r.Retail_ERP__r.BoatModelYear__c,
-													AcctSeedERP__Project__r.Retail_ERP__r.Serial_Number__c,
-													AcctSeedERP__Project__r.Retail_ERP__r.Serial_Number__r.Name,
-													AcctSeedERP__Project__r.Retail_ERP__r.TrailerModelYear__c
+		                                               AcctSeedERP__Project__r.Serial_Number__r.Name
 		                                        FROM AcctSeedERP__Material__c
 		                                        WHERE AcctSeedERP__Project__r.RecordTypeId =:erpPartnerBoatSaleRtId
 		                                        AND AcctSeedERP__Project__r.Stage__c != 'Draft'
@@ -336,9 +316,9 @@ public without sharing class InventoryAllocationRetail_ar {
 		String queryProductOwner = 'SELECT AcctSeed__Account__r.name , Manufactured_Product_id__c From AcctSeed__Project__c WHERE Manufactured_Product_id__c in: allProducts and AcctSeed__Status__c = \'Completed\'';
 		Map<Id,String> mapProductOwner = new Map<Id,String>();
         for (AcctSeed__Project__c prod : Database.query(queryProductOwner)) {
-            String productId = prod.Manufactured_Product_id__c;
+            String productID = prod.Manufactured_Product_id__c;
             String accountOwner = prod.AcctSeed__Account__r.name;
-            mapProductOwner.put(productId,accountOwner);
+            mapProductOwner.put(productID,accountOwner);
         }
 
         /// Map Canvas ERP
@@ -418,14 +398,10 @@ public without sharing class InventoryAllocationRetail_ar {
 				    Map<Date,Shipment> mapShipment = new Map<Date,Shipment>();
 				    for(Shipment sh : lstShip)
 				    {
-					if(sh.productId == null)
-						sh.productId = pro.Id;
 				      if(!mapShipment.containsKey(sh.deliverDate))
 				        mapShipment.put(sh.deliverDate,sh);
 				      else{
 				        Shipment sh2 = mapShipment.get(sh.deliverDate);
-						  if(sh2.productId == null)
-							  sh2.productId = pro.Id;
 				        sh2.quantity += sh.quantity;
 				        sh2.orders += sh.orders;
 				        sh2.available_retail = sh.available_retail;
@@ -540,8 +516,7 @@ public without sharing class InventoryAllocationRetail_ar {
 				inv.productId = pro.Id;
 				inv.productName = pro.Name + ' / ' + yearSelected;
 				inv.lotName = filterType == 'Boat' ? yearSelected : '';
-                System.debug('inv');
-                System.debug(inv);
+
 				if (! yearSelected.contains('-'))
 				{
 					if(inv.availabeForRetail <> 0 || inv.retailSold <> 0  || inv.specials <> 0 || inv.useds <> 0 || inv.damages <> 0 || inv.inStock <> 0 || inv.demos <> 0)
@@ -555,7 +530,7 @@ public without sharing class InventoryAllocationRetail_ar {
                 Integer netAvail = inv.netAvailable;
                 Integer netAvailRetail = inv.availabeForRetail;
                 for(Shipment shi : inv.shipments){
-                    if( netAvailRetail != null)
+                    if( netAvailRetail != null && shi.reserved != null )
                     {
                         shi.available_retail = netAvailRetail + shi.quantity - shi.orders;
                         netAvailRetail = shi.available_retail;
@@ -677,7 +652,7 @@ public without sharing class InventoryAllocationRetail_ar {
     }
 
     public class Shipment {
-        public String productId                   {get;set;}
+        public String productID                   {get;set;}
         public String shipID                      {get;set;}
         public Integer quantity                   {get;set;}
         public Date deliverDate                   {get;set;}
@@ -689,10 +664,10 @@ public without sharing class InventoryAllocationRetail_ar {
         public String soldErpOrder                {get;set;}
         public String erpOrder                    {get;set;}
 
-        public Shipment(String productId, Integer quantity, Date deliverDate,Integer reserved, String shipID, Integer orders) {
+        public Shipment(String productID, Integer quantity, Date deliverDate,Integer reserved, String shipID, Integer orders) {
 
             shipID = shipID;
-            productId = productId;
+            productID = productID;
             quantity = quantity;
             available = available;
             deliverDate = deliverDate;
@@ -715,7 +690,7 @@ public without sharing class InventoryAllocationRetail_ar {
                 reserved = 0;
 
             shipID = orderLine.Id;
-            productId = orderLine.AcctSeedERP__Product__c;
+            productID = orderLine.AcctSeedERP__Product__c;
             if(orderLine.AcctSeedERP__Product__c != null && orderLine.AcctSeedERP__Product__r.RecordType.Name == 'Boat')
               quantity = Integer.valueOf(orderLine.AcctSeedERP__Quantity__c);
             else
@@ -730,32 +705,19 @@ public without sharing class InventoryAllocationRetail_ar {
         }
 
         public Shipment(AcctSeedERP__Material__c orderLine) {
-			System.debug('orderLine');
-			System.debug(orderLine);
-            System.debug('orderLineRetail ERP');
-			System.debug(orderLine.AcctSeedERP__Project__r.Retail_ERP__c);
-
             deliverDate = null;
             deliverDateFormatted = null;
-            if(orderLine.AcctSeedERP__Project__r.Delivery_Date__c != null){
-                deliverDate = orderLine.AcctSeedERP__Project__r.Delivery_Date__c.date();
-                deliverDateFormatted = orderLine.AcctSeedERP__Project__r.Delivery_Date__c.format('MMM d, yyyy');
-            }
             reserved = 0;
             shipID = orderLine.Id;
-            productId = orderLine.AcctSeedERP__Product__c;
+            productID = orderLine.AcctSeedERP__Product__c;
             quantity = 1;
             available = available;
-            orders = orderLine.AcctSeedERP__Project__r.Retail_ERP__c == null ? 0 : 1;
-            System.debug('orderLineRetail orders');
-            System.debug(orders);
-            if(orderLine.AcctSeedERP__Project__r.Retail_ERP__c != null)
-                soldErpOrder = JSON.serialize(new Map<String,List<ErpOrderObj>>{'Retail ERP Orders' => new List<ErpOrderObj>{new ErpOrderObj(orderLine.AcctSeedERP__Project__r.Retail_ERP__r, 'retailERP')}});
-			if(orderLine.AcctSeedERP__Project__c != null){
-				ErpOrderObj eo = new ErpOrderObj(orderLine.AcctSeedERP__Project__r, 'partnerERP');
-				eo.productId = orderLine.AcctSeedERP__Product__c;
-				erpOrder = JSON.serialize(new Map<String,List<ErpOrderObj>>{'Unscheduled ERP' => new List<ErpOrderObj>{eo}});
-			}
+            orders = orderLine.AcctSeedERP__Project__c == null ? 0 : 1;
+            if(deliverDate == null)
+            	orders = 0;
+            soldErpOrder = null;
+            if(orderLine.AcctSeedERP__Project__c != null)
+              erpOrder = JSON.serialize(new Map<String,List<ErpOrderObj>>{'Unscheduled ERP' => new List<ErpOrderObj>{new ErpOrderObj(orderLine.AcctSeedERP__Project__r, 'partnerERP')}});
         }
     }
 
@@ -764,7 +726,7 @@ public without sharing class InventoryAllocationRetail_ar {
         public String serialName                    {get;set;}
         public String serialStatus                  {get;set;}
         public String unitCost                		{get;set;}
-        public String productId                     {get;set;}
+        public String productID                     {get;set;}
         public String productName                   {get;set;}
         public String lotName                       {get;set;}
         public String makeModel                     {get;set;}
@@ -781,7 +743,7 @@ public without sharing class InventoryAllocationRetail_ar {
             serialName = serial.Name;
             serialStatus = serial.Status__c;
             unitCost = (serial.Current_Unit_Cost__c == null ? 0 : serial.Current_Unit_Cost__c).format();
-            productId = serial.GMBLASERP__Product__c;
+            productID = serial.GMBLASERP__Product__c;
             productName = serial.GMBLASERP__Product__r.Name;
             lotName = serial.GMBLASERP__Lot__r.Name;
             makeModel = serial.Model_Year__c == null ? '' : String.valueOf(serial.Model_Year__c);
@@ -790,7 +752,6 @@ public without sharing class InventoryAllocationRetail_ar {
 
     public class ErpOrderObj {
         public String erpId                 {get;set;}
-        public String productId           	{get;set;}
         public String accountName           {get;set;}
         public String idSerial              {get;set;}
         public String serialName            {get;set;}

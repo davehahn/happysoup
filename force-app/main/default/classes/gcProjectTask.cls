@@ -154,7 +154,7 @@ global without sharing class gcProjectTask {
             for(AcctSeed__Project_Task__c pt : oldMap.values())
             {
             	AcctSeed__Project__c project = mapProject.get(pt.AcctSeed__Project__c);
-            	if(project.Locked__c && !gcProject.disableLockedCheck)
+            	if(project.Locked__c)
             		pt.addError('Cannot delete task, the parent ERP Order is locked.');  
             	if(pt.Locked__c)
             		pt.addError('Cannot delete task, it is locked.');  
@@ -176,7 +176,7 @@ global without sharing class gcProjectTask {
 				{
 				  	AcctSeed__Project_Task__c oldRec = oldMap.get(pt.Id);
 				    AcctSeed__Project__c project = mapProject.get(pt.AcctSeed__Project__c);
-					if((project.Locked__c && !gcProject.disableLockedCheck) || (oldRec.Locked__c && pt.Locked__c))
+					if(project.Locked__c || (oldRec.Locked__c && pt.Locked__c))
 					{
 						if(pt.AcctSeed__GL_Account_Variable_1__c != oldRec.AcctSeed__GL_Account_Variable_1__c
 							|| pt.AcctSeed__GL_Account_Variable_2__c != oldRec.AcctSeed__GL_Account_Variable_2__c
@@ -212,7 +212,7 @@ global without sharing class gcProjectTask {
 	        for(AcctSeed__Project_Task__c pt : listNew)
 	        {
 	        	AcctSeed__Project__c project = mapProject.get(pt.AcctSeed__Project__c);
-	        	if(project.Locked__c && !gcProject.disableLockedCheck)
+	        	if(project.Locked__c)
 	        		pt.addError('Cannot add new task. The parent ERP Order is locked.');
 
 	        	if(boolIsInsert)
