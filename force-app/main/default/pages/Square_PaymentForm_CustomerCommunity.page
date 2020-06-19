@@ -54,7 +54,7 @@
           event.data.messageType === 'doPayment' )
       {
         console.log( event.data );
-        doPostPayment( event.data.paymentAmount )
+        doPostPayment( event.data.paymentAmount, event.data.reference_id )
         .then( (result) =>
         {
           console.log( 'visualforce page' );

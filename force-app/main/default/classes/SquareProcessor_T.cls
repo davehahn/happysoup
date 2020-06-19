@@ -18,6 +18,7 @@ private class SquareProcessor_T
   public class SquareSuccessResponse implements HttpCalloutMock
   {
     private final String reference_id;
+
     public SquareSuccessResponse()
     {
       this.reference_id = null;
@@ -29,8 +30,13 @@ private class SquareProcessor_T
 
     public HTTPResponse respond(HTTPRequest req)
     {
+      Date t = Date.today();
+      String dateString = String.valueOf(t.year()) + '-';
+      dateString += String.valueOf(t.month()) + '-';
+      dateString += String.valueOf( t.day() );
+      dateString += 'T16:20:20.000Z';
       String resString = '{"payment":{';
-      resString += '"id":"6aVfIp7gEaxzracrrrZPexample","created_at":"2019-07-14T02:51:35.984Z","updated_at":"2019-07-14T02:51:36.701Z",';
+      resString += '"id":"6aVfIp7gEaxzracrrrZPexample","created_at":"' + dateString + '","updated_at":"' + dateString + '",';
       resString += '"amount_money":{"amount":1000,"currency":"CAD"},';
       resString += '"status":"COMPLETED", "source_type":"CARD", "card_details":{';
       resString += ' "status":"CAPTURED","card":{';
@@ -212,7 +218,7 @@ private class SquareProcessor_T
       );
       insert acct;
       opp = new Opportunity(
-        Deposit__c = 500,
+        Deposit__c = 1000,
         Name = 'Test Opportunity',
         Pricebook2Id = LGND_Constants.retailPricebookId,
         StageName = 'Quoting',
@@ -242,16 +248,35 @@ private class SquareProcessor_T
         Description__c,
         Notes__c,
         sqOrderId__c,
-        sqStatus__c
+        sqStatus__c,
+        sqReferenceId__c
       FROM Square_Transaction__c
       WHERE Account__c = :acct.Id ];
+
+//    AcctSeed__Cash_Receipt__c[] cashReceipts = [
+//      SELECT
+//        Id,
+//        AcctSeed__Amount__c,
+//        AcctSeed__Payment_Reference__c,
+//        AcctSeed__Purpose__c,
+//        Payment_Method__c
+//      FROM AcctSeed__Cash_Receipt__c
+//      WHERE AcctSeed__Account__c = :acct.Id
+//    ];
 
     System.assertEquals( 1, sqTs.size(), 'Should be a Square_Transaction__c record');
     System.assertEquals( acct.Id, sqTs[0].Account__c );
     System.assertEquals( 1000, sqTs[0].Amount__c );
     System.assertEquals( 'COMPLETED', sqTs[0].sqStatus__c );
     System.assertEquals( opp.Name, sqTs[0].Description__c );
+    System.assertEquals( opp.Id, sqTs[0].sqReferenceId__c );
     System.assertEquals( 'Deposit for Online Boat Reservation', sqTs[0].Notes__c );
+
+//    System.assertEquals( 1, cashReceipts.size(), '1 Cash Receipt should have been created');
+//    System.assertEquals( 1000, cashReceipts[0].AcctSeed__Amount__c );
+//    System.assertEquals( sqTs[0].sqOrderId__c, cashReceipts[0].AcctSeed__Payment_Reference__c );
+//    System.assertEquals( 'Customer Receipt', cashReceipts[0].AcctSeed__Purpose__c );
+//    System.assertEquals( 'Online Store', cashReceipts[0].Payment_Method__c );
   }
 
   @IsTest
