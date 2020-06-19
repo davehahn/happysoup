@@ -765,8 +765,8 @@
                                                                             data-acct-type="retailERP"
                                                                             data-value="{!shipment.orders}"
                                                                             data-dealer-orders="{!shipment.soldErpOrder}">
-                                                                                <apex:outputText rendered="{!shipment.deliverDate != null}">{!shipment.orders}</apex:outputText>
-                                                                                <apex:outputText rendered="{!shipment.deliverDate == null}">-</apex:outputText>
+                                                                                <apex:outputText rendered="{!shipment.orders != null}">{!shipment.orders}</apex:outputText>
+                                                                                <apex:outputText rendered="{!shipment.orders == null}">-</apex:outputText>
                                                                     </div>
                                                                     </th>
                                                                     </apex:outputText>
@@ -878,7 +878,7 @@
                         {{#each this.listNested}}      
                           <div class="slds-col slds-box slds-size_1-of-3">
                             <div class="slds-truncate" title="{{ this.productName }}">
-                                <a href="javascript:void(0);" class="erp-link" data-record-id="{{this.productID}}">
+                                <a href="javascript:void(0);" class="erp-link" data-record-id="{{this.productId}}">
                                     <div class="slds-truncate">{{ this.productName }}</div>
                                 </a>                                                
                             </div>
@@ -1209,14 +1209,14 @@
                         {{#if this.retailErpId}}
                         <a href="javascript:void(0);" class="erp-link" data-record-id="{{this.retailErpId}}">
                           {{ this.retailErpName }}&nbsp;
-                            <a href="javascript:void(0);" onclick="clearRetail(this);" data-iderp="{{this.erpId}}">
+                            <a href="javascript:void(0);" onclick="clearRetail(this);" data-iderp="{{this.erpId}}" data-idprod="{{this.productId}}">
                               (clear)
                             </a>                          
                         </a>
                         {{else}}
-                        <a href="javascript:void(0);" onclick="launchSelectRetail(this);" data-iderp="{{this.erpId}}">
+                        <a href="javascript:void(0);" onclick="launchSelectRetail(this);" data-iderp="{{this.erpId}}" data-idprod="{{this.productId}}">
                           select
-                        </a>                        
+                        </a>
                         {{/if}}
                       </th>
                       <th scope="row">
@@ -1547,7 +1547,7 @@
                                                         data-acct-type="retailERP"
                                                         data-value="{{this.orders}}"
                                                         data-dealer-orders="{{this.soldErpOrder}}">
-                                                        {{#if this.deliverDate}}
+                                                        {{#if this.orders}}
                                                             {{this.orders}}
                                                         {{else}}
                                                             -
@@ -1600,10 +1600,11 @@
                     autoFocus: false,
                     source: function (request, response) {
                         var idWholesaleErp = $inputField.data('whsid');
+                        var idWholesalePrd = $inputField.data('prdid');
                         // console.log(idWholesaleErp);
                         Visualforce.remoting.Manager.invokeAction(
                             '{!$RemoteAction.InventoryAllocationController.retrieveRetailERPOrders}',
-                             request.term, idWholesaleErp,
+                             request.term, idWholesaleErp, idWholesalePrd,
                             function (result, event) {
                                 if (event.status) {
                                     $.each(result,function(k,item){
@@ -1629,16 +1630,17 @@
                     },
                     select: function (event, ui) {
                         var idWholesaleErp = $inputField.data('whsid');
-                        updateRetailERP(ui.item,idWholesaleErp,false);
+                        var idWholesalePrd = $inputField.data('prdid');
+                        updateRetailERP(ui.item,idWholesaleErp,idWholesalePrd,false);
                         $currentSelection = null;
                         return false;
                     },
                     change: function (event, ui) {
                         var idWholesaleErp = $inputField.data('whsid');
-                        // updateRetailERP(ui.item,idWholesaleErp);
+                        var idWholesalePrd = $inputField.data('prdid');
                         if($currentSelection != null)
                         {
-                            updateRetailERP($currentSelectionrowIndx,idWholesaleErp, false);
+                            updateRetailERP($currentSelectionrowIndx,idWholesaleErp,idWholesalePrd, false);
                             $currentSelection = null;
                         }
                         return false;
@@ -1647,7 +1649,7 @@
             });
         });
 
-        function updateRetailERP(obj,idWholesaleERP,allowTag)
+        function updateRetailERP(obj,idWholesaleERP,idWholesalePrd,allowTag)
         {
             var idPR = null;
             if(obj != null)
@@ -1658,19 +1660,19 @@
             showLoading();
             Visualforce.remoting.Manager.invokeAction(
                 '{!$RemoteAction.InventoryAllocationController.updateRetailERP}',
-                idWholesaleERP, idPR, allowTag,
+                idWholesaleERP, idPR,idWholesalePrd, allowTag,
                 function(result,event)
                 {
                     if(event.status)
                     {
                         $('.retailSearch').dialog('destroy'); 
-                        reloadThisRow(result.idProduct,result.lotame);
+                        reloadThisRow(result.idProduct,result.lotName);
                         // $('div.dataTables_length_warehouse select').trigger('change');
                     }
                     else
                     {
                         if(event.message == 'NOMATCH'){
-                            askForConfirmation(obj, idWholesaleERP);
+                            askForConfirmation(obj, idWholesaleERP,idWholesalePrd);
                             hideLoading();
                         }
                         else{
@@ -1682,7 +1684,7 @@
             {buffer:true, escape:true, timeout:120000});
         }
 
-        function askForConfirmation(obj,idWholesaleERP) {
+        function askForConfirmation(obj,idWholesaleERP,idWholesalePrd) {
             $('<div></div>').appendTo('body')
             .html('<div><h6>The wholesale ERP order lines for serialized items does not match with Retail ERP. Are you sure you want to proceed?</h6></div>')
             .dialog({
@@ -1690,7 +1692,7 @@
                 width: 'auto', resizable: false,
                 buttons: {
                     Yes: function () {
-                        updateRetailERP(obj, idWholesaleERP, true);
+                        updateRetailERP(obj, idWholesaleERP,idWholesalePrd, true);
                         $(this).dialog("close");
                     },
                     No: function () {
@@ -1708,9 +1710,11 @@
             $('.lgnd').find('.dynamic-details').remove();
             $ele = $(ele);
             var idWholesaleErp = $ele.data('iderp');
+            var idProduct = $ele.data('idprod');
+            console.log(idProduct);
             var $dialogDiv = $('<div class="retailSearch" style=\"z-index:100 !important;\"></div>');
             var $gridDiv = $('<div id=\"retailERPOrders\"></div>');
-            var $retailList = $('<input class="slds-input autoComplete2" data-whsid=\"'+idWholesaleErp+'\" />');
+            var $retailList = $('<input class="slds-input autoComplete2" data-whsid=\"'+idWholesaleErp+'\" data-prdid=\"'+idProduct+'\" />');
             $gridDiv.append($retailList);
             // console.log(idWholesaleErp);
             // return;
@@ -1737,15 +1741,19 @@
             $('.lgnd').find('.dynamic-details').remove();
             $ele = $(ele);
             var idWholesaleERP = $ele.data('iderp');
+            var idWholesaleProd = $ele.data('idprod');
+            console.log('idWholesaleProd');
+            console.log(idWholesaleProd);
             showLoading();
             Visualforce.remoting.Manager.invokeAction(
                 '{!$RemoteAction.InventoryAllocationController.clearRetailERP}',
-                idWholesaleERP,
+                idWholesaleERP,idWholesaleProd,
                 function(result,event)
                 {
+                    console.log(result);
                     if(event.status)
                     {
-                        reloadThisRow(result.idProduct,result.lotame);
+                        reloadThisRow(result.idProduct,result.lotName);
                         // $('div.dataTables_length_warehouse select').trigger('change');
                     }
                     else
@@ -1888,6 +1896,7 @@
             if( acctType == 'partnerERP')
             {
               $cont.append( ERPTemplate( {data: data} ) );
+              console.log(data);
             }
             if( acctType == 'erpMaterial')
             {
@@ -2025,21 +2034,21 @@
 
 
 
-        function updateReservedForDisplay(productID,quantity,productName,lotName) {
-            this.updateAvailableToShipDealer(productID,lotName);
+        function updateReservedForDisplay(productId,quantity,productName,lotName) {
+            this.updateAvailableToShipDealer(productId,lotName);
 
             var lotVal = document.getElementById("selectedLot").value;
 
             Visualforce.remoting.Manager.invokeAction(
                 '{!$RemoteAction.InventoryAllocationController.saveForDisplay}',
-                productID,
+                productId,
                 quantity,
                 productName,
                 lotVal,
                 function(result, event) {
                     if (event.status) {
                         //var availableToshipDelears = $('#availableToshipDelears')[0];
-                        updateShipmentsTable('', productID,lotName);
+                        updateShipmentsTable('', productId,lotName);
                     }
                     else {
                         alert( event.message );
@@ -2048,12 +2057,12 @@
             );
         }
 
-        function updateAvailableForRetail(productID,productName,lotName) {
+        function updateAvailableForRetail(productId,productName,lotName) {
 
-            var itemToUpdate = $('#availableForRetail-' + productID+'-'+lotName);
-            var itemOriginal = $('#reservedForRetail-' + productID+'-'+lotName);
-            var itemSpecial = $('#specials-' + productID+'-'+lotName)[0];
-            var retailSold = $('#retailSold-' + productID+'-'+lotName)[0];
+            var itemToUpdate = $('#availableForRetail-' + productId+'-'+lotName);
+            var itemOriginal = $('#reservedForRetail-' + productId+'-'+lotName);
+            var itemSpecial = $('#specials-' + productId+'-'+lotName)[0];
+            var retailSold = $('#retailSold-' + productId+'-'+lotName)[0];
             var lotVal = document.getElementById("selectedLot").value;
             var self = this;
             // console.log('1::',parseInt(itemOriginal.val()));
@@ -2065,7 +2074,7 @@
 
             Visualforce.remoting.Manager.invokeAction(
                 '{!$RemoteAction.InventoryAllocationController.saveForRetail}',
-                productID,
+                productId,
                 itemOriginal.val(),
                 productName,
                 lotVal,
@@ -2075,8 +2084,8 @@
                         var v = parseInt(itemOriginal.val())  -  parseInt(retailSold.innerHTML);
                         itemToUpdate.html( v );
                         itemToUpdate.data('field-value', v);
-                        self.updateAvailableToShipDealer(productID,lotName);
-                        updateShipmentsTable('', productID,lotName);
+                        self.updateAvailableToShipDealer(productId,lotName);
+                        updateShipmentsTable('', productId,lotName);
                     }
                     else {
                         alert( event.message );
@@ -2086,18 +2095,18 @@
             );
         }
 
-        function updateAvailableToShipDealer(productID,lotName) {
-            var itemShipDealer = $('#availableToshipDelears-' + productID+'-'+lotName)[0];
+        function updateAvailableToShipDealer(productId,lotName) {
+            var itemShipDealer = $('#availableToshipDelears-' + productId+'-'+lotName)[0];
             //console.log(itemShipDealer);
-            var itemForDisplay = $('#reservedForDisplay-' + productID+'-'+lotName)[0];
-            var itemForRetail = $('#reservedForRetail-' + productID+'-'+lotName)[0];
+            var itemForDisplay = $('#reservedForDisplay-' + productId+'-'+lotName)[0];
+            var itemForRetail = $('#reservedForRetail-' + productId+'-'+lotName)[0];
 
-            var itemStock = $('#stock-' + productID+'-'+lotName)[0];
-            var itemSpecial = $('#specials-' + productID+'-'+lotName)[0];
-            var itemDamaged = $('#damaged-' + productID+'-'+lotName)[0];
-            var dealerOrder = $('#dealerOrders-'+productID+'-'+lotName)[0];
-            var netAvailable = $('#netAvailable-' + productID+'-'+lotName);
-            //console.log('#netAvailable-' + productID+'-'+lotName);
+            var itemStock = $('#stock-' + productId+'-'+lotName)[0];
+            var itemSpecial = $('#specials-' + productId+'-'+lotName)[0];
+            var itemDamaged = $('#damaged-' + productId+'-'+lotName)[0];
+            var dealerOrder = $('#dealerOrders-'+productId+'-'+lotName)[0];
+            var netAvailable = $('#netAvailable-' + productId+'-'+lotName);
+            //console.log('#netAvailable-' + productId+'-'+lotName);
             //itemShipDealer.innerHTML = itemStock.value - itemForDisplay.value - itemForRetail.value - parseInt(itemDamaged.className) - parseInt(itemSpecial.className);
             //console.log(netAvailable);
             //console.log(dealerOrder);
@@ -2108,12 +2117,12 @@
             //console.log(itemStock.value - itemForRetail.value - itemForDisplay.value - dealerOrder.innerHTML);
         }
 
-        function updateReservedShipment(shipID,quantity,productID,lotName) {
+        function updateReservedShipment(shipID,quantity,productId,lotName) {
 
-            //this.updateAvailableShipment(shipID,productID,lotName);
+            //this.updateAvailableShipment(shipID,productId,lotName);
             return new Promise( function( resolve, reject ) {
                 var $ind = $('<div class="subTable-busy"></div>');
-                $ind.insertBefore( $('#subTable-'+productID+'-'+lotName) );
+                $ind.insertBefore( $('#subTable-'+productId+'-'+lotName) );
                 Visualforce.remoting.Manager.invokeAction(
                     '{!$RemoteAction.InventoryAllocationController.saveShipmentReseved}',
                     shipID,
@@ -2129,12 +2138,12 @@
             });
         }
 
-        function updateShipmentsTable(shipID,productID,lotName) {
-            // console.log( 'productId = ' + productID );
+        function updateShipmentsTable(shipID,productId,lotName) {
+            // console.log( 'productId = ' + productId );
             // console.log( 'lotName = ' + lotName );
-            var netAvailable = $('#netAvailable-' + productID+'-'+lotName).data('field-value'),
-                retailAvailable = $('#availableForRetail-' + productID+'-'+lotName).data('field-value'),
-                rows = $('#subTable-'+productID+'-'+lotName).find('tbody').children('tr');
+            var netAvailable = $('#netAvailable-' + productId+'-'+lotName).data('field-value'),
+                retailAvailable = $('#availableForRetail-' + productId+'-'+lotName).data('field-value'),
+                rows = $('#subTable-'+productId+'-'+lotName).find('tbody').children('tr');
 
             for( var i=0; i < rows.length; i++ )
             {
@@ -2195,13 +2204,14 @@
         }
 
         function reloadThisRow(idProduct, lotName) {
-            // console.log(idProduct);
-            // console.log(lotName);
+            console.log(idProduct);
+            console.log(lotName);
             // showLoading();
             InventoryAllocationRetail_ar.retrieveRetailData([idProduct],[lotName],$('div.dataTables_length_warehouse select').val(),
                 function(result, event){
                     if (event.status) {
-                        // console.log(result);
+                        console.log('result');
+                        console.log(result);
                         $rows = RowTemplate( {data: result} );
                         // console.log($rows);
                         var idTr = '#tr-'+idProduct+'-'+lotName;
