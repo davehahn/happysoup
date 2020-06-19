@@ -11,6 +11,17 @@ public without sharing class gcProject {
     }
   }
 
+  public static Boolean disableLockedCheck{
+    get{
+      if(disableLockedCheck == null) return false;
+      else return disableLockedCheck;
+    }
+    set{
+      if(value == null) disableLockedCheck = false;
+      else disableLockedCheck = value;
+    }
+  }
+
   public static Boolean disableCommission{
     get{
       if(disableCommission == null) return false;
