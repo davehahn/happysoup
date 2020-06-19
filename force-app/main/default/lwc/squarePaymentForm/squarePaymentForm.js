@@ -33,11 +33,12 @@ export default class SquarePaymentForm extends LightningElement {
     this.setIframeHeight( window.outerWidth );
   }
 
-  @api doPostToSquare( paymentAmount )
+  @api doPostToSquare( paymentAmount, reference_id )
   {
     const data = {
       messageType: 'doPayment',
-      paymentAmount: paymentAmount
+      paymentAmount: paymentAmount,
+      reference_id: reference_id
     };
     const iframe = this.template.querySelector('[data-id="square-payment-container"]').contentWindow;
 

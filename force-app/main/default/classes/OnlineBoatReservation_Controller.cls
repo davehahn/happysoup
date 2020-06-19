@@ -336,6 +336,11 @@ public without sharing class OnlineBoatReservation_Controller
         CloseDate = Date.today().addMonths( 1 )
       );
       upsert opp;
+      Boolean o = OpportunityTriggerHandler.disableTrigger;
+      OpportunityTriggerHandler.disableTrigger = true;
+      opp.Pricebook2Id = LGND_Constants.retailPricebookId;
+      update opp;
+      OpportunityTriggerHandler.disableTrigger = o;
       return opp;
     }
   }
