@@ -253,7 +253,7 @@ public with sharing class arPOSReturn {
 		FROM AcctSeed__Project__c
 		WHERE Id IN:setIdProjects])
 	{
-		//pr.AcctSeed__Status__c = 'Active';
+		pr.AcctSeed__Status__c = 'Active';
 		listProjects.add(pr);
 		/// Chek if there is already a return task
 		if(!pr.AcctSeed__Project_Tasks__r.isEmpty())
@@ -288,9 +288,10 @@ public with sharing class arPOSReturn {
 
 	Savepoint sp = Database.setSavepoint();
 	try{
-		Boolean oldVal = gcProject.disableLockedCheck;
-		gcProject.disableLockedCheck = true;
-		//update listProjects;
+		Boolean oldVal = gcProject.disableTrigger;
+		gcProject.disableTrigger = true;
+		update listProjects;
+		gcProject.disableTrigger = oldVal;
 		// Insert New Tasks
 		if(!listNewTasks.isEmpty())
 			insert listNewTasks;
@@ -533,13 +534,13 @@ public with sharing class arPOSReturn {
 			/// Insert all APD
 			insert listAPD;
 			/// Make the status completed again
-//			for(AcctSeed__Project__c pr : listProjects)
-//			{
-//				pr.AcctSeed__Status__c = 'Completed';
-//			}
-//		gcProject.disableTrigger = true;
-//		update listProjects;
-		gcProject.disableLockedCheck = oldVal;
+			for(AcctSeed__Project__c pr : listProjects)
+			{
+				pr.AcctSeed__Status__c = 'Completed';
+			}
+		gcProject.disableTrigger = true;
+		update listProjects;
+		gcProject.disableTrigger = oldVal;
 		/// This is to include the COGS movements for the first Project Only. 
 		/// As we have only one project now
 		/// When we decide to move on with multiple projects again we will redo this section
