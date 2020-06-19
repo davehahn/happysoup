@@ -28,11 +28,12 @@ public without sharing class SquareTransaction_Service
   public static List<AcctSeed__Cash_Receipt__c> createCashReceipts( List<Square_Transaction__c> completedSquareTransactions )
   {
     List<AcctSeed__Cash_Receipt__c> cashReceipts = new List<AcctSeed__Cash_Receipt__c>();
+
     AcctSeed__Accounting_Period__c[] period =
     [SELECT Id, AcctSeed__Start_Date__c, AcctSeed__End_Date__c, Name, AcctSeed__Status__c
     FROM AcctSeed__Accounting_Period__c
     WHERE AcctSeed__Status__c = 'Open'];
-    
+
     for( Square_Transaction__c sqT : completedSquareTransactions )
     {
       System.debug('Square Transaction Amount = ' + sqT.Amount__c );
@@ -42,12 +43,6 @@ public without sharing class SquareTransaction_Service
         sqT.sqCreateDate__c.day() );
       System.debug( rDate );
 
-      map<Date,AcctSeed__Accounting_Period__c> mapDateToPeriod = new map<Date,AcctSeed__Accounting_Period__c>();
-      mapDateToPeriod.put(Date.today(),null);
-      GMBLASG.gcAccountingPeriod.mapDateToPeriod(mapDateToPeriod);
-      System.debug('mapDateToPeriod');
-      System.debug(mapDateToPeriod);
-
       cashReceipts.add( new AcctSeed__Cash_Receipt__c(
         AcctSeed__Account__c = sqT.Account__c,
         AcctSeed__Amount__c = sqT.Amount__c,
@@ -55,8 +50,7 @@ public without sharing class SquareTransaction_Service
         AcctSeed__Purpose__c = 'Customer Receipt',
         AcctSeed__Receipt_Date__c = rDate,
         Payment_Method__c = 'Online Store',
-        AcctSeed__Accounting_Period__c = period[0].Id,
-        AcctSeed__Ledger__c = gcConstants.idActualLedger
+        AcctSeed__Accounting_Period__c = period[0].Id
       ));
     }
 
