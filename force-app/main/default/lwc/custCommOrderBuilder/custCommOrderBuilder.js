@@ -19,10 +19,13 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
 
   origin;
   recordId;
+  accountId;
+  opportunityId;
   logo = LOGO;
   vertLogo = VLOGO;
   orderValid=true;
   isMobile = false;
+  paymentAmount = 1000;
   @track motorDetails;
   pages = [
     'performance',
@@ -185,6 +188,7 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
 	{
 		this.doModalPageChange( event.currentTarget );
 	}
+
 	doModalPageChange( page )
 	{
 	  let pageName = page.dataset.modalNavName;
@@ -315,51 +319,43 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
     const spinner = this.template.querySelector('c-legend-spinner');
     spinner.toggle();
 
-		const lli = this.template.querySelectorAll('lightning-layout-item');
-		let userData = {};
-		lli.forEach((item) => {
-		  let input = item.querySelector('input');
-		  if(!input){
-    		input = item.querySelector('select');
-     	}
-		  const dataId = input.getAttribute('data-id');
-			const value = input.value;
-			userData[dataId] = value;
-  	});
+//    const lli = this.template.querySelectorAll('lightning-layout-item');
+//    let userData = {};
+//    lli.forEach((item) => {
+//      let input = item.querySelector('input');
+//      if(!input){
+//        input = item.querySelector('select');
+//      }
+//      const dataId = input.getAttribute('data-id');
+//      const value = input.value;
+//      userData[dataId] = value;
+//    });
+//
+//    const userJSON = JSON.stringify(userData);
+//
+//    createAccount({customerJSON: userJSON})
 
-  	//userJSON = {'firstName': '', 'lastName': '', 'email': '', 'phone': ''}
-		const userJSON = JSON.stringify(userData);
-
-		createAccount({customerJSON: userJSON})
-		.catch( (error) => {
-			console.log('error: ', error);
-		})
-		.then( (result) => {
-		  console.log('createAccount: ', result);
-		  //accountInfo = {'Id': '', 'AccountId': ' '}
-		  let accountInfo = {
-		    'Id': result.opportunityId,
-		    'AccountId': result.record.Id
-    	};
-    	accountInfo = JSON.stringify(accountInfo);
-			const boatLineItem = [{
-			  'Product2Id': this.boat.id,
-			  'UnitPrice': this.boat.retailPrice,
-			  'Quantity': 1,
-   		}];
-    	let lineItems = this.performanceItems.concat(this.traileringItems, this.electronicsItems, boatLineItem);
-    	lineItems = JSON.stringify(lineItems);
-		  //lineItems = [{'PricebookEntryId': '', 'Quantity': 1, 'UnitPrice': ''}, {'PricebookEntryId': '', 'Quantity': '', 'UnitPrice': ''}, ...]
-			console.log('accountInfo: ', accountInfo);
-			console.log('lineItems: ', lineItems);
-			saveLineItems({oppJSON: accountInfo, olisJSON: lineItems})
-			.then( (result) => {
-				console.log('lineItemsResult: ', result);
-   		});
+	  this.saveCustomer()
+		.then( ( accountSaveResult ) => {
+		  console.log('createAccount: ', accountSaveResult);
+		  this.opportunityId = accountSaveResult.opportunityId;
+      this.accountId = accountSaveResult.record.Id;
+		  return this.createSquarePayment();
   	})
-  	.catch( (error) => {
+  	.then( ( paymentResult ) => {
+  	   console.log( paymentResult );
+  	   return this.saveSaleItems();
+    })
+  	.then( ( saveSaleItemsResult ) => {
+      console.log('lineItemsResult: ', saveSaleItemsResult);
+    })
+  	.catch( ( error ) => {
 			console.log('error: ', error);
    	})
+   	.finally( () => {
+      spinner.toggle();
+      console.log('Everything is done, but what should happen now');
+    });
 //   	.finally( (result) => {
 //   	  console.log("finally: ", result);
    	  /*
@@ -388,6 +384,51 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
 //    })
 
 
+  }
+
+  saveCustomer()
+  {
+    const lli = this.template.querySelectorAll('lightning-layout-item');
+    let userData = {};
+    lli.forEach((item) => {
+      let input = item.querySelector('input');
+      if(!input){
+        input = item.querySelector('select');
+      }
+      const dataId = input.getAttribute('data-id');
+      const value = input.value;
+      userData[dataId] = value;
+    });
+
+    const userJSON = JSON.stringify(userData);
+
+    return createAccount({customerJSON: userJSON});
+  }
+
+  createSquarePayment()
+  {
+    //return new Promise( (resolve, reject) => resolve( 'payment promise result') );
+    return this.template.querySelector('c-square-payment-form')
+      .doPostToSquare( this.paymentAmount, this.opportunityId );
+  }
+
+  saveSaleItems()
+  {
+    const oppInfo = JSON.stringify({
+      'Id': this.opportunityId,
+      'AccountId': this.accountId,
+      'Deposit__c': this.paymentAmount
+    });
+    const boatLineItem = [{
+      'Product2Id': this.boat.id,
+      'UnitPrice': this.boat.retailPrice,
+      'Quantity': 1,
+    }];
+    let lineItems = this.performanceItems.concat(this.traileringItems, this.electronicsItems, boatLineItem);
+    lineItems = JSON.stringify(lineItems);
+    console.log('oppInfo: ', oppInfo);
+    console.log('lineItems: ', lineItems);
+    return saveLineItems({oppJSON: oppInfo, olisJSON: lineItems});
   }
 
   onPaymentPage()

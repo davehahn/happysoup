@@ -243,6 +243,28 @@ private without sharing class OnlineBoatReservation_Controller_T
   }
 
   @IsTest
+  static void createAccount_Guest_Pass_Test()
+  {
+    System.runAs( guest )
+    {
+      Test.startTest();
+      OnlineBoatReservation_Controller.AccountSaveResult result =
+        OnlineBoatReservation_Controller.createAccount(JSON.serialize(custJSON));
+      Test.stopTest();
+
+      Opportunity opp = [SELECT Id, OwnerId, StageName,Pricebook2Id, CloseDate FROM Opportunity Where Id = :result.opportunityId];
+
+      System.assertEquals('success', result.status, 'Result status should be success');
+      System.assert(result.record != null, 'An account should be returned');
+      System.assert(result.opportunityId != null, 'There should be an Opportunity Id');
+      System.assertEquals('Quoting', opp.StageName, 'Opportunity Stage should be Quoting');
+      System.assertEquals( guest.Id, opp.OwnerId );
+      System.assertEquals(LGND_Constants.retailPricebookId, opp.Pricebook2Id);
+      System.assertNotEquals( Test.getStandardPricebookId(), opp.Pricebook2Id );
+    }
+  }
+
+  @IsTest
   static void createAccount_ValidationFail_Test()
   {
     custJSON.put('firstName', null);
