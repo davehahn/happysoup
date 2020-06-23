@@ -585,7 +585,8 @@ global without sharing class gcProjectTask {
 				Order_Taxable_Provincial__c,
 				Order_Taxable_Federal__c,
 				Order_Taxable_Retail__c,
-				(SELECT Taxable_Provincial__c, Taxable_Federal__c, Taxable_Retail__c, GMBLASERP__Total_Price__c FROM AcctSeedERP__Materials__r)
+				Order_Insurance_Total__c,
+				(SELECT isInsuranceItem__c, Taxable_Provincial__c, Taxable_Federal__c, Taxable_Retail__c, GMBLASERP__Total_Price__c FROM AcctSeedERP__Materials__r)
 			 FROM AcctSeed__Project_Task__c
 			 WHERE Id IN :setIdProjectTask])
 		{
@@ -593,6 +594,7 @@ global without sharing class gcProjectTask {
 			Decimal taxableProvincial = 0;
 			Decimal taxableFederal = 0;
 			Decimal taxableRetail = 0;
+			Decimal insurance = 0;
 			for(AcctSeedERP__Material__c m : pt.AcctSeedERP__Materials__r)
 			{
 				amt += (m.GMBLASERP__Total_Price__c == null ? 0 : m.GMBLASERP__Total_Price__c);
@@ -602,17 +604,21 @@ global without sharing class gcProjectTask {
 					taxableFederal += (m.GMBLASERP__Total_Price__c == null ? 0 : m.GMBLASERP__Total_Price__c);
 				if(m.Taxable_Retail__c)
 					taxableRetail += (m.GMBLASERP__Total_Price__c == null ? 0 : m.GMBLASERP__Total_Price__c);
+				if( m.isInsuranceItem__c )
+					insurance += (m.GMBLASERP__Total_Price__c == null ? 0 : m.GMBLASERP__Total_Price__c );
 			}
 
 			if(pt.Order_Item_Total__c == null || pt.Order_Item_Total__c.setScale(2) != amt.setScale(2) ||
 			   pt.Order_Taxable_Provincial__c == null || pt.Order_Taxable_Provincial__c.setScale(2) != taxableProvincial.setScale(2) ||
 			   pt.Order_Taxable_Federal__c == null || pt.Order_Taxable_Federal__c.setScale(2) != taxableFederal.setScale(2) || 
-			   pt.Order_Taxable_Retail__c == null || pt.Order_Taxable_Retail__c.setScale(2) != taxableRetail.setScale(2))
+			   pt.Order_Taxable_Retail__c == null || pt.Order_Taxable_Retail__c.setScale(2) != taxableRetail.setScale(2) ||
+				 pt.Order_Insurance_Total__c == null || pt.Order_Insurance_Total__c.setScale(2) != insurance.setScale(2))
 			{
 				pt.Order_Item_Total__c = amt;
 				pt.Order_Taxable_Provincial__c = taxableProvincial;
 				pt.Order_Taxable_Federal__c = taxableFederal;
 				pt.Order_Taxable_Retail__c = taxableRetail;
+				pt.Order_Insurance_Total__c = insurance;
 
 				listPTupdate.add(pt);
 			}
