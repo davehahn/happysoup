@@ -132,7 +132,8 @@ summaryFrag(){
 			'optionImage': this.productOptions.images,
 			'optionParentPage': this.optionPage,
 			'optionName': this.productOptions.name,
-			'optionType': this.productOptions.inputType
+			'optionType': this.productOptions.inputType,
+			'addToComposite': isChecked,
    	};
 		console.log('pricebookEntryId', this.productOptions.pricebookEntryId);
    	let summaryDetails = {
@@ -157,6 +158,12 @@ summaryFrag(){
 
 		if(this.optionPage === 'performance'){
 			fireEvent(this.pageRef, 'motorSelection', details	);
+		}
+		if(this.optionPage === 'trailering'){
+			fireEvent(this.pageRef, 'traileringSelection', details	);
+		}
+		if(this.optionPage === 'electronics'){
+			fireEvent(this.pageRef, 'electronicsSelection', details	);
 		}
 
    	fireEvent(this.pageRef, 'updateSummary', summaryDetails);

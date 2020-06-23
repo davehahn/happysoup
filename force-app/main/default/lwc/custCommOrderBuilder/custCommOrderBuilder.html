@@ -44,7 +44,7 @@
         <section class="config-page config-page_selected" data-page="performance">
           <div class="config-page_left">
             <h2 class="vh">Performance</h2>
-            <c-cust-comm-order-boat-image size="large" page='performance'></c-cust-comm-order-boat-image>
+            <c-cust-comm-order-boat-image size="large" page='performance' marketing-content= {boat.marketingContent}></c-cust-comm-order-boat-image>
             <c-cust-comm-order-motor-stats motor-details={motorDetails}></c-cust-comm-order-motor-stats>
           </div>
           <div class="config-page_right slds-p-around_xx-large">
@@ -59,7 +59,7 @@
           <div class="config-page_left">
             <h2 class="vh">Trailering</h2>
             <template if:false={isMobile}>
-              <c-cust-comm-order-boat-image size="large" page='trailering'></c-cust-comm-order-boat-image>
+              <c-cust-comm-order-boat-image size="large" page='trailering' marketing-content= {boat.marketingContent}></c-cust-comm-order-boat-image>
             </template>
           </div>
           <div class="config-page_right slds-p-around_xx-large">
@@ -77,7 +77,7 @@
           <div class="config-page_left">
             <h2 class="vh">Electronics</h2>
             <template if:false={isMobile}>
-              <c-cust-comm-order-boat-image size="large" page='electronics'></c-cust-comm-order-boat-image>
+              <c-cust-comm-order-boat-image size="large" page='electronics' marketing-content= {boat.marketingContent}></c-cust-comm-order-boat-image>
             </template>
           </div>
           <div class="config-page_right slds-p-around_xx-large">
