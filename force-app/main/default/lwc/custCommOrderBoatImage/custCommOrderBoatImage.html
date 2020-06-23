@@ -14,5 +14,10 @@
     <img class="compositeImage transomImage" data-size={size} data-page={page} src={transomImage} alt="Transom image">
   </template>
   <img class="compositeImage motorImage" data-size={size} data-page={page} src={motorImage} alt="Motor image">
-  <img class="compositeImage boatImage" data-size={size} data-page={page} src={boatImage} alt="Boat image">
+  <template if:true={hasTrailerImage}>
+    <img class="compositeImage trailerImage" data-size={size} data-page={page} src={trailerImage} alt="Trailer image">
+  </template>
+  <template if:false={hasTrailerImage}>
+    <img class="compositeImage boatImage" data-size={size} data-page={page} src={boatImage} alt="Boat image">
+  </template>
 </template>

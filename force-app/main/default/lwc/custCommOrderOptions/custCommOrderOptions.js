@@ -61,14 +61,6 @@ export default class CustCommOrderOptions extends LightningElement {
 						//console.log('no id');
 					}
         });
-//     	  for(let option of options){
-//     	    if('id' in option){
-//     	      const parsedOption = this.parseOption(option);
-//     	      combinedOptions.push(parsedOption[0]);
-//          } else {
-//            //console.log('no id');
-//          }
-//        }
         return combinedOptions;
       }
    	}
@@ -189,7 +181,6 @@ export default class CustCommOrderOptions extends LightningElement {
 	}
 
 	handleMotorSelection(detail){
-	  console.log('motor event fired');
 	  let relatedOptions = this.template.querySelectorAll(`[data-parentpage="${detail.optionParentPage}"]`);
 	  relatedOptions.forEach((option) => {
 			option.classList.add('hide');
@@ -200,10 +191,7 @@ export default class CustCommOrderOptions extends LightningElement {
  	}
 
  	handleSwatchChange(event){
- 	  console.log('event detail: ', event.detail);
  	  const optionList = this.template.querySelector('.options_list');
- 	  console.log(optionList.offsetHeight);
- 	  console.log(optionList.offsetHeight + event.detail);
  	  optionList.style.marginBottom = event.detail + 16 + 'px';
   }
 

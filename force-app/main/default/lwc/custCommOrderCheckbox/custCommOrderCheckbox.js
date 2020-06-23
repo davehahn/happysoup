@@ -27,7 +27,6 @@ export default class CustCommOrderCheckbox extends NavigationMixin(LightningElem
 
 	renderedCallback(){
 	  registerListener('purchasePriceConnected', this.pageReady, this);
-		console.log('hasSummary: ', this.template.querySelector('.detailedSummary'));
 		if(this.template.querySelector('.detailedSummary')){
 		  this.summaryFrag();
   	}
@@ -118,6 +117,7 @@ summaryFrag(){
  }
 
 	handleChange(event, init){
+	  console.log('handle change');
 	  let isChecked = false;
 	  if(event){
 	  	isChecked = event.currentTarget.checked;

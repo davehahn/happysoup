@@ -19,6 +19,8 @@ export default class CustCommOrderBoatImage extends LightningElement {
 		@track hasTransomImage = false;
 		@track electronicsImage;
 		@track hasElectronicsImage = false;
+		@track trailerImage;
+		@track hasTrailerImage = false;
     @track boatImage;
     @track defaultImage;
 
@@ -59,11 +61,6 @@ export default class CustCommOrderBoatImage extends LightningElement {
   	}
 
 		handleImageChange(detail){
-		  console.log('detail.optionName', detail.optionName);
-		  console.log('detail.optionImage', JSON.stringify(detail.optionImage));
-		  console.log('detail.optionImage', detail.optionImage);
-		  console.log('detail.addToComposite', detail.addToComposite);
-
 			if(detail.optionImage.length > 0){
 				for(let image of detail.optionImage){
 					if(this.page === 'performance'){
@@ -74,7 +71,6 @@ export default class CustCommOrderBoatImage extends LightningElement {
 
 					if(this.page === 'trailering' || this.page === 'electronics'){
 						if(image.imageType === 'backLeft'){
-							console.log('has back left');
 							if(detail.optionName === 'Add Bow To Stern Cover'){
 							  if(this.page !== 'electronics'){
 							  	this.canvasImage = (detail.addToComposite) ? 'https://' + image.imageURL : '';
@@ -84,9 +80,8 @@ export default class CustCommOrderBoatImage extends LightningElement {
 								this.transomImage = (detail.addToComposite) ? 'https://' + image.imageURL : '';
 								this.hasTransomImage = (detail.addToComposite) ? true : false;
 							} else if(detail.optionName === 'Galvanized Trailer'){
-							  console.log('this.boatImage', this.boatImage);
-								this.boatImage = 'https://' + image.imageURL;
-								console.log('this.boatImage', this.boatImage);
+								this.trailerImage = (detail.addToComposite) ? 'https://' + image.imageURL : '';
+								this.hasTrailerImage = (detail.addToComposite) ? true : false;
 							} else if(detail.optionName === 'Terrova 55 Tech Package'){
 							  if(this.page !== 'trailering'){
 									this.electronicsImage = (detail.addToComposite) ? 'https://' + image.imageURL : '';
@@ -105,10 +100,15 @@ export default class CustCommOrderBoatImage extends LightningElement {
 					}
 				}
 			}else{
-				console.log('no back left, show default');
-				if(detail.optionName === 'Black Powder Coated Trailer'){
-					console.log('default image', this.defaultImage);
-					this.boatImage = 'https://' + this.defaultImage;
+			  console.log('item has no image')
+			  if(this.page === 'trailering' || this.page === 'electronics'){
+			    console.log('on trailering or electronics page');
+					if(detail.optionName === 'Black Powder Coated Trailer'){
+					  console.log('product is black trailer');
+					  console.log(this.defaultImage);
+						this.trailerImage = (detail.addToComposite) ? this.defaultImage : '';
+						this.hasTrailerImage = (detail.addToComposite) ? true : false;
+					}
 				}
 			}
 		}
