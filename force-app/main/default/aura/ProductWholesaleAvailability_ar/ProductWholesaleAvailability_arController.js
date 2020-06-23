@@ -26,7 +26,7 @@
 			var results = response.getReturnValue();
 			results = JSON.parse(results);
             console.log('length');
-			if(results['Wholesale Inventory'] != undefined)
+			if(results['Wholesale Inventory'] != undefined && results['Wholesale Inventory'][0] != undefined)
 			{
 				component.set("v.availAbility", results['Wholesale Inventory'][0].netAvailable);
 				component.set("v.availAbilityDate", results['Wholesale Inventory'][0].nextPositiveShipment);
@@ -38,11 +38,11 @@
                 component.set("v.availAbilityDate", '');
 				component.set('v.showData', true);				
 			}
-            console.log(results['Wholesale Inventory'][0].netAvailable);
-            console.log(results['Wholesale Inventory'][0].nextPositiveShipment);            
-            console.log(component.get("v.availAbilityDate"));            
-            console.log(results['Wholesale Inventory'][0].datePositiveShipment);            
-            console.log(results['Wholesale Inventory'][0].datePositiveShipmentIsToday);            
+//            console.log(results['Wholesale Inventory'][0].netAvailable);
+//            console.log(results['Wholesale Inventory'][0].nextPositiveShipment);
+//            console.log(component.get("v.availAbilityDate"));
+//            console.log(results['Wholesale Inventory'][0].datePositiveShipment);
+//            console.log(results['Wholesale Inventory'][0].datePositiveShipmentIsToday);
 			helper.toggleSpinner(component, false);
 		});
 	}
