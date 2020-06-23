@@ -408,6 +408,11 @@ public with sharing class CommissionLineItem2_Service
     }
   }
 
+  public static void syncToMaterials( List<AcctSeedERP__Material__c> changedMaterials )
+  {
+    doMaterialSync( LGND_Utilities.getIdSetFromList( changedMaterials ) );
+  }
+
   private static ConnectApi.FeedItemInput buildChangesChatterPost( Id recordId, List<String> changes )
   {
     ConnectApi.FeedItemInput feedItemInput = new ConnectApi.FeedItemInput();
