@@ -2,7 +2,7 @@
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Survey_Expiration_Date_String__c</fullName>
     <externalId>false</externalId>
-    <formula>TEXT(YEAR(DATEVALUE(Survey_Send_Date__c + 30))) + &#39;-&#39; + TEXT(MONTH(DATEVALUE(Survey_Send_Date__c + 30))) + &#39;-&#39; + TEXT(DAY(DATEVALUE(Survey_Send_Date__c + 30))) + &#39;T&#39; + TEXT(HOUR(TIMEVALUE(Survey_Send_Date__c + 30))) + &#39;:&#39; + TEXT(MINUTE(TIMEVALUE(Survey_Send_Date__c + 30))) + &#39;:00Z&#39;</formula>
+    <formula>TEXT(YEAR(DATEVALUE(Survey_Send_Date__c + 30))) + &apos;-&apos; + TEXT(MONTH(DATEVALUE(Survey_Send_Date__c + 30))) + &apos;-&apos; + TEXT(DAY(DATEVALUE(Survey_Send_Date__c + 30))) + &apos;T&apos; + TEXT(HOUR(TIMEVALUE(Survey_Send_Date__c + 30))) + &apos;:&apos; + TEXT(MINUTE(TIMEVALUE(Survey_Send_Date__c + 30))) + &apos;:00Z&apos;</formula>
     <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
     <label>Survey Expiration Date String</label>
     <required>false</required>
