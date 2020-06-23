@@ -74,9 +74,9 @@
             qs += ' from  AcctSeedERP__Purchase_Order_Line__c  Where AcctSeedERP__Purchase_Order__r.Estimated_Time_of_Arrival_ETA__c != null ';*/
 
             String qs = 'Select Id, Name, AcctSeedERP__Product__r.RecordType.Name, AcctSeedERP__Product__r.Name, AcctSeedERP__Quantity_Allocated__c, AcctSeedERP__Product__c, GMBLASERP__Lot__r.Name, GMBLASERP__Serial_Number__c, GMBLASERP__Serial_Number__r.Name, ';
-            qs += ' AcctSeedERP__Project__c, AcctSeedERP__Project__r.Name, AcctSeedERP__Project__r.AcctSeed__Account__r.Name, AcctSeedERP__Project__r.AcctSeedERP__Work_Order_Number__c, AcctSeedERP__Project__r.Stage__c, AcctSeedERP__Project__r.CreatedDate, AcctSeedERP__Project__r.Delivery_Date__c, AcctSeedERP__Project__r.BoatModelYear__c, AcctSeedERP__Project__r.Serial_Number__c, AcctSeedERP__Project__r.ERP_Serial_In_Inventory__c, AcctSeedERP__Project__r.Serial_Number__r.Name, AcctSeedERP__Project__r.TrailerModelYear__c,  ';
-            qs += ' AcctSeedERP__Project__r.Retail_ERP__c, AcctSeedERP__Project__r.Retail_ERP__r.ERP_Serial_In_Inventory__c, AcctSeedERP__Project__r.Retail_ERP__r.Name, AcctSeedERP__Project__r.Retail_ERP__r.AcctSeed__Account__r.Name, AcctSeedERP__Project__r.Retail_ERP__r.AcctSeedERP__Work_Order_Number__c, AcctSeedERP__Project__r.Retail_ERP__r.Stage__c, AcctSeedERP__Project__r.Retail_ERP__r.CreatedDate, AcctSeedERP__Project__r.Retail_ERP__r.Delivery_Date__c, AcctSeedERP__Project__r.Retail_ERP__r.BoatModelYear__c, AcctSeedERP__Project__r.Retail_ERP__r.Serial_Number__c, AcctSeedERP__Project__r.Retail_ERP__r.Serial_Number__r.Name, AcctSeedERP__Project__r.Retail_ERP__r.TrailerModelYear__c ';
-            qs += ' from  AcctSeedERP__Material__c Where AcctSeedERP__Project__c != null ';
+            qs += ' AcctSeedERP__Project__c, AcctSeedERP__Project__r.Name, AcctSeedERP__Project__r.AcctSeed__Account__r.Name, AcctSeedERP__Project__r.AcctSeedERP__Work_Order_Number__c, AcctSeedERP__Project__r.Stage__c, AcctSeedERP__Project__r.CreatedDate, AcctSeedERP__Project__r.Delivery_Date__c, AcctSeedERP__Project__r.Arrival_Date__c, AcctSeedERP__Project__r.BoatModelYear__c, AcctSeedERP__Project__r.Serial_Number__c, AcctSeedERP__Project__r.ERP_Serial_In_Inventory__c, AcctSeedERP__Project__r.Serial_Number__r.Name, AcctSeedERP__Project__r.TrailerModelYear__c,  ';
+            qs += ' AcctSeedERP__Project__r.Retail_ERP__c, AcctSeedERP__Project__r.Retail_ERP__r.ERP_Serial_In_Inventory__c, AcctSeedERP__Project__r.Retail_ERP__r.Name, AcctSeedERP__Project__r.Retail_ERP__r.AcctSeed__Account__r.Name, AcctSeedERP__Project__r.Retail_ERP__r.AcctSeedERP__Work_Order_Number__c, AcctSeedERP__Project__r.Retail_ERP__r.Stage__c, AcctSeedERP__Project__r.Retail_ERP__r.CreatedDate, AcctSeedERP__Project__r.Retail_ERP__r.Delivery_Date__c, AcctSeedERP__Project__r.Retail_ERP__r.Arrival_Date__c, AcctSeedERP__Project__r.Retail_ERP__r.BoatModelYear__c, AcctSeedERP__Project__r.Retail_ERP__r.Serial_Number__c, AcctSeedERP__Project__r.Retail_ERP__r.Serial_Number__r.Name, AcctSeedERP__Project__r.Retail_ERP__r.TrailerModelYear__c ';
+            qs += ' from  AcctSeedERP__Material__c Where AcctSeedERP__Project__c != null AND AcctSeedERP__Project__r.RecordTypeId =:erpPartnerBoatSaleRtId ';
 
             this.queryShipments = qs;
             this.queryProductOwner = 'SELECT AcctSeed__Account__r.name , Manufactured_Product_id__c From AcctSeed__Project__c WHERE Manufactured_Product_id__c in: allProducts and AcctSeed__Status__c = \'Completed\'';
@@ -292,6 +292,7 @@
                                                                  AcctSeedERP__Project__r.AcctSeedERP__Work_Order_Number__c,
                                                                  AcctSeedERP__Project__r.Stage__c,
                                                                  AcctSeedERP__Project__r.CreatedDate,
+                                                                 AcctSeedERP__Project__r.Arrival_Date__c,
                                                                  AcctSeedERP__Project__r.Delivery_Date__c,
                                                                  AcctSeedERP__Project__r.BoatModelYear__c,
                                                                  AcctSeedERP__Project__r.TrailerModelYear__c,
@@ -366,6 +367,8 @@
           pData.put('Stage', objMaterial.AcctSeedERP__Project__r.Stage__c);
           pData.put('CreatedDate', objMaterial.AcctSeedERP__Project__r.CreatedDate.format('MMM d, yyyy') );
           pData.put('DeliveryDate', objMaterial.AcctSeedERP__Project__r.Delivery_Date__c != null ? objMaterial.AcctSeedERP__Project__r.Delivery_Date__c.format('MMM d, yyyy') : '');
+          Date dtArrival = objMaterial.AcctSeedERP__Project__r.Arrival_Date__c;
+          pData.put('ArrivalDate', dtArrival != null ? Datetime.newInstance(dtArrival.year(),dtArrival.month(),dtArrival.day()).format('MMM d, yyyy') : '');
           pData.put('type', 'retailERP');
 
           if( !hoverOverRetailSoldDetails.containsKey( uniqueCombo ) )
@@ -418,6 +421,7 @@
                                                            AcctSeedERP__Project__r.AcctSeedERP__Work_Order_Number__c,
                                                            AcctSeedERP__Project__r.Stage__c,
                                                            AcctSeedERP__Project__r.CreatedDate,
+                                                           AcctSeedERP__Project__r.Arrival_Date__c,
                                                            AcctSeedERP__Project__r.Delivery_Date__c,
                                                            AcctSeedERP__Project__r.BoatModelYear__c,
                                                            AcctSeedERP__Project__r.TrailerModelYear__c,
@@ -481,6 +485,7 @@
                                                            AcctSeedERP__Project__r.AcctSeed__Status__c,
                                                            AcctSeedERP__Project__r.Stage__c,
                                                            AcctSeedERP__Project__r.CreatedDate,
+                                                           AcctSeedERP__Project__r.Arrival_Date__c,
                                                            AcctSeedERP__Project__r.Delivery_Date__c,
                                                            AcctSeedERP__Project__r.BoatModelYear__c,
                                                            AcctSeedERP__Project__r.TrailerModelYear__c,
@@ -493,6 +498,7 @@
                                                           AcctSeedERP__Project__r.Retail_ERP__r.AcctSeedERP__Work_Order_Number__c,
                                                           AcctSeedERP__Project__r.Retail_ERP__r.Stage__c,
                                                           AcctSeedERP__Project__r.Retail_ERP__r.CreatedDate,
+                                                          AcctSeedERP__Project__r.Retail_ERP__r.Arrival_Date__c,
                                                           AcctSeedERP__Project__r.Retail_ERP__r.Delivery_Date__c,
                                                           AcctSeedERP__Project__r.Retail_ERP__r.BoatModelYear__c,
                                                           AcctSeedERP__Project__r.Retail_ERP__r.Serial_Number__c,
@@ -1176,6 +1182,7 @@
             AcctSeedERP__Project__r.Retail_ERP__r.Serial_Number__r.Name,
             AcctSeedERP__Project__r.Retail_ERP__r.Stage__c,
             AcctSeedERP__Project__r.Retail_ERP__r.CreatedDate,
+            AcctSeedERP__Project__r.Retail_ERP__r.Arrival_Date__c,
             AcctSeedERP__Project__r.Retail_ERP__r.Delivery_Date__c,
             AcctSeedERP__Project__r.Name,
             AcctSeedERP__Project__r.AcctSeed__Account__c,
@@ -1183,6 +1190,7 @@
             AcctSeedERP__Project__r.AcctSeedERP__Work_Order_Number__c,
             AcctSeedERP__Project__r.Stage__c,
             AcctSeedERP__Project__r.CreatedDate,
+            AcctSeedERP__Project__r.Arrival_Date__c,
             AcctSeedERP__Project__r.Delivery_Date__c,
             AcctSeedERP__Project__r.BoatModelYear__c,
             AcctSeedERP__Project__r.TrailerModelYear__c,
@@ -1243,6 +1251,7 @@
             AcctSeedERP__Project__r.AcctSeedERP__Work_Order_Number__c,
             AcctSeedERP__Project__r.Stage__c,
             AcctSeedERP__Project__r.CreatedDate,
+            AcctSeedERP__Project__r.Arrival_Date__c,
             AcctSeedERP__Project__r.Delivery_Date__c,
             AcctSeedERP__Project__r.BoatModelYear__c,
             AcctSeedERP__Project__r.TrailerModelYear__c,
@@ -1772,6 +1781,9 @@
                 if(orderLine.AcctSeedERP__Product__r.RecordType.Name != 'Boat' && orderLine.AcctSeedERP__Project__r.Delivery_Date__c != null){
                   this.deliverDate = orderLine.AcctSeedERP__Project__r.Delivery_Date__c.date();
                   this.deliverDateFormatted = orderLine.AcctSeedERP__Project__r.Delivery_Date__c.format('MMM d, yyyy');
+                }else if(orderLine.AcctSeedERP__Product__r.RecordType.Name == 'Boat' && orderLine.AcctSeedERP__Project__r.Arrival_Date__c != null){
+                  this.deliverDate = orderLine.AcctSeedERP__Project__r.Arrival_Date__c;
+                  this.deliverDateFormatted = Datetime.newInstance(this.deliverDate.year(),this.deliverDate.month(),this.deliverDate.day()).format('MMM d, yyyy');
                 }
                 this.reserved = 0;
 
@@ -1789,8 +1801,9 @@
                 if(orderLine.AcctSeedERP__Project__c != null && orderLine.AcctSeedERP__Product__r.RecordType.Name == 'Boat') {
                     ErpOrderObj eo = new ErpOrderObj(orderLine.AcctSeedERP__Project__r, 'partnerERP');
                     eo.productId = orderLine.AcctSeedERP__Product__c;
+                    String keyName = 'Partner ERP';
                     this.erpOrder = JSON.serialize(new Map<String, List<ErpOrderObj>>{
-                        'Unscheduled ERP' => new List<ErpOrderObj>{eo}
+                        keyName => new List<ErpOrderObj>{eo}
                     });
                 }else
                   this.erpOrder = JSON.serialize(new Map<String,List<ErpOrderObj>>{'ERP Order Lines' => new List<ErpOrderObj>{new ErpOrderObj(orderLine, 'erpMaterial')}});
