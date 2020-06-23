@@ -20,9 +20,11 @@ export default class CustCommOrderBoatImage extends LightningElement {
 		@track electronicsImage;
 		@track hasElectronicsImage = false;
 		@track trailerImage;
+		@track trailerCutImage;
 		@track hasTrailerImage = false;
     @track boatImage;
-    @track defaultImage;
+    @track defaultTrailerImage;
+    @track defaultTrailerCutImage;
 
 		@wire(CurrentPageReference) pageRef;
 
@@ -49,9 +51,11 @@ export default class CustCommOrderBoatImage extends LightningElement {
 								}
 							} else if(this.page === 'trailering' || this.page === 'electronics'){
 								if(key === 'backLeft'){
-								  this.defaultImage = 'https://' + value;
+								  this.defaultTrailerImage = 'https://' + value;
 									this.boatImage = 'https://' + value;
-								}
+								} else if(key === 'backLeftCut'){
+								  this.defaultTrailerCutImage = 'https://' + value;
+        				}
 							}
 						});
 					}
@@ -90,7 +94,11 @@ export default class CustCommOrderBoatImage extends LightningElement {
 							}else {
 								this.motorImage = 'https://' + image.imageURL;
        				}
-						}
+						}else if(image.imageType === 'backLeftCut'){
+							if(detail.optionName === 'Galvanized Trailer'){
+								this.trailerCutImage = 'https://' + image.imageURL;
+       				}
+      			}
 					}
 
 					if(this.page === 'summary'){
@@ -106,7 +114,8 @@ export default class CustCommOrderBoatImage extends LightningElement {
 					if(detail.optionName === 'Black Powder Coated Trailer'){
 					  console.log('product is black trailer');
 					  console.log(this.defaultImage);
-						this.trailerImage = (detail.addToComposite) ? this.defaultImage : '';
+						this.trailerImage = (detail.addToComposite) ? this.defaultTrailerImage : '';
+						this.trailerCutImage = this.defaultTrailerCutImage;
 						this.hasTrailerImage = (detail.addToComposite) ? true : false;
 					}
 				}

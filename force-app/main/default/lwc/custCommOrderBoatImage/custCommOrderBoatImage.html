@@ -15,7 +15,12 @@
   </template>
   <img class="compositeImage motorImage" data-size={size} data-page={page} src={motorImage} alt="Motor image">
   <template if:true={hasTrailerImage}>
-    <img class="compositeImage trailerImage" data-size={size} data-page={page} src={trailerImage} alt="Trailer image">
+    <template if:true={hasCanvasImage}>
+      <img class="compositeImage trailerCutImage" data-size={size} data-page={page} src={trailerCutImage} alt="Trailer image">
+    </template>
+    <template if:false={hasCanvasImage}>
+      <img class="compositeImage trailerImage" data-size={size} data-page={page} src={trailerImage} alt="Trailer image">
+    </template>
   </template>
   <template if:false={hasTrailerImage}>
     <img class="compositeImage boatImage" data-size={size} data-page={page} src={boatImage} alt="Boat image">
