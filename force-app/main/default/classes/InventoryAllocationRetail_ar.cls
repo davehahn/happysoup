@@ -97,8 +97,8 @@ public without sharing class InventoryAllocationRetail_ar {
         //queryShipments += ' from  AcctSeedERP__Purchase_Order_Line__c  Where AcctSeedERP__Purchase_Order__r.Estimated_Time_of_Arrival_ETA__c != null  AND AcctSeedERP__Project__c != null AND AcctSeedERP__Project__r.Stage__c != \'Delivered\' AND (AcctSeedERP__Project__r.GMBLASERP__Warehouse__c =:filterWarehouse OR AcctSeedERP__Project__r.AcctSeed__Account__r.Warehouse__c =:filterWarehouse) order by deliverDate__c';
 
 		String queryShipments = 'Select Id, Name, AcctSeedERP__Product__r.RecordType.Name, AcctSeedERP__Product__r.Name, AcctSeedERP__Quantity_Allocated__c, AcctSeedERP__Product__c, GMBLASERP__Lot__r.Name, GMBLASERP__Serial_Number__c, GMBLASERP__Serial_Number__r.Name, ';
-		queryShipments += ' AcctSeedERP__Project__c, AcctSeedERP__Project__r.Name, AcctSeedERP__Project__r.AcctSeed__Account__r.Name, AcctSeedERP__Project__r.AcctSeedERP__Work_Order_Number__c, AcctSeedERP__Project__r.Stage__c, AcctSeedERP__Project__r.CreatedDate, AcctSeedERP__Project__r.Delivery_Date__c, AcctSeedERP__Project__r.BoatModelYear__c, AcctSeedERP__Project__r.Serial_Number__c, AcctSeedERP__Project__r.ERP_Serial_In_Inventory__c, AcctSeedERP__Project__r.Serial_Number__r.Name, AcctSeedERP__Project__r.TrailerModelYear__c,  ';
-		queryShipments += ' AcctSeedERP__Project__r.Retail_ERP__c, AcctSeedERP__Project__r.Retail_ERP__r.ERP_Serial_In_Inventory__c, AcctSeedERP__Project__r.Retail_ERP__r.Name, AcctSeedERP__Project__r.Retail_ERP__r.AcctSeed__Account__r.Name, AcctSeedERP__Project__r.Retail_ERP__r.AcctSeedERP__Work_Order_Number__c, AcctSeedERP__Project__r.Retail_ERP__r.Stage__c, AcctSeedERP__Project__r.Retail_ERP__r.CreatedDate, AcctSeedERP__Project__r.Retail_ERP__r.Delivery_Date__c, AcctSeedERP__Project__r.Retail_ERP__r.BoatModelYear__c, AcctSeedERP__Project__r.Retail_ERP__r.Serial_Number__c, AcctSeedERP__Project__r.Retail_ERP__r.Serial_Number__r.Name, AcctSeedERP__Project__r.Retail_ERP__r.TrailerModelYear__c ';
+		queryShipments += ' AcctSeedERP__Project__c, AcctSeedERP__Project__r.Name, AcctSeedERP__Project__r.AcctSeed__Account__r.Name, AcctSeedERP__Project__r.AcctSeedERP__Work_Order_Number__c, AcctSeedERP__Project__r.Stage__c, AcctSeedERP__Project__r.CreatedDate, AcctSeedERP__Project__r.Delivery_Date__c, AcctSeedERP__Project__r.Arrival_Date__c, AcctSeedERP__Project__r.BoatModelYear__c, AcctSeedERP__Project__r.Serial_Number__c, AcctSeedERP__Project__r.ERP_Serial_In_Inventory__c, AcctSeedERP__Project__r.Serial_Number__r.Name, AcctSeedERP__Project__r.TrailerModelYear__c,  ';
+		queryShipments += ' AcctSeedERP__Project__r.Retail_ERP__c, AcctSeedERP__Project__r.Retail_ERP__r.ERP_Serial_In_Inventory__c, AcctSeedERP__Project__r.Retail_ERP__r.Name, AcctSeedERP__Project__r.Retail_ERP__r.AcctSeed__Account__r.Name, AcctSeedERP__Project__r.Retail_ERP__r.AcctSeedERP__Work_Order_Number__c, AcctSeedERP__Project__r.Retail_ERP__r.Stage__c, AcctSeedERP__Project__r.Retail_ERP__r.CreatedDate, AcctSeedERP__Project__r.Retail_ERP__r.Delivery_Date__c, AcctSeedERP__Project__r.Retail_ERP__r.Arrival_Date__c, AcctSeedERP__Project__r.Retail_ERP__r.BoatModelYear__c, AcctSeedERP__Project__r.Retail_ERP__r.Serial_Number__c, AcctSeedERP__Project__r.Retail_ERP__r.Serial_Number__r.Name, AcctSeedERP__Project__r.Retail_ERP__r.TrailerModelYear__c ';
 		queryShipments += ' from  AcctSeedERP__Material__c Where AcctSeedERP__Product__c IN:allProducts AND (GMBLASERP__Lot__r.Name IN:listFilterYear OR AcctSeedERP__Project__r.BoatModelYear__c IN:listFilterYear) AND AcctSeedERP__Project__r.Stage__c != \'Delivered\' AND (AcctSeedERP__Project__r.GMBLASERP__Warehouse__c =:filterWarehouse OR AcctSeedERP__Project__r.AcctSeed__Account__r.Warehouse__c =:filterWarehouse) order by AcctSeedERP__Project__r.Arrival_Date__c';
 		System.debug('queryShipments');
 		System.debug(queryShipments);
@@ -151,6 +151,7 @@ public without sharing class InventoryAllocationRetail_ar {
 		                                                     AcctSeedERP__Project__r.AcctSeedERP__Work_Order_Number__c,
 		                                                     AcctSeedERP__Project__r.Stage__c,
 		                                                     AcctSeedERP__Project__r.CreatedDate,
+		                                                     AcctSeedERP__Project__r.Arrival_Date__c,
 		                                                     AcctSeedERP__Project__r.Delivery_Date__c,
 		                                                     AcctSeedERP__Project__r.BoatModelYear__c,
 		                                                     AcctSeedERP__Project__r.TrailerModelYear__c,
@@ -204,6 +205,8 @@ public without sharing class InventoryAllocationRetail_ar {
 			pData.put('Stage', objMaterial.AcctSeedERP__Project__r.Stage__c);
 			pData.put('CreatedDate', objMaterial.AcctSeedERP__Project__r.CreatedDate.format('MMM d, yyyy') );
 			pData.put('DeliveryDate', objMaterial.AcctSeedERP__Project__r.Delivery_Date__c != null ? objMaterial.AcctSeedERP__Project__r.Delivery_Date__c.format('MMM d, yyyy') : '');
+			Date dtArrival = objMaterial.AcctSeedERP__Project__r.Arrival_Date__c;
+			pData.put('ArrivalDate', dtArrival != null ? Datetime.newInstance(dtArrival.year(),dtArrival.month(),dtArrival.day()).format('MMM d, yyyy') : '');
 			pData.put('type', 'retailERP');
 
 			if( !hoverOverRetailSoldDetails.containsKey( uniqueCombo ) )
@@ -285,6 +288,7 @@ public without sharing class InventoryAllocationRetail_ar {
 		                                               AcctSeedERP__Project__r.AcctSeedERP__Work_Order_Number__c,
 		                                               AcctSeedERP__Project__r.Stage__c,
 		                                               AcctSeedERP__Project__r.CreatedDate,
+		                                               AcctSeedERP__Project__r.Arrival_Date__c,
 		                                               AcctSeedERP__Project__r.Delivery_Date__c,
 		                                               AcctSeedERP__Project__r.BoatModelYear__c,
 		                                               AcctSeedERP__Project__r.TrailerModelYear__c,
@@ -296,6 +300,7 @@ public without sharing class InventoryAllocationRetail_ar {
 													AcctSeedERP__Project__r.Retail_ERP__r.AcctSeedERP__Work_Order_Number__c,
 													AcctSeedERP__Project__r.Retail_ERP__r.Stage__c,
 													AcctSeedERP__Project__r.Retail_ERP__r.CreatedDate,
+													AcctSeedERP__Project__r.Retail_ERP__r.Arrival_Date__c,
 													AcctSeedERP__Project__r.Retail_ERP__r.Delivery_Date__c,
 													AcctSeedERP__Project__r.Retail_ERP__r.BoatModelYear__c,
 													AcctSeedERP__Project__r.Retail_ERP__r.Serial_Number__c,
@@ -737,9 +742,9 @@ public without sharing class InventoryAllocationRetail_ar {
 
             deliverDate = null;
             deliverDateFormatted = null;
-            if(orderLine.AcctSeedERP__Project__r.Delivery_Date__c != null){
-                deliverDate = orderLine.AcctSeedERP__Project__r.Delivery_Date__c.date();
-                deliverDateFormatted = orderLine.AcctSeedERP__Project__r.Delivery_Date__c.format('MMM d, yyyy');
+            if(orderLine.AcctSeedERP__Project__r.Arrival_Date__c != null){
+                deliverDate = orderLine.AcctSeedERP__Project__r.Arrival_Date__c;
+                deliverDateFormatted = Datetime.newInstance(deliverDate.year(),deliverDate.month(),deliverDate.day()).format('MMM d, yyyy');
             }
             reserved = 0;
             shipID = orderLine.Id;
@@ -754,7 +759,7 @@ public without sharing class InventoryAllocationRetail_ar {
 			if(orderLine.AcctSeedERP__Project__c != null){
 				ErpOrderObj eo = new ErpOrderObj(orderLine.AcctSeedERP__Project__r, 'partnerERP');
 				eo.productId = orderLine.AcctSeedERP__Product__c;
-				erpOrder = JSON.serialize(new Map<String,List<ErpOrderObj>>{'Unscheduled ERP' => new List<ErpOrderObj>{eo}});
+				erpOrder = JSON.serialize(new Map<String,List<ErpOrderObj>>{'Partner ERP' => new List<ErpOrderObj>{eo}});
 			}
         }
     }
