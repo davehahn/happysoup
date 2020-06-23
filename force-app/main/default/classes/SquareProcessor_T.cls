@@ -13,6 +13,9 @@ private class SquareProcessor_T
   {
     new Factory_TestData();
     Factory_CustomSettings.setupInventorySettings();
+    GMBLASG__Settings__c gmblSettings = new GMBLASG__Settings__c();
+    gmblSettings.GMBLASG__disable_gtCashReceipt__c = true;
+    insert gmblSettings;
   }
 
   public class SquareSuccessResponse implements HttpCalloutMock
@@ -253,16 +256,16 @@ private class SquareProcessor_T
       FROM Square_Transaction__c
       WHERE Account__c = :acct.Id ];
 
-//    AcctSeed__Cash_Receipt__c[] cashReceipts = [
-//      SELECT
-//        Id,
-//        AcctSeed__Amount__c,
-//        AcctSeed__Payment_Reference__c,
-//        AcctSeed__Purpose__c,
-//        Payment_Method__c
-//      FROM AcctSeed__Cash_Receipt__c
-//      WHERE AcctSeed__Account__c = :acct.Id
-//    ];
+    AcctSeed__Cash_Receipt__c[] cashReceipts = [
+      SELECT
+        Id,
+        AcctSeed__Amount__c,
+        AcctSeed__Payment_Reference__c,
+        AcctSeed__Purpose__c,
+        Payment_Method__c
+      FROM AcctSeed__Cash_Receipt__c
+      WHERE AcctSeed__Account__c = :acct.Id
+    ];
 
     System.assertEquals( 1, sqTs.size(), 'Should be a Square_Transaction__c record');
     System.assertEquals( acct.Id, sqTs[0].Account__c );
@@ -272,11 +275,11 @@ private class SquareProcessor_T
     System.assertEquals( opp.Id, sqTs[0].sqReferenceId__c );
     System.assertEquals( 'Deposit for Online Boat Reservation', sqTs[0].Notes__c );
 
-//    System.assertEquals( 1, cashReceipts.size(), '1 Cash Receipt should have been created');
-//    System.assertEquals( 1000, cashReceipts[0].AcctSeed__Amount__c );
-//    System.assertEquals( sqTs[0].sqOrderId__c, cashReceipts[0].AcctSeed__Payment_Reference__c );
-//    System.assertEquals( 'Customer Receipt', cashReceipts[0].AcctSeed__Purpose__c );
-//    System.assertEquals( 'Online Store', cashReceipts[0].Payment_Method__c );
+    System.assertEquals( 1, cashReceipts.size(), '1 Cash Receipt should have been created');
+    System.assertEquals( 1000, cashReceipts[0].AcctSeed__Amount__c );
+    System.assertEquals( sqTs[0].sqOrderId__c, cashReceipts[0].AcctSeed__Payment_Reference__c );
+    System.assertEquals( 'Customer Receipt', cashReceipts[0].AcctSeed__Purpose__c );
+    System.assertEquals( 'Online Store', cashReceipts[0].Payment_Method__c );
   }
 
   @IsTest
