@@ -405,17 +405,18 @@ public with sharing class DealerPartsOrderController {
         }
 
       m.put('warehouseName', userWarehouse);
-      Map<Id,Decimal> mapProductQty = new Map<Id,Decimal>();
-      List<String> listIdProduct = new  List<String>();
-      listIdProduct.add(idProduct);
-      map<String,list<String>> mapFilters = new map<String,list<String>>();
-      mapFilters.put('idProduct',listIdProduct);
-      mapFilters.put('idWarehouse',new List<String>{idWarehouse});
-      List<gcInventoryMovementCube_Report.cube> allCubes = gcInventoryMovementCube_Report.inventoryAggRes(mapFilters, new List<String>{'idProduct'});
+      Set<Id> setIdProduct = new Set<Id>{idProduct};
+      Map<Id, gcInventoryReport_MRP.cube> allCubes = gcInventoryReport_MRP.retrieveProducts(setIdProduct,idWarehouse);
+      System.debug('setIdProduct');
+      System.debug(setIdProduct);
+      System.debug('idWarehouse');
+      System.debug(idWarehouse);
+      System.debug('allCubes');
+      System.debug(allCubes);
       Decimal qty = 0;
       if(!allCubes.isEmpty())
-      for(gcInventoryMovementCube_Report.cube cube : allCubes){
-        qty = cube.qty;
+      for(gcInventoryReport_MRP.cube cube : allCubes.values()){
+        qty = cube.inventoryParts - (cube.specified - cube.consumed);
       }
       m.put('qty', String.valueOf(qty));
       return m;
@@ -542,7 +543,7 @@ public with sharing class DealerPartsOrderController {
       List<MaterialWrapper> results = new List<MaterialWrapper>();
       if(String.isNotBlank(erpOrderId)) {
         Id idWarehouse;
-        Set<String> setIdProduct = new Set<String>();
+        Set<Id> setIdProduct = new Set<Id>();
           List<AcctSeedERP__Material__c> materialList = [Select Id,
                                                          Name,
                                                          AcctSeedERP__Product__c,
@@ -574,24 +575,28 @@ public with sharing class DealerPartsOrderController {
               results.add(newWr);
           }
           Map<Id,Decimal> mapProductQty = new Map<Id,Decimal>();
-          List<String> listIdProduct = new  List<String>();
-          listIdProduct.addAll(setIdProduct);
-          map<String,list<String>> mapFilters = new map<String,list<String>>();
-          mapFilters.put('idProduct',listIdProduct);
-          mapFilters.put('idWarehouse',new List<String>{idWarehouse});
-          List<gcInventoryMovementCube_Report.cube> allCubes = gcInventoryMovementCube_Report.inventoryAggRes(mapFilters, new List<String>{'idProduct'});
+//          List<String> listIdProduct = new  List<String>();
+//          listIdProduct.addAll(setIdProduct);
+//          map<String,list<String>> mapFilters = new map<String,list<String>>();
+//          mapFilters.put('idProduct',listIdProduct);
+//          mapFilters.put('idWarehouse',new List<String>{idWarehouse});
+//          List<gcInventoryMovementCube_Report.cube> allCubes = gcInventoryMovementCube_Report.inventoryAggRes(mapFilters, new List<String>{'idProduct'});
+          Map<Id, gcInventoryReport_MRP.cube> allCubes = gcInventoryReport_MRP.retrieveProducts(setIdProduct,idWarehouse);
           System.debug(LoggingLevel.ERROR,'allCubes:'+allCubes);
           Map<Id,Decimal> mapSerialCost = new Map<Id,Decimal>();
-          for(gcInventoryMovementCube_Report.cube cube : allCubes){
-            mapProductQty.put(cube.idProduct, cube.qty);
-          }
+//          for(gcInventoryMovementCube_Report.cube cube : allCubes){
+//            mapProductQty.put(cube.idProduct, cube.qty);
+//          }
 
           for(MaterialWrapper newWr : results)
           {
-            if(mapProductQty.containsKey(newWr.pdtId))
-              newWr.AvailableQuantitySelf = mapProductQty.get(newWr.pdtId);
-            else
-              newWr.AvailableQuantitySelf = 0;
+            if(allCubes.containsKey(newWr.pdtId)) {
+                gcInventoryReport_MRP.cube cube = allCubes.get(newWr.pdtId);
+                System.debug('cube');
+                System.debug(cube);
+                newWr.AvailableQuantitySelf = cube.inventoryParts - (cube.specified - cube.consumed);
+            }else
+                newWr.AvailableQuantitySelf = 0;
           }
       }
       return results;
