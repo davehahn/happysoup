@@ -132,7 +132,7 @@ export default class CommissionLineItems extends LightningElement {
     this.activeLineItem = {
       comment: '',
       description: '',
-      commissionRate: this.lineItems ? this.lineItems[0].commissionRate : '',
+      commissionRate: this.lineItems != undefined && this.lineItems.length > 0 ? this.lineItems[0].commissionRate : '',
       salePrice: '',
       labourCost: '',
       unitCost: '',
