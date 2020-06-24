@@ -7,7 +7,7 @@
     <masterLabel>Display Current Invoice</masterLabel>
     <openType>onClickJavaScript</openType>
     <protected>false</protected>
-    <url>if (&#39;{!AcctSeed__Project__c.LastDocumentID__c}&#39; != null &amp;&amp; &#39;{!AcctSeed__Project__c.LastDocumentID__c}&#39; != &#39;&#39;)
+    <url>if (&apos;{!AcctSeed__Project__c.LastDocumentID__c}&apos; != null &amp;&amp; &apos;{!AcctSeed__Project__c.LastDocumentID__c}&apos; != &apos;&apos;)
 {
      window.open(&quot;/servlet/servlet.FileDownload?file={!AcctSeed__Project__c.LastDocumentID__c}&quot;, &quot;Current Invoice&quot;);
 
