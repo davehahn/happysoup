@@ -29,12 +29,21 @@ export default class CustCommOrderOptions extends LightningElement {
 	  'price': '',
 	  'blurb': ''
  	};
+ 	@track selectionMade = false;
 
   @wire(CurrentPageReference) pageRef;
 
 	renderedCallback(){
 		registerListener('motorSelection', this.handleMotorSelection, this);
+		registerListener('traileringSelection', this.handleTraileringSelection, this);
 	}
+
+	handleTraileringSelection(detail){
+	  console.log('onUserSelection?', detail.onUserSelection);
+	  if( detail.onUserSelection && (detail.userSelectionName === this.groupingName) ){
+	    this.selectionMade = true;
+   	}
+ 	}
 
 	get availableOptions(){
 
@@ -54,21 +63,16 @@ export default class CustCommOrderOptions extends LightningElement {
      	  let combinedOptions = [];
      	  options.forEach((option, index) => {
      	    if('id' in option){
-     	      let init = (this.isInit && index === 0) ? true : false;
+						let init = false;
+						if(!this.selectionMade){
+							init = (this.isInit && index === 0) ? true : false;
+      			}
 						const parsedOption = this.parseOption(option, init);
 						combinedOptions.push(parsedOption[0]);
 					} else {
 						//console.log('no id');
 					}
         });
-//     	  for(let option of options){
-//     	    if('id' in option){
-//     	      const parsedOption = this.parseOption(option);
-//     	      combinedOptions.push(parsedOption[0]);
-//          } else {
-//            //console.log('no id');
-//          }
-//        }
         return combinedOptions;
       }
    	}
@@ -87,7 +91,6 @@ export default class CustCommOrderOptions extends LightningElement {
 
 		let name = option['name'];
 		const sku = option['id'];
-		const pricebookEntryId = option['pricebookEntryId'];
 		let km = null;
 		let	rpm = null;
 		let images = [];
@@ -142,7 +145,6 @@ export default class CustCommOrderOptions extends LightningElement {
 
 		optionDetails.push({
 			'sku': sku,
-			'pricebookEntryId': pricebookEntryId,
 			'name': name,
 			'retailPrice': retailPrice,
 			'displayPrice': displayPrice,
@@ -189,7 +191,6 @@ export default class CustCommOrderOptions extends LightningElement {
 	}
 
 	handleMotorSelection(detail){
-	  console.log('motor event fired');
 	  let relatedOptions = this.template.querySelectorAll(`[data-parentpage="${detail.optionParentPage}"]`);
 	  relatedOptions.forEach((option) => {
 			option.classList.add('hide');
@@ -200,10 +201,7 @@ export default class CustCommOrderOptions extends LightningElement {
  	}
 
  	handleSwatchChange(event){
- 	  console.log('event detail: ', event.detail);
  	  const optionList = this.template.querySelector('.options_list');
- 	  console.log(optionList.offsetHeight);
- 	  console.log(optionList.offsetHeight + event.detail);
  	  optionList.style.marginBottom = event.detail + 16 + 'px';
   }
 

@@ -27,7 +27,6 @@ export default class CustCommOrderCheckbox extends NavigationMixin(LightningElem
 
 	renderedCallback(){
 	  registerListener('purchasePriceConnected', this.pageReady, this);
-		console.log('hasSummary: ', this.template.querySelector('.detailedSummary'));
 		if(this.template.querySelector('.detailedSummary')){
 		  this.summaryFrag();
   	}
@@ -125,6 +124,12 @@ summaryFrag(){
    	  isChecked = true;
     }
 
+    const onUserSelection = (event) ? true : false;
+    let userSelectionName = null;
+    if(onUserSelection){
+    	userSelectionName = event.currentTarget.getAttribute('name');
+    }
+
 	  let details = {
 	    'optionSKU': this.productOptions.sku,
 			'motorSpeed': this.productOptions.km,
@@ -132,12 +137,13 @@ summaryFrag(){
 			'optionImage': this.productOptions.images,
 			'optionParentPage': this.optionPage,
 			'optionName': this.productOptions.name,
-			'optionType': this.productOptions.inputType
+			'optionType': this.productOptions.inputType,
+			'addToComposite': isChecked,
+			'onUserSelection': onUserSelection,
+			'userSelectionName': userSelectionName
    	};
-		console.log('pricebookEntryId', this.productOptions.pricebookEntryId);
    	let summaryDetails = {
 			'sku': this.productOptions.sku,
-			'pricebookEntryId': this.productOptions.pricebookEntryId,
 			'name': this.productOptions.name,
 			'price': this.productOptions.retailPrice,
 			'addToSummary': isChecked,
@@ -157,6 +163,12 @@ summaryFrag(){
 
 		if(this.optionPage === 'performance'){
 			fireEvent(this.pageRef, 'motorSelection', details	);
+		}
+		if(this.optionPage === 'trailering'){
+			fireEvent(this.pageRef, 'traileringSelection', details	);
+		}
+		if(this.optionPage === 'electronics'){
+			fireEvent(this.pageRef, 'electronicsSelection', details	);
 		}
 
    	fireEvent(this.pageRef, 'updateSummary', summaryDetails);
