@@ -8,9 +8,9 @@
             <guestUser>Boat_Reservation</guestUser>
         </sharedTo>
         <criteriaItems>
-            <field>AcctSeed__Active__c</field>
-            <operation>equals</operation>
-            <value>True</value>
+            <field>OwnerId</field>
+            <operation>notEqual</operation>
+            <value>null</value>
         </criteriaItems>
     </sharingGuestRules>
     <sharingGuestRules>
@@ -21,7 +21,7 @@
             <guestUser>Legend_Help_Center</guestUser>
         </sharedTo>
         <criteriaItems>
-            <field>OwnerId</field>
+            <field>Name</field>
             <operation>notEqual</operation>
             <value>null</value>
         </criteriaItems>
