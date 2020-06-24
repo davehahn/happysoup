@@ -103,7 +103,7 @@ export default class CustCommOrderBoatImage extends LightningElement {
 
 					if(this.page === 'summary'){
 						if(image.imageType === 'frontAngle'){
-							this.motorImage = 'https://' + image.imageURL;
+							this.boatImage = 'https://' + image.imageURL;
 						}
 					}
 				}

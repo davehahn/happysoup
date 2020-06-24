@@ -9,6 +9,7 @@ import { fireEvent, registerListener, unregisterAllListeners} from 'c/pubsub';
 export default class CustCommOrderCheckbox extends NavigationMixin(LightningElement) {
 	@api optionShowUpgradePrice;
 	@api optionPage;
+	@api optionParentPage;
 	@api optionParentSku;
 	@api optionIsAddon;
 	@api displayImage;
@@ -27,6 +28,8 @@ export default class CustCommOrderCheckbox extends NavigationMixin(LightningElem
 
 	renderedCallback(){
 	  registerListener('purchasePriceConnected', this.pageReady, this);
+	  registerListener('motorSelection', this.handleMotorSelection, this);
+	  registerListener('foundSelection', this.checkRelatedMotorOption, this);
 		if(this.template.querySelector('.detailedSummary')){
 		  this.summaryFrag();
   	}
@@ -187,4 +190,44 @@ summaryFrag(){
 		}
  	}
 
+ 	handleMotorSelection(detail){
+		let relatedOptions = this.template.querySelectorAll(`[data-parentpage="${detail.optionParentPage}"]`);
+
+		relatedOptions.forEach((option) => {
+		  if(option.checked){
+		  	option.checked = false;
+		  	const optionLabel = option.dataset.label;
+		  	const newDetails = {
+		  	  'details': detail,
+		  	  'sameLabel': optionLabel
+		  	 };
+		  	fireEvent(this.pageRef, 'foundSelection', newDetails);
+    	}
+		});
+	}
+
+
+	checkRelatedMotorOption(detail){
+		const selectedSku = detail.details.optionSKU;
+		const relatedOptionParentSku = this.productOptions.parentSku;
+		if(selectedSku === relatedOptionParentSku){
+		  console.log('we have a match! check it off!');
+			const optionToCheck = this.template.querySelector(`[data-parentsku="${relatedOptionParentSku}"]`);
+			optionToCheck.checked = true;
+  	}
+	}
+
+//	checkRelatedMotorOption(detail, relatedOptions){
+//	  relatedOptions.forEach((option) => {
+//			console.log('hasPreviousSelection: ', this.hasPreviousSelection);
+//			if(this.hasPreviousSelection){
+//				console.log('previous selection found');
+//				console.log('optionParentSku: ', option.getAttribute('data-parentsku'));
+//				console.log('selectedSku: ', detail.optionSKU);
+//				if(option.getAttribute('data-parentsku') === detail.optionSKU){
+//					option.checked = true;
+//				}
+//			}
+//		});
+// 	}
 }
