@@ -29,12 +29,21 @@ export default class CustCommOrderOptions extends LightningElement {
 	  'price': '',
 	  'blurb': ''
  	};
+ 	@track selectionMade = false;
 
   @wire(CurrentPageReference) pageRef;
 
 	renderedCallback(){
 		registerListener('motorSelection', this.handleMotorSelection, this);
+		registerListener('traileringSelection', this.handleTraileringSelection, this);
 	}
+
+	handleTraileringSelection(detail){
+	  console.log('onUserSelection?', detail.onUserSelection);
+	  if( detail.onUserSelection && (detail.userSelectionName === this.groupingName) ){
+	    this.selectionMade = true;
+   	}
+ 	}
 
 	get availableOptions(){
 
@@ -54,7 +63,10 @@ export default class CustCommOrderOptions extends LightningElement {
      	  let combinedOptions = [];
      	  options.forEach((option, index) => {
      	    if('id' in option){
-     	      let init = (this.isInit && index === 0) ? true : false;
+						let init = false;
+						if(!this.selectionMade){
+							init = (this.isInit && index === 0) ? true : false;
+      			}
 						const parsedOption = this.parseOption(option, init);
 						combinedOptions.push(parsedOption[0]);
 					} else {
@@ -79,7 +91,6 @@ export default class CustCommOrderOptions extends LightningElement {
 
 		let name = option['name'];
 		const sku = option['id'];
-		const pricebookEntryId = option['pricebookEntryId'];
 		let km = null;
 		let	rpm = null;
 		let images = [];
@@ -134,7 +145,6 @@ export default class CustCommOrderOptions extends LightningElement {
 
 		optionDetails.push({
 			'sku': sku,
-			'pricebookEntryId': pricebookEntryId,
 			'name': name,
 			'retailPrice': retailPrice,
 			'displayPrice': displayPrice,

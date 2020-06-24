@@ -117,12 +117,17 @@ summaryFrag(){
  }
 
 	handleChange(event, init){
-	  console.log('handle change');
 	  let isChecked = false;
 	  if(event){
 	  	isChecked = event.currentTarget.checked;
    	} else if(init){
    	  isChecked = true;
+    }
+
+    const onUserSelection = (event) ? true : false;
+    let userSelectionName = null;
+    if(onUserSelection){
+    	userSelectionName = event.currentTarget.getAttribute('name');
     }
 
 	  let details = {
@@ -134,11 +139,11 @@ summaryFrag(){
 			'optionName': this.productOptions.name,
 			'optionType': this.productOptions.inputType,
 			'addToComposite': isChecked,
+			'onUserSelection': onUserSelection,
+			'userSelectionName': userSelectionName
    	};
-		console.log('pricebookEntryId', this.productOptions.pricebookEntryId);
    	let summaryDetails = {
 			'sku': this.productOptions.sku,
-			'pricebookEntryId': this.productOptions.pricebookEntryId,
 			'name': this.productOptions.name,
 			'price': this.productOptions.retailPrice,
 			'addToSummary': isChecked,

@@ -108,12 +108,8 @@ export default class CustCommOrderBoatImage extends LightningElement {
 					}
 				}
 			}else{
-			  console.log('item has no image')
 			  if(this.page === 'trailering' || this.page === 'electronics'){
-			    console.log('on trailering or electronics page');
 					if(detail.optionName === 'Black Powder Coated Trailer'){
-					  console.log('product is black trailer');
-					  console.log(this.defaultImage);
 						this.trailerImage = (detail.addToComposite) ? this.defaultTrailerImage : '';
 						this.trailerCutImage = this.defaultTrailerCutImage;
 						this.hasTrailerImage = (detail.addToComposite) ? true : false;
