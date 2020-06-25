@@ -19,9 +19,16 @@ export default class CustCommOrderSummary extends LightningElement {
 	}
 
 	updateSummary(details){
+
+	  console.log('in summary');
+	  console.log('sku: ', details.sku);
+	  console.log('type: ', details.type);
+	  console.log('input name:', details.userSelectionName);
+
 		let payload = {
 			 'name': details.name,
-			 'sku': details.sku
+			 'sku': details.sku,
+			 'inputName': details.userSelectionName
 		};
 		if(details.addToSummary){
 			//add item to list
@@ -30,14 +37,11 @@ export default class CustCommOrderSummary extends LightningElement {
 				if(details.addon){
     		} else {
     		  if(details.section === 'performance'){
-    		    this.performanceItems.pop();
-						this.performanceItems.push(payload);
+						this.ifContains(this.performanceItems, payload);
 					} else if(details.section === 'trailering'){
-						this.traileringItems.pop();
-						this.traileringItems.push(payload);
+					 	this.ifContains(this.traileringItems, payload);
      			} else if(details.section === 'electronics'){
-     			  this.electronicsItems.pop();
-						this.electronicsItems.push(payload);
+     			  this.ifContains(this.electronicsItems, payload);
         	}
       	}
    		}	else {
@@ -64,5 +68,17 @@ export default class CustCommOrderSummary extends LightningElement {
    //	console.log('summaryList: ', JSON.parse(JSON.stringify(this.summaryList)));
  	}
 
+	ifContains(array, object){
+	  console.log('ifContains array: ', array);
+	  console.log('ifContains object', object);
+		let index = array.findIndex(({inputName}) => inputName === object.inputName);
+		if(index === -1){
+		  console.log('no existing value, add');
+			array.push(object);
+ 	 	} else{
+ 	 	  console.log('found existing value, replace');
+ 	 	  array[index] = object;
+    }
+ 	}
 
 }

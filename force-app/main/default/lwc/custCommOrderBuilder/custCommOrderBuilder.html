@@ -49,8 +49,8 @@
           </div>
           <div class="config-page_right slds-p-around_xx-large">
             <h3 class="right_heading">Select Your Performance</h3>
-            <c-cust-comm-order-options options-title="Standard Performance" selections="one" selection-scope="global" options={boat.standardMotor} boat-retail-price={boat.retailPrice} is-init="true" trigger-ui-change="true" page='performance'></c-cust-comm-order-options>
-            <c-cust-comm-order-options options-title="Enhanced Performance" selections="one" selection-scope="global" options={boat.motorUpgrades} boat-retail-price={boat.retailPrice} trigger-ui-change="true" page='performance'></c-cust-comm-order-options>
+            <c-cust-comm-order-options options-title="Standard Performance" selections="one" selection-scope="global" options={boat.standardMotor} boat-retail-price={boat.retailPrice} is-init="true" trigger-ui-change="true" page='performance' grouping-name="motor_options"></c-cust-comm-order-options>
+            <c-cust-comm-order-options options-title="Enhanced Performance" selections="one" selection-scope="global" options={boat.motorUpgrades} boat-retail-price={boat.retailPrice} trigger-ui-change="true" page='performance' grouping-name="motor_options"></c-cust-comm-order-options>
           </div>
         </section>
 

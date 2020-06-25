@@ -131,6 +131,8 @@ summaryFrag(){
     let userSelectionName = null;
     if(onUserSelection){
     	userSelectionName = event.currentTarget.getAttribute('name');
+    } else {
+      userSelectionName = this.optionGroupingName;
     }
 
 	  let details = {
@@ -152,7 +154,8 @@ summaryFrag(){
 			'addToSummary': isChecked,
 			'section': this.optionPage,
 			'type': this.productOptions.inputType,
-			'addon': this.optionIsAddon
+			'addon': this.optionIsAddon,
+			'userSelectionName': userSelectionName
 		};
 
 		let purchasePrice = {
@@ -161,7 +164,8 @@ summaryFrag(){
 			'addToPrice': isChecked,
 			'section': this.optionPage,
 			'type': this.productOptions.inputType,
-			'addon': this.optionIsAddon
+			'addon': this.optionIsAddon,
+			'userSelectionName': userSelectionName
   	};
 
 		if(this.optionPage === 'performance'){
@@ -211,18 +215,12 @@ summaryFrag(){
 
 
 	checkRelatedMotorOption(detail){
-		console.log('checkRelatedMotorOptions');
-		console.log('sameLabel: ', detail.sameLabel);
-		console.log('this label: ', this.productOptions.name);
-		console.log('selectedSku:', detail.details.optionSKU);
-		console.log('this parent sku: ', this.productOptions.parentSku);
 		const sameLabel = detail.sameLabel;
 		const relatedOptionLabel = this.productOptions.name;
 		const selectedSku = detail.details.optionSKU;
 		const relatedOptionParentSku = this.productOptions.parentSku;
 		if(sameLabel === relatedOptionLabel){
 		  if(selectedSku === relatedOptionParentSku){
-				console.log('we have a match! check it off!');
 				const optionToCheck = this.template.querySelector(`[data-parentsku="${relatedOptionParentSku}"]`);
 				optionToCheck.checked = true;
 			}
