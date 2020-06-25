@@ -191,16 +191,19 @@ summaryFrag(){
  	}
 
  	handleMotorSelection(detail){
+ 	  console.log('checkbox handleMotorSelection');
 		let relatedOptions = this.template.querySelectorAll(`[data-parentpage="${detail.optionParentPage}"]`);
 
 		relatedOptions.forEach((option) => {
 		  if(option.checked){
+		    console.log('this option selected');
 		  	option.checked = false;
 		  	const optionLabel = option.dataset.label;
 		  	const newDetails = {
 		  	  'details': detail,
 		  	  'sameLabel': optionLabel
 		  	 };
+		  	console.log('newDetails: ', newDetails);
 		  	fireEvent(this.pageRef, 'foundSelection', newDetails);
     	}
 		});
@@ -208,12 +211,21 @@ summaryFrag(){
 
 
 	checkRelatedMotorOption(detail){
+		console.log('checkRelatedMotorOptions');
+		console.log('sameLabel: ', detail.sameLabel);
+		console.log('this label: ', this.productOptions.name);
+		console.log('selectedSku:', detail.details.optionSKU);
+		console.log('this parent sku: ', this.productOptions.parentSku);
+		const sameLabel = detail.sameLabel;
+		const relatedOptionLabel = this.productOptions.name;
 		const selectedSku = detail.details.optionSKU;
 		const relatedOptionParentSku = this.productOptions.parentSku;
-		if(selectedSku === relatedOptionParentSku){
-		  console.log('we have a match! check it off!');
-			const optionToCheck = this.template.querySelector(`[data-parentsku="${relatedOptionParentSku}"]`);
-			optionToCheck.checked = true;
+		if(sameLabel === relatedOptionLabel){
+		  if(selectedSku === relatedOptionParentSku){
+				console.log('we have a match! check it off!');
+				const optionToCheck = this.template.querySelector(`[data-parentsku="${relatedOptionParentSku}"]`);
+				optionToCheck.checked = true;
+			}
   	}
 	}
 
