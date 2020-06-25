@@ -49,8 +49,8 @@
           </div>
           <div class="config-page_right slds-p-around_xx-large">
             <h3 class="right_heading">Select Your Performance</h3>
-            <c-cust-comm-order-options options-title="Standard Performance" selections="one" selection-scope="global" options={boat.standardMotor} boat-retail-price={boat.retailPrice} is-init="true" trigger-ui-change="true" page='performance' grouping-name="motor_options"></c-cust-comm-order-options>
-            <c-cust-comm-order-options options-title="Enhanced Performance" selections="one" selection-scope="global" options={boat.motorUpgrades} boat-retail-price={boat.retailPrice} trigger-ui-change="true" page='performance' grouping-name="motor_options"></c-cust-comm-order-options>
+            <c-cust-comm-order-options options-title="Standard Performance" selections="one" selection-scope="global" options={boat.standardMotor} parent-product-sku={boat.id} boat-retail-price={boat.retailPrice} is-init="true" trigger-ui-change="true" page='performance' grouping-name="motor_options"></c-cust-comm-order-options>
+            <c-cust-comm-order-options options-title="Enhanced Performance" selections="one" selection-scope="global" options={boat.motorUpgrades} parent-product-sku={boat.id} boat-retail-price={boat.retailPrice} trigger-ui-change="true" page='performance' grouping-name="motor_options"></c-cust-comm-order-options>
           </div>
         </section>
 
@@ -64,9 +64,9 @@
           </div>
           <div class="config-page_right slds-p-around_xx-large">
             <h3 class="right_heading">Trailering Package</h3>
-            <c-cust-comm-order-options options-title="Select Your Trailer" selections="one" selection-scope="local" is-init="true" options={traileringOptions} show-option-price="true" boat-retail-price={boat.retailPrice} layout-type="alt-swatch" grouping-name="trailer_options" page='trailering'></c-cust-comm-order-options>
+            <c-cust-comm-order-options options-title="Select Your Trailer" selections="one" selection-scope="local" is-init="true" options={traileringOptions} parent-product-sku={boat.id} show-option-price="true" boat-retail-price={boat.retailPrice} layout-type="alt-swatch" grouping-name="trailer_options" page='trailering'></c-cust-comm-order-options>
             <!--<c-cust-comm-order-options selections="one" selection-scope="global" options={boat.trailerUpgrades} show-option-price="true" boat-retail-price={boat.retailPrice} page='trailering'></c-cust-comm-order-options>-->
-            <c-cust-comm-order-options options-title="More Trailering Options" selections="multiple" selection-scope="local" options={boat.optionalProducts.canvas} show-option-price="true" boat-retail-price={boat.retailPrice} page='trailering'></c-cust-comm-order-options>
+            <c-cust-comm-order-options options-title="More Trailering Options" selections="multiple" selection-scope="local" options={boat.optionalProducts.canvas} parent-product-sku={boat.id} show-option-price="true" boat-retail-price={boat.retailPrice} page='trailering'></c-cust-comm-order-options>
             <c-cust-comm-order-options selections="multiple" selection-scope="local" options={boat.standardMotor} sub-section="optionalProducts.trailerAccessories" addons="true" show-option-price="true" boat-retail-price={boat.retailPrice} page='trailering' parent-page='performance'></c-cust-comm-order-options>
             <c-cust-comm-order-options selections="multiple" selection-scope="local" options={boat.motorUpgrades} sub-section="optionalProducts.trailerAccessories" addons="true" show-option-price="true" boat-retail-price={boat.retailPrice} page='trailering' parent-page='performance'></c-cust-comm-order-options>
           </div>
@@ -82,7 +82,7 @@
           </div>
           <div class="config-page_right slds-p-around_xx-large">
             <h3 class="right_heading"><span class="vh">Choose Your</span> Electronics</h3>
-            <c-cust-comm-order-options options-title="Terrova 55 Tech Package" options={boat.optionalProducts.electronics} show-option-price="true" boat-retail-price={boat.retailPrice} page='electronics'></c-cust-comm-order-options>
+            <c-cust-comm-order-options options-title="Terrova 55 Tech Package" options={boat.optionalProducts.electronics} parent-product-sku={boat.id} show-option-price="true" boat-retail-price={boat.retailPrice} page='electronics'></c-cust-comm-order-options>
           </div>
         </section>
 

@@ -121,8 +121,10 @@ summaryFrag(){
 
 	handleChange(event, init){
 	  let isChecked = false;
+	  let ppSku = this.productOptions.ppSku;
 	  if(event){
 	  	isChecked = event.currentTarget.checked;
+	  	ppSku = (event.currentTarget.dataset.parentsku) ? event.currentTarget.dataset.parentsku : this.productOptions.ppSku;
    	} else if(init){
    	  isChecked = true;
     }
@@ -149,6 +151,7 @@ summaryFrag(){
    	};
    	let summaryDetails = {
 			'sku': this.productOptions.sku,
+			'ppSku': ppSku,
 			'name': this.productOptions.name,
 			'price': this.productOptions.retailPrice,
 			'addToSummary': isChecked,
@@ -224,17 +227,4 @@ summaryFrag(){
   	}
 	}
 
-//	checkRelatedMotorOption(detail, relatedOptions){
-//	  relatedOptions.forEach((option) => {
-//			console.log('hasPreviousSelection: ', this.hasPreviousSelection);
-//			if(this.hasPreviousSelection){
-//				console.log('previous selection found');
-//				console.log('optionParentSku: ', option.getAttribute('data-parentsku'));
-//				console.log('selectedSku: ', detail.optionSKU);
-//				if(option.getAttribute('data-parentsku') === detail.optionSKU){
-//					option.checked = true;
-//				}
-//			}
-//		});
-// 	}
 }
