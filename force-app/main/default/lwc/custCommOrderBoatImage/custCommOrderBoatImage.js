@@ -62,6 +62,10 @@ export default class CustCommOrderBoatImage extends LightningElement {
 				}
 			}
 
+			window.addEventListener('resize', (event) => {
+			  this.setCompositeHeight();
+			});
+
   	}
 
 		handleImageChange(detail){
@@ -100,12 +104,6 @@ export default class CustCommOrderBoatImage extends LightningElement {
        				}
       			}
 					}
-
-//					if(this.page === 'summary'){
-//						if(image.imageType === 'frontAngle'){
-//							this.boatImage = 'https://' + image.imageURL;
-//						}
-//					}
 				}
 			}else{
 			  if(this.page === 'trailering' || this.page === 'electronics' || this.page === 'summary'){
@@ -117,4 +115,11 @@ export default class CustCommOrderBoatImage extends LightningElement {
 				}
 			}
 		}
+
+		setCompositeHeight(){
+		  console.log('setCompositeHeight');
+			const compositeImage = this.template.querySelector('.compositeImage');
+			console.log(JSON.stringify(compositeImage));
+			this.template.querySelector('.compositeImageWrapper').style.minHeight = compositeImage.height + "px";
+  	}
 }

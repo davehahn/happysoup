@@ -20,11 +20,6 @@ export default class CustCommOrderSummary extends LightningElement {
 
 	updateSummary(details){
 
-	  console.log('in summary');
-	  console.log('sku: ', details.sku);
-	  console.log('type: ', details.type);
-	  console.log('input name:', details.userSelectionName);
-
 		let payload = {
 			 'name': details.name,
 			 'sku': details.sku,
@@ -69,14 +64,10 @@ export default class CustCommOrderSummary extends LightningElement {
  	}
 
 	ifContains(array, object){
-	  console.log('ifContains array: ', array);
-	  console.log('ifContains object', object);
 		let index = array.findIndex(({inputName}) => inputName === object.inputName);
 		if(index === -1){
-		  console.log('no existing value, add');
 			array.push(object);
  	 	} else{
- 	 	  console.log('found existing value, replace');
  	 	  array[index] = object;
     }
  	}

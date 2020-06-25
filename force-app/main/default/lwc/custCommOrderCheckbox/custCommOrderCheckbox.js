@@ -195,19 +195,16 @@ summaryFrag(){
  	}
 
  	handleMotorSelection(detail){
- 	  console.log('checkbox handleMotorSelection');
 		let relatedOptions = this.template.querySelectorAll(`[data-parentpage="${detail.optionParentPage}"]`);
 
 		relatedOptions.forEach((option) => {
 		  if(option.checked){
-		    console.log('this option selected');
 		  	option.checked = false;
 		  	const optionLabel = option.dataset.label;
 		  	const newDetails = {
 		  	  'details': detail,
 		  	  'sameLabel': optionLabel
 		  	 };
-		  	console.log('newDetails: ', newDetails);
 		  	fireEvent(this.pageRef, 'foundSelection', newDetails);
     	}
 		});

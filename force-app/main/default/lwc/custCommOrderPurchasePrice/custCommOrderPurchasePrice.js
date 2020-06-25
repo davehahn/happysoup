@@ -76,13 +76,11 @@ export default class CustCommOrderPurchasePrice extends LightningElement {
 		}
 
 		let itemMatrix = this.baseItem.concat(this.performanceItems, this.traileringItems, this.electronicsItems);
-		console.log('itemMatrix: ', itemMatrix);
 		let priceMatrix = [];
 		const reducer = (accumulator, currentValue) => accumulator + currentValue;
 		for(const item of itemMatrix){
 			priceMatrix.push(item.price);
   	}
-  	console.log('priceMatrix: ', priceMatrix);
 		const sumTotal = priceMatrix.reduce(reducer)
 		this.totalPrice = new Intl.NumberFormat('en-CA', {
 														style: 'currency',
@@ -92,14 +90,10 @@ export default class CustCommOrderPurchasePrice extends LightningElement {
  	}
 
  	ifContains(array, object){
-		console.log('ifContains array: ', array);
-		console.log('ifContains object', object);
 		let index = array.findIndex(({inputName}) => inputName === object.inputName);
 		if(index === -1){
-			console.log('no existing value, add');
 			array.push(object);
 		} else{
-			console.log('found existing value, replace');
 			array[index] = object;
 		}
 	}
