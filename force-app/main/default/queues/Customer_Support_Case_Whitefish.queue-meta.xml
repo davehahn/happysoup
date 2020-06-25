@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Queue xmlns="http://soap.sforce.com/2006/04/metadata">
-    <doesSendEmailToMembers>false</doesSendEmailToMembers>
+    <doesSendEmailToMembers>true</doesSendEmailToMembers>
+    <email>snadeau@legendboats.com</email>
     <name>Customer Support Case Whitefish</name>
     <queueMembers>
         <users>
@@ -11,8 +12,10 @@
             <user>jsanti@legendboats.com</user>
             <user>jdewar@legendboats.com</user>
             <user>kduhamel@legendboats.com</user>
+            <user>snadeau@legendboats.com</user>
         </users>
     </queueMembers>
+    <queueRoutingConfig>Legend_Support_LiveAgent</queueRoutingConfig>
     <queueSobject>
         <sobjectType>Case</sobjectType>
     </queueSobject>
