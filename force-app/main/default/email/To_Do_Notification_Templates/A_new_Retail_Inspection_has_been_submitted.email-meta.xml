@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <description>Notify Sales Manager that a Retail Inspection has been completed.</description>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>Legend_Letterhead</letterhead>
+    <name>A new Retail Inspection has been submitted</name>
+    <style>freeForm</style>
+    <subject>A new Retail Inspection has been submitted!</subject>
+    <textOnly>Hello,
+
+A new {!Legend_Inspection__c.RecordType} has been submitted by {!Legend_Inspection__c.CreatedBy}. You can review the inspection by clicking the URL below.</textOnly>
+    <type>html</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>
