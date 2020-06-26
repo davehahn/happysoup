@@ -11,6 +11,17 @@ public without sharing class gcProject {
     }
   }
 
+  public static Boolean disableLockedCheck{
+    get{
+      if(disableLockedCheck == null) return false;
+      else return disableLockedCheck;
+    }
+    set{
+      if(value == null) disableLockedCheck = false;
+      else disableLockedCheck = value;
+    }
+  }
+
   public static Boolean disableCommission{
     get{
       if(disableCommission == null) return false;
@@ -971,26 +982,11 @@ public without sharing class gcProject {
   {
     List<AcctSeedERP__Material__c> toUpdate = new List<AcctSeedERP__Material__c>();
     Map<Id, List<AcctSeedERP__Material__c>> matMap = new Map<Id, List<AcctSeedERP__Material__c>>();
-    for( AcctSeed__Project_Task__c task : [SELECT Id,
-    (SELECT Id,
-      AcctSeedERP__Project__c,
-      AcctSeedERP__Product__c,
-      AcctSeedERP__Product__r.Name,
-      AcctSeedERP__Product__r.Is_Residual_Insurance__c,
-      AcctSeedERP__Product__r.Family,
-      Insurance_Coverage__c,
-      Insurance_Rate__c
-    FROM AcctSeedERP__Materials__r)
-    FROM AcctSeed__Project_Task__c
-    WHERE IsInsurance__c = true
-    AND AcctSeed__Project__c IN :changeMap.keySet() ] )
+    for( AcctSeedERP__Material__c mat : Material_Selector.allInsuranceMaterialsByProjectIds( changeMap.keySet() ) )
     {
-      for( AcctSeedERP__Material__c mat : task.AcctSeedERP__Materials__r )
-      {
-        if( !matMap.containsKey( mat.AcctSeedERP__Project__c ) )
-          matMap.put( mat.AcctSeedERP__Project__c, new List<AcctSeedERP__Material__c>() );
-        matMap.get( mat.AcctSeedERP__Project__c ).add( mat );
-      }
+      if( !matMap.containsKey( mat.AcctSeedERP__Project__c ) )
+        matMap.put( mat.AcctSeedERP__Project__c, new List<AcctSeedERP__Material__c>() );
+      matMap.get( mat.AcctSeedERP__Project__c ).add( mat );
     }
     Set<Id> prodIds = new Set<Id>();
     for( String erpId : changeMap.keySet() )
@@ -1073,10 +1069,12 @@ public without sharing class gcProject {
         toUpdate.addAll( doInsuranceCalculation_perERP( changeMap.get(erpId), matMap.get(erpId) ) );
     }
     if( toUpdate.size() > 0 ) {
-      //Boolean matBool = gcMaterial.disableTrigger;
-      //gcMaterial.disableTrigger = true;
+      Boolean matBool = gcMaterial.disableTrigger;
+      gcMaterial.disableTrigger = true;
       update toUpdate;
-      //gcMaterial.disableTrigger = matBool;
+      CommissionLineItem2_Service.syncToMaterials( toUpdate );
+      gcMaterial.disableTrigger = matBool;
+
     }
   }
 

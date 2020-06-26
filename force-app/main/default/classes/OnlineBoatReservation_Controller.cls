@@ -5,20 +5,41 @@
 public without sharing class OnlineBoatReservation_Controller
 {
 
+  public virtual class DuplicateWrapper implements Comparable
+  {
+    public Decimal confidence;
+    public SObject record;
+
+    public DuplicateWrapper(Datacloud.MatchRecord matchRecord)
+    {
+      this.confidence = matchRecord.getMatchConfidence();
+      this.record = matchRecord.getRecord();
+    }
+
+    public Integer compareTo(Object compareTo)
+    {
+      DuplicateWrapper compareDup = (DuplicateWrapper) compareTo;
+      if (compareDup.confidence > this.confidence) return 1;
+      if (compareDup.confidence < this.confidence) return -1;
+      return 0;
+    }
+  }
+
   public virtual class AccountSaveResult
   {
     @AuraEnabled public Account record;
     @AuraEnabled public String opportunityId;
     @AuraEnabled public String status;
     @AuraEnabled public String[] messages;
-    @AuraEnabled public List<SObject> duplicateRecords;
+    @AuraEnabled public List<DuplicateWrapper> duplicateRecords;
+
 
     public AccountSaveResult(){}
 
-    public void addDuplicate( SObject dup )
+    public void addDuplicate( DuplicateWrapper dup )
     {
       if( this.duplicateRecords == null )
-        this.duplicateRecords = new List<SObject>();
+        this.duplicateRecords = new List<DuplicateWrapper>();
       this.duplicateRecords.add( dup );
     }
 
@@ -173,7 +194,7 @@ public without sharing class OnlineBoatReservation_Controller
         this.lead.Company = null;
         update this.lead;
       }
-
+      checkForDuplicateAccount();
       Database.LeadConvert lc = new Database.LeadConvert();
       lc.setLeadId( this.lead.Id );
       LeadStatus convertStatus = [ SELECT Id, ApiName FROM LeadStatus WHERE IsConverted = true LIMIT 1];
@@ -216,6 +237,31 @@ public without sharing class OnlineBoatReservation_Controller
         return result;
       }
 
+    }
+
+    private void checkForDuplicateAccount()
+    {
+      List<Datacloud.FindDuplicatesResult> results = Datacloud.FindDuplicates.findDuplicates(
+        new List<Account>{this.acct}
+      );
+      System.debug( results.size() );
+      if( results.size() > 0 )
+      {
+        System.debug('We have duplicates');
+        System.debug( results[0].getDuplicateResults() );
+        System.debug( results[0].getDuplicateResults()[0].getMatchResults() );
+        System.debug( results[0].getDuplicateResults()[0].getMatchResults()[0].getMatchRecords() );
+        List<DuplicateWrapper> dupWrappers = new List<DuplicateWrapper>();
+        for (Datacloud.MatchRecord matchRecord : results[0].getDuplicateResults()[0].getMatchResults()[0].getMatchRecords() )
+        {
+          dupWrappers.add( new DuplicateWrapper( matchRecord ) );
+        }
+        if( dupWrappers.size() > 0 )
+        {
+          dupWrappers.sort();
+          this.acct.Id = (Id) dupWrappers[0].record.get('Id');
+        }
+      }
     }
 
     private AccountSaveResult forceAccountSave()
@@ -265,26 +311,14 @@ public without sharing class OnlineBoatReservation_Controller
 
           for (Datacloud.MatchRecord matchRecord : matchRecords)
           {
-            result.addDuplicate( matchRecord.getRecord() );
+            result.addDuplicate( new DuplicateWrapper( matchRecord ) );
           }
         }
       }
       if( result.duplicateRecords != null )
       {
-        if( result.duplicateRecords.size() == 1 )
-          this.acct.Id = (Id)result.duplicateRecords[0].get('Id');
-
-        if( result.duplicateRecords.size() > 1 )
-        {
-          for( SObject dup : result.duplicateRecords)
-          {
-            if( dup.get('Name') == this.firstName + ' ' + this.lastName )
-            {
-              this.acct.Id = (Id)dup.get('Id');
-              break;
-            }
-          }
-        }
+        result.duplicateRecords.sort();
+        this.acct.Id = (Id)result.duplicateRecords[0].record.get('Id');
         return this.acct.Id == null ?
           forceAccountSave() :
           this.hasLead() ? convertLead() : doAccountSave();
@@ -302,6 +336,11 @@ public without sharing class OnlineBoatReservation_Controller
         CloseDate = Date.today().addMonths( 1 )
       );
       upsert opp;
+      Boolean o = OpportunityTriggerHandler.disableTrigger;
+      OpportunityTriggerHandler.disableTrigger = true;
+      opp.Pricebook2Id = LGND_Constants.retailPricebookId;
+      update opp;
+      OpportunityTriggerHandler.disableTrigger = o;
       return opp;
     }
   }
@@ -345,7 +384,6 @@ public without sharing class OnlineBoatReservation_Controller
       (Opportunity)JSON.deserialize( oppJSON, Opportunity.class );
     List<OpportunityLineItem> olis =
       (List<OpportunityLineItem>)JSON.deserialize( olisJSON, List<OpportunityLineItem>.class );
-    System.debug( olis );
     update opp;
     for( OpportunityLineItem oli : olis )
     {

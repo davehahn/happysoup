@@ -22,16 +22,16 @@ private class RunSquarePaymentFlow_T
       period.AcctSeed__Start_Date__c.addDays(5),
       Time.newInstance(0, 0, 0, 0)
     );
+    Account cust = Factory_Account.insertFullPersonAccount('TestFirst', 'TestLast');
+    Square_Transaction__c trans = new Square_Transaction__c(
+      Account__c = cust.Id,
+      sqStatus__c = 'INCOMPLETE',
+      Amount__c = 1000,
+      Email__c = 'test@test.com'
+    );
+    insert trans;
     System.runAs( u )
     {
-      Account cust = Factory_Account.insertFullPersonAccount('TestFirst', 'TestLast');
-      Square_Transaction__c trans = new Square_Transaction__c(
-        Account__c = cust.Id,
-        sqStatus__c = 'INCOMPLETE',
-        Amount__c = 1000,
-        Email__c = 'test@test.com'
-      );
-      insert trans;
       Test.startTest();
       RunSquarePaymentFlow.finalizeSquarePayment(
         trans.Id,
@@ -41,13 +41,16 @@ private class RunSquarePaymentFlow_T
         '0000001'
       );
       Test.stopTest();
-
-//      Square_Transaction__c trx = [SELECT Id, sqStatus__c FROM Square_Transaction__c WHERE Id = :trans.Id];
-//      AcctSeed__Cash_Receipt__c[] cashReceipts =
-//        [ SELECT Id FROM AcctSeed__Cash_Receipt__c WHERE AcctSeed__Payment_Reference__c = :'6aVfIp7gEaxzracrrrZPexample'];
-//
-//      System.assertEquals('COMPLETED', trx.sqStatus__c);
-//      System.assertEquals( 1, cashReceipts.size() );
     }
+
+    Square_Transaction__c trx = [SELECT Id, sqStatus__c FROM Square_Transaction__c WHERE Id = :trans.Id];
+    System.assertEquals('COMPLETED', trx.sqStatus__c);
+
+    AcctSeed__Cash_Receipt__c[] cashReceipts =
+    [ SELECT Id
+      FROM AcctSeed__Cash_Receipt__c
+      WHERE AcctSeed__Payment_Reference__c = :'6aVfIp7gEaxzracrrrZPexample'
+    ];
+    System.assertEquals( 1, cashReceipts.size() );
   }
 }

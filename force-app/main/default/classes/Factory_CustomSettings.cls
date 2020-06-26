@@ -34,6 +34,12 @@ public class Factory_CustomSettings {
     invSettings.Work_Order_Partner_Pricebook_Id__c = String.valueOf(
       pbMap.get('partner').Id ).substring(0, 15);
     insert invSettings;
+
+    // disable the gcCashReceipt trigger handler in GMBLASG package due to
+    // guest user sharing issues introduced in Summer 20
+    GMBLASG__Settings__c gmblSettings = new GMBLASG__Settings__c();
+    gmblSettings.GMBLASG__disable_gtCashReceipt__c = true;
+    insert gmblSettings;
   }
 
   public static void setupUtilityProducts()

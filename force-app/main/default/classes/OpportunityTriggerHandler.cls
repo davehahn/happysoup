@@ -162,7 +162,6 @@ public class OpportunityTriggerHandler {
                                                          Warehouse__c
                                                  FROM User
                                                  WHERE ID IN :ownerIds]);
-        System.debug( 'Opportunity Trigger Handler before update');
         for( Opportunity opp : listNew )
         {
           opp.Tax_Rate_Federal__c = fedTaxRate;
@@ -192,18 +191,19 @@ public class OpportunityTriggerHandler {
            // Retail Opps
           if(opp.RecordTypeId == retailId && disableAutoPricebookSet == false)
           {
-            System.debug( 'Setting the Pricebook = ' +  Legend_Settings__c.getOrgDefaults().Default_Retail_Pricebook__c );
-            System.debug( ' compare - ' + LGND_Constants.retailPricebookId );
             opp.Pricebook2Id = LGND_Constants.retailPricebookId;
+            System.debug('BEFORE INSERT PRICEBOOK');
+            System.debug( [SELECT Name FROM Pricebook2 WHERE Id = :opp.Pricebook2Id].Name);
           }
         }
 
       }
       if(boolIsUpdate)
       {
-        //setupInvoice(listNew, oldMap);
         for( Opportunity opp : listNew )
         {
+          System.debug('BEFORE UPDATE PRICEBOOK');
+          System.debug( [SELECT Name FROM Pricebook2 WHERE Id = :opp.Pricebook2Id].Name);
           if( opp.Probability == 0 )
             opp.Pickup_Location__c = null;
 
@@ -222,6 +222,8 @@ public class OpportunityTriggerHandler {
     {
       if(boolIsInsert)
       {
+        System.debug('AFTER INSERT PRICEBOOK');
+        System.debug( [SELECT Name FROM Pricebook2 WHERE Id = :listNew[0].Pricebook2Id].Name);
         //reCalculateLineItems(newMap,oldMap);
         Opportunity[] opps = [SELECT Id,
                                      Delivery_Date__c,
@@ -246,11 +248,12 @@ public class OpportunityTriggerHandler {
       }
       if(boolIsUpdate)
       {
-        System.debug('boolIsUpdate');
         //reCalculateLineItems(newMap,oldMap);
         Map<Id, Map<String, String>> preInsuranceChanged = new Map<Id, Map<String, String>>();
         for( Opportunity opp : listNew )
         {
+          System.debug('AFTER UPDATE PRICEBOOK');
+          System.debug( [SELECT Name FROM Pricebook2 WHERE Id = :opp.Pricebook2Id].Name);
           Opportunity oOpp = oldMap.get( opp.Id );
           if(
               ( opp.Pre_Insurance_Total__c != oOpp.Pre_Insurance_Total__c ) ||
@@ -304,7 +307,6 @@ public class OpportunityTriggerHandler {
     LGND_Utilities.ProvincialTax activeTaxZone;
     //Throw an exception if we do not have at least the tax zone for Ontario setup
     LGND_Utilities.ProvincialTax defaultTaxZone;
-    System.debug( provincialTaxInfo );
     try {
       defaultTaxZone = provincialTaxInfo.get('Ontario');
     }
@@ -429,7 +431,6 @@ public class OpportunityTriggerHandler {
 
   private static void recalcInsuranceLines( Map<Id, Map<String, String>> changeMap )
   {
-    System.debug('recalcInsuranceLines');
     List<OpportunityLineItem> toUpdate = new List<OpportunityLineItem>();
     Map<Id, List<OpportunityLineItem>> oliMap = new Map<Id, List<OpportunityLineItem>>();
     for( OpportunityLineItem oli : [SELECT Id,
@@ -486,7 +487,6 @@ public class OpportunityTriggerHandler {
           {
             Decimal it = Decimal.valueOf( changeMap.get( oppId ).get('insTerm') );
             Decimal ft = Decimal.valueOf( changeMap.get( oppId ).get('finTerm') );
-            System.debug( changeMap.get( oppId ) );
             if( ir.Tax_Zone__c == changeMap.get( oppId ).get('taxZone') &&
                 (
                   (
@@ -541,8 +541,6 @@ public class OpportunityTriggerHandler {
     List<Map<String, String>> lineData = new List<Map<String, String>>();
     for( OpportunityLineItem oli : olis )
     {
-      System.debug(oli);
-      System.debug(oli.Product2.Family);
       oliMap.put( oli.Id, oli );
       Map<String, String> d = new Map<String, String>();
       d.put('recordId', oli.Id);

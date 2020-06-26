@@ -76,6 +76,15 @@ public with sharing class SquareProcessor
       String jsonResponse = response.getBody();
       jsonResponse = jsonResponse.replace('"currency":', '"currency_type":');
       PaymentResponse r = (PaymentResponse)JSON.deserialize( jsonResponse, PaymentResponse.class );
+      try
+      {
+        if (LGND_Utilities.sObjectNameFromId(referenceId) == 'Opportunity' &&
+          r.errors == null)
+        {
+          SquareTransaction_Service.newFromOnlineBoatReservation(r.payment);
+        }
+      }
+      catch( Exception e ){} //invalid or non-existant referenceId, which is ok and valid
       return r;
     }
     catch( System.CalloutException e )
