@@ -51,6 +51,8 @@ export default class CustCommOrderOptions extends LightningElement {
 	  if(this.options){
 
 	    let options = this.options;
+	    console.log( 'get availableOptions');
+	    console.log( options );
 
 	    const keys = Object.keys(this.options);
 
@@ -69,7 +71,8 @@ export default class CustCommOrderOptions extends LightningElement {
 							init = (this.isInit && index === 0) ? true : false;
       			}
 						const parsedOption = this.parseOption(option, init);
-						combinedOptions.push(parsedOption[0]);
+						if( parsedOption !== undefined )
+						  combinedOptions.push(parsedOption[0]);
 					} else {
 						//console.log('no id');
 					}
@@ -87,8 +90,13 @@ export default class CustCommOrderOptions extends LightningElement {
 		if(this.subSection){
 			parentSku = option['id'];
 			option = this.recompose(option, this.subSection);
-			option = option[0];
+			if( option !== undefined )
+			  option = option[0];
 		}
+
+		console.log('option');
+		console.log(option);
+    if( option === undefined ) return;
 
 		let name = option['name'];
 		const sku = option['id'];
@@ -171,14 +179,18 @@ export default class CustCommOrderOptions extends LightningElement {
   }
 
   recompose(obj,string){
-			var parts = string.split('.');
-			var newObj = obj[parts[0]];
-			if(parts[1]){
-					parts.splice(0,1);
-					var newString = parts.join('.');
-					return this.recompose(newObj,newString);
-			}
-			return newObj;
+    console.log('RECOMPOSE');
+    console.log(obj);
+    console.log(string);
+    var parts = string.split('.');
+    var newObj = obj[parts[0]];
+    if(parts[1]){
+        parts.splice(0,1);
+        var newString = parts.join('.');
+        return this.recompose(newObj,newString);
+    }
+    console.log(newObj);
+    return newObj;
 	};
 
 	decodeHtml(html) {

@@ -1,0 +1,70 @@
+<!--
+ - Created by dave on 2020-06-25.
+ -->
+
+<!-- Boat Res Finance Details -->
+<template>
+
+  <lightning-layout multiple-rows="true">
+
+    <lightning-layout-item padding="horizontal-small"
+                           size="12"
+                           small-device-size="12"
+                           medium-device-size="6"
+                           large-device-size="6">
+      <div class="form-input">
+        <label>Downpayment</label>
+        <input label="Downpayment" data-field-name="downpayment" type="currency">
+      </div>
+    </lightning-layout-item>
+
+    <lightning-layout-item padding="horizontal-small"
+                           size="12"
+                           small-device-size="12"
+                           medium-device-size="6"
+                           large-device-size="6">
+      <div class="form-input form-input--select">
+        <label>Term</label>
+        <span></span>
+        <select data-field-name="term">
+          <template for:each={termOptions} for:item="term">
+            <option key={term.value} value={term.value}>{term.label}</option>
+          </template>
+        </select>
+      </div>
+    </lightning-layout-item>
+
+    <lightning-layout-item padding="horizontal-small"
+                           size="12"
+                           small-device-size="12"
+                           medium-device-size="6"
+                           large-device-size="6">
+      <div class="form-input">
+        <label>Interest Rate %</label>
+        <input label="interestRate"
+               data-id="interestrate"
+               type="text"
+               value={interestRate}>
+      </div>
+    </lightning-layout-item>
+
+    <lightning-layout-item padding="horizontal-small"
+                           size="12"
+                           small-device-size="12"
+                           medium-device-size="6"
+                           large-device-size="6">
+      <div class="form-input">
+        <label>Financed Amount</label>
+        <input label="Financed Amount"
+               data-field-name="amount"
+               type="text"
+               value={amount}>
+      </div>
+    </lightning-layout-item>
+
+  </lightning-layout>
+
+<!--  <h1>{financeType}</h1>-->
+
+
+</template>
