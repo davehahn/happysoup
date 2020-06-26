@@ -13,6 +13,9 @@ private class SquareProcessor_T
   {
     new Factory_TestData();
     Factory_CustomSettings.setupInventorySettings();
+    GMBLASG__Settings__c gmblSettings = new GMBLASG__Settings__c();
+    gmblSettings.GMBLASG__disable_gtCashReceipt__c = true;
+    insert gmblSettings;
   }
 
   public class SquareSuccessResponse implements HttpCalloutMock
