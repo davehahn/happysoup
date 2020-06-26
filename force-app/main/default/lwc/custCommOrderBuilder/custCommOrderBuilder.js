@@ -268,6 +268,7 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
 	updateListItems(details){
 	  let payload = {
 			 'Product2Id': details.sku,
+			 'ParentProductId__c': details.ppSku,
 			 'UnitPrice': details.price,
 			 'Quantity': 1
 		};

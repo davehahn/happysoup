@@ -24,7 +24,8 @@ export default class CustCommOrderPurchasePrice extends LightningElement {
 	connectedCallback(){
 		let defaultPayload = {
 			 'sku': this.boatSku,
-			 'price': this.boatRetailPrice
+			 'price': this.boatRetailPrice,
+			 'inputName': ''
 		};
 		this.baseItem.push(defaultPayload);
 
@@ -35,8 +36,9 @@ export default class CustCommOrderPurchasePrice extends LightningElement {
 	handlePurchasePrice(details){
 
 		let payload = {
+			 'price': details.price,
 			 'sku': details.sku,
-			 'price': details.price
+			 'inputName': details.userSelectionName
 		};
 		if(details.addToPrice){
 			//add item to list
@@ -45,14 +47,11 @@ export default class CustCommOrderPurchasePrice extends LightningElement {
 				if(details.addon){
 				} else {
 					if(details.section === 'performance'){
-						this.performanceItems.pop();
-						this.performanceItems.push(payload);
+						this.ifContains(this.performanceItems, payload);
 					} else if(details.section === 'trailering'){
-						this.traileringItems.pop();
-						this.traileringItems.push(payload);
+						this.ifContains(this.traileringItems, payload);
 					} else if(details.section === 'electronics'){
-						this.electronicsItems.pop();
-						this.electronicsItems.push(payload);
+						this.ifContains(this.electronicsItems, payload);
 					}
 				}
 			}	else {
@@ -77,7 +76,6 @@ export default class CustCommOrderPurchasePrice extends LightningElement {
 		}
 
 		let itemMatrix = this.baseItem.concat(this.performanceItems, this.traileringItems, this.electronicsItems);
-
 		let priceMatrix = [];
 		const reducer = (accumulator, currentValue) => accumulator + currentValue;
 		for(const item of itemMatrix){
@@ -90,4 +88,13 @@ export default class CustCommOrderPurchasePrice extends LightningElement {
 														minimumFractionDigits: 0
 														}).format(sumTotal);
  	}
+
+ 	ifContains(array, object){
+		let index = array.findIndex(({inputName}) => inputName === object.inputName);
+		if(index === -1){
+			array.push(object);
+		} else{
+			array[index] = object;
+		}
+	}
 }

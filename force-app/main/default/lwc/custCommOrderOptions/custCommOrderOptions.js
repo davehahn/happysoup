@@ -13,6 +13,7 @@ export default class CustCommOrderOptions extends LightningElement {
   @api selections;
   @api selectionScope;
   @api options;
+  @api parentProductSku;
   @api subSection;
   @api boatRetailPrice;
   @api isInit;
@@ -145,6 +146,7 @@ export default class CustCommOrderOptions extends LightningElement {
 
 		optionDetails.push({
 			'sku': sku,
+			'ppSku': this.parentProductSku,
 			'name': name,
 			'retailPrice': retailPrice,
 			'displayPrice': displayPrice,

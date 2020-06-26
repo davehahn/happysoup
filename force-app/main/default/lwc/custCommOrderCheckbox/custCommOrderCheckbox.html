@@ -18,10 +18,13 @@
                    type={productOptions.inputType}
                    name={optionInputName}
                    id="option"
+                   data-label={productOptions.name}
                    data-sku={productOptions.sku}
+                   data-parentsku={productOptions.parentSku}
                    data-km={productOptions.km}
                    data-rpm={productOptions.rpm}
                    data-page={optionPage}
+                   data-parentpage={optionParentPage}
                    data-retail-price={productOptions.retailPrice}
                    onchange={handleChange}>
             <label class="options_label"
@@ -46,9 +49,11 @@
                    name={optionInputName}
                    id="optionInit"
                    data-sku={productOptions.sku}
+                   data-parentsku={productOptions.parentSku}
                    data-km={productOptions.km}
                    data-rpm={productOptions.rpm}
                    data-page={optionPage}
+                   data-parentpage={optionParentPage}
                    data-retail-price={productOptions.retailPrice}
                    onchange={handleChange}
                     checked>

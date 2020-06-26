@@ -1,13 +1,20 @@
 /**
  * Created by Tim on 2020-04-23.
  */
-
+.compositeImageWrapper{
+  display: block;
+}
+.compositeImageWrapper[data-page="summary"]{
+  position: relative;
+  min-height: 175px;
+}
 .compositeImage{
   width: 100%;
   position: absolute;
   top: 50%; left: 50%; transform: translate(-50%,-50%);
 	margin: 0 auto;
 	display: block;
+	transition: all 0.2s linear;
 }
 .boatImage{
 	z-index: 1;
@@ -16,7 +23,7 @@
   z-index: 2;
 }
 .transomImage{
-  z-index: 2;
+  z-index: 4;
 }
 .electronicsImage{
   z-index: 2;
@@ -29,8 +36,11 @@
   /*padding-left: 7%;*/
 }
 
-@media screen and (max-width: 1024px){
-    .compositeImage[data-size="large"]{
-        margin-top: 4em;
-    }
+@media screen and (max-width: 540px){
+  .compositeImageWrapper:not([data-page="summary"]) .compositeImage{
+    top: 40%;
+  }
+  .compositeImageWrapper[data-page="summary"] .compositeImage{
+		top: 60%;
+	}
 }
