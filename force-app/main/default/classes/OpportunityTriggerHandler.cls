@@ -192,8 +192,6 @@ public class OpportunityTriggerHandler {
           if(opp.RecordTypeId == retailId && disableAutoPricebookSet == false)
           {
             opp.Pricebook2Id = LGND_Constants.retailPricebookId;
-            System.debug('BEFORE INSERT PRICEBOOK');
-            System.debug( [SELECT Name FROM Pricebook2 WHERE Id = :opp.Pricebook2Id].Name);
           }
         }
 
@@ -202,8 +200,6 @@ public class OpportunityTriggerHandler {
       {
         for( Opportunity opp : listNew )
         {
-          System.debug('BEFORE UPDATE PRICEBOOK');
-          System.debug( [SELECT Name FROM Pricebook2 WHERE Id = :opp.Pricebook2Id].Name);
           if( opp.Probability == 0 )
             opp.Pickup_Location__c = null;
 
@@ -222,8 +218,6 @@ public class OpportunityTriggerHandler {
     {
       if(boolIsInsert)
       {
-        System.debug('AFTER INSERT PRICEBOOK');
-        System.debug( [SELECT Name FROM Pricebook2 WHERE Id = :listNew[0].Pricebook2Id].Name);
         //reCalculateLineItems(newMap,oldMap);
         Opportunity[] opps = [SELECT Id,
                                      Delivery_Date__c,
@@ -252,8 +246,6 @@ public class OpportunityTriggerHandler {
         Map<Id, Map<String, String>> preInsuranceChanged = new Map<Id, Map<String, String>>();
         for( Opportunity opp : listNew )
         {
-          System.debug('AFTER UPDATE PRICEBOOK');
-          System.debug( [SELECT Name FROM Pricebook2 WHERE Id = :opp.Pricebook2Id].Name);
           Opportunity oOpp = oldMap.get( opp.Id );
           if(
               ( opp.Pre_Insurance_Total__c != oOpp.Pre_Insurance_Total__c ) ||
