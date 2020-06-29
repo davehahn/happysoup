@@ -109,9 +109,6 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
     .then(()=>{});
 
     window.addEventListener('resize', (event) => {
-			console.log('resizing window bitches');
-			console.log( event );
-			console.log( event.currentTarget.outerWidth );
 			this.isMobile = (event.currentTarget.outerWidth < 1024) ? true : false;
 		});
 		this.isMobile = (window.outerWidth < 1024) ? true : false;
