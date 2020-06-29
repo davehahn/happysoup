@@ -65,7 +65,7 @@ public without sharing class ProductMRP_ar {
     }
 
     @AuraEnabled
-    public static String retrieveProductDetail(String idRecordType, Decimal pageNumber, String orderBy, String orderDirection, String idWarehouse, String idProduct, Boolean showAll)
+    public static String retrieveProductDetail(String idRecordType, Decimal pageNumber, String orderBy, String orderDirection, String idWarehouse, String idProduct, Boolean showAll, String idSupAccount)
     {
         List<resultData> listTxnData = new List<resultData>();
         map<Id,resultData> mapTD = new map<Id,resultData>();
@@ -91,6 +91,9 @@ public without sharing class ProductMRP_ar {
             soqlCount += ' AND Product__c =:idProduct ';
         else
             soqlCount += ' AND Product__r.RecordTypeId IN:setRecIds ';
+
+        if(idSupAccount != null)
+            soqlCount += ' AND Product__r.AcctSeedERP__Default_Vendor__c  =:idSupAccount ';
 
         if(idWarehouse != '' && idProduct == null)
             soqlCount += ' AND Warehouse__c =:idWarehouse ';
@@ -119,6 +122,9 @@ public without sharing class ProductMRP_ar {
         else
             soql += ' AND Product__r.RecordTypeId IN:setRecIds ';
 
+        if(idSupAccount != null)
+            soql += ' AND Product__r.AcctSeedERP__Default_Vendor__c  =:idSupAccount ';
+
         if(idWarehouse != '' && idProduct == null)
             soql += ' AND Warehouse__c =:idWarehouse ';
         //soql += ' AND (MRP_Quantity__c <> 0 AND Last_Year_Season_Consumption__c <> 0) ';
@@ -131,9 +137,9 @@ public without sharing class ProductMRP_ar {
         {
             resultData res = new resultData();
             res.productId = pr.Product__c;
-            res.productName = pr.Product__r.Name;            
+            res.productName = pr.Product__r.Name;
             res.warehouseId = pr.Warehouse__c;
-            res.warehouseName = pr.Warehouse__r.Name;            
+            res.warehouseName = pr.Warehouse__r.Name;
             res.lastYearSeasonConsumption = pr.Last_Year_Season_Consumption__c == null ? 0 : pr.Last_Year_Season_Consumption__c;
             res.lastYearLeadTimeConsumption = pr.Last_Year_Lead_Time_Consumption__c == null ? 0 : pr.Last_Year_Lead_Time_Consumption__c;
             res.mrpQuantity = pr.MRP_Quantity_Available__c == null ? 0 : pr.MRP_Quantity_Available__c;
@@ -143,7 +149,7 @@ public without sharing class ProductMRP_ar {
                 res.percentageQuantity = 800;
             if(res.averageLeadTime > 0){
                 for(Integer i=0;i<res.averageLeadTime;i++)
-					res.listLeadTime.add(i);
+                    res.listLeadTime.add(i);
             }
             //Double percentageLength = res.lastYearSeasonConsumption != 0 ? (res.mrpQuantity/res.lastYearSeasonConsumption)*100 : 0;
             Double percentageLength = pr.Availability_Percentage__c == null ? 0 : pr.Availability_Percentage__c;
@@ -151,7 +157,7 @@ public without sharing class ProductMRP_ar {
             res.colorCode = rgb(percentageLength);
             listTxnData.add(res);
         }
-        
+
         return JSON.serialize( pd );
     }
 
@@ -170,7 +176,7 @@ public without sharing class ProductMRP_ar {
     }
 
     public static void coverage(){
-        integer i;  
+        integer i;
         i=1;
         i=1;
         i=1;
