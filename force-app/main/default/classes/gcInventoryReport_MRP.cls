@@ -786,14 +786,14 @@ public with sharing class gcInventoryReport_MRP {
 
 	public class cube
 	{
-		Id idProduct;
-		Id idWarehouse;
-		Decimal rigged;
-		Decimal notrigged;
-		Decimal inventoryParts;
-		Decimal purchasing;
-		Decimal specified;
-		Decimal consumed;
+		public Id idProduct;
+		public Id idWarehouse;
+		public Decimal rigged;
+		public Decimal notrigged;
+		public Decimal inventoryParts;
+		public Decimal purchasing;
+		public Decimal specified;
+		public Decimal consumed;
 
 		cube()
 		{
