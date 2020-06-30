@@ -39,7 +39,8 @@
             orderDirection: component.get("v.orderDirection"),
             idWarehouse: component.get("v.idWarehouse"),
             idProduct: idProduct,
-            showAll:checkCmp.get("v.value")
+            showAll:checkCmp.get("v.value"),
+            idSupAccount:component.get("v.idSupplier")
         }, function(response) {
             this.toggleSpinner(component, false);
             var results = response.getReturnValue();
@@ -49,7 +50,7 @@
             component.set("v.total", results.totalRecords);
             component.set("v.pages", Math.ceil(results.totalRecords / 50));
             component.set("v.resultData", results.listTxnData);
-        });        
+        });
     },
     clearProductSearch : function(component){
         var childCmp = component.find("searchProductComp");
@@ -58,6 +59,7 @@
     clearFilters : function(component){
         component.set("v.donotLoad",true);
         component.set("v.idRecordType","");
+        component.set("v.idSupplier","");
         component.set("v.idWarehouse","");
         component.set("v.donotLoad",false);
     }
