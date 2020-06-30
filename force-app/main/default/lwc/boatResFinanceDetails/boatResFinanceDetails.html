@@ -16,7 +16,7 @@
     </ol>
   </nav>
 
-  <div class="finance-content" data-current={financeType}>
+  <div class="finance-content" data-current={paymentType}>
 
     <!-- CASH SECTION -->
     <section class="finance-option-page" data-section="cash">
@@ -45,7 +45,7 @@
             <input label="Downpayment"
                    data-field-name="downpayment"
                    type="number"
-                   value={downPayment}>
+                   value={deposit}>
           </div>
         </lightning-layout-item>
 
@@ -57,7 +57,7 @@
           <div class="form-input form-input_select">
             <label>Term</label>
             <span></span>
-            <select data-field-name="term">
+            <select data-field-name="term" onchange={handleTermChange} value={amort}>
               <template for:each={termOptions} for:item="term">
                 <option key={term.value} value={term.value}>{term.label}</option>
               </template>
@@ -102,15 +102,27 @@
           <ul class="payment-lines">
             <li class="payment-line">
               <span class="payment-line_label">Weekly</span>
-              <span class="payment-line_value highlight">${payments.weekly}</span>
+              <span class="payment-line_value highlight">
+                <lightning-formatted-number value={payments.weekly}
+                                            format-style="currency"
+                                            currency-code="CAD"></lightning-formatted-number>
+              </span>
             </li>
             <li class="payment-line">
               <span class="payment-line_label">Bi-Weekly</span>
-              <span class="payment-line_value">${payments.biweekly}</span>
+              <span class="payment-line_value">
+                <lightning-formatted-number value={payments.biweekly}
+                                            format-style="currency"
+                                            currency-code="CAD"></lightning-formatted-number>
+              </span>
             </li>
             <li class="payment-line">
               <span class="payment-line_label">Monthly</span>
-              <span class="payment-line_value">${payments.monthly}</span>
+              <span class="payment-line_value">
+                <lightning-formatted-number value={payments.monthly}
+                                            format-style="currency"
+                                            currency-code="CAD"></lightning-formatted-number>
+              </span>
             </li>
           </ul>
         </lightning-layout-item>

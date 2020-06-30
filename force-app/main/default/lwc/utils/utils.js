@@ -47,6 +47,3 @@ export {
   konamiAdd,
   konamiRemove
 }
-
-a3U5C000000Yhn0UAC
-a3U5C000000Yhn0UAC

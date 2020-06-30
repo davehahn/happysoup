@@ -177,7 +177,7 @@
             <div class="payment-details">
               <h3 class="form-header">Payment</h3>
               <div class="payment-disclaimer">
-                Due today to complete your order: $3,200.
+                Due today to complete your order: $1000.
               </div>
             </div>
 
@@ -239,7 +239,9 @@
           </div>
 
           <div class="config-footer_item finance-prices">
-            <c-cust-comm-order-purchase-price boat-sku={boat.id} boat-retail-price={boat.retailPrice}></c-cust-comm-order-purchase-price>
+            <c-cust-comm-order-purchase-price payment-type={paymentType}
+                                              boat-sku={boat.id}
+                                              boat-retail-price={boat.retailPrice}></c-cust-comm-order-purchase-price>
             <div class="config-footer_savings">
               <div class="amount">{premiumPackValue}</div>
               <div class="label">Preferred equipment package savings</div>
@@ -305,7 +307,11 @@
                 <p class="premiumPackage_value">Value: <span>{premiumPackValue}</span></p>
               </section>
               <section class="modal-page" data-modal-page="payment-calculator">
-                <c-boat-res-finance-details finance-type={paymentType}></c-boat-res-finance-details>
+                <template if:true={purchasePrice}>
+                  <c-boat-res-finance-details payment-type={paymentType}
+                                              amount={purchasePrice}
+                                              deposit={paymentAmount}></c-boat-res-finance-details>
+                </template>
               </section>
               <section class="modal-page" data-modal-page="delivery">
                 <h3>Delivery Timing</h3>

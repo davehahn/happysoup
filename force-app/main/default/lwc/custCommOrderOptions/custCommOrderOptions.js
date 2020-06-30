@@ -40,7 +40,6 @@ export default class CustCommOrderOptions extends LightningElement {
 	}
 
 	handleTraileringSelection(detail){
-	  console.log('onUserSelection?', detail.onUserSelection);
 	  if( detail.onUserSelection && (detail.userSelectionName === this.groupingName) ){
 	    this.selectionMade = true;
    	}
@@ -51,8 +50,6 @@ export default class CustCommOrderOptions extends LightningElement {
 	  if(this.options){
 
 	    let options = this.options;
-	    console.log( 'get availableOptions');
-	    console.log( options );
 
 	    const keys = Object.keys(this.options);
 
@@ -94,8 +91,7 @@ export default class CustCommOrderOptions extends LightningElement {
 			  option = option[0];
 		}
 
-		console.log('option');
-		console.log(option);
+
     if( option === undefined ) return;
 
 		let name = option['name'];
@@ -169,19 +165,14 @@ export default class CustCommOrderOptions extends LightningElement {
 			'swatch': swatch,
 			'detailedSummary': detailedSummary
 		});
-//				console.log('details: ', optionDetails);
 		return optionDetails;
  	}
 
  	get hasOptionsTitle(){
-// 	  console.log('optionsTitle: ', this.optionsTitle);
  	  return (typeof this.optionsTitle !== 'undefined') ? true : false;
   }
 
   recompose(obj,string){
-    console.log('RECOMPOSE');
-    console.log(obj);
-    console.log(string);
     var parts = string.split('.');
     var newObj = obj[parts[0]];
     if(parts[1]){
@@ -189,7 +180,6 @@ export default class CustCommOrderOptions extends LightningElement {
         var newString = parts.join('.');
         return this.recompose(newObj,newString);
     }
-    console.log(newObj);
     return newObj;
 	};
 
