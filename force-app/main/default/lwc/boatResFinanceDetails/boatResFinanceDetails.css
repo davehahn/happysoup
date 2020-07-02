@@ -10,8 +10,6 @@
  	 margin-top: -13px;
  }
 
-
-
  button{
    background: none;
    border: 0 none;
@@ -20,6 +18,7 @@
 
  button:focus{
    outline: none;
+   background-color: transparent !important;
  }
 
  .finance-nav {
@@ -110,6 +109,7 @@
 }
 
 .form-input input[type="text"],
+.form-input .fake-disabled-input,
 .form-input_select span,
 .form-input_percent span,
 .form-input_currency span
@@ -127,6 +127,7 @@
 
 
 .form-input_select select,
+.form-input .fake-disabled-input,
 .form-input_currency input,
 .form-input_percent input {
   position: absolute;
@@ -191,9 +192,16 @@
 }
 
 .form-input.disabled span,
+.form-input .fake-disabled-input,
 .form-input.disabled input {
   border-color: #DDD;
   background:transparent;
+}
+
+.form-input .fake-disabled-input {
+  position:relative;
+  border: 1px solid #DDD;
+  line-height: 1rem;
 }
 
 /* Chrome, Safari, Edge, Opera */
