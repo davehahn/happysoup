@@ -26,14 +26,13 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
   orderValid=true;
   isMobile = false;
   paymentAmount = 1000;
-  @track motorDetails;
+
   pages = [
     'performance',
     'trailering',
     'electronics',
     'payment'
   ];
-  @track currentPage = 'performance';
 
  	 modalPages = [
 		{
@@ -52,17 +51,22 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
 			class: 'modal-nav-item'
 		},
 	];
-	@track currentModalPage = 'premium-package';
 	premiumPackage;
 
-  @track paymentType='cash';
+	@track motorDetails;
+	@track currentPage = 'performance';
+  @track currentModalPage = 'premium-package';
+  @track paymentType='loan';
   @track iframeHeight;
   @track boat;
+  @track purchasePrice;
+  @track performanceItems = [];
+  @track traileringItems = [];
+  @track electronicsItems = [];
 
   @wire(CurrentPageReference)
   setCurrentPageReference(currentPageReference) {
     this.recordId = currentPageReference.state.c__recordId;
-    console.log( this.recordId );
   }
 
   @wire(CurrentPageReference) pageRef;
@@ -72,8 +76,6 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
   {
     if( data )
     {
-      console.log('data returned');
-      console.log( data  );
       this.boat = data;
     }
     else if( error )
@@ -84,7 +86,6 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
 
   get boatDetailsLoaded()
   {
-    console.log(`Boat Details Loaded ? - ${this.boat != null}`);
     return this.boat != null;
   }
 
@@ -99,6 +100,8 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
 
   connectedCallback(){
     registerListener('updateListItems', this.updateListItems, this);
+    registerListener('purchasePriceChanged', this.handlePurchasePriceChange, this);
+    registerListener('paymentTypeChanged', this.handlePaymentTypeChange, this);
   }
 
   renderedCallback()
@@ -109,9 +112,6 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
     .then(()=>{});
 
     window.addEventListener('resize', (event) => {
-			console.log('resizing window bitches');
-			console.log( event );
-			console.log( event.currentTarget.outerWidth );
 			this.isMobile = (event.currentTarget.outerWidth < 1024) ? true : false;
 		});
 		this.isMobile = (window.outerWidth < 1024) ? true : false;
@@ -155,6 +155,18 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
   handleNav( event )
   {
     this.doPageChange( event.currentTarget.dataset.navName );
+  }
+
+  handlePurchasePriceChange( amount )
+  {
+    console.log(`Purchase Price Changed EVENT in OrderBuilder Captured ${amount}`);
+    this.purchasePrice = amount;
+    this.template.querySelector('c-boat-res-finance-details').calculate();
+  }
+
+  handlePaymentTypeChange( paymentType )
+  {
+    this.paymentType = paymentType;
   }
 
   openFinanceSelect( event )
@@ -251,6 +263,7 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
     							  							}).format(value);
 		}
   }
+
 	get premiumPackItems(){
 	  if(this.boat.premiumPackage.contents){
 			const contents = this.boat.premiumPackage.contents;
@@ -266,9 +279,8 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
 		}
 	}
 
-	@track performanceItems = [];
-	@track traileringItems = [];
-	@track electronicsItems = [];
+
+
 	updateListItems(details){
 	  let payload = {
 			 'Product2Id': details.sku,
@@ -319,32 +331,13 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
   {
     const spinner = this.template.querySelector('c-legend-spinner');
     spinner.toggle();
-
-//    const lli = this.template.querySelectorAll('lightning-layout-item');
-//    let userData = {};
-//    lli.forEach((item) => {
-//      let input = item.querySelector('input');
-//      if(!input){
-//        input = item.querySelector('select');
-//      }
-//      const dataId = input.getAttribute('data-id');
-//      const value = input.value;
-//      userData[dataId] = value;
-//    });
-//
-//    const userJSON = JSON.stringify(userData);
-//
-//    createAccount({customerJSON: userJSON})
-
 	  this.saveCustomer()
 		.then( ( accountSaveResult ) => {
-		  console.log('createAccount: ', accountSaveResult);
 		  this.opportunityId = accountSaveResult.opportunityId;
       this.accountId = accountSaveResult.record.Id;
 		  return this.createSquarePayment();
   	})
   	.then( ( paymentResult ) => {
-  	   console.log( paymentResult );
   	   return this.saveSaleItems();
     })
   	.then( ( saveSaleItemsResult ) => {
@@ -357,34 +350,6 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
       spinner.toggle();
       console.log('Everything is done, but what should happen now');
     });
-//   	.finally( (result) => {
-//   	  console.log("finally: ", result);
-   	  /*
-   	  this.template.querySelector('c-square-payment-form').doPostToSquare( 2000 )
-			.then( (result) => {
-				console.log( 'submitOrder Result ');
-				console.log( JSON.parse( JSON.stringify( result ) ) );
-			})
-			.catch( ( error ) => {
-				console.log( error );
-				error.forEach( (err) => {
-					const event = new ShowToastEvent({
-						title: "Please fix the following error",
-						message:  err.message,
-						variant: 'error',
-						mode: 'sticky'
-					});
-					this.dispatchEvent( event );
-				});
-			})
-			.finally( () => {
-				spinner.toggle();
-				//alert( 'Figure out what to do now!!!!!');
-			});
-			*/
-//    })
-
-
   }
 
   saveCustomer()
@@ -408,7 +373,6 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
 
   createSquarePayment()
   {
-    //return new Promise( (resolve, reject) => resolve( 'payment promise result') );
     return this.template.querySelector('c-square-payment-form')
       .doPostToSquare( this.paymentAmount, this.opportunityId );
   }

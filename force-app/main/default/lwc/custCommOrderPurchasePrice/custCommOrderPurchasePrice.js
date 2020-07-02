@@ -9,7 +9,7 @@ import { fireEvent, registerListener, unregisterAllListeners} from 'c/pubsub';
 export default class CustCommOrderPurchasePrice extends LightningElement {
 	@api boatRetailPrice;
 	@api boatSku;
-	@track totalPrice;
+	@api paymentType;
 
 	baseItem = [];
 	performanceItems = [];
@@ -18,6 +18,7 @@ export default class CustCommOrderPurchasePrice extends LightningElement {
  	@track priceMatrixString;
 
  	@track totalPrice;
+ 	@track payments;
 
 	@wire(CurrentPageReference) pageRef;
 
@@ -30,11 +31,24 @@ export default class CustCommOrderPurchasePrice extends LightningElement {
 		this.baseItem.push(defaultPayload);
 
 		registerListener('updatePurchasePrice', this.handlePurchasePrice, this);
+		registerListener('paymentAmountChanged', this.handlePaymentAmountChange, this);
+
 		fireEvent(this.pageRef, 'purchasePriceConnected', 'ready'	);
 	}
 
-	handlePurchasePrice(details){
+	get displayLoanData()
+	{
+	  return this.paymentType == 'loan' && this.payments;
+  }
 
+  get displayCashData()
+  {
+    return this.paymentType == 'cash';
+  }
+
+	handlePurchasePrice(details)
+	{
+	  console.log('handlePurchasePrice');
 		let payload = {
 			 'price': details.price,
 			 'sku': details.sku,
@@ -81,13 +95,18 @@ export default class CustCommOrderPurchasePrice extends LightningElement {
 		for(const item of itemMatrix){
 			priceMatrix.push(item.price);
   	}
-		const sumTotal = priceMatrix.reduce(reducer)
-		this.totalPrice = new Intl.NumberFormat('en-CA', {
-														style: 'currency',
-														currency: 'CAD',
-														minimumFractionDigits: 0
-														}).format(sumTotal);
+		this.totalPrice = priceMatrix.reduce(reducer)
+    console.log(`totalPrice = ${this.totalPrice}`);
+		fireEvent( this.pageRef, 'purchasePriceChanged', this.totalPrice );
  	}
+
+ 	handlePaymentAmountChange( payments )
+ 	{
+ 	  console.log('handling payment change');
+ 	  this.payments = payments;
+  }
+
+
 
  	ifContains(array, object){
 		let index = array.findIndex(({inputName}) => inputName === object.inputName);
@@ -97,4 +116,5 @@ export default class CustCommOrderPurchasePrice extends LightningElement {
 			array[index] = object;
 		}
 	}
+
 }

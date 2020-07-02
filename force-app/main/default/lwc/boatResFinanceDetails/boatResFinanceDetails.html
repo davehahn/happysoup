@@ -1,0 +1,138 @@
+<!--
+ - Created by dave on 2020-06-25.
+ -->
+
+<!-- Boat Res Finance Details -->
+<template>
+
+  <nav class="finance-nav slds-m-bottom_large">
+<!--    <h2 class="vh">Main Navigation</h2>-->
+    <ol class="finance-nav-list">
+      <template for:each={tabData} for:item="page">
+        <li key={page.label}>
+          <button class={page.class} onclick={handleNav} data-click-focus="unset" data-nav-name={page.label}><h3 class="finance-nav-title">{page.label}</h3></button>
+        </li>
+      </template>
+    </ol>
+  </nav>
+
+  <div class="finance-content" data-current={paymentType}>
+
+    <!-- CASH SECTION -->
+    <section class="finance-option-page" data-section="cash">
+      <h1>Doing CASH</h1>
+    </section>
+
+    <!-- LOAN SECTION -->
+    <section class="finance-option-page" data-section="loan">
+      <lightning-layout multiple-rows="true">
+
+        <lightning-layout-item size="12"
+                               padding="around-small">
+          <p>
+            Finance your boat purchase by paying a down payment and monthly installments until you've paid off the full price.
+          </p>
+        </lightning-layout-item>
+
+        <lightning-layout-item padding="horizontal-small"
+                               size="12"
+                               small-device-size="12"
+                               medium-device-size="6"
+                               large-device-size="6">
+          <div class="form-input form-input_currency">
+            <label>Downpayment</label>
+            <span></span>
+            <input label="Downpayment"
+                   data-field-name="downpayment"
+                   type="number"
+                   value={deposit}>
+          </div>
+        </lightning-layout-item>
+
+        <lightning-layout-item padding="horizontal-small"
+                               size="12"
+                               small-device-size="12"
+                               medium-device-size="6"
+                               large-device-size="6">
+          <div class="form-input form-input_select">
+            <label>Term</label>
+            <span></span>
+            <select data-field-name="term" onchange={handleTermChange} value={amort}>
+              <template for:each={termOptions} for:item="term">
+                <option key={term.value} value={term.value}>{term.label}</option>
+              </template>
+            </select>
+          </div>
+        </lightning-layout-item>
+
+        <lightning-layout-item padding="horizontal-small"
+                               size="12"
+                               small-device-size="12"
+                               medium-device-size="6"
+                               large-device-size="6">
+          <div class="form-input disabled">
+            <label>Interest Rate %</label>
+            <input label="interestRate"
+                   data-id="interestrate"
+                   type="text"
+                   disabled
+                   value={interestRateValue}>
+          </div>
+        </lightning-layout-item>
+
+        <lightning-layout-item padding="horizontal-small"
+                               size="12"
+                               small-device-size="12"
+                               medium-device-size="6"
+                               large-device-size="6">
+          <div class="form-input form-input_currency disabled">
+            <label>Financed Amount</label>
+            <span></span>
+            <input label="Financed Amount"
+                   data-field-name="amount"
+                   type="number"
+                   disabled
+                   value={amount}>
+          </div>
+        </lightning-layout-item>
+
+        <lightning-layout-item size="12"
+                               padding="around-small"
+                               class="payment-details">
+          <ul class="payment-lines">
+            <li class="payment-line">
+              <span class="payment-line_label">Weekly</span>
+              <span class="payment-line_value highlight">
+                <lightning-formatted-number value={payments.weekly}
+                                            format-style="currency"
+                                            currency-code="CAD"></lightning-formatted-number>
+              </span>
+            </li>
+            <li class="payment-line">
+              <span class="payment-line_label">Bi-Weekly</span>
+              <span class="payment-line_value">
+                <lightning-formatted-number value={payments.biweekly}
+                                            format-style="currency"
+                                            currency-code="CAD"></lightning-formatted-number>
+              </span>
+            </li>
+            <li class="payment-line">
+              <span class="payment-line_label">Monthly</span>
+              <span class="payment-line_value">
+                <lightning-formatted-number value={payments.monthly}
+                                            format-style="currency"
+                                            currency-code="CAD"></lightning-formatted-number>
+              </span>
+            </li>
+          </ul>
+        </lightning-layout-item>
+
+      </lightning-layout>
+    </section>
+
+  </div>
+
+
+
+
+</template>

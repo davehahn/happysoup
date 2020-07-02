@@ -1,0 +1,251 @@
+/**
+ * Created by dave on 2020-06-25.
+ */
+ :host {
+   --legend-blue: #2AB2F0;
+   --legend-focus: rgba(42, 178, 240, 0.25);
+   -webkit-font-smoothing: antialiased;
+ 	 -moz-osx-font-smoothing: grayscale;
+ 	 display: block;
+ 	 margin-top: -13px;
+ }
+
+
+
+ button{
+   background: none;
+   border: 0 none;
+   outline: none;
+ }
+
+ button:focus{
+   outline: none;
+ }
+
+ .finance-nav {
+   width: 100%;
+   z-index: 1;
+   flex: 9;
+ }
+
+ .finance-nav-list {
+   display: flex;
+   justify-content: center;
+   list-style-position: inside;
+   height: 100%;
+   list-style-type: none;
+   border-bottom: 1px solid #DDD;
+ }
+
+ .finance-nav-list li{
+   flex-grow: 1;
+ }
+
+ .finance-nav-item {
+   display: block;
+   width: 100%;
+   text-align: center;
+   cursor: pointer;
+   color: #000;
+   opacity: 0.35;
+   font-size: 14px;
+   transition: opacity .15s ease-in-out;
+   transform: translateZ(0);
+ }
+
+ .finance-nav-item:hover{
+   background-color: #f2f2f2;
+   opacity: 0.65;
+ }
+
+ .finance-nav-item:focus{
+   background-color: var(--legend-focus);
+   opacity: 1;
+ }
+
+ .finance-nav-item h2 {
+   text-transform: capitalize;
+ }
+
+ .finance-nav-item:before {
+   padding-right: 2px;
+ }
+
+ .finance-nav-item.finance-nav-item_selected {
+   box-shadow: inset 0 -5px 0 -1px var(--legend-blue);
+ 	 opacity: 1;
+ }
+
+ .finance-nav-title {
+   font-size: 24px;
+   font-family: var(--tds-sans-font_stack--medium);
+   padding: 20px 0;
+   display: inline-block;
+   margin: 0;
+   text-transform: capitalize;
+ }
+
+ .finance-option-page {
+   display:none;
+ }
+
+ .finance-content[data-current="cash"] section[data-section="cash"] {
+    display:initial;
+ }
+
+ .finance-content[data-current="loan"] section[data-section="loan"] {
+   display:initial;
+ }
+
+.form-input {
+  margin-bottom: 24px;
+  position: relative;
+}
+
+.form-input label {
+  color: #666;
+  font-size: 14px;
+  margin: 0 20px 8px;
+  display: block;
+}
+
+.form-input input[type="text"],
+.form-input_select span,
+.form-input_percent span,
+.form-input_currency span
+{
+  display: block;
+  background: #FFF;
+  border: 1px solid transparent;
+  padding: 10px 20px;
+  border-radius: 20px;
+  width: 100%;
+  font-size: 14px;
+  min-height: 38px;
+  color: #666;
+}
+
+
+.form-input_select select,
+.form-input_currency input,
+.form-input_percent input {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  width: 100%;
+  height: 38px;
+  -webkit-appearance: none;
+  border: 0 none;
+  background: none;
+  padding-left: 1.5em;
+}
+
+.form-input_currency input
+{
+  padding-left: 1.75em;
+}
+
+.form-input input:focus,
+.form-input_select select:focus {
+  outline: none;
+  border: 1px solid #CCC;
+  border-radius: 20px;
+}
+
+.form-input_currency span::before {
+  display:block;
+  content: "\0024";
+  line-height: 1;
+  color: #666;
+  margin-right: 7px;
+  font-size: 17px;
+  position: absolute;
+  bottom: 10px; left: 0.65em;
+}
+
+.form-input_percent span::before {
+  display:block;
+  content: "\0025";
+  line-height: 1;
+  color: #666;
+  margin-right: 7px;
+  font-size: 17px;
+  position: absolute;
+  bottom: 10px; right: 0.65em;
+}
+
+.form-input_select span::before{
+  display: block;
+  content: "\e928";
+  font-family: 'sldsicon' !important;
+	speak: none;
+	font-style: normal;
+	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
+	line-height: 1;
+	color: #999;
+	margin-right: 7px;
+	font-size: 14px;
+	position: absolute;
+	bottom: 10px; right: 1.5em;
+}
+
+.form-input.disabled span,
+.form-input.disabled input {
+  border-color: #DDD;
+  background:transparent;
+}
+
+/* Chrome, Safari, Edge, Opera */
+ input::-webkit-outer-spin-button,
+ input::-webkit-inner-spin-button {
+   -webkit-appearance: none;
+   margin: 0;
+ }
+
+ /* Firefox */
+ input[type=number] {
+   -moz-appearance: textfield;
+ }
+
+ .payment-details {
+   width:100%;
+   padding: 0.75rem;
+   background: #EEE;
+   border-radius: 5px;
+ }
+
+.payment-line {
+  clear: both;
+  height: auto;
+  width: 100%;
+  overflow: auto;
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  border-bottom: 1px solid #CCC;
+}
+
+.payment-line:first-child {
+  padding-top:0;
+}
+
+.payment-line:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.payment-line_label {
+  flex-basis: 60%;
+}
+
+.payment-line_value {
+  margin-left: auto;
+  color: #444;
+  white-space: nowrap;
+}
+
+.payment-line_value.highlight {
+  font-size: 1.5rem;
+  line-height: 1.2;
+}
