@@ -370,6 +370,20 @@ public without sharing class OnlineBoatReservation_Controller
     return b;
   }
 
+  @AuraEnabled(Cacheable=true)
+  public static Map<String,Object> fetchSettings()
+  {
+    Map<String, Object> result = new Map<String, Object>();
+    Boat_Reservation_Settings__mdt settings =
+      [ SELECT Default_Deposit_Amount__c, Default_Interest_Rate__c, Default_Term__c
+        FROM Boat_Reservation_Settings__mdt
+        LIMIT 1 ];
+    result.put( 'term', settings.Default_Term__c );
+    result.put( 'deposit', settings.Default_Deposit_Amount__c );
+    result.put( 'interestRate', settings.Default_Interest_Rate__c );
+    return result;
+  }
+
   @AuraEnabled
   public static AccountSaveResult createAccount( String customerJSON )
   {
