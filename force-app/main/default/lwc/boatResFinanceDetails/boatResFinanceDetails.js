@@ -13,7 +13,7 @@ export default class BoatResFinanceDetails extends LightningElement {
   @api amount;
 
   @track amort = 60;
-  @track interestRate = 5.00;
+  @track interestRate = 0.05;
   @track downPayment = 1000;
 
   numOfAmortYears = 20;
@@ -66,11 +66,6 @@ export default class BoatResFinanceDetails extends LightningElement {
     });
   }
 
-  get interestRateValue()
-  {
-    return `${this.interestRate} %`;
-  }
-
   handleNav( event )
   {
     const navPage =  event.currentTarget.dataset.navName;
@@ -107,7 +102,7 @@ export default class BoatResFinanceDetails extends LightningElement {
     }
     else
     {
-      compoundInterest = ( this.interestRate / 100 ) / compound_per_year,
+      compoundInterest = this.interestRate  / compound_per_year,
       payment = ( compoundInterest * amountFinanced ) / ( 1 - ( Math.pow( (1 + compoundInterest), (- ( this.amort * compound_per_year / 12 ) ) ) ) );
       //remaining = amountFinanced *( Math.pow((1+ compoundInterest ), ( term * compound_per_year / 12)) ) -( payment )*( ( Math.pow((1+ compoundInterest ),( term * compound_per_year / 12)) - 1 ) /compoundInterest );
     }
@@ -118,12 +113,5 @@ export default class BoatResFinanceDetails extends LightningElement {
 
     fireEvent( this.pageRef, 'paymentAmountChanged', this.payments );
   }
-
-
-//  handleFinanceAmountChange( amount )
-//  {
-//    console.log( `FinanceDetails FinanceAmountChanged `)
-//    this.amount = amount;
-//  }
 
 }

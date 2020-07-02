@@ -72,11 +72,10 @@
                                large-device-size="6">
           <div class="form-input disabled">
             <label>Interest Rate %</label>
-            <input label="interestRate"
-                   data-id="interestrate"
-                   type="text"
-                   disabled
-                   value={interestRateValue}>
+            <lightning-formatted-number value={interestRate}
+                                        format-style="percent"
+                                        class="fake-disabled-input"
+                                        maximum-fraction-digits="2"></lightning-formatted-number>
           </div>
         </lightning-layout-item>
 
@@ -85,14 +84,17 @@
                                small-device-size="12"
                                medium-device-size="6"
                                large-device-size="6">
-          <div class="form-input form-input_currency disabled">
+          <div class="form-input">
             <label>Financed Amount</label>
-            <span></span>
-            <input label="Financed Amount"
-                   data-field-name="amount"
-                   type="number"
-                   disabled
-                   value={amount}>
+            <lightning-formatted-number value={amount}
+                                        format-style="currency"
+                                        class="fake-disabled-input"
+                                        currency-code="CAD"></lightning-formatted-number>
+<!--            <input label="Financed Amount"-->
+<!--                   data-field-name="amount"-->
+<!--                   type="number"-->
+<!--                   disabled-->
+<!--                   value={amount}>-->
           </div>
         </lightning-layout-item>
 
