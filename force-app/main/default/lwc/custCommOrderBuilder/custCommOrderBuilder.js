@@ -12,6 +12,7 @@ import gothamFonts from '@salesforce/resourceUrl/GothamHTF';
 import LOGO from '@salesforce/resourceUrl/LegendLogo';
 import VLOGO from '@salesforce/resourceUrl/LegendLogoVertical';
 import fetchBoat from '@salesforce/apex/OnlineBoatReservation_Controller.fetchBoat';
+import fetchSettings from '@salesforce/apex/OnlineBoatReservation_Controller.fetchSettings';
 import createAccount from '@salesforce/apex/OnlineBoatReservation_Controller.createAccount';
 import saveLineItems from '@salesforce/apex/OnlineBoatReservation_Controller.saveLineItems';
 
@@ -25,7 +26,8 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
   vertLogo = VLOGO;
   orderValid=true;
   isMobile = false;
-  paymentAmount = 1000;
+
+
 
   pages = [
     'performance',
@@ -53,6 +55,9 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
 	];
 	premiumPackage;
 
+  @track paymentAmount;
+  @track term;
+  @track interestRate;
 	@track motorDetails;
 	@track currentPage = 'performance';
   @track currentModalPage = 'premium-package';
@@ -79,6 +84,21 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
       this.boat = data;
     }
     else if( error )
+    {
+      console.log( error );
+    }
+  }
+
+  @wire( fetchSettings, {} )
+  wiredSettings( {error, data } )
+  {
+    if( data )
+    {
+      this.paymentAmount = data.deposit;
+      this.term = data.term;
+      this.interestRate = data.interestRate / 100;
+    }
+    if( error )
     {
       console.log( error );
     }

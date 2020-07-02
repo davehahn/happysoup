@@ -177,7 +177,11 @@
             <div class="payment-details">
               <h3 class="form-header">Payment</h3>
               <div class="payment-disclaimer">
-                Due today to complete your order: $1000.
+                Due today to complete your order:
+                <lightning-formatted-number value={paymentAmount}
+                                            format-style="percent"
+                                            maximum-fraction-digits="2"></lightning-formatted-number>
+                .
               </div>
             </div>
 
@@ -310,7 +314,9 @@
                 <template if:true={purchasePrice}>
                   <c-boat-res-finance-details payment-type={paymentType}
                                               amount={purchasePrice}
-                                              deposit={paymentAmount}></c-boat-res-finance-details>
+                                              deposit={paymentAmount}
+                                              interest-rate={interestRate}
+                                              amort={term}></c-boat-res-finance-details>
                 </template>
               </section>
               <section class="modal-page" data-modal-page="delivery">

@@ -11,10 +11,9 @@ export default class BoatResFinanceDetails extends LightningElement {
   @api paymentType;
   @api deposit;
   @api amount;
-
-  @track amort = 60;
-  @track interestRate = 0.05;
-  @track downPayment = 1000;
+  @api amort;
+  @api interestRate;
+  //@track downPayment = 1000;
 
   numOfAmortYears = 20;
   pages = ['cash', 'loan'];
@@ -89,6 +88,7 @@ export default class BoatResFinanceDetails extends LightningElement {
   @api calculate()
   {
     if( this.amount === undefined ) return;
+    if( this.interestRate === undefined ) return;
 
     console.log( `calculate finance payments using amount ${this.amount}` );
     const amountFinanced = this.amount - this.deposit,
