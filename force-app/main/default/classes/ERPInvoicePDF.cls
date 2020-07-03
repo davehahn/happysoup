@@ -223,7 +223,8 @@ public with sharing class ERPInvoicePDF {
   public Decimal labourTotal                                             { get; set; }
   public String compartmentKeyNumber                                     { get; set; }
   public String ignitionKeyNumber                                        { get; set; }
-  public Boolean hideServiceDisclaimer                                   { get; set; }
+  public Boolean showServiceDisclaimer                                   { get; set; }
+  public Boolean showWarrantyDisclaimer                                  { get; set; }
   /* Invoice By Bill*/
   public Decimal totalAmountPreTax                                       { get; set; }
   public Decimal totalTaxH                                               { get; set; }
@@ -265,7 +266,8 @@ public with sharing class ERPInvoicePDF {
     this.tradeInLien = 0;
     this.fetchERPOrder();
     this.internalOverRide = false;
-    this.hideServiceDisclaimer = false;
+    this.showServiceDisclaimer = false;
+    this.showWarrantyDisclaimer = false;
     String paramVersion = ApexPages.currentPage().getParameters().get('version');
     if( paramVersion != null && paramVersion == 'internal' )
       internalOverRide = true;
@@ -379,7 +381,8 @@ public with sharing class ERPInvoicePDF {
                             Internal_Partner_Parts_Order__c,
                             Internal_Partner_Boat_Sale__c,
                             Partner_External_PO_Number__c,
-                            Parking_Spot__c
+                            Parking_Spot__c,
+                            Warranty_Type__c
                      FROM AcctSeed__Project__c
                      WHERE Id =: erpId ];
 
@@ -963,8 +966,11 @@ public with sharing class ERPInvoicePDF {
      fetchSerialNumber();
     partsTotal = 0;
     labourTotal = 0;
-    if( this.erpOrder.RecordTypeId == gcConstants.idRtTradeIn )
-      this.hideServiceDisclaimer = true;
+    if( this.erpOrder.RecordTypeId == gcConstants.idRtProjectService)
+      this.showServiceDisclaimer = true;
+    if( this.erpOrder.RecordTypeId == gcConstants.idRtProjectWarranty &&
+        this.erpOrder.Warranty_Type__c == 'Warranty ')
+      this.showWarrantyDisclaimer = true;
 
     this.taskLineItems = new List<TaskLineItem>();
     for( AcctSeed__Project_Task__c task : this.projectTasks )
