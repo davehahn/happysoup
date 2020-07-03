@@ -169,6 +169,23 @@ private without sharing class OnlineBoatReservation_Controller_T
   }
 
   @IsTest
+  static void fetchSettings_Test()
+  {
+    Boat_Reservation_Settings__mdt brSettings =
+      [ SELECT Id, Default_Deposit_Amount__c, Default_Interest_Rate__c, Default_Term__c
+        FROM Boat_Reservation_Settings__mdt
+        LIMIT 1 ];
+    Test.startTest();
+    Map<String, Object> result =
+      OnlineBoatReservation_Controller.fetchSettings();
+    Test.stopTest();
+
+    System.assertEquals( brSettings.Default_Term__c, (Decimal)result.get('term') );
+    System.assertEquals( brSettings.Default_Deposit_Amount__c, (Decimal)result.get('deposit') );
+    System.assertEquals( brSettings.Default_Interest_Rate__c, (Decimal)result.get('interestRate') );
+  }
+
+  @IsTest
   static void fetchBoats_Test()
   {
     Test.startTest();
