@@ -1,0 +1,95 @@
+@page {
+    size:letter;
+    margin-top: 0.5cm;
+    margin-left: 0.5cm;
+    margin-right: 0.5cm;
+    margin-bottom: 0.5cm;
+
+    /*size: 8.5in 11in; width height */
+
+    /*@bottom-left
+    {
+      content: element(footer);
+    }*/
+}
+
+body {
+    font-family:sans-serif !important;
+    background: #FFF;
+}
+
+p {
+    margin:0;
+    padding:0;
+}
+
+.header2 div + div > div .blockSummary > table tr td:first-child img {
+    left:-5px !important;
+}
+
+.header2 div + div > div .blockSummary > table tr td:first-child + td img {
+    left:-8px !important;
+}
+.header2 div + div > div .blockSummary > table tr td:first-child + td + td img {
+    left:0 !important;
+}
+
+.customer_info .buyer_name {
+    color: #444;
+    font-weight: bold;
+    font-size:17px;
+}
+
+table.itemsTable > thead > tr > td {
+    border-bottom: 2px solid #999;
+    background: #FFF;
+    line-height:25px;
+    height: 25px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+table.itemsTable > tbody > tr > td {
+    background: #FFF;
+    line-height:25px;
+    height: 25px;
+    font-size: 12px;
+    border-bottom: 1px solid #999;
+}
+
+table.itemsTable > tbody > tr:first-child > td {
+    /*border-top: 1px solid #999;*/
+}
+
+.signatures_and_summary h2 {
+    font-size: 14px;
+    height: 25px;
+    line-height:25px;
+    color: #666;
+    font-weight: bold;
+    margin: 0;
+    padding: 0;
+    padding-left: 16px;
+}
+
+.notes_container {
+    width:90%;
+    margin: 0;
+    border:1px solid #CCC;
+    background: #fff;
+    color:#666;
+    font-size: 12px;
+    min-height:100px;
+}
+
+.notes_container p {
+    margin:8px;
+}
+
+.notes_container p ol,
+.notes_container p, ul {
+    margin:4px 0;
+    list-style-position: inside;
+    padding-left:5px;
+}
+

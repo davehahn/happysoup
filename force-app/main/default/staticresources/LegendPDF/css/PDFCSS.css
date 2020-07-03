@@ -1,0 +1,124 @@
+ @import url(https://fonts.googleapis.com/css?family=Lato:300,400);
+
+ @page
+   {
+		/*size: 21cm 29.7cm ;A4 size
+		font-family: Dialog;*/
+		/*size:landscape;margin-top: 0cm; margin-left: 0cm; margin-right: 0cm; margin-bottom: 1.0cm;*/
+    size:legal;
+		margin-top: 0.5cm;
+		margin-left: 0cm;
+		margin-right: 0cm;
+		margin-bottom: 0.5cm;
+
+		/*size: 8.5in 11in; width height */
+    font-family:sans-serif;
+		/*@bottom-left
+		{
+			content: element(footer);
+		}*/
+   }
+
+   /*@page { size: 29.7cm 21.0cm ; margin-top: 1.0cm; margin-left: 1.0cm; margin-right: 1.0cm; margin-bottom: 1.0cm; }*/
+  .pagenumber:before {
+    content: counter(page);
+  }
+
+  .pagecount:before {
+    content: counter(pages);
+  }
+
+  .boatImageContainer {
+   padding:3cm;
+   width:100%;
+  }
+
+  .boatImageContainer > img {
+    width:15cm;
+    height:auto;
+    max-height:15cm;
+    float:left;
+  }
+
+  .summary_table {
+    width:100%;
+    margin:auto;
+    position:relative;
+  }
+
+  h3 {
+    margin: 10px 0 0px 0 !important;
+    line-height:18px;
+    border-bottom: 1px solid #34444D;
+    color: #34444D;
+    max-width: none;
+    width:100%;
+    display:block !important;
+    font-size:14px !important;
+    font-family:'Lato' sans-serif !important;
+    font-weight:300;
+  }
+
+  p.itemRow {
+    margin: 0px;
+    padding: 0px 0px 0px 5px;
+    line-height: 23px;
+    background: #E2F4FA;
+    font-size: 11px;
+    font-family: 'Lato' , sans-serif !important;
+  }
+
+  p.itemRow.subItemRow {
+    margin-left:30px;
+  }
+
+  .quantity {
+    float: left;
+    font-weight: bold;
+    text-align: right;
+    padding: 0px 15px 0px 5px;
+  }
+
+  .cost {
+    float: right;
+    text-align: right;
+    padding-right: 5px;
+  }
+
+  .total_row {
+    line-height: 25px;
+    height: 26px;
+    font-size: 16px;
+    background: #FFF;
+  }
+
+  .total_row.sub_total {
+    border-top: 1px solid #34444D;
+    margin-top: 10px;
+  }
+
+  .total_row.grand_total {
+    font-size: 18px;
+    line-height: 30px;
+    height: 30px;
+  }
+
+  .total_row > span:first-child {
+    float: right;
+    text-align: right;
+    padding-right: 5px;
+  }
+
+  .total_row > span:first-child > span {
+    float: none;
+    font-size: inherit;
+    margin-right: 15px;
+  }
+
+	div.footer
+	{
+		display: block;
+		padding: 2px;
+		position: running(footer);
+	}
+

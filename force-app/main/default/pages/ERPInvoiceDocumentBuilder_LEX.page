@@ -388,7 +388,6 @@
           docArch = Handlebars.compile( $j('#docArch').html() ),
           emailForm = Handlebars.compile( $j('#email-modal').html() );
 
-
       if( currentDocumentId.length > 0 )
       {
         insertPdf( '/servlet/servlet.FileDownload?file=' + currentDocumentId );

@@ -1,0 +1,38 @@
+@page {
+    size:letter;
+    margin-top: 0.5cm;
+    margin-left: 0cm;
+    margin-right: 0cm;
+    margin-bottom: 0.25cm;
+
+    /*size: 8.5in 11in; width height */
+
+    /*@bottom-left
+    {
+      content: element(footer);
+    }*/
+}
+
+body {
+    font-family:sans-serif !important;
+    background: #FFF;
+}
+
+p {
+    margin:0;
+    padding:0;
+}
+
+.watermark {
+    position: absolute;
+    color: #F00;
+    height: 100%;
+    width: 100%;
+    text-align: center;
+    font-size: 100px;
+    z-index: 100;
+    -ms-transform: rotate(20deg);
+    -webkit-transform: rotate(20deg);
+    transform: rotate(-45deg);
+    top: 15%;
+}

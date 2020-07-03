@@ -737,6 +737,7 @@ public without sharing class RetailSalesToolController_dh
     List<Campaign> campaigns = [SELECT Id, Name, Parent.Name, RecordType.Name
                                 FROM Campaign
                                 WHERE isActive = true
+                                AND Hidden__c = false
                                 AND Status = 'In Progress' ];
     for( Campaign c : campaigns ){
       if( userType == 'PowerPartner' && c.RecordType.Name != 'National' )

@@ -2,6 +2,7 @@
 
 
     <aura:attribute name="saleType" type="String" default="Partner" />
+    <aura:attribute name="inConsoleView" type="Boolean" />
     <aura:attribute name="isSelectingAccount" type="Boolean" default="false" />
     <aura:attribute name="erpOrderId" type="String" default=""/>
     <aura:attribute name="activePriceBookId" type="Id" default=""/>
@@ -45,6 +46,8 @@
     <aura:handler name="partCreatedEvent"
                   event="c:Product_PartCreated_Event_dh"
                   action="{!c.handlePartCreatedInSalesforceSuccess}" />
+
+    <lightning:workspaceAPI aura:id="workspace" />
 
     <div class="slds-spinner_container slds-hide" aura:id="busy-indicator">
       <div role="status" class="slds-spinner slds-spinner--medium">
