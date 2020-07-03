@@ -2,7 +2,12 @@
   doInit : function(component, event, helper)
   {
     console.log( 'parts form doinit');
-    helper.doInit(component)
+    helper.inConsole( component )
+    .then( (response) => {
+      component.set("v.inConsoleView", response );
+      console.log(`We are in a console view ${response}`);
+      return helper.doInit(component);
+    })
     .then(
       $A.getCallback( function( result ) {
         console.log( 'dealerPartsOrderFormController INIT');
@@ -206,7 +211,7 @@
     .then(
       $A.getCallback( function( erpId ) {
         LightningUtils.showToast('success', 'Success', 'Thank you for placing an order with Legend Boats');
-        helper.returnToDetails( erpId );
+        helper.returnToDetails( component, erpId );
       }),
       $A.getCallback( function(err) {
         spinner.toggle();
@@ -221,7 +226,7 @@
     helper.submitHelper(component, true)
     .then(
       $A.getCallback( function( erpId ) {
-        helper.returnToDetails( erpId );
+        helper.returnToDetails( component, erpId );
       }),
       $A.getCallback( function(err) {
         spinner.toggle();
@@ -249,7 +254,7 @@
     helper.submitRetail( component, accountId )
     .then(
       $A.getCallback( function( erpId ) {
-        helper.returnToDetails( erpId );
+        helper.returnToDetails( component, erpId );
       }),
       $A.getCallback( function( err ) {
         LightningUtils.errorToast( err );

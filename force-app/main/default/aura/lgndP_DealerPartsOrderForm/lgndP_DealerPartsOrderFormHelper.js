@@ -1,4 +1,17 @@
 ({
+  inConsole: function( component )
+  {
+    var workspaceAPI = component.find('workspace');
+    return new Promise( (resolve, reject ) => {
+      workspaceAPI.isConsoleNavigation().then(function(response) {
+       resolve(response);
+      })
+      .catch(function(error) {
+        reject(error);
+      });
+    })
+  },
+
 	doInit: function(component)
 	{
 		var erpOrderId = component.get("v.erpOrderId"),
@@ -219,13 +232,43 @@
 			.fire();
 	},
 
-	returnToDetails: function( erpId )
+	returnToDetails: function( component, erpId )
 	{
-		var navEvt = $A.get("e.force:navigateToSObject");
-    navEvt.setParams({
-      "recordId": erpId
-    });
-    navEvt.fire();
+	  let self = this;
+	  if( component.get('v.inConsoleView') )
+	  {
+	    let focusedTabId;
+	    const workspaceAPI = component.find("workspace");
+	    workspaceAPI.getFocusedTabInfo()
+      .then( (response) => {
+        focusedTabId = response.tabId;
+        return workspaceAPI.openTab({
+          pageReference: {
+            type: 'standard__recordPage',
+            attributes: {
+              recordId: erpId,
+              actionName: 'view'
+            },
+            state: {}
+          },
+          focus: true
+        });
+      })
+      .then( (response) => {
+        workspaceAPI.refreshTab({tabId: focusedTabId});
+      })
+      .catch(function(error) {
+          console.log(error);
+      });
+    }
+    else
+    {
+      var navEvt = $A.get("e.force:navigateToSObject");
+      navEvt.setParams({
+        "recordId": erpId
+      });
+      navEvt.fire();
+    }
 	},
 
 	submitRetail: function( component, accountId )
