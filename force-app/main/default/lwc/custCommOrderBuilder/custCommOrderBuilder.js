@@ -37,14 +37,14 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
   ];
 
  	 modalPages = [
+ 	   {
+      title: 'Finance Options',
+      label: 'payment-calculator',
+      class: 'modal-nav-item  modal-nav-item_selected'
+    },
 		{
 			title: 'Preferred Equipment Package',
 			label: 'premium-package',
-			class: 'modal-nav-item modal-nav-item_selected'
-		},
-		{
-			title: 'Payment Calculator',
-			label: 'payment-calculator',
 			class: 'modal-nav-item'
 		},
 		{
