@@ -402,7 +402,11 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
     const oppInfo = JSON.stringify({
       'Id': this.opportunityId,
       'AccountId': this.accountId,
-      'Deposit__c': this.paymentAmount
+      'Deposit__c': this.paymentAmount,
+      'Finance_Term__c': this.term,
+      'Finance_Ammortization__c': this.term,
+      'Insurance_Term__c': this.term,
+      'Finance_Annual_Interest__c': this.interestRate
     });
     const boatLineItem = [{
       'Product2Id': this.boat.id,

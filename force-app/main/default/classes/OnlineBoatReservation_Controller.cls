@@ -396,9 +396,11 @@ public without sharing class OnlineBoatReservation_Controller
   {
     Opportunity opp =
       (Opportunity)JSON.deserialize( oppJSON, Opportunity.class );
+    opp.StageName = 'Sales Manager Approval Pending';
+    update opp;
+
     List<OpportunityLineItem> olis =
       (List<OpportunityLineItem>)JSON.deserialize( olisJSON, List<OpportunityLineItem>.class );
-    update opp;
     for( OpportunityLineItem oli : olis )
     {
       oli.OpportunityId = opp.Id;
