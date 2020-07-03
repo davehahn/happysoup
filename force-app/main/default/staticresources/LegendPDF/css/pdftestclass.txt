@@ -1,0 +1,711 @@
+/**
+ * This class contains unit tests for validating the behavior of Apex classes
+ * and triggers.
+ *
+ * Unit tests are class methods that verify whether a particular piece
+ * of code is working properly. Unit test methods take no arguments,
+ * commit no data to the database, and are flagged with the testMethod
+ * keyword in the method definition.
+ *
+ * All test methods in an organization are executed whenever Apex code is deployed
+ * to a production organization to confirm correctness, ensure code
+ * coverage, and prevent regressions. All Apex classes are
+ * required to have at least 75% code coverage in order to be deployed
+ * to a production organization. In addition, all triggers must have some code coverage.
+ * 
+ * The @isTest class annotation indicates this class only contains test
+ * methods. Classes defined with the @isTest annotation do not count against
+ * the organization size limit for all Apex scripts.
+ *
+ * See the Apex Language Reference for more information about Testing and Code Coverage.
+ */
+@isTest (seeAllData=true)
+private class BoatPDFBuilder_Test {
+	static PageReference pageRef;
+    static Opportunity opp;
+    static Pricebook2 standard_pb2;
+    static BoatTestFactory factory;
+    static List<Product2> testCreatedBoats;
+    static Product2 selectedBoat;
+    static List<Product2> feeProducts;
+    static List<Product2> availableMotors;
+    static List<Product2> availableTrailers;
+    static BoatPDFBuilder_2 bb;
+    static Decimal standardBoatPrice;
+
+    static {
+        factory = new BoatTestFactory();
+        standard_pb2 = [Select Id, Name, IsActive From Pricebook2 where IsStandard = true LIMIT 1];
+        if (!standard_pb2.isActive) {
+            standard_pb2.isActive = true;
+            update standard_pb2;
+        }
+        /* create an Opportunity as it required for Boat Builder */
+        opp = new Opportunity(
+              Name = 'Test Opportunity',
+              StageName='Prospecting',
+              CloseDate=Date.today(),
+              Pricebook2Id = standard_pb2.Id,
+              AccountId = null
+            );
+        insert opp;
+        //create 3 Fee Products
+        //get record type Id for fees product record type
+        Schema.DescribeSObjectResult cfrSchema = Schema.SObjectType.Product2;
+        Map<String,Schema.RecordTypeInfo> Product2RecordTypeInfo = cfrSchema.getRecordTypeInfosByName();
+        Id feeRecordTypeId = Product2RecordTypeInfo.get('Fees').getRecordTypeId();
+        feeProducts = new List<Product2>();
+        List<PricebookEntry> feePricebookEntries = new List<PricebookEntry>();
+        List<Product_Fee_Map__c> productFeeMaps = new List<Product_Fee_Map__c>();
+        for(String t : new Set<String>{'Bank Registration PPSA Fee', 'Documentation Fee','Freight'}){
+            feeProducts.add( new Product2(
+                Name = t,
+                Family = t,
+                RecordTypeId = feeRecordTypeId,
+                isActive = true
+                )
+            );
+        }
+        insert feeProducts;
+        for( Product2 f : feeProducts ){
+          feePricebookEntries.add( new PricebookEntry(
+              Pricebook2Id = standard_pb2.Id,
+              Product2Id = f.Id,
+              UnitPrice = 100.00,
+              isActive = true
+            ) );
+        }
+        insert feePricebookEntries;
+
+        testCreatedBoats = factory.insertFullTestBoats(2, standard_pb2, 'Pontoon');
+
+        for( Product2 boat : testCreatedBoats){
+            for( Product2 fee : feeProducts ){
+                productFeeMaps.add( new Product_Fee_Map__c(
+                    Parent_Product__c = boat.Id,
+                    Fee_Product__c = fee.Id
+                    )
+                );
+            }
+        }
+
+        insert productFeeMaps;
+    }
+
+    private static void init() {
+
+        /* set current page to the BoatBuilder  */
+        pageRef = Page.generatequotePDFSections_2;
+        pageRef.getParameters().put('id', opp.Id);
+        Test.setCurrentPageReference(pageRef);
+        bb = new BoatPDFBuilder_2();
+        bb.selectedProductFamily = 'Pontoon';
+        selectedBoat = testCreatedBoats[1];
+        //standard price should be 100
+        standardBoatPrice = [SELECT UnitPrice
+                              FROM PricebookEntry
+                              WHERE PriceBook2.IsStandard = true
+                              AND Product2Id = :selectedBoat.Id].UnitPrice;
+       //boat has 3 fees @ 100 each attached to it so ....
+       standardBoatPrice += 300;
+    }
+
+    testmethod static void constructorTest() {
+        init();
+        Set<String> testBoatIds = new Set<String>();
+        Set<String> fetchedBoatIds = new Set<String>();
+        for(Product2 p : testCreatedBoats){
+            testBoatIds.add(p.Id);
+        }
+        test.startTest();
+        for (SelectOption so :bb.getBoatSelectItems() ){
+            if(so.getValue() != ''){
+                fetchedBoatIds.add( so.getValue() );
+            }
+        }
+        test.stopTest();
+        for(String id : testBoatIds){
+            System.assert(  fetchedBoatIds.contains(id) );
+        }
+
+    }
+
+    testMethod static void selectBoatTest() {
+        init();
+
+        test.startTest();
+        bb.selectedBoatId = selectedBoat.Id;
+        /* this method gets call when the Boat select leist changes */
+        bb.selectBoatFromSelector();
+        test.stopTest();
+
+        System.assertEquals(selectedBoat.Id, bb.selectedBoat.Id);
+        System.assertEquals(selectedBoat.Standard_Motor__c, bb.selectedMotor.Id);
+        System.assertEquals(selectedBoat.Standard_Trailer__c, bb.selectedTrailer.Id);
+        System.assertEquals(selectedBoat.Standard_Trolling_Motor__c, bb.selectedTrollingMotor.Id);
+        //verify the motor/trailer/trolling motor select menus are rendered
+        System.assert( bb.getRenderMotorSelector() );
+        System.assert( bb.getRenderTrailerSelector() );
+        System.assert( bb.getRenderTrollingMotorSelector() );
+
+        //this is the select options
+        System.assertEquals(10, bb.getMotorSelectItems().size() ); // 9 + standard_motor
+        // //this is the actual product2 objects
+        System.assertEquals( 9, bb.availableProductUpgrades.get('motors').size() );
+        // //this is the select options
+        //this is options associated with selected motor
+        System.assertEquals(1, bb.availableMotorOptions.size() );
+        //this is the select options
+        System.assertEquals(10, bb.getTrailerSelectItems().size() ); // 9 + standard_trailer
+        // //this is the actual product2 objects
+        System.assertEquals( 9, bb.availableProductUpgrades.get('trailers').size() );
+         //this is options associated with selected trailer
+        System.assertEquals(1, bb.availableTrailerOptions.size() );
+        // //this is the select options
+        System.assertEquals(10, bb.getTrollingMotorSelectItems().size() ); //9 + standard_motor
+        // //this is the actual product2 objects
+        System.assertEquals( 9, bb.availableProductUpgrades.get('trolling_motors').size() );
+         //this is options associated with selected trolling motor
+        System.assertEquals(1, bb.availableTrollingMotorOptions.size() );
+
+        System.assertEquals( 3, bb.availableBoatOptions.get('Electronics').size() );
+        System.assertEquals( 3, bb.getAvailableElectronics().size() );
+        System.assertEquals( 3, bb.availableBoatOptions.get('Fun and Entertainment').size() );
+        System.assertEquals( 3, bb.getAvailableFandE().size() );
+        System.assertEquals( 3, bb.availableBoatOptions.get('Graphics and Decals').size() );
+        System.assertEquals( 3, bb.getAvailableGraphics().size() );
+        System.assertEquals( 3, bb.availableBoatOptions.get('Pontoon Covers').size() );
+        System.assertEquals( 3, bb.getAvailablePontoonCovers().size() );
+        System.assertEquals( 3, bb.availableBoatOptions.get('Safety').size() );
+        System.assertEquals( 3, bb.getAvailableSafety().size() );
+        System.assertEquals( 3, bb.availableBoatOptions.get('Seating').size() );
+        System.assertEquals( 3, bb.getAvailableSeating().size() );
+        System.assertEquals( 3, bb.availableBoatOptions.get('Trailering and Covers').size() );
+        System.assertEquals( 3, bb.getAvailableTrailering().size() );
+
+        System.assertEquals(standardBoatPrice - 300, bb.basePrice); // 3 fees of 100 each
+        System.assertEquals(standardBoatPrice, bb.runningPrice);
+
+        /* *******  Simulate selecting the null ('Select a Boat') in the select list  ******* */
+
+         bb.selectedBoatId = null;
+         bb.selectBoatFromSelector();
+
+        System.assertEquals(null, bb.selectedBoat);
+        System.assertEquals( 0, bb.availableProductUpgrades.size() );
+        System.assertEquals(null, bb.availableMotorOptions);
+        System.assertEquals(null, bb.availableTrailerOptions);
+        System.assertEquals(null, bb.availableTrollingMotorOptions);
+        for( String key : bb.availableBoatOptions.keyset() ){
+            System.assertEquals( 0, bb.availableBoatOptions.get(key).size() );
+        }
+        System.assertEquals(null, bb.runningPrice);
+    }
+
+    testMethod static void selectMotorTest() {
+        init();
+        test.startTest();
+        bb.selectedBoatId = selectedBoat.Id;
+        /* this method gets call when the Boat select list changes */
+        bb.selectBoatFromSelector();
+       // Product_Option__c motorOption = [SELECT Id, From_Product__c FROM Product_Option__c WHERE From_Product__r.RecordType.Name = 'Motor' AND To_Product__c = :selectedBoat.Id LIMIT 1];
+        Product2 motor = bb.availableProductUpgrades.get('motors')[2];
+        //lets add a fee associated with this motor
+        Product_Fee_Map__c motorFee = new Product_Fee_Map__c(
+                                            Parent_Product__c = motor.Id,
+                                            Fee_Product__c = feeProducts[1].Id
+                                        );
+        insert motorFee;
+        bb.selectedMotorId = motor.Id;
+        bb.selectMotor();
+        Decimal motorUpgradePrice = [SELECT Price__c
+                                     FROM Product_Upgrade__c
+                                     WHERE From_Product__c = :selectedBoat.Standard_Motor__c
+                                     AND To_Product__c = :motor.Id
+                                     LIMIT 1].Price__c;
+        motorUpgradePrice += 100; //because of the fee we added of 100
+        test.stopTest();
+        System.assertEquals( standardBoatPrice + motorUpgradePrice, bb.runningPrice);
+        // subtract 100 from motorUpgrade price as it includes the fee and bb.motorUpgradePrice does  not
+        System.assertEquals( String.valueOf(motorUpgradePrice - 100), bb.motorUpgradePrice );
+
+        /* Select The one motor option that should be available */
+        String mOptionPid;
+        for( String id: bb.availableMotorOptions.keySet() ){
+            mOptionPid = id;
+            break;
+        }
+        Decimal productPrice = [SELECT UnitPrice
+                                FROM PricebookEntry
+                                WHERE PriceBook2Id = :standard_pb2.Id
+                                AND Product2Id = :mOptionPid ].UnitPrice;
+        pageRef.getParameters().put( 'productId', mOptionPid );
+        pageRef.getParameters().put( 'quantity', '1' );
+        pageRef.getParameters().put( 'productType', 'motor' );
+        Test.setCurrentPageReference(pageRef);
+        bb.productOptionsChanged();
+
+        System.assertEquals( standardBoatPrice + motorUpgradePrice + productPrice, bb.runningPrice);
+
+        /* *******  Simulate selecting the null ('Select a Motor') in the select list  ******* */
+
+        bb.selectedMotorId = null;
+        bb.selectMotor();
+
+        System.assertEquals(null, bb.selectedMotor);
+        System.assertEquals(null, bb.motorUpgradePrice);
+        System.assertEquals(standardBoatPrice, bb.runningPrice);
+
+        /* ******* Simulate reselecting the included motor option ******* */
+        bb.selectedMotorId = selectedBoat.Standard_Motor__c;
+        bb.selectMotor();
+
+        System.assertEquals('Included', bb.motorUpgradePrice);
+        System.assertEquals(standardBoatPrice, bb.runningPrice);
+    }
+
+    testMethod static void selectTrailerTest() {
+        init();
+        test.startTest();
+        bb.selectedBoatId = selectedBoat.Id;
+        /* this method gets call when the Boat select leist changes */
+        bb.selectBoatFromSelector();
+       // Product_Option__c motorOption = [SELECT Id, From_Product__c FROM Product_Option__c WHERE From_Product__r.RecordType.Name = 'Motor' AND To_Product__c = :selectedBoat.Id LIMIT 1];
+        bb.selectedTrailerId = bb.availableProductUpgrades.get('trailers')[1].Id;
+        bb.selectTrailer();
+        Decimal trailerUpgradePrice = [SELECT Price__c
+                                     FROM Product_Upgrade__c
+                                     WHERE From_Product__c = :selectedBoat.Standard_Trailer__c
+                                     AND To_Product__c = :bb.availableProductUpgrades.get('trailers')[1].Id
+                                     LIMIT 1].Price__c;
+        test.stopTest();
+
+        System.assertEquals( String.valueOf(trailerUpgradePrice), bb.trailerUpgradePrice );
+        System.assertEquals(standardBoatPrice + trailerUpgradePrice , bb.runningPrice);
+
+         /* Select The one motor option that should be available */
+        String tOptionPid;
+        for( String id: bb.availableTrailerOptions.keySet() ){
+            tOptionPid = id;
+            break;
+        }
+        Decimal productPrice = [SELECT UnitPrice
+                                FROM PricebookEntry
+                                WHERE PriceBook2Id = :standard_pb2.Id
+                                AND Product2Id = :tOptionPid ].UnitPrice;
+        pageRef.getParameters().put( 'productId', tOptionPid );
+        pageRef.getParameters().put( 'quantity', '1' );
+        pageRef.getParameters().put( 'productType', 'trailer' );
+        Test.setCurrentPageReference(pageRef);
+        bb.productOptionsChanged();
+
+        System.assertEquals( standardBoatPrice + trailerUpgradePrice + productPrice , bb.runningPrice);
+
+
+        /* *******  Simulate selecting the null ('Select a Trailor') in the select list  ******* */
+
+        bb.selectedTrailerId = null;
+        bb.selectTrailer();
+
+        System.assertEquals(null, bb.selectedTrailer);
+        System.assertEquals(null, bb.trailerUpgradePrice);
+        System.assertEquals(standardBoatPrice, bb.runningPrice);
+
+         /* ******* Simulate reselecting the included motor option ******* */
+        bb.selectedTrailerId = selectedBoat.Standard_Trailer__c;
+        bb.selectTrailer();
+
+        System.assertEquals('Included', bb.trailerUpgradePrice);
+        System.assertEquals(standardBoatPrice, bb.runningPrice);
+    }
+
+    testMethod static void selectTrollingMotorTest() {
+        init();
+        test.startTest();
+        bb.selectedBoatId = selectedBoat.Id;
+        /* this method gets call when the Boat select leist changes */
+        bb.selectBoatFromSelector();
+       // Product_Option__c motorOption = [SELECT Id, From_Product__c FROM Product_Option__c WHERE From_Product__r.RecordType.Name = 'Motor' AND To_Product__c = :selectedBoat.Id LIMIT 1];
+        bb.selectedTrollingMotorId = bb.availableProductUpgrades.get('trolling_motors')[1].Id;
+        bb.selectTrollingMotor();
+        Decimal trollingMotorUpgradePrice = [SELECT Price__c
+                                     FROM Product_Upgrade__c
+                                     WHERE From_Product__c = :selectedBoat.Standard_Trolling_Motor__c
+                                     AND To_Product__c = :bb.availableProductUpgrades.get('trolling_motors')[1].Id
+                                     LIMIT 1].Price__c;
+        test.stopTest();
+
+        System.assertEquals( String.valueOf(trollingMotorUpgradePrice), bb.trollingMotorUpgradePrice );
+        System.assertEquals(standardBoatPrice + trollingMotorUpgradePrice , bb.runningPrice);
+
+         /* Select The one trolling motor option that should be available */
+        String tmOptionPid;
+        for( String id: bb.availableTrollingMotorOptions.keySet() ){
+            tmOptionPid = id;
+            break;
+        }
+        Decimal productPrice = [SELECT UnitPrice
+                                FROM PricebookEntry
+                                WHERE PriceBook2Id = :standard_pb2.Id
+                                AND Product2Id = :tmOptionPid ].UnitPrice;
+        pageRef.getParameters().put( 'productId', tmOptionPid );
+        pageRef.getParameters().put( 'quantity', '1' );
+        pageRef.getParameters().put( 'productType', 'trolling motor' );
+        Test.setCurrentPageReference(pageRef);
+        bb.productOptionsChanged();
+
+        System.assertEquals( standardBoatPrice + trollingMotorUpgradePrice + productPrice , bb.runningPrice);
+
+        /* *******  Simulate selecting the null ('Select a Trailor') in the select list  ******* */
+
+        bb.selectedTrollingMotorId = null;
+        bb.selectTrollingMotor();
+
+        System.assertEquals(null, bb.selectedTrollingMotor);
+        System.assertEquals(null, bb.trollingMotorUpgradePrice);
+        System.assertEquals(standardBoatPrice, bb.runningPrice);
+
+         /* ******* Simulate reselecting the included motor option ******* */
+        bb.selectedTrollingMotorId = selectedBoat.Standard_Trolling_Motor__c;
+        bb.selectTrollingMotor();
+
+        System.assertEquals('Included', bb.trollingMotorUpgradePrice);
+        System.assertEquals(standardBoatPrice, bb.runningPrice);
+    }
+
+    testmethod static void selectAccessoryTest() {
+        init();
+        test.startTest();
+        bb.selectedBoatId = selectedBoat.Id;
+        /* this method gets call when the Boat select leist changes */
+        bb.selectBoatFromSelector();
+        String eOptionPid;
+        for( String id: bb.availableBoatOptions.get('Electronics').keySet() ){
+            eOptionPid = id;
+            break;
+        }
+        //lets add a fee association to the option product
+        insert new Product_Fee_Map__c(Parent_Product__c = eOptionpid, Fee_Product__c = feeProducts[2].Id);
+        Decimal productPrice = [SELECT UnitPrice
+                                FROM PricebookEntry
+                                WHERE PriceBook2Id = :standard_pb2.Id
+                                AND Product2Id = :eOptionPid].UnitPrice;
+        pageRef.getParameters().put('productId', eOptionPid);
+        pageRef.getParameters().put('quantity', '1');
+        pageRef.getParameters().put( 'productType', 'boat' );
+        Test.setCurrentPageReference(pageRef);
+        bb.productOptionsChanged();
+        test.stopTest();
+
+        //add 100 to product price due to fee we added above
+        System.assertEquals( productPrice + 100 + standardBoatPrice, bb.runningPrice);
+        System.assert( bb.getSelectedPartsIdList().get('boat').contains(':'+eOptionPid+':') );
+        System.assertEquals( 1, bb.selectedItemsMap.get('boat').size() );
+        System.assertEquals( 3, bb.subOptions.get(eOptionPid).size() );
+
+        /* Select one of 3 subOptions that should be available */
+        String subId = bb.subOptions.get(eOptionPid)[0].id;
+        // lets add a fee product association to this sub product
+        insert new Product_Fee_Map__c(Parent_Product__c = subId, Fee_Product__c = feeProducts[0].Id);
+        Decimal subProductPrice = [SELECT UnitPrice
+                                FROM PricebookEntry
+                                WHERE PriceBook2Id = :standard_pb2.Id
+                                AND Product2Id = :subId].UnitPrice;
+        pageRef.getParameters().put('productId', subId);
+        pageRef.getParameters().put('parentProductId', eOptionPid);
+        pageRef.getParameters().put('quantity', '1');
+        pageRef.getParameters().put( 'productType', 'boat' );
+        Test.setCurrentPageReference(pageRef);
+        bb.productOptionsChanged();
+
+        //add 100 due to the fee product we associated above
+        System.assertEquals( productPrice + 100 + standardBoatPrice + subProductPrice+ 100, bb.runningPrice);
+
+        /* ****** Simulate reselecting the 0 as option quantity **** */
+        pageRef.getParameters().put('quantity', '0');
+        pageRef.getParameters().put('productId', eOptionPid);
+        pageRef.getParameters().remove('parentProductId');
+        Test.setCurrentPageReference(pageRef);
+        bb.productOptionsChanged();
+
+        System.assertEquals( standardBoatPrice, bb.runningPrice);
+    }
+
+    testmethod static void saveToOpportunityTest() {
+
+        init();
+        test.startTest();
+        //select a boat
+        bb.selectedBoatId = selectedBoat.Id;
+        bb.selectBoat();
+        //running price should now be 100 + 3 fees of $100 each = 400
+
+        //select a trailer +$100
+        bb.selectedTrailerId = bb.availableProductUpgrades.get('trailers')[0].Id;
+        bb.selectTrailer();
+        //running price should now be 500
+
+        //select a motor +$100
+        bb.selectedMotorId = bb.availableProductUpgrades.get('motors')[0].Id;
+        //add a fee to the motor
+        insert new Product_Fee_Map__c(Parent_Product__c = bb.selectedMotorId, Fee_Product__c = feeProducts[0].Id);
+        bb.selectMotor();
+        //running price should now be 700
+        //select 1 Electronics option and 1 of its sub options
+        String eOptionPid;
+        for( String id: bb.availableBoatOptions.get('Electronics').keySet() ){
+            eOptionPid = id;
+            break;
+        }
+
+        pageRef.getParameters().put('productId', eOptionPid);
+        pageRef.getParameters().put('quantity', '1');
+        pageRef.getParameters().put( 'productType', 'boat' );
+        Test.setCurrentPageReference(pageRef);
+        bb.productOptionsChanged();
+
+        String subId = bb.subOptions.get(eOptionPid)[0].id;
+        pageRef.getParameters().put('productId', subId);
+        pageRef.getParameters().put('parentProductId', eOptionPid);
+        pageRef.getParameters().put('quantity', '1');
+        pageRef.getParameters().put( 'productType', 'boat' );
+        Test.setCurrentPageReference(pageRef);
+        bb.productOptionsChanged();
+
+        //running price should be 720
+
+        //bb.saveToOpportunity();
+        Opportunity updateOpp = [SELECT Id, Amount, Total_Amount__c, Addition_Fees__c, (SELECT Id FROM OpportunityLineItems), (SELECT Id FROM FeeLineItems__r) FROM Opportunity WHERE Id = :opp.Id];
+
+        test.stopTest();
+
+        System.assertEquals(720.00, bb.runningPrice);
+        System.assertEquals(10, updateOpp.OpportunityLineItems.size() );
+        //opportunity amount equals the boatbuilder runningAmount + the Fee Class fees on the boat (which is 400)
+        //System.assertEquals(400, updateOpp.Addition_Fees__c);
+        System.assertEquals(720.00, updateOpp.Total_Amount__c);
+
+        //Lets add a Product Manually to the Opportunity Line Items
+        // Product2 part = factory.insertTestProducts(1, 'Part', 'Seating')[0];
+        // PriceBookEntry pbe = [SELECT Id FROM PriceBookEntry WHERE PriceBook2Id = :standard_pb2.Id AND Product2Id = :part.Id AND isActive = true];
+        // OpportunityLineItem oItem = new OpportunityLineItem(
+        //     OpportunityId = updateOpp.Id,
+        //     Quantity = 1,
+        //     Description = part.name,
+        //     UnitPrice = 300,
+        //     PriceBookEntryId = pbe.Id
+        // );
+        // insert oItem;
+         updateOpp = [SELECT Id, Amount, Total_Amount__c, Addition_Fees__c, (SELECT Id FROM OpportunityLineItems), (SELECT Id FROM FeeLineItems__r) FROM Opportunity WHERE Id = :opp.Id];
+         //Should now have 6 Opportunity Line Items
+        System.assertEquals(10, updateOpp.OpportunityLineItems.size() );
+
+        // Lets reload the boatbuilder with the opportunity and make sure all
+        // options are still intact
+
+        pageRef = Page.generatequotePDFSections_2;
+        pageRef.getParameters().put('id', updateOpp.Id);
+        Test.setCurrentPageReference(pageRef);
+
+        BoatPDFBuilder_2 newbb = new BoatPDFBuilder_2();
+        System.assertEquals(720.00, newbb.runningPrice);
+        System.assertEquals(newbb.selectedBoatId, bb.selectedBoatId);
+        System.assertEquals(newbb.selectedMotorId, bb.selectedMotorId);
+        System.assertEquals(newbb.selectedTrailerId, bb.selectedTrailerId);
+        System.assertEquals(newbb.selectedTrollingMotorId, bb.selectedTrollingMotorId);
+
+        // Lets add a discount with positive value
+
+        pageRef.getParameters().remove('opportunity_id');
+        pageRef.getParameters().put('discountDescription', 'A discount from the Test Suite');
+        pageRef.getParameters().put('discountAmount', '20');
+        Test.setCurrentPageReference(pageRef);
+
+        newbb.createDiscount();
+
+        System.assertEquals(1, newbb.discountItems.size());
+        System.assertEquals(20, newbb.discountTotal);
+        System.assertEquals(700, newbb.runningPrice);
+
+         // Lets add a discount with positive value
+
+        pageRef.getParameters().put('discountDescription', 'A second discount from the Test Suite');
+        pageRef.getParameters().put('discountAmount', '-100');
+        Test.setCurrentPageReference(pageRef);
+
+        newbb.createDiscount();
+
+        System.assertEquals(2, newbb.discountItems.size());
+        System.assertEquals(120, newbb.discountTotal);
+        System.assertEquals(600, newbb.runningPrice);
+
+//        newbb.saveToOpportunity();
+        updateOpp = [SELECT Id, Amount, Total_Amount__c, (SELECT Id FROM OpportunityLineItems) FROM Opportunity WHERE Id = :opp.Id];
+        System.assertEquals(600, updateOpp.total_Amount__c);
+         System.assertEquals(12, updateOpp.OpportunityLineItems.size() );
+
+        pageRef = Page.generatequotePDFSections_2;
+        pageRef.getParameters().put('opportunity_id', updateOpp.Id);
+        Test.setCurrentPageReference(pageRef);
+
+        newbb = new BoatPDFBuilder_2();
+        System.assertEquals(2, newbb.discountItems.size());
+        System.assertEquals(120, newbb.discountTotal);
+        System.assertEquals(600, newbb.runningPrice);
+
+        //Now we will remove one of the discounts
+
+        String discountId = newbb.discountItems[0].id;
+        pageRef.getParameters().remove('id');
+        pageRef.getParameters().put('discountId', discountId);
+        Test.setCurrentPageReference(pageRef);
+        newbb.removeDiscount();
+
+        System.assertEquals(1, newbb.discountItems.size());
+        System.assertEquals(100, newbb.discountTotal);
+        System.assertEquals(620, newbb.runningPrice);
+
+//        newbb.saveToOpportunity();
+        updateOpp = [SELECT Id, Amount, Total_Amount__c, (SELECT Id FROM OpportunityLineItems) FROM Opportunity WHERE Id = :opp.Id];
+        System.assertEquals(620, updateOpp.total_Amount__c);
+        System.assertEquals(11, updateOpp.OpportunityLineItems.size() );
+
+
+
+
+        // //Should still have 5 Opportunity Line Items
+        // updateOpp = [SELECT Id, Amount, Total_Amount__c, Addition_Fees__c, (SELECT Id FROM OpportunityLineItems), (SELECT Id FROM FeeLineItems__r) FROM Opportunity WHERE Id = :opp.Id];
+        // System.assertEquals(6, updateOpp.OpportunityLineItems.size() );
+
+        // Let's add an insurance line item
+
+    //     Schema.DescribeSObjectResult R = Product2.SObjectType.getDescribe();
+    //     Map<String,Schema.RecordTypeInfo> rtMapByName = R.getRecordTypeInfosByName();
+    //     Schema.RecordTypeInfo rtByName =  rtMapByName.get('Insurance');
+
+    //     Product2 insurance_product = new Product2(
+    //           Name = 'Insurance Type A',
+    //           RecordTypeId = rtByName.getRecordTypeId()
+    //         );
+    //     insert insurance_product;
+
+    //     PricebookEntry pbe = new PricebookEntry(
+    //         Pricebook2Id = standard_pb2.Id,
+    //         Product2Id = insurance_product.Id,
+    //         UnitPrice = 1000,
+    //         isActive = true
+    //     );
+    //     insert pbe;
+
+    //     OpportunityLineItem oli = new OpportunityLineItem(
+    //         OpportunityId = updateOpp.Id,
+    //         Quantity = 1,
+    //         UnitPrice = pbe.UnitPrice,
+    //         PricebookEntryId = pbe.Id
+    //     );
+
+    // insert oli;
+
+    // updateOpp = [SELECT Id, InsuranceTotal__c FROM Opportunity WHERE Id = :opp.Id];
+    //     System.assertEquals(1000, updateOpp.InsuranceTotal__c);
+
+
+
+
+    }
+
+    testmethod static void additionalAccessoriesTest() {
+         init();
+        test.startTest();
+        //select a boat
+        bb.selectedBoatId = selectedBoat.Id;
+        bb.selectBoat();
+        //running price should now be 100 + 3 fees of $100 each = 400
+
+        //select a trailer +$100
+        bb.selectedTrailerId = bb.availableProductUpgrades.get('trailers')[0].Id;
+        bb.selectTrailer();
+        //running price should now be 500
+
+        //select a motor +$100
+        bb.selectedMotorId = bb.availableProductUpgrades.get('motors')[0].Id;
+        //add a fee to the motor
+        insert new Product_Fee_Map__c(Parent_Product__c = bb.selectedMotorId, Fee_Product__c = feeProducts[0].Id);
+        bb.selectMotor();
+        //running price should now be 700
+        //select 1 Electronics option and 1 of its sub options
+        String eOptionPid;
+        for( String id: bb.availableBoatOptions.get('Electronics').keySet() ){
+            eOptionPid = id;
+            break;
+        }
+
+        pageRef.getParameters().put('productId', eOptionPid);
+        pageRef.getParameters().put('quantity', '1');
+        pageRef.getParameters().put( 'productType', 'boat' );
+        Test.setCurrentPageReference(pageRef);
+        bb.productOptionsChanged();
+
+        String subId = bb.subOptions.get(eOptionPid)[0].id;
+        pageRef.getParameters().put('productId', subId);
+        pageRef.getParameters().put('parentProductId', eOptionPid);
+        pageRef.getParameters().put('quantity', '1');
+        pageRef.getParameters().put( 'productType', 'boat' );
+        Test.setCurrentPageReference(pageRef);
+        bb.productOptionsChanged();
+
+        //running price should be 720
+
+        List<Product2> randomProducts = new List<Product2>();
+        for(Integer i=0;i<6;i++ ){
+            Product2 p = new Product2(
+                Name = 'Random Product - ' + String.valueOf(i),
+                isActive = true
+            );
+            randomProducts.add(p);
+        }
+        insert randomProducts;
+        List<PricebookEntry> pbes = new List<PricebookEntry>();
+        for( Product2 p : randomProducts){
+            PricebookEntry pbe = new PricebookEntry(
+                Product2Id = p.Id,
+                Pricebook2Id = standard_pb2.Id,
+                UnitPrice = 10,
+                isActive = true
+            );
+            pbes.add(pbe);
+        }
+        insert pbes;
+        List<Product2> searchProducts = BoatBuilder.productSearch('Random Product');
+
+        Product2 selected = BoatBuilder.selectProduct(searchProducts[2].Id);
+
+        pageRef.getParameters().put('productId', selected.Id);
+        pageRef.getParameters().put('quantity', '4');
+        pageRef.getParameters().put('salePrice', '10');
+        Test.setCurrentPageReference(pageRef);
+        bb.addAdditionalAccessory();
+
+        //running price should now be 760
+
+//        bb.saveToOpportunity();
+        Opportunity updateOpp = [SELECT Id, Amount, Total_Amount__c, (SELECT Id FROM OpportunityLineItems) FROM Opportunity WHERE Id = :opp.Id];
+
+        test.stopTest();
+
+        System.assertEquals(6, searchProducts.size() );
+        System.assertEquals('Random Product - 2', selected.Name);
+        System.assertEquals(10, selected.PricebookEntries[0].UnitPrice);
+        System.assertEquals(760.00, bb.runningPrice);
+        System.assertEquals(760.00, updateOpp.Amount);
+
+        pageRef.getParameters().put('aaId', bb.additionalAccessories[0].Id);
+        Test.setCurrentPageReference(pageRef);
+        bb.removeAdditionalAccessory();
+
+        System.assertEquals(720, bb.runningPrice);
+
+    }
+
+
+}

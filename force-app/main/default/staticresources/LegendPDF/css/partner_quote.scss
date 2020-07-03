@@ -1,0 +1,223 @@
+$blue: #00AEE9;
+
+@page {
+  margin-top: 0.5cm;
+  margin-bottom: 1.25cm;
+  @bottom-left {
+    content: element( footerLeft );
+    border-top: 3px solid $blue;
+  }
+
+  @bottom-center {
+    border-top: 3px solid $blue;
+    content: element( footerCenter );
+  }
+
+  @bottom-right {
+    border-top: 3px solid $blue;
+    content: element( footerRight );
+  }
+}
+
+#footerLeft {
+  position: running(footerLeft);
+  color: #777;
+  font-size: 9px;
+  padding-left:9px;
+}
+
+#footerCenter {
+  position: running( footerCenter );
+  color: #777;
+  font-size: 9px;
+  text-align: center;
+}
+
+#footerRight {
+  position: running( footerRight );
+  font-size: 9px;
+  color: #777;
+  text-align: right;
+  padding-right:9px;
+  .page-number:after {
+    padding-left:5px;
+    content: counter(page);
+  }
+}
+
+
+page[size="A4"] {
+  background: white;
+  margin-left: 0.25cm;
+  margin-right:0.25cm;
+  display: block;
+  // margin: 0 auto;
+  box-shadow: 0 0 0.5cm rgba(0,0,0,0.3);
+  //padding:10px;
+  position:relative;
+}
+
+.header1 .left p {
+  height: 110px !important;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 6cm;
+  overflow: hidden;
+  text-align: center;
+}
+
+.header1 .left img {
+  margin:0;
+  position: relative;
+}
+
+.header2 {
+  & > div + div {
+
+    & > div > .blockSummary {
+
+    }
+
+    & > p {
+      width:100%;
+      float:initial !important;
+      font-size: 9px;
+      color:#444;
+      top:0;
+      & > span:first-child {
+        float: left;
+        display:none;
+        & + span {
+          float: right;
+          padding-right:10px;
+        }
+      }
+    }
+  }
+
+  &.payments-visible {
+
+    & > div + div {
+
+      & > div > .blockSummary {
+        margin-top: 2px !important;
+        & > table.icons {
+          display:none;
+        }
+
+        & > div {
+          background-image:none;
+          background: $blue;
+          height:74px !important;
+          width:100%;
+          & > table {
+            margin:0 !important;
+            tr td {
+              width: 33.33% !important;
+              line-height: 18px;
+              padding-top: 0 !important;
+              padding-bottom:0 !important;
+              font-size: 12px;
+              & span {
+                font-size: 14px;
+              }
+            }
+            tr:first-child td {
+              border-bottom: 1px solid #FFF;
+            }
+          }
+        }
+      }
+
+      & > p {
+        & > span:first-child {
+          display:block;
+        }
+      }
+    }
+  }
+}
+
+.invoice_body {
+  clear:both;
+  overflow: hidden;
+
+  .invoice-body-left {
+    width: 58%;
+    box-sizing: border-box;
+    display:inline;
+    margin-right: 1%;
+
+    p.itemRow {
+      line-height:16px;
+      height: 16px;
+      font-size:10px;
+      color: #333;
+      border-top: 1px solid #D0D0D0;
+      position:relative;
+      z-index:2;
+      &.odd {
+        background:#FFF;
+      }
+      &.even {
+        background:#FFF;
+      }
+      &.subItemRow {
+        border-top: none;
+        padding-left:10px;
+        margin-left:15px;
+        z-index:1;
+        line-height:15px;
+        height: 15px;
+        font-size:9px;
+        &:before {
+          content: "";
+          position:absolute;
+          width: 8px;
+          height:15px;
+          left:-4px;
+          top: -10px;
+          border: 1px solid #D0D0D0;
+          border-right-color: transparent;
+          border-top-color: transparent;
+        }
+      }
+    }
+  }
+  .invoice-body-right {
+    width:40%;
+    display:inline;
+    box-sizing: border-box;
+  }
+}
+
+table.itemsTable {
+  width:100%;
+  thead {
+    tr {
+      td {
+        padding-left:20px;
+        border-bottom: 1px solid #D0D0D0;
+      }
+    }
+  }
+  tbody {
+    tr.odd,
+    tr.even {
+      td {
+        background: #FFF;
+        border-top: 1px solid #D0D0D0;
+        line-height:16px;
+        font-size:10px;
+        color: #333;
+      }
+      &:last-child td {
+        border-bottom:1px solid #D0D0D0;
+      }
+    }
+    tr.subTotal td {
+      line-height: 17px;
+    }
+  }
+}
