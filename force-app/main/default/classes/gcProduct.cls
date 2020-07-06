@@ -116,7 +116,7 @@ public without sharing class gcProduct {
 		for(AcctSeed__GL_Account__c gl :
 				[SELECT Id, Uniquefier__c
 			 	 FROM AcctSeed__GL_Account__c
-			 	 WHERE Uniquefier__c IN ('InventoryBoats','InventoryParts','CogsBoats','CogsParts','SalesBoats','SalesParts')])
+			 	 WHERE Uniquefier__c IN ('InventoryBoats','InventoryParts','CogsBoats','CogsParts','SalesBoats','SalesParts', 'NonInvCogs')])
 		{
 			mapGL.put(gl.Uniquefier__c,gl.Id);
 		}
@@ -190,10 +190,14 @@ public without sharing class gcProduct {
 				}
 				else
 				{
+					System.debug(p.AcctSeed__Inventory_Type__c);
 					if(p.AcctSeed__Inventory_Type__c != 'Purchased' && p.AcctSeed__Inventory_Type__c != 'Raw Materials') {
 						p.AcctSeed__Inventory_Type__c = null;
 						p.AcctSeed__Inventory_GL_Account__c = null;
 					}
+
+					if( p.AcctSeed__Inventory_Type__c == 'Purchased' &&  p.AcctSeed__Inventory_GL_Account__c == null )
+						p.AcctSeed__Inventory_GL_Account__c = mapGL.get('NonInvCogs');
 
 					if(p.AcctSeed__Expense_GL_Account__c == null)
 					   p.AcctSeed__Expense_GL_Account__c = mapGL.get('CogsParts');
