@@ -14,3 +14,48 @@
 .THIS.error-container .slds-notify {
   max-width:500px;
 }
+
+.THIS .project-closed_message_overlay {
+  display: none;
+  position:absolute;
+  height:100%;
+  width:100%;
+  top:0;
+  left:0;
+  background: rgba( 255,255,255, 0.5);
+  z-index: 1000
+}
+
+.THIS .project-closed_message_container {
+  max-width: 400px;
+  margin:auto;
+  padding: 1rem;
+  background:#c50101;
+  color: white;
+  margin-top: 15%;
+  font-size:1.5rem;
+  border-radius:6px;
+  display:flex;
+  box-shadow: 0px 5px 9px 0px #980255;
+}
+
+.THIS .project-closed_message_container > div:first-child {
+  width: 20%;
+  margin: auto;
+}
+
+.THIS .project-closed_message_container > div:first-child svg {
+  fill: #FFF;
+}
+
+.THIS .project-closed_message_container p:last-child {
+  font-size: 0.9rem;
+}
+
+.THIS.project-closed .commission-record-content {
+  filter:blur(4px);
+}
+
+.THIS.project-closed .project-closed_message_overlay {
+  display:initial;
+}

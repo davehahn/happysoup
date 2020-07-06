@@ -7,7 +7,7 @@
   {
     let feed = component.find('feed'),
         record = component.get('v.record');
-
+console.log( JSON.parse( JSON.stringify( record ) ) );
     if( record && record.isViewable && typeof( feed ) !== 'undefined' )
     {
       feed.set('v.body', []);

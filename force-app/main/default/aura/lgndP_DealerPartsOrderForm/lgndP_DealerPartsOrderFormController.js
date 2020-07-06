@@ -32,6 +32,7 @@
         helper.calOrderTotal(component);
       }),
       $A.getCallback( function( err ) {
+        console.log( 'error here?');
         LightningUtils.errorToast( err );
       })
     );

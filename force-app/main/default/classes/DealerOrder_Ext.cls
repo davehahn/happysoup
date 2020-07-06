@@ -2007,6 +2007,7 @@ public without sharing class DealerOrder_Ext {
     List<AcctSeed__Project__c> erps = new List<AcctSeed__Project__c>();
     if( !wrapper.isMotorRequest )
     {
+      System.debug( wrapper );
       for( Integer i=0; i<quantity; i++ )
       {
         erps.add( new AcctSeed__Project__c(
@@ -2020,6 +2021,7 @@ public without sharing class DealerOrder_Ext {
           GMBLASERP__Pricebook__c = dealerOrder.Pricebook__c,
           RecordTypeId = erpRT,
           Dealer_Order_Number__c = dealerOrder.Order_Number__c,
+          Boat_Product__c = wrapper.boat != null ? wrapper.boat.id : null,
           //GMBLASERP__Warehouse__c = wh.Id,
           Customer_Notes__c = wrapper.notes
         ) );
@@ -2276,7 +2278,7 @@ public without sharing class DealerOrder_Ext {
         (SELECT Id, UnitPrice FROM PricebookEntries WHERE Pricebook2Id = :pricebookId)
         FROM Product2
         WHERE Id IN :prodIds] );
-    AcctSeed__Project__c[] erps = [SELECT Id,
+    AcctSeed__Project__c[] erps = [SELECT Id, Boat_Product__c,
                                    (SELECT Id
                                     FROM AcctSeed__Project_Tasks__r
                                     WHERE Name LIKE '%Dealer Order Lines%'
@@ -2289,6 +2291,11 @@ public without sharing class DealerOrder_Ext {
     for( AcctSeed__Project__c erp : erps )
     {
       erp.Customer_Notes__c = wrapper.notes;
+      if( wrapper.boat != null &&
+          erp.Boat_Product__c != wrapper.boat.id )
+        erp.Boat_Product__c = wrapper.boat.id;
+      if( wrapper.boat == null )
+        erp.Boat_Product__c = null;
       oldMaterials.addAll( erp.AcctSeedERP__Project_Materials__r );
       for( OptionWrapper ow : wrapper.lineItems )
       {
