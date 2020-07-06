@@ -17,6 +17,7 @@ export default class CommissionRecordHeader extends LightningElement {
   connectedCallback()
   {
     this.selectedRecord = this.commissionRecords[0];
+    console.log( JSON.parse( JSON.stringify( this.selectedRecord ) ) );
     this.dispatchChangeEvent();
     this.menuItems = Array.from( this.commissionRecords, record =>
       new Object( {
@@ -47,6 +48,11 @@ export default class CommissionRecordHeader extends LightningElement {
   get menuDisabled()
   {
     return this.isEditingPayment === true;
+  }
+
+  get selectedTaskURL()
+  {
+    return `/${this.selectedRecord.taskId}`;
   }
 
   handleMenuSelect(event)
