@@ -58,7 +58,10 @@ function determineUI(theme)
     case 'Theme4t':
       return 'sf1';
       break;
+    case 'Theme4u':
+      return 'lightningConsole';
+      break;
     default:
-      alert('Can Not Determine Your User Experience!');
+      console('Can Not Determine Your User Experience!');
   }
 }

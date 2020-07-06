@@ -268,7 +268,7 @@
           </p>
         </div>
         <div class="disclaimer-container">
-          <apex:outputPanel rendered="{!!hideServiceDisclaimer}">
+          <apex:outputPanel rendered="{!showServiceDisclaimer}">
             <p>
               I hearby authorize the repair work hereinafter set forth to be done along with the necessary
               material and agree that you are not responsible for lost or damage to vehicle or articles left
@@ -296,6 +296,17 @@
               </p>
               <p>Customer Signature</p>
             </div>
+          </apex:outputPanel>
+          <apex:outputPanel rendered="{!showWarrantyDisclaimer}">
+            <p>
+              <strong>Warranty Credit or Parts Return Disclaimer: </strong>
+              All Legend Boats warranty credit authorizations and/or parts return requested claims are subject to audit
+              which may include hull and/or parts inspection by authorized Legend Boats personnel prior to approval and
+              reimbursement.  If the claim upon audit or the condition of the returned hull and/or parts is not
+              consistent with the description on the claim and warranty guidelines, Legend Boats has the right to review
+              and/or adjust the claim after being approved even if paid.  Upon inspection, Legend Boats also reserves the
+              right to reject the claim if it is found that the claim does not meet warranty guidelines.
+            </p>
           </apex:outputPanel>
         </div>
 

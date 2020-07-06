@@ -1,0 +1,268 @@
+$blue: #00AEE9;
+
+@page {
+    size:letter;
+    margin-top: 0.5cm;
+    margin-left: 0.5cm;
+    margin-right: 0.5cm;
+    margin-bottom: 1.75cm;
+
+    /*size: 8.5in 11in; width height */
+
+    /*@bottom-left
+    {
+      content: element(footer);
+    }*/
+    @bottom-left {
+      content: element( footerLeft );
+      border-top: 3px solid $blue;
+    }
+
+    @bottom-center {
+      border-top: 3px solid $blue;
+      content: element( footerCenter );
+    }
+
+    @bottom-right {
+      border-top: 3px solid $blue;
+      content: element( footerRight );
+    }
+
+    @bottom-right-corner {
+      font-size: 10px;
+      color: #777;
+      content: counter(page);
+    }
+}
+
+// #footerName {
+//   position: running(footerLeft);
+//   font-size: 10px;
+//   color: #777;
+//   display: inline-block;
+// }
+
+#footerLeft {
+  position: running(footerLeft);
+  p {
+    color: #777;
+    font-size: 9px;
+    &.tax_numbers {
+      padding-top: 3px;
+      span {
+        padding-right: 5px;
+      }
+    }
+  }
+}
+
+#footerCenter {
+  position: running( footerCenter );
+  p {
+    color: #777;
+    font-size: 9px;
+    text-align: center;
+    &.tax_numbers {
+      padding-top: 3px;
+      span {
+        padding-right: 5px;
+      }
+    }
+  }
+}
+
+#footerRight {
+  position: running( footerRight );
+  span {
+    font-size: 9px;
+    color: #777;
+    float: right;
+    padding-right: 5px;
+  }
+}
+
+body {
+    font-family:sans-serif !important;
+    background: #FFF;
+}
+
+p {
+    margin:0;
+    padding:0;
+}
+
+.header2 div + div > div .blockSummary > table tr td:first-child img {
+    left:-5px !important;
+}
+
+.header2 div + div > div .blockSummary > table tr td:first-child + td img {
+    left:-8px !important;
+}
+.header2 div + div > div .blockSummary > table tr td:first-child + td + td img {
+    left:0 !important;
+}
+
+.customer_info .buyer_name {
+    color: #444;
+    font-weight: bold;
+    font-size:17px;
+}
+
+table.itemsTable > thead > tr > td {
+    border-bottom: 2px solid #999;
+    background: #FFF;
+    line-height:25px;
+    height: 25px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+table.itemsTable > tbody > tr > td {
+    background: #FFF;
+    line-height:25px;
+    height: 25px;
+    font-size: 12px;
+    border-bottom: 1px solid #999;
+}
+
+table.itemsTable > tbody > tr:first-child > td {
+    /*border-top: 1px solid #999;*/
+}
+
+
+.service-order-erp,
+.dealer-order-erp {
+
+  .header1 {
+    .left {
+      img {
+        margin-top: 0;
+      }
+    }
+  }
+
+  .header2 {
+    overflow: visible;
+
+    .customer-info {
+      p:first-child {
+        top: -29px
+      }
+      .buyer_name {
+        top:-19px;
+        font-size:17px;
+        font-weight: bold;
+      }
+      .buyer_address {
+        top: -18px;
+        font-size: 12px;
+      }
+      .buyer_phone,
+      .buyer_email {
+        top:-18px;
+        font-size: 10px;
+        padding-top: 2px;
+      }
+    }
+  }
+
+  .serial-info {
+    margin-top: 15px;
+    table.itemsTable {
+      tbody tr td {
+        color: #777;
+      }
+    }
+  }
+
+  .key-info {
+    div {
+      line-height: 25px;
+      height: 25px;
+      font-size: 12px;
+      color: #777;
+    }
+    .label {
+       text-align:center;
+    }
+    .fake-input {
+      border:1px solid #CCC;
+      height: 100%;
+      width: 80%;
+      padding: 0 5px;
+    }
+  }
+
+  .signatures_and_summary {
+    page-break-inside: avoid;
+    page-break-after: auto;
+
+    h2 {
+      font-size: 14px;
+      height: 25px;
+      line-height:25px;
+      color: #666;
+      font-weight: bold;
+      margin: 0;
+      padding: 0;
+      padding-left: 16px;
+    }
+
+    .notes_container {
+      min-height: 70px;
+      width: 95%;
+      margin: 0;
+      border:1px solid #CCC;
+      background: #fff;
+      color:#666;
+      font-size: 12px;
+
+      p {
+        margin: 8px;
+        ol, ul {
+            margin:4px 0;
+            list-style-position: inside;
+            padding-left:5px;
+        }
+      }
+    }
+
+    .disclaimer-container {
+      width:95%;
+      border:1px solid #CCC;
+      color:#777;
+      font-size: 9px;
+      min-height:70px;
+      margin-top: 10px;
+      &.no-border {
+        border: none;
+      }
+
+      p {
+        margin:8px;
+      }
+      .signature_container {
+        p:first-child {
+          margin-top:50px;
+          border-bottom:1px solid #777;
+          span {
+            float:right;
+            font-size: 11px;
+            color: #777;
+            position: relative;
+            display:block;
+            margin-top: -15px;
+          }
+          & + p {
+            font-size: 14px;
+            text-align: left;
+            padding-left: 20px;
+          }
+        }
+      }
+    }
+
+  }
+
+}
+

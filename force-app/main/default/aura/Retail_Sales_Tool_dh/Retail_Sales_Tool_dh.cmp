@@ -3,8 +3,12 @@
   <aura:attribute name="saleType" type="String" />
   <aura:attribute name="fromCPQ" type="Boolean" default="false" />
   <aura:attribute name="makeAccountTaxExempt" type="Boolean" default="false" />
+  <aura:attribute name="inConsoleView" type="Boolean" />
 
+  <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
   <aura:handler event="c:Retail_Sales_Tool_OppCreated_Event" action="{!c.handleOppCreated}"/>
+  <lightning:workspaceAPI aura:id="workspace" />
+
 
   <aura:if isTrue="{! empty(v.saleType)}">
     <div>

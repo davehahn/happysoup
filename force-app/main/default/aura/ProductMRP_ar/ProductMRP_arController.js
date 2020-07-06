@@ -42,5 +42,21 @@
         var page = component.get("v.page");
         component.set("v.page",1);
         helper.retrieveProductDetails(component, event, idFilter);
+    },
+    handleSupplierSelected: function( component, event, helper )
+    {
+        console.log('I am here');
+        helper.clearFilters(component);
+        helper.clearProductSearch(component);
+        var accountId = event.getParam("accountId");
+        component.set("v.idSupplier",accountId);
+        var page = component.get("v.page");
+        component.set("v.page",1);
+        //helper.retrieveProductDetails(component, event, null);
+    },
+    clearAccountSelection: function( component, event, helper )
+    {
+        console.log('I am clear');
+        component.set("v.idSupplier","");
     }
 })
