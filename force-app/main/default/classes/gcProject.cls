@@ -1069,9 +1069,15 @@ public without sharing class gcProject {
         toUpdate.addAll( doInsuranceCalculation_perERP( changeMap.get(erpId), matMap.get(erpId) ) );
     }
     if( toUpdate.size() > 0 ) {
+      Set<Id> taskIds = new Set<Id>();
+      for( AcctSeedERP__Material__c mat : toUpdate )
+      {
+        taskIds.add( mat.AcctSeedERP__Project_Task__c );
+      }
       Boolean matBool = gcMaterial.disableTrigger;
       gcMaterial.disableTrigger = true;
       update toUpdate;
+      gcProjectTask.rollUpOrderItem( taskIds );
       CommissionLineItem2_Service.syncToMaterials( toUpdate );
       gcMaterial.disableTrigger = matBool;
 
