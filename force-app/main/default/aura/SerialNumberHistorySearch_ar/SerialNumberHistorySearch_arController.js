@@ -1,12 +1,21 @@
 ({
     doInit: function(component, event, helper) {
         helper.toggleSpinner(component, true);
-        helper.runAction(component, "c.listWarehouses", {}, function(response) {
-            component.set("v.whOptions", response.getReturnValue());
-        });
-        helper.runAction(component, "c.checkCanSeeGLAmount", {}, function(response) {
-            component.set("v.canSeeGLAmount", response.getReturnValue());
-        });
+        var idRec = component.get("v.recordId");
+        if(idRec != null){
+          component.set("v.donotShowTop",true);
+          component.set("v.idSerial",idRec);
+          component.set("v.idProduct","");
+          component.set("v.idWarehouse","");
+          helper.retrievehistory(component, event, helper);
+        }else{
+          helper.runAction(component, "c.listWarehouses", {}, function(response) {
+              component.set("v.whOptions", response.getReturnValue());
+          });
+          helper.runAction(component, "c.checkCanSeeGLAmount", {}, function(response) {
+              component.set("v.canSeeGLAmount", response.getReturnValue());
+          });
+        }
     },
     warehouseChanged: function(component, event, helper) {
         helper.retrievehistory(component, event, helper);
