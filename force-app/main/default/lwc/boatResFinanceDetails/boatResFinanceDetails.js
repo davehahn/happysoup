@@ -13,6 +13,9 @@ export default class BoatResFinanceDetails extends LightningElement {
   @api amount;
   @api amort;
   @api interestRate;
+  @api premiumPackValue;
+  @api premiumPackItems;
+  @api hideInputs
   //@track downPayment = 1000;
 
   numOfAmortYears = 20;
@@ -112,6 +115,11 @@ export default class BoatResFinanceDetails extends LightningElement {
     this.payments.weekly = ( payment / ( 52 / compound_per_year ) );
 
     fireEvent( this.pageRef, 'paymentAmountChanged', this.payments );
+  }
+
+  get retailPlusPremium(){
+    const value = this.amount + this.premiumPackValue;
+    return value;
   }
 
 }
