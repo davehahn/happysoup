@@ -204,6 +204,16 @@
             <h2 class="right_heading slds-text-heading_medium">Your X18</h2>
             <p class="right_delivery">Estimated Deliver: 5-8 weeks</p>
             <c-cust-comm-order-summary></c-cust-comm-order-summary>
+            <template if:true={purchasePrice}>
+              <c-boat-res-finance-details payment-type={paymentType}
+                                          amount={purchasePrice}
+                                          deposit={paymentAmount}
+                                          interest-rate={interestRate}
+                                          amort={term}
+                                          premium-pack-value={boat.premiumPackage.value}
+                                          premium-pack-items={premiumPackItems}
+                                          hide-inputs="true"></c-boat-res-finance-details>
+            </template>
           </aside>
 
         </section>

@@ -296,6 +296,9 @@
   justify-content: space-between;
   align-items: center;
 }
+.cashAmount h3, .cashAmount h4, .cashAmount h5, .cashAmount h6{
+  padding-right: 0.5em;
+}
 .cashAmount lightning-formatted-number{
   font-size: 1.2em; font-weight: 600;
 }
@@ -305,4 +308,12 @@
   line-height: 1.25;
   display: block;
   margin-top: 0.5em;
+}
+
+[data-hide="true"]{
+  position: absolute;
+	overflow: hidden;
+	clip: rect(0 0 0 0);
+	height: 1px; width: 1px;
+	margin: -1px; padding: 0; border: 0;
 }

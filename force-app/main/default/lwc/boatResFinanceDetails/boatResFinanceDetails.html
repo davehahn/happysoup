@@ -31,8 +31,8 @@
         <small>Purchase Price shown with added Preferred Equipment Package.</small>
       </header>
       <aside class="cash_premiumPack">
-        <h4>Preferred Equipment Package</h4>
-        <ul>
+        <h4 data-hide={hideInputs}>Preferred Equipment Package</h4>
+        <ul data-hide={hideInputs}>
           <template for:each={premiumPackItems} for:item="item">
             <li key={item} class="premiumPackage_item">{item}</li>
           </template>
@@ -74,8 +74,9 @@
                                size="12"
                                small-device-size="12"
                                medium-device-size="6"
-                               large-device-size="6">
-          <div class="form-input form-input_currency">
+                               large-device-size="6"
+                               data-hide={hideInputs}>
+          <div class="form-input form-input_currency" data-hide={hideInputs}>
             <label>Downpayment</label>
             <span></span>
             <input label="Downpayment"
@@ -89,8 +90,9 @@
                                size="12"
                                small-device-size="12"
                                medium-device-size="6"
-                               large-device-size="6">
-          <div class="form-input form-input_select">
+                               large-device-size="6"
+                               data-hide={hideInputs}>
+          <div class="form-input form-input_select" data-hide={hideInputs}>
             <label>Term</label>
             <span></span>
             <select data-field-name="term" onchange={handleTermChange} value={amort}>
