@@ -1,6 +1,10 @@
 <aura:component controller="DealerPartsOrderController" implements="forceCommunity:availableForAllPageTypes,force:appHostable,flexipage:availableForAllPageTypes" >
 
 
+    <aura:attribute name="environmentType"
+                    type="String"
+                    default="Standard"
+                    description="This variable is used to indicate which environment this component is displayed on, f.i. community vs standard lightning" />
     <aura:attribute name="saleType" type="String" default="Partner" />
     <aura:attribute name="inConsoleView" type="Boolean" />
     <aura:attribute name="isSelectingAccount" type="Boolean" default="false" />

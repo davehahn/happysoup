@@ -18,6 +18,7 @@ public class CommissionWrapper
     @AuraEnabled public String taskId;
     @AuraEnabled public String taskName;
     @AuraEnabled public Boolean isViewable;
+    @AuraEnabled public Boolean projectIsClosedLost;
 
     @AuraEnabled public Boolean canViewAllCommissions = LGND_Utilities.CustomPermissions.canViewAllCommissionRecord;
     @AuraEnabled public Boolean canUndoApproved = LGND_Utilities.CustomPermissions.canReOpenCommissionRecord;
@@ -38,6 +39,7 @@ public class CommissionWrapper
       this.taskId = cRec.Project_Task__c;
       this.taskName = cRec.Project_Task__r.Name;
       this.isViewable = checkAccess( cRec.Commission_Payments__r );
+      this.projectIsClosedLost = cRec.Project__r.Stage__c == 'Closed Lost';
     }
 
     private Boolean checkAccess( List<CommissionPayment2__c> payments )

@@ -14,6 +14,7 @@ public with sharing class CommissionRecord2_Selector extends Application_Selecto
       'Calculation_Method__c',
       'TaxProvince__c',
       'Project__c',
+      'Project__r.Stage__c',
       'Project_Task__c',
       'Project_Task__r.Name',
       'Status__c',

@@ -403,6 +403,17 @@
         <template>Sales_Process/Legend_Insurance</template>
     </alerts>
     <alerts>
+        <fullName>Montreal_ERP_Tagging_Pending</fullName>
+        <description>Montreal - ERP Tagging Pending</description>
+        <protected>false</protected>
+        <recipients>
+            <recipient>maxime@legendboats.com</recipient>
+            <type>user</type>
+        </recipients>
+        <senderType>DefaultWorkflowUser</senderType>
+        <template>To_Do_Notification_Templates/Montreal_ERP_Tagging_Pending</template>
+    </alerts>
+    <alerts>
         <fullName>Montreal_Notification_Assign_Boat_Specialist_Retail_ERP</fullName>
         <description>Montreal Notification Assign Boat Specialist Retail ERP</description>
         <protected>false</protected>
@@ -2424,17 +2435,12 @@
     <rules>
         <fullName>One Year Boat Anniversary Pickup</fullName>
         <active>true</active>
-        <criteriaItems>
-            <field>AcctSeed__Project__c.Stage__c</field>
-            <operation>equals</operation>
-            <value>Delivered</value>
-        </criteriaItems>
-        <criteriaItems>
-            <field>AcctSeed__Project__c.RecordTypeId</field>
-            <operation>equals</operation>
-            <value>Retail Boat Sale</value>
-        </criteriaItems>
         <description>Email sent to customer 1 year after the boat has been picked up</description>
+        <formula>AND(
+TEXT(Stage__c) = &apos;Delivered&apos;,
+RecordType.Name  = &apos;Retail Boat Sale&apos;,
+TEXT(AcctSeed__Account__r.Preferred_Language__c) = &apos;English&apos;
+)</formula>
         <triggerType>onCreateOrTriggeringUpdate</triggerType>
         <workflowTimeTriggers>
             <actions>

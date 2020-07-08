@@ -1,14 +1,21 @@
 ({
   inConsole: function( component )
   {
-    var workspaceAPI = component.find('workspace');
+    var workspaceAPI = component.find('workspace'),
+        envType = component.get('v.environmentType');
     return new Promise( (resolve, reject ) => {
-      workspaceAPI.isConsoleNavigation().then(function(response) {
-       resolve(response);
-      })
-      .catch(function(error) {
-        reject(error);
-      });
+      if( envType === 'Community' ){
+        resolve( false );
+      }
+      else
+      {
+        workspaceAPI.isConsoleNavigation().then(function(response) {
+          resolve(response);
+        })
+        .catch(function(error) {
+          reject(error);
+        });
+      }
     })
   },
 
