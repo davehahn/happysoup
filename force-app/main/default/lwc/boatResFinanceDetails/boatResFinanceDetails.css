@@ -255,5 +255,54 @@
 
 .payment-line_value.highlight {
   font-size: 1.5rem;
+  font-weight: 600;
   line-height: 1.2;
+}
+
+/*
+┌─┐┌─┐┌─┐┬ ┬  ┌┬┐┌─┐┌┐
+│  ├─┤└─┐├─┤   │ ├─┤├┴┐
+└─┘┴ ┴└─┘┴ ┴   ┴ ┴ ┴└─┘
+*/
+.cash_purchasePrice,
+.cash_premiumPack,
+.cash_savings{
+  background: #efefef;
+}
+.cash_purchasePrice{
+  padding: 1.5em 1.5em 0;
+}
+.cash_premiumPack,
+.cash_savings{
+  padding: 1em 1.5em 0;
+}
+.cash_savings{
+  padding-bottom: 1.5em;
+}
+.cash_purchasePrice::after,
+.cash_premiumPack::after{
+  content: '';
+  display: block;
+  width: 100%;
+  height: 1px;
+  background-color: #ddd;
+  margin-top: 1em;
+}
+.cash_premiumPack ul{
+  margin: 1em 0;
+}
+.cashAmount{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.cashAmount lightning-formatted-number{
+  font-size: 1.2em; font-weight: 600;
+}
+[data-section="cash"] small{
+  color: #737373;
+  font-size: 85%;
+  line-height: 1.25;
+  display: block;
+  margin-top: 0.5em;
 }

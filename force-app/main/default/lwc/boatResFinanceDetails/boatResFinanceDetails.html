@@ -20,7 +20,43 @@
 
     <!-- CASH SECTION -->
     <section class="finance-option-page" data-section="cash">
-      <h1>Doing CASH</h1>
+      <header class="cash_purchasePrice">
+        <div class="cashAmount">
+          <h3>Purchase Price</h3>
+          <lightning-formatted-number value={retailPlusPremium}
+                                    format-style="currency"
+                                    class="fake-disabled-input"
+                                    currency-code="CAD"></lightning-formatted-number>
+        </div>
+        <small>Purchase Price shown with added Preferred Equipment Package.</small>
+      </header>
+      <aside class="cash_premiumPack">
+        <h4>Preferred Equipment Package</h4>
+        <ul>
+          <template for:each={premiumPackItems} for:item="item">
+            <li key={item} class="premiumPackage_item">{item}</li>
+          </template>
+        </ul>
+        <div class="cashAmount">
+          <h6>Preferred Equipment Savings</h6>
+          <lightning-formatted-number value={premiumPackValue}
+                                    format-style="currency"
+                                    class="fake-disabled-input"
+                                    currency-code="CAD"></lightning-formatted-number>
+        </div>
+      </aside>
+      <footer class="cash_savings">
+        <div class="cashAmount">
+          <h5>After Preferred Package Savings</h5>
+          <lightning-formatted-number value={amount}
+                                    format-style="currency"
+                                    class="fake-disabled-input"
+                                    currency-code="CAD"></lightning-formatted-number>
+        </div>
+        <small>
+          All In Price includes freight, prep and admin fees. Excludes taxes. Taxes calculated based on final purchase price.
+        </small>
+      </footer>
     </section>
 
     <!-- LOAN SECTION -->

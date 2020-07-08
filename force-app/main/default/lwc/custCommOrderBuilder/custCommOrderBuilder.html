@@ -284,7 +284,7 @@
       </div>
 
       <aside class="modal-container">
-        <h2 class="vh">Additional Details Overlay</h2>
+        <h2 class="vh">Additional Details</h2>
         <div class="modal-content">
           <div class="modal-content_body">
             <nav class="modal-content_sidebar">
@@ -307,11 +307,13 @@
                                               amount={purchasePrice}
                                               deposit={paymentAmount}
                                               interest-rate={interestRate}
-                                              amort={term}></c-boat-res-finance-details>
+                                              amort={term}
+                                              premium-pack-value={boat.premiumPackage.value}
+                                              premium-pack-items={premiumPackItems}></c-boat-res-finance-details>
                 </template>
               </section>
               <section class="modal-page" data-modal-page="premium-package">
-                <h3>Preferred Equipment Package</h3>
+                <h3 class="modal-heading">Preferred Equipment Package</h3>
                 <ul class="premiumPackage">
                   <template for:each={premiumPackItems} for:item="item">
                     <li key={item} class="premiumPackage_item">{item}</li>
@@ -320,7 +322,7 @@
                 <p class="premiumPackage_value">Value: <span>{premiumPackValue}</span></p>
               </section>
               <section class="modal-page" data-modal-page="delivery">
-                <h3>Delivery Timing</h3>
+                <h3 class="modal-heading">Delivery Timing</h3>
               </section>
               <span class="modal-content_close">
                 <button onclick={handleCloseModal}>
