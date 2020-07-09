@@ -527,6 +527,8 @@ global without sharing class gcProject_Ext {
     {
       ERPOrderTaskNames__c taskNameSetting = ERPOrderTaskNames__c.getInstance(taskName);
       Boolean showInInvoice = false;
+      if(taskNameSetting == null)
+        showInInvoice = true;
       Id commissionRecordOverride = null;
       if(taskNameSetting != null && taskNameSetting.Show_In_Invoice__c)
         showInInvoice = true;
