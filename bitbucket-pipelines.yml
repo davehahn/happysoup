@@ -22,10 +22,13 @@ definitions:
           - ./deploy_static_resources.sh $PRODUCTION_PASSWORD
     - step: &validate-deploy
         name: Validate Deploy
+        size: 2x
         script:
           - echo 'Validating deploy against new Sandbox'
           - chmod +x validateBuild.sh
           - ./validateBuild.sh $PRODUCTION_PASSWORD
+        after-script:
+          - ./create_pull_request.sh master $BITBUCKET_EXIT_CODE
 
 pipelines:
   custom:
