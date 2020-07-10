@@ -22,7 +22,6 @@ definitions:
           - ./deploy_static_resources.sh $PRODUCTION_PASSWORD
     - step: &validate-deploy
         name: Validate Deploy
-        size: 2x
         script:
           - echo 'Validating deploy against new Sandbox'
           - chmod +x validateBuild.sh
@@ -42,7 +41,6 @@ pipelines:
       - step:
           name: Deploy to Staging
           deployment: staging
-          size: 2x
           script:
             - echo 'Deploy to Staging'
             - chmod +x pipeline_deploy.sh
