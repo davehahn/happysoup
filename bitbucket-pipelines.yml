@@ -65,13 +65,12 @@ pipelines:
       - step: *build-sandbox
       - step: *build-static-resources
       - step: *validate-deploy
-      - step: *validate-deploy
-customer-community:
-          - step:
-              name: Validate Customer Community
-              script:
-                - echo 'Validating Customer Community deploy'
-                - chmod +x pipeline_deploy.sh
-                - ./pipeline_deploy.sh $DEPLOY_KEY $BOAT_RESERVATION_STAGING_USERNAME $BOAT_RESERVATION_STAGING_CONSUMER_KEY $BOAT_RESERVATION_STAGING_URL
+    customer-community:
+      - step:
+          name: Validate Customer Community
+          script:
+            - echo 'Validating Customer Community deploy'
+            - chmod +x pipeline_deploy.sh
+            - ./pipeline_deploy.sh $DEPLOY_KEY $BOAT_RESERVATION_STAGING_USERNAME $BOAT_RESERVATION_STAGING_CONSUMER_KEY $BOAT_RESERVATION_STAGING_URL
 
 
