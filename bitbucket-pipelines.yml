@@ -28,6 +28,7 @@ definitions:
           - chmod +x validateBuild.sh
           - ./validateBuild.sh $PRODUCTION_PASSWORD
         after-script:
+          - chmod +x create_pull_request.sh
           - ./create_pull_request.sh master $BITBUCKET_EXIT_CODE
 
 pipelines:
