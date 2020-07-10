@@ -57,7 +57,7 @@ pipelines:
       - step: *build-sandbox
       - step: *build-static-resources
       - step: *validate-deploy
-   feature/*:
+    feature/*:
       - step: *build-sandbox
       - step: *build-static-resources
       - step: *validate-deploy
