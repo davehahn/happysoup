@@ -160,8 +160,9 @@ public with sharing class gcDealerReseved_Receipt {
     										AcctSeed__Purpose__c = 'Customer Receipt',
                                             AcctSeed__Receipt_Date__c = receiptDate,
                                             AcctSeed__Project__c = idERP,
-                                            AcctSeed__Project_Task__c = idERPTask
-    									);
+                                            AcctSeed__Project_Task__c = idERPTask,
+                                            AcctSeed__GL_Account_Variable_1__c = idGLV1
+                                        );
     	listCrs.add(customerCr);
         if(checkCharge > 0) {
             AcctSeed__Cash_Receipt__c bankCr = new AcctSeed__Cash_Receipt__c(
@@ -171,7 +172,8 @@ public with sharing class gcDealerReseved_Receipt {
                 AcctSeed__Payment_Reference__c = System.now().format(),
                 Payment_Method__c = 'Bank Funding',
                 AcctSeed__Purpose__c = 'Customer Receipt',
-                AcctSeed__Receipt_Date__c = receiptDate
+                AcctSeed__Receipt_Date__c = receiptDate,
+                AcctSeed__GL_Account_Variable_1__c = idGLV1
             );
             listCrs.add(bankCr);
 

@@ -15,6 +15,9 @@ public with sharing class JournalEntry_Service {
         List<CommissionRecord2__c> listCR = new List<CommissionRecord2__c>();
         Map<Id, Id> mapUserGLV4 = new Map<Id, Id>();
         Map<Id, AcctSeed__Journal_Entry__c> mapProjectJE = new Map<Id, AcctSeed__Journal_Entry__c>();
+        Date earliestOpenDate = GMBLASERP.gcAccountingPeriod.dateEarliestOpen();
+        System.debug('earliestOpenDate');
+        System.debug(earliestOpenDate);
         for (CommissionRecord2__c cr : [
             SELECT Id,
                 Journal_Entry__c,
@@ -39,6 +42,12 @@ public with sharing class JournalEntry_Service {
                 mapUserGLV4.put(cp.Owner__c, null);
             }
             Datetime dt = cr.Project__r.Delivery_Date__c;
+            if(earliestOpenDate != null && dt != null){
+                if(earliestOpenDate > dt.date()){
+                    dt = Date.today();
+                    //throw new gcException(earliestOpenDate.format() + ' ' + dt.format());
+                }
+            }
             if(dt == null) dt = Date.today();
             mapProjectJE.put(cr.Project__c, new AcctSeed__Journal_Entry__c(
                 Name = 'Commission Payment - ' + cr.Project_Task__r.Name,
@@ -67,13 +76,15 @@ public with sharing class JournalEntry_Service {
                 Id idGLV4 = mapUserGLV4.get(cp.Owner__c);
                 Id idProject = cr.Project__c;
                 Id idProjectTask = cr.Project_Task__c;
-                Id idJE = mapProjectJE.get(idProject).Id;
+                AcctSeed__Journal_Entry__c je = mapProjectJE.get(idProject);
+                Id idJE = je.Id;
+                Date jeDate = je.AcctSeed__Journal_Date__c;
                 AcctSeed__Journal_Entry_Line__c debitJE = new AcctSeed__Journal_Entry_Line__c(
                     AcctSeed__Debit__c = amt,
                     AcctSeed__GL_Account__c = idDebitGL,
                     AcctSeed__Project__c = idProject,
                     AcctSeed__Project_Task__c = idProjectTask,
-                    AcctSeed__Date__c = dt.date(),
+                    AcctSeed__Date__c = jeDate,
                     AcctSeed__Units__c = 1,
                     Commission_Payment__c = cp.Id,
                     AcctSeed__GL_Account_Variable_1__c = idGlv1,
@@ -87,7 +98,7 @@ public with sharing class JournalEntry_Service {
                     AcctSeed__GL_Account__c = idCreditGL,
                     AcctSeed__Project__c = idProject,
                     AcctSeed__Project_Task__c = idProjectTask,
-                    AcctSeed__Date__c = dt.date(),
+                    AcctSeed__Date__c = jeDate,
                     AcctSeed__Units__c = 1,
                     Commission_Payment__c = cp.Id,
                     AcctSeed__GL_Account_Variable_1__c = idGlv1,
@@ -113,6 +124,7 @@ public with sharing class JournalEntry_Service {
     }
     public static void unTakeExpense(Set<Id> setIdFilter) {
         System.debug(LoggingLevel.ERROR,'setIdFilter:'+setIdFilter);
+        Date earliestOpenDate = GMBLASERP.gcAccountingPeriod.dateEarliestOpen();
         Set<Id> setJEToReverse = new Set<Id>();
         List<CommissionRecord2__c> listCR = new List<CommissionRecord2__c>();
         for (CommissionRecord2__c cr : [SELECT Id, Journal_Entry__c FROM CommissionRecord2__c WHERE Id IN :setIdFilter]){
@@ -133,6 +145,7 @@ public with sharing class JournalEntry_Service {
                 AcctSeed__Total_Debits__c,
                 Commission_Record__c,
                 Project__c,
+                AcctSeed__Journal_Date__c,
                 (SELECT
                     Id,
                     AcctSeed__Account__c,
@@ -161,6 +174,9 @@ public with sharing class JournalEntry_Service {
             {
                 AcctSeed__Journal_Entry__c newJE = je.clone(false,true);
                 newJE.Name = je.Name + '-Reversal';
+                if(earliestOpenDate != null && earliestOpenDate > je.AcctSeed__Journal_Date__c){
+                     newJE.AcctSeed__Journal_Date__c = Date.today();
+                }
                 mapNewJE.put(je.Id,newJE);
                 for(AcctSeed__Journal_Entry_Line__c jel : je.AcctSeed__Journal_Entry_Lines__r)
                 {

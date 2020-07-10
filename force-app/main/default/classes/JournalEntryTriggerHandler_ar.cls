@@ -61,6 +61,11 @@ public without sharing class JournalEntryTriggerHandler_ar {
 		 Boolean boolIsUpdate,
 		 Boolean boolIsDelete)
 	{
+		if(boolIsBefore && (boolIsUpdate || boolIsInsert)) {
+			for (AcctSeed__Journal_Entry__c je : listNew) {
+				je.AcctSeed__Ledger__c = gcConstants.idActualLedger;
+			}
+		}
 		if(!boolIsBefore && (boolIsUpdate || boolIsInsert))
 		{
 			Set<Id> setIdJE = new Set<Id>();

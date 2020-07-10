@@ -3,15 +3,39 @@ image:
   username: $DOCKER_HUB_USERNAME
   password: $DOCKER_HUB_PASSWORD
   email: $DOCKER_HUB_EMAIL
+
+definitions:
+  steps:
+    - step: &build-sandbox
+        name: Create Sandbox
+        script:
+          - echo 'Spinning up Sandbox'
+          - chmod +x create_sandbox.sh
+          - ./create_sandbox.sh $DEPLOY_KEY $PRODUCTION_USERNAME $PRODUCTION_CONSUMER_KEY $PRODUCTION_URL
+        artifacts:
+          - org_info.json
+    - step: &build-static-resources
+        name: Deploy Static Resources
+        script:
+          - echo 'Deploying Static Resources'
+          - chmod +x deploy_static_resources.sh
+          - ./deploy_static_resources.sh $PRODUCTION_PASSWORD
+    - step: &validate-deploy
+        name: Validate Deploy
+        script:
+          - echo 'Validating deploy against new Sandbox'
+          - chmod +x validateBuild.sh
+          - ./validateBuild.sh $PRODUCTION_PASSWORD
+        after-script:
+          - chmod +x create_pull_request.sh
+          - ./create_pull_request.sh master $BITBUCKET_EXIT_CODE
+
 pipelines:
   custom:
     validate:
-      - step:
-          name: Validate Deploy
-          script:
-            - echo 'Validating deploy'
-            - chmod +x pipeline_validate.sh
-            - ./pipeline_validate.sh $DEPLOY_KEY $VALIDATE_USERNAME $VALIDATE_CONSUMER_KEY $VALIDATE_URL
+      - step: *build-sandbox
+      - step: *build-static-resources
+      - step: *validate-deploy
   branches:
     master:
       - step:
@@ -30,30 +54,24 @@ pipelines:
             - chmod +x pipeline_deploy.sh
             - ./pipeline_deploy.sh $DEPLOY_KEY $SFDC_USERNAME $SFDC_CONSUMER_KEY $SFDC_URL
     bugfix/*:
-      - step:
-          name: Validate Deploy
-          script:
-            - echo 'Validating deploy'
-            - chmod +x pipeline_validate.sh
-            - ./pipeline_validate.sh $DEPLOY_KEY $VALIDATE_USERNAME $VALIDATE_CONSUMER_KEY $VALIDATE_URL
-    feature/*:
-      - step:
-          name: Validate Deploy
-          script:
-            - echo 'Validating deploy'
-            - chmod +x pipeline_validate.sh
-            - ./pipeline_validate.sh $DEPLOY_KEY $VALIDATE_USERNAME $VALIDATE_CONSUMER_KEY $VALIDATE_URL
+      - step: *build-sandbox
+      - step: *build-static-resources
+      - step: *validate-deploy
+   feature/*:
+      - step: *build-sandbox
+      - step: *build-static-resources
+      - step: *validate-deploy
     declarative/*:
-      - step:
-          name: Validate Deploy
-          script:
-            - echo 'Validating deploy'
-            - chmod +x pipeline_validate.sh
-            - ./pipeline_validate.sh $DEPLOY_KEY $VALIDATE_USERNAME $VALIDATE_CONSUMER_KEY $VALIDATE_URL
-    customer-community:
+      - step: *build-sandbox
+      - step: *build-static-resources
+      - step: *validate-deploy
+      - step: *validate-deploy
+customer-community:
           - step:
               name: Validate Customer Community
               script:
                 - echo 'Validating Customer Community deploy'
                 - chmod +x pipeline_deploy.sh
                 - ./pipeline_deploy.sh $DEPLOY_KEY $BOAT_RESERVATION_STAGING_USERNAME $BOAT_RESERVATION_STAGING_CONSUMER_KEY $BOAT_RESERVATION_STAGING_URL
+
+

@@ -1,7 +1,9 @@
-<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:lightningQuickAction" access="global" controller="SerialNumberHistorySearchController_ar">
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:lightningQuickAction,force:hasRecordId" access="global" controller="SerialNumberHistorySearchController_ar">
+    <aura:attribute name="recordId" type="Id" />
     <aura:attribute name="listData" type="sObject[]"/>
 	<aura:attribute name="whOptions" type="sObject[]" />
 	<aura:attribute name="idWarehouse" type="String" />
+    <aura:attribute name="donotShowTop" type="Boolean" default="false" />
 	<aura:attribute name="canSeeGLAmount" type="Boolean" />
 	<aura:attribute name="idProduct" type="String" />
 	<aura:attribute name="idSerial" type="String" />
@@ -10,6 +12,7 @@
     <aura:handler name="change" value="{!v.listData}" action="{!c.changeTotal}"/>
     <aura:handler name="filterSelectedEvent" event="c:filterSelectedEvent" action="{!c.handleFilterSelected}" />
     <aura:handler name="serialSelectedEvent" event="c:serialSelectedEvent" action="{!c.handleSerialSelected}" />
+    <aura:if isTrue="{!!v.donotShowTop}">
     <lightning:card class="slds-p-around_none slds-m-around_none" title="">
     	<lightning:layout horizontalAlign="center" verticalAlign="center">
     		<lightning:layoutItem class="slds-m-around_small">
@@ -28,6 +31,7 @@
 			</lightning:layoutItem>
 		</lightning:layout>
     </lightning:card>
+    </aura:if>
     <lightning:card class="slds-p-around_small" title="">
         <table class="slds-table slds-table_bordered slds-p-around_none slds-m-around_none">
             <thead>

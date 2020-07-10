@@ -119,6 +119,7 @@ public without sharing class gcCashDisbursement {
 		if(paymentMethod == 'MasterCard'
 			|| paymentMethod == 'Visa'
 			|| paymentMethod == 'Debit'
+			|| paymentMethod == 'Credit Card'
 			|| paymentMethod == 'Accord D')
 			cd.AcctSeed__Bank_Account__c = gcConstants.idGlMerchantDebitCredit;
 		else if(paymentMethod == 'Cheque'
