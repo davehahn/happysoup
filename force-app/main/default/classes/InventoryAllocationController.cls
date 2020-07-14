@@ -1521,12 +1521,15 @@
           AcctSeed__Project__c wholesaleProject;
           Set<Id> setIdRetailSerialProducts = new Set<Id>();
           Set<Id> setIdWholesaleSerialProducts = new Set<Id>();
+          Map<Id,Map<Id,Id>> mapProjectProductSerial = new Map<Id,Map<Id,Id>>();
+          mapProjectProductSerial.put(idRERP,new Map<Id,Id>());
           AcctSeedERP__Purchase_Order_Line__c pol;
             String modelYear = '';
           for(AcctSeed__Project__c p :
             [SELECT Id, BoatModelYear__c,
               Retail_ERP__c,
-              (SELECT Id, AcctSeedERP__Product__c FROM AcctSeedERP__Project_Materials__r WHERE AcctSeedERP__Product__r.AcctSeedERP__Serialized__c = true),
+                Serial_Number__c,
+              (SELECT Id, AcctSeedERP__Product__c, GMBLASERP__Serial_Number__c FROM AcctSeedERP__Project_Materials__r WHERE AcctSeedERP__Product__r.AcctSeedERP__Serialized__c = true),
               (SELECT Id, GMBLASERP__Lot__c, GMBLASERP__Lot__r.Name, AcctSeedERP__Product__c FROM AcctSeedERP__Purchase_Order_Lines__r LIMIT 1)
             FROM AcctSeed__Project__c
             WHERE Locked__c = false
@@ -1537,8 +1540,10 @@
             if(!p.AcctSeedERP__Purchase_Order_Lines__r.isEmpty())
               pol = p.AcctSeedERP__Purchase_Order_Lines__r[0];
 
-            for(AcctSeedERP__Material__c matl : p.AcctSeedERP__Project_Materials__r)
-              setIdRetailSerialProducts.add(matl.AcctSeedERP__Product__c);
+            for(AcctSeedERP__Material__c matl : p.AcctSeedERP__Project_Materials__r) {
+                mapProjectProductSerial.get(idRERP).put(matl.AcctSeedERP__Product__c,matl.GMBLASERP__Serial_Number__c);
+                setIdRetailSerialProducts.add(matl.AcctSeedERP__Product__c);
+            }
           }
           //if(pol == null) throw new InventoryAllocationException( 'The wholesale ERP does not have a related Purchase Order Line.');
             AcctSeed__Project__c retailPR;
@@ -1575,6 +1580,11 @@
           m.put('lotName',modelYear);
           m.put('idProduct',idWholesalePrd);
             System.debug(m);
+            if(!mapProjectProductSerial.isEmpty()) {
+                System.debug('mapProjectProductSerial');
+                System.debug(mapProjectProductSerial);
+                gcMaterial.updateRetailMaterialSerial(mapProjectProductSerial);
+            }
           return m;
         }
 
@@ -1584,6 +1594,7 @@
           AcctSeed__Project__c wholesaleProject;
           AcctSeedERP__Purchase_Order_Line__c pol;
             String modelYear = '';
+            Id idRetailERP;
           for(AcctSeed__Project__c p :
             [SELECT Id, BoatModelYear__c,
               (SELECT Id, GMBLASERP__Lot__c, GMBLASERP__Lot__r.Name, AcctSeedERP__Product__c FROM AcctSeedERP__Purchase_Order_Lines__r LIMIT 1)
@@ -1598,7 +1609,8 @@
           }
           //if(pol == null) throw new InventoryAllocationException( 'The wholesale ERP does not have a related Purchase Order Line.');
           for(AcctSeed__Project__c pr : [SELECT Id, Locked__c, Retail_ERP__c, Serial_Number__c FROM AcctSeed__Project__c WHERE Id = :idWErp AND Retail_ERP__c != null]){
-            pr.Retail_ERP__c = null;
+              idRetailERP = pr.Retail_ERP__c;
+              pr.Retail_ERP__c = null;
             update pr;
           }
             System.debug('wholesaleProject');
@@ -1607,6 +1619,13 @@
           m.put('lotName',modelYear);
           m.put('idProduct',idWholesaleProd);
             System.debug(m);
+            if(idRetailERP != null) {
+                System.debug('idRetailERP');
+                System.debug(idRetailERP);
+                gcMaterial.untagRetailERPItems(new Set<Id>{
+                    idRetailERP
+                });
+            }
           return m;
         }
 

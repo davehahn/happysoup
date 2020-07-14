@@ -20,6 +20,8 @@ public without sharing class InventoryAllocationRetail_ar {
         Map<String,Integer> mapStock = new Map<String,Integer>();
         Map<String,List<SerialNumber>> mapInventoryList = new Map<String,List<SerialNumber>>();
         Map<String,Set<String>> mapProductIdToSetYear = new Map<String,Set<String>>();
+		Id erpPartnerBoatSaleRtId = gcConstants.idRtProjectPartnerBoatSale;
+		Id erpRetailBoatSaleRtId = gcConstants.idRtProjectBoatSale;
 
         String returnDateQuery;
         returnDateQuery = queryInv + ' AND GMBLASERP__Lot__r.name IN:listFilterYear ';
@@ -99,7 +101,7 @@ public without sharing class InventoryAllocationRetail_ar {
 		String queryShipments = 'Select Id, Name, AcctSeedERP__Product__r.RecordType.Name, AcctSeedERP__Product__r.Name, AcctSeedERP__Quantity_Allocated__c, AcctSeedERP__Product__c, GMBLASERP__Lot__r.Name, GMBLASERP__Serial_Number__c, GMBLASERP__Serial_Number__r.Name, ';
 		queryShipments += ' AcctSeedERP__Project__c, AcctSeedERP__Project__r.Name, AcctSeedERP__Project__r.AcctSeed__Account__r.Name, AcctSeedERP__Project__r.AcctSeedERP__Work_Order_Number__c, AcctSeedERP__Project__r.Stage__c, AcctSeedERP__Project__r.CreatedDate, AcctSeedERP__Project__r.Delivery_Date__c, AcctSeedERP__Project__r.Arrival_Date__c, AcctSeedERP__Project__r.BoatModelYear__c, AcctSeedERP__Project__r.Serial_Number__c, AcctSeedERP__Project__r.ERP_Serial_In_Inventory__c, AcctSeedERP__Project__r.Serial_Number__r.Name, AcctSeedERP__Project__r.TrailerModelYear__c,  ';
 		queryShipments += ' AcctSeedERP__Project__r.Retail_ERP__c, AcctSeedERP__Project__r.Retail_ERP__r.ERP_Serial_In_Inventory__c, AcctSeedERP__Project__r.Retail_ERP__r.Name, AcctSeedERP__Project__r.Retail_ERP__r.AcctSeed__Account__r.Name, AcctSeedERP__Project__r.Retail_ERP__r.AcctSeedERP__Work_Order_Number__c, AcctSeedERP__Project__r.Retail_ERP__r.Stage__c, AcctSeedERP__Project__r.Retail_ERP__r.CreatedDate, AcctSeedERP__Project__r.Retail_ERP__r.Delivery_Date__c, AcctSeedERP__Project__r.Retail_ERP__r.Arrival_Date__c, AcctSeedERP__Project__r.Retail_ERP__r.BoatModelYear__c, AcctSeedERP__Project__r.Retail_ERP__r.Serial_Number__c, AcctSeedERP__Project__r.Retail_ERP__r.Serial_Number__r.Name, AcctSeedERP__Project__r.Retail_ERP__r.TrailerModelYear__c ';
-		queryShipments += ' from  AcctSeedERP__Material__c Where AcctSeedERP__Product__c IN:allProducts AND (GMBLASERP__Lot__r.Name IN:listFilterYear OR AcctSeedERP__Project__r.BoatModelYear__c IN:listFilterYear) AND AcctSeedERP__Project__r.Stage__c != \'Delivered\' AND (AcctSeedERP__Project__r.GMBLASERP__Warehouse__c =:filterWarehouse OR AcctSeedERP__Project__r.AcctSeed__Account__r.Warehouse__c =:filterWarehouse) order by AcctSeedERP__Project__r.Arrival_Date__c';
+		queryShipments += ' from  AcctSeedERP__Material__c Where AcctSeedERP__Product__c IN:allProducts AND (GMBLASERP__Lot__r.Name IN:listFilterYear OR AcctSeedERP__Project__r.BoatModelYear__c IN:listFilterYear) AND AcctSeedERP__Project__r.Stage__c != \'Delivered\' AND (AcctSeedERP__Project__r.GMBLASERP__Warehouse__c =:filterWarehouse OR AcctSeedERP__Project__r.AcctSeed__Account__r.Warehouse__c =:filterWarehouse) AND AcctSeedERP__Project__r.RecordTypeId =:erpPartnerBoatSaleRtId order by AcctSeedERP__Project__r.Arrival_Date__c';
 		System.debug('queryShipments');
 		System.debug(queryShipments);
         for (AcctSeedERP__Material__c orderLine : Database.query(queryShipments))
@@ -136,8 +138,6 @@ public without sharing class InventoryAllocationRetail_ar {
 		Map<String, Map<String, List<Map<String,String>>>> hoverOverDealerOrderDetails = new Map<String, Map<String, List<Map<String,String>>>>();
 		Map<Id,Boolean> mapRetailLinked = new Map<Id,Boolean>();
 		List<AcctSeedERP__Material__c> listRetailMaterials = new List<AcctSeedERP__Material__c>();
-		Id erpPartnerBoatSaleRtId = gcConstants.idRtProjectPartnerBoatSale;
-		Id erpRetailBoatSaleRtId = gcConstants.idRtProjectBoatSale;
 
 		Set<Id> rts = new Set<Id>{ erpPartnerBoatSaleRtId, erpRetailBoatSaleRtId };
 		for( AcctSeedERP__Material__c objMaterial : [ SELECT Id,
