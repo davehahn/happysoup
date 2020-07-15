@@ -145,6 +145,20 @@
         </outputAssignments>
     </recordLookups>
     <screens>
+        <name>Begin</name>
+        <label>Begin</label>
+        <locationX>68</locationX>
+        <locationY>167</locationY>
+        <allowBack>true</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>true</allowPause>
+        <connector>
+            <targetReference>GetRecordTypeID</targetReference>
+        </connector>
+        <showFooter>true</showFooter>
+        <showHeader>true</showHeader>
+    </screens>
+    <screens>
         <name>Create_Warranty_Return_Case_Screen</name>
         <label>Create Warranty Return Case</label>
         <locationX>456</locationX>
@@ -262,7 +276,7 @@
         <locationX>33</locationX>
         <locationY>39</locationY>
         <connector>
-            <targetReference>GetRecordTypeID</targetReference>
+            <targetReference>Begin</targetReference>
         </connector>
     </start>
     <status>Active</status>
