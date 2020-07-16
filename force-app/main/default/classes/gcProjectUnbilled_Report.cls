@@ -27,6 +27,20 @@ public with sharing class gcProjectUnbilled_Report {
         return listOptions;
     }
 
+    @RemoteAction @ReadOnly
+    public static List<Account> searchAccount(String searchTxt)
+    {
+        List<Account> listGLA = new List<Account>();
+        searchTxt = '%'+searchTxt.replaceAll('[*]','%') +'%';
+
+        for(Account acc : [SELECT Id, Name, (SELECT Id FROM AcctSeed__Projects__r LIMIT 1) FROM Account WHERE Name like:searchTxt ORDER BY Name limit 20])
+        {
+            if(!acc.AcctSeed__Projects__r.isEmpty())
+                listGLA.add(acc);
+        }
+        return listGLA;
+    }
+
     public void retrieveListGLV()
     {
         listGLV1 = new List<SelectOption>();
