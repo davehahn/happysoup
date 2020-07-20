@@ -13,6 +13,8 @@ export default class CustCommOrderBoatImage extends LightningElement {
     @api marketingContent;
 
     @track motorImage;
+    @track spareTireImage;
+    @track hasSpareTireImage = false;
     @track canvasImage;
     @track hasCanvasImage = false;
     @track transomImage;
@@ -71,6 +73,7 @@ export default class CustCommOrderBoatImage extends LightningElement {
 		handleImageChange(detail){
 			if(detail.optionImage.length > 0){
 				for(let image of detail.optionImage){
+				  console.log(JSON.stringify(image));
 					if(this.page === 'performance'){
 						if(image.imageType === 'backRight'){
 							this.motorImage = 'https://' + image.imageURL;
@@ -87,6 +90,10 @@ export default class CustCommOrderBoatImage extends LightningElement {
 						 	} else if(detail.optionName === 'Transom Saver - Motor Support'){
 								this.transomImage = (detail.addToComposite) ? 'https://' + image.imageURL : '';
 								this.hasTransomImage = (detail.addToComposite) ? true : false;
+							} else if(detail.optionName === 'Spare Tire and Bracket Kit'){
+								this.spareTireImage = (detail.addToComposite) ? 'https://' + image.imageURL : '';
+								this.hasSpareTireImage = (detail.addToComposite) ? true : false;
+								console.log('hasSpareTireImage: ', this.hasSpareTireImage);
 							} else if(detail.optionName === 'Galvanized Trailer'){
 								this.trailerImage = (detail.addToComposite) ? 'https://' + image.imageURL : '';
 								this.hasTrailerImage = (detail.addToComposite) ? true : false;

@@ -81,6 +81,7 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
   {
     if( data )
     {
+      console.log(data);
       this.boat = data;
     }
     else if( error )
@@ -447,5 +448,19 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
 			});
 		});
  	}
+
+
+ 	get shippingTiming(){
+		let marketingContent = this.boat.marketingContent;
+		for(const mc of marketingContent){
+			const label = mc['label'].toLowerCase();
+			const origContent = mc['content'];
+			const stripContent = origContent.replace(/(<([^>]+)>)/ig,"");
+			if(label === 'shippingtiming'){
+				return stripContent;
+			}
+		}
+  }
+
 
 }

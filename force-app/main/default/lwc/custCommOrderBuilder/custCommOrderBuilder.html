@@ -67,6 +67,7 @@
             <c-cust-comm-order-options options-title="Select Your Trailer" selections="one" selection-scope="local" is-init="true" options={traileringOptions} parent-product-sku={boat.id} show-option-price="true" boat-retail-price={boat.retailPrice} layout-type="alt-swatch" grouping-name="trailer_options" page='trailering'></c-cust-comm-order-options>
             <!--<c-cust-comm-order-options selections="one" selection-scope="global" options={boat.trailerUpgrades} show-option-price="true" boat-retail-price={boat.retailPrice} page='trailering'></c-cust-comm-order-options>-->
             <c-cust-comm-order-options options-title="More Trailering Options" selections="multiple" selection-scope="local" options={boat.optionalProducts.canvas} parent-product-sku={boat.id} show-option-price="true" boat-retail-price={boat.retailPrice} page='trailering'></c-cust-comm-order-options>
+            <c-cust-comm-order-options selections="multiple" selection-scope="local" options={boat.standardTrailer.optionalProducts.trailerAccessories} parent-product-sku={boat.id} show-option-price="true" boat-retail-price={boat.retailPrice} page='trailering'></c-cust-comm-order-options>
             <c-cust-comm-order-options selections="multiple" selection-scope="local" options={boat.standardMotor} sub-section="optionalProducts.trailerAccessories" addons="true" show-option-price="true" boat-retail-price={boat.retailPrice} page='trailering' parent-page='performance'></c-cust-comm-order-options>
             <c-cust-comm-order-options selections="multiple" selection-scope="local" options={boat.motorUpgrades} sub-section="optionalProducts.trailerAccessories" addons="true" show-option-price="true" boat-retail-price={boat.retailPrice} page='trailering' parent-page='performance'></c-cust-comm-order-options>
           </div>
@@ -333,6 +334,9 @@
               </section>
               <section class="modal-page" data-modal-page="delivery">
                 <h3 class="modal-heading">Delivery Timing</h3>
+                <p>You can expect to get your <strong>{boat.name}</strong> in <strong>{shippingTiming}</strong>.</p>
+                <p>By leveraging our dealer network all across Canada, we ensure you get your Legend Boat as soon as possible.</p>
+                <p>We will provide you more details around the exact timing and status of your delivery as we process your order.</p>
               </section>
               <span class="modal-content_close">
                 <button onclick={handleCloseModal}>
