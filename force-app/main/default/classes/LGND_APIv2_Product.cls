@@ -1,4 +1,4 @@
-public with sharing class LGND_APIv2_Product {
+public without sharing class LGND_APIv2_Product {
 
   public String Id { get; set; }
   public String Name { get; set; }
