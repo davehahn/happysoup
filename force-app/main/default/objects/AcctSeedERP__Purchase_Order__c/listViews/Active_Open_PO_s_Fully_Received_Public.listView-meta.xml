@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Active_Open_PO_s_Fully_Received_Public</fullName>
+    <columns>NAME</columns>
+    <columns>Warehouse__c</columns>
+    <columns>Stage__c</columns>
+    <columns>AcctSeedERP__Order_Date__c</columns>
+    <columns>AcctSeedERP__Vendor__c</columns>
+    <columns>UPDATEDBY_USER</columns>
+    <columns>CREATED_DATE</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>AcctSeedERP__Status__c</field>
+        <operation>equals</operation>
+        <value>Open</value>
+    </filters>
+    <filters>
+        <field>Total_Qty_Unreceived__c</field>
+        <operation>equals</operation>
+        <value>0</value>
+    </filters>
+    <label>Active/Open PO&apos;s Fully Received</label>
+</ListView>
