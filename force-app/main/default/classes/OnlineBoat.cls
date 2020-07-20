@@ -189,7 +189,7 @@ public virtual class OnlineBoat extends Online_Product
         }
         this.marketingContentMap.get( mc.Product__c ).add( mc );
       }
-      if( mc.Prod uct_Option__c != null )
+      if( mc.Product_Option__c != null )
       {
         if( !this.marketingContentMap.containsKey( mc.Product_Option__c ) )
         {
