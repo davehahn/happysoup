@@ -2,7 +2,7 @@
  * Created by dave on 2019-10-31.
  */
 
-public with sharing class PartnerLocator
+public without sharing class PartnerLocator
 {
   public class PartnerLocator_Exception extends Exception{}
 

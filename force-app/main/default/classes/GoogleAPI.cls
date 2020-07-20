@@ -2,7 +2,7 @@
  * Created by dave on 2019-10-31.
  */
 
-public with sharing class GoogleAPI
+public class GoogleAPI
 {
   private static final String googleApiKey = LGND_Constants.googleMapsAPI_Key;
 
@@ -42,6 +42,7 @@ public with sharing class GoogleAPI
 
     public GoogleDestinationsResult execute()
     {
+      System.debug( googleApiKey );
       String url = 'https://maps.googleapis.com/maps/api/distancematrix/json?';
       url += 'origins='+EncodingUtil.urlEncode( this.origin, 'UTF-8')+',Canada';
       url += '&destinations=' + EncodingUtil.urlEncode( this.destinations, 'UTF-8');
