@@ -45,15 +45,59 @@ public with sharing class Factory_Product {
     return p;
   }
 
-  public static Product2[] createSerializedProducts( String recordTypeName,
-                                                     String family,
-                                                     Integer count )
+  public static Product2[] buildSerializedProducts(
+    String recordTypeName,
+    String family,
+    Integer count )
   {
     Product2[] prods = new List<Product2>();
     for( Integer i=0; i<count; i++ )
     {
       prods.add( buildSerializedProduct( recordTypeName, family ) );
     }
+    return prods;
+  }
+
+  public static Product2[] createSerializedProducts( String recordTypeName,
+                                                     String family,
+                                                     Integer count )
+  {
+    Product2[] prods = buildSerializedProducts(
+      recordTypeName,
+      family,
+      count
+    );
+    Boolean orig = gcProduct.disableTrigger;
+    gcProduct.disableTrigger = true;
+    insert prods;
+    gcProduct.disableTrigger = orig;
+    return prods;
+  }
+
+  public static Product2[] buildSerializedProducts_AvailableOnline(
+    String recordTypeName,
+    String family,
+    Integer count )
+  {
+    Product2[] prods = new List<Product2>();
+    for( Integer i=0; i<count; i++ )
+    {
+      Product2 p =  buildSerializedProduct( recordTypeName, family );
+      p.Available_Online__c = true;
+      prods.add( p );
+    }
+    return prods;
+  }
+
+  public static Product2[] createSerializedProducts_AvailableOnline( String recordTypeName,
+                                                                     String family,
+                                                                     Integer count )
+  {
+    Product2[] prods = buildSerializedProducts_AvailableOnline(
+      recordTypeName,
+      family,
+      count
+    );
     Boolean orig = gcProduct.disableTrigger;
     gcProduct.disableTrigger = true;
     insert prods;

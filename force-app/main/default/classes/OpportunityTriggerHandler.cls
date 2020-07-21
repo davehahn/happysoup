@@ -165,7 +165,8 @@ public class OpportunityTriggerHandler {
         for( Opportunity opp : listNew )
         {
           opp.Tax_Rate_Federal__c = fedTaxRate;
-          opp.Business_Manager__c = users.get( opp.OwnerId ).Business_Office_Manager__c;
+          if( users.containsKey( opp.OwnerId ) )
+            opp.Business_Manager__c = users.get( opp.OwnerId ).Business_Office_Manager__c;
           if( users.get( opp.OwnerId ).Warehouse__c == null )
           {
             opp.Warehouse__c = warehouseFallback.Id;
@@ -181,20 +182,22 @@ public class OpportunityTriggerHandler {
               opp.Warehouse__c = warehouseFallback.id;
             }
           }
+          User oppOwner = users.containsKey( opp.OwnerId ) ?
+            users.get( opp.OwnerId ) :
+            null;
           setTaxes( opp,
                     acctsMap.get(opp.AccountId),
-                    users.get( opp.OwnerId ) );
+                    oppOwner );
            // Retail Opps
           if(opp.RecordTypeId == retailId && disableAutoPricebookSet == false)
           {
-            opp.Pricebook2Id = Legend_Settings__c.getOrgDefaults().Default_Retail_Pricebook__c;
+            opp.Pricebook2Id = LGND_Constants.retailPricebookId;
           }
         }
 
       }
       if(boolIsUpdate)
       {
-        //setupInvoice(listNew, oldMap);
         for( Opportunity opp : listNew )
         {
           if( opp.Probability == 0 )
@@ -239,7 +242,6 @@ public class OpportunityTriggerHandler {
       }
       if(boolIsUpdate)
       {
-        System.debug('boolIsUpdate');
         //reCalculateLineItems(newMap,oldMap);
         Map<Id, Map<String, String>> preInsuranceChanged = new Map<Id, Map<String, String>>();
         for( Opportunity opp : listNew )
@@ -313,7 +315,7 @@ public class OpportunityTriggerHandler {
     {
       if( opp.RecordTypeId == LGND_Utilities.recordTypeIdFromName('Opportunity', 'Retail') )
       {
-        if( owner.Warehouse__c != null && warehouseProvinceMap.containsKey( owner.Warehouse__c) )
+        if( owner != null && owner.Warehouse__c != null && warehouseProvinceMap.containsKey( owner.Warehouse__c) )
         {
           activeTaxZone = provincialTaxInfo.get( warehouseProvinceMap.get( owner.Warehouse__c ) );
         }
@@ -421,7 +423,6 @@ public class OpportunityTriggerHandler {
 
   private static void recalcInsuranceLines( Map<Id, Map<String, String>> changeMap )
   {
-    System.debug('recalcInsuranceLines');
     List<OpportunityLineItem> toUpdate = new List<OpportunityLineItem>();
     Map<Id, List<OpportunityLineItem>> oliMap = new Map<Id, List<OpportunityLineItem>>();
     for( OpportunityLineItem oli : [SELECT Id,
@@ -478,7 +479,6 @@ public class OpportunityTriggerHandler {
           {
             Decimal it = Decimal.valueOf( changeMap.get( oppId ).get('insTerm') );
             Decimal ft = Decimal.valueOf( changeMap.get( oppId ).get('finTerm') );
-            System.debug( changeMap.get( oppId ) );
             if( ir.Tax_Zone__c == changeMap.get( oppId ).get('taxZone') &&
                 (
                   (
@@ -533,8 +533,6 @@ public class OpportunityTriggerHandler {
     List<Map<String, String>> lineData = new List<Map<String, String>>();
     for( OpportunityLineItem oli : olis )
     {
-      System.debug(oli);
-      System.debug(oli.Product2.Family);
       oliMap.put( oli.Id, oli );
       Map<String, String> d = new Map<String, String>();
       d.put('recordId', oli.Id);

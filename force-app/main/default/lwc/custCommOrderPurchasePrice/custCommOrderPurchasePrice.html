@@ -1,0 +1,20 @@
+<!--
+ - Created by Tim on 2020-05-27.
+ -->
+
+<!-- Cust Comm Order Purchase Price -->
+<template>
+  <div class="config-footer_price">
+    <div class="amount" if:true={displayCashData}>
+      <lightning-formatted-number value={totalPrice}
+                                  format-style="currency"
+                                  currency-code="CAD"></lightning-formatted-number>
+    </div>
+    <div class="amount" if:true={displayLoanData}>
+      <lightning-formatted-number value={payments.weekly}
+                                  format-style="currency"
+                                  currency-code="CAD"></lightning-formatted-number>
+      <span> /Wk</span></div>
+    <div class="label">Purchase Price</div>
+  </div>
+</template>

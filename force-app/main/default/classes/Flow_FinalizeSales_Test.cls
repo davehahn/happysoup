@@ -201,7 +201,9 @@ public class Flow_FinalizeSales_Test {
 
 	@isTest static void getLocation_test() {
 		init();
+		Test.startTest();
 		String locationString = Flow_FinalizeSales.getLocation(locationId);
+		Test.stopTest();
 		AcctSeed__Accounting_Variable__c location = (AcctSeed__Accounting_Variable__c)JSON.deserialize( locationString, AcctSeed__Accounting_Variable__c.class );
 		System.debug('Location: ' + location);
 		System.assert(location != null);
@@ -209,7 +211,9 @@ public class Flow_FinalizeSales_Test {
 
 	@isTest static void getOrderItems_test() {
 		init();
+		Test.startTest();
 		String orderItemsString = Flow_FinalizeSales.getOrderItems(erp.Id);
+		Test.stopTest();
 		AcctSeedERP__Material__c[] orderItems = (List<AcctSeedERP__Material__c>)JSON.deserialize( orderItemsString, List<AcctSeedERP__Material__c>.class );
 		System.assert( orderItems.size() > 0 );
 	}

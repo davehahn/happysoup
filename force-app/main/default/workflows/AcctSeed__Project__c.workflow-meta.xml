@@ -1112,7 +1112,7 @@
     </fieldUpdates>
     <rules>
         <fullName>Barrie 5 days prior to pickup - Infographic email send</fullName>
-        <active>false</active>
+        <active>true</active>
         <criteriaItems>
             <field>AcctSeed__Project__c.Pickup_Location__c</field>
             <operation>equals</operation>
@@ -1872,7 +1872,7 @@
     </rules>
     <rules>
         <fullName>Montreal 5 days prior to pickup - Infographic email send</fullName>
-        <active>false</active>
+        <active>true</active>
         <criteriaItems>
             <field>AcctSeed__Project__c.Pickup_Location__c</field>
             <operation>equals</operation>
@@ -1940,7 +1940,7 @@
             <name>Notifies_Montreal_Team_of_Retail_Delivery_Date_Change</name>
             <type>Alert</type>
         </actions>
-        <active>false</active>
+        <active>true</active>
         <description>Notifies Service Manager and Team when a Retail boat Is scheduled or rescheduled for Pickup (Delivery Date)</description>
         <formula>OR(   AND(   ISPICKVAL(Pickup_Location__c,&quot;Montreal - Pick-up&quot;),    ISCHANGED(Delivery_Date__c)   ),  AND(    ISPICKVAL(Pickup_Location__c,&quot;Montreal - Delivery&quot;),    ISCHANGED(Delivery_Date__c)   ) )</formula>
         <triggerType>onAllChanges</triggerType>
@@ -3977,7 +3977,7 @@ TEXT(AcctSeed__Account__r.Preferred_Language__c) = &apos;English&apos;
     </rules>
     <rules>
         <fullName>Whitefish 5 days prior to pickup - Infographic email send</fullName>
-        <active>false</active>
+        <active>true</active>
         <criteriaItems>
             <field>AcctSeed__Project__c.Pickup_Location__c</field>
             <operation>equals</operation>
@@ -4061,7 +4061,7 @@ TEXT(AcctSeed__Account__r.Preferred_Language__c) = &apos;English&apos;
             <name>Notifies_WF_Team_that_a_Retail_Boat_has_been_Scheduled_or_Rescheduled</name>
             <type>Alert</type>
         </actions>
-        <active>false</active>
+        <active>true</active>
         <description>Notifies Service Manager and Team when a Retail boat Is scheduled or rescheduled for Pickup (Delivery Date)</description>
         <formula>OR(   AND(   ISPICKVAL(Pickup_Location__c,&quot;Whitefish - Pick-up&quot;),    ISCHANGED(Delivery_Date__c)   ),  AND(    ISPICKVAL(Pickup_Location__c,&quot;Whitefish - Delivery&quot;),    ISCHANGED(Delivery_Date__c)   ) )</formula>
         <triggerType>onAllChanges</triggerType>

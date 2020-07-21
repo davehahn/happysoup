@@ -1,0 +1,952 @@
+/**
+ * Created by dave on 2020-04-10.
+ */
+:host {
+  counter-reset: menuCounter;
+  --legend-blue: #2AB2F0;
+  --legend-focus: rgba(42, 178, 240, 0.25);
+  -webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+.vh{
+    position: absolute;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    height: 1px; width: 1px;
+    margin: -1px; padding: 0; border: 0;
+}
+button{
+  background: none;
+  border: 0 none;
+  outline: none;
+}
+button:focus{
+  outline: none;
+}
+
+.lgnd-order-builder {
+  position: absolute;
+  min-height: 100vh;
+  overflow: hidden;
+  box-sizing: border-box;
+  padding-top: 65px;
+  padding-bottom: 90px;
+  width: 100%;
+  height: 100%;
+}
+.lgnd-order-builder > *,
+.lgnd-order-builder h1, .lgnd-order-builder h2, .lgnd-order-builder h3, .lgnd-order-builder h4, .lgnd-order-builder h5, .lgnd-order-builder h6{
+    font-family: 'gotham_htf', Montserrat, Lato, Helvetica, Arial, sans-serif;
+}
+
+/*
+.___  ___.   ______    _______       ___       __
+|   \/   |  /  __  \  |       \     /   \     |  |
+|  \  /  | |  |  |  | |  .--.  |   /  ^  \    |  |
+|  |\/|  | |  |  |  | |  |  |  |  /  /_\  \   |  |
+|  |  |  | |  `--'  | |  '--'  | /  _____  \  |  `----.
+|__|  |__|  \______/  |_______/ /__/     \__\ |_______|
+*/
+
+.modal-container {
+  position: fixed;
+  width: 100%;
+  height:100%;
+  left: 0;
+  right: 0;
+  top: 0;
+  z-index: 0;
+  opacity: 0;
+}
+
+.modal-container.open {
+  background: rgba(0,0,0,.75);
+  opacity: 1;
+  visibility: visible;
+  top: 0;
+  z-index: 5001;
+  display: flex;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  transition: 0.5s;
+}
+
+.modal-content {
+  display: block;
+  padding: 0;
+  position: relative;
+  max-width: 1100px;
+  max-height: 610px;
+  background-color: #F4F4F4;
+  width: 80%;
+  margin: 0 auto;
+  height: 90%;
+  min-width: 50vw;
+  border-radius: 8px;
+  z-index:5002;
+}
+
+.modal-content_body {
+  height:100%;
+  width:100%;
+  max-width:100%;
+  transition: all .2s ease-in-out;
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  transform: translateZ(0);
+  height: 100%;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+}
+
+.modal-content_sidebar {
+  width: 250px;
+  flex: 0 0 auto;
+  background-color: #FFF;
+  border-radius: 8px 0 0 8px;
+}
+.sidebar_logo{
+  width: 50%; margin: 2.5vw auto;
+}
+
+.sidebar_nav{
+  margin: 0 auto;
+  padding: 12.5;
+}
+.sidebar_nav::before{
+ 	content: ''; display: block;
+ 	width: 75%; height: 1px;
+ 	background: #ddd;
+ 	margin: 0 auto 1em;
+}
+.modal-nav-item{
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 1em 12.5%;
+}
+.modal-nav-title{
+  background: none; border: 0 none;
+}
+.modal-nav-title h3{
+  font-weight: 400;
+  font-size: 1.125em;
+	opacity: 0.5;
+	transition: all 0.2s;
+}
+.model-nav-title:focus{
+  outline: none;
+}
+.modal-nav-title:hover h3, .modal-nav-title:focus h3{
+  opacity: 0.85;
+}
+.modal-nav-item.modal-nav-item_selected{
+  border-right: 3px solid var(--legend-blue);
+}
+.modal-nav-item.modal-nav-item_selected .modal-nav-title h3, .modal-nav-item.modal-nav-item_selected .modal-nav-title:hover h3, .modal-nav-item.modal-nav-item_selected .modal-nav-title:focus h3{
+  opacity: 1;
+}
+
+.modal-content_main {
+  font-size: 15px;
+  padding: 40px;
+  position: relative;
+  flex: 1 1 auto;
+  display: flex;
+  overflow-x: hidden;
+  overflow-y: auto;
+  border-radius: 0 8px 8px 0;
+}
+.modal-content_main .modal-page{
+  position: absolute;
+  top: 0; left: 0;
+  background-color: #F4F4F4;
+  width: 100%; height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  z-index: 1;
+  padding: 10%;
+  transition: all 0.2s;
+}
+.modal-content_main .modal-page.modal-page_selected{
+	z-index: 2;
+}
+.modal-content_main .modal-page h4{
+  font-size: 1.5em;
+  font-weight: 600;
+}
+
+.modal-content_close {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  right: 0;
+  z-index: 10;
+  padding: 7px;
+}
+
+.modal-content_close button {
+  all: unset;
+}
+
+.modal-content_close button i {
+  color: rgb(51, 51, 51);
+  font-size: 20px;
+}
+
+.modal-container.open + div.config-header {
+  top: -55px;
+}
+
+.modal-container.open + div.config-header + div.config-content + div.config-footer {
+  bottom: -80px;
+}
+
+.modal-heading{
+  font-size: 1.5em;
+  font-weight: 600;
+  margin-bottom: 0.75em;
+}
+
+.premiumPackage{
+
+}
+.premiumPackage_item{
+  padding: 0.5em 0.25em;
+  border-bottom: 1px solid #ddd;
+}
+.premiumPackage_item:nth-of-type(even){
+  background-color: #efefef;
+}
+.premiumPackage_item:last-of-type{
+  border-bottom: 3px solid #333;
+}
+.premiumPackage_value{
+  text-align: right;
+  font-size: 1.25em;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+.premiumPackage_value span{
+  font-size: 1.5em;
+  color: var(--legend-blue);
+}
+
+.modal-page[data-modal-page="delivery"] p{
+  padding-bottom: 1em;
+}
+
+/*
+ __    __   _______     ___       _______   _______ .______
+|  |  |  | |   ____|   /   \     |       \ |   ____||   _  \
+|  |__|  | |  |__     /  ^  \    |  .--.  ||  |__   |  |_)  |
+|   __   | |   __|   /  /_\  \   |  |  |  ||   __|  |      /
+|  |  |  | |  |____ /  _____  \  |  '--'  ||  |____ |  |\  \----.
+|__|  |__| |_______/__/     \__\ |_______/ |_______|| _| `._____|
+*/
+
+.config-header {
+  display: flex;
+  justify-content: space-between;
+  min-height: 65px;
+  z-index: 100;
+  border-bottom: 1px solid #dfdfdf;
+  width: 100%;
+  position: fixed;
+  top: 0;
+  background-color: #fff;
+  transition: 0.5s;
+}
+
+.branding {
+  display: grid;
+  min-height: 65px;
+  width: 100%;
+  max-width: 200px;
+  align-items: center;
+  flex: 1;
+}
+
+.branding .main-logo {
+  margin: 0 15px;
+  cursor: pointer;
+  width: 80%;
+}
+.branding .main-logo button{
+  background: none;
+  border: 0 none;
+}
+.branding .main-logo button:focus{
+  outline: 2px dashed #333;
+}
+
+.config-nav {
+  width: 100%;
+  z-index: 1;
+  flex: 9;
+}
+
+.config-nav-list {
+  display: flex;
+  justify-content: center;
+  list-style-position: inside;
+  counter-reset: menuCounter;
+  height: 100%;
+  background: hsla(0,0%,100%,.3);
+  list-style-type: none;
+}
+
+.config-nav-list li{
+  flex-grow: 1;
+  min-width: 165px;
+	max-width: 225px;
+}
+
+.config-nav-item {
+  display: block;
+  width: 100%;
+  text-align: center;
+  cursor: pointer;
+  color: #000;
+  opacity: 0.35;
+  font-size: 14px;
+  transition: opacity .15s ease-in-out;
+  transform: translateZ(0);
+  counter-increment: menuCounter;
+}
+.config-nav-item:hover{
+  background-color: #f2f2f2;
+  opacity: 0.65;
+}
+.config-nav-item:focus{
+  background-color: var(--legend-focus);
+  opacity: 1;
+}
+
+.config-nav-item h2 {
+  text-transform: capitalize;
+}
+
+.config-nav-item:before {
+  content: counter(menuCounter) ".";
+  padding-right: 2px;
+}
+
+.config-nav-item.config-nav-item_selected {
+  box-shadow: inset 0 -5px 0 -1px var(--legend-blue);
+	opacity: 1;
+}
+
+.config-nav-title {
+  font-size: 14px;
+  font-family: var(--tds-sans-font_stack--medium);
+  padding: 20px 0;
+  display: inline-block;
+  margin: 0;
+  text-transform: capitalize;
+}
+
+.language-select {
+  cursor: pointer;
+  display: inherit;
+}
+
+/*
+ _______   ______     ______   .___________. _______ .______
+|   ____| /  __  \   /  __  \  |           ||   ____||   _  \
+|  |__   |  |  |  | |  |  |  | `---|  |----`|  |__   |  |_)  |
+|   __|  |  |  |  | |  |  |  |     |  |     |   __|  |      /
+|  |     |  `--'  | |  `--'  |     |  |     |  |____ |  |\  \----.
+|__|      \______/   \______/      |__|     |_______|| _| `._____|
+*/
+
+
+.config-footer {
+  position:fixed;
+  bottom: 0;
+  width:100%;
+  z-index:1000;
+  background: #333;
+  margin: 0 auto;
+  clear: both;
+  transition: 0.5s;
+  height:90px;
+  font-weight: 300;
+}
+
+.config-footer_content,
+.config-footer_item {
+  display: flex;
+  align-items: center;
+  height: inherit;
+}
+
+.config-footer_content {
+  justify-content: space-between;
+  padding: 10px 0;
+  box-sizing: content-box;
+  height:70px;
+}
+
+.config-footer_item {
+  justify-content: center;
+  padding: 0 40px;
+}
+
+.config-footer_item.finance-type {
+  border-right: 1px solid #555;
+  padding: 0 20px;
+}
+
+.financetype-selector_container {
+  min-width: 100px;
+}
+
+.financetype-selector_button {
+  cursor: pointer;
+  padding: 8px 40px 8px 20px;
+  position: relative;
+  color: #eee;
+  font-size: 13px;
+  text-transform: uppercase;
+  opacity: 1;
+}
+
+.financetype-selector_button:focus{
+  outline: 2px dashed #FFF;
+}
+
+.financetype-selector_button i {
+  color: #FFF;
+  margin-left:0.75rem;
+  position:relative;
+  top: 2px;
+}
+
+.financetype-selector_options {
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 80%;
+  left: 10px;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+  z-index: -1;
+  opacity: 0;
+  transition: height .375s ease,width .375s ease,min-width .375s ease,opacity .125s ease .0625s,top .0625s ease .375s,bottom 1s ease .375s,z-index 1.375s ease;
+  -webkit-transition: none;
+  box-shadow: 5px 5px 10px rgba(0,0,0,.15);
+  border-radius: 10px;
+}
+
+.financetype-selector_option {
+  background-color: #fff;
+  color: #333;
+  font-size: 16px;
+  padding: 13px 8px;
+  text-align: center;
+  text-transform: uppercase;
+  min-width: 100%;
+  height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: opacity .125s ease,height .375s ease;
+}
+
+.financetype-selector_option:first-child {
+  padding: 13px 8px;
+  border-top: 1px solid #fff;
+  border-top-left-radius: 10px 10px;
+  border-top-right-radius: 10px 10px;
+}
+
+.financetype-selector_option:last-child {
+  border-bottom: 1px solid #fff;
+  border-bottom-right-radius: 10px 10px;
+  border-bottom-left-radius: 10px 10px;
+}
+
+.financetype-selector_option:hover {
+  background-color: #f4f4f4;
+}
+
+.financetype-selector_option.selected {
+
+}
+
+.financetype-selector_container.open .financetype-selector_button {
+  opacity: 0;
+  z-index: -1;
+}
+
+.financetype-selector_container.open .financetype-selector_options {
+  width: auto;
+  min-width: 120px;
+  height: auto;
+  transform: translateY(-100%);
+  overflow: initial;
+  z-index: 100;
+  opacity: 1;
+  transition: all .25s ease;
+  -webkit-transition: none;
+}
+
+.financetype-selector_container.open .financetype-selector_option {
+  height: auto;
+  opacity: 1;
+  transition: all .25s ease;
+}
+
+.config-footer_item.finance-prices {
+  border-right: 1px solid #555;
+}
+
+.config-footer_item:nth-child(3) {
+  justify-content: flex-end;
+  flex: 1;
+  min-width: 275px;
+}
+
+.config-footer_item:last-child {
+  max-width: 430px;
+  border: 0;
+  flex: 1 0;
+}
+
+.config-footer_prices {
+  border-right: 1px solid #555;
+}
+
+.config-footer_price,
+.config-footer_savings {
+  justify-content: center;
+  font-size: 15px;
+  margin-right: 3em;
+  white-space: normal;
+  min-width: 110px;
+  line-height: 1;
+  letter-spacing: 0.05em;
+}
+
+.config-footer_price div,
+.config-footer_savings div
+{
+  margin-top: 3px;
+  font-size: 12px;
+  color: #fff;
+  cursor: pointer;
+  align-self: center;
+}
+
+.config-footer_price .amount,
+.config-footer_savings .amount {
+  display: block;
+  color: #fff;
+  font-size: 19px;
+  align-self: center;
+  padding: 0;
+  margin: 0;
+  line-height: 1.25;
+  white-space: nowrap;
+}
+
+.config-footer_details-link a,
+.config-footer_details-link a:hover {
+  color: #FFF;
+  text-decoration: none;
+  border-bottom: 1px solid #FFF;
+  padding: 0.25em 0.25em 0.15em;
+}
+.config-footer_details-link a:focus{
+  outline: 2px dashed #FFF;
+}
+
+.config-footer_delivery {
+  color: #FFF;
+}
+
+.config-footer_item:nth-child(3) {
+  justify-content: flex-start;
+  flex: 1;
+  min-width: 275px;
+}
+
+.config-footer_item:last-child {
+  max-width: 430px;
+  border: 0;
+  flex: 1 0;
+}
+
+.config-footer_item button {
+  width: 100%;
+  max-width: 100%;
+  margin-left: 0;
+  margin-right: 0;
+  left: 0;
+  background-color: var(--legend-blue);
+  padding: 5px 40px;
+  min-height: 40px;
+  min-width:200px;
+  border: 3px solid transparent;
+  text-transform: uppercase;
+  font-weight: 600;
+  border-radius: 20px;
+  color: #FFF;
+  margin: 8px 0;
+  transition: 0.25s;
+}
+
+.config-footer_item button:hover, .config-footer_item button:focus{
+  background-color: #0379af;
+}
+
+.config-footer_item button:focus {
+  outline: 2px dashed #FFF;
+}
+
+
+.config-footer_item button:disabled {
+  background-color: #484848;
+  color: #6d7275;
+}
+
+/*
+
+  ______   ______   .__   __. .___________. _______ .__   __. .___________.
+ /      | /  __  \  |  \ |  | |           ||   ____||  \ |  | |           |
+|  ,----'|  |  |  | |   \|  | `---|  |----`|  |__   |   \|  | `---|  |----`
+|  |     |  |  |  | |  . `  |     |  |     |   __|  |  . `  |     |  |
+|  `----.|  `--'  | |  |\   |     |  |     |  |____ |  |\   |     |  |
+ \______| \______/  |__| \__|     |__|     |_______||__| \__|     |__|
+
+
+*/
+
+
+.config-content {
+  width: 100%;
+  height: calc( 100% - 155px ); /* 65px header + 90px footer */
+  display:flex;
+  justify-content: center;
+  overflow: auto;
+  position: absolute;
+  z-index: 1;
+}
+
+.config-page {
+  display:none;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  position: relative;
+}
+
+.config-page.config-page_selected {
+  display:flex;
+}
+
+.config-page_left {
+  overflow: hidden;
+  padding: 0;
+  align-items: center;
+  flex-grow: 3;
+  flex-shrink: 3;
+  flex-basis: 0;
+  border-right: 1px solid #ddd;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+  max-height: 100%;
+  width: 100%;
+}
+
+.config-page[data-page="payment"] .config-page_left {
+  overflow-y: auto;
+  display: block;
+  background: #F4F4F4;
+  padding: 3% 7%;
+  border-right-color: transparent;
+}
+
+.config-page_right {
+  max-width: 435px;
+  min-width: 435px;
+  width: 435px;
+  margin-right: 3px;
+  flex-grow: 1;
+  flex-shrink: 1;
+  flex-basis: 0;
+  margin: auto;
+  position: relative;
+  padding: 3rem 1.8rem;
+  max-height: 100%;
+  height: 100%;
+  display: flex;
+  flex-flow: column no-wrap;
+  justify-content: flex-start;
+  overflow-y: auto;
+  background-color: #FFF;
+}
+.config-page_right .right_heading{
+    width: 100%;
+    font-size: 1.5em;
+}
+.config-page[data-page="payment"] .config-page_right .right_heading{
+    text-align: center;
+    margin: 0.5em 0;
+}
+.config-page[data-page="payment"] .config-page_right .right_delivery{
+    text-align: center;
+    font-size: 1.125em;
+    color: #737373;
+}
+
+.edit-config {
+  margin: -5% 0 0 -9%;
+  top: 0;
+  left: 0;
+  cursor: pointer;
+  color: #999;
+  padding: 1%;
+  font-size: 14px;
+}
+.edit-config:hover, .edit-config:focus{
+  text-decoration: underline;
+}
+
+.edit-config i {
+  color: #999;
+  margin-right: 7px;
+  font-size: 14px;
+}
+
+.account-details {
+  border-bottom: 1px solid #ccc;
+  padding-bottom:10px;
+}
+
+.payment-details {
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #CCC;
+}
+
+.payment-disclaimer {
+  color: #999;
+  font-size: 14px;
+  margin: 5px 0 10px;
+}
+
+.form-header {
+  margin: 20px 0 15px;
+  font-size: 18px;
+  color: #666;
+}
+
+.form-input {
+  margin-bottom: 24px;
+  position: relative;
+}
+
+.form-input label {
+  color: #666;
+  font-size: 14px;
+  margin: 0 20px 8px;
+  display: block;
+}
+
+.form-input input, .form-input--select span
+{
+  display: block;
+  background: #FFF;
+  border: 1px solid transparent;
+  padding: 10px 20px;
+  border-radius: 20px;
+  width: 100%;
+  font-size: 14px;
+  min-height: 38px;
+  color: #666;
+}
+
+.form-input input:focus {
+  outline: none;
+  border: 1px solid #CCC;
+}
+
+.form-input--select select{
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  width: 100%; height: 38px;
+  -webkit-appearance: none;
+  border: 0 none; background: none;
+  padding-left: 1.5em;
+}
+.form-input--select span::before{
+  display: block;
+  content: "\e928";
+  font-family: 'sldsicon' !important;
+	speak: none;
+	font-style: normal;
+	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
+	line-height: 1;
+	color: #999;
+	margin-right: 7px;
+	font-size: 14px;
+	position: absolute;
+	bottom: 10px; right: 1.5em;
+}
+
+
+/*
+
+.___  ___.  _______  _______   __       ___           ______      __    __   _______ .______       __   _______     _______.
+|   \/   | |   ____||       \ |  |     /   \         /  __  \    |  |  |  | |   ____||   _  \     |  | |   ____|   /       |
+|  \  /  | |  |__   |  .--.  ||  |    /  ^  \       |  |  |  |   |  |  |  | |  |__   |  |_)  |    |  | |  |__     |   (----`
+|  |\/|  | |   __|  |  |  |  ||  |   /  /_\  \      |  |  |  |   |  |  |  | |   __|  |      /     |  | |   __|     \   \
+|  |  |  | |  |____ |  '--'  ||  |  /  _____  \     |  `--'  '--.|  `--'  | |  |____ |  |\  \----.|  | |  |____.----)   |
+|__|  |__| |_______||_______/ |__| /__/     \__\     \_____\_____\\______/  |_______|| _| `._____||__| |_______|_______/
+
+
+*/
+@media screen and (max-width: 64em){
+
+    /* force scroll and height of main container */
+    .lgnd-order-builder:not([data-current="payment"]){
+        overflow: auto;
+        height: auto; min-height: 100vh;
+    }
+    /* hide main navigation */
+    .config-nav{
+        display: none;
+    }
+    /* stack paged content */
+    .config-content:not([data-current="payment"]){
+        padding-bottom: 90px;
+    }
+    .config-content:not([data-current="payment"]),
+    .config-page:not([data-page="payment"]),
+    .config-page.config-page_selected:not([data-page="payment"]){
+        display: block;
+        height: auto;
+    }
+    .config-content[data-current="payment"]
+    .config-page:not([data-page="payment"]),
+    .config-content[data-current="payment"]
+    .config-page.config-page_selected:not([data-page="payment"]){
+        display: none;
+    }
+    .config-content:not([data-current="payment"]) .config-page_left{
+        border-right: 0 none;
+    }
+
+    .slds-small-size_12-of-12, .slds-small-size--12-of-12 {
+        width: 100%;
+    }
+
+		.config-page[data-page="electronics"]{
+			padding-bottom: 5em;
+  	}
+
+    /* expand right rail to full width */
+    .config-page:not([data-page="payment"]) .config-page_right{
+        width: 100%; max-width: 100%; min-width: 100%;
+        padding: 2em;
+        display: block;
+    }
+    /* center right rail heading */
+    .config-page_right .right_heading{
+        text-align: center;
+    }
+    /* hide footer items */
+    .config-footer_item{
+      padding: 0 20px;
+    }
+    .config-footer_item.finance-type, .config-footer_savings, .config-footer_details-link{
+        display: none;
+    }
+    .config-footer_item:nth-child(3){
+        min-width: fit-content;
+    }
+}
+
+@media screen and (max-width: 54em){
+    .lgnd-order-builder[data-current="payment"]{
+        overflow: auto;
+        height: auto; min-height: 100vh;
+        padding-bottom: 0;
+    }
+    .config-content[data-current="payment"]{
+        display: block;
+        height: auto;
+    }
+    .config-page.config-page_selected[data-page="payment"]{
+        flex-wrap: wrap;
+        flex-direction: column-reverse;
+        height: auto;
+    }
+    .config-page.config-page_selected[data-page="payment"] .config-page_left{
+        height: auto;
+        flex-basis: auto;
+        position: static;
+    }
+    .config-page.config-page_selected[data-page="payment"] .config-page_right{
+        min-width: 100%;
+        width: 100%;
+        padding-left: 5vw; padding-right: 5vw;
+        flex-basis: auto;
+        flex-grow: unset;
+    }
+    .edit-config{
+        position: absolute; top: 1.5em; left: 1.5em;
+        margin: 0; z-index: 1;
+    }
+    .lgnd-order-builder[data-current="payment"] .config-footer{
+        position: static;
+        background-color: none;
+        color: #000;
+        display: block;
+    }
+}
+
+@media screen and (max-width: 40em){
+    .config-footer{
+        height: auto;
+        background-color: #333333e8;
+    }
+    .config-footer_content{
+        display: block;
+        height: auto;
+    }
+    .config-footer_item.finance-prices{
+        display: block;
+        border: none;
+        text-align: center;
+    }
+    .config-footer_price, .config-footer_savings{
+        display: block;
+        margin: 0 0 0.5em;
+    }
+    .config-footer_price .amount,
+    .config-footer_price .label,
+    .config-footer_savings .amount,
+    .config-footer_savings .label{
+        display: inline;
+        margin-right: 0.25em;
+    }
+    .config-footer_delivery{
+        display: none;
+    }
+    .config-footer_item:last-child{
+        margin: 0 auto;
+    }
+}

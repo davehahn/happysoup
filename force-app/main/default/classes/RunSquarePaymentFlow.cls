@@ -1,4 +1,4 @@
-public class RunSquarePaymentFlow {
+public without sharing class RunSquarePaymentFlow {
 
   //Instance of the Flow
   public Flow.Interview.Update_Square_Transaction squareFlow {get; set;}
@@ -28,18 +28,30 @@ public class RunSquarePaymentFlow {
       'receiptURL' => sqReceiptURL,
       'receiptNum' => sqReceiptNum
     };
-    System.debug( params );
-    if( !Test.isRunningTest() )
-    {
+
+//    Square_Transaction__c sqTrans = new Square_Transaction__c(
+//      Id = recordId,
+//      sqCreateDate__c = Date.valueOf( sqCaptureDate ),
+//      sqOrderId__c = sqOrderId,
+//      sqReceiptURL__c = sqReceiptURL,
+//      sqReceiptNumber__c = sqReceiptNum,
+//      sqStatus__c = 'COMPLETED'
+//    );
+//    update sqTrans;
+
+    //if( !Test.isRunningTest() )
+    //{
       try
       {
+        TriggerHandler.bypass('SquareTransaction_TriggerHandler');
         new Flow.Interview.Update_Square_Transaction( params ).start();
+        TriggerHandler.clearBypass('SquareTransaction_TriggerHandler');
       }
       catch( Exception e )
       {
         throw new SquareProcessor.SquareException(e.getMessage());
       }
-    }
+    //}
   }
 
 

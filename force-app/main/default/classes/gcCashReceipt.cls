@@ -30,6 +30,7 @@ public without sharing class gcCashReceipt {
 		{
 			if(boolIsInsert)
 			{
+				System.debug('gcCashReceipt.isBeforeInsert');
 				for( AcctSeed__Cash_Receipt__c cr : listNew )
 				{
 					if( cr.AcctSeed__Ledger__c == null )
@@ -73,6 +74,9 @@ public without sharing class gcCashReceipt {
 	{
 		if(boolIsBefore && (boolIsUpdate || boolIsInsert))
 		{
+			//code pulled from GMBLASG package gcCashReceipt class
+			setPeriod( oldMap, newMap, listNew, boolIsBefore, boolIsInsert, boolIsUpdate, boolIsDelete);
+
 			retrieveStatics(listNew);
 			for(AcctSeed__Cash_Receipt__c cr : listNew)
 			{
@@ -115,6 +119,87 @@ public without sharing class gcCashReceipt {
 			if(!setIdProject.isEmpty())
 				gcProject.lockIfNoBalanceDue(setIdProject);
 		}
+	}
+
+	public static void setPeriod( map<Id,AcctSeed__Cash_Receipt__c> oldMap,
+																			  map<Id,AcctSeed__Cash_Receipt__c> newMap,
+																				list<AcctSeed__Cash_Receipt__c> listNew,
+																				Boolean boolIsBefore,
+																				Boolean boolIsInsert,
+																				Boolean boolIsUpdate,
+																				Boolean boolIsDelete )
+	{
+		if(boolIsBefore && (boolIsInsert || boolIsUpdate))
+		{
+			list<AcctSeed__Cash_Receipt__c> listRecordToSetPeriod = new list<AcctSeed__Cash_Receipt__c>();
+
+			for(AcctSeed__Cash_Receipt__c cr : listNew)
+			{
+				if(cr.AcctSeed__Status__c == 'Posted') continue;
+
+				if(boolIsInsert || (boolIsUpdate && (cr.AcctSeed__Receipt_Date__c != oldMap.get(cr.Id).AcctSeed__Receipt_Date__c || cr.AcctSeed__Accounting_Period__c != oldMap.get(cr.Id).AcctSeed__Accounting_Period__c)))
+				{
+					listRecordToSetPeriod.add(cr);
+				}
+			}
+			if(listRecordToSetPeriod.size() > 0)
+			{
+				Map<Date,AcctSeed__Accounting_Period__c> mapDateToPeriod = mapPeriods( listRecordToSetPeriod );
+				for(AcctSeed__Cash_Receipt__c cr : listRecordToSetPeriod)
+				{
+					AcctSeed__Accounting_Period__c p = mapDateToPeriod.get(cr.AcctSeed__Receipt_Date__c);
+
+					if(p == null)
+					{
+						cr.addError('The receipt date cannot be set to a date for which a period does not exist.');
+					}
+					else if(p.AcctSeed__Status__c != 'Open')
+					{
+						cr.addError('The receipt date cannot be set to a date that is within a closed period.');
+					}
+					else
+					{
+						cr.AcctSeed__Accounting_Period__c = p.Id;
+					}
+				}
+			}
+		}
+	}
+
+	private static Map<Date,AcctSeed__Accounting_Period__c> mapPeriods( List<AcctSeed__Cash_Receipt__c> listRecordToSetPeriod )
+	{
+		Map<Date,AcctSeed__Accounting_Period__c> mapDateToPeriod = new Map<Date,AcctSeed__Accounting_Period__c>();
+		for(AcctSeed__Cash_Receipt__c cr : listRecordToSetPeriod)
+		{
+			mapDateToPeriod.put(cr.AcctSeed__Receipt_Date__c,null);
+		}
+
+		Date dateMax;
+		Date dateMin;
+
+		for(Date d : mapDateToPeriod.keySet())
+		{
+			if(dateMin == null || d < dateMin)
+				dateMin = d;
+
+			if(dateMax == null || d > dateMax)
+				dateMax = d;
+		}
+
+		for(AcctSeed__Accounting_Period__c p :[
+			SELECT Id, AcctSeed__Start_Date__c, AcctSeed__End_Date__c, AcctSeed__Status__c
+			FROM AcctSeed__Accounting_Period__c
+			WHERE AcctSeed__Start_Date__c <= :dateMax AND AcctSeed__End_Date__c >= :dateMin] )
+		{
+			for(Date d : mapDateToPeriod.keySet())
+			{
+				if(p.AcctSeed__Start_Date__c <= d && p.AcctSeed__End_Date__c >= d)
+				{
+					mapDateToPeriod.put(d,p);
+				}
+			}
+		}
+		return mapDateToPeriod;
 	}
 
 	private static void setBankGL(AcctSeed__Cash_Receipt__c cr)

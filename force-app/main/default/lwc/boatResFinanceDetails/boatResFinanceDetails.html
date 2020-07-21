@@ -1,0 +1,178 @@
+<!--
+ - Created by dave on 2020-06-25.
+ -->
+
+<!-- Boat Res Finance Details -->
+<template>
+
+  <nav class="finance-nav slds-m-bottom_large">
+<!--    <h2 class="vh">Main Navigation</h2>-->
+    <ol class="finance-nav-list">
+      <template for:each={tabData} for:item="page">
+        <li key={page.label}>
+          <button class={page.class} onclick={handleNav} data-click-focus="unset" data-nav-name={page.label}><h3 class="finance-nav-title">{page.label}</h3></button>
+        </li>
+      </template>
+    </ol>
+  </nav>
+
+  <div class="finance-content" data-current={paymentType}>
+
+    <!-- CASH SECTION -->
+    <section class="finance-option-page" data-section="cash">
+      <header class="cash_purchasePrice">
+        <div class="cashAmount">
+          <h3>Purchase Price</h3>
+          <lightning-formatted-number value={retailPlusPremium}
+                                    format-style="currency"
+                                    class="fake-disabled-input"
+                                    currency-code="CAD"></lightning-formatted-number>
+        </div>
+        <small>Purchase Price shown with added Preferred Equipment Package.</small>
+      </header>
+      <aside class="cash_premiumPack">
+        <h4 data-hide={hideInputs}>Preferred Equipment Package</h4>
+        <ul data-hide={hideInputs}>
+          <template for:each={premiumPackItems} for:item="item">
+            <li key={item} class="premiumPackage_item">{item}</li>
+          </template>
+        </ul>
+        <div class="cashAmount">
+          <h6>Preferred Equipment Savings</h6>
+          <lightning-formatted-number value={premiumPackValue}
+                                    format-style="currency"
+                                    class="fake-disabled-input"
+                                    currency-code="CAD"></lightning-formatted-number>
+        </div>
+      </aside>
+      <footer class="cash_savings">
+        <div class="cashAmount">
+          <h5>After Preferred Package Savings</h5>
+          <lightning-formatted-number value={amount}
+                                    format-style="currency"
+                                    class="fake-disabled-input"
+                                    currency-code="CAD"></lightning-formatted-number>
+        </div>
+        <small>
+          All In Price includes freight, prep and admin fees. Excludes taxes. Taxes calculated based on final purchase price.
+        </small>
+      </footer>
+    </section>
+
+    <!-- LOAN SECTION -->
+    <section class="finance-option-page" data-section="loan">
+      <lightning-layout multiple-rows="true">
+
+        <lightning-layout-item size="12"
+                               padding="around-small">
+          <p>
+            Finance your boat purchase by paying a down payment and monthly installments until you've paid off the full price.
+          </p>
+        </lightning-layout-item>
+
+        <lightning-layout-item padding="horizontal-small"
+                               size="12"
+                               small-device-size="12"
+                               medium-device-size="6"
+                               large-device-size="6"
+                               data-hide={hideInputs}>
+          <div class="form-input form-input_currency" data-hide={hideInputs}>
+            <label>Downpayment</label>
+            <span></span>
+            <input label="Downpayment"
+                   data-field-name="downpayment"
+                   type="number"
+                   value={deposit}>
+          </div>
+        </lightning-layout-item>
+
+        <lightning-layout-item padding="horizontal-small"
+                               size="12"
+                               small-device-size="12"
+                               medium-device-size="6"
+                               large-device-size="6"
+                               data-hide={hideInputs}>
+          <div class="form-input form-input_select" data-hide={hideInputs}>
+            <label>Term</label>
+            <span></span>
+            <select data-field-name="term" onchange={handleTermChange} value={amort}>
+              <template for:each={termOptions} for:item="term">
+                <option key={term.value} value={term.value}>{term.label}</option>
+              </template>
+            </select>
+          </div>
+        </lightning-layout-item>
+
+        <lightning-layout-item padding="horizontal-small"
+                               size="12"
+                               small-device-size="12"
+                               medium-device-size="6"
+                               large-device-size="6">
+          <div class="form-input disabled">
+            <label>Interest Rate %</label>
+            <lightning-formatted-number value={interestRate}
+                                        format-style="percent"
+                                        class="fake-disabled-input"
+                                        maximum-fraction-digits="2"></lightning-formatted-number>
+          </div>
+        </lightning-layout-item>
+
+        <lightning-layout-item padding="horizontal-small"
+                               size="12"
+                               small-device-size="12"
+                               medium-device-size="6"
+                               large-device-size="6">
+          <div class="form-input">
+            <label>Financed Amount</label>
+            <lightning-formatted-number value={amount}
+                                        format-style="currency"
+                                        class="fake-disabled-input"
+                                        currency-code="CAD"></lightning-formatted-number>
+<!--            <input label="Financed Amount"-->
+<!--                   data-field-name="amount"-->
+<!--                   type="number"-->
+<!--                   disabled-->
+<!--                   value={amount}>-->
+          </div>
+        </lightning-layout-item>
+
+        <lightning-layout-item size="12"
+                               padding="around-small"
+                               class="payment-details">
+          <ul class="payment-lines">
+            <li class="payment-line">
+              <span class="payment-line_label">Weekly</span>
+              <span class="payment-line_value highlight">
+                <lightning-formatted-number value={payments.weekly}
+                                            format-style="currency"
+                                            currency-code="CAD"></lightning-formatted-number>
+              </span>
+            </li>
+            <li class="payment-line">
+              <span class="payment-line_label">Bi-Weekly</span>
+              <span class="payment-line_value">
+                <lightning-formatted-number value={payments.biweekly}
+                                            format-style="currency"
+                                            currency-code="CAD"></lightning-formatted-number>
+              </span>
+            </li>
+            <li class="payment-line">
+              <span class="payment-line_label">Monthly</span>
+              <span class="payment-line_value">
+                <lightning-formatted-number value={payments.monthly}
+                                            format-style="currency"
+                                            currency-code="CAD"></lightning-formatted-number>
+              </span>
+            </li>
+          </ul>
+        </lightning-layout-item>
+
+      </lightning-layout>
+    </section>
+
+  </div>
+
+
+
+
+</template>

@@ -58,6 +58,13 @@ public class Factory_User {
       username=fName.substring(0,1) + lName + '_' + random +'@testorg.com');
   }
 
+  public static User createUser(String fName, String lName, String profName )
+  {
+    User u = buildUser( fName, lName, profName );
+    insert u;
+    return u;
+  }
+
   private static Id findProfileId(String profileName)
   {
     if( profileMap == null )

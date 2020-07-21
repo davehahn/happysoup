@@ -1,0 +1,58 @@
+/**
+ * Created by Tim on 2020-04-22.
+ */
+
+.options{
+    margin-top: 4vw;
+}
+.options[data-has-title="false"]{
+  margin-top: 0;
+}
+.options_title{
+    font-size: 1.125em;
+    margin-bottom: 0.5em;
+    font-family: 'gotham_htf';
+    font-weight: 600;
+}
+.options_list{
+  position: relative;
+  padding-bottom: 1em;
+}
+.options_list, .options_item{
+    width: 100%;
+}
+.options_item:last-of-type{
+    margin-bottom: 0;
+}
+.options_item, .options_item:only-child{
+    margin-bottom: 1.5em;
+}
+.options_item.hide{
+  display: none;
+}
+
+.options_list[data-layout-type="alt-swatch"]{
+  display: flex;
+  justify-content: flex-start;
+}
+.options_list[data-layout-type="alt-swatch"] .options_item{
+  width: auto;
+  margin-right: 1.5em;
+}
+.options_details_altview{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+.options_details_altview .options_label_price_alt{
+	font-weight: 600;
+}
+.options_details_altview .options_label_blurb_alt{
+  width: 100%;
+}
+
+@media screen and (max-width: 64em){
+	.options_list:not([data-layout-type="alt-swatch"]){
+		padding-bottom: 0;
+	}
+}

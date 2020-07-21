@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SharingRules xmlns="http://soap.sforce.com/2006/04/metadata">
+    <sharingGuestRules>
+        <fullName>BoatReservation_Access</fullName>
+        <accessLevel>Read</accessLevel>
+        <description>Allows acces to Boat Reservation Community</description>
+        <label>Boat_Reservation_Access</label>
+        <sharedTo>
+            <guestUser>Boat_Reservation</guestUser>
+        </sharedTo>
+        <criteriaItems>
+            <field>Available_Online__c</field>
+            <operation>equals</operation>
+            <value>True</value>
+        </criteriaItems>
+    </sharingGuestRules>
+</SharingRules>

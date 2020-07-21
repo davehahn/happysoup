@@ -1,4 +1,4 @@
-public with sharing class LGND_Utilities {
+public without sharing class LGND_Utilities {
 
   public class LGND_Exception extends Exception {}
 
@@ -111,6 +111,17 @@ public with sharing class LGND_Utilities {
       .getRecordTypeInfosByName()
       .get( recordName )
       .getRecordTypeId();
+  }
+
+  public static String toCamelCase( String text )
+  {
+    String[] split = new List<String>();
+    for( String s : text.split(' ') )
+    {
+      split.add( s.capitalize() );
+    }
+    text = String.join( split, '');
+    return text.uncapitalize();
   }
 
   public static Set<Id> getIdSetFromList( sObject[] objects )

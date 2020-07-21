@@ -1,4 +1,4 @@
-public with sharing class LGND_Constants {
+public without sharing class LGND_Constants {
   public class LGND_Constants_Exception extends Exception {}
   public static String WarrantyPayableTaskName = 'Warranty Payable';
   public static String WarrantyRecoverableTaskName = 'Warranty Recoverable';
