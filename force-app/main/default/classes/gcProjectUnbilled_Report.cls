@@ -10,21 +10,35 @@ public with sharing class gcProjectUnbilled_Report {
 
     public static string locale{get{return UserInfo.getLocale();}}
 
-    public List<SelectOption> getListAccounts()
-    {
-        List<SelectOption> listOptions = new List<SelectOption>();
-        //Set<Id> setIdAccountWithProject = new Set<Id>();
-        //for(sObject obj : [SELECT AcctSeed__Account__c idAccount FROM AcctSeed__Project__c WHERE AcctSeed__Account__c != null GROUP BY AcctSeed__Account__c])
-        //    setIdAccountWithProject.add((Id)obj.get('idAccount'));
+//    public List<SelectOption> getListAccounts()
+//    {
+//        List<SelectOption> listOptions = new List<SelectOption>();
+//        //Set<Id> setIdAccountWithProject = new Set<Id>();
+//        //for(sObject obj : [SELECT AcctSeed__Account__c idAccount FROM AcctSeed__Project__c WHERE AcctSeed__Account__c != null GROUP BY AcctSeed__Account__c])
+//        //    setIdAccountWithProject.add((Id)obj.get('idAccount'));
+//
+//        listOptions.add(new selectOption('', '--All Accounts--'));
+//        for(Account acc : [SELECT Id, Name, (SELECT Id FROM AcctSeed__Projects__r LIMIT 1) FROM Account ORDER BY Name])
+//        {
+//            if(!acc.AcctSeed__Projects__r.isEmpty())
+//                listOptions.add(new selectOption(acc.Id, acc.Name));
+//        }
+//
+//        return listOptions;
+//    }
 
-        listOptions.add(new selectOption('', '--All Accounts--'));
-        for(Account acc : [SELECT Id, Name, (SELECT Id FROM AcctSeed__Projects__r LIMIT 1) FROM Account ORDER BY Name])
+    @RemoteAction @ReadOnly
+    public static List<Account> searchAccount(String searchTxt)
+    {
+        List<Account> listGLA = new List<Account>();
+        searchTxt = '%'+searchTxt.replaceAll('[*]','%') +'%';
+
+        for(Account acc : [SELECT Id, Name, (SELECT Id FROM AcctSeed__Projects__r LIMIT 1) FROM Account WHERE Name like:searchTxt ORDER BY Name limit 20])
         {
             if(!acc.AcctSeed__Projects__r.isEmpty())
-                listOptions.add(new selectOption(acc.Id, acc.Name));
+                listGLA.add(acc);
         }
-
-        return listOptions;
+        return listGLA;
     }
 
     public void retrieveListGLV()

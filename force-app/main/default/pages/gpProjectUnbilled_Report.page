@@ -18,7 +18,7 @@ div.pq-grid-footer{
 }
 #filterContainer select
 {
-    width: 200px;
+    width: 170px;
 }
 </style>
 
@@ -59,9 +59,8 @@ div.pq-grid-footer{
                                         <div>
                                             Select a Account:
                                             <span class="accountSelector">
-                                            <apex:selectList size="1" value="{!defaultAccount}" onchange="refreshGrid_erpOrders();">
-                                                <apex:selectOptions value="{!listAccounts}"/>
-                                            </apex:selectList>
+                                            <input type="text" name="accountName" id="accountName"/>
+                                            <input type="hidden" name="accountId" id="accountId"/>
                                             </span>
                                         </div>
                                     </td>
@@ -76,6 +75,9 @@ div.pq-grid-footer{
                                     </td>
                                     <td>Completed ERP:
                                         <input title="Check This only if you want to load all ERP orders including completed and all billings ERP order items 0 amounts will be discarded as billed." type="checkbox" name="allCompleted" id="allCompleted" onchange="refreshGrid_erpOrders();" />
+                                    </td>
+                                    <td>
+                                        <input type="button" onclick="refreshGrid_erpOrders();" value=" Refresh "/>
                                     </td>
                                 </tr>
                             </table>
@@ -257,7 +259,12 @@ div.pq-grid-footer{
     {
         var $gridDiv = $j('#erpOrders');
         $gridDiv.pqGrid('showLoading');
-        var idAccount = $j('span.accountSelector select').val();
+        var accountName = $j('#accountName').val();
+        var idAccount = $j('#accountId').val();
+        if(idAccount == '' || idAccount == undefined)
+            idAccount = null;
+        if(accountName == null || accountName == '' || accountName == undefined)
+            idAccount = null;
         var glv1Val = $j('span.glv1Selector select').val();
         var glv2Val = $j('span.glv2Selector select').val();
         if(idAccount == '') $j('#allTimes').prop('checked',false);
@@ -445,6 +452,54 @@ div.pq-grid-footer{
           return 0;
       }
     }
+
+    /// Account Selection
+    $currentSelection = null;
+    $j('#accountName').autocomplete({
+        minLength: 2,
+        autoFocus: false,
+        source: function (request, response) {
+            Visualforce.remoting.Manager.invokeAction(
+                '{!$RemoteAction.gcProjectUnbilled_Report.searchAccount}',
+                 request.term,
+                function (result, event) {
+                    if (event.status) {
+                        $j.each(result,function(k,item){
+                            if(item.label == undefined)
+                                result[k].label = item.Name;
+                            if(item.value == undefined)
+                                result[k].value = item.Id;
+                        })
+                        response(result);
+                    } else {
+                        alert(event.message);
+                    }
+                }, {
+                    buffer: true,
+                    escape: true,
+                    timeout: 120000
+                });
+        },
+        focus: function (event, ui) {
+            $j(this).val(ui.item.Name);
+            $currentSelection = ui.item;
+            return false;
+        },
+        select: function (event, ui) {
+            $j(this).next().val(ui.item.Id);
+            refreshGrid_erpOrders();
+            return false;
+        },
+        change: function (event, ui) {
+            if($currentSelection != null)
+            {
+                $j(this).next().val(ui.item.Id);
+                refreshGrid_erpOrders();
+                $currentSelection = null;
+            }
+            return false;
+        }
+    });
 
 </script>
 
