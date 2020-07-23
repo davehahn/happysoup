@@ -91,19 +91,23 @@
           </lightning:layoutItem>
         </lightning:layout>
 
-        <c:commissionPayments commissionRecordId="{!v.record.id}"
-                              onpaymentchange="{!c.handlePaymentChange}"
-                              onpaymentupdatecomplete="{!c.handlePaymentUpdateComplete}"
-                              ondisputedpayments="{!c.handleDisputedPayments}"
-                              aura:id="payments" />
+        <aura:if isTrue="{! !empty(v.record)}">
+          <c:commissionPayments commissionRecordId="{!v.record.id}"
+                                onpaymentchange="{!c.handlePaymentChange}"
+                                onpaymentupdatecomplete="{!c.handlePaymentUpdateComplete}"
+                                ondisputedpayments="{!c.handleDisputedPayments}"
+                                aura:id="payments" />
+        </aura:if>
 
         <aura:if isTrue="{!v.renderFeed}">
           <lightning:tabset>
 
             <lightning:tab label="Details">
-              <c:commissionLineItems commissionRecordId="{!v.record.id}"
-                                     recordCalculationMethod="{!v.record.calculationMethod}"
-                                     aura:id="commissionLines" />
+              <aura:if isTrue="{! !empty(v.record)}">
+                <c:commissionLineItems commissionRecordId="{!v.record.id}"
+                                       recordCalculationMethod="{!v.record.calculationMethod}"
+                                       aura:id="commissionLines" />
+              </aura:if>
             </lightning:tab>
 
             <lightning:tab label="Feed" aura:id="feed" >
@@ -113,9 +117,11 @@
         </aura:if>
 
         <aura:if isTrue="{! !v.renderFeed}">
-          <c:commissionLineItems commissionRecordId="{!v.record.id}"
-                                 renderRatePaymentColumns="{!equals(v.record.calculationMethod, 'Revenue')}"
-                                 aura:id="commissionLines" />
+          <aura:if isTrue="{! !empty(v.record)}">
+            <c:commissionLineItems commissionRecordId="{!v.record.id}"
+                                   renderRatePaymentColumns="{!equals(v.record.calculationMethod, 'Revenue')}"
+                                   aura:id="commissionLines" />
+          </aura:if>
         </aura:if>
 
       </div>
