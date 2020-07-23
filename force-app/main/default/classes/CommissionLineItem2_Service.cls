@@ -72,7 +72,12 @@ public with sharing class CommissionLineItem2_Service
         }
         else if( this.insuranceProducts.containsKey( cli.Product__c ) )
         {
-          cost = cli.Sale_Price__c * ( ( 100 - insuranceProducts.get( cli.Product__c ).InsurancePlan__r.Profit_Percent__c ) / 100 );
+          Product2 insuranceP = this.insuranceProducts.get( cli.Product__c );
+          Decimal profitPercent = ( insuranceP.Insurance_Profit_Percent_Override__c != null &&
+                                    insuranceP.Insurance_Profit_Percent_Override__c > 0 ) ?
+                                  insuranceP.Insurance_Profit_Percent_Override__c :
+                                  insuranceP.InsurancePlan__r.Profit_Percent__c;
+          cost = cli.Sale_Price__c * ( ( 100 - profitPercent ) / 100 );
           rate = insuranceRate;
           paymentBasedOnProfit = true;
         }
@@ -140,6 +145,7 @@ public with sharing class CommissionLineItem2_Service
       this.packageBundles = new Map<Id, Product2>();
       this.feeProducts = new Map<Id, Product2>();
       for( Product2 p : [ SELECT Id,
+                                  Insurance_Profit_Percent_Override__c,
                                   InsurancePlan__c,
                                   InsurancePlan__r.Profit_Percent__c,
                                   RecordTypeId,
