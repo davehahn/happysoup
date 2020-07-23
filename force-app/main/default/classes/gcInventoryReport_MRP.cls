@@ -19,6 +19,7 @@ public with sharing class gcInventoryReport_MRP {
 			idDefaultWarehouse = gcConstants.idWarehouseWholesale;
 		//return idDefaultWarehouse;
 	}
+	public static string locale{get{return UserInfo.getLocale();}}
 
 	public List<SelectOption> getListWarehouse()
 	{
