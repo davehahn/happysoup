@@ -301,6 +301,7 @@ input.dateSelector{
 <apex:variable value="{!AcctSeed__Project__c.Internal_Labour_Service__c}" var="isInternalLabour"/>
 <apex:variable value="{!AcctSeed__Project__c.Internal_Warranty__c}" var="isInternalWarranty"/>
 <apex:variable value="{!AcctSeed__Project__c.Internal_Partner_Parts_Order__c}" var="isInternalPartsOrder"/>
+<apex:variable value="{!AcctSeed__Project__c.GMBLASERP__Warehouse__c}" var="idERPWarehouse"/>
 <div id="theAuraComp"></div>
     <apex:form >
         <apex:actionFunction name="rerenderDetail" reRender="detailContainer"/>
@@ -2698,8 +2699,11 @@ input.dateSelector{
                         if(rowData.idSerial == ui.rowData.idSerial) return 'Already Selected';
                         // if(ui.rowData.IsAvailable == 'false' && {!$Permission.CanTagUnavailableSerial})
                         //     return '<button type="button" class="btn" onclick=\"selectSerialForMaterial(\''+idMaterial+'\',\''+ui.rowData.idSerial+'\',\''+rowIndx+'\',true)\">Not Available</button>';
-                        // if(ui.rowData.IsAvailable == 'false')
-                        //     return 'Not Available'
+                        console.log('{!idWarehouseInternal}');
+                        console.log('{!idERPWarehouse}');
+                        console.log(ui.rowData.idWarehouse);
+                        if('{!idWarehouseInternal}' != '{!idERPWarehouse}' && ui.rowData.idWarehouse == '{!idWarehouseInternal}')
+                             return '';
                         return '<button type="button" class="btn" onclick=\"selectSerialForMaterial(\''+idMaterial+'\',\''+ui.rowData.idSerial+'\',\''+rowIndx+'\',false)\">Select</button>';
                     }
                 });

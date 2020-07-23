@@ -1430,6 +1430,7 @@ global without sharing class gcProject_Ext {
       if(isInternalPartnerBoatSale && sn.GMBLASERP__Inventory_Balance__r.AcctSeedERP__Warehouse__c != gcConstants.idWarehouseWholesale) continue;
       if(matl.AcctSeedERP__Project__r.GMBLASERP__Warehouse__r.Name == 'Wholesale' && !sn.Available_Wholesale__c) continue;
       if(matl.AcctSeedERP__Project__r.GMBLASERP__Warehouse__r.Name != 'Wholesale' && !sn.Available_Retail__c) continue;
+      if(matl.AcctSeedERP__Project__r.GMBLASERP__Warehouse__r.Name != 'Wholesale' && sn.GMBLASERP__Inventory_Balance__r.AcctSeedERP__Warehouse__r.Name == 'Wholesale') continue;
       Map<String,String> m = new Map<String,String>();
       m.put('idWarehouse', sn.GMBLASERP__Inventory_Balance__r.AcctSeedERP__Warehouse__c);
       m.put('warehouseName', sn.GMBLASERP__Inventory_Balance__r.AcctSeedERP__Warehouse__r.Name);

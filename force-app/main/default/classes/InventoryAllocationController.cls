@@ -74,7 +74,7 @@
             qs += ' from  AcctSeedERP__Purchase_Order_Line__c  Where AcctSeedERP__Purchase_Order__r.Estimated_Time_of_Arrival_ETA__c != null ';*/
 
             String qs = 'Select Id, Name, AcctSeedERP__Product__r.RecordType.Name, AcctSeedERP__Product__r.Name, AcctSeedERP__Quantity_Allocated__c, AcctSeedERP__Product__c, GMBLASERP__Lot__r.Name, GMBLASERP__Serial_Number__c, GMBLASERP__Serial_Number__r.Name, ';
-            qs += ' AcctSeedERP__Project__c, AcctSeedERP__Project__r.Name, AcctSeedERP__Project__r.AcctSeed__Account__r.Name, AcctSeedERP__Project__r.AcctSeedERP__Work_Order_Number__c, AcctSeedERP__Project__r.Stage__c, AcctSeedERP__Project__r.CreatedDate, AcctSeedERP__Project__r.Delivery_Date__c, AcctSeedERP__Project__r.Arrival_Date__c, AcctSeedERP__Project__r.BoatModelYear__c, AcctSeedERP__Project__r.Serial_Number__c, AcctSeedERP__Project__r.ERP_Serial_In_Inventory__c, AcctSeedERP__Project__r.Serial_Number__r.Name, AcctSeedERP__Project__r.TrailerModelYear__c,  ';
+            qs += ' AcctSeedERP__Project__c, AcctSeedERP__Project__r.Name, AcctSeedERP__Project__r.AcctSeed__Account__r.Name, AcctSeedERP__Project__r.AcctSeedERP__Work_Order_Number__c, AcctSeedERP__Project__r.Stage__c, AcctSeedERP__Project__r.CreatedDate, AcctSeedERP__Project__r.Delivery_Date__c, AcctSeedERP__Project__r.Arrival_Date__c, AcctSeedERP__Project__r.BoatModelYear__c, AcctSeedERP__Project__r.Serial_Number__c, AcctSeedERP__Project__r.Serial_Number__r.Product_Name__c, AcctSeedERP__Project__r.ERP_Serial_In_Inventory__c, AcctSeedERP__Project__r.Serial_Number__r.Name, AcctSeedERP__Project__r.TrailerModelYear__c,  ';
             qs += ' AcctSeedERP__Project__r.Retail_ERP__c, AcctSeedERP__Project__r.Retail_ERP__r.ERP_Serial_In_Inventory__c, AcctSeedERP__Project__r.Retail_ERP__r.Name, AcctSeedERP__Project__r.Retail_ERP__r.AcctSeed__Account__r.Name, AcctSeedERP__Project__r.Retail_ERP__r.AcctSeedERP__Work_Order_Number__c, AcctSeedERP__Project__r.Retail_ERP__r.Stage__c, AcctSeedERP__Project__r.Retail_ERP__r.CreatedDate, AcctSeedERP__Project__r.Retail_ERP__r.Delivery_Date__c, AcctSeedERP__Project__r.Retail_ERP__r.Arrival_Date__c, AcctSeedERP__Project__r.Retail_ERP__r.BoatModelYear__c, AcctSeedERP__Project__r.Retail_ERP__r.Serial_Number__c, AcctSeedERP__Project__r.Retail_ERP__r.Serial_Number__r.Name, AcctSeedERP__Project__r.Retail_ERP__r.TrailerModelYear__c ';
             qs += ' from  AcctSeedERP__Material__c Where AcctSeedERP__Project__c != null AND AcctSeedERP__Project__r.RecordTypeId =:erpPartnerBoatSaleRtId ';
 
@@ -131,11 +131,13 @@
                                                                  AcctSeedERP__Product__r.RecordType.Name,
                                                                  GMBLASERP__Serial_Number__c,
                                                                  GMBLASERP__Serial_Number__r.Name,
+                                                                 GMBLASERP__Serial_Number__r.Product_Name__c,
                                                                  GMBLASERP__Lot__c,
                                                                  GMBLASERP__Lot__r.Name,
                                                                  AcctSeedERP__Project__c,
                                                                  AcctSeedERP__Project__r.Name,
-                                                                 AcctSeedERP__Project__r.AcctSeedERP__Work_Order_Number__c
+                                                                 AcctSeedERP__Project__r.AcctSeedERP__Work_Order_Number__c,
+                                                                 AcctSeedERP__Project__r.Serial_Number__r.Product_Name__c
                                                           FROM AcctSeedERP__Material__c
                                                           WHERE AcctSeedERP__Product__r.RecordType.Name != 'Boat'
                                                             AND AcctSeedERP__Product__r.AcctSeedERP__Serialized__c = true
@@ -491,6 +493,7 @@
                                                            AcctSeedERP__Project__r.TrailerModelYear__c,
                                                            AcctSeedERP__Project__r.Serial_Number__c,
                                                            AcctSeedERP__Project__r.Serial_Number__r.Name,
+                                                           AcctSeedERP__Project__r.Serial_Number__r.Product_Name__c,
                                                            AcctSeedERP__Project__r.Retail_ERP__c,
                                                           AcctSeedERP__Project__r.Retail_ERP__r.ERP_Serial_In_Inventory__c,
                                                           AcctSeedERP__Project__r.Retail_ERP__r.Name,
@@ -520,7 +523,12 @@
             populateMapValues(objMaterial.AcctSeedERP__Product__c, uniqueCombo);
             uniqueCombo = objMaterial.AcctSeedERP__Product__c + ( uniqueCombo == '' ? '' : ('-' + uniqueCombo) );
             if(mapShipmentERP.containsKey(uniqueCombo) && mapShipmentERP.get(uniqueCombo).contains(objMaterial.AcctSeedERP__Project__c)) continue;
+            System.debug('AcctSeedERP__Project__r.Serial_Number__r.Name');
+            System.debug(objMaterial);
+            System.debug(objMaterial.AcctSeedERP__Project__r.Serial_Number__r.Name);
             Shipment shipmnt = new Shipment(objMaterial);
+            System.debug('shipmnt');
+            System.debug(shipmnt);
             List<Shipment> shipments = new List<Shipment>();
             if(this.mapShipments.containsKey(uniqueCombo))
               shipments = this.mapShipments.get(uniqueCombo);
@@ -805,6 +813,8 @@
                 //inv.shipments = this.mapShipments.get(pro.Id + yearSection);
                 List<Shipment> lstShip = new List<Shipment>();
                 lstShip = this.mapShipments.get(pro.Id + yearSection);
+                System.debug('lstShip');
+                System.debug(lstShip);
                 Map<Date,Shipment> mapShipment = new Map<Date,Shipment>();
                 for(Shipment sh : lstShip)
                 {
@@ -1521,12 +1531,15 @@
           AcctSeed__Project__c wholesaleProject;
           Set<Id> setIdRetailSerialProducts = new Set<Id>();
           Set<Id> setIdWholesaleSerialProducts = new Set<Id>();
+          Map<Id,Map<Id,Id>> mapProjectProductSerial = new Map<Id,Map<Id,Id>>();
+          mapProjectProductSerial.put(idRERP,new Map<Id,Id>());
           AcctSeedERP__Purchase_Order_Line__c pol;
             String modelYear = '';
           for(AcctSeed__Project__c p :
             [SELECT Id, BoatModelYear__c,
               Retail_ERP__c,
-              (SELECT Id, AcctSeedERP__Product__c FROM AcctSeedERP__Project_Materials__r WHERE AcctSeedERP__Product__r.AcctSeedERP__Serialized__c = true),
+                Serial_Number__c,
+              (SELECT Id, AcctSeedERP__Product__c, GMBLASERP__Serial_Number__c FROM AcctSeedERP__Project_Materials__r WHERE AcctSeedERP__Product__r.AcctSeedERP__Serialized__c = true),
               (SELECT Id, GMBLASERP__Lot__c, GMBLASERP__Lot__r.Name, AcctSeedERP__Product__c FROM AcctSeedERP__Purchase_Order_Lines__r LIMIT 1)
             FROM AcctSeed__Project__c
             WHERE Locked__c = false
@@ -1537,8 +1550,10 @@
             if(!p.AcctSeedERP__Purchase_Order_Lines__r.isEmpty())
               pol = p.AcctSeedERP__Purchase_Order_Lines__r[0];
 
-            for(AcctSeedERP__Material__c matl : p.AcctSeedERP__Project_Materials__r)
-              setIdRetailSerialProducts.add(matl.AcctSeedERP__Product__c);
+            for(AcctSeedERP__Material__c matl : p.AcctSeedERP__Project_Materials__r) {
+                mapProjectProductSerial.get(idRERP).put(matl.AcctSeedERP__Product__c,matl.GMBLASERP__Serial_Number__c);
+                setIdRetailSerialProducts.add(matl.AcctSeedERP__Product__c);
+            }
           }
           //if(pol == null) throw new InventoryAllocationException( 'The wholesale ERP does not have a related Purchase Order Line.');
             AcctSeed__Project__c retailPR;
@@ -1575,6 +1590,11 @@
           m.put('lotName',modelYear);
           m.put('idProduct',idWholesalePrd);
             System.debug(m);
+            if(!mapProjectProductSerial.isEmpty()) {
+                System.debug('mapProjectProductSerial');
+                System.debug(mapProjectProductSerial);
+                gcMaterial.updateRetailMaterialSerial(mapProjectProductSerial);
+            }
           return m;
         }
 
@@ -1584,6 +1604,7 @@
           AcctSeed__Project__c wholesaleProject;
           AcctSeedERP__Purchase_Order_Line__c pol;
             String modelYear = '';
+            Id idRetailERP;
           for(AcctSeed__Project__c p :
             [SELECT Id, BoatModelYear__c,
               (SELECT Id, GMBLASERP__Lot__c, GMBLASERP__Lot__r.Name, AcctSeedERP__Product__c FROM AcctSeedERP__Purchase_Order_Lines__r LIMIT 1)
@@ -1598,7 +1619,8 @@
           }
           //if(pol == null) throw new InventoryAllocationException( 'The wholesale ERP does not have a related Purchase Order Line.');
           for(AcctSeed__Project__c pr : [SELECT Id, Locked__c, Retail_ERP__c, Serial_Number__c FROM AcctSeed__Project__c WHERE Id = :idWErp AND Retail_ERP__c != null]){
-            pr.Retail_ERP__c = null;
+              idRetailERP = pr.Retail_ERP__c;
+              pr.Retail_ERP__c = null;
             update pr;
           }
             System.debug('wholesaleProject');
@@ -1607,6 +1629,13 @@
           m.put('lotName',modelYear);
           m.put('idProduct',idWholesaleProd);
             System.debug(m);
+            if(idRetailERP != null) {
+                System.debug('idRetailERP');
+                System.debug(idRetailERP);
+                gcMaterial.untagRetailERPItems(new Set<Id>{
+                    idRetailERP
+                });
+            }
           return m;
         }
 
@@ -1730,6 +1759,7 @@
             public Integer reserved                   {get;set;}
             public Integer available_retail           {get;set;}
             public Integer orders                     {get;set;}
+            public String boatName                    {get;set;}
             public String soldErpOrder                {get;set;}
             public String erpOrder                    {get;set;}
 
@@ -1786,11 +1816,14 @@
                   this.deliverDateFormatted = Datetime.newInstance(this.deliverDate.year(),this.deliverDate.month(),this.deliverDate.day()).format('MMM d, yyyy');
                 }
                 this.reserved = 0;
-
+                System.debug('orderLine');
+                System.debug(orderLine.AcctSeedERP__Project__r.Serial_Number__r.Product_Name__c);
+                this.boatName = orderLine.AcctSeedERP__Project__r.Serial_Number__r.Product_Name__c;
                 this.shipID = orderLine.Id;
                 this.productId = orderLine.AcctSeedERP__Product__c;
                 this.quantity = 1;
                 this.available = available;
+
                 this.orders = orderLine.AcctSeedERP__Project__r.Retail_ERP__c == null ? 0 : 1;
                 if(orderLine.AcctSeedERP__Product__r.RecordType.Name != 'Boat')
                   this.orders = 0;
@@ -1858,6 +1891,7 @@
             public String productName           {get;set;}
             public String idSerial              {get;set;}
             public String serialName            {get;set;}
+            public String boatName              {get;set;}
             public String erpName               {get;set;}
             public String retailErpName         {get;set;}
             public String retailErpId           {get;set;}
@@ -1896,6 +1930,7 @@
                 this.productName = matl.AcctSeedERP__Product__r.Name;
                 this.retailErpId = null;
                 this.retailErpName = null;
+                this.boatName = matl.AcctSeedERP__Project__r.Serial_Number__r.Product_Name__c;
                 this.accountName = matl.AcctSeedERP__Project__r.AcctSeed__Account__r.Name;
                 this.idSerial = matl.GMBLASERP__Serial_Number__c;
                 this.serialName = matl.GMBLASERP__Serial_Number__c != null ? matl.GMBLASERP__Serial_Number__r.Name : '';
@@ -1913,6 +1948,7 @@
             public String materialName          {get;set;}
             public String productId             {get;set;}
             public String productName           {get;set;}
+            public String boatName              {get;set;}
             public String idSerial              {get;set;}
             public String serialName            {get;set;}
             public String idLot                 {get;set;}
@@ -1925,6 +1961,7 @@
                 this.materialName = matl.Name;
                 this.productId = matl.AcctSeedERP__Product__c;
                 this.productName = matl.AcctSeedERP__Product__r.Name;
+                this.boatName = matl.AcctSeedERP__Project__r.Serial_Number__r.Product_Name__c;
                 this.idSerial = matl.GMBLASERP__Serial_Number__c;
                 this.serialName = matl.GMBLASERP__Serial_Number__r.Name;
                 this.idLot = matl.GMBLASERP__Lot__c;
