@@ -852,6 +852,24 @@
         <reevaluateOnChange>true</reevaluateOnChange>
     </fieldUpdates>
     <fieldUpdates>
+        <fullName>ERP_Set_inApproval_to_False</fullName>
+        <field>inApproval__c</field>
+        <literalValue>0</literalValue>
+        <name>ERP - Set inApproval to False</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+    </fieldUpdates>
+    <fieldUpdates>
+        <fullName>ERP_Set_inApproval_to_True</fullName>
+        <field>inApproval__c</field>
+        <literalValue>1</literalValue>
+        <name>ERP - Set inApproval to True</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+    </fieldUpdates>
+    <fieldUpdates>
         <fullName>Locked_If_Competed</fullName>
         <field>Locked__c</field>
         <literalValue>1</literalValue>
@@ -2436,11 +2454,7 @@
         <fullName>One Year Boat Anniversary Pickup</fullName>
         <active>true</active>
         <description>Email sent to customer 1 year after the boat has been picked up</description>
-        <formula>AND(
-TEXT(Stage__c) = &apos;Delivered&apos;,
-RecordType.Name  = &apos;Retail Boat Sale&apos;,
-TEXT(AcctSeed__Account__r.Preferred_Language__c) = &apos;English&apos;
-)</formula>
+        <formula>AND( TEXT(Stage__c) = &apos;Delivered&apos;, RecordType.Name  = &apos;Retail Boat Sale&apos;, TEXT(AcctSeed__Account__r.Preferred_Language__c) = &apos;English&apos; )</formula>
         <triggerType>onCreateOrTriggeringUpdate</triggerType>
         <workflowTimeTriggers>
             <actions>

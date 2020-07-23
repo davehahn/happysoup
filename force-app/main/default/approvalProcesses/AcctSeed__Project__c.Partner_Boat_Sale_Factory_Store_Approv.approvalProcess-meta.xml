@@ -54,13 +54,35 @@
     </entryCriteria>
     <finalApprovalActions>
         <action>
+            <name>ERP_Set_inApproval_to_False</name>
+            <type>FieldUpdate</type>
+        </action>
+        <action>
             <name>Update_to_Plan_Load</name>
             <type>FieldUpdate</type>
         </action>
     </finalApprovalActions>
     <finalApprovalRecordLock>false</finalApprovalRecordLock>
+    <finalRejectionActions>
+        <action>
+            <name>ERP_Set_inApproval_to_False</name>
+            <type>FieldUpdate</type>
+        </action>
+    </finalRejectionActions>
     <finalRejectionRecordLock>false</finalRejectionRecordLock>
+    <initialSubmissionActions>
+        <action>
+            <name>ERP_Set_inApproval_to_True</name>
+            <type>FieldUpdate</type>
+        </action>
+    </initialSubmissionActions>
     <label>Partner Boat Sale - Factory Store Approv</label>
+    <recallActions>
+        <action>
+            <name>ERP_Set_inApproval_to_False</name>
+            <type>FieldUpdate</type>
+        </action>
+    </recallActions>
     <recordEditability>AdminOnly</recordEditability>
     <showApprovalHistory>false</showApprovalHistory>
 </ApprovalProcess>
