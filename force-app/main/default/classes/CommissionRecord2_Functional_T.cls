@@ -319,6 +319,7 @@ private class CommissionRecord2_Functional_T
         false
       ));
     }
+    products[0].Insurance_Profit_Percent_Override__c = 15;
     insert products;
 
     List<AcctSeedERP__Material__c> materials = new List<AcctSeedERP__Material__c>();
@@ -343,13 +344,18 @@ private class CommissionRecord2_Functional_T
     System.assertEquals( 1, commissionRecords.size() );
     System.assertEquals( 10, commissionLineItems.size() );
     System.assertEquals( 1000, commissionLineItems[0].Sale_Price__c );
+    System.assertEquals( 1000, commissionLineItems[1].Sale_Price__c );
+    /* cost is the sale price - (sale price * the Profit Percent Override on Insurance Product ) */
+    System.assertEquals( 850, commissionLineItems[0].Cost__c );
+    System.assertEquals( 150, commissionLineItems[0].Profit__c );
     /* cost is the sale price - (sale price * the Profit Percent on the insurance Plan ) */
-    System.assertEquals( 750, commissionLineItems[0].Cost__c );
-    System.assertEquals( 250, commissionLineItems[0].Profit__c );
+    System.assertEquals( 750, commissionLineItems[1].Cost__c );
+    System.assertEquals( 250, commissionLineItems[1].Profit__c );
     System.assertEquals( 'From Unit Test', commissionLineItems[0].Comment__c );
     System.assertEquals( 1, commissionLineItems[0].Quantity__c );
     System.assertEquals( CommissionLineItem2_Service.insuranceRate, commissionLineItems[0].Commission_Rate__c );
-    System.assertEquals( ( 250 * CommissionLineItem2_Service.insuranceRate ), commissionLineItems[0].Payment_Amount__c );
+    System.assertEquals( ( 150 * CommissionLineItem2_Service.insuranceRate ), commissionLineItems[0].Payment_Amount__c );
+    System.assertEquals( ( 250 * CommissionLineItem2_Service.insuranceRate ), commissionLineItems[1].Payment_Amount__c );
   }
 
   @IsTest

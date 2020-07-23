@@ -4,6 +4,7 @@ BLUE=`tput setaf 4`
 RESET=`tput sgr0`
 TESTLEVEL='RunLocalTest'
 CHECKONLY=false
+DEPLOY_EXPERIENCES=false
 
 echoOut() {
   echo "${BLUE}$1${RESET}"
@@ -65,22 +66,28 @@ if [ "$CHECKONLY" = true ]
 then
   echoOut 'VALIDATING ONLY'
   if sfdx force:source:deploy --testlevel $TESTLEVEL --checkonly --targetusername $1 -p force-app/main/default -g -w 120 ; then
-    echoOut 're-enable original .forceignore'
-    rm -f .forceignore
-    mv .forceignore.orig .forceignore
-    echoOut 'Deploying ExperienceBundles'
-    sfdx force:source:deploy --testlevel NoTestRun --checkonly --targetusername $1 -p force-app/main/default/experiences -g -w 120
+    if [ $DEPLOY_EXPERIENCES = true ]
+    then
+      echoOut 're-enable original .forceignore'
+      rm -f .forceignore
+      mv .forceignore.orig .forceignore
+      echoOut 'Deploying ExperienceBundles'
+      sfdx force:source:deploy --testlevel NoTestRun --checkonly --targetusername $1 -p force-app/main/default/experiences -g -w 120
+    fi
   else
     echoOut 'Validation Fail'
     exit 1
   fi
 else
   if sfdx force:source:deploy --testlevel $TESTLEVEL --targetusername $1 -p force-app/main/default -g -w 120 ; then
-    echoOut 're-enable original .forceignore'
-    rm -f .forceignore
-    mv .forceignore.orig .forceignore
-    echoOut 'Deploying ExperienceBundles'
-    sfdx force:source:deploy --testlevel NoTestRun --targetusername $1 -p force-app/main/default/experiences -g -w 120
+    if [ $DEPLOY_EXPERIENCES = true ]
+    then
+      echoOut 're-enable original .forceignore'
+      rm -f .forceignore
+      mv .forceignore.orig .forceignore
+      echoOut 'Deploying ExperienceBundles'
+      sfdx force:source:deploy --testlevel NoTestRun --targetusername $1 -p force-app/main/default/experiences -g -w 120
+    fi
   else
     echoOut 'Deploy Fail'
     exit 1
