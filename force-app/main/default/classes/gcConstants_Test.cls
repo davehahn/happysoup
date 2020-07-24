@@ -44,6 +44,8 @@ private class gcConstants_Test {
 		Id idGlMerchantDebitCredit = gcConstants.idGlMerchantDebitCredit;
 		Id idGlCashFloat = gcConstants.idGlCashFloat;
 		Id idGlRBCCDN = gcConstants.idGlRBCCDN;
+		Id idGlRBCUS = gcConstants.idGlRBCUS;
+		Id idGlCCPayable = gcConstants.idGlCCPayable;
 		Id idGlCostVariance = gcConstants.idGlCostVariance;
 		Id idGlAccruedExpenses = gcConstants.idGlAccruedExpenses;
 		Id idGlClearingARAP = gcConstants.idGlClearingARAP;

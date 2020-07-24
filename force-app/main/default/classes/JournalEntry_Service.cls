@@ -196,6 +196,7 @@ public with sharing class JournalEntry_Service {
                 jel.AcctSeed__Journal_Entry__c = mapNewJE.get(jel.AcctSeed__Journal_Entry__c).Id;
             }
             insert listJEL;
+            AcctSeed.JournalEntryPostService.postJournalEntries(mapNewJE.values());
         }
         if(!listCR.isEmpty())
             update listCR;

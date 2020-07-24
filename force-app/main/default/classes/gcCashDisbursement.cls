@@ -126,10 +126,12 @@ public without sharing class gcCashDisbursement {
 			|| paymentMethod == 'Check'
 			|| paymentMethod == 'Draft')
 			cd.AcctSeed__Bank_Account__c = gcConstants.idGlRBCCDN;
+		else if(paymentMethod == 'Company Credit Card')
+			cd.AcctSeed__Bank_Account__c = gcConstants.idGlCCPayable;
 		else if(paymentMethod == 'Cash')
 			cd.AcctSeed__Bank_Account__c = gcConstants.idGlCashFloat;
-		else if(paymentMethod == 'Gift Cards')
-			cd.AcctSeed__Bank_Account__c = gcConstants.idGlGiftCards;
+		else if(paymentMethod == 'Wire')
+			cd.AcctSeed__Bank_Account__c = gcConstants.idGlRBCUS;
 		else if(paymentMethod == 'Legend Bucks')
 			cd.AcctSeed__Bank_Account__c = gcConstants.idGlLegendBucks;
 		else if(paymentMethod == 'Online Store')
