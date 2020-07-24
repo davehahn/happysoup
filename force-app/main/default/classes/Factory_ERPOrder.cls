@@ -90,6 +90,43 @@ public class Factory_ERPOrder {
     return erps;
   }
 
+  public static AcctSeed__Project__c[] createPartnerBoatSales(
+    Account acct,
+    PricebookEntry[] pbes,
+    Integer count )
+  {
+    AcctSeed__Project__c[] erps = new List<AcctSeed__Project__c>();
+    for( Integer i=0; i<count; i++ )
+    {
+      AcctSeed__Project__c erp = buildERP( acct, null, gcConstants.idRtProjectPartnerBoatSale );
+      erp.Stage__c = 'Draft';
+      erps.add( erp );
+    }
+    Boolean origTrig = gcProject.disableTrigger;
+    gcProject.disableTrigger = true;
+    insert erps;
+    gcProject.disableTrigger = origTrig;
+    Map<Id, AcctSeed__Project_Task__c> erpId_task_map = new  Map<Id, AcctSeed__Project_Task__c>();
+    for( AcctSeed__Project__c erp :erps )
+    {
+      erpId_task_map.put( erp.Id, buildProjectTask( erp.Id, 'Dealer Order' ) );
+    }
+    insert erpId_task_map.values();
+    AcctSeedERP__Material__c[] mats = new List<AcctSeedERP__Material__c>();
+    for( AcctSeed__Project__c erp :erps )
+    {
+      for(PricebookEntry pbe : pbes )
+      {
+        mats.add( buildMaterial( erp.Id, erpId_task_map.get( erp.Id ).Id, pbe) );
+      }
+    }
+    origTrig = gcMaterial.disableTrigger;
+    gcMaterial.disableTrigger = true;
+    insert mats;
+    gcMaterial.disableTrigger = origTrig;
+    return erps;
+  }
+
   public static AcctSeed__Project__c createPartnerBoatSale( Account acct, GMBLASERP__Serial_Number__c serial )
   {
     AcctSeed__Project__c erp = buildERP( acct, serial.Id, gcConstants.idRtProjectPartnerBoatSale );
@@ -277,6 +314,17 @@ public class Factory_ERPOrder {
       AcctSeedERP__Project__c = erpId,
       AcctSeedERP__Project_Task__c = taskId,
       GMBLASERP__Unit_Price__c = 10.00
+    );
+  }
+
+  public static AcctSeedERP__Material__c buildMaterial( Id erpId, Id taskId, PricebookEntry pbe )
+  {
+    return new AcctSeedERP__Material__c(
+      AcctSeedERP__Product__c = pbe.Product2Id,
+      AcctSeedERP__Quantity_Per_Unit__c = 1,
+      AcctSeedERP__Project__c = erpId,
+      AcctSeedERP__Project_Task__c = taskId,
+      GMBLASERP__Unit_Price__c = pbe.UnitPrice
     );
   }
 

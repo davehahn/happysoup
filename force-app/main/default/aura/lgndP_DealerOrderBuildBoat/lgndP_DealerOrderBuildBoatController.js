@@ -15,20 +15,20 @@
     {
       component.set('v.province', 'Others');
     }
-    helper.findAvailableDiscounts( component )
-    .then(
-      $A.getCallback( function( result ) {
-        component.set('v.availableDiscounts', result );
-        return helper.setUserType( component );
-      }),
-      $A.getCallback( function( err ) {
-        LightningUtils.errorToast( err );
-      })
-    )
+//    helper.findAvailableDiscounts( component )
+//    .then(
+//      $A.getCallback( function( result ) {
+//        component.set('v.availableDiscounts', result );
+//        return helper.setUserType( component );
+//      }),
+//      $A.getCallback( function( err ) {
+//        LightningUtils.errorToast( err );
+//      })
+//    )
     //setUserType then
+    helper.setUserType( component )
     .then(
       $A.getCallback( function() {
-        helper.functions.clearVars( component );
         component.find("lgnd_BoatTypeSelector--CMP").resetVars();
         helper.fireChangeEvent( component );
       }),
@@ -43,20 +43,22 @@
     helper.functions.clearVars( component );
     var params = event.getParam('arguments'),
         result;
-    component.set('v.orderGroupId', params.groupId );
 
-    helper.findAvailableDiscounts( component )
-    .then(
-      $A.getCallback( function( result ) {
-        component.set('v.availableDiscounts', result );
-        return helper.setUserType( component );
-      }),
-      $A.getCallback( function( err ) {
-        LightningUtils.errorToast( err );
-      })
-    )
+
+//    helper.findAvailableDiscounts( component )
+//    .then(
+//      $A.getCallback( function( result ) {
+//        component.set('v.availableDiscounts', result );
+//        return helper.setUserType( component );
+//      }),
+//      $A.getCallback( function( err ) {
+//        LightningUtils.errorToast( err );
+//      })
+//    )
+    helper.setUserType( component )
     .then(
       $A.getCallback( function() {
+         component.set('v.orderGroupId', params.groupId );
         return  helper.initForEdit( component, params.groupId );
       }),
       $A.getCallback( function(err) {
@@ -67,6 +69,8 @@
       // initForEdit SUCCESS
       $A.getCallback( function( resp) {
         result = JSON.parse( resp );
+        console.log( JSON.parse(JSON.stringify(result)));
+        component.set('v.modelYear', result.modelYear);
         if( result.province !== undefined && result.province.length > 0 )
           component.set('v.province', result.province );
         else
@@ -159,6 +163,7 @@
   cancelOrder: function( component, event, helper )
   {
     var cancelEvt = component.getEvent("cancelOrderEvent");
+    component.set('v.busyMessage', 'Cancelling Order');
     cancelEvt.fire();
   },
 
@@ -172,25 +177,28 @@
       $A.getCallback( function(response) {
         console.log( 'Saving Order Success');
         component.set('v.dealerOrder', response);
-        return helper.checkForPromotions( component );
+        return helper.handlePartnerProgram( component );
+        //return helper.checkForPromotions( component );
       }),
       $A.getCallback( function(err) {
         console.log(err);
         LightningUtils.errorToast(err);
       })
     )
+//    .then(
+//      $A.getCallback( function( result ) {
+//        return helper.applyPromotions( component, result )
+//      }),
+//      $A.getCallback( function( err ) {
+//        console.log( err );
+//        LightningUtils.errorToast( err );
+//      })
+//    )
     .then(
       $A.getCallback( function( result ) {
-        return helper.applyPromotions( component, result )
-      }),
-      $A.getCallback( function( err ) {
-        console.log( err );
-        LightningUtils.errorToast( err );
-      })
-    )
-    .then(
-      $A.getCallback( function( result ) {
+        console.log( JSON.parse( JSON.stringify( result ) ) );
         component.set( 'v.promotionMessage', result );
+        component.set('v.busyMessage', '');
         if( inOrderView )
         {
           component.set('v.isEditing', false);
@@ -267,6 +275,7 @@
       //SelectBoatFunction SUCCESS
       $A.getCallback( function( result ) {
         boat = result;
+        console.log( component.get('v.optionalProducts') );
         return helper.handleTrailer( component, boat.standardTrailer_Id );
       }),
       //SelectBoatFunction FAIL

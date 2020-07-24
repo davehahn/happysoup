@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Dealer_Order__c</fullName>
+    <externalId>false</externalId>
+    <label>Dealer Order</label>
+    <lookupFilter>
+        <active>true</active>
+        <errorMessage>Dealer Order Account must be the same as the Booking Order Account</errorMessage>
+        <filterItems>
+            <field>Dealer_Order__c.Account__c</field>
+            <operation>equals</operation>
+            <valueField>$Source.Account__c</valueField>
+        </filterItems>
+        <filterItems>
+            <field>Dealer_Order__c.Is_Booking_Order__c</field>
+            <operation>equals</operation>
+            <value>True</value>
+        </filterItems>
+        <isOptional>false</isOptional>
+    </lookupFilter>
+    <referenceTo>Dealer_Order__c</referenceTo>
+    <relationshipLabel>Partner Booking Orders</relationshipLabel>
+    <relationshipName>Partner_Booking_Orders</relationshipName>
+    <relationshipOrder>0</relationshipOrder>
+    <reparentableMasterDetail>false</reparentableMasterDetail>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>MasterDetail</type>
+    <writeRequiresMasterRead>false</writeRequiresMasterRead>
+</CustomField>

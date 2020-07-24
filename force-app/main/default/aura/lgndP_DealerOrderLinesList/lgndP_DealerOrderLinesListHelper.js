@@ -1,10 +1,35 @@
 ({
+  doInit: function( component )
+  {
+    let self = this;
+    return new Promise( (resolve, reject ) => {
+      self.fetchOrderDetails( component )
+      .then(
+        $A.getCallback( function( response ) {
+          var result = JSON.parse( response );
+          console.log(result);
+          component.set('v.boats', result.boats );
+          component.set('v.motors', result.motors );
+          component.set('v.trailers', result.trailers );
+          component.set('v.trollingMotors', result.trollingMotors );
+          // helper.groupItems( component );
+          self.setIsEditable( component );
+          resolve();
+        }),
+        $A.getCallback( function( err ) {
+          console.log( err );
+          reject( err );
+        })
+      );
+    })
+  },
+
   fetchOrderDetails: function( component )
   {
     var self = this,
         dealerOrderId = component.get('v.dealerOrder').Id,
         action = component.get('c.fetchUniqueOrderDetails');
-console.log( '&&&&&&&&&&&& Dealer_Order Id = ' + dealerOrderId);
+
     action.setParams({
       recordId: dealerOrderId
     });
@@ -76,13 +101,20 @@ console.log( '&&&&&&&&&&&& Dealer_Order Id = ' + dealerOrderId);
     });
     action.setCallback(this, function(response) {
       var state = response.getState();
-      if (state === "SUCCESS") {
-        self.removeOrderLine( component, groupId, itemType )
+      if (state === "SUCCESS")
+      {
+        self.doInit( component )
         .then(
           $A.getCallback( function() {
             self.toggleSpinner(component, false);
           })
-        )
+        );
+//        self.removeOrderLine( component, groupId, itemType )
+//        .then(
+//          $A.getCallback( function() {
+//            self.toggleSpinner(component, false);
+//          })
+//        )
       }
       else if (component.isValid() && state === "INCOMPLETE") {
       }

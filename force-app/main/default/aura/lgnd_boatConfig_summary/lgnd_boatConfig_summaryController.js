@@ -1,13 +1,13 @@
 ({
   doInit: function( component, event, helper )
   {
-    console.log( 'initing Summary ');
+    //console.log( 'initing Summary ');
   },
 
   handleConfigChange : function(component, event, helper) {
     var params = event.getParams();
-    console.log('summary change handler');
-    console.log(params);
+//    console.log('summary change handler');
+//    console.log(params);
     component.set('v.boat', params.boat);
     component.set('v.trailer', params.trailer);
     component.set('v.motor', params.motor);
@@ -19,10 +19,17 @@
     component.set('v.feeList', params.feeList);
     component.set('v.discounts', params.discounts);
     var ol = [];
-    for( var key in params.options )
+    if( params.options )
     {
-      if( params.options[key].isSelected )
-        ol.push( params.options[key] );
+      for( let optionGroup of params.options )
+      {
+        console.log( optionGroup );
+        for( let opt of optionGroup.values )
+        {
+          if( opt.isSelected )
+            ol.push( opt );
+        }
+      }
     }
     component.set('v.optionsList', ol);
     helper.updateTotal( component );

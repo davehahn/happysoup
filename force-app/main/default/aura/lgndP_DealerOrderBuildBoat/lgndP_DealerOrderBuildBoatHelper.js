@@ -2,30 +2,35 @@
   setUserType: function( component )
   {
     var self = this,
-        action = component.get('c.getUserType');
+        //action = component.get('c.getUserType');
+        action = component.get('c.builderInit');
 
     return new Promise( function( resolve, reject ) {
-      self.actionHandler.call(self, component, action )
+      self.actionHandler.call(self, component, action, true )
       .then(
         $A.getCallback( function(result) {
-          component.set('v.userType', result);
+          self.functions.clearVars( component );
+          console.log( JSON.parse( JSON.stringify( result )));
+          component.set('v.modelYearOptions', result.modelYearOptions );
+          component.set('v.userType', result.userType);
+          component.set('v.modelYear', result.modelYear);
           resolve();
         })
       );
     });
   },
 
-  findAvailableDiscounts: function( component )
-  {
-    var dealerOrder = component.get('v.dealerOrder'),
-        action = component.get('c.getAvailableDiscounts');
-
-    action.setParams({
-      dealerOrderId: dealerOrder.Id
-    });
-
-    return this.actionHandler( component, action, true, true );
-  },
+//  findAvailableDiscounts: function( component )
+//  {
+//    var dealerOrder = component.get('v.dealerOrder'),
+//        action = component.get('c.getAvailableDiscounts');
+//
+//    action.setParams({
+//      dealerOrderId: dealerOrder.Id
+//    });
+//
+//    return this.actionHandler( component, action, true, true );
+//  },
 
 	fetchProducts : function( component, recordType, family )
   {
@@ -80,21 +85,28 @@
 
     component.set('v.busyMessage', 'Saving Order');
 
-    options = options.concat( component.get('v.canvasOptions') );
-    options = options.concat( component.get('v.buildOptions') );
-
-    if( options !== undefined && options !== null && Object.keys(options).length > 0 )
+    for( let optionGroup of component.get('v.optionalProducts') )
     {
-      for( var productId in options)
+      options = options.concat( optionGroup.values );
+    }
+
+    console.log( options );
+//    oldOptions = oldOptions.concat( component.get('v.canvasOptions') );
+//    oldOptions = oldOptions.concat( component.get('v.buildOptions') );
+//    console.log( oldOptions );
+
+    if( options !== undefined && options !== null )
+    {
+      for( let option of options)
       {
-        if( options[productId].isSelected )
-          erpLineItems.push( options[productId] );
-        if( options[productId].subOptions !== undefined && options[productId].subOptions !== null )
+        if( option.isSelected )
+          erpLineItems.push( option );
+        if( option.subOptions !== undefined && option.subOptions !== null )
         {
-          for( var i=0; i<options[productId].subOptions.length; i++ )
+          for( var i=0; i<option.subOptions.length; i++ )
           {
-            if( options[productId].subOptions[i].isSelected )
-              erpLineItems.push( options[productId].subOptions[i] );
+            if( option.subOptions[i].isSelected )
+              erpLineItems.push( option.subOptions[i] );
           }
         }
       }
@@ -115,6 +127,7 @@
     data.isLegendTransfer = dealerOrder.Is_Legend_Transfer__c;
     data.accountId = dealerOrder.Account__c;
     data.isMotorRequest = isMotorRequest;
+    data.modelYear = component.get('v.modelYear');
     if( boat !== null && Object.keys(boat).length > 0 )
     {
       data.boat = boat;
@@ -249,36 +262,46 @@
     });
   },
 
-  checkForPromotions: function( component )
+  handlePartnerProgram:function( component )
   {
-    var action = component.get('c.checkForPromotions');
+    let action = component.get( 'c.applyPartnerProgram' );
     action.setParams({
       dealerOrderId: component.get('v.dealerOrder').Id
     });
-    component.set('v.busyMessage', 'Checking for Promotions');
+    component.set('v.busyMessage', 'Applying Partner Program');
     return new LightningApex( this, action ).fire();
   },
 
-  applyPromotions: function( component, promotion )
-  {
-    console.log( 'applying Promotion' );
-    console.log( JSON.parse( JSON.stringify(promotion )));
-    if( promotion.isApplicable )
-    {
-      var action = component.get('c.applyPromotions');
-      action.setParams({
-        jsonPromotion: JSON.stringify( promotion )
-      });
-      component.set('v.busyMessage', 'Applying Promotions');
-      return new LightningApex( this, action ).fire();
-    }
-    else
-    {
-      return new Promise( function( resolve ) {
-        resolve(null);
-      });
-    }
-  },
+//  checkForPromotions: function( component )
+//  {
+//    var action = component.get('c.checkForPromotions');
+//    action.setParams({
+//      dealerOrderId: component.get('v.dealerOrder').Id
+//    });
+//    component.set('v.busyMessage', 'Checking for Promotions');
+//    return new LightningApex( this, action ).fire();
+//  },
+//
+//  applyPromotions: function( component, promotion )
+//  {
+//    console.log( 'applying Promotion' );
+//    console.log( JSON.parse( JSON.stringify(promotion )));
+//    if( promotion.isApplicable )
+//    {
+//      var action = component.get('c.applyPromotions');
+//      action.setParams({
+//        jsonPromotion: JSON.stringify( promotion )
+//      });
+//      component.set('v.busyMessage', 'Applying Promotions');
+//      return new LightningApex( this, action ).fire();
+//    }
+//    else
+//    {
+//      return new Promise( function( resolve ) {
+//        resolve(null);
+//      });
+//    }
+//  },
 
   initForEdit: function( component, groupId )
   {
@@ -403,21 +426,37 @@
         boat,
         checkForSelectedOpts = function( productOptions )
         {
-         if( options !== null && Object.keys(options).length > 0 )
+          if( options !== null && Object.keys(options).length > 0 )
           {
             for( var productId in options )
             {
-              for( var j=0; j<productOptions.length; j++ )
-              {
-                if( productId === productOptions[j].id )
-                {
-                  productOptions[j].isSelected = true;
-                  if( options[productId].subOptions !== undefined && options[productId].subOptions !== null )
-                    productOptions[j].subOptions = options[productId].subOptions;
-                }
-              }
+              productOptions.forEach( (optionGroup) => {
+                optionGroup.values.forEach( (option) => {
+                  if( productId === option.id )
+                  {
+                    option.isSelected = true;
+                    if(options[productId].subOptions !== undefined && options[productId].subOptions !== null )
+                      option.subOptions = options[productId].subOptions;
+                  }
+                });
+              });
             }
           }
+//         if( options !== null && Object.keys(options).length > 0 )
+//          {
+//            for( var productId in options )
+//            {
+//              for( var j=0; j<productOptions.length; j++ )
+//              {
+//                if( productId === productOptions[j].id )
+//                {
+//                  productOptions[j].isSelected = true;
+//                  if( options[productId].subOptions !== undefined && options[productId].subOptions !== null )
+//                    productOptions[j].subOptions = options[productId].subOptions;
+//                }
+//              }
+//            }
+//          }
           return productOptions;
         };
 
@@ -432,6 +471,8 @@
           $A.getCallback( function(response)
           {
             boat = JSON.parse(response);
+            console.log( 'fetch product success' );
+            console.log( boat );
             helper.functions.clearConfigVars( component );
             component.set('v.selectedBoat_Id', boatId );
             component.set( 'v.trailerSelectOptions', boat.trailerUpgrades );
@@ -443,16 +484,27 @@
             component.set( 'v.canvasDiscountAmount', boat.canvasDiscountAmount );
 
             var feeData = [],
+                optProds = [],
                 changeData;
-            if( typeof(boat.canvasOptions) !== 'undefined' && boat.canvasOptions.length > 0 )
+            for( let fam of Object.keys( boat.optionalProducts) )
             {
-              component.set('v.canvasOptions', checkForSelectedOpts(boat.canvasOptions) );
+              optProds.push({
+                title: fam,
+                values: boat.optionalProducts[fam]
+              });
+            }
+            console.log( optProds );
+            //component.set( 'v.optionalProducts', optProds );
+            component.set('v.optionalProducts', checkForSelectedOpts(optProds) );
+//            if( typeof(boat.canvasOptions) !== 'undefined' && boat.canvasOptions.length > 0 )
+//            {
+//              component.set('v.canvasOptions', checkForSelectedOpts(boat.canvasOptions) );
               helper.checkForCanvasDiscount( component );
-            }
-            if( typeof(boat.buildOptions) !== 'undefined' && boat.buildOptions.length > 0 )
-            {
-              component.set('v.buildOptions', checkForSelectedOpts(boat.buildOptions) );
-            }
+//            }
+//            if( typeof(boat.buildOptions) !== 'undefined' && boat.buildOptions.length > 0 )
+//            {
+//              component.set('v.buildOptions', checkForSelectedOpts(boat.buildOptions) );
+//            }
             // else
             //   component.set('v.options', []);
 
@@ -477,6 +529,8 @@
           }),
           //fetchProduct ERROR
           $A.getCallback( function(product_err) {
+            console.log('fetch product error');
+            console.log( product_err );
             reject(product_err);
           })
         )
@@ -485,6 +539,7 @@
         .then(
           //handleConfigChange SUCCESS
           $A.getCallback( function() {
+            console.log('handle config change success');
             helper.fireChangeEvent( component );
             component.set('v.productSelected', true);
             // handleTrailer selection and return Promise
@@ -782,6 +837,7 @@
 
   handleConfigChange: function( component, params )
   {
+    console.log('handleConfigChange');
     var self = this,
         handleFees = function( params )
         {
@@ -903,8 +959,8 @@
       if( params.whatChanged === 'boat' )
       {
         component.set('v.boat', params.changeData );
-        handleCoopDiscount( params.changeData.cost );
-        handleEarlyOrderDiscount( params.changeData.cost );
+        //handleCoopDiscount( params.changeData.cost );
+        //handleEarlyOrderDiscount( params.changeData.cost );
         handleFees( params );
       }
 
@@ -976,7 +1032,8 @@
     {
       var discountName = '"We Have You Covered" Discount',
           discounts = component.get('v.discounts'),
-          options = component.get('v.canvasOptions'),
+          canvasOptions = [],
+          optionalProducts = component.get('v.optionalProducts'),
           discountIndex,
           hasCanvasOptions;
 
@@ -990,11 +1047,15 @@
         }
       }
 
-      for( var i=0; i<options.length; i++ )
+      for( let familyProducts of optionalProducts )
       {
-        if( options[i].isSelected )
+        if( familyProducts.title === 'Canvas' )
         {
-          hasCanvasOptions = true;
+          for( let option of familyProducts.values )
+          if( option.isSelected )
+          {
+            hasCanvasOptions = true;
+          }
         }
       }
 
@@ -1075,16 +1136,14 @@
 
   fireChangeEvent: function( component )
   {
-    var configChangeEvt = $A.get('e.c:lgnd_BoatConfig_configChange_Event'),
-        options = [];
-    options = options.concat( component.get('v.canvasOptions') );
-    options = options.concat( component.get('v.buildOptions') );
+    var configChangeEvt = $A.get('e.c:lgnd_BoatConfig_configChange_Event');
+
     configChangeEvt.setParams({
       boat: component.get('v.boat'),
       trailer: component.get('v.trailer'),
       motor: component.get('v.motor'),
       trollingMotor: component.get('v.trollingMotor'),
-      options: options,
+      options: component.get('v.optionalProducts'),
       motorOptions: component.get('v.motorOptions'),
       fees: component.get('v.fees'),
       feeList: component.get('v.feeList'),
@@ -1107,8 +1166,9 @@
       component.set( 'v.hasStandardTrailer', false);
       component.set( 'v.hasStandardMotor', false);
       component.set( 'v.hasStandardTrollingMotor', false);
-      component.set( 'v.canvasOptions', [] );
-      component.set( 'v.buildOptions', [] );
+//      component.set( 'v.canvasOptions', [] );
+//      component.set( 'v.buildOptions', [] );
+      component.set('v.optionalProducts', [] );
       component.set( 'v.selectedBoat_Id', '' );
       component.set( 'v.selectedTrailer_Id', '' );
       component.set( 'v.selectedMotor_Id', '');
@@ -1132,6 +1192,7 @@
       component.set('v.orderGroupId', '' );
       component.set('v.promotionMessage', null);
       component.set('v.busyMessage', null);
+      component.set('v.modelYear', '');
       //this.functions.clearConfigVars( component );
     },
 

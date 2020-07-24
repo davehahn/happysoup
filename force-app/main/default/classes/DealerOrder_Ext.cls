@@ -1,42 +1,27 @@
 public without sharing class DealerOrder_Ext {
-  //public static Id pbId = gcConstants.idPricebookPartner;
-  public static Boolean disableStagePropagation{
-      get{
-          if(disableStagePropagation == null) return false;
-          else return disableStagePropagation;
-      }
-      set{
-          if(value == null) disableStagePropagation = false;
-          else disableStagePropagation = value;
-      }
-  }
-
- public static Boolean disableTrigger {
-    get{
-      if(disableTrigger == null) return false;
-      else return disableTrigger;
-    }
-    set;
-  }
 
   public class DetailsWrapper {
     public Id accountId { get; set; }
     public String province { get; set; }
+    public List<Object> programYearOptions { get; set; }
     public List<Map<String, String>> financeCompanyOptions { get; set; }
     public List<Map<String, String>> accountOptions { get; set; }
     public List<String> paymentMethodOptions { get; set; }
     public Dealer_Order__c dealerOrder { get; set; }
+    public Partner_Booking_Order__c bookingOrder { get; set; }
     public Boolean fromInternal { get; set; }
     public Boolean isFactoryStore { get; set; }
     public Set<String> legendAccounts { get; set; }
+    public Boolean allowBookingOrder { get; set; }
 
     public DetailsWrapper()
     {
+      this.allowBookingOrder = true;
       this.dealerOrder = new Dealer_Order__c();
       Integer currentYear = System.Today().year();
       if( System.Today().month() >= 8 )
         currentYear++;
-      this.DealerOrder.Model_Year__c = String.valueOf( currentYear );
+      this.DealerOrder.Program_Year__c = String.valueOf( currentYear );
       this.DealerOrder.Is_Legend_Transfer__c = false;
       this.paymentMethodOptions = LGND_Utilities.getPicklistValues('Dealer_Order__c', 'Payment_Method__c');
       this.financeCompanyOptions = new List<Map<String, String>>();
@@ -44,6 +29,22 @@ public without sharing class DealerOrder_Ext {
       this.fromInternal = false;
       this.isFactoryStore = false;
       this.legendAccounts = setLegendAccounts();
+      buildProgramYearOptions();
+    }
+
+    private void buildProgramYearOptions()
+    {
+      this.programYearOptions = new List<Object>();
+      for( String year : Partner_Program_Settings__c.getOrgDefaults().Available_Program_Years__c.split(',') )
+      {
+        Map<String,Object> opt = new Map<String, Object>{
+          'label' => year,
+          'value' => year
+        };
+        if( year == String.valueOf(this.dealerOrder.Program_Year__c) )
+          opt.put('selected', true);
+        this.programYearOptions.add( opt );
+      }
     }
 
     public DetailsWrapper addFinanceCompanyOptions( Financing_Company__c[] fics )
@@ -118,13 +119,21 @@ public without sharing class DealerOrder_Ext {
     public List<UpgradeWrapper> trailerUpgrades { get; set; }
     public List<UpgradeWrapper> motorUpgrades { get; set; }
     public List<UpgradeWrapper> trollingMotorUpgrades { get; set; }
-    public List<OptionWrapper> canvasOptions { get; set; }
-    public List<OptionWrapper> buildOptions { get; set; }
+//    public List<OptionWrapper> canvasOptions { get; set; }
+//    public List<OptionWrapper> buildOptions { get; set; }
     public List<OptionWrapper> motorOptions { get; set; }
+    public Map<String, List<OptionWrapper>> optionalProducts { get; set; }
     public Map<String, List<LGND_APIv2_Product.FeeProduct>> fees { get; set; }
+    private List<String> enabledOptionFamilies;
 
     public ProductWrapper( LGND_APIv2_Product apiProd, String pricebookId )
     {
+      this.optionalProducts = new Map<String, List<OptionWrapper>>();
+//      for( String fam : enabledOptionFamilies )
+//      {
+//        this.optionalProducts.put( fam, new List<OptionWrapper>() );
+//      }
+      this.enabledOptionFamilies = Partner_Boat_Sale_Settings__c.getOrgDefaults().Enabled_Part_Families__c.split(',');
       isFactory = pricebookId == gcConstants.idPricebookFactory;
       isPartner = pricebookId == gcConstants.idPricebookPartner;
       this.name = apiProd.Name;
@@ -140,8 +149,8 @@ public without sharing class DealerOrder_Ext {
         this.trailerUpgrades = new List<UpgradeWrapper>();
         this.motorUpgrades = new List<UpgradeWrapper>();
         this.trollingMotorUpgrades = new List<UpgradeWrapper>();
-        this.canvasOptions = new List<OptionWrapper>();
-        this.buildOptions = new List<OptionWrapper>();
+//        this.canvasOptions = new List<OptionWrapper>();
+//        this.buildOptions = new List<OptionWrapper>();
         if( apiProd.StandardTrailer != null )
         {
           this.standardTrailer_Id = apiProd.StandardTrailer.Id;
@@ -189,25 +198,41 @@ public without sharing class DealerOrder_Ext {
         if( apiProd.TrollingMotorUpgrades != null && apiProd.TrollingMotorUpgrades.size() > 0 )
           this.trollingMotorUpgrades.addAll( this.createUpgradeList( apiProd.TrollingMotorUpgrades, this.standardTrollingMotor_Id ) );
 
-        //Canvas Options
         findCanvasDiscount( apiProd.Id, pricebookId );
-        if( apiProd.OptionalProducts != null &&
-            apiProd.OptionalProducts.containsKey('Canvas') )
+
+        //Options
+        for( String fam : this.enabledOptionFamilies )
         {
-          for( LGND_APIv2_Product.PartProduct pp : apiProd.OptionalProducts.get('Canvas') )
+          if (apiProd.OptionalProducts != null &&
+            apiProd.OptionalProducts.containsKey(fam))
           {
-            this.canvasOptions.add( new OptionWrapper( pp ) );
+            if (!this.optionalProducts.containsKey(fam))
+              this.optionalProducts.put(fam, new List<OptionWrapper>());
+
+            for (LGND_APIv2_Product.PartProduct pp : apiProd.OptionalProducts.get(fam))
+            {
+              this.optionalProducts.get(fam).add(new OptionWrapper(pp));
+            }
           }
         }
-        //Build Options
-        if( apiProd.OptionalProducts != null &&
-            apiProd.OptionalProducts.containsKey('Boat Build Option') )
-        {
-          for( LGND_APIv2_Product.PartProduct pp : apiProd.OptionalProducts.get('Boat Build Option') )
-          {
-            this.buildOptions.add( new OptionWrapper( pp ) );
-          }
-        }
+
+//        if( apiProd.OptionalProducts != null &&
+//            apiProd.OptionalProducts.containsKey('Canvas') )
+//        {
+//          for( LGND_APIv2_Product.PartProduct pp : apiProd.OptionalProducts.get('Canvas') )
+//          {
+//            this.canvasOptions.add( new OptionWrapper( pp ) );
+//          }
+//        }
+//        //Build Options
+//        if( apiProd.OptionalProducts != null &&
+//            apiProd.OptionalProducts.containsKey('Boat Build Option') )
+//        {
+//          for( LGND_APIv2_Product.PartProduct pp : apiProd.OptionalProducts.get('Boat Build Option') )
+//          {
+//            this.buildOptions.add( new OptionWrapper( pp ) );
+//          }
+//        }
       }
       if( apiProd.RecordTypeName == 'Motor' && isFactory)
       {
@@ -337,6 +362,7 @@ public without sharing class DealerOrder_Ext {
     public String selectedTrollingMotor_Id      { get; set; }
     public String selectedTrollingMotor_Name    { get; set; }
     public String notes                         { get; set; }
+    public String modelYear                     { get; set; }
     public Integer quantity                     { get; set; }
     public Map<String, OptionWrapper> options   { get; set; }
     public List<OptionWrapper> motorOptions     { get; set; }
@@ -483,307 +509,33 @@ public without sharing class DealerOrder_Ext {
     }
   }
 
-  //public static Id pbId = Legend_Settings__c.getOrgDefaults().Default_Retail_Pricebook__c;
-  //private static Id discountProduct;
-
 	public DealerOrder_Ext(ApexPages.StandardController std) {}
 
-  public static void triggerHandler(
-                                    Map<Id, Dealer_Order__c> oldMap,
-                                    Map<Id, Dealer_Order__c> newMap,
-                                    List<Dealer_Order__c> listNew,
-                                    Boolean boolIsBefore,
-                                    Boolean boolIsInsert,
-                                    Boolean boolIsUpdate,
-                                    Boolean boolIsDelete
-                                   )
+  @AuraEnabled
+  public static String builderInit()
   {
-    if( oldMap == null ) oldMap = new Map<Id, Dealer_Order__c>();
-    if( newMap == null ) newMap = new Map<Id, Dealer_Order__c>();
-    if( listNew == null ) listNew = new List<Dealer_Order__c>();
-
-    if( boolIsBefore )
-    /* &&&&&&&   BEFORE    &&&&&&& */
+    Integer currentYear = System.Today().year();
+    if( System.Today().month() >= 8 )
+      currentYear++;
+    Map<String, Object> result = new Map<String, Object>();
+    result.put('userType', UserInfo.getUserType() );
+    result.put('modelYear', currentYear );
+    List<Map<String, Object>> options = new List<Map<String,Object>>();
+    for( String year : Partner_Program_Settings__c.getOrgDefaults().Available_Model_Years__c.split(',') )
     {
-      if( boolIsInsert )
-      {
-        for( Dealer_Order__c dealerOrder: listNew )
-        {
-          if( dealerOrder.Stage__c == 'Pending Review' )
-            dealerOrder.Date_Submitted__c = DateTime.now();
-        }
-      }
-      if( boolIsUpdate )
-      {
-        for( Dealer_Order__c dealerOrder: listNew )
-        {
-          //Set<String> stages = new Set<String>{'Pending Financing',
-          //                                     'Approved',
-          //                                     'Filled'};
-          Dealer_Order__c oldOrder = oldMap.get( dealerOrder.Id);
-          //if( stages.contains( oldOrder.Stage__c ) &&
-          //    oldOrder.Merc_Order_Sent__c == true )
-          //{
-
-          //}
-          if( dealerOrder.Stage__c == 'Pending Review' &&
-              oldOrder.Stage__c == 'Draft' )
-            dealerOrder.Date_Submitted__c = DateTime.now();
-          if( dealerOrder.Stage__c == 'Draft' )
-            dealerOrder.Date_Submitted__c = null;
-        }
-      }
-      if( boolIsDelete )
-      {
-        for(Dealer_Order__c dOrder : oldMap.values() )
-        {
-          if( dOrder.Stage__c != 'Draft' )
-          {
-            dOrder.addError('You can not delete a Dealer Order with stage "' + dOrder.Stage__c + '"');
-          }
-          else {
-            Set<Id> erpIds = new Set<Id>();
-            for( Dealer_Order_Line__c dol : [SELECT ERP_Order__c
-                                             FROM Dealer_Order_Line__c
-                                             WHERE Dealer_Order__c IN :oldMap.keySet() ] )
-            {
-              erpIds.add( dol.ERP_Order__c );
-            }
-            Dealer_Order_Line_Ext.deleteERPs( erpIds );
-          }
-        }
-      }
+      Map<String,Object> opt = new Map<String, Object>{
+        'label' => year,
+        'value' => year
+      };
+      if( year == String.valueOf(currentYear) )
+        opt.put('selected', true);
+      options.add( opt );
     }
-    else
-    {
-    /* &&&&&&&   AFTER   &&&&&&& */
-      if( boolIsInsert )
-      {
-        setErpStage( oldMap, newMap );
-      }
-      if( boolIsUpdate )
-      {
-        if( !disableStagePropagation )
-          setErpStage( oldMap, newMap );
-        propagateOwner( oldMap, newMap );
-      }
-      if( boolIsDelete )
-      {
-      }
-    }
-  }
-
-  private static void propagateOwner( Map<Id, Dealer_Order__c> oldMap,
-                                      Map<Id, Dealer_Order__c> newMap )
-  {
-    Map<Id, Id> ownerChanged = new Map<Id, Id>();
-    for( Dealer_Order__c d : newMap.Values() )
-    {
-      Dealer_Order__c od = oldMap.get(d.Id);
-      if( d.OwnerId != od.OwnerId )
-      {
-        ownerChanged.put( d.Id, d.OwnerId );
-      }
-    }
-    if( ownerChanged.size() > 0 )
-    {
-      Map<Id, Id> erpDOrderMap = new Map<Id,Id>();
-      for( Dealer_Order_Line__c dol : [SELECT ERP_Order__c, Dealer_Order__c
-                                       FROM Dealer_Order_Line__c
-                                       WHERE Dealer_Order__c IN :ownerChanged.keySet() ])
-      {
-        erpDOrderMap.put( dol.ERP_Order__c, dol.Dealer_Order__c );
-      }
-      AcctSeed__Project__c[] erps = [SELECT Id,
-                                      (SELECT Id
-                                       FROM AcctSeedERP__Project_Materials__r )
-                                     FROM AcctSeed__Project__c WHERE Id IN :erpDOrderMap.keySet() ];
-      AcctSeedERP__Material__c[] updateMats = new List<AcctSeedERP__Material__c>();
-      for( AcctSeed__Project__c erp : erps )
-      {
-        Id doId = erpDOrderMap.get(erp.Id);
-        erp.OwnerId = ownerChanged.get(doId);
-        for( AcctSeedERP__Material__c m : erp.AcctSeedERP__Project_Materials__r )
-        {
-          m.OwnerId = ownerChanged.get(doId);
-          updateMats.add( m );
-        }
-      }
-      Boolean origProgTrig =  gcProject.disableTrigger;
-      Boolean origMatTrig = gcMaterial.disableTrigger;
-      gcProject.disableTrigger = true;
-      gcMaterial.disableTrigger = true;
-      update erps;
-      update updateMats;
-      gcProject.disableTrigger = origProgTrig;
-      gcMaterial.disableTrigger = origMatTrig;
-    }
-  }
-
-  //private static void setStageOnRelated( Map<Id, Dealer_Order__c> oldMap,
-  //                                       Map<Id, Dealer_Order__c> newMap )
-  //{
-  //  Dealer_Order_Line__c[] dols = [SELECT Id,
-  //                                        Dealer_Order__c,
-  //                                        ERP_Order__c,
-  //                                        Legend_Transfer_Request__c
-  //                                 FROM Dealer_Order_Line__c
-  //                                 WHERE Dealer_Order__c IN :newMap.keySet() ];
-  //}
-
-  private static void setErpStage( Map<Id, Dealer_Order__c> oldMap,
-                                   Map<Id, Dealer_Order__c> newMap )
-  {
-    //Stages that are greater than (passed) Plan Load
-    Set<String> highStages = new Set<String>{
-      //'Tagging Pending',
-      'Ready to Ship',
-      'Delivered',
-      'Closed Lost'
-    };
-    AcctSeed__Project__c[] erps = new List<AcctSeed__Project__c>();
-    Set<Id> dealerOrdeIds_WithMotorTransferRequests = new Set<Id>();
-    Legend_Transfer_Request__c[] transfers = new List<Legend_Transfer_Request__c>();
-    Dealer_Order_Line__c[] dols = [SELECT Id,
-                                          Dealer_Order__c,
-                                          Dealer_Order__r.Merc_Order_Sent__c,
-                                          ERP_Order__c,
-                                          ERP_Order__r.Stage__c,
-                                          Legend_Transfer_Request__c,
-                                          Dealer_Motor_Request__c
-                                   FROM Dealer_Order_Line__c
-                                   WHERE Dealer_Order__c IN :newMap.keySet() ];
-    for( Dealer_Order_Line__c dol : dols )
-    {
-      /*
-        Draft
-      */
-      if( newMap.get( dol.Dealer_Order__c ).Stage__c == 'Draft' )
-      {
-        if( dol.ERP_Order__c != null && !highStages.contains( dol.Erp_Order__r.Stage__c ) )
-        {
-          AcctSeed__Project__c erp = new AcctSeed__Project__c(
-            Id = dol.ERP_Order__c,
-            Stage__c = 'Draft'
-          );
-          erps.add( erp );
-        }
-        if( dol.Legend_Transfer_Request__c != null )
-        {
-          transfers.add( new Legend_Transfer_Request__c(
-              Id = dol.Legend_Transfer_Request__c,
-              Stage__c = 'Draft'
-            )
-          );
-        }
-      }
-      /*
-        "Pending Review"
-      */
-      if( newMap.get( dol.Dealer_Order__c ).Stage__c == 'Pending Review' )
-      {
-        if( dol.ERP_Order__c != null && !highStages.contains( dol.Erp_Order__r.Stage__c ) )
-        {
-          AcctSeed__Project__c erp = new AcctSeed__Project__c(
-            Id = dol.ERP_Order__c,
-            Stage__c = 'Pending Review'
-          );
-          erps.add( erp );
-        }
-        if( dol.Legend_Transfer_Request__c != null )
-        {
-          transfers.add( new Legend_Transfer_Request__c(
-              Id = dol.Legend_Transfer_Request__c,
-              Stage__c = 'Plan Load'
-            )
-          );
-        }
-      }
-       /*
-        "Pending Financing"
-      */
-      if( newMap.get( dol.Dealer_Order__c ).Stage__c == 'Pending Financing' )
-      {
-        if( dol.ERP_Order__c != null && !highStages.contains( dol.Erp_Order__r.Stage__c ) )
-        {
-          AcctSeed__Project__c erp = new AcctSeed__Project__c(
-            Id = dol.ERP_Order__c,
-            Stage__c = 'Pending Financing'
-          );
-          erps.add( erp );
-        }
-        if( dol.Dealer_Motor_Request__c != null &&
-            !dol.Dealer_Order__r.Merc_Order_Sent__c)
-          dealerOrdeIds_WithMotorTransferRequests.add( dol.Dealer_Order__c);
-      }
-      /*
-        "Approved"
-      */
-      if( newMap.get( dol.Dealer_Order__c ).Stage__c == 'Approved' )
-      {
-        if( dol.ERP_Order__c != null && !highStages.contains( dol.Erp_Order__r.Stage__c ) )
-        {
-          AcctSeed__Project__c erp = new AcctSeed__Project__c(
-            Id = dol.ERP_Order__c,
-            Stage__c = 'Tagging Pending'
-          );
-          erps.add( erp );
-        }
-        if( dol.Dealer_Motor_Request__c != null &&
-            !dol.Dealer_Order__r.Merc_Order_Sent__c)
-          dealerOrdeIds_WithMotorTransferRequests.add( dol.Dealer_Order__c);
-      }
-    }
-
-    if( erps.size() > 0 )
-      update erps;
-
-    if( transfers.size() > 0 )
-      update transfers;
-
-    if( dealerOrdeIds_WithMotorTransferRequests.size() > 0 )
-      sendMercuryMotorOrderEmail( dealerOrdeIds_WithMotorTransferRequests );
-  }
-
-  private static void sendMercuryMotorOrderEmail( Set<Id> dealerOrderIds )
-  {
-
-    String[] ccAddrs = new List<String>{
-      'dealercare@legendboats.com'
-    };
-    String templateId = Legend_Settings__c.getOrgDefaults().Mercury_Order_Email_Template_Id__c;
-    Id contactId = Legend_Settings__c.getOrgDefaults().Mercury_Contact_Id__c;
-    Id orgEmailId;
-    try {
-      orgEmailId = [SELECT Id FROM OrgWideEmailAddress WHERE DisplayName = 'Dealer Care' LIMIT 1].Id;
-    }
-    catch(Exception e){}
-    List<Dealer_Order__c> dealerOrders = new List<Dealer_Order__c>();
-    List<Messaging.SingleEmailMessage> msgList= new List<Messaging.SingleEmailMessage>();
-    for( Id doId : dealerOrderIds )
-    {
-      dealerOrders.add( new Dealer_Order__c(
-          Id = doId,
-          Merc_Order_Sent__c = true
-        )
-      );
-      Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
-      if( orgEmailId != null )
-      {
-        mail.setOrgWideEmailAddressId( orgEmailId );
-      }
-      mail.setTargetObjectId(contactId);
-      mail.setWhatId( doId );
-      mail.setTemplateId( templateId );
-      mail.setCcAddresses( ccAddrs );
-      mail.setSaveAsActivity(true);
-      msgList.add(mail);
-    }
-    Messaging.sendEmail(msgList);
-    Boolean trigStatus = DealerOrder_Ext.disableTrigger;
-    DealerOrder_Ext.disableTrigger = true;
-    update dealerOrders;
-    DealerOrder_Ext.disableTrigger = trigStatus;
+    result.put(
+      'modelYearOptions',
+      options
+    );
+    return JSON.serialize( result );
   }
 
   @AuraEnabled
@@ -793,15 +545,8 @@ public without sharing class DealerOrder_Ext {
   }
 
   @AuraEnabled
-  public static String getAvailableDiscounts( String dealerOrderId )
-  {
-    return JSON.serialize( new DealerOrderDiscounts( dealerOrderId ).availableDiscounts );
-  }
-
-  @AuraEnabled
   public static String getInitNewOrder()
   {
-    Dealer_Program_Settings__c theProgram = Dealer_Program_Settings__c.getValues('2018');
     DetailsWrapper dw = new DetailsWrapper();
     Id contactId = [SELECT ContactId FROM User WHERE Id = :Userinfo.getUserId()].ContactId;
     System.debug( contactId );
@@ -825,7 +570,24 @@ public without sharing class DealerOrder_Ext {
                          ORDER By Name ASC ] );
       dw.fromInternal = true;
     }
-    dw.dealerOrder.Is_Booking_Order__c = ( Date.today() <= theProgram.Early_Order_Discount_Date__c );
+    try
+    {
+      String uniq = dw.dealerOrder.Program_Year__c + '-' + dw.dealerOrder.Account__c;
+      dw.bookingOrder = [
+        SELECT
+          Id,
+          Name,
+          Dealer_Order__c,
+          Account__c,
+          V_Hull_Discount_Percent__c,
+          Pontoon_Volume_Discount_Percent__c,
+          Uniquifier__c
+        FROM Partner_Booking_Order__c
+        WHERE Uniquifier__c = :uniq];
+      dw.allowBookingOrder = false;
+    }
+    catch( Exception e ){}
+    dw.dealerOrder.Is_Booking_Order__c = dw.bookingOrder == null;
     return JSON.serialize( dw );
   }
 
@@ -847,9 +609,7 @@ public without sharing class DealerOrder_Ext {
     if( dealerOrder == null )
       return new Dealer_Order__c();
     upsert dealerOrder;
-    return  fetchDealerOrder( dealerOrder.Id ) ;//[SELECT Id, Financing_Company__c, Payment_Method__c, Is_Booking_Order__c
-            //FROM Dealer_Order__c
-            //WHERE Id = :dealerOrder.Id];
+    return  fetchDealerOrder( dealerOrder.Id ) ;
   }
 
   @AuraEnabled
@@ -879,7 +639,8 @@ public without sharing class DealerOrder_Ext {
                                           Dealer_Order__r.Is_Legend_Transfer__c,
                                           Dealer_Motor_Request__c,
                                           Line_Total_Pre_Tax__c,
-                                          Dealer_Order__r.Is_Booking_Order__c
+                                          Dealer_Order__r.Is_Booking_Order__c,
+                                          Model_Year__c
                                    FROM Dealer_Order_Line__c
                                    WHERE Order_Group_Id__c = :groupId];
     if( dols.size() == 0 )
@@ -985,11 +746,7 @@ public without sharing class DealerOrder_Ext {
       {
         if( name == item.get('name') )
         {
-          //Decimal cost = Decimal.valueOf( fee.get('cost') );
-          //cost += mat.GMBLASERP__Unit_Price__c;
-          //fee.put('cost', String.valueOf( cost) );
           exists = true;
-          //Decimal cost = Decimal.valueOf( item.get('cost') );
           Decimal cost = mat.GMBLASERP__Unit_Price__c;
           Decimal total = Decimal.valueOf( item.get('total') );
           Integer count = Integer.valueOf( item.get('quantity') );
@@ -1287,6 +1044,7 @@ public without sharing class DealerOrder_Ext {
                                           Dealer_Order__r.Account__r.BillingState,
                                           Dealer_Order__r.Is_Legend_Transfer__c,
                                           Dealer_Motor_Request__c,
+                                          Model_Year__c,
                                           Notes__c
                                    FROM Dealer_Order_Line__c
                                    WHERE Order_Group_Id__c = :groupId];
@@ -1698,7 +1456,7 @@ public without sharing class DealerOrder_Ext {
     }
     result.quantity = dols.size();
     result.notes = dols[0].Notes__c;
-
+    result.modelYear = dols[0].Model_Year__c;
     return result;
   }
 
@@ -1873,25 +1631,31 @@ public without sharing class DealerOrder_Ext {
   }
 
   @AuraEnabled
-  public static String checkForPromotions( String dealerOrderId )
+  public static String applyPartnerProgram( String dealerOrderId )
   {
-//    PartnerPromotion.ResultMessage result = PartnerPromotion.checkForDiscount( dealerOrderId );
-//    return JSON.serialize( result );
-    return JSON.serialize( new PartnerPromotion.Seven4Seven_Promo( dealerOrderId) );
+    PartnerProgram_Service pp_service = new PartnerProgram_Service(
+      new Set<Id>{ Id.valueOf(dealerOrderId) } );
+    return JSON.serialize( pp_service.checkAndApply().get( dealerOrderId) );
   }
 
-  @AuraEnabled
-  public static String applyPromotions( String jsonPromotion )
-  {
-    PartnerPromotion.Seven4Seven_Promo promo =
-      (PartnerPromotion.Seven4Seven_Promo)JSON.deserialize(
-        jsonPromotion, PartnerPromotion.Seven4Seven_Promo.class
-      );
-    //this should always be the case but just in case
-    if( promo.isApplicable )
-      promo.apply();
-    return JSON.serialize( promo.resultMessage );
-  }
+//  @AuraEnabled
+//  public static String checkForPromotions( String dealerOrderId )
+//  {
+//    return JSON.serialize( new PartnerPromotion.Seven4Seven_Promo( dealerOrderId) );
+//  }
+//
+//  @AuraEnabled
+//  public static String applyPromotions( String jsonPromotion )
+//  {
+//    PartnerPromotion.Seven4Seven_Promo promo =
+//      (PartnerPromotion.Seven4Seven_Promo)JSON.deserialize(
+//        jsonPromotion, PartnerPromotion.Seven4Seven_Promo.class
+//      );
+//    //this should always be the case but just in case
+//    if( promo.isApplicable )
+//      promo.apply();
+//    return JSON.serialize( promo.resultMessage );
+//  }
 
 
   private static Dealer_Order__c createDealerLineItems( DealerOrderLineWrapper wrapper )
@@ -2013,8 +1777,8 @@ public without sharing class DealerOrder_Ext {
         erps.add( new AcctSeed__Project__c(
           Name = (acct.Name).LEFT(70) + '-' + dealerOrder.Name.split('-')[1] + '.' + String.valueOf(i+1),
           isDealerBookingOrder__c = dealerOrder.Is_Booking_Order__c,
-          BoatModelYear__c = dealerOrder.Model_Year__c,
-          TrailerModelYear__c = dealerOrder.Model_Year__c,
+          BoatModelYear__c = wrapper.modelYear,
+          TrailerModelYear__c = wrapper.modelYear,
           AcctSeed__Account__c = acct.Id,
           AcctSeed__Status__c = 'Active',
           Stage__c = 'Draft',
@@ -2079,7 +1843,8 @@ public without sharing class DealerOrder_Ext {
           Product__c = majorProductId,
           Order_Group_Id__c = groupId,
           Dealer_Motor_Request__c = wrapper.dealerMotorRequestId,
-                Notes__c = wrapper.notes
+          Notes__c = wrapper.notes,
+          Model_Year__c = wrapper.modelYear
         ) );
       }
     }
@@ -2090,7 +1855,8 @@ public without sharing class DealerOrder_Ext {
               Order_Group_Id__c = groupId,
               Dealer_Motor_Request__c = wrapper.dealerMotorRequestId,
               Product__c = wrapper.motor.id,
-              Notes__c = wrapper.notes
+              Notes__c = wrapper.notes,
+              Model_Year__c = wrapper.modelYear
         )
       );
     }
@@ -2228,12 +1994,6 @@ public without sharing class DealerOrder_Ext {
             Parent_Product__c = ow.parent_id
           )
         );
-
-        //if( productMap.containsKey( ow.Id) &&
-        //    productMap.get(ow.id ).PricebookEntries.size() > 0 )
-        //{
-        //  material.GMBLASERP__Price_Override__c = ( productMap.get(ow.id).PricebookEntries[0].UnitPrice == ow.cost ? false : true );
-        //}
       }
     }
     update transfers;
@@ -2290,6 +2050,8 @@ public without sharing class DealerOrder_Ext {
 
     for( AcctSeed__Project__c erp : erps )
     {
+      erp.BoatModelYear__c = wrapper.modelYear;
+      erp.TrailerModelYear__c = wrapper.modelYear;
       erp.Customer_Notes__c = wrapper.notes;
       if( wrapper.boat != null &&
           erp.Boat_Product__c != wrapper.boat.id )

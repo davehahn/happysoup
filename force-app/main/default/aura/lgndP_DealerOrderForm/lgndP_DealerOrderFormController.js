@@ -4,25 +4,31 @@
     helper.getInitValues( component ).
     then(
       $A.getCallback( function( result ) {
+        console.log( JSON.parse( JSON.stringify( result ) ) );
         component.set('v.dealerOrder', result.dealerOrder );
+        component.set('v.programYearOptions', result.programYearOptions );
         component.set('v.financeCompanyOptions', result.financeCompanyOptions );
         component.set('v.paymentMethodOptions', result.paymentMethodOptions );
         component.set('v.fromInternal', result.fromInternal);
         component.set('v.isFactoryStore', result.isFactoryStore );
         component.set('v.accountOptions', result.accountOptions );
         component.set('v.legendAccounts', result.legendAccounts );
-        if( result.fromInternal )
-          component.set('v.lockBookingOrderToggle', false);
-        if( !result.fromInternal &&
-            result.dealerOrder.Is_Booking_Order__c )
-        {
-          component.set('v.lockBookingOrderToggle', false);
-        }
+        component.set('v.lockBookingOrderToggle', true );
+//        if( result.fromInternal )
+//          component.set('v.lockBookingOrderToggle', false);
+//        if( !result.fromInternal &&
+//            result.dealerOrder.Is_Booking_Order__c )
+//        {
+//          component.set('v.lockBookingOrderToggle', false);
+//        }
       }),
       $A.getCallback( function( err ) {
         LightningUtilis.errorToast( err );
       })
-    );
+    )
+    .finally( $A.getCallback( () => {
+      helper.toggleSpinner( false );
+    }))
 	},
 
   handleAccountChange: function( component, event, helper )

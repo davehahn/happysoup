@@ -94,5 +94,4 @@
     });
     homeEvent.fire();
   }
-
 })

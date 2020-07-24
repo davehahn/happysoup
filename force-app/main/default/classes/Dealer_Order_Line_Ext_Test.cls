@@ -5,17 +5,13 @@ private class Dealer_Order_Line_Ext_Test {
     Dealer_Order_Line_Ext.coverage();
     Account dealer = AccountFactory.buildDealerAccount('Test Dealer');
     insert dealer;
-    Dealer_Order__c dealerOrder = new Dealer_Order__c(
-      Account__c = dealer.Id,
-      Payment_method__c = 'Cash',
-      Model_Year__c = String.valueOf( Date.today().year() )
-    );
-    insert dealerOrder;
+    Dealer_Order__c dealerOrder = Factory_DealerOrder.createDealerOrder( dealer );
     Opportunity opp = OpportunityFactory.insertRetailBoatSale();
     Dealer_Order_Line__c dol = new Dealer_Order_Line__c(
       Opportunity__c = opp.Id,
       Dealer_Order__c = dealerOrder.Id,
-      Order_Group_Id__c = LGND_Utilities.generateRandomString( 16 )
+      Order_Group_Id__c = LGND_Utilities.generateRandomString( 16 ),
+      Model_Year__c = dealerOrder.Program_Year__c
     );
     insert dol;
     Dealer_Order_Line_Ext.cloneOrderLine( dol.Id, 10 );

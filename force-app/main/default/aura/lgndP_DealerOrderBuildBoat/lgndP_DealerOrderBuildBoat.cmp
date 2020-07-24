@@ -6,7 +6,7 @@
   <aura:attribute name="userType" type="String" />
   <!-- <aura:attribute name="pricebookId" type="String" /> -->
   <aura:attribute name="isFactoryStore" type="Boolean" default="false" />
-  <aura:attribute name="availableDiscounts" type="Array" default="[]" />
+<!--  <aura:attribute name="availableDiscounts" type="Array" default="[]" />-->
   <aura:attribute name="motorRequest"
                   type="Dealer_Motor_Request__c"
                   default="{'sobjectType': 'Dealer_Motor_Request__c',
@@ -22,12 +22,14 @@
   <aura:attribute name="isEditing" type="Boolean" default="false" />
   <aura:attribute name="isMotorRequest" type="boolean" default="false" />
 
+  <aura:attribute name="modelYearOptions" type="Array" />
+  <aura:attribute name="modelYear" type="String" />
   <aura:attribute name="boatSelectOptions" type="Object" />
   <aura:attribute name="motorSelectOptions" type="Object" />
   <aura:attribute name="trailerSelectOptions" type="Object" />
   <aura:attribute name="trollingMotorSelectOptions" type="Object" />
-  <aura:attribute name="canvasOptions" type="Object" />
-  <aura:attribute name="buildOptions" type="Object" />
+<!--  <aura:attribute name="canvasOptions" type="Object" />-->
+<!--  <aura:attribute name="buildOptions" type="Object" />-->
   <aura:attribute name="selectedBoat_Id" type="String" />
   <aura:attribute name="selectedTrailer_Id" type="String" />
   <aura:attribute name="selectedMotor_Id" type="String" />
@@ -55,6 +57,9 @@
   <aura:attribute name="toastContent" type="Object" />
   <aura:attribute name="promotionMessage" type="Map" />
   <aura:attribute name="busyMessage" type="String" />
+
+<!--  <aura:attribute name="optionFamilies" type="Array" />-->
+  <aura:attribute name="optionalProducts" type="Array" />
 
   <!-- Events -->
   <aura:handler event="c:lgnd_BoatConfig_optionChanged_Event"
@@ -84,6 +89,22 @@
   <div class="slds-grid slds-wrap slds-grid--pull-padded-x-small" style="margin-left:0; margin-right:0;">
 
     <div class="slds-col slds-size--1-of-1 slds-medium-size--6-of-12 slds-large-size--6-of-12 slds-p-horizontal--x-small">
+
+<!--      <lightning:input type="text"-->
+<!--                       label="Model Year"-->
+<!--                       name="model-year"-->
+<!--                       value="{!v.modelYear}"-->
+<!--                       class="slds-m-bottom_medium" />-->
+
+        <lightning:select name="model-year"
+                          label="Model Year"
+                          value="{!v.modelYear}"
+                          class="slds-m-bottom_large">
+          <aura:iteration items="{!v.modelYearOptions}" var="myear">
+            <option value="{!myear.value}" text="{!myear.label}" selected="{!myear.selected}" />
+          </aura:iteration>
+        </lightning:select>
+
       <c:lgnd_BoatTypeSelector family="{!v.family}"
                                productRecordType="{!v.recordType}"
                                aura:id="lgnd_BoatTypeSelector--CMP"/>
@@ -100,7 +121,7 @@
         </lightning:select>
       </aura:renderIf>
 
-      <aura:If isTrue="{!!empty(v.motorSelectOptions)}">
+      <aura:if isTrue="{!!empty(v.motorSelectOptions)}">
 
         <aura:if isTrue="{!and( equals(v.recordType, 'Motor'),
                                 equals(v.userType, 'Standard') )}">
@@ -118,9 +139,9 @@
                           label="Select Motor"
                           value="{!v.selectedMotor_Id}"
                           onchange="{!c.selectMotor}">
-          <aura:RenderIf isTrue="{!equals(v.hasStandardMotor, false)}">
+          <aura:if isTrue="{!equals(v.hasStandardMotor, false)}">
             <option value="none" checked="true"> -- None -- </option>
-          </aura:RenderIf>
+          </aura:if>
           <aura:iteration items="{!v.motorSelectOptions}" var="motor">
             <aura:if isTrue="{! or( equals(v.isMotorRequest, false),
                                     equals( equals(motor.packageAndSave, 'true'), v.isMotorRequest)
@@ -154,62 +175,76 @@
                messageToggleActive="Yes"
                messageToggleInactive="No" />
         </aura:if> -->
-      </aura:If>
+      </aura:if>
 
-      <aura:renderIf isTrue="{!!empty(v.trailerSelectOptions)}">
+      <aura:if isTrue="{!!empty(v.trailerSelectOptions)}">
         <lightning:select name="trailer-select"
                           label="Select Trailer"
                           value="{!v.selectedTrailer_Id}"
                           onchange="{!c.selectTrailer}">
-          <aura:RenderIf isTrue="{!equals(v.hasStandardTrailer,false)}">
+          <aura:if isTrue="{!equals(v.hasStandardTrailer,false)}">
             <option value="none" checked="true"> -- None -- </option>
-          </aura:RenderIf>
+          </aura:if>
           <aura:iteration items="{!v.trailerSelectOptions}" var="trailer">
             <option value="{!trailer.id}" text="{!trailer.name + '  -  ' + (empty(trailer.cost) ? '( Included )' : '( $ ' + trailer.cost + ' )' ) }"></option>
           </aura:iteration>
         </lightning:select>
-      </aura:renderIf>
+      </aura:if>
 
-      <aura:renderIf isTrue="{!and( !empty(v.trollingMotorSelectOptions), or( v.isFactoryStore, equals(v.recordType,'Trolling Motor') ) )}">
+      <aura:if isTrue="{!and( !empty(v.trollingMotorSelectOptions), or( v.isFactoryStore, equals(v.recordType,'Trolling Motor') ) )}">
         <lightning:select name="trolling-motor-select"
                           label="Select Trolling Motor"
                           value="{!v.selectedTrollingMotor_Id}"
                           onchange="{!c.selectTrollingMotor}">
-          <aura:RenderIf isTrue="{!equals(v.hasStandardTrollingMotor, false)}">
+          <aura:if isTrue="{!equals(v.hasStandardTrollingMotor, false)}">
             <option value="none" checked="true"> -- None -- </option>
-          </aura:RenderIf>
+          </aura:if>
           <aura:iteration items="{!v.trollingMotorSelectOptions}" var="t_motor">
             <option value="{!t_motor.id}" text="{!t_motor.name + '  -  ' + (empty(t_motor.cost) ? '( Included )' : '( $ ' + t_motor.cost + ' )' ) }"></option>
           </aura:iteration>
         </lightning:select>
-      </aura:renderIf>
+      </aura:if>
 
-      <aura:If isTrue="{!!empty(v.canvasOptions)}">
-        <label class="slds-form-element__label slds-m-top_large">Canvas Options</label><br />
-      </aura:If>
-      <aura:iteration items="{!v.canvasOptions}" var="options">
-        <c:lgnd_boatConfig_optionSelect product_id="{!options.id}"
-                                        product_name="{!options.name}"
-                                        isSelected="{!options.isSelected}"
-                                        cost="{!options.cost}"
-                                        hasOptions="{!options.hasOptions}"
-                                        subOptions="{!options.subOptions}"
-                                        pricebookId="{!v.dealerOrder.Pricebook__c}" />
-      </aura:iteration>
+<!--      <aura:If isTrue="{!!empty(v.canvasOptions)}">-->
+<!--        <label class="slds-form-element__label slds-m-top_large">Canvas Options</label><br />-->
+<!--      </aura:If>-->
+<!--      <aura:iteration items="{!v.canvasOptions}" var="options">-->
+<!--        <c:lgnd_boatConfig_optionSelect product_id="{!options.id}"-->
+<!--                                        product_name="{!options.name}"-->
+<!--                                        isSelected="{!options.isSelected}"-->
+<!--                                        cost="{!options.cost}"-->
+<!--                                        hasOptions="{!options.hasOptions}"-->
+<!--                                        subOptions="{!options.subOptions}"-->
+<!--                                        pricebookId="{!v.dealerOrder.Pricebook__c}" />-->
+<!--      </aura:iteration>-->
 
-      <aura:If isTrue="{!!empty(v.buildOptions)}">
-        <label class="slds-form-element__label slds-m-top_large">Build Options</label><br />
-      </aura:If>
-      <aura:iteration items="{!v.buildOptions}" var="options">
-        <c:lgnd_boatConfig_optionSelect product_id="{!options.id}"
-                                        product_name="{!options.name}"
-                                        isSelected="{!options.isSelected}"
-                                        cost="{!options.cost}"
-                                        hasOptions="{!options.hasOptions}"
-                                        subOptions="{!options.subOptions}"
-                                        pricebookId="{!v.dealerOrder.Pricebook__c}" />
-      </aura:iteration>
+<!--      <aura:If isTrue="{!!empty(v.buildOptions)}">-->
+<!--        <label class="slds-form-element__label slds-m-top_large">Build Options</label><br />-->
+<!--      </aura:If>-->
+<!--      <aura:iteration items="{!v.buildOptions}" var="options">-->
+<!--        <c:lgnd_boatConfig_optionSelect product_id="{!options.id}"-->
+<!--                                        product_name="{!options.name}"-->
+<!--                                        isSelected="{!options.isSelected}"-->
+<!--                                        cost="{!options.cost}"-->
+<!--                                        hasOptions="{!options.hasOptions}"-->
+<!--                                        subOptions="{!options.subOptions}"-->
+<!--                                        pricebookId="{!v.dealerOrder.Pricebook__c}" />-->
+<!--      </aura:iteration>-->
 
+<!--      <aura:if isTrue="{! !empty( v.optionalProducts)}">-->
+        <aura:iteration items="{!v.optionalProducts}" var="optProds">
+          <label class="slds-form-element__label slds-m-top_large">{!optProds.title}</label><br />
+          <aura:iteration  items="{! optProds.values }" var="options">
+            <c:lgnd_boatConfig_optionSelect product_id="{!options.id}"
+                                            product_name="{!options.name}"
+                                            isSelected="{!options.isSelected}"
+                                            cost="{!options.cost}"
+                                            hasOptions="{!options.hasOptions}"
+                                            subOptions="{!options.subOptions}"
+                                            pricebookId="{!v.dealerOrder.Pricebook__c}" />
+          </aura:iteration>
+        </aura:iteration>
+<!--      </aura:if>-->
 
 
     </div>

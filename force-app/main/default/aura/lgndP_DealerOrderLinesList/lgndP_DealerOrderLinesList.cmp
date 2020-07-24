@@ -35,7 +35,7 @@
       <lightning:button label="{!if( v.moreDetails, 'Less Details', 'More Details' ) }"
                       onclick="{! c.detailToggle }" />
       <aura:if isTrue="{!and(v.isEditable, !v.inOrderBuilder)}">
-         <lightning:button label="Add"
+        <lightning:button label="Add"
                           onclick="{! c.handleAdd }" />
         <aura:if isTrue="{!equals(v.dealerOrder.Stage__c, 'Draft')}">
           <lightning:button label="Submit"
