@@ -434,6 +434,15 @@ public without sharing class gcConstants {
 		set;
 	}
 
+	public static Id idGlRBCUS{
+		get{
+			if(idGlRBCUS == null) fetchGlAccounts();
+			if(idGlRBCUS == null) throw new gcException('A GL Account with Uniquefier [RBCUS] does not exist.');
+			return idGlRBCUS;
+		}
+		set;
+	}
+
 	public static Id idGlCostVariance{
 		get{
 			if(idGlCostVariance == null) fetchGlAccounts();
@@ -551,6 +560,15 @@ public without sharing class gcConstants {
 		set;
 	}
 
+	public static Id idGlCCPayable{
+		get{
+			if(idGlCCPayable == null) fetchGlAccounts();
+			if(idGlCCPayable == null) throw new gcException('A Cash Flow GL Account with Uniquefier [CCPayable] does not exist.');
+			return idGlCCPayable;
+		}
+		set;
+	}
+
 	private static void fetchGlAccounts()
 	{
 		List<String> listUniquefier = new list<String>{
@@ -573,6 +591,7 @@ public without sharing class gcConstants {
 			'MerchantDebitCredit',
 			'CashFloat',
 			'RBCCDN',
+			'RBCUS',
 			'CostVariance',
 			'APayable',
 			'ClearingARAP',
@@ -587,7 +606,8 @@ public without sharing class gcConstants {
 			'MerchantOnline',
 			'RevenueCF',
 			'CommissionsPayable',
-			'CommissionExpense'
+			'CommissionExpense',
+			'CCPayable'
 		};
 
 		for(AcctSeed__GL_Account__c gl :
@@ -635,6 +655,8 @@ public without sharing class gcConstants {
 				idGlCashFloat = gl.Id;
 			else if(gl.Uniquefier__c == 'RBCCDN')
 				idGlRBCCDN = gl.Id;
+			else if(gl.Uniquefier__c == 'RBCUS')
+				idGlRBCUS = gl.Id;
 			else if(gl.Uniquefier__c == 'CostVariance')
 				idGlCostVariance = gl.Id;
 			else if(gl.Uniquefier__c == 'ClearingARAP')
@@ -663,6 +685,8 @@ public without sharing class gcConstants {
 				idGlCommissionExpense = gl.Id;
 			else if(gl.Uniquefier__c == 'CommissionsPayable')
 				idGlCommissionsPayable = gl.Id;
+			else if(gl.Uniquefier__c == 'CCPayable')
+				idGlCCPayable = gl.Id;
 		}
 	}
 

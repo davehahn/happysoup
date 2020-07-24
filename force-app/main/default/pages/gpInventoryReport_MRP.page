@@ -542,7 +542,8 @@ div.pq-grid-footer{
                         {dataIndx:"projectLot",         title:"ERP Order Lot",   align:"left",   dataType:"string",  gFilter:"select"},
                         {dataIndx:"isInventory",        title:"Is. Inv",    align:"center", dataType:"string",  gFilter:"select", gFormat:'checkbox', maxWidth:75, minWidth:75},
                         //{dataIndx:"projectNumber",    title:"Project #",       align:"center", dataType:"string",  gFilter:"text"},
-                        {dataIndx:"createdDate",        title:"Created",         align:"center", dataType:"date"},
+                        {dataIndx:"createdDate",        title:"Created",         align:"center", dataType:"date",
+                                sortType: function (rowData1, rowData2, dataIndx) {return sortDateTime(rowData1, rowData2,'createdDate');}},
                         {dataIndx:"productName",        title:"ERP Order Item",  align:"left",   dataType:"string",  gFilter:"text"},
                         {dataIndx:"qtySpecified",       title:"Ordered",         align:"right",  dataType:"float", gFormat:'number', maxWidth:75, gTotal:true},
                         {dataIndx:"qtyAllocated",       title:"WIP",             align:"right",  dataType:"float", gFormat:'number', maxWidth:75, gTotal:true},
@@ -634,6 +635,41 @@ div.pq-grid-footer{
             gGrid.refreshGrid_callback($j('#purchaseOrders'),[]);
             gGrid.refreshGrid_callback($j('#projects'),[]);         
         }   
+    }
+
+    function sortDateTime(rowData1, rowData2, dataIndx)
+    {
+        console.log(rowData1);
+        console.log(rowData2);
+        console.log(rowData1[dataIndx]);
+        console.log(rowData2[dataIndx]);
+        var d=1,m=0;
+        if('{!locale}' == 'en_CA')
+        {
+            d=0;
+            m=1;
+        }
+        var data1 = rowData1[dataIndx].split(' '),
+            data2 = rowData2[dataIndx].split(' '),
+            data1 = data1[0].split('/'),
+            data2 = data2[0].split('/'),
+            date1 = new Date(data1[2],data1[m],data1[d]),
+            date2 = new Date(data2[2],data2[m],data2[d]),
+            time1 = date1.getTime(),
+            time2 = date2.getTime();
+        console.log(date1);
+        console.log(date2);
+        console.log(time1);
+        console.log(time2);
+        if (time1 > time2) {
+            return 1;
+        }
+        else if (time1 < time2) {
+            return -1;
+        }
+        else {
+            return 0;
+        }
     }
 
 
