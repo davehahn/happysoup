@@ -250,7 +250,10 @@ div.pq-grid-footer{
             console.log(ui.rowData);
         });
 
-        refreshGrid_erpOrders();
+        //refreshGrid_erpOrders();
+        var allTimes = $j('#allTimes').is(':checked');
+        if(allTimes) $j("span.dateSpan").hide();
+        else $j("span.dateSpan").show();
 
         gridObj = null;
     }
@@ -267,7 +270,7 @@ div.pq-grid-footer{
             idAccount = null;
         var glv1Val = $j('span.glv1Selector select').val();
         var glv2Val = $j('span.glv2Selector select').val();
-        if(idAccount == '') $j('#allTimes').prop('checked',false);
+        if(idAccount == '' || idAccount == null) $j('#allTimes').prop('checked',false);
         var dateFrom = $j('#datepicker').val();
         var dateTill = $j('#datepickerTill').val();
         var allTimes = $j('#allTimes').is(':checked');
