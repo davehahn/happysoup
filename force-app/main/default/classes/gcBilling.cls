@@ -99,9 +99,12 @@ public without sharing class gcBilling {
 				{
 					projectsToCreditPrepaids.add(b.GMBLASERP__Project__c);
 				}
-				if ( oldRec != null &&
-						 oldRec.AcctSeed__Status__c == 'Posted' &&
-						 b.GMBLASERP__Project__c != null )
+			}
+			if( b.AcctSeed__Status__c != 'Posted' )
+			{
+				if( oldRec != null &&
+					  oldRec.AcctSeed__Status__c == 'Posted' &&
+					  b.GMBLASERP__Project__c != null )
 				{
 					projectsToCleanPrepaids.add(b.GMBLASERP__Project__c);
 				}
