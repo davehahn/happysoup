@@ -5,9 +5,14 @@ public with sharing class arPOSReturn {
 
 		Schema.DescribeFieldResult fieldResult = AcctSeed__Cash_Disbursement__c.AcctSeed__Type__c.getDescribe();
 		List<Schema.PicklistEntry> ple = fieldResult.getPicklistValues();
-			
-		for( Schema.PicklistEntry f : ple)
-			options.add(f.getValue());
+		String[] listDiscard = new String[]{'Company Credit Card', 'Wire', 'Direct Deposit'};
+		System.debug('listDiscard');
+		System.debug(listDiscard);
+		for( Schema.PicklistEntry f : ple) {
+			String pVal = f.getValue();
+			if(listDiscard.contains(pVal)) continue;
+			options.add(pVal);
+		}
 
 		return options;
 	}
