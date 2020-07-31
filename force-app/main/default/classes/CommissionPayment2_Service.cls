@@ -5,6 +5,7 @@
 public with sharing class CommissionPayment2_Service
 {
   public static Decimal defaultGrossMarginPaymentPercent = 10;
+  public static Decimal defaultGrossMarginPaymentPercentManager = 10;
 
   public static List<CommissionPayment2__c> createInitialPayments( Set<Id> commissionRecordIds )
   {
@@ -12,7 +13,12 @@ public with sharing class CommissionPayment2_Service
     for( Id crId : commissionRecordIds )
     {
       payments.add( new CommissionPayment2__c(
-        Commission_Record2__c = crId
+          Commission_Record2__c = crId,
+          Type__c = 'Standard'
+      ));
+      payments.add( new CommissionPayment2__c(
+          Commission_Record2__c = crId,
+          Type__c = 'Manager'
       ));
     }
     insert payments;
@@ -29,6 +35,7 @@ public with sharing class CommissionPayment2_Service
   {
     Set<Id> cRecIds = new Set<Id>();
     Set<Id> ownerIds = new Set<Id>();
+    Id managerId = [Select Id, ManagerId FROM User WHERE Id = :UserInfo.getUserId()].ManagerId;
     for( CommissionPayment2__c payment : payments )
     {
       cRecIds.add( payment.Commission_Record2__c );
@@ -39,20 +46,27 @@ public with sharing class CommissionPayment2_Service
       if( commRecMap.containsKey( payment.Commission_Record2__c ) )
       {
         CommissionRecord2__c cr = commRecMap.get( payment.Commission_Record2__c );
-        if( payment.Owner__c == null )
-        {
-          if( cr.Project_Task__r.AcctSeed__GL_Account_Variable_2__c == LGND_Constants.GLV2Id_BusinessOffice )
-          {
-            payment.Owner__c = cr.Project_Task__r.AcctSeed__Project__r.Business_Manager__c;
-          }
-          else if( cr.Project_Task__r.AcctSeed__GL_Account_Variable_2__c == LGND_Constants.GLV2Id_Sales &&
-                   cr.Project_Task__r.Name.contains( 'Retail Sale' ) )
-          {
-            payment.Owner__c = cr.Project_Task__r.AcctSeed__Project__r.Salesperson__c;
-          }
-          if (payment.Owner__c == null)
-          {
-            payment.Owner__c = UserInfo.getUserId();
+        if( payment.Owner__c == null) {
+          if (payment.Type__c == 'Standard' || payment.Type__c == null) {
+            if (cr.Project_Task__r.AcctSeed__GL_Account_Variable_2__c == LGND_Constants.GLV2Id_BusinessOffice) {
+              payment.Owner__c = cr.Project_Task__r.AcctSeed__Project__r.Business_Manager__c;
+            } else if (cr.Project_Task__r.AcctSeed__GL_Account_Variable_2__c == LGND_Constants.GLV2Id_Sales &&
+                cr.Project_Task__r.Name.contains('Retail Sale')) {
+              payment.Owner__c = cr.Project_Task__r.AcctSeed__Project__r.Salesperson__c;
+            }
+            if (payment.Owner__c == null) {
+              payment.Owner__c = UserInfo.getUserId();
+            }
+          } else if (payment.Type__c == 'Manager'){
+            if (cr.Project_Task__r.AcctSeed__GL_Account_Variable_2__c == LGND_Constants.GLV2Id_BusinessOffice) {
+              payment.Owner__c = cr.Project_Task__r.AcctSeed__Project__r.Business_Manager__r.ManagerId;
+            } else if (cr.Project_Task__r.AcctSeed__GL_Account_Variable_2__c == LGND_Constants.GLV2Id_Sales &&
+                cr.Project_Task__r.Name.contains('Retail Sale')) {
+              payment.Owner__c = cr.Project_Task__r.AcctSeed__Project__r.Salesperson__r.ManagerId;
+            }
+            if (payment.Owner__c == null) {
+              payment.Owner__c = managerId;
+            }
           }
         }
       }
@@ -67,14 +81,25 @@ public with sharing class CommissionPayment2_Service
       ownerIds.add( cp.Owner__c );
     }
     Map<Id, User> owners = new Map<Id, User>(
-      [SELECT Id, Commission_Gross_Margin_Percent_Override__c FROM User WHERE Id IN :ownerIds]
+      [SELECT Id, Commission_Gross_Margin_Percent_Override__c, Commission_Gross_Margin_Manager__c FROM User WHERE Id IN :ownerIds]
     );
     for( CommissionPayment2__c cp : payments )
     {
-      cp.Gross_Margin_Payment_Percent__c =
-        owners.get( cp.Owner__c).Commission_Gross_Margin_Percent_Override__c != null ?
-          owners.get( cp.Owner__c ).Commission_Gross_Margin_Percent_Override__c :
-          defaultGrossMarginPaymentPercent;
+      if(cp.Owner__c != null) {
+        if (cp.Type__c == 'Standard') {
+          cp.Gross_Margin_Payment_Percent__c =
+              owners.get(cp.Owner__c).Commission_Gross_Margin_Percent_Override__c != null ?
+                  owners.get(cp.Owner__c).Commission_Gross_Margin_Percent_Override__c :
+                  defaultGrossMarginPaymentPercent;
+        } else {
+          cp.Gross_Margin_Payment_Percent__c =
+              owners.get(cp.Owner__c).Commission_Gross_Margin_Manager__c != null ?
+                  owners.get(cp.Owner__c).Commission_Gross_Margin_Manager__c :
+                  defaultGrossMarginPaymentPercentManager;
+        }
+      }else{
+        throw new gcException('Owner not found');
+      }
     }
 
   }

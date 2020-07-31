@@ -11,6 +11,7 @@
 
   <aura:attribute name="recordId" type="String" />
   <aura:attribute name="record" type="Object" />
+  <aura:attribute name="hasManagerAccess" type="Boolean" default="false" />
   <aura:attribute name="linesLoaded" type="Boolean" default="false" />
   <aura:attribute name="isEditing" type="Boolean" default="false" />
   <aura:attribute name="paymentsValid" type="Boolean" default="true" />
@@ -80,8 +81,14 @@
                                   onclick="{!c.handleAddLineItem}" />
               </aura:if>
               <aura:if isTrue="{!v.isEditing}">
-                <lightning:button label="Add Payment"
-                                  onclick="{!c.handleAddPayment}" />
+                <lightning:buttonMenu label="Add Payment" alternativeText="Add Payment" onselect="{!c.handleAddPayment}">
+                <lightning:menuItem value="Standard" label="Standard Payment" />
+                  <aura:if isTrue="{!v.hasManagerAccess}">
+                    <lightning:menuItem value="Manager" label="Manager Payment" />
+                  </aura:if>
+                </lightning:buttonMenu>
+                <!--<lightning:button label="Add Payment"
+                                  onclick="{!c.handleAddPayment}" />-->
                 <lightning:button label="Update Payments"
                                   onclick="{!c.handlePaymentUpdate}"
                                   disabled="{! !v.paymentsValid}" />
@@ -90,23 +97,21 @@
             </aura:if>
           </lightning:layoutItem>
         </lightning:layout>
-
         <aura:if isTrue="{! !empty(v.record)}">
-          <c:commissionPayments commissionRecordId="{!v.record.id}"
-                                onpaymentchange="{!c.handlePaymentChange}"
-                                onpaymentupdatecomplete="{!c.handlePaymentUpdateComplete}"
-                                ondisputedpayments="{!c.handleDisputedPayments}"
-                                aura:id="payments" />
+        <c:commissionPayments commissionRecordId="{!v.record.id}"
+                              onpaymentchange="{!c.handlePaymentChange}"
+                              onpaymentupdatecomplete="{!c.handlePaymentUpdateComplete}"
+                              ondisputedpayments="{!c.handleDisputedPayments}"
+                              aura:id="payments" />
         </aura:if>
-
         <aura:if isTrue="{!v.renderFeed}">
           <lightning:tabset>
 
             <lightning:tab label="Details">
               <aura:if isTrue="{! !empty(v.record)}">
-                <c:commissionLineItems commissionRecordId="{!v.record.id}"
-                                       recordCalculationMethod="{!v.record.calculationMethod}"
-                                       aura:id="commissionLines" />
+              <c:commissionLineItems commissionRecordId="{!v.record.id}"
+                                     recordCalculationMethod="{!v.record.calculationMethod}"
+                                     aura:id="commissionLines" />
               </aura:if>
             </lightning:tab>
 
@@ -118,11 +123,11 @@
 
         <aura:if isTrue="{! !v.renderFeed}">
           <aura:if isTrue="{! !empty(v.record)}">
-            <c:commissionLineItems commissionRecordId="{!v.record.id}"
-                                   renderRatePaymentColumns="{!equals(v.record.calculationMethod, 'Revenue')}"
-                                   aura:id="commissionLines" />
-          </aura:if>
+          <c:commissionLineItems commissionRecordId="{!v.record.id}"
+                                 renderRatePaymentColumns="{!equals(v.record.calculationMethod, 'Revenue')}"
+                                 aura:id="commissionLines" />
         </aura:if>
+      </aura:if>
 
       </div>
     </div>

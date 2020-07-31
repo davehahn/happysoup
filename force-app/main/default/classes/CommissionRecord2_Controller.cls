@@ -7,6 +7,18 @@ public with sharing class CommissionRecord2_Controller
   public class CommissionRecord2_Exception extends Exception{}
 
   @AuraEnabled(Cacheable=true)
+  public static Boolean fetchManagerCustomPermission()
+  {
+    CustomPermissionsReader cpr = new CustomPermissionsReader();
+    Boolean hasCommissionCanSeeManagerValue = false;
+    if(cpr.hasPermission('CommissionCanSeeManagerValue'))
+      hasCommissionCanSeeManagerValue = true;
+    System.debug('hasCommissionCanSeeManagerValue');
+    System.debug(hasCommissionCanSeeManagerValue);
+    return hasCommissionCanSeeManagerValue;
+  }
+
+  @AuraEnabled(Cacheable=true)
   public static List<CommissionWrapper.Record> fetchCommissionRecords( String erpId )
   {
     List<CommissionWrapper.Record> results = new List<CommissionWrapper.Record>();

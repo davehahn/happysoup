@@ -70,7 +70,7 @@ export default class CommissionPayments extends LightningElement {
   {
     this._totalSplitPercent = 0;
     const records = [...this.payments.data];
-    records.forEach( payment => this._totalSplitPercent += parseFloat(payment.split) );
+    records.forEach( payment => this._totalSplitPercent += (payment.cType == 'Standard' ? parseFloat(payment.split) : 0) );
     return this._totalSplitPercent === 100;
   }
 
@@ -114,16 +114,19 @@ export default class CommissionPayments extends LightningElement {
     this.validate();
   }
 
-  @api handleAddPayment()
+  @api handleAddPayment(typeCP)
   {
+    console.log(typeCP);
       let newP = {...this.payments.data[0]};
       let dup = [...this.payments.data];
       newP.id = gen8DigitId();
       newP.owner = null;
       newP.ownerId = null;
       newP.avatarURL = null;
+      newP.cType = typeCP;
       newP.split = 0;
       newP.amount = 0;
+      console.log(newP);
       dup.push( newP );
       this.payments.data = dup;
       this.validate();

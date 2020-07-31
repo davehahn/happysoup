@@ -17,6 +17,16 @@
         LightningUtils.errorToast(error);
       })
     );
+
+    self.fetchManagerPermission( component )
+    .then(
+      $A.getCallback( function( result ) {
+        component.set('v.hasManagerAccess', result );
+      }),
+      $A.getCallback( function( error ) {
+        LightningUtils.errorToast(error);
+      })
+    );
   },
 
   setRecordVisibility: function( component )
@@ -47,6 +57,12 @@
     action.setParams({
       recordId: component.get('v.recordId')
     });
+    return new LightningApex( this, action ).fire();
+  },
+
+  fetchManagerPermission: function( component )
+  {
+    var action = component.get('c.fetchManagerCustomPermission');
     return new LightningApex( this, action ).fire();
   },
 

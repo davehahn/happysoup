@@ -8,7 +8,7 @@ public virtual class Application_Selector
 
   protected String sObjectName;
   protected List<String> fields;
-  private List<String> whereClause;
+  protected List<String> whereClause;
   private String orderBy;
   protected List<String> childQueries;
 

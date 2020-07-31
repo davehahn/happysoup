@@ -63,10 +63,12 @@
                                     format-style="currency"
                                     currency-code="CAD"></lightning-formatted-number>
       </p>
+      <template if:true={renderSplit}>
       <p>
         <b>Split: </b>
         {payment.split}%
       </p>
+      </template>
     </lightning-card>
   </template>
 
@@ -119,13 +121,13 @@
 <!--        <b>Split: </b>-->
 <!--        {payment.split}%-->
 <!--      </p>-->
-      <!--<template if:true={renderSplit}>-->
+      <template if:true={renderSplit}>
       <lightning-slider label="Split %"
                         size="xx-small"
 
                         value={payment.split}
                         onchange={handleSpitPercentChange}></lightning-slider>
-      <!--</template>-->
+      </template>
     </lightning-card>
 
   </template>

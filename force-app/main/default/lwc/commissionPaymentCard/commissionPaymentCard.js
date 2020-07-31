@@ -8,11 +8,13 @@ import { CurrentPageReference } from 'lightning/navigation';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import { fireEvent } from 'c/pubsub';
 import statusChange from '@salesforce/apex/CommissionRecord2_Controller.paymentStatusChange'
+import hasManagerPermission from '@salesforce/apex/CommissionRecord2_Controller.fetchManagerCustomPermission'
 
 export default class CommissionPaymentCard extends LightningElement {
   userId = Id;
   @wire(CurrentPageReference) pageRef;
   @api payment;
+  @api canSeeManagerData;
   @api isEditing;
   @track showDisputeReason=false;
   @track disputeReason;
@@ -35,7 +37,8 @@ export default class CommissionPaymentCard extends LightningElement {
 
   get renderSplit()
   {
-    return this.paymentType === 'Standard';
+    console.log(this.payment);
+    return this.payment.cType === 'Standard';
   }
 
   get renderStatusMenu()
@@ -121,11 +124,17 @@ export default class CommissionPaymentCard extends LightningElement {
 
   reCalcAmount( data )
   {
+    console.log(data);
     if( data.usesGrossCalculation )
     {
-      return data.totalProfit *
-        ( data.grossMarginPaymentPercent / 100 ) *
-        ( data.split / 100 );
+      if(cType != 'Manager'){
+        return data.totalProfit *
+          ( data.grossMarginPaymentPercent / 100 ) *
+          ( data.split / 100 );
+      }else{
+        return data.totalPayment *
+                  ( data.grossMarginPaymentPercent / 100 );
+      }
     }
     else
     {
@@ -188,6 +197,27 @@ export default class CommissionPaymentCard extends LightningElement {
       );
     });
   }
+
+  fetchManagerPermission()
+    {
+      let spinner = this.template.querySelector("c-legend-spinner"),
+          title, state, message;
+
+      spinner.toggle();
+
+      fetchManagerCustomPermission()
+      .then( result => {
+        this.canSeeManagerData = result;
+      })
+      .catch( error => {
+        title = error.message ? error.message : 'There was an Error';
+        state = 'error';
+        message = error;
+      })
+      .finally( () => {
+        spinner.toggle();
+      });
+    }
 
   handleSaveDispute()
   {
