@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 #accessToken="$(cat $BITBUCKET_CLONE_DIR/org_info.json | jq -r  '.accessToken')"
 DEPLOY_EXPERIENCES=false
@@ -38,8 +39,8 @@ echo 'modifying .forceignore to not deploy staticresources and experienceBundles
 echo -e "\nforce-app/main/default/staticresources" >> .forceignore
 echo -e "\nforce-app/main/default/experiences" >> .forceignore
 
-
 sfdx force:source:deploy --testlevel RunLocalTests --checkonly --targetusername ci-testValid -p force-app/main/default -g -w 120
+
 if [ $DEPLOY_EXPERIENCES = true ]
 then
   echoOut 're-enable original .forceignore'
