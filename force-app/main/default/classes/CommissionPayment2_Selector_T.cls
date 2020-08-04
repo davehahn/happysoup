@@ -19,10 +19,33 @@ private class CommissionPayment2_Selector_T
     Factory_ERPOrder.insertRetailBoatSale( customer, warehouse, DateTime.now().addMonths(1), serial );
   }
 
+  private static void addCustomPermission(){
+    CustomPermissionsReader cpr = new CustomPermissionsReader();
+    Boolean hasCommissionCanSeeManagerValue = false;
+    if(cpr.hasPermission('CommissionCanSeeManagerValue'))
+      hasCommissionCanSeeManagerValue = true;
+    if(!hasCommissionCanSeeManagerValue){
+      PermissionSet ps = new PermissionSet();
+      ps.Name = 'ManagersPermissionForJE';
+      ps.Label = 'ManagersPermissionForJE';
+      insert ps;
+
+      SetupEntityAccess sea = new SetupEntityAccess();
+      sea.ParentId = ps.Id;
+      sea.SetupEntityId = [select Id from CustomPermission where DeveloperName = 'CommissionCanSeeManagerValue'][0].Id;
+      insert sea;
+      PermissionSetAssignment psa = new PermissionSetAssignment();
+      psa.AssigneeId = UserInfo.getUserId();
+      psa.PermissionSetId = ps.Id;
+      insert psa;
+    }
+  }
+
   private static void init()
   {
     project = [SELECT Id FROM AcctSeed__Project__c LIMIT 1];
     commissionRecord = [SELECT Id FROM CommissionRecord2__c WHERE Project__c = :project.Id LIMIT 1];
+    addCustomPermission();
   }
 
   @IsTest
