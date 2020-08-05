@@ -100,6 +100,8 @@ public with sharing class CommissionRecord2_Controller
     }
     catch( Exception e )
     {
+      System.debug('Error');
+      System.debug(e.getMessage());
       throw new AuraHandledException( e.getMessage() );
     }
   }

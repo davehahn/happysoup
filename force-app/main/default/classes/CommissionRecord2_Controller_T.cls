@@ -17,6 +17,32 @@ private class CommissionRecord2_Controller_T
     Factory_ERPOrder.insertRetailBoatSale( customer, warehouse, DateTime.now().addMonths(1), serial );
   }
 
+  private static Boolean checkCustomPermission() {
+    CustomPermissionsReader cpr = new CustomPermissionsReader();
+    Boolean hasCommissionCanSeeManagerValue = false;
+    if(cpr.hasPermission('CommissionCanSeeManagerValue'))
+      hasCommissionCanSeeManagerValue = true;
+    return hasCommissionCanSeeManagerValue;
+  }
+  private static void addCustomPermission(){
+    Boolean hasCommissionCanSeeManagerValue = checkCustomPermission();
+    if(!hasCommissionCanSeeManagerValue){
+      PermissionSet ps = new PermissionSet();
+      ps.Name = 'ManagersPermissionForJE';
+      ps.Label = 'ManagersPermissionForJE';
+      insert ps;
+
+      SetupEntityAccess sea = new SetupEntityAccess();
+      sea.ParentId = ps.Id;
+      sea.SetupEntityId = [select Id from CustomPermission where DeveloperName = 'CommissionCanSeeManagerValue'][0].Id;
+      insert sea;
+      PermissionSetAssignment psa = new PermissionSetAssignment();
+      psa.AssigneeId = UserInfo.getUserId();
+      psa.PermissionSetId = ps.Id;
+      insert psa;
+    }
+  }
+
   private static void init()
   {
     project = [SELECT Id FROM AcctSeed__Project__c LIMIT 1];
@@ -164,8 +190,10 @@ private class CommissionRecord2_Controller_T
       [ SELECT Id
         FROM CommissionLineItem2__c
         WHERE CommissionRecord2__c = :commissionRecord.Id ];
-
-    System.assertEquals( materials.size() + 1, lineItems.size() );
+    if(!checkCustomPermission())
+      System.assertEquals( materials.size() + 1, lineItems.size() );
+    else
+      System.assertEquals( materials.size(), lineItems.size() );
   }
 
   @IsTest
