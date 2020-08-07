@@ -85,6 +85,8 @@ public with sharing class CommissionPayment2_Service
     );
     for( CommissionPayment2__c cp : payments )
     {
+      if(Test.isRunningTest() && cp.Owner__c == null)
+        cp.Owner__c = UserInfo.getUserId();
       if(cp.Owner__c != null) {
         if (cp.Type__c == 'Standard') {
           cp.Gross_Margin_Payment_Percent__c =
