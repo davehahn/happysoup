@@ -441,8 +441,11 @@ private class CommissionRecord2_Functional_T
   {
     List<User> users = new List<User>();
     User userUser = Factory_User.newUser('USR_Test', 'User1', 'System Administrator', null);
+    userUser.ManagerId = UserInfo.getUserId();
     User boUser = Factory_User.newUser('BO_Test', 'User1', 'System Administrator', null);
+    boUser.ManagerId = UserInfo.getUserId();
     User salesUser = Factory_User.newUser('SAL_Test', 'User2', 'System Administrator', null);
+    salesUser.ManagerId = UserInfo.getUserId();
     users.add( boUser );
     users.add( salesUser );
     users.add( userUser );
@@ -478,8 +481,8 @@ private class CommissionRecord2_Functional_T
       System.assert( LGND_Constants.GLV2Id_BusinessOffice == boTask.AcctSeed__GL_Account_Variable_2__c );
       System.assertEquals(1, salesCommRecords.size());
       System.assertEquals(1, boCommRecords.size());
-      System.assertEquals(1, boCommRecords[0].Commission_Payments__r.size());
-      System.assertEquals(1, salesCommRecords[0].Commission_Payments__r.size());
+      System.assertEquals(2, boCommRecords[0].Commission_Payments__r.size());
+      System.assertEquals(2, salesCommRecords[0].Commission_Payments__r.size());
       System.assertEquals(boUser.Id, boCommRecords[0].Commission_Payments__r[0].Owner__c);
       System.assertEquals(salesUser.Id, salesCommRecords[0].Commission_Payments__r[0].Owner__c);
     }
@@ -489,6 +492,7 @@ private class CommissionRecord2_Functional_T
   static void payments_DefaultOwner_Test()
   {
     User userUser = Factory_User.newUser('USR_Test', 'User1', 'System Administrator', null);
+    userUser.ManagerId = UserInfo.getUserId();
     insert userUser;
     project = [SELECT Id FROM AcctSeed__Project__c LIMIT 1];
     //Salesperson get set to Current User be default in gcProject triggerHandler
@@ -522,8 +526,8 @@ private class CommissionRecord2_Functional_T
       System.assert( LGND_Constants.GLV2Id_BusinessOffice == boTask.AcctSeed__GL_Account_Variable_2__c );
       System.assertEquals(1, salesCommRecords.size());
       System.assertEquals(1, boCommRecords.size());
-      System.assertEquals(1, boCommRecords[0].Commission_Payments__r.size());
-      System.assertEquals(1, salesCommRecords[0].Commission_Payments__r.size());
+      System.assertEquals(2, boCommRecords[0].Commission_Payments__r.size());
+      System.assertEquals(2, salesCommRecords[0].Commission_Payments__r.size());
       System.assertEquals(userUser.Id, boCommRecords[0].Commission_Payments__r[0].Owner__c);
       System.assertEquals(userUser.Id, salesCommRecords[0].Commission_Payments__r[0].Owner__c);
     }
@@ -533,6 +537,7 @@ private class CommissionRecord2_Functional_T
   static void paymentAmount_GrossMarginDefault_Test()
   {
     User u = Factory_User.newUser( 'tster', 'lastname', 'System Administrator', null );
+    u.ManagerId = UserInfo.getUserId();
     insert u;
     System.runAs( u )
     {
@@ -569,7 +574,7 @@ private class CommissionRecord2_Functional_T
       ];
       // 10 parts * $500 profit * default gross margin commission payment percent
       Decimal expectedAmount = 10 * 500 * (CommissionPayment2_Service.defaultGrossMarginPaymentPercent / 100);
-      System.assertEquals(1, commPayments.size());
+      System.assertEquals(2, commPayments.size());
       System.assertEquals(true, commPayments[0].Use_Gross_Margin_Calculation__c);
       System.assertEquals(100, commPayments[0].Split_Percent__c);
       System.assertEquals(CommissionPayment2_Service.defaultGrossMarginPaymentPercent, commPayments[0].Gross_Margin_Payment_Percent__c);
@@ -581,6 +586,7 @@ private class CommissionRecord2_Functional_T
   static void paymentAmount_GrossMarginOverRide_Test()
   {
     User specialUser = Factory_User.newUser('SPE_Test', 'User1', 'System Administrator', null);
+    specialUser.ManagerId = UserInfo.getUserId();
     specialUser.Commission_Gross_Margin_Percent_Override__c = 13;
     insert specialUser;
     project = [SELECT Id FROM AcctSeed__Project__c LIMIT 1];
@@ -626,7 +632,7 @@ private class CommissionRecord2_Functional_T
       Decimal expectedAmount = 10 * 500 * (13.0 / 100.0);
       System.debug( expectedAmount );
       System.debug( 0 == expectedAmount );
-      System.assertEquals(1, commPayments.size());
+      System.assertEquals(2, commPayments.size());
       System.assertEquals(true, commPayments[0].Use_Gross_Margin_Calculation__c);
       System.assertEquals(100, commPayments[0].Split_Percent__c);
       System.assertEquals(13, commPayments[0].Gross_Margin_Payment_Percent__c);
@@ -670,7 +676,7 @@ private class CommissionRecord2_Functional_T
     ];
     // 10 parts * $1000 sale * partsRate
     Decimal expectedAmount = 10 * 1000 * ( CommissionLineItem2_Service.partsRate );
-    System.assertEquals( 1, commPayments.size() );
+    System.assertEquals( 2, commPayments.size() );
     System.assertEquals( false, commPayments[0].Use_Gross_Margin_Calculation__c );
     System.assertEquals( 100, commPayments[0].Split_Percent__c );
     System.assertEquals( expectedAmount, commPayments[0].Amount__c );
@@ -707,7 +713,7 @@ private class CommissionRecord2_Functional_T
     ];
     // 1 parts * $1000 sale * partsRate
     Decimal expectedAmount = 1 * 1000 * ( CommissionLineItem2_Service.partsRate );
-    System.assertEquals( 1, commRec.Commission_Payments__r.size() );
+    System.assertEquals( 2, commRec.Commission_Payments__r.size() );
     System.assertEquals( 1, commRec.Commission_Line_Items__r.size() );
     System.assertEquals( 1, commRec.Commission_Line_Items__r[0].Quantity__c );
     System.assertEquals( false, commRec.Commission_Payments__r[0].Use_Gross_Margin_Calculation__c );
