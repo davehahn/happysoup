@@ -45,14 +45,16 @@ global without sharing class gcInboundInventoryMovement {
 			{
 				gcTransactionParent.setFinancialAttributes(
 					listNew,
-					'AcctSeedERP__Project__c',
+					null,
+					'AcctSeedERP__Project_Task__c',
 					null);
 			}
 			if(boolIsUpdate)
 			{
 				gcTransactionParent.setFinancialAttributes(
 					listNew,
-					'AcctSeedERP__Project__c',
+					null,
+					'AcctSeedERP__Project_Task__c',
 					null);
 			}
 			if(boolIsDelete)

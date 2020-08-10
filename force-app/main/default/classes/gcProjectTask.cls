@@ -55,6 +55,7 @@ global without sharing class gcProjectTask {
 				gcTransactionParent.setFinancialAttributes(
 					listNew,
 					'AcctSeed__Project__c',
+					null,
 					null);
 			}
 			if(boolIsUpdate)
@@ -62,6 +63,7 @@ global without sharing class gcProjectTask {
 				gcTransactionParent.setFinancialAttributes(
 					listNew,
 					'AcctSeed__Project__c',
+					null,
 					null);
 			}
 			if(boolIsDelete)

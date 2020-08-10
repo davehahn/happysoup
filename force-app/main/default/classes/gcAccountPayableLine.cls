@@ -79,7 +79,8 @@ public without sharing class gcAccountPayableLine {
 	{
 		gcTransactionParent.setFinancialAttributes(
 			listNew,
-			'AcctSeed__Project__c',
+			null,
+			'AcctSeed__Project_Task__c',
 			'AcctSeed__Expense_GL_Account__c');
 	}
 
