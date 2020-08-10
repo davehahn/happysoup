@@ -94,13 +94,18 @@ public without sharing class gcProject {
       if(boolIsDelete)
       {
         Set<Id> partnerErpIds = new Set<Id>();
+        Set<Id> setIdP = new Set<Id>();
         for( AcctSeed__Project__c erp : oldMap.values() )
         {
           if( erp.RecordTypeId == gcConstants.idRtProjectPartnerBoatSale )
             partnerErpIds.add( erp.Id );
+          if(erp.Stage__c == 'Draft')
+            setIdP.add(erp.Id);
         }
         TruckDeliveryItem.erpWasDeleted( partnerErpIds );
-
+        if(!setIdP.isEmpty()){
+          delete [SELECT Id FROM AcctSeed__Project_Task__c WHERE AcctSeed__Project__c IN:setIdP];
+        }
         if(!disableJob)
           Rigger_Schedule_mp.destroyRelatedJobs(oldmap.keySet());
       }

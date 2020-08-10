@@ -130,7 +130,7 @@ public without sharing class gcCashDisbursement {
 			cd.AcctSeed__Bank_Account__c = gcConstants.idGlCCPayable;
 		else if(paymentMethod == 'Cash')
 			cd.AcctSeed__Bank_Account__c = gcConstants.idGlCashFloat;
-		else if(paymentMethod == 'Wire')
+		else if(paymentMethod == 'Wire' || paymentMethod == 'US Check')
 			cd.AcctSeed__Bank_Account__c = gcConstants.idGlRBCUS;
 		else if(paymentMethod == 'Legend Bucks')
 			cd.AcctSeed__Bank_Account__c = gcConstants.idGlLegendBucks;
