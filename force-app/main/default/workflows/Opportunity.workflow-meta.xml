@@ -363,8 +363,8 @@
         <template>Invitations_and_Individual_Follow_Ups/X90_Day_No_Contact_E_mail_Notification</template>
     </alerts>
     <alerts>
-        <fullName>Notify_Henry_of_New_Whitefish_Opportunity</fullName>
-        <description>Notify Henry of New Whitefish Opportunity</description>
+        <fullName>Notify_Henry_of_New_Barrie_Opportunity</fullName>
+        <description>Notify Henry of New Barrie Opportunity</description>
         <protected>false</protected>
         <recipients>
             <recipient>hnguyen@legendboats.com</recipient>
@@ -1953,13 +1953,13 @@
         </workflowTimeTriggers>
     </rules>
     <rules>
-        <fullName>Notify Henry of New Whitefish Opportunity</fullName>
+        <fullName>Notify Henry of New Barrie Opportunity</fullName>
         <actions>
-            <name>Notify_Henry_of_New_Whitefish_Opportunity</name>
+            <name>Notify_Henry_of_New_Barrie_Opportunity</name>
             <type>Alert</type>
         </actions>
         <active>true</active>
-        <formula>OR(TEXT(Owner.Warehouse__c) = &quot;Whitefish&quot;, TEXT(Owner.Warehouse__c) = &quot;Wholesale&quot;)</formula>
+        <formula>TEXT(Owner.Warehouse__c) = &quot;Barrie&quot;</formula>
         <triggerType>onCreateOnly</triggerType>
     </rules>
     <rules>
