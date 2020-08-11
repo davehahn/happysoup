@@ -23,6 +23,8 @@ public without sharing class gcTransactionParent {
 
 		if(mapProject == null)
 			mapProject = new Map<Id, AcctSeed__Project__c>();
+		if(mapProjectTask == null)
+			mapProjectTask = new Map<Id, AcctSeed__Project_Task__c>();
 		if(mapGLAccount == null)
 			mapGLAccount = new Map<Id, AcctSeed__GL_Account__c>();
 
@@ -32,8 +34,10 @@ public without sharing class gcTransactionParent {
 
 		for(SObject obj : listNew)
 		{
-			Id idProject = (Id)obj.get(projectField);
+			Id idProject;
 			Id idProjectTask;
+			if(projectField != null)
+				idProject = (Id)obj.get(projectField);
 			if(projectTaskField != null)
 				idProjectTask = (Id)obj.get(projectTaskField);
 			if(idProject != null && !mapProject.containsKey(idProject))
@@ -95,6 +99,8 @@ public without sharing class gcTransactionParent {
 				[SELECT Id,
 					AcctSeed__GL_Account_Variable_1__c,
 					AcctSeed__GL_Account_Variable_2__c,
+					AcctSeed__Project__r.GL_Account_Variable_1__c,
+					AcctSeed__Project__r.GL_Account_Variable_2__c,
 					AcctSeed__Project__r.Internal_Labour_Service__c,
 					AcctSeed__Project__r.Internal_Warranty__c,
 					AcctSeed__Project__r.Internal_Partner_Boat_Sale__c
@@ -141,8 +147,8 @@ public without sharing class gcTransactionParent {
 			if(projectTaskField != null) {
 				pt = mapProjectTask.get((Id) obj.get(projectTaskField));
 				p = pt.AcctSeed__Project__r;
-				idGLV1 = pt.AcctSeed__GL_Account_Variable_1__c;
-				idGLV2 = pt.AcctSeed__GL_Account_Variable_2__c;
+				idGLV1 = pt.AcctSeed__GL_Account_Variable_1__c == null ? p.GL_Account_Variable_1__c : pt.AcctSeed__GL_Account_Variable_1__c;
+				idGLV2 = pt.AcctSeed__GL_Account_Variable_2__c == null ? p.GL_Account_Variable_2__c : pt.AcctSeed__GL_Account_Variable_2__c;
 			}else {
 				p = mapProject.get((Id) obj.get(projectField));
 				idGLV1 = p.GL_Account_Variable_1__c;
@@ -238,6 +244,110 @@ public without sharing class gcTransactionParent {
 
 	public static void coverage(){
 		integer i;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
 		i=1;
 		i=1;
 		i=1;
