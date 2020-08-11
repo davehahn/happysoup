@@ -80,7 +80,8 @@ public without sharing class gcBillingLine {
 	{
 		gcTransactionParent.setFinancialAttributes(
 			listNew,
-			'AcctSeed__Project__c',
+			null,
+			'AcctSeed__Project_Task__c',
 			'AcctSeed__Revenue_GL_Account__c');
 	}
 

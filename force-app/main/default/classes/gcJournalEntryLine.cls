@@ -69,7 +69,8 @@ public without sharing class gcJournalEntryLine {
 	{
 		gcTransactionParent.setFinancialAttributes(
 			listNew,
-			'AcctSeed__Project__c',
+			null,
+			'AcctSeed__Project_Task__c',
 			'AcctSeed__GL_Account__c');
 	}
 
