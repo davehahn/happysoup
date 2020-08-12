@@ -82,18 +82,76 @@
 				"caseId": caseId,
 				"paymentMethod": paymentMethod
 			});
+//			new LightningApex( self, action ).fire()
+//			.then(
+//			  $A.getCallback( (response) => {
+//			    if (caseId != null)
+//			    {
+//            self.updateCase(response, component)
+//            .then
+//            (
+//              $A.getCallback( function() {
+//                self.renderResults(response, component, regSpinner);
+//              })
+//            );
+//          }
+//          else
+//          {
+//            self.renderResults(response, component, regSpinner);
+//          }
+//        }),
+//        $A.getCallback( (err) => {
+//          LightningUtils.errorToast( err );
+//          $A.util.toggleClass(regSpinner, 'slds-hide');
+//        })
+//      );
 			action.setCallback(this, function(response) {
-				if (caseId != null) {
-					self.updateCase(response, component)
-					.then
-					(
-						$A.getCallback( function() {
-							self.renderResults(response, component, regSpinner);
-						})
-					);
-				} else {
-					self.renderResults(response, component, regSpinner);
-				}
+			  var state = response.getState();
+        if( state === 'SUCCESS' )
+        {
+          if (caseId != null)
+          {
+            self.updateCase(response, component)
+            .then
+            (
+              $A.getCallback( function() {
+                self.renderResults(response, component, regSpinner);
+              })
+            );
+          } else {
+            self.renderResults(response, component, regSpinner);
+          }
+        }
+        if( state === 'ERROR' )
+        {
+          var errors = response.getError();
+          console.log( errors );
+          if (errors)
+          {
+            if(errors[0] && errors[0].message)
+            {
+              LightningUtils.errorToast( errors[0].message );
+            }
+            if( errors[0] &&
+                errors[0].pageErrors &&
+                errors[0].pageErrors.length > 0 )
+            {
+             LightningUtils.errorToast( errors[0].pageErrors[0].message );
+            }
+            if( errors[0] &&
+                errors[0].fieldErrors &&
+                Object.keys( errors[0].fieldErrors ).length > 0 )
+            {
+              var msg = '';
+              for( var field in errors[0].fieldErrors )
+              {
+                msg += field + ' - ' + errors[0].fieldErrors[field][0].message + '\r\n';
+              }
+              LightningUtils.errorToast( msg );
+            }
+          }
+          $A.util.toggleClass(regSpinner, 'slds-hide');
+        }
 			});
 			$A.enqueueAction(action);
 		}

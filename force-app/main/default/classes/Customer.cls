@@ -285,6 +285,7 @@ public virtual class Customer
 
     private AccountSaveResult doAccountSave()
     {
+      System.debug('doAccountSave');
       Database.UpsertResult saveResult =
         Database.upsert(
           this.revertToAccount(),
@@ -320,6 +321,7 @@ public virtual class Customer
 
     private AccountSaveResult handleSaveSuccess()
     {
+      System.debug('handleSaveSuccess');
       AccountSaveResult result = new AccountSaveResult();
       result.record = this.theAccount;
       result.status = 'success';
@@ -328,6 +330,7 @@ public virtual class Customer
 
     private AccountSaveResult handleErrors( List<Database.Error> errors )
     {
+      System.debug('handleErrors');
       AccountSaveResult result = new AccountSaveResult();
       result.status = 'error';
       for( Database.Error error : errors )
@@ -336,6 +339,7 @@ public virtual class Customer
         result.addMessage( error.getMessage() );
         if( error instanceof Database.DuplicateError )
         {
+          System.debug('Instance of Duplicate Error');
           /* The Error */
           Database.DuplicateError duplicateError = (Database.DuplicateError) error;
           Datacloud.DuplicateResult duplicateResult = duplicateError.getDuplicateResult();
@@ -352,8 +356,22 @@ public virtual class Customer
       }
       if( result.duplicateRecords != null )
       {
+        System.debug('we have duplicate records');
         if( result.duplicateRecords.size() == 1 )
-          this.id = (Id)result.duplicateRecords[0].get('Id');
+        {
+          if( result.duplicateRecords[0].get('PersonEmail') == this.email )
+          {
+            System.debug('EMAIL IS THE DUP');
+            String err = this.email + ' is already in use by a Customer by the name of ' + result.duplicateRecords[0].get('Name');
+            AuraHandledException ex = new AuraHandledException( err );
+            ex.setMessage( err );
+            throw ex;
+          }
+        }
+        else
+        {
+          this.id = (Id) result.duplicateRecords[0].get('Id');
+        }
 
         if( result.duplicateRecords.size() > 1 )
         {
@@ -361,8 +379,8 @@ public virtual class Customer
           {
             if( dup.get('PersonEmail') == this.email )
             {
-              this.id = (Id)dup.get('Id');
-              break;
+              System.debug('EMAIL IS THE DUP');
+              throw new AuraHandledException( this.email + ' is already in use by a Customer by the name of ' + dup.get('Name') );
             }
             if( dup.get('Name') == this.firstName + ' ' + this.lastName )
             {
