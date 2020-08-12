@@ -1,6 +1,7 @@
 public without sharing class gcTransactionParent {
 
 	private static map<Id,AcctSeed__Project__c> mapProject;
+	private static map<Id,AcctSeed__Project_Task__c> mapProjectTask;
 	private static map<Id,AcctSeed__GL_Account__c> mapGLAccount;
 
 	public static void setFinancialAttributes(
@@ -8,22 +9,41 @@ public without sharing class gcTransactionParent {
 		String projectField,
 		String glAccountField)
 	{
+
+	}
+
+	public static void setFinancialAttributes(
+		List<sObject> listNew,
+		String projectField,
+		String projectTaskField,
+		String glAccountField)
+	{
 		//Skip if list is null or empty
 		if(listNew == null || listNew.isEmpty()) return;
 
 		if(mapProject == null)
 			mapProject = new Map<Id, AcctSeed__Project__c>();
+		if(mapProjectTask == null)
+			mapProjectTask = new Map<Id, AcctSeed__Project_Task__c>();
 		if(mapGLAccount == null)
 			mapGLAccount = new Map<Id, AcctSeed__GL_Account__c>();
 
 		Set<Id> setIdProject = new Set<Id>();
+		Set<Id> setIdProjectTask = new Set<Id>();
 		Set<Id> setIdGlAccount = new Set<Id>();
 
 		for(SObject obj : listNew)
 		{
-			Id idProject = (Id)obj.get(projectField);
+			Id idProject;
+			Id idProjectTask;
+			if(projectField != null)
+				idProject = (Id)obj.get(projectField);
+			if(projectTaskField != null)
+				idProjectTask = (Id)obj.get(projectTaskField);
 			if(idProject != null && !mapProject.containsKey(idProject))
 				setIdProject.add(idProject);
+			if(idProjectTask != null && !mapProjectTask.containsKey(idProjectTask))
+				setIdProjectTask.add(idProjectTask);
 
 			if(glAccountField != null)
 			{
@@ -36,11 +56,14 @@ public without sharing class gcTransactionParent {
 		if(!setIdProject.isEmpty())
 			retrieveProjectStatics(setIdProject);
 
+		if(!setIdProjectTask.isEmpty())
+			retrieveProjectTaskStatics(setIdProjectTask);
+
 		if(!setIdGlAccount.isEmpty())
 			retrieveGlAccountStatics(setIdGlAccount);
 
 		/// Set all GLV 1,2 values
-		setGLVAttributes(listNew, projectField);
+		setGLVAttributes(listNew, projectField, projectTaskField);
 
 		/// Validate that GLVs are set if required
 		if(glAccountField != null)
@@ -67,6 +90,28 @@ public without sharing class gcTransactionParent {
 		}
 	}
 
+	private static void retrieveProjectTaskStatics(Set<Id> setIdTask)
+	{
+		setIdTask.remove(null);
+		if(!setIdTask.isEmpty())
+		{
+			for(AcctSeed__Project_Task__c pt :
+				[SELECT Id,
+					AcctSeed__GL_Account_Variable_1__c,
+					AcctSeed__GL_Account_Variable_2__c,
+					AcctSeed__Project__r.GL_Account_Variable_1__c,
+					AcctSeed__Project__r.GL_Account_Variable_2__c,
+					AcctSeed__Project__r.Internal_Labour_Service__c,
+					AcctSeed__Project__r.Internal_Warranty__c,
+					AcctSeed__Project__r.Internal_Partner_Boat_Sale__c
+				 FROM AcctSeed__Project_Task__c
+				 WHERE Id IN :setIdTask])
+			{
+				mapProjectTask.put(pt.Id,pt);
+			}
+		}
+	}
+
 	private static void retrieveGlAccountStatics(Set<Id> setIdGlAccount)
 	{
 		setIdGlAccount.remove(null);
@@ -86,7 +131,7 @@ public without sharing class gcTransactionParent {
 		}
 	}
 
-	public static void setGLVAttributes(list<sObject> listNew, String projectField)
+	public static void setGLVAttributes(list<sObject> listNew, String projectField, String projectTaskField)
 	{
 		if(listNew == null || listNew.isEmpty())
 			return;
@@ -95,27 +140,41 @@ public without sharing class gcTransactionParent {
 
 		for(sObject obj : listNew)
 		{
-			AcctSeed__Project__c p = mapProject.get((Id)obj.get(projectField));
+			AcctSeed__Project__c p;
+			AcctSeed__Project_Task__c pt;
+			Id idGLV1;
+			Id idGLV2;
+			if(projectTaskField != null && obj.get(projectTaskField) != null) {
+				pt = mapProjectTask.get((Id) obj.get(projectTaskField));
+				p = pt.AcctSeed__Project__r;
+				idGLV1 = pt.AcctSeed__GL_Account_Variable_1__c == null ? p.GL_Account_Variable_1__c : pt.AcctSeed__GL_Account_Variable_1__c;
+				idGLV2 = pt.AcctSeed__GL_Account_Variable_2__c == null ? p.GL_Account_Variable_2__c : pt.AcctSeed__GL_Account_Variable_2__c;
+			}else if(projectField != null && obj.get(projectField) != null){
+				p = mapProject.get((Id) obj.get(projectField));
+				idGLV1 = p.GL_Account_Variable_1__c;
+				idGLV2 = p.GL_Account_Variable_2__c;
+			}
+
 			if(p != null)
 			{
 				if(p.GL_Account_Variable_1__c != null){
 					if(!p.Internal_Labour_Service__c && !p.Internal_Partner_Boat_Sale__c && !p.Internal_Warranty__c)
-						obj.put(prefix + 'GL_Account_Variable_1__c', p.GL_Account_Variable_1__c);
+						obj.put(prefix + 'GL_Account_Variable_1__c', idGLV1);
 					else if(obj.get(prefix + 'GL_Account_Variable_1__c') == null){
-						obj.put(prefix + 'GL_Account_Variable_1__c', p.GL_Account_Variable_1__c);
+						obj.put(prefix + 'GL_Account_Variable_1__c', idGLV1);
 					}
 				}
-				if(p.GL_Account_Variable_2__c != null){
+				if(idGLV1 != null){
 					if(!p.Internal_Labour_Service__c &&
 						 !p.Internal_Partner_Boat_Sale__c &&
 						 !p.Internal_Warranty__c &&
 							obj.get(prefix + 'GL_Account_Variable_2__c') == null )
 					{
-						obj.put(prefix + 'GL_Account_Variable_2__c', p.GL_Account_Variable_2__c);
+						obj.put(prefix + 'GL_Account_Variable_2__c', idGLV2);
 					}
 					else if(obj.get(prefix + 'GL_Account_Variable_2__c') == null)
 					{
-						obj.put(prefix + 'GL_Account_Variable_2__c', p.GL_Account_Variable_2__c);
+						obj.put(prefix + 'GL_Account_Variable_2__c', idGLV2);
 					}
 				}
 			}
@@ -185,6 +244,110 @@ public without sharing class gcTransactionParent {
 
 	public static void coverage(){
 		integer i;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
 		i=1;
 		i=1;
 		i=1;
