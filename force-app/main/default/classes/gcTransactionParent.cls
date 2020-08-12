@@ -144,12 +144,12 @@ public without sharing class gcTransactionParent {
 			AcctSeed__Project_Task__c pt;
 			Id idGLV1;
 			Id idGLV2;
-			if(projectTaskField != null) {
+			if(projectTaskField != null && obj.get(projectTaskField) != null) {
 				pt = mapProjectTask.get((Id) obj.get(projectTaskField));
 				p = pt.AcctSeed__Project__r;
 				idGLV1 = pt.AcctSeed__GL_Account_Variable_1__c == null ? p.GL_Account_Variable_1__c : pt.AcctSeed__GL_Account_Variable_1__c;
 				idGLV2 = pt.AcctSeed__GL_Account_Variable_2__c == null ? p.GL_Account_Variable_2__c : pt.AcctSeed__GL_Account_Variable_2__c;
-			}else {
+			}else if(projectField != null && obj.get(projectField) != null){
 				p = mapProject.get((Id) obj.get(projectField));
 				idGLV1 = p.GL_Account_Variable_1__c;
 				idGLV2 = p.GL_Account_Variable_2__c;
