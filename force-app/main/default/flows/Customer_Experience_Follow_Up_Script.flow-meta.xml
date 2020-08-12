@@ -7,6 +7,9 @@
         <locationY>1257</locationY>
         <actionName>LogACall</actionName>
         <actionType>quickAction</actionType>
+        <connector>
+            <targetReference>Launch_Post_Season_Flow</targetReference>
+        </connector>
         <faultConnector>
             <targetReference>ErrorHandler</targetReference>
         </faultConnector>
@@ -243,6 +246,13 @@
             <stringValue>Yes</stringValue>
         </value>
     </choices>
+    <constants>
+        <name>EmptyString</name>
+        <dataType>String</dataType>
+        <value>
+            <stringValue/>
+        </value>
+    </constants>
     <decisions>
         <name>ContactMethodSplit</name>
         <label>ContactMethodSplit</label>
@@ -342,6 +352,31 @@
                 <targetReference>UpdateAccount</targetReference>
             </connector>
             <label>No</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Launch_Post_Season_Flow</name>
+        <label>Launch Post Season Flow</label>
+        <locationX>3479</locationX>
+        <locationY>1259</locationY>
+        <defaultConnector>
+            <targetReference>Success</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>LaunchFlow</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>LaunchPostSeasonSurveyBool</leftValueReference>
+                <operator>NotEqualTo</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Launch_Post_Season_Survey_Flow</targetReference>
+            </connector>
+            <label>LaunchFlow</label>
         </rules>
     </decisions>
     <decisions>
@@ -972,8 +1007,36 @@
         </fields>
         <fields>
             <name>DisplayEndCall</name>
-            <fieldText>&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;&lt;b style=&quot;color: rgb(231, 147, 2);&quot;&gt;Reminder: &lt;/b&gt;&lt;i style=&quot;color: rgb(0, 0, 0);&quot;&gt;Take this opportunity to speak with the customer about our Winterization services. Refer to the &quot;Post-Season Follow-Up Call Survey&quot; widget below. &lt;/i&gt;&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot;font-family: verdana;&quot;&gt;Thanks again for your business and taking the time to speak with me, if you have any questions please feel free to call me.&lt;/span&gt;&lt;/p&gt;</fieldText>
+            <fieldText>&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot;font-family: verdana;&quot;&gt;Thanks again for your business and taking the time to speak with me, if you have any questions please feel free to call me.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;&lt;b style=&quot;color: rgb(231, 147, 2); background-color: rgb(255, 255, 255);&quot;&gt;&lt;span class=&quot;ql-cursor&quot;&gt;﻿&lt;/span&gt;Reminder: &lt;/b&gt;&lt;i style=&quot;color: rgb(0, 0, 0); background-color: rgb(255, 255, 255);&quot;&gt;Take this opportunity to speak with the customer about our Winterization services. Refer to the &quot;Post-Season Follow-Up Call Survey&quot; widget below. &lt;/i&gt;&lt;/p&gt;</fieldText>
             <fieldType>DisplayText</fieldType>
+        </fields>
+        <fields>
+            <name>LaunchPostSeasonSurvey</name>
+            <extensionName>flowruntime:toggle</extensionName>
+            <fieldType>ComponentInstance</fieldType>
+            <inputParameters>
+                <name>label</name>
+                <value>
+                    <stringValue>Launch &apos;Post-Season Follow-Up Call Survey&apos;?</stringValue>
+                </value>
+            </inputParameters>
+            <inputParameters>
+                <name>messageToggleActive</name>
+                <value>
+                    <stringValue>Yes</stringValue>
+                </value>
+            </inputParameters>
+            <inputParameters>
+                <name>messageToggleInactive</name>
+                <value>
+                    <stringValue>No</stringValue>
+                </value>
+            </inputParameters>
+            <isRequired>true</isRequired>
+            <outputParameters>
+                <assignToReference>LaunchPostSeasonSurveyBool</assignToReference>
+                <name>value</name>
+            </outputParameters>
         </fields>
         <showFooter>true</showFooter>
         <showHeader>true</showHeader>
@@ -1329,6 +1392,22 @@
         <showHeader>true</showHeader>
     </screens>
     <screens>
+        <name>Success</name>
+        <label>Success</label>
+        <locationX>3485</locationX>
+        <locationY>1473</locationY>
+        <allowBack>false</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>false</allowPause>
+        <fields>
+            <name>DisplaySuccess</name>
+            <fieldText>&lt;p&gt;&lt;b style=&quot;color: rgb(13, 208, 13);&quot;&gt;The application has finished successfully&lt;/b&gt;&lt;/p&gt;</fieldText>
+            <fieldType>DisplayText</fieldType>
+        </fields>
+        <showFooter>true</showFooter>
+        <showHeader>true</showHeader>
+    </screens>
+    <screens>
         <name>Welcome</name>
         <label>Welcome</label>
         <locationX>477</locationX>
@@ -1397,9 +1476,35 @@
         </connector>
     </start>
     <status>Active</status>
+    <subflows>
+        <name>Launch_Post_Season_Survey_Flow</name>
+        <label>Launch Post-Season Survey Flow</label>
+        <locationX>3648</locationX>
+        <locationY>1255</locationY>
+        <flowName>Post_Season_Follow_Up_Call_Survey</flowName>
+        <inputAssignments>
+            <name>recordId</name>
+            <value>
+                <elementReference>recordId</elementReference>
+            </value>
+        </inputAssignments>
+    </subflows>
     <textTemplates>
         <name>EmailBody</name>
-        <text>&lt;p&gt;Hello {!CustomerFirstName},&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;My name is {!UserFirstName} with Legend Boats {!WarehouseID}. I called you today to check up on your new {!ProductName} and caught your voicemail.&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;We are hoping that you have had a chance to give your new boat a try and all went well. I would love to hear all about your first day or days on the water and would also like to know if you have had any questions or difficulties with the boat’s operation.&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;Please give me a call, reply to this email, or send me a quick text when you get a chance so I can help you with any questions you have with the boat. &lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;I look forward to speaking with you and helping you with your good times on the water!&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;Sincerely,&lt;/p&gt;&lt;p&gt;{!UserFirstName} {!UserLastName}&lt;/p&gt;&lt;p&gt;{!UserPhone}&lt;/p&gt;</text>
+        <text>Hi {!CustomerFirstName},
+
+It&apos;s {!UserFirstName} with Legend Boats {!WarehouseID}. I called you today to check up on your new {!ProductName} and caught your voicemail.
+
+We are hoping that you have had a chance to give your new boat a try and all went well. I would love to hear all about your first day or days on the water and would also like to know if you have had any questions or difficulties with the boat’s operation.
+
+Please give me a call, reply to this email, or send me a quick text when you get a chance so I can help you with any questions you have with the boat.
+
+I look forward to speaking with you and helping you with your good times on the water!
+
+
+Sincerely,
+{!UserFirstName} {!UserLastName}
+{!UserPhone}</text>
     </textTemplates>
     <variables>
         <name>CaseRecordId</name>
@@ -1444,6 +1549,16 @@
         <isOutput>false</isOutput>
         <value>
             <stringValue>Legend Boats Follow-Up</stringValue>
+        </value>
+    </variables>
+    <variables>
+        <name>LaunchPostSeasonSurveyBool</name>
+        <dataType>Boolean</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <value>
+            <booleanValue>false</booleanValue>
         </value>
     </variables>
     <variables>
