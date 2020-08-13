@@ -1,5 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionCalls>
+        <name>Log_Activity</name>
+        <label>Log Activity</label>
+        <locationX>2763</locationX>
+        <locationY>2211</locationY>
+        <actionName>LogACall</actionName>
+        <actionType>quickAction</actionType>
+        <connector>
+            <targetReference>Success</targetReference>
+        </connector>
+        <faultConnector>
+            <targetReference>ErrorHandler</targetReference>
+        </faultConnector>
+        <inputParameters>
+            <name>Description</name>
+            <value>
+                <stringValue>Post-Season Follow-Up</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>contextId</name>
+            <value>
+                <elementReference>recordId</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>WhatId</name>
+            <value>
+                <elementReference>recordId</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>Subject</name>
+            <value>
+                <stringValue>Post-Season Follow-Up</stringValue>
+            </value>
+        </inputParameters>
+    </actionCalls>
     <choices>
         <name>Abigboxstore</name>
         <choiceText>A big box store</choiceText>
@@ -201,7 +239,7 @@
         <locationX>2455</locationX>
         <locationY>1527</locationY>
         <defaultConnector>
-            <targetReference>Success</targetReference>
+            <targetReference>Log_Activity</targetReference>
         </defaultConnector>
         <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
         <rules>
@@ -591,7 +629,7 @@
         <locationX>3146</locationX>
         <locationY>1558</locationY>
         <connector>
-            <targetReference>Success</targetReference>
+            <targetReference>Log_Activity</targetReference>
         </connector>
         <faultConnector>
             <targetReference>ErrorHandler</targetReference>
@@ -1064,8 +1102,8 @@
     <screens>
         <name>ErrorHandler</name>
         <label>ErrorHandler</label>
-        <locationX>2675</locationX>
-        <locationY>121</locationY>
+        <locationX>3340</locationX>
+        <locationY>1013</locationY>
         <allowBack>false</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
@@ -1408,8 +1446,8 @@
     <screens>
         <name>Success</name>
         <label>Success</label>
-        <locationX>2746</locationX>
-        <locationY>2108</locationY>
+        <locationX>2932</locationX>
+        <locationY>2213</locationY>
         <allowBack>false</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
