@@ -114,6 +114,29 @@ private class Customer_T
   }
 
   @IsTest
+  static void newAccount_DupEmail_Test()
+  {
+    insert acct;
+    String custJSON = JSON.serialize( cust );
+    Customer.Person person =
+      (Customer.Person)JSON.deserialize(
+        custJSON, Customer.Person.class
+      );
+    Test.startTest();
+    try
+    {
+      Customer.AccountSaveResult result = person.upsertRecord();
+    }
+    catch(Exception e)
+    {
+      String errorMsg = email + ' is already in use by a Customer by the name of ' + acct.FirstName + ' ' + acct.LastName;
+      System.assertEquals( errorMsg, e.getMessage() );
+    }
+    Test.stopTest();
+
+  }
+
+  @IsTest
   static void newAccount2_Pass_Test()
   {
     insert acct_diff;
@@ -149,85 +172,43 @@ private class Customer_T
     System.assertEquals( 1, result.messages.size() );
   }
 
-  @IsTest
-  static void leadConvert_Test()
-  {
-    Lead l = createLead();
-    Customer.Person person = new Customer.Person( l );
-    Test.startTest();
-    Customer.AccountSaveResult result = person.upsertRecord();
-    Test.stopTest();
-
-    Account[] accts = [SELECT Id FROM Account WHERE RecordTypeId = :personRT ];
-    l = [ SELECT
-      Id,
-      IsConverted,
-      ConvertedAccountId,
-      FirstName,
-      LastName,
-      Phone,
-      Email,
-      Street,
-      City,
-      State,
-      Country,
-      PostalCode
-      FROM Lead WHERE Id = :l.Id ];
-
-    System.assert( l.IsConverted, 'Lead should be converted' );
-    System.assertEquals( 1, accts.size() );
-    System.assertEquals( l.ConvertedAccountId, accts[0].Id );
-    System.assertEquals( 'success', result.status );
-    System.assertEquals( l.FirstName, result.record.FirstName );
-    System.assertEquals( l.LastName, result.record.LastName );
-    System.assertEquals( l.Email, result.record.PersonEmail );
-    System.assertEquals( l.Phone, result.record.Phone );
-    System.assertEquals( l.Street, result.record.BillingStreet );
-    System.assertEquals( l.City, result.record.BillingCity );
-    System.assertEquals( l.State, result.record.BillingState );
-    System.assertEquals( l.Country, result.record.BillingCountry );
-    System.assertEquals( l.PostalCode, result.record.BillingPostalCode );
-  }
-
-  @IsTest
-  static void leadConvert_WithDulicateAccount_Test()
-  {
-    insert acct;
-    Lead l = createLead();
-    Customer.Person person = new Customer.Person( l );
-    Test.startTest();
-    Customer.AccountSaveResult result = person.upsertRecord();
-    Test.stopTest();
-
-    Account[] accts = [SELECT Id FROM Account WHERE RecordTypeId = :personRT ];
-    l = [ SELECT
-      Id,
-      IsConverted,
-      ConvertedAccountId,
-      FirstName,
-      LastName,
-      Phone,
-      Email,
-      Street,
-      City,
-      State,
-      Country,
-      PostalCode
-    FROM Lead WHERE Id = :l.Id ];
-
-    System.assert( l.IsConverted, 'Lead should be converted' );
-    System.assertEquals( 1, accts.size() );
-    System.assertEquals( l.ConvertedAccountId, accts[0].Id );
-    System.assertEquals( l.ConvertedAccountId, acct.Id );
-    System.assertEquals( 'success', result.status );
-    System.assertEquals( l.FirstName, result.record.FirstName );
-    System.assertEquals( l.LastName, result.record.LastName );
-    System.assertEquals( l.Email, result.record.PersonEmail );
-    System.assertEquals( l.Phone, result.record.Phone );
-    System.assertEquals( l.Street, result.record.BillingStreet );
-    System.assertEquals( l.City, result.record.BillingCity );
-    System.assertEquals( l.State, result.record.BillingState );
-    System.assertEquals( l.Country, result.record.BillingCountry );
-    System.assertEquals( l.PostalCode, result.record.BillingPostalCode );
-  }
+//  @IsTest
+//  static void leadConvert_Test()
+//  {
+//    Lead l = createLead();
+//    Customer.Person person = new Customer.Person( l );
+//    Test.startTest();
+//    Customer.AccountSaveResult result = person.upsertRecord();
+//    Test.stopTest();
+//
+//    Account[] accts = [SELECT Id FROM Account WHERE RecordTypeId = :personRT ];
+//    l = [ SELECT
+//      Id,
+//      IsConverted,
+//      ConvertedAccountId,
+//      FirstName,
+//      LastName,
+//      Phone,
+//      Email,
+//      Street,
+//      City,
+//      State,
+//      Country,
+//      PostalCode
+//      FROM Lead WHERE Id = :l.Id ];
+//
+//    System.assert( l.IsConverted, 'Lead should be converted' );
+//    System.assertEquals( 1, accts.size() );
+//    System.assertEquals( l.ConvertedAccountId, accts[0].Id );
+//    System.assertEquals( 'success', result.status );
+//    System.assertEquals( l.FirstName, result.record.FirstName );
+//    System.assertEquals( l.LastName, result.record.LastName );
+//    System.assertEquals( l.Email, result.record.PersonEmail );
+//    System.assertEquals( l.Phone, result.record.Phone );
+//    System.assertEquals( l.Street, result.record.BillingStreet );
+//    System.assertEquals( l.City, result.record.BillingCity );
+//    System.assertEquals( l.State, result.record.BillingState );
+//    System.assertEquals( l.Country, result.record.BillingCountry );
+//    System.assertEquals( l.PostalCode, result.record.BillingPostalCode );
+//  }
 }
