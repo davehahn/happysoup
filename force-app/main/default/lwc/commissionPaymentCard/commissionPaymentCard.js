@@ -127,7 +127,7 @@ export default class CommissionPaymentCard extends LightningElement {
     console.log(data);
     if( data.usesGrossCalculation )
     {
-      if(cType != 'Manager'){
+      if(data.cType != 'Manager'){
         return data.totalProfit *
           ( data.grossMarginPaymentPercent / 100 ) *
           ( data.split / 100 );
