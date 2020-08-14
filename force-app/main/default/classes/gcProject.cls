@@ -1384,7 +1384,7 @@ public without sharing class gcProject {
         throw new gcException(proj.Name + ' has unfinished tasks. Please Transfer all inventory items before making the project completed.');
       }else if(proj.RecordTypeId != gcConstants.idRtProjectManufacturing && proj.RecordTypeId != gcConstants.idRtTradeIn && proj.RecordTypeId != gcConstants.idRtFixedAsset && !proj.Internal_Partner_Parts_Order__c && cube.qtyUnbilled != 0){
         throw new gcException(proj.Name + ' has unfinished tasks. Please create billings for all inventory items before making the project completed.');
-      }else if(proj.RecordTypeId != gcConstants.idRtProjectManufacturing && proj.RecordTypeId != gcConstants.idRtTradeIn && !proj.Internal_Partner_Parts_Order__c && noCogsQty != 0){
+      }else if(proj.RecordTypeId != gcConstants.idRtProjectManufacturing && proj.RecordTypeId != gcConstants.idRtTradeIn && !proj.Internal_Partner_Parts_Order__c && noCogsQty.setScale(2) != 0){
         throw new gcException(proj.Name + ' has unfinished tasks. Please move all inventory items to WIP to COGS before making the project completed.');
       }
     }
