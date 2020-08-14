@@ -8,7 +8,7 @@
         <actionName>LogACall</actionName>
         <actionType>quickAction</actionType>
         <connector>
-            <targetReference>Launch_Post_Season_Flow</targetReference>
+            <targetReference>Update_Call_Complete_Field</targetReference>
         </connector>
         <faultConnector>
             <targetReference>ErrorHandler</targetReference>
@@ -432,6 +432,11 @@
         </rules>
     </decisions>
     <formulas>
+        <name>now</name>
+        <dataType>DateTime</dataType>
+        <expression>now()</expression>
+    </formulas>
+    <formulas>
         <name>userID</name>
         <dataType>String</dataType>
         <expression>{!$User.Id}</expression>
@@ -848,6 +853,32 @@
             <field>Id</field>
         </outputAssignments>
     </recordLookups>
+    <recordUpdates>
+        <name>Update_Call_Complete_Field</name>
+        <label>Update Call Complete Field</label>
+        <locationX>3383</locationX>
+        <locationY>1062</locationY>
+        <connector>
+            <targetReference>Launch_Post_Season_Flow</targetReference>
+        </connector>
+        <faultConnector>
+            <targetReference>ErrorHandler</targetReference>
+        </faultConnector>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>recordId</elementReference>
+            </value>
+        </filters>
+        <inputAssignments>
+            <field>Customer_Experience_Call_Completed__c</field>
+            <value>
+                <elementReference>now</elementReference>
+            </value>
+        </inputAssignments>
+        <object>Account</object>
+    </recordUpdates>
     <recordUpdates>
         <name>UpdateAccount</name>
         <label>UpdateAccount</label>
