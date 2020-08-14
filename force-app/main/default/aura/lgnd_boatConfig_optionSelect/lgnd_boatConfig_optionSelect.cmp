@@ -8,7 +8,7 @@
   <aura:attribute type="Boolean" name="hasOptions"  access="global"/>
   <aura:attribute type="String" name="className" default="" access="global" />
   <aura:attribute type="Object" name="subOptions" access="global" />
-
+  <aura:attribute type="Boolean" name="isDisabled" default="false" />
   <aura:attribute type="Boolean" name="isSelected"/>
 
   <ltng:require scripts="{!join(',', $Resource.Libraries +'/js/LightningApex.js',
@@ -21,12 +21,13 @@
   <div class="{! 'slds-grid option-row slds-wrap ' + v.className}">
     <div class="slds-col slds-size--1-of-1 slds-medium-size--2-of-12 slds-large-size--2-of-12">
       <lightning:input type="toggle"
-               name="{!v.product_name + '-toggle'}"
-               label="{!v.product_name}"
-               checked="{!v.isSelected}"
-               onchange="{!c.toggleSelected}"
-               messageToggleActive=""
-               messageToggleInactive="" />
+        name="{!v.product_name + '-toggle'}"
+        label="{!v.product_name}"
+        checked="{!v.isSelected}"
+        disabled="{!v.isDisabled}"
+        onchange="{!c.toggleSelected}"
+        messageToggleActive=""
+        messageToggleInactive="" />
     </div>
     <div class="slds-col slds-size--1-of-1 slds-medium-size--8-of-12 slds-large-size--8-of-12">
       <div class="slds-truncate">
@@ -43,6 +44,7 @@
                                     product_name="{!sub.name}"
                                     cost="{!sub.cost}"
                                     isSelected="{!sub.isSelected}"
+                                    isDisabled="{!sub.isDisabled}"
                                     parent_id="{!sub.parent_id}"
                                     pricebookId="{!v.pricebookId}"
                                     className="subOption" />

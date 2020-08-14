@@ -191,7 +191,7 @@
         </lightning:select>
       </aura:if>
 
-      <aura:if isTrue="{!and( !empty(v.trollingMotorSelectOptions), or( v.isFactoryStore, equals(v.recordType,'Trolling Motor') ) )}">
+      <aura:if isTrue="{! !empty(v.trollingMotorSelectOptions)}">
         <lightning:select name="trolling-motor-select"
                           label="Select Trolling Motor"
                           value="{!v.selectedTrollingMotor_Id}"
@@ -238,6 +238,7 @@
             <c:lgnd_boatConfig_optionSelect product_id="{!options.id}"
                                             product_name="{!options.name}"
                                             isSelected="{!options.isSelected}"
+                                            isDisabled="{!options.isDisabled}"
                                             cost="{!options.cost}"
                                             hasOptions="{!options.hasOptions}"
                                             subOptions="{!options.subOptions}"

@@ -1,7 +1,6 @@
 ({
   doInit: function( component, event, helper )
   {
-    console.log('NewOrderForm.doInit');
     //hide all but statrting "order details form"
 //    $A.util.addClass( component.find('build-boat'), 'toggle');
 //    $A.util.addClass( component.find('review-container'), 'toggle');
@@ -69,10 +68,8 @@
 
   handleIndicator: function( component, event, helper )
   {
-    console.log( 'handle indicator' );
     var params = event.getParams(),
         indicator = component.find('busy-indicator');
-    console.log( params.isBusy );
     if( params.isBusy )
       $A.util.removeClass( indicator, 'toggle' );
     else

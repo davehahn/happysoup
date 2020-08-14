@@ -10,7 +10,6 @@
       .then(
         $A.getCallback( function(result) {
           self.functions.clearVars( component );
-          console.log( JSON.parse( JSON.stringify( result )));
           component.set('v.modelYearOptions', result.modelYearOptions );
           component.set('v.userType', result.userType);
           component.set('v.modelYear', result.modelYear);
@@ -89,11 +88,6 @@
     {
       options = options.concat( optionGroup.values );
     }
-
-    console.log( options );
-//    oldOptions = oldOptions.concat( component.get('v.canvasOptions') );
-//    oldOptions = oldOptions.concat( component.get('v.buildOptions') );
-//    console.log( oldOptions );
 
     if( options !== undefined && options !== null )
     {
@@ -471,8 +465,6 @@
           $A.getCallback( function(response)
           {
             boat = JSON.parse(response);
-            console.log( 'fetch product success' );
-            console.log( boat );
             helper.functions.clearConfigVars( component );
             component.set('v.selectedBoat_Id', boatId );
             component.set( 'v.trailerSelectOptions', boat.trailerUpgrades );
@@ -492,22 +484,9 @@
                 title: fam,
                 values: boat.optionalProducts[fam]
               });
-            }
-            console.log( optProds );
-            //component.set( 'v.optionalProducts', optProds );
+            }            //component.set( 'v.optionalProducts', optProds );
             component.set('v.optionalProducts', checkForSelectedOpts(optProds) );
-//            if( typeof(boat.canvasOptions) !== 'undefined' && boat.canvasOptions.length > 0 )
-//            {
-//              component.set('v.canvasOptions', checkForSelectedOpts(boat.canvasOptions) );
-              helper.checkForCanvasDiscount( component );
-//            }
-//            if( typeof(boat.buildOptions) !== 'undefined' && boat.buildOptions.length > 0 )
-//            {
-//              component.set('v.buildOptions', checkForSelectedOpts(boat.buildOptions) );
-//            }
-            // else
-            //   component.set('v.options', []);
-
+            helper.checkForCanvasDiscount( component );
             if( boat.fees !== undefined &&
                 boat.fees != null &&
                 boat.fees[prov] !== undefined &&
@@ -539,11 +518,8 @@
         .then(
           //handleConfigChange SUCCESS
           $A.getCallback( function() {
-            console.log('handle config change success');
             helper.fireChangeEvent( component );
             component.set('v.productSelected', true);
-            // handleTrailer selection and return Promise
-            // return helper.handleTrailer( component, boat.standardTrailer_Id )
             resolve( boat );
           })
         );
@@ -837,7 +813,6 @@
 
   handleConfigChange: function( component, params )
   {
-    console.log('handleConfigChange');
     var self = this,
         handleFees = function( params )
         {

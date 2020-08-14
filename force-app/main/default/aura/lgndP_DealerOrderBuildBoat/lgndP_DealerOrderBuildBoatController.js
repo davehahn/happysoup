@@ -69,6 +69,7 @@
       // initForEdit SUCCESS
       $A.getCallback( function( resp) {
         result = JSON.parse( resp );
+        console.log( 'init4edit response' );
         console.log( JSON.parse(JSON.stringify(result)));
         component.set('v.modelYear', result.modelYear);
         if( result.province !== undefined && result.province.length > 0 )
@@ -175,10 +176,8 @@
     helper.saveDealerOrderLine( component )
     .then(
       $A.getCallback( function(response) {
-        console.log( 'Saving Order Success');
-        component.set('v.dealerOrder', response);
+        component.set( 'v.dealerOrder', response );
         return helper.handlePartnerProgram( component );
-        //return helper.checkForPromotions( component );
       }),
       $A.getCallback( function(err) {
         console.log(err);
@@ -196,7 +195,6 @@
 //    )
     .then(
       $A.getCallback( function( result ) {
-        console.log( JSON.parse( JSON.stringify( result ) ) );
         component.set( 'v.promotionMessage', result );
         component.set('v.busyMessage', '');
         if( inOrderView )
@@ -205,7 +203,6 @@
         }
         else
         {
-          console.log('firing nav event');
           nav = $A.get('e.c:lgndP_DealerOrderNav_Event');
           nav.setParams({
             "firedBy" : 1,
@@ -275,7 +272,6 @@
       //SelectBoatFunction SUCCESS
       $A.getCallback( function( result ) {
         boat = result;
-        console.log( component.get('v.optionalProducts') );
         return helper.handleTrailer( component, boat.standardTrailer_Id );
       }),
       //SelectBoatFunction FAIL

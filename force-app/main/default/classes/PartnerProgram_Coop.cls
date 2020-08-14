@@ -5,8 +5,6 @@
 public virtual class PartnerProgram_Coop extends PartnerProgramItem
 {
 
-  private final Decimal discountPercent = 2;
-
   public PartnerProgram_Coop()
   {
     this.name = 'Coop Discount';

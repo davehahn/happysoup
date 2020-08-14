@@ -23,6 +23,7 @@ public without sharing class LGND_APIv2_Product {
   public UpgradeProduct StandardTrailer { get; set; }
   public UpgradeProduct StandardTrollingMotor { get; set; }
   public Boolean ExcludePartnerStandardTrailer { get; set; }
+  public Boolean ExcludePartnerStandardTrollingMotor { get; set; }
   public UpgradeProduct MaximumMotor { get; set; }
   public Map<String, List<PartProduct>> OptionalProducts { get; set; }
   public List<UpgradeProduct> MotorUpgrades { get; set; }
@@ -59,6 +60,7 @@ public without sharing class LGND_APIv2_Product {
     pricebookNameMap.put('factory', factoryPricebookId );
   }
   private Boolean excludeStandardTrailer = false;
+  private Boolean excludeStandardTrollingMotor = false;
 
   public LGND_APIv2_Product(Id pId, String recordTypeName){
     this.RecordTypeName = recordTypeName;
@@ -104,8 +106,11 @@ public without sharing class LGND_APIv2_Product {
         this.PricebookName = [SELECT Name FROM Pricebook2 WHERE Id  = :pricebookNameMap.get(retailPartnerFilter)].Name;
         if( retailPartnerFilter == 'partner' && prod.Exclude_Partner_Standard_Trailer__c == true)
           excludeStandardTrailer = true;
+        if( retailPartnerFilter == 'partner' && prod.Exclude_Partner_Standard_Trolling_Motor__c == true)
+          excludeStandardTrollingMotor = true;
       }
       this.ExcludePartnerStandardTrailer = excludeStandardTrailer;
+      this.ExcludePartnerStandardTrollingMotor = excludeStandardTrollingMotor;
       this.Id = prod.Id;
       this.Name = prod.Name;
       this.Family = prod.Family;
@@ -139,6 +144,7 @@ public without sharing class LGND_APIv2_Product {
                                                   'Description_FR__c',
                                                   'RecordType.Name',
                                                   'Exclude_Partner_Standard_Trailer__c',
+                                                  'Exclude_Partner_Standard_Trolling_Motor__c',
                                                   'Legend_Gallery_Image__r.Active_S3_Object__r.URL_Original__c',
                                                   'Default_Gallery_Image__c',
                                                   'Legend_Gallery_Image__r.Active_S3_Object__r.URL_500x500__c',
@@ -339,14 +345,19 @@ public without sharing class LGND_APIv2_Product {
         else
           pbIdSearch = pricebookMap.keySet();
 
-        Set<Id> filteredUpgradeIds = new Set<Id>();
-        //find only upgrade Ids that have Costs within the selected Pricebook(s)
-        for( Product_Upgrade_Cost__c puc : [SELECT Id, Product_Upgrade__c
-                                                 FROM Product_Upgrade_Cost__c
-                                                 WHERE Price_Book__c IN :pbIdSearch
-                                                 AND Product_Upgrade__c IN :upgradeIds] )
+        if( retailPartnerFilter == 'retail')
         {
-          filteredUpgradeIds.add( puc.Product_Upgrade__c );
+
+          Set<Id> filteredUpgradeIds = new Set<Id>();
+          //find only upgrade Ids that have Costs within the selected Pricebook(s)
+          for (Product_Upgrade_Cost__c puc : [ SELECT Id, Product_Upgrade__c
+                                               FROM Product_Upgrade_Cost__c
+                                               WHERE Price_Book__c IN :pbIdSearch
+                                               AND Product_Upgrade__c IN :upgradeIds ])
+          {
+            filteredUpgradeIds.add(puc.Product_Upgrade__c);
+          }
+          upgradeIds = filteredUpgradeIds;
         }
 
 
@@ -356,7 +367,7 @@ public without sharing class LGND_APIv2_Product {
               FROM Product_Upgrade_Costs__r
               WHERE Price_Book__c IN : pbIdSearch )
            FROM Product_Upgrade__c
-           WHERE Id IN :filteredUpgradeIds
+           WHERE Id IN :upgradeIds
            ORDER BY To_Product__r.Name ]
         );
 
@@ -367,7 +378,7 @@ public without sharing class LGND_APIv2_Product {
         this.OptionalProducts = buildOptionalProducts( optionsMap.get('Part') );
         this.MotorUpgrades = buildMotorUpgrades( optionsMap.get('Motor'), upgrades );
         buildTrailerUpgrades( optionsMap.get('Trailer'), upgrades );
-        this.TrollingMotorUpgrades = buildTrollingMotorUpgrades( optionsMap.get('Trolling Motor'), upgrades );
+        buildTrollingMotorUpgrades( optionsMap.get('Trolling Motor'), upgrades );
       }
     }
     catch(Exception e){}
@@ -615,17 +626,37 @@ public without sharing class LGND_APIv2_Product {
     return this.TrailerUpgrades;
   }
 
-  private List<UpgradeProduct> buildTrollingMotorUpgrades(List<Product2> trollinMotors,
+  private List<UpgradeProduct> buildTrollingMotorUpgrades(List<Product2> trollingMotors,
                                                                 Map<Id, Product_Upgrade__c> upgrades)
   {
-    if( trollinMotors.isEmpty() ){
-      return null;
+    System.debug('Exclude Standard Trolling Motor = ' + excludeStandardTrollingMotor);
+    if( trollingMotors.isEmpty() ){
+      return this.TrollingMotorUpgrades;
     }
-    List<UpgradeProduct> trList = new List<UpgradeProduct>();
-    for( Product2 p : trollinMotors){
-      trList.add(new UpgradeProduct(p, upgrades, false));
+    if(this.TrollingMotorUpgrades == null )
+      this.TrollingMotorUpgrades = new List<UpgradeProduct>();
+    for( Product2 p : trollingMotors){
+      System.debug( p.Name );
+      Boolean useTMotor = false;
+      if( this.standardTrollingMotor == null && excludeStandardTrollingMotor == false )
+        useTmotor = true;
+      else
+      {
+        for(Product_Upgrade__c pu : upgrades.values() )
+        {
+          System.debug( pu.To_Product__r.Name);
+          if( p.Id == pu.To_Product__c )
+          {
+            useTmotor = true;
+            break;
+          }
+        }
+      }
+      System.debug('Use Trolling Motor = ' + useTMotor);
+      if( useTmotor )
+        this.TrollingMotorUpgrades.add( new UpgradeProduct( p, upgrades, excludeStandardTrollingMotor ) );
     }
-    return trList;
+    return this.TrollingMotorUpgrades;
   }
 
   private void setStandardMotor(Product2 motor){
@@ -793,19 +824,22 @@ public without sharing class LGND_APIv2_Product {
           }
           if( pricebookMap.get(pbe.Pricebook2Id) == 'partner' )
           {
-            this.PartnerPrice = pbe.UnitPrice;
+            this.PartnerPrice = pbe.UnitPrice.setScale(2);
             this.PartnerSpecialPrice = pbe.Special_Price__c;
             this.PartnerSpecialPriceDescription = pbe.Special_Price_Description__c;
-            if( this.Family == 'Trailer' && excludedStandard == true )
-              this.PartnerUpgradeCost = pbe.UnitPrice;
+            if( (this.Family == 'Trailer' || this.Family == 'Trolling Motor') && excludedStandard == true )
+              this.PartnerUpgradeCost = pbe.UnitPrice.setScale(2);
           }
           if( pricebookMap.get(pbe.Pricebook2Id) == 'factory' )
           {
-            this.PartnerPrice = pbe.UnitPrice;
-            if( this.Family == 'Trailer' && retailPartnerFilter == 'factory' )
-              this.PartnerUpgradeCost = pbe.UnitPrice;
-            if( this.Family == 'Trolling Motor' && retailPartnerFilter == 'factory' )
-              this.PartnerUpgradeCost = pbe.UnitPrice;
+            if (retailPartnerFilter == 'factory')
+            {
+              this.PartnerPrice = pbe.UnitPrice;
+              if (this.Family == 'Trailer')
+                this.PartnerUpgradeCost = pbe.UnitPrice;
+              if (this.Family == 'Trolling Motor')
+                this.PartnerUpgradeCost = pbe.UnitPrice;
+            }
           }
         }
       }

@@ -189,12 +189,12 @@ public without sharing class DealerOrder_Ext {
         }
 
 
-        if( apiProd.StandardTrollingMotor != null )
-        {
-          this.standardTrollingMotor_Id = apiProd.StandardTrollingMotor.Id;
-          this.standardTrollingMotor_Name = apiProd.StandardTrollingMotor.Name;
-          this.trollingMotorUpgrades.add( new UpgradeWrapper( apiProd.StandardTrollingMotor, apiProd.StandardTrollingMotor.Id ) );
-        }
+//        if( apiProd.StandardTrollingMotor != null )
+//        {
+//          this.standardTrollingMotor_Id = apiProd.StandardTrollingMotor.Id;
+//          this.standardTrollingMotor_Name = apiProd.StandardTrollingMotor.Name;
+//          this.trollingMotorUpgrades.add( new UpgradeWrapper( apiProd.StandardTrollingMotor, apiProd.StandardTrollingMotor.Id ) );
+//        }
         if( apiProd.TrollingMotorUpgrades != null && apiProd.TrollingMotorUpgrades.size() > 0 )
           this.trollingMotorUpgrades.addAll( this.createUpgradeList( apiProd.TrollingMotorUpgrades, this.standardTrollingMotor_Id ) );
 
@@ -279,6 +279,8 @@ public without sharing class DealerOrder_Ext {
       List<UpgradeWrapper> result = new List<UpgradeWrapper>();
       for( LGND_APIv2_Product.UpgradeProduct uProd : upgrades )
       {
+        if( ( standardProductId != null && uProd.PartnerUpgradeCost != null && uProd.PartnerUpgradeCost > 0 ) ||
+            ( standardProductId == null && uProd.PartnerPrice != null && uProd.PartnerPrice > 0) )
         result.add( new UpgradeWrapper( uProd, standardProductId ) );
       }
       return result;
@@ -311,15 +313,17 @@ public without sharing class DealerOrder_Ext {
     public Decimal cost { get; set; }
     public Boolean isSelected { get; set; }
     public Boolean hasOptions { get; set; }
+    public Boolean isDisabled { get; set; }
     public List<OptionWrapper> subOptions { get; set; }
 
     public OptionWrapper( LGND_APIv2_Product.PartProduct pp )
     {
       this.id = pp.Id;
       this.name = pp.Name;
-      this.cost = pp.PartnerPrice;
+      this.cost = pp.QuantityStandard > 0 ? 0 : pp.PartnerPrice;
       this.hasOptions = pp.HasOptions;
-      this.isSelected = false;
+      this.isSelected = pp.QuantityStandard > 0 ? true : false;
+      this.isDisabled = pp.QuantityStandard > 0;
     }
 
     public OptionWrapper( PricebookEntry pbe )
@@ -329,6 +333,7 @@ public without sharing class DealerOrder_Ext {
       this.cost = pbe.UnitPrice;
       this.hasOptions = false;
       this.isSelected = false;
+      this.isDisabled = false;
     }
 
     public OptionWrapper( AcctSeedERP__Material__c mat )
@@ -1375,30 +1380,44 @@ public without sharing class DealerOrder_Ext {
           }
           else
           {
-            if( !selectedParentChildMap.containsKey(mat.AcctSeedERP__Product__c) )
-              selectedParentChildMap.put( mat.Parent_Product__c, new Set<Id>() );
+            if( !selectedParentChildMap.containsKey(mat.Parent_product__c) )
+            {
+              selectedParentChildMap.put(mat.Parent_Product__c, new Set<Id>());
+            }
+            System.debug( selectedParentChildMap.values() );
             selectedParentChildMap.get( mat.Parent_Product__c ).add( mat.AcctSeedERP__Product__c );
+            System.debug( selectedParentChildMap.values() );
           }
         }
         else
-          parentIds.add( mat.AcctSeedERP__Product__c );
+        {
+          parentIds.add(mat.AcctSeedERP__Product__c);
+        }
+
+
+        System.debug('selectedParentChildMap');
+        System.debug(selectedParentChildMap);
       }
       /*
         childParentMap = maps the available subOptions to Set of Parent Product Ids
         it is possible for a single subOption( child ) to be available in many
         options( parent )
       */
-      Map<Id, Set<Id>> childParentMap = new Map<Id, Set<Id>>();
+      //Map<Id, Set<Id>> childParentMap = new Map<Id, Set<Id>>();
+      Map<Id, List<Product_Option__c>> childParentOptionMap = new Map<Id, List<Product_Option__c>>();
       /* find the parent product options (SubOptions) */
-      Product_Option__c[] options = [SELECT From_Product__c, To_Product__c
+      Product_Option__c[] options = [SELECT From_Product__c, To_Product__c, Standard__c, Maximum__c
                                      FROM Product_Option__c
                                      WHERE To_Product__c IN :parentIds];
       /*build the childParentMap */
       for( Product_Option__c opt : options )
       {
-        if( !childParentMap.containsKey(opt.From_Product__c) )
-          childParentMap.put( opt.From_Product__c, new Set<Id>() );
-        childParentMap.get( opt.From_Product__c).add(opt.To_Product__c);
+        if( !childParentOptionMap.containsKey(opt.From_Product__c) )
+          childParentOptionMap.put( opt.From_Product__c, new List<Product_Option__c>() );
+        childParentOptionMap.get( opt.From_Product__c).add(opt);
+//        if( !childParentMap.containsKey(opt.From_Product__c) )
+//          childParentMap.put( opt.From_Product__c, new Set<Id>() );
+//        childParentMap.get( opt.From_Product__c).add(opt.To_Product__c);
       }
       /*
         parent_subOptions_Map - maps parentProductId to a List of subOptions
@@ -1409,31 +1428,33 @@ public without sharing class DealerOrder_Ext {
       */
       for( PricebookEntry pbe : [SELECT Id, UnitPrice, Product2Id, Product2.Name
                                FROM PricebookEntry
-                               WHERE Product2Id IN :childParentMap.keySet()
+                               WHERE Product2Id IN :childParentOptionMap.keySet()
                                AND Pricebook2Id = :pricebookId ] )
       {
         /*
           using the childProductId (pbe.Product2Id) we iterate through the list
           of parentIds which have this subOptions
         */
-        for( Id parentId : childParentMap.get( pbe.Product2Id) )
+        for( Product_Option__c opt : childParentOptionMap.get( pbe.Product2Id) )
         {
           /*
             create an OptionWrapper object for each subOption
             and add it to the parent_subOption_Map
           */
-          if( !parent_subOptions_Map.containsKey(parentId) )
+          if( !parent_subOptions_Map.containsKey(opt.To_Product__c) )
           {
-            parent_subOptions_Map.put( parentId, new List<OptionWrapper>() );
+            parent_subOptions_Map.put( opt.To_Product__c, new List<OptionWrapper>() );
           }
           OptionWrapper ow = new OptionWrapper( pbe );
           /*
             check see if this sub option was previously selected
           */
-          ow.isSelected = selectedParentChildMap.containsKey( parentId ) &&
-                          selectedParentChildMap.get(parentId).contains(ow.id);
-          ow.parent_id = parentId;
-          parent_subOptions_Map.get( parentId ).add( ow );
+          ow.isSelected = selectedParentChildMap.containsKey( opt.To_Product__c ) &&
+                          selectedParentChildMap.get(opt.To_Product__c).contains(ow.id);
+          ow.parent_id = opt.To_Product__c;
+          ow.cost = opt.Standard__c > 0 ? 0 : ow.cost;
+          ow.isDisabled = opt.Standard__c > 0;
+          parent_subOptions_Map.get( opt.To_Product__c ).add( ow );
         }
       }
       /*
@@ -1552,20 +1573,23 @@ public without sharing class DealerOrder_Ext {
                                         String pricebookId )
   {
     List<OptionWrapper> result = new List<OptionWrapper>();
-    Set<Id> productIds = new Set<Id>();
-    for( Product_Option__c option : [SELECT From_Product__c
+    Map<Id, Product_Option__c> prod_option_map = new Map<Id, Product_Option__c>();
+    for( Product_Option__c option : [SELECT From_Product__c, Standard__c
                                       FROM Product_Option__c
                                       WHERE To_Product__c = :parentProductId] )
     {
-      productIds.add( option.From_Product__c );
+      prod_option_map.put( option.From_Product__c, option );
     }
     for( PricebookEntry pbe : [SELECT Id, UnitPrice, Product2Id, Product2.Name
                                FROM PricebookEntry
-                               WHERE Product2Id IN :productIds
+                               WHERE Product2Id IN :prod_option_map.keySet()
                                AND Pricebook2Id = :pricebookId ] )
     {
       OptionWrapper ow = new OptionWrapper( pbe );
       ow.parent_id = parentProductId;
+      ow.isSelected = prod_option_map.get( pbe.Product2Id ).Standard__c > 0 ? true : false;
+      ow.isDisabled = prod_option_map.get( pbe.Product2Id ).Standard__c > 0;
+      ow.cost = ow.isSelected ? 0 : ow.cost;
       result.add( ow );
     }
     return JSON.serialize( result );
@@ -1615,6 +1639,7 @@ public without sharing class DealerOrder_Ext {
                    Model_Year__c,
                    isLocked__c,
                    Pricebook__c,
+                   Program_Year__c,
                    Financing_Company__r.Financing_Company__r.Name,
             (SELECT Id,
                     Line_Total_Pre_Tax__c,
@@ -1624,6 +1649,7 @@ public without sharing class DealerOrder_Ext {
                     Dealer_Motor_Request__r.Quantity__c,
                     Product__c,
                     Product__r.Name,
+                    Model_Year__c,
                     Order_Group_Id__c
              FROM Dealer_Order_Lines__r)
             FROM Dealer_Order__c

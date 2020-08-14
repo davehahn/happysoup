@@ -120,7 +120,7 @@ public virtual class PartnerProgramItem implements PartnerProgramItem_I
         .setScale(2, RoundingMode.HALF_UP );
 
       discounts.add(
-        wrapper.buildDiscountLine( this.name, this.discountPercent )
+        wrapper.buildDiscountLine( this.name, savings )
       );
       totalSavings += savings;
     }
