@@ -5,24 +5,28 @@
 public with sharing class CommissionPayment2_Service
 {
   public static Decimal defaultGrossMarginPaymentPercent = 10;
-  public static Decimal defaultGrossMarginPaymentPercentManager = 10;
+  public static Decimal defaultGrossMarginPaymentPercentManager = 0;
 
-  public static List<CommissionPayment2__c> createInitialPayments( Set<Id> commissionRecordIds )
+  public static List<CommissionPayment2__c> createInitialPayments( Set<Id> commissionRecordIds, String cpType )
   {
     List<CommissionPayment2__c> payments = new List<CommissionPayment2__c>();
     for( Id crId : commissionRecordIds )
     {
       payments.add( new CommissionPayment2__c(
           Commission_Record2__c = crId,
-          Type__c = 'Standard'
-      ));
-      payments.add( new CommissionPayment2__c(
-          Commission_Record2__c = crId,
-          Type__c = 'Manager'
+          Type__c = cpType
       ));
     }
     insert payments;
     return payments;
+  }
+
+  public static Set<Id> checkManagersCommission(Set<Id> commissionRecordIds){
+    Set<Id> idWithManagers = new Set<Id>();
+    for(CommissionPayment2__c cp : [SELECT Id, Commission_Record2__c FROM CommissionPayment2__c WHERE Commission_Record2__c IN:commissionRecordIds AND Type__c = 'Manager']){
+      idWithManagers.add(cp.Commission_Record2__c);
+    }
+    return idWithManagers;
   }
 
   public static void setInitialValues( List<CommissionPayment2__c> payments )

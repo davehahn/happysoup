@@ -26,9 +26,38 @@ public without sharing class CommissionPayment2_TriggerHandler extends TriggerHa
 //  {
 //  }
 
-//  protected override void afterInsert()
-//  {
-//  }
+  protected override void afterInsert()
+  {
+    Set<Id> setIdCommissionRecord = new Set<Id>();
+    Map<Id,CommissionPayment2__c> managerCP = new Map<Id,CommissionPayment2__c>();
+    // Adding all CR ids to find out existing managers record;
+    for(CommissionPayment2__c cp : (List<CommissionPayment2__c>) Trigger.new){
+      setIdCommissionRecord.add(cp.Commission_Record2__c);
+    }
+    // Checking for Manages Payment
+    Set<Id> setIdCRWithManagers = CommissionPayment2_Service.checkManagersCommission(setIdCommissionRecord);
+    System.debug('setIdCRWithManagers');
+    System.debug(setIdCRWithManagers);
+    // loop and validate
+    for(CommissionPayment2__c cp : (List<CommissionPayment2__c>) Trigger.new){
+      /// Creating false Managers list to check and validate
+      if(!setIdCRWithManagers.contains(cp.Commission_Record2__c))
+        managerCP.put(cp.Commission_Record2__c, new CommissionPayment2__c(Commission_Record2__c = cp.Commission_Record2__c, Type__c = 'Manager'));
+    }
+    // Check with false records
+    CommissionPayment2_Service.setInitialValues(managerCP.values());
+    // now lets check to see if any payments have zero amount. Then we will discard those
+    // List<CommissionPayment2__c> cpManagersListTOInsert = new List<CommissionPayment2__c>();
+    Set<Id> setIdManagersCP = new Set<Id>();
+    for(CommissionPayment2__c cp : managerCP.values()){
+      if(cp.Gross_Margin_Payment_Percent__c != 0 && cp.Gross_Margin_Payment_Percent__c != null){
+        setIdManagersCP.add(cp.Commission_Record2__c);
+      }
+    }
+    // Now do the actual managers payments
+    if(!setIdManagersCP.isEmpty())
+      CommissionPayment2_Service.createInitialPayments( setIdCommissionRecord, 'Manager' );
+  }
 
   protected override void afterUpdate()
   {
