@@ -1338,8 +1338,8 @@ public without sharing class gcProject {
         mapCube.put(matl.AcctSeedERP__Project__c, cube);
       }
       cube.allQtySpecified += matlQtySpec;
-      cube.qtyUnbilled += (matlQtySpec - priorBillQty);
-      cube.amtUnbilled += (matlAmount - priorBillAmt);
+      cube.qtyUnbilled += (matlQtySpec - priorBillQty).setScale(2);
+      cube.amtUnbilled += (matlAmount - priorBillAmt).setScale(2);
       if(matl.AcctSeedERP__Product__r.AcctSeed__Inventory_Product__c){
         cube.qtyTransferred += priorTrnsQty;
         if(!matl.No_WIP__c || matl.AcctSeedERP__Project__r.Internal_Warranty__c)
@@ -1380,11 +1380,11 @@ public without sharing class gcProject {
         throw new gcException(proj.Name + ' has unfinished tasks. Please move all inventory items to WIP before making the project completed.');
       }else if(proj.RecordTypeId == gcConstants.idRtTradeIn && fgQty == 0){
         throw new gcException(proj.Name + ' has unfinished tasks. A Trade In ERP should have inbound moves before making the project completed.');
-      }else if(proj.RecordTypeId == gcConstants.idRtPartnerPartsOrder && proj.Internal_Partner_Parts_Order__c && cube.qtyTransferred != cube.qtySpecified){
+      }else if(proj.RecordTypeId == gcConstants.idRtPartnerPartsOrder && proj.Internal_Partner_Parts_Order__c && cube.qtyTransferred.setScale(2) != cube.qtySpecified.setScale(2)){
         throw new gcException(proj.Name + ' has unfinished tasks. Please Transfer all inventory items before making the project completed.');
       }else if(proj.RecordTypeId != gcConstants.idRtProjectManufacturing && proj.RecordTypeId != gcConstants.idRtTradeIn && proj.RecordTypeId != gcConstants.idRtFixedAsset && !proj.Internal_Partner_Parts_Order__c && cube.qtyUnbilled != 0){
         throw new gcException(proj.Name + ' has unfinished tasks. Please create billings for all inventory items before making the project completed.');
-      }else if(proj.RecordTypeId != gcConstants.idRtProjectManufacturing && proj.RecordTypeId != gcConstants.idRtTradeIn && !proj.Internal_Partner_Parts_Order__c && noCogsQty != 0){
+      }else if(proj.RecordTypeId != gcConstants.idRtProjectManufacturing && proj.RecordTypeId != gcConstants.idRtTradeIn && !proj.Internal_Partner_Parts_Order__c && noCogsQty.setScale(2) != 0){
         throw new gcException(proj.Name + ' has unfinished tasks. Please move all inventory items to WIP to COGS before making the project completed.');
       }
     }
