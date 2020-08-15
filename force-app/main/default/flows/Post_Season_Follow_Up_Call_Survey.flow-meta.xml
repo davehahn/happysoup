@@ -8,7 +8,7 @@
         <actionName>LogACall</actionName>
         <actionType>quickAction</actionType>
         <connector>
-            <targetReference>Success</targetReference>
+            <targetReference>Update_Call_Complete_Field</targetReference>
         </connector>
         <faultConnector>
             <targetReference>ErrorHandler</targetReference>
@@ -522,6 +522,11 @@
             <label>IfScreen7Other</label>
         </rules>
     </decisions>
+    <formulas>
+        <name>now</name>
+        <dataType>DateTime</dataType>
+        <expression>Now()</expression>
+    </formulas>
     <interviewLabel>Post-Season Follow-Up Call Survey {!$Flow.CurrentDateTime}</interviewLabel>
     <label>Post-Season Follow-Up Call Survey</label>
     <processMetadataValues>
@@ -863,6 +868,32 @@
             <field>Id</field>
         </outputAssignments>
     </recordLookups>
+    <recordUpdates>
+        <name>Update_Call_Complete_Field</name>
+        <label>Update Call Complete Field</label>
+        <locationX>2928</locationX>
+        <locationY>2211</locationY>
+        <connector>
+            <targetReference>Success</targetReference>
+        </connector>
+        <faultConnector>
+            <targetReference>ErrorHandler</targetReference>
+        </faultConnector>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>recordId</elementReference>
+            </value>
+        </filters>
+        <inputAssignments>
+            <field>Post_Season_Call_Completed__c</field>
+            <value>
+                <elementReference>now</elementReference>
+            </value>
+        </inputAssignments>
+        <object>Account</object>
+    </recordUpdates>
     <recordUpdates>
         <name>Update_Screen_1_Other</name>
         <label>Update Screen 1 Other</label>
@@ -1446,8 +1477,8 @@
     <screens>
         <name>Success</name>
         <label>Success</label>
-        <locationX>2932</locationX>
-        <locationY>2213</locationY>
+        <locationX>3120</locationX>
+        <locationY>2211</locationY>
         <allowBack>false</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
