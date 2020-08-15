@@ -2,7 +2,7 @@
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Inventory_MRP_Report__c</fullName>
     <externalId>false</externalId>
-    <formula>IF( AcctSeed__Inventory_Product__c , HYPERLINK(&#39;/apex/gpInventoryReport_MRP?id=&#39; &amp; Id , &#39;MRP Qty Available &#39; &amp; TEXT(MRP_Quantity__c), &#39;_blank&#39;), &#39;Non Inventory&#39;)</formula>
+    <formula>IF( AcctSeed__Inventory_Product__c , HYPERLINK(&apos;/apex/gpInventoryReport_MRP?id=&apos; &amp; Id , &apos;MRP Qty Available &apos; &amp; TEXT(MRP_Quantity__c), &apos;_blank&apos;), &apos;Non Inventory&apos;)</formula>
     <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
     <label>Inventory MRP Report</label>
     <required>false</required>

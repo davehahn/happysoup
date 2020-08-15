@@ -43,7 +43,8 @@ public with sharing class Dealer_Order_Line_Ext {
                                             Dealer_Order__r.LineItemCount__c,
                                             Dealer_Order__r.Account__r.Name,
                                             Opportunity__c,
-                                            Order_Group_Id__c
+                                            Order_Group_Id__c,
+                                            Model_Year__c
                                      FROM Dealer_Order_Line__c
                                      WHERE Id = :orderLineId];
 
@@ -81,7 +82,8 @@ public with sharing class Dealer_Order_Line_Ext {
         new Dealer_Order_Line__c(
             Opportunity__c = opp.Id,
             Dealer_Order__c = origLine.Dealer_Order__c,
-            Order_Group_id__c = origLine.Order_Group_Id__c
+            Order_Group_id__c = origLine.Order_Group_Id__c,
+            Model_Year__c = origLine.Model_Year__c
         )
       );
     }
@@ -159,17 +161,25 @@ public with sharing class Dealer_Order_Line_Ext {
         Set<Id> erpIds = new Set<Id>();
         Set<Id> transferIds = new Set<Id>();
         Set<Id> motorRequestIds = new Set<Id>();
+        Set<Id> dealerOrderIds = new Set<Id>();
         for( Dealer_Order_Line__c dol : oldMap.values() )
         {
           if( dol.ERP_Order__c != null )
-            erpIds.add( dol.ERP_Order__c );
+          {
+            erpIds.add(dol.ERP_Order__c);
+            dealerOrderIds.add( dol.Dealer_Order__c );
+          }
           if( dol.Legend_Transfer_Request__c != null )
             transferIds.add( dol.Legend_Transfer_Request__c );
           if( dol.Dealer_Motor_Request__c != null )
             motorRequestIds.add( dol.Dealer_Motor_Request__c );
         }
         if( erpIds.size() > 0 )
+        {
           deleteErps(erpIds);
+          PartnerProgram_Service ppService = new PartnerProgram_Service( dealerOrderIds );
+          ppService.checkAndApply();
+        }
         if( transferIds.size() > 0 )
           deleteLegendTransferRequests( transferIds );
         if( motorRequestIds.size() > 0 )

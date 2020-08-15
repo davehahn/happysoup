@@ -5,6 +5,8 @@
 public with sharing class PartnerPromotion {
 
   public static String sevenForSevenDiscountName = '7 for 7 Discount';
+  public Id dealerOrderId;
+  public List<ErpWrapper> erpWrappers;
 
 
   public class ResultMessage {

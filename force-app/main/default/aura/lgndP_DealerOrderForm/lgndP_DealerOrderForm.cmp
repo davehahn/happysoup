@@ -3,6 +3,7 @@
   <!-- attributes -->
   <!-- <aura:attribute name="detailsWrapper" type="Object" access="global" /> -->
   <aura:attribute name="financeCompanyOptions" type="Object" />
+  <aura:attribute name="programYearOptions" type="Array" />
   <aura:attribute name="paymentMethodOptions" type="Object" />
   <aura:attribute name="dealerOrder" type="Dealer_Order__c"  />
   <aura:attribute name="fromInternal" type="Boolean" default="false" />
@@ -13,7 +14,7 @@
   <aura:attribute name="orderNumber" type="String" />
   <aura:attribute name="province" type="String" />
   <aura:attribute name="legendAccounts" type="String[]" />
-  <aura:attribute name="lockBookingOrderToggle" type="Boolean" default="true"/>
+  <aura:attribute name="lockBookingOrderToggle" type="Boolean" default="false"/>
   <aura:attribute name="scriptsLoaded" type="Boolean" default="false" />
   <!-- <aura:attribute name="isLegendTransfer" type="Boolean" default="true" /> -->
 
@@ -76,13 +77,20 @@
       </div>
 
       <div class="slds-col slds-large-size_6-of-12 slds-p-horizontal_small">
-        <lightning:input label="Model Year" name="model-year" value="{!v.dealerOrder.Model_Year__c}" />
+<!--        <lightning:input label="Program Year" name="program-year" value="{!v.dealerOrder.Program_Year__c}" />-->
+        <lightning:select name="program-year"
+                          label="Program Year"
+                          value="{!v.dealerOrder.Program_Year__c}">
+          <aura:iteration items="{!v.programYearOptions}" var="year">
+            <option value="{!year.value}" text="{!year.label}" selected="{! year.selected}" />
+          </aura:iteration>
+        </lightning:select>
       </div>
 
     </div>
 
 
-    <aura:if isTrue="{!not(v.dealerOrder.Is_Legend_Transfer__c)}">
+<!--    <aura:if isTrue="{!not(v.dealerOrder.Is_Legend_Transfer__c)}">-->
       <div class='slds-grid slds-wrap slds-grid_pull-padded'>
 
         <div class="slds-col slds-large-size_6-of-12 slds-p-horizontal_small">
@@ -102,17 +110,19 @@
           </aura:if>
         </div>
 
-        <!-- <div class="slds-col slds-large-size_6-of-12 slds-p-horizontal_small slds-text-align_center">
-          <label class="slds-form-element_label  slds-m-top_large">Is this a Booking Order?</label>
+        <div class="slds-col slds-large-size_6-of-12 slds-p-horizontal_small">
+<!--          <label class="slds-form-element_label slds-m-top_large">Is this a Booking Order?</label>-->
           <lightning:input type="toggle"
                            name="isBookingOrder"
-                           label="Is Booking Order"
+                           label="Is this a Booking Order?"
                            class="centerToggle"
                            disabled="{!v.lockBookingOrderToggle}"
-                           checked="{!v.dealerOrder.Is_Booking_Order__c}" />
-        </div> -->
+                           checked="{!v.dealerOrder.Is_Booking_Order__c}"
+                           messageToggleActive="Yes"
+                           messageToggleInactive="No"/>
+        </div>
       </div>
-    </aura:if>
+<!--    </aura:if>-->
 
   </div>
 

@@ -180,11 +180,7 @@ private class EmailComponentController_Test {
   {
     Test.startTest();
     gcProduct.disableTrigger = true;
-    Dealer_Order__c dOrder = new Dealer_Order__c(
-      Account__c = acct.Id,
-      Model_Year__c = String.valueOf( Date.today().year() )
-    );
-    insert dOrder;
+    Dealer_Order__c dOrder = Factory_DealerOrder.createDealerOrder( acct );
     InventoryTestFactory factory = new InventoryTestFactory();
     Product2 motor = factory.buildTestProducts(1, 'Motor')[0];
     motor.AcctSeedERP__Serialized__c = true;
@@ -201,7 +197,8 @@ private class EmailComponentController_Test {
         Dealer_Motor_Request__c = dmr.Id,
         Dealer_Order__c = dOrder.Id,
         Product__c = motor.Id,
-        Order_Group_Id__c = LGND_Utilities.generateRandomString( 16 )
+        Order_Group_Id__c = LGND_Utilities.generateRandomString( 16 ),
+        Model_Year__c = dOrder.Program_Year__c
       ));
     }
     insert dols;

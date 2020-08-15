@@ -1,15 +1,18 @@
 ({
-	doInit: function(component, event, helper)
+  doInit: function( component, event, helper )
+  {
+    //hide all but statrting "order details form"
+//    $A.util.addClass( component.find('build-boat'), 'toggle');
+//    $A.util.addClass( component.find('review-container'), 'toggle');
+  },
+
+	afterScripts: function(component, event, helper)
   {
     var navMap = ['order-details',
                   'build-boat',
                   'review-container'];
     component.set('v.currentAction', 0);
     component.set('v.navMap', navMap);
-    //hide all but statrting "order details form"
-    $A.util.addClass( component.find('build-boat'), 'toggle');
-    $A.util.addClass( component.find('review-container'), 'toggle');
-    $A.util.addClass( component.find('busy-indicator'), 'toggle');
     component.find("orderDetails--Cmp").doInit();
   },
 

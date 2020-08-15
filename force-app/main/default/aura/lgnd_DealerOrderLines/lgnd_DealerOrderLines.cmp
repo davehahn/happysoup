@@ -24,6 +24,7 @@
   <aura:handler name="change" value="{!v.isViewing}" action="{!c.handleViewChange}" />
   <aura:handler event="force:refreshView" action="{!c.doInit}" />
 
+
   <div>
     <div class="slds-spinner_container toggle" aura:id="busy-indicator">
       <div role="status" class="slds-spinner slds-spinner--medium">
@@ -37,38 +38,7 @@
     </div>
 
     <!-- +++++ DISCOUNT NOTIFICATION CENTER +++++++ -->
-    <aura:if isTrue="{!not(empty(v.promotionMessage))}">
-      <aura:if isTrue="{!not(empty(v.promotionMessage.success))}">
-        <lightning:layout horizontalAlign="center">
-          <lightning:layoutItem size="12"
-                                largeDeviceSize="4"
-                                mediumDeviceSize="6"
-                                smallDeviceSize="12">
-            <div class="promotion-message slds-theme_alert-texture slds-theme_success" role="alert">
-              <h2>Congratulations!</h2>
-              <div><aura:unescapedHtml value="{!v.promotionMessage.success}" /></div>
-            </div>
-          </lightning:layoutItem>
-        </lightning:layout>
-      </aura:if>
-      <aura:if isTrue="{!not(empty(v.promotionMessage.errors))}">
-        <lightning:layout horizontalAlign="center">
-          <lightning:layoutItem size="12"
-                                largeDeviceSize="4"
-                                mediumDeviceSize="6"
-                                smallDeviceSize="12">
-            <div class="promotion-message slds-theme_alert-texture slds-theme_warning" role="alert">
-              <h2>You can save money!</h2>
-              <ul>
-                <aura:iteration items="{!v.promotionMessage.errors}" var="err">
-                  <li>{!err}</li>
-                </aura:iteration>
-              </ul>
-            </div>
-          </lightning:layoutItem>
-        </lightning:layout>
-      </aura:if>
-    </aura:if>
+    <c:lgndp_PartnerProgramNotification message="{!v.promotionMessage}" />
     <!-- ====== DISCOUNT NOTIFICATION CENTER ======= -->
 
     <aura:if isTrue="{!equals(v.currentView, 'list')}">

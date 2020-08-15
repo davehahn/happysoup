@@ -177,16 +177,12 @@ private class BoatBuilder_Test {
     {
       Account dealer = AccountFactory.buildDealerAccount('Test Dealer');
       insert dealer;
-      Dealer_Order__c dealerOrder = new Dealer_Order__c(
-        Account__c = dealer.Id,
-        Payment_method__c = 'Cash',
-        Model_Year__c = String.valueOf(Date.today().year())
-      );
-      insert dealerOrder;
+      Dealer_Order__c dealerOrder = Factory_DealerOrder.createDealerOrder( dealer );
       Opportunity dol_opp = OpportunityFactory.insertRetailBoatSale();
       Dealer_Order_Line__c dol = new Dealer_Order_Line__c(
         Opportunity__c = dol_opp.Id,
         Dealer_Order__c = dealerOrder.Id,
+        Model_Year__c = dealerOrder.Program_Year__c,
         Order_Group_Id__c = 'bcvhueopqvc'
       );
       insert dol;

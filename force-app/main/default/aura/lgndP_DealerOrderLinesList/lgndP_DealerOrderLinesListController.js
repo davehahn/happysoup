@@ -1,23 +1,7 @@
 ({
   doInit: function( component, event, helper )
   {
-    helper.fetchOrderDetails( component )
-    .then(
-      $A.getCallback( function( response ) {
-        var result = JSON.parse( response );
-        console.log(result);
-        component.set('v.boats', result.boats );
-        component.set('v.motors', result.motors );
-        component.set('v.trailers', result.trailers );
-        component.set('v.trollingMotors', result.trollingMotors );
-        // helper.groupItems( component );
-        helper.setIsEditable( component );
-      }),
-      $A.getCallback( function( err ) {
-        console.log( err );
-      })
-    );
-
+    helper.doInit( component );
   },
 
   detailToggle: function( component, event, helper )
