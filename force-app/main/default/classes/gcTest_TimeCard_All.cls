@@ -33,6 +33,7 @@ private class gcTest_TimeCard_All{
   @isTest
   static void trigger_Test()
   {
+    gcProject.disableTrigger = true;
     AcctSeed__Time_Card_Period__c tcp = insertTimeCardPeriod();
     AcctSeed__Time_Card__c tc = insertTimeCard( tcp );
     AcctSeed__Time_Card_Line__c tcl = insertTimeCardLine( tc );
