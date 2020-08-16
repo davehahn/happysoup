@@ -595,6 +595,7 @@ private class CommissionRecord2_Functional_T
     insert u;
     System.runAs( u )
     {
+      Test.startTest();
       setup_Project_Task_Products('Gross Margin', 1000, 500);
       List<AcctSeedERP__Material__c> materials = new List<AcctSeedERP__Material__c>();
       for (Product2 p : products)
@@ -610,7 +611,7 @@ private class CommissionRecord2_Functional_T
       }
 
       insert materials;
-
+      Test.stopTest();
       CommissionRecord2__c commRec = [
           SELECT Id
           FROM CommissionRecord2__c
@@ -627,6 +628,8 @@ private class CommissionRecord2_Functional_T
           WHERE Commission_Record2__c = :commRec.Id
       ];
       // 10 parts * $500 profit * default gross margin commission payment percent
+      System.debug('Payments Size');
+      System.debug(commPayments.size());
       System.debug('Commission');
       System.debug(commPayments[0].Amount__c);
       System.debug('Manager Commission');

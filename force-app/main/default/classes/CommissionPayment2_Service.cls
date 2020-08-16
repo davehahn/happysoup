@@ -20,6 +20,45 @@ public with sharing class CommissionPayment2_Service
     insert payments;
     return payments;
   }
+  @Future
+  public static void createManagersCommissionFuture(Set<Id> commissionPaymentIds){
+    createManagersCommission(commissionPaymentIds);
+  }
+  public static void createManagersCommission(Set<Id> commissionPaymentIds){
+    System.debug('I am here...');
+    System.debug(commissionPaymentIds);
+    List<CommissionPayment2__c> listCP = new List<CommissionPayment2__c>();
+    Set<Id> setIdCommissionRecord = new Set<Id>();
+    for(CommissionPayment2__c cp : [SELECT Id, Commission_Record2__c FROM CommissionPayment2__c WHERE Id IN:commissionPaymentIds]){
+      listCP.add(cp);
+      setIdCommissionRecord.add(cp.Commission_Record2__c);
+    }
+    /////
+    Map<Id,CommissionPayment2__c> managerCP = new Map<Id,CommissionPayment2__c>();
+    // Checking for Manages Payment
+    Set<Id> setIdCRWithManagers = checkManagersCommission(setIdCommissionRecord);
+    System.debug('setIdCRWithManagers');
+    System.debug(setIdCRWithManagers);
+    // loop and validate
+    for(CommissionPayment2__c cp : listCP){
+      /// Creating false Managers list to check and validate
+      if(!setIdCRWithManagers.contains(cp.Commission_Record2__c))
+        managerCP.put(cp.Commission_Record2__c, new CommissionPayment2__c(Commission_Record2__c = cp.Commission_Record2__c, Type__c = 'Manager'));
+    }
+    // Check with false records
+    setInitialValues(managerCP.values());
+    // now lets check to see if any payments have zero amount. Then we will discard those
+    // List<CommissionPayment2__c> cpManagersListTOInsert = new List<CommissionPayment2__c>();
+    Set<Id> setIdManagersCP = new Set<Id>();
+    for(CommissionPayment2__c cp : managerCP.values()){
+      if(cp.Gross_Margin_Payment_Percent__c != 0 && cp.Gross_Margin_Payment_Percent__c != null){
+        setIdManagersCP.add(cp.Commission_Record2__c);
+      }
+    }
+    // Now do the actual managers payments
+    if(!setIdManagersCP.isEmpty())
+      createInitialPayments( setIdCommissionRecord, 'Manager' );
+  }
 
   public static Set<Id> checkManagersCommission(Set<Id> commissionRecordIds){
     Set<Id> idWithManagers = new Set<Id>();
