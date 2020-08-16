@@ -97,7 +97,7 @@ public with sharing class CommissionPayment2_Service
               owners.get(cp.Owner__c).Commission_Gross_Margin_Percent_Override__c != null ?
                   owners.get(cp.Owner__c).Commission_Gross_Margin_Percent_Override__c :
                   defaultGrossMarginPaymentPercent;
-        } else {
+        } else if(owners.get(cp.Owner__c) != null){
           cp.Gross_Margin_Payment_Percent__c =
               owners.get(cp.Owner__c).Commission_Gross_Margin_Manager__c != null ?
                   owners.get(cp.Owner__c).Commission_Gross_Margin_Manager__c :
