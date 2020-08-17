@@ -26,9 +26,18 @@ public without sharing class CommissionPayment2_TriggerHandler extends TriggerHa
 //  {
 //  }
 
-//  protected override void afterInsert()
-//  {
-//  }
+  protected override void afterInsert()
+  {
+    Set<Id> setIdCommPay = new Set<Id>();
+    for(CommissionPayment2__c cp : (List<CommissionPayment2__c>) Trigger.new){
+      if(cp.Type__c != 'Manager')
+        setIdCommPay.add(cp.Id);
+    }
+    if(!setIdCommPay.isEmpty()) {
+      System.debug(setIdCommPay);
+      CommissionPayment2_Service.createManagersCommissionFuture(setIdCommPay);
+    }
+  }
 
   protected override void afterUpdate()
   {

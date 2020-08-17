@@ -32,7 +32,7 @@ public without sharing class CommissionRecord2_TriggerHandler extends TriggerHan
 
   protected override void afterInsert()
   {
-    CommissionPayment2_Service.createInitialPayments( Trigger.newMap.keySet() );
+    CommissionPayment2_Service.createInitialPayments( Trigger.newMap.keySet(), 'Standard' );
     CommissionLineItem2_Service.createDefaultLineItems( (List<CommissionRecord2__c>)Trigger.new );
   }
 
