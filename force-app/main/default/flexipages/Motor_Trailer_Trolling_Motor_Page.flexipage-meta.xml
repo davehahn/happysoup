@@ -7,12 +7,24 @@
                 <value>false</value>
             </componentInstanceProperties>
             <componentInstanceProperties>
+                <name>enableActionsConfiguration</name>
+                <value>false</value>
+            </componentInstanceProperties>
+            <componentInstanceProperties>
+                <name>hideChatterActions</name>
+                <value>false</value>
+            </componentInstanceProperties>
+            <componentInstanceProperties>
                 <name>numVisibleActions</name>
                 <value>5</value>
             </componentInstanceProperties>
             <componentName>force:highlightsPanel</componentName>
         </componentInstances>
         <componentInstances>
+            <componentInstanceProperties>
+                <name>hideHeader</name>
+                <value>false</value>
+            </componentInstanceProperties>
             <componentName>force:relatedListQuickLinksContainer</componentName>
         </componentInstances>
         <name>header</name>
@@ -20,6 +32,18 @@
     </flexiPageRegions>
     <flexiPageRegions>
         <componentInstances>
+            <componentInstanceProperties>
+                <name>relatedListComponentOverride</name>
+                <value>NONE</value>
+            </componentInstanceProperties>
+            <componentInstanceProperties>
+                <name>rowsToDisplay</name>
+                <value>10</value>
+            </componentInstanceProperties>
+            <componentInstanceProperties>
+                <name>showActionBar</name>
+                <value>true</value>
+            </componentInstanceProperties>
             <componentName>force:relatedListContainer</componentName>
         </componentInstances>
         <name>facet-48b5c921-88da-4d83-ab7d-d70157b3551e</name>
@@ -46,6 +70,10 @@
                 <name>pageName</name>
                 <value>ProductOptionsView</value>
             </componentInstanceProperties>
+            <componentInstanceProperties>
+                <name>showLabel</name>
+                <value>true</value>
+            </componentInstanceProperties>
             <componentName>flexipage:visualforcePage</componentName>
         </componentInstances>
         <name>facet-9a69a28a-2fd6-48d5-973c-95084fb3a100</name>
@@ -65,9 +93,20 @@
                 <name>pageName</name>
                 <value>ProductUpgradesView</value>
             </componentInstanceProperties>
+            <componentInstanceProperties>
+                <name>showLabel</name>
+                <value>true</value>
+            </componentInstanceProperties>
             <componentName>flexipage:visualforcePage</componentName>
         </componentInstances>
         <name>facet-8dd109fd-60d8-4873-bbfc-6f7529a37447</name>
+        <type>Facet</type>
+    </flexiPageRegions>
+    <flexiPageRegions>
+        <componentInstances>
+            <componentName>forceChatter:recordFeedContainer</componentName>
+        </componentInstances>
+        <name>Facet-7d3fe2c4-f357-4044-b0a5-4940d2890c19</name>
         <type>Facet</type>
     </flexiPageRegions>
     <flexiPageRegions>
@@ -123,6 +162,17 @@
             </componentInstanceProperties>
             <componentName>flexipage:tab</componentName>
         </componentInstances>
+        <componentInstances>
+            <componentInstanceProperties>
+                <name>body</name>
+                <value>Facet-7d3fe2c4-f357-4044-b0a5-4940d2890c19</value>
+            </componentInstanceProperties>
+            <componentInstanceProperties>
+                <name>title</name>
+                <value>Standard.Tab.collaborate</value>
+            </componentInstanceProperties>
+            <componentName>flexipage:tab</componentName>
+        </componentInstances>
         <name>facet-0af94b1e-d956-4f0f-b8ce-0ba89daf6227</name>
         <type>Facet</type>
     </flexiPageRegions>
@@ -139,6 +189,9 @@
     </flexiPageRegions>
     <flexiPageRegions>
         <componentInstances>
+            <componentName>Product_BinLocations_dh</componentName>
+        </componentInstances>
+        <componentInstances>
             <componentInstanceProperties>
                 <name>allowUploads</name>
                 <value>true</value>
@@ -147,9 +200,6 @@
         </componentInstances>
         <componentInstances>
             <componentName>forceChatter:recordFeedContainer</componentName>
-        </componentInstances>
-        <componentInstances>
-            <componentName>Product_BinLocations_dh</componentName>
         </componentInstances>
         <name>sidebar</name>
         <type>Region</type>
