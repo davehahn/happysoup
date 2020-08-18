@@ -34,7 +34,11 @@
         .fire();
       }),
       $A.getCallback( function( err ) {
-        LightningUtilis.errorToast( err );
+        try{
+          LightningUtilis.errorToast( err );
+        }catch(e){
+
+        }
       })
     )
     .finally( $A.getCallback( function() {

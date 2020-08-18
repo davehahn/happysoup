@@ -37,12 +37,14 @@ public with sharing class PartnerProgram_Service
 
     public void addAppliedDiscount( PartnerProgramItem_I promo )
     {
-      this.appliedDiscountNames.add( promo.getDiscountPercent() + '% - ' + promo.getName() );
-      this.totalSavings += promo.getResult().totalSaving;
-      this.appliedDiscounts.add( new Map<String, Object>{
-        'name' => promo.getName(),
-        'percentage' => promo.getDiscountPercent()
-      });
+      if(promo.getResult().totalSaving != null && promo.getResult().totalSaving <> 0) {
+        this.appliedDiscountNames.add(promo.getDiscountPercent() + '% - ' + promo.getName());
+        this.totalSavings += promo.getResult().totalSaving == null ? 0 : promo.getResult().totalSaving;
+        this.appliedDiscounts.add(new Map<String, Object>{
+            'name' => promo.getName(),
+            'percentage' => promo.getDiscountPercent()
+        });
+      }
     }
 
     public void addError( String err )
@@ -71,6 +73,8 @@ public with sharing class PartnerProgram_Service
       this.savingLines = new List<AcctSeedERP__Material__c>();
       for( AcctSeedERP__Material__c mat : this.erp.AcctSeedERP__Project_Materials__r )
       {
+        System.debug('mat');
+        System.debug(mat);
         if(mat.AcctSeedERP__Product__r.RecordTypeId == boatRtId )
         {
           this.boatLine = mat;
@@ -103,6 +107,13 @@ public with sharing class PartnerProgram_Service
     public AcctSeedERP__Material__c buildDiscountLine( String programItemName,
                                                        Decimal amount )
     {
+      System.debug('programItemName');
+      System.debug(programItemName);
+      System.debug('amount');
+      System.debug(amount);
+      System.debug('this.boatLine');
+      System.debug(this.boatLine);
+      if(this.boatLine == null) return null;
       Id discountProdId = LGND_Constants.savingsProductId;
       AcctSeedERP__Material__c mat = new AcctSeedERP__Material__c(
         Id = findExistingSavingsId( programItemName ),

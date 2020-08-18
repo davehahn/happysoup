@@ -83,11 +83,14 @@ public virtual class PartnerProgram_7for7 extends PartnerProgramItem
 
   public override List<AcctSeedERP__Material__c> apply()
   {
+    system.debug('apply');
     List<AcctSeedERP__Material__c> discounts = new List<AcctSeedERP__Material__c>();
     Decimal totalSavings = 0;
     Set<Id> erpIds_withSaving = new Set<Id>();
     for( BoatStack bs : this.stacks.values() )
     {
+      system.debug('bs');
+      system.debug(bs);
       if( bs.completeStacks > 0 )
       {
         for( Integer i=0; i<( bs.stackSize * bs.completeStacks ); i++ )
@@ -95,12 +98,13 @@ public virtual class PartnerProgram_7for7 extends PartnerProgramItem
           PartnerProgram_Service.ErpWrapper wrapper = bs.erpWrappers[i];
           if( !wrapper.promotionClaimed( this.name ) )
           {
-            discounts.add(
-              wrapper.buildDiscountLine( this.name, bs.savingsPerBoat )
-            );
-            erpIds_withSaving.add( wrapper.boatLine.AcctSeedERP__Project__c );
+            AcctSeedERP__Material__c mtrl = wrapper.buildDiscountLine( this.name, bs.savingsPerBoat );
+            if(mtrl != null){
+              discounts.add(mtrl);
+              totalSavings += bs.savingsPerBoat;
+              erpIds_withSaving.add( wrapper.boatLine.AcctSeedERP__Project__c );
+            }
           }
-          totalSavings += bs.savingsPerBoat;
         }
       }
     }
@@ -111,8 +115,10 @@ public virtual class PartnerProgram_7for7 extends PartnerProgramItem
       dol.Order_Group_Id__c = dol.Order_Group_Id__c + '-747';
     }
     update dols;
-    this.resultMessage.totalSaving = totalSavings;
-    this.resultMessage.success = 'This order qualifies for the Legend Boats 7 for 7 Promotion and has been applied. <br /> You saved a total of <b>$' + String.valueOf( totalSavings.setScale(2, RoundingMode.HALF_UP) ) + '</b>';
+    if(totalSavings <> 0) {
+      this.resultMessage.totalSaving = totalSavings;
+      this.resultMessage.success = 'This order qualifies for the Legend Boats 7 for 7 Promotion and has been applied. <br /> You saved a total of <b>$' + String.valueOf(totalSavings.setScale(2, RoundingMode.HALF_UP)) + '</b>';
+    }
     return discounts;
   }
 
