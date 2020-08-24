@@ -76,6 +76,8 @@ private class PartnerProgramItem_T
       SELECT
         Id,
         Name,
+      ( SELECT Id
+        FROM AcctSeed__Project_Tasks__r ),
       ( SELECT Id,
         AcctSeedERP__Project__c,
         AcctSeedERP__Project_Task__c,

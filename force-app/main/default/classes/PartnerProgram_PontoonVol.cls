@@ -15,8 +15,12 @@ public virtual class PartnerProgram_PontoonVol extends PartnerProgramItem
   {
     if( this.orderWrapper.isBookingOrder && this.erpWrappers.size() >= 4 )
       return true;
-    if( !this.orderWrapper.isBookingOrder && this.erpWrappers.size() > 0 )
-      return this.hasVerifiedBookingOrder;
+    if( !this.orderWrapper.isBookingOrder &&
+        this.erpWrappers.size() > 0 )
+    {
+      if( this.orderWrapper.bookingOrder.get( this.fieldName ) == null ) return false;
+      if( (Decimal)this.orderWrapper.bookingOrder.get( this.fieldName ) > 0 ) return true;
+    }
     return false;
   }
 
