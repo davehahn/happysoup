@@ -18,10 +18,13 @@ public virtual class PartnerProgram_Cash extends PartnerProgramItem
 
   public override List<AcctSeedERP__Material__c> apply()
   {
+    system.debug('cash apply');
     List<AcctSeedERP__Material__c> discounts = new List<AcctSeedERP__Material__c>();
     Decimal totalSavings = 0;
     for( PartnerProgram_Service.ErpWrapper wrapper : this.erpWrappers )
     {
+      system.debug('cash wrapper');
+      system.debug(wrapper);
       Decimal erpTotal = 0;
       for( AcctSeedERP__Material__c mat : wrapper.allLines )
       {
@@ -36,14 +39,16 @@ public virtual class PartnerProgram_Cash extends PartnerProgramItem
       }
       Decimal savings = ( erpTotal * ( this.discountPercent / 100 ) )
         .setScale(2, RoundingMode.HALF_UP );
-
-      discounts.add(
-        wrapper.buildDiscountLine( this.name, savings )
-      );
-      totalSavings += savings;
+      AcctSeedERP__Material__c mtrl = wrapper.buildDiscountLine( this.name, savings );
+      if(mtrl != null) {
+        discounts.add(mtrl);
+        totalSavings += savings;
+      }
     }
-    this.resultMessage.totalSaving = totalSavings;
-    this.resultMessage.success = 'This order qualifies for the Legend Boats ' + this.name;
+    if(totalSavings <> 0) {
+      this.resultMessage.totalSaving = totalSavings;
+      this.resultMessage.success = 'This order qualifies for the Legend Boats ' + this.name;
+    }
     return discounts;
   }
 

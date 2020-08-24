@@ -23,7 +23,10 @@
 //        }
       }),
       $A.getCallback( function( err ) {
-        LightningUtilis.errorToast( err );
+        try{
+          LightningUtilis.errorToast( err );
+        }catch(e){
+        }
       })
     )
     .finally( $A.getCallback( () => {
@@ -63,6 +66,9 @@
     }
   },
 
+  showConsole: function( component, event, helper ){
+    console.log('loaded');
+  },
   handlePaymentMethodChange: function( component, event, helper )
   {
     var dealerOrder = component.get('v.dealerOrder');

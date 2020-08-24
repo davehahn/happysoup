@@ -47,25 +47,30 @@ public virtual class PartnerProgram_Volume extends PartnerProgramItem
 
   public override List<AcctSeedERP__Material__c> apply()
   {
+    system.debug('volume apply');
     List<AcctSeedERP__Material__c> discounts = new List<AcctSeedERP__Material__c>();
     Decimal totalSavings = 0;
     Decimal savingsPercent = determineSavingsPercent();
     for( PartnerProgram_Service.ErpWrapper wrapper : this.erpWrappers )
     {
+      system.debug('wrapper');
+      system.debug(wrapper);
       if( applicableBoatFamilies.contains( wrapper.boatLine.AcctSeedERP__Product__r.Family ) )
       {
         Decimal savings = (wrapper.boatCost * ( savingsPercent / 100 ) )
           .setScale(2, RoundingMode.HALF_UP);
 
-        discounts.add(
-          wrapper.buildDiscountLine(this.name, savings)
-        );
-
-        totalSavings += savings;
+        AcctSeedERP__Material__c mtrl = wrapper.buildDiscountLine( this.name, savings );
+        if(mtrl != null) {
+          discounts.add(mtrl);
+          totalSavings += savings;
+        }
       }
     }
-    this.resultMessage.totalSaving = totalSavings;
-    this.resultMessage.success = 'This order qualifies for the Legend Boats ' + this.name + ' @ ' + this.discountPercent + '%';
+    if(totalSavings <> 0) {
+      this.resultMessage.totalSaving = totalSavings;
+      this.resultMessage.success = 'This order qualifies for the Legend Boats ' + this.name + ' @ ' + this.discountPercent + '%';
+    }
     return discounts;
   }
 
