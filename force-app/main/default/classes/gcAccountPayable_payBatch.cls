@@ -156,7 +156,8 @@ global with sharing class gcAccountPayable_payBatch {
 		String accountType = cdHolder.AcctSeed__Type__c;
 		Decimal startingCheckNumber = cdHolder.AcctSeed__Check_Number__c;
 		Boolean noChequeRequired = false;
-		if(!(accountType.equals('Cheque') || accountType.equals('Check'))){
+		Set<String> setCheckTypes = new Set<String>{'Cheque','Check','US Check'};
+		if(accountType == null || !setCheckTypes.contains(accountType)){
 			startingCheckNumber = 0;
 			noChequeRequired = true;
 		}
