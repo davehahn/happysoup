@@ -74,10 +74,12 @@ $j(document).ready(function(){
 		$j('select[id*=":txnType"]').val('Cheque');
 	else if($j('select[id*=":txnType"]').find('option[value=Check]').length)
 		$j('select[id*=":txnType"]').val('Check');
+	else if($j('select[id*=":txnType"]').find('option[value=US Check]').length)
+		$j('select[id*=":txnType"]').val('US Check');
 });
 
 function showHideCheckNumber(obj) {
-	if($j(obj).val() == 'Cheque' || $j(obj).val() == 'Check'){
+	if($j(obj).val() == 'Cheque' || $j(obj).val() == 'Check' || $j(obj).val() == 'US Check'){
 		$j('input[id*=":elCheckNum"]').show();
 		$j('label[for*=":elCheckNum"]').show();
 	}else{
