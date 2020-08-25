@@ -12,12 +12,21 @@ public virtual class PartnerProgram_Coop extends PartnerProgramItem
 
   public override Boolean isApplicable()
   {
-    return this.orderWrapper.erpWrappers.size() > 0;
+    return this.erpWrappers.size() > 0;
   }
 
   public override List<AcctSeedERP__Material__c> apply()
   {
     return this.doStandardApply();
+  }
+
+  protected override void filterApplicableERPs( List<PartnerProgram_Service.ErpWrapper> erpWrappers )
+  {
+    for( PartnerProgram_Service.ErpWrapper wrapper : erpWrappers )
+    {
+      if( wrapper.boatLine != null )
+        this.erpWrappers.add( wrapper );
+    }
   }
 
   protected override Decimal determineSavingsPercent()

@@ -112,28 +112,20 @@ public virtual class PartnerProgramItem implements PartnerProgramItem_I
 
   protected List<AcctSeedERP__Material__c> doStandardApply()
   {
-    system.debug('doStandardApply');
-    system.debug('this.erpWrappers');
-    system.debug(this.erpWrappers);
     List<AcctSeedERP__Material__c> discounts = new List<AcctSeedERP__Material__c>();
     Decimal totalSavings = 0;
     for( PartnerProgram_Service.ErpWrapper wrapper : this.erpWrappers )
     {
-      system.debug('wrapper');
-      system.debug(wrapper);
-      Decimal savings = ((wrapper.boatCost == null ? 0 : wrapper.boatCost) * ( (this.discountPercent == null ? 0 : this.discountPercent) / 100 )).setScale(2, RoundingMode.HALF_UP );
-      if(savings <> 0) {
-        AcctSeedERP__Material__c mtrl = wrapper.buildDiscountLine(this.name, savings);
-        if(mtrl != null) {
-          discounts.add(mtrl);
-          totalSavings += savings;
-        }
-      }
+      Decimal savings = ( wrapper.boatCost * ( this.discountPercent / 100 ) )
+        .setScale(2, RoundingMode.HALF_UP );
+
+      discounts.add(
+        wrapper.buildDiscountLine( this.name, savings )
+      );
+      totalSavings += savings;
     }
-    if(totalSavings <> 0) {
-      this.resultMessage.totalSaving = totalSavings;
-      this.resultMessage.success = 'This order qualifies for the Legend Boats ' + this.name + ' @ ' + this.discountPercent + '%';
-    }
+    this.resultMessage.totalSaving = totalSavings;
+    this.resultMessage.success = 'This order qualifies for the Legend Boats ' + this.name + ' @ ' + this.discountPercent + '%';
     return discounts;
   }
 

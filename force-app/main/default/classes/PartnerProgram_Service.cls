@@ -73,8 +73,6 @@ public with sharing class PartnerProgram_Service
       this.savingLines = new List<AcctSeedERP__Material__c>();
       for( AcctSeedERP__Material__c mat : this.erp.AcctSeedERP__Project_Materials__r )
       {
-        System.debug('mat');
-        System.debug(mat);
         if(mat.AcctSeedERP__Product__r.RecordTypeId == boatRtId )
         {
           this.boatLine = mat;
@@ -107,18 +105,11 @@ public with sharing class PartnerProgram_Service
     public AcctSeedERP__Material__c buildDiscountLine( String programItemName,
                                                        Decimal amount )
     {
-      System.debug('programItemName');
-      System.debug(programItemName);
-      System.debug('amount');
-      System.debug(amount);
-      System.debug('this.boatLine');
-      System.debug(this.boatLine);
-      if(this.boatLine == null) return null;
       Id discountProdId = LGND_Constants.savingsProductId;
       AcctSeedERP__Material__c mat = new AcctSeedERP__Material__c(
         Id = findExistingSavingsId( programItemName ),
-        AcctSeedERP__Project__c = this.boatLine.AcctSeedERP__Project__c,
-        AcctSeedERP__Project_Task__c = this.boatLine.AcctSeedERP__Project_Task__c,
+        AcctSeedERP__Project__c = this.erp.Id,
+        AcctSeedERP__Project_Task__c = this.erp.AcctSeed__Project_Tasks__r[0].Id,
         GMBLASERP__Unit_Price__c = -1 * amount,
         GMBLASERP__Price_Override__c = true,
         AcctSeedERP__Comment__c = programItemName,
@@ -387,6 +378,8 @@ public with sharing class PartnerProgram_Service
       erpId2DealerOrderId.put( dol.ERP_Order__c, dol.Dealer_Order__c );
     }
     for( AcctSeed__Project__c erp : [ SELECT Id, Name,
+                                      ( SELECT Id
+                                        FROM AcctSeed__Project_Tasks__r ),
                                       ( SELECT Id,
                                         AcctSeedERP__Project__c,
                                         AcctSeedERP__Project_Task__c,
