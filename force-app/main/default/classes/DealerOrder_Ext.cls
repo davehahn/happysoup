@@ -1661,10 +1661,13 @@ public without sharing class DealerOrder_Ext {
   {
     String retVal;
     PartnerProgram_Service pp_service = new PartnerProgram_Service(
-      new Set<Id>{ Id.valueOf(dealerOrderId) } );
-    if(pp_service.checkAndApply() != null && pp_service.checkAndApply().get( dealerOrderId) != null)
-      retVal = JSON.serialize( pp_service.checkAndApply().get( dealerOrderId) );
+        new Set<Id>{ Id.valueOf(dealerOrderId) } );
 
+    try {
+      retVal = JSON.serialize(pp_service.checkAndApply().get(dealerOrderId));
+    }catch (Exception e){
+      System.debug('This is resolved');
+    }
     return retVal;
   }
 
