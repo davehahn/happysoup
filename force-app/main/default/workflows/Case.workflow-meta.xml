@@ -38,21 +38,6 @@
         <template>Warranty/Warranty_Case_Internal_Delay</template>
     </alerts>
     <alerts>
-        <fullName>Notify_Salesforce_Case_Team_of_new_Case</fullName>
-        <description>Notify Salesforce Case Team of new Case</description>
-        <protected>false</protected>
-        <recipients>
-            <recipient>dhahn1@legendboats.com</recipient>
-            <type>user</type>
-        </recipients>
-        <recipients>
-            <recipient>jdewar@legendboats.com</recipient>
-            <type>user</type>
-        </recipients>
-        <senderType>CurrentUser</senderType>
-        <template>Case_Templates/Salesforce_Issue</template>
-    </alerts>
-    <alerts>
         <fullName>Notify_Service_Team_of_new_Service_Case_Barrie</fullName>
         <description>Notify Service Team of new Service Case Barrie</description>
         <protected>false</protected>
@@ -348,21 +333,6 @@
         </criteriaItems>
         <description>Notify Warranty Managers when a Warranty Case&apos;s delay reason is &apos;Internal Delay&apos;</description>
         <triggerType>onCreateOrTriggeringUpdate</triggerType>
-    </rules>
-    <rules>
-        <fullName>Salesforce Issue Created</fullName>
-        <actions>
-            <name>Notify_Salesforce_Case_Team_of_new_Case</name>
-            <type>Alert</type>
-        </actions>
-        <active>false</active>
-        <criteriaItems>
-            <field>Case.RecordTypeId</field>
-            <operation>equals</operation>
-            <value>Salesforce</value>
-        </criteriaItems>
-        <description>Internal user submitted a Case detailing an issue or enhancement to the Salesforce software</description>
-        <triggerType>onCreateOnly</triggerType>
     </rules>
     <rules>
         <fullName>Set Case Exchange Rate</fullName>
