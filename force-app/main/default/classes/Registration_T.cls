@@ -352,11 +352,12 @@ private class Registration_T
     GMBLASERP__Serial_Number__c ser = Factory_SerialNumber.insertFullSerial('Boat', 'Pontoon', 'Test-151');
     AcctSeedERP__Warehouse__c wfWarehouse = [ SELECT Id, Name FROM AcctSeedERP__Warehouse__c
                                               WHERE Name LIKE '%Whitefish%' ];
-    Boolean orig = gcProjectTask.ignoreCommissions;
-    gcProjectTask.ignoreCommissions = true;
-    gcProject.disableJob = true;
+    Boolean orig = gcProjectTask.disableTrigger;
+    gcProjectTask.disableTrigger = true;
+    arMaterial_PACKAGE.disableTrigger = true;
+    gcProject.disableTrigger = true;
     AcctSeed__Project__c erp = Factory_ERPOrder.insertRetailBoatSale( c, wfWarehouse, DateTime.now().addDays(10), ser);
-    gcProjectTask.ignoreCommissions = orig;
+    gcProjectTask.disableTrigger = orig;
     Registration__c reg = Factory_Registration.buildRegistration( null, c.Id, ser.Id );
     reg.ErpOrder__c = erp.Id;
     wfUser = Factory_User.newUser('WhiteFish', 'User', 'System Administrator', wfWarehouse );
