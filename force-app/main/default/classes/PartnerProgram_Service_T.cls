@@ -10,12 +10,17 @@ private class PartnerProgram_Service_T
   static PartnerProgram_Cash pp_cash = new PartnerProgram_Cash();
   static PartnerProgram_Coop pp_coop = new PartnerProgram_Coop();
   static PartnerProgram_Volume pp_vol = new PartnerProgram_Volume();
+  static PartnerProgram_Kickstart_Booking pp_kickStart = new PartnerProgram_Kickstart_Booking();
   static PartnerProgram_PontoonVol pp_pvol = new PartnerProgram_PontoonVol();
 
   @testSetup static void dataSetup()
   {
     new Factory_TestData();
     Factory_CustomSettings.setupInventorySettings();
+    insert new Partner_Program_Settings__c(
+      Coop_Discount_Percent__c = 2,
+      Kickstart_Booking_Order_Discount_Percent__c = 2
+    );
     Account partner = Factory_Account.buildDealerAccounts(1)[0];
     partner.Name = partnerAccountName;
     partner.BillingState = 'Ontario';
@@ -76,14 +81,14 @@ private class PartnerProgram_Service_T
       Id savingsProdId = LGND_Constants.savingsProductId;
       Set<String> appliedDiscountNames = new Set<String>();
       List<AcctSeedERP__Material__c> mats = [
-        SELECT Id, AcctSeedERP__Comment__c
+        SELECT Id, Applied_Partner_Program_Discount__c
         FROM AcctSeedERP__Material__c
         WHERE AcctSeedERP__Product__c = :savingsProdId
         AND AcctSeedERP__Project__c = :erps[0].Id
       ];
       for( AcctSeedERP__Material__c m : mats )
       {
-        appliedDiscountNames.add( m.AcctSeedERP__Comment__c );
+        appliedDiscountNames.add( m.Applied_Partner_Program_Discount__c );
       }
 
       System.assert( appliedDiscountNames.contains( pp_coop.getName() ) );
@@ -121,7 +126,7 @@ private class PartnerProgram_Service_T
       Id savingsProdId = LGND_Constants.savingsProductId;
       Map<String, Decimal> appliedDiscounts = new Map<String, Decimal>();
       List<AcctSeedERP__Material__c> mats = [
-        SELECT Id, AcctSeedERP__Comment__c
+        SELECT Id, Applied_Partner_Program_Discount__c
         FROM AcctSeedERP__Material__c
         WHERE AcctSeedERP__Product__c = :savingsProdId
         AND AcctSeedERP__Project__c = : erps[0].Id
@@ -134,9 +139,10 @@ private class PartnerProgram_Service_T
       System.assert( appliedDiscounts.keySet().contains( pp_coop.getName() ) );
       System.assert( appliedDiscounts.keySet().contains( pp_cash.getName() ) );
       System.assert( appliedDiscounts.keySet().contains( pp_pvol.getName() ) );
+      System.assert( appliedDiscounts.keySet().contains( pp_kickStart.getName() ) );
       System.assertEquals( 1, appliedDiscounts.get( pp_pvol.getName() ) );
-      System.assertEquals( 3, result.get(order.Id).appliedDiscountNames.size() );
-      System.assertEquals( 3, mats.size() );
+      System.assertEquals( 4, result.get(order.Id).appliedDiscountNames.size() );
+      System.assertEquals( 4, mats.size() );
 
 
     }
@@ -168,7 +174,7 @@ private class PartnerProgram_Service_T
       Id savingsProdId = LGND_Constants.savingsProductId;
       Map<String, Decimal> appliedDiscounts = new Map<String, Decimal>();
       List<AcctSeedERP__Material__c> mats = [
-        SELECT Id, AcctSeedERP__Comment__c
+        SELECT Id, Applied_Partner_Program_Discount__c
         FROM AcctSeedERP__Material__c
         WHERE AcctSeedERP__Product__c = :savingsProdId
         AND AcctSeedERP__Project__c = : erps[0].Id
@@ -181,9 +187,10 @@ private class PartnerProgram_Service_T
       System.assert( appliedDiscounts.keySet().contains( pp_coop.getName() ) );
       System.assert( appliedDiscounts.keySet().contains( pp_cash.getName() ) );
       System.assert( appliedDiscounts.keySet().contains( pp_pvol.getName() ) );
+      System.assert( appliedDiscounts.keySet().contains( pp_kickStart.getName() ) );
       System.assertEquals( 4, appliedDiscounts.get( pp_pvol.getName() ) );
-      System.assertEquals( 3, result.get(order.Id).appliedDiscountNames.size() );
-      System.assertEquals( 3, mats.size() );
+      System.assertEquals( 4, result.get(order.Id).appliedDiscountNames.size() );
+      System.assertEquals( 4, mats.size() );
 
 
     }
@@ -222,7 +229,7 @@ private class PartnerProgram_Service_T
       Id savingsProdId = LGND_Constants.savingsProductId;
       Map<String, Decimal> appliedDiscounts = new Map<String, Decimal>();
       List<AcctSeedERP__Material__c> mats = [
-        SELECT Id, AcctSeedERP__Comment__c
+        SELECT Id, Applied_Partner_Program_Discount__c
         FROM AcctSeedERP__Material__c
         WHERE AcctSeedERP__Product__c = :savingsProdId
         AND AcctSeedERP__Project__c = : erps[0].Id
@@ -235,9 +242,10 @@ private class PartnerProgram_Service_T
       System.assert( appliedDiscounts.keySet().contains( pp_coop.getName() ) );
       System.assert( appliedDiscounts.keySet().contains( pp_cash.getName() ) );
       System.assert( appliedDiscounts.keySet().contains( pp_vol.getName() ) );
+      System.assert( appliedDiscounts.keySet().contains( pp_kickStart.getName() ) );
       System.assertEquals( 1, appliedDiscounts.get( pp_vol.getName() ) );
-      System.assertEquals( 3, result.get(order.Id).appliedDiscountNames.size() );
-      System.assertEquals( 3, mats.size() );
+      System.assertEquals( 4, result.get(order.Id).appliedDiscountNames.size() );
+      System.assertEquals( 4, mats.size() );
 
 
     }
@@ -284,7 +292,7 @@ private class PartnerProgram_Service_T
       Id savingsProdId = LGND_Constants.savingsProductId;
       Map<String, Decimal> appliedDiscounts = new Map<String, Decimal>();
       List<AcctSeedERP__Material__c> mats = [
-        SELECT Id, AcctSeedERP__Comment__c
+        SELECT Id, Applied_Partner_Program_Discount__c
         FROM AcctSeedERP__Material__c
         WHERE AcctSeedERP__Product__c = :savingsProdId
         AND AcctSeedERP__Project__c = : erps[0].Id
@@ -351,13 +359,13 @@ private class PartnerProgram_Service_T
       Id savingsProdId = LGND_Constants.savingsProductId;
       Map<String, Decimal> appliedDiscounts = new Map<String, Decimal>();
       List<AcctSeedERP__Material__c> pontoon_mats = [
-        SELECT Id, AcctSeedERP__Comment__c
+        SELECT Id, Applied_Partner_Program_Discount__c
         FROM AcctSeedERP__Material__c
         WHERE AcctSeedERP__Product__c = :savingsProdId
         AND AcctSeedERP__Project__c = : pontoon_erps[0].Id
       ];
       List<AcctSeedERP__Material__c> vhull_mats = [
-        SELECT Id, AcctSeedERP__Comment__c
+        SELECT Id, Applied_Partner_Program_Discount__c
         FROM AcctSeedERP__Material__c
         WHERE AcctSeedERP__Product__c = :savingsProdId
         AND AcctSeedERP__Project__c = :vhull_erps[0].Id
@@ -371,11 +379,14 @@ private class PartnerProgram_Service_T
       System.assert( appliedDiscounts.keySet().contains( pp_cash.getName() ) );
       System.assert( appliedDiscounts.keySet().contains( pp_vol.getName() ) );
       System.assert( appliedDiscounts.keySet().contains( pp_pvol.getName() ) );
+      System.assert( appliedDiscounts.keySet().contains( pp_kickStart.getName() ) );
       System.assertEquals( 1, appliedDiscounts.get( pp_vol.getName() ) );
-      System.assertEquals( 1, appliedDiscounts.get( pp_pvol.getName() ) );
-      System.assertEquals( 4, result.get(order.Id).appliedDiscountNames.size() );
-      System.assertEquals( 3, pontoon_mats.size() );
-      System.assertEquals( 3, vhull_mats.size() );
+      System.assertEquals( 5, result.get(order.Id).appliedDiscountNames.size() );
+      System.assertEquals( 4, pontoon_mats.size() );
+      System.assertEquals( 4, vhull_mats.size() );
+      // discount percentages
+      System.assertEquals( 2, appliedDiscounts.get( pp_coop.getName() ) );
+      System.assertEquals( 2, appliedDiscounts.get( pp_kickStart.getName() ) );
 
     }
   }

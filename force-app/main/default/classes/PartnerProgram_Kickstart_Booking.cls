@@ -1,18 +1,18 @@
 /**
- * Created by dave on 2020-08-04.
+ * Created by dave on 2020-08-28.
  */
 
-public virtual class PartnerProgram_Coop extends PartnerProgramItem
+public with sharing class PartnerProgram_Kickstart_Booking extends PartnerProgramItem
 {
 
-  public PartnerProgram_Coop()
+  public PartnerProgram_Kickstart_Booking()
   {
-    this.name = 'Coop Discount';
+    this.name = 'Kickstart Booking Order Discount';
   }
 
   public override Boolean isApplicable()
   {
-    return this.erpWrappers.size() > 0;
+    return this.orderWrapper.isBookingOrder && this.erpWrappers.size() > 0;
   }
 
   public override List<AcctSeedERP__Material__c> apply()
@@ -31,7 +31,7 @@ public virtual class PartnerProgram_Coop extends PartnerProgramItem
 
   protected override Decimal determineSavingsPercent()
   {
-    return Partner_Program_Settings__c.getOrgDefaults().Coop_Discount_Percent__c;
+    return Partner_Program_Settings__c.getOrgDefaults().Kickstart_Booking_Order_Discount_Percent__c;
   }
 
 }
