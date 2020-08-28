@@ -262,10 +262,10 @@ public with sharing class PartnerProgram_Service
     {
       Set<String> appliedNames = new Set<String>();
       DealerOrderWrapper dealerOrderWrapper = this.dealerOrderWrappers.get( doId );
-      for (PartnerProgramItem_I item : dealerOrderWrapper.programItems )
+      for( PartnerProgramItem_I item : dealerOrderWrapper.programItems )
       {
         item.init(dealerOrderWrapper);
-        if (item.isApplicable())
+        if( item.isApplicable() )
         {
           discounts.addAll(item.apply());
           this.result.get( doId ).addAppliedDiscount(item);

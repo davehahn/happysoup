@@ -121,7 +121,7 @@
             <div class="data-group">
               <div class="slds-text-heading_small">Options</div>
               <aura:iteration items="{! v.lineData.options}" var="option">
-                <lightning:layout class="line-item">
+                <lightning:layout class="{! join(' ', 'line-item', if(option.hasChildren, 'has-children', ''))}">
                   <lightning:layoutItem size="8"
                                         padding="around-small">
                     <div class="slds-text-body_regular">{!option.name}</div>
@@ -134,6 +134,36 @@
                                                currencyCode="CAD" />
                   </lightning:layoutItem>
                 </lightning:layout>
+                <aura:if isTrue="{! !empty(option.kitParts) }">
+                  <aura:iteration items="{! option.kitParts }" var="kitPart">
+                    <lightning:layout class="line-item sub-item">
+                      <lightning:layoutItem size="8">
+                        <div class="slds-text-body_regular">{!kitPart.more_name}</div>
+                      </lightning:layoutItem>
+                      <lightning:layoutItem size="4"
+                                            class="slds-text-align_right">
+                        <lightning:formattedNumber value="{!kitPart.cost}"
+                                                   style="currency"
+                                                   currencyCode="CAD" />
+                      </lightning:layoutItem>
+                    </lightning:layout>
+                  </aura:iteration>
+                </aura:if>
+                <aura:if isTrue="{! !empty(option.subOptions) }">
+                  <aura:iteration items="{! option.subOptions }" var="subOpt">
+                    <lightning:layout class="line-item sub-item">
+                      <lightning:layoutItem size="8">
+                        <div class="slds-text-body_regular">{!subOpt.more_name}</div>
+                      </lightning:layoutItem>
+                      <lightning:layoutItem size="4"
+                                            class="slds-text-align_right">
+                        <lightning:formattedNumber value="{!subOpt.cost}"
+                                                   style="currency"
+                                                   currencyCode="CAD" />
+                      </lightning:layoutItem>
+                    </lightning:layout>
+                  </aura:iteration>
+                </aura:if>
               </aura:iteration>
             </div>
           </aura:if>

@@ -17,6 +17,11 @@
   font-weight: normal;
 }
 
+.THIS .sub-item.kit-item {
+  margin-left: 2rem;
+}
+
+
 .THIS .sub-item:before {
   position:absolute;
   content:'';
@@ -26,7 +31,18 @@
   height: 100%;
   border: 1px solid #CCC;
   border-right-color: transparent;
+
   border-top-color: transparent;
+}
+
+.THIS .sub-item.kit-item:before
+{
+  border-left-color: #CCC;
+  height: 65%;
+}
+
+.THIS > tbody > tr > td > .sub-item.kit-item + .sub-item.kit-item:before {
+  height: 100%;
 }
 
 .THIS .sub-item:first-child {
@@ -35,6 +51,22 @@
 
 .THIS .sub-item:first-child:before {
   bottom:50%;
+}
+
+.THIS .sub-item.kit-item:after
+{
+  position:absolute;
+  content:'';
+  bottom: calc(50% - 0.25rem);
+  left: -2rem;
+  width: 0.9rem;
+  height: 100%;
+  border-left: 1px solid #CCC;
+}
+
+.THIS .sub-item.kit-item.last-kit-item:after
+{
+  border-left-color: transparent;
 }
 
 @media only screen and (max-width:48em) {

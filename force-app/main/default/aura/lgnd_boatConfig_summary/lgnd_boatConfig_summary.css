@@ -5,14 +5,15 @@
 .THIS .slds-grid {
   font-size: .9rem;
   font-weight: 300;
-  border-bottom: 1px solid #b5b5b5;
+  border-top: 1px solid #b5b5b5;
   padding: 0.5rem 0;
+  position:relative;
 }
 
 .THIS .slds-grid.main-line {
-  line-height: 3rem;
   font-size: 1.25rem;
   font-weight: 400;
+  border-top: none;
 }
 
 .THIS .slds-grid.main-line .small-main-line-text {
@@ -23,19 +24,45 @@
   font-weight: 400;
 }
 
+.THIS .slds-grid.sub-option {
+  border-top: none;
+  padding: 0.25rem 0;
+  margin-left: 20px;
+}
+
+.THIS .slds-grid.sub-option:before {
+  position:absolute;
+  content: '';
+  width:0.75rem;
+  height: calc( 50% + 1rem);;
+  top: -1rem;
+  left: -1rem;
+  border-left: 1px solid #b5b5b5;
+  border-bottom: 1px solid #b5b5b5;
+}
+
+.THIS .slds-grid.sub-option.sub-option-0 {
+  margin-top: -0.125rem;
+}
+
+.THIS .slds-grid.sub-option.sub-option-0:before {
+  height: calc( 50% + 0.125rem);
+  top: -0.125rem;
+}
+
 .THIS .slds-grid.quantity-line {
   background: #f4f6f9;
+  line-height: 3rem;
 }
 
 .THIS .slds-grid.quantity-line > .slds-col:first-child {
-  padding-right: 1.5rem;
   color: #0070d2;
   font-weight: 400;
 }
 
 .THIS .slds-grid.quantity-line .quantity-selector {
   margin-bottom:0;
-  border-bottom: 0;
+  border-top: 0;
   margin-top: 2px;
 }
 

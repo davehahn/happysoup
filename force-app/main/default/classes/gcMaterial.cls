@@ -739,14 +739,14 @@ global without sharing class gcMaterial{
             for(AcctSeed__Product_Part__c comp : kit.AcctSeed__Product_Parts__r)
             {
                 listMatlComp.add(new AcctSeedERP__Material__c(
-                    AcctSeedERP__Product__c = comp.AcctSeed__Product_Part__c,
-                    Material__c = matlKit.Id,
-                    GMBLASERP__Price_Override__c = true,
-                    GMBLASERP__Unit_Price__c = 0,
-            		AcctSeedERP__Project__c = matlKit.AcctSeedERP__Project__c,
-            		AcctSeedERP__Project_Task__c = matlKit.AcctSeedERP__Project_Task__c,
-            		Part_Quantity_Specified_Multiplier__c = (comp.AcctSeed__Quantity__c == null ? 0 : comp.AcctSeed__Quantity__c),
-                    AcctSeedERP__Quantity_per_Unit__c = (comp.AcctSeed__Quantity__c == null ? 0 : comp.AcctSeed__Quantity__c) * (matlKit.AcctSeedERP__Quantity_per_Unit__c == null ? 0 : matlKit.AcctSeedERP__Quantity_per_Unit__c)
+									AcctSeedERP__Product__c = comp.AcctSeed__Product_Part__c,
+									Material__c = matlKit.Id,
+									GMBLASERP__Price_Override__c = true,
+									GMBLASERP__Unit_Price__c = 0,
+            			AcctSeedERP__Project__c = matlKit.AcctSeedERP__Project__c,
+            			AcctSeedERP__Project_Task__c = matlKit.AcctSeedERP__Project_Task__c,
+            			Part_Quantity_Specified_Multiplier__c = (comp.AcctSeed__Quantity__c == null ? 0 : comp.AcctSeed__Quantity__c),
+									AcctSeedERP__Quantity_per_Unit__c = (comp.AcctSeed__Quantity__c == null ? 0 : comp.AcctSeed__Quantity__c) * (matlKit.AcctSeedERP__Quantity_per_Unit__c == null ? 0 : matlKit.AcctSeedERP__Quantity_per_Unit__c)
                 ));
             }
         }

@@ -93,14 +93,24 @@
     {
       for( let option of options)
       {
-        if( option.isSelected )
+        if( ( option.isCheckbox && option.isSelected ) ||
+            ( !option.isCheckbox && option.quantitySelected > 0 ) )
+        {
+          console.log( 'Add Option - ');
+          console.log( option );
           erpLineItems.push( option );
+        }
         if( option.subOptions !== undefined && option.subOptions !== null )
         {
           for( var i=0; i<option.subOptions.length; i++ )
           {
-            if( option.subOptions[i].isSelected )
+            if( ( option.subOptions[i].isCheckbox && option.subOptions[i].isSelected ) ||
+                (!option.subOptions[i].isCheckbox && option.subOptions[i].quantitySelected > 0 ) )
+            {
+              console.log( 'Add Sub Option - ');
+              console.log( option.subOptions[i] );
               erpLineItems.push( option.subOptions[i] );
+            }
           }
         }
       }
@@ -428,7 +438,10 @@
                 optionGroup.values.forEach( (option) => {
                   if( productId === option.id )
                   {
-                    option.isSelected = true;
+                    if( options[productId].isCheckbox )
+                      option.isSelected = true;
+                    else
+                      option.quantitySelected = options[productId].quantitySelected;
                     if(options[productId].subOptions !== undefined && options[productId].subOptions !== null )
                       option.subOptions = options[productId].subOptions;
                   }
@@ -849,83 +862,83 @@
           }
           component.set('v.feeList', allFeeList);
           component.set('v.fees', fees);
-        },
-        handleEarlyOrderDiscount = function( boatCost )
-        {
-          var isMotorRequest = component.get('v.isMotorRequest'),
-              total,
-              discountName = 'Early Booking Discount',
-              coopDiscName = 'Co-Op Discount',
-              discountAmount,
-              coopDiscRate = 0,
-              foundIt = false,
-              discountRate,
-              availableDiscounts = component.get('v.availableDiscounts'),
-              discounts = component.get('v.discounts');
-          if( isMotorRequest )
-            return false;
-
-          //find out if 'Early Booking Discount' is in availableDiscounts
-          for( var i=0; i<availableDiscounts.length; i++ )
-          {
-            if( availableDiscounts[i].name === discountName)
-            {
-              discountRate = availableDiscounts[i].amount;
-            }
-            if( availableDiscounts[i].name === coopDiscName )
-            {
-              coopDiscRate = availableDiscounts[i].amount;
-            }
-          }
-
-          //if the discountRate is null this order is not applicable
-          if( discountRate === undefined )
-            return false;
-
-          //total = self.calculateTotalForEarlyBooking( component );
-          total = ( parseFloat(boatCost) * ( 100 - coopDiscRate) ) / 100;
-          discountAmount = ( total * ( discountRate / 100 ) ) * -1;
-          //find the 'Early Booking Discount' and update the total or create it
-          for( var i=0; i<discounts.length; i++ )
-          {
-            if( discounts[i].name === discountName )
-            {
-              discounts[i].amount = discountAmount;
-              foundIt = true;
-              break;
-            }
-          }
-          if( !foundIt )
-          {
-            discounts.push({
-              name: discountName,
-              amount:discountAmount
-            });
-          }
-          component.set('v.discounts', discounts);
-        },
-        handleCoopDiscount = function( boatCost )
-        {
-          var availDiscounts = component.get('v.availableDiscounts'),
-              discounts = component.get('v.discounts'),
-              coopRate;
-          for( var i=0; i<availDiscounts.length; i++ )
-          {
-            if( availDiscounts[i].name === 'Co-Op Discount');
-            {
-              coopRate = availDiscounts[i].amount;
-              break;
-            }
-          }
-          if( coopRate !== undefined && coopRate !== null )
-          {
-            var disc = {};
-            disc.name = 'Co-Op Discount';
-            disc.amount = (parseFloat(boatCost) * ( coopRate / 100 )) * -1;
-            discounts.push( disc );
-            component.set('v.discounts', discounts);
-          }
-        }
+        };
+//        handleEarlyOrderDiscount = function( boatCost )
+//        {
+//          var isMotorRequest = component.get('v.isMotorRequest'),
+//              total,
+//              discountName = 'Early Booking Discount',
+//              coopDiscName = 'Co-Op Discount',
+//              discountAmount,
+//              coopDiscRate = 0,
+//              foundIt = false,
+//              discountRate,
+//              availableDiscounts = component.get('v.availableDiscounts'),
+//              discounts = component.get('v.discounts');
+//          if( isMotorRequest )
+//            return false;
+//
+//          //find out if 'Early Booking Discount' is in availableDiscounts
+//          for( var i=0; i<availableDiscounts.length; i++ )
+//          {
+//            if( availableDiscounts[i].name === discountName)
+//            {
+//              discountRate = availableDiscounts[i].amount;
+//            }
+//            if( availableDiscounts[i].name === coopDiscName )
+//            {
+//              coopDiscRate = availableDiscounts[i].amount;
+//            }
+//          }
+//
+//          //if the discountRate is null this order is not applicable
+//          if( discountRate === undefined )
+//            return false;
+//
+//          //total = self.calculateTotalForEarlyBooking( component );
+//          total = ( parseFloat(boatCost) * ( 100 - coopDiscRate) ) / 100;
+//          discountAmount = ( total * ( discountRate / 100 ) ) * -1;
+//          //find the 'Early Booking Discount' and update the total or create it
+//          for( var i=0; i<discounts.length; i++ )
+//          {
+//            if( discounts[i].name === discountName )
+//            {
+//              discounts[i].amount = discountAmount;
+//              foundIt = true;
+//              break;
+//            }
+//          }
+//          if( !foundIt )
+//          {
+//            discounts.push({
+//              name: discountName,
+//              amount:discountAmount
+//            });
+//          }
+//          component.set('v.discounts', discounts);
+//        },
+//        handleCoopDiscount = function( boatCost )
+//        {
+//          var availDiscounts = component.get('v.availableDiscounts'),
+//              discounts = component.get('v.discounts'),
+//              coopRate;
+//          for( var i=0; i<availDiscounts.length; i++ )
+//          {
+//            if( availDiscounts[i].name === 'Co-Op Discount');
+//            {
+//              coopRate = availDiscounts[i].amount;
+//              break;
+//            }
+//          }
+//          if( coopRate !== undefined && coopRate !== null )
+//          {
+//            var disc = {};
+//            disc.name = 'Co-Op Discount';
+//            disc.amount = (parseFloat(boatCost) * ( coopRate / 100 )) * -1;
+//            discounts.push( disc );
+//            component.set('v.discounts', discounts);
+//          }
+//        }
 
     return new Promise( function( resolve, reject ) {
       if( params.whatChanged === 'reset' )

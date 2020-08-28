@@ -3,8 +3,10 @@
   {
   },
 
-  handleConfigChange : function(component, event, helper) {
+  handleConfigChange : function(component, event, helper)
+  {
     var params = event.getParams();
+
     component.set('v.boat', params.boat);
     component.set('v.trailer', params.trailer);
     component.set('v.motor', params.motor);
@@ -21,7 +23,8 @@
       {
         for( let opt of optionGroup.values )
         {
-          if( opt.isSelected )
+          if( (opt.isCheckbox && opt.isSelected) ||
+              (!opt.isCheckbox && opt.quantitySelected > 0 ) )
             ol.push( opt );
         }
       }

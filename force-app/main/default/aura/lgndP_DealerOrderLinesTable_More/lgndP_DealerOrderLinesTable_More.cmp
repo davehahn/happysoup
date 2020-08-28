@@ -91,19 +91,7 @@
 
               <!-- Options Lines -->
               <aura:if isTrue="{! !empty(item.options) }">
-                <aura:iteration items="{!item.options}" var="opt">
-                  <div class="slds-grid slds-wrap">
-                    <div class="slds-col slds-size_9-of-12">
-                      <div class="sub-item">
-                        {!opt.name}
-                      </div>
-                    </div>
-                    <div class="slds-col slds-size_3-of-12 slds-text-align_right slds-p-right_small">
-                      <c:lgnd_currencyDisplay value="{!opt.cost}"
-                                              zeroLabel="Included" />
-                    </div>
-                  </div>
-                </aura:iteration>
+                <c:lgndP_OptionLine_More options="{!item.options}" />
               </aura:if>
 
               <!-- Fees Lines -->
@@ -260,19 +248,7 @@
 
               <!-- Options Lines -->
               <aura:if isTrue="{! !empty(item.options) }">
-                <aura:iteration items="{!item.options}" var="opt">
-                  <div class="slds-grid slds-wrap">
-                    <div class="slds-col slds-size_9-of-12">
-                      <div class="sub-item">
-                        {!opt.name}
-                      </div>
-                    </div>
-                    <div class="slds-col slds-size_3-of-12 slds-text-align_right slds-p-right_small">
-                      <c:lgnd_currencyDisplay value="{!opt.cost}"
-                                              zeroLabel="Included" />
-                    </div>
-                  </div>
-                </aura:iteration>
+                <c:lgndP_OptionLine_More options="{!item.options}" />
               </aura:if>
 
               <!-- Fees Lines -->
@@ -429,19 +405,7 @@
 
               <!-- Options Lines -->
               <aura:if isTrue="{! !empty(item.options) }">
-                <aura:iteration items="{!item.options}" var="opt">
-                  <div class="slds-grid slds-wrap">
-                    <div class="slds-col slds-size_9-of-12">
-                      <div class="sub-item">
-                        {!opt.name}
-                      </div>
-                    </div>
-                    <div class="slds-col slds-size_3-of-12 slds-text-align_right slds-p-right_small">
-                      <c:lgnd_currencyDisplay value="{!opt.cost}"
-                                              zeroLabel="Included" />
-                    </div>
-                  </div>
-                </aura:iteration>
+                <c:lgndP_OptionLine_More options="{!item.options}" />
               </aura:if>
 
               <!-- Fees Lines -->
@@ -598,19 +562,7 @@
 
               <!-- Options Lines -->
               <aura:if isTrue="{! !empty(item.options) }">
-                <aura:iteration items="{!item.options}" var="opt">
-                  <div class="slds-grid slds-wrap">
-                    <div class="slds-col slds-size_9-of-12">
-                      <div class="sub-item">
-                        {!opt.name}
-                      </div>
-                    </div>
-                    <div class="slds-col slds-size_3-of-12 slds-text-align_right slds-p-right_small">
-                      <c:lgnd_currencyDisplay value="{!opt.cost}"
-                                              zeroLabel="Included" />
-                    </div>
-                  </div>
-                </aura:iteration>
+                <c:lgndP_OptionLine_More options="{!item.options}" />
               </aura:if>
 
               <!-- Fees Lines -->

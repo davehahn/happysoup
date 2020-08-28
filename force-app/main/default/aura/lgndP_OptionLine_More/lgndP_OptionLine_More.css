@@ -1,0 +1,39 @@
+/**
+ * Created by dave on 2020-08-28.
+ */
+
+.THIS .sub-item {
+  margin-left: 1rem;
+  padding-top: 0.5rem;
+  position: relative;
+  line-height: 1.5rem;
+  font-weight: 300;
+}
+
+.THIS .sub-item.kit-item {
+  margin-left: 2rem;
+}
+
+.THIS > .slds-col > .sub-item:before {
+  position:absolute;
+  content:'';
+  bottom: 50%;
+  left: -1rem;
+  width: 0.9rem;
+  height: 100%;
+  border: 1px solid #16325c;
+  border-right-color: transparent;
+  border-top-color: transparent;
+}
+
+.THIS > .slds-col > .sub-item.kit-item:after{
+  position:absolute;
+  content:'';
+  bottom: 50%;
+  left: -2rem;
+  width: 0.9rem;
+  height: 100%;
+  border-left: 1px solid #16325c;
+}
+
+

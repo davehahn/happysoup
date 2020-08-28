@@ -2,36 +2,36 @@
 	toggleSelected : function(component, event, helper)
   {
     console.log('toggleSelected');
-    var selected = component.get('v.isSelected'),
-        hasOptions = component.get('v.hasOptions'),
-        parentProductId = component.get('v.parent_id'),
-        options;
-    //component.set('v.isSelected', !selected);
-    console.log( 'option is selected ? = ' + selected);
-    console.log( 'option has subOptions? = ' + hasOptions );
-    console.log( 'option parent_id = ' + parentProductId );
-    if( selected == true &&
-        hasOptions == true  )
+    var option = component.get('v.option');
+
+    if( option.isSelected == true &&
+        option.hasOptions == true  )
     {
-      helper.fetchsubOptions( component )
-      .then(
-        $A.getCallback( function( response ) {
-          console.log('sub options');
-          console.log( response)
-          component.set('v.subOptions', response);
-          helper.changeComplete( component );
-        }),
-        $A.getCallback( function( err ) {
-          alert(err);
-        })
-      );
+      helper.fetchsubOptions( component );
+    }
+    else
+    {
+      option.subOptions = [];
+      component.set('v.option', option);
+      helper.changeComplete( component );
+    }
+
+	},
+
+	selectChanged: function( component, event, helper )
+	{
+	  let option = component.get('v.option');
+
+	  if( option.hasOptions &&
+	      option.quantitySelected > 0 )
+	  {
+	    helper.fetchsubOptions( component );
     }
     else
     {
       component.set('v.subOptions', []);
       helper.changeComplete( component );
     }
-
-	}
+  }
 
 })
