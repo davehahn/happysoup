@@ -1,4 +1,22 @@
 ({
+  onRender: function( component, event, helper )
+  {
+    let rows = document.querySelectorAll('td[data-label="Item Name"]');
+    rows.forEach( row =>
+    {
+      if( row.children.length > 0 )
+      {
+        if(row.children[row.children.length - 1].classList.contains('kit-item') )
+        {
+          for( let i=0; i<row.children.length; i++ )
+          {
+            row.children[i].classList.add('last-kit-item');
+          }
+        }
+      }
+    });
+  },
+
   handleTableAction: function( component, event, helper )
   {
     var menuSelection = event.getParam("value").split(':'),

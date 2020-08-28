@@ -1,15 +1,8 @@
 <aura:component controller="DealerOrder_Ext" access="global">
   <!-- Attributes -->
-  <aura:attribute type="String" name="product_id"  access="global"/>
-  <aura:attribute type="String" name="parent_id"  access="global"/>
-  <aura:attribute type="String" name="product_name"  access="global"/>
-  <aura:attribute type="Decimal" name="cost"  access="global"/>
   <aura:attribute type="String" name="pricebookId" access="global" />
-  <aura:attribute type="Boolean" name="hasOptions"  access="global"/>
   <aura:attribute type="String" name="className" default="" access="global" />
-  <aura:attribute type="Object" name="subOptions" access="global" />
-  <aura:attribute type="Boolean" name="isDisabled" default="false" />
-  <aura:attribute type="Boolean" name="isSelected"/>
+  <aura:attribute type="Object" name="option" />
 
   <ltng:require scripts="{!join(',', $Resource.Libraries +'/js/LightningApex.js',
                                      $Resource.Libraries +'/js/LightningUtils.js') }" />
@@ -20,34 +13,49 @@
 
   <div class="{! 'slds-grid option-row slds-wrap ' + v.className}">
     <div class="slds-col slds-size--1-of-1 slds-medium-size--2-of-12 slds-large-size--2-of-12">
-      <lightning:input type="toggle"
-        name="{!v.product_name + '-toggle'}"
-        label="{!v.product_name}"
-        checked="{!v.isSelected}"
-        disabled="{!v.isDisabled}"
-        onchange="{!c.toggleSelected}"
-        messageToggleActive=""
-        messageToggleInactive="" />
+      <aura:if isTrue="{!v.option.isCheckbox}">
+        <lightning:input type="toggle"
+          name="{!v.option.name + '-toggle'}"
+          label="{!v.option.name}"
+          checked="{!v.option.isSelected}"
+          disabled="{!v.option.isDisabled}"
+          onchange="{!c.toggleSelected}"
+          messageToggleActive=""
+          messageToggleInactive="" />
+      </aura:if>
+
+      <aura:if isTrue="{! not(v.option.isCheckbox) }">
+        <div class="select-container">
+          <lightning:select label="{!v.option.name}"
+                            variant="label-hidden"
+                            value="{!v.option.quantitySelected}"
+                            onchange="{!c.selectChanged}">
+            <aura:iteration items="{!v.option.quantityOptions}" var="q">
+              <aura:if isTrue="{! equals( g, v.option.quantitySelected)}">
+                <option value="{!q}" selected="true">{!q}</option>
+              </aura:if>
+              <aura:if isTrue="{! !equals( g, v.option.quantitySelected)}">
+                <option value="{!q}">{!q}</option>
+              </aura:if>
+            </aura:iteration>
+          </lightning:select>
+        </div>
+      </aura:if>
     </div>
     <div class="slds-col slds-size--1-of-1 slds-medium-size--8-of-12 slds-large-size--8-of-12">
       <div class="slds-truncate">
-        {!v.product_name}
+        {!v.option.name}
       </div>
     </div>
     <div class="slds-col slds-size--1-of-1 slds-medium-size--2-of-12 slds-large-size--2-of-12 slds-text-align--right">
-        <lightning:formattedNumber value="{!v.cost}" style="currency" currencyCode="CAD" />
+        <lightning:formattedNumber value="{!v.option.cost}" style="currency" currencyCode="CAD" />
     </div>
   </div>
   <!-- <aura:renderIf isTrue="{!!empty(v.subOptions)}"> -->
-    <aura:iteration items="{!v.subOptions}" var="sub">
-    <c:lgnd_boatConfig_optionSelect product_id="{!sub.id}"
-                                    product_name="{!sub.name}"
-                                    cost="{!sub.cost}"
-                                    isSelected="{!sub.isSelected}"
-                                    isDisabled="{!sub.isDisabled}"
-                                    parent_id="{!sub.parent_id}"
-                                    pricebookId="{!v.pricebookId}"
-                                    className="subOption" />
+  <aura:iteration items="{!v.option.subOptions}" var="sub">
+    <c:lgnd_boatConfig_optionSelect pricebookId="{!v.pricebookId}"
+                                    className="subOption"
+                                    option="{!sub}"/>
   </aura:iteration>
 
   <!-- </aura:renderIf> -->

@@ -265,13 +265,35 @@
             </thead>
             <tbody>
               <aura:iteration items="{!v.options}" var="item">
-                <tr>
+                <tr class="{! if( item.hasChildren, 'has-children', '')}">
                   <td>{!item.name}</td>
                   <td class="slds-text-align--right">
                     <c:lgnd_currencyDisplay value="{!item.cost}"
                                             zeroLabel="Included" />
                   </td>
                 </tr>
+                <aura:if isTrue="{! !empty(item.kitParts)}">
+                  <aura:iteration items="{! item.kitParts}" var="kitPart">
+                    <tr class="sub-item">
+                      <td>{!kitPart.name}</td>
+                      <td class="slds-text-align--right">
+                        <c:lgnd_currencyDisplay value="{!kitPart.cost}"
+                                                zeroLabel="Included" />
+                      </td>
+                    </tr>
+                  </aura:iteration>
+                </aura:if>
+                <aura:if isTrue="{! !empty(item.subOptions)}">
+                  <aura:iteration items="{! item.subOptions}" var="subOpt">
+                    <tr class="sub-item">
+                      <td>{!subOpt.name}</td>
+                      <td class="slds-text-align--right">
+                        <c:lgnd_currencyDisplay value="{!subOpt.cost}"
+                                                zeroLabel="Included" />
+                      </td>
+                    </tr>
+                  </aura:iteration>
+                </aura:if>
               </aura:iteration>
             </tbody>
           </table>

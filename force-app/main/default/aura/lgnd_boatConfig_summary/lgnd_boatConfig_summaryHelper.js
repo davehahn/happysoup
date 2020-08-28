@@ -35,24 +35,42 @@
 
     if( motor !== null && motor.length !== 0 && motor.cost !== undefined && !isNaN(motor.cost))
       total += motor.cost;
+
     if( trollingMotor !== null && trollingMotor.length !== 0 && trollingMotor.cost !== undefined && !isNaN(trollingMotor.cost))
       total += trollingMotor.cost;
 
     if( options !== null && Object.keys( options ).length > 0 )
     {
-      for( var key in options )
-      {
-        if( options[key].isSelected == true )
-          total += parseFloat( options[key].cost );
-        if( options[key].subOptions !== undefined && options[key].subOptions !== null )
-        {
-          for( var i=0; i<options[key].subOptions.length; i++ )
+      options.forEach( optionGroup => {
+        optionGroup.values.forEach( option => {
+          if( option.isCheckbox && option.isSelected )
           {
-            if( options[key].subOptions[i].isSelected === true )
-              total += options[key].subOptions[i].cost;
+            total += parseFloat( option.cost );
           }
-        }
-      }
+
+          if( option.isCheckbox != true && parseFloat(option.quantitySelected) > 0 )
+          {
+            total += ( parseFloat(option.quantitySelected) * parseFloat(option.cost) );
+          }
+
+          if( option.subOptions !== undefined && option.subOptions !== null )
+          {
+            for( var i=0; i<option.subOptions.length; i++ )
+            {
+              if( option.subOptions[i].isCheckbox &&
+                  option.subOptions[i].isSelected === true )
+              {
+                total += option.subOptions[i].cost;
+              }
+              if( !option.subOptions[i].isCheckbox &&
+                  option.subOptions[i].quantitySelected > 0 )
+                {
+                  total += option.subOptions[i].cost * option.subOptions[i].quantitySelected;
+                }
+            }
+          }
+        })
+      })
     }
     if( motorOptions !== null && motorOptions.length > 0 )
     {

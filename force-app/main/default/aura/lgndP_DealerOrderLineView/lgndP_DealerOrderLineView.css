@@ -19,7 +19,41 @@
 
 
 .THIS .slds-grid.line-item {
+  border-top: 1px solid #d8dde6;
+  position:relative;
+}
+
+.THIS .slds-grid.line-item.has-children > div {
+  padding-bottom: 0.25rem;
+}
+
+.THIS .slds-grid.line-item:first-child {
+  border-top: none;
+}
+
+.THIS .slds-grid.line-item:last-child {
   border-bottom: 1px solid #d8dde6;
+}
+
+.THIS .slds-grid.line-item.sub-item {
+  padding: 0.125rem 0.75rem 0.125rem 2rem;
+  border-top: none;
+}
+
+.THIS .slds-grid.line-item.sub-item:before {
+  position:absolute;
+  content:'';
+  bottom: 50%;
+  left: 1rem;
+  width: 0.9rem;
+  height: 100%;
+  border: 1px solid #CCC;
+  border-right-color: transparent;
+  border-top-color: transparent;
+}
+
+.THIS .slds-grid.line-item.has-children + .line-item.sub-item:before {
+  height: 60%;
 }
 
 .THIS .slds-grid.line-item.line-total {

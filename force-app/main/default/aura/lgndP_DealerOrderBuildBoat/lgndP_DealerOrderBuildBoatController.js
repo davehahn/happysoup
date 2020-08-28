@@ -15,17 +15,6 @@
     {
       component.set('v.province', 'Others');
     }
-//    helper.findAvailableDiscounts( component )
-//    .then(
-//      $A.getCallback( function( result ) {
-//        component.set('v.availableDiscounts', result );
-//        return helper.setUserType( component );
-//      }),
-//      $A.getCallback( function( err ) {
-//        LightningUtils.errorToast( err );
-//      })
-//    )
-    //setUserType then
     helper.setUserType( component )
     .then(
       $A.getCallback( function() {
@@ -44,17 +33,6 @@
     var params = event.getParam('arguments'),
         result;
 
-
-//    helper.findAvailableDiscounts( component )
-//    .then(
-//      $A.getCallback( function( result ) {
-//        component.set('v.availableDiscounts', result );
-//        return helper.setUserType( component );
-//      }),
-//      $A.getCallback( function( err ) {
-//        LightningUtils.errorToast( err );
-//      })
-//    )
     helper.setUserType( component )
     .then(
       $A.getCallback( function() {
@@ -272,6 +250,7 @@
       //SelectBoatFunction SUCCESS
       $A.getCallback( function( result ) {
         boat = result;
+        console.log( JSON.parse( JSON.stringify( boat ) ) );
         return helper.handleTrailer( component, boat.standardTrailer_Id );
       }),
       //SelectBoatFunction FAIL
@@ -370,6 +349,7 @@
           whatChanged: 'options',
           changeData: params
         };
+
     helper.handleConfigChange( component, changeData )
     .then(
       $A.getCallback( function()

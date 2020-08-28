@@ -43,11 +43,8 @@ public virtual class PartnerProgram_Cash extends PartnerProgramItem
       );
       totalSavings += savings;
     }
-    if(totalSavings <> 0) {
-      this.resultMessage.totalSaving = totalSavings;
-      this.resultMessage.success = 'This order qualifies for the Legend Boats ' + this.name;
-    }
-    System.debug( discounts );
+    this.resultMessage.totalSaving = totalSavings;
+    this.resultMessage.success = 'This order qualifies for the Legend Boats ' + this.name;
     return discounts;
   }
 

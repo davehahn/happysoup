@@ -311,9 +311,14 @@ public without sharing class DealerOrder_Ext {
     public String name { get; set; }
     public String parent_id { get; set; }
     public Decimal cost { get; set; }
+    public Integer quantityStandard { get; set; }
+    public Integer quantityMaximum { get; set; }
+    public Integer quantitySelected { get; set; }
     public Boolean isSelected { get; set; }
     public Boolean hasOptions { get; set; }
     public Boolean isDisabled { get; set; }
+    public Boolean isCheckbox { get; set; }
+    public Set<Integer> quantityOptions { get; set; }
     public List<OptionWrapper> subOptions { get; set; }
 
     public OptionWrapper( LGND_APIv2_Product.PartProduct pp )
@@ -323,7 +328,26 @@ public without sharing class DealerOrder_Ext {
       this.cost = pp.QuantityStandard > 0 ? 0 : pp.PartnerPrice;
       this.hasOptions = pp.HasOptions;
       this.isSelected = pp.QuantityStandard > 0 ? true : false;
-      this.isDisabled = pp.QuantityStandard > 0;
+      this.isDisabled = pp.QuantityStandard == pp.MaximumQuantity;
+      this.quantityStandard = pp.QuantityStandard;
+      this.quantityMaximum = pp.MaximumQuantity;
+      this.quantitySelected = pp.QuantityStandard;
+      this.isCheckbox = pp.MaximumQuantity == 1;
+      buildQuantityOptions();
+    }
+
+    public OptionWrapper( PricebookEntry pbe, Product_Option__c opt )
+    {
+      this.id = pbe.Product2Id;
+      this.name = pbe.Product2.Name;
+      this.cost = pbe.UnitPrice;
+      this.isSelected = opt.Standard__c > 0;
+      this.quantityStandard = Integer.valueOf( opt.Standard__c );
+      this.quantityMaximum = Integer.valueOf( opt.Maximum__c );
+      this.quantitySelected = Integer.valueOf( opt.Standard__c );
+      this.isCheckbox = opt.Maximum__c == 1;
+      this.isDisabled = opt.Standard__c == opt.Maximum__c;
+      buildQuantityOptions();
     }
 
     public OptionWrapper( PricebookEntry pbe )
@@ -346,6 +370,25 @@ public without sharing class DealerOrder_Ext {
       this.isSelected = true;
     }
 
+    public OptionWrapper( AcctSeedERP__Material__c mat,
+                          Product_Option__c opt)
+    {
+      this.id = mat.AcctSeedERP__Product__c;
+      this.name = mat.AcctSeedERP__Product__r.Name;
+      this.cost = mat.GMBLASERP__Unit_Price__c;
+      if( mat.Parent_Product__c != null )
+        this.parent_id = mat.Parent_Product__c;
+      this.isCheckbox = opt.Maximum__c == 1;
+      if( this.isCheckbox )
+        this.isSelected = true;
+      else
+        this.quantitySelected = Integer.valueOf( mat.AcctSeedERP__Quantity_Per_Unit__c );
+      this.quantityStandard = Integer.valueOf( opt.Standard__c );
+      this.quantityMaximum = Integer.valueOf( opt.Maximum__c );
+      this.isDisabled = opt.Standard__c == opt.Maximum__c;
+      buildQuantityOptions();
+    }
+
     public OptionWrapper( Legend_Transfer_Item__c item )
     {
       this.id = item.Product__c;
@@ -354,6 +397,15 @@ public without sharing class DealerOrder_Ext {
       if( item.Parent_Product__c != null )
         this.parent_id = item.Parent_Product__c;
       this.isSelected = true;
+    }
+
+    private void buildQuantityOptions()
+    {
+      this.quantityOptions = new Set<Integer>();
+      for( Integer i=this.quantityStandard; i<=this.quantityMaximum; i++ )
+      {
+        this.quantityOptions.add( i );
+      }
     }
   }
 
@@ -382,13 +434,13 @@ public without sharing class DealerOrder_Ext {
 
   public class DolViewWrapper {
     public String notes { get; set; }
-    public Map<String, String> boat { get; set; }
-    public Map<String, String> motor { get; set; }
-    public Map<String, String> trollingMotor { get; set; }
-    public Map<String, String> trailer { get; set; }
-    public List<Map<String, String>> options { get; set; }
-    public List<Map<String, String>> fees { get; set; }
-    public List<Map<String, String>> discounts { get; set; }
+    public Map<String, Object> boat { get; set; }
+    public Map<String, Object> motor { get; set; }
+    public Map<String, Object> trollingMotor { get; set; }
+    public Map<String, Object> trailer { get; set; }
+    public List<Map<String, Object>> options { get; set; }
+    public List<Map<String, Object>> fees { get; set; }
+    public List<Map<String, Object>> discounts { get; set; }
     public String invoiceNumber { get; set; }
     public Integer quantity { get; set; }
     public Decimal orderTotal { get; set; }
@@ -402,9 +454,9 @@ public without sharing class DealerOrder_Ext {
     {
       this.totalBeforeSavings = 0;
       this.totalSavings = 0;
-      this.options = new List<Map<String, String>>();
-      this.fees = new List<Map<String, String>>();
-      this.discounts = new List<Map<String, String>>();
+      this.options = new List<Map<String, Object>>();
+      this.fees = new List<Map<String, Object>>();
+      this.discounts = new List<Map<String, Object>>();
     }
 
     public DolViewWrapper addBoat( AcctSeedERP__Material__c mat )
@@ -463,8 +515,23 @@ public without sharing class DealerOrder_Ext {
 
     public DolViewWrapper addOption( AcctSeedERP__Material__c mat )
     {
-      this.options.add( makeEntry(mat.AcctSeedERP__Product__r.Name, mat.GMBLASERP__Unit_Price__c) );
-      this.totalBeforeSavings += mat.GMBLASERP__Unit_Price__c;
+      Map<String, Object> entry =
+        makeEntry(mat.AcctSeedERP__Product__r.Name, mat.GMBLASERP__Unit_Price__c);
+      entry.put('hasChildren', false);
+      entry.put( 'parentId', mat.Parent_Product__c );
+      entry.put( 'productId', mat.AcctSeedERP__Product__c );
+      entry.put( 'kitParentId', mat.Material__c == null ? null : mat.Material__r.AcctSeedERP__Product__c );
+      if( mat.AcctSeedERP__Quantity_Per_Unit__c > 1 )
+      {
+        entry.put('name', entry.get('name') + '  ( qty ' + String.valueOf(mat.AcctSeedERP__Quantity_Per_Unit__c.stripTrailingZeros()) + ' )' );
+        if( mat.GMBLASERP__Unit_Price__c == 0 )
+          entry.put('more_name', entry.get('more_name') + '  ( ' + String.valueOf(mat.AcctSeedERP__Quantity_Per_Unit__c.stripTrailingZeros()) + ' )' );
+        else
+          entry.put('more_name', entry.get('more_name') + '  ( ' + String.valueOf(mat.AcctSeedERP__Quantity_Per_Unit__c.stripTrailingZeros()) + ' @ $' + mat.GMBLASERP__Unit_Price__c.setScale(2) + ' ea. )' );
+        entry.put('cost', mat.AcctSeedERP__Quantity_Per_Unit__c * mat.GMBLASERP__Unit_Price__c );
+      }
+      this.options.add( entry );
+      this.totalBeforeSavings += mat.GMBLASERP__Unit_Price__c * mat.AcctSeedERP__Quantity_Per_Unit__c;
       return this;
     }
     public DolViewWrapper addOption( Legend_Transfer_Item__c item )
@@ -492,19 +559,70 @@ public without sharing class DealerOrder_Ext {
       return this;
     }
 
-    private Map<String, String> makeEntry( String name, Decimal cost )
+    public void groupOptions()
     {
-      Map<String, String> entry = new Map<String, String>();
+      List<Map<String, Object>> result = new List<Map<String, Object>>();
+      Map<String, Map<String,Object>> groupedOptions = new Map<String, Map<String, Object>>();
+      Map<String, List<Map<String, Object>>> subOptionMap = new Map<String, List<Map<String, Object>>>();
+      Map<String, List<Map<String, Object>>> kitPartsMap = new Map<String, List<Map<String, Object>>>();
+      for( Map<String, Object> option : this.options )
+      {
+        if( option.containsKey('parentId') && option.get('parentId') != null)
+        {
+          if( !subOptionMap.containsKey( (String)option.get('parentId') ) )
+            subOptionMap.put( (String)option.get('parentId'), new List<Map<String, Object>>() );
+          subOptionMap.get( (String)option.get('parentId') ).add( option );
+        }
+        else if( option.containsKey('kitParentId') && option.get('kitParentId') != null)
+        {
+          if( !kitPartsMap.containsKey( (String)option.get('kitParentId') ) )
+            kitPartsMap.put( (String)option.get('kitParentId'), new List<Map<String, Object>>() );
+          kitPartsMap.get( (String)option.get('kitParentId') ).add( option );
+        }
+        else
+        {
+          groupedOptions.put( (String)option.get('productId'), option );
+        }
+      }
+      for( String parentId : subOptionMap.keySet() )
+      {
+        if( groupedOptions.containsKey( parentId ) )
+        {
+          List<Map<String, Object>> subOptions = subOptionMap.get( parentId );
+          groupedOptions.get( parentId ).put('subOptions', subOptions );
+          groupedOptions.get( parentId ).put('hasChildren', true);
+        }
+      }
+      for( String kitParentId : kitPartsMap.keySet() )
+      {
+        if( groupedOptions.containsKey( kitParentId ) )
+        {
+          List<Map<String, Object>> kitParts = kitPartsMap.get( kitParentId );
+          groupedOptions.get( kitParentId ).put('kitParts', kitParts );
+          groupedOptions.get( kitParentId ).put('hasChildren', true);
+        }
+      }
+      for( String productId : groupedOptions.keySet() )
+      {
+        result.add( groupedOptions.get( productId ) );
+      }
+      this.options = result;
+    }
+
+    private Map<String, Object> makeEntry( String name, Decimal cost )
+    {
+      Map<String, Object> entry = new Map<String, Object>();
       entry.put('name', name);
-      entry.put('cost', String.valueOf( cost ) );
+      entry.put('more_name', name);
+      entry.put('cost', cost );
       if( cost == 0 )
         entry.put('cost_description', 'Included');
       return entry;
     }
 
-    private Map<String, String> makeEntry( String name, Decimal cost, String serNum )
+    private Map<String, Object> makeEntry( String name, Decimal cost, String serNum )
     {
-      Map<String, String> entry = new Map<String, String>();
+      Map<String, Object> entry = new Map<String, Object>();
       entry.put('name', name);
       entry.put('serial_number', serNum);
       entry.put('cost', String.valueOf( cost ) );
@@ -512,6 +630,7 @@ public without sharing class DealerOrder_Ext {
         entry.put('cost_description', 'Included');
       return entry;
     }
+
   }
 
 	public DealerOrder_Ext(ApexPages.StandardController std) {}
@@ -554,7 +673,6 @@ public without sharing class DealerOrder_Ext {
   {
     DetailsWrapper dw = new DetailsWrapper();
     Id contactId = [SELECT ContactId FROM User WHERE Id = :Userinfo.getUserId()].ContactId;
-    System.debug( contactId );
     try {
       Contact ct = [SELECT AccountId, Account.BillingState, Account.Is_Internal__c FROM Contact WHERE Id = :contactId];
       dw.accountId = ct.AccountId;
@@ -610,7 +728,6 @@ public without sharing class DealerOrder_Ext {
   public static Dealer_Order__c saveDealerOrder( String dealerOrderJSON )
   {
     Dealer_Order__c dealerOrder = (Dealer_Order__c)JSON.deserialize( dealerOrderJSON, Dealer_Order__c.class);
-    System.debug( dealerOrder );
     if( dealerOrder == null )
       return new Dealer_Order__c();
     upsert dealerOrder;
@@ -703,7 +820,7 @@ public without sharing class DealerOrder_Ext {
     public List<Map<String, String>> mercuryMotors { get; set; }
     public List<Map<String, String>> fees { get; set; }
     public List<Map<String, String>> discounts { get; set; }
-    public List<Map<String, String>> options { get; set; }
+    public List<Map<String, Object>> options { get; set; }
 
     public OrderDetailsWrapper()
     {
@@ -714,7 +831,7 @@ public without sharing class DealerOrder_Ext {
       this.mercuryMotors = new List<Map<String, String>>();
       this.fees = new List<Map<String, String>>();
       this.discounts = new List<Map<String, String>>();
-      this.options = new List<Map<String, String>>();
+      this.options = new List<Map<String, Object>>();
     }
 
     public OrderDetailsWrapper addItem( AcctSeedERP__Material__c mat )
@@ -735,7 +852,7 @@ public without sharing class DealerOrder_Ext {
           this.buildSummedObj( mat, this.discounts );
           //this.discounts.add( buildObj(mat));
         else
-          this.options.add( buildObj(mat) );
+          this.options.add( buildOptionObj(mat) );
       }
       return this;
     }
@@ -792,6 +909,81 @@ public without sharing class DealerOrder_Ext {
       result.put('serialNumber', mat.GMBLASERP__Serial_Number__r.Name);
       return result;
     }
+
+    public Map<String, Object> buildOptionObj( AcctSeedERP__Material__c mat )
+    {
+      Map<String, Object> result = new Map<String, Object>();
+      String name = mat.AcctSeedERP__Product__r.Family == 'Discount' ?
+        mat.AcctSeedERP__Comment__c :
+        mat.AcctSeedERP__Product__r.Name;
+      result.put('name', name );
+      result.put('invoiceNumber', mat.AcctSeedERP__Project__r.AcctSeedERP__Work_Order_Number__c );
+      result.put('cost', mat.GMBLASERP__Unit_Price__c * mat.AcctSeedERP__Quantity_Per_Unit__c );
+      result.put('itemStatus', mat.AcctSeedERP__Project__r.Stage__c );
+      result.put('serialNumber', mat.GMBLASERP__Serial_Number__r.Name);
+      result.put('hasChildren', false);
+      result.put('productId', mat.AcctSeedERP__Product__c );
+      result.put('kitParentId', mat.Material__c == null ? null : mat.Material__r.AcctSeedERP__Product__c );
+      result.put('parentId', mat.Parent_Product__c );
+      if( mat.AcctSeedERP__Quantity_Per_Unit__c > 1 )
+      {
+        if( mat.GMBLASERP__Unit_Price__c == 0 )
+          result.put('name', name + ' ( ' + String.valueOf( mat.AcctSeedERP__Quantity_Per_Unit__c.stripTrailingZeros()) + ' )');
+        else
+          result.put('name', name + '  ( ' + String.valueOf(mat.AcctSeedERP__Quantity_Per_Unit__c.stripTrailingZeros()) + ' @ $' + mat.GMBLASERP__Unit_Price__c.setScale(2) + ' ea. )');
+      }
+      return result;
+    }
+
+    public void groupOptions()
+    {
+      List<Map<String, Object>> result = new List<Map<String, Object>>();
+      Map<String, Map<String,Object>> groupedOptions = new Map<String, Map<String, Object>>();
+      Map<String, List<Map<String, Object>>> subOptionMap = new Map<String, List<Map<String, Object>>>();
+      Map<String, List<Map<String, Object>>> kitPartsMap = new Map<String, List<Map<String, Object>>>();
+      for( Map<String, Object> option : this.options )
+      {
+        if( option.containsKey('parentId') && option.get('parentId') != null)
+        {
+          if( !subOptionMap.containsKey( (String)option.get('parentId') ) )
+            subOptionMap.put( (String)option.get('parentId'), new List<Map<String, Object>>() );
+          subOptionMap.get( (String)option.get('parentId') ).add( option );
+        }
+        else if( option.containsKey('kitParentId') && option.get('kitParentId') != null)
+        {
+          if( !kitPartsMap.containsKey( (String)option.get('kitParentId') ) )
+            kitPartsMap.put( (String)option.get('kitParentId'), new List<Map<String, Object>>() );
+          kitPartsMap.get( (String)option.get('kitParentId') ).add( option );
+        }
+        else
+        {
+          groupedOptions.put( (String)option.get('productId'), option );
+        }
+      }
+      for( String parentId : subOptionMap.keySet() )
+      {
+        if( groupedOptions.containsKey( parentId ) )
+        {
+          List<Map<String, Object>> subOptions = subOptionMap.get( parentId );
+          groupedOptions.get( parentId ).put('subOptions', subOptions );
+          groupedOptions.get( parentId ).put('hasChildren', true);
+        }
+      }
+      for( String kitParentId : kitPartsMap.keySet() )
+      {
+        if( groupedOptions.containsKey( kitParentId ) )
+        {
+          List<Map<String, Object>> kitParts = kitPartsMap.get( kitParentId );
+          groupedOptions.get( kitParentId ).put('kitParts', kitParts );
+          groupedOptions.get( kitParentId ).put('hasChildren', true);
+        }
+      }
+      for( String productId : groupedOptions.keySet() )
+      {
+        result.add( groupedOptions.get( productId ) );
+      }
+      this.options = result;
+    }
   }
 
   @AuraEnabled
@@ -817,6 +1009,9 @@ public without sharing class DealerOrder_Ext {
                                                 AcctSeedERP__Project__r.Stage__c,
                                                 GMBLASERP__Serial_Number__r.Name,
                                                 GMBLASERP__Unit_Price__c,
+                                                Parent_Product__c,
+                                                Material__c,
+                                                Material__r.AcctSeedERP__Product__c,
                                                 AcctSeedERP__Project__r.AcctSeedERP__Work_Order_Number__c
                                       FROM AcctSeedERP__Material__c
                                       WHERE AcctSeedERP__Project__c IN :erpIds])
@@ -831,6 +1026,7 @@ public without sharing class DealerOrder_Ext {
     {
       result.addMercuryItem( dmr );
     }
+    result.groupOptions();
     return JSON.serialize( result );
 
   }
@@ -893,7 +1089,10 @@ public without sharing class DealerOrder_Ext {
                                               AcctSeedERP__Comment__c,
                                               AcctSeedERP__Quantity_per_Unit__c,
                                               GMBLASERP__Unit_Price__c,
-                                              GMBLASERP__Serial_Number__r.Name
+                                              GMBLASERP__Serial_Number__r.Name,
+                                              Parent_Product__c,
+                                              Material__c,
+                                              Material__r.AcctSeedERP__Product__c
                                       FROM AcctSeedERP__Project_Materials__r)
                                      FROM AcctSeed__Project__c
                                      WHERE Id IN :erpIdMap.keySet() ] )
@@ -925,7 +1124,7 @@ public without sharing class DealerOrder_Ext {
         if( mat.AcctSeedERP__Product__r.RecordType.Name == 'Fees' )
           r.addFee( mat );
       }
-
+      r.groupOptions();
       if( workingLine.Dealer_Motor_Request__c != null )
       {
         Map<String, String> motor = new Map<String,String>{
@@ -978,7 +1177,10 @@ public without sharing class DealerOrder_Ext {
                                                 AcctSeedERP__Comment__c,
                                                 AcctSeedERP__Quantity_per_Unit__c,
                                                 GMBLASERP__Unit_Price__c,
-                                                GMBLASERP__Serial_Number__r.Name
+                                                GMBLASERP__Serial_Number__r.Name,
+                                                Parent_Product__c,
+                                                Material__c,
+                                                Material__r.AcctSeedERP__Product__c
                                          FROM AcctSeedERP__Material__c
                                          WHERE AcctSeedERP__Project__c = : dols[0].ERP_Order__c ])
     {
@@ -1013,6 +1215,7 @@ public without sharing class DealerOrder_Ext {
         result.motor = motor;
       }
     }
+    result.groupOptions();
     return result;
 
   }
@@ -1265,6 +1468,9 @@ public without sharing class DealerOrder_Ext {
                                                 String pricebookId )
   {
     DolWrapper result = new DolWrapper();
+    Set<Id> productIds = new Set<Id>();
+    Map<Id, Product_Option__c> optionMap = new Map<Id, Product_Option__c>();
+    Map<String, AcctSeedERP__Material__c> subOptionMaterialMap = new Map<String, AcctSeedERP__Material__c>();
     AcctSeedERP__Material__c boat;
     AcctSeedERP__Material__c trailer;
     AcctSeedERP__Material__c motor;
@@ -1290,6 +1496,7 @@ public without sharing class DealerOrder_Ext {
       if( mat.AcctSeedERP__Product__r.RecordType.Name == 'Boat' )
       {
         boat = mat;
+        productIds.add( mat.AcctSeedERP__Product__c );
       }
       if( mat.AcctSeedERP__Product__r.RecordType.Name == 'Trailer' )
       {
@@ -1298,6 +1505,7 @@ public without sharing class DealerOrder_Ext {
       if( mat.AcctSeedERP__Product__r.RecordType.Name == 'Motor' )
       {
         motor = mat;
+        productIds.add( mat.AcctSeedERP__Product__c );
       }
       if( mat.AcctSeedERP__Product__r.RecordType.Name == 'Trolling Motor' )
       {
@@ -1311,6 +1519,13 @@ public without sharing class DealerOrder_Ext {
       {
         fees.add( mat );
       }
+    }
+    /* find Product Options */
+    for( Product_Option__c option : [ SELECT From_Product__c, Standard__c, Maximum__c
+                                      FROM Product_Option__c
+                                      WHERE To_Product__c IN :productIds ] )
+    {
+      optionMap.put( option.From_Product__c, option );
     }
     /* if the dol has a Dealer_Motor_Request find it and set it */
     if( dols[0].Dealer_Motor_Request__c != null )
@@ -1357,7 +1572,7 @@ public without sharing class DealerOrder_Ext {
     if( parts.size() > 0 )
     {
       /* Find ALL sub options for selected Options */
-      Set<id> parentIds = new Set<Id>();
+      Set<Id> parentIds = new Set<Id>();
       Map<Id,Set<Id>> selectedParentChildMap = new Map<Id, Set<Id>>();
       for( AcctSeedERP__Material__c mat : parts )
       {
@@ -1367,8 +1582,12 @@ public without sharing class DealerOrder_Ext {
           if Parent Product is null then this is first level option and we
           need to find all the available subOptions
         */
+        System.debug( mat.AcctSeedERP__Product__r.Name + ' - parentId - ' + mat.Parent_Product__c );
         if( mat.Parent_Product__c != null )
         {
+          String key = mat.Parent_Product__c + '-' + mat.AcctSeedERP__Product__c;
+          System.debug( 'building key = ' + key);
+          subOptionMaterialMap.put( key, mat );
           /* if the parent Id is equal to the motor, then this is a
              selected motor option
           */
@@ -1384,19 +1603,13 @@ public without sharing class DealerOrder_Ext {
             {
               selectedParentChildMap.put(mat.Parent_Product__c, new Set<Id>());
             }
-            System.debug( selectedParentChildMap.values() );
             selectedParentChildMap.get( mat.Parent_Product__c ).add( mat.AcctSeedERP__Product__c );
-            System.debug( selectedParentChildMap.values() );
           }
         }
         else
         {
           parentIds.add(mat.AcctSeedERP__Product__c);
         }
-
-
-        System.debug('selectedParentChildMap');
-        System.debug(selectedParentChildMap);
       }
       /*
         childParentMap = maps the available subOptions to Set of Parent Product Ids
@@ -1415,9 +1628,6 @@ public without sharing class DealerOrder_Ext {
         if( !childParentOptionMap.containsKey(opt.From_Product__c) )
           childParentOptionMap.put( opt.From_Product__c, new List<Product_Option__c>() );
         childParentOptionMap.get( opt.From_Product__c).add(opt);
-//        if( !childParentMap.containsKey(opt.From_Product__c) )
-//          childParentMap.put( opt.From_Product__c, new Set<Id>() );
-//        childParentMap.get( opt.From_Product__c).add(opt.To_Product__c);
       }
       /*
         parent_subOptions_Map - maps parentProductId to a List of subOptions
@@ -1445,15 +1655,28 @@ public without sharing class DealerOrder_Ext {
           {
             parent_subOptions_Map.put( opt.To_Product__c, new List<OptionWrapper>() );
           }
-          OptionWrapper ow = new OptionWrapper( pbe );
+          OptionWrapper ow = new OptionWrapper( pbe, opt );
+          ow.parent_id = opt.To_Product__c;
           /*
             check see if this sub option was previously selected
           */
-          ow.isSelected = selectedParentChildMap.containsKey( opt.To_Product__c ) &&
-                          selectedParentChildMap.get(opt.To_Product__c).contains(ow.id);
-          ow.parent_id = opt.To_Product__c;
-          ow.cost = opt.Standard__c > 0 ? 0 : ow.cost;
-          ow.isDisabled = opt.Standard__c > 0;
+          if( ow.isCheckbox )
+          {
+            ow.isSelected = selectedParentChildMap.containsKey(opt.To_Product__c) &&
+              selectedParentChildMap.get(opt.To_Product__c).contains(ow.id);
+          }
+          else
+          {
+            //ow.quantitySelected = 2;
+            String key = opt.To_Product__c + '-' + opt.From_Product__c;
+            System.debug( 'reconstruct Key = ' + key );
+            if( subOptionMaterialMap.containsKey( key ) )
+            {
+              ow.quantitySelected = Integer.valueOf( subOptionMaterialMap.get( key ).AcctSeedERP__Quantity_Per_Unit__c );
+            }
+          }
+          System.debug('SUB OPTION OW');
+          System.debug(ow);
           parent_subOptions_Map.get( opt.To_Product__c ).add( ow );
         }
       }
@@ -1465,7 +1688,11 @@ public without sharing class DealerOrder_Ext {
       {
         if( mat.Parent_Product__c == null )
         {
-          OptionWrapper ow = new OptionWrapper(mat);
+          OptionWrapper ow;
+          if( optionMap.containsKey( mat.AcctSeedERP__Product__c) )
+            ow = new OptionWrapper(mat, optionMap.get( mat.AcctSeedERP__Product__c) );
+          else
+            ow = new OptionWrapper(mat);
           if( parent_subOptions_Map.containsKey( ow.id ) )
           {
             ow.subOptions = parent_subOptions_Map.get( ow.id );
@@ -1483,12 +1710,10 @@ public without sharing class DealerOrder_Ext {
 
   @AuraEnabled
   public static Dealer_Order__c saveDealerLineItem( String jsonData ) {
-    System.debug( jsonData );
     DealerOrderLineWrapper wrapper = (DealerOrderLineWrapper)JSON.deserialize(jsonData, DealerOrderLineWrapper.class );
     System.debug('*** WRAPPER *** ' + wrapper);
     if( wrapper.orderGroupId == null )
     {
-      System.debug('***** CREATING NEW *******');
       return createDealerLineItems( wrapper );
     }
     else
@@ -1549,7 +1774,6 @@ public without sharing class DealerOrder_Ext {
     queryString += ' AND Product2.isActive = true AND Pricebook2Id = \'';
     queryString += pricebookId;
     queryString += '\' ORDER BY Product2.Name ASC';
-    System.debug( '%%%%%% ' + queryString);
     for( PricebookEntry pbe : Database.query( queryString ) )
     {
       if( pbe.UnitPrice > 0 )
@@ -1574,7 +1798,7 @@ public without sharing class DealerOrder_Ext {
   {
     List<OptionWrapper> result = new List<OptionWrapper>();
     Map<Id, Product_Option__c> prod_option_map = new Map<Id, Product_Option__c>();
-    for( Product_Option__c option : [SELECT From_Product__c, Standard__c
+    for( Product_Option__c option : [SELECT From_Product__c, Standard__c, Maximum__c
                                       FROM Product_Option__c
                                       WHERE To_Product__c = :parentProductId] )
     {
@@ -1585,11 +1809,12 @@ public without sharing class DealerOrder_Ext {
                                WHERE Product2Id IN :prod_option_map.keySet()
                                AND Pricebook2Id = :pricebookId ] )
     {
-      OptionWrapper ow = new OptionWrapper( pbe );
+      OptionWrapper ow = new OptionWrapper(
+        pbe,
+        prod_option_map.get( pbe.Product2Id )
+      );
+      ow.hasOptions = false;
       ow.parent_id = parentProductId;
-      ow.isSelected = prod_option_map.get( pbe.Product2Id ).Standard__c > 0 ? true : false;
-      ow.isDisabled = prod_option_map.get( pbe.Product2Id ).Standard__c > 0;
-      ow.cost = ow.isSelected ? 0 : ow.cost;
       result.add( ow );
     }
     return JSON.serialize( result );
@@ -1661,35 +1886,13 @@ public without sharing class DealerOrder_Ext {
   {
     String retVal;
     PartnerProgram_Service pp_service = new PartnerProgram_Service(
-        new Set<Id>{ Id.valueOf(dealerOrderId) } );
-
-    try {
-      retVal = JSON.serialize(pp_service.checkAndApply().get(dealerOrderId));
-    }catch (Exception e){
-      System.debug('This is resolved');
-    }
-    return retVal;
-  }
-
-//  @AuraEnabled
-//  public static String checkForPromotions( String dealerOrderId )
-//  {
-//    return JSON.serialize( new PartnerPromotion.Seven4Seven_Promo( dealerOrderId) );
-//  }
+      new Set<Id>{ Id.valueOf(dealerOrderId) } );
+//    if(pp_service.checkAndApply() != null && pp_service.checkAndApply().get( dealerOrderId) != null)
+//      retVal = JSON.serialize( pp_service.checkAndApply().get( dealerOrderId) );
 //
-//  @AuraEnabled
-//  public static String applyPromotions( String jsonPromotion )
-//  {
-//    PartnerPromotion.Seven4Seven_Promo promo =
-//      (PartnerPromotion.Seven4Seven_Promo)JSON.deserialize(
-//        jsonPromotion, PartnerPromotion.Seven4Seven_Promo.class
-//      );
-//    //this should always be the case but just in case
-//    if( promo.isApplicable )
-//      promo.apply();
-//    return JSON.serialize( promo.resultMessage );
-//  }
-
+//    return retVal;
+    return JSON.serialize( pp_service.checkAndApply().get( dealerOrderId) );
+  }
 
   private static Dealer_Order__c createDealerLineItems( DealerOrderLineWrapper wrapper )
   {
@@ -1804,7 +2007,6 @@ public without sharing class DealerOrder_Ext {
     List<AcctSeed__Project__c> erps = new List<AcctSeed__Project__c>();
     if( !wrapper.isMotorRequest )
     {
-      System.debug( wrapper );
       for( Integer i=0; i<quantity; i++ )
       {
         erps.add( new AcctSeed__Project__c(
@@ -2144,12 +2346,15 @@ public without sharing class DealerOrder_Ext {
 
   private static AcctSeedERP__Material__c newMaterialsFromWrapper( OptionWrapper ow, Id erpId, Id taskId )
   {
+    System.debug( ow );
     AcctSeedERP__Material__c material = new AcctSeedERP__Material__c(
       AcctSeedERP__Product__c = ow.id,
       AcctSeedERP__Comment__c = ow.name,
       AcctSeedERP__Project__c = erpId,
       AcctSeedERP__Project_Task__c = taskId,
-      AcctSeedERP__Quantity_per_Unit__c = 1,
+      AcctSeedERP__Quantity_per_Unit__c = ow.isCheckbox == null || ow.isCheckbox ?
+        1 :
+        ow.quantitySelected,
       GMBLASERP__Unit_Price__c = ow.cost,
       Parent_Product__c = ow.parent_id
     );

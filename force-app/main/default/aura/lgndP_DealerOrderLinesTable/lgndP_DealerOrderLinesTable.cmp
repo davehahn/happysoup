@@ -6,6 +6,7 @@
   <aura:attribute name="isEditable" type="Boolean" default="false" />
 
   <!-- EVENTS -->
+  <aura:handler name="render" value="{!this}" action="{!c.onRender}"/>
   <aura:registerEvent name="actionEvent" type="c:lgndP_DealerOrderLinesTableAction_Event" />
   <aura:registerEvent name="deleteEvent" type="c:lgndP_DealerOrderLinesTable_Delete_Event" />
   <!-- METHODS -->
@@ -63,6 +64,18 @@
               <aura:if isTrue="{! !empty(item.options) }">
                 <aura:iteration items="{!item.options}" var="opt">
                   <p class="sub-item slds-truncarte">{! opt.name }</p>
+                  <!-- Kit Parts -->
+                  <aura:if isTrue="{! !empty(opt.kitParts) }">
+                    <aura:iteration items="{!opt.kitParts}" var="kitPart" indexVar="kpIdx">
+                      <p class="{! join(' ', 'sub-item kit-item', concat('kit-item-', kpIdx))}">{! kitPart.name }</p>
+                    </aura:iteration>
+                  </aura:if>
+                  <!-- Sub Options -->
+                  <aura:if isTrue="{! !empty(opt.subOptions) }">
+                    <aura:iteration items="{!opt.subOptions}" var="subOpt" indexVar="subIdx">
+                      <p class="{! join(' ', 'sub-item kit-item', concat('kit-item-', subIdx))}">{! subOpt.name }</p>
+                    </aura:iteration>
+                  </aura:if>
                 </aura:iteration>
               </aura:if>
             </td>
