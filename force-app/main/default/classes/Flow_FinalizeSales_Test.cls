@@ -196,7 +196,9 @@ public class Flow_FinalizeSales_Test {
 
 	@isTest static void getReceipts_test() {
 		init();
+		Test.startTest();
 		String receiptsString = Flow_FinalizeSales.getReceipts(customerId);
+		Test.stopTest();
 		AcctSeed__Cash_Receipt__c[] receipts = (List<AcctSeed__Cash_Receipt__c>)JSON.deserialize( receiptsString, List<AcctSeed__Cash_Receipt__c>.class) ;
 		System.assert( receipts.size() > 0 );
 	}
