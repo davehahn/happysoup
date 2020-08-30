@@ -17,11 +17,12 @@ private class PartnerProgramItem_T
   {
     new Factory_TestData();
     Factory_CustomSettings.setupInventorySettings();
-    Partner_Program_Settings__c pps = new Partner_Program_Settings__c(
+    insert new Partner_Program_Settings__c(
+      Coop_Discount_Percent__c = 2,
+      Kickstart_Booking_Order_Discount_Percent__c = 2,
       Available_Model_Years__c = '2020,2021',
       Available_Program_Years__c = '2021'
     );
-    insert pps;
     Account partner = Factory_Account.buildDealerAccounts(1)[0];
     partner.Name = partnerAccountName;
     partner.BillingState = 'Ontario';
@@ -205,6 +206,34 @@ private class PartnerProgramItem_T
       System.assert( program.isApplicable(), 'PartnerProgram_Coop should be applicable');
       System.assert( !program.wasAppliedPreviously(), 'PartnerProgram_Coop should Not have been applied previously');
       System.assertEquals( 2, program.getDiscountPercent(), 'Coop discount should be 2%' );
+
+      Decimal totalSavings = 1 * ( 50000 * 0.02 );
+      List<AcctSeedERP__Material__c> discounts = program.apply();
+      PartnerProgram_Service.ResultMessage result = program.getResult();
+
+      System.assertEquals( 1, discounts.size() );
+      System.assertEquals( totalSavings, result.totalSaving );
+    }
+  }
+
+  @IsTest
+  static void PartnerProgram_KickStartBooking_Test()
+  {
+    init('Pontoon', 50000, null);
+
+    System.runAs( partnerUser )
+    {
+      createDealerOrder( 1 );
+      PartnerProgram_Service.DealerOrderWrapper orderWrapper =
+        new PartnerProgram_Service.DealerOrderWrapper(
+          order, erps, null
+        );
+      PartnerProgram_Kickstart_Booking program = new PartnerProgram_Kickstart_Booking();
+      program.init( orderWrapper );
+
+      System.assert( program.isApplicable(), 'PartnerProgram_KickStart_Booking should be applicable');
+      System.assert( !program.wasAppliedPreviously(), 'PartnerProgram_KickStart_Booking should Not have been applied previously');
+      System.assertEquals( 2, program.getDiscountPercent(), 'KickStart Booking discount should be 2%' );
 
       Decimal totalSavings = 1 * ( 50000 * 0.02 );
       List<AcctSeedERP__Material__c> discounts = program.apply();

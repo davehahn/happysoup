@@ -14,6 +14,7 @@ public with sharing class PartnerProgram_Service
   //PartnerProgram_Cash HAS to be last as it has to consider the others
   private static final List<String> planItemClassNames = new List<String>{
     'PartnerProgram_Coop',
+    'PartnerProgram_Kickstart_Booking',
     'PartnerProgram_7for7',
     'PartnerProgram_Volume',
     'PartnerProgram_PontoonVol',

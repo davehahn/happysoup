@@ -59,7 +59,7 @@ public virtual class PartnerProgramItem implements PartnerProgramItem_I
 
   public virtual Decimal getDiscountPercent()
   {
-    return this.discountPercent;
+    return this.discountPercent.stripTrailingZeros();
   }
 
   public virtual PartnerProgram_Service.ResultMessage getResult()
