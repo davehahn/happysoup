@@ -29,6 +29,7 @@ public class Flow_FinalizeSales_Test {
 	static GMBLASERP__Serial_Number__c serialNumber;
 	static Pricebook2 pricebook;
 	static Product2 boat;
+	static AcctSeed__Accounting_Variable__c glv4;
 	static Id glv4Id;
 	static Factory_TestData testData;
 
@@ -76,14 +77,16 @@ public class Flow_FinalizeSales_Test {
     // Create User
     user = Factory_User.newUser('Tom', 'Bombadil', 'System Administrator', warehouse);
     insert user;
-    user = [SELECT Id, Name FROM User WHERE Id = :user.Id];
+    //user = [SELECT Id, Name FROM User WHERE Id = :user.Id];
 
-    AcctSeed__Accounting_Variable__c glv4 = new AcctSeed__Accounting_Variable__c(
+    glv4 = new AcctSeed__Accounting_Variable__c(
     	AcctSeed__Type__c = 'GL Account Variable 4',
-			Name = user.Name
+			Name = user.FirstName + ' ' + user.LastName
     );
+		system.debug( glv4.Name );
     insert glv4;
-
+system.debug( glv4.Name );
+		system.debug( glv4.Id );
     AcctSeed__Ledger__c ledger = [SELECT Id FROM AcctSeed__Ledger__c LIMIT 1];
 
     AcctSeed__Cash_Receipt__c newCR = new AcctSeed__Cash_Receipt__c(
@@ -139,53 +142,66 @@ public class Flow_FinalizeSales_Test {
     // Location Id
     locationId = [SELECT GL_Account_Variable_1__c FROM AcctSeed__Project__c WHERE Id = :erp.Id].GL_Account_Variable_1__c;
 
-    glv4Id = Flow_FinalizeSales.getGLV4(user.Id);
+    glv4Id = glv4.Id;//Flow_FinalizeSales.getGLV4(user.Id);
   }
 
 	@isTest static void getERP_test() {
 		init();
+		Test.startTest();
 		String serializedERP = Flow_FinalizeSales.getERP( erp.Id );
 		AcctSeed__Project__c project = (AcctSeed__Project__c)JSON.deserialize( serializedERP, AcctSeed__Project__c.Class);
+		Test.stopTest();
 		System.assert( project.Id != null );
 	}
 
 	@isTest static void getUserName_test() {
 		init();
+		Test.startTest();
 		Map<String, String> userMap = Flow_FinalizeSales.getUserName(user.Id);
-		System.debug(userMap);
+		Test.stopTest();
 		System.assert( userMap.get('name') == 'Tom Bom' );
 	}
 
 	@isTest static void checkForExistingEntry_test() {
 		init();
+		Test.startTest();
 		Boolean exists = Flow_FinalizeSales.checkForExistingEntry(erp.Id);
+		Test.stopTest();
 		System.assert( exists == false );
 	}
 
 	@isTest static void getJournalEntrySettings_test() {
 		init();
+		Test.startTest();
 		String settingsJson = Flow_FinalizeSales.getJournalEntrySettings();
+		Test.stopTest();
 		JournalEntrySettings__c[] settings = (List<JournalEntrySettings__c>)JSON.deserialize( settingsJson, List<JournalEntrySettings__c>.Class );
 		System.assert( settings[0].Line1125__c == 900 );
 	}
 
 	@isTest static void getSalesperson_test() {
 		init();
+		Test.startTest();
 		String salespersonString = Flow_FinalizeSales.getSalesperson(user.Id);
+		Test.stopTest();
 		User salesperson = (User)JSON.deserialize( salespersonString, User.class );
 		System.assert( salesperson.Id == user.Id );
 	}
 
 	@isTest static void getCustomer_test() {
 		init();
+		Test.startTest();
 		String customerString = Flow_FinalizeSales.getCustomer(customerId);
+		Test.stopTest();
 		Account customer = (Account)JSON.deserialize( customerString, Account.class );
 		System.assert( customer.ID == customerId) ;
 	}
 
 	@isTest static void getReceipts_test() {
 		init();
+		Test.startTest();
 		String receiptsString = Flow_FinalizeSales.getReceipts(customerId);
+		Test.stopTest();
 		AcctSeed__Cash_Receipt__c[] receipts = (List<AcctSeed__Cash_Receipt__c>)JSON.deserialize( receiptsString, List<AcctSeed__Cash_Receipt__c>.class) ;
 		System.assert( receipts.size() > 0 );
 	}
@@ -220,7 +236,9 @@ public class Flow_FinalizeSales_Test {
 
 	@isTest static void getTradeIns_test() {
 		init();
+		Test.startTest();
 		String tradeInsString = Flow_FinalizeSales.getTradeIns(oppId);
+		Test.stopTest();
 		AcctSeedERP__Material__c[] materials = (List<AcctSeedERP__Material__c>)JSON.deserialize( tradeInsString, List<AcctSeedERP__Material__c>.class );
 		System.assert( materials.size() == 0 );
 	}
@@ -234,48 +252,62 @@ public class Flow_FinalizeSales_Test {
 
 	@isTest static void getTradeInERP_test() {
 		init();
+		Test.startTest();
 		String tradeInErpString = Flow_FinalizeSales.getTradeInERP(oppId, recTypeId);
+		Test.stopTest();
 		AcctSeed__Project__c tradeInErp = (AcctSeed__Project__c)JSON.deserialize( tradeInErpString, AcctSeed__Project__c.class );
 	}
 
 	@isTest static void getInboundInventory_test() {
 		init();
+		Test.startTest();
 		String inboundString = Flow_FinalizeSales.getInboundInventory(erp.Id);
+		Test.stopTest();
 		List<AcctSeedERP__Inbound_Inventory_Movement__c> inboundInventory = (List<AcctSeedERP__Inbound_Inventory_Movement__c>)JSON.deserialize( inboundString, List<AcctSeedERP__Inbound_Inventory_Movement__c>.class );
 		System.assert( inboundInventory.size() == 0 );
 	}
 
 	@isTest static void getInsuranceItems_test() {
 		init();
+		Test.startTest();
 		String insuranceString = Flow_FinalizeSales.getInsuranceItems(erp.Id);
+		Test.stopTest();
 		AcctSeedERP__Material__c[] insuranceItems = (List<AcctSeedERP__Material__c>)JSON.deserialize( insuranceString, List<AcctSeedERP__Material__c>.class);
 		System.assert( insuranceItems.size() > 0 );
 	}
 
 	@isTest static void getCommissionRecords_test() {
 		init();
+		Test.startTest();
 		String recordString = Flow_FinalizeSales.getCommissionRecords(erp.Id);
+		Test.stopTest();
 		List<Flow_FinalizeSales.CommissionWrapper> commissions = (List<Flow_FinalizeSales.CommissionWrapper>)JSON.deserialize( recordString, List<Flow_FinalizeSales.CommissionWrapper>.class );
 		System.assert( commissions.size() > 0 );
 	}
 
 	@isTest static void getPartnerPricebook_test() {
 		init();
+		Test.startTest();
 		String pricebookString = Flow_FinalizeSales.getPartnerPricebook(pricebook.Id);
+		Test.stopTest();
 		Pricebook2 pricebook = (Pricebook2)JSON.deserialize( pricebookString, Pricebook2.class );
 		System.assert( pricebook.Id != null );
 	}
 
 	@isTest static void getMaximumMotor_test() {
 		init();
+		Test.startTest();
 		String maxMotorString = Flow_FinalizeSales.getMaximumMotor( erp.Id, pricebook.Id );
+		Test.stopTest();
 		Flow_FinalizeSales.MotorWrapper motor = (Flow_FinalizeSales.MotorWrapper)JSON.deserialize( maxMotorString, Flow_FinalizeSales.MotorWrapper.class );
 		System.assert( motor != null );
 	}
 
 	@isTest static void getERPTasks_test() {
 		init();
+		Test.startTest();
 		String taskString = Flow_FinalizeSales.getErpTasks(erp.Id);
+		Test.stopTest();
 		AcctSeed__Project_Task__c[] tasks = (List<AcctSeed__Project_Task__c>)JSON.deserialize( taskString, List<AcctSeed__Project_Task__c>.class );
 		System.assert( tasks.size() > 0 );
 	}
@@ -288,38 +320,44 @@ public class Flow_FinalizeSales_Test {
     	Product2Id = boat.Id,
     	UnitPrice = 500.0
     );
-
+		Test.startTest();
 		String boatString = Flow_FinalizeSales.getBoat(boat.Id, pricebook.Id);
+		Test.stopTest();
 		PricebookEntry entry = (PricebookEntry)JSON.deserialize( boatString, PricebookEntry.class );
 		System.assert( entry != null );
 	}
 
 	@isTest static void getNestedItems_test() {
 		init();
+		Test.startTest();
 		String nestedString = Flow_FinalizeSales.getNestedItems(sernoId, pbId);
+		Test.stopTest();
 		List<Flow_FinalizeSales.NestWrapper> nestList = (List<Flow_FinalizeSales.NestWrapper>)JSON.deserialize( nestedString, List<Flow_FinalizeSales.NestWrapper>.class );
 		System.assert( nestList.size() == 0 );
 	}
 
 	@isTest static void getGLV4_test() {
 		init();
-		Id glv4Id = Flow_FinalizeSales.getGLV4(user.Id);
-		AcctSeed__Accounting_Variable__c glv4 = [SELECT Name FROM AcctSeed__Accounting_Variable__c WHERE Id = :glv4Id];
-		System.assert( glv4.Name == user.Name );
+		Test.startTest();
+		Id result = Flow_FinalizeSales.getGLV4(user.Id);
+		//AcctSeed__Accounting_Variable__c glv4 = [SELECT Name FROM AcctSeed__Accounting_Variable__c WHERE Id = :glv4Id];
+		Test.stopTest();
+		System.assertEquals( glv4Id, result );
 	}
 
 	@isTest static void setTradeInToComplete_test() {
 		init();
+		Test.startTest();
 		String completeString = Flow_FinalizeSales.setTradeInToComplete(erp.Id);
+		Test.stopTest();
 		AcctSeed__Project__c tradein = (AcctSeed__Project__c)JSON.deserialize(completeString, AcctSeed__Project__c.class);
 		System.assert( tradein.Stage__c == 'Delivered' );
 	}
 
 
 	@isTest static void createJournalEntry_test() {
-		Test.startTest();
-
 		init();
+		Test.startTest();
 		Flow_FinalizeSales.getBillings(customerId, 45.0, erp.Id);
 		Flow_FinalizeSales.JournalEntryLine[] lines = new List<Flow_FinalizeSales.JournalEntryLine>();
 		for (Integer i = 0; i < 16; i++) {
@@ -393,9 +431,11 @@ public class Flow_FinalizeSales_Test {
 		lines[15].entryType		  = 'debit';
 
 		String entries = JSON.serialize(lines);
-		Test.stopTest();
+
 		// Create Journal Entries
+
 		Flow_FinalizeSales.createJournalEntry(entries, erp.Id);
+		Test.stopTest();
 	}
 
 }

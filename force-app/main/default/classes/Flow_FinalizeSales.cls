@@ -600,13 +600,15 @@ public with sharing class Flow_FinalizeSales {
 		Id glv4Id;
 
 		Schema.SObjectType objType = whoId.getSobjectType();
-
+System.debug( whoId );
 		if (objType == User.getSobjectType()) {
 			try {
 				User u= [SELECT Id, Name FROM User WHERE Id = :whoId];
+				System.debug('USER = ' + u);
 				AcctSeed__Accounting_Variable__c glv4 = [SELECT Id, Name
 																								  FROM AcctSeed__Accounting_Variable__c
-																								 WHERE Name = :u.Name];
+																								 WHERE AcctSeed__Type__c = 'GL Account Variable 4'
+																								 AND Name = :u.Name];
 				glv4Id = glv4.Id;
 			} catch (Exception e) {}
 		}
