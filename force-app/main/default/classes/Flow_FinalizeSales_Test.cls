@@ -29,6 +29,7 @@ public class Flow_FinalizeSales_Test {
 	static GMBLASERP__Serial_Number__c serialNumber;
 	static Pricebook2 pricebook;
 	static Product2 boat;
+	static AcctSeed__Accounting_Variable__c glv4;
 	static Id glv4Id;
 	static Factory_TestData testData;
 
@@ -76,14 +77,16 @@ public class Flow_FinalizeSales_Test {
     // Create User
     user = Factory_User.newUser('Tom', 'Bombadil', 'System Administrator', warehouse);
     insert user;
-    user = [SELECT Id, Name FROM User WHERE Id = :user.Id];
+    //user = [SELECT Id, Name FROM User WHERE Id = :user.Id];
 
-    AcctSeed__Accounting_Variable__c glv4 = new AcctSeed__Accounting_Variable__c(
+    glv4 = new AcctSeed__Accounting_Variable__c(
     	AcctSeed__Type__c = 'GL Account Variable 4',
-			Name = user.Name
+			Name = user.FirstName + ' ' + user.LastName
     );
+		system.debug( glv4.Name );
     insert glv4;
-
+system.debug( glv4.Name );
+		system.debug( glv4.Id );
     AcctSeed__Ledger__c ledger = [SELECT Id FROM AcctSeed__Ledger__c LIMIT 1];
 
     AcctSeed__Cash_Receipt__c newCR = new AcctSeed__Cash_Receipt__c(
@@ -139,7 +142,7 @@ public class Flow_FinalizeSales_Test {
     // Location Id
     locationId = [SELECT GL_Account_Variable_1__c FROM AcctSeed__Project__c WHERE Id = :erp.Id].GL_Account_Variable_1__c;
 
-    glv4Id = Flow_FinalizeSales.getGLV4(user.Id);
+    glv4Id = glv4.Id;//Flow_FinalizeSales.getGLV4(user.Id);
   }
 
 	@isTest static void getERP_test() {
@@ -336,10 +339,10 @@ public class Flow_FinalizeSales_Test {
 	@isTest static void getGLV4_test() {
 		init();
 		Test.startTest();
-		Id glv4Id = Flow_FinalizeSales.getGLV4(user.Id);
+		Id result = Flow_FinalizeSales.getGLV4(user.Id);
+		//AcctSeed__Accounting_Variable__c glv4 = [SELECT Name FROM AcctSeed__Accounting_Variable__c WHERE Id = :glv4Id];
 		Test.stopTest();
-		AcctSeed__Accounting_Variable__c glv4 = [SELECT Name FROM AcctSeed__Accounting_Variable__c WHERE Id = :glv4Id];
-		System.assert( glv4.Name == user.Name );
+		System.assertEquals( glv4Id, result );
 	}
 
 	@isTest static void setTradeInToComplete_test() {
