@@ -1,5 +1,14 @@
 public without sharing class DealerOrder_Ext {
 
+  public static List<String> enabledOptionFamilies {
+    get {
+      if( enabledOptionFamilies == null )
+        enabledOptionFamilies = Partner_Boat_Sale_Settings__c.getOrgDefaults().Enabled_Part_Families__c.split(',');
+      return enabledOptionFamilies;
+    }
+    set;
+  }
+
   public class DetailsWrapper {
     public Id accountId { get; set; }
     public String province { get; set; }
@@ -133,10 +142,7 @@ public without sharing class DealerOrder_Ext {
 //      {
 //        this.optionalProducts.put( fam, new List<OptionWrapper>() );
 //      }
-      Partner_Boat_Sale_Settings__c settings = Partner_Boat_Sale_Settings__c.getOrgDefaults();
-      this.enabledOptionFamilies = settings.Enabled_Part_Families__c == null ?
-        new List<String>() :
-        settings.Enabled_Part_Families__c.split(',');
+      this.enabledOptionFamilies = DealerOrder_Ext.enabledOptionFamilies;
       isFactory = pricebookId == gcConstants.idPricebookFactory;
       isPartner = pricebookId == gcConstants.idPricebookPartner;
       this.name = apiProd.Name;
@@ -295,6 +301,7 @@ public without sharing class DealerOrder_Ext {
     public String id { get; set; }
     public Decimal cost { get; set; }
     public Boolean isUpgrade { get; set; }
+    public Map<String, List<OptionWrapper>> optionalProducts { get; set; }
 
     public UpgradeWrapper( LGND_APIv2_Product.UpgradeProduct uProd, String standardProductId )
     {
@@ -302,10 +309,26 @@ public without sharing class DealerOrder_Ext {
       this.name = uProd.Name;
       this.isUpgrade = standardProductId == null ? false :
         standardProductId == uProd.Id ? false : true;
+      this.optionalProducts = new Map<String, List<OptionWrapper>>();
       if( standardProductId != null )
         this.cost = uProd.PartnerUpgradeCost;
       else
         this.cost = uProd.PartnerPrice;
+      //Options
+      for( String fam : DealerOrder_Ext.enabledOptionFamilies )
+      {
+        if( uProd.OptionalProducts != null &&
+            uProd.OptionalProducts.containsKey(fam))
+        {
+          if (!this.optionalProducts.containsKey(fam))
+            this.optionalProducts.put(fam, new List<OptionWrapper>());
+
+          for (LGND_APIv2_Product.PartProduct pp : uProd.OptionalProducts.get(fam))
+          {
+            this.optionalProducts.get(fam).add(new OptionWrapper(pp));
+          }
+        }
+      }
     }
   }
 
