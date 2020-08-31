@@ -30,7 +30,7 @@ public without sharing class LGND_APIv2_Product {
   public List<UpgradeProduct> TrailerUpgrades { get; set; }
   public List<UpgradeProduct> TrollingMotorUpgrades { get; set; }
   public List<MarketingImage> MarketingImages { get; set; }
-  public Map<string, List<String>> Features { get; set; }
+  public Map<String, List<String>> Features { get; set; }
   public Map<String, List<FeeProduct>> Fees { get; set; }
   public PremiumPackage PremiumPackage { get; set; }
   public Map<String, String> BoatSpecs { get; set; }
@@ -176,7 +176,7 @@ public without sharing class LGND_APIv2_Product {
           query += ', ' + standardTrollingMotorFields;
         }
         query += ', (SELECT  Pricebook2Id, PriceBook2.Name, UnitPrice, Special_Price__c, Special_Price_Description__c, CreatedDate FROM PricebookEntries WHERE Pricebook2.isStandard = false AND isActive = true AND Pricebook2.isActive = true ORDER BY CreatedDate DESC), ' +
-          '(SELECT Id, Feature_ID__r.Description__c, Feature_ID__r.Category__c FROM Product_Feature_Maps__r),' +
+          '(SELECT Id, Feature_ID__r.Description__c, Feature_ID__r.Description_Fr__c,Feature_ID__r.Category__c, Feature_ID__r.Value__c FROM Product_Feature_Maps__r),' +
           '(SELECT Id, Standard__C, Maximum__c, displayOnWeb__c, isBiggestMotor__c, From_Product__r.Id, From_Product__r.Name, From_Product__r.RecordType.Name, From_Product__r.Family FROM To_Product_Options__r ORDER BY From_Product__r.Name),' +
           '(SELECT Id, Fee_Product__c FROM Parent_Product_Fee_Maps__r)';
         if( RecordTypeName == 'Boat' )
@@ -404,7 +404,8 @@ public without sharing class LGND_APIv2_Product {
           (SELECT Id,
                   Feature_Id__r.description__c,
                   Feature_Id__r.description_fr__c,
-                  Feature_Id__r.Category__c
+                  Feature_Id__r.Category__c,
+                  Feature_Id__r.Value__c
                   FROM Product_Feature_Maps__r )
          FROM Product2
          WHERE Id = :p.Id ];
@@ -420,7 +421,9 @@ public without sharing class LGND_APIv2_Product {
           if( !this.Features.keySet().contains( pfm.Feature_ID__r.Category__c ) ){
             this.Features.put( pfm.Feature_ID__r.Category__c, new List<String>() );
           }
-          this.Features.get( pfm.Feature_ID__r.Category__c ).add( pfm.Feature_ID__r.Description__c );
+          this.Features.get( pfm.Feature_ID__r.Category__c ).add(
+            pfm.Feature_Id__r.description__c
+          );
         }
       }
     }
@@ -927,11 +930,13 @@ public without sharing class LGND_APIv2_Product {
   public Class Feature {
     public String Description { get; set; }
     public String Description_FR { get; set; }
+    public Decimal Value { get; set; }
 
     public Feature( Product_Feature_Map__c pfm )
     {
       this.Description = pfm.Feature_Id__r.description__c;
       this.Description_FR = pfm.Feature_Id__r.description_fr__c;
+      this.Value = pfm.Feature_Id__r.Value__c;
     }
   }
 

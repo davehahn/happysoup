@@ -372,6 +372,12 @@
         </quickActionListItems>
     </quickActionList>
     <relatedLists>
+        <relatedList>RelatedEntityHistoryList</relatedList>
+    </relatedLists>
+    <relatedLists>
+        <relatedList>RelatedPricebookEntryList</relatedList>
+    </relatedLists>
+    <relatedLists>
         <fields>NAME</fields>
         <fields>Warehouse__c</fields>
         <fields>Aisle__c</fields>
@@ -403,10 +409,17 @@
         <sortOrder>Asc</sortOrder>
     </relatedLists>
     <relatedLists>
-        <relatedList>RelatedEntityHistoryList</relatedList>
+        <fields>NAME</fields>
+        <relatedList>Product_Fee_Map__c.Parent_Product__c</relatedList>
     </relatedLists>
     <relatedLists>
-        <relatedList>RelatedPricebookEntryList</relatedList>
+        <excludeButtons>MassChangeOwner</excludeButtons>
+        <excludeButtons>New</excludeButtons>
+        <fields>NAME</fields>
+        <fields>Feature_Id__c</fields>
+        <fields>Category__c</fields>
+        <fields>Description__c</fields>
+        <relatedList>Product_Feature_Map__c.Product_Id__c</relatedList>
     </relatedLists>
     <relatedLists>
         <fields>CREATED_DATE</fields>
@@ -470,17 +483,6 @@
         <relatedList>GMBLASERP__Inventory_Movement_Cube__c.GMBLASERP__Product__c</relatedList>
     </relatedLists>
     <relatedLists>
-        <fields>NAME</fields>
-        <relatedList>Product_Fee_Map__c.Parent_Product__c</relatedList>
-    </relatedLists>
-    <relatedLists>
-        <fields>NAME</fields>
-        <fields>Tax_Zone__c</fields>
-        <fields>Term_Range__c</fields>
-        <fields>Single_Joint_String__c</fields>
-        <relatedList>Insurance_Rate__c.Product__c</relatedList>
-    </relatedLists>
-    <relatedLists>
         <fields>OPPORTUNITY.NAME</fields>
         <fields>ACCOUNT.NAME</fields>
         <fields>OPPORTUNITY.CLOSE_DATE</fields>
@@ -493,10 +495,6 @@
     </relatedLists>
     <relatedLists>
         <relatedList>RelatedStandardPriceList</relatedList>
-    </relatedLists>
-    <relatedLists>
-        <fields>NAME</fields>
-        <relatedList>Product_Feature_Map__c.Product_Id__c</relatedList>
     </relatedLists>
     <relatedLists>
         <fields>TASK.SUBJECT</fields>
