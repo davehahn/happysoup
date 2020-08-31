@@ -115,7 +115,8 @@ public with sharing class PartnerProgram_Service
         GMBLASERP__Price_Override__c = true,
         AcctSeedERP__Comment__c = programItemName,
         Applied_Partner_Program_Discount__c = programItemName,
-        AcctSeedERP__Product__c = discountProdId
+        AcctSeedERP__Product__c = discountProdId,
+        AcctSeedERP__Quantity_Per_Unit__c = 1
       );
       if( mat.Id == null )
         this.allLines.add( mat );
