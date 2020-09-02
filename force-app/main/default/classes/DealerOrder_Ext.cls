@@ -1476,7 +1476,7 @@ public without sharing class DealerOrder_Ext {
     DolWrapper result = new DolWrapper();
     Set<Id> productIds = new Set<Id>();
     Map<Id, Product_Option__c> optionMap = new Map<Id, Product_Option__c>();
-    Map<String, AcctSeedERP__Material__c> subOptionMaterialMap = new Map<String, AcctSeedERP__Material__c>();
+    Map<String, List<AcctSeedERP__Material__c>> subOptionMaterialsMap = new Map<String, List<AcctSeedERP__Material__c>>();
     AcctSeedERP__Material__c boat;
     AcctSeedERP__Material__c trailer;
     AcctSeedERP__Material__c motor;
@@ -1593,7 +1593,9 @@ public without sharing class DealerOrder_Ext {
         {
           String key = mat.Parent_Product__c + '-' + mat.AcctSeedERP__Product__c;
           System.debug( 'building key = ' + key);
-          subOptionMaterialMap.put( key, mat );
+          if( !subOptionMaterialsMap.containsKey(key) )
+            subOptionMaterialsMap.put( key, new List<AcctSeedERP__Material__c>() );
+          subOptionMaterialsMap.get( key).add( mat );
           /* if the parent Id is equal to the motor, then this is a
              selected motor option
           */
@@ -1676,9 +1678,14 @@ public without sharing class DealerOrder_Ext {
             //ow.quantitySelected = 2;
             String key = opt.To_Product__c + '-' + opt.From_Product__c;
             System.debug( 'reconstruct Key = ' + key );
-            if( subOptionMaterialMap.containsKey( key ) )
+            if( subOptionMaterialsMap.containsKey( key ) )
             {
-              ow.quantitySelected = Integer.valueOf( subOptionMaterialMap.get( key ).AcctSeedERP__Quantity_Per_Unit__c );
+              Integer quan = 0;
+              for( AcctSeedERP__Material__c mat : subOptionMaterialsMap.get( key ) )
+              {
+                 quan += Integer.valueOf( mat.AcctSeedERP__Quantity_Per_Unit__c );
+              }
+              ow.quantitySelected = quan;
             }
           }
           System.debug('SUB OPTION OW');
@@ -2317,6 +2324,12 @@ public without sharing class DealerOrder_Ext {
           material.GMBLASERP__Price_Override__c = ( productMap.get(ow.id).PricebookEntries[0].UnitPrice == ow.cost ? false : true );
         }
         newMaterials.add( material );
+        if( ( ow.isCheckbox == null || !ow.isCheckbox ) &&
+          ow.quantityStandard > 0 &&
+          ow.quantityStandard != ow.quantitySelected )
+        {
+          newMaterials.add( newIncludedOptionMaterial( material, ow.quantityStandard ) );
+        }
       }
       newMaterials.addAll( createDiscountMaterials( wrapper.discounts,
                                                     erp.Id,

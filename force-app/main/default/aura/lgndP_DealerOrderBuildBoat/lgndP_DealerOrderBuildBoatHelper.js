@@ -454,6 +454,8 @@
                       option.quantitySelected = options[productId].quantitySelected;
                     if(options[productId].subOptions !== undefined && options[productId].subOptions !== null )
                       option.subOptions = options[productId].subOptions;
+                    console.log( "***OPTION***");
+                    console.log(option);
                   }
                 });
               });

@@ -111,9 +111,11 @@
               <div class="slds-truncate">{!opt.name}</div>
             </div>
             <div class="slds-col slds-size--1-of-1 slds-medium-size--3-of-12 slds-large-size--3-of-12 slds-text-align--right">
-              <lightning:formattedNumber value="{!opt.cost}"
-                                         style="currency"
-                                         currencyCode="CAD" />
+<!--              <lightning:formattedNumber value="{!opt.cost}"-->
+<!--                                         style="currency"-->
+<!--                                         currencyCode="CAD" />-->
+              <c:lgnd_currencyDisplay value="{!opt.cost}"
+                                      zeroLabel="Included" />
             </div>
           </div>
         </aura:if>
@@ -142,9 +144,11 @@
               </div>
             </div>
             <div class="slds-col slds-size--1-of-1 slds-medium-size--3-of-12 slds-large-size--3-of-12 slds-text-align--right">
-              <lightning:formattedNumber value="{!mult(opt.cost, opt.quantitySelected)}"
-                                         style="currency"
-                                         currencyCode="CAD" />
+<!--              <lightning:formattedNumber value="{!mult(opt.cost, opt.quantitySelected)}"-->
+<!--                                         style="currency"-->
+<!--                                         currencyCode="CAD" />-->
+              <c:lgnd_currencyDisplay value="{!mult(opt.cost, opt.quantitySelected)}"
+                                      zeroLabel="Included" />
             </div>
           </div>
         </aura:if>
@@ -158,9 +162,11 @@
                 {!subOpt.name}
               </div>
               <div class="slds-col slds-size--1-of-1 slds-medium-size--3-of-12 slds-large-size--3-of-12 slds-text-align--right">
-                <lightning:formattedNumber value="{!subOpt.cost}"
-                                           style="currency"
-                                           currencyCode="CAD" />
+<!--                <lightning:formattedNumber value="{!subOpt.cost}"-->
+<!--                                           style="currency"-->
+<!--                                           currencyCode="CAD" />-->
+                <c:lgnd_currencyDisplay value="{!subOpt.cost}"
+                                        zeroLabel="Included" />
               </div>
             </div>
           </aura:if>
@@ -194,9 +200,11 @@
                 </div>
               </div>
               <div class="slds-col slds-size--1-of-1 slds-medium-size--3-of-12 slds-large-size--3-of-12 slds-text-align--right">
-                <lightning:formattedNumber value="{!mult(subOpt.individualCost, sub(subOpt.quantitySelected, subOpt.quantityStandard))}"
-                                           style="currency"
-                                           currencyCode="CAD" />
+<!--                <lightning:formattedNumber value="{!mult(subOpt.individualCost, sub(subOpt.quantitySelected, subOpt.quantityStandard))}"-->
+<!--                                           style="currency"-->
+<!--                                           currencyCode="CAD" />-->
+                <c:lgnd_currencyDisplay value="{!mult(subOpt.individualCost, sub(subOpt.quantitySelected, subOpt.quantityStandard))}"
+                                        zeroLabel="Included" />
               </div>
             </div>
           </aura:if>

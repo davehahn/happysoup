@@ -48,7 +48,12 @@
       </div>
     </div>
     <div class="slds-col slds-size--1-of-1 slds-medium-size--2-of-12 slds-large-size--2-of-12 slds-text-align--right">
-        <lightning:formattedNumber value="{!v.option.cost}" style="currency" currencyCode="CAD" />
+      <aura:if isTrue="{! and( greaterthan(v.option.quantitySelected, 0), equals(v.option.quantityStandard, v.option.quantitySelected))}">
+        <span>Included</span>
+        <aura:set attribute="else">
+          <lightning:formattedNumber value="{!v.option.individualCost}" style="currency" currencyCode="CAD" /> ea.
+        </aura:set>
+      </aura:if>
     </div>
   </div>
   <!-- <aura:renderIf isTrue="{!!empty(v.subOptions)}"> -->
