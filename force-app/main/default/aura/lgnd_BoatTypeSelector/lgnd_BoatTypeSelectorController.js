@@ -29,8 +29,7 @@
 
     tip = component.find( type + '-tip');
     tipEle = tip.getElement();
-    tipEle.style.top = ( rect.top - 50 ) + 'px';
-    tipEle.style.left = rect.left + 'px';
+    tipEle.style.top =  ( ele.offsetTop - ele.offsetHeight ) + 'px';//( rect.top - 50 ) + 'px';
     $A.util.addClass( tip, 'open' );
   },
 

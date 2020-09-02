@@ -134,17 +134,23 @@
     data.modelYear = component.get('v.modelYear');
     if( boat !== null && Object.keys(boat).length > 0 )
     {
+      boat.isSelected = true;
+      boat.isCheckbox = true;
       data.boat = boat;
       erpLineItems.push( boat );
     }
     if( trailer !== null && Object.keys(trailer).length > 0 )
     {
+      trailer.isSelected = true;
+      trailer.isCheckbox = true;
       data.trailer = trailer;
       erpLineItems.push( trailer );
     }
 
     if( motor !== null && Object.keys(motor).length > 0 )
     {
+      motor.isSelected = true;
+      motor.isCheckbox = true;
       if( isFactoryStore )
       {
         data.motor = motor;
@@ -176,6 +182,8 @@
 
     if( trollingMotor !== null && Object.keys(trollingMotor).length > 0 )
     {
+      trollingMotor.isSelected = true;
+      trollingMotor.isCheckbox = true;
       data.trollingMotor = trollingMotor;
       erpLineItems.push( trollingMotor );
     }
@@ -196,6 +204,8 @@
             data.dealerMotorRequestId = motorRequest.Id;
             data.motor = { id: motorRequest.Motor__c };
           }
+          console.log('DATA');
+          console.log( JSON.parse(JSON.stringify(data )));
           action.setParams({
             jsonData: JSON.stringify( data )
           });

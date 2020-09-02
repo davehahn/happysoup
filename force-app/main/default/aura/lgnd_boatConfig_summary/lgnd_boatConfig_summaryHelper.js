@@ -50,7 +50,7 @@
 
           if( option.isCheckbox != true && parseFloat(option.quantitySelected) > 0 )
           {
-            total += ( parseFloat(option.quantitySelected) * parseFloat(option.cost) );
+            total += (( parseFloat(option.quantitySelected ) - parseFloat(option.quantityStandard)) * parseFloat(option.individualCost) );
           }
 
           if( option.subOptions !== undefined && option.subOptions !== null )
@@ -65,7 +65,7 @@
               if( !option.subOptions[i].isCheckbox &&
                   option.subOptions[i].quantitySelected > 0 )
                 {
-                  total += option.subOptions[i].cost * option.subOptions[i].quantitySelected;
+                  total += (option.subOptions[i].quantitySelected - option.subOptions[i].quantityStandard ) * option.subOptions[i].individualCost;
                 }
             }
           }
