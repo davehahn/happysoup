@@ -142,13 +142,13 @@ public virtual class PartnerProgram_7for7 extends PartnerProgramItem
         this.stacks.get(ew.boatId).erpWrappers.add(ew);
       }
     }
-    if( this.stacks.keySet().size() > 0 )
-    {
-      for (BoatStack bs : this.stacks.values()) {
-        if (bs.toGetPromotionMessage != null)
-          this.resultMessage.errors.add(bs.toGetPromotionMessage);
-      }
-    }
+//    if( this.stacks.keySet().size() > 0 )
+//    {
+//      for (BoatStack bs : this.stacks.values()) {
+//        if (bs.toGetPromotionMessage != null)
+//          this.resultMessage.errors.add(bs.toGetPromotionMessage);
+//      }
+//    }
   }
 
   protected override Decimal determineSavingsPercent()
