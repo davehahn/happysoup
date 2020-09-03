@@ -25,7 +25,10 @@
         {
           if( (opt.isCheckbox && opt.isSelected) ||
               (!opt.isCheckbox && opt.quantitySelected > 0 ) )
+          {
+            console.log( opt );
             ol.push( opt );
+          }
         }
       }
     }

@@ -133,7 +133,10 @@ public without sharing class DealerOrder_Ext {
 //      {
 //        this.optionalProducts.put( fam, new List<OptionWrapper>() );
 //      }
-      this.enabledOptionFamilies = Partner_Boat_Sale_Settings__c.getOrgDefaults().Enabled_Part_Families__c.split(',');
+      Partner_Boat_Sale_Settings__c settings = Partner_Boat_Sale_Settings__c.getOrgDefaults();
+      this.enabledOptionFamilies = settings.Enabled_Part_Families__c == null ?
+        new List<String>() :
+        settings.Enabled_Part_Families__c.split(',');
       isFactory = pricebookId == gcConstants.idPricebookFactory;
       isPartner = pricebookId == gcConstants.idPricebookPartner;
       this.name = apiProd.Name;
@@ -311,6 +314,7 @@ public without sharing class DealerOrder_Ext {
     public String name { get; set; }
     public String parent_id { get; set; }
     public Decimal cost { get; set; }
+    public Decimal individualCost { get; set; }
     public Integer quantityStandard { get; set; }
     public Integer quantityMaximum { get; set; }
     public Integer quantitySelected { get; set; }
@@ -325,6 +329,7 @@ public without sharing class DealerOrder_Ext {
     {
       this.id = pp.Id;
       this.name = pp.Name;
+      this.individualCost = pp.PartnerPrice;
       this.cost = pp.QuantityStandard > 0 ? 0 : pp.PartnerPrice;
       this.hasOptions = pp.HasOptions;
       this.isSelected = pp.QuantityStandard > 0 ? true : false;
@@ -340,7 +345,8 @@ public without sharing class DealerOrder_Ext {
     {
       this.id = pbe.Product2Id;
       this.name = pbe.Product2.Name;
-      this.cost = pbe.UnitPrice;
+      this.individualCost = pbe.UnitPrice;
+      this.cost = opt.Standard__c > 0 ? 0 : pbe.UnitPrice;
       this.isSelected = opt.Standard__c > 0;
       this.quantityStandard = Integer.valueOf( opt.Standard__c );
       this.quantityMaximum = Integer.valueOf( opt.Maximum__c );
@@ -1470,7 +1476,7 @@ public without sharing class DealerOrder_Ext {
     DolWrapper result = new DolWrapper();
     Set<Id> productIds = new Set<Id>();
     Map<Id, Product_Option__c> optionMap = new Map<Id, Product_Option__c>();
-    Map<String, AcctSeedERP__Material__c> subOptionMaterialMap = new Map<String, AcctSeedERP__Material__c>();
+    Map<String, List<AcctSeedERP__Material__c>> subOptionMaterialsMap = new Map<String, List<AcctSeedERP__Material__c>>();
     AcctSeedERP__Material__c boat;
     AcctSeedERP__Material__c trailer;
     AcctSeedERP__Material__c motor;
@@ -1587,7 +1593,9 @@ public without sharing class DealerOrder_Ext {
         {
           String key = mat.Parent_Product__c + '-' + mat.AcctSeedERP__Product__c;
           System.debug( 'building key = ' + key);
-          subOptionMaterialMap.put( key, mat );
+          if( !subOptionMaterialsMap.containsKey(key) )
+            subOptionMaterialsMap.put( key, new List<AcctSeedERP__Material__c>() );
+          subOptionMaterialsMap.get( key).add( mat );
           /* if the parent Id is equal to the motor, then this is a
              selected motor option
           */
@@ -1670,9 +1678,14 @@ public without sharing class DealerOrder_Ext {
             //ow.quantitySelected = 2;
             String key = opt.To_Product__c + '-' + opt.From_Product__c;
             System.debug( 'reconstruct Key = ' + key );
-            if( subOptionMaterialMap.containsKey( key ) )
+            if( subOptionMaterialsMap.containsKey( key ) )
             {
-              ow.quantitySelected = Integer.valueOf( subOptionMaterialMap.get( key ).AcctSeedERP__Quantity_Per_Unit__c );
+              Integer quan = 0;
+              for( AcctSeedERP__Material__c mat : subOptionMaterialsMap.get( key ) )
+              {
+                 quan += Integer.valueOf( mat.AcctSeedERP__Quantity_Per_Unit__c );
+              }
+              ow.quantitySelected = quan;
             }
           }
           System.debug('SUB OPTION OW');
@@ -2054,6 +2067,12 @@ public without sharing class DealerOrder_Ext {
             material.GMBLASERP__Price_Override__c = ( productMap.get(ow.id).PricebookEntries[0].UnitPrice == ow.cost ? false : true );
           }
           materials.add( material );
+          if( ( ow.isCheckbox == null || !ow.isCheckbox ) &&
+              ow.quantityStandard > 0 &&
+              ow.quantityStandard != ow.quantitySelected )
+          {
+            materials.add( newIncludedOptionMaterial( material, ow.quantityStandard ) );
+          }
         }
         materials.addAll( createDiscountMaterials( wrapper.discounts,
                                                    erp.Id,
@@ -2305,6 +2324,12 @@ public without sharing class DealerOrder_Ext {
           material.GMBLASERP__Price_Override__c = ( productMap.get(ow.id).PricebookEntries[0].UnitPrice == ow.cost ? false : true );
         }
         newMaterials.add( material );
+        if( ( ow.isCheckbox == null || !ow.isCheckbox ) &&
+          ow.quantityStandard > 0 &&
+          ow.quantityStandard != ow.quantitySelected )
+        {
+          newMaterials.add( newIncludedOptionMaterial( material, ow.quantityStandard ) );
+        }
       }
       newMaterials.addAll( createDiscountMaterials( wrapper.discounts,
                                                     erp.Id,
@@ -2346,20 +2371,37 @@ public without sharing class DealerOrder_Ext {
 
   private static AcctSeedERP__Material__c newMaterialsFromWrapper( OptionWrapper ow, Id erpId, Id taskId )
   {
-    System.debug( ow );
+    Integer quantity = ow.isCheckbox != null && ow.isCheckbox && ow.isSelected ?
+      1 :
+      ( ow.isCheckbox == null || !ow.isCheckbox ) && ow.quantityStandard == ow.quantitySelected ?
+        ow.quantitySelected :
+        ow.quantitySelected - ow.quantityStandard;
+    System.debug(ow.name);
+    System.debug(ow.isCheckbox);
+    System.debug(ow.isSelected);
+    System.debug(ow.quantitySelected);
+    System.debug(ow.quantityStandard);
+    System.debug('calc quantity = ' + quantity);
     AcctSeedERP__Material__c material = new AcctSeedERP__Material__c(
       AcctSeedERP__Product__c = ow.id,
       AcctSeedERP__Comment__c = ow.name,
       AcctSeedERP__Project__c = erpId,
       AcctSeedERP__Project_Task__c = taskId,
-      AcctSeedERP__Quantity_per_Unit__c = ow.isCheckbox == null || ow.isCheckbox ?
-        1 :
-        ow.quantitySelected,
-      GMBLASERP__Unit_Price__c = ow.cost,
+      AcctSeedERP__Quantity_per_Unit__c = quantity,
+      GMBLASERP__Unit_Price__c = ow.quantitySelected > ow.quantityStandard ?
+        ow.individualCost : ow.cost,
       Parent_Product__c = ow.parent_id
     );
-
     return material;
+  }
+
+  private static AcctSeedERP__Material__c newIncludedOptionMaterial( AcctSeedERP__Material__c material, Decimal stdQuantity )
+  {
+    AcctSeedERP__Material__c offset = material.clone( false, true, false, false );
+    offset.AcctSeedERP__Quantity_Per_Unit__c = stdQuantity;
+    offset.GMBLASERP__Unit_Price__c = 0;
+    offset.GMBLASERP__Price_Override__c = true;
+    return offset;
   }
 
   public static void coverage(){

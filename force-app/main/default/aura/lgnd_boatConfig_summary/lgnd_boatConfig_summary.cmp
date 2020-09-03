@@ -111,9 +111,11 @@
               <div class="slds-truncate">{!opt.name}</div>
             </div>
             <div class="slds-col slds-size--1-of-1 slds-medium-size--3-of-12 slds-large-size--3-of-12 slds-text-align--right">
-              <lightning:formattedNumber value="{!opt.cost}"
-                                         style="currency"
-                                         currencyCode="CAD" />
+<!--              <lightning:formattedNumber value="{!opt.cost}"-->
+<!--                                         style="currency"-->
+<!--                                         currencyCode="CAD" />-->
+              <c:lgnd_currencyDisplay value="{!opt.cost}"
+                                      zeroLabel="Included" />
             </div>
           </div>
         </aura:if>
@@ -142,9 +144,11 @@
               </div>
             </div>
             <div class="slds-col slds-size--1-of-1 slds-medium-size--3-of-12 slds-large-size--3-of-12 slds-text-align--right">
-              <lightning:formattedNumber value="{!mult(opt.cost, opt.quantitySelected)}"
-                                         style="currency"
-                                         currencyCode="CAD" />
+<!--              <lightning:formattedNumber value="{!mult(opt.cost, opt.quantitySelected)}"-->
+<!--                                         style="currency"-->
+<!--                                         currencyCode="CAD" />-->
+              <c:lgnd_currencyDisplay value="{!mult(opt.cost, opt.quantitySelected)}"
+                                      zeroLabel="Included" />
             </div>
           </div>
         </aura:if>
@@ -152,46 +156,55 @@
         <!-- Sub Options -->
         <aura:iteration items="{!opt.subOptions}" var="subOpt" indexVar="idx">
           <!-- Check box option -->
-          <aura:if isTrue="{!subOpt.isSelected}">
+          <aura:if isTrue="{!and( subOpt.isCheckbox, subOpt.isSelected )}">
             <div class="{! join(' ', 'slds-grid slds-wrap sub-option', concat('sub-option-',idx))}">
               <div class="slds-col slds-size--1-of-1 slds-medium-size--9-of-12 slds-large-size--9-of-12">
                 {!subOpt.name}
               </div>
               <div class="slds-col slds-size--1-of-1 slds-medium-size--3-of-12 slds-large-size--3-of-12 slds-text-align--right">
-                <lightning:formattedNumber value="{!subOpt.cost}"
-                                           style="currency"
-                                           currencyCode="CAD" />
+<!--                <lightning:formattedNumber value="{!subOpt.cost}"-->
+<!--                                           style="currency"-->
+<!--                                           currencyCode="CAD" />-->
+                <c:lgnd_currencyDisplay value="{!subOpt.cost}"
+                                        zeroLabel="Included" />
               </div>
             </div>
           </aura:if>
 
           <!-- Select option -->
           <aura:if isTrue="{! and( not(subOpt.isCheckbox), greaterthan(subOpt.quantitySelected, 0) )}">
-            <div class="slds-grid slds-wrap sub-option">
+            <div class="{! join(' ', 'slds-grid slds-wrap sub-option', concat('sub-option-',idx))}">
               <div class="slds-col slds-size--1-of-1 slds-medium-size--9-of-12 slds-large-size--9-of-12">
                 <div class="slds-truncate">
                   <span>
                     {!subOpt.name}
                     <aura:if isTrue="{! greaterthan(subOpt.quantitySelected, 1)}">
-                      <span style="margin-left:0.25rem; font-size:0.8rem;">
+                      <div style="margin-left:0.25rem; font-size:0.8rem;">
                         (
+                        <aura:if isTrue="{! greaterthan( subOpt.quantityStandard, 0 )}">
                         <span>
-                          {!subOpt.quantitySelected}
+                          {!subOpt.quantityStandard} included and
+                        </span>
+                        </aura:if>
+                        <span>
+                          {! sub( subOpt.quantitySelected, subOpt.quantityStandard ) }
                         </span>
                         <span class="slds-m-right_xx-small slds-m-left_xx-small">x</span>
-                        <lightning:formattedNumber value="{!subOpt.cost}"
+                        <lightning:formattedNumber value="{!subOpt.individualCost}"
                                                    style="currency"
                                                    currencyCode="CAD" />
                         ea.)
-                      </span>
+                      </div>
                     </aura:if>
                   </span>
                 </div>
               </div>
               <div class="slds-col slds-size--1-of-1 slds-medium-size--3-of-12 slds-large-size--3-of-12 slds-text-align--right">
-                <lightning:formattedNumber value="{!mult(subOpt.cost, subOpt.quantitySelected)}"
-                                           style="currency"
-                                           currencyCode="CAD" />
+<!--                <lightning:formattedNumber value="{!mult(subOpt.individualCost, sub(subOpt.quantitySelected, subOpt.quantityStandard))}"-->
+<!--                                           style="currency"-->
+<!--                                           currencyCode="CAD" />-->
+                <c:lgnd_currencyDisplay value="{!mult(subOpt.individualCost, sub(subOpt.quantitySelected, subOpt.quantityStandard))}"
+                                        zeroLabel="Included" />
               </div>
             </div>
           </aura:if>
