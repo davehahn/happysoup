@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <description>Reminders the ERP owner that the ERP has been on the quoting stage for over 30 days.</description>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>Legend_Letterhead</letterhead>
+    <name>Counter Sale ERP 30 Day Quoting Reminder</name>
+    <style>freeForm</style>
+    <subject>Your Counter Sale ERP has been set to Quoting for 30 Days</subject>
+    <textOnly>Hello {!AcctSeed__Project__c.OwnerFirstName},
+
+The following Counter Sale ERP has been on the Quoting stage for 30 days. Please contact the customer and update the ERP accordingly.
+
+
+ERP Order: {!AcctSeed__Project__c.Name}
+Customer: {!AcctSeed__Project__c.AcctSeed__Account__c}
+Current Stage: {!AcctSeed__Project__c.Stage__c}
+URL: {!AcctSeed__Project__c.Link}</textOnly>
+    <type>html</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>
