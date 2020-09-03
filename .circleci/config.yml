@@ -12,6 +12,16 @@ version: 2.1
 #    jobs:
 #      - welcome/run
 jobs:
+  build-validation-env:
+    docker:
+      - image: legendarydevs/sfdx_deploy
+    steps:
+      -run:
+        name: Build Validation Environment
+        command: . build/circleci/create_sandbox.sh
+    store_artifacts:
+      path: /tmp/org_info.json
+
   stage:
     docker:
       - image: legendarydevs/sfdx_deploy
@@ -29,6 +39,7 @@ jobs:
       # - run:
       #     name: Deploy Experience Bundles to Staging
       #     command: . build/circleci/deploy_experience_bundles.sh
+
   deploy:
     docker:
       - image: legendarydevs/sfdx_deploy
@@ -62,3 +73,12 @@ workflows:
             branches:
               only:
                 - master
+  validate:
+    jobs:
+      - build-validation-env:
+          filter:
+            branches:
+              only:
+                - feature/*
+                - bugfix/*
+                - declarative/*
