@@ -51,6 +51,16 @@
         <template>Sales_Process/Boat_Numbers_Order</template>
     </alerts>
     <alerts>
+        <fullName>Counter_Sale_ERP_30_Day_Quoting_Reminder</fullName>
+        <description>Counter Sale ERP 30 Day Quoting Reminder</description>
+        <protected>false</protected>
+        <recipients>
+            <type>owner</type>
+        </recipients>
+        <senderType>DefaultWorkflowUser</senderType>
+        <template>To_Do_Notification_Templates/Counter_Sale_ERP_30_Day_Quoting_Reminder</template>
+    </alerts>
+    <alerts>
         <fullName>Customer_Satisfaction_Survey</fullName>
         <description>Customer Satisfaction Survey Stage Delivered</description>
         <protected>false</protected>
@@ -626,6 +636,36 @@
         </recipients>
         <senderType>CurrentUser</senderType>
         <template>Sales_Process/You_have_been_assigned_as_the_Boat_Specialist_for_this_ERP</template>
+    </alerts>
+    <alerts>
+        <fullName>Notify_Customer_of_Counter_Sale_Part_Pending_Pickup_EN</fullName>
+        <description>Notify Customer of Counter Sale Part Pending Pickup EN</description>
+        <protected>false</protected>
+        <recipients>
+            <field>ContactEmail__c</field>
+            <type>email</type>
+        </recipients>
+        <recipients>
+            <field>Salesperson_Email__c</field>
+            <type>email</type>
+        </recipients>
+        <senderType>CurrentUser</senderType>
+        <template>Customer_Follow_Up_Templates/Notify_Customer_of_Counter_Sale_Part_Pending_Pickup_EN</template>
+    </alerts>
+    <alerts>
+        <fullName>Notify_Customer_of_Counter_Sale_Part_Pending_Pickup_FR</fullName>
+        <description>Notify Customer of Counter Sale Part Pending Pickup FR</description>
+        <protected>false</protected>
+        <recipients>
+            <field>ContactEmail__c</field>
+            <type>email</type>
+        </recipients>
+        <recipients>
+            <field>Salesperson_Email__c</field>
+            <type>email</type>
+        </recipients>
+        <senderType>CurrentUser</senderType>
+        <template>Customer_Follow_Up_Templates/Notify_Customer_of_Counter_Sale_Part_Pending_Pickup_FR</template>
     </alerts>
     <alerts>
         <fullName>Notify_of_Factory_Store_Partner_Boat_Sale</fullName>

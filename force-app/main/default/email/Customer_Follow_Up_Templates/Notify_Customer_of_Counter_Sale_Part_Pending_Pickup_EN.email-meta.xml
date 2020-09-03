@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>Legend_Letterhead</letterhead>
+    <name>Notify Customer of Counter Sale Part Pending Pickup EN</name>
+    <style>formalLetter</style>
+    <subject>Your part has arrived!</subject>
+    <textOnly>Hi {!AcctSeed__Project__c.AcctSeed__Account__c},
+
+We just want to inform you that your part(s) have arrived at our facility. You may drop by anytime during our operating hours to pickup your part(s).
+Yours in boating,
+
+{!AcctSeed__Project__c.Salesperson__c}</textOnly>
+    <type>html</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>
