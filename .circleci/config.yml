@@ -16,11 +16,11 @@ jobs:
     docker:
       - image: legendarydevs/sfdx_deploy
     steps:
-      -run:
-        name: Build Validation Environment
-        command: . build/circleci/create_sandbox.sh
-    store_artifacts:
-      path: /tmp/org_info.json
+      - run:
+          name: Build Validation Environment
+          command: . build/circleci/create_sandbox.sh
+      - store_artifacts:
+          path: /tmp/org_info.json
 
   stage:
     docker:
