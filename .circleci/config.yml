@@ -76,7 +76,7 @@ workflows:
   validate:
     jobs:
       - build-validation-env:
-          filter:
+          filters:
             branches:
               only:
                 - feature/*
