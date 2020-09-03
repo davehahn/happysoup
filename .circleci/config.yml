@@ -57,7 +57,7 @@ workflows:
                 - staging
   deploy_to_production:
     jobs:
-      - stage:
+      - deploy:
           filters:
             branches:
               only:
