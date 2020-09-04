@@ -59,7 +59,7 @@ public with sharing class CommissionLineItem2_Service
         else if( this.maintenancePackages.containsKey( cli.Product__c ) )
         {
           rate = maintenancePackageRate;
-          paymentBasedOnProfit = true;
+          //paymentBasedOnProfit = true;
         }
         else if( this.protectionAndServicesProducts.containsKey( cli.Product__c ) )
         {
