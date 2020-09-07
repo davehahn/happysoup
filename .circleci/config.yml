@@ -12,6 +12,39 @@ version: 2.1
 #    jobs:
 #      - welcome/run
 jobs:
+  build-validation-env:
+    docker:
+      - image: legendarydevs/sfdx_deploy
+    steps:
+      - checkout
+      - run:
+          name: Build Validation Environment
+          command: . build/circleci/create_sandbox.sh
+
+      - persist_to_workspace:
+          root: workspace
+          paths:
+            - org_info.json
+
+  validate-build:
+    docker:
+      - image: legendarydevs/sfdx_deploy
+    environment:
+      GIT_BRANCH: << pipeline.git.branch >>
+    steps:
+      - checkout
+      - attach_workspace:
+          at: /workspace
+      - run:
+          name: Validate deployment
+          command: |
+            . build/circleci/cleancode.sh
+            . build/circleci/validate_build.sh
+      - run:
+          name: Create Pull Request
+          command: . build/circleci/create_pull_request.sh staging
+          when: on_success
+
   stage:
     docker:
       - image: legendarydevs/sfdx_deploy
@@ -29,6 +62,7 @@ jobs:
       # - run:
       #     name: Deploy Experience Bundles to Staging
       #     command: . build/circleci/deploy_experience_bundles.sh
+
   deploy:
     docker:
       - image: legendarydevs/sfdx_deploy
@@ -62,3 +96,16 @@ workflows:
             branches:
               only:
                 - master
+  validate:
+    jobs:
+      - build-validation-env:
+          filters:
+            branches:
+              only:
+                - /feature\/.*/
+                - /bugfix\/.*/
+                - /declarative\/.*/
+      - validate-build:
+          requires:
+            - build-validation-env
+
