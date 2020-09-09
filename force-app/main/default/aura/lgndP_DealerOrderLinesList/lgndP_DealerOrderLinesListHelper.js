@@ -119,14 +119,15 @@
       else if (component.isValid() && state === "INCOMPLETE") {
       }
       else if (component.isValid() && state === "ERROR") {
+        self.toggleSpinner(component, false);
         var errors = response.getError();
         if (errors) {
             if (errors[0] && errors[0].message) {
-                alert.log("Error message: " +
+                alert("Error message: " +
                          errors[0].message);
             }
         } else {
-            alert.log("Unknown error");
+            alert("Unknown error");
         }
       }
     });

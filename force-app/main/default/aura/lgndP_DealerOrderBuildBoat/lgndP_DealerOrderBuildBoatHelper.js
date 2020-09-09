@@ -278,44 +278,14 @@
 
   handlePartnerProgram:function( component )
   {
-    let action = component.get( 'c.applyPartnerProgram' );
-    action.setParams({
-      dealerOrderId: component.get('v.dealerOrder').Id
-    });
-    component.set('v.busyMessage', 'Applying Partner Program');
-    return new LightningApex( this, action ).fire();
-  },
-
-//  checkForPromotions: function( component )
-//  {
-//    var action = component.get('c.checkForPromotions');
+//    let action = component.get( 'c.applyPartnerProgram' );
 //    action.setParams({
 //      dealerOrderId: component.get('v.dealerOrder').Id
 //    });
-//    component.set('v.busyMessage', 'Checking for Promotions');
+//    component.set('v.busyMessage', 'Applying Partner Program');
 //    return new LightningApex( this, action ).fire();
-//  },
-//
-//  applyPromotions: function( component, promotion )
-//  {
-//    console.log( 'applying Promotion' );
-//    console.log( JSON.parse( JSON.stringify(promotion )));
-//    if( promotion.isApplicable )
-//    {
-//      var action = component.get('c.applyPromotions');
-//      action.setParams({
-//        jsonPromotion: JSON.stringify( promotion )
-//      });
-//      component.set('v.busyMessage', 'Applying Promotions');
-//      return new LightningApex( this, action ).fire();
-//    }
-//    else
-//    {
-//      return new Promise( function( resolve ) {
-//        resolve(null);
-//      });
-//    }
-//  },
+    return new Promise( (resolve, reject) => { resolve(null) } );
+  },
 
   initForEdit: function( component, groupId )
   {

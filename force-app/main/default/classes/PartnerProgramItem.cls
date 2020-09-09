@@ -2,7 +2,7 @@
  * Created by dave on 2020-07-24.
  */
 
-public virtual class PartnerProgramItem implements PartnerProgramItem_I
+public virtual class PartnerProgramItem implements PartnerProgramItem_I, Promise.Deferred
 {
   protected String name;
   public Dealer_Order__c dealerOrder;
@@ -98,6 +98,36 @@ public virtual class PartnerProgramItem implements PartnerProgramItem_I
       }
     }
     return toDelete;
+  }
+
+  public Object resolve( Object dealerOrderWrapper )
+  {
+    PartnerProgram_Service.DealerOrderWrapper wrapper = (PartnerProgram_Service.DealerOrderWrapper)dealerOrderWrapper;
+    Decimal percent = null;
+    init( wrapper );
+    if( this.isApplicable() )
+    {
+      upsert this.apply();
+      percent = this.getDiscountPercent();
+    }
+    else
+    {
+      if( this.wasAppliedPreviously() )
+      {
+        delete this.revert();
+      }
+    }
+
+    if( wrapper.bookingOrder != null &&
+        this.getBookingOrderFieldName() != null )
+    {
+      wrapper.bookingOrder.put(
+        this.getBookingOrderFieldName(),
+        percent
+      );
+      update wrapper.bookingOrder;
+    }
+    return wrapper;
   }
 
   protected virtual void filterApplicableERPs( List<PartnerProgram_Service.ErpWrapper> erpWrappers )

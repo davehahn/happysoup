@@ -1894,18 +1894,14 @@ public without sharing class DealerOrder_Ext {
             WHERE Id = :recordId];
   }
 
-  @AuraEnabled
-  public static String applyPartnerProgram( String dealerOrderId )
-  {
-    String retVal;
-    PartnerProgram_Service pp_service = new PartnerProgram_Service(
-      new Set<Id>{ Id.valueOf(dealerOrderId) } );
-//    if(pp_service.checkAndApply() != null && pp_service.checkAndApply().get( dealerOrderId) != null)
-//      retVal = JSON.serialize( pp_service.checkAndApply().get( dealerOrderId) );
-//
-//    return retVal;
-    return JSON.serialize( pp_service.checkAndApply().get( dealerOrderId) );
-  }
+//  @AuraEnabled
+//  public static String applyPartnerProgram( String dealerOrderId )
+//  {
+//    String retVal;
+//    PartnerProgram_Service pp_service = new PartnerProgram_Service(
+//      new Set<Id>{ Id.valueOf(dealerOrderId) } );
+//    return JSON.serialize( pp_service.checkAndApply().get( dealerOrderId) );
+//  }
 
   private static Dealer_Order__c createDealerLineItems( DealerOrderLineWrapper wrapper )
   {
