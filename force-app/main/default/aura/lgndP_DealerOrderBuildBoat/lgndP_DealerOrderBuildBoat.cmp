@@ -151,7 +151,7 @@
 
           <aura:iteration items="{!v.motorOptions}" var="m_opt">
             <c:lgnd_boatConfig_optionSelect pricebookId="{!v.dealerOrder.Pricebook__c}"
-                                            option="{!v.m_opt}" />
+                                            option="{!m_opt}" />
           </aura:iteration>
         </aura:if>
 
