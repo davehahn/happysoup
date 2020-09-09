@@ -31,10 +31,10 @@
                             value="{!v.option.quantitySelected}"
                             onchange="{!c.selectChanged}">
             <aura:iteration items="{!v.option.quantityOptions}" var="q">
-              <aura:if isTrue="{! equals( g, v.option.quantitySelected)}">
+              <aura:if isTrue="{! equals( q, v.option.quantitySelected)}">
                 <option value="{!q}" selected="true">{!q}</option>
               </aura:if>
-              <aura:if isTrue="{! !equals( g, v.option.quantitySelected)}">
+              <aura:if isTrue="{! !equals( q, v.option.quantitySelected)}">
                 <option value="{!q}">{!q}</option>
               </aura:if>
             </aura:iteration>
