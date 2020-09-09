@@ -2,7 +2,6 @@
   setUserType: function( component )
   {
     var self = this,
-        //action = component.get('c.getUserType');
         action = component.get('c.builderInit');
 
     return new Promise( function( resolve, reject ) {
@@ -10,26 +9,17 @@
       .then(
         $A.getCallback( function(result) {
           self.functions.clearVars( component );
+          console.log( JSON.parse( JSON.stringify( result ) ) );
           component.set('v.modelYearOptions', result.modelYearOptions );
           component.set('v.userType', result.userType);
           component.set('v.modelYear', result.modelYear);
+          if( result.uiTheme !== 'Theme3' )
+            component.set('v.inCommuninty', false );
           resolve();
         })
       );
     });
   },
-
-//  findAvailableDiscounts: function( component )
-//  {
-//    var dealerOrder = component.get('v.dealerOrder'),
-//        action = component.get('c.getAvailableDiscounts');
-//
-//    action.setParams({
-//      dealerOrderId: dealerOrder.Id
-//    });
-//
-//    return this.actionHandler( component, action, true, true );
-//  },
 
 	fetchProducts : function( component, recordType, family )
   {
@@ -278,12 +268,6 @@
 
   handlePartnerProgram:function( component )
   {
-//    let action = component.get( 'c.applyPartnerProgram' );
-//    action.setParams({
-//      dealerOrderId: component.get('v.dealerOrder').Id
-//    });
-//    component.set('v.busyMessage', 'Applying Partner Program');
-//    return new LightningApex( this, action ).fire();
     return new Promise( (resolve, reject) => { resolve(null) } );
   },
 
@@ -431,21 +415,6 @@
               });
             }
           }
-//         if( options !== null && Object.keys(options).length > 0 )
-//          {
-//            for( var productId in options )
-//            {
-//              for( var j=0; j<productOptions.length; j++ )
-//              {
-//                if( productId === productOptions[j].id )
-//                {
-//                  productOptions[j].isSelected = true;
-//                  if( options[productId].subOptions !== undefined && options[productId].subOptions !== null )
-//                    productOptions[j].subOptions = options[productId].subOptions;
-//                }
-//              }
-//            }
-//          }
           return productOptions;
         };
 
@@ -845,82 +814,6 @@
           component.set('v.feeList', allFeeList);
           component.set('v.fees', fees);
         };
-//        handleEarlyOrderDiscount = function( boatCost )
-//        {
-//          var isMotorRequest = component.get('v.isMotorRequest'),
-//              total,
-//              discountName = 'Early Booking Discount',
-//              coopDiscName = 'Co-Op Discount',
-//              discountAmount,
-//              coopDiscRate = 0,
-//              foundIt = false,
-//              discountRate,
-//              availableDiscounts = component.get('v.availableDiscounts'),
-//              discounts = component.get('v.discounts');
-//          if( isMotorRequest )
-//            return false;
-//
-//          //find out if 'Early Booking Discount' is in availableDiscounts
-//          for( var i=0; i<availableDiscounts.length; i++ )
-//          {
-//            if( availableDiscounts[i].name === discountName)
-//            {
-//              discountRate = availableDiscounts[i].amount;
-//            }
-//            if( availableDiscounts[i].name === coopDiscName )
-//            {
-//              coopDiscRate = availableDiscounts[i].amount;
-//            }
-//          }
-//
-//          //if the discountRate is null this order is not applicable
-//          if( discountRate === undefined )
-//            return false;
-//
-//          //total = self.calculateTotalForEarlyBooking( component );
-//          total = ( parseFloat(boatCost) * ( 100 - coopDiscRate) ) / 100;
-//          discountAmount = ( total * ( discountRate / 100 ) ) * -1;
-//          //find the 'Early Booking Discount' and update the total or create it
-//          for( var i=0; i<discounts.length; i++ )
-//          {
-//            if( discounts[i].name === discountName )
-//            {
-//              discounts[i].amount = discountAmount;
-//              foundIt = true;
-//              break;
-//            }
-//          }
-//          if( !foundIt )
-//          {
-//            discounts.push({
-//              name: discountName,
-//              amount:discountAmount
-//            });
-//          }
-//          component.set('v.discounts', discounts);
-//        },
-//        handleCoopDiscount = function( boatCost )
-//        {
-//          var availDiscounts = component.get('v.availableDiscounts'),
-//              discounts = component.get('v.discounts'),
-//              coopRate;
-//          for( var i=0; i<availDiscounts.length; i++ )
-//          {
-//            if( availDiscounts[i].name === 'Co-Op Discount');
-//            {
-//              coopRate = availDiscounts[i].amount;
-//              break;
-//            }
-//          }
-//          if( coopRate !== undefined && coopRate !== null )
-//          {
-//            var disc = {};
-//            disc.name = 'Co-Op Discount';
-//            disc.amount = (parseFloat(boatCost) * ( coopRate / 100 )) * -1;
-//            discounts.push( disc );
-//            component.set('v.discounts', discounts);
-//          }
-//        }
 
     return new Promise( function( resolve, reject ) {
       if( params.whatChanged === 'reset' )
@@ -929,8 +822,6 @@
       if( params.whatChanged === 'boat' )
       {
         component.set('v.boat', params.changeData );
-        //handleCoopDiscount( params.changeData.cost );
-        //handleEarlyOrderDiscount( params.changeData.cost );
         handleFees( params );
       }
 
@@ -1047,63 +938,6 @@
     }
   },
 
-  // calculateTotalForEarlyBooking: function( component )
-  // {
-  //   var //quantity = component.get('v.quantity'),
-  //       boat = component.get('v.boat'),
-  //       //trailer = component.get('v.trailer'),
-  //       //motor = component.get('v.motor'),
-  //       //optionList = component.get('v.optionsList'),
-  //       //options = component.get('v.options'),
-  //       //feeList = component.get('v.feeList'),
-  //       //discounts = component.get('v.discounts'),
-  //       total = 0.00;
-
-  //   if( boat !== null && boat.length !== 0 && boat.cost !== undefined)
-  //     total += boat.cost;
-
-  //   // if( trailer !== null && trailer.length !== 0 && trailer.cost !== undefined)
-  //   //   total += isNaN( parseFloat( trailer.cost ) ) ? 0 : parseFloat( trailer.cost );
-
-  //   // if( motor !== null && motor.length !== 0 && motor.cost !== undefined && !isNaN(motor.cost))
-  //   //   total += motor.cost;
-
-  //   // if( options !== null && Object.keys( options ).length > 0 )
-  //   // {
-  //   //   for( var key in options )
-  //   //   {
-  //   //     if( options[key].isSelected == true )
-  //   //       total += parseFloat( options[key].cost );
-  //   //     if( options[key].subOptions !== undefined && options[key].subOptions !== null )
-  //   //     {
-  //   //       for( var i=0; i<options[key].subOptions.length; i++ )
-  //   //       {
-  //   //         if( options[key].subOptions[i].isSelected === true )
-  //   //           total += options[key].subOptions[i].cost;
-  //   //       }
-  //   //     }
-  //   //   }
-  //   // }
-  //   // if( feeList !== null && feeList.length !== 0 )
-  //   // {
-  //   //   for( var i=0; i<feeList.length; i++ )
-  //   //   {
-  //   //     total += parseFloat(feeList[i].cost);
-  //   //   }
-  //   // }
-
-  //   // if( discounts !== null && discounts.length !== 0 )
-  //   // {
-  //   //   for( var i=0; i<discounts.length; i++ )
-  //   //   {
-  //   //     if( discounts[i].name !== 'Early Booking Discount')
-  //   //       total += parseFloat(discounts[i].amount);
-  //   //   }
-  //   // }
-  //   return total;
-  // },
-
-
   fireChangeEvent: function( component )
   {
     var configChangeEvt = $A.get('e.c:lgnd_BoatConfig_configChange_Event');
@@ -1136,8 +970,6 @@
       component.set( 'v.hasStandardTrailer', false);
       component.set( 'v.hasStandardMotor', false);
       component.set( 'v.hasStandardTrollingMotor', false);
-//      component.set( 'v.canvasOptions', [] );
-//      component.set( 'v.buildOptions', [] );
       component.set('v.optionalProducts', [] );
       component.set( 'v.selectedBoat_Id', '' );
       component.set( 'v.selectedTrailer_Id', '' );
@@ -1163,7 +995,6 @@
       component.set('v.promotionMessage', null);
       component.set('v.busyMessage', null);
       component.set('v.modelYear', '');
-      //this.functions.clearConfigVars( component );
     },
 
     clearConfigVars: function( component )

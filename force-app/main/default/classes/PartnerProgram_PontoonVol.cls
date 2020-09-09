@@ -50,7 +50,7 @@ public virtual class PartnerProgram_PontoonVol extends PartnerProgramItem
         !this.orderWrapper.isBookingOrder &&
         this.orderWrapper.bookingOrder.get( this.fieldName ) != null )
     {
-      return (Decimal) orderWrapper.bookingOrder.get(this.fieldName);
+      return (Decimal) this.orderWrapper.bookingOrder.get(this.fieldName);
     }
     if( count < 4 )
       return 0;

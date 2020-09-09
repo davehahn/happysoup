@@ -650,6 +650,7 @@ public without sharing class DealerOrder_Ext {
     Map<String, Object> result = new Map<String, Object>();
     result.put('userType', UserInfo.getUserType() );
     result.put('modelYear', currentYear );
+    result.put('uiTheme', UserInfo.getUiThemeDisplayed() );
     List<Map<String, Object>> options = new List<Map<String,Object>>();
     for( String year : Partner_Program_Settings__c.getOrgDefaults().Available_Model_Years__c.split(',') )
     {

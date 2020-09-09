@@ -27,9 +27,7 @@ public class PartnerProgram_Executor
   {
     public void done( Object incomingObject )
     {
-      //Set<String> result = (Set<String>)incomingObject;
       System.debug( 'Partner Program Executor Complete');
-      //System.debug( result );
     }
   }
 

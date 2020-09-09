@@ -4,6 +4,17 @@
     helper.doInit( component );
   },
 
+  refreshItems: function( component, event, helper )
+  {
+    helper.toggleSpinner( component, true );
+    helper.doInit( component )
+    .finally(
+      $A.getCallback( () => {
+        helper.toggleSpinner( component, false );
+      })
+    )
+  },
+
   detailToggle: function( component, event, helper )
   {
     var moreDeets = component.get('v.moreDetails');

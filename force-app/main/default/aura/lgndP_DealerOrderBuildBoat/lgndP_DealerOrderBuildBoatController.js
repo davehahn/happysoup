@@ -19,6 +19,7 @@
     .then(
       $A.getCallback( function() {
         component.find("lgnd_BoatTypeSelector--CMP").resetVars();
+        console.log( `In Community = ${component.get('v.inCommuninty') }`);
         helper.fireChangeEvent( component );
       }),
       $A.getCallback( function(err) {
@@ -37,6 +38,7 @@
     .then(
       $A.getCallback( function() {
          component.set('v.orderGroupId', params.groupId );
+         console.log( `In Community = ${component.get('v.inCommuninty') }`);
         return  helper.initForEdit( component, params.groupId );
       }),
       $A.getCallback( function(err) {
