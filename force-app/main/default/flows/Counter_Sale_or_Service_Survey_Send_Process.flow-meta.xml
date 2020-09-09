@@ -185,10 +185,10 @@
                         <stringValue>Picklist</stringValue>
                     </value>
                 </processMetadataValues>
-                <leftValueReference>myVariable_current.AcctSeed__Status__c</leftValueReference>
+                <leftValueReference>myVariable_current.Stage__c</leftValueReference>
                 <operator>EqualTo</operator>
                 <rightValue>
-                    <stringValue>Completed</stringValue>
+                    <stringValue>Delivered</stringValue>
                 </rightValue>
             </conditions>
             <conditions>
@@ -559,10 +559,10 @@
                         <stringValue>Picklist</stringValue>
                     </value>
                 </processMetadataValues>
-                <leftValueReference>myVariable_current.AcctSeed__Status__c</leftValueReference>
+                <leftValueReference>myVariable_current.Stage__c</leftValueReference>
                 <operator>EqualTo</operator>
                 <rightValue>
-                    <stringValue>Completed</stringValue>
+                    <stringValue>Delivered</stringValue>
                 </rightValue>
             </conditions>
             <conditions>
@@ -899,10 +899,10 @@
                         <stringValue>Picklist</stringValue>
                     </value>
                 </processMetadataValues>
-                <leftValueReference>myVariable_current.AcctSeed__Status__c</leftValueReference>
+                <leftValueReference>myVariable_current.Stage__c</leftValueReference>
                 <operator>EqualTo</operator>
                 <rightValue>
-                    <stringValue>Completed</stringValue>
+                    <stringValue>Delivered</stringValue>
                 </rightValue>
             </conditions>
             <conditions>
@@ -1270,10 +1270,10 @@
                         <stringValue>Picklist</stringValue>
                     </value>
                 </processMetadataValues>
-                <leftValueReference>myVariable_current.AcctSeed__Status__c</leftValueReference>
+                <leftValueReference>myVariable_current.Stage__c</leftValueReference>
                 <operator>EqualTo</operator>
                 <rightValue>
-                    <stringValue>Completed</stringValue>
+                    <stringValue>Delivered</stringValue>
                 </rightValue>
             </conditions>
             <conditions>
@@ -1625,10 +1625,10 @@
                         <stringValue>Picklist</stringValue>
                     </value>
                 </processMetadataValues>
-                <leftValueReference>myVariable_old.AcctSeed__Status__c</leftValueReference>
+                <leftValueReference>myVariable_old.Stage__c</leftValueReference>
                 <operator>EqualTo</operator>
                 <rightValue>
-                    <stringValue>Completed</stringValue>
+                    <stringValue>Delivered</stringValue>
                 </rightValue>
             </conditions>
             <conditions>
@@ -2008,10 +2008,10 @@
                         <stringValue>Picklist</stringValue>
                     </value>
                 </processMetadataValues>
-                <leftValueReference>myVariable_old.AcctSeed__Status__c</leftValueReference>
+                <leftValueReference>myVariable_old.Stage__c</leftValueReference>
                 <operator>EqualTo</operator>
                 <rightValue>
-                    <stringValue>Completed</stringValue>
+                    <stringValue>Delivered</stringValue>
                 </rightValue>
             </conditions>
             <conditions>
@@ -2315,7 +2315,7 @@
                 <stringValue>Now() + 1</stringValue>
             </value>
         </processMetadataValues>
-        <name>formula_2_myRule_1_A1_0780747876</name>
+        <name>formula_2_myRule_1_A1_3824710674</name>
         <dataType>DateTime</dataType>
         <expression>Now() + 1</expression>
     </formulas>
@@ -2326,11 +2326,11 @@
                 <stringValue>Now() + 1</stringValue>
             </value>
         </processMetadataValues>
-        <name>formula_5_myRule_4_A1_0225652726</name>
+        <name>formula_5_myRule_4_A1_6846446356</name>
         <dataType>DateTime</dataType>
         <expression>Now() + 1</expression>
     </formulas>
-    <interviewLabel>Counter_Sale_or_Service_Survey_Send_Process-16_InterviewLabel</interviewLabel>
+    <interviewLabel>Counter_Sale_or_Service_Survey_Send_Process-17_InterviewLabel</interviewLabel>
     <label>Counter Sale or Service Survey Send Process</label>
     <processMetadataValues>
         <name>ObjectType</name>
@@ -2435,7 +2435,7 @@
             </processMetadataValues>
             <field>Survey_Send_Date__c</field>
             <value>
-                <elementReference>formula_2_myRule_1_A1_0780747876</elementReference>
+                <elementReference>formula_2_myRule_1_A1_3824710674</elementReference>
             </value>
         </inputAssignments>
         <object>AcctSeed__Project__c</object>
@@ -2518,7 +2518,7 @@
             </processMetadataValues>
             <field>Survey_Send_Date__c</field>
             <value>
-                <elementReference>formula_5_myRule_4_A1_0225652726</elementReference>
+                <elementReference>formula_5_myRule_4_A1_6846446356</elementReference>
             </value>
         </inputAssignments>
         <object>AcctSeed__Project__c</object>
