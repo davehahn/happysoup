@@ -1,13 +1,12 @@
 ({
   doInit: function( component, event, helper )
   {
-    //hide all but statrting "order details form"
-//    $A.util.addClass( component.find('build-boat'), 'toggle');
-//    $A.util.addClass( component.find('review-container'), 'toggle');
+
   },
 
 	afterScripts: function(component, event, helper)
   {
+    helper.testCometD( component );
     var navMap = ['order-details',
                   'build-boat',
                   'review-container'];
@@ -18,8 +17,7 @@
 
   handleOrderCancel: function( component, event, helper )
   {
-    var indicator = component.find('busy-indicator');
-    $A.util.removeClass( indicator, 'toggle' );
+    helper.toggleIndicator( component, 'Cancelling Order')
     helper.cancelOrder( component )
     .then(
       $A.getCallback( function() {
@@ -69,10 +67,11 @@
   handleIndicator: function( component, event, helper )
   {
     var params = event.getParams(),
-        indicator = component.find('busy-indicator');
-    if( params.isBusy )
-      $A.util.removeClass( indicator, 'toggle' );
-    else
-      $A.util.addClass( indicator, 'toggle' );
+        msg = params.message;
+    helper.toggleIndicator( component, msg );
+//    if( params.isBusy )
+//      $A.util.removeClass( indicator, 'toggle' );
+//    else
+//      $A.util.addClass( indicator, 'toggle' );
   }
 })

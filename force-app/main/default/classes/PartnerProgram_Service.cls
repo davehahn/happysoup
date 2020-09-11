@@ -151,17 +151,20 @@ public with sharing class PartnerProgram_Service
     public String bookingOrderUniquifier;
     public Partner_Booking_Order__c bookingOrder;
     public PartnerProgram_Service.Result result;
-    public List<String> appliedPrograms;
+    public Set<String> appliedPrograms;
     public List<PartnerProgram_Service.ErpWrapper> erpWrappers;
 
     public DealerOrderWrapper( Dealer_Order__c dealerOrder,
                                List<AcctSeed__Project__c> erps,
                                Partner_Booking_Order__c bookingOrder )
     {
-      this.appliedPrograms = new List<String>();
+      this.dealerOrder = dealerOrder;
+      this.appliedPrograms = new Set<String>();
       if( dealerOrder.Applied_Partner_Program_Discounts__c != null )
       {
-        this.appliedPrograms = dealerOrder.Applied_Partner_Program_Discounts__c.split(';');
+        this.appliedPrograms = new Set<String>(
+          dealerOrder.Applied_Partner_Program_Discounts__c.split(';')
+        );
       }
       this.erpWrappers = new List<PartnerProgram_Service.ErpWrapper>();
       this.dealerOrderId = dealerOrder.Id;
@@ -190,6 +193,17 @@ public with sharing class PartnerProgram_Service
         wrapERPs( erps );
     }
 
+    public void updateDealerOrder()
+    {
+      if( this.appliedPrograms.size() > 0 )
+      {
+        this.dealerOrder.Applied_Partner_Program_Discounts__c = setToMultiSelect(this.appliedPrograms);
+        TriggerHandler.bypass('DealerOrder_TriggerHandler');
+        update this.dealerOrder;
+        TriggerHandler.clearBypass('DealerOrder_TriggerHandler');
+      }
+    }
+
     private void wrapERPs( List<AcctSeed__Project__c> erps )
     {
       for( AcctSeed__Project__c erp : erps )
@@ -197,6 +211,17 @@ public with sharing class PartnerProgram_Service
         PartnerProgram_Service.ErpWrapper wrapper = new PartnerProgram_Service.ErpWrapper( erp );
         this.erpWrappers.add( wrapper );
       }
+    }
+
+    private String setToMultiSelect( Set<String> names )
+    {
+      String result = '';
+      for( String name : names )
+      {
+        result += name + ';';
+      }
+      result = result.removeEnd(';');
+      return result;
     }
 
   }

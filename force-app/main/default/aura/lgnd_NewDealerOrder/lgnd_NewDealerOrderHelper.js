@@ -1,4 +1,22 @@
 ({
+  testCometD: function( component )
+  {
+    let action = component.get('c.getSessionId');
+
+    new LightningApex( this, action ).fire()
+    .then(
+      $A.getCallback( function( response ) {
+        console.log(`sessionId = ${response}`);
+        component.set('v.sessionId', response);
+      })
+    )
+//    let cometD = component.find('cometD');
+//        cometD.test();
+//        cometD.testCallback('an arg', $A.getCallback( (response) => {
+//          console.log( `Callback response = ${response}`);
+//        }));
+  },
+
 	handleStageChange: function( params, component)
   {
     var actionNumber = params.navigateTo,
@@ -54,8 +72,9 @@
 
     //if we are going from the builder to review
     if( actionNumber === 2 && prevActionNumber === 1 )
+    {
       component.find("reviewOrder--Cmp").doInit();
-
+    }
     //if we are coming from review to build a boat we need to reset all the variables
     if( actionNumber === 1 && prevActionNumber === 2 )
     {
@@ -93,5 +112,12 @@
         "scope": "Dealer_Order__c"
     });
     homeEvent.fire();
+  },
+
+  toggleIndicator: function( component, message )
+  {
+    let indicator = component.find('busy-indicator');
+    console.log(`NewDealerOrder busy Message = ${message}`);
+    indicator.toggle( message );
   }
 })

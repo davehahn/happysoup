@@ -78,9 +78,9 @@
   //   .fire();
   // },
 
-  toggleSpinner: function( isBusy )
+  toggleSpinner: function( isBusy, message )
   {
     var busy = $A.get('e.c:lgndP_BusyIndicator_Event');
-    busy.setParams({isBusy: isBusy}).fire();
+    busy.setParams({isBusy: isBusy, message: message}).fire();
   }
 })

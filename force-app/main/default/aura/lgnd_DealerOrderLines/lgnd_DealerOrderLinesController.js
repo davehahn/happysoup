@@ -67,10 +67,11 @@
   {
     var params = event.getParams(),
         indicator = component.find('busy-indicator');
-    if( params.isBusy )
-      $A.util.removeClass( indicator, 'toggle' );
-    else
-      $A.util.addClass( indicator, 'toggle' );
+    indicator.toggle( params.message );
+//    if( params.isBusy )
+//      $A.util.removeClass( indicator, 'toggle' );
+//    else
+//      $A.util.addClass( indicator, 'toggle' );
   },
 
   handleViewChange: function( component, event, helper )

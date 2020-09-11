@@ -217,7 +217,7 @@ public with sharing class Dealer_Order_Line_Ext {
   }
 
   @Future
-  private static void applyPartnerProgram( Set<Id> dealerOrderIds )
+  public static void applyPartnerProgram( Set<Id> dealerOrderIds )
   {
     PartnerProgram_Service ppService = new PartnerProgram_Service( dealerOrderIds );
     ppService.checkAndApply();

@@ -1,6 +1,15 @@
 ({
   doInit: function( component, event, helper )
   {
+    console.log( 'DealerOrderReview.doInit');
+    helper.groupItems( component );
+    component.find('dealerOrderLines--Cmp').doInit();
+  },
+
+  applyPartnerProgramAndInit: function( component, event, helper )
+  {
+    console.log( 'DealerOrderReview.applyPartnerProgramAndInit');
+
     helper.groupItems( component );
     component.find('dealerOrderLines--Cmp').doInit();
   },

@@ -649,6 +649,7 @@ public without sharing class DealerOrder_Ext {
       currentYear++;
     Map<String, Object> result = new Map<String, Object>();
     result.put('userType', UserInfo.getUserType() );
+    result.put('sessionId', UserInfo.getSessionId() );
     result.put('modelYear', currentYear );
     result.put('uiTheme', UserInfo.getUiThemeDisplayed() );
     List<Map<String, Object>> options = new List<Map<String,Object>>();
@@ -673,6 +674,12 @@ public without sharing class DealerOrder_Ext {
   public static String getUserType()
   {
     return UserInfo.getUserType();
+  }
+
+  @AuraEnabled
+  public static String getSessionId()
+  {
+    return UserInfo.getSessionId();
   }
 
   @AuraEnabled
@@ -785,6 +792,12 @@ public without sharing class DealerOrder_Ext {
     else
       return JSON.serialize( viewDealerLineItemFromERP( dols ) );
 
+  }
+
+  @AuraEnabled
+  public static void applyPartnerProgram( String dealerOrderId )
+  {
+    Dealer_Order_Line_Ext.applyPartnerProgram( new Set<Id>{ Id.valueOf(dealerOrderId)} );
   }
 
   private static DolViewWrapper viewDealerLineItemFromTransfer( Dealer_Order_Line__c[] dols )
@@ -2111,7 +2124,10 @@ public without sharing class DealerOrder_Ext {
         )
       );
     }
+    Boolean origTriggerState = Dealer_Order_Line_Ext.disablePartnerProgram;
+    Dealer_Order_Line_Ext.disablePartnerProgram = true;
     insert dols;
+    Dealer_Order_Line_Ext.disablePartnerProgram = origTriggerState;
   }
 
   private static Dealer_Order__c updateDealerLineItems( DealerOrderLineWrapper wrapper )

@@ -1,0 +1,24 @@
+<!--
+ - Created by dave on 2020-09-11.
+ -->
+
+<aura:component description="Utility_CometD">
+
+  <aura:attribute name="sessionId" type="String" />
+  <aura:attribute name="cometd" type="Object" />
+
+  <ltng:require scripts="{!join(',', $Resource.Libraries + '/js/cometd.js') }"
+                afterScriptsLoaded="{!c.doInit}"/>
+
+  <aura:method name="subscribe" action="{!c.subscribe}">
+    <aura:attribute name="channel" type="String" />
+    <aura:attribute name="replayId" type="String" />
+    <aura:attribute name="callback" type="Function" />
+  </aura:method>
+
+  <aura:method name="unsubscribe" action="{!c.unsubscribe}">
+    <aura:attribute name="subscription" type="String" />
+    <aura:attribute name="callback" type="Function" />
+  </aura:method>
+
+</aura:component>

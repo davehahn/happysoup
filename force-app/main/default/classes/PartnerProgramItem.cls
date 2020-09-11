@@ -105,20 +105,26 @@ public virtual class PartnerProgramItem implements PartnerProgramItem_I, Promise
     PartnerProgram_Service.DealerOrderWrapper wrapper = (PartnerProgram_Service.DealerOrderWrapper)dealerOrderWrapper;
     Decimal percent = null;
     init( wrapper );
+    Boolean updateDealerOrder = false;
     if( this.isApplicable() )
     {
       upsert this.apply();
       percent = this.getDiscountPercent();
+      wrapper.appliedPrograms.add( this.getName() );
+      updateDealerOrder = true;
     }
     else
     {
       if( this.wasAppliedPreviously() )
       {
         delete this.revert();
+        wrapper.appliedPrograms.remove( this.getName() );
+        updateDealerOrder = true;
       }
     }
 
-    if( wrapper.bookingOrder != null &&
+    if( wrapper.isBookingOrder &&
+        wrapper.bookingOrder != null &&
         this.getBookingOrderFieldName() != null )
     {
       wrapper.bookingOrder.put(
@@ -127,6 +133,8 @@ public virtual class PartnerProgramItem implements PartnerProgramItem_I, Promise
       );
       update wrapper.bookingOrder;
     }
+    if( updateDealerOrder )
+      wrapper.updateDealerOrder();
     return wrapper;
   }
 

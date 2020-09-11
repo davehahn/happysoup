@@ -10,7 +10,6 @@
   <aura:attribute name="userType" type="String" />
   <aura:attribute name="detailsBtnText" type="String" default="More Details" />
   <aura:attribute name="promotionMessage" type="Map" default="{}" />
-  <aura:attribute name="busyMessage" type="String" />
 
   <!-- EVENTS -->
   <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
@@ -26,16 +25,18 @@
 
 
   <div>
-    <div class="slds-spinner_container toggle" aura:id="busy-indicator">
-      <div role="status" class="slds-spinner slds-spinner--medium">
-        <span class="slds-assistive-text">Loading</span>
-        <div class="slds-spinner__dot-a"></div>
-        <div class="slds-spinner__dot-b"></div>
-      </div>
-      <aura:if isTrue="{! !empty(v.busyMessage)}">
-        <div class="spinner-text">{!v.busyMessage} ..</div>
-      </aura:if>
-    </div>
+<!--    <div class="slds-spinner_container toggle" aura:id="busy-indicator">-->
+<!--      <div role="status" class="slds-spinner slds-spinner&#45;&#45;medium">-->
+<!--        <span class="slds-assistive-text">Loading</span>-->
+<!--        <div class="slds-spinner__dot-a"></div>-->
+<!--        <div class="slds-spinner__dot-b"></div>-->
+<!--      </div>-->
+<!--      <aura:if isTrue="{! !empty(v.busyMessage)}">-->
+<!--        <div class="spinner-text">{!v.busyMessage} ..</div>-->
+<!--      </aura:if>-->
+<!--    </div>-->
+
+    <c:Lgnd_Spinner_dh aura:id="busy-indicator" />
 
     <!-- +++++ DISCOUNT NOTIFICATION CENTER +++++++ -->
     <c:lgndp_PartnerProgramNotification message="{!v.promotionMessage}" />
@@ -52,7 +53,6 @@
                                     inOrderView="true"
                                     isEditing="{!v.isEditing}"
                                     promotionMessage="{!v.promotionMessage}"
-                                    busyMessage="{!v.busyMessage}"
                                     isFactoryStore="{!v.dealerOrder.Account__r.Is_Internal__c}"
                                     aura:id="dealerOrderBuildBoat--Cmp" />
     </aura:if>

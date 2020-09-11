@@ -144,64 +144,94 @@
   cancelOrder: function( component, event, helper )
   {
     var cancelEvt = component.getEvent("cancelOrderEvent");
-    component.set('v.busyMessage', 'Cancelling Order');
     cancelEvt.fire();
   },
 
-  navNext: function(component,event,helper)
+  navNext: function( component, event, helper )
   {
-    var inOrderView = component.get('v.inOrderView'),
-        nav;
-    helper.functions.toggleSpinner( component, true );
     helper.saveDealerOrderLine( component )
     .then(
-      $A.getCallback( function(response) {
+      $A.getCallback( ( response ) => {
         component.set( 'v.dealerOrder', response );
-        return helper.handlePartnerProgram( component );
-      }),
-      $A.getCallback( function(err) {
-        console.log(err);
-        LightningUtils.errorToast(err);
+        helper.functions.toggleModal( component, 'open' );
       })
     )
+    .finally(
+      $A.getCallback( () => {
+        helper.functions.toggleSpinner( component, false );
+      })
+    );
+  },
+
+  handleAdd: function( component, event, helper )
+  {
+    helper.functions.clearVars( component );
+    component.find("lgnd_BoatTypeSelector--CMP").resetVars();
+    helper.fireChangeEvent( component );
+    helper.functions.toggleModal( component, 'close');
+  },
+
+  handleFinalize: function( component, event, helper )
+  {
+    const inCommunity = component.get('v.inCommuninty');
+    let empApi;
+    if( inCommunity )
+    {
+      empApi = component.find('cometD');
+    }
+    else
+    {
+      empApi = component.find('empApi');
+    }
+//    empApi.onError($A.getCallback(error => {
+//        // Error can be any type of error (subscribe, unsubscribe...)
+//        console.error('EMP API error: ', JSON.stringify(error));
+//    }));
+    empApi.subscribe( '/event/Partner_Program_Event__e', -1, $A.getCallback( eventReceived => {
+      console.log('Received event ', JSON.stringify(eventReceived));
+      helper.partnerProgramSuccess( component, eventReceived );
+    }))
+    .then( subscription => {
+      console.log('Subscription request sent to: ', subscription.channel);
+      console.log( subscription );
+      component.set('v.partnerProgramSubscription', subscription);
+    });
+    helper.applyPartnerProgram( component );
+  },
+
+//  navNext: function(component,event,helper)
+//  {
+//    var inOrderView = component.get('v.inOrderView'),
+//        nav;
+//    helper.saveDealerOrderLine( component )
 //    .then(
-//      $A.getCallback( function( result ) {
-//        return helper.applyPromotions( component, result )
+//      $A.getCallback( function(response) {
+//        component.set( 'v.dealerOrder', response );
+//        //return helper.handlePartnerProgram( component );
+//        if( inOrderView )
+//        {
+//          component.set('v.isEditing', false);
+//        }
+//        else
+//        {
+//          nav = $A.get('e.c:lgndP_DealerOrderNav_Event');
+//          nav.setParams({
+//            "firedBy" : 1,
+//            "navigateTo": 2
+//           })
+//          .fire();
+//        }
 //      }),
-//      $A.getCallback( function( err ) {
-//        console.log( err );
-//        LightningUtils.errorToast( err );
+//      $A.getCallback( function(err) {
+//        console.log(err);
+//        LightningUtils.errorToast(err);
 //      })
 //    )
-    .then(
-      $A.getCallback( function( result ) {
-        component.set( 'v.promotionMessage', result );
-        component.set('v.busyMessage', '');
-        if( inOrderView )
-        {
-          component.set('v.isEditing', false);
-        }
-        else
-        {
-          nav = $A.get('e.c:lgndP_DealerOrderNav_Event');
-          nav.setParams({
-            "firedBy" : 1,
-            "navigateTo": 2
-           })
-          .fire();
-        }
-      }),
-      $A.getCallback( function( err ) {
-        console.log( 'apply promotion error' );
-        console.log( err );
-        LightningUtils.errorToast( err );
-      })
-    )
-    .finally( $A.getCallback( function() {
-      helper.functions.toggleSpinner( component, false );
-    }));
-
-	},
+//    .finally( $A.getCallback( function() {
+//      helper.functions.toggleSpinner( component, false );
+//    }));
+//
+//	},
 
   navBack : function(component, event, helper)
   {

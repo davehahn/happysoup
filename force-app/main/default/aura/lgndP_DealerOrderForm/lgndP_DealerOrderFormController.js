@@ -1,6 +1,7 @@
 ({
 	doInit : function(component, event, helper)
   {
+    helper.toggleSpinner( true, 'Initializing Order' );
     helper.getInitValues( component ).
     then(
       $A.getCallback( function( result ) {
@@ -101,6 +102,7 @@
   cancelOrder: function( component, event, helper )
   {
     var cancelEvt = component.getEvent("cancelOrderEvent");
+    event.getSource().set('v.disabled', true);
     cancelEvt.fire();
   }
 })

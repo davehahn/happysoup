@@ -12,6 +12,7 @@
           console.log( JSON.parse( JSON.stringify( result ) ) );
           component.set('v.modelYearOptions', result.modelYearOptions );
           component.set('v.userType', result.userType);
+          component.set('v.sessionId', result.sessionId );
           component.set('v.modelYear', result.modelYear);
           if( result.uiTheme !== 'Theme3' )
             component.set('v.inCommuninty', false );
@@ -24,7 +25,13 @@
 	fetchProducts : function( component, recordType, family )
   {
     var self = this,
-        action = component.get("c.fetchProducts");
+        action = component.get("c.fetchProducts"),
+        message = 'Retrieving ';
+
+    console.log(`recordType = ${recordType}`);
+    console.log(`family = ${family}`);
+    message += recordType === 'Boat' ? family : recordType;
+    message += 's';
 
     action.setParams({
       'recordType': recordType,
@@ -32,7 +39,7 @@
       'pricebookId': component.get('v.dealerOrder').Pricebook__c
     });
 
-    return self.actionHandler.call( self, component, action );
+    return self.actionHandler.call( self, component, action, false, true, message );
 	},
 
   fetchProduct: function( component, productId, recordTypeName )
@@ -46,10 +53,16 @@
       pricebookId: dealerOrder.Pricebook__c
     });
 
-    return this.actionHandler.call( this, component, action );
+    return this.actionHandler.call( this, component, action, false, true, 'Retrieving Details' );
   },
 
   saveDealerOrderLine: function( component )
+//  {
+//    this.functions.toggleSpinner( component, true, 'Saving Order' );
+//    return new Promise( (resolve, reject) => {
+//      setTimeout( () => { resolve(); }, 3000 )
+//    });
+//  },
   {
     var self = this,
         boat = component.get('v.boat'),
@@ -72,7 +85,7 @@
         data = {},
         action = component.get('c.saveDealerLineItem');
 
-    component.set('v.busyMessage', 'Saving Order');
+    self.functions.toggleSpinner( component, true, 'Saving Order' );
 
     for( let optionGroup of component.get('v.optionalProducts') )
     {
@@ -220,6 +233,56 @@
 
   },
 
+  applyPartnerProgram: function( component )
+  {
+    const dealerOrder = component.get('v.dealerOrder');
+    let action = component.get('c.applyPartnerProgram');
+    action.setParams({
+      dealerOrderId: dealerOrder.Id
+    });
+    this.functions.toggleModal( component, 'close');
+    this.functions.toggleSpinner( component, true, 'Applying Partner Program');
+    new LightningApex( this, action ).fire();
+  },
+
+  partnerProgramSuccess: function( component, eventReceived )
+  {
+    const subscription = component.get('v.partnerProgramSubscription'),
+          inCommunity = component.get('v.inCommunity');
+
+    let empApi;
+    if( inCommunity )
+    {
+      empApi = component.find('cometD');
+    }
+    else
+    {
+      empApi = component.find('empApi');
+    }
+    empApi.unsubscribe( subscription, $A.getCallback( unsubscribed => {
+      console.log('Unsubscribed from channel '+ unsubscribed.subscription);
+      component.set('v.partnerProgramSubscription', null);
+    }));
+
+    this.functions.toggleSpinner( component, false );
+    let inOrderView = component.get('v.inOrderView'),
+        nav;
+
+    if( inOrderView )
+    {
+      component.set('v.isEditing', false);
+    }
+    else
+    {
+      nav = $A.get('e.c:lgndP_DealerOrderNav_Event');
+      nav.setParams({
+        "firedBy" : 1,
+        "navigateTo": 2
+       })
+      .fire();
+    }
+  },
+
   handleMotorRequest: function( component, motorRequest )
   {
     var self = this,
@@ -266,10 +329,10 @@
     });
   },
 
-  handlePartnerProgram:function( component )
-  {
-    return new Promise( (resolve, reject) => { resolve(null) } );
-  },
+//  handlePartnerProgram:function( component )
+//  {
+//    return new Promise( (resolve, reject) => { resolve(null) } );
+//  },
 
   initForEdit: function( component, groupId )
   {
@@ -280,17 +343,17 @@
       pricebookId: component.get('v.dealerOrder').Pricebook__c
     });
 
-    return this.actionHandler.call(this, component, action);
+    return this.actionHandler.call(this, component, action, false, true, 'Initializing');
 
   },
 
-  actionHandler: function( component, action, parse, showIndicator )
+  actionHandler: function( component, action, parse, showIndicator, message )
   {
     var self = this;
     showIndicator = showIndicator === undefined ? true : showIndicator;
     parse = parse === undefined ? false : parse;
     if( showIndicator )
-      self.functions.toggleSpinner( component, true );
+      self.functions.toggleSpinner( component, true, message );
     return new Promise( function(resolve, reject) {
 
       action.setCallback(self, function(response) {
@@ -993,7 +1056,6 @@
       component.set('v.feeList', [] );
       component.set('v.orderGroupId', '' );
       component.set('v.promotionMessage', null);
-      component.set('v.busyMessage', null);
       component.set('v.modelYear', '');
     },
 
@@ -1016,10 +1078,32 @@
       component.set('v.isMotorRequest', false);
     },
 
-    toggleSpinner: function( component, busy )
+    toggleSpinner: function( component, busy, message )
     {
       var indEvt = $A.get('e.c:lgndP_BusyIndicator_Event');
-      indEvt.setParams({isBusy: busy}).fire();
+      indEvt.setParams(
+        {
+          isBusy: busy,
+          message: message
+        }
+      ).fire();
+    },
+
+    toggleModal: function( component, state )
+    {
+      const modal = component.find('modal-container'),
+            backDrop = component.find('modal-backdrop');
+
+      if( state === 'open')
+      {
+        $A.util.addClass( modal, 'slds-fade-in-open');
+        $A.util.addClass( backDrop, 'slds-backdrop_open');
+      }
+      if( state === 'close')
+      {
+        $A.util.removeClass( modal, 'slds-fade-in-open');
+        $A.util.removeClass( backDrop, 'slds-backdrop_open');
+      }
     }
   }
 })

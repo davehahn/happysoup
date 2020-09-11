@@ -28,6 +28,10 @@ public class PartnerProgram_Executor
     public void done( Object incomingObject )
     {
       System.debug( 'Partner Program Executor Complete');
+      Partner_Program_Event__e evt = new Partner_Program_Event__e(
+        Status__c = 'success'
+      );
+      EventBus.publish( evt );
     }
   }
 

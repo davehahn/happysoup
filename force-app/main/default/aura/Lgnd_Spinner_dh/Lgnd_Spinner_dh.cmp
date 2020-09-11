@@ -1,12 +1,19 @@
 <aura:component >
   <aura:attribute name="isVisible" type="Boolean" default="false" />
+  <aura:attribute name="busyMessage" type="String" default="" />
 
-  <aura:method name="toggle" action="{!c.toggle}" />
+  <aura:method name="toggle" action="{!c.toggle}">
+    <aura:attribute name="busyMessage" type="String" default="" />
+  </aura:method>
 
   <aura:if isTrue="{!v.isVisible}">
     <div class="lgnd-spinner">
       <img src="{! $Resource.LegendLoadingIndicator2017}" />
+      <aura:if isTrue="{! !empty(v.busyMessage)}">
+        <div class="spinner-text">{!v.busyMessage} ..</div>
+      </aura:if>
     </div>
+
   </aura:if>
 
 </aura:component>

@@ -6,6 +6,7 @@
   <aura:attribute name="orderTotal" type="Decimal" />
   <aura:attribute name="currentView" type="String" default="list" />
   <aura:attribute name="detailsBtnText" type="String" default="More Details" />
+  <aura:attribute name="partnerProgramSubscription" type="Map" />
 
   <!-- EVENTS -->
   <aura:registerEvent name="navEvent" type="c:lgndP_DealerOrderNav_Event" />
@@ -20,6 +21,7 @@
 
   <!-- METHODS -->
   <aura:method name="doInit" access="public" />
+  <aura:method name="applyPartnerProgramAndInit" access="public" />
 
   <ltng:require scripts="{!join(',', $Resource.Libraries +'/js/LightningApex.js',
                                      $Resource.Libraries +'/js/LightningUtils.js') }" />
