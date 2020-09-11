@@ -3,6 +3,7 @@
     <fullName>Payments_due_in_next_7_days</fullName>
     <columns>NAME</columns>
     <columns>Payment_Preference__c</columns>
+    <columns>Internal_Comment__c</columns>
     <columns>AcctSeed__Due_Date__c</columns>
     <columns>Payee_New__c</columns>
     <columns>AcctSeed__Payee_Reference__c</columns>
@@ -26,11 +27,11 @@
     <filters>
         <field>AcctSeed__Due_Date__c</field>
         <operation>lessOrEqual</operation>
-        <value>NEXT_N_DAYS:7</value>
+        <value>NEXT_N_DAYS:14</value>
     </filters>
     <filters>
         <field>Payment_Preference__c</field>
         <operation>contains</operation>
     </filters>
-    <label>Payments due in next 7 days</label>
+    <label>Payments due in next 14 days</label>
 </ListView>
