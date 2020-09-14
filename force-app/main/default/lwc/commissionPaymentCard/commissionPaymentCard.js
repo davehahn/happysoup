@@ -132,13 +132,21 @@ export default class CommissionPaymentCard extends LightningElement {
           ( data.grossMarginPaymentPercent / 100 ) *
           ( data.split / 100 );
       }else{
-        return data.totalPayment *
-                  ( data.grossMarginPaymentPercent / 100 );
+        if(data.mcType == 'Gross Margin' || data.mcType == 'Revenue')
+          return data.totalProfit * ( data.grossMarginPaymentPercent / 100 );
+        else if(data.mcType == 'Business Revenue')
+          return data.totalPayment * ( data.grossMarginPaymentPercent / 100 );
       }
     }
     else
     {
-      return data.totalPayment * ( data.split / 100 );
+      if(data.cType == 'Manager'){
+        if(data.mcType == 'Gross Margin' || data.mcType == 'Revenue')
+          return data.totalProfit * ( data.grossMarginPaymentPercent / 100 );
+        else if(data.mcType == 'Business Revenue')
+          return data.totalPayment * ( data.grossMarginPaymentPercent / 100 );
+      }else
+        return data.totalPayment * ( data.split / 100 );
     }
   }
 

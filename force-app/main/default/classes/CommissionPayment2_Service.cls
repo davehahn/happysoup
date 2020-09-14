@@ -119,13 +119,23 @@ public with sharing class CommissionPayment2_Service
   public static void setPaymentPercentages( List<CommissionPayment2__c> payments )
   {
     Set<Id> ownerIds = new Set<Id>();
+    Map<Id,AcctSeed__Project_Task__c> mapTaskDetailByCRId = new Map<Id,AcctSeed__Project_Task__c>();
     for( CommissionPayment2__c cp : payments )
     {
       ownerIds.add( cp.Owner__c );
+      mapTaskDetailByCRId.put(cp.Commission_Record2__c,null);
     }
     Map<Id, User> owners = new Map<Id, User>(
-      [SELECT Id, Commission_Gross_Margin_Percent_Override__c, Commission_Gross_Margin_Manager__c FROM User WHERE Id IN :ownerIds]
+      [SELECT Id, Commission_Gross_Margin_Percent_Override__c, Commission_Gross_Margin_Manager__c, Commission_Manager_Business_Office__c, Commission_Revenue_Manager__c FROM User WHERE Id IN :ownerIds]
     );
+
+    /// Search for tasks
+    Id idGLV2BusinessOffice = LGND_Constants.GLV2Id_BusinessOffice;
+    Id idGLV2Sales = LGND_Constants.GLV2Id_Sales;
+    for(CommissionRecord2__c cr : [SELECT Id, Project_Task__c, Project_Task__r.AcctSeed__GL_Account_Variable_2__c, Project_Task__r.Commission_Calculation_Method__c FROM CommissionRecord2__c WHERE Id IN:mapTaskDetailByCRId.keySet()]){
+      mapTaskDetailByCRId.put(cr.Id,cr.Project_Task__r);
+    }
+
     for( CommissionPayment2__c cp : payments )
     {
       if(Test.isRunningTest() && cp.Owner__c == null)
@@ -136,11 +146,28 @@ public with sharing class CommissionPayment2_Service
               owners.get(cp.Owner__c).Commission_Gross_Margin_Percent_Override__c != null ?
                   owners.get(cp.Owner__c).Commission_Gross_Margin_Percent_Override__c :
                   defaultGrossMarginPaymentPercent;
-        } else if(owners.get(cp.Owner__c) != null){
-          cp.Gross_Margin_Payment_Percent__c =
-              owners.get(cp.Owner__c).Commission_Gross_Margin_Manager__c != null ?
-                  owners.get(cp.Owner__c).Commission_Gross_Margin_Manager__c :
-                  defaultGrossMarginPaymentPercentManager;
+        } else if(owners.get(cp.Owner__c) != null
+            && owners.get(cp.Owner__c) != null){
+          AcctSeed__Project_Task__c pt = mapTaskDetailByCRId.get(cp.Commission_Record2__c);
+          if(pt.Commission_Calculation_Method__c == 'Gross Margin' && pt.AcctSeed__GL_Account_Variable_2__c == idGLV2Sales) {
+            cp.Gross_Margin_Payment_Percent__c =
+                owners.get(cp.Owner__c).Commission_Gross_Margin_Manager__c != null ?
+                    owners.get(cp.Owner__c).Commission_Gross_Margin_Manager__c :
+                    defaultGrossMarginPaymentPercentManager;
+            cp.Manager_Commission_Type__c = 'Gross Margin';
+          }else if(pt.Commission_Calculation_Method__c == 'Revenue' && pt.AcctSeed__GL_Account_Variable_2__c == idGLV2BusinessOffice){
+            cp.Gross_Margin_Payment_Percent__c =
+                owners.get(cp.Owner__c).Commission_Manager_Business_Office__c != null ?
+                    owners.get(cp.Owner__c).Commission_Manager_Business_Office__c :
+                    defaultGrossMarginPaymentPercentManager;
+            cp.Manager_Commission_Type__c = 'Business Revenue';
+          }else if(pt.Commission_Calculation_Method__c == 'Revenue' && pt.AcctSeed__GL_Account_Variable_2__c != idGLV2BusinessOffice){
+            cp.Gross_Margin_Payment_Percent__c =
+                owners.get(cp.Owner__c).Commission_Revenue_Manager__c != null ?
+                    owners.get(cp.Owner__c).Commission_Revenue_Manager__c :
+                    defaultGrossMarginPaymentPercentManager;
+            cp.Manager_Commission_Type__c = 'Revenue';
+          }
         }
       }else{
         throw new gcException('Owner not found');

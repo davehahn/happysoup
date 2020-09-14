@@ -13,6 +13,7 @@
 				component.set('v.availableCredit', result.availableCredit);
 				component.set('v.creditLimit', result.creditLimit);
 				component.set('v.creditTotal', result.creditTotal);
+				component.set('v.actualBalance', result.actualBalance);
 				component.set('v.currentBalance', result.currentBalance);
 				component.set('v.debitTotal', result.debitTotal);
 				component.set('v.lastPayment', result.lastPayment);
