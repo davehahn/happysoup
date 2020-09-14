@@ -35,22 +35,42 @@ private class CommissionRecord2_Functional_T
     );
     insert task;
 
+    setupPB(retailPrice,factoryPrice);
+  }
+
+  private static void setup_Project_Task_Products(String calcMethod, Decimal retailPrice, Decimal factoryPrice, Id idGLV2)
+  {
+    Legend_Settings__c settings = Legend_Settings__c.getOrgDefaults();
+    project = [SELECT Id FROM AcctSeed__Project__c LIMIT 1];
+    task = new AcctSeed__Project_Task__c(
+        AcctSeed__Project__c = project.Id,
+        DisplayOnCustomerInvoice__c = true,
+        Commission_Calculation_Method__c = calcMethod,
+        Name = 'Commission Task',
+        AcctSeed__GL_Account_Variable_2__c = idGLV2
+    );
+    insert task;
+    setupPB(retailPrice,factoryPrice);
+  }
+
+  private static void setupPB(Decimal retailPrice, Decimal factoryPrice){
+    Legend_Settings__c settings = Legend_Settings__c.getOrgDefaults();
     products = Factory_Product.createNonSerializedProducts( 'Part', 'Electronics', 10 );
     Factory_PricebookEntry.insertStandardEntries( products, 100 );
     List<PricebookEntry> pbes = new List<PricebookEntry>();
     pbes.addAll(
-      Factory_PricebookEntry.buildEntries(
-        products,
-        settings.Default_Retail_Pricebook__c,
-        retailPrice
-      )
+        Factory_PricebookEntry.buildEntries(
+            products,
+            settings.Default_Retail_Pricebook__c,
+            retailPrice
+        )
     );
     pbes.addAll(
-      Factory_PricebookEntry.buildEntries(
-        products,
-        settings.Default_Factory_Pricebook__c,
-        factoryPrice
-      )
+        Factory_PricebookEntry.buildEntries(
+            products,
+            settings.Default_Factory_Pricebook__c,
+            factoryPrice
+        )
     );
     insert pbes;
   }
@@ -647,6 +667,150 @@ private class CommissionRecord2_Functional_T
       System.assertEquals(15, commPayments[1].Gross_Margin_Payment_Percent__c);
       System.assertEquals(expectedAmount, commPayments[0].Amount__c);
       System.assertEquals(expectedAmountManager, commPayments[1].Amount__c);
+    }
+  }
+
+  //// Commission Manager Test
+  @IsTest
+  static void paymentAmount_BusinessOfficeManager_Test()
+  {
+    User managerUser = Factory_User.newUser( 'Test', 'Manager', 'System Administrator', null );
+    managerUser.Commission_Manager_Business_Office__c = 2.5;
+    insert managerUser;
+    User u = Factory_User.newUser( 'tester', 'Salesman', 'System Administrator', null );
+    u.ManagerId = managerUser.Id;
+    u.Commission_Gross_Margin_Percent_Override__c = 10;
+    insert u;
+    System.runAs( u )
+    {
+      Test.startTest();
+      setup_Project_Task_Products('Revenue', 1000, 500, gcConstants.idGLV2BusinessOffice);
+      List<AcctSeedERP__Material__c> materials = new List<AcctSeedERP__Material__c>();
+      for (Product2 p : products)
+      {
+        materials.add(new AcctSeedERP__Material__c(
+            AcctSeedERP__Product__c = p.Id,
+            AcctSeedERP__Project__c = project.Id,
+            AcctSeedERP__Project_Task__c = task.Id,
+            AcctSeedERP__Quantity_Per_Unit__c = 1,
+            GMBLASERP__Unit_Price__c = 1000,
+            AcctSeedERP__Comment__c = 'From Unit Test'
+        ));
+      }
+
+      insert materials;
+      Test.stopTest();
+      CommissionRecord2__c commRec = [
+          SELECT Id, Total_Payment_Amount__c
+          FROM CommissionRecord2__c
+          WHERE Project_Task__c = :task.Id
+      ];
+      CommissionPayment2__c[] commPayments = [
+          SELECT Id,
+              Gross_Margin_Payment_Percent__c,
+              Owner__c,
+              Split_Percent__c,
+              Use_Gross_Margin_Calculation__c,
+              Manager_Commission_Type__c,
+              Amount__c
+          FROM CommissionPayment2__c
+          WHERE Commission_Record2__c = :commRec.Id
+      ];
+      // 10 parts * $500 profit * default gross margin commission payment percent
+      System.debug('CommRec');
+      System.debug(commRec.Total_Payment_Amount__c);
+      System.debug('Payments Size');
+      System.debug(commPayments.size());
+      System.debug('Commission');
+      System.debug(commPayments[0].Amount__c);
+      System.debug('Manager Commission');
+      System.debug(commPayments[1].Amount__c);
+      Decimal expectedAmount = commRec.Total_Payment_Amount__c * (commPayments[0].Split_Percent__c / 100);
+      System.debug('Commission AMount');
+      System.debug(expectedAmount);
+      Decimal expectedAmountManager = commRec.Total_Payment_Amount__c * (managerUser.Commission_Manager_Business_Office__c / 100);
+      System.debug('Manager Commission AMount');
+      System.debug(expectedAmountManager);
+      System.assertEquals(2, commPayments.size());
+      System.assertEquals(false, commPayments[0].Use_Gross_Margin_Calculation__c);
+      System.assertEquals(100, commPayments[0].Split_Percent__c);
+      System.assertEquals(10, commPayments[0].Gross_Margin_Payment_Percent__c);
+      System.assertEquals(2.5, commPayments[1].Gross_Margin_Payment_Percent__c);
+      System.assertEquals('Business Revenue', commPayments[1].Manager_Commission_Type__c);
+      System.assertEquals(expectedAmount, commPayments[0].Amount__c);
+      System.assertEquals(expectedAmountManager.setScale(2), commPayments[1].Amount__c);
+    }
+  }
+
+  //// Commission Manager Test
+  @IsTest
+  static void paymentAmount_RevenueManager_Test()
+  {
+    User managerUser = Factory_User.newUser( 'Test', 'Manager', 'System Administrator', null );
+    managerUser.Commission_Revenue_Manager__c = 2.5;
+    insert managerUser;
+    User u = Factory_User.newUser( 'tester', 'Salesman', 'System Administrator', null );
+    u.ManagerId = managerUser.Id;
+    u.Commission_Gross_Margin_Percent_Override__c = 10;
+    insert u;
+    System.runAs( u )
+    {
+      Test.startTest();
+      setup_Project_Task_Products('Revenue', 1000, 500, gcConstants.idGlv2Sales);
+      List<AcctSeedERP__Material__c> materials = new List<AcctSeedERP__Material__c>();
+      for (Product2 p : products)
+      {
+        materials.add(new AcctSeedERP__Material__c(
+            AcctSeedERP__Product__c = p.Id,
+            AcctSeedERP__Project__c = project.Id,
+            AcctSeedERP__Project_Task__c = task.Id,
+            AcctSeedERP__Quantity_Per_Unit__c = 1,
+            GMBLASERP__Unit_Price__c = 1000,
+            AcctSeedERP__Comment__c = 'From Unit Test'
+        ));
+      }
+
+      insert materials;
+      Test.stopTest();
+      CommissionRecord2__c commRec = [
+          SELECT Id, Total_Payment_Amount__c
+          FROM CommissionRecord2__c
+          WHERE Project_Task__c = :task.Id
+      ];
+      CommissionPayment2__c[] commPayments = [
+          SELECT Id,
+              Gross_Margin_Payment_Percent__c,
+              Owner__c,
+              Split_Percent__c,
+              Use_Gross_Margin_Calculation__c,
+              Manager_Commission_Type__c,
+              Amount__c
+          FROM CommissionPayment2__c
+          WHERE Commission_Record2__c = :commRec.Id
+      ];
+      // 10 parts * $500 profit * default gross margin commission payment percent
+      System.debug('CommRec');
+      System.debug(commRec.Total_Payment_Amount__c);
+      System.debug('Payments Size');
+      System.debug(commPayments.size());
+      System.debug('Commission');
+      System.debug(commPayments[0].Amount__c);
+      System.debug('Manager Commission');
+      System.debug(commPayments[1].Amount__c);
+      Decimal expectedAmount = commRec.Total_Payment_Amount__c * (commPayments[0].Split_Percent__c / 100);
+      System.debug('Commission AMount');
+      System.debug(expectedAmount);
+      Decimal expectedAmountManager = commRec.Total_Payment_Amount__c * (managerUser.Commission_Revenue_Manager__c / 100);
+      System.debug('Manager Commission AMount');
+      System.debug(expectedAmountManager);
+      System.assertEquals(2, commPayments.size());
+      System.assertEquals(false, commPayments[0].Use_Gross_Margin_Calculation__c);
+      System.assertEquals(100, commPayments[0].Split_Percent__c);
+      System.assertEquals(10, commPayments[0].Gross_Margin_Payment_Percent__c);
+      System.assertEquals(2.5, commPayments[1].Gross_Margin_Payment_Percent__c);
+      System.assertEquals(expectedAmount, commPayments[0].Amount__c);
+      System.assertEquals('Revenue', commPayments[1].Manager_Commission_Type__c);
+      System.assertEquals(expectedAmountManager.setScale(2), commPayments[1].Amount__c);
     }
   }
 
