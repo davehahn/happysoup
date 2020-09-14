@@ -5,16 +5,17 @@
         <backgroundColor2>#FFFFFF</backgroundColor2>
         <backgroundFadeDir>Diagonal</backgroundFadeDir>
         <chartSummaries>
+            <aggregate>Sum</aggregate>
             <axisBinding>y</axisBinding>
-            <column>RowCount</column>
+            <column>AcctSeed__Account_Payable__c.AcctSeed__Balance__c</column>
         </chartSummaries>
         <chartType>Funnel</chartType>
         <enableHoverLabels>false</enableHoverLabels>
         <expandOthers>false</expandOthers>
-        <groupingColumn>CUST_CREATED_NAME</groupingColumn>
+        <groupingColumn>FK_NAME</groupingColumn>
         <legendPosition>Right</legendPosition>
         <location>CHART_BOTTOM</location>
-        <showAxisLabels>true</showAxisLabels>
+        <showAxisLabels>false</showAxisLabels>
         <showPercentage>false</showPercentage>
         <showTotal>false</showTotal>
         <showValues>false</showValues>
@@ -29,35 +30,57 @@
         <field>CUST_NAME</field>
     </columns>
     <columns>
-        <field>FK_NAME</field>
-    </columns>
-    <columns>
-        <field>AcctSeed__Account_Payable__c.GL_Account_Variable_1__c</field>
-    </columns>
-    <columns>
-        <field>AcctSeed__Account_Payable__c.GL_Account_Variable_2__c</field>
-    </columns>
-    <columns>
         <aggregateTypes>Sum</aggregateTypes>
-        <field>AcctSeed__Account_Payable__c.AcctSeed__Total__c</field>
+        <field>AcctSeed__Account_Payable__c.AcctSeed__Balance__c</field>
     </columns>
+    <columns>
+        <field>AcctSeed__Account_Payable__c.AcctSeed__Due_Date__c</field>
+    </columns>
+    <columns>
+        <field>FK_$Account.Payment_Preference__c</field>
+    </columns>
+    <columns>
+        <field>FK_ACC_ADDR1_COUNTRY_CODE</field>
+    </columns>
+    <description>These are payments on or before tomorrow.</description>
     <filter>
+        <criteriaItems>
+            <column>AcctSeed__Account_Payable__c.AcctSeed__Balance__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>notEqual</operator>
+            <value>0</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>AcctSeed__Account_Payable__c.AcctSeed__Due_Date__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>lessOrEqual</operator>
+            <value>NEXT_N_DAYS:1</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>AcctSeed__Account_Payable__c.Approved__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>equals</operator>
+            <value>1</value>
+        </criteriaItems>
         <criteriaItems>
             <column>AcctSeed__Account_Payable__c.GMBLASG__Posted__c</column>
             <columnToColumn>false</columnToColumn>
             <isUnlocked>true</isUnlocked>
             <operator>equals</operator>
-            <value>0</value>
+            <value>1</value>
         </criteriaItems>
         <language>en_US</language>
     </filter>
     <format>Summary</format>
     <groupingsDown>
         <dateGranularity>Day</dateGranularity>
-        <field>CUST_CREATED_NAME</field>
+        <field>FK_NAME</field>
         <sortOrder>Asc</sortOrder>
     </groupingsDown>
-    <name>Unposted Payables</name>
+    <name>Approved Payments due immediately</name>
     <params>
         <name>co</name>
         <value>1</value>

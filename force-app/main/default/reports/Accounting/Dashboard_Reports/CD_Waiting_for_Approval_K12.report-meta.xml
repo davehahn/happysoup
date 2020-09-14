@@ -5,13 +5,14 @@
         <backgroundColor2>#FFFFFF</backgroundColor2>
         <backgroundFadeDir>Diagonal</backgroundFadeDir>
         <chartSummaries>
+            <aggregate>Sum</aggregate>
             <axisBinding>y</axisBinding>
-            <column>RowCount</column>
+            <column>AcctSeed__Cash_Disbursement__c$AcctSeed__Amount__c</column>
         </chartSummaries>
         <chartType>Funnel</chartType>
         <enableHoverLabels>false</enableHoverLabels>
         <expandOthers>false</expandOthers>
-        <groupingColumn>CUST_CREATED_NAME</groupingColumn>
+        <groupingColumn>AcctSeed__Cash_Disbursement__c$AcctSeed__Payee__c</groupingColumn>
         <legendPosition>Right</legendPosition>
         <location>CHART_BOTTOM</location>
         <showAxisLabels>true</showAxisLabels>
@@ -26,49 +27,47 @@
         <titleSize>18</titleSize>
     </chart>
     <columns>
-        <field>CUST_NAME</field>
-    </columns>
-    <columns>
-        <field>FK_NAME</field>
-    </columns>
-    <columns>
-        <field>AcctSeed__Account_Payable__c.GL_Account_Variable_1__c</field>
-    </columns>
-    <columns>
-        <field>AcctSeed__Account_Payable__c.GL_Account_Variable_2__c</field>
+        <field>AcctSeed__Cash_Disbursement__c$Name</field>
     </columns>
     <columns>
         <aggregateTypes>Sum</aggregateTypes>
-        <field>AcctSeed__Account_Payable__c.AcctSeed__Total__c</field>
+        <field>AcctSeed__Cash_Disbursement__c$AcctSeed__Amount__c</field>
     </columns>
     <filter>
         <criteriaItems>
-            <column>AcctSeed__Account_Payable__c.GMBLASG__Posted__c</column>
+            <column>AcctSeed__Cash_Disbursement__c$AcctSeed__Payment_Status__c</column>
             <columnToColumn>false</columnToColumn>
             <isUnlocked>true</isUnlocked>
             <operator>equals</operator>
-            <value>0</value>
+            <value>Paid</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>AcctSeed__Cash_Disbursement__c$Approval_Status__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>equals</operator>
+            <value>Step 1 Approved</value>
         </criteriaItems>
         <language>en_US</language>
     </filter>
     <format>Summary</format>
     <groupingsDown>
         <dateGranularity>Day</dateGranularity>
-        <field>CUST_CREATED_NAME</field>
+        <field>AcctSeed__Cash_Disbursement__c$AcctSeed__Payee__c</field>
         <sortOrder>Asc</sortOrder>
     </groupingsDown>
-    <name>Unposted Payables</name>
+    <name>CD Waiting for Approval</name>
     <params>
         <name>co</name>
         <value>1</value>
     </params>
-    <reportType>CustomEntity$AcctSeed__Account_Payable__c@AcctSeed__Account_Payable__c.AcctSeed__Vendor__c</reportType>
+    <reportType>Cash_Disbursements_with_Payables__c</reportType>
     <scope>organization</scope>
     <showDetails>true</showDetails>
     <showGrandTotal>true</showGrandTotal>
     <showSubTotals>true</showSubTotals>
     <timeFrameFilter>
-        <dateColumn>AcctSeed__Account_Payable__c.AcctSeed__Due_Date__c</dateColumn>
+        <dateColumn>AcctSeed__Cash_Disbursement__c$AcctSeed__Cleared_Date__c</dateColumn>
         <interval>INTERVAL_CUSTOM</interval>
     </timeFrameFilter>
 </Report>

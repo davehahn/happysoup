@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <description>Payable Approval Process Rejection Notification Email</description>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>Legend_Letterhead</letterhead>
+    <name>AP Approval Rejection Email</name>
+    <style>freeForm</style>
+    <subject>The following Payable approval request has been rejected</subject>
+    <textOnly>The following Payable approval request has been rejected:
+
+
+
+Vendor: {!AcctSeed__Account_Payable__c.AcctSeed__Vendor__c}
+
+Payee Reference: {!AcctSeed__Account_Payable__c.AcctSeed__Payee_Reference__c}
+
+Total: {!AcctSeed__Account_Payable__c.AcctSeed__Total__c}
+
+Issue Date: {!AcctSeed__Account_Payable__c.AcctSeed__Date__c}
+
+Rejection Comment: {!ApprovalRequest.Comments}
+
+URL: {!AcctSeed__Account_Payable__c.Link}</textOnly>
+    <type>html</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>
