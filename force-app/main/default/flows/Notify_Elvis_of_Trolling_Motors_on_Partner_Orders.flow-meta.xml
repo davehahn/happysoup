@@ -2,45 +2,21 @@
 <Flow xmlns="http://soap.sforce.com/2006/04/metadata">
     <actionCalls>
         <processMetadataValues>
-            <name>postTarget</name>
+            <name>emailAlertSelection</name>
             <value>
-                <stringValue>Elvis Paulino</stringValue>
-            </value>
-        </processMetadataValues>
-        <processMetadataValues>
-            <name>postTargetUserType</name>
-            <value>
-                <stringValue>USER</stringValue>
-            </value>
-        </processMetadataValues>
-        <processMetadataValues>
-            <name>textJson</name>
-            <value>
-                <stringValue>{&quot;mentions&quot;:[],&quot;message&quot;:&quot;This Partner Order ERP Order Line contains a Trolling Motor.&quot;}</stringValue>
+                <stringValue>Notify_Elvis_of_Trolling_Motors_on_Partner_Orders</stringValue>
             </value>
         </processMetadataValues>
         <name>myRule_1_A1</name>
-        <label>Chatter Elvis</label>
+        <label>Email Elvis</label>
         <locationX>100</locationX>
         <locationY>200</locationY>
-        <actionName>chatterPost</actionName>
-        <actionType>chatterPost</actionType>
+        <actionName>AcctSeedERP__Material__c.Notify_Elvis_of_Trolling_Motors_on_Partner_Orders</actionName>
+        <actionType>emailAlert</actionType>
         <inputParameters>
-            <name>text</name>
+            <name>SObjectRowId</name>
             <value>
-                <stringValue>This Partner Order ERP Order Line contains a Trolling Motor.</stringValue>
-            </value>
-        </inputParameters>
-        <inputParameters>
-            <name>type</name>
-            <value>
-                <stringValue>USER</stringValue>
-            </value>
-        </inputParameters>
-        <inputParameters>
-            <name>subjectNameOrId</name>
-            <value>
-                <stringValue>005i0000006Y5xYAAS</stringValue>
+                <elementReference>myVariable_current.Id</elementReference>
             </value>
         </inputParameters>
     </actionCalls>
@@ -314,7 +290,7 @@
         </rules>
     </decisions>
     <description>Notify Elvis of Trolling Motors on Partner Orders</description>
-    <interviewLabel>Notify_Elvis_of_Trolling_Motors_on_Partner_Orders-1_InterviewLabel</interviewLabel>
+    <interviewLabel>Notify_Elvis_of_Trolling_Motors_on_Partner_Orders-2_InterviewLabel</interviewLabel>
     <label>Notify Elvis of Trolling Motors on Partner Orders</label>
     <processMetadataValues>
         <name>ObjectType</name>
