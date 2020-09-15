@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ListView xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>Payments_due_in_next_7_days</fullName>
+    <fullName>Approved_Payments_due_immediately</fullName>
     <columns>NAME</columns>
     <columns>Payment_Preference__c</columns>
     <columns>AcctSeed__Due_Date__c</columns>
@@ -19,18 +19,23 @@
         <value>0</value>
     </filters>
     <filters>
-        <field>GMBLASG__Posted__c</field>
-        <operation>equals</operation>
-        <value>1</value>
-    </filters>
-    <filters>
         <field>AcctSeed__Due_Date__c</field>
         <operation>lessOrEqual</operation>
-        <value>NEXT_N_DAYS:14</value>
+        <value>NEXT_N_DAYS:1</value>
     </filters>
     <filters>
         <field>Payment_Preference__c</field>
         <operation>contains</operation>
     </filters>
-    <label>Payments due in next 14 days</label>
+    <filters>
+        <field>Approved__c</field>
+        <operation>equals</operation>
+        <value>1</value>
+    </filters>
+    <filters>
+        <field>GMBLASG__Posted__c</field>
+        <operation>equals</operation>
+        <value>1</value>
+    </filters>
+    <label>Approved Payments due immediately</label>
 </ListView>

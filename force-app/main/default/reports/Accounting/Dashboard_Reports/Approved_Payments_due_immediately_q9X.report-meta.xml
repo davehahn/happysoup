@@ -9,15 +9,15 @@
             <axisBinding>y</axisBinding>
             <column>AcctSeed__Account_Payable__c.AcctSeed__Balance__c</column>
         </chartSummaries>
-        <chartType>Donut</chartType>
+        <chartType>Funnel</chartType>
         <enableHoverLabels>false</enableHoverLabels>
         <expandOthers>false</expandOthers>
         <groupingColumn>FK_NAME</groupingColumn>
         <legendPosition>Right</legendPosition>
         <location>CHART_BOTTOM</location>
-        <showAxisLabels>true</showAxisLabels>
+        <showAxisLabels>false</showAxisLabels>
         <showPercentage>false</showPercentage>
-        <showTotal>true</showTotal>
+        <showTotal>false</showTotal>
         <showValues>false</showValues>
         <size>Medium</size>
         <summaryAxisRange>Auto</summaryAxisRange>
@@ -42,6 +42,7 @@
     <columns>
         <field>FK_ACC_ADDR1_COUNTRY_CODE</field>
     </columns>
+    <description>These are payments on or before tomorrow.</description>
     <filter>
         <criteriaItems>
             <column>AcctSeed__Account_Payable__c.AcctSeed__Balance__c</column>
@@ -55,7 +56,21 @@
             <columnToColumn>false</columnToColumn>
             <isUnlocked>true</isUnlocked>
             <operator>lessOrEqual</operator>
-            <value>NEXT_N_DAYS:7</value>
+            <value>NEXT_N_DAYS:1</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>AcctSeed__Account_Payable__c.Approved__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>equals</operator>
+            <value>1</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>AcctSeed__Account_Payable__c.GMBLASG__Posted__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>equals</operator>
+            <value>1</value>
         </criteriaItems>
         <language>en_US</language>
     </filter>
@@ -65,7 +80,7 @@
         <field>FK_NAME</field>
         <sortOrder>Asc</sortOrder>
     </groupingsDown>
-    <name>Payments due in next 7 days</name>
+    <name>Approved Payments due immediately</name>
     <params>
         <name>co</name>
         <value>1</value>

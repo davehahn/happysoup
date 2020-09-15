@@ -15,7 +15,7 @@
         <groupingColumn>FK_NAME</groupingColumn>
         <legendPosition>Right</legendPosition>
         <location>CHART_BOTTOM</location>
-        <showAxisLabels>true</showAxisLabels>
+        <showAxisLabels>false</showAxisLabels>
         <showPercentage>false</showPercentage>
         <showTotal>true</showTotal>
         <showValues>false</showValues>
@@ -55,7 +55,28 @@
             <columnToColumn>false</columnToColumn>
             <isUnlocked>true</isUnlocked>
             <operator>lessOrEqual</operator>
-            <value>NEXT_N_DAYS:7</value>
+            <value>NEXT_N_DAYS:14</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>AcctSeed__Account_Payable__c.Approved__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>equals</operator>
+            <value>0</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>CUST_CREATED_DATE</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>greaterOrEqual</operator>
+            <value>8/5/2020 12:00 AM</value>
+        </criteriaItems>
+        <criteriaItems>
+            <column>AcctSeed__Account_Payable__c.GMBLASG__Posted__c</column>
+            <columnToColumn>false</columnToColumn>
+            <isUnlocked>true</isUnlocked>
+            <operator>equals</operator>
+            <value>1</value>
         </criteriaItems>
         <language>en_US</language>
     </filter>
@@ -65,7 +86,7 @@
         <field>FK_NAME</field>
         <sortOrder>Asc</sortOrder>
     </groupingsDown>
-    <name>Payments due in next 7 days</name>
+    <name>Unapproved Payments due in next 14 days</name>
     <params>
         <name>co</name>
         <value>1</value>
