@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Cash_Disbursements_Created</fullName>
+    <columns>NAME</columns>
+    <columns>AcctSeed__Amount__c</columns>
+    <columns>AcctSeed__Disbursement_Date__c</columns>
+    <columns>Payee_New__c</columns>
+    <columns>AcctSeed__Type__c</columns>
+    <columns>CREATEDBY_USER</columns>
+    <columns>GMBLASG__Posted__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>AcctSeed__Disbursement_Date__c</field>
+        <operation>lessOrEqual</operation>
+        <value>TODAY</value>
+    </filters>
+    <label>Cash Disbursements Created</label>
+    <sharedTo>
+        <role>Accounting</role>
+    </sharedTo>
+</ListView>

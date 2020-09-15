@@ -45,12 +45,14 @@
     <filter>
         <criteriaItems>
             <column>AcctSeed__Account_Payable__c.AcctSeed__Balance__c</column>
+            <columnToColumn>false</columnToColumn>
             <isUnlocked>true</isUnlocked>
             <operator>notEqual</operator>
             <value>0</value>
         </criteriaItems>
         <criteriaItems>
             <column>AcctSeed__Account_Payable__c.AcctSeed__Due_Date__c</column>
+            <columnToColumn>false</columnToColumn>
             <isUnlocked>true</isUnlocked>
             <operator>lessOrEqual</operator>
             <value>NEXT_N_DAYS:7</value>

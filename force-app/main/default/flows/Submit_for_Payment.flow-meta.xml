@@ -3,7 +3,7 @@
     <decisions>
         <name>Period_Status</name>
         <label>Period Status</label>
-        <locationX>490</locationX>
+        <locationX>629</locationX>
         <locationY>60</locationY>
         <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
         <rules>
@@ -65,7 +65,7 @@
     <recordCreates>
         <name>Create_AP_Line</name>
         <label>Create AP Line</label>
-        <locationX>749</locationX>
+        <locationX>888</locationX>
         <locationY>214</locationY>
         <assignRecordIdToReference>PayableLineID</assignRecordIdToReference>
         <connector>
@@ -103,7 +103,7 @@
     <recordCreates>
         <name>Create_Payable</name>
         <label>Create Payable</label>
-        <locationX>675</locationX>
+        <locationX>814</locationX>
         <locationY>61</locationY>
         <assignRecordIdToReference>PayableRecordID</assignRecordIdToReference>
         <connector>
@@ -154,12 +154,18 @@
                 <elementReference>Internal_Comments</elementReference>
             </value>
         </inputAssignments>
+        <inputAssignments>
+            <field>Payable_Due_Date__c</field>
+            <value>
+                <elementReference>Due_Date</elementReference>
+            </value>
+        </inputAssignments>
         <object>AcctSeed__Account_Payable__c</object>
     </recordCreates>
     <recordLookups>
         <name>Validate_Accounting_Period</name>
         <label>Validate Accounting Period</label>
-        <locationX>386</locationX>
+        <locationX>525</locationX>
         <locationY>58</locationY>
         <assignNullValuesIfNoRecordsFound>true</assignNullValuesIfNoRecordsFound>
         <connector>
@@ -178,10 +184,11 @@
             <field>AcctSeed__Status__c</field>
         </outputAssignments>
     </recordLookups>
+    <runInMode>SystemModeWithSharing</runInMode>
     <screens>
         <name>Error</name>
         <label>Error - Period Closed</label>
-        <locationX>364</locationX>
+        <locationX>503</locationX>
         <locationY>346</locationY>
         <allowBack>false</allowBack>
         <allowFinish>true</allowFinish>
@@ -200,7 +207,7 @@
     <screens>
         <name>Error_Validation</name>
         <label>Error - Validation</label>
-        <locationX>582</locationX>
+        <locationX>721</locationX>
         <locationY>220</locationY>
         <allowBack>false</allowBack>
         <allowFinish>true</allowFinish>
@@ -216,7 +223,7 @@
     <screens>
         <name>Select_Vendor</name>
         <label>Select Vendor</label>
-        <locationX>251</locationX>
+        <locationX>390</locationX>
         <locationY>58</locationY>
         <allowBack>false</allowBack>
         <allowFinish>true</allowFinish>
@@ -353,7 +360,13 @@
             <inputParameters>
                 <name>label</name>
                 <value>
-                    <stringValue>Catagory</stringValue>
+                    <stringValue>Category</stringValue>
+                </value>
+            </inputParameters>
+            <inputParameters>
+                <name>required</name>
+                <value>
+                    <booleanValue>true</booleanValue>
                 </value>
             </inputParameters>
             <isRequired>true</isRequired>
@@ -367,7 +380,7 @@
             <dataType>String</dataType>
             <fieldText>Invoice Number</fieldText>
             <fieldType>InputField</fieldType>
-            <isRequired>false</isRequired>
+            <isRequired>true</isRequired>
         </fields>
         <fields>
             <name>Issue_Date</name>
@@ -377,7 +390,7 @@
             </defaultValue>
             <fieldText>Issue Date</fieldText>
             <fieldType>InputField</fieldType>
-            <isRequired>false</isRequired>
+            <isRequired>true</isRequired>
         </fields>
         <fields>
             <name>Due_Date</name>
@@ -387,7 +400,7 @@
             </defaultValue>
             <fieldText>Due Date</fieldText>
             <fieldType>InputField</fieldType>
-            <isRequired>false</isRequired>
+            <isRequired>true</isRequired>
         </fields>
         <fields>
             <name>Internal_Comments</name>
@@ -401,7 +414,7 @@
     <screens>
         <name>Thank_You</name>
         <label>Thank You</label>
-        <locationX>961</locationX>
+        <locationX>1100</locationX>
         <locationY>61</locationY>
         <allowBack>false</allowBack>
         <allowFinish>true</allowFinish>
@@ -417,7 +430,7 @@
     <screens>
         <name>Upload_Attachment</name>
         <label>Upload Attachment</label>
-        <locationX>819</locationX>
+        <locationX>958</locationX>
         <locationY>61</locationY>
         <allowBack>false</allowBack>
         <allowFinish>true</allowFinish>
@@ -452,8 +465,14 @@
         <showFooter>true</showFooter>
         <showHeader>true</showHeader>
     </screens>
-    <startElementReference>Select_Vendor</startElementReference>
-    <status>Draft</status>
+    <start>
+        <locationX>50</locationX>
+        <locationY>50</locationY>
+        <connector>
+            <targetReference>Select_Vendor</targetReference>
+        </connector>
+    </start>
+    <status>Active</status>
     <variables>
         <name>PayableLineID</name>
         <dataType>String</dataType>

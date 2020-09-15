@@ -1,8 +1,8 @@
 #!/bin/bash
 
-RAND="$(echo $CIRCLE_SHA1 | head -c6)"
-SANDBOXNAME="sbtd${RAND}"
-echo "$RAND"
+#RAND="$(echo $CIRCLE_WORKFLOW_JOB_ID | head -c6)"
+SANDBOXNAME="sbtd${CIRCLE_BUILD_NUM}"
+#echo "$RAND"
 echo "$SANDBOXNAME"
 
 DEPLOY_KEY=$SFDC_SERVER_KEY

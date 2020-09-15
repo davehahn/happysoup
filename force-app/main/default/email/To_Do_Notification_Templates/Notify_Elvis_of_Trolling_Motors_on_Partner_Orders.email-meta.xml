@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <description>Notify Elvis of Trolling Motors on Partner Order</description>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>Legend_Letterhead</letterhead>
+    <name>Notify Elvis of Trolling Motors on Partner Orders</name>
+    <style>freeForm</style>
+    <subject>A new Partner Order was placed containing a Trolling Motor</subject>
+    <textOnly>Hello,
+
+The following partner order contains a Trolling Motor:
+
+ERP Order: {!AcctSeedERP__Material__c.AcctSeedERP__Project__c}
+
+Created by: {!AcctSeedERP__Material__c.OwnerFullName}
+
+URL: {!AcctSeedERP__Material__c.Link}</textOnly>
+    <type>html</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>
