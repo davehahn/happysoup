@@ -16,6 +16,7 @@
 	<aura:attribute type="Decimal" 	name="availableCredit" />
 	<aura:attribute type="Decimal" 	name="creditLimit" />
 	<aura:attribute type="Decimal" 	name="creditTotal" />
+	<aura:attribute type="Decimal" 	name="actualBalance" />
 	<aura:attribute type="Decimal" 	name="currentBalance" />
 	<aura:attribute type="Decimal" 	name="debitTotal" />
 	<aura:attribute type="Decimal" 	name="lastPayment" />
@@ -80,7 +81,7 @@
 							<tr>
 								<th>Current Balance</th>
 								<td>
-									<ui:outputCurrency value="{!v.currentBalance}" 
+									<ui:outputCurrency value="{!v.actualBalance}"
 																		 format="$##,##,###,##0.00"/>
 								</td>
 							</tr>

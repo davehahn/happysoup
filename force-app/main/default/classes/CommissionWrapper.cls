@@ -194,6 +194,7 @@ public class CommissionWrapper
   {
     @AuraEnabled public String id;
     @AuraEnabled public String cType;
+    @AuraEnabled public String mcType;
     @AuraEnabled public String owner;
     @AuraEnabled public String ownerId;
     @AuraEnabled public String avatarURL;
@@ -213,13 +214,14 @@ public class CommissionWrapper
     {
       this.id = p.Id;
       this.cType = p.Type__c == null ? 'Standard' : p.Type__c;
+      this.mcType = p.Manager_Commission_Type__c == null ? 'Gross Margin' : p.Manager_Commission_Type__c;
       this.owner = p.Owner__r.Name;
       this.ownerId = p.Owner__c;
       this.commissionRecordId = p.Commission_Record2__c;
       this.commissionRecordStatus = p.Commission_Record2__r.Status__c;
       this.avatarURL = p.Owner__r.SmallPhotoUrl;
       this.status = p.Status__c;
-      this.usesGrossCalculation = p .Use_Gross_Margin_Calculation__c;
+      this.usesGrossCalculation = p.Use_Gross_Margin_Calculation__c;
       this.amount = p.Amount__c;
       this.totalProfit = p.Commission_Record2__r.Total_Profit__c;
       this.totalPayment = p.Commission_Record2__r.Total_Payment_Amount__c;

@@ -31,8 +31,11 @@ public without sharing class AccountSummaries_mp {
 		public Datetime paymentDueDate					{ get; set; }
 		public Decimal availableCredit 					{ get; set; }
 		public Decimal currentBalance 					{ get; set; }
+		public Decimal actualBalance 					{ get; set; }
+		public Decimal cashReceiptBalance 					{ get; set; }
 		public Decimal creditTotal 							{ get; set; }
 		public Decimal debitTotal 							{ get; set; }
+		public Decimal billingBalance 							{ get; set; }
 		public Decimal creditLimit 							{ get; set; }
 		public Decimal lastPayment 							{ get; set; }
 		public TransactionRecord[] transactions	{ get; set; }
@@ -68,6 +71,8 @@ public without sharing class AccountSummaries_mp {
 			this.creditLimit 		 = 0.00;
 			this.lastPayment 		 = 0.00;
 			this.currentBalance  = 0.00;
+			this.actualBalance  = 0.00;
+			this.cashReceiptBalance  = 0.00;
 
 			Integer numberOfDays = Date.daysInMonth(System.Today().year(), System.Today().month());
 			this.paymentDueDate = Date.newInstance(System.Today().year(), System.Today().month(), numberOfDays).addDays(15);
@@ -210,8 +215,12 @@ public without sharing class AccountSummaries_mp {
 					summary.debitTotal += tr.Debit;
 				}
 				tr.SortDate = billing.AcctSeed__Date__c;
+				//summary.billingBalance += billing.AcctSeed__Balance__c == null ? 0 : billing.AcctSeed__Balance__c;
 				summary.transactions.add( tr );
 			}
+		}
+		for(SObject crAggr : [SELECT SUM(AcctSeed__Balance__c) totalBalance FROM AcctSeed__Billing__c WHERE AcctSeed__Customer__c = :summary.dealerId AND AcctSeed__Balance__c <> 0 AND GMBLASG__Posted__c = true]){
+			summary.billingBalance = (Decimal)crAggr.get('totalBalance');
 		}
 
 		summary.transactions.sort();
@@ -229,8 +238,12 @@ public without sharing class AccountSummaries_mp {
 			summary.lastPaymentDate = lastReceipt.CreatedDate;
 			summary.currentBalance = lastReceipt.AcctSeed__Balance__c;
 			summary.availableCredit = summary.creditLimit - summary.currentBalance;
-		} catch(Exception e) {}
 
+			for(SObject crAggr : [SELECT SUM(AcctSeed__Balance__c) totalBalance FROM AcctSeed__Cash_Receipt__c WHERE AcctSeed__Account__c = :summary.dealerId AND AcctSeed__Balance__c <> 0 AND GMBLASG__Posted__c = true]){
+				summary.cashReceiptBalance = (Decimal)crAggr.get('totalBalance');
+			}
+		} catch(Exception e) {}
+		summary.actualBalance = ((summary.billingBalance == null ? 0 : summary.billingBalance) - (summary.cashReceiptBalance == null ? 0 : summary.cashReceiptBalance)).setScale(2);
 		try {
 			summary.statements = getStatements('Parts Order Statement', summary.dealerId);
 			System.debug(summary.statements);

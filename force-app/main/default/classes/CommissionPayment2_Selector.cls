@@ -16,6 +16,7 @@ public with sharing class CommissionPayment2_Selector extends Application_Select
       'Id',
       'Owner__c',
       'Type__c',
+      'Manager_Commission_Type__c',
       'Owner__r.Name',
       'Owner__r.SmallPhotoUrl',
       'Amount__c',
