@@ -13,7 +13,6 @@
 
   returnToList: function( component, event, helper )
   {
-    console.log('component controller return to list');
     helper.returnToList( component );
     //console.log( 'return' );
   },
@@ -51,8 +50,6 @@
     }
     else
     {
-      console.log( component.get('v.alwaysEditFields_List') );
-      console.log( component.get('v.sObjectName') );
       component.set('v.displayAlwaysEditForm', true);
       var spinner = component.find('spinner');
       spinner.toggle();
@@ -79,7 +76,6 @@
     )
     .then(
       $A.getCallback( function() {
-        console.log( 'delete complete');
         helper.returnToList( component );
       }),
       $A.getCallback( function( err ) {

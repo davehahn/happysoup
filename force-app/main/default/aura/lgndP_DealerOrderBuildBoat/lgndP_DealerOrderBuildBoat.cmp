@@ -21,7 +21,6 @@
   <aura:attribute name="productSelected" type="Boolean" />
   <aura:attribute name="orderGroupId" type="String" />
   <aura:attribute name="inOrderView" type="Boolean" default="false" />
-  <aura:attribute name="isEditing" type="Boolean" default="false" />
   <aura:attribute name="isMotorRequest" type="boolean" default="false" />
 
   <aura:attribute name="modelYearOptions" type="Array" />
@@ -73,7 +72,7 @@
   <aura:registerEvent name="busyIndicatorEvent" type="c:lgndP_BusyIndicator_Event" />
   <aura:registerEvent name="configChanged" type="c:lgnd_BoatConfig_configChange_Event" />
   <aura:registerEvent name="cancelOrderEvent" type="c:lgndP_DealerOrderCancelled_Event" />
-
+  <aura:registerEvent name="editComplete" type="c:lgndP_DealerOrderLineEditComplete_Event" />
   <ltng:require scripts="{!join(',', $Resource.Libraries + '/js/LightningApex.js',
                                      $Resource.Libraries + '/js/LightningUtils.js') }" />
 
@@ -84,50 +83,7 @@
     <aura:attribute name="groupId" type="String" default="" />
   </aura:method>
 
-  <lightning:empApi aura:id="empApi" />
-  <aura:if isTrue="{! !empty(v.sessionId)}">
-    <c:Utility_CometD sessionId="{!v.sessionId}" aura:id="cometD" />
-  </aura:if>
-
-
-<!--  <aura:if isTrue="{! !empty(v.userType) }">-->
-<!--    <aura:if isTrue="{! equals(v.inCommuninty, false)}">-->
-<!--      <h1>Use Salesforces</h1>-->
-<!--      <lightning:empApi aura:id="empApi" />-->
-<!--    </aura:if>-->
-<!--    <aura:if isTrue="{! and( !empty(v.sessionId), equals(v.inCommuninty, true))}">-->
-<!--      <h1>Use Mine</h1>-->
-<!--      <c:Utility_CometD sessionId="{!v.sessionId}" aura:id="empApi" />-->
-<!--    </aura:if>-->
-<!--  </aura:if>-->
-
-   <c:toast content="{!v.toastContent}" isThemeReverse="false" containerId="toast" isToast="true"/>
-
-  <section role="dialog" class="slds-modal" aura:id="modal-container">
-    <div class="slds-modal__container">
-      <header class="slds-modal__header">
-        <h2 class="slds-modal__title slds-hyphenate">
-          What would you like to do?
-        </h2>
-      </header>
-      <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
-        <lightning:layout>
-          <lightning:layoutItem padding="around-medium"
-                                size="6">
-            <lightning:button label="Add More"
-                              onclick="{!c.handleAdd}"/>
-          </lightning:layoutItem>
-          <lightning:layoutItem padding="around-medium"
-                                size="6">
-            <lightning:button label="Finalize &amp; Review"
-                              onclick="{!c.handleFinalize}"/>
-          </lightning:layoutItem>
-        </lightning:layout>
-      </div>
-    </div>
-  </section>
-  <div class="slds-backdrop" aura:id="modal-backdrop"></div>
-
+  <c:toast content="{!v.toastContent}" isThemeReverse="false" containerId="toast" isToast="true"/>
 
   <div class="slds-grid slds-wrap slds-grid--pull-padded-x-small" style="margin-left:0; margin-right:0;">
 

@@ -1,20 +1,8 @@
 ({
-  testCometD: function( component )
+  setUserData: function( component )
   {
-    let action = component.get('c.getSessionId');
-
-    new LightningApex( this, action ).fire()
-    .then(
-      $A.getCallback( function( response ) {
-        console.log(`sessionId = ${response}`);
-        component.set('v.sessionId', response);
-      })
-    )
-//    let cometD = component.find('cometD');
-//        cometD.test();
-//        cometD.testCallback('an arg', $A.getCallback( (response) => {
-//          console.log( `Callback response = ${response}`);
-//        }));
+    var action = component.get('c.builderInit');
+    return new LightningApex( this, action ).fire();
   },
 
 	handleStageChange: function( params, component)
@@ -75,8 +63,13 @@
     {
       component.find("reviewOrder--Cmp").doInit();
     }
+    //if we are going from review to finalize
+    if( actionNumber === 3 && prevActionNumber === 2 )
+    {
+      component.find('finalizeOrder-Cmp').doInit();
+    }
     //if we are coming from review to build a boat we need to reset all the variables
-    if( actionNumber === 1 && prevActionNumber === 2 )
+    if( actionNumber === 1 && ( prevActionNumber === 2 || prevActionNumber === 3 ) )
     {
       if( params.groupId !== undefined && params.groupId.length > 0 )
         component.find("orderBuildBoat--Cmp").doInitForEdit( params.groupId );
@@ -117,7 +110,6 @@
   toggleIndicator: function( component, message )
   {
     let indicator = component.find('busy-indicator');
-    console.log(`NewDealerOrder busy Message = ${message}`);
     indicator.toggle( message );
   }
 })

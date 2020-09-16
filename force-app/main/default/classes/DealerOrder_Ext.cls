@@ -797,7 +797,9 @@ public without sharing class DealerOrder_Ext {
   @AuraEnabled
   public static void applyPartnerProgram( String dealerOrderId )
   {
-    Dealer_Order_Line_Ext.applyPartnerProgram( new Set<Id>{ Id.valueOf(dealerOrderId)} );
+
+    PartnerProgram_Service ppService = new PartnerProgram_Service( new Set<Id>{ Id.valueOf(dealerOrderId)} );
+    ppService.checkAndApply();
   }
 
   private static DolViewWrapper viewDealerLineItemFromTransfer( Dealer_Order_Line__c[] dols )
@@ -2124,10 +2126,10 @@ public without sharing class DealerOrder_Ext {
         )
       );
     }
-    Boolean origTriggerState = Dealer_Order_Line_Ext.disablePartnerProgram;
+    Boolean disablePartnerProgram = Dealer_Order_Line_Ext.disablePartnerProgram;
     Dealer_Order_Line_Ext.disablePartnerProgram = true;
     insert dols;
-    Dealer_Order_Line_Ext.disablePartnerProgram = origTriggerState;
+    Dealer_Order_Line_Ext.disablePartnerProgram = disablePartnerProgram;
   }
 
   private static Dealer_Order__c updateDealerLineItems( DealerOrderLineWrapper wrapper )
@@ -2351,7 +2353,10 @@ public without sharing class DealerOrder_Ext {
     update erps;
     insert newMaterials;
     delete oldMaterials;
+    Boolean disablePartnerProgram = Dealer_Order_Line_Ext.disablePartnerProgram;
+    Dealer_Order_Line_Ext.disablePartnerProgram = true;
     delete dolsToDelete;
+    Dealer_Order_Line_Ext.disablePartnerProgram = disablePartnerProgram;
 
     if( quantityDiff > 0 )
       insertNewDealerOrderLines( wrapper, quantityDiff, productMap, wrapper.orderGroupId );

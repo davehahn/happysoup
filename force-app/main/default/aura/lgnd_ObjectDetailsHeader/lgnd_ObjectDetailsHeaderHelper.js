@@ -7,7 +7,6 @@
     self.fetchRecord( component )
     .then(
       $A.getCallback( function( result ) {
-        console.log( result );
         if( result !== null &&
             Object.keys(result).length > 0 )
         {
@@ -58,7 +57,6 @@
       }, fields );
     }
 
-    console.log( Array.from(fields) );
     action.setParams({
       sObjectName: sObjectName,
       recordId: recordId,
@@ -102,7 +100,7 @@
         criteriaResult = self.evaluateEditCriteria( component ),
         result = false;
 
-    if( alwaysEditFields_List.length > 0 )
+    if( alwaysEditFields_List !== undefined && alwaysEditFields_List.length > 0 )
       result = true;
     else
       result = criteriaResult;
@@ -186,7 +184,6 @@
         return flds;
       }, fields );
     }
-    console.log( fields );
     component.set('v.displayFieldData', fields);
   },
 
@@ -194,8 +191,6 @@
   {
     var listURL = component.get('v.listViewURL'),
         evt = $A.get("e.force:navigateToURL");
-    console.log( 'return to list');
-    console.log( listURL);
     evt.setParams({
         url: listURL,
         isredirect: true
@@ -224,8 +219,6 @@
     action.setParams({
       recordId: recordId
     });
-
-    console.log( 'delete record');
 
     return new Promise( function( resolve, reject ) {
       action.setCallback( self, function( response ) {

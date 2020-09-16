@@ -111,6 +111,7 @@ public virtual class PartnerProgramItem implements PartnerProgramItem_I, Promise
       upsert this.apply();
       percent = this.getDiscountPercent();
       wrapper.appliedPrograms.add( this.getName() );
+      wrapper.result.addAppliedDiscount( this );
       updateDealerOrder = true;
     }
     else

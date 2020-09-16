@@ -158,6 +158,7 @@ public with sharing class PartnerProgram_Service
                                List<AcctSeed__Project__c> erps,
                                Partner_Booking_Order__c bookingOrder )
     {
+      this.result = new PartnerProgram_Service.Result();
       this.dealerOrder = dealerOrder;
       this.appliedPrograms = new Set<String>();
       if( dealerOrder.Applied_Partner_Program_Discounts__c != null )

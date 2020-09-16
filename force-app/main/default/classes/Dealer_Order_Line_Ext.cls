@@ -219,7 +219,10 @@ public with sharing class Dealer_Order_Line_Ext {
   @Future
   public static void applyPartnerProgram( Set<Id> dealerOrderIds )
   {
-    PartnerProgram_Service ppService = new PartnerProgram_Service( dealerOrderIds );
+    Map<Id, Dealer_Order__c> dealerOrders = new Map<Id, Dealer_Order__c>(
+      [SELECT Id FROM Dealer_Order__c WHERE Id IN :dealerOrderIds AND Is_Booking_Order__c = true]
+    );
+    PartnerProgram_Service ppService = new PartnerProgram_Service( dealerOrders.keySet() );
     ppService.checkAndApply();
   }
 

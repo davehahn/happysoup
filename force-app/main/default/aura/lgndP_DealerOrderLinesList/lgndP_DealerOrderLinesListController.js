@@ -1,18 +1,17 @@
 ({
   doInit: function( component, event, helper )
   {
-    helper.doInit( component );
-  },
-
-  refreshItems: function( component, event, helper )
-  {
-    helper.toggleSpinner( component, true );
+    console.log('DOlines List init');
+    helper.toggleSpinner( component, 'Retrieving Order Details');
     helper.doInit( component )
-    .finally(
-      $A.getCallback( () => {
-        helper.toggleSpinner( component, false );
-      })
+    .then(
+      $A.getCallback( () => {}),
+      $A.getCallback( () => {})
     )
+    .finally( $A.getCallback( () => {
+      console.log('DOlines List done');
+      helper.toggleSpinner( component );
+    }));
   },
 
   detailToggle: function( component, event, helper )

@@ -44,54 +44,54 @@
     component.find('dealerOrderLineView--Cmp').doInit( groupId );
   },
 
-  submitOrder: function( component )
-  {
-    var self = this,
-          action = component.get('c.submitDealerOrder');
-    return new Promise( function( resolve, reject )
-    {
-      self.toggleSpinner(component, true);
-      action.setParams({
-        dealerOrderId: component.get('v.dealerOrder').Id
-      });
-      action.setCallback(self, function( response ) {
-        var state = response.getState();
-        if (state === "SUCCESS") {
-          self.toggleSpinner(component, false);
-          resolve();
-        }
-        else if (component.isValid() && state === "INCOMPLETE") {
-          reject( 'incomplete' );
-        }
-        else if (component.isValid() && state === "ERROR") {
-          var errors = response.getError();
-          if (errors) {
-              if (errors[0] && errors[0].message) {
-                  reject("Error message: " +
-                           errors[0].message);
-              }
-          } else {
-             reject("Unknown error");
-          }
-        }
-      });
-      $A.enqueueAction( action );
-    });
-  },
+//  submitOrder: function( component )
+//  {
+//    var self = this,
+//          action = component.get('c.submitDealerOrder');
+//    return new Promise( function( resolve, reject )
+//    {
+//      self.toggleSpinner(component, true);
+//      action.setParams({
+//        dealerOrderId: component.get('v.dealerOrder').Id
+//      });
+//      action.setCallback(self, function( response ) {
+//        var state = response.getState();
+//        if (state === "SUCCESS") {
+//          self.toggleSpinner(component, false);
+//          resolve();
+//        }
+//        else if (component.isValid() && state === "INCOMPLETE") {
+//          reject( 'incomplete' );
+//        }
+//        else if (component.isValid() && state === "ERROR") {
+//          var errors = response.getError();
+//          if (errors) {
+//              if (errors[0] && errors[0].message) {
+//                  reject("Error message: " +
+//                           errors[0].message);
+//              }
+//          } else {
+//             reject("Unknown error");
+//          }
+//        }
+//      });
+//      $A.enqueueAction( action );
+//    });
+//  },
+//
+//  navigateHome: function()
+//  {
+//    var homeEvent = $A.get("e.force:navigateToObjectHome");
+//    homeEvent.setParams({
+//        "scope": "Dealer_Order__c"
+//    });
+//    homeEvent.fire();
+//
+//  },
 
-  navigateHome: function()
-  {
-    var homeEvent = $A.get("e.force:navigateToObjectHome");
-    homeEvent.setParams({
-        "scope": "Dealer_Order__c"
-    });
-    homeEvent.fire();
-
-  },
-
-  toggleSpinner: function( component, busy )
-  {
-    var indEvt = $A.get('e.c:lgndP_BusyIndicator_Event');
-    indEvt.setParams({isBusy: busy}).fire();
-  }
+//  toggleSpinner: function( component, busy )
+//  {
+//    var indEvt = $A.get('e.c:lgndP_BusyIndicator_Event');
+//    indEvt.setParams({isBusy: busy}).fire();
+//  }
 })

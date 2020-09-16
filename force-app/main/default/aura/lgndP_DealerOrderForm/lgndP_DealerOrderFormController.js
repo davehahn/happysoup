@@ -15,13 +15,6 @@
         component.set('v.accountOptions', result.accountOptions );
         component.set('v.legendAccounts', result.legendAccounts );
         component.set('v.lockBookingOrderToggle', true );
-//        if( result.fromInternal )
-//          component.set('v.lockBookingOrderToggle', false);
-//        if( !result.fromInternal &&
-//            result.dealerOrder.Is_Booking_Order__c )
-//        {
-//          component.set('v.lockBookingOrderToggle', false);
-//        }
       }),
       $A.getCallback( function( err ) {
         try{

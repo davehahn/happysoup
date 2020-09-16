@@ -1,10 +1,13 @@
 ({
 	doInit : function(component, event, helper)
   {
-    helper.getUserType( component )
+    helper.getUserDetails( component )
     .then(
       $A.getCallback( function( result ) {
-        component.set('v.userType', result);
+        component.set('v.userType', result.userType);
+        component.set('v.sessionId', result.sessionId);
+        if( result.uiTheme !== 'Theme3' )
+           component.set('v.inCommunity', false );
         return helper.fetchDealerOrder( component );
       }),
       $A.getCallback( function( err ) {
@@ -14,6 +17,7 @@
     .then(
       $A.getCallback( function( result ) {
         component.set( 'v.dealerOrder', result );
+        console.log('DOlines done');
         component.find('dealerOrderLines--Cmp').doInit();
       }),
       $A.getCallback( function( err ) {
@@ -45,10 +49,11 @@
     var params = event.getParams(),
         id = params.id,
         action = params.action;
+    console.log(`handling action ${action}`);
 
     if( action === 'edit' )
     {
-      component.set('v.isEditing', true);
+      component.set('v.currentView', 'edit');
       component.find('dealerOrderBuildBoat--Cmp').doInitForEdit( id );
     }
     if( action === 'view' )
@@ -58,7 +63,7 @@
     }
     if( action === 'add' )
     {
-      component.set('v.isEditing', true);
+      component.set('v.currentView', 'edit');
       component.find('dealerOrderBuildBoat--Cmp').doInit();
     }
   },
@@ -67,6 +72,8 @@
   {
     var params = event.getParams(),
         indicator = component.find('busy-indicator');
+
+    console.log(`handling indicator, message = ${params.message}`);
     indicator.toggle( params.message );
 //    if( params.isBusy )
 //      $A.util.removeClass( indicator, 'toggle' );
@@ -87,17 +94,17 @@
     }
   },
 
-  handleEditChange: function( component, event, helper )
+  handleEditComplete: function( component, event, helper )
   {
-    if( event.getParam("value") == true  )
+    console.log('handle edit complete');
+    let status = event.getParam('status');
+    if( status === 'cancel' )
     {
-      component.set('v.currentView', 'edit');
+      helper.returnToLineView( component );
     }
-    else
+    if( status === 'complete' )
     {
-      component.set('v.currentView', 'list');
-      component.find('dealerOrderLines--Cmp').doInit();
-      $A.get('e.force:refreshView').fire();
+      helper.handleApplyPartnerProgram( component )
     }
   }
 })

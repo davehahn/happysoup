@@ -9,7 +9,6 @@
       .then(
         $A.getCallback( function(result) {
           self.functions.clearVars( component );
-          console.log( JSON.parse( JSON.stringify( result ) ) );
           component.set('v.modelYearOptions', result.modelYearOptions );
           component.set('v.userType', result.userType);
           component.set('v.sessionId', result.sessionId );
@@ -28,10 +27,7 @@
         action = component.get("c.fetchProducts"),
         message = 'Retrieving ';
 
-    console.log(`recordType = ${recordType}`);
-    console.log(`family = ${family}`);
-    message += recordType === 'Boat' ? family : recordType;
-    message += 's';
+    message += recordType + 's';
 
     action.setParams({
       'recordType': recordType,
@@ -57,12 +53,6 @@
   },
 
   saveDealerOrderLine: function( component )
-//  {
-//    this.functions.toggleSpinner( component, true, 'Saving Order' );
-//    return new Promise( (resolve, reject) => {
-//      setTimeout( () => { resolve(); }, 3000 )
-//    });
-//  },
   {
     var self = this,
         boat = component.get('v.boat'),
@@ -99,8 +89,6 @@
         if( ( option.isCheckbox && option.isSelected ) ||
             ( !option.isCheckbox && option.quantitySelected > 0 ) )
         {
-          console.log( 'Add Option - ');
-          console.log( option );
           erpLineItems.push( option );
         }
         if( option.subOptions !== undefined && option.subOptions !== null )
@@ -110,8 +98,6 @@
             if( ( option.subOptions[i].isCheckbox && option.subOptions[i].isSelected ) ||
                 (!option.subOptions[i].isCheckbox && option.subOptions[i].quantitySelected > 0 ) )
             {
-              console.log( 'Add Sub Option - ');
-              console.log( option.subOptions[i] );
               erpLineItems.push( option.subOptions[i] );
             }
           }
@@ -207,8 +193,6 @@
             data.dealerMotorRequestId = motorRequest.Id;
             data.motor = { id: motorRequest.Motor__c };
           }
-          console.log('DATA');
-          console.log( JSON.parse(JSON.stringify(data )));
           action.setParams({
             jsonData: JSON.stringify( data )
           });
@@ -243,44 +227,6 @@
     this.functions.toggleModal( component, 'close');
     this.functions.toggleSpinner( component, true, 'Applying Partner Program');
     new LightningApex( this, action ).fire();
-  },
-
-  partnerProgramSuccess: function( component, eventReceived )
-  {
-    const subscription = component.get('v.partnerProgramSubscription'),
-          inCommunity = component.get('v.inCommunity');
-
-    let empApi;
-    if( inCommunity )
-    {
-      empApi = component.find('cometD');
-    }
-    else
-    {
-      empApi = component.find('empApi');
-    }
-    empApi.unsubscribe( subscription, $A.getCallback( unsubscribed => {
-      console.log('Unsubscribed from channel '+ unsubscribed.subscription);
-      component.set('v.partnerProgramSubscription', null);
-    }));
-
-    this.functions.toggleSpinner( component, false );
-    let inOrderView = component.get('v.inOrderView'),
-        nav;
-
-    if( inOrderView )
-    {
-      component.set('v.isEditing', false);
-    }
-    else
-    {
-      nav = $A.get('e.c:lgndP_DealerOrderNav_Event');
-      nav.setParams({
-        "firedBy" : 1,
-        "navigateTo": 2
-       })
-      .fire();
-    }
   },
 
   handleMotorRequest: function( component, motorRequest )
@@ -328,11 +274,6 @@
       }
     });
   },
-
-//  handlePartnerProgram:function( component )
-//  {
-//    return new Promise( (resolve, reject) => { resolve(null) } );
-//  },
 
   initForEdit: function( component, groupId )
   {
@@ -1087,23 +1028,6 @@
           message: message
         }
       ).fire();
-    },
-
-    toggleModal: function( component, state )
-    {
-      const modal = component.find('modal-container'),
-            backDrop = component.find('modal-backdrop');
-
-      if( state === 'open')
-      {
-        $A.util.addClass( modal, 'slds-fade-in-open');
-        $A.util.addClass( backDrop, 'slds-backdrop_open');
-      }
-      if( state === 'close')
-      {
-        $A.util.removeClass( modal, 'slds-fade-in-open');
-        $A.util.removeClass( backDrop, 'slds-backdrop_open');
-      }
     }
   }
 })

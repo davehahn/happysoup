@@ -16,7 +16,6 @@
   <aura:attribute name="legendAccounts" type="String[]" />
   <aura:attribute name="lockBookingOrderToggle" type="Boolean" default="false"/>
   <aura:attribute name="scriptsLoaded" type="Boolean" default="false" />
-  <!-- <aura:attribute name="isLegendTransfer" type="Boolean" default="true" /> -->
 
   <ltng:require scripts="{!join(',', $Resource.Libraries +'/js/LightningApex.js',
                                      $Resource.Libraries +'/js/LightningUtils.js') }" afterScriptsLoaded="{!c.showConsole}" />
@@ -25,9 +24,6 @@
   <aura:method name="doInit" access="public" />
 
   <!-- events -->
-  <!-- <aura:handler name="modalOpen"
-                event="c:lgndP_DealerOrderModalOpen_Event"
-                action="{!c.doInit}" /> -->
   <aura:registerEvent name="navEvent" type="c:lgndP_DealerOrderNav_Event" />
   <aura:registerEvent name="busyIndicatorEvent" type="c:lgndP_BusyIndicator_Event" />
   <aura:registerEvent name="cancelOrderEvent" type="c:lgndP_DealerOrderCancelled_Event" />
@@ -59,25 +55,8 @@
     </aura:if>
 
     <div class='slds-grid slds-wrap slds-grid_pull-padded slds-m-top_large'>
-      <div class="slds-col slds-large-size_6-of-12 slds-p-horizontal_small">
-        <aura:if isTrue="{!not(v.dealerOrder.Is_Legend_Transfer__c)}">
-          <lightning:select name="payment-method-select"
-                        aura:id="requiredField"
-                        label="Select Payment Method"
-                        required="true"
-                        onchange="{!c.handlePaymentMethodChange}"
-                        messageWhenValueMissing="Payment Method is Required"
-                        value="{!v.dealerOrder.Payment_Method__c}">
-            <option value=""> -- None -- </option>
-            <aura:iteration items="{!v.paymentMethodOptions}" var="method">
-              <option value="{!method}" text="{!method}"></option>
-            </aura:iteration>
-          </lightning:select>
-        </aura:if>
-      </div>
 
       <div class="slds-col slds-large-size_6-of-12 slds-p-horizontal_small">
-<!--        <lightning:input label="Program Year" name="program-year" value="{!v.dealerOrder.Program_Year__c}" />-->
         <lightning:select name="program-year"
                           label="Program Year"
                           value="{!v.dealerOrder.Program_Year__c}">
@@ -87,11 +66,38 @@
         </lightning:select>
       </div>
 
+      <div class="slds-col slds-large-size_6-of-12 slds-p-horizontal_small">
+        <lightning:input type="toggle"
+                         name="isBookingOrder"
+                         label="Is this a Booking Order?"
+                         class="centerToggle"
+                         disabled="{!v.lockBookingOrderToggle}"
+                         checked="{!v.dealerOrder.Is_Booking_Order__c}"
+                         messageToggleActive="Yes"
+                         messageToggleInactive="No"/>
+      </div>
+
     </div>
 
+    <div class='slds-grid slds-wrap slds-grid_pull-padded'>
 
-<!--    <aura:if isTrue="{!not(v.dealerOrder.Is_Legend_Transfer__c)}">-->
-      <div class='slds-grid slds-wrap slds-grid_pull-padded'>
+        <div class="slds-col slds-large-size_6-of-12 slds-p-horizontal_small">
+          <aura:if isTrue="{!not(v.dealerOrder.Is_Legend_Transfer__c)}">
+            <lightning:select name="payment-method-select"
+                              aura:id="requiredField"
+                              label="Select Payment Method"
+                              class="slds-m-top_large"
+                              required="true"
+                              onchange="{!c.handlePaymentMethodChange}"
+                              messageWhenValueMissing="Payment Method is Required"
+                              value="{!v.dealerOrder.Payment_Method__c}">
+              <option value=""> -- None -- </option>
+              <aura:iteration items="{!v.paymentMethodOptions}" var="method">
+                <option value="{!method}" text="{!method}"></option>
+              </aura:iteration>
+            </lightning:select>
+          </aura:if>
+        </div>
 
         <div class="slds-col slds-large-size_6-of-12 slds-p-horizontal_small">
           <aura:if isTrue="{!equals(v.dealerOrder.Payment_Method__c,'Finance')}">
@@ -110,24 +116,12 @@
           </aura:if>
         </div>
 
-        <div class="slds-col slds-large-size_6-of-12 slds-p-horizontal_small">
-<!--          <label class="slds-form-element_label slds-m-top_large">Is this a Booking Order?</label>-->
-          <lightning:input type="toggle"
-                           name="isBookingOrder"
-                           label="Is this a Booking Order?"
-                           class="centerToggle"
-                           disabled="{!v.lockBookingOrderToggle}"
-                           checked="{!v.dealerOrder.Is_Booking_Order__c}"
-                           messageToggleActive="Yes"
-                           messageToggleInactive="No"/>
-        </div>
+
       </div>
-<!--    </aura:if>-->
 
   </div>
 
   <div class="slds-modal__footer">
-       <!--  <lightning:button label="Cancel" onclick="{!c.toggleForm}" /> -->
     <lightning:button label="Cancel Order"
                       iconName="utility:close"
                       iconPosition="left"

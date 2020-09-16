@@ -7,7 +7,6 @@
       .then(
         $A.getCallback( function( response ) {
           var result = JSON.parse( response );
-          console.log(result);
           component.set('v.boats', result.boats );
           component.set('v.motors', result.motors );
           component.set('v.trailers', result.trailers );
@@ -94,7 +93,7 @@
     var self = this,
         action = component.get('c.deleteOrderGroup');
 
-    self.toggleSpinner(component, true);
+    self.toggleSpinner(component, 'Deleting Line Item');
 
     action.setParams({
       groupId: groupId
@@ -106,7 +105,7 @@
         self.doInit( component )
         .then(
           $A.getCallback( function() {
-            self.toggleSpinner(component, false);
+            self.toggleSpinner(component);
           })
         );
 //        self.removeOrderLine( component, groupId, itemType )
@@ -119,7 +118,7 @@
       else if (component.isValid() && state === "INCOMPLETE") {
       }
       else if (component.isValid() && state === "ERROR") {
-        self.toggleSpinner(component, false);
+        self.toggleSpinner(component);
         var errors = response.getError();
         if (errors) {
             if (errors[0] && errors[0].message) {
@@ -162,7 +161,7 @@
         dealerOrder = component.get('v.dealerOrder'),
         action = component.get('c.submitDealerOrder');
 
-    self.toggleSpinner( component, true );
+    self.toggleSpinner( component, 'Submitting Order' );
     action.setParams({
       dealerOrderId: dealerOrder.Id
     });
@@ -172,7 +171,7 @@
         var state = response.getState();
         if (state === "SUCCESS") {
           resolve();
-          self.toggleSpinner( component, false );
+          self.toggleSpinner( component );
         }
         else if (component.isValid() && state === "INCOMPLETE") {
           reject( 'incomplete' );
@@ -193,13 +192,11 @@
     });
   },
 
-  toggleSpinner: function( component, busy )
+  toggleSpinner: function( component, message )
   {
-    var indicator = component.find('busy-indicator');
-    if( busy )
-      $A.util.removeClass( indicator, 'toggle' );
-    else
-      $A.util.addClass( indicator, 'toggle' );
+    let evt = $A.get('e.c:lgndP_BusyIndicator_Event');
+    evt.setParams({ message: message })
+    .fire();
   }
 
 })

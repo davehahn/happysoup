@@ -19,7 +19,6 @@
     .then(
       $A.getCallback( function() {
         component.find("lgnd_BoatTypeSelector--CMP").resetVars();
-        console.log( `In Community = ${component.get('v.inCommuninty') }`);
         helper.fireChangeEvent( component );
       }),
       $A.getCallback( function(err) {
@@ -38,7 +37,6 @@
     .then(
       $A.getCallback( function() {
          component.set('v.orderGroupId', params.groupId );
-         console.log( `In Community = ${component.get('v.inCommuninty') }`);
         return  helper.initForEdit( component, params.groupId );
       }),
       $A.getCallback( function(err) {
@@ -49,8 +47,6 @@
       // initForEdit SUCCESS
       $A.getCallback( function( resp) {
         result = JSON.parse( resp );
-        console.log( 'init4edit response' );
-        console.log( JSON.parse(JSON.stringify(result)));
         component.set('v.modelYear', result.modelYear);
         if( result.province !== undefined && result.province.length > 0 )
           component.set('v.province', result.province );
@@ -147,98 +143,67 @@
     cancelEvt.fire();
   },
 
-  navNext: function( component, event, helper )
-  {
-    helper.saveDealerOrderLine( component )
-    .then(
-      $A.getCallback( ( response ) => {
-        component.set( 'v.dealerOrder', response );
-        helper.functions.toggleModal( component, 'open' );
-      })
-    )
-    .finally(
-      $A.getCallback( () => {
-        helper.functions.toggleSpinner( component, false );
-      })
-    );
-  },
-
   handleAdd: function( component, event, helper )
   {
+    const modelYear = component.get('v.modelYear');
+
     helper.functions.clearVars( component );
+    component.set('v.modelYear', modelYear );
     component.find("lgnd_BoatTypeSelector--CMP").resetVars();
     helper.fireChangeEvent( component );
     helper.functions.toggleModal( component, 'close');
   },
 
-  handleFinalize: function( component, event, helper )
+  navNext: function(component,event,helper)
   {
-    const inCommunity = component.get('v.inCommuninty');
-    let empApi;
-    if( inCommunity )
-    {
-      empApi = component.find('cometD');
-    }
-    else
-    {
-      empApi = component.find('empApi');
-    }
-//    empApi.onError($A.getCallback(error => {
-//        // Error can be any type of error (subscribe, unsubscribe...)
-//        console.error('EMP API error: ', JSON.stringify(error));
-//    }));
-    empApi.subscribe( '/event/Partner_Program_Event__e', -1, $A.getCallback( eventReceived => {
-      console.log('Received event ', JSON.stringify(eventReceived));
-      helper.partnerProgramSuccess( component, eventReceived );
-    }))
-    .then( subscription => {
-      console.log('Subscription request sent to: ', subscription.channel);
-      console.log( subscription );
-      component.set('v.partnerProgramSubscription', subscription);
-    });
-    helper.applyPartnerProgram( component );
-  },
+    var inOrderView = component.get('v.inOrderView'),
+        nav;
+    helper.saveDealerOrderLine( component )
+    .then(
+      $A.getCallback( function(response) {
+        component.set( 'v.dealerOrder', response );
+        if( inOrderView )
+        {
+          let evt = $A.get('e.c:lgndP_DealerOrderLineEditComplete_Event');
+          evt.setParams({
+            status: 'complete'
+          })
+          .fire();
+        }
+        else
+        {
+          nav = $A.get('e.c:lgndP_DealerOrderNav_Event');
+          nav.setParams({
+            "firedBy" : 1,
+            "navigateTo": 2
+           })
+          .fire();
+        }
+      }),
+      $A.getCallback( function(err) {
+        console.log(err);
+        LightningUtils.errorToast(err);
+      })
+    )
+    .finally( $A.getCallback( function() {
+      if( !inOrderView )
+        helper.functions.toggleSpinner( component, false );
+    }));
 
-//  navNext: function(component,event,helper)
-//  {
-//    var inOrderView = component.get('v.inOrderView'),
-//        nav;
-//    helper.saveDealerOrderLine( component )
-//    .then(
-//      $A.getCallback( function(response) {
-//        component.set( 'v.dealerOrder', response );
-//        //return helper.handlePartnerProgram( component );
-//        if( inOrderView )
-//        {
-//          component.set('v.isEditing', false);
-//        }
-//        else
-//        {
-//          nav = $A.get('e.c:lgndP_DealerOrderNav_Event');
-//          nav.setParams({
-//            "firedBy" : 1,
-//            "navigateTo": 2
-//           })
-//          .fire();
-//        }
-//      }),
-//      $A.getCallback( function(err) {
-//        console.log(err);
-//        LightningUtils.errorToast(err);
-//      })
-//    )
-//    .finally( $A.getCallback( function() {
-//      helper.functions.toggleSpinner( component, false );
-//    }));
-//
-//	},
+	},
 
   navBack : function(component, event, helper)
   {
     var inOrderView = component.get('v.inOrderView'),
         nav;
     if( inOrderView )
-      component.set('v.isEditing', false);
+    {
+      let evt = $A.get('e.c:lgndP_DealerOrderLineEditComplete_Event');
+      evt.setParams({
+        status: 'cancel'
+      })
+      .fire();
+    }
     else
     {
       nav = $A.get('e.c:lgndP_DealerOrderNav_Event');
@@ -282,7 +247,6 @@
       //SelectBoatFunction SUCCESS
       $A.getCallback( function( result ) {
         boat = result;
-        console.log( JSON.parse( JSON.stringify( boat ) ) );
         return helper.handleTrailer( component, boat.standardTrailer_Id );
       }),
       //SelectBoatFunction FAIL

@@ -5,8 +5,8 @@
   <!-- <aura:attribute name="lineItems" type="Object" /> -->
   <aura:attribute name="orderTotal" type="Decimal" />
   <aura:attribute name="currentView" type="String" default="list" />
-  <aura:attribute name="detailsBtnText" type="String" default="More Details" />
-  <aura:attribute name="partnerProgramSubscription" type="Map" />
+<!--  <aura:attribute name="detailsBtnText" type="String" default="More Details" />-->
+<!--  <aura:attribute name="partnerProgramSubscription" type="Map" />-->
 
   <!-- EVENTS -->
   <aura:registerEvent name="navEvent" type="c:lgndP_DealerOrderNav_Event" />
@@ -21,7 +21,6 @@
 
   <!-- METHODS -->
   <aura:method name="doInit" access="public" />
-  <aura:method name="applyPartnerProgramAndInit" access="public" />
 
   <ltng:require scripts="{!join(',', $Resource.Libraries +'/js/LightningApex.js',
                                      $Resource.Libraries +'/js/LightningUtils.js') }" />
@@ -74,6 +73,7 @@
     <aura:if isTrue="{!equals(v.currentView, 'list')}">
       <c:lgndP_DealerOrderLinesList dealerOrder="{!v.dealerOrder}"
                                      inOrderBuilder="true"
+                                     moreDetails="false"
                                      aura:id="dealerOrderLines--Cmp" />
     </aura:if>
 
@@ -99,15 +99,17 @@
                       class="slds-button_success"
                       iconPosition="left"
                       onclick="{!c.addToOrder}" />
-    <lightning:button label="Save Draft"
-                      iconName="utility:process"
-                      iconPosition="left"
-                      onclick="{!c.draft}" />
-    <lightning:button label="Submit"
-                      variant="brand"
-                      iconName="utility:upload"
-                      iconPosition="left"
-                      onclick="{!c.submit}" />
+<!--    <lightning:button label="Save Draft"-->
+<!--                      iconName="utility:process"-->
+<!--                      iconPosition="left"-->
+<!--                      onclick="{!c.draft}" />-->
+<!--    <lightning:button label="Submit"-->
+<!--                      variant="brand"-->
+<!--                      iconName="utility:upload"-->
+<!--                      iconPosition="left"-->
+<!--                      onclick="{!c.submit}" />-->
+    <lightning:button label="Apply Partner Program &amp; Review"
+                      onclick="{!c.applyPartnerProgram}" />
   </div>
 
 </aura:component>

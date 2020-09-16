@@ -4,11 +4,11 @@
 
 <aura:component description="Utility_CometD">
 
+  <aura:attribute name="isConnected" type="Boolean" default="false" />
   <aura:attribute name="sessionId" type="String" />
   <aura:attribute name="cometd" type="Object" />
 
-  <ltng:require scripts="{!join(',', $Resource.Libraries + '/js/cometd.js') }"
-                afterScriptsLoaded="{!c.doInit}"/>
+  <ltng:require scripts="{!join(',', $Resource.Libraries + '/js/cometd.js') }" />
 
   <aura:method name="subscribe" action="{!c.subscribe}">
     <aura:attribute name="channel" type="String" />

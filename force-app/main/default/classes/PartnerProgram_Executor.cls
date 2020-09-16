@@ -28,8 +28,11 @@ public class PartnerProgram_Executor
     public void done( Object incomingObject )
     {
       System.debug( 'Partner Program Executor Complete');
+      PartnerProgram_Service.DealerOrderWrapper wrapper = (PartnerProgram_Service.DealerOrderWrapper)incomingObject;
+      System.debug( wrapper.result );
       Partner_Program_Event__e evt = new Partner_Program_Event__e(
-        Status__c = 'success'
+        Status__c = 'success',
+        DealerOrderId__c = wrapper.dealerOrderId
       );
       EventBus.publish( evt );
     }

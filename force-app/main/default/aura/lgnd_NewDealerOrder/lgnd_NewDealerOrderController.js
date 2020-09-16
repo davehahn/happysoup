@@ -6,13 +6,24 @@
 
 	afterScripts: function(component, event, helper)
   {
-    helper.testCometD( component );
-    var navMap = ['order-details',
-                  'build-boat',
-                  'review-container'];
-    component.set('v.currentAction', 0);
-    component.set('v.navMap', navMap);
-    component.find("orderDetails--Cmp").doInit();
+    helper.setUserData( component )
+    .then(
+      $A.getCallback( (response) => {
+        var navMap = ['order-details',
+                          'build-boat',
+                          'review-container',
+                          'finalize-container'];
+        component.set('v.sessionId', response.sessionId );
+        if( response.uiTheme !== 'Theme3' )
+          component.set('v.inCommunity', false );
+        component.set('v.currentAction', 0);
+        component.set('v.navMap', navMap);
+        component.find("orderDetails--Cmp").doInit();
+      }),
+      $A.getCallback( (err) => {
+        LightningUtils.errorToast( err );
+      })
+    );
   },
 
   handleOrderCancel: function( component, event, helper )
@@ -24,7 +35,7 @@
         helper.navigateHome();
       }),
       $A.getCallback( function( err ) {
-        LightningUtilis.errorToast( err );
+        LightningUtils.errorToast( err );
       })
     );
   },
@@ -69,9 +80,5 @@
     var params = event.getParams(),
         msg = params.message;
     helper.toggleIndicator( component, msg );
-//    if( params.isBusy )
-//      $A.util.removeClass( indicator, 'toggle' );
-//    else
-//      $A.util.addClass( indicator, 'toggle' );
   }
 })
