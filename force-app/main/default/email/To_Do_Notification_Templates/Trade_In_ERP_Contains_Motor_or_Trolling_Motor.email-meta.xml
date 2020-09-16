@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <description>A Trade In ERP contains a motor or trolling motor</description>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>Legend_Letterhead</letterhead>
+    <name>Trade In ERP Contains Motor or Trolling Motor</name>
+    <style>freeForm</style>
+    <subject>This Trade-In ERP Contains a Motor or Trolling Motor</subject>
+    <textOnly>Hello,
+
+Please check motors included on this trade in ERP and ensure the &quot;Motors Registered&quot; is adjusted manually on the serial number.
+
+ERP Order: {!AcctSeedERP__Material__c.AcctSeedERP__Project__c}
+
+URL: {!AcctSeedERP__Material__c.Link}</textOnly>
+    <type>html</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>
