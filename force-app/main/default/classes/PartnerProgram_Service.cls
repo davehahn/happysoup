@@ -145,6 +145,7 @@ public with sharing class PartnerProgram_Service
     public Dealer_Order__c dealerOrder;
     public Date createdDate;
     public Id dealerOrderId;
+    public Boolean isFactoryStore;
     public Boolean isBookingOrder;
     public Boolean isCashOrder;
     public String programYear;
@@ -169,6 +170,7 @@ public with sharing class PartnerProgram_Service
       }
       this.erpWrappers = new List<PartnerProgram_Service.ErpWrapper>();
       this.dealerOrderId = dealerOrder.Id;
+      this.isFactoryStore = dealerOrder.Account__r.Is_Internal__c;
       this.isBookingOrder = dealerOrder.Is_Booking_Order__c;
       this.isCashOrder = dealerOrder.Payment_Method__c == 'Cash';
       this.createdDate = Date.newInstance(
@@ -278,6 +280,7 @@ public with sharing class PartnerProgram_Service
           Is_Booking_Order__c,
           Program_Year__c,
           Account__c,
+          Account__r.Is_Internal__c,
           Payment_Method__c,
           Applied_Partner_Program_Discounts__c
         FROM Dealer_Order__c

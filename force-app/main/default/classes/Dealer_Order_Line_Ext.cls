@@ -208,7 +208,7 @@ public with sharing class Dealer_Order_Line_Ext {
     Set<Id> dealerOrderIds = new Set<Id>();
     for( Dealer_Order_Line__c dol : listNew )
     {
-      if( dol.ERP_Order__c != null )
+      if( dol.ERP_Order__c != null && !dol.Is_For_Factory_Store__c )
       {
         dealerOrderIds.add( dol.Dealer_Order__c );
       }

@@ -9,14 +9,24 @@
   {
     var actionNumber = params.navigateTo,
         prevActionNumber = params.firedBy,
+        isFactoryStore = component.get('v.dealerOrder').Account__r.Is_Internal__c,
         c_name, i_name, c_cmp, i_cmp, prev_i_name, prev_i_cmp, navMap = component.get('v.navMap');
 
+    // If it is a factory store skip the summary and
+    // apply Partner Program step
+    if( actionNumber === 2 && isFactoryStore )
+      actionNumber = 3;
+
     component.set('v.currentAction', actionNumber );
+    i_name = navMap[actionNumber] + '-indicator';
+    i_cmp = component.find( i_name );
 
     for( var i=0; i<navMap.length; i++ )
     {
       c_name = navMap[i];
       c_cmp = component.find( c_name );
+      prev_i_name = navMap[ i ] + '-indicator';
+      prev_i_cmp = component.find( prev_i_name );
 
       if( actionNumber === i )
       {
@@ -24,35 +34,54 @@
         $A.util.addClass( i_cmp,'slds-is-current');
         $A.util.removeClass( i_cmp,'slds-is-incomplete');
       }
-      else
+      else if( actionNumber > i )
       {
         $A.util.addClass( c_cmp, 'toggle' );
+        $A.util.removeClass( i_cmp,'slds-is-incomplete');
+        $A.util.addClass( prev_i_cmp,'slds-is-complete');
+        $A.util.removeClass( prev_i_cmp,'slds-is-current');
+        $A.util.removeClass( prev_i_cmp,'slds-is-incomplete');
+      }
+      else if( actionNumber < i )
+      {
+        $A.util.addClass( c_cmp, 'toggle' );
+        $A.util.removeClass( i_cmp,'slds-is-complete');
+        $A.util.addClass( prev_i_cmp,'slds-is-incomplete');
+        $A.util.removeClass( prev_i_cmp,'slds-is-current');
+        $A.util.removeClass( prev_i_cmp,'slds-is-complete');
       }
 
     }
 
-    i_name = navMap[actionNumber] + '-indicator';
-    i_cmp = component.find( i_name );
-    prev_i_name = navMap[ prevActionNumber ] + '-indicator';
-    prev_i_cmp = component.find( prev_i_name );
-
-    $A.util.addClass( i_cmp,'slds-is-current');
+    //$A.util.addClass( i_cmp,'slds-is-current');
 
     // moving to the next step
-    if( actionNumber > prevActionNumber )
-    {
-      $A.util.removeClass( i_cmp,'slds-is-incomplete');
-      $A.util.addClass( prev_i_cmp,'slds-is-complete');
-      $A.util.removeClass( prev_i_cmp,'slds-is-current');
-    }
-
-    //moving back to previous step
-    if( actionNumber < prevActionNumber )
-    {
-      $A.util.removeClass( i_cmp,'slds-is-complete');
-      $A.util.addClass( prev_i_cmp,'slds-is-incomplete');
-      $A.util.removeClass( prev_i_cmp,'slds-is-current');
-    }
+//    if( actionNumber > prevActionNumber )
+//    {
+//      for( let i = prevActionNumber; i<actionNumber; i++ )
+//      {
+//        prev_i_name = navMap[ i ] + '-indicator';
+//        prev_i_cmp = component.find( prev_i_name );
+//        $A.util.removeClass( i_cmp,'slds-is-incomplete');
+//        $A.util.addClass( prev_i_cmp,'slds-is-complete');
+//        $A.util.removeClass( prev_i_cmp,'slds-is-current');
+//        $A.util.removeClass( prev_i_cmp,'slds-is-incomplete');
+//      }
+//    }
+//
+//    //moving back to previous step
+//    if( actionNumber < prevActionNumber )
+//    {
+//      for( let i = prevActionNumber; i<actionNumber; i-- )
+//      {
+//        prev_i_name = navMap[ i ] + '-indicator';
+//        prev_i_cmp = component.find( prev_i_name );
+//        $A.util.removeClass( i_cmp,'slds-is-complete');
+//        $A.util.addClass( prev_i_cmp,'slds-is-incomplete');
+//        $A.util.removeClass( prev_i_cmp,'slds-is-current');
+//        $A.util.removeClass( prev_i_cmp,'slds-is-complete');
+//      }
+//    }
 
     //initialize Builder coming from Dealer Order Form
     if( actionNumber === 1 && prevActionNumber === 0 )
@@ -64,7 +93,7 @@
       component.find("reviewOrder--Cmp").doInit();
     }
     //if we are going from review to finalize
-    if( actionNumber === 3 && prevActionNumber === 2 )
+    if( actionNumber === 3 && ( prevActionNumber === 2 || prevActionNumber === 1 ) )
     {
       component.find('finalizeOrder-Cmp').doInit();
     }

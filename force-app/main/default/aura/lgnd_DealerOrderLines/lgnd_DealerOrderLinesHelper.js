@@ -81,6 +81,9 @@
     }));
     indicator.toggle();
     component.set('v.applyingPartnerProgram', false);
+    console.log('PARTNER PROGRAM RESULT');
+    console.log( JSON.parse( message.data.payload.Result__c ) );
+    component.set('v.promotionMessage', JSON.parse( message.data.payload.Result__c ) );
     this.returnToLineView( component );
   }
 })

@@ -20,11 +20,24 @@
                                   onclick="{!c.closeSuccess}"/>
             <h1>Congratulations!</h1>
             <h3>Order qualifies for the following discounts under the Partner Program:</h3>
-            <ul>
-              <aura:iteration items="{!v.message.appliedDiscountNames}" var="discount">
-                <li>{!discount}</li>
+            <table>
+              <aura:iteration items="{!v.message.appliedDiscounts}" var="discount">
+                <tr>
+                  <td>
+                    <lightning:formattedNumber value="{!discount.percentage / 100}"
+                                               style="percent" />
+                  </td>
+                  <td>
+                    {!discount.name}
+                  </td>
+                </tr>
               </aura:iteration>
-            </ul>
+            </table>
+<!--            <ul>-->
+<!--              <aura:iteration items="{!v.message.appliedDiscountNames}" var="discount">-->
+<!--                <li>{!discount}</li>-->
+<!--              </aura:iteration>-->
+<!--            </ul>-->
             <h2>
               You saved a total of <lightning:formattedNumber value="{!v.message.totalSavings}"
                                                               style="currency"

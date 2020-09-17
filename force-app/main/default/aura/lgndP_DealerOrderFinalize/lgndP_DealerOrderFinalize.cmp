@@ -5,12 +5,13 @@
 <aura:component description="lgndP_DealerOrderFinalize" controller="DealerOrder_Ext">
 
   <aura:attribute name="dealerOrder" type="Dealer_Order__c" />
-  <aura:attribute name="applyFinished" type="Boolean" default="false" />
+  <aura:attribute name="applyFinished" type="Boolean" default="true" />
   <aura:attribute name="sessionId" type="String" />
   <aura:attribute name="inCommunity" type="Boolean" default="true" />
   <aura:attribute name="partnerProgramSubscription" type="Map" />
   <aura:attribute name="orderTotal" type="Decimal" />
   <aura:attribute name="currentView" type="String" default="list" />
+  <aura:attribute name="promotionMessage" type="Map" default="{}" />
 
   <aura:registerEvent name="navEvent" type="c:lgndP_DealerOrderNav_Event" />
   <aura:registerEvent name="busyIndicatorEvent" type="c:lgndP_BusyIndicator_Event" />
@@ -23,7 +24,7 @@
                 event="c:lgndP_DealerOrderLineViewCancel_Event"
                 action="{!c.handleCancelView}" />
 
-  <aura:method name="doInit" access="public" />
+  <aura:method name="doInit" access="global" />
 
   <lightning:empApi aura:id="empApi" />
   <aura:if isTrue="{! !empty(v.sessionId)}">
@@ -36,6 +37,10 @@
   </aura:if>
 
   <aura:if isTrue="{!v.applyFinished}">
+
+    <!-- +++++ DISCOUNT NOTIFICATION CENTER +++++++ -->
+    <c:lgndp_PartnerProgramNotification message="{!v.promotionMessage}" />
+    <!-- ====== DISCOUNT NOTIFICATION CENTER ======= -->
 
     <div class="slds-grid slds-wrap slds-grid--pull-padded-x-small"
          style="margin-left:0; margin-right:0;">

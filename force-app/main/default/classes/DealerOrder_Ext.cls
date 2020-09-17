@@ -797,7 +797,12 @@ public without sharing class DealerOrder_Ext {
   @AuraEnabled
   public static void applyPartnerProgram( String dealerOrderId )
   {
+    doPartnerApplyFuture( dealerOrderId );
+  }
 
+  @Future
+  public static void doPartnerApplyFuture( String dealerOrderId )
+  {
     PartnerProgram_Service ppService = new PartnerProgram_Service( new Set<Id>{ Id.valueOf(dealerOrderId)} );
     ppService.checkAndApply();
   }

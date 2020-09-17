@@ -98,13 +98,22 @@
   {
     console.log('handle edit complete');
     let status = event.getParam('status');
+    const isFactoryStore = component.get('v.dealerOrder').Account__r.Is_Internal__c;
     if( status === 'cancel' )
     {
       helper.returnToLineView( component );
     }
     if( status === 'complete' )
     {
-      helper.handleApplyPartnerProgram( component )
+      if( isFactoryStore )
+      {
+        component.find('busy-indicator').toggle();
+        helper.returnToLineView( component );
+      }
+      else
+      {
+        helper.handleApplyPartnerProgram( component )
+      }
     }
   }
 })
