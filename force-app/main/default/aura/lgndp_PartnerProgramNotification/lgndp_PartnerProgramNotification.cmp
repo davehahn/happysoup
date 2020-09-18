@@ -20,11 +20,24 @@
                                   onclick="{!c.closeSuccess}"/>
             <h1>Congratulations!</h1>
             <h3>Order qualifies for the following discounts under the Partner Program:</h3>
-            <ul>
-              <aura:iteration items="{!v.message.appliedDiscountNames}" var="discount">
-                <li>{!discount}</li>
+            <table>
+              <aura:iteration items="{!v.message.appliedDiscounts}" var="discount">
+                <tr>
+                  <td>
+                    <lightning:formattedNumber value="{!discount.percentage / 100}"
+                                               style="percent" />
+                  </td>
+                  <td>
+                    {!discount.name}
+                  </td>
+                </tr>
               </aura:iteration>
-            </ul>
+            </table>
+<!--            <ul>-->
+<!--              <aura:iteration items="{!v.message.appliedDiscountNames}" var="discount">-->
+<!--                <li>{!discount}</li>-->
+<!--              </aura:iteration>-->
+<!--            </ul>-->
             <h2>
               You saved a total of <lightning:formattedNumber value="{!v.message.totalSavings}"
                                                               style="currency"
@@ -34,27 +47,6 @@
         </lightning:layoutItem>
       </lightning:layout>
     </aura:if>
-<!--    <aura:if isTrue="{!not(empty(v.message.errors))}">-->
-<!--      <lightning:layout horizontalAlign="center">-->
-<!--        <lightning:layoutItem size="12"-->
-<!--                              largeDeviceSize="4"-->
-<!--                              mediumDeviceSize="6"-->
-<!--                              smallDeviceSize="12">-->
-<!--          <div class="promotion-message slds-theme_alert-texture slds-theme_warning" role="alert">-->
-<!--            <lightning:buttonIcon iconName="utility:close"-->
-<!--                                  size="small"-->
-<!--                                  variant="bare"-->
-<!--                                  onclick="{!c.closeError}" />-->
-<!--            <h2>You can save money!</h2>-->
-<!--            <ul>-->
-<!--              <aura:iteration items="{!v.message.errors}" var="err">-->
-<!--                <li>{!err}</li>-->
-<!--              </aura:iteration>-->
-<!--            </ul>-->
-<!--          </div>-->
-<!--        </lightning:layoutItem>-->
-<!--      </lightning:layout>-->
-<!--    </aura:if>-->
   </aura:if>
 
 </aura:component>

@@ -649,7 +649,9 @@ public without sharing class DealerOrder_Ext {
       currentYear++;
     Map<String, Object> result = new Map<String, Object>();
     result.put('userType', UserInfo.getUserType() );
+    result.put('sessionId', UserInfo.getSessionId() );
     result.put('modelYear', currentYear );
+    result.put('uiTheme', UserInfo.getUiThemeDisplayed() );
     List<Map<String, Object>> options = new List<Map<String,Object>>();
     for( String year : Partner_Program_Settings__c.getOrgDefaults().Available_Model_Years__c.split(',') )
     {
@@ -672,6 +674,12 @@ public without sharing class DealerOrder_Ext {
   public static String getUserType()
   {
     return UserInfo.getUserType();
+  }
+
+  @AuraEnabled
+  public static String getSessionId()
+  {
+    return UserInfo.getSessionId();
   }
 
   @AuraEnabled
@@ -784,6 +792,19 @@ public without sharing class DealerOrder_Ext {
     else
       return JSON.serialize( viewDealerLineItemFromERP( dols ) );
 
+  }
+
+  @AuraEnabled
+  public static void applyPartnerProgram( String dealerOrderId )
+  {
+    doPartnerApplyFuture( dealerOrderId );
+  }
+
+  @Future
+  public static void doPartnerApplyFuture( String dealerOrderId )
+  {
+    PartnerProgram_Service ppService = new PartnerProgram_Service( new Set<Id>{ Id.valueOf(dealerOrderId)} );
+    ppService.checkAndApply();
   }
 
   private static DolViewWrapper viewDealerLineItemFromTransfer( Dealer_Order_Line__c[] dols )
@@ -1894,18 +1915,14 @@ public without sharing class DealerOrder_Ext {
             WHERE Id = :recordId];
   }
 
-  @AuraEnabled
-  public static String applyPartnerProgram( String dealerOrderId )
-  {
-    String retVal;
-    PartnerProgram_Service pp_service = new PartnerProgram_Service(
-      new Set<Id>{ Id.valueOf(dealerOrderId) } );
-//    if(pp_service.checkAndApply() != null && pp_service.checkAndApply().get( dealerOrderId) != null)
-//      retVal = JSON.serialize( pp_service.checkAndApply().get( dealerOrderId) );
-//
-//    return retVal;
-    return JSON.serialize( pp_service.checkAndApply().get( dealerOrderId) );
-  }
+//  @AuraEnabled
+//  public static String applyPartnerProgram( String dealerOrderId )
+//  {
+//    String retVal;
+//    PartnerProgram_Service pp_service = new PartnerProgram_Service(
+//      new Set<Id>{ Id.valueOf(dealerOrderId) } );
+//    return JSON.serialize( pp_service.checkAndApply().get( dealerOrderId) );
+//  }
 
   private static Dealer_Order__c createDealerLineItems( DealerOrderLineWrapper wrapper )
   {
@@ -2114,7 +2131,10 @@ public without sharing class DealerOrder_Ext {
         )
       );
     }
+    Boolean disablePartnerProgram = Dealer_Order_Line_Ext.disablePartnerProgram;
+    Dealer_Order_Line_Ext.disablePartnerProgram = true;
     insert dols;
+    Dealer_Order_Line_Ext.disablePartnerProgram = disablePartnerProgram;
   }
 
   private static Dealer_Order__c updateDealerLineItems( DealerOrderLineWrapper wrapper )
@@ -2338,7 +2358,10 @@ public without sharing class DealerOrder_Ext {
     update erps;
     insert newMaterials;
     delete oldMaterials;
+    Boolean disablePartnerProgram = Dealer_Order_Line_Ext.disablePartnerProgram;
+    Dealer_Order_Line_Ext.disablePartnerProgram = true;
     delete dolsToDelete;
+    Dealer_Order_Line_Ext.disablePartnerProgram = disablePartnerProgram;
 
     if( quantityDiff > 0 )
       insertNewDealerOrderLines( wrapper, quantityDiff, productMap, wrapper.orderGroupId );

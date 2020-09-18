@@ -65,22 +65,9 @@
     return la.fire();
   },
 
-
-  // successHandler: function( component, result )
-  // {
-  //   component.set( 'v.dealerOrder', result);
-  //   var nav = $A.get('e.c:lgndP_DealerOrderNav_Event');
-  //   nav.setParams({"firedBy" : 0,
-  //               "navigateTo": 1 })
-  //   .fire();
-  //   var busy = $A.get('e.c:lgndP_BusyIndicator_Event');
-  //   busy.setParams({isBusy: false})
-  //   .fire();
-  // },
-
-  toggleSpinner: function( isBusy )
+  toggleSpinner: function( isBusy, message )
   {
     var busy = $A.get('e.c:lgndP_BusyIndicator_Event');
-    busy.setParams({isBusy: isBusy}).fire();
+    busy.setParams({isBusy: isBusy, message: message}).fire();
   }
 })

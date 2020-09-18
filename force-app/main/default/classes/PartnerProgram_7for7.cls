@@ -108,13 +108,6 @@ public virtual class PartnerProgram_7for7 extends PartnerProgramItem
         }
       }
     }
-
-    List<Dealer_Order_Line__c> dols = [SELECT Id, Order_Group_Id__c FROM Dealer_Order_Line__c WHERE ERP_Order__c IN :erpIds_withSaving];
-    for( Dealer_Order_Line__c dol : dols )
-    {
-      dol.Order_Group_Id__c = dol.Order_Group_Id__c + '-747';
-    }
-    update dols;
     if(totalSavings <> 0) {
       this.resultMessage.totalSaving = totalSavings;
       this.resultMessage.success = 'This order qualifies for the Legend Boats 7 for 7 Promotion and has been applied. <br /> You saved a total of <b>$' + String.valueOf(totalSavings.setScale(2, RoundingMode.HALF_UP)) + '</b>';
@@ -142,13 +135,6 @@ public virtual class PartnerProgram_7for7 extends PartnerProgramItem
         this.stacks.get(ew.boatId).erpWrappers.add(ew);
       }
     }
-//    if( this.stacks.keySet().size() > 0 )
-//    {
-//      for (BoatStack bs : this.stacks.values()) {
-//        if (bs.toGetPromotionMessage != null)
-//          this.resultMessage.errors.add(bs.toGetPromotionMessage);
-//      }
-//    }
   }
 
   protected override Decimal determineSavingsPercent()

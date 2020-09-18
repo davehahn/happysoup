@@ -29,11 +29,6 @@ public virtual class PartnerProgram_PontoonVol extends PartnerProgramItem
     return this.fieldName;
   }
 
-  public override Decimal getDiscountPercent()
-  {
-    return this.discountPercent;
-  }
-
   public override List<AcctSeedERP__Material__c> apply()
   {
     return this.doStandardApply();
@@ -55,7 +50,7 @@ public virtual class PartnerProgram_PontoonVol extends PartnerProgramItem
         !this.orderWrapper.isBookingOrder &&
         this.orderWrapper.bookingOrder.get( this.fieldName ) != null )
     {
-      return (Decimal) orderWrapper.bookingOrder.get(this.fieldName);
+      return (Decimal) this.orderWrapper.bookingOrder.get(this.fieldName);
     }
     if( count < 4 )
       return 0;

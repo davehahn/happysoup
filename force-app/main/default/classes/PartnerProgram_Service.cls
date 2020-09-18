@@ -11,16 +11,6 @@ public with sharing class PartnerProgram_Service
   public Map<Id, List<AcctSeed__Project__c>> erpsByDealerOrder;
   public Map<Id, Result> result;
 
-  //PartnerProgram_Cash HAS to be last as it has to consider the others
-  private static final List<String> planItemClassNames = new List<String>{
-    'PartnerProgram_Coop',
-    'PartnerProgram_Kickstart_Booking',
-    'PartnerProgram_7for7',
-    'PartnerProgram_Volume',
-    'PartnerProgram_PontoonVol',
-    'PartnerProgram_Cash'
-  };
-
   public class Result
   {
     public List<String> appliedDiscountNames;
@@ -155,28 +145,32 @@ public with sharing class PartnerProgram_Service
     public Dealer_Order__c dealerOrder;
     public Date createdDate;
     public Id dealerOrderId;
+    public Boolean isFactoryStore;
     public Boolean isBookingOrder;
     public Boolean isCashOrder;
     public String programYear;
     public String bookingOrderUniquifier;
     public Partner_Booking_Order__c bookingOrder;
     public PartnerProgram_Service.Result result;
-    public List<String> appliedPrograms;
+    public Set<String> appliedPrograms;
     public List<PartnerProgram_Service.ErpWrapper> erpWrappers;
-    public List<PartnerProgramItem_I> programItems;
 
     public DealerOrderWrapper( Dealer_Order__c dealerOrder,
                                List<AcctSeed__Project__c> erps,
                                Partner_Booking_Order__c bookingOrder )
     {
-      this.appliedPrograms = new List<String>();
+      this.result = new PartnerProgram_Service.Result();
+      this.dealerOrder = dealerOrder;
+      this.appliedPrograms = new Set<String>();
       if( dealerOrder.Applied_Partner_Program_Discounts__c != null )
       {
-        this.appliedPrograms = dealerOrder.Applied_Partner_Program_Discounts__c.split(';');
+        this.appliedPrograms = new Set<String>(
+          dealerOrder.Applied_Partner_Program_Discounts__c.split(';')
+        );
       }
       this.erpWrappers = new List<PartnerProgram_Service.ErpWrapper>();
-      this.programItems = new List<PartnerProgramItem_I>();
       this.dealerOrderId = dealerOrder.Id;
+      this.isFactoryStore = dealerOrder.Account__r.Is_Internal__c;
       this.isBookingOrder = dealerOrder.Is_Booking_Order__c;
       this.isCashOrder = dealerOrder.Payment_Method__c == 'Cash';
       this.createdDate = Date.newInstance(
@@ -200,7 +194,17 @@ public with sharing class PartnerProgram_Service
       }
       if( erps != null )
         wrapERPs( erps );
-      initProgramItems();
+    }
+
+    public void updateDealerOrder()
+    {
+      if( this.appliedPrograms.size() > 0 )
+      {
+        this.dealerOrder.Applied_Partner_Program_Discounts__c = setToMultiSelect(this.appliedPrograms);
+        TriggerHandler.bypass('DealerOrder_TriggerHandler');
+        update this.dealerOrder;
+        TriggerHandler.clearBypass('DealerOrder_TriggerHandler');
+      }
     }
 
     private void wrapERPs( List<AcctSeed__Project__c> erps )
@@ -212,14 +216,17 @@ public with sharing class PartnerProgram_Service
       }
     }
 
-    private void initProgramItems()
+    private String setToMultiSelect( Set<String> names )
     {
-      for( String className : PartnerProgram_Service.planItemClassNames )
+      String result = '';
+      for( String name : names )
       {
-        Type t = Type.forName( className );
-        this.programItems.add( (PartnerProgramItem)t.newInstance() );
+        result += name + ';';
       }
+      result = result.removeEnd(';');
+      return result;
     }
+
   }
 
 
@@ -254,81 +261,14 @@ public with sharing class PartnerProgram_Service
     }
   }
 
-  public Map<Id,Result> checkAndApply()
+  public void checkAndApply()
   {
-    List<AcctSeedERP__Material__c> discounts = new List<AcctSeedERP__Material__c>();
-    List<AcctSeedERP__Material__c> noLongerApplicable = new List<AcctSeedERP__Material__c>();
-    List<Dealer_Order__c> dealerOrders = new List<Dealer_Order__c>();
-    Map<String, Partner_Booking_Order__c> bookingOrders = new Map<String, Partner_Booking_Order__c>();
     for( Id doId : this.dealerOrderIds )
     {
-      Set<String> appliedNames = new Set<String>();
-      DealerOrderWrapper dealerOrderWrapper = this.dealerOrderWrappers.get( doId );
-      for( PartnerProgramItem_I item : dealerOrderWrapper.programItems )
-      {
-        item.init(dealerOrderWrapper);
-        if( item.isApplicable() )
-        {
-          discounts.addAll(item.apply());
-          this.result.get( doId ).addAppliedDiscount(item);
-          appliedNames.add( item.getName() );
-          if( dealerOrderWrapper.bookingOrder != null &&
-              item.getBookingOrderFieldName() != null )
-          {
-            if( !bookingOrders.containsKey( dealerOrderWrapper.bookingOrderUniquifier ) )
-            {
-              bookingOrders.put( dealerOrderWrapper.bookingOrderUniquifier, dealerOrderWrapper.bookingOrder );
-            }
-            bookingOrders.get( dealerOrderWrapper.bookingOrderUniquifier ).put(
-              item.getBookingOrderFieldName(),
-              item.getDiscountPercent()
-            );
-          }
-        }
-        else
-        {
-          if( item.wasAppliedPreviously() )
-          {
-            noLongerApplicable.addAll( item.revert() );
-            if( dealerOrderWrapper.bookingOrder != null &&
-                item.getBookingOrderFieldName() != null )
-            {
-              if( !bookingOrders.containsKey( dealerOrderWrapper.bookingOrderUniquifier ) )
-              {
-                bookingOrders.put( dealerOrderWrapper.bookingOrderUniquifier, dealerOrderWrapper.bookingOrder );
-              }
-              bookingOrders.get( dealerOrderWrapper.bookingOrderUniquifier ).put(
-                item.getBookingOrderFieldName(),
-                null
-              );
-            }
-          }
-          if (item.getResult().errors.size() > 0)
-          {
-            for (String err : item.getResult().errors)
-            {
-              this.result.get(doId).addError(err);
-            }
-          }
-        }
-      }
-      if( appliedNames.size() > 0 )
-      {
-        dealerOrders.add( new Dealer_Order__c(
-          Id = doId,
-          Applied_Partner_Program_Discounts__c = setToMultiSelect( appliedNames )
-        ));
-      }
+      new PartnerProgram_Executor().execute(
+        this.dealerOrderWrappers.get( doId )
+      );
     }
-    if( discounts.size() > 0 )
-      upsert discounts;
-    if( noLongerApplicable.size() > 0 )
-      delete noLongerApplicable;
-    if( dealerOrders.size() > 0 )
-      update dealerOrders;
-    if( bookingOrders.size() > 0 )
-      upsert bookingOrders.values();
-    return this.result;
   }
 
   private void fetchDealerOrders()
@@ -340,6 +280,7 @@ public with sharing class PartnerProgram_Service
           Is_Booking_Order__c,
           Program_Year__c,
           Account__c,
+          Account__r.Is_Internal__c,
           Payment_Method__c,
           Applied_Partner_Program_Discounts__c
         FROM Dealer_Order__c
@@ -403,17 +344,6 @@ public with sharing class PartnerProgram_Service
         this.erpsByDealerOrder.put( erpId2DealerOrderId.get(erp.Id), new List<AcctSeed__Project__c>() );
       this.erpsByDealerOrder.get( erpId2DealerOrderId.get(erp.Id) ).add( erp );
     }
-  }
-
-  private String setToMultiSelect( Set<String> names )
-  {
-    String result = '';
-    for( String name : names )
-    {
-      result += name + ';';
-    }
-    result = result.removeEnd(';');
-    return result;
   }
 
 }

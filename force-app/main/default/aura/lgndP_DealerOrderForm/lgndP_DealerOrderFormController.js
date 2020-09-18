@@ -1,6 +1,7 @@
 ({
 	doInit : function(component, event, helper)
   {
+    helper.toggleSpinner( true, 'Initializing Order' );
     helper.getInitValues( component ).
     then(
       $A.getCallback( function( result ) {
@@ -14,13 +15,6 @@
         component.set('v.accountOptions', result.accountOptions );
         component.set('v.legendAccounts', result.legendAccounts );
         component.set('v.lockBookingOrderToggle', true );
-//        if( result.fromInternal )
-//          component.set('v.lockBookingOrderToggle', false);
-//        if( !result.fromInternal &&
-//            result.dealerOrder.Is_Booking_Order__c )
-//        {
-//          component.set('v.lockBookingOrderToggle', false);
-//        }
       }),
       $A.getCallback( function( err ) {
         try{
@@ -101,6 +95,7 @@
   cancelOrder: function( component, event, helper )
   {
     var cancelEvt = component.getEvent("cancelOrderEvent");
+    event.getSource().set('v.disabled', true);
     cancelEvt.fire();
   }
 })

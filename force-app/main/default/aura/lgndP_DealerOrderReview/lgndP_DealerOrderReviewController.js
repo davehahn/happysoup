@@ -1,9 +1,18 @@
 ({
   doInit: function( component, event, helper )
   {
+    console.log( 'DealerOrderReview.doInit');
     helper.groupItems( component );
     component.find('dealerOrderLines--Cmp').doInit();
   },
+
+//  applyPartnerProgramAndInit: function( component, event, helper )
+//  {
+//    console.log( 'DealerOrderReview.applyPartnerProgramAndInit');
+//
+//    helper.groupItems( component );
+//    component.find('dealerOrderLines--Cmp').doInit();
+//  },
 
   addToOrder : function(component, event, helper)
   {
@@ -19,23 +28,31 @@
     cancelEvt.fire();
   },
 
-  handleDetailsBtn: function( component )
+  applyPartnerProgram: function( component, event, helper )
   {
-    var currentView = component.get('v.currentView');
-    console.log( currentView );
-    if( currentView === 'list' )
-    {
-      component.set('v.currentView', 'details');
-      component.set('v.detailsBtnText', 'Less Details');
-      component.find('dealerOrderLinesDetails--Cmp').doInit();
-    }
-    if( currentView === 'details' )
-    {
-      component.set('v.currentView', 'list');
-      component.set('v.detailsBtnText', 'More Details');
-      component.find('dealerOrderLines--Cmp').doInit();
-    }
+    var nav = $A.get('e.c:lgndP_DealerOrderNav_Event');
+    nav.setParams({"firedBy" : 2,
+                "navigateTo": 3 });
+    nav.fire();
   },
+
+//  handleDetailsBtn: function( component )
+//  {
+//    var currentView = component.get('v.currentView');
+//    console.log( currentView );
+//    if( currentView === 'list' )
+//    {
+//      component.set('v.currentView', 'details');
+//      component.set('v.detailsBtnText', 'Less Details');
+//      component.find('dealerOrderLinesDetails--Cmp').doInit();
+//    }
+//    if( currentView === 'details' )
+//    {
+//      component.set('v.currentView', 'list');
+//      component.set('v.detailsBtnText', 'More Details');
+//      component.find('dealerOrderLines--Cmp').doInit();
+//    }
+//  },
 
   handleTableAction: function( component, event, helper )
   {
@@ -56,21 +73,21 @@
     component.find('dealerOrderLines--Cmp').doInit();
   },
 
-  draft : function(component, event, helper)
-  {
-    helper.navigateHome();
-  },
-
-  submit : function(component, event, helper)
-  {
-    helper.submitOrder( component )
-    .then(
-      $A.getCallback( function() {
-        helper.navigateHome();
-      }),
-      $A.getCallback( function( err ){
-        alert(err);
-      })
-    );
-  }
+//  draft : function(component, event, helper)
+//  {
+//    helper.navigateHome();
+//  },
+//
+//  submit : function(component, event, helper)
+//  {
+//    helper.submitOrder( component )
+//    .then(
+//      $A.getCallback( function() {
+//        helper.navigateHome();
+//      }),
+//      $A.getCallback( function( err ){
+//        alert(err);
+//      })
+//    );
+//  }
 })

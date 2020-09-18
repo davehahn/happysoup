@@ -57,7 +57,8 @@ public without sharing class DealerOrder_TriggerHandler extends TriggerHandler
       if (dOrder.Stage__c != 'Draft')
       {
         dOrder.addError('You can not delete a Dealer Order with stage "' + dOrder.Stage__c + '"');
-      } else
+      }
+      else
       {
         Set<Id> erpIds = new Set<Id>();
         for (Dealer_Order_Line__c dol : [
@@ -76,25 +77,28 @@ public without sharing class DealerOrder_TriggerHandler extends TriggerHandler
   protected override void afterInsert()
   {
     createRequiredPartnerBookingOrders((List<Dealer_Order__c>) Trigger.new);
-    setErpStage(
-      (Map<Id, Dealer_Order__c>) Trigger.oldMap,
-      (Map<Id, Dealer_Order__c>) Trigger.newMap
-    );
   }
 
   protected override void afterUpdate()
   {
-    if (!disableStagePropagation)
+    Map<Id, Dealer_Order__c> oldMap = (Map<Id, Dealer_Order__c>)Trigger.oldMap;
+    Map<Id, Dealer_Order__c> stageChangeMap = new Map<Id, Dealer_Order__c>();
+    Map<Id, Id> ownerChanged = new Map<Id, Id>();
+    for( Dealer_Order__c newOrder : (List<Dealer_Order__c>)Trigger.new )
     {
-      setErpStage(
-        (Map<Id, Dealer_Order__c>) Trigger.oldMap,
-        (Map<Id, Dealer_Order__c>) Trigger.newMap
-      );
+      Dealer_Order__c oldOrder = oldMap.get( newOrder.Id );
+      if (!disableStagePropagation)
+      {
+        if( oldOrder.Stage__c != newOrder.Stage__c )
+          stageChangeMap.put( newOrder.Id, newOrder );
+      }
+      if( oldOrder.OwnerId != newOrder.OwnerId )
+      {
+        ownerChanged.put( newOrder.Id, newOrder.OwnerId );
+      }
     }
-    propagateOwner(
-      (Map<Id, Dealer_Order__c>) Trigger.oldMap,
-      (Map<Id, Dealer_Order__c>) Trigger.newMap
-    );
+    propagateOwner( ownerChanged );
+    setErpStage( stageChangeMap );
   }
 
 //  protected override void afterDelete()
@@ -112,57 +116,46 @@ public without sharing class DealerOrder_TriggerHandler extends TriggerHandler
 //    system.debug('[DealerOrder_TriggerHandler] final actions');
 //  }
 
-  private static void propagateOwner( Map<Id, Dealer_Order__c> oldMap,
-                                      Map<Id, Dealer_Order__c> newMap )
+  private static void propagateOwner( Map<Id, Id> ownerChanged )
   {
-    Map<Id, Id> ownerChanged = new Map<Id, Id>();
-    for (Dealer_Order__c d : newMap.Values())
+    if( ownerChanged.size() == 0 ) return;
+
+    Map<Id, Id> erpDOrderMap = new Map<Id, Id>();
+    for (Dealer_Order_Line__c dol : [
+      SELECT ERP_Order__c, Dealer_Order__c
+      FROM Dealer_Order_Line__c
+      WHERE Dealer_Order__c IN :ownerChanged.keySet()
+    ])
     {
-      Dealer_Order__c od = oldMap.get(d.Id);
-      if (d.OwnerId != od.OwnerId)
+      erpDOrderMap.put(dol.ERP_Order__c, dol.Dealer_Order__c);
+    }
+    AcctSeed__Project__c[] erps = [
+      SELECT Id, (
+        SELECT Id
+        FROM AcctSeedERP__Project_Materials__r
+      )
+      FROM AcctSeed__Project__c
+      WHERE Id IN :erpDOrderMap.keySet()
+    ];
+    AcctSeedERP__Material__c[] updateMats = new List<AcctSeedERP__Material__c>();
+    for (AcctSeed__Project__c erp : erps)
+    {
+      Id doId = erpDOrderMap.get(erp.Id);
+      erp.OwnerId = ownerChanged.get(doId);
+      for (AcctSeedERP__Material__c m : erp.AcctSeedERP__Project_Materials__r)
       {
-        ownerChanged.put(d.Id, d.OwnerId);
+        m.OwnerId = ownerChanged.get(doId);
+        updateMats.add(m);
       }
     }
-    if (ownerChanged.size() > 0)
-    {
-      Map<Id, Id> erpDOrderMap = new Map<Id, Id>();
-      for (Dealer_Order_Line__c dol : [
-        SELECT ERP_Order__c, Dealer_Order__c
-        FROM Dealer_Order_Line__c
-        WHERE Dealer_Order__c IN :ownerChanged.keySet()
-      ])
-      {
-        erpDOrderMap.put(dol.ERP_Order__c, dol.Dealer_Order__c);
-      }
-      AcctSeed__Project__c[] erps = [
-        SELECT Id, (
-          SELECT Id
-          FROM AcctSeedERP__Project_Materials__r
-        )
-        FROM AcctSeed__Project__c
-        WHERE Id IN :erpDOrderMap.keySet()
-      ];
-      AcctSeedERP__Material__c[] updateMats = new List<AcctSeedERP__Material__c>();
-      for (AcctSeed__Project__c erp : erps)
-      {
-        Id doId = erpDOrderMap.get(erp.Id);
-        erp.OwnerId = ownerChanged.get(doId);
-        for (AcctSeedERP__Material__c m : erp.AcctSeedERP__Project_Materials__r)
-        {
-          m.OwnerId = ownerChanged.get(doId);
-          updateMats.add(m);
-        }
-      }
-      Boolean origProgTrig = gcProject.disableTrigger;
-      Boolean origMatTrig = gcMaterial.disableTrigger;
-      gcProject.disableTrigger = true;
-      gcMaterial.disableTrigger = true;
-      update erps;
-      update updateMats;
-      gcProject.disableTrigger = origProgTrig;
-      gcMaterial.disableTrigger = origMatTrig;
-    }
+    Boolean origProgTrig = gcProject.disableTrigger;
+    Boolean origMatTrig = gcMaterial.disableTrigger;
+    gcProject.disableTrigger = true;
+    gcMaterial.disableTrigger = true;
+    update erps;
+    update updateMats;
+    gcProject.disableTrigger = origProgTrig;
+    gcMaterial.disableTrigger = origMatTrig;
   }
 
   private static void createRequiredPartnerBookingOrders( List<Dealer_Order__c> listNew )
@@ -183,9 +176,9 @@ public without sharing class DealerOrder_TriggerHandler extends TriggerHandler
       insert orders;
   }
 
-  private static void setErpStage( Map<Id, Dealer_Order__c> oldMap,
-    Map<Id, Dealer_Order__c> newMap )
+  private static void setErpStage( Map<Id, Dealer_Order__c> newMap )
   {
+    if( newMap.size() == 0 ) return;
     //Stages that are greater than (passed) Plan Load
     Set<String> highStages = new Set<String>{
       //'Tagging Pending',
