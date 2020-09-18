@@ -16,24 +16,18 @@
   <aura:handler name="deleteEvent"
                 event="c:lgndP_DealerOrderLinesTable_Delete_Event"
                 action="{!c.handleDelete}" />
+  <aura:registerEvent name="busyIndicatorEvent" type="c:lgndP_BusyIndicator_Event" />
   <!-- METHODS -->
   <aura:method name="doInit" access="public" />
 
   <c:lgnd_Confirm aura:id="lgnd-confirm"/>
 
-  <div class="slds-spinner_container toggle" aura:id="busy-indicator">
-    <div role="status" class="slds-spinner slds-spinner--medium">
-      <span class="slds-assistive-text">Loading</span>
-      <div class="slds-spinner__dot-a"></div>
-      <div class="slds-spinner__dot-b"></div>
-    </div>
-  </div>
-
-
   <div class="slds-clearfix slds-m-bottom_medium">
     <lightning:buttonGroup class="slds-float_right slds-m-right_medium">
-      <lightning:button label="{!if( v.moreDetails, 'Less Details', 'More Details' ) }"
-                      onclick="{! c.detailToggle }" />
+      <aura:if isTrue="{! not(v.inOrderBuilder)}">
+        <lightning:button label="{!if( v.moreDetails, 'Less Details', 'More Details' ) }"
+                          onclick="{! c.detailToggle }" />
+      </aura:if>
       <aura:if isTrue="{!and(v.isEditable, !v.inOrderBuilder)}">
         <lightning:button label="Add"
                           onclick="{! c.handleAdd }" />
@@ -45,21 +39,20 @@
     </lightning:buttonGroup>
   </div>
 
-
-  <aura:if isTrue="{!not(v.moreDetails)}">
+  <div class="{! if( v.moreDetails, 'toggle', '')}">
     <c:lgndP_DealerOrderLinesTable boats="{!v.boats}"
                                    motors="{!v.motors}"
                                    trailers="{!v.trailers}"
                                    trollingMotors="{!v.trollingMotors}"
                                    isEditable="{!v.isEditable}" />
-  </aura:if>
+  </div>
 
-  <aura:if isTrue="{!v.moreDetails}">
+  <div class="{! if( v.moreDetails, '', 'toggle')}">
     <c:lgndP_DealerOrderLinesTable_More boats="{!v.boats}"
                                         motors="{!v.motors}"
                                         trailers="{!v.trailers}"
                                         trollingMotors="{!v.trollingMotors}"
                                         isEditable="{!v.isEditable}" />
-  </aura:if>
+  </div>
 
 </aura:component>

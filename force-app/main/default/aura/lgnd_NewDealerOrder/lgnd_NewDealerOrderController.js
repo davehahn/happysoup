@@ -1,32 +1,41 @@
 ({
   doInit: function( component, event, helper )
   {
-    //hide all but statrting "order details form"
-//    $A.util.addClass( component.find('build-boat'), 'toggle');
-//    $A.util.addClass( component.find('review-container'), 'toggle');
+
   },
 
 	afterScripts: function(component, event, helper)
   {
-    var navMap = ['order-details',
-                  'build-boat',
-                  'review-container'];
-    component.set('v.currentAction', 0);
-    component.set('v.navMap', navMap);
-    component.find("orderDetails--Cmp").doInit();
+    helper.setUserData( component )
+    .then(
+      $A.getCallback( (response) => {
+        var navMap = ['order-details',
+                          'build-boat',
+                          'review-container',
+                          'finalize-container'];
+        component.set('v.sessionId', response.sessionId );
+        if( response.uiTheme !== 'Theme3' )
+          component.set('v.inCommunity', false );
+        component.set('v.currentAction', 0);
+        component.set('v.navMap', navMap);
+        component.find("orderDetails--Cmp").doInit();
+      }),
+      $A.getCallback( (err) => {
+        LightningUtils.errorToast( err );
+      })
+    );
   },
 
   handleOrderCancel: function( component, event, helper )
   {
-    var indicator = component.find('busy-indicator');
-    $A.util.removeClass( indicator, 'toggle' );
+    helper.toggleIndicator( component, 'Cancelling Order')
     helper.cancelOrder( component )
     .then(
       $A.getCallback( function() {
         helper.navigateHome();
       }),
       $A.getCallback( function( err ) {
-        LightningUtilis.errorToast( err );
+        LightningUtils.errorToast( err );
       })
     );
   },
@@ -69,10 +78,7 @@
   handleIndicator: function( component, event, helper )
   {
     var params = event.getParams(),
-        indicator = component.find('busy-indicator');
-    if( params.isBusy )
-      $A.util.removeClass( indicator, 'toggle' );
-    else
-      $A.util.addClass( indicator, 'toggle' );
+        msg = params.message;
+    helper.toggleIndicator( component, msg );
   }
 })

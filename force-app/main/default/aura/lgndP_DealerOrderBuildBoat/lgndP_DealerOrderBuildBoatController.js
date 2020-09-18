@@ -47,8 +47,6 @@
       // initForEdit SUCCESS
       $A.getCallback( function( resp) {
         result = JSON.parse( resp );
-        console.log( 'init4edit response' );
-        console.log( JSON.parse(JSON.stringify(result)));
         component.set('v.modelYear', result.modelYear);
         if( result.province !== undefined && result.province.length > 0 )
           component.set('v.province', result.province );
@@ -142,42 +140,35 @@
   cancelOrder: function( component, event, helper )
   {
     var cancelEvt = component.getEvent("cancelOrderEvent");
-    component.set('v.busyMessage', 'Cancelling Order');
     cancelEvt.fire();
+  },
+
+  handleAdd: function( component, event, helper )
+  {
+    const modelYear = component.get('v.modelYear');
+
+    helper.functions.clearVars( component );
+    component.set('v.modelYear', modelYear );
+    component.find("lgnd_BoatTypeSelector--CMP").resetVars();
+    helper.fireChangeEvent( component );
+    helper.functions.toggleModal( component, 'close');
   },
 
   navNext: function(component,event,helper)
   {
     var inOrderView = component.get('v.inOrderView'),
         nav;
-    helper.functions.toggleSpinner( component, true );
     helper.saveDealerOrderLine( component )
     .then(
       $A.getCallback( function(response) {
         component.set( 'v.dealerOrder', response );
-        return helper.handlePartnerProgram( component );
-      }),
-      $A.getCallback( function(err) {
-        console.log(err);
-        LightningUtils.errorToast(err);
-      })
-    )
-//    .then(
-//      $A.getCallback( function( result ) {
-//        return helper.applyPromotions( component, result )
-//      }),
-//      $A.getCallback( function( err ) {
-//        console.log( err );
-//        LightningUtils.errorToast( err );
-//      })
-//    )
-    .then(
-      $A.getCallback( function( result ) {
-        component.set( 'v.promotionMessage', result );
-        component.set('v.busyMessage', '');
         if( inOrderView )
         {
-          component.set('v.isEditing', false);
+          let evt = $A.get('e.c:lgndP_DealerOrderLineEditComplete_Event');
+          evt.setParams({
+            status: 'complete'
+          })
+          .fire();
         }
         else
         {
@@ -189,14 +180,14 @@
           .fire();
         }
       }),
-      $A.getCallback( function( err ) {
-        console.log( 'apply promotion error' );
-        console.log( err );
-        LightningUtils.errorToast( err );
+      $A.getCallback( function(err) {
+        console.log(err);
+        LightningUtils.errorToast(err);
       })
     )
     .finally( $A.getCallback( function() {
-      helper.functions.toggleSpinner( component, false );
+      if( !inOrderView )
+        helper.functions.toggleSpinner( component, false );
     }));
 
 	},
@@ -206,7 +197,13 @@
     var inOrderView = component.get('v.inOrderView'),
         nav;
     if( inOrderView )
-      component.set('v.isEditing', false);
+    {
+      let evt = $A.get('e.c:lgndP_DealerOrderLineEditComplete_Event');
+      evt.setParams({
+        status: 'cancel'
+      })
+      .fire();
+    }
     else
     {
       nav = $A.get('e.c:lgndP_DealerOrderNav_Event');
@@ -250,7 +247,6 @@
       //SelectBoatFunction SUCCESS
       $A.getCallback( function( result ) {
         boat = result;
-        console.log( JSON.parse( JSON.stringify( boat ) ) );
         return helper.handleTrailer( component, boat.standardTrailer_Id );
       }),
       //SelectBoatFunction FAIL

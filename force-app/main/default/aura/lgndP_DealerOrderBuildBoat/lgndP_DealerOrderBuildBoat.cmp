@@ -4,6 +4,8 @@
   <!-- Attributes -->
   <aura:attribute name="dealerOrder" type="Dealer_Order__c" />
   <aura:attribute name="userType" type="String" />
+  <aura:attribute name="sessionId" type="String" />
+  <aura:attribute name="inCommuninty" type="Boolean" default="true" />
   <!-- <aura:attribute name="pricebookId" type="String" /> -->
   <aura:attribute name="isFactoryStore" type="Boolean" default="false" />
 <!--  <aura:attribute name="availableDiscounts" type="Array" default="[]" />-->
@@ -19,7 +21,6 @@
   <aura:attribute name="productSelected" type="Boolean" />
   <aura:attribute name="orderGroupId" type="String" />
   <aura:attribute name="inOrderView" type="Boolean" default="false" />
-  <aura:attribute name="isEditing" type="Boolean" default="false" />
   <aura:attribute name="isMotorRequest" type="boolean" default="false" />
 
   <aura:attribute name="modelYearOptions" type="Array" />
@@ -56,10 +57,10 @@
 
   <aura:attribute name="toastContent" type="Object" />
   <aura:attribute name="promotionMessage" type="Map" />
-  <aura:attribute name="busyMessage" type="String" />
 
 <!--  <aura:attribute name="optionFamilies" type="Array" />-->
   <aura:attribute name="optionalProducts" type="Array" />
+  <aura:attribute name="partnerProgramSubscription" type="Map" />
 
   <!-- Events -->
   <aura:handler event="c:lgnd_BoatConfig_optionChanged_Event"
@@ -71,7 +72,7 @@
   <aura:registerEvent name="busyIndicatorEvent" type="c:lgndP_BusyIndicator_Event" />
   <aura:registerEvent name="configChanged" type="c:lgnd_BoatConfig_configChange_Event" />
   <aura:registerEvent name="cancelOrderEvent" type="c:lgndP_DealerOrderCancelled_Event" />
-
+  <aura:registerEvent name="editComplete" type="c:lgndP_DealerOrderLineEditComplete_Event" />
   <ltng:require scripts="{!join(',', $Resource.Libraries + '/js/LightningApex.js',
                                      $Resource.Libraries + '/js/LightningUtils.js') }" />
 
@@ -82,9 +83,7 @@
     <aura:attribute name="groupId" type="String" default="" />
   </aura:method>
 
-  <!-- <aura:handler name="change" value="{!v.selectedBoat_Id}" action="{!c.selectBoat}" /> -->
-  <!-- <aura:handler name="change" value="{!v.selectedTrailer_Id}" action="{!c.selectTrailer}" /> -->
-   <c:toast content="{!v.toastContent}" isThemeReverse="false" containerId="toast" isToast="true"/>
+  <c:toast content="{!v.toastContent}" isThemeReverse="false" containerId="toast" isToast="true"/>
 
   <div class="slds-grid slds-wrap slds-grid--pull-padded-x-small" style="margin-left:0; margin-right:0;">
 

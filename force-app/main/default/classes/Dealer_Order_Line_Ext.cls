@@ -10,6 +10,14 @@ public with sharing class Dealer_Order_Line_Ext {
     set;
   }
 
+  public static Boolean disablePartnerProgram {
+    get{
+      if(disablePartnerProgram == null) return false;
+      else return disablePartnerProgram;
+    }
+    set;
+  }
+
   public final Dealer_Order_Line__c dealerOrderLine { get; private set; }
   public final BoatBuilder boatBuilder { get; private set; }
 
@@ -135,11 +143,12 @@ public with sharing class Dealer_Order_Line_Ext {
     /* &&&&&&&   AFTER   &&&&&&& */
       if( boolIsInsert )
       {
-
+        handlePartnerProgram( listNew );
       }
       if( boolIsUpdate )
       {
         System.debug( 'Dealer Order Line after update');
+        handlePartnerProgram( listNew );
         Set<Id> toSendtoMercuryId = new Set<Id>();
         for( Dealer_Order_Line__c dol : listNew )
         {
@@ -162,6 +171,7 @@ public with sharing class Dealer_Order_Line_Ext {
         Set<Id> transferIds = new Set<Id>();
         Set<Id> motorRequestIds = new Set<Id>();
         Set<Id> dealerOrderIds = new Set<Id>();
+
         for( Dealer_Order_Line__c dol : oldMap.values() )
         {
           if( dol.ERP_Order__c != null )
@@ -176,16 +186,44 @@ public with sharing class Dealer_Order_Line_Ext {
         }
         if( erpIds.size() > 0 )
         {
+          TriggerHandler.bypass('DealerOrder_TriggerHandler');
           deleteErps(erpIds);
-          PartnerProgram_Service ppService = new PartnerProgram_Service( dealerOrderIds );
-          ppService.checkAndApply();
+          TriggerHandler.clearBypass('DealerOrder_TriggerHandler');
+//          PartnerProgram_Service ppService = new PartnerProgram_Service( dealerOrderIds );
+//          ppService.checkAndApply();
         }
         if( transferIds.size() > 0 )
           deleteLegendTransferRequests( transferIds );
         if( motorRequestIds.size() > 0 )
           deleteDealerMotorRequests( motorRequestIds );
+        handlePartnerProgram( oldMap.values() );
       }
     }
+  }
+
+  private static void handlePartnerProgram( List<Dealer_Order_Line__c> listNew )
+  {
+    if( disablePartnerProgram ) return;
+
+    Set<Id> dealerOrderIds = new Set<Id>();
+    for( Dealer_Order_Line__c dol : listNew )
+    {
+      if( dol.ERP_Order__c != null && !dol.Is_For_Factory_Store__c )
+      {
+        dealerOrderIds.add( dol.Dealer_Order__c );
+      }
+    }
+    applyPartnerProgram( dealerOrderIds );
+  }
+
+  @Future
+  public static void applyPartnerProgram( Set<Id> dealerOrderIds )
+  {
+    Map<Id, Dealer_Order__c> dealerOrders = new Map<Id, Dealer_Order__c>(
+      [SELECT Id FROM Dealer_Order__c WHERE Id IN :dealerOrderIds AND Is_Booking_Order__c = true]
+    );
+    PartnerProgram_Service ppService = new PartnerProgram_Service( dealerOrders.keySet() );
+    ppService.checkAndApply();
   }
 
   public class DealerOrderLine_SetSerial_Queue implements Queueable {

@@ -1,7 +1,17 @@
 ({
   doInit: function( component, event, helper )
   {
-    helper.doInit( component );
+    console.log('DOlines List init');
+    helper.toggleSpinner( component, 'Retrieving Order Details');
+    helper.doInit( component )
+    .then(
+      $A.getCallback( () => {}),
+      $A.getCallback( () => {})
+    )
+    .finally( $A.getCallback( () => {
+      console.log('DOlines List done');
+      helper.toggleSpinner( component );
+    }));
   },
 
   detailToggle: function( component, event, helper )
