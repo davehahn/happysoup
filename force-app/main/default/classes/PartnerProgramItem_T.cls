@@ -66,6 +66,7 @@ private class PartnerProgramItem_T
         Is_Booking_Order__c,
         Program_Year__c,
         Account__c,
+        Account__r.Is_Internal__c,
         Payment_Method__c,
         Applied_Partner_Program_Discounts__c
       FROM Dealer_Order__c
