@@ -6,6 +6,9 @@ public class PartnerProgram_Executor
 {
   public class PartnerProgram_Exception Extends Exception{}
 
+  @TestVisible
+  private static List<SObject> events = new List<SObject>();
+
   public void execute( PartnerProgram_Service.DealerOrderWrapper wrapper)
   {
     if( wrapper.isFactoryStore )
@@ -29,6 +32,61 @@ public class PartnerProgram_Executor
     }
   }
 
+  /** TEST METHODS **/
+  @TestVisible
+  private void Test_Cash(PartnerProgram_Service.DealerOrderWrapper wrapper )
+  {
+    new Promise(new PartnerProgram_Cash())
+      .error(new PartnerProgram_ErrorHandler())
+      .done(new PartnerProgram_DoneHandler())
+      .execute(wrapper);
+  }
+
+  @TestVisible
+  private void Test_Coop(PartnerProgram_Service.DealerOrderWrapper wrapper )
+  {
+    new Promise(new PartnerProgram_Coop())
+      .error(new PartnerProgram_ErrorHandler())
+      .done(new PartnerProgram_DoneHandler())
+      .execute(wrapper);
+  }
+
+  @TestVisible
+  private void Test_KickStart(PartnerProgram_Service.DealerOrderWrapper wrapper )
+  {
+    new Promise(new PartnerProgram_Kickstart_Booking())
+      .error(new PartnerProgram_ErrorHandler())
+      .done(new PartnerProgram_DoneHandler())
+      .execute(wrapper);
+  }
+
+  @TestVisible
+  private void Test_Volume(PartnerProgram_Service.DealerOrderWrapper wrapper )
+  {
+    new Promise(new PartnerProgram_Volume())
+      .error(new PartnerProgram_ErrorHandler())
+      .done(new PartnerProgram_DoneHandler())
+      .execute(wrapper);
+  }
+
+  @TestVisible
+  private void Test_PontoonVolume(PartnerProgram_Service.DealerOrderWrapper wrapper )
+  {
+    new Promise(new PartnerProgram_PontoonVol())
+      .error(new PartnerProgram_ErrorHandler())
+      .done(new PartnerProgram_DoneHandler())
+      .execute(wrapper);
+  }
+
+  @TestVisible
+  private void Test_7for7(PartnerProgram_Service.DealerOrderWrapper wrapper )
+  {
+    new Promise(new PartnerProgram_7for7())
+      .error(new PartnerProgram_ErrorHandler())
+      .done(new PartnerProgram_DoneHandler())
+      .execute(wrapper);
+  }
+
   public static void publishEvent( PartnerProgram_Service.DealerOrderWrapper wrapper,
                                    String status )
   {
@@ -37,6 +95,7 @@ public class PartnerProgram_Executor
       DealerOrderId__c = wrapper.dealerOrderId,
       Result__c = JSON.serialize( wrapper.result )
     );
+    PartnerProgram_Executor.events.add( evt );
     EventBus.publish( evt );
   }
 
