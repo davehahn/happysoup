@@ -213,14 +213,14 @@ public without sharing class DealerOrder_TriggerHandler extends TriggerHandler
           );
           erps.add( erp );
         }
-        if( dol.Legend_Transfer_Request__c != null )
-        {
-          transfers.add( new Legend_Transfer_Request__c(
-            Id = dol.Legend_Transfer_Request__c,
-            Stage__c = 'Draft'
-          )
-          );
-        }
+//        if( dol.Legend_Transfer_Request__c != null )
+//        {
+//          transfers.add( new Legend_Transfer_Request__c(
+//            Id = dol.Legend_Transfer_Request__c,
+//            Stage__c = 'Draft'
+//          )
+//          );
+//        }
       }
       /*
         "Pending Review"
@@ -235,14 +235,14 @@ public without sharing class DealerOrder_TriggerHandler extends TriggerHandler
           );
           erps.add( erp );
         }
-        if( dol.Legend_Transfer_Request__c != null )
-        {
-          transfers.add( new Legend_Transfer_Request__c(
-            Id = dol.Legend_Transfer_Request__c,
-            Stage__c = 'Plan Load'
-          )
-          );
-        }
+//        if( dol.Legend_Transfer_Request__c != null )
+//        {
+//          transfers.add( new Legend_Transfer_Request__c(
+//            Id = dol.Legend_Transfer_Request__c,
+//            Stage__c = 'Plan Load'
+//          )
+//          );
+//        }
       }
       /*
        "Pending Financing"
@@ -325,7 +325,8 @@ public without sharing class DealerOrder_TriggerHandler extends TriggerHandler
       mail.setSaveAsActivity(true);
       msgList.add(mail);
     }
-    Messaging.sendEmail(msgList);
+    if( !Test.isRunningTest() )
+      Messaging.sendEmail(msgList);
     TriggerHandler.bypass('DealerOrder_TriggerHandler');
     update dealerOrders;
     TriggerHandler.clearBypass('DealerOrder_TriggerHandler');
