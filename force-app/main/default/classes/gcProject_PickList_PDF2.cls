@@ -19,6 +19,8 @@ public with sharing class gcProject_PickList_PDF2 {
 		public String qtySpecified {get; set;}
 		public String qtyAvailable {get; set;}
 		public String qtyAllocated {get; set;}
+		public String qtyFilled {get; set;}
+		public String qtyNeeded {get; set;}
 		public String projectTaskName {get; set;}
 		public Boolean done {get; set;}
 
@@ -155,7 +157,8 @@ public with sharing class gcProject_PickList_PDF2 {
         												 OwnerId, 
         												 Product_Name__c, 
         												 Product_Record_Type__c, 
-        												 Quantity_Allocated_Non_Inventory__c, 
+        												 Quantity_Allocated_Non_Inventory__c,
+														 Actual_Quantity_Filled__c,
         												 Quantity_Specified_Override__c, 
         												 Return_Parent__c, 
         												 Taxable_Retail__c 
@@ -184,6 +187,7 @@ public with sharing class gcProject_PickList_PDF2 {
 	        	mw.qtySpecified = m.get('qtySpecified') == null ? '0' : m.get('qtySpecified');
 	        	mw.qtyAvailable = String.valueOf( movementMap.get( m.get('idProduct') ) );
 	        	mw.qtyAllocated = m.get('qtyAllocated') == null ? '0' : m.get('qtyAllocated');
+				mw.qtyNeeded = m.get('qtyCanBeMoved') == null ? '0' : m.get('qtyCanBeMoved');
 
 	        	if (mw.qtySpecified == mw.qtyAllocated) {
 	        		mw.done = True;
