@@ -290,6 +290,7 @@ public without sharing class DealerOrder_TriggerHandler extends TriggerHandler
       sendMercuryMotorOrderEmail( dealerOrdeIds_WithMotorTransferRequests );
   }
 
+  @Future
   private static void sendMercuryMotorOrderEmail( Set<Id> dealerOrderIds )
   {
 
