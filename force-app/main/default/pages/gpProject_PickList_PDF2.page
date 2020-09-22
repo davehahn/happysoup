@@ -266,18 +266,22 @@
                     </tr>
                 </table>
             </td>
-            <td width="5%">
-                <span  class="headerLabel">Get</span>
-            </td>
+<!--            <td width="5%">-->
+<!--                <span  class="headerLabel">Get</span>-->
+<!--            </td>-->
             <td width="5%">
                 <span  class="headerLabel">Inv.</span>
             </td>   
+<!--            <td width="5%">-->
+<!--                <span  class="headerLabel">Got</span>-->
+<!--            </td> -->
             <td width="5%">
-                <span  class="headerLabel">Got</span>
-            </td>           
+                <span  class="headerLabel">Need</span>
+            </td>
         </tr>
 
         <apex:repeat value="{!materials}" var="matl">
+            <apex:outputText rendered="{!VALUE(matl['qtyNeeded']) != 0}">
             <tr style="page-break-inside:avoid;">
                 <td>
                     <apex:form >
@@ -306,22 +310,28 @@
                         </apex:repeat>
                     </table>
                 </td>
-                <td class="alignCentre">
-                    <apex:outputText value="{0, number,###,##0}">
-                        <apex:param value="{!VALUE(matl['qtySpecified'])}"/>
-                    </apex:outputText>
-                </td>
+<!--                <td class="alignCentre">-->
+<!--                    <apex:outputText value="{0, number,###,##0}">-->
+<!--                        <apex:param value="{!VALUE(matl['qtySpecified'])}"/>-->
+<!--                    </apex:outputText>-->
+<!--                </td>-->
                 <td class="alignCentre">
                     <apex:outputText value="{0, number,###,##0}">
                         <apex:param value="{!VALUE(matl['qtyAvailable'])}"/>
                     </apex:outputText>
                 </td>
+<!--                <td class="alignCentre">-->
+<!--                    <apex:outputText value="{0, number,###,##0}">-->
+<!--                        <apex:param value="{!VALUE(matl['qtyAllocated'])}"/>-->
+<!--                    </apex:outputText>-->
+<!--                </td>-->
                 <td class="alignCentre">
                     <apex:outputText value="{0, number,###,##0}">
-                        <apex:param value="{!VALUE(matl['qtyAllocated'])}"/>
+                        <apex:param value="{!VALUE(matl['qtyNeeded'])}"/>
                     </apex:outputText>
                 </td>
-            </tr>    
+            </tr>
+            </apex:outputText>
         </apex:repeat>
 
     </table>

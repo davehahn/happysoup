@@ -1155,6 +1155,8 @@ global without sharing class gcPurchaseOrder_Ext {
 		AcctSeed__Account_Payable__c ap = new AcctSeed__Account_Payable__c(
 												AcctSeed__Vendor__c = po.AcctSeedERP__Vendor__c,
 												AcctSeed__Date__c = date.Today(),
+												Approval_Date__c = date.Today(),
+												Approved__c = true,
 												AcctSeed__Payee_Reference__c = vendorInvoiceNumber,
 												AcctSeedERP__Purchase_Order__c = po.Id,
 												GL_Account_Variable_1__c = po.GL_Account_Variable_1__c,
