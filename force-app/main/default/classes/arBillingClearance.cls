@@ -103,7 +103,9 @@ public without sharing class arBillingClearance {
 		 	AcctSeed__Account_Payable__c accountPayable = new AcctSeed__Account_Payable__c(
 				AcctSeed__Vendor__c = bill.AcctSeed__Customer__c,
 				AcctSeed__Payee_Reference__c = apReference,
-				AcctSeed__Date__c = Date.today()
+				AcctSeed__Date__c = Date.today(),
+				Approval_Date__c = date.Today(),
+				Approved__c = true
 			);
 		 	insert accountPayable;
 
