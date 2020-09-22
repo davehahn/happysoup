@@ -132,7 +132,7 @@ public virtual class PartnerProgramItem implements PartnerProgramItem_I, Promise
         this.getBookingOrderFieldName(),
         percent
       );
-      update wrapper.bookingOrder;
+      upsert wrapper.bookingOrder;
     }
     if( updateDealerOrder )
       wrapper.updateDealerOrder();

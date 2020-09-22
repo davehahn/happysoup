@@ -31,6 +31,7 @@
   <aura:handler name="change" value="{!v.isViewing}" action="{!c.handleViewChange}" />
   <aura:handler event="force:refreshView" action="{!c.doInit}" />
 
+
   <lightning:empApi aura:id="empApi" />
   <aura:if isTrue="{! !empty(v.sessionId)}">
     <c:Utility_CometD sessionId="{!v.sessionId}" aura:id="cometD" />
