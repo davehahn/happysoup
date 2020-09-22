@@ -504,7 +504,9 @@ public with sharing class arPOSReturn {
 				Tax_Rate_Federal__c = 0,
 				Tax_Rate_Provincial__c = 0,
 				Tax_Rate_Retail__c = 0,
-				AcctSeed__Date__c = Date.today()
+				AcctSeed__Date__c = Date.today(),
+				Approval_Date__c = date.Today(),
+				Approved__c = true
 			);
 			insert posPay;
 			AcctSeed__Account_Payable_Line__c payLine = new AcctSeed__Account_Payable_Line__c(
