@@ -1,10 +1,34 @@
 public without sharing class DealerOrder_Ext {
 
-  public static List<String> enabledOptionFamilies {
+  public static Partner_Boat_Sale_Settings__c partnerSettings {
     get {
-      if( enabledOptionFamilies == null )
-        enabledOptionFamilies = Partner_Boat_Sale_Settings__c.getOrgDefaults().Enabled_Part_Families__c.split(',');
-      return enabledOptionFamilies;
+      if( partnerSettings == null )
+        partnerSettings = Partner_Boat_Sale_Settings__c.getOrgDefaults();
+      return partnerSettings;
+    }
+    set;
+  }
+
+  public static Map<String,List<String>> enabledOptionFamiliesMap {
+    get {
+      if( enabledOptionFamiliesMap == null )
+      {
+        enabledOptionFamiliesMap = new Map<String, List<String>>{
+          'Boat' => partnerSettings.Enabled_Boat_Option_Families__c == null ?
+            new List<String>() :
+            partnerSettings.Enabled_Boat_Option_Families__c.split(','),
+          'Motor' => partnerSettings.Enabled_Motor_Option_Families__c == null ?
+            new List<String>() :
+            partnerSettings.Enabled_Motor_Option_Families__c.split(','),
+          'Trailer' => partnerSettings.Enabled_Trailer_Option_Families__c == null ?
+            new List<String>() :
+            partnerSettings.Enabled_Trailer_Option_Families__c.split(','),
+          'Trolling Motor' => partnerSettings.Enabled_Trolling_Motor_Option_Families__c == null ?
+            new List<String>() :
+            partnerSettings.Enabled_Trolling_Motor_Option_Families__c.split(',')
+        };
+      }
+      return enabledOptionFamiliesMap;
     }
     set;
   }
@@ -133,7 +157,6 @@ public without sharing class DealerOrder_Ext {
     public List<OptionWrapper> motorOptions { get; set; }
     public Map<String, List<OptionWrapper>> optionalProducts { get; set; }
     public Map<String, List<LGND_APIv2_Product.FeeProduct>> fees { get; set; }
-    private List<String> enabledOptionFamilies;
 
     public ProductWrapper( LGND_APIv2_Product apiProd, String pricebookId )
     {
@@ -142,7 +165,6 @@ public without sharing class DealerOrder_Ext {
 //      {
 //        this.optionalProducts.put( fam, new List<OptionWrapper>() );
 //      }
-      this.enabledOptionFamilies = DealerOrder_Ext.enabledOptionFamilies;
       isFactory = pricebookId == gcConstants.idPricebookFactory;
       isPartner = pricebookId == gcConstants.idPricebookPartner;
       this.name = apiProd.Name;
@@ -197,52 +219,13 @@ public without sharing class DealerOrder_Ext {
             this.motorUpgrades.addAll( this.createUpgradeList( apiProd.MotorUpgrades, null) );
         }
 
-
-//        if( apiProd.StandardTrollingMotor != null )
-//        {
-//          this.standardTrollingMotor_Id = apiProd.StandardTrollingMotor.Id;
-//          this.standardTrollingMotor_Name = apiProd.StandardTrollingMotor.Name;
-//          this.trollingMotorUpgrades.add( new UpgradeWrapper( apiProd.StandardTrollingMotor, apiProd.StandardTrollingMotor.Id ) );
-//        }
         if( apiProd.TrollingMotorUpgrades != null && apiProd.TrollingMotorUpgrades.size() > 0 )
           this.trollingMotorUpgrades.addAll( this.createUpgradeList( apiProd.TrollingMotorUpgrades, this.standardTrollingMotor_Id ) );
 
         findCanvasDiscount( apiProd.Id, pricebookId );
 
-        //Options
-        for( String fam : this.enabledOptionFamilies )
-        {
-          if (apiProd.OptionalProducts != null &&
-            apiProd.OptionalProducts.containsKey(fam))
-          {
-            if (!this.optionalProducts.containsKey(fam))
-              this.optionalProducts.put(fam, new List<OptionWrapper>());
-
-            for (LGND_APIv2_Product.PartProduct pp : apiProd.OptionalProducts.get(fam))
-            {
-              this.optionalProducts.get(fam).add(new OptionWrapper(pp));
-            }
-          }
-        }
-
-//        if( apiProd.OptionalProducts != null &&
-//            apiProd.OptionalProducts.containsKey('Canvas') )
-//        {
-//          for( LGND_APIv2_Product.PartProduct pp : apiProd.OptionalProducts.get('Canvas') )
-//          {
-//            this.canvasOptions.add( new OptionWrapper( pp ) );
-//          }
-//        }
-//        //Build Options
-//        if( apiProd.OptionalProducts != null &&
-//            apiProd.OptionalProducts.containsKey('Boat Build Option') )
-//        {
-//          for( LGND_APIv2_Product.PartProduct pp : apiProd.OptionalProducts.get('Boat Build Option') )
-//          {
-//            this.buildOptions.add( new OptionWrapper( pp ) );
-//          }
-//        }
       }
+
       if( apiProd.RecordTypeName == 'Motor' && isFactory)
       {
         this.motorOptions = new List<OptionWrapper>();
@@ -254,6 +237,30 @@ public without sharing class DealerOrder_Ext {
             OptionWrapper ow = new OptionWrapper( pp );
             ow.parent_id = this.id;
             this.motorOptions.add( ow );
+          }
+        }
+      }
+
+      //Options
+      buildOptions( apiProd );
+    }
+
+    private void buildOptions( LGND_APIv2_Product apiProd )
+    {
+      if( DealerOrder_Ext.enabledOptionFamiliesMap.containsKey( apiProd.RecordTypeName ) )
+      {
+        for( String fam : DealerOrder_Ext.enabledOptionFamiliesMap.get( apiProd.RecordTypeName ) )
+        {
+          if (apiProd.OptionalProducts != null &&
+            apiProd.OptionalProducts.containsKey(fam))
+          {
+            if (!this.optionalProducts.containsKey(fam))
+              this.optionalProducts.put(fam, new List<OptionWrapper>());
+
+            for (LGND_APIv2_Product.PartProduct pp : apiProd.OptionalProducts.get(fam))
+            {
+              this.optionalProducts.get(fam).add(new OptionWrapper(pp));
+            }
           }
         }
       }
@@ -315,21 +322,25 @@ public without sharing class DealerOrder_Ext {
       else
         this.cost = uProd.PartnerPrice;
       //Options
-      for( String fam : DealerOrder_Ext.enabledOptionFamilies )
+      if( DealerOrder_Ext.enabledOptionFamiliesMap.containsKey( uProd.Family ) )
       {
-        if( uProd.OptionalProducts != null &&
-            uProd.OptionalProducts.containsKey(fam))
+        for (String fam : DealerOrder_Ext.enabledOptionFamiliesMap.get( uProd.Family ))
         {
-          if (!this.optionalProducts.containsKey(fam))
-            this.optionalProducts.put(fam, new List<OptionWrapper>());
-
-          for (LGND_APIv2_Product.PartProduct pp : uProd.OptionalProducts.get(fam))
+          if (uProd.OptionalProducts != null &&
+            uProd.OptionalProducts.containsKey(fam))
           {
-            this.optionalProducts.get(fam).add(new OptionWrapper(pp));
+            if (!this.optionalProducts.containsKey(fam))
+              this.optionalProducts.put(fam, new List<OptionWrapper>());
+
+            for (LGND_APIv2_Product.PartProduct pp : uProd.OptionalProducts.get(fam))
+            {
+              this.optionalProducts.get(fam).add(new OptionWrapper(pp));
+            }
           }
         }
       }
     }
+
   }
 
   public class OptionWrapper {
@@ -1882,6 +1893,7 @@ public without sharing class DealerOrder_Ext {
                                             String recordTypeName,
                                             String pricebookId )
   {
+    System.debug('FETCH PRODUCT - ' + recordTypeName );
     //verify product is in Specified Pricebook
     try {
       PricebookEntry pbe = [SELECT Id
@@ -1903,6 +1915,7 @@ public without sharing class DealerOrder_Ext {
     }
     //LGND_APIv2_Product lp = new LGND_APIv2_Product( productId, 'partner', recordTypeName );
     LGND_APIv2_Product lp = new LGND_APIv2_Product( productId, Id.valueOf(pricebookId), recordTypeName );
+    System.debug( lp );
     return JSON.serialize( new ProductWrapper( lp, pricebookId ) );
   }
 

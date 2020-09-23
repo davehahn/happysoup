@@ -33,10 +33,10 @@
     if( trailer !== null && trailer.length !== 0 && trailer.cost !== undefined)
       total += isNaN( parseFloat( trailer.cost ) ) ? 0 : parseFloat( trailer.cost );
 
-    if( motor !== null && motor.length !== 0 && motor.cost !== undefined && !isNaN(motor.cost))
+    if( motor !== undefined && motor !== null && motor.length !== 0 && motor.cost !== undefined && !isNaN(motor.cost))
       total += motor.cost;
 
-    if( trollingMotor !== null && trollingMotor.length !== 0 && trollingMotor.cost !== undefined && !isNaN(trollingMotor.cost))
+    if( trollingMotor !== undefined && trollingMotor !== null && trollingMotor.length !== 0 && trollingMotor.cost !== undefined && !isNaN(trollingMotor.cost))
       total += trollingMotor.cost;
 
     if( options !== null && Object.keys( options ).length > 0 )
@@ -72,14 +72,14 @@
         })
       })
     }
-    if( motorOptions !== null && motorOptions.length > 0 )
-    {
-      for( let mOpt of motorOptions )
-      {
-        if( mOpt.isSelected )
-          total += parseFloat( mOpt.cost );
-      }
-    }
+//    if( motorOptions !== null && motorOptions.length > 0 )
+//    {
+//      for( let mOpt of motorOptions )
+//      {
+//        if( mOpt.isSelected )
+//          total += parseFloat( mOpt.cost );
+//      }
+//    }
     if( feeList !== null && feeList.length !== 0 )
     {
       for( var i=0; i<feeList.length; i++ )

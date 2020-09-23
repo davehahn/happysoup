@@ -145,14 +145,22 @@
             </aura:if>
           </aura:iteration>
         </lightning:select>
-        <aura:if isTrue="{!!empty(v.motorOptions)}">
-          <label class="slds-form-element__label">Motor Options</label><br />
 
-          <aura:iteration items="{!v.motorOptions}" var="m_opt">
-            <c:lgnd_boatConfig_optionSelect pricebookId="{!v.dealerOrder.Pricebook__c}"
-                                            option="{!m_opt}" />
+        <aura:if isTrue="{! and( !empty( v.trailer), !empty(v.motor.optionalProducts))}">
+          <label class="slds-form-element__label slds-m-top_large">Motor Options</label><br />
+          <aura:iteration items="{!v.motor.optionalProducts}" var="option">
+            <c:lgnd_boatConfig_optionSelect option="{!option}"
+                                            pricebookId="{!v.dealerOrder.Pricebook__c}" />
           </aura:iteration>
         </aura:if>
+<!--        <aura:if isTrue="{!!empty(v.motorOptions)}">-->
+<!--          <label class="slds-form-element__label">Motor Options</label><br />-->
+
+<!--          <aura:iteration items="{!v.motorOptions}" var="m_opt">-->
+<!--            <c:lgnd_boatConfig_optionSelect pricebookId="{!v.dealerOrder.Pricebook__c}"-->
+<!--                                            option="{!m_opt}" />-->
+<!--          </aura:iteration>-->
+<!--        </aura:if>-->
 
       </aura:if>
 
@@ -168,6 +176,14 @@
             <option value="{!trailer.id}" text="{!trailer.name + '  -  ' + (empty(trailer.cost) ? '( Included )' : '( $ ' + trailer.cost + ' )' ) }"></option>
           </aura:iteration>
         </lightning:select>
+
+        <aura:if isTrue="{! and( !empty( v.trailer), !empty(v.trailer.optionalProducts))}">
+          <label class="slds-form-element__label slds-m-top_large">Trailer Options</label><br />
+          <aura:iteration items="{!v.trailer.optionalProducts}" var="option">
+            <c:lgnd_boatConfig_optionSelect option="{!option}"
+                                            pricebookId="{!v.dealerOrder.Pricebook__c}" />
+          </aura:iteration>
+        </aura:if>
       </aura:if>
 
       <aura:if isTrue="{! !empty(v.trollingMotorSelectOptions)}">
@@ -182,6 +198,15 @@
             <option value="{!t_motor.id}" text="{!t_motor.name + '  -  ' + (empty(t_motor.cost) ? '( Included )' : '( $ ' + t_motor.cost + ' )' ) }"></option>
           </aura:iteration>
         </lightning:select>
+
+        <aura:if isTrue="{! and( !empty( v.trollingMotor), !empty(v.trollingMotor.optionalProducts))}">
+          <label class="slds-form-element__label slds-m-top_large">Trolling Motor Options</label><br />
+          <aura:iteration items="{!v.trollingMotor.optionalProducts}" var="option">
+            <c:lgnd_boatConfig_optionSelect option="{!option}"
+                                            pricebookId="{!v.dealerOrder.Pricebook__c}" />
+          </aura:iteration>
+        </aura:if>
+
       </aura:if>
 
       <aura:iteration items="{!v.optionalProducts}" var="optProds">

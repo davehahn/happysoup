@@ -245,8 +245,9 @@
     helper.selectBoatFunction( component, boatId )
     .then(
       //SelectBoatFunction SUCCESS
-      $A.getCallback( function( result ) {
-        boat = result;
+      $A.getCallback( function( boat ) {
+        console.log('BOAT');
+        console.log( boat );
         return helper.handleTrailer( component, boat.standardTrailer_Id );
       }),
       //SelectBoatFunction FAIL
@@ -256,7 +257,10 @@
     )
     .then(
       //HandleTrailer SUCCESS
-      $A.getCallback( function() {
+      $A.getCallback( function( trailer ) {
+        console.log('TRAILER');
+        console.log( trailer );
+        component.set('v.trailer', trailer );
         return helper.handleMotor( component, boat.standardMotor_Id );
       }),
       //HandleTrailer FAIL
@@ -266,7 +270,10 @@
     )
     .then(
       //HandleMotor SUCCESS
-      $A.getCallback( function() {
+      $A.getCallback( function( motor ) {
+        console.log('MOTOR');
+        console.log( motor );
+        component.set('v.motor', motor );
         return helper.handleTrollingMotor( component, boat.standardTrollingMotor_Id, boat.standardTrollingMotor_Name );
       }),
       //HandleMotor FAIL
@@ -276,7 +283,10 @@
     )
     .then(
       //HandleTrollingMotor SUCCESS
-      $A.getCallback( function() {
+      $A.getCallback( function( trollingMotor ) {
+         console.log('TROLLING MOTOR');
+        console.log( trollingMotor );
+        component.set('v.trollingMotor', trollingMotor );
         helper.fireChangeEvent( component );
       }),
       //HandleTrollingMotor FAIL
@@ -292,8 +302,9 @@
     var trailerId = component.get('v.selectedTrailer_Id');
     helper.handleTrailer( component, trailerId )
     .then(
-      $A.getCallback( function()
+      $A.getCallback( function(trailer)
       {
+        component.set('v.trailer', trailer);
         helper.fireChangeEvent( component );
       }),
 
@@ -309,8 +320,9 @@
     var motorId = component.get('v.selectedMotor_Id');
     helper.handleMotor( component, motorId )
     .then(
-      $A.getCallback( function()
+      $A.getCallback( function( motor )
       {
+        component.set('v.motor', motor );
         helper.fireChangeEvent( component );
       }),
 
@@ -326,8 +338,9 @@
     var t_motorId = component.get('v.selectedTrollingMotor_Id');
     helper.handleTrollingMotor( component, t_motorId )
     .then(
-      $A.getCallback( function()
+      $A.getCallback( function(trollingMotor)
       {
+        component.set('v.trollingMotor', trollingMotor );
         helper.fireChangeEvent( component );
       }),
 
@@ -345,7 +358,8 @@
           whatChanged: 'options',
           changeData: params
         };
-
+console.log('option changed');
+console.log( JSON.parse( JSON.stringify( params ) ) );
     helper.handleConfigChange( component, changeData )
     .then(
       $A.getCallback( function()

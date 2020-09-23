@@ -412,8 +412,6 @@
                       option.quantitySelected = options[productId].quantitySelected;
                     if(options[productId].subOptions !== undefined && options[productId].subOptions !== null )
                       option.subOptions = options[productId].subOptions;
-                    console.log( "***OPTION***");
-                    console.log(option);
                   }
                 });
               });
@@ -476,7 +474,6 @@
           }),
           //fetchProduct ERROR
           $A.getCallback( function(product_err) {
-            console.log('fetch product error');
             console.log( product_err );
             reject(product_err);
           })
@@ -537,8 +534,16 @@
           {
             feeData = feeData.concat( self.handleFees( trailer, prov ) );
           }
-          /*
-          we want to get the cost of the trailer from the trailerSelectOptions
+          let opts = [];
+          try {
+            opts = Object.keys( trailer.optionalProducts )
+              .reduce( (result, key) => {
+                return result.concat( trailer.optionalProducts[key] );
+              }, opts );
+          }
+          catch(e){}
+          trailer.optionalProducts = opts;
+          /* we want to get the cost of the trailer from the trailerSelectOptions
           as it may be an upgrade or a full cost trailer, this is the easiest way
           */
           for( var i=0; i<trailerOptions.length; i++ )
@@ -563,7 +568,7 @@
           };
           self.handleConfigChange( component, changeData )
           .then( function() {
-            resolve();
+            resolve(trailer);
           });
         },
         function( err ) {
@@ -618,6 +623,18 @@
           {
             feeData = feeData.concat( self.handleFees( motor, prov ) );
           }
+          let opts = [];
+          if( !isMotorRequestOnly )
+          {
+            try {
+              opts = Object.keys( motor.optionalProducts )
+                .reduce( (result, key) => {
+                  return result.concat( motor.optionalProducts[key] );
+                }, opts );
+            }
+            catch(e){}
+          }
+          motor.optionalProducts = opts;
           /*
           if the dealer order is not record type of Motor then this is a package and
           save motor AND this is not a Legend Factory Store
@@ -677,7 +694,7 @@
 
           self.handleConfigChange( component, changeData )
           .then( function() {
-            resolve();
+            resolve( motor );
           });
         },
         function( err ) {
@@ -727,6 +744,15 @@
           {
             feeData = feeData.concat( self.handleFees( trollingMotor, prov ) );
           }
+          let opts = [];
+          try {
+            opts = Object.keys( tollingMotorr.optionalProducts )
+              .reduce( (result, key) => {
+                return result.concat( trollingMotor.optionalProducts[key] );
+              }, opts );
+          }
+          catch(e){}
+          trollingMotor.optionalProducts = opts;
           /*
           we want to get the cost of the trailer from the trailerSelectOptions
           as it may be an upgrade or a full cost trailer, this is the easiest way
@@ -750,7 +776,7 @@
           };
           self.handleConfigChange( component, changeData )
           .then( function() {
-            resolve();
+            resolve( trollingMotor );
           });
         },
         function( err ) {
