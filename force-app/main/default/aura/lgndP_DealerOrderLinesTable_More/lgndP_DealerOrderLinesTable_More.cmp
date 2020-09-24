@@ -56,6 +56,19 @@
                                             zeroLabel="Legend - Mercury Special Programs" />
                   </div>
                 </div>
+                <aura:iteration items="{!item.motor.options}" var="subOpt" indexVar="subIdx">
+                  <div class="slds-grid slds-wrap kit-part">
+                    <div class="slds-col slds-size_9-of-12">
+                      <div class="{! join(' ', 'sub-item kit-item', concat('kit-item-',subIdx))}">
+                        {!subOpt.more_name}
+                      </div>
+                    </div>
+                    <div class="slds-col slds-size_3-of-12 slds-text-align_right slds-p-right_small">
+                      <c:lgnd_currencyDisplay value="{!subOpt.cost}"
+                                              zeroLabel="Included" />
+                    </div>
+                  </div>
+                </aura:iteration>
               </aura:if>
 
 
@@ -72,6 +85,21 @@
                                             zeroLabel="Included" />
                   </div>
                 </div>
+                <aura:if isTrue="{! !empty(item.trailer.options) }">
+                  <aura:iteration items="{!item.trailer.options}" var="subOpt" indexVar="subIdx">
+                    <div class="slds-grid slds-wrap kit-part">
+                      <div class="slds-col slds-size_9-of-12">
+                        <div class="{! join(' ', 'sub-item kit-item', concat('kit-item-',subIdx))}">
+                          {!subOpt.more_name}
+                        </div>
+                      </div>
+                      <div class="slds-col slds-size_3-of-12 slds-text-align_right slds-p-right_small">
+                        <c:lgnd_currencyDisplay value="{!subOpt.cost}"
+                                                zeroLabel="Included" />
+                      </div>
+                    </div>
+                  </aura:iteration>
+                </aura:if>
               </aura:if>
 
               <!-- Trolling Motor Line -->
@@ -87,6 +115,19 @@
                                             zeroLabel="Included" />
                   </div>
                 </div>
+                <aura:iteration items="{!item.trollingMotor.options}" var="subOpt" indexVar="subIdx">
+                  <div class="slds-grid slds-wrap kit-part">
+                    <div class="slds-col slds-size_9-of-12">
+                      <div class="{! join(' ', 'sub-item kit-item', concat('kit-item-',subIdx))}">
+                        {!subOpt.more_name}
+                      </div>
+                    </div>
+                    <div class="slds-col slds-size_3-of-12 slds-text-align_right slds-p-right_small">
+                      <c:lgnd_currencyDisplay value="{!subOpt.cost}"
+                                              zeroLabel="Included" />
+                    </div>
+                  </div>
+                </aura:iteration>
               </aura:if>
 
               <!-- Options Lines -->

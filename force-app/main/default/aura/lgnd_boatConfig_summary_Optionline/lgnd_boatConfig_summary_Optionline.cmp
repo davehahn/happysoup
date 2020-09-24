@@ -1,0 +1,105 @@
+<!--
+ - Created by dave on 2020-09-23.
+ -->
+
+<aura:component>
+
+  <aura:attribute name="option" type="Map" />
+  <aura:attribute name="lineClass" type="String" />
+
+  <!-- Checkbox Options -->
+  <aura:if isTrue="{! and( v.option.isCheckbox, v.option.isSelected)}">
+    <div class="{! join(' ', 'slds-grid slds-wrap', v.lineClass)}">
+      <div class="slds-col slds-size--1-of-1 slds-medium-size--9-of-12 slds-large-size--9-of-12">
+        <div class="slds-truncate">{!v.option.name}</div>
+      </div>
+      <div class="slds-col slds-size--1-of-1 slds-medium-size--3-of-12 slds-large-size--3-of-12 slds-text-align--right">
+        <c:lgnd_currencyDisplay value="{!v.option.cost}"
+                                zeroLabel="Included" />
+      </div>
+    </div>
+  </aura:if>
+
+  <!-- Select Options -->
+  <aura:if isTrue="{! and( not(v.option.isCheckbox), greaterthan(v.option.quantitySelected, 0) )}">
+    <div class="{! join(' ', 'slds-grid slds-wrap', v.lineClass)}">
+      <div class="slds-col slds-size--1-of-1 slds-medium-size--9-of-12 slds-large-size--9-of-12">
+        <div class="slds-truncate">
+          <span>
+            {!v.option.name}
+            <aura:if isTrue="{! greaterthan(v.option.quantitySelected, 1)}">
+              <span style="margin-left:0.25rem; font-size:0.8rem;">
+                (
+                <span>
+                  {!v.option.quantitySelected}
+                </span>
+                <span class="slds-m-right_xx-small slds-m-left_xx-small">x</span>
+                <lightning:formattedNumber value="{!v.option.cost}"
+                                           style="currency"
+                                           currencyCode="CAD" />
+                ea.)
+              </span>
+            </aura:if>
+          </span>
+        </div>
+      </div>
+      <div class="slds-col slds-size--1-of-1 slds-medium-size--3-of-12 slds-large-size--3-of-12 slds-text-align--right">
+        <c:lgnd_currencyDisplay value="{!mult(v.option.cost, v.option.quantitySelected)}"
+                                zeroLabel="Included" />
+      </div>
+    </div>
+  </aura:if>
+
+  <!-- Sub Options -->
+  <aura:iteration items="{!v.option.subOptions}" var="subOpt" indexVar="idx">
+<!--     Check Box Option -->
+    <aura:if isTrue="{!and( subOpt.isCheckbox, subOpt.isSelected )}">
+      <div class="{! join(' ', 'slds-grid slds-wrap sub-option', concat('sub-option-',idx))}">
+        <div class="slds-col slds-size--1-of-1 slds-medium-size--9-of-12 slds-large-size--9-of-12">
+          {!subOpt.name}
+        </div>
+        <div class="slds-col slds-size--1-of-1 slds-medium-size--3-of-12 slds-large-size--3-of-12 slds-text-align--right">
+          <c:lgnd_currencyDisplay value="{!subOpt.cost}"
+                                  zeroLabel="Included" />
+        </div>
+      </div>
+    </aura:if>
+
+    <!-- Select Option -->
+    <aura:if isTrue="{! and( not(subOpt.isCheckbox), greaterthan(subOpt.quantitySelected, 0) )}">
+      <div class="{! join(' ', 'slds-grid slds-wrap sub-option', concat('sub-option-',idx))}">
+        <div class="slds-col slds-size--1-of-1 slds-medium-size--9-of-12 slds-large-size--9-of-12">
+          <div class="slds-truncate">
+            <span>
+              {!subOpt.name}
+              <aura:if isTrue="{! greaterthan(subOpt.quantitySelected, 1)}">
+                <div style="margin-left:0.25rem; font-size:0.8rem;">
+                  (
+                  <aura:if isTrue="{! greaterthan( subOpt.quantityStandard, 0 )}">
+                    <span>
+                      {!subOpt.quantityStandard} included and
+                    </span>
+                  </aura:if>
+                  <span>
+                    {! sub( subOpt.quantitySelected, subOpt.quantityStandard ) }
+                  </span>
+                  <span class="slds-m-right_xx-small slds-m-left_xx-small">x</span>
+                  <lightning:formattedNumber value="{!subOpt.individualCost}"
+                                             style="currency"
+                                             currencyCode="CAD" />
+                  ea.)
+                </div>
+              </aura:if>
+            </span>
+          </div>
+        </div>
+        <div class="slds-col slds-size--1-of-1 slds-medium-size--3-of-12 slds-large-size--3-of-12 slds-text-align--right">
+          <c:lgnd_currencyDisplay value="{!mult(subOpt.individualCost, sub(subOpt.quantitySelected, subOpt.quantityStandard))}"
+                                  zeroLabel="Included" />
+        </div>
+      </div>
+    </aura:if>
+  </aura:iteration>
+
+
+</aura:component>

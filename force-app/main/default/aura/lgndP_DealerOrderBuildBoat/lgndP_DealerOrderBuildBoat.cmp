@@ -146,7 +146,7 @@
           </aura:iteration>
         </lightning:select>
 
-        <aura:if isTrue="{! and( !empty( v.trailer), !empty(v.motor.optionalProducts))}">
+        <aura:if isTrue="{! and( !empty( v.motor), !empty(v.motor.optionalProducts))}">
           <label class="slds-form-element__label slds-m-top_large">Motor Options</label><br />
           <aura:iteration items="{!v.motor.optionalProducts}" var="option">
             <c:lgnd_boatConfig_optionSelect option="{!option}"
