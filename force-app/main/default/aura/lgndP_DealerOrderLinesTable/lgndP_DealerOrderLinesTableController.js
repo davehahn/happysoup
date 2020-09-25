@@ -2,6 +2,8 @@
   onRender: function( component, event, helper )
   {
     const boats = component.get('v.boats');
+    console.log('LinesTable');
+    console.log( JSON.parse(JSON.stringify(boats)));
     let rows = document.querySelectorAll('td[data-label="Item Name"]');
     rows.forEach( row =>
     {

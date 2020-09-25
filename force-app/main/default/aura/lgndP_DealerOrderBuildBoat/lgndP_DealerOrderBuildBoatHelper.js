@@ -73,7 +73,22 @@
         orderGroupId = component.get('v.orderGroupId'),
         options = [],
         data = {},
-        action = component.get('c.saveDealerLineItem');
+        action = component.get('c.saveDealerLineItem'),
+        findSelectedOptions = function( opts )
+        {
+          return opts.reduce( ( result, opt ) => {
+            if( ( opt.isCheckbox && opt.isSelected ) ||
+                ( !opt.isCheckbox && opt.quantitySelected > 0 ) )
+            {
+              result.push( opt );
+            }
+            if( opt.subOptions !== undefined && opt.subOptions !== null )
+            {
+              result = result.concat( findSelectedOptions( opt.subOptions ) );
+            }
+            return result;
+          }, [] );
+        };
 
     self.functions.toggleSpinner( component, true, 'Saving Order' );
 
@@ -84,26 +99,12 @@
 
     if( options !== undefined && options !== null )
     {
-      for( let option of options)
-      {
-        if( ( option.isCheckbox && option.isSelected ) ||
-            ( !option.isCheckbox && option.quantitySelected > 0 ) )
-        {
-          erpLineItems.push( option );
-        }
-        if( option.subOptions !== undefined && option.subOptions !== null )
-        {
-          for( var i=0; i<option.subOptions.length; i++ )
-          {
-            if( ( option.subOptions[i].isCheckbox && option.subOptions[i].isSelected ) ||
-                (!option.subOptions[i].isCheckbox && option.subOptions[i].quantitySelected > 0 ) )
-            {
-              erpLineItems.push( option.subOptions[i] );
-            }
-          }
-        }
-      }
+      erpLineItems = erpLineItems.concat( findSelectedOptions( options ) );
     }
+
+    console.log('erpLineItems');
+    console.log( erpLineItems );
+
     for( var i=0; i<fees.length; i++ )
     {
       if( !isMotorRequest )
@@ -134,6 +135,10 @@
       trailer.isCheckbox = true;
       data.trailer = trailer;
       erpLineItems.push( trailer );
+      if( trailer.optionalProducts !== undefined && trailer.optionalProducts !== null )
+      {
+        erpLineItems = erpLineItems.concat( findSelectedOptions( trailer.optionalProducts ) );
+      }
     }
 
     if( motor !== null && Object.keys(motor).length > 0 )
@@ -144,10 +149,9 @@
       {
         data.motor = motor;
         erpLineItems.push( motor );
-        for( let mo of motorOptions )
+        if( motor.optionalProducts !== undefined && motor.optionalProducts !== null )
         {
-          if( mo.isSelected )
-            erpLineItems.push( mo );
+          erpLineItems = erpLineItems.concat( findSelectedOptions( motor.optionalProducts ) );
         }
       }
       else if( order_ProductRecordType === 'Motor' && isMotorRequest )
@@ -161,11 +165,19 @@
       {
         data.motor = motor;
         erpLineItems.push( motor );
+        if( motor.optionalProducts !== undefined && motor.optionalProducts !== null )
+        {
+          erpLineItems = erpLineItems.concat( findSelectedOptions( motor.optionalProducts ) );
+        }
       }
       else
       {
         motorRequest.Motor__c = motor.id;
         motorRequest.Quantity__c = quantity;
+        if( motor.optionalProducts !== undefined && motor.optionalProducts !== null )
+        {
+          erpLineItems = erpLineItems.concat( findSelectedOptions( motor.optionalProducts ) );
+        }
       }
     }
 
@@ -175,10 +187,16 @@
       trollingMotor.isCheckbox = true;
       data.trollingMotor = trollingMotor;
       erpLineItems.push( trollingMotor );
+      if( trollingMotor.optionalProducts !== undefined && trollingMotor.optionalProducts !== null )
+      {
+        erpLineItems = erpLineItems.concat( findSelectedOptions( trollingMotor.optionalProducts ) );
+      }
     }
     if( orderGroupId !== undefined && orderGroupId !== null && orderGroupId.length > 0 )
       data.orderGroupId = orderGroupId;
     data.lineItems = erpLineItems;
+    console.log('SAVE DATA');
+    console.log( data );
 
     return new Promise( function( resolve, reject ) {
       self.handleMotorRequest.call(self, component, motorRequest )
@@ -389,6 +407,7 @@
     });
   },
 
+
   selectBoatFunction: function( component, boatId, selectedOptions )
   {
     var helper = this,
@@ -412,8 +431,6 @@
                       option.quantitySelected = options[productId].quantitySelected;
                     if(options[productId].subOptions !== undefined && options[productId].subOptions !== null )
                       option.subOptions = options[productId].subOptions;
-                    console.log( "***OPTION***");
-                    console.log(option);
                   }
                 });
               });
@@ -433,6 +450,8 @@
           $A.getCallback( function(response)
           {
             boat = JSON.parse(response);
+            console.log( 'BOAT' );
+            console.log( boat );
             helper.functions.clearConfigVars( component );
             component.set('v.selectedBoat_Id', boatId );
             component.set( 'v.trailerSelectOptions', boat.trailerUpgrades );
@@ -455,28 +474,22 @@
             }            //component.set( 'v.optionalProducts', optProds );
             component.set('v.optionalProducts', checkForSelectedOpts(optProds) );
             helper.checkForCanvasDiscount( component );
-            if( boat.fees !== undefined &&
-                boat.fees != null &&
-                boat.fees[prov] !== undefined &&
-                !dealerOrder.Is_Legend_Transfer__c )
-            {
-              feeData = feeData.concat( helper.handleFees( boat, prov ) );
-            }
+//            if( boat.fees !== undefined &&
+//                boat.fees != null &&
+//                boat.fees[prov] !== undefined &&
+//                !dealerOrder.Is_Legend_Transfer__c )
+//            {
+//              feeData = feeData.concat( helper.handleFees( boat, component ) );
+//            }
 
             changeData = {
               whatChanged: 'boat',
-              changeData: {
-                id: boat.id,
-                name: boat.name,
-                cost: boat.cost,
-                fees: feeData
-              }
+              changeData: boat
             };
             return helper.handleConfigChange( component, changeData );
           }),
           //fetchProduct ERROR
           $A.getCallback( function(product_err) {
-            console.log('fetch product error');
             console.log( product_err );
             reject(product_err);
           })
@@ -496,11 +509,46 @@
 
   },
 
-  handleTrailer: function( component, trailerId )
+  checkForSelectedOptions: function( allOptions, selectedOptions )
   {
+    selectedOptions = typeof( selectedOptions ) === 'undefined' ? null : selectedOptions;
+    if( selectedOptions !== null )
+    {
+      for( var productId in selectedOptions )
+      {
+        allOptions.forEach( (option) => {
+          console.log(`productId = ${productId}`);
+          console.log(`option.id = ${option.id}`);
+
+          if( productId === option.id )
+          {
+            console.log('option is selected');
+            if( option.isCheckbox )
+            {
+              console.log( 'option is a checkbox');
+              option.isSelected = true;
+            }
+            else
+            {
+              console.log('option is a select');
+              option.quantitySelected = selectedOptions[productId].quantitySelected;
+            }
+          }
+        });
+      }
+    }
+    return allOptions;
+  },
+
+  handleTrailer: function( component, trailerId, selectedOptions )
+  {
+    console.log('seriously what the fuck');
+    console.log('trailer selected Options')
+    console.log( selectedOptions );
     var self = this,
         dealerOrder = component.get('v.dealerOrder'),
         changeData;
+
     return new Promise(function( resolve, reject )
     {
       if( trailerId == null ||trailerId == 'none' )
@@ -511,7 +559,7 @@
         };
         self.handleConfigChange( component, changeData )
         .then( function() {
-          resolve();
+          resolve( null );
         });
       }
       else
@@ -530,22 +578,25 @@
         {
           trailer = JSON.parse(response);
           component.set('v.productSelected', true);
-          if( trailer.fees !== undefined &&
-              trailer.fees !== null &&
-              trailer.fees[prov] !== undefined &&
-              !dealerOrder.Is_Legend_Transfer__c )
-          {
-            feeData = feeData.concat( self.handleFees( trailer, prov ) );
+
+          let opts = [];
+          try {
+            opts = Object.keys( trailer.optionalProducts )
+              .reduce( (result, key) => {
+                return result.concat( trailer.optionalProducts[key] );
+              }, opts );
           }
-          /*
-          we want to get the cost of the trailer from the trailerSelectOptions
+          catch(e){}
+          trailer.optionalProducts = self.checkForSelectedOptions( opts, selectedOptions );
+
+          /* we want to get the cost of the trailer from the trailerSelectOptions
           as it may be an upgrade or a full cost trailer, this is the easiest way
           */
           for( var i=0; i<trailerOptions.length; i++ )
           {
             if( trailerOptions[i].id === trailer.id )
             {
-              trailerCost = trailerOptions[i].cost;
+              trailer.cost = trailerOptions[i].cost;
               if( trailerOptions[i].isUpgrade == true )
                 trailerName = 'Upgrade to ';
               trailerName += trailerOptions[i].name;
@@ -554,16 +605,11 @@
           }
           changeData = {
             whatChanged: 'trailer',
-            changeData: {
-              id: trailer.id,
-              name: trailerName,
-              cost: trailerCost,
-              fees: feeData
-            }
+            changeData: trailer
           };
           self.handleConfigChange( component, changeData )
           .then( function() {
-            resolve();
+            resolve(trailer);
           });
         },
         function( err ) {
@@ -573,15 +619,16 @@
     });
   },
 
-  handleMotor: function( component, motorId, selectedMotorOptions )
+  handleMotor: function( component, motorId, selectedOptions )
   {
+    console.log(`handleMotor motorId = ${motorId}`);
     var self = this,
         dealerOrder = component.get('v.dealerOrder'),
         isFactoryStore = component.get('v.isFactoryStore'),
         order_ProductRecordType = component.get('v.recordType'),
-        selectedMotorOptions = typeof( selectedMotorOptions ) === 'undefined' ? null : selectedMotorOptions,
         changeData;
-    return new Promise(function( resolve, reject )
+
+    return new Promise( ( resolve, reject ) =>
     {
       if( motorId == null || motorId == 'none' )
       {
@@ -591,14 +638,13 @@
         };
         self.handleConfigChange( component, changeData )
         .then( function() {
-          resolve();
+          resolve( null );
         });
       }
       else
       {
         component.set( 'v.selectedMotor_Id', motorId );
         var motorOptions = component.get('v.motorSelectOptions'),
-            prov = component.get('v.province'),
             isMotorRequestOnly = component.get('v.isMotorRequest'),
             motorCost,
             motor,
@@ -609,15 +655,26 @@
         .then( function( response )
         {
           motor = JSON.parse(response);
+          console.log( JSON.parse(JSON.stringify(motor)));
           component.set('v.productSelected', true);
           if( motor.fees !== undefined &&
               motor.fees !== null &&
-              motor.fees[prov] !== undefined &&
-              !dealerOrder.Is_Legend_Transfer__c &&
               !isMotorRequestOnly )
           {
-            feeData = feeData.concat( self.handleFees( motor, prov ) );
+            feeData = feeData.concat( self.handleFees( motor, component ) );
           }
+          let opts = [];
+          if( !isMotorRequestOnly )
+          {
+            try {
+              opts = Object.keys( motor.optionalProducts )
+                .reduce( (result, key) => {
+                  return result.concat( motor.optionalProducts[key] );
+                }, opts );
+            }
+            catch(e){}
+          }
+          motor.optionalProducts = self.checkForSelectedOptions( opts, selectedOptions );
           /*
           if the dealer order is not record type of Motor then this is a package and
           save motor AND this is not a Legend Factory Store
@@ -637,57 +694,33 @@
             {
               if( motorOptions[i].id === motor.id )
               {
-                motorCost = motorOptions[i].cost;
+                motor.cost = motorOptions[i].cost;
                 break;
               }
             }
           }
 
-          if( typeof(motor.motorOptions) === 'undefined' )
-            component.set('v.motorOptions', [] );
-          else
-          {
-            if( selectedMotorOptions != null )
-            {
-              for( var mOpt of motor.motorOptions )
-              {
-                for( var selected_mOpt of selectedMotorOptions )
-                {
-                  if( selected_mOpt.id === mOpt.id )
-                  {
-                    mOpt.isSelected = true;
-                  }
-                }
-              }
-            }
-            component.set('v.motorOptions', motor.motorOptions );
-          }
-
           changeData = {
             whatChanged: 'motor',
-            changeData: {
-              id: motor.id,
-              name: motor.name,
-              cost: motorCost,
-              fees: feeData
-            }
+            changeData: motor
           };
           if( isMotorRequestOnly )
-            changeData.changeData.cost_description = 'Package and Save';
+            changeData.cost_description = 'Package and Save';
 
           self.handleConfigChange( component, changeData )
           .then( function() {
-            resolve();
+            resolve( motor );
           });
         },
         function( err ) {
+          console.log('error handle motor handleConfigChange');
           reject(err);
         });
       }
     });
   },
 
-  handleTrollingMotor: function( component, trollingMotorId )
+  handleTrollingMotor: function( component, trollingMotorId, selectedOptions )
   {
     var self = this,
         dealerOrder = component.get('v.dealerOrder'),
@@ -702,7 +735,7 @@
         };
         self.handleConfigChange( component, changeData )
         .then( function() {
-          resolve();
+          resolve( null );
         });
       }
       else
@@ -720,13 +753,16 @@
         {
           trollingMotor = JSON.parse(response);
           component.set('v.productSelected', true);
-          if( trollingMotor.fees !== undefined &&
-              trollingMotor.fees !== null &&
-              trollingMotor.fees[prov] !== undefined &&
-              !dealerOrder.Is_Legend_Transfer__c )
-          {
-            feeData = feeData.concat( self.handleFees( trollingMotor, prov ) );
+
+          let opts = [];
+          try {
+            opts = Object.keys( trollingMotor.optionalProducts )
+              .reduce( (result, key) => {
+                return result.concat( trollingMotor.optionalProducts[key] );
+              }, opts );
           }
+          catch(e){}
+          trollingMotor.optionalProducts = self.checkForSelectedOptions( opts, selectedOptions );
           /*
           we want to get the cost of the trailer from the trailerSelectOptions
           as it may be an upgrade or a full cost trailer, this is the easiest way
@@ -735,22 +771,23 @@
           {
             if( trollingMotorOptions[i].id === trollingMotor.id )
             {
-              trollingMotorCost = trollingMotorOptions[i].cost;
+              trollingMotor.cost = trollingMotorOptions[i].cost;
               break;
             }
           }
           changeData = {
             whatChanged: 'trolling motor',
-            changeData: {
-              id: trollingMotor.id,
-              name: trollingMotor.name,
-              cost: trollingMotorCost,
-              fees: feeData
-            }
+            changeData: trollingMotor
+//            changeData: {
+//              id: trollingMotor.id,
+//              name: trollingMotor.name,
+//              cost: trollingMotorCost,
+//              fees: feeData
+//            }
           };
           self.handleConfigChange( component, changeData )
           .then( function() {
-            resolve();
+            resolve( trollingMotor );
           });
         },
         function( err ) {
@@ -760,9 +797,10 @@
     });
   },
 
-  handleFees: function( product, province )
+  handleFees: function( product, component )
   {
-    var fees = product.fees[ province ],
+    var province = component.get('v.province'),
+        fees = product.fees[ province ] === undefined ? [] : product.fees[ province ],
         result = [],
         priceType = product.isPartner ? 'PartnerPrice' : 'FactoryPrice';
     for( var i=0; i<fees.length; i++ )
@@ -782,7 +820,18 @@
   handleConfigChange: function( component, params )
   {
     var self = this,
-        handleFees = function( params )
+        getProvincialFees = function( product )
+        {
+          let feeData = [];
+          if( product.fees !== undefined &&
+              product.fees !== null )
+          {
+            feeData = feeData.concat( self.handleFees( product, component ) );
+          }
+          console.log( feeData );
+          return feeData;
+        },
+        processFees = function( params )
         {
           var fees = component.get('v.fees'),
               newFees,
@@ -797,10 +846,9 @@
           {
             delete fees[params.whatChanged];
           }
-          else if( params.changeData !== undefined &&
-                   params.changeData.fees !== undefined )
+          else if( params.changeData !== undefined  )
           {
-            newFees = params.changeData.fees;
+            newFees = getProvincialFees( params.changeData );
             //remove existing fees for the product that changed
             if( fees[params.whatChanged] !== undefined )
               delete fees[params.whatChanged];
@@ -826,7 +874,7 @@
       if( params.whatChanged === 'boat' )
       {
         component.set('v.boat', params.changeData );
-        handleFees( params );
+        processFees( params );
       }
 
       if( params.whatChanged === 'trailer')
@@ -836,7 +884,7 @@
         else
           component.set('v.trailer', [] );
 
-        handleFees( params );
+        processFees( params );
       }
 
       if( params.whatChanged === 'motor')
@@ -851,7 +899,7 @@
           component.set('v.motorRequest', motorRequest);
         }
 
-        handleFees( params );
+        processFees( params );
       }
 
       if( params.whatChanged === 'trolling motor')
@@ -952,7 +1000,7 @@
       motor: component.get('v.motor'),
       trollingMotor: component.get('v.trollingMotor'),
       options: component.get('v.optionalProducts'),
-      motorOptions: component.get('v.motorOptions'),
+//      motorOptions: component.get('v.motorOptions'),
       fees: component.get('v.fees'),
       feeList: component.get('v.feeList'),
       discounts: component.get('v.discounts')

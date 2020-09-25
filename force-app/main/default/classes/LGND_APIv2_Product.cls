@@ -857,7 +857,7 @@ public without sharing class LGND_APIv2_Product {
           pIds.add(po.From_Product__c);
         }
         List<Product2> prods = [SELECT Id, Name, Family, Default_Gallery_Image__c,
-                                (SELECT Id, UnitPrice, Pricebook2.Name FROM PricebookEntries WHERE isActive = true AND Pricebook2.isActive = true ORDER BY CreatedDate DESC),
+                                (SELECT Id, UnitPrice, Pricebook2.Name, Special_Price__c, Special_Price_Description__c FROM PricebookEntries WHERE isActive = true AND Pricebook2.isActive = true ORDER BY CreatedDate DESC),
                                 (SELECT Id, Standard__c, Maximum__c, DisplayOnWeb__c FROM From_Product_Options__r WHERE To_Product__c = :parentProduct.Id LIMIT 1),
                                 (SELECT Id, Standard__C, Maximum__c, From_Product__r.Id, From_Product__r.Name FROM To_Product_Options__r ORDER BY From_Product__r.Name)
                                FROM Product2

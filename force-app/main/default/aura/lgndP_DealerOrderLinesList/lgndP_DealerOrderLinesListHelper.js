@@ -7,6 +7,7 @@
       .then(
         $A.getCallback( function( response ) {
           var result = JSON.parse( response );
+          console.log( JSON.parse( JSON.stringify(result)));
           component.set('v.boats', result.boats );
           component.set('v.motors', result.motors );
           component.set('v.trailers', result.trailers );

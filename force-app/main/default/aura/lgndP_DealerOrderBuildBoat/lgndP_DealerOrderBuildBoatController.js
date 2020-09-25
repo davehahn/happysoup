@@ -45,8 +45,9 @@
     )
     .then(
       // initForEdit SUCCESS
-      $A.getCallback( function( resp) {
+      $A.getCallback( function( resp ) {
         result = JSON.parse( resp );
+        console.log( JSON.parse(JSON.stringify(result)));
         component.set('v.modelYear', result.modelYear);
         if( result.province !== undefined && result.province.length > 0 )
           component.set('v.province', result.province );
@@ -77,7 +78,7 @@
     .then(
       // SelectBoatFunction SUCCESS Now Select the trailer
       $A.getCallback( function() {
-        return helper.handleTrailer( component, result.selectedTrailer_Id );
+        return helper.handleTrailer( component, result.selectedTrailer_Id, result.trailerOptions );
       }),
       // SelectBoatFunction FAIL
       $A.getCallback( function(err) {
@@ -86,7 +87,8 @@
     )
     .then(
       // Select Trailer SUCCESS Now Select the motor
-      $A.getCallback( function() {
+      $A.getCallback( function( trailer ) {
+        component.set('v.trailer', trailer );
         if( result.motorRequest !== undefined &&
             result.motorRequest !== null &&
             Object.keys( result.motorRequest ).length > 0 )
@@ -96,7 +98,7 @@
           delete result.motorRequest.attributes;
           component.set('v.motorRequest', result.motorRequest );
 
-          return helper.handleMotor( component, result.motorRequest.Motor__c );
+          return helper.handleMotor( component, result.motorRequest.Motor__c, result.motorOptions );
         }
         else
         {
@@ -110,10 +112,11 @@
     )
     .then(
       // SelectMotor SUCCESS
-      $A.getCallback( function() {
+      $A.getCallback( function( motor ) {
+        component.set('v.motor', motor );
         return helper.handleTrollingMotor( component,
                                            result.selectedTrollingMotor_Id,
-                                           result.selectedTrollingMotor_Name );
+                                           result.trollingMotorOptions );
       }),
       // SelectBoatFunction FAIL
       $A.getCallback( function(err) {
@@ -122,7 +125,8 @@
     )
     .then(
       // SelectTrollingMotor SUCCESS
-      $A.getCallback( function() {
+      $A.getCallback( function( trollingMotor ) {
+        component.set( 'v.trollingMotor', trollingMotor );
         component.set('v.quantity', parseInt( result.quantity ) );
         component.set('v.notes', result.notes );
         //component.set('v.optionsList', result.optionsList);
@@ -247,40 +251,56 @@
       //SelectBoatFunction SUCCESS
       $A.getCallback( function( result ) {
         boat = result;
+        console.log('BOAT');
+        console.log( boat );
         return helper.handleTrailer( component, boat.standardTrailer_Id );
       }),
       //SelectBoatFunction FAIL
       $A.getCallback( function(err) {
+        console.log('Select Boat ERROR');
         LightningUtils.errorToast(err, 'sticky');
       })
     )
     .then(
       //HandleTrailer SUCCESS
-      $A.getCallback( function() {
+      $A.getCallback( function( trailer ) {
+        console.log('TRAILER');
+        console.log( trailer );
+        component.set('v.trailer', trailer );
+        console.log( boat.standardMotor_Id );
         return helper.handleMotor( component, boat.standardMotor_Id );
       }),
       //HandleTrailer FAIL
       $A.getCallback( function(err) {
+        console.log( 'handle trailer fail');
         LightningUtils.errorToast(err, 'sticky');
       })
     )
     .then(
       //HandleMotor SUCCESS
-      $A.getCallback( function() {
-        return helper.handleTrollingMotor( component, boat.standardTrollingMotor_Id, boat.standardTrollingMotor_Name );
+      $A.getCallback( function( motor ) {
+        console.log('MOTOR');
+        console.log( motor );
+        component.set('v.motor', motor );
+        return helper.handleTrollingMotor( component, boat.standardTrollingMotor_Id );
       }),
       //HandleMotor FAIL
       $A.getCallback( function(err) {
+        console.log('handle motor fail');
         LightningUtils.errorToast(err, 'sticky');
       })
     )
     .then(
       //HandleTrollingMotor SUCCESS
-      $A.getCallback( function() {
+      $A.getCallback( function( trollingMotor ) {
+        console.log('TROLLING MOTOR');
+        console.log( trollingMotor );
+        component.set('v.trollingMotor', trollingMotor );
         helper.fireChangeEvent( component );
       }),
       //HandleTrollingMotor FAIL
       $A.getCallback( function(err) {
+        console.log('handle trolling motor fail');
         LightningUtils.errorToast(err, 'sticky');
       })
     );
@@ -292,8 +312,11 @@
     var trailerId = component.get('v.selectedTrailer_Id');
     helper.handleTrailer( component, trailerId )
     .then(
-      $A.getCallback( function()
+      $A.getCallback( function(trailer)
       {
+        console.log('select trailer');
+        console.log( JSON.parse(JSON.stringify(trailer)));
+        component.set('v.trailer', trailer);
         helper.fireChangeEvent( component );
       }),
 
@@ -309,8 +332,11 @@
     var motorId = component.get('v.selectedMotor_Id');
     helper.handleMotor( component, motorId )
     .then(
-      $A.getCallback( function()
+      $A.getCallback( function( motor )
       {
+        console.log('MOTOR');
+        console.log( JSON.parse(JSON.stringify(motor)));
+        component.set('v.motor', motor );
         helper.fireChangeEvent( component );
       }),
 
@@ -326,8 +352,11 @@
     var t_motorId = component.get('v.selectedTrollingMotor_Id');
     helper.handleTrollingMotor( component, t_motorId )
     .then(
-      $A.getCallback( function()
+      $A.getCallback( function(trollingMotor)
       {
+        console.log('select trolling motor');
+        console.log( JSON.parse(JSON.stringify(trollingMotor)));
+        component.set('v.trollingMotor', trollingMotor );
         helper.fireChangeEvent( component );
       }),
 
@@ -345,7 +374,8 @@
           whatChanged: 'options',
           changeData: params
         };
-
+console.log('option changed');
+console.log( JSON.parse( JSON.stringify( params ) ) );
     helper.handleConfigChange( component, changeData )
     .then(
       $A.getCallback( function()

@@ -1,0 +1,33 @@
+/**
+ * Created by dave on 2020-09-23.
+ */
+
+.THIS.slds-grid.sub-line {
+  font-weight: 400;
+}
+
+.THIS.slds-grid.sub-option {
+  border-top: none;
+  padding: 0.25rem 0;
+  margin-left: 20px;
+}
+
+.THIS.slds-grid.sub-option:before {
+  position:absolute;
+  content: '';
+  width:0.75rem;
+  height: calc( 50% + 1rem);;
+  top: -1rem;
+  left: -1rem;
+  border-left: 1px solid #b5b5b5;
+  border-bottom: 1px solid #b5b5b5;
+}
+
+.THIS.slds-grid.sub-option.sub-option-0 {
+  margin-top: -0.125rem;
+}
+
+.THIS.slds-grid.sub-option.sub-option-0:before {
+  height: calc( 50% + 0.125rem);
+  top: -0.125rem;
+}
