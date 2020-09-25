@@ -54,12 +54,27 @@
               {!item.boat.name}
               <aura:if isTrue="{! !empty(item.motor) }">
                 <p class="sub-item slds-truncarte">{! item.motor.name }</p>
+                <aura:if isTrue="{! !empty(item.motor.options) }">
+                  <aura:iteration items="{!item.motor.options}" var="opt" indexVar="subIdx">
+                    <p class="{! join(' ', 'sub-item kit-item', concat('kit-item-', subIdx))}">{! opt.name }</p>
+                  </aura:iteration>
+                </aura:if>
               </aura:if>
               <aura:if isTrue="{! !empty(item.trailer) }">
                 <p class="sub-item slds-truncarte">{! item.trailer.name }</p>
+                <aura:if isTrue="{! !empty(item.trailer.options) }">
+                  <aura:iteration items="{!item.trailer.options}" var="opt" indexVar="subIdx">
+                    <p class="{! join(' ', 'sub-item kit-item', concat('kit-item-', subIdx))}">{! opt.name }</p>
+                  </aura:iteration>
+                </aura:if>
               </aura:if>
               <aura:if isTrue="{! !empty(item.trollingMotor) }">
                 <p class="sub-item slds-truncarte">{! item.trollingMotor.name }</p>
+                <aura:if isTrue="{! !empty(item.trollingMotor.options) }">
+                  <aura:iteration items="{!item.trollingMotor.options}" var="opt" indexVar="subIdx">
+                    <p class="{! join(' ', 'sub-item kit-item', concat('kit-item-', subIdx))}">{! opt.name }</p>
+                  </aura:iteration>
+                </aura:if>
               </aura:if>
               <aura:if isTrue="{! !empty(item.options) }">
                 <aura:iteration items="{!item.options}" var="opt">
