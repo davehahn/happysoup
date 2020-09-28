@@ -50,8 +50,9 @@ public with sharing class JournalEntry_Service {
                 }
             }
             if(dt == null) dt = Date.today();
+            String jeName = 'Commission Payment - ' + cr.Project_Task__r.Name;
             mapProjectJE.put(cr.Project__c, new AcctSeed__Journal_Entry__c(
-                Name = 'Commission Payment - ' + cr.Project_Task__r.Name,
+                Name = jeName.left(80),
                 AcctSeed__Journal_Date__c = dt.date(),
                 AcctSeed__Status__c = 'Approved',
                 Commission_Record__c = cr.Id,
@@ -176,7 +177,7 @@ public with sharing class JournalEntry_Service {
             WHERE Id IN:setJEToReverse])
             {
                 AcctSeed__Journal_Entry__c newJE = je.clone(false,true);
-                newJE.Name = je.Name + '-Reversal';
+                newJE.Name = je.Name.left(71) + '-Reversal';
                 if(earliestOpenDate != null && earliestOpenDate > je.AcctSeed__Journal_Date__c){
                      newJE.AcctSeed__Journal_Date__c = Date.today();
                 }
