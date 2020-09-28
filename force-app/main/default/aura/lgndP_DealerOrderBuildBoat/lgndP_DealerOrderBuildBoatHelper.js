@@ -810,7 +810,9 @@
         result.push({
           id: fees[i].Id,
           name: fees[i].Name,
-          cost: fees[i][priceType]
+          cost: fees[i][priceType],
+          isCheckbox: true,
+          IsSelected: true
         });
       }
     }
