@@ -184,10 +184,10 @@ public without sharing class DealerOrder_Ext {
         {
           this.standardTrailer_Id = apiProd.StandardTrailer.Id;
           this.standardTrailer_Name = apiProd.StandardTrailer.Name;
-          this.trailerUpgrades.add( new UpgradeWrapper( apiProd.StandardTrailer, apiProd.StandardTrailer.Id ) );
+          this.trailerUpgrades.add( new UpgradeWrapper( apiProd.StandardTrailer, apiProd.StandardTrailer.Id, isFactory ) );
         }
         if( apiProd.TrailerUpgrades != null && apiProd.TrailerUpgrades.size() > 0 )
-          this.trailerUpgrades.addAll( this.createUpgradeList( apiProd.TrailerUpgrades, this.standardTrailer_Id ) );
+          this.trailerUpgrades.addAll( this.createUpgradeList( apiProd.TrailerUpgrades, this.standardTrailer_Id, isFactory ) );
 
         //Motor Stuff
         if(  apiProd.MotorUpgrades != null && apiProd.MotorUpgrades.size() > 0 )
@@ -196,7 +196,7 @@ public without sharing class DealerOrder_Ext {
           {
             switch on apiProd.Family {
               when 'Utility' {
-                this.motorUpgrades.addAll(this.createUpgradeList(apiProd.MotorUpgrades, null));
+                this.motorUpgrades.addAll(this.createUpgradeList(apiProd.MotorUpgrades, null, isFactory));
               }
               when else {
                 if( LGND_Constants.mercuryDiscountBoatIds.contains( this.Id ) )
@@ -208,42 +208,42 @@ public without sharing class DealerOrder_Ext {
                       mUpgrades.add( ug );
                   }
                   if( mUpgrades.size() > 0 )
-                    this.motorUpgrades.addAll(this.createUpgradeList(mUpgrades, null));
+                    this.motorUpgrades.addAll(this.createUpgradeList(mUpgrades, null, isFactory));
                 }
               }
             }
           }
           if( isFactory )
-            this.motorUpgrades.addAll( this.createUpgradeList( apiProd.MotorUpgrades, null) );
+            this.motorUpgrades.addAll( this.createUpgradeList( apiProd.MotorUpgrades, null, isFactory) );
         }
 
         if( apiProd.TrollingMotorUpgrades != null && apiProd.TrollingMotorUpgrades.size() > 0 )
-          this.trollingMotorUpgrades.addAll( this.createUpgradeList( apiProd.TrollingMotorUpgrades, this.standardTrollingMotor_Id ) );
+          this.trollingMotorUpgrades.addAll( this.createUpgradeList( apiProd.TrollingMotorUpgrades, this.standardTrollingMotor_Id, isFactory ) );
 
         findCanvasDiscount( apiProd.Id, pricebookId );
 
       }
 
-      if( apiProd.RecordTypeName == 'Motor' && isFactory)
-      {
-        this.motorOptions = new List<OptionWrapper>();
-        if( apiProd.OptionalProducts != null &&
-            apiProd.OptionalProducts.containsKey('Labour') )
-        {
-          for( LGND_APIv2_Product.PartProduct pp : apiProd.OptionalProducts.get('Labour') )
-          {
-            OptionWrapper ow = new OptionWrapper( pp );
-            ow.parent_id = this.id;
-            this.motorOptions.add( ow );
-          }
-        }
-      }
+//      if( apiProd.RecordTypeName == 'Motor' && isFactory)
+//      {
+//        this.motorOptions = new List<OptionWrapper>();
+//        if( apiProd.OptionalProducts != null &&
+//            apiProd.OptionalProducts.containsKey('Labour') )
+//        {
+//          for( LGND_APIv2_Product.PartProduct pp : apiProd.OptionalProducts.get('Labour') )
+//          {
+//            OptionWrapper ow = new OptionWrapper( pp );
+//            ow.parent_id = this.id;
+//            this.motorOptions.add( ow );
+//          }
+//        }
+//      }
 
       //Options
-      buildOptions( apiProd );
+      buildOptions( apiProd, isFactory );
     }
 
-    private void buildOptions( LGND_APIv2_Product apiProd )
+    private void buildOptions( LGND_APIv2_Product apiProd, Boolean isFactory )
     {
       System.debug('APIPRODUCT');
       if( DealerOrder_Ext.enabledOptionFamiliesMap.containsKey( apiProd.RecordTypeName ) )
@@ -261,7 +261,7 @@ public without sharing class DealerOrder_Ext {
 
             for (LGND_APIv2_Product.PartProduct pp : apiProd.OptionalProducts.get(fam))
             {
-              OptionWrapper ow = new OptionWrapper(pp);
+              OptionWrapper ow = new OptionWrapper(pp, isFactory);
               if( apiProd.RecordTypeName != 'Boat' )
                 ow.parent_id = apiProd.Id;
               this.optionalProducts.get(fam).add( ow );
@@ -297,14 +297,15 @@ public without sharing class DealerOrder_Ext {
     }
 
     private List<UpgradeWrapper> createUpgradeList( List<LGND_APIv2_Product.UpgradeProduct> upgrades,
-                                                     String standardProductId )
+                                                    String standardProductId,
+                                                    Boolean isFactory )
     {
       List<UpgradeWrapper> result = new List<UpgradeWrapper>();
       for( LGND_APIv2_Product.UpgradeProduct uProd : upgrades )
       {
         if( ( standardProductId != null && uProd.PartnerUpgradeCost != null && uProd.PartnerUpgradeCost > 0 ) ||
             ( standardProductId == null && uProd.PartnerPrice != null && uProd.PartnerPrice > 0) )
-        result.add( new UpgradeWrapper( uProd, standardProductId ) );
+        result.add( new UpgradeWrapper( uProd, standardProductId, isFactory ) );
       }
       return result;
     }
@@ -317,7 +318,7 @@ public without sharing class DealerOrder_Ext {
     public Boolean isUpgrade { get; set; }
     public Map<String, List<OptionWrapper>> optionalProducts { get; set; }
 
-    public UpgradeWrapper( LGND_APIv2_Product.UpgradeProduct uProd, String standardProductId )
+    public UpgradeWrapper( LGND_APIv2_Product.UpgradeProduct uProd, String standardProductId, Boolean isFactory)
     {
       this.id = uProd.Id;
       this.name = uProd.Name;
@@ -341,7 +342,7 @@ public without sharing class DealerOrder_Ext {
 
             for (LGND_APIv2_Product.PartProduct pp : uProd.OptionalProducts.get(fam))
             {
-              this.optionalProducts.get(fam).add(new OptionWrapper(pp));
+              this.optionalProducts.get(fam).add(new OptionWrapper(pp, isFactory));
             }
           }
         }
@@ -366,12 +367,12 @@ public without sharing class DealerOrder_Ext {
     public Set<Integer> quantityOptions { get; set; }
     public List<OptionWrapper> subOptions { get; set; }
 
-    public OptionWrapper( LGND_APIv2_Product.PartProduct pp )
+    public OptionWrapper( LGND_APIv2_Product.PartProduct pp, Boolean isFactory )
     {
       this.id = pp.Id;
       this.name = pp.Name;
-      this.individualCost = pp.PartnerPrice;
-      this.cost = pp.QuantityStandard > 0 ? 0 : pp.PartnerPrice;
+      this.individualCost = isFactory ? pp.FactoryPrice : pp.PartnerPrice;
+      this.cost = pp.QuantityStandard > 0 ? 0 : isFactory ? pp.FactoryPrice : pp.PartnerPrice;
       this.hasOptions = pp.HasOptions;
       this.isSelected = pp.QuantityStandard > 0 ? true : false;
       this.isDisabled = pp.QuantityStandard == pp.MaximumQuantity;
