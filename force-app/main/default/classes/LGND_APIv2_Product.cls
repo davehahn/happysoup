@@ -98,7 +98,6 @@ public without sharing class LGND_APIv2_Product {
   }
 
   public void init(Product2 prod){
-    System.debug( 'INIT ' + prod );
     if( prod != null )
     {
       if( retailPartnerFilter != null )
@@ -247,8 +246,6 @@ public without sharing class LGND_APIv2_Product {
   }
 
   public LGND_APIv2_Product processStandardProducts(Product2 b){
-    System.debug( 'processStandardProducts' );
-    System.debug( this.RecordTypeName );
     if( this.RecordTypeName == 'Boat')
     {
       try
@@ -267,7 +264,6 @@ public without sharing class LGND_APIv2_Product {
         for( Product2 p : standards ){
           if(p.RecordType.Name == 'Motor'){
             setStandardMotor(p);
-            System.debug('STANDARD MOTOR = ' + p);
           }
           if(p.RecordType.Name == 'Trailer'){
             setStandardTrailer(p);
@@ -344,6 +340,9 @@ public without sharing class LGND_APIv2_Product {
           pbIdSearch.add( pricebookNameMap.get(retailPartnerFilter) );
         else
           pbIdSearch = pricebookMap.keySet();
+
+        System.debug('**** pbIdSearch ****');
+        System.debug(pbIdSearch);
 
         if( retailPartnerFilter == 'retail')
         {
@@ -632,14 +631,12 @@ public without sharing class LGND_APIv2_Product {
   private List<UpgradeProduct> buildTrollingMotorUpgrades(List<Product2> trollingMotors,
                                                                 Map<Id, Product_Upgrade__c> upgrades)
   {
-    System.debug('Exclude Standard Trolling Motor = ' + excludeStandardTrollingMotor);
     if( trollingMotors.isEmpty() ){
       return this.TrollingMotorUpgrades;
     }
     if(this.TrollingMotorUpgrades == null )
       this.TrollingMotorUpgrades = new List<UpgradeProduct>();
     for( Product2 p : trollingMotors){
-      System.debug( p.Name );
       Boolean useTMotor = false;
       if( this.standardTrollingMotor == null && excludeStandardTrollingMotor == false )
         useTmotor = true;
@@ -647,7 +644,6 @@ public without sharing class LGND_APIv2_Product {
       {
         for(Product_Upgrade__c pu : upgrades.values() )
         {
-          System.debug( pu.To_Product__r.Name);
           if( p.Id == pu.To_Product__c )
           {
             useTmotor = true;
@@ -655,7 +651,6 @@ public without sharing class LGND_APIv2_Product {
           }
         }
       }
-      System.debug('Use Trolling Motor = ' + useTMotor);
       if( useTmotor )
         this.TrollingMotorUpgrades.add( new UpgradeProduct( p, upgrades, excludeStandardTrollingMotor ) );
     }
@@ -696,27 +691,18 @@ public without sharing class LGND_APIv2_Product {
     public String DefaultImage { get; set; }
     public Decimal RetailPrice { get; set; }
     public Decimal PartnerPrice { get; set; }
+    public Decimal FactoryPrice { get; set; }
     public Decimal RetailSpecialPrice { get; set; }
     public String RetailSpecialPriceDescription { get; set; }
     public Decimal PartnerSpecialPrice { get; set; }
     public String PartnerSpecialPriceDescription { get; set; }
     public Decimal RetailUpgradeCost { get; set; }
     public Decimal PartnerUpgradeCost { get; set; }
+    public Decimal FactoryUpgradeCost { get; set; }
     public Decimal WeeklyUpgradeCost { get; set; }
     /* other motor related detail fields */
     public Map<String, List<PartProduct>> OptionalProducts { get; set; }
     public Boolean availableForMercDiscount { get; set; }
-
-    //public UpgradeProduct(Product2 m)
-    //{
-    //  this.Name = m.Name;
-    //  this.Family = m.RecordType.Name;
-    //  this.Id = m.Id;
-    //  this.DefaultImage = m.Default_Gallery_Image__c;
-    //  this.processOptions(m);
-    //  this.processPrices(m);
-    //  this.WeeklyUpgradeCost = calcWeeklyCost();
-    //}
 
     public UpgradeProduct(Product2 m, Boolean excludedStandard)
     {
@@ -755,28 +741,6 @@ public without sharing class LGND_APIv2_Product {
       this.availableForMercDiscount = m.Available_For_Mercury_Partner_Discount__c;
     }
 
-    //public UpgradeProduct(Product2 m,
-    //                      Map<Id, Product_Upgrade__c> upgrades)
-    //{
-    //  this.Name = m.Name;
-    //  this.Family = m.RecordType.Name;
-    //  this.Id = m.Id;
-    //  this.DefaultImage = m.Default_Gallery_Image__c;
-    //  //this.RetailPrice = m.PricebookEntries[0].UnitPrice;
-    //  if( m.To_Product_Upgrades__r != null &&
-    //      !m.To_Product_Upgrades__r.isEmpty() &&
-    //      upgrades != null ){
-    //    //this.UpgradeCost = m.To_Product_Upgrades__r[0].Price__c;
-    //    this.processUpgrades(m, upgrades);
-    //  }
-    //  if( m.From_Product_Options__r != null && !m.From_Product_Options__r.isEmpty() ){
-    //    this.DisplayOnWeb =  m.From_Product_Options__r[0].displayOnWeb__c;
-    //  }
-    //  this.processOptions(m);
-    //  this.processPrices(m);
-    //  this.WeeklyUpgradeCost = calcWeeklyCost();
-    //}
-
     private Decimal calcWeeklyCost()
     {
       /* calculate using this.RetailUpgradeCost and ParentRetailPrice */
@@ -802,10 +766,13 @@ public without sharing class LGND_APIv2_Product {
             {
               this.RetailUpgradeCost = puc.Cost__c;
             }
-             if( pricebookMap.get(puc.Price_Book__c) == 'partner' ||
-                 pricebookMap.get(puc.Price_Book__c) == 'factory' )
+            if( pricebookMap.get(puc.Price_Book__c) == 'partner' )
             {
               this.PartnerUpgradeCost = puc.Cost__c;
+            }
+            if( pricebookMap.get(puc.Price_Book__c) == 'factory' )
+            {
+              this.FactoryUpgradeCost = puc.Cost__c;
             }
           }
         }
@@ -835,14 +802,9 @@ public without sharing class LGND_APIv2_Product {
           }
           if( pricebookMap.get(pbe.Pricebook2Id) == 'factory' )
           {
-            if (retailPartnerFilter == 'factory')
-            {
-              this.PartnerPrice = pbe.UnitPrice;
-              if (this.Family == 'Trailer')
-                this.PartnerUpgradeCost = pbe.UnitPrice;
-              if (this.Family == 'Trolling Motor')
-                this.PartnerUpgradeCost = pbe.UnitPrice;
-            }
+            this.FactoryPrice = pbe.UnitPrice;
+            if(this.Family == 'Trailer' || this.Family == 'Trolling Motor')
+              this.FactoryUpgradeCost = pbe.UnitPrice;
           }
         }
       }
