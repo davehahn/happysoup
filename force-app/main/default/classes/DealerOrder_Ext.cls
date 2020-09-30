@@ -245,17 +245,13 @@ public without sharing class DealerOrder_Ext {
 
     private void buildOptions( LGND_APIv2_Product apiProd, Boolean isFactory )
     {
-      System.debug('APIPRODUCT');
       if( DealerOrder_Ext.enabledOptionFamiliesMap.containsKey( apiProd.RecordTypeName ) )
       {
-        System.debug('enabledOptionFamiliesMap containsKey ' + apiProd.RecordTypeName );
         for( String fam : DealerOrder_Ext.enabledOptionFamiliesMap.get( apiProd.RecordTypeName ) )
         {
-          System.debug('check fam - ' + fam );
           if( apiProd.OptionalProducts != null &&
               apiProd.OptionalProducts.containsKey(fam))
           {
-            System.debug('add ' + fam + ' - ' + apiProd.OptionalProducts );
             if (!this.optionalProducts.containsKey(fam))
               this.optionalProducts.put(fam, new List<OptionWrapper>());
 
@@ -268,8 +264,6 @@ public without sharing class DealerOrder_Ext {
             }
           }
         }
-        System.debug('OPTIONAL PRODUCTS');
-        System.debug( this.optionalProducts);
       }
     }
 
@@ -326,9 +320,9 @@ public without sharing class DealerOrder_Ext {
         standardProductId == uProd.Id ? false : true;
       this.optionalProducts = new Map<String, List<OptionWrapper>>();
       if( standardProductId != null )
-        this.cost = uProd.PartnerUpgradeCost;
+        this.cost = isFactory ? uProd.FactoryUpgradeCost : uProd.PartnerUpgradeCost;
       else
-        this.cost = uProd.PartnerPrice;
+        this.cost = isFactory ? uProd.FactoryPrice : uProd.PartnerPrice;
       //Options
       if( DealerOrder_Ext.enabledOptionFamiliesMap.containsKey( uProd.Family ) )
       {
@@ -1674,11 +1668,9 @@ public without sharing class DealerOrder_Ext {
           if Parent Product is null then this is first level option and we
           need to find all the available subOptions
         */
-        System.debug( mat.AcctSeedERP__Product__r.Name + ' - parentId - ' + mat.Parent_Product__c );
         if( mat.Parent_Product__c != null )
         {
           String key = mat.Parent_Product__c + '-' + mat.AcctSeedERP__Product__c;
-          System.debug( 'building key = ' + key);
           if( !subOptionMaterialsMap.containsKey(key) )
             subOptionMaterialsMap.put( key, new List<AcctSeedERP__Material__c>() );
           subOptionMaterialsMap.get( key).add( mat );
@@ -1774,7 +1766,6 @@ public without sharing class DealerOrder_Ext {
           {
             //ow.quantitySelected = 2;
             String key = opt.To_Product__c + '-' + opt.From_Product__c;
-            System.debug( 'reconstruct Key = ' + key );
             if( subOptionMaterialsMap.containsKey( key ) )
             {
               Integer quan = 0;
@@ -1785,8 +1776,6 @@ public without sharing class DealerOrder_Ext {
               ow.quantitySelected = quan;
             }
           }
-          System.debug('SUB OPTION OW');
-          System.debug(ow);
           parent_subOptions_Map.get( opt.To_Product__c ).add( ow );
         }
       }
@@ -1821,7 +1810,6 @@ public without sharing class DealerOrder_Ext {
   @AuraEnabled
   public static Dealer_Order__c saveDealerLineItem( String jsonData ) {
     DealerOrderLineWrapper wrapper = (DealerOrderLineWrapper)JSON.deserialize(jsonData, DealerOrderLineWrapper.class );
-    System.debug('*** WRAPPER *** ' + wrapper);
     if( wrapper.orderGroupId == null )
     {
       return createDealerLineItems( wrapper );
@@ -1935,7 +1923,6 @@ public without sharing class DealerOrder_Ext {
                                             String recordTypeName,
                                             String pricebookId )
   {
-    System.debug('FETCH PRODUCT - ' + recordTypeName );
     //verify product is in Specified Pricebook
     try {
       PricebookEntry pbe = [SELECT Id
@@ -1955,9 +1942,7 @@ public without sharing class DealerOrder_Ext {
       err += '\n\r Stop the order and contact your Legend Representative!';
       throw new AuraHandledException(err);
     }
-    //LGND_APIv2_Product lp = new LGND_APIv2_Product( productId, 'partner', recordTypeName );
     LGND_APIv2_Product lp = new LGND_APIv2_Product( productId, Id.valueOf(pricebookId), recordTypeName );
-    System.debug( lp );
     return JSON.serialize( new ProductWrapper( lp, pricebookId ) );
   }
 
@@ -2477,12 +2462,7 @@ public without sharing class DealerOrder_Ext {
       ( ow.isCheckbox == null || !ow.isCheckbox ) && ow.quantityStandard == ow.quantitySelected ?
         ow.quantitySelected :
         ow.quantitySelected - ow.quantityStandard;
-    System.debug(ow.name);
-    System.debug(ow.isCheckbox);
-    System.debug(ow.isSelected);
-    System.debug(ow.quantitySelected);
-    System.debug(ow.quantityStandard);
-    System.debug('calc quantity = ' + quantity);
+
     AcctSeedERP__Material__c material = new AcctSeedERP__Material__c(
       AcctSeedERP__Product__c = ow.id,
       AcctSeedERP__Comment__c = ow.name,
