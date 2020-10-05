@@ -198,7 +198,7 @@ public with sharing class gcInventoryReport_MRP {
 			 	AND No_WIP__c = false
 			  	AND AcctSeedERP__Project__r.Locked__c = false
 			 	AND AcctSeedERP__Project__c NOT IN:setIdRetailProjectToDiscard
-			  	AND AcctSeedERP__Project__r.Stage__c NOT IN ('Quoting','Closed Lost','Draft')
+			  	AND AcctSeedERP__Project__r.Stage__c NOT IN ('Quoting','Closed Lost','Draft','Pending Review')
 			  	AND AcctSeedERP__Product__c IN :setIdProduct
 			 	AND (IsDeleted =:checkDeleted OR AcctSeedERP__Project__r.GMBLASERP__Warehouse__c =:pIdWarehouse)
 			 	AND IsDeleted = false])
@@ -333,7 +333,7 @@ public with sharing class gcInventoryReport_MRP {
 		soql += ' WHERE AcctSeedERP__Product__c IN:setIdProduct';
 		soql += ' AND AcctSeedERP__Quantity_Per_Unit__c > 0';
 		soql += ' AND AcctSeedERP__Project__c NOT IN:setIdRetailProjectToDiscard ';
-		soql += ' AND AcctSeedERP__Project__r.Locked__c = false AND AcctSeedERP__Project__r.Stage__c NOT IN (\'Quoting\',\'Closed Lost\',\'Draft\') AND No_WIP__c = false';
+		soql += ' AND AcctSeedERP__Project__r.Locked__c = false AND AcctSeedERP__Project__r.Stage__c NOT IN (\'Quoting\',\'Closed Lost\',\'Draft\',\'Pending Review\') AND No_WIP__c = false';
 		if(pIdWarehouse != null)
 			soql += ' AND AcctSeedERP__Project__r.GMBLASERP__Warehouse__c =:pIdWarehouse';
 		soql += ' GROUP BY AcctSeedERP__Product__c';
@@ -353,7 +353,7 @@ public with sharing class gcInventoryReport_MRP {
 		soql += ' WHERE AcctSeedERP__Product__c IN:setIdProduct';
 		soql += ' AND AcctSeedERP__Quantity_Allocated__c > 0';
 		soql += ' AND AcctSeedERP__Project__c NOT IN:setIdRetailProjectToDiscard ';
-		soql += ' AND AcctSeedERP__Project__r.Locked__c = false AND AcctSeedERP__Project__r.Stage__c NOT IN (\'Quoting\',\'Closed Lost\',\'Draft\') AND No_WIP__c = false';
+		soql += ' AND AcctSeedERP__Project__r.Locked__c = false AND AcctSeedERP__Project__r.Stage__c NOT IN (\'Quoting\',\'Closed Lost\',\'Draft\',\'Pending Review\') AND No_WIP__c = false';
 		if(pIdWarehouse != null)
 			soql += ' AND AcctSeedERP__Project__r.GMBLASERP__Warehouse__c =:pIdWarehouse';
 		soql += ' GROUP BY AcctSeedERP__Product__c';
@@ -375,7 +375,7 @@ public with sharing class gcInventoryReport_MRP {
 		soql += ' AND Material__c != null';
 		soql += ' AND Material__r.AcctSeedERP__Project__r.Locked__c = false';
 		soql += ' AND Material__r.AcctSeedERP__Project__c NOT IN:setIdRetailProjectToDiscard ';
-		soql += ' AND Material__r.AcctSeedERP__Project__r.Stage__c NOT IN (\'Quoting\',\'Closed Lost\',\'Draft\')';
+		soql += ' AND Material__r.AcctSeedERP__Project__r.Stage__c NOT IN (\'Quoting\',\'Closed Lost\',\'Draft\',\'Pending Review\')';
 		if(pIdWarehouse != null)
 			soql += ' AND Material__r.AcctSeedERP__Project__r.GMBLASERP__Warehouse__c =:pIdWarehouse';
 		soql += ' GROUP BY GMBLASERP__Product__c';
@@ -643,7 +643,7 @@ public with sharing class gcInventoryReport_MRP {
 		soql += ' WHERE AcctSeedERP__Product__c IN:setIdProduct';
 		soql += ' AND AcctSeedERP__Quantity_Per_Unit__c > 0';
 		soql += ' AND AcctSeedERP__Project__c NOT IN:setIdRetailProjectToDiscard ';
-		soql += ' AND AcctSeedERP__Project__r.Locked__c = false AND AcctSeedERP__Project__r.Stage__c NOT IN (\'Quoting\',\'Closed Lost\',\'Draft\') AND No_WIP__c = false';
+		soql += ' AND AcctSeedERP__Project__r.Locked__c = false AND AcctSeedERP__Project__r.Stage__c NOT IN (\'Quoting\',\'Closed Lost\',\'Draft\',\'Pending Review\') AND No_WIP__c = false';
 		soql += ' AND AcctSeedERP__Project__r.GMBLASERP__Warehouse__c IN:setIdWarehouse';
 		soql += ' GROUP BY AcctSeedERP__Product__c, AcctSeedERP__Project__r.GMBLASERP__Warehouse__c';
 		soql += ' HAVING sum(AcctSeedERP__Quantity_Per_Unit__c) > 0';
@@ -667,7 +667,7 @@ public with sharing class gcInventoryReport_MRP {
 		soql += ' WHERE AcctSeedERP__Product__c IN:setIdProduct';
 		soql += ' AND AcctSeedERP__Quantity_Allocated__c > 0';
 		soql += ' AND AcctSeedERP__Project__c NOT IN:setIdRetailProjectToDiscard ';
-		soql += ' AND AcctSeedERP__Project__r.Locked__c = false AND AcctSeedERP__Project__r.Stage__c NOT IN (\'Quoting\',\'Closed Lost\',\'Draft\') AND No_WIP__c = false';
+		soql += ' AND AcctSeedERP__Project__r.Locked__c = false AND AcctSeedERP__Project__r.Stage__c NOT IN (\'Quoting\',\'Closed Lost\',\'Draft\',\'Pending Review\') AND No_WIP__c = false';
 		soql += ' AND AcctSeedERP__Project__r.GMBLASERP__Warehouse__c IN:setIdWarehouse';
 		soql += ' GROUP BY AcctSeedERP__Product__c, AcctSeedERP__Project__r.GMBLASERP__Warehouse__c';
 		soql += ' HAVING sum(AcctSeedERP__Quantity_Allocated__c) > 0';
@@ -693,7 +693,7 @@ public with sharing class gcInventoryReport_MRP {
 		soql += ' AND Material__c != null';
 		soql += ' AND Material__r.AcctSeedERP__Project__r.Locked__c = false';
 		soql += ' AND Material__r.AcctSeedERP__Project__c NOT IN:setIdRetailProjectToDiscard ';
-		soql += ' AND Material__r.AcctSeedERP__Project__r.Stage__c NOT IN (\'Quoting\',\'Closed Lost\',\'Draft\')';
+		soql += ' AND Material__r.AcctSeedERP__Project__r.Stage__c NOT IN (\'Quoting\',\'Closed Lost\',\'Draft\',\'Pending Review\')';
 		soql += ' AND Material__r.AcctSeedERP__Project__r.GMBLASERP__Warehouse__c IN:setIdWarehouse';
 		soql += ' GROUP BY GMBLASERP__Product__c, Material__r.AcctSeedERP__Project__r.GMBLASERP__Warehouse__c';
 		soql += ' HAVING sum(AcctSeedERP__Quantity__c) > 0';
