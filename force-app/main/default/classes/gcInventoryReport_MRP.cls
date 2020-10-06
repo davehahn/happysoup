@@ -290,6 +290,26 @@ public with sharing class gcInventoryReport_MRP {
 		}
 
 		listAggRes.clear();
+		//SELECT GMBLASERP__Product__c idProduct, sum(GMBLASERP__Quantity__c) qty, sum(GMBLASERP__Inventory_GL_Amount__c) amt FROM GMBLASERP__Inventory_Movement_Cube__c WHERE GMBLASERP__Product__c = '01ti0000007Sd2gAAC' AND GMBLASERP__Warehouse__c = 'a1T1Y000004WXURUA4' AND GMBLASERP__Movement_Date__c <= TODAY GROUP BY GMBLASERP__Product__c, GMBLASERP__Warehouse__c
+		soql = 'SELECT GMBLASERP__Product__c idProduct, sum(GMBLASERP__Quantity__c) qty FROM GMBLASERP__Inventory_Movement_Cube__c';
+		soql += ' WHERE GMBLASERP__Product__c IN:setIdProduct';
+		soql += ' AND GMBLASERP__Product__r.RecordType.Name != \'Boat\'';
+		soql += ' AND (GMBLASERP__Quantity__c < 0 OR GMBLASERP__Quantity__c > 0)';
+		if(pIdWarehouse != null)
+			soql += ' AND GMBLASERP__Warehouse__c =:pIdWarehouse';
+		soql += ' GROUP BY GMBLASERP__Product__c';
+		soql += ' HAVING sum(GMBLASERP__Quantity__c) < 0 OR sum(GMBLASERP__Quantity__c) > 0';
+
+		listAggRes.addAll(Database.query(soql));
+		for(sObject aggRes : listAggRes)
+		{
+			cube cube = mapCube.get((Id)aggRes.get('idProduct'));
+			if(cube == null) cube = new cube();
+			cube.currentInventoryFromCube = (Decimal)aggRes.get('qty');
+			mapCube.put((Id)aggRes.get('idProduct'), cube);
+		}
+
+		listAggRes.clear();
 		soql = 'SELECT AcctSeedERP__Product__c idProduct, sum(AcctSeedERP__Available_Quantity__c) qty FROM AcctSeedERP__Inventory_Balance__c';
 		soql += ' WHERE AcctSeedERP__Product__c IN:setIdProduct';
 		soql += ' AND AcctSeedERP__Product__r.RecordType.Name != \'Boat\'';
@@ -382,13 +402,13 @@ public with sharing class gcInventoryReport_MRP {
 		soql += ' HAVING sum(AcctSeedERP__Quantity__c) > 0';
 
 		listAggRes.addAll(Database.query(soql));
-		for(sObject aggRes : listAggRes)
-		{
-			cube cube = mapCube.get((Id)aggRes.get('idProduct'));
-			if(cube == null) cube = new cube();
-			cube.consumed += (Decimal)aggRes.get('qty');
-			mapCube.put((Id)aggRes.get('idProduct'), cube);
-		}
+//		for(sObject aggRes : listAggRes)
+//		{
+//			cube cube = mapCube.get((Id)aggRes.get('idProduct'));
+//			if(cube == null) cube = new cube();
+//			cube.consumed += (Decimal)aggRes.get('qty');
+//			mapCube.put((Id)aggRes.get('idProduct'), cube);
+//		}
 
 		mapCube.remove(null);
 
@@ -791,6 +811,7 @@ public with sharing class gcInventoryReport_MRP {
 		public Id idWarehouse;
 		public Decimal rigged;
 		public Decimal notrigged;
+		public Decimal currentInventoryFromCube;
 		public Decimal inventoryParts;
 		public Decimal purchasing;
 		public Decimal specified;
@@ -800,6 +821,7 @@ public with sharing class gcInventoryReport_MRP {
 		{
 			rigged = 0;
 			notrigged = 0;
+			currentInventoryFromCube = 0;
 			inventoryParts = 0;
 			purchasing = 0;
 			specified = 0;
@@ -810,6 +832,7 @@ public with sharing class gcInventoryReport_MRP {
 		{
 			rigged = 0;
 			notrigged = 0;
+			currentInventoryFromCube = 0;
 			inventoryParts = 0;
 			purchasing = 0;
 			specified = 0;
