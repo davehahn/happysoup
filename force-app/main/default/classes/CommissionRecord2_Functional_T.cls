@@ -701,7 +701,7 @@ private class CommissionRecord2_Functional_T
       insert materials;
       Test.stopTest();
       CommissionRecord2__c commRec = [
-          SELECT Id, Total_Payment_Amount__c
+          SELECT Id, Total_Payment_Amount__c, Total_Profit__c, Total_Commission_Payment__c
           FROM CommissionRecord2__c
           WHERE Project_Task__c = :task.Id
       ];
@@ -718,7 +718,7 @@ private class CommissionRecord2_Functional_T
       ];
       // 10 parts * $500 profit * default gross margin commission payment percent
       System.debug('CommRec');
-      System.debug(commRec.Total_Payment_Amount__c);
+      System.debug(commRec.Total_Commission_Payment__c);
       System.debug('Payments Size');
       System.debug(commPayments.size());
       System.debug('Commission');
@@ -728,7 +728,9 @@ private class CommissionRecord2_Functional_T
       Decimal expectedAmount = commRec.Total_Payment_Amount__c * (commPayments[0].Split_Percent__c / 100);
       System.debug('Commission AMount');
       System.debug(expectedAmount);
-      Decimal expectedAmountManager = commRec.Total_Payment_Amount__c * (managerUser.Commission_Manager_Business_Office__c / 100);
+      System.debug('Commission AMount');
+      System.debug(commRec.Total_Profit__c);
+      Decimal expectedAmountManager = commRec.Total_Profit__c * (managerUser.Commission_Manager_Business_Office__c / 100);
       System.debug('Manager Commission AMount');
       System.debug(expectedAmountManager);
       System.assertEquals(2, commPayments.size());
@@ -773,7 +775,7 @@ private class CommissionRecord2_Functional_T
       insert materials;
       Test.stopTest();
       CommissionRecord2__c commRec = [
-          SELECT Id, Total_Payment_Amount__c
+          SELECT Id, Total_Payment_Amount__c, Total_Commission_Payment__c
           FROM CommissionRecord2__c
           WHERE Project_Task__c = :task.Id
       ];
@@ -800,7 +802,9 @@ private class CommissionRecord2_Functional_T
       Decimal expectedAmount = commRec.Total_Payment_Amount__c * (commPayments[0].Split_Percent__c / 100);
       System.debug('Commission AMount');
       System.debug(expectedAmount);
-      Decimal expectedAmountManager = commRec.Total_Payment_Amount__c * (managerUser.Commission_Revenue_Manager__c / 100);
+      System.debug('Total_Commission_Payment__c');
+      System.debug(commRec.Total_Commission_Payment__c);
+      Decimal expectedAmountManager = commRec.Total_Commission_Payment__c * (managerUser.Commission_Revenue_Manager__c / 100);
       System.debug('Manager Commission AMount');
       System.debug(expectedAmountManager);
       System.assertEquals(2, commPayments.size());

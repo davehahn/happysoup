@@ -198,7 +198,7 @@ public with sharing class gcInventoryReport_MRP {
 			 	AND No_WIP__c = false
 			  	AND AcctSeedERP__Project__r.Locked__c = false
 			 	AND AcctSeedERP__Project__c NOT IN:setIdRetailProjectToDiscard
-			  	AND AcctSeedERP__Project__r.Stage__c NOT IN ('Quoting','Closed Lost','Draft')
+			  	AND AcctSeedERP__Project__r.Stage__c NOT IN ('Quoting','Closed Lost','Draft','Pending Review')
 			  	AND AcctSeedERP__Product__c IN :setIdProduct
 			 	AND (IsDeleted =:checkDeleted OR AcctSeedERP__Project__r.GMBLASERP__Warehouse__c =:pIdWarehouse)
 			 	AND IsDeleted = false])
@@ -290,6 +290,26 @@ public with sharing class gcInventoryReport_MRP {
 		}
 
 		listAggRes.clear();
+		//SELECT GMBLASERP__Product__c idProduct, sum(GMBLASERP__Quantity__c) qty, sum(GMBLASERP__Inventory_GL_Amount__c) amt FROM GMBLASERP__Inventory_Movement_Cube__c WHERE GMBLASERP__Product__c = '01ti0000007Sd2gAAC' AND GMBLASERP__Warehouse__c = 'a1T1Y000004WXURUA4' AND GMBLASERP__Movement_Date__c <= TODAY GROUP BY GMBLASERP__Product__c, GMBLASERP__Warehouse__c
+		soql = 'SELECT GMBLASERP__Product__c idProduct, sum(GMBLASERP__Quantity__c) qty FROM GMBLASERP__Inventory_Movement_Cube__c';
+		soql += ' WHERE GMBLASERP__Product__c IN:setIdProduct';
+		soql += ' AND GMBLASERP__Product__r.RecordType.Name != \'Boat\'';
+		soql += ' AND (GMBLASERP__Quantity__c < 0 OR GMBLASERP__Quantity__c > 0)';
+		if(pIdWarehouse != null)
+			soql += ' AND GMBLASERP__Warehouse__c =:pIdWarehouse';
+		soql += ' GROUP BY GMBLASERP__Product__c';
+		soql += ' HAVING sum(GMBLASERP__Quantity__c) < 0 OR sum(GMBLASERP__Quantity__c) > 0';
+
+		listAggRes.addAll(Database.query(soql));
+		for(sObject aggRes : listAggRes)
+		{
+			cube cube = mapCube.get((Id)aggRes.get('idProduct'));
+			if(cube == null) cube = new cube();
+			cube.currentInventoryFromCube = (Decimal)aggRes.get('qty');
+			mapCube.put((Id)aggRes.get('idProduct'), cube);
+		}
+
+		listAggRes.clear();
 		soql = 'SELECT AcctSeedERP__Product__c idProduct, sum(AcctSeedERP__Available_Quantity__c) qty FROM AcctSeedERP__Inventory_Balance__c';
 		soql += ' WHERE AcctSeedERP__Product__c IN:setIdProduct';
 		soql += ' AND AcctSeedERP__Product__r.RecordType.Name != \'Boat\'';
@@ -333,7 +353,7 @@ public with sharing class gcInventoryReport_MRP {
 		soql += ' WHERE AcctSeedERP__Product__c IN:setIdProduct';
 		soql += ' AND AcctSeedERP__Quantity_Per_Unit__c > 0';
 		soql += ' AND AcctSeedERP__Project__c NOT IN:setIdRetailProjectToDiscard ';
-		soql += ' AND AcctSeedERP__Project__r.Locked__c = false AND AcctSeedERP__Project__r.Stage__c NOT IN (\'Quoting\',\'Closed Lost\',\'Draft\') AND No_WIP__c = false';
+		soql += ' AND AcctSeedERP__Project__r.Locked__c = false AND AcctSeedERP__Project__r.Stage__c NOT IN (\'Quoting\',\'Closed Lost\',\'Draft\',\'Pending Review\') AND No_WIP__c = false';
 		if(pIdWarehouse != null)
 			soql += ' AND AcctSeedERP__Project__r.GMBLASERP__Warehouse__c =:pIdWarehouse';
 		soql += ' GROUP BY AcctSeedERP__Product__c';
@@ -353,7 +373,7 @@ public with sharing class gcInventoryReport_MRP {
 		soql += ' WHERE AcctSeedERP__Product__c IN:setIdProduct';
 		soql += ' AND AcctSeedERP__Quantity_Allocated__c > 0';
 		soql += ' AND AcctSeedERP__Project__c NOT IN:setIdRetailProjectToDiscard ';
-		soql += ' AND AcctSeedERP__Project__r.Locked__c = false AND AcctSeedERP__Project__r.Stage__c NOT IN (\'Quoting\',\'Closed Lost\',\'Draft\') AND No_WIP__c = false';
+		soql += ' AND AcctSeedERP__Project__r.Locked__c = false AND AcctSeedERP__Project__r.Stage__c NOT IN (\'Quoting\',\'Closed Lost\',\'Draft\',\'Pending Review\') AND No_WIP__c = false';
 		if(pIdWarehouse != null)
 			soql += ' AND AcctSeedERP__Project__r.GMBLASERP__Warehouse__c =:pIdWarehouse';
 		soql += ' GROUP BY AcctSeedERP__Product__c';
@@ -375,20 +395,20 @@ public with sharing class gcInventoryReport_MRP {
 		soql += ' AND Material__c != null';
 		soql += ' AND Material__r.AcctSeedERP__Project__r.Locked__c = false';
 		soql += ' AND Material__r.AcctSeedERP__Project__c NOT IN:setIdRetailProjectToDiscard ';
-		soql += ' AND Material__r.AcctSeedERP__Project__r.Stage__c NOT IN (\'Quoting\',\'Closed Lost\',\'Draft\')';
+		soql += ' AND Material__r.AcctSeedERP__Project__r.Stage__c NOT IN (\'Quoting\',\'Closed Lost\',\'Draft\',\'Pending Review\')';
 		if(pIdWarehouse != null)
 			soql += ' AND Material__r.AcctSeedERP__Project__r.GMBLASERP__Warehouse__c =:pIdWarehouse';
 		soql += ' GROUP BY GMBLASERP__Product__c';
 		soql += ' HAVING sum(AcctSeedERP__Quantity__c) > 0';
 
 		listAggRes.addAll(Database.query(soql));
-		for(sObject aggRes : listAggRes)
-		{
-			cube cube = mapCube.get((Id)aggRes.get('idProduct'));
-			if(cube == null) cube = new cube();
-			cube.consumed += (Decimal)aggRes.get('qty');
-			mapCube.put((Id)aggRes.get('idProduct'), cube);
-		}
+//		for(sObject aggRes : listAggRes)
+//		{
+//			cube cube = mapCube.get((Id)aggRes.get('idProduct'));
+//			if(cube == null) cube = new cube();
+//			cube.consumed += (Decimal)aggRes.get('qty');
+//			mapCube.put((Id)aggRes.get('idProduct'), cube);
+//		}
 
 		mapCube.remove(null);
 
@@ -643,7 +663,7 @@ public with sharing class gcInventoryReport_MRP {
 		soql += ' WHERE AcctSeedERP__Product__c IN:setIdProduct';
 		soql += ' AND AcctSeedERP__Quantity_Per_Unit__c > 0';
 		soql += ' AND AcctSeedERP__Project__c NOT IN:setIdRetailProjectToDiscard ';
-		soql += ' AND AcctSeedERP__Project__r.Locked__c = false AND AcctSeedERP__Project__r.Stage__c NOT IN (\'Quoting\',\'Closed Lost\',\'Draft\') AND No_WIP__c = false';
+		soql += ' AND AcctSeedERP__Project__r.Locked__c = false AND AcctSeedERP__Project__r.Stage__c NOT IN (\'Quoting\',\'Closed Lost\',\'Draft\',\'Pending Review\') AND No_WIP__c = false';
 		soql += ' AND AcctSeedERP__Project__r.GMBLASERP__Warehouse__c IN:setIdWarehouse';
 		soql += ' GROUP BY AcctSeedERP__Product__c, AcctSeedERP__Project__r.GMBLASERP__Warehouse__c';
 		soql += ' HAVING sum(AcctSeedERP__Quantity_Per_Unit__c) > 0';
@@ -667,7 +687,7 @@ public with sharing class gcInventoryReport_MRP {
 		soql += ' WHERE AcctSeedERP__Product__c IN:setIdProduct';
 		soql += ' AND AcctSeedERP__Quantity_Allocated__c > 0';
 		soql += ' AND AcctSeedERP__Project__c NOT IN:setIdRetailProjectToDiscard ';
-		soql += ' AND AcctSeedERP__Project__r.Locked__c = false AND AcctSeedERP__Project__r.Stage__c NOT IN (\'Quoting\',\'Closed Lost\',\'Draft\') AND No_WIP__c = false';
+		soql += ' AND AcctSeedERP__Project__r.Locked__c = false AND AcctSeedERP__Project__r.Stage__c NOT IN (\'Quoting\',\'Closed Lost\',\'Draft\',\'Pending Review\') AND No_WIP__c = false';
 		soql += ' AND AcctSeedERP__Project__r.GMBLASERP__Warehouse__c IN:setIdWarehouse';
 		soql += ' GROUP BY AcctSeedERP__Product__c, AcctSeedERP__Project__r.GMBLASERP__Warehouse__c';
 		soql += ' HAVING sum(AcctSeedERP__Quantity_Allocated__c) > 0';
@@ -693,7 +713,7 @@ public with sharing class gcInventoryReport_MRP {
 		soql += ' AND Material__c != null';
 		soql += ' AND Material__r.AcctSeedERP__Project__r.Locked__c = false';
 		soql += ' AND Material__r.AcctSeedERP__Project__c NOT IN:setIdRetailProjectToDiscard ';
-		soql += ' AND Material__r.AcctSeedERP__Project__r.Stage__c NOT IN (\'Quoting\',\'Closed Lost\',\'Draft\')';
+		soql += ' AND Material__r.AcctSeedERP__Project__r.Stage__c NOT IN (\'Quoting\',\'Closed Lost\',\'Draft\',\'Pending Review\')';
 		soql += ' AND Material__r.AcctSeedERP__Project__r.GMBLASERP__Warehouse__c IN:setIdWarehouse';
 		soql += ' GROUP BY GMBLASERP__Product__c, Material__r.AcctSeedERP__Project__r.GMBLASERP__Warehouse__c';
 		soql += ' HAVING sum(AcctSeedERP__Quantity__c) > 0';
@@ -791,6 +811,7 @@ public with sharing class gcInventoryReport_MRP {
 		public Id idWarehouse;
 		public Decimal rigged;
 		public Decimal notrigged;
+		public Decimal currentInventoryFromCube;
 		public Decimal inventoryParts;
 		public Decimal purchasing;
 		public Decimal specified;
@@ -800,6 +821,7 @@ public with sharing class gcInventoryReport_MRP {
 		{
 			rigged = 0;
 			notrigged = 0;
+			currentInventoryFromCube = 0;
 			inventoryParts = 0;
 			purchasing = 0;
 			specified = 0;
@@ -810,6 +832,7 @@ public with sharing class gcInventoryReport_MRP {
 		{
 			rigged = 0;
 			notrigged = 0;
+			currentInventoryFromCube = 0;
 			inventoryParts = 0;
 			purchasing = 0;
 			specified = 0;

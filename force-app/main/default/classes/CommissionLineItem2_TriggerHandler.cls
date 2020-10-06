@@ -87,10 +87,12 @@ public without sharing class CommissionLineItem2_TriggerHandler extends TriggerH
       if( cli.Payment_Based_on_Profit__c )
       {
         cli.Payment_Amount__c = cli.Profit__c * cli.Commission_Rate__c;
+        cli.Actual_Amount_for_Commission__c = cli.Profit__c;
       }
       else
       {
         cli.Payment_Amount__c = cli.Sale_Price__c * cli.Quantity__c * cli.Commission_Rate__c;
+        cli.Actual_Amount_for_Commission__c = cli.Sale_Price__c * cli.Quantity__c;
       }
     }
   }
