@@ -61,13 +61,15 @@
         $A.getCallback( function( result) {
           if( result.length > 0 )
           {
+            console.log( 'result' );
             console.log( result );
             var obj = {
+              inventoryParts2: parseFloat(result[0].inventoryParts2),
               all: parseFloat(result[0].inventoryParts),
               required: parseFloat(result[0].required),
-              available: parseFloat(result[0].inventory),
+              available: parseFloat(result[0].inventory2),
               onOrder: parseFloat(result[0].purchasing),
-              afterRecieving: parseFloat(result[0].expected)
+              afterRecieving: parseFloat(result[0].expected2)
             }
             component.set('v.selectedInventoryDetail', obj );
           }

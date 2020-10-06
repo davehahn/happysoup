@@ -74,15 +74,15 @@ public with sharing class Product_BinLocations_Controller_dh {
   @AuraEnabled
   public static String fetchWarehouseInventory( Id prodId, String whName )
   {
-      Set<Id> prodIds = new Set<Id>{prodId};
+      List<Id> prodIds = new List<Id>{prodId};
       Id whId = null;
       try {
         AcctSeedERP__Warehouse__c wh = [SELECT Id FROM AcctSeedERP__Warehouse__c WHERE Name = :whName];
         whId = wh.Id;
       }
       catch(Exception e){}
-      //Id partRTid = LGND_Utilities.recordTypeIdFromName('Product2', 'Part');
-      return JSON.serialize( gcInventoryReport_MRP.retrieveProducts( prodIds, whId ) );
+      Id partRTid = LGND_Utilities.recordTypeIdFromName('Product2', 'Part');
+      return JSON.serialize( gcInventoryReport_MRP.retrieveProducts( prodIds, whId, partRTid ) );
       //Map<Id, gcInventoryReport_MRP.cube> allCubes = gcInventoryReport_MRP.retrieveProducts(setIdProduct,idWarehouse);
   }
 

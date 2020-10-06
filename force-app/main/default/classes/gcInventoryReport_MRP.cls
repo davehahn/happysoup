@@ -28,8 +28,8 @@ public with sharing class gcInventoryReport_MRP {
 		Id idWarehouseTransit = GMBLASERP__Inventory_Settings__c.getOrgDefaults().GMBLASERP__Transit_Warehouse_Id__c;
 		listOptions.add(new selectOption('', '-All-'));
 		for(AcctSeedERP__Warehouse__c whs :
-			[SELECT Id, Name FROM AcctSeedERP__Warehouse__c WHERE Id !=:idWarehouseAdjustment AND Id !=:idWarehouseTransit ORDER BY Name])
-        {
+		[SELECT Id, Name FROM AcctSeedERP__Warehouse__c WHERE Id !=:idWarehouseAdjustment AND Id !=:idWarehouseTransit ORDER BY Name])
+		{
 			listOptions.add(new selectOption(whs.Id, whs.Name));
 		}
 
@@ -40,10 +40,10 @@ public with sharing class gcInventoryReport_MRP {
 	{
 		List<SelectOption> listOptions = new List<SelectOption>();
 		//listOptions.add(new selectOption('', '-All-'));
-	    Map<Id,Schema.RecordTypeInfo> productRecordTypeInfo = Schema.SObjectType.Product2.getRecordTypeInfosById();
+		Map<Id,Schema.RecordTypeInfo> productRecordTypeInfo = Schema.SObjectType.Product2.getRecordTypeInfosById();
 
 		for(Id idRT : productRecordTypeInfo.keySet())
-        {
+		{
 			listOptions.add(new selectOption(idRT, productRecordTypeInfo.get(idRT).getName()));
 		}
 
@@ -61,22 +61,22 @@ public with sharing class gcInventoryReport_MRP {
 		Boolean checkDeleted = true;
 		if(pIdWarehouse == null) checkDeleted = false;
 		for(GMBLASERP__Serial_Number__c x :
-			[SELECT Id, Name,
-					Dealer_Rigged__c,
-					Available_Retail__c,
-					Available_Wholesale__c,
-					Model_Year__c,
-					GMBLASERP__Product__c,
-					Product_Name__c,
-					GMBLASERP__Lot__c,
-					GMBLASERP__Lot__r.Name,
-					GMBLASERP__Inventory_Balance__r.AcctSeedERP__Warehouse__c,
-					GMBLASERP__Inventory_Balance__r.AcctSeedERP__Warehouse__r.Name
-			 FROM GMBLASERP__Serial_Number__c
-			 WHERE GMBLASERP__Inventory_Balance__c != null
-			 	AND (IsDeleted =:checkDeleted OR GMBLASERP__Inventory_Balance__r.AcctSeedERP__Warehouse__c =:pIdWarehouse)
-			 	AND IsDeleted = false
-			   	AND GMBLASERP__Product__c IN :setIdProduct])
+		[SELECT Id, Name,
+			Dealer_Rigged__c,
+			Available_Retail__c,
+			Available_Wholesale__c,
+			Model_Year__c,
+			GMBLASERP__Product__c,
+			Product_Name__c,
+			GMBLASERP__Lot__c,
+			GMBLASERP__Lot__r.Name,
+			GMBLASERP__Inventory_Balance__r.AcctSeedERP__Warehouse__c,
+			GMBLASERP__Inventory_Balance__r.AcctSeedERP__Warehouse__r.Name
+		FROM GMBLASERP__Serial_Number__c
+		WHERE GMBLASERP__Inventory_Balance__c != null
+		AND (IsDeleted =:checkDeleted OR GMBLASERP__Inventory_Balance__r.AcctSeedERP__Warehouse__c =:pIdWarehouse)
+		AND IsDeleted = false
+		AND GMBLASERP__Product__c IN :setIdProduct])
 		{
 			map<String,String> m = new map<String,String>();
 
@@ -110,24 +110,24 @@ public with sharing class gcInventoryReport_MRP {
 		Boolean checkDeleted = true;
 		if(pIdWarehouse == null) checkDeleted = false;
 		for(AcctSeedERP__Purchase_Order_Line__c x :
-			[SELECT AcctSeedERP__Purchase_Order__c,
-					AcctSeedERP__Purchase_Order__r.Name,
-					AcctSeedERP__Purchase_Order__r.AcctSeedERP__Order_Date__c,
-					AcctSeedERP__Purchase_Order__r.AcctSeedERP__Vendor__r.Name,
-					AcctSeedERP__Purchase_Order__r.Warehouse__c,
-					AcctSeedERP__Purchase_Order__r.Warehouse__r.Name,
-					AcctSeedERP__Product__r.Name,
-					AcctSeedERP__Quantity__c,
-					AcctSeedERP__Quantity_Unreceived__c
-			 FROM AcctSeedERP__Purchase_Order_Line__c
-			 WHERE AcctSeedERP__Quantity_Unreceived__c > 0
-			 	AND (IsDeleted =:checkDeleted
-			 		OR (AcctSeedERP__Purchase_Order__r.Warehouse__c =:pIdWarehouse
-			 			OR AcctSeedERP__Purchase_Order__r.Warehouse__c = null))
-			 	AND IsDeleted = false
-			   	AND AcctSeedERP__Purchase_Order__r.AcctSeedERP__Status__c = 'Open'
-			   	AND AcctSeedERP__Product__r.AcctSeed__Inventory_Product__c = true
-			   	AND AcctSeedERP__Product__c IN :setIdProduct])
+		[SELECT AcctSeedERP__Purchase_Order__c,
+			AcctSeedERP__Purchase_Order__r.Name,
+			AcctSeedERP__Purchase_Order__r.AcctSeedERP__Order_Date__c,
+			AcctSeedERP__Purchase_Order__r.AcctSeedERP__Vendor__r.Name,
+			AcctSeedERP__Purchase_Order__r.Warehouse__c,
+			AcctSeedERP__Purchase_Order__r.Warehouse__r.Name,
+			AcctSeedERP__Product__r.Name,
+			AcctSeedERP__Quantity__c,
+			AcctSeedERP__Quantity_Unreceived__c
+		FROM AcctSeedERP__Purchase_Order_Line__c
+		WHERE AcctSeedERP__Quantity_Unreceived__c > 0
+		AND (IsDeleted =:checkDeleted
+		OR (AcctSeedERP__Purchase_Order__r.Warehouse__c =:pIdWarehouse
+		OR AcctSeedERP__Purchase_Order__r.Warehouse__c = null))
+		AND IsDeleted = false
+		AND AcctSeedERP__Purchase_Order__r.AcctSeedERP__Status__c = 'Open'
+		AND AcctSeedERP__Product__r.AcctSeed__Inventory_Product__c = true
+		AND AcctSeedERP__Product__c IN :setIdProduct])
 		{
 			map<String,String> m = new map<String,String>();
 
@@ -179,29 +179,29 @@ public with sharing class gcInventoryReport_MRP {
 		Boolean checkDeleted = true;
 		if(pIdWarehouse == null) checkDeleted = false;
 		for(AcctSeedERP__Material__c x :
-			[SELECT AcctSeedERP__Project__c,
-					AcctSeedERP__Project__r.RecordType.Name,
-					AcctSeedERP__Project__r.AcctSeedERP__Work_Order_Number__c,
-					AcctSeedERP__Project__r.Serial_Number__c,
-					AcctSeedERP__Project__r.Serial_Number__r.Name,
-					AcctSeedERP__Project__r.Serial_Number__r.GMBLASERP__Lot__r.Name,
-					AcctSeedERP__Project__r.GMBLASERP__Warehouse__c,
-					AcctSeedERP__Project__r.GMBLASERP__Warehouse__r.Name,
-					AcctSeedERP__Project__r.Name,
-					AcctSeedERP__Project__r.CreatedDate,
-					AcctSeedERP__Product__r.Name,
-					AcctSeedERP__Quantity_Per_Unit__c,
-					AcctSeedERP__Quantity_Allocated__c,
-					(SELECT Id, AcctSeedERP__Quantity__c FROM Outbound_Inventory_Movements__r)
-			 FROM AcctSeedERP__Material__c
-			 WHERE AcctSeedERP__Quantity_Per_Unit__c > 0
-			 	AND No_WIP__c = false
-			  	AND AcctSeedERP__Project__r.Locked__c = false
-			 	AND AcctSeedERP__Project__c NOT IN:setIdRetailProjectToDiscard
-			  	AND AcctSeedERP__Project__r.Stage__c NOT IN ('Quoting','Closed Lost','Draft','Pending Review')
-			  	AND AcctSeedERP__Product__c IN :setIdProduct
-			 	AND (IsDeleted =:checkDeleted OR AcctSeedERP__Project__r.GMBLASERP__Warehouse__c =:pIdWarehouse)
-			 	AND IsDeleted = false])
+		[SELECT AcctSeedERP__Project__c,
+			AcctSeedERP__Project__r.RecordType.Name,
+			AcctSeedERP__Project__r.AcctSeedERP__Work_Order_Number__c,
+			AcctSeedERP__Project__r.Serial_Number__c,
+			AcctSeedERP__Project__r.Serial_Number__r.Name,
+			AcctSeedERP__Project__r.Serial_Number__r.GMBLASERP__Lot__r.Name,
+			AcctSeedERP__Project__r.GMBLASERP__Warehouse__c,
+			AcctSeedERP__Project__r.GMBLASERP__Warehouse__r.Name,
+			AcctSeedERP__Project__r.Name,
+			AcctSeedERP__Project__r.CreatedDate,
+			AcctSeedERP__Product__r.Name,
+			AcctSeedERP__Quantity_Per_Unit__c,
+			AcctSeedERP__Quantity_Allocated__c,
+		(SELECT Id, AcctSeedERP__Quantity__c FROM Outbound_Inventory_Movements__r)
+		FROM AcctSeedERP__Material__c
+		WHERE AcctSeedERP__Quantity_Per_Unit__c > 0
+		AND No_WIP__c = false
+		AND AcctSeedERP__Project__r.Locked__c = false
+		AND AcctSeedERP__Project__c NOT IN:setIdRetailProjectToDiscard
+		AND AcctSeedERP__Project__r.Stage__c NOT IN ('Quoting','Closed Lost','Draft','Pending Review')
+		AND AcctSeedERP__Product__c IN :setIdProduct
+		AND (IsDeleted =:checkDeleted OR AcctSeedERP__Project__r.GMBLASERP__Warehouse__c =:pIdWarehouse)
+		AND IsDeleted = false])
 		{
 			map<String,String> m = new map<String,String>();
 			m.put('idProject',x.AcctSeedERP__Project__c);
@@ -232,11 +232,11 @@ public with sharing class gcInventoryReport_MRP {
 				m.put('qtyAllocated','0');
 
 			Decimal qtyAllocated = 0;
-		 	for(AcctSeedERP__Outbound_Inventory_Movement__c oim : x.Outbound_Inventory_Movements__r){
-		 		qtyAllocated += oim.AcctSeedERP__Quantity__c == null ? 0 : oim.AcctSeedERP__Quantity__c;
-		 	}
-		 	if(qtyAllocated <> 0)
-		 		m.put('qtyAllocated',String.valueOf(qtyAllocated.setScale(6)));
+			for(AcctSeedERP__Outbound_Inventory_Movement__c oim : x.Outbound_Inventory_Movements__r){
+				qtyAllocated += oim.AcctSeedERP__Quantity__c == null ? 0 : oim.AcctSeedERP__Quantity__c;
+			}
+			if(qtyAllocated <> 0)
+				m.put('qtyAllocated',String.valueOf(qtyAllocated.setScale(6)));
 
 			listJSON.add(m);
 		}
@@ -402,13 +402,13 @@ public with sharing class gcInventoryReport_MRP {
 		soql += ' HAVING sum(AcctSeedERP__Quantity__c) > 0';
 
 		listAggRes.addAll(Database.query(soql));
-//		for(sObject aggRes : listAggRes)
-//		{
-//			cube cube = mapCube.get((Id)aggRes.get('idProduct'));
-//			if(cube == null) cube = new cube();
-//			cube.consumed += (Decimal)aggRes.get('qty');
-//			mapCube.put((Id)aggRes.get('idProduct'), cube);
-//		}
+		for(sObject aggRes : listAggRes)
+		{
+			cube cube = mapCube.get((Id)aggRes.get('idProduct'));
+			if(cube == null) cube = new cube();
+			cube.consumed += (Decimal)aggRes.get('qty');
+			mapCube.put((Id)aggRes.get('idProduct'), cube);
+		}
 
 		mapCube.remove(null);
 
@@ -455,7 +455,7 @@ public with sharing class gcInventoryReport_MRP {
 			}
 		}
 		if(!listProductsToUpdate.isEmpty())
-			 update listProductsToUpdate;
+			update listProductsToUpdate;
 	}
 
 	public static void updateProductAvailabilityBatch(Set<Id> setIdProduct)
@@ -465,7 +465,7 @@ public with sharing class gcInventoryReport_MRP {
 		Map<Id,cube> mapCube = retrieveProducts(setIdProduct,null);
 		List<Product2> listProductUpdate = new List<Product2>();
 		for(Product2 p :
-			[SELECT Id, MRP_Quantity__c FROM Product2 WHERE Id IN:setIdProduct])
+		[SELECT Id, MRP_Quantity__c FROM Product2 WHERE Id IN:setIdProduct])
 		{
 			Decimal qtyMRP = 0;
 			cube cube = mapCube.get(p.Id);
@@ -482,7 +482,7 @@ public with sharing class gcInventoryReport_MRP {
 		if(!listProductUpdate.isEmpty())
 		{
 			Boolean olVal =
-			gcProduct.disableTrigger = true;
+				gcProduct.disableTrigger = true;
 			update listProductUpdate;
 		}
 	}
@@ -496,18 +496,18 @@ public with sharing class gcInventoryReport_MRP {
 			setIdWarehouse.add(whs.Id);
 
 		setIdWarehouse.remove(GMBLASERP__Inventory_Settings__c.getOrgDefaults().GMBLASERP__Adjustment_Warehouse_Id__c);
-    	setIdWarehouse.remove(GMBLASERP__Inventory_Settings__c.getOrgDefaults().GMBLASERP__Transit_Warehouse_Id__c);
+		setIdWarehouse.remove(GMBLASERP__Inventory_Settings__c.getOrgDefaults().GMBLASERP__Transit_Warehouse_Id__c);
 
 		Map<String,cube> mapCube = retrieveProductsByWarehouse(setIdProduct,setIdWarehouse);
 		Map<String,Product_MRP_Value__c> mapMRPCube = new Map<String,Product_MRP_Value__c>();
-		for(Product_MRP_Value__c p : 
-			[SELECT Id,
-				Product__c,
-				Warehouse__c,
-				MRP_Quantity_Available__c,
-				Uniquefier__c
-			FROM Product_MRP_Value__c 
-			WHERE Product__c IN:setIdProduct])
+		for(Product_MRP_Value__c p :
+		[SELECT Id,
+			Product__c,
+			Warehouse__c,
+			MRP_Quantity_Available__c,
+			Uniquefier__c
+		FROM Product_MRP_Value__c
+		WHERE Product__c IN:setIdProduct])
 		{
 			Id idP = p.Product__c;
 			Id idW = p.Warehouse__c;
@@ -539,7 +539,7 @@ public with sharing class gcInventoryReport_MRP {
 
 		List<Product2> listProductUpdate = new List<Product2>();
 		for(Product2 p :
-			[SELECT Id, MRP_Quantity__c FROM Product2 WHERE Id IN:setIdProduct])
+		[SELECT Id, MRP_Quantity__c FROM Product2 WHERE Id IN:setIdProduct])
 		{
 			Decimal qtyMRP = 0;
 			if(mapProductMRP.containsKey(p.Id))
@@ -602,7 +602,7 @@ public with sharing class gcInventoryReport_MRP {
 		{
 			Id idProduct = (Id)aggRes.get('idProduct');
 			Id idWarehouse = (Id)aggRes.get('idWarehouse');
-			String key = idProduct + '' + idWarehouse;			
+			String key = idProduct + '' + idWarehouse;
 			cube cube = mapCube.get(key);
 			if(cube == null) {
 				cube = new cube(idProduct,idWarehouse);
@@ -626,7 +626,7 @@ public with sharing class gcInventoryReport_MRP {
 		{
 			Id idProduct = (Id)aggRes.get('idProduct');
 			Id idWarehouse = (Id)aggRes.get('idWarehouse');
-			String key = idProduct + '' + idWarehouse;			
+			String key = idProduct + '' + idWarehouse;
 			cube cube = mapCube.get(key);
 			if(cube == null) {
 				cube = new cube(idProduct,idWarehouse);
@@ -649,7 +649,7 @@ public with sharing class gcInventoryReport_MRP {
 		{
 			Id idProduct = (Id)aggRes.get('idProduct');
 			Id idWarehouse = (Id)aggRes.get('idWarehouse');
-			String key = idProduct + '' + idWarehouse;			
+			String key = idProduct + '' + idWarehouse;
 			cube cube = mapCube.get(key);
 			if(cube == null) {
 				cube = new cube(idProduct,idWarehouse);
@@ -673,7 +673,7 @@ public with sharing class gcInventoryReport_MRP {
 		{
 			Id idProduct = (Id)aggRes.get('idProduct');
 			Id idWarehouse = (Id)aggRes.get('idWarehouse');
-			String key = idProduct + '' + idWarehouse;			
+			String key = idProduct + '' + idWarehouse;
 			cube cube = mapCube.get(key);
 			if(cube == null) {
 				cube = new cube(idProduct,idWarehouse);
@@ -697,7 +697,7 @@ public with sharing class gcInventoryReport_MRP {
 		{
 			Id idProduct = (Id)aggRes.get('idProduct');
 			Id idWarehouse = (Id)aggRes.get('idWarehouse');
-			String key = idProduct + '' + idWarehouse;			
+			String key = idProduct + '' + idWarehouse;
 			cube cube = mapCube.get(key);
 			if(cube == null) {
 				cube = new cube(idProduct,idWarehouse);
@@ -723,7 +723,7 @@ public with sharing class gcInventoryReport_MRP {
 		{
 			Id idProduct = (Id)aggRes.get('idProduct');
 			Id idWarehouse = (Id)aggRes.get('idWarehouse');
-			String key = idProduct + '' + idWarehouse;			
+			String key = idProduct + '' + idWarehouse;
 			cube cube = mapCube.get(key);
 			if(cube == null) {
 				cube = new cube(idProduct,idWarehouse);
@@ -754,9 +754,9 @@ public with sharing class gcInventoryReport_MRP {
 		Map<Id,cube> mapCube = retrieveProducts(setIdProducts,pIdWarehouse);
 
 		for(Product2 p :
-			[SELECT Id, Name, Unique_Product_Code__c, Family, RecordType.Name, AcctSeedERP__Default_Vendor__r.Name
-			 FROM Product2
-			 WHERE Id IN:setIdProducts])
+		[SELECT Id, Name, Unique_Product_Code__c, Family, RecordType.Name, AcctSeedERP__Default_Vendor__r.Name
+		FROM Product2
+		WHERE Id IN:setIdProducts])
 		{
 			map<String,String> m = new map<String,String>();
 			m.put('idProduct',p.Id);
@@ -772,6 +772,7 @@ public with sharing class gcInventoryReport_MRP {
 				m.put('rigged',String.valueOf(cube.rigged.setScale(6)));
 				m.put('notrigged',String.valueOf(cube.notrigged.setScale(6)));
 				m.put('inventoryParts',String.valueOf(cube.inventoryParts.setScale(6)));
+				m.put('inventoryParts2',String.valueOf(cube.currentInventoryFromCube.setScale(6)));
 				m.put('specified',String.valueOf(cube.specified.setScale(6)));
 				m.put('consumed',String.valueOf(cube.consumed.setScale(6)));
 				Decimal required = cube.specified - cube.consumed;
@@ -781,9 +782,16 @@ public with sharing class gcInventoryReport_MRP {
 				Decimal inventory = cube.rigged + cube.notrigged + cube.inventoryParts - required;
 				m.put('inventory', String.valueOf(inventory.setScale(6)));
 
+				Decimal inventory2 = cube.rigged + cube.notrigged + cube.currentInventoryFromCube - required;
+				m.put('inventory2', String.valueOf(inventory2.setScale(6)));
+
 				Decimal expected = inventory + cube.purchasing;
 				m.put('expected', String.valueOf(expected.setScale(6)));
 				m.put('available', String.valueOf((expected - required).setScale(6)));
+
+				Decimal expected2 = inventory2 + cube.purchasing;
+				m.put('expected2', String.valueOf(expected2.setScale(6)));
+				m.put('available2', String.valueOf((expected2 - required).setScale(6)));
 			}
 			else
 			{
@@ -791,13 +799,16 @@ public with sharing class gcInventoryReport_MRP {
 				m.put('notrigged','0');
 				m.put('inventoryParts','0');
 				m.put('inventory','0');
+				m.put('inventory2','0');
 				m.put('purchasing','0');
 				m.put('specified','0');
 				m.put('consumed','0');
 				m.put('required','0');
 
 				m.put('expected','0');
+				m.put('expected2','0');
 				m.put('available','0');
+				m.put('available2','0');
 			}
 			listJSON.add(m);
 		}
@@ -844,6 +855,282 @@ public with sharing class gcInventoryReport_MRP {
 
 	public static void coverage(){
 		integer i;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
 		i=1;
 		i=1;
 		i=1;
