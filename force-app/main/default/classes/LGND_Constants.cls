@@ -128,6 +128,39 @@ public without sharing class LGND_Constants {
     }
   }
 
+  /* CASE RECORD TYPES */
+
+  public static Id caseRtId_Promotion {
+    get {
+      if( caseRtId_Promotion == null ) fetchCaseRecordTypes();
+      if( caseRtId_Promotion == null )
+        throw new LGND_Utilities.LGND_Exception('Case Record Type with API name [Promotion] does not exist');
+      return caseRtId_Promotion;
+    }
+  }
+
+  public static Id caseRtId_Warranty {
+    get {
+      if( caseRtId_Warranty == null ) fetchCaseRecordTypes();
+      if( caseRtId_Warranty == null )
+        throw new LGND_Utilities.LGND_Exception('Case Record Type with API name [Warranty] does not exist');
+      return caseRtId_Warranty;
+    }
+  }
+
+  private static void fetchCaseRecordTypes()
+  {
+    for(RecordType rt : [ SELECT Id, DeveloperName, SobjectType
+    FROM RecordType
+    WHERE SobjectType = 'Case' ])
+    {
+      if( rt.DeveloperName == 'Promotion' )
+        caseRtId_Promotion = rt.Id;
+      if( rt.DeveloperName == 'Warranty' )
+        caseRtId_Warranty = rt.Id;
+    }
+  }
+
   /* ++++++++++++++++++ PRICEBOOKS +++++++++++++++++++++ */
 
   public static Id retailPricebookId {

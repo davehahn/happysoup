@@ -3,7 +3,7 @@
  -->
 
 <aura:component description="PartnerReservations"
-                controller="Partner_OutstandingBoatOrders"
+                controller="PartnerReservations_Controller"
                 implements="forceCommunity:availableForAllPageTypes">
   <aura:attribute name="isFactoryStore" type="Boolean" default="false" />
   <aura:attribute name="availableLists" type="String[]" />
@@ -11,6 +11,18 @@
   <aura:attribute name="allRecords" type="List" />
   <aura:attribute name="filteredRecords" type="List" />
   <aura:attribute name="isReserving" type="Boolean" default="false" />
+  <aura:attribute name="recordForReserve" type="Object" />
+  <aura:attribute name="customer" type="Object" />
+  <aura:attribute name="customerId" type="String" />
+  <aura:attribute name="customerFormDisplayed" type="Boolean" />
+  <aura:attribute name="reservationSteps" type="List" />
+  <aura:attribute name="currentStep" type="String" />
+  <aura:attribute name="availablePromotions" type="List" />
+  <aura:attribute name="selectedPromotion" type="Object" />
+  <aura:attribute name="retailERPs" type="List" />
+  <aura:attribute name="requiredPromotionDocuments" type="List" />
+  <aura:attribute name="promotionCase" type="Object" />
+  <aura:attribute name="uploadedFiles" type="List" />
 
   <ltng:require scripts="{!join(',', $Resource.Libraries +'/js/LightningApex.js',
                                      $Resource.Libraries +'/js/LightningUtils.js') }"
@@ -125,9 +137,168 @@
     </ul>
     </aura:if>
 
+
     <aura:if isTrue="{! v.isReserving}">
-      Reservation form
+
+      <div class="new-reservation-form-container">
+
+        <!-- PARTNER Reservation Form -->
+        <aura:if isTrue="{! not(v.isFactoryStore)}">
+          <aura:if isTrue="{! equals( v.currentStep, v.reservationSteps[0] ) }">
+            <c:Account_FindOrCreate_PersonAccount Customer="{!v.customer}"
+                                                  displayForm="{!v.customerFormDisplayed}"
+                                                  aura:id="customer-form"/>
+          </aura:if>
+
+          <aura:if isTrue="{! equals( v.currentStep, v.reservationSteps[1] ) }">
+            <!-- Promotion Selection -->
+            <aura:if isTrue="{! empty(v.promotionCase)}">
+              <h2 class="slds-text-align_center slds-text-heading_medium slds-m-top_medium slds-m-bottom_small slds-m-left_small">Select a Promotion</h2>
+              <table class="promo-table slds-table slds-table_bordered slds-table_cell-buffer slds-max-medium-table--stacked">
+                <thead>
+                  <tr class="slds-text-title_caps slds-line-height_reset">
+                    <th scope="col">Promotion Name</th>
+                    <th scope="col"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <aura:iteration items="{!v.availablePromotions}" var="promo">
+                    <tr>
+                      <td data-label="Promotion Name">{!promo.Promotion__r.Name}</td>
+                      <td>
+                        <lightning:button label="Select"
+                                          value="{!promo}"
+                                          onclick="{!c.handleSelectPromo}"/>
+                      </td>
+                    </tr>
+                  </aura:iteration>
+                </tbody>
+              </table>
+            </aura:if>
+          </aura:if>
+          <aura:if isTrue="{! equals( v.currentStep, v.reservationSteps[2] ) }">
+            <!-- Promotion Documentation Upload -->
+            <aura:if isTrue="{! and( !empty(v.promotionCase), !empty(v.requiredPromotionDocuments) )}">
+              <h2 class="slds-text-align_center slds-text-heading_medium slds-m-top_medium slds-m-bottom_small slds-m-left_small">
+                Please upload the following required documentation
+              </h2>
+              <div class="file-list">
+                <ul class="slds-p-vertical_medium">
+                  <aura:iteration items="{! v.requiredPromotionDocuments }" var="item">
+                    <li>{!item}</li>
+                  </aura:iteration>
+                </ul>
+              </div>
+              <aura:if isTrue="{! !equals( v.requiredPromotionDocuments.length,
+                                           v.uploadedFiles.length )}">
+                <div class="file-upload-container">
+                  <lightning:fileUpload label="Attach Documentation"
+                                        name="fileUploader"
+                                        multiple="true"
+                                        accept=".pdf, .png, .jpg"
+                                        recordId="{!v.promotionCase.Id}"
+                                        onuploadfinished="{!c.handleUploadFinished}" />
+                </div>
+              </aura:if>
+              <aura:if isTrue="{! !empty(v.uploadedFiles)}">
+                <h2 class="slds-text-align_center slds-text-heading_medium slds-m-top_medium slds-m-bottom_small slds-m-left_small">
+                  Uploaded Files
+                </h2>
+                <div class="file-list">
+                  <ul class="slds-p-vertical_medium">
+                    <aura:iteration items="{! v.uploadedFiles }" var="file">
+                      <li>{!file.name}</li>
+                    </aura:iteration>
+                  </ul>
+                </div>
+              </aura:if>
+            </aura:if>
+          </aura:if>
+        </aura:if>
+
+        <aura:if isTrue="{! v.isFactoryStore}">
+          <h2 class="slds-text-align_center slds-text-heading_medium slds-m-top_medium slds-m-bottom_small slds-m-left_small">Select a Retail Boat Sale</h2>
+          <table class="slds-table slds-table_bordered slds-table_cell-buffer slds-max-medium-table--stacked " aura:id="listTable">
+            <thead>
+            <tr class="slds-text-title_caps slds-line-height_reset">
+              <th scope="col">ERP Name</th>
+              <th scope="col">Customer</th>
+              <th scope="col">Sales Person</th>
+              <th scope="col">Included Serialized Items</th>
+              <th scope="col" class="slds-text-align_right slds-p-right_xx-small">Reserved For</th>
+            </tr>
+            </thead>
+            <tbody>
+            <aura:iteration items="{!v.retailERPs}" var="item">
+              <tr>
+                <td data-label="Erp Name">{!item.name}</td>
+                <td data-label="Customer">{!item.accountName}</td>
+                <td data-label="Sales Person">{!item.salesPerson}</td>
+                <td data-label="Included Serialized Items">
+                  <ul class='build-items'>
+                    <aura:iteration items="{!item.serializedItems}" var="buildItem">
+                      <li>{!buildItem.name}</li>
+                    </aura:iteration>
+                  </ul>
+                </td>
+                <td data-label="Reserved For" class="slds-text-align_right slds-p-right_xx-small">
+                  <lightning:button label="Reserve Now"
+                                    value="{!item}"
+                                    onclick="{!c.handleFactoryReservation}"/>
+                </td>
+              </tr>
+            </aura:iteration>
+            </tbody>
+          </table>
+        </aura:if>
+
+        <footer class="slds-modal__footer">
+          <lightning:layout>
+            <lightning:layoutItem size="2">
+              <lightning:button label="Cancel"
+                                iconName="utility:close"
+                                iconPosition="left"
+                                onclick="{!c.handleCancel}"
+                                class="slds-float_left"/>
+            </lightning:layoutItem>
+            <lightning:layoutItem size="8">
+              <lightning:progressIndicator currentStep="{!v.currentStep}"
+                                           type="base"
+                                           hasError="true"
+                                           variant="base">
+                <aura:iteration items="{!v.reservationSteps}" var="step">
+                  <lightning:progressStep label="{!step}" value="{!step}"/>
+                </aura:iteration>
+              </lightning:progressIndicator>
+            </lightning:layoutItem>
+            <lightning:layoutItem size="2">
+              <aura:if isTrue="{! empty(v.customerId)}">
+                <lightning:button label="Next"
+                                  variant="brand"
+                                  iconName="utility:chevronright"
+                                  iconPosition="right"
+                                  disabled="{! not(v.customerFormDisplayed)}"
+                                  onclick="{!c.handleNext}" />
+              </aura:if>
+              <aura:if isTrue="{! !empty(v.customerId)}">
+                <lightning:button label="Finish"
+                                  variant="brand"
+                                  iconName="utility:chevronright"
+                                  iconPosition="right"
+                                  disabled="{! !and( !empty(v.promotionCase),
+                                                    equals( v.requiredPromotionDocuments.length,
+                                                            v.uploadedFiles.length )
+                                                  )}"
+                                  onclick="{!c.handleFinish}" />
+              </aura:if>
+            </lightning:layoutItem>
+          </lightning:layout>
+        </footer>
+      </div>
+
     </aura:if>
+
+
 
   </div>
 </aura:component>

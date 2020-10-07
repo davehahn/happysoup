@@ -21,11 +21,22 @@ public class Factory_User {
 
   public static User createPartnerUser( Id acctId )
   {
-    Contact c = new Contact( FirstName = 'First ' + LGND_Utilities.generateRandomString(6),
-                             LastName = 'Last ' + LGND_Utilities.generateRandomString( 6 ),
-                             AccountId = acctId);
+    return createPartnerUser( acctId, 'TestUser_First', 'TestUser_Last' );
+  }
+
+  public static User createPartnerUser( Id acctId, String firstName, String lastName )
+  {
+    Contact c = new Contact(
+      FirstName = 'First ' + LGND_Utilities.generateRandomString(6),
+      LastName = 'Last ' + LGND_Utilities.generateRandomString( 6 ),
+      AccountId = acctId
+    );
     insert c;
-    User u = buildUser('TestUser_First', 'testUser_Last', findProfileId('Legend Partner'));
+    User u = buildUser(
+      firstName,
+      lastName,
+      findProfileId('Legend Partner')
+    );
     u.ContactId = c.Id;
     insert u;
     return u;

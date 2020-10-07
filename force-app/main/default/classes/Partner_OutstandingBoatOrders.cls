@@ -6,17 +6,6 @@ public with sharing class Partner_OutstandingBoatOrders {
     return LGND_Utilities.CustomPermissions.partnerCanViewOutstandingOrders ? 'true' : 'false';
   }
 
-  @AuraEnabled
-  public static Boolean isFactoryStore()
-  {
-    try {
-      return [SELECT Id, Account.Is_Internal__c FROM User WHERE Id = :UserInfo.getUserId() ].Account.Is_Internal__c;
-    }
-    catch( Exception e )
-    {
-      throw new AuraHandledException('You appear to logged in as a Non Partner User');
-    }
-  }
 
   @AuraEnabled
   public static String fetchOutstandingNumbers()
@@ -66,6 +55,7 @@ public with sharing class Partner_OutstandingBoatOrders {
   public class OrderLine implements Comparable
   {
     public String majorItemName;
+    public String majorItemId;
     public String dealerOrderId;
     public String dealerOrderName;
     public String erpOrderNumber;
@@ -100,6 +90,7 @@ public with sharing class Partner_OutstandingBoatOrders {
     private void init( Dealer_Order_Line__c dol )
     {
       this.majorItemName = dol.Product__r.Name;
+      this.majorItemId = dol.Product__c;
       this.dealerOrderId = dol.Dealer_Order__c;
       this.dealerOrderName = dol.Dealer_Order__r.Name;
       this.erpOrderStage = dol.ERP_Order__r.Stage__c;
@@ -145,6 +136,7 @@ public with sharing class Partner_OutstandingBoatOrders {
     OrderLine[] result = new List<OrderLine>();
     for( Dealer_Order_Line__c dol : [SELECT Id,
                                             Product__r.Name,
+                                            Product__c,
                                             Dealer_Order__r.Date_Submitted__c,
                                             Dealer_Order__r.Name,
                                             Dealer_Order__c,
@@ -198,13 +190,18 @@ public with sharing class Partner_OutstandingBoatOrders {
     OrderLine[] result = new List<OrderLine>();
     for( Dealer_Order_Line__c dol : [SELECT Id,
                                             Product__r.Name,
+                                            Product__c,
                                             Dealer_Order__r.Date_Submitted__c,
                                             Dealer_Order__r.Name,
                                             Dealer_Order__c,
                                             ERP_Order__c,
                                             ERP_Order__r.Stage__c,
                                             ERP_Order__r.AcctSeedERP__Work_Order_Number__c,
-                                            ERP_Order__r.LastDocumentID__c
+                                            ERP_Order__r.LastDocumentID__c,
+                                            ERP_Order__r.Retail_ERP__c,
+                                            ERP_Order__r.Retail_ERP__r.Name,
+                                            ERP_Order__r.Reserved_For_Customer_Account__c,
+                                            ERP_Order__r.Reserved_For_Customer_Account__r.Name
                                      FROM Dealer_Order_Line__c
                                      WHERE ERP_Order__c <> null
                                      AND ERP_Order__r.Stage__c NOT IN :ignoreStages
