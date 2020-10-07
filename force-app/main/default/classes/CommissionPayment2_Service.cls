@@ -106,6 +106,10 @@ public with sharing class CommissionPayment2_Service
             } else if (cr.Project_Task__r.AcctSeed__GL_Account_Variable_2__c == LGND_Constants.GLV2Id_Sales &&
                 cr.Project_Task__r.Name.contains('Retail Sale')) {
               payment.Owner__c = cr.Project_Task__r.AcctSeed__Project__r.Salesperson__r.ManagerId;
+            }else if (cr.Project_Task__r.AcctSeed__GL_Account_Variable_2__c == LGND_Constants.GLV2Id_PartsAndService) {
+              /// This is to set the Manager to the Salesperson for parts and Service
+              /// Checking it separately because we might have some more logic later
+              payment.Owner__c = cr.Project_Task__r.AcctSeed__Project__r.Salesperson__r.ManagerId;
             }
             if (payment.Owner__c == null) {
               payment.Owner__c = managerId;

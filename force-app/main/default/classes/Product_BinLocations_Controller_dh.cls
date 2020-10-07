@@ -83,6 +83,7 @@ public with sharing class Product_BinLocations_Controller_dh {
       catch(Exception e){}
       Id partRTid = LGND_Utilities.recordTypeIdFromName('Product2', 'Part');
       return JSON.serialize( gcInventoryReport_MRP.retrieveProducts( prodIds, whId, partRTid ) );
+      //Map<Id, gcInventoryReport_MRP.cube> allCubes = gcInventoryReport_MRP.retrieveProducts(setIdProduct,idWarehouse);
   }
 
   public static void coverage(){
