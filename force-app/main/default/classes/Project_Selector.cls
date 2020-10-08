@@ -2,7 +2,7 @@
  * Created by dave on 2020-01-15.
  */
 
-public with sharing class Project_Selector Extends Application_Selector
+public without sharing class Project_Selector Extends Application_Selector
 {
   public Project_Selector()
   {
@@ -108,6 +108,19 @@ public with sharing class Project_Selector Extends Application_Selector
     {
       selector.addWhere('Job_Status__c != \'Completed\'' );
     }
+    return selector.query();
+  }
+
+  public static List<AcctSeed__Project__c> allOpenRetailBoatSalesAvailableToReserveByGLV1AndBoatId( Id glv1Id, Id boatProductId )
+  {
+    Project_Selector selector = new Project_Selector();
+    selector
+      .addWhere( 'RecordTypeId = \'' + gcConstants.idRtProjectBoatSale + '\'')
+      .addWhere( 'GL_Account_Variable_1__c = \'' + glv1Id + '\'')
+      .addWhere( 'Boat_Product__c = \'' + boatProductId + '\'')
+      .addWhere( 'Stage__c <> \'Delivered\'')
+      .addWhere( 'Stage__c <> \'Closed Lost\'')
+    .addChildQuery('(SELECT Id, AcctSeedERP__Product__r.Name, AcctSeedERP__Quantity_per_Unit__c FROM AcctSeedERP__Project_Materials__r WHERE AcctSeedERP__Product__r.AcctSeedERP__Serialized__c = true AND AcctSeedERP__Product__r.RecordType.Name <> \'Boat\')');
     return selector.query();
   }
 

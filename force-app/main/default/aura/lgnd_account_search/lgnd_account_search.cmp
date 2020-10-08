@@ -26,6 +26,8 @@
   <aura:handler name="change" value="{!v.accountList}" action="{!c.close}" />
   <aura:handler name="change" value="{!v.scope}" action="{!c.handleScopeChange}" />
 
+  <aura:registerEvent name="accountSearchResultEvent" type="c:Account_Search_Result_Event" />
+
   <aura:registerEvent name="lgnd_registration_event" type="c:lgnd_registration_event"/>
   <aura:registerEvent name="accountSearchCleared" type="c:lgnd_account_search_cleared_Event"/>
   <aura:registerEvent name="accountSelected" type="c:lgnd_account_search_selected_Event"/>

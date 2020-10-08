@@ -6,6 +6,12 @@
     <aura:attribute name="busyMessage" type="String" default="" />
   </aura:method>
 
+  <aura:method name="off" action="{!c.handleOff}" />
+
+  <aura:method name="setMessage" action="{!c.setMessage}">
+    <aura:attribute name="busyMessage" type="String" default="" />
+  </aura:method>
+
   <aura:if isTrue="{!v.isVisible}">
     <div class="lgnd-spinner">
       <img src="{! $Resource.LegendLoadingIndicator2017}" />

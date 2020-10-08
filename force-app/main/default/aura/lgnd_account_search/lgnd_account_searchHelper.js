@@ -45,8 +45,13 @@
 		component.set('v.AccountState', null);
 		component.set('v.AccountCountry', null);
 		component.set('v.showAccountCard', false);
-		var evt = component.getEvent('accountSearchCleared');
+		var evt = component.getEvent('accountSearchCleared'),
+		    accountSearchEvent = component.getEvent('accountSearchResultEvent');
 		evt.fire();
+		accountSearchEvent.setParams({
+		  action: 'cancel'
+    })
+    .fire();
 	},
 
 	enableSearch: function( component )
