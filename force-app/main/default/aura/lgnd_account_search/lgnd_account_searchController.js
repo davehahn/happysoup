@@ -43,11 +43,17 @@
 
 		if( component.get('v.selectorOnly') )
 		{
-			var evt = component.getEvent("accountSelected");
+			var evt = component.getEvent("accountSelected"),
+			    accountSearchEvent = component.getEvent('accountSearchResultEvent');
 			evt.setParams({
 				accountId: accountId
 			})
 			.fire();
+			accountSearchEvent.setParams({
+			  action: 'edit',
+			  recordId: accountId
+      })
+      .fire();
 		}
 		else
 		{
@@ -72,6 +78,7 @@
 
 	clickCreateNewAccount : function(component, event, helper) {
 		var myEvent = component.getEvent("lgnd_registration_event"),
+		    accountSearchEvent = component.getEvent('accountSearchResultEvent'),
 				combobox = component.find('name_combobox'),
 				search = component.find('search');
 
@@ -82,6 +89,11 @@
 		myEvent.setParams({"event": "new"});
 
 		myEvent.fire();
+
+		accountSearchEvent.setParams({
+		  action: 'new'
+    })
+    .fire();
 	},
 
 	close : function(component, event, helper) {

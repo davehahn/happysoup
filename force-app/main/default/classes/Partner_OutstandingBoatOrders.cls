@@ -6,6 +6,7 @@ public with sharing class Partner_OutstandingBoatOrders {
     return LGND_Utilities.CustomPermissions.partnerCanViewOutstandingOrders ? 'true' : 'false';
   }
 
+
   @AuraEnabled
   public static String fetchOutstandingNumbers()
   {
@@ -54,11 +55,16 @@ public with sharing class Partner_OutstandingBoatOrders {
   public class OrderLine implements Comparable
   {
     public String majorItemName;
+    public String majorItemId;
     public String dealerOrderId;
     public String dealerOrderName;
     public String erpOrderNumber;
     public String erpOrderId;
     public String erpOrderStage;
+    public String reservedForCustomerId;
+    public String reservedForCustomerName;
+    public String retailErpId;
+    public String retailErpName;
     public DateTime orderDate;
     public List<String> lineItems;
     public String invoiceId;
@@ -84,10 +90,21 @@ public with sharing class Partner_OutstandingBoatOrders {
     private void init( Dealer_Order_Line__c dol )
     {
       this.majorItemName = dol.Product__r.Name;
+      this.majorItemId = dol.Product__c;
       this.dealerOrderId = dol.Dealer_Order__c;
       this.dealerOrderName = dol.Dealer_Order__r.Name;
       this.erpOrderStage = dol.ERP_Order__r.Stage__c;
       this.erpOrderId = dol.ERP_Order__c;
+      if( dol.ERP_Order__r.Reserved_For_Customer_Account__c != null )
+      {
+        this.reservedForCustomerId = dol.ERP_Order__r.Reserved_For_Customer_Account__c;
+        this.reservedForCustomerName = dol.ERP_Order__r.Reserved_For_Customer_Account__r.Name;
+      }
+      if( dol.ERP_Order__r.Retail_ERP__c != null )
+      {
+        this.retailErpId = dol.ERP_Order__r.Retail_ERP__c;
+        this.retailErpName = dol.ERP_Order__r.Retail_ERP__r.Name;
+      }
       if( dol.ERP_Order__r.LastDocumentID__c != null )
       {
         this.erpOrderNumber = dol.ERP_Order__r.AcctSeedERP__Work_Order_Number__c;
@@ -119,13 +136,18 @@ public with sharing class Partner_OutstandingBoatOrders {
     OrderLine[] result = new List<OrderLine>();
     for( Dealer_Order_Line__c dol : [SELECT Id,
                                             Product__r.Name,
+                                            Product__c,
                                             Dealer_Order__r.Date_Submitted__c,
                                             Dealer_Order__r.Name,
                                             Dealer_Order__c,
                                             ERP_Order__c,
                                             ERP_Order__r.Stage__c,
                                             ERP_Order__r.AcctSeedERP__Work_Order_Number__c,
-                                            ERP_Order__r.LastDocumentID__c
+                                            ERP_Order__r.LastDocumentID__c,
+                                            ERP_Order__r.Retail_ERP__c,
+                                            ERP_Order__r.Retail_ERP__r.Name,
+                                            ERP_Order__r.Reserved_For_Customer_Account__c,
+                                            ERP_Order__r.Reserved_For_Customer_Account__r.Name
                                      FROM Dealer_Order_Line__c
                                      WHERE ERP_Order__c <> null
                                      AND ERP_Order__r.Stage__c NOT IN :ignoreStages
@@ -168,13 +190,18 @@ public with sharing class Partner_OutstandingBoatOrders {
     OrderLine[] result = new List<OrderLine>();
     for( Dealer_Order_Line__c dol : [SELECT Id,
                                             Product__r.Name,
+                                            Product__c,
                                             Dealer_Order__r.Date_Submitted__c,
                                             Dealer_Order__r.Name,
                                             Dealer_Order__c,
                                             ERP_Order__c,
                                             ERP_Order__r.Stage__c,
                                             ERP_Order__r.AcctSeedERP__Work_Order_Number__c,
-                                            ERP_Order__r.LastDocumentID__c
+                                            ERP_Order__r.LastDocumentID__c,
+                                            ERP_Order__r.Retail_ERP__c,
+                                            ERP_Order__r.Retail_ERP__r.Name,
+                                            ERP_Order__r.Reserved_For_Customer_Account__c,
+                                            ERP_Order__r.Reserved_For_Customer_Account__r.Name
                                      FROM Dealer_Order_Line__c
                                      WHERE ERP_Order__c <> null
                                      AND ERP_Order__r.Stage__c NOT IN :ignoreStages
