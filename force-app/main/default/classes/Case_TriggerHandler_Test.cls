@@ -292,4 +292,73 @@ private class Case_TriggerHandler_Test {
 			}
 		}
 	}
+
+	@IsTest
+	static void addPromotionalProductsToERP_Test()
+	{
+		initForWarranty();
+		partner = [SELECT Id, ContactId, AccountId FROM USer WHERE Id = :partner.Id ];
+		Product2 boat = Factory_Product.createSerializedProducts('Boat', 'Pontoon', 1)[0];
+		Product2 part = Factory_Product.createNonSerializedProduct('Part', 'Electronics');
+		AcctSeed__Project__c erp = Factory_ERPOrder.createPartnerBoatSales( dealer, new List<Product2>{boat}, 1)[0];
+		Promotion__c promo = Factory_Promotion.buildPromotions(1)[0];
+		promo.Available_On__c = 'Reservation';
+		insert promo;
+		Promotion_Item__c promoItem = Factory_Promotion.buildPromoItem( promo, boat, 1000);
+		insert promoItem;
+		Promotion_Incentive_Product__c iProd = new Promotion_Incentive_Product__c(
+			Product__c = part.Id,
+			Promotion__c = promo.Id,
+			Quantity__c = 1
+		);
+		insert iProd;
+		Case promoCase = new Case(
+			RecordTypeId = LGND_Constants.caseRtId_Promotion,
+			ContactId = partner.ContactId,
+			AccountId = partner.AccountId,
+			Promotion_Item__c = promoItem.Id,
+			Promotion_Erp__c = erp.Id,
+			Status = 'Pending documentation'
+		);
+		TriggerHandler.bypass('Case_TriggerHandler');
+		insert promoCase;
+		TriggerHandler.clearBypass('Case_TriggerHandler');
+
+		erp = [
+			SELECT
+				Id,
+			(SELECT
+				Id
+			FROM AcctSeedERP__Project_Materials__r),
+			(SELECT
+				Id
+			FROM AcctSeed__Project_Tasks__r)
+			FROM AcctSeed__Project__c
+			WHERE Id = :erp.Id
+		];
+
+		System.assertEquals( 1, erp.AcctSeedERP__Project_Materials__r.size() );
+		System.assertEquals( 1, erp.AcctSeed__Project_Tasks__r.size() );
+
+		Test.startTest();
+		promoCase.Status = 'Complete';
+		update promoCase;
+		Test.stopTest();
+
+		erp = [
+			SELECT
+				Id,
+			(SELECT
+				Id
+			 FROM AcctSeedERP__Project_Materials__r),
+			(SELECT
+				Id
+			 FROM AcctSeed__Project_Tasks__r)
+			FROM AcctSeed__Project__c
+			WHERE Id = :erp.Id
+		];
+
+		System.assertEquals( 2, erp.AcctSeedERP__Project_Materials__r.size() );
+		System.assertEquals( 2, erp.AcctSeed__Project_Tasks__r.size() );
+	}
 }

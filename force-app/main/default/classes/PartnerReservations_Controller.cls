@@ -137,6 +137,7 @@ public without sharing class PartnerReservations_Controller
       RecordTypeId = LGND_Constants.caseRtId_Promotion,
       Promotion_Item__c = data.get('promoItemId'),
       Promotion_Customer_Account__c = data.get('customerId'),
+      Promotion_ERP__c = data.get('erpId'),
       Status = 'Pending documentation'
     );
     insert c;
