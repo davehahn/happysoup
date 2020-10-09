@@ -231,9 +231,11 @@
   createPromoCase: function( component, promo )
   {
     let action = component.get('c.createPromotionCase'),
+        record = component.get('v.recordForReserve'),
         jsonData = {
           customerId: component.get('v.customerId'),
-          promoItemId: promo.Id
+          promoItemId: promo.Id,
+          erpId: record.erpOrderId
         };
 
     action.setParams({

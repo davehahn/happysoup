@@ -149,21 +149,12 @@ public with sharing class Dealer_Order_Line_Ext {
       {
         System.debug( 'Dealer Order Line after update');
         handlePartnerProgram( listNew );
-        Set<Id> toSendtoMercuryId = new Set<Id>();
-        for( Dealer_Order_Line__c dol : listNew )
-        {
-          if( dol.Dealer_Motor_Request__c != null &&
-              !dol.Serial_Number_Sent_to_Mercury__c &&
-              dol.Boat_Serial_Number__c != null &&
-              oldMap.get( dol.Id ).Boat_Serial_Number__c != dol.Boat_Serial_Number__c ) {
-            toSendtoMercuryId.add(dol.Id);
-          }
-        }
-        System.debug( toSendtoMercuryId );
-        if( toSendtoMercuryId.size() > 0 )
-        {
-          notifyMercuryOfSerial( toSendtoMercuryId );
-        }
+        /*
+          Implemented for 2020 season but no longer require for 2021 season
+          Promotion no longer available so Mercury no longer needs to be
+          notified of the serial numbers
+        */
+        //notifyMercuryIfSerialSet( listNew, oldMap );
       }
       if( boolIsDelete )
       {
@@ -262,46 +253,67 @@ public with sharing class Dealer_Order_Line_Ext {
     }
   }
 
-  private static void notifyMercuryOfSerial( Set<Id> dolIds )
-  {
-    String[] ccAddrs = new List<String>{
-      'dealercare@legendboats.com'
-    };
-    String templateId = Legend_Settings__c.getOrgDefaults().Mercury_Motor_Request_Serial_Number_Emai__c;
-    Id contactId = Legend_Settings__c.getOrgDefaults().Mercury_Contact_Id__c;
-    Id orgEmailId;
-    try {
-      orgEmailId = [SELECT Id FROM OrgWideEmailAddress WHERE DisplayName = 'Dealer Care' LIMIT 1].Id;
-    }
-    catch(Exception e){}
-    List<Dealer_Order_Line__c> dols = new List<Dealer_Order_Line__c>();
-    List<Messaging.SingleEmailMessage> msgList= new List<Messaging.SingleEmailMessage>();
-    for( Id dolId : dolIds ) {
-      dols.add(new Dealer_Order_Line__c(
-        Id = dolId,
-        Serial_Number_Sent_to_Mercury__c = true,
-        Serial_Number_Sent_On__c = Date.today()
-      ));
-      Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
-      if (orgEmailId != null) {
-        mail.setOrgWideEmailAddressId(orgEmailId);
-      }
-      mail.setTargetObjectId(contactId);
-      mail.setWhatId(dolId);
-      mail.setTemplateId(templateId);
-      if( !LGND_Constants.runningInASandbox )
-      {
-        mail.setCcAddresses(ccAddrs);
-      }
-      mail.setSaveAsActivity(true);
-      msgList.add(mail);
-    }
-    Messaging.sendEmail(msgList);
-    Boolean orig = Dealer_Order_Line_Ext.disableTrigger;
-    Dealer_Order_Line_Ext.disableTrigger = true;
-    update dols;
-    Dealer_Order_Line_Ext.disableTrigger = orig;
-  }
+//  private static void notifyMercuryIfSerialSet( List<Dealer_Order_Line__c> listNew, Map<Id, Dealer_Order_Line__c> oldMap )
+//  {
+//    Set<Id> toSendtoMercuryId = new Set<Id>();
+//    for( Dealer_Order_Line__c dol : listNew )
+//    {
+//      if( dol.Dealer_Motor_Request__c != null &&
+//        !dol.Serial_Number_Sent_to_Mercury__c &&
+//        dol.Boat_Serial_Number__c != null &&
+//        oldMap.get( dol.Id ).Boat_Serial_Number__c != dol.Boat_Serial_Number__c ) {
+//        toSendtoMercuryId.add(dol.Id);
+//      }
+//    }
+//    System.debug( toSendtoMercuryId );
+//    if( toSendtoMercuryId.size() > 0 )
+//    {
+//
+//      String[] ccAddrs = new List<String>
+//      {
+//        'dealercare@legendboats.com'
+//      };
+//      String templateId = Legend_Settings__c.getOrgDefaults().Mercury_Motor_Request_Serial_Number_Emai__c;
+//      Id contactId = Legend_Settings__c.getOrgDefaults().Mercury_Contact_Id__c;
+//      Id orgEmailId;
+//      try
+//      {
+//        orgEmailId = [SELECT Id FROM OrgWideEmailAddress WHERE DisplayName = 'Dealer Care' LIMIT 1].Id;
+//      }
+//      catch (Exception e)
+//      {
+//      }
+//      List<Dealer_Order_Line__c> dols = new List<Dealer_Order_Line__c>();
+//      List<Messaging.SingleEmailMessage> msgList = new List<Messaging.SingleEmailMessage>();
+//      for (Id dolId : toSendtoMercuryId)
+//      {
+//        dols.add(new Dealer_Order_Line__c(
+//          Id = dolId,
+//          Serial_Number_Sent_to_Mercury__c = true,
+//          Serial_Number_Sent_On__c = Date.today()
+//        ));
+//        Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
+//        if (orgEmailId != null)
+//        {
+//          mail.setOrgWideEmailAddressId(orgEmailId);
+//        }
+//        mail.setTargetObjectId(contactId);
+//        mail.setWhatId(dolId);
+//        mail.setTemplateId(templateId);
+//        if (!LGND_Constants.runningInASandbox)
+//        {
+//          mail.setCcAddresses(ccAddrs);
+//        }
+//        mail.setSaveAsActivity(true);
+//        msgList.add(mail);
+//      }
+//      Messaging.sendEmail(msgList);
+//      Boolean orig = Dealer_Order_Line_Ext.disableTrigger;
+//      Dealer_Order_Line_Ext.disableTrigger = true;
+//      update dols;
+//      Dealer_Order_Line_Ext.disableTrigger = orig;
+//    }
+//  }
 
   private static void setLineTotal( List<Dealer_Order_Line__c> lines )
   {
