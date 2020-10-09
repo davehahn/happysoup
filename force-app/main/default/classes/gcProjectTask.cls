@@ -581,6 +581,9 @@ global without sharing class gcProjectTask {
 		setIdProjectTask.remove(null);
 		list<AcctSeed__Project_Task__c> listPTupdate = new list<AcctSeed__Project_Task__c>();
 
+		Id discountProdId = LGND_Constants.savingsProductId;
+		Id feeRtId = LGND_Constants.productRtId_Fees;
+
 		for(AcctSeed__Project_Task__c pt :
 			[SELECT Id,
 				Order_Item_Total__c,
@@ -588,7 +591,16 @@ global without sharing class gcProjectTask {
 				Order_Taxable_Federal__c,
 				Order_Taxable_Retail__c,
 				Order_Insurance_Total__c,
-				(SELECT isInsuranceItem__c, Taxable_Provincial__c, Taxable_Federal__c, Taxable_Retail__c, GMBLASERP__Total_Price__c FROM AcctSeedERP__Materials__r)
+				Order_Item_Total_BeforeFeesAndDiscounts__c,
+				(SELECT
+					isInsuranceItem__c,
+					Taxable_Provincial__c,
+					Taxable_Federal__c,
+					Taxable_Retail__c,
+					AcctSeedERP__Product__c,
+					AcctSeedERP__Product__r.RecordTypeId,
+					GMBLASERP__Total_Price__c
+				FROM AcctSeedERP__Materials__r)
 			 FROM AcctSeed__Project_Task__c
 			 WHERE Id IN :setIdProjectTask])
 		{
@@ -597,6 +609,7 @@ global without sharing class gcProjectTask {
 			Decimal taxableFederal = 0;
 			Decimal taxableRetail = 0;
 			Decimal insurance = 0;
+			Decimal preFeesDiscounts = 0;
 			for(AcctSeedERP__Material__c m : pt.AcctSeedERP__Materials__r)
 			{
 				amt += (m.GMBLASERP__Total_Price__c == null ? 0 : m.GMBLASERP__Total_Price__c);
@@ -608,19 +621,24 @@ global without sharing class gcProjectTask {
 					taxableRetail += (m.GMBLASERP__Total_Price__c == null ? 0 : m.GMBLASERP__Total_Price__c);
 				if( m.isInsuranceItem__c )
 					insurance += (m.GMBLASERP__Total_Price__c == null ? 0 : m.GMBLASERP__Total_Price__c );
+				if( m.AcctSeedERP__Product__c != discountProdId &&
+						m.AcctSeedERP__Product__r.RecordTypeId != feeRtId )
+					preFeesDiscounts += (m.GMBLASERP__Total_Price__c == null ? 0 : m.GMBLASERP__Total_Price__c );
 			}
-
+System.debug('gcProjectTrigger 627');
 			if(pt.Order_Item_Total__c == null || pt.Order_Item_Total__c.setScale(2) != amt.setScale(2) ||
 			   pt.Order_Taxable_Provincial__c == null || pt.Order_Taxable_Provincial__c.setScale(2) != taxableProvincial.setScale(2) ||
 			   pt.Order_Taxable_Federal__c == null || pt.Order_Taxable_Federal__c.setScale(2) != taxableFederal.setScale(2) || 
 			   pt.Order_Taxable_Retail__c == null || pt.Order_Taxable_Retail__c.setScale(2) != taxableRetail.setScale(2) ||
-				 pt.Order_Insurance_Total__c == null || pt.Order_Insurance_Total__c.setScale(2) != insurance.setScale(2))
+				 pt.Order_Insurance_Total__c == null || pt.Order_Insurance_Total__c.setScale(2) != insurance.setScale(2) ||
+				 pt.Order_Item_Total_BeforeFeesAndDiscounts__c == null || pt.Order_Item_Total_BeforeFeesAndDiscounts__c.setScale(2) != preFeesDiscounts.setScale(2))
 			{
 				pt.Order_Item_Total__c = amt;
 				pt.Order_Taxable_Provincial__c = taxableProvincial;
 				pt.Order_Taxable_Federal__c = taxableFederal;
 				pt.Order_Taxable_Retail__c = taxableRetail;
 				pt.Order_Insurance_Total__c = insurance;
+				pt.Order_Item_Total_BeforeFeesAndDiscounts__c = preFeesDiscounts;
 
 				listPTupdate.add(pt);
 			}
