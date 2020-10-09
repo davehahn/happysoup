@@ -12,7 +12,6 @@
           component.set('v.motors', result.motors );
           component.set('v.trailers', result.trailers );
           component.set('v.trollingMotors', result.trollingMotors );
-          // helper.groupItems( component );
           self.setIsEditable( component );
           resolve();
         }),
@@ -103,18 +102,14 @@
       var state = response.getState();
       if (state === "SUCCESS")
       {
-        self.doInit( component )
-        .then(
-          $A.getCallback( function() {
-            self.toggleSpinner(component);
-          })
-        );
-//        self.removeOrderLine( component, groupId, itemType )
-//        .then(
-//          $A.getCallback( function() {
-//            self.toggleSpinner(component, false);
-//          })
-//        )
+        self.toggleSpinner(component);
+        $A.get('e.force:refreshView').fire();
+        var toast = $A.get('e.force:showToast');
+        toast.setParams({
+          message: 'Your order was submitted successfully!',
+          type: 'success'
+        })
+        .fire();
       }
       else if (component.isValid() && state === "INCOMPLETE") {
       }

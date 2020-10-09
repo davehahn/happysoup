@@ -1963,6 +1963,8 @@ public without sharing class DealerOrder_Ext {
                    Pricebook__c,
                    Program_Year__c,
                    Financing_Company__r.Financing_Company__r.Name,
+                   Order_Total__c,
+                   Order_Total_No_Fees_And_Discounts__c,
             (SELECT Id,
                     Line_Total_Pre_Tax__c,
                     ERP_Order__r.Name,
