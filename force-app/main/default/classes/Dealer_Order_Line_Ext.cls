@@ -317,9 +317,14 @@ public with sharing class Dealer_Order_Line_Ext {
 
   private static void setLineTotal( List<Dealer_Order_Line__c> lines )
   {
+    System.debug('DOL.setLineTotal');
     for( Dealer_Order_Line__c dol : lines )
     {
       dol.Line_Total__c = dol.Line_Total_Pre_Tax__c;//dol.Line_Total_Calc__c;
+      dol.Line_Total_No_Fees_or_Discounts__c = dol.Line_Total_NoFeesOrDiscountsCalc__c;
+      System.debug( dol.Product_Name__c);
+      System.debug( dol.Line_Total_NoFeesOrDiscountsCalc__c );
+      System.debug( dol.Line_Total_No_Fees_or_Discounts__c );
     }
   }
 

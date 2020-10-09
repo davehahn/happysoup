@@ -10,6 +10,7 @@
         if( result !== null &&
             Object.keys(result).length > 0 )
         {
+          console.log( JSON.parse( JSON.stringify(result)));
           var nameField = component.get('v.nameField');
           component.set('v.record', result );
           component.set('v.recordName', result[nameField] );
@@ -56,6 +57,8 @@
         }
       }, fields );
     }
+
+    console.log( Array.from(fields));
 
     action.setParams({
       sObjectName: sObjectName,
@@ -162,6 +165,8 @@
         displayFieldsString = component.get('v.displayFields'),
         fields = [],
         findValue = function( fName ) {
+          console.log(`fName = ${fName}`);
+          console.log( fName.split('.'));
           return fName.split('.').reduce( function( v, subName ) {
               return v[subName];
           }, record );
@@ -184,6 +189,7 @@
         return flds;
       }, fields );
     }
+    console.log( fields );
     component.set('v.displayFieldData', fields);
   },
 

@@ -18,7 +18,7 @@ public with sharing class lgnd_ObjectHeaderController {
     query += ' WHERE Id = \'' + recordId + '\'';
     System.debug( query );
     SObject result = Database.query( query );
-
+    System.debug(result);
     return JSON.serialize( result );
   }
 

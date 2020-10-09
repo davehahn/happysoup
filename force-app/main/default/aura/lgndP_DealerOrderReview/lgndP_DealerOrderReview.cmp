@@ -2,11 +2,7 @@
 
   <!-- ATTRIBUTES -->
   <aura:attribute name="dealerOrder" type="Dealer_Order__c" />
-  <!-- <aura:attribute name="lineItems" type="Object" /> -->
-  <aura:attribute name="orderTotal" type="Decimal" />
   <aura:attribute name="currentView" type="String" default="list" />
-<!--  <aura:attribute name="detailsBtnText" type="String" default="More Details" />-->
-<!--  <aura:attribute name="partnerProgramSubscription" type="Map" />-->
 
   <!-- EVENTS -->
   <aura:registerEvent name="navEvent" type="c:lgndP_DealerOrderNav_Event" />
@@ -43,11 +39,21 @@
             </div>
           </div>
         </div>
-        <div class="slds-col slds-no-flex slds-grid slds-align-top order-total">
-          <lightning:formattedNumber value="{!v.orderTotal}"
-                                     style="currency"
-                                     currencyCode="CAD"
-                                     class="order-total"/>
+        <div class="slds-col slds-no-flex slds-align-top">
+          <div class="slds-text-align_right">
+            <span class="slds-p-right_medium">Before Tax</span>
+            <lightning:formattedNumber value="{!v.dealerOrder.Order_Total__c}"
+                                       style="currency"
+                                       currencyCode="CAD"
+                                       class="order-total"/>
+          </div>
+          <div class="slds-text-align_right">
+            <span class="slds-p-right_medium">Before Tax/Fees/Discounts</span>
+            <lightning:formattedNumber value="{!v.dealerOrder.Order_Total_No_Fees_And_Discounts__c}"
+                                       style="currency"
+                                       currencyCode="CAD"
+                                       class="order-total-small"/>
+          </div>
         </div>
       </div>
       <ul class="slds-grid slds-page-header__detail-row">

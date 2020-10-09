@@ -71,38 +71,7 @@
 
   initLines: function( component )
   {
-    this.groupItems( component );
     component.find('dealerOrderLines--Cmp').doInit();
-  },
-
-  groupItems: function( component )
-  {
-    var dealerOrder = component.get('v.dealerOrder'),
-        doLines = dealerOrder.Dealer_Order_Lines__r,
-        lineItemsMap = {},
-        total = 0,
-        lineItems = [];
-
-    for( var i=0; i < doLines.length; i++ )
-    {
-      if( lineItemsMap[ doLines[i].Order_Group_Id__c ] === undefined )
-        lineItemsMap[ doLines[i].Order_Group_Id__c ] = [];
-      lineItemsMap[ doLines[i].Order_Group_Id__c ].push( doLines[i] );
-    }
-    for( var key in lineItemsMap ) {
-      if( lineItemsMap.hasOwnProperty(key) )
-      {
-        var data = {};
-        data.quantity = lineItemsMap[key].length;
-        data.eachPrice = lineItemsMap[key][0].Line_Total_Pre_Tax__c;
-        data.totalPrice = data.eachPrice * data.quantity;
-        data.productName = lineItemsMap[key][0].Product__r.Name;
-        data.groupId = lineItemsMap[key][0].Order_Group_Id__c;
-        lineItems.push( data );
-        total += data.totalPrice;
-      }
-    }
-    component.set('v.orderTotal', total);
   },
 
   editOrderRow: function( component, groupId )
