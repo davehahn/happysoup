@@ -541,7 +541,8 @@ input.dateSelector{
             <apex:relatedList subject="{!Id}" list="Journal_Entries__r" rendered="{!AND($ObjectType.AcctSeed__Journal_Entry__c.accessible,$ObjectType.AcctSeed__Journal_Entry__c.fields.Project__c.accessible)}"/>
         </apex:outputPanel>
     </div>
-   <!--  <div id="pageBlockTimeCardLedger">
+    <!--
+     <div id="pageBlockTimeCardLedger">
         <apex:pageBlock mode="edit" title="Time Card Ledger" rendered="{!OR(isManufacturing,isService,isWarranty)}">
             <div><div id="timeCardLedger"></div></div>
         </apex:pageBlock>
@@ -572,6 +573,7 @@ input.dateSelector{
             <c:gcmpTimeCardLines_bulkEdit idTimeCardProject="{!Id}" rendered="{!IF($CurrentPage.parameters.bulkEdit='0',false,true)}"/>
         </apex:outputPanel>
     </div> -->
+<apex:relatedList subject="{!Id}" list="AcctSeed__Journal_Entry_Lines__r"/>
 <apex:relatedList subject="{!Id}" list="CombinedAttachments"/>
 <apex:relatedList subject="{!Id}" list="OpenActivities" />
 <apex:relatedList subject="{!Id}" list="ActivityHistories" />
