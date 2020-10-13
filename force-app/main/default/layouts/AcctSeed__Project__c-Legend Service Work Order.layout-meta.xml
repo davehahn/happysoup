@@ -60,6 +60,10 @@
                 <field>Secondary_Parking_Spot__c</field>
             </layoutItems>
             <layoutItems>
+                <behavior>Edit</behavior>
+                <field>Storage_Parking_Spot__c</field>
+            </layoutItems>
+            <layoutItems>
                 <behavior>Readonly</behavior>
                 <field>Internal_Labour_Service__c</field>
             </layoutItems>
@@ -380,19 +384,6 @@
             <quickActionName>FeedItem.ContentNote</quickActionName>
         </quickActionListItems>
     </quickActionList>
-    <relatedLists>
-        <fields>NAME</fields>
-        <fields>RECORDTYPE</fields>
-        <fields>Stage__c</fields>
-        <fields>AcctSeed__Status__c</fields>
-        <fields>AcctSeed__Account__c</fields>
-        <fields>GMBLASERP__Warehouse__c</fields>
-        <fields>Serial_Number__c</fields>
-        <fields>Serial_Product__c</fields>
-        <fields>AcctSeed__Project_Manager__c</fields>
-        <fields>UPDATEDBY_USER</fields>
-        <relatedList>AcctSeed__Project__c.Service_ERP__c</relatedList>
-    </relatedLists>
     <relatedLists>
         <fields>NAME</fields>
         <relatedList>Rigger_Job__c.ERP_Order__c</relatedList>
