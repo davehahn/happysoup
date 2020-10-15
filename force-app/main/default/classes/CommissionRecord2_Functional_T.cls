@@ -730,7 +730,7 @@ private class CommissionRecord2_Functional_T
       System.debug(expectedAmount);
       System.debug('Commission AMount');
       System.debug(commRec.Total_Profit__c);
-      Decimal expectedAmountManager = commRec.Total_Profit__c * (managerUser.Commission_Manager_Business_Office__c / 100);
+      Decimal expectedAmountManager = commRec.Total_Payment_Amount__c * (managerUser.Commission_Manager_Business_Office__c / 100);
       System.debug('Manager Commission AMount');
       System.debug(expectedAmountManager);
       System.assertEquals(2, commPayments.size());
