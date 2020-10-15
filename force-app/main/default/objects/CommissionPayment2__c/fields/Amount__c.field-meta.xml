@@ -2,10 +2,7 @@
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Amount__c</fullName>
     <externalId>false</externalId>
-    <formula>IF(  Use_Gross_Margin_Calculation__c,
-	( Commission_Record2__r.Total_Profit__c *  Gross_Margin_Payment_Percent__c *  Split_Percent__c  ),
-	(   IF( ISPICKVAL(Type__c,&apos;Manager&apos;) , IF(ISPICKVAL( Manager_Commission_Type__c ,&apos;Revenue&apos;),Commission_Record2__r.Total_Commission_Payment__c * Gross_Margin_Payment_Percent__c,Commission_Record2__r.Total_Profit__c * Gross_Margin_Payment_Percent__c) , (Commission_Record2__r.Total_Payment_Amount__c *  Split_Percent__c))  )
-	)</formula>
+    <formula>IF(  Use_Gross_Margin_Calculation__c, ( Commission_Record2__r.Total_Profit__c *  Gross_Margin_Payment_Percent__c *  Split_Percent__c  ), ( IF( ISPICKVAL(Type__c,&apos;Manager&apos;) , IF(ISPICKVAL( Manager_Commission_Type__c ,&apos;Revenue&apos;), Commission_Record2__r.Total_Commission_Payment__c * Gross_Margin_Payment_Percent__c, (IF(ISPICKVAL( Manager_Commission_Type__c ,&apos;Business Revenue&apos;),Commission_Record2__r.Total_Payment_Amount__c * Gross_Margin_Payment_Percent__c,Commission_Record2__r.Total_Profit__c * Gross_Margin_Payment_Percent__c))) , (Commission_Record2__r.Total_Payment_Amount__c *  Split_Percent__c)) ))</formula>
     <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
     <label>Amount</label>
     <precision>18</precision>
