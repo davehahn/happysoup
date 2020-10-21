@@ -81,7 +81,8 @@ public without sharing class Lead_TriggerHandler extends TriggerHandler
       if( oldMap != null )
       {
         Lead oldLead = oldMap.get( l.Id );
-        if( ( l.IP_City__c != null && l.IP_City__c != oldLead.IP_City__c ) ||
+        if( ( l.PostalCode != null && l.PostalCode != oldLead.PostalCode ) ||
+            ( l.IP_City__c != null && l.IP_City__c != oldLead.IP_City__c ) ||
             ( l.hubspot_IP_City_Lead__c != null && l.hubspot_IP_City_Lead__c != oldLead.IP_City__c ) )
         {
           setClosestPartner.add(l.Id);
