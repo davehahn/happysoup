@@ -401,6 +401,9 @@ public without sharing class LGND_APIv2_Product {
            WHERE isActive = true
            AND Pricebook2.isActive = true),
           (SELECT Id,
+                  Name,
+                  Feature_Id__c,
+                  Feature_Id__r.Name,
                   Feature_Id__r.description__c,
                   Feature_Id__r.description_fr__c,
                   Feature_Id__r.Category__c,
@@ -890,12 +893,16 @@ public without sharing class LGND_APIv2_Product {
   }
 
   public Class Feature {
+    public String Id { get; set; }
+    public String Name { get; set; }
     public String Description { get; set; }
     public String Description_FR { get; set; }
     public Decimal Value { get; set; }
 
     public Feature( Product_Feature_Map__c pfm )
     {
+      this.Id = pfm.Feature_Id__c;
+      this.Name = pfm.Feature_Id__r.Name;
       this.Description = pfm.Feature_Id__r.description__c;
       this.Description_FR = pfm.Feature_Id__r.description_fr__c;
       this.Value = pfm.Feature_Id__r.Value__c;
