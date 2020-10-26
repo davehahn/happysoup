@@ -47,6 +47,7 @@
         <fileset dir="${basedir}/force-app/main/default/tabs" includes="*.xml"/>
       </replaceregexp>
 
+
       <!-- Removes the Action Override for Lead object with Einstein IQ score component from apps -->
       <replaceregexp match="&lt;actionOverrides&gt;\s*&lt;actionName&gt;(.+?)&lt;/actionName&gt;\s*&lt;comment&gt;(.+?)&lt;/comment&gt;\s*&lt;content&gt;Lead_Record_Page_Einstein&lt;/content&gt;\s*&lt;formFactor&gt;(.+?)&lt;/formFactor&gt;\s*&lt;skipRecordTypeSelect&gt;(.+?)&lt;/skipRecordTypeSelect&gt;\s*&lt;type&gt;Flexipage&lt;/type&gt;\s*&lt;pageOrSobjectType&gt;Lead&lt;/pageOrSobjectType&gt;\s*&lt;/actionOverrides&gt;\s*" replace="" flags="gm" byline="false">
         <fileset dir="${basedir}/force-app/main/default/applications" includes="*.xml"/>
@@ -58,6 +59,7 @@
       <antcall target="remove_mcdm_15" />
       <antcall target="remove_et4ae5" />
       <antcall target="remove_userPermissions" />
+      <antcall target="remove_ApplicationVisibilities" />
 
       <!-- Remove SiteIframeWhiteListUrl-Whitelisted Domains for Inline Frames Layout from profiles -->
       <replaceregexp match="&lt;layoutAssignments&gt;\s*&lt;layout&gt;SiteIframeWhiteListUrl-Whitelisted Domains for Inline Frames Layout&lt;/layout&gt;\s*&lt;/layoutAssignments&gt;\s*" replace="" flags="gm" byline="false">
@@ -164,6 +166,20 @@
 
       <!-- Remove ViewUserPII from profiles -->
       <replaceregexp match="&lt;userPermissions&gt;\s*&lt;enabled&gt;[\S\s]*?&lt;/enabled&gt;\s*&lt;name&gt;ViewUserPII&lt;/name&gt;\s*&lt;/userPermissions&gt;\s*" replace="" flags="gm" byline="false">
+        <fileset dir="${basedir}/force-app/main/default/profiles" includes="*.xml"/>
+      </replaceregexp>
+    </target>
+
+    <target name="remove_ApplicationVisibilities">
+      <replaceregexp match="&lt;applicationVisibilities&gt;\s*&lt;application&gt;standard__(.*)&lt;/application&gt;\s*&lt;default&gt;[\S\s]*?&lt;/default&gt;\s*&lt;visible&gt;[\S\s]*?&lt;/visible&gt;\s*&lt;/applicationVisibilities&gt;\s*" replace="" flags="gm" byline="false">
+        <fileset dir="${basedir}/force-app/main/default/profiles" includes="*.xml"/>
+      </replaceregexp>
+
+      <replaceregexp match="&lt;applicationVisibilities&gt;\s*&lt;application&gt;AcctSeed__(.*)&lt;/application&gt;\s*&lt;default&gt;[\S\s]*?&lt;/default&gt;\s*&lt;visible&gt;[\S\s]*?&lt;/visible&gt;\s*&lt;/applicationVisibilities&gt;\s*" replace="" flags="gm" byline="false">
+        <fileset dir="${basedir}/force-app/main/default/profiles" includes="*.xml"/>
+      </replaceregexp>
+
+      <replaceregexp match="&lt;applicationVisibilities&gt;\s*&lt;application&gt;HubSpot_Inc__(.*)&lt;/application&gt;\s*&lt;default&gt;[\S\s]*?&lt;/default&gt;\s*&lt;visible&gt;[\S\s]*?&lt;/visible&gt;\s*&lt;/applicationVisibilities&gt;\s*" replace="" flags="gm" byline="false">
         <fileset dir="${basedir}/force-app/main/default/profiles" includes="*.xml"/>
       </replaceregexp>
     </target>
