@@ -31,9 +31,10 @@ else
 fi
 
 cmd=$(pwd)
+echo "\"${cmd}\""
 mkdir ~/.deploy_root
 cd ~/.deploy_root
-git clone $cmd .
+git clone "${cmd}" .
 chmod +x deploy.sh
 ./deploy.sh $1 $TESTLEVEL
 echoOut 'Ceaning up'
