@@ -211,20 +211,6 @@
       </replaceregexp>
     </target>
 
-    <target name="remove_ApplicationVisibilities">
-      <replaceregexp match="&lt;applicationVisibilities&gt;\s*&lt;application&gt;standard__(.*)&lt;/application&gt;\s*&lt;default&gt;[\S\s]*?&lt;/default&gt;\s*&lt;visible&gt;[\S\s]*?&lt;/visible&gt;\s*&lt;/applicationVisibilities&gt;\s*" replace="" flags="gm" byline="false">
-        <fileset dir="${basedir}/force-app/main/default/profiles" includes="*.xml"/>
-      </replaceregexp>
-
-      <replaceregexp match="&lt;applicationVisibilities&gt;\s*&lt;application&gt;AcctSeed__(.*)&lt;/application&gt;\s*&lt;default&gt;[\S\s]*?&lt;/default&gt;\s*&lt;visible&gt;[\S\s]*?&lt;/visible&gt;\s*&lt;/applicationVisibilities&gt;\s*" replace="" flags="gm" byline="false">
-        <fileset dir="${basedir}/force-app/main/default/profiles" includes="*.xml"/>
-      </replaceregexp>
-
-      <replaceregexp match="&lt;applicationVisibilities&gt;\s*&lt;application&gt;HubSpot_Inc__(.*)&lt;/application&gt;\s*&lt;default&gt;[\S\s]*?&lt;/default&gt;\s*&lt;visible&gt;[\S\s]*?&lt;/visible&gt;\s*&lt;/applicationVisibilities&gt;\s*" replace="" flags="gm" byline="false">
-        <fileset dir="${basedir}/force-app/main/default/profiles" includes="*.xml"/>
-      </replaceregexp>
-    </target>
-
     <target name="remove_mcdm_15">
       <echo>Removing mcdm_15 references from profiles</echo>
       <!-- Remove mcdm_15__ classAccess from profiles -->
