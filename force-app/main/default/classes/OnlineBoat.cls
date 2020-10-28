@@ -291,19 +291,22 @@ public virtual class OnlineBoat extends Online_Product
       }
       else
       {
-        Online_Product.Option oop = new Online_Product.Option(prod, opt, pbe);
-        populate( oop );
+        if( pbe != null )
+        {
+          Online_Product.Option oop = new Online_Product.Option(prod, opt, pbe);
+          populate( oop );
 
-        String label;
-        if( prodRts.contains( prod.RecordType.Id ) )
-          label = prod.RecordType.Name;
-        else
-          label = prod.Family;
+          String label;
+          if( prodRts.contains( prod.RecordType.Id ) )
+            label = prod.RecordType.Name;
+          else
+            label = prod.Family;
 
-        label = LGND_Utilities.toCamelCase( label );
-        if (!result.containsKey(label))
-          result.put(label, new List<Online_Product.Option>());
-        result.get(label).add( oop );
+          label = LGND_Utilities.toCamelCase( label );
+          if (!result.containsKey(label))
+            result.put(label, new List<Online_Product.Option>());
+          result.get(label).add( oop );
+        }
       }
     }
     return result;
