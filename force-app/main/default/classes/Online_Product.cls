@@ -6,6 +6,7 @@ public virtual class Online_Product
 {
   @AuraEnabled public String id;
   @AuraEnabled public String name;
+  @AuraEnabled public String family;
   @AuraEnabled public String details;
   @AuraEnabled public Decimal retailPrice;
   @AuraEnabled public String pricebookEntryId;
@@ -175,6 +176,7 @@ public virtual class Online_Product
                           Product_Fee_Amount__c feeAmount )
     {
       super( prod );
+      this.family = prod.Family;
       this.province = feeAmount.Province__c;
       this.retailPrice = feeAmount.Amount__c;
       this.pricebookEntryId = pbe == null ? null : pbe.Id;
