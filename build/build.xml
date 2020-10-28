@@ -56,8 +56,12 @@
     </target>
 
     <target name="cleanProfiles">
-      <antcall target="remove_mcdm_15" />
-      <antcall target="remove_et4ae5" />
+      <antcall target="remove_nameSpaceEntries">
+          <param name="nameSpace" value="mcdm_15" />
+      </antcall>
+      <antcall target="remove_nameSpaceEntries">
+        <param name="nameSpace" value="et4ae5" />
+      </antcall>
       <antcall target="remove_userPermissions" />
       <antcall target="remove_ApplicationVisibilities" />
       <antcall target="remove_LayoutAssignments" />
@@ -211,78 +215,40 @@
       </replaceregexp>
     </target>
 
-    <target name="remove_mcdm_15">
-      <echo>Removing mcdm_15 references from profiles</echo>
-      <!-- Remove mcdm_15__ classAccess from profiles -->
-      <replaceregexp match="&lt;classAccesses&gt;\s*&lt;apexClass&gt;mcdm_15__(.*)&lt;/apexClass&gt;\s*&lt;enabled&gt;[\S\s]*?&lt;/enabled&gt;\s*&lt;/classAccesses&gt;\s*" replace="" flags="gm" byline="false">
+    <target name="remove_nameSpaceEntries">
+      <echo message="Removing ${nameSpace} references from profiles"></echo>
+      <!-- Remove classAccess from profiles -->
+      <replaceregexp match="&lt;classAccesses&gt;\s*&lt;apexClass&gt;${nameSpace}__(.*)&lt;/apexClass&gt;\s*&lt;enabled&gt;[\S\s]*?&lt;/enabled&gt;\s*&lt;/classAccesses&gt;\s*" replace="" flags="gm" byline="false">
         <fileset dir="${basedir}/force-app/main/default/profiles" includes="*.xml"/>
       </replaceregexp>
 
-      <!-- Remove mcdm_15__ ExternalData Source from profiles -->
-      <replaceregexp match="&lt;externalDataSourceAccesses&gt;\s*&lt;enabled&gt;[\S\s]*?&lt;/enabled&gt;\s*&lt;externalDataSource&gt;mcdm_15__(.*)&lt;/externalDataSource&gt;\s*&lt;/externalDataSourceAccesses&gt;\s*" replace="" flags="gm" byline="false">
+      <!-- Remove ExternalData Source from profiles -->
+      <replaceregexp match="&lt;externalDataSourceAccesses&gt;\s*&lt;enabled&gt;[\S\s]*?&lt;/enabled&gt;\s*&lt;externalDataSource&gt;${nameSpace}__(.*)&lt;/externalDataSource&gt;\s*&lt;/externalDataSourceAccesses&gt;\s*" replace="" flags="gm" byline="false">
         <fileset dir="${basedir}/force-app/main/default/profiles" includes="*.xml"/>
       </replaceregexp>
 
-      <!-- Remove mcdm_15__ ObjectPermissions from profiles -->
-      <replaceregexp match="&lt;objectPermissions&gt;\s*&lt;allowCreate&gt;[\S\s]*?&lt;/allowCreate&gt;\s*&lt;allowDelete&gt;[\S\s]*?&lt;/allowDelete&gt;\s*&lt;allowEdit&gt;[\S\s]*?&lt;/allowEdit&gt;\s*&lt;allowRead&gt;[\S\s]*?&lt;/allowRead&gt;\s*&lt;modifyAllRecords&gt;[\S\s]*?&lt;/modifyAllRecords&gt;\s*&lt;object&gt;mcdm_15__(.*)&lt;/object&gt;\s*&lt;viewAllRecords&gt;[\S\s]*?&lt;/viewAllRecords&gt;\s*&lt;/objectPermissions&gt;\s*" replace="" flags="gm" byline="false">
+      <!-- Remove ObjectPermissions from profiles -->
+      <replaceregexp match="&lt;objectPermissions&gt;\s*&lt;allowCreate&gt;[\S\s]*?&lt;/allowCreate&gt;\s*&lt;allowDelete&gt;[\S\s]*?&lt;/allowDelete&gt;\s*&lt;allowEdit&gt;[\S\s]*?&lt;/allowEdit&gt;\s*&lt;allowRead&gt;[\S\s]*?&lt;/allowRead&gt;\s*&lt;modifyAllRecords&gt;[\S\s]*?&lt;/modifyAllRecords&gt;\s*&lt;object&gt;${nameSpace}__(.*)&lt;/object&gt;\s*&lt;viewAllRecords&gt;[\S\s]*?&lt;/viewAllRecords&gt;\s*&lt;/objectPermissions&gt;\s*" replace="" flags="gm" byline="false">
         <fileset dir="${basedir}/force-app/main/default/profiles" includes="*.xml"/>
       </replaceregexp>
 
-      <!-- Remove mcdm_15__ LayoutAssignments from profiles -->
-      <replaceregexp match="&lt;layoutAssignments&gt;\s*&lt;layout&gt;mcdm_15__(.*)&lt;/layout&gt;\s*&lt;/layoutAssignments&gt;\s*" replace="" flags="gm" byline="false">
+      <!-- Remove LayoutAssignments from profiles -->
+      <replaceregexp match="&lt;layoutAssignments&gt;\s*&lt;layout&gt;${nameSpace}__(.*)&lt;/layout&gt;\s*&lt;/layoutAssignments&gt;\s*" replace="" flags="gm" byline="false">
         <fileset dir="${basedir}/force-app/main/default/profiles" includes="*.xml"/>
       </replaceregexp>
 
-      <!-- Remove mcdm_15 fieldPermissions from profiles -->
-      <replaceregexp match="&lt;fieldPermissions&gt;\s*&lt;editable&gt;(.+?)&lt;/editable&gt;\s*&lt;field&gt;(.*).mcdm_15__(.*)&lt;/field&gt;\s*&lt;readable&gt;(.+?)&lt;/readable&gt;\s*&lt;/fieldPermissions&gt;\s*" replace="" flags="gm" byline="false">
+      <!-- RemovfieldPermissions from profiles -->
+      <replaceregexp match="&lt;fieldPermissions&gt;\s*&lt;editable&gt;(.+?)&lt;/editable&gt;\s*&lt;field&gt;(.*).${nameSpace}__(.*)&lt;/field&gt;\s*&lt;readable&gt;(.+?)&lt;/readable&gt;\s*&lt;/fieldPermissions&gt;\s*" replace="" flags="gm" byline="false">
         <fileset dir="${basedir}/force-app/main/default/profiles" includes="*.xml"/>
       </replaceregexp>
 
-      <!-- Remove mcdm_15__ pageAccess from profiles -->
-      <replaceregexp match="&lt;pageAccesses&gt;\s*&lt;apexPage&gt;mcdm_15__(.*)&lt;/apexPage&gt;\s*&lt;enabled&gt;[\S\s]*?&lt;/enabled&gt;\s*&lt;/pageAccesses&gt;\s*" replace="" flags="gm" byline="false">
+      <!-- Remove pageAccess from profiles -->
+      <replaceregexp match="&lt;pageAccesses&gt;\s*&lt;apexPage&gt;${nameSpace}__(.*)&lt;/apexPage&gt;\s*&lt;enabled&gt;[\S\s]*?&lt;/enabled&gt;\s*&lt;/pageAccesses&gt;\s*" replace="" flags="gm" byline="false">
         <fileset dir="${basedir}/force-app/main/default/profiles" includes="*.xml"/>
       </replaceregexp>
 
-      <!-- Remove mcdm_15__ tabVisibility from profiles -->
-      <replaceregexp match="&lt;tabVisibilities&gt;\s*&lt;tab&gt;mcdm_15__(.*)&lt;/tab&gt;\s*&lt;visibility&gt;[\S\s]*?&lt;/visibility&gt;\s*&lt;/tabVisibilities&gt;\s*" replace="" flags="gm" byline="false">
-        <fileset dir="${basedir}/force-app/main/default/profiles" includes="*.xml"/>
-      </replaceregexp>
-    </target>
-
-    <target name="remove_et4ae5">
-      <echo>Removing et4ae5 references from profiles</echo>
-      <!-- Remove et4ae5__ classAccess from profiles -->
-      <replaceregexp match="&lt;classAccesses&gt;\s*&lt;apexClass&gt;et4ae5__(.*)&lt;/apexClass&gt;\s*&lt;enabled&gt;[\S\s]*?&lt;/enabled&gt;\s*&lt;/classAccesses&gt;\s*" replace="" flags="gm" byline="false">
-        <fileset dir="${basedir}/force-app/main/default/profiles" includes="*.xml"/>
-      </replaceregexp>
-
-      <!-- Remove et4ae5__ ExternalData Source from profiles -->
-      <replaceregexp match="&lt;externalDataSourceAccesses&gt;\s*&lt;enabled&gt;[\S\s]*?&lt;/enabled&gt;\s*&lt;externalDataSource&gt;et4ae5__(.*)&lt;/externalDataSource&gt;\s*&lt;/externalDataSourceAccesses&gt;\s*" replace="" flags="gm" byline="false">
-        <fileset dir="${basedir}/force-app/main/default/profiles" includes="*.xml"/>
-      </replaceregexp>
-
-      <!-- Remove et4ae5__ ObjectPermissions from profiles -->
-      <replaceregexp match="&lt;objectPermissions&gt;\s*&lt;allowCreate&gt;[\S\s]*?&lt;/allowCreate&gt;\s*&lt;allowDelete&gt;[\S\s]*?&lt;/allowDelete&gt;\s*&lt;allowEdit&gt;[\S\s]*?&lt;/allowEdit&gt;\s*&lt;allowRead&gt;[\S\s]*?&lt;/allowRead&gt;\s*&lt;modifyAllRecords&gt;[\S\s]*?&lt;/modifyAllRecords&gt;\s*&lt;object&gt;et4ae5__(.*)&lt;/object&gt;\s*&lt;viewAllRecords&gt;[\S\s]*?&lt;/viewAllRecords&gt;\s*&lt;/objectPermissions&gt;\s*" replace="" flags="gm" byline="false">
-        <fileset dir="${basedir}/force-app/main/default/profiles" includes="*.xml"/>
-      </replaceregexp>
-
-      <!-- Remove et4ae5__ LayoutAssignments from profiles -->
-      <replaceregexp match="&lt;layoutAssignments&gt;\s*&lt;layout&gt;et4ae5__(.*)&lt;/layout&gt;\s*&lt;/layoutAssignments&gt;\s*" replace="" flags="gm" byline="false">
-        <fileset dir="${basedir}/force-app/main/default/profiles" includes="*.xml"/>
-      </replaceregexp>
-
-      <!-- Remove et4ae5 fieldPermissions from profiles -->
-      <replaceregexp match="&lt;fieldPermissions&gt;\s*&lt;editable&gt;(.+?)&lt;/editable&gt;\s*&lt;field&gt;(.*).et4ae5__(.*)&lt;/field&gt;\s*&lt;readable&gt;(.+?)&lt;/readable&gt;\s*&lt;/fieldPermissions&gt;\s*" replace="" flags="gm" byline="false">
-        <fileset dir="${basedir}/force-app/main/default/profiles" includes="*.xml"/>
-      </replaceregexp>
-
-      <!-- Remove et4ae5__ pageAccess from profiles -->
-      <replaceregexp match="&lt;pageAccesses&gt;\s*&lt;apexPage&gt;et4ae5__(.*)&lt;/apexPage&gt;\s*&lt;enabled&gt;[\S\s]*?&lt;/enabled&gt;\s*&lt;/pageAccesses&gt;\s*" replace="" flags="gm" byline="false">
-        <fileset dir="${basedir}/force-app/main/default/profiles" includes="*.xml"/>
-      </replaceregexp>
-
-      <!-- Remove et4ae5__ tabVisibility from profiles -->
-      <replaceregexp match="&lt;tabVisibilities&gt;\s*&lt;tab&gt;et4ae5__(.*)&lt;/tab&gt;\s*&lt;visibility&gt;[\S\s]*?&lt;/visibility&gt;\s*&lt;/tabVisibilities&gt;\s*" replace="" flags="gm" byline="false">
+      <!-- Remove tabVisibility from profiles -->
+      <replaceregexp match="&lt;tabVisibilities&gt;\s*&lt;tab&gt;${nameSpace}__(.*)&lt;/tab&gt;\s*&lt;visibility&gt;[\S\s]*?&lt;/visibility&gt;\s*&lt;/tabVisibilities&gt;\s*" replace="" flags="gm" byline="false">
         <fileset dir="${basedir}/force-app/main/default/profiles" includes="*.xml"/>
       </replaceregexp>
     </target>
@@ -327,7 +293,6 @@
 
     <target name="doMetadataClean">
       <echo>Cleaning metadata to exclude unwanted files</echo>
-<!--      <antcall target="cleanFlexiPages" />-->
       <antcall target="cleanFiles" />
       <antcall target="cleanProfiles" />
       <!--<antcall target="cleanPermissionSets" /> -->
