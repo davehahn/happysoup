@@ -1,6 +1,6 @@
 ({
     doInit: function(component, event, helper) {
-        helper.toggleSpinner(component, true);
+        helper.toggleSpinner(component, false);
         var idRec = component.get("v.recordId");
         if(idRec != null){
           component.set("v.donotShowTop",true);
@@ -9,6 +9,9 @@
           component.set("v.idWarehouse","");
           helper.retrievehistory(component, event, helper);
         }else{
+          helper.runAction(component, "c.yearStartDate", {}, function(response) {
+              component.set("v.today", response.getReturnValue());
+          });
           helper.runAction(component, "c.listWarehouses", {}, function(response) {
               component.set("v.whOptions", response.getReturnValue());
           });
