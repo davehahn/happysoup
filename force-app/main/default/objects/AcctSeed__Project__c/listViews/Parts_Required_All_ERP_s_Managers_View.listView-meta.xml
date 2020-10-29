@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Parts_Required_All_ERP_s_Managers_View</fullName>
+    <columns>NAME</columns>
+    <columns>RECORDTYPE</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>RECORDTYPE</field>
+        <operation>equals</operation>
+        <value>AcctSeed__Project__c.CounterSale,AcctSeed__Project__c.Service,AcctSeed__Project__c.BoatSale</value>
+    </filters>
+    <filters>
+        <field>WarehouseName__c</field>
+        <operation>contains</operation>
+        <value>Whitefish</value>
+    </filters>
+    <filters>
+        <field>Stage__c</field>
+        <operation>equals</operation>
+        <value>Parts Required</value>
+    </filters>
+    <label>Parts Required All ERP&apos;s - Managers View</label>
+</ListView>
