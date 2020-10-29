@@ -229,16 +229,19 @@ private class Case_TriggerHandler_Test {
 			c = Factory_Case.createWarrantyCase(dealer);
 			List<Case_Part__c> cParts = Factory_CasePart.create( c, 3 );
 			Test.startTest();
+			c.Partner_Reference__c = 'Unit Test';
 			c.Status = 'Approved';
 			update c;
 			Test.stopTest();
-			c = [SELECT Id, Parts_Order_ERP__c FROM Case WHERE Id = :c.Id ];
-			AcctSeed__Project__c erp = [ SELECT Id,
+			c = [SELECT Id, Parts_Order_ERP__c, Partner_Reference__c, CaseNumber FROM Case WHERE Id = :c.Id ];
+			AcctSeed__Project__c erp = [ SELECT Id, Partner_External_PO_Number__c, Customer_Notes__c,
 																	( SELECT Id FROM AcctSeedERP__Project_Materials__r )
 																	 FROM AcctSeed__Project__c
 																	 WHERE Id = :c.Parts_Order_ERP__c ];
 			System.assert( c.Parts_Order_ERP__c != null, 'Case Parts Order lookup should be populated' );
 			System.assertEquals( c.Parts_Order_ERP__c, erp.Id );
+			System.assertEquals( erp.Customer_Notes__c, 'Warranty Case # ' + c.CaseNumber);
+			System.assertEquals( erp.Partner_External_PO_Number__c, c.Partner_Reference__c );
 			System.assertEquals( cParts.size(), erp.AcctSeedERP__Project_Materials__r.size() );
 		}
 	}
