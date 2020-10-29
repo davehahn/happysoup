@@ -8,8 +8,10 @@
 	<aura:attribute name="idProduct" type="String" />
 	<aura:attribute name="idSerial" type="String" />
 	<aura:attribute name="availableQuantity" type="Decimal" />
+    <aura:attribute name="today" type="Date" default=""/>
     <aura:handler action="{!c.doInit}" name="init" value="{!this}"/>
     <aura:handler name="change" value="{!v.listData}" action="{!c.changeTotal}"/>
+    <aura:handler name="change" value="{!v.today}" action="{!c.warehouseChanged}"/>
     <aura:handler name="filterSelectedEvent" event="c:filterSelectedEvent" action="{!c.handleFilterSelected}" />
     <aura:handler name="serialSelectedEvent" event="c:serialSelectedEvent" action="{!c.handleSerialSelected}" />
     <aura:if isTrue="{!!v.donotShowTop}">
@@ -29,6 +31,9 @@
     		<lightning:layoutItem class="slds-m-around_small">
 	            <c:SearchSerial_ar aura:id="searchSerialComp" />
 			</lightning:layoutItem>
+            <lightning:layoutItem class="slds-m-around_small">
+                <ui:inputDate aura:id="startDate" format="dd/MM/yyyy" label="Filter Start Date" class="field" value="{!v.today}" displayDatePicker="true" />
+            </lightning:layoutItem>
 		</lightning:layout>
     </lightning:card>
     </aura:if>
@@ -200,4 +205,5 @@
             </tfoot>
         </table>
     </lightning:card>
+    <lightning:spinner aura:id="spinner" />
 </aura:component>
