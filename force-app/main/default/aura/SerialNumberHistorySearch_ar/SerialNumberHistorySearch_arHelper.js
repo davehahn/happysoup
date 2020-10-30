@@ -30,22 +30,26 @@
     	var idWhs = component.get("v.idWarehouse");
     	var idPrd = component.get("v.idProduct");
     	var idSrl = component.get("v.idSerial");
+    	var startDate = component.get("v.today");
     	console.log(idPrd);
     	console.log(idSrl);
     	var idFlt = idSrl != null ? idSrl : (idPrd != null ? idPrd : (idWhs != null ? idWhs : ''))
     	if(idFlt == '') return;
     	if(idPrd == null && idSrl == null) return;
+    	helper.toggleSpinner(component, true);
         helper.runAction(component, "c.retrieveHistoryDetails", {
             mapFilter: {
                 idFilter: idFlt,
                 idWarehouse: idWhs,
                 idProduct: idPrd,
-                idSerial: idSrl
+                idSerial: idSrl,
+                startDate: startDate
             }
         }, function(response) {
             var results = response.getReturnValue();
             results = JSON.parse(results);
             component.set("v.listData", results);
+            helper.toggleSpinner(component, false);
         });
     },
     clearProductSearch : function(component){
@@ -60,5 +64,16 @@
     },
     clearFilters : function(component){
         component.set("v.idWarehouse","");
+    },
+    toggleSpinner: function (component, value) {
+       var spinner = component.find('spinner');
+       window.setTimeout(
+           $A.getCallback( function() {
+               if (value) {
+                   $A.util.removeClass(spinner, 'slds-hide');
+               } else {
+                   $A.util.addClass(spinner, 'slds-hide');
+               }
+           }));
     }
 })

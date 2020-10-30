@@ -158,6 +158,12 @@ public without sharing class SerialNumberHistorySearchController_ar {
 	}
 
 	@AuraEnabled
+	public static String yearStartDate()
+	{
+		return Date.today().addYears(-1).format();
+	}
+
+	@AuraEnabled
 	public static list<map<string,string>> listWarehouses()
 	{
 		list<map<string,string>> listJSON = new list<map<string,string>>();
@@ -192,6 +198,20 @@ public without sharing class SerialNumberHistorySearchController_ar {
 		String idWarehouse = mapFilter.get('idWarehouse');
 		String idProduct = mapFilter.get('idProduct');
 		String idSerial = mapFilter.get('idSerial');
+		String startDate = mapFilter.get('startDate');
+		System.debug('mapFilter');
+		System.debug(mapFilter);
+		Date filterStart;
+		if(startDate != null) {
+			String[] dtSplit = startDate.split('-');
+			try {
+				filterStart = Date.newInstance(Integer.valueOf(dtSplit[0]), Integer.valueOf(dtSplit[1]), Integer.valueOf(dtSplit[2]));
+			}catch(Exception e){
+				filterStart = Date.parse(startDate);
+			}
+		}
+		System.debug('filterStart');
+		System.debug(filterStart);
 
 		String query = 'SELECT Id, GMBLASERP__Warehouse__c, GMBLASERP__Warehouse__r.Name, GMBLASERP__Product__c, GMBLASERP__Product__r.Name, ';
 			   query += ' GMBLASERP__Lot__c, GMBLASERP__Lot__r.Name, GMBLASERP__Serial_Number__c, GMBLASERP__Serial_Number__r.Name, ';
@@ -208,6 +228,10 @@ public without sharing class SerialNumberHistorySearchController_ar {
 			if(idWarehouse != null && idWarehouse != ''){
 			   if(filter != ' WHERE ') filter += ' AND ';
 			   filter += ' GMBLASERP__Warehouse__c =:idWarehouse';
+			}
+			if(filterStart != null){
+			   if(filter != ' WHERE ') filter += ' AND ';
+			   filter += ' AcctSeedERP__Movement_Date__c >=:filterStart';
 			}
 
 		filter += ' ORDER BY AcctSeedERP__Movement_Date__c DESC ';
