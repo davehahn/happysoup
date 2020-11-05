@@ -5,7 +5,7 @@
     <description>Prevents any standard user from changing the serial number</description>
     <errorConditionFormula>ISCHANGED(Name) 
 &amp;&amp;
-$Profile.Name != &#39;System Administrator&#39;
+$Profile.Name != &apos;System Administrator&apos;
 &amp;&amp;
 $Permission.Can_Modify_Serial_Number_Value = FALSE</errorConditionFormula>
     <errorDisplayField>Name</errorDisplayField>

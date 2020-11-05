@@ -246,7 +246,8 @@ private class CPQ_Controller_dh_Test {
       Test.startTest();
       String resultJSON = CPQ_Controller_dh.fetchMajorProductOptions( 'Motor',
                                                                       'Remote',
-                                                                      pbId );
+                                                                      pbId,
+                                                                      false);
       List<Map<String, String>> result = (List<Map<String, String>>)JSON.deserialize( resultJSON, List<Map<String, String>>.class );
       Test.stopTest();
       System.assertEquals( 10, result.size() );

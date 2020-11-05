@@ -1,4 +1,4 @@
-public with sharing class Partner_OutstandingBoatOrders {
+public without sharing class Partner_OutstandingBoatOrders {
 
   @AuraEnabled
   public static String checkPermission()

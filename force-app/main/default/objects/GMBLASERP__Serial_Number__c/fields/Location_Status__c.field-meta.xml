@@ -2,7 +2,7 @@
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Location_Status__c</fullName>
     <externalId>false</externalId>
-    <formula>IF(ISBLANK(Usage__c), &#39;&#39;, (Usage__c &amp; &quot; &quot;)) &amp; Location__c</formula>
+    <formula>IF(ISBLANK(Usage__c), &apos;&apos;, (Usage__c &amp; &quot; &quot;)) &amp; Location__c</formula>
     <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
     <label>Location Status</label>
     <required>false</required>

@@ -310,7 +310,8 @@ private class CPQ_Test {
       Test.startTest();
       List<Map<String, String>> result = CPQ.fetchMajorProductSelectOptions( 'Motor',
                                                                              'Remote',
-                                                                             pbId );
+                                                                             pbId,
+                                                                             false );
       Test.stopTest();
       System.assertEquals( 10, result.size() );
     }

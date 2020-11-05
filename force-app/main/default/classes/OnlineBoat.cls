@@ -212,7 +212,7 @@ public virtual class OnlineBoat extends Online_Product
       fee_parent_map.put( pfm.Fee_Product__c, pfm.Parent_Product__c );
     }
 
-    for( Product_Fee_Amount__c pfa : [ SELECT Id, Province__c, Amount__c, Fee_Product__c, Fee_Product__r.Name FROM Product_Fee_Amount__c WHERE Fee_Product__c IN :fee_parent_map.keySet() AND Price_Book__c = :retailPbId ])
+    for( Product_Fee_Amount__c pfa : [ SELECT Id, Province__c, Amount__c, Fee_Product__c, Fee_Product__r.Name, Fee_Product__r.Family FROM Product_Fee_Amount__c WHERE Fee_Product__c IN :fee_parent_map.keySet() AND Price_Book__c = :retailPbId ])
     {
       this.productFee_Map.get( fee_parent_map.get( pfa.Fee_Product__c ) ).add( pfa );
       this.allProductIds.add( pfa.Fee_Product__c );
@@ -291,19 +291,22 @@ public virtual class OnlineBoat extends Online_Product
       }
       else
       {
-        Online_Product.Option oop = new Online_Product.Option(prod, opt, pbe);
-        populate( oop );
+        if( pbe != null )
+        {
+          Online_Product.Option oop = new Online_Product.Option(prod, opt, pbe);
+          populate( oop );
 
-        String label;
-        if( prodRts.contains( prod.RecordType.Id ) )
-          label = prod.RecordType.Name;
-        else
-          label = prod.Family;
+          String label;
+          if( prodRts.contains( prod.RecordType.Id ) )
+            label = prod.RecordType.Name;
+          else
+            label = prod.Family;
 
-        label = LGND_Utilities.toCamelCase( label );
-        if (!result.containsKey(label))
-          result.put(label, new List<Online_Product.Option>());
-        result.get(label).add( oop );
+          label = LGND_Utilities.toCamelCase( label );
+          if (!result.containsKey(label))
+            result.put(label, new List<Online_Product.Option>());
+          result.get(label).add( oop );
+        }
       }
     }
     return result;
