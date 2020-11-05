@@ -108,12 +108,28 @@ public with sharing class CPQ_Controller_dh {
     }
   }
 
+//  @AuraEnabled
+//  public static String fetchMajorProductOptions( String recordType,
+//                                                 String family,
+//                                                 String activePricebookId )
+//  {
+//    return JSON.serialize( CPQ.fetchMajorProductSelectOptions( recordType, family, activePricebookId ) );
+//  }
+
   @AuraEnabled
   public static String fetchMajorProductOptions( String recordType,
-                                                 String family,
-                                                 String activePricebookId )
+                                                  String family,
+                                                  String activePricebookId,
+                                                  Boolean allowInactiveEntries)
   {
-    return JSON.serialize( CPQ.fetchMajorProductSelectOptions( recordType, family, activePricebookId ) );
+    return JSON.serialize(
+      CPQ.fetchMajorProductSelectOptions(
+        recordType,
+        family,
+        activePricebookId,
+        allowInactiveEntries
+      )
+    );
   }
 
   @AuraEnabled

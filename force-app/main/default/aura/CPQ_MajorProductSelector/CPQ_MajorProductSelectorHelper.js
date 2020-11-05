@@ -22,7 +22,8 @@
     action.setParams({
       recordType: component.get('v.productRecordType'),
       family: component.get('v.productFamily'),
-      activePricebookId: component.get('v.activePricebookId')
+      activePricebookId: component.get('v.activePricebookId'),
+      allowInactiveEntries: component.get('v.allowInactiveBoats')
     });
     return new LightningApex( this, action ).fire();
   },

@@ -199,11 +199,13 @@ public class CPQ {
 
   public static List<Map<String, String>> fetchMajorProductSelectOptions( String rtName,
                                                                           String family,
-                                                                          String activePricebookId )
+                                                                          String activePricebookId,
+                                                                          Boolean allowInactiveEntries )
   {
     Id rtId = LGND_Utilities.recordTypeIdFromName( 'Product2', rtName );
     return CPQ.fetchProducts( rtId,
                               activePricebookId,
+                              allowInactiveEntries,
                               rtName,
                               family );
   }
@@ -734,12 +736,17 @@ public class CPQ {
 
   private static List<Map<String, String>> fetchProducts( Id rtId,
                                                           Id activePricebook,
+                                                          Boolean allowInactiveEntries,
                                                           String rtName,
                                                           String family )
   {
     String userType = UserInfo.getUserType();
     List<Map<String, String>> result = new List<Map<String, String>>();
-    String queryString = 'SELECT Product2.Id, Product2.Name, Product2.Taxable__c, UnitPrice, IsActive, Product2.Available_For_Package_And_Save__c FROM PricebookEntry WHERE IsActive = true AND Product2.RecordTypeId =\'' + rtId + '\'';
+    String queryString = 'SELECT Product2.Id, Product2.Name, Product2.Taxable__c, UnitPrice, IsActive, Product2.Available_For_Package_And_Save__c FROM PricebookEntry WHERE Product2.RecordTypeId =\'' + rtId + '\'';
+    if( !allowInactiveEntries )
+    {
+      queryString += ' AND IsActive = true';
+    }
     if( family != null )
     {
       queryString += ' AND Product2.Family = \'';

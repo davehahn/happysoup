@@ -6,6 +6,9 @@
   <aura:attribute name="allowSavings"
                   type="Boolean"
                   default="false" />
+  <aura:attribute name="allowInactiveBoats"
+                  type="Boolean"
+                  default="false" />
   <aura:attribute name="allowCustomProducts"
                   type="Boolean"
                   default="false" />
@@ -43,6 +46,7 @@
                                     activePricebookId="{!v.cpq.activePricebookId}"
                                     productFamily="{!v.cpq.baseProductFamily}"
                                     productRecordType="{!v.cpq.baseProductRecordType_Name}"
+                                    allowInactiveBoats="{!v.allowInactiveBoats}"
                                     value="{!v.cpq.boatId}" />
 
         <aura:if isTrue="{! not(empty(v.cpq.theBoat))}">
