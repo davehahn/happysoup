@@ -2231,10 +2231,6 @@
     <rules>
         <fullName>Notify Emilie Arbour on Trade-In ERP Stage Pending Inspection or Delivered</fullName>
         <actions>
-            <name>This_Trade_ERP_is_now_Pending_Inspection</name>
-            <type>Task</type>
-        </actions>
-        <actions>
             <name>Trade_In_ERP_Stage_has_been_updated</name>
             <type>Task</type>
         </actions>
@@ -2361,6 +2357,61 @@
             <value>Retail Boat Sale</value>
         </criteriaItems>
         <description>Notifies LIsa on Stage Delivered on ERP.  This helps for ERPs that Lisa is BOM for but the picukp is at another location.</description>
+        <triggerType>onCreateOrTriggeringUpdate</triggerType>
+    </rules>
+    <rules>
+        <fullName>Notify Marian McGuire on Trade-In ERP Stage Pending Inspection or Delivered</fullName>
+        <actions>
+            <name>This_Trade_ERP_is_now_Pending_Inspection</name>
+            <type>Task</type>
+        </actions>
+        <active>true</active>
+        <booleanFilter>(1 AND 2) OR (1 AND 3) AND 4</booleanFilter>
+        <criteriaItems>
+            <field>AcctSeed__Project__c.RecordTypeId</field>
+            <operation>equals</operation>
+            <value>Legend Trade In</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>AcctSeed__Project__c.Stage__c</field>
+            <operation>equals</operation>
+            <value>Pending Inspection</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>AcctSeed__Project__c.Stage__c</field>
+            <operation>equals</operation>
+            <value>Delivered</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>AcctSeed__Project__c.WarehouseName__c</field>
+            <operation>contains</operation>
+            <value>Whitefish</value>
+        </criteriaItems>
+        <triggerType>onCreateOrTriggeringUpdate</triggerType>
+    </rules>
+    <rules>
+        <fullName>Notify Matt on Pend Rig on Service ERP</fullName>
+        <actions>
+            <name>Parts_came_in_and_ready_for_scheduling</name>
+            <type>Task</type>
+        </actions>
+        <active>true</active>
+        <criteriaItems>
+            <field>AcctSeed__Project__c.RecordTypeId</field>
+            <operation>equals</operation>
+            <value>Legend Service Work Order</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>AcctSeed__Project__c.Stage__c</field>
+            <operation>equals</operation>
+            <value>Pending Rigging</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>AcctSeed__Project__c.WarehouseName__c</field>
+            <operation>contains</operation>
+            <value>white</value>
+        </criteriaItems>
+        <description>This can be deleted as of Sept. 1 2020, this is a backup workflow while i&apos;m on vacation - BF</description>
         <triggerType>onCreateOrTriggeringUpdate</triggerType>
     </rules>
     <rules>
