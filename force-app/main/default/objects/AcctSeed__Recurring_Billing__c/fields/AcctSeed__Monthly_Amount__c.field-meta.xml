@@ -3,10 +3,12 @@
     <fullName>AcctSeed__Monthly_Amount__c</fullName>
     <deprecated>false</deprecated>
     <externalId>false</externalId>
-    <formula>IF(Text(AcctSeed__Billing_Frequency__c)=&quot;Annual&quot;, AcctSeed__Total__c /12, 
-IF(Text(AcctSeed__Billing_Frequency__c)=&quot;Semi-Annual&quot;, AcctSeed__Total__c/6, 
-IF(Text(AcctSeed__Billing_Frequency__c)=&quot;Quarterly&quot;, AcctSeed__Total__c/3, 
-AcctSeed__Total__c)))</formula>
+    <formula>IF(Text(AcctSeed__Billing_Frequency__c)=&quot;Annual&quot;, AcctSeed__Total__c / 12,
+IF(Text(AcctSeed__Billing_Frequency__c)=&quot;Semi-Annual&quot;, AcctSeed__Total__c / 6,
+IF(Text(AcctSeed__Billing_Frequency__c)=&quot;Quarterly&quot;, AcctSeed__Total__c / 3,
+IF(Text(AcctSeed__Billing_Frequency__c)=&quot;Weekly&quot;, AcctSeed__Total__c * 4,
+IF(Text(AcctSeed__Billing_Frequency__c)=&quot;Bi-weekly&quot;, AcctSeed__Total__c * 2,
+AcctSeed__Total__c )))))</formula>
     <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
     <inlineHelpText>Calculated monthly amount.</inlineHelpText>
     <label>Monthly Amount</label>

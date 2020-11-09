@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>AcctSeed__Tax_Group__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <inlineHelpText>If using native tax functionality, this determines the Combined Tax Rate percentage and the tax GL mappings and is used to calculate the Tax Amount</inlineHelpText>
+    <label>Tax Group</label>
+    <lookupFilter>
+        <active>true</active>
+        <booleanFilter>1 AND (2 OR 3)</booleanFilter>
+        <filterItems>
+            <field>AcctSeed__Tax_Group__c.AcctSeed__Active__c</field>
+            <operation>equals</operation>
+            <value>True</value>
+        </filterItems>
+        <filterItems>
+            <field>AcctSeed__Tax_Group__c.AcctSeed__Tax_Type__c</field>
+            <operation>equals</operation>
+            <value>Sales</value>
+        </filterItems>
+        <filterItems>
+            <field>AcctSeed__Tax_Group__c.AcctSeed__Tax_Type__c</field>
+            <operation>equals</operation>
+            <value>Sales and Purchase</value>
+        </filterItems>
+        <isOptional>true</isOptional>
+    </lookupFilter>
+    <referenceTo>AcctSeed__Tax_Group__c</referenceTo>
+    <relationshipLabel>Recurring Billing Lines</relationshipLabel>
+    <relationshipName>Recurring_Billing_Lines</relationshipName>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>AcctSeed__All_Actual</fullName>
+    <columns>NAME</columns>
+    <columns>AcctSeed__Type__c</columns>
+    <columns>AcctSeed__Time_Card_Period__c</columns>
+    <columns>AcctSeed__Week_Ending_Date__c</columns>
+    <columns>AcctSeed__Employee__c</columns>
+    <columns>AcctSeed__Status__c</columns>
+    <columns>AcctSeed__Total_Hours__c</columns>
+    <columns>AcctSeed__Billable_Hours__c</columns>
+    <columns>AcctSeed__Unbilled_Hours__c</columns>
+    <columns>AcctSeed__Ledger__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>AcctSeed__Type__c</field>
+        <operation>equals</operation>
+        <value>Actual</value>
+    </filters>
+    <label>All Actual</label>
+</ListView>

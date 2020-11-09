@@ -3,7 +3,7 @@
     <fullName>AcctSeed__Net_Amount__c</fullName>
     <deprecated>false</deprecated>
     <externalId>false</externalId>
-    <formula>AcctSeed__Total__c - AcctSeed__Discount_Amount__c</formula>
+    <formula>AcctSeed__Total__c - AcctSeed__Discount_Amount__c - IF(AcctSeed__Reverse_Charge__c,AcctSeed__Purchase_Tax3__c,0)</formula>
     <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
     <inlineHelpText>Invoice Total minus Discount Amount.</inlineHelpText>
     <label>Net Amount</label>
