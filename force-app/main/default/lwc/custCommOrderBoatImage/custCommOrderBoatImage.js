@@ -73,7 +73,6 @@ export default class CustCommOrderBoatImage extends LightningElement {
 		handleImageChange(detail){
 			if(detail.optionImage.length > 0){
 				for(let image of detail.optionImage){
-				  console.log(JSON.stringify(image));
 					if(this.page === 'performance'){
 						if(image.imageType === 'backRight'){
 							this.motorImage = 'https://' + image.imageURL;

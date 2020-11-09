@@ -53,6 +53,26 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
 			class: 'modal-nav-item'
 		},
 	];
+
+	freight = {
+		fishingBoat: {
+		  "Alberta": 1450,
+      "British Columbia": 1675,
+      "Manitoba": 825,
+      "New Brunswick": 825,
+      "Newfoundland and Labrador": 2450,
+      "Northwest Territories": 0,
+      "Nova Scotia": 825,
+      "Nunavut": 0,
+      "Ontario": 0,
+      "Prince Edward Island": 825,
+      "Quebec": 0,
+      "Saskatchewan": 975,
+      "Yukon": 0,
+  	},
+ 	};
+ 	@track freightCharge;
+
 	premiumPackage;
 
   @track paymentAmount;
@@ -463,5 +483,31 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
 		}
   }
 
+	handleFreight(event, init){
+		console.log('update freight info!');
+		console.log(event.currentTarget.value);
+		let province = event.currentTarget.value;
+		let charge = this.freight.fishingBoat[province];
+
+		let purchasePrice = {
+			'sku': 'freight',
+			'price': charge,
+			'addToPrice': true,
+			'section': 'freight',
+			'type': 'select',
+			'addon': false,
+			'userSelectionName': 'freight'
+		};
+		fireEvent(this.pageRef, 'updatePurchasePrice', purchasePrice);
+		this.displayFreightCharge(charge);
+ 	}
+
+ 	displayFreightCharge(charge){
+ 	  this.freightCharge = new Intl.NumberFormat('en-CA', {
+            																	style: 'currency',
+            																	currency: 'CAD',
+            																	minimumFractionDigits: 0
+            																	}).format(charge);
+  }
 
 }

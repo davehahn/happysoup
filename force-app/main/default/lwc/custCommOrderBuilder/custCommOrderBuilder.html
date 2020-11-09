@@ -153,7 +153,7 @@
                   <div class="form-input form-input--select">
                     <label>Province or Territory</label>
                     <span></span>
-                    <select label="Province or Territory" data-id="state">
+                    <select label="Province or Territory" data-id="state" onchange={handleFreight}>
                       <option value=""> -- Select One -- </option>
                       <option value="Alberta">Alberta</option>
                       <option value="British Columbia">British Columbia</option>
@@ -169,6 +169,16 @@
                       <option value="Saskatchewan">Saskatchewan</option>
                       <option value="Yukon">Yukon</option>
                     </select>
+                  </div>
+                </lightning-layout-item>
+
+                <lightning-layout-item padding="horizontal-small"
+                                       size="12"
+                                       small-device-size="12"
+                                       medium-device-size="6"
+                                       large-device-size="6">
+                  <div class="form-input form-input--select">
+                    {freightCharge}
                   </div>
                 </lightning-layout-item>
 
