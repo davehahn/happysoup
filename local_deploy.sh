@@ -3,12 +3,15 @@
 BLUE=`tput setaf 4`
 RESET=`tput sgr0`
 TESTLEVEL='RunLocalTest'
+SFDX_ALIAS=$1
+RAND="$(date +%s)"
+CLONEDIR=".deploy_root_$RAND"
 
 echoOut() {
   echo "${BLUE}$1${RESET}"
 }
 
-if [[ -z $1 ]]; then
+if [[ -z $SFDX_ALIAS ]]; then
   echo "You need to supply the sfdx org alias which you are trying to deploy to"
   exit 1
 fi
@@ -31,11 +34,10 @@ else
 fi
 
 cmd=$(pwd)
-echo "\"${cmd}\""
-mkdir ~/.deploy_root
-cd ~/.deploy_root
+mkdir ~/$CLONEDIR
+cd ~/$CLONEDIR
 git clone "${cmd}" .
 chmod +x deploy.sh
-./deploy.sh $1 $TESTLEVEL
+./deploy.sh $SFDX_ALIAS $TESTLEVEL
 echoOut 'Ceaning up'
-cd .. && rm -fR .deploy_root
+cd .. && rm -fR $CLONEDIR
