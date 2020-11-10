@@ -48,7 +48,7 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
 			class: 'modal-nav-item'
 		},
 		{
-			title: 'Delivery Timing',
+			title: 'Delivery Timing + Freight',
 			label: 'delivery',
 			class: 'modal-nav-item'
 		},
@@ -88,6 +88,7 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
   @track performanceItems = [];
   @track traileringItems = [];
   @track electronicsItems = [];
+  @track freightItems = [];
 
   @wire(CurrentPageReference)
   setCurrentPageReference(currentPageReference) {
@@ -347,7 +348,10 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
 						this.electronicsItems.push(payload);
 					}
 				}
-			}	else {
+			} else if(details.type === 'select'){
+			  this.freightItems = [];
+			  this.freightItems.push(payload);
+   		} else {
 				//append the item to this section
 				if(details.section === 'performance'){
 					this.performanceItems.push(payload);
@@ -498,16 +502,32 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
 			'addon': false,
 			'userSelectionName': 'freight'
 		};
+
+		let summaryDetails = {
+			'sku': 'freight',
+			'name': 'Freight to ' + province,
+			'price': charge,
+			'addToSummary': true,
+			'section': 'freight',
+			'type': 'select',
+			'addon': false,
+			'userSelectionName': 'freight'
+		};
+
+		fireEvent(this.pageRef, 'updateSummary', summaryDetails);
+		fireEvent(this.pageRef, 'updateListItems', summaryDetails);
 		fireEvent(this.pageRef, 'updatePurchasePrice', purchasePrice);
+
 		this.displayFreightCharge(charge);
  	}
 
  	displayFreightCharge(charge){
- 	  this.freightCharge = new Intl.NumberFormat('en-CA', {
-            																	style: 'currency',
-            																	currency: 'CAD',
-            																	minimumFractionDigits: 0
-            																	}).format(charge);
+ 	  let updatedFreight = new Intl.NumberFormat('en-CA', {
+													style: 'currency',
+													currency: 'CAD',
+													minimumFractionDigits: 0
+													}).format(charge);
+ 	  this.freightCharge = '+ ' + updatedFreight + ' Freight Charge';
   }
 
 }

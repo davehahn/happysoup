@@ -33,9 +33,7 @@ button:focus{
   padding-bottom: 90px;
   width: 100%;
   height: 100%;
-  background-image: url('https://s3.amazonaws.com/salesforce-image-gallery-sandbox/Product2/2020/11/1280w/1604694825175.jpg');
-  background-size: 200%;
-  background-position: center;
+  background: #FFF;
 }
 .lgnd-order-builder > *,
 .lgnd-order-builder h1, .lgnd-order-builder h2, .lgnd-order-builder h3, .lgnd-order-builder h4, .lgnd-order-builder h5, .lgnd-order-builder h6{
@@ -240,6 +238,20 @@ button:focus{
 
 .modal-page[data-modal-page="delivery"] p{
   padding-bottom: 1em;
+}
+
+.modal-table tr{
+  border-bottom: 1px solid #ddd;
+}
+.modal-table tr td{
+  padding: 0.5em 0.25em;
+}
+.modal-table tr:first-of-type{
+  background-color: #333;
+  color: #FFF;
+}
+.modal-table tr:nth-of-type(even){
+  background-color: #efefef;
 }
 
 /*
@@ -808,7 +820,11 @@ button:focus{
 	position: absolute;
 	bottom: 10px; right: 1.5em;
 }
-
+.freightCharge{
+	font-size: 0.9em;
+	font-style: italic;
+	padding-top: 3.25em;
+}
 
 /*
 
@@ -854,6 +870,11 @@ button:focus{
 
     .slds-small-size_12-of-12, .slds-small-size--12-of-12 {
         width: 100%;
+    }
+    .freightCharge{
+      padding-top: 0;
+      text-align: right;
+      margin-top: -1.25em;
     }
 
 		.config-page[data-page="electronics"]{

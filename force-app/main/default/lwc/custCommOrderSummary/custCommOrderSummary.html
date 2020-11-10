@@ -16,6 +16,9 @@
       <template for:each={electronicsItems} for:item="item">
         <li class="summary_listItem" key={item.sku} data-id={item.sku}>{item.name}</li>
       </template>
+      <template for:each={freightItems} for:item="item">
+        <li class="summary_listItem" key={item.sku} data-id={item.sku}>{item.name}</li>
+      </template>
     </ul>
   </aside>
 </template>
