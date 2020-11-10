@@ -72,6 +72,11 @@
         <fileset dir="${basedir}/force-app/main/default/profiles" includes="*.xml"/>
       </replaceregexp>
 
+      <!-- Remove all references to Dump_Id__c fields from Data migration' -->
+      <replaceregexp match="&lt;fieldPermissions&gt;\s*&lt;editable&gt;(.+?)&lt;/editable&gt;\s*&lt;field&gt;(.*).Dump_Id__c&lt;/field&gt;\s*&lt;readable&gt;(.+?)&lt;/readable&gt;\s*&lt;/fieldPermissions&gt;\s*" replace="" flags="gm" byline="false">
+        <fileset dir="${basedir}/force-app/main/default/profiles" includes="*.xml"/>
+      </replaceregexp>
+
       <!-- remove all references to flowAccesses -->
       <replaceregexp match="&lt;flowAccesses&gt;\s*&lt;enabled&gt;(.+?)&lt;/enabled&gt;\s*&lt;flow&gt;(.+?)&lt;/flow&gt;\s*&lt;/flowAccesses&gt;\s*" replace="" flags="gm" byline="false">
         <fileset dir="${basedir}/force-app/main/default/profiles" includes="*.xml"/>
