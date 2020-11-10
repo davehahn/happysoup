@@ -83,6 +83,12 @@ public without sharing class gcCashDisbursement {
 					setBankGL(cd);
 				if(boolIsUpdate){
 					AcctSeed__Cash_Disbursement__c oldRec = oldMap.get(cd.Id);
+					
+					System.debug('cd');
+					System.debug(cd);
+					System.debug('oldRec');
+					System.debug(oldRec);
+
 					if(cd.GMBLASG__Posted__c && 
 						(cd.AcctSeed__Check_Number__c != oldRec.AcctSeed__Check_Number__c
 						|| cd.AcctSeed__Reference__c != oldRec.AcctSeed__Reference__c

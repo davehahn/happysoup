@@ -16,20 +16,20 @@ var spinner;
 
 var showSpinner = function(){
 	
-	var spinDiv = document.createElement(&#39;div&#39;);
+	var spinDiv = document.createElement(&apos;div&apos;);
 	
-	var spinCSS = &#39;&#39;;
-	spinCSS += &#39;background:rgba(0,0,0,.2);&#39;;
-	spinCSS += &#39;background-image:url(&quot;/img/loading32.gif&quot;);&#39;;
-	spinCSS += &#39;background-repeat:no-repeat;&#39;;
-	spinCSS += &#39;background-attachment:fixed;&#39;;
-	spinCSS += &#39;background-position:center;&#39;;
-	spinCSS += &#39;position:absolute;&#39;;
-	spinCSS += &#39;width:100%;&#39;;
-	spinCSS += &#39;height:100%;&#39;;
-	spinCSS += &#39;top:0;&#39;;
-	spinCSS += &#39;left:0;&#39;;
-	spinCSS += &#39;z-index:9998;&#39;;
+	var spinCSS = &apos;&apos;;
+	spinCSS += &apos;background:rgba(0,0,0,.2);&apos;;
+	spinCSS += &apos;background-image:url(&quot;/img/loading32.gif&quot;);&apos;;
+	spinCSS += &apos;background-repeat:no-repeat;&apos;;
+	spinCSS += &apos;background-attachment:fixed;&apos;;
+	spinCSS += &apos;background-position:center;&apos;;
+	spinCSS += &apos;position:absolute;&apos;;
+	spinCSS += &apos;width:100%;&apos;;
+	spinCSS += &apos;height:100%;&apos;;
+	spinCSS += &apos;top:0;&apos;;
+	spinCSS += &apos;left:0;&apos;;
+	spinCSS += &apos;z-index:9998;&apos;;
 
 	spinDiv.style.cssText = spinCSS;
 	document.body.appendChild(spinDiv);
@@ -46,7 +46,7 @@ var hideSpinner = function(){
 var showError = function(error) {
 
 	hideSpinner();
-	alert(&#39;The record could not be created. &#39;+error);
+	alert(&apos;The record could not be created. &apos;+error);
 
 };
 
@@ -57,11 +57,11 @@ var createRecord = function(){
 	if(!idVendor)
 	{
 		hideSpinner();	
-		alert(&#39;The Purchase Order must have a Vendor, in order to create an AP.&#39;);
+		alert(&apos;The Purchase Order must have a Vendor, in order to create an AP.&apos;);
 		return;
 	};
 
-	var invoiceNumber = prompt(&quot;Enter the vendor&#39;s invoice number&quot;);
+	var invoiceNumber = prompt(&quot;Enter the vendor&apos;s invoice number&quot;);
 	if(invoiceNumber === null)
 	{
 		hideSpinner();
@@ -70,7 +70,7 @@ var createRecord = function(){
 	else if (!invoiceNumber)
 	{
 		hideSpinner();
-		alert(&#39;An invoice number is required.&#39;);
+		alert(&apos;An invoice number is required.&apos;);
 		return;
 	};
 
@@ -88,7 +88,7 @@ var createRecord = function(){
 
 var createRecord_callback = function(result){
 
-	window.open(&#39;/&#39;+result,&quot;_self&quot;);
+	window.open(&apos;/&apos;+result,&quot;_self&quot;);
 
 };
 
@@ -107,14 +107,14 @@ var checkAccess = function(){
 
 var checkAccess_callback = function(accessible){
 
-	if(accessible == &#39;true&#39;)
+	if(accessible == &apos;true&apos;)
 	{
 		createRecord();
 	}
 	else
 	{
 		hideSpinner();
-		alert(&#39;The current user does not have access to Accounts Payable.&#39;);
+		alert(&apos;The current user does not have access to Accounts Payable.&apos;);
 	}
 };
 

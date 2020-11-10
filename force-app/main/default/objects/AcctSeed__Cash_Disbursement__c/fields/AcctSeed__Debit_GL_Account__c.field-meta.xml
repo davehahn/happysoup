@@ -1,11 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>AcctSeed__Debit_GL_Account__c</fullName>
-    <deleteConstraint>Restrict</deleteConstraint>
+    <deleteConstraint>SetNull</deleteConstraint>
     <deprecated>false</deprecated>
     <externalId>false</externalId>
     <inlineHelpText>Used if the Cash Disbursement Type is a Customer Refund or Other. A Debit is made to this GL account while a corresponding Credit is made to the Bank Account.</inlineHelpText>
     <label>Debit GL Account</label>
+    <lookupFilter>
+        <active>true</active>
+        <booleanFilter>1 OR 2 OR 3</booleanFilter>
+        <filterItems>
+            <field>AcctSeed__GL_Account__c.AcctSeed__Type__c</field>
+            <operation>equals</operation>
+            <value>Expense</value>
+        </filterItems>
+        <filterItems>
+            <field>AcctSeed__GL_Account__c.AcctSeed__Type__c</field>
+            <operation>equals</operation>
+            <value>Balance Sheet</value>
+        </filterItems>
+        <filterItems>
+            <field>AcctSeed__GL_Account__c.AcctSeed__Type__c</field>
+            <operation>equals</operation>
+            <value>Revenue</value>
+        </filterItems>
+        <isOptional>true</isOptional>
+    </lookupFilter>
     <referenceTo>AcctSeed__GL_Account__c</referenceTo>
     <relationshipLabel>Cash Disbursements (Refund GL Account)</relationshipLabel>
     <relationshipName>Cash_Disbursements1</relationshipName>

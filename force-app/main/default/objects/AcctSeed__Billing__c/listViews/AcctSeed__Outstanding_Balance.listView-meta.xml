@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>AcctSeed__Outstanding_Balance</fullName>
+    <columns>NAME</columns>
+    <columns>AcctSeed__Proprietary_Billing_Number__c</columns>
+    <columns>AcctSeed__Customer__c</columns>
+    <columns>AcctSeed__Accounting_Period__c</columns>
+    <columns>AcctSeed__Date__c</columns>
+    <columns>AcctSeed__Due_Date2__c</columns>
+    <columns>AcctSeed__Status__c</columns>
+    <columns>AcctSeed__Type__c</columns>
+    <columns>AcctSeed__Total__c</columns>
+    <columns>AcctSeed__Balance__c</columns>
+    <columns>AcctSeed__Age__c</columns>
+    <columns>AcctSeed__Ledger__c</columns>
+    <columns>AcctSeed__PDF_Email_Status__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>AcctSeed__Balance__c</field>
+        <operation>greaterThan</operation>
+        <value>0</value>
+    </filters>
+    <label>Outstanding Balance</label>
+</ListView>

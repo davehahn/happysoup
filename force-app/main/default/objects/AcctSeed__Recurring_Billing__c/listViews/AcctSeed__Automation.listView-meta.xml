@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>AcctSeed__Automation</fullName>
+    <columns>NAME</columns>
+    <columns>AcctSeed__Customer__c</columns>
+    <columns>AcctSeed__Opportunity__c</columns>
+    <columns>AcctSeed__Billing_Frequency__c</columns>
+    <columns>AcctSeed__Status__c</columns>
+    <columns>AcctSeed__Last_Billing_Date__c</columns>
+    <columns>AcctSeed__Next_Billing_Date__c</columns>
+    <columns>AcctSeed__Total__c</columns>
+    <columns>AcctSeed__Exclude_From_Automation__c</columns>
+    <columns>AcctSeed__Ledger__c</columns>
+    <filterScope>Mine</filterScope>
+    <filters>
+        <field>AcctSeed__Exclude_From_Automation__c</field>
+        <operation>equals</operation>
+        <value>0</value>
+    </filters>
+    <label>Automation</label>
+</ListView>

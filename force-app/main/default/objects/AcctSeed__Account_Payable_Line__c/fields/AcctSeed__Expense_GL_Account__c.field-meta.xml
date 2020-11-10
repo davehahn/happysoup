@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>AcctSeed__Expense_GL_Account__c</fullName>
-    <deleteConstraint>Restrict</deleteConstraint>
+    <deleteConstraint>SetNull</deleteConstraint>
     <deprecated>false</deprecated>
     <externalId>false</externalId>
     <inlineHelpText>Upon posting a debit entry will be made to this account and a corresponding credit entry will be made to the AP Control account set in the Accounting Settings Tab or the AP Control Override indicated in the Account Payable Parent.</inlineHelpText>
@@ -16,6 +16,7 @@
         <isOptional>true</isOptional>
     </lookupFilter>
     <referenceTo>AcctSeed__GL_Account__c</referenceTo>
+    <relationshipLabel>Payable Lines</relationshipLabel>
     <relationshipName>Project_Payable_Invoice_Lines</relationshipName>
     <required>false</required>
     <trackHistory>true</trackHistory>

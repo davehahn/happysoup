@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>AcctSeed__Project_Default</fullName>
+    <columns>NAME</columns>
+    <columns>AcctSeed__Employee__c</columns>
+    <columns>AcctSeed__Project__c</columns>
+    <columns>AcctSeed__Project_Task__c</columns>
+    <columns>AcctSeed__Hourly_Cost__c</columns>
+    <columns>AcctSeed__Overtime_Hourly_Cost__c</columns>
+    <columns>AcctSeed__Weekly_Salary_Cost__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>AcctSeed__Project__c</field>
+        <operation>notEqual</operation>
+    </filters>
+    <filters>
+        <field>AcctSeed__Project_Task__c</field>
+        <operation>equals</operation>
+    </filters>
+    <label>Project Default</label>
+</ListView>

@@ -4,7 +4,7 @@
     <externalId>false</externalId>
     <formula>IF( PricebookEntry.Product2.Taxable__c,
   IF( IsInsurance__c,
-    IF( ISPICKVAL(Opportunity.taxationProvince__c , &#39;Quebec&#39;), 0,  TotalPrice *  Opportunity.ProvincialTaxRate__c ),
+    IF( ISPICKVAL(Opportunity.taxationProvince__c , &apos;Quebec&apos;), 0,  TotalPrice *  Opportunity.ProvincialTaxRate__c ),
     TotalPrice * ( Opportunity.ProvincialTaxRate__c +   $Setup.Legend_Settings__c.FederalTaxRate__c ) ),
   0 )</formula>
     <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>

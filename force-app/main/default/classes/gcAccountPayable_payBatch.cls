@@ -229,7 +229,8 @@ global with sharing class gcAccountPayable_payBatch {
 					AcctSeed__Disbursement_Date__c = disbursementDate,
 					AcctSeed__Debit_GL_Account__c = gcConstants.idGlAPayable,
 					AcctSeed__GL_Account_Variable_1__c = idGlV1,
-					AcctSeed__Cash_Flow_Category__c = idCashFlowCategory
+					AcctSeed__Cash_Flow_Category__c = idCashFlowCategory,
+					AcctSeed__Source__c = 'Account Payable'
 					//AcctSeed__Check_Number__c = nextCheckNumber
 				);
 				//nextCheckNumber += 1;
