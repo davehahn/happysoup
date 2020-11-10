@@ -334,15 +334,19 @@
                 </template>
               </section>
               <section class="modal-page" data-modal-page="premium-package">
-                <h3 class="modal-heading">Preferred Equipment Package</h3>
-                <p class="modal-subheading">
+                <h3 class="modal-heading premiumPackage_heading">Preferred Equipment Package</h3>
+                <p class="modal-subheading premiumPackage_subheading">
                   Total Value <span>{premiumPackValue}</span> <strong> FREE!</strong>
                 </p>
-                <p>These features are typically optional on most comparable models, but come <strong>standard*</strong> on the {boat.name}.</p>
-                <small>*No substitutions or exclusions.</small>
+                <p class="premiumPackage_deck">These features are typically optional on most comparable models, but come <strong>standard*</strong> on the {boat.name}.</p>
+                <small class="premiumPackage_clause">*No substitutions or exclusions.</small>
                 <ul class="premiumPackage">
                   <template for:each={premiumPackItems} for:item="item">
-                    <li key={item} class="premiumPackage_item">{item}</li>
+                    <li key={item.description} class="premiumPackage_item">
+                      <strong class="premiumPackage_itemName">{item.description}</strong>
+                      <span class="premiumPackage_itemPrice">{item.valueFormatted}</span>
+                      <small class="premiumPackage_checkmark"></small>
+                    </li>
                   </template>
                 </ul>
               </section>

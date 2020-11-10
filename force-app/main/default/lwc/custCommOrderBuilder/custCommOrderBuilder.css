@@ -212,12 +212,46 @@ button:focus{
   margin-bottom: 0.75em;
 }
 
-.premiumPackage{
-
+.premiumPackage_heading{
+	text-align: center;
+}
+.premiumPackage_subheading{
+  font-size: 1.5em;
+	margin: -1em 0 0.5em;
+	text-align: center;
+}
+.premiumPackage_subheading span{
+  position: relative;
+}
+.premiumPackage_subheading span::before{
+  display: block;
+	content: "";
+	position: absolute;
+	top: 46%;
+	left: 0;
+	width: 100%;
+	height: 1.5px;
+	background-color: #f7292b;
+	transform: rotate(-10deg);
+}
+.premiumPackage_deck{
+	text-align: center;
+}
+.premiumPackage_clause{
+  display: block;
+  width: 100%;
+  text-align: center;
+  margin-bottom: 1.5em;
 }
 .premiumPackage_item{
   padding: 0.5em 0.25em;
   border-bottom: 1px solid #ddd;
+  display: flex;
+  align-items: center;
+}
+.premiumPackage_item .premiumPackage_itemName{
+  font-weight: normal;
+  width: 100%;
 }
 .premiumPackage_item:nth-of-type(even){
   background-color: #efefef;
@@ -225,15 +259,51 @@ button:focus{
 .premiumPackage_item:last-of-type{
   border-bottom: 3px solid #333;
 }
-.premiumPackage_value{
-  text-align: right;
-  font-size: 1.25em;
-  font-weight: 600;
-  text-transform: uppercase;
+.premiumPackage_item .premiumPackage_itemPrice{
+  display: block;
+  margin: 0 1em;
+  position: relative;
 }
-.premiumPackage_value span{
-  font-size: 1.5em;
-  color: var(--legend-blue);
+.premiumPackage_item .premiumPackage_itemPrice::before{
+  display: block;
+	content: "";
+	position: absolute;
+	top: 46%;
+	left: 0;
+	width: 100%;
+	height: 1.5px;
+	background-color: #f7292b;
+	transform: rotate(-10deg);
+}
+.premiumPackage_checkmark{
+	display: block;
+	width: 20px; min-width: 20px;
+	height: 20px;
+	border-radius: 100vh;
+	background-color: #0d506d;
+	margin: 0 auto;
+	position: relative;
+	text-align: center;
+}
+.premiumPackage_checkmark::before, .premiumPackage_checkmark::after{
+	content: "";
+	display: block;
+	position: absolute;
+	height: 2.5px;
+	border-radius: 100vh;
+	background-color: #fff;
+}
+.premiumPackage_checkmark::before{
+	width: 7px;
+	transform: rotate(40deg);
+	top: 55%;
+	left: 20%;
+}
+.premiumPackage_checkmark::after{
+	width: 10px;
+	transform: rotate(-50deg);
+	top: 42%;
+	left: 35%;
 }
 
 .modal-page[data-modal-page="delivery"] p{
