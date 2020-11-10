@@ -1193,6 +1193,26 @@
         <reevaluateOnChange>true</reevaluateOnChange>
     </fieldUpdates>
     <rules>
+        <fullName>Austin Notified on Marianne creating a Counter Sale</fullName>
+        <actions>
+            <name>Marianne_French_Just_Created_a_Counter_Sale</name>
+            <type>Task</type>
+        </actions>
+        <active>true</active>
+        <criteriaItems>
+            <field>AcctSeed__Project__c.CreatedById</field>
+            <operation>contains</operation>
+            <value>French</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>AcctSeed__Project__c.RecordTypeId</field>
+            <operation>equals</operation>
+            <value>Legend Counter Sale</value>
+        </criteriaItems>
+        <description>This can be deleted as of Sept. 11 2020.  This is to assist in Marianne French working from home.</description>
+        <triggerType>onCreateOnly</triggerType>
+    </rules>
+    <rules>
         <fullName>Barrie 5 days prior to pickup - Infographic email send</fullName>
         <active>true</active>
         <criteriaItems>
@@ -4002,6 +4022,26 @@
         <triggerType>onCreateOrTriggeringUpdate</triggerType>
     </rules>
     <rules>
+        <fullName>User Task SalesPerson Get with Boat Specialist VanDeligt</fullName>
+        <actions>
+            <name>Please_review_this_ERP_for_Accuracy_with_Boat_Specialist_van_de_ligt</name>
+            <type>Task</type>
+        </actions>
+        <active>false</active>
+        <criteriaItems>
+            <field>AcctSeed__Project__c.RecordTypeId</field>
+            <operation>equals</operation>
+            <value>Retail Boat Sale</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>AcctSeed__Project__c.Salesperson__c</field>
+            <operation>contains</operation>
+            <value>van de ligt</value>
+        </criteriaItems>
+        <description>Task for SalesPeople to get with their Boat Specialist on Retail ERPs</description>
+        <triggerType>onCreateOrTriggeringUpdate</triggerType>
+    </rules>
+    <rules>
         <fullName>Vanessa Add On Call ERP</fullName>
         <active>false</active>
         <criteriaItems>
@@ -4479,6 +4519,21 @@ Thanks!  You rock!</description>
         <subject>Inspect Your Customer&apos;s Boat</subject>
     </tasks>
     <tasks>
+        <fullName>Marianne_French_Just_Created_a_Counter_Sale</fullName>
+        <assignedTo>aseltzer@legendboats.com</assignedTo>
+        <assignedToType>user</assignedToType>
+        <description>Austin Seltzer,  You have been assigned the very special duty of picking and packing parts for this counter sale.   
+
+Please ensure this is done to the best of your abilities and let Marianne know when it is completed.</description>
+        <dueDateOffset>0</dueDateOffset>
+        <notifyAssignee>false</notifyAssignee>
+        <offsetFromField>AcctSeed__Project__c.CreatedDate</offsetFromField>
+        <priority>Normal</priority>
+        <protected>false</protected>
+        <status>Open</status>
+        <subject>Marianne French Just Created a Counter Sale</subject>
+    </tasks>
+    <tasks>
         <fullName>Montreal_Add_On_Call_ERP_Benoit</fullName>
         <assignedTo>bgrenier@legendboats.com</assignedTo>
         <assignedToType>user</assignedToType>
@@ -4693,6 +4748,18 @@ Please complete other tasks associated to this Partner Boat Sale and finalize th
         <protected>false</protected>
         <status>Open</status>
         <subject>Parts are required on Warranty ERP</subject>
+    </tasks>
+    <tasks>
+        <fullName>Parts_came_in_and_ready_for_scheduling</fullName>
+        <assignedTo>mpatrakka@legendboats.com</assignedTo>
+        <assignedToType>user</assignedToType>
+        <description>THis ERP is ready for scheduling.  This is a temporary notification until Ben is back from vacation.</description>
+        <dueDateOffset>0</dueDateOffset>
+        <notifyAssignee>false</notifyAssignee>
+        <priority>Normal</priority>
+        <protected>false</protected>
+        <status>Open</status>
+        <subject>Parts came in and ready for scheduling</subject>
     </tasks>
     <tasks>
         <fullName>Parts_have_been_received</fullName>
