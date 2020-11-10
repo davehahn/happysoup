@@ -315,9 +315,26 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
 			for(const [section, parts] of sections){
 				const items = Object.values(parts);
 				for(const item of items){
-					packItems.push(item);
+				  let description = item.description;
+				  let value = item.value;
+				  let valueFormatted = new Intl.NumberFormat('en-CA', {
+																style: 'currency',
+																currency: 'CAD',
+																minimumFractionDigits: 0
+																}).format(value);
+				  let details = {
+				    description: description,
+				    value: value,
+				    valueFormatted: valueFormatted,
+      		};
+					packItems.push(details);
 				}
 			}
+
+			packItems.sort(function(a,b){
+				return b.value - a.value;
+   		});
+   		console.log(packItems);
 			return packItems;
 		}
 	}
