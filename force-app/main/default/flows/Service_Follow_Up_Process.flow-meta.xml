@@ -93,6 +93,9 @@
         <label>Create Task</label>
         <locationX>176</locationX>
         <locationY>829</locationY>
+        <connector>
+            <targetReference>Update_ERP</targetReference>
+        </connector>
         <inputAssignments>
             <field>ActivityDate</field>
             <value>
@@ -206,6 +209,27 @@
             <field>Id</field>
         </outputAssignments>
     </recordLookups>
+    <recordUpdates>
+        <name>Update_ERP</name>
+        <label>Update ERP</label>
+        <locationX>176</locationX>
+        <locationY>949</locationY>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </filters>
+        <inputAssignments>
+            <field>Service_Follow_Up_Tasked__c</field>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </inputAssignments>
+        <object>AcctSeed__Project__c</object>
+    </recordUpdates>
     <start>
         <locationX>50</locationX>
         <locationY>0</locationY>
@@ -225,6 +249,13 @@
             <operator>EqualTo</operator>
             <value>
                 <stringValue>Active</stringValue>
+            </value>
+        </filters>
+        <filters>
+            <field>Service_Follow_Up_Tasked__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <booleanValue>false</booleanValue>
             </value>
         </filters>
         <object>AcctSeed__Project__c</object>
