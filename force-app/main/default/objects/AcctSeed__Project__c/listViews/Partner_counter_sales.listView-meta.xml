@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Partner_counter_sales</fullName>
+    <columns>NAME</columns>
+    <columns>Dealer_Order_Number__c</columns>
+    <columns>CREATED_DATE</columns>
+    <columns>Stage__c</columns>
+    <columns>Order_Item_Total__c</columns>
+    <columns>AcctSeed__Status__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>RECORDTYPE</field>
+        <operation>equals</operation>
+        <value>AcctSeed__Project__c.LegendPartnerPartsOrder</value>
+    </filters>
+    <label>Partner counter sales</label>
+</ListView>

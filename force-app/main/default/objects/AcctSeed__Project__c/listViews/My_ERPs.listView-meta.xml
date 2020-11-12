@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>My_ERPs</fullName>
+    <columns>AcctSeed__Account__c</columns>
+    <columns>NAME</columns>
+    <columns>Delivery_Date__c</columns>
+    <filterScope>Mine</filterScope>
+    <filters>
+        <field>Stage__c</field>
+        <operation>notEqual</operation>
+        <value>Draft,Quoting,Picked up / Won,Delivered / Won,Delivered,Closed Lost</value>
+    </filters>
+    <label>My ERPs</label>
+</ListView>

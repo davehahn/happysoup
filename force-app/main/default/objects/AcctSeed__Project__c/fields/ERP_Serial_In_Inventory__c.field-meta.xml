@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>ERP_Serial_In_Inventory__c</fullName>
+    <externalId>false</externalId>
+    <formula>IF(  ISBLANK(Serial_Number__r.GMBLASERP__Inventory_Balance__c) , false, true)</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>ERP Serial In Inventory</label>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

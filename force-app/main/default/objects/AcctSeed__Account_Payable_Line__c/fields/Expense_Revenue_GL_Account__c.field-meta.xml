@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Expense_Revenue_GL_Account__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <description>This field has been created only to be used in Lighting quick action. The original Revenue GL account field does not allow Revenue GL accounts to be added. To resolve this issue this field will be used just to by pass the value to the original AcctSeed Expense GL Account field.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>The original Expense GL account field does not allow Revenue GL accounts to be added. To resolve this issue this field will be used just to by pass the value to the original AcctSeed Expense GL field.</inlineHelpText>
+    <label>Expense/Revenue GL Account</label>
+    <referenceTo>AcctSeed__GL_Account__c</referenceTo>
+    <relationshipName>Account_Payable_Lines</relationshipName>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

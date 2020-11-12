@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Wages__c</fullName>
+    <externalId>false</externalId>
+    <formula>AcctSeed__Time_Card_Line__r.Wage_RT__c *  Hours_RT__c +
+AcctSeed__Time_Card_Line__r.Wage_OT__c *  Hours_OT__c +
+AcctSeed__Time_Card_Line__r.Wage_DT__c *  Hours_DT__c</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Wages</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Currency</type>
+</CustomField>

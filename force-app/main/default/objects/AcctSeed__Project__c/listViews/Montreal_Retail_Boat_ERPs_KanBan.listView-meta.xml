@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Montreal_Retail_Boat_ERPs_KanBan</fullName>
+    <columns>NAME</columns>
+    <columns>Delivery_Date__c</columns>
+    <columns>Salesperson__c</columns>
+    <columns>Boat_Specialist__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>RECORDTYPE</field>
+        <operation>equals</operation>
+        <value>AcctSeed__Project__c.BoatSale</value>
+    </filters>
+    <filters>
+        <field>Stage__c</field>
+        <operation>notEqual</operation>
+        <value>Repair Completed,Delivered,Closed Lost</value>
+    </filters>
+    <filters>
+        <field>GMBLASERP__Warehouse__c</field>
+        <operation>contains</operation>
+        <value>Montreal</value>
+    </filters>
+    <label>Montreal Retail Boat ERPs KanBan</label>
+</ListView>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>ManufacturingFG</fullName>
+    <columns>NAME</columns>
+    <columns>AcctSeedERP__Work_Order_Number__c</columns>
+    <columns>GMBLASERP__Warehouse__c</columns>
+    <columns>Manufactured_Product_Name__c</columns>
+    <columns>Serial_Number__c</columns>
+    <columns>AcctSeed__Status__c</columns>
+    <columns>WIP__c</columns>
+    <columns>Finished_Goods__c</columns>
+    <columns>CREATED_DATE</columns>
+    <columns>LAST_UPDATE</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>RECORDTYPE</field>
+        <operation>equals</operation>
+        <value>AcctSeed__Project__c.Manufacturing</value>
+    </filters>
+    <filters>
+        <field>Finished_Goods__c</field>
+        <operation>notEqual</operation>
+        <value>0</value>
+    </filters>
+    <label>Manufacturing-FG</label>
+    <language>en_US</language>
+</ListView>

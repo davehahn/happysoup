@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Quebec_Boat_Sale</fullName>
+    <columns>NAME</columns>
+    <columns>RECORDTYPE</columns>
+    <columns>AcctSeed__Account__c</columns>
+    <columns>AcctSeedERP__Work_Order_Number__c</columns>
+    <columns>Serial_Number__c</columns>
+    <columns>GMBLASERP__Warehouse__c</columns>
+    <columns>AcctSeed__Status__c</columns>
+    <columns>Tax_Amount_Federal__c</columns>
+    <columns>Tax_Amount_Provincial__c</columns>
+    <columns>Tax_Amount_Retail__c</columns>
+    <columns>Order_Item_Total__c</columns>
+    <columns>Grand_Total__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>RECORDTYPE</field>
+        <operation>equals</operation>
+        <value>AcctSeed__Project__c.BoatSale,AcctSeed__Project__c.CounterSale,AcctSeed__Project__c.PartnerBoatSale</value>
+    </filters>
+    <filters>
+        <field>GL_Account_Variable_3__c</field>
+        <operation>equals</operation>
+        <value>Quebec</value>
+    </filters>
+    <label>Quebec - Boat Sale</label>
+    <language>en_US</language>
+</ListView>

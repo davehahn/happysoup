@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>WF_Service_Boat_ERPs_KanBan_2020</fullName>
+    <columns>CREATED_DATE</columns>
+    <columns>NAME</columns>
+    <columns>Job_Status__c</columns>
+    <columns>Parking_Spot__c</columns>
+    <columns>OWNER.LAST_NAME</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>RECORDTYPE</field>
+        <operation>equals</operation>
+        <value>AcctSeed__Project__c.Service</value>
+    </filters>
+    <filters>
+        <field>Stage__c</field>
+        <operation>notEqual</operation>
+        <value>Pending Rigging,Repair Completed,Pending Inspection,Delivered,Closed Lost</value>
+    </filters>
+    <filters>
+        <field>GMBLASERP__Warehouse__c</field>
+        <operation>contains</operation>
+        <value>Whitefish</value>
+    </filters>
+    <filters>
+        <field>OWNER.LAST_NAME</field>
+        <operation>contains</operation>
+        <value>Santi,Lafreniere,Tessier,Menard,parisotto,patrakka,seltzer,french,fram,gareau,nichols</value>
+    </filters>
+    <filters>
+        <field>Stage__c</field>
+        <operation>notEqual</operation>
+        <value>Quoting</value>
+    </filters>
+    <filters>
+        <field>Job_Status__c</field>
+        <operation>notEqual</operation>
+        <value>Spring Startup</value>
+    </filters>
+    <label>WF Service Boat ERPs KanBan - 2020</label>
+</ListView>

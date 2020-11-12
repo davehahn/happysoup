@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>My_ERPs_Assigned_as_Boat_Specialist_Fram</fullName>
+    <booleanFilter>(1 or 2 or 3 or 4 or 5 or 6 or 7) and 8 and 9</booleanFilter>
+    <columns>NAME</columns>
+    <columns>AcctSeed__Account__c</columns>
+    <columns>Delivery_Date__c</columns>
+    <columns>Job_Status__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>Salesperson__c</field>
+        <operation>equals</operation>
+        <value>Jake Santi</value>
+    </filters>
+    <filters>
+        <field>Salesperson__c</field>
+        <operation>equals</operation>
+        <value>Marc Gareau</value>
+    </filters>
+    <filters>
+        <field>Salesperson__c</field>
+        <operation>equals</operation>
+        <value>Anthony Nichols</value>
+    </filters>
+    <filters>
+        <field>Salesperson__c</field>
+        <operation>equals</operation>
+        <value>mardy st.jacques</value>
+    </filters>
+    <filters>
+        <field>CREATEDBY_USER</field>
+        <operation>equals</operation>
+        <value>Scott Dormer</value>
+    </filters>
+    <filters>
+        <field>CREATEDBY_USER</field>
+        <operation>equals</operation>
+        <value>Donald Levac</value>
+    </filters>
+    <filters>
+        <field>CREATEDBY_USER</field>
+        <operation>equals</operation>
+        <value>Bill Grant</value>
+    </filters>
+    <filters>
+        <field>Stage__c</field>
+        <operation>notEqual</operation>
+        <value>Completed,Delivered,Closed Lost</value>
+    </filters>
+    <filters>
+        <field>RECORDTYPE</field>
+        <operation>notEqual</operation>
+        <value>AcctSeed__Project__c.CounterSale,AcctSeed__Project__c.LegendFixedAsset,AcctSeed__Project__c.Manufacturing,AcctSeed__Project__c.LegendPartnerPartsOrder,AcctSeed__Project__c.TradeIn,AcctSeed__Project__c.Legend_Warranty,AcctSeed__Project__c.PartnerBoatSale,AcctSeed__Project__c.AcctSeedERP__Project</value>
+    </filters>
+    <label>Active Service ERP&apos;S</label>
+</ListView>

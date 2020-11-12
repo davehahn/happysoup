@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Sale_Type__c</fullName>
+    <externalId>false</externalId>
+    <formula>IF(  AcctSeed__Account__r.RecordType.DeveloperName = &apos;Dealer&apos;  , &apos;Partner&apos;,
+ IF( AcctSeed__Account__r.RecordType.DeveloperName = &apos;PersonAccount&apos;, &apos;Retail&apos;,
+   IF( AcctSeed__Account__r.RecordType.DeveloperName = &apos;Business_Account&apos;, &apos;Retail&apos;,
+     IF( AND( AcctSeed__Account__r.RecordType.DeveloperName = &apos;Supplier&apos;,  RecordType.Name = &apos;Retail Boat Sale&apos;), &apos;Retail&apos;, null))))</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Sale Type</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

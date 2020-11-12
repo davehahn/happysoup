@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Whitefish_Service_Boat_ERPs_KanBan</fullName>
+    <columns>NAME</columns>
+    <columns>Job_Status__c</columns>
+    <columns>Salesperson__c</columns>
+    <columns>Service_Date__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>RECORDTYPE</field>
+        <operation>equals</operation>
+        <value>AcctSeed__Project__c.Service</value>
+    </filters>
+    <filters>
+        <field>Stage__c</field>
+        <operation>notEqual</operation>
+        <value>Repair Completed,Delivered,Closed Lost</value>
+    </filters>
+    <filters>
+        <field>GMBLASERP__Warehouse__c</field>
+        <operation>contains</operation>
+        <value>Whitefish</value>
+    </filters>
+    <label>Whitefish Service Boat ERPs KanBan</label>
+</ListView>
