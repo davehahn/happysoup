@@ -111,7 +111,12 @@
                     <input label="First Name"
                            data-attr="firstName"
                            type="text"
-                           onchange={handleCustomerData}>
+                           onkeyup={handleCustomerData}
+                           onfocusout={triggerValidation}
+                           required aria-required="true"
+                           aria-describedby="FirstName_feedback"
+                           class="assertive valName">
+                    <span class="feedback" id="FirstName_feedback" aria-live="assertive"></span>
                   </div>
                 </lightning-layout-item>
 
@@ -125,7 +130,12 @@
                     <input label="Last Name"
                            data-attr="lastName"
                            type="text"
-                           onchange={handleCustomerData}>
+                           onkeyup={handleCustomerData}
+                           onfocusout={triggerValidation}
+                           required aria-required="true"
+                           aria-describedby="LastName_feedback"
+                           class="assertive valName">
+                    <span class="feedback" id="LastName_feedback" aria-live="polite"></span>
                   </div>
                 </lightning-layout-item>
 
@@ -138,8 +148,13 @@
                     <label>Email Address</label>
                     <input label="Email Address"
                            data-attr="email"
-                           type="text"
-                           onchange={handleCustomerData}>
+                           type="email"
+                           onkeyup={handleCustomerData}
+                           onfocusout={triggerValidation}
+                           required aria-required="true"
+                           aria-describedby="email_feedback"
+                           class="assertive valEmail">
+                    <span class="feedback" id="email_feedback" aria-live="assertive"></span>
                   </div>
                 </lightning-layout-item>
 
@@ -152,8 +167,14 @@
                     <label>Phone Number</label>
                     <input label="Phone Number"
                            data-attr="phone"
-                           type="text"
-                           onchange={handleCustomerData}>
+                           type="tel"
+                           onkeyup={handleCustomerData}
+                           onfocusout={triggerValidation}
+                           pattern="(?:\(?)(\d{3})(?:\)?)(\s|\.|-)?(\d{3})(\s|\.|-)?(\d{4})"
+                           required aria-require="true"
+                           aria-describedby="PhoneNumber_feedback"
+                           class="polite valPhone">
+                    <span class="feedback" id="PhoneNumber_feedback" aria-live="polite"></span>
                   </div>
                 </lightning-layout-item>
 
@@ -167,7 +188,11 @@
                     <span></span>
                     <select label="Province or Territory"
                             data-attr="state"
-                            onchange={handleCustomerData}>
+                            change={handleCustomerData}
+                            onfocusout={triggerValidation}
+                            required aria-require="true"
+                            aria-describedby="Province_feedback"
+                            class="polite">
                       <option value=""> -- Select One -- </option>
                       <option value="Alberta">Alberta</option>
                       <option value="British Columbia">British Columbia</option>
@@ -183,6 +208,7 @@
                       <option value="Saskatchewan">Saskatchewan</option>
                       <option value="Yukon">Yukon</option>
                     </select>
+                    <span class="feedback" id="Province_feedback" aria-live="polite"></span>
                   </div>
                 </lightning-layout-item>
 

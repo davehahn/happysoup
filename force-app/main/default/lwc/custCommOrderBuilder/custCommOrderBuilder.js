@@ -216,6 +216,11 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
           value = event.currentTarget.value;
     this.customer[attr] = value;
 
+		var code = event.keyCode || event.which;
+		if(code !== 9){
+			this.validateField( event.currentTarget );
+		}
+
     if( attr === 'state' )
       this.handleFreight( value );
 
@@ -223,7 +228,7 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
       this.customerFirstName = value;
 
     if( attr === 'lastName')
-          this.customerLastName = value;
+			this.customerLastName = value;
 
   }
 
@@ -555,6 +560,122 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
 													}).format(charge);
  	  this.freightCharge = '+ ' + updatedFreight + ' Freight Charge';
   }
+
+	triggerValidation( event ){
+		this.validateField(event.currentTarget);
+ 	}
+
+  validateField( field ){
+
+    const attr = field.dataset.attr,
+					value = field.value,
+					feedback = field.parentElement.querySelector('.feedback'),
+					lang = 'en';
+
+		if( attr === 'firstName' || attr === 'lastName'){
+			if(value.length === 0){
+				if(field.hasAttribute('required')){
+					let errmsg = (lang === 'en') ? 'This field cannot be empty' : 'Ce champ ne peut pas être vide';
+					feedback.classList.remove('clean');
+					feedback.classList.add('error');
+					feedback.innerHTML = errmsg;
+					field.classList.remove('clean');
+					field.classList.add('error');
+   	 		}
+   		} else {
+   		  const pattern = /^[a-zA-ZàâçéèêëîïôûùüÿæœÙÛÜŸÀÂÆÇÉÈÊËÏÎÔŒ  .'-]+$/i;
+				if(!(pattern.test(value))){
+					let errmsg = (lang === 'en') ? 'This field contains invalid characters' : 'Ce champ contient des textes invalides';
+					feedback.classList.remove('clean');
+					feedback.classList.add('error');
+					feedback.innerHTML = errmsg;
+					field.classList.remove('clean');
+					field.classList.add('error');
+				}
+				else{
+					feedback.classList.remove('error');
+					feedback.classList.add('clean');
+					feedback.innerHTML = '';
+					field.classList.remove('error');
+					field.classList.add('clean');
+				}
+     	}
+  	}
+
+  	if( attr === 'email' ){
+  		if(value.length === 0){
+				if(field.hasAttribute('required')){
+					let errmsg = (lang === 'en') ? 'This field cannot be empty' : 'Ce champ ne peut pas être vide';
+					feedback.classList.remove('clean');
+					feedback.classList.add('error');
+					feedback.innerHTML = errmsg;
+					field.classList.remove('clean');
+					field.classList.add('error');
+				}
+			} else {
+				const pattern = /^\w+([\.\-_]?\w+)*@\w+([\.\-_]?\w+)*(\.\w{2,5})+$/;
+				if(!(pattern.test(value))){
+					let errmsg = (lang === 'en') ? 'This field is in the wrong format. Try using the format <em>email@address.com</em> instead.' : 'Ce champ est en mauvais format.  Essayez d\'utiliser ce format à la place <em>email@address.com</em> ';
+					feedback.classList.remove('clean');
+					feedback.classList.add('error');
+					feedback.innerHTML = errmsg;
+					field.classList.remove('clean');
+					field.classList.add('error');
+				}
+				else{
+					feedback.classList.remove('error');
+					feedback.classList.add('clean');
+					feedback.innerHTML = '';
+					field.classList.remove('error');
+					field.classList.add('clean');
+				}
+			}
+  	}
+
+  	if( attr === 'phone'){
+			if(value.length === 0){
+				if(field.hasAttribute('required')){
+					let errmsg = (lang === 'en') ? 'This field cannot be empty' : 'Ce champ ne peut pas être vide';
+					feedback.classList.remove('clean');
+					feedback.classList.add('error');
+					feedback.innerHTML = errmsg;
+					field.classList.remove('clean');
+					field.classList.add('error');
+				}
+			} else {
+				const pattern = /^(?:\(?)(\d{3})(?:\)?)(\s|\.|-)?(\d{3})(\s|\.|-)?(\d{4})$/;
+				if(!(pattern.test(value))){
+					let errmsg = (lang === 'en') ? 'This field is in the wrong format. Try using the format <em>123-456-7890</em> instead' : 'Ce champ est en mauvais format.  Essayez d\'utiliser ce format à la place  <em>123-456-7890</em>';
+					feedback.classList.remove('clean');
+					feedback.classList.add('error');
+					feedback.innerHTML = errmsg;
+					field.classList.remove('clean');
+					field.classList.add('error');
+				}
+				else{
+					feedback.classList.remove('error');
+					feedback.classList.add('clean');
+					feedback.innerHTML = '';
+					field.classList.remove('error');
+					field.classList.add('clean');
+				}
+			}
+  	}
+
+  	if( attr === 'state' ){
+  		if(value.length === 0){
+				if(field.hasAttribute('required')){
+					let errmsg = (lang === 'en') ? 'This field cannot be empty' : 'Ce champ ne peut pas être vide';
+					feedback.classList.remove('clean');
+					feedback.classList.add('error');
+					feedback.innerHTML = errmsg;
+					field.classList.remove('clean');
+					field.classList.add('error');
+				}
+			}
+  	}
+  }
+
 
   displayThanks(){
     const thanksShow = this.template.querySelectorAll('[data-thanks="show"]');
