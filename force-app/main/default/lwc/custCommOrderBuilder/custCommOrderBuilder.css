@@ -900,9 +900,63 @@ button:focus{
 	padding-top: 3.25em;
 }
 
-.thankyou{
+/* THANK YOU PAGE */
+*[data-thanks="show"]{
   display: none;
 }
+
+.config-thanks{
+	height: calc(100% - 150px);
+	flex-direction: column;
+	justify-content: center;
+}
+.config-thanks header{
+  width: 100%;
+  text-align: center;
+  padding-top: 3%;
+}
+.config-thanks header h2{
+  font-size: 2.25em;
+  line-height: 1.5;
+}
+.config-thanks header p{
+  font-size: 1.5em;
+}
+.config-thanks .thanks_body{
+  display: flex;
+	flex: 1;
+	align-items: center;
+	justify-content: center;
+}
+.config-thanks .thanks_model{
+  position: relative;
+  width: 55%;
+}
+.config-thanks .thanks_overview{
+  width: 45%;
+  padding-right: 5%;
+}
+.config-thanks .thanks_overview h3{
+  font-size: 2.5em;
+  font-weight: 900;
+}
+.config-thanks .thanks_overview .thanks_details .thanks_detail{
+	font-size: 1.25rem;
+	padding: 0.8em 0;
+	border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+}
+.config-thanks .thanks_overview .thanks_details .thanks_detail:first-of-type{
+  padding-top: 0;
+  font-size: 1.125rem;
+}
+.config-thanks .thanks_overview .thanks_details .thanks_detail:last-of-type{
+  border-bottom: 0 none;
+}
+.config-thanks .thanks_overview .thanks_details .thanks_detail.thanks_detail--horizontal span{
+  display: inline-block;
+  margin-left: 0.25em;
+}
+
 
 /*
 
@@ -982,6 +1036,15 @@ button:focus{
     }
     .config-footer_item:nth-child(3){
         min-width: fit-content;
+    }
+
+    .config-thanks .thanks_body{
+      flex-direction: column;
+			text-align: center;
+    }
+    .config-thanks .thanks_model, .config-thanks .thanks_overview{
+      width: 90%; max-width: 580px;
+      padding-right: 0;
     }
 }
 

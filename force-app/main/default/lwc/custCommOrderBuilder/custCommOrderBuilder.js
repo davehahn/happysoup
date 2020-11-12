@@ -27,6 +27,8 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
   orderValid=true;
   isMobile = false;
   customer={};
+  @track customerFirstName;
+  @track customerLastName;
 
 
 
@@ -213,8 +215,16 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
     const attr = event.currentTarget.dataset.attr,
           value = event.currentTarget.value;
     this.customer[attr] = value;
+
     if( attr === 'state' )
       this.handleFreight( value );
+
+    if( attr === 'firstName')
+      this.customerFirstName = value;
+
+    if( attr === 'lastName')
+          this.customerLastName = value;
+
   }
 
   handlePaymentTypeChange( paymentType )
@@ -402,54 +412,45 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
 
   submitOrder()
   {
-    console.log('submit a');
     const spinner = this.template.querySelector('c-legend-spinner');
     spinner.toggle();
-    console.log('submit b');
+
 	  this.saveCustomer()
 		.then( ( accountSaveResult ) => {
-		  console.log('submit c');
 		  this.opportunityId = accountSaveResult.opportunityId;
       this.accountId = accountSaveResult.record.Id;
-      console.log('submit d');
 		  return this.createSquarePayment();
   	})
   	.then( ( paymentResult ) => {
-  	  console.log('submit e');
   	   return this.saveSaleItems();
     })
   	.then( ( saveSaleItemsResult ) => {
-  	  console.log('submit f');
       console.log('lineItemsResult: ', saveSaleItemsResult);
     })
   	.catch( ( error ) => {
-  	  console.log('submit g');
 			console.log('error: ', JSON.stringify(error));
    	})
    	.finally( () => {
-   	  console.log('submit h');
       spinner.toggle();
       console.log('Everything is done, but what should happen now');
+      this.displayThanks();
     });
   }
 
   saveCustomer()
   {
     const userJSON = JSON.stringify( this.customer );
-		console.log('save f');
     return createAccount({customerJSON: userJSON});
   }
 
   createSquarePayment()
   {
-    console.log('square a');
     return this.template.querySelector('c-square-payment-form')
       .doPostToSquare( this.paymentAmount, this.opportunityId );
   }
 
   saveSaleItems()
   {
-    console.log('sale a');
     const oppInfo = JSON.stringify({
       'Id': this.opportunityId,
       'AccountId': this.accountId,
@@ -459,16 +460,13 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
       'Insurance_Term__c': this.term,
       'Finance_Annual_Interest__c': this.interestRate
     });
-    console.log('sale b');
     const boatLineItem = [{
       'Product2Id': this.boat.id,
       'UnitPrice': this.boat.retailPrice,
       'Quantity': 1,
     }];
-    console.log('sale c');
     let lineItems = this.performanceItems.concat(this.traileringItems, this.electronicsItems, boatLineItem);
     lineItems = JSON.stringify(lineItems);
-    console.log('sale d');
     console.log('oppInfo: ', oppInfo);
     console.log('lineItems: ', lineItems);
     return saveLineItems({oppJSON: oppInfo, olisJSON: lineItems});
@@ -517,6 +515,7 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
 
 	handleFreight( province ){
 		console.log('update freight info!');
+		console.log('province', province);
 		let charge = this.freight.fishingBoat[province];
 
 		let purchasePrice = {
@@ -548,12 +547,25 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
  	}
 
  	displayFreightCharge(charge){
+ 	  console.log('freight charge: ', charge);
  	  let updatedFreight = new Intl.NumberFormat('en-CA', {
 													style: 'currency',
 													currency: 'CAD',
 													minimumFractionDigits: 0
 													}).format(charge);
  	  this.freightCharge = '+ ' + updatedFreight + ' Freight Charge';
+  }
+
+  displayThanks(){
+    const thanksShow = this.template.querySelectorAll('[data-thanks="show"]');
+    const thanksHide = this.template.querySelectorAll('[data-thanks="hide"]');
+
+    thanksShow.forEach((element) => {
+      element.style.display = 'flex';
+    });
+    thanksHide.forEach((element) => {
+      element.style.display = 'none';
+    });
   }
 
 }

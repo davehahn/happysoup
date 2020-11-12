@@ -9,6 +9,8 @@ import { fireEvent, registerListener, unregisterAllListeners} from 'c/pubsub';
 export default class CustCommOrderSummary extends LightningElement {
 	@wire(CurrentPageReference) pageRef;
 
+	@api usage;
+
 	@track performanceItems = [];
 	@track traileringItems = [];
 	@track electronicsItems = [];

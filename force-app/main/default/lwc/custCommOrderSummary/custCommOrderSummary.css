@@ -18,6 +18,24 @@ h1, h2, h3, h4, h5, h6{
 .summary_list{
   font-size: 1.125em;
 }
+.summary_list .summary_section strong{
+  display: none;
+}
 .summary_listItem{
   margin: 0.5em 0.25em;
+}
+
+.summary[data-usage="thanks"]{
+  margin: 0;
+}
+.summary[data-usage="thanks"] h3{
+  font-size: 1.25rem;
+  border-bottom: 0 none;
+  font-weight: 900;
+}
+.summary[data-usage="thanks"] h3::after{
+  content: ":";
+}
+.summary[data-usage="thanks"] .summary_list{
+  font-size: 1.25rem;
 }

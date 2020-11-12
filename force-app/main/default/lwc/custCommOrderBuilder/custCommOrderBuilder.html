@@ -21,7 +21,7 @@
           </h1>
         </div>
 
-        <nav class="config-nav">
+        <nav class="config-nav" data-thanks="hide">
           <h2 class="vh">Main Navigation</h2>
           <ol class="config-nav-list">
             <template for:each={processPages} for:item="page">
@@ -38,7 +38,7 @@
 
       </header>
 
-      <div class="config-content" data-current={currentPage}>
+      <div class="config-content" data-current={currentPage} data-thanks="hide">
 
         <!-- PERFORMANCE -->
         <section class="config-page config-page_selected" data-page="performance">
@@ -228,7 +228,7 @@
             <c-cust-comm-order-boat-image size="small" page='summary' marketing-content= {boat.marketingContent}></c-cust-comm-order-boat-image>
             <h2 class="right_heading slds-text-heading_medium">Your {boat.name}</h2>
             <p class="right_delivery">Estimated Deliver: {shippingTiming}</p>
-            <c-cust-comm-order-summary></c-cust-comm-order-summary>
+            <c-cust-comm-order-summary usage="standard"></c-cust-comm-order-summary>
             <template if:true={purchasePrice}>
               <c-boat-res-finance-details payment-type={paymentType}
                                           amount={purchasePrice}
@@ -245,8 +245,40 @@
 
       </div>
 
+      <section class="config-thanks" data-thanks="show">
+        <header>
+          <h2>Thank you!</h2>
+          <p>Your order has been submitted.</p>
+        </header>
+        <div class="thanks_body">
+          <aside class="thanks_model">
+            <c-cust-comm-order-boat-image size="small" page='summary' marketing-content= {boat.marketingContent}></c-cust-comm-order-boat-image>
+          </aside>
+          <section class="thanks_overview">
+            <h3>{boat.name}</h3>
+            <ul class="thanks_details">
+              <li class="thanks_detail thanks_detail--horizontal">
+                <strong>Confirmation #:</strong> <span>1234XYZ</span>
+              </li>
+              <li class="thanks_detail thanks_detail--group">
+                <c-cust-comm-order-summary usage="thanks"></c-cust-comm-order-summary>
+              </li>
+              <li class="thanks_detail thanks_detail--horizontal">
+                <strong>Payment:</strong> <span><lightning-formatted-number value={paymentAmount} format-style="percent" maximum-fraction-digits="2"></lightning-formatted-number></span>
+              </li>
+              <li class="thanks_detail thanks_detail--horizontal">
+                <strong>Estimated Deliver:</strong> <span>{shippingTiming}</span>
+              </li>
+              <li class="thanks_detail thanks_detail--horizontal">
+                <strong>Billed To:</strong> <span>{customerFirstName} {customerLastName}</span>
+              </li>
+            </ul>
+          </section>
+        </div>
+      </section>
+
       <div class="config-footer">
-        <div class="config-footer_content">
+        <div class="config-footer_content" data-thanks="hide">
 
           <div class="config-footer_item finance-type">
             <div class="financetype-selector_container">
@@ -442,10 +474,6 @@
         </div>
       </aside>
     </div>
-
-    <section class="thankyou" id="thanks">
-      Thank you page!
-    </section>
 
   </main>
 </template>
