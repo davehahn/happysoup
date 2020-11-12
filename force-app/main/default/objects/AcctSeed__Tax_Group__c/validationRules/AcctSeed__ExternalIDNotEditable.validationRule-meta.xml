@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>AcctSeed__ExternalIDNotEditable</fullName>
+    <active>true</active>
+    <description>The External ID field can only be set at the time of creation. It cannot be updated or modified.</description>
+    <errorConditionFormula>AND ( 
+NOT(ISNEW()),
+ISCHANGED(AcctSeed__External_Id2__c)
+)</errorConditionFormula>
+    <errorDisplayField>AcctSeed__External_Id2__c</errorDisplayField>
+    <errorMessage>The External ID field can only be set at the time of creation. It cannot be updated or modified.</errorMessage>
+</ValidationRule>

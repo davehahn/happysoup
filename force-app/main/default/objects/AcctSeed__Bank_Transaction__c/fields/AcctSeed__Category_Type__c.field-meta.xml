@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>AcctSeed__Category_Type__c</fullName>
+    <deprecated>false</deprecated>
+    <externalId>false</externalId>
+    <inlineHelpText>The category type of the category assigned to the transaction.</inlineHelpText>
+    <label>Category Type</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>expense</fullName>
+                <default>false</default>
+                <label>expense</label>
+            </value>
+            <value>
+                <fullName>income</fullName>
+                <default>false</default>
+                <label>income</label>
+            </value>
+            <value>
+                <fullName>transfer</fullName>
+                <default>false</default>
+                <label>transfer</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

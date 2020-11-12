@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>AcctSeed__Purchase_Tax</fullName>
+    <columns>NAME</columns>
+    <columns>AcctSeed__Description__c</columns>
+    <columns>AcctSeed__Tax_Type__c</columns>
+    <columns>AcctSeed__Combined_Tax_Rate__c</columns>
+    <columns>AcctSeed__Tax_Rate_Count__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>AcctSeed__Tax_Type__c</field>
+        <operation>equals</operation>
+        <value>Purchase</value>
+    </filters>
+    <label>Purchase Tax</label>
+</ListView>
