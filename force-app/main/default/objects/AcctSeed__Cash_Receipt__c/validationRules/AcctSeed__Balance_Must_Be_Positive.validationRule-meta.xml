@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>AcctSeed__Balance_Must_Be_Positive</fullName>
-    <active>true</active>
-    <description>The balance must always greater than 0</description>
-    <errorConditionFormula>ROUND(AcctSeed__Balance__c,2) &lt; 0</errorConditionFormula>
-    <errorMessage>The cash receipt balance cannot be less than 0</errorMessage>
-</ValidationRule>

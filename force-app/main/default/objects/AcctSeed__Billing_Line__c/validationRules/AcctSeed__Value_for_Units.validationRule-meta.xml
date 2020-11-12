@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>AcctSeed__Value_for_Units</fullName>
-    <active>true</active>
-    <description>Verifies units field is not blank</description>
-    <errorConditionFormula>ISBLANK( AcctSeed__Hours_Units__c )</errorConditionFormula>
-    <errorDisplayField>AcctSeed__Hours_Units__c</errorDisplayField>
-    <errorMessage>A billing line must contain a value for the quantity field.</errorMessage>
-</ValidationRule>

@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>AcctSeed__Mileage_Acccount_Require_Rate</fullName>
-    <active>true</active>
-    <description>Require a mileage rate if the GL Account is a mileage account</description>
-    <errorConditionFormula>AcctSeed__Mileage_Account__c = true &amp;&amp; ISBLANK( AcctSeed__Mileage_Rate__c )</errorConditionFormula>
-    <errorDisplayField>AcctSeed__Mileage_Rate__c</errorDisplayField>
-    <errorMessage>You must specify a mileage rate for a mileage account.</errorMessage>
-</ValidationRule>
