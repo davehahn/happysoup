@@ -108,7 +108,10 @@
                                        large-device-size="6">
                   <div class="form-input">
                     <label>First Name</label>
-                    <input label="First Name" data-id="firstName" type="text">
+                    <input label="First Name"
+                           data-attr="firstName"
+                           type="text"
+                           onchange={handleCustomerData}>
                   </div>
                 </lightning-layout-item>
 
@@ -119,7 +122,10 @@
                                        large-device-size="6">
                   <div class="form-input">
                     <label>Last Name</label>
-                    <input label="Last Name" data-id="lastName" type="text">
+                    <input label="Last Name"
+                           data-attr="lastName"
+                           type="text"
+                           onchange={handleCustomerData}>
                   </div>
                 </lightning-layout-item>
 
@@ -130,7 +136,10 @@
                                        large-device-size="6">
                   <div class="form-input">
                     <label>Email Address</label>
-                    <input label="Email Address" data-id="email" type="text">
+                    <input label="Email Address"
+                           data-attr="email"
+                           type="text"
+                           onchange={handleCustomerData}>
                   </div>
                 </lightning-layout-item>
 
@@ -141,7 +150,10 @@
                                        large-device-size="6">
                   <div class="form-input">
                     <label>Phone Number</label>
-                    <input label="Phone Number" data-id="phone" type="text">
+                    <input label="Phone Number"
+                           data-attr="phone"
+                           type="text"
+                           onchange={handleCustomerData}>
                   </div>
                 </lightning-layout-item>
 
@@ -153,7 +165,9 @@
                   <div class="form-input form-input--select">
                     <label>Province or Territory</label>
                     <span></span>
-                    <select label="Province or Territory" data-id="state" onchange={handleFreight}>
+                    <select label="Province or Territory"
+                            data-attr="state"
+                            onchange={handleCustomerData}>
                       <option value=""> -- Select One -- </option>
                       <option value="Alberta">Alberta</option>
                       <option value="British Columbia">British Columbia</option>
@@ -428,5 +442,10 @@
         </div>
       </aside>
     </div>
+
+    <section class="thankyou" id="thanks">
+      Thank you page!
+    </section>
+
   </main>
 </template>

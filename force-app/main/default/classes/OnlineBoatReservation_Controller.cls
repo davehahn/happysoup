@@ -387,7 +387,13 @@ public without sharing class OnlineBoatReservation_Controller
   @AuraEnabled
   public static AccountSaveResult createAccount( String customerJSON )
   {
-    Customer cust = (Customer)JSON.deserialize( customerJSON, Customer.class );
+    System.debug('CREATEACCOUNT');
+    System.debug( customerJSON );
+    OnlineBoatReservation_Controller.Customer cust =
+      (OnlineBoatReservation_Controller.Customer)JSON.deserialize(
+        customerJSON,
+        OnlineBoatReservation_Controller.Customer.class
+      );
     return cust.upsertToAccount();
   }
 
