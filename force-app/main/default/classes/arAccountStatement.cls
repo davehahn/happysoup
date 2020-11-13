@@ -560,8 +560,8 @@ public without sharing class arAccountStatement {
 				Tax_Rate_Federal__c = 0,
 				Tax_Rate_Provincial__c = 0,
 				Tax_Rate_Retail__c = 0,
-				AcctSeed__Date__c = Date.today(),
-				AcctSeed__Ledger__c = 'a121D000001muWMQAY'
+				AcctSeed__Date__c = Date.today()/*,
+				AcctSeed__Ledger__c = 'a121D000001muWMQAY'*/
 			);
 			insert accountPayable;
 
@@ -640,8 +640,8 @@ public without sharing class arAccountStatement {
 				AcctSeed__Reference__c = 'refund_'+ System.now().format(),
 				AcctSeed__Debit_GL_Account__c = gcConstants.idGlAPayable,
 				AcctSeed__Payment_Status__c = 'Paid',
-				AcctSeed__Cash_Flow_Category__c = gcConstants.idGlRevenueCF,
-				AcctSeed__Ledger__c = 'a121D000001muWMQAY'
+				AcctSeed__Cash_Flow_Category__c = gcConstants.idGlRevenueCF/*,
+				AcctSeed__Ledger__c = 'a121D000001muWMQAY'*/
 			);
 
 			insert disbursement;
