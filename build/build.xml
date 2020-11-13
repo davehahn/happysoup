@@ -49,9 +49,9 @@
 
 
       <!-- Removes the Action Override for Lead object with Einstein IQ score component from apps -->
-      <replaceregexp match="&lt;actionOverrides&gt;\s*&lt;actionName&gt;(.+?)&lt;/actionName&gt;\s*&lt;comment&gt;(.+?)&lt;/comment&gt;\s*&lt;content&gt;Lead_Record_Page_Einstein&lt;/content&gt;\s*&lt;formFactor&gt;(.+?)&lt;/formFactor&gt;\s*&lt;skipRecordTypeSelect&gt;(.+?)&lt;/skipRecordTypeSelect&gt;\s*&lt;type&gt;Flexipage&lt;/type&gt;\s*&lt;pageOrSobjectType&gt;Lead&lt;/pageOrSobjectType&gt;\s*&lt;/actionOverrides&gt;\s*" replace="" flags="gm" byline="false">
-        <fileset dir="${basedir}/force-app/main/default/applications" includes="*.xml"/>
-      </replaceregexp>
+<!--      <replaceregexp match="&lt;actionOverrides&gt;\s*&lt;actionName&gt;(.+?)&lt;/actionName&gt;\s*&lt;comment&gt;(.+?)&lt;/comment&gt;\s*&lt;content&gt;Lead_Record_Page_Einstein&lt;/content&gt;\s*&lt;formFactor&gt;(.+?)&lt;/formFactor&gt;\s*&lt;skipRecordTypeSelect&gt;(.+?)&lt;/skipRecordTypeSelect&gt;\s*&lt;type&gt;Flexipage&lt;/type&gt;\s*&lt;pageOrSobjectType&gt;Lead&lt;/pageOrSobjectType&gt;\s*&lt;/actionOverrides&gt;\s*" replace="" flags="gm" byline="false">-->
+<!--        <fileset dir="${basedir}/force-app/main/default/applications" includes="*.xml"/>-->
+<!--      </replaceregexp>-->
 
     </target>
 
@@ -299,7 +299,7 @@
     <target name="doMetadataClean">
       <echo>Cleaning metadata to exclude unwanted files</echo>
       <antcall target="cleanFiles" />
-      <antcall target="cleanProfiles" />
+<!--      <antcall target="cleanProfiles" />-->
       <!--<antcall target="cleanPermissionSets" /> -->
 <!--      <antcall target="cleanObjects" />-->
 <!--      <antcall target="removeListViews"/>-->
