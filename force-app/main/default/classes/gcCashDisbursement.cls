@@ -75,39 +75,55 @@ public without sharing class gcCashDisbursement {
 			for(AcctSeed__Cash_Disbursement__c cd : listNew)
 			{
                 //cd.AcctSeed__Ledger__c = 'a121D000001muWMQAY';
-				//if(cd.AcctSeed__Cash_Flow_Category__c == null){
+				if(!cd.GMBLASG__Posted__c){
 					if(cd.AcctSeed__Reference__c != null && cd.AcctSeed__Reference__c.contains('refund') && !cd.GMBLASG__Posted__c)
 						cd.AcctSeed__Cash_Flow_Category__c = gcConstants.idGlRevenueCF;
-				//}
-				if(boolIsInsert || (boolIsUpdate && cd.AcctSeed__Bank_Account__c == null))
+				}
+				if(!cd.GMBLASG__Posted__c && (boolIsInsert || (boolIsUpdate && cd.AcctSeed__Bank_Account__c == null))) {
+					System.debug('Not Posted');
 					setBankGL(cd);
-				if(boolIsUpdate){
+				}
+				if(boolIsUpdate) {
 					AcctSeed__Cash_Disbursement__c oldRec = oldMap.get(cd.Id);
-					
+
 					System.debug('cd');
 					System.debug(cd);
 					System.debug('oldRec');
 					System.debug(oldRec);
 
-					if(cd.GMBLASG__Posted__c && 
-						(cd.AcctSeed__Check_Number__c != oldRec.AcctSeed__Check_Number__c
-						|| cd.AcctSeed__Reference__c != oldRec.AcctSeed__Reference__c
-						|| cd.AcctSeed__Type__c != oldRec.AcctSeed__Type__c
-						|| cd.AcctSeed__Employee__c != oldRec.AcctSeed__Employee__c
-						|| cd.AcctSeed__Contact__c != oldRec.AcctSeed__Contact__c
-						|| cd.AcctSeed__Vendor__c != oldRec.AcctSeed__Vendor__c
-						|| cd.AcctSeed__GL_Account_Variable_1__c != oldRec.AcctSeed__GL_Account_Variable_1__c
-						|| cd.AcctSeed__GL_Account_Variable_2__c != oldRec.AcctSeed__GL_Account_Variable_2__c
-						|| cd.AcctSeed__GL_Account_Variable_3__c != oldRec.AcctSeed__GL_Account_Variable_3__c
-						|| cd.AcctSeed__GL_Account_Variable_4__c != oldRec.AcctSeed__GL_Account_Variable_4__c
-						|| cd.AcctSeed__Bank_Account__c != oldRec.AcctSeed__Bank_Account__c
-						|| cd.AcctSeed__Debit_GL_Account__c != oldRec.AcctSeed__Debit_GL_Account__c
-						|| cd.AcctSeed__Disbursement_Date__c != oldRec.AcctSeed__Disbursement_Date__c
-						|| cd.AcctSeed__Project__c != oldRec.AcctSeed__Project__c
-						|| cd.AcctSeed__Project_Task__c != oldRec.AcctSeed__Project_Task__c
-						|| cd.AcctSeed__Source__c != oldRec.AcctSeed__Source__c))
-					{
-						cd.addError('You cannot update the Check Number, Reference, Type, Employee, Contact, Vendor, GL Variable 1, GL Variable 2, GL Variable 3, GL Variable 4, Bank Account, Debit GL Account, Disbursement Date, Project, Project Task or Source fields on a posted record. You must unpost the record to edit any of these fields.');
+					if (cd.GMBLASG__Posted__c) {
+						if (cd.AcctSeed__Check_Number__c != oldRec.AcctSeed__Check_Number__c)
+							cd.addError('You cannot update the Check Number on a posted record. You must unpost the record to edit any of these fields.');
+						if (cd.AcctSeed__Reference__c != oldRec.AcctSeed__Reference__c)
+							cd.addError('You cannot update the Reference on a posted record. You must unpost the record to edit any of these fields.');
+						if (cd.AcctSeed__Type__c != oldRec.AcctSeed__Type__c)
+							cd.addError('You cannot update the Type on a posted record. You must unpost the record to edit any of these fields.');
+						if (cd.AcctSeed__Employee__c != oldRec.AcctSeed__Employee__c)
+							cd.addError('You cannot update the Employee on a posted record. You must unpost the record to edit any of these fields.');
+						if (cd.AcctSeed__Contact__c != oldRec.AcctSeed__Contact__c)
+							cd.addError('You cannot update the Contact on a posted record. You must unpost the record to edit any of these fields.');
+						if (cd.AcctSeed__Vendor__c != oldRec.AcctSeed__Vendor__c)
+							cd.addError('You cannot update the Vendor on a posted record. You must unpost the record to edit any of these fields.');
+						if (cd.AcctSeed__GL_Account_Variable_1__c != oldRec.AcctSeed__GL_Account_Variable_1__c)
+							cd.addError('You cannot update the GL Variable 1 on a posted record. You must unpost the record to edit any of these fields.');
+						if (cd.AcctSeed__GL_Account_Variable_2__c != oldRec.AcctSeed__GL_Account_Variable_2__c)
+							cd.addError('You cannot update the GL Variable 2 on a posted record. You must unpost the record to edit any of these fields.');
+						if (cd.AcctSeed__GL_Account_Variable_3__c != oldRec.AcctSeed__GL_Account_Variable_3__c)
+							cd.addError('You cannot update the GL Variable 3 on a posted record. You must unpost the record to edit any of these fields.');
+						if (cd.AcctSeed__GL_Account_Variable_4__c != oldRec.AcctSeed__GL_Account_Variable_4__c)
+							cd.addError('You cannot update the GL Variable 4 on a posted record. You must unpost the record to edit any of these fields.');
+						if (cd.AcctSeed__Bank_Account__c != oldRec.AcctSeed__Bank_Account__c)
+							cd.addError('You cannot update the Bank on a posted record. You must unpost the record to edit any of these fields.');
+						if (cd.AcctSeed__Debit_GL_Account__c != oldRec.AcctSeed__Debit_GL_Account__c)
+							cd.addError('You cannot update the Debit GL on a posted record. You must unpost the record to edit any of these fields.');
+						if (cd.AcctSeed__Disbursement_Date__c != oldRec.AcctSeed__Disbursement_Date__c)
+							cd.addError('You cannot update the Disbursement Date on a posted record. You must unpost the record to edit any of these fields.');
+						if (cd.AcctSeed__Project__c != oldRec.AcctSeed__Project__c)
+							cd.addError('You cannot update the ERP on a posted record. You must unpost the record to edit any of these fields.');
+						if (cd.AcctSeed__Project_Task__c != oldRec.AcctSeed__Project_Task__c)
+							cd.addError('You cannot update the ERP Task on a posted record. You must unpost the record to edit any of these fields.');
+						if (cd.AcctSeed__Source__c != oldRec.AcctSeed__Source__c)
+							cd.addError('You cannot update the Source on a posted record. You must unpost the record to edit any of these fields.');
 					}
 				}
 
