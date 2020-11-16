@@ -22,7 +22,6 @@ export default class CustCommOrderSummary extends LightningElement {
 	}
 
 	updateSummary(details){
-
 		let payload = {
 			 'name': details.name,
 			 'sku': details.sku,

@@ -29,6 +29,7 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
   customer={};
   @track customerFirstName;
   @track customerLastName;
+  creditCardError = false;
 
 
 
@@ -57,23 +58,6 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
 		},
 	];
 
-	freight = {
-		fishingBoat: {
-		  "Alberta": 1450,
-      "British Columbia": 1675,
-      "Manitoba": 825,
-      "New Brunswick": 825,
-      "Newfoundland and Labrador": 2450,
-      "Northwest Territories": 0,
-      "Nova Scotia": 825,
-      "Nunavut": 0,
-      "Ontario": 0,
-      "Prince Edward Island": 825,
-      "Quebec": 0,
-      "Saskatchewan": 975,
-      "Yukon": 0,
-  	},
- 	};
  	@track freightCharge;
 
 	premiumPackage;
@@ -105,7 +89,7 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
   {
     if( data )
     {
-      console.log('FETCH BOAT DATA');
+//      console.log('FETCH BOAT DATA');
       console.log(data);
       this.boat = data;
     }
@@ -205,7 +189,7 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
 
   handlePurchasePriceChange( amount )
   {
-    console.log(`Purchase Price Changed EVENT in OrderBuilder Captured ${amount}`);
+//    console.log(`Purchase Price Changed EVENT in OrderBuilder Captured ${amount}`);
     this.purchasePrice = amount;
     this.template.querySelector('c-boat-res-finance-details').calculate();
   }
@@ -359,7 +343,7 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
 			packItems.sort(function(a,b){
 				return b.value - a.value;
    		});
-   		console.log(packItems);
+//   		console.log(packItems);
 			return packItems;
 		}
 	}
@@ -424,6 +408,7 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
 		.then( ( accountSaveResult ) => {
 		  this.opportunityId = accountSaveResult.opportunityId;
       this.accountId = accountSaveResult.record.Id;
+
 		  return this.createSquarePayment();
   	})
   	.then( ( paymentResult ) => {
@@ -433,12 +418,19 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
       console.log('lineItemsResult: ', saveSaleItemsResult);
     })
   	.catch( ( error ) => {
-			console.log('error: ', JSON.stringify(error));
+			console.log('error: ', error);
+			if(typeof error === 'object'){
+				console.log('errors: ', JSON.parse(JSON.stringify(error)));
+			}
    	})
    	.finally( () => {
       spinner.toggle();
-      console.log('Everything is done, but what should happen now');
-      this.displayThanks();
+      if(!this.creditCardError){
+      	console.log('Everything is done, but what should happen now');
+				this.displayThanks();
+      } else {
+      	alert('An error occurred processing your credit card.');
+      }
     });
   }
 
@@ -472,8 +464,6 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
     }];
     let lineItems = this.performanceItems.concat(this.traileringItems, this.electronicsItems, boatLineItem);
     lineItems = JSON.stringify(lineItems);
-    console.log('oppInfo: ', oppInfo);
-    console.log('lineItems: ', lineItems);
     return saveLineItems({oppJSON: oppInfo, olisJSON: lineItems});
   }
 
@@ -519,10 +509,7 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
   }
 
 	handleFreight( province ){
-		console.log('update freight info!');
-		console.log('province', province);
-		let charge = this.freight.fishingBoat[province];
-
+		let charge = this.boat.additionalFees[province][0]['retailPrice'];
 		let purchasePrice = {
 			'sku': 'freight',
 			'price': charge,
@@ -552,7 +539,6 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
  	}
 
  	displayFreightCharge(charge){
- 	  console.log('freight charge: ', charge);
  	  let updatedFreight = new Intl.NumberFormat('en-CA', {
 													style: 'currency',
 													currency: 'CAD',

@@ -67,7 +67,7 @@
             <c-cust-comm-order-options options-title="Select Your Trailer" selections="one" selection-scope="local" is-init="true" options={traileringOptions} parent-product-sku={boat.id} show-option-price="true" boat-retail-price={boat.retailPrice} layout-type="alt-swatch" grouping-name="trailer_options" page='trailering'></c-cust-comm-order-options>
             <!--<c-cust-comm-order-options selections="one" selection-scope="global" options={boat.trailerUpgrades} show-option-price="true" boat-retail-price={boat.retailPrice} page='trailering'></c-cust-comm-order-options>-->
             <c-cust-comm-order-options options-title="More Trailering Options" selections="multiple" selection-scope="local" options={boat.optionalProducts.canvas} parent-product-sku={boat.id} show-option-price="true" boat-retail-price={boat.retailPrice} page='trailering'></c-cust-comm-order-options>
-            <c-cust-comm-order-options selections="multiple" selection-scope="local" options={boat.standardTrailer.optionalProducts.trailerAccessories} parent-product-sku={boat.id} show-option-price="true" boat-retail-price={boat.retailPrice} page='trailering'></c-cust-comm-order-options>
+            <c-cust-comm-order-options selections="multiple" selection-scope="local" options={traileringOptions} sub-section="optionalProducts.trailerAccessories" addons="true" show-option-price="true" boat-retail-price={boat.retailPrice} page='trailering' parent-page="trailer_options"></c-cust-comm-order-options>
             <c-cust-comm-order-options selections="multiple" selection-scope="local" options={boat.standardMotor} sub-section="optionalProducts.trailerAccessories" addons="true" show-option-price="true" boat-retail-price={boat.retailPrice} page='trailering' parent-page='performance'></c-cust-comm-order-options>
             <c-cust-comm-order-options selections="multiple" selection-scope="local" options={boat.motorUpgrades} sub-section="optionalProducts.trailerAccessories" addons="true" show-option-price="true" boat-retail-price={boat.retailPrice} page='trailering' parent-page='performance'></c-cust-comm-order-options>
           </div>
@@ -188,7 +188,7 @@
                     <span></span>
                     <select label="Province or Territory"
                             data-attr="state"
-                            change={handleCustomerData}
+                            onchange={handleCustomerData}
                             onfocusout={triggerValidation}
                             required aria-require="true"
                             aria-describedby="Province_feedback"
@@ -230,7 +230,7 @@
               <div class="payment-disclaimer">
                 Due today to complete your order:
                 <lightning-formatted-number value={paymentAmount}
-                                            format-style="percent"
+                                            format-style="currency"
                                             maximum-fraction-digits="2"></lightning-formatted-number>
                 .
               </div>
@@ -350,7 +350,7 @@
 
           <div class="config-footer_item">
             <div class="config-footer_delivery">
-              <div>Estimated Deliver: 5-8 weeks</div>
+              <div>Estimated Delivery: 5-8 weeks</div>
             </div>
           </div>
 
