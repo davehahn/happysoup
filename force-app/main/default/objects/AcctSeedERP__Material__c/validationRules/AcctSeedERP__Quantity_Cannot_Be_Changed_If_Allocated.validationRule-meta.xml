@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>AcctSeedERP__Quantity_Cannot_Be_Changed_If_Allocated</fullName>
-    <active>false</active>
-    <description>the quantity per unit cannot be changed if inventory movements have been allocated to the material</description>
-    <errorConditionFormula>NOT(ISNEW()) &amp;&amp; PRIORVALUE( AcctSeedERP__Quantity_Per_Unit__c ) != AcctSeedERP__Quantity_Per_Unit__c &amp;&amp; AcctSeedERP__Quantity_Allocated__c &gt; 0</errorConditionFormula>
-    <errorDisplayField>AcctSeedERP__Quantity_Per_Unit__c</errorDisplayField>
-    <errorMessage>You cannot change the quantity per unit if the quantity allocated is greater than 0</errorMessage>
-</ValidationRule>

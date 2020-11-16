@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>AcctSeedERP__Both_Purchasing_And_Manufacturing</fullName>
-    <active>true</active>
-    <errorConditionFormula>AND(NOT(ISBLANK(AcctSeedERP__Manufacturing_Order__c) ),  NOT(ISBLANK(AcctSeedERP__Purchase_Order_Line__c )))</errorConditionFormula>
-    <errorDisplayField>AcctSeedERP__Product__c</errorDisplayField>
-    <errorMessage>A product can not be on back order as a manufactured item and a purchased item.</errorMessage>
-</ValidationRule>

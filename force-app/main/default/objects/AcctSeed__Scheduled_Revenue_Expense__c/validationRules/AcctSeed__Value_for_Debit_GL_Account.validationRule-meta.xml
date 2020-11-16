@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>AcctSeed__Value_for_Debit_GL_Account</fullName>
-    <active>true</active>
-    <description>Verifies debit gl account field is not blank.</description>
-    <errorConditionFormula>ISBLANK( AcctSeed__Debit_GL_Account__c )</errorConditionFormula>
-    <errorMessage>A scheduled revenue or expense must contain a value for the debit gl account field.</errorMessage>
-</ValidationRule>

@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>AP_Vendor_and_CD_Vendor_Must_be_same</fullName>
-    <active>true</active>
-    <errorConditionFormula>AcctSeed__Cash_Disbursement__r.AcctSeed__Vendor__c !=  AcctSeed__Account_Payable__r.AcctSeed__Vendor__c</errorConditionFormula>
-    <errorMessage>An AP from one vendor cannot be applied to a CD of another vendor.</errorMessage>
-</ValidationRule>
