@@ -76,6 +76,8 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
   @track traileringItems = [];
   @track electronicsItems = [];
   @track freightItems = [];
+  @track paymentFormErrors;
+  @track hasPaymentErrors = false;
 
   @wire(CurrentPageReference)
   setCurrentPageReference(currentPageReference) {
@@ -408,7 +410,7 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
 		.then( ( accountSaveResult ) => {
 		  this.opportunityId = accountSaveResult.opportunityId;
       this.accountId = accountSaveResult.record.Id;
-
+			this.creditCardError = false;
 		  return this.createSquarePayment();
   	})
   	.then( ( paymentResult ) => {
@@ -418,18 +420,14 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
       console.log('lineItemsResult: ', saveSaleItemsResult);
     })
   	.catch( ( error ) => {
-			console.log('error: ', error);
-			if(typeof error === 'object'){
-				console.log('errors: ', JSON.parse(JSON.stringify(error)));
-			}
+			this.displayPaymentError(error);
+			this.creditCardError = true;
    	})
    	.finally( () => {
       spinner.toggle();
       if(!this.creditCardError){
       	console.log('Everything is done, but what should happen now');
 				this.displayThanks();
-      } else {
-      	alert('An error occurred processing your credit card.');
       }
     });
   }
@@ -662,6 +660,17 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
   	}
   }
 
+	displayPaymentError(error){
+		console.log('PAYMENT ERROR!!');
+		this.hasPaymentErrors = true;
+		console.log('error: ', error);
+		if(typeof error === 'object'){
+			console.log('errors: ', JSON.parse(JSON.stringify(error)));
+			error.forEach((err) => {
+				this.paymentFormErrors = err.message;
+			});
+		}
+	}
 
   displayThanks(){
     const thanksShow = this.template.querySelectorAll('[data-thanks="show"]');

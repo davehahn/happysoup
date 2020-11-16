@@ -238,13 +238,16 @@
 
             <div class="payment-form">
               <h3 class="form-header">Payment Card Details</h3>
+              <template if:true={hasPaymentErrors}>
+                <div class="payment-form-errors">{paymentFormErrors}</div>
+              </template>
               <c-square-payment-form apex-page-name="/apex/Square_PaymentForm_CustomerCommunity"
                                      is-responsive="true"
                                      width-break-point="1401"
                                      small-height="184"
                                      large-height="368"></c-square-payment-form>
               <div class="payment-disclaimer">
-                I allow Legend Boats to save my payment instrument information for future transactions pursuant to the <a href="#" target="_blank">Payment Terms for Services</a>
+                By submitting this order form, I allow Legend Boats to save my payment instrument information for future transactions pursuant to the <a href="#" target="_blank">Payment Terms for Services</a>
               </div>
             </div>
 
