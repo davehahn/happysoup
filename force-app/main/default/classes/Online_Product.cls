@@ -113,14 +113,14 @@ public virtual class Online_Product
   public virtual class PremiumPackage extends Online_Product
   {
     @AuraEnabled public  Decimal value;
-    @AuraEnabled public Map<String, List<String>> contents;
+    @AuraEnabled public Map<String, List<Map<String, Object>>> contents;
 
     public PremiumPackage( Product2 prod, PricebookEntry pbe )
     {
       super( prod, pbe );
       this.retailPrice = 0;
       this.value = pbe.UnitPrice;
-      this.contents = new Map<String, List<String>>();
+      this.contents = new Map<String, List<Map<String, Object>>>();
       processContents();
     }
 
@@ -131,13 +131,19 @@ public virtual class Online_Product
           Id,
           Feature_Id__r.description__c,
           Feature_Id__r.description_fr__c,
-          Feature_Id__r.Category__c
+          Feature_Id__r.Category__c,
+          Feature_Id__r.Value__c
         FROM Product_Feature_Map__c
         WHERE Product_Id__c = :this.id ] )
       {
         if( !this.contents.containsKey( pfmap.Feature_Id__r.Category__c) )
-          this.contents.put(  pfmap.Feature_Id__r.Category__c, new List<String>() );
-        this.contents.get(  pfmap.Feature_Id__r.Category__c ).add( pfmap.Feature_Id__r.description__c );
+          this.contents.put(  pfmap.Feature_Id__r.Category__c, new List<Map<String, Object>>() );
+        Map<String, Object> content = new Map<String, Object>{
+          'description' => pfmap.Feature_Id__r.description__c,
+          'description_fr' => pfmap.Feature_Id__r.description_fr__c,
+          'value' => pfmap.Feature_Id__r.Value__c
+        };
+        this.contents.get(  pfmap.Feature_Id__r.Category__c ).add( content );
       }
     }
   }

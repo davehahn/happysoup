@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>AcctSeed__Invoice_and_Credit_Memo_Same_Payee</fullName>
+    <active>true</active>
+    <description>The Invoice and Credit Memo must have the same Payee.</description>
+    <errorConditionFormula>AcctSeed__Account_Payable_Invoice__r.AcctSeed__Vendor__c != AcctSeed__Account_Payable_Credit_Memo__r.AcctSeed__Vendor__c ||
+AcctSeed__Account_Payable_Invoice__r.AcctSeed__Contact__c != AcctSeed__Account_Payable_Credit_Memo__r.AcctSeed__Contact__c ||
+AcctSeed__Account_Payable_Invoice__r.AcctSeed__Employee__c != AcctSeed__Account_Payable_Credit_Memo__r.AcctSeed__Employee__c</errorConditionFormula>
+    <errorMessage>Invoice and Credit Memo must have the same Payee.</errorMessage>
+</ValidationRule>

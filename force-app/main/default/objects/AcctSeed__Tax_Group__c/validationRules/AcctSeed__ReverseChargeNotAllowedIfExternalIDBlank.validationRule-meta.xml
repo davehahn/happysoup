@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>AcctSeed__ReverseChargeNotAllowedIfExternalIDBlank</fullName>
+    <active>true</active>
+    <description>Reverse-Charge is not allowed to be checked if the External ID field is blank.</description>
+    <errorConditionFormula>AND(
+ISBLANK(AcctSeed__External_Id2__c),
+AcctSeed__Reverse_Charge__c = true)</errorConditionFormula>
+    <errorDisplayField>AcctSeed__Reverse_Charge__c</errorDisplayField>
+    <errorMessage>Reverse-Charge is not allowed to be checked if the External ID field is blank.</errorMessage>
+</ValidationRule>

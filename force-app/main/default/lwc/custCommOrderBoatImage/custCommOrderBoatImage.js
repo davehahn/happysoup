@@ -73,7 +73,6 @@ export default class CustCommOrderBoatImage extends LightningElement {
 		handleImageChange(detail){
 			if(detail.optionImage.length > 0){
 				for(let image of detail.optionImage){
-				  console.log(JSON.stringify(image));
 					if(this.page === 'performance'){
 						if(image.imageType === 'backRight'){
 							this.motorImage = 'https://' + image.imageURL;
@@ -87,7 +86,7 @@ export default class CustCommOrderBoatImage extends LightningElement {
 							  	this.canvasImage = (detail.addToComposite) ? 'https://' + image.imageURL : '';
 							  	this.hasCanvasImage = (detail.addToComposite) ? true : false;
 								}
-						 	} else if(detail.optionName === 'Transom Saver - Motor Support'){
+						 	} else if(detail.optionName === 'Add Transom Saver - Motor Support'){
 								this.transomImage = (detail.addToComposite) ? 'https://' + image.imageURL : '';
 								this.hasTransomImage = (detail.addToComposite) ? true : false;
 							} else if(detail.optionName === 'Spare Tire and Bracket Kit'){
@@ -97,7 +96,7 @@ export default class CustCommOrderBoatImage extends LightningElement {
 							} else if(detail.optionName === 'Galvanized Trailer'){
 								this.trailerImage = (detail.addToComposite) ? 'https://' + image.imageURL : '';
 								this.hasTrailerImage = (detail.addToComposite) ? true : false;
-							} else if(detail.optionName === 'Terrova 55 Tech Package'){
+							} else if(detail.optionName === 'Add Terrova 55 Tech Package'){
 							  if(this.page !== 'trailering'){
 									this.electronicsImage = (detail.addToComposite) ? 'https://' + image.imageURL : '';
 									this.hasElectronicsImage = (detail.addToComposite) ? true : false;
