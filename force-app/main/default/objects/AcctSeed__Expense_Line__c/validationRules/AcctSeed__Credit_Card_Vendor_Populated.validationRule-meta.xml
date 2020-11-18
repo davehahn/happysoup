@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>AcctSeed__Credit_Card_Vendor_Populated</fullName>
-    <active>true</active>
-    <description>The credit card vendor field and the employee reimburse field cannot both populated</description>
-    <errorConditionFormula>AcctSeed__Employee_Reimburse__c = true &amp;&amp; NOT(ISBLANK(AcctSeed__Credit_Card_Vendor__c))</errorConditionFormula>
-    <errorDisplayField>AcctSeed__Credit_Card_Vendor__c</errorDisplayField>
-    <errorMessage>The employee reimburse field and the credit card vendor field cannot both be populated. You can only select one.</errorMessage>
-</ValidationRule>

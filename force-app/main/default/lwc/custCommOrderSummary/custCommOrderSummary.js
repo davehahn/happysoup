@@ -12,6 +12,7 @@ export default class CustCommOrderSummary extends LightningElement {
 	@track performanceItems = [];
 	@track traileringItems = [];
 	@track electronicsItems = [];
+	@track freightItems = [];
 
 	connectedCallback(){
 		registerListener('updateSummary', this.updateSummary, this);
@@ -39,7 +40,10 @@ export default class CustCommOrderSummary extends LightningElement {
      			  this.ifContains(this.electronicsItems, payload);
         	}
       	}
-   		}	else {
+   		} else if(details.type === 'select'){
+   		  this.freightItems.length = 0;
+   		  this.freightItems.push(payload);
+    	}	else {
    			//append the item to this section
    			if(details.section === 'performance'){
 					this.performanceItems.push(payload);

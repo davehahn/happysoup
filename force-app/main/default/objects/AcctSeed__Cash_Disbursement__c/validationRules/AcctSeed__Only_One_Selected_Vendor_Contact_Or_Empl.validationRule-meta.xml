@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>AcctSeed__Only_One_Selected_Vendor_Contact_Or_Empl</fullName>
-    <active>false</active>
-    <errorConditionFormula>NOT(ISBLANK(AcctSeed__Vendor__c)) &amp;&amp; (NOT(ISBLANK(AcctSeed__Contact__c)) || NOT(ISBLANK(AcctSeed__Employee__c))) 
-|| NOT(ISBLANK(AcctSeed__Contact__c)) &amp;&amp; (NOT(ISBLANK(AcctSeed__Vendor__c)) || NOT(ISBLANK(AcctSeed__Employee__c))) 
-|| NOT(ISBLANK(AcctSeed__Employee__c)) &amp;&amp; (NOT(ISBLANK(AcctSeed__Contact__c)) || NOT(ISBLANK(AcctSeed__Vendor__c)))</errorConditionFormula>
-    <errorMessage>You can only select one of the following as a payee: vendor, contact, or employee.</errorMessage>
-</ValidationRule>

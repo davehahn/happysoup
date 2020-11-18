@@ -1193,6 +1193,26 @@
         <reevaluateOnChange>true</reevaluateOnChange>
     </fieldUpdates>
     <rules>
+        <fullName>Austin Notified on Marianne creating a Counter Sale</fullName>
+        <actions>
+            <name>Marianne_French_Just_Created_a_Counter_Sale</name>
+            <type>Task</type>
+        </actions>
+        <active>true</active>
+        <criteriaItems>
+            <field>AcctSeed__Project__c.CreatedById</field>
+            <operation>contains</operation>
+            <value>French</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>AcctSeed__Project__c.RecordTypeId</field>
+            <operation>equals</operation>
+            <value>Legend Counter Sale</value>
+        </criteriaItems>
+        <description>This can be deleted as of Sept. 11 2020.  This is to assist in Marianne French working from home.</description>
+        <triggerType>onCreateOnly</triggerType>
+    </rules>
+    <rules>
         <fullName>Barrie 5 days prior to pickup - Infographic email send</fullName>
         <active>true</active>
         <criteriaItems>
@@ -2231,10 +2251,6 @@
     <rules>
         <fullName>Notify Emilie Arbour on Trade-In ERP Stage Pending Inspection or Delivered</fullName>
         <actions>
-            <name>This_Trade_ERP_is_now_Pending_Inspection</name>
-            <type>Task</type>
-        </actions>
-        <actions>
             <name>Trade_In_ERP_Stage_has_been_updated</name>
             <type>Task</type>
         </actions>
@@ -2361,6 +2377,61 @@
             <value>Retail Boat Sale</value>
         </criteriaItems>
         <description>Notifies LIsa on Stage Delivered on ERP.  This helps for ERPs that Lisa is BOM for but the picukp is at another location.</description>
+        <triggerType>onCreateOrTriggeringUpdate</triggerType>
+    </rules>
+    <rules>
+        <fullName>Notify Marian McGuire on Trade-In ERP Stage Pending Inspection or Delivered</fullName>
+        <actions>
+            <name>This_Trade_ERP_is_now_Pending_Inspection</name>
+            <type>Task</type>
+        </actions>
+        <active>true</active>
+        <booleanFilter>(1 AND 2) OR (1 AND 3) AND 4</booleanFilter>
+        <criteriaItems>
+            <field>AcctSeed__Project__c.RecordTypeId</field>
+            <operation>equals</operation>
+            <value>Legend Trade In</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>AcctSeed__Project__c.Stage__c</field>
+            <operation>equals</operation>
+            <value>Pending Inspection</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>AcctSeed__Project__c.Stage__c</field>
+            <operation>equals</operation>
+            <value>Delivered</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>AcctSeed__Project__c.WarehouseName__c</field>
+            <operation>contains</operation>
+            <value>Whitefish</value>
+        </criteriaItems>
+        <triggerType>onCreateOrTriggeringUpdate</triggerType>
+    </rules>
+    <rules>
+        <fullName>Notify Matt on Pend Rig on Service ERP</fullName>
+        <actions>
+            <name>Parts_came_in_and_ready_for_scheduling</name>
+            <type>Task</type>
+        </actions>
+        <active>true</active>
+        <criteriaItems>
+            <field>AcctSeed__Project__c.RecordTypeId</field>
+            <operation>equals</operation>
+            <value>Legend Service Work Order</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>AcctSeed__Project__c.Stage__c</field>
+            <operation>equals</operation>
+            <value>Pending Rigging</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>AcctSeed__Project__c.WarehouseName__c</field>
+            <operation>contains</operation>
+            <value>white</value>
+        </criteriaItems>
+        <description>This can be deleted as of Sept. 1 2020, this is a backup workflow while i&apos;m on vacation - BF</description>
         <triggerType>onCreateOrTriggeringUpdate</triggerType>
     </rules>
     <rules>
@@ -3951,6 +4022,26 @@
         <triggerType>onCreateOrTriggeringUpdate</triggerType>
     </rules>
     <rules>
+        <fullName>User Task SalesPerson Get with Boat Specialist VanDeligt</fullName>
+        <actions>
+            <name>Please_review_this_ERP_for_Accuracy_with_Boat_Specialist_van_de_ligt</name>
+            <type>Task</type>
+        </actions>
+        <active>false</active>
+        <criteriaItems>
+            <field>AcctSeed__Project__c.RecordTypeId</field>
+            <operation>equals</operation>
+            <value>Retail Boat Sale</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>AcctSeed__Project__c.Salesperson__c</field>
+            <operation>contains</operation>
+            <value>van de ligt</value>
+        </criteriaItems>
+        <description>Task for SalesPeople to get with their Boat Specialist on Retail ERPs</description>
+        <triggerType>onCreateOrTriggeringUpdate</triggerType>
+    </rules>
+    <rules>
         <fullName>Vanessa Add On Call ERP</fullName>
         <active>false</active>
         <criteriaItems>
@@ -4428,6 +4519,21 @@ Thanks!  You rock!</description>
         <subject>Inspect Your Customer&apos;s Boat</subject>
     </tasks>
     <tasks>
+        <fullName>Marianne_French_Just_Created_a_Counter_Sale</fullName>
+        <assignedTo>aseltzer@legendboats.com</assignedTo>
+        <assignedToType>user</assignedToType>
+        <description>Austin Seltzer,  You have been assigned the very special duty of picking and packing parts for this counter sale.   
+
+Please ensure this is done to the best of your abilities and let Marianne know when it is completed.</description>
+        <dueDateOffset>0</dueDateOffset>
+        <notifyAssignee>false</notifyAssignee>
+        <offsetFromField>AcctSeed__Project__c.CreatedDate</offsetFromField>
+        <priority>Normal</priority>
+        <protected>false</protected>
+        <status>Open</status>
+        <subject>Marianne French Just Created a Counter Sale</subject>
+    </tasks>
+    <tasks>
         <fullName>Montreal_Add_On_Call_ERP_Benoit</fullName>
         <assignedTo>bgrenier@legendboats.com</assignedTo>
         <assignedToType>user</assignedToType>
@@ -4642,6 +4748,18 @@ Please complete other tasks associated to this Partner Boat Sale and finalize th
         <protected>false</protected>
         <status>Open</status>
         <subject>Parts are required on Warranty ERP</subject>
+    </tasks>
+    <tasks>
+        <fullName>Parts_came_in_and_ready_for_scheduling</fullName>
+        <assignedTo>mpatrakka@legendboats.com</assignedTo>
+        <assignedToType>user</assignedToType>
+        <description>THis ERP is ready for scheduling.  This is a temporary notification until Ben is back from vacation.</description>
+        <dueDateOffset>0</dueDateOffset>
+        <notifyAssignee>false</notifyAssignee>
+        <priority>Normal</priority>
+        <protected>false</protected>
+        <status>Open</status>
+        <subject>Parts came in and ready for scheduling</subject>
     </tasks>
     <tasks>
         <fullName>Parts_have_been_received</fullName>
