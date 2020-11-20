@@ -8,17 +8,17 @@
     <subject>Please Approve Warranty Pre Supplier Submission</subject>
     <textOnly>Hi there,
 
-Can you please go take a look at Purchase Order, {!AcctSeedERP__Purchase_Order__c.Name}, Supplier: {!AcctSeedERP__Purchase_Order__c.AcctSeedERP__Vendor__c}
-Purchase Order Link {!AcctSeedERP__Purchase_Order__c.Link}
-Line items  {!AcctSeedERP__Purchase_Order_Line__c.AcctSeedERP__Product__c}
-Requested by: {!AcctSeedERP__Purchase_Order__c.CreatedBy}
+Can you please go take a look at Warranty ERP {!AcctSeed__Project__c.AcctSeedERP__Work_Order_Number__c} for approval.
 
-If this is good to be submitted, please scroll to the bottom of the PO and beside your name, click &quot;Approve/Reject&quot; and then Click Approve.
+URL: {!AcctSeed__Project__c.Link}
 
-This will notify the creator of the PO to Submit it to the Supplier.
+Thank you!
 
+P/O Comments:
+{!AcctSeedERP__Purchase_Order__c.AcctSeedERP__Comment__c}
 
-Thank you!</textOnly>
+Submission/Rejection Comments
+{!ApprovalRequest.Comments}</textOnly>
     <type>html</type>
     <uiType>Aloha</uiType>
 </EmailTemplate>
