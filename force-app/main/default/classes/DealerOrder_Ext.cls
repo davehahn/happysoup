@@ -297,8 +297,10 @@ public without sharing class DealerOrder_Ext {
       List<UpgradeWrapper> result = new List<UpgradeWrapper>();
       for( LGND_APIv2_Product.UpgradeProduct uProd : upgrades )
       {
-        if( ( standardProductId != null && uProd.PartnerUpgradeCost != null && uProd.PartnerUpgradeCost > 0 ) ||
-            ( standardProductId == null && uProd.PartnerPrice != null && uProd.PartnerPrice > 0) )
+        Decimal upgradeCost = isFactory ? uProd.FactoryUpgradeCost : uProd.PartnerUpgradeCost;
+        Decimal price = isFactory ? uProd.FactoryPrice : uProd.PartnerPrice;
+        if( ( standardProductId != null && upgradeCost != null && upgradeCost > 0 ) ||
+            ( standardProductId == null && price != null && price > 0) )
         result.add( new UpgradeWrapper( uProd, standardProductId, isFactory ) );
       }
       return result;
