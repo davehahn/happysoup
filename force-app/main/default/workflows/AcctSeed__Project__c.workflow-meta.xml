@@ -128,15 +128,11 @@
     </alerts>
     <alerts>
         <fullName>Deal_is_Tagged</fullName>
-        <description>Deal is Tagged</description>
+        <description>Notify BOM when Deal is Tagged</description>
         <protected>false</protected>
         <recipients>
-            <recipient>bkent@legendboats.com</recipient>
-            <type>user</type>
-        </recipients>
-        <recipients>
-            <recipient>lturcott@legendboats.com</recipient>
-            <type>user</type>
+            <field>Business_Manager__c</field>
+            <type>userLookup</type>
         </recipients>
         <senderType>CurrentUser</senderType>
         <template>Sales_Process/Deal_is_Tagged</template>
@@ -2126,12 +2122,13 @@
         <triggerType>onCreateOrTriggeringUpdate</triggerType>
     </rules>
     <rules>
-        <fullName>Notify BOM when Tagged</fullName>
+        <fullName>Notify BOM when Deal is Tagged</fullName>
         <actions>
             <name>Deal_is_Tagged</name>
             <type>Alert</type>
         </actions>
         <active>true</active>
+        <booleanFilter>1 AND (2 OR 3 OR 4)</booleanFilter>
         <criteriaItems>
             <field>AcctSeed__Project__c.Stage__c</field>
             <operation>equals</operation>
@@ -2140,7 +2137,17 @@
         <criteriaItems>
             <field>AcctSeed__Project__c.Business_Manager__c</field>
             <operation>equals</operation>
-            <value>Lisa Turcott</value>
+            <value>Brigitte Kent</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>AcctSeed__Project__c.Business_Manager__c</field>
+            <operation>equals</operation>
+            <value>Jeana Davis</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>AcctSeed__Project__c.Business_Manager__c</field>
+            <operation>equals</operation>
+            <value>Catherine Grenier</value>
         </criteriaItems>
         <triggerType>onCreateOrTriggeringUpdate</triggerType>
     </rules>
@@ -2150,7 +2157,7 @@
             <name>Deal_is_tagged_John_Winter</name>
             <type>Alert</type>
         </actions>
-        <active>true</active>
+        <active>false</active>
         <booleanFilter>1 AND (2 OR 3)</booleanFilter>
         <criteriaItems>
             <field>AcctSeed__Project__c.Stage__c</field>
@@ -2175,7 +2182,7 @@
             <name>Deal_is_Tagged_Montreal</name>
             <type>Alert</type>
         </actions>
-        <active>true</active>
+        <active>false</active>
         <criteriaItems>
             <field>AcctSeed__Project__c.Stage__c</field>
             <operation>equals</operation>
