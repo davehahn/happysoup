@@ -2196,10 +2196,10 @@ public without sharing class DealerOrder_Ext {
         )
       );
     }
-    Boolean disablePartnerProgram = Dealer_Order_Line_Ext.disablePartnerProgram;
-    Dealer_Order_Line_Ext.disablePartnerProgram = true;
+    Boolean disablePartnerProgram = DealerOrderLine_TriggerHandler.disablePartnerProgram;
+    DealerOrderLine_TriggerHandler.disablePartnerProgram = true;
     insert dols;
-    Dealer_Order_Line_Ext.disablePartnerProgram = disablePartnerProgram;
+    DealerOrderLine_TriggerHandler.disablePartnerProgram = disablePartnerProgram;
   }
 
   private static Dealer_Order__c updateDealerLineItems( DealerOrderLineWrapper wrapper )
@@ -2423,10 +2423,10 @@ public without sharing class DealerOrder_Ext {
     update erps;
     insert newMaterials;
     delete oldMaterials;
-    Boolean disablePartnerProgram = Dealer_Order_Line_Ext.disablePartnerProgram;
-    Dealer_Order_Line_Ext.disablePartnerProgram = true;
+    Boolean disablePartnerProgram = DealerOrderLine_TriggerHandler.disablePartnerProgram;
+    DealerOrderLine_TriggerHandler.disablePartnerProgram = true;
     delete dolsToDelete;
-    Dealer_Order_Line_Ext.disablePartnerProgram = disablePartnerProgram;
+    DealerOrderLine_TriggerHandler.disablePartnerProgram = disablePartnerProgram;
 
     if( quantityDiff > 0 )
       insertNewDealerOrderLines( wrapper, quantityDiff, productMap, wrapper.orderGroupId );
