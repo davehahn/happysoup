@@ -1390,26 +1390,6 @@
         <triggerType>onCreateOrTriggeringUpdate</triggerType>
     </rules>
     <rules>
-        <fullName>Cherlynn - New Internal SWO</fullName>
-        <actions>
-            <name>New_Internal_Service_Work_Order_Was_Created</name>
-            <type>Task</type>
-        </actions>
-        <active>true</active>
-        <criteriaItems>
-            <field>AcctSeed__Project__c.Name</field>
-            <operation>contains</operation>
-            <value>Whitefish,Barrie,Montreal</value>
-        </criteriaItems>
-        <criteriaItems>
-            <field>AcctSeed__Project__c.RecordTypeId</field>
-            <operation>equals</operation>
-            <value>Legend Service Work Order</value>
-        </criteriaItems>
-        <description>Notifies Cherlynn on new Internal Service Work Orders</description>
-        <triggerType>onCreateOnly</triggerType>
-    </rules>
-    <rules>
         <fullName>Community Parts Required on Warranty</fullName>
         <actions>
             <name>Parts_are_required_on_Warranty_ERP</name>
@@ -2083,6 +2063,45 @@
             <field>AcctSeed__Project__c.RecordTypeId</field>
             <operation>equals</operation>
             <value>Legend Fixed Asset</value>
+        </criteriaItems>
+        <triggerType>onCreateOnly</triggerType>
+    </rules>
+    <rules>
+        <fullName>New Internal SWO for Factory Stores</fullName>
+        <actions>
+            <name>New_Internal_Service_Work_Order_Was_Created</name>
+            <type>Task</type>
+        </actions>
+        <active>true</active>
+        <criteriaItems>
+            <field>AcctSeed__Project__c.Name</field>
+            <operation>contains</operation>
+            <value>Whitefish,Barrie,Montreal</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>AcctSeed__Project__c.RecordTypeId</field>
+            <operation>equals</operation>
+            <value>Legend Service Work Order</value>
+        </criteriaItems>
+        <description>Notifies Cherlynn on new Internal Service Work Orders</description>
+        <triggerType>onCreateOnly</triggerType>
+    </rules>
+    <rules>
+        <fullName>New Internal SWO for Wholesale</fullName>
+        <actions>
+            <name>New_Wholesale_Internal_Service_Work_Order_Was_Created</name>
+            <type>Task</type>
+        </actions>
+        <active>true</active>
+        <criteriaItems>
+            <field>AcctSeed__Project__c.Name</field>
+            <operation>contains</operation>
+            <value>Wholesale</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>AcctSeed__Project__c.RecordTypeId</field>
+            <operation>equals</operation>
+            <value>Legend Service Work Order</value>
         </criteriaItems>
         <triggerType>onCreateOnly</triggerType>
     </rules>
@@ -4558,7 +4577,7 @@ Please ensure this is done to the best of your abilities and let Marianne know w
     </tasks>
     <tasks>
         <fullName>New_Internal_Service_Work_Order_Was_Created</fullName>
-        <assignedTo>cmclean@legendboats.com</assignedTo>
+        <assignedTo>shackett@legendboats.com</assignedTo>
         <assignedToType>user</assignedToType>
         <description>This Task is to notify you that a new Service ERP has been created against one of the Factory Stores.</description>
         <dueDateOffset>0</dueDateOffset>
@@ -4581,8 +4600,20 @@ Please ensure this is done to the best of your abilities and let Marianne know w
         <subject>New Partner Parts Order for your Approval</subject>
     </tasks>
     <tasks>
+        <fullName>New_Wholesale_Internal_Service_Work_Order_Was_Created</fullName>
+        <assignedTo>earbour@legendboats.com</assignedTo>
+        <assignedToType>user</assignedToType>
+        <description>This Task is to notify you that a new Service ERP has been created for Wholesale</description>
+        <dueDateOffset>0</dueDateOffset>
+        <notifyAssignee>false</notifyAssignee>
+        <priority>Normal</priority>
+        <protected>false</protected>
+        <status>Open</status>
+        <subject>New Wholesale Internal Service Work Order Was Created</subject>
+    </tasks>
+    <tasks>
         <fullName>Partner_Boat_Sale_Delivery_Has_Passed</fullName>
-        <assignedTo>mbeaucage@legendboats.com	</assignedTo>
+        <assignedTo>mbeaucage@legendboats.com</assignedTo>
         <assignedToType>user</assignedToType>
         <description>A Partner Boat sale has been 12 hours since the picukp time.
 Please complete other tasks associated to this Partner Boat Sale and finalize the ERP.</description>
