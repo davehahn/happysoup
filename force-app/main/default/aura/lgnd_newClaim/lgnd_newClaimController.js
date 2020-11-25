@@ -1,58 +1,27 @@
 ({
-  doInit: function(component, event, helper) {
-    console.log('newClaim.doInit');
-    var claim = {
-        'case': { 'sobjectType': 'Case' },
-        'parts': [],
-        'isValid': false,
-        'imagesAdded': false
-      },
-      claims = [];
-    component.set('v.claim', claim);
-
-    helper.getProductId(component, 'Wholesale Exclusive Labour')
-    .then($A.getCallback(
-      function() {
-        var productId = component.get('v.productId');
-        console.log(productId);
-        helper.getPricebookId(component).then($A.getCallback(
-          function(pricebookId) {
-            component.set("v.pricebookId", pricebookId);
-          }
-        ));
-        helper.getClaimTypes(component).then($A.getCallback(
-          function(claimTypes) {
-            console.log('CLAIM TYPES:');
-            console.log(claimTypes);
-            var claimTypeOptions = [{
-              class: "optionClass",
-              label: "--None--",
-              value: "",
-              selected: "false"
-            }];
-            for (var i = 0; i < claimTypes.length; i++) {
-              var claimType = claimTypes[i];
-              claimTypeOptions.push({
-                class: "optionClass",
-                label: claimType,
-                value: claimType
-              });
-            }
-            component.set("v.claimTypeOptions", claimTypeOptions);
-          }
-        ));
-        console.log(productId);
-        helper.getUnitPrice(component, productId).then($A.getCallback(
-          function(laborPrice) {
-            console.log(laborPrice);
-            component.set("v.laborUnitCost", laborPrice);
-          }
-        ));
-      }
-    ));
-    
-    // component.find('imageUploader').init();
-    console.log(claims);
+  doInit: function( component, event, helper )
+  {
+    var action = component.get('c.initForm');
+    new LightningApex( helper, action ).fire()
+    .then(
+      $A.getCallback( result => {
+        console.log('INIT FORM RESULT');
+        console.log( JSON.parse(JSON.stringify(result)));
+        component.set( 'v.productId', result.warrantyLabourProduct );
+        component.set( 'v.pricebookId', result.pricebookId );
+        component.set( 'v.laborUnitCost', result.laborPrice );
+        component.set( 'v.claimTypeOptions', result.claimTypeOptions );
+        component.set('v.claim', {
+          'case': { 'sobjectType': 'Case' },
+          'parts': [],
+          'isValid': false,
+          'imagesAdded': false
+        });
+      })
+    )
+    .catch( err => {
+      LightningUtils.errorToast( err );
+    });
   },
 
   next: function(component, event, helper) {
@@ -87,7 +56,6 @@
     new Promise(function(resolve, reject) {
       if (onStep == 5) {
         imageUploaderContainer.set('v.body', '');
-        // component.set('v.disableNextButton', true);
         helper.doStepFour(component, event);
         resolve();
       } else if (onStep == 4) {
@@ -239,20 +207,9 @@
   },
 
   addPart: function(component, event, helper) {
-
-    // validate part
-    //var partLookupComponent = component.find("partLookup");
-    //var partProductId = partLookupComponent.get("v.sobjectId");
-    //var partProductId = partLookupComponent.get('v.selectionId');
     var partProductId = component.get('v.partLookupValue');
-    //partLookupComponent.set("v.error", null);
     console.log( 'PartProductId ' + partProductId);
     if (!partProductId) {
-      // if (!partLookupComponent.get("v.value")) {
-      //   partLookupComponent.set("v.error", "Part is required");
-      // } else {
-      //   partLookupComponent.set("v.error", "This part isn't valid");
-      // }
       var toastEvent = $A.get("e.force:showToast");
       toastEvent.setParams({
           "title": 'No Part Selected',
@@ -280,8 +237,6 @@
 
     helper.getProduct(component, partProductId).then($A.getCallback(
       function(product) {
-        console.log('HEYYYYYYYYY');
-        console.log(product);
         if (product) {
           helper.getUnitPrice(component, product.Id).then($A.getCallback(
             function(unitPrice) {
@@ -302,8 +257,6 @@
               console.log(parts);
 
               // clear the part search and quantity fields
-              //partLookupComponent.set("v.value", null);
-              //component.set('v.partLookupValue', null);
               partLookupCMP.set('v.query', null);
               partLookupQuantityComponent.set("v.value", null);
             })
@@ -315,13 +268,6 @@
 
   removePart: function(component, event, helper) {
     helper.deletePart(component,event);
-    // var partsIndex = event.currentTarget.getAttribute("data-parts-index");
-    // var parts = component.get("v.parts");
-    // var part = parts[partsIndex];
-    // if(part.Id != undefined || part.Id != null)
-
-    // parts.splice(partsIndex, 1);
-    // component.set("v.parts", parts);
   },
 
   uploaderInitialized: function(component, event) {
