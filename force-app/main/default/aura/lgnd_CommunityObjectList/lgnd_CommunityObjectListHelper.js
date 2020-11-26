@@ -1,7 +1,6 @@
 ({
   addDummyRecordData: function( component, fields )
   {
-    console.log( 'adding dummy records ');
     var recs = [], count = 0, rec = {}, blankRecord,
         addValueToObj = function(obj, base) {
           return Object.keys(obj)
@@ -34,6 +33,7 @@
         globalFilter = component.get('v.globalFilter'),
         listName = component.get('v.selectedList'),
         fieldDetails = component.get('v.fieldDetails'),
+        searchString = component.get('v.searchString'),
         orderField = component.get('v.sortField'),
         orderFieldName = component.get('v.sortedCol'),
         orderDir = component.get('v.sortDir'),
@@ -41,6 +41,7 @@
         localConfig = JSON.parse( localStorage.getItem( component.get('v.title') ) ),
         useCache = component.get('v.shouldUseCache'),
         fieldNames = [],
+        searchFields = [],
         params;
 
     self.showIndicator( component, true );
@@ -48,6 +49,8 @@
     for( var i=0; i<fieldDetails.length; i++ )
     {
       fieldNames.push( fieldDetails[i].apiName );
+      if( fieldDetails[i].type === 'STRING' )
+        searchFields.push( fieldDetails[i].apiName );
     }
 
     self.addDummyRecordData( component, fieldNames );
@@ -56,6 +59,8 @@
       sObjectName: component.get('v.sObjectName'),
       fieldNames: fieldNames,
       accountField: component.get('v.accountIdentityField'),
+      searchString: searchString,
+      searchFields: searchFields,
       orderField: orderField,
       orderDir: orderDir,
       perPage: perPage,
@@ -109,6 +114,8 @@
         component.set('v.pageOptions', pageOptions);
         localStorage.setItem( component.get('v.title'), JSON.stringify( localConfig ) );
         self.showIndicator( component, false );
+        if( component.get('v.searchString') !== component.get('v.searchInputString') )
+          component.set('v.searchString', component.get('v.searchInputString') );
       }
       if( state === 'INCOMPLETE' )
       {
@@ -151,8 +158,6 @@
 
   viewRow: function( component, recordId )
   {
-    console.log('view row');
-    console.log(recordId);
     var viewURL = component.get('v.viewURL'),
         action;
     if( viewURL === undefined || viewURL.length === 0)
@@ -173,6 +178,7 @@
   {
     var tb = component.find('listTable'),
         pgn = component.find('paginationRow');
+    component.set('v.isLoading', state);
     if( state )
     {
       $A.util.addClass( tb, 'loading');

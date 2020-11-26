@@ -58,6 +58,8 @@ public without sharing class lgnd_CommunityObjectList_Controller {
   public static String fetchRecords( String sObjectName,
                                      List<String> fieldNames,
                                      String accountField,
+                                     String searchString,
+                                     List<String> searchFields,
                                      String orderField,
                                      String orderDir,
                                      String listFilter,
@@ -101,6 +103,25 @@ public without sharing class lgnd_CommunityObjectList_Controller {
       countQuery += countQuery.contains('WHERE') ?
         (' AND ' + listFilter ) :
         (' WHERE ' + listFilter );
+    }
+
+    if( searchString != null && searchString.length() > 0 && searchFields != null && searchFields.size() > 0 )
+    {
+      searchString = '%' + searchString + '%';
+      String q = '(';
+      for( String field : searchFields )
+      {
+        q += field + ' LIKE \'' + searchString + '\' OR ';
+      }
+      q = q.removeEnd(' OR ');
+      q += ')';
+
+      recordQuery += recordQuery.contains('WHERE') ?
+        (' AND ' + q ) :
+        ( ' WHERE ' + q );
+      countQuery += countQuery.contains('WHERE') ?
+        (' AND ' + q ) :
+        (' WHERE ' + q );
     }
     recordQuery += (' ORDER BY ' + orderField + ' ' + orderDir );
     recordQuery += (' LIMIT ' + perPage + ' OFFSET ' + offset);
