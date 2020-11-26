@@ -39,16 +39,9 @@ export default class CustCommOrderOptions extends LightningElement {
 		registerListener('traileringSelection', this.handleTraileringSelection, this);
 	}
 
-	handleTraileringSelection(detail){
-	  if( detail.onUserSelection && (detail.userSelectionName === this.groupingName) ){
-	    this.selectionMade = true;
-   	}
- 	}
-
 	get availableOptions(){
 
 	  if(this.options){
-			console.log(JSON.parse(JSON.stringify(this.options)));
 	    let options = JSON.parse(JSON.stringify(this.options));
 
 			if(options !== null){
@@ -205,6 +198,19 @@ export default class CustCommOrderOptions extends LightningElement {
    		}
    	});
  	}
+
+	handleTraileringSelection(detail){
+		if( detail.onUserSelection && (detail.userSelectionName === this.groupingName) ){
+			this.selectionMade = true;
+		}
+		let relatedOptions = this.template.querySelectorAll(`[data-parentpage="${detail.userSelectionName}"]`);
+		relatedOptions.forEach((option) => {
+			option.classList.add('hide');
+			if(option.getAttribute('data-parentsku') === detail.optionSKU){
+				option.classList.remove('hide');
+			}
+  	});
+	}
 
  	handleSwatchChange(event){
  	  const optionList = this.template.querySelector('.options_list');
