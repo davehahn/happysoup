@@ -3,14 +3,21 @@
     <fullName>Whitefish</fullName>
     <columns>NAME</columns>
     <columns>Issue_Type__c</columns>
-    <columns>OWNER.FIRST_NAME</columns>
-    <columns>OWNER.LAST_NAME</columns>
+    <columns>Department__c</columns>
+    <columns>Days_Open__c</columns>
     <columns>Status__c</columns>
+    <columns>OWNER.LAST_NAME</columns>
+    <columns>OWNER.FIRST_NAME</columns>
     <filterScope>Everything</filterScope>
     <filters>
         <field>Location__c</field>
         <operation>contains</operation>
         <value>Whitefish</value>
     </filters>
-    <label>Whitefish</label>
+    <filters>
+        <field>Status__c</field>
+        <operation>notContain</operation>
+        <value>Complete</value>
+    </filters>
+    <label>Whitefish - Open</label>
 </ListView>
