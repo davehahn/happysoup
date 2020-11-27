@@ -664,6 +664,21 @@
         <template>Customer_Follow_Up_Templates/Notify_Customer_of_Counter_Sale_Part_Pending_Pickup_FR</template>
     </alerts>
     <alerts>
+        <fullName>Notify_DealerCare_and_Product_Specialist_on_Partner_Boat_Sale_ClosedLost</fullName>
+        <description>Notify DealerCare and Product Specialist on Partner Boat Sale ClosedLost</description>
+        <protected>false</protected>
+        <recipients>
+            <recipient>Partner_Support_Team</recipient>
+            <type>role</type>
+        </recipients>
+        <recipients>
+            <recipient>sboothe@legendboats.com</recipient>
+            <type>user</type>
+        </recipients>
+        <senderType>CurrentUser</senderType>
+        <template>To_Do_Notification_Templates/Partner_Boat_Sale_is_Closed_Lost</template>
+    </alerts>
+    <alerts>
         <fullName>Notify_of_Factory_Store_Partner_Boat_Sale</fullName>
         <description>Notify of Factory Store Partner Boat Sale</description>
         <protected>false</protected>
@@ -2272,6 +2287,25 @@
             <value>Legend Service Work Order</value>
         </criteriaItems>
         <description>Notifies Braedon MacArthur on Stage Delivered on ERP</description>
+        <triggerType>onCreateOrTriggeringUpdate</triggerType>
+    </rules>
+    <rules>
+        <fullName>Notify DealerCare and Product Specialist on Partner Boat Sale ClosedLost</fullName>
+        <actions>
+            <name>Notify_DealerCare_and_Product_Specialist_on_Partner_Boat_Sale_ClosedLost</name>
+            <type>Alert</type>
+        </actions>
+        <active>true</active>
+        <criteriaItems>
+            <field>AcctSeed__Project__c.RecordTypeId</field>
+            <operation>equals</operation>
+            <value>Partner Boat Sale</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>AcctSeed__Project__c.Stage__c</field>
+            <operation>equals</operation>
+            <value>Closed Lost</value>
+        </criteriaItems>
         <triggerType>onCreateOrTriggeringUpdate</triggerType>
     </rules>
     <rules>
