@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>Legend_Letterhead</letterhead>
+    <name>Partner Boat Sale is Closed/Lost</name>
+    <style>freeForm</style>
+    <subject>This Partner Boat Sale has been moved to Closed Lost</subject>
+    <textOnly>The following Partner Boat Sale has been moved to Closed Lost:
+
+ERP Order Name: {!AcctSeed__Project__c.Name}
+
+Account: {!AcctSeed__Project__c.AcctSeed__Account__c}
+
+Partner: {!AcctSeed__Project__c.CreatedBy}
+
+Serial Number: {!AcctSeed__Project__c.Serial_Number__c}
+
+URL: {!AcctSeed__Project__c.Link}</textOnly>
+    <type>html</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

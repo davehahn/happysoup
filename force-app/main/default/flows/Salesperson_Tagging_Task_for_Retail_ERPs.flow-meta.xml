@@ -1,6 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Flow xmlns="http://soap.sforce.com/2006/04/metadata">
-    <apiVersion>49.0</apiVersion>
+    <apiVersion>50.0</apiVersion>
+    <decisions>
+        <name>isChangedDecision2_myRule_1_Stage_c</name>
+        <label>isChangedDecision2_myRule_1_Stage_c</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>myDecision</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>default</defaultConnectorLabel>
+        <rules>
+            <name>isChangedRule_2_myRule_1_Stage_c</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>myVariable_old</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>myVariable_old.Stage__c</leftValueReference>
+                <operator>NotEqualTo</operator>
+                <rightValue>
+                    <elementReference>myVariable_current.Stage__c</elementReference>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>myDecision</targetReference>
+            </connector>
+            <label>isChangedRule_2_myRule_1_Stage_c</label>
+        </rules>
+    </decisions>
     <decisions>
         <processMetadataValues>
             <name>index</name>
@@ -17,58 +49,166 @@
             <name>myRule_1</name>
             <conditionLogic>and</conditionLogic>
             <conditions>
-                <leftValueReference>formula_myRule_1</leftValueReference>
+                <processMetadataValues>
+                    <name>inputDataType</name>
+                    <value>
+                        <stringValue>String</stringValue>
+                    </value>
+                </processMetadataValues>
+                <processMetadataValues>
+                    <name>leftHandSideType</name>
+                    <value>
+                        <stringValue>String</stringValue>
+                    </value>
+                </processMetadataValues>
+                <processMetadataValues>
+                    <name>operatorDataType</name>
+                    <value>
+                        <stringValue>String</stringValue>
+                    </value>
+                </processMetadataValues>
+                <processMetadataValues>
+                    <name>rightHandSideType</name>
+                    <value>
+                        <stringValue>String</stringValue>
+                    </value>
+                </processMetadataValues>
+                <leftValueReference>myVariable_current.RecordType.Name</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Retail Boat Sale</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <processMetadataValues>
+                    <name>inputDataType</name>
+                    <value>
+                        <stringValue>Picklist</stringValue>
+                    </value>
+                </processMetadataValues>
+                <processMetadataValues>
+                    <name>leftHandSideType</name>
+                    <value>
+                        <stringValue>Picklist</stringValue>
+                    </value>
+                </processMetadataValues>
+                <processMetadataValues>
+                    <name>operatorDataType</name>
+                    <value>
+                        <stringValue>String</stringValue>
+                    </value>
+                </processMetadataValues>
+                <processMetadataValues>
+                    <name>rightHandSideType</name>
+                    <value>
+                        <stringValue>Picklist</stringValue>
+                    </value>
+                </processMetadataValues>
+                <leftValueReference>myVariable_current.Stage__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Tagging Pending</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <processMetadataValues>
+                    <name>inputDataType</name>
+                    <value>
+                        <stringValue>Boolean</stringValue>
+                    </value>
+                </processMetadataValues>
+                <processMetadataValues>
+                    <name>leftHandSideType</name>
+                    <value>
+                        <stringValue>Picklist</stringValue>
+                    </value>
+                </processMetadataValues>
+                <processMetadataValues>
+                    <name>operatorDataType</name>
+                    <value>
+                        <stringValue>String</stringValue>
+                    </value>
+                </processMetadataValues>
+                <processMetadataValues>
+                    <name>rightHandSideType</name>
+                    <value>
+                        <stringValue>Boolean</stringValue>
+                    </value>
+                </processMetadataValues>
+                <leftValueReference>isChangedRule_2_myRule_1_Stage_c</leftValueReference>
                 <operator>EqualTo</operator>
                 <rightValue>
                     <booleanValue>true</booleanValue>
                 </rightValue>
             </conditions>
+            <conditions>
+                <processMetadataValues>
+                    <name>inputDataType</name>
+                    <value>
+                        <stringValue>Boolean</stringValue>
+                    </value>
+                </processMetadataValues>
+                <processMetadataValues>
+                    <name>leftHandSideReferenceTo</name>
+                    <value>
+                        <stringValue>User</stringValue>
+                    </value>
+                </processMetadataValues>
+                <processMetadataValues>
+                    <name>leftHandSideType</name>
+                    <value>
+                        <stringValue>ID</stringValue>
+                    </value>
+                </processMetadataValues>
+                <processMetadataValues>
+                    <name>operatorDataType</name>
+                    <value>
+                        <stringValue>String</stringValue>
+                    </value>
+                </processMetadataValues>
+                <processMetadataValues>
+                    <name>rightHandSideType</name>
+                    <value>
+                        <stringValue>Boolean</stringValue>
+                    </value>
+                </processMetadataValues>
+                <leftValueReference>myVariable_current.Salesperson__c</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
             <connector>
                 <targetReference>myRule_1_A1</targetReference>
             </connector>
-            <label>Assign Salesperson</label>
+            <label>Retail ERP Tagging Pending</label>
         </rules>
     </decisions>
-    <description>Notifies the assigned Salesperson on a Retail ERP</description>
+    <description>Tasks the Salesperson on a Retail ERP when the stage is set to &apos;Tagging Pending&apos;</description>
     <formulas>
         <processMetadataValues>
             <name>originalFormula</name>
             <value>
-                <stringValue>Today()</stringValue>
+                <stringValue>TODAY()</stringValue>
             </value>
         </processMetadataValues>
-        <name>formula_2_myRule_1_A1_7553518287</name>
+        <name>formula_3_myRule_1_A1_3301294658</name>
         <dataType>Date</dataType>
-        <expression>Today()</expression>
+        <expression>TODAY()</expression>
     </formulas>
     <formulas>
         <processMetadataValues>
             <name>originalFormula</name>
             <value>
-                <stringValue>Now()</stringValue>
+                <stringValue>NOW()</stringValue>
             </value>
         </processMetadataValues>
-        <name>formula_3_myRule_1_A1_7315005458</name>
+        <name>formula_4_myRule_1_A1_5802920592</name>
         <dataType>DateTime</dataType>
-        <expression>Now()</expression>
+        <expression>NOW()</expression>
     </formulas>
-    <formulas>
-        <processMetadataValues>
-            <name>originalFormula</name>
-            <value>
-                <stringValue>[AcctSeed__Project__c].RecordType.Name = &quot;Retail Boat Sale&quot; &amp;&amp;
-NOT(ISBLANK([AcctSeed__Project__c].Salesperson__c )) &amp;&amp;
-OR(ISNEW(), ISCHANGED([AcctSeed__Project__c].Salesperson__c ))</stringValue>
-            </value>
-        </processMetadataValues>
-        <name>formula_myRule_1</name>
-        <dataType>Boolean</dataType>
-        <expression>{!myVariable_current.RecordType.Name} = &quot;Retail Boat Sale&quot; &amp;&amp;
-NOT(ISBLANK({!myVariable_current.Salesperson__c} )) &amp;&amp;
-OR(ISNEW(), ISCHANGED({!myVariable_current.Salesperson__c} ))</expression>
-    </formulas>
-    <interviewLabel>Notify_Assigned_Salesperson-1_InterviewLabel</interviewLabel>
-    <label>Notify Assigned Salesperson</label>
+    <interviewLabel>Salesperson_Tagging_Task_for_Retail_ERPs-2_InterviewLabel</interviewLabel>
+    <label>Salesperson Tagging Task for Retail ERPs</label>
     <processMetadataValues>
         <name>ObjectType</name>
         <value>
@@ -96,7 +236,7 @@ OR(ISNEW(), ISCHANGED({!myVariable_current.Salesperson__c} ))</expression>
     <processType>Workflow</processType>
     <recordCreates>
         <name>myRule_1_A1</name>
-        <label>Assign Task</label>
+        <label>Task Salesperson</label>
         <locationX>100</locationX>
         <locationY>200</locationY>
         <inputAssignments>
@@ -132,7 +272,7 @@ OR(ISNEW(), ISCHANGED({!myVariable_current.Salesperson__c} ))</expression>
             </processMetadataValues>
             <field>ActivityDate</field>
             <value>
-                <elementReference>formula_2_myRule_1_A1_7553518287</elementReference>
+                <elementReference>formula_3_myRule_1_A1_3301294658</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -168,7 +308,7 @@ OR(ISNEW(), ISCHANGED({!myVariable_current.Salesperson__c} ))</expression>
             </processMetadataValues>
             <field>Description</field>
             <value>
-                <stringValue>Please review this ERP with the assigned Boat Specialist for accuracy and any anomalies (if any).</stringValue>
+                <stringValue>This Barrie Retail Boat is in Tagging Pending Stage and ready to be tagged.</stringValue>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -227,12 +367,6 @@ OR(ISNEW(), ISCHANGED({!myVariable_current.Salesperson__c} ))</expression>
                 </value>
             </processMetadataValues>
             <processMetadataValues>
-                <name>leftHandSideReferenceTo</name>
-                <value>
-                    <stringValue>Group;User</stringValue>
-                </value>
-            </processMetadataValues>
-            <processMetadataValues>
                 <name>rightHandSideType</name>
                 <value>
                     <stringValue>Reference</stringValue>
@@ -263,12 +397,6 @@ OR(ISNEW(), ISCHANGED({!myVariable_current.Salesperson__c} ))</expression>
                 </value>
             </processMetadataValues>
             <processMetadataValues>
-                <name>leftHandSideReferenceTo</name>
-                <value>
-                    <stringValue/>
-                </value>
-            </processMetadataValues>
-            <processMetadataValues>
                 <name>rightHandSideType</name>
                 <value>
                     <stringValue>Picklist</stringValue>
@@ -277,6 +405,42 @@ OR(ISNEW(), ISCHANGED({!myVariable_current.Salesperson__c} ))</expression>
             <field>Priority</field>
             <value>
                 <stringValue>High</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <processMetadataValues>
+                <name>dataType</name>
+                <value>
+                    <stringValue>ID</stringValue>
+                </value>
+            </processMetadataValues>
+            <processMetadataValues>
+                <name>isRequired</name>
+                <value>
+                    <booleanValue>false</booleanValue>
+                </value>
+            </processMetadataValues>
+            <processMetadataValues>
+                <name>leftHandSideLabel</name>
+                <value>
+                    <stringValue>Task Record Type ID</stringValue>
+                </value>
+            </processMetadataValues>
+            <processMetadataValues>
+                <name>leftHandSideReferenceTo</name>
+                <value>
+                    <stringValue>RecordType</stringValue>
+                </value>
+            </processMetadataValues>
+            <processMetadataValues>
+                <name>rightHandSideType</name>
+                <value>
+                    <stringValue>ID</stringValue>
+                </value>
+            </processMetadataValues>
+            <field>RecordTypeId</field>
+            <value>
+                <stringValue>0121Y000001O8VAQA0</stringValue>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -312,7 +476,7 @@ OR(ISNEW(), ISCHANGED({!myVariable_current.Salesperson__c} ))</expression>
             </processMetadataValues>
             <field>ReminderDateTime</field>
             <value>
-                <elementReference>formula_3_myRule_1_A1_7315005458</elementReference>
+                <elementReference>formula_4_myRule_1_A1_5802920592</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -332,12 +496,6 @@ OR(ISNEW(), ISCHANGED({!myVariable_current.Salesperson__c} ))</expression>
                 <name>leftHandSideLabel</name>
                 <value>
                     <stringValue>Status</stringValue>
-                </value>
-            </processMetadataValues>
-            <processMetadataValues>
-                <name>leftHandSideReferenceTo</name>
-                <value>
-                    <stringValue/>
                 </value>
             </processMetadataValues>
             <processMetadataValues>
@@ -384,7 +542,7 @@ OR(ISNEW(), ISCHANGED({!myVariable_current.Salesperson__c} ))</expression>
             </processMetadataValues>
             <field>Subject</field>
             <value>
-                <stringValue>Please review this ERP for Accuracy with Boat Specialist</stringValue>
+                <stringValue>This Barrie Retail ERP is Ready for Tagging</stringValue>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -445,7 +603,7 @@ OR(ISNEW(), ISCHANGED({!myVariable_current.Salesperson__c} ))</expression>
             <processMetadataValues>
                 <name>leftHandSideReferenceTo</name>
                 <value>
-                    <stringValue>AWS_S3_Object__c;Account;Account_Number_Detail__c;AcctSeedERP__Inbound_Inventory_Movement__c;AcctSeedERP__Inventory_Balance__c;AcctSeedERP__Location__c;AcctSeedERP__Manufacturing_Inventory_Movement__c;AcctSeedERP__Material__c;AcctSeedERP__Outbound_Inventory_Movement__c;AcctSeedERP__Purchase_Order_Inventory_Movement__c;AcctSeedERP__Purchase_Order_Line__c;AcctSeedERP__Purchase_Order__c;AcctSeedERP__Sales_Order_Inventory_Movement__c;AcctSeedERP__Sales_Order_Line__c;AcctSeedERP__Sales_Order__c;AcctSeedERP__Shipment_Line__c;AcctSeedERP__Shipment__c;AcctSeedERP__Warehouse__c;AcctSeed__AP_Credit_Memo__c;AcctSeed__AP_Disbursement__c;AcctSeed__Account_Payable_Line__c;AcctSeed__Account_Payable__c;AcctSeed__Accounting_Period__c;AcctSeed__Accounting_Variable__c;AcctSeed__Bank_Adjustment__c;AcctSeed__Bank_Deposit__c;AcctSeed__Bank_Reconciliation2__c;AcctSeed__Bank_Reconciliation_Line2__c;AcctSeed__Bank_Reconciliation__c;AcctSeed__Billing_Cash_Receipt__c;AcctSeed__Billing_Credit_Memo__c;AcctSeed__Billing_Format__c;AcctSeed__Billing_Line__c;AcctSeed__Billing_Rates__c;AcctSeed__Billing__c;AcctSeed__Cash_Disbursement_Batch__c;AcctSeed__Cash_Disbursement__c;AcctSeed__Cash_Receipt__c;AcctSeed__Cost_Rates__c;AcctSeed__Expense_Line__c;AcctSeed__Expense_Report__c;AcctSeed__Financial_Cube__c;AcctSeed__Fixed_Asset__c;AcctSeed__GL_Account__c;AcctSeed__Journal_Entry_Line__c;AcctSeed__Journal_Entry__c;AcctSeed__Ledger__c;AcctSeed__Product_Part__c;AcctSeed__Project_Task__c;AcctSeed__Project__c;AcctSeed__Recurring_Account_Payable_Line__c;AcctSeed__Recurring_Account_Payable__c;AcctSeed__Recurring_Billing_Line__c;AcctSeed__Recurring_Billing__c;AcctSeed__Recurring_Journal_Entry_Line__c;AcctSeed__Recurring_Journal_Entry__c;AcctSeed__Scheduled_Revenue_Expense__c;AcctSeed__Time_Card_Accounting_Period__c;AcctSeed__Time_Card_Day__c;AcctSeed__Time_Card_Line__c;AcctSeed__Time_Card_Period__c;AcctSeed__Time_Card__c;Asset;AssetRelationship;Campaign;Case;ChannelProgram;ChannelProgramLevel;CommSubscriptionConsent;ContactRequest;Contract;ContractLineItem;Dealer_Financing_Request__c;Dealer_Order_Line__c;Dealer_Order__c;Employee_Wage_Rate__c;Employee__c;Entitlement;Financing_Amount_Used__c;Financing_Company__c;Freight_Charges__c;Fundraiser__c;GMBLASERP__Inventory_Adjustment__c;GMBLASERP__Inventory_Transfer__c;GMBLASERP__Serial_Number__c;GetFeedback_Survey_Response__c;Legend_Accounting__c;Legend_Production_Home__c;Legend_Sales_Home__c;ListEmail;LiveAgentSession;LiveChatTranscript;Lot_Exchange__c;Opportunity;PartnerFundAllocation;PartnerFundClaim;PartnerFundRequest;PartnerMarketingBudget;PartyConsent;Performance_Tracker__c;Prepaid_Service_Redeemed__c;Prepaid_Service__c;Product2;Project_Labor_Rate__c;Prop_Chart__c;Quote;Rigger_Job__c;ServiceContract;Solution;System_Issue__c;Technican__c;Time_Card_Entry__c;Truck_Destination__c;WorkOrder;WorkOrderLineItem;Yard_Location__c;et4ae5__Triggered_Send_Execution__c</stringValue>
+                    <stringValue>AWS_S3_Object__c;Account;Account_Number_Detail__c;AcctSeedERP__Inbound_Inventory_Movement__c;AcctSeedERP__Inventory_Balance__c;AcctSeedERP__Location__c;AcctSeedERP__Manufacturing_Inventory_Movement__c;AcctSeedERP__Material__c;AcctSeedERP__Outbound_Inventory_Movement__c;AcctSeedERP__Purchase_Order_Inventory_Movement__c;AcctSeedERP__Purchase_Order_Line__c;AcctSeedERP__Purchase_Order__c;AcctSeedERP__Sales_Order_Inventory_Movement__c;AcctSeedERP__Sales_Order_Line__c;AcctSeedERP__Sales_Order__c;AcctSeedERP__Shipment_Line__c;AcctSeedERP__Shipment__c;AcctSeedERP__Warehouse__c;AcctSeed__AP_Credit_Memo__c;AcctSeed__AP_Disbursement__c;AcctSeed__Account_Payable_Line__c;AcctSeed__Account_Payable__c;AcctSeed__Accounting_Period__c;AcctSeed__Accounting_Variable__c;AcctSeed__Bank_Adjustment__c;AcctSeed__Bank_Deposit__c;AcctSeed__Bank_Reconciliation2__c;AcctSeed__Bank_Reconciliation_Line2__c;AcctSeed__Bank_Reconciliation__c;AcctSeed__Bank_Transaction__c;AcctSeed__Billing_Cash_Receipt__c;AcctSeed__Billing_Credit_Memo__c;AcctSeed__Billing_Format__c;AcctSeed__Billing_Line__c;AcctSeed__Billing_Rates__c;AcctSeed__Billing__c;AcctSeed__Cash_Disbursement_Batch__c;AcctSeed__Cash_Disbursement__c;AcctSeed__Cash_Receipt__c;AcctSeed__Cost_Rates__c;AcctSeed__Expense_Line__c;AcctSeed__Expense_Report__c;AcctSeed__Financial_Cube__c;AcctSeed__Fixed_Asset__c;AcctSeed__GL_Account__c;AcctSeed__Journal_Entry_Line__c;AcctSeed__Journal_Entry__c;AcctSeed__Ledger__c;AcctSeed__Product_Part__c;AcctSeed__Project_Task__c;AcctSeed__Project__c;AcctSeed__Recurring_Account_Payable_Line__c;AcctSeed__Recurring_Account_Payable__c;AcctSeed__Recurring_Billing_Line__c;AcctSeed__Recurring_Billing__c;AcctSeed__Recurring_Journal_Entry_Line__c;AcctSeed__Recurring_Journal_Entry__c;AcctSeed__Scheduled_Revenue_Expense__c;AcctSeed__Tax_Group__c;AcctSeed__Tax_Rate__c;AcctSeed__Time_Card_Accounting_Period__c;AcctSeed__Time_Card_Day__c;AcctSeed__Time_Card_Line__c;AcctSeed__Time_Card_Period__c;AcctSeed__Time_Card__c;Asset;AssetRelationship;Campaign;Case;ChannelProgram;ChannelProgramLevel;CommSubscriptionConsent;CommissionLineItem2__c;CommissionPayment2__c;CommissionRecord2__c;ContactRequest;Contract;ContractLineItem;Dealer_Financing_Request__c;Dealer_Order_Line__c;Dealer_Order__c;DelegatedAccount;Employee_Wage_Rate__c;Employee__c;Entitlement;Financing_Amount_Used__c;Financing_Company__c;Freight_Charges__c;Fundraiser__c;GMBLASERP__Inventory_Adjustment__c;GMBLASERP__Inventory_Transfer__c;GMBLASERP__Serial_Number__c;GetFeedback_Survey_Response__c;Legend_Accounting__c;Legend_Inspection__c;Legend_Production_Home__c;Legend_Sales_Home__c;ListEmail;LiveAgentSession;LiveChatTranscript;Location;Lot_Exchange__c;Opportunity;PartnerFundAllocation;PartnerFundClaim;PartnerFundRequest;PartnerMarketingBudget;PartyConsent;Performance_Tracker__c;Prepaid_Service_Redeemed__c;Prepaid_Service__c;Product2;Project_Labor_Rate__c;Prop_Chart__c;Quote;Rigger_Job__c;ServiceContract;ServiceResource;Solution;System_Issue__c;Technican__c;Time_Card_Entry__c;Truck_Destination__c;WorkOrder;WorkOrderLineItem;Yard_Location__c;et4ae5__Triggered_Send_Execution__c</stringValue>
                 </value>
             </processMetadataValues>
             <processMetadataValues>
@@ -461,8 +619,8 @@ OR(ISNEW(), ISCHANGED({!myVariable_current.Salesperson__c} ))</expression>
         </inputAssignments>
         <object>Task</object>
     </recordCreates>
-    <startElementReference>myDecision</startElementReference>
-    <status>Obsolete</status>
+    <startElementReference>isChangedDecision2_myRule_1_Stage_c</startElementReference>
+    <status>Active</status>
     <variables>
         <name>myVariable_current</name>
         <dataType>SObject</dataType>
