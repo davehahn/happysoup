@@ -62,7 +62,7 @@ public with sharing class Quote_TriggerHandler {
     Map<Id, Quote> changed = new Map<Id, Quote>();
     for( Quote q : listNew )
     {
-      if( q.IsSyncing != oldMap.get( q.Id ).IsSyncing )
+      if( q.IsSyncing && q.IsSyncing != oldMap.get( q.Id ).IsSyncing )
       {
         changed.put( q.Id, q );
       }

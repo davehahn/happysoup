@@ -2,22 +2,6 @@ public with sharing class Dealer_Order_Line_Ext {
 
   public class DealerOrderLineException extends Exception {}
 
-  public static Boolean disableTrigger {
-    get{
-      if(disableTrigger == null) return false;
-      else return disableTrigger;
-    }
-    set;
-  }
-
-  public static Boolean disablePartnerProgram {
-    get{
-      if(disablePartnerProgram == null) return false;
-      else return disablePartnerProgram;
-    }
-    set;
-  }
-
   public final Dealer_Order_Line__c dealerOrderLine { get; private set; }
   public final BoatBuilder boatBuilder { get; private set; }
 
@@ -102,121 +86,6 @@ public with sharing class Dealer_Order_Line_Ext {
 
   }
 
-  public static void triggerHandler(
-                                    Map<Id, Dealer_Order_Line__c> oldMap,
-                                    Map<Id, Dealer_Order_Line__c> newMap,
-                                    List<Dealer_Order_Line__c> listNew,
-                                    Boolean boolIsBefore,
-                                    Boolean boolIsInsert,
-                                    Boolean boolIsUpdate,
-                                    Boolean boolIsDelete
-                                   )
-  {
-    if( oldMap == null ) oldMap = new Map<Id, Dealer_Order_Line__c>();
-    if( newMap == null ) newMap = new Map<Id, Dealer_Order_Line__c>();
-    if( listNew == null ) listNew = new List<Dealer_Order_Line__c>();
-
-    if( boolIsBefore )
-    /* &&&&&&&   BEFORE    &&&&&&& */
-    {
-      if( boolIsInsert )
-      {
-        setLineTotal( listNew );
-      }
-      if( boolIsUpdate )
-      {
-         setLineTotal( listNew );
-      }
-      if( boolIsDelete )
-      {
-        //for( Dealer_Order_Line__c dol : oldMap.values() )
-        //{
-        //  if( dol.ERP_Order__c != null )
-        //  {
-        //    dol.addError('You can not delete a Dealer Order Line that has an associated ERP Order');
-        //  }
-        //}
-      }
-    }
-    else
-    {
-    /* &&&&&&&   AFTER   &&&&&&& */
-      if( boolIsInsert )
-      {
-        handlePartnerProgram( listNew );
-      }
-      if( boolIsUpdate )
-      {
-        System.debug( 'Dealer Order Line after update');
-        handlePartnerProgram( listNew );
-        /*
-          Implemented for 2020 season but no longer require for 2021 season
-          Promotion no longer available so Mercury no longer needs to be
-          notified of the serial numbers
-        */
-        //notifyMercuryIfSerialSet( listNew, oldMap );
-      }
-      if( boolIsDelete )
-      {
-        Set<Id> erpIds = new Set<Id>();
-        Set<Id> transferIds = new Set<Id>();
-        Set<Id> motorRequestIds = new Set<Id>();
-        Set<Id> dealerOrderIds = new Set<Id>();
-
-        for( Dealer_Order_Line__c dol : oldMap.values() )
-        {
-          if( dol.ERP_Order__c != null )
-          {
-            erpIds.add(dol.ERP_Order__c);
-            dealerOrderIds.add( dol.Dealer_Order__c );
-          }
-          if( dol.Legend_Transfer_Request__c != null )
-            transferIds.add( dol.Legend_Transfer_Request__c );
-          if( dol.Dealer_Motor_Request__c != null )
-            motorRequestIds.add( dol.Dealer_Motor_Request__c );
-        }
-        if( erpIds.size() > 0 )
-        {
-          TriggerHandler.bypass('DealerOrder_TriggerHandler');
-          deleteErps(erpIds);
-          TriggerHandler.clearBypass('DealerOrder_TriggerHandler');
-//          PartnerProgram_Service ppService = new PartnerProgram_Service( dealerOrderIds );
-//          ppService.checkAndApply();
-        }
-        if( transferIds.size() > 0 )
-          deleteLegendTransferRequests( transferIds );
-        if( motorRequestIds.size() > 0 )
-          deleteDealerMotorRequests( motorRequestIds );
-        handlePartnerProgram( oldMap.values() );
-      }
-    }
-  }
-
-  private static void handlePartnerProgram( List<Dealer_Order_Line__c> listNew )
-  {
-    if( disablePartnerProgram ) return;
-
-    Set<Id> dealerOrderIds = new Set<Id>();
-    for( Dealer_Order_Line__c dol : listNew )
-    {
-      if( dol.ERP_Order__c != null && !dol.Is_For_Factory_Store__c )
-      {
-        dealerOrderIds.add( dol.Dealer_Order__c );
-      }
-    }
-    applyPartnerProgram( dealerOrderIds );
-  }
-
-  @Future
-  public static void applyPartnerProgram( Set<Id> dealerOrderIds )
-  {
-    Map<Id, Dealer_Order__c> dealerOrders = new Map<Id, Dealer_Order__c>(
-      [SELECT Id FROM Dealer_Order__c WHERE Id IN :dealerOrderIds AND Is_Booking_Order__c = true]
-    );
-    PartnerProgram_Service ppService = new PartnerProgram_Service( dealerOrders.keySet() );
-    ppService.checkAndApply();
-  }
-
   public class DealerOrderLine_SetSerial_Queue implements Queueable {
     public final Set<Id> materialIds;
 
@@ -249,124 +118,13 @@ public with sharing class Dealer_Order_Line_Ext {
           Boat_Serial_Number__c = erpId_Material_map.get( dol.ERP_Order__c ).GMBLASERP__Serial_Number__c
         ));
       }
+      TriggerHandler.bypass('DealerOrderLine_TriggerHandler');
       update dols;
+      TriggerHandler.clearBypass('DealerOrderLine_TriggerHandler');
     }
   }
 
-//  private static void notifyMercuryIfSerialSet( List<Dealer_Order_Line__c> listNew, Map<Id, Dealer_Order_Line__c> oldMap )
-//  {
-//    Set<Id> toSendtoMercuryId = new Set<Id>();
-//    for( Dealer_Order_Line__c dol : listNew )
-//    {
-//      if( dol.Dealer_Motor_Request__c != null &&
-//        !dol.Serial_Number_Sent_to_Mercury__c &&
-//        dol.Boat_Serial_Number__c != null &&
-//        oldMap.get( dol.Id ).Boat_Serial_Number__c != dol.Boat_Serial_Number__c ) {
-//        toSendtoMercuryId.add(dol.Id);
-//      }
-//    }
-//    System.debug( toSendtoMercuryId );
-//    if( toSendtoMercuryId.size() > 0 )
-//    {
-//
-//      String[] ccAddrs = new List<String>
-//      {
-//        'dealercare@legendboats.com'
-//      };
-//      String templateId = Legend_Settings__c.getOrgDefaults().Mercury_Motor_Request_Serial_Number_Emai__c;
-//      Id contactId = Legend_Settings__c.getOrgDefaults().Mercury_Contact_Id__c;
-//      Id orgEmailId;
-//      try
-//      {
-//        orgEmailId = [SELECT Id FROM OrgWideEmailAddress WHERE DisplayName = 'Dealer Care' LIMIT 1].Id;
-//      }
-//      catch (Exception e)
-//      {
-//      }
-//      List<Dealer_Order_Line__c> dols = new List<Dealer_Order_Line__c>();
-//      List<Messaging.SingleEmailMessage> msgList = new List<Messaging.SingleEmailMessage>();
-//      for (Id dolId : toSendtoMercuryId)
-//      {
-//        dols.add(new Dealer_Order_Line__c(
-//          Id = dolId,
-//          Serial_Number_Sent_to_Mercury__c = true,
-//          Serial_Number_Sent_On__c = Date.today()
-//        ));
-//        Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
-//        if (orgEmailId != null)
-//        {
-//          mail.setOrgWideEmailAddressId(orgEmailId);
-//        }
-//        mail.setTargetObjectId(contactId);
-//        mail.setWhatId(dolId);
-//        mail.setTemplateId(templateId);
-//        if (!LGND_Constants.runningInASandbox)
-//        {
-//          mail.setCcAddresses(ccAddrs);
-//        }
-//        mail.setSaveAsActivity(true);
-//        msgList.add(mail);
-//      }
-//      Messaging.sendEmail(msgList);
-//      Boolean orig = Dealer_Order_Line_Ext.disableTrigger;
-//      Dealer_Order_Line_Ext.disableTrigger = true;
-//      update dols;
-//      Dealer_Order_Line_Ext.disableTrigger = orig;
-//    }
-//  }
-
-  private static void setLineTotal( List<Dealer_Order_Line__c> lines )
-  {
-    System.debug('DOL.setLineTotal');
-    for( Dealer_Order_Line__c dol : lines )
-    {
-      dol.Line_Total__c = dol.Line_Total_Pre_Tax__c;//dol.Line_Total_Calc__c;
-      dol.Line_Total_No_Fees_or_Discounts__c = dol.Line_Total_NoFeesOrDiscountsCalc__c;
-      System.debug( dol.Product_Name__c);
-      System.debug( dol.Line_Total_NoFeesOrDiscountsCalc__c );
-      System.debug( dol.Line_Total_No_Fees_or_Discounts__c );
-    }
-  }
-
-  public static void deleteErps( Set<Id> erpIds )
-  {
-      delete [SELECT Id FROM AcctSeed__Project_Task__c WHERE AcctSeed__Project__c IN:erpIds];
-      delete [SELECT Id FROM AcctSeed__Project__c WHERE Id IN :erpIds];
-  }
-
-  private static void deleteLegendTransferRequests( Set<Id> transferIds )
-  {
-    Legend_Transfer_Request__c[] ltrs = [SELECT Id
-                                         FROM Legend_Transfer_Request__c
-                                         WHERE Id IN :transferIds];
-    delete ltrs;
-  }
-
-  private static void deleteDealerMotorRequests( Set<Id> motorRequestIds )
-  {
-    Dealer_Motor_Request__c[] dmrs = [SELECT Id
-                                      FROM Dealer_Motor_Request__c
-                                      WHERE Id IN :motorRequestIds];
-    delete dmrs;
-  }
-
-  //private static void setOpportunityStage( List<Dealer_Order_Line__c> dols )
-  //{
-  //  Set<Id> oppIds = new Set<Id>();
-  //  for( Dealer_Order_Line__c dol : dols )
-  //  {
-  //    if( dol.Opportunity__c != null && dol.ERP_Order__c != null )
-  //      oppIds.add( dol.Opportunity__c );
-  //  }
-  //  Opportunity[] opps = [SELECT Id, StageName FROM Opportunity WHERE Id IN :oppIds];
-  //  for( Opportunity opp : opps )
-  //  {
-  //    opp.StageName = 'Sent to ERP';
-  //  }
-  //  update opps;
-  //}
-
-public static void coverage(){
+  public static void coverage(){
     integer i;
     i=1;
     i=1;

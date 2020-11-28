@@ -25,7 +25,6 @@
       helper.getSelectOptions( component )
       .then(
         $A.getCallback( function( result ) {
-          console.log( result );
           component.set('v.selectOptions', result );
           component.set('v.opp', result.opp );
         }),
@@ -67,7 +66,6 @@
 
     handleAccountSelected: function( component, event, helper )
     {
-      console.log('accountSelected');
       var objectId = event.getParams().accountId,
           spinner = component.find('spinner');
       spinner.toggle();
@@ -75,6 +73,25 @@
       .then(
         $A.getCallback( function( result ) {
           console.log( result );
+          if( Object.keys( result ).indexOf('leadSource') >= 0 &&
+              result.leadSource !== null )
+          {
+            let opp = component.get('v.opp');
+            opp.leadSource = result.leadSource;
+            component.set('v.opp', opp);
+          }
+          if( Object.keys( result ).indexOf('leadCampaignInfluences') >= 0 &&
+              result.leadCampaignInfluences !== null &&
+              result.leadCampaignInfluences.length > 0 )
+          {
+            let options = component.get('v.selectOptions');
+            let influences = {
+              groupName: 'Lead Influences',
+              options: result.leadCampaignInfluences
+            };
+            options.campaigns.unshift( influences );
+            component.set('v.selectOptions', options );
+          }
           component.set('v.customer', result );
           component.set('v.showPersonForm', true );
           spinner.toggle();
@@ -87,7 +104,6 @@
 
     handleAccountSearchCleared: function( component )
     {
-      console.log( 'handling account search cleared event ');
       var c = {
         id: '',
         firstName: '',

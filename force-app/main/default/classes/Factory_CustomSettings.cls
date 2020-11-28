@@ -67,6 +67,11 @@ public class Factory_CustomSettings {
       {
         ups.Partner_Custom_Product__c = p.Id;
       }
+      if( p.Family == 'Labour' &&
+          p.Name == 'Partner Warranty Labour' )
+      {
+        ups.Partner_Warranty_Labour__c = p.Id;
+      }
     }
     insert ups;
 
