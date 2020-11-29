@@ -19,7 +19,7 @@ echo -e "\nforce-app/main/default/staticresources" >> .forceignore
 
 echoOut 'Pulling remote metadata...'
 
-sfdx force:source:pull -u $USER
+sfdx force:source:pull -u $USER -f
 
 rm -f .forceignore
 mv .forceignore.orig .forceignore

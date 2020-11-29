@@ -3,7 +3,7 @@
     <fullName>Deposit_Method_Required</fullName>
     <active>false</active>
     <description>If Deposit Method is require if there is a deposit amount</description>
-    <errorConditionFormula>AND( NOT( ISBLANK( Deposit__c ) ),   ISPICKVAL( Deposit_Method__c , &#39;&#39;) )</errorConditionFormula>
+    <errorConditionFormula>AND( NOT( ISBLANK( Deposit__c ) ),   ISPICKVAL( Deposit_Method__c , &apos;&apos;) )</errorConditionFormula>
     <errorDisplayField>Deposit_Method__c</errorDisplayField>
     <errorMessage>Deposit Method is Required</errorMessage>
 </ValidationRule>

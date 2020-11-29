@@ -38,6 +38,10 @@
                 <behavior>Edit</behavior>
                 <field>Delivery_Date__c</field>
             </layoutItems>
+            <layoutItems>
+                <behavior>Readonly</behavior>
+                <field>Grand_Total2__c</field>
+            </layoutItems>
         </layoutColumns>
         <layoutColumns>
             <layoutItems>
@@ -70,12 +74,12 @@
                 <field>TradeInAmount2__c</field>
             </layoutItems>
             <layoutItems>
-                <behavior>Edit</behavior>
-                <field>TradeInLien2__c</field>
-            </layoutItems>
-            <layoutItems>
                 <behavior>Readonly</behavior>
                 <field>TradeInValue2__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>TradeInLien2__c</field>
             </layoutItems>
         </layoutColumns>
         <layoutColumns>
@@ -360,7 +364,6 @@
         <excludeButtons>New</excludeButtons>
         <fields>NAME</fields>
         <fields>Serial_Number__c</fields>
-        <fields>AcctSeed__Project_Manager__c</fields>
         <fields>Cash__c</fields>
         <fields>Revenue__c</fields>
         <fields>Expense__c</fields>

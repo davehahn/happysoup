@@ -18,7 +18,7 @@ fi
 cmd=$(pwd)
 mkdir ~/$CLONEDIR
 cd ~/$CLONEDIR
-git clone $cmd .
+git clone "${cmd}" .
 
 chmod +x clean_code.sh
 ./clean_code.sh

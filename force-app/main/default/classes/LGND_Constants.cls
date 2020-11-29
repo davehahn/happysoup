@@ -105,6 +105,17 @@ public without sharing class LGND_Constants {
     private set;
   }
 
+  public static Id partnerWarrantyLabourProductId {
+    get {
+      if( partnerWarrantyLabourProductId == null )
+        partnerWarrantyLabourProductId = Utility_Products__c.getOrgDefaults().Partner_Warranty_Labour__c;
+      if( partnerWarrantyLabourProductId == null )
+        throw new LGND_Constants_Exception('Partner Custom Product is not setup.  Please contact an administrator to get this rectified');
+      return partnerWarrantyLabourProductId;
+    }
+    private set;
+  }
+
   /* ACCOUNT RECORD TYPES ++++++++++++ .. */
 
   public static Id accountRtId_Dealer {

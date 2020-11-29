@@ -27,6 +27,9 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
   orderValid=true;
   isMobile = false;
   customer={};
+  @track customerFirstName;
+  @track customerLastName;
+  creditCardError = false;
 
 
 
@@ -55,23 +58,6 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
 		},
 	];
 
-	freight = {
-		fishingBoat: {
-		  "Alberta": 1450,
-      "British Columbia": 1675,
-      "Manitoba": 825,
-      "New Brunswick": 825,
-      "Newfoundland and Labrador": 2450,
-      "Northwest Territories": 0,
-      "Nova Scotia": 825,
-      "Nunavut": 0,
-      "Ontario": 0,
-      "Prince Edward Island": 825,
-      "Quebec": 0,
-      "Saskatchewan": 975,
-      "Yukon": 0,
-  	},
- 	};
  	@track freightCharge;
 
 	premiumPackage;
@@ -90,6 +76,8 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
   @track traileringItems = [];
   @track electronicsItems = [];
   @track freightItems = [];
+  @track paymentFormErrors;
+  @track hasPaymentErrors = false;
 
   @wire(CurrentPageReference)
   setCurrentPageReference(currentPageReference) {
@@ -103,7 +91,7 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
   {
     if( data )
     {
-      console.log('FETCH BOAT DATA');
+//      console.log('FETCH BOAT DATA');
       console.log(data);
       this.boat = data;
     }
@@ -203,7 +191,7 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
 
   handlePurchasePriceChange( amount )
   {
-    console.log(`Purchase Price Changed EVENT in OrderBuilder Captured ${amount}`);
+//    console.log(`Purchase Price Changed EVENT in OrderBuilder Captured ${amount}`);
     this.purchasePrice = amount;
     this.template.querySelector('c-boat-res-finance-details').calculate();
   }
@@ -213,8 +201,21 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
     const attr = event.currentTarget.dataset.attr,
           value = event.currentTarget.value;
     this.customer[attr] = value;
+
+		var code = event.keyCode || event.which;
+		if(code !== 9){
+			this.validateField( event.currentTarget );
+		}
+
     if( attr === 'state' )
       this.handleFreight( value );
+
+    if( attr === 'firstName')
+      this.customerFirstName = value;
+
+    if( attr === 'lastName')
+			this.customerLastName = value;
+
   }
 
   handlePaymentTypeChange( paymentType )
@@ -344,7 +345,7 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
 			packItems.sort(function(a,b){
 				return b.value - a.value;
    		});
-   		console.log(packItems);
+//   		console.log(packItems);
 			return packItems;
 		}
 	}
@@ -402,54 +403,49 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
 
   submitOrder()
   {
-    console.log('submit a');
     const spinner = this.template.querySelector('c-legend-spinner');
     spinner.toggle();
-    console.log('submit b');
+
 	  this.saveCustomer()
 		.then( ( accountSaveResult ) => {
-		  console.log('submit c');
 		  this.opportunityId = accountSaveResult.opportunityId;
       this.accountId = accountSaveResult.record.Id;
-      console.log('submit d');
+			this.creditCardError = false;
 		  return this.createSquarePayment();
   	})
   	.then( ( paymentResult ) => {
-  	  console.log('submit e');
   	   return this.saveSaleItems();
     })
   	.then( ( saveSaleItemsResult ) => {
-  	  console.log('submit f');
       console.log('lineItemsResult: ', saveSaleItemsResult);
     })
   	.catch( ( error ) => {
-  	  console.log('submit g');
-			console.log('error: ', JSON.stringify(error));
+			this.displayPaymentError(error);
+			this.creditCardError = true;
    	})
    	.finally( () => {
-   	  console.log('submit h');
       spinner.toggle();
-      console.log('Everything is done, but what should happen now');
+      if(!this.creditCardError){
+      	console.log('Everything is done, but what should happen now');
+				this.displayThanks();
+      }
     });
   }
 
   saveCustomer()
   {
     const userJSON = JSON.stringify( this.customer );
-		console.log('save f');
     return createAccount({customerJSON: userJSON});
   }
 
   createSquarePayment()
   {
-    console.log('square a');
     return this.template.querySelector('c-square-payment-form')
       .doPostToSquare( this.paymentAmount, this.opportunityId );
   }
 
   saveSaleItems()
   {
-    console.log('sale a');
     const oppInfo = JSON.stringify({
       'Id': this.opportunityId,
       'AccountId': this.accountId,
@@ -459,18 +455,13 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
       'Insurance_Term__c': this.term,
       'Finance_Annual_Interest__c': this.interestRate
     });
-    console.log('sale b');
     const boatLineItem = [{
       'Product2Id': this.boat.id,
       'UnitPrice': this.boat.retailPrice,
       'Quantity': 1,
     }];
-    console.log('sale c');
     let lineItems = this.performanceItems.concat(this.traileringItems, this.electronicsItems, boatLineItem);
     lineItems = JSON.stringify(lineItems);
-    console.log('sale d');
-    console.log('oppInfo: ', oppInfo);
-    console.log('lineItems: ', lineItems);
     return saveLineItems({oppJSON: oppInfo, olisJSON: lineItems});
   }
 
@@ -516,9 +507,7 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
   }
 
 	handleFreight( province ){
-		console.log('update freight info!');
-		let charge = this.freight.fishingBoat[province];
-
+		let charge = this.boat.additionalFees[province][0]['retailPrice'];
 		let purchasePrice = {
 			'sku': 'freight',
 			'price': charge,
@@ -554,6 +543,145 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
 													minimumFractionDigits: 0
 													}).format(charge);
  	  this.freightCharge = '+ ' + updatedFreight + ' Freight Charge';
+  }
+
+	triggerValidation( event ){
+		this.validateField(event.currentTarget);
+ 	}
+
+  validateField( field ){
+
+    const attr = field.dataset.attr,
+					value = field.value,
+					feedback = field.parentElement.querySelector('.feedback'),
+					lang = 'en';
+
+		if( attr === 'firstName' || attr === 'lastName'){
+			if(value.length === 0){
+				if(field.hasAttribute('required')){
+					let errmsg = (lang === 'en') ? 'This field cannot be empty' : 'Ce champ ne peut pas être vide';
+					feedback.classList.remove('clean');
+					feedback.classList.add('error');
+					feedback.innerHTML = errmsg;
+					field.classList.remove('clean');
+					field.classList.add('error');
+   	 		}
+   		} else {
+   		  const pattern = /^[a-zA-ZàâçéèêëîïôûùüÿæœÙÛÜŸÀÂÆÇÉÈÊËÏÎÔŒ  .'-]+$/i;
+				if(!(pattern.test(value))){
+					let errmsg = (lang === 'en') ? 'This field contains invalid characters' : 'Ce champ contient des textes invalides';
+					feedback.classList.remove('clean');
+					feedback.classList.add('error');
+					feedback.innerHTML = errmsg;
+					field.classList.remove('clean');
+					field.classList.add('error');
+				}
+				else{
+					feedback.classList.remove('error');
+					feedback.classList.add('clean');
+					feedback.innerHTML = '';
+					field.classList.remove('error');
+					field.classList.add('clean');
+				}
+     	}
+  	}
+
+  	if( attr === 'email' ){
+  		if(value.length === 0){
+				if(field.hasAttribute('required')){
+					let errmsg = (lang === 'en') ? 'This field cannot be empty' : 'Ce champ ne peut pas être vide';
+					feedback.classList.remove('clean');
+					feedback.classList.add('error');
+					feedback.innerHTML = errmsg;
+					field.classList.remove('clean');
+					field.classList.add('error');
+				}
+			} else {
+				const pattern = /^\w+([\.\-_]?\w+)*@\w+([\.\-_]?\w+)*(\.\w{2,5})+$/;
+				if(!(pattern.test(value))){
+					let errmsg = (lang === 'en') ? 'This field is in the wrong format. Try using the format <em>email@address.com</em> instead.' : 'Ce champ est en mauvais format.  Essayez d\'utiliser ce format à la place <em>email@address.com</em> ';
+					feedback.classList.remove('clean');
+					feedback.classList.add('error');
+					feedback.innerHTML = errmsg;
+					field.classList.remove('clean');
+					field.classList.add('error');
+				}
+				else{
+					feedback.classList.remove('error');
+					feedback.classList.add('clean');
+					feedback.innerHTML = '';
+					field.classList.remove('error');
+					field.classList.add('clean');
+				}
+			}
+  	}
+
+  	if( attr === 'phone'){
+			if(value.length === 0){
+				if(field.hasAttribute('required')){
+					let errmsg = (lang === 'en') ? 'This field cannot be empty' : 'Ce champ ne peut pas être vide';
+					feedback.classList.remove('clean');
+					feedback.classList.add('error');
+					feedback.innerHTML = errmsg;
+					field.classList.remove('clean');
+					field.classList.add('error');
+				}
+			} else {
+				const pattern = /^(?:\(?)(\d{3})(?:\)?)(\s|\.|-)?(\d{3})(\s|\.|-)?(\d{4})$/;
+				if(!(pattern.test(value))){
+					let errmsg = (lang === 'en') ? 'This field is in the wrong format. Try using the format <em>123-456-7890</em> instead' : 'Ce champ est en mauvais format.  Essayez d\'utiliser ce format à la place  <em>123-456-7890</em>';
+					feedback.classList.remove('clean');
+					feedback.classList.add('error');
+					feedback.innerHTML = errmsg;
+					field.classList.remove('clean');
+					field.classList.add('error');
+				}
+				else{
+					feedback.classList.remove('error');
+					feedback.classList.add('clean');
+					feedback.innerHTML = '';
+					field.classList.remove('error');
+					field.classList.add('clean');
+				}
+			}
+  	}
+
+  	if( attr === 'state' ){
+  		if(value.length === 0){
+				if(field.hasAttribute('required')){
+					let errmsg = (lang === 'en') ? 'This field cannot be empty' : 'Ce champ ne peut pas être vide';
+					feedback.classList.remove('clean');
+					feedback.classList.add('error');
+					feedback.innerHTML = errmsg;
+					field.classList.remove('clean');
+					field.classList.add('error');
+				}
+			}
+  	}
+  }
+
+	displayPaymentError(error){
+		console.log('PAYMENT ERROR!!');
+		this.hasPaymentErrors = true;
+		console.log('error: ', error);
+		if(typeof error === 'object'){
+			console.log('errors: ', JSON.parse(JSON.stringify(error)));
+			error.forEach((err) => {
+				this.paymentFormErrors = err.message;
+			});
+		}
+	}
+
+  displayThanks(){
+    const thanksShow = this.template.querySelectorAll('[data-thanks="show"]');
+    const thanksHide = this.template.querySelectorAll('[data-thanks="hide"]');
+
+    thanksShow.forEach((element) => {
+      element.style.display = 'flex';
+    });
+    thanksHide.forEach((element) => {
+      element.style.display = 'none';
+    });
   }
 
 }

@@ -21,7 +21,7 @@
           </h1>
         </div>
 
-        <nav class="config-nav">
+        <nav class="config-nav" data-thanks="hide">
           <h2 class="vh">Main Navigation</h2>
           <ol class="config-nav-list">
             <template for:each={processPages} for:item="page">
@@ -38,7 +38,7 @@
 
       </header>
 
-      <div class="config-content" data-current={currentPage}>
+      <div class="config-content" data-current={currentPage} data-thanks="hide">
 
         <!-- PERFORMANCE -->
         <section class="config-page config-page_selected" data-page="performance">
@@ -67,7 +67,7 @@
             <c-cust-comm-order-options options-title="Select Your Trailer" selections="one" selection-scope="local" is-init="true" options={traileringOptions} parent-product-sku={boat.id} show-option-price="true" boat-retail-price={boat.retailPrice} layout-type="alt-swatch" grouping-name="trailer_options" page='trailering'></c-cust-comm-order-options>
             <!--<c-cust-comm-order-options selections="one" selection-scope="global" options={boat.trailerUpgrades} show-option-price="true" boat-retail-price={boat.retailPrice} page='trailering'></c-cust-comm-order-options>-->
             <c-cust-comm-order-options options-title="More Trailering Options" selections="multiple" selection-scope="local" options={boat.optionalProducts.canvas} parent-product-sku={boat.id} show-option-price="true" boat-retail-price={boat.retailPrice} page='trailering'></c-cust-comm-order-options>
-            <c-cust-comm-order-options selections="multiple" selection-scope="local" options={boat.standardTrailer.optionalProducts.trailerAccessories} parent-product-sku={boat.id} show-option-price="true" boat-retail-price={boat.retailPrice} page='trailering'></c-cust-comm-order-options>
+            <c-cust-comm-order-options selections="multiple" selection-scope="local" options={traileringOptions} sub-section="optionalProducts.trailerAccessories" addons="true" show-option-price="true" boat-retail-price={boat.retailPrice} page='trailering' parent-page="trailer_options"></c-cust-comm-order-options>
             <c-cust-comm-order-options selections="multiple" selection-scope="local" options={boat.standardMotor} sub-section="optionalProducts.trailerAccessories" addons="true" show-option-price="true" boat-retail-price={boat.retailPrice} page='trailering' parent-page='performance'></c-cust-comm-order-options>
             <c-cust-comm-order-options selections="multiple" selection-scope="local" options={boat.motorUpgrades} sub-section="optionalProducts.trailerAccessories" addons="true" show-option-price="true" boat-retail-price={boat.retailPrice} page='trailering' parent-page='performance'></c-cust-comm-order-options>
           </div>
@@ -111,7 +111,12 @@
                     <input label="First Name"
                            data-attr="firstName"
                            type="text"
-                           onchange={handleCustomerData}>
+                           onkeyup={handleCustomerData}
+                           onfocusout={triggerValidation}
+                           required aria-required="true"
+                           aria-describedby="FirstName_feedback"
+                           class="assertive valName">
+                    <span class="feedback" id="FirstName_feedback" aria-live="assertive"></span>
                   </div>
                 </lightning-layout-item>
 
@@ -125,7 +130,12 @@
                     <input label="Last Name"
                            data-attr="lastName"
                            type="text"
-                           onchange={handleCustomerData}>
+                           onkeyup={handleCustomerData}
+                           onfocusout={triggerValidation}
+                           required aria-required="true"
+                           aria-describedby="LastName_feedback"
+                           class="assertive valName">
+                    <span class="feedback" id="LastName_feedback" aria-live="polite"></span>
                   </div>
                 </lightning-layout-item>
 
@@ -138,8 +148,13 @@
                     <label>Email Address</label>
                     <input label="Email Address"
                            data-attr="email"
-                           type="text"
-                           onchange={handleCustomerData}>
+                           type="email"
+                           onkeyup={handleCustomerData}
+                           onfocusout={triggerValidation}
+                           required aria-required="true"
+                           aria-describedby="email_feedback"
+                           class="assertive valEmail">
+                    <span class="feedback" id="email_feedback" aria-live="assertive"></span>
                   </div>
                 </lightning-layout-item>
 
@@ -152,8 +167,14 @@
                     <label>Phone Number</label>
                     <input label="Phone Number"
                            data-attr="phone"
-                           type="text"
-                           onchange={handleCustomerData}>
+                           type="tel"
+                           onkeyup={handleCustomerData}
+                           onfocusout={triggerValidation}
+                           pattern="(?:\(?)(\d{3})(?:\)?)(\s|\.|-)?(\d{3})(\s|\.|-)?(\d{4})"
+                           required aria-require="true"
+                           aria-describedby="PhoneNumber_feedback"
+                           class="polite valPhone">
+                    <span class="feedback" id="PhoneNumber_feedback" aria-live="polite"></span>
                   </div>
                 </lightning-layout-item>
 
@@ -167,7 +188,11 @@
                     <span></span>
                     <select label="Province or Territory"
                             data-attr="state"
-                            onchange={handleCustomerData}>
+                            onchange={handleCustomerData}
+                            onfocusout={triggerValidation}
+                            required aria-require="true"
+                            aria-describedby="Province_feedback"
+                            class="polite">
                       <option value=""> -- Select One -- </option>
                       <option value="Alberta">Alberta</option>
                       <option value="British Columbia">British Columbia</option>
@@ -183,6 +208,7 @@
                       <option value="Saskatchewan">Saskatchewan</option>
                       <option value="Yukon">Yukon</option>
                     </select>
+                    <span class="feedback" id="Province_feedback" aria-live="polite"></span>
                   </div>
                 </lightning-layout-item>
 
@@ -204,7 +230,7 @@
               <div class="payment-disclaimer">
                 Due today to complete your order:
                 <lightning-formatted-number value={paymentAmount}
-                                            format-style="percent"
+                                            format-style="currency"
                                             maximum-fraction-digits="2"></lightning-formatted-number>
                 .
               </div>
@@ -212,13 +238,16 @@
 
             <div class="payment-form">
               <h3 class="form-header">Payment Card Details</h3>
+              <template if:true={hasPaymentErrors}>
+                <div class="payment-form-errors">{paymentFormErrors}</div>
+              </template>
               <c-square-payment-form apex-page-name="/apex/Square_PaymentForm_CustomerCommunity"
                                      is-responsive="true"
                                      width-break-point="1401"
                                      small-height="184"
                                      large-height="368"></c-square-payment-form>
               <div class="payment-disclaimer">
-                I allow Legend Boats to save my payment instrument information for future transactions pursuant to the <a href="#" target="_blank">Payment Terms for Services</a>
+                By submitting this order form, I allow Legend Boats to save my payment instrument information for future transactions pursuant to the <a href="#" target="_blank">Payment Terms for Services</a>
               </div>
             </div>
 
@@ -228,7 +257,7 @@
             <c-cust-comm-order-boat-image size="small" page='summary' marketing-content= {boat.marketingContent}></c-cust-comm-order-boat-image>
             <h2 class="right_heading slds-text-heading_medium">Your {boat.name}</h2>
             <p class="right_delivery">Estimated Deliver: {shippingTiming}</p>
-            <c-cust-comm-order-summary></c-cust-comm-order-summary>
+            <c-cust-comm-order-summary usage="standard"></c-cust-comm-order-summary>
             <template if:true={purchasePrice}>
               <c-boat-res-finance-details payment-type={paymentType}
                                           amount={purchasePrice}
@@ -245,8 +274,40 @@
 
       </div>
 
+      <section class="config-thanks" data-thanks="show">
+        <header>
+          <h2>Thank you!</h2>
+          <p>Your order has been submitted.</p>
+        </header>
+        <div class="thanks_body">
+          <aside class="thanks_model">
+            <c-cust-comm-order-boat-image size="small" page='summary' marketing-content= {boat.marketingContent}></c-cust-comm-order-boat-image>
+          </aside>
+          <section class="thanks_overview">
+            <h3>{boat.name}</h3>
+            <ul class="thanks_details">
+              <li class="thanks_detail thanks_detail--horizontal">
+                <strong>Confirmation #:</strong> <span>1234XYZ</span>
+              </li>
+              <li class="thanks_detail thanks_detail--group">
+                <c-cust-comm-order-summary usage="thanks"></c-cust-comm-order-summary>
+              </li>
+              <li class="thanks_detail thanks_detail--horizontal">
+                <strong>Payment:</strong> <span><lightning-formatted-number value={paymentAmount} format-style="percent" maximum-fraction-digits="2"></lightning-formatted-number></span>
+              </li>
+              <li class="thanks_detail thanks_detail--horizontal">
+                <strong>Estimated Deliver:</strong> <span>{shippingTiming}</span>
+              </li>
+              <li class="thanks_detail thanks_detail--horizontal">
+                <strong>Billed To:</strong> <span>{customerFirstName} {customerLastName}</span>
+              </li>
+            </ul>
+          </section>
+        </div>
+      </section>
+
       <div class="config-footer">
-        <div class="config-footer_content">
+        <div class="config-footer_content" data-thanks="hide">
 
           <div class="config-footer_item finance-type">
             <div class="financetype-selector_container">
@@ -292,7 +353,7 @@
 
           <div class="config-footer_item">
             <div class="config-footer_delivery">
-              <div>Estimated Deliver: 5-8 weeks</div>
+              <div>Estimated Delivery: 5-8 weeks</div>
             </div>
           </div>
 
@@ -442,10 +503,6 @@
         </div>
       </aside>
     </div>
-
-    <section class="thankyou" id="thanks">
-      Thank you page!
-    </section>
 
   </main>
 </template>

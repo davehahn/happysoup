@@ -69,7 +69,7 @@ public without sharing class DealerOrder_TriggerHandler extends TriggerHandler
         {
           erpIds.add(dol.ERP_Order__c);
         }
-        Dealer_Order_Line_Ext.deleteERPs(erpIds);
+        DealerOrderLine_TriggerHandler.deleteERPs(erpIds);
       }
     }
   }

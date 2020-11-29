@@ -14,9 +14,12 @@ public virtual class Customer
   public String country { get; set; }
   public String countryCode { get; set; }
   public String postalCode { get; set; }
+  public String leadSource { get; set; }
+  public List<Map<String, String>> leadCampaignInfluences { get; set; }
 
   private Account theAccount;
   private Lead theLead;
+  private Boolean createOpportunityOnLeadConvert = false;
 
   public Customer()
   {
@@ -52,6 +55,12 @@ public virtual class Customer
     {
       fixCountry('country');
     }
+  }
+
+  public Customer setCreateOpportunityOnLeadConvert( boolean shouldConvert )
+  {
+    this.createOpportunityOnLeadConvert = shouldConvert;
+    return this;
   }
 
   private void fixState( String missingAttr )
@@ -143,6 +152,7 @@ public virtual class Customer
       this.animals = acct.Animals__c == null ? null : acct.Animals__c.split(';');
       this.teams = acct.Teams__c;
       this.wowNotes = acct.WOW_Notes__pc;
+      this.leadCampaignInfluences = new List<Map<String, String>>();
     }
 
     public Person( Lead l )
@@ -151,6 +161,7 @@ public virtual class Customer
       this.id = l.Id;
       this.firstName = l.FirstName;
       this.lastName = l.LastName;
+      this.leadSource = l.LeadSource;
       this.email = l.Email;
       this.phone = l.Phone;
       this.mobilePhone = l.MobilePhone;
@@ -164,6 +175,20 @@ public virtual class Customer
       this.preferredLanguage = l.Preferred_Language__c;
       this.numberOfChildren = 0;
       this.isTaxExempt = false;
+      this.leadCampaignInfluences = new List<Map<String, String>>();
+      try
+      {
+        for( CampaignMember cm : l.CampaignMembers )
+        {
+          this.leadCampaignInfluences.add(
+            new Map<String, String>{
+              'label' => cm.Campaign.Name,
+              'value' => cm.CampaignId
+            }
+          );
+        }
+      }
+      catch( Exception e ){}
     }
 
     public Account revertToAccount()
@@ -205,6 +230,7 @@ public virtual class Customer
       this.theLead = new Lead(
         FirstName = this.firstName,
         LastName = this.lastName,
+        LeadSource = this.leadSource,
         Email = this.email,
         Phone = this.phone,
         MobilePhone = this.mobilePhone,
@@ -245,7 +271,7 @@ public virtual class Customer
       lc.setLeadId( this.theLead.Id );
       LeadStatus convertStatus = [ SELECT Id, ApiName FROM LeadStatus WHERE IsConverted = true LIMIT 1];
       lc.setConvertedStatus( convertStatus.ApiName );
-      lc.setDoNotCreateOpportunity( true );
+      lc.setDoNotCreateOpportunity( !this.createOpportunityOnLeadConvert );
       if( this.id != null && this.id != this.theLead.Id )
       {
         lc.setAccountId( this.id );
@@ -260,6 +286,8 @@ public virtual class Customer
           AccountSaveResult result = new AccountSaveResult();
           result.status = 'success';
           result.record = revertToAccount();
+          if( this.createOpportunityOnLeadConvert )
+            result.opportunityId = leadConvertResult.getOpportunityId();
           return result;
         }
         else

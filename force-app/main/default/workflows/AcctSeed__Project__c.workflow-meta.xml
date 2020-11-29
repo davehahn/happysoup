@@ -128,15 +128,11 @@
     </alerts>
     <alerts>
         <fullName>Deal_is_Tagged</fullName>
-        <description>Deal is Tagged</description>
+        <description>Notify BOM when Deal is Tagged</description>
         <protected>false</protected>
         <recipients>
-            <recipient>bkent@legendboats.com</recipient>
-            <type>user</type>
-        </recipients>
-        <recipients>
-            <recipient>lturcott@legendboats.com</recipient>
-            <type>user</type>
+            <field>Business_Manager__c</field>
+            <type>userLookup</type>
         </recipients>
         <senderType>CurrentUser</senderType>
         <template>Sales_Process/Deal_is_Tagged</template>
@@ -666,6 +662,21 @@
         </recipients>
         <senderType>CurrentUser</senderType>
         <template>Customer_Follow_Up_Templates/Notify_Customer_of_Counter_Sale_Part_Pending_Pickup_FR</template>
+    </alerts>
+    <alerts>
+        <fullName>Notify_DealerCare_and_Product_Specialist_on_Partner_Boat_Sale_ClosedLost</fullName>
+        <description>Notify DealerCare and Product Specialist on Partner Boat Sale ClosedLost</description>
+        <protected>false</protected>
+        <recipients>
+            <recipient>Partner_Support_Team</recipient>
+            <type>role</type>
+        </recipients>
+        <recipients>
+            <recipient>sboothe@legendboats.com</recipient>
+            <type>user</type>
+        </recipients>
+        <senderType>CurrentUser</senderType>
+        <template>To_Do_Notification_Templates/Partner_Boat_Sale_is_Closed_Lost</template>
     </alerts>
     <alerts>
         <fullName>Notify_of_Factory_Store_Partner_Boat_Sale</fullName>
@@ -1390,26 +1401,6 @@
         <triggerType>onCreateOrTriggeringUpdate</triggerType>
     </rules>
     <rules>
-        <fullName>Cherlynn - New Internal SWO</fullName>
-        <actions>
-            <name>New_Internal_Service_Work_Order_Was_Created</name>
-            <type>Task</type>
-        </actions>
-        <active>true</active>
-        <criteriaItems>
-            <field>AcctSeed__Project__c.Name</field>
-            <operation>contains</operation>
-            <value>Whitefish,Barrie,Montreal</value>
-        </criteriaItems>
-        <criteriaItems>
-            <field>AcctSeed__Project__c.RecordTypeId</field>
-            <operation>equals</operation>
-            <value>Legend Service Work Order</value>
-        </criteriaItems>
-        <description>Notifies Cherlynn on new Internal Service Work Orders</description>
-        <triggerType>onCreateOnly</triggerType>
-    </rules>
-    <rules>
         <fullName>Community Parts Required on Warranty</fullName>
         <actions>
             <name>Parts_are_required_on_Warranty_ERP</name>
@@ -2087,6 +2078,45 @@
         <triggerType>onCreateOnly</triggerType>
     </rules>
     <rules>
+        <fullName>New Internal SWO for Factory Stores</fullName>
+        <actions>
+            <name>New_Internal_Service_Work_Order_Was_Created</name>
+            <type>Task</type>
+        </actions>
+        <active>true</active>
+        <criteriaItems>
+            <field>AcctSeed__Project__c.Name</field>
+            <operation>contains</operation>
+            <value>Whitefish,Barrie,Montreal</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>AcctSeed__Project__c.RecordTypeId</field>
+            <operation>equals</operation>
+            <value>Legend Service Work Order</value>
+        </criteriaItems>
+        <description>Notifies Cherlynn on new Internal Service Work Orders</description>
+        <triggerType>onCreateOnly</triggerType>
+    </rules>
+    <rules>
+        <fullName>New Internal SWO for Wholesale</fullName>
+        <actions>
+            <name>New_Wholesale_Internal_Service_Work_Order_Was_Created</name>
+            <type>Task</type>
+        </actions>
+        <active>true</active>
+        <criteriaItems>
+            <field>AcctSeed__Project__c.Name</field>
+            <operation>contains</operation>
+            <value>Wholesale</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>AcctSeed__Project__c.RecordTypeId</field>
+            <operation>equals</operation>
+            <value>Legend Service Work Order</value>
+        </criteriaItems>
+        <triggerType>onCreateOnly</triggerType>
+    </rules>
+    <rules>
         <fullName>New Trade In ERP</fullName>
         <active>false</active>
         <criteriaItems>
@@ -2126,12 +2156,13 @@
         <triggerType>onCreateOrTriggeringUpdate</triggerType>
     </rules>
     <rules>
-        <fullName>Notify BOM when Tagged</fullName>
+        <fullName>Notify BOM when Deal is Tagged</fullName>
         <actions>
             <name>Deal_is_Tagged</name>
             <type>Alert</type>
         </actions>
         <active>true</active>
+        <booleanFilter>1 AND (2 OR 3 OR 4)</booleanFilter>
         <criteriaItems>
             <field>AcctSeed__Project__c.Stage__c</field>
             <operation>equals</operation>
@@ -2140,7 +2171,17 @@
         <criteriaItems>
             <field>AcctSeed__Project__c.Business_Manager__c</field>
             <operation>equals</operation>
-            <value>Lisa Turcott</value>
+            <value>Brigitte Kent</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>AcctSeed__Project__c.Business_Manager__c</field>
+            <operation>equals</operation>
+            <value>Jeana Davis</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>AcctSeed__Project__c.Business_Manager__c</field>
+            <operation>equals</operation>
+            <value>Catherine Grenier</value>
         </criteriaItems>
         <triggerType>onCreateOrTriggeringUpdate</triggerType>
     </rules>
@@ -2150,7 +2191,7 @@
             <name>Deal_is_tagged_John_Winter</name>
             <type>Alert</type>
         </actions>
-        <active>true</active>
+        <active>false</active>
         <booleanFilter>1 AND (2 OR 3)</booleanFilter>
         <criteriaItems>
             <field>AcctSeed__Project__c.Stage__c</field>
@@ -2175,7 +2216,7 @@
             <name>Deal_is_Tagged_Montreal</name>
             <type>Alert</type>
         </actions>
-        <active>true</active>
+        <active>false</active>
         <criteriaItems>
             <field>AcctSeed__Project__c.Stage__c</field>
             <operation>equals</operation>
@@ -2246,6 +2287,25 @@
             <value>Legend Service Work Order</value>
         </criteriaItems>
         <description>Notifies Braedon MacArthur on Stage Delivered on ERP</description>
+        <triggerType>onCreateOrTriggeringUpdate</triggerType>
+    </rules>
+    <rules>
+        <fullName>Notify DealerCare and Product Specialist on Partner Boat Sale ClosedLost</fullName>
+        <actions>
+            <name>Notify_DealerCare_and_Product_Specialist_on_Partner_Boat_Sale_ClosedLost</name>
+            <type>Alert</type>
+        </actions>
+        <active>true</active>
+        <criteriaItems>
+            <field>AcctSeed__Project__c.RecordTypeId</field>
+            <operation>equals</operation>
+            <value>Partner Boat Sale</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>AcctSeed__Project__c.Stage__c</field>
+            <operation>equals</operation>
+            <value>Closed Lost</value>
+        </criteriaItems>
         <triggerType>onCreateOrTriggeringUpdate</triggerType>
     </rules>
     <rules>
@@ -4558,7 +4618,7 @@ Please ensure this is done to the best of your abilities and let Marianne know w
     </tasks>
     <tasks>
         <fullName>New_Internal_Service_Work_Order_Was_Created</fullName>
-        <assignedTo>cmclean@legendboats.com</assignedTo>
+        <assignedTo>shackett@legendboats.com</assignedTo>
         <assignedToType>user</assignedToType>
         <description>This Task is to notify you that a new Service ERP has been created against one of the Factory Stores.</description>
         <dueDateOffset>0</dueDateOffset>
@@ -4581,8 +4641,20 @@ Please ensure this is done to the best of your abilities and let Marianne know w
         <subject>New Partner Parts Order for your Approval</subject>
     </tasks>
     <tasks>
+        <fullName>New_Wholesale_Internal_Service_Work_Order_Was_Created</fullName>
+        <assignedTo>earbour@legendboats.com</assignedTo>
+        <assignedToType>user</assignedToType>
+        <description>This Task is to notify you that a new Service ERP has been created for Wholesale</description>
+        <dueDateOffset>0</dueDateOffset>
+        <notifyAssignee>false</notifyAssignee>
+        <priority>Normal</priority>
+        <protected>false</protected>
+        <status>Open</status>
+        <subject>New Wholesale Internal Service Work Order Was Created</subject>
+    </tasks>
+    <tasks>
         <fullName>Partner_Boat_Sale_Delivery_Has_Passed</fullName>
-        <assignedTo>mbeaucage@legendboats.com	</assignedTo>
+        <assignedTo>mbeaucage@legendboats.com</assignedTo>
         <assignedToType>user</assignedToType>
         <description>A Partner Boat sale has been 12 hours since the picukp time.
 Please complete other tasks associated to this Partner Boat Sale and finalize the ERP.</description>

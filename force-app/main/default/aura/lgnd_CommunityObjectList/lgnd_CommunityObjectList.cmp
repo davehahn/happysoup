@@ -6,6 +6,8 @@
   <aura:attribute name="sObjectName" type="String" access="global" />
   <aura:attribute name="fields" type="String" access="global" />
   <aura:attribute name="globalFilter" type="String" access="global" />
+  <aura:attribute name="searchInputString" type="String" access="global" />
+  <aura:attribute name="isLoading" type="Boolean" access="global" default="false" />
   <aura:attribute name="accountIdentityField" type="String" access="global" />
   <aura:attribute name="viewURL" type="String" access="global" />
   <aura:attribute name="editURL" type="String" access="global" />
@@ -24,6 +26,7 @@
   <aura:attribute name="perPage" type="Integer" default="15" />
   <aura:attribute name="pageOptions" type="Integer[]" />
   <aura:attribute name="listSelectorFilter" type="String" />
+  <aura:attribute name="searchString" type="String" />
   <aura:attribute name="sortDir" type="String" />
   <aura:attribute name="sortField" type="String" />
   <aura:attribute name="sortedCol" type="String" />
@@ -35,6 +38,7 @@
   <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
   <aura:handler event="c:lgnd_ListSelector_Event"
                 action="{!c.handleListChange}" />
+  <aura:handler name="change" value="{!v.searchString}" action="{!c.doSearch}" />
 
   <div>
 
@@ -55,10 +59,23 @@
             </div>
           </div>
         </div>
-        <div class="slds-col slds-no-flex slds-grid slds-align-top">
-          <aura:if isTrue="{!v.newURL != ''}">
-            <button class="slds-button slds-button--neutral" onclick="{!c.navigateToNew}">New</button>
-          </aura:if>
+        <div class="slds-col slds-has-flexi-truncate slds-align-top">
+          <div class="slds-grid">
+            <div class="slds-col slds-has-flexi-truncate slds-text-align_right">
+              <lightning:input type="search"
+                               name="searchFilter"
+                               label="Filter"
+                               value="{!v.searchInputString}"
+                               onchange="{!c.handleSearch}"
+                               placeholder="Search this list"
+                               variant="label-hidden"/>
+            </div>
+            <aura:if isTrue="{!v.newURL != ''}">
+              <div class="slds-col slds-size_2-of-12 slds-align-top slds-text-align_right">
+                <button class="slds-button slds-button--neutral" onclick="{!c.navigateToNew}">New</button>
+              </div>
+            </aura:if>
+          </div>
         </div>
       </div>
     </div>

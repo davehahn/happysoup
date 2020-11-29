@@ -458,8 +458,8 @@
                                       aura:id="required-form-4"
                                       required="true"
                                       messageWhenValueMissing="Campaign Source is required">
+                      <option value="">What brought you in today?</option>
                       <aura:iteration items="{!v.selectOptions.campaigns}" var='optGroup'>
-                        <option value="">What brought you in today?</option>
                         <optgroup label="{!optGroup.groupName}">
                           <aura:iteration items="{!optGroup.options}" var="opt">
                             <option value="{!opt.value}">{!opt.label}</option>
@@ -479,7 +479,12 @@
                                     value="{!v.opp.leadSource}">
                     <option value="">Where did you originally hear about Legend?</option>
                     <aura:iteration items="{!v.selectOptions.leadSource}" var='opt'>
-                      <option value="{!opt.value}">{!opt.label}</option>
+                      <aura:if isTrue="{!equals( opt.value, v.opp.leadSource )}">
+                        <option value="{!opt.value}" selected="true">{!opt.label}</option>
+                        <aura:set attribute="else">
+                          <option value="{!opt.value}">{!opt.label}</option>
+                        </aura:set>
+                      </aura:if>
                     </aura:iteration>
                   </lightning:select>
                 </lightning:layoutItem>

@@ -9,6 +9,8 @@ import { fireEvent, registerListener, unregisterAllListeners} from 'c/pubsub';
 export default class CustCommOrderSummary extends LightningElement {
 	@wire(CurrentPageReference) pageRef;
 
+	@api usage;
+
 	@track performanceItems = [];
 	@track traileringItems = [];
 	@track electronicsItems = [];
@@ -20,7 +22,6 @@ export default class CustCommOrderSummary extends LightningElement {
 	}
 
 	updateSummary(details){
-
 		let payload = {
 			 'name': details.name,
 			 'sku': details.sku,

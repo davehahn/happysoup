@@ -92,10 +92,10 @@ export default class CustCommOrderBoatImage extends LightningElement {
 							} else if(detail.optionName === 'Spare Tire and Bracket Kit'){
 								this.spareTireImage = (detail.addToComposite) ? 'https://' + image.imageURL : '';
 								this.hasSpareTireImage = (detail.addToComposite) ? true : false;
-								console.log('hasSpareTireImage: ', this.hasSpareTireImage);
 							} else if(detail.optionName === 'Galvanized Trailer'){
 								this.trailerImage = (detail.addToComposite) ? 'https://' + image.imageURL : '';
 								this.hasTrailerImage = (detail.addToComposite) ? true : false;
+								this.hasSpareTireImage = false;
 							} else if(detail.optionName === 'Add Terrova 55 Tech Package'){
 							  if(this.page !== 'trailering'){
 									this.electronicsImage = (detail.addToComposite) ? 'https://' + image.imageURL : '';
@@ -117,6 +117,7 @@ export default class CustCommOrderBoatImage extends LightningElement {
 						this.trailerImage = (detail.addToComposite) ? this.defaultTrailerImage : '';
 						this.trailerCutImage = this.defaultTrailerCutImage;
 						this.hasTrailerImage = (detail.addToComposite) ? true : false;
+						this.hasSpareTireImage = false;
 					}
 				}
 			}

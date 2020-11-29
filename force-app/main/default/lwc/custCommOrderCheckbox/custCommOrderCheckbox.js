@@ -30,6 +30,7 @@ export default class CustCommOrderCheckbox extends NavigationMixin(LightningElem
 	  registerListener('purchasePriceConnected', this.pageReady, this);
 	  registerListener('motorSelection', this.handleMotorSelection, this);
 	  registerListener('foundSelection', this.checkRelatedMotorOption, this);
+	  registerListener('clearSelectedTrailerOptions', this.clearTrailerOptions, this);
 		if(this.template.querySelector('.detailedSummary')){
 		  this.summaryFrag();
   	}
@@ -194,6 +195,7 @@ summaryFrag(){
 					detail: extraPadding
 			});
 			this.dispatchEvent(selectEvent);
+			fireEvent(this.pageRef, 'clearSelectedTrailerOptions', summaryDetails);
 		}
  	}
 
@@ -227,4 +229,26 @@ summaryFrag(){
   	}
 	}
 
+	clearTrailerOptions(summaryDetails){
+		const optionsToClear = this.template.querySelectorAll(`[data-parentpage="${summaryDetails.userSelectionName}"`);
+
+		optionsToClear.forEach((option) => {
+			option.checked = false;
+
+			let optionDetails = {
+				'sku': option.getAttribute('data-sku'),
+				'ppSku': option.getAttribute('data-parentsku'),
+				'name': option.getAttribute('data-label'),
+				'price': option.getAttribute('data-retail-price'),
+				'addToSummary': false,
+				'section': option.getAttribute('data-page'),
+				'type': option.getAttribute('type'),
+				'addon': false,
+				'userSelectionName': option.getAttribute('name')
+			};
+
+			fireEvent(this.pageRef, 'updateSummary', optionDetails);
+			fireEvent(this.pageRef, 'updateListItems', optionDetails);
+		});
+ 	}
 }
