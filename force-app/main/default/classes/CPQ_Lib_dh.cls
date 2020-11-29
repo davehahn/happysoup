@@ -558,13 +558,14 @@ public with sharing class CPQ_Lib_dh {
 
     private void saveToQuote( Id recordId )
     {
-      Quote q = [SELECT Id, OpportunityId FROM Quote WHERE Id = :recordId];
+      Quote q = [SELECT Id, OpportunityId, IsSyncing FROM Quote WHERE Id = :recordId];
       Trade_In_Record__c tr = new Trade_In_Record__c(
         Id = this.id,
         Lien_Amount__c = this.lien,
         Total_Value__c = this.value,
         Quote__c = recordId,
-        Opportunity__c = q.OpportunityId
+        Opportunity__c = q.OpportunityId,
+        IsSyncing__c = q.IsSyncing
       );
       upsert tr;
       saveLineItems( tr.Id );

@@ -6,7 +6,19 @@ private class lgnd_newClaimController_Test {
 	@testSetup static void dataSetup() 
   { 
     new Factory_TestData(); 
-    Factory_CustomSettings.setupInventorySettings(); 
+    Factory_CustomSettings.setupInventorySettings();
+		insert new PricebookEntry(
+			Product2Id = LGND_Constants.partnerWarrantyLabourProductId,
+			Pricebook2Id = Test.getStandardPricebookId(),
+			UnitPrice = 100,
+			IsActive = true
+		);
+		insert new PricebookEntry(
+			Product2Id = LGND_Constants.partnerWarrantyLabourProductId,
+			Pricebook2Id = LGND_Constants.partnerPricebookId,
+			UnitPrice = 100,
+			IsActive = true
+		);
   }
 
 	@isTest
@@ -16,8 +28,8 @@ private class lgnd_newClaimController_Test {
 	}
 
 	@isTest
-	static void getClaimTypes() {
-		String[] claimTypes = lgnd_newClaimController.getClaimTypes();
+	static void initForm_Test() {
+		Map<String, Object> initData = lgnd_newClaimController.initForm();
 	}
 
 	@isTest

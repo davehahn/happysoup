@@ -1,6 +1,7 @@
 # List files or directories below to ignore them when running force:source:push, force:source:pull, and force:source:status
 # More information: https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_exclude_source.htm
 #
+# .forceignore v2
 
 package.xml
 
@@ -12,9 +13,7 @@ package.xml
 **/__tests__/**
 
 #Profile
-#force-app/main/default/profiles/Insights Integration User.profile-meta.xml
-#force-app/main/default/profiles/SalesforceIQ Integration User.profile-meta.xml
-#force-app/main/default/profiles/
-force-app/main/default/workflows/Opportunity.workflow
-force-app/main/default/quickActions/Case.SendEmail.quickAction-meta.xml
-#force-app/main/default/approvalProcesses
+force-app/main/default/profiles/
+force-app/main/default/workflows/Opportunity.*
+force-app/main/default/quickActions/Case.SendEmail.*
+

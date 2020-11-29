@@ -43,7 +43,7 @@ public with sharing class TradeInRecord_TriggerHandler {
     {
       if(boolIsInsert)
       {
-
+        syncAmountsToQuote( listNew, null );
       }
       if(boolIsUpdate)
       {
@@ -87,11 +87,11 @@ public with sharing class TradeInRecord_TriggerHandler {
     Quote[] quotesToUpdate = new List<Quote>();
     for( Trade_In_Record__c tir : listNew )
     {
-      if( tir.Quote__c != null && tir.IsSyncing__c )
+      if( tir.Quote__c != null  )
       {
         Quote q = new Quote( Id = tir.Quote__c );
-        q.TradeInAmount__c = tir.IsSyncing__c ? tir.Total_Value__c : null;
-        q.TradeInLien__c = tir.IsSyncing__c ? tir.Lien_Amount__c : null;
+        q.TradeInAmount__c =  tir.Total_Value__c;
+        q.TradeInLien__c = tir.Lien_Amount__c;
         quotesToUpdate.add( q );
       }
     }

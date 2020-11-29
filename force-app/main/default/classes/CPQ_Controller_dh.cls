@@ -56,7 +56,9 @@ public with sharing class CPQ_Controller_dh {
       ExpirationDate = expireDate == null ? null : Date.valueOf( expireDate ),
       GL_Account_Variable_3__c = taxZone.id,
       Tax_Rate_Federal__c = taxZone.federalRate,
-      Tax_Rate_Provincial__c = taxZone.provincialRate
+      Tax_Rate_Provincial__c = taxZone.provincialRate,
+      TradeInLien__c = 0,
+      TradeInAmount__c = 0
     );
     Switch on sObjectType {
       when 'Quote' {
