@@ -52,5 +52,4 @@ any other data you require using DumpIt. ( Ask Dave about this )
 into ``bugfix/{month}-sprint`` branch.  If this branch does not exist in Bitbucket, contact Dave and ask him nicely to get off his ass and create it.
 
 ### Step 7 - Celebrate, you are done.
-* You have completed you bugfix sprint, congrates, doesn't feel good? Yes it does, jump up, shoot at the world "Screw you bugs, your DEAD", or maybe quietly have a drink when you get home and reflect at how awesome you are.
-ction using [packaging](https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_dev2gp.htm) or by [converting your source](https://developer.salesforce.com/docs/atlas.en-us.sfdx_cli_reference.meta/sfdx_cli_reference/cli_reference_force_source.htm#cli_reference_convert) into metadata format and using the [metadata deploy command](https://developer.salesforce.com/docs/atlas.en-us.sfdx_cli_reference.meta/sfdx_cli_reference/cli_reference_force_mdapi.htm#cli_reference_deploy).
+* You have completed your bugfix sprint, congrates, doesn't feel good? Yes it does, jump up, shoot at the world "Screw you bugs, your DEAD", or maybe quietly have a drink when you get home and reflect at how awesome you are.
