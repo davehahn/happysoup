@@ -106,14 +106,14 @@ workflows:
                 - master
   validate:
     jobs:
-      - check-for-changes
-      - build-validation-env:
+      - check-for-changes:
           filters:
             branches:
               only:
                 - /feature\/.*/
                 - /bugfix\/.*/
                 - /declarative\/.*/
+      - build-validation-env:
           requires:
             - check-for-changes
       - validate-build:
