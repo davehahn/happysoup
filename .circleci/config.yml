@@ -13,6 +13,8 @@ version: 2.1
 #      - welcome/run
 jobs:
   check-for-changes:
+    docker:
+      - image: legendarydevs/sfdx_deploy
     steps:
       - checkout
       - run:
