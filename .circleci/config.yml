@@ -12,6 +12,14 @@ version: 2.1
 #    jobs:
 #      - welcome/run
 jobs:
+  check-for-changes:
+    steps:
+      - checkout
+      - run:
+          name: Check if New branch
+          command: |
+            set -e
+            if git diff --quiet origin/staging; then exit 1; fi
   build-validation-env:
     docker:
       - image: legendarydevs/sfdx_deploy
@@ -98,6 +106,7 @@ workflows:
                 - master
   validate:
     jobs:
+      - check-for-changes
       - build-validation-env:
           filters:
             branches:
@@ -105,6 +114,8 @@ workflows:
                 - /feature\/.*/
                 - /bugfix\/.*/
                 - /declarative\/.*/
+          requires:
+            - check-for-changes
       - validate-build:
           requires:
             - build-validation-env
