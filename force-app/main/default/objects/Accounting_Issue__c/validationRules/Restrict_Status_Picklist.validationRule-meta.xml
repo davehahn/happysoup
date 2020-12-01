@@ -7,7 +7,8 @@
      NOT($Permission.Can_Manage_Accounting_Issues),
      NOT($Permission.Can_Modify_All_Accounting_Issues),
      NOT($Profile.Name = &apos;System Administrator&apos;),
-     NOT(ISPICKVAL(Status__c, &apos;Submitted&apos;))
+     NOT(ISPICKVAL(Status__c, &apos;Submitted&apos;)),
+     NOT(ISPICKVAL(Status__c, &apos;Ready for Accounting&apos;))
 )</errorConditionFormula>
     <errorMessage>You can only set the set the Status field to &apos;Submitted&apos;.</errorMessage>
 </ValidationRule>
