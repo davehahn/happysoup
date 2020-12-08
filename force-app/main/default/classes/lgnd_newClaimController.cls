@@ -1,19 +1,28 @@
 public with sharing class lgnd_newClaimController {
   public class ClaimException extends Exception{}
 
+  private static Id pricebookId = LGND_Constants.partnerPricebookId;
+
   @AuraEnabled
-  public static Id getPricebookId() {
-    return Legend_Settings__c.getOrgDefaults().Default_Partner_Pricebook__c;
+  public static Map<String, Object> initForm()
+  {
+    Id warrantyLabourProduct = LGND_Constants.partnerWarrantyLabourProductId;
+    Map<String, Object> result = New Map<String, Object>();
+    result.put('pricebookId', pricebookId);
+    result.put('warrantyLabourProduct', warrantyLabourProduct);
+    result.put('laborPrice', getUnitPrice(warrantyLabourProduct) );
+    result.put('claimTypeOptions', buildClaimTypeOptions() );
+    return result;
   }
 
   @AuraEnabled
-  public static List<String> getClaimTypes() {
-    return LGND_Utilities.getPicklistValues('Case', 'Claim_Type__c');
+  public static Id getPricebookId() {
+    return pricebookId;
   }
 
   @AuraEnabled
   public static String saveWithParts(String caseJson, List<Case_Part__c> caseParts) {
-    Case c; 
+    Case c;
 
     if (caseJson == null) {
       return null;
@@ -136,16 +145,16 @@ public with sharing class lgnd_newClaimController {
 
   @AuraEnabled
   public static Case_Part__c[] getParts(Case c) {
-    return [SELECT Case__c, 
-                   Id, 
-                   Material__c, 
-                   Name, 
+    return [SELECT Case__c,
+                   Id,
+                   Material__c,
+                   Name,
                    Product__c,
-                   Product__r.Name, 
+                   Product__r.Name,
                    Product__r.Family,
                    Product_Code__c,
                    Unit_Price__c,
-                   Order_Quantity__c, 
+                   Order_Quantity__c,
                    Quantity__c,
                    Case__r.Status
               FROM Case_Part__c
@@ -154,16 +163,16 @@ public with sharing class lgnd_newClaimController {
 
   @AuraEnabled
   public static Case_Part__c[] getPartByCaseId(Id caseId) {
-    return [SELECT Case__c, 
-                   Id, 
-                   Material__c, 
-                   Name, 
+    return [SELECT Case__c,
+                   Id,
+                   Material__c,
+                   Name,
                    Product__c,
-                   Product__r.Name, 
-                   Product__r.Family, 
+                   Product__r.Name,
+                   Product__r.Family,
                    Product_Code__c,
                    Unit_Price__c,
-                   Order_Quantity__c, 
+                   Order_Quantity__c,
                    Quantity__c,
                    Case__r.Status
               FROM Case_Part__c
@@ -190,12 +199,11 @@ public with sharing class lgnd_newClaimController {
 
   @AuraEnabled
   public static Decimal getUnitPrice(String productId) {
-    Id priceBookId = getPricebookId();
     System.debug( '>>>>>>>>>>>>>>>> ' + productId + ' <<<<<<<<<<<<<<');
     try {
       PriceBookEntry pbe =  [SELECT UnitPrice
                               FROM PricebookEntry
-                              WHERE Pricebook2Id = :priceBookId
+                              WHERE Pricebook2Id = :pricebookId
                               AND Product2Id = :productId
                               LIMIT 1];
       System.debug( pbe );
@@ -217,5 +225,25 @@ public with sharing class lgnd_newClaimController {
   @AuraEnabled
   public static Id getProductIdByName(String name) {
     return [select Id from Product2 where Name = :name limit 1].Id;
+  }
+
+  private static List<Map<String, Object>> buildClaimTypeOptions()
+  {
+    List<Map<String, Object>> options = new List<Map<String, Object>>();
+    options.add( new Map<String, Object>{
+      'class' => 'optionClass',
+      'label' => '--None--',
+      'value' => '',
+      'selected' => false
+    });
+    for( String claimType : LGND_Utilities.getPicklistValues('Case', 'Claim_Type__c'))
+    {
+      options.add( new Map<String, Object>{
+        'class' => 'optionClass',
+        'label' => claimType,
+        'value' => claimType
+      });
+    }
+    return options;
   }
 }

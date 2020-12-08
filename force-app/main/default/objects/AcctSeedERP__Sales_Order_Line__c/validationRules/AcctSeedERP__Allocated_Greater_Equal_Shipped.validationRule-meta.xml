@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>AcctSeedERP__Allocated_Greater_Equal_Shipped</fullName>
-    <active>true</active>
-    <description>Ensures the quantity allocated is always greater than or equal to the quantity shipped</description>
-    <errorConditionFormula>AcctSeedERP__Quantity_Shipped__c &gt;  AcctSeedERP__Quantity_Allocated__c</errorConditionFormula>
-    <errorMessage>The quantity shipped cannot be more than the quantity allocated</errorMessage>
-</ValidationRule>

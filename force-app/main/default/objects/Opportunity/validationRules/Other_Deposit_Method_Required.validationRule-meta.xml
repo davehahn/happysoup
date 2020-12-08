@@ -3,7 +3,7 @@
     <fullName>Other_Deposit_Method_Required</fullName>
     <active>false</active>
     <description>If Deposit Method is &quot;Other&quot; then Deposit Method Other is required</description>
-    <errorConditionFormula>AND( ISBLANK( Deposit_Method_Other__c ),   ISPICKVAL( Deposit_Method__c , &#39;Other&#39;) )</errorConditionFormula>
+    <errorConditionFormula>AND( ISBLANK( Deposit_Method_Other__c ),   ISPICKVAL( Deposit_Method__c , &apos;Other&apos;) )</errorConditionFormula>
     <errorDisplayField>Deposit_Method_Other__c</errorDisplayField>
     <errorMessage>Other Deposit Method is Required</errorMessage>
 </ValidationRule>

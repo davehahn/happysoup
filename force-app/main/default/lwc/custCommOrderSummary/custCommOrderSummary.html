@@ -4,18 +4,44 @@
 
 <!-- Cust Comm Order Summary -->
 <template>
-  <aside class="summary">
+  <aside class="summary" data-usage={usage}>
     <h3>Summary</h3>
     <ul class="summary_list">
-      <template for:each={performanceItems} for:item="item">
-        <li class="summary_listItem" key={item.sku} data-id={item.sku}>{item.name}</li>
-      </template>
-      <template for:each={traileringItems} for:item="item">
-        <li class="summary_listItem" key={item.sku} data-id={item.sku}>{item.name}</li>
-      </template>
-      <template for:each={electronicsItems} for:item="item">
-        <li class="summary_listItem" key={item.sku} data-id={item.sku}>{item.name}</li>
-      </template>
+      <li class="summary_section">
+        <strong>Performance:</strong>
+        <ul>
+          <template for:each={performanceItems} for:item="item">
+            <li class="summary_listItem" key={item.sku} data-id={item.sku}>{item.name}</li>
+          </template>
+        </ul>
+      </li>
+
+      <li class="summary_section">
+        <strong>Trailering:</strong>
+        <ul>
+          <template for:each={traileringItems} for:item="item">
+            <li class="summary_listItem" key={item.sku} data-id={item.sku}>{item.name}</li>
+          </template>
+        </ul>
+      </li>
+
+      <li class="summary_section">
+        <strong>Trailering:</strong>
+        <ul>
+          <template for:each={electronicsItems} for:item="item">
+            <li class="summary_listItem" key={item.sku} data-id={item.sku}>{item.name}</li>
+          </template>
+        </ul>
+      </li>
+
+      <li class="summary_section">
+        <strong>Freight:</strong>
+        <ul>
+          <template for:each={freightItems} for:item="item">
+            <li class="summary_listItem" key={item.sku} data-id={item.sku}>{item.name}</li>
+          </template>
+        </ul>
+      </li>
     </ul>
   </aside>
 </template>

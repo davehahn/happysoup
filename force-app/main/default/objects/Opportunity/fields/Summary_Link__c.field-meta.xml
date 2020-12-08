@@ -2,7 +2,7 @@
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Summary_Link__c</fullName>
     <externalId>false</externalId>
-    <formula>HYPERLINK(Left($Api.Enterprise_Server_URL_190,(find(&#39;/services&#39;,$Api.Enterprise_Server_URL_190))) + &#39;apex/BoatConfigurator?opportunity_id=&#39; + Id + &#39;&amp;defaultView=showSummary&#39;, &#39;Opportunity Summary&#39; )</formula>
+    <formula>HYPERLINK(Left($Api.Enterprise_Server_URL_190,(find(&apos;/services&apos;,$Api.Enterprise_Server_URL_190))) + &apos;apex/BoatConfigurator?opportunity_id=&apos; + Id + &apos;&amp;defaultView=showSummary&apos;, &apos;Opportunity Summary&apos; )</formula>
     <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
     <label>Summary Link</label>
     <required>false</required>

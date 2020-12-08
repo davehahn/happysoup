@@ -2,7 +2,7 @@
  * Created by dave on 2020-05-07.
  */
 
-public with sharing class ProductFeeMap_Selector extends Application_Selector
+public class ProductFeeMap_Selector extends Application_Selector
 {
 
   public ProductFeeMap_Selector()

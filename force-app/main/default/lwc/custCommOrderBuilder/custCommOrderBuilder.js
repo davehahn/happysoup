@@ -26,6 +26,10 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
   vertLogo = VLOGO;
   orderValid=true;
   isMobile = false;
+  customer={};
+  @track customerFirstName;
+  @track customerLastName;
+  creditCardError = false;
 
 
 
@@ -48,11 +52,14 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
 			class: 'modal-nav-item'
 		},
 		{
-			title: 'Delivery Timing',
+			title: 'Delivery Timing + Freight',
 			label: 'delivery',
 			class: 'modal-nav-item'
 		},
 	];
+
+ 	@track freightCharge;
+
 	premiumPackage;
 
   @track paymentAmount;
@@ -68,6 +75,9 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
   @track performanceItems = [];
   @track traileringItems = [];
   @track electronicsItems = [];
+  @track freightItems = [];
+  @track paymentFormErrors;
+  @track hasPaymentErrors = false;
 
   @wire(CurrentPageReference)
   setCurrentPageReference(currentPageReference) {
@@ -81,7 +91,7 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
   {
     if( data )
     {
-      console.log('FETCH BOAT DATA');
+//      console.log('FETCH BOAT DATA');
       console.log(data);
       this.boat = data;
     }
@@ -181,9 +191,31 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
 
   handlePurchasePriceChange( amount )
   {
-    console.log(`Purchase Price Changed EVENT in OrderBuilder Captured ${amount}`);
+//    console.log(`Purchase Price Changed EVENT in OrderBuilder Captured ${amount}`);
     this.purchasePrice = amount;
     this.template.querySelector('c-boat-res-finance-details').calculate();
+  }
+
+  handleCustomerData( event )
+  {
+    const attr = event.currentTarget.dataset.attr,
+          value = event.currentTarget.value;
+    this.customer[attr] = value;
+
+		var code = event.keyCode || event.which;
+		if(code !== 9){
+			this.validateField( event.currentTarget );
+		}
+
+    if( attr === 'state' )
+      this.handleFreight( value );
+
+    if( attr === 'firstName')
+      this.customerFirstName = value;
+
+    if( attr === 'lastName')
+			this.customerLastName = value;
+
   }
 
   handlePaymentTypeChange( paymentType )
@@ -294,9 +326,26 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
 			for(const [section, parts] of sections){
 				const items = Object.values(parts);
 				for(const item of items){
-					packItems.push(item);
+				  let description = item.description;
+				  let value = item.value;
+				  let valueFormatted = new Intl.NumberFormat('en-CA', {
+																style: 'currency',
+																currency: 'CAD',
+																minimumFractionDigits: 0
+																}).format(value);
+				  let details = {
+				    description: description,
+				    value: value,
+				    valueFormatted: valueFormatted,
+      		};
+					packItems.push(details);
 				}
 			}
+
+			packItems.sort(function(a,b){
+				return b.value - a.value;
+   		});
+//   		console.log(packItems);
 			return packItems;
 		}
 	}
@@ -327,7 +376,10 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
 						this.electronicsItems.push(payload);
 					}
 				}
-			}	else {
+			} else if(details.type === 'select'){
+			  this.freightItems = [];
+			  this.freightItems.push(payload);
+   		} else {
 				//append the item to this section
 				if(details.section === 'performance'){
 					this.performanceItems.push(payload);
@@ -353,10 +405,12 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
   {
     const spinner = this.template.querySelector('c-legend-spinner');
     spinner.toggle();
+
 	  this.saveCustomer()
 		.then( ( accountSaveResult ) => {
 		  this.opportunityId = accountSaveResult.opportunityId;
       this.accountId = accountSaveResult.record.Id;
+			this.creditCardError = false;
 		  return this.createSquarePayment();
   	})
   	.then( ( paymentResult ) => {
@@ -366,30 +420,21 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
       console.log('lineItemsResult: ', saveSaleItemsResult);
     })
   	.catch( ( error ) => {
-			console.log('error: ', error);
+			this.displayPaymentError(error);
+			this.creditCardError = true;
    	})
    	.finally( () => {
       spinner.toggle();
-      console.log('Everything is done, but what should happen now');
+      if(!this.creditCardError){
+      	console.log('Everything is done, but what should happen now');
+				this.displayThanks();
+      }
     });
   }
 
   saveCustomer()
   {
-    const lli = this.template.querySelectorAll('lightning-layout-item');
-    let userData = {};
-    lli.forEach((item) => {
-      let input = item.querySelector('input');
-      if(!input){
-        input = item.querySelector('select');
-      }
-      const dataId = input.getAttribute('data-id');
-      const value = input.value;
-      userData[dataId] = value;
-    });
-
-    const userJSON = JSON.stringify(userData);
-
+    const userJSON = JSON.stringify( this.customer );
     return createAccount({customerJSON: userJSON});
   }
 
@@ -417,8 +462,6 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
     }];
     let lineItems = this.performanceItems.concat(this.traileringItems, this.electronicsItems, boatLineItem);
     lineItems = JSON.stringify(lineItems);
-    console.log('oppInfo: ', oppInfo);
-    console.log('lineItems: ', lineItems);
     return saveLineItems({oppJSON: oppInfo, olisJSON: lineItems});
   }
 
@@ -463,5 +506,182 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
 		}
   }
 
+	handleFreight( province ){
+		let charge = this.boat.additionalFees[province][0]['retailPrice'];
+		let purchasePrice = {
+			'sku': 'freight',
+			'price': charge,
+			'addToPrice': true,
+			'section': 'freight',
+			'type': 'select',
+			'addon': false,
+			'userSelectionName': 'freight'
+		};
+
+		let summaryDetails = {
+			'sku': 'freight',
+			'name': 'Freight to ' + province,
+			'price': charge,
+			'addToSummary': true,
+			'section': 'freight',
+			'type': 'select',
+			'addon': false,
+			'userSelectionName': 'freight'
+		};
+
+		fireEvent(this.pageRef, 'updateSummary', summaryDetails);
+		fireEvent(this.pageRef, 'updateListItems', summaryDetails);
+		fireEvent(this.pageRef, 'updatePurchasePrice', purchasePrice);
+
+		this.displayFreightCharge(charge);
+ 	}
+
+ 	displayFreightCharge(charge){
+ 	  let updatedFreight = new Intl.NumberFormat('en-CA', {
+													style: 'currency',
+													currency: 'CAD',
+													minimumFractionDigits: 0
+													}).format(charge);
+ 	  this.freightCharge = '+ ' + updatedFreight + ' Freight Charge';
+  }
+
+	triggerValidation( event ){
+		this.validateField(event.currentTarget);
+ 	}
+
+  validateField( field ){
+
+    const attr = field.dataset.attr,
+					value = field.value,
+					feedback = field.parentElement.querySelector('.feedback'),
+					lang = 'en';
+
+		if( attr === 'firstName' || attr === 'lastName'){
+			if(value.length === 0){
+				if(field.hasAttribute('required')){
+					let errmsg = (lang === 'en') ? 'This field cannot be empty' : 'Ce champ ne peut pas être vide';
+					feedback.classList.remove('clean');
+					feedback.classList.add('error');
+					feedback.innerHTML = errmsg;
+					field.classList.remove('clean');
+					field.classList.add('error');
+   	 		}
+   		} else {
+   		  const pattern = /^[a-zA-ZàâçéèêëîïôûùüÿæœÙÛÜŸÀÂÆÇÉÈÊËÏÎÔŒ  .'-]+$/i;
+				if(!(pattern.test(value))){
+					let errmsg = (lang === 'en') ? 'This field contains invalid characters' : 'Ce champ contient des textes invalides';
+					feedback.classList.remove('clean');
+					feedback.classList.add('error');
+					feedback.innerHTML = errmsg;
+					field.classList.remove('clean');
+					field.classList.add('error');
+				}
+				else{
+					feedback.classList.remove('error');
+					feedback.classList.add('clean');
+					feedback.innerHTML = '';
+					field.classList.remove('error');
+					field.classList.add('clean');
+				}
+     	}
+  	}
+
+  	if( attr === 'email' ){
+  		if(value.length === 0){
+				if(field.hasAttribute('required')){
+					let errmsg = (lang === 'en') ? 'This field cannot be empty' : 'Ce champ ne peut pas être vide';
+					feedback.classList.remove('clean');
+					feedback.classList.add('error');
+					feedback.innerHTML = errmsg;
+					field.classList.remove('clean');
+					field.classList.add('error');
+				}
+			} else {
+				const pattern = /^\w+([\.\-_]?\w+)*@\w+([\.\-_]?\w+)*(\.\w{2,5})+$/;
+				if(!(pattern.test(value))){
+					let errmsg = (lang === 'en') ? 'This field is in the wrong format. Try using the format <em>email@address.com</em> instead.' : 'Ce champ est en mauvais format.  Essayez d\'utiliser ce format à la place <em>email@address.com</em> ';
+					feedback.classList.remove('clean');
+					feedback.classList.add('error');
+					feedback.innerHTML = errmsg;
+					field.classList.remove('clean');
+					field.classList.add('error');
+				}
+				else{
+					feedback.classList.remove('error');
+					feedback.classList.add('clean');
+					feedback.innerHTML = '';
+					field.classList.remove('error');
+					field.classList.add('clean');
+				}
+			}
+  	}
+
+  	if( attr === 'phone'){
+			if(value.length === 0){
+				if(field.hasAttribute('required')){
+					let errmsg = (lang === 'en') ? 'This field cannot be empty' : 'Ce champ ne peut pas être vide';
+					feedback.classList.remove('clean');
+					feedback.classList.add('error');
+					feedback.innerHTML = errmsg;
+					field.classList.remove('clean');
+					field.classList.add('error');
+				}
+			} else {
+				const pattern = /^(?:\(?)(\d{3})(?:\)?)(\s|\.|-)?(\d{3})(\s|\.|-)?(\d{4})$/;
+				if(!(pattern.test(value))){
+					let errmsg = (lang === 'en') ? 'This field is in the wrong format. Try using the format <em>123-456-7890</em> instead' : 'Ce champ est en mauvais format.  Essayez d\'utiliser ce format à la place  <em>123-456-7890</em>';
+					feedback.classList.remove('clean');
+					feedback.classList.add('error');
+					feedback.innerHTML = errmsg;
+					field.classList.remove('clean');
+					field.classList.add('error');
+				}
+				else{
+					feedback.classList.remove('error');
+					feedback.classList.add('clean');
+					feedback.innerHTML = '';
+					field.classList.remove('error');
+					field.classList.add('clean');
+				}
+			}
+  	}
+
+  	if( attr === 'state' ){
+  		if(value.length === 0){
+				if(field.hasAttribute('required')){
+					let errmsg = (lang === 'en') ? 'This field cannot be empty' : 'Ce champ ne peut pas être vide';
+					feedback.classList.remove('clean');
+					feedback.classList.add('error');
+					feedback.innerHTML = errmsg;
+					field.classList.remove('clean');
+					field.classList.add('error');
+				}
+			}
+  	}
+  }
+
+	displayPaymentError(error){
+		console.log('PAYMENT ERROR!!');
+		this.hasPaymentErrors = true;
+		console.log('error: ', error);
+		if(typeof error === 'object'){
+			console.log('errors: ', JSON.parse(JSON.stringify(error)));
+			error.forEach((err) => {
+				this.paymentFormErrors = err.message;
+			});
+		}
+	}
+
+  displayThanks(){
+    const thanksShow = this.template.querySelectorAll('[data-thanks="show"]');
+    const thanksHide = this.template.querySelectorAll('[data-thanks="hide"]');
+
+    thanksShow.forEach((element) => {
+      element.style.display = 'flex';
+    });
+    thanksHide.forEach((element) => {
+      element.style.display = 'none';
+    });
+  }
 
 }

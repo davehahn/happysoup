@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>AcctSeed__YYYY_MM_Format</fullName>
-    <active>true</active>
-    <description>Accounting Periods must be in numerical format YYYY-MM</description>
-    <errorConditionFormula>ISBLANK(Name) || !(REGEX(Name, &quot;^(1|2)[0-9]{3}-(0[1-9]|1[012])$&quot;))</errorConditionFormula>
-    <errorDisplayField>Name</errorDisplayField>
-    <errorMessage>Accounting Periods must be in the format YYYY-MM and must be numerical values.</errorMessage>
-</ValidationRule>

@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>AcctSeed__Mandatory_Mileage_Rate</fullName>
-    <active>true</active>
-    <description>Makes Mileage Rate Mandatory</description>
-    <errorConditionFormula>AND(AcctSeed__Expense_GL_Account__r.AcctSeed__Mileage_Account__c =true,  ISBLANK(AcctSeed__Miles__c ))</errorConditionFormula>
-    <errorDisplayField>AcctSeed__Miles__c</errorDisplayField>
-    <errorMessage>A mileage rate needs to be specified if the Expense type is a Mileage GL Account.</errorMessage>
-</ValidationRule>

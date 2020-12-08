@@ -454,7 +454,15 @@
         <description>Send Sales Approval Email</description>
         <protected>false</protected>
         <recipients>
-            <recipient>Business_Office_Managers</recipient>
+            <recipient>Business_Office_Managers_Barrie</recipient>
+            <type>role</type>
+        </recipients>
+        <recipients>
+            <recipient>Business_Office_Managers_Montreal</recipient>
+            <type>role</type>
+        </recipients>
+        <recipients>
+            <recipient>Business_Office_Managers_Whitefish</recipient>
             <type>role</type>
         </recipients>
         <recipients>
@@ -462,7 +470,15 @@
             <type>role</type>
         </recipients>
         <recipients>
-            <recipient>Memory_Makers</recipient>
+            <recipient>Memory_Makers_Barrie</recipient>
+            <type>role</type>
+        </recipients>
+        <recipients>
+            <recipient>Memory_Makers_Montreal</recipient>
+            <type>role</type>
+        </recipients>
+        <recipients>
+            <recipient>Memory_Makers_Whitefish</recipient>
             <type>role</type>
         </recipients>
         <recipients>
@@ -470,7 +486,43 @@
             <type>role</type>
         </recipients>
         <recipients>
+            <recipient>Sales_Manager_Barrie</recipient>
+            <type>role</type>
+        </recipients>
+        <recipients>
+            <recipient>Sales_Manager_Montreal</recipient>
+            <type>role</type>
+        </recipients>
+        <recipients>
+            <recipient>Sales_Manager_Whitefish</recipient>
+            <type>role</type>
+        </recipients>
+        <recipients>
+            <recipient>Store_Manager_Barrie</recipient>
+            <type>role</type>
+        </recipients>
+        <recipients>
+            <recipient>Store_Manager_Montreal</recipient>
+            <type>role</type>
+        </recipients>
+        <recipients>
+            <recipient>Store_Manager_Whitefish</recipient>
+            <type>role</type>
+        </recipients>
+        <recipients>
             <recipient>bkent@legendboats.com</recipient>
+            <type>user</type>
+        </recipients>
+        <recipients>
+            <recipient>bmilne@legendboats.com</recipient>
+            <type>user</type>
+        </recipients>
+        <recipients>
+            <recipient>cthew@legendboats.com</recipient>
+            <type>user</type>
+        </recipients>
+        <recipients>
+            <recipient>d_alexander@legendboats.com</recipient>
             <type>user</type>
         </recipients>
         <recipients>
@@ -495,6 +547,10 @@
         </recipients>
         <recipients>
             <recipient>mduhamel@legendboats.com</recipient>
+            <type>user</type>
+        </recipients>
+        <recipients>
+            <recipient>pchittapong@legendboats.com</recipient>
             <type>user</type>
         </recipients>
         <recipients>
@@ -591,27 +647,43 @@
         <description>Trade In Info Needed</description>
         <protected>false</protected>
         <recipients>
-            <recipient>Business_Office_Managers</recipient>
+            <recipient>Business_Office_Managers_Barrie</recipient>
             <type>role</type>
         </recipients>
         <recipients>
-            <recipient>Legend_Dealership_General_Manager</recipient>
+            <recipient>Business_Office_Managers_Montreal</recipient>
             <type>role</type>
         </recipients>
         <recipients>
-            <recipient>Legend_General_Manager</recipient>
+            <recipient>Business_Office_Managers_Whitefish</recipient>
             <type>role</type>
         </recipients>
         <recipients>
-            <recipient>Retail_Memory_Making_Manager</recipient>
+            <recipient>Executives</recipient>
             <type>role</type>
         </recipients>
         <recipients>
-            <recipient>Retail_Sales_Manager</recipient>
+            <recipient>Sales_Manager_Barrie</recipient>
             <type>role</type>
         </recipients>
         <recipients>
-            <recipient>The_Oracle</recipient>
+            <recipient>Sales_Manager_Montreal</recipient>
+            <type>role</type>
+        </recipients>
+        <recipients>
+            <recipient>Sales_Manager_Whitefish</recipient>
+            <type>role</type>
+        </recipients>
+        <recipients>
+            <recipient>Store_Manager_Barrie</recipient>
+            <type>role</type>
+        </recipients>
+        <recipients>
+            <recipient>Store_Manager_Montreal</recipient>
+            <type>role</type>
+        </recipients>
+        <recipients>
+            <recipient>Store_Manager_Whitefish</recipient>
             <type>role</type>
         </recipients>
         <recipients>
@@ -724,6 +796,7 @@
         <notifyAssignee>false</notifyAssignee>
         <operation>Literal</operation>
         <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
     </fieldUpdates>
     <fieldUpdates>
         <fullName>Approved_Checkbox_to_False</fullName>
@@ -733,6 +806,7 @@
         <notifyAssignee>false</notifyAssignee>
         <operation>Literal</operation>
         <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
     </fieldUpdates>
     <fieldUpdates>
         <fullName>Approved_Checkbox_to_True</fullName>
@@ -742,6 +816,7 @@
         <notifyAssignee>false</notifyAssignee>
         <operation>Literal</operation>
         <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
     </fieldUpdates>
     <fieldUpdates>
         <fullName>Change_Close_Date_to_Today</fullName>
@@ -751,6 +826,7 @@
         <notifyAssignee>false</notifyAssignee>
         <operation>Formula</operation>
         <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
     </fieldUpdates>
     <fieldUpdates>
         <fullName>Change_Stage_to_Business_Office_Pending</fullName>
@@ -781,6 +857,7 @@
         <notifyAssignee>false</notifyAssignee>
         <operation>Literal</operation>
         <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
     </fieldUpdates>
     <fieldUpdates>
         <fullName>Change_to_Tagging_Pending</fullName>
@@ -801,6 +878,7 @@
         <notifyAssignee>false</notifyAssignee>
         <operation>Literal</operation>
         <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
     </fieldUpdates>
     <fieldUpdates>
         <fullName>Customer_Declined_Reason</fullName>
@@ -811,6 +889,7 @@
         <notifyAssignee>false</notifyAssignee>
         <operation>Literal</operation>
         <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
     </fieldUpdates>
     <fieldUpdates>
         <fullName>Rejected</fullName>
@@ -820,6 +899,7 @@
         <notifyAssignee>false</notifyAssignee>
         <operation>Literal</operation>
         <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
     </fieldUpdates>
     <fieldUpdates>
         <fullName>Reset_StageName</fullName>
@@ -829,6 +909,7 @@
         <notifyAssignee>false</notifyAssignee>
         <operation>Literal</operation>
         <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
     </fieldUpdates>
     <fieldUpdates>
         <fullName>Revert_to_Quoting</fullName>
@@ -838,6 +919,7 @@
         <notifyAssignee>false</notifyAssignee>
         <operation>Literal</operation>
         <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
     </fieldUpdates>
     <fieldUpdates>
         <fullName>Set_To_Sales_Manager_Approval</fullName>
@@ -847,6 +929,7 @@
         <notifyAssignee>false</notifyAssignee>
         <operation>Literal</operation>
         <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
     </fieldUpdates>
     <fieldUpdates>
         <fullName>Stage_Change_to_Closed_Lost</fullName>
@@ -856,6 +939,7 @@
         <notifyAssignee>false</notifyAssignee>
         <operation>Literal</operation>
         <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
     </fieldUpdates>
     <fieldUpdates>
         <fullName>Type_Change_back_to_Prospect</fullName>
@@ -865,6 +949,7 @@
         <notifyAssignee>false</notifyAssignee>
         <operation>Literal</operation>
         <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
         <targetObject>AccountId</targetObject>
     </fieldUpdates>
     <fieldUpdates>
@@ -875,6 +960,7 @@
         <notifyAssignee>false</notifyAssignee>
         <operation>Literal</operation>
         <protected>false</protected>
+        <reevaluateOnChange>false</reevaluateOnChange>
         <targetObject>AccountId</targetObject>
     </fieldUpdates>
     <rules>

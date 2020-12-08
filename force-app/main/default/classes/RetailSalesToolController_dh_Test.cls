@@ -18,8 +18,8 @@ private class RetailSalesToolController_dh_Test {
 		Account acct = Factory_Account.insertFullPersonAccount('Testy', 'McTestFace');
     String jsonCustomer = RetailSalesToolController_dh.fetchCustomer( acct.Id );
     Test.stopTest();
-    RetailSalesToolController_dh.Customer customer =
-      (RetailSalesToolController_dh.Customer)JSON.deserialize( jsonCustomer, RetailSalesToolController_dh.Customer.class);
+    Customer.Person customer =
+      (Customer.Person)JSON.deserialize( jsonCustomer, Customer.Person.class);
 
     System.assertEquals( 'Testy', customer.firstName );
     System.assertEquals( 'McTestFace', customer.lastName );
@@ -32,8 +32,8 @@ private class RetailSalesToolController_dh_Test {
     Lead l = Factory_Lead.insertLead('Testy', 'McTestFace');
     String jsonCustomer = RetailSalesToolController_dh.fetchCustomer( l.Id );
     Test.stopTest();
-    RetailSalesToolController_dh.Customer customer =
-      (RetailSalesToolController_dh.Customer)JSON.deserialize( jsonCustomer, RetailSalesToolController_dh.Customer.class);
+    Customer.Person customer =
+      (Customer.Person)JSON.deserialize( jsonCustomer, Customer.Person.class);
 
     System.assertEquals( 'Testy', customer.firstName );
     System.assertEquals( 'McTestFace', customer.lastName );
@@ -90,7 +90,7 @@ private class RetailSalesToolController_dh_Test {
     String[] relStatuses = LGND_Utilities.getPicklistValues('Account', 'Relationship_Status__c');
     String[] langs = LGND_Utilities.getPicklistValues('Account', 'Preferred_Language__c');
     String[] genders = LGND_Utilities.getPicklistValues('Account', 'Gender__pc');
-    RetailSalesToolController_dh.Customer cust = new RetailSalesToolController_dh.Customer();
+    Customer.Person cust = new Customer.Person();
     cust.firstName = 'Testy';
     cust.lastName = 'McTestFace';
     cust.street = '139 Fittons Rd West';

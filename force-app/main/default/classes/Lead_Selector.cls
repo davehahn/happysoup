@@ -13,10 +13,40 @@ public without sharing class Lead_Selector extends Application_Selector
       'FirstName',
       'LastName',
       'Phone',
+      'MobilePhone',
       'Email',
+      'LeadSource',
       'Company',
-      'IsConverted'
+      'IsConverted',
+      'Street',
+      'City',
+      'State',
+      'StateCode',
+      'Country',
+      'CountryCode',
+      'PostalCode',
+      'Preferred_Language__c'
     };
+  }
+
+  public static Lead byIdIncludingCampaignMembers( Id recordId )
+  {
+    Lead_Selector selector = new Lead_Selector();
+    selector.addWhereIdIn( new Set<Id>{ recordId } )
+      .addChildQuery(
+      '(SELECT Id, CampaignId, Campaign.Name FROM CampaignMembers)'
+    );
+    List<SObject> result = selector.query();
+    if( result.size() == 0 )
+    {
+      throw new Application_Selector.SelectorException(
+        'No Lead record found with supplied Id'
+      );
+    }
+    else
+    {
+      return (Lead)result[0];
+    }
   }
 
   public static List<Lead> allNonConvertedByEmail( String email )

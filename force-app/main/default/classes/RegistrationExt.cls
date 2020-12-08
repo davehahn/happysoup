@@ -408,38 +408,38 @@ public with sharing class RegistrationExt {
 	private static String fetchAccount( String acctId )
 	{
 		Boolean isPerson = [SELECT IsPersonAccount FROM Account WHERE Id = :acctId].IsPersonAccount;
-		if( isPerson )
+		try
 		{
-			Account acct = Account_Selector.allPersonAccountsByIds(new Set<Id>{acctId})[0];
-			return JSON.serialize(new Customer.Person(acct));
+			if( isPerson )
+			{
+				return JSON.serialize( new Customer.Person(
+					Account_Selector.personAccountById( acctId )
+				));
+			}
+			else
+			{
+				Account acct = Account_Selector.allByIds( new Set<Id>{acctId})[0];
+				return JSON.serialize( new Customer.Dealer( acct ) );
+			}
 		}
-		else
+		catch( Exception e )
 		{
-			Account acct = Account_Selector.allByIds( new Set<Id>{acctId})[0];
-			return JSON.serialize( new Customer.Dealer( acct ) );
+			throw new AuraHandledException( e.getMessage() );
 		}
 	}
 
 	private static String fetchLead( String leadId )
 	{
-		Lead l = [SELECT Id,
-			Email,
-			FirstName,
-			LastName,
-			Phone,
-			MobilePhone,
-			Preferred_Language__c,
-			Country,
-			CountryCode,
-			City,
-			State,
-			StateCode,
-			Street,
-			PostalCode
-		FROM Lead
-		WHERE Id = : leadId
-		AND isConverted = false];
-		return JSON.serialize( new Customer.Person( l ) );
+		try
+		{
+			return JSON.serialize( new Customer.Person(
+				Lead_Selector.byIdIncludingCampaignMembers( leadId )
+			));
+		}
+		catch( Exception e )
+		{
+			throw new AuraHandledException( e.getMessage() );
+		}
 	}
 
   public static void coverage()

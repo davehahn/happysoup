@@ -39,43 +39,38 @@ export default class CustCommOrderOptions extends LightningElement {
 		registerListener('traileringSelection', this.handleTraileringSelection, this);
 	}
 
-	handleTraileringSelection(detail){
-	  if( detail.onUserSelection && (detail.userSelectionName === this.groupingName) ){
-	    this.selectionMade = true;
-   	}
- 	}
-
 	get availableOptions(){
 
 	  if(this.options){
+	    let options = JSON.parse(JSON.stringify(this.options));
 
-	    let options = this.options;
-
-	    const keys = Object.keys(this.options);
-
-			if('id' in options){
-	      //single option details to array
-	      const init = (this.isInit) ? true : false;
-	      const parsedOption =  this.parseOption(options, init);
-				return parsedOption;
-     	} else {
-     	  //return 'multiple options';
-     	  let combinedOptions = [];
-     	  options.forEach((option, index) => {
-     	    if('id' in option){
-						let init = false;
-						if(!this.selectionMade){
-							init = (this.isInit && index === 0) ? true : false;
-      			}
-						const parsedOption = this.parseOption(option, init);
-						if( parsedOption !== undefined )
-						  combinedOptions.push(parsedOption[0]);
-					} else {
-						//console.log('no id');
-					}
-        });
-        return combinedOptions;
-      }
+			if(options !== null){
+			  if('id' in options){
+					//single option details to array
+					const init = (this.isInit) ? true : false;
+					const parsedOption =  this.parseOption(options, init);
+					return parsedOption;
+				} else {
+					//return 'multiple options';
+					let combinedOptions = [];
+					options.forEach((option, index) => {
+					  if(option !== null){
+					  	if('id' in option){
+								let init = false;
+								if(!this.selectionMade){
+									init = (this.isInit && index === 0) ? true : false;
+								}
+								const parsedOption = this.parseOption(option, init);
+								if( parsedOption !== undefined )
+									combinedOptions.push(parsedOption[0]);
+							} else {
+								//console.log('no id');
+							}
+       			}
+					});
+					return combinedOptions;
+				}
+   		}
    	}
  	}
 
@@ -203,6 +198,19 @@ export default class CustCommOrderOptions extends LightningElement {
    		}
    	});
  	}
+
+	handleTraileringSelection(detail){
+		if( detail.onUserSelection && (detail.userSelectionName === this.groupingName) ){
+			this.selectionMade = true;
+		}
+		let relatedOptions = this.template.querySelectorAll(`[data-parentpage="${detail.userSelectionName}"]`);
+		relatedOptions.forEach((option) => {
+			option.classList.add('hide');
+			if(option.getAttribute('data-parentsku') === detail.optionSKU){
+				option.classList.remove('hide');
+			}
+  	});
+	}
 
  	handleSwatchChange(event){
  	  const optionList = this.template.querySelector('.options_list');

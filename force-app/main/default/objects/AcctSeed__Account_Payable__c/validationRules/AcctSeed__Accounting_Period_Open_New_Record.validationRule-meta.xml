@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>AcctSeed__Accounting_Period_Open_New_Record</fullName>
-    <active>true</active>
-    <description>The accounting period must be open to create a new record</description>
-    <errorConditionFormula>ISNEW() &amp;&amp; !ISBLANK(AcctSeed__Accounting_Period__c) &amp;&amp; TEXT( AcctSeed__Accounting_Period__r.AcctSeed__Status__c) != &quot;Open&quot;</errorConditionFormula>
-    <errorDisplayField>AcctSeed__Accounting_Period__c</errorDisplayField>
-    <errorMessage>The accounting period must be open to create a record</errorMessage>
-</ValidationRule>

@@ -225,192 +225,192 @@ public without sharing class RetailSalesToolController_dh
 
   }
 
-  public class Customer {
-    public String id { get; set; }
-    public String firstName { get; set; }
-    public String lastName { get; set; }
-    public String email { get; set; }
-    public String phone { get; set; }
-    public String gender { get; set; }
-    public String mobilePhone { get; set; }
-    public Boolean isTaxExempt { get; set; }
-    public String taxExemptNumber { get; set; }
-
-    public String street { get; set; }
-    public String city { get; set; }
-    public String state { get; set; }
-    public String stateCode { get; set; }
-    public String country { get; set; }
-    public String countryCode { get; set; }
-    public String postalCode { get; set; }
-
-    public String preferredLanguage { get; set; }
-    public String relationshipStatus { get; set; }
-    public Decimal numberOfChildren { get; set; }
-    public String occupation { get; set; }
-    public String towVehicle { get; set; }
-
-    public String[] emotionalMotivation { get; set; }
-    public String[] hobbies { get; set; }
-    public String[] animals { get; set; }
-    public String teams { get; set; }
-
-    public String wowNotes { get; set; }
-
-
-    public Customer(){}
-    public Customer( Account acct )
-    {
-      this.id = acct.Id;
-      this.firstName = acct.FirstName;
-      this.lastName = acct.LastName;
-      this.email = acct.PersonEmail;
-      this.phone = formatPhoneNumber( acct.Phone );
-      this.mobilePhone = formatPhoneNumber( acct.PersonMobilePhone );
-      this.gender = acct.Gender__pc;
-      this.isTaxExempt = acct.Tax_Exempt_Status_Card_Number__pc != null;
-
-      this.street = acct.BillingStreet;
-      this.city = acct.BillingCity;
-      this.state = acct.BillingState;
-      this.stateCode = acct.BillingStateCode;
-      this.country = acct.BillingCountry;
-      this.countryCode = acct.BillingCountryCode;
-      this.postalCode = acct.BillingPostalCode;
-
-      this.preferredLanguage = acct.Preferred_Language__c == null ? 'English' : acct.Preferred_Language__c;
-      this.relationShipStatus = acct.Relationship_Status__c;
-      this.numberOfChildren = acct.Number_Of_Children__c == null ? 0 : acct.Number_Of_Children__c;
-      this.occupation = acct.Occupation__c;
-      this.towVehicle = acct.Tow_Vehicle__c;
-
-      this.emotionalMotivation = acct.Emotional_Motivation__c == null ? null : acct.Emotional_Motivation__c.split(';');
-      this.hobbies = acct.Hobbies__c == null ? null : acct.Hobbies__c.split(';');
-      this.animals = acct.Animals__c == null ? null : acct.Animals__c.split(';');
-      this.teams = acct.Teams__c;
-
-      this.wowNotes = acct.WOW_Notes__pc;
-    }
-
-    public Customer( Lead l )
-    {
-      this.id = l.Id;
-      this.firstName = l.FirstName;
-      this.lastName = l.LastName;
-      this.email = l.Email;
-      this.phone = l.Phone;
-      this.mobilePhone = l.MobilePhone;
-      this.preferredLanguage = l.Preferred_Language__c;
-      this.numberOfChildren = 0;
-      this.isTaxExempt = false;
-    }
-
-    public void fillCountryAndState()
-    {
-      if( this.state != null && this.stateCode == null )
-      {
-        fixState('code');
-      }
-      if( this.stateCode != null && this.state == null )
-      {
-        fixState('state');
-      }
-      if( this.country != null && this.countryCode == null )
-      {
-        fixCountry('code');
-      }
-      if( this.countryCode != null && this.country == null )
-      {
-        fixCountry('country');
-      }
-    }
-
-    private void fixState( String missingAttr )
-    {
-      Schema.DescribeFieldResult fieldResult = User.statecode.getDescribe();
-      List<Schema.PicklistEntry> ple = fieldResult.getPicklistValues();
-      for( Schema.PicklistEntry f : ple) {
-        if( missingAttr == 'code' && f.getLabel() == this.state )
-        {
-          this.stateCode = f.getValue();
-        }
-        if( missingAttr == 'state' && f.getValue() == this.stateCode )
-        {
-          this.state = f.getLabel();
-        }
-      }
-    }
-
-    private void fixCountry( String missingAttr )
-    {
-      Schema.DescribeFieldResult fieldResult = User.Countrycode.getDescribe();
-      List<Schema.PicklistEntry> ple = fieldResult.getPicklistValues();
-      for( Schema.PicklistEntry f : ple) {
-        if( missingAttr == 'code' && f.getLabel() == this.country )
-        {
-          this.countryCode = f.getValue();
-        }
-        if( missingAttr == 'country' && f.getValue() == this.countryCode )
-        {
-          this.country = f.getLabel();
-        }
-      }
-    }
-
-    public Account revertToAccount()
-    {
-      return new Account(
-        Id = this.id,
-        FirstName = this.firstName,
-        LastName = this.lastName,
-        PersonEmail = this.email,
-        Phone = this.phone,
-        PersonMobilePhone = this.mobilePhone,
-        Gender__pc = this.gender,
-        Tax_Exempt_Status_Card_Number__pc = this.taxExemptNumber,
-        BillingCountry = this.country,
-        BillingCountryCode = this.countryCode,
-        BillingStreet = this.street,
-        BillingCity = this.city,
-        BillingState = this.state,
-        BillingStateCode = this.stateCode,
-        BillingPostalCode = this.postalCode,
-        Preferred_Language__c = this.preferredLanguage,
-        Relationship_Status__c = this.relationshipStatus,
-        Number_Of_Children__c = this.numberOfChildren,
-        Occupation__c = this.occupation,
-        Tow_Vehicle__c = this.towVehicle,
-        Emotional_Motivation__c = this.emotionalMotivation == null ? null : String.join(this.emotionalMotivation, ';'),
-        Hobbies__c = this.hobbies == null ? null : String.join(this.hobbies, ';'),
-        Animals__c = this.animals == null ? null : String.join(this.animals, ';'),
-        Teams__c = this.teams,
-        WOW_Notes__pc = this.wowNotes
-      );
-    }
-
-    public Lead revertToLead()
-    {
-      Lead l = new Lead(
-        FirstName = this.firstName,
-        LastName = this.lastName,
-        Email = this.email,
-        Phone = this.phone,
-        MobilePhone = this.mobilePhone,
-        Preferred_Language__c = this.preferredLanguage
-      );
-      if( this.id != null )
-        l.Id = this.Id;
-      return l;
-    }
-
-    private String formatPhoneNumber( String pn )
-    {
-      if( pn == null )
-        return null;
-      pn = pn.replaceAll('[^0-9]','');
-      return pn.substring(0,3) + '-' + pn.substring(3,6) + '-' + pn.substring(6);
-    }
-  }
+//  public class Customer {
+//    public String id { get; set; }
+//    public String firstName { get; set; }
+//    public String lastName { get; set; }
+//    public String email { get; set; }
+//    public String phone { get; set; }
+//    public String gender { get; set; }
+//    public String mobilePhone { get; set; }
+//    public Boolean isTaxExempt { get; set; }
+//    public String taxExemptNumber { get; set; }
+//
+//    public String street { get; set; }
+//    public String city { get; set; }
+//    public String state { get; set; }
+//    public String stateCode { get; set; }
+//    public String country { get; set; }
+//    public String countryCode { get; set; }
+//    public String postalCode { get; set; }
+//
+//    public String preferredLanguage { get; set; }
+//    public String relationshipStatus { get; set; }
+//    public Decimal numberOfChildren { get; set; }
+//    public String occupation { get; set; }
+//    public String towVehicle { get; set; }
+//
+//    public String[] emotionalMotivation { get; set; }
+//    public String[] hobbies { get; set; }
+//    public String[] animals { get; set; }
+//    public String teams { get; set; }
+//
+//    public String wowNotes { get; set; }
+//
+//
+//    public Customer(){}
+//    public Customer( Account acct )
+//    {
+//      this.id = acct.Id;
+//      this.firstName = acct.FirstName;
+//      this.lastName = acct.LastName;
+//      this.email = acct.PersonEmail;
+//      this.phone = formatPhoneNumber( acct.Phone );
+//      this.mobilePhone = formatPhoneNumber( acct.PersonMobilePhone );
+//      this.gender = acct.Gender__pc;
+//      this.isTaxExempt = acct.Tax_Exempt_Status_Card_Number__pc != null;
+//
+//      this.street = acct.BillingStreet;
+//      this.city = acct.BillingCity;
+//      this.state = acct.BillingState;
+//      this.stateCode = acct.BillingStateCode;
+//      this.country = acct.BillingCountry;
+//      this.countryCode = acct.BillingCountryCode;
+//      this.postalCode = acct.BillingPostalCode;
+//
+//      this.preferredLanguage = acct.Preferred_Language__c == null ? 'English' : acct.Preferred_Language__c;
+//      this.relationShipStatus = acct.Relationship_Status__c;
+//      this.numberOfChildren = acct.Number_Of_Children__c == null ? 0 : acct.Number_Of_Children__c;
+//      this.occupation = acct.Occupation__c;
+//      this.towVehicle = acct.Tow_Vehicle__c;
+//
+//      this.emotionalMotivation = acct.Emotional_Motivation__c == null ? null : acct.Emotional_Motivation__c.split(';');
+//      this.hobbies = acct.Hobbies__c == null ? null : acct.Hobbies__c.split(';');
+//      this.animals = acct.Animals__c == null ? null : acct.Animals__c.split(';');
+//      this.teams = acct.Teams__c;
+//
+//      this.wowNotes = acct.WOW_Notes__pc;
+//    }
+//
+//    public Customer( Lead l )
+//    {
+//      this.id = l.Id;
+//      this.firstName = l.FirstName;
+//      this.lastName = l.LastName;
+//      this.email = l.Email;
+//      this.phone = l.Phone;
+//      this.mobilePhone = l.MobilePhone;
+//      this.preferredLanguage = l.Preferred_Language__c;
+//      this.numberOfChildren = 0;
+//      this.isTaxExempt = false;
+//    }
+//
+//    public void fillCountryAndState()
+//    {
+//      if( this.state != null && this.stateCode == null )
+//      {
+//        fixState('code');
+//      }
+//      if( this.stateCode != null && this.state == null )
+//      {
+//        fixState('state');
+//      }
+//      if( this.country != null && this.countryCode == null )
+//      {
+//        fixCountry('code');
+//      }
+//      if( this.countryCode != null && this.country == null )
+//      {
+//        fixCountry('country');
+//      }
+//    }
+//
+//    private void fixState( String missingAttr )
+//    {
+//      Schema.DescribeFieldResult fieldResult = User.statecode.getDescribe();
+//      List<Schema.PicklistEntry> ple = fieldResult.getPicklistValues();
+//      for( Schema.PicklistEntry f : ple) {
+//        if( missingAttr == 'code' && f.getLabel() == this.state )
+//        {
+//          this.stateCode = f.getValue();
+//        }
+//        if( missingAttr == 'state' && f.getValue() == this.stateCode )
+//        {
+//          this.state = f.getLabel();
+//        }
+//      }
+//    }
+//
+//    private void fixCountry( String missingAttr )
+//    {
+//      Schema.DescribeFieldResult fieldResult = User.Countrycode.getDescribe();
+//      List<Schema.PicklistEntry> ple = fieldResult.getPicklistValues();
+//      for( Schema.PicklistEntry f : ple) {
+//        if( missingAttr == 'code' && f.getLabel() == this.country )
+//        {
+//          this.countryCode = f.getValue();
+//        }
+//        if( missingAttr == 'country' && f.getValue() == this.countryCode )
+//        {
+//          this.country = f.getLabel();
+//        }
+//      }
+//    }
+//
+//    public Account revertToAccount()
+//    {
+//      return new Account(
+//        Id = this.id,
+//        FirstName = this.firstName,
+//        LastName = this.lastName,
+//        PersonEmail = this.email,
+//        Phone = this.phone,
+//        PersonMobilePhone = this.mobilePhone,
+//        Gender__pc = this.gender,
+//        Tax_Exempt_Status_Card_Number__pc = this.taxExemptNumber,
+//        BillingCountry = this.country,
+//        BillingCountryCode = this.countryCode,
+//        BillingStreet = this.street,
+//        BillingCity = this.city,
+//        BillingState = this.state,
+//        BillingStateCode = this.stateCode,
+//        BillingPostalCode = this.postalCode,
+//        Preferred_Language__c = this.preferredLanguage,
+//        Relationship_Status__c = this.relationshipStatus,
+//        Number_Of_Children__c = this.numberOfChildren,
+//        Occupation__c = this.occupation,
+//        Tow_Vehicle__c = this.towVehicle,
+//        Emotional_Motivation__c = this.emotionalMotivation == null ? null : String.join(this.emotionalMotivation, ';'),
+//        Hobbies__c = this.hobbies == null ? null : String.join(this.hobbies, ';'),
+//        Animals__c = this.animals == null ? null : String.join(this.animals, ';'),
+//        Teams__c = this.teams,
+//        WOW_Notes__pc = this.wowNotes
+//      );
+//    }
+//
+//    public Lead revertToLead()
+//    {
+//      Lead l = new Lead(
+//        FirstName = this.firstName,
+//        LastName = this.lastName,
+//        Email = this.email,
+//        Phone = this.phone,
+//        MobilePhone = this.mobilePhone,
+//        Preferred_Language__c = this.preferredLanguage
+//      );
+//      if( this.id != null )
+//        l.Id = this.Id;
+//      return l;
+//    }
+//
+//    private String formatPhoneNumber( String pn )
+//    {
+//      if( pn == null )
+//        return null;
+//      pn = pn.replaceAll('[^0-9]','');
+//      return pn.substring(0,3) + '-' + pn.substring(3,6) + '-' + pn.substring(6);
+//    }
+//  }
 
   public class OppWrapper {
     public String priceBook;
@@ -477,12 +477,16 @@ public without sharing class RetailSalesToolController_dh
   @AuraEnabled
   public static String fetchCustomer( String objectId )
   {
+    String result;
     Schema.sObjectType entityType = Id.valueOf(objectId).getSObjectType();
     if( entityType == Account.sObjectType )
-      return fetchPersonAccount( objectId );
+      result =  fetchPersonAccount( objectId );
     if( entityType == Lead.sObjectType )
-      return fetchLead( objectId );
-    return null;
+      result = fetchLead( objectId );
+    if( result == null )
+      throw new AuraHandledException('No customer found with supplied Id');
+    else
+      return result;
   }
 
   @AuraEnabled
@@ -495,7 +499,7 @@ public without sharing class RetailSalesToolController_dh
   public static String checkDuplicate( String customerJSON)
   {
     List<Account> listAcc = new List<Account>();
-    Customer c = (Customer)JSON.deserialize( customerJSON, Customer.class );
+    Customer.Person c = (Customer.Person)JSON.deserialize( customerJSON, Customer.Person.class );
     c.fillCountryAndState();
     Account acct = c.revertToAccount();
     List<Account_Matching_Field__mdt> listFields = queryDuplicateFields();
@@ -526,45 +530,62 @@ public without sharing class RetailSalesToolController_dh
   {
     User u = [SELECT Id, Sales_Department__c FROM User WHERE Id = :UserInfo.getUserId()];
     System.debug( customerJSON );
-    Customer c = (Customer)JSON.deserialize( customerJSON, Customer.class );
+    Customer.Person c = (Customer.Person)JSON.deserialize( customerJSON, Customer.Person.class );
     c.fillCountryAndState();
+    c.setCreateOpportunityOnLeadConvert( true );
     OppWrapper oppFields = (OppWrapper)JSON.deserialize( oppJSON, OppWrapper.class);
     Opportunity opp;
-    Schema.sObjectType entityType = c.id == null ? null : Id.valueOf(c.id).getSObjectType();
-    System.debug('entityType:'+entityType);
-    if(entityType == Lead.sObjectType)
+
+    Customer.AccountSaveResult result = c.upsertRecord();
+
+    if( result.status == 'success' )
     {
-      Lead ld = c.revertToLead();
-      upsert ld;
-      Database.LeadConvertResult lcr = convertLead(ld);
-      if( lcr.isSuccess() )
+      if( result.opportunityId == null )
       {
-        opp = [SELECT Id, Account.Name FROM Opportunity WHERE Id = :lcr.getOpportunityId() ];
-        c.id = lcr.getAccountId();
-        //save the extra details on the account;
-        Account acct = c.revertToAccount();
-        update acct;
+        opp = new Opportunity(
+          Name = buildOppName(c.firstName + ' ' + c.lastName),
+          AccountId = result.record.Id
+        );
+      }
+      else
+      {
+        opp = [SELECT Id, Account.Name FROM Opportunity WHERE Id = :result.opportunityId ];
       }
     }
-    else if( entityType == null || entityType == Account.sObjectType )
+    else
     {
-//      try {
-        Account acct = c.revertToAccount();
-        System.debug(acct);
-        upsert acct;
-        opp = new Opportunity(
-            Name = buildOppName(c.firstName + ' ' + c.lastName),
-            AccountId = acct.Id
-        );
-//      }catch(Exception e){
-//        if(e.getMessage().contains('DUPLICATES_DETECTED')){
-//
-//        }
+      throw new AuraHandledException( result.messages[0] );
+    }
+
+//    Schema.sObjectType entityType = c.id == null ? null : Id.valueOf(c.id).getSObjectType();
+//    System.debug('entityType:'+entityType);
+//    if(entityType == Lead.sObjectType)
+//    {
+//      Lead ld = c.revertToLead();
+//      upsert ld;
+//      Database.LeadConvertResult lcr = convertLead(ld);
+//      if( lcr.isSuccess() )
+//      {
+//        opp = [SELECT Id, Account.Name FROM Opportunity WHERE Id = :lcr.getOpportunityId() ];
+//        c.id = lcr.getAccountId();
+//        //save the extra details on the account;
+//        Account acct = c.revertToAccount();
+//        update acct;
 //      }
-    }
-    else {
-      throw new AuraHandledException('The Id specified must be either a Lead or an Account');
-    }
+//    }
+//    else if( entityType == null || entityType == Account.sObjectType )
+//    {
+//      Account acct = c.revertToAccount();
+//      System.debug(acct);
+//      upsert acct;
+//      opp = new Opportunity(
+//          Name = buildOppName(c.firstName + ' ' + c.lastName),
+//          AccountId = acct.Id
+//      );
+//    }
+//    else {
+//      throw new AuraHandledException('The Id specified must be either a Lead or an Account');
+//    }
 
     opp.StageName = 'Quoting';
     opp.LeadSource = oppFields.leadSource;
@@ -780,86 +801,44 @@ public without sharing class RetailSalesToolController_dh
 
   private static String fetchPersonAccount( String acctId )
   {
-    Account acct = [SELECT Id,
-                           Name,
-                           PersonEmail,
-                           FirstName,
-                           LastName,
-                           Phone,
-                           PersonHomePhone,
-                           PersonMobilePhone,
-                           PersonOtherPhone,
-                           Preferred_Language__c,
-                           Relationship_Status__c,
-                           Number_Of_Children__c,
-                           Hobbies__c,
-                           Emotional_Motivation__c,
-                           Occupation__c,
-                           Animals__c,
-                           Teams__c,
-                           Tow_Vehicle__c,
-                           WOW_Notes__pc,
-                           Gender__pc,
-                           Tax_Exempt_Status_Card_Number__pc,
-                           BillingStreet,
-                           BillingCity,
-                           BillingState,
-                           BillingStateCode,
-                           BillingCountry,
-                           BillingCountryCode,
-                           BillingPostalCode
-           FROM Account
-           WHERE Id = :acctId];
-    return JSON.serialize( new Customer( acct ) );
+    try
+    {
+      return JSON.serialize( new Customer.Person(
+        Account_Selector.personAccountById( acctId )
+      ));
+    }
+    catch( Exception e )
+    {
+      throw new AuraHandledException( e.getMessage() );
+    }
   }
 
   private static String fetchBusinessAccount( String acctId )
   {
-    Account acct = [SELECT Id,
-                           Name,
-                           Phone,
-                           AccountEmail__c,
-                           Fax,
-                           BillingStreet,
-                           BillingCity,
-                           BillingState,
-                           BillingStateCode,
-                           BillingCountry,
-                           BillingCountryCode,
-                           BillingPostalCode,
-                           ShippingStreet,
-                           ShippingCity,
-                           ShippingState,
-                           ShippingStateCode,
-                           ShippingCountry,
-                           ShippingCountryCode,
-                           ShippingPostalCode,
-                  (SELECT Id,
-                          FirstName,
-                          LastName,
-                          Email,
-                          Phone,
-                          MobilePhone,
-                          Title
-                   FROM Contacts)
-           FROM Account
-           WHERE Id = :acctId];
-    return JSON.serialize( new Business( acct ) );
+    try
+    {
+      return JSON.serialize( new Business(
+        Account_Selector.businessAccountWithContactsById( acctId )
+      ));
+    }
+    catch( Exception e )
+    {
+      throw new AuraHandledException( e.getMessage() );
+    }
   }
 
   private static String fetchLead( String leadId )
   {
-    Lead l = [SELECT Id,
-                     Email,
-                     FirstName,
-                     LastName,
-                     Phone,
-                     MobilePhone,
-                     Preferred_Language__c
-              FROM Lead
-              WHERE Id = : leadId
-              AND isConverted = false];
-    return JSON.serialize( new Customer( l ) );
+    try
+    {
+      return JSON.serialize( new Customer.Person(
+        Lead_Selector.byIdIncludingCampaignMembers( leadId )
+      ));
+    }
+    catch( Exception e )
+    {
+      throw new AuraHandledException( e.getMessage() );
+    }
   }
 
   private static List<Account_Matching_Field__mdt> queryDuplicateFields() {

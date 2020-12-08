@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>AcctSeed__Value_for_Credit_GL_Account</fullName>
-    <active>true</active>
-    <description>Verifies credit gl account field is not blank.</description>
-    <errorConditionFormula>ISBLANK( AcctSeed__Credit_GL_Account__c )</errorConditionFormula>
-    <errorMessage>A scheduled revenue or expense must contain a value for the credit gl account field.</errorMessage>
-</ValidationRule>

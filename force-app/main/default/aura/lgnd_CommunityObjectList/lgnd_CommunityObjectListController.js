@@ -18,9 +18,6 @@
     fieldDetailsMap = (fields === undefined || fields === null ) ?
       [] : fields.split(',');
 
-    // fieldDetailsMap = (fields === undefined || fields === null ) ?
-    //   ['Name:Name:STRING'] : ('Name:Name:STRING,' + fields).split(',');
-
     for( var i=0; i<fieldDetailsMap.length; i++ )
     {
       var d = {},
@@ -30,7 +27,6 @@
       d['type'] = r[2];
       fieldDetails.push(d);
     }
-
     component.set('v.fieldDetails', fieldDetails );
 
     //setup header
@@ -68,6 +64,27 @@
     localStorage.setItem( component.get('v.title'), JSON.stringify( localConfig ) );
     component.find('listSelector--Cmp').doInit();
 	},
+
+	handleSearch: function( component, event, helper )
+	{
+	  let searchString = event.getSource().get('v.value'),
+	      isLoading = component.get('v.isLoading');
+	  if( ( searchString === null ||
+	        searchString.length === 0 ||
+	        searchString.length > 3 ) &&
+	      !isLoading )
+    {
+      setTimeout( () => {
+        if( component.get('v.searchInputString') === searchString )
+          component.set('v.searchString', searchString );
+      },500);
+    }
+  },
+
+  doSearch: function( component, event, helper )
+  {
+    helper.fetchRecords( component );
+  },
 
   navigateToNew: function( component )
   {
@@ -113,7 +130,6 @@
 
   pageNumChanged: function( component, event, helper )
   {
-    console.log( component.get('v.pageNumber') );
     helper.fetchRecords( component );
   },
 
@@ -135,7 +151,6 @@
 
   handleSort: function( component, event, helper )
   {
-    console.log( 'sort ');
     var ele = event.currentTarget,
         workingField = ele.dataset.fieldName,
         currentField = component.get('v.sortedCol'),
@@ -157,8 +172,6 @@
           component.set('v.sortField', fieldDetails[i].apiName );
         }
       }
-      // component.set('v.sortedCol', workingField);
-      // component.set('v.sortField', fieldNames[ fieldLabels.indexOf(workingField)] );
     }
     helper.fetchRecords( component );
   }

@@ -1,38 +1,8 @@
 ({
-  getPricebookId: function(component) {
-    console.log('newClaim.helper.getPricebookId');
-    return this.callAction(component, "getPricebookId", {});
-  },
-
-  getProductId: function(component, name) {
-    var self = this;
-    return new Promise(
-      function(resolve, reject) {
-        self.callAction(component, "getProductIdByName", {"name" : name})
-        .then(
-          $A.getCallback(
-            function(id) {
-              console.log(id);
-              component.set('v.productId', id);
-              resolve();
-            }
-          ),
-          $A.getCallback(
-            function(err) {
-              reject(err);
-            }
-          )
-        );
-      }
-    );
-  },
-
   doStep: function(component, event) {
-    console.log('newClaim.doStep');
     var step = component.get('v.onStep'),
         self = this,
         initialized = component.get('v.uploaderInitialized');
-    console.log('Step: ' + step);
     return new Promise(
       function(resolve, reject) {
         if (step == 1) {
@@ -89,7 +59,6 @@
   },
 
   doStepOne: function(component, event) {
-    console.log('newClaim.helper.doStepOne');
 
     var serialLookupComponent = component.find("sernoSearch"),
         failDate = component.get("v.claim.case.Date_Failure__c"),
@@ -99,10 +68,7 @@
     return new Promise(
       function(resolve, reject) {
 
-        console.log(failDate);
-
         if (!serialLookupComponent.get("v.sernoId")) {
-          console.log('Serial number is required');
           component.set("v.error", "Serial number is required.");
           $A.util.addClass(component.find('spinner'), 'slds-hide');
           reject();
@@ -115,7 +81,6 @@
           $A.util.addClass(component.find('spinner'), 'slds-hide');
           reject();
         } else {
-          console.log('no errors');
           serialLookupComponent.set("v.error", null);
           component.set("v.isValid", true);
 
@@ -130,14 +95,12 @@
 
         $A.util.addClass(component.find('spinner'), 'slds-hide');
 
-        console.log(component.get('v.claims'));
         resolve();
       }
     );
   },
 
   doStepTwo: function(component, event) {
-    console.log('newClaim.helper.doStepTwo');
     var self = this,
         problem = component.get('v.claim.case.Description'),
         type = component.get('v.claim.case.Claim_Type__c'),
@@ -164,13 +127,13 @@
                     parts.splice(i, 1);
                   }
                 }
+                console.log(`Labor Price = ${laborPrice}`);
                 parts.push({
                   sobjectType: "Case_Part__c",
                   Case__c: undefined,
                   Product__c: product.Id,
                   Product__r: product,
                   Quantity__c: hours,
-                  //Order_Quantity__c: hours,
                   Unit_Price__c: laborPrice
                 });
                 component.set("v.parts", parts);
@@ -185,20 +148,16 @@
   },
 
   doStepThree: function(component, event) {
-    console.log('newClaim.helper.doStepThree');
     var self = this,
         onStep = component.get('v.onStep');
 
     return new Promise(function(resolve, reject) {
-      console.log('Here..');
       $A.util.addClass(component.find('spinner'), 'slds-hide');
       resolve();
     });
   },
 
   doStepFour: function(component, event) {
-    console.log('newClaim.helper.doStepFour');
-    console.log(component.get('v.parts'));
     var self = this,
         onStep = component.get('v.onStep');
 
@@ -212,8 +171,6 @@
             var claims = component.get("v.claims"),
                 claim = component.get("v.claim"),
                 claimPosition = component.get('v.claimPosition');
-
-            console.log(claim);
 
             claim.Customer_Name__c = component.get('v.accountName');
             claim.Status = 'saved';
@@ -231,7 +188,6 @@
             component.set('v.claimPosition');
 
             $A.util.addClass(component.find('spinner'), 'slds-hide');
-            console.log( component.get('v.parentId') );
             self.createUploader(component)
             .then(
               $A.getCallback( function() {
@@ -271,11 +227,9 @@
               body.push(uploader);
               imageUploaderContainer.set('v.body', body);
               component.addEventHandler('c:lgnd_FileUpload_AWS_Initialized_Event', function(auraEvent) {
-                console.log('Image Uploader Initialized');
                 component.set('v.uploaderInitialized', true);
                 component.set('v.disableNextButton', false);
               });
-              console.log('EVENT HANDLER ADDED');
             } else if (status === "INCOMPLETE") {
               console.log('No response from server or client is offline.');
             } else if (status === "ERROR") {
@@ -289,7 +243,6 @@
   },
 
   doStepFive: function(component, event) {
-    console.log('newClaim.helper.doStepFive');
     return new Promise(
       function(resolve, reject) {
         if (component.find('imageUploader').get('v.dropToAWS').data('pluginData').fileMap.length > 0) {
@@ -303,8 +256,6 @@
   },
 
   saveProblem: function(component, event) {
-    console.log('newClaim.helper.saveProblem');
-
     var self = this,
         spinner = component.find('spinner');
 
@@ -312,7 +263,6 @@
 
     if (!self.validateProblem(component)) {
       $A.util.addClass(spinner, 'slds-hide');
-      console.log(component.get('v.errors'));
       return false;
     }
 
@@ -330,8 +280,6 @@
   },
 
   updateClaims: function(component, event) {
-    console.log('newclaim.helper.updateClaims');
-
     $A.util.removeClass(component.find('spinner'), 'slds-hide');
 
     var self = this,
@@ -377,7 +325,6 @@
     var partsIndex = event.currentTarget.getAttribute("data-parts-index");
     var parts = component.get("v.parts");
     var part = parts[partsIndex];
-    console.log(part);
     if(part.Id != undefined || part.Id != null){
       var self = this;
       return new Promise(function(resolve, reject) {
@@ -403,18 +350,14 @@
   },
 
   getParts: function(component) {
-    console.log('helper.getParts');
     var self = this,
         claim = component.get('v.claim');
-    console.log('claim');
-    console.log(claim);
     return new Promise(function(resolve, reject) {
       self.callAction(component, "getPartByCaseId", {
             "caseId": claim.case.Id
           })
           .then(
             $A.getCallback(function(result) {
-              console.log(result);
               component.set('v.parts', result);
               resolve();
             }),
@@ -427,14 +370,11 @@
   },
 
   validateProblem: function(component) {
-    console.log('newClaim.helper.validateProblem');
     var isValid = false,
       index = component.get('v.onProblemNum'),
       description = component.get('v.claim.case.Description'),
       correction = component.get('v.claim.case.Correction__c'),
       claimType = component.get('v.claim.case.Claim_Type__c');
-
-    console.log('variables set');
 
     // validate description
     if (!description) {
@@ -443,7 +383,6 @@
     } else {
       component.find("description").set("v.errors", null);
     }
-    console.log('description is ok');
 
     // validate correction
     if (!correction) {
@@ -452,15 +391,12 @@
     } else {
       component.find("correction").set("v.errors", null);
     }
-    console.log('correction is ok');
 
-    console.log(claimType);
     // validate claim type
     if (!claimType) {
       alert('Select a type of problem, you must.');
       return false;
     }
-    console.log('claim type is ok');
 
     // validate sublet
     if (component.get("v.showSublet")) {
@@ -489,30 +425,21 @@
         subletPriceComponent.set("v.errors", null);
       }
     }
-    console.log('sublet is ok');
 
     return true;
   },
 
   createClaim: function(component) {
-    console.log('newClaim.helper.createClaim');
     var self = this,
         claim = component.get('v.claim');
 
-    console.log('newClaim.helper.createClaim: Claim:');
-    console.log(claim);
-
     return new Promise(function(resolve, reject) {
-      console.log(claim);
-      console.log(claim.case);
       self.callAction(component, "saveWithParts", {
         "caseJson": JSON.stringify(claim.case),
         "caseParts": component.get('v.parts')
       })
       .then(
         $A.getCallback(function(caseId) {
-          console.log('newClaim.helper.createClaim: caseId: ' + caseId);
-          console.log(component.get('v.claims'));
           component.set('v.claim.case.Id', caseId);
           component.set('v.parts', []);
           component.set('v.parentId', caseId);
@@ -526,7 +453,6 @@
   },
 
   addSubletAttachment: function(component, event) {
-    console.log('newClaim.helper.addSubletAttachment');
     var caseId = event.target.dataset.parent,
         beginEvt = $A.get('e.c:lgnd_dh_fileUploadBegin_Event');
 
@@ -548,32 +474,19 @@
     return this.callAction(component, "getProduct", { "id": productId });
   },
 
-  getClaimTypes: function(component) {
-    return this.callAction(component, "getClaimTypes", {});
-  },
-
   removeClaims: function(component) {
-    console.log('helper.removeClaims');
-
     var self = this,
         claims = component.get('v.claims'),
         claimIds = [];
 
-    console.log('helper.removeClaims: variables set');
-
     for (i = 0; i < claims.length; i++) {
-      console.log('helper.removeClaims: for loop: ' + i);
-      console.log(claims[i].case.Id);
       claimIds.push(claims[i].case.Id);
     }
-
-    console.log(claimIds);
 
     return new Promise(function(resolve, reject) {
       self.callAction(component, "deleteClaims", {"claimIds": claimIds})
       .then(
         $A.getCallback( function() {
-          console.log('helper.removeClaims: deleted');
           resolve();
         })
       );
@@ -581,15 +494,12 @@
   },
 
   removeClaim: function(component) {
-    console.log('helper.removeClaim');
 
     var self = this,
         claims = component.get('v.claims'),
         claim = component.get('v.claim'),
         onStep = component.get('v.onStep'),
         claimIds = [];
-
-    console.log('helper.removeClaim: variables set');
 
     if (onStep < 3) {
       claims.pop();
@@ -604,7 +514,6 @@
             component.set('v.claims', claims);
             claim = claims[claims.length-1];
             component.set('v.claim', claim);
-            console.log('helper.removeClaim: deleted');
             resolve();
           })
         );
@@ -620,7 +529,6 @@
       })
       .then(
         $A.getCallback( function(unitPrice) {
-          console.log(unitPrice);
           resolve(unitPrice);
         })
       );
@@ -628,7 +536,6 @@
   },
 
   callAction: function(component, methodName, parameters) {
-    console.log('newClaim.helper.callAction:' + methodName);
     var action = component.get("c." + methodName);
     action.setParams(parameters);
     return new Promise(function(resolve, reject) {
@@ -639,7 +546,6 @@
         }
         else if (responseState === "ERROR")
         {
-          //reject(response.getError());
           var errors = response.getError();
           if (errors)
           {
@@ -663,7 +569,6 @@
 
   showToast: function( message, messageType )
   {
-    console.log( message );
     var toast = $A.get('e.force:showToast');
     toast.setParams({
       message: message,

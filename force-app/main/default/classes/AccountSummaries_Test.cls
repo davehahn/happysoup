@@ -70,7 +70,7 @@ private class AccountSummaries_Test {
 		insert newBL;
 		AcctSeed__Cash_Receipt__c cr = new AcctSeed__Cash_Receipt__c(
 			AcctSeed__Account__c = dealer.Id,
-			AcctSeed__Amount__c = 50.0,
+			AcctSeed__Amount__c = 5.0,
 			AcctSeed__Receipt_Date__c = Date.today(),
 			AcctSeed__Payment_Reference__c = 'Cash',
 			AcctSeed__Ledger__c = ledger.Id
@@ -79,7 +79,7 @@ private class AccountSummaries_Test {
 		AcctSeed__Billing_Cash_Receipt__c bcr = new AcctSeed__Billing_Cash_Receipt__c(
 			AcctSeed__Cash_Receipt__c = cr.Id,
 			AcctSeed__Billing__c = newBill.Id,
-			AcctSeed__Applied_Amount__c = 50.0
+			AcctSeed__Applied_Amount__c = 5.0
 		);
 		insert bcr;
 		Test.setCreatedDate( newBill.Id, Date.today().toStartOfMonth().addDays(-15) );

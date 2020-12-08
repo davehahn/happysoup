@@ -1,58 +1,55 @@
-# Salesforce App
+# Legend Bug Fix Week Process
 
-This guide helps Salesforce developers who are new to Visual Studio Code go from zero to a deployed app using Salesforce Extensions for VS Code and Salesforce CLI.
+### Step 1 - Setup dev and validation orgs
 
-## Part 1: Choosing a Development Model
+* Refresh your current dev org from Production or create a new one.  Once refreshed populate standard data and 
+any other data you require using DumpIt. ( Ask Dave about this )
+* Create a new validate sandbox from Production. This will be used to perform local test deploys/validations. Make note of what you named it.
+* Authorize your newly created validation sandbox with sfdx giving it a alias of your choosing.  
+``sfdx force:auth:web:login -a YOUR-VALIDATION-ORG-ALIAS -r https://test.salesforce.com``
 
-There are two types of developer processes or models supported in Salesforce Extensions for VS Code and Salesforce CLI. These models are explained below. Each model offers pros and cons and is fully supported.
 
-### Package Development Model
+### Step 2 - Setup git branch
 
-The package development model allows you to create self-contained applications or libraries that are deployed to your org as a single package. These packages are typically developed against source-tracked orgs called scratch orgs. This development model is geared toward a more modern type of software development process that uses org source tracking, source control, and continuous integration and deployment.
+* Create a LOCAL branch called {month}-bugsprint-{name} from staging.  We will refer to this as your "buxfix containing branch".    
+``git checkout staging``     
+``git checkout -b dec-bugsprint-dave`` 
 
-If you are starting a new project, we recommend that you consider the package development model. To start developing with this model in Visual Studio Code, see [Package Development Model with VS Code](https://forcedotcom.github.io/salesforcedx-vscode/articles/user-guide/package-development-model). For details about the model, see the [Package Development Model](https://trailhead.salesforce.com/en/content/learn/modules/sfdx_dev_model) Trailhead module.
+### Step 3 - Update Source/Source Tracking on your dev org
 
-If you are developing against scratch orgs, use the command `SFDX: Create Project` (VS Code) or `sfdx force:project:create` (Salesforce CLI)  to create your project. If you used another command, you might want to start over with that command.
+* Perform a Local Push to ensure all code from the repository exists in your Dev org.  This will also update the Source Tracking of SFDX allow sfdx force:source:pull to function.  
+``./local_push.sh YOUR_DEV_OR_ALIAS``
 
-When working with source-tracked orgs, use the commands `SFDX: Push Source to Org` (VS Code) or `sfdx force:source:push` (Salesforce CLI) and `SFDX: Pull Source from Org` (VS Code) or `sfdx force:source:pull` (Salesforce CLI). Do not use the `Retrieve` and `Deploy` commands with scratch orgs.
+### Step 4 - Make your changes and commit
+* It is now time to make the required changes to close the particular issue you are working on.
+* If you have made declarative changes you can use the  Local Pull command to get those.  *note: this does not apply to static resources, if you update/created a static resource you will be required to manual retrieve and add it source.  
+``./local_pull.sh YOUR_DEV_ORG_ALIAS``
+* Please take a minute to review what this command retrieved.  If you do not recognize a piece of metadata that was retrieved, please do not commit it.
+* Add all new files to source and commit ENSURING you reference the Jira Issue Number in the commit.  
+``git add -A``  
+``git commit -am 'closes SFISSUES-###'``  
+* If you are working on a complex issue where you feel you will need to make several commits along the way, create a new issue specific branch off your bugfix containing branch.  
+``git checkout -b SFISSUES-###``  
+* make all your changes and commits.  
+``git commit -am 'did some work'``  
+``...``  
+``...``  
+``git commit -am 'did some more work'``
+* when you are all done and made your final commit, make sure the final commit message contains reference to the Jira Issue name.  If you forgot simply run ``git commit --amend`` and edit the commit message to add the Jira Issue name.
+* You can now merge your Issue specific branch into your bugfix containing branch.  
+``git checkout YOUR-BUGFIX-CONTAININ-BRANCH``  
+``git merge SFISSUES-###``
+* It is best practice to push your bugfix containing branch up to Bitbucket after every Issue has been resolved, basically just for safe keeping.
 
-### Org Development Model
+### Step 5 (optional) - Local deploy validation
 
-The org development model allows you to connect directly to a non-source-tracked org (sandbox, Developer Edition (DE) org, Trailhead Playground, or even a production org) to retrieve and deploy code directly. This model is similar to the type of development you have done in the past using tools such as Force.com IDE or MavensMate.
+* If you have made large changes, especially large code changes, and you would like to validate your current bugfix containing branch run:  
+``./local_deploy.sh YOUR-VALIDATION-ORG-ALIAS RunLocalTests true``
+* This will perform a validation only deploy and run all unit tests, it will take awhile, but is very valuable.
 
-To start developing with this model in Visual Studio Code, see [Org Development Model with VS Code](https://forcedotcom.github.io/salesforcedx-vscode/articles/user-guide/org-development-model). For details about the model, see the [Org Development Model](https://trailhead.salesforce.com/content/learn/modules/org-development-model) Trailhead module.
+### Step 6 - All Issues closed
+* Once you perform all required changes to resolve all Jira issues assigned to you AND you have verified your local bugfix containing branch by performing Step 5, log into Bitbucket and create a Pull Request
+into ``bugfix/{month}-sprint`` branch.  If this branch does not exist in Bitbucket, contact Dave and ask him nicely to get off his ass and create it.
 
-If you are developing against non-source-tracked orgs, use the command `SFDX: Create Project with Manifest` (VS Code) or `sfdx force:project:create --manifest` (Salesforce CLI) to create your project. If you used another command, you might want to start over with this command to create a Salesforce DX project.
-
-When working with non-source-tracked orgs, use the commands `SFDX: Deploy Source to Org` (VS Code) or `sfdx force:source:deploy` (Salesforce CLI) and `SFDX: Retrieve Source from Org` (VS Code) or `sfdx force:source:retrieve` (Salesforce CLI). The `Push` and `Pull` commands work only on orgs with source tracking (scratch orgs).
-
-## The `sfdx-project.json` File
-
-The `sfdx-project.json` file contains useful configuration information for your project. See [Salesforce DX Project Configuration](https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_ws_config.htm) in the _Salesforce DX Developer Guide_ for details about this file.
-
-The most important parts of this file for getting started are the `sfdcLoginUrl` and `packageDirectories` properties.
-
-The `sfdcLoginUrl` specifies the default login URL to use when authorizing an org.
-
-The `packageDirectories` filepath tells VS Code and Salesforce CLI where the metadata files for your project are stored. You need at least one package directory set in your file. The default setting is shown below. If you set the value of the `packageDirectories` property called `path` to `force-app`, by default your metadata goes in the `force-app` directory. If you want to change that directory to something like `src`, simply change the `path` value and make sure the directory you’re pointing to exists.
-
-```json
-"packageDirectories" : [
-    {
-      "path": "force-app",
-      "default": true
-    }
-]
-```
-
-## Part 2: Working with Source
-
-For details about developing against scratch orgs, see the [Package Development Model](https://trailhead.salesforce.com/en/content/learn/modules/sfdx_dev_model) module on Trailhead or [Package Development Model with VS Code](https://forcedotcom.github.io/salesforcedx-vscode/articles/user-guide/package-development-model).
-
-For details about developing against orgs that don’t have source tracking, see the [Org Development Model](https://trailhead.salesforce.com/content/learn/modules/org-development-model) module on Trailhead or [Org Development Model with VS Code](https://forcedotcom.github.io/salesforcedx-vscode/articles/user-guide/org-development-model).
-
-## Part 3: Deploying to Production
-
-Don’t deploy your code to production directly from Visual Studio Code. The deploy and retrieve commands do not support transactional operations, which means that a deployment can fail in a partial state. Also, the deploy and retrieve commands don’t run the tests needed for production deployments. The push and pull commands are disabled for orgs that don’t have source tracking, including production orgs.
-
-Deploy your changes to production using [packaging](https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_dev2gp.htm) or by [converting your source](https://developer.salesforce.com/docs/atlas.en-us.sfdx_cli_reference.meta/sfdx_cli_reference/cli_reference_force_source.htm#cli_reference_convert) into metadata format and using the [metadata deploy command](https://developer.salesforce.com/docs/atlas.en-us.sfdx_cli_reference.meta/sfdx_cli_reference/cli_reference_force_mdapi.htm#cli_reference_deploy).
+### Step 7 - Celebrate, you are done.
+* You have completed your bugfix sprint, congrates, doesn't feel good? Yes it does, jump up, shoot at the world "Screw you bugs, your DEAD", or maybe quietly have a drink when you get home and reflect at how awesome you are.

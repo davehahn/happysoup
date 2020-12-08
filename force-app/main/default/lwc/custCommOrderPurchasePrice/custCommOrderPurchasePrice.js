@@ -15,6 +15,7 @@ export default class CustCommOrderPurchasePrice extends LightningElement {
 	performanceItems = [];
 	traileringItems = [];
 	electronicsItems = [];
+	freightItems = [];
  	@track priceMatrixString;
 
  	@track totalPrice;
@@ -68,7 +69,14 @@ export default class CustCommOrderPurchasePrice extends LightningElement {
 						this.ifContains(this.electronicsItems, payload);
 					}
 				}
-			}	else {
+			}	else if(details.type === 'select'){
+			  if(details.section === 'freight'){
+			    //remove the old item
+			    this.freightItems = this.freightItems.filter(obj => obj.sku !== payload.sku);
+			    //add the new item
+			    this.freightItems.push(payload);
+     		}
+   		} else {
 				//append the item to this section
 				if(details.section === 'performance'){
 					this.performanceItems.push(payload);
@@ -89,7 +97,7 @@ export default class CustCommOrderPurchasePrice extends LightningElement {
 			}
 		}
 
-		let itemMatrix = this.baseItem.concat(this.performanceItems, this.traileringItems, this.electronicsItems);
+		let itemMatrix = this.baseItem.concat(this.performanceItems, this.traileringItems, this.electronicsItems, this.freightItems);
 		let priceMatrix = [];
 		const reducer = (accumulator, currentValue) => accumulator + currentValue;
 		for(const item of itemMatrix){
