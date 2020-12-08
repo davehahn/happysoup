@@ -171,7 +171,7 @@ public with sharing class OpportunityDocumentBuilder {
     insert doc;
 
     Opportunity_Document__c oppDoc = new Opportunity_Document__c();
-    oppDoc.Name = bName + ' - ' + Datetime.Now().format() + '.pdf';
+    oppDoc.Name = fixOpportunityDocName( bName );
     oppDoc.Opportunity__c = oppId;
     oppDoc.Document_Type__c = 'Quote';
     oppDoc.Document_Id__c = doc.Id;
@@ -181,6 +181,19 @@ public with sharing class OpportunityDocumentBuilder {
 
   }
 
+  private static String fixOpportunityDocName( String boatName )
+  {
+    String oppDocNameAddition = ' - ' + Datetime.Now().format() + '.pdf';
+    String oppDocName = boatName + oppDocNameAddition;
+    if( oppDocName.length() > 80 )
+    {
+      Integer over = oppDocName.length() - 80;
+      String shortenedBName = boatName.substring(0, (boatName.length() - over) );
+      oppDocName = shortenedBName + oppDocNameAddition;
+    }
+    return oppDocName;
+  }
+
   public static Opportunity_Document__c buildQuotePDF(Id oppId,
                                                  String language,
                                                  String bName,
@@ -188,11 +201,12 @@ public with sharing class OpportunityDocumentBuilder {
                                                  String validDate )
   {
     String docName = 'Quote - '  + fileName + ' - ' + Datetime.Now().format() + '.pdf';
+
     Document doc = buildPdfDoc( 'Quote', language, docName, oppId, validDate );
     insert doc;
 
     Opportunity_Document__c oppDoc = new Opportunity_Document__c();
-    oppDoc.Name = bName + ' - ' + Datetime.Now().format() + '.pdf';
+    oppDoc.Name = fixOpportunityDocName( bName );
     oppDoc.Opportunity__c = oppId;
     oppDoc.Document_Type__c = 'Quote';
     oppDoc.Document_Id__c = doc.Id;
@@ -212,7 +226,7 @@ public with sharing class OpportunityDocumentBuilder {
     Document doc = buildPdfDoc( 'Quote', language, docName, oppId );
     insert doc;
     Opportunity_Document__c oppDoc = new Opportunity_Document__c();
-    oppDoc.Name = bName + ' - ' + Datetime.Now().format() + '.pdf';
+    oppDoc.Name = fixOpportunityDocName( bName );
     oppDoc.Opportunity__c = attachOppId;
     oppDoc.Document_Id__c = doc.Id;
     oppDoc.Document_Type__c = 'Quote';
