@@ -24,6 +24,9 @@ export default class CustCommOrderCheckbox extends NavigationMixin(LightningElem
 	@track displayRPM;
 	@track displayKM;
 
+	@track isEN = true;
+	@track isFR = false;
+
 	@wire(CurrentPageReference) pageRef;
 
 	renderedCallback(){
@@ -31,6 +34,7 @@ export default class CustCommOrderCheckbox extends NavigationMixin(LightningElem
 	  registerListener('motorSelection', this.handleMotorSelection, this);
 	  registerListener('foundSelection', this.checkRelatedMotorOption, this);
 	  registerListener('clearSelectedTrailerOptions', this.clearTrailerOptions, this);
+	  registerListener('languageChange', this.handleLanguageChange, this);
 		if(this.template.querySelector('.detailedSummary')){
 		  this.summaryFrag();
   	}
@@ -251,4 +255,11 @@ summaryFrag(){
 			fireEvent(this.pageRef, 'updateListItems', optionDetails);
 		});
  	}
+
+ 	handleLanguageChange(detail){
+		if(detail){
+			this.isEN = (detail === 'EN') ? true : false;
+			this.isFR = (detail === 'FR') ? true : false;
+		}
+	}
 }

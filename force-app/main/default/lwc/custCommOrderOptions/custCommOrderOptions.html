@@ -6,7 +6,12 @@
 <template>
     <section class="options" data-has-title={hasOptionsTitle}>
         <template if:true={hasOptionsTitle}>
-            <h4 class="options_title">{optionsTitle}</h4>
+            <template if:true={isEN}>
+                <h4 class="options_title">{optionsTitleEn}</h4>
+            </template>
+            <template if:true={isFR}>
+                <h4 class="options_title">{optionsTitleFr}</h4>
+            </template>
         </template>
         <fieldset>
             <ul class="options_list" data-layout-type={layoutType}>

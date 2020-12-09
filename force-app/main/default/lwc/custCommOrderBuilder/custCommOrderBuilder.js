@@ -30,14 +30,27 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
   @track customerFirstName;
   @track customerLastName;
   creditCardError = false;
-
-
+  @track isEN = true;
+  @track isFR = false;
+  @track currentLang = 'EN';
 
   pages = [
-    'performance',
-    'trailering',
-    'electronics',
-    'payment'
+    {
+    	label: 'performance',
+    	label_fr: 'performance'
+    },
+    {
+			label: 'trailering',
+			label_fr: 'remorque'
+		},
+		{
+			label: 'electronics',
+			label_fr: 'électroniques'
+		},
+		{
+			label: 'payment',
+			label_fr: 'paiement'
+		}
   ];
 
  	 modalPages = [
@@ -156,7 +169,8 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
   {
     return this.pages.map( page => {
       return {
-        label: page,
+        label: page.label,
+        label_fr: page.label_fr,
         class: this.currentPage === page ?
           'config-nav-item config-nav-item_selected' :
           'config-nav-item'
@@ -187,6 +201,21 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
   handleNav( event )
   {
     this.doPageChange( event.currentTarget.dataset.navName );
+  }
+
+  handleLanguage( event ){
+  	let changeToLang = event.currentTarget.dataset.lang;
+  	if(changeToLang === 'EN'){
+  		this.isEN = true;
+  		this.isFR = false;
+  		this.currentLang = 'EN';
+  		fireEvent(this.pageRef, 'languageChange', 'EN');
+  	} else {
+  		this.isEN = false;
+  		this.isFR = true;
+  		this.currentLang = 'FR';
+  		fireEvent(this.pageRef, 'languageChange', 'FR');
+  	}
   }
 
   handlePurchasePriceChange( amount )

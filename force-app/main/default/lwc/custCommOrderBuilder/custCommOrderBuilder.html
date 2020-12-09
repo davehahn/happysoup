@@ -26,14 +26,24 @@
           <ol class="config-nav-list">
             <template for:each={processPages} for:item="page">
               <li key={page.label}>
-                <button class={page.class} onclick={handleNav} data-click-focus="unset" data-nav-name={page.label}><h3 class="config-nav-title">{page.label}</h3></button>
+                <template if:true={isEN}>
+                  <button class={page.class} onclick={handleNav} data-click-focus="unset" data-nav-name={page.label}><h3 class="config-nav-title">{page.label}</h3></button>
+                </template>
+                <template if:true={isFR}>
+                  <button class={page.class} onclick={handleNav} data-click-focus="unset" data-nav-name={page.label}><h3 class="config-nav-title">{page.label_fr}</h3></button>
+                </template>
               </li>
             </template>
           </ol>
         </nav>
 
         <div class="language-select">
-
+          <template if:true={isEN}>
+            <button onclick={handleLanguage} data-lang="FR">Français</button>
+          </template>
+          <template if:true={isFR}>
+            <button onclick={handleLanguage} data-lang="EN">English</button>
+          </template>
         </div>
 
       </header>
@@ -44,13 +54,18 @@
         <section class="config-page config-page_selected" data-page="performance">
           <div class="config-page_left">
             <h2 class="vh">Performance</h2>
-            <c-cust-comm-order-boat-image size="large" page='performance' marketing-content= {boat.marketingContent}></c-cust-comm-order-boat-image>
+            <c-cust-comm-order-boat-image size="large" page='performance' marketing-content={boat.marketingContent}></c-cust-comm-order-boat-image>
             <c-cust-comm-order-motor-stats motor-details={motorDetails}></c-cust-comm-order-motor-stats>
           </div>
           <div class="config-page_right slds-p-around_xx-large">
-            <h3 class="right_heading">Select Your Performance</h3>
-            <c-cust-comm-order-options options-title="Standard Performance" selections="one" selection-scope="global" options={boat.standardMotor} parent-product-sku={boat.id} boat-retail-price={boat.retailPrice} is-init="true" trigger-ui-change="true" page='performance' grouping-name="motor_options"></c-cust-comm-order-options>
-            <c-cust-comm-order-options options-title="Enhanced Performance" selections="one" selection-scope="global" options={boat.motorUpgrades} parent-product-sku={boat.id} boat-retail-price={boat.retailPrice} trigger-ui-change="true" page='performance' grouping-name="motor_options"></c-cust-comm-order-options>
+            <template if:true={isEN}>
+              <h3 class="right_heading">Select Your Performance</h3>
+            </template>
+            <template if:true={isFR}>
+              <h3 class="right_heading">Choisissez votre performance </h3>
+            </template>
+            <c-cust-comm-order-options options-title-en="Standard Performance" options-title-fr="Performance standard" selections="one" selection-scope="global" options={boat.standardMotor} parent-product-sku={boat.id} boat-retail-price={boat.retailPrice} is-init="true" trigger-ui-change="true" page='performance' grouping-name="motor_options"></c-cust-comm-order-options>
+            <c-cust-comm-order-options options-title-en="Enhanced Performance" options-title-fr="Performance améliorée" selections="one" selection-scope="global" options={boat.motorUpgrades} parent-product-sku={boat.id} boat-retail-price={boat.retailPrice} trigger-ui-change="true" page='performance' grouping-name="motor_options"></c-cust-comm-order-options>
           </div>
         </section>
 
@@ -199,14 +214,11 @@
                       <option value="Manitoba">Manitoba</option>
                       <option value="New Brunswick">New Brunswick</option>
                       <option value="Newfoundland and Labrador">Newfoundland and Labrador</option>
-                      <option value="Northwest Territories">Northwest Territories</option>
                       <option value="Nova Scotia">Nova Scotia</option>
-                      <option value="Nunavut">Nunavut</option>
                       <option value="Ontario">Ontario</option>
                       <option value="Prince Edward Island">Prince Edward Island</option>
                       <option value="Quebec">Quebec</option>
                       <option value="Saskatchewan">Saskatchewan</option>
-                      <option value="Yukon">Yukon</option>
                     </select>
                     <span class="feedback" id="Province_feedback" aria-live="polite"></span>
                   </div>
@@ -228,9 +240,10 @@
             <div class="payment-details">
               <h3 class="form-header">Payment</h3>
               <div class="payment-disclaimer">
-                Due today to complete your order:
+                Due today is a fully refundable down payment of:
                 <lightning-formatted-number value={paymentAmount}
                                             format-style="currency"
+                                            currency-code="CAD"
                                             maximum-fraction-digits="2"></lightning-formatted-number>
                 .
               </div>
@@ -293,7 +306,13 @@
                 <c-cust-comm-order-summary usage="thanks"></c-cust-comm-order-summary>
               </li>
               <li class="thanks_detail thanks_detail--horizontal">
-                <strong>Payment:</strong> <span><lightning-formatted-number value={paymentAmount} format-style="percent" maximum-fraction-digits="2"></lightning-formatted-number></span>
+                <strong>Payment:</strong>
+                <span>
+                  <lightning-formatted-number value={paymentAmount}
+                                              format-style="currency"
+                                              currency-code="CAD"
+                                              maximum-fraction-digits="2"></lightning-formatted-number>
+                </span>
               </li>
               <li class="thanks_detail thanks_detail--horizontal">
                 <strong>Estimated Deliver:</strong> <span>{shippingTiming}</span>
@@ -459,16 +478,8 @@
                       <td>$2,450</td>
                     </tr>
                     <tr>
-                      <td>Northwest Territories</td>
-                      <td>TBD</td>
-                    </tr>
-                    <tr>
                       <td>Nova Scotia</td>
                       <td>$825</td>
-                    </tr>
-                    <tr>
-                      <td>Nunavut</td>
-                      <td>TBD</td>
                     </tr>
                     <tr>
                       <td>Ontario</td>
@@ -485,10 +496,6 @@
                     <tr>
                       <td>Saskatchewan</td>
                       <td>$975</td>
-                    </tr>
-                    <tr>
-                      <td>Yukon</td>
-                      <td>TBD</td>
                     </tr>
                   </table>
                 </div>

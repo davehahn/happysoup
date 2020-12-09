@@ -34,7 +34,11 @@
         <h4 data-hide={hideInputs}>Preferred Equipment Package</h4>
         <ul data-hide={hideInputs}>
           <template for:each={premiumPackItems} for:item="item">
-            <li key={item} class="premiumPackage_item">{item}</li>
+            <li key={item.description} class="premiumPackage_item">
+              <strong class="premiumPackage_itemName">{item.description}</strong>
+              <span class="premiumPackage_itemPrice">{item.valueFormatted}</span>
+              <small class="premiumPackage_checkmark"></small>
+            </li>
           </template>
         </ul>
         <div class="cashAmount">
