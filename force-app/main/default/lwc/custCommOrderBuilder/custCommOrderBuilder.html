@@ -62,7 +62,7 @@
               <h3 class="right_heading">Select Your Performance</h3>
             </template>
             <template if:true={isFR}>
-              <h3 class="right_heading">Choisissez votre performance </h3>
+              <h3 class="right_heading">Choisissez votre performance</h3>
             </template>
             <c-cust-comm-order-options options-title-en="Standard Performance" options-title-fr="Performance standard" selections="one" selection-scope="global" options={boat.standardMotor} parent-product-sku={boat.id} boat-retail-price={boat.retailPrice} is-init="true" trigger-ui-change="true" page='performance' grouping-name="motor_options"></c-cust-comm-order-options>
             <c-cust-comm-order-options options-title-en="Enhanced Performance" options-title-fr="Performance améliorée" selections="one" selection-scope="global" options={boat.motorUpgrades} parent-product-sku={boat.id} boat-retail-price={boat.retailPrice} trigger-ui-change="true" page='performance' grouping-name="motor_options"></c-cust-comm-order-options>
@@ -78,10 +78,15 @@
             </template>
           </div>
           <div class="config-page_right slds-p-around_xx-large">
-            <h3 class="right_heading">Trailering Package</h3>
-            <c-cust-comm-order-options options-title="Select Your Trailer" selections="one" selection-scope="local" is-init="true" options={traileringOptions} parent-product-sku={boat.id} show-option-price="true" boat-retail-price={boat.retailPrice} layout-type="alt-swatch" grouping-name="trailer_options" page='trailering'></c-cust-comm-order-options>
+            <template if:true={isEN}>
+              <h3 class="right_heading">Trailering Package</h3>
+            </template>
+            <template if:true={isFR}>
+              <h3 class="right_heading">Ensemble de remorquage</h3>
+            </template>
+            <c-cust-comm-order-options options-title-en="Select Your Trailer" options-title-fr="Choisissez votre remorque" selections="one" selection-scope="local" is-init="true" options={traileringOptions} parent-product-sku={boat.id} show-option-price="true" boat-retail-price={boat.retailPrice} layout-type="alt-swatch" grouping-name="trailer_options" page='trailering'></c-cust-comm-order-options>
             <!--<c-cust-comm-order-options selections="one" selection-scope="global" options={boat.trailerUpgrades} show-option-price="true" boat-retail-price={boat.retailPrice} page='trailering'></c-cust-comm-order-options>-->
-            <c-cust-comm-order-options options-title="More Trailering Options" selections="multiple" selection-scope="local" options={boat.optionalProducts.canvas} parent-product-sku={boat.id} show-option-price="true" boat-retail-price={boat.retailPrice} page='trailering'></c-cust-comm-order-options>
+            <c-cust-comm-order-options options-title-en="More Trailering Options" options-title-fr="Plus d’option pour remorques" selections="multiple" selection-scope="local" options={boat.optionalProducts.canvas} parent-product-sku={boat.id} show-option-price="true" boat-retail-price={boat.retailPrice} page='trailering'></c-cust-comm-order-options>
             <c-cust-comm-order-options selections="multiple" selection-scope="local" options={traileringOptions} sub-section="optionalProducts.trailerAccessories" addons="true" show-option-price="true" boat-retail-price={boat.retailPrice} page='trailering' parent-page="trailer_options"></c-cust-comm-order-options>
             <c-cust-comm-order-options selections="multiple" selection-scope="local" options={boat.standardMotor} sub-section="optionalProducts.trailerAccessories" addons="true" show-option-price="true" boat-retail-price={boat.retailPrice} page='trailering' parent-page='performance'></c-cust-comm-order-options>
             <c-cust-comm-order-options selections="multiple" selection-scope="local" options={boat.motorUpgrades} sub-section="optionalProducts.trailerAccessories" addons="true" show-option-price="true" boat-retail-price={boat.retailPrice} page='trailering' parent-page='performance'></c-cust-comm-order-options>
@@ -98,7 +103,7 @@
           </div>
           <div class="config-page_right slds-p-around_xx-large">
             <h3 class="right_heading"><span class="vh">Choose Your</span> Electronics</h3>
-            <c-cust-comm-order-options options-title="Terrova 55 Tech Package" options={boat.optionalProducts.trollingMotor} parent-product-sku={boat.id} show-option-price="true" boat-retail-price={boat.retailPrice} page='electronics'></c-cust-comm-order-options>
+            <c-cust-comm-order-options options-title-en="Terrova 55 Tech Package" options-title-fr="Ensemble Terrova 55" options={boat.optionalProducts.trollingMotor} parent-product-sku={boat.id} show-option-price="true" boat-retail-price={boat.retailPrice} page='electronics'></c-cust-comm-order-options>
           </div>
         </section>
 

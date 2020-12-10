@@ -107,6 +107,7 @@ export default class CustCommOrderOptions extends LightningElement {
 		let blurb_fr = null;
 		let swatch = null;
 		let detailedSummary = null;
+		let detailedSummary_fr = null;
 		let includedProducts = [];
 
 
@@ -153,7 +154,9 @@ export default class CustCommOrderOptions extends LightningElement {
     		} else if(label === 'detailedsummary'){
     		  //detailedSummary = this.decodeHtml(origContent);
     		  detailedSummary = origContent;
-      	}
+      	} else if(label === 'detailedsummary_fr'){
+      		detailedSummary_fr = origContent;
+       	}
 			}
 		}
 
@@ -174,7 +177,8 @@ export default class CustCommOrderOptions extends LightningElement {
 			'includedProducts': includedProducts,
 			'parentSku': parentSku,
 			'swatch': swatch,
-			'detailedSummary': detailedSummary
+			'detailedSummary': detailedSummary,
+			'detailedSummary_fr': detailedSummary_fr
 		});
 		return optionDetails;
  	}

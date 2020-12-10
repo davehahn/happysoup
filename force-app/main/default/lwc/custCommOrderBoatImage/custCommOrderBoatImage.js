@@ -71,6 +71,8 @@ export default class CustCommOrderBoatImage extends LightningElement {
   	}
 
 		handleImageChange(detail){
+		  console.log('imagechange: ', detail);
+		  console.log(JSON.stringify(detail.optionImage));
 			if(detail.optionImage.length > 0){
 				for(let image of detail.optionImage){
 					if(this.page === 'performance'){
@@ -81,6 +83,7 @@ export default class CustCommOrderBoatImage extends LightningElement {
 
 					if(this.page === 'trailering' || this.page === 'electronics' || this.page === 'summary'){
 						if(image.imageType === 'backLeft'){
+						  console.log('optionName', detail.optionName);
 							if(detail.optionName === 'Add Bow To Stern Cover'){
 							  if(this.page !== 'electronics' && this.page !== 'summary'){
 							  	this.canvasImage = (detail.addToComposite) ? 'https://' + image.imageURL : '';
@@ -89,7 +92,7 @@ export default class CustCommOrderBoatImage extends LightningElement {
 						 	} else if(detail.optionName === 'Add Transom Saver - Motor Support'){
 								this.transomImage = (detail.addToComposite) ? 'https://' + image.imageURL : '';
 								this.hasTransomImage = (detail.addToComposite) ? true : false;
-							} else if(detail.optionName === 'Spare Tire and Bracket Kit'){
+							} else if(detail.optionName === 'Add Spare Tire and Bracket Kit'){
 								this.spareTireImage = (detail.addToComposite) ? 'https://' + image.imageURL : '';
 								this.hasSpareTireImage = (detail.addToComposite) ? true : false;
 							} else if(detail.optionName === 'Galvanized Trailer'){

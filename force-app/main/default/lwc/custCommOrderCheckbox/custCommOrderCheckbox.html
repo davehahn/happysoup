@@ -91,7 +91,12 @@
     <template if:true={hasDetailedSummary}>
         <div class="detailedSummaryWrapper">
             <button class="detailedSummaryTrigger" onclick={showHideSummary}>
-                <strong lwc:dom="manual"></strong> {productOptions.name} details:
+                <template if:true={isEN}>
+                    <strong lwc:dom="manual"></strong> {productOptions.name} details:
+                </template>
+                <template if:true={isFR}>
+                    <strong lwc:dom="manual"></strong> les détails de {productOptions.name} :
+                </template>
             </button>
             <div class="detailedSummary" data-state="collapsed" lwc:dom="manual"></div>
         </div>

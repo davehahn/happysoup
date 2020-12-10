@@ -30,9 +30,8 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
   @track customerFirstName;
   @track customerLastName;
   creditCardError = false;
-  @track isEN = true;
-  @track isFR = false;
-  @track currentLang = 'EN';
+  isEN = true;
+  isFR = false;
 
   pages = [
     {
@@ -171,7 +170,7 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
       return {
         label: page.label,
         label_fr: page.label_fr,
-        class: this.currentPage === page ?
+        class: this.currentPage === page.label ?
           'config-nav-item config-nav-item_selected' :
           'config-nav-item'
       }
