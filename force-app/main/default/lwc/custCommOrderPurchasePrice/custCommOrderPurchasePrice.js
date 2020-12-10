@@ -21,6 +21,9 @@ export default class CustCommOrderPurchasePrice extends LightningElement {
  	@track totalPrice;
  	@track payments;
 
+ 	@track isEN = true;
+	@track isFR = false;
+
 	@wire(CurrentPageReference) pageRef;
 
 	connectedCallback(){
@@ -35,6 +38,10 @@ export default class CustCommOrderPurchasePrice extends LightningElement {
 		registerListener('paymentAmountChanged', this.handlePaymentAmountChange, this);
 
 		fireEvent(this.pageRef, 'purchasePriceConnected', 'ready'	);
+	}
+
+	renderedCallback(){
+		registerListener('languageChange', this.handleLanguageChange, this);
 	}
 
 	get displayLoanData()
@@ -122,6 +129,13 @@ export default class CustCommOrderPurchasePrice extends LightningElement {
 			array.push(object);
 		} else{
 			array[index] = object;
+		}
+	}
+
+	handleLanguageChange(detail){
+			if(detail){
+				this.isEN = (detail === 'EN') ? true : false;
+				this.isFR = (detail === 'FR') ? true : false;
 		}
 	}
 

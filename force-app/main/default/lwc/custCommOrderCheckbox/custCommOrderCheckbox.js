@@ -72,6 +72,27 @@ export default class CustCommOrderCheckbox extends NavigationMixin(LightningElem
 																	}).format(displayPrice);
 	 }
  }
+ get optionFormattedPriceFR(){
+  		let displayPrice = this.productOptions.displayPrice;
+     if(displayPrice === 0){
+       if(this.optionPage === 'performance'){
+         displayPrice = this.optionBoatRetail;
+ 				return displayPrice = new Intl.NumberFormat('fr-CA', {
+         																	style: 'currency',
+         																	currency: 'CAD',
+         																	minimumFractionDigits: 0
+         																	}).format(displayPrice);
+       } else {
+        	return displayPrice = (this.isEN) ? 'Included' : 'Inclus';
+       }
+ 		} else {
+ 			return displayPrice = new Intl.NumberFormat('fr-CA', {
+ 																	style: 'currency',
+ 																	currency: 'CAD',
+ 																	minimumFractionDigits: 0
+ 																	}).format(displayPrice);
+ 	 }
+  }
 
  get hasIncludedProducts(){
    return (this.productOptions.includedProducts.length !== 0) ? true : false;
@@ -164,6 +185,7 @@ summaryFrag(){
 			'sku': this.productOptions.sku,
 			'ppSku': ppSku,
 			'name': this.productOptions.name,
+			'name_fr': this.productOptions.name_fr,
 			'price': this.productOptions.retailPrice,
 			'addToSummary': isChecked,
 			'section': this.optionPage,

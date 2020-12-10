@@ -51,7 +51,7 @@ export default class CustCommOrderBoatImage extends LightningElement {
 								  this.defaultImage = 'https://' + value;
 									this.boatImage = 'https://' + value;
 								}
-							} else if(this.page === 'trailering' || this.page === 'electronics' || this.page === 'summary'){
+							} else if(this.page === 'trailering' || this.page === 'electronics' || this.page === 'summary' || this.page === 'thankyou'){
 								if(key === 'backLeft'){
 								  this.defaultTrailerImage = 'https://' + value;
 									this.boatImage = 'https://' + value;
@@ -81,11 +81,11 @@ export default class CustCommOrderBoatImage extends LightningElement {
 						}
 					}
 
-					if(this.page === 'trailering' || this.page === 'electronics' || this.page === 'summary'){
+					if(this.page === 'trailering' || this.page === 'electronics' || this.page === 'summary' || this.page === 'thankyou'){
 						if(image.imageType === 'backLeft'){
 						  console.log('optionName', detail.optionName);
 							if(detail.optionName === 'Add Bow To Stern Cover'){
-							  if(this.page !== 'electronics' && this.page !== 'summary'){
+							  if(this.page !== 'electronics' && this.page !== 'summary' && this.page !== 'thankyou'){
 							  	this.canvasImage = (detail.addToComposite) ? 'https://' + image.imageURL : '';
 							  	this.hasCanvasImage = (detail.addToComposite) ? true : false;
 								}
@@ -115,7 +115,7 @@ export default class CustCommOrderBoatImage extends LightningElement {
 					}
 				}
 			}else{
-			  if(this.page === 'trailering' || this.page === 'electronics' || this.page === 'summary'){
+			  if(this.page === 'trailering' || this.page === 'electronics' || this.page === 'summary' || this.page === 'thankyou'){
 					if(detail.optionName === 'Black Powder Coated Trailer'){
 						this.trailerImage = (detail.addToComposite) ? this.defaultTrailerImage : '';
 						this.trailerCutImage = this.defaultTrailerCutImage;
