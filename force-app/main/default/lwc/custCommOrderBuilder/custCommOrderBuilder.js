@@ -84,6 +84,7 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
 	@track currentPage = 'performance';
   @track currentModalPage = 'premium-package';
   @track paymentType='loan';
+  @track paymentTypeLabel='loan';
   @track iframeHeight;
   @track boat;
   @track purchasePrice;
@@ -211,17 +212,20 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
   		this.isEN = true;
   		this.isFR = false;
   		this.currentLang = 'EN';
+  		this.paymentTypeLabel = this.template.querySelector('.financetype-selector_option.selected').dataset.label;
   		fireEvent(this.pageRef, 'languageChange', 'EN');
   	} else {
   		this.isEN = false;
   		this.isFR = true;
   		this.currentLang = 'FR';
+  		this.paymentTypeLabel = this.template.querySelector('.financetype-selector_option.selected').dataset.labelFr;
   		fireEvent(this.pageRef, 'languageChange', 'FR');
   	}
 
   	this.shippingTiming();
   	this.premiumPackValue();
   	this.buttonText();
+
   }
 
   handlePurchasePriceChange( amount )
@@ -263,10 +267,16 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
     this.template.querySelector('.financetype-selector_container').classList.add('open');
   }
 
-  handlePaymentTypeSelect( event )
+  handlePaymentTypeSelect( event = null )
   {
-    this.paymentType = event.currentTarget.dataset.value;
+  	this.paymentType = event.currentTarget.dataset.value;
+  	this.paymentTypeLabel = (this.isEN) ? event.currentTarget.dataset.label : event.currentTarget.dataset.labelFr;
     this.template.querySelector('.financetype-selector_container').classList.remove('open');
+    let types = this.template.querySelectorAll('.financetype-selector_option');
+    types.forEach((type) => {
+    	type.classList.remove('selected');
+    });
+    event.currentTarget.classList.add('selected');
   }
 
   handleCloseModal()

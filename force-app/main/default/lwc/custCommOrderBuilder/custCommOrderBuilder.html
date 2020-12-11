@@ -349,8 +349,14 @@
           <div class="thanks_model">
             <c-cust-comm-order-boat-image size="small" page='thankyou' marketing-content={boat.marketingContent}></c-cust-comm-order-boat-image>
           </div>
-          <h2>Thank you!</h2>
-          <p>Your order has been submitted.</p>
+          <h2>
+            <template if:true={isEN}>Thank you!</template>
+            <template if:true={isFR}>Merci !</template>
+          </h2>
+          <p>
+            <template if:true={isEN}>Your order has been submitted.</template>
+            <template if:true={isFR}>Votre commande a été transmise.</template>
+          </p>
         </header>
         <div class="thanks_body">
           <section class="thanks_overview">
@@ -358,10 +364,16 @@
             <div class="thanks_paymentDetails">
               <ul class="thanks_details">
                 <li class="thanks_detail thanks_detail--horizontal">
-                  <strong>Order Number:</strong> <span>{opportunityId}</span>
+                  <strong>
+                    <template if:true={isEN}>Order Number:</template>
+                    <template if:true={isFR}>Numéro de commande:</template>
+                  </strong> <span>{opportunityId}</span>
                 </li>
                 <li class="thanks_detail thanks_detail--horizontal">
-                  <strong>Payment:</strong>
+                  <strong>
+                    <template if:true={isEN}>Payment:</template>
+                    <template if:true={isFR}>Paiement :</template>
+                  </strong>
                   <span>
                   <lightning-formatted-number value={paymentAmount}
                                               format-style="currency"
@@ -370,7 +382,8 @@
                 </span>
                 </li>
                 <li class="thanks_detail thanks_detail--horizontal">
-                  <strong>Estimated Deliver:</strong> <span>{shippingTiming}</span>
+                  <template if:true={isEN}>Estimated Deliver: <span>{shippingTiming}</span></template>
+                  <template if:true={isFR}>Livraison estimée : <span>{shippingTiming}</span></template>
                 </li>
               </ul>
             </div>
@@ -385,10 +398,16 @@
           <footer class="thanks_footer">
             <ul class="thanks_footerDetails">
               <li class="thanks_footerDetail">
-                <strong>Order Number:</strong> <span>{opportunityId}</span>
+                <strong>
+                  <template if:true={isEN}>Order Number:</template>
+                  <template if:true={isFR}>Numéro de commande:</template>
+                </strong> <span>{opportunityId}</span>
               </li>
               <li class="thanks_footerDetail">
-                <strong>Billed To:</strong> <span>{customerFirstName} {customerLastName}</span>
+                <strong>
+                  <template if:true={isEN}>Billed To:</template>
+                  <template if:true={isFR}>Facturé à :</template>
+                </strong> <span>{customerFirstName} {customerLastName}</span>
               </li>
             </ul>
           </footer>
@@ -405,7 +424,7 @@
                    tabindex="0"
                    data-click-focus="unset"
                    onclick={openFinanceSelect}>
-                {paymentType}
+                {paymentTypeLabel}
                 <i class="slds-icon-chevrondown"></i>
               </div>
               <ul class="financetype-selector_options" role="tablist">
