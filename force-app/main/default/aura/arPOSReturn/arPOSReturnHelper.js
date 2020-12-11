@@ -58,7 +58,134 @@
 		{
 		  this.showToast(component, "Error", "error", "ERP Order Item is already in the list of returns.");
 		}
-  },
+  },processRefundStart: function(component, event, helper) {
+        console.log('processRefundStart');
+                    var self = this;
+                    self.initForPartner(component);
+                    helper.toggleSpinner(component, true);
+                    helper.closeModal( component, event, helper );
+                    self.processBilling(component).then($A.getCallback(function(response) {
+                        console.log(response);
+                        var results = response;
+                        console.log('results billing');
+                        console.log(results);
+                        component.set("v.idBill", results);
+                        //self.processRefundPayment(component, event, helper);
+                    }), $A.getCallback(function(err) {
+                        LightningUtils.errorToast(err);
+                        self.toggleSpinner(component, false);
+                    }));
+                },
+                processBilling: function(component) {
+                  console.log('processBilling');
+                    var action = component.get("c.saveReturnMaterials"),
+                        la;
+                    var idAccount = component.get('v.accountId'),
+                        idFilter = component.get('v.idFilter'),
+                        paymentMethod = component.get('v.cdType'),
+                        pIdWarehouse = component.get('v.idWarehouse'),
+                        allMaterials = JSON.stringify(component.get('v.materials'));
+                    action.setParams({
+                        idAccount: idAccount,
+                        idFilter: idFilter,
+                        paymentMethod: paymentMethod,
+                        pIdWarehouse: pIdWarehouse,
+                        allMaterials: allMaterials
+                    });
+                    la = new LightningApex(this, action);
+                    return la.fire();
+                },processRefundStart2: function(component, event, helper) {
+    console.log('processRefundStart');
+                var self = this;
+                helper.toggleSpinner(component, true);
+                helper.closeModal( component, event, helper );
+                self.processBilling(component).then($A.getCallback(function(response) {
+                    console.log(response);
+                    var results = response;
+                    console.log('results billing');
+                    console.log(results);
+                    component.set("v.idBill", results);
+                    self.processRefundPayment(component, event, helper);
+                }), $A.getCallback(function(err) {
+                    LightningUtils.errorToast(err);
+                    self.toggleSpinner(component, false);
+                }));
+            },
+            processBilling: function(component) {
+              console.log('processBilling');
+                var action = component.get("c.saveReturnMaterials"),
+                    la;
+                var idAccount = component.get('v.accountId'),
+                    idFilter = component.get('v.idFilter'),
+                    paymentMethod = component.get('v.cdType'),
+                    pIdWarehouse = component.get('v.idWarehouse'),
+                    allMaterials = JSON.stringify(component.get('v.materials'));
+                action.setParams({
+                    idAccount: idAccount,
+                    idFilter: idFilter,
+                    paymentMethod: paymentMethod,
+                    pIdWarehouse: pIdWarehouse,
+                    allMaterials: allMaterials
+                });
+                la = new LightningApex(this, action);
+                return la.fire();
+            },
+            processRefundPayment: function(component, event, helper) {
+               console.log('processRefundPayment');
+               var self = this;
+               self.processPayment(component).then($A.getCallback(function(response) {
+                   var results = response;
+                    console.log('results payable');
+                    console.log(results);
+                   console.log('results pay');
+                   console.log(results);
+                   component.set("v.idPayable", results);
+                   self.processRefundCD(component);
+               }), $A.getCallback(function(err) {
+                   LightningUtils.errorToast(err);
+                   //self.unpostBillRefund(component, event, helper);
+                   self.toggleSpinner(component, false);
+               }));
+            },
+            processPayment: function(component, event, helper) {
+              console.log('processPayment');
+               var action = component.get("c.savePaymentReturn"),
+                   la;
+               action.setParams({
+                   idBilling: component.get("v.idBill")
+               });
+               la = new LightningApex(this, action);
+               return la.fire();
+            },
+            processRefundCD: function(component, event, helper) {
+              var self = this;
+              self.processCD(component).then($A.getCallback(function(response) {
+                  var results = response;
+                  console.log('results cd');
+                  console.log(results);
+                  var idBill = component.get("v.idBill");
+                  self.processCOGS( component, event, self, idBill );
+                  self.toggleSpinner(component, false);
+              }), $A.getCallback(function(err) {
+                  LightningUtils.errorToast(err);
+                  //self.unpostBillRefund(component, event, helper);
+                  self.toggleSpinner(component, false);
+              }));
+            },
+            processCD: function(component, event, helper) {
+              var action = component.get("c.saveDisbursement"),
+                  la;
+              var idPayable = component.get('v.idPayable'),
+                  paymentMethod = component.get('v.cdType'),
+                  idProject = component.get('v.idFilter');
+              action.setParams({
+                  idProject: idProject,
+                  idPayable: idPayable,
+                  paymentMethod: paymentMethod
+              });
+              la = new LightningApex(this, action);
+              return la.fire();
+            },
 	processCOGS: function( component, event, helper, idBill)
 	{
 		/// We were accepting multiple projects. but later decided to have only one.
@@ -162,5 +289,46 @@
 	closeModal: function(component, event, helper) {
 		component.set("v.canBereturned", false);
 		component.set("v.cssCustomStyle", ".forceStyle .viewport .oneHeader.slds-global-header_container {z-index:5} .forceStyle.desktop .viewport{overflow:visible}");
-	}
+	},
+	initForPartner: function( component )
+    {
+      const erpID = component.get('v.idFilter');
+      let empApi = component.find('empApi');
+      empApi.subscribe(
+        '/event/POS_Return_Event__e',
+        -1,
+        $A.getCallback( eventReceived => {
+          console.log('Received event ');
+          console.log( eventReceived );
+          if( eventReceived.data.payload.Status__c === 'success' &&
+              eventReceived.data.payload.ERP_Order__c === erpID )
+            this.refundSuccess( component, eventReceived );
+        })
+      )
+      .then(
+        $A.getCallback( subscription => {
+          console.log('Subscription request sent to: ', subscription.channel);
+          component.set('v.refundSubscription', subscription);
+        })
+      );
+    },
+    refundSuccess: function( component, eventReceived )
+        {
+          const subscription = component.get('v.refundSubscription');
+          let empApi = component.find('empApi');
+          empApi.unsubscribe( subscription, $A.getCallback( unsubscribed => {
+            console.log('Unsubscribed from channel '+ unsubscribed.subscription);
+            component.set('v.refundSubscription', null);
+          }));
+
+          console.log('REFUND RESULT');
+          console.log(eventReceived);
+          this.showToast(component, "Success", "success", 'Refund Successful.');
+          this.toggleSpinner(component, false);
+          navEvt.setParams({
+            "recordId": component.get('idFilter'),
+            "slideDevName": "related"
+          });
+          navEvt.fire();
+        }
 })
