@@ -5,13 +5,22 @@
 <!-- Cust Comm Order Summary -->
 <template>
   <aside class="summary" data-usage={usage}>
-    <h3>Summary</h3>
+    <h3>
+      <template if:false={checkIsThanks}>
+        <template if:true={isEN}>Summary</template>
+        <template if:true={isFR}>Sommaire</template>
+      </template>
+
+    </h3>
     <ul class="summary_list">
       <li class="summary_section">
         <strong>Performance:</strong>
         <ul>
           <template for:each={performanceItems} for:item="item">
-            <li class="summary_listItem" key={item.sku} data-id={item.sku}>{item.name}</li>
+            <li class="summary_listItem" key={item.sku} data-id={item.sku}>
+              <template if:true={isEN}>{item.name}</template>
+              <template if:true={isFR}>{item.name_fr}</template>
+            </li>
           </template>
         </ul>
       </li>
@@ -20,7 +29,10 @@
         <strong>Trailering:</strong>
         <ul>
           <template for:each={traileringItems} for:item="item">
-            <li class="summary_listItem" key={item.sku} data-id={item.sku}>{item.name}</li>
+            <li class="summary_listItem" key={item.sku} data-id={item.sku}>
+              <template if:true={isEN}>{item.name}</template>
+              <template if:true={isFR}>{item.name_fr}</template>
+            </li>
           </template>
         </ul>
       </li>
@@ -29,7 +41,10 @@
         <strong>Trailering:</strong>
         <ul>
           <template for:each={electronicsItems} for:item="item">
-            <li class="summary_listItem" key={item.sku} data-id={item.sku}>{item.name}</li>
+            <li class="summary_listItem" key={item.sku} data-id={item.sku}>
+              <template if:true={isEN}>{item.name}</template>
+              <template if:true={isFR}>{item.name_fr}</template>
+            </li>
           </template>
         </ul>
       </li>
@@ -38,7 +53,10 @@
         <strong>Freight:</strong>
         <ul>
           <template for:each={freightItems} for:item="item">
-            <li class="summary_listItem" key={item.sku} data-id={item.sku}>{item.name}</li>
+            <li class="summary_listItem" key={item.sku} data-id={item.sku}>
+              <template if:true={isEN}>{item.name}</template>
+              <template if:true={isFR}>{item.name_fr}</template>
+            </li>
           </template>
         </ul>
       </li>

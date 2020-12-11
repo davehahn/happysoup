@@ -9,7 +9,8 @@ import { loadStyle } from 'lightning/platformResourceLoader';
 import gothamFonts from '@salesforce/resourceUrl/GothamHTF';
 
 export default class CustCommOrderOptions extends LightningElement {
-  @api optionsTitle;
+  @api optionsTitleEn;
+  @api optionsTitleFr;
   @api selections;
   @api selectionScope;
   @api options;
@@ -32,11 +33,15 @@ export default class CustCommOrderOptions extends LightningElement {
  	};
  	@track selectionMade = false;
 
+ 	@track isEN = true;
+ 	@track isFR = false;
+
   @wire(CurrentPageReference) pageRef;
 
 	renderedCallback(){
 		registerListener('motorSelection', this.handleMotorSelection, this);
 		registerListener('traileringSelection', this.handleTraileringSelection, this);
+		registerListener('languageChange', this.handleLanguageChange, this);
 	}
 
 	get availableOptions(){
@@ -68,6 +73,9 @@ export default class CustCommOrderOptions extends LightningElement {
 							}
        			}
 					});
+					combinedOptions.sort(function(a,b){
+						return a.displayPrice - b.displayPrice;
+					});
 					return combinedOptions;
 				}
    		}
@@ -90,13 +98,16 @@ export default class CustCommOrderOptions extends LightningElement {
     if( option === undefined ) return;
 
 		let name = option['name'];
+		let name_fr = option['name'];
 		const sku = option['id'];
 		let km = null;
 		let	rpm = null;
 		let images = [];
 		let blurb = null;
+		let blurb_fr = null;
 		let swatch = null;
 		let detailedSummary = null;
+		let detailedSummary_fr = null;
 		let includedProducts = [];
 
 
@@ -130,16 +141,22 @@ export default class CustCommOrderOptions extends LightningElement {
 					});
 				} else if(label === 'blurb'){
 					 blurb = this.decodeHtml(stripContent);
+				} else if(label === 'blurb_fr'){
+					 blurb_fr = this.decodeHtml(stripContent);
 				} else if(label === 'includedproducts'){
 					includedProducts = stripContent.split("|");
 				} else if(label === 'customdisplayname'){
 					name = stripContent;
+				} else if(label === 'customdisplayname_fr'){
+					name_fr = stripContent;
 				} else if(label === 'swatch'){
 					swatch = stripContent;
     		} else if(label === 'detailedsummary'){
     		  //detailedSummary = this.decodeHtml(origContent);
     		  detailedSummary = origContent;
-      	}
+      	} else if(label === 'detailedsummary_fr'){
+      		detailedSummary_fr = origContent;
+       	}
 			}
 		}
 
@@ -147,6 +164,7 @@ export default class CustCommOrderOptions extends LightningElement {
 			'sku': sku,
 			'ppSku': this.parentProductSku,
 			'name': name,
+			'name_fr': name_fr,
 			'retailPrice': retailPrice,
 			'displayPrice': displayPrice,
 			'km': km,
@@ -155,16 +173,18 @@ export default class CustCommOrderOptions extends LightningElement {
 			'inputType': inputType,
 			'images': images,
 			'blurb': blurb,
+			'blurb_fr': blurb_fr,
 			'includedProducts': includedProducts,
 			'parentSku': parentSku,
 			'swatch': swatch,
-			'detailedSummary': detailedSummary
+			'detailedSummary': detailedSummary,
+			'detailedSummary_fr': detailedSummary_fr
 		});
 		return optionDetails;
  	}
 
  	get hasOptionsTitle(){
- 	  return (typeof this.optionsTitle !== 'undefined') ? true : false;
+ 	  return (typeof this.optionsTitleEn !== 'undefined') ? true : false;
   }
 
   recompose(obj,string){
@@ -216,5 +236,12 @@ export default class CustCommOrderOptions extends LightningElement {
  	  const optionList = this.template.querySelector('.options_list');
  	  optionList.style.marginBottom = event.detail + 16 + 'px';
   }
+
+  handleLanguageChange(detail){
+			if(detail){
+				this.isEN = (detail === 'EN') ? true : false;
+				this.isFR = (detail === 'FR') ? true : false;
+		}
+	}
 
 }

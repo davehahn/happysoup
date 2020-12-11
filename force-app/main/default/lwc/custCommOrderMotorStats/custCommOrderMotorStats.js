@@ -11,14 +11,18 @@ export default class CustCommOrderMotorStats extends LightningElement {
         'motorSpeed' : '48km',
         'motorRPM' : '5300-6300'
     };
+    @track isEN = true;
+    @track isFR = false;
+
 		previousSpeed = 0;
     motorSpeed = 0;
     motorRPM = '';
 
     @wire(CurrentPageReference) pageRef;
 
-		connectedCallback(){
+		renderedCallback(){
 			registerListener('motorSelection', this.handleMotorStatsChange, this);
+			registerListener('languageChange', this.handleLanguageChange, this);
 		}
 
 		handleMotorStatsChange(detail){
@@ -49,6 +53,14 @@ export default class CustCommOrderMotorStats extends LightningElement {
 				self.motorRPM = detail.motorRPM;
 			}
   	}
+
+		handleLanguageChange(detail){
+		  console.log('handleLanguageChange');
+		  if(detail){
+		    this.isEN = (detail === 'EN') ? true : false;
+		    this.isFR = (detail === 'FR') ? true : false;
+    }
+  }
 
 
 }

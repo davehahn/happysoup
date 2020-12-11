@@ -24,6 +24,9 @@ export default class CustCommOrderCheckbox extends NavigationMixin(LightningElem
 	@track displayRPM;
 	@track displayKM;
 
+	isEN = true;
+	isFR = false;
+
 	@wire(CurrentPageReference) pageRef;
 
 	renderedCallback(){
@@ -31,6 +34,7 @@ export default class CustCommOrderCheckbox extends NavigationMixin(LightningElem
 	  registerListener('motorSelection', this.handleMotorSelection, this);
 	  registerListener('foundSelection', this.checkRelatedMotorOption, this);
 	  registerListener('clearSelectedTrailerOptions', this.clearTrailerOptions, this);
+	  registerListener('languageChange', this.handleLanguageChange, this);
 		if(this.template.querySelector('.detailedSummary')){
 		  this.summaryFrag();
   	}
@@ -58,7 +62,7 @@ export default class CustCommOrderCheckbox extends NavigationMixin(LightningElem
         																	minimumFractionDigits: 0
         																	}).format(displayPrice);
       } else {
-       	return displayPrice = 'Included';
+       	return displayPrice = (this.isEN) ? 'Included' : 'Inclus';
       }
 		} else {
 			return displayPrice = new Intl.NumberFormat('en-CA', {
@@ -68,6 +72,27 @@ export default class CustCommOrderCheckbox extends NavigationMixin(LightningElem
 																	}).format(displayPrice);
 	 }
  }
+ get optionFormattedPriceFR(){
+  		let displayPrice = this.productOptions.displayPrice;
+     if(displayPrice === 0){
+       if(this.optionPage === 'performance'){
+         displayPrice = this.optionBoatRetail;
+ 				return displayPrice = new Intl.NumberFormat('fr-CA', {
+         																	style: 'currency',
+         																	currency: 'CAD',
+         																	minimumFractionDigits: 0
+         																	}).format(displayPrice);
+       } else {
+        	return displayPrice = (this.isEN) ? 'Included' : 'Inclus';
+       }
+ 		} else {
+ 			return displayPrice = new Intl.NumberFormat('fr-CA', {
+ 																	style: 'currency',
+ 																	currency: 'CAD',
+ 																	minimumFractionDigits: 0
+ 																	}).format(displayPrice);
+ 	 }
+  }
 
  get hasIncludedProducts(){
    return (this.productOptions.includedProducts.length !== 0) ? true : false;
@@ -87,25 +112,31 @@ export default class CustCommOrderCheckbox extends NavigationMixin(LightningElem
  }
 
 summaryFrag(){
-  this.template.querySelector('.detailedSummaryTrigger strong').innerHTML = 'Show';
-	 this.template.querySelector('.detailedSummary').innerHTML = this.productOptions.detailedSummary;
+  this.template.querySelector('.detailedSummaryTrigger strong').innerHTML = (this.isEN) ? 'Show' : 'Montrer';
+	 this.template.querySelector('.detailedSummary').innerHTML = (this.isEN) ? this.productOptions.detailedSummary : this.productOptions.detailedSummary_fr;
  }
 
- showHideSummary(e){
-   const trigger = e.currentTarget;
+ showHideSummary(e, elm){
+   const trigger = (e !== null) ? e.currentTarget : this.template.querySelector(elm);
+//	 const trigger = e.currentTarget;
    const triggerActionText = trigger.querySelector('strong');
    const summary = trigger.nextSibling;
    const summaryState = summary.getAttribute('data-state');
-
-   if(summaryState === 'collapsed'){
-     summary.setAttribute('data-state', 'expanded');
-     triggerActionText.classList.add('open');
-     triggerActionText.innerHTML = 'Hide';
-   } else {
-     summary.setAttribute('data-state', 'collapsed');
-     triggerActionText.classList.remove('open');
-		 triggerActionText.innerHTML = 'Show';
-   }
+	if(e !== null){
+		if(summaryState === 'collapsed'){
+		 summary.setAttribute('data-state', 'expanded');
+		 triggerActionText.classList.add('open');
+		 triggerActionText.innerHTML = (this.isEN) ? 'Hide' : 'Cacher';
+		 } else {
+			 summary.setAttribute('data-state', 'collapsed');
+			 triggerActionText.classList.remove('open');
+			 triggerActionText.innerHTML = (this.isEN) ? 'Show' : 'Montrer';
+		 }
+	} else{
+		summary.setAttribute('data-state', 'collapsed');
+	 triggerActionText.classList.remove('open');
+	 triggerActionText.innerHTML = (this.isEN) ? 'Show' : 'Montrer';
+	}
  }
 
  pageReady(detail){
@@ -154,6 +185,7 @@ summaryFrag(){
 			'sku': this.productOptions.sku,
 			'ppSku': ppSku,
 			'name': this.productOptions.name,
+			'name_fr': this.productOptions.name_fr,
 			'price': this.productOptions.retailPrice,
 			'addToSummary': isChecked,
 			'section': this.optionPage,
@@ -251,4 +283,12 @@ summaryFrag(){
 			fireEvent(this.pageRef, 'updateListItems', optionDetails);
 		});
  	}
+
+ 	handleLanguageChange(detail){
+		if(detail){
+			this.isEN = (detail === 'EN') ? true : false;
+			this.isFR = (detail === 'FR') ? true : false;
+			this.showHideSummary(null, '.detailedSummaryTrigger');
+		}
+	}
 }

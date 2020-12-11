@@ -10,7 +10,7 @@
     <ol class="finance-nav-list">
       <template for:each={tabData} for:item="page">
         <li key={page.label}>
-          <button class={page.class} onclick={handleNav} data-click-focus="unset" data-nav-name={page.label}><h3 class="finance-nav-title">{page.label}</h3></button>
+          <button class={page.class} onclick={handleNav} data-click-focus="unset" data-nav-name={page.label}><h3 class="finance-nav-title">{page.title}</h3></button>
         </li>
       </template>
     </ol>
@@ -22,23 +22,45 @@
     <section class="finance-option-page" data-section="cash">
       <header class="cash_purchasePrice">
         <div class="cashAmount">
-          <h3>Purchase Price</h3>
+          <h3>
+            <template if:true={isEN}>Purchase Price</template>
+            <template if:true={isFR}>Prix d’achat</template>
+          </h3>
           <lightning-formatted-number value={retailPlusPremium}
                                     format-style="currency"
                                     class="fake-disabled-input"
                                     currency-code="CAD"></lightning-formatted-number>
         </div>
-        <small>Purchase Price shown with added Preferred Equipment Package.</small>
+        <small>
+          <template if:true={isEN}>Purchase Price shown with added Preferred Equipment Package.</template>
+          <template if:true={isFR}>Prix d’achat incluant les ensembles d’équipements préférentiels.</template>
+        </small>
       </header>
       <aside class="cash_premiumPack">
-        <h4 data-hide={hideInputs}>Preferred Equipment Package</h4>
+        <h4 data-hide={hideInputs}>
+          <template if:true={isEN}>Preferred Equipment Package</template>
+          <template if:true={isFR}>Ensemble Équipement Préférentiel</template>
+        </h4>
         <ul data-hide={hideInputs}>
           <template for:each={premiumPackItems} for:item="item">
-            <li key={item} class="premiumPackage_item">{item}</li>
+            <li key={item.description} class="premiumPackage_item">
+              <strong class="premiumPackage_itemName">
+                <template if:true={isEN}>{item.description}</template>
+                <template if:true={isFR}>{item.description_fr}</template>
+              </strong>
+              <span class="premiumPackage_itemPrice">
+                <template if:true={isEN}>{item.valueFormatted}</template>
+                <template if:true={isFR}>{item.valueFormatted_fr}</template>
+              </span>
+              <small class="premiumPackage_checkmark"></small>
+            </li>
           </template>
         </ul>
         <div class="cashAmount">
-          <h6>Preferred Equipment Savings</h6>
+          <h6>
+            <template if:true={isEN}>Preferred Equipment Savings</template>
+            <template if:true={isFR}>Économies sur  Équipement préférentiels</template>
+          </h6>
           <lightning-formatted-number value={premiumPackValue}
                                     format-style="currency"
                                     class="fake-disabled-input"
@@ -47,14 +69,18 @@
       </aside>
       <footer class="cash_savings">
         <div class="cashAmount">
-          <h5>After Preferred Package Savings</h5>
+          <h5>
+            <template if:true={isEN}>After Preferred Package Savings</template>
+            <template if:true={isFR}>Économies après les équipements préférentiels</template>
+          </h5>
           <lightning-formatted-number value={amount}
                                     format-style="currency"
                                     class="fake-disabled-input"
                                     currency-code="CAD"></lightning-formatted-number>
         </div>
         <small>
-          All In Price includes freight, prep and admin fees. Excludes taxes. Taxes calculated based on final purchase price.
+          <template if:true={isEN}>All In Price includes freight, prep and admin fees. Excludes taxes. Taxes calculated based on final purchase price.</template>
+          <template if:true={isFR}>Le prix total inclut le transport, la préparation et les frais d'administration. Les taxes sont calculées sur le montant final des achats.</template>
         </small>
       </footer>
     </section>
@@ -66,7 +92,8 @@
         <lightning-layout-item size="12"
                                padding="around-small">
           <p>
-            Finance your boat purchase by paying a down payment and monthly installments until you've paid off the full price.
+            <template if:true={isEN}>Finance your boat purchase by paying a down payment and monthly installments until you've paid off the full price.</template>
+            <template if:true={isFR}>Financez l’achat de votre bateau en donnant un acompte et payant des mensualités jusqu’à ce que le tout soit payé en totalité.</template>
           </p>
         </lightning-layout-item>
 
@@ -77,7 +104,10 @@
                                large-device-size="6"
                                data-hide={hideInputs}>
           <div class="form-input form-input_currency" data-hide={hideInputs}>
-            <label>Downpayment</label>
+            <label>
+              <template if:true={isEN}>Downpayment</template>
+              <template if:true={isFR}>Acompte</template>
+            </label>
             <span></span>
             <input label="Downpayment"
                    data-field-name="downpayment"
@@ -93,11 +123,17 @@
                                large-device-size="6"
                                data-hide={hideInputs}>
           <div class="form-input form-input_select" data-hide={hideInputs}>
-            <label>Term</label>
+            <label>
+              <template if:true={isEN}>Term</template>
+              <template if:true={isFR}>Termes</template>
+            </label>
             <span></span>
             <select data-field-name="term" onchange={handleTermChange} value={amort}>
               <template for:each={termOptions} for:item="term">
-                <option key={term.value} value={term.value}>{term.label}</option>
+                <option key={term.value} value={term.value}>
+                  <template if:true={isEN}>{term.label}</template>
+                  <template if:true={isFR}>{term.label_fr}</template>
+                </option>
               </template>
             </select>
           </div>
@@ -109,7 +145,10 @@
                                medium-device-size="6"
                                large-device-size="6">
           <div class="form-input disabled">
-            <label>Interest Rate %</label>
+            <label>
+              <template if:true={isEN}>Interest Rate %</template>
+              <template if:true={isFR}>Taux d’intérêt</template>
+            </label>
             <lightning-formatted-number value={interestRate}
                                         format-style="percent"
                                         class="fake-disabled-input"
@@ -123,7 +162,10 @@
                                medium-device-size="6"
                                large-device-size="6">
           <div class="form-input">
-            <label>Financed Amount</label>
+            <label>
+              <template if:true={isEN}>Financed Amount</template>
+              <template if:true={isFR}>Montant financé</template>
+            </label>
             <lightning-formatted-number value={amount}
                                         format-style="currency"
                                         class="fake-disabled-input"
@@ -141,7 +183,10 @@
                                class="payment-details">
           <ul class="payment-lines">
             <li class="payment-line">
-              <span class="payment-line_label">Weekly</span>
+              <span class="payment-line_label">
+                <template if:true={isEN}>Weekly</template>
+                <template if:true={isFR}>Hebdomadaire</template>
+              </span>
               <span class="payment-line_value highlight">
                 <lightning-formatted-number value={payments.weekly}
                                             format-style="currency"
@@ -149,7 +194,10 @@
               </span>
             </li>
             <li class="payment-line">
-              <span class="payment-line_label">Bi-Weekly</span>
+              <span class="payment-line_label">
+                <template if:true={isEN}>Bi-Weekly</template>
+                <template if:true={isFR}>Aux deux semaines</template>
+              </span>
               <span class="payment-line_value">
                 <lightning-formatted-number value={payments.biweekly}
                                             format-style="currency"
@@ -157,7 +205,10 @@
               </span>
             </li>
             <li class="payment-line">
-              <span class="payment-line_label">Monthly</span>
+              <span class="payment-line_label">
+                <template if:true={isEN}>Monthly</template>
+                <template if:true={isFR}>Mois</template>
+              </span>
               <span class="payment-line_value">
                 <lightning-formatted-number value={payments.monthly}
                                             format-style="currency"

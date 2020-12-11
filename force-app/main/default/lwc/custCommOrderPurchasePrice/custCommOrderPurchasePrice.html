@@ -14,7 +14,14 @@
       <lightning-formatted-number value={payments.weekly}
                                   format-style="currency"
                                   currency-code="CAD"></lightning-formatted-number>
-      <span> /Wk</span></div>
-    <div class="label">Purchase Price</div>
+      <span>
+        <template if:true={isEN}>/week</template>
+        <template if:true={isFR}>/semaine</template>
+      </span>
+    </div>
+    <div class="label">
+      <template if:true={isEN}>Weekly Purchase Price</template>
+      <template if:true={isFR}>Prix d’achat par semaine</template>
+    </div>
   </div>
 </template>

@@ -9,7 +9,7 @@
       <c-legend-spinner visible="true"></c-legend-spinner>
     </template>
 
-    <div class="lgnd-order-builder" if:true={boatDetailsLoaded}>
+    <div class="lgnd-order-builder" data-current={currentPage} if:true={boatDetailsLoaded}>
       <c-legend-spinner></c-legend-spinner>
 
       <header class="config-header">
@@ -26,14 +26,24 @@
           <ol class="config-nav-list">
             <template for:each={processPages} for:item="page">
               <li key={page.label}>
-                <button class={page.class} onclick={handleNav} data-click-focus="unset" data-nav-name={page.label}><h3 class="config-nav-title">{page.label}</h3></button>
+                <button class={page.class} onclick={handleNav} data-click-focus="unset" data-nav-name={page.label}>
+                  <h3 class="config-nav-title">
+                    <template if:true={isEN}>{page.label}</template>
+                    <template if:true={isFR}>{page.label_fr}</template>
+                  </h3>
+                </button>
               </li>
             </template>
           </ol>
         </nav>
 
         <div class="language-select">
-
+          <template if:true={isEN}>
+            <button onclick={handleLanguage} data-lang="FR">Français</button>
+          </template>
+          <template if:true={isFR}>
+            <button onclick={handleLanguage} data-lang="EN">English</button>
+          </template>
         </div>
 
       </header>
@@ -44,13 +54,16 @@
         <section class="config-page config-page_selected" data-page="performance">
           <div class="config-page_left">
             <h2 class="vh">Performance</h2>
-            <c-cust-comm-order-boat-image size="large" page='performance' marketing-content= {boat.marketingContent}></c-cust-comm-order-boat-image>
+            <c-cust-comm-order-boat-image size="large" page='performance' marketing-content={boat.marketingContent}></c-cust-comm-order-boat-image>
             <c-cust-comm-order-motor-stats motor-details={motorDetails}></c-cust-comm-order-motor-stats>
           </div>
           <div class="config-page_right slds-p-around_xx-large">
-            <h3 class="right_heading">Select Your Performance</h3>
-            <c-cust-comm-order-options options-title="Standard Performance" selections="one" selection-scope="global" options={boat.standardMotor} parent-product-sku={boat.id} boat-retail-price={boat.retailPrice} is-init="true" trigger-ui-change="true" page='performance' grouping-name="motor_options"></c-cust-comm-order-options>
-            <c-cust-comm-order-options options-title="Enhanced Performance" selections="one" selection-scope="global" options={boat.motorUpgrades} parent-product-sku={boat.id} boat-retail-price={boat.retailPrice} trigger-ui-change="true" page='performance' grouping-name="motor_options"></c-cust-comm-order-options>
+            <h3 class="right_heading">
+              <template if:true={isEN}>Select Your Performance</template>
+              <template if:true={isFR}>Choisissez votre performance</template>
+            </h3>
+            <c-cust-comm-order-options options-title-en="Standard Performance" options-title-fr="Performance standard" selections="one" selection-scope="global" options={boat.standardMotor} parent-product-sku={boat.id} boat-retail-price={boat.retailPrice} is-init="true" trigger-ui-change="true" page='performance' grouping-name="motor_options"></c-cust-comm-order-options>
+            <c-cust-comm-order-options options-title-en="Enhanced Performance" options-title-fr="Performance améliorée" selections="one" selection-scope="global" options={boat.motorUpgrades} parent-product-sku={boat.id} boat-retail-price={boat.retailPrice} trigger-ui-change="true" page='performance' grouping-name="motor_options"></c-cust-comm-order-options>
           </div>
         </section>
 
@@ -63,10 +76,13 @@
             </template>
           </div>
           <div class="config-page_right slds-p-around_xx-large">
-            <h3 class="right_heading">Trailering Package</h3>
-            <c-cust-comm-order-options options-title="Select Your Trailer" selections="one" selection-scope="local" is-init="true" options={traileringOptions} parent-product-sku={boat.id} show-option-price="true" boat-retail-price={boat.retailPrice} layout-type="alt-swatch" grouping-name="trailer_options" page='trailering'></c-cust-comm-order-options>
+            <h3 class="right_heading">
+              <template if:true={isEN}>Trailering Package</template>
+              <template if:true={isFR}>Ensemble de remorquage</template>
+            </h3>
+            <c-cust-comm-order-options options-title-en="Select Your Trailer" options-title-fr="Choisissez votre remorque" selections="one" selection-scope="local" is-init="true" options={traileringOptions} parent-product-sku={boat.id} show-option-price="true" boat-retail-price={boat.retailPrice} layout-type="alt-swatch" grouping-name="trailer_options" page='trailering'></c-cust-comm-order-options>
             <!--<c-cust-comm-order-options selections="one" selection-scope="global" options={boat.trailerUpgrades} show-option-price="true" boat-retail-price={boat.retailPrice} page='trailering'></c-cust-comm-order-options>-->
-            <c-cust-comm-order-options options-title="More Trailering Options" selections="multiple" selection-scope="local" options={boat.optionalProducts.canvas} parent-product-sku={boat.id} show-option-price="true" boat-retail-price={boat.retailPrice} page='trailering'></c-cust-comm-order-options>
+            <c-cust-comm-order-options options-title-en="More Trailering Options" options-title-fr="Plus d’option pour remorques" selections="multiple" selection-scope="local" options={boat.optionalProducts.canvas} parent-product-sku={boat.id} show-option-price="true" boat-retail-price={boat.retailPrice} page='trailering'></c-cust-comm-order-options>
             <c-cust-comm-order-options selections="multiple" selection-scope="local" options={traileringOptions} sub-section="optionalProducts.trailerAccessories" addons="true" show-option-price="true" boat-retail-price={boat.retailPrice} page='trailering' parent-page="trailer_options"></c-cust-comm-order-options>
             <c-cust-comm-order-options selections="multiple" selection-scope="local" options={boat.standardMotor} sub-section="optionalProducts.trailerAccessories" addons="true" show-option-price="true" boat-retail-price={boat.retailPrice} page='trailering' parent-page='performance'></c-cust-comm-order-options>
             <c-cust-comm-order-options selections="multiple" selection-scope="local" options={boat.motorUpgrades} sub-section="optionalProducts.trailerAccessories" addons="true" show-option-price="true" boat-retail-price={boat.retailPrice} page='trailering' parent-page='performance'></c-cust-comm-order-options>
@@ -82,8 +98,11 @@
             </template>
           </div>
           <div class="config-page_right slds-p-around_xx-large">
-            <h3 class="right_heading"><span class="vh">Choose Your</span> Electronics</h3>
-            <c-cust-comm-order-options options-title="Terrova 55 Tech Package" options={boat.optionalProducts.trollingMotor} parent-product-sku={boat.id} show-option-price="true" boat-retail-price={boat.retailPrice} page='electronics'></c-cust-comm-order-options>
+            <h3 class="right_heading">
+              <template if:true={isEN}><span class="vh">Choose Your</span> Electronics</template>
+              <template if:true={isFR}><span class="vh">Choisir Votre</span> Électroniques</template>
+            </h3>
+            <c-cust-comm-order-options options-title-en="Terrova 55 Tech Package" options-title-fr="Ensemble Terrova 55" options={boat.optionalProducts.trollingMotor} parent-product-sku={boat.id} show-option-price="true" boat-retail-price={boat.retailPrice} page='electronics'></c-cust-comm-order-options>
           </div>
         </section>
 
@@ -94,10 +113,16 @@
           <div class="config-page_left">
             <button class="edit-config" onclick={handleEditConfig}>
               <i class="slds-icon-chevronleft"></i>
-              <span>Edit Design</span>
+              <span>
+                <template if:true={isEN}>Edit Design</template>
+                <template if:true={isFR}>Modifier la conception</template>
+              </span>
             </button>
             <div class="account-details">
-              <h3 class="form-header">Enter Account Details</h3>
+              <h3 class="form-header">
+                <template if:true={isEN}>Enter Account Details</template>
+                <template if:true={isFR}>Entrer les détails du compte</template>
+              </h3>
               <lightning-layout multiple-rows="true">
 
                 <lightning-layout-item padding="horizontal-small"
@@ -107,7 +132,10 @@
                                        medium-device-size="6"
                                        large-device-size="6">
                   <div class="form-input">
-                    <label>First Name</label>
+                    <label>
+                      <template if:true={isEN}>First Name</template>
+                      <template if:true={isFR}>Prénom</template>
+                    </label>
                     <input label="First Name"
                            data-attr="firstName"
                            type="text"
@@ -126,7 +154,10 @@
                                        medium-device-size="6"
                                        large-device-size="6">
                   <div class="form-input">
-                    <label>Last Name</label>
+                    <label>
+                      <template if:true={isEN}>Last Name</template>
+                      <template if:true={isFR}>Nom de famille</template>
+                    </label>
                     <input label="Last Name"
                            data-attr="lastName"
                            type="text"
@@ -145,7 +176,10 @@
                                        medium-device-size="6"
                                        large-device-size="6">
                   <div class="form-input">
-                    <label>Email Address</label>
+                    <label>
+                      <template if:true={isEN}>Email Address</template>
+                      <template if:true={isFR}>Courriel</template>
+                    </label>
                     <input label="Email Address"
                            data-attr="email"
                            type="email"
@@ -164,7 +198,10 @@
                                        medium-device-size="6"
                                        large-device-size="6">
                   <div class="form-input">
-                    <label>Phone Number</label>
+                    <label>
+                      <template if:true={isEN}>Phone Number</template>
+                      <template if:true={isFR}>Téléphone</template>
+                    </label>
                     <input label="Phone Number"
                            data-attr="phone"
                            type="tel"
@@ -184,7 +221,7 @@
                                        medium-device-size="6"
                                        large-device-size="6">
                   <div class="form-input form-input--select">
-                    <label>Province or Territory</label>
+                    <label>Province</label>
                     <span></span>
                     <select label="Province or Territory"
                             data-attr="state"
@@ -193,20 +230,38 @@
                             required aria-require="true"
                             aria-describedby="Province_feedback"
                             class="polite">
-                      <option value=""> -- Select One -- </option>
+                      <option value="">
+                        <template if:true={isEN}> -- Select One -- </template>
+                        <template if:true={isFR}> -- Sélectionnez un -- </template>
+                      </option>
                       <option value="Alberta">Alberta</option>
-                      <option value="British Columbia">British Columbia</option>
+                      <option value="British Columbia">
+                        <template if:true={isEN}>British Columbia</template>
+                        <template if:true={isFR}>Colombie-Britannique</template>
+                      </option>
                       <option value="Manitoba">Manitoba</option>
-                      <option value="New Brunswick">New Brunswick</option>
-                      <option value="Newfoundland and Labrador">Newfoundland and Labrador</option>
-                      <option value="Northwest Territories">Northwest Territories</option>
-                      <option value="Nova Scotia">Nova Scotia</option>
-                      <option value="Nunavut">Nunavut</option>
+                      <option value="New Brunswick">
+                        <template if:true={isEN}>New Brunswick</template>
+                        <template if:true={isFR}>Nouveau-Brunswick</template>
+                      </option>
+                      <option value="Newfoundland and Labrador">
+                        <template if:true={isEN}>Newfoundland and Labrador</template>
+                        <template if:true={isFR}>Terre-Neuve-et-Labrador</template>
+                      </option>
+                      <option value="Nova Scotia">
+                        <template if:true={isEN}>Nova Scotia</template>
+                        <template if:true={isFR}>Nouvelle-Écosse</template>
+                      </option>
                       <option value="Ontario">Ontario</option>
-                      <option value="Prince Edward Island">Prince Edward Island</option>
-                      <option value="Quebec">Quebec</option>
+                      <option value="Prince Edward Island">
+                        <template if:true={isEN}>Prince Edward Island</template>
+                        <template if:true={isFR}>Île-du-Prince-Édouard</template>
+                      </option>
+                      <option value="Quebec">
+                        <template if:true={isEN}>Quebec</template>
+                        <template if:true={isFR}>Québec</template>
+                      </option>
                       <option value="Saskatchewan">Saskatchewan</option>
-                      <option value="Yukon">Yukon</option>
                     </select>
                     <span class="feedback" id="Province_feedback" aria-live="polite"></span>
                   </div>
@@ -226,18 +281,26 @@
             </div>
 
             <div class="payment-details">
-              <h3 class="form-header">Payment</h3>
+              <h3 class="form-header">
+                <template if:true={isEN}>Payment</template>
+                <template if:true={isFR}>Paiement</template>
+              </h3>
               <div class="payment-disclaimer">
-                Due today to complete your order:
+                <template if:true={isEN}>Due today is a fully refundable down payment of: </template>
+                <template if:true={isFR}>Un dépôt entièrement remboursable de </template>
                 <lightning-formatted-number value={paymentAmount}
                                             format-style="currency"
+                                            currency-code="CAD"
                                             maximum-fraction-digits="2"></lightning-formatted-number>
                 .
               </div>
             </div>
 
             <div class="payment-form">
-              <h3 class="form-header">Payment Card Details</h3>
+              <h3 class="form-header">
+                <template if:true={isEN}>Payment Card Details</template>
+                <template if:true={isFR}>Détails de la carte de paiement</template>
+              </h3>
               <template if:true={hasPaymentErrors}>
                 <div class="payment-form-errors">{paymentFormErrors}</div>
               </template>
@@ -247,7 +310,8 @@
                                      small-height="184"
                                      large-height="368"></c-square-payment-form>
               <div class="payment-disclaimer">
-                By submitting this order form, I allow Legend Boats to save my payment instrument information for future transactions pursuant to the <a href="#" target="_blank">Payment Terms for Services</a>
+                <template if:true={isEN}>By submitting this order form, I allow Legend Boats to save my payment instrument information for future transactions pursuant to the <a href="#" target="_blank">Payment Terms for Services</a></template>
+                <template if:true={isFR}>En soumettant cette formulair de commande, je permet à Bateaux Legend de sauvegarder les informations de paiement pour transactions futures conformément aux <a href="#" target="_blank">termes des paiements de service</a></template>
               </div>
             </div>
 
@@ -255,8 +319,14 @@
 
           <aside class="config-page_right slds-p-around_xx-large">
             <c-cust-comm-order-boat-image size="small" page='summary' marketing-content= {boat.marketingContent}></c-cust-comm-order-boat-image>
-            <h2 class="right_heading slds-text-heading_medium">Your {boat.name}</h2>
-            <p class="right_delivery">Estimated Deliver: {shippingTiming}</p>
+            <h2 class="right_heading slds-text-heading_medium">
+              <template if:true={isEN}>Your {boat.name}</template>
+              <template if:true={isFR}>Votre {boat.name}</template>
+            </h2>
+            <p class="right_delivery">
+              <template if:true={isEN}>Estimated Deliver: {shippingTiming}</template>
+              <template if:true={isFR}>Livraison estimée : {shippingTiming}</template>
+            </p>
             <c-cust-comm-order-summary usage="standard"></c-cust-comm-order-summary>
             <template if:true={purchasePrice}>
               <c-boat-res-finance-details payment-type={paymentType}
@@ -276,33 +346,52 @@
 
       <section class="config-thanks" data-thanks="show">
         <header>
+          <div class="thanks_model">
+            <c-cust-comm-order-boat-image size="small" page='thankyou' marketing-content={boat.marketingContent}></c-cust-comm-order-boat-image>
+          </div>
           <h2>Thank you!</h2>
           <p>Your order has been submitted.</p>
         </header>
         <div class="thanks_body">
-          <aside class="thanks_model">
-            <c-cust-comm-order-boat-image size="small" page='summary' marketing-content= {boat.marketingContent}></c-cust-comm-order-boat-image>
-          </aside>
           <section class="thanks_overview">
-            <h3>{boat.name}</h3>
-            <ul class="thanks_details">
-              <li class="thanks_detail thanks_detail--horizontal">
-                <strong>Confirmation #:</strong> <span>1234XYZ</span>
+            <h3 class="vh">Summary</h3>
+            <div class="thanks_paymentDetails">
+              <ul class="thanks_details">
+                <li class="thanks_detail thanks_detail--horizontal">
+                  <strong>Order Number:</strong> <span>{opportunityId}</span>
+                </li>
+                <li class="thanks_detail thanks_detail--horizontal">
+                  <strong>Payment:</strong>
+                  <span>
+                  <lightning-formatted-number value={paymentAmount}
+                                              format-style="currency"
+                                              currency-code="CAD"
+                                              maximum-fraction-digits="2"></lightning-formatted-number>
+                </span>
+                </li>
+                <li class="thanks_detail thanks_detail--horizontal">
+                  <strong>Estimated Deliver:</strong> <span>{shippingTiming}</span>
+                </li>
+              </ul>
+            </div>
+            <div class="thanks_modelSummary thanks_detail">
+              <strong>
+                <template if:true={isEN}>Your {boat.name}</template>
+                <template if:true={isFR}>Votre {boat.name}</template>
+              </strong>
+              <c-cust-comm-order-summary usage="thankyou"></c-cust-comm-order-summary>
+            </div>
+          </section>
+          <footer class="thanks_footer">
+            <ul class="thanks_footerDetails">
+              <li class="thanks_footerDetail">
+                <strong>Order Number:</strong> <span>{opportunityId}</span>
               </li>
-              <li class="thanks_detail thanks_detail--group">
-                <c-cust-comm-order-summary usage="thanks"></c-cust-comm-order-summary>
-              </li>
-              <li class="thanks_detail thanks_detail--horizontal">
-                <strong>Payment:</strong> <span><lightning-formatted-number value={paymentAmount} format-style="percent" maximum-fraction-digits="2"></lightning-formatted-number></span>
-              </li>
-              <li class="thanks_detail thanks_detail--horizontal">
-                <strong>Estimated Deliver:</strong> <span>{shippingTiming}</span>
-              </li>
-              <li class="thanks_detail thanks_detail--horizontal">
+              <li class="thanks_footerDetail">
                 <strong>Billed To:</strong> <span>{customerFirstName} {customerLastName}</span>
               </li>
             </ul>
-          </section>
+          </footer>
         </div>
       </section>
 
@@ -324,15 +413,21 @@
                     tabindex="-1"
                     class="financetype-selector_option selected"
                     data-value="cash"
+                    data-label="Cash"
+                    data-label-fr="Comptant"
                     onclick={handlePaymentTypeSelect}>
-                  cash
+                  <template if:true={isEN}>Cash</template>
+                  <template if:true={isFR}>Comptant</template>
                 </li>
                 <li role="tab"
                     tabindex="-1"
                     class="financetype-selector_option"
                     data-value="loan"
+                    data-label="Loan"
+                    data-label-fr="Emprunt"
                     onclick={handlePaymentTypeSelect}>
-                  loan
+                  <template if:true={isEN}>Loan</template>
+                  <template if:true={isFR}>Emprunt</template>
                 </li>
               </ul>
             </div>
@@ -344,16 +439,25 @@
                                               boat-retail-price={boat.retailPrice}></c-cust-comm-order-purchase-price>
             <div class="config-footer_savings">
               <div class="amount">{premiumPackValue}</div>
-              <div class="label">Preferred equipment package savings</div>
+              <div class="label">
+                <template if:true={isEN}>Preferred equipment package savings</template>
+                <template if:true={isFR}>Économies pour ensemble d’équipement préférentiel</template>
+              </div>
             </div>
             <div class="config-footer_details-link">
-              <a onclick={handleOpenModal} tabindex="0" data-click-focus="unset">Show Details</a>
+              <a onclick={handleOpenModal} tabindex="0" data-click-focus="unset">
+                <template if:true={isEN}>Show Details</template>
+                <template if:true={isFR}>Montrer les détails</template>
+              </a>
             </div>
           </div>
 
           <div class="config-footer_item">
             <div class="config-footer_delivery">
-              <div>Estimated Delivery: 5-8 weeks</div>
+              <div>
+                <template if:true={isEN}>Estimated Deliver: <span>{shippingTiming}</span></template>
+                <template if:true={isFR}>Livraison estimée : <span>{shippingTiming}</span></template>
+              </div>
             </div>
           </div>
 
@@ -391,7 +495,12 @@
               <ul class="sidebar_nav">
                 <template for:each={modalPages} for:item="modalPage">
                   <li key={modalPage.label}>
-                    <button class={modalPage.class} onclick={handleModalNav} data-modal-nav-name={modalPage.label}><h4 class="modal-nav-title">{modalPage.title}</h4></button>
+                    <button class={modalPage.class} onclick={handleModalNav} data-modal-nav-name={modalPage.label}>
+                      <h4 class="modal-nav-title">
+                        <template if:true={isEN}>{modalPage.title}</template>
+                        <template if:true={isFR}>{modalPage.title_fr}</template>
+                      </h4>
+                    </button>
                   </li>
                 </template>
               </ul>
@@ -409,29 +518,58 @@
                 </template>
               </section>
               <section class="modal-page" data-modal-page="premium-package">
-                <h3 class="modal-heading premiumPackage_heading">Preferred Equipment Package</h3>
+                <h3 class="modal-heading premiumPackage_heading">
+                  <template if:true={isEN}>Preferred Equipment Package</template>
+                  <template if:true={isFR}>Ensemble Équipement Préférentiel</template>
+                </h3>
                 <p class="modal-subheading premiumPackage_subheading">
-                  Total Value <span>{premiumPackValue}</span> <strong> FREE!</strong>
+                  <template if:true={isEN}>Total Value <span>{premiumPackValue}</span> <strong> FREE!</strong></template>
+                  <template if:true={isFR}>Valeur totale <span>{premiumPackValue}</span> <strong> GRATUIT!</strong></template>
                 </p>
-                <p class="premiumPackage_deck">These features are typically optional on most comparable models, but come <strong>standard*</strong> on the {boat.name}.</p>
-                <small class="premiumPackage_clause">*No substitutions or exclusions.</small>
+                <p class="premiumPackage_deck">
+                  <template if:true={isEN}>These features are typically optional on most comparable models, but come <strong>standard*</strong> on the {boat.name}.</template>
+                  <template if:true={isFR}>Ces fonctionnalités sont habituellement en option sur des modèles comparables mais sont <strong>standard*</strong> sur le modèle {boat.name}.</template>
+                </p>
+                <small class="premiumPackage_clause">
+                  <template if:true={isEN}>*No substitutions or exclusions.</template>
+                  <template if:true={isFR}>*Pas de substitutions ou d’exclusions.</template>
+                </small>
                 <ul class="premiumPackage">
                   <template for:each={premiumPackItems} for:item="item">
                     <li key={item.description} class="premiumPackage_item">
-                      <strong class="premiumPackage_itemName">{item.description}</strong>
-                      <span class="premiumPackage_itemPrice">{item.valueFormatted}</span>
+                      <strong class="premiumPackage_itemName">
+                        <template if:true={isEN}>{item.description}</template>
+                        <template if:true={isFR}>{item.description_fr}</template>
+                      </strong>
+                      <span class="premiumPackage_itemPrice">
+                        <template if:true={isEN}>{item.valueFormatted}</template>
+                        <template if:true={isFR}>{item.valueFormatted_fr}</template>
+                      </span>
                       <small class="premiumPackage_checkmark"></small>
                     </li>
                   </template>
                 </ul>
               </section>
               <section class="modal-page" data-modal-page="delivery">
-                <h3 class="modal-heading">Delivery Timing</h3>
-                <p>You can expect to get your <strong>{boat.name}</strong> in <strong>{shippingTiming}</strong>.</p>
-                <p>By leveraging our dealer network all across Canada, we ensure you get your Legend Boat as soon as possible.</p>
-                <p>We will provide you more details around the exact timing and status of your delivery as we process your order.</p>
+                <h3 class="modal-heading">
+                  <template if:true={isEN}>Delivery Timing + Freight</template>
+                  <template if:true={isFR}>Calendrier de livraison + transport</template>
+                </h3>
+                <template if:true={isEN}>
+                  <p>You can expect to get your <strong>{boat.name}</strong> in <strong>{shippingTiming}</strong>.</p>
+                  <p>By leveraging our dealer network all across Canada, we ensure you get your Legend Boat as soon as possible.</p>
+                  <p>We will provide you more details around the exact timing and status of your delivery as we process your order.</p>
+                </template>
+                <template if:true={isFR}>
+                  <p>Le délais d’attente pour recevoir votre <strong>{boat.name}</strong> est de <strong>{shippingTiming}</strong>.</p>
+                  <p>En profitant de notre réseau de concessionnaires à travers le Canada, nous nous assurons d’avoir votre Bateau Legend dès que possible.</p>
+                  <p>Nous vous donnerons plus de détails sur la date exacte et l’état de votre livraison au fur à mesure que nous traiterons votre commande.</p>
+                </template>
 
-                <h3 class="modal-heading">2021 Freight Charges by Province</h3>
+                <h3 class="modal-heading">
+                  <template if:true={isEN}>2021 Freight Charges by Province</template>
+                  <template if:true={isFR}>Frais de transport 2021 par province</template>
+                </h3>
                 <div class="modal-table-wrap">
                   <table class="modal-table">
                     <tr>
@@ -459,16 +597,8 @@
                       <td>$2,450</td>
                     </tr>
                     <tr>
-                      <td>Northwest Territories</td>
-                      <td>TBD</td>
-                    </tr>
-                    <tr>
                       <td>Nova Scotia</td>
                       <td>$825</td>
-                    </tr>
-                    <tr>
-                      <td>Nunavut</td>
-                      <td>TBD</td>
                     </tr>
                     <tr>
                       <td>Ontario</td>
@@ -485,10 +615,6 @@
                     <tr>
                       <td>Saskatchewan</td>
                       <td>$975</td>
-                    </tr>
-                    <tr>
-                      <td>Yukon</td>
-                      <td>TBD</td>
                     </tr>
                   </table>
                 </div>
