@@ -309,7 +309,8 @@ public without sharing class arAccountStatement {
 			Set<Id> setIdProject = new Set<Id>();
 			Map<Id,AcctSeed__Project__c> mapProject = new Map<Id,AcctSeed__Project__c>();
 			Map<Id,Decimal> mapProjectBilled = new Map<Id,Decimal>();
-			for(AcctSeed__Project__c pr : [SELECT Id, Name, Order_Item_Total__c, Grand_Total__c FROM AcctSeed__Project__c WHERE AcctSeed__Account__c =:idAccount AND Stage__c NOT IN ('Quoting','Closed Lost','Draft')])
+			Id idRTTradeIn = gcConstants.idRtTradeIn;
+			for(AcctSeed__Project__c pr : [SELECT Id, Name, Order_Item_Total__c, Grand_Total__c FROM AcctSeed__Project__c WHERE RecordTypeId !=:idRTTradeIn AND AcctSeed__Account__c =:idAccount AND Stage__c NOT IN ('Quoting','Closed Lost','Draft')])
 			{
 				setIdProject.add(pr.Id);
 				txnData.projectTotal += (pr.Grand_Total__c == null ? 0 : pr.Grand_Total__c);
