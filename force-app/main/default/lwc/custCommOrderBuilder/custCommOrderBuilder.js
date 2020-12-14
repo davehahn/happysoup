@@ -92,6 +92,7 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
   @track traileringItems = [];
   @track electronicsItems = [];
   @track freightItems = [];
+  @track validatedFormFields = 0;
   @track paymentFormErrors;
   @track hasPaymentErrors = false;
 
@@ -325,6 +326,8 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
   }
 
   jumpToPayment(){
+  		this.onPaymentPage() ?
+      this.submitOrder() :
       this.doPageChange( 'payment' );
   }
 
@@ -465,6 +468,11 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
 
   submitOrder()
   {
+  	let formFields = this.template.querySelectorAll('.form-input:not(.form-input--valueOnly)');
+  	let numFormFields = formFields.length;
+  	console.log('numFormFields', numFormFields);
+  	console.log('numValidFields', this.validatedFormFields);
+  	return false;
     const spinner = this.template.querySelector('c-legend-spinner');
     spinner.toggle();
 
@@ -642,6 +650,10 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
 					feedback.innerHTML = errmsg;
 					field.classList.remove('clean');
 					field.classList.add('error');
+					if(field.classList.contains('valid')){
+						field.classList.remove('valid');
+						this.validatedFormFields - 1;
+					}
    	 		}
    		} else {
    		  const pattern = /^[a-zA-ZàâçéèêëîïôûùüÿæœÙÛÜŸÀÂÆÇÉÈÊËÏÎÔŒ  .'-]+$/i;
@@ -652,6 +664,10 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
 					feedback.innerHTML = errmsg;
 					field.classList.remove('clean');
 					field.classList.add('error');
+					if(field.classList.contains('valid')){
+						field.classList.remove('valid');
+						this.validatedFormFields - 1;
+					}
 				}
 				else{
 					feedback.classList.remove('error');
@@ -659,6 +675,8 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
 					feedback.innerHTML = '';
 					field.classList.remove('error');
 					field.classList.add('clean');
+					field.classList.add('valid');
+					this.validatedFormFields + 1;
 				}
      	}
   	}
@@ -672,6 +690,10 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
 					feedback.innerHTML = errmsg;
 					field.classList.remove('clean');
 					field.classList.add('error');
+					if(field.classList.contains('valid')){
+						field.classList.remove('valid');
+						this.validatedFormFields - 1;
+					}
 				}
 			} else {
 				const pattern = /^\w+([\.\-_]?\w+)*@\w+([\.\-_]?\w+)*(\.\w{2,5})+$/;
@@ -682,6 +704,10 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
 					feedback.innerHTML = errmsg;
 					field.classList.remove('clean');
 					field.classList.add('error');
+					if(field.classList.contains('valid')){
+						field.classList.remove('valid');
+						this.validatedFormFields - 1;
+					}
 				}
 				else{
 					feedback.classList.remove('error');
@@ -689,6 +715,8 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
 					feedback.innerHTML = '';
 					field.classList.remove('error');
 					field.classList.add('clean');
+					field.classList.add('valid');
+					this.validatedFormFields + 1;
 				}
 			}
   	}
@@ -702,6 +730,10 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
 					feedback.innerHTML = errmsg;
 					field.classList.remove('clean');
 					field.classList.add('error');
+					if(field.classList.contains('valid')){
+						field.classList.remove('valid');
+						this.validatedFormFields - 1;
+					}
 				}
 			} else {
 				const pattern = /^(?:\(?)(\d{3})(?:\)?)(\s|\.|-)?(\d{3})(\s|\.|-)?(\d{4})$/;
@@ -712,6 +744,10 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
 					feedback.innerHTML = errmsg;
 					field.classList.remove('clean');
 					field.classList.add('error');
+					if(field.classList.contains('valid')){
+						field.classList.remove('valid');
+						this.validatedFormFields - 1;
+					}
 				}
 				else{
 					feedback.classList.remove('error');
@@ -719,6 +755,8 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
 					feedback.innerHTML = '';
 					field.classList.remove('error');
 					field.classList.add('clean');
+					field.classList.add('valid');
+					this.validatedFormFields + 1;
 				}
 			}
   	}
@@ -732,7 +770,19 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
 					feedback.innerHTML = errmsg;
 					field.classList.remove('clean');
 					field.classList.add('error');
+					if(field.classList.contains('valid')){
+						field.classList.remove('valid');
+						this.validatedFormFields - 1;
+					}
 				}
+			} else{
+				feedback.classList.remove('error');
+				feedback.classList.add('clean');
+				feedback.innerHTML = '';
+				field.classList.remove('error');
+				field.classList.add('clean');
+				field.classList.add('valid');
+				this.validatedFormFields + 1;
 			}
   	}
   }
