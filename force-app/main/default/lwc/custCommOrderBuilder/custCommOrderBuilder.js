@@ -472,7 +472,9 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
   	let numFormFields = formFields.length;
   	console.log('numFormFields', numFormFields);
   	console.log('numValidFields', this.validatedFormFields);
-  	return false;
+  	if(numFormFields > this.validatedFormFields){
+  		return false;
+  	}
     const spinner = this.template.querySelector('c-legend-spinner');
     spinner.toggle();
 
@@ -480,7 +482,6 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
 		.then( ( accountSaveResult ) => {
 		  this.opportunityId = accountSaveResult.opportunityId;
       this.accountId = accountSaveResult.record.Id;
-			this.creditCardError = false;
 		  return this.createSquarePayment();
   	})
   	.then( ( paymentResult ) => {
@@ -488,6 +489,7 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
     })
   	.then( ( saveSaleItemsResult ) => {
       console.log('lineItemsResult: ', saveSaleItemsResult);
+      this.creditCardError = false;
     })
   	.catch( ( error ) => {
 			this.displayPaymentError(error);
@@ -652,7 +654,7 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
 					field.classList.add('error');
 					if(field.classList.contains('valid')){
 						field.classList.remove('valid');
-						this.validatedFormFields - 1;
+						this.validatedFormFields = this.validatedFormFields - 1;
 					}
    	 		}
    		} else {
@@ -666,7 +668,7 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
 					field.classList.add('error');
 					if(field.classList.contains('valid')){
 						field.classList.remove('valid');
-						this.validatedFormFields - 1;
+						this.validatedFormFields = this.validatedFormFields - 1;
 					}
 				}
 				else{
@@ -675,8 +677,10 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
 					feedback.innerHTML = '';
 					field.classList.remove('error');
 					field.classList.add('clean');
-					field.classList.add('valid');
-					this.validatedFormFields + 1;
+					if(!field.classList.contains('valid')){
+						field.classList.add('valid');
+						this.validatedFormFields = this.validatedFormFields + 1;
+					}
 				}
      	}
   	}
@@ -692,7 +696,7 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
 					field.classList.add('error');
 					if(field.classList.contains('valid')){
 						field.classList.remove('valid');
-						this.validatedFormFields - 1;
+						this.validatedFormFields = this.validatedFormFields - 1;
 					}
 				}
 			} else {
@@ -706,7 +710,7 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
 					field.classList.add('error');
 					if(field.classList.contains('valid')){
 						field.classList.remove('valid');
-						this.validatedFormFields - 1;
+						this.validatedFormFields = this.validatedFormFields - 1;
 					}
 				}
 				else{
@@ -715,8 +719,10 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
 					feedback.innerHTML = '';
 					field.classList.remove('error');
 					field.classList.add('clean');
-					field.classList.add('valid');
-					this.validatedFormFields + 1;
+					if(!field.classList.contains('valid')){
+						field.classList.add('valid');
+						this.validatedFormFields = this.validatedFormFields + 1;
+					}
 				}
 			}
   	}
@@ -732,7 +738,7 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
 					field.classList.add('error');
 					if(field.classList.contains('valid')){
 						field.classList.remove('valid');
-						this.validatedFormFields - 1;
+						this.validatedFormFields = this.validatedFormFields - 1;
 					}
 				}
 			} else {
@@ -746,7 +752,7 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
 					field.classList.add('error');
 					if(field.classList.contains('valid')){
 						field.classList.remove('valid');
-						this.validatedFormFields - 1;
+						this.validatedFormFields = this.validatedFormFields - 1;
 					}
 				}
 				else{
@@ -755,8 +761,10 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
 					feedback.innerHTML = '';
 					field.classList.remove('error');
 					field.classList.add('clean');
-					field.classList.add('valid');
-					this.validatedFormFields + 1;
+					if(!field.classList.contains('valid')){
+						field.classList.add('valid');
+						this.validatedFormFields = this.validatedFormFields + 1;
+					}
 				}
 			}
   	}
@@ -772,7 +780,7 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
 					field.classList.add('error');
 					if(field.classList.contains('valid')){
 						field.classList.remove('valid');
-						this.validatedFormFields - 1;
+						this.validatedFormFields = this.validatedFormFields - 1;
 					}
 				}
 			} else{
@@ -781,8 +789,10 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
 				feedback.innerHTML = '';
 				field.classList.remove('error');
 				field.classList.add('clean');
-				field.classList.add('valid');
-				this.validatedFormFields + 1;
+				if(!field.classList.contains('valid')){
+					field.classList.add('valid');
+					this.validatedFormFields = this.validatedFormFields + 1;
+				}
 			}
   	}
   }
