@@ -13,6 +13,7 @@ export default class SquarePaymentForm extends LightningElement {
   @api widthBreakPoint = 140;
   @api smallHeight = 200;
   @api largeHeight = 400;
+  @api currentLanguage = 'english';
 
   @track iframeHeight;
 
@@ -62,7 +63,9 @@ export default class SquarePaymentForm extends LightningElement {
   get pageURL()
   {
     const urlString = window.location.href;
-    return urlString.substring(0, urlString.indexOf("/s") ) + this.apexPageName;
+    let url = urlString.substring(0, urlString.indexOf("/s") ) + this.apexPageName;
+    url += '?currentLanguage=' + this.currentLanguage;
+    return url;
   }
 
   setIframeHeight( width )

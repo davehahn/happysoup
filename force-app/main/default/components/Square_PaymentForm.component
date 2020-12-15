@@ -2,7 +2,8 @@
  - Created by dave on 2020-04-15.
  -->
 
-<apex:component controller="SquarePaymentForm_Controller">
+<apex:component controller="SquarePaymentForm_Controller"
+                language="{!pageLang}">
 
   <script type="text/javascript" src="{!paymentFormJsUrl}">
   </script>
@@ -18,7 +19,7 @@
                   slds-large-size_1-of-2
                   slds-p-left_small
                   slds-p-right_small">
-        <label>Card Number</label>
+        <label>{!$Label.sqForm_CardNumber}</label>
         <div id="sq-card-number"></div>
       </div>
       <div class="slds-col
@@ -28,7 +29,7 @@
                   slds-large-size_1-of-2
                   slds-p-left_small
                   slds-p-right_small">
-        <label>Expiration Date</label>
+        <label>{!$Label.sqForm_ExpirationDate}</label>
         <div id="sq-expiration-date"></div>
       </div>
       <div class="slds-col
@@ -38,7 +39,7 @@
                   slds-large-size_1-of-2
                   slds-p-left_small
                   slds-p-right_small">
-        <label>CVV</label>
+        <label>{!$Label.sqForm_CVV}</label>
         <div id="sq-cvv"></div>
       </div>
       <div class="slds-col
@@ -48,7 +49,7 @@
                   slds-large-size_1-of-2
                   slds-p-left_small
                   slds-p-right_small">
-        <label>Billing Postal Code</label>
+        <label>{!$Label.sqForm_PostalCode}</label>
         <div id="sq-postal-code"></div>
       </div>
       <!--        <button id="sq-creditcard" class="button-credit-card" onclick="onGetCardNonce(event)">Pay Invoice</button>-->

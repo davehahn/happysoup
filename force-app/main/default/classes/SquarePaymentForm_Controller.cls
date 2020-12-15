@@ -5,7 +5,13 @@
 global with sharing class SquarePaymentForm_Controller
 {
 
-  public SquarePaymentForm_Controller(){}
+  public String pageLang { get; set; }
+
+  public SquarePaymentForm_Controller()
+  {
+    String currentLanguage = ApexPages.currentPage().getParameters().get('currentLanguage');
+    this.pageLang = currentLanguage != null && currentLanguage == 'french' ? 'fr' : 'en_US';
+  }
 
   @RemoteAction
   global static String postToSquare( Decimal paymentAmount, String referenceId, String token )
@@ -23,6 +29,7 @@ global with sharing class SquarePaymentForm_Controller
   {
     return SquareProcessor.getPaymentFormJsUrl();
   }
+
 
 }
 
