@@ -291,6 +291,68 @@
 .cash_premiumPack ul{
   margin: 1em 0;
 }
+.premiumPackage_item{
+  padding: 0.5em 0.25em;
+  border-bottom: 1px solid #ddd;
+  display: flex;
+  align-items: center;
+}
+.premiumPackage_item .premiumPackage_itemName{
+  font-weight: normal;
+  width: 100%;
+}
+.premiumPackage_item:nth-of-type(even){
+  background-color: #efefef;
+}
+.premiumPackage_item:last-of-type{
+  border-bottom: 3px solid #333;
+}
+.premiumPackage_item .premiumPackage_itemPrice{
+  display: block;
+  margin: 0 1em;
+  position: relative;
+}
+.premiumPackage_item .premiumPackage_itemPrice::before{
+  display: block;
+	content: "";
+	position: absolute;
+	top: 46%;
+	left: 0;
+	width: 100%;
+	height: 1.5px;
+	background-color: #f7292b;
+	transform: rotate(-10deg);
+}
+.premiumPackage_checkmark{
+	display: block;
+	width: 20px; min-width: 20px;
+	height: 20px;
+	border-radius: 100vh;
+	background-color: #0d506d;
+	margin: 0 auto;
+	position: relative;
+	text-align: center;
+}
+.premiumPackage_checkmark::before, .premiumPackage_checkmark::after{
+	content: "";
+	display: block;
+	position: absolute;
+	height: 2.5px;
+	border-radius: 100vh;
+	background-color: #fff;
+}
+.premiumPackage_checkmark::before{
+	width: 7px;
+	transform: rotate(40deg);
+	top: 55%;
+	left: 20%;
+}
+.premiumPackage_checkmark::after{
+	width: 10px;
+	transform: rotate(-50deg);
+	top: 42%;
+	left: 35%;
+}
 .cashAmount{
   display: flex;
   justify-content: space-between;

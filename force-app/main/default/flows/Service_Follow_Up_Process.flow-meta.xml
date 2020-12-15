@@ -11,7 +11,7 @@
             <name>Last_Activity_Greater_7d</name>
             <conditionLogic>and</conditionLogic>
             <conditions>
-                <leftValueReference>Get_Account_Activity.LastActivityDate</leftValueReference>
+                <leftValueReference>$Record.CreatedDate</leftValueReference>
                 <operator>LessThanOrEqualTo</operator>
                 <rightValue>
                     <elementReference>SevenDaysAgo</elementReference>
@@ -22,6 +22,13 @@
                 <operator>IsNull</operator>
                 <rightValue>
                     <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>Get_Account_Activity.LastActivityDate</leftValueReference>
+                <operator>LessThanOrEqualTo</operator>
+                <rightValue>
+                    <elementReference>SevenDaysAgo</elementReference>
                 </rightValue>
             </conditions>
             <connector>

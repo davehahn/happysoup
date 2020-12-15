@@ -19,7 +19,16 @@ export default class BoatResFinanceDetails extends LightningElement {
   //@track downPayment = 1000;
 
   numOfAmortYears = 20;
-  pages = ['cash', 'loan'];
+  pages = [
+    {
+      label: 'cash',
+      label_fr: 'comptant'
+    },
+    {
+      label: 'loan',
+      label_fr: 'emprunt'
+    }
+  ];
   initialRenderComplete = false;
 
   @track payments = {
@@ -27,6 +36,9 @@ export default class BoatResFinanceDetails extends LightningElement {
     biweekly: 22.22,
     monthly: 333.33
   };
+
+  @track isEN = true;
+	@track isFR = false;
 
   @wire(CurrentPageReference) pageRef;
 
@@ -42,6 +54,7 @@ export default class BoatResFinanceDetails extends LightningElement {
       this.calculate();
       this.initialRenderComplete = true;
     }
+    registerListener('languageChange', this.handleLanguageChange, this);
   }
 
   get termOptions()
@@ -50,7 +63,8 @@ export default class BoatResFinanceDetails extends LightningElement {
     .reduce( (result, currentVal) => {
       result.push({
         value: currentVal,
-        label: `${currentVal} months`
+        label: `${currentVal} months`,
+        label_fr: `${currentVal} mois`
       });
       return result;
     }, [] );
@@ -60,8 +74,9 @@ export default class BoatResFinanceDetails extends LightningElement {
   {
     return this.pages.map( page => {
       return {
-        label: page,
-        class: this.paymentType === page ?
+        label: page.label,
+        title: this.isEN ? page.label : page.label_fr,
+        class: this.paymentType === page.label ?
           'finance-nav-item finance-nav-item_selected' :
           'finance-nav-item'
       }
@@ -121,5 +136,12 @@ export default class BoatResFinanceDetails extends LightningElement {
     const value = this.amount + this.premiumPackValue;
     return value;
   }
+
+  handleLanguageChange(detail){
+			if(detail){
+				this.isEN = (detail === 'EN') ? true : false;
+				this.isFR = (detail === 'FR') ? true : false;
+		}
+	}
 
 }

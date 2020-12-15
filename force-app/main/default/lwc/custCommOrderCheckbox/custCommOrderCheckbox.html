@@ -34,11 +34,21 @@
                 <template if:true={useCheckbox}>
                     <small class="options_label_checkbox"></small>
                 </template>
-                <span class="options_label_name">{productOptions.name}</span>
-                <span class="options_label_price">{optionFormattedPrice}</span>
+
+                <span class="options_label_name">
+                    <template if:true={isEN}>{productOptions.name}</template>
+                    <template if:true={isFR}>{productOptions.name_fr}</template>
+                </span>
+                <span class="options_label_price">
+                    <template if:true={isEN}>{optionFormattedPrice}</template>
+                    <template if:true={isFR}>{optionFormattedPriceFR}</template>
+                </span>
             </label>
             <template if:true={hasOptionsDeck}>
-                <p class="options_deck" data-layout-type={optionLayout}>{productOptions.blurb}</p>
+                <p class="options_deck" data-layout-type={optionLayout}>
+                    <template if:true={isEN}>{productOptions.blurb}</template>
+                    <template if:true={isFR}>{productOptions.blurb_fr}</template>
+                </p>
             </template>
         </div>
     </template>
@@ -64,11 +74,20 @@
                 <template if:true={useCheckbox}>
                     <small class="options_label_checkbox"></small>
                 </template>
-                <span class="options_label_name">{productOptions.name}</span>
-                <span class="options_label_price">{optionFormattedPrice}</span>
+                <span class="options_label_name">
+                    <template if:true={isEN}>{productOptions.name}</template>
+                    <template if:true={isFR}>{productOptions.name_fr}</template>
+                </span>
+                <span class="options_label_price">
+                    <template if:true={isEN}>{optionFormattedPrice}</template>
+                    <template if:true={isFR}>{optionFormattedPriceFR}</template>
+                </span>
             </label>
             <template if:true={hasOptionsDeck}>
-                <p class="options_deck" data-layout-type={optionLayout}>{productOptions.blurb}</p>
+                <p class="options_deck" data-layout-type={optionLayout}>
+                    <template if:true={isEN}>{productOptions.blurb}</template>
+                    <template if:true={isFR}>{productOptions.blurb_fr}</template>
+                </p>
             </template>
         </div>
     </template>
@@ -76,7 +95,12 @@
     <template if:true={hasDetailedSummary}>
         <div class="detailedSummaryWrapper">
             <button class="detailedSummaryTrigger" onclick={showHideSummary}>
-                <strong lwc:dom="manual"></strong> {productOptions.name} details:
+                <template if:true={isEN}>
+                    <strong lwc:dom="manual"></strong> {productOptions.name} details:
+                </template>
+                <template if:true={isFR}>
+                    <strong lwc:dom="manual"></strong> les détails de {productOptions.name} :
+                </template>
             </button>
             <div class="detailedSummary" data-state="collapsed" lwc:dom="manual"></div>
         </div>

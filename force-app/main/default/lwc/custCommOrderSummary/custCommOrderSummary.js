@@ -16,14 +16,25 @@ export default class CustCommOrderSummary extends LightningElement {
 	@track electronicsItems = [];
 	@track freightItems = [];
 
+	@track isEN = true;
+	@track isFR = false;
+
 	connectedCallback(){
 		registerListener('updateSummary', this.updateSummary, this);
 		fireEvent(this.pageRef, 'summaryConnected', 'ready'	);
+	}
+	renderedCallback(){
+	  registerListener('languageChange', this.handleLanguageChange, this);
+  }
+
+	get checkIsThanks() {
+		return (this.usage === 'thankyou') ? true : false;
 	}
 
 	updateSummary(details){
 		let payload = {
 			 'name': details.name,
+			 'name_fr': details.name_fr,
 			 'sku': details.sku,
 			 'inputName': details.userSelectionName
 		};
@@ -76,5 +87,12 @@ export default class CustCommOrderSummary extends LightningElement {
  	 	  array[index] = object;
     }
  	}
+
+ 	handleLanguageChange(detail){
+			if(detail){
+				this.isEN = (detail === 'EN') ? true : false;
+				this.isFR = (detail === 'FR') ? true : false;
+		}
+	}
 
 }

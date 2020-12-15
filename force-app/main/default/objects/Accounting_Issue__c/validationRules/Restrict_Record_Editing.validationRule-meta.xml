@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Restrict_Record_Editing</fullName>
+    <active>true</active>
+    <description>This validation rule restricts the ability of non-accounting users to modify records they don&apos;t own.</description>
+    <errorConditionFormula>AND 
+( 
+ NOT(ISNEW()),
+ NOT($Permission.Can_Manage_Accounting_Issues),
+ NOT($Permission.Can_Modify_All_Accounting_Issues),
+ NOT($Profile.Name = &apos;System Administrator&apos;),
+ OR( 
+       $User.Id &lt;&gt; OwnerId
+      )
+)</errorConditionFormula>
+    <errorMessage>You do not have permissions to modify this record.</errorMessage>
+</ValidationRule>

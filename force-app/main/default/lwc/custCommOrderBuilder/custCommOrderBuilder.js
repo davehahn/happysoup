@@ -30,29 +30,44 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
   @track customerFirstName;
   @track customerLastName;
   creditCardError = false;
-
-
+  isEN = true;
+  isFR = false;
 
   pages = [
-    'performance',
-    'trailering',
-    'electronics',
-    'payment'
+    {
+    	label: 'performance',
+    	label_fr: 'performance'
+    },
+    {
+			label: 'trailering',
+			label_fr: 'remorque'
+		},
+		{
+			label: 'electronics',
+			label_fr: 'électroniques'
+		},
+		{
+			label: 'payment',
+			label_fr: 'paiement'
+		}
   ];
 
  	 modalPages = [
  	   {
       title: 'Finance Options',
+      title_fr: 'Options de financement',
       label: 'payment-calculator',
       class: 'modal-nav-item  modal-nav-item_selected'
     },
 		{
 			title: 'Preferred Equipment Package',
+			title_fr: 'Ensemble Équipement Préférentiel',
 			label: 'premium-package',
 			class: 'modal-nav-item'
 		},
 		{
 			title: 'Delivery Timing + Freight',
+			title_fr: 'Calendrier de livraison + transport',
 			label: 'delivery',
 			class: 'modal-nav-item'
 		},
@@ -69,6 +84,7 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
 	@track currentPage = 'performance';
   @track currentModalPage = 'premium-package';
   @track paymentType='loan';
+  @track paymentTypeLabel='loan';
   @track iframeHeight;
   @track boat;
   @track purchasePrice;
@@ -76,6 +92,7 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
   @track traileringItems = [];
   @track electronicsItems = [];
   @track freightItems = [];
+  @track validatedFormFields = 0;
   @track paymentFormErrors;
   @track hasPaymentErrors = false;
 
@@ -156,8 +173,9 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
   {
     return this.pages.map( page => {
       return {
-        label: page,
-        class: this.currentPage === page ?
+        label: page.label,
+        label_fr: page.label_fr,
+        class: this.currentPage === page.label ?
           'config-nav-item config-nav-item_selected' :
           'config-nav-item'
       }
@@ -166,7 +184,7 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
 
   get buttonText()
   {
-    return this.onPaymentPage() ? 'Place Order' : 'Next';
+    return this.onPaymentPage() ? ((this.isEN) ? 'Place Order' : 'Placer la commande') : ((this.isEN) ? 'Next' : 'Suivant');
   }
 
   get buttonDisabled()
@@ -187,6 +205,28 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
   handleNav( event )
   {
     this.doPageChange( event.currentTarget.dataset.navName );
+  }
+
+  handleLanguage( event ){
+  	let changeToLang = event.currentTarget.dataset.lang;
+  	if(changeToLang === 'EN'){
+  		this.isEN = true;
+  		this.isFR = false;
+  		this.currentLang = 'EN';
+  		this.paymentTypeLabel = this.template.querySelector('.financetype-selector_option.selected').dataset.label;
+  		fireEvent(this.pageRef, 'languageChange', 'EN');
+  	} else {
+  		this.isEN = false;
+  		this.isFR = true;
+  		this.currentLang = 'FR';
+  		this.paymentTypeLabel = this.template.querySelector('.financetype-selector_option.selected').dataset.labelFr;
+  		fireEvent(this.pageRef, 'languageChange', 'FR');
+  	}
+
+  	this.shippingTiming();
+  	this.premiumPackValue();
+  	this.buttonText();
+
   }
 
   handlePurchasePriceChange( amount )
@@ -228,10 +268,16 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
     this.template.querySelector('.financetype-selector_container').classList.add('open');
   }
 
-  handlePaymentTypeSelect( event )
+  handlePaymentTypeSelect( event = null )
   {
-    this.paymentType = event.currentTarget.dataset.value;
+  	this.paymentType = event.currentTarget.dataset.value;
+  	this.paymentTypeLabel = (this.isEN) ? event.currentTarget.dataset.label : event.currentTarget.dataset.labelFr;
     this.template.querySelector('.financetype-selector_container').classList.remove('open');
+    let types = this.template.querySelectorAll('.financetype-selector_option');
+    types.forEach((type) => {
+    	type.classList.remove('selected');
+    });
+    event.currentTarget.classList.add('selected');
   }
 
   handleCloseModal()
@@ -276,16 +322,18 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
   {
     this.onPaymentPage() ?
     this.submitOrder() :
-    this.doPageChange( this.pages[ this.pages.indexOf( this.currentPage ) +1 ] );
+    this.doPageChange( this.pages[ this.pages.findIndex( x => x.label === this.currentPage) + 1 ] );
   }
 
   jumpToPayment(){
+  		this.onPaymentPage() ?
+      this.submitOrder() :
       this.doPageChange( 'payment' );
   }
 
   doPageChange( page )
   {
-    this.currentPage = page;
+    this.currentPage = (page.label) ? page.label : page;
     this.template.querySelector('.config-page_selected').classList.remove('config-page_selected');
     this.template.querySelector(`[data-page="${this.currentPage}"]` ).classList.add('config-page_selected');
 
@@ -310,11 +358,20 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
   get premiumPackValue(){
     if(this.boat.premiumPackage.value){
 			const value = parseInt(this.boat.premiumPackage.value);
-			return new Intl.NumberFormat('en-CA', {
-    							  							style: 'currency',
-    							  							currency: 'CAD',
-    							  							minimumFractionDigits: 0
-    							  							}).format(value);
+			if(this.isEN){
+				return new Intl.NumberFormat('en-CA', {
+												style: 'currency',
+												currency: 'CAD',
+												minimumFractionDigits: 0
+												}).format(value);
+			} else if(this.isFR){
+				return new Intl.NumberFormat('fr-CA', {
+												style: 'currency',
+												currency: 'CAD',
+												minimumFractionDigits: 0
+												}).format(value);
+			}
+
 		}
   }
 
@@ -327,16 +384,24 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
 				const items = Object.values(parts);
 				for(const item of items){
 				  let description = item.description;
+				  let description_fr = item.description_fr;
 				  let value = item.value;
 				  let valueFormatted = new Intl.NumberFormat('en-CA', {
 																style: 'currency',
 																currency: 'CAD',
 																minimumFractionDigits: 0
 																}).format(value);
+					let valueFormatted_fr = new Intl.NumberFormat('fr-CA', {
+          																style: 'currency',
+          																currency: 'CAD',
+          																minimumFractionDigits: 0
+          																}).format(value);
 				  let details = {
 				    description: description,
+				    description_fr: description_fr,
 				    value: value,
 				    valueFormatted: valueFormatted,
+				    valueFormatted_fr: valueFormatted_fr,
       		};
 					packItems.push(details);
 				}
@@ -403,6 +468,13 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
 
   submitOrder()
   {
+  	let formFields = this.template.querySelectorAll('.form-input:not(.form-input--valueOnly)');
+  	let numFormFields = formFields.length;
+  	console.log('numFormFields', numFormFields);
+  	console.log('numValidFields', this.validatedFormFields);
+  	if(numFormFields > this.validatedFormFields){
+  		return false;
+  	}
     const spinner = this.template.querySelector('c-legend-spinner');
     spinner.toggle();
 
@@ -410,7 +482,6 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
 		.then( ( accountSaveResult ) => {
 		  this.opportunityId = accountSaveResult.opportunityId;
       this.accountId = accountSaveResult.record.Id;
-			this.creditCardError = false;
 		  return this.createSquarePayment();
   	})
   	.then( ( paymentResult ) => {
@@ -418,6 +489,7 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
     })
   	.then( ( saveSaleItemsResult ) => {
       console.log('lineItemsResult: ', saveSaleItemsResult);
+      this.creditCardError = false;
     })
   	.catch( ( error ) => {
 			this.displayPaymentError(error);
@@ -467,7 +539,7 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
 
   onPaymentPage()
   {
-    return this.pages.indexOf( this.currentPage ) + 1 === this.pages.length
+    return this.pages.findIndex( x => x.label === this.currentPage ) + 1 === this.pages.length
   }
 
 	get traileringOptions(){
@@ -500,9 +572,16 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
 			const label = mc['label'].toLowerCase();
 			const origContent = mc['content'];
 			const stripContent = origContent.replace(/(<([^>]+)>)/ig,"");
-			if(label === 'shippingtiming'){
-				return stripContent;
+			if(this.isEN){
+				if(label === 'shippingtiming'){
+					return stripContent;
+				}
+			} else if(this.isFR){
+				if(label === 'shippingtimingfr'){
+					return stripContent;
+				}
 			}
+
 		}
   }
 
@@ -537,12 +616,21 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
  	}
 
  	displayFreightCharge(charge){
- 	  let updatedFreight = new Intl.NumberFormat('en-CA', {
-													style: 'currency',
-													currency: 'CAD',
-													minimumFractionDigits: 0
-													}).format(charge);
- 	  this.freightCharge = '+ ' + updatedFreight + ' Freight Charge';
+ 		if(this.isEN){
+ 			let updatedFreight = new Intl.NumberFormat('en-CA', {
+								style: 'currency',
+								currency: 'CAD',
+								minimumFractionDigits: 0
+								}).format(charge);
+ 		} else if(this.isEN){
+			let updatedFreight = new Intl.NumberFormat('fr-CA', {
+							style: 'currency',
+							currency: 'CAD',
+							minimumFractionDigits: 0
+							}).format(charge);
+		}
+
+ 	  this.freightCharge = (this.isEN) ? '+ ' + updatedFreight + ' Freight Charge' : '+ ' + updatedFreight + ' Frais de transport';
   }
 
 	triggerValidation( event ){
@@ -553,28 +641,35 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
 
     const attr = field.dataset.attr,
 					value = field.value,
-					feedback = field.parentElement.querySelector('.feedback'),
-					lang = 'en';
+					feedback = field.parentElement.querySelector('.feedback');
 
 		if( attr === 'firstName' || attr === 'lastName'){
 			if(value.length === 0){
 				if(field.hasAttribute('required')){
-					let errmsg = (lang === 'en') ? 'This field cannot be empty' : 'Ce champ ne peut pas être vide';
+					let errmsg = (this.isEN) ? 'This field cannot be empty' : 'Ce champ ne peut pas être vide';
 					feedback.classList.remove('clean');
 					feedback.classList.add('error');
 					feedback.innerHTML = errmsg;
 					field.classList.remove('clean');
 					field.classList.add('error');
+					if(field.classList.contains('valid')){
+						field.classList.remove('valid');
+						this.validatedFormFields = this.validatedFormFields - 1;
+					}
    	 		}
    		} else {
    		  const pattern = /^[a-zA-ZàâçéèêëîïôûùüÿæœÙÛÜŸÀÂÆÇÉÈÊËÏÎÔŒ  .'-]+$/i;
 				if(!(pattern.test(value))){
-					let errmsg = (lang === 'en') ? 'This field contains invalid characters' : 'Ce champ contient des textes invalides';
+					let errmsg = (this.isEN) ? 'This field contains invalid characters' : 'Ce champ contient des textes invalides';
 					feedback.classList.remove('clean');
 					feedback.classList.add('error');
 					feedback.innerHTML = errmsg;
 					field.classList.remove('clean');
 					field.classList.add('error');
+					if(field.classList.contains('valid')){
+						field.classList.remove('valid');
+						this.validatedFormFields = this.validatedFormFields - 1;
+					}
 				}
 				else{
 					feedback.classList.remove('error');
@@ -582,6 +677,10 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
 					feedback.innerHTML = '';
 					field.classList.remove('error');
 					field.classList.add('clean');
+					if(!field.classList.contains('valid')){
+						field.classList.add('valid');
+						this.validatedFormFields = this.validatedFormFields + 1;
+					}
 				}
      	}
   	}
@@ -589,22 +688,30 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
   	if( attr === 'email' ){
   		if(value.length === 0){
 				if(field.hasAttribute('required')){
-					let errmsg = (lang === 'en') ? 'This field cannot be empty' : 'Ce champ ne peut pas être vide';
+					let errmsg = (this.isEN) ? 'This field cannot be empty' : 'Ce champ ne peut pas être vide';
 					feedback.classList.remove('clean');
 					feedback.classList.add('error');
 					feedback.innerHTML = errmsg;
 					field.classList.remove('clean');
 					field.classList.add('error');
+					if(field.classList.contains('valid')){
+						field.classList.remove('valid');
+						this.validatedFormFields = this.validatedFormFields - 1;
+					}
 				}
 			} else {
 				const pattern = /^\w+([\.\-_]?\w+)*@\w+([\.\-_]?\w+)*(\.\w{2,5})+$/;
 				if(!(pattern.test(value))){
-					let errmsg = (lang === 'en') ? 'This field is in the wrong format. Try using the format <em>email@address.com</em> instead.' : 'Ce champ est en mauvais format.  Essayez d\'utiliser ce format à la place <em>email@address.com</em> ';
+					let errmsg = (this.isEN) ? 'This field is in the wrong format. Try using the format <em>email@address.com</em> instead.' : 'Ce champ est en mauvais format.  Essayez d\'utiliser ce format à la place <em>email@address.com</em> ';
 					feedback.classList.remove('clean');
 					feedback.classList.add('error');
 					feedback.innerHTML = errmsg;
 					field.classList.remove('clean');
 					field.classList.add('error');
+					if(field.classList.contains('valid')){
+						field.classList.remove('valid');
+						this.validatedFormFields = this.validatedFormFields - 1;
+					}
 				}
 				else{
 					feedback.classList.remove('error');
@@ -612,6 +719,10 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
 					feedback.innerHTML = '';
 					field.classList.remove('error');
 					field.classList.add('clean');
+					if(!field.classList.contains('valid')){
+						field.classList.add('valid');
+						this.validatedFormFields = this.validatedFormFields + 1;
+					}
 				}
 			}
   	}
@@ -619,22 +730,30 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
   	if( attr === 'phone'){
 			if(value.length === 0){
 				if(field.hasAttribute('required')){
-					let errmsg = (lang === 'en') ? 'This field cannot be empty' : 'Ce champ ne peut pas être vide';
+					let errmsg = (this.isEN) ? 'This field cannot be empty' : 'Ce champ ne peut pas être vide';
 					feedback.classList.remove('clean');
 					feedback.classList.add('error');
 					feedback.innerHTML = errmsg;
 					field.classList.remove('clean');
 					field.classList.add('error');
+					if(field.classList.contains('valid')){
+						field.classList.remove('valid');
+						this.validatedFormFields = this.validatedFormFields - 1;
+					}
 				}
 			} else {
 				const pattern = /^(?:\(?)(\d{3})(?:\)?)(\s|\.|-)?(\d{3})(\s|\.|-)?(\d{4})$/;
 				if(!(pattern.test(value))){
-					let errmsg = (lang === 'en') ? 'This field is in the wrong format. Try using the format <em>123-456-7890</em> instead' : 'Ce champ est en mauvais format.  Essayez d\'utiliser ce format à la place  <em>123-456-7890</em>';
+					let errmsg = (this.isEN) ? 'This field is in the wrong format. Try using the format <em>123-456-7890</em> instead' : 'Ce champ est en mauvais format.  Essayez d\'utiliser ce format à la place  <em>123-456-7890</em>';
 					feedback.classList.remove('clean');
 					feedback.classList.add('error');
 					feedback.innerHTML = errmsg;
 					field.classList.remove('clean');
 					field.classList.add('error');
+					if(field.classList.contains('valid')){
+						field.classList.remove('valid');
+						this.validatedFormFields = this.validatedFormFields - 1;
+					}
 				}
 				else{
 					feedback.classList.remove('error');
@@ -642,6 +761,10 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
 					feedback.innerHTML = '';
 					field.classList.remove('error');
 					field.classList.add('clean');
+					if(!field.classList.contains('valid')){
+						field.classList.add('valid');
+						this.validatedFormFields = this.validatedFormFields + 1;
+					}
 				}
 			}
   	}
@@ -649,12 +772,26 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
   	if( attr === 'state' ){
   		if(value.length === 0){
 				if(field.hasAttribute('required')){
-					let errmsg = (lang === 'en') ? 'This field cannot be empty' : 'Ce champ ne peut pas être vide';
+					let errmsg = (this.isEN) ? 'This field cannot be empty' : 'Ce champ ne peut pas être vide';
 					feedback.classList.remove('clean');
 					feedback.classList.add('error');
 					feedback.innerHTML = errmsg;
 					field.classList.remove('clean');
 					field.classList.add('error');
+					if(field.classList.contains('valid')){
+						field.classList.remove('valid');
+						this.validatedFormFields = this.validatedFormFields - 1;
+					}
+				}
+			} else{
+				feedback.classList.remove('error');
+				feedback.classList.add('clean');
+				feedback.innerHTML = '';
+				field.classList.remove('error');
+				field.classList.add('clean');
+				if(!field.classList.contains('valid')){
+					field.classList.add('valid');
+					this.validatedFormFields = this.validatedFormFields + 1;
 				}
 			}
   	}
@@ -675,6 +812,8 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
   displayThanks(){
     const thanksShow = this.template.querySelectorAll('[data-thanks="show"]');
     const thanksHide = this.template.querySelectorAll('[data-thanks="hide"]');
+
+    this.currentPage = 'thankyou';
 
     thanksShow.forEach((element) => {
       element.style.display = 'flex';

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Restrict_Status_Picklist</fullName>
+    <active>true</active>
+    <errorConditionFormula>AND
+   (
+     NOT($Permission.Can_Manage_Accounting_Issues),
+     NOT($Permission.Can_Modify_All_Accounting_Issues),
+     NOT($Profile.Name = &apos;System Administrator&apos;),
+     NOT(ISPICKVAL(Status__c, &apos;Submitted&apos;)),
+     NOT(ISPICKVAL(Status__c, &apos;Ready for Accounting&apos;))
+)</errorConditionFormula>
+    <errorMessage>You can only set the set the Status field to &apos;Submitted&apos;.</errorMessage>
+</ValidationRule>

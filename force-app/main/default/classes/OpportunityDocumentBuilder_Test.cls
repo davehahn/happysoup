@@ -102,7 +102,7 @@ private class OpportunityDocumentBuilder_Test {
     init();
     Opportunity_Document__c oppdoc = OpportunityDocumentBuilder.buildQuotePDF( opp.Id,
                                                                                'english',
-                                                                               'BoatName',
+                                                                               'BoatName This is Really Really Really Stupidly pointlessly long But we have had very long product names that have created issues in the past so we need to test this',
                                                                                'fileName');
     System.assert(oppdoc != null);
     System.assertEquals(opp.Id, oppdoc.Opportunity__c);

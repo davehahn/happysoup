@@ -79,12 +79,13 @@ private class DealerPartOrdersStatement_Test {
 		}
 		Date thisMonth = Date.today();
 		Date lastMonth = Date.today().toStartOfMonth().addMonths(-1);
+		Date nextMonth = Date.today().toStartOfMonth().addMonths(1);
 		//current
 		billings[0].Lgnd_Due_Date__c = Date.newInstance(thisMonth.year(), thisMonth.month(), 15);
 		//overdue
 		billings[1].Lgnd_Due_Date__c = Date.newInstance(lastMonth.year(), lastMonth.month(), 15);
 		//future
-		billings[2].Lgnd_Due_Date__c = Date.newInstance(thisMonth.year(), thisMonth.addMonths(1).month(), 15);
+		billings[2].Lgnd_Due_Date__c = Date.newInstance(nextMonth.year(), nextMonth.month(), 16);
 		insert billings;
 
 		List<AcctSeed__Billing_Line__c> billingLines = new List<AcctSeed__Billing_Line__c>();
