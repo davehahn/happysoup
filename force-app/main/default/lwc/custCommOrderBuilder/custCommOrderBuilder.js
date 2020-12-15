@@ -84,6 +84,7 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
 	@track currentPage = 'performance';
   @track currentModalPage = 'premium-package';
   @track paymentType='loan';
+  @track paymentTypeLabel='loan';
   @track iframeHeight;
   @track boat;
   @track purchasePrice;
@@ -91,6 +92,7 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
   @track traileringItems = [];
   @track electronicsItems = [];
   @track freightItems = [];
+  @track validatedFormFields = 0;
   @track paymentFormErrors;
   @track hasPaymentErrors = false;
 
@@ -211,17 +213,20 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
   		this.isEN = true;
   		this.isFR = false;
   		this.currentLang = 'EN';
+  		this.paymentTypeLabel = this.template.querySelector('.financetype-selector_option.selected').dataset.label;
   		fireEvent(this.pageRef, 'languageChange', 'EN');
   	} else {
   		this.isEN = false;
   		this.isFR = true;
   		this.currentLang = 'FR';
+  		this.paymentTypeLabel = this.template.querySelector('.financetype-selector_option.selected').dataset.labelFr;
   		fireEvent(this.pageRef, 'languageChange', 'FR');
   	}
 
   	this.shippingTiming();
   	this.premiumPackValue();
   	this.buttonText();
+
   }
 
   handlePurchasePriceChange( amount )
@@ -263,10 +268,16 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
     this.template.querySelector('.financetype-selector_container').classList.add('open');
   }
 
-  handlePaymentTypeSelect( event )
+  handlePaymentTypeSelect( event = null )
   {
-    this.paymentType = event.currentTarget.dataset.value;
+  	this.paymentType = event.currentTarget.dataset.value;
+  	this.paymentTypeLabel = (this.isEN) ? event.currentTarget.dataset.label : event.currentTarget.dataset.labelFr;
     this.template.querySelector('.financetype-selector_container').classList.remove('open');
+    let types = this.template.querySelectorAll('.financetype-selector_option');
+    types.forEach((type) => {
+    	type.classList.remove('selected');
+    });
+    event.currentTarget.classList.add('selected');
   }
 
   handleCloseModal()
@@ -315,6 +326,8 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
   }
 
   jumpToPayment(){
+  		this.onPaymentPage() ?
+      this.submitOrder() :
       this.doPageChange( 'payment' );
   }
 
@@ -455,6 +468,13 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
 
   submitOrder()
   {
+  	let formFields = this.template.querySelectorAll('.form-input:not(.form-input--valueOnly)');
+  	let numFormFields = formFields.length;
+  	console.log('numFormFields', numFormFields);
+  	console.log('numValidFields', this.validatedFormFields);
+  	if(numFormFields > this.validatedFormFields){
+  		return false;
+  	}
     const spinner = this.template.querySelector('c-legend-spinner');
     spinner.toggle();
 
@@ -462,7 +482,6 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
 		.then( ( accountSaveResult ) => {
 		  this.opportunityId = accountSaveResult.opportunityId;
       this.accountId = accountSaveResult.record.Id;
-			this.creditCardError = false;
 		  return this.createSquarePayment();
   	})
   	.then( ( paymentResult ) => {
@@ -470,6 +489,7 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
     })
   	.then( ( saveSaleItemsResult ) => {
       console.log('lineItemsResult: ', saveSaleItemsResult);
+      this.creditCardError = false;
     })
   	.catch( ( error ) => {
 			this.displayPaymentError(error);
@@ -632,6 +652,10 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
 					feedback.innerHTML = errmsg;
 					field.classList.remove('clean');
 					field.classList.add('error');
+					if(field.classList.contains('valid')){
+						field.classList.remove('valid');
+						this.validatedFormFields = this.validatedFormFields - 1;
+					}
    	 		}
    		} else {
    		  const pattern = /^[a-zA-ZàâçéèêëîïôûùüÿæœÙÛÜŸÀÂÆÇÉÈÊËÏÎÔŒ  .'-]+$/i;
@@ -642,6 +666,10 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
 					feedback.innerHTML = errmsg;
 					field.classList.remove('clean');
 					field.classList.add('error');
+					if(field.classList.contains('valid')){
+						field.classList.remove('valid');
+						this.validatedFormFields = this.validatedFormFields - 1;
+					}
 				}
 				else{
 					feedback.classList.remove('error');
@@ -649,6 +677,10 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
 					feedback.innerHTML = '';
 					field.classList.remove('error');
 					field.classList.add('clean');
+					if(!field.classList.contains('valid')){
+						field.classList.add('valid');
+						this.validatedFormFields = this.validatedFormFields + 1;
+					}
 				}
      	}
   	}
@@ -662,6 +694,10 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
 					feedback.innerHTML = errmsg;
 					field.classList.remove('clean');
 					field.classList.add('error');
+					if(field.classList.contains('valid')){
+						field.classList.remove('valid');
+						this.validatedFormFields = this.validatedFormFields - 1;
+					}
 				}
 			} else {
 				const pattern = /^\w+([\.\-_]?\w+)*@\w+([\.\-_]?\w+)*(\.\w{2,5})+$/;
@@ -672,6 +708,10 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
 					feedback.innerHTML = errmsg;
 					field.classList.remove('clean');
 					field.classList.add('error');
+					if(field.classList.contains('valid')){
+						field.classList.remove('valid');
+						this.validatedFormFields = this.validatedFormFields - 1;
+					}
 				}
 				else{
 					feedback.classList.remove('error');
@@ -679,6 +719,10 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
 					feedback.innerHTML = '';
 					field.classList.remove('error');
 					field.classList.add('clean');
+					if(!field.classList.contains('valid')){
+						field.classList.add('valid');
+						this.validatedFormFields = this.validatedFormFields + 1;
+					}
 				}
 			}
   	}
@@ -692,6 +736,10 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
 					feedback.innerHTML = errmsg;
 					field.classList.remove('clean');
 					field.classList.add('error');
+					if(field.classList.contains('valid')){
+						field.classList.remove('valid');
+						this.validatedFormFields = this.validatedFormFields - 1;
+					}
 				}
 			} else {
 				const pattern = /^(?:\(?)(\d{3})(?:\)?)(\s|\.|-)?(\d{3})(\s|\.|-)?(\d{4})$/;
@@ -702,6 +750,10 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
 					feedback.innerHTML = errmsg;
 					field.classList.remove('clean');
 					field.classList.add('error');
+					if(field.classList.contains('valid')){
+						field.classList.remove('valid');
+						this.validatedFormFields = this.validatedFormFields - 1;
+					}
 				}
 				else{
 					feedback.classList.remove('error');
@@ -709,6 +761,10 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
 					feedback.innerHTML = '';
 					field.classList.remove('error');
 					field.classList.add('clean');
+					if(!field.classList.contains('valid')){
+						field.classList.add('valid');
+						this.validatedFormFields = this.validatedFormFields + 1;
+					}
 				}
 			}
   	}
@@ -722,6 +778,20 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
 					feedback.innerHTML = errmsg;
 					field.classList.remove('clean');
 					field.classList.add('error');
+					if(field.classList.contains('valid')){
+						field.classList.remove('valid');
+						this.validatedFormFields = this.validatedFormFields - 1;
+					}
+				}
+			} else{
+				feedback.classList.remove('error');
+				feedback.classList.add('clean');
+				feedback.innerHTML = '';
+				field.classList.remove('error');
+				field.classList.add('clean');
+				if(!field.classList.contains('valid')){
+					field.classList.add('valid');
+					this.validatedFormFields = this.validatedFormFields + 1;
 				}
 			}
   	}
