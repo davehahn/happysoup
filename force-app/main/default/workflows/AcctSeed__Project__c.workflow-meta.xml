@@ -742,7 +742,7 @@
         <description>Send email to Dealer Care team that a PO is required</description>
         <protected>false</protected>
         <recipients>
-            <recipient>mbeaucage@legendboats.com	</recipient>
+            <recipient>mbeaucage@legendboats.com</recipient>
             <type>user</type>
         </recipients>
         <senderType>DefaultWorkflowUser</senderType>
@@ -2182,6 +2182,25 @@
             <field>AcctSeed__Project__c.Business_Manager__c</field>
             <operation>equals</operation>
             <value>Catherine Grenier</value>
+        </criteriaItems>
+        <triggerType>onCreateOrTriggeringUpdate</triggerType>
+    </rules>
+    <rules>
+        <fullName>Notify BOM when Tagged</fullName>
+        <actions>
+            <name>Deal_is_Tagged</name>
+            <type>Alert</type>
+        </actions>
+        <active>true</active>
+        <criteriaItems>
+            <field>AcctSeed__Project__c.Stage__c</field>
+            <operation>equals</operation>
+            <value>Pending Work Order</value>
+        </criteriaItems>
+        <criteriaItems>
+            <field>AcctSeed__Project__c.Business_Manager__c</field>
+            <operation>equals</operation>
+            <value>Lisa Turcott</value>
         </criteriaItems>
         <triggerType>onCreateOrTriggeringUpdate</triggerType>
     </rules>
@@ -4401,7 +4420,7 @@
         <assignedToType>user</assignedToType>
         <description>This Counter Sale was marked to have no payment required.  Can you please go approve and make the necessary journal entries?
 
-            Thank you!</description>
+Thank you!</description>
         <dueDateOffset>1</dueDateOffset>
         <notifyAssignee>true</notifyAssignee>
         <priority>Normal</priority>
@@ -4448,9 +4467,9 @@
         <fullName>Create_Work_Order_Barrie_ERP</fullName>
         <assignedTo>bmilne@legendboats.com</assignedTo>
         <assignedToType>user</assignedToType>
-        <description>This deal has been tagged and the add on call is complete, please do your thing and create this Work Order
+        <description>This deal has been tagged and the add on call is complete, please do your thing and create this Work Order 
 
-            Thanks!  You rock!</description>
+Thanks!  You rock!</description>
         <dueDateOffset>0</dueDateOffset>
         <notifyAssignee>false</notifyAssignee>
         <priority>Normal</priority>
@@ -4464,7 +4483,7 @@
         <assignedToType>user</assignedToType>
         <description>This deal has been tagged and the add on call is complete, please do your thing and create this Work Order
 
-            Thanks! You rock!</description>
+Thanks! You rock!</description>
         <dueDateOffset>0</dueDateOffset>
         <notifyAssignee>false</notifyAssignee>
         <priority>Normal</priority>
@@ -4474,7 +4493,7 @@
     </tasks>
     <tasks>
         <fullName>Create_Work_Order_Retail_Rig</fullName>
-        <assignedTo>mbeaucage@legendboats.com	</assignedTo>
+        <assignedTo>mbeaucage@legendboats.com</assignedTo>
         <assignedToType>user</assignedToType>
         <description>Please create a work order in IEM for Retail Rig</description>
         <dueDateOffset>0</dueDateOffset>
@@ -4488,9 +4507,9 @@
         <fullName>Create_Work_Order_Whitefish_ERP</fullName>
         <assignedTo>mguitard@legendboats.com</assignedTo>
         <assignedToType>user</assignedToType>
-        <description>This deal has been tagged and the add on call is complete, please do your thing and create this Work Order
+        <description>This deal has been tagged and the add on call is complete, please do your thing and create this Work Order 
 
-            Thanks!  You rock!</description>
+Thanks!  You rock!</description>
         <dueDateOffset>0</dueDateOffset>
         <notifyAssignee>true</notifyAssignee>
         <priority>Normal</priority>
@@ -4582,9 +4601,9 @@
         <fullName>Marianne_French_Just_Created_a_Counter_Sale</fullName>
         <assignedTo>aseltzer@legendboats.com</assignedTo>
         <assignedToType>user</assignedToType>
-        <description>Austin Seltzer,  You have been assigned the very special duty of picking and packing parts for this counter sale.
+        <description>Austin Seltzer,  You have been assigned the very special duty of picking and packing parts for this counter sale.   
 
-            Please ensure this is done to the best of your abilities and let Marianne know when it is completed.</description>
+Please ensure this is done to the best of your abilities and let Marianne know when it is completed.</description>
         <dueDateOffset>0</dueDateOffset>
         <notifyAssignee>false</notifyAssignee>
         <offsetFromField>AcctSeed__Project__c.CreatedDate</offsetFromField>
@@ -4657,7 +4676,7 @@
         <assignedTo>mbeaucage@legendboats.com</assignedTo>
         <assignedToType>user</assignedToType>
         <description>A Partner Boat sale has been 12 hours since the picukp time.
-            Please complete other tasks associated to this Partner Boat Sale and finalize the ERP.</description>
+Please complete other tasks associated to this Partner Boat Sale and finalize the ERP.</description>
         <dueDateOffset>0</dueDateOffset>
         <notifyAssignee>false</notifyAssignee>
         <priority>Normal</priority>
@@ -4667,10 +4686,10 @@
     </tasks>
     <tasks>
         <fullName>Partner_Boat_Sale_delivery_date_has_passed</fullName>
-        <assignedTo>mbeaucage@legendboats.com	</assignedTo>
+        <assignedTo>mbeaucage@legendboats.com</assignedTo>
         <assignedToType>user</assignedToType>
         <description>A Partner Boat sale has been 12 hours since the picukp time.
-            Please complete other tasks associated to this Partner Boat Sale and finalize the ERP.</description>
+Please complete other tasks associated to this Partner Boat Sale and finalize the ERP.</description>
         <dueDateOffset>0</dueDateOffset>
         <notifyAssignee>false</notifyAssignee>
         <priority>Normal</priority>
@@ -5218,7 +5237,7 @@
         <assignedToType>user</assignedToType>
         <description>This deal has been approved to tag, go do your thing :)
 
-            Thank you, you&apos;re awesome!</description>
+Thank you, you&apos;re awesome!</description>
         <dueDateOffset>1</dueDateOffset>
         <notifyAssignee>true</notifyAssignee>
         <priority>Normal</priority>
@@ -5288,11 +5307,11 @@
     </tasks>
     <tasks>
         <fullName>This_Dealer_Created_a_Parts_Request</fullName>
-        <assignedTo>mbeaucage@legendboats.com	</assignedTo>
+        <assignedTo>mbeaucage@legendboats.com</assignedTo>
         <assignedToType>user</assignedToType>
         <description>This dealer created a parts request.  Please have back parts pack it up.
 
-            Please note, Luc and Elvis also get this notification.</description>
+Please note, Luc and Elvis also get this notification.</description>
         <dueDateOffset>0</dueDateOffset>
         <notifyAssignee>false</notifyAssignee>
         <priority>Normal</priority>
@@ -5306,7 +5325,7 @@
         <assignedToType>user</assignedToType>
         <description>This dealer created a parts request.  Please have back parts pack it up.
 
-            Please note, Luc and Elvis and Mel also get this notification.</description>
+Please note, Luc and Elvis and Mel also get this notification.</description>
         <dueDateOffset>0</dueDateOffset>
         <notifyAssignee>false</notifyAssignee>
         <priority>Normal</priority>
@@ -5581,9 +5600,9 @@
         <assignedToType>user</assignedToType>
         <description>You have been assigned as Boat Specialist for this Retail ERP.
 
-            Please review the ERP and get with the Salesperson to review the ERP and ensure everything is correct.
+Please review the ERP and get with the Salesperson to review the ERP and ensure everything is correct.
 
-            Also, take this opportunity to call the customer to introduce yourself.</description>
+Also, take this opportunity to call the customer to introduce yourself.</description>
         <dueDateOffset>0</dueDateOffset>
         <notifyAssignee>false</notifyAssignee>
         <priority>Normal</priority>
@@ -5597,9 +5616,9 @@
         <assignedToType>user</assignedToType>
         <description>You have been assigned as Boat Specialist for this Retail ERP.
 
-            Please review the ERP and get with the Salesperson to review the ERP and ensure everything is correct.
+Please review the ERP and get with the Salesperson to review the ERP and ensure everything is correct.
 
-            Also, take this opportunity to call the customer to introduce yourself.</description>
+Also, take this opportunity to call the customer to introduce yourself.</description>
         <dueDateOffset>0</dueDateOffset>
         <notifyAssignee>false</notifyAssignee>
         <priority>Normal</priority>
@@ -5613,9 +5632,9 @@
         <assignedToType>user</assignedToType>
         <description>You have been assigned as Boat Specialist for this Retail ERP.
 
-            Please review the ERP and get with the Salesperson to review the ERP and ensure everything is correct.
+Please review the ERP and get with the Salesperson to review the ERP and ensure everything is correct.
 
-            Also, take this opportunity to call the customer to introduce yourself.</description>
+Also, take this opportunity to call the customer to introduce yourself.</description>
         <dueDateOffset>0</dueDateOffset>
         <notifyAssignee>false</notifyAssignee>
         <priority>Normal</priority>
@@ -5629,9 +5648,9 @@
         <assignedToType>user</assignedToType>
         <description>You have been assigned as Boat Specialist for this Retail ERP.
 
-            Please review the ERP and get with the Salesperson to review the ERP and ensure everything is correct.
+Please review the ERP and get with the Salesperson to review the ERP and ensure everything is correct.
 
-            Also, take this opportunity to call the customer to introduce yourself.</description>
+Also, take this opportunity to call the customer to introduce yourself.</description>
         <dueDateOffset>0</dueDateOffset>
         <notifyAssignee>false</notifyAssignee>
         <priority>Normal</priority>
@@ -5645,9 +5664,9 @@
         <assignedToType>user</assignedToType>
         <description>You have been assigned as Boat Specialist for this Retail ERP.
 
-            Please review the ERP and get with the Salesperson to review the ERP and ensure everything is correct.
+Please review the ERP and get with the Salesperson to review the ERP and ensure everything is correct.
 
-            Also, take this opportunity to call the customer to introduce yourself.</description>
+Also, take this opportunity to call the customer to introduce yourself.</description>
         <dueDateOffset>0</dueDateOffset>
         <notifyAssignee>false</notifyAssignee>
         <priority>Normal</priority>
@@ -5661,9 +5680,9 @@
         <assignedToType>user</assignedToType>
         <description>You have been assigned as Boat Specialist for this Retail ERP.
 
-            Please review the ERP and get with the Salesperson to review the ERP and ensure everything is correct.
+Please review the ERP and get with the Salesperson to review the ERP and ensure everything is correct.
 
-            Also, take this opportunity to call the customer to introduce yourself.</description>
+Also, take this opportunity to call the customer to introduce yourself.</description>
         <dueDateOffset>0</dueDateOffset>
         <notifyAssignee>false</notifyAssignee>
         <priority>Normal</priority>
@@ -5677,9 +5696,9 @@
         <assignedToType>user</assignedToType>
         <description>You have been assigned as Boat Specialist for this Retail ERP.
 
-            Please review the ERP and get with the Salesperson to review the ERP and ensure everything is correct.
+Please review the ERP and get with the Salesperson to review the ERP and ensure everything is correct.
 
-            Also, take this opportunity to call the customer to introduce yourself.</description>
+Also, take this opportunity to call the customer to introduce yourself.</description>
         <dueDateOffset>0</dueDateOffset>
         <notifyAssignee>false</notifyAssignee>
         <priority>Normal</priority>
@@ -5693,9 +5712,9 @@
         <assignedToType>user</assignedToType>
         <description>You have been assigned as Boat Specialist for this Retail ERP.
 
-            Please review the ERP and get with the Salesperson to review the ERP and ensure everything is correct.
+Please review the ERP and get with the Salesperson to review the ERP and ensure everything is correct.
 
-            Also, take this opportunity to call the customer to introduce yourself.</description>
+Also, take this opportunity to call the customer to introduce yourself.</description>
         <dueDateOffset>0</dueDateOffset>
         <notifyAssignee>false</notifyAssignee>
         <priority>Normal</priority>
