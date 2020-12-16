@@ -325,8 +325,9 @@
           console.log(eventReceived);
           this.showToast(component, "Success", "success", 'Refund Successful.');
           this.toggleSpinner(component, false);
+          var navEvt = $A.get("e.force:navigateToSObject");
           navEvt.setParams({
-            "recordId": component.get('idFilter'),
+            "recordId": component.get('v.idFilter'),
             "slideDevName": "related"
           });
           navEvt.fire();

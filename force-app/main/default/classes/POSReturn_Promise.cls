@@ -23,7 +23,7 @@ public with sharing class POSReturn_Promise {
         }
     }
 
-    public class createExpense implements Promise.Deferred, Database.AllowsCallouts {
+    public class createExpense implements Promise.Deferred {
         public Object resolve(Object mapList) {
             promiseData pd = (promiseData)mapList;
             return takeExpense(pd);
@@ -107,6 +107,7 @@ public with sharing class POSReturn_Promise {
         new Promise( new createReturnERPTaskAndBilling() )
             .then( new createPayment() )
             .then( new createDisbursement() )
+            .then( new createExpense() )
             .error( new returnError() )
             .done( new returnDone() )
             .execute(pd);
@@ -390,8 +391,7 @@ public with sharing class POSReturn_Promise {
             Tax_Rate_Retail__c = 0,
             AcctSeed__Date__c = Date.today(),
             Approval_Date__c = date.Today(),
-            Approved__c = true,
-            AcctSeed__Ledger__c = 'a12020000004ItEAAU'
+            Approved__c = true
         );
         /// The bills
         //Savepoint sp = Database.setSavepoint();
@@ -500,8 +500,7 @@ public with sharing class POSReturn_Promise {
                 AcctSeed__Debit_GL_Account__c = gcConstants.idGlAPayable,
                 AcctSeed__Payment_Status__c = 'Paid',
                 AcctSeed__Project__c = idProject,
-                AcctSeed__Project_Task__c = pr.AcctSeed__Project_Tasks__r[0].Id,
-                AcctSeed__Ledger__c = 'a12020000004ItEAAU'
+                AcctSeed__Project_Task__c = pr.AcctSeed__Project_Tasks__r[0].Id
             );
             System.debug('disbursement');
             System.debug(disbursement);
