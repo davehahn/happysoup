@@ -192,6 +192,13 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
     return this.onPaymentPage() ? !this.orderValid : false;
   }
 
+  get currentLanguage()
+  {
+    if( this.isEn && !this.isFR ) return 'english';
+    if( !this.isEn && this.isFR ) return 'french';
+    return 'english';
+  }
+
   handleHomeNav()
   {
     this[NavigationMixin.Navigate]({
@@ -587,6 +594,7 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
 
 	handleFreight( province ){
 		let charge = this.boat.additionalFees[province][0]['retailPrice'];
+		this.displayFreightCharge(charge);
 		let purchasePrice = {
 			'sku': 'freight',
 			'price': charge,
@@ -611,25 +619,25 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
 		fireEvent(this.pageRef, 'updateSummary', summaryDetails);
 		fireEvent(this.pageRef, 'updateListItems', summaryDetails);
 		fireEvent(this.pageRef, 'updatePurchasePrice', purchasePrice);
-
-		this.displayFreightCharge(charge);
  	}
 
  	displayFreightCharge(charge){
+ 		console.log('freight Charge: ', charge);
+ 		let updatedFreight = null;
  		if(this.isEN){
- 			let updatedFreight = new Intl.NumberFormat('en-CA', {
+ 			updatedFreight = new Intl.NumberFormat('en-CA', {
 								style: 'currency',
 								currency: 'CAD',
 								minimumFractionDigits: 0
 								}).format(charge);
- 		} else if(this.isEN){
-			let updatedFreight = new Intl.NumberFormat('fr-CA', {
+ 		} else if(this.isFR){
+			updatedFreight = new Intl.NumberFormat('fr-CA', {
 							style: 'currency',
 							currency: 'CAD',
 							minimumFractionDigits: 0
 							}).format(charge);
 		}
-
+		console.log('updated freight: ', updatedFreight);
  	  this.freightCharge = (this.isEN) ? '+ ' + updatedFreight + ' Freight Charge' : '+ ' + updatedFreight + ' Frais de transport';
   }
 
