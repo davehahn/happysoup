@@ -12,292 +12,70 @@ public class POSReturn_Promise_T
     static PricebookEntry pbe;
     static Dealer_Order__c order;
     static List<AcctSeed__Project__c> erps;
+    static AcctSeed__Project__c project;
 
     @testSetup static void dataSetup()
     {
         new Factory_TestData();
         Factory_CustomSettings.setupInventorySettings();
-        Account customer = Factory_Account.insertCustomerAccounts(1)[0];
-        customer.Name = customerAccountName;
-        customer.BillingState = 'Montreal';
-        insert customer;
-        Product2[] parts = new List<Product2>();
-        for( Integer i=0; i<5; i++ )
-        {
-            parts.add( Factory_Product.buildNonSerializedProduct('Part', 'Electronics') );
-        }
-        insert parts;
-    }
-
-    private static void createDealerOrder( Integer quantity )
-    {
-        order = Factory_DealerOrder.createDealerOrder(partner);
-        order.Is_Booking_Order__c = true;
-        update order;
-        order = [
-            SELECT
-                Id,
-                CreatedDate,
-                Is_Booking_Order__c,
-                Program_Year__c,
-                Account__c,
-                Account__r.Is_Internal__c,
-                Payment_Method__c,
-                Applied_Partner_Program_Discounts__c
-            FROM Dealer_Order__c
-            WHERE Id = :order.Id ];
-        erps = Factory_ERPOrder.createPartnerBoatSales(partner, new List<PricebookEntry>{ pbe }, quantity);
-        Factory_DealerOrder.createDealerOrderLines(erps, order, boat);
-        Set<Id> erpIds = LGND_Utilities.getIdSetFromList( (List<sObject>)erps );
-        erps = [
-            SELECT
-                Id,
-                Name,
-            ( SELECT Id
-            FROM AcctSeed__Project_Tasks__r ),
-            ( SELECT Id,
-                AcctSeedERP__Project__c,
-                AcctSeedERP__Project_Task__c,
-                GMBLASERP__Unit_Price__c,
-                AcctSeedERP__Comment__c,
-                Applied_Partner_Program_Discount__c,
-                AcctSeedERP__Product__c,
-                AcctSeedERP__Product__r.Id,
-                AcctSeedERP__Product__r.Stack_Size__c,
-                AcctSeedERP__Product__r.Name,
-                AcctSeedERP__Product__r.RecordTypeId,
-                AcctSeedERP__Product__r.Family,
-                AcctSeedERP__Product__r.AcctSeedERP__Serialized__c
-            FROM AcctSeedERP__Project_Materials__r )
-            FROM AcctSeed__Project__c
-            WHERE Id IN :erpIds
-        ];
-    }
-
-    private static Decimal determineCashDiscount()
-    {
-        if( order.createdDate.month() >= 8 )
-        {
-            if( order.createdDate.month() == 12 &&
-                order.createdDate.day() > 18 )
-            {
-                return 1;
-            }
-            return 3;
-        }
-        return 1;
+        TriggerHandler.bypass('CommissionPayment2_TriggerHandler');
+        TriggerHandler.bypass('CommissionRecord2_TriggerHandler');
+        project = ProjectTestFactory.insertCounterSale();
+        System.debug('projectm');
+        System.debug(project);
     }
 
     @IsTest
-    static void Coop_Apply_Test()
+    static void testStepOnePromise()
     {
-        Decimal boatCost = 50000;
-        PartnerProgram_Coop program = new PartnerProgram_Coop();
-        init('Pontoon', boatCost, null);
-
-        System.runAs(partnerUser)
+        AcctSeed__Project__c pr = [SELECT Id, AcctSeed__Account__c, GMBLASERP__Warehouse__c FROM AcctSeed__Project__c WHERE Id =:project.Id][0];
+        Id idAccount = pr.AcctSeed__Account__c;
+        List<POSReturn_Promise.materialData> listMaterials = new List<POSReturn_Promise.materialData>();
+        for(AcctSeedERP__Material__c matl :
+        [SELECT Id,
+            AcctSeedERP__Project__c,
+            AcctSeedERP__Project__r.Name,
+            AcctSeedERP__Product__c,
+            AcctSeedERP__Product__r.RecordType.Name,
+            AcctSeedERP__Product__r.AcctSeed__Inventory_Product__c,
+            AcctSeedERP__Product__r.AcctSeedERP__Serialized__c,
+            AcctSeedERP__Product__r.Name,
+            GMBLASERP__Serial_Number__c,
+            GMBLASERP__Serial_Number__r.Name,
+            AcctSeedERP__Project_Task__r.Name,
+            AcctSeedERP__Quantity_Per_Unit__c,
+            AcctSeedERP__Quantity_Allocated__c,
+            GMBLASERP__Unit_Price__c,
+            GMBLASERP__Total_Price__c,
+        (SELECT AcctSeedERP__Quantity_Per_Unit__c, AcctSeedERP__Quantity_Allocated__c FROM ReturndMaterials__r)
+        FROM AcctSeedERP__Material__c
+        WHERE AcctSeedERP__Project__c =:project.Id
+        AND Return_Parent__c = null
+        AND (AcctSeedERP__Product__r.AcctSeed__Inventory_Product__c = false
+        OR (AcctSeedERP__Product__r.AcctSeed__Inventory_Product__c = true
+        AND AcctSeedERP__Quantity_Allocated__c > 0))
+        LIMIT 1])
         {
-            createDealerOrder(1);
-            PartnerProgram_Service.DealerOrderWrapper orderWrapper =
-                new PartnerProgram_Service.DealerOrderWrapper(
-                    order, erps, null
-                );
-            Test.startTest();
-            new PartnerProgram_Executor().Test_Coop(orderWrapper);
-            Test.stopTest();
-
-            List<Partner_Program_Event__e> events = PartnerProgram_Executor.events;
-            Map<String, Object> result =
-                (Map<String, Object>) JSON.deserializeUntyped(
-                    events[0].Result__c);
-            List<Object> appliedDiscounts = (List<Object>) result.get('appliedDiscounts');
-            Map<String, Object> planResult = (Map<String, Object>) appliedDiscounts[0];
-            System.debug(appliedDiscounts);
-            System.assertEquals(1, events.size());
-            System.assertEquals('success', events[0].Status__c);
-            System.assertEquals(orderWrapper.dealerOrderId, events[0].DealerOrderId__c);
-            System.assertEquals(1, appliedDiscounts.size());
-            System.assertEquals(planResult.get('name'), program.getName());
-            System.assertEquals((Decimal) planResult.get('percentage'), programSettings.Coop_Discount_Percent__c);
-            System.assertEquals((Decimal) result.get('totalSavings'), boatCost * (programSettings.Coop_Discount_Percent__c / 100));
+            POSReturn_Promise.materialData md = new POSReturn_Promise.materialData();
+            md.matId = matl.Id;
+            md.matQuantity = matl.AcctSeedERP__Quantity_Allocated__c;
+            md.returnQuantity = 1;
+            md.pricePerQuantity = matl.GMBLASERP__Unit_Price__c;
+            md.serialized = matl.AcctSeedERP__Product__r.AcctSeedERP__Serialized__c;
+            md.totalPrice = matl.GMBLASERP__Unit_Price__c;
+            md.productName = matl.AcctSeedERP__Product__r.Name;
+            md.projectName = matl.AcctSeedERP__Project__r.Name;
+            listMaterials.add(md);
         }
 
+        POSReturn_Promise.promiseData pd = new POSReturn_Promise.promiseData();
+        pd.idAccount = idAccount;
+        pd.idFilter = project.Id;
+        pd.paymentMethod = 'Cash';
+        pd.pIdWarehouse = pr.GMBLASERP__Warehouse__c;
+        pd.allMaterials = listMaterials;
+        Test.startTest();
+        new POSReturn_Promise().Test_ERPTaskAndBilling(pd);
+        Test.stopTest();
     }
-
-    @IsTest
-    static void KickStart_Apply_Test()
-    {
-        Decimal boatCost = 50000;
-        PartnerProgram_Kickstart_Booking program = new PartnerProgram_Kickstart_Booking();
-        init('Pontoon', boatCost, null);
-
-        System.runAs(partnerUser)
-        {
-            createDealerOrder(1);
-            PartnerProgram_Service.DealerOrderWrapper orderWrapper =
-                new PartnerProgram_Service.DealerOrderWrapper(
-                    order, erps, null
-                );
-            Test.startTest();
-            new PartnerProgram_Executor().Test_KickStart(orderWrapper);
-            Test.stopTest();
-
-            List<Partner_Program_Event__e> events = PartnerProgram_Executor.events;
-            Map<String, Object> result =
-                (Map<String, Object>) JSON.deserializeUntyped(
-                    events[0].Result__c);
-            List<Object> appliedDiscounts = (List<Object>) result.get('appliedDiscounts');
-            Map<String, Object> planResult = (Map<String, Object>) appliedDiscounts[0];
-            System.debug(appliedDiscounts);
-            System.assertEquals(1, events.size());
-            System.assertEquals('success', events[0].Status__c);
-            System.assertEquals(orderWrapper.dealerOrderId, events[0].DealerOrderId__c);
-            System.assertEquals(1, appliedDiscounts.size());
-            System.assertEquals(planResult.get('name'), program.getName());
-            System.assertEquals((Decimal) planResult.get('percentage'), programSettings.Kickstart_Booking_Order_Discount_Percent__c);
-            System.assertEquals((Decimal) result.get('totalSavings'), boatCost * (programSettings.Kickstart_Booking_Order_Discount_Percent__c / 100));
-        }
-
-    }
-
-    @IsTest
-    static void Cash_Apply_Test()
-    {
-        Decimal boatCost = 50000;
-        PartnerProgram_Cash program = new PartnerProgram_Cash();
-        init('Pontoon', boatCost, null);
-
-        System.runAs( partnerUser )
-        {
-            createDealerOrder(1);
-            PartnerProgram_Service.DealerOrderWrapper orderWrapper =
-                new PartnerProgram_Service.DealerOrderWrapper(
-                    order, erps, null
-                );
-            Test.startTest();
-            new PartnerProgram_Executor().Test_Cash( orderWrapper);
-            Test.stopTest();
-
-            List<Partner_Program_Event__e> events = PartnerProgram_Executor.events;
-            Map<String, Object> result =
-                (Map<String, Object>)JSON.deserializeUntyped(
-                    events[0].Result__c );
-            List<Object> appliedDiscounts = (List<Object>)result.get('appliedDiscounts');
-            Map<String, Object> planResult = (Map<String, Object>)appliedDiscounts[0];
-            System.debug( appliedDiscounts );
-            System.assertEquals( 1, events.size() );
-            System.assertEquals('success', events[0].Status__c );
-            System.assertEquals( orderWrapper.dealerOrderId, events[0].DealerOrderId__c );
-            System.assertEquals( 1, appliedDiscounts.size() );
-            System.assertEquals( planResult.get('name'), program.getName() );
-            System.assertEquals( (Decimal)planResult.get('percentage'), determineCashDiscount() );
-            System.assertEquals( (Decimal)result.get('totalSavings'), boatCost * ( determineCashDiscount() / 100 ) );
-        }
-    }
-
-    @IsTest
-    static void Volume_Apply_Test()
-    {
-        Decimal boatCost = 50000;
-        PartnerProgram_Volume program = new PartnerProgram_Volume();
-        init('Full Windshield', boatCost, null);
-
-        System.runAs( partnerUser )
-        {
-            createDealerOrder(4);
-            PartnerProgram_Service.DealerOrderWrapper orderWrapper =
-                new PartnerProgram_Service.DealerOrderWrapper(
-                    order, erps, null
-                );
-            Test.startTest();
-            new PartnerProgram_Executor().Test_Volume( orderWrapper);
-            Test.stopTest();
-
-            List<Partner_Program_Event__e> events = PartnerProgram_Executor.events;
-            Map<String, Object> result =
-                (Map<String, Object>)JSON.deserializeUntyped(
-                    events[0].Result__c );
-            List<Object> appliedDiscounts = (List<Object>)result.get('appliedDiscounts');
-            Map<String, Object> planResult = (Map<String, Object>)appliedDiscounts[0];
-            System.debug( appliedDiscounts );
-            System.assertEquals( 1, events.size() );
-            System.assertEquals('success', events[0].Status__c );
-            System.assertEquals( orderWrapper.dealerOrderId, events[0].DealerOrderId__c );
-            System.assertEquals( appliedDiscounts.size(), 1 );
-            System.assertEquals( program.getName(), planResult.get('name') );
-            System.assertEquals( 1, (Decimal)planResult.get('percentage') );
-            System.assertEquals( 4 * boatCost * 0.01, (Decimal)result.get('totalSavings')  );
-        }
-    }
-
-    @IsTest
-    static void PontoonVolume_Apply_Test()
-    {
-        Decimal boatCost = 50000;
-        PartnerProgram_PontoonVol program = new PartnerProgram_PontoonVol();
-        init('Pontoon', boatCost, null);
-
-        System.runAs( partnerUser )
-        {
-            createDealerOrder(4);
-            PartnerProgram_Service.DealerOrderWrapper orderWrapper =
-                new PartnerProgram_Service.DealerOrderWrapper(
-                    order, erps, null
-                );
-            Test.startTest();
-            new PartnerProgram_Executor().Test_PontoonVolume( orderWrapper );
-            Test.stopTest();
-
-            List<Partner_Program_Event__e> events = PartnerProgram_Executor.events;
-            Map<String, Object> result =
-                (Map<String, Object>)JSON.deserializeUntyped(
-                    events[0].Result__c );
-            List<Object> appliedDiscounts = (List<Object>)result.get('appliedDiscounts');
-            Map<String, Object> planResult = (Map<String, Object>)appliedDiscounts[0];
-            System.debug( appliedDiscounts );
-            System.assertEquals( 1, events.size() );
-            System.assertEquals('success', events[0].Status__c );
-            System.assertEquals( orderWrapper.dealerOrderId, events[0].DealerOrderId__c );
-            System.assertEquals( appliedDiscounts.size(), 1 );
-            System.assertEquals( program.getName(), planResult.get('name') );
-            System.assertEquals( 1, (Decimal)planResult.get('percentage') );
-            System.assertEquals( 4 * boatCost * 0.01, (Decimal)result.get('totalSavings')  );
-        }
-    }
-
-    @IsTest
-    static void Seven4Seven_Apply_Test()
-    {
-        Decimal boatCost = 10000;
-        PartnerProgram_7for7 program = new PartnerProgram_7for7();
-        init('Utility', boatCost, 3);
-
-        System.runAs( partnerUser )
-        {
-            createDealerOrder(9);
-            PartnerProgram_Service.DealerOrderWrapper orderWrapper =
-                new PartnerProgram_Service.DealerOrderWrapper(
-                    order, erps, null
-                );
-            Test.startTest();
-            new PartnerProgram_Executor().Test_7for7( orderWrapper );
-            Test.stopTest();
-
-            List<Partner_Program_Event__e> events = PartnerProgram_Executor.events;
-            Map<String, Object> result =
-                (Map<String, Object>)JSON.deserializeUntyped(
-                    events[0].Result__c );
-            List<Object> appliedDiscounts = (List<Object>)result.get('appliedDiscounts');
-            Map<String, Object> planResult = (Map<String, Object>)appliedDiscounts[0];
-            System.debug( appliedDiscounts );
-            System.assertEquals( 1, events.size() );
-            System.assertEquals('success', events[0].Status__c );
-            System.assertEquals( orderWrapper.dealerOrderId, events[0].DealerOrderId__c );
-            System.assertEquals( appliedDiscounts.size(), 1 );
-            System.assertEquals( program.getName(), planResult.get('name') );
-            System.assertEquals( 7, (Decimal)planResult.get('percentage') );
-            System.assertEquals( 9 * boatCost * 0.07, (Decimal)result.get('totalSavings')  );
-        }
-    }
-
 }

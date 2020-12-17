@@ -113,6 +113,40 @@ public with sharing class POSReturn_Promise {
             .execute(pd);
         return 'ok';
     }
+
+    /** TEST METHODS **/
+    @TestVisible
+    private void Test_ERPTaskAndBilling(promiseData wrapper )
+    {
+        new Promise(new createReturnERPTaskAndBilling())
+            .error(new returnError())
+            .done(new returnDone())
+            .execute(wrapper);
+    }
+    @TestVisible
+    private void Test_Payment(promiseData wrapper )
+    {
+        new Promise(new createPayment())
+            .error(new returnError())
+            .done(new returnDone())
+            .execute(wrapper);
+    }
+    @TestVisible
+    private void Test_Disbursement(promiseData wrapper )
+    {
+        new Promise(new createDisbursement())
+            .error(new returnError())
+            .done(new returnDone())
+            .execute(wrapper);
+    }
+    @TestVisible
+    private void Test_Expense(promiseData wrapper )
+    {
+        new Promise(new createExpense())
+            .error(new returnError())
+            .done(new returnDone())
+            .execute(wrapper);
+    }
     /// While testing Promise we are keeping it as original
     public static promiseData saveReturnMaterials_Original(promiseData pd)
     {
