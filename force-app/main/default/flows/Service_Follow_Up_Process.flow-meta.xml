@@ -4,8 +4,8 @@
     <decisions>
         <name>Activity_Split</name>
         <label>Activity Split</label>
-        <locationX>176</locationX>
-        <locationY>493</locationY>
+        <locationX>50</locationX>
+        <locationY>613</locationY>
         <defaultConnectorLabel>NA</defaultConnectorLabel>
         <rules>
             <name>Last_Activity_Greater_7d</name>
@@ -59,6 +59,28 @@
             <label>7 Days No Activity</label>
         </rules>
     </decisions>
+    <decisions>
+        <name>Validate_User</name>
+        <label>Validate User</label>
+        <locationX>270</locationX>
+        <locationY>253</locationY>
+        <defaultConnectorLabel>Else</defaultConnectorLabel>
+        <rules>
+            <name>UserIsActive</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Owner:User.IsActive</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Get_Account_Activity</targetReference>
+            </connector>
+            <label>UserIsActive</label>
+        </rules>
+    </decisions>
     <formulas>
         <name>Now</name>
         <dataType>DateTime</dataType>
@@ -98,8 +120,8 @@
     <recordCreates>
         <name>Create_Task</name>
         <label>Create Task</label>
-        <locationX>176</locationX>
-        <locationY>829</locationY>
+        <locationX>50</locationX>
+        <locationY>949</locationY>
         <connector>
             <targetReference>Update_ERP</targetReference>
         </connector>
@@ -175,8 +197,8 @@
     <recordLookups>
         <name>Get_Account_Activity</name>
         <label>Get Account Activity</label>
-        <locationX>176</locationX>
-        <locationY>253</locationY>
+        <locationX>50</locationX>
+        <locationY>373</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
             <targetReference>Get_Task_RecordType</targetReference>
@@ -196,8 +218,8 @@
     <recordLookups>
         <name>Get_Task_RecordType</name>
         <label>Get Task RecordType</label>
-        <locationX>176</locationX>
-        <locationY>373</locationY>
+        <locationX>50</locationX>
+        <locationY>493</locationY>
         <assignNullValuesIfNoRecordsFound>true</assignNullValuesIfNoRecordsFound>
         <connector>
             <targetReference>Activity_Split</targetReference>
@@ -219,8 +241,8 @@
     <recordUpdates>
         <name>Update_ERP</name>
         <label>Update ERP</label>
-        <locationX>176</locationX>
-        <locationY>949</locationY>
+        <locationX>50</locationX>
+        <locationY>1069</locationY>
         <filterLogic>and</filterLogic>
         <filters>
             <field>Id</field>
@@ -238,10 +260,10 @@
         <object>AcctSeed__Project__c</object>
     </recordUpdates>
     <start>
-        <locationX>50</locationX>
+        <locationX>144</locationX>
         <locationY>0</locationY>
         <connector>
-            <targetReference>Get_Account_Activity</targetReference>
+            <targetReference>Validate_User</targetReference>
         </connector>
         <filterLogic>and</filterLogic>
         <filters>
@@ -284,6 +306,13 @@
         <triggerType>RecordAfterSave</triggerType>
     </start>
     <status>Active</status>
+    <variables>
+        <name>isActive</name>
+        <dataType>Boolean</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
     <variables>
         <name>TaskRecordTypeID</name>
         <dataType>String</dataType>
