@@ -285,15 +285,18 @@ private without sharing class OnlineBoatReservation_Controller_T
   static void createAccount_ValidationFail_Test()
   {
     custJSON.put('firstName', null);
-    custJSON.put('email', null);
-    Test.startTest();
-    OnlineBoatReservation_Controller.AccountSaveResult result =
-      OnlineBoatReservation_Controller.createAccount(JSON.serialize(custJSON));
-    Test.stopTest();
 
-    System.assertEquals('error', result.status, ' Status should be error');
-    System.assertEquals(2, result.messages.size());
-
+    try
+    {
+      Test.startTest();
+      OnlineBoatReservation_Controller.AccountSaveResult result =
+        OnlineBoatReservation_Controller.createAccount(JSON.serialize(custJSON));
+      Test.stopTest();
+    }
+    catch( Exception e )
+    {
+      System.assertEquals( 'First Name is required', e.getMessage() );
+    }
   }
 
   @IsTest

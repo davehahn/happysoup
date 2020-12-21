@@ -29,6 +29,7 @@ public without sharing class OnlineBoatReservation_Controller
   {
     @AuraEnabled public Account record;
     @AuraEnabled public String opportunityId;
+    @AuraEnabled public String referenceNumber;
     @AuraEnabled public String status;
     @AuraEnabled public String[] messages;
     @AuraEnabled public List<DuplicateWrapper> duplicateRecords;
@@ -213,9 +214,11 @@ public without sharing class OnlineBoatReservation_Controller
         if( leadConvertResult.isSuccess() )
         {
           this.acct.Id = leadConvertResult.getAccountId();
+          Opportunity opp = upsertOpportunity( leadConvertResult.getOpportunityId() );
           AccountSaveResult result = new AccountSaveResult();
           result.status = 'success';
-          result.opportunityId = upsertOpportunity( leadConvertResult.getOpportunityId() ).Id;
+          result.opportunityId = opp.Id;
+          result.referenceNumber = opp.Reference_Number__c;
           result.record = updateAccountDetails();
           return result;
         }
@@ -284,10 +287,12 @@ public without sharing class OnlineBoatReservation_Controller
 
     private AccountSaveResult handleSaveSuccess()
     {
+      Opportunity opp = upsertOpportunity(null);
       AccountSaveResult result = new AccountSaveResult();
       result.record = this.acct;
       result.status = 'success';
-      result.opportunityId = upsertOpportunity(null).Id;
+      result.opportunityId = opp.Id;
+      result.referenceNumber = opp.Reference_Number__c;
       return result;
     }
 
@@ -341,7 +346,8 @@ public without sharing class OnlineBoatReservation_Controller
       opp.Pricebook2Id = LGND_Constants.retailPricebookId;
       update opp;
       OpportunityTriggerHandler.disableTrigger = o;
-      return opp;
+      System.debug( opp );
+      return Opportunity_Selector.allByIds( new Set<Id>{ opp.Id } )[0];
     }
   }
 
@@ -387,14 +393,17 @@ public without sharing class OnlineBoatReservation_Controller
   @AuraEnabled
   public static AccountSaveResult createAccount( String customerJSON )
   {
-    System.debug('CREATEACCOUNT');
-    System.debug( customerJSON );
     OnlineBoatReservation_Controller.Customer cust =
       (OnlineBoatReservation_Controller.Customer)JSON.deserialize(
         customerJSON,
         OnlineBoatReservation_Controller.Customer.class
       );
-    return cust.upsertToAccount();
+    AccountSaveResult result = cust.upsertToAccount();
+    if( result.status == 'success' )
+      return result;
+    AuraHandledException err = new AuraHandledException( result.messages[0] );
+    err.setMessage( result.messages[0] );
+    throw err;
   }
 
   @AuraEnabled
