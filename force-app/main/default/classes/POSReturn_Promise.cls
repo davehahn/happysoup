@@ -415,7 +415,7 @@ public with sharing class POSReturn_Promise {
         AcctSeed__Billing__c b = [SELECT Id, AcctSeed__Customer__c FROM AcctSeed__Billing__c WHERE Id =:idBilling][0];
         String payeeRef = 'POSRet-' + String.valueOf(DateTime.now().getTime()) + '-Refund';
         AcctSeed__Account_Payable__c posPay = new AcctSeed__Account_Payable__c(
-            AcctSeed__Vendor__c = b.AcctSeed__Customer__c,
+            AcctSeed__Vendor__c = pd.idAccount,
             AcctSeed__Payee_Reference__c = payeeRef,
             GL_Account_Variable_3__c = gcConstants.idGlv3Others,
             Tax_is_Harmonized__c = false,
@@ -425,11 +425,18 @@ public with sharing class POSReturn_Promise {
             Tax_Rate_Retail__c = 0,
             AcctSeed__Date__c = Date.today(),
             Approval_Date__c = date.Today(),
-            Approved__c = true
+            Approved__c = true,
+            AcctSeed__Ledger__c = gcConstants.idActualLedger
         );
         /// The bills
         //Savepoint sp = Database.setSavepoint();
         //try{
+        System.debug(gcConstants.idActualLedger);
+        AcctSeed__Ledger__c ld = [SELECT Id, AcctSeed__Type__c FROM AcctSeed__Ledger__c WHERE AcctSeed__Type__c = 'Transactional'];
+        System.debug('ld');
+        System.debug(ld);
+        System.debug('posPay');
+        System.debug(posPay);
         insert posPay;
         /// Create all the Payable lines
         list<AcctSeed__Account_Payable_Line__c> listAPLine = new list<AcctSeed__Account_Payable_Line__c>();
