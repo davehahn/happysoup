@@ -288,7 +288,8 @@ global without sharing class gcInventoryAdjustment_Ext {
 			//move the item in at the new value
 			moveIn.AcctSeedERP__Quantity__c = 1;
 			moveIn.AcctSeedERP__Unit_Cost__c = (amtInv + amt).setScale(6);
-			update moveIn;
+			/// This code is off becuase of too many SOQL
+			//update moveIn;
 
 		}
 		//for non-serialized inventory, the adjustments take place at the adjustment warehouse
@@ -310,7 +311,8 @@ global without sharing class gcInventoryAdjustment_Ext {
 			//move inventory back in at the new value
 			moveIn.AcctSeedERP__Quantity__c = qtyInv.setScale(6);
 			moveIn.AcctSeedERP__Unit_Cost__c = unitCost.setScale(6);
-			update moveIn;
+			// This code is off due to too many SOQL
+			//update moveIn;
 
 			//move inventory out at the old value
 			unitCost = 0;
@@ -329,6 +331,35 @@ global without sharing class gcInventoryAdjustment_Ext {
 
 		}
 		return retrieveMoves(moveIn.Id)[0];
+	}
+
+	@RemoteAction
+	global static map<string,string> adjustValueIn(String idMove, Decimal amt)
+	{
+		List<AcctSeedERP__Inbound_Inventory_Movement__c> listIn = new List<AcctSeedERP__Inbound_Inventory_Movement__c>();
+		Id idInMove;
+		for(AcctSeedERP__Outbound_Inventory_Movement__c move :
+		[SELECT Id,
+			AcctSeedERP__Quantity__c,
+			GMBLASERP__Serial_Number__r.Current_Unit_Cost__c,
+			AcctSeedERP__Unit_Cost__c,
+			AcctSeedERP__Inbound_Inventory_Movement__c
+		FROM AcctSeedERP__Outbound_Inventory_Movement__c
+		WHERE AcctSeedERP__Inbound_Inventory_Movement__r.GMBLASERP__Inventory_Adjustment__c =:idMove
+		AND AcctSeedERP__Quantity__c = 1])
+		{
+			AcctSeedERP__Inbound_Inventory_Movement__c iim = new AcctSeedERP__Inbound_Inventory_Movement__c(
+				AcctSeedERP__Quantity__c = move.AcctSeedERP__Quantity__c,
+				AcctSeedERP__Unit_Cost__c = move.AcctSeedERP__Unit_Cost__c + amt,
+				Id = move.AcctSeedERP__Inbound_Inventory_Movement__c
+			);
+			listIn.add(iim);
+			idInMove = move.AcctSeedERP__Inbound_Inventory_Movement__c;
+		}
+		System.debug(listIn);
+		System.debug(listIn.size());
+		update listIn;
+		return retrieveMoves(idInMove)[0];
 	}
 
 	@RemoteAction

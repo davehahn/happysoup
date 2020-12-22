@@ -624,6 +624,34 @@ tr.total td{
             idMove,amtNew,
             function(result,event){
                 if(event.status){
+                    adjustValueIn(rowIndx, idMove, amtNew, rowData)
+//                    rowData.qty = result.qty;
+//                    $gridDiv.pqGrid( "refreshRow", {rowIndx: rowIndx} );
+//                    $gridDiv.pqGrid( "setSelection", null);
+//                    $gridDiv.pqGrid( "setSelection", {rowIndx: rowIndx} );
+
+//                    updateInventoryRow(idObject);
+                }
+                else{
+                    alert(event.message);
+                    refreshAll();
+                }
+               hideLoading();
+            },
+            {buffer:true, escape:true, timeout:120000});
+    }
+
+    function adjustValueIn(rowIndx, idMove, amtNew, rowData)
+    {
+        var idObject = getIdObject(rowData);
+        var $gridDiv = $j('#adjustments');
+        showLoading();
+
+        Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.gcInventoryAdjustment_Ext.adjustValueIn}',
+            idMove,amtNew,
+            function(result,event){
+                if(event.status){
 
                     rowData.qty = result.qty;
                     $gridDiv.pqGrid( "refreshRow", {rowIndx: rowIndx} );
