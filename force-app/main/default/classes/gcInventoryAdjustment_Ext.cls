@@ -283,13 +283,13 @@ global without sharing class gcInventoryAdjustment_Ext {
 			//move the item out
 			moveOut.AcctSeedERP__Quantity__c = 1;
 			moveOut.AcctSeedERP__Unit_Cost__c = amtInv.setScale(6);
-			update moveOut;
+			//update moveOut;
 
 			//move the item in at the new value
 			moveIn.AcctSeedERP__Quantity__c = 1;
 			moveIn.AcctSeedERP__Unit_Cost__c = (amtInv + amt).setScale(6);
 			/// This code is off becuase of too many SOQL
-			//update moveIn;
+			update moveIn;
 
 		}
 		//for non-serialized inventory, the adjustments take place at the adjustment warehouse
@@ -301,7 +301,7 @@ global without sharing class gcInventoryAdjustment_Ext {
 			//reset the move-out
 			moveOut.AcctSeedERP__Quantity__c = 0;
 			moveOut.AcctSeedERP__Unit_Cost__c = 0;
-			update moveOut;
+			//update moveOut;
 
 			unitCost = 0;
 			if(qtyInv != 0)
@@ -312,7 +312,7 @@ global without sharing class gcInventoryAdjustment_Ext {
 			moveIn.AcctSeedERP__Quantity__c = qtyInv.setScale(6);
 			moveIn.AcctSeedERP__Unit_Cost__c = unitCost.setScale(6);
 			// This code is off due to too many SOQL
-			//update moveIn;
+			update moveIn;
 
 			//move inventory out at the old value
 			unitCost = 0;
@@ -321,11 +321,11 @@ global without sharing class gcInventoryAdjustment_Ext {
 
 			system.debug('stop 30: move out at old value');
 			//move all inventory out
-			//moveOut = [SELECT Id FROM AcctSeedERP__Outbound_Inventory_Movement__c WHERE Id =:moveOut.Id][0];
+			//moveOut = [SELECT Id, AcctSeedERP__Quantity__c,  FROM AcctSeedERP__Outbound_Inventory_Movement__c WHERE Id =:moveOut.Id][0];
 			moveOut = new AcctSeedERP__Outbound_Inventory_Movement__c(Id = moveOut.Id);
 			moveOut.AcctSeedERP__Quantity__c = qtyInv.setScale(6);
 			moveOut.AcctSeedERP__Unit_Cost__c = unitCost.setScale(6);
-			update moveOut;
+			//update moveOut;
 
 			system.debug('stop 40:  all done');
 
@@ -336,24 +336,26 @@ global without sharing class gcInventoryAdjustment_Ext {
 	@RemoteAction
 	global static map<string,string> adjustValueIn(String idMove, Decimal amt)
 	{
-		List<AcctSeedERP__Inbound_Inventory_Movement__c> listIn = new List<AcctSeedERP__Inbound_Inventory_Movement__c>();
+		System.debug('idMove');
+		System.debug(idMove);
+		System.debug('amt');
+		System.debug(amt);
+		List<AcctSeedERP__Outbound_Inventory_Movement__c> listIn = new List<AcctSeedERP__Outbound_Inventory_Movement__c>();
 		Id idInMove;
 		for(AcctSeedERP__Outbound_Inventory_Movement__c move :
 		[SELECT Id,
 			AcctSeedERP__Quantity__c,
 			GMBLASERP__Serial_Number__r.Current_Unit_Cost__c,
 			AcctSeedERP__Unit_Cost__c,
-			AcctSeedERP__Inbound_Inventory_Movement__c
+			AcctSeedERP__Inbound_Inventory_Movement__c,
+			AcctSeedERP__Inbound_Inventory_Movement__r.AcctSeedERP__Quantity__c,
+			AcctSeedERP__Inbound_Inventory_Movement__r.AcctSeedERP__Unit_Cost__c
 		FROM AcctSeedERP__Outbound_Inventory_Movement__c
-		WHERE AcctSeedERP__Inbound_Inventory_Movement__r.GMBLASERP__Inventory_Adjustment__c =:idMove
-		AND AcctSeedERP__Quantity__c = 1])
+		WHERE AcctSeedERP__Inbound_Inventory_Movement__c =:idMove])
 		{
-			AcctSeedERP__Inbound_Inventory_Movement__c iim = new AcctSeedERP__Inbound_Inventory_Movement__c(
-				AcctSeedERP__Quantity__c = move.AcctSeedERP__Quantity__c,
-				AcctSeedERP__Unit_Cost__c = move.AcctSeedERP__Unit_Cost__c + amt,
-				Id = move.AcctSeedERP__Inbound_Inventory_Movement__c
-			);
-			listIn.add(iim);
+			move.AcctSeedERP__Quantity__c = move.AcctSeedERP__Inbound_Inventory_Movement__r.AcctSeedERP__Quantity__c;
+			move.AcctSeedERP__Unit_Cost__c = move.AcctSeedERP__Inbound_Inventory_Movement__r.AcctSeedERP__Unit_Cost__c - amt;
+			listIn.add(move);
 			idInMove = move.AcctSeedERP__Inbound_Inventory_Movement__c;
 		}
 		System.debug(listIn);
