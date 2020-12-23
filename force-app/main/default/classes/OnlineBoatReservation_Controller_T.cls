@@ -49,7 +49,6 @@ private without sharing class OnlineBoatReservation_Controller_T
   static Product2[] parts;
   static Map<Id, PricebookEntry> pbEntryMap = new Map<Id, PricebookEntry>();
   static Opportunity opp;
-  static User guest = Factory_User.createUser('Guest', 'BoatRes', 'Boat Reservation Profile');
 
 
   @testSetup static void dataSetup()
@@ -57,6 +56,12 @@ private without sharing class OnlineBoatReservation_Controller_T
     new Factory_TestData();
     Factory_CustomSettings.setupInventorySettings();
     Factory_Product.createSerializedProducts_AvailableOnline('Boat', 'Pontoon', 5);
+  }
+
+  private static User createGuest()
+  {
+    String fName = 'Guest' + LGND_Utilities.generateRandomString(4);
+    return Factory_User.createUser(fName, 'BoatRes', 'Boat Reservation Profile');
   }
 
   private static void dataSetupForFullBoat()
@@ -262,6 +267,7 @@ private without sharing class OnlineBoatReservation_Controller_T
   @IsTest
   static void createAccount_Guest_Pass_Test()
   {
+    User guest = createGuest();
     System.runAs( guest )
     {
       Test.startTest();
