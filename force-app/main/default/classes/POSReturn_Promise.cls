@@ -414,6 +414,7 @@ public with sharing class POSReturn_Promise {
         Id idBilling = pd.idBill;
         AcctSeed__Billing__c b = [SELECT Id, AcctSeed__Customer__c FROM AcctSeed__Billing__c WHERE Id =:idBilling][0];
         String payeeRef = 'POSRet-' + String.valueOf(DateTime.now().getTime()) + '-Refund';
+        AcctSeed__Ledger__c ld = [SELECT Id, AcctSeed__Type__c FROM AcctSeed__Ledger__c WHERE AcctSeed__Type__c = 'Transactional'];
         AcctSeed__Account_Payable__c posPay = new AcctSeed__Account_Payable__c(
             AcctSeed__Vendor__c = pd.idAccount,
             AcctSeed__Payee_Reference__c = payeeRef,
@@ -432,7 +433,6 @@ public with sharing class POSReturn_Promise {
         //Savepoint sp = Database.setSavepoint();
         //try{
         System.debug(gcConstants.idActualLedger);
-        AcctSeed__Ledger__c ld = [SELECT Id, AcctSeed__Type__c FROM AcctSeed__Ledger__c WHERE AcctSeed__Type__c = 'Transactional'];
         System.debug('ld');
         System.debug(ld);
         System.debug('posPay');
