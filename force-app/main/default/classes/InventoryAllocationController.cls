@@ -997,22 +997,25 @@
 
         private void buildShipmentsAvailable () {
             for(Inventory inv: this.inventory ) {
-                if(inv.existNextShipments) {
-                    /* changedby Dave Hahn Jun 05/17 so availible is carried over from the above line */
-                    Integer netAvail = inv.netAvailable == null ? 0 : inv.netAvailable;
-                    Integer netAvailRetail = inv.availabeForRetail == null ? 0 : inv.availabeForRetail;
-                    for(Shipment shi : inv.shipments){
-                        //if(shi.quantity != null && netAvail != null)
-                        //{
-                        //    shi.available = shi.quantity + netAvail -shi.reserved;
-                        //    netAvail = shi.available;
-                        //}
-                        if( netAvailRetail != null)
-                        {
-                            shi.available_retail = netAvailRetail + shi.quantity - shi.orders;
-                            netAvailRetail = shi.available_retail;
-                        }
+                if(inv.existNextShipments)
+                {
+                  inv.shipments.sort();
+                  /* changedby Dave Hahn Jun 05/17 so availible is carried over from the above line */
+                  Integer netAvail = inv.netAvailable == null ? 0 : inv.netAvailable;
+                  Integer netAvailRetail = inv.availabeForRetail == null ? 0 : inv.availabeForRetail;
+                  for (Shipment shi : inv.shipments)
+                  {
+                    //if(shi.quantity != null && netAvail != null)
+                    //{
+                    //    shi.available = shi.quantity + netAvail -shi.reserved;
+                    //    netAvail = shi.available;
+                    //}
+                    if (netAvailRetail != null)
+                    {
+                      shi.available_retail = netAvailRetail + shi.quantity - shi.orders;
+                      netAvailRetail = shi.available_retail;
                     }
+                  }
                 }
             }
         }
@@ -1749,7 +1752,7 @@
             }
         }
 
-        public class Shipment {
+        public class Shipment implements Comparable {
             public String productId                   {get;set;}
             public String shipID                      {get;set;}
             public Integer quantity                   {get;set;}
@@ -1841,6 +1844,13 @@
                 }else
                   this.erpOrder = JSON.serialize(new Map<String,List<ErpOrderObj>>{'ERP Order Lines' => new List<ErpOrderObj>{new ErpOrderObj(orderLine, 'erpMaterial')}});
             }
+
+          public Integer compareTo(Object compareTo) {
+            Shipment compareToshipment = (Shipment)compareTo;
+            if (deliverDate == compareToshipment.deliverDate) return 0;
+            if (deliverDate > compareToshipment.deliverDate) return 1;
+            return -1;
+          }
         }
 
         public class SerialNumber {

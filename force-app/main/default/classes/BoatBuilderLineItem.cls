@@ -4,7 +4,7 @@ public with sharing class BoatBuilderLineItem {
   public String description_FR { get; set; }
   public Decimal quantity { get; set; }
   public Decimal quan {get; set;}
-  public Integer quantity_included { get; set; }
+  public Decimal quantity_included { get; set; }
   public Decimal individual_price;
   public String product_family { get; set; }
   public String pricebook_entry_id { get; set; }

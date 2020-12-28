@@ -1,7 +1,7 @@
 <apex:page title="{!GMBLASERP__Inventory_Adjustment__c.Name}" standardController="GMBLASERP__Inventory_Adjustment__c" extensions="gcInventoryAdjustment_Ext">
 
-<head>
-<style>
+    <head>
+        <style>
 .link{
     cursor:pointer;
     text-decoration:underline;
@@ -20,46 +20,46 @@ tr.total td{
 }
 </style>
 
-<apex:stylesheet value="{!URLFOR($Resource.GMBLJS__jQueryUI,'/jquery-ui/jquery-ui.min.css')}"/>
-<apex:stylesheet value="{!URLFOR($Resource.GMBLJS__pqGridPro241,'/pqgrid.min.css')}"/>
+        <apex:stylesheet value="{!URLFOR($Resource.GMBLJS__jQueryUI,'/jquery-ui/jquery-ui.min.css')}"/>
+        <apex:stylesheet value="{!URLFOR($Resource.GMBLJS__pqGridPro241,'/pqgrid.min.css')}"/>
 
-</head>
+    </head>
 
-<body>
+    <body>
     <div id="divWrapper">
         <div style="margin:0 auto; width:100%;">
             <div id="adjustments"></div>
             <br/>
             <div style="display: {!IF(GMBLASERP__Inventory_Adjustment__c.GMBLASERP__Product__c == null,'','none;')}">
-            <apex:form >
-                Select a Product Type:
-                <span class="typeSelector">
+                <apex:form >
+                    Select a Product Type:
+                    <span class="typeSelector">
                 <apex:selectList styleClass="typeList" size="1" value="{!defaultRecordId}" onchange="refreshGrid_inventory();">
                     <apex:selectOptions value="{!listProductType}"/>
                 </apex:selectList>
                 </span>
-                <!-- Search for Product/Serial/Lot:
-                <span class="txtSelector">
-                    <input type="text" id="searchText" name="searchText" /> 
-                </span> -->
-            </apex:form>
+                    <!-- Search for Product/Serial/Lot:
+                    <span class="txtSelector">
+                        <input type="text" id="searchText" name="searchText" />
+                    </span> -->
+                </apex:form>
             </div>
             <div id="inventory"></div>
         </div>
     </div>
-</body>
+    </body>
 
-<apex:includeScript value="{!$Resource.GMBLJS__jQuery}"/>
-<apex:includeScript value="{!URLFOR($Resource.GMBLJS__jQueryUI,'/jquery-ui/jquery-ui.min.js')}"/>
-<apex:includeScript value="{!URLFOR($Resource.GMBLJS__pqGridPro241,'/pqgrid.min.js')}"/>
-<apex:includeScript value="{!URLFOR($Resource.GMBLJS__pqGridPro241,'/touch-punch/touch-punch.min.js')}"/>
-<apex:includeScript value="{!$Resource.GMBLJS__accountingJS}"/>
-<apex:includeScript value="{!$Resource.GMBLJS__ExcellentExport}"/>
-<apex:includeScript value="{!$Resource.GMBLJS__gsrSpinner}"/>
-<apex:includeScript value="{!$Resource.GMBLJS__gsrGrid2}"/>
+    <apex:includeScript value="{!$Resource.GMBLJS__jQuery}"/>
+    <apex:includeScript value="{!URLFOR($Resource.GMBLJS__jQueryUI,'/jquery-ui/jquery-ui.min.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.GMBLJS__pqGridPro241,'/pqgrid.min.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.GMBLJS__pqGridPro241,'/touch-punch/touch-punch.min.js')}"/>
+    <apex:includeScript value="{!$Resource.GMBLJS__accountingJS}"/>
+    <apex:includeScript value="{!$Resource.GMBLJS__ExcellentExport}"/>
+    <apex:includeScript value="{!$Resource.GMBLJS__gsrSpinner}"/>
+    <apex:includeScript value="{!$Resource.GMBLJS__gsrGrid2}"/>
 
-<script>function setFocusOnLoad() {}</script>
-<script type="text/javascript">
+    <script>function setFocusOnLoad() {}</script>
+    <script type="text/javascript">
     $j = jQuery.noConflict();
 
     var loadCount = +0;
@@ -621,6 +621,34 @@ tr.total td{
 
         Visualforce.remoting.Manager.invokeAction(
             '{!$RemoteAction.gcInventoryAdjustment_Ext.adjustValue}',
+            idMove,amtNew,
+            function(result,event){
+                if(event.status){
+                    adjustValueIn(rowIndx, idMove, amtNew, rowData)
+                    //rowData.qty = result.qty;
+                    //$gridDiv.pqGrid( "refreshRow", {rowIndx: rowIndx} );
+                    //$gridDiv.pqGrid( "setSelection", null);
+                    //$gridDiv.pqGrid( "setSelection", {rowIndx: rowIndx} );
+
+                    //updateInventoryRow(idObject);
+                }
+                else{
+                    alert(event.message);
+                    refreshAll();
+                }
+               hideLoading();
+            },
+            {buffer:true, escape:true, timeout:120000});
+    }
+
+    function adjustValueIn(rowIndx, idMove, amtNew, rowData)
+    {
+        var idObject = getIdObject(rowData);
+        var $gridDiv = $j('#adjustments');
+        showLoading();
+
+        Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.gcInventoryAdjustment_Ext.adjustValueIn}',
             idMove,amtNew,
             function(result,event){
                 if(event.status){

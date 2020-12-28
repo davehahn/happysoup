@@ -4,6 +4,7 @@
 
 import { LightningElement, wire, track } from 'lwc';
 import { CurrentPageReference, NavigationMixin } from 'lightning/navigation';
+import { errorToast, successToast, warningToast, reduceErrors } from 'c/utils';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import { loadStyle } from 'lightning/platformResourceLoader';
 import { fireEvent, registerListener, unregisterAllListeners} from 'c/pubsub';
@@ -22,6 +23,7 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
   recordId;
   accountId;
   opportunityId;
+  orderNumber;
   logo = LOGO;
   vertLogo = VLOGO;
   orderValid=true;
@@ -488,6 +490,7 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
 	  this.saveCustomer()
 		.then( ( accountSaveResult ) => {
 		  this.opportunityId = accountSaveResult.opportunityId;
+		  this.orderNumber = accountSaveResult.referenceNumber;
       this.accountId = accountSaveResult.record.Id;
 		  return this.createSquarePayment();
   	})
@@ -497,17 +500,19 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
   	.then( ( saveSaleItemsResult ) => {
       console.log('lineItemsResult: ', saveSaleItemsResult);
       this.creditCardError = false;
+      this.displayThanks();
     })
   	.catch( ( error ) => {
-			this.displayPaymentError(error);
-			this.creditCardError = true;
+//			this.displayPaymentError(error);
+//			this.creditCardError = true;
+      errorToast( this, reduceErrors( error )[0] );
    	})
    	.finally( () => {
       spinner.toggle();
-      if(!this.creditCardError){
-      	console.log('Everything is done, but what should happen now');
-				this.displayThanks();
-      }
+//      if(!this.creditCardError){
+//      	console.log('Everything is done, but what should happen now');
+//				this.displayThanks();
+//      }
     });
   }
 
@@ -805,17 +810,17 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
   	}
   }
 
-	displayPaymentError(error){
-		console.log('PAYMENT ERROR!!');
-		this.hasPaymentErrors = true;
-		console.log('error: ', error);
-		if(typeof error === 'object'){
-			console.log('errors: ', JSON.parse(JSON.stringify(error)));
-			error.forEach((err) => {
-				this.paymentFormErrors = err.message;
-			});
-		}
-	}
+//	displayPaymentError(error){
+//		console.log('PAYMENT ERROR!!');
+//		this.hasPaymentErrors = true;
+//		console.log('error: ', error);
+//		if(typeof error === 'object'){
+//			console.log('errors: ', JSON.parse(JSON.stringify(error)));
+//			error.forEach((err) => {
+//				this.paymentFormErrors = err.message;
+//			});
+//		}
+//	}
 
   displayThanks(){
     const thanksShow = this.template.querySelectorAll('[data-thanks="show"]');

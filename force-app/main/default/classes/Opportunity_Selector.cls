@@ -2,7 +2,7 @@
  * Created by dave on 2019-08-06.
  */
 
-public with sharing class Opportunity_Selector Extends Application_Selector {
+public inherited sharing class Opportunity_Selector Extends Application_Selector {
 
   public Opportunity_Selector()
   {
@@ -24,17 +24,15 @@ public with sharing class Opportunity_Selector Extends Application_Selector {
       'Delivery_Date__c',
       'On_Water_Orientation__c',
       'Payment_Method__c',
-      'InvoiceNumber__c'
+      'InvoiceNumber__c',
+      'Reference_Number__c'
     };
   }
 
   public static Opportunity[] allByIds( Set<Id> ids )
   {
     Opportunity_Selector selector = new Opportunity_Selector();
-    selector.addWhere( whereInClauseBuilder(
-      'Id',
-      (Set<String>)JSON.deserialize( JSON.serialize( ids ), Set<String>.class ) )
-    );
+    selector.addWhereIdIn( ids );
     return selector.query();
   }
 

@@ -59,7 +59,7 @@ public with sharing class TruckSchedule {
     {
       if( d != null )
       {
-        return DateTime.newInstance( d.year(), d.month(), d.day() ).format('MM/dd/YY');
+        return DateTime.newInstance( d.year(), d.month(), d.day() ).format('MM/dd/yy');
       }
       return null;
     }
@@ -179,6 +179,8 @@ public with sharing class TruckSchedule {
   {
     Date sDateTime = DateTime.newInstance(startAt).date();
     Date eDateTime = DateTime.newInstance(endAt).date();
+    System.debug( sDateTime );
+    System.debug( eDateTime );
     List<EventData> result = new List<EventData>();
     List<Truck_Trip__c> trips = [SELECT Id,
                                         Name,

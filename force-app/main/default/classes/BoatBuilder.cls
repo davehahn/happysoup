@@ -104,7 +104,7 @@ public with sharing class BoatBuilder {
       this.description = oli.PricebookEntry.Product2.Name;
       this.description_FR = oli.PricebookEntry.Product2.Name_FR__c;
       this.priceBookEntryId = oli.PricebookEntry.Id;
-      this.quantity =  Integer.valueOf( oli.quantity );
+      this.quantity =  oli.quantity;
       this.taxRate = taxRate;
     }
   }
@@ -2531,7 +2531,7 @@ public with sharing class BoatBuilder {
         availableBoatOptions.get(pFamily).put(opt.Id, opt);
         //if the product_option has 1 or more standard we need to add it to the selected Items
         if(opt.From_Product_Options__r[0].Standard__c > 0){
-          addSelectedItem(opt, 'boat', Integer.valueOf(opt.From_Product_Options__r[0].Standard__c));
+          addSelectedItem(opt, 'boat', opt.From_Product_Options__r[0].Standard__c);
         }
       }
     }
@@ -2556,7 +2556,7 @@ public with sharing class BoatBuilder {
       availableProtectionOptions.get(p.Family).put(p.Id, ppw);
       if(p.From_Product_Options__r[0].Standard__c > 0)
       {
-        addSelectedItem(p, 'protection', Integer.valueOf(p.From_Product_Options__r[0].Standard__c));
+        addSelectedItem(p, 'protection', p.From_Product_Options__r[0].Standard__c);
       }
     }
   }
@@ -2661,20 +2661,20 @@ public with sharing class BoatBuilder {
     try{
       Map<String, BoatBuilderLineItem> subItems = selectedItemsMap.get(productType ).get(parentProductId).subItems;
       if( subItems != null && subItems.containsKey(subItem.id) ){
-        if( Integer.valueOf(quantity) == 0 ){
+        if( Decimal.valueOf(quantity) == 0 ){
           subItems.remove(subItem.id);
           //remove the entry in the fee map if there is one
           if( provinceFeesMap.containsKey(subItem.id) ){
             provinceFeesMap.remove(subItem.id);
           }
         } else {
-          subItems.get(subItem.id).quantity = Integer.valueOf(quantity);
+          subItems.get(subItem.id).quantity = Decimal.valueOf(quantity);
           if( provinceFeesMap.containsKey(subItem.id) )
           {
             if( provinceFeesMap.get(subItem.id).containsKey(opportunity.GL_Account_Variable_3__r.Name) )
             {
               for( FeeItem fi : provinceFeesMap.get(subItem.id).get(opportunity.GL_Account_Variable_3__r.Name) ){
-                fi.quantity = Integer.valueOf(quantity);
+                fi.quantity = Decimal.valueOf(quantity);
               }
             }
           }
@@ -2684,15 +2684,15 @@ public with sharing class BoatBuilder {
         li.description = subItem.name;
         li.description_FR = subItem.name_FR;
         li.product_id = subItem.id;
-        li.quantity = Integer.valueOf(quantity);
-        li.quan = Integer.valueOf(quantity);
-        li.quantity_included = Integer.valueOf(subItem.standard);
+        li.quantity = Decimal.valueOf(quantity);
+        li.quan = Decimal.valueOf(quantity);
+        li.quantity_included = subItem.standard;
         li.individual_price =  subItem.price;
         li.product_family = subItem.productFamily;
         li.pricebook_entry_id = subItem.productPricebookEntryId;
         li.taxRate = subItem.taxRate;
         if( subItem.feeProducts.size() > 0 ){
-          updateAdditionalFees(null, subItem.id, subItem.feeProducts, Integer.valueOf(quantity) );
+          updateAdditionalFees(null, subItem.id, subItem.feeProducts, Decimal.valueOf(quantity) );
         }
         subItems.put(subItem.id, li);
       }
@@ -2708,20 +2708,20 @@ public with sharing class BoatBuilder {
                                            String quantity){
     Map<String, BoatBuilderLineItem> subItems = selectedItemsMap.get(productType ).get(parentProductId).subItems;
     if( subItems != null && subItems.containsKey(productid) ){
-      if( Integer.valueOf(quantity) == 0 ){
+      if( Decimal.valueOf(quantity) == 0 ){
         subItems.remove(productid);
         //remove the entry in the fee map if there is one
         if( provinceFeesMap.containsKey(productId) ){
           provinceFeesMap.remove(productId);
         }
       } else {
-        subItems.get(productid).quantity = Integer.valueOf(quantity);
+        subItems.get(productid).quantity = Decimal.valueOf(quantity);
         if( provinceFeesMap.containsKey(productId) )
         {
           if( provinceFeesMap.get(productId).containsKey('opportunity.GL_Account_Variable_3__r.Name') )
           {
             for( FeeItem fi : provinceFeesMap.get(productId).get(opportunity.GL_Account_Variable_3__r.Name) ){
-              fi.quantity = Integer.valueOf(quantity);
+              fi.quantity = Decimal.valueOf(quantity);
             }
           }
         }
@@ -2739,16 +2739,16 @@ public with sharing class BoatBuilder {
         li.description = p.Name;
         li.description_FR = p.Name_FR__c;
         li.product_id = p.Id;
-        li.quantity = Integer.valueOf(quantity);
-        li.quan = Integer.valueOf(quantity);
+        li.quantity = Decimal.valueOf(quantity);
+        li.quan = Decimal.valueOf(quantity);
         li.pricebook_entry_id = p.PricebookEntries[0].Id;
-        li.quantity_included = Integer.valueOf(p.From_Product_Options__r[0].Standard__c);
+        li.quantity_included = p.From_Product_Options__r[0].Standard__c;
         li.individual_price =  p.PricebookEntries.isEmpty() ? 0 : p.PricebookEntries[0].UnitPrice;
         li.product_family = p.Family;
         li.taxRate = findTaxRate(p.Taxable__c);
         subItems.put(p.Id, li);
         if( p.Parent_Product_Fee_Maps__r.size() > 0 ){
-          updateAdditionalFees(null, p.Id, p.Parent_Product_Fee_Maps__r, Integer.valueOf(quantity));
+          updateAdditionalFees(null, p.Id, p.Parent_Product_Fee_Maps__r, Decimal.valueOf(quantity));
         }
       }
     }
@@ -2761,7 +2761,7 @@ public with sharing class BoatBuilder {
     li.product_id = p.Id;
     li.quantity = quantity;
     li.quan = quantity;
-    li.quantity_included = Integer.valueOf(p.From_Product_Options__r[0].Standard__c);
+    li.quantity_included = p.From_Product_Options__r[0].Standard__c;
     li.individual_price =  p.PricebookEntries.isEmpty() ? 0 : p.PricebookEntries[0].UnitPrice;
     li.product_family = p.Family;
     li.pricebook_entry_id = p.PriceBookEntries[0].Id;
@@ -2789,7 +2789,7 @@ public with sharing class BoatBuilder {
           sli.product_id = i.id;
           sli.quantity = i.standard;
           sli.quan = i.standard;
-          sli.quantity_included = Integer.valueOf(i.standard);
+          sli.quantity_included = i.standard;
           sli.individual_price =  i.price;
           sli.product_family = i.productFamily;
           sli.pricebook_entry_id = i.productPriceBookEntryId;
