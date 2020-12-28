@@ -456,10 +456,17 @@ public class POSReturn_Promise_T
         pd.paymentMethod = 'Cash';
         pd.pIdWarehouse = pr.GMBLASERP__Warehouse__c;
         pd.allMaterials = listMaterials;
+
+        /// Now Create all that happened in first step
+        pd = saveReturnMaterials_Original(pd);
         Test.startTest();
-        new POSReturn_Promise().Test_ERPTaskAndBilling(pd);
+        gcAccountPayable.disableTrigger = true;
+        gcAccountPayableLine.disableTrigger = true;
+        pd = POSReturn_Promise.savePaymentReturn(pd);
+        new POSReturn_Promise().Test_Disbursement(pd);
         Test.stopTest();
     }
+
     @IsTest
     static void testStepFourPromise()
     {
@@ -515,8 +522,16 @@ public class POSReturn_Promise_T
         pd.paymentMethod = 'Cash';
         pd.pIdWarehouse = pr.GMBLASERP__Warehouse__c;
         pd.allMaterials = listMaterials;
+
+        /// Now Create all that happened in first step
+        pd = saveReturnMaterials_Original(pd);
         Test.startTest();
-        new POSReturn_Promise().Test_ERPTaskAndBilling(pd);
+        gcAccountPayable.disableTrigger = true;
+        gcAccountPayableLine.disableTrigger = true;
+        //gcCashDisbursement.disableTrigger = true;
+        pd = POSReturn_Promise.savePaymentReturn(pd);
+        pd = POSReturn_Promise.saveDisbursement(pd);
+        new POSReturn_Promise().Test_Expense(pd);
         Test.stopTest();
     }
 }
