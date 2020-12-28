@@ -110,10 +110,18 @@ public without sharing class gcBilling {
 				}
 			}
 		}
-		if(!projectsToCreditPrepaids.isEmpty() || !projectsToCleanPrepaids.isEmpty())
-			Prepaid_Services_mp.handleProjectPrepaids( projectsToCreditPrepaids, projectsToCleanPrepaids );
+		if(!projectsToCreditPrepaids.isEmpty() || !projectsToCleanPrepaids.isEmpty()){
+			if(!System.isQueueable())
+				Prepaid_Services_mp.handleProjectPrepaids( projectsToCreditPrepaids, projectsToCleanPrepaids );
+			else
+				callCleanPrepaidsFuture(projectsToCreditPrepaids, projectsToCleanPrepaids);
+		}
 	}
 
+	@future(callout=true)
+	public static void callCleanPrepaidsFuture(Set<Id> projectsToCreditPrepaids, Set<Id> projectsToCleanPrepaids){
+		Prepaid_Services_mp.handleProjectPrepaids( projectsToCreditPrepaids, projectsToCleanPrepaids );
+	}
 
 	public static void updateAndValidate
 		(map<Id,AcctSeed__Billing__c> oldMap,

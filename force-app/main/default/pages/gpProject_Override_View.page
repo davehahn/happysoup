@@ -362,10 +362,10 @@ input.dateSelector{
                         <button type="button" class="btn" id="btnUndoTransferSelected"  onclick="undoTransferSelected();">Undo Transfer (Selected)</button>
                     </apex:outputText>
                 </apex:outputText>
-                <apex:outputText rendered="{!AND(!isCounterSale,!isInternalLabour,!isInternalPartsOrder,!isInternalWarranty,$Permission.CanMoveInvToWIP)}">
+                <apex:outputText rendered="{!AND(!isCounterSale,!isInternalLabour,!isInternalPartsOrder,!isInternalWarranty,$Permission.CanMoveInvToWIP,!hasFinishedGood)}">
                     <button type="button" class="btn" id="btnInvToWIPSelected"  onclick="consumeInventorySelected();">Inv <span style="font-size:larger;">&rarr;</span> WIP (Selected)</button>
                 </apex:outputText>
-                <apex:outputText rendered="{!AND(!isCounterSale,!isInternalLabour,!isInternalPartsOrder,!isInternalWarranty,$Permission.CanMoveWIPToInv)}">
+                <apex:outputText rendered="{!AND(!isCounterSale,!isInternalLabour,!isInternalPartsOrder,!isInternalWarranty,$Permission.CanMoveWIPToInv,!hasFinishedGood)}">
                     <button type="button" class="btn" id="btnWIPToInvSelected"  onclick="unconsumeInventorySelected();">Inv <span style="font-size:larger;">&larr;</span> WIP (Selected)</button>
                 </apex:outputText>
                 <button type="button" class="btn" id="btnExpandMaterial"    onclick="expandGrid_materials();">Collapse</button>
@@ -427,7 +427,7 @@ input.dateSelector{
             <apex:pageBlockButtons location="top" rendered="{!$ObjectType.AcctSeed__Journal_Entry__c.createable}">
                 <apex:outputPanel rendered="{!isManufacturing}">
                     <apex:outputPanel >
-                        <apex:outputText rendered="{!$Permission.CanMoveInvToWIP}">
+                        <apex:outputText rendered="{!AND($Permission.CanMoveInvToWIP,!hasFinishedGood)}">
                         <button type="button" class="btn" onclick="consumeInventory();">INV <span style="font-size:larger;">&rarr;</span> WIP</button>
                         </apex:outputText>
                         <apex:outputText rendered="{!$Permission.CanMoveWIPToInv}">
@@ -437,7 +437,7 @@ input.dateSelector{
                     </apex:outputPanel>
 
                     <apex:outputPanel >
-                        <apex:outputText rendered="{!$Permission.CanCreateWIPToFG}">
+                        <apex:outputText rendered="{!AND($Permission.CanCreateWIPToFG,!hasFinishedGood)}">
                         <button type="button" class="btn" onclick="buildFinishedGoods();">WIP <span style="font-size:larger;">&rarr;</span> FG</button>
                         </apex:outputText>
                         <apex:outputText rendered="{!$Permission.CanCreateFGToWIP}">
@@ -446,7 +446,7 @@ input.dateSelector{
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     </apex:outputPanel>
                     <apex:outputPanel >
-                        <apex:outputText rendered="{!$Permission.CanMoveInvToWIPToFG}">
+                        <apex:outputText rendered="{!AND($Permission.CanMoveInvToWIPToFG,!hasFinishedGood)}">
                         <button type="button" class="btn" onclick="postProject();">INV <span style="font-size:larger;">&rarr;</span> WIP <span style="font-size:larger;">&rarr;</span> FG</button>
                         </apex:outputText>
                         <apex:outputText rendered="{!$Permission.CanMoveFGToWIPToInv}">
