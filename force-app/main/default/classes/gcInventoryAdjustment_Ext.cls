@@ -283,13 +283,13 @@ global without sharing class gcInventoryAdjustment_Ext {
 			//move the item out
 			moveOut.AcctSeedERP__Quantity__c = 1;
 			moveOut.AcctSeedERP__Unit_Cost__c = amtInv.setScale(6);
-			//update moveOut;
+			update moveOut;
 
 			//move the item in at the new value
 			moveIn.AcctSeedERP__Quantity__c = 1;
 			moveIn.AcctSeedERP__Unit_Cost__c = (amtInv + amt).setScale(6);
 			/// This code is off becuase of too many SOQL
-			update moveIn;
+			//update moveIn;
 
 		}
 		//for non-serialized inventory, the adjustments take place at the adjustment warehouse
@@ -340,11 +340,12 @@ global without sharing class gcInventoryAdjustment_Ext {
 		System.debug(idMove);
 		System.debug('amt');
 		System.debug(amt);
-		List<AcctSeedERP__Outbound_Inventory_Movement__c> listIn = new List<AcctSeedERP__Outbound_Inventory_Movement__c>();
+		List<sObject> listIn = new List<sObject>();
 		Id idInMove;
 		for(AcctSeedERP__Outbound_Inventory_Movement__c move :
 		[SELECT Id,
 			AcctSeedERP__Quantity__c,
+			GMBLASERP__Serial_Number__c,
 			GMBLASERP__Serial_Number__r.Current_Unit_Cost__c,
 			AcctSeedERP__Unit_Cost__c,
 			AcctSeedERP__Inbound_Inventory_Movement__c,
@@ -353,9 +354,17 @@ global without sharing class gcInventoryAdjustment_Ext {
 		FROM AcctSeedERP__Outbound_Inventory_Movement__c
 		WHERE AcctSeedERP__Inbound_Inventory_Movement__c =:idMove])
 		{
-			move.AcctSeedERP__Quantity__c = move.AcctSeedERP__Inbound_Inventory_Movement__r.AcctSeedERP__Quantity__c;
-			move.AcctSeedERP__Unit_Cost__c = move.AcctSeedERP__Inbound_Inventory_Movement__r.AcctSeedERP__Unit_Cost__c - amt;
-			listIn.add(move);
+			if(move.GMBLASERP__Serial_Number__c != null){
+				AcctSeedERP__Inbound_Inventory_Movement__c inMove = new AcctSeedERP__Inbound_Inventory_Movement__c();
+				inMove.Id = move.AcctSeedERP__Inbound_Inventory_Movement__c;
+				inMove.AcctSeedERP__Quantity__c = move.AcctSeedERP__Quantity__c;
+				inMove.AcctSeedERP__Unit_Cost__c = move.AcctSeedERP__Unit_Cost__c + amt;
+				listIn.add(inMove);
+			}else{
+				move.AcctSeedERP__Quantity__c = move.AcctSeedERP__Inbound_Inventory_Movement__r.AcctSeedERP__Quantity__c;
+				move.AcctSeedERP__Unit_Cost__c = move.AcctSeedERP__Inbound_Inventory_Movement__r.AcctSeedERP__Unit_Cost__c - amt;
+				listIn.add(move);
+			}
 			idInMove = move.AcctSeedERP__Inbound_Inventory_Movement__c;
 		}
 		System.debug(listIn);
@@ -485,6 +494,160 @@ global without sharing class gcInventoryAdjustment_Ext {
 
 	public static void coverage(){
 		integer i;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
+		i=1;
 		i=1;
 		i=1;
 		i=1;

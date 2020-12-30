@@ -1,8 +1,85 @@
-@isTest(SeeAllData=TRUE)
+@isTest
 private class gcInventoryAdjustment_Ext_Test{
-  
-	static testMethod void test1()
-	{
-        gcInventoryAdjustment_Ext.coverage();
+
+    @testSetup static void dataSetup()
+    {
+        new Factory_TestData();
+        Factory_CustomSettings.setupInventorySettings();
+    }
+
+    @IsTest
+    static void testAdjustment()
+    {
+        AcctSeed__Ledger__c ledger = [SELECT Id FROM AcctSeed__Ledger__c LIMIT 1];
+        AcctSeed__GL_Account__c glA = [SELECT Id
+        FROM AcctSeed__GL_Account__c
+        LIMIT 1];
+        AcctSeedERP__Warehouse__c wh;
+        AcctSeedERP__Warehouse__c whAd;
+        for(AcctSeedERP__Warehouse__c w : [SELECT Id, Name FROM AcctSeedERP__Warehouse__c WHERE Name IN ('Adjustments','Wholesale')]){
+            if(w.Name == 'Adjustments')
+                whAd = w;
+            if(w.Name == 'Wholesale')
+                wh = w;
+        }
+        AcctSeedERP__Location__c loc = new AcctSeedERP__Location__c(
+            Name = 'Test Loc',
+            AcctSeedERP__Warehouse__c = wh.Id
+        );
+        insert loc;
+        Product2 part = Factory_Product.createNonSerializedProduct('Part', 'Electronics');
+        AcctSeedERP__Inventory_Balance__c balance = new AcctSeedERP__Inventory_Balance__c(
+            AcctSeedERP__Location__c = loc.Id,
+            AcctSeedERP__Warehouse__c = wh.Id,
+            AcctSeedERP__Product__c = part.Id
+        );
+        // Required for Hibiscus;
+        //balance.AcctSeedERP__Ledger__c = ledger.Id;
+        insert balance;
+        Account[] accts = Factory_Account.insertSupplierAccounts(2);
+        Account vendor = accts[0];
+        Account shipTo = accts[1];
+        AcctSeedERP__Purchase_Order__c po = Factory_PurchaseOrder.createMinimalPO( vendor.Id, shipTo.Id );
+        System.debug([SELECT Id, AcctSeedERP__Vendor_Country__c FROM AcctSeedERP__Purchase_Order__c WHERE Id = :po.Id]);
+        AcctSeedERP__Purchase_Order_Line__c pol = new AcctSeedERP__Purchase_Order_Line__c(
+            AcctSeedERP__Purchase_Order__c = po.Id,
+            AcctSeedERP__Product__c = part.Id,
+            AcctSeedERP__Quantity__c = 10,
+            AcctSeedERP__Unit_Price__c = 10.00
+        );
+        insert pol;
+
+        AcctSeedERP__Purchase_Order_Inventory_Movement__c movement = new AcctSeedERP__Purchase_Order_Inventory_Movement__c(
+            AcctSeedERP__Unit_Cost__c = 10,
+            AcctSeedERP__Quantity__c = 10,
+            AcctSeedERP__Inventory_Balance__c = balance.Id,
+            AcctSeedERP__Ledger__c = ledger.Id,
+            GMBLASERP__Warehouse__c = wh.Id,
+            AcctSeedERP__Movement_Date__c = Date.today(),
+            GMBLASERP__Product__c = part.Id,
+            AcctSeedERP__Purchase_Order_Line__c = pol.Id,
+            GMBLASERP__Purchase_Order__c = po.Id
+        );
+        GMBLASERP.gcPurchaseOrderInventoryMovement.disableTrigger = true;
+        insert movement;
+
+        GMBLASERP__Inventory_Adjustment__c adj = new GMBLASERP__Inventory_Adjustment__c();
+        adj.GL_Account_Variable_1__c = gcConstants.idGlv1Wholesale;
+        adj.Department_GLV_2__c = gcConstants.idGlv2Sales;
+        adj.GMBLASERP__GL_Account__c = gcConstants.idGlCostVariance;
+        adj.GMBLASERP__Product__c = part.Id;
+        adj.GMBLASERP__Adjustment_Type__c = 'Value';
+        insert adj;
+        String adjId = whAd.Id;
+        GMBLASERP__Inventory_Settings__c setting = new GMBLASERP__Inventory_Settings__c();
+        setting.GMBLASERP__Adjustment_Warehouse_Id__c = adjId.left(15);
+        insert setting;
+
+        Test.startTest();
+        ApexPages.StandardController sc = new ApexPages.StandardController(adj);
+        gcInventoryAdjustment_Ext obj = new gcInventoryAdjustment_Ext(sc);
+        List<SelectOption> listPT = obj.getListProductType();
+        gcInventoryAdjustment_Ext.createAdjustment(adj.Id,part.Id);
+        Test.stopTest();
     }
 }
