@@ -927,24 +927,18 @@ public without sharing class gcConstants {
 /////////////////////////	RECORD TYPES ////////////////////////
 //
 //
-	private static Application_RecordType.WorkOrderRTs workOrderRTs;
+	//private static Application_RecordType.WorkOrderRTs workOrderRTs;
 	private static Application_RecordType.ERPOrderRTs projectRTs;
 
-	public static Id idRtWorkOrderManufacturing{
-		get{
-			if(workOrderRTs == null)
-			{
-				workOrderRTs = new Application_RecordType.WorkOrderRTs();
-			}
-			return workOrderRTs.getManufacturingId();
-		}
-		set;
-	}
-
-//	private static void fetchWORecordTypes()
-//	{
-//		Map<String, Schema.RecordTypeInfo> mapRT_WO = WorkOrder.sObjectType.getDescribe().getRecordTypeInfosByDeveloperName();
-//		idRtWorkOrderManufacturing = mapRT_WO.get('Manufacturing').getRecordTypeId();
+//	public static Id idRtWorkOrderManufacturing{
+//		get{
+//			if(workOrderRTs == null)
+//			{
+//				workOrderRTs = new Application_RecordType.WorkOrderRTs();
+//			}
+//			return workOrderRTs.getManufacturingId();
+//		}
+//		set;
 //	}
 
 	public static Id idRtProjectBoatSale{
