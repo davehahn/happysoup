@@ -44,9 +44,20 @@ public without sharing class CommissionLineItem2_TriggerHandler extends TriggerH
     );
   }
 
-//  protected override void afterDelete()
-//  {
-//  }
+  protected override void afterDelete()
+  {
+    Map<Id, List<String>> changeMap = new Map<Id, List<String>>();
+    for( CommissionLineItem2__c cli : (List<CommissionLineItem2__c>)Trigger.oldMap.values() )
+    {
+      if( !changeMap.containsKey( cli.CommissionRecord2__c ) )
+      {
+        changeMap.put( cli.CommissionRecord2__c, new List<String>() );
+      }
+      changeMap.get( cli.CommissionRecord2__c )
+        .add( cli.Descriptor__c + ' has been removed' );
+    }
+    CommissionLineItem2_Service.makeChatterPostsAboutChanges( changeMap );
+  }
 
 //  protected override void afterUndelete()
 //  {
