@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Invoice_Type__c</fullName>
+    <description>The Type of Invoice to be displayed on</description>
+    <externalId>false</externalId>
+    <fieldManageability>DeveloperControlled</fieldManageability>
+    <label>Invoice Type</label>
+    <required>false</required>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Internal Service Order</fullName>
+                <default>true</default>
+                <label>Internal Service Order</label>
+            </value>
+            <value>
+                <fullName>Partner Boat Sale</fullName>
+                <default>false</default>
+                <label>Partner Boat Sale</label>
+            </value>
+            <value>
+                <fullName>Partner Parts Order</fullName>
+                <default>false</default>
+                <label>Partner Parts Order</label>
+            </value>
+            <value>
+                <fullName>Retail Boat Sale</fullName>
+                <default>false</default>
+                <label>Retail Boat Sale</label>
+            </value>
+            <value>
+                <fullName>Retail Counter Sale</fullName>
+                <default>false</default>
+                <label>Retail Counter Sale</label>
+            </value>
+            <value>
+                <fullName>Service Order</fullName>
+                <default>false</default>
+                <label>Service Order</label>
+            </value>
+            <value>
+                <fullName>Warranty Payable</fullName>
+                <default>false</default>
+                <label>Warranty Payable</label>
+            </value>
+            <value>
+                <fullName>Warranty Recoverable</fullName>
+                <default>false</default>
+                <label>Warranty Recoverable</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>
