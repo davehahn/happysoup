@@ -358,11 +358,11 @@ global without sharing class gcInventoryAdjustment_Ext {
 				AcctSeedERP__Inbound_Inventory_Movement__c inMove = new AcctSeedERP__Inbound_Inventory_Movement__c();
 				inMove.Id = move.AcctSeedERP__Inbound_Inventory_Movement__c;
 				inMove.AcctSeedERP__Quantity__c = move.AcctSeedERP__Quantity__c;
-				inMove.AcctSeedERP__Unit_Cost__c = move.AcctSeedERP__Unit_Cost__c + amt;
+				inMove.AcctSeedERP__Unit_Cost__c = move.AcctSeedERP__Unit_Cost__c + (amt/move.AcctSeedERP__Quantity__c);
 				listIn.add(inMove);
 			}else{
 				move.AcctSeedERP__Quantity__c = move.AcctSeedERP__Inbound_Inventory_Movement__r.AcctSeedERP__Quantity__c;
-				move.AcctSeedERP__Unit_Cost__c = move.AcctSeedERP__Inbound_Inventory_Movement__r.AcctSeedERP__Unit_Cost__c - amt;
+				move.AcctSeedERP__Unit_Cost__c = move.AcctSeedERP__Inbound_Inventory_Movement__r.AcctSeedERP__Unit_Cost__c - (amt/move.AcctSeedERP__Inbound_Inventory_Movement__r.AcctSeedERP__Quantity__c);
 				listIn.add(move);
 			}
 			idInMove = move.AcctSeedERP__Inbound_Inventory_Movement__c;

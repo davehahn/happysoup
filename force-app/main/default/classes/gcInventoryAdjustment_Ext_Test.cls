@@ -64,6 +64,18 @@ private class gcInventoryAdjustment_Ext_Test{
         GMBLASERP.gcPurchaseOrderInventoryMovement.disableTrigger = true;
         insert movement;
 
+        GMBLASERP.gcInventoryMovementCube.allowDML = true;
+        GMBLASERP__Inventory_Movement_Cube__c cube = new GMBLASERP__Inventory_Movement_Cube__c();
+        cube.GMBLASERP__Inventory_Balance__c = balance.Id;
+        cube.GMBLASERP__Location__c = balance.AcctSeedERP__Location__c;
+        cube.GMBLASERP__Product__c = part.Id;
+        cube.GMBLASERP__Movement_Date__c = Date.today();
+        cube.GMBLASERP__Warehouse__c = wh.Id;
+        cube.GMBLASERP__Movement_Type__c = 'AcctSeedERP__Purchase_Order_Inventory_Movement__c';
+        cube.GMBLASERP__Quantity__c = 10;
+        cube.GMBLASERP__Inventory_GL_Amount__c = 100;
+        insert cube;
+
         GMBLASERP__Inventory_Adjustment__c adj = new GMBLASERP__Inventory_Adjustment__c();
         adj.GL_Account_Variable_1__c = gcConstants.idGlv1Wholesale;
         adj.Department_GLV_2__c = gcConstants.idGlv2Sales;
@@ -84,6 +96,9 @@ private class gcInventoryAdjustment_Ext_Test{
         List<SelectOption> listPT = obj.getListProductType();
         map<string,string> mapString = gcInventoryAdjustment_Ext.createAdjustment(adj.Id,part.Id);
         Id idMove = mapString.get('idMove');
+        GMBLASERP.gcInventoryAdjustment.disableTrigger = true;
+        GMBLASERP.gcInboundInventoryMovement.disableTrigger = true;
+        GMBLASERP.gcOutboundInventoryMovement.disableTrigger = true;
         gcInventoryAdjustment_Ext.adjustValue(idMove, -5);
         gcInventoryAdjustment_Ext.adjustValueIn(idMove, -5);
         Test.stopTest();
@@ -354,6 +369,9 @@ private class gcInventoryAdjustment_Ext_Test{
         Test.startTest();
         map<string,string> mapString = gcInventoryAdjustment_Ext.createAdjustment(adj.Id,boatSerial.Id);
         Id idMove = mapString.get('idMove');
+        GMBLASERP.gcInventoryAdjustment.disableTrigger = true;
+        GMBLASERP.gcInboundInventoryMovement.disableTrigger = true;
+        GMBLASERP.gcOutboundInventoryMovement.disableTrigger = true;
         gcInventoryAdjustment_Ext.adjustValue(idMove, 100);
         gcInventoryAdjustment_Ext.adjustValueIn(idMove, 100);
         Test.stopTest();
