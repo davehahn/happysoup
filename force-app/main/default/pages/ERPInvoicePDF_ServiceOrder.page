@@ -268,30 +268,17 @@
           </p>
         </div>
         <div class="disclaimer-container">
-          <apex:outputPanel rendered="{!showServiceDisclaimer}">
-            <p>
-              I hearby authorize the repair work hereinafter set forth to be done along with the necessary
-              material and agree that you are not responsible for lost or damage to vehicle or articles left
-              in vehicle in case of fire, theft, or any other cause beyond your control or for any delays
-              caused by unavailability of parts or delays in parts shipments by the supplier or transporter.
-              I hereby grant you and/or your employees permission to operate the vehicle herein described on
-              streets, highways or elsewhere for the purpose of testing and/or inspection. An express mechanic's
-              lien is hereby acknowledged on above vehicle to secure the amount of repairs thereto.
-            </p>
-            <apex:outputPanel rendered="{! NOT( ISNULL($Setup.Invoice_Disclaimer__c.Service_Winter_Disclaimer__c))}">
-              <p>
-                <strong>** WARNING- FREEZING TEMPERATURES **</strong><br />
-                {! $Setup.Invoice_Disclaimer__c.Service_Winter_Disclaimer__c}
-              </p>
-            </apex:outputPanel>
-            <p>
-              <strong>STATEMENT OF DISCLAIMER: </strong> Any warranties on product sold hereby are those made by the manufacturer. The seller hereby expressly disclaims all warranties, either expess or implied, including any implied warranty of merchantabilityor fitness for other purpose, and neither assumes nor authorizes any other person to assume for it any liability in connection with the sale of said products.  Any limitation contained herein does not apply where prohibited by law.
-            </p>
-            <p>
-                <strong>Terms:</strong>
-                Balance due within 30 days by certified funds or money transfer. After 30 days, a 2% interest per month will apply to unpaid balances              
-            </p>
 
+          <apex:outputPanel rendered="{!disclaimers.size > 0}">
+            <apex:repeat value="{!disclaimers}" var="disclaimer">
+              <p>
+                <strong>{!disclaimer.Title__c}</strong><br />
+                {!disclaimer.English__c}
+              </p>
+            </apex:repeat>
+          </apex:outputPanel>
+
+          <apex:outputPanel rendered="{!disclaimerRequiresSignature}">
             <div class="signature_container">
               <p>
                 <span>
@@ -302,17 +289,6 @@
               </p>
               <p>Customer Signature</p>
             </div>
-          </apex:outputPanel>
-          <apex:outputPanel rendered="{!showWarrantyDisclaimer}">
-            <p>
-              <strong>Warranty Credit or Parts Return Disclaimer: </strong>
-              All Legend Boats warranty credit authorizations and/or parts return requested claims are subject to audit
-              which may include hull and/or parts inspection by authorized Legend Boats personnel prior to approval and
-              reimbursement.  If the claim upon audit or the condition of the returned hull and/or parts is not
-              consistent with the description on the claim and warranty guidelines, Legend Boats has the right to review
-              and/or adjust the claim after being approved even if paid.  Upon inspection, Legend Boats also reserves the
-              right to reject the claim if it is found that the claim does not meet warranty guidelines.
-            </p>
           </apex:outputPanel>
         </div>
 
