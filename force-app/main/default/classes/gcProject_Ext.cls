@@ -39,6 +39,7 @@ global without sharing class gcProject_Ext {
     idWarehouseInternal = gcConstants.idWarehouseWholesale;
 
     isTaggedRetailERP = findIfTaggedERP(c.getId());
+    hasFinishedGood = findMFGFinishedGood(c.getId());
   }
 
   global Boolean isBoatSale{get;set;}
@@ -51,6 +52,7 @@ global without sharing class gcProject_Ext {
   global Boolean isTradeIn{get;set;}
   global Boolean isPartnerPartsOrder{get;set;}
   global Boolean isTaggedRetailERP{get;set;}
+  global Boolean hasFinishedGood{get;set;}
 
   global Id idWarehouseInternal{get;set;}
 
@@ -78,6 +80,22 @@ global without sharing class gcProject_Ext {
     for(AcctSeed__Project__c pr : [SELECT Id, (SELECT Id FROM ERP_Orders__r WHERE AcctSeed__Status__c != 'Completed' LIMIT 1) FROM AcctSeed__Project__c WHERE Id =:idERP])
       if(!pr.ERP_Orders__r.isEmpty())
         result = true;
+    return result;
+  }
+
+  public Boolean findMFGFinishedGood(Id idERP){
+    Boolean result = false;
+    for(AggregateResult aggRes :
+      [SELECT sum(AcctSeedERP__Quantity__c) qty
+      FROM AcctSeedERP__Inbound_Inventory_Movement__c
+      WHERE AcctSeedERP__Project__c = :idERP
+      AND AcctSeedERP__Quantity__c != null])
+    {
+      Decimal qty = (Decimal)aggRes.get('qty');
+      if(qty == null) qty = 0;
+      if(qty.setScale(2) != 0)
+        result = true;
+    }
     return result;
   }
 

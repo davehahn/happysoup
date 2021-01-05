@@ -7,6 +7,12 @@
 		helper.runAction(component, "c.getWarehouses", {}, function(response) {
 			component.set("v.whOptions", response.getReturnValue());
 		});
+		const empApi = component.find('empApi');
+		empApi.onError($A.getCallback(error => {
+        // Error can be any type of error (subscribe, unsubscribe...)
+        console.error('EMP API error: ', JSON.stringify(error));
+        helper.toggleSpinner(component, true);
+    }));
 	},
 	searchAgain: function( component, event, helper )
 	{
@@ -71,6 +77,10 @@
 		});
 	},
 	processReturn: function( component, event, helper )
+  {
+    helper.processRefundStart(component, event, helper);
+  },
+	processReturn_Old: function( component, event, helper )
 	{
 		/// We were accepting multiple projects. but later decided to have only one.
 		/// That is why we are returning the user to the first ERP order which is going to be the only one.

@@ -927,126 +927,158 @@ public without sharing class gcConstants {
 /////////////////////////	RECORD TYPES ////////////////////////
 //
 //
+	//private static Application_RecordType.WorkOrderRTs workOrderRTs;
+	private static Application_RecordType.ERPOrderRTs projectRTs;
+
+//	public static Id idRtWorkOrderManufacturing{
+//		get{
+//			if(workOrderRTs == null)
+//			{
+//				workOrderRTs = new Application_RecordType.WorkOrderRTs();
+//			}
+//			return workOrderRTs.getManufacturingId();
+//		}
+//		set;
+//	}
+
 	public static Id idRtProjectBoatSale{
 		get{
-			if(idRtProjectBoatSale == null) fetchRecordTypes();
-			if(idRtProjectBoatSale == null) throw new gcException('A Project Record Type having API name [BoatSale] does not exist.');
-			return idRtProjectBoatSale;
+			if(projectRTs == null)
+			{
+				projectRTs = new Application_RecordType.ERPOrderRTs();
+			}
+			return projectRTs.getRetailBoatSaleId();
 		}
 		set;
 	}
 
 	public static Id idRtProjectPartnerBoatSale{
 		get{
-			if(idRtProjectPartnerBoatSale == null) fetchRecordTypes();
-			if(idRtProjectPartnerBoatSale == null) throw new gcException('A Project Record Type having API name [PartnerBoatSale] does not exist.');
-			return idRtProjectPartnerBoatSale;
+			if(projectRTs == null)
+			{
+				projectRTs = new Application_RecordType.ERPOrderRTs();
+			}
+			return projectRTs.getPartnerBoatSaleId();
 		}
 		set;
 	}
 
 	public static Id idRtProjectCounterSale{
 		get{
-			if(idRtProjectCounterSale == null) fetchRecordTypes();
-			if(idRtProjectCounterSale == null) throw new gcException('A Project Record Type having API name [CounterSale] does not exist.');
-			return idRtProjectCounterSale;
+			if(projectRTs == null)
+			{
+				projectRTs = new Application_RecordType.ERPOrderRTs();
+			}
+			return projectRTs.getCounterSaleId();
 		}
 		set;
 	}
 
 	public static Id idRtProjectManufacturing{
 		get{
-			if(idRtProjectManufacturing == null) fetchRecordTypes();
-			if(idRtProjectManufacturing == null) throw new gcException('A Project Record Type having API name [Manufacturing] does not exist.');
-			return idRtProjectManufacturing;
+			if(projectRTs == null)
+			{
+				projectRTs = new Application_RecordType.ERPOrderRTs();
+			}
+			return projectRTs.getManufacturingId();
 		}
 		set;
 	}
 
 	public static Id idRtProjectService{
 		get{
-			if(idRtProjectService == null) fetchRecordTypes();
-			if(idRtProjectService == null) throw new gcException('A Project Record Type having API name [Service] does not exist.');
-			return idRtProjectService;
+			if(projectRTs == null)
+			{
+				projectRTs = new Application_RecordType.ERPOrderRTs();
+			}
+			return projectRTs.getServiceWorkOrderId();
 		}
 		set;
 	}
 
 	public static Id idRtProjectWarranty{
 		get{
-			if(idRtProjectWarranty == null) fetchRecordTypes();
-			if(idRtProjectWarranty == null) throw new gcException('A Project Record Type having API name [Legend_Warranty] does not exist.');
-			return idRtProjectWarranty;
+			if(projectRTs == null)
+			{
+				projectRTs = new Application_RecordType.ERPOrderRTs();
+			}
+			return projectRTs.getWarrantyId();
 		}
 		set;
 	}
 
 	public static Id idRtPartnerPartsOrder{
 		get{
-			if(idRtPartnerPartsOrder == null) fetchRecordTypes();
-			if(idRtPartnerPartsOrder == null) throw new gcException('A Project Record Type having API name [LegendPartnerPartsOrder] does not exist.');
-			return idRtPartnerPartsOrder;
+			if(projectRTs == null)
+			{
+				projectRTs = new Application_RecordType.ERPOrderRTs();
+			}
+			return projectRTs.getPartnerPartsOrderId();
 		}
 		set;
 	}
 
 	public static Id idRtTradeIn{
 		get{
-			if(idRtTradeIn == null) fetchRecordTypes();
-			if(idRtTradeIn == null) throw new gcException('A Project Record Type having API name [TradeIn] does not exist.');
-			return idRtTradeIn;
+			if(projectRTs == null)
+			{
+				projectRTs = new Application_RecordType.ERPOrderRTs();
+			}
+			return projectRTs.getTradeInId();
 		}
 		set;
 	}
 
 	public static Id idRtFixedAsset{
 		get{
-			if(idRtFixedAsset == null) fetchRecordTypes();
-			if(idRtFixedAsset == null) throw new gcException('A Project Record Type having API name [LegendFixedAsset] does not exist.');
-			return idRtFixedAsset;
+			if(projectRTs == null)
+			{
+				projectRTs = new Application_RecordType.ERPOrderRTs();
+			}
+			return projectRTs.getFixedAssetId();
 		}
 		set;
 	}
 
-	private static void fetchRecordTypes()
-	{
-		for(RecordType rt :
-			[SELECT Id, DeveloperName, SobjectType
-			 FROM RecordType
-			 WHERE (SobjectType = 'AcctSeed__Project__c' AND
-			 		(DeveloperName = 'BoatSale' OR
-			 		 DeveloperName = 'PartnerBoatSale' OR
-			 		 DeveloperName = 'CounterSale' OR
-			 		 DeveloperName = 'Manufacturing' OR
-			 		 DeveloperName = 'TradeIn' OR
-			 		 DeveloperName = 'Legend_Warranty' OR
-			 		 DeveloperName = 'LegendFixedAsset' OR
-			 		 DeveloperName = 'LegendPartnerPartsOrder' OR
-			    	 DeveloperName = 'Service'))])
-		{
-			if(rt.SobjectType == 'AcctSeed__Project__c')
-			{
-				if(rt.DeveloperName == 'BoatSale')
-					idRtProjectBoatSale = rt.Id;
-				else if(rt.DeveloperName == 'PartnerBoatSale')
-					idRtProjectPartnerBoatSale = rt.Id;
-				else if(rt.DeveloperName == 'CounterSale')
-					idRtProjectCounterSale = rt.Id;
-				else if(rt.DeveloperName == 'Manufacturing')
-					idRtProjectManufacturing = rt.Id;
-				else if(rt.DeveloperName == 'Service')
-					idRtProjectService = rt.Id;
-				else if(rt.DeveloperName == 'Legend_Warranty')
-					idRtProjectWarranty = rt.Id;
-				else if(rt.DeveloperName == 'TradeIn')
-					idRtTradeIn = rt.Id;
-				else if(rt.DeveloperName == 'LegendFixedAsset')
-					idRtFixedAsset = rt.Id;
-				else if(rt.DeveloperName == 'LegendPartnerPartsOrder')
-					idRtPartnerPartsOrder = rt.Id;
-			}
-		}
-	}
+//	private static void fetchRecordTypes()
+//	{
+//		for(RecordType rt :
+//			[SELECT Id, DeveloperName, SobjectType
+//			 FROM RecordType
+//			 WHERE (SobjectType = 'AcctSeed__Project__c' AND
+//			 		(DeveloperName = 'BoatSale' OR
+//			 		 DeveloperName = 'PartnerBoatSale' OR
+//			 		 DeveloperName = 'CounterSale' OR
+//			 		 DeveloperName = 'Manufacturing' OR
+//			 		 DeveloperName = 'TradeIn' OR
+//			 		 DeveloperName = 'Legend_Warranty' OR
+//			 		 DeveloperName = 'LegendFixedAsset' OR
+//			 		 DeveloperName = 'LegendPartnerPartsOrder' OR
+//			    	 DeveloperName = 'Service'))])
+//		{
+//			if(rt.SobjectType == 'AcctSeed__Project__c')
+//			{
+//				if(rt.DeveloperName == 'BoatSale')
+//					idRtProjectBoatSale = rt.Id;
+//				else if(rt.DeveloperName == 'PartnerBoatSale')
+//					idRtProjectPartnerBoatSale = rt.Id;
+//				else if(rt.DeveloperName == 'CounterSale')
+//					idRtProjectCounterSale = rt.Id;
+//				else if(rt.DeveloperName == 'Manufacturing')
+//					idRtProjectManufacturing = rt.Id;
+//				else if(rt.DeveloperName == 'Service')
+//					idRtProjectService = rt.Id;
+//				else if(rt.DeveloperName == 'Legend_Warranty')
+//					idRtProjectWarranty = rt.Id;
+//				else if(rt.DeveloperName == 'TradeIn')
+//					idRtTradeIn = rt.Id;
+//				else if(rt.DeveloperName == 'LegendFixedAsset')
+//					idRtFixedAsset = rt.Id;
+//				else if(rt.DeveloperName == 'LegendPartnerPartsOrder')
+//					idRtPartnerPartsOrder = rt.Id;
+//			}
+//		}
+//	}
 
 //
 //
@@ -1199,11 +1231,12 @@ public without sharing class gcConstants {
 				}
 				catch( Exception e )
 				{
-					throw new gcException('A Defualt Ledger has not been setup.  Please set the default Ledger in Accounting Settings');
+					throw new gcException('A Default Ledger has not been setup.  Please set the default Ledger in Accounting Settings');
 				}
 			}
 			return idActualLedger;
 		}
+		set;
 	}
 
 	/// Kept so that the other class does not throw errors

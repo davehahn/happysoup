@@ -2,7 +2,7 @@
  * Created by dave on 2019-08-08.
  */
 
-public class QueueableUtil implements Queueable {
+public class QueueableUtil implements Queueable, Database.AllowsCallouts {
   Queueable[] payload;
   static QueueableUtil self;
 

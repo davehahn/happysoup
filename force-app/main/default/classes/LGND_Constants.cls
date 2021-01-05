@@ -110,7 +110,7 @@ public without sharing class LGND_Constants {
       if( partnerWarrantyLabourProductId == null )
         partnerWarrantyLabourProductId = Utility_Products__c.getOrgDefaults().Partner_Warranty_Labour__c;
       if( partnerWarrantyLabourProductId == null )
-        throw new LGND_Constants_Exception('Partner Custom Product is not setup.  Please contact an administrator to get this rectified');
+        throw new LGND_Constants_Exception('Partner Warranty Labour Product is not setup.  Please contact an administrator to get this rectified');
       return partnerWarrantyLabourProductId;
     }
     private set;
@@ -118,59 +118,66 @@ public without sharing class LGND_Constants {
 
   /* ACCOUNT RECORD TYPES ++++++++++++ .. */
 
+  private static Application_RecordType.AccountRTs accountRTs;
+
   public static Id accountRtId_Dealer {
     get {
-      if( accountRtId_Dealer == null ) fetchAccountRecordTypes();
-      if( accountRtId_Dealer == null )
-        throw new LGND_Utilities.LGND_Exception('Account Record Type with API Name [Dealer] does not exist');
-      return accountRtId_Dealer;
+      if(accountRTs == null)
+      {
+        accountRTs = new Application_RecordType.AccountRTs();
+      }
+      return accountRTs.getDealerId();
     }
     set;
   }
 
-  private static void fetchAccountRecordTypes()
-  {
-    for(RecordType rt : [ SELECT Id, DeveloperName, SobjectType
-                          FROM RecordType
-                          WHERE SobjectType = 'Account' ])
-    {
-      if( rt.DeveloperName == 'Dealer' )
-        accountRtId_Dealer = rt.Id;
-    }
-  }
+//  private static void fetchAccountRecordTypes()
+//  {
+//    for(RecordType rt : [ SELECT Id, DeveloperName, SobjectType
+//                          FROM RecordType
+//                          WHERE SobjectType = 'Account' ])
+//    {
+//      if( rt.DeveloperName == 'Dealer' )
+//        accountRtId_Dealer = rt.Id;
+//    }
+//  }
 
   /* CASE RECORD TYPES */
 
+  private static Application_RecordType.CaseRTs caseRTs;
+
   public static Id caseRtId_Promotion {
     get {
-      if( caseRtId_Promotion == null ) fetchCaseRecordTypes();
-      if( caseRtId_Promotion == null )
-        throw new LGND_Utilities.LGND_Exception('Case Record Type with API name [Promotion] does not exist');
-      return caseRtId_Promotion;
+      if(caseRTs == null)
+      {
+        caseRTs = new Application_RecordType.CaseRTs();
+      }
+      return caseRTs.getPromotionId();
     }
   }
 
   public static Id caseRtId_Warranty {
     get {
-      if( caseRtId_Warranty == null ) fetchCaseRecordTypes();
-      if( caseRtId_Warranty == null )
-        throw new LGND_Utilities.LGND_Exception('Case Record Type with API name [Warranty] does not exist');
-      return caseRtId_Warranty;
+      if(caseRTs == null)
+      {
+        caseRTs = new Application_RecordType.CaseRTs();
+      }
+      return caseRTs.getWarrantyId();
     }
   }
 
-  private static void fetchCaseRecordTypes()
-  {
-    for(RecordType rt : [ SELECT Id, DeveloperName, SobjectType
-    FROM RecordType
-    WHERE SobjectType = 'Case' ])
-    {
-      if( rt.DeveloperName == 'Promotion' )
-        caseRtId_Promotion = rt.Id;
-      if( rt.DeveloperName == 'Warranty' )
-        caseRtId_Warranty = rt.Id;
-    }
-  }
+//  private static void fetchCaseRecordTypes()
+//  {
+//    for(RecordType rt : [ SELECT Id, DeveloperName, SobjectType
+//    FROM RecordType
+//    WHERE SobjectType = 'Case' ])
+//    {
+//      if( rt.DeveloperName == 'Promotion' )
+//        caseRtId_Promotion = rt.Id;
+//      if( rt.DeveloperName == 'Warranty' )
+//        caseRtId_Warranty = rt.Id;
+//    }
+//  }
 
   /* ++++++++++++++++++ PRICEBOOKS +++++++++++++++++++++ */
 
@@ -247,135 +254,146 @@ public without sharing class LGND_Constants {
 
   /* +++++++++++++++++ PRODUCT RECORD TYPES ++++++++++++++++++ */
 
+  private static Application_RecordType.ProductRTs productRTs;
+
   public static Id productRtId_Boat{
     get {
-      if( productRtId_Boat == null ) fetchProductRecordTypes();
-      if( productRtId_Boat == null )
-        throw new LGND_Utilities.LGND_Exception('Product Record Type with API Name [Boat] does not exist');
-      return productRtId_Boat;
+      if(productRTs == null)
+      {
+        productRTs = new Application_RecordType.ProductRTs();
+      }
+      return productRTs.getBoatId();
     }
     set;
   }
 
   public static Id productRtId_Trailer{
     get {
-      if( productRtId_Trailer == null ) fetchProductRecordTypes();
-      if( productRtId_Trailer == null )
-        throw new LGND_Utilities.LGND_Exception('Product Record Type with API Name [Trailer] does not exist');
-      return productRtId_Trailer;
+      if(productRTs == null)
+      {
+        productRTs = new Application_RecordType.ProductRTs();
+      }
+      return productRTs.getTrailerId();
     }
     set;
   }
 
   public static Id productRtId_Motor{
     get {
-      if( productRtId_Motor == null ) fetchProductRecordTypes();
-      if( productRtId_Motor == null )
-        throw new LGND_Utilities.LGND_Exception('Product Record Type with API Name [Motor] does not exist');
-      return productRtId_Motor;
+      if(productRTs == null)
+      {
+        productRTs = new Application_RecordType.ProductRTs();
+      }
+      return productRTs.getMotorId();
     }
     set;
   }
 
   public static Id productRtId_TrollingMotor{
     get {
-      if( productRtId_TrollingMotor == null ) fetchProductRecordTypes();
-      if( productRtId_TrollingMotor == null )
-        throw new LGND_Utilities.LGND_Exception('Product Record Type with API Name [TrollingMotor] does not exist');
-      return productRtId_TrollingMotor;
+      if(productRTs == null)
+      {
+        productRTs = new Application_RecordType.ProductRTs();
+      }
+      return productRTs.getTrollingMotorId();
     }
     set;
   }
 
   public static Id productRtId_Part{
     get {
-      if( productRtId_Part == null ) fetchProductRecordTypes();
-      if( productRtId_Part == null )
-        throw new LGND_Utilities.LGND_Exception('Product Record Type with API Name [Part] does not exist');
-      return productRtId_Part;
+      if(productRTs == null)
+      {
+        productRTs = new Application_RecordType.ProductRTs();
+      }
+      return productRTs.getPartId();
     }
     set;
   }
 
   public static Id productRtId_Bundle{
     get {
-      if( productRtId_Bundle == null ) fetchProductRecordTypes();
-      if( productRtId_Bundle == null )
-        throw new LGND_Utilities.LGND_Exception('Product Record Type with API Name [Package Bundle] does not exist');
-      return productRtId_Bundle;
+      if(productRTs == null)
+      {
+        productRTs = new Application_RecordType.ProductRTs();
+      }
+      return productRTs.getPackageBundleId();
     }
     set;
   }
 
   public static Id productRtId_Protection{
     get {
-      if( productRtId_Protection == null ) fetchProductRecordTypes();
-      if( productRtId_Protection == null )
-        throw new LGND_Utilities.LGND_Exception('Product Record Type with API Name [Protection and Services] does not exist');
-      return productRtId_Protection;
+      if(productRTs == null)
+      {
+        productRTs = new Application_RecordType.ProductRTs();
+      }
+      return productRTs.getProtectionAndServiceId();
     }
     set;
   }
 
   public static Id productRtId_Insurance{
     get {
-      if( productRtId_Insurance == null ) fetchProductRecordTypes();
-      if( productRtId_Insurance == null )
-        throw new LGND_Utilities.LGND_Exception('Product Record Type with API Name [Insurance] does not exist');
-      return productRtId_Insurance;
+      if(productRTs == null)
+      {
+        productRTs = new Application_RecordType.ProductRTs();
+      }
+      return productRTs.getInsuranceId();
     }
     set;
   }
 
   public static Id productRtId_Fees{
     get {
-      if( productRtId_Fees == null ) fetchProductRecordTypes();
-      if( productRtId_Fees == null )
-        throw new LGND_Utilities.LGND_Exception('Product Record Type with API Name [Fees] does not exist');
-      return productRtId_Fees;
+      if(productRTs == null)
+      {
+        productRTs = new Application_RecordType.ProductRTs();
+      }
+      return productRTs.getFeesId();
     }
     set;
   }
 
-  private static void fetchProductRecordTypes()
-  {
-    for(RecordType rt :
-      [SELECT Id, DeveloperName, SobjectType
-       FROM RecordType
-       WHERE (SobjectType = 'Product2' AND
-          (DeveloperName = 'Boat' OR
-           DeveloperName = 'Trailer' OR
-           DeveloperName = 'Motor' OR
-           DeveloperName = 'Trolling_Motor' OR
-           DeveloperName = 'Part' OR
-           DeveloperName = 'Package_Bundle' OR
-           DeveloperName = 'Protection_and_Services' OR
-           DeveloperName = 'Insurance' OR
-           DeveloperName = 'Fees'))])
-    {
-      if(rt.SobjectType == 'Product2')
-      {
-        if(rt.DeveloperName == 'Boat')
-          productRtId_Boat = rt.Id;
-        else if(rt.DeveloperName == 'Trailer')
-          productRtId_Trailer = rt.Id;
-        else if(rt.DeveloperName == 'Motor')
-          productRtId_Motor = rt.Id;
-        else if(rt.DeveloperName == 'Trolling_Motor')
-          productRtId_TrollingMotor = rt.Id;
-        else if(rt.DeveloperName == 'Part')
-          productRtId_Part = rt.Id;
-        else if(rt.DeveloperName == 'Package_Bundle')
-          productRtId_Bundle = rt.Id;
-        else if(rt.DeveloperName == 'Protection_and_Services')
-          productRtId_Protection = rt.Id;
-        else if(rt.DeveloperName == 'Insurance')
-          productRtId_Insurance = rt.Id;
-        else if(rt.DeveloperName == 'Fees')
-          productRtId_Fees = rt.Id;
-      }
-    }
-  }
+//  private static void fetchProductRecordTypes()
+//  {
+//    for(RecordType rt :
+//      [SELECT Id, DeveloperName, SobjectType
+//       FROM RecordType
+//       WHERE (SobjectType = 'Product2' AND
+//          (DeveloperName = 'Boat' OR
+//           DeveloperName = 'Trailer' OR
+//           DeveloperName = 'Motor' OR
+//           DeveloperName = 'Trolling_Motor' OR
+//           DeveloperName = 'Part' OR
+//           DeveloperName = 'Package_Bundle' OR
+//           DeveloperName = 'Protection_and_Services' OR
+//           DeveloperName = 'Insurance' OR
+//           DeveloperName = 'Fees'))])
+//    {
+//      if(rt.SobjectType == 'Product2')
+//      {
+//        if(rt.DeveloperName == 'Boat')
+//          productRtId_Boat = rt.Id;
+//        else if(rt.DeveloperName == 'Trailer')
+//          productRtId_Trailer = rt.Id;
+//        else if(rt.DeveloperName == 'Motor')
+//          productRtId_Motor = rt.Id;
+//        else if(rt.DeveloperName == 'Trolling_Motor')
+//          productRtId_TrollingMotor = rt.Id;
+//        else if(rt.DeveloperName == 'Part')
+//          productRtId_Part = rt.Id;
+//        else if(rt.DeveloperName == 'Package_Bundle')
+//          productRtId_Bundle = rt.Id;
+//        else if(rt.DeveloperName == 'Protection_and_Services')
+//          productRtId_Protection = rt.Id;
+//        else if(rt.DeveloperName == 'Insurance')
+//          productRtId_Insurance = rt.Id;
+//        else if(rt.DeveloperName == 'Fees')
+//          productRtId_Fees = rt.Id;
+//      }
+//    }
+//  }
 
   /* GLV2's */
 
