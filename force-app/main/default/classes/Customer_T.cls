@@ -172,43 +172,55 @@ private class Customer_T
     System.assertEquals( 1, result.messages.size() );
   }
 
-//  @IsTest
-//  static void leadConvert_Test()
-//  {
-//    Lead l = createLead();
-//    Customer.Person person = new Customer.Person( l );
-//    Test.startTest();
-//    Customer.AccountSaveResult result = person.upsertRecord();
-//    Test.stopTest();
-//
-//    Account[] accts = [SELECT Id FROM Account WHERE RecordTypeId = :personRT ];
-//    l = [ SELECT
-//      Id,
-//      IsConverted,
-//      ConvertedAccountId,
-//      FirstName,
-//      LastName,
-//      Phone,
-//      Email,
-//      Street,
-//      City,
-//      State,
-//      Country,
-//      PostalCode
-//      FROM Lead WHERE Id = :l.Id ];
-//
-//    System.assert( l.IsConverted, 'Lead should be converted' );
-//    System.assertEquals( 1, accts.size() );
-//    System.assertEquals( l.ConvertedAccountId, accts[0].Id );
-//    System.assertEquals( 'success', result.status );
-//    System.assertEquals( l.FirstName, result.record.FirstName );
-//    System.assertEquals( l.LastName, result.record.LastName );
-//    System.assertEquals( l.Email, result.record.PersonEmail );
-//    System.assertEquals( l.Phone, result.record.Phone );
-//    System.assertEquals( l.Street, result.record.BillingStreet );
-//    System.assertEquals( l.City, result.record.BillingCity );
-//    System.assertEquals( l.State, result.record.BillingState );
-//    System.assertEquals( l.Country, result.record.BillingCountry );
-//    System.assertEquals( l.PostalCode, result.record.BillingPostalCode );
-//  }
+  @IsTest
+  static void leadConvert_WithOpportunity_Test()
+  {
+    Lead l = createLead();
+    User salesUser = Factory_User.createUser('Test', 'SalesPerson', 'System Administrator');
+    Customer.Person person = new Customer.Person( l );
+    person.setCreateOpportunityOnLeadConvert( true );
+    Customer.AccountSaveResult result;
+    System.runAs( salesUser )
+    {
+      Test.startTest();
+      result = person.upsertRecord();
+      Test.stopTest();
+    }
+
+    Account[] accts = [SELECT Id, OwnerId FROM Account WHERE RecordTypeId = :personRT ];
+    Opportunity[] opps = [SELECT Id, OwnerId, AccountId FROM Opportunity];
+    l = [ SELECT
+      Id,
+      IsConverted,
+      ConvertedAccountId,
+      ConvertedOpportunityId,
+      FirstName,
+      LastName,
+      Phone,
+      Email,
+      Street,
+      City,
+      State,
+      Country,
+      PostalCode
+      FROM Lead WHERE Id = :l.Id ];
+
+    System.assert( l.IsConverted, 'Lead should be converted' );
+    System.assertEquals( 1, accts.size() );
+    System.assertEquals( l.ConvertedAccountId, accts[0].Id );
+    System.assertEquals( 1, opps.size(), 'One Opportunity should have been created');
+    System.assertEquals( l.ConvertedOpportunityId, opps[0].Id, 'Lead should have a Converted Opportunity Id');
+    System.assertEquals( 'success', result.status );
+    System.assertEquals( l.FirstName, result.record.FirstName );
+    System.assertEquals( l.LastName, result.record.LastName );
+    System.assertEquals( l.Email, result.record.PersonEmail );
+    System.assertEquals( l.Phone, result.record.Phone );
+    System.assertEquals( l.Street, result.record.BillingStreet );
+    System.assertEquals( l.City, result.record.BillingCity );
+    System.assertEquals( l.State, result.record.BillingState );
+    System.assertEquals( l.Country, result.record.BillingCountry );
+    System.assertEquals( l.PostalCode, result.record.BillingPostalCode );
+    System.assertEquals( salesUser.Id, accts[0].OwnerId, 'Sales User should own the created Account');
+    System.assertEquals( salesUser.Id, opps[0].OwnerId, 'Sales User should own the created Opportunity');
+  }
 }

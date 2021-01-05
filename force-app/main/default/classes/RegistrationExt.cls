@@ -94,7 +94,6 @@ public with sharing class RegistrationExt {
 					cJSON, Customer.person.class
 				);
 			Customer.AccountSaveResult result = customer.upsertRecord();
-			System.debug( result );
 			if( result.status == 'success' ) return result.record.Id;
 			throw new AuraHandledException( result.messages[0] );
 		}
