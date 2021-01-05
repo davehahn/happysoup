@@ -26,7 +26,7 @@
         <criteriaItems>
             <field>Registration__c.CreatedById</field>
             <operation>notContain</operation>
-            <value>Hahn,gimbal,corcoran,maclean,davis,beaucage,lavallee,fram,dewar,boothe,duhamel,rubel,parise,paulino</value>
+            <value>Hahn,gimbal,corcoran,maclean,davis,beaucage,lavallee,fram,dewar,boothe,duhamel,rubel,parise,paulino,lockhart,roy</value>
         </criteriaItems>
         <criteriaItems>
             <field>Registration__c.Product_Name__c</field>
@@ -34,6 +34,6 @@
             <value>Trolling,DUV,DUP,DUB,terrova</value>
         </criteriaItems>
         <description>Notifies Dealer Team when there is a new registration by a dealer to one of their customers.</description>
-        <triggerType>onCreateOrTriggeringUpdate</triggerType>
+        <triggerType>onCreateOnly</triggerType>
     </rules>
 </Workflow>
