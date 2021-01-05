@@ -362,10 +362,10 @@ input.dateSelector{
                         <button type="button" class="btn" id="btnUndoTransferSelected"  onclick="undoTransferSelected();">Undo Transfer (Selected)</button>
                     </apex:outputText>
                 </apex:outputText>
-                <apex:outputText rendered="{!AND(!isCounterSale,!isInternalLabour,!isInternalPartsOrder,!isInternalWarranty,$Permission.CanMoveInvToWIP,!hasFinishedGood)}">
+                <apex:outputText rendered="{!AND(!isTradeIn, !isCounterSale,!isInternalLabour,!isInternalPartsOrder,!isInternalWarranty,$Permission.CanMoveInvToWIP,!hasFinishedGood)}">
                     <button type="button" class="btn" id="btnInvToWIPSelected"  onclick="consumeInventorySelected();">Inv <span style="font-size:larger;">&rarr;</span> WIP (Selected)</button>
                 </apex:outputText>
-                <apex:outputText rendered="{!AND(!isCounterSale,!isInternalLabour,!isInternalPartsOrder,!isInternalWarranty,$Permission.CanMoveWIPToInv,!hasFinishedGood)}">
+                <apex:outputText rendered="{!AND(!isTradeIn, !isCounterSale,!isInternalLabour,!isInternalPartsOrder,!isInternalWarranty,$Permission.CanMoveWIPToInv,!hasFinishedGood)}">
                     <button type="button" class="btn" id="btnWIPToInvSelected"  onclick="unconsumeInventorySelected();">Inv <span style="font-size:larger;">&larr;</span> WIP (Selected)</button>
                 </apex:outputText>
                 <button type="button" class="btn" id="btnExpandMaterial"    onclick="expandGrid_materials();">Collapse</button>
