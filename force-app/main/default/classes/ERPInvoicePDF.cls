@@ -383,7 +383,8 @@ public with sharing class ERPInvoicePDF {
                             Internal_Partner_Boat_Sale__c,
                             Partner_External_PO_Number__c,
                             Parking_Spot__c,
-                            Warranty_Type__c
+                            Warranty_Type__c,
+                            Stage__c
                      FROM AcctSeed__Project__c
                      WHERE Id =: erpId ];
 
@@ -1140,7 +1141,8 @@ public with sharing class ERPInvoicePDF {
     Boolean billingInvoice = false;
     Boolean transferSlip = false;
     if(this.billId != null
-      || erpOrder.RecordTypeId == gcConstants.idRtProjectCounterSale
+      || ( erpOrder.RecordTypeId == gcConstants.idRtProjectCounterSale &&
+           erpOrder.Stage__c != 'Quoting' )
       || (erpOrder.RecordTypeId == gcConstants.idRtPartnerPartsOrder
           && !erpOrder.Internal_Partner_Parts_Order__c))
     {
