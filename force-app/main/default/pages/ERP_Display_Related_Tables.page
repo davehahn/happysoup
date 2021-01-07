@@ -2096,8 +2096,10 @@ input.dateSelector{
                                     if(ui.rowData.isFlagged == 'true')
                                         check = 'checked="checked"';
                                     var disabled = "";
-                                    if({!isWarranty})
-                                        disabled = " disabled = 'disabled' ";
+                                    if({!(isWarranty)} || ui.rowData.projectComplete == 'true')
+                                    {
+                                      disabled = " disabled = 'disabled' ";
+                                    }
                                     myHTML += '<input '+disabled+' type="checkbox" value="'+ui.rowIndx+'" onclick="checkedFlagged(this)" '+check+'/>';
                                 }
                             }
