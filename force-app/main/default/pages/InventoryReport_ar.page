@@ -1,7 +1,7 @@
 <apex:page controller="gcInventoryMovementCube_Report" showHeader="true" sidebar="true" cache="false" readOnly="true">
 
-<head>
-<style>
+    <head>
+        <style>
 tr.pq-row-select td{
     background-color:yellow;
 }
@@ -16,27 +16,34 @@ tr.total td{
 }
 </style>
 
-<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css" />
-<apex:stylesheet value="{!URLFOR($Resource.GMBLJS__jQueryUI,'/jquery-ui/jquery-ui.min.css')}"/>
-<apex:stylesheet value="{!URLFOR($Resource.GMBLJS__pqGridPro241,'/pqgrid.min.css')}"/>
+        <link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css" />
+        <apex:stylesheet value="{!URLFOR($Resource.GMBLJS__jQueryUI,'/jquery-ui/jquery-ui.min.css')}"/>
+        <apex:stylesheet value="{!URLFOR($Resource.GMBLJS__pqGridPro241,'/pqgrid.min.css')}"/>
 
-</head>
-<body>
+    </head>
+    <body>
     <div style="width:98%; margin:0 auto">
         <table width="100%">
             <tr style="text-align:center;" id="datepickerContainer">
                 <td colspan="2">
-                    Inventory as of:&nbsp;&nbsp;<input type="text" id="datepicker" readonly="true"/>
-                    <apex:form >
-                    <div style="display: {!IF($CurrentPage.parameters.id == null,'','none;')}">
-                        Select a Product Type:
-                        <span class="typeSelector">
-                        <apex:selectList size="1" onchange="refreshAll();">
-                            <apex:selectOptions value="{!listProductType}"/>
-                        </apex:selectList>
-                        </span>
-                    </div>
-                    </apex:form>                    
+                    <table>
+                        <tr>
+                            <td>Inventory as of:&nbsp;&nbsp;<input type="text" id="datepicker" readonly="true"/></td>
+                            <td>
+                                <apex:form >
+                                    <div style="display: {!IF($CurrentPage.parameters.id == null,'','none;')}">
+                                        Select a Product Type:
+                                        <span class="typeSelector">
+                                        <apex:selectList size="1">
+                                            <apex:selectOptions value="{!listProductType}"/>
+                                        </apex:selectList>
+                                        </span>
+                                    </div>
+                                </apex:form>
+                            </td>
+                            <td><button value=" Refresh Result " type="button" onclick="refreshAll();"> Refresh Result </button></td>
+                        </tr>
+                    </table>
                 </td>
             </tr>
             <tr>
@@ -52,27 +59,22 @@ tr.total td{
                     <div><div id="detail"></div></div>
                 </td>
             </tr>
-            <tr>
-                <td colspan="2">
-                    <div id="maps"></div>
-                </td>
-            </tr>
         </table>
     </div>
-</body>
+    </body>
 
-<apex:includeScript value="{!$Resource.GMBLJS__jQuery}"/>
-<apex:includeScript value="{!URLFOR($Resource.GMBLJS__jQueryUI,'/jquery-ui/jquery-ui.min.js')}"/>
-<apex:includeScript value="{!$Resource.GMBLJS__accountingJS}"/>
-<apex:includeScript value="{!$Resource.GMBLJS__ExcellentExport}"/>
+    <apex:includeScript value="{!$Resource.GMBLJS__jQuery}"/>
+    <apex:includeScript value="{!URLFOR($Resource.GMBLJS__jQueryUI,'/jquery-ui/jquery-ui.min.js')}"/>
+    <apex:includeScript value="{!$Resource.GMBLJS__accountingJS}"/>
+    <apex:includeScript value="{!$Resource.GMBLJS__ExcellentExport}"/>
 
-<apex:includeScript value="{!URLFOR($Resource.GMBLJS__pqGridPro241,'/pqgrid.min.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.GMBLJS__pqGridPro241,'/pqgrid.min.js')}"/>
 
-<apex:includeScript value="{!$Resource.GMBLJS__gsrSpinner}"/>
-<apex:includeScript value="{!$Resource.GMBLJS__gsrGrid2}"/>
+    <apex:includeScript value="{!$Resource.GMBLJS__gsrSpinner}"/>
+    <apex:includeScript value="{!$Resource.GMBLJS__gsrGrid2}"/>
 
-<script>function setFocusOnLoad() {}</script>
-<script type="text/javascript">
+    <script>function setFocusOnLoad() {}</script>
+    <script type="text/javascript">
 
     $j = jQuery.noConflict();
     var currentTheme = "{!$User.UITheme}";
@@ -110,12 +112,12 @@ tr.total td{
 
         $j('#datepicker').datepicker('setDate', new Date());
 
-        $j('#datepicker').change(function()
+        /*$j('#datepicker').change(function()
         {
             $j('#warehouse').pqGrid('selection',{type:'row',method:'removeAll'});
             $j('#product').pqGrid('selection',{type:'row',method:'removeAll'});
             refreshAll();
-        });
+        });*/
     }
 
     function refreshAll() {
@@ -187,7 +189,7 @@ tr.total td{
             refreshGrid_detail();
         });
 
-        refreshGrid_warehouse();
+        //refreshGrid_warehouse();
 
         gridObj = null;
     }
@@ -286,7 +288,7 @@ tr.total td{
             refreshGrid_detail();
         });
 
-        refreshGrid_product();
+        //refreshGrid_product();
 
         gridObj = null;
     }

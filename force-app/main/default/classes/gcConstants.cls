@@ -569,6 +569,15 @@ public without sharing class gcConstants {
 		set;
 	}
 
+	public static Id idGlWellsFargoLoan{
+		get{
+			if(idGlWellsFargoLoan == null) fetchGlAccounts();
+			if(idGlWellsFargoLoan == null) throw new gcException('A Cash Flow GL Account with Uniquefier [WellsFargoLoan] does not exist.');
+			return idGlWellsFargoLoan;
+		}
+		set;
+	}
+
 	private static void fetchGlAccounts()
 	{
 		List<String> listUniquefier = new list<String>{
@@ -607,7 +616,8 @@ public without sharing class gcConstants {
 			'RevenueCF',
 			'CommissionsPayable',
 			'CommissionExpense',
-			'CCPayable'
+			'CCPayable',
+			'WellsFargoLoan'
 		};
 
 		for(AcctSeed__GL_Account__c gl :
@@ -687,6 +697,8 @@ public without sharing class gcConstants {
 				idGlCommissionsPayable = gl.Id;
 			else if(gl.Uniquefier__c == 'CCPayable')
 				idGlCCPayable = gl.Id;
+			else if(gl.Uniquefier__c == 'WellsFargoLoan')
+				idGlWellsFargoLoan = gl.Id;
 		}
 	}
 
@@ -1240,8 +1252,7 @@ public without sharing class gcConstants {
 	}
 
 	/// Kept so that the other class does not throw errors
- 	public static void coverage()
- 	{
+ 	public static void coverage() {
  		integer i;
 		i=1;
 		i=1;
