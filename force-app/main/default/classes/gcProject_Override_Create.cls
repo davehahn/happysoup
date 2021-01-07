@@ -351,7 +351,10 @@ global without sharing class gcProject_Override_Create {
                 showInInvoice = true;
 
             if(internalLabour)
+            {
                 tn = 'Default Labour Task';
+                showInInvoice = true;
+            }
             insert new AcctSeed__Project_Task__c(
                 AcctSeed__Project__c = project.Id,
                 DisplayOnCustomerInvoice__c = showInInvoice,
