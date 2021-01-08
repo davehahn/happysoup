@@ -68,6 +68,13 @@ global without sharing class gcProjectTask {
 			}
 			if(boolIsDelete)
 			{
+				for( AcctSeed__Project_Task__c task : oldMap.values() )
+				{
+					if( task.Admin_Deletable_Only__c == true )
+					{
+						task.addError('You can not delete this task. Please contact you Salesforce administrator and explain to them what you are trying to do');
+					}
+				}
 				CommissionRecord2_Service service = new CommissionRecord2_Service();
 				service.addTasksToRemove( oldMap.values() );
 				service.deleteRecords();
