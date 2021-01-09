@@ -272,6 +272,7 @@ public virtual class Customer
       LeadStatus convertStatus = [ SELECT Id, ApiName FROM LeadStatus WHERE IsConverted = true LIMIT 1];
       lc.setConvertedStatus( convertStatus.ApiName );
       lc.setDoNotCreateOpportunity( !this.createOpportunityOnLeadConvert );
+      lc.setOwnerId( UserInfo.getUserId() );
       if( this.id != null && this.id != this.theLead.Id )
       {
         lc.setAccountId( this.id );

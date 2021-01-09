@@ -84,7 +84,12 @@
       <div class="customer-info">
         <p>
           <img src="{!URLFOR($Resource.LegendPDF,'Icons/Invoice.png')}" />
-          INVOICE TO:
+          <apex:outputPanel layout="none" rendered="{!erpOrder.Stage__c != 'Quoting'}">
+            INVOICE TO:
+          </apex:outputPanel>
+          <apex:outputPanel layout="none" rendered="{!erpOrder.Stage__c == 'Quoting'}">
+            QUOTE FOR:
+          </apex:outputPanel>
         </p>
         <p class="buyer_name">
          {!projectAccount.name}

@@ -263,36 +263,28 @@
           </p>
         </div>
         <div class="disclaimer-container">
-          <p>
-            I hearby authorize the repair work hereinafter set forth to be done along with the necessary
-            material and agree that you are not responsible for lost or damage to vehicle or articles left
-            in vehicle in case of fire, theft, or any other cause beyond your control or for any delays
-            caused by unavailability of parts or delays in parts shipments by the supplier or transporter.
-            I hereby grant you and/or your employees permission to operate the vehicle herein described on
-            streets, highways or elsewhere for the purpose of testing and/or inspection. An express mechanic's
-            lien is hereby acknowledged on above vehicle to secure the amount of repairs thereto.
-          </p>
-          <apex:outputPanel rendered="{! NOT( ISNULL($Setup.Invoice_Disclaimer__c.Service_Winter_Disclaimer_FR__c))}">
-            <p>
-              <strong>** AVERTISSEMENT - TEMPÉRATURES DE GEL **</strong><br />
-              {! $Setup.Invoice_Disclaimer__c.Service_Winter_Disclaimer_FR__c}
-            </p>
+
+          <apex:outputPanel rendered="{!disclaimers.size > 0}">
+            <apex:repeat value="{!disclaimers}" var="disclaimer">
+              <p>
+                <strong>{!disclaimer.Title_FR__c}</strong><br />
+                {!disclaimer.French__c}
+              </p>
+            </apex:repeat>
           </apex:outputPanel>
-          <p>
-            <strong>STATEMENT OF DISCLAIMER: </strong> Any warranties on product sold hereby are those made by the manufacturer. The seller hereby expressly disclaims all warranties, either expess or implied, including any implied warranty of merchantabilityor fitness for other purpose, and neither assumes nor authorizes any other person to assume for it any liability in connection with the sale of said products.  Any limitation contained herein does not apply where prohibited by law.
-          </p>
 
-          <div class="signature_container">
-            <p>
-              <span>
-                <apex:outputText value="{0, date, MMM dd'/'yy}">
-                  <apex:param value="{!NOW()}" />
-                </apex:outputText>
-              </span>
-            </p>
-            <p>Signature du client</p>
-          </div>
-
+          <apex:outputPanel rendered="{!disclaimerRequiresSignature}">
+            <div class="signature_container">
+              <p>
+                <span>
+                  <apex:outputText value="{0, date, MMM dd'/'yy}">
+                    <apex:param value="{!NOW()}" />
+                  </apex:outputText>
+                </span>
+              </p>
+              <p>Signature du client</p>
+            </div>
+          </apex:outputPanel>
         </div>
 
 

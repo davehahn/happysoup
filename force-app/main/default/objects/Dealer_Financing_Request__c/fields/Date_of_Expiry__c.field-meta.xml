@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Date_of_Expiry__c</fullName>
-    <description>Calculated expiry date is Approval Date + 120 days</description>
+    <description>Calculated expiry date IF Financing Company is TCF than  Approval Date + 180 days ELSE Approval Date + 120 days</description>
     <externalId>false</externalId>
-    <formula>Date_of_Approval__c + 120</formula>
+    <formula>IF( ISPICKVAL( Finance_Company__c , &apos;TCF&apos; ), Date_of_Approval__c + 180, Date_of_Approval__c + 120 )</formula>
     <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
     <label>Date of Expiry</label>
     <required>false</required>

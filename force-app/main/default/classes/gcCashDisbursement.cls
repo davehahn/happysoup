@@ -158,6 +158,8 @@ public without sharing class gcCashDisbursement {
 			cd.AcctSeed__Bank_Account__c = gcConstants.idGlLegendBucks;
 		else if(paymentMethod == 'Online Store')
 			cd.AcctSeed__Bank_Account__c = gcConstants.idGlMerchantOnline;
+		else if(paymentMethod == 'Financed')
+			cd.AcctSeed__Bank_Account__c = gcConstants.idGlWellsFargoLoan;
 		else
 			cd.AcctSeed__Bank_Account__c = gcConstants.idGlRBCCDN;
 	}
