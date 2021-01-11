@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Open_Service_Counter_Sale_ERPs_Barrie</fullName>
+    <columns>NAME</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>RECORDTYPE</field>
+        <operation>equals</operation>
+        <value>AcctSeed__Project__c.CounterSale,AcctSeed__Project__c.Service</value>
+    </filters>
+    <filters>
+        <field>Stage__c</field>
+        <operation>notEqual</operation>
+        <value>Delivered,Closed Lost</value>
+    </filters>
+    <filters>
+        <field>CREATED_DATE</field>
+        <operation>greaterOrEqual</operation>
+        <value>1/1/2020 12:00 AM</value>
+    </filters>
+    <filters>
+        <field>WarehouseName__c</field>
+        <operation>contains</operation>
+        <value>Barrie</value>
+    </filters>
+    <filters>
+        <field>AcctSeed__Status__c</field>
+        <operation>notEqual</operation>
+        <value>Completed,Ready For Accounting</value>
+    </filters>
+    <label>Open Service/Counter Sale ERPs</label>
+    <sharedTo>
+        <roleAndSubordinatesInternal>Store_Manager_Barrie</roleAndSubordinatesInternal>
+    </sharedTo>
+</ListView>
