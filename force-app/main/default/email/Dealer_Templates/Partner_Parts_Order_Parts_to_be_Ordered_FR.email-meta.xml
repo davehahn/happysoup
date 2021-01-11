@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <description>French Email sent to Partner when a Partner Parts Order is set to Parts to be Ordered</description>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>Legend_Letterhead</letterhead>
+    <name>Partner Parts Order - Parts to be Ordered FR</name>
+    <style>freeForm</style>
+    <subject>Votre commande de pièces est en backorder</subject>
+    <textOnly>Bonjour {!AcctSeed__Project__c.OwnerFirstName},
+
+Certaines pièces que vous avez commandées ne sont pas en inventaire en ce moment, mais nous travaillons à vous les obtenir le plus rapidement possible.
+
+Parts Order: {!AcctSeed__Project__c.Name}
+Parts Order Status: {!AcctSeed__Project__c.Stage__c}</textOnly>
+    <type>html</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

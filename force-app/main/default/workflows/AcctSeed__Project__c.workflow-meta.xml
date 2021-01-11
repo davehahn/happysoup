@@ -250,19 +250,6 @@
         <template>Sales_Process/Retail_ERP_Stage_Changed_to_Closed_Lost</template>
     </alerts>
     <alerts>
-        <fullName>Email_sent_notifying_that_ERP_parts_are_on_order</fullName>
-        <description>Email sent notifying that ERP parts are on order</description>
-        <protected>false</protected>
-        <recipients>
-            <type>accountOwner</type>
-        </recipients>
-        <recipients>
-            <type>creator</type>
-        </recipients>
-        <senderType>CurrentUser</senderType>
-        <template>Sales_Process/ERP_parts_on_Order</template>
-    </alerts>
-    <alerts>
         <fullName>Email_sent_to_Barrie_customers_24_hours_prior_to_Pickup_Date</fullName>
         <description>Email sent to Barrie customers 24 hours prior to Pickup Date.</description>
         <protected>false</protected>
@@ -1758,21 +1745,6 @@
             <value>Parts Shipped</value>
         </criteriaItems>
         <description>Trigger for parts shipped</description>
-        <triggerType>onCreateOrTriggeringUpdate</triggerType>
-    </rules>
-    <rules>
-        <fullName>ERP Parts on Order</fullName>
-        <actions>
-            <name>Email_sent_notifying_that_ERP_parts_are_on_order</name>
-            <type>Alert</type>
-        </actions>
-        <active>true</active>
-        <criteriaItems>
-            <field>AcctSeed__Project__c.Stage__c</field>
-            <operation>equals</operation>
-            <value>Parts On Order</value>
-        </criteriaItems>
-        <description>Trigger for parts on order</description>
         <triggerType>onCreateOrTriggeringUpdate</triggerType>
     </rules>
     <rules>
