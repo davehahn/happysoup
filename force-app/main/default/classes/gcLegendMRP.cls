@@ -133,7 +133,8 @@ global without sharing class gcLegendMRP {
 				listPT.add(new AcctSeed__Project_Task__c(
 					AcctSeed__Project__c = p.Id,
 					Name = taskName,
-					Product__c = p.AcctSeedERP__Manufactured_Product__c
+					Product__c = p.AcctSeedERP__Manufactured_Product__c,
+					Admin_Deletable_Only__c = true
 				));
 			}
 			insert listPT;

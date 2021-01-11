@@ -65,28 +65,28 @@ echo 'Deploying the remaining metadata'
 if [ "$CHECKONLY" = true ]
 then
   echoOut 'VALIDATING ONLY'
-  if sfdx force:source:deploy --testlevel $TESTLEVEL --checkonly --targetusername $1 -p force-app/main/default -g -w 120 ; then
+  if sfdx force:source:deploy --testlevel $TESTLEVEL --checkonly --targetusername $1 -p force-app/main/default -g -w 180 ; then
     if [ $DEPLOY_EXPERIENCES = true ]
     then
       echoOut 're-enable original .forceignore'
       rm -f .forceignore
       mv .forceignore.orig .forceignore
       echoOut 'Deploying ExperienceBundles'
-      sfdx force:source:deploy --testlevel NoTestRun --checkonly --targetusername $1 -p force-app/main/default/experiences -g -w 120
+      sfdx force:source:deploy --testlevel NoTestRun --checkonly --targetusername $1 -p force-app/main/default/experiences -g -w 180
     fi
   else
     echoOut 'Validation Fail'
     exit 1
   fi
 else
-  if sfdx force:source:deploy --testlevel $TESTLEVEL --targetusername $1 -p force-app/main/default -g -w 120 ; then
+  if sfdx force:source:deploy --testlevel $TESTLEVEL --targetusername $1 -p force-app/main/default -g -w 180 ; then
     if [ $DEPLOY_EXPERIENCES = true ]
     then
       echoOut 're-enable original .forceignore'
       rm -f .forceignore
       mv .forceignore.orig .forceignore
       echoOut 'Deploying ExperienceBundles'
-      sfdx force:source:deploy --testlevel NoTestRun --targetusername $1 -p force-app/main/default/experiences -g -w 120
+      sfdx force:source:deploy --testlevel NoTestRun --targetusername $1 -p force-app/main/default/experiences -g -w 180
     fi
   else
     echoOut 'Deploy Fail'

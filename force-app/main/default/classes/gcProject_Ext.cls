@@ -845,6 +845,7 @@ global without sharing class gcProject_Ext {
           AcctSeedERP__Product__r.isPrepayable__c,
           AcctSeedERP__Project__c,
           AcctSeedERP__Project__r.AcctSeedERP__Quantity_Ordered__c,
+          AcctSeedERP__Project__r.AcctSeed__Status__c,
           AcctSeedERP__Project_Task__c,
           AcctSeedERP__Quantity_Allocated__c,
           AcctSeedERP__Quantity_Per_Unit__c,
@@ -1190,6 +1191,7 @@ global without sharing class gcProject_Ext {
             m.put('qtyMoved', String.valueOf(qtyMoved.setScale(6)));
             m.put('qtyCanBeMoved', String.valueOf((qtySpecified - qtyMoved).setScale(6)));
             m.put('qtyToMove', '0.00');
+            m.put('projectComplete', c.matl.AcctSeedERP__Project__r.AcctSeed__Status__c == 'Completed' ? 'true' : 'false');
 
             if(!c.matl.Journal_Entry_Lines__r.isEmpty())
               m.put('lineHasCOGS', 'true');

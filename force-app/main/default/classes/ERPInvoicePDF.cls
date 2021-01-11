@@ -194,6 +194,8 @@ public with sharing class ERPInvoicePDF {
   public String partnerReference                                         { get; set; }
   public List<Integer> cccList                                           { get; set; }
   public List<Legend_Tax_Numbers__mdt> taxNumbers                        { get; set; }
+  public List<InvoiceDisclaimer__mdt> disclaimers                        { get; set; }
+  public Boolean disclaimerRequiresSignature                             { get; set; }
 
   /*  Boat Sale Variables */
   public AcctSeedERP__Material__c boat                                   { get; set; }
@@ -224,7 +226,6 @@ public with sharing class ERPInvoicePDF {
   public String compartmentKeyNumber                                     { get; set; }
   public String ignitionKeyNumber                                        { get; set; }
   public Boolean showServiceDisclaimer                                   { get; set; }
-  public Boolean showWarrantyDisclaimer                                  { get; set; }
   /* Invoice By Bill*/
   public Decimal totalAmountPreTax                                       { get; set; }
   public Decimal totalTaxH                                               { get; set; }
@@ -267,7 +268,7 @@ public with sharing class ERPInvoicePDF {
     this.fetchERPOrder();
     this.internalOverRide = false;
     this.showServiceDisclaimer = false;
-    this.showWarrantyDisclaimer = false;
+    this.disclaimerRequiresSignature = false;
     String paramVersion = ApexPages.currentPage().getParameters().get('version');
     if( paramVersion != null && paramVersion == 'internal' )
       internalOverRide = true;
@@ -382,7 +383,8 @@ public with sharing class ERPInvoicePDF {
                             Internal_Partner_Boat_Sale__c,
                             Partner_External_PO_Number__c,
                             Parking_Spot__c,
-                            Warranty_Type__c
+                            Warranty_Type__c,
+                            Stage__c
                      FROM AcctSeed__Project__c
                      WHERE Id =: erpId ];
 
@@ -762,6 +764,32 @@ public with sharing class ERPInvoicePDF {
     }
   }
 
+  private void fetchDisclaimers( String invoiceType )
+  {
+    this.disclaimers = [
+      SELECT
+        Id,
+        Order__c,
+        Title__c,
+        Title_FR__c,
+        English__c,
+        French__c,
+        Signature_Required__c
+      FROM InvoiceDisclaimer__mdt
+      WHERE IsActive__c = TRUE
+      AND Invoice_Type__c = :invoiceType
+      ORDER BY Order__c ASC NULLS FIRST
+    ];
+    for( InvoiceDisclaimer__mdt disclaimer : this.disclaimers )
+    {
+      if( disclaimer.Signature_required__c )
+      {
+        this.disclaimerRequiresSignature = true;
+        break;
+      }
+    }
+  }
+
   private void addNestedSerials( Id serialId )
   {
     if( serialNumbers == null )
@@ -967,10 +995,15 @@ public with sharing class ERPInvoicePDF {
     partsTotal = 0;
     labourTotal = 0;
     if( this.erpOrder.RecordTypeId == gcConstants.idRtProjectService)
+    {
       this.showServiceDisclaimer = true;
+      fetchDisclaimers( 'Service Order' );
+    }
     if( this.erpOrder.RecordTypeId == gcConstants.idRtProjectWarranty &&
-        this.erpOrder.Warranty_Type__c == 'Warranty ')
-      this.showWarrantyDisclaimer = true;
+        this.erpOrder.Warranty_Type__c == 'Warranty' )
+    {
+      fetchDisclaimers( 'Warranty Payable' );
+    }
 
     this.taskLineItems = new List<TaskLineItem>();
     for( AcctSeed__Project_Task__c task : this.projectTasks )
@@ -1108,7 +1141,8 @@ public with sharing class ERPInvoicePDF {
     Boolean billingInvoice = false;
     Boolean transferSlip = false;
     if(this.billId != null
-      || erpOrder.RecordTypeId == gcConstants.idRtProjectCounterSale
+      || ( erpOrder.RecordTypeId == gcConstants.idRtProjectCounterSale &&
+           erpOrder.Stage__c != 'Quoting' )
       || (erpOrder.RecordTypeId == gcConstants.idRtPartnerPartsOrder
           && !erpOrder.Internal_Partner_Parts_Order__c))
     {

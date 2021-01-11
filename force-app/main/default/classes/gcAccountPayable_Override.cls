@@ -83,17 +83,18 @@ public without sharing class gcAccountPayable_Override {
     public static List<Product2> searchProduct(String searchTxt)
     {
     	List<Product2> listProduct = new List<Product2>();
-        searchTxt = '%'+searchTxt.replaceAll('[*]','%') +'%';
+        String likeSearchTxt = '%'+searchTxt.replaceAll('[*]','%') +'%';
 
+		Set<Id> setIdFound = new Set<Id>();
         for(Product2 gla : 
-        	[SELECT Id, 
-        		Name
-        	FROM Product2 
-        	WHERE (Name like :searchTxt 
-        			OR Family like :searchTxt
-        			OR ProductCode like :searchTxt)
-        	ORDER BY Name 
-        	LIMIT 15])
+        	[SELECT Id, Name FROM Product2 WHERE (Name = :searchTxt OR Family = :searchTxt OR ProductCode = :searchTxt) ORDER BY Name LIMIT 5])
+        {
+            listProduct.add(gla);
+			setIdFound.add(gla.Id);
+        }
+
+		for(Product2 gla :
+        	[SELECT Id, Name FROM Product2 WHERE (Name like :likeSearchTxt OR Family like :likeSearchTxt OR ProductCode like :likeSearchTxt) AND Id NOT IN:setIdFound ORDER BY Name LIMIT 20])
         {
             listProduct.add(gla);
         }

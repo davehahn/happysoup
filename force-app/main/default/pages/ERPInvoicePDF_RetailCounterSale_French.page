@@ -57,7 +57,12 @@
       <div>
         <p >
           <img src="{!URLFOR($Resource.LegendPDF,'Icons/Invoice.png')}" />
-          FACTURE Á:
+          <apex:outputPanel layout="none" rendered="{!erpOrder.Stage__c != 'Quoting'}">
+            FACTURE Á:
+          </apex:outputPanel>
+          <apex:outputPanel layout="none" rendered="{!erpOrder.Stage__c == 'Quoting'}">
+            SOUMISSION À:
+          </apex:outputPanel>
         </p>
       </div>
 

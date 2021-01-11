@@ -679,6 +679,18 @@
         <template>To_Do_Notification_Templates/Partner_Boat_Sale_is_Closed_Lost</template>
     </alerts>
     <alerts>
+        <fullName>Notify_Dealer_Care_upon_Partner_Boat_Sale_Reservation</fullName>
+        <ccEmails>dealercare@legendboats.com</ccEmails>
+        <description>Notify Dealer Care upon Partner Boat Sale Reservation</description>
+        <protected>false</protected>
+        <recipients>
+            <recipient>jdavis@legendboats.com</recipient>
+            <type>user</type>
+        </recipients>
+        <senderType>CurrentUser</senderType>
+        <template>To_Do_Notification_Templates/New_Partner_Boat_Sale_Reservation</template>
+    </alerts>
+    <alerts>
         <fullName>Notify_of_Factory_Store_Partner_Boat_Sale</fullName>
         <description>Notify of Factory Store Partner Boat Sale</description>
         <protected>false</protected>
@@ -2465,7 +2477,7 @@
             <type>Task</type>
         </actions>
         <active>true</active>
-        <booleanFilter>(1 AND 2) OR (1 AND 3) AND 4</booleanFilter>
+        <booleanFilter>1 AND (2 OR 3) AND 4</booleanFilter>
         <criteriaItems>
             <field>AcctSeed__Project__c.RecordTypeId</field>
             <operation>equals</operation>
