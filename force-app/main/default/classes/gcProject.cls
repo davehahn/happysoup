@@ -864,15 +864,13 @@ public without sharing class gcProject {
     if(setIdProject.isEmpty()) return;
     List<AcctSeed__Project__c> listProjects = new List<AcctSeed__Project__c>();
     Application_RecordType.ERPOrderRTs recordTypes = new Application_RecordType.ERPOrderRTs();
-    Id idRtCounterSale = recordTypes.getCounterSaleId();
-    Id idRtProjectManufacturing = recordTypes.getManufacturingId();
 
     for(AcctSeed__Project__c project : [SELECT Id, RecordTypeId, Name, Locked__c, AcctSeed__Status__c, Internal_Partner_Boat_Sale__c FROM AcctSeed__Project__c WHERE Id IN :setIdProject])
     {
       if(project.AcctSeed__Status__c != 'Completed'){
         if( project.RecordTypeId == recordTypes.getCounterSaleId() ||
             project.RecordTypeId == recordTypes.getManufacturingId() ||
-            project.Internal_Partner_Boat_Sale__c	)
+            project.RecordTypeId == recordTypes.getPartnerBoatSaleId()	)
         {
           project.AcctSeed__Status__c = 'Completed';
           listProjects.add(project);
