@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <description>English Email sent to Partner when a Partner Parts Order is set to Parts on Order</description>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>Legend_Letterhead</letterhead>
+    <name>Partner Parts Order - Parts on Order EN</name>
+    <style>freeForm</style>
+    <subject>Your Parts Order has been ordered</subject>
+    <textOnly>Hello {!AcctSeed__Project__c.OwnerFirstName},
+
+Your parts have been ordered and may take some time to arrive. As soon as the part or parts arrive we will arrange the shipment of the parts.
+
+Parts Order: {!AcctSeed__Project__c.Name}
+Parts Order Status: {!AcctSeed__Project__c.Stage__c}</textOnly>
+    <type>html</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

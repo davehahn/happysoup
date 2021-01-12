@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <description>French Email sent to Partner when a Partner Parts Order is set to Parts Shipped</description>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>Legend_Letterhead</letterhead>
+    <name>Partner Parts Order - Parts Shipped FR</name>
+    <style>freeForm</style>
+    <subject>Votre commande de pièces a été expédiée!</subject>
+    <textOnly>Bonjour {!AcctSeed__Project__c.OwnerFirstName},
+
+Votre commande de pièces est partie aujourd&apos;hui, vous devriez recevoir cette commande sous peu.
+
+Parts Order: {!AcctSeed__Project__c.Name}
+Parts Order Status: {!AcctSeed__Project__c.Stage__c}</textOnly>
+    <type>html</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>
