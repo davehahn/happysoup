@@ -1,11 +1,179 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionCalls>
+        <name>Send_Parts_on_Order_EN_Email</name>
+        <label>Send Parts on Order EN Email</label>
+        <locationX>2954</locationX>
+        <locationY>551</locationY>
+        <actionName>AcctSeed__Project__c.Partner_Parts_Order_Parts_on_Order_EN</actionName>
+        <actionType>emailAlert</actionType>
+        <inputParameters>
+            <name>SObjectRowId</name>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </inputParameters>
+    </actionCalls>
+    <actionCalls>
+        <name>Send_Parts_on_Order_FR_Email</name>
+        <label>Send Parts on Order FR Email</label>
+        <locationX>2690</locationX>
+        <locationY>551</locationY>
+        <actionName>AcctSeed__Project__c.Partner_Parts_Order_Parts_on_Order_FR</actionName>
+        <actionType>emailAlert</actionType>
+        <inputParameters>
+            <name>SObjectRowId</name>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </inputParameters>
+    </actionCalls>
+    <actionCalls>
+        <name>Send_Parts_Shipped_EN_Email</name>
+        <label>Send Parts Shipped EN Email</label>
+        <locationX>1898</locationX>
+        <locationY>551</locationY>
+        <actionName>AcctSeed__Project__c.Partner_Parts_Order_Parts_Shipped_EN</actionName>
+        <actionType>emailAlert</actionType>
+        <inputParameters>
+            <name>SObjectRowId</name>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </inputParameters>
+    </actionCalls>
+    <actionCalls>
+        <name>Send_Parts_Shipped_FR_Email</name>
+        <label>Send Parts Shipped FR Email</label>
+        <locationX>1634</locationX>
+        <locationY>551</locationY>
+        <actionName>AcctSeed__Project__c.Partner_Parts_Order_Parts_Shipped_FR</actionName>
+        <actionType>emailAlert</actionType>
+        <inputParameters>
+            <name>SObjectRowId</name>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </inputParameters>
+    </actionCalls>
+    <actionCalls>
+        <name>Send_Parts_to_be_Ordered_EN_Email</name>
+        <label>Send Parts to be Ordered EN Email</label>
+        <locationX>2426</locationX>
+        <locationY>551</locationY>
+        <actionName>AcctSeed__Project__c.Partner_Parts_Order_Parts_to_be_Ordered_EN</actionName>
+        <actionType>emailAlert</actionType>
+        <inputParameters>
+            <name>SObjectRowId</name>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </inputParameters>
+    </actionCalls>
+    <actionCalls>
+        <name>Send_Parts_to_be_Ordered_FR_Email</name>
+        <label>Send Parts to be Ordered FR Email</label>
+        <locationX>2162</locationX>
+        <locationY>551</locationY>
+        <actionName>AcctSeed__Project__c.Partner_Parts_Order_Parts_to_be_Ordered_FR</actionName>
+        <actionType>emailAlert</actionType>
+        <inputParameters>
+            <name>SObjectRowId</name>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </inputParameters>
+    </actionCalls>
+    <actionCalls>
+        <name>Send_Pending_Pick_Pack_EN_Email</name>
+        <label>Send Pending Pick &amp; Pack EN Email</label>
+        <locationX>842</locationX>
+        <locationY>551</locationY>
+        <actionName>AcctSeed__Project__c.Partner_Parts_Order_Pending_Pick_Pack_EN</actionName>
+        <actionType>emailAlert</actionType>
+        <inputParameters>
+            <name>SObjectRowId</name>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </inputParameters>
+    </actionCalls>
+    <actionCalls>
+        <name>Send_Pending_Pick_Pack_FR_Email</name>
+        <label>Send Pending Pick &amp; Pack FR Email</label>
+        <locationX>578</locationX>
+        <locationY>551</locationY>
+        <actionName>AcctSeed__Project__c.Partner_Parts_Order_Pending_Pick_Pack_FR</actionName>
+        <actionType>emailAlert</actionType>
+        <inputParameters>
+            <name>SObjectRowId</name>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </inputParameters>
+    </actionCalls>
+    <actionCalls>
+        <name>Send_Pending_Review_EN_Email</name>
+        <label>Send Pending Review EN Email</label>
+        <locationX>314</locationX>
+        <locationY>551</locationY>
+        <actionName>AcctSeed__Project__c.Partner_Parts_Order_Pending_Review_EN</actionName>
+        <actionType>emailAlert</actionType>
+        <inputParameters>
+            <name>SObjectRowId</name>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </inputParameters>
+    </actionCalls>
+    <actionCalls>
+        <name>Send_Pending_Review_FR_Email</name>
+        <label>Send Pending Review FR Email</label>
+        <locationX>50</locationX>
+        <locationY>551</locationY>
+        <actionName>AcctSeed__Project__c.Partner_Parts_Order_Pending_Review_FR</actionName>
+        <actionType>emailAlert</actionType>
+        <inputParameters>
+            <name>SObjectRowId</name>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </inputParameters>
+    </actionCalls>
+    <actionCalls>
+        <name>Send_Pending_Shipment_EN_Email</name>
+        <label>Send Pending Shipment EN Email</label>
+        <locationX>1370</locationX>
+        <locationY>551</locationY>
+        <actionName>AcctSeed__Project__c.Partner_Parts_Order_Pending_Shipment_EN</actionName>
+        <actionType>emailAlert</actionType>
+        <inputParameters>
+            <name>SObjectRowId</name>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </inputParameters>
+    </actionCalls>
+    <actionCalls>
+        <name>Send_Pending_Shipment_FR_Email</name>
+        <label>Send Pending Shipment FR Email</label>
+        <locationX>1106</locationX>
+        <locationY>551</locationY>
+        <actionName>AcctSeed__Project__c.Partner_Parts_Order_Pending_Shipment_FR</actionName>
+        <actionType>emailAlert</actionType>
+        <inputParameters>
+            <name>SObjectRowId</name>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </inputParameters>
+    </actionCalls>
     <apiVersion>50.0</apiVersion>
     <decisions>
         <name>ERP_Order_Stage</name>
         <label>ERP Order Stage</label>
-        <locationX>176</locationX>
-        <locationY>253</locationY>
+        <locationX>1700</locationX>
+        <locationY>311</locationY>
         <defaultConnectorLabel>Else</defaultConnectorLabel>
         <rules>
             <name>Pending_Review</name>
@@ -17,6 +185,9 @@
                     <stringValue>Pending Review</stringValue>
                 </rightValue>
             </conditions>
+            <connector>
+                <targetReference>Language</targetReference>
+            </connector>
             <doesRequireRecordChangedToMeetCriteria>true</doesRequireRecordChangedToMeetCriteria>
             <label>Pending Review</label>
         </rules>
@@ -30,6 +201,9 @@
                     <stringValue>Pending Pick and Pack</stringValue>
                 </rightValue>
             </conditions>
+            <connector>
+                <targetReference>Language_0</targetReference>
+            </connector>
             <doesRequireRecordChangedToMeetCriteria>true</doesRequireRecordChangedToMeetCriteria>
             <label>Pending Pick &amp; Pack</label>
         </rules>
@@ -43,6 +217,9 @@
                     <stringValue>Pending Shipment</stringValue>
                 </rightValue>
             </conditions>
+            <connector>
+                <targetReference>Language_0_0</targetReference>
+            </connector>
             <doesRequireRecordChangedToMeetCriteria>true</doesRequireRecordChangedToMeetCriteria>
             <label>Pending Shipment</label>
         </rules>
@@ -56,6 +233,9 @@
                     <stringValue>Parts Shipped</stringValue>
                 </rightValue>
             </conditions>
+            <connector>
+                <targetReference>Language_0_0_0</targetReference>
+            </connector>
             <doesRequireRecordChangedToMeetCriteria>true</doesRequireRecordChangedToMeetCriteria>
             <label>Parts Shipped</label>
         </rules>
@@ -69,6 +249,9 @@
                     <stringValue>Parts to be Ordered</stringValue>
                 </rightValue>
             </conditions>
+            <connector>
+                <targetReference>Language_0_0_0_0</targetReference>
+            </connector>
             <doesRequireRecordChangedToMeetCriteria>true</doesRequireRecordChangedToMeetCriteria>
             <label>Parts to be Ordered</label>
         </rules>
@@ -82,8 +265,161 @@
                     <stringValue>Parts On Order</stringValue>
                 </rightValue>
             </conditions>
+            <connector>
+                <targetReference>Language_0_0_0_0_0</targetReference>
+            </connector>
             <doesRequireRecordChangedToMeetCriteria>true</doesRequireRecordChangedToMeetCriteria>
             <label>Parts on Order</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Language</name>
+        <label>Language</label>
+        <locationX>182</locationX>
+        <locationY>431</locationY>
+        <defaultConnector>
+            <targetReference>Send_Pending_Review_EN_Email</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>EN</defaultConnectorLabel>
+        <rules>
+            <name>FR</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.AcctSeed__Account__r.Language__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>French</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Send_Pending_Review_FR_Email</targetReference>
+            </connector>
+            <label>FR</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Language_0</name>
+        <label>Language</label>
+        <locationX>710</locationX>
+        <locationY>431</locationY>
+        <defaultConnector>
+            <targetReference>Send_Pending_Pick_Pack_EN_Email</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>EN</defaultConnectorLabel>
+        <rules>
+            <name>FR_0</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.AcctSeed__Account__r.Language__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>French</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Send_Pending_Pick_Pack_FR_Email</targetReference>
+            </connector>
+            <label>FR</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Language_0_0</name>
+        <label>Language</label>
+        <locationX>1238</locationX>
+        <locationY>431</locationY>
+        <defaultConnector>
+            <targetReference>Send_Pending_Shipment_EN_Email</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>EN</defaultConnectorLabel>
+        <rules>
+            <name>FR_0_0</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.AcctSeed__Account__r.Language__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>French</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Send_Pending_Shipment_FR_Email</targetReference>
+            </connector>
+            <label>FR</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Language_0_0_0</name>
+        <label>Language</label>
+        <locationX>1766</locationX>
+        <locationY>431</locationY>
+        <defaultConnector>
+            <targetReference>Send_Parts_Shipped_EN_Email</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>EN</defaultConnectorLabel>
+        <rules>
+            <name>FR_0_0_0</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.AcctSeed__Account__r.Language__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>French</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Send_Parts_Shipped_FR_Email</targetReference>
+            </connector>
+            <label>FR</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Language_0_0_0_0</name>
+        <label>Language</label>
+        <locationX>2294</locationX>
+        <locationY>431</locationY>
+        <defaultConnector>
+            <targetReference>Send_Parts_to_be_Ordered_EN_Email</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>EN</defaultConnectorLabel>
+        <rules>
+            <name>FR_0_0_0_0</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.AcctSeed__Account__r.Language__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>French</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Send_Parts_to_be_Ordered_FR_Email</targetReference>
+            </connector>
+            <label>FR</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Language_0_0_0_0_0</name>
+        <label>Language</label>
+        <locationX>2822</locationX>
+        <locationY>431</locationY>
+        <defaultConnector>
+            <targetReference>Send_Parts_on_Order_EN_Email</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>EN</defaultConnectorLabel>
+        <rules>
+            <name>FR_0_0_0_0_0</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.AcctSeed__Account__r.Language__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>French</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Send_Parts_on_Order_FR_Email</targetReference>
+            </connector>
+            <label>FR</label>
         </rules>
     </decisions>
     <description>This flow handles email notifications sent to the Partners based on the stage of the Parts Order ERP</description>
@@ -109,7 +445,7 @@
     </processMetadataValues>
     <processType>AutoLaunchedFlow</processType>
     <start>
-        <locationX>50</locationX>
+        <locationX>1574</locationX>
         <locationY>0</locationY>
         <connector>
             <targetReference>ERP_Order_Stage</targetReference>
@@ -126,5 +462,5 @@
         <recordTriggerType>CreateAndUpdate</recordTriggerType>
         <triggerType>RecordAfterSave</triggerType>
     </start>
-    <status>Draft</status>
+    <status>Active</status>
 </Flow>
