@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <description>French Email sent to Partner when a Partner Parts Order is set to Parts on Order</description>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>Legend_Letterhead</letterhead>
+    <name>Partner Parts Order - Parts on Order FR</name>
+    <style>freeForm</style>
+    <subject>Votre commande de pièces a été commandée</subject>
+    <textOnly>Hello {!AcctSeed__Project__c.OwnerFirstName},
+
+Votre pièce ou vos pièces ne sont pas en inventaire en ce moment et peuvent mettre un certain temps à arriver, mais nous travaillons à vous les obtenir le plus rapidement possible. Dès que la pièce ou les pièces arriveront, nous en coordonnerons l&apos;expédition dans les meilleurs délais possible.
+
+Parts Order: {!AcctSeed__Project__c.Name}
+Parts Order Status: {!AcctSeed__Project__c.Stage__c}</textOnly>
+    <type>html</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

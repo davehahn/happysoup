@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <description>French Email sent to Partner when a Partner Parts Order is set to Pending Shipment</description>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>Legend_Letterhead</letterhead>
+    <name>Partner Parts Order - Pending Shipment FR</name>
+    <style>freeForm</style>
+    <subject>Votre commande de pièces est prévue pour l’expédition</subject>
+    <textOnly>Bonjour {!AcctSeed__Project__c.OwnerFirstName},
+
+L&apos;expédition de votre commande est présentement en planification.
+
+Parts Order: {!AcctSeed__Project__c.Name}
+Parts Order Status: {!AcctSeed__Project__c.Stage__c}</textOnly>
+    <type>html</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

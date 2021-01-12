@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <description>French Email sent to Partner when a Partner Parts Order is set to Pending Review</description>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>Legend_Letterhead</letterhead>
+    <name>Partner Parts Order - Pending Review FR</name>
+    <style>freeForm</style>
+    <subject>Votre commande de pièces est présentement en révision</subject>
+    <textOnly>Bonjour {!AcctSeed__Project__c.OwnerFirstName},
+
+Merci pour votre commande. Elle est présentement en révision et nous vérifions la disponibilité de l&apos;inventaire
+
+Parts Order: {!AcctSeed__Project__c.Name}
+Parts Order Status: {!AcctSeed__Project__c.Stage__c}</textOnly>
+    <type>html</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>
