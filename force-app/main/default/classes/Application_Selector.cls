@@ -33,7 +33,7 @@ public virtual class Application_Selector
   {
     Set<String> acceptableOperators = new Set<String>{'AND', 'OR'};
     if( operator != null && !acceptableOperators.contains( operator ) )
-      throw new SelectorException(' An invalid operator was specified. Acceptable values are null, \'AND\' or \'OR\'');
+      throwError(' An invalid operator was specified. Acceptable values are null, \'AND\' or \'OR\'');
 
     if( whereClause == null || whereClause.length() == 0 )
       return this;
@@ -61,6 +61,12 @@ public virtual class Application_Selector
     addWhere( whereInClauseBuilder(idField, s_ids ) );
     return this;
   }
+  public Application_Selector addWhereIdInField( Set<Id> ids, String idField, String operator )
+  {
+    Set<String> s_ids = (Set<String>)JSON.deserialize( JSON.serialize( ids ), Set<String>.class );
+    addWhere( whereInClauseBuilder(idField, s_ids ), operator );
+    return this;
+  }
 
   public Application_Selector addOrderBy( String orderBy )
   {
@@ -82,15 +88,53 @@ public virtual class Application_Selector
     return this;
   }
 
+  public Application_Selector addChildQuery( Application_Selector childSelector )
+  {
+    return addChildQuery( buildChildQuery( childSelector ) );
+  }
+
+  public String buildChildQuery( Application_Selector childSelector )
+  {
+    SObjectType sObjType = (
+      (SObject) Type.forName(this.sObjectName).newInstance()
+    ).getSObjectType();
+    String q = '(SELECT ';
+    for( String f : childSelector.fields )
+    {
+      q += f +', ';
+    }
+    q = q.removeEnd(', ');
+    q += ' FROM ';
+    for(Schema.ChildRelationship cr: sObjType.getDescribe().getChildRelationships() )
+    {
+      if( cr.getChildSObject().getDescribe().getName() == childSelector.sObjectName )
+      {
+        q += cr.getRelationshipName() ;
+        break;
+      }
+    }
+    if( childSelector.whereClause != null && childSelector.whereClause.size() > 0 )
+    {
+      for( String clause : childSelector.whereClause )
+      {
+        q += ' ' + clause;
+      }
+    }
+    q += ')';
+    return q;
+  }
+
   public List<SObject> query()
   {
     try
     {
-      return Database.query(this.buildQueryString());
+      String qString = this.buildQueryString();
+      return Database.query(qString);
     }
     catch( Exception e )
     {
-      throw new SelectorException( e.getMessage() );
+      throwError( e.getMessage() );
+      return null;
     }
   }
 
@@ -118,7 +162,13 @@ public virtual class Application_Selector
     {
       queryString += ' ORDER BY ' + this.orderBy;
     }
+    System.debug(queryString);
     return queryString;
+  }
+
+  public void throwError( String message )
+  {
+    throw new SelectorException( message );
   }
 
   public static String whereInClauseBuilder( String field, Set<Id> matchers )
@@ -157,5 +207,7 @@ public virtual class Application_Selector
   {
     return dt.format('yyyy-MM-dd\'T\'HH:mm:ss.\'000Z\'');
   }
+
+
 
 }

@@ -301,6 +301,11 @@ public virtual class Application_RecordType
       return this.getIdFromDeveloperName('LegendPartnerPartsOrder');
     }
 
+    public Id getPartnerRetailBoatSaleId()
+    {
+      return this.getIdFromDeveloperName('PartnerRetailBoatSale');
+    }
+
     public Id getServiceWorkOrderId()
     {
       return this.getIdFromDeveloperName('Service');
