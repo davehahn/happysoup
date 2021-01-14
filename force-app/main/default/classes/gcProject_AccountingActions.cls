@@ -1716,8 +1716,8 @@ public without sharing class gcProject_AccountingActions {
 		    				AcctSeed__Debit__c = factoryPrice - amt,
 		    				AcctSeed__GL_Account__c = idGlCogsParts,
 		    				AcctSeed__Product__c = matl.AcctSeedERP__Product__c,
-		    				AcctSeed__Project__c = null,
-		    				AcctSeed__Project_Task__c = null,
+		    				AcctSeed__Project__c = matl.AcctSeedERP__Project__c,
+		    				AcctSeed__Project_Task__c = matl.AcctSeedERP__Project_Task__c,
 		    				AcctSeed__Date__c = cogsDate,
 		    				AcctSeed__Units__c = qty)
 						);
