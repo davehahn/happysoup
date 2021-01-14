@@ -1137,7 +1137,8 @@ public without sharing class DealerOrder_Ext {
                                              ERP_Order__c,
                                              Notes__c
                                       FROM Dealer_Order_Line__c
-                                      WHERE Dealer_Order__c = :recordId] )
+                                      WHERE Dealer_Order__c = :recordId
+                                      AND ERP_Order__r.Stage__c <> 'Closed Lost'] )
     {
       if( !uniqueERPLines.containsKey( line.Order_Group_Id__c ) )
       {
