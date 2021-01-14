@@ -1,47 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
-  <apiVersion>47.0</apiVersion>
-  <description>Account Find Closest Partner</description>
-  <isExposed>true</isExposed>
-  <targets>
-    <target>lightning__AppPage</target>
-    <target>lightning__HomePage</target>
-    <target>lightningCommunity__Page</target>
-    <target>lightningCommunity__Default</target>
-  </targets>
-  <targetConfigs>
-    <targetConfig targets="lightning__AppPage, lightning__HomePage, lightningCommunity__Default">
-      <property name="cmpTitle"
-                type="String"
-                default="Find Closest Legend Partner"
-                description="The main title of the component"
-                label="Component Title" />
-      <property name="cmpTitleAlign"
-                type="String"
-                default="left"
-                description="How would you like the title aligned"
-                label="Title Alignment"
-                datasource="left,center,right"/>
-      <property name="inputLabel"
-                type="String"
-                default="Enter Postal Code or City"
-                description="The label on top the input field"
-                label="Label" />
-      <property name="partnerCount"
-                type="Integer"
-                default="1"
-                description="The number of Partners to display as 'Closest'"
-                label="Number of Partners to Display" />
-      <property name="mapView"
-                type="Boolean"
-                default="True"
-                description="If True the results will be rendered in a Map, if False, the results are rendered as a simple list"
-                label="Display as Map" />
-      <property name="excludedAccountIds"
-                type="String"
-                description="A comma seperated list of Account Id's that should be excluded from the results"
-                label="Excluded Account Id's" />
-    </targetConfig>
-  </targetConfigs>
-  <masterLabel>Account Find Closest Partner</masterLabel>
+    <apiVersion>47.0</apiVersion>
+    <description>Account Find Closest Partner</description>
+    <isExposed>true</isExposed>
+    <targets>
+        <target>lightning__AppPage</target>
+        <target>lightning__HomePage</target>
+        <target>lightningCommunity__Page</target>
+        <target>lightningCommunity__Default</target>
+    </targets>
+    <targetConfigs>
+        <targetConfig targets="lightning__AppPage, lightning__HomePage, lightningCommunity__Default">
+            <property name="cmpTitle" type="String" default="Find Closest Legend Partner" description="The main title of the component" label="Component Title"/>
+            <property name="cmpTitleAlign" type="String" default="left" description="How would you like the title aligned" label="Title Alignment" datasource="left,center,right"/>
+            <property name="inputLabel" type="String" default="Enter Postal Code or City" description="The label on top the input field" label="Label"/>
+            <property name="partnerCount" type="Integer" default="1" description="The number of Partners to display as 'Closest'" label="Number of Partners to Display"/>
+            <property name="mapView" type="Boolean" default="True" description="If True the results will be rendered in a Map, if False, the results are rendered as a simple list" label="Display as Map"/>
+            <property name="excludedAccountIds" type="String" description="A comma seperated list of Account Id's that should be excluded from the results" label="Excluded Account Id's"/>
+        </targetConfig>
+    </targetConfigs>
+    <masterLabel>Account Find Closest Partner</masterLabel>
 </LightningComponentBundle>

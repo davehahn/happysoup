@@ -33,4 +33,14 @@ export default class LegendSpinner extends LightningElement {
     this.visible = !this.visible;
   }
 
+  @api open()
+  {
+    this.visible = true;
+  }
+
+  @api close()
+  {
+    this.visible = false;
+  }
+
 }

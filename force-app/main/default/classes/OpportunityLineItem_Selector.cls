@@ -13,6 +13,8 @@ public virtual class OpportunityLineItem_Selector extends Application_Selector
     'Product2Id',
     'ParentProductId__c',
     'Product2.RecordTypeId',
+    'Product2.Name',
+    'Product2.Name_FR__c',
     'Product2.Family',
     'Quantity',
     'InsuranceCoverage__c',
