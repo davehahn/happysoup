@@ -9,26 +9,28 @@
 
     <c-legend-spinner variant="contained"></c-legend-spinner>
 
-    <h2 class={titleClass}>
-      {cmpTitle}
-    </h2>
-    <lightning-layout>
-      <lightning-layout-item size="11" class="slds-m-bottom_small ">
-        <span onkeyup={checkForEnter}>
-          <lightning-input label={inputLabel}
-                           variant="label-hidden"
-                           type="text"
-                           placeholder={inputLabel}
-                           value={lookupValue}
-                           class="lookup-field"></lightning-input>
-        </span>
-      </lightning-layout-item>
-      <lightning-layout-item size="1">
-        <lightning-button-icon icon-name="utility:search"
-                               alternative-text="Search"
-                               onclick={doSearch}></lightning-button-icon>
-      </lightning-layout-item>
-    </lightning-layout>
+    <template if:false={hideSearch}>
+      <h2 class={titleClass}>
+        {cmpTitle}
+      </h2>
+      <lightning-layout>
+        <lightning-layout-item size="11" class="slds-m-bottom_small ">
+          <span onkeyup={checkForEnter}>
+            <lightning-input label={inputLabel}
+                             variant="label-hidden"
+                             type="text"
+                             placeholder={inputLabel}
+                             value={lookupValue}
+                             class="lookup-field"></lightning-input>
+          </span>
+        </lightning-layout-item>
+        <lightning-layout-item size="1">
+          <lightning-button-icon icon-name="utility:search"
+                                 alternative-text="Search"
+                                 onclick={doSearch}></lightning-button-icon>
+        </lightning-layout-item>
+      </lightning-layout>
+    </template>
 
 
 
@@ -39,7 +41,8 @@
         <lightning-map map-markers={mapMarkers}
                        markers-title="Closest Partners"
                        zoom-level={zoomLevel}
-                       center="true"></lightning-map>
+                       center="true"
+                       onmarkerselect={handleMarkerSelect}></lightning-map>
 
         <template if:true={displaySingleResult}>
           <c-account-find-closest-partner-details-card acct={firstMapMarker}></c-account-find-closest-partner-details-card>
@@ -52,7 +55,10 @@
         <template for:each={mapMarkers} for:item="acct">
           <c-account-find-closest-partner-details-card key={acct.Id}
                                                        acct={acct}
-                                                       origin-address={originAddress}></c-account-find-closest-partner-details-card>
+                                                       is-selectable={isSelectable}
+                                                       hide-icon={hideResultIcon}
+                                                       origin-address={originAddress}
+                                                       onaccountselected={handleAccountSelected}></c-account-find-closest-partner-details-card>
         </template>
       </template>
     </template>

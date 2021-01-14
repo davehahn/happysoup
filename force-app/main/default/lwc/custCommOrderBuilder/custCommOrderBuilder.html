@@ -62,8 +62,27 @@
               <template if:true={isEN}>Select Your Performance</template>
               <template if:true={isFR}>Choisissez votre performance</template>
             </h3>
-            <c-cust-comm-order-options options-title-en="Standard Performance" options-title-fr="Performance standard" selections="one" selection-scope="global" options={boat.standardMotor} parent-product-sku={boat.id} boat-retail-price={boat.retailPrice} is-init="true" trigger-ui-change="true" page='performance' grouping-name="motor_options"></c-cust-comm-order-options>
-            <c-cust-comm-order-options options-title-en="Enhanced Performance" options-title-fr="Performance améliorée" selections="one" selection-scope="global" options={boat.motorUpgrades} parent-product-sku={boat.id} boat-retail-price={boat.retailPrice} trigger-ui-change="true" page='performance' grouping-name="motor_options"></c-cust-comm-order-options>
+            <c-cust-comm-order-options options-title-en="Standard Performance"
+                                       options-title-fr="Performance standard"
+                                       selections="one"
+                                       selection-scope="global"
+                                       options={boat.standardMotor}
+                                       parent-product-sku={boat.id}
+                                       boat-retail-price={boat.retailPrice}
+                                       is-init="true"
+                                       trigger-ui-change="true"
+                                       page='performance'
+                                       grouping-name="motor_options"></c-cust-comm-order-options>
+            <c-cust-comm-order-options options-title-en="Enhanced Performance"
+                                       options-title-fr="Performance améliorée"
+                                       selections="one"
+                                       selection-scope="global"
+                                       options={boat.motorUpgrades}
+                                       parent-product-sku={boat.id}
+                                       boat-retail-price={boat.retailPrice}
+                                       trigger-ui-change="true"
+                                       page='performance'
+                                       grouping-name="motor_options"></c-cust-comm-order-options>
           </div>
         </section>
 
@@ -102,7 +121,13 @@
               <template if:true={isEN}><span class="vh">Choose Your</span> Electronics</template>
               <template if:true={isFR}><span class="vh">Choisir Votre</span> Électroniques</template>
             </h3>
-            <c-cust-comm-order-options options-title-en="Terrova 55 Tech Package" options-title-fr="Ensemble Terrova 55" options={boat.optionalProducts.trollingMotor} parent-product-sku={boat.id} show-option-price="true" boat-retail-price={boat.retailPrice} page='electronics'></c-cust-comm-order-options>
+            <c-cust-comm-order-options options-title-en="Terrova 55 Tech Package"
+                                       options-title-fr="Ensemble Terrova 55"
+                                       options={boat.optionalProducts.trollingMotor}
+                                       parent-product-sku={boat.id}
+                                       show-option-price="true"
+                                       boat-retail-price={boat.retailPrice}
+                                       page='electronics'></c-cust-comm-order-options>
           </div>
         </section>
 
@@ -304,12 +329,14 @@
               <template if:true={hasPaymentErrors}>
                 <div class="payment-form-errors">{paymentFormErrors}</div>
               </template>
-              <c-square-payment-form apex-page-name="/apex/Square_PaymentForm_CustomerCommunity"
-                                     is-responsive="true"
-                                     width-break-point="1401"
-                                     small-height="184"
-                                     large-height="368"
-                                     current-language={currentLanguage}></c-square-payment-form>
+              <template if:true={onPaymentPage}>
+                <c-square-payment-form apex-page-name="/apex/Square_PaymentForm_CustomerCommunity"
+                                       is-responsive="true"
+                                       width-break-point="1401"
+                                       small-height="184"
+                                       large-height="368"
+                                       current-language={currentLanguage}></c-square-payment-form>
+              </template>
               <div class="payment-disclaimer">
                 <template if:true={isEN}>By submitting this order form, I allow Legend Boats to save my payment instrument information for future transactions pursuant to the <a href="#" target="_blank">Payment Terms for Services</a></template>
                 <template if:true={isFR}>En soumettant cette formulair de commande, je permet à Bateaux Legend de sauvegarder les informations de paiement pour transactions futures conformément aux <a href="#" target="_blank">termes des paiements de service</a></template>
@@ -345,6 +372,7 @@
 
       </div>
 
+      <!-- THANKS -->
       <section class="config-thanks" data-thanks="show">
         <header>
           <div class="thanks_model">
@@ -359,6 +387,14 @@
             <template if:true={isFR}>Votre commande a été transmise.</template>
           </p>
         </header>
+        <div class="pickup-selection">
+          <c-account-find-closest-partner partner-count="3"
+                                          is-selectable="true"
+                                          hide-result-icon="true"
+                                          hide-search="true"
+                                          input-label="Your Postal Code or City"
+                                          onaccountselected={handleAccountSelected}></c-account-find-closest-partner>
+        </div>
         <div class="thanks_body">
           <section class="thanks_overview">
             <h3 class="vh">Summary</h3>
@@ -415,6 +451,8 @@
         </div>
       </section>
 
+
+      <!-- FOOTER -->
       <div class="config-footer">
         <div class="config-footer_content" data-thanks="hide">
 
@@ -503,7 +541,7 @@
         </div>
       </div>
 
-      <aside class="modal-container">
+      <aside class="modal-container" data-thanks="hide">
         <h2 class="vh">Additional Details</h2>
         <div class="modal-content">
           <div class="modal-content_body">

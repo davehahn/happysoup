@@ -335,6 +335,7 @@ public without sharing class OnlineBoatReservation_Controller
     {
       Opportunity opp = new Opportunity(
         Id = oppId,
+        //recordTypeId = new Application_RecordType().getOpportunityRecordTypes().getOnlineId(),
         AccountId = this.acct.Id,
         Name = buildOppName(),
         StageName = 'Quoting',
@@ -390,6 +391,66 @@ public without sharing class OnlineBoatReservation_Controller
     return result;
   }
 
+  @AuraEnabled(Cacheable=true)
+  public static Map<String, Object> fetchOrderDetails( String opportunityId )
+  {
+    if( opportunityId == null )
+    {
+      return null;
+    }
+    Opportunity opp = Opportunity_Selector.selectAllByIdWithLineItems(
+      new Set<Id>{ Id.valueOf(opportunityId) }
+    )[0];
+    Account acct = Account_Selector.personAccountById(
+      opp.AccountId
+    );
+    Map<String, Object> result = new Map<String,Object>{
+      'account' => acct,
+      'opportunity' => opp
+    };
+    List<Map<String, String>> options = new List<Map<String,String>>();
+    Application_RecordType.ProductRTs productRts =
+      new Application_RecordType().getProductRecordTypes();
+
+    for( OpportunityLineItem oli : opp.OpportunityLineItems )
+    {
+      if( oli.Product2.RecordTypeId == productRts.getBoatId() )
+      {
+        OnlineBoat boat = new OnlineBoat(
+          Product_Selector.getOnlineBoat( oli.Product2Id )
+        );
+        result.put('boat', boat);
+      }
+      if( oli.Product2.RecordTypeId == productRts.getMotorId() )
+      {
+        result.put('motor', new Map<String, String>{
+          'name' => oli.Product2.Name,
+          'name_fr' => oli.Product2.Name_FR__c
+        } );
+      }
+      if( oli.Product2.RecordTypeId == productRts.getTrailerId() )
+      {
+        result.put('trailer', new Map<String, String>{
+          'name' => oli.Product2.Name,
+          'name_fr' => oli.Product2.Name_FR__c
+        } );
+      }
+      if( oli.Product2.RecordTypeId == productRts.getTrollingMotorId() ||
+          oli.Product2.RecordTypeId == productRts.getPartId() )
+      {
+        options.add( new Map<String, String>{
+          'name' => oli.Product2.Name,
+          'name_fr' => oli.Product2.Name_FR__c
+        });
+      }
+    }
+    if( options.size() > 0 )
+    {
+      result.put('options', options);
+    }
+    return result;
+  }
+
   @AuraEnabled
   public static AccountSaveResult createAccount( String customerJSON )
   {
@@ -407,8 +468,10 @@ public without sharing class OnlineBoatReservation_Controller
   }
 
   @AuraEnabled
-  public static void saveLineItems( String oppJSON, String olisJSON )
+  public static void saveLineItems( String acctJSON, String oppJSON, String olisJSON )
   {
+    Account acct = (Account)JSON.deserialize( acctJSON, Account.class );
+    update acct;
     Opportunity opp =
       (Opportunity)JSON.deserialize( oppJSON, Opportunity.class );
     opp.StageName = 'Sales Manager Approval Pending';
@@ -422,6 +485,18 @@ public without sharing class OnlineBoatReservation_Controller
       oli.BoatBuilderItem__c = true;
     }
     insert olis;
+  }
+
+  @AuraEnabled
+  public static void setPickupDealership(
+    String opportunityId,
+    String dealerId
+  )
+  {
+    update new Opportunity(
+      Id = opportunityId,
+      PickupDealership__c = dealerId
+    );
   }
 
 

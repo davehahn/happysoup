@@ -32,6 +32,7 @@ export default class CustCommOrderSummary extends LightningElement {
 	}
 
 	updateSummary(details){
+	  console.log( JSON.parse(JSON.stringify(details)));
 		let payload = {
 			 'name': details.name,
 			 'name_fr': details.name_fr,

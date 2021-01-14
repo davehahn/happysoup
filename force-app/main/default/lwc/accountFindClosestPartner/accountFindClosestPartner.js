@@ -11,6 +11,9 @@ export default class AccountFindClosestPartner extends LightningElement {
   @api inputLabel;
   @api partnerCount;
   @api mapView;
+  @api hideSearch=false;
+  @api hideResultIcon=false;
+  @api isSelectable;
   @api excludedAccountIds;
   @api results;
   @track mapMarkers;
@@ -41,6 +44,13 @@ export default class AccountFindClosestPartner extends LightningElement {
     return this.mapMarkers[0];
   }
 
+  @api findPartners( lookupValue )
+  {
+    if( lookupValue === undefined || lookupValue === null ) return;
+    this.lookupValue = lookupValue;
+    return this.searchPromise();
+  }
+
   checkForEnter( evt )
   {
     this.lookupValue = evt.target.value;
@@ -54,22 +64,60 @@ export default class AccountFindClosestPartner extends LightningElement {
   {
     let spinner = this.template.querySelector("c-legend-spinner");
     spinner.toggle();
-    findClosestPartner( {
-      lookupValue: this.lookupValue,
-      resultCount: this.partnerCount,
-      excludedAccountIds: this.excludedAccountIds
-     } )
+    this.searchPromise()
     .then( result => {
-      let r = JSON.parse( result );
-      this.mapMarkers = r.mapMarkers;
-      this.originAddress = r.origin_address;
+      //success
     })
     .catch( error => {
       console.log('error');
-      console.log( error.message );
+      console.log( error );
     })
     .finally( function() {
       spinner.toggle();
     })
+  }
+
+  searchPromise()
+  {
+    return new Promise( ( resolve, reject ) => {
+      findClosestPartner( {
+        lookupValue: this.lookupValue,
+        resultCount: this.partnerCount,
+        excludedAccountIds: this.excludedAccountIds
+       } )
+      .then( result => {
+        let r = JSON.parse( result );
+        this.mapMarkers = r.mapMarkers;
+        this.originAddress = r.origin_address;
+        resolve('success');
+      })
+      .catch( error => {
+        console.log('error');
+        console.log( error.message );
+        reject( error.message );
+      })
+    });
+  }
+
+  handleMarkerSelect( event )
+  {
+    let selectedAcct =
+      this.mapMarkers.filter( marker => marker.id === event.target.selectedMarkerValue )[0];
+    this.dispatchEvent(
+      new CustomEvent(
+        'accountselected',
+        { detail: selectedAcct }
+      )
+    );
+  }
+
+  handleAccountSelected( event )
+  {
+    this.dispatchEvent(
+      new CustomEvent(
+        'accountselected',
+        { detail: event.detail }
+      )
+    );
   }
 }

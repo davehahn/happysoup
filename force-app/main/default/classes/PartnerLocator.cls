@@ -57,7 +57,7 @@ public without sharing class PartnerLocator
       result += '<br />' + acct.Phone;
       if( acct.AccountEmail__c != null )
       {
-        result += '<div style="margin-top:0.5rem">' + acct.AccountEmail__c + '</div>';
+        result += '<br />' + acct.AccountEmail__c;
       }
       return result;
     }
@@ -66,6 +66,7 @@ public without sharing class PartnerLocator
 
   public class MapMarker {
     public String id;
+    public String value;
     public Map<String, String> location;
     public String title;
     public String icon;
@@ -89,6 +90,7 @@ public without sharing class PartnerLocator
         'Street' => wrapper.street
       };
       this.id = wrapper.id;
+      this.value = wrapper.id;
       this.title = wrapper.name + ' ( ' + wrapper.distance_text + ' )';
       this.icon = 'standard:account';
       this.description = wrapper.description;

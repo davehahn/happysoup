@@ -1,0 +1,31 @@
+/**
+ * Created by dave on 2021-01-14.
+ */
+:host {
+  --legend-blue: #2AB2F0;
+  --legend-blue-hover: #0379AF;
+}
+
+.slds-no-flex {
+  height:100%;
+}
+
+button.select-account {
+  background-color: var(--legend-blue);
+  padding: 5px 40px;
+  text-transform: uppercase;
+  font-weight: 600;
+  border-radius: 20px;
+  color: #FFF;
+  transition: 0.25s;
+  white-space: nowrap;
+  border-color: transparent;
+}
+
+button.select-account:hover {
+  background-color: var(--legend-blue-hover);
+}
+
+button.select-account:focus {
+  outline: none;
+}

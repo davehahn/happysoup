@@ -57,7 +57,7 @@
   </div>
 
   <script type="text/javascript">
-    let _resolve, _reject, _paymentAmount, _referenceId;
+    let _resolve, _reject, _paymentAmount, _referenceId, _postalCode;
 
     const paymentForm = new SqPaymentForm(
     {
@@ -90,6 +90,13 @@
       },
       callbacks:
       {
+        inputEventReceived: function( inputEvent )
+        {
+          if( inputEvent.eventType === 'postalCodeChanged' )
+          {
+            _postalCode = inputEvent.postalCodeValue;
+          }
+        },
         cardNonceResponseReceived: function (errors, nonce, cardData)
         {
           console.log('cardNonceResponseReceived');
@@ -118,6 +125,7 @@
                 {
                   console.log('LOOK HERE');
                   console.log( response.payment );
+                  response.payment.postal_code = _postalCode;
                   _resolve(  response.payment );
                 }
               }
