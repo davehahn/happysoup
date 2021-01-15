@@ -1,12 +1,16 @@
 <apex:page showHeader="false" sidebar="false" controller="ERPInvoicePDF" renderAs="pdf">
 
   <apex:stylesheet value="{!URLFOR($Resource.LegendPDF,'css/invoicePDF.min.css')}" />
-  <!-- <apex:stylesheet value="{!URLFOR($Resource.LegendPDF,'css/dealer_invoice_page.css')}" /> -->
   <apex:stylesheet value="{!URLFOR($Resource.LegendPDF,'css/service_order_page.min.css')}" />
 
   <div id="footerRight">
     <span>Page</span>
-    <span>Invoice #{!invoiceName}</span>
+    <apex:outputPanel layout="none" rendered="{!erpOrder.Stage__c != 'Quoting'}">
+      <span>Invoice #{!invoiceName}</span>
+    </apex:outputPanel>
+    <apex:outputPanel layout="none" rendered="{!erpOrder.Stage__c == 'Quoting'}">
+      <span>Quote #{!invoiceName}</span>
+    </apex:outputPanel>
   </div>
 
   <div id="footerLeft">
@@ -64,9 +68,7 @@
         <div style="position:relative">
           <img src="{!URLFOR($Resource.LegendPDF,'image/web.png')}" />
           <p>www.legendboats.com</p>
-         <!--  <img src="https://www.barcodesinc.com/generator/image.php?code=INV-10812&amp;style=68&amp;type=C128B&amp;width=150&amp;height=40&amp;xres=1&amp;font=3" alt="Barcode" border="0"/> -->
-         <!--  <p class="invoice_number">{!invoiceName}</p> -->
-         <p style="width: 100%; padding-top: 5px; font-size: 12px; text-align: center">
+          <p style="width: 100%; padding-top: 5px; font-size: 12px; text-align: center">
             Memory Maker
           </p>
           <p style="width: 100%; font-size: 14px; font-weight: bold; text-align: center">
@@ -134,12 +136,22 @@
                         </apex:outputText>
                     </td>
                     <td style="">
+                      <apex:outputPanel layout="none" rendered="{!erpOrder.Stage__c != 'Quoting'}">
                         <p>{!invoiceDateLabel}:</p>
-                        <p>{!invoiceDate}</p>
+                      </apex:outputPanel>
+                      <apex:outputPanel layout="none" rendered="{!erpOrder.Stage__c == 'Quoting'}">
+                        <p>Quoted On:</p>
+                      </apex:outputPanel>
+                      <p>{!invoiceDate}</p>
                     </td>
                     <td style="">
+                      <apex:outputPanel layout="none" rendered="{!erpOrder.Stage__c != 'Quoting'}">
                         <p>Invoice #:</p>
-                        <p>{!invoiceName}</p>
+                      </apex:outputPanel>
+                      <apex:outputPanel layout="none" rendered="{!erpOrder.Stage__c == 'Quoting'}">
+                        <p>Quote #:</p>
+                      </apex:outputPanel>
+                      <p>{!invoiceName}</p>
                     </td>
                 </tr>
               </table>
@@ -179,8 +191,6 @@
                     </td>
                   </tr>
                 </table>
-                <!-- <span style="display:inline-block: width: 50%">{!part.productCode}</span>
-                <span style="display:inline-block">{!part.description}</span> -->
                 <apex:outputPanel layout="block" styleClass="kit-contents" rendered="{!part.hasKitParts}" style=":padding-bottom: 5px;">
                   <table class="kitParts">
                     <apex:repeat value="{!part.kitParts}" var="kitPart">
@@ -205,24 +215,6 @@
                 </apex:outputText>
               </td>
             </tr>
-            <!-- <apex:outputPanel layout="none" rendered="{!part.hasKitParts}">
-              <apex:repeat value="{!part.kitParts}" var="kitPart">
-                <tr>
-                  <td class="w75" style="padding-left: 10%">
-                    <div style="display:inline-block; padding: 0 5px 0 10px;">
-                      -
-                    </div>
-                    <apex:outputText value="{!kitPart.description}"/>
-                  </td>
-                  <td class="w5">{!kitPart.quantity}</td>
-                  <td class="w15 right">
-                    <apex:outputText value="{!IF(kitPart.price != 0,' ${0, number, ###,###,###,##0.00}','Included')} ">
-                      <apex:param value="{!kitPart.price}"/>
-                    </apex:outputText>
-                  </td>
-                </tr>
-              </apex:repeat>
-            </apex:outputPanel> -->
           </apex:repeat>
         </tbody>
     </table>
@@ -233,6 +225,11 @@
       <div class="col col65">
         <h2>Notes:</h2>
         <div class="notes_container">
+          <apex:outputPanel layout="none" rendered="{!erpOrder.Stage__c == 'Quoting'}">
+            <p>
+              <b>** Quote valid for 7 days after date quoted</b>
+            </p>
+          </apex:outputPanel>
           <apex:outputPanel rendered="{!!ISBLANK(partnerReference)}" layout="none">
             <p style="padding:0.25rem">
               <apex:outputText value="{! 'Partner Reference # '&partnerReference}" />
@@ -245,25 +242,6 @@
       </div>
       <div class="col col35 right">
         <table class="costSummary">
-          <!-- <tr>
-            <td>SUB TOTAL:</td>
-            <td>
-              <apex:outputText value="${0, number, ###,###,###,##0.00}">
-                    <apex:param value="{!subTotal}"/>
-               </apex:outputText>
-            </td>
-          </tr>
-          <apex:outputPanel layout="none">
-          <tr>
-            <td class="decrease">SAVINGS:</td>
-            <td class="decrease">
-              - &nbsp;<apex:outputText value="${0, number, ###,###,###,##0.00}"
-                                   rendered="{!totalSaving != null}">
-                    <apex:param value="{!totalSaving}"/>
-                  </apex:outputText>
-            </td>
-          </tr>
-          </apex:outputPanel> -->
           <tr class="header-line">
             <td colspan="2" style="padding-top:0;">Sub Total</td>
           </tr>
@@ -386,44 +364,17 @@
               </apex:outputText>
             </td>
           </tr>
-          <tr><td colspan="2" style="text-align: left;">
-                <span style="text-align: left;"><strong>Terms:</strong>
-                Balance due within 30 days by certified funds or money transfer. After 30 days, a 2% interest per month will apply to unpaid balances
-                </span>
-              </td>            
+          <tr>
+            <td colspan="2" style="text-align: left;">
+              <span style="text-align: left;"><strong>Terms:</strong>
+              Balance due within 30 days by certified funds or money transfer. After 30 days, a 2% interest per month will apply to unpaid balances
+              </span>
+            </td>
           </tr>
         </table>
       </div>
     </div>
-    <!-- ============================= /NOTES AND TOTALS ======================== -- >
-
-    <!-- ++++++++++++++++++++++++++++ FOOTER +++++++++++++++++++++++++++++++++++ -->
-<!--     <div class="row pdf_footer" style="position: fixed; bottom: 0;">
-
-      <div class="thankyou">
-        Thank you for choosing Legend to help you create memories on the water!
-      </div>
-
-      <div class="col col30 logo">
-        <img src="{!URLFOR($Resource.LegendPDF,'image/logo_220x26.png')}" />
-      </div>
-
-      <div class="col col33 address">
-        <p>
-          {!storeAddress}
-        </p>
-      </div>
-
-      <div class="col col33 tax_numbers">
-        <p>
-          <span>HST# 10150-9867</span>
-          <span>PST# 11158735</span>
-          <span>QST# 11158735</span>
-        </p>
-      </div>
-
-    </div> -->
-    <!-- ============================ FOOTER ================================== -->
+    <!-- ============================= /NOTES AND TOTALS ======================== -->
 
   </div>
 

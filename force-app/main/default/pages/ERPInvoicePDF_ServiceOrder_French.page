@@ -3,9 +3,14 @@
   <apex:stylesheet value="{!URLFOR($Resource.LegendPDF,'css/invoicePDF.min.css')}" />
   <apex:stylesheet value="{!URLFOR($Resource.LegendPDF,'css/service_order_page.min.css')}" />
 
- <div id="footerRight">
+  <div id="footerRight">
     <span>Page</span>
-    <span>Facture #{!invoiceName}</span>
+    <apex:outputPanel layout="none" rendered="{!erpOrder.Stage__c != 'Quoting'}">
+     <span>Facture #{!invoiceName}</span>
+    </apex:outputPanel>
+    <apex:outputPanel layout="none" rendered="{!erpOrder.Stage__c == 'Quoting'}">
+     <span>Citation #{!invoiceName}</span>
+    </apex:outputPanel>
   </div>
 
   <div id="footerLeft">
@@ -22,7 +27,6 @@
       </apex:repeat>
     </p>
   </div>
-
 
   <div class="service-order-erp">
     <!-- +++++++++++++++++++++++++++++++++++++++ HEADER 1 ++++++++++++++++++++++++ -->
@@ -64,8 +68,6 @@
         <div style="position:relative">
           <img src="{!URLFOR($Resource.LegendPDF,'image/web.png')}" />
           <p>www.legendboats.com</p>
-         <!--  <img src="https://www.barcodesinc.com/generator/image.php?code=INV-10812&amp;style=68&amp;type=C128B&amp;width=150&amp;height=40&amp;xres=1&amp;font=3" alt="Barcode" border="0"/> -->
-          <!-- <p class="invoice_number">{!invoiceName}</p> -->
           <p style="width: 100%; padding-top: 5px; font-size: 12px; text-align: center">
             Constructeur de mémoire
           </p>
@@ -84,7 +86,12 @@
       <div class="customer-info">
         <p>
           <img src="{!URLFOR($Resource.LegendPDF,'Icons/Invoice.png')}" />
-          FACTURE Á:
+          <apex:outputPanel layout="none" rendered="{!erpOrder.Stage__c != 'Quoting'}">
+            FACTURE Á:
+          </apex:outputPanel>
+          <apex:outputPanel layout="none" rendered="{!erpOrder.Stage__c == 'Quoting'}">
+            SOUMISSION À:
+          </apex:outputPanel>
         </p>
         <p class="buyer_name">
          {!projectAccount.name}
@@ -123,18 +130,28 @@
               <table>
                 <tr>
                     <td style="">
-                        <p>Total Sale:</p>
-                        <apex:outputText value="${0, number, ###,###,###,##0.00}">
-                              <apex:param value="{!erpOrder.Grand_Total__c - IF(ISNULL(erpOrder.Deposit__c), 0, erpOrder.Deposit__c)}"/>
-                        </apex:outputText>
+                      <p>Total Sale:</p>
+                      <apex:outputText value="${0, number, ###,###,###,##0.00}">
+                            <apex:param value="{!erpOrder.Grand_Total__c - IF(ISNULL(erpOrder.Deposit__c), 0, erpOrder.Deposit__c)}"/>
+                      </apex:outputText>
                     </td>
                     <td style="">
-                        <p>Invoice Date:</p>
-                        <p>{!invoiceDate}</p>
+                      <apex:outputPanel layout="none" rendered="{!erpOrder.Stage__c != 'Quoting'}">
+                        <p>Facture:</p>
+                      </apex:outputPanel>
+                      <apex:outputPanel layout="none" rendered="{!erpOrder.Stage__c == 'Quoting'}">
+                        <p>Cité le:</p>
+                      </apex:outputPanel>
+                      <p>{!invoiceDate}</p>
                     </td>
                     <td style="">
-                        <p>Invoice #:</p>
-                        <p>{!invoiceName}</p>
+                      <apex:outputPanel layout="none" rendered="{!erpOrder.Stage__c != 'Quoting'}">
+                        <p>Facture d'achat #:</p>
+                      </apex:outputPanel>
+                      <apex:outputPanel layout="none" rendered="{!erpOrder.Stage__c == 'Quoting'}">
+                        <p>Citation #:</p>
+                      </apex:outputPanel>
+                      <p>{!invoiceName}</p>
                     </td>
                 </tr>
               </table>
@@ -148,7 +165,6 @@
 
     </div>
     <!-- ================================= /HEADER 2 =================================== -->
-
 
     <!-- +++++++++++++++++++++++++++++++++ SERIAL INFO +++++++++++++++++++++++++++++++++ -->
     <div class="row serial-info">
@@ -258,6 +274,11 @@
       <div class="col col65">
         <h2>Notes:</h2>
         <div class="notes_container">
+          <apex:outputPanel layout="none" rendered="{!erpOrder.Stage__c == 'Quoting'}">
+            <p>
+              <b>** Devis valable 7 jours après la date citée</b>
+            </p>
+          </apex:outputPanel>
           <p>
             <apex:outputText escape="false" value="{!customerNotes}" />
           </p>
