@@ -385,7 +385,8 @@ public without sharing class arAccountStatement {
 			}
 
 			Set<Id> setIdCD = new Set<Id>();
-			for(AcctSeed__Cash_Disbursement__c cd : [SELECT Id FROM AcctSeed__Cash_Disbursement__c WHERE AcctSeed__Vendor__c =:idAccount AND AcctSeed__Amount__c <> 0  AND GMBLASG__Posted__c = true AND AcctSeed__Payment_Status__c != 'Void'])
+			Id idGLPayable = gcConstants.idGlAPayable;
+			for(AcctSeed__Cash_Disbursement__c cd : [SELECT Id FROM AcctSeed__Cash_Disbursement__c WHERE AcctSeed__Vendor__c =:idAccount AND AcctSeed__Amount__c <> 0  AND GMBLASG__Posted__c = true AND AcctSeed__Payment_Status__c != 'Void' AND AcctSeed__Debit_GL_Account__c =:idGLPayable])
 				setIdCD.add(cd.Id);
 
 			for(AcctSeed__Cash_Disbursement__c cd :
