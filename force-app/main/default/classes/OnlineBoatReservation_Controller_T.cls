@@ -493,8 +493,14 @@ private without sharing class OnlineBoatReservation_Controller_T
 
     List<OpportunityLineItem> olis = buildOpportunityLineItems();
 
+    Account acct = new Account(
+      Id = result.record.Id,
+      BillingPostalCode = 'L3V3V3'
+    );
+
     Test.startTest();
     OnlineBoatReservation_Controller.saveLineItems(
+      JSON.serialize( acct),
       JSON.serialize(opp),
       JSON.serialize(olis)
     );
@@ -513,6 +519,32 @@ private without sharing class OnlineBoatReservation_Controller_T
     System.assertEquals(6, olis_r.size());
     System.assertEquals(1, child_olis.size());
 
+  }
+
+  @IsTest
+  static void setPickupDealership_Test()
+  {
+    Account customer = Factory_Account.insertFullPersonAccount( 'Test', 'Customer' );
+    Account dealer = Factory_Account.insertDealerAccounts(1)[0];
+
+    Opportunity opp = Factory_Opportunity.insertOpportunity( customer, Test.getStandardPricebookId() );
+
+    Test.startTest();
+    OnlineBoatReservation_Controller.setPickupDealership(
+      opp.Id,
+      dealer.Id
+    );
+    Test.stopTest();
+
+    opp = [
+      SELECT
+        Id,
+        PickupDealership__c
+      FROM Opportunity
+      WHERE Id = :opp.Id
+    ];
+
+    System.assertEquals( dealer.Id, opp.PickupDealership__c );
   }
 
 }
