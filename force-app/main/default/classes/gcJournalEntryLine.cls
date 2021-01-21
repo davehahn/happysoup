@@ -91,8 +91,7 @@ public without sharing class gcJournalEntryLine {
 			for(AcctSeed__Journal_Entry_Line__c jel : listNew) {
 				if(jel.AcctSeed__Project__c != null)
 					setIdProject.add(jel.AcctSeed__Project__c);
-				else
-					mapJournal.put(jel.AcctSeed__Journal_Entry__c,null);
+				mapJournal.put(jel.AcctSeed__Journal_Entry__c,null);
 			}
 		}
 		/// Retrieving JE
@@ -126,8 +125,11 @@ public without sharing class gcJournalEntryLine {
 				System.debug('jel before: '+jel);
 				if(jel.AcctSeed__Project__c != null && mapProjectInternal.containsKey(jel.AcctSeed__Project__c) && mapProjectInternal.get(jel.AcctSeed__Project__c))
 					jel.Is_Internal__c = true;
-				else if(jel.AcctSeed__Project__c == null && mapJournal.get(jel.AcctSeed__Journal_Entry__c) != null && mapProjectInternal.get(mapJournal.get(jel.AcctSeed__Journal_Entry__c)))
-					jel.Is_Internal__c = true;
+				else if(jel.AcctSeed__Project__c == null && mapJournal.containsKey(jel.AcctSeed__Journal_Entry__c) && mapJournal.get(jel.AcctSeed__Journal_Entry__c) != null){
+					Id idProject = mapJournal.get(jel.AcctSeed__Journal_Entry__c);
+					if(mapProjectInternal.containsKey(idProject) && mapProjectInternal.get(idProject))
+						jel.Is_Internal__c = true;
+				}
 				System.debug('jel after: '+jel);
 				if((boolIsUpdate && allowProjectAndTask) || boolIsInsert){
 					String journalName = jel.Journal_Entry_Name__c;
