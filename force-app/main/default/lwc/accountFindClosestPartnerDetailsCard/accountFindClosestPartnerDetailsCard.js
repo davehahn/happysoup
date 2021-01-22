@@ -7,6 +7,8 @@ import { LightningElement, api } from 'lwc';
 export default class AccountFindClosestPartnerDetailsCard extends LightningElement {
   @api acct;
   @api originAddress;
+  @api isSelectable;
+  @api hideIcon=false;
 
   get teleHref()
   {
@@ -16,6 +18,16 @@ export default class AccountFindClosestPartnerDetailsCard extends LightningEleme
   get emailHref()
   {
     return 'emailto:' + this.acct.email;
+  }
+
+  handleSelect( evt )
+  {
+    this.dispatchEvent(
+      new CustomEvent(
+        'accountselected',
+        { detail: this.acct }
+      )
+    );
   }
 
   navToWebsite( evt )

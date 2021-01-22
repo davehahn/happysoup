@@ -3,7 +3,7 @@
  */
 
 @IsTest
-private without sharing class OnlineBoatReservation_Controller_T
+private class OnlineBoatReservation_Controller_T
 {
 
   static Factory_Boat boatFactory;
@@ -111,6 +111,8 @@ private without sharing class OnlineBoatReservation_Controller_T
     allProds.add( motor );
     allProds.add( trailer );
     allProds.addAll( parts );
+    boat.Available_Online__c = true;
+    update boat;
     Factory_PricebookEntry.insertStandardEntries( allProds, 0 );
     List<PricebookEntry> pbes = new List<PricebookEntry>();
     pbes.add( Factory_PricebookEntry.buildEntry( boat.Id, retailPbId, 30000 ) );
@@ -493,8 +495,14 @@ private without sharing class OnlineBoatReservation_Controller_T
 
     List<OpportunityLineItem> olis = buildOpportunityLineItems();
 
+    Account acct = new Account(
+      Id = result.record.Id,
+      BillingPostalCode = 'L3V3V3'
+    );
+
     Test.startTest();
     OnlineBoatReservation_Controller.saveLineItems(
+      JSON.serialize( acct),
       JSON.serialize(opp),
       JSON.serialize(olis)
     );
@@ -513,6 +521,235 @@ private without sharing class OnlineBoatReservation_Controller_T
     System.assertEquals(6, olis_r.size());
     System.assertEquals(1, child_olis.size());
 
+  }
+
+  @IsTest
+  static void setPickupDealership_Test()
+  {
+    Account customer = Factory_Account.insertFullPersonAccount( 'Test', 'Customer' );
+    Account dealer = Factory_Account.insertDealerAccounts(1)[0];
+
+    Opportunity opp = Factory_Opportunity.insertOpportunity( customer, Test.getStandardPricebookId() );
+
+    Test.startTest();
+    OnlineBoatReservation_Controller.setPickupDealership(
+      opp.Id,
+      dealer.Id
+    );
+    Test.stopTest();
+
+    opp = [
+      SELECT
+        Id,
+        PickupDealership__c
+      FROM Opportunity
+      WHERE Id = :opp.Id
+    ];
+
+    System.assertEquals( dealer.Id, opp.PickupDealership__c );
+  }
+
+  @IsTest
+  static void fetchOrderDetails_forStandardMotorAndTrailer_Test()
+  {
+    dataSetupForFullBoat();
+    insert acct;
+    setupOpp( null );
+    insert opp;
+
+    OnlineBoat boat = new OnlineBoat( boatFactory.boat.Id );
+    List<Marketing_Content__c> marketingContent = new List<Marketing_Content__c>();
+    marketingContent.add(
+      new Marketing_Content__c(
+        Product__c = boat.id,
+        Label__c = 'images',
+        Content__c = 'backLeft:boat-image-url|backRight:backright-image-url'
+      )
+    );
+    marketingContent.add(
+      new Marketing_Content__c(
+        Product__c = boat.StandardMotor.id,
+        Label__c = 'images',
+        Content__c = 'backLeft:motor-image-url|backRight:backright-image-url'
+      )
+    );
+    marketingContent.add(
+      new Marketing_Content__c(
+        Product_Option__c = boat.optionalProducts.get('electronics')[0].optionId,
+        Label__c = 'images',
+        Content__c = 'backLeft:option-image-url|backRight:backright-image-url'
+      )
+    );
+
+    insert marketingContent;
+
+    List<OpportunityLineItem> olis =  new List<OpportunityLineItem>();
+    olis.add( Factory_OpportunityLineItem.buildLineItem(
+      boat.pricebookEntryId,
+      opp.Id,
+      boat.retailPrice,
+      1,
+      null
+    ));
+
+    olis.add( Factory_OpportunityLineItem.buildLineItem(
+      boat.standardMotor.pricebookEntryId,
+      opp.Id,
+      0,
+      1,
+      null
+    ));
+
+    olis.add( Factory_OpportunityLineItem.buildLineItem(
+      boat.standardTrailer.pricebookEntryId,
+      opp.Id,
+      0,
+      1,
+      null
+    ));
+
+    olis.add( Factory_OpportunityLineItem.buildLineItem(
+      boat.optionalProducts.get('electronics')[0].pricebookEntryId,
+      opp.Id,
+      boat.optionalProducts.get('electronics')[0].retailPrice,
+      1,
+      boat.id
+    ));
+
+    insert olis;
+
+    Test.startTest();
+    Map<String, Object> result = OnlineBoatReservation_Controller.fetchOrderDetails( String.valueOf( opp.Id ) );
+    Test.stopTest();
+
+    Account resultAccount = (Account)result.get('account');
+    Opportunity resultOpp = (Opportunity)result.get('opportunity');
+    OnlineBoat resultBoat = (OnlineBoat)result.get('boat');
+    Map<String, String> resultMotor = (Map<String, String>)result.get('motor');
+    Map<String, String> resultTrailer = (Map<String, String>)result.get('trailer');
+    Map<String, Object> resultImages = (Map<String, Object>)result.get('summaryImages');
+    String boatImageURL = (String)resultImages.get('boat');
+    String motorImageURL = (String)resultImages.get('motor');
+    List<String> optionImageURLs = (List<String>)resultImages.get('options');
+
+
+    System.assertEquals( acct.Id, resultAccount.Id );
+    System.assertEquals( opp.Id, resultOpp.Id );
+    System.assertEquals( boatFactory.boat.Id, resultBoat.id );
+    System.assertEquals( boatFactory.standardMotor.Id, resultMotor.get('id') );
+    System.assertEquals( boatFactory.standardTrailer.Id, resultTrailer.get('id') );
+    System.assert( resultImages.containsKey('boat') );
+    System.assert( resultImages.containsKey('motor') );
+    System.assert( resultImages.containsKey('options') );
+    System.assertEquals( 'boat-image-url', boatImageURL );
+    System.assertEquals( 'motor-image-url', motorImageURL );
+    System.assertEquals( 1, optionImageURLs.size() );
+    System.assertEquals( 'option-image-url', optionImageURLs[0] );
+  }
+
+  @IsTest
+  static void fetchOrderDetails_forUpgradedMotorAndTrailer_Test()
+  {
+    dataSetupForFullBoat();
+    insert acct;
+    setupOpp( null );
+    insert opp;
+
+    OnlineBoat boat = new OnlineBoat( boatFactory.boat.Id );
+    List<Marketing_Content__c> marketingContent = new List<Marketing_Content__c>();
+    marketingContent.add(
+      new Marketing_Content__c(
+        Product__c = boat.id,
+        Label__c = 'images',
+        Content__c = 'backLeft:boat-image-url|backRight:backright-image-url'
+      )
+    );
+    marketingContent.add(
+      new Marketing_Content__c(
+        Product__c = boat.motorUpgrades[0].id,
+        Label__c = 'images',
+        Content__c = 'backLeft:motor-image-url|backRight:backright-image-url'
+      )
+    );
+    marketingContent.add(
+      new Marketing_Content__c(
+        Product__c = boat.trailerUpgrades[0].id,
+        Label__c = 'images',
+        Content__c = 'backLeft:trailer-image-url|backRight:backright-image-url'
+      )
+    );
+    marketingContent.add(
+      new Marketing_Content__c(
+        Product_Option__c = boat.optionalProducts.get('electronics')[0].optionId,
+        Label__c = 'images',
+        Content__c = 'backLeft:option-image-url|backRight:backright-image-url'
+      )
+    );
+
+    insert marketingContent;
+
+    List<OpportunityLineItem> olis =  new List<OpportunityLineItem>();
+    olis.add( Factory_OpportunityLineItem.buildLineItem(
+      boat.pricebookEntryId,
+      opp.Id,
+      boat.retailPrice,
+      1,
+      null
+    ));
+
+    olis.add( Factory_OpportunityLineItem.buildLineItem(
+      boat.motorUpgrades[0].id,
+      opp.Id,
+      boat.motorUpgrades[0].retailUpgradeCost,
+      1,
+      null
+    ));
+
+    olis.add( Factory_OpportunityLineItem.buildLineItem(
+      boat.trailerUpgrades[0].id,
+      opp.Id,
+      boat.trailerUpgrades[0].retailUpgradeCost,
+      1,
+      null
+    ));
+
+    olis.add( Factory_OpportunityLineItem.buildLineItem(
+      boat.optionalProducts.get('electronics')[0].pricebookEntryId,
+      opp.Id,
+      boat.optionalProducts.get('electronics')[0].retailPrice,
+      1,
+      boat.id
+    ));
+
+    insert olis;
+
+    Test.startTest();
+    Map<String, Object> result = OnlineBoatReservation_Controller.fetchOrderDetails( String.valueOf( opp.Id ) );
+    Test.stopTest();
+
+    Account resultAccount = (Account)result.get('account');
+    Opportunity resultOpp = (Opportunity)result.get('opportunity');
+    OnlineBoat resultBoat = (OnlineBoat)result.get('boat');
+    Map<String, String> resultMotor = (Map<String, String>)result.get('motor');
+    Map<String, String> resultTrailer = (Map<String, String>)result.get('trailer');
+    Map<String, Object> resultImages = (Map<String, Object>)result.get('summaryImages');
+    String boatImageURL = (String)resultImages.get('boat');
+    String motorImageURL = (String)resultImages.get('motor');
+    List<String> optionImageURLs = (List<String>)resultImages.get('options');
+
+
+    System.assertEquals( acct.Id, resultAccount.Id );
+    System.assertEquals( opp.Id, resultOpp.Id );
+    System.assertEquals( boat.id, resultBoat.id );
+    System.assertEquals( boat.motorUpgrades[0].id, resultMotor.get('id') );
+    System.assertEquals( boat.trailerUpgrades[0].id, resultTrailer.get('id') );
+    System.assert( resultImages.containsKey('boat') );
+    System.assert( resultImages.containsKey('motor') );
+    System.assert( resultImages.containsKey('options') );
+    System.assertEquals( 'trailer-image-url', boatImageURL );
+    System.assertEquals( 'motor-image-url', motorImageURL );
+    System.assertEquals( 1, optionImageURLs.size() );
+    System.assertEquals( 'option-image-url', optionImageURLs[0] );
   }
 
 }

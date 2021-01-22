@@ -7,7 +7,7 @@
   <div class="slds-card slds-m-top_medium">
     <div class="slds-card__header slds-grid">
       <header class="slds-media slds-media_center slds-has-flexi-truncate">
-        <div class="slds-media__figure">
+        <div if:false={hideIcon} class="slds-media__figure">
           <lightning-icon icon-name={acct.icon}
                           alternative-text="account"></lightning-icon>
         </div>
@@ -39,12 +39,20 @@
           </div>
         </div>
         <div class="slds-no-flex">
-          <div class="slds-badge">{acct.distance}</div>
+          <div class="slds-badge slds-m-right_small slds-m-top_xx-small">{acct.distance}</div>
+          <template if:true={isSelectable}>
+            <button class="select-account slds-float_right slds-m-left_small"
+                    onclick={handleSelect}>Select</button>
+
+<!--            <lightning-button label="Select"-->
+<!--                              variant="brand"-->
+<!--                              class="slds-float_right slds-m-left_small"></lightning-button>-->
+          </template>
           <template if:true={originAddress}>
             <lightning-button-icon icon-name="utility:location"
                                    alternative-text='Directions'
                                    onclick={showDirections}
-                                   class="slds-float_right slds-m-top_small"></lightning-button-icon>
+                                   class="slds-float_right"></lightning-button-icon>
           </template>
         </div>
       </header>
