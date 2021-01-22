@@ -55,7 +55,9 @@ public inherited sharing class Opportunity_Selector Extends Application_Selector
       'Boat_Model_Year__c',
       'Trailer_Model_Year__c',
       'IsPickupDealershipPartner__c',
-      'PickupDealership__c'
+      'PickupDealership__c',
+      'PickupDealership__r.Id',
+      'PickupDealership__r.Name'
     };
   }
 

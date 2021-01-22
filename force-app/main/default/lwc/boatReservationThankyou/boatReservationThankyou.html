@@ -11,7 +11,9 @@
     <section class={containerClass} data-thanks="show">
     <header>
       <div class="thanks_model">
-        <c-cust-comm-order-boat-image size="small" page='thankyou' marketing-content={boat.marketingContent}></c-cust-comm-order-boat-image>
+        <c-cust-comm-order-boat-image size="small"
+                                      page='thankyou'
+                                      summary-images={summaryImages}></c-cust-comm-order-boat-image>
       </div>
       <template if:true={pickupDealershipSelected}>
         <h2>
@@ -96,8 +98,8 @@
             <template if:true={options}>
               <template for:each={options} for:item="option">
                 <li key={option.name} class="order-item">
-                  <template if:true={isEN}>{options.name}</template>
-                  <template if:true={isFR}>{options.name_fr}</template>
+                  <template if:true={isEN}>{option.name}</template>
+                  <template if:true={isFR}>{option.name_fr}</template>
                 </li>
               </template>
             </template>
@@ -125,7 +127,7 @@
             <strong>
               <template if:true={isEN}>Pickup at:</template>
               <template if:true={isFR}>Ramassage à:</template>
-            </strong> <span>{pickupDealership.name}</span>
+            </strong> <span>{pickupDealershipName}</span>
           </li>
         </ul>
       </footer>

@@ -162,7 +162,7 @@ public virtual class Application_Selector
     {
       queryString += ' ORDER BY ' + this.orderBy;
     }
-    System.debug(queryString);
+    //System.debug(queryString);
     return queryString;
   }
 

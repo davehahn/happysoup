@@ -98,7 +98,6 @@ export default class BoatResFinanceDetails extends LightningElement {
 
   handlePurchasePriceChange( amount )
   {
-    console.log(`Purchase Price Changed EVENT in FinanceDetails Captured ${amount}`);
     this.amount = amount;
     this.calculate();
   }
@@ -108,7 +107,6 @@ export default class BoatResFinanceDetails extends LightningElement {
     if( this.amount === undefined ) return;
     if( this.interestRate === undefined ) return;
 
-    console.log( `calculate finance payments using amount ${this.amount}` );
     const amountFinanced = this.amount - this.deposit,
           compound_per_year = 12;
     let compoundInterest, payment;
@@ -124,7 +122,6 @@ export default class BoatResFinanceDetails extends LightningElement {
       payment = ( compoundInterest * amountFinanced ) / ( 1 - ( Math.pow( (1 + compoundInterest), (- ( this.amort * compound_per_year / 12 ) ) ) ) );
       //remaining = amountFinanced *( Math.pow((1+ compoundInterest ), ( term * compound_per_year / 12)) ) -( payment )*( ( Math.pow((1+ compoundInterest ),( term * compound_per_year / 12)) - 1 ) /compoundInterest );
     }
-    console.log( payment );
     this.payments.monthly = ( payment / ( 12 / compound_per_year ) );
     this.payments.biweekly = ( payment / ( 26 / compound_per_year ) );
     this.payments.weekly = ( payment / ( 52 / compound_per_year ) );

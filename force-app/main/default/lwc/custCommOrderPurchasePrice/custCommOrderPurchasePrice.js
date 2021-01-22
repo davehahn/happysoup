@@ -56,7 +56,6 @@ export default class CustCommOrderPurchasePrice extends LightningElement {
 
 	handlePurchasePrice(details)
 	{
-	  console.log('handlePurchasePrice');
 		let payload = {
 			 'price': details.price,
 			 'sku': details.sku,
@@ -111,13 +110,11 @@ export default class CustCommOrderPurchasePrice extends LightningElement {
 			priceMatrix.push(item.price);
   	}
 		this.totalPrice = priceMatrix.reduce(reducer)
-    console.log(`totalPrice = ${this.totalPrice}`);
 		fireEvent( this.pageRef, 'purchasePriceChanged', this.totalPrice );
  	}
 
  	handlePaymentAmountChange( payments )
  	{
- 	  console.log('handling payment change');
  	  this.payments = payments;
   }
 

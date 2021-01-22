@@ -22,10 +22,11 @@ export default class BoatReservationThankyou extends NavigationMixin(LightningEl
   motor;
   trailer;
   options;
+  summaryImages;
   paymentAmount;
   customer;
   postalCode;
-  pickupDealership;
+  pickupDealershipName;
   pickupDealershipSelected = false;
   dataLoaded = false;
 
@@ -68,8 +69,17 @@ export default class BoatReservationThankyou extends NavigationMixin(LightningEl
       {
         this.options = data.options;
       }
+      if( Object.keys( data ).indexOf('summaryImages') )
+      {
+        this.summaryImages = data.summaryImages;
+      }
       this.orderNumber = data.opportunity.Reference_Number__c;
       this.paymentAmount = data.opportunity.Deposit__c;
+      if( data.opportunity.PickupDealership__c )
+      {
+        this.pickupDealershipName = data.opportunity.PickupDealership__r.Name;
+        this.pickupDealershipSelected = true;
+      }
       this.dataLoaded = true;
       console.log('wire fetchOrderDetails');
       this.init();
@@ -90,12 +100,21 @@ export default class BoatReservationThankyou extends NavigationMixin(LightningEl
         this._stylesLoaded = true;
       });
     }
-    this.locator = this.template.querySelector('c-account-find-closest-partner');
-    if( this.locator )
+    if( this.pickupDealershipSelected )
     {
       this._componentRendered = true;
       console.log('renderedCallback');
       this.init();
+    }
+    else
+    {
+      this.locator = this.template.querySelector('c-account-find-closest-partner');
+      if( this.locator )
+      {
+        this._componentRendered = true;
+        console.log('renderedCallback');
+        this.init();
+      }
     }
   }
 
@@ -105,11 +124,28 @@ export default class BoatReservationThankyou extends NavigationMixin(LightningEl
     if( this.dataLoaded && this._componentRendered )
     {
       this.spinner = this.template.querySelector('c-legend-spinner');
-      this.locator.findPartners( this.customer.BillingPostalCode )
-      .then( result => {
+      if( this.pickupDealershipSelected )
+      {
         this._initialized = true;
         this.spinner.close();
-      });
+      }
+      else
+      {
+        this.locator.findPartners( this.customer.BillingPostalCode )
+        .then( result => {
+        })
+        .catch( error => {
+          errorToast( this, reduceErrors( error )[0] );
+        })
+        .finally( () => {
+          this._initialized = true;
+          this.spinner.close();
+        })
+      }
+      console.log( this.boat );
+      console.log( this.motor );
+      console.log( this.trailer );
+      console.log( this.options );
     }
   }
 
@@ -147,13 +183,11 @@ export default class BoatReservationThankyou extends NavigationMixin(LightningEl
 
   handleAccountSelected( event )
   {
-    console.log('thanks account selected');
-    console.log( {...event.detail} );
     this.spinner.open();
-    this.pickupDealership = {...event.detail};
+    this.pickupDealershipName = event.detail.name;
     setPickupDealership( {
       opportunityId: this.opportunityId,
-      dealerId: this.pickupDealership.id
+      dealerId: event.detail.id
     })
     .then( () => {
       this.pickupDealershipSelected = true;

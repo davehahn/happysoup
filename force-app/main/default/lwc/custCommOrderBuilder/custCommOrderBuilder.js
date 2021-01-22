@@ -440,6 +440,8 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
 			 'UnitPrice': details.price,
 			 'Quantity': 1
 		};
+		console.log('updateListItems');
+		console.log( JSON.parse( JSON.stringify( details ) ) );
 		if(details.addToSummary){
 			//add item to list
 			if(details.type === 'radio'){

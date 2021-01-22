@@ -3,6 +3,7 @@
  */
 
 import { LightningElement, api, track } from 'lwc';
+import { errorToast, successToast, warningToast, reduceErrors } from 'c/utils';
 import findClosestPartner from '@salesforce/apex/Account_FindClosestPartner.findClosestPartner';
 
 export default class AccountFindClosestPartner extends LightningElement {
@@ -70,7 +71,8 @@ export default class AccountFindClosestPartner extends LightningElement {
     })
     .catch( error => {
       console.log('error');
-      console.log( error );
+      console.log( reduceErrors( error )[0] );
+      errorToast( this, reduceErrors( error )[0] );
     })
     .finally( function() {
       spinner.toggle();
@@ -92,9 +94,7 @@ export default class AccountFindClosestPartner extends LightningElement {
         resolve('success');
       })
       .catch( error => {
-        console.log('error');
-        console.log( error.message );
-        reject( error.message );
+        reject( error );
       })
     });
   }
