@@ -4356,6 +4356,7 @@ function createBillingWithDate()
 
 function createBilling(selectedDate){
         gSpinner.show();
+        if($j("#cogsDate").length) $j("#cogsDate").val(selectedDate);
         Visualforce.remoting.Manager.invokeAction(
             '{!$RemoteAction.gcProject_Ext.createBilling}',
             '{!Id}',selectedDate,
