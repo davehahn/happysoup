@@ -13,18 +13,27 @@ public class Factory_OpportunityLineItem {
                           parentProductId );
   }
 
-  public static OpportunityLineItem buildLineItem( Id pbeId,
+  public static OpportunityLineItem buildLineItem( Id relatedId,
                                                    Id oppId,
                                                    Decimal price,
                                                    Integer quantity,
                                                    Id parentProductId )
   {
-    return new OpportunityLineItem(
+    OpportunityLineItem oli = new OpportunityLineItem(
       OpportunityId = oppId,
-      PricebookEntryId = pbeId,
       UnitPrice = price,
       Quantity = quantity,
       ParentProductId__c = parentProductId
     );
+    String relatedObjectType = LGND_Utilities.sObjectNameFromId(relatedId);
+    if( relatedObjectType == 'PriceBookEntry' )
+    {
+      oli.PricebookEntryId = relatedId;
+    }
+    if( relatedObjectType == 'Product2' )
+    {
+      oli.Product2Id = relatedId;
+    }
+    return oli;
   }
 }

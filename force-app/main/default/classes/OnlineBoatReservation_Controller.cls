@@ -335,6 +335,7 @@ public without sharing class OnlineBoatReservation_Controller
     {
       Opportunity opp = new Opportunity(
         Id = oppId,
+        //recordTypeId = new Application_RecordType().getOpportunityRecordTypes().getOnlineId(),
         AccountId = this.acct.Id,
         Name = buildOppName(),
         StageName = 'Quoting',
@@ -390,6 +391,68 @@ public without sharing class OnlineBoatReservation_Controller
     return result;
   }
 
+  @AuraEnabled(Cacheable=true)
+  public static Map<String, Object> fetchOrderDetails( String opportunityId )
+  {
+    if( opportunityId == null )
+    {
+      return null;
+    }
+    Opportunity opp = Opportunity_Selector.selectAllByIdWithLineItems(
+      new Set<Id>{ Id.valueOf(opportunityId) }
+    )[0];
+    Account acct = Account_Selector.personAccountById(
+      opp.AccountId
+    );
+    Map<String, Object> result = new Map<String,Object>{
+      'account' => acct,
+      'opportunity' => opp
+    };
+    List<Map<String, String>> options = new List<Map<String,String>>();
+    Application_RecordType.ProductRTs productRts =
+      new Application_RecordType().getProductRecordTypes();
+
+    Set<Id> boatMotorTrailerRtIds = new Set<Id>{
+      productRts.getBoatId(),
+      productRts.getMotorId(),
+      productRts.getTrailerId()
+    };
+    for( OpportunityLineItem oli : opp.OpportunityLineItems )
+    {
+      System.debug( oli.Product2.Name + ' - ' + oli.Product2.RecordType.Name );
+      if( oli.Product2.RecordTypeId == productRts.getBoatId() )
+      {
+        OnlineBoat boat = new OnlineBoat(
+          Product_Selector.getOnlineBoat( oli.Product2Id )
+        );
+        result.put('boat', boat);
+      }
+      if( oli.Product2.RecordTypeId == productRts.getMotorId() )
+      {
+        result.put('motor', buildItem( oli )  );
+      }
+      if( oli.Product2.RecordTypeId == productRts.getTrailerId() )
+      {
+        result.put('trailer', buildItem( oli ) );
+      }
+      if( ( oli.Product2.RecordTypeId == productRts.getTrollingMotorId() ||
+            oli.Product2.RecordTypeId == productRts.getPartId() ) &&
+          ( oli.ParentProductId__c == null ||
+            ( oli.ParentProductId__c <> null && boatMotorTrailerRtIds.contains( oli.ParentProductId__r.RecordTypeId )
+            )
+          ) )
+      {
+        options.add( buildItem( oli ) );
+      }
+    }
+    if( options.size() > 0 )
+    {
+      result.put('options', options);
+    }
+    getImagesForSummary( result );
+    return result;
+  }
+
   @AuraEnabled
   public static AccountSaveResult createAccount( String customerJSON )
   {
@@ -407,8 +470,10 @@ public without sharing class OnlineBoatReservation_Controller
   }
 
   @AuraEnabled
-  public static void saveLineItems( String oppJSON, String olisJSON )
+  public static void saveLineItems( String acctJSON, String oppJSON, String olisJSON )
   {
+    Account acct = (Account)JSON.deserialize( acctJSON, Account.class );
+    update acct;
     Opportunity opp =
       (Opportunity)JSON.deserialize( oppJSON, Opportunity.class );
     opp.StageName = 'Sales Manager Approval Pending';
@@ -422,6 +487,195 @@ public without sharing class OnlineBoatReservation_Controller
       oli.BoatBuilderItem__c = true;
     }
     insert olis;
+  }
+
+  @AuraEnabled
+  public static void setPickupDealership(
+    String opportunityId,
+    String dealerId
+  )
+  {
+    System.debug( 'setPickupDealership' );
+    update new Opportunity(
+      Id = opportunityId,
+      PickupDealership__c = dealerId
+    );
+  }
+
+
+  //PRIVATES
+
+  private static Map<String, String> buildItem( OpportunityLineItem oli )
+  {
+    return new Map<String, String>{
+      'id' => oli.Product2Id,
+      'name' => oli.Product2.Name,
+      'name_fr' => oli.Product2.Name_FR__c
+    };
+  }
+
+  private static void getImagesForSummary( Map<String, Object> orderDetails )
+  {
+
+    Map<String, Object> images = new Map<String, Object>();
+    String boatImage;
+    String motorImage;
+    List<String> optionImages = new List<String>();
+
+    Set<String> selectedOptionIds = new Set<String>();
+    //build set of Ids of selected Options
+    if( orderDetails.containsKey('options') )
+    {
+      System.debug('^^^^^^^^^^ WE HAVE OPTIONS ^^^^^^^^^^^^^');
+      List<Map<String, String>> selectedOptions =
+        (List<Map<String, String>>) orderDetails.get('options');
+      for (Map<String, String> opt : selectedOptions)
+      {
+        selectedOptionIds.add(opt.get('id'));
+      }
+    }
+
+    OnlineBoat boat = (OnlineBoat)orderDetails.get('boat');
+    boatImage = findCorrectImageFromAllMarketingContents( boat.marketingContent );
+    if( selectedOptionIds.size() > 0 )
+    {
+      System.debug('^^^^^^^^^^^ Get Option Images  ^^^^^^^^^^');
+      optionImages.addAll(optionImages(boat.optionalProducts, selectedOptionIds));
+    }
+
+    //figure out motor image
+    if( orderDetails.containsKey('motor') )
+    {
+      System.debug('*** Order Detail MOTOR ****');
+      System.debug( orderDetails.get('motor') );
+      Map<String, String> motor = (Map<String, String>)orderDetails.get('motor');
+      if( motor.get('id') == boat.standardMotor.id )
+      {
+        motorImage = findCorrectImageFromAllMarketingContents( boat.standardMotor.marketingContent );
+        if( selectedOptionIds.size() > 0 )
+        {
+          optionImages.addAll(optionImages(boat.standardMotor.optionalProducts, selectedOptionIds));
+        }
+      }
+      else
+      {
+        for (Online_Product.Upgrade motorUpgrade : boat.motorUpgrades)
+        {
+          if (motor.get('id') == motorUpgrade.id)
+          {
+            if( selectedOptionIds.size() > 0 )
+            {
+              optionImages.addAll(optionImages(motorUpgrade.optionalProducts, selectedOptionIds));
+            }
+            String mImage = findCorrectImageFromAllMarketingContents(motorUpgrade.marketingContent);
+            if (mImage != null)
+            {
+              motorImage = mImage;
+            }
+            break;
+          }
+        }
+      }
+    }
+
+    //Check if trailer upgrade
+    if( orderDetails.containsKey('trailer') )
+    {
+      Map<String, String> trailer = (Map<String,String>)orderDetails.get('trailer');
+      if( trailer.get('id') != boat.standardTrailer.id )
+      {
+        for (Online_Product.Upgrade trailerUpgrade : boat.trailerUpgrades)
+        {
+          if (trailer.get('id') == trailerUpgrade.id)
+          {
+            if( selectedOptionIds.size() > 0 )
+            {
+              optionImages.addAll(optionImages(trailerUpgrade.optionalProducts, selectedOptionIds));
+            }
+            String trailerImage = findCorrectImageFromAllMarketingContents(trailerUpgrade.marketingContent);
+            if (trailerImage != null)
+            {
+              boatImage = trailerImage;
+
+            }
+            break;
+          }
+        }
+      }
+    }
+
+    if( boatImage != null )
+    {
+      images.put( 'boat', boatImage );
+    }
+    if( motorImage != null )
+    {
+      images.put( 'motor', motorImage );
+    }
+    if( optionImages.size() > 0 )
+    {
+      images.put('options', optionImages );
+    }
+
+    orderDetails.put('summaryImages', images );
+  }
+
+  private static List<String> optionImages(
+    Map<String, List<Online_Product.Option>> optionsMap,
+    Set<String> selectedOptionIds
+  )
+  {
+    List<String> result = new List<String>();
+    for( String key : optionsMap.keySet() )
+    {
+      if( key != 'canvas' )
+      {
+        for(Online_Product.Option option : optionsMap.get(key))
+        {
+          if( selectedOptionIds.contains( option.id ) )
+          {
+            String optionImage =
+              findCorrectImageFromAllMarketingContents(option.marketingContent);
+            if (optionImage != null)
+            {
+              result.add(optionImage);
+            }
+          }
+        }
+      }
+    }
+    return result;
+  }
+
+  private static String findCorrectImageFromAllMarketingContents(
+    List<Online_Product.MarketingContent> marketingContents )
+  {
+    String url;
+    for( Online_Product.MarketingContent mc : marketingContents )
+    {
+      if( mc.label == 'images' )
+      {
+        Map<String, String> images = imagesFromMarketingContent( mc.content );
+        if( images.containsKey( 'backLeft') )
+        {
+          url = images.get('backLeft');
+          break;
+        }
+      }
+    }
+    return url;
+  }
+
+  private static Map<String, String> imagesFromMarketingContent( String content )
+  {
+    Map<String, String> result = new Map<String, String>();
+    for( String image : content.stripHtmlTags().split('\\|') )
+    {
+      System.debug(image);
+      String[] keyValue = image.split(':');
+      result.put( keyValue[0], keyValue[1] );
+    }
+    return result;
   }
 
 

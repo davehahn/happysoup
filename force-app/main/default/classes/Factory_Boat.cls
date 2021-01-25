@@ -38,6 +38,18 @@ public with sharing class Factory_Boat
     addPricebookEntries( boat.Id, BOAT_PRICE );
   }
 
+  public Id getPricebookEntry( Id productId )
+  {
+    for( PricebookEntry pb : this.pbEntries )
+    {
+      if( pb.Product2Id == productId )
+      {
+        return pb.Id;
+      }
+    }
+    return null;
+  }
+
   public Factory_Boat addStandardProducts( List<Map<String, String>> rt_family_map )
   {
     for( Map<String, String> rt_family : rt_family_map )
@@ -207,6 +219,16 @@ public with sharing class Factory_Boat
         Content__c = 'This is the Contents - ' + String.valueOf(i)
       ));
     }
+    return this;
+  }
+
+  public Factory_Boat addMarketingContentImage( Id parentProductId )
+  {
+    this.marketingContents.add( new Marketing_Content__c(
+      Product__c = parentProductId,
+      Label__c = 'images',
+      Content__c = 'backLeft:backleft-image-url|backRight:backright-image-url'
+    ));
     return this;
   }
 

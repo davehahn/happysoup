@@ -1,0 +1,141 @@
+/**
+ * Created by dave on 2021-01-15.
+ */
+ .config-thanks > *,
+ .config-thanks h1,
+ .config-thanks h2,
+ .config-thanks h3,
+ .config-thanks h4,
+ .config-thanks h5,
+ .config-thanks h6 {
+   font-family: 'gotham_htf', Montserrat, Lato, Helvetica, Arial, sans-serif;
+ }
+.config-thanks{
+	/* height: calc(100% - 150px); */
+	min-height: 100vh;
+	width: 90%; max-width: 640px;
+	margin: 0 auto;
+	background: #FFF;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	opacity: 0;
+}
+
+.config-thanks.loaded {
+  opacity: 1;
+}
+
+.config-thanks header{
+  width: 100%;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.config-thanks header h2{
+  font-size: 2.25em;
+  line-height: 1.5;
+}
+
+.config-thanks header p{
+  font-size: 1.5em;
+}
+
+.config-thanks .thanks_body,
+.config-thanks .pickup-selector {
+  width: 100%;
+}
+
+.config-thanks .pickup-selector h2,
+.config-thanks .pickup-selector h3
+{
+  width: 100%;
+  text-align:center;
+}
+
+.config-thanks .pickup-selector h2 {
+  font-size: 1.5em;
+}
+
+.config-thanks .pickup-selector h3 {
+  font-size: 1em;
+}
+
+.config-thanks .thanks_model{
+  position: relative;
+  width: 90%; max-width: 400px;
+  margin: 0 auto;
+}
+
+.config-thanks .thanks_overview{
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  background: #e1e1e1;
+  padding: 2em;
+  margin-top: 2em;
+}
+
+.config-thanks .thanks_paymentDetails, .config-thanks .thanks_modelSummary{
+  width: 40%;
+}
+
+.config-thanks .thanks_overview h3{
+  font-weight: 900;
+}
+
+.config-thanks .thanks_overview .thanks_details .thanks_detail{
+	padding: 0.8em 0;
+}
+
+.config-thanks .thanks_overview .thanks_details .thanks_detail:first-of-type{
+  padding-top: 0;
+}
+
+.config-thanks .thanks_overview .thanks_details .thanks_detail:last-of-type{
+  border-bottom: 0 none;
+}
+
+.config-thanks .thanks_overview .thanks_details .thanks_detail.thanks_detail--horizontal span{
+  display: inline-block;
+  margin-left: 0.25em;
+}
+
+.config-thanks .order-items {
+  margin: 1em 0 2em;
+  border-top: 1px solid #D2D2D2;
+}
+
+.config-thanks .order-items .order-items-list {
+  font-size: 1.125em;
+}
+
+.config-thanks .order-items .order-items-list .order-item {
+  margin: 0.5em 0.25em;
+}
+
+.config-thanks .summary_listItem{
+  margin: 0.5em 0.25em;
+}
+
+.thanks_footer{
+  margin-top: 2em;
+  padding: 2em;
+}
+
+.thanks_footer .thanks_footerDetails{
+  display: flex;
+	justify-content: space-between;
+	align-items: flex-start;
+}
+
+.thanks_footer .thanks_footerDetail{
+  width: 40%;
+}
+
+.thanks_footer .thanks_footerDetail strong{
+  display: block;
+}

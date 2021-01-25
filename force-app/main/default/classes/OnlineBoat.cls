@@ -25,9 +25,20 @@ public virtual class OnlineBoat extends Online_Product
   private Map<Id, List<Product_Option__c>> optionOwnerMap;// parentProductId => List<Options>
   private Map<Id, List<Product_Upgrade__c>> product_upgradeMap;// standardId => List<Upgrades>
 
+  public OnlineBoat( Id boatProductId )
+  {
+    super( Product_Selector.getOnlineBoat( boatProductId ) );
+    init();
+  }
+
   public OnlineBoat( Product2 boat )
   {
     super( boat );
+    init();
+  }
+
+  private void init()
+  {
     this.allProductIds = new Set<Id>();
     this.allProductOptionIds = new Set<Id>();
     this.marketingContentMap = new Map<Id, List<Marketing_Content__c>>();
@@ -36,12 +47,6 @@ public virtual class OnlineBoat extends Online_Product
     this.product_upgradeMap = new Map<Id, List<Product_Upgrade__c>>();
     this.productFee_Map = new Map<Id, List<Product_Fee_Amount__c>>();
     this.optionalUpgradeIds = new Set<Id>();
-
-    init();
-  }
-
-  private void init()
-  {
     this.allProductIds.add( this.sfProduct.Id );
     this.standardProductIds = new Set<Id>();
     if( this.sfProduct.Standard_Motor__c != null )
