@@ -2031,6 +2031,7 @@ global without sharing class gcProject_Ext {
         throw new gcException('A Project must have at least one underlying Project Task, in order to receive a deposit.');
 
       if(paymentMethod != '' && paymentMethod != null){
+        Date crDate = (billingDate == null) ? Date.today() : Date.parse(billingDate);
         insert new AcctSeed__Cash_Receipt__c(
           AcctSeed__Amount__c = amount,
           AcctSeed__Account__c = p.AcctSeed__Account__c,
@@ -2038,6 +2039,7 @@ global without sharing class gcProject_Ext {
           AcctSeed__Credit_GL_Account__c = idGlDeposit,
           AcctSeed__Payment_Reference__c = paymentReference,
           AcctSeed__Project__c = p.Id,
+          AcctSeed__Receipt_Date__c = crDate,
           AcctSeed__Project_Task__c = p.AcctSeed__Project_Tasks__r[0].Id,
           Payment_Method__c = paymentMethod
         );
