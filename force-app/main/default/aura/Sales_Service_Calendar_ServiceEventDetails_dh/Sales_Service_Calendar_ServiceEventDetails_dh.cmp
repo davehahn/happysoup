@@ -104,11 +104,10 @@
                 </lightning:layout>
                 <lightning:layout >
                   <lightning:layoutItem size="6" padding="around-small">
-                    <ui:inputDateTime label="Service Date"
-                                      labelClass="slds-form-element__label"
-                                      value="{!v.eventData.startDateTime}"
-                                      displayDatePicker="true"
-                                      disabled="{! not(v.perms.canEditServiceDate)}" />
+                    <lightning:input type="datetime-local"
+                                     label="Service Date"
+                                     value="{!v.eventData.startDateTime}"
+                                     disabled="{! not(v.perms.canEditServiceDate)}" />
                     <lightning:layout class="slds-m-top_large">
                       <lightning:layoutItem size="6">
                         <p class="slds-text-heading_small slds-p-left_medium">

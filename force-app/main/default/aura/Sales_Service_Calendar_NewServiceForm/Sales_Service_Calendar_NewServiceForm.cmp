@@ -84,10 +84,9 @@
           <!-- DATES -->
           <lightning:layout class="slds-border_bottom slds-m-bottom_medium" horizontalAlign="spread">
             <lightning:layoutItem padding="around-small" size="6">
-              <ui:inputDateTime label="Start"
-                                labelClass="slds-form-element__label"
-                                value="{!v.startAt}"
-                                displayDatePicker="true" />
+              <lightning:input type="datetime-local"
+                               label="Start"
+                               value="{!v.startAt}" />
               <lightning:select label="Location"
                                 class="slds-m-bottom_small"
                                 value="{!v.warehouseId}">
