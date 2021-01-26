@@ -68,7 +68,7 @@ private class P2PInventorySearch_mp_Test {
   static void searchPartnerInventories_Test()
   {
     init();
-    String jsonResult = P2PInventorySearch_mp.searchPartnerInventories();
+    String jsonResult = P2PInventorySearch_mp.searchPartnerInventories( true );
     P2PInventorySearch_mp.ResultWrapper result =
       (P2PInventorySearch_mp.ResultWrapper)JSON.deserialize( jsonResult,
                                                              P2PInventorySearch_mp.ResultWrapper.class);
@@ -89,7 +89,7 @@ private class P2PInventorySearch_mp_Test {
     User pUser = [SELECT Id, Name FROM User WHERE ContactId = :pContact.Id ];
     System.runAs( pUser )
     {
-      String jsonResult = P2PInventorySearch_mp.searchPartnerInventories();
+      String jsonResult = P2PInventorySearch_mp.searchPartnerInventories( true );
       P2PInventorySearch_mp.ResultWrapper result =
         (P2PInventorySearch_mp.ResultWrapper)JSON.deserialize( jsonResult,
                                                                P2PInventorySearch_mp.ResultWrapper.class);

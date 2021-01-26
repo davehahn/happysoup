@@ -4,9 +4,14 @@
   <apex:stylesheet value="{!URLFOR($Resource.LegendPDF,'css/service_order_page.min.css')}" />
 
  <div id="footerRight">
-    <span>Page</span>
-    <span>Invoice #{!invoiceName}</span>
-  </div>
+   <span>Page</span>
+   <apex:outputPanel layout="none" rendered="{!erpOrder.Stage__c != 'Quoting'}">
+     <span>Invoice #{!invoiceName}</span>
+   </apex:outputPanel>
+   <apex:outputPanel layout="none" rendered="{!erpOrder.Stage__c == 'Quoting'}">
+     <span>Quote #{!invoiceName}</span>
+   </apex:outputPanel>
+ </div>
 
   <div id="footerLeft">
     <img src="{!URLFOR($Resource.LegendPDF,'image/logo_220x26.png')}" />
@@ -22,7 +27,6 @@
       </apex:repeat>
     </p>
   </div>
-
 
   <div class="service-order-erp">
     <!-- +++++++++++++++++++++++++++++++++++++++ HEADER 1 ++++++++++++++++++++++++ -->
@@ -64,8 +68,6 @@
         <div style="position:relative">
           <img src="{!URLFOR($Resource.LegendPDF,'image/web.png')}" />
           <p>www.legendboats.com</p>
-         <!--  <img src="https://www.barcodesinc.com/generator/image.php?code=INV-10812&amp;style=68&amp;type=C128B&amp;width=150&amp;height=40&amp;xres=1&amp;font=3" alt="Barcode" border="0"/> -->
-          <!-- <p class="invoice_number">{!invoiceName}</p> -->
           <p style="width: 100%; padding-top: 5px; font-size: 12px; text-align: center">
             Memory Builder
           </p>
@@ -84,7 +86,12 @@
       <div class="customer-info">
         <p>
           <img src="{!URLFOR($Resource.LegendPDF,'Icons/Invoice.png')}" />
-          INVOICE TO:
+          <apex:outputPanel layout="none" rendered="{!erpOrder.Stage__c != 'Quoting'}">
+            INVOICE TO:
+          </apex:outputPanel>
+          <apex:outputPanel layout="none" rendered="{!erpOrder.Stage__c == 'Quoting'}">
+            QUOTE FOR:
+          </apex:outputPanel>
         </p>
         <p class="buyer_name">
          {!projectAccount.name}
@@ -129,12 +136,22 @@
                         </apex:outputText>
                     </td>
                     <td style="">
+                      <apex:outputPanel layout="none" rendered="{!erpOrder.Stage__c != 'Quoting'}">
                         <p>{!invoiceDateLabel}:</p>
-                        <p>{!invoiceDate}</p>
+                      </apex:outputPanel>
+                      <apex:outputPanel layout="none" rendered="{!erpOrder.Stage__c == 'Quoting'}">
+                        <p>Quoted On:</p>
+                      </apex:outputPanel>
+                      <p>{!invoiceDate}</p>
                     </td>
                     <td style="">
+                      <apex:outputPanel layout="none" rendered="{!erpOrder.Stage__c != 'Quoting'}">
                         <p>Invoice #:</p>
-                        <p>{!invoiceName}</p>
+                      </apex:outputPanel>
+                      <apex:outputPanel layout="none" rendered="{!erpOrder.Stage__c == 'Quoting'}">
+                        <p>Quote #:</p>
+                      </apex:outputPanel>
+                      <p>{!invoiceName}</p>
                     </td>
                 </tr>
               </table>
@@ -263,6 +280,11 @@
       <div class="col col65">
         <h2>Notes:</h2>
         <div class="notes_container">
+          <apex:outputPanel layout="none" rendered="{!erpOrder.Stage__c == 'Quoting'}">
+            <p>
+              <b>** Quote valid for 7 days after date quoted</b>
+            </p>
+          </apex:outputPanel>
           <p>
             <apex:outputText escape="false" value="{!customerNotes}" />
           </p>

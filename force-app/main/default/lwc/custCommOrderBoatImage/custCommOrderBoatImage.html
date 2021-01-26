@@ -24,5 +24,10 @@
     <template if:false={hasTrailerImage}>
       <img class="compositeImage boatImage" onload={setCompositeHeight} data-size={size} data-page={page} src={boatImage} alt="Boat image">
     </template>
+    <tempate if:true={optionImages}>
+      <template for:each={optionImages} for:item="optionImage">
+        <img key={optionImage} class="compositeImage optionImage" onload={setCompositeHeight} data-size={size} data-page={page} src={optionImage} alt="Option image">
+      </template>
+    </tempate>
   </span>
 </template>

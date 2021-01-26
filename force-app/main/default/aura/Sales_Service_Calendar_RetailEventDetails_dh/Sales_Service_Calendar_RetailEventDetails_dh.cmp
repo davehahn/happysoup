@@ -49,11 +49,10 @@
                 <div class="slds-p-around_medium">
                   <lightning:layout >
                     <lightning:layoutItem size="6" padding="around-small">
-                      <ui:inputDateTime label="Pickup Date"
-                                        labelClass="slds-form-element__label"
-                                        value="{!v.eventData.startDateTime}"
-                                        displayDatePicker="true"
-                                        disabled="{! not(v.settings.canEditPickupDate)}" />
+                      <lightning:input type="datetime-local"
+                                       label="Pickup Date"
+                                       value="{!v.eventData.startDateTime}"
+                                       disabled="{! not(v.perms.canEditPiuckupDate)}" />
                     </lightning:layoutItem>
                     <lightning:layoutItem size="6" padding="around-small">
                       <lightning:select name="pickupLocationSelect"

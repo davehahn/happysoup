@@ -24,6 +24,7 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
   accountId;
   opportunityId;
   orderNumber;
+  paymentResult;
   logo = LOGO;
   vertLogo = VLOGO;
   orderValid=true;
@@ -201,14 +202,20 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
     return 'english';
   }
 
-  handleHomeNav()
+  navigateToCommunityPage( attrs, state )
   {
     this[NavigationMixin.Navigate]({
       type: 'comm__namedPage',
-      attributes: {
-          pageName: 'home'
-      }
+      attributes: attrs,
+      state: state === undefined ? {} : state
     });
+  }
+
+  handleHomeNav()
+  {
+    this.navigateToCommunityPage(
+      { pageName: 'home' }
+    );
   }
 
   handleNav( event )
@@ -433,6 +440,8 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
 			 'UnitPrice': details.price,
 			 'Quantity': 1
 		};
+		console.log('updateListItems');
+		console.log( JSON.parse( JSON.stringify( details ) ) );
 		if(details.addToSummary){
 			//add item to list
 			if(details.type === 'radio'){
@@ -482,7 +491,7 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
   	console.log('numFormFields', numFormFields);
   	console.log('numValidFields', this.validatedFormFields);
   	if(numFormFields > this.validatedFormFields){
-  		return false;
+  		//return false;
   	}
     const spinner = this.template.querySelector('c-legend-spinner');
     spinner.toggle();
@@ -495,7 +504,10 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
 		  return this.createSquarePayment();
   	})
   	.then( ( paymentResult ) => {
-  	   return this.saveSaleItems();
+  	  console.log('PAYMENT RESULT');
+  	  //console.log( JSON.parse(JSON.stringify( paymentResult ) ) );
+  	  this.paymentResult = paymentResult;
+  	  return this.saveSaleItems();
     })
   	.then( ( saveSaleItemsResult ) => {
       console.log('lineItemsResult: ', saveSaleItemsResult);
@@ -503,16 +515,10 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
       this.displayThanks();
     })
   	.catch( ( error ) => {
-//			this.displayPaymentError(error);
-//			this.creditCardError = true;
       errorToast( this, reduceErrors( error )[0] );
    	})
    	.finally( () => {
       spinner.toggle();
-//      if(!this.creditCardError){
-//      	console.log('Everything is done, but what should happen now');
-//				this.displayThanks();
-//      }
     });
   }
 
@@ -520,16 +526,31 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
   {
     const userJSON = JSON.stringify( this.customer );
     return createAccount({customerJSON: userJSON});
+
+    /* for thank you testing */
+//    return Promise.resolve({
+//      opportunityId: '005xxxxx',
+//      referenceNumber: 'ref#0001',
+//      record: { Id: '009xxxx'}
+//    });
   }
 
   createSquarePayment()
   {
     return this.template.querySelector('c-square-payment-form')
       .doPostToSquare( this.paymentAmount, this.opportunityId );
+    /* for thank you testing */
+//    return Promise.resolve();
   }
 
   saveSaleItems()
   {
+    /* for thank you testing */
+//    return Promise.resolve();
+    const acctInfo = JSON.stringify({
+      Id: this.accountId,
+      BillingPostalCode: this.paymentResult.postal_code
+    });
     const oppInfo = JSON.stringify({
       'Id': this.opportunityId,
       'AccountId': this.accountId,
@@ -546,7 +567,7 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
     }];
     let lineItems = this.performanceItems.concat(this.traileringItems, this.electronicsItems, boatLineItem);
     lineItems = JSON.stringify(lineItems);
-    return saveLineItems({oppJSON: oppInfo, olisJSON: lineItems});
+    return saveLineItems({acctJSON: acctInfo, oppJSON: oppInfo, olisJSON: lineItems});
   }
 
   onPaymentPage()
@@ -810,30 +831,17 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
   	}
   }
 
-//	displayPaymentError(error){
-//		console.log('PAYMENT ERROR!!');
-//		this.hasPaymentErrors = true;
-//		console.log('error: ', error);
-//		if(typeof error === 'object'){
-//			console.log('errors: ', JSON.parse(JSON.stringify(error)));
-//			error.forEach((err) => {
-//				this.paymentFormErrors = err.message;
-//			});
-//		}
-//	}
-
-  displayThanks(){
-    const thanksShow = this.template.querySelectorAll('[data-thanks="show"]');
-    const thanksHide = this.template.querySelectorAll('[data-thanks="hide"]');
-
-    this.currentPage = 'thankyou';
-
-    thanksShow.forEach((element) => {
-      element.style.display = 'flex';
-    });
-    thanksHide.forEach((element) => {
-      element.style.display = 'none';
-    });
+  displayThanks()
+  {
+    this.navigateToCommunityPage(
+      {
+        pageName: 'thankyou'
+      },
+      {
+        language: this.currentLanguage,
+        opportunityId: this.opportunityId
+      }
+    );
   }
 
 }

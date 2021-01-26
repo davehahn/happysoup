@@ -64,12 +64,12 @@ public without sharing class P2PInventorySearch_mp {
 	}
 
 	@AuraEnabled
-	public static String searchPartnerInventories() {
+	public static String searchPartnerInventories( Boolean includeFactoryStoresForPartners) {
 		Set<String> uniquer = new Set<String>();
 		ResultWrapper result = new ResultWrapper();
 		Map<String, List<AccountWrapper>> inventory = new Map<String, List<AccountWrapper>>();
 		Map<String, GroupSelectOpts> selectOpts = new Map<String, GroupSelectOpts>();
-		for (Registration__c reg : findRegistrations() )
+		for (Registration__c reg : findRegistrations( includeFactoryStoresForPartners ) )
 		{
 			//add to select options
 			if( !selectOpts.containsKey( reg.SerialNumber__r.GMBLASERP__Product__r.Family ) )
@@ -102,10 +102,11 @@ public without sharing class P2PInventorySearch_mp {
 		return JSON.serialize( result );
 	}
 
-	private static Registration__c[] findRegistrations()
+	private static Registration__c[] findRegistrations( Boolean includeFactoryStoresForPartners )
 	{
-		User cu = [SELECT Id, AccountId FROM User WHERE Id = :UserInfo.getUserId()];
-		System.debug('cu: '+ cu);
+		User cu = [SELECT Id, AccountId, Account.Is_Internal__c FROM User WHERE Id = :UserInfo.getUserId()];
+		Boolean excludeFactoryStores = cu.Account.Is_Internal__c ? false : !includeFactoryStoresForPartners;
+
 		String[] fields = new List<String>{
 			'Account__c',
 			'Account__r.Phone',
@@ -129,6 +130,10 @@ public without sharing class P2PInventorySearch_mp {
 		query = query.removeEnd(',');
 		query += ' FROM Registration__c WHERE Account__r.Type = \'Dealer\'';
 		query += ' AND isCurrent__c = true AND SerialNumber__r.Product_Record_Type__c = \'Boat\'';
+		if( excludeFactoryStores )
+		{
+			query += ' AND Account__r.Is_Internal__c <> true';
+		}
 		if( cu.AccountId != null )
 			query += ' AND Account__c != \'' + cu.AccountId + '\'';
 		query += ' ORDER BY SerialNumber__r.Product_Name__c ASC';

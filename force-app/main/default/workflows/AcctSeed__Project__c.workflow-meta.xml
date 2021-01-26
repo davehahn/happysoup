@@ -250,6 +250,19 @@
         <template>Sales_Process/Retail_ERP_Stage_Changed_to_Closed_Lost</template>
     </alerts>
     <alerts>
+        <fullName>Email_sent_notifying_that_ERP_parts_are_on_order</fullName>
+        <description>Email sent notifying that ERP parts are on order</description>
+        <protected>false</protected>
+        <recipients>
+            <type>accountOwner</type>
+        </recipients>
+        <recipients>
+            <type>creator</type>
+        </recipients>
+        <senderType>CurrentUser</senderType>
+        <template>Sales_Process/ERP_parts_on_Order</template>
+    </alerts>
+    <alerts>
         <fullName>Email_sent_to_Barrie_customers_24_hours_prior_to_Pickup_Date</fullName>
         <description>Email sent to Barrie customers 24 hours prior to Pickup Date.</description>
         <protected>false</protected>
@@ -897,7 +910,7 @@
         <description>Send email to Dealer Care team that a PO is required</description>
         <protected>false</protected>
         <recipients>
-            <recipient>mbeaucage@legendboats.com</recipient>
+            <recipient>rmaclean@legendboats.com</recipient>
             <type>user</type>
         </recipients>
         <senderType>DefaultWorkflowUser</senderType>
@@ -1901,6 +1914,21 @@
             <value>Parts Shipped</value>
         </criteriaItems>
         <description>Trigger for parts shipped</description>
+        <triggerType>onCreateOrTriggeringUpdate</triggerType>
+    </rules>
+    <rules>
+        <fullName>ERP Parts on Order</fullName>
+        <actions>
+            <name>Email_sent_notifying_that_ERP_parts_are_on_order</name>
+            <type>Alert</type>
+        </actions>
+        <active>true</active>
+        <criteriaItems>
+            <field>AcctSeed__Project__c.Stage__c</field>
+            <operation>equals</operation>
+            <value>Parts On Order</value>
+        </criteriaItems>
+        <description>Trigger for parts on order</description>
         <triggerType>onCreateOrTriggeringUpdate</triggerType>
     </rules>
     <rules>
@@ -4496,7 +4524,7 @@
     </tasks>
     <tasks>
         <fullName>A_new_Trade_in_has_been_Created_MM</fullName>
-        <assignedTo>rmenard@legendboats.com</assignedTo>
+        <assignedTo>jwatson@legendboats.com</assignedTo>
         <assignedToType>user</assignedToType>
         <description>A new Trade in has been created.  Please get this Trade-in scheduled for a proper inspection.</description>
         <dueDateOffset>0</dueDateOffset>
@@ -4633,7 +4661,7 @@ Thanks! You rock!</description>
     </tasks>
     <tasks>
         <fullName>Create_Work_Order_Retail_Rig</fullName>
-        <assignedTo>mbeaucage@legendboats.com</assignedTo>
+        <assignedTo>rmaclean@legendboats.com</assignedTo>
         <assignedToType>user</assignedToType>
         <description>Please create a work order in IEM for Retail Rig</description>
         <dueDateOffset>0</dueDateOffset>
@@ -4716,7 +4744,7 @@ Thanks!  You rock!</description>
     </tasks>
     <tasks>
         <fullName>ERP_is_in_Pending_Scheduling</fullName>
-        <assignedTo>rmenard@legendboats.com</assignedTo>
+        <assignedTo>jwatson@legendboats.com</assignedTo>
         <assignedToType>user</assignedToType>
         <description>This ERP is ready to be scheduled into the shop.  All parts have been picked and packed and it is ready to go.</description>
         <dueDateOffset>0</dueDateOffset>
@@ -4777,7 +4805,7 @@ Please ensure this is done to the best of your abilities and let Marianne know w
     </tasks>
     <tasks>
         <fullName>New_Internal_Service_Work_Order_Was_Created</fullName>
-        <assignedTo>shackett@legendboats.com</assignedTo>
+        <assignedTo>cmclean@legendboats.com</assignedTo>
         <assignedToType>user</assignedToType>
         <description>This Task is to notify you that a new Service ERP has been created against one of the Factory Stores.</description>
         <dueDateOffset>0</dueDateOffset>
@@ -4813,7 +4841,7 @@ Please ensure this is done to the best of your abilities and let Marianne know w
     </tasks>
     <tasks>
         <fullName>Partner_Boat_Sale_Delivery_Has_Passed</fullName>
-        <assignedTo>mbeaucage@legendboats.com</assignedTo>
+        <assignedTo>rmaclean@legendboats.com</assignedTo>
         <assignedToType>user</assignedToType>
         <description>A Partner Boat sale has been 12 hours since the picukp time.
 Please complete other tasks associated to this Partner Boat Sale and finalize the ERP.</description>
@@ -4826,7 +4854,7 @@ Please complete other tasks associated to this Partner Boat Sale and finalize th
     </tasks>
     <tasks>
         <fullName>Partner_Boat_Sale_delivery_date_has_passed</fullName>
-        <assignedTo>mbeaucage@legendboats.com</assignedTo>
+        <assignedTo>rmaclean@legendboats.com</assignedTo>
         <assignedToType>user</assignedToType>
         <description>A Partner Boat sale has been 12 hours since the picukp time.
 Please complete other tasks associated to this Partner Boat Sale and finalize the ERP.</description>
@@ -5100,7 +5128,7 @@ Please complete other tasks associated to this Partner Boat Sale and finalize th
     </tasks>
     <tasks>
         <fullName>Please_review_this_ERP_for_Accuracy</fullName>
-        <assignedTo>rmenard@legendboats.com</assignedTo>
+        <assignedTo>jwatson@legendboats.com</assignedTo>
         <assignedToType>user</assignedToType>
         <description>Please review this ERP for accuracy, all parts WIp&apos;d.  All notes added etc.</description>
         <dueDateOffset>0</dueDateOffset>
@@ -5447,7 +5475,7 @@ Thank you, you&apos;re awesome!</description>
     </tasks>
     <tasks>
         <fullName>This_Dealer_Created_a_Parts_Request</fullName>
-        <assignedTo>mbeaucage@legendboats.com</assignedTo>
+        <assignedTo>rmaclean@legendboats.com</assignedTo>
         <assignedToType>user</assignedToType>
         <description>This dealer created a parts request.  Please have back parts pack it up.
 
@@ -5487,7 +5515,7 @@ Please note, Luc and Elvis and Mel also get this notification.</description>
     </tasks>
     <tasks>
         <fullName>This_ERP_is_in_Pending_Rigging_Stage</fullName>
-        <assignedTo>rmenard@legendboats.com</assignedTo>
+        <assignedTo>jwatson@legendboats.com</assignedTo>
         <assignedToType>user</assignedToType>
         <description>This ERP is in Pending RIgging Stage.</description>
         <dueDateOffset>0</dueDateOffset>
@@ -5560,7 +5588,7 @@ Please note, Luc and Elvis and Mel also get this notification.</description>
     </tasks>
     <tasks>
         <fullName>This_Service_Work_Order_has_been_moved_to_Pending_Rigging</fullName>
-        <assignedTo>rmenard@legendboats.com</assignedTo>
+        <assignedTo>jwatson@legendboats.com</assignedTo>
         <assignedToType>user</assignedToType>
         <description>This ERP has been moved to Pending Rigging.</description>
         <dueDateOffset>0</dueDateOffset>

@@ -11,6 +11,7 @@ export default class CustCommOrderBoatImage extends LightningElement {
     @api motorDetails;
     @api page;
     @api marketingContent;
+    @api summaryImages;
 
     @track motorImage;
     @track spareTireImage;
@@ -27,6 +28,7 @@ export default class CustCommOrderBoatImage extends LightningElement {
     @track boatImage;
     @track defaultTrailerImage;
     @track defaultTrailerCutImage;
+    @track optionImages;
 
 		@wire(CurrentPageReference) pageRef;
 
@@ -34,10 +36,28 @@ export default class CustCommOrderBoatImage extends LightningElement {
 			registerListener('motorSelection', this.handleImageChange, this);
 			registerListener('traileringSelection', this.handleImageChange, this);
 			registerListener('electronicsSelection', this.handleImageChange, this);
+			if( this.summaryImages )
+      {
+        if( Object.keys( this.summaryImages).indexOf( 'boat' ) >= 0 )
+        {
+          this.boatImage = 'https://' + this.summaryImages.boat;
+        }
+        if( Object.keys( this.summaryImages).indexOf( 'motor' ) >= 0 )
+        {
+          this.motorImage = 'https://' + this.summaryImages.motor;
+        }
+        if( Object.keys( this.summaryImages).indexOf( 'options' ) >= 0 )
+        {
+          this.optionImages =
+            this.summaryImages.options.map( opt => 'https://' + opt );
+        }
+      }
 		}
+
 		renderedCallback(){
 			//set default image
-			if(this.marketingContent){
+			if(this.marketingContent)
+			{
 				let marketingContent = this.marketingContent;
 				for(const mc of marketingContent){
 					const label = mc['label'].toLowerCase();
@@ -71,8 +91,6 @@ export default class CustCommOrderBoatImage extends LightningElement {
   	}
 
 		handleImageChange(detail){
-		  console.log('imagechange: ', detail);
-		  console.log(JSON.stringify(detail.optionImage));
 			if(detail.optionImage.length > 0){
 				for(let image of detail.optionImage){
 					if(this.page === 'performance'){
@@ -83,7 +101,6 @@ export default class CustCommOrderBoatImage extends LightningElement {
 
 					if(this.page === 'trailering' || this.page === 'electronics' || this.page === 'summary' || this.page === 'thankyou'){
 						if(image.imageType === 'backLeft'){
-						  console.log('optionName', detail.optionName);
 							if(detail.optionName === 'Add Bow To Stern Cover'){
 							  if(this.page !== 'electronics' && this.page !== 'summary' && this.page !== 'thankyou'){
 							  	this.canvasImage = (detail.addToComposite) ? 'https://' + image.imageURL : '';

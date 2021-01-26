@@ -77,12 +77,14 @@ public virtual class Online_Product
   {
     @AuraEnabled public Decimal standard;
     @AuraEnabled public Decimal maximum;
+    @AuraEnabled public String optionId;
 
     public Option( Product2 prod, Product_Option__c opt, PricebookEntry pbe )
     {
       super( prod, pbe );
       this.standard = opt.Standard__c;
       this.maximum = opt.Maximum__c;
+      this.optionId = opt.Id;
     }
   }
 
@@ -152,11 +154,15 @@ public virtual class Online_Product
   {
     @AuraEnabled public String label;
     @AuraEnabled public String content;
+    @AuraEnabled public String productId;
+    @AuraEnabled public String productOptionId;
 
     public MarketingContent( Marketing_Content__c mc )
     {
       this.label = mc.Label__c;
       this.content = mc.Content__c;
+      this.productId = mc.Product__c;
+      this.productOptionId = mc.Product_Option__c;
     }
   }
 
