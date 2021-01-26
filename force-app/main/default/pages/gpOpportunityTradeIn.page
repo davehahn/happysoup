@@ -352,67 +352,107 @@ input.autoComplete
             }
         }
 
-        Visualforce.remoting.Manager.invokeAction(
-            '{!$RemoteAction.gcOpportunityTradeIn.createTradeInOrders}',
-            '{!Id}',
-            function(result,event){
-                if(event.status)
-                {
-                    //gGrid.refreshGrid_callback($gridDiv,result);
-                    refreshGrid_opportunityProjects();
-                }
-                else
-                {
-                    alert(event.message); 
-                }
-                $gridDiv.pqGrid('hideLoading');
-            },
-            {buffer:true, escape:true, timeout:120000});
+				createTradeInRecord()
+				.then( function() {
+				  return createRetailRecord();
+				})
+    		.then( function() {
+    			refreshGrid_opportunityProjects();
+      	})
+      	.catch( function( error ) {
+      		alert( error );
+       	})
+       	.finally( function() {
+       	  $gridDiv.pqGrid('hideLoading');
+        });
     }
-    /// Projects 
-	function initGrid_opportunityProjects()
+
+    function createTradeInRecord()
     {
-        var gridObj = { title:"",
-                        collapsible:{on:false,collapsed:false,toggle:false},
-                        columnTemplate: {sortable:true,editable:false, minWidth:80},
-                        dataModel:{data:[], sorting:'local', location:'local'}, 
-                        dragColumns:{enabled:false},
-                        editable:false,
-                        //editModel: {clicksToEdit:1, saveKey: jQuery.ui.keyCode.ENTER, keyUpDown: false, onSave:null, onBlur:''},
-                        //editModel:{clicksToEdit:1, pressToEdit:false, filterKeys:true, keyUpDown:true, saveKey:$j.ui.keyCode.ENTER},
-                        //filterModel:{on:true, mode:'AND', header:true},
-                        freezeCols:0,
-                        freezeRows:0,
-                        height:'flex',
-                        historyModel:{on:false},
-                        hoverMode:'row',
-                        hwrap:false,
-                        numberCell:{show:true},
-                        pageModel: {type:null},
-                        pasteModel:{on:false},
-                        resizable: false,
-                        roundCorners: false,
-                        scrollModel: {autoFit:true},
-                        selectionModel: { type: null},
-                        showBottom:true,
-                        showHeader:true,
-                        showTitle:false,
-                        showTop:true,
-                        showToolbar:false,
-                        sortable:true,
-                        swipeModel:{on:false},
-                        virtualX: false,
-                        //virtualXHeader: false,
-                        virtualY: false,
-                        width:'auto',
-                        wrap:false};
+      console.log( 'Creating TradeIn ERP Record' );
+      return new Promise( function( resolve, result ) {
+        Visualforce.remoting.Manager.invokeAction(
+					'{!$RemoteAction.gcOpportunityTradeIn.createTradeInERP}',
+					'{!Id}',
+					function(result,event){
+						if(event.status)
+						{
+							resolve();
+						}
+						else
+						{
+							reject( event.message );
+						}
+					},
+					{buffer:true, escape:true, timeout:120000}
+        );
+      });
+    }
 
-        gridObj.colModel=[{dataIndx:'projectName',	title:'Project'},
-                          {dataIndx:'recordType',	title:'Type'},
-                          {dataIndx:"scrollSpacer", minWidth:15, maxWidth:15}];
+    function createRetailRecord()
+    {
+      console.log( 'Creating Retail Sale ERP Record' );
+      return new Promise( function( resolve, reject ) {
+        Visualforce.remoting.Manager.invokeAction(
+					'{!$RemoteAction.gcOpportunityTradeIn.createRetailERP}',
+					'{!Id}',
+					function(result,event){
+						if(event.status)
+						{
+							resolve();
+						}
+						else
+						{
+							reject(event.message);
+						}
+					},
+					{buffer:true, escape:true, timeout:120000}
+        );
+      })
+    }
 
-        //gGrid.initFormat(gridObj.colModel);
-        //gGrid.initFilter(gridObj.colModel);
+    /// Projects 
+		function initGrid_opportunityProjects()
+    {
+        var gridObj = {
+        	title:"",
+					collapsible:{on:false,collapsed:false,toggle:false},
+					columnTemplate: {sortable:true,editable:false, minWidth:80},
+					dataModel:{data:[], sorting:'local', location:'local'},
+					dragColumns:{enabled:false},
+					editable:false,
+					freezeCols:0,
+					freezeRows:0,
+					height:'flex',
+					historyModel:{on:false},
+					hoverMode:'row',
+					hwrap:false,
+					numberCell:{show:true},
+					pageModel: {type:null},
+					pasteModel:{on:false},
+					resizable: false,
+					roundCorners: false,
+					scrollModel: {autoFit:true},
+					selectionModel: { type: null},
+					showBottom:true,
+					showHeader:true,
+					showTitle:false,
+					showTop:true,
+					showToolbar:false,
+					sortable:true,
+					swipeModel:{on:false},
+					virtualX: false,
+					//virtualXHeader: false,
+					virtualY: false,
+					width:'auto',
+					wrap:false
+				};
+
+        gridObj.colModel=[
+          {dataIndx:'projectName',	title:'Project'},
+					{dataIndx:'recordType',	title:'Type'},
+					{dataIndx:"scrollSpacer", minWidth:15, maxWidth:15}
+				];
 
         $j.each(gridObj.colModel, function(i,col)
         {
@@ -440,7 +480,7 @@ input.autoComplete
     }
 
     function refreshGrid_opportunityProjects(){
-
+				console.log( 'Fetching Opportunity projects' );
         var $gridDiv = $j('#opportunityProjects');
         $gridDiv.pqGrid('showLoading');
 
