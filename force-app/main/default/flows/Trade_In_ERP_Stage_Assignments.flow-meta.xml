@@ -64,6 +64,7 @@
             </value>
         </inputParameters>
     </actionCalls>
+    <apiVersion>49.0</apiVersion>
     <assignments>
         <name>myWaitAssignment_myWait_myRule_5</name>
         <label>myWaitAssignment_myWait_myRule_5</label>
@@ -311,6 +312,37 @@
                 <operator>IsNull</operator>
                 <rightValue>
                     <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <processMetadataValues>
+                    <name>inputDataType</name>
+                    <value>
+                        <stringValue>Boolean</stringValue>
+                    </value>
+                </processMetadataValues>
+                <processMetadataValues>
+                    <name>leftHandSideType</name>
+                    <value>
+                        <stringValue>Boolean</stringValue>
+                    </value>
+                </processMetadataValues>
+                <processMetadataValues>
+                    <name>operatorDataType</name>
+                    <value>
+                        <stringValue>Boolean</stringValue>
+                    </value>
+                </processMetadataValues>
+                <processMetadataValues>
+                    <name>rightHandSideType</name>
+                    <value>
+                        <stringValue>Boolean</stringValue>
+                    </value>
+                </processMetadataValues>
+                <leftValueReference>myVariable_current.AcctSeed__Opportunity__r.Owner.IsActive</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
                 </rightValue>
             </conditions>
             <connector>
@@ -579,6 +611,37 @@
                 <operator>EqualTo</operator>
                 <rightValue>
                     <stringValue>Closed Lost</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <processMetadataValues>
+                    <name>inputDataType</name>
+                    <value>
+                        <stringValue>Boolean</stringValue>
+                    </value>
+                </processMetadataValues>
+                <processMetadataValues>
+                    <name>leftHandSideType</name>
+                    <value>
+                        <stringValue>Boolean</stringValue>
+                    </value>
+                </processMetadataValues>
+                <processMetadataValues>
+                    <name>operatorDataType</name>
+                    <value>
+                        <stringValue>Boolean</stringValue>
+                    </value>
+                </processMetadataValues>
+                <processMetadataValues>
+                    <name>rightHandSideType</name>
+                    <value>
+                        <stringValue>Boolean</stringValue>
+                    </value>
+                </processMetadataValues>
+                <leftValueReference>myVariable_current.Salesperson__r.IsActive</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
                 </rightValue>
             </conditions>
             <connector>
@@ -928,7 +991,7 @@
                 <stringValue>Now()</stringValue>
             </value>
         </processMetadataValues>
-        <name>formula_10_myRule_7_A2_9944938951</name>
+        <name>formula_10_myRule_7_A2_6663238365</name>
         <dataType>DateTime</dataType>
         <expression>Now()</expression>
     </formulas>
@@ -939,7 +1002,7 @@
                 <stringValue>Today()</stringValue>
             </value>
         </processMetadataValues>
-        <name>formula_11_myRule_7_A1_0150268350</name>
+        <name>formula_11_myRule_7_A1_6933491184</name>
         <dataType>Date</dataType>
         <expression>Today()</expression>
     </formulas>
@@ -950,7 +1013,7 @@
                 <stringValue>Now()</stringValue>
             </value>
         </processMetadataValues>
-        <name>formula_12_myRule_7_A1_1916222273</name>
+        <name>formula_12_myRule_7_A1_8967961703</name>
         <dataType>DateTime</dataType>
         <expression>Now()</expression>
     </formulas>
@@ -961,7 +1024,7 @@
                 <stringValue>Today()</stringValue>
             </value>
         </processMetadataValues>
-        <name>formula_2_myRule_1_A2_7367627537</name>
+        <name>formula_2_myRule_1_A2_9366130875</name>
         <dataType>Date</dataType>
         <expression>Today()</expression>
     </formulas>
@@ -972,7 +1035,7 @@
                 <stringValue>Now()</stringValue>
             </value>
         </processMetadataValues>
-        <name>formula_3_myRule_1_A2_6546238862</name>
+        <name>formula_3_myRule_1_A2_2828088863</name>
         <dataType>DateTime</dataType>
         <expression>Now()</expression>
     </formulas>
@@ -983,11 +1046,11 @@
                 <stringValue>Today()</stringValue>
             </value>
         </processMetadataValues>
-        <name>formula_9_myRule_7_A2_2683384286</name>
+        <name>formula_9_myRule_7_A2_3635989189</name>
         <dataType>Date</dataType>
         <expression>Today()</expression>
     </formulas>
-    <interviewLabel>Trade_In_ERP_Stage_Assignments-11_InterviewLabel</interviewLabel>
+    <interviewLabel>Trade_In_ERP_Stage_Assignments-13_InterviewLabel</interviewLabel>
     <label>Trade In ERP Stage Assignments</label>
     <processMetadataValues>
         <name>ObjectType</name>
@@ -1058,7 +1121,7 @@
             </processMetadataValues>
             <field>ActivityDate</field>
             <value>
-                <elementReference>formula_2_myRule_1_A2_7367627537</elementReference>
+                <elementReference>formula_2_myRule_1_A2_9366130875</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -1238,7 +1301,7 @@
             </processMetadataValues>
             <field>ReminderDateTime</field>
             <value>
-                <elementReference>formula_3_myRule_1_A2_6546238862</elementReference>
+                <elementReference>formula_3_myRule_1_A2_2828088863</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -1428,7 +1491,7 @@
             </processMetadataValues>
             <field>ActivityDate</field>
             <value>
-                <elementReference>formula_11_myRule_7_A1_0150268350</elementReference>
+                <elementReference>formula_11_myRule_7_A1_6933491184</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -1596,7 +1659,7 @@
             </processMetadataValues>
             <field>ReminderDateTime</field>
             <value>
-                <elementReference>formula_12_myRule_7_A1_1916222273</elementReference>
+                <elementReference>formula_12_myRule_7_A1_8967961703</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -1777,7 +1840,7 @@
             </processMetadataValues>
             <field>ActivityDate</field>
             <value>
-                <elementReference>formula_9_myRule_7_A2_2683384286</elementReference>
+                <elementReference>formula_9_myRule_7_A2_3635989189</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -1945,7 +2008,7 @@
             </processMetadataValues>
             <field>ReminderDateTime</field>
             <value>
-                <elementReference>formula_10_myRule_7_A2_9944938951</elementReference>
+                <elementReference>formula_10_myRule_7_A2_6663238365</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
