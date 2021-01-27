@@ -136,11 +136,33 @@ public with sharing class gcOpportunityTradeIn {
     return retrieveOppyProjects(idOppy);
   }
 
+  @RemoteAction
+  public static void createRetailERP( String idOppy )
+  {
+    gcProject_CreateFromOppy.createProject2(idOppy);
+  }
+
+  @RemoteAction
   public static void createTradeInERP(String idOppy)
   {
-      Opportunity oppy = [SELECT Id, Name, Business_Manager__c, Pricebook2Id, AccountId, Account.Name, (select Id from AcctSeed__Projects__r limit 1) FROM Opportunity WHERE Id = :idOppy][0];
+    Application_RecordType.ERPOrderRTs erpRts = new Application_RecordType().getERPOrderRecordTypes();
+      Opportunity oppy = [
+        SELECT
+          Id,
+          Name,
+          Business_Manager__c,
+          Pricebook2Id,
+          AccountId,
+          Account.Name,
+        ( SELECT
+            Id
+          FROM AcctSeed__Projects__r
+          WHERE RecordTypeId = :erpRts.getTradeInId() )
+        FROM Opportunity
+        WHERE Id = :idOppy
+      ][0];
       if(!oppy.AcctSeed__Projects__r.isEmpty())
-        throw new gcException('The opportunity already has underlying ERP Orders.');
+        throw new gcException('The opportunity already has Trade In ERP Order Created.');
 
       String projectName = (oppy.Account.Name.length()>=50?oppy.Account.Name.trim().substring(0,50):oppy.Account.Name) + ' - Trade In';
 
