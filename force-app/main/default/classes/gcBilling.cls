@@ -414,27 +414,39 @@ public without sharing class gcBilling {
 			for(AcctSeed__Billing__c billing : mapProjectBillings.get(idProject))
 			{
 				Decimal billingBalance = mapBillingBalance.get(billing.Id);
-				if(billingBalance == null || billingBalance <= 0) continue;
+				if(!(billingBalance == null || billingBalance <= 0)) {
+					//System.debug('billingBalance');
+					//System.debug(billingBalance);
+					if (mapProjectReceipts.containsKey(idProject)) {
+						for (AcctSeed__Cash_Receipt__c receipt : mapProjectReceipts.get(idProject)) {
+							billingBalance = mapBillingBalance.get(billing.Id);
+							//System.debug('billingBalance2');
+							//System.debug(billingBalance);
+							Decimal receiptBalance = mapReceiptBalance.get(receipt.Id);
+							//System.debug('receiptBalance');
+							//System.debug(receiptBalance);
+							if (!(receiptBalance == null || receiptBalance <= 0)) {
 
-				if(mapProjectReceipts.containsKey(idProject))
-				for(AcctSeed__Cash_Receipt__c receipt : mapProjectReceipts.get(idProject))
-				{
-					Decimal receiptBalance = mapReceiptBalance.get(receipt.Id);
-					if(receiptBalance == null || receiptBalance <= 0) continue;
-
-					Decimal applyAmount = receiptBalance;
-					if(applyAmount > billingBalance)
-					   applyAmount = billingBalance;
-
-					listBCR.add(new AcctSeed__Billing_Cash_Receipt__c(
-						AcctSeed__Accounting_Period__c = idPeriod,
-						AcctSeed__Applied_Amount__c = applyAmount,
-						AcctSeed__Billing__c = billing.Id,
-						AcctSeed__Cash_Receipt__c = receipt.Id
-					));
-
-					mapBillingBalance.put(billing.Id, mapBillingBalance.get(billing.Id) - applyAmount);
-					mapReceiptBalance.put(receipt.Id, mapReceiptBalance.get(receipt.Id) - applyAmount);
+								Decimal applyAmount = receiptBalance;
+								if (applyAmount > billingBalance)
+									applyAmount = billingBalance;
+								//System.debug('applyAmount');
+								//System.debug(applyAmount);
+								listBCR.add(new AcctSeed__Billing_Cash_Receipt__c(
+									AcctSeed__Accounting_Period__c = idPeriod,
+									AcctSeed__Applied_Amount__c = applyAmount,
+									AcctSeed__Billing__c = billing.Id,
+									AcctSeed__Cash_Receipt__c = receipt.Id
+								));
+								//System.debug('ba');
+								//System.debug(billingBalance - applyAmount);
+								//System.debug('ra');
+								//System.debug(receiptBalance - applyAmount);
+								mapBillingBalance.put(billing.Id, billingBalance - applyAmount);
+								mapReceiptBalance.put(receipt.Id, receiptBalance - applyAmount);
+							}
+						}
+					}
 				}
 			}
 		}
