@@ -1,5 +1,6 @@
 ({
 	doInit : function(component, event, helper) {
+	  console.log('promotion details init');
 		helper.getClaimDetails(component, event);
 	},
 

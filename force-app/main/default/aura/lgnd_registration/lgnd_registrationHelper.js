@@ -24,7 +24,27 @@
     });
   },
 
-	fetchCustomer: function( component, objectId )
+  fetchCustomer: function( component, objectId )
+  {
+    let spinner = component.find('registrationSpinner');
+    $A.util.toggleClass(spinner, 'slds-hide');
+    this.doFetchCustomer( component, objectId )
+    .then(
+      $A.getCallback( function( result ) {
+        console.log( result );
+        component.set('v.Customer', result );
+        component.set('v.showAccountForm', true );
+      }),
+      $A.getCallback( function( err) {
+        LightningUtils.errorToast( err );
+      })
+    )
+    .finally( $A.getCallback( function() {
+      $A.util.toggleClass(spinner, 'slds-hide');
+    }));
+  },
+
+	doFetchCustomer: function( component, objectId )
 	{
 	  var action = component.get('c.fetchCustomer');
 	  action.setParams({
