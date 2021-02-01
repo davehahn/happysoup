@@ -92,6 +92,12 @@
     LightningUtils.errorToast( 'Not yet Implemented' );
   },
 
+  handleNoPromotion: function( component, event, helper )
+  {
+    LightningUtils.showToast('success', 'Success', "Reservation successfully created");
+    helper.reload( component, 'Reloading records' );
+  },
+
   handleNext: function( component, event, helper )
   {
     const currentStep = component.get('v.currentStep'),
@@ -182,7 +188,7 @@
   handleFinish: function( component, event, helper )
   {
     const required = component.get('v.requiredPromotionDocuments'),
-         uploaded = component.get('v.uploadedFiles');
+          uploaded = component.get('v.uploadedFiles');
 
     if( required.length != uploaded.length )
     {
