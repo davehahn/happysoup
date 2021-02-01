@@ -449,14 +449,17 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
 				if(details.addon){
 				} else {
 					if(details.section === 'performance'){
-						this.performanceItems.pop();
-						this.performanceItems.push(payload);
+//						this.performanceItems.pop();
+//						this.performanceItems.push(payload);
+						this.ifContains(this.performanceItems, payload);
 					} else if(details.section === 'trailering'){
-						this.traileringItems.pop();
-						this.traileringItems.push(payload);
+//						this.traileringItems.pop();
+//						this.traileringItems.push(payload);
+							this.ifContains(this.traileringItems, payload);
 					} else if(details.section === 'electronics'){
-						this.electronicsItems.pop();
-						this.electronicsItems.push(payload);
+//						this.electronicsItems.pop();
+//						this.electronicsItems.push(payload);
+							this.ifContains(this.electronicsItems, payload);
 					}
 				}
 			} else if(details.type === 'select'){
@@ -475,14 +478,27 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
 		} else {
 			//remove item from list
 			if(details.section === 'performance'){
-				this.performanceItems = this.performanceItems.filter(obj => obj.PricebookEntryId !== payload.PricebookEntryId);
+				this.performanceItems = this.performanceItems.filter(obj => obj.Product2Id !== payload.Product2Id);
 			} else if(details.section === 'trailering'){
-				this.traileringItems = this.traileringItems.filter(obj => obj.PricebookEntryId !== payload.PricebookEntryId);
+				this.traileringItems = this.traileringItems.filter(obj => obj.Product2Id !== payload.Product2Id);
 			} else if(details.section === 'electronics'){
-				this.electronicsItems = this.electronicsItems.filter(obj => obj.PricebookEntryId !== payload.PricebookEntryId);
+				this.electronicsItems = this.electronicsItems.filter(obj => obj.Product2Id !== payload.Product2Id);
 			}
 		}
+
+		console.log('PERFORMANCE ITEMS', JSON.stringify(this.performanceItems));
+		console.log('TRAILERING ITEMS', JSON.stringify(this.traileringItems));
+		console.log('ELECTRONICS ITEMS', JSON.stringify(this.electronicsItems));
  	}
+
+ 		ifContains(array, object){
+  		let index = array.findIndex(({inputName}) => inputName === object.inputName);
+  		if(index === -1){
+  			array.push(object);
+   	 	} else{
+   	 	  array[index] = object;
+      }
+   	}
 
   submitOrder()
   {
@@ -565,8 +581,14 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
       'UnitPrice': this.boat.retailPrice,
       'Quantity': 1,
     }];
-    let lineItems = this.performanceItems.concat(this.traileringItems, this.electronicsItems, boatLineItem);
+    const premiumPackLineItem = [{
+    	'Product2Id': this.boat.premiumPackage.id,
+			'UnitPrice': this.boat.premiumPackage.retailPrice,
+			'Quantity': 1,
+    }];
+    let lineItems = this.performanceItems.concat(this.traileringItems, this.electronicsItems, boatLineItem, premiumPackLineItem);
     lineItems = JSON.stringify(lineItems);
+    console.log("LINE ITEMS:", lineItems);
     return saveLineItems({acctJSON: acctInfo, oppJSON: oppInfo, olisJSON: lineItems});
   }
 

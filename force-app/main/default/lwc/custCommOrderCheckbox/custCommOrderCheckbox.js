@@ -215,6 +215,7 @@ summaryFrag(){
 		}
 
    	fireEvent(this.pageRef, 'updateSummary', summaryDetails);
+   	console.log('fire updatedListItems a');
    	fireEvent(this.pageRef, 'updateListItems', summaryDetails);
    	fireEvent(this.pageRef, 'updatePurchasePrice', purchasePrice);
 
@@ -280,6 +281,7 @@ summaryFrag(){
 			};
 
 			fireEvent(this.pageRef, 'updateSummary', optionDetails);
+			console.log('fire updatedListItems b');
 			fireEvent(this.pageRef, 'updateListItems', optionDetails);
 		});
  	}
