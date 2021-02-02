@@ -116,6 +116,24 @@ global with sharing class ERPInvoiceDocumentBuilder {
 
   }
 
+  @AuraEnabled
+  public static List<ERP_document__c> fetchErpDocuments( String recordId )
+  {
+    return [
+      SELECT
+        Id,
+        CreatedDate,
+        Name,
+        CreatedBy.Name,
+        DocumentID__c,
+        Project__c
+      FROM ERP_document__c
+      WHERE Project__c = :recordId
+      AND Report_Type__c = 'Invoice'
+      ORDER BY CreatedDate DESC
+    ];
+  }
+
   global String getErpDocsJSON()
   {
     return JSON.serialize( this.erpDocuments );
