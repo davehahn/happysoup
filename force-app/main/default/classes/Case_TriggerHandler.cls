@@ -71,7 +71,7 @@ public without sharing class Case_TriggerHandler extends TriggerHandler
 
   private static void setContactAndPricebookOnPartnerWarrantyCase( List<Case> newList )
   {
-    User u = [ SELECT ContactId FROM User WHERE Id = :UserInfo.getUserId() ];
+    User u = [ SELECT Id, ContactId FROM User WHERE Id = :UserInfo.getUserId() ];
     for( Case c : newList )
     {
       if( c.RecordTypeId == warrantyRecordTypeId )

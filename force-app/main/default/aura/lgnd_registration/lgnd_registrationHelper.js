@@ -102,29 +102,6 @@
 				"caseId": caseId,
 				"paymentMethod": paymentMethod
 			});
-//			new LightningApex( self, action ).fire()
-//			.then(
-//			  $A.getCallback( (response) => {
-//			    if (caseId != null)
-//			    {
-//            self.updateCase(response, component)
-//            .then
-//            (
-//              $A.getCallback( function() {
-//                self.renderResults(response, component, regSpinner);
-//              })
-//            );
-//          }
-//          else
-//          {
-//            self.renderResults(response, component, regSpinner);
-//          }
-//        }),
-//        $A.getCallback( (err) => {
-//          LightningUtils.errorToast( err );
-//          $A.util.toggleClass(regSpinner, 'slds-hide');
-//        })
-//      );
 			action.setCallback(this, function(response) {
 			  var state = response.getState();
         if( state === 'SUCCESS' )
@@ -235,8 +212,11 @@
 				component.set('v.sernoSelected', false);
 				component.set('v.canBeNest', false);
 				component.set('v.hideSernoSearch', false);
-				LightningUtils.showToast('success', 'success', 'Product has been registered. High five!');
 				component.set('v.regInProcess', false);
+				LightningUtils.showToast('success', 'success', 'Product has been registered. High five!');
+				let evt = component.getEvent("registrationSuccessEvent");
+				evt.setParam('message', 'success');
+				evt.fire();
 			}
 		}
 

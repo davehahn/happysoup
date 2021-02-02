@@ -31,11 +31,15 @@
 	},
 
 	cancelRegister : function(component, event, helper) {
+	  console.log('CANCEL REGISTRATION');
+	  console.log( component.get('v.regInProcess') );
 		component.set('v.serno',  '');
 		component.set('v.sernoId',  '');
+		component.set('v.regInProcess', false );
 		component.find('lgnd_account_search').set('v.accountList', '');
     document.getElementById('lgnd_registration').classList.add('slds-hide');
     document.getElementById('lgnd_inventory_list').classList.remove('slds-hide');
+
 	},
 
   handleAccountSelected: function( component, event, helper )
