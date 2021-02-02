@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Reason_Lost__c</fullName>
+    <externalId>false</externalId>
+    <label>Reason Lost</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <type>Picklist</type>
+    <valueSet>
+        <controllingField>Status</controllingField>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Purchased at Dealer</fullName>
+                <default>false</default>
+                <label>Purchased at Dealer</label>
+            </value>
+            <value>
+                <fullName>Unqualified</fullName>
+                <default>false</default>
+                <label>Unqualified</label>
+            </value>
+            <value>
+                <fullName>Attempted to Contact</fullName>
+                <default>false</default>
+                <label>Attempted to Contact</label>
+            </value>
+            <value>
+                <fullName>Bad Timing</fullName>
+                <default>false</default>
+                <label>Bad Timing</label>
+            </value>
+            <value>
+                <fullName>Rejected - No Potential</fullName>
+                <default>false</default>
+                <label>Rejected - No Potential</label>
+            </value>
+            <value>
+                <fullName>Rejected - Bad Data</fullName>
+                <default>false</default>
+                <label>Rejected - Bad Data</label>
+            </value>
+        </valueSetDefinition>
+        <valueSettings>
+            <controllingFieldValue>Closed - Unconverted</controllingFieldValue>
+            <valueName>Purchased at Dealer</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Closed - Unconverted</controllingFieldValue>
+            <valueName>Unqualified</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Closed - Unconverted</controllingFieldValue>
+            <valueName>Attempted to Contact</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Closed - Unconverted</controllingFieldValue>
+            <valueName>Bad Timing</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Closed - Unconverted</controllingFieldValue>
+            <valueName>Rejected - No Potential</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Closed - Unconverted</controllingFieldValue>
+            <valueName>Rejected - Bad Data</valueName>
+        </valueSettings>
+    </valueSet>
+</CustomField>
