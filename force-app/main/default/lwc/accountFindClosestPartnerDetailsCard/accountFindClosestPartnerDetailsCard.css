@@ -2,34 +2,89 @@
  * Created by dave on 2021-01-14.
  */
 :host {
-  --legend-blue: #2AB2F0;
-  --legend-blue-hover: #0379AF;
-}
-
-.slds-no-flex {
-  height:100%;
+  /* --legend-blue: #2AB2F0; */
+  --legend-blue: #0d506d;
+  --legend-blue-hover: #FFF;
 }
 
 .slds-card {
   border:none;
+  background-color: transparent;
+  height: 100%;
+}
+
+.slds-grid{
+  margin-bottom: 0;
+  height: 100%;
+}
+
+
+.slds-media{
+  flex-direction: column;
+  align-items: flex-start;
+}
+.slds-no-flex {
+  /*height:100%;*/
+}
+
+
+.slds-m-top_medium, .slds-m-top--medium {
+	margin-top: 0!important;
+	padding-bottom: var(--lwc-spacingMedium,1rem);
+}
+
+.slds-text-heading_small{
+  font-weight: 900;
+}
+
+.partner-details .partner-address span{
+  display: block;
+}
+.partner-details .partner-contact{
+  margin: 0.5em 0; padding: 0.5em 0;
+  border-top: 1px solid #c4c4c4;
+  border-bottom: 1px solid #c4c4c4;
+}
+.partner-details .partner-contact a{
+  display: block;
+}
+.partner-actions{
+	display: flex;
+	align-items: center;
+	justify-self: flex-end;
+}
+.slds-m-right_small, .slds-m-right--small{
+  background-color: #333;
+	color: #FFF;
+	font-weight: 300!important;
+}
+.slds-button_icon-border{
+  border-color: #333;
 }
 
 button.select-account {
   background-color: var(--legend-blue);
   padding: 5px 40px;
   text-transform: uppercase;
-  font-weight: 600;
+  font-weight: 900;
   border-radius: 20px;
   color: #FFF;
   transition: 0.25s;
   white-space: nowrap;
-  border-color: transparent;
+  border: 1px solid var(--legend-blue);
 }
 
 button.select-account:hover {
   background-color: var(--legend-blue-hover);
+  color: var(--legend-blue);
 }
 
 button.select-account:focus {
   outline: none;
+}
+
+@media screen and (max-width: 920px){
+  .slds-grid{
+    min-width: 320px;
+  }
 }

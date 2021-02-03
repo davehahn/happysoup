@@ -2,11 +2,14 @@
  * Created by dave on 2021-01-15.
  */
 
-import { LightningElement, wire } from 'lwc';
+import { LightningElement, wire, track } from 'lwc';
 import { CurrentPageReference, NavigationMixin } from 'lightning/navigation';
 import { errorToast, successToast, warningToast, reduceErrors } from 'c/utils';
+import { fireEvent, registerListener, unregisterAllListeners} from 'c/pubsub';
 import { loadStyle } from 'lightning/platformResourceLoader';
 import gothamFonts from '@salesforce/resourceUrl/GothamHTF';
+import LOGO from '@salesforce/resourceUrl/LegendLogo';
+import VLOGO from '@salesforce/resourceUrl/LegendLogoVertical';
 import fetchOrderDetails from '@salesforce/apex/OnlineBoatReservation_Controller.fetchOrderDetails';
 import setPickupDealership from '@salesforce/apex/OnlineBoatReservation_Controller.setPickupDealership';
 
@@ -14,6 +17,8 @@ export default class BoatReservationThankyou extends NavigationMixin(LightningEl
 
   isEN = true;
   isFR = false;
+  logo = LOGO;
+	vertLogo = VLOGO;
   locator;
   spinner;
   opportunityId;
@@ -29,11 +34,13 @@ export default class BoatReservationThankyou extends NavigationMixin(LightningEl
   pickupDealershipName;
   pickupDealershipSelected = false;
   dataLoaded = false;
+  @track mapMarkers;
+  zoomLevel = 10;
+
 
   _stylesLoaded = false;
   _componentRendered = false;
   _initialized = false;
-
 
   @wire(CurrentPageReference)
   setCurrentPageReference(currentPageReference) {
@@ -49,6 +56,8 @@ export default class BoatReservationThankyou extends NavigationMixin(LightningEl
     this.init();
   }
 
+  @wire(CurrentPageReference) pageRef;
+
   @wire( fetchOrderDetails, { opportunityId: '$opportunityId'} )
   wiredDetails( { error, data } )
   {
@@ -57,6 +66,14 @@ export default class BoatReservationThankyou extends NavigationMixin(LightningEl
       console.log( JSON.parse(JSON.stringify(data)) );
       this.customer = data.account;
       this.boat = data.boat;
+		 	this.mapMarkers = [
+				{
+					location: {
+						Country: 'Canada',
+						PostalCode: data.account.BillingPostalCode
+					},
+				}
+			];
       if( Object.keys( data ).indexOf('motor') )
       {
         this.motor = data.motor;
@@ -89,6 +106,11 @@ export default class BoatReservationThankyou extends NavigationMixin(LightningEl
       console.log( error );
     }
   }
+
+  connectedCallback()
+  {
+		registerListener('setMap', this.setMapMarkers, this);
+	}
 
   renderedCallback()
   {
@@ -124,6 +146,7 @@ export default class BoatReservationThankyou extends NavigationMixin(LightningEl
     if( this.dataLoaded && this._componentRendered )
     {
       this.spinner = this.template.querySelector('c-legend-spinner');
+
       if( this.pickupDealershipSelected )
       {
         this._initialized = true;
@@ -146,7 +169,9 @@ export default class BoatReservationThankyou extends NavigationMixin(LightningEl
       console.log( this.motor );
       console.log( this.trailer );
       console.log( this.options );
+
     }
+
   }
 
   get ready()
@@ -200,4 +225,23 @@ export default class BoatReservationThankyou extends NavigationMixin(LightningEl
     });
 
   }
+
+  handleHomeNav()
+	{
+		this.navigateToCommunityPage(
+			{ pageName: 'home' }
+		);
+	}
+
+	setMapMarkers(payload){
+		this.mapMarkers = [{
+			location: {
+				Street: payload.location.Street,
+				City: payload.location.City,
+				State: payload.location.State,
+			},
+			title: payload.name,
+		}];
+	}
+
 }

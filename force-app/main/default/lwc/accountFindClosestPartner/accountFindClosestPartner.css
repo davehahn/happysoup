@@ -2,6 +2,17 @@
  * Created by dave on 2020-01-27.
  */
 .forceBaseCard {
-  background: #FFF;
+  width: 100%;
+  height: 100%;
   position:relative;
+  padding: 0!important;
+}
+.forceBaseCard .card-wrapper:nth-of-type(odd){
+  background-color: rgba(0, 0, 0, 0.1);
+}
+@media screen and (max-width: 920px){
+  .forceBaseCard{
+    display: flex;
+    overflow: auto;
+  }
 }

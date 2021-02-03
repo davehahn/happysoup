@@ -53,12 +53,14 @@
 
       <template if:false={mapView} >
         <template for:each={mapMarkers} for:item="acct">
-          <c-account-find-closest-partner-details-card key={acct.Id}
-                                                       acct={acct}
-                                                       is-selectable={isSelectable}
-                                                       hide-icon={hideResultIcon}
-                                                       origin-address={originAddress}
-                                                       onaccountselected={handleAccountSelected}></c-account-find-closest-partner-details-card>
+          <div class="card-wrapper" key={acct.Id}>
+            <c-account-find-closest-partner-details-card acct={acct}
+                                                         is-selectable={isSelectable}
+                                                         hide-icon={hideResultIcon}
+                                                         origin-address={originAddress}
+                                                         onaccountselected={handleAccountSelected}></c-account-find-closest-partner-details-card>
+          </div>
+
         </template>
       </template>
     </template>
