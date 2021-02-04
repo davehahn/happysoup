@@ -165,43 +165,43 @@ private class P2PInventorySearch_mp_Test {
     System.assert( aWrapper.onOrder );
   }
 
-//  @isTest
-//  static void searchPartnerInventories_inStockAndOnOrder_Test()
-//  {
-//    init();
-//    initRegistrations();
-//    initDealerOrders();
-//    Test.startTest();
-//    String jsonResult = P2PInventorySearch_mp.searchPartnerInventories( true );
-//    Test.stopTest();
-//    P2PInventorySearch_mp.ResultWrapper result =
-//      (P2PInventorySearch_mp.ResultWrapper)JSON.deserialize(
-//        jsonResult,
-//        P2PInventorySearch_mp.ResultWrapper.class
-//      );
-//    System.assertEquals( 2, result.boatSelectOptions.size() );
-//    System.assertEquals( 2, result.inventory.keySet().size() );
-//    P2PInventorySearch_mp.AccountWrapper[] wrappers =
-//      result.inventory.get(boat.Name);
-//    P2PInventorySearch_mp.AccountWrapper dealer1Wrapper;
-//    P2PInventorySearch_mp.AccountWrapper dealer2Wrapper;
-//    for( P2PInventorySearch_mp.AccountWrapper wrapper : wrappers )
-//    {
-//      if( wrapper.id == dealers[1].Id )
-//      {
-//        dealer1Wrapper = wrapper;
-//      }
-//      if( wrapper.id == dealers[2].Id )
-//      {
-//        dealer2Wrapper = wrapper;
-//      }
-//    }
-//    System.assertEquals( 4, result.inventory.get(boat.Name).size() );
-//    System.assert( dealer1Wrapper.inStock );
-//    System.assert( dealer1Wrapper.onOrder );
-//    System.assert( dealer2Wrapper.inStock );
-//    System.assert( !dealer2Wrapper.onOrder );
-//  }
+  @isTest
+  static void searchPartnerInventories_inStockAndOnOrder_Test()
+  {
+    init();
+    initRegistrations();
+    initDealerOrders();
+    Test.startTest();
+    String jsonResult = P2PInventorySearch_mp.searchPartnerInventories( true );
+    Test.stopTest();
+    P2PInventorySearch_mp.ResultWrapper result =
+      (P2PInventorySearch_mp.ResultWrapper)JSON.deserialize(
+        jsonResult,
+        P2PInventorySearch_mp.ResultWrapper.class
+      );
+    System.assertEquals( 2, result.boatSelectOptions.size() );
+    System.assertEquals( 2, result.inventory.keySet().size() );
+    P2PInventorySearch_mp.AccountWrapper[] wrappers =
+      result.inventory.get(boat.Name);
+    P2PInventorySearch_mp.AccountWrapper dealer1Wrapper;
+    P2PInventorySearch_mp.AccountWrapper dealer2Wrapper;
+    for( P2PInventorySearch_mp.AccountWrapper wrapper : wrappers )
+    {
+      if( wrapper.id == dealers[1].Id )
+      {
+        dealer1Wrapper = wrapper;
+      }
+      if( wrapper.id == dealers[2].Id )
+      {
+        dealer2Wrapper = wrapper;
+      }
+    }
+    System.assertEquals( 4, result.inventory.get(boat.Name).size() );
+    System.assert( dealer1Wrapper.inStock );
+    System.assert( dealer1Wrapper.onOrder );
+    System.assert( dealer2Wrapper.inStock );
+    System.assert( !dealer2Wrapper.onOrder );
+  }
 
   @isTest
   static void searchPartnerInventories_AsPartner_Test()

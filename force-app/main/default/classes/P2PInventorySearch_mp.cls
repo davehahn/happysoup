@@ -90,9 +90,12 @@ public without sharing class P2PInventorySearch_mp {
 		Map<String, List<AccountWrapper>> inventory = new Map<String, List<AccountWrapper>>();
 		Map<String, GroupSelectOpts> selectOpts = new Map<String, GroupSelectOpts>();
 		List<Registration__c> registrations = findRegistrations( includeFactoryStoresForPartners );
-		Map<Id, List<Dealer_Order_Line__c>> dealerOrderLinesByAccountId = findOnOrderBoats( includeFactoryStoresForPartners );
+		Map<String, List<Dealer_Order_Line__c>> dealerOrderLinesByAccountId = findOnOrderBoats( includeFactoryStoresForPartners );
+		System.debug('^^^ DOLS BY ACCTID ^^^');
+		System.debug( dealerOrderLinesByAccountId );
 		for (Registration__c reg : registrations )
 		{
+			System.debug( 'Registrations for ' + reg.Account__r.Name + reg.SerialNumber__r.Product_Name__c );
 			//add to select options
 			if( !selectOpts.containsKey( reg.SerialNumber__r.GMBLASERP__Product__r.Family ) )
 				selectOpts.put( reg.SerialNumber__r.GMBLASERP__Product__r.Family, new GroupSelectOpts( reg.SerialNumber__r.GMBLASERP__Product__r.Family ) );
@@ -108,12 +111,14 @@ public without sharing class P2PInventorySearch_mp {
 			{
 				uniquer.add( uniq );
 				AccountWrapper wrapper = new AccountWrapper( reg );
-				if( dealerOrderLinesByAccountId.containsKey( wrapper.id ) )
+				System.debug( 'On Order = ' + dealerOrderLinesByAccountId.containsKey( uniq ) );
+				if( dealerOrderLinesByAccountId.containsKey( uniq ) )
 				{
 					wrapper.onOrder = true;
-					dealerOrderLinesByAccountId.remove( wrapper.id );
+					dealerOrderLinesByAccountId.remove( uniq );
 				}
 				inventory.get(reg.SerialNumber__r.Product_Name__c).add( wrapper );
+				System.debug( wrapper );
 			}
 
 		}
@@ -121,9 +126,9 @@ public without sharing class P2PInventorySearch_mp {
 		if( dealerOrderLinesByAccountId.size() > 0 )
 		{
 			uniquer = new Set<String>();
-			for( Id acctId : dealerOrderLinesByAccountId.keySet() )
+			for( String accountProduct : dealerOrderLinesByAccountId.keySet() )
 			{
-				for( Dealer_Order_Line__c dol : dealerOrderLinesByAccountId.get( acctId ) )
+				for( Dealer_Order_Line__c dol : dealerOrderLinesByAccountId.get( accountProduct ) )
 				{
 					//add to select options
 					if( !selectOpts.containsKey( dol.Product__r.Family ) )
@@ -135,7 +140,7 @@ public without sharing class P2PInventorySearch_mp {
 					{
 						inventory.put(dol.Product__r.Name, new List<AccountWrapper>() );
 					}
-					String uniq = String.valueOf(dol.Dealer_Order__r.Account__c) + String.valueOf(dol.Product__r.Name);
+					String uniq = String.valueOf(dol.Dealer_Order__r.Account__c) + String.valueOf(dol.Product__c);
 					if( !uniquer.contains( uniq ) )
 					{
 						uniquer.add( uniq );
@@ -196,12 +201,12 @@ public without sharing class P2PInventorySearch_mp {
 		return Database.query(query);
 	}
 
-	private static  Map<Id, List<Dealer_Order_Line__c>> findOnOrderBoats(
+	private static  Map<String, List<Dealer_Order_Line__c>> findOnOrderBoats(
 		boolean includeFactoryStoresForPartners
 	)
 	{
-		Map<Id, List<Dealer_Order_Line__c>> result =
-			new Map<Id, List<Dealer_Order_Line__c>>();
+		Map<String, List<Dealer_Order_Line__c>> result =
+			new Map<String, List<Dealer_Order_Line__c>>();
 		Set<String> ignoreStages = new Set<String>{
 			'Draft',
 			'Delivered',
@@ -211,7 +216,6 @@ public without sharing class P2PInventorySearch_mp {
 		List<Dealer_Order_Line__c> dols = [
 			SELECT
 				Id,
-				Product__r.RecordTypeId,
 				Erp_Order__r.Stage__c,
 				Dealer_Order__r.Account__c,
 				Dealer_Order__r.Account__r.Phone,
@@ -225,23 +229,25 @@ public without sharing class P2PInventorySearch_mp {
 				Dealer_Order__r.Account__r.BillingCountry,
 				Dealer_order__r.Account__r.BillingPostalCode,
 				Product__c,
+				Product__r.RecordTypeId,
 				Product__r.Family,
 				Product__r.Name
 			FROM Dealer_Order_Line__c
 			WHERE ERP_Order__c <> null
 			AND ERP_Order__r.Stage__c NOT IN :ignoreStages
 			AND Dealer_Order__r.Account__c = :dealers.keySet()
+			AND Product__c <> null
 		];
 		for( Dealer_Order_Line__c dol : dols )
 		{
 			if( dol.Dealer_Order__r.Account__r.Is_Internal__c && !includeFactoryStoresForPartners )
 				continue;
-
-			if( !result.containsKey( dol.Dealer_Order__r.Account__c ) )
+			String uniq = String.valueOf( dol.Dealer_Order__r.Account__c ) + String.valueOf( dol.Product__c );
+			if( !result.containsKey( uniq ) )
 			{
-				result.put( dol.Dealer_Order__r.Account__c, new List<Dealer_Order_Line__c>() );
+				result.put( uniq, new List<Dealer_Order_Line__c>() );
 			}
-			result.get( dol.Dealer_Order__r.Account__c ).add( dol );
+			result.get( uniq ).add( dol );
 		}
 		return result;
 	}
