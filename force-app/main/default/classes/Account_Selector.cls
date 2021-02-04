@@ -117,10 +117,10 @@ public virtual class Account_Selector extends Application_Selector
     if( result.size() == 0 )
     {
       String msg = 'No Account record found with supplied Id';
-      Application_Selector.SelectorException exception =
+      Application_Selector.SelectorException ex =
         new Application_Selector.SelectorException( msg );
-      exception.setMessage(msg);
-      throw exception;
+      ex.setMessage(msg);
+      throw ex;
     }
     else
     {

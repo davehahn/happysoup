@@ -54,6 +54,7 @@ private class Account_Selector_T
     }
     catch( Exception e )
     {
+      System.debug( e.getMessage() );
       System.assert( e.getMessage() != null );
     }
   }
