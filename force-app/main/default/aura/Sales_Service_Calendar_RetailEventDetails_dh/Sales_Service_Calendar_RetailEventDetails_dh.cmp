@@ -52,7 +52,7 @@
                       <lightning:input type="datetime-local"
                                        label="Pickup Date"
                                        value="{!v.eventData.startDateTime}"
-                                       disabled="{! not(v.perms.canEditPiuckupDate)}" />
+                                       disabled="{! not(v.settings.canEditPickupDate)}" />
                     </lightning:layoutItem>
                     <lightning:layoutItem size="6" padding="around-small">
                       <lightning:select name="pickupLocationSelect"
