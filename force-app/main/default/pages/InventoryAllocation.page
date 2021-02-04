@@ -858,7 +858,7 @@
                                         Installed on: {{ this.nestName }}
                                     </a>
                                     {{/if}}
-                                    <div>{{this.lotName}}</div>
+                                    <div>{{this.lotName}}: Age: {{this.retailAge}}</div>
                                     <apex:outputText rendered="{!$Permission.CanViewUnitCostOnAllocations}">
                                         <div style="margin-top: 3px;" class="custom-badge-nopad">${{ this.unitCost }}</div>
                                     </apex:outputText>
