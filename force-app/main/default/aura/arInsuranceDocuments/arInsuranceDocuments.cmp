@@ -1,130 +1,104 @@
 <aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,force:lightningQuickAction" access="global" controller="arInsuranceDocuments" >
-    <aura:attribute name="recordId" type="Id" />
-    <aura:attribute name="erpData" type="Object" />
-    <aura:attribute name="loaded" type="Boolean" default="false" />
-    <aura:attribute name="canDelete" type="Boolean" default="false" />
-    <aura:attribute name="hasInsurance" type="Boolean" default="false" />
-    <aura:attribute name="noInsurancePDF" type="Boolean" default="false" />
-    <aura:attribute name="newInsurancePDF" type="Boolean" default="false" />
-    <aura:attribute name="selectedDocId" type="String" />
-    <aura:attribute name="oldPDFs" type="Object[]" />
-    <aura:attribute name="newPDFSRC" type="String"/>
-    <aura:attribute name="pdfSRC" type="String"/>
-    <aura:attribute name="firstPaymentDate" type="String" />
-    <aura:attribute name="language" type="String" default="Eng" />
+  <aura:attribute name="recordId" type="Id" />
+  <aura:attribute name="erpData" type="Object" />
+  <aura:attribute name="loaded" type="Boolean" default="false" />
+  <aura:attribute name="canDelete" type="Boolean" default="false" />
+  <aura:attribute name="hasInsurance" type="Boolean" default="false" />
+  <aura:attribute name="noInsurancePDF" type="Boolean" default="false" />
+  <aura:attribute name="newInsurancePDF" type="Boolean" default="false" />
+  <aura:attribute name="hasFirstPaymentDate" type="Boolean" default="false" />
+  <aura:attribute name="selectedDocId" type="String" />
+  <aura:attribute name="oldPDFs" type="Object[]" />
+  <aura:attribute name="newPDFSRC" type="String"/>
+  <aura:attribute name="pdfSRC" type="String"/>
+  <aura:attribute name="language" type="String" default="Eng" />
 
-    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+  <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
 
-    <aura:method name="reInit" action="{!c.doInit}" />
+  <aura:method name="reInit" action="{!c.doInit}" />
 
-    <lightning:spinner aura:id="spinner" />
-    <c:lgnd_Confirm aura:id="lgnd-confirm"/>
+  <lightning:spinner aura:id="spinner" />
+  <c:lgnd_Confirm aura:id="lgnd-confirm"/>
 
-    <div>
+  <div>
 
-      <div class="slds-hide" aura:id="date-select-modal">
-        <section role="dialog" class="slds-modal slds-fade-in-open">
-          <div class="slds-modal__container">
-            <header class="slds-modal__header">
-              <h2 class="slds-text-heading_medium slds-hyphenate">First Payment Date</h2>
-            </header>
-            <div class="slds-modal__content slds-p-around_xx-large" id="modal-content-id-1">
-              <div>
-                <ui:inputDate label="Please select the date the first payment is to be made"
-                              labelClass="slds-form-element__label"
-                              value="{!v.firstPaymentDate}"
-                              displayDatePicker="true"
-                              format="dd-MMM-yyyy"/>
-              </div>
-              <aura:if isTrue="{!v.erpData.taxZone eq 'Quebec'}">
-                <div>
-                  <lightning:select name="language" label="Language:" value="{!v.language}">
-                    <option value="Eng">English</option>
-                    <option value="Fr">French</option>
-                  </lightning:select>
-                </div>
-              </aura:if>
-            </div>
-            <footer class="slds-modal__footer">
-              <button class="slds-button slds-button_neutral" onclick="{!c.cancelPaymentDate}">Cancel</button>
-              <button class="slds-button slds-button_brand"
-                      onclick="{!c.saveNew}"
-                      disabled="{! empty(v.firstPaymentDate)}">Save</button>
-            </footer>
-          </div>
-        </section>
-        <div class="slds-backdrop slds-backdrop_open"></div>
-      </div>
-
-      <aura:if isTrue="{! and( v.hasInsurance, v.loaded)}">
-        <div class="slds-text-align_right">
-          <lightning:button label="Create New" onclick="{!c.setPaymentDate}" />
-        </div>
-        <aura:if isTrue="{!!v.noInsurancePDF}">
-          <div class="container">
-            <aura:if isTrue="{!!v.newInsurancePDF}">
-
-              <div class="doc-archive">
-                <h2>Document Archive</h2>
-                <div class="slds-table--edit_container slds-is-relative">
-                  <table aura:id="data-main-table" class="slds-table slds-table--bordered slds-has-focus slds-no-row-hover">
-                    <thead>
-                      <tr class="slds-text-title--caps">
-                        <aura:if isTrue="{!v.canDelete}">
-                          <th scope="col">
-                              <div class="slds-truncate">&nbsp;</div>
-                          </th>
-                        </aura:if>
-                        <th scope="col">
-                          <div class="slds-truncate">Document Name</div>
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <aura:iteration items="{!v.oldPDFs}" var="doc">
-                        <tr class="{! 'document-data' + if( equals( doc.idDoc, v.selectedDocId ), ' highlighted', '' )}"
-                            data-document-id="{!doc.idDoc}">
-                          <aura:if isTrue="{!v.canDelete}">
-                            <td>
-                              <a href="javascript:void(0);"
-                                 data-iderpdoc="{!doc.idErpDoc}"
-                                 data-dicid="{!doc.idDoc}"
-                                 onclick="{!c.deleteDoc}"
-                                 class="{! if(not( equals(v.selectedDocId, doc.idDoc)), 'disabled', '')}">delete</a>
-                            </td>
-                          </aura:if>
-                          <td>
-                              <a href="javascript:void(0);" onclick="{!c.loadPDF}" data-dicid="{!doc.idDoc}" data-iderpdoc="{!doc.idErpDoc}" class="slds-truncate">{!doc.Name}</a>
-                          </td>
-                        </tr>
-                      </aura:iteration>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-
-            </aura:if>
-            <div class="pdf-container">
-              <div>
-               <iframe height="800px"
-                        aura:id="pdfIframe"
-                        id="pdfI"
-                         name="InsurancePDF"
-                        src="{!v.pdfSRC}"
-                        width="100%">
-                </iframe>
-              </div>
-            </div>
-          </div>
+    <aura:if isTrue="{! and( v.hasInsurance, v.loaded)}">
+      <p class="slds-text-align_right">
+        <lightning:button label="Create New"
+                          onclick="{!c.saveNew}"
+                          disabled="{! not(v.hasFirstPaymentDate)}"/>
+        <aura:if isTrue="{! not(v.hasFirstPaymentDate)}">
+          <p style="color:red">
+            First Payment Date MUST be set to create Document
+          </p>
         </aura:if>
-      </aura:if>
 
-      <aura:if isTrue="{! and( not(v.hasInsurance), v.loaded )}">
-          <div class="slds-text-heading_large">
-            <h1>No Insurance has been selected for {!v.erpData.projectName}</h1>
+      </p>
+      <aura:if isTrue="{!!v.noInsurancePDF}">
+        <div class="container">
+          <aura:if isTrue="{!!v.newInsurancePDF}">
+
+            <div class="doc-archive">
+              <h2>Document Archive</h2>
+              <div class="slds-table--edit_container slds-is-relative">
+                <table aura:id="data-main-table" class="slds-table slds-table--bordered slds-has-focus slds-no-row-hover">
+                  <thead>
+                  <tr class="slds-text-title--caps">
+                    <aura:if isTrue="{!v.canDelete}">
+                      <th scope="col">
+                        <div class="slds-truncate">&nbsp;</div>
+                      </th>
+                    </aura:if>
+                    <th scope="col">
+                      <div class="slds-truncate">Document Name</div>
+                    </th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <aura:iteration items="{!v.oldPDFs}" var="doc">
+                    <tr class="{! 'document-data' + if( equals( doc.idDoc, v.selectedDocId ), ' highlighted', '' )}"
+                        data-document-id="{!doc.idDoc}">
+                      <aura:if isTrue="{!v.canDelete}">
+                        <td>
+                          <a href="javascript:void(0);"
+                             data-iderpdoc="{!doc.idErpDoc}"
+                             data-dicid="{!doc.idDoc}"
+                             onclick="{!c.deleteDoc}"
+                             class="{! if(not( equals(v.selectedDocId, doc.idDoc)), 'disabled', '')}">delete</a>
+                        </td>
+                      </aura:if>
+                      <td>
+                        <a href="javascript:void(0);" onclick="{!c.loadPDF}" data-dicid="{!doc.idDoc}" data-iderpdoc="{!doc.idErpDoc}" class="slds-truncate">{!doc.Name}</a>
+                      </td>
+                    </tr>
+                  </aura:iteration>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+          </aura:if>
+          <div class="pdf-container">
+            <div>
+              <iframe height="800px"
+                      aura:id="pdfIframe"
+                      id="pdfI"
+                      name="InsurancePDF"
+                      src="{!v.pdfSRC}"
+                      width="100%">
+              </iframe>
+            </div>
           </div>
+        </div>
       </aura:if>
+    </aura:if>
 
-    </div>
+    <aura:if isTrue="{! and( not(v.hasInsurance), v.loaded )}">
+      <div class="slds-text-heading_large">
+        <h1>No Insurance has been selected for {!v.erpData.projectName}</h1>
+      </div>
+    </aura:if>
+
+  </div>
 
 </aura:component>

@@ -1,0 +1,89 @@
+<!--
+ - Created by dave on 2021-02-04.
+ -->
+
+<!-- Business Office Specific Fields -->
+<template>
+  <template if:true={busy}>
+    <lightning-spinner size="medium"></lightning-spinner>
+  </template>
+
+  <template if:true={isReady}>
+    <template if:false={isEditing}>
+      <lightning-record-view-form
+        record-id={recordId}
+        object-api-name={sObjectType}
+        onload={handleRecordViewLoaded}>
+
+        <template if:true={viewRecordLoaded}>
+          <div class="slds-card">
+            <lightning-layout multiple-rows="true">
+              <template for:each={fields} for:item="field">
+                <lightning-layout-item key={field.name}
+                                       size="12"
+                                       small-device-size="12"
+                                       medium-device-size="6"
+                                       large-device-size="4"
+                                       padding="around-small"
+                                       class="view-field">
+                  <lightning-output-field field-name={field.name}
+                                          class="slds-form-element_readonly"></lightning-output-field>
+                  <template if:true={field.editable}>
+                    <lightning-button-icon icon-name="utility:edit"
+                                           variant="bare"
+                                           size="small"
+                                           onclick={handleEdit}
+                                           class="edit-button"></lightning-button-icon>
+                  </template>
+                </lightning-layout-item>
+              </template>
+            </lightning-layout>
+          </div>
+        </template>
+
+      </lightning-record-view-form>
+    </template>
+
+    <template if:true={isEditing}>
+      <lightning-record-edit-form
+        record-id={recordId}
+        object-api-name={sObjectType}
+        onload={handleRecordEditLoaded}
+        onsubmit={handleEditSubmit}
+        onsuccess={handleEditSuccess}>
+
+        <div class="slds-card">
+          <lightning-messages></lightning-messages>
+          <lightning-layout multiple-rows="true">
+            <template for:each={fields} for:item="field">
+              <lightning-layout-item key={field.name}
+                                     size="12"
+                                     small-device-size="12"
+                                     medium-device-size="6"
+                                     large-device-size="4"
+                                     padding="around-small"
+                                     class="slds-text-align_center">
+                <lightning-input-field field-name={field.name}></lightning-input-field>
+              </lightning-layout-item>
+            </template>
+          </lightning-layout>
+          <lightning-layout>
+            <lightning-layout-item size="12"
+                                   padding="around-small"
+                                   class="slds-text-align_center">
+              <lightning-button label="Cancel"
+                                onclick={handleCancelEdit}
+                                class="slds-m-right_small"></lightning-button>
+              <lightning-button label="Update"
+                                variant="brand"
+                                type="submit"></lightning-button>
+            </lightning-layout-item>
+          </lightning-layout>
+        </div>
+
+      </lightning-record-edit-form>
+    </template>
+  </template>
+
+
+</template>
