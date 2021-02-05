@@ -52,6 +52,10 @@ public virtual class Account_Selector extends Application_Selector
     'ShippingPostalCode'
   };
 
+  private final List<String> defaultDealerFields = new List<String>{
+    'Is_Internal__c'
+  };
+
   public Account_Selector()
   {
     this.sObjectName = 'Account';
@@ -65,6 +69,19 @@ public virtual class Account_Selector extends Application_Selector
     {
       super();
       this.fields.addAll( defaultPersonFields );
+    }
+  }
+
+  public virtual class DealerAccount_Selector extends Account_Selector
+  {
+    public DealerAccount_Selector()
+    {
+      super();
+      Id rtId = new Application_RecordType()
+        .getAccountRecordTypes()
+        .getDealerId();
+      this.fields.addAll( defaultDealerFields );
+      this.addWhere('RecordTypeId =\'' + rtId + '\'');
     }
   }
 
@@ -99,14 +116,23 @@ public virtual class Account_Selector extends Application_Selector
     );
     if( result.size() == 0 )
     {
-      throw new Application_Selector.SelectorException(
-        'No Account record found with supplied Id'
-      );
+      String msg = 'No Account record found with supplied Id';
+      Application_Selector.SelectorException ex =
+        new Application_Selector.SelectorException( msg );
+      ex.setMessage(msg);
+      throw ex;
     }
     else
     {
       return result[0];
     }
+  }
+
+  public static Account[] allActiveDealers()
+  {
+    return new DealerAccount_Selector()
+      .addWhere('Active__c = true')
+      .query();
   }
 
   public static Account businessAccountWithContactsById( Id recordId )
