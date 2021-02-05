@@ -6,7 +6,8 @@
       $A.getCallback( function( result ) {
         console.log( result );
         component.set('v.pricebookId', result.Id);
-        component.set('v.pricebookName', result.Name)
+        component.set('v.pricebookName', result.Name);
+        component.set('v.sObjectType', result.sObjectType );
         component.set('v.canViewInsuranceDocs', result.documentsAccessible);
         component.set('v.loading', false);
       }),
