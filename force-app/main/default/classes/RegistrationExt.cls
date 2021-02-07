@@ -329,10 +329,22 @@ public with sharing class RegistrationExt {
   }
 
   @AuraEnabled
-  public static Case updateClaimWithRegistration(String caseId, String regId) {
-  	Case c = [SELECT Id, Registration__c FROM Case WHERE ID = :caseId];
-  	c.Registration__c = regId;
+  public static Case updateClaimWithRegistration(
+		String caseId,
+		String regId
+	)
+	{
+		Registration__c registration = [
+			SELECT
+				Id,
+				SerialNumber__c
+			FROM Registration__c
+			WHERE Id = :regId
+		];
+  	Case c = Promotion_mp.getClaimDetails( caseId );
+  	c.Registration__c = registration.Id;
   	c.Status = 'Pending review';
+		c.Serial_Number__c = registration.SerialNumber__c;
   	update c;
   	return c;
   }

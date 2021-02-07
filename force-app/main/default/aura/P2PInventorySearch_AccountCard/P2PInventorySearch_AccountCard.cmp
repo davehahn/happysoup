@@ -17,7 +17,27 @@
           <h2 class="slds-card__header-title">
             <span>{! v.dealer.name }</span>
           </h2>
-          <p>{!v.dealer.city}, {!v.dealer.state}</p>
+          <p>
+            <span>
+              {!v.dealer.city}, {!v.dealer.state}
+            </span>
+            <span class="slds-m-left_medium">
+              <aura:if isTrue="{!v.dealer.inStock}">
+                <span class="slds-m-right_medium">
+                  <lightning:icon iconName="standard:product_required"
+                                  size="xx-small" />
+                  IN STOCK
+                </span>
+              </aura:if>
+              <aura:if isTrue="{!v.dealer.onOrder}">
+                <span>
+                  <lightning:icon iconName="standard:product_request"
+                                  size="xx-small" />
+                  ON ORDER
+                </span>
+              </aura:if>
+            </span>
+          </p>
         </div>
         <div class="slds-no-flex">
           <div class="slds-dropdown-trigger slds-dropdown-trigger_click slds-is-open">

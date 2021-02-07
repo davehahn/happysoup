@@ -103,7 +103,9 @@ public inherited sharing class Project_Service
         Tax_Override__c = this.opportunity.Tax_Override__c,
         ContactEmail__c = this.opportunity.ContactEmail__c,
         BoatModelYear__c = this.opportunity.Boat_Model_Year__c,
-        TrailerModelYear__c = this.opportunity.Trailer_Model_Year__c
+        TrailerModelYear__c = this.opportunity.Trailer_Model_Year__c,
+        Contract_Start_Date__c = this.opportunity.Contract_Start_Date__c,
+        First_Payment_Date__c = this.opportunity.First_Payment_Date__c
       );
       if( this.opportunity.Tax_Override__c == true )
       {

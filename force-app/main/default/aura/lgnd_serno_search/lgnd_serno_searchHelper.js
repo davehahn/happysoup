@@ -103,7 +103,10 @@
 
 		console.log('nestId:');
 		console.log(nestId);
-		this.populateSerialCard(component, event, '', sernoId, nestId);
+		if( sernoId !== undefined && sernoId !== null && sernoId.length > 0)
+		{
+		  this.populateSerialCard(component, event, '', sernoId, nestId);
+		}
 	},
 
 	populateSerialCard : function (component, event, serno, sernoId, nestId) {

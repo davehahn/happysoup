@@ -4,8 +4,8 @@
     <assignments>
         <name>Assign_Loop_Values</name>
         <label>Assign Loop Values</label>
-        <locationX>716</locationX>
-        <locationY>235</locationY>
+        <locationX>1406</locationX>
+        <locationY>171</locationY>
         <assignmentItems>
             <assignToReference>varDisplayTextLoop</assignToReference>
             <operator>Add</operator>
@@ -125,8 +125,8 @@
     <assignments>
         <name>Assign_Summary_Values</name>
         <label>Assign Summary Values</label>
-        <locationX>276</locationX>
-        <locationY>517</locationY>
+        <locationX>997</locationX>
+        <locationY>642</locationY>
         <assignmentItems>
             <assignToReference>varDisplayTextSummary</assignToReference>
             <operator>Add</operator>
@@ -239,8 +239,8 @@
     <assignments>
         <name>Clear_Loop_Data</name>
         <label>Clear Loop Data</label>
-        <locationX>472</locationX>
-        <locationY>412</locationY>
+        <locationX>997</locationX>
+        <locationY>443</locationY>
         <assignmentItems>
             <assignToReference>varDisplayTextLoop</assignToReference>
             <operator>Assign</operator>
@@ -260,8 +260,8 @@
     <decisions>
         <name>Update_New_ACV</name>
         <label>Update New ACV</label>
-        <locationX>709</locationX>
-        <locationY>632</locationY>
+        <locationX>1398</locationX>
+        <locationY>493</locationY>
         <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
         <rules>
             <name>True</name>
@@ -300,8 +300,8 @@
     <loops>
         <name>Iterate_IIM_Collection</name>
         <label>Iterate IIM Collection</label>
-        <locationX>474</locationX>
-        <locationY>235</locationY>
+        <locationX>997</locationX>
+        <locationY>173</locationY>
         <assignNextValueToReference>Individual_IIM</assignNextValueToReference>
         <collectionReference>IIMCollection</collectionReference>
         <iterationOrder>Asc</iterationOrder>
@@ -334,8 +334,8 @@
     <recordLookups>
         <name>Get_IIM</name>
         <label>Get IIM</label>
-        <locationX>286</locationX>
-        <locationY>402</locationY>
+        <locationX>755</locationX>
+        <locationY>439</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
             <targetReference>Iterate_IIM_Collection</targetReference>
@@ -346,6 +346,13 @@
             <operator>EqualTo</operator>
             <value>
                 <elementReference>recordId</elementReference>
+            </value>
+        </filters>
+        <filters>
+            <field>AcctSeedERP__Quantity__c</field>
+            <operator>GreaterThan</operator>
+            <value>
+                <numberValue>0.0</numberValue>
             </value>
         </filters>
         <object>AcctSeedERP__Inbound_Inventory_Movement__c</object>
@@ -361,8 +368,8 @@
     <recordLookups>
         <name>Get_New_ACV</name>
         <label>Get New ACV</label>
-        <locationX>277</locationX>
-        <locationY>729</locationY>
+        <locationX>997</locationX>
+        <locationY>861</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
             <targetReference>Assign_Summary_Values</targetReference>
@@ -384,8 +391,8 @@
     <recordLookups>
         <name>Get_New_ACV_0</name>
         <label>Get New ACV</label>
-        <locationX>436</locationX>
-        <locationY>582</locationY>
+        <locationX>1235</locationX>
+        <locationY>487</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
             <targetReference>Assign_Summary_Values</targetReference>
@@ -407,8 +414,8 @@
     <recordUpdates>
         <name>Update_New_ACV_Values</name>
         <label>Update New ACV Values</label>
-        <locationX>427</locationX>
-        <locationY>729</locationY>
+        <locationX>1315</locationX>
+        <locationY>862</locationY>
         <connector>
             <targetReference>Get_New_ACV</targetReference>
         </connector>
@@ -434,8 +441,8 @@
     <screens>
         <name>Display_Loop_Values</name>
         <label>Display Loop Values</label>
-        <locationX>717</locationX>
-        <locationY>411</locationY>
+        <locationX>1406</locationX>
+        <locationY>331</locationY>
         <allowBack>false</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
@@ -478,8 +485,8 @@
     <screens>
         <name>DisplaySummary</name>
         <label>DisplaySummary</label>
-        <locationX>474</locationX>
-        <locationY>58</locationY>
+        <locationX>1120</locationX>
+        <locationY>50</locationY>
         <allowBack>false</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
@@ -494,8 +501,8 @@
     <screens>
         <name>Error_Handler</name>
         <label>Error Handler</label>
-        <locationX>427</locationX>
-        <locationY>952</locationY>
+        <locationX>1553</locationX>
+        <locationY>861</locationY>
         <allowBack>false</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
@@ -510,8 +517,8 @@
     <screens>
         <name>Intro</name>
         <label>Intro</label>
-        <locationX>50</locationX>
-        <locationY>340</locationY>
+        <locationX>470</locationX>
+        <locationY>439</locationY>
         <allowBack>false</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
@@ -527,8 +534,8 @@
         <showHeader>true</showHeader>
     </screens>
     <start>
-        <locationX>147</locationX>
-        <locationY>235</locationY>
+        <locationX>50</locationX>
+        <locationY>420</locationY>
         <connector>
             <targetReference>Intro</targetReference>
         </connector>
