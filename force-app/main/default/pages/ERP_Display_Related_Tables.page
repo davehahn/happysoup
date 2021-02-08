@@ -1,8 +1,8 @@
 <apex:page title="{!AcctSeed__Project__c.Name}" standardController="AcctSeed__Project__c" extensions="gcProject_Ext,gcSerialNumber_Ext,gcProject_AccountingActions,gcProject_TimeCardLedger" cache="false" docType="html-5.0" showChat="false" showHeader="false" sidebar="true" lightningStylesheets="true">
-<apex:includeLightning />
-<head>
-<title>{!AcctSeed__Project__c.Name}</title>
-<style>
+    <apex:includeLightning />
+    <head>
+        <title>{!AcctSeed__Project__c.Name}</title>
+        <style>
 body {
     background: #FFF !important;
 }
@@ -46,18 +46,18 @@ input.dateSelector{
     display: none;
 }
 </style>
-<apex:stylesheet value="{!URLFOR($Resource.GMBLJS__jQueryUI,'/jquery-ui/jquery-ui.min.css')}"/>
-<apex:stylesheet value="{!URLFOR($Resource.GMBLJS__pqGridPro241,'/pqgrid.min.css')}"/>
-<apex:includeScript value="{!$Resource.GMBLJS__jQuery}"/>
-<apex:includeScript value="{!URLFOR($Resource.GMBLJS__jQueryUI,'/jquery-ui/jquery-ui.min.js')}"/>
-<apex:includeScript value="{!URLFOR($Resource.GMBLJS__pqGridPro241,'/pqgrid.min.js')}"/>
-<apex:includeScript value="{!URLFOR($Resource.GMBLJS__pqGridPro241,'/touch-punch/touch-punch.min.js')}"/>
-<apex:includeScript value="{!$Resource.GMBLJS__accountingJS}"/>
-<apex:includeScript value="{!$Resource.GMBLJS__ExcellentExport}"/>
-<apex:includeScript value="{!$Resource.GMBLJS__gsrSpinner}"/>
-<apex:includeScript value="{!$Resource.GMBLJS__gsrGrid2}"/>
-<script>function setFocusOnLoad() {}</script>
-<script type="text/javascript">
+        <apex:stylesheet value="{!URLFOR($Resource.GMBLJS__jQueryUI,'/jquery-ui/jquery-ui.min.css')}"/>
+        <apex:stylesheet value="{!URLFOR($Resource.GMBLJS__pqGridPro241,'/pqgrid.min.css')}"/>
+        <apex:includeScript value="{!$Resource.GMBLJS__jQuery}"/>
+        <apex:includeScript value="{!URLFOR($Resource.GMBLJS__jQueryUI,'/jquery-ui/jquery-ui.min.js')}"/>
+        <apex:includeScript value="{!URLFOR($Resource.GMBLJS__pqGridPro241,'/pqgrid.min.js')}"/>
+        <apex:includeScript value="{!URLFOR($Resource.GMBLJS__pqGridPro241,'/touch-punch/touch-punch.min.js')}"/>
+        <apex:includeScript value="{!$Resource.GMBLJS__accountingJS}"/>
+        <apex:includeScript value="{!$Resource.GMBLJS__ExcellentExport}"/>
+        <apex:includeScript value="{!$Resource.GMBLJS__gsrSpinner}"/>
+        <apex:includeScript value="{!$Resource.GMBLJS__gsrGrid2}"/>
+        <script>function setFocusOnLoad() {}</script>
+        <script type="text/javascript">
     $j = jQuery.noConflict();
     var isInternal = {!AcctSeed__Project__c.AcctSeed__Account__r.Is_Internal__c};
     var paymentMethods = [];
@@ -294,14 +294,14 @@ input.dateSelector{
 
 
 </script>
-</head>
+    </head>
 
-<body>
-<apex:variable value="{!AcctSeed__Project__c.Internal_Partner_Boat_Sale__c}" var="isInternalERP"/>
-<apex:variable value="{!AcctSeed__Project__c.Internal_Labour_Service__c}" var="isInternalLabour"/>
-<apex:variable value="{!AcctSeed__Project__c.Internal_Warranty__c}" var="isInternalWarranty"/>
-<apex:variable value="{!AcctSeed__Project__c.Internal_Partner_Parts_Order__c}" var="isInternalPartsOrder"/>
-<div id="theAuraComp"></div>
+    <body>
+    <apex:variable value="{!AcctSeed__Project__c.Internal_Partner_Boat_Sale__c}" var="isInternalERP"/>
+    <apex:variable value="{!AcctSeed__Project__c.Internal_Labour_Service__c}" var="isInternalLabour"/>
+    <apex:variable value="{!AcctSeed__Project__c.Internal_Warranty__c}" var="isInternalWarranty"/>
+    <apex:variable value="{!AcctSeed__Project__c.Internal_Partner_Parts_Order__c}" var="isInternalPartsOrder"/>
+    <div id="theAuraComp"></div>
     <apex:form >
         <apex:actionFunction name="rerenderDetail" reRender="detailContainer"/>
         <apex:actionFunction name="rerenderJournalEntry" reRender="relatedListJournalEntry"/>
@@ -314,9 +314,9 @@ input.dateSelector{
         <apex:actionFunction name="rerenderAPLines" reRender="relatedListAPLines"/>
     </apex:form>
 
-   <!-- <apex:outputPanel id="detailContainer">
-        <apex:detail subject="{!AcctSeed__Project__c.Id}" relatedList="false" id="theDetail" oncomplete="detailOnComplete()" inlineEdit="false"/>
-    </apex:outputPanel> -->
+    <!-- <apex:outputPanel id="detailContainer">
+         <apex:detail subject="{!AcctSeed__Project__c.Id}" relatedList="false" id="theDetail" oncomplete="detailOnComplete()" inlineEdit="false"/>
+     </apex:outputPanel> -->
 
 
     <div id="pageBlockSerials">
@@ -336,13 +336,13 @@ input.dateSelector{
         <apex:pageBlock mode="edit" title="ERP Order Tasks">
             <apex:pageBlockButtons rendered="{!if(AND(isManufacturing,hasFinishedGood),false,true)}" location="top">
                 <apex:form >
-                <span><strong>Select Task Name:</strong></span>
-                <span id="newTaskName">
+                    <span><strong>Select Task Name:</strong></span>
+                    <span id="newTaskName">
                     <apex:selectList styleClass="newTaskName" size="1">
                         <apex:selectOptions value="{!listDefaultTaskNames}"/>
                     </apex:selectList>
                 </span>
-                <button type="button" class="btn" id="btnNewProjectTask" onclick="launchNewProjectTask();">New ERP Order Task</button>
+                    <button type="button" class="btn" id="btnNewProjectTask" onclick="launchNewProjectTask();">New ERP Order Task</button>
                 </apex:form>
             </apex:pageBlockButtons>
 
@@ -378,81 +378,81 @@ input.dateSelector{
         </apex:pageBlock>
     </div>
 
-<apex:outputText rendered="{!isInternalPartsOrder}">
-<div>
-    <apex:outputPanel id="relatedListInventoryTransfers">
-        <apex:relatedList subject="{!Id}" list="Inventory_Transfers__r"/>
-    </apex:outputPanel>
-</div>
-</apex:outputText>
-<div style="{!IF(OR(isManufacturing,isTradeIn,isInternalERP,isInternalPartsOrder),'','display:none')}">
-    <apex:outputPanel id="relatedListInboundMovements">
-        <apex:relatedList subject="{!Id}" list="AcctSeedERP__Inbound_Inventory_Movements__r" rendered="{!AND($ObjectType.AcctSeedERP__Inbound_Inventory_Movement__c.accessible,$ObjectType.AcctSeedERP__Inbound_Inventory_Movement__c.fields.AcctSeedERP__Project__c.accessible)}"/>
-    </apex:outputPanel>
-</div>
+    <apex:outputText rendered="{!isInternalPartsOrder}">
+        <div>
+            <apex:outputPanel id="relatedListInventoryTransfers">
+                <apex:relatedList subject="{!Id}" list="Inventory_Transfers__r"/>
+            </apex:outputPanel>
+        </div>
+    </apex:outputText>
+    <div style="{!IF(OR(isManufacturing,isTradeIn,isInternalERP,isInternalPartsOrder),'','display:none')}">
+        <apex:outputPanel id="relatedListInboundMovements">
+            <apex:relatedList subject="{!Id}" list="AcctSeedERP__Inbound_Inventory_Movements__r" rendered="{!AND($ObjectType.AcctSeedERP__Inbound_Inventory_Movement__c.accessible,$ObjectType.AcctSeedERP__Inbound_Inventory_Movement__c.fields.AcctSeedERP__Project__c.accessible)}"/>
+        </apex:outputPanel>
+    </div>
 
-<div style="{!IF(!isInternalPartsOrder,'','display:none')}">
-<div style="{!IF(OR(isBoatSale,isPartnerBoatSale,isCounterSale,isPartnerPartsOrder,isService,isWarranty),'','display:none')}">
-    <div>
-        <apex:outputPanel id="relatedListBillings">
-            <apex:relatedList subject="{!Id}" list="GMBLASERP__Billings__r" rendered="{!AND($ObjectType.AcctSeed__Billing__c.accessible,$ObjectType.AcctSeed__Billing__c.fields.GMBLASERP__Project__c.accessible)}"/>
-        </apex:outputPanel>
+    <div style="{!IF(!isInternalPartsOrder,'','display:none')}">
+        <div style="{!IF(OR(isBoatSale,isPartnerBoatSale,isCounterSale,isPartnerPartsOrder,isService,isWarranty),'','display:none')}">
+            <div>
+                <apex:outputPanel id="relatedListBillings">
+                    <apex:relatedList subject="{!Id}" list="GMBLASERP__Billings__r" rendered="{!AND($ObjectType.AcctSeed__Billing__c.accessible,$ObjectType.AcctSeed__Billing__c.fields.GMBLASERP__Project__c.accessible)}"/>
+                </apex:outputPanel>
+            </div>
+            <div id="pageBlock_cash">
+                <apex:outputPanel id="relatedListCashReceipts" rendered="{!AND(!isInternalERP,!isInternalLabour)}">
+                    <apex:relatedList subject="{!Id}" list="AcctSeed__Cash_Receipts__r" rendered="{!AND($ObjectType.AcctSeed__Cash_Receipt__c.accessible,$ObjectType.AcctSeed__Cash_Receipt__c.fields.AcctSeed__Project__c.accessible)}"/>
+                </apex:outputPanel>
+            </div>
+            <div>
+                <apex:outputPanel id="relatedListBillingLines">
+                    <apex:relatedList subject="{!Id}" list="AcctSeed__Billing_Lines__r" rendered="{!AND($ObjectType.AcctSeed__Billing_Line__c.accessible,$ObjectType.AcctSeed__Billing_Line__c.fields.AcctSeed__Project__c.accessible)}"/>
+                </apex:outputPanel>
+            </div>
+            <apex:outputPanel id="relatedListOpportunityLineItems" rendered="false">
+                <apex:outputPanel rendered="{!!ISBLANK(AcctSeed__Project__c.AcctSeed__Opportunity__c)}">
+                    <apex:relatedList subject="{!AcctSeed__Project__c.AcctSeed__Opportunity__c}" list="OpportunityLineItems" rendered="{!AND($ObjectType.OpportunityLineItem.accessible,$ObjectType.AcctSeed__Project__c.fields.AcctSeed__Opportunity__c.accessible)}"/>
+                </apex:outputPanel>
+            </apex:outputPanel>
+        </div>
+        <div style="{!IF(OR(!isCounterSale,AND(isCounterSale,AcctSeed__Project__c.AcctSeed__Account__c != null, AcctSeed__Project__c.AcctSeed__Account__r.RecordType.Name == 'Supplier')),'','display:none')}">
+            <apex:outputPanel id="relatedListAPLines">
+                <apex:relatedList subject="{!Id}" list="AcctSeed__Account_Payable_Lines__r" rendered="{!AND($ObjectType.AcctSeed__Account_Payable_Line__c.accessible,$ObjectType.AcctSeed__Account_Payable_Line__c.fields.AcctSeed__Project__c.accessible)}"/>
+            </apex:outputPanel>
+        </div>
     </div>
-    <div id="pageBlock_cash">
-        <apex:outputPanel id="relatedListCashReceipts" rendered="{!AND(!isInternalERP,!isInternalLabour)}">
-            <apex:relatedList subject="{!Id}" list="AcctSeed__Cash_Receipts__r" rendered="{!AND($ObjectType.AcctSeed__Cash_Receipt__c.accessible,$ObjectType.AcctSeed__Cash_Receipt__c.fields.AcctSeed__Project__c.accessible)}"/>
-        </apex:outputPanel>
-    </div>
-    <div>
-        <apex:outputPanel id="relatedListBillingLines">
-            <apex:relatedList subject="{!Id}" list="AcctSeed__Billing_Lines__r" rendered="{!AND($ObjectType.AcctSeed__Billing_Line__c.accessible,$ObjectType.AcctSeed__Billing_Line__c.fields.AcctSeed__Project__c.accessible)}"/>
-        </apex:outputPanel>
-    </div>
-    <apex:outputPanel id="relatedListOpportunityLineItems" rendered="false">
-        <apex:outputPanel rendered="{!!ISBLANK(AcctSeed__Project__c.AcctSeed__Opportunity__c)}">
-            <apex:relatedList subject="{!AcctSeed__Project__c.AcctSeed__Opportunity__c}" list="OpportunityLineItems" rendered="{!AND($ObjectType.OpportunityLineItem.accessible,$ObjectType.AcctSeed__Project__c.fields.AcctSeed__Opportunity__c.accessible)}"/>
-        </apex:outputPanel>
-    </apex:outputPanel>
-</div>
-<div style="{!IF(OR(!isCounterSale,AND(isCounterSale,AcctSeed__Project__c.AcctSeed__Account__c != null, AcctSeed__Project__c.AcctSeed__Account__r.RecordType.Name == 'Supplier')),'','display:none')}">
-    <apex:outputPanel id="relatedListAPLines">
-        <apex:relatedList subject="{!Id}" list="AcctSeed__Account_Payable_Lines__r" rendered="{!AND($ObjectType.AcctSeed__Account_Payable_Line__c.accessible,$ObjectType.AcctSeed__Account_Payable_Line__c.fields.AcctSeed__Project__c.accessible)}"/>
-    </apex:outputPanel>
-</div>
-</div>
     <div id="pageBlockLedger">
         <apex:pageBlock mode="edit" title="Project Ledger" rendered="{!$ObjectType.AcctSeed__Transaction__c.accessible}">
             <apex:pageBlockButtons location="top" rendered="{!$ObjectType.AcctSeed__Journal_Entry__c.createable}">
                 <apex:outputPanel rendered="{!isManufacturing}">
                     <apex:outputPanel >
                         <apex:outputText rendered="{!AND($Permission.CanMoveInvToWIP,!hasFinishedGood)}">
-                        <button type="button" class="btn" onclick="consumeInventory();">INV <span style="font-size:larger;">&rarr;</span> WIP</button>
+                            <button type="button" class="btn" onclick="consumeInventory();">INV <span style="font-size:larger;">&rarr;</span> WIP</button>
                         </apex:outputText>
                         <apex:outputText rendered="{!$Permission.CanMoveWIPToInv}">
-                        <button type="button" class="btn" onclick="unconsumeInventory();">INV <span style="font-size:larger;">&larr;</span> WIP</button>
+                            <button type="button" class="btn" onclick="unconsumeInventory();">INV <span style="font-size:larger;">&larr;</span> WIP</button>
                         </apex:outputText>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     </apex:outputPanel>
 
                     <apex:outputPanel >
                         <apex:outputText rendered="{!AND($Permission.CanCreateWIPToFG,!hasFinishedGood)}">
-                        <button type="button" class="btn" onclick="buildFinishedGoods();">WIP <span style="font-size:larger;">&rarr;</span> FG</button>
+                            <button type="button" class="btn" onclick="buildFinishedGoods();">WIP <span style="font-size:larger;">&rarr;</span> FG</button>
                         </apex:outputText>
                         <apex:outputText rendered="{!$Permission.CanCreateFGToWIP}">
-                        <button type="button" class="btn" onclick="unbuildFinishedGoods();">WIP <span style="font-size:larger;">&larr;</span> FG</button>
+                            <button type="button" class="btn" onclick="unbuildFinishedGoods();">WIP <span style="font-size:larger;">&larr;</span> FG</button>
                         </apex:outputText>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     </apex:outputPanel>
                     <apex:outputPanel >
                         <apex:outputText rendered="{!AND($Permission.CanMoveInvToWIPToFG,!hasFinishedGood)}">
-                        <button type="button" class="btn" onclick="postProject();">INV <span style="font-size:larger;">&rarr;</span> WIP <span style="font-size:larger;">&rarr;</span> FG</button>
+                            <button type="button" class="btn" onclick="postProject();">INV <span style="font-size:larger;">&rarr;</span> WIP <span style="font-size:larger;">&rarr;</span> FG</button>
                         </apex:outputText>
                         <apex:outputText rendered="{!$Permission.CanMoveFGToWIPToInv}">
-                        <button type="button" class="btn" onclick="unpostProject();">INV <span style="font-size:larger;">&larr;</span> WIP <span style="font-size:larger;">&larr;</span> FG</button>
+                            <button type="button" class="btn" onclick="unpostProject();">INV <span style="font-size:larger;">&larr;</span> WIP <span style="font-size:larger;">&larr;</span> FG</button>
                         </apex:outputText>
                     </apex:outputPanel>
                     <apex:outputText rendered="{!AND($Permission.CanSelectBillCOGSDate,OR($Permission.CanCreateWIPToFG,$Permission.CanMoveInvToWIPToFG))}">
-                    &nbsp;&nbsp;FG Date: <input type="text" class="dateSelector" name="cogsDate" id="cogsDate"/>
+                        &nbsp;&nbsp;FG Date: <input type="text" class="dateSelector" name="cogsDate" id="cogsDate"/>
                     </apex:outputText>
                 </apex:outputPanel>
 
@@ -461,10 +461,10 @@ input.dateSelector{
                     <apex:outputPanel rendered="{!AND(!OR(isCounterSale,isFixedAsset),!isInternalERP,!isInternalLabour)}">
                         <apex:outputPanel >
                             <apex:outputText rendered="{!$Permission.CanMoveInvToWIP}">
-                            <button type="button" class="btn" onclick="consumeInventory();">INV <span style="font-size:larger;">&rarr;</span> WIP</button>
+                                <button type="button" class="btn" onclick="consumeInventory();">INV <span style="font-size:larger;">&rarr;</span> WIP</button>
                             </apex:outputText>
                             <apex:outputText rendered="{!$Permission.CanMoveWIPToInv}">
-                            <button type="button" class="btn" onclick="unconsumeInventory();">INV <span style="font-size:larger;">&larr;</span> WIP</button>
+                                <button type="button" class="btn" onclick="unconsumeInventory();">INV <span style="font-size:larger;">&larr;</span> WIP</button>
                             </apex:outputText>
                             <!-- <apex:outputText rendered="{!AND($Permission.CanSelectBillCOGSDate,OR($Permission.CanMoveInvToWIP,$Permission.CanCreateInvToWIPToCOGS))}">
                             &nbsp;&nbsp;Move Date: <input type="text" class="dateSelector" name="moveDate" id="moveDate"/>
@@ -473,34 +473,34 @@ input.dateSelector{
                         </apex:outputPanel>
                         <apex:outputPanel >
                             <apex:outputText rendered="{!$Permission.CanCreateWIPToCOGS}">
-                            <button type="button" class="btn" onclick="takeExpense();">WIP <span style="font-size:larger;">&rarr;</span> COGS</button>
+                                <button type="button" class="btn" onclick="takeExpense();">WIP <span style="font-size:larger;">&rarr;</span> COGS</button>
                             </apex:outputText>
                             <apex:outputText rendered="{!$Permission.CanCreateCOGSToWIP}">
-                            <button type="button" class="btn" onclick="untakeExpense();">WIP <span style="font-size:larger;">&larr;</span> COGS</button>
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <button type="button" class="btn" onclick="untakeExpense();">WIP <span style="font-size:larger;">&larr;</span> COGS</button>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             </apex:outputText>
                         </apex:outputPanel>
                     </apex:outputPanel>
                     <apex:outputPanel rendered="{!!isInternalLabour}">
                         <apex:outputText rendered="{!$Permission.CanCreateInvToWIPToCOGS}">
-                        <button type="button" class="btn" onclick="postProject();">INV <span style="font-size:larger;">&rarr;</span> WIP <span style="font-size:larger;">&rarr;</span> COGS</button>
+                            <button type="button" class="btn" onclick="postProject();">INV <span style="font-size:larger;">&rarr;</span> WIP <span style="font-size:larger;">&rarr;</span> COGS</button>
                         </apex:outputText>
                         <apex:outputText rendered="{!$Permission.CanCreateCOGSToWIPtoInv}">
-                        <button type="button" class="btn" onclick="unpostProject();">INV <span style="font-size:larger;">&larr;</span> WIP <span style="font-size:larger;">&larr;</span> COGS</button>
+                            <button type="button" class="btn" onclick="unpostProject();">INV <span style="font-size:larger;">&larr;</span> WIP <span style="font-size:larger;">&larr;</span> COGS</button>
                         </apex:outputText>
                         <apex:outputText rendered="{!AND($Permission.CanSelectBillCOGSDate,OR($Permission.CanCreateWIPToCOGS,$Permission.CanCreateInvToWIPToCOGS))}">
-                        &nbsp;&nbsp;Move/COGS Date: <input type="text" class="dateSelector" name="cogsDate" id="cogsDate"/>
+                            &nbsp;&nbsp;Move/COGS Date: <input type="text" class="dateSelector" name="cogsDate" id="cogsDate"/>
                         </apex:outputText>
                     </apex:outputPanel>
                     <apex:outputPanel rendered="{!isInternalLabour}">
                         <apex:outputText rendered="{!$Permission.CanCreateInvToWIPToCOGS}">
-                        <button type="button" class="btn" onclick="postProject();">Internal COGS</button>
+                            <button type="button" class="btn" onclick="postProject();">Internal COGS</button>
                         </apex:outputText>
                         <apex:outputText rendered="{!$Permission.CanCreateCOGSToWIPtoInv}">
-                        <button type="button" class="btn" onclick="unpostProject();">Undo Internal COGS</button>
+                            <button type="button" class="btn" onclick="unpostProject();">Undo Internal COGS</button>
                         </apex:outputText>
                         <apex:outputText rendered="{!AND($Permission.CanSelectBillCOGSDate,OR($Permission.CanCreateWIPToCOGS,$Permission.CanCreateInvToWIPToCOGS))}">
-                        &nbsp;&nbsp;COGS Date: <input type="text" class="dateSelector" name="cogsDate" id="cogsDate"/>
+                            &nbsp;&nbsp;COGS Date: <input type="text" class="dateSelector" name="cogsDate" id="cogsDate"/>
                         </apex:outputText>
                     </apex:outputPanel>
                 </apex:outputPanel>
@@ -508,18 +508,18 @@ input.dateSelector{
                     <button type="button" class="btn" onclick="createInboundMoves();">Create Inbound</button>
                     <button type="button" class="btn" onclick="unbuildFinishedGoods();">Delete Inbound</button>
                     <apex:outputText rendered="{!$Permission.CanCreateWIPToFG}">
-                    <button type="button" class="btn" onclick="buildFinishedGoodsTradeIn();">WIP <span style="font-size:larger;">&rarr;</span> FG</button>
+                        <button type="button" class="btn" onclick="buildFinishedGoodsTradeIn();">WIP <span style="font-size:larger;">&rarr;</span> FG</button>
                     </apex:outputText>
                     <apex:outputText rendered="{!$Permission.CanCreateFGToWIP}">
-                    <button type="button" class="btn" onclick="unbuildFinishedGoods();">WIP <span style="font-size:larger;">&larr;</span> FG</button>
+                        <button type="button" class="btn" onclick="unbuildFinishedGoods();">WIP <span style="font-size:larger;">&larr;</span> FG</button>
                     </apex:outputText>
                 </apex:outputPanel>
                 <apex:outputPanel rendered="{!isInternalPartsOrder}">
                     <apex:outputText rendered="{!$Permission.CanCreateWIPToCOGS}">
-                    <button type="button" class="btn" onclick="takeExpense();">WIP <span style="font-size:larger;">&rarr;</span> COGS</button>
+                        <button type="button" class="btn" onclick="takeExpense();">WIP <span style="font-size:larger;">&rarr;</span> COGS</button>
                     </apex:outputText>
                     <apex:outputText rendered="{!$Permission.CanCreateCOGSToWIP}">
-                    <button type="button" class="btn" onclick="untakeExpense();">WIP <span style="font-size:larger;">&larr;</span> COGS</button>
+                        <button type="button" class="btn" onclick="untakeExpense();">WIP <span style="font-size:larger;">&larr;</span> COGS</button>
                     </apex:outputText>
                     <button type="button" class="btn" onclick="cosumeAndTransfer();">Transfer All ERP Items</button>
                     <apex:outputText rendered="{!$Permission.CanUnfillInternalPartsOrder}">
@@ -573,48 +573,48 @@ input.dateSelector{
             <c:gcmpTimeCardLines_bulkEdit idTimeCardProject="{!Id}" rendered="{!IF($CurrentPage.parameters.bulkEdit='0',false,true)}"/>
         </apex:outputPanel>
     </div> -->
-<apex:relatedList subject="{!Id}" list="AcctSeed__Journal_Entry_Lines__r"/>
-<apex:relatedList subject="{!Id}" list="CombinedAttachments"/>
-<apex:relatedList subject="{!Id}" list="OpenActivities" />
-<apex:relatedList subject="{!Id}" list="ActivityHistories" />
-<apex:relatedList subject="{!Id}" list="ERP_DOCUMENTS__r" />
+    <apex:relatedList subject="{!Id}" list="AcctSeed__Journal_Entry_Lines__r"/>
+    <apex:relatedList subject="{!Id}" list="CombinedAttachments"/>
+    <apex:relatedList subject="{!Id}" list="OpenActivities" />
+    <apex:relatedList subject="{!Id}" list="ActivityHistories" />
+    <apex:relatedList subject="{!Id}" list="ERP_DOCUMENTS__r" />
 
 
-<div id="serial-number-form" style="display:none;">
-    <div>
-        <form name="createSerialForm" id="createSerialForm" onsubmit="return fn_saveSerial(this);">
-            <table width="100%">
-                <tr>
-                    <td>Product:</td>
-                    <td><input type="hidden" id="isNest" /><input type="hidden" id="selectProductId" /><input type="text" id="selectProduct" /></td>
-                </tr>
-                <tr>
-                    <td>Lot:</td>
-                    <td><input type="hidden" id="productIsLotTracked" /><input type="text" id="selectLot" /></td>
-                </tr>
-                <tr>
-                    <td>Serial Number:</td>
-                    <td><input type="text" id="serialNumber" /></td>
-                </tr>
-                <tr>
-                    <td>Model Year:</td>
-                    <td><input type="text" id="modelYear" /></td>
-                </tr>
-                <tr>
-                    <td>Description:</td>
-                    <td><textarea id="serialDescription" rows="5"></textarea></td>
-                </tr>
-            </table>
-        </form>
+    <div id="serial-number-form" style="display:none;">
+        <div>
+            <form name="createSerialForm" id="createSerialForm" onsubmit="return fn_saveSerial(this);">
+                <table width="100%">
+                    <tr>
+                        <td>Product:</td>
+                        <td><input type="hidden" id="isNest" /><input type="hidden" id="selectProductId" /><input type="text" id="selectProduct" /></td>
+                    </tr>
+                    <tr>
+                        <td>Lot:</td>
+                        <td><input type="hidden" id="productIsLotTracked" /><input type="text" id="selectLot" /></td>
+                    </tr>
+                    <tr>
+                        <td>Serial Number:</td>
+                        <td><input type="text" id="serialNumber" /></td>
+                    </tr>
+                    <tr>
+                        <td>Model Year:</td>
+                        <td><input type="text" id="modelYear" /></td>
+                    </tr>
+                    <tr>
+                        <td>Description:</td>
+                        <td><textarea id="serialDescription" rows="5"></textarea></td>
+                    </tr>
+                </table>
+            </form>
+        </div>
     </div>
-</div>
-<apex:outputText rendered="{!!$Permission.CanSelectBillCOGSDate}">
-    <input style="display: none;" type="text" class="dateSelector" name="cogsDate" id="cogsDate"/>
-</apex:outputText>
+    <apex:outputText rendered="{!!$Permission.CanSelectBillCOGSDate}">
+        <input style="display: none;" type="text" class="dateSelector" name="cogsDate" id="cogsDate"/>
+    </apex:outputText>
 
-</body>
+    </body>
 
-<script type="text/javascript">
+    <script type="text/javascript">
     ////////////// Time Card Related Functionality - START
     <apex:outputText rendered="{!AND($ObjectType.AcctSeed__Time_Card__c.accessible,OR(isManufacturing,isService,isWarranty,isBoatSale,isPartnerBoatSale))}">
     function refreshTimecardLines()
@@ -3590,6 +3590,43 @@ input.dateSelector{
             {buffer:true, escape:false, timeout:120000});
     }
 
+    function takeExpenseWithDate(expenseDate)
+    {
+        gSpinner.show();
+        var $gridDiv = $j('#ledger');
+        $gridDiv.pqGrid('showLoading');
+        Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.gcProject_AccountingActions.takeExpenseRA}',
+            '{!Id}',expenseDate,
+            function(result,event)
+            {
+                if(event.status)
+                {
+                    if(result.length > 0)
+                    {
+                        var myString = '';
+                        jQuery.each(result, function(i,msg)
+                        {
+                            myString += msg;
+                            myString += '\n\n';
+                        });
+                        alert(myString);
+                    }
+                }
+                else
+                {
+                    alert(event.message);
+                }
+                refreshAll();
+                rerenderDetail();
+                rerenderJournalEntry();
+                rerenderInboundMovements();
+                $gridDiv.pqGrid('hideLoading');
+                gSpinner.hide();
+            },
+            {buffer:true, escape:false, timeout:120000});
+    }
+
     function untakeExpense()
     {
         gSpinner.show();
@@ -4356,6 +4393,7 @@ function createBillingWithDate()
 
 function createBilling(selectedDate){
         gSpinner.show();
+        console.log('I am here...');
         if($j("#cogsDate").length) $j("#cogsDate").val(selectedDate);
         Visualforce.remoting.Manager.invokeAction(
             '{!$RemoteAction.gcProject_Ext.createBilling}',
@@ -4371,15 +4409,16 @@ function createBilling(selectedDate){
                         if({!OR(isCounterSale,isPartnerPartsOrder,isInternalWarranty)})
                             createInvoice(result);
 
+                        if({!OR(isInternalLabour,isInternalWarranty)})
+                            takeExpenseWithDate(selectedDate);
+                    }else if({!isInternalWarranty}) // Trying to take Expense for Internal Warranty.
+                            takeExpenseWithDate(selectedDate);
+
                         rerenderDetail();
                         refreshGrid_tasks();
                         refreshGrid_ledger();
                         rerenderBillings();
                         rerenderBillingLines();
-
-                        if({!OR(isInternalLabour,isInternalWarranty)})
-                            takeExpense();
-                    }
                 }
                 else
                 {
@@ -5018,7 +5057,7 @@ function initGrid_timeCardLedger()
     }
 </script>
 
-<!-- Search and Create serial number - start-->
-<c:gcmpSearchAndCreateSerial idProject="{!Id}" />
-<!-- Search and Create serial number - end-->
+    <!-- Search and Create serial number - start-->
+    <c:gcmpSearchAndCreateSerial idProject="{!Id}" />
+    <!-- Search and Create serial number - end-->
 </apex:page>
