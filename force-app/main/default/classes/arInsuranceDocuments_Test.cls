@@ -162,7 +162,7 @@ private class arInsuranceDocuments_Test {
 
 		Test.stopTest();
 		arInsuranceDocuments.retrieveERPDetails(erp.Id);
-		String jsonResult = arInsuranceDocuments.generateInsurancePDF(erp.Id, 'Companion Maxum', DateTime.now().format('dd-MMM-yyyy') );
+		String jsonResult = arInsuranceDocuments.generateInsurancePDF(erp.Id, 'Companion Maxum' );
 		List<Map<String,String>> result = (List<Map<String,String>>)JSON.deserialize( jsonResult, List<Map<String,String>>.class );
 		System.assertEquals(result.size() , 1);
 		arInsuranceDocuments.deleteDocument(erp.Id,result[0].get('idErpDoc'),result[0].get('idDoc'));

@@ -24,7 +24,27 @@
     });
   },
 
-	fetchCustomer: function( component, objectId )
+  fetchCustomer: function( component, objectId )
+  {
+    let spinner = component.find('registrationSpinner');
+    $A.util.toggleClass(spinner, 'slds-hide');
+    this.doFetchCustomer( component, objectId )
+    .then(
+      $A.getCallback( function( result ) {
+        console.log( result );
+        component.set('v.Customer', result );
+        component.set('v.showAccountForm', true );
+      }),
+      $A.getCallback( function( err) {
+        LightningUtils.errorToast( err );
+      })
+    )
+    .finally( $A.getCallback( function() {
+      $A.util.toggleClass(spinner, 'slds-hide');
+    }));
+  },
+
+	doFetchCustomer: function( component, objectId )
 	{
 	  var action = component.get('c.fetchCustomer');
 	  action.setParams({
@@ -82,29 +102,6 @@
 				"caseId": caseId,
 				"paymentMethod": paymentMethod
 			});
-//			new LightningApex( self, action ).fire()
-//			.then(
-//			  $A.getCallback( (response) => {
-//			    if (caseId != null)
-//			    {
-//            self.updateCase(response, component)
-//            .then
-//            (
-//              $A.getCallback( function() {
-//                self.renderResults(response, component, regSpinner);
-//              })
-//            );
-//          }
-//          else
-//          {
-//            self.renderResults(response, component, regSpinner);
-//          }
-//        }),
-//        $A.getCallback( (err) => {
-//          LightningUtils.errorToast( err );
-//          $A.util.toggleClass(regSpinner, 'slds-hide');
-//        })
-//      );
 			action.setCallback(this, function(response) {
 			  var state = response.getState();
         if( state === 'SUCCESS' )
@@ -215,8 +212,11 @@
 				component.set('v.sernoSelected', false);
 				component.set('v.canBeNest', false);
 				component.set('v.hideSernoSearch', false);
-				LightningUtils.showToast('success', 'success', 'Product has been registered. High five!');
 				component.set('v.regInProcess', false);
+				LightningUtils.showToast('success', 'success', 'Product has been registered. High five!');
+				let evt = component.getEvent("registrationSuccessEvent");
+				evt.setParam('message', 'success');
+				evt.fire();
 			}
 		}
 

@@ -49,6 +49,36 @@ public with sharing class BusinessOffice_Controller {
 
 /* ===== TOOL METHODS ===== */
 
+/* +++++++  BUSINESS OFFICE SPECIFIC FIELDS +++++++++ */
+
+  @AuraEnabled(cacheable=true)
+  public static List<Map<String, Object>> getBusinessOfficeFields( String sObjectType )
+  {
+    String fieldSetName = 'Retail_Business_Office_Fields';
+    List<Map<String, Object>> result = new List<Map<String,Object>>();
+    List<Schema.FieldSetMember> fieldSetMembers = Schema.getGlobalDescribe().get(sObjectType)
+      .getDescribe()
+      .FieldSets.getMap()
+      .get(fieldSetName)
+      .getFields();
+    if( fieldSetMembers != null )
+    {
+      for( FieldSetMember fsm : fieldSetMembers )
+      {
+        Map<String, Object> field = new Map<String, Object>{
+          'name' => fsm.getFieldPath(),
+          'editable' => fsm.getSObjectField().getDescribe().isUpdateable()
+        };
+
+        result.add( field );
+      }
+    }
+    return result;
+  }
+
+
+/* ======= /BUSINESS OFFICE SPECIFIC FIELDS ========= */
+
 /* +++++ FINANCIAL INSTITUTION +++++*/
 
   public class FinancingInstitutionDetails {

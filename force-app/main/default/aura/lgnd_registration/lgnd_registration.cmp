@@ -46,6 +46,8 @@
                           						$Resource.Libraries +'/js/LightningUtils.js') }"
                 afterScriptsLoaded="{!c.doInit}"  />
 
+	<aura:registerEvent name="registrationSuccessEvent" type="c:lgnd_registration_success_Event" />
+
 	<aura:handler name="accountSelected"
 								event="c:lgnd_account_search_selected_Event"
 								action="{!c.handleAccountSelected}" />
@@ -312,10 +314,14 @@
 						<div style="margin: 0.75rem">
 							<article class="slds-card" id="deliveryDate" style="padding: 0.75rem">
 								<h4>Delivery Date</h4>
-								<ui:inputDate aura:id="dateField"
-															label="When is the customer picking up their boat?"
-															value="{! v.DeliveryDate }"
-															displayDatePicker="true"/>
+								<lightning:input type="date"
+																 label="When is the customer picking up their boat?"
+																 value="{! v.DeliveryDate }"
+																 aura:id="dateField" />
+<!--								<ui:inputDate aura:id="dateField"-->
+<!--															label="When is the customer picking up their boat?"-->
+<!--															value="{! v.DeliveryDate }"-->
+<!--															displayDatePicker="true"/>-->
 							</article>
 						</div>
 					</div>

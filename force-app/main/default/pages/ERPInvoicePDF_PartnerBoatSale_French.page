@@ -1,10 +1,30 @@
 <apex:page showHeader="false" sidebar="false" controller="ERPInvoicePDF" renderAs="pdf">
 
   <apex:stylesheet value="{!URLFOR($Resource.LegendPDF,'css/invoicePDF.min.css')}" />
-  <apex:stylesheet value="{!URLFOR($Resource.LegendPDF,'css/dealer_invoice_page.css')}" />
+  <apex:stylesheet value="{!URLFOR($Resource.LegendPDF,'css/service_order_page.min.css')}" />
 
-   <div >
-      <!-- +++++++++++++++++++++++++++++++++++++++ HEADER 1 ++++++++++++++++++++++++ -->
+  <div id="footerRight">
+    <span>Page</span>
+    <span>Invoice #{!invoiceName}</span>
+  </div>
+
+  <div id="footerLeft">
+    <img src="{!URLFOR($Resource.LegendPDF,'image/logo_220x26.png')}" />
+  </div>
+
+  <div id="footerCenter">
+    <p class="address">
+      {!storeAddress}
+    </p>
+    <p class="tax_numbers">
+      <apex:repeat value="{!taxNumbers}" var="tn">
+        <span><b>{!tn.DeveloperName}#</b> {!tn.Tax_Number__c}</span>
+      </apex:repeat>
+    </p>
+  </div>
+
+  <div class="dealer-order-erp">
+    <!-- +++++++++++++++++++++++++++++++++++++++ HEADER 1 ++++++++++++++++++++++++ -->
     <div class="row header1">
 
       <div class="left" >
@@ -20,13 +40,7 @@
 
         <div>
           <img src="{!URLFOR($Resource.LegendPDF,'Icons/Phone.png')}" />
-           <!-- <p>
-            Tél
-            <span style="float:right;padding-right:25px;">
-              {!warehouse.Phone__c}
-            </span>
-          </p> -->
-           <p>
+          <p>
             Sans Frais
             <span style="float:right;padding-right:25px;">
               1 888-345-4756
@@ -109,7 +123,6 @@
     </div>
     <!-- ================================= /HEADER 2 =================================== -->
 
-
     <!-- +++++++++++++++++++++++++++++++++ CUSTOMER INFO +++++++++++++++++++++++++++++++++ -->
     <div class="row customer_info">
 
@@ -175,7 +188,7 @@
      <!-- +++++++++++++++++++++++++++++++++++ MAJOR ITEMS TABLE +++++++++++++++++++++++++++++++ -->
     <div class="major_items">
 
-      <table class="itemsTable" style="display:{!IF((boat.Product_Name__c) != null,'','none')}; margin-bottom:25px;">
+      <table class="itemsTable service-order" style="display:{!IF((boat.Product_Name__c) != null,'','none')}; margin-bottom:15px;">
         <thead>
           <tr>
             <td colspan="5">Boat</td>
@@ -203,7 +216,7 @@
         </tbody>
       </table>
 
-      <table class="itemsTable" style="display:{!IF(motors.size > 0,'','none')}; margin-bottom:25px;">
+      <table class="itemsTable service-order" style="display:{!IF(motors.size > 0,'','none')}; margin-bottom:15px;">
         <thead>
           <tr>
             <td colspan="5">Motor(s)</td>
@@ -232,7 +245,7 @@
         </tbody>
       </table>
 
-      <table class="itemsTable" style="display:{!IF((trailer.Product_Name__c) != null,'','none')}; margin-bottom:25px;">
+      <table class="itemsTable service-order" style="display:{!IF((trailer.Product_Name__c) != null,'','none')}; margin-bottom:15px;">
         <thead>
           <tr>
             <td colspan="5">Trailer</td>
@@ -259,7 +272,7 @@
         </tbody>
       </table>
 
-      <table class="itemsTable" style="display:{!IF(trollingMotors.size > 0,'','none')}; margin-bottom:25px;">
+      <table class="itemsTable service-order" style="display:{!IF(trollingMotors.size > 0,'','none')}; margin-bottom:15px;">
         <thead>
           <tr>
             <td colspan="5" >Trolling Motor</td >
@@ -288,7 +301,7 @@
         </tbody>
       </table>
 
-      <table class="itemsTable" style="display:{!IF((oppAccList.size) > 0,'','none')}; margin-bottom:25px;">
+      <table class="itemsTable service-order" style="display:{!IF((oppAccList.size) > 0,'','none')}; margin-bottom:15px;">
         <thead>
           <tr>
             <td colspan="3" >Addition Items</td >
@@ -327,7 +340,7 @@
         </tbody>
       </table>
 
-      <table class="itemsTable" style="display:{!IF((feesList.size) > 0,'','none')}; margin-bottom:25px;">
+      <table class="itemsTable service-order" style="display:{!IF((feesList.size) > 0,'','none')}; margin-bottom:15px;">
         <thead>
           <tr>
             <td colspan="3" >Frais Supplémentaires</td >
@@ -350,22 +363,7 @@
         </tbody>
       </table>
 
-     <!--  <div class="row signatures_and_summary">
-        <div class="col col30 right">
-          <table class="costSummary">
-            <tr>
-              <td>Sub Total:</td>
-              <td>
-                <apex:outputText value="${0, number, ###,###,###,##0.00}">
-                      <apex:param value="{!subTotal}"/>
-                </apex:outputText>
-              </td>
-            </tr>
-          </table>
-        </div>
-      </div> -->
-
-      <table class="itemsTable" style="display:{!IF((discountList.size) > 0,'','none')}; margin-bottom:25px;">
+      <table class="itemsTable service-order" style="display:{!IF((discountList.size) > 0,'','none')}; margin-bottom:15px;">
         <thead>
           <tr>
             <td colspan="3" >Rabais Spéciales</td >
@@ -518,33 +516,7 @@
         </table>
       </div>
     </div>
-    <!-- ++++++++++++++++++++++++++++ FOOTER +++++++++++++++++++++++++++++++++++ -->
-    <div class="row pdf_footer" style="position: fixed; bottom: 0;">
 
-      <div class="thankyou">
-        Merci d'avoir choisi Legend pour vous aider à créer des souvenirs sur l'eau.
-      </div>
-
-      <div class="col col30 logo">
-        <img src="{!URLFOR($Resource.LegendPDF,'image/logo_220x26.png')}" />
-      </div>
-
-      <div class="col col33 address">
-        <p>
-          {!storeAddress}
-        </p>
-      </div>
-
-      <div class="col col33 tax_numbers">
-        <p>
-          <apex:repeat value="{!taxNumbers}" var="tn">
-            <span><b>{!tn.DeveloperName}#</b> {!tn.Tax_Number__c}</span><br />
-          </apex:repeat>
-        </p>
-      </div>
-
-    </div>
-    <!-- ============================ FOOTER ================================== -->
   </div>
 
 

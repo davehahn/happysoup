@@ -11,6 +11,10 @@
                          $Resource.Libraries +'/js/LightningUtils.js') }"
     afterScriptsLoaded="{!c.doInit}" />
 
+	<aura:handler name="registrationSuccessEvent"
+								event="c:lgnd_registration_success_Event"
+								action="{!c.handleRegistrationSuccess}" />
+
 	<aura:if isTrue="{! !v.regInProcess }">
 	  <div class="slds-grid slds-gutters">
 	  	<div class="slds-col slds-size_2-of-3">
@@ -72,7 +76,9 @@
 					            <span class="slds-form-element__label">Retail Amount</span>
 					            <div class="slds-form-element__control">
 					              <span class="slds-form-element__static">
-					              	<ui:outputCurrency value="{!v.claim.Promotion_Item__r.Retail_Amount__c}" />
+					              	<lightning:formattedNumber value="{!v.claim.Promotion_Item__r.Retail_Amount__c}"
+																										 style="currency"
+																										 currencyCode="CAD"/>
 					              </span>
 					            </div>
 					          </li>
