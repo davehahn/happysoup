@@ -50,7 +50,9 @@
 	    					<td>
 	    						FIRST PAYMENT DATE<br/>(DD/MM/YYYY)
 	    						<div class="form-text">
-                    {!formData.firstPaymentDate}
+										<apex:outputText value="{0, date, dd MMM yyyy}">
+											<apex:param value="{!formData.firstPaymentDate}" />
+										</apex:outputText>
                   </div>
 	    					</td>
 	    					<td>

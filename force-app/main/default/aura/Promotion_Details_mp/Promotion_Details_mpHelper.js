@@ -1,20 +1,12 @@
 ({
-	getClaimDetails : function(component, event) {
+	getClaimDetails : function(component) {
+	  console.log('getClaimDetails');
 		var self = this,
-				action = component.get('c.getClaimDetails'), la,
+				action = component.get('c.getClaimDetails'),
 				recordId = component.get('v.recordId');
 		action.setParams({
 			"caseId" : recordId
 		});
-        la = new LightningApex( this, action );
-        return la.fire()
-        .then(
-            $A.getCallback(
-            	function(result) {
-            		component.set('v.claim', result);
-            		component.set('v.AccountId', result.Promotion_Customer_Account__c)
-            	}
-            )
-        );
+    return new LightningApex( self, action ).fire();
 	}
 })

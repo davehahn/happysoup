@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>Legend_Letterhead</letterhead>
+    <name>Retail ERP Stage Notification Email</name>
+    <style>freeForm</style>
+    <subject>A {!AcctSeed__Project__c.WarehouseName__c} Retail ERP is now {!AcctSeed__Project__c.Stage__c}</subject>
+    <textOnly>Hello,
+
+The following {!AcctSeed__Project__c.WarehouseName__c} Retail Boat Sale ERP is now {!AcctSeed__Project__c.Stage__c} :
+
+
+ERP Order: {!AcctSeed__Project__c.Name}
+Stage: {!AcctSeed__Project__c.Stage__c}
+
+URL: {!AcctSeed__Project__c.Link}</textOnly>
+    <type>html</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

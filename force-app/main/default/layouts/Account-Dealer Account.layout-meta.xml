@@ -42,8 +42,7 @@
             </containers>
         </primaryTabComponents>
     </customConsoleComponents>
-    <excludeButtons>DataDotComAccountInsights</excludeButtons>
-    <excludeButtons>DataDotComCompanyHierarchy</excludeButtons>
+    <excludeButtons>DataDotComClean</excludeButtons>
     <excludeButtons>DisableCustomerPortalAccount</excludeButtons>
     <excludeButtons>IncludeOffline</excludeButtons>
     <excludeButtons>Share</excludeButtons>
@@ -706,6 +705,19 @@
         <fields>V_Hull_Discount_Percent__c</fields>
         <fields>Dealer_Order__c</fields>
         <relatedList>Partner_Booking_Order__c.Account__c</relatedList>
+    </relatedLists>
+    <relatedLists>
+        <fields>NAME</fields>
+        <fields>AcctSeed__Accounting_Period__c</fields>
+        <fields>Payee_New__c</fields>
+        <fields>AcctSeed__Payee_Reference__c</fields>
+        <fields>AcctSeed__Date__c</fields>
+        <fields>AcctSeed__Due_Date__c</fields>
+        <fields>AcctSeed__Status__c</fields>
+        <fields>AcctSeed__Payment_Status__c</fields>
+        <fields>AcctSeed__Total__c</fields>
+        <fields>AcctSeed__Balance__c</fields>
+        <relatedList>AcctSeed__Account_Payable__c.AcctSeed__Vendor__c</relatedList>
     </relatedLists>
     <relatedLists>
         <fields>NAME</fields>

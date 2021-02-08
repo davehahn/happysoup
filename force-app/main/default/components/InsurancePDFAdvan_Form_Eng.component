@@ -298,7 +298,11 @@
 	    				<tr>
 	    					<td>
 	    						FIRST PAYMENT DATE
-	    						<div class="form-text"><apex:outputText value="{0, date, dd/MM/yyyy}"><apex:param value="{!formData.firstPaymentDate}" /></apex:outputText></div>
+	    						<div class="form-text">
+										<apex:outputText value="{0, date, dd/MM/yyyy}">
+											<apex:param value="{!formData.firstPaymentDate}" />
+										</apex:outputText>
+									</div>
 	    					</td>
 	    					<td>
 	    						FINANCE TERM IN MONTHS

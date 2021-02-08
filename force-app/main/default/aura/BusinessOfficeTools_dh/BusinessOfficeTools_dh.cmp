@@ -5,6 +5,7 @@
                 afterScriptsLoaded="{!c.doInit}" />
 
   <aura:attribute name="recordId" type="String" />
+  <aura:attribute name="sObjectType" type="String" />
   <aura:attribute name="pricebookId" type="String" />
   <aura:attribute name="pricebookName" type="String" />
   <aura:attribute name="loading" type="Boolean" default="true" />
@@ -25,19 +26,36 @@
     </aura:if>
 
     <aura:if isTrue="{!not(v.loading)}">
+
       <lightning:tabset variant="scoped">
+
+        <lightning:tab label="Business Office Fields">
+          <h3 class="slds-section__title">
+            <span class="slds-section__title-action">
+              Business Office Fields
+            </span>
+          </h3>
+          <div>
+            <c:businessOfficeSpecificFields recordId="{!v.recordId}"
+                                            sObjectType="{!v.sObjectType}"></c:businessOfficeSpecificFields>
+          </div>
+          <h3 class="slds-section__title">
+            <span class="slds-section__title-action">
+              PPSA Fee
+            </span>
+          </h3>
+          <div>
+            <c:BusinessOffice_PPSA_dh recordId="{!v.recordId}"
+                                      pricebookId="{!v.pricebookId}"
+                                      pricebookName="{!v.pricebookName}" />
+          </div>
+        </lightning:tab>
 
         <lightning:tab label="Financing &amp; Insurance" onactive="{!c.reInitInsurance}">
           <c:BusinessOffice_FI_dh recordId="{!v.recordId}"
                                   pricebookId="{!v.pricebookId}"
                                   pricebookName="{!v.pricebookName}"
                                   aura:id="fi_CMP" />
-        </lightning:tab>
-
-         <lightning:tab label="PPSA Fee">
-          <c:BusinessOffice_PPSA_dh recordId="{!v.recordId}"
-                                    pricebookId="{!v.pricebookId}"
-                                    pricebookName="{!v.pricebookName}" />
         </lightning:tab>
 
         <lightning:tab label="Warranty &amp; Service">
