@@ -2,17 +2,13 @@
  * Created by dave on 2020-01-26.
  */
 
-import { LightningElement, api, wire, track } from 'lwc';
-import { CurrentPageReference, NavigationMixin } from 'lightning/navigation';
-import { fireEvent, registerListener, unregisterAllListeners} from 'c/pubsub';
+import { LightningElement, api } from 'lwc';
 
-export default class AccountFindClosestPartnerDetailsCard extends NavigationMixin(LightningElement) {
+export default class AccountFindClosestPartnerDetailsCard extends LightningElement {
   @api acct;
   @api originAddress;
   @api isSelectable;
   @api hideIcon=false;
-
-	@wire(CurrentPageReference) pageRef;
 
   get teleHref()
   {
@@ -43,13 +39,12 @@ export default class AccountFindClosestPartnerDetailsCard extends NavigationMixi
 
   showDirections()
   {
-//    let url = 'https://google.com/maps/dir/';
-//    url += this.originAddress.split(' ').join('+');
-//    url += '/' + this.acct.location.Street.split(' ').join('+') + ',';
-//    url += '+' + this.acct.location.City +',';
-//    url += '+' + this.acct.location.State;
-//    this.navToURL(url);
-		fireEvent(this.pageRef, 'setMap', this.acct);
+    let url = 'https://google.com/maps/dir/';
+    url += this.originAddress.split(' ').join('+');
+    url += '/' + this.acct.location.Street.split(' ').join('+') + ',';
+    url += '+' + this.acct.location.City +',';
+    url += '+' + this.acct.location.State;
+    this.navToURL(url);
     return false;
   }
 

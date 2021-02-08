@@ -11,32 +11,35 @@
           <lightning-icon icon-name={acct.icon}
                           alternative-text="account"></lightning-icon>
         </div>
-
-        <section class="slds-media__body partner-details">
-          <h3 class="slds-text-heading_small">
+        <div class="slds-media__body">
+          <div class="slds-text-heading_small">
             {acct.name}
-          </h3>
-          <p class="partner-address">
-            <span>{acct.location.Street}, {acct.location.City}</span>
-            <span>{acct.location.State}, {acct.location.Country}, {acct.location.PostalCode}</span>
-          </p>
-          <p class="partner-contact">
-            <a href={teleHref}>{acct.phone}</a>
-            <a href={emailHref}>{acct.email}</a>
-            <a href={acct.website} onclick={navToWebsite}>{acct.website}</a>
-          </p>
-        </section>
-
-        <aside class="slds-no-flex partner-actions">
+          </div>
+          <div>
+            <span>{acct.location.Street},</span>
+            <span class="slds-p-left_xx-small">{acct.location.City}</span><br />
+            <span>{acct.location.State},</span>
+            <span class="slds-p-left_xx-small">{acct.location.Country},</span>
+            <span  class="slds-p-left_xx-small">{acct.location.PostalCode}</span> <br />
+            <span>
+              <a href={teleHref}>
+                {acct.phone}
+              </a>
+            </span><br />
+            <span>
+              <a href={emailHref}>
+                {acct.email}
+              </a>
+            </span><br />
+            <span>
+              <a href={acct.website} onclick={navToWebsite}>
+                {acct.website}
+              </a>
+            </span>
+          </div>
+        </div>
+        <div class="slds-no-flex">
           <div class="slds-badge slds-m-right_small slds-m-top_xx-small">{acct.distance}</div>
-
-          <template if:true={originAddress}>
-            <lightning-button-icon icon-name="utility:location"
-                                   alternative-text='Directions'
-                                   onclick={showDirections}
-                                   class="slds-float_right"></lightning-button-icon>
-          </template>
-
           <template if:true={isSelectable}>
             <button class="select-account slds-float_right slds-m-left_small"
                     onclick={handleSelect}>Select</button>
@@ -45,7 +48,13 @@
 <!--                              variant="brand"-->
 <!--                              class="slds-float_right slds-m-left_small"></lightning-button>-->
           </template>
-        </aside>
+          <template if:true={originAddress}>
+            <lightning-button-icon icon-name="utility:location"
+                                   alternative-text='Directions'
+                                   onclick={showDirections}
+                                   class="slds-float_right"></lightning-button-icon>
+          </template>
+        </div>
       </header>
     </div>
     <div class="slds-card__body slds-card__body_inner">
