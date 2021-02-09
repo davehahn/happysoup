@@ -70,6 +70,8 @@ public with sharing class gcInventoryReport_MRP {
 			Product_Name__c,
 			GMBLASERP__Lot__c,
 			GMBLASERP__Lot__r.Name,
+			Overall_Age__c,
+			Retail_Age__c,
 			GMBLASERP__Inventory_Balance__r.AcctSeedERP__Warehouse__c,
 			GMBLASERP__Inventory_Balance__r.AcctSeedERP__Warehouse__r.Name
 		FROM GMBLASERP__Serial_Number__c
@@ -88,6 +90,8 @@ public with sharing class gcInventoryReport_MRP {
 			m.put('idProduct',x.GMBLASERP__Product__c);
 			m.put('productName',x.Product_Name__c);
 			m.put('modelYear',(x.Model_Year__c == null ? '' : String.valueOf(x.Model_Year__c)));
+			m.put('serialOverallAge',(x.Overall_Age__c == null ? '' : String.valueOf(x.Overall_Age__c)));
+			m.put('serialRetailAge',(x.Retail_Age__c == null ? '' : String.valueOf(x.Retail_Age__c)));
 			m.put('idLot',x.GMBLASERP__Lot__c);
 			m.put('lotName',x.GMBLASERP__Lot__r.Name);
 			m.put('idWarehouse',x.GMBLASERP__Inventory_Balance__r.AcctSeedERP__Warehouse__c);

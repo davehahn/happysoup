@@ -858,7 +858,7 @@
                                         Installed on: {{ this.nestName }}
                                     </a>
                                     {{/if}}
-                                    <div>{{this.lotName}}</div>
+                                    <div>{{this.lotName}}: Age: {{this.retailAge}}</div>
                                     <apex:outputText rendered="{!$Permission.CanViewUnitCostOnAllocations}">
                                         <div style="margin-top: 3px;" class="custom-badge-nopad">${{ this.unitCost }}</div>
                                     </apex:outputText>
@@ -1247,6 +1247,20 @@
                                 </ul>
                             </th>
                         </tr>
+                    {{/if}}
+                    {{#if this.listCanvas}}
+                    <div class="slds-theme_info">Installed Canvas and Boat Build Options</div>
+                    <div class="slds-grid slds-wrap slds-theme_default slds-text-align_left">
+                        {{#each this.listCanvas}}
+                        <div class="slds-col slds-box slds-size_1-of-3">
+                            <div class="slds-truncate" title="{{ this.productName }}">
+                                <a href="javascript:void(0);" class="erp-link" data-record-id="{{this.idCanvas}}">
+                                    <div title="{{ this.canvasName }}" class="slds-truncate" style="max-width: 90%;">{{ this.canvasName }}</div>
+                                </a>
+                            </div>
+                        </div>
+                        {{/each}}
+                    </div>
                     {{/if}}
                     {{/each}}
                   </tbody>

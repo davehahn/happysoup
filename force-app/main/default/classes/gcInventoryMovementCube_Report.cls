@@ -291,6 +291,8 @@ global without sharing class gcInventoryMovementCube_Report{
 					Nest__r.GMBLASERP__Product__r.Name,
 					Nest__r.Name,
 					Model_Year__c,
+					Overall_Age__c,
+					Retail_Age__c,
 					(SELECT Id FROM Projects__r WHERE AcctSeedERP__Manufactured_Product__c != null LIMIT 1),
 					(SELECT Id, Name, GMBLASERP__Product__r.Family, GMBLASERP__Product__r.Name FROM Nested_Serial_Numbers__r ORDER BY GMBLASERP__Product__r.Family, GMBLASERP__Product__r.Name)
 			FROM GMBLASERP__Serial_Number__c WHERE Id IN :mapSerial.keySet()])
@@ -431,6 +433,8 @@ global without sharing class gcInventoryMovementCube_Report{
 				obj.put('idSerial',serial.Id);
 				obj.put('serialName',serial.Name);
 				obj.put('serialModelYear',(serial.Model_Year__c == null ? '' : String.valueOf(serial.Model_Year__c)));
+				obj.put('serialOverallAge',(serial.Overall_Age__c == null ? '' : String.valueOf(serial.Overall_Age__c)));
+				obj.put('serialRetailAge',(serial.Retail_Age__c == null ? '' : String.valueOf(serial.Retail_Age__c)));
 
 				String d = '';
 				if(serial.Nest__c != null)

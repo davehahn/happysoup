@@ -65,7 +65,7 @@
             }
             this.filterYear = 'ALL';
             this.filterType = 'Boat';
-            this.queryInv = 'SELECT Id, Name, Current_Unit_Cost__c, GMBLASERP__Product__c, GMBLASERP__Product__r.Name, Model_Year__c, Status__c, GMBLASERP__Lot__c,GMBLASERP__Lot__r.Name, Nest__c, Nest__r.Name, (SELECT Id, Name, Current_Unit_Cost__c, GMBLASERP__Product__c, GMBLASERP__Product__r.Name, Model_Year__c, Status__c, GMBLASERP__Lot__c,GMBLASERP__Lot__r.Name, Nest__c, Nest__r.Name FROM Nested_Serial_Numbers__r) from GMBLASERP__Serial_Number__c where Available_Retail__c = true AND GMBLASERP__Lot__c != null AND GMBLASERP__Inventory_Balance__r.AcctSeedERP__Warehouse__c =:filterWarehouse';
+            this.queryInv = 'SELECT Id, Name, Current_Unit_Cost__c, GMBLASERP__Product__c, GMBLASERP__Product__r.Name, Model_Year__c, Status__c, GMBLASERP__Lot__c,GMBLASERP__Lot__r.Name, Nest__c, Nest__r.Name, Retail_Age__c, Overall_Age__c, (SELECT Id, Name, Current_Unit_Cost__c, GMBLASERP__Product__c, GMBLASERP__Product__r.Name, Model_Year__c, Status__c, Retail_Age__c, Overall_Age__c, GMBLASERP__Lot__c,GMBLASERP__Lot__r.Name, Nest__c, Nest__r.Name FROM Nested_Serial_Numbers__r) from GMBLASERP__Serial_Number__c where Available_Retail__c = true AND GMBLASERP__Lot__c != null AND GMBLASERP__Inventory_Balance__r.AcctSeedERP__Warehouse__c =:filterWarehouse';
             this.queryProd = 'SELECT Id, Name From Product2 WHERE Id in: allProducts ';
             // AND AcctSeedERP__Project__r.Stage__c != \'Delivered\'
             /*String qs = 'Select Id, Name, AcctSeedERP__Product__r.RecordType.Name, AcctSeedERP__Quantity__c, AcctSeedERP__Quantity_Unreceived__c, Reserved__c, deliverDate__c, AcctSeedERP__Product__c, AcctSeedERP__Purchase_Order__r.Estimated_Time_of_Arrival_ETA__c, GMBLASERP__Lot__r.Name, ';
@@ -73,8 +73,8 @@
             qs += ' AcctSeedERP__Project__r.Retail_ERP__c, AcctSeedERP__Project__r.Retail_ERP__r.ERP_Serial_In_Inventory__c, AcctSeedERP__Project__r.Retail_ERP__r.Name, AcctSeedERP__Project__r.Retail_ERP__r.AcctSeed__Account__r.Name, AcctSeedERP__Project__r.Retail_ERP__r.AcctSeedERP__Work_Order_Number__c, AcctSeedERP__Project__r.Retail_ERP__r.Stage__c, AcctSeedERP__Project__r.Retail_ERP__r.CreatedDate, AcctSeedERP__Project__r.Retail_ERP__r.Delivery_Date__c, AcctSeedERP__Project__r.Retail_ERP__r.BoatModelYear__c, AcctSeedERP__Project__r.Retail_ERP__r.Serial_Number__c, AcctSeedERP__Project__r.Retail_ERP__r.Serial_Number__r.Name, AcctSeedERP__Project__r.Retail_ERP__r.TrailerModelYear__c ';
             qs += ' from  AcctSeedERP__Purchase_Order_Line__c  Where AcctSeedERP__Purchase_Order__r.Estimated_Time_of_Arrival_ETA__c != null ';*/
 
-            String qs = 'Select Id, Name, AcctSeedERP__Product__r.RecordType.Name, AcctSeedERP__Product__r.Name, AcctSeedERP__Quantity_Allocated__c, AcctSeedERP__Product__c, GMBLASERP__Lot__r.Name, GMBLASERP__Serial_Number__c, GMBLASERP__Serial_Number__r.Name, ';
-            qs += ' AcctSeedERP__Project__c, AcctSeedERP__Project__r.Name, AcctSeedERP__Project__r.AcctSeed__Account__r.Name, AcctSeedERP__Project__r.AcctSeedERP__Work_Order_Number__c, AcctSeedERP__Project__r.Stage__c, AcctSeedERP__Project__r.CreatedDate, AcctSeedERP__Project__r.Delivery_Date__c, AcctSeedERP__Project__r.Arrival_Date__c, AcctSeedERP__Project__r.BoatModelYear__c, AcctSeedERP__Project__r.Serial_Number__c, AcctSeedERP__Project__r.Serial_Number__r.Product_Name__c, AcctSeedERP__Project__r.ERP_Serial_In_Inventory__c, AcctSeedERP__Project__r.Serial_Number__r.Name, AcctSeedERP__Project__r.TrailerModelYear__c,  ';
+            String qs = 'Select Id, Name, AcctSeedERP__Product__r.RecordType.Name, AcctSeedERP__Product__r.Name, AcctSeedERP__Quantity_Allocated__c, AcctSeedERP__Product__c, GMBLASERP__Lot__r.Name, GMBLASERP__Serial_Number__c, GMBLASERP__Serial_Number__r.Name, GMBLASERP__Serial_Number__r.Retail_Age__c, GMBLASERP__Serial_Number__r.Overall_Age__c, ';
+            qs += ' AcctSeedERP__Project__c, AcctSeedERP__Project__r.Name, AcctSeedERP__Project__r.AcctSeed__Account__r.Name, AcctSeedERP__Project__r.AcctSeedERP__Work_Order_Number__c, AcctSeedERP__Project__r.Stage__c, AcctSeedERP__Project__r.CreatedDate, AcctSeedERP__Project__r.Delivery_Date__c, AcctSeedERP__Project__r.Arrival_Date__c, AcctSeedERP__Project__r.BoatModelYear__c, AcctSeedERP__Project__r.Serial_Number__c, AcctSeedERP__Project__r.Serial_Number__r.Product_Name__c, AcctSeedERP__Project__r.ERP_Serial_In_Inventory__c, AcctSeedERP__Project__r.Serial_Number__r.Name, AcctSeedERP__Project__r.Serial_Number__r.Retail_Age__c,AcctSeedERP__Project__r.Serial_Number__r.Overall_Age__c,AcctSeedERP__Project__r.TrailerModelYear__c,  ';
             qs += ' AcctSeedERP__Project__r.Retail_ERP__c, AcctSeedERP__Project__r.Retail_ERP__r.ERP_Serial_In_Inventory__c, AcctSeedERP__Project__r.Retail_ERP__r.Name, AcctSeedERP__Project__r.Retail_ERP__r.AcctSeed__Account__r.Name, AcctSeedERP__Project__r.Retail_ERP__r.AcctSeedERP__Work_Order_Number__c, AcctSeedERP__Project__r.Retail_ERP__r.Stage__c, AcctSeedERP__Project__r.Retail_ERP__r.CreatedDate, AcctSeedERP__Project__r.Retail_ERP__r.Delivery_Date__c, AcctSeedERP__Project__r.Retail_ERP__r.Arrival_Date__c, AcctSeedERP__Project__r.Retail_ERP__r.BoatModelYear__c, AcctSeedERP__Project__r.Retail_ERP__r.Serial_Number__c, AcctSeedERP__Project__r.Retail_ERP__r.Serial_Number__r.Name, AcctSeedERP__Project__r.Retail_ERP__r.TrailerModelYear__c ';
             qs += ' from  AcctSeedERP__Material__c Where AcctSeedERP__Project__c != null AND AcctSeedERP__Project__r.RecordTypeId =:erpPartnerBoatSaleRtId ';
 
@@ -132,6 +132,8 @@
                                                                  GMBLASERP__Serial_Number__c,
                                                                  GMBLASERP__Serial_Number__r.Name,
                                                                  GMBLASERP__Serial_Number__r.Product_Name__c,
+                                                                 GMBLASERP__Serial_Number__r.Retail_Age__c,
+                                                                 GMBLASERP__Serial_Number__r.Overall_Age__c,
                                                                  GMBLASERP__Lot__c,
                                                                  GMBLASERP__Lot__r.Name,
                                                                  AcctSeedERP__Project__c,
@@ -169,6 +171,8 @@
                                                                  AcctSeedERP__Project__r.AcctSeedERP__Work_Order_Number__c,
                                                                  AcctSeedERP__Project__r.Serial_Number__c,
                                                                  AcctSeedERP__Project__r.Serial_Number__r.Name,
+                                                                 AcctSeedERP__Project__r.Serial_Number__r.Retail_Age__c,
+                                                                 AcctSeedERP__Project__r.Serial_Number__r.Overall_Age__c,
                                                                  AcctSeedERP__Product__r.AcctSeed__Inventory_Product__c,
                                                                  AcctSeedERP__Quantity_Per_Unit__c,
                                                                  AcctSeedERP__Quantity_Allocated__c
@@ -299,6 +303,8 @@
                                                                  AcctSeedERP__Project__r.BoatModelYear__c,
                                                                  AcctSeedERP__Project__r.TrailerModelYear__c,
                                                                  AcctSeedERP__Project__r.Serial_Number__c,
+                                                                 AcctSeedERP__Project__r.Serial_Number__r.Retail_Age__c,
+                                                                 AcctSeedERP__Project__r.Serial_Number__r.Overall_Age__c,
                                                                  AcctSeedERP__Project__r.Serial_Number__r.Name
                                                           FROM AcctSeedERP__Material__c
                                                           WHERE AcctSeedERP__Project__r.RecordTypeId IN :rts
@@ -428,6 +434,8 @@
                                                            AcctSeedERP__Project__r.BoatModelYear__c,
                                                            AcctSeedERP__Project__r.TrailerModelYear__c,
                                                            AcctSeedERP__Project__r.Serial_Number__c,
+                                                           AcctSeedERP__Project__r.Serial_Number__r.Retail_Age__c,
+                                                           AcctSeedERP__Project__r.Serial_Number__r.Overall_Age__c,
                                                            AcctSeedERP__Project__r.Serial_Number__r.Name
                                                     FROM AcctSeedERP__Material__c
                                                     WHERE AcctSeedERP__Project__r.RecordTypeId =:erpPartnerBoatSaleRtId
@@ -493,6 +501,8 @@
                                                            AcctSeedERP__Project__r.TrailerModelYear__c,
                                                            AcctSeedERP__Project__r.Serial_Number__c,
                                                            AcctSeedERP__Project__r.Serial_Number__r.Name,
+                                                           AcctSeedERP__Project__r.Serial_Number__r.Retail_Age__c,
+                                                           AcctSeedERP__Project__r.Serial_Number__r.Overall_Age__c,
                                                            AcctSeedERP__Project__r.Serial_Number__r.Product_Name__c,
                                                            AcctSeedERP__Project__r.Retail_ERP__c,
                                                           AcctSeedERP__Project__r.Retail_ERP__r.ERP_Serial_In_Inventory__c,
@@ -506,6 +516,8 @@
                                                           AcctSeedERP__Project__r.Retail_ERP__r.BoatModelYear__c,
                                                           AcctSeedERP__Project__r.Retail_ERP__r.Serial_Number__c,
                                                           AcctSeedERP__Project__r.Retail_ERP__r.Serial_Number__r.Name,
+                                                          AcctSeedERP__Project__r.Retail_ERP__r.Serial_Number__r.Retail_Age__c,
+                                                          AcctSeedERP__Project__r.Retail_ERP__r.Serial_Number__r.Overall_Age__c,
                                                           AcctSeedERP__Project__r.Retail_ERP__r.TrailerModelYear__c
                                                     FROM AcctSeedERP__Material__c
                                                     WHERE AcctSeedERP__Project__r.RecordTypeId =:erpPartnerBoatSaleRtId
@@ -675,7 +687,7 @@
         private MAP<String,Integer> buildMapLocations()
         {
             MAP<String,Integer> mapProdLocations = new MAP<String,Integer>();
-            String query = 'SELECT Id, Name, Current_Unit_Cost__c, GMBLASERP__Product__c, location__c,GMBLASERP__Lot__r.name, Nest__c, Nest__r.Name, (SELECT Id, Name, Current_Unit_Cost__c, GMBLASERP__Product__c, GMBLASERP__Product__r.Name, Status__c, Model_Year__c, GMBLASERP__Lot__r.Name, Nest__c, Nest__r.Name FROM Nested_Serial_Numbers__r) FROM GMBLASERP__Serial_Number__c where Available_Retail__c = true';
+            String query = 'SELECT Id, Name, Current_Unit_Cost__c, GMBLASERP__Product__c, location__c,GMBLASERP__Lot__r.name, Nest__c, Nest__r.Name, Retail_Age__c, Overall_Age__c, (SELECT Id, Name, Current_Unit_Cost__c, GMBLASERP__Product__c, GMBLASERP__Product__r.Name, Status__c, Model_Year__c, Retail_Age__c, Overall_Age__c, GMBLASERP__Lot__r.Name, Nest__c, Nest__r.Name FROM Nested_Serial_Numbers__r) FROM GMBLASERP__Serial_Number__c where Available_Retail__c = true';
             query += ' AND GMBLASERP__Inventory_Balance__r.AcctSeedERP__Warehouse__c =:filterWarehouse ';
             if('All' != this.filterYear && this.filterType == 'Boat') {
                 query += ' AND GMBLASERP__Lot__r.name IN:listFilterYear ';
@@ -714,6 +726,8 @@
                   GMBLASERP__Lot__r.Name,
                   Nest__c,
                   Nest__r.Name,
+                  Retail_Age__c,
+                  Overall_Age__c,
                   (SELECT Id,
                     Name,
                     Current_Unit_Cost__c,
@@ -723,7 +737,9 @@
                     Model_Year__c,
                     GMBLASERP__Lot__r.Name,
                     Nest__c,
-                    Nest__r.Name
+                    Nest__r.Name,
+                    Retail_Age__c,
+                    Overall_Age__c
                   FROM Nested_Serial_Numbers__r)
                 FROM GMBLASERP__Serial_Number__c
                 WHERE Available_Retail__c = true
@@ -1123,6 +1139,8 @@
             GMBLASERP__Lot__r.Name,
             Nest__c,
             Nest__r.Name,
+            Retail_Age__c,
+            Overall_Age__c,
         (SELECT Id,
             Name,
             Current_Unit_Cost__c,
@@ -1132,7 +1150,9 @@
             Model_Year__c,
             GMBLASERP__Lot__r.Name,
             Nest__c,
-            Nest__r.Name
+            Nest__r.Name,
+            Retail_Age__c,
+            Overall_Age__c
         FROM Nested_Serial_Numbers__r)
         FROM GMBLASERP__Serial_Number__c
         WHERE Available_Wholesale__c = true
@@ -1193,6 +1213,8 @@
             AcctSeedERP__Project__r.Retail_ERP__r.AcctSeed__Account__r.Name,
             AcctSeedERP__Project__r.Retail_ERP__r.Serial_Number__c,
             AcctSeedERP__Project__r.Retail_ERP__r.Serial_Number__r.Name,
+            AcctSeedERP__Project__r.Retail_ERP__r.Serial_Number__r.Retail_Age__c,
+            AcctSeedERP__Project__r.Retail_ERP__r.Serial_Number__r.Overall_Age__c,
             AcctSeedERP__Project__r.Retail_ERP__r.Stage__c,
             AcctSeedERP__Project__r.Retail_ERP__r.CreatedDate,
             AcctSeedERP__Project__r.Retail_ERP__r.Arrival_Date__c,
@@ -1209,6 +1231,8 @@
             AcctSeedERP__Project__r.TrailerModelYear__c,
             AcctSeedERP__Project__r.Serial_Number__c,
             AcctSeedERP__Project__r.Serial_Number__r.Name,
+            AcctSeedERP__Project__r.Serial_Number__r.Retail_Age__c,
+            AcctSeedERP__Project__r.Serial_Number__r.Overall_Age__c,
             AcctSeedERP__Project__r.ERP_Serial_In_Inventory__c
         FROM AcctSeedERP__Purchase_Order_Line__c
         WHERE (AcctSeedERP__Purchase_Order__r.Estimated_Time_of_Arrival_ETA__c != null OR deliverDate__c != null)
@@ -1269,6 +1293,8 @@
             AcctSeedERP__Project__r.BoatModelYear__c,
             AcctSeedERP__Project__r.TrailerModelYear__c,
             AcctSeedERP__Project__r.Serial_Number__c,
+            AcctSeedERP__Project__r.Serial_Number__r.Retail_Age__c,
+            AcctSeedERP__Project__r.Serial_Number__r.Overall_Age__c,
             AcctSeedERP__Project__r.Serial_Number__r.Name
         FROM AcctSeedERP__Material__c
         WHERE AcctSeedERP__Project__r.Stage__c NOT IN ('Draft','Quoting','Delivered','Closed Lost')
@@ -1865,6 +1891,8 @@
             public String makeModel                     {get;set;}
             public String nestId                        {get;set;}
             public String nestName                      {get;set;}
+            public Decimal retailAge                    {get;set;}
+            public Decimal overallAge                   {get;set;}
             public List<SerialNumber> listNested        {get;set;}
             public List<Map<String,String>> listCanvas  {get;set;}
 
@@ -1885,6 +1913,8 @@
                 this.totalUnitCost = (totalNested + (serial.Current_Unit_Cost__c == null ? 0 : serial.Current_Unit_Cost__c)).format();
                 this.nestId = serial.Nest__c;
                 this.nestName = serial.Nest__r.Name;
+                this.retailAge = serial.Retail_Age__c == null ? 0 : serial.Retail_Age__c;
+                this.overallAge = serial.Overall_Age__c == null ? 0 : serial.Overall_Age__c;
                 this.productId = serial.GMBLASERP__Product__c;
                 this.productName = serial.GMBLASERP__Product__r.Name;
                 this.lotName = serial.GMBLASERP__Lot__r.Name;
