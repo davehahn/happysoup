@@ -68,6 +68,7 @@ public without sharing class Partner_OutstandingBoatOrders {
     public DateTime orderDate;
     public List<String> lineItems;
     public String invoiceId;
+    public Date erpArrivalDate;
 
     public OrderLine( Dealer_Order_Line__c dol, AcctSeedERP__Material__c[] mats )
     {
@@ -111,6 +112,7 @@ public without sharing class Partner_OutstandingBoatOrders {
         this.invoiceId = dol.ERP_Order__r.LastDocumentID__c;
       }
       this.orderDate = dol.Dealer_Order__r.Date_Submitted__c;
+      this.erpArrivalDate = dol.ERP_Order__r.Arrival_Date__c;
     }
 
     public Integer compareTo(Object compareTo) {
@@ -141,6 +143,7 @@ public without sharing class Partner_OutstandingBoatOrders {
                                             Dealer_Order__r.Name,
                                             Dealer_Order__c,
                                             ERP_Order__c,
+                                            ERP_Order__r.Arrival_Date__c,
                                             ERP_Order__r.Stage__c,
                                             ERP_Order__r.AcctSeedERP__Work_Order_Number__c,
                                             ERP_Order__r.LastDocumentID__c,
@@ -197,6 +200,7 @@ public without sharing class Partner_OutstandingBoatOrders {
                                             ERP_Order__c,
                                             ERP_Order__r.Stage__c,
                                             ERP_Order__r.AcctSeedERP__Work_Order_Number__c,
+                                            ERP_Order__r.Arrival_Date__c,
                                             ERP_Order__r.LastDocumentID__c,
                                             ERP_Order__r.Retail_ERP__c,
                                             ERP_Order__r.Retail_ERP__r.Name,
