@@ -31,6 +31,7 @@ public without sharing class P2PInventorySearch_mp {
 	}
 
 	public virtual class AccountWrapper implements Comparable {
+		public Id id;
 		public String name;
 		public String phone;
 		public String email;
@@ -40,9 +41,12 @@ public without sharing class P2PInventorySearch_mp {
 		public String country;
 		public String postalCode;
 		public String photoURL;
+		public Boolean inStock = false;
+		public Boolean onOrder = false;
 
 		public AccountWrapper( Registration__c reg )
 		{
+			this.id = reg.Account__c;
 			this.name = reg.Account__r.Name;
 			this.phone = reg.Account__r.Phone;
 			this.email = reg.Account__r.AccountEmail__c;
@@ -52,6 +56,22 @@ public without sharing class P2PInventorySearch_mp {
 			this.country = reg.Account__r.BillingCountry;
 			this.postalCode = reg.Account__r.BillingPostalCode;
 			this.photoURL = reg.Account__r.PhotoUrl;
+			this.inStock = true;
+		}
+
+		public AccountWrapper( Dealer_Order_Line__c dol )
+		{
+			this.id = dol.Dealer_Order__r.Account__c;
+			this.name = dol.Dealer_Order__r.Account__r.Name;
+			this.phone = dol.Dealer_Order__r.Account__r.Phone;
+			this.email = dol.Dealer_Order__r.Account__r.AccountEmail__c;
+			this.street = dol.Dealer_Order__r.Account__r.BillingStreet;
+			this.city = dol.Dealer_Order__r.Account__r.BillingCity;
+			this.state = dol.Dealer_Order__r.Account__r.BillingState;
+			this.country = dol.Dealer_Order__r.Account__r.BillingCountry;
+			this.postalCode = dol.Dealer_Order__r.Account__r.BillingPostalCode;
+			this.photoURL = dol.Dealer_Order__r.Account__r.PhotoUrl;
+			this.onOrder = true;
 		}
 
 		public Integer compareTo( Object compareTo )
@@ -69,8 +89,13 @@ public without sharing class P2PInventorySearch_mp {
 		ResultWrapper result = new ResultWrapper();
 		Map<String, List<AccountWrapper>> inventory = new Map<String, List<AccountWrapper>>();
 		Map<String, GroupSelectOpts> selectOpts = new Map<String, GroupSelectOpts>();
-		for (Registration__c reg : findRegistrations( includeFactoryStoresForPartners ) )
+		List<Registration__c> registrations = findRegistrations( includeFactoryStoresForPartners );
+		Map<String, List<Dealer_Order_Line__c>> dealerOrderLinesByAccountId = findOnOrderBoats( includeFactoryStoresForPartners );
+		System.debug('^^^ DOLS BY ACCTID ^^^');
+		System.debug( dealerOrderLinesByAccountId );
+		for (Registration__c reg : registrations )
 		{
+			System.debug( 'Registrations for ' + reg.Account__r.Name + reg.SerialNumber__r.Product_Name__c );
 			//add to select options
 			if( !selectOpts.containsKey( reg.SerialNumber__r.GMBLASERP__Product__r.Family ) )
 				selectOpts.put( reg.SerialNumber__r.GMBLASERP__Product__r.Family, new GroupSelectOpts( reg.SerialNumber__r.GMBLASERP__Product__r.Family ) );
@@ -85,9 +110,45 @@ public without sharing class P2PInventorySearch_mp {
 			if( !uniquer.contains( uniq ) )
 			{
 				uniquer.add( uniq );
-				inventory.get(reg.SerialNumber__r.Product_Name__c).add( new AccountWrapper( reg ) );
+				AccountWrapper wrapper = new AccountWrapper( reg );
+				System.debug( 'On Order = ' + dealerOrderLinesByAccountId.containsKey( uniq ) );
+				if( dealerOrderLinesByAccountId.containsKey( uniq ) )
+				{
+					wrapper.onOrder = true;
+					dealerOrderLinesByAccountId.remove( uniq );
+				}
+				inventory.get(reg.SerialNumber__r.Product_Name__c).add( wrapper );
+				System.debug( wrapper );
 			}
 
+		}
+
+		if( dealerOrderLinesByAccountId.size() > 0 )
+		{
+			uniquer = new Set<String>();
+			for( String accountProduct : dealerOrderLinesByAccountId.keySet() )
+			{
+				for( Dealer_Order_Line__c dol : dealerOrderLinesByAccountId.get( accountProduct ) )
+				{
+					//add to select options
+					if( !selectOpts.containsKey( dol.Product__r.Family ) )
+						selectOpts.put( dol.Product__r.Family, new GroupSelectOpts( dol.Product__r.Family ) );
+					selectOpts.get( dol.Product__r.Family ).options.add( dol.Product__r.Name );
+
+					//add to inventory
+					if ( !inventory.containsKey(dol.Product__r.Name) )
+					{
+						inventory.put(dol.Product__r.Name, new List<AccountWrapper>() );
+					}
+					String uniq = String.valueOf(dol.Dealer_Order__r.Account__c) + String.valueOf(dol.Product__c);
+					if( !uniquer.contains( uniq ) )
+					{
+						uniquer.add( uniq );
+						AccountWrapper wrapper = new AccountWrapper( dol );
+						inventory.get(dol.Product__r.Name).add( wrapper );
+					}
+				}
+			}
 		}
 		//sort inventory by Account Name
 		for( String pName : inventory.keySet() )
@@ -138,5 +199,56 @@ public without sharing class P2PInventorySearch_mp {
 			query += ' AND Account__c != \'' + cu.AccountId + '\'';
 		query += ' ORDER BY SerialNumber__r.Product_Name__c ASC';
 		return Database.query(query);
+	}
+
+	private static  Map<String, List<Dealer_Order_Line__c>> findOnOrderBoats(
+		boolean includeFactoryStoresForPartners
+	)
+	{
+		Map<String, List<Dealer_Order_Line__c>> result =
+			new Map<String, List<Dealer_Order_Line__c>>();
+		Set<String> ignoreStages = new Set<String>{
+			'Draft',
+			'Delivered',
+			'Closed Lost'
+		};
+		Map<Id, Account> dealers = new Map<Id, Account>( Account_Selector.allActiveDealers() );
+		List<Dealer_Order_Line__c> dols = [
+			SELECT
+				Id,
+				Erp_Order__r.Stage__c,
+				Dealer_Order__r.Account__c,
+				Dealer_Order__r.Account__r.Phone,
+				Dealer_Order__r.Account__r.Is_Internal__c,
+				Dealer_Order__r.Account__r.PhotoUrl,
+				Dealer_Order__r.Account__r.AccountEmail__c,
+				Dealer_Order__r.Account__r.Name,
+				Dealer_Order__r.Account__r.BillingStreet,
+				Dealer_Order__r.Account__r.BillingCity,
+				Dealer_Order__r.Account__r.BillingState,
+				Dealer_Order__r.Account__r.BillingCountry,
+				Dealer_order__r.Account__r.BillingPostalCode,
+				Product__c,
+				Product__r.RecordTypeId,
+				Product__r.Family,
+				Product__r.Name
+			FROM Dealer_Order_Line__c
+			WHERE ERP_Order__c <> null
+			AND ERP_Order__r.Stage__c NOT IN :ignoreStages
+			AND Dealer_Order__r.Account__c = :dealers.keySet()
+			AND Product__c <> null
+		];
+		for( Dealer_Order_Line__c dol : dols )
+		{
+			if( dol.Dealer_Order__r.Account__r.Is_Internal__c && !includeFactoryStoresForPartners )
+				continue;
+			String uniq = String.valueOf( dol.Dealer_Order__r.Account__c ) + String.valueOf( dol.Product__c );
+			if( !result.containsKey( uniq ) )
+			{
+				result.put( uniq, new List<Dealer_Order_Line__c>() );
+			}
+			result.get( uniq ).add( dol );
+		}
+		return result;
 	}
 }

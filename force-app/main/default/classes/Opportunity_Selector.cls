@@ -57,7 +57,9 @@ public inherited sharing class Opportunity_Selector Extends Application_Selector
       'IsPickupDealershipPartner__c',
       'PickupDealership__c',
       'PickupDealership__r.Id',
-      'PickupDealership__r.Name'
+      'PickupDealership__r.Name',
+      'Contract_Start_Date__c',
+      'First_Payment_Date__c'
     };
   }
 

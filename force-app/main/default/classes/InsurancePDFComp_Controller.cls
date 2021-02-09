@@ -13,15 +13,14 @@ public with sharing class InsurancePDFComp_Controller {
     {
         formData = new insuranceFormData(false);
         String certNo = ApexPages.currentPage().getParameters().get('certNo');
-        //String firstPaymentDate = ApexPages.currentPage().getParameters().get('fPaymentDate');
-        String dateString = ApexPages.currentPage().getParameters().get('fPaymentDate');
-        if( dateString != null )
-        {
-            formData.firstPaymentDate = date.newInstance(Integer.valueOf(dateString.split('-')[0]),
-                                                         Integer.valueOf(dateString.split('-')[1]),
-                                                         Integer.valueOf(dateString.split('-')[2]));
-        }
-        //System.debug('**** FRIST PAYMENT DATE ****** ' + firstPaymentDate );
+
+//        String dateString = ApexPages.currentPage().getParameters().get('fPaymentDate');
+//        if( dateString != null )
+//        {
+//            formData.firstPaymentDate = date.newInstance(Integer.valueOf(dateString.split('-')[0]),
+//                                                         Integer.valueOf(dateString.split('-')[1]),
+//                                                         Integer.valueOf(dateString.split('-')[2]));
+//        }
         if(certNo == null) certNo = '-PREVIEW-';
 
         formData.certificateNo = certNo;
@@ -53,6 +52,7 @@ public with sharing class InsurancePDFComp_Controller {
                                             Serial_Number__c,
                                             Serial_Number__r.Name,
                                             Tax_Rate_Retail__c,
+                                            First_Payment_Date__c,
                                             (SELECT Id,
                                              GMBLASERP__Total_Price__c,
                                              Insurance_Coverage__c,
@@ -86,6 +86,7 @@ public with sharing class InsurancePDFComp_Controller {
             formData.monthlyPayment_wo_Insurance = project.Finance_Monthly_Payment_wo_Insurance__c;
             formData.financeTerm = project.Finance_Term__c;
             formData.amortizationTerm = project.Finance_Ammortization__c;
+            formData.firstPaymentDate = project.First_Payment_Date__c;
             formData.totalPremium = 0;
             formData.salesTax = 0;
             formData.totalCost = 0;

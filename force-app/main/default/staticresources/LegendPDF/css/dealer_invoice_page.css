@@ -1,16 +1,78 @@
 @page {
-    size:letter;
-    margin-top: 0.5cm;
-    margin-left: 0.5cm;
-    margin-right: 0.5cm;
-    margin-bottom: 0.5cm;
+  size:letter;
+  margin-top: 0.5cm;
+  margin-left: 0.5cm;
+  margin-right: 0.5cm;
+  margin-bottom: 1.75cm;
+}
 
-    /*size: 8.5in 11in; width height */
+@bottom-left {
+  content: element( footerLeft );
+  border-top: 3px solid #00AEE9;
+}
 
-    /*@bottom-left
-    {
-      content: element(footer);
-    }*/
+@bottom-center {
+  border-top: 3px solid #00AEE9;
+  content: element( footerCenter );
+}
+
+@bottom-right {
+  border-top: 3px solid #00AEE9;
+  content: element( footerRight );
+}
+
+@bottom-right-corner {
+  font-size: 10px;
+  color: #777;
+  content: counter(page);
+}
+
+#footerLeft {
+  position: running(footerLeft);
+}
+
+#footerLeft p {
+  color: #777;
+  font-size: 9px;
+}
+
+#footerLeft p.tax_numbers {
+  padding-top: 3px;
+}
+
+#footerLeft p.tax_numbers span {
+  padding-right: 5px;
+}
+
+#footerCenter {
+  position: running( footerCenter );
+}
+
+#footerCenter p {
+  color: #777;
+  font-size: 9px;
+  text-align: center;
+}
+
+#footerCenter p.tax_numbers {
+  padding-top: 3px;
+}
+
+
+#footerCenter p.tax_numbers span {
+  padding-right: 5px;
+}
+
+#footerRight {
+  position: running( footerRight );
+}
+
+
+#footerRight span {
+  font-size: 9px;
+  color: #777;
+  float: right;
+  padding-right: 5px;
 }
 
 body {

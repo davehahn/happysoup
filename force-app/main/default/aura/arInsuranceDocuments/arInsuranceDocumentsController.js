@@ -10,6 +10,7 @@
             results = JSON.parse(results);
             component.set("v.erpData", results);
             component.set('v.canDelete', results.canDelete);
+            component.set('v.hasFirstPaymentDate', results.hasFirstPaymentDate );
             var hasInsurance = results.hasInsurance == 'true' ? true : false;
             component.set("v.hasInsurance", hasInsurance);
             if(hasInsurance){
@@ -43,12 +44,12 @@
     loadPDF: function(component, event, helper) {
         helper.loadPDF(component, event, helper);
     },
-    createNew: function(component, event, helper) {
-        helper.createNew(component, event, helper);
-    },
-    cancelNew: function(component, event, helper) {
-        helper.cancelNew(component, event, helper);
-    },
+//    createNew: function(component, event, helper) {
+//        helper.createNew(component, event, helper);
+//    },
+//    cancelNew: function(component, event, helper) {
+//        helper.cancelNew(component, event, helper);
+//    },
     deleteDoc: function(component, event, helper) {
         var selectedItem = event.currentTarget;
         var idDoc = selectedItem.dataset.dicid;
@@ -102,53 +103,35 @@
 
     },
 
-    setPaymentDate: function( component, event, helper )
-    {
-        var modal = component.find('date-select-modal');
-        $A.util.removeClass(modal, 'slds-hide');
-    },
-
-    cancelPaymentDate: function( component, event, helper )
-    {
-        var modal = component.find('date-select-modal');
-        $A.util.addClass(modal, 'slds-hide');
-    },
-
     saveNew: function(component, event, helper) {
-        var modal = component.find('date-select-modal');
-        $A.util.addClass(modal, 'slds-hide');
-        helper.toggleSpinner(component, true);
-        helper.runAction(component, "c.generateInsurancePDF", {
-            idProject: component.get("v.recordId"),
-            insuranceType: component.get("v.erpData").insuranceType,
-            firstPaymentDate: component.get("v.firstPaymentDate"),
-            language: component.get("v.language")
-        }, function(response) {
-            var state = response.getState();
-            if (state != "SUCCESS") {
-                var errors = response.getError();
-                if (errors) {
-                    helper.toggleSpinner(component, false);
-                    if (errors[0] && errors[0].message) {
-                        helper.showToast(component, "Error In Save", "error", errors[0].message);
-                    } else {
-                        helper.showToast(component, "Error In Save", "error", "There was an error saving document");
-                    }
-                    return;
-                }
+      helper.toggleSpinner(component, true);
+      helper.runAction(component, "c.generateInsurancePDF", {
+          idProject: component.get("v.recordId"),
+          insuranceType: component.get("v.erpData").insuranceType,
+          language: component.get("v.language")
+      }, function(response) {
+          var state = response.getState();
+          if (state != "SUCCESS") {
+            var errors = response.getError();
+            if (errors) {
+              helper.toggleSpinner(component, false);
+              if (errors[0] && errors[0].message) {
+                 helper.showToast(component, "Error In Save", "error", errors[0].message);
+              } else {
+                 helper.showToast(component, "Error In Save", "error", "There was an error saving document");
+              }
+              return;
             }
-            var results = response.getReturnValue();
-            results = JSON.parse(results);
-            //var listPDF = component.get("v.oldPDFs");
-			//listPDF.push(results);
-            component.set("v.oldPDFs",results);
-            //component.find("pdfIframe").set('v.src','/servlet/servlet.FileDownload?file='+results.idDoc);
-            helper.cancelNew(component, event, helper);
-            helper.toggleSpinner(component, false);
-            component.set("v.newInsurancePDF", false);
-            component.set("v.noInsurancePDF", false);
-            component.set('v.selectedDocId', results[0].idDoc);
-            component.set("v.pdfSRC", '/servlet/servlet.FileDownload?file='+results[0].idDoc);
-        });
+          }
+          var results = response.getReturnValue();
+          results = JSON.parse(results);
+          component.set("v.oldPDFs",results);
+          helper.cancelNew(component, event, helper);
+          helper.toggleSpinner(component, false);
+          component.set("v.newInsurancePDF", false);
+          component.set("v.noInsurancePDF", false);
+          component.set('v.selectedDocId', results[0].idDoc);
+          component.set("v.pdfSRC", '/servlet/servlet.FileDownload?file='+results[0].idDoc);
+      });
     }
 })
