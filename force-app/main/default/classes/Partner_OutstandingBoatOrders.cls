@@ -200,6 +200,7 @@ public without sharing class Partner_OutstandingBoatOrders {
                                             ERP_Order__c,
                                             ERP_Order__r.Stage__c,
                                             ERP_Order__r.AcctSeedERP__Work_Order_Number__c,
+                                            ERP_Order__r.Arrival_Date__c,
                                             ERP_Order__r.LastDocumentID__c,
                                             ERP_Order__r.Retail_ERP__c,
                                             ERP_Order__r.Retail_ERP__r.Name,
