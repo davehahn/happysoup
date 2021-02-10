@@ -172,9 +172,17 @@ public with sharing class gcInventoryReport_MRP {
 	public static list<map<String,String>> retrieveProjects(list<Id> listIdProduct, Id pIdWarehouse)
 	{
 		Set<Id> setIdRetailProjectToDiscard = new Set<Id>();
-		for(AcctSeed__Project__c pr : [SELECT Id, Retail_ERP__c FROM AcctSeed__Project__c WHERE Retail_ERP__c != null AND Locked__c = false])
-			setIdRetailProjectToDiscard.add(pr.Retail_ERP__c);
-		System.debug('setIdRetailProjectToDiscard'+setIdRetailProjectToDiscard);
+//		for(AcctSeed__Project__c pr : [SELECT Id, Retail_ERP__c FROM AcctSeed__Project__c WHERE Retail_ERP__c != null AND Locked__c = false])
+//			setIdRetailProjectToDiscard.add(pr.Retail_ERP__c);
+		Map<Id,Set<Id>> mapProjectSetProducts = new Map<Id,Set<Id>>();
+		for(AcctSeedERP__Material__c x :
+		[SELECT AcctSeedERP__Project__r.Retail_ERP__c, AcctSeedERP__Product__c FROM AcctSeedERP__Material__c WHERE AcctSeedERP__Project__r.Retail_ERP__c != null AND AcctSeedERP__Project__r.Locked__c = false]){
+			if(!mapProjectSetProducts.containsKey(x.AcctSeedERP__Project__r.Retail_ERP__c)){
+				mapProjectSetProducts.put(x.AcctSeedERP__Project__r.Retail_ERP__c,new Set<Id>());
+			}
+			mapProjectSetProducts.get(x.AcctSeedERP__Project__r.Retail_ERP__c).add(x.AcctSeedERP__Product__c);
+		}
+		System.debug('mapProjectSetProducts'+mapProjectSetProducts);
 		list<map<String,String>> listJSON = new list<map<String,String>>();
 
 		set<Id> setIdProduct = new set<Id>();
@@ -193,6 +201,7 @@ public with sharing class gcInventoryReport_MRP {
 			AcctSeedERP__Project__r.GMBLASERP__Warehouse__r.Name,
 			AcctSeedERP__Project__r.Name,
 			AcctSeedERP__Project__r.CreatedDate,
+			AcctSeedERP__Product__c,
 			AcctSeedERP__Product__r.Name,
 			AcctSeedERP__Quantity_Per_Unit__c,
 			AcctSeedERP__Quantity_Allocated__c,
@@ -201,57 +210,65 @@ public with sharing class gcInventoryReport_MRP {
 		WHERE AcctSeedERP__Quantity_Per_Unit__c > 0
 		AND No_WIP__c = false
 		AND AcctSeedERP__Project__r.Locked__c = false
-		AND AcctSeedERP__Project__c NOT IN:setIdRetailProjectToDiscard
+		//AND AcctSeedERP__Project__c NOT IN:setIdRetailProjectToDiscard
 		AND AcctSeedERP__Project__r.Stage__c NOT IN ('Quoting','Closed Lost','Draft','Pending Review')
 		AND AcctSeedERP__Product__c IN :setIdProduct
 		AND (IsDeleted =:checkDeleted OR AcctSeedERP__Project__r.GMBLASERP__Warehouse__c =:pIdWarehouse)
 		AND IsDeleted = false])
 		{
-			map<String,String> m = new map<String,String>();
-			m.put('idProject',x.AcctSeedERP__Project__c);
-			m.put('idWarehouse',x.AcctSeedERP__Project__r.GMBLASERP__Warehouse__c);
-			m.put('nameWarehouse',x.AcctSeedERP__Project__r.GMBLASERP__Warehouse__r.Name);
-			if(x.AcctSeedERP__Project__c != null)
-			{
-				m.put('projectNumber',String.valueOf(Integer.valueOf(x.AcctSeedERP__Project__r.AcctSeedERP__Work_Order_Number__c.replaceAll('[^0-9]',''))));
-				m.put('createdDate',x.AcctSeedERP__Project__r.CreatedDate.format());
-				m.put('projectName',x.AcctSeedERP__Project__r.Name);
-				m.put('projectType',x.AcctSeedERP__Project__r.RecordType.Name);
-				if(x.AcctSeedERP__Project__r.Serial_Number__c != null){
-					m.put('projectSerial',x.AcctSeedERP__Project__r.Serial_Number__r.Name);
-					m.put('projectLot',x.AcctSeedERP__Project__r.Serial_Number__r.GMBLASERP__Lot__r.Name);
+			if(!(mapProjectSetProducts.containsKey(x.AcctSeedERP__Project__c) && mapProjectSetProducts.get(x.AcctSeedERP__Project__c).contains(x.AcctSeedERP__Product__c))) {
+				map<String, String> m = new map<String, String>();
+				m.put('idProject', x.AcctSeedERP__Project__c);
+				m.put('idWarehouse', x.AcctSeedERP__Project__r.GMBLASERP__Warehouse__c);
+				m.put('nameWarehouse', x.AcctSeedERP__Project__r.GMBLASERP__Warehouse__r.Name);
+				if (x.AcctSeedERP__Project__c != null) {
+					m.put('projectNumber', String.valueOf(Integer.valueOf(x.AcctSeedERP__Project__r.AcctSeedERP__Work_Order_Number__c.replaceAll('[^0-9]', ''))));
+					m.put('createdDate', x.AcctSeedERP__Project__r.CreatedDate.format());
+					m.put('projectName', x.AcctSeedERP__Project__r.Name);
+					m.put('projectType', x.AcctSeedERP__Project__r.RecordType.Name);
+					if (x.AcctSeedERP__Project__r.Serial_Number__c != null) {
+						m.put('projectSerial', x.AcctSeedERP__Project__r.Serial_Number__r.Name);
+						m.put('projectLot', x.AcctSeedERP__Project__r.Serial_Number__r.GMBLASERP__Lot__r.Name);
+					}
 				}
+
+				m.put('productName', x.AcctSeedERP__Product__r.Name);
+
+				if (x.AcctSeedERP__Quantity_Per_Unit__c != null)
+					m.put('qtySpecified', String.valueOf(x.AcctSeedERP__Quantity_Per_Unit__c.setScale(6))); else
+					m.put('qtySpecified', '0');
+
+				if (x.AcctSeedERP__Quantity_Allocated__c != null)
+					m.put('qtyAllocated', String.valueOf(x.AcctSeedERP__Quantity_Allocated__c.setScale(6))); else
+					m.put('qtyAllocated', '0');
+
+				Decimal qtyAllocated = 0;
+				for (AcctSeedERP__Outbound_Inventory_Movement__c oim : x.Outbound_Inventory_Movements__r) {
+					qtyAllocated += oim.AcctSeedERP__Quantity__c == null ? 0 : oim.AcctSeedERP__Quantity__c;
+				}
+				if (qtyAllocated <> 0)
+					m.put('qtyAllocated', String.valueOf(qtyAllocated.setScale(6)));
+
+				listJSON.add(m);
 			}
-
-			m.put('productName',x.AcctSeedERP__Product__r.Name);
-
-			if(x.AcctSeedERP__Quantity_Per_Unit__c != null)
-				m.put('qtySpecified',String.valueOf(x.AcctSeedERP__Quantity_Per_Unit__c.setScale(6)));
-			else
-				m.put('qtySpecified','0');
-
-			if(x.AcctSeedERP__Quantity_Allocated__c != null)
-				m.put('qtyAllocated',String.valueOf(x.AcctSeedERP__Quantity_Allocated__c.setScale(6)));
-			else
-				m.put('qtyAllocated','0');
-
-			Decimal qtyAllocated = 0;
-			for(AcctSeedERP__Outbound_Inventory_Movement__c oim : x.Outbound_Inventory_Movements__r){
-				qtyAllocated += oim.AcctSeedERP__Quantity__c == null ? 0 : oim.AcctSeedERP__Quantity__c;
-			}
-			if(qtyAllocated <> 0)
-				m.put('qtyAllocated',String.valueOf(qtyAllocated.setScale(6)));
-
-			listJSON.add(m);
 		}
 		return listJSON;
 	}
 
 	public static Map<Id,cube> retrieveProducts(Set<Id> setIdProduct, Id pIdWarehouse)
 	{
-		Set<Id> setIdRetailProjectToDiscard = new Set<Id>();
-		for(AcctSeed__Project__c pr : [SELECT Id, Retail_ERP__c FROM AcctSeed__Project__c WHERE Retail_ERP__c != null AND Locked__c = false])
-			setIdRetailProjectToDiscard.add(pr.Retail_ERP__c);
+//		Set<Id> setIdRetailProjectToDiscard = new Set<Id>();
+//		for(AcctSeed__Project__c pr : [SELECT Id, Retail_ERP__c FROM AcctSeed__Project__c WHERE Retail_ERP__c != null AND Locked__c = false])
+//			setIdRetailProjectToDiscard.add(pr.Retail_ERP__c);
+		Map<Id,Set<Id>> mapProjectSetProducts = new Map<Id,Set<Id>>();
+		for(AcctSeedERP__Material__c x :
+		[SELECT AcctSeedERP__Project__r.Retail_ERP__c, AcctSeedERP__Product__c FROM AcctSeedERP__Material__c WHERE AcctSeedERP__Project__r.Retail_ERP__c != null AND AcctSeedERP__Project__r.Locked__c = false]){
+			if(!mapProjectSetProducts.containsKey(x.AcctSeedERP__Project__r.Retail_ERP__c)){
+				mapProjectSetProducts.put(x.AcctSeedERP__Project__r.Retail_ERP__c,new Set<Id>());
+			}
+			mapProjectSetProducts.get(x.AcctSeedERP__Project__r.Retail_ERP__c).add(x.AcctSeedERP__Product__c);
+		}
+		System.debug('mapProjectSetProducts'+mapProjectSetProducts);
 
 		map<Id,cube> mapCube = new map<Id,cube>();
 		System.debug( setIdProduct );
@@ -333,85 +350,101 @@ public with sharing class gcInventoryReport_MRP {
 		}
 
 		listAggRes.clear();
-		soql = 'SELECT AcctSeedERP__Product__c idProduct, sum(AcctSeedERP__Quantity_Unreceived__c) qty FROM AcctSeedERP__Purchase_Order_Line__c';
+		soql = 'SELECT AcctSeedERP__Project__c idProject, AcctSeedERP__Product__c idProduct, sum(AcctSeedERP__Quantity_Unreceived__c) qty FROM AcctSeedERP__Purchase_Order_Line__c';
 		soql += ' WHERE AcctSeedERP__Product__c IN:setIdProduct';
 		soql += ' AND AcctSeedERP__Quantity_Unreceived__c > 0';
-		soql += ' AND AcctSeedERP__Project__c NOT IN:setIdRetailProjectToDiscard ';
+		//soql += ' AND AcctSeedERP__Project__c NOT IN:setIdRetailProjectToDiscard ';
 		soql += ' AND AcctSeedERP__Purchase_Order__r.AcctSeedERP__Status__c = \'Open\'';
 		soql += ' AND AcctSeedERP__Product__r.AcctSeed__Inventory_Product__c = true';
 		if(pIdWarehouse != null)
 			soql += ' AND (AcctSeedERP__Purchase_Order__r.Warehouse__c =:pIdWarehouse OR AcctSeedERP__Purchase_Order__r.Warehouse__c = null)';
-		soql += ' GROUP BY AcctSeedERP__Product__c';
+		soql += ' GROUP BY AcctSeedERP__Project__c, AcctSeedERP__Product__c';
 
 		listAggRes.addAll(Database.query(soql));
 		for(sObject aggRes : listAggRes)
 		{
-			cube cube = mapCube.get((Id)aggRes.get('idProduct'));
-			if(cube == null) cube = new cube();
-			cube.purchasing += (Decimal)aggRes.get('qty');
-			mapCube.put((Id)aggRes.get('idProduct'), cube);
+			Id idProject = (Id)aggRes.get('idProject');
+			Id idProduct = (Id)aggRes.get('idProduct');
+			if(!(mapProjectSetProducts.containsKey(idProject) && mapProjectSetProducts.get(idProject).contains(idProduct))) {
+				cube cube = mapCube.get(idProduct);
+				if (cube == null) cube = new cube();
+				cube.purchasing += (Decimal) aggRes.get('qty');
+				mapCube.put(idProduct, cube);
+			}
 		}
 
 		listAggRes.clear();
-		soql = 'SELECT AcctSeedERP__Product__c idProduct, sum(AcctSeedERP__Quantity_Per_Unit__c) qty FROM AcctSeedERP__Material__c';
+		soql = 'SELECT AcctSeedERP__Project__c idProject, AcctSeedERP__Product__c idProduct, sum(AcctSeedERP__Quantity_Per_Unit__c) qty FROM AcctSeedERP__Material__c';
 		soql += ' WHERE AcctSeedERP__Product__c IN:setIdProduct';
 		soql += ' AND AcctSeedERP__Quantity_Per_Unit__c > 0';
-		soql += ' AND AcctSeedERP__Project__c NOT IN:setIdRetailProjectToDiscard ';
+		//soql += ' AND AcctSeedERP__Project__c NOT IN:setIdRetailProjectToDiscard ';
 		soql += ' AND AcctSeedERP__Project__r.Locked__c = false AND AcctSeedERP__Project__r.Stage__c NOT IN (\'Quoting\',\'Closed Lost\',\'Draft\',\'Pending Review\') AND No_WIP__c = false';
 		if(pIdWarehouse != null)
 			soql += ' AND AcctSeedERP__Project__r.GMBLASERP__Warehouse__c =:pIdWarehouse';
-		soql += ' GROUP BY AcctSeedERP__Product__c';
+		soql += ' GROUP BY AcctSeedERP__Project__c, AcctSeedERP__Product__c';
 		soql += ' HAVING sum(AcctSeedERP__Quantity_Per_Unit__c) > 0';
 
 		listAggRes.addAll(Database.query(soql));
 		for(sObject aggRes : listAggRes)
 		{
-			cube cube = mapCube.get((Id)aggRes.get('idProduct'));
-			if(cube == null) cube = new cube();
-			cube.specified += (Decimal)aggRes.get('qty');
-			mapCube.put((Id)aggRes.get('idProduct'), cube);
+			Id idProject = (Id)aggRes.get('idProject');
+			Id idProduct = (Id)aggRes.get('idProduct');
+			if(!(mapProjectSetProducts.containsKey(idProject) && mapProjectSetProducts.get(idProject).contains(idProduct))) {
+				cube cube = mapCube.get(idProduct);
+				if (cube == null) cube = new cube();
+				cube.specified += (Decimal) aggRes.get('qty');
+				mapCube.put((Id) aggRes.get('idProduct'), cube);
+			}
 		}
 
 		listAggRes.clear();
-		soql = 'SELECT AcctSeedERP__Product__c idProduct, sum(AcctSeedERP__Quantity_Allocated__c) qty FROM AcctSeedERP__Material__c';
+		soql = 'SELECT AcctSeedERP__Project__c idProject, AcctSeedERP__Product__c idProduct, sum(AcctSeedERP__Quantity_Allocated__c) qty FROM AcctSeedERP__Material__c';
 		soql += ' WHERE AcctSeedERP__Product__c IN:setIdProduct';
 		soql += ' AND AcctSeedERP__Quantity_Allocated__c > 0';
-		soql += ' AND AcctSeedERP__Project__c NOT IN:setIdRetailProjectToDiscard ';
+		//soql += ' AND AcctSeedERP__Project__c NOT IN:setIdRetailProjectToDiscard ';
 		soql += ' AND AcctSeedERP__Project__r.Locked__c = false AND AcctSeedERP__Project__r.Stage__c NOT IN (\'Quoting\',\'Closed Lost\',\'Draft\',\'Pending Review\') AND No_WIP__c = false';
 		if(pIdWarehouse != null)
 			soql += ' AND AcctSeedERP__Project__r.GMBLASERP__Warehouse__c =:pIdWarehouse';
-		soql += ' GROUP BY AcctSeedERP__Product__c';
+		soql += ' GROUP BY AcctSeedERP__Project__c, AcctSeedERP__Product__c';
 		soql += ' HAVING sum(AcctSeedERP__Quantity_Allocated__c) > 0';
 
 		listAggRes.addAll(Database.query(soql));
 		for(sObject aggRes : listAggRes)
 		{
-			cube cube = mapCube.get((Id)aggRes.get('idProduct'));
-			if(cube == null) cube = new cube();
-			cube.consumed += (Decimal)aggRes.get('qty');
-			mapCube.put((Id)aggRes.get('idProduct'), cube);
+			Id idProject = (Id)aggRes.get('idProject');
+			Id idProduct = (Id)aggRes.get('idProduct');
+			if(!(mapProjectSetProducts.containsKey(idProject) && mapProjectSetProducts.get(idProject).contains(idProduct))) {
+				cube cube = mapCube.get(idProduct);
+				if (cube == null) cube = new cube();
+				cube.consumed += (Decimal) aggRes.get('qty');
+				mapCube.put((Id) aggRes.get('idProduct'), cube);
+			}
 		}
 
 		listAggRes.clear();
-		soql = 'SELECT GMBLASERP__Product__c idProduct, sum(AcctSeedERP__Quantity__c) qty FROM AcctSeedERP__Outbound_Inventory_Movement__c';
+		soql = 'SELECT Material__r.AcctSeedERP__Project__c idProject, GMBLASERP__Product__c idProduct, sum(AcctSeedERP__Quantity__c) qty FROM AcctSeedERP__Outbound_Inventory_Movement__c';
 		soql += ' WHERE GMBLASERP__Product__c IN:setIdProduct';
 		soql += ' AND AcctSeedERP__Quantity__c <> 0';
 		soql += ' AND Material__c != null';
 		soql += ' AND Material__r.AcctSeedERP__Project__r.Locked__c = false';
-		soql += ' AND Material__r.AcctSeedERP__Project__c NOT IN:setIdRetailProjectToDiscard ';
+		//soql += ' AND Material__r.AcctSeedERP__Project__c NOT IN:setIdRetailProjectToDiscard ';
 		soql += ' AND Material__r.AcctSeedERP__Project__r.Stage__c NOT IN (\'Quoting\',\'Closed Lost\',\'Draft\',\'Pending Review\')';
 		if(pIdWarehouse != null)
 			soql += ' AND Material__r.AcctSeedERP__Project__r.GMBLASERP__Warehouse__c =:pIdWarehouse';
-		soql += ' GROUP BY GMBLASERP__Product__c';
+		soql += ' GROUP BY Material__r.AcctSeedERP__Project__c, GMBLASERP__Product__c';
 		soql += ' HAVING sum(AcctSeedERP__Quantity__c) > 0';
 
 		listAggRes.addAll(Database.query(soql));
 		for(sObject aggRes : listAggRes)
 		{
-			cube cube = mapCube.get((Id)aggRes.get('idProduct'));
-			if(cube == null) cube = new cube();
-			cube.consumed += (Decimal)aggRes.get('qty');
-			mapCube.put((Id)aggRes.get('idProduct'), cube);
+			Id idProject = (Id)aggRes.get('idProject');
+			Id idProduct = (Id)aggRes.get('idProduct');
+			if(!(mapProjectSetProducts.containsKey(idProject) && mapProjectSetProducts.get(idProject).contains(idProduct))) {
+				cube cube = mapCube.get(idProduct);
+				if (cube == null) cube = new cube();
+				cube.consumed += (Decimal) aggRes.get('qty');
+				mapCube.put(idProduct, cube);
+			}
 		}
 
 		mapCube.remove(null);
@@ -567,9 +600,18 @@ public with sharing class gcInventoryReport_MRP {
 
 	public static Map<String,cube> retrieveProductsByWarehouse(Set<Id> setIdProduct, Set<Id> setIdWarehouse)
 	{
-		Set<Id> setIdRetailProjectToDiscard = new Set<Id>();
-		for(AcctSeed__Project__c pr : [SELECT Id, Retail_ERP__c FROM AcctSeed__Project__c WHERE Retail_ERP__c != null AND Locked__c = false])
-			setIdRetailProjectToDiscard.add(pr.Retail_ERP__c);
+//		Set<Id> setIdRetailProjectToDiscard = new Set<Id>();
+//		for(AcctSeed__Project__c pr : [SELECT Id, Retail_ERP__c FROM AcctSeed__Project__c WHERE Retail_ERP__c != null AND Locked__c = false])
+//			setIdRetailProjectToDiscard.add(pr.Retail_ERP__c);
+		Map<Id,Set<Id>> mapProjectSetProducts = new Map<Id,Set<Id>>();
+		for(AcctSeedERP__Material__c x :
+		[SELECT AcctSeedERP__Project__r.Retail_ERP__c, AcctSeedERP__Product__c FROM AcctSeedERP__Material__c WHERE AcctSeedERP__Project__r.Retail_ERP__c != null AND AcctSeedERP__Project__r.Locked__c = false]){
+			if(!mapProjectSetProducts.containsKey(x.AcctSeedERP__Project__r.Retail_ERP__c)){
+				mapProjectSetProducts.put(x.AcctSeedERP__Project__r.Retail_ERP__c,new Set<Id>());
+			}
+			mapProjectSetProducts.get(x.AcctSeedERP__Project__r.Retail_ERP__c).add(x.AcctSeedERP__Product__c);
+		}
+		System.debug('mapProjectSetProducts'+mapProjectSetProducts);
 
 		map<String,cube> mapCube = new map<String,cube>();
 		list<sObject> listAggRes = new list<sObject>();
@@ -663,77 +705,86 @@ public with sharing class gcInventoryReport_MRP {
 		}
 
 		listAggRes.clear();
-		soql = 'SELECT AcctSeedERP__Product__c idProduct, AcctSeedERP__Project__r.GMBLASERP__Warehouse__c idWarehouse, sum(AcctSeedERP__Quantity_Per_Unit__c) qty FROM AcctSeedERP__Material__c';
+		soql = 'SELECT AcctSeedERP__Project__c idProject, AcctSeedERP__Product__c idProduct, AcctSeedERP__Project__r.GMBLASERP__Warehouse__c idWarehouse, sum(AcctSeedERP__Quantity_Per_Unit__c) qty FROM AcctSeedERP__Material__c';
 		soql += ' WHERE AcctSeedERP__Product__c IN:setIdProduct';
 		soql += ' AND AcctSeedERP__Quantity_Per_Unit__c > 0';
-		soql += ' AND AcctSeedERP__Project__c NOT IN:setIdRetailProjectToDiscard ';
+		//soql += ' AND AcctSeedERP__Project__c NOT IN:setIdRetailProjectToDiscard ';
 		soql += ' AND AcctSeedERP__Project__r.Locked__c = false AND AcctSeedERP__Project__r.Stage__c NOT IN (\'Quoting\',\'Closed Lost\',\'Draft\',\'Pending Review\') AND No_WIP__c = false';
 		soql += ' AND AcctSeedERP__Project__r.GMBLASERP__Warehouse__c IN:setIdWarehouse';
-		soql += ' GROUP BY AcctSeedERP__Product__c, AcctSeedERP__Project__r.GMBLASERP__Warehouse__c';
+		soql += ' GROUP BY AcctSeedERP__Project__c, AcctSeedERP__Product__c, AcctSeedERP__Project__r.GMBLASERP__Warehouse__c';
 		soql += ' HAVING sum(AcctSeedERP__Quantity_Per_Unit__c) > 0';
 
 		listAggRes.addAll(Database.query(soql));
 		for(sObject aggRes : listAggRes)
 		{
+			Id idProject = (Id)aggRes.get('idProject');
 			Id idProduct = (Id)aggRes.get('idProduct');
-			Id idWarehouse = (Id)aggRes.get('idWarehouse');
-			String key = idProduct + '' + idWarehouse;
-			cube cube = mapCube.get(key);
-			if(cube == null) {
-				cube = new cube(idProduct,idWarehouse);
-				mapCube.put(key, cube);
+			if(!(mapProjectSetProducts.containsKey(idProject) && mapProjectSetProducts.get(idProject).contains(idProduct))) {
+				Id idWarehouse = (Id) aggRes.get('idWarehouse');
+				String key = idProduct + '' + idWarehouse;
+				cube cube = mapCube.get(key);
+				if (cube == null) {
+					cube = new cube(idProduct, idWarehouse);
+					mapCube.put(key, cube);
+				}
+				cube.specified += (Decimal) aggRes.get('qty');
 			}
-			cube.specified += (Decimal)aggRes.get('qty');
 		}
 
 		listAggRes.clear();
-		soql = 'SELECT AcctSeedERP__Product__c idProduct, AcctSeedERP__Project__r.GMBLASERP__Warehouse__c idWarehouse, sum(AcctSeedERP__Quantity_Allocated__c) qty FROM AcctSeedERP__Material__c';
+		soql = 'SELECT AcctSeedERP__Project__c idProject, AcctSeedERP__Product__c idProduct, AcctSeedERP__Project__r.GMBLASERP__Warehouse__c idWarehouse, sum(AcctSeedERP__Quantity_Allocated__c) qty FROM AcctSeedERP__Material__c';
 		soql += ' WHERE AcctSeedERP__Product__c IN:setIdProduct';
 		soql += ' AND AcctSeedERP__Quantity_Allocated__c > 0';
-		soql += ' AND AcctSeedERP__Project__c NOT IN:setIdRetailProjectToDiscard ';
+		//soql += ' AND AcctSeedERP__Project__c NOT IN:setIdRetailProjectToDiscard ';
 		soql += ' AND AcctSeedERP__Project__r.Locked__c = false AND AcctSeedERP__Project__r.Stage__c NOT IN (\'Quoting\',\'Closed Lost\',\'Draft\',\'Pending Review\') AND No_WIP__c = false';
 		soql += ' AND AcctSeedERP__Project__r.GMBLASERP__Warehouse__c IN:setIdWarehouse';
-		soql += ' GROUP BY AcctSeedERP__Product__c, AcctSeedERP__Project__r.GMBLASERP__Warehouse__c';
+		soql += ' GROUP BY AcctSeedERP__Project__c, AcctSeedERP__Product__c, AcctSeedERP__Project__r.GMBLASERP__Warehouse__c';
 		soql += ' HAVING sum(AcctSeedERP__Quantity_Allocated__c) > 0';
 
 		listAggRes.addAll(Database.query(soql));
 		for(sObject aggRes : listAggRes)
 		{
+			Id idProject = (Id)aggRes.get('idProject');
 			Id idProduct = (Id)aggRes.get('idProduct');
-			Id idWarehouse = (Id)aggRes.get('idWarehouse');
-			String key = idProduct + '' + idWarehouse;
-			cube cube = mapCube.get(key);
-			if(cube == null) {
-				cube = new cube(idProduct,idWarehouse);
-				mapCube.put(key, cube);
+			if(!(mapProjectSetProducts.containsKey(idProject) && mapProjectSetProducts.get(idProject).contains(idProduct))) {
+				Id idWarehouse = (Id) aggRes.get('idWarehouse');
+				String key = idProduct + '' + idWarehouse;
+				cube cube = mapCube.get(key);
+				if (cube == null) {
+					cube = new cube(idProduct, idWarehouse);
+					mapCube.put(key, cube);
+				}
+				cube.consumed += (Decimal) aggRes.get('qty');
 			}
-			cube.consumed += (Decimal)aggRes.get('qty');
 		}
 
 		listAggRes.clear();
-		soql = 'SELECT GMBLASERP__Product__c idProduct, Material__r.AcctSeedERP__Project__r.GMBLASERP__Warehouse__c idWarehouse, sum(AcctSeedERP__Quantity__c) qty FROM AcctSeedERP__Outbound_Inventory_Movement__c';
+		soql = 'SELECT Material__r.AcctSeedERP__Project__c idProject, GMBLASERP__Product__c idProduct, Material__r.AcctSeedERP__Project__r.GMBLASERP__Warehouse__c idWarehouse, sum(AcctSeedERP__Quantity__c) qty FROM AcctSeedERP__Outbound_Inventory_Movement__c';
 		soql += ' WHERE GMBLASERP__Product__c IN:setIdProduct';
 		soql += ' AND AcctSeedERP__Quantity__c <> 0';
 		soql += ' AND Material__c != null';
 		soql += ' AND Material__r.AcctSeedERP__Project__r.Locked__c = false';
-		soql += ' AND Material__r.AcctSeedERP__Project__c NOT IN:setIdRetailProjectToDiscard ';
+		//soql += ' AND Material__r.AcctSeedERP__Project__c NOT IN:setIdRetailProjectToDiscard ';
 		soql += ' AND Material__r.AcctSeedERP__Project__r.Stage__c NOT IN (\'Quoting\',\'Closed Lost\',\'Draft\',\'Pending Review\')';
 		soql += ' AND Material__r.AcctSeedERP__Project__r.GMBLASERP__Warehouse__c IN:setIdWarehouse';
-		soql += ' GROUP BY GMBLASERP__Product__c, Material__r.AcctSeedERP__Project__r.GMBLASERP__Warehouse__c';
+		soql += ' GROUP BY Material__r.AcctSeedERP__Project__c, GMBLASERP__Product__c, Material__r.AcctSeedERP__Project__r.GMBLASERP__Warehouse__c';
 		soql += ' HAVING sum(AcctSeedERP__Quantity__c) > 0';
 
 		listAggRes.addAll(Database.query(soql));
 		for(sObject aggRes : listAggRes)
 		{
+			Id idProject = (Id)aggRes.get('idProject');
 			Id idProduct = (Id)aggRes.get('idProduct');
-			Id idWarehouse = (Id)aggRes.get('idWarehouse');
-			String key = idProduct + '' + idWarehouse;
-			cube cube = mapCube.get(key);
-			if(cube == null) {
-				cube = new cube(idProduct,idWarehouse);
-				mapCube.put(key, cube);
+			if(!(mapProjectSetProducts.containsKey(idProject) && mapProjectSetProducts.get(idProject).contains(idProduct))) {
+				Id idWarehouse = (Id) aggRes.get('idWarehouse');
+				String key = idProduct + '' + idWarehouse;
+				cube cube = mapCube.get(key);
+				if (cube == null) {
+					cube = new cube(idProduct, idWarehouse);
+					mapCube.put(key, cube);
+				}
+				cube.consumed += (Decimal) aggRes.get('qty');
 			}
-			cube.consumed += (Decimal)aggRes.get('qty');
 		}
 
 		mapCube.remove(null);
