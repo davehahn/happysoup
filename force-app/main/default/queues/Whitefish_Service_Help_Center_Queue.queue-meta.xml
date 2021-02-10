@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Queue xmlns="http://soap.sforce.com/2006/04/metadata">
+    <doesSendEmailToMembers>false</doesSendEmailToMembers>
+    <name>Whitefish Service Help Center Queue</name>
+    <queueMembers>
+        <users>
+            <user>dramnath@legendboats.com</user>
+            <user>jsanti@legendboats.com</user>
+            <user>rmenard@legendboats.com</user>
+            <user>snadeau@legendboats.com</user>
+            <user>vrulens@legendboats.com</user>
+        </users>
+    </queueMembers>
+    <queueRoutingConfig>Help_Center_Routing</queueRoutingConfig>
+    <queueSobject>
+        <sobjectType>LiveAgentSession</sobjectType>
+    </queueSobject>
+    <queueSobject>
+        <sobjectType>LiveChatTranscript</sobjectType>
+    </queueSobject>
+    <queueSobject>
+        <sobjectType>MessagingSession</sobjectType>
+    </queueSobject>
+</Queue>
