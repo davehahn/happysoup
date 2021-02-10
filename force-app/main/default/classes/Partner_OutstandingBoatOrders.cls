@@ -1,5 +1,18 @@
 public without sharing class Partner_OutstandingBoatOrders {
 
+  private static Partner_Community_Settings__c partnerSettings
+  {
+    get
+    {
+      if( partnerSettings == null )
+      {
+        partnerSettings = Partner_Community_Settings__c.getOrgDefaults();
+      }
+      return partnerSettings;
+    }
+    set {}
+  }
+
   @AuraEnabled
   public static String checkPermission()
   {
@@ -68,7 +81,7 @@ public without sharing class Partner_OutstandingBoatOrders {
     public DateTime orderDate;
     public List<String> lineItems;
     public String invoiceId;
-    public Date erpArrivalDate;
+    public Date estArrivalDate;
 
     public OrderLine( Dealer_Order_Line__c dol, AcctSeedERP__Material__c[] mats )
     {
@@ -112,7 +125,13 @@ public without sharing class Partner_OutstandingBoatOrders {
         this.invoiceId = dol.ERP_Order__r.LastDocumentID__c;
       }
       this.orderDate = dol.Dealer_Order__r.Date_Submitted__c;
-      this.erpArrivalDate = dol.ERP_Order__r.Arrival_Date__c;
+      if( dol.ERP_Order__r.Arrival_Date__c != null &&
+          partnerSettings.Order_Arrival_Date_Offset__c != null)
+      {
+        this.estArrivalDate = dol.ERP_Order__r.Arrival_Date__c.addDays(
+          (Integer)partnerSettings.Order_Arrival_Date_Offset__c
+        );
+      }
     }
 
     public Integer compareTo(Object compareTo) {

@@ -95,8 +95,7 @@
                       <th scope="col">Order #</th>
                       <th scope="col">Invoice #</th>
                       <th scope="col">
-                        Arrival Date
-                        <div style="font-size:0.5rem !important;">(to Factory)</div>
+                        Est. Arrival Date
                       </th>
                       <th scope="col">Order Specific Items</th>
                       <th scope="col" class="slds-text-align_right slds-p-right_xx-small">Reserved For</th>
@@ -110,8 +109,8 @@
                         </td>
                         <td data-label="Order #">{!item.dealerOrderName}</td>
                         <td data-label="Invoice #">{!item.erpOrderNumber}</td>
-                        <td data-label="Arrival Date">
-                          <lightning:formattedDateTime value="{!item.erpArrivalDate}" /></td>
+                        <td data-label="Est. Arrival Date">
+                          <lightning:formattedDateTime value="{!item.estArrivalDate}" /></td>
                         <td data-label="Order Specific Items">
                           <ul class='build-items'>
                             <aura:iteration items="{!item.lineItems}" var="buildItem">
