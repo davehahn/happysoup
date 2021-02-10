@@ -42,22 +42,19 @@
 
 
       <div class="pickup-selector" if:false={pickupDealershipSelected}>
+        <h4>Dealers nearest to you:</h4>
         <!-- TODO:  Add proper verbiage,style and check translation -->
-        <div class="partner-locations">
-          <c-account-find-closest-partner partner-count="3"
-                                          is-selectable="true"
-                                          hide-result-icon="true"
-                                          hide-search="true"
-                                          input-label="Your Postal Code or City"
-                                          onaccountselected={handleAccountSelected}></c-account-find-closest-partner>
+        <div class="partner-locations-wrap">
+          <div class="partner-locations">
+            <c-account-find-closest-partner partner-count="3"
+                                            is-selectable="true"
+                                            hide-result-icon="true"
+                                            hide-search="true"
+                                            input-label="Your Postal Code or City"
+                                            onaccountselected={handleAccountSelected}></c-account-find-closest-partner>
+          </div>
         </div>
 
-        <div class="partner-map">
-          <lightning-map
-                  map-markers={mapMarkers}
-                  zoom-level={zoomLevel}
-          ></lightning-map>
-        </div>
       </div>
 
       <div class="thanks_body" if:true={pickupDealershipSelected}>

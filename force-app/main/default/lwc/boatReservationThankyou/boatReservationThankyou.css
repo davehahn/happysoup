@@ -131,23 +131,31 @@
 .config-thanks .pickup-selector {
   width: 100%;
   position: relative;
-}
-.config-thanks .pickup-selector {
-  max-height: 31.2vw;
-}
-.config-thanks .pickup-selector{
   display: flex;
+  flex-direction: column;
+  align-items: center;
+	width: 100%;
+  margin: 0 auto;
+}
+.config-thanks .pickup-selector h4{
+  font-size: 1.25em; font-weight: 900;
+  text-align: center;
+  margin-bottom: 0.25em;
+}
+.config-thanks .partner-locations-wrap{
+  border: 1px solid #dfdfdf;
+  width: 100%; max-width: 480px;
+  margin: 0 auto;
+  overflow: auto;
 }
 .config-thanks .partner-locations{
-  min-width: 320px;
   overflow: auto;
   background: rgba(255, 255, 255, 0.8);
   z-index: 2;
+  min-width: 480px;
+	max-width: 480px;
 }
 
-.config-thanks .partner-map{
-	width: 100%;
-}
 .slds-map_container{
   padding: 0!important;
 }
