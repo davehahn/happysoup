@@ -42,7 +42,10 @@
 
 
       <div class="pickup-selector" if:false={pickupDealershipSelected}>
-        <h4>Dealers nearest to you:</h4>
+        <h4>
+          <template if:true={isEN}>Dealers nearest to you:</template>
+          <template if:true={isFR}>Concessionnaires près de chez vous:</template>
+        </h4>
         <!-- TODO:  Add proper verbiage,style and check translation -->
         <div class="partner-locations-wrap">
           <div class="partner-locations">
