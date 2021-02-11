@@ -1292,7 +1292,8 @@ public without sharing class gcProject {
       AcctSeed__Product__c,
       AcctSeed__Units__c
     FROM AcctSeed__Journal_Entry_Line__c
-    WHERE AcctSeed__Project__c IN:mapProjectFinishedMoves.keySet()
+    WHERE Internal_Wholesale_Cost__c = false
+    AND AcctSeed__Project__c IN:mapProjectFinishedMoves.keySet()
     AND AcctSeed__GL_Account__c IN:setIdGlCogsParts])
     {
       if(!mapPTPQty.containsKey(cogsJE.AcctSeed__Project__c))

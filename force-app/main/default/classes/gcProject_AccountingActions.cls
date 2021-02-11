@@ -1718,6 +1718,7 @@ public without sharing class gcProject_AccountingActions {
 		    				AcctSeed__Product__c = matl.AcctSeedERP__Product__c,
 		    				AcctSeed__Project__c = matl.AcctSeedERP__Project__c,
 		    				AcctSeed__Project_Task__c = matl.AcctSeedERP__Project_Task__c,
+							Internal_Wholesale_Cost__c = true,
 		    				AcctSeed__Date__c = cogsDate,
 		    				AcctSeed__Units__c = qty)
 						);
