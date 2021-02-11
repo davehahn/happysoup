@@ -4,6 +4,7 @@
 
 public without sharing class PartnerReservations_Controller
 {
+
   @AuraEnabled
   public static Boolean isFactoryStore()
   {
@@ -23,31 +24,6 @@ public without sharing class PartnerReservations_Controller
   {
     return Partner_OutstandingBoatOrders.fetchOrderTypeDetails('boat');
   }
-
-//  @AuraEnabled
-//  public static String fetchRetailERPs( String productId )
-//  {
-//    AcctSeed__Accounting_Variable__c glv1;
-//    User u = [ SELECT Id, GL_Account_Variable_1__c FROM User WHERE Id = :UserInfo.getUserId() ];
-//    if( u.GL_Account_Variable_1__c == null )
-//      throw new AuraHandledException('GLV1 not set on current user.  Contact your Administrator with this error');
-//    try
-//    {
-//      glv1 = [
-//        SELECT
-//          Id
-//        FROM AcctSeed__Accounting_Variable__c
-//        WHERE Name = :u.GL_Account_Variable_1__c
-//      ];
-//    }
-//    catch( Exception e )
-//    {
-//      throw new AuraHandledException('Could not find a GLV1 with name ' + u.GL_Account_Variable_1__c );
-//    }
-//    return JSON.serialize(
-//      fetchAndWrapErpData( glv1.Id, productId )
-//    );
-//  }
 
   @AuraEnabled
   public static String createReservation( String partnerErpId, String customerJSON )
@@ -152,40 +128,5 @@ public without sharing class PartnerReservations_Controller
       Status = 'Pending review'
     );
   }
-
-
-
-//  private static List<Map<String, Object>> fetchAndWrapErpData( Id glv1Id, String productId )
-//  {
-//    List<Map<String, Object>> result = new List<Map<String, Object>>();
-//    AcctSeed__Project__c[] erps =
-//      Project_Selector.allOpenRetailBoatSalesAvailableToReserveByGLV1AndBoatId( glv1Id, Id.valueOf(productId) );
-//    for( AcctSeed__Project__c erp : erps )
-//    {
-//      List<Map<String,Object>> lineItems = new List<Map<String, Object>>();
-//      for( AcctSeedERP__Material__c mat : erp.AcctSeedERP__Project_Materials__r )
-//      {
-//        Map<String, Object> lineItem = new Map<String, Object>
-//        {
-//          'name' => mat.AcctSeedERP__Product__r.Name
-//        };
-//        lineItems.add(
-//          new Map<String, Object>{
-//            'name' => mat.AcctSeedERP__Product__r.Name
-//          }
-//        );
-//      }
-//      Map<String, Object> item = new Map<String, Object>
-//      {
-//        'id' => erp.Id,
-//        'name' => erp.Name,
-//        'accountName' => erp.AcctSeed__Account__r.Name,
-//        'salesPerson' => erp.Salesperson__r.Name,
-//        'serializedItems' => lineItems
-//      };
-//      result.add( item );
-//    }
-//    return result;
-//  }
 
 }

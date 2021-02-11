@@ -7,6 +7,8 @@ private class Partner_OutstandingBoatOrders_Test {
   private static Product2[] boats;
   private static Product2[] trailers;
   private static Dealer_Order__c order;
+  private static AcctSeed__Project__c[] boatERPs;
+  private static AcctSeed__Project__c[] trailerERPs;
 
   @testSetup static void dataSetup()
   {
@@ -17,10 +19,12 @@ private class Partner_OutstandingBoatOrders_Test {
   private static void setup()
   {
     dealer = Factory_Account.insertDealerAccounts(1)[0];
-    partnerContact = Factory_Contact.buildContact( dealer.Id,
-                                                   'PartnerFN',
-                                                   'PartnerLN',
-                                                   'partner@dealer.com ');
+    partnerContact = Factory_Contact.buildContact(
+      dealer.Id,
+      'PartnerFN',
+      'PartnerLN',
+      'partner@dealer.com '
+    );
     partnerUser = [SELECT Id, Name FROM User WHERE ContactId = :partnerContact.Id ];
     boats = Factory_Product.createSerializedProducts('Boat', 'Pontoon', 3 );
     trailers = Factory_Product.createSerializedProducts('Trailer', 'Pontoon Trailer', 3 );
@@ -28,12 +32,16 @@ private class Partner_OutstandingBoatOrders_Test {
 
   private static void buildOrders()
   {
-    AcctSeed__Project__c[] boatERPs = Factory_ERPOrder.createPartnerBoatSales( dealer,
-                                                                             new List<Product2>{boats[0], trailers[0]},
-                                                                             new List<String>{'Plan Load', 'Delivered'} );
-    AcctSeed__Project__c[] trailerERPs = Factory_ERPOrder.createPartnerBoatSales( dealer,
-                                                                                new List<Product2>{trailers[0]},
-                                                                                new List<String>{'Plan Load'} );
+    boatERPs = Factory_ERPOrder.createPartnerBoatSales(
+      dealer,
+      new List<Product2>{boats[0], trailers[0]},
+      new List<String>{'Plan Load', 'Delivered'}
+    );
+    trailerERPs = Factory_ERPOrder.createPartnerBoatSales(
+      dealer,
+      new List<Product2>{trailers[0]},
+      new List<String>{'Plan Load'}
+    );
     order = Factory_DealerOrder.createDealerOrder( dealer, 'Pending Review' );
     boatERPs[1].Stage__c = 'Delivered';
     Boolean origTrig = gcProject.disableTrigger;
@@ -100,6 +108,61 @@ private class Partner_OutstandingBoatOrders_Test {
       System.assertEquals( result[0].majorItemName, boats[0].Name );
       System.assertEquals( result[0].dealerOrderId, order.Id );
       System.assertEquals( 1, result[0].lineItems.size() );
+      System.assertEquals( result[0].estArrivalDate, null );
+    }
+  }
+
+  @isTest
+  static void fetchOrderTypeDetails_Boat_withArrivalDateButNoCustomSetting_Test()
+  {
+    setup();
+    System.runAs( partnerUser )
+    {
+      buildOrders();
+      boatERPs[0].Arrival_Date__c = Date.today();
+      gcProject.disableTrigger = true;
+      update boatERPs[0];
+      Test.startTest();
+      String resultJSON = Partner_OutstandingBoatOrders.fetchOrderTypeDetails('boat');
+      Test.stopTest();
+      List<Partner_OutstandingBoatOrders.OrderLine> result =
+        (List<Partner_OutstandingBoatOrders.OrderLine>)JSON.deserialize(
+          resultJSON, List<Partner_OutstandingBoatOrders.OrderLine>.class
+        );
+      System.assertEquals( 1, result.size() );
+      System.assertEquals( result[0].majorItemName, boats[0].Name );
+      System.assertEquals( result[0].dealerOrderId, order.Id );
+      System.assertEquals( 1, result[0].lineItems.size() );
+      System.assertEquals( result[0].estArrivalDate, null );
+    }
+  }
+
+  @isTest
+  static void fetchOrderTypeDetails_Boat_withArrivalDateAndCustomSetting_Test()
+  {
+    setup();
+    Integer offset = 14;
+    insert new Partner_Community_Settings__c(
+      Order_Arrival_Date_Offset__c = offset
+    );
+    System.runAs( partnerUser )
+    {
+      buildOrders();
+      boatERPs[0].Arrival_Date__c = Date.today();
+      gcProject.disableTrigger = true;
+      update boatERPs[0];
+      Test.startTest();
+      String resultJSON = Partner_OutstandingBoatOrders.fetchOrderTypeDetails('boat');
+      Test.stopTest();
+      List<Partner_OutstandingBoatOrders.OrderLine> result =
+        (List<Partner_OutstandingBoatOrders.OrderLine>)JSON.deserialize(
+          resultJSON, List<Partner_OutstandingBoatOrders.OrderLine>.class
+        );
+      System.assertEquals( 1, result.size() );
+      System.assertEquals( result[0].majorItemName, boats[0].Name );
+      System.assertEquals( result[0].dealerOrderId, order.Id );
+      System.assertEquals( 1, result[0].lineItems.size() );
+      System.assertEquals( result[0].estArrivalDate, Date.today().addDays(offset) );
     }
   }
 

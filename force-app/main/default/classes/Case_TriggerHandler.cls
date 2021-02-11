@@ -71,18 +71,23 @@ public without sharing class Case_TriggerHandler extends TriggerHandler
 
   private static void setContactAndPricebookOnPartnerWarrantyCase( List<Case> newList )
   {
-    User u = [ SELECT Id, ContactId FROM User WHERE Id = :UserInfo.getUserId() ];
-    for( Case c : newList )
+    try
     {
-      if( c.RecordTypeId == warrantyRecordTypeId )
+      User u = [SELECT Id, ContactId FROM User WHERE Id = :UserInfo.getUserId()];
+      for (Case c : newList)
       {
-        c.Price_Book__c = Legend_Settings__c.getOrgDefaults().Default_Partner_Pricebook__c;
-      }
-      if( c.ContactId == null )
-      {
-        c.ContactId = u.ContactId;
+        if (c.RecordTypeId == warrantyRecordTypeId)
+        {
+          c.Price_Book__c = Legend_Settings__c.getOrgDefaults().Default_Partner_Pricebook__c;
+        }
+        if (c.ContactId == null)
+        {
+          c.ContactId = u.ContactId;
+        }
       }
     }
+    //In case trigger is invoked by automatedProcess and UserInfo will fail
+    catch( Exception e ){}
   }
 
   private static void createRequiredWarrantyPayableErps( List<Case> listNew )

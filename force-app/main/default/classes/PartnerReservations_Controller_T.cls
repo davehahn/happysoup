@@ -181,6 +181,7 @@ private class PartnerReservations_Controller_T
       System.assertEquals( result[0].majorItemName, boats[0].Name );
       System.assertEquals( result[0].erpOrderId, boatERPs[0].Id );
       System.assertEquals( result[0].dealerOrderId, order.Id );
+      System.assertEquals( result[0].estArrivalDate, null );
       System.assertEquals( 1, result[0].lineItems.size() );
     }
   }
