@@ -688,7 +688,15 @@ public without sharing class gcProject_AccountingActions {
 		Date moveDate = Date.today();
 		if(buildDate != null)
 			moveDate = Date.parse(buildDate);
-
+//		for(AggregateResult aggRes : [SELECT AcctSeedERP__Material__r.AcctSeedERP__Project__c idProject,
+//								SUM(AcctSeedERP__Quantity__c) totQty
+//							FROM AcctSeedERP__Manufacturing_Inventory_Movement__c
+//							WHERE AcctSeedERP__Material__r.AcctSeedERP__Project__c = :idProject
+//							GROUP BY AcctSeedERP__Material__r.AcctSeedERP__Project__c])
+//		{
+//			Id idBalance = (Id)aggRes.get('idProject');
+//			Decimal qtyMoved = (Decimal)aggRes.get('totQty');
+//		}
 		AcctSeed__Project__c project = 
 		[SELECT Id,
 				RecordTypeId,
@@ -708,10 +716,10 @@ public without sharing class gcProject_AccountingActions {
 						AcctSeedERP__Project_Task__c,
 						AcctSeedERP__Quantity_Allocated__c,
 						AcctSeedERP__Quantity_Per_Unit__c,
+						Actual_Quantity_Filled__c,
 						GMBLASERP__Serial_Number__c
 				 FROM AcctSeedERP__Project_Materials__r
-				 WHERE AcctSeedERP__Product__r.AcctSeed__Inventory_Product__c = true
-				   AND AcctSeedERP__Product__r.AcctSeedERP__Serialized__c = TRUE)
+				 WHERE AcctSeedERP__Product__r.AcctSeed__Inventory_Product__c = true)
 		 FROM AcctSeed__Project__c
 		 WHERE Id = :idProject][0];
 
@@ -796,15 +804,24 @@ public without sharing class gcProject_AccountingActions {
 				//move the projects serial into WIP
 
 				//first, find or create a Material record
+				Decimal qtyOrdered = 0;
+				Decimal qtyFilled = 0;
 				AcctSeedERP__Material__c matl;
 				for(AcctSeedERP__Material__c mx : project.AcctSeedERP__Project_Materials__r)
 				{
+					qtyOrdered += mx.AcctSeedERP__Quantity_Per_Unit__c == null ? 0 : mx.AcctSeedERP__Quantity_Per_Unit__c;
+					qtyFilled += mx.Actual_Quantity_Filled__c == null ? 0 : mx.Actual_Quantity_Filled__c;
 					if(mx.AcctSeedERP__Product__c == project.AcctSeedERP__Manufactured_Product__c)
 					{
 						if(matl == null || matl.GMBLASERP__Serial_Number__c == project.Serial_Number__c)
 							matl = mx;
 					}
 				}
+				if(qtyOrdered != qtyFilled){
+					listMsg.add(new ApexPages.Message(ApexPages.Severity.ERROR, 'All Inventory Products must be WIPed before creating a Finished Good.'));
+					return listMsg;
+				}
+
 				if(matl != null && matl.GMBLASERP__Serial_Number__c == null)
 				{
 					matl.GMBLASERP__Serial_Number__c = project.Serial_Number__c;
