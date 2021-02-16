@@ -357,6 +357,7 @@ button:focus{
   min-height: 65px;
   width: 100%;
   max-width: 200px;
+  min-width: 200px;
   align-items: center;
   flex: 1;
 }
@@ -447,6 +448,8 @@ button:focus{
   opacity: 0.5;
   padding: 0 1em;
   transition: opacity .15s ease-in-out;
+  min-width: 200px;
+  display: flex; justify-content: flex-end;
 }
 .language-select:hover, .language-select:focus {
   background-color: #f2f2f2;
