@@ -1,6 +1,65 @@
 /**
  * Created by dave on 2021-01-15.
  */
+.vh{
+    position: absolute;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    height: 1px; width: 1px;
+    margin: -1px; padding: 0; border: 0;
+}
+ /*
+  __    __   _______     ___       _______   _______ .______
+ |  |  |  | |   ____|   /   \     |       \ |   ____||   _  \
+ |  |__|  | |  |__     /  ^  \    |  .--.  ||  |__   |  |_)  |
+ |   __   | |   __|   /  /_\  \   |  |  |  ||   __|  |      /
+ |  |  |  | |  |____ /  _____  \  |  '--'  ||  |____ |  |\  \----.
+ |__|  |__| |_______/__/     \__\ |_______/ |_______|| _| `._____|
+ */
+
+ .config-header {
+   display: flex;
+   justify-content: space-between;
+   min-height: 65px;
+   z-index: 100;
+   border-bottom: 1px solid #dfdfdf;
+   width: 100%;
+   position: fixed;
+   top: 0;
+   background-color: #fff;
+   transition: 0.5s;
+ }
+
+ .branding {
+   display: grid;
+   min-height: 65px;
+   width: 100%;
+   max-width: 200px;
+   align-items: center;
+   flex: 1;
+ }
+
+ .branding .main-logo {
+   margin: 0 15px;
+   cursor: pointer;
+   width: 80%;
+ }
+ .branding .main-logo button{
+   background: none;
+   border: 0 none;
+ }
+ .branding .main-logo button:focus{
+   outline: 2px dashed #333;
+ }
+
+/*
+.___________. __    __       ___      .__   __.  __  ___      _______.
+|           ||  |  |  |     /   \     |  \ |  | |  |/  /     /       |
+`---|  |----`|  |__|  |    /  ^  \    |   \|  | |  '  /     |   (----`
+    |  |     |   __   |   /  /_\  \   |  . `  | |    <       \   \
+    |  |     |  |  |  |  /  _____  \  |  |\   | |  .  \  .----)   |
+    |__|     |__|  |__| /__/     \__\ |__| \__| |__|\__\ |_______/
+*/
  .config-thanks > *,
  .config-thanks h1,
  .config-thanks h2,
@@ -12,9 +71,9 @@
  }
 .config-thanks{
 	/* height: calc(100% - 150px); */
-	min-height: 100vh;
-	width: 90%; max-width: 640px;
-	margin: 0 auto;
+	/* min-height: 100vh; */
+	width: 90%; max-width: 1080px;
+	margin: 65px auto 40px;
 	background: #FFF;
 	flex-direction: column;
 	justify-content: center;
@@ -39,36 +98,67 @@
   line-height: 1.5;
 }
 
-.config-thanks header p{
-  font-size: 1.5em;
+
+.thanks_intro{
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+  justify-content: center;
+}
+
+.config-thanks .thanks_intro .thanks_model{
+  position: relative;
+  width: 90%; max-width: 450px;
+  margin: 0 auto;
+}
+
+.config-thanks .thanks_intro h2,
+.config-thanks .thanks_intro h3
+{
+  text-align:center;
+}
+
+.config-thanks .thanks_intro h2, .config-thanks .thanks_body h2 {
+  font-size: 2.5em;
+  font-weight: 900;
+}
+
+.config-thanks .thanks_intro h3, .config-thanks .thanks_body h3, .config-thanks .thanks_intro h3, .config-thanks .thanks_body p {
+  font-size: 1em;
 }
 
 .config-thanks .thanks_body,
 .config-thanks .pickup-selector {
   width: 100%;
-}
-
-.config-thanks .pickup-selector h2,
-.config-thanks .pickup-selector h3
-{
-  width: 100%;
-  text-align:center;
-}
-
-.config-thanks .pickup-selector h2 {
-  font-size: 1.5em;
-}
-
-.config-thanks .pickup-selector h3 {
-  font-size: 1em;
-}
-
-.config-thanks .thanks_model{
   position: relative;
-  width: 90%; max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+	width: 100%;
   margin: 0 auto;
 }
+.config-thanks .pickup-selector h4{
+  font-size: 1.25em; font-weight: 900;
+  text-align: center;
+  margin-bottom: 0.25em;
+}
+.config-thanks .partner-locations-wrap{
+  border: 1px solid #dfdfdf;
+  width: 100%; max-width: 480px;
+  margin: 0 auto;
+  overflow: auto;
+}
+.config-thanks .partner-locations{
+  overflow: auto;
+  background: rgba(255, 255, 255, 0.8);
+  z-index: 2;
+  min-width: 480px;
+	max-width: 480px;
+}
 
+.slds-map_container{
+  padding: 0!important;
+}
 .config-thanks .thanks_overview{
   width: 100%;
   display: flex;
@@ -110,7 +200,7 @@
 }
 
 .config-thanks .order-items .order-items-list {
-  font-size: 1.125em;
+  font-size: 1em;
 }
 
 .config-thanks .order-items .order-items-list .order-item {
@@ -123,19 +213,79 @@
 
 .thanks_footer{
   margin-top: 2em;
-  padding: 2em;
+  padding: 0 2em;
 }
 
 .thanks_footer .thanks_footerDetails{
   display: flex;
 	justify-content: space-between;
 	align-items: flex-start;
+	flex-wrap: wrap;
 }
 
 .thanks_footer .thanks_footerDetail{
-  width: 40%;
+  width: 33%; min-width: 250px;
+  margin-bottom: 1em;
 }
 
 .thanks_footer .thanks_footerDetail strong{
   display: block;
+}
+
+/*
+ _______   ______     ______   .___________. _______ .______
+|   ____| /  __  \   /  __  \  |           ||   ____||   _  \
+|  |__   |  |  |  | |  |  |  | `---|  |----`|  |__   |  |_)  |
+|   __|  |  |  |  | |  |  |  |     |  |     |   __|  |      /
+|  |     |  `--'  | |  `--'  |     |  |     |  |____ |  |\  \----.
+|__|      \______/   \______/      |__|     |_______|| _| `._____|
+*/
+
+.config-footer {
+  position:relative;
+  bottom: 0;
+  width:100%;
+  z-index:1000;
+  background: #333;
+  margin: 0 auto;
+  clear: both;
+  transition: 0.5s;
+  height:90px;
+  font-weight: 300;
+}
+
+
+@media screen and (max-width: 920px){
+  .config-thanks .pickup-selector{
+    flex-direction: column;
+  }
+  .config-thanks,
+  .config-thanks .pickup-selector {
+		 max-height: fit-content;
+		 max-height: -moz-fit-content;
+	 }
+  .config-thanks .partner-locations{
+    width: 100%;
+    display: flex;
+  }
+
+  .config-thanks .thanks_overview{
+    flex-direction: column;
+  }
+  .config-footer{
+    position: relative;
+  }
+}
+
+@media screen and (max-width: 640px){
+	.config-thanks .thanks_intro{
+    flex-direction: column-reverse;
+    padding-top: 1em;
+  }
+	.config-thanks .thanks_paymentDetails, .config-thanks .thanks_modelSummary{
+    width: 100%;
+  }
+  .config-thanks .thanks_modelSummary{
+    margin-top: 1em;
+  }
 }

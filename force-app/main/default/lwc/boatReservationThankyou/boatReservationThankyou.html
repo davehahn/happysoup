@@ -8,131 +8,167 @@
   <c-legend-spinner visible="true"></c-legend-spinner>
 
   <template if:true={dataLoaded}>
-    <section class={containerClass} data-thanks="show">
-    <header>
-      <div class="thanks_model">
-        <c-cust-comm-order-boat-image size="small"
-                                      page='thankyou'
-                                      summary-images={summaryImages}></c-cust-comm-order-boat-image>
+    <header class="config-header">
+      <div class="branding">
+        <h1 class="main-logo">
+          <span class="vh">Legend Boats - Boat Builder</span>
+          <button onclick={handleHomeNav} data-click-focus="unset"><img src={logo}></button>
+        </h1>
       </div>
-      <template if:true={pickupDealershipSelected}>
-        <h2>
-          <template if:true={isEN}>Thank you!</template>
-          <template if:true={isFR}>Merci !</template>
-        </h2>
-        <p>
-          <template if:true={isEN}>Your order has been submitted.</template>
-          <template if:true={isFR}>Votre commande a été transmise.</template>
-        </p>
-      </template>
     </header>
 
-    <div class="pickup-selector" if:false={pickupDealershipSelected}>
-      <!-- TODO:  Add proper verbiage,style and check translation -->
-      <h2>
-        <template if:true={isEN}>Where would you like to pick up your boat?</template>
-        <template if:true={isFR}>Où souhaitez-vous récupérer votre bateau?</template>
-      </h2>
-      <h3>
-        <template if:true={isEN}>Not sure? No worries this can easily be changed later.</template>
-        <template if:true={isFR}>Pas certain? Pas de soucis, cela peut facilement être changé plus tard.</template>
-      </h3>
-      <c-account-find-closest-partner partner-count="3"
-                                      is-selectable="true"
-                                      hide-result-icon="true"
-                                      hide-search="true"
-                                      input-label="Your Postal Code or City"
-                                      onaccountselected={handleAccountSelected}></c-account-find-closest-partner>
-    </div>
+    <section class={containerClass} data-thanks="show">
+      <div class="thanks_intro" if:false={pickupDealershipSelected}>
+        <div class="thanks_model">
+          <c-cust-comm-order-boat-image size="small"
+                                        page='thankyou'
+                                        summary-images={summaryImages}></c-cust-comm-order-boat-image>
+        </div>
+        <header>
+          <h2>
+            <template if:true={isEN}>Almost done!</template>
+            <template if:true={isFR}>Presque fini!</template>
+          </h2>
+          <h3>
+            <template if:true={isEN}>Where would you like to pick up your boat?</template>
+            <template if:true={isFR}>Où souhaitez-vous récupérer votre bateau?</template>
+          </h3>
+          <p>
+            <template if:true={isEN}>Not sure? No worries this can easily be changed later.</template>
+            <template if:true={isFR}>Pas certain? Pas de soucis, cela peut facilement être changé plus tard.</template>
+          </p>
+        </header>
+      </div>
 
-    <div class="thanks_body" if:true={pickupDealershipSelected}>
 
-      <section class="thanks_overview">
+      <div class="pickup-selector" if:false={pickupDealershipSelected}>
+        <h4>
+          <template if:true={isEN}>Dealers nearest to you:</template>
+          <template if:true={isFR}>Concessionnaires près de chez vous:</template>
+        </h4>
+        <!-- TODO:  Add proper verbiage,style and check translation -->
+        <div class="partner-locations-wrap">
+          <div class="partner-locations">
+            <c-account-find-closest-partner partner-count="3"
+                                            is-selectable="true"
+                                            hide-result-icon="true"
+                                            hide-search="true"
+                                            input-label="Your Postal Code or City"
+                                            onaccountselected={handleAccountSelected}></c-account-find-closest-partner>
+          </div>
+        </div>
 
-        <div class="thanks_paymentDetails">
-          <ul class="thanks_details">
-            <li class="thanks_detail thanks_detail--horizontal">
+      </div>
+
+      <div class="thanks_body" if:true={pickupDealershipSelected}>
+
+        <div class="thanks_intro">
+          <div class="thanks_model">
+            <c-cust-comm-order-boat-image size="small"
+                                          page='thankyou'
+                                          summary-images={summaryImages}></c-cust-comm-order-boat-image>
+          </div>
+          <header>
+            <h2>
+              <template if:true={isEN}>Thank you!</template>
+              <template if:true={isFR}>Merci !</template>
+            </h2>
+            <p>
+              <template if:true={isEN}>Your order has been submitted.</template>
+              <template if:true={isFR}>Votre commande a été transmise.</template>
+            </p>
+          </header>
+        </div>
+
+        <section class="thanks_overview">
+
+          <div class="thanks_paymentDetails">
+            <ul class="thanks_details">
+              <li class="thanks_detail thanks_detail--horizontal">
+                <strong>
+                  <template if:true={isEN}>Order Number:</template>
+                  <template if:true={isFR}>Numéro de commande:</template>
+                </strong> <span>{orderNumber}</span>
+              </li>
+              <li class="thanks_detail thanks_detail--horizontal">
+                <strong>
+                  <template if:true={isEN}>Payment:</template>
+                  <template if:true={isFR}>Paiement :</template>
+                </strong>
+                <span>
+                      <lightning-formatted-number value={paymentAmount}
+                                                  format-style="currency"
+                                                  currency-code="CAD"
+                                                  maximum-fraction-digits="2"></lightning-formatted-number>
+                    </span>
+              </li>
+              <li class="thanks_detail thanks_detail--horizontal">
+                <template if:true={isEN}>Estimated Deliver: <span>{shippingTiming}</span></template>
+                <template if:true={isFR}>Livraison estimée : <span>{shippingTiming}</span></template>
+              </li>
+            </ul>
+          </div>
+
+          <div class="thanks_modelSummary thanks_detail">
+            <strong>
+              <template if:true={isEN}>Your {boat.name}</template>
+              <template if:true={isFR}>Votre {boat.name}</template>
+            </strong>
+            <section class="order-items">
+              <ul class="order-items-list">
+                <template if:true={motor}>
+                  <li class="order-item">
+                    <template if:true={isEN}>{motor.name}</template>
+                    <template if:true={isFR}>{motor.name_fr}</template>
+                  </li>
+                </template>
+                <template if:true={trailer}>
+                  <li class="order-item">
+                    <template if:true={isEN}>{trailer.name}</template>
+                    <template if:true={isFR}>{trailer.name_fr}</template>
+                  </li>
+                </template>
+                <template if:true={options}>
+                  <template for:each={options} for:item="option">
+                    <li key={option.name} class="order-item">
+                      <template if:true={isEN}>{option.name}</template>
+                      <template if:true={isFR}>{option.name_fr}</template>
+                    </li>
+                  </template>
+                </template>
+              </ul>
+            </section>
+          </div>
+
+        </section>
+
+        <footer class="thanks_footer">
+          <ul class="thanks_footerDetails">
+            <li class="thanks_footerDetail">
               <strong>
                 <template if:true={isEN}>Order Number:</template>
                 <template if:true={isFR}>Numéro de commande:</template>
               </strong> <span>{orderNumber}</span>
             </li>
-            <li class="thanks_detail thanks_detail--horizontal">
+            <li class="thanks_footerDetail">
               <strong>
-                <template if:true={isEN}>Payment:</template>
-                <template if:true={isFR}>Paiement :</template>
-              </strong>
-              <span>
-                  <lightning-formatted-number value={paymentAmount}
-                                              format-style="currency"
-                                              currency-code="CAD"
-                                              maximum-fraction-digits="2"></lightning-formatted-number>
-                </span>
+                <template if:true={isEN}>Billed To:</template>
+                <template if:true={isFR}>Facturé à:</template>
+              </strong> <span>{customer.FirstName} {customer.LastName}</span>
             </li>
-            <li class="thanks_detail thanks_detail--horizontal">
-              <template if:true={isEN}>Estimated Deliver: <span>{shippingTiming}</span></template>
-              <template if:true={isFR}>Livraison estimée : <span>{shippingTiming}</span></template>
+            <li class="thanks_footerDetail">
+              <strong>
+                <template if:true={isEN}>Pickup at:</template>
+                <template if:true={isFR}>Ramassage à:</template>
+              </strong> <span>{pickupDealershipName}</span>
             </li>
           </ul>
-        </div>
+        </footer>
 
-        <div class="thanks_modelSummary thanks_detail">
-          <strong>
-            <template if:true={isEN}>Your {boat.name}</template>
-            <template if:true={isFR}>Votre {boat.name}</template>
-          </strong>
-          <section class="order-items">
-            <ul class="order-items-list">
-            <template if:true={motor}>
-              <li class="order-item">
-                <template if:true={isEN}>{motor.name}</template>
-                <template if:true={isFR}>{motor.name_fr}</template>
-              </li>
-            </template>
-            <template if:true={trailer}>
-              <li class="order-item">
-                <template if:true={isEN}>{trailer.name}</template>
-                <template if:true={isFR}>{trailer.name_fr}</template>
-              </li>
-            </template>
-            <template if:true={options}>
-              <template for:each={options} for:item="option">
-                <li key={option.name} class="order-item">
-                  <template if:true={isEN}>{option.name}</template>
-                  <template if:true={isFR}>{option.name_fr}</template>
-                </li>
-              </template>
-            </template>
-          </ul>
-          </section>
-        </div>
+      </div>
+    </section>
 
-      </section>
-
-      <footer class="thanks_footer">
-        <ul class="thanks_footerDetails">
-          <li class="thanks_footerDetail">
-            <strong>
-              <template if:true={isEN}>Order Number:</template>
-              <template if:true={isFR}>Numéro de commande:</template>
-            </strong> <span>{orderNumber}</span>
-          </li>
-          <li class="thanks_footerDetail">
-            <strong>
-              <template if:true={isEN}>Billed To:</template>
-              <template if:true={isFR}>Facturé à:</template>
-            </strong> <span>{customer.FirstName} {customer.LastName}</span>
-          </li>
-          <li class="thanks_footerDetail">
-            <strong>
-              <template if:true={isEN}>Pickup at:</template>
-              <template if:true={isFR}>Ramassage à:</template>
-            </strong> <span>{pickupDealershipName}</span>
-          </li>
-        </ul>
-      </footer>
-
+    <div class="config-footer">
     </div>
-  </section>
   </template>
 </template>
