@@ -201,6 +201,7 @@ public with sharing class gcInventoryReport_MRP {
 			AcctSeedERP__Project__r.GMBLASERP__Warehouse__r.Name,
 			AcctSeedERP__Project__r.Name,
 			AcctSeedERP__Project__r.CreatedDate,
+			AcctSeedERP__Project__r.Actual_Order_Date__c,
 			AcctSeedERP__Product__c,
 			AcctSeedERP__Product__r.Name,
 			AcctSeedERP__Quantity_Per_Unit__c,
@@ -223,7 +224,7 @@ public with sharing class gcInventoryReport_MRP {
 				m.put('nameWarehouse', x.AcctSeedERP__Project__r.GMBLASERP__Warehouse__r.Name);
 				if (x.AcctSeedERP__Project__c != null) {
 					m.put('projectNumber', String.valueOf(Integer.valueOf(x.AcctSeedERP__Project__r.AcctSeedERP__Work_Order_Number__c.replaceAll('[^0-9]', ''))));
-					m.put('createdDate', x.AcctSeedERP__Project__r.CreatedDate.format());
+					m.put('createdDate', x.AcctSeedERP__Project__r.Actual_Order_Date__c == null ? x.AcctSeedERP__Project__r.CreatedDate.format() : x.AcctSeedERP__Project__r.Actual_Order_Date__c.format());
 					m.put('projectName', x.AcctSeedERP__Project__r.Name);
 					m.put('projectType', x.AcctSeedERP__Project__r.RecordType.Name);
 					if (x.AcctSeedERP__Project__r.Serial_Number__c != null) {

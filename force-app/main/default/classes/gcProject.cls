@@ -489,7 +489,13 @@ public without sharing class gcProject {
         if(boolIsUpdate && oldRec.Retail_ERP__c != p.Retail_ERP__c){
           setIdRetailERP.add(oldRec.Retail_ERP__c);
         }
-
+        Set<String> setStageDrafts = new Set<String>{'Draft','Quoting','Delivered','Closed Lost'};
+        // If the stage was in draft and now comething else then se the actual order date
+        if(boolIsUpdate && oldRec.Stage__c != p.Stage__c && setStageDrafts.contains(oldRec.Stage__c)){
+          p.Actual_Order_Date__c = System.now();
+        }else if(boolIsUpdate && oldRec.Stage__c != p.Stage__c && setStageDrafts.contains(p.Stage__c)){
+          p.Actual_Order_Date__c = null;
+        }
       }
       /// If there are unlinked Retail ERP then untag all serials
       if(!setIdRetailERP.isEmpty())
