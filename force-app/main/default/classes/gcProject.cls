@@ -540,8 +540,10 @@ public without sharing class gcProject {
               && acct != null
               && acct.GL_Account_Variable_1__c != p.GL_Account_Variable_1__c)
             {
-              acct.GL_Account_Variable_1__c = p.GL_Account_Variable_1__c;
-              mapAccountUpdate.put(acct.Id, acct);
+              if(!acct.Is_Internal__c) {
+                acct.GL_Account_Variable_1__c = p.GL_Account_Variable_1__c;
+                mapAccountUpdate.put(acct.Id, acct);
+              }
             }
           }
 
