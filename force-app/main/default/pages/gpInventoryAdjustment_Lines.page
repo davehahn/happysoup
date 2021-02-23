@@ -102,8 +102,8 @@ tr.total td{
     function refreshAll()
     {
         refreshGrid_adjustments();
-        if(pageId != '')
-            refreshGrid_inventory();
+//        if(pageId != '')
+//            refreshGrid_inventory();
     }
 
     function showLoading()
@@ -502,15 +502,19 @@ tr.total td{
         });
     }
 
+
+
     function refreshGrid_inventory(){
 
         var $gridDiv = $j('#inventory');
         var idType = $j('span.typeSelector select').val();
-        var srcText = $j('span.txtSelector input').val();
+        var srcText = null;
+        if($j('span.txtSelector').length > 0)
+            srcText = $j('span.txtSelector input').val();
         showLoading();
         Visualforce.remoting.Manager.invokeAction(
             '{!$RemoteAction.gcInventoryAdjustment_Ext.retrieveInventory}',
-            '{!Id}',null,idType,
+            '{!Id}',null,idType,srcText,
             function(result,event){
                 if(event.status){
                     gGrid.refreshGrid_callback($gridDiv,result);
