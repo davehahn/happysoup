@@ -37,6 +37,7 @@
             }
             var data = response.getReturnValue();
             if(data != null){
+                console.log( JSON.parse( JSON.stringify(data)));
                 component.set("v.erpOrder", data.erpOrder);
                 var matList = data.materialList;
                 if(matList.length > 0) {

@@ -2,7 +2,7 @@
   doInit: function( component, event, helper )
   {
     var vendor = component.get('v.vendor');
-    component.set( 'v.hasVendor', vendor.id != null );
+//    component.set( 'v.hasVendor', vendor.id != null );
     component.set('v.tableCols', [
       {label: 'Product', fieldName: 'name', type: 'text'},
       {label: 'Quantity', fieldName: 'quantity', type: 'text'}

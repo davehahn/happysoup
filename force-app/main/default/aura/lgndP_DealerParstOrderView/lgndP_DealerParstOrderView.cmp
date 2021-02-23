@@ -19,29 +19,54 @@
           role="tabpanel"
           aria-labelledby="tab-default-1__item">
 
-      <div class="lgnd" style="margin-top: 10px;">
+      <div class="lgnd">
         <fieldset class="slds-form--compound">
-            <aura:iteration items="{!v.materials}" var="mat" indexVar="index1">
-                <div class="slds-grid" style="border-bottom: 1px solid lightgrey;">
-                    <div class="slds-col slds-size--2-of-6">
-                        <img src="{!mat.matImgUrl}" alt="No Product Image" width="80" height="80" border="0" style="margin-top: 20px;"/>
-                    </div>&nbsp;&nbsp;
-                    <div class="slds-col slds-size--4-of-6">
-                        <br/>
-                        <div style="padding-top: 10px;color: cornflowerblue;">
-                            <ui:outputText value="{!mat.pdtName}"/>
-                        </div>
-                        <div style="color: grey;">
-                            <ui:outputText value="{!mat.pdtcode}"/>
-                        </div>
-                        <div>
-                            <span style="font-weight: bold;padding-right: 20px;font-size:80%">${!mat.pricePerQuantity}</span><span style="padding-left: 10px;padding-right: 10px;color: grey;font-size:80%">x</span>
-                            <ui:outputText value="{!mat.matQuantity}"/>
-                            <span style="float: right;font-weight: bold;font-size:80%">${!mat.totalPrice}</span>
-                        </div>
+          <aura:iteration items="{!v.materials}" var="mat" indexVar="index1">
+            <div class="slds-grid slds-grid_vertical-align-center" style="border-bottom: 1px solid lightgrey;">
+              <div class="slds-col slds-size--6-of-12 slds-p-top_small slds-p-bottom_small">
+                <div class="slds-grid">
+                  <div class="slds-col slds-size_4-of-12">
+                    <img src="{!mat.matImgUrl}" alt="No Product Image" width="80" height="80" border="0" />
+                  </div>
+                  <div class="slds-col slds-size_8-of-12">
+                    <div style="padding-top: 10px;color: cornflowerblue;">
+                      {!mat.pdtName}
                     </div>
+                    <div style="color: grey;">
+                      {!mat.pdtcode}
+                    </div>
+                    <div>
+                      <span style="font-weight: bold;padding-right: 20px;font-size:80%">${!mat.pricePerQuantity}</span><span style="padding-left: 10px;padding-right: 10px;color: grey;font-size:80%">x</span>
+                      {!mat.matQuantity}
+                    </div>
+                  </div>
                 </div>
-            </aura:iteration>
+              </div>&nbsp;&nbsp;
+              <div class="slds-col slds-size--3-of-12 slds-p-top_small slds-p-bottom_small">
+                <aura:if isTrue="{!mat.onBackOrder}">
+                  <p class="slds-grid slds-grid_vertical-align-center">
+                    <lightning:icon iconName="utility:warning"
+                                    size="x-small"
+                                    variant="error"></lightning:icon>
+                    <span style="color:#c23a35" class="slds-m-left_x-small">
+                      On Backorder
+                    </span>
+                  </p>
+                  <p class="slds-m-top_xx-small">ETA:
+                    <aura:if isTrue="{! !empty(mat.estimatedArrivalDate)}">
+                      <lightning:formattedDateTime value="{!mat.estimatedArrivalDate}" />
+                      <aura:set attribute="else">
+                        unknown
+                      </aura:set>
+                    </aura:if>
+                  </p>
+                </aura:if>
+              </div>
+              <div class="slds-col slds-size--3-of-12 slds-p-top_small slds-p-bottom_small">
+                <span style="float: right;font-weight: bold;font-size:1.2rem">${!mat.totalPrice}</span>
+              </div>
+            </div>
+          </aura:iteration>
         </fieldset>
       </div>
     </div>
