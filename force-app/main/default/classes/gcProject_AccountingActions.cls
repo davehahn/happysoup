@@ -1632,9 +1632,10 @@ public without sharing class gcProject_AccountingActions {
     				idCreditGL = idGlInternalLabour;
     				amt = (matl.GMBLASERP__Unit_Price__c == null ? 0 : matl.GMBLASERP__Unit_Price__c) * qty;
     			}
-
+				Boolean noERP = false;
     			if(matl.AcctSeedERP__Project__r.Internal_Warranty__c) {
     				idDebitGL = gcConstants.idGlInternalRevenue;
+					noERP = true;
     				idCreditGL = gcConstants.idGLInternalWarrantyClearing;
     				amt = (matl.GMBLASERP__Unit_Price__c == null ? 0 : matl.GMBLASERP__Unit_Price__c) * qty;
     			}
@@ -1642,8 +1643,8 @@ public without sharing class gcProject_AccountingActions {
     				AcctSeed__Debit__c = amt,
     				AcctSeed__GL_Account__c = idDebitGL,
     				AcctSeed__Product__c = matl.AcctSeedERP__Product__c,
-    				AcctSeed__Project__c = matl.AcctSeedERP__Project__c,
-    				AcctSeed__Project_Task__c = matl.AcctSeedERP__Project_Task__c,
+    				AcctSeed__Project__c = noERP ? null : matl.AcctSeedERP__Project__c,
+    				AcctSeed__Project_Task__c = noERP ? null : matl.AcctSeedERP__Project_Task__c,
     				AcctSeed__Date__c = cogsDate,
     				AcctSeed__Units__c = qty,
     				Material__c = matl.Id

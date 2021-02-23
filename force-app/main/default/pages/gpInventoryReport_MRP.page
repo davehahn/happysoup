@@ -544,7 +544,7 @@ div.pq-grid-footer{
                         {dataIndx:"projectLot",         title:"ERP Order Lot",   align:"left",   dataType:"string",  gFilter:"select"},
                         {dataIndx:"isInventory",        title:"Is. Inv",    align:"center", dataType:"string",  gFilter:"select", gFormat:'checkbox', maxWidth:75, minWidth:75},
                         //{dataIndx:"projectNumber",    title:"Project #",       align:"center", dataType:"string",  gFilter:"text"},
-                        {dataIndx:"createdDate",        title:"Created",         align:"center", dataType:"date",
+                        {dataIndx:"createdDate",        title:"Ordered",         align:"center", dataType:"date",
                                 sortType: function (rowData1, rowData2, dataIndx) {return sortDateTime(rowData1, rowData2,'createdDate');}},
                         {dataIndx:"productName",        title:"ERP Order Item",  align:"left",   dataType:"string",  gFilter:"text"},
                         {dataIndx:"qtySpecified",       title:"Ordered",         align:"right",  dataType:"float", gFormat:'number', maxWidth:75, gTotal:true},
