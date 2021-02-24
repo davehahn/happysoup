@@ -32,16 +32,27 @@ tr.total td{
             <br/>
             <div style="display: {!IF(GMBLASERP__Inventory_Adjustment__c.GMBLASERP__Product__c == null,'','none;')}">
                 <apex:form >
-                    Select a Product Type:
-                    <span class="typeSelector">
-                <apex:selectList styleClass="typeList" size="1" value="{!defaultRecordId}" onchange="refreshGrid_inventory();">
-                    <apex:selectOptions value="{!listProductType}"/>
-                </apex:selectList>
-                </span>
-                    <!-- Search for Product/Serial/Lot:
-                    <span class="txtSelector">
-                        <input type="text" id="searchText" name="searchText" />
-                    </span> -->
+                    <table>
+                        <tr>
+                            <td>
+                                Select a Product Type:
+                                <span class="typeSelector">
+                                    <apex:selectList styleClass="typeList" size="1" value="{!defaultRecordId}">
+                                        <apex:selectOptions value="{!listProductType}"/>
+                                    </apex:selectList>
+                                </span>
+                            </td>
+                            <td>
+                                Search for Product/Serial/Lot:
+                                <span class="txtSelector">
+                                    <input type="text" id="searchText" name="searchText" />
+                                </span>
+                            </td>
+                            <td>
+                                <input type="button" value=" Search " onclick="refreshGrid_inventory();"/>
+                            </td>
+                        </tr>
+                    </table>
                 </apex:form>
             </div>
             <div id="inventory"></div>
@@ -91,8 +102,8 @@ tr.total td{
     function refreshAll()
     {
         refreshGrid_adjustments();
-        if(pageId != '')
-            refreshGrid_inventory();
+//        if(pageId != '')
+//            refreshGrid_inventory();
     }
 
     function showLoading()
@@ -491,14 +502,19 @@ tr.total td{
         });
     }
 
+
+
     function refreshGrid_inventory(){
 
         var $gridDiv = $j('#inventory');
         var idType = $j('span.typeSelector select').val();
+        var srcText = null;
+        if($j('span.txtSelector').length > 0)
+            srcText = $j('span.txtSelector input').val();
         showLoading();
         Visualforce.remoting.Manager.invokeAction(
             '{!$RemoteAction.gcInventoryAdjustment_Ext.retrieveInventory}',
-            '{!Id}',null,idType,
+            '{!Id}',null,idType,srcText,
             function(result,event){
                 if(event.status){
                     gGrid.refreshGrid_callback($gridDiv,result);
