@@ -146,7 +146,7 @@ global without sharing class gcInventoryAdjustment_Ext {
 	}
 
 	@RemoteAction @ReadOnly
-	global static list<map<string,string>> retrieveInventory(string idAdjustment, string idObject, String idType)
+	global static list<map<string,string>> retrieveInventory(string idAdjustment, string idObject, String idType, String searchText)
 	{
 		GMBLASERP__Inventory_Adjustment__c adj =
 		[SELECT GMBLASERP__Warehouse__c,
@@ -157,8 +157,12 @@ global without sharing class gcInventoryAdjustment_Ext {
 		WHERE Id = :idAdjustment][0];
 
 		map<string,list<string>> mapFilters = new map<string,list<string>>();
-
+		Set<String> setIdProducts = new Set<String>();
+		List<String> listIdProducts = new List<String>();
 		mapFilters.put('dateThru', new list<string>{String.valueOf(adj.GMBLASERP__Adjustment_Date__c.format())});
+		if(searchText != null || searchText != ''){
+			searchText = '%'+searchText.replaceAll('[*]','%') +'%';
+		}
 
 		if(adj.GMBLASERP__Warehouse__c != null)
 			mapFilters.put('idWarehouse', new list<string>{adj.GMBLASERP__Warehouse__c});
@@ -178,13 +182,25 @@ global without sharing class gcInventoryAdjustment_Ext {
 		if(idType != '' && !mapFilters.containsKey('idProduct'))
 		{
 			List<String> listProductId = new List<String>();
-			for(Product2 p :
-			[SELECT Id
-			FROM Product2
-			WHERE AcctSeed__Inventory_Product__c = true
-			AND RecordTypeId =:idType])
-			{
-				listProductId.add(p.Id);
+			if(idType != '' && (searchText == '' || searchText == null)) {
+				for (Product2 p : [
+					SELECT Id
+					FROM Product2
+					WHERE AcctSeed__Inventory_Product__c = true
+					AND RecordTypeId = :idType
+				]) {
+					listProductId.add(p.Id);
+				}
+			}else if(idType != '' && (searchText != '' || searchText != null)) {
+				for (Product2 p : [
+					SELECT Id
+					FROM Product2
+					WHERE AcctSeed__Inventory_Product__c = true
+					AND (ProductCode like:searchText OR Name like:searchText)
+					AND RecordTypeId = :idType
+				]) {
+					listProductId.add(p.Id);
+				}
 			}
 			if(!listProductId.isEmpty())
 				mapFilters.put('idProduct',listProductId);
