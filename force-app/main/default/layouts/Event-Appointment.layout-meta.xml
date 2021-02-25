@@ -14,19 +14,11 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>StageName__c</field>
-            </layoutItems>
-            <layoutItems>
-                <behavior>Edit</behavior>
                 <field>Type</field>
             </layoutItems>
             <layoutItems>
-                <behavior>Required</behavior>
-                <field>StartDateTime</field>
-            </layoutItems>
-            <layoutItems>
-                <behavior>Required</behavior>
-                <field>EndDateTime</field>
+                <behavior>Edit</behavior>
+                <field>Description</field>
             </layoutItems>
         </layoutColumns>
         <layoutColumns>
@@ -35,8 +27,12 @@
                 <field>OwnerId</field>
             </layoutItems>
             <layoutItems>
-                <behavior>Edit</behavior>
-                <field>Description</field>
+                <behavior>Required</behavior>
+                <field>StartDateTime</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Required</behavior>
+                <field>EndDateTime</field>
             </layoutItems>
         </layoutColumns>
         <style>TwoColumnsTopToBottom</style>
@@ -117,7 +113,6 @@
     </layoutSections>
     <miniLayout>
         <fields>Subject</fields>
-        <fields>StageName__c</fields>
         <fields>Type</fields>
         <fields>StartDateTime</fields>
         <fields>EndDateTime</fields>
@@ -130,12 +125,6 @@
             <layoutItem>
                 <behavior>Readonly</behavior>
                 <field>WhoId</field>
-            </layoutItem>
-        </relatedContentItems>
-        <relatedContentItems>
-            <layoutItem>
-                <behavior>Readonly</behavior>
-                <field>WhatId</field>
             </layoutItem>
         </relatedContentItems>
     </relatedContent>
