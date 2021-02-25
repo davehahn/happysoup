@@ -167,7 +167,7 @@ public virtual class Customer
       this.mobilePhone = l.MobilePhone;
       this.street = l.Street;
       this.city = l.City;
-      this.state = l.StateCode;
+      this.state = l.State;
       this.stateCode = l.StateCode;
       this.country = l.Country;
       this.countryCode = l.CountryCode;
