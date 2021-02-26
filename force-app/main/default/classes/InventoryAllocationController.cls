@@ -313,6 +313,9 @@
                                                           AND GMBLASERP__Serial_Number__c = null
                                                           AND AcctSeedERP__Product__c != null ] )
           {
+              System.debug('objMaterial');
+              System.debug(objMaterial);
+
             //String uniqueCombo = getUniqueComboProject(objMaterial,objMaterial.AcctSeedERP__Product__r.RecordType.Name);
             //populateMapValues(objMaterial.AcctSeedERP__Product__c, uniqueCombo);
             //uniqueCombo = objMaterial.AcctSeedERP__Product__c + ( uniqueCombo == '' ? '' : ('-' + uniqueCombo) );
@@ -324,18 +327,26 @@
               listRetailMaterials.add(objMaterial);
             }
           }
+            System.debug('listRetailMaterials');
+            System.debug(listRetailMaterials);
+            System.debug('this.filterWarehouse');
+            System.debug(this.filterWarehouse);
 
-          if(!mapRetailLinked.isEmpty()){
-            for(AcctSeed__Project__c pr : [SELECT Id, (SELECT Id FROM ERP_Orders__r) FROM AcctSeed__Project__c WHERE Id IN:mapRetailLinked.keySet()])
-              if(!pr.ERP_Orders__r.isEmpty())
-                mapRetailLinked.put(pr.Id, true);
-          }
+//          if(!mapRetailLinked.isEmpty()){
+//            for(AcctSeed__Project__c pr : [SELECT Id, (SELECT Id FROM ERP_Orders__r) FROM AcctSeed__Project__c WHERE Id IN:mapRetailLinked.keySet()])
+//              if(!pr.ERP_Orders__r.isEmpty())
+//                mapRetailLinked.put(pr.Id, true);
+//          }
 
           for( AcctSeedERP__Material__c objMaterial : listRetailMaterials){
             if(mapRetailLinked.get(objMaterial.AcctSeedERP__Project__c)) continue;
             String uniqueCombo = getUniqueComboProject(objMaterial,objMaterial.AcctSeedERP__Product__r.RecordType.Name);
             populateMapValues(objMaterial.AcctSeedERP__Product__c, uniqueCombo);
             uniqueCombo = objMaterial.AcctSeedERP__Product__c + ( uniqueCombo == '' ? '' : ('-' + uniqueCombo) );
+              System.debug('uniqueCombo');
+              System.debug(uniqueCombo);
+              if(objMaterial.AcctSeedERP__Product__r.RecordType.Name == this.filterType)
+                this.allProducts.add(objMaterial.AcctSeedERP__Product__c);
             addToRetailERPOrders( uniqueCombo, objMaterial );
           }
 
@@ -1537,7 +1548,8 @@
                                                                  AcctSeedERP__Project__r.Name,
                                                                  AcctSeedERP__Project__r.AcctSeedERP__Work_Order_Number__c
                                                           FROM AcctSeedERP__Material__c
-                                                          WHERE AcctSeedERP__Product__c =:idWholesaleProd
+                                                          WHERE AcctSeedERP__Project__r.Stage__c != 'Delivered'
+                                                            AND AcctSeedERP__Product__c =:idWholesaleProd
                                                             AND (AcctSeedERP__Project__r.Name like:searchTxt OR AcctSeedERP__Project__r.AcctSeedERP__Work_Order_Number__c like:searchTxt)
                                                             AND (AcctSeedERP__Project__r.BoatModelYear__c =:erpWH.BoatModelYear__c)
                                                             AND AcctSeedERP__Project__c !=:erpWH.Id
