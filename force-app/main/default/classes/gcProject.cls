@@ -1382,8 +1382,8 @@ public without sharing class gcProject {
 
       Decimal noCogsQty = cube.qtySpecified - cube.cogsQty;
       if(proj.Internal_Warranty__c){
-        noCogsQty = cube.allQtySpecified - cube.cogsQty;
-        cube.noCogsQty = cube.allQtySpecified - cube.cogsQty;
+        noCogsQty = 0;//cube.allQtySpecified - cube.cogsQty;
+        cube.noCogsQty = 0;//cube.allQtySpecified - cube.cogsQty;
       }
 
       if(proj.RecordTypeId == gcConstants.idRtProjectManufacturing && (cube.qtyUnWIP != 0 || fgQty == 0)){
