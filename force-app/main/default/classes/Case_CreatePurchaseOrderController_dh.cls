@@ -21,6 +21,57 @@ public with sharing class Case_CreatePurchaseOrderController_dh {
     }
   }
 
+  @AuraEnabled(Cacheable=true)
+  public static List<Case_Part__c> fetchCaseParts( List<Id> casePartIds )
+  {
+    return CasePart_Selector.allByIds( casePartIds );
+  }
+
+  @AuraEnabled
+  public static List<Map<String, Object>> findOpenPOs(
+    Id vendorId,
+    Id warehouseId,
+    List<Id> productIds
+  )
+  {
+    List<Map<String, Object>> result = new List<Map<String, Object>>();
+    List<AcctSeedERP__Purchase_Order_Line__c> pols =[
+      SELECT
+        Id,
+        AcctSeedERP__Product__c,
+        AcctSeedERP__Quantity__c,
+        AcctSeedERP__Quantity_Received__c,
+        deliverDate__c,
+        AcctSeedERP__Purchase_Order__r.Id,
+        AcctSeedERP__Purchase_Order__r.Name,
+        AcctSeedERP__Purchase_Order__r.CreatedDate,
+        AcctSeedERP__Purchase_Order__r.CreatedBy.Name,
+        AcctSeedERP__Purchase_Order__r.AcctSeedERP__Vendor__r.Name,
+        AcctSeedERP__Purchase_Order__r.AcctSeedERP__Vendor__c,
+        AcctSeedERP__Purchase_Order__r.Estimated_Time_of_Arrival_ETA__c
+      FROM AcctSeedERP__Purchase_Order_Line__c
+      WHERE AcctSeedERP__Product__c IN :productIds
+      AND AcctSeedERP__Purchase_Order__r.Warehouse__c = :warehouseId
+      AND AcctSeedERP__Purchase_Order__r.AcctSeedERP__Vendor__c = :vendorId
+      AND AcctSeedERP__Purchase_Order__r.AcctSeedERP__Status__c <> 'Closed'
+    ];
+    for( AcctSeedERP__Purchase_Order_Line__c pol : pols )
+    {
+      result.add( new Map<String, Object>{
+        'createdDate' => pol.AcctSeedERP__Purchase_Order__r.CreatedDate,
+        'createdBy' => pol.AcctSeedERP__Purchase_Order__r.CreatedBy.Name,
+        'productId' => pol.AcctSeedERP__Product__c,
+        'qtyOrdered' => pol.AcctSeedERP__Quantity__c,
+        'qtyReceived' => pol.AcctSeedERP__Quantity_Received__c,
+        'qtyRemaining' => pol.AcctSeedERP__Quantity__c - pol.AcctSeedERP__Quantity_Received__c,
+        'id' => pol.Id,
+        'poName' => pol.AcctSeedERP__Purchase_Order__r.Name,
+        'eta' => pol.deliverDate__c == null ? pol.AcctSeedERP__Purchase_Order__r.Estimated_Time_of_Arrival_ETA__c : pol.deliverDate__c
+      });
+    }
+    return result;
+  }
+
   @AuraEnabled
   public static Integer checkForParts( String recordId )
   {
@@ -45,26 +96,40 @@ public with sharing class Case_CreatePurchaseOrderController_dh {
   }
 
   @AuraEnabled
+  public static Case_Part__c linkPurchaseOrderLineToCasePart(
+    Id casePartId,
+    Id polId
+  )
+  {
+    Case_Part__c cp = new Case_Part__c(
+      Id = casePartId,
+      Purchase_Order_Line__c = polId
+    );
+    update cp;
+    return cp;
+  }
+
+  @AuraEnabled
   public static void createPOlinesAndUdateCase( String[] casePartIds, String poId, Boolean setDefaultVendor )
   {
     createPOlines( casePartIds, poId, setDefaultVendor );
   }
 
-  private static String findUserWareHouse()
-  {
-    User u = [SELECT Id, Warehouse__c
-              FROM User
-              WHERE Id = :UserInfo.getUserId() ];
-    try {
-      return [SELECT Id
-              FROM AcctSeedERP__Warehouse__c
-              WHERE Name = :u.Warehouse__c ].Id;
-    }
-    catch( Exception e )
-    {
-      return null;
-    }
-  }
+//  private static String findUserWareHouse()
+//  {
+//    User u = [SELECT Id, Warehouse__c
+//              FROM User
+//              WHERE Id = :UserInfo.getUserId() ];
+//    try {
+//      return [SELECT Id
+//              FROM AcctSeedERP__Warehouse__c
+//              WHERE Name = :u.Warehouse__c ].Id;
+//    }
+//    catch( Exception e )
+//    {
+//      return null;
+//    }
+//  }
 
   private static Vendor[] buildPartsByVendor( String recordId )
   {

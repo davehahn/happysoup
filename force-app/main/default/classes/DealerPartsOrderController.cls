@@ -547,6 +547,7 @@ public without sharing class DealerPartsOrderController {
           AcctSeedERP__Product__r.Name,
           AcctSeedERP__Product__r.ProductCode,
           AcctSeedERP__Quantity_Per_Unit__c,
+          Quantity_Unshipped__c,
           GMBLASERP__Unit_Price__c,
           AcctSeedERP__Project__c,
           AcctSeedERP__Project__r.GMBLASERP__Warehouse__c,
@@ -591,11 +592,13 @@ public without sharing class DealerPartsOrderController {
   private static Map<Id, Date> backOrderedPartsArrivalDates( Id erpId )
   {
     Map<Id, Date> result = new Map<Id, Date>();
+    Decimal offset = Partner_Community_Settings__c.getOrgDefaults().Part_Order_Arrival_Date_Offset__c;
     List<Case_Part__c> caseParts = [
       SELECT
         Id,
         Product__c,
-        Purchase_Order_Line__r.Estimated_Arrival_Date__c
+        Purchase_Order_Line__r.AcctSeedERP__Purchase_Order__r.Estimated_Time_of_Arrival_ETA__c,
+        Purchase_Order_Line__r.deliverDate__c
       FROM Case_Part__c
       WHERE Case__r.ERP_Order__c = :erpId
     ];
@@ -603,7 +606,17 @@ public without sharing class DealerPartsOrderController {
     {
       for( Case_Part__c cPart : caseParts )
       {
-        result.put( cPart.Product__c, cPart.Purchase_Order_Line__r.Estimated_Arrival_Date__c );
+        Date eta = cPart.Purchase_Order_Line__r.deliverDate__c == null ?
+          cPart.Purchase_Order_Line__r.AcctSeedERP__Purchase_Order__r.Estimated_Time_of_Arrival_ETA__c :
+          cPart.Purchase_Order_Line__r.deliverDate__c;
+        if( eta != null && offset != null )
+        {
+          eta = eta.addDays( (Integer)offset );
+        }
+        result.put(
+          cPart.Product__c,
+          eta
+        );
       }
     }
     return result;
@@ -642,54 +655,69 @@ public without sharing class DealerPartsOrderController {
     return partIdsList;
   }
 
-  public class MaterialWrapper {
-      @AuraEnabled
-      public String               matId;
-      @AuraEnabled
-      public String               pdtId;
-      @AuraEnabled
-      public String               pdtName;
-      @AuraEnabled
-      public Decimal              matQuantity;
-      @AuraEnabled
-      public Decimal              pricePerQuantity;
-      @AuraEnabled
-      public String               pdtcode;
-      @AuraEnabled
-      public Decimal              totalPrice;
-      @AuraEnabled
-      public String               matImgUrl;
-      @AuraEnabled
-      public String               taskId;
-      @AuraEnabled
-      public String               warehouseName;
-      @AuraEnabled
-      public Decimal              AvailableQuantitySelf;
-      @AuraEnabled
-      public Decimal              AvailableQuantityWholesale;
-      @AuraEnabled
-      public Boolean              onBackOrder;
-      @AuraEnabled
-      public Date                 estimatedArrivalDate;
+  public class MaterialWrapper
+  {
+    @AuraEnabled
+    public String matId;
+    @AuraEnabled
+    public String pdtId;
+    @AuraEnabled
+    public String pdtName;
+    @AuraEnabled
+    public Decimal matQuantity;
+    @AuraEnabled
+    public Decimal matQuantityShipped;
+    @AuraEnabled
+    public Decimal matQuantityOutstanding;
+    @AuraEnabled
+    public Decimal pricePerQuantity;
+    @AuraEnabled
+    public String pdtcode;
+    @AuraEnabled
+    public Decimal totalPrice;
+    @AuraEnabled
+    public String matImgUrl;
+    @AuraEnabled
+    public String taskId;
+    @AuraEnabled
+    public String warehouseName;
+    @AuraEnabled
+    public Decimal AvailableQuantitySelf;
+    @AuraEnabled
+    public Decimal AvailableQuantityWholesale;
+    @AuraEnabled
+    public Boolean onBackOrder;
+    @AuraEnabled
+    public Date estimatedArrivalDate;
 
-      public MaterialWrapper( AcctSeedERP__Material__c mat )
-      {
-        this.matId = mat.Id;
-        this.pdtId = mat.AcctSeedERP__Product__c;
-        this.matQuantity = mat.AcctSeedERP__Quantity_Per_Unit__c;
-        this.pricePerQuantity = mat.GMBLASERP__Unit_Price__c;
-        this.pdtName = mat.AcctSeedERP__Product__r.Name;
-        this.pdtcode = mat.AcctSeedERP__Product__r.ProductCode;
-        this.matImgUrl = mat.AcctSeedERP__Product__r.Default_Image_Thumb__c;
-        this.totalPrice = (mat.GMBLASERP__Unit_Price__c*mat.AcctSeedERP__Quantity_Per_Unit__c).setScale(2);
-        this.taskId = mat.AcctSeedERP__Project_Task__c;
-      }
+    public MaterialWrapper(AcctSeedERP__Material__c mat)
+    {
+      this.matId = mat.Id;
+      this.pdtId = mat.AcctSeedERP__Product__c;
+      this.matQuantity = mat.AcctSeedERP__Quantity_Per_Unit__c;
+      this.matQuantityOutstanding = mat.Quantity_Unshipped__c == null ? 0 : mat.Quantity_Unshipped__c;
+      this.matQuantityShipped = this.matQuantity - this.matQuantityOutstanding;
+      this.pricePerQuantity = mat.GMBLASERP__Unit_Price__c;
+      this.pdtName = mat.AcctSeedERP__Product__r.Name;
+      this.pdtcode = mat.AcctSeedERP__Product__r.ProductCode;
+      this.matImgUrl = mat.AcctSeedERP__Product__r.Default_Image_Thumb__c;
+      this.totalPrice = (mat.GMBLASERP__Unit_Price__c * mat.AcctSeedERP__Quantity_Per_Unit__c).setScale(2);
+      this.taskId = mat.AcctSeedERP__Project_Task__c;
+    }
 
-      public void setBackOrderStatus( Date arrivalDate )
+    public Boolean isComplete()
+    {
+      return this.matQuantityOutstanding == 0;
+    }
+
+    public void setBackOrderStatus( Date arrivalDate )
+    {
+      if( !this.isComplete() )
       {
         this.onBackOrder = true;
         this.estimatedArrivalDate = arrivalDate;
       }
+    }
   }
 
   public class ProductWrapper {

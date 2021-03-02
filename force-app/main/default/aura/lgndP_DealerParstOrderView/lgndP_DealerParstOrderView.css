@@ -1,2 +1,40 @@
-.THIS {
+.THIS table {
+  width: 100%;
+}
+
+.THIS table thead tr th:first-child,
+.THIS table tbody tr td:first-child {
+  width:75px;
+  padding-left:0.5rem;
+}
+
+.THIS table thead tr th:first-child + td,
+.THIS table tbody tr td:first-child + td {
+  width:30%;
+}
+
+.THIS .quantity-remaining {
+  display:flex;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+}
+
+.THIS .eta {
+  font-size: 0.65rem;
+  margin:0;
+  text-align:right;
+}
+
+@media only screen and (max-width:48em) {
+  .THIS table thead tr th:first-child,
+  .THIS table tbody tr td:first-child,
+  .THIS table thead tr th:first-child + td,
+  .THIS table tbody tr td:first-child + td {
+    width:100%;
+  }
+
+  .THIS .quantity-remaining {
+    justify-content: flex-start;
+  }
 }

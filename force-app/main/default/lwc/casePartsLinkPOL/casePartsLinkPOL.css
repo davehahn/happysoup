@@ -1,0 +1,57 @@
+/**
+ * Created by dave on 2021-02-26.
+ */
+.container {
+  min-height: 20rem;
+  position:relative;
+}
+
+.slds-popover__header {
+  background-color: var(--lwc-colorBackground, #f3f2f2);
+}
+
+table thead tr th:first-child,
+table tbody tr td:first-child
+{
+  width: 100px;
+}
+
+table thead tr th:last-child,
+table tbody tr td:last-child {
+  width: 150px;
+}
+
+.button-container {
+  position: relative;
+  margin-bottom: 0.25rem;
+}
+
+.button-container:last-child {
+  margin-bottom: 0;
+}
+
+
+
+.button-container .slds-popover {
+  position: absolute;
+  right: 100%;
+  top: -70px;
+  text-align:initial;
+}
+
+.button-container .slds-popover:before,
+.button-container .slds-popover:after {
+  top: calc( 70px + ( 1.875rem / 2 ) );
+}
+
+.eta {
+  padding: 4px 8px;
+  background: #FFF;
+  border-radius: 10rem;
+  border: 1px solid var( --lwc-colorBorder, #dddbda );
+}
+
+table.quantity-table thead tr th,
+table.quantity-table tbody tr td {
+  width: 33.33%;
+}

@@ -831,9 +831,11 @@ public without sharing class RetailSalesToolController_dh
   {
     try
     {
-      return JSON.serialize( new Customer.Person(
-        Lead_Selector.byIdIncludingCampaignMembers( leadId )
-      ));
+      Lead theLead = Lead_Selector.byIdIncludingCampaignMembers( leadId );
+      Customer.Person thePerson = new Customer.Person(
+        theLead
+      );
+      return JSON.serialize( thePerson );
     }
     catch( Exception e )
     {

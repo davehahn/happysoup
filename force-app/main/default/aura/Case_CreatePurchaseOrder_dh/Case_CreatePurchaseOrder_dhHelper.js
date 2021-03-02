@@ -1,7 +1,8 @@
 ({
   titles: {
     stepOne: 'Select Vendor and Parts',
-    stepTwo: 'Create Purchase Order'
+    stepTwo: 'Create Purchase Order',
+    stepThree: 'Link Existing Purchase Order'
   },
 
   checkForPartsRequiringOrdering: function( component )
@@ -12,6 +13,30 @@
     });
     la = new LightningApex( this, action );
     return la.fire();
+  },
+
+  initializePoSelect: function( component )
+  {
+    this.initNewPO( component)
+    .then(
+      $A.getCallback( function( result ){
+        console.log( result );
+        if( Object.keys( result ).indexOf('vendors') >= 0 )
+        {
+          console.log( JSON.parse(result.vendors) )
+          component.set('v.vendorParts', JSON.parse(result.vendors) );
+        }
+        if( Object.keys( result ).indexOf('userWarehouse') >= 0 )
+        {
+          component.set('v.userWarehouse', result.userWarehouse );
+        }
+        component.set('v.currentStep', 1 );
+        component.set('v.modalOpen', true);
+      }),
+      $A.getCallback( function( err ) {
+        LightningUtils.errorToast( err );
+      })
+    );
   },
 
   initNewPO: function( component )
