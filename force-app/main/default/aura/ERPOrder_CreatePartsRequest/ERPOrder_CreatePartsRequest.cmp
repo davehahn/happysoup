@@ -2,6 +2,7 @@
 
   <aura:attribute name="recordId" type="String" />
   <aura:attribute name="stage" type="String" />
+  <aura:attribute name="canCreate" type="Boolean" default="false" />
   <aura:attribute name="caseWrappers" type="List" />
   <aura:attribute name="hasCases" type="Boolean" default="false" />
   <aura:attribute name="hasMultipleCases" type="Boolean" default="false" />
@@ -21,7 +22,7 @@
 
   <c:Lgnd_Spinner_dh aura:id="spinner" />
 
-  <aura:if isTrue="{! or( equals(v.stage, 'Parts Required'), v.hasCases ) }">
+  <aura:if isTrue="{! or( v.canCreate, v.hasCases ) }">
     <lightning:layout multipleRows="true">
 
       <lightning:layoutItem size="12"
@@ -54,7 +55,7 @@
                             mediumDeviceSize="2"
                             largeDeviceSize="2"
                             padding="horizontal-small">
-        <aura:if isTrue="{! equals(v.stage, 'Parts Required') }">
+        <aura:if isTrue="{! v.canCreate }">
           <div class="slds-clearfix">
             <lightning:button label="Create Parts Request"
                               onclick="{!c.openModel}"

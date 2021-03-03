@@ -71,8 +71,16 @@ public with sharing class ERPOrder_CreatePartsRequestController {
   @AuraEnabled
   public static String getInitialData( String recordId )
   {
-    Map<String, String> result = new MAp<String, String>();
-    AcctSeed__Project__c erp = [SELECT Id, Stage__c FROM AcctSeed__Project__c WHERE Id = :recordId];
+    Map<String, String> result = new Map<String, String>();
+    result.put('canCreate', 'false' );
+    AcctSeed__Project__c erp = [
+      SELECT
+        Id,
+        Stage__c,
+        RecordTypeId
+      FROM AcctSeed__Project__c
+      WHERE Id = :recordId
+    ];
     result.put('erp', JSON.serialize(erp) );
     Case[] cases = [
       SELECT
@@ -86,7 +94,7 @@ public with sharing class ERPOrder_CreatePartsRequestController {
         Quantity__c,
         Purchase_Order_Line__r.deliverDate__c,
         Purchase_Order_Line__r.AcctSeedERP__Purchase_Order__r.Estimated_Time_of_Arrival_ETA__c
-      FROM Case_Parts__r)
+      FROM Case_Parts__r )
       FROM Case
       WHERE ERP_Order__c = :recordId
       AND IsClosed = false
@@ -100,6 +108,24 @@ public with sharing class ERPOrder_CreatePartsRequestController {
         cwrappers.add( new CaseWrapper(c) );
       }
       result.put('cases', JSON.serialize( cwrappers ) );
+    }
+
+    //determine if the Create Button should be displayed
+    Application_RecordType appRT = new Application_RecordType();
+    Set<String> validRetailStages = new Set<String>{
+      'Tagging Pending',
+      'Pending Work Order',
+      'Pending Pick and Pack',
+      'Parts Required'
+    };
+    if( erp.RecordTypeId == appRT.getERPOrderRecordTypes().getRetailBoatSaleId() &&
+        validRetailStages.contains( erp.Stage__c ) )
+    {
+      result.put('canCreate', 'true' );
+    }
+    else if( erp.Stage__c == 'Parts Required' )
+    {
+      result.put('canCreate', 'true' );
     }
 
     return JSON.serialize(result);
