@@ -105,9 +105,12 @@
 
       <div>
         <div>
-          <div class="blockSummary no-amount">
+          <div class="blockSummary">
             <table>
               <tr>
+                <td>
+                  <img src="{!URLFOR($Resource.LegendPDF,'image/calendar_trans.png')}" width="25" height="25" />
+                </td>
                 <td>
                   <img src="{!URLFOR($Resource.LegendPDF,'image/calendar_trans.png')}" width="25" height="25" />
                 </td>
@@ -121,14 +124,18 @@
             <div style="">
               <table>
                 <tr>
-                    <td style="">
-                        <p>Invoice Date:</p>
-                        <p>{!invoiceDate}</p>
-                    </td>
-                    <td style="">
-                        <p>Invoice #:</p>
-                        <p>{!invoiceName}</p>
-                    </td>
+                  <td style="">
+                    <p>Invoice Date:</p>
+                    <p>{!invoiceDate}</p>
+                  </td>
+                  <td style="">
+                    <p>Delivery Date:</p>
+                    <p>{!deliveryDate}</p>
+                  </td>
+                  <td style="">
+                      <p>Invoice #:</p>
+                      <p>{!invoiceName}</p>
+                  </td>
                 </tr>
               </table>
             </div>
