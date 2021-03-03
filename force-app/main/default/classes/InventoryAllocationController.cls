@@ -1403,7 +1403,7 @@
                 inv.availabeToShipDelears = inv.inStock - allSpecials;
                 inv.netAvailable = inv.availabeToShipDelears - inv.dealerOrders;
 
-                if (!ln.contains('-') || !lotName.contains('-')) {
+                if ((ln != null && !ln.contains('-')) || (lotName != null && !lotName.contains('-'))) {
                     whInventory.add(inv);
                 }
             }
