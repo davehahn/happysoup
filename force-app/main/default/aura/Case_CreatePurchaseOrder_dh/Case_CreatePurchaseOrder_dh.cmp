@@ -59,12 +59,14 @@
           <aura:if isTrue="{! equals(1, v.currentStep) }">
             <div class="slds-p-around_small vendor-parts">
               <aura:iteration items="{!v.vendorParts}" var="vp">
-                <c:Case_CreatePO_VendorParts vendor="{!vp}" />
+                <c:Case_CreatePO_VendorParts vendor="{!vp}"
+                                             warehouseId="{!v.userWarehouse}" />
               </aura:iteration>
             </div>
           </aura:if>
           <!-- /Parts Selection -->
-          <!--PO Form -->
+
+          <!--PO Create Form -->
           <aura:if isTrue="{! equals(2, v.currentStep) }">
             <div class="slds-p-around_small">
               <lightning:recordEditForm objectApiName="AcctSeedERP__Purchase_Order__c"
@@ -94,6 +96,12 @@
                   <lightning:layoutItem size="6" padding="around-small">
                     <lightning:inputField fieldName="Internal_Notes__c" />
                   </lightning:layoutItem>
+                  <lightning:layoutItem size="6" padding="around-small">
+                    <lightning:inputField fieldName="AcctSeedERP__Ledger__c" />
+                  </lightning:layoutItem>
+                  <lightning:layoutItem size="6" padding="around-small">
+                    <lightning:inputField fieldName="AcctSeedERP__Purchase_Order_Format__c" />
+                  </lightning:layoutItem>
                 </lightning:layout>
                  <lightning:inputField fieldName="Parts_Request_Case__c"
                                           value="{!v.recordId}"
@@ -103,6 +111,17 @@
             </div>
           </aura:if>
           <!-- /PO Form -->
+
+          <!-- PO Linking -->
+          <aura:if isTrue="{! equals(3, v.currentStep) }">
+            <c:casePartsLinkPOL warehouseId="{!v.userWarehouse}"
+                                vendorId="{!v.vendorPartsSelection.vendorId}"
+                                casePartIds="{!v.vendorPartsSelection.casePartIds}"
+                                oncreatenew="{!c.handleVendorPartsSelected}"
+                                onlinksuccess="{!c.handleLinkSuccess}"></c:casePartsLinkPOL>
+          </aura:if>
+          <!-- /PO Linking -->
+
         </div>
         <footer class="slds-modal__footer slds-clearfix">
           <lightning:button label="Cancel"
@@ -114,6 +133,8 @@
                               variant="brand"
                               onclick="{!c.handleSubmit}"
                               class="slds-m-right_small slds-float_right" />
+          </aura:if>
+          <aura:if isTrue="{! or( equals(2, v.currentStep), equals(3, v.currentStep))}">
             <lightning:button label="Back"
                               variant="neutral"
                               onclick="{!c.handleBack}"

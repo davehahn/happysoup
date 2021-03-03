@@ -1,12 +1,14 @@
-<aura:component>
+<aura:component controller="Case_CreatePurchaseOrderController_dh">
   <aura:attribute name="vendor" type="Map" />
+  <aura:attribute name="warehouseId" type="String" />
   <aura:attribute name="tableCols" type="List" />
 
   <ltng:require scripts="{!join(',', $Resource.Libraries +'/js/LightningApex.js',
-                                     $Resource.Libraries +'/js/LightningUtils.js') }" />
+                                     $Resource.Libraries +'/js/LightningUtils.js') }"
+                afterScriptsLoaded="{!c.doInit}" />
 
 
-  <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+<!--  <aura:handler name="init" value="{!this}" action="{!c.doInit}" />-->
   <aura:registerEvent name="vendorPartsSelected" type="c:Case_CreatePO_VenderPartsSelected_Event" />
 
   <div>
@@ -39,11 +41,21 @@
           </table>
 
         </lightning:layoutItem>
-        <lightning:layoutItem size="3" padding="around-small">
-          <lightning:button variant="neutral"
-                            label="Create PO"
-                            class="slds-float_right"
-                            onclick="{!c.handleCreatePO}" />
+        <lightning:layoutItem size="3" padding="around-small" class="slds-text-align_right">
+          <lightning:buttonGroup>
+            <aura:if isTrue="{! !empty(v.vendor.id)}">
+              <lightning:button variant="neutral"
+                                label="Link PO"
+                                class="slds-float_right"
+                                onclick="{!c.handlePO}"
+                                value="link" />
+            </aura:if>
+            <lightning:button variant="neutral"
+                              label="Create PO"
+                              class="slds-float_right"
+                              onclick="{!c.handlePO}"
+                              value="create" />
+          </lightning:buttonGroup>
         </lightning:layoutItem>
       </lightning:layout>
     </div>

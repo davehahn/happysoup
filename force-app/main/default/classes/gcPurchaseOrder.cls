@@ -29,7 +29,7 @@ public without sharing class gcPurchaseOrder {
 		if(boolIsBefore)
 		{
 			if(boolIsInsert)
-			{			
+			{
 			}
 			if(boolIsUpdate)
 			{

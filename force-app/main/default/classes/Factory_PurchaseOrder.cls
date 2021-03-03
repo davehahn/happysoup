@@ -21,6 +21,35 @@ public with sharing class Factory_PurchaseOrder {
     return po;
   }
 
+  public static AcctSeedERP__Purchase_Order_Line__c createLineItem(
+    Id poId,
+    Id prodId,
+    Integer count
+  )
+  {
+    AcctSeedERP__Purchase_Order_Line__c pol = buildLineItem(
+      poId,
+      prodId,
+      count
+    );
+    insert pol;
+    return pol;
+  }
+
+  public static AcctSeedERP__Purchase_Order_Line__c buildLineItem(
+    Id poId,
+    Id prodId,
+    Integer count
+  )
+  {
+    return new AcctSeedERP__Purchase_Order_Line__c(
+      AcctSeedERP__Purchase_Order__c = poId,
+      AcctSeedERP__Product__c = prodId,
+      AcctSeedERP__Quantity__c = count,
+      AcctSeedERP__Unit_Price__c = 10.00
+    );
+  }
+
   public static void addPOLines( Integer count,  Id poId )
   {
     AcctSeedERP__Purchase_Order_Line__c[] pols = new List<AcctSeedERP__Purchase_Order_Line__c>();
@@ -28,12 +57,7 @@ public with sharing class Factory_PurchaseOrder {
     insert parts;
     for( Product2 p : parts )
     {
-      pols.add( new AcctSeedERP__Purchase_Order_Line__c(
-        AcctSeedERP__Purchase_Order__c = poId,
-        AcctSeedERP__Product__c = p.Id,
-        AcctSeedERP__Quantity__c = 1,
-        AcctSeedERP__Unit_Price__c = 10.00
-      ));
+      pols.add( buildLineItem( poId, p.Id, 1 ) );
     }
     insert pols;
   }

@@ -32,28 +32,16 @@
     {
       component.set('v.title', helper.titles.stepTwo);
     }
+
+    if( step === 3 )
+    {
+      component.set('v.title', helper.titles.stepThree);
+    }
   },
 
   handleInitializePo: function( component, event, helper )
   {
-    helper.initNewPO( component)
-    .then(
-      $A.getCallback( function( result ){
-        console.log( result );
-        if( Object.keys( result ).indexOf('vendors') >= 0 )
-        {
-          console.log( JSON.parse(result.vendors) )
-          component.set('v.vendorParts', JSON.parse(result.vendors) );
-        }
-        if( Object.keys( result ).indexOf('userWarehouse') >= 0 )
-          component.set('v.userWarehouse', result.userWarehouse );
-
-        component.set('v.modalOpen', true);
-      }),
-      $A.getCallback( function( err ) {
-        LightningUtils.errorToast( err );
-      })
-    );
+    helper.initializePoSelect( component );
   },
 
   handleVendorPartsSelected: function( component, event, helper )
@@ -62,8 +50,18 @@
     console.log( JSON.parse( JSON.stringify(params) ) );
     component.set('v.vendorPartsSelection', params );
     if( params.vendorId === null )
+    {
       component.set('v.vendorEmpty', true);
-    component.set('v.currentStep', 2);
+    }
+    if( params.action === 'create' )
+    {
+      component.set('v.currentStep', 2);
+    }
+
+    if( params.action === 'link' )
+    {
+      component.set('v.currentStep', 3);
+    }
   },
 
   handleBack: function( component )
@@ -100,6 +98,13 @@
       component.find('spinner').toggle();
     }))
 	},
+
+	handleLinkSuccess: function( component, event, helper )
+	{
+	  console.log('link Success');
+	  LightningUtils.showToast( 'success', 'Success', 'Case part link successful' );
+	  helper.initializePoSelect( component );
+  },
 
   openModal: function(component, event, helper)
   {

@@ -58,7 +58,9 @@ public with sharing class ERPOrder_CreatePartsRequestController {
         Map<String, String> p = new Map<String, String>();
         p.put('productName', cp.Product__r.Name );
         p.put('quantity', String.valueOf( cp.Quantity__c) );
-        Date eta = cp.Purchase_Order_Line__r.AcctSeedERP__Purchase_Order__r.Estimated_Time_of_Arrival_ETA__c;
+        Date eta = cp.Purchase_Order_Line__r.deliverDate__c == null ?
+          cp.Purchase_Order_Line__r.AcctSeedERP__Purchase_Order__r.Estimated_Time_of_Arrival_ETA__c :
+          cp.Purchase_Order_Line__r.deliverDate__c;
         String eta_string = eta == null ? '' : DateTime.newInstance( eta.year(), eta.month(), eta.day() ).format('MMM d, yyyy');
         p.put('eta', eta_string );
         this.caseParts.add( p );
@@ -72,12 +74,24 @@ public with sharing class ERPOrder_CreatePartsRequestController {
     Map<String, String> result = new MAp<String, String>();
     AcctSeed__Project__c erp = [SELECT Id, Stage__c FROM AcctSeed__Project__c WHERE Id = :recordId];
     result.put('erp', JSON.serialize(erp) );
-    Case[] cases = [SELECT Id, CaseNumber, CreatedBy.Name, CreatedDate, Status,
-                    ( SELECT Product__R.Name, Quantity__c, Purchase_Order_Line__r.AcctSeedERP__Purchase_Order__r.Estimated_Time_of_Arrival_ETA__c
-                      FROM Case_Parts__r)
-                    FROM Case
-                    WHERE ERP_Order__c = :recordId
-                    AND IsClosed = false ];
+    Case[] cases = [
+      SELECT
+        Id,
+        CaseNumber,
+        CreatedBy.Name,
+        CreatedDate,
+        Status,
+      ( SELECT
+        Product__R.Name,
+        Quantity__c,
+        Purchase_Order_Line__r.deliverDate__c,
+        Purchase_Order_Line__r.AcctSeedERP__Purchase_Order__r.Estimated_Time_of_Arrival_ETA__c
+      FROM Case_Parts__r)
+      FROM Case
+      WHERE ERP_Order__c = :recordId
+      AND IsClosed = false
+    ];
+
     if( cases.size() > 0 )
     {
       CaseWrapper[] cwrappers = new List<CaseWrapper>();
