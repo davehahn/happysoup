@@ -60,7 +60,8 @@ private class DealerPartsOrderController_Test {
       DealerPartsOrderController.getProductswithFamily('', jsonValue, '', pdt.Id, pbId, false );
   }
 
-  static @isTest void coverageTest() {
+  @isTest
+  static void coverageTest() {
     DealerPartsOrderController.coverage();
   }
 }

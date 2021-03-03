@@ -191,6 +191,20 @@ public class Factory_ERPOrder {
     return erp;
   }
 
+  public static AcctSeed__Project__c insertPartnerPartsOrder(
+    Account dealer,
+    Id warehouseId )
+  {
+    AcctSeed__Project__c erp = buildERP(
+      dealer,
+      null,
+      new Application_RecordType().getERPOrderRecordTypes().getPartnerPartsOrderId()
+    );
+    erp.GMBLASERP__Warehouse__c = warehouseId;
+    insert erp;
+    return erp;
+  }
+
   public static AcctSeed__Project__c[] insertRetailBoatSales( Account acct,
                                                               AcctSeedERP__Warehouse__c warehouse,
                                                               DateTime deliveryDate,

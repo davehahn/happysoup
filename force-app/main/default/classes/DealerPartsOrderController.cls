@@ -1,4 +1,4 @@
-public with sharing class DealerPartsOrderController {
+public without sharing class DealerPartsOrderController {
 
   public class PartsOrderException extends Exception {}
 
@@ -15,17 +15,20 @@ public with sharing class DealerPartsOrderController {
 
   @AuraEnabled
   public static ERPMaterialsWrapper getERPOrder(Id orderId) {
-    System.debug( 'ORDERID = ' + orderId);
-    try {
-      AcctSeed__Project__c erp = [SELECT Id,
-                                         AcctSeed__Account__r.Name,
-                                         GMBLASERP__Pricebook__c,
-                                         Name,
-                                         Grand_Total__c,
-                                         Stage__c
-                                  FROM AcctSeed__Project__c
-                                  WHERE Id = :orderId];
-      return new ERPMaterialsWrapper(erp, DealerPartsOrderController.getAddedMaterials(orderId));
+    try
+    {
+      AcctSeed__Project__c erp = [
+        SELECT
+          Id,
+          AcctSeed__Account__r.Name,
+          GMBLASERP__Pricebook__c,
+          Name,
+          Grand_Total__c,
+          Stage__c
+        FROM AcctSeed__Project__c
+        WHERE Id = :orderId
+      ];
+      return new ERPMaterialsWrapper(erp, getAddedMaterials(orderId) );
     }
     catch( Exception e )
     {
@@ -34,215 +37,232 @@ public with sharing class DealerPartsOrderController {
   }
 
   @AuraEnabled
-  public static boolean erpDeleteRecord(String recordId){
+  public static boolean erpDeleteRecord(String recordId)
+  {
     try{
-        System.debug('recordId-----'+recordId);
-        if(string.isNotEmpty(recordId)){
-            AcctSeed__Project__c objRecord = new AcctSeed__Project__c();
-            objRecord.Id = recordId;
-            delete objRecord;
-            return true;
-        }
-        return false;
+      if( String.isNotEmpty(recordId))
+      {
+        AcctSeed__Project__c objRecord = new AcctSeed__Project__c();
+        objRecord.Id = recordId;
+        delete objRecord;
+        return true;
+      }
+      return false;
     }
-    catch(Exception e){
-        System.debug('Error Occurred -----'+e.getMessage());
-        throw e;
+    catch( Exception e )
+    {
+      throw e;
     }
   }
 
   public class ERPMaterialsWrapper {
-      @AuraEnabled
-      public AcctSeed__Project__c erpOrder;
-      @AuraEnabled
-      public List<DealerPartsOrderController.MaterialWrapper> materialList;
+    @AuraEnabled
+    public AcctSeed__Project__c erpOrder;
 
-      public ERPMaterialsWrapper(AcctSeed__Project__c tmpErpOrder, List<DealerPartsOrderController.MaterialWrapper> tmpMaterialList) {
-          this.erpOrder = tmpErpOrder;
-          this.materialList = tmpMaterialList;
-      }
+    @AuraEnabled
+    public List<DealerPartsOrderController.MaterialWrapper> materialList;
+
+    public ERPMaterialsWrapper(
+      AcctSeed__Project__c tmpErpOrder,
+      List<DealerPartsOrderController.MaterialWrapper> tmpMaterialList
+    )
+    {
+      this.erpOrder = tmpErpOrder;
+      this.materialList = tmpMaterialList;
+    }
   }
 
 
   @AuraEnabled
-  public static List<ProductWrapper> getProductswithFamily(String searchKey,
-                                                           String pFamily,
-                                                           String selectedIds,
-                                                           String selectedBoatModel,
-                                                           String activePriceBookId,
-                                                           Boolean isInternalRetail )
+  public static List<ProductWrapper> getProductswithFamily(
+    String searchKey,
+    String pFamily,
+    String selectedIds,
+    String selectedBoatModel,
+    String activePriceBookId,
+    Boolean isInternalRetail )
   {
-    System.debug('searchKey = ' + searchKey );
-    System.debug('pFamily = ' + pFamily );
-    System.debug('selectedIds = ' + selectedIds);
-    System.debug('selectedBoatModel = ' + selectedBoatModel);
-    System.debug('activePriceBookId = ' + activePriceBookId);
-    System.debug('isInternalRetail = ' + isInternalRetail );
-      Set<Id> allowedRecordTypeIds = new Set<Id>{
-        LGND_Utilities.recordTypeIdFromName('Product2', 'Trolling Motor'),
-        LGND_Utilities.recordTypeIdFromName('Product2', 'Part')
-      };
-      Boolean itemsFound = true;
-      List<Product2> products = new List<Product2>();
-      Set<String> partIdsForBoat = new Set<String>();
-      List<String> selectedIdsList = new List<String>();
-      List<Mercury_Product__c> mProds = new List<Mercury_Product__c>();
-      String query = 'Select Id, Name, description,Default_Image_Thumb__c,ProductCode,family From Product2';
-      //String key = '%' + searchKey + '%';
-      String searchString = '\'*'+searchKey+'*\'';
-      String whereClause = ' WHERE RecordTypeId IN :allowedRecordTypeIds';
-      string whereclausequery;
-      whereClause += ' AND IsActive = true';
-      //we have a search and looking for specific boats
-      if(String.isNotBlank(searchKey) && selectedBoatModel != 'All Models')
-      {
-        System.debug( ' IN SELECTED BOAT IF SO BOAT SHOULD BE SELECTED');
-          partIdsForBoat.addAll(getPartIdsForBoat(selectedBoatModel));
-          String searchquery = 'FIND ' + searchString + ' IN NAME FIELDS RETURNING';
-          searchquery += ' Product2(Id, Name WHERE Id IN :partIdsForBoat AND IsActive = true LIMIT 20)';
-          List<List<SObject>> searchList = search.query(searchquery);
-          List<Product2> productSearchResultList = (List<Product2>)searchList[0];
-          partIdsForBoat.clear();
-          itemsFound = false;
-          for(Product2 pdt : productSearchResultList) {
-              itemsFound = true;
-              partIdsForBoat.add(pdt.Id);
-          }
+    Set<Id> allowedRecordTypeIds = new Set<Id>{
+      LGND_Utilities.recordTypeIdFromName('Product2', 'Trolling Motor'),
+      LGND_Utilities.recordTypeIdFromName('Product2', 'Part')
+    };
+    Boolean itemsFound = true;
+    List<Product2> products = new List<Product2>();
+    Set<String> partIdsForBoat = new Set<String>();
+    List<String> selectedIdsList = new List<String>();
+    List<Mercury_Product__c> mProds = new List<Mercury_Product__c>();
+    String query = 'Select Id, Name, description,Default_Image_Thumb__c,ProductCode,family From Product2';
+    //String key = '%' + searchKey + '%';
+    String searchString = '\'*'+searchKey+'*\'';
+    String whereClause = ' WHERE RecordTypeId IN :allowedRecordTypeIds';
+    string whereclausequery;
+    whereClause += ' AND IsActive = true';
+    //we have a search and looking for specific boats
+    if(String.isNotBlank(searchKey) && selectedBoatModel != 'All Models')
+    {
+      System.debug( ' IN SELECTED BOAT IF SO BOAT SHOULD BE SELECTED');
+      partIdsForBoat.addAll(getPartIdsForBoat(selectedBoatModel));
+      String searchquery = 'FIND ' + searchString + ' IN NAME FIELDS RETURNING';
+      searchquery += ' Product2(Id, Name WHERE Id IN :partIdsForBoat AND IsActive = true LIMIT 20)';
+      List<List<SObject>> searchList = search.query(searchquery);
+      List<Product2> productSearchResultList = (List<Product2>)searchList[0];
+      partIdsForBoat.clear();
+      itemsFound = false;
+      for(Product2 pdt : productSearchResultList) {
+        itemsFound = true;
+        partIdsForBoat.add(pdt.Id);
       }
-      /* we have a search and looking at all boats */
-      else if(String.isNotBlank(searchKey))
-      {
-        String searchquery = 'FIND ' + searchString + ' IN NAME FIELDS RETURNING';
-        searchquery += ' Product2(Id, Name WHERE IsActive = true LIMIT 20)';
-        List<List<SObject>> searchList = search.query(searchquery);
-        List<Product2> productSearchResultList = (List<Product2>)searchList[0];
-        itemsFound = false;
-        for(Product2 pdt : productSearchResultList) {
-            itemsFound = true;
-            partIdsForBoat.add(pdt.Id);
-        }
-        /* MERCURY PRODUCTS SEARCH */
-        if( isInternalRetail )
-        {
-          String sq = '%' + searchKey + '%';
-          mProds = [SELECT Id,
-                           Code__c,
-                           Description__c,
-                           List_Price__c,
-                           MSRP__c,
-                           UPC__c
-                    FROM Mercury_Product__c
-                    WHERE Salesforce_Product__c = null
-                    AND ( Code__c LIKE :sq OR UPC__c LIKE :sq )
-                    LIMIT 50 ];
-        }
-      } else if(selectedBoatModel != 'All Models') {
-          itemsFound = false;
-          partIdsForBoat.addAll(getPartIdsForBoat(selectedBoatModel));
-          if(!partIdsForBoat.isEmpty()) {
-              itemsFound = true;
-          }
+    }
+    /* we have a search and looking at all boats */
+    else if(String.isNotBlank(searchKey))
+    {
+      String searchquery = 'FIND ' + searchString + ' IN NAME FIELDS RETURNING';
+      searchquery += ' Product2(Id, Name WHERE IsActive = true LIMIT 20)';
+      List<List<SObject>> searchList = search.query(searchquery);
+      List<Product2> productSearchResultList = (List<Product2>)searchList[0];
+      itemsFound = false;
+      for(Product2 pdt : productSearchResultList) {
+        itemsFound = true;
+        partIdsForBoat.add(pdt.Id);
       }
-      System.debug('partIdsForBoat = ' + partIdsForBoat );
+      /* MERCURY PRODUCTS SEARCH */
+      if( isInternalRetail )
+      {
+        String sq = '%' + searchKey + '%';
+        mProds = [
+          SELECT
+            Id,
+            Code__c,
+            Description__c,
+            List_Price__c,
+            MSRP__c,
+            UPC__c
+          FROM Mercury_Product__c
+          WHERE Salesforce_Product__c = null
+          AND ( Code__c LIKE :sq OR UPC__c LIKE :sq )
+          LIMIT 50
+        ];
+      }
+    } else if(selectedBoatModel != 'All Models')
+    {
+      itemsFound = false;
+      partIdsForBoat.addAll(getPartIdsForBoat(selectedBoatModel));
       if(!partIdsForBoat.isEmpty()) {
-          whereClause += ' AND Id IN :partIdsForBoat';
+        itemsFound = true;
       }
-      if(String.isBlank(searchKey) && selectedBoatModel == 'All Models') {
-          itemsFound = false;
-      }
-      if(!string.isBlank(pFamily))
+    }
+    System.debug('partIdsForBoat = ' + partIdsForBoat );
+    if(!partIdsForBoat.isEmpty())
+    {
+      whereClause += ' AND Id IN :partIdsForBoat';
+    }
+    if(String.isBlank(searchKey) && selectedBoatModel == 'All Models')
+    {
+      itemsFound = false;
+    }
+    if(!string.isBlank(pFamily))
+    {
+      List<DisplayProdFamilyRecords> lstProdRecords =
+        (List<DisplayProdFamilyRecords>)System.JSON.deserialize(
+          pFamily,List<DisplayProdFamilyRecords>.class
+        );
+      integer i = 0;
+      integer x =0;
+      string soqlQuery = '';
+      String trollingMotorRtId = LGND_Utilities.recordTypeIdFromName('Product2', 'Trolling Motor');
+      for(DisplayProdFamilyRecords objProdRecords:lstProdRecords)
       {
-          List<DisplayProdFamilyRecords> lstProdRecords =
-          (List<DisplayProdFamilyRecords>)
-          System.JSON.deserialize(pFamily,List<DisplayProdFamilyRecords>.class);
-          integer i = 0;
-          integer x =0;
-          string soqlQuery = '';
-          String trollingMotorRtId = LGND_Utilities.recordTypeIdFromName('Product2', 'Trolling Motor');
-          for(DisplayProdFamilyRecords objProdRecords:lstProdRecords)
-          {
-              if(objProdRecords.isSelected && i == 0)
-              {
-                if( objProdRecords.prodFamilyName == 'Trolling Motor' )
-                  soqlQuery += 'recordTypeId =\'' + trollingMotorRtId +'\'';
-                else
-                  soqlQuery += 'family =\''+objProdRecords.prodFamilyName+'\'';
-                i=1;
-                x=1;
+        if(objProdRecords.isSelected && i == 0)
+        {
+          if( objProdRecords.prodFamilyName == 'Trolling Motor' )
+            soqlQuery += 'recordTypeId =\'' + trollingMotorRtId +'\'';
+          else
+            soqlQuery += 'family =\''+objProdRecords.prodFamilyName+'\'';
+          i=1;
+          x=1;
 
-              }
-              else if(objProdRecords.isSelected && i == 1)
-              {
-                if( objProdRecords.prodFamilyName == 'Trolling Motor' )
-                  soqlQuery += 'OR recordTypeId =\'' + trollingMotorRtId +'\'';
-                else
-                  soqlQuery += ' OR family =\''+objProdRecords.prodFamilyName+'\'';
-                x=2;
-              }
-          }
-
-          if(x == 1){
-              whereclausequery =  whereClause +' AND '+soqlQuery;
-          } else if(x==2){
-              whereclausequery = whereClause +' AND ('+soqlQuery+')';
-          } else {
-              whereclausequery =  whereClause;
-          }
+        }
+        else if(objProdRecords.isSelected && i == 1)
+        {
+          if( objProdRecords.prodFamilyName == 'Trolling Motor' )
+            soqlQuery += 'OR recordTypeId =\'' + trollingMotorRtId +'\'';
+          else
+            soqlQuery += ' OR family =\''+objProdRecords.prodFamilyName+'\'';
+          x=2;
+        }
       }
 
-      if(String.isNotBlank(selectedIds)) {
-          selectedIdsList = selectedIds.split(':');
-          whereclausequery += ' AND Id Not IN :selectedIdsList';
+      if(x == 1)
+      {
+        whereclausequery =  whereClause +' AND '+soqlQuery;
+      } else if(x==2)
+      {
+        whereclausequery = whereClause +' AND ('+soqlQuery+')';
+      } else
+      {
+        whereclausequery =  whereClause;
       }
-      query += whereclausequery + ' Order By Name LIMIT 100';
-      System.debug('>>>searchKey>>>>'+searchKey);
-      System.debug('>>>query>>>>'+query);
-      if(itemsFound) {
-          products = Database.query(query);
-          System.debug('>>>products>>>>'+query);
-      }
-      return buildProductsWrapper(products, activePriceBookId, mProds );
+    }
+
+    if(String.isNotBlank(selectedIds))
+    {
+      selectedIdsList = selectedIds.split(':');
+      whereclausequery += ' AND Id Not IN :selectedIdsList';
+    }
+    query += whereclausequery + ' Order By Name LIMIT 100';
+
+    if(itemsFound)
+    {
+      products = Database.query(query);
+    }
+    return buildProductsWrapper(products, activePriceBookId, mProds );
   }
 
   @TestVisible
-  private static List<ProductWrapper> buildProductsWrapper( List<Product2> products,
-                                                             String activePriceBookId,
-                                                             List<Mercury_Product__c> mProds )
+  private static List<ProductWrapper> buildProductsWrapper(
+    List<Product2> products,
+    String activePriceBookId,
+    List<Mercury_Product__c> mProds )
   {
-      Map<String, Decimal> pdtUnitPriceMap = getProductUnitPriceMap(products, activePriceBookId);
-      List<ProductWrapper> results = new List<ProductWrapper>();
-      for(Product2 pdt : products) {
-        if( pdtUnitPriceMap.containsKey(pdt.Id) )
-        {
-          ProductWrapper newWrapper = new ProductWrapper(pdt, pdtUnitPriceMap.get(pdt.Id) );
-          results.add(newWrapper);
-        }
-      }
-      for( Mercury_Product__c mp : mProds )
+    Map<String, Decimal> pdtUnitPriceMap = getProductUnitPriceMap(products, activePriceBookId);
+    List<ProductWrapper> results = new List<ProductWrapper>();
+    for(Product2 pdt : products) {
+      if( pdtUnitPriceMap.containsKey(pdt.Id) )
       {
-        results.add( new ProductWrapper( mp ) );
+        ProductWrapper newWrapper = new ProductWrapper(pdt, pdtUnitPriceMap.get(pdt.Id) );
+        results.add(newWrapper);
       }
-      return results;
+    }
+    for( Mercury_Product__c mp : mProds )
+    {
+      results.add( new ProductWrapper( mp ) );
+    }
+    return results;
   }
 
   @TestVisible
   private static Map<String, Decimal> getProductUnitPriceMap( List<Product2> products,
                                                               String activePriceBookId )
   {
-      Map<String, Decimal> pdtUnitPriceMap = new Map<String, Decimal>();
-      Set<String> pdtIds = new Set<String>();
-      for(Product2 pdt : products) {
-          pdtIds.add(pdt.Id);
-      }
-      List<PricebookEntry> pbeList = [SELECT Id, UnitPrice,Product2Id
-                          FROM PricebookEntry
-                          WHERE Pricebook2Id = :activePriceBookId
-                          AND UnitPrice > 0
-                          AND Product2Id IN :pdtIds];
-      for(PricebookEntry pbe : pbeList) {
-          pdtUnitPriceMap.put(pbe.Product2Id, pbe.UnitPrice);
-      }
-      return pdtUnitPriceMap;
+    Map<String, Decimal> pdtUnitPriceMap = new Map<String, Decimal>();
+    Set<String> pdtIds = new Set<String>();
+    for(Product2 pdt : products) {
+        pdtIds.add(pdt.Id);
+    }
+    List<PricebookEntry> pbeList = [
+      SELECT
+        Id,
+        UnitPrice,
+        Product2Id
+      FROM PricebookEntry
+      WHERE Pricebook2Id = :activePriceBookId
+      AND UnitPrice > 0
+      AND Product2Id IN :pdtIds
+    ];
+    for(PricebookEntry pbe : pbeList) {
+      pdtUnitPriceMap.put(pbe.Product2Id, pbe.UnitPrice);
+    }
+    return pdtUnitPriceMap;
   }
 
   @AuraEnabled
@@ -364,28 +384,6 @@ public with sharing class DealerPartsOrderController {
         materialList.add(newMaterial);
       }
     }
-    /*
-    if( mProdsList.size() > 0 )
-    {
-      //create Product and Pricebook entries for Mercury Product
-      Map<Id, MaterialWrapper> matMap = new Map<Id, MaterialWrapper>();
-      for( MaterialWrapper mw : mProdsList )
-      {
-        matMap.put( mw.pdtId, mw );
-      }
-      Map<Id, Id> mp_prod_map = Mercury_Product_dh.convertToSalesforceProducts( matMap.keySet() );
-      for( MaterialWrapper mw : mProdsList )
-      {
-        materialList.add( new AcctSeedERP__Material__c(
-          AcctSeedERP__Product__c = mp_prod_map.get( mw.pdtId ),
-          AcctSeedERP__Quantity_Per_Unit__c = mw.matQuantity,
-          GMBLASERP__Unit_Price__c = mw.pricePerQuantity,
-          AcctSeedERP__Project__c = erpOrderId,
-          AcctSeedERP__Project_Task__c = projectTask.Id
-        );
-      }
-    }
-    */
     upsert materialList;
   }
 
@@ -450,12 +448,7 @@ public with sharing class DealerPartsOrderController {
           strprodfamily.add('Trolling Motor');
       }
       catch(Exception e){}
-      //final Schema.DescribeFieldResult fieldResult = Product2.family.getDescribe();
-      //final List<Schema.picklistEntry> ple = fieldResult.getPicklistValues();
-      //for(Schema.picklistEntry f:ple) {
-      //    strprodfamily.add(f.getLabel());
 
-      //}
       List<DisplayProdFamilyRecords> lstProdRecords =
       new List<DisplayProdFamilyRecords>();
 
@@ -540,66 +533,93 @@ public with sharing class DealerPartsOrderController {
 
   public static List<MaterialWrapper> getAddedMaterials(String erpOrderId)
   {
-      List<MaterialWrapper> results = new List<MaterialWrapper>();
-      if(String.isNotBlank(erpOrderId)) {
-        Id idWarehouse;
-        Set<Id> setIdProduct = new Set<Id>();
-          List<AcctSeedERP__Material__c> materialList = [Select Id,
-                                                         Name,
-                                                         AcctSeedERP__Product__c,
-                                                         AcctSeedERP__Product__r.Default_Image_Thumb__c,
-                                                         AcctSeedERP__Product__r.Name,
-                                                         AcctSeedERP__Product__r.ProductCode,
-                                                         AcctSeedERP__Quantity_Per_Unit__c,
-                                                         GMBLASERP__Unit_Price__c,
-                                                         AcctSeedERP__Project__c,
-                                                         AcctSeedERP__Project__r.GMBLASERP__Warehouse__c,
-                                                         AcctSeedERP__Project_Task__c
-                                                         From AcctSeedERP__Material__c
-                                                         Where AcctSeedERP__Project_Task__r.AcctSeed__Project__c =:erpOrderId];
+    List<MaterialWrapper> results = new List<MaterialWrapper>();
+    if(String.isNotBlank(erpOrderId))
+    {
+      Id idWarehouse;
+      Set<Id> setIdProduct = new Set<Id>();
+      List<AcctSeedERP__Material__c> materialList = [
+        SELECT
+          Id,
+          Name,
+          AcctSeedERP__Product__c,
+          AcctSeedERP__Product__r.Default_Image_Thumb__c,
+          AcctSeedERP__Product__r.Name,
+          AcctSeedERP__Product__r.ProductCode,
+          AcctSeedERP__Quantity_Per_Unit__c,
+          Quantity_Unshipped__c,
+          GMBLASERP__Unit_Price__c,
+          AcctSeedERP__Project__c,
+          AcctSeedERP__Project__r.GMBLASERP__Warehouse__c,
+          AcctSeedERP__Project_Task__c
+        FROM AcctSeedERP__Material__c
+        WHERE AcctSeedERP__Project_Task__r.AcctSeed__Project__c =:erpOrderId
+      ];
 
-          for(AcctSeedERP__Material__c mat : materialList) {
-            if(idWarehouse == null)
-              idWarehouse = mat.AcctSeedERP__Project__r.GMBLASERP__Warehouse__c;
-              setIdProduct.add(mat.AcctSeedERP__Product__c);
-              MaterialWrapper newWr = new MaterialWrapper();
-              newWr.matId = mat.Id;
-              newWr.pdtId = mat.AcctSeedERP__Product__c;
-              newWr.matQuantity = mat.AcctSeedERP__Quantity_Per_Unit__c;
-              newWr.pricePerQuantity = mat.GMBLASERP__Unit_Price__c;
-              newWr.pdtName = mat.AcctSeedERP__Product__r.Name;
-              newWr.pdtcode = mat.AcctSeedERP__Product__r.ProductCode;
-              newWr.matImgUrl = mat.AcctSeedERP__Product__r.Default_Image_Thumb__c;
-              newWr.totalPrice = (mat.GMBLASERP__Unit_Price__c*mat.AcctSeedERP__Quantity_Per_Unit__c).setScale(2);
-              newWr.taskId = mat.AcctSeedERP__Project_Task__c;
-              results.add(newWr);
-          }
-          Map<Id,Decimal> mapProductQty = new Map<Id,Decimal>();
-//          List<String> listIdProduct = new  List<String>();
-//          listIdProduct.addAll(setIdProduct);
-//          map<String,list<String>> mapFilters = new map<String,list<String>>();
-//          mapFilters.put('idProduct',listIdProduct);
-//          mapFilters.put('idWarehouse',new List<String>{idWarehouse});
-//          List<gcInventoryMovementCube_Report.cube> allCubes = gcInventoryMovementCube_Report.inventoryAggRes(mapFilters, new List<String>{'idProduct'});
-          Map<Id, gcInventoryReport_MRP.cube> allCubes = gcInventoryReport_MRP.retrieveProducts(setIdProduct,idWarehouse);
-          System.debug(LoggingLevel.ERROR,'allCubes:'+allCubes);
-          Map<Id,Decimal> mapSerialCost = new Map<Id,Decimal>();
-//          for(gcInventoryMovementCube_Report.cube cube : allCubes){
-//            mapProductQty.put(cube.idProduct, cube.qty);
-//          }
-
-          for(MaterialWrapper newWr : results)
-          {
-            if(allCubes.containsKey(newWr.pdtId)) {
-                gcInventoryReport_MRP.cube cube = allCubes.get(newWr.pdtId);
-                System.debug('cube');
-                System.debug(cube);
-                newWr.AvailableQuantitySelf = cube.inventoryParts - (cube.specified - cube.consumed);
-            }else
-                newWr.AvailableQuantitySelf = 0;
-          }
+      for(AcctSeedERP__Material__c mat : materialList)
+      {
+        if(idWarehouse == null)
+        {
+          idWarehouse = mat.AcctSeedERP__Project__r.GMBLASERP__Warehouse__c;
+        }
+        setIdProduct.add(mat.AcctSeedERP__Product__c);
+        results.add( new MaterialWrapper( mat ) );
       }
-      return results;
+      Map<Id, gcInventoryReport_MRP.cube> allCubes = gcInventoryReport_MRP.retrieveProducts(setIdProduct,idWarehouse);
+
+      Map<Id, Date> arrivalDates = backOrderedPartsArrivalDates( erpOrderId );
+
+      for(MaterialWrapper newWr : results)
+      {
+        if(allCubes.containsKey(newWr.pdtId))
+        {
+          gcInventoryReport_MRP.cube cube = allCubes.get(newWr.pdtId);
+          newWr.AvailableQuantitySelf = cube.inventoryParts - (cube.specified - cube.consumed);
+        }
+        else
+        {
+          newWr.AvailableQuantitySelf = 0;
+        }
+        if( arrivalDates.containsKey( newWr.pdtId ) )
+        {
+          newWr.setBackOrderStatus( arrivalDates.get(newWr.pdtId ) );
+        }
+      }
+    }
+    return results;
+  }
+
+  private static Map<Id, Date> backOrderedPartsArrivalDates( Id erpId )
+  {
+    Map<Id, Date> result = new Map<Id, Date>();
+    Decimal offset = Partner_Community_Settings__c.getOrgDefaults().Part_Order_Arrival_Date_Offset__c;
+    List<Case_Part__c> caseParts = [
+      SELECT
+        Id,
+        Product__c,
+        Purchase_Order_Line__r.AcctSeedERP__Purchase_Order__r.Estimated_Time_of_Arrival_ETA__c,
+        Purchase_Order_Line__r.deliverDate__c
+      FROM Case_Part__c
+      WHERE Case__r.ERP_Order__c = :erpId
+    ];
+    if( caseParts.size() > 0 )
+    {
+      for( Case_Part__c cPart : caseParts )
+      {
+        Date eta = cPart.Purchase_Order_Line__r.deliverDate__c == null ?
+          cPart.Purchase_Order_Line__r.AcctSeedERP__Purchase_Order__r.Estimated_Time_of_Arrival_ETA__c :
+          cPart.Purchase_Order_Line__r.deliverDate__c;
+        if( eta != null && offset != null )
+        {
+          eta = eta.addDays( (Integer)offset );
+        }
+        result.put(
+          cPart.Product__c,
+          eta
+        );
+      }
+    }
+    return result;
   }
 
   private static Set<String> getPartIdsForBoat(String selectedBoatModel) {
@@ -635,31 +655,69 @@ public with sharing class DealerPartsOrderController {
     return partIdsList;
   }
 
-  public class MaterialWrapper {
-      @AuraEnabled
-      public String               matId;
-      @AuraEnabled
-      public String               pdtId;
-      @AuraEnabled
-      public String               pdtName;
-      @AuraEnabled
-      public Decimal              matQuantity;
-      @AuraEnabled
-      public Decimal              pricePerQuantity;
-      @AuraEnabled
-      public String               pdtcode;
-      @AuraEnabled
-      public Decimal              totalPrice;
-      @AuraEnabled
-      public String               matImgUrl;
-      @AuraEnabled
-      public String               taskId;
-      @AuraEnabled
-      public String               warehouseName;
-      @AuraEnabled
-      public Decimal              AvailableQuantitySelf;
-      @AuraEnabled
-      public Decimal              AvailableQuantityWholesale;
+  public class MaterialWrapper
+  {
+    @AuraEnabled
+    public String matId;
+    @AuraEnabled
+    public String pdtId;
+    @AuraEnabled
+    public String pdtName;
+    @AuraEnabled
+    public Decimal matQuantity;
+    @AuraEnabled
+    public Decimal matQuantityShipped;
+    @AuraEnabled
+    public Decimal matQuantityOutstanding;
+    @AuraEnabled
+    public Decimal pricePerQuantity;
+    @AuraEnabled
+    public String pdtcode;
+    @AuraEnabled
+    public Decimal totalPrice;
+    @AuraEnabled
+    public String matImgUrl;
+    @AuraEnabled
+    public String taskId;
+    @AuraEnabled
+    public String warehouseName;
+    @AuraEnabled
+    public Decimal AvailableQuantitySelf;
+    @AuraEnabled
+    public Decimal AvailableQuantityWholesale;
+    @AuraEnabled
+    public Boolean onBackOrder;
+    @AuraEnabled
+    public Date estimatedArrivalDate;
+
+    public MaterialWrapper(AcctSeedERP__Material__c mat)
+    {
+      this.matId = mat.Id;
+      this.pdtId = mat.AcctSeedERP__Product__c;
+      this.matQuantity = mat.AcctSeedERP__Quantity_Per_Unit__c;
+      this.matQuantityOutstanding = mat.Quantity_Unshipped__c == null ? 0 : mat.Quantity_Unshipped__c;
+      this.matQuantityShipped = this.matQuantity - this.matQuantityOutstanding;
+      this.pricePerQuantity = mat.GMBLASERP__Unit_Price__c;
+      this.pdtName = mat.AcctSeedERP__Product__r.Name;
+      this.pdtcode = mat.AcctSeedERP__Product__r.ProductCode;
+      this.matImgUrl = mat.AcctSeedERP__Product__r.Default_Image_Thumb__c;
+      this.totalPrice = (mat.GMBLASERP__Unit_Price__c * mat.AcctSeedERP__Quantity_Per_Unit__c).setScale(2);
+      this.taskId = mat.AcctSeedERP__Project_Task__c;
+    }
+
+    public Boolean isComplete()
+    {
+      return this.matQuantityOutstanding == 0;
+    }
+
+    public void setBackOrderStatus( Date arrivalDate )
+    {
+      if( !this.isComplete() )
+      {
+        this.onBackOrder = true;
+        this.estimatedArrivalDate = arrivalDate;
+      }
+    }
   }
 
   public class ProductWrapper {

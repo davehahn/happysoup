@@ -14,7 +14,6 @@
   returnToList: function( component, event, helper )
   {
     helper.returnToList( component );
-    //console.log( 'return' );
   },
 
   cancelAlwaysEdit: function( component )

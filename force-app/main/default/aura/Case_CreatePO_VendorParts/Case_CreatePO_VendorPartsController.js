@@ -2,18 +2,21 @@
   doInit: function( component, event, helper )
   {
     var vendor = component.get('v.vendor');
-    component.set( 'v.hasVendor', vendor.id != null );
+    console.log( JSON.parse( JSON.stringify( vendor ) ) );
     component.set('v.tableCols', [
       {label: 'Product', fieldName: 'name', type: 'text'},
       {label: 'Quantity', fieldName: 'quantity', type: 'text'}
     ]);
+
   },
 
-	handleCreatePO: function( component, event, helper )
+
+	handlePO: function( component, event, helper )
   {
     var vendor = component.get('v.vendor'),
         selectedCaseParts = [],
         checkBoxes = component.find('rowSelect'),
+        action = event.getSource().get('v.value'),
         evt = component.getEvent("vendorPartsSelected");
 
     if( checkBoxes.length )
@@ -36,9 +39,11 @@
     else
     {
       console.log( selectedCaseParts );
+      console.log( action );
       evt.setParams({
         vendorId: vendor.id,
-        casePartIds: selectedCaseParts
+        casePartIds: selectedCaseParts,
+        action: action
       })
       .fire();
     }

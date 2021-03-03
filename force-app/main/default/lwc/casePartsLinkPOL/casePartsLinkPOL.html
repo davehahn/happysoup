@@ -1,0 +1,126 @@
+<!--
+ - Created by dave on 2021-02-26.
+ -->
+
+<!-- Case Parts Link Pol -->
+<template>
+  <div class="slds-grid slds-grid_vertical-align-center container">
+    <c-legend-spinner variant="contained"></c-legend-spinner>
+    <template if:true={ready}>
+      <table class="slds-table slds-table_cell-buffer slds-table_bordered">
+        <thead>
+        <tr>
+          <th scope="col">
+            Quantity
+          </th>
+          <th scope="col">
+            Product Name
+          </th>
+          <th scope="col" class="slds-text-align_right">
+            Available P.O.'s
+          </th>
+        </tr>
+        </thead>
+        <tbody>
+        <template for:each={casePartsWithPolOptions} for:item="cp_pol_options">
+          <tr key={cp_pol_options.casePartId}>
+            <td scope="col">
+              <div class="slds-m-left_medium">{cp_pol_options.quantity}</div>
+            </td>
+            <td scope="col">
+              <div class="slds-truncate">
+                {cp_pol_options.productName}
+              </div>
+            </td>
+            <td scope="col" class="slds-text-align_right">
+              <template if:true={cp_pol_options.hasPOLs}
+                        for:each={cp_pol_options.availablePOLs}
+                        for:item="pol">
+                <div key={pol.id} class="button-container">
+                  <section class="slds-hide slds-popover slds-nubbin_right slds-popover_large" role="dialog">
+                    <header class="slds-popover__header slds-media slds-media_center">
+                      <div class="slds-media__figure">
+                        <lightning-icon icon-name="custom:custom32"
+                                        size="small"></lightning-icon>
+                      </div>
+                      <div class="slds-media__body">
+                        <h2 class="slds-text-heading_small">
+                          {pol.poName} Details
+                        </h2>
+                      </div>
+                      <div class="slds-no-flex">
+                        <span class="slds-form-element__label slds-m-left_small">ETA:</span>
+                        <p class="eta">
+                          <template if:true={pol.eta}>
+                            <lightning-formatted-date-time value={pol.eta}></lightning-formatted-date-time>
+                          </template>
+                          <template if:false={pol.eta}>
+                            Unknown
+                          </template>
+                        </p>
+                      </div>
+                    </header>
+                    <div class="slds-popover__body">
+                      <lightning-layout multiple-rows="true">
+                        <lightning-layout-item size="6"
+                                               padding="horizontal-small"
+                                               class="slds-m-bottom_x-small">
+                          <span class="slds-form-element__label">Created Date:</span>
+                          <p>
+                            <lightning-formatted-date-time value={pol.createdDate}></lightning-formatted-date-time>
+                          </p>
+                        </lightning-layout-item>
+                        <lightning-layout-item size="6"
+                                               padding="horizontal-small"
+                                               class="slds-m-bottom_x-small">
+                          <span class="slds-form-element__label">Created By:</span>
+                          <p>
+                            {pol.createdBy}
+                          </p>
+                        </lightning-layout-item>
+                        <lightning-layout-item size="12"
+                                               padding="horizontal-small"
+                                               class="slds-m-bottom_x-small">
+                          <span class="slds-form-element__label">Quantities:</span>
+                          <table class="slds-table quantity-table">
+                            <thead>
+                            <tr>
+                              <th class="slds-text-align_center">Ordered</th>
+                              <th class="slds-text-align_center">Received</th>
+                              <th class="slds-text-align_center">Remaining</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                              <td class="slds-text-align_center">{pol.qtyOrdered}</td>
+                              <td class="slds-text-align_center">{pol.qtyReceived}</td>
+                              <td class="slds-text-align_center">{pol.qtyRemaining}</td>
+                            </tr>
+                            </tbody>
+                          </table>
+                        </lightning-layout-item>
+                      </lightning-layout>
+                    </div>
+                  </section>
+                  <lightning-button variant="bare"
+                                    label={pol.poName}
+                                    data-case-part-id={cp_pol_options.casePartId}
+                                    data-pol-id={pol.id}
+                                    onclick={handlePolSelect}
+                                    onmouseover={showPoDetails}
+                                    onmouseout={hidePoDetails}></lightning-button>
+                </div>
+              </template>
+              <template if:false={cp_pol_options.hasPOLs}>
+                <lightning-button label="Create PO"
+                                  variant="brand"
+                                  onclick={handleCreateNew}></lightning-button>
+              </template>
+            </td>
+          </tr>
+        </template>
+        </tbody>
+      </table>
+    </template>
+  </div>
+</template>
