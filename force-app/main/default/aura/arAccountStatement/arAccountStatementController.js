@@ -1,92 +1,60 @@
 ({
     doInit: function(component, event, helper) {
-        helper.toggleSpinner(component, true);
-        component.set('v.columns', [{
-            label: 'Name',
-            fieldName: 'Name',
-            type: 'text'
-        }, {
-            label: 'ERP Order(s)',
-            fieldName: 'billProject',
-            type: 'text'
-        }, {
-            label: 'Balance',
-            fieldName: 'billBalance',
-            type: 'currency',
-            typeAttributes: {
-                currencyCode: 'CAD'
+      helper.toggleSpinner(component, true);
+      component.set('v.columns', helper.COLUMNS );
+      component.set('v.otherColumns', helper.OTHER_COLUMNS);
+      component.set('v.erpColumns', helper.ERP_COLUMNS);
+
+      helper.getAccountId( component )
+      .then(
+        $A.getCallback( function( result ) {
+          component.set( 'v.accountId', result );
+          helper.runAction(component, "c.retrieveAccountTxnDetails", {
+              idAccount: component.get("v.accountId")
+            },
+            function(response) {
+              var results = response.getReturnValue();
+              results = JSON.parse(results);
+              component.set("v.transactionData", results);
+              component.set("v.totalBalance", results.totalBalance );
+              component.set("v.refundAmount", results.totalARBalance);
+              helper.toggleSpinner(component, false);
             }
-        }]);
-        component.set('v.otherColumns', [{
-            label: 'Name',
-            fieldName: 'Name',
-            type: 'text'
-        }, {
-            label: 'Balance',
-            fieldName: 'AcctSeed__Balance__c',
-            type: 'currency',
-            typeAttributes: {
-                currencyCode: 'CAD'
-            }
-        }]);
-        component.set('v.erpColumns', [{
-            label: 'Name',
-            fieldName: 'Name',
-            type: 'text'
-        }, {
-            label: 'Grand Total',
-            fieldName: 'grandTotal',
-            type: 'currency',
-            typeAttributes: {
-                currencyCode: 'CAD'
-            }
-        }, {
-            label: 'Total Billed',
-            fieldName: 'billTotal',
-            type: 'currency',
-            typeAttributes: {
-                currencyCode: 'CAD'
-            }
-        }, {
-            label: 'Unbilled',
-            fieldName: 'erpUnbilled',
-            type: 'currency',
-            typeAttributes: {
-                currencyCode: 'CAD'
-            }
-        }]);
-        helper.runAction(component, "c.retrieveAccountTxnDetails", {
-            idAccount: component.get("v.recordId")
-        }, function(response) {
-            var results = response.getReturnValue();
-            results = JSON.parse(results);
-            component.set("v.transactionData", results);
-            component.set("v.refundAmount", results.totalARBalance);
-            helper.toggleSpinner(component, false);
-        });
-        helper.runAction(component, "c.getOptions", {}, function(response) {
+          );
+
+          helper.runAction(component, "c.getOptions", {}, function(response) {
             component.set("v.options", response.getReturnValue());
-        });
-        helper.runAction(component, "c.getCDOptions", {}, function(response) {
+          });
+
+          helper.runAction(component, "c.getCDOptions", {}, function(response) {
             component.set("v.cdOptions", response.getReturnValue());
-        });
+          });
+        })
+      )
+      .catch(
+        $A.getCallback( function( err ) {
+          LightningUtils.errorToast( err );
+        })
+      );
     },
+
     rowSelected: function(component) {
-        var billTable = component.find('billDataTable');
-        var table;
-        if (billTable != undefined && billTable.length > 1) {
-            for (var i = billTable.length; i == 1; i--) billTable[i].destroy();
-            table = billTable[1];
-        } else table = billTable;
-        // var table = component.find('billDataTable');
-        if (table != undefined) {
-            var selections = table.getSelectedRows();
-            component.set('v.hasSelections', selections.length > 0);
-        } else component.set('v.hasSelections', false);
-        console.log(table);
+      var billTable = component.find('billDataTable');
+      var table;
+      if (billTable != undefined && billTable.length > 1) {
+          for (var i = billTable.length; i == 1; i--) billTable[i].destroy();
+          table = billTable[1];
+      } else table = billTable;
+      // var table = component.find('billDataTable');
+      if (table != undefined) {
+          var selections = table.getSelectedRows();
+          component.set('v.hasSelections', selections.length > 0);
+      } else component.set('v.hasSelections', false);
+      console.log(table);
     },
+
     validate: function(component, event, helper) {
-        helper.validate(component, event, helper);
+      helper.validate(component, event, helper);
     },
     processRefund: function(component, event, helper) {
        helper.toggleSpinner(component, true);
@@ -119,7 +87,7 @@
         }
         helper.closeRefundModal(component, event, helper);
         helper.runAction(component, "c.handleRefund", {
-            idAccount: component.get("v.recordId"),
+            idAccount: component.get("v.accountId"),
             paymentMethod: cdType,
             refundAmount: refundAmount
         }, function(response) {
@@ -147,7 +115,7 @@
             // $A.get('e.force:refreshView').fire();
             helper.toggleSpinner(component, false);
             // navEvt.setParams({
-            //   "recordId": results,
+            //   "accountId": results,
             //   "slideDevName": "related"
             // });
             // navEvt.fire();
@@ -157,7 +125,7 @@
         helper.closeModel(component, event, helper);
         var urlEvent = $A.get("e.force:navigateToURL");
         urlEvent.setParams({
-            "url": "/apex/gpProjectUnbilled_Report?idAccount=" + component.get("v.recordId")
+            "url": "/apex/gpProjectUnbilled_Report?idAccount=" + component.get("v.accountId")
         });
         urlEvent.fire();
     },
@@ -171,7 +139,7 @@
         helper.closeModel(component, event, helper);
         helper.toggleSpinner(component, true);
         helper.runAction(component, "c.applyCashReceipts", {
-            idAccount: component.get("v.recordId"),
+            idAccount: component.get("v.accountId"),
             idCR: crId,
             applyType: applyType
         }, function(response) {
@@ -213,7 +181,7 @@
         helper.closeModel(component, event, helper);
         helper.toggleSpinner(component, true);
         helper.runAction(component, "c.receiveBilling", {
-            idAccount: component.get("v.recordId"),
+            idAccount: component.get("v.accountId"),
             idBills: billIds,
             paymentMethod: typeSelect
         }, function(response) {
@@ -246,7 +214,7 @@
         helper.closeModel(component, event, helper);
         helper.toggleSpinner(component, true);
         helper.runAction(component, "c.receiveBilling", {
-            idAccount: component.get("v.recordId"),
+            idAccount: component.get("v.accountId"),
             idBill: idBill
         }, function(response) {
             helper.toggleSpinner(component, false);

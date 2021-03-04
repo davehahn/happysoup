@@ -1,185 +1,189 @@
 <aura:component access="global" implements="force:appHostable,flexipage:availableForAllPageTypes,force:hasRecordId" controller="arAccountStatement">
 
-    <aura:attribute name="recordId" type="Id" />
-    <aura:attribute name="idBill" type="Id" />
-    <aura:attribute name="idPayable" type="Id" />
-    <aura:attribute name="idDisbursement" type="Id" />
-    <aura:attribute name="transactionData" type="Object" />   
-    <aura:attribute name="listData" type="sObject[]" />   
-    <aura:attribute name="listTitle" type="String" />
-    <aura:attribute name="message" type="String" />
-    <aura:attribute name="messageType" type="String" default="success" />
-    <aura:attribute name="isRefund" type="boolean" default="false"/>
-    <aura:attribute name="isRefundSuccess" type="boolean" default="false"/>
-    <aura:attribute name="isOpen" type="boolean" default="false"/>
-    <aura:attribute name="isOtherList" type="boolean" default="false"/>
-    <aura:attribute name="isERPList" type="boolean" default="false"/>
-    <aura:attribute name="isBillList" type="boolean" default="false"/>
-    <aura:attribute name="isCRList" type="boolean" default="false"/>
-    <aura:attribute name="cssCustomStyle" type="String" />
-    <aura:attribute name="options" type="String[]" /> 
-    <aura:attribute name="columns" type="List" />
-    <aura:attribute name="otherColumns" type="List" />
-    <aura:attribute name="erpColumns" type="List" />
-    <aura:attribute name="hasSelections" type="Boolean" default="false" />
-    <aura:attribute name="receiptType" type="String" />
-    <aura:attribute name="cdOptions" type="String[]" /> 
-    <aura:attribute name="refundAmount" type="Decimal" default="0.00" />
-    <aura:attribute name="cdType" type="String" />
-    <aura:attribute name="btnDisabled" type="Boolean" default="false" />
+  <aura:attribute name="recordId" type="Id" />
+  <aura:attribute name="accountId" type="Id" />
+  <aura:attribute name="idBill" type="Id" />
+  <aura:attribute name="idPayable" type="Id" />
+  <aura:attribute name="idDisbursement" type="Id" />
+  <aura:attribute name="transactionData" type="Object" />
+  <aura:attribute name="listData" type="sObject[]" />
+  <aura:attribute name="listTitle" type="String" />
+  <aura:attribute name="message" type="String" />
+  <aura:attribute name="messageType" type="String" default="success" />
+  <aura:attribute name="isRefund" type="boolean" default="false"/>
+  <aura:attribute name="isRefundSuccess" type="boolean" default="false"/>
+  <aura:attribute name="isOpen" type="boolean" default="false"/>
+  <aura:attribute name="isOtherList" type="boolean" default="false"/>
+  <aura:attribute name="isERPList" type="boolean" default="false"/>
+  <aura:attribute name="isBillList" type="boolean" default="false"/>
+  <aura:attribute name="isCRList" type="boolean" default="false"/>
+  <aura:attribute name="cssCustomStyle" type="String" />
+  <aura:attribute name="options" type="String[]" />
+  <aura:attribute name="columns" type="List" />
+  <aura:attribute name="otherColumns" type="List" />
+  <aura:attribute name="erpColumns" type="List" />
+  <aura:attribute name="hasSelections" type="Boolean" default="false" />
+  <aura:attribute name="receiptType" type="String" />
+  <aura:attribute name="cdOptions" type="String[]" />
+  <aura:attribute name="refundAmount" type="Decimal" default="0.00" />
+  <aura:attribute name="cdType" type="String" />
+  <aura:attribute name="btnDisabled" type="Boolean" default="false" />
+  <aura:attribute name="totalBalance" type="Decimal" />
 
-    <style>{!v.cssCustomStyle}</style>
-    <ltng:require scripts="{!join(',', $Resource.Libraries +'/js/LightningApex.js',
-                                     $Resource.Libraries +'/js/LightningUtils.js') }"
-                  afterScriptsLoaded="{!c.doInit}"/>
-    <aura:if isTrue="{!v.isOpen}">
-       <!--###### MODAL BOX Start From Here ######--> 
-          <div role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
-            <div class="slds-modal__container">
-              <!-- ###### MODAL BOX HEADER Part Start From Here ######-->
-              <c:Toaster aura:id="toast" />
-              <div class="slds-modal__header">
-                <h2 id="header99" class="slds-text-heading--medium">{!v.listTitle}</h2>
-              </div>
-              <!--###### MODAL BOX BODY Part Start From Here ######-->
-              <div class="slds-modal__content slds-p-around--medium">
-                  <aura:if isTrue="{!v.isOtherList}"> 
-                  <lightning:datatable aura:id="otherDataTable"
-                             data="{! v.listData }"
-                             columns="{! v.otherColumns }"
-                             keyField="Id"
-                             hideCheckboxColumn="true"/>
-                  </aura:if>
-                  <aura:if isTrue="{!v.isERPList}"> 
-                  <lightning:datatable aura:id="otherDataTable"
-                             data="{! v.listData }"
-                             columns="{! v.erpColumns }"
-                             keyField="Id"
-                             hideCheckboxColumn="true"/>
-                  </aura:if>
-                  <aura:if isTrue="{!v.isBillList}"> 
-                    <lightning:datatable aura:id="billDataTable"
-                             data="{! v.listData }"
-                             columns="{! v.columns }"
-                             keyField="Id"
-                             onrowselection="{!c.rowSelected}"/>
-                  </aura:if>
-                  <aura:if isTrue="{!v.isCRList}"> 
-                  <table class="slds-table slds-table_bordered slds-table_cell-buffer">
-                      <thead>
-                        <tr class="slds-text-title_caps">
-                          <th scope="col" width="20%">
-                            <div class="slds-truncate" title="Name">CR Name</div>
-                          </th>
-                          <th scope="col" width="30%" class="slds-text-align_right">
-                            <div class="slds-truncate" title="Balance">Balance</div>
-                          </th>
-                          <th scope="col" width="50%">
-                            <div class="slds-truncate" title="Action">&nbsp;</div>
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <aura:iteration items="{!v.transactionData.listReceipts}" var="a">
-                            <tr>
-                              <th scope="row" data-label="Name">
-                                  <a href="{!'/one/one.app?#/sObject/'+ a.Id + '/view'}" target="_blank">{#a.Name}</a>
-                              </th>
-                              <td data-label="Amount" class="slds-text-align_right">
-                                <div class="slds-truncate" title="{#a.AcctSeed__Balance__c}">
-                                  <lightning:formattedNumber value="{#a.AcctSeed__Balance__c}" style="currency" currencyCode="CAD" />
-                                </div>
-                              </td>
-                              <td class="slds-text-align_right">
-                                <aura:if isTrue="{#a.GMBLASG__Posted__c}">
-                                  <lightning:buttonMenu menuAlignment="right" iconName="utility:down" alternativeText="Menu" onselect="{! c.createApplyCRSelect }">
-                                      <lightning:menuItem label="Apply on Existing" value="{#a.Id + '__exist'}"/>
-                                      <lightning:menuItem label="Create &amp; Apply" value="{#a.Id + '__create'}" />
-                                    </lightning:buttonMenu>
-                                  <aura:set attribute="else">
-                                    Not Posted
-                                  </aura:set>
-                                </aura:if>
-                              </td>
-                            </tr>
-                        </aura:iteration>
-                      </tbody>
-                    </table>
-                  </aura:if>
-              </div>
-              <!--###### MODAL BOX FOOTER Part Start From Here ######-->
-              <div class="slds-modal__footer">
-                <aura:renderIf isTrue="{!v.listTitle == 'Billings'}">
-                  <div class="select-auto-width">
-                   <lightning:select aura:id="receiptTypes" class="slds-select" disabled="{! not(v.hasSelections)}">
-                      <option value="" text="Select Receipt Type"></option>
-                      <aura:iteration items="{!v.options}" var="option">
-                        <option value="{!option}" text="{!option}"></option>
+  <style>{!v.cssCustomStyle}</style>
+
+  <ltng:require scripts="{!join(',', $Resource.Libraries +'/js/LightningApex.js',
+                                   $Resource.Libraries +'/js/LightningUtils.js') }"
+                afterScriptsLoaded="{!c.doInit}"/>
+
+  <aura:if isTrue="{!v.isOpen}">
+     <!--###### MODAL BOX Start From Here ######-->
+        <div role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+          <div class="slds-modal__container">
+            <!-- ###### MODAL BOX HEADER Part Start From Here ######-->
+            <c:Toaster aura:id="toast" />
+            <div class="slds-modal__header">
+              <h2 id="header99" class="slds-text-heading--medium">{!v.listTitle}</h2>
+            </div>
+            <!--###### MODAL BOX BODY Part Start From Here ######-->
+            <div class="slds-modal__content slds-p-around--medium">
+                <aura:if isTrue="{!v.isOtherList}">
+                <lightning:datatable aura:id="otherDataTable"
+                           data="{! v.listData }"
+                           columns="{! v.otherColumns }"
+                           keyField="Id"
+                           hideCheckboxColumn="true"/>
+                </aura:if>
+                <aura:if isTrue="{!v.isERPList}">
+                <lightning:datatable aura:id="otherDataTable"
+                           data="{! v.listData }"
+                           columns="{! v.erpColumns }"
+                           keyField="Id"
+                           hideCheckboxColumn="true"/>
+                </aura:if>
+                <aura:if isTrue="{!v.isBillList}">
+                  <lightning:datatable aura:id="billDataTable"
+                           data="{! v.listData }"
+                           columns="{! v.columns }"
+                           keyField="Id"
+                           onrowselection="{!c.rowSelected}"/>
+                </aura:if>
+                <aura:if isTrue="{!v.isCRList}">
+                <table class="slds-table slds-table_bordered slds-table_cell-buffer">
+                    <thead>
+                      <tr class="slds-text-title_caps">
+                        <th scope="col" width="20%">
+                          <div class="slds-truncate" title="Name">CR Name</div>
+                        </th>
+                        <th scope="col" width="30%" class="slds-text-align_right">
+                          <div class="slds-truncate" title="Balance">Balance</div>
+                        </th>
+                        <th scope="col" width="50%">
+                          <div class="slds-truncate" title="Action">&nbsp;</div>
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <aura:iteration items="{!v.transactionData.listReceipts}" var="a">
+                          <tr>
+                            <th scope="row" data-label="Name">
+                                <a href="{!'/one/one.app?#/sObject/'+ a.Id + '/view'}" target="_blank">{#a.Name}</a>
+                            </th>
+                            <td data-label="Amount" class="slds-text-align_right">
+                              <div class="slds-truncate" title="{#a.AcctSeed__Balance__c}">
+                                <lightning:formattedNumber value="{#a.AcctSeed__Balance__c}" style="currency" currencyCode="CAD" />
+                              </div>
+                            </td>
+                            <td class="slds-text-align_right">
+                              <aura:if isTrue="{#a.GMBLASG__Posted__c}">
+                                <lightning:buttonMenu menuAlignment="right" iconName="utility:down" alternativeText="Menu" onselect="{! c.createApplyCRSelect }">
+                                    <lightning:menuItem label="Apply on Existing" value="{#a.Id + '__exist'}"/>
+                                    <lightning:menuItem label="Create &amp; Apply" value="{#a.Id + '__create'}" />
+                                  </lightning:buttonMenu>
+                                <aura:set attribute="else">
+                                  Not Posted
+                                </aura:set>
+                              </aura:if>
+                            </td>
+                          </tr>
                       </aura:iteration>
-                   </lightning:select>
-                  </div>&nbsp;
-                  <lightning:button class="slds-button slds-button--brand" label="Receive" onclick="{!c.receiveBillings}" disabled="{! not(v.hasSelections)}" />
-                </aura:renderIf>
-                <aura:renderIf isTrue="{!v.isERPList}">
-                  <div class="select-auto-width" title="Unbilled Report"><a onclick="{!c.gotoVFUnbilledPage}" href="javascript:void(0);">&rarr;&nbsp;Go To Unbilled ERP Order Items Report </a>&nbsp;&nbsp;</div>
-                </aura:renderIf>
-                <button class="slds-button slds-button--neutral" onclick="{!c.closeModel}" >Close</button>
-              </div>
+                    </tbody>
+                  </table>
+                </aura:if>
+            </div>
+            <!--###### MODAL BOX FOOTER Part Start From Here ######-->
+            <div class="slds-modal__footer">
+              <aura:renderIf isTrue="{!v.listTitle == 'Billings'}">
+                <div class="select-auto-width">
+                 <lightning:select aura:id="receiptTypes" class="slds-select" disabled="{! not(v.hasSelections)}">
+                    <option value="" text="Select Receipt Type"></option>
+                    <aura:iteration items="{!v.options}" var="option">
+                      <option value="{!option}" text="{!option}"></option>
+                    </aura:iteration>
+                 </lightning:select>
+                </div>&nbsp;
+                <lightning:button class="slds-button slds-button--brand" label="Receive" onclick="{!c.receiveBillings}" disabled="{! not(v.hasSelections)}" />
+              </aura:renderIf>
+              <aura:renderIf isTrue="{!v.isERPList}">
+                <div class="select-auto-width" title="Unbilled Report"><a onclick="{!c.gotoVFUnbilledPage}" href="javascript:void(0);">&rarr;&nbsp;Go To Unbilled ERP Order Items Report </a>&nbsp;&nbsp;</div>
+              </aura:renderIf>
+              <button class="slds-button slds-button--neutral" onclick="{!c.closeModel}" >Close</button>
             </div>
           </div>
-          <div class="slds-backdrop slds-backdrop--open"></div>
-          <!--###### MODAL BOX Part END Here ######-->
-     </aura:if>
-     <aura:if isTrue="{!v.isRefund}"> 
-          <div role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
-            <div class="slds-modal__container">
-              <div class="slds-modal__header">
-                <h2 id="header99" class="slds-text-heading--medium">Refund to Customer</h2>
-              </div>
-              <div class="slds-modal__content slds-p-around--medium">
-                <div class="slds-form slds-form_stacked slds-m-horizontal_large">
-                    <div class="slds-form-element">
-                      <lightning:select name="cdTypes" value="{!v.cdType}" label="Select Disbursement Type" onchange="{!c.validate}">
-                        <aura:iteration items="{!v.cdOptions}" var="option">
-                          <option value="{!option}" text="{!option}"></option>
-                        </aura:iteration>
-                      </lightning:select>
-                    </div>
-                    <div class="slds-form-element">
-                        <div class="slds-form-element__control">
-                          <lightning:input aura:id="refundAmountInput" type="text" label="Amount to refund" onchange="{!c.validate}" value="{!v.refundAmount}"/>
-                        </div>
+        </div>
+        <div class="slds-backdrop slds-backdrop--open"></div>
+        <!--###### MODAL BOX Part END Here ######-->
+   </aura:if>
+  <aura:if isTrue="{!v.isRefund}">
+      <div role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+        <div class="slds-modal__container">
+          <div class="slds-modal__header">
+            <h2 id="header99" class="slds-text-heading--medium">Refund to Customer</h2>
+          </div>
+          <div class="slds-modal__content slds-p-around--medium">
+            <div class="slds-form slds-form_stacked slds-m-horizontal_large">
+                <div class="slds-form-element">
+                  <lightning:select name="cdTypes" value="{!v.cdType}" label="Select Disbursement Type" onchange="{!c.validate}">
+                    <aura:iteration items="{!v.cdOptions}" var="option">
+                      <option value="{!option}" text="{!option}"></option>
+                    </aura:iteration>
+                  </lightning:select>
+                </div>
+                <div class="slds-form-element">
+                    <div class="slds-form-element__control">
+                      <lightning:input aura:id="refundAmountInput" type="text" label="Amount to refund" onchange="{!c.validate}" value="{!v.refundAmount}"/>
                     </div>
                 </div>
-              </div>
-              <div class="slds-modal__footer">
-                <lightning:button label="Process Refund" onclick="{!c.processRefund}" disabled="{!v.btnDisabled}" />
-                <button class="slds-button slds-button--neutral" onclick="{!c.closeRefundModal}" >Close</button>
-              </div>
             </div>
           </div>
-          <div class="slds-backdrop slds-backdrop--open"></div>
-     </aura:if>
-     <aura:if isTrue="{!v.isRefundSuccess}"> 
-          <div role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
-            <div class="slds-modal__container">
-              <div class="slds-modal__header">
-                <h2 id="header99" class="slds-text-heading--medium">Refund Successfull</h2>
-              </div>
-              <div class="slds-modal__content slds-p-around--medium">
-                <div class="slds-form slds-form_stacked slds-m-horizontal_large">
-                  To View the Refund Billing <a href="{!'/one/one.app?#/sObject/'+ v.idBill + '/view'}" target="_blank">Click here</a><br/>
-                  To View the Refund AP <a href="{!'/one/one.app?#/sObject/'+ v.idPayable + '/view'}" target="_blank">Click here</a><br/>
-                  To View the Refund CD <a href="{!'/one/one.app?#/sObject/'+ v.idDisbursement + '/view'}" target="_blank">Click here</a><br/>
-                </div>
-              </div>
-              <div class="slds-modal__footer">
-                <button class="slds-button slds-button--neutral" onclick="{!c.closeRefundSuccessModal}" >Close</button>
-              </div>
+          <div class="slds-modal__footer">
+            <lightning:button label="Process Refund" onclick="{!c.processRefund}" disabled="{!v.btnDisabled}" />
+            <button class="slds-button slds-button--neutral" onclick="{!c.closeRefundModal}" >Close</button>
+          </div>
+        </div>
+      </div>
+      <div class="slds-backdrop slds-backdrop--open"></div>
+  </aura:if>
+  <aura:if isTrue="{!v.isRefundSuccess}">
+      <div role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+        <div class="slds-modal__container">
+          <div class="slds-modal__header">
+            <h2 id="header99" class="slds-text-heading--medium">Refund Successfull</h2>
+          </div>
+          <div class="slds-modal__content slds-p-around--medium">
+            <div class="slds-form slds-form_stacked slds-m-horizontal_large">
+              To View the Refund Billing <a href="{!'/one/one.app?#/sObject/'+ v.idBill + '/view'}" target="_blank">Click here</a><br/>
+              To View the Refund AP <a href="{!'/one/one.app?#/sObject/'+ v.idPayable + '/view'}" target="_blank">Click here</a><br/>
+              To View the Refund CD <a href="{!'/one/one.app?#/sObject/'+ v.idDisbursement + '/view'}" target="_blank">Click here</a><br/>
             </div>
           </div>
-          <div class="slds-backdrop slds-backdrop--open"></div>
-     </aura:if>
+          <div class="slds-modal__footer">
+            <button class="slds-button slds-button--neutral" onclick="{!c.closeRefundSuccessModal}" >Close</button>
+          </div>
+        </div>
+      </div>
+      <div class="slds-backdrop slds-backdrop--open"></div>
+  </aura:if>
     <lightning:card >
         <aura:set attribute="title">
             Receivable Balance:
@@ -213,22 +217,6 @@
                   <lightning:formattedNumber value="{!v.transactionData.cashReceiptBalance}" style="currency" currencyCode="CAD" />
                  </td>
               </tr>
-              <!-- <tr>
-                 <th scope="row" data-label="Transaction Parent">
-                    <div class="slds-truncate" title="Receipts"><a href="javascript:void(0);">ERP Amount</a></div>
-                 </th>
-                 <td data-label="Balance Amount" class="slds-text-align_right">
-                  <lightning:formattedNumber value="{!v.transactionData.projectTotal}" style="currency" currencyCode="CAD" />
-                 </td>
-              </tr>
-              <tr>
-                 <th scope="row" data-label="Transaction Parent">
-                    <div class="slds-truncate" title="Receipts"><a href="javascript:void(0);">ERP Amount Billed</a></div>
-                 </th>
-                 <td data-label="Balance Amount" class="slds-text-align_right">
-                  <lightning:formattedNumber value="{!v.transactionData.projectTotalBilled}" style="currency" currencyCode="CAD" />
-                 </td>
-              </tr> -->
               <tr>
                  <th scope="row" data-label="Transaction Parent">
                     <div class="slds-truncate" title="Receipts"><a onclick="{!c.openModelERP}" href="javascript:void(0);">ERP Unbilled Amount</a></div>
@@ -298,6 +286,7 @@
            </tbody>
         </table>
     </lightning:card>
+
     <lightning:layout class="slds-m-bottom_small slds-border_bottom">
         <lightning:layoutItem size="7">
           <div class="sale-label">
