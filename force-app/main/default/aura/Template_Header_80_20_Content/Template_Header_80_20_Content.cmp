@@ -1,0 +1,45 @@
+<!--
+ - Created by dave on 2021-03-05.
+ -->
+
+<aura:component implements="lightning:recordHomeTemplate" description=" Full Header, 80/20 split, Full Region">
+  <aura:attribute name="header" type="Aura.Component[]" />
+  <aura:attribute name="left" type="Aura.Component[]" />
+  <aura:attribute name="right" type="Aura.Component[]" />
+  <aura:attribute name="content" type="Aura.Component[]" />
+
+  <div>
+    <!-- HEADER -->
+    <lightning:layout>
+      <lightning:layoutItem size="12">
+        {!v.header}
+      </lightning:layoutItem>
+    </lightning:layout>
+
+    <!-- SPLIT REGION -->
+    <lightning:layout multipleRows="true" verticalAlign="center">
+      <lightning:layoutItem size="12"
+                            smallDeviceSize="12"
+                            mediumDeviceSize="8"
+                            largeDeviceSize="10"
+                            class="slds-p-right_small slds-p-top_small slds-p-bottom_small">
+        {!v.left}
+      </lightning:layoutItem>
+      <lightning:layoutItem size="12"
+                            smallDeviceSize="12"
+                            mediumDeviceSize="4"
+                            largeDeviceSize="2"
+                            class="slds-p-left_small slds-p-top_small slds-p-bottom_small">
+        {!v.right}
+      </lightning:layoutItem>
+    </lightning:layout>
+
+    <!-- CONTENT -->
+    <lightning:layout>
+      <lightning:layoutItem size="12">
+        {!v.content}
+      </lightning:layoutItem>
+    </lightning:layout>
+  </div>
+
+</aura:component>

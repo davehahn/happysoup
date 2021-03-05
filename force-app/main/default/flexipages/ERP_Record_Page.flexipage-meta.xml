@@ -31,11 +31,10 @@
                 <componentName>force:relatedListQuickLinksContainer</componentName>
             </componentInstance>
         </itemInstances>
-        <itemInstances>
-            <componentInstance>
-                <componentName>ERP_AccountBalance</componentName>
-            </componentInstance>
-        </itemInstances>
+        <name>header</name>
+        <type>Region</type>
+    </flexiPageRegions>
+    <flexiPageRegions>
         <itemInstances>
             <componentInstance>
                 <componentInstanceProperties>
@@ -45,12 +44,16 @@
                 <componentName>runtime_sales_pathassistant:pathAssistant</componentName>
             </componentInstance>
         </itemInstances>
+        <name>left</name>
+        <type>Region</type>
+    </flexiPageRegions>
+    <flexiPageRegions>
         <itemInstances>
             <componentInstance>
-                <componentName>ERPOrder_CreatePartsRequest</componentName>
+                <componentName>ERP_AccountBalance</componentName>
             </componentInstance>
         </itemInstances>
-        <name>header</name>
+        <name>right</name>
         <type>Region</type>
     </flexiPageRegions>
     <flexiPageRegions>
@@ -297,6 +300,11 @@
     <flexiPageRegions>
         <itemInstances>
             <componentInstance>
+                <componentName>ERPOrder_CreatePartsRequest</componentName>
+            </componentInstance>
+        </itemInstances>
+        <itemInstances>
+            <componentInstance>
                 <componentInstanceProperties>
                     <name>tabs</name>
                     <value>facet-770b770f-7b34-478b-a1c1-8e96fa441db6</value>
@@ -304,13 +312,13 @@
                 <componentName>flexipage:tabset</componentName>
             </componentInstance>
         </itemInstances>
-        <name>main</name>
+        <name>content</name>
         <type>Region</type>
     </flexiPageRegions>
     <masterLabel>ERP Record Page</masterLabel>
     <sobjectType>AcctSeed__Project__c</sobjectType>
     <template>
-        <name>flexipage:recordHomeSingleColTemplateDesktop</name>
+        <name>Template_Header_80_20_Content</name>
     </template>
     <type>RecordPage</type>
 </FlexiPage>
