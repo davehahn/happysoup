@@ -108,7 +108,7 @@
             <assignToReference>varDisplayTextLoop</assignToReference>
             <operator>Add</operator>
             <value>
-                <stringValue>&lt;br&gt;&lt;br&gt;</stringValue>
+                <stringValue>&lt;br&gt;</stringValue>
             </value>
         </assignmentItems>
         <assignmentItems>
@@ -118,6 +118,27 @@
                 <elementReference>Individual_IIM.Id</elementReference>
             </value>
         </assignmentItems>
+        <assignmentItems>
+            <assignToReference>varDisplayTextLoop</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>&lt;b&gt;Movement Date: &lt;/b&gt;</stringValue>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>varDisplayTextLoop</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <elementReference>Individual_IIM.AcctSeedERP__Movement_Date__c</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>varDisplayTextLoop</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>&lt;br&gt;&lt;br&gt;</stringValue>
+            </value>
+        </assignmentItems>
         <connector>
             <targetReference>Display_Loop_Values</targetReference>
         </connector>
@@ -125,7 +146,7 @@
     <assignments>
         <name>Assign_Summary_Values</name>
         <label>Assign Summary Values</label>
-        <locationX>997</locationX>
+        <locationX>996</locationX>
         <locationY>642</locationY>
         <assignmentItems>
             <assignToReference>varDisplayTextSummary</assignToReference>
@@ -223,6 +244,27 @@
             <operator>Add</operator>
             <value>
                 <elementReference>NewACV</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>varDisplayTextSummary</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>&lt;br&gt;</stringValue>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>varDisplayTextSummary</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>&lt;b&gt;Movement Date: &lt;/b&gt;</stringValue>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>varDisplayTextSummary</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <elementReference>Individual_IIM.AcctSeedERP__Movement_Date__c</elementReference>
             </value>
         </assignmentItems>
         <assignmentItems>
@@ -364,6 +406,9 @@
         <queriedFields>GMBLASERP__Serial_Number__c</queriedFields>
         <queriedFields>AcctSeedERP__Quantity__c</queriedFields>
         <queriedFields>AcctSeedERP__Unit_Cost__c</queriedFields>
+        <queriedFields>AcctSeedERP__Movement_Date__c</queriedFields>
+        <sortField>AcctSeedERP__Movement_Date__c</sortField>
+        <sortOrder>Desc</sortOrder>
     </recordLookups>
     <recordLookups>
         <name>Get_New_ACV</name>
