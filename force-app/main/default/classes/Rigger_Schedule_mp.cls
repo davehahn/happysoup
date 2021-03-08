@@ -21,6 +21,9 @@ public with sharing class Rigger_Schedule_mp {
 		public List<AcctSeed__Project_Task__c> tasks {get; set;}
 		public Integer jobCount {get; set;}
 		public Decimal timeEstimate {get; set;}
+		public Decimal timeSpent { get; set; }
+		public Decimal progress { get; set; }
+		public String progressClass { get; set; }
 		public String serviceDate { get; set;}
 		public String openTimeEntryId;
 		public Boolean hasStartedTimeEntry;
@@ -59,6 +62,8 @@ public with sharing class Rigger_Schedule_mp {
 				}
 				this.timeEstimate = riggingTime + taskTime;
 			}
+
+			setProgress();
 		}
 
 		public JobWrapper(Rigger_Job__c job, List<MaterialWrapper> materialWrappers, List<AcctSeed__Project_Task__c> tasks, Integer jobCount) {
@@ -108,6 +113,7 @@ public with sharing class Rigger_Schedule_mp {
 				this.timeEstimate = riggingTime + taskTime;
 				System.debug(this.timeEstimate);
 			}
+			setProgress();
 		}
 
 		private void setTimeEntryStatus()
@@ -118,6 +124,7 @@ public with sharing class Rigger_Schedule_mp {
 				this.hasStartedTimeEntry = true;
 				this.openTimeEntryId = this.job.Rigger_Job_Time_Entries__r[0].Id;
 			}
+			this.timeSpent = this.job.Actual_Time_Spent_Hours__c;
 		}
 
 		private void setTimeToComplete()
@@ -125,6 +132,23 @@ public with sharing class Rigger_Schedule_mp {
 			Integer hours = Integer.valueOf( job.Actual_Time_Spent__c / 60 );
 			Integer minutes = Integer.valueOf( job.Actual_Time_Spent__c - ( hours * 60 ) );
 			this.timeToComplete = String.valueOf(hours) + ':' + String.valueOf(minutes).leftPad(2, '0');
+		}
+
+		private void setProgress()
+		{
+			if( this.timeEstimate == 0 )
+			{
+				this.progress = 0;
+			}
+			else
+			{
+				this.progress = (( this.timeSpent / this.timeEstimate ) * 100);
+			}
+			this.progressClass = this.progress > 100 ?
+				'over-time' :
+				this.hasStartedTimeEntry ?
+					'in-progress' :
+					'';
 		}
 
 		private void setServiceDate()
@@ -184,6 +208,7 @@ public with sharing class Rigger_Schedule_mp {
 		query += 'ActualEnd__c, ';
 		query += 'ActualStart__c, ';
 		query += 'Actual_Time_Spent__c, ';
+		query += 'Actual_Time_Spent_Hours__c, ';
 		query += 'ActualTime__c, ';
 		query += 'Warranty_Time__c, ';
 		query += 'Non_Warranty_Time__c, ';
@@ -305,6 +330,7 @@ public with sharing class Rigger_Schedule_mp {
 		List<Rigger_Job__c> jobs = [SELECT ActualEnd__c,
 																			 ActualStart__c,
 																		   Actual_Time_Spent__c,
+			 																 Actual_Time_Spent_Hours__c,
 																			 ActualTime__c,
 																			 Warranty_Time__c,
 																			 Non_Warranty_Time__c,
@@ -448,6 +474,7 @@ public with sharing class Rigger_Schedule_mp {
 									 ActualStart__c,
 									 ActualTime__c,
 									 Actual_Time_Spent__c,
+									 Actual_Time_Spent_Hours__c,
 									 Warranty_Time__c,
 									 Non_Warranty_Time__c,
 									 BilledNotes__c,
@@ -504,6 +531,7 @@ public with sharing class Rigger_Schedule_mp {
 		query += 'Warranty_Time__c, ';
 		query += 'Non_Warranty_Time__c, ';
 		query += 'Actual_Time_Spent__c, ';
+		query += 'Actual_Time_Spent_Hours__c, ';
 		query += 'BilledNotes__c, ';
 		query += 'BilledOther__c, ';
 		query += 'BilledRetail__c, ';
@@ -744,6 +772,7 @@ public with sharing class Rigger_Schedule_mp {
 		Rigger_Job__c job = [SELECT ActualEnd__c,
 															 ActualStart__c,
 															 Actual_Time_Spent__c,
+															 Actual_Time_Spent_Hours__c,
 															 ActualTime__c,
 															 Warranty_Time__c,
 			                         Non_Warranty_Time__c,
@@ -1221,6 +1250,7 @@ public with sharing class Rigger_Schedule_mp {
 		query += 'ActualEnd__c, ';
 		query += 'ActualStart__c, ';
 		query += 'Actual_Time_Spent__c, ';
+		query += 'Actual_Time_Spent_Hours__c, ';
 		query += 'ActualTime__c, ';
 		query += 'Warranty_Time__c, ';
 		query += 'Non_Warranty_Time__c, ';

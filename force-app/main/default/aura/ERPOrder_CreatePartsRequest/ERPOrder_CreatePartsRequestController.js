@@ -14,8 +14,15 @@
     helper.getInitData(component)
     .then(
       $A.getCallback( function(result) {
+        console.log( JSON.parse(JSON.stringify(result)));
         if( Object.keys(result).indexOf('erp') >= 0 )
+        {
           component.set('v.stage', JSON.parse(result.erp).Stage__c );
+        }
+        if( Object.keys(result).indexOf('canCreate') >= 0 )
+        {
+          component.set('v.canCreate', result.canCreate === 'true' );
+        }
         if( Object.keys(result).indexOf('cases') >= 0 )
         {
           var cases = JSON.parse( result.cases );

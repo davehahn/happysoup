@@ -244,6 +244,7 @@ public class OpportunityTriggerHandler {
       {
         //reCalculateLineItems(newMap,oldMap);
         Map<Id, Map<String, String>> preInsuranceChanged = new Map<Id, Map<String, String>>();
+        Set<Id> nowCustomerAccountIds = new Set<Id>();
         for( Opportunity opp : listNew )
         {
           Opportunity oOpp = oldMap.get( opp.Id );
@@ -268,9 +269,19 @@ public class OpportunityTriggerHandler {
             data.put('termChanged', (opp.Finance_Term__c != oOpp.Finance_Term__c || opp.Insurance_Term__c != oOpp.Insurance_Term__c) ? 'true' : 'false');
             preInsuranceChanged.put( opp.Id, data );
           }
+          if( opp.Approved__c  && !oOpp.Approved__c )
+          {
+            nowCustomerAccountIds.add( opp.AccountId );
+          }
         }
         if( preInsuranceChanged.size() > 0 )
-          recalcInsuranceLines( preInsuranceChanged );
+        {
+          recalcInsuranceLines(preInsuranceChanged);
+        }
+        if( nowCustomerAccountIds.size() > 0 )
+        {
+          updateAccountsToCustomers( nowCustomerAccountIds );
+        }
       }
       if(boolIsDelete)
       {
@@ -278,6 +289,27 @@ public class OpportunityTriggerHandler {
       }
     }
 
+  }
+
+  private static void updateAccountsToCustomers( Set<Id> acctIds )
+  {
+    List<Account> accts = [
+      SELECT
+        Id,
+        Type
+      FROM Account
+      WHERE Id = :acctIds
+    ];
+    List<Account> toUpdate = new List<Account>();
+    for( Account acct : accts )
+    {
+      if( acct.Type != 'Legend Customer' )
+      {
+        acct.Type = 'Legend Customer';
+        toUpdate.add( acct );
+      }
+    }
+    update toUpdate;
   }
 
   private static Set<Id> findQuebecAccts( Opportunity[] opps )

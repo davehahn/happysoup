@@ -117,6 +117,10 @@ public inherited sharing class Project_Service
       {
         this.record.GMBLASERP__Warehouse__c = Warehouse_Selector.selectDefaultWarehouseForUser().Id;
       }
+      if( this.record.Payment_Method__c == 'Finance' )
+      {
+        this.record.Payment_Status__c = 'Approved for Financing';
+      }
     }
   }
 

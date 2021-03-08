@@ -277,6 +277,29 @@
               background-image-repeat: no-repeat;
             }
           }
+
+          &.four-node {
+            & > table,
+            & > div > table {
+              tr td {
+                width: 25%;
+                & img {
+                  left: 0 !important;
+                }
+              }
+            }
+            & > table {
+              width:520px;
+            }
+            & > div > table tr td {
+              padding: 0;
+              padding-left: 10px;
+            }
+            & > div {
+              background-image: url('images/bg_520_4node.png');
+              background-image-repeat: no-repeat;
+            }
+          }
         }
       }
     }// /div2(right)

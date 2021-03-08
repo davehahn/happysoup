@@ -162,4 +162,22 @@ private class OpportunityTrigger_Test {
     }
   }
 
+  @IsTest
+  static void updateAccountToLegendCustomer_Test()
+  {
+    Account customer = Factory_Account.insertFullPersonAccount('Testy', 'McTesterson');
+    Account beforeAcct = [SELECT Id, Type FROM Account WHERE Id = :customer.Id];
+    Opportunity opp = Factory_Opportunity.insertOpportunity( customer, Test.getStandardPricebookId() );
+
+    Test.startTest();
+    opp.Approved__c = true;
+    update opp;
+    Test.stopTest();
+
+    Account afterAcct = [SELECT Id, Type FROM Account WHERE Id = :customer.Id];
+
+    System.assert( beforeAcct.Type != 'Legend Customer', 'Account type should not be Legend Customer Pending before Sales manager Approval' );
+    System.assert( afterAcct.Type == 'Legend Customer', 'Account type should now be Legend Customer');
+  }
+
 }

@@ -21,10 +21,11 @@
         $A.getCallback( 
           function( wrappedJobs ) {
             console.log('getJobs callback');
-            console.dir( wrappedJobs );
-            for (j of wrappedJobs) {
+            console.log( JSON.parse(JSON.stringify(wrappedJobs )));
+            wrappedJobs.forEach( j => {
+              console.log(j);
               j.job.CreatedDate = j.job.CreatedDate.substr(0,10);
-              
+
               if (j.job.DueDate__c) {
                 j.job.age = self.daysBetween(new Date(), j.job.DueDate__c);
               } else {
@@ -94,7 +95,10 @@
               if (j.timeEstimate !== undefined) {
                 hours += parseFloat(j.timeEstimate);
               }
-            }
+            })
+//            for(j of wrappedJobs) {
+//
+//            }
             component.set('v.hours', Number(Math.round(hours+'e2')+'e-2'));
 
             $A.util.addClass(component.find('spinner'), 'slds-hide');
