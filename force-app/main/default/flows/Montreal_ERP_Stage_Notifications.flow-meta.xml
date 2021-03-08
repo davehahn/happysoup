@@ -7,9 +7,9 @@
                 <stringValue>Montreal_ERP_Tagging_Pending</stringValue>
             </value>
         </processMetadataValues>
-        <name>myRule_51_A1</name>
+        <name>myRule_61_A1</name>
         <label>Notify Max</label>
-        <locationX>5100</locationX>
+        <locationX>6100</locationX>
         <locationY>200</locationY>
         <actionName>AcctSeed__Project__c.Montreal_ERP_Tagging_Pending</actionName>
         <actionType>emailAlert</actionType>
@@ -20,6 +20,327 @@
             </value>
         </inputParameters>
     </actionCalls>
+    <apiVersion>51.0</apiVersion>
+    <decisions>
+        <name>isChangedDecision14_myRule_13_Stage_c</name>
+        <label>isChangedDecision14_myRule_13_Stage_c</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>isChangedDecision20_myRule_19_Stage_c</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>default</defaultConnectorLabel>
+        <rules>
+            <name>isChangedRule_14_myRule_13_Stage_c</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>myVariable_old</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>myVariable_old.Stage__c</leftValueReference>
+                <operator>NotEqualTo</operator>
+                <rightValue>
+                    <elementReference>myVariable_current.Stage__c</elementReference>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>isChangedDecision20_myRule_19_Stage_c</targetReference>
+            </connector>
+            <label>isChangedRule_14_myRule_13_Stage_c</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>isChangedDecision20_myRule_19_Stage_c</name>
+        <label>isChangedDecision20_myRule_19_Stage_c</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>isChangedDecision26_myRule_25_Stage_c</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>default</defaultConnectorLabel>
+        <rules>
+            <name>isChangedRule_20_myRule_19_Stage_c</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>myVariable_old</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>myVariable_old.Stage__c</leftValueReference>
+                <operator>NotEqualTo</operator>
+                <rightValue>
+                    <elementReference>myVariable_current.Stage__c</elementReference>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>isChangedDecision26_myRule_25_Stage_c</targetReference>
+            </connector>
+            <label>isChangedRule_20_myRule_19_Stage_c</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>isChangedDecision26_myRule_25_Stage_c</name>
+        <label>isChangedDecision26_myRule_25_Stage_c</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>isChangedDecision32_myRule_31_Stage_c</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>default</defaultConnectorLabel>
+        <rules>
+            <name>isChangedRule_26_myRule_25_Stage_c</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>myVariable_old</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>myVariable_old.Stage__c</leftValueReference>
+                <operator>NotEqualTo</operator>
+                <rightValue>
+                    <elementReference>myVariable_current.Stage__c</elementReference>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>isChangedDecision32_myRule_31_Stage_c</targetReference>
+            </connector>
+            <label>isChangedRule_26_myRule_25_Stage_c</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>isChangedDecision2_myRule_1_Stage_c</name>
+        <label>isChangedDecision2_myRule_1_Stage_c</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>isChangedDecision8_myRule_7_Stage_c</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>default</defaultConnectorLabel>
+        <rules>
+            <name>isChangedRule_2_myRule_1_Stage_c</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>myVariable_old</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>myVariable_old.Stage__c</leftValueReference>
+                <operator>NotEqualTo</operator>
+                <rightValue>
+                    <elementReference>myVariable_current.Stage__c</elementReference>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>isChangedDecision8_myRule_7_Stage_c</targetReference>
+            </connector>
+            <label>isChangedRule_2_myRule_1_Stage_c</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>isChangedDecision32_myRule_31_Stage_c</name>
+        <label>isChangedDecision32_myRule_31_Stage_c</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>isChangedDecision38_myRule_37_Stage_c</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>default</defaultConnectorLabel>
+        <rules>
+            <name>isChangedRule_32_myRule_31_Stage_c</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>myVariable_old</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>myVariable_old.Stage__c</leftValueReference>
+                <operator>NotEqualTo</operator>
+                <rightValue>
+                    <elementReference>myVariable_current.Stage__c</elementReference>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>isChangedDecision38_myRule_37_Stage_c</targetReference>
+            </connector>
+            <label>isChangedRule_32_myRule_31_Stage_c</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>isChangedDecision38_myRule_37_Stage_c</name>
+        <label>isChangedDecision38_myRule_37_Stage_c</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>isChangedDecision44_myRule_43_Stage_c</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>default</defaultConnectorLabel>
+        <rules>
+            <name>isChangedRule_38_myRule_37_Stage_c</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>myVariable_old</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>myVariable_old.Stage__c</leftValueReference>
+                <operator>NotEqualTo</operator>
+                <rightValue>
+                    <elementReference>myVariable_current.Stage__c</elementReference>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>isChangedDecision44_myRule_43_Stage_c</targetReference>
+            </connector>
+            <label>isChangedRule_38_myRule_37_Stage_c</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>isChangedDecision44_myRule_43_Stage_c</name>
+        <label>isChangedDecision44_myRule_43_Stage_c</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>isChangedDecision50_myRule_49_Stage_c</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>default</defaultConnectorLabel>
+        <rules>
+            <name>isChangedRule_44_myRule_43_Stage_c</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>myVariable_old</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>myVariable_old.Stage__c</leftValueReference>
+                <operator>NotEqualTo</operator>
+                <rightValue>
+                    <elementReference>myVariable_current.Stage__c</elementReference>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>isChangedDecision50_myRule_49_Stage_c</targetReference>
+            </connector>
+            <label>isChangedRule_44_myRule_43_Stage_c</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>isChangedDecision50_myRule_49_Stage_c</name>
+        <label>isChangedDecision50_myRule_49_Stage_c</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>isChangedDecision56_myRule_55_Stage_c</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>default</defaultConnectorLabel>
+        <rules>
+            <name>isChangedRule_50_myRule_49_Stage_c</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>myVariable_old</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>myVariable_old.Stage__c</leftValueReference>
+                <operator>NotEqualTo</operator>
+                <rightValue>
+                    <elementReference>myVariable_current.Stage__c</elementReference>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>isChangedDecision56_myRule_55_Stage_c</targetReference>
+            </connector>
+            <label>isChangedRule_50_myRule_49_Stage_c</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>isChangedDecision56_myRule_55_Stage_c</name>
+        <label>isChangedDecision56_myRule_55_Stage_c</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>myDecision</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>default</defaultConnectorLabel>
+        <rules>
+            <name>isChangedRule_56_myRule_55_Stage_c</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>myVariable_old</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>myVariable_old.Stage__c</leftValueReference>
+                <operator>NotEqualTo</operator>
+                <rightValue>
+                    <elementReference>myVariable_current.Stage__c</elementReference>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>myDecision</targetReference>
+            </connector>
+            <label>isChangedRule_56_myRule_55_Stage_c</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>isChangedDecision8_myRule_7_Stage_c</name>
+        <label>isChangedDecision8_myRule_7_Stage_c</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>isChangedDecision14_myRule_13_Stage_c</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>default</defaultConnectorLabel>
+        <rules>
+            <name>isChangedRule_8_myRule_7_Stage_c</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>myVariable_old</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>myVariable_old.Stage__c</leftValueReference>
+                <operator>NotEqualTo</operator>
+                <rightValue>
+                    <elementReference>myVariable_current.Stage__c</elementReference>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>isChangedDecision14_myRule_13_Stage_c</targetReference>
+            </connector>
+            <label>isChangedRule_8_myRule_7_Stage_c</label>
+        </rules>
+    </decisions>
     <decisions>
         <processMetadataValues>
             <name>index</name>
@@ -32,7 +353,7 @@
         <locationX>50</locationX>
         <locationY>0</locationY>
         <defaultConnector>
-            <targetReference>myDecision5</targetReference>
+            <targetReference>myDecision6</targetReference>
         </defaultConnector>
         <defaultConnectorLabel>default</defaultConnectorLabel>
         <rules>
@@ -168,6 +489,37 @@
                     <booleanValue>true</booleanValue>
                 </rightValue>
             </conditions>
+            <conditions>
+                <processMetadataValues>
+                    <name>inputDataType</name>
+                    <value>
+                        <stringValue>Boolean</stringValue>
+                    </value>
+                </processMetadataValues>
+                <processMetadataValues>
+                    <name>leftHandSideType</name>
+                    <value>
+                        <stringValue>Picklist</stringValue>
+                    </value>
+                </processMetadataValues>
+                <processMetadataValues>
+                    <name>operatorDataType</name>
+                    <value>
+                        <stringValue>String</stringValue>
+                    </value>
+                </processMetadataValues>
+                <processMetadataValues>
+                    <name>rightHandSideType</name>
+                    <value>
+                        <stringValue>Boolean</stringValue>
+                    </value>
+                </processMetadataValues>
+                <leftValueReference>isChangedRule_2_myRule_1_Stage_c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
             <connector>
                 <targetReference>myRule_1_A1</targetReference>
             </connector>
@@ -181,17 +533,17 @@
                 <numberValue>2.0</numberValue>
             </value>
         </processMetadataValues>
-        <name>myDecision10</name>
-        <label>myDecision10</label>
+        <name>myDecision12</name>
+        <label>myDecision12</label>
         <locationX>50</locationX>
         <locationY>0</locationY>
         <defaultConnector>
-            <targetReference>myDecision15</targetReference>
+            <targetReference>myDecision18</targetReference>
         </defaultConnector>
         <defaultConnectorLabel>default</defaultConnectorLabel>
         <rules>
-            <name>myRule_11</name>
-            <conditionLogic>(1 OR 2) AND 3 AND 4 AND 5</conditionLogic>
+            <name>myRule_13</name>
+            <conditionLogic>(1 OR 2) AND 3 AND 4 AND 5 AND 6</conditionLogic>
             <conditions>
                 <processMetadataValues>
                     <name>inputDataType</name>
@@ -359,8 +711,39 @@
                     <booleanValue>true</booleanValue>
                 </rightValue>
             </conditions>
+            <conditions>
+                <processMetadataValues>
+                    <name>inputDataType</name>
+                    <value>
+                        <stringValue>Boolean</stringValue>
+                    </value>
+                </processMetadataValues>
+                <processMetadataValues>
+                    <name>leftHandSideType</name>
+                    <value>
+                        <stringValue>Picklist</stringValue>
+                    </value>
+                </processMetadataValues>
+                <processMetadataValues>
+                    <name>operatorDataType</name>
+                    <value>
+                        <stringValue>String</stringValue>
+                    </value>
+                </processMetadataValues>
+                <processMetadataValues>
+                    <name>rightHandSideType</name>
+                    <value>
+                        <stringValue>Boolean</stringValue>
+                    </value>
+                </processMetadataValues>
+                <leftValueReference>isChangedRule_14_myRule_13_Stage_c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
             <connector>
-                <targetReference>myRule_11_A1</targetReference>
+                <targetReference>myRule_13_A1</targetReference>
             </connector>
             <label>Pending Pick &amp; Pack (Service, Manufacturing ERP)</label>
         </rules>
@@ -372,16 +755,16 @@
                 <numberValue>3.0</numberValue>
             </value>
         </processMetadataValues>
-        <name>myDecision15</name>
-        <label>myDecision15</label>
+        <name>myDecision18</name>
+        <label>myDecision18</label>
         <locationX>50</locationX>
         <locationY>0</locationY>
         <defaultConnector>
-            <targetReference>myDecision20</targetReference>
+            <targetReference>myDecision24</targetReference>
         </defaultConnector>
         <defaultConnectorLabel>default</defaultConnectorLabel>
         <rules>
-            <name>myRule_16</name>
+            <name>myRule_19</name>
             <conditionLogic>and</conditionLogic>
             <conditions>
                 <processMetadataValues>
@@ -482,8 +865,39 @@
                     <stringValue>Pending Pick and Pack</stringValue>
                 </rightValue>
             </conditions>
+            <conditions>
+                <processMetadataValues>
+                    <name>inputDataType</name>
+                    <value>
+                        <stringValue>Boolean</stringValue>
+                    </value>
+                </processMetadataValues>
+                <processMetadataValues>
+                    <name>leftHandSideType</name>
+                    <value>
+                        <stringValue>Picklist</stringValue>
+                    </value>
+                </processMetadataValues>
+                <processMetadataValues>
+                    <name>operatorDataType</name>
+                    <value>
+                        <stringValue>String</stringValue>
+                    </value>
+                </processMetadataValues>
+                <processMetadataValues>
+                    <name>rightHandSideType</name>
+                    <value>
+                        <stringValue>Boolean</stringValue>
+                    </value>
+                </processMetadataValues>
+                <leftValueReference>isChangedRule_20_myRule_19_Stage_c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
             <connector>
-                <targetReference>myRule_16_A1</targetReference>
+                <targetReference>myRule_19_A1</targetReference>
             </connector>
             <label>Pending Pick &amp; Pack (Retail ERP)</label>
         </rules>
@@ -495,17 +909,17 @@
                 <numberValue>4.0</numberValue>
             </value>
         </processMetadataValues>
-        <name>myDecision20</name>
-        <label>myDecision20</label>
+        <name>myDecision24</name>
+        <label>myDecision24</label>
         <locationX>50</locationX>
         <locationY>0</locationY>
         <defaultConnector>
-            <targetReference>myDecision25</targetReference>
+            <targetReference>myDecision30</targetReference>
         </defaultConnector>
         <defaultConnectorLabel>default</defaultConnectorLabel>
         <rules>
-            <name>myRule_21</name>
-            <conditionLogic>(1 OR 2 OR 3) AND 4 AND 5</conditionLogic>
+            <name>myRule_25</name>
+            <conditionLogic>(1 OR 2 OR 3) AND 4 AND 5 AND 6</conditionLogic>
             <conditions>
                 <processMetadataValues>
                     <name>inputDataType</name>
@@ -679,8 +1093,39 @@
                     <stringValue>Pending Rigging</stringValue>
                 </rightValue>
             </conditions>
+            <conditions>
+                <processMetadataValues>
+                    <name>inputDataType</name>
+                    <value>
+                        <stringValue>Boolean</stringValue>
+                    </value>
+                </processMetadataValues>
+                <processMetadataValues>
+                    <name>leftHandSideType</name>
+                    <value>
+                        <stringValue>Picklist</stringValue>
+                    </value>
+                </processMetadataValues>
+                <processMetadataValues>
+                    <name>operatorDataType</name>
+                    <value>
+                        <stringValue>String</stringValue>
+                    </value>
+                </processMetadataValues>
+                <processMetadataValues>
+                    <name>rightHandSideType</name>
+                    <value>
+                        <stringValue>Boolean</stringValue>
+                    </value>
+                </processMetadataValues>
+                <leftValueReference>isChangedRule_26_myRule_25_Stage_c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
             <connector>
-                <targetReference>myRule_21_A1</targetReference>
+                <targetReference>myRule_25_A1</targetReference>
             </connector>
             <label>Pending Rigging (Service, Retail, Manufacturing ERP)</label>
         </rules>
@@ -692,17 +1137,17 @@
                 <numberValue>5.0</numberValue>
             </value>
         </processMetadataValues>
-        <name>myDecision25</name>
-        <label>myDecision25</label>
+        <name>myDecision30</name>
+        <label>myDecision30</label>
         <locationX>50</locationX>
         <locationY>0</locationY>
         <defaultConnector>
-            <targetReference>myDecision30</targetReference>
+            <targetReference>myDecision36</targetReference>
         </defaultConnector>
         <defaultConnectorLabel>default</defaultConnectorLabel>
         <rules>
-            <name>myRule_26</name>
-            <conditionLogic>(1 OR 2 OR 5) AND 3 AND 4 AND 6</conditionLogic>
+            <name>myRule_31</name>
+            <conditionLogic>(1 OR 2 OR 5) AND 3 AND 4 AND 6 AND 7</conditionLogic>
             <conditions>
                 <processMetadataValues>
                     <name>inputDataType</name>
@@ -907,8 +1352,39 @@
                     <booleanValue>true</booleanValue>
                 </rightValue>
             </conditions>
+            <conditions>
+                <processMetadataValues>
+                    <name>inputDataType</name>
+                    <value>
+                        <stringValue>Boolean</stringValue>
+                    </value>
+                </processMetadataValues>
+                <processMetadataValues>
+                    <name>leftHandSideType</name>
+                    <value>
+                        <stringValue>Picklist</stringValue>
+                    </value>
+                </processMetadataValues>
+                <processMetadataValues>
+                    <name>operatorDataType</name>
+                    <value>
+                        <stringValue>String</stringValue>
+                    </value>
+                </processMetadataValues>
+                <processMetadataValues>
+                    <name>rightHandSideType</name>
+                    <value>
+                        <stringValue>Boolean</stringValue>
+                    </value>
+                </processMetadataValues>
+                <leftValueReference>isChangedRule_32_myRule_31_Stage_c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
             <connector>
-                <targetReference>myRule_26_A1</targetReference>
+                <targetReference>myRule_31_A1</targetReference>
             </connector>
             <label>Pending Inspection (Service, Manufacturing , Tade-In ERP)</label>
         </rules>
@@ -920,16 +1396,16 @@
                 <numberValue>6.0</numberValue>
             </value>
         </processMetadataValues>
-        <name>myDecision30</name>
-        <label>myDecision30</label>
+        <name>myDecision36</name>
+        <label>myDecision36</label>
         <locationX>50</locationX>
         <locationY>0</locationY>
         <defaultConnector>
-            <targetReference>myDecision35</targetReference>
+            <targetReference>myDecision42</targetReference>
         </defaultConnector>
         <defaultConnectorLabel>default</defaultConnectorLabel>
         <rules>
-            <name>myRule_31</name>
+            <name>myRule_37</name>
             <conditionLogic>and</conditionLogic>
             <conditions>
                 <processMetadataValues>
@@ -1098,8 +1574,39 @@
                     <booleanValue>true</booleanValue>
                 </rightValue>
             </conditions>
+            <conditions>
+                <processMetadataValues>
+                    <name>inputDataType</name>
+                    <value>
+                        <stringValue>Boolean</stringValue>
+                    </value>
+                </processMetadataValues>
+                <processMetadataValues>
+                    <name>leftHandSideType</name>
+                    <value>
+                        <stringValue>Picklist</stringValue>
+                    </value>
+                </processMetadataValues>
+                <processMetadataValues>
+                    <name>operatorDataType</name>
+                    <value>
+                        <stringValue>String</stringValue>
+                    </value>
+                </processMetadataValues>
+                <processMetadataValues>
+                    <name>rightHandSideType</name>
+                    <value>
+                        <stringValue>Boolean</stringValue>
+                    </value>
+                </processMetadataValues>
+                <leftValueReference>isChangedRule_38_myRule_37_Stage_c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
             <connector>
-                <targetReference>myRule_31_A1</targetReference>
+                <targetReference>myRule_37_A1</targetReference>
             </connector>
             <label>Pending Inspection (Retail ERP)</label>
         </rules>
@@ -1111,16 +1618,16 @@
                 <numberValue>7.0</numberValue>
             </value>
         </processMetadataValues>
-        <name>myDecision35</name>
-        <label>myDecision35</label>
+        <name>myDecision42</name>
+        <label>myDecision42</label>
         <locationX>50</locationX>
         <locationY>0</locationY>
         <defaultConnector>
-            <targetReference>myDecision40</targetReference>
+            <targetReference>myDecision48</targetReference>
         </defaultConnector>
         <defaultConnectorLabel>default</defaultConnectorLabel>
         <rules>
-            <name>myRule_36</name>
+            <name>myRule_43</name>
             <conditionLogic>and</conditionLogic>
             <conditions>
                 <processMetadataValues>
@@ -1221,8 +1728,39 @@
                     <stringValue>Pending Approval</stringValue>
                 </rightValue>
             </conditions>
+            <conditions>
+                <processMetadataValues>
+                    <name>inputDataType</name>
+                    <value>
+                        <stringValue>Boolean</stringValue>
+                    </value>
+                </processMetadataValues>
+                <processMetadataValues>
+                    <name>leftHandSideType</name>
+                    <value>
+                        <stringValue>Picklist</stringValue>
+                    </value>
+                </processMetadataValues>
+                <processMetadataValues>
+                    <name>operatorDataType</name>
+                    <value>
+                        <stringValue>String</stringValue>
+                    </value>
+                </processMetadataValues>
+                <processMetadataValues>
+                    <name>rightHandSideType</name>
+                    <value>
+                        <stringValue>Boolean</stringValue>
+                    </value>
+                </processMetadataValues>
+                <leftValueReference>isChangedRule_44_myRule_43_Stage_c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
             <connector>
-                <targetReference>myRule_36_A1</targetReference>
+                <targetReference>myRule_43_A1</targetReference>
             </connector>
             <label>Pending Approval (Service ERP)</label>
         </rules>
@@ -1234,16 +1772,16 @@
                 <numberValue>8.0</numberValue>
             </value>
         </processMetadataValues>
-        <name>myDecision40</name>
-        <label>myDecision40</label>
+        <name>myDecision48</name>
+        <label>myDecision48</label>
         <locationX>50</locationX>
         <locationY>0</locationY>
         <defaultConnector>
-            <targetReference>myDecision45</targetReference>
+            <targetReference>myDecision54</targetReference>
         </defaultConnector>
         <defaultConnectorLabel>default</defaultConnectorLabel>
         <rules>
-            <name>myRule_41</name>
+            <name>myRule_49</name>
             <conditionLogic>and</conditionLogic>
             <conditions>
                 <processMetadataValues>
@@ -1375,8 +1913,39 @@
                     <booleanValue>true</booleanValue>
                 </rightValue>
             </conditions>
+            <conditions>
+                <processMetadataValues>
+                    <name>inputDataType</name>
+                    <value>
+                        <stringValue>Boolean</stringValue>
+                    </value>
+                </processMetadataValues>
+                <processMetadataValues>
+                    <name>leftHandSideType</name>
+                    <value>
+                        <stringValue>Picklist</stringValue>
+                    </value>
+                </processMetadataValues>
+                <processMetadataValues>
+                    <name>operatorDataType</name>
+                    <value>
+                        <stringValue>String</stringValue>
+                    </value>
+                </processMetadataValues>
+                <processMetadataValues>
+                    <name>rightHandSideType</name>
+                    <value>
+                        <stringValue>Boolean</stringValue>
+                    </value>
+                </processMetadataValues>
+                <leftValueReference>isChangedRule_50_myRule_49_Stage_c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
             <connector>
-                <targetReference>myRule_41_A1</targetReference>
+                <targetReference>myRule_49_A1</targetReference>
             </connector>
             <label>Pending Pickup (Service ERP)</label>
         </rules>
@@ -1388,16 +1957,16 @@
                 <numberValue>9.0</numberValue>
             </value>
         </processMetadataValues>
-        <name>myDecision45</name>
-        <label>myDecision45</label>
+        <name>myDecision54</name>
+        <label>myDecision54</label>
         <locationX>50</locationX>
         <locationY>0</locationY>
         <defaultConnector>
-            <targetReference>myDecision50</targetReference>
+            <targetReference>myDecision60</targetReference>
         </defaultConnector>
         <defaultConnectorLabel>default</defaultConnectorLabel>
         <rules>
-            <name>myRule_46</name>
+            <name>myRule_55</name>
             <conditionLogic>and</conditionLogic>
             <conditions>
                 <processMetadataValues>
@@ -1566,8 +2135,39 @@
                     <booleanValue>true</booleanValue>
                 </rightValue>
             </conditions>
+            <conditions>
+                <processMetadataValues>
+                    <name>inputDataType</name>
+                    <value>
+                        <stringValue>Boolean</stringValue>
+                    </value>
+                </processMetadataValues>
+                <processMetadataValues>
+                    <name>leftHandSideType</name>
+                    <value>
+                        <stringValue>Picklist</stringValue>
+                    </value>
+                </processMetadataValues>
+                <processMetadataValues>
+                    <name>operatorDataType</name>
+                    <value>
+                        <stringValue>String</stringValue>
+                    </value>
+                </processMetadataValues>
+                <processMetadataValues>
+                    <name>rightHandSideType</name>
+                    <value>
+                        <stringValue>Boolean</stringValue>
+                    </value>
+                </processMetadataValues>
+                <leftValueReference>isChangedRule_56_myRule_55_Stage_c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
             <connector>
-                <targetReference>myRule_46_A1</targetReference>
+                <targetReference>myRule_55_A1</targetReference>
             </connector>
             <label>Pending Pickup (Retail ERP)</label>
         </rules>
@@ -1579,16 +2179,16 @@
                 <numberValue>1.0</numberValue>
             </value>
         </processMetadataValues>
-        <name>myDecision5</name>
-        <label>myDecision5</label>
+        <name>myDecision6</name>
+        <label>myDecision6</label>
         <locationX>50</locationX>
         <locationY>0</locationY>
         <defaultConnector>
-            <targetReference>myDecision10</targetReference>
+            <targetReference>myDecision12</targetReference>
         </defaultConnector>
         <defaultConnectorLabel>default</defaultConnectorLabel>
         <rules>
-            <name>myRule_6</name>
+            <name>myRule_7</name>
             <conditionLogic>and</conditionLogic>
             <conditions>
                 <processMetadataValues>
@@ -1720,8 +2320,39 @@
                     <booleanValue>true</booleanValue>
                 </rightValue>
             </conditions>
+            <conditions>
+                <processMetadataValues>
+                    <name>inputDataType</name>
+                    <value>
+                        <stringValue>Boolean</stringValue>
+                    </value>
+                </processMetadataValues>
+                <processMetadataValues>
+                    <name>leftHandSideType</name>
+                    <value>
+                        <stringValue>Picklist</stringValue>
+                    </value>
+                </processMetadataValues>
+                <processMetadataValues>
+                    <name>operatorDataType</name>
+                    <value>
+                        <stringValue>String</stringValue>
+                    </value>
+                </processMetadataValues>
+                <processMetadataValues>
+                    <name>rightHandSideType</name>
+                    <value>
+                        <stringValue>Boolean</stringValue>
+                    </value>
+                </processMetadataValues>
+                <leftValueReference>isChangedRule_8_myRule_7_Stage_c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
             <connector>
-                <targetReference>myRule_6_A1</targetReference>
+                <targetReference>myRule_7_A1</targetReference>
             </connector>
             <label>Pending Authorization (Service ERP)</label>
         </rules>
@@ -1733,13 +2364,13 @@
                 <numberValue>10.0</numberValue>
             </value>
         </processMetadataValues>
-        <name>myDecision50</name>
-        <label>myDecision50</label>
+        <name>myDecision60</name>
+        <label>myDecision60</label>
         <locationX>50</locationX>
         <locationY>0</locationY>
         <defaultConnectorLabel>default</defaultConnectorLabel>
         <rules>
-            <name>myRule_51</name>
+            <name>myRule_61</name>
             <conditionLogic>and</conditionLogic>
             <conditions>
                 <processMetadataValues>
@@ -1835,23 +2466,12 @@
                 </rightValue>
             </conditions>
             <connector>
-                <targetReference>myRule_51_A1</targetReference>
+                <targetReference>myRule_61_A1</targetReference>
             </connector>
             <label>Tagging Pending (Retail ERP)</label>
         </rules>
     </decisions>
-    <description>Notify designated staff upon Montreal ERP record stages being changed</description>
-    <formulas>
-        <processMetadataValues>
-            <name>originalFormula</name>
-            <value>
-                <stringValue>TODAY()</stringValue>
-            </value>
-        </processMetadataValues>
-        <name>formula_12_myRule_11_A1_4681887423</name>
-        <dataType>Date</dataType>
-        <expression>TODAY()</expression>
-    </formulas>
+    <description>Notify designated staff upon Montreal ERP record stages being changed.</description>
     <formulas>
         <processMetadataValues>
             <name>originalFormula</name>
@@ -1859,7 +2479,7 @@
                 <stringValue>NOW()</stringValue>
             </value>
         </processMetadataValues>
-        <name>formula_13_myRule_11_A1_0680524368</name>
+        <name>formula_10_myRule_7_A1_1452618201</name>
         <dataType>DateTime</dataType>
         <expression>NOW()</expression>
     </formulas>
@@ -1870,7 +2490,7 @@
                 <stringValue>([AcctSeed__Project__c].Name) + &apos; ERP stage has been changed to &apos; + TEXT([AcctSeed__Project__c].Stage__c)</stringValue>
             </value>
         </processMetadataValues>
-        <name>formula_14_myRule_11_A1_0064535896</name>
+        <name>formula_11_myRule_7_A1_5356977015</name>
         <dataType>String</dataType>
         <expression>({!myVariable_current.Name}) + &apos; ERP stage has been changed to &apos; + TEXT({!myVariable_current.Stage__c})</expression>
     </formulas>
@@ -1881,7 +2501,7 @@
                 <stringValue>TODAY()</stringValue>
             </value>
         </processMetadataValues>
-        <name>formula_17_myRule_16_A1_5970282957</name>
+        <name>formula_15_myRule_13_A1_4796730298</name>
         <dataType>Date</dataType>
         <expression>TODAY()</expression>
     </formulas>
@@ -1892,7 +2512,7 @@
                 <stringValue>NOW()</stringValue>
             </value>
         </processMetadataValues>
-        <name>formula_18_myRule_16_A1_3416581647</name>
+        <name>formula_16_myRule_13_A1_1954467201</name>
         <dataType>DateTime</dataType>
         <expression>NOW()</expression>
     </formulas>
@@ -1903,7 +2523,7 @@
                 <stringValue>([AcctSeed__Project__c].Name) + &apos; ERP stage has been changed to &apos; + TEXT([AcctSeed__Project__c].Stage__c)</stringValue>
             </value>
         </processMetadataValues>
-        <name>formula_19_myRule_16_A1_2775853065</name>
+        <name>formula_17_myRule_13_A1_2762479765</name>
         <dataType>String</dataType>
         <expression>({!myVariable_current.Name}) + &apos; ERP stage has been changed to &apos; + TEXT({!myVariable_current.Stage__c})</expression>
     </formulas>
@@ -1914,7 +2534,7 @@
                 <stringValue>TODAY()</stringValue>
             </value>
         </processMetadataValues>
-        <name>formula_22_myRule_21_A1_5394848968</name>
+        <name>formula_21_myRule_19_A1_5437203237</name>
         <dataType>Date</dataType>
         <expression>TODAY()</expression>
     </formulas>
@@ -1925,7 +2545,7 @@
                 <stringValue>NOW()</stringValue>
             </value>
         </processMetadataValues>
-        <name>formula_23_myRule_21_A1_2229105715</name>
+        <name>formula_22_myRule_19_A1_1922435525</name>
         <dataType>DateTime</dataType>
         <expression>NOW()</expression>
     </formulas>
@@ -1936,7 +2556,7 @@
                 <stringValue>([AcctSeed__Project__c].Name) + &apos; ERP stage has been changed to &apos; + TEXT([AcctSeed__Project__c].Stage__c)</stringValue>
             </value>
         </processMetadataValues>
-        <name>formula_24_myRule_21_A1_2474767792</name>
+        <name>formula_23_myRule_19_A1_9051801108</name>
         <dataType>String</dataType>
         <expression>({!myVariable_current.Name}) + &apos; ERP stage has been changed to &apos; + TEXT({!myVariable_current.Stage__c})</expression>
     </formulas>
@@ -1947,7 +2567,7 @@
                 <stringValue>TODAY()</stringValue>
             </value>
         </processMetadataValues>
-        <name>formula_27_myRule_26_A1_6062464041</name>
+        <name>formula_27_myRule_25_A1_0851334916</name>
         <dataType>Date</dataType>
         <expression>TODAY()</expression>
     </formulas>
@@ -1958,7 +2578,7 @@
                 <stringValue>NOW()</stringValue>
             </value>
         </processMetadataValues>
-        <name>formula_28_myRule_26_A1_7797844108</name>
+        <name>formula_28_myRule_25_A1_8573375913</name>
         <dataType>DateTime</dataType>
         <expression>NOW()</expression>
     </formulas>
@@ -1969,7 +2589,7 @@
                 <stringValue>([AcctSeed__Project__c].Name) + &apos; ERP stage has been changed to &apos; + TEXT([AcctSeed__Project__c].Stage__c)</stringValue>
             </value>
         </processMetadataValues>
-        <name>formula_29_myRule_26_A1_0957354823</name>
+        <name>formula_29_myRule_25_A1_9878496595</name>
         <dataType>String</dataType>
         <expression>({!myVariable_current.Name}) + &apos; ERP stage has been changed to &apos; + TEXT({!myVariable_current.Stage__c})</expression>
     </formulas>
@@ -1980,18 +2600,7 @@
                 <stringValue>TODAY()</stringValue>
             </value>
         </processMetadataValues>
-        <name>formula_2_myRule_1_A1_0142602689</name>
-        <dataType>Date</dataType>
-        <expression>TODAY()</expression>
-    </formulas>
-    <formulas>
-        <processMetadataValues>
-            <name>originalFormula</name>
-            <value>
-                <stringValue>TODAY()</stringValue>
-            </value>
-        </processMetadataValues>
-        <name>formula_32_myRule_31_A1_2318585278</name>
+        <name>formula_33_myRule_31_A1_2079920001</name>
         <dataType>Date</dataType>
         <expression>TODAY()</expression>
     </formulas>
@@ -2002,7 +2611,7 @@
                 <stringValue>NOW()</stringValue>
             </value>
         </processMetadataValues>
-        <name>formula_33_myRule_31_A1_5945409018</name>
+        <name>formula_34_myRule_31_A1_6738656091</name>
         <dataType>DateTime</dataType>
         <expression>NOW()</expression>
     </formulas>
@@ -2013,7 +2622,7 @@
                 <stringValue>([AcctSeed__Project__c].Name) + &apos; ERP stage has been changed to &apos; + TEXT([AcctSeed__Project__c].Stage__c)</stringValue>
             </value>
         </processMetadataValues>
-        <name>formula_34_myRule_31_A1_7815145029</name>
+        <name>formula_35_myRule_31_A1_7452861175</name>
         <dataType>String</dataType>
         <expression>({!myVariable_current.Name}) + &apos; ERP stage has been changed to &apos; + TEXT({!myVariable_current.Stage__c})</expression>
     </formulas>
@@ -2024,42 +2633,9 @@
                 <stringValue>TODAY()</stringValue>
             </value>
         </processMetadataValues>
-        <name>formula_37_myRule_36_A1_7222235760</name>
+        <name>formula_39_myRule_37_A1_8431871426</name>
         <dataType>Date</dataType>
         <expression>TODAY()</expression>
-    </formulas>
-    <formulas>
-        <processMetadataValues>
-            <name>originalFormula</name>
-            <value>
-                <stringValue>NOW()</stringValue>
-            </value>
-        </processMetadataValues>
-        <name>formula_38_myRule_36_A1_4365988011</name>
-        <dataType>DateTime</dataType>
-        <expression>NOW()</expression>
-    </formulas>
-    <formulas>
-        <processMetadataValues>
-            <name>originalFormula</name>
-            <value>
-                <stringValue>([AcctSeed__Project__c].Name) + &apos; ERP stage has been changed to &apos; + TEXT([AcctSeed__Project__c].Stage__c)</stringValue>
-            </value>
-        </processMetadataValues>
-        <name>formula_39_myRule_36_A1_3047832664</name>
-        <dataType>String</dataType>
-        <expression>({!myVariable_current.Name}) + &apos; ERP stage has been changed to &apos; + TEXT({!myVariable_current.Stage__c})</expression>
-    </formulas>
-    <formulas>
-        <processMetadataValues>
-            <name>originalFormula</name>
-            <value>
-                <stringValue>NOW()</stringValue>
-            </value>
-        </processMetadataValues>
-        <name>formula_3_myRule_1_A1_7261421257</name>
-        <dataType>DateTime</dataType>
-        <expression>NOW()</expression>
     </formulas>
     <formulas>
         <processMetadataValues>
@@ -2068,7 +2644,7 @@
                 <stringValue>TODAY()</stringValue>
             </value>
         </processMetadataValues>
-        <name>formula_42_myRule_41_A1_0392694611</name>
+        <name>formula_3_myRule_1_A1_1331154584</name>
         <dataType>Date</dataType>
         <expression>TODAY()</expression>
     </formulas>
@@ -2079,7 +2655,7 @@
                 <stringValue>NOW()</stringValue>
             </value>
         </processMetadataValues>
-        <name>formula_43_myRule_41_A1_5648157840</name>
+        <name>formula_40_myRule_37_A1_0492064920</name>
         <dataType>DateTime</dataType>
         <expression>NOW()</expression>
     </formulas>
@@ -2090,7 +2666,7 @@
                 <stringValue>([AcctSeed__Project__c].Name) + &apos; ERP stage has been changed to &apos; + TEXT([AcctSeed__Project__c].Stage__c)</stringValue>
             </value>
         </processMetadataValues>
-        <name>formula_44_myRule_41_A1_9838080237</name>
+        <name>formula_41_myRule_37_A1_1511456011</name>
         <dataType>String</dataType>
         <expression>({!myVariable_current.Name}) + &apos; ERP stage has been changed to &apos; + TEXT({!myVariable_current.Stage__c})</expression>
     </formulas>
@@ -2101,7 +2677,7 @@
                 <stringValue>TODAY()</stringValue>
             </value>
         </processMetadataValues>
-        <name>formula_47_myRule_46_A1_5699006747</name>
+        <name>formula_45_myRule_43_A1_2159188944</name>
         <dataType>Date</dataType>
         <expression>TODAY()</expression>
     </formulas>
@@ -2112,7 +2688,7 @@
                 <stringValue>NOW()</stringValue>
             </value>
         </processMetadataValues>
-        <name>formula_48_myRule_46_A1_2545553190</name>
+        <name>formula_46_myRule_43_A1_5372141230</name>
         <dataType>DateTime</dataType>
         <expression>NOW()</expression>
     </formulas>
@@ -2123,9 +2699,42 @@
                 <stringValue>([AcctSeed__Project__c].Name) + &apos; ERP stage has been changed to &apos; + TEXT([AcctSeed__Project__c].Stage__c)</stringValue>
             </value>
         </processMetadataValues>
-        <name>formula_49_myRule_46_A1_7124319073</name>
+        <name>formula_47_myRule_43_A1_4870812809</name>
         <dataType>String</dataType>
         <expression>({!myVariable_current.Name}) + &apos; ERP stage has been changed to &apos; + TEXT({!myVariable_current.Stage__c})</expression>
+    </formulas>
+    <formulas>
+        <processMetadataValues>
+            <name>originalFormula</name>
+            <value>
+                <stringValue>NOW()</stringValue>
+            </value>
+        </processMetadataValues>
+        <name>formula_4_myRule_1_A1_9130569544</name>
+        <dataType>DateTime</dataType>
+        <expression>NOW()</expression>
+    </formulas>
+    <formulas>
+        <processMetadataValues>
+            <name>originalFormula</name>
+            <value>
+                <stringValue>TODAY()</stringValue>
+            </value>
+        </processMetadataValues>
+        <name>formula_51_myRule_49_A1_4121757323</name>
+        <dataType>Date</dataType>
+        <expression>TODAY()</expression>
+    </formulas>
+    <formulas>
+        <processMetadataValues>
+            <name>originalFormula</name>
+            <value>
+                <stringValue>NOW()</stringValue>
+            </value>
+        </processMetadataValues>
+        <name>formula_52_myRule_49_A1_2305644291</name>
+        <dataType>DateTime</dataType>
+        <expression>NOW()</expression>
     </formulas>
     <formulas>
         <processMetadataValues>
@@ -2134,7 +2743,7 @@
                 <stringValue>([AcctSeed__Project__c].Name) + &apos; ERP stage has been changed to &apos; + TEXT([AcctSeed__Project__c].Stage__c)</stringValue>
             </value>
         </processMetadataValues>
-        <name>formula_4_myRule_1_A1_5575601690</name>
+        <name>formula_53_myRule_49_A1_9407785093</name>
         <dataType>String</dataType>
         <expression>({!myVariable_current.Name}) + &apos; ERP stage has been changed to &apos; + TEXT({!myVariable_current.Stage__c})</expression>
     </formulas>
@@ -2145,7 +2754,7 @@
                 <stringValue>TODAY()</stringValue>
             </value>
         </processMetadataValues>
-        <name>formula_7_myRule_6_A1_1918606165</name>
+        <name>formula_57_myRule_55_A1_7378133543</name>
         <dataType>Date</dataType>
         <expression>TODAY()</expression>
     </formulas>
@@ -2156,7 +2765,7 @@
                 <stringValue>NOW()</stringValue>
             </value>
         </processMetadataValues>
-        <name>formula_8_myRule_6_A1_7505367343</name>
+        <name>formula_58_myRule_55_A1_7660559434</name>
         <dataType>DateTime</dataType>
         <expression>NOW()</expression>
     </formulas>
@@ -2167,11 +2776,33 @@
                 <stringValue>([AcctSeed__Project__c].Name) + &apos; ERP stage has been changed to &apos; + TEXT([AcctSeed__Project__c].Stage__c)</stringValue>
             </value>
         </processMetadataValues>
-        <name>formula_9_myRule_6_A1_8717246673</name>
+        <name>formula_59_myRule_55_A1_9030013605</name>
         <dataType>String</dataType>
         <expression>({!myVariable_current.Name}) + &apos; ERP stage has been changed to &apos; + TEXT({!myVariable_current.Stage__c})</expression>
     </formulas>
-    <interviewLabel>Montreal_ERP_Stage_Notifications-5_InterviewLabel</interviewLabel>
+    <formulas>
+        <processMetadataValues>
+            <name>originalFormula</name>
+            <value>
+                <stringValue>([AcctSeed__Project__c].Name) + &apos; ERP stage has been changed to &apos; + TEXT([AcctSeed__Project__c].Stage__c)</stringValue>
+            </value>
+        </processMetadataValues>
+        <name>formula_5_myRule_1_A1_7265091221</name>
+        <dataType>String</dataType>
+        <expression>({!myVariable_current.Name}) + &apos; ERP stage has been changed to &apos; + TEXT({!myVariable_current.Stage__c})</expression>
+    </formulas>
+    <formulas>
+        <processMetadataValues>
+            <name>originalFormula</name>
+            <value>
+                <stringValue>TODAY()</stringValue>
+            </value>
+        </processMetadataValues>
+        <name>formula_9_myRule_7_A1_4531209983</name>
+        <dataType>Date</dataType>
+        <expression>TODAY()</expression>
+    </formulas>
+    <interviewLabel>Montreal_ERP_Stage_Notifications-8_InterviewLabel</interviewLabel>
     <label>Montreal ERP Stage Notifications</label>
     <processMetadataValues>
         <name>ObjectType</name>
@@ -2199,9 +2830,9 @@
     </processMetadataValues>
     <processType>Workflow</processType>
     <recordCreates>
-        <name>myRule_11_A1</name>
+        <name>myRule_13_A1</name>
         <label>Create Task</label>
-        <locationX>1100</locationX>
+        <locationX>1300</locationX>
         <locationY>200</locationY>
         <inputAssignments>
             <processMetadataValues>
@@ -2236,7 +2867,7 @@
             </processMetadataValues>
             <field>ActivityDate</field>
             <value>
-                <elementReference>formula_12_myRule_11_A1_4681887423</elementReference>
+                <elementReference>formula_15_myRule_13_A1_4796730298</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -2368,7 +2999,7 @@
             </processMetadataValues>
             <field>ReminderDateTime</field>
             <value>
-                <elementReference>formula_13_myRule_11_A1_0680524368</elementReference>
+                <elementReference>formula_16_myRule_13_A1_1954467201</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -2434,7 +3065,7 @@
             </processMetadataValues>
             <field>Subject</field>
             <value>
-                <elementReference>formula_14_myRule_11_A1_0064535896</elementReference>
+                <elementReference>formula_17_myRule_13_A1_2762479765</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -2476,9 +3107,9 @@
         <object>Task</object>
     </recordCreates>
     <recordCreates>
-        <name>myRule_16_A1</name>
+        <name>myRule_19_A1</name>
         <label>Create Task (Miguel C.)</label>
-        <locationX>1600</locationX>
+        <locationX>1900</locationX>
         <locationY>200</locationY>
         <inputAssignments>
             <processMetadataValues>
@@ -2513,7 +3144,7 @@
             </processMetadataValues>
             <field>ActivityDate</field>
             <value>
-                <elementReference>formula_17_myRule_16_A1_5970282957</elementReference>
+                <elementReference>formula_21_myRule_19_A1_5437203237</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -2645,7 +3276,7 @@
             </processMetadataValues>
             <field>ReminderDateTime</field>
             <value>
-                <elementReference>formula_18_myRule_16_A1_3416581647</elementReference>
+                <elementReference>formula_22_myRule_19_A1_1922435525</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -2711,7 +3342,7 @@
             </processMetadataValues>
             <field>Subject</field>
             <value>
-                <elementReference>formula_19_myRule_16_A1_2775853065</elementReference>
+                <elementReference>formula_23_myRule_19_A1_9051801108</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -2790,7 +3421,7 @@
             </processMetadataValues>
             <field>ActivityDate</field>
             <value>
-                <elementReference>formula_2_myRule_1_A1_0142602689</elementReference>
+                <elementReference>formula_3_myRule_1_A1_1331154584</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -2922,7 +3553,7 @@
             </processMetadataValues>
             <field>ReminderDateTime</field>
             <value>
-                <elementReference>formula_3_myRule_1_A1_7261421257</elementReference>
+                <elementReference>formula_4_myRule_1_A1_9130569544</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -2988,7 +3619,7 @@
             </processMetadataValues>
             <field>Subject</field>
             <value>
-                <elementReference>formula_4_myRule_1_A1_5575601690</elementReference>
+                <elementReference>formula_5_myRule_1_A1_7265091221</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -3030,9 +3661,9 @@
         <object>Task</object>
     </recordCreates>
     <recordCreates>
-        <name>myRule_21_A1</name>
+        <name>myRule_25_A1</name>
         <label>Create Task (Miguel C.)</label>
-        <locationX>2100</locationX>
+        <locationX>2500</locationX>
         <locationY>200</locationY>
         <inputAssignments>
             <processMetadataValues>
@@ -3067,7 +3698,7 @@
             </processMetadataValues>
             <field>ActivityDate</field>
             <value>
-                <elementReference>formula_22_myRule_21_A1_5394848968</elementReference>
+                <elementReference>formula_27_myRule_25_A1_0851334916</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -3199,7 +3830,7 @@
             </processMetadataValues>
             <field>ReminderDateTime</field>
             <value>
-                <elementReference>formula_23_myRule_21_A1_2229105715</elementReference>
+                <elementReference>formula_28_myRule_25_A1_8573375913</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -3265,284 +3896,7 @@
             </processMetadataValues>
             <field>Subject</field>
             <value>
-                <elementReference>formula_24_myRule_21_A1_2474767792</elementReference>
-            </value>
-        </inputAssignments>
-        <inputAssignments>
-            <processMetadataValues>
-                <name>dataType</name>
-                <value>
-                    <stringValue>ID</stringValue>
-                </value>
-            </processMetadataValues>
-            <processMetadataValues>
-                <name>isRequired</name>
-                <value>
-                    <booleanValue>false</booleanValue>
-                </value>
-            </processMetadataValues>
-            <processMetadataValues>
-                <name>leftHandSideLabel</name>
-                <value>
-                    <stringValue>Related To ID</stringValue>
-                </value>
-            </processMetadataValues>
-            <processMetadataValues>
-                <name>leftHandSideReferenceTo</name>
-                <value>
-                    <stringValue>AWS_S3_Object__c;Account;Account_Number_Detail__c;AcctSeedERP__Inbound_Inventory_Movement__c;AcctSeedERP__Inventory_Balance__c;AcctSeedERP__Location__c;AcctSeedERP__Manufacturing_Inventory_Movement__c;AcctSeedERP__Material__c;AcctSeedERP__Outbound_Inventory_Movement__c;AcctSeedERP__Purchase_Order_Inventory_Movement__c;AcctSeedERP__Purchase_Order_Line__c;AcctSeedERP__Purchase_Order__c;AcctSeedERP__Sales_Order_Inventory_Movement__c;AcctSeedERP__Sales_Order_Line__c;AcctSeedERP__Sales_Order__c;AcctSeedERP__Shipment_Line__c;AcctSeedERP__Shipment__c;AcctSeedERP__Warehouse__c;AcctSeed__AP_Credit_Memo__c;AcctSeed__AP_Disbursement__c;AcctSeed__Account_Payable_Line__c;AcctSeed__Account_Payable__c;AcctSeed__Accounting_Period__c;AcctSeed__Accounting_Variable__c;AcctSeed__Bank_Adjustment__c;AcctSeed__Bank_Deposit__c;AcctSeed__Bank_Reconciliation2__c;AcctSeed__Bank_Reconciliation_Line2__c;AcctSeed__Bank_Reconciliation__c;AcctSeed__Billing_Cash_Receipt__c;AcctSeed__Billing_Credit_Memo__c;AcctSeed__Billing_Format__c;AcctSeed__Billing_Line__c;AcctSeed__Billing_Rates__c;AcctSeed__Billing__c;AcctSeed__Cash_Disbursement_Batch__c;AcctSeed__Cash_Disbursement__c;AcctSeed__Cash_Receipt__c;AcctSeed__Cost_Rates__c;AcctSeed__Expense_Line__c;AcctSeed__Expense_Report__c;AcctSeed__Financial_Cube__c;AcctSeed__Fixed_Asset__c;AcctSeed__GL_Account__c;AcctSeed__Journal_Entry_Line__c;AcctSeed__Journal_Entry__c;AcctSeed__Ledger__c;AcctSeed__Product_Part__c;AcctSeed__Project_Task__c;AcctSeed__Project__c;AcctSeed__Recurring_Account_Payable_Line__c;AcctSeed__Recurring_Account_Payable__c;AcctSeed__Recurring_Billing_Line__c;AcctSeed__Recurring_Billing__c;AcctSeed__Recurring_Journal_Entry_Line__c;AcctSeed__Recurring_Journal_Entry__c;AcctSeed__Scheduled_Revenue_Expense__c;AcctSeed__Time_Card_Accounting_Period__c;AcctSeed__Time_Card_Day__c;AcctSeed__Time_Card_Line__c;AcctSeed__Time_Card_Period__c;AcctSeed__Time_Card__c;Asset;AssetRelationship;Campaign;Case;ChannelProgram;ChannelProgramLevel;ContactRequest;Contract;ContractLineItem;Dealer_Financing_Request__c;Dealer_Order_Line__c;Dealer_Order__c;Employee_Wage_Rate__c;Employee__c;Entitlement;Financing_Amount_Used__c;Financing_Company__c;Freight_Charges__c;Fundraiser__c;GMBLASERP__Inventory_Adjustment__c;GMBLASERP__Inventory_Transfer__c;GMBLASERP__Serial_Number__c;GetFeedback_Survey_Response__c;Legend_Accounting__c;Legend_Production_Home__c;Legend_Sales_Home__c;ListEmail;LiveAgentSession;LiveChatTranscript;Lot_Exchange__c;Opportunity;PartnerFundAllocation;PartnerFundClaim;PartnerFundRequest;PartnerMarketingBudget;Performance_Tracker__c;Prepaid_Service_Redeemed__c;Prepaid_Service__c;Product2;Project_Labor_Rate__c;Prop_Chart__c;Quote;Rigger_Job__c;ServiceContract;Solution;Technican__c;Time_Card_Entry__c;Truck_Destination__c;WorkOrder;WorkOrderLineItem;Yard_Location__c;agf__ADM_Epic__c;agf__ADM_Priority__c;agf__ADM_Release_Event__c;agf__ADM_Release_Stamp_Cache__c;agf__ADM_Release__c;agf__ADM_Severity_Type__c;agf__ADM_Severity__c;agf__ADM_Sprint__c;agf__ADM_Type__c;agf__ADM_Work__c;agf__Environments_Order__c;agf__Headcount__c;agf__Locking_Record__c;agf__OMOpportunity__c;agf__QA_Test_Case__c;agf__QA_Test_Execution__c;agf__QA_Test_Plan__c;agf__RCA__c;agf__Release_Signoff_Infrastructure__c;agf__Retrospective__c;et4ae5__Triggered_Send_Execution__c</stringValue>
-                </value>
-            </processMetadataValues>
-            <processMetadataValues>
-                <name>rightHandSideType</name>
-                <value>
-                    <stringValue>Reference</stringValue>
-                </value>
-            </processMetadataValues>
-            <field>WhatId</field>
-            <value>
-                <elementReference>myVariable_current.Id</elementReference>
-            </value>
-        </inputAssignments>
-        <object>Task</object>
-    </recordCreates>
-    <recordCreates>
-        <name>myRule_26_A1</name>
-        <label>Create Task</label>
-        <locationX>2600</locationX>
-        <locationY>200</locationY>
-        <inputAssignments>
-            <processMetadataValues>
-                <name>dataType</name>
-                <value>
-                    <stringValue>Date</stringValue>
-                </value>
-            </processMetadataValues>
-            <processMetadataValues>
-                <name>isRequired</name>
-                <value>
-                    <booleanValue>false</booleanValue>
-                </value>
-            </processMetadataValues>
-            <processMetadataValues>
-                <name>leftHandSideLabel</name>
-                <value>
-                    <stringValue>Due Date Only</stringValue>
-                </value>
-            </processMetadataValues>
-            <processMetadataValues>
-                <name>leftHandSideReferenceTo</name>
-                <value>
-                    <stringValue/>
-                </value>
-            </processMetadataValues>
-            <processMetadataValues>
-                <name>rightHandSideType</name>
-                <value>
-                    <stringValue>Formula</stringValue>
-                </value>
-            </processMetadataValues>
-            <field>ActivityDate</field>
-            <value>
-                <elementReference>formula_27_myRule_26_A1_6062464041</elementReference>
-            </value>
-        </inputAssignments>
-        <inputAssignments>
-            <processMetadataValues>
-                <name>dataType</name>
-                <value>
-                    <stringValue>Boolean</stringValue>
-                </value>
-            </processMetadataValues>
-            <processMetadataValues>
-                <name>isRequired</name>
-                <value>
-                    <booleanValue>false</booleanValue>
-                </value>
-            </processMetadataValues>
-            <processMetadataValues>
-                <name>leftHandSideLabel</name>
-                <value>
-                    <stringValue>Reminder Set</stringValue>
-                </value>
-            </processMetadataValues>
-            <processMetadataValues>
-                <name>leftHandSideReferenceTo</name>
-                <value>
-                    <stringValue/>
-                </value>
-            </processMetadataValues>
-            <processMetadataValues>
-                <name>rightHandSideType</name>
-                <value>
-                    <stringValue>Boolean</stringValue>
-                </value>
-            </processMetadataValues>
-            <field>IsReminderSet</field>
-            <value>
-                <booleanValue>true</booleanValue>
-            </value>
-        </inputAssignments>
-        <inputAssignments>
-            <processMetadataValues>
-                <name>dataType</name>
-                <value>
-                    <stringValue>ID</stringValue>
-                </value>
-            </processMetadataValues>
-            <processMetadataValues>
-                <name>isRequired</name>
-                <value>
-                    <booleanValue>false</booleanValue>
-                </value>
-            </processMetadataValues>
-            <processMetadataValues>
-                <name>leftHandSideLabel</name>
-                <value>
-                    <stringValue>Assigned To ID</stringValue>
-                </value>
-            </processMetadataValues>
-            <processMetadataValues>
-                <name>rightHandSideType</name>
-                <value>
-                    <stringValue>Reference</stringValue>
-                </value>
-            </processMetadataValues>
-            <field>OwnerId</field>
-            <value>
-                <elementReference>myVariable_current.OwnerId</elementReference>
-            </value>
-        </inputAssignments>
-        <inputAssignments>
-            <processMetadataValues>
-                <name>dataType</name>
-                <value>
-                    <stringValue>Picklist</stringValue>
-                </value>
-            </processMetadataValues>
-            <processMetadataValues>
-                <name>isRequired</name>
-                <value>
-                    <booleanValue>false</booleanValue>
-                </value>
-            </processMetadataValues>
-            <processMetadataValues>
-                <name>leftHandSideLabel</name>
-                <value>
-                    <stringValue>Priority</stringValue>
-                </value>
-            </processMetadataValues>
-            <processMetadataValues>
-                <name>rightHandSideType</name>
-                <value>
-                    <stringValue>Picklist</stringValue>
-                </value>
-            </processMetadataValues>
-            <field>Priority</field>
-            <value>
-                <stringValue>Normal</stringValue>
-            </value>
-        </inputAssignments>
-        <inputAssignments>
-            <processMetadataValues>
-                <name>dataType</name>
-                <value>
-                    <stringValue>DateTime</stringValue>
-                </value>
-            </processMetadataValues>
-            <processMetadataValues>
-                <name>isRequired</name>
-                <value>
-                    <booleanValue>false</booleanValue>
-                </value>
-            </processMetadataValues>
-            <processMetadataValues>
-                <name>leftHandSideLabel</name>
-                <value>
-                    <stringValue>Reminder Date/Time</stringValue>
-                </value>
-            </processMetadataValues>
-            <processMetadataValues>
-                <name>leftHandSideReferenceTo</name>
-                <value>
-                    <stringValue/>
-                </value>
-            </processMetadataValues>
-            <processMetadataValues>
-                <name>rightHandSideType</name>
-                <value>
-                    <stringValue>Formula</stringValue>
-                </value>
-            </processMetadataValues>
-            <field>ReminderDateTime</field>
-            <value>
-                <elementReference>formula_28_myRule_26_A1_7797844108</elementReference>
-            </value>
-        </inputAssignments>
-        <inputAssignments>
-            <processMetadataValues>
-                <name>dataType</name>
-                <value>
-                    <stringValue>Picklist</stringValue>
-                </value>
-            </processMetadataValues>
-            <processMetadataValues>
-                <name>isRequired</name>
-                <value>
-                    <booleanValue>false</booleanValue>
-                </value>
-            </processMetadataValues>
-            <processMetadataValues>
-                <name>leftHandSideLabel</name>
-                <value>
-                    <stringValue>Status</stringValue>
-                </value>
-            </processMetadataValues>
-            <processMetadataValues>
-                <name>rightHandSideType</name>
-                <value>
-                    <stringValue>Picklist</stringValue>
-                </value>
-            </processMetadataValues>
-            <field>Status</field>
-            <value>
-                <stringValue>Open</stringValue>
-            </value>
-        </inputAssignments>
-        <inputAssignments>
-            <processMetadataValues>
-                <name>dataType</name>
-                <value>
-                    <stringValue>String</stringValue>
-                </value>
-            </processMetadataValues>
-            <processMetadataValues>
-                <name>isRequired</name>
-                <value>
-                    <booleanValue>false</booleanValue>
-                </value>
-            </processMetadataValues>
-            <processMetadataValues>
-                <name>leftHandSideLabel</name>
-                <value>
-                    <stringValue>Subject</stringValue>
-                </value>
-            </processMetadataValues>
-            <processMetadataValues>
-                <name>leftHandSideReferenceTo</name>
-                <value>
-                    <stringValue/>
-                </value>
-            </processMetadataValues>
-            <processMetadataValues>
-                <name>rightHandSideType</name>
-                <value>
-                    <stringValue>Formula</stringValue>
-                </value>
-            </processMetadataValues>
-            <field>Subject</field>
-            <value>
-                <elementReference>formula_29_myRule_26_A1_0957354823</elementReference>
+                <elementReference>formula_29_myRule_25_A1_9878496595</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -3585,7 +3939,7 @@
     </recordCreates>
     <recordCreates>
         <name>myRule_31_A1</name>
-        <label>Create Task (Boat Specialist)</label>
+        <label>Create Task</label>
         <locationX>3100</locationX>
         <locationY>200</locationY>
         <inputAssignments>
@@ -3621,7 +3975,284 @@
             </processMetadataValues>
             <field>ActivityDate</field>
             <value>
-                <elementReference>formula_32_myRule_31_A1_2318585278</elementReference>
+                <elementReference>formula_33_myRule_31_A1_2079920001</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <processMetadataValues>
+                <name>dataType</name>
+                <value>
+                    <stringValue>Boolean</stringValue>
+                </value>
+            </processMetadataValues>
+            <processMetadataValues>
+                <name>isRequired</name>
+                <value>
+                    <booleanValue>false</booleanValue>
+                </value>
+            </processMetadataValues>
+            <processMetadataValues>
+                <name>leftHandSideLabel</name>
+                <value>
+                    <stringValue>Reminder Set</stringValue>
+                </value>
+            </processMetadataValues>
+            <processMetadataValues>
+                <name>leftHandSideReferenceTo</name>
+                <value>
+                    <stringValue/>
+                </value>
+            </processMetadataValues>
+            <processMetadataValues>
+                <name>rightHandSideType</name>
+                <value>
+                    <stringValue>Boolean</stringValue>
+                </value>
+            </processMetadataValues>
+            <field>IsReminderSet</field>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <processMetadataValues>
+                <name>dataType</name>
+                <value>
+                    <stringValue>ID</stringValue>
+                </value>
+            </processMetadataValues>
+            <processMetadataValues>
+                <name>isRequired</name>
+                <value>
+                    <booleanValue>false</booleanValue>
+                </value>
+            </processMetadataValues>
+            <processMetadataValues>
+                <name>leftHandSideLabel</name>
+                <value>
+                    <stringValue>Assigned To ID</stringValue>
+                </value>
+            </processMetadataValues>
+            <processMetadataValues>
+                <name>rightHandSideType</name>
+                <value>
+                    <stringValue>Reference</stringValue>
+                </value>
+            </processMetadataValues>
+            <field>OwnerId</field>
+            <value>
+                <elementReference>myVariable_current.OwnerId</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <processMetadataValues>
+                <name>dataType</name>
+                <value>
+                    <stringValue>Picklist</stringValue>
+                </value>
+            </processMetadataValues>
+            <processMetadataValues>
+                <name>isRequired</name>
+                <value>
+                    <booleanValue>false</booleanValue>
+                </value>
+            </processMetadataValues>
+            <processMetadataValues>
+                <name>leftHandSideLabel</name>
+                <value>
+                    <stringValue>Priority</stringValue>
+                </value>
+            </processMetadataValues>
+            <processMetadataValues>
+                <name>rightHandSideType</name>
+                <value>
+                    <stringValue>Picklist</stringValue>
+                </value>
+            </processMetadataValues>
+            <field>Priority</field>
+            <value>
+                <stringValue>Normal</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <processMetadataValues>
+                <name>dataType</name>
+                <value>
+                    <stringValue>DateTime</stringValue>
+                </value>
+            </processMetadataValues>
+            <processMetadataValues>
+                <name>isRequired</name>
+                <value>
+                    <booleanValue>false</booleanValue>
+                </value>
+            </processMetadataValues>
+            <processMetadataValues>
+                <name>leftHandSideLabel</name>
+                <value>
+                    <stringValue>Reminder Date/Time</stringValue>
+                </value>
+            </processMetadataValues>
+            <processMetadataValues>
+                <name>leftHandSideReferenceTo</name>
+                <value>
+                    <stringValue/>
+                </value>
+            </processMetadataValues>
+            <processMetadataValues>
+                <name>rightHandSideType</name>
+                <value>
+                    <stringValue>Formula</stringValue>
+                </value>
+            </processMetadataValues>
+            <field>ReminderDateTime</field>
+            <value>
+                <elementReference>formula_34_myRule_31_A1_6738656091</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <processMetadataValues>
+                <name>dataType</name>
+                <value>
+                    <stringValue>Picklist</stringValue>
+                </value>
+            </processMetadataValues>
+            <processMetadataValues>
+                <name>isRequired</name>
+                <value>
+                    <booleanValue>false</booleanValue>
+                </value>
+            </processMetadataValues>
+            <processMetadataValues>
+                <name>leftHandSideLabel</name>
+                <value>
+                    <stringValue>Status</stringValue>
+                </value>
+            </processMetadataValues>
+            <processMetadataValues>
+                <name>rightHandSideType</name>
+                <value>
+                    <stringValue>Picklist</stringValue>
+                </value>
+            </processMetadataValues>
+            <field>Status</field>
+            <value>
+                <stringValue>Open</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <processMetadataValues>
+                <name>dataType</name>
+                <value>
+                    <stringValue>String</stringValue>
+                </value>
+            </processMetadataValues>
+            <processMetadataValues>
+                <name>isRequired</name>
+                <value>
+                    <booleanValue>false</booleanValue>
+                </value>
+            </processMetadataValues>
+            <processMetadataValues>
+                <name>leftHandSideLabel</name>
+                <value>
+                    <stringValue>Subject</stringValue>
+                </value>
+            </processMetadataValues>
+            <processMetadataValues>
+                <name>leftHandSideReferenceTo</name>
+                <value>
+                    <stringValue/>
+                </value>
+            </processMetadataValues>
+            <processMetadataValues>
+                <name>rightHandSideType</name>
+                <value>
+                    <stringValue>Formula</stringValue>
+                </value>
+            </processMetadataValues>
+            <field>Subject</field>
+            <value>
+                <elementReference>formula_35_myRule_31_A1_7452861175</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <processMetadataValues>
+                <name>dataType</name>
+                <value>
+                    <stringValue>ID</stringValue>
+                </value>
+            </processMetadataValues>
+            <processMetadataValues>
+                <name>isRequired</name>
+                <value>
+                    <booleanValue>false</booleanValue>
+                </value>
+            </processMetadataValues>
+            <processMetadataValues>
+                <name>leftHandSideLabel</name>
+                <value>
+                    <stringValue>Related To ID</stringValue>
+                </value>
+            </processMetadataValues>
+            <processMetadataValues>
+                <name>leftHandSideReferenceTo</name>
+                <value>
+                    <stringValue>AWS_S3_Object__c;Account;Account_Number_Detail__c;AcctSeedERP__Inbound_Inventory_Movement__c;AcctSeedERP__Inventory_Balance__c;AcctSeedERP__Location__c;AcctSeedERP__Manufacturing_Inventory_Movement__c;AcctSeedERP__Material__c;AcctSeedERP__Outbound_Inventory_Movement__c;AcctSeedERP__Purchase_Order_Inventory_Movement__c;AcctSeedERP__Purchase_Order_Line__c;AcctSeedERP__Purchase_Order__c;AcctSeedERP__Sales_Order_Inventory_Movement__c;AcctSeedERP__Sales_Order_Line__c;AcctSeedERP__Sales_Order__c;AcctSeedERP__Shipment_Line__c;AcctSeedERP__Shipment__c;AcctSeedERP__Warehouse__c;AcctSeed__AP_Credit_Memo__c;AcctSeed__AP_Disbursement__c;AcctSeed__Account_Payable_Line__c;AcctSeed__Account_Payable__c;AcctSeed__Accounting_Period__c;AcctSeed__Accounting_Variable__c;AcctSeed__Bank_Adjustment__c;AcctSeed__Bank_Deposit__c;AcctSeed__Bank_Reconciliation2__c;AcctSeed__Bank_Reconciliation_Line2__c;AcctSeed__Bank_Reconciliation__c;AcctSeed__Billing_Cash_Receipt__c;AcctSeed__Billing_Credit_Memo__c;AcctSeed__Billing_Format__c;AcctSeed__Billing_Line__c;AcctSeed__Billing_Rates__c;AcctSeed__Billing__c;AcctSeed__Cash_Disbursement_Batch__c;AcctSeed__Cash_Disbursement__c;AcctSeed__Cash_Receipt__c;AcctSeed__Cost_Rates__c;AcctSeed__Expense_Line__c;AcctSeed__Expense_Report__c;AcctSeed__Financial_Cube__c;AcctSeed__Fixed_Asset__c;AcctSeed__GL_Account__c;AcctSeed__Journal_Entry_Line__c;AcctSeed__Journal_Entry__c;AcctSeed__Ledger__c;AcctSeed__Product_Part__c;AcctSeed__Project_Task__c;AcctSeed__Project__c;AcctSeed__Recurring_Account_Payable_Line__c;AcctSeed__Recurring_Account_Payable__c;AcctSeed__Recurring_Billing_Line__c;AcctSeed__Recurring_Billing__c;AcctSeed__Recurring_Journal_Entry_Line__c;AcctSeed__Recurring_Journal_Entry__c;AcctSeed__Scheduled_Revenue_Expense__c;AcctSeed__Time_Card_Accounting_Period__c;AcctSeed__Time_Card_Day__c;AcctSeed__Time_Card_Line__c;AcctSeed__Time_Card_Period__c;AcctSeed__Time_Card__c;Asset;AssetRelationship;Campaign;Case;ChannelProgram;ChannelProgramLevel;ContactRequest;Contract;ContractLineItem;Dealer_Financing_Request__c;Dealer_Order_Line__c;Dealer_Order__c;Employee_Wage_Rate__c;Employee__c;Entitlement;Financing_Amount_Used__c;Financing_Company__c;Freight_Charges__c;Fundraiser__c;GMBLASERP__Inventory_Adjustment__c;GMBLASERP__Inventory_Transfer__c;GMBLASERP__Serial_Number__c;GetFeedback_Survey_Response__c;Legend_Accounting__c;Legend_Production_Home__c;Legend_Sales_Home__c;ListEmail;LiveAgentSession;LiveChatTranscript;Lot_Exchange__c;Opportunity;PartnerFundAllocation;PartnerFundClaim;PartnerFundRequest;PartnerMarketingBudget;Performance_Tracker__c;Prepaid_Service_Redeemed__c;Prepaid_Service__c;Product2;Project_Labor_Rate__c;Prop_Chart__c;Quote;Rigger_Job__c;ServiceContract;Solution;Technican__c;Time_Card_Entry__c;Truck_Destination__c;WorkOrder;WorkOrderLineItem;Yard_Location__c;agf__ADM_Epic__c;agf__ADM_Priority__c;agf__ADM_Release_Event__c;agf__ADM_Release_Stamp_Cache__c;agf__ADM_Release__c;agf__ADM_Severity_Type__c;agf__ADM_Severity__c;agf__ADM_Sprint__c;agf__ADM_Type__c;agf__ADM_Work__c;agf__Environments_Order__c;agf__Headcount__c;agf__Locking_Record__c;agf__OMOpportunity__c;agf__QA_Test_Case__c;agf__QA_Test_Execution__c;agf__QA_Test_Plan__c;agf__RCA__c;agf__Release_Signoff_Infrastructure__c;agf__Retrospective__c;et4ae5__Triggered_Send_Execution__c</stringValue>
+                </value>
+            </processMetadataValues>
+            <processMetadataValues>
+                <name>rightHandSideType</name>
+                <value>
+                    <stringValue>Reference</stringValue>
+                </value>
+            </processMetadataValues>
+            <field>WhatId</field>
+            <value>
+                <elementReference>myVariable_current.Id</elementReference>
+            </value>
+        </inputAssignments>
+        <object>Task</object>
+    </recordCreates>
+    <recordCreates>
+        <name>myRule_37_A1</name>
+        <label>Create Task (Boat Specialist)</label>
+        <locationX>3700</locationX>
+        <locationY>200</locationY>
+        <inputAssignments>
+            <processMetadataValues>
+                <name>dataType</name>
+                <value>
+                    <stringValue>Date</stringValue>
+                </value>
+            </processMetadataValues>
+            <processMetadataValues>
+                <name>isRequired</name>
+                <value>
+                    <booleanValue>false</booleanValue>
+                </value>
+            </processMetadataValues>
+            <processMetadataValues>
+                <name>leftHandSideLabel</name>
+                <value>
+                    <stringValue>Due Date Only</stringValue>
+                </value>
+            </processMetadataValues>
+            <processMetadataValues>
+                <name>leftHandSideReferenceTo</name>
+                <value>
+                    <stringValue/>
+                </value>
+            </processMetadataValues>
+            <processMetadataValues>
+                <name>rightHandSideType</name>
+                <value>
+                    <stringValue>Formula</stringValue>
+                </value>
+            </processMetadataValues>
+            <field>ActivityDate</field>
+            <value>
+                <elementReference>formula_39_myRule_37_A1_8431871426</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -3753,7 +4384,7 @@
             </processMetadataValues>
             <field>ReminderDateTime</field>
             <value>
-                <elementReference>formula_33_myRule_31_A1_5945409018</elementReference>
+                <elementReference>formula_40_myRule_37_A1_0492064920</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -3819,7 +4450,7 @@
             </processMetadataValues>
             <field>Subject</field>
             <value>
-                <elementReference>formula_34_myRule_31_A1_7815145029</elementReference>
+                <elementReference>formula_41_myRule_37_A1_1511456011</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -3861,9 +4492,9 @@
         <object>Task</object>
     </recordCreates>
     <recordCreates>
-        <name>myRule_36_A1</name>
+        <name>myRule_43_A1</name>
         <label>Create Task (Miguel C.)</label>
-        <locationX>3600</locationX>
+        <locationX>4300</locationX>
         <locationY>200</locationY>
         <inputAssignments>
             <processMetadataValues>
@@ -3898,7 +4529,7 @@
             </processMetadataValues>
             <field>ActivityDate</field>
             <value>
-                <elementReference>formula_37_myRule_36_A1_7222235760</elementReference>
+                <elementReference>formula_45_myRule_43_A1_2159188944</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -4030,7 +4661,7 @@
             </processMetadataValues>
             <field>ReminderDateTime</field>
             <value>
-                <elementReference>formula_38_myRule_36_A1_4365988011</elementReference>
+                <elementReference>formula_46_myRule_43_A1_5372141230</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -4096,7 +4727,7 @@
             </processMetadataValues>
             <field>Subject</field>
             <value>
-                <elementReference>formula_39_myRule_36_A1_3047832664</elementReference>
+                <elementReference>formula_47_myRule_43_A1_4870812809</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -4138,9 +4769,9 @@
         <object>Task</object>
     </recordCreates>
     <recordCreates>
-        <name>myRule_41_A1</name>
+        <name>myRule_49_A1</name>
         <label>Create Task</label>
-        <locationX>4100</locationX>
+        <locationX>4900</locationX>
         <locationY>200</locationY>
         <inputAssignments>
             <processMetadataValues>
@@ -4175,7 +4806,7 @@
             </processMetadataValues>
             <field>ActivityDate</field>
             <value>
-                <elementReference>formula_42_myRule_41_A1_0392694611</elementReference>
+                <elementReference>formula_51_myRule_49_A1_4121757323</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -4307,7 +4938,7 @@
             </processMetadataValues>
             <field>ReminderDateTime</field>
             <value>
-                <elementReference>formula_43_myRule_41_A1_5648157840</elementReference>
+                <elementReference>formula_52_myRule_49_A1_2305644291</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -4373,7 +5004,7 @@
             </processMetadataValues>
             <field>Subject</field>
             <value>
-                <elementReference>formula_44_myRule_41_A1_9838080237</elementReference>
+                <elementReference>formula_53_myRule_49_A1_9407785093</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -4415,9 +5046,9 @@
         <object>Task</object>
     </recordCreates>
     <recordCreates>
-        <name>myRule_46_A1</name>
+        <name>myRule_55_A1</name>
         <label>Create Task (Boat Specialist)</label>
-        <locationX>4600</locationX>
+        <locationX>5500</locationX>
         <locationY>200</locationY>
         <inputAssignments>
             <processMetadataValues>
@@ -4452,7 +5083,7 @@
             </processMetadataValues>
             <field>ActivityDate</field>
             <value>
-                <elementReference>formula_47_myRule_46_A1_5699006747</elementReference>
+                <elementReference>formula_57_myRule_55_A1_7378133543</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -4584,7 +5215,7 @@
             </processMetadataValues>
             <field>ReminderDateTime</field>
             <value>
-                <elementReference>formula_48_myRule_46_A1_2545553190</elementReference>
+                <elementReference>formula_58_myRule_55_A1_7660559434</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -4650,7 +5281,7 @@
             </processMetadataValues>
             <field>Subject</field>
             <value>
-                <elementReference>formula_49_myRule_46_A1_7124319073</elementReference>
+                <elementReference>formula_59_myRule_55_A1_9030013605</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -4692,9 +5323,9 @@
         <object>Task</object>
     </recordCreates>
     <recordCreates>
-        <name>myRule_6_A1</name>
+        <name>myRule_7_A1</name>
         <label>Create Task</label>
-        <locationX>600</locationX>
+        <locationX>700</locationX>
         <locationY>200</locationY>
         <inputAssignments>
             <processMetadataValues>
@@ -4729,7 +5360,7 @@
             </processMetadataValues>
             <field>ActivityDate</field>
             <value>
-                <elementReference>formula_7_myRule_6_A1_1918606165</elementReference>
+                <elementReference>formula_9_myRule_7_A1_4531209983</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -4861,7 +5492,7 @@
             </processMetadataValues>
             <field>ReminderDateTime</field>
             <value>
-                <elementReference>formula_8_myRule_6_A1_7505367343</elementReference>
+                <elementReference>formula_10_myRule_7_A1_1452618201</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -4927,7 +5558,7 @@
             </processMetadataValues>
             <field>Subject</field>
             <value>
-                <elementReference>formula_9_myRule_6_A1_8717246673</elementReference>
+                <elementReference>formula_11_myRule_7_A1_5356977015</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -4968,7 +5599,7 @@
         </inputAssignments>
         <object>Task</object>
     </recordCreates>
-    <startElementReference>myDecision</startElementReference>
+    <startElementReference>isChangedDecision2_myRule_1_Stage_c</startElementReference>
     <status>Active</status>
     <variables>
         <name>myVariable_current</name>

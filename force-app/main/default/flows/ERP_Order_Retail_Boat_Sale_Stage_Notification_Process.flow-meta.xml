@@ -4,21 +4,7 @@
         <name>Pending_Inspection_Email_Store_Manager_Whitefish</name>
         <label>Pending Inspection Email Store Manager Whitefish</label>
         <locationX>50</locationX>
-        <locationY>493</locationY>
-        <actionName>AcctSeed__Project__c.Retail_ERP_Stage_Notification_Whitefish_Store_Manager</actionName>
-        <actionType>emailAlert</actionType>
-        <inputParameters>
-            <name>SObjectRowId</name>
-            <value>
-                <elementReference>$Record.Id</elementReference>
-            </value>
-        </inputParameters>
-    </actionCalls>
-    <actionCalls>
-        <name>Tagging_Pending_Email_Store_Manager_Whitefish</name>
-        <label>Tagging Pending Email Store Manager Whitefish</label>
-        <locationX>314</locationX>
-        <locationY>493</locationY>
+        <locationY>671</locationY>
         <actionName>AcctSeed__Project__c.Retail_ERP_Stage_Notification_Whitefish_Store_Manager</actionName>
         <actionType>emailAlert</actionType>
         <inputParameters>
@@ -33,7 +19,7 @@
         <name>ERP_Stage</name>
         <label>ERP Stage</label>
         <locationX>314</locationX>
-        <locationY>373</locationY>
+        <locationY>551</locationY>
         <defaultConnectorLabel>Else</defaultConnectorLabel>
         <rules>
             <name>Pending_Inspection_Whitefish</name>
@@ -52,27 +38,115 @@
             <label>Pending Inspection</label>
         </rules>
         <rules>
-            <name>Tagging_Pending_Whitefish</name>
+            <name>Pending_Final_Rigging</name>
             <conditionLogic>and</conditionLogic>
             <conditions>
                 <leftValueReference>$Record.Stage__c</leftValueReference>
                 <operator>EqualTo</operator>
                 <rightValue>
-                    <stringValue>Tagging Pending</stringValue>
+                    <stringValue>Pending Final Rigging</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.Boat_Specialist__c</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.Delivery_Date__c</leftValueReference>
+                <operator>GreaterThanOrEqualTo</operator>
+                <rightValue>
+                    <elementReference>TodayPlus60d</elementReference>
                 </rightValue>
             </conditions>
             <connector>
-                <targetReference>Tagging_Pending_Email_Store_Manager_Whitefish</targetReference>
+                <targetReference>Task_Boat_Specialist_Call_Early_Pickup</targetReference>
             </connector>
             <doesRequireRecordChangedToMeetCriteria>true</doesRequireRecordChangedToMeetCriteria>
-            <label>Tagging Pending</label>
+            <label>Pending Final Rigging</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>ERP_Stage_0</name>
+        <label>ERP Stage</label>
+        <locationX>974</locationX>
+        <locationY>551</locationY>
+        <defaultConnectorLabel>Else</defaultConnectorLabel>
+        <rules>
+            <name>Pending_Final_Rigging_0</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Stage__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Pending Final Rigging</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.Boat_Specialist__c</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.Delivery_Date__c</leftValueReference>
+                <operator>GreaterThanOrEqualTo</operator>
+                <rightValue>
+                    <elementReference>TodayPlus60d</elementReference>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Task_Boat_Specialist_Call_Early_Pickup_0</targetReference>
+            </connector>
+            <doesRequireRecordChangedToMeetCriteria>true</doesRequireRecordChangedToMeetCriteria>
+            <label>Pending Final Rigging</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>ERP_Stage_0_0</name>
+        <label>ERP Stage</label>
+        <locationX>1502</locationX>
+        <locationY>551</locationY>
+        <defaultConnectorLabel>Else</defaultConnectorLabel>
+        <rules>
+            <name>Pending_Final_Rigging_0_0</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Stage__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Pending Final Rigging</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.Boat_Specialist__c</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.Delivery_Date__c</leftValueReference>
+                <operator>GreaterThanOrEqualTo</operator>
+                <rightValue>
+                    <elementReference>TodayPlus60d</elementReference>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Task_Boat_Specialist_Call_Early_Pickup_0_0</targetReference>
+            </connector>
+            <doesRequireRecordChangedToMeetCriteria>true</doesRequireRecordChangedToMeetCriteria>
+            <label>Pending Final Rigging</label>
         </rules>
     </decisions>
     <decisions>
         <name>Retail_Location</name>
         <label>Retail Location</label>
-        <locationX>842</locationX>
-        <locationY>253</locationY>
+        <locationX>1106</locationX>
+        <locationY>431</locationY>
         <defaultConnectorLabel>Else</defaultConnectorLabel>
         <rules>
             <name>Whitefish</name>
@@ -99,6 +173,9 @@
                     <stringValue>Montreal</stringValue>
                 </rightValue>
             </conditions>
+            <connector>
+                <targetReference>ERP_Stage_0</targetReference>
+            </connector>
             <label>Montreal</label>
         </rules>
         <rules>
@@ -111,10 +188,28 @@
                     <stringValue>Barrie</stringValue>
                 </rightValue>
             </conditions>
+            <connector>
+                <targetReference>ERP_Stage_0_0</targetReference>
+            </connector>
             <label>Barrie</label>
         </rules>
     </decisions>
     <description>Slowly removing individual workflows / process builders that handle Retail ERP notifications and migrating them into this flow.</description>
+    <formulas>
+        <name>Now</name>
+        <dataType>DateTime</dataType>
+        <expression>NOW()</expression>
+    </formulas>
+    <formulas>
+        <name>Today</name>
+        <dataType>Date</dataType>
+        <expression>TODAY()</expression>
+    </formulas>
+    <formulas>
+        <name>TodayPlus60d</name>
+        <dataType>Date</dataType>
+        <expression>TODAY() + 60</expression>
+    </formulas>
     <interviewLabel>ERP Order: Retail Boat Sale Stage Notification Process {!$Flow.CurrentDateTime}</interviewLabel>
     <label>ERP Order: Retail Boat Sale Stage Notification Process</label>
     <processMetadataValues>
@@ -136,11 +231,263 @@
         </value>
     </processMetadataValues>
     <processType>AutoLaunchedFlow</processType>
-    <start>
-        <locationX>716</locationX>
-        <locationY>0</locationY>
+    <recordCreates>
+        <name>Task_Boat_Specialist_Call_Early_Pickup</name>
+        <label>Task Boat Specialist Call Early Pickup</label>
+        <locationX>314</locationX>
+        <locationY>671</locationY>
+        <inputAssignments>
+            <field>ActivityDate</field>
+            <value>
+                <elementReference>Today</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Description</field>
+            <value>
+                <stringValue>Call the customer to arrange an earlier pickup date if possible.</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>IsReminderSet</field>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>OwnerId</field>
+            <value>
+                <elementReference>$Record.Boat_Specialist__r.Id</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Priority</field>
+            <value>
+                <stringValue>High</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>RecordTypeId</field>
+            <value>
+                <elementReference>TaskRecordTypeID</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>ReminderDateTime</field>
+            <value>
+                <elementReference>Now</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Status</field>
+            <value>
+                <stringValue>Open</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Subject</field>
+            <value>
+                <stringValue>Call the customer to arrange for early pickup</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Type</field>
+            <value>
+                <stringValue>To Do</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>WhatId</field>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </inputAssignments>
+        <object>Task</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordCreates>
+    <recordCreates>
+        <name>Task_Boat_Specialist_Call_Early_Pickup_0</name>
+        <label>Task Boat Specialist Call Early Pickup</label>
+        <locationX>842</locationX>
+        <locationY>671</locationY>
+        <inputAssignments>
+            <field>ActivityDate</field>
+            <value>
+                <elementReference>Today</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Description</field>
+            <value>
+                <stringValue>Call the customer to arrange an earlier pickup date if possible.</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>IsReminderSet</field>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>OwnerId</field>
+            <value>
+                <elementReference>$Record.Boat_Specialist__r.Id</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Priority</field>
+            <value>
+                <stringValue>High</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>RecordTypeId</field>
+            <value>
+                <elementReference>TaskRecordTypeID</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>ReminderDateTime</field>
+            <value>
+                <elementReference>Now</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Status</field>
+            <value>
+                <stringValue>Open</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Subject</field>
+            <value>
+                <stringValue>Call the customer to arrange for early pickup</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Type</field>
+            <value>
+                <stringValue>To Do</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>WhatId</field>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </inputAssignments>
+        <object>Task</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordCreates>
+    <recordCreates>
+        <name>Task_Boat_Specialist_Call_Early_Pickup_0_0</name>
+        <label>Task Boat Specialist Call Early Pickup</label>
+        <locationX>1370</locationX>
+        <locationY>671</locationY>
+        <inputAssignments>
+            <field>ActivityDate</field>
+            <value>
+                <elementReference>Today</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Description</field>
+            <value>
+                <stringValue>Call the customer to arrange an earlier pickup date if possible.</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>IsReminderSet</field>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>OwnerId</field>
+            <value>
+                <elementReference>$Record.Boat_Specialist__r.Id</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Priority</field>
+            <value>
+                <stringValue>High</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>RecordTypeId</field>
+            <value>
+                <elementReference>TaskRecordTypeID</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>ReminderDateTime</field>
+            <value>
+                <elementReference>Now</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Status</field>
+            <value>
+                <stringValue>Open</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Subject</field>
+            <value>
+                <stringValue>Call the customer to arrange for early pickup</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Type</field>
+            <value>
+                <stringValue>To Do</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>WhatId</field>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </inputAssignments>
+        <object>Task</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordCreates>
+    <recordLookups>
+        <name>Get_Task_Record_Type</name>
+        <label>Get Task Record Type</label>
+        <locationX>1106</locationX>
+        <locationY>311</locationY>
+        <assignNullValuesIfNoRecordsFound>true</assignNullValuesIfNoRecordsFound>
         <connector>
             <targetReference>Retail_Location</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>SobjectType</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>Task</stringValue>
+            </value>
+        </filters>
+        <filters>
+            <field>Name</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>Customer Follow Up</stringValue>
+            </value>
+        </filters>
+        <object>RecordType</object>
+        <outputAssignments>
+            <assignToReference>TaskRecordTypeID</assignToReference>
+            <field>Id</field>
+        </outputAssignments>
+    </recordLookups>
+    <start>
+        <locationX>980</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Get_Task_Record_Type</targetReference>
         </connector>
         <filterLogic>and</filterLogic>
         <filters>
@@ -155,4 +502,11 @@
         <triggerType>RecordAfterSave</triggerType>
     </start>
     <status>Active</status>
+    <variables>
+        <name>TaskRecordTypeID</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
 </Flow>

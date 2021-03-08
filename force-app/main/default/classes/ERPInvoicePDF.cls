@@ -594,7 +594,7 @@ public with sharing class ERPInvoicePDF {
     {
       if(this.billId != null && bl.Id == this.billId){
         this.currentBill = bl;
-        this.invoiceDate = bl.CreatedDate.format('MMMMM dd, yyyy');
+        this.invoiceDate = bl.CreatedDate.format('MMM dd, yyyy');
       }
       else
         this.erpBillings.add(bl);
@@ -873,7 +873,7 @@ public with sharing class ERPInvoicePDF {
       DateTime birth;
       if (personBirthday != null) {
         birth = datetime.newInstance(personBirthday.year(), personBirthday.month(), personBirthday.day() );
-        this.birthday =  birth.format('MMMMM dd, yyyy');
+        this.birthday =  birth.format('MMM dd, yyyy');
       }
     }
     this.storeAddress = this.warehouse.Street__c + ', '
@@ -892,11 +892,11 @@ public with sharing class ERPInvoicePDF {
       this.invoiceName = projectName;
     }
     this.deliveryDate = erpOrder.Delivery_Date__c == null ? '' :
-                        erpOrder.Delivery_Date__c.format('MMMMM dd, yyyy');
-    this.invoiceDate = erpOrder.createdDate.format('MMMMM dd, yyyy');
+                        erpOrder.Delivery_Date__c.format('MMM dd, yyyy');
+    this.invoiceDate = erpOrder.createdDate.format('MMM dd, yyyy');
     if( this.erpOrder.RecordTypeId == gcConstants.idRtProjectPartnerBoatSale )
       this.invoiceDate = erpOrder.Delivery_Date__c == null ? '' :
-                         erpOrder.Delivery_Date__c.format('MMMMM dd, yyyy');
+                         erpOrder.Delivery_Date__c.format('MMM dd, yyyy');
 
     if( this.erpOrder.RecordTypeId == gcConstants.idRtProjectCounterSale ||
         this.erpOrder.RecordTypeId == gcConstants.idRtPartnerPartsOrder ||
@@ -905,7 +905,7 @@ public with sharing class ERPInvoicePDF {
       this.invoiceDateLabel = 'Invoice Date';
       if( this.erpOrder.Delivery_Date__c != null )
       {
-        this.InvoiceDate = erpOrder.Delivery_Date__c.format('MMMMM dd, yyyy');
+        this.InvoiceDate = erpOrder.Delivery_Date__c.format('MMM dd, yyyy');
         this.invoiceDateLabel = 'Delivery Date';
       }
     }
