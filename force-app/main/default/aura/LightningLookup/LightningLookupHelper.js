@@ -24,7 +24,7 @@
         console.log( 'component must be valid');
         var action = component.get("c.searchSObject");
         action.setParams({
-            'type' : type,
+            'sObjectType' : type,
             'searchString' : searchString,
             'serializedFilters': JSON.stringify(filters),
             'pricebookId' : pricebookId,
