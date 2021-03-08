@@ -39,6 +39,25 @@ public without sharing class arAccountStatement {
 	}
 
 	@AuraEnabled
+	public static Id getAccountId( Id recordId )
+	{
+		Id result;
+		String sObjectType = LGND_Utilities.sObjectNameFromId( recordId );
+		switch on sObjectType
+		{
+			when 'Account'
+			{
+				result = recordId;
+			}
+			when 'AcctSeed__Project__c'
+			{
+				result = [SELECT AcctSeed__Account__c FROM AcctSeed__Project__c WHERE Id = :recordId ].AcctSeed__Account__c;
+			}
+		}
+		return result;
+	}
+
+	@AuraEnabled
 	public static List<String> getOptions() {
 		List<String> options = new list<String>();
 

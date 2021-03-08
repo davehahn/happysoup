@@ -68,28 +68,40 @@
 													onclick="{!c.toggleThisJob}">
 										☰
 									</button>
-<!--									<aura:if isTrue="{!j.job.ActualStart__c == null}">-->
-										<button class="{!join('timerBtn ', 'slds-button ', 'slds-button_neutral ', if(j.hasStartedTimeEntry, 'active', ''))}"
-														data-job-id="{!j.Id}"
-														data-time-entry-id="{!j.openTimeEntryId}"
-														onclick="{!c.startJob}"
-														aura:id="startButton"></button>
-<!--									</aura:if>-->
-<!--									<aura:if isTrue="{!j.job.ActualStart__c != null}">-->
-<!--										<span class="timerBtn">Started</span>-->
-<!--									</aura:if>-->
+									<button class="{!join('timerBtn ', 'slds-button ', 'slds-button_neutral ', if(j.hasStartedTimeEntry, 'active', ''))}"
+													data-job-id="{!j.Id}"
+													data-time-entry-id="{!j.openTimeEntryId}"
+													onclick="{!c.startJob}"
+													aura:id="startButton">
+									</button>
 								</div>
 								<div class="fullDetails">
 									<div class="hasERP">
 										<div class="RecordType">
 											{!j.job.ERP_Order__r.RecordType.Name}
 										</div>
-										<p class="age">
-											<aura:if isTrue="{!j.timeEstimate != null}">
-												<span>{!j.timeEstimate}</span> hours<br/>
-												<br/>
-											</aura:if>
-										</p>
+										<div class="progress slds-border_bottom slds-m-bottom_small">
+											<div class="slds-grid slds-grid_vertical-align-end">
+												<div class="slds-col slds-text-align_center slds-border_right slds-size_1-of-2">
+													<div style="font-size:1.1rem">
+														<lightning:formattedNumber value="{!j.timeSpent}" maximumFractionDigits="2" />
+														<span class="slds-text-body_small slds-m-left_xx-small">hrs</span>
+													</div>
+													<div class="slds-text-body_small" style="margin-top: -8px;">Actual</div>
+												</div>
+												<div class="slds-col slds-text-align_center">
+													<div style="font-size:1.1rem">
+														<lightning:formattedNumber value="{!j.timeEstimate}" maximumFractionDigits="2" />
+														<span class="slds-text-body_small slds-m-left_xx-small">hrs</span>
+													</div>
+													<div class="slds-text-body_small" style="margin-top: -8px;">Estimated</div>
+												</div>
+											</div>
+											<div class="slds-progress-bar slds-progress-bar_large">
+												<span class="{! join( ' ', 'slds-progress-bar__value', j.progressClass)}"
+															style="{! join('', 'width:', j.progress, '%;')}"></span>
+											</div>
+										</div>
 										<dl>
 											<aura:if isTrue="{!j.job.ERP_Order__r.AcctSeedERP__Work_Order_Number__c != null}">
 												<dt>ERP Order #</dt>
@@ -172,12 +184,28 @@
 								</div>
 								<div class="minDetails">
 									<div class="hasERP">
-										<p class="age">
-											<aura:if isTrue="{!j.timeEstimate != null}">
-												<span>{!j.timeEstimate}</span> hours<br/>
-												<br/>
-											</aura:if>
-										</p>
+										<div class="progress slds-border_bottom slds-m-bottom_small">
+											<div class="slds-grid slds-grid_vertical-align-end">
+												<div class="slds-col slds-text-align_center slds-border_right slds-size_1-of-2">
+													<div style="font-size:1.1rem">
+														<lightning:formattedNumber value="{!j.timeSpent}" maximumFractionDigits="2" />
+														<span class="slds-text-body_small slds-m-left_xx-small">hrs</span>
+													</div>
+													<div class="slds-text-body_small" style="margin-top: -8px;">Actual</div>
+												</div>
+												<div class="slds-col slds-text-align_center">
+													<div style="font-size:1.1rem">
+														<lightning:formattedNumber value="{!j.timeEstimate}" maximumFractionDigits="2" />
+														<span class="slds-text-body_small slds-m-left_xx-small">hrs</span>
+													</div>
+													<div class="slds-text-body_small" style="margin-top: -8px;">Estimated</div>
+												</div>
+											</div>
+											<div class="slds-progress-bar slds-progress-bar_large">
+												<span class="{! join( ' ', 'slds-progress-bar__value', j.progressClass)}"
+															style="{! join('', 'width:', j.progress, '%;')}"></span>
+											</div>
+										</div>
 										# {!j.job.ERP_Order__r.AcctSeedERP__Work_Order_Number__c}<br/>
 										{!j.job.ERP_Order__r.AcctSeed__Account__r.Name}<br/>
 										{!j.job.ERP_Order__r.Model_Name__c}

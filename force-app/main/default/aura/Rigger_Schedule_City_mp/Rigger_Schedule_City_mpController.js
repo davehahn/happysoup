@@ -89,7 +89,7 @@
 	},
 
 	handleDroppedItem : function(component, event, helper) {
-		component.set('v.fuckit', false);
+//		component.set('v.fuckit', false);
 		helper.getJobs(component);
 	}
 })

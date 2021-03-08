@@ -13,3 +13,15 @@
 .THIS .timerBtn.active:before {
   content: 'Pause'
 }
+
+.THIS .progress .slds-progress-bar {
+  overflow: hidden;
+}
+
+.THIS .progress .slds-progress-bar > .slds-progress-bar__value.in-progress {
+  background-color: green;
+}
+
+.THIS .progress .slds-progress-bar > .slds-progress-bar__value.over-time {
+  background-color: red;
+}
