@@ -95,33 +95,33 @@
     doInit: function(component, event, helper) {
 
 
-        var globalId = component.getGlobalId();
-        component.set("v.globalId", globalId);
+      var globalId = component.getGlobalId(),
+          isRequired = component.get("v.required"),
+          jsonFilters = component.get("v.jsonFilters");
 
-        var isRequired = component.get("v.required");
+      component.set("v.globalId", globalId);
 
+      if( isRequired )
+      {
+        var requiredComponent = component.find("required");
+        $A.util.removeClass(requiredComponent, "slds-hide");
+      }
 
-        if (isRequired) {
+      if( jsonFilters )
+      {
+        component.set('v.filters', JSON.parse(jsonFilters) );
+      }
 
-            var requiredComponent = component.find("required");
+      if(!component.get("v.findLabel")) {
+        return;
+      }
 
-            $A.util.removeClass(requiredComponent, "slds-hide");
-
-
-        }
-
-        if (!component.get("v.findLabel")) {
-
-            return;
-        }
-
-
-        var type = component.get("v.type");
-        helper.getLabel(component, type).then(
-            function(label) {
-                component.set('v.label', label);
-            }
-        );
+      var type = component.get("v.type");
+      helper.getLabel(component, type).then(
+          function(label) {
+              component.set('v.label', label);
+          }
+      );
 
 
     },
