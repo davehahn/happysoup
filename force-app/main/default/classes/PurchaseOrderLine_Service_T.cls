@@ -71,7 +71,9 @@ private class PurchaseOrderLine_Service_T
       pols.add( pol );
     }
     gcPurchaseOrderLine.disableTrigger = true;
+    lgndPurchaseOrderLine.disableTrigger = true;
     insert pols;
+    lgndPurchaseOrderLine.disableTrigger = false;
   }
 
   @IsTest
