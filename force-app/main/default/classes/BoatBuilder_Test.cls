@@ -136,7 +136,7 @@ private class BoatBuilder_Test {
         BoatBuilder.TradeInItem ti = new BoatBuilder.TradeInItem();
         System.assertEquals(false, ti.isDeleted);
 
-        Date d = Date.today() + 30;
+        Date d = Date.today().addDays(30);
 
         System.assertEquals(d, bb.quoteValidDate);
         System.assert(bb.getProductFamilySelectItems().size() > 0);
