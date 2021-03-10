@@ -118,7 +118,7 @@ public without sharing class gcProject {
         {
           Rigger_Schedule_mp.createJobFromERP_Future(newMap.keySet());
         }
-        checkForLinkRetailSaleOnPartnerBoatOrder( listNew, null );
+        Project_Service.handlePartnerToRetailBoatSaleLinkChanges( listNew, null );
       }
       if(boolIsUpdate)
       {
@@ -129,7 +129,7 @@ public without sharing class gcProject {
           RegistrationExt.handleRegistrationsFromERP(newMap, oldMap);
         }
         recalculateInsuranceItems( listNew, oldMap );
-        checkForLinkRetailSaleOnPartnerBoatOrder( listNew, oldMap );
+        Project_Service.handlePartnerToRetailBoatSaleLinkChanges( listNew, oldMap );
       }
       if(boolIsDelete)
       {
@@ -141,74 +141,6 @@ public without sharing class gcProject {
         revertOppStage( oldMap.values() );
       }
     }
-  }
-
-  private static void checkForLinkRetailSaleOnPartnerBoatOrder(
-    List<AcctSeed__Project__c> listNew,
-    Map<Id, AcctSeed__Project__c> oldMap
-  )
-  {
-    List<AcctSeed__Project__c> retailErps = new List<AcctSeed__Project__c>();
-    Map<Id, AcctSeed__Project__c> linkedRetailHasChanged = new Map<Id, AcctSeed__Project__c>();
-    Application_RecordType.ERPOrderRTs erpRts = new Application_RecordType()
-      .getERPOrderRecordTypes();
-    for( AcctSeed__Project__c erp : listNew )
-    {
-      if( erp.RecordTypeId == erpRts.getPartnerBoatSaleId() )
-      {
-        if( oldMap != null )
-        {
-          if( erp.Retail_ERP__c != oldMap.get(erp.Id).Retail_ERP__c )
-          {
-            if( erp.Retail_ERP__c == null )
-            {
-              //Clear old Retail ERP Arrival Data
-              retailErps.add( new AcctSeed__Project__c(
-                Id = oldMap.get(erp.Id).Retail_ERP__c,
-                Arrival_Date__c = null
-              ));
-            }
-            else
-            {
-              //Linked ERP has changes so update the arrival date on new linked retail
-              linkedRetailHasChanged.put( erp.Id, erp );
-            }
-          }
-        }
-        //This is an insert operation
-        else
-        {
-          if( erp.Retail_ERP__c != null )
-          {
-            linkedRetailHasChanged.put( erp.Id, erp );
-          }
-        }
-      }
-    }
-
-    if( linkedRetailHasChanged.size() > 0 )
-    {
-      List<AcctSeedERP__Purchase_Order_Line__c> pols = [
-        SELECT
-          Id,
-          deliverDate__c,
-          AcctSeedERP__Project__c
-        FROM AcctSeedERP__Purchase_Order_Line__c
-        WHERE AcctSeedERP__Project__c IN :linkedRetailHasChanged.keySet()
-      ];
-      for( AcctSeedERP__Purchase_Order_Line__c pol : pols )
-      {
-        if( pol.deliverDate__c != null )
-        {
-          retailERPs.add(new AcctSeed__Project__c(
-            Id = linkedRetailHasChanged.get(pol.AcctSeedERP__Project__c).Retail_ERP__c,
-            Arrival_Date__c = pol.deliverDate__c
-          ));
-        }
-      }
-    }
-
-    update retailERPs;
   }
 
   private static void setStage( AcctSeed__Project__c[] listNew )
