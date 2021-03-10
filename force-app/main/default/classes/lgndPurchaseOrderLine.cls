@@ -46,13 +46,25 @@ public with sharing class lgndPurchaseOrderLine {
     {
       if(boolIsInsert)
       {
-
+        Set<Id> deliverDateSet = new Set<Id>();
+        for( AcctSeedERP__Purchase_Order_Line__c pol : listNew )
+        {
+          if( pol.deliverDate__c != null )
+          {
+            deliverDateSet.add( pol.Id );
+          }
+        }
+        if( deliverDateSet.size() > 0 )
+        {
+          PurchaseOrderLine_Service.propagateDeliveryDate( deliverDateSet );
+        }
       }
       if(boolIsUpdate)
       {
         Map<String, Integer> pl_q_map = new Map<String, Integer>();
         Set<Id> prodIds = new Set<Id>();
         Set<Id> lotIds = new Set<Id>();
+        Set<Id> hasDeliverDateChanges = new Set<Id>();
         for( AcctSeedERP__Purchase_Order_Line__c pol : listNew )
         {
            /*
@@ -74,9 +86,18 @@ public with sharing class lgndPurchaseOrderLine {
             System.debug('idString = ' + idString );
             pl_q_map.put( idString, Integer.valueOf( oldPol.Reserved__c - pol.Reserved__c ) );
           }
+          if( pol.deliverDate__c != oldPol.deliverDate__c ||
+              pol.AcctSeedERP__Project__c != oldPol.AcctSeedERP__Project__c )
+          {
+            hasDeliverDateChanges.add(pol.Id);
+          }
         }
         if( pl_q_map.size() > 0 )
           updateProductLotReservation( pl_q_map, prodIds );
+        if( hasDeliverDateChanges.size() > 0 )
+        {
+          PurchaseOrderLine_Service.propagateDeliveryDate( hasDeliverDateChanges );
+        }
 
       }
       if(boolIsDelete)
