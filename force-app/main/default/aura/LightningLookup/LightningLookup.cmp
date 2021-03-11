@@ -44,6 +44,11 @@
         ]
       "/>
 
+    <aura:attribute name="jsonFilters"
+                    type="String"
+                    description="A JSON representation of the filters attribute. If present this will be parsed into the filters attribute on initilization"
+                    access="global"/>
+
     <aura:attribute name="pricebookId" type="String" default="" description="ID of the pricebook that all search results must use"/>
 
     <aura:attribute name="value" type="String" />
@@ -61,8 +66,8 @@
           <label class="slds-form-element__label"><span class="slds-required slds-hide" aura:id="required">*</span>{!v.label}</label>
         </aura:if>
         <div class="slds-form-element__control">
-          <div class="slds-input-has-icon slds-input-has-icon--right">
-            <c:svg ariaHidden="true" class="slds-input__icon" xlinkHref="/resource/SLDS/assets/icons/utility-sprite/svg/symbols.svg#search"/>
+          <div class="slds-input-has-icon slds-input-has-icon_right">
+            <c:svg ariaHidden="true" class="slds-input__icon" xlinkHref="/resource/LGND_SLDS_214/assets/icons/utility-sprite/svg/symbols.svg#search"/>
             <input id="{!'searchString'+globalId}" class="slds-lookup__search-input slds-input" type="text" role="combobox" aria-activedescendent="" aria-expanded="false" aria-autocomplete="list" placeholder="{!v.placeholder}" value="{!v.value}"/>
           </div>
           <div class="slds-form-element__help slds-hide" aura:id="error">{!v.error}</div>

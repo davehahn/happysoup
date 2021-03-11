@@ -167,53 +167,6 @@ public inherited sharing class Project_Service
     return project.getRecord();
   }
 
-//  public static AcctSeed__Project__c constructFromOpportunity( Opportunity opp )
-//  {
-//    Id projectRT = opp.RecordType.Name == 'Retail Counter Sale' ?
-//      gcConstants.idRtProjectCounterSale :
-//      gcConstants.idRtProjectBoatSale;
-//    AcctSeed__Project__c result = new AcctSeed__Project__c(
-//      Name = (opp.Name).LEFT(80),
-//      Campaign__c = opp.CampaignId,
-//      LeadSource__c = opp.LeadSource,
-//      Stage__c = 'Tagging Pending',
-//      Deposit__c = opp.Deposit__c,
-//      Deposit_Method__c = opp.Deposit_Method__c,
-//      On_Water_Orientation__c = opp.On_Water_Orientation__c,
-//      Pickup_Location__c = opp.Pickup_Location__c,
-//      Delivery_Date__c = opp.Delivery_Date__c,
-//      AcctSeed__Account__c = opp.AccountId,
-//      AcctSeed__Opportunity__c = opp.Id,
-//      Boat_Product__c = opp.BoatId__c,
-//      GMBLASERP__Pricebook__c = opp.Pricebook2Id,
-//      RecordTypeId = projectRT,
-//      Customer_Notes__c = opp.Customer_Notes__c,
-//      GMBLASERP__Warehouse__c = opp.Warehouse__c,
-//      GL_Account_Variable_3__c = opp.GL_Account_Variable_3__c,
-//      Business_Manager__c = opp.Business_Manager__c,
-//      Salesperson__c = opp.OwnerId,
-//      Payment_Method__c = opp.Payment_Method__c,
-//      Boat_Specialist__c = opp.Boat_Specialist_Id__c,
-//      Insurance_Term__c = opp.Insurance_Term__c,
-//      Finance_Term__c = opp.Finance_Term__c,
-//      Finance_Annual_Interest__c = opp.Finance_Annual_Interest__c,
-//      Finance_Ammortization__c = opp.Finance_Ammortization__c,
-//      Finance_Payments_Per_Year__c = opp.Finance_Payments_Per_Year__c,
-//      Finance_Compound_Per_Year__c = opp.Finance_Compound__c,
-//      Tax_Override__c = opp.Tax_Override__c,
-//      ContactEmail__c = opp.ContactEmail__c,
-//      BoatModelYear__c = opp.Boat_Model_Year__c,
-//      TrailerModelYear__c = opp.Trailer_Model_Year__c
-//    );
-//    if( opp.Tax_Override__c == true )
-//    {
-//      result.Tax_Rate_Federal__c = opp.Tax_Rate_Federal__c;
-//      result.Tax_Rate_Provincial__c = opp.Tax_Rate_Provincial__c;
-//      result.Tax_Rate_Retail__c = opp.Tax_Rate_Retail__c;
-//    }
-//    return result;
-//  }
-
   public static List<Case> insertWarrantyPayablesFromCases( List<Case> cases )
   {
     Map<Id, Account> accountMap = buildAccountMap( cases );
@@ -249,6 +202,87 @@ public inherited sharing class Project_Service
       Serial_Number__c = c.Serial_Number__c,
       GMBLASERP__Pricebook__c = c.Price_Book__c
     );
+  }
+
+  public static void handlePartnerToRetailBoatSaleLinkChanges(
+    List<AcctSeed__Project__c> listNew,
+    Map<Id, AcctSeed__Project__c> oldMap
+  )
+  {
+    Map<Id, AcctSeed__Project__c> retailErps = new Map<Id, AcctSeed__Project__c>();
+    Map<Id, AcctSeed__Project__c> linkedRetailHasChanged = new Map<Id, AcctSeed__Project__c>();
+    Application_RecordType.ERPOrderRTs erpRts = new Application_RecordType()
+      .getERPOrderRecordTypes();
+    for( AcctSeed__Project__c erp : listNew )
+    {
+      if( erp.RecordTypeId == erpRts.getPartnerBoatSaleId() )
+      {
+        if( oldMap != null && oldMap.size() > 0 )
+        {
+          if( erp.Retail_ERP__c != oldMap.get(erp.Id).Retail_ERP__c )
+          {
+            if( erp.Retail_ERP__c == null )
+            {
+              //Clear old Retail ERP Arrival Data
+              retailErps.put(
+                oldMap.get(erp.Id).Retail_ERP__c,
+                new AcctSeed__Project__c(
+                  Id = oldMap.get(erp.Id).Retail_ERP__c,
+                  Arrival_Date__c = null
+                )
+              );
+            }
+            else
+            {
+              //Linked ERP has changes so update the arrival date on new linked retail
+              linkedRetailHasChanged.put( erp.Id, erp );
+              if( oldMap.get(erp.Id).Retail_ERP__c != null )
+              {
+                retailErps.put(
+                  oldMap.get(erp.Id).Retail_ERP__c,
+                  new AcctSeed__Project__c(
+                    Id = oldMap.get(erp.Id).Retail_ERP__c,
+                    Arrival_Date__c = null
+                  )
+                );
+              }
+            }
+          }
+        }
+        //This is an insert operation
+        else
+        {
+          if( erp.Retail_ERP__c != null )
+          {
+            linkedRetailHasChanged.put( erp.Id, erp );
+          }
+        }
+      }
+    }
+    // if the linked Retail erp has changed, then retrieve the deliverDate
+    // from the po line linked to partner order and update the arrival date
+    // on the Retail ERP
+    if( linkedRetailHasChanged.size() > 0 )
+    {
+      for(
+        AcctSeedERP__Purchase_Order_Line__c pol :
+        PurchaseOrderLine_Selector.allByProjectId( linkedRetailHasChanged.keySet() )
+      )
+      {
+        if( pol.deliverDate__c != null )
+        {
+          retailERPs.put(
+            linkedRetailHasChanged.get(pol.AcctSeedERP__Project__c).Retail_ERP__c,
+              new AcctSeed__Project__c(
+              Id = linkedRetailHasChanged.get(pol.AcctSeedERP__Project__c).Retail_ERP__c,
+              Arrival_Date__c = pol.deliverDate__c
+            )
+          );
+        }
+      }
+    }
+    System.debug( retailERPs.values());
+    update retailERPs.values();
   }
 
   /**

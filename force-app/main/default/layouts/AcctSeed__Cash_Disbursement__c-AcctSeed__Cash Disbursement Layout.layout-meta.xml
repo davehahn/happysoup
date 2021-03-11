@@ -35,12 +35,12 @@
                 <field>AcctSeed__Status__c</field>
             </layoutItems>
             <layoutItems>
-                <behavior>Readonly</behavior>
-                <field>GMBLASG__Posted__c</field>
+                <behavior>Edit</behavior>
+                <field>Approval_Status__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Readonly</behavior>
-                <field>AcctSeed__Payment_Status__c</field>
+                <field>GMBLASG__Posted__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Required</behavior>
@@ -273,11 +273,6 @@
             <sortOrder>8</sortOrder>
         </platformActionListItems>
         <platformActionListItems>
-            <actionName>Event</actionName>
-            <actionType>QuickAction</actionType>
-            <sortOrder>17</sortOrder>
-        </platformActionListItems>
-        <platformActionListItems>
             <actionName>AcctSeed__Apply</actionName>
             <actionType>CustomButton</actionType>
             <sortOrder>9</sortOrder>
@@ -316,6 +311,11 @@
             <actionName>Lead</actionName>
             <actionType>QuickAction</actionType>
             <sortOrder>16</sortOrder>
+        </platformActionListItems>
+        <platformActionListItems>
+            <actionName>Event</actionName>
+            <actionType>QuickAction</actionType>
+            <sortOrder>17</sortOrder>
         </platformActionListItems>
         <platformActionListItems>
             <actionName>Account</actionName>

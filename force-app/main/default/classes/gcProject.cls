@@ -114,31 +114,30 @@ public without sharing class gcProject {
     {
       if(boolIsInsert)
       {
-//        if(!disableCommission)
-//          CommissionRecordERP.createRecords( newMap.keySet() );
-
         if(!disableJob)
+        {
           Rigger_Schedule_mp.createJobFromERP_Future(newMap.keySet());
+        }
+        Project_Service.handlePartnerToRetailBoatSaleLinkChanges( listNew, null );
       }
       if(boolIsUpdate)
       {
         notifyOnOwnerChange( newMap, oldMap );
         rename(newMap.keySet());
-//        if(!disableCommission)
-//          CommissionRecordERP.erpChanged( newMap, oldMap);
         if(!disableRegistration)
+        {
           RegistrationExt.handleRegistrationsFromERP(newMap, oldMap);
+        }
         recalculateInsuranceItems( listNew, oldMap );
-        //Rigger_Schedule_mp.updateRelatedJobs(newMap, oldMap);
-
-        //if(!disablePrepaid)
-        //    Prepaid_Services_mp.handleProjectPrepaids( newMap, oldMap );
+        Project_Service.handlePartnerToRetailBoatSaleLinkChanges( listNew, oldMap );
       }
       if(boolIsDelete)
       {
         rename(newMap.keySet());
         if(!disableCommission)
-          CommissionRecordERP.deleteRecords( oldMap.keySet() );
+        {
+          CommissionRecordERP.deleteRecords(oldMap.keySet());
+        }
         revertOppStage( oldMap.values() );
       }
     }

@@ -6,11 +6,19 @@
 private class Project_Service_T
 {
 
+  private static final Integer recordCount = 3;
+  private static final Date deliveryDate = Date.today().addDays(10);
+  private static Product2 boat;
+  private static List<AcctSeed__Project__c> retailERPs;
+  private static List<AcctSeed__Project__c> partnerERPs;
+  private static Map<Id, AcctSeedERP__Purchase_Order_Line__c> pol_by_linkedPartnerERPid;
+
   @testSetup static void dataSetup()
   {
     new Factory_TestData();
     Factory_CustomSettings.setupInventorySettings();
     buildOpp();
+    initPartnerRetailPOLStuff();
   }
 
   private static void buildOpp()
@@ -66,6 +74,118 @@ private class Project_Service_T
     insert olis;
   }
 
+  private static void initPartnerRetailPOLStuff()
+  {
+    createERPs();
+    createPO_and_POLs();
+  }
+
+  private static void fetchPartnerRetailPOLStuff()
+  {
+    Application_RecordType.ERPOrderRTs rts = new Application_RecordType().getERPOrderRecordTypes();
+    List<AcctSeed__Project__c> erps = [
+      SELECT
+        Id,
+        RecordTypeId,
+        Arrival_Date__c,
+        Retail_ERP__c
+      FROM AcctSeed__Project__c
+    ];
+    partnerERPs = new List<AcctSeed__Project__c>();
+    Set<Id> partnerIds = new Set<Id>();
+    retailERPs = new List<AcctSeed__Project__c>();
+    for( AcctSeed__Project__c erp : erps )
+    {
+      if( erp.RecordTypeId == rts.getRetailBoatSaleId() )
+      {
+        retailERPs.add( erp );
+      }
+      if( erp.RecordTypeId == rts.getPartnerBoatSaleId() )
+      {
+        partnerERPs.add( erp );
+        partnerIds.add( erp.Id );
+      }
+    }
+
+    pol_by_linkedPartnerERPid = new Map<Id, AcctSeedERP__Purchase_Order_Line__c>();
+    List<AcctSeedERP__Purchase_Order_Line__c> pols = [
+      SELECT
+        Id,
+        deliverDate__c,
+        AcctSeedERP__Project__c
+      FROM AcctSeedERP__Purchase_Order_Line__c
+      WHERE AcctSeedERP__Project__C IN :partnerIds
+    ];
+    for( AcctSeedERP__Purchase_Order_Line__c pol : pols )
+    {
+      pol_by_linkedPartnerERPid.put( pol.AcctSeedERP__Project__c, pol );
+    }
+  }
+
+  private static void createERPs()
+  {
+    Account dealer = Factory_Account.insertDealerAccounts(1)[0];
+    List<Account> customers = Factory_Account.insertCustomerAccounts( recordCount );
+    boat = Factory_Product.createSerializedProduct( 'Boat', 'Pontoon' );
+    partnerERPs = Factory_ERPOrder.createPartnerBoatSales(
+      dealer,
+      new List<Product2>{ boat },
+      recordCount
+    );
+    Id retailRtId = new Application_RecordType().getERPOrderRecordTypes().getRetailBoatSaleId();
+    retailERPs = new List<AcctSeed__Project__c>();
+    for( Account acct : customers )
+    {
+      retailERPs.add( Factory_ERPOrder.buildERP(
+        acct, null, retailRtId
+      ));
+    }
+    retailERPs[0].Arrival_Date__c = deliveryDate;
+    insert retailERPs;
+    for( Integer i=0; i<recordCount; i++ )
+    {
+      partnerERPs[i].Retail_ERP__c = retailERPs[i].Id;
+    }
+    update partnerERPs;
+  }
+
+  private static void createPO_and_POLs()
+  {
+    Account vendor = Factory_Account.insertSupplierAccounts(1)[0];
+    Set<Id> partnerERPids = new Set<Id>();
+    for( AcctSeed__Project__c erp : partnerERPs )
+    {
+      partnerERPids.add( erp.Id );
+    }
+    partnerERPs = [
+      SELECT
+        Id,
+      (SELECT
+        Id
+      FROM AcctSeed__Project_Tasks__r )
+      FROM AcctSeed__Project__c
+      WHERE Id IN : partnerERPids
+    ];
+    AcctSeedERP__Purchase_Order__c po = Factory_PurchaseOrder.createMinimalPO(
+      vendor.Id, null
+    );
+    pol_by_linkedPartnerERPid = new Map<Id, AcctSeedERP__Purchase_Order_Line__c>();
+    for( AcctSeed__Project__c erp : partnerERPs )
+    {
+      AcctSeedERP__Purchase_Order_Line__c pol = Factory_PurchaseOrder.buildLineItem(
+        po.Id,
+        boat.Id,
+        1
+      );
+      pol.AcctSeedERP__Project__c = erp.Id;
+      pol.AcctSeedERP__Project_Task__c = erp.AcctSeed__Project_Tasks__r[0].Id;
+      pol.deliverDate__c = deliveryDate;
+      pol_by_linkedPartnerERPid.put( erp.Id, pol );
+    }
+    gcPurchaseOrderLine.disableTrigger = true;
+    insert pol_by_linkedPartnerERPid.values();
+  }
+
   @IsTest
   static void newFromOpportunityId_SimpleTest()
   {
@@ -96,6 +216,151 @@ private class Project_Service_T
     AcctSeed__Project__c project = Project_Service.newFromOpportunityId( opp.Id );
     Test.stopTest();
     checkResults( project.Id, 3, 9, 3 );
+  }
+
+  @IsTest
+  static void handlePartnerToRetailBoatSaleLinkChanges_linkCreateSimulate_Test()
+  {
+    fetchPartnerRetailPOLStuff();
+    List<AcctSeed__Project__c> listNew = new List<AcctSeed__Project__c>();
+    Map<Id, AcctSeed__Project__c> oldMap = new Map<Id, AcctSeed__Project__c>();
+
+    AcctSeed__Project__c partnerERP = [
+      SELECT
+        Id,
+        Retail_ERP__c,
+        RecordTypeId
+      FROM AcctSeed__Project__c
+      WHERE Id = :partnerERPs[1].Id
+    ];
+
+    partnerERP.Retail_ERP__c = retailERPs[1].Id;
+    listNew.add( partnerERP );
+
+    Test.startTest();
+    Project_Service.handlePartnerToRetailBoatSaleLinkChanges( listNew, oldMap );
+    Test.stopTest();
+
+    AcctSeed__Project__c retailERP = [
+      SELECT
+        Id,
+        Arrival_Date__c
+      FROM AcctSeed__Project__c
+      WHERE Id = :retailERPs[1].Id
+    ];
+
+    System.assertEquals(
+      deliveryDate,
+      retailERP.Arrival_Date__c,
+      'Arrival Date should now be set on Retail ERP'
+    );
+  }
+
+  @IsTest
+  static void handlePartnerToRetailBoatSaleLinkChanges_unlinkSimulate_Test()
+  {
+    fetchPartnerRetailPOLStuff();
+    List<AcctSeed__Project__c> listNew = new List<AcctSeed__Project__c>();
+    Map<Id, AcctSeed__Project__c> oldMap = new Map<Id, AcctSeed__Project__c>();
+
+    oldMap.put( partnerERPs[0].Id, partnerERPs[0] );
+
+    AcctSeed__Project__c partnerERP = [
+      SELECT
+        Id,
+        Retail_ERP__c,
+        RecordTypeId
+      FROM AcctSeed__Project__c
+      WHERE Id = :partnerERPs[0].Id
+    ];
+    partnerERP.Retail_ERP__c = null;
+    listNew.add( partnerERP );
+
+    Test.startTest();
+    Project_Service.handlePartnerToRetailBoatSaleLinkChanges( listNew, oldMap );
+    Test.stopTest();
+
+    AcctSeed__Project__c retailERP = [
+      SELECT
+        Id,
+        Arrival_Date__c
+      FROM AcctSeed__Project__c
+      WHERE Id = :retailERPs[0].Id
+    ];
+
+    System.assertEquals(
+      null,
+      retailERP.Arrival_Date__c,
+      'Arrival Date should now be null on Retail ERP'
+    );
+  }
+
+  @IsTest
+  static void handlePartnerToRetailBoatSaleLinkChanges_linkChangeSimulate_Test()
+  {
+    fetchPartnerRetailPOLStuff();
+    List<AcctSeed__Project__c> listNew = new List<AcctSeed__Project__c>();
+    Map<Id, AcctSeed__Project__c> oldMap = new Map<Id, AcctSeed__Project__c>();
+
+    AcctSeed__Project__c partnerERP = [
+      SELECT
+        Id,
+        Retail_ERP__c,
+        RecordTypeId
+      FROM AcctSeed__Project__c
+      WHERE Id = :partnerERPs[1].Id
+    ];
+
+    partnerERP.Retail_ERP__c = retailERPs[1].Id;
+    retailERPs[1].Arrival_Date__c = deliveryDate;
+    gcProject.disableTrigger = true;
+    update new List<AcctSeed__Project__c>{ partnerERP, retailERPs[1] };
+
+    oldMap.put( partnerERP.Id, partnerERP );
+
+    AcctSeed__Project__c partnerERPnew = [
+      SELECT
+        Id,
+        Retail_ERP__c,
+        RecordTypeId
+      FROM AcctSeed__Project__c
+      WHERE Id = :partnerERP.Id
+    ];
+
+    partnerERPnew.Retail_ERP__c = retailERPs[2].Id;
+    listNew.add( partnerERPnew );
+
+    Test.startTest();
+    Project_Service.handlePartnerToRetailBoatSaleLinkChanges( listNew, oldMap );
+    Test.stopTest();
+
+    AcctSeed__Project__c retailERP1 = [
+      SELECT
+        Id,
+        Arrival_Date__c
+      FROM AcctSeed__Project__c
+      WHERE Id = :retailERPs[1].Id
+    ];
+
+    AcctSeed__Project__c retailERP2 = [
+      SELECT
+        Id,
+        Arrival_Date__c
+      FROM AcctSeed__Project__c
+      WHERE Id = :retailERPs[2].Id
+    ];
+
+    System.assertEquals(
+      null,
+      retailERP1.Arrival_Date__c,
+      'Arrival Date should now be null on Retail ERP 1'
+    );
+
+    System.assertEquals(
+      deliveryDate,
+      retailERP2.Arrival_Date__c,
+      'Arrival Date should now be set on Retail ERP 2'
+    );
   }
 
   private static void checkResults( Id projectId,
