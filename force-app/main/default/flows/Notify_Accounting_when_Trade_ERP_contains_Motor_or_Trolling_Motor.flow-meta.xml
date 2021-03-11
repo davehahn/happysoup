@@ -14,6 +14,7 @@
             </value>
         </inputParameters>
     </actionCalls>
+    <apiVersion>49.0</apiVersion>
     <decisions>
         <name>Entry_Criteria</name>
         <label>Entry Criteria</label>
@@ -59,6 +60,12 @@
         </value>
     </processMetadataValues>
     <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>FREE_FORM_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
         <name>OriginBuilderType</name>
         <value>
             <stringValue>LightningFlowBuilder</stringValue>
@@ -68,12 +75,13 @@
     <recordLookups>
         <name>Get_ERP_Record_Type_ID</name>
         <label>Get ERP Record Type ID</label>
-        <locationX>147</locationX>
+        <locationX>215</locationX>
         <locationY>332</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
-            <targetReference>Get_ERP_Record_Type_Name</targetReference>
+            <targetReference>Get_Product_Record_Type_ID</targetReference>
         </connector>
+        <filterLogic>and</filterLogic>
         <filters>
             <field>Id</field>
             <operator>EqualTo</operator>
@@ -86,27 +94,9 @@
             <assignToReference>ERPRecordTypeID</assignToReference>
             <field>RecordTypeId</field>
         </outputAssignments>
-    </recordLookups>
-    <recordLookups>
-        <name>Get_ERP_Record_Type_Name</name>
-        <label>Get ERP Record Type Name</label>
-        <locationX>284</locationX>
-        <locationY>332</locationY>
-        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
-        <connector>
-            <targetReference>Get_Product_Record_Type_ID</targetReference>
-        </connector>
-        <filters>
-            <field>Id</field>
-            <operator>EqualTo</operator>
-            <value>
-                <elementReference>ERPRecordTypeID</elementReference>
-            </value>
-        </filters>
-        <object>RecordType</object>
         <outputAssignments>
             <assignToReference>ERPRecordTypeName</assignToReference>
-            <field>Name</field>
+            <field>RecordType_Name__c</field>
         </outputAssignments>
     </recordLookups>
     <recordLookups>
@@ -116,8 +106,9 @@
         <locationY>332</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
-            <targetReference>Get_Product_Record_Type_Name</targetReference>
+            <targetReference>Entry_Criteria</targetReference>
         </connector>
+        <filterLogic>and</filterLogic>
         <filters>
             <field>Id</field>
             <operator>EqualTo</operator>
@@ -130,27 +121,9 @@
             <assignToReference>ProductRecordTypeID</assignToReference>
             <field>RecordTypeId</field>
         </outputAssignments>
-    </recordLookups>
-    <recordLookups>
-        <name>Get_Product_Record_Type_Name</name>
-        <label>Get Product Record Type Name</label>
-        <locationX>544</locationX>
-        <locationY>332</locationY>
-        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
-        <connector>
-            <targetReference>Entry_Criteria</targetReference>
-        </connector>
-        <filters>
-            <field>Id</field>
-            <operator>EqualTo</operator>
-            <value>
-                <elementReference>ProductRecordTypeID</elementReference>
-            </value>
-        </filters>
-        <object>RecordType</object>
         <outputAssignments>
             <assignToReference>ProductRecordTypeName</assignToReference>
-            <field>Name</field>
+            <field>RecordType_Name__c</field>
         </outputAssignments>
     </recordLookups>
     <start>
