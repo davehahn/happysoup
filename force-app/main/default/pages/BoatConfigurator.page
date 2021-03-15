@@ -706,8 +706,10 @@
                                     $ {!availableMotorOptions[key].PricebookEntries[0].UnitPrice}
                                   </apex:outputPanel>
                                 </td>
-                                <td><c:BoatBuilderOptionSelect begin_at="{!availableMotorOptions[key].From_Product_Options__r[0].Standard__c}"
+                                <td><c:BoatBuilderOptionSelect
+                                    begin_at="{!availableMotorOptions[key].From_Product_Options__r[0].Standard__c}"
                                     end_at="{!availableMotorOptions[key].From_Product_Options__r[0].Maximum__c}"
+                                    step="{!availableMotorOptions[key].From_Product_Options__r[0].Step__c}"
                                     selectId="{!key}"
                                     productType="motor"
                                     selectValue="{!IF(CONTAINS(selectedPartsIdList['motor'], ':'+key+':'), selectedItemsMap['motor'][key].Quantity, availableMotorOptions[key].From_Product_Options__r[0].Standard__c)}"
@@ -759,8 +761,10 @@
                                   </apex:outputPanel>
                                 </td>
                                 <td>
-                                  <c:BoatBuilderOptionSelect begin_at="{!availableTrailerOptions[key].From_Product_Options__r[0].Standard__c}"
+                                  <c:BoatBuilderOptionSelect
+                                    begin_at="{!availableTrailerOptions[key].From_Product_Options__r[0].Standard__c}"
                                     end_at="{!availableTrailerOptions[key].From_Product_Options__r[0].Maximum__c}"
+                                    step="{!availableTrailerOptions[key].From_Product_Options__r[0].Step__c}"
                                     selectId="{!key}"
                                     productType="trailer"
                                     selectValue="{!IF(CONTAINS(selectedPartsIdList['trailer'], ':'+key+':'), selectedItemsMap['trailer'][key].Quantity, availableTrailerOptions[key].From_Product_Options__r[0].Standard__c)}"
@@ -809,8 +813,10 @@
                                     $ {!availableTrollingMotorOptions[key].PricebookEntries[0].UnitPrice}
                                   </apex:outputPanel>
                                 </td>
-                                <td><c:BoatBuilderOptionSelect begin_at="{!availableTrollingMotorOptions[key].From_Product_Options__r[0].Standard__c}"
+                                <td><c:BoatBuilderOptionSelect
+                                    begin_at="{!availableTrollingMotorOptions[key].From_Product_Options__r[0].Standard__c}"
                                     end_at="{!availableTrollingMotorOptions[key].From_Product_Options__r[0].Maximum__c}"
+                                    step="{!availableTrollingMotorOptions[key].From_Product_Options__r[0].Step__c}"
                                     selectId="{!availableTrollingMotorOptions[key].Id}"
                                     productType="trolling motor"
                                     selectValue="{!IF(CONTAINS(selectedPartsIdList['trolling motor'], ':'+key+':'), selectedItemsMap['trolling motor'][key].Quantity, availableTrollingMotorOptions[key].From_Product_Options__r[0].Standard__c)}"
@@ -864,8 +870,10 @@
                                         $ {!pp_options[key].protectionProduct.PricebookEntries[0].UnitPrice}
                                       </apex:outputPanel>
                                     </td>
-                                    <td><c:BoatBuilderOptionSelect begin_at="{!pp_options[key].protectionProduct.From_Product_Options__r[0].Standard__c}"
+                                    <td><c:BoatBuilderOptionSelect
+                                          begin_at="{!pp_options[key].protectionProduct.From_Product_Options__r[0].Standard__c}"
                                           end_at="{!pp_options[key].protectionProduct.From_Product_Options__r[0].Maximum__c}"
+                                          step="{!pp_options[key].protectionProduct.From_Product_Options__r[0].Step__c}"
                                           selectId="{!key}"
                                           productType="protection"
                                           selectValue="{!IF(CONTAINS(selectedPartsIdList['protection'], ':'+key+':'), selectedItemsMap['protection'][key].Quantity, pp_options[key].protectionProduct.From_Product_Options__r[0].Standard__c)}"
@@ -953,12 +961,14 @@
                                       </apex:outputPanel>
                                     </td>
                                     <td>
-                                      <c:BoatBuilderOptionSelect begin_at="{!product_options[key].From_Product_Options__r[0].Standard__c}"
-                                      end_at="{!product_options[key].From_Product_Options__r[0].Maximum__c}"
-                                      selectId="{!key}"
-                                      productType="Boat"
-                                      selectValue="{!IF(CONTAINS(selectedPartsIdList['boat'], ':'+key+':'), selectedItemsMap['boat'][key].Quantity, product_options[key].From_Product_Options__r[0].Standard__c)}"
-                                      onOptionChange="optionChanged(this)" />
+                                      <c:BoatBuilderOptionSelect
+                                        begin_at="{!product_options[key].From_Product_Options__r[0].Standard__c}"
+                                        end_at="{!product_options[key].From_Product_Options__r[0].Maximum__c}"
+                                        step="{!product_options[key].From_Product_Options__r[0].Step__c}"
+                                        selectId="{!key}"
+                                        productType="Boat"
+                                        selectValue="{!IF(CONTAINS(selectedPartsIdList['boat'], ':'+key+':'), selectedItemsMap['boat'][key].Quantity, product_options[key].From_Product_Options__r[0].Standard__c)}"
+                                        onOptionChange="optionChanged(this)" />
                                     </td>
                                   </tr>
                                   <apex:outputPanel layout="none" rendered="{!product_options[key].To_Product_Options__r.size > 0 }">
@@ -970,7 +980,9 @@
                                               <tr>
                                                 <td class="desc">{!subOption.name}: </td>
                                                 <td>$ {!subOption.price}</td>
-                                                <td><c:BoatBuilderOptionSelect begin_at="{!subOption.standard}"
+                                                <td><c:BoatBuilderOptionSelect
+                                                        begin_at="{!subOption.standard}"
+                                                        step="{!subOption.step}"
                                                         end_at="{!subOption.maximum}"
                                                         selectId="{!subOption.id}"
                                                         productType="Boat"

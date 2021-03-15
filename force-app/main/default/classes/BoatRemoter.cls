@@ -143,7 +143,7 @@ global with sharing class BoatRemoter {
   @RemoteAction
   global static Product_Option__c editOptionDetails(String Id) {
     try{
-      return [SELECT Id, Maximum__c, Standard__c, From_Product__r.Name
+      return [SELECT Id, Maximum__c, Standard__c, Step__c, From_Product__r.Name
               FROM Product_Option__c
               WHERE Id = : Id];
     }
@@ -156,11 +156,19 @@ global with sharing class BoatRemoter {
   global static Product_Option__c updateOptionDetails(String data) {
     Map<String, String> dataMap = mapParamsSting(data);
     try {
-      Product_Option__c opt = [SELECT Id, Maximum__c, Standard__c
+      Product_Option__c opt = [SELECT Id, Maximum__c, Standard__c, Step__c
                          FROM Product_Option__c
                          WHERE id = :dataMap.get('Id')];
       opt.Maximum__c = Decimal.valueOf(dataMap.get('Maximum__c'));
       opt.Standard__c = Decimal.valueOf(dataMap.get('Standard__c'));
+      if( dataMap.containsKey('Step__c') )
+      {
+        opt.Step__c = Decimal.valueOf(dataMap.get('Step__c'));
+      }
+      else
+      {
+        opt.Step__c = null;
+      }
       update opt;
       return opt;
     }
@@ -171,10 +179,14 @@ global with sharing class BoatRemoter {
 
   public static Map<String, String> mapParamsSting(String params) {
     String[] c = params.split('&');
+    System.debug( c );
     Map<String, String> map1 = new Map<String,String>();
     for(String a : c) {
-        String[] x = a.split('=');
-        map1.put(x[0],x[1]);
+      String[] x = a.split('=');
+      if( x.size() > 1 )
+      {
+        map1.put(x[0], x[1]);
+      }
     }
     return map1;
   }

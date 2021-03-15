@@ -12,6 +12,11 @@
                   type="Decimal"
                   assignTo="{!endNum}"
                   required="true" />
+  <apex:attribute name="step"
+                  description="The step value between select option values"
+                  type="Decimal"
+                  assignTo="{!optionStep}"
+                  required="false" />
   <apex:attribute name="onOptionChange"
                   description="javascript to fire onthe change event"
                   type="String"
