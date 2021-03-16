@@ -45,6 +45,7 @@ public with sharing class BoatBuilder {
     public String description_FR { get; set; }
     public Decimal standard { get; set; }
     public Decimal maximum { get; set; }
+    public Decimal step { get; set; }
     public Decimal price { get; set; }
     public String productFamily { get; set; }
     public String productPriceBookEntryId { get; set; }
@@ -1106,7 +1107,7 @@ public with sharing class BoatBuilder {
 
     selectedBoat = [SELECT Id, Name, Name_FR__c, Standard_Motor__c, Standard_Trailer__c, Standard_Motor__r.Name, Make__c,  Standard_Trailer__r.Name, Family, Standard_Trolling_Motor__c, Standard_Trolling_Motor__r.Name, Taxable__c,  Default_image_700w__c,
                    // select options
-                   (SELECT Id, Standard__c, Maximum__c, Rank__c, From_Product__r.Id, From_Product__r.Name, From_Product__r.Name_FR__c, From_Product__r.Description, From_Product__r.Description_FR__c, From_Product__r.RecordType.Name, From_Product__r.Family
+                   (SELECT Id, Standard__c, Maximum__c, Step__c, Rank__c, From_Product__r.Id, From_Product__r.Name, From_Product__r.Name_FR__c, From_Product__r.Description, From_Product__r.Description_FR__c, From_Product__r.RecordType.Name, From_Product__r.Family
                     FROM To_Product_Options__r
                     ORDER BY Rank__c),
                    (SELECT Id, Fee_Product__c
@@ -1366,7 +1367,7 @@ public with sharing class BoatBuilder {
       }
       Product2 p = [SELECT Id, Name, Name_FR__c,Family, Description, Description_FR__c, Taxable__c,
                       (SELECT Id, UnitPrice FROM PricebookEntries WHERE Pricebook2Id = :pb2Id),
-                      (SELECT Id, Standard__c, Maximum__c, From_Product__c, From_Product__r.Name
+                      (SELECT Id, Standard__c, Maximum__c, Step__c, From_Product__c, From_Product__r.Name
                         FROM From_Product_Options__r
                         WHERE To_Product__c = :selectedId),
                       (SELECT Id, Feature_Id__r.Description__c, Feature_Id__r.Description_FR__c FROM Product_Feature_Maps__r),
@@ -2429,11 +2430,11 @@ public with sharing class BoatBuilder {
                         WHERE Pricebook2Id = :pb2Id
                         AND isActive = true
                         ORDER BY UnitPrice),
-                       (SELECT Id, Standard__c, Maximum__c
+                       (SELECT Id, Standard__c, Maximum__c, Step__c
                         FROM From_Product_Options__r
                         WHERE To_Product__c = :selectedBoatId
                         ORDER BY Rank__c),
-                       (SELECT Id, Standard__c, Maximum__c, From_Product__c, From_Product__r.Name, From_Product__r.Name_FR__c
+                       (SELECT Id, Standard__c, Maximum__c, Step__c, From_Product__c, From_Product__r.Name, From_Product__r.Name_FR__c
                         FROM To_Product_Options__r),
                        (SELECT Id, Feature_Id__r.Description__c, Feature_Id__r.Description_FR__c FROM Product_Feature_Maps__r)
                        FROM Product2
@@ -2481,7 +2482,7 @@ public with sharing class BoatBuilder {
                           WHERE Pricebook2Id = :pb2Id
                           AND isActive = true
                           ORDER BY UnitPrice),
-                         (SELECT Id, Standard__c, Maximum__c, To_Product__c, To_Product__r.Name
+                         (SELECT Id, Standard__c, Maximum__c, Step__c, To_Product__c, To_Product__r.Name
                           FROM From_Product_Options__r
                           WHERE To_Product__c IN :parentIds
                           ORDER BY Rank__c),
@@ -2502,6 +2503,7 @@ public with sharing class BoatBuilder {
               sub.description_FR = sp.Description_FR__c;
               sub.standard = po.Standard__c;
               sub.maximum = po.Maximum__c;
+              sub.step = po.Step__c;
               sub.price = sp.PricebookEntries.size() > 0 ? sp.PricebookEntries[0].UnitPrice : null;
               sub.productFamily = sp.Family;
               sub.productPriceBookEntryId = sp.PricebookEntries.size() > 0 ? sp.PriceBookEntries[0].Id : null;
@@ -2593,7 +2595,7 @@ public with sharing class BoatBuilder {
                       FROM PricebookEntries
                       WHERE Pricebook2Id = :pb2Id
                       ORDER BY UnitPrice),
-                     (SELECT Id, Standard__c, Maximum__c
+                     (SELECT Id, Standard__c, Maximum__c, Step__c
                       FROM From_Product_Options__r
                       WHERE To_Product__c = :parentId),
                      (SELECT Id, Fee_Product__c
@@ -2729,7 +2731,7 @@ public with sharing class BoatBuilder {
     } else {
       Product2 p = [SELECT Id, Name, Name_FR__c, Description, Description_FR__c, Family, Taxable__c,
                     (SELECT Id, UnitPrice, Pricebook2Id FROM PricebookEntries WHERE Pricebook2Id = :pb2Id),
-                    (SELECT Id, Standard__c, Maximum__c, From_Product__c, From_Product__r.Name, From_Product__r.Name_FR__c FROM From_Product_Options__r WHERE To_Product__c = :parentProductid),
+                    (SELECT Id, Standard__c, Maximum__c, Step__c, From_Product__c, From_Product__r.Name, From_Product__r.Name_FR__c FROM From_Product_Options__r WHERE To_Product__c = :parentProductid),
                     (SELECT Id, Fee_Product__c FROM Parent_Product_Fee_Maps__r)
                     FROM Product2
                     WHERE Id = :productid];

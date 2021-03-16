@@ -60,7 +60,8 @@
 			        $details = $('<div></div>').addClass('option_details'),
 			        $submit = $('<input type="submit" value="Save" class="btn" />'),
 			        $s_input = $('<div></div>').addClass('field'),
-			        $m_input = $s_input.clone();
+			        $m_input = $s_input.clone(),
+			        $step_input = $s_input.clone();
 
 			        $details.html('<span>' + results.From_Product__r.Name + '</span>');
 			        $s_input.append($("<label for='Standard__c'>Standard:</label>"))
@@ -83,9 +84,20 @@
 			                                              value: results.Maximum__c
 			                                            })
 			          );
+			        $step_input.append($("<label for='Step__c'>Step:</label>"))
+              			          .append($("<input></input>").attr({type: 'number',
+              			                                              class: 'focus',
+              			                                              id: 'Step__c',
+              			                                              name: 'Step__c',
+              			                                              step: 'any',
+              			                                              required: false,
+              			                                              value: results.Step__c
+              			                                            })
+              			          );
 			        $form.append($("<input />").attr({type: 'hidden', id: 'Id', name: 'Id', value: results.Id}))
 			           .append($s_input)
 			           .append($m_input)
+			           .append($step_input)
 			           .append($submit);
 			        $content.append($details).append($form);
 			        d_self.resolve($content);
@@ -157,10 +169,12 @@
 				e.preventDefault();
 				var data = $form.serialize();
   			$this.quickBox('showIndicator');
+  			console.log(data);
 				BoatRemoter.updateOptionDetails(data, function(results, events){
 					var $row = $this.closest('tr');
 					$row.find('.Standard__c').html(results.Standard__c);
 					$row.find('.Maximum__c').html(results.Maximum__c);
+					$row.find('.Step__c').html(results.Step__c);
 					$this.quickBox('removeIndicator');
 					$this.quickBox('closeBox');
 				});
