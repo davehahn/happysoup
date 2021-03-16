@@ -97,7 +97,11 @@ public without sharing class gcProject_AccountingActions {
 			}
 
 			if(listMsg.isEmpty())
-				listMsg.add(new ApexPages.Message(ApexPages.Severity.INFO, 'INV --> WIP --> FG actions succeeded!'));
+				listMsg.addAll(takeExpense(idProject, null));
+			if(!listMsg.isEmpty())
+				listMsg.add(new ApexPages.Message(ApexPages.Severity.WARNING, 'FG -> MFGCOST actions incomplete or unsuccessful.'));
+			else
+				listMsg.add(new ApexPages.Message(ApexPages.Severity.INFO, 'INV --> WIP --> FG --> MFGCOST actions succeeded!'));
 		}
 		else
 		{
@@ -713,13 +717,15 @@ public without sharing class gcProject_AccountingActions {
 				(SELECT Id, 
 						AcctSeedERP__Product__r.AcctSeedERP__Serialized__c,
 						AcctSeedERP__Product__r.GMBLASERP__Lot_Tracked__c,
+						AcctSeedERP__Product__r.AcctSeed__Inventory_Product__c,
+						AcctSeedERP__Product__r.AcctSeed__Unit_Cost__c,
+						GMBLASERP__Total_Price__c,
 						AcctSeedERP__Project_Task__c,
 						AcctSeedERP__Quantity_Allocated__c,
 						AcctSeedERP__Quantity_Per_Unit__c,
 						Actual_Quantity_Filled__c,
 						GMBLASERP__Serial_Number__c
-				 FROM AcctSeedERP__Project_Materials__r
-				 WHERE AcctSeedERP__Product__r.AcctSeed__Inventory_Product__c = true)
+				 FROM AcctSeedERP__Project_Materials__r)
 		 FROM AcctSeed__Project__c
 		 WHERE Id = :idProject][0];
 
@@ -749,6 +755,7 @@ public without sharing class gcProject_AccountingActions {
 		}
 
 		Id idProjectTask;
+		Decimal nonInventoryPrice = 0;
 		if(project.RecordTypeId == gcConstants.idRtProjectManufacturing)
 		{
 			for(AcctSeed__Project_Task__c pt : project.AcctSeed__Project_Tasks__r)
@@ -776,7 +783,6 @@ public without sharing class gcProject_AccountingActions {
 				listMsg.add(new ApexPages.Message(ApexPages.Severity.INFO, 'Finished Goods were not built, because the Project has no WIP.'));
 				return listMsg;	 	
 			}
-		
 
 		 	if(project.AcctSeedERP__Manufactured_Product__r.AcctSeedERP__Serialized__c)
 		 	{
@@ -809,12 +815,18 @@ public without sharing class gcProject_AccountingActions {
 				AcctSeedERP__Material__c matl;
 				for(AcctSeedERP__Material__c mx : project.AcctSeedERP__Project_Materials__r)
 				{
-					qtyOrdered += mx.AcctSeedERP__Quantity_Per_Unit__c == null ? 0 : mx.AcctSeedERP__Quantity_Per_Unit__c;
-					qtyFilled += mx.Actual_Quantity_Filled__c == null ? 0 : mx.Actual_Quantity_Filled__c;
-					if(mx.AcctSeedERP__Product__c == project.AcctSeedERP__Manufactured_Product__c)
-					{
-						if(matl == null || matl.GMBLASERP__Serial_Number__c == project.Serial_Number__c)
-							matl = mx;
+					if(mx.AcctSeedERP__Product__r.AcctSeed__Inventory_Product__c){
+						qtyOrdered += mx.AcctSeedERP__Quantity_Per_Unit__c == null ? 0 : mx.AcctSeedERP__Quantity_Per_Unit__c;
+						qtyFilled += mx.Actual_Quantity_Filled__c == null ? 0 : mx.Actual_Quantity_Filled__c;
+						if(mx.AcctSeedERP__Product__c == project.AcctSeedERP__Manufactured_Product__c)
+						{
+							if(matl == null || matl.GMBLASERP__Serial_Number__c == project.Serial_Number__c)
+								matl = mx;
+						}
+					}else{
+						Decimal qt = mx.AcctSeedERP__Quantity_Per_Unit__c == null ? 0 : mx.AcctSeedERP__Quantity_Per_Unit__c;
+						Decimal am = mx.AcctSeedERP__Product__r.AcctSeed__Unit_Cost__c == null ? 0 : mx.AcctSeedERP__Product__r.AcctSeed__Unit_Cost__c;
+						nonInventoryPrice += (qt * am);
 					}
 				}
 				if(qtyOrdered != qtyFilled){
@@ -897,12 +909,14 @@ public without sharing class gcProject_AccountingActions {
     			AcctSeedERP__Project_Task__c = idProjectTask,
     			AcctSeedERP__Quantity__c = 1,
     			AcctSeedERP__Type__c = 'Accounting',
-    			AcctSeedERP__Unit_Cost__c = amtWip,
+    			AcctSeedERP__Unit_Cost__c = amtWip + nonInventoryPrice,
     			GMBLASERP__Cost_Override__c = true,
     			GMBLASERP__Lot__c = project.Serial_Number__r.GMBLASERP__Lot__c,
     			GMBLASERP__Serial_Number__c = project.Serial_Number__c
     		);
 
+		if(listMsg.isEmpty())
+			listMsg.addAll(takeExpense(idProject, buildDate));
 		return listMsg;
 	}
 
@@ -1539,6 +1553,7 @@ public without sharing class gcProject_AccountingActions {
     @RemoteAction
 	public static List<ApexPages.Message> takeExpense(Id idFilter, String expenseDate)
 	{
+        System.debug('From MFG');
 		Date cogsDate = Date.today();
 		if(expenseDate != null)
 			cogsDate = Date.parse(expenseDate);
@@ -1566,6 +1581,8 @@ public without sharing class gcProject_AccountingActions {
     				AcctSeedERP__Product__r.AcctSeed__Unit_Cost__c,
     				AcctSeedERP__Product__r.Partner_Price__c,
     				AcctSeedERP__Product__r.Loaded_Cost__c,
+    				AcctSeedERP__Product__r.AcctSeed__Inventory_GL_Account__c,
+    				AcctSeedERP__Product__r.AcctSeed__Expense_GL_Account__c,
     				AcctSeedERP__Project__c,
     				AcctSeedERP__Project__r.RecordTypeId,
     				AcctSeedERP__Project__r.Internal_Labour_Service__c,
@@ -1589,162 +1606,171 @@ public without sharing class gcProject_AccountingActions {
     				(SELECT Id, AcctSeedERP__Unit_Cost__c FROM AcctSeedERP__Manufacturing_Inventory_Movements__r LIMIT 1)
     		FROM AcctSeedERP__Material__c
     		WHERE (AcctSeedERP__Project__c = :idFilter OR AcctSeedERP__Project_Task__c = :idFilter)])
-    	{
-    		if(idProject == null) idProject = matl.AcctSeedERP__Project__c;
-    		if(matl.AcctSeedERP__Product__r.AcctSeed__Inventory_Product__c && matl.AcctSeedERP__Manufacturing_Inventory_Movements__r.isEmpty() && !matl.AcctSeedERP__Project__r.Internal_Warranty__c) continue;
-    		Decimal qty = matl.AcctSeedERP__Quantity_Per_Unit__c;
-    		Decimal amt = matl.AcctSeedERP__Product__r.AcctSeed__Unit_Cost__c;
-    		Decimal unitCost = 0;
-    		if(matl.AcctSeedERP__Product__r.AcctSeed__Inventory_Product__c && !matl.AcctSeedERP__Manufacturing_Inventory_Movements__r.isEmpty()){
-	    		qty = matl.AcctSeedERP__Quantity_Allocated__c;
-	    		unitCost = matl.AcctSeedERP__Manufacturing_Inventory_Movements__r[0].AcctSeedERP__Unit_Cost__c;    			
-    		}
-
-			if(!matl.Outbound_Inventory_Movements__r.isEmpty()){
-				qty = 0;
-				unitCost = 0;
-				for(AcctSeedERP__Outbound_Inventory_Movement__c oim : matl.Outbound_Inventory_Movements__r)
-					qty += oim.AcctSeedERP__Quantity__c == null ? 0 : oim.AcctSeedERP__Quantity__c;
-			}
-
-    		if(!matl.Journal_Entry_Lines__r.isEmpty())
-    		for(AcctSeed__Journal_Entry_Line__c jel : matl.Journal_Entry_Lines__r){
-    			qty -= jel.AcctSeed__Units__c == null ? 0 : jel.AcctSeed__Units__c;
-    		}
-    		if(matl.AcctSeedERP__Product__r.AcctSeed__Inventory_Product__c)
-    			amt = qty * unitCost;
-
-    		if(qty != null && qty != 0)
-    		{
-    			if(amt == null) amt = 0;
-
-    			amt = amt.setScale(6);
-    			qty = qty.setScale(6);
-    			Id idDebitGL = idGlProjectParts;
-    			Id idCreditGL = idGlProjectPartsClearing;
-    			if(matl.AcctSeedERP__Product__r.AcctSeed__Inventory_Product__c){
-    				idDebitGL = idGlCogsParts;
-    				idCreditGL = idGlWIP;    					
-    			}
-    			if(matl.AcctSeedERP__Product__r.RecordType.Name == gcConstants.internalProductRecordTypeName 
-    				&& matl.AcctSeedERP__Project__r.Internal_Labour_Service__c) {
-    				idDebitGL = idGlWagesLabour;
-    				idCreditGL = idGlInternalLabour;
-    				amt = (matl.GMBLASERP__Unit_Price__c == null ? 0 : matl.GMBLASERP__Unit_Price__c) * qty;
-    			}
-				Boolean noERP = false;
-    			if(matl.AcctSeedERP__Project__r.Internal_Warranty__c) {
-    				idDebitGL = gcConstants.idGlInternalRevenue;
-					noERP = true;
-    				idCreditGL = gcConstants.idGLInternalWarrantyClearing;
-    				amt = (matl.GMBLASERP__Unit_Price__c == null ? 0 : matl.GMBLASERP__Unit_Price__c) * qty;
-    			}
-    			AcctSeed__Journal_Entry_Line__c debitJE = new AcctSeed__Journal_Entry_Line__c(
-    				AcctSeed__Debit__c = amt,
-    				AcctSeed__GL_Account__c = idDebitGL,
-    				AcctSeed__Product__c = matl.AcctSeedERP__Product__c,
-    				AcctSeed__Project__c = noERP ? null : matl.AcctSeedERP__Project__c,
-    				AcctSeed__Project_Task__c = noERP ? null : matl.AcctSeedERP__Project_Task__c,
-    				AcctSeed__Date__c = cogsDate,
-    				AcctSeed__Units__c = qty,
-    				Material__c = matl.Id
-    			);
-
-    			AcctSeed__Journal_Entry_Line__c creditJE = new AcctSeed__Journal_Entry_Line__c(
-    				AcctSeed__Credit__c = amt,
-    				AcctSeed__GL_Account__c = idCreditGL,
-    				AcctSeed__Product__c = matl.AcctSeedERP__Product__c,
-    				AcctSeed__Project__c = null,
-    				AcctSeed__Project_Task__c = null,
-    				AcctSeed__Date__c = cogsDate,
-    				AcctSeed__Units__c = qty * (-1)
-    			);
-    			if(matl.AcctSeedERP__Product__r.AcctSeed__Inventory_Product__c){
-    				creditJE.AcctSeed__Project__c = matl.AcctSeedERP__Project__c;
-    				creditJE.AcctSeed__Project_Task__c = matl.AcctSeedERP__Project_Task__c;
-    			}
-    			// For Internal Orders we are actually taking the inventory out of Wholesale
-    			if(matl.AcctSeedERP__Project__r.Internal_Partner_Boat_Sale__c 
-    				|| matl.AcctSeedERP__Project__r.Internal_Partner_Parts_Order__c){
-    				creditJE.AcctSeed__GL_Account_Variable_1__c = idGlv1Wholesale;
-    				creditJE.AcctSeed__GL_Account_Variable_2__c = idGlv2Sales;
-    				debitJE.AcctSeed__GL_Account_Variable_1__c = idGlv1Wholesale;
-    				debitJE.AcctSeed__GL_Account_Variable_2__c = idGlv2Sales;    				
-    			}
-
-    			if(matl.AcctSeedERP__Product__r.RecordType.Name == gcConstants.internalProductRecordTypeName 
-    				&& matl.AcctSeedERP__Project__r.Internal_Labour_Service__c) {
-    				//debitJE.AcctSeed__Project__c = null;
-    				//debitJE.AcctSeed__Project_Task__c = null;    				
-    				creditJE.AcctSeed__Project__c = matl.AcctSeedERP__Project__c;
-    				creditJE.AcctSeed__Project_Task__c = matl.AcctSeedERP__Project_Task__c;    				
-    				debitJE.AcctSeed__GL_Account_Variable_1__c = matl.AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_1__c;
-    				debitJE.AcctSeed__GL_Account_Variable_2__c = matl.AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_2__c;
-    				listJELLabour.add(debitJE);
-    				listJELLabour.add(creditJE);
-				}else{
-					if(matl.AcctSeedERP__Project__r.Internal_Warranty__c){
-						creditJE.AcctSeed__GL_Account_Variable_1__c = matl.AcctSeedERP__Project__r.AcctSeed__Account__r.GL_Account_Variable_1__c;
-						debitJE.AcctSeed__GL_Account_Variable_1__c = matl.AcctSeedERP__Project__r.AcctSeed__Account__r.GL_Account_Variable_1__c;
-					}
-    				listJEL.add(debitJE);
-    				listJEL.add(creditJE);
+		{
+			if(matl.AcctSeedERP__Product__r.AcctSeed__Inventory_Product__c && matl.AcctSeedERP__Project__r.RecordTypeId != gcConstants.idRtProjectManufacturing)
+			{
+				if (idProject == null) idProject = matl.AcctSeedERP__Project__c;
+				if (matl.AcctSeedERP__Product__r.AcctSeed__Inventory_Product__c && matl.AcctSeedERP__Manufacturing_Inventory_Movements__r.isEmpty() && !matl.AcctSeedERP__Project__r.Internal_Warranty__c) continue;
+				Decimal qty = matl.AcctSeedERP__Quantity_Per_Unit__c;
+				Decimal amt = matl.AcctSeedERP__Product__r.AcctSeed__Unit_Cost__c;
+				Decimal unitCost = 0;
+				if (matl.AcctSeedERP__Product__r.AcctSeed__Inventory_Product__c && !matl.AcctSeedERP__Manufacturing_Inventory_Movements__r.isEmpty()) {
+					qty = matl.AcctSeedERP__Quantity_Allocated__c;
+					unitCost = matl.AcctSeedERP__Manufacturing_Inventory_Movements__r[0].AcctSeedERP__Unit_Cost__c;
 				}
 
-				/// Now the Internal Parts JEL
-				if((matl.AcctSeedERP__Project__r.RecordTypeId == gcConstants.idRtProjectBoatSale
+				if (!matl.Outbound_Inventory_Movements__r.isEmpty()) {
+					qty = 0;
+					unitCost = 0;
+					for (AcctSeedERP__Outbound_Inventory_Movement__c oim : matl.Outbound_Inventory_Movements__r)
+						qty += oim.AcctSeedERP__Quantity__c == null ? 0 : oim.AcctSeedERP__Quantity__c;
+				}
+
+				if (!matl.AcctSeedERP__Product__r.AcctSeed__Inventory_Product__c && matl.AcctSeedERP__Project__r.RecordTypeId == gcConstants.idRtProjectManufacturing) {
+					unitCost = matl.AcctSeedERP__Product__r.AcctSeed__Unit_Cost__c;
+				}
+
+				if (!matl.Journal_Entry_Lines__r.isEmpty())
+					for (AcctSeed__Journal_Entry_Line__c jel : matl.Journal_Entry_Lines__r) {
+						qty -= jel.AcctSeed__Units__c == null ? 0 : jel.AcctSeed__Units__c;
+					}
+				if (matl.AcctSeedERP__Product__r.AcctSeed__Inventory_Product__c)
+					amt = qty * unitCost;
+
+				if (qty != null && qty != 0) {
+					if (amt == null) amt = 0;
+
+					amt = amt.setScale(6);
+					qty = qty.setScale(6);
+					Id idDebitGL = idGlProjectParts;
+					Id idCreditGL = idGlProjectPartsClearing;
+					if (matl.AcctSeedERP__Product__r.AcctSeed__Inventory_Product__c && matl.AcctSeedERP__Project__r.RecordTypeId != gcConstants.idRtProjectManufacturing) {
+						idDebitGL = idGlCogsParts;
+						idCreditGL = idGlWIP;
+					} else if (!matl.AcctSeedERP__Product__r.AcctSeed__Inventory_Product__c && matl.AcctSeedERP__Project__r.RecordTypeId == gcConstants.idRtProjectManufacturing) {
+						idDebitGL = idGlWIP;
+						idCreditGL = matl.AcctSeedERP__Product__r.AcctSeed__Expense_GL_Account__c;
+					}
+					if (matl.AcctSeedERP__Product__r.RecordType.Name == gcConstants.internalProductRecordTypeName
+						&& matl.AcctSeedERP__Project__r.Internal_Labour_Service__c) {
+						idDebitGL = idGlWagesLabour;
+						idCreditGL = idGlInternalLabour;
+						amt = (matl.GMBLASERP__Unit_Price__c == null ? 0 : matl.GMBLASERP__Unit_Price__c) * qty;
+					}
+					Boolean noERP = false;
+					if (matl.AcctSeedERP__Project__r.Internal_Warranty__c) {
+						idDebitGL = gcConstants.idGlInternalRevenue;
+						noERP = true;
+						idCreditGL = gcConstants.idGLInternalWarrantyClearing;
+						amt = (matl.GMBLASERP__Unit_Price__c == null ? 0 : matl.GMBLASERP__Unit_Price__c) * qty;
+					}
+					AcctSeed__Journal_Entry_Line__c debitJE = new AcctSeed__Journal_Entry_Line__c(
+						AcctSeed__Debit__c = amt,
+						AcctSeed__GL_Account__c = idDebitGL,
+						AcctSeed__Product__c = matl.AcctSeedERP__Product__c,
+						AcctSeed__Project__c = noERP ? null : matl.AcctSeedERP__Project__c,
+						AcctSeed__Project_Task__c = noERP ? null : matl.AcctSeedERP__Project_Task__c,
+						AcctSeed__Date__c = cogsDate,
+						AcctSeed__Units__c = qty,
+						Material__c = matl.Id
+					);
+
+					AcctSeed__Journal_Entry_Line__c creditJE = new AcctSeed__Journal_Entry_Line__c(
+						AcctSeed__Credit__c = amt,
+						AcctSeed__GL_Account__c = idCreditGL,
+						AcctSeed__Product__c = matl.AcctSeedERP__Product__c,
+						AcctSeed__Project__c = null,
+						AcctSeed__Project_Task__c = null,
+						AcctSeed__Date__c = cogsDate,
+						AcctSeed__Units__c = qty * (-1)
+					);
+					if (matl.AcctSeedERP__Product__r.AcctSeed__Inventory_Product__c) {
+						creditJE.AcctSeed__Project__c = matl.AcctSeedERP__Project__c;
+						creditJE.AcctSeed__Project_Task__c = matl.AcctSeedERP__Project_Task__c;
+					}
+					// For Internal Orders we are actually taking the inventory out of Wholesale
+					if (matl.AcctSeedERP__Project__r.Internal_Partner_Boat_Sale__c
+						|| matl.AcctSeedERP__Project__r.Internal_Partner_Parts_Order__c) {
+						creditJE.AcctSeed__GL_Account_Variable_1__c = idGlv1Wholesale;
+						creditJE.AcctSeed__GL_Account_Variable_2__c = idGlv2Sales;
+						debitJE.AcctSeed__GL_Account_Variable_1__c = idGlv1Wholesale;
+						debitJE.AcctSeed__GL_Account_Variable_2__c = idGlv2Sales;
+					}
+
+					if (matl.AcctSeedERP__Product__r.RecordType.Name == gcConstants.internalProductRecordTypeName
+						&& matl.AcctSeedERP__Project__r.Internal_Labour_Service__c) {
+						//debitJE.AcctSeed__Project__c = null;
+						//debitJE.AcctSeed__Project_Task__c = null;
+						creditJE.AcctSeed__Project__c = matl.AcctSeedERP__Project__c;
+						creditJE.AcctSeed__Project_Task__c = matl.AcctSeedERP__Project_Task__c;
+						debitJE.AcctSeed__GL_Account_Variable_1__c = matl.AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_1__c;
+						debitJE.AcctSeed__GL_Account_Variable_2__c = matl.AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_2__c;
+						listJELLabour.add(debitJE);
+						listJELLabour.add(creditJE);
+					} else {
+						if (matl.AcctSeedERP__Project__r.Internal_Warranty__c) {
+							creditJE.AcctSeed__GL_Account_Variable_1__c = matl.AcctSeedERP__Project__r.AcctSeed__Account__r.GL_Account_Variable_1__c;
+							debitJE.AcctSeed__GL_Account_Variable_1__c = matl.AcctSeedERP__Project__r.AcctSeed__Account__r.GL_Account_Variable_1__c;
+						}
+						listJEL.add(debitJE);
+						listJEL.add(creditJE);
+					}
+
+					/// Now the Internal Parts JEL
+					if ((matl.AcctSeedERP__Project__r.RecordTypeId == gcConstants.idRtProjectBoatSale
 						|| matl.AcctSeedERP__Project__r.RecordTypeId == gcConstants.idRtProjectCounterSale
 						|| matl.AcctSeedERP__Project__r.RecordTypeId == gcConstants.idRtProjectService)
-					&& matl.AcctSeedERP__Product__r.RecordType.Name == 'Part')
-				{
-					Decimal factoryPrice = matl.AcctSeedERP__Product__r.Partner_Price__c;
-					Id projectGLV1 = matl.AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_1__c;
-					Id projectGLV2 = matl.AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_2__c;
-					//Decimal factoryLoadedCost = matl.AcctSeedERP__Product__r.Loaded_Cost__c;
-					if(factoryPrice == null) factoryPrice = 0;
-					factoryPrice = factoryPrice * qty;
-					//if(factoryLoadedCost == null) factoryLoadedCost = 0;
-					/// Wholesale COST
-					if(factoryPrice <> 0){
-						listJEL.add(new AcctSeed__Journal_Entry_Line__c(
-		    				AcctSeed__Debit__c = amt,
-		    				AcctSeed__GL_Account__c = idGlCogsParts,
-		    				AcctSeed__Product__c = matl.AcctSeedERP__Product__c,
-		    				AcctSeed__Project__c = null,
-		    				AcctSeed__Project_Task__c = null,
-		    				AcctSeed__GL_Account_Variable_1__c = idGlv1Wholesale,
-		    				AcctSeed__GL_Account_Variable_2__c = idGlv2PartsAndService,//projectGLV2,//idGlv2Sales,
-		    				AcctSeed__Date__c = cogsDate,
-		    				AcctSeed__Units__c = qty)
-						);
-						/// Wholesale Revenue
-						listJEL.add(new AcctSeed__Journal_Entry_Line__c(
-		    				AcctSeed__Credit__c = factoryPrice,
-		    				AcctSeed__GL_Account__c = gcConstants.idGlProductRevenue,
-		    				AcctSeed__Product__c = matl.AcctSeedERP__Product__c,
-		    				AcctSeed__Project__c = null,
-		    				AcctSeed__Project_Task__c = null,
-		    				AcctSeed__GL_Account_Variable_1__c = idGlv1Wholesale,
-		    				AcctSeed__GL_Account_Variable_2__c = idGlv2PartsAndService,//projectGLV2,//idGlv2Sales,
-		    				AcctSeed__Date__c = cogsDate,
-		    				AcctSeed__Units__c = qty * (-1))
-						);
-						/// Wholesale Revenue
-						listJEL.add(new AcctSeed__Journal_Entry_Line__c(
-		    				AcctSeed__Debit__c = factoryPrice - amt,
-		    				AcctSeed__GL_Account__c = idGlCogsParts,
-		    				AcctSeed__Product__c = matl.AcctSeedERP__Product__c,
-		    				AcctSeed__Project__c = matl.AcctSeedERP__Project__c,
-		    				AcctSeed__Project_Task__c = matl.AcctSeedERP__Project_Task__c,
-							Internal_Wholesale_Cost__c = true,
-		    				AcctSeed__Date__c = cogsDate,
-		    				AcctSeed__Units__c = qty)
-						);
+						&& matl.AcctSeedERP__Product__r.RecordType.Name == 'Part') {
+						Decimal factoryPrice = matl.AcctSeedERP__Product__r.Partner_Price__c;
+						Id projectGLV1 = matl.AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_1__c;
+						Id projectGLV2 = matl.AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_2__c;
+						//Decimal factoryLoadedCost = matl.AcctSeedERP__Product__r.Loaded_Cost__c;
+						if (factoryPrice == null) factoryPrice = 0;
+						factoryPrice = factoryPrice * qty;
+						//if(factoryLoadedCost == null) factoryLoadedCost = 0;
+						/// Wholesale COST
+						if (factoryPrice <> 0) {
+							listJEL.add(new AcctSeed__Journal_Entry_Line__c(
+								AcctSeed__Debit__c = amt,
+								AcctSeed__GL_Account__c = idGlCogsParts,
+								AcctSeed__Product__c = matl.AcctSeedERP__Product__c,
+								AcctSeed__Project__c = null,
+								AcctSeed__Project_Task__c = null,
+								AcctSeed__GL_Account_Variable_1__c = idGlv1Wholesale,
+								AcctSeed__GL_Account_Variable_2__c = idGlv2PartsAndService,//projectGLV2,//idGlv2Sales,
+								AcctSeed__Date__c = cogsDate,
+								AcctSeed__Units__c = qty)
+							);
+							/// Wholesale Revenue
+							listJEL.add(new AcctSeed__Journal_Entry_Line__c(
+								AcctSeed__Credit__c = factoryPrice,
+								AcctSeed__GL_Account__c = gcConstants.idGlProductRevenue,
+								AcctSeed__Product__c = matl.AcctSeedERP__Product__c,
+								AcctSeed__Project__c = null,
+								AcctSeed__Project_Task__c = null,
+								AcctSeed__GL_Account_Variable_1__c = idGlv1Wholesale,
+								AcctSeed__GL_Account_Variable_2__c = idGlv2PartsAndService,//projectGLV2,//idGlv2Sales,
+								AcctSeed__Date__c = cogsDate,
+								AcctSeed__Units__c = qty * (-1))
+							);
+							/// Wholesale Revenue
+							listJEL.add(new AcctSeed__Journal_Entry_Line__c(
+								AcctSeed__Debit__c = factoryPrice - amt,
+								AcctSeed__GL_Account__c = idGlCogsParts,
+								AcctSeed__Product__c = matl.AcctSeedERP__Product__c,
+								AcctSeed__Project__c = matl.AcctSeedERP__Project__c,
+								AcctSeed__Project_Task__c = matl.AcctSeedERP__Project_Task__c,
+								Internal_Wholesale_Cost__c = true,
+								AcctSeed__Date__c = cogsDate,
+								AcctSeed__Units__c = qty)
+							);
+						}
 					}
 				}
-    		}
+			}
     	}
-
+		System.debug('listJEL');
+		System.debug(listJEL);
     	if(!listJEL.isEmpty() || !listJELLabour.isEmpty())
     	{
 			AcctSeed__Project__c project = 
@@ -1754,7 +1780,8 @@ public without sharing class gcProject_AccountingActions {
 					GL_Account_Variable_2__c,
 					Internal_Partner_Boat_Sale__c,
 					Internal_Labour_Service__c,
-					Internal_Warranty__c
+					Internal_Warranty__c,
+                    RecordTypeId
 			 FROM AcctSeed__Project__c
 			 WHERE Id = :idProject][0]; 
             
@@ -1765,6 +1792,8 @@ public without sharing class gcProject_AccountingActions {
             	String jobCostOrWarranty = 'Job Cost for ';
             	if(project.Internal_Warranty__c)
             		jobCostOrWarranty = 'Internal Warranty for ';
+            	if(project.RecordTypeId == gcConstants.idRtProjectManufacturing)
+            		jobCostOrWarranty = 'Manufacturing Cost for ';
 
 	    		je = new AcctSeed__Journal_Entry__c(
 	    			Name = jobCostOrWarranty + project.AcctSeedERP__Work_Order_Number__c,
