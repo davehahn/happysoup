@@ -1607,7 +1607,8 @@ public without sharing class gcProject_AccountingActions {
     		FROM AcctSeedERP__Material__c
     		WHERE (AcctSeedERP__Project__c = :idFilter OR AcctSeedERP__Project_Task__c = :idFilter)])
 		{
-			if(matl.AcctSeedERP__Product__r.AcctSeed__Inventory_Product__c && matl.AcctSeedERP__Project__r.RecordTypeId != gcConstants.idRtProjectManufacturing)
+			if(matl.AcctSeedERP__Project__r.RecordTypeId != gcConstants.idRtProjectManufacturing
+				|| (!matl.AcctSeedERP__Product__r.AcctSeed__Inventory_Product__c && matl.AcctSeedERP__Project__r.RecordTypeId == gcConstants.idRtProjectManufacturing))
 			{
 				if (idProject == null) idProject = matl.AcctSeedERP__Project__c;
 				if (matl.AcctSeedERP__Product__r.AcctSeed__Inventory_Product__c && matl.AcctSeedERP__Manufacturing_Inventory_Movements__r.isEmpty() && !matl.AcctSeedERP__Project__r.Internal_Warranty__c) continue;
@@ -1634,7 +1635,7 @@ public without sharing class gcProject_AccountingActions {
 					for (AcctSeed__Journal_Entry_Line__c jel : matl.Journal_Entry_Lines__r) {
 						qty -= jel.AcctSeed__Units__c == null ? 0 : jel.AcctSeed__Units__c;
 					}
-				if (matl.AcctSeedERP__Product__r.AcctSeed__Inventory_Product__c)
+				if (matl.AcctSeedERP__Product__r.AcctSeed__Inventory_Product__c || (!matl.AcctSeedERP__Product__r.AcctSeed__Inventory_Product__c && matl.AcctSeedERP__Project__r.RecordTypeId == gcConstants.idRtProjectManufacturing))
 					amt = qty * unitCost;
 
 				if (qty != null && qty != 0) {
