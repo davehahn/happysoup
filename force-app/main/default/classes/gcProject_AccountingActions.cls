@@ -1009,13 +1009,14 @@ public without sharing class gcProject_AccountingActions {
 				(SELECT Id, 
 						AcctSeedERP__Product__r.AcctSeedERP__Serialized__c,
 						AcctSeedERP__Product__r.GMBLASERP__Lot_Tracked__c,
+						AcctSeedERP__Product__r.AcctSeed__Unit_Cost__c,
+						AcctSeedERP__Product__r.AcctSeed__Inventory_Product__c,
 						AcctSeedERP__Project_Task__c,
 						AcctSeedERP__Quantity_Allocated__c,
 						AcctSeedERP__Quantity_Per_Unit__c,
 						GMBLASERP__Serial_Number__c,
 						Actual_Quantity_Filled__c
-				 FROM AcctSeedERP__Project_Materials__r
-				 WHERE AcctSeedERP__Product__r.AcctSeed__Inventory_Product__c = true)
+				 FROM AcctSeedERP__Project_Materials__r)
 		 FROM AcctSeed__Project__c
 		 WHERE Id = :idProject][0];
 
@@ -1051,6 +1052,7 @@ public without sharing class gcProject_AccountingActions {
 		}
 
 		Id idProjectTask;
+		Decimal nonInventoryPrice = 0;
 		if(project.RecordTypeId == gcConstants.idRtTradeIn)
 		{
 			for(AcctSeed__Project_Task__c pt : project.AcctSeed__Project_Tasks__r)
@@ -1088,15 +1090,21 @@ public without sharing class gcProject_AccountingActions {
 				AcctSeedERP__Material__c matl;
 				for(AcctSeedERP__Material__c mx : project.AcctSeedERP__Project_Materials__r)
 				{
-					if(mx.AcctSeedERP__Product__c == project.AcctSeedERP__Manufactured_Product__c)
-					{
-						if(matl == null || matl.GMBLASERP__Serial_Number__c == project.Serial_Number__c)
-							matl = mx;
-					}else{
-						if(mx.Actual_Quantity_Filled__c != mx.AcctSeedERP__Quantity_Per_Unit__c){
-							listMsg.add(new ApexPages.Message(ApexPages.Severity.ERROR, 'Finished Goods were not built, because all items are not moved to WIP.'));
-							return listMsg;	 								
+					if(mx.AcctSeedERP__Product__r.AcctSeed__Inventory_Product__c){
+						if(mx.AcctSeedERP__Product__c == project.AcctSeedERP__Manufactured_Product__c)
+						{
+							if(matl == null || matl.GMBLASERP__Serial_Number__c == project.Serial_Number__c)
+								matl = mx;
+						}else{
+							if(mx.Actual_Quantity_Filled__c != mx.AcctSeedERP__Quantity_Per_Unit__c){
+								listMsg.add(new ApexPages.Message(ApexPages.Severity.ERROR, 'Finished Goods were not built, because all items are not moved to WIP.'));
+								return listMsg;
+							}
 						}
+					}else{
+						Decimal qt = mx.AcctSeedERP__Quantity_Per_Unit__c == null ? 0 : mx.AcctSeedERP__Quantity_Per_Unit__c;
+						Decimal am = mx.AcctSeedERP__Product__r.AcctSeed__Unit_Cost__c == null ? 0 : mx.AcctSeedERP__Product__r.AcctSeed__Unit_Cost__c;
+						nonInventoryPrice += (qt * am);
 					}
 				}
 				if(matl != null && matl.GMBLASERP__Serial_Number__c == null)
@@ -1191,7 +1199,7 @@ public without sharing class gcProject_AccountingActions {
     			AcctSeedERP__Project_Task__c = idProjectTask,
     			AcctSeedERP__Quantity__c = 1,
     			AcctSeedERP__Type__c = 'Accounting',
-    			AcctSeedERP__Unit_Cost__c = amtWip,
+    			AcctSeedERP__Unit_Cost__c = amtWip + nonInventoryPrice,
     			GMBLASERP__Cost_Override__c = true,
     			GMBLASERP__Lot__c = project.Serial_Number__r.GMBLASERP__Lot__c,
     			GMBLASERP__Serial_Number__c = project.Serial_Number__c
