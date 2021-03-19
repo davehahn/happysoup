@@ -50,7 +50,7 @@ public with sharing class gcJournalEntry_Actions {
 				//AcctSeed__Journal_Date__c, 
 				AcctSeed__Out_of_Balance__c, 
 				AcctSeed__Total_Credits__c, 
-				AcctSeed__Total_Debits__c, 
+				AcctSeed__Total_Debits__c,
 				Project__c, 
 				(SELECT 
 					Id, 
@@ -61,7 +61,8 @@ public with sharing class gcJournalEntry_Actions {
 					AcctSeed__GL_Account_Variable_2__c, 
 					AcctSeed__GL_Account_Variable_3__c, 
 					AcctSeed__GL_Account_Variable_4__c, 
-					AcctSeed__Cleared_Date__c, 
+					AcctSeed__Cleared_Date__c,
+					AcctSeed__Cash_Flow_Category__c,
 					//AcctSeed__Date__c, 
 					AcctSeed__Credit__c, 
 					AcctSeed__Debit__c, 
