@@ -49,8 +49,23 @@
             var results = response.getReturnValue();
             results = JSON.parse(results);
             component.set("v.listData", results);
+            component.set("v.listDataAll", results);
             helper.toggleSpinner(component, false);
         });
+    },
+    moveChanged : function(component){
+        var listMovesToShow = [];
+        var moveTypeVal = component.get("v.moveType");
+        var allMoves = component.get("v.listDataAll");
+        if(moveTypeVal == '')
+          component.set("v.listData", allMoves);
+        else{
+          for(var i = 0; i < allMoves.length; i++){
+            if(allMoves[i].moveType == moveTypeVal)
+              listMovesToShow.push(allMoves[i]);
+          }
+          component.set("v.listData", listMovesToShow);
+        }
     },
     clearProductSearch : function(component){
         var childCmp = component.find("searchProductComp");
