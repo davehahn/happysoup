@@ -23,6 +23,9 @@
     warehouseChanged: function(component, event, helper) {
         helper.retrievehistory(component, event, helper);
     },
+    moveChanged: function(component, event, helper) {
+        helper.moveChanged(component);
+    },
     changeTotal: function(component) {
     	var listData = component.get("v.listData");
     	var totalQ = 0;
