@@ -1,8 +1,10 @@
 <aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:lightningQuickAction,force:hasRecordId" access="global" controller="SerialNumberHistorySearchController_ar">
     <aura:attribute name="recordId" type="Id" />
     <aura:attribute name="listData" type="sObject[]"/>
+    <aura:attribute name="listDataAll" type="sObject[]"/>
 	<aura:attribute name="whOptions" type="sObject[]" />
 	<aura:attribute name="idWarehouse" type="String" />
+	<aura:attribute name="moveType" type="String" />
     <aura:attribute name="donotShowTop" type="Boolean" default="false" />
 	<aura:attribute name="canSeeGLAmount" type="Boolean" />
 	<aura:attribute name="idProduct" type="String" />
@@ -32,7 +34,8 @@
 	            <c:SearchSerial_ar aura:id="searchSerialComp" />
 			</lightning:layoutItem>
             <lightning:layoutItem class="slds-m-around_small">
-                <ui:inputDate aura:id="startDate" format="dd/MM/yyyy" label="Filter Start Date" class="field" value="{!v.today}" displayDatePicker="true" />
+                <lightning:input aura:id="startDate" type="date" name="startDateInput" label="Filter Start Date" value="{!v.today}"/>
+<!--                <ui:inputDate aura:id="startDate" format="dd/MM/yyyy" label="Filter Start Date" class="field" value="{!v.today}" displayDatePicker="true" />-->
             </lightning:layoutItem>
 		</lightning:layout>
     </lightning:card>
@@ -43,7 +46,13 @@
                 <tr class="slds-text-title_caps">
                     <th scope="col">
                         <div class="slds-truncate" title="Move Type">
-                            Move Type
+                            <lightning:select name="warehouses" value="{!v.moveType}" label="" onchange="{!c.moveChanged}">
+                                <option value="" text="- Move Types -"></option>
+                                <option value="Inbound" text="Inbound"></option>
+                                <option value="Outbound" text="Outbound"></option>
+                                <option value="Manufacturing" text="Manufacturing"></option>
+                                <option value="Purchase Order" text="Purchase Order"></option>
+                            </lightning:select>
                         </div>
                     </th>
                     <th scope="col">
@@ -71,13 +80,13 @@
                             Serial
                         </div>
                     </th>
-                    <th scope="col" class="slds-text-align--center">
+                    <th scope="col" class="slds-text-align_center">
                         <div class="slds-truncate" title="Quantity">
                             Qty
                         </div>
                     </th>
                     <aura:if isTrue="{!v.canSeeGLAmount}">
-                    <th scope="col" class="slds-text-align--right">
+                    <th scope="col" class="slds-text-align_right">
                         <div class="slds-truncate" title="GL Amount">
                             GL Amount
                         </div>
@@ -142,7 +151,7 @@
                                             <div class="slds-col slds-size_1-of-5 slds-border_bottom  slds-text-align_right">
                                                 <span>
                                                     <aura:if isTrue="{!v.canSeeGLAmount}">
-                                                        <ui:outputCurrency value="{!l.amount}"/>
+                                                        <lightning:formattedNumber value="{!l.amount}" style="currency"/>
                                                     </aura:if>
                                                 </span>
                                             </div>
@@ -179,12 +188,12 @@
                                 </a>
                             </div>                            
                         </th>
-                        <th scope="row" class="slds-text-align--center">
+                        <th scope="row" class="slds-text-align_center">
                             {!a.quantity}
                         </th>
                         <aura:if isTrue="{!v.canSeeGLAmount}">
-                        <th scope="row" class="slds-text-align--right">
-                            <ui:outputCurrency value="{!a.inventoryGLAmount}"/>
+                        <th scope="row" class="slds-text-align_right">
+                            <lightning:formattedNumber value="{!a.inventoryGLAmount}" style="currency"/>
                         </th>
                     	</aura:if>
                     </tr>
@@ -197,7 +206,7 @@
                         	Current Availability:
                        	</div>
                     </th>
-                    <th scope="row" class="slds-text-align--center">
+                    <th scope="row" class="slds-text-align_center">
                         {!v.availableQuantity}
                     </th>
                     <th>&nbsp;</th>
