@@ -67,30 +67,35 @@
       </div>
     </div>
     <aura:if isTrue="{!!empty( v.displayFieldData )}">
-      <ul class="slds-grid slds-page-header__detail-row">
+      <lightning:recordViewForm objectApiName="Case" recordId="{!v.recordId}" class="slds-grid slds-page-header__detail-row">
         <aura:iteration items="{!v.displayFieldData}" var="field">
-          <li class="slds-page-header__detail-block">
-            <p class="slds-text-title slds-truncate slds-m-bottom_xx-small"
-               title="{!field.label}">
-              {!field.label}
-            </p>
-            <p class="slds-text-body_regular slds-truncate"
-               title="{!field.value}">
-              <aura:if isTrue="{!equals( field.format, 'STRING')}">
-                {!field.value}
-              </aura:if>
-              <aura:if isTrue="{!equals( field.format, 'DATETIME')}">
-                <ui:outputDateTime value="{!field.value}" />
-              </aura:if>
-              <aura:if isTrue="{!equals( field.format, 'CURRENCY')}">
-                <lightning:formattedNumber value="{!field.value}"
-                                           style="currency"
-                                           currencyCode="CAD" />
-              </aura:if>
-            </p>
-          </li>
+            <lightning:outputField fieldName="{!field.name}" class="slds-page-header__detail-block  slds-truncate" />
         </aura:iteration>
-      </ul>
+      </lightning:recordViewForm>
+<!--      <ul class="slds-grid slds-page-header__detail-row">-->
+<!--        <aura:iteration items="{!v.displayFieldData}" var="field">-->
+<!--          <li class="slds-page-header__detail-block">-->
+<!--            <p class="slds-text-title slds-truncate slds-m-bottom_xx-small"-->
+<!--               title="{!field.label}">-->
+<!--              {!field.label}-->
+<!--            </p>-->
+<!--            <p class="slds-text-body_regular slds-truncate"-->
+<!--               title="{!field.value}">-->
+<!--              <aura:if isTrue="{!equals( field.format, 'STRING')}">-->
+<!--                {!field.value}-->
+<!--              </aura:if>-->
+<!--              <aura:if isTrue="{!equals( field.format, 'DATETIME')}">-->
+<!--                <ui:outputDateTime value="{!field.value}" />-->
+<!--              </aura:if>-->
+<!--              <aura:if isTrue="{!equals( field.format, 'CURRENCY')}">-->
+<!--                <lightning:formattedNumber value="{!field.value}"-->
+<!--                                           style="currency"-->
+<!--                                           currencyCode="CAD" />-->
+<!--              </aura:if>-->
+<!--            </p>-->
+<!--          </li>-->
+<!--        </aura:iteration>-->
+<!--      </ul>-->
     </aura:if>
   </div>
 
@@ -132,30 +137,35 @@
         </div>
       </div>
     </div>
-    <ul class="slds-list_vertical-space-medium slds-m-left_xx-smal">
+    <lightning:recordViewForm objectApiName="Case" recordId="{!v.recordId}" class="slds-list_vertical-space-medium slds-m-left_xx-small">
       <aura:iteration items="{!v.displayFieldData}" var="field">
-        <li class="slds-item">
-          <p class="slds-text-title slds-truncate slds-m-bottom_xx-small"
-             title="{!field.label}">
-            {!field.label}
-          </p>
-          <p class="slds-text-body_regular slds-truncate"
-             title="{!field.value}">
-            <aura:if isTrue="{!equals( field.format, 'STRING')}">
-              {!field.value}
-            </aura:if>
-            <aura:if isTrue="{!equals( field.format, 'DATETIME')}">
-              <ui:outputDateTime value="{!field.value}" />
-            </aura:if>
-            <aura:if isTrue="{!equals( field.format, 'CURRENCY')}">
-              <lightning:formattedNumber value="{!field.value}"
-                                         style="currency"
-                                         currencyCode="CAD" />
-            </aura:if>
-          </p>
-        </li>
+        <lightning:outputField fieldName="{!field.name}" class="slds-item" />
       </aura:iteration>
-    </ul>
+    </lightning:recordViewForm>
+<!--    <ul class="slds-list_vertical-space-medium slds-m-left_xx-smal">-->
+<!--      <aura:iteration items="{!v.displayFieldData}" var="field">-->
+<!--        <li class="slds-item">-->
+<!--          <p class="slds-text-title slds-truncate slds-m-bottom_xx-small"-->
+<!--             title="{!field.label}">-->
+<!--            {!field.label}-->
+<!--          </p>-->
+<!--          <p class="slds-text-body_regular slds-truncate"-->
+<!--             title="{!field.value}">-->
+<!--            <aura:if isTrue="{!equals( field.format, 'STRING')}">-->
+<!--              {!field.value}-->
+<!--            </aura:if>-->
+<!--            <aura:if isTrue="{!equals( field.format, 'DATETIME')}">-->
+<!--              <ui:outputDateTime value="{!field.value}" />-->
+<!--            </aura:if>-->
+<!--            <aura:if isTrue="{!equals( field.format, 'CURRENCY')}">-->
+<!--              <lightning:formattedNumber value="{!field.value}"-->
+<!--                                         style="currency"-->
+<!--                                         currencyCode="CAD" />-->
+<!--            </aura:if>-->
+<!--          </p>-->
+<!--        </li>-->
+<!--      </aura:iteration>-->
+<!--    </ul>-->
   </div>
 
   <aura:if isTrue="{!v.displayAlwaysEditForm}">

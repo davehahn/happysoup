@@ -38,7 +38,7 @@ public without sharing class Case_TriggerHandler extends TriggerHandler
   protected override void afterInsert()
   {
     createPartnerPartsOrderForApprovedWarrantyCases( (List<Case>)Trigger.new, null );
-    makeCommentOnErpAboutCaseNumber( (List<Case>)Trigger.new );
+    makeCommentOnErpAboutCaseNumberAndLink( (List<Case>)Trigger.new );
     handleSubletLines( (List<Case>)Trigger.new, null );
     enforceAssignmentRules( Trigger.newMap.keySet() );
     //new JiraConnect( Trigger.new, Trigger.oldMap ).createIssues();
@@ -163,7 +163,7 @@ public without sharing class Case_TriggerHandler extends TriggerHandler
 
   }
 
-  private static void makeCommentOnErpAboutCaseNumber( List<Case> cases )
+  private static void makeCommentOnErpAboutCaseNumberAndLink( List<Case> cases )
   {
     List<AcctSeed__Project__c> erps = new List<AcctSeed__Project__c>();
     for( Case c : cases )
@@ -175,7 +175,8 @@ public without sharing class Case_TriggerHandler extends TriggerHandler
           comment += '<br> Partner Reference # ' + c.Partner_Reference__c;
         erps.add( new AcctSeed__Project__c(
           Id = c.Warranty_ERP__c,
-          Customer_Notes__c = comment
+          Customer_Notes__c = comment,
+          Warranty_Case__c = c.Id
         ));
       }
       Boolean origProjState = gcProject.disableTrigger;
