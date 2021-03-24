@@ -3499,6 +3499,8 @@ input.dateSelector{
                         });
                         alert(myString);
                     }
+                    if({!isManufacturing})
+                        takeExpense();
                 }
                 else
                 {
@@ -3576,6 +3578,8 @@ input.dateSelector{
                         });
                         alert(myString);
                     }
+                    if({!isPartnerBoatSale})
+                        createInternalInboundMoves();
                 }
                 else
                 {
@@ -3621,6 +3625,42 @@ input.dateSelector{
                 refreshAll();
                 rerenderDetail();
                 rerenderJournalEntry();
+                rerenderInboundMovements();
+                $gridDiv.pqGrid('hideLoading');
+                gSpinner.hide();
+            },
+            {buffer:true, escape:false, timeout:120000});
+    }
+
+    function createInternalInboundMoves()
+    {
+        gSpinner.show();
+        var $gridDiv = $j('#ledger');
+        $gridDiv.pqGrid('showLoading');
+        var expenseDate = null;
+        if($j("#cogsDate").length) expenseDate = $j("#cogsDate").val();
+        Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.gcProject_AccountingActions.createInboundInboundMovesRA}',
+            '{!Id}',expenseDate,
+            function(result,event)
+            {
+                if(event.status)
+                {
+                    if(result.length > 0)
+                    {
+                        var myString = '';
+                        jQuery.each(result, function(i,msg)
+                        {
+                            myString += msg;
+                            myString += '\n\n';
+                        });
+                        alert(myString);
+                    }
+                }
+                else
+                {
+                    alert(event.message);
+                }
                 rerenderInboundMovements();
                 $gridDiv.pqGrid('hideLoading');
                 gSpinner.hide();
