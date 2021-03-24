@@ -1,25 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Flow xmlns="http://soap.sforce.com/2006/04/metadata">
-    <actionCalls>
-        <processMetadataValues>
-            <name>emailAlertSelection</name>
-            <value>
-                <stringValue>Montreal_ERP_Tagging_Pending</stringValue>
-            </value>
-        </processMetadataValues>
-        <name>myRule_43_A1</name>
-        <label>Notify Max</label>
-        <locationX>4300</locationX>
-        <locationY>200</locationY>
-        <actionName>AcctSeed__Project__c.Montreal_ERP_Tagging_Pending</actionName>
-        <actionType>emailAlert</actionType>
-        <inputParameters>
-            <name>SObjectRowId</name>
-            <value>
-                <elementReference>myVariable_current.Id</elementReference>
-            </value>
-        </inputParameters>
-    </actionCalls>
     <apiVersion>51.0</apiVersion>
     <decisions>
         <name>isChangedDecision14_myRule_13_Stage_c</name>
@@ -1267,9 +1247,6 @@
         <label>myDecision36</label>
         <locationX>50</locationX>
         <locationY>0</locationY>
-        <defaultConnector>
-            <targetReference>myDecision42</targetReference>
-        </defaultConnector>
         <defaultConnectorLabel>default</defaultConnectorLabel>
         <rules>
             <name>myRule_37</name>
@@ -1439,120 +1416,6 @@
                 <targetReference>myRule_37_A1</targetReference>
             </connector>
             <label>Pending Pickup (Service ERP)</label>
-        </rules>
-    </decisions>
-    <decisions>
-        <processMetadataValues>
-            <name>index</name>
-            <value>
-                <numberValue>7.0</numberValue>
-            </value>
-        </processMetadataValues>
-        <name>myDecision42</name>
-        <label>myDecision42</label>
-        <locationX>50</locationX>
-        <locationY>0</locationY>
-        <defaultConnectorLabel>default</defaultConnectorLabel>
-        <rules>
-            <name>myRule_43</name>
-            <conditionLogic>and</conditionLogic>
-            <conditions>
-                <processMetadataValues>
-                    <name>inputDataType</name>
-                    <value>
-                        <stringValue>String</stringValue>
-                    </value>
-                </processMetadataValues>
-                <processMetadataValues>
-                    <name>leftHandSideType</name>
-                    <value>
-                        <stringValue>String</stringValue>
-                    </value>
-                </processMetadataValues>
-                <processMetadataValues>
-                    <name>operatorDataType</name>
-                    <value>
-                        <stringValue>String</stringValue>
-                    </value>
-                </processMetadataValues>
-                <processMetadataValues>
-                    <name>rightHandSideType</name>
-                    <value>
-                        <stringValue>String</stringValue>
-                    </value>
-                </processMetadataValues>
-                <leftValueReference>myVariable_current.RecordType.Name</leftValueReference>
-                <operator>Contains</operator>
-                <rightValue>
-                    <stringValue>Retail Boat Sale</stringValue>
-                </rightValue>
-            </conditions>
-            <conditions>
-                <processMetadataValues>
-                    <name>inputDataType</name>
-                    <value>
-                        <stringValue>String</stringValue>
-                    </value>
-                </processMetadataValues>
-                <processMetadataValues>
-                    <name>leftHandSideType</name>
-                    <value>
-                        <stringValue>String</stringValue>
-                    </value>
-                </processMetadataValues>
-                <processMetadataValues>
-                    <name>operatorDataType</name>
-                    <value>
-                        <stringValue>String</stringValue>
-                    </value>
-                </processMetadataValues>
-                <processMetadataValues>
-                    <name>rightHandSideType</name>
-                    <value>
-                        <stringValue>String</stringValue>
-                    </value>
-                </processMetadataValues>
-                <leftValueReference>myVariable_current.WarehouseName__c</leftValueReference>
-                <operator>Contains</operator>
-                <rightValue>
-                    <stringValue>Montreal</stringValue>
-                </rightValue>
-            </conditions>
-            <conditions>
-                <processMetadataValues>
-                    <name>inputDataType</name>
-                    <value>
-                        <stringValue>Picklist</stringValue>
-                    </value>
-                </processMetadataValues>
-                <processMetadataValues>
-                    <name>leftHandSideType</name>
-                    <value>
-                        <stringValue>Picklist</stringValue>
-                    </value>
-                </processMetadataValues>
-                <processMetadataValues>
-                    <name>operatorDataType</name>
-                    <value>
-                        <stringValue>String</stringValue>
-                    </value>
-                </processMetadataValues>
-                <processMetadataValues>
-                    <name>rightHandSideType</name>
-                    <value>
-                        <stringValue>Picklist</stringValue>
-                    </value>
-                </processMetadataValues>
-                <leftValueReference>myVariable_current.Stage__c</leftValueReference>
-                <operator>EqualTo</operator>
-                <rightValue>
-                    <stringValue>Tagging Pending</stringValue>
-                </rightValue>
-            </conditions>
-            <connector>
-                <targetReference>myRule_43_A1</targetReference>
-            </connector>
-            <label>Tagging Pending (Retail ERP)</label>
         </rules>
     </decisions>
     <decisions>
@@ -1748,7 +1611,7 @@
                 <stringValue>NOW()</stringValue>
             </value>
         </processMetadataValues>
-        <name>formula_10_myRule_7_A1_7411719889</name>
+        <name>formula_10_myRule_7_A1_6065218507</name>
         <dataType>DateTime</dataType>
         <expression>NOW()</expression>
     </formulas>
@@ -1759,7 +1622,7 @@
                 <stringValue>([AcctSeed__Project__c].Name) + &apos; ERP stage has been changed to &apos; + TEXT([AcctSeed__Project__c].Stage__c)</stringValue>
             </value>
         </processMetadataValues>
-        <name>formula_11_myRule_7_A1_4692940315</name>
+        <name>formula_11_myRule_7_A1_2775472820</name>
         <dataType>String</dataType>
         <expression>({!myVariable_current.Name}) + &apos; ERP stage has been changed to &apos; + TEXT({!myVariable_current.Stage__c})</expression>
     </formulas>
@@ -1770,7 +1633,7 @@
                 <stringValue>TODAY()</stringValue>
             </value>
         </processMetadataValues>
-        <name>formula_15_myRule_13_A1_1911275797</name>
+        <name>formula_15_myRule_13_A1_9119501964</name>
         <dataType>Date</dataType>
         <expression>TODAY()</expression>
     </formulas>
@@ -1781,7 +1644,7 @@
                 <stringValue>NOW()</stringValue>
             </value>
         </processMetadataValues>
-        <name>formula_16_myRule_13_A1_7804315921</name>
+        <name>formula_16_myRule_13_A1_3378352688</name>
         <dataType>DateTime</dataType>
         <expression>NOW()</expression>
     </formulas>
@@ -1792,7 +1655,7 @@
                 <stringValue>([AcctSeed__Project__c].Name) + &apos; ERP stage has been changed to &apos; + TEXT([AcctSeed__Project__c].Stage__c)</stringValue>
             </value>
         </processMetadataValues>
-        <name>formula_17_myRule_13_A1_5478540608</name>
+        <name>formula_17_myRule_13_A1_0431307794</name>
         <dataType>String</dataType>
         <expression>({!myVariable_current.Name}) + &apos; ERP stage has been changed to &apos; + TEXT({!myVariable_current.Stage__c})</expression>
     </formulas>
@@ -1803,7 +1666,7 @@
                 <stringValue>TODAY()</stringValue>
             </value>
         </processMetadataValues>
-        <name>formula_21_myRule_19_A1_4424449474</name>
+        <name>formula_21_myRule_19_A1_6850772655</name>
         <dataType>Date</dataType>
         <expression>TODAY()</expression>
     </formulas>
@@ -1814,7 +1677,7 @@
                 <stringValue>NOW()</stringValue>
             </value>
         </processMetadataValues>
-        <name>formula_22_myRule_19_A1_1152165520</name>
+        <name>formula_22_myRule_19_A1_2973328634</name>
         <dataType>DateTime</dataType>
         <expression>NOW()</expression>
     </formulas>
@@ -1825,7 +1688,7 @@
                 <stringValue>([AcctSeed__Project__c].Name) + &apos; ERP stage has been changed to &apos; + TEXT([AcctSeed__Project__c].Stage__c)</stringValue>
             </value>
         </processMetadataValues>
-        <name>formula_23_myRule_19_A1_0767374883</name>
+        <name>formula_23_myRule_19_A1_8531724053</name>
         <dataType>String</dataType>
         <expression>({!myVariable_current.Name}) + &apos; ERP stage has been changed to &apos; + TEXT({!myVariable_current.Stage__c})</expression>
     </formulas>
@@ -1836,7 +1699,7 @@
                 <stringValue>TODAY()</stringValue>
             </value>
         </processMetadataValues>
-        <name>formula_27_myRule_25_A1_6724033403</name>
+        <name>formula_27_myRule_25_A1_4613738891</name>
         <dataType>Date</dataType>
         <expression>TODAY()</expression>
     </formulas>
@@ -1847,7 +1710,7 @@
                 <stringValue>NOW()</stringValue>
             </value>
         </processMetadataValues>
-        <name>formula_28_myRule_25_A1_8339309035</name>
+        <name>formula_28_myRule_25_A1_8427827005</name>
         <dataType>DateTime</dataType>
         <expression>NOW()</expression>
     </formulas>
@@ -1858,7 +1721,7 @@
                 <stringValue>([AcctSeed__Project__c].Name) + &apos; ERP stage has been changed to &apos; + TEXT([AcctSeed__Project__c].Stage__c)</stringValue>
             </value>
         </processMetadataValues>
-        <name>formula_29_myRule_25_A1_3016422939</name>
+        <name>formula_29_myRule_25_A1_3539767543</name>
         <dataType>String</dataType>
         <expression>({!myVariable_current.Name}) + &apos; ERP stage has been changed to &apos; + TEXT({!myVariable_current.Stage__c})</expression>
     </formulas>
@@ -1869,7 +1732,7 @@
                 <stringValue>TODAY()</stringValue>
             </value>
         </processMetadataValues>
-        <name>formula_33_myRule_31_A1_9745897805</name>
+        <name>formula_33_myRule_31_A1_5402807068</name>
         <dataType>Date</dataType>
         <expression>TODAY()</expression>
     </formulas>
@@ -1880,7 +1743,7 @@
                 <stringValue>NOW()</stringValue>
             </value>
         </processMetadataValues>
-        <name>formula_34_myRule_31_A1_2831146498</name>
+        <name>formula_34_myRule_31_A1_2176895730</name>
         <dataType>DateTime</dataType>
         <expression>NOW()</expression>
     </formulas>
@@ -1891,7 +1754,7 @@
                 <stringValue>([AcctSeed__Project__c].Name) + &apos; ERP stage has been changed to &apos; + TEXT([AcctSeed__Project__c].Stage__c)</stringValue>
             </value>
         </processMetadataValues>
-        <name>formula_35_myRule_31_A1_5003956331</name>
+        <name>formula_35_myRule_31_A1_3149357159</name>
         <dataType>String</dataType>
         <expression>({!myVariable_current.Name}) + &apos; ERP stage has been changed to &apos; + TEXT({!myVariable_current.Stage__c})</expression>
     </formulas>
@@ -1902,7 +1765,7 @@
                 <stringValue>TODAY()</stringValue>
             </value>
         </processMetadataValues>
-        <name>formula_39_myRule_37_A1_1560745383</name>
+        <name>formula_39_myRule_37_A1_9602272511</name>
         <dataType>Date</dataType>
         <expression>TODAY()</expression>
     </formulas>
@@ -1913,7 +1776,7 @@
                 <stringValue>TODAY()</stringValue>
             </value>
         </processMetadataValues>
-        <name>formula_3_myRule_1_A1_4546381318</name>
+        <name>formula_3_myRule_1_A1_2360904186</name>
         <dataType>Date</dataType>
         <expression>TODAY()</expression>
     </formulas>
@@ -1924,7 +1787,7 @@
                 <stringValue>NOW()</stringValue>
             </value>
         </processMetadataValues>
-        <name>formula_40_myRule_37_A1_1916769402</name>
+        <name>formula_40_myRule_37_A1_9188255094</name>
         <dataType>DateTime</dataType>
         <expression>NOW()</expression>
     </formulas>
@@ -1935,7 +1798,7 @@
                 <stringValue>([AcctSeed__Project__c].Name) + &apos; ERP stage has been changed to &apos; + TEXT([AcctSeed__Project__c].Stage__c)</stringValue>
             </value>
         </processMetadataValues>
-        <name>formula_41_myRule_37_A1_9375957716</name>
+        <name>formula_41_myRule_37_A1_5035206661</name>
         <dataType>String</dataType>
         <expression>({!myVariable_current.Name}) + &apos; ERP stage has been changed to &apos; + TEXT({!myVariable_current.Stage__c})</expression>
     </formulas>
@@ -1946,7 +1809,7 @@
                 <stringValue>NOW()</stringValue>
             </value>
         </processMetadataValues>
-        <name>formula_4_myRule_1_A1_0779021538</name>
+        <name>formula_4_myRule_1_A1_1530552968</name>
         <dataType>DateTime</dataType>
         <expression>NOW()</expression>
     </formulas>
@@ -1957,7 +1820,7 @@
                 <stringValue>([AcctSeed__Project__c].Name) + &apos; ERP stage has been changed to &apos; + TEXT([AcctSeed__Project__c].Stage__c)</stringValue>
             </value>
         </processMetadataValues>
-        <name>formula_5_myRule_1_A1_3365981286</name>
+        <name>formula_5_myRule_1_A1_6738993281</name>
         <dataType>String</dataType>
         <expression>({!myVariable_current.Name}) + &apos; ERP stage has been changed to &apos; + TEXT({!myVariable_current.Stage__c})</expression>
     </formulas>
@@ -1968,11 +1831,11 @@
                 <stringValue>TODAY()</stringValue>
             </value>
         </processMetadataValues>
-        <name>formula_9_myRule_7_A1_6308122555</name>
+        <name>formula_9_myRule_7_A1_4678501902</name>
         <dataType>Date</dataType>
         <expression>TODAY()</expression>
     </formulas>
-    <interviewLabel>Montreal_ERP_Stage_Notifications-9_InterviewLabel</interviewLabel>
+    <interviewLabel>Montreal_ERP_Stage_Notifications-10_InterviewLabel</interviewLabel>
     <label>Montreal ERP Stage Notifications</label>
     <processMetadataValues>
         <name>ObjectType</name>
@@ -2037,7 +1900,7 @@
             </processMetadataValues>
             <field>ActivityDate</field>
             <value>
-                <elementReference>formula_15_myRule_13_A1_1911275797</elementReference>
+                <elementReference>formula_15_myRule_13_A1_9119501964</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -2169,7 +2032,7 @@
             </processMetadataValues>
             <field>ReminderDateTime</field>
             <value>
-                <elementReference>formula_16_myRule_13_A1_7804315921</elementReference>
+                <elementReference>formula_16_myRule_13_A1_3378352688</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -2235,7 +2098,7 @@
             </processMetadataValues>
             <field>Subject</field>
             <value>
-                <elementReference>formula_17_myRule_13_A1_5478540608</elementReference>
+                <elementReference>formula_17_myRule_13_A1_0431307794</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -2314,7 +2177,7 @@
             </processMetadataValues>
             <field>ActivityDate</field>
             <value>
-                <elementReference>formula_21_myRule_19_A1_4424449474</elementReference>
+                <elementReference>formula_21_myRule_19_A1_6850772655</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -2446,7 +2309,7 @@
             </processMetadataValues>
             <field>ReminderDateTime</field>
             <value>
-                <elementReference>formula_22_myRule_19_A1_1152165520</elementReference>
+                <elementReference>formula_22_myRule_19_A1_2973328634</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -2512,7 +2375,7 @@
             </processMetadataValues>
             <field>Subject</field>
             <value>
-                <elementReference>formula_23_myRule_19_A1_0767374883</elementReference>
+                <elementReference>formula_23_myRule_19_A1_8531724053</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -2591,7 +2454,7 @@
             </processMetadataValues>
             <field>ActivityDate</field>
             <value>
-                <elementReference>formula_3_myRule_1_A1_4546381318</elementReference>
+                <elementReference>formula_3_myRule_1_A1_2360904186</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -2723,7 +2586,7 @@
             </processMetadataValues>
             <field>ReminderDateTime</field>
             <value>
-                <elementReference>formula_4_myRule_1_A1_0779021538</elementReference>
+                <elementReference>formula_4_myRule_1_A1_1530552968</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -2789,7 +2652,7 @@
             </processMetadataValues>
             <field>Subject</field>
             <value>
-                <elementReference>formula_5_myRule_1_A1_3365981286</elementReference>
+                <elementReference>formula_5_myRule_1_A1_6738993281</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -2868,7 +2731,7 @@
             </processMetadataValues>
             <field>ActivityDate</field>
             <value>
-                <elementReference>formula_27_myRule_25_A1_6724033403</elementReference>
+                <elementReference>formula_27_myRule_25_A1_4613738891</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -3000,7 +2863,7 @@
             </processMetadataValues>
             <field>ReminderDateTime</field>
             <value>
-                <elementReference>formula_28_myRule_25_A1_8339309035</elementReference>
+                <elementReference>formula_28_myRule_25_A1_8427827005</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -3066,7 +2929,7 @@
             </processMetadataValues>
             <field>Subject</field>
             <value>
-                <elementReference>formula_29_myRule_25_A1_3016422939</elementReference>
+                <elementReference>formula_29_myRule_25_A1_3539767543</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -3145,7 +3008,7 @@
             </processMetadataValues>
             <field>ActivityDate</field>
             <value>
-                <elementReference>formula_33_myRule_31_A1_9745897805</elementReference>
+                <elementReference>formula_33_myRule_31_A1_5402807068</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -3277,7 +3140,7 @@
             </processMetadataValues>
             <field>ReminderDateTime</field>
             <value>
-                <elementReference>formula_34_myRule_31_A1_2831146498</elementReference>
+                <elementReference>formula_34_myRule_31_A1_2176895730</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -3343,7 +3206,7 @@
             </processMetadataValues>
             <field>Subject</field>
             <value>
-                <elementReference>formula_35_myRule_31_A1_5003956331</elementReference>
+                <elementReference>formula_35_myRule_31_A1_3149357159</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -3422,7 +3285,7 @@
             </processMetadataValues>
             <field>ActivityDate</field>
             <value>
-                <elementReference>formula_39_myRule_37_A1_1560745383</elementReference>
+                <elementReference>formula_39_myRule_37_A1_9602272511</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -3554,7 +3417,7 @@
             </processMetadataValues>
             <field>ReminderDateTime</field>
             <value>
-                <elementReference>formula_40_myRule_37_A1_1916769402</elementReference>
+                <elementReference>formula_40_myRule_37_A1_9188255094</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -3620,7 +3483,7 @@
             </processMetadataValues>
             <field>Subject</field>
             <value>
-                <elementReference>formula_41_myRule_37_A1_9375957716</elementReference>
+                <elementReference>formula_41_myRule_37_A1_5035206661</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -3699,7 +3562,7 @@
             </processMetadataValues>
             <field>ActivityDate</field>
             <value>
-                <elementReference>formula_9_myRule_7_A1_6308122555</elementReference>
+                <elementReference>formula_9_myRule_7_A1_4678501902</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -3831,7 +3694,7 @@
             </processMetadataValues>
             <field>ReminderDateTime</field>
             <value>
-                <elementReference>formula_10_myRule_7_A1_7411719889</elementReference>
+                <elementReference>formula_10_myRule_7_A1_6065218507</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -3897,7 +3760,7 @@
             </processMetadataValues>
             <field>Subject</field>
             <value>
-                <elementReference>formula_11_myRule_7_A1_4692940315</elementReference>
+                <elementReference>formula_11_myRule_7_A1_2775472820</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
