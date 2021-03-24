@@ -179,6 +179,7 @@
           flds.push({
             label: field[0],
             value: findValue( field[1] ),
+            name: field[1],
             format: format
           });
         }
