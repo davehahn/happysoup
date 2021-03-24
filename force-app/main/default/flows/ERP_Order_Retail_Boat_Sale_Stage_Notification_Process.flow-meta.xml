@@ -1,6 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Flow xmlns="http://soap.sforce.com/2006/04/metadata">
     <actionCalls>
+        <name>Chatter_Miguel_Pending_Rigging</name>
+        <label>Chatter Miguel Pending Rigging</label>
+        <locationX>2162</locationX>
+        <locationY>911</locationY>
+        <actionName>chatterPost</actionName>
+        <actionType>chatterPost</actionType>
+        <inputParameters>
+            <name>text</name>
+            <value>
+                <elementReference>MiguelGenericStageChangeBody</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>subjectNameOrId</name>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </inputParameters>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </actionCalls>
+    <actionCalls>
+        <name>Chatter_Miguel_Pick_and_Pack</name>
+        <label>Chatter Miguel Pick and Pack</label>
+        <locationX>1106</locationX>
+        <locationY>911</locationY>
+        <actionName>chatterPost</actionName>
+        <actionType>chatterPost</actionType>
+        <inputParameters>
+            <name>text</name>
+            <value>
+                <elementReference>MiguelGenericStageChangeBody</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>subjectNameOrId</name>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </inputParameters>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </actionCalls>
+    <actionCalls>
         <name>Pending_Inspection_Email_Store_Manager_Whitefish</name>
         <label>Pending Inspection Email Store Manager Whitefish</label>
         <locationX>50</locationX>
@@ -16,7 +58,159 @@
     </actionCalls>
     <apiVersion>50.0</apiVersion>
     <decisions>
-        <name>ERP_Stage</name>
+        <name>ERP_Stage_Barrie</name>
+        <label>ERP Stage</label>
+        <locationX>3086</locationX>
+        <locationY>551</locationY>
+        <defaultConnectorLabel>Else</defaultConnectorLabel>
+        <rules>
+            <name>Pending_Final_Rigging_Barrie</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Stage__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Pending Final Rigging</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.Boat_Specialist__r.IsActive</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.Delivery_Date__c</leftValueReference>
+                <operator>GreaterThanOrEqualTo</operator>
+                <rightValue>
+                    <elementReference>TodayPlus60d</elementReference>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Task_Boat_Specialist_Call_Early_Pickup_Barrie</targetReference>
+            </connector>
+            <doesRequireRecordChangedToMeetCriteria>true</doesRequireRecordChangedToMeetCriteria>
+            <label>Pending Final Rigging</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>ERP_Stage_Montreal</name>
+        <label>ERP Stage</label>
+        <locationX>1766</locationX>
+        <locationY>551</locationY>
+        <defaultConnectorLabel>Else</defaultConnectorLabel>
+        <rules>
+            <name>Pending_Final_Rigging_Montreal</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Stage__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Pending Final Rigging</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.Boat_Specialist__r.IsActive</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.Delivery_Date__c</leftValueReference>
+                <operator>GreaterThanOrEqualTo</operator>
+                <rightValue>
+                    <elementReference>TodayPlus60d</elementReference>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Task_Boat_Specialist_Call_Early_Pickup_Montreal</targetReference>
+            </connector>
+            <doesRequireRecordChangedToMeetCriteria>true</doesRequireRecordChangedToMeetCriteria>
+            <label>Pending Final Rigging</label>
+        </rules>
+        <rules>
+            <name>Pending_Pick_Pack_Montreal</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Stage__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Pending Pick and Pack</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Get_Miguel_C_User_ID</targetReference>
+            </connector>
+            <doesRequireRecordChangedToMeetCriteria>true</doesRequireRecordChangedToMeetCriteria>
+            <label>Pending Pick &amp; Pack</label>
+        </rules>
+        <rules>
+            <name>Pending_Pickup_Montreal</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Stage__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Pending Pickup</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.Boat_Specialist__r.IsActive</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Task_Boat_Specialist_Pending_Pickup_Montreal</targetReference>
+            </connector>
+            <doesRequireRecordChangedToMeetCriteria>true</doesRequireRecordChangedToMeetCriteria>
+            <label>Pending Pickup</label>
+        </rules>
+        <rules>
+            <name>Pending_Inspection_Montreal</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Stage__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Pending Inspection</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.Boat_Specialist__r.IsActive</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Task_Boat_Specialist_Pending_Inspection_Montreal</targetReference>
+            </connector>
+            <doesRequireRecordChangedToMeetCriteria>true</doesRequireRecordChangedToMeetCriteria>
+            <label>Pending Inspection</label>
+        </rules>
+        <rules>
+            <name>Pending_Rigging_Montreal</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Stage__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Pending Rigging</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Get_Miguel_C_User_ID_0</targetReference>
+            </connector>
+            <doesRequireRecordChangedToMeetCriteria>true</doesRequireRecordChangedToMeetCriteria>
+            <label>Pending Rigging</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>ERP_Stage_Whitefish</name>
         <label>ERP Stage</label>
         <locationX>314</locationX>
         <locationY>551</locationY>
@@ -38,7 +232,7 @@
             <label>Pending Inspection</label>
         </rules>
         <rules>
-            <name>Pending_Final_Rigging</name>
+            <name>Pending_Final_Rigging_Whitefish</name>
             <conditionLogic>and</conditionLogic>
             <conditions>
                 <leftValueReference>$Record.Stage__c</leftValueReference>
@@ -48,10 +242,10 @@
                 </rightValue>
             </conditions>
             <conditions>
-                <leftValueReference>$Record.Boat_Specialist__c</leftValueReference>
-                <operator>IsNull</operator>
+                <leftValueReference>$Record.Boat_Specialist__r.IsActive</leftValueReference>
+                <operator>EqualTo</operator>
                 <rightValue>
-                    <booleanValue>false</booleanValue>
+                    <booleanValue>true</booleanValue>
                 </rightValue>
             </conditions>
             <conditions>
@@ -62,81 +256,7 @@
                 </rightValue>
             </conditions>
             <connector>
-                <targetReference>Task_Boat_Specialist_Call_Early_Pickup</targetReference>
-            </connector>
-            <doesRequireRecordChangedToMeetCriteria>true</doesRequireRecordChangedToMeetCriteria>
-            <label>Pending Final Rigging</label>
-        </rules>
-    </decisions>
-    <decisions>
-        <name>ERP_Stage_0</name>
-        <label>ERP Stage</label>
-        <locationX>974</locationX>
-        <locationY>551</locationY>
-        <defaultConnectorLabel>Else</defaultConnectorLabel>
-        <rules>
-            <name>Pending_Final_Rigging_0</name>
-            <conditionLogic>and</conditionLogic>
-            <conditions>
-                <leftValueReference>$Record.Stage__c</leftValueReference>
-                <operator>EqualTo</operator>
-                <rightValue>
-                    <stringValue>Pending Final Rigging</stringValue>
-                </rightValue>
-            </conditions>
-            <conditions>
-                <leftValueReference>$Record.Boat_Specialist__c</leftValueReference>
-                <operator>IsNull</operator>
-                <rightValue>
-                    <booleanValue>false</booleanValue>
-                </rightValue>
-            </conditions>
-            <conditions>
-                <leftValueReference>$Record.Delivery_Date__c</leftValueReference>
-                <operator>GreaterThanOrEqualTo</operator>
-                <rightValue>
-                    <elementReference>TodayPlus60d</elementReference>
-                </rightValue>
-            </conditions>
-            <connector>
-                <targetReference>Task_Boat_Specialist_Call_Early_Pickup_0</targetReference>
-            </connector>
-            <doesRequireRecordChangedToMeetCriteria>true</doesRequireRecordChangedToMeetCriteria>
-            <label>Pending Final Rigging</label>
-        </rules>
-    </decisions>
-    <decisions>
-        <name>ERP_Stage_0_0</name>
-        <label>ERP Stage</label>
-        <locationX>1502</locationX>
-        <locationY>551</locationY>
-        <defaultConnectorLabel>Else</defaultConnectorLabel>
-        <rules>
-            <name>Pending_Final_Rigging_0_0</name>
-            <conditionLogic>and</conditionLogic>
-            <conditions>
-                <leftValueReference>$Record.Stage__c</leftValueReference>
-                <operator>EqualTo</operator>
-                <rightValue>
-                    <stringValue>Pending Final Rigging</stringValue>
-                </rightValue>
-            </conditions>
-            <conditions>
-                <leftValueReference>$Record.Boat_Specialist__c</leftValueReference>
-                <operator>IsNull</operator>
-                <rightValue>
-                    <booleanValue>false</booleanValue>
-                </rightValue>
-            </conditions>
-            <conditions>
-                <leftValueReference>$Record.Delivery_Date__c</leftValueReference>
-                <operator>GreaterThanOrEqualTo</operator>
-                <rightValue>
-                    <elementReference>TodayPlus60d</elementReference>
-                </rightValue>
-            </conditions>
-            <connector>
-                <targetReference>Task_Boat_Specialist_Call_Early_Pickup_0_0</targetReference>
+                <targetReference>Task_Boat_Specialist_Call_Early_Pickup_Whitefish</targetReference>
             </connector>
             <doesRequireRecordChangedToMeetCriteria>true</doesRequireRecordChangedToMeetCriteria>
             <label>Pending Final Rigging</label>
@@ -145,7 +265,7 @@
     <decisions>
         <name>Retail_Location</name>
         <label>Retail Location</label>
-        <locationX>1106</locationX>
+        <locationX>1898</locationX>
         <locationY>431</locationY>
         <defaultConnectorLabel>Else</defaultConnectorLabel>
         <rules>
@@ -159,7 +279,7 @@
                 </rightValue>
             </conditions>
             <connector>
-                <targetReference>ERP_Stage</targetReference>
+                <targetReference>ERP_Stage_Whitefish</targetReference>
             </connector>
             <label>Whitefish</label>
         </rules>
@@ -174,7 +294,7 @@
                 </rightValue>
             </conditions>
             <connector>
-                <targetReference>ERP_Stage_0</targetReference>
+                <targetReference>ERP_Stage_Montreal</targetReference>
             </connector>
             <label>Montreal</label>
         </rules>
@@ -189,9 +309,53 @@
                 </rightValue>
             </conditions>
             <connector>
-                <targetReference>ERP_Stage_0_0</targetReference>
+                <targetReference>ERP_Stage_Barrie</targetReference>
             </connector>
             <label>Barrie</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Validate_Miguel_Collette</name>
+        <label>Validate Miguel Collette</label>
+        <locationX>1238</locationX>
+        <locationY>791</locationY>
+        <defaultConnectorLabel>Else</defaultConnectorLabel>
+        <rules>
+            <name>Active</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>MiguelColletteUserID</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Chatter_Miguel_Pick_and_Pack</targetReference>
+            </connector>
+            <label>Active</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Validate_Miguel_Collette_0</name>
+        <label>Validate Miguel Collette</label>
+        <locationX>2294</locationX>
+        <locationY>791</locationY>
+        <defaultConnectorLabel>Else</defaultConnectorLabel>
+        <rules>
+            <name>Active_0</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>MiguelColletteUserID</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Chatter_Miguel_Pending_Rigging</targetReference>
+            </connector>
+            <label>Active</label>
         </rules>
     </decisions>
     <description>Slowly removing individual workflows / process builders that handle Retail ERP notifications and migrating them into this flow.</description>
@@ -232,9 +396,9 @@
     </processMetadataValues>
     <processType>AutoLaunchedFlow</processType>
     <recordCreates>
-        <name>Task_Boat_Specialist_Call_Early_Pickup</name>
+        <name>Task_Boat_Specialist_Call_Early_Pickup_Barrie</name>
         <label>Task Boat Specialist Call Early Pickup</label>
-        <locationX>314</locationX>
+        <locationX>2954</locationX>
         <locationY>671</locationY>
         <inputAssignments>
             <field>ActivityDate</field>
@@ -306,7 +470,7 @@
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </recordCreates>
     <recordCreates>
-        <name>Task_Boat_Specialist_Call_Early_Pickup_0</name>
+        <name>Task_Boat_Specialist_Call_Early_Pickup_Montreal</name>
         <label>Task Boat Specialist Call Early Pickup</label>
         <locationX>842</locationX>
         <locationY>671</locationY>
@@ -380,9 +544,9 @@
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </recordCreates>
     <recordCreates>
-        <name>Task_Boat_Specialist_Call_Early_Pickup_0_0</name>
+        <name>Task_Boat_Specialist_Call_Early_Pickup_Whitefish</name>
         <label>Task Boat Specialist Call Early Pickup</label>
-        <locationX>1370</locationX>
+        <locationX>314</locationX>
         <locationY>671</locationY>
         <inputAssignments>
             <field>ActivityDate</field>
@@ -453,10 +617,232 @@
         <object>Task</object>
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </recordCreates>
+    <recordCreates>
+        <name>Task_Boat_Specialist_Pending_Inspection_Montreal</name>
+        <label>Task Boat Specialist Pending Inspection</label>
+        <locationX>1898</locationX>
+        <locationY>671</locationY>
+        <inputAssignments>
+            <field>ActivityDate</field>
+            <value>
+                <elementReference>Today</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Description</field>
+            <value>
+                <stringValue>The following ERP Order stage has been changed to Pending Inspection</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>IsReminderSet</field>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>OwnerId</field>
+            <value>
+                <elementReference>$Record.Boat_Specialist__r.Id</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Priority</field>
+            <value>
+                <stringValue>High</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>RecordTypeId</field>
+            <value>
+                <elementReference>TaskRecordTypeID</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>ReminderDateTime</field>
+            <value>
+                <elementReference>Now</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Status</field>
+            <value>
+                <stringValue>Open</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Subject</field>
+            <value>
+                <stringValue>This deal is now Pending Inspection</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Type</field>
+            <value>
+                <stringValue>To Do</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>WhatId</field>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </inputAssignments>
+        <object>Task</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordCreates>
+    <recordCreates>
+        <name>Task_Boat_Specialist_Pending_Pickup_Montreal</name>
+        <label>Task Boat Specialist Pending Pickup</label>
+        <locationX>1634</locationX>
+        <locationY>671</locationY>
+        <inputAssignments>
+            <field>ActivityDate</field>
+            <value>
+                <elementReference>Today</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Description</field>
+            <value>
+                <stringValue>The following ERP Order stage has been changed to Pending Pickup</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>IsReminderSet</field>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>OwnerId</field>
+            <value>
+                <elementReference>$Record.Boat_Specialist__r.Id</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Priority</field>
+            <value>
+                <stringValue>High</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>RecordTypeId</field>
+            <value>
+                <elementReference>TaskRecordTypeID</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>ReminderDateTime</field>
+            <value>
+                <elementReference>Now</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Status</field>
+            <value>
+                <stringValue>Open</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Subject</field>
+            <value>
+                <stringValue>This deal is now Pending Pickup</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Type</field>
+            <value>
+                <stringValue>To Do</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>WhatId</field>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </inputAssignments>
+        <object>Task</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordCreates>
+    <recordLookups>
+        <name>Get_Miguel_C_User_ID</name>
+        <label>Get Miguel C User ID</label>
+        <locationX>1238</locationX>
+        <locationY>671</locationY>
+        <assignNullValuesIfNoRecordsFound>true</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Validate_Miguel_Collette</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>FirstName</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>Miguel</stringValue>
+            </value>
+        </filters>
+        <filters>
+            <field>LastName</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>Collette</stringValue>
+            </value>
+        </filters>
+        <filters>
+            <field>IsActive</field>
+            <operator>EqualTo</operator>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </filters>
+        <object>User</object>
+        <outputAssignments>
+            <assignToReference>MiguelColletteUserID</assignToReference>
+            <field>Id</field>
+        </outputAssignments>
+    </recordLookups>
+    <recordLookups>
+        <name>Get_Miguel_C_User_ID_0</name>
+        <label>Get Miguel C User ID</label>
+        <locationX>2294</locationX>
+        <locationY>671</locationY>
+        <assignNullValuesIfNoRecordsFound>true</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Validate_Miguel_Collette_0</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>FirstName</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>Miguel</stringValue>
+            </value>
+        </filters>
+        <filters>
+            <field>LastName</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>Collette</stringValue>
+            </value>
+        </filters>
+        <filters>
+            <field>IsActive</field>
+            <operator>EqualTo</operator>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </filters>
+        <object>User</object>
+        <outputAssignments>
+            <assignToReference>MiguelColletteUserID</assignToReference>
+            <field>Id</field>
+        </outputAssignments>
+    </recordLookups>
     <recordLookups>
         <name>Get_Task_Record_Type</name>
         <label>Get Task Record Type</label>
-        <locationX>1106</locationX>
+        <locationX>1898</locationX>
         <locationY>311</locationY>
         <assignNullValuesIfNoRecordsFound>true</assignNullValuesIfNoRecordsFound>
         <connector>
@@ -484,7 +870,7 @@
         </outputAssignments>
     </recordLookups>
     <start>
-        <locationX>980</locationX>
+        <locationX>1772</locationX>
         <locationY>0</locationY>
         <connector>
             <targetReference>Get_Task_Record_Type</targetReference>
@@ -502,6 +888,18 @@
         <triggerType>RecordAfterSave</triggerType>
     </start>
     <status>Active</status>
+    <textTemplates>
+        <name>MiguelGenericStageChangeBody</name>
+        <isViewedAsPlainText>true</isViewedAsPlainText>
+        <text>@[{!MiguelColletteUserID}] The following ERP Order Stage has been changed to {!$Record.Stage__c}</text>
+    </textTemplates>
+    <variables>
+        <name>MiguelColletteUserID</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
     <variables>
         <name>TaskRecordTypeID</name>
         <dataType>String</dataType>

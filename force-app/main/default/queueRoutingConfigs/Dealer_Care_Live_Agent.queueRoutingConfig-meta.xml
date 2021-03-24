@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <QueueRoutingConfig xmlns="http://soap.sforce.com/2006/04/metadata">
-    <capacityWeight>10.0</capacityWeight>
+    <capacityWeight>2.0</capacityWeight>
     <isAttributeBased>false</isAttributeBased>
     <label>Dealer Care Live Agent</label>
-    <pushTimeout>15</pushTimeout>
+    <pushTimeout>60</pushTimeout>
+    <queueOverflowAssignee>Dealer_Care_Omni_Overflow</queueOverflowAssignee>
     <routingModel>MOST_AVAILABLE</routingModel>
     <routingPriority>1</routingPriority>
 </QueueRoutingConfig>
