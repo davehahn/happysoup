@@ -1,5 +1,948 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Flow xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <actionCalls>
+        <name>ErrorHandler</name>
+        <label>ErrorHandler</label>
+        <locationX>2337</locationX>
+        <locationY>796</locationY>
+        <actionName>c:Flow_Toast</actionName>
+        <actionType>component</actionType>
+        <connector>
+            <targetReference>SuccessHandler</targetReference>
+        </connector>
+        <inputParameters>
+            <name>mode</name>
+            <value>
+                <stringValue>dismissible</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>duration</name>
+            <value>
+                <stringValue>7</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>message</name>
+            <value>
+                <stringValue>Trade Items already exists on this Opportunity</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>title</name>
+            <value>
+                <stringValue>Error</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>type</name>
+            <value>
+                <stringValue>error</stringValue>
+            </value>
+        </inputParameters>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </actionCalls>
+    <actionCalls>
+        <name>ErrorHandler_0</name>
+        <label>ErrorHandler</label>
+        <locationX>1908</locationX>
+        <locationY>794</locationY>
+        <actionName>c:Flow_Toast</actionName>
+        <actionType>component</actionType>
+        <inputParameters>
+            <name>mode</name>
+            <value>
+                <stringValue>dismissible</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>duration</name>
+            <value>
+                <stringValue>7</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>message</name>
+            <value>
+                <elementReference>$Flow.FaultMessage</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>title</name>
+            <value>
+                <stringValue>Error</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>type</name>
+            <value>
+                <stringValue>error</stringValue>
+            </value>
+        </inputParameters>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </actionCalls>
+    <actionCalls>
+        <name>ErrorHandler_0_0</name>
+        <label>ErrorHandler</label>
+        <locationX>3248</locationX>
+        <locationY>954</locationY>
+        <actionName>c:Flow_Toast</actionName>
+        <actionType>component</actionType>
+        <inputParameters>
+            <name>mode</name>
+            <value>
+                <stringValue>dismissible</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>duration</name>
+            <value>
+                <stringValue>7</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>message</name>
+            <value>
+                <elementReference>$Flow.FaultMessage</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>title</name>
+            <value>
+                <stringValue>Error</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>type</name>
+            <value>
+                <stringValue>error</stringValue>
+            </value>
+        </inputParameters>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </actionCalls>
+    <actionCalls>
+        <name>ErrorHandler_0_0_0</name>
+        <label>ErrorHandler</label>
+        <locationX>2544</locationX>
+        <locationY>787</locationY>
+        <actionName>c:Flow_Toast</actionName>
+        <actionType>component</actionType>
+        <connector>
+            <targetReference>SuccessHandler_0_0_0_0_0_0_0_0</targetReference>
+        </connector>
+        <inputParameters>
+            <name>mode</name>
+            <value>
+                <stringValue>dismissible</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>duration</name>
+            <value>
+                <stringValue>7</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>message</name>
+            <value>
+                <stringValue>Trade Items already exists on this Opportunity</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>title</name>
+            <value>
+                <stringValue>Error</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>type</name>
+            <value>
+                <stringValue>error</stringValue>
+            </value>
+        </inputParameters>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </actionCalls>
+    <actionCalls>
+        <name>ErrorHandler_0_0_0_0</name>
+        <label>ErrorHandler</label>
+        <locationX>3419</locationX>
+        <locationY>958</locationY>
+        <actionName>c:Flow_Toast</actionName>
+        <actionType>component</actionType>
+        <inputParameters>
+            <name>mode</name>
+            <value>
+                <stringValue>dismissible</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>duration</name>
+            <value>
+                <stringValue>7</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>message</name>
+            <value>
+                <elementReference>$Flow.FaultMessage</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>title</name>
+            <value>
+                <stringValue>Error</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>type</name>
+            <value>
+                <stringValue>error</stringValue>
+            </value>
+        </inputParameters>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </actionCalls>
+    <actionCalls>
+        <name>ErrorHandler_0_0_0_0_0</name>
+        <label>ErrorHandler</label>
+        <locationX>3106</locationX>
+        <locationY>732</locationY>
+        <actionName>c:Flow_Toast</actionName>
+        <actionType>component</actionType>
+        <inputParameters>
+            <name>mode</name>
+            <value>
+                <stringValue>dismissible</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>duration</name>
+            <value>
+                <stringValue>7</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>message</name>
+            <value>
+                <elementReference>$Flow.FaultMessage</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>title</name>
+            <value>
+                <stringValue>Error</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>type</name>
+            <value>
+                <stringValue>error</stringValue>
+            </value>
+        </inputParameters>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </actionCalls>
+    <actionCalls>
+        <name>ErrorHandler_0_0_0_0_0_0</name>
+        <label>ErrorHandler</label>
+        <locationX>3684</locationX>
+        <locationY>568</locationY>
+        <actionName>c:Flow_Toast</actionName>
+        <actionType>component</actionType>
+        <inputParameters>
+            <name>mode</name>
+            <value>
+                <stringValue>dismissible</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>duration</name>
+            <value>
+                <stringValue>7</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>message</name>
+            <value>
+                <elementReference>$Flow.FaultMessage</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>title</name>
+            <value>
+                <stringValue>Error</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>type</name>
+            <value>
+                <stringValue>error</stringValue>
+            </value>
+        </inputParameters>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </actionCalls>
+    <actionCalls>
+        <name>ErrorHandler_0_0_0_0_0_0_0</name>
+        <label>ErrorHandler</label>
+        <locationX>3421</locationX>
+        <locationY>373</locationY>
+        <actionName>c:Flow_Toast</actionName>
+        <actionType>component</actionType>
+        <inputParameters>
+            <name>mode</name>
+            <value>
+                <stringValue>dismissible</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>duration</name>
+            <value>
+                <stringValue>7</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>message</name>
+            <value>
+                <elementReference>$Flow.FaultMessage</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>title</name>
+            <value>
+                <stringValue>Error</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>type</name>
+            <value>
+                <stringValue>error</stringValue>
+            </value>
+        </inputParameters>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </actionCalls>
+    <actionCalls>
+        <name>ErrorHandler_0_0_0_0_0_0_0_0</name>
+        <label>ErrorHandler</label>
+        <locationX>3583</locationX>
+        <locationY>331</locationY>
+        <actionName>c:Flow_Toast</actionName>
+        <actionType>component</actionType>
+        <inputParameters>
+            <name>mode</name>
+            <value>
+                <stringValue>dismissible</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>duration</name>
+            <value>
+                <stringValue>7</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>message</name>
+            <value>
+                <elementReference>$Flow.FaultMessage</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>title</name>
+            <value>
+                <stringValue>Error</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>type</name>
+            <value>
+                <stringValue>error</stringValue>
+            </value>
+        </inputParameters>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </actionCalls>
+    <actionCalls>
+        <name>ErrorHandler_0_0_0_0_0_0_0_0_0</name>
+        <label>ErrorHandler</label>
+        <locationX>3283</locationX>
+        <locationY>211</locationY>
+        <actionName>c:Flow_Toast</actionName>
+        <actionType>component</actionType>
+        <inputParameters>
+            <name>mode</name>
+            <value>
+                <stringValue>dismissible</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>duration</name>
+            <value>
+                <stringValue>7</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>message</name>
+            <value>
+                <elementReference>$Flow.FaultMessage</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>title</name>
+            <value>
+                <stringValue>Error</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>type</name>
+            <value>
+                <stringValue>error</stringValue>
+            </value>
+        </inputParameters>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </actionCalls>
+    <actionCalls>
+        <name>ErrorHandler_0_0_0_0_0_0_0_0_0_0</name>
+        <label>ErrorHandler</label>
+        <locationX>3077</locationX>
+        <locationY>137</locationY>
+        <actionName>c:Flow_Toast</actionName>
+        <actionType>component</actionType>
+        <inputParameters>
+            <name>mode</name>
+            <value>
+                <stringValue>dismissible</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>duration</name>
+            <value>
+                <stringValue>7</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>message</name>
+            <value>
+                <elementReference>$Flow.FaultMessage</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>title</name>
+            <value>
+                <stringValue>Error</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>type</name>
+            <value>
+                <stringValue>error</stringValue>
+            </value>
+        </inputParameters>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </actionCalls>
+    <actionCalls>
+        <name>ErrorHandler_0_0_0_0_0_0_0_0_0_0_0</name>
+        <label>ErrorHandler</label>
+        <locationX>2830</locationX>
+        <locationY>54</locationY>
+        <actionName>c:Flow_Toast</actionName>
+        <actionType>component</actionType>
+        <inputParameters>
+            <name>mode</name>
+            <value>
+                <stringValue>dismissible</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>duration</name>
+            <value>
+                <stringValue>7</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>message</name>
+            <value>
+                <elementReference>$Flow.FaultMessage</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>title</name>
+            <value>
+                <stringValue>Error</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>type</name>
+            <value>
+                <stringValue>error</stringValue>
+            </value>
+        </inputParameters>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </actionCalls>
+    <actionCalls>
+        <name>ErrorHandler_0_0_0_0_0_0_0_0_0_0_0_0</name>
+        <label>ErrorHandler</label>
+        <locationX>2724</locationX>
+        <locationY>52</locationY>
+        <actionName>c:Flow_Toast</actionName>
+        <actionType>component</actionType>
+        <inputParameters>
+            <name>mode</name>
+            <value>
+                <stringValue>dismissible</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>duration</name>
+            <value>
+                <stringValue>7</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>message</name>
+            <value>
+                <elementReference>$Flow.FaultMessage</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>title</name>
+            <value>
+                <stringValue>Error</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>type</name>
+            <value>
+                <stringValue>error</stringValue>
+            </value>
+        </inputParameters>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </actionCalls>
+    <actionCalls>
+        <name>ErrorHandler_0_0_0_0_0_0_0_0_0_0_0_0_0</name>
+        <label>ErrorHandler</label>
+        <locationX>2621</locationX>
+        <locationY>50</locationY>
+        <actionName>c:Flow_Toast</actionName>
+        <actionType>component</actionType>
+        <inputParameters>
+            <name>mode</name>
+            <value>
+                <stringValue>dismissible</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>duration</name>
+            <value>
+                <stringValue>7</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>message</name>
+            <value>
+                <elementReference>$Flow.FaultMessage</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>title</name>
+            <value>
+                <stringValue>Error</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>type</name>
+            <value>
+                <stringValue>error</stringValue>
+            </value>
+        </inputParameters>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </actionCalls>
+    <actionCalls>
+        <name>ErrorHandler_0_0_0_0_0_0_0_0_0_0_0_0_0_0</name>
+        <label>ErrorHandler</label>
+        <locationX>2541</locationX>
+        <locationY>442</locationY>
+        <actionName>c:Flow_Toast</actionName>
+        <actionType>component</actionType>
+        <inputParameters>
+            <name>mode</name>
+            <value>
+                <stringValue>dismissible</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>duration</name>
+            <value>
+                <stringValue>7</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>message</name>
+            <value>
+                <elementReference>$Flow.FaultMessage</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>title</name>
+            <value>
+                <stringValue>Error</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>type</name>
+            <value>
+                <stringValue>error</stringValue>
+            </value>
+        </inputParameters>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </actionCalls>
+    <actionCalls>
+        <name>SuccessHandler</name>
+        <label>SuccessHandler</label>
+        <locationX>2337</locationX>
+        <locationY>920</locationY>
+        <actionName>c:Flow_Toast</actionName>
+        <actionType>component</actionType>
+        <inputParameters>
+            <name>mode</name>
+            <value>
+                <stringValue>dismissible</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>duration</name>
+            <value>
+                <stringValue>7</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>message</name>
+            <value>
+                <stringValue>The Boat Appraisal record was successfully created</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>title</name>
+            <value>
+                <stringValue>Success!</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>type</name>
+            <value>
+                <stringValue>success</stringValue>
+            </value>
+        </inputParameters>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </actionCalls>
+    <actionCalls>
+        <name>SuccessHandler_0</name>
+        <label>SuccessHandler</label>
+        <locationX>3524</locationX>
+        <locationY>804</locationY>
+        <actionName>c:Flow_Toast</actionName>
+        <actionType>component</actionType>
+        <inputParameters>
+            <name>mode</name>
+            <value>
+                <stringValue>dismissible</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>duration</name>
+            <value>
+                <stringValue>7</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>message</name>
+            <value>
+                <stringValue>The Boat Appraisal And Trade In records have been successfully created</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>title</name>
+            <value>
+                <stringValue>Success!</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>type</name>
+            <value>
+                <stringValue>success</stringValue>
+            </value>
+        </inputParameters>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </actionCalls>
+    <actionCalls>
+        <name>SuccessHandler_0_0</name>
+        <label>SuccessHandler</label>
+        <locationX>3532</locationX>
+        <locationY>648</locationY>
+        <actionName>c:Flow_Toast</actionName>
+        <actionType>component</actionType>
+        <inputParameters>
+            <name>mode</name>
+            <value>
+                <stringValue>dismissible</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>duration</name>
+            <value>
+                <stringValue>7</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>message</name>
+            <value>
+                <stringValue>The Boat Appraisal And Trade In records have been successfully created</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>title</name>
+            <value>
+                <stringValue>Success!</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>type</name>
+            <value>
+                <stringValue>success</stringValue>
+            </value>
+        </inputParameters>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </actionCalls>
+    <actionCalls>
+        <name>SuccessHandler_0_0_0</name>
+        <label>SuccessHandler</label>
+        <locationX>3504</locationX>
+        <locationY>469</locationY>
+        <actionName>c:Flow_Toast</actionName>
+        <actionType>component</actionType>
+        <inputParameters>
+            <name>mode</name>
+            <value>
+                <stringValue>dismissible</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>duration</name>
+            <value>
+                <stringValue>7</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>message</name>
+            <value>
+                <stringValue>The Boat Appraisal And Trade In records have been successfully created</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>title</name>
+            <value>
+                <stringValue>Success!</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>type</name>
+            <value>
+                <stringValue>success</stringValue>
+            </value>
+        </inputParameters>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </actionCalls>
+    <actionCalls>
+        <name>SuccessHandler_0_0_0_0</name>
+        <label>SuccessHandler</label>
+        <locationX>3232</locationX>
+        <locationY>347</locationY>
+        <actionName>c:Flow_Toast</actionName>
+        <actionType>component</actionType>
+        <inputParameters>
+            <name>mode</name>
+            <value>
+                <stringValue>dismissible</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>duration</name>
+            <value>
+                <stringValue>7</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>message</name>
+            <value>
+                <stringValue>The Boat Appraisal And Trade In records have been successfully created</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>title</name>
+            <value>
+                <stringValue>Success!</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>type</name>
+            <value>
+                <stringValue>success</stringValue>
+            </value>
+        </inputParameters>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </actionCalls>
+    <actionCalls>
+        <name>SuccessHandler_0_0_0_0_0</name>
+        <label>SuccessHandler</label>
+        <locationX>3138</locationX>
+        <locationY>247</locationY>
+        <actionName>c:Flow_Toast</actionName>
+        <actionType>component</actionType>
+        <inputParameters>
+            <name>mode</name>
+            <value>
+                <stringValue>dismissible</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>duration</name>
+            <value>
+                <stringValue>7</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>message</name>
+            <value>
+                <stringValue>The Boat Appraisal And Trade In records have been successfully created</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>title</name>
+            <value>
+                <stringValue>Success!</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>type</name>
+            <value>
+                <stringValue>success</stringValue>
+            </value>
+        </inputParameters>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </actionCalls>
+    <actionCalls>
+        <name>SuccessHandler_0_0_0_0_0_0</name>
+        <label>SuccessHandler</label>
+        <locationX>2938</locationX>
+        <locationY>62</locationY>
+        <actionName>c:Flow_Toast</actionName>
+        <actionType>component</actionType>
+        <inputParameters>
+            <name>mode</name>
+            <value>
+                <stringValue>dismissible</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>duration</name>
+            <value>
+                <stringValue>7</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>message</name>
+            <value>
+                <stringValue>The Boat Appraisal And Trade In records have been successfully created</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>title</name>
+            <value>
+                <stringValue>Success!</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>type</name>
+            <value>
+                <stringValue>success</stringValue>
+            </value>
+        </inputParameters>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </actionCalls>
+    <actionCalls>
+        <name>SuccessHandler_0_0_0_0_0_0_0</name>
+        <label>SuccessHandler</label>
+        <locationX>2805</locationX>
+        <locationY>325</locationY>
+        <actionName>c:Flow_Toast</actionName>
+        <actionType>component</actionType>
+        <inputParameters>
+            <name>mode</name>
+            <value>
+                <stringValue>dismissible</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>duration</name>
+            <value>
+                <stringValue>7</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>message</name>
+            <value>
+                <stringValue>The Boat Appraisal And Trade In records have been successfully created</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>title</name>
+            <value>
+                <stringValue>Success!</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>type</name>
+            <value>
+                <stringValue>success</stringValue>
+            </value>
+        </inputParameters>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </actionCalls>
+    <actionCalls>
+        <name>SuccessHandler_0_0_0_0_0_0_0_0</name>
+        <label>SuccessHandler</label>
+        <locationX>2547</locationX>
+        <locationY>917</locationY>
+        <actionName>c:Flow_Toast</actionName>
+        <actionType>component</actionType>
+        <inputParameters>
+            <name>mode</name>
+            <value>
+                <stringValue>dismissible</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>duration</name>
+            <value>
+                <stringValue>7</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>message</name>
+            <value>
+                <stringValue>The Boat Appraisal record was successfully created</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>title</name>
+            <value>
+                <stringValue>Success!</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>type</name>
+            <value>
+                <stringValue>success</stringValue>
+            </value>
+        </inputParameters>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </actionCalls>
+    <apiVersion>49.0</apiVersion>
     <choices>
         <name>NoWindshield</name>
         <choiceText>None</choiceText>
@@ -11,8 +954,8 @@
     <decisions>
         <name>Appraisal_Source</name>
         <label>Appraisal Source</label>
-        <locationX>396</locationX>
-        <locationY>469</locationY>
+        <locationX>630</locationX>
+        <locationY>613</locationY>
         <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
         <rules>
             <name>From_Opportunity</name>
@@ -49,8 +992,8 @@
         <description>Check to see if a trade record was already created</description>
         <name>Existing_Trade</name>
         <label>Existing Trade</label>
-        <locationX>2090</locationX>
-        <locationY>467</locationY>
+        <locationX>2324</locationX>
+        <locationY>611</locationY>
         <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
         <rules>
             <name>Trade_Record_Exists</name>
@@ -63,7 +1006,7 @@
                 </rightValue>
             </conditions>
             <connector>
-                <targetReference>Trade_Already_Exists</targetReference>
+                <targetReference>ErrorHandler</targetReference>
             </connector>
             <label>Trade Record Exists</label>
         </rules>
@@ -86,8 +1029,8 @@
     <decisions>
         <name>Item_Appraisal_Decision</name>
         <label>Item Appraisal Decision</label>
-        <locationX>917</locationX>
-        <locationY>945</locationY>
+        <locationX>1151</locationX>
+        <locationY>1089</locationY>
         <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
         <rules>
             <name>All_Items</name>
@@ -296,8 +1239,8 @@
     <decisions>
         <name>Item_Appraisal_Decision_0</name>
         <label>Item Appraisal Decision</label>
-        <locationX>1007</locationX>
-        <locationY>134</locationY>
+        <locationX>1241</locationX>
+        <locationY>278</locationY>
         <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
         <rules>
             <name>All_Items_0</name>
@@ -497,8 +1440,8 @@
     <decisions>
         <name>Item_Appraisal_Decision_0_0</name>
         <label>Item Appraisal Decision</label>
-        <locationX>1201</locationX>
-        <locationY>736</locationY>
+        <locationX>1435</locationX>
+        <locationY>880</locationY>
         <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
         <rules>
             <name>All_Items_0_0</name>
@@ -695,8 +1638,8 @@
     <decisions>
         <name>Item_Appraisal_Decision_0_0_0</name>
         <label>Item Appraisal Decision</label>
-        <locationX>2451</locationX>
-        <locationY>468</locationY>
+        <locationX>2685</locationX>
+        <locationY>612</locationY>
         <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
         <rules>
             <name>All_Items_0_0_0</name>
@@ -1234,6 +2177,12 @@
         </value>
     </processMetadataValues>
     <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>FREE_FORM_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
         <name>OriginBuilderType</name>
         <value>
             <stringValue>LightningFlowBuilder</stringValue>
@@ -1243,12 +2192,15 @@
     <recordCreates>
         <name>Create_Appraisal</name>
         <label>Create Appraisal</label>
-        <locationX>1673</locationX>
-        <locationY>465</locationY>
+        <locationX>1907</locationX>
+        <locationY>609</locationY>
         <assignRecordIdToReference>appraisalId</assignRecordIdToReference>
         <connector>
             <targetReference>Upload_Photos</targetReference>
         </connector>
+        <faultConnector>
+            <targetReference>ErrorHandler_0</targetReference>
+        </faultConnector>
         <inputAssignments>
             <field>Aft_Side_Back_Curtains__c</field>
             <value>
@@ -1680,12 +2632,15 @@
     <recordCreates>
         <name>Create_Trade_in_Item_Boat</name>
         <label>Create Trade in Item Boat</label>
-        <locationX>2448</locationX>
-        <locationY>50</locationY>
+        <locationX>2682</locationX>
+        <locationY>194</locationY>
         <assignRecordIdToReference>TradeInLineBoatId</assignRecordIdToReference>
         <connector>
             <targetReference>Create_Trade_in_Item_Motor</targetReference>
         </connector>
+        <faultConnector>
+            <targetReference>ErrorHandler_0_0_0_0_0_0_0_0_0_0_0_0_0</targetReference>
+        </faultConnector>
         <inputAssignments>
             <field>Make__c</field>
             <value>
@@ -1721,9 +2676,15 @@
     <recordCreates>
         <name>Create_Trade_in_Item_Boat_0</name>
         <label>Create Trade in Item Boat</label>
-        <locationX>2578</locationX>
-        <locationY>202</locationY>
+        <locationX>2798</locationX>
+        <locationY>441</locationY>
         <assignRecordIdToReference>TradeInLineBoatId</assignRecordIdToReference>
+        <connector>
+            <targetReference>SuccessHandler_0_0_0_0_0_0_0</targetReference>
+        </connector>
+        <faultConnector>
+            <targetReference>ErrorHandler_0_0_0_0_0_0_0_0_0_0_0_0_0_0</targetReference>
+        </faultConnector>
         <inputAssignments>
             <field>Make__c</field>
             <value>
@@ -1759,12 +2720,15 @@
     <recordCreates>
         <name>Create_Trade_in_Item_Boat_0_0</name>
         <label>Create Trade in Item Boat</label>
-        <locationX>3028</locationX>
-        <locationY>325</locationY>
+        <locationX>3262</locationX>
+        <locationY>469</locationY>
         <assignRecordIdToReference>TradeInLineBoatId</assignRecordIdToReference>
         <connector>
             <targetReference>Create_Trade_in_Item_Motor_0_0</targetReference>
         </connector>
+        <faultConnector>
+            <targetReference>ErrorHandler_0_0_0_0_0_0_0</targetReference>
+        </faultConnector>
         <inputAssignments>
             <field>Make__c</field>
             <value>
@@ -1800,12 +2764,15 @@
     <recordCreates>
         <name>Create_Trade_in_Item_Boat_0_0_0</name>
         <label>Create Trade in Item Boat</label>
-        <locationX>3027</locationX>
-        <locationY>504</locationY>
+        <locationX>3261</locationX>
+        <locationY>648</locationY>
         <assignRecordIdToReference>TradeInLineBoatId</assignRecordIdToReference>
         <connector>
             <targetReference>Create_Trade_in_Item_Trailer_0_0</targetReference>
         </connector>
+        <faultConnector>
+            <targetReference>ErrorHandler_0_0_0_0_0</targetReference>
+        </faultConnector>
         <inputAssignments>
             <field>Make__c</field>
             <value>
@@ -1841,12 +2808,15 @@
     <recordCreates>
         <name>Create_Trade_in_Item_Motor</name>
         <label>Create Trade in Item Motor</label>
-        <locationX>2571</locationX>
-        <locationY>50</locationY>
+        <locationX>2805</locationX>
+        <locationY>194</locationY>
         <assignRecordIdToReference>TradeInLineMotorId</assignRecordIdToReference>
         <connector>
             <targetReference>Create_Trade_in_Item_Trailer</targetReference>
         </connector>
+        <faultConnector>
+            <targetReference>ErrorHandler_0_0_0_0_0_0_0_0_0_0_0_0</targetReference>
+        </faultConnector>
         <inputAssignments>
             <field>Make__c</field>
             <value>
@@ -1882,9 +2852,15 @@
     <recordCreates>
         <name>Create_Trade_in_Item_Motor_0</name>
         <label>Create Trade in Item Motor</label>
-        <locationX>2719</locationX>
-        <locationY>205</locationY>
+        <locationX>2960</locationX>
+        <locationY>336</locationY>
         <assignRecordIdToReference>TradeInLineMotorId</assignRecordIdToReference>
+        <connector>
+            <targetReference>SuccessHandler_0_0_0_0_0</targetReference>
+        </connector>
+        <faultConnector>
+            <targetReference>ErrorHandler_0_0_0_0_0_0_0_0_0_0</targetReference>
+        </faultConnector>
         <inputAssignments>
             <field>Make__c</field>
             <value>
@@ -1920,9 +2896,15 @@
     <recordCreates>
         <name>Create_Trade_in_Item_Motor_0_0</name>
         <label>Create Trade in Item Motor</label>
-        <locationX>3148</locationX>
-        <locationY>325</locationY>
+        <locationX>3382</locationX>
+        <locationY>469</locationY>
         <assignRecordIdToReference>TradeInLineMotorId</assignRecordIdToReference>
+        <connector>
+            <targetReference>SuccessHandler_0_0_0</targetReference>
+        </connector>
+        <faultConnector>
+            <targetReference>ErrorHandler_0_0_0_0_0_0_0_0</targetReference>
+        </faultConnector>
         <inputAssignments>
             <field>Make__c</field>
             <value>
@@ -1958,12 +2940,15 @@
     <recordCreates>
         <name>Create_Trade_in_Item_Motor_0_0_0</name>
         <label>Create Trade in Item Motor</label>
-        <locationX>3019</locationX>
-        <locationY>660</locationY>
+        <locationX>3253</locationX>
+        <locationY>804</locationY>
         <assignRecordIdToReference>TradeInLineMotorId</assignRecordIdToReference>
         <connector>
             <targetReference>Create_Trade_in_Item_Trailer_0_0_0</targetReference>
         </connector>
+        <faultConnector>
+            <targetReference>ErrorHandler_0_0</targetReference>
+        </faultConnector>
         <inputAssignments>
             <field>Make__c</field>
             <value>
@@ -1999,9 +2984,15 @@
     <recordCreates>
         <name>Create_Trade_in_Item_Trailer</name>
         <label>Create Trade in Item Trailer</label>
-        <locationX>2707</locationX>
-        <locationY>50</locationY>
+        <locationX>2941</locationX>
+        <locationY>194</locationY>
         <assignRecordIdToReference>TradeInLineTrailerId</assignRecordIdToReference>
+        <connector>
+            <targetReference>SuccessHandler_0_0_0_0_0_0</targetReference>
+        </connector>
+        <faultConnector>
+            <targetReference>ErrorHandler_0_0_0_0_0_0_0_0_0_0_0</targetReference>
+        </faultConnector>
         <inputAssignments>
             <field>Make__c</field>
             <value>
@@ -2031,9 +3022,15 @@
     <recordCreates>
         <name>Create_Trade_in_Item_Trailer_0</name>
         <label>Create Trade in Item Trailer</label>
-        <locationX>2855</locationX>
-        <locationY>203</locationY>
+        <locationX>3092</locationX>
+        <locationY>347</locationY>
         <assignRecordIdToReference>TradeInLineTrailerId</assignRecordIdToReference>
+        <connector>
+            <targetReference>SuccessHandler_0_0_0_0</targetReference>
+        </connector>
+        <faultConnector>
+            <targetReference>ErrorHandler_0_0_0_0_0_0_0_0_0</targetReference>
+        </faultConnector>
         <inputAssignments>
             <field>Make__c</field>
             <value>
@@ -2063,9 +3060,15 @@
     <recordCreates>
         <name>Create_Trade_in_Item_Trailer_0_0</name>
         <label>Create Trade in Item Trailer</label>
-        <locationX>3164</locationX>
-        <locationY>504</locationY>
+        <locationX>3398</locationX>
+        <locationY>648</locationY>
         <assignRecordIdToReference>TradeInLineTrailerId</assignRecordIdToReference>
+        <connector>
+            <targetReference>SuccessHandler_0_0</targetReference>
+        </connector>
+        <faultConnector>
+            <targetReference>ErrorHandler_0_0_0_0_0_0</targetReference>
+        </faultConnector>
         <inputAssignments>
             <field>Make__c</field>
             <value>
@@ -2095,9 +3098,15 @@
     <recordCreates>
         <name>Create_Trade_in_Item_Trailer_0_0_0</name>
         <label>Create Trade in Item Trailer</label>
-        <locationX>3162</locationX>
-        <locationY>660</locationY>
+        <locationX>3396</locationX>
+        <locationY>804</locationY>
         <assignRecordIdToReference>TradeInLineTrailerId</assignRecordIdToReference>
+        <connector>
+            <targetReference>SuccessHandler_0</targetReference>
+        </connector>
+        <faultConnector>
+            <targetReference>ErrorHandler_0_0_0_0</targetReference>
+        </faultConnector>
         <inputAssignments>
             <field>Make__c</field>
             <value>
@@ -2127,12 +3136,15 @@
     <recordCreates>
         <name>Create_Trade_Record</name>
         <label>Create Trade Record</label>
-        <locationX>2311</locationX>
-        <locationY>466</locationY>
+        <locationX>2545</locationX>
+        <locationY>610</locationY>
         <assignRecordIdToReference>tradeRecordId</assignRecordIdToReference>
         <connector>
             <targetReference>Item_Appraisal_Decision_0_0_0</targetReference>
         </connector>
+        <faultConnector>
+            <targetReference>ErrorHandler_0_0_0</targetReference>
+        </faultConnector>
         <inputAssignments>
             <field>Lien_Amount__c</field>
             <value>
@@ -2156,12 +3168,13 @@
     <recordLookups>
         <name>Get_Trade_Record</name>
         <label>Get Trade Record</label>
-        <locationX>1993</locationX>
-        <locationY>465</locationY>
+        <locationX>2227</locationX>
+        <locationY>609</locationY>
         <assignNullValuesIfNoRecordsFound>true</assignNullValuesIfNoRecordsFound>
         <connector>
             <targetReference>Existing_Trade</targetReference>
         </connector>
+        <filterLogic>and</filterLogic>
         <filters>
             <field>Opportunity__c</field>
             <operator>EqualTo</operator>
@@ -2178,12 +3191,13 @@
     <recordLookups>
         <name>getAccData</name>
         <label>getAccData</label>
-        <locationX>405</locationX>
-        <locationY>658</locationY>
+        <locationX>639</locationX>
+        <locationY>802</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
             <targetReference>Appraisal_Item_Selection</targetReference>
         </connector>
+        <filterLogic>and</filterLogic>
         <filters>
             <field>Id</field>
             <operator>EqualTo</operator>
@@ -2204,12 +3218,13 @@
     <recordLookups>
         <name>getOppAccountData</name>
         <label>getOppAccountData</label>
-        <locationX>298</locationX>
-        <locationY>467</locationY>
+        <locationX>532</locationX>
+        <locationY>611</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
             <targetReference>Appraisal_Source</targetReference>
         </connector>
+        <filterLogic>and</filterLogic>
         <filters>
             <field>Id</field>
             <operator>EqualTo</operator>
@@ -2226,12 +3241,13 @@
     <recordLookups>
         <name>getOppData</name>
         <label>getOppData</label>
-        <locationX>156</locationX>
-        <locationY>467</locationY>
+        <locationX>390</locationX>
+        <locationY>611</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
             <targetReference>getOppAccountData</targetReference>
         </connector>
+        <filterLogic>and</filterLogic>
         <filters>
             <field>Id</field>
             <operator>EqualTo</operator>
@@ -2252,8 +3268,8 @@
     <screens>
         <name>Appraisal_Item_Selection</name>
         <label>Appraisal Item Selection</label>
-        <locationX>540</locationX>
-        <locationY>658</locationY>
+        <locationX>774</locationX>
+        <locationY>802</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>true</allowPause>
@@ -2262,7 +3278,7 @@
         </connector>
         <fields>
             <name>whatAreWeAppraisingTitle</name>
-            <fieldText>&lt;p&gt;Hi {!FlowUserFirstName}, Please select the items you&#39;d like to appraise.&lt;/p&gt;</fieldText>
+            <fieldText>&lt;p&gt;Hi {!FlowUserFirstName}, Please select the items you&apos;d like to appraise.&lt;/p&gt;</fieldText>
             <fieldType>DisplayText</fieldType>
         </fields>
         <fields>
@@ -2292,8 +3308,8 @@
     <screens>
         <name>Boat_Screen_1</name>
         <label>Boat Screen 1</label>
-        <locationX>600</locationX>
-        <locationY>465</locationY>
+        <locationX>834</locationX>
+        <locationY>609</locationY>
         <allowBack>false</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
@@ -2348,8 +3364,8 @@
     <screens>
         <name>Boat_Screen_2</name>
         <label>Boat Screen 2</label>
-        <locationX>721</locationX>
-        <locationY>465</locationY>
+        <locationX>955</locationX>
+        <locationY>609</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
@@ -2451,8 +3467,8 @@
     <screens>
         <name>Boat_Screen_3</name>
         <label>Boat Screen 3</label>
-        <locationX>839</locationX>
-        <locationY>465</locationY>
+        <locationX>1073</locationX>
+        <locationY>609</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
@@ -2573,8 +3589,8 @@
     <screens>
         <name>Boat_Screen_4</name>
         <label>Boat Screen 4</label>
-        <locationX>959</locationX>
-        <locationY>465</locationY>
+        <locationX>1193</locationX>
+        <locationY>609</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
@@ -2709,8 +3725,8 @@
     <screens>
         <name>Capture_Signature</name>
         <label>Capture Signature</label>
-        <locationX>1878</locationX>
-        <locationY>465</locationY>
+        <locationX>2112</locationX>
+        <locationY>609</locationY>
         <allowBack>false</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
@@ -2746,8 +3762,8 @@
     <screens>
         <name>Final_Appraisal_Screen</name>
         <label>Final Appraisal Screen</label>
-        <locationX>1542</locationX>
-        <locationY>465</locationY>
+        <locationX>1776</locationX>
+        <locationY>609</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
@@ -2781,6 +3797,9 @@
         <fields>
             <name>Family_Friend_Boat_Value</name>
             <dataType>Currency</dataType>
+            <defaultValue>
+                <numberValue>0.0</numberValue>
+            </defaultValue>
             <fieldText>If you were to sell your boat to family or friends, what would you ask for it?</fieldText>
             <fieldType>InputField</fieldType>
             <isRequired>false</isRequired>
@@ -2830,6 +3849,9 @@
         <fields>
             <name>Internet_Search_Value</name>
             <dataType>Currency</dataType>
+            <defaultValue>
+                <numberValue>0.0</numberValue>
+            </defaultValue>
             <fieldText>Internet Search Value</fieldText>
             <fieldType>InputField</fieldType>
             <isRequired>false</isRequired>
@@ -2838,6 +3860,9 @@
         <fields>
             <name>Comparable_New</name>
             <dataType>Currency</dataType>
+            <defaultValue>
+                <numberValue>0.0</numberValue>
+            </defaultValue>
             <fieldText>Comparable New</fieldText>
             <fieldType>InputField</fieldType>
             <isRequired>false</isRequired>
@@ -2846,6 +3871,9 @@
         <fields>
             <name>Lien_on_Trade</name>
             <dataType>Currency</dataType>
+            <defaultValue>
+                <numberValue>0.0</numberValue>
+            </defaultValue>
             <fieldText>Lien on Trade</fieldText>
             <fieldType>InputField</fieldType>
             <isRequired>false</isRequired>
@@ -2854,6 +3882,9 @@
         <fields>
             <name>Estimated_Trade_Value_Before_Inspection</name>
             <dataType>Currency</dataType>
+            <defaultValue>
+                <numberValue>0.0</numberValue>
+            </defaultValue>
             <fieldText>Estimated Value of Trade In before visual and running inspection</fieldText>
             <fieldType>InputField</fieldType>
             <isRequired>false</isRequired>
@@ -2865,8 +3896,8 @@
     <screens>
         <name>Motor_Screen_1</name>
         <label>Motor Screen 1</label>
-        <locationX>1069</locationX>
-        <locationY>465</locationY>
+        <locationX>1303</locationX>
+        <locationY>609</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
@@ -2944,8 +3975,8 @@
     <screens>
         <name>Motor_Screen_2</name>
         <label>Motor Screen 2</label>
-        <locationX>1186</locationX>
-        <locationY>465</locationY>
+        <locationX>1420</locationX>
+        <locationY>609</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
@@ -3033,26 +4064,10 @@
         <showHeader>true</showHeader>
     </screens>
     <screens>
-        <name>Trade_Already_Exists</name>
-        <label>Trade Already Exists</label>
-        <locationX>2099</locationX>
-        <locationY>637</locationY>
-        <allowBack>false</allowBack>
-        <allowFinish>true</allowFinish>
-        <allowPause>false</allowPause>
-        <fields>
-            <name>Trade_Exists_Error</name>
-            <fieldText>&lt;p&gt;&lt;b style=&quot;color: rgb(244, 0, 0); --darkmode-inline-color:#db3c3c;&quot; data-darkmode-inline-color=&quot;&quot;&gt;Error adding Trade in Items to this Opportunity. Trade-In Items appear to have already been added manually in the Boat Configurator. &lt;/b&gt;&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;&lt;b style=&quot;color: rgb(2, 255, 44);&quot;&gt;Appraisal Successfully Created&lt;/b&gt;&lt;/p&gt;</fieldText>
-            <fieldType>DisplayText</fieldType>
-        </fields>
-        <showFooter>true</showFooter>
-        <showHeader>true</showHeader>
-    </screens>
-    <screens>
         <name>Trailer_Screen_1</name>
         <label>Trailer Screen 1</label>
-        <locationX>1300</locationX>
-        <locationY>465</locationY>
+        <locationX>1534</locationX>
+        <locationY>609</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
@@ -3108,8 +4123,8 @@
     <screens>
         <name>Trailer_Screen_2</name>
         <label>Trailer Screen 2</label>
-        <locationX>1417</locationX>
-        <locationY>465</locationY>
+        <locationX>1651</locationX>
+        <locationY>609</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
@@ -3183,8 +4198,8 @@
     <screens>
         <name>Upload_Photos</name>
         <label>Upload Photos</label>
-        <locationX>1778</locationX>
-        <locationY>465</locationY>
+        <locationX>2012</locationX>
+        <locationY>609</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>true</allowPause>
@@ -3218,7 +4233,13 @@
         <showFooter>true</showFooter>
         <showHeader>true</showHeader>
     </screens>
-    <startElementReference>getOppData</startElementReference>
+    <start>
+        <locationX>50</locationX>
+        <locationY>611</locationY>
+        <connector>
+            <targetReference>getOppData</targetReference>
+        </connector>
+    </start>
     <status>Active</status>
     <variables>
         <name>accountId</name>
