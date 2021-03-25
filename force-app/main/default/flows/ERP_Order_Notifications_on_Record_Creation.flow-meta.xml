@@ -5,7 +5,7 @@
         <name>Chatter_Salesperson_Manager_New_Retail_ERP</name>
         <label>Chatter Salesperson Manager New Retail ERP</label>
         <locationX>50</locationX>
-        <locationY>551</locationY>
+        <locationY>671</locationY>
         <actionName>chatterPost</actionName>
         <actionType>chatterPost</actionType>
         <inputParameters>
@@ -25,7 +25,7 @@
     <actionCalls>
         <name>Email_Max_Retail_ERP_Tagging_Pending</name>
         <label>Email Max Retail ERP Tagging Pending</label>
-        <locationX>578</locationX>
+        <locationX>842</locationX>
         <locationY>551</locationY>
         <actionName>AcctSeed__Project__c.Montreal_ERP_Tagging_Pending</actionName>
         <actionType>emailAlert</actionType>
@@ -40,7 +40,7 @@
     <decisions>
         <name>Evaluate_RecordType</name>
         <label>Evaluate RecordType</label>
-        <locationX>1128</locationX>
+        <locationX>1359</locationX>
         <locationY>311</locationY>
         <defaultConnectorLabel>Else</defaultConnectorLabel>
         <rules>
@@ -77,7 +77,7 @@
     <decisions>
         <name>Retail_Location_Retail</name>
         <label>Retail Location</label>
-        <locationX>446</locationX>
+        <locationX>644</locationX>
         <locationY>431</locationY>
         <defaultConnectorLabel>Else</defaultConnectorLabel>
         <rules>
@@ -91,7 +91,7 @@
                 </rightValue>
             </conditions>
             <connector>
-                <targetReference>Chatter_Salesperson_Manager_New_Retail_ERP</targetReference>
+                <targetReference>Validate_Salesperson_and_Manager_Whitefish</targetReference>
             </connector>
             <label>Whitefish</label>
         </rules>
@@ -126,7 +126,7 @@
     <decisions>
         <name>Retail_Location_Service</name>
         <label>Retail Location</label>
-        <locationX>1370</locationX>
+        <locationX>1634</locationX>
         <locationY>431</locationY>
         <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
         <rules>
@@ -166,6 +166,35 @@
             <label>Montreal</label>
         </rules>
     </decisions>
+    <decisions>
+        <name>Validate_Salesperson_and_Manager_Whitefish</name>
+        <label>Validate Salesperson and Manager</label>
+        <locationX>182</locationX>
+        <locationY>551</locationY>
+        <defaultConnectorLabel>Else</defaultConnectorLabel>
+        <rules>
+            <name>Valid_Whitefish</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Salesperson__c</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.Salesperson__r.Manager.IsActive</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Chatter_Salesperson_Manager_New_Retail_ERP</targetReference>
+            </connector>
+            <label>Valid</label>
+        </rules>
+    </decisions>
     <description>Handles all ERP Order notifications when a ERP Order record is created. (I.E. Tagging Pending)</description>
     <interviewLabel>ERP Order: Notifications on Record Creation {!$Flow.CurrentDateTime}</interviewLabel>
     <label>ERP Order: Notifications on Record Creation</label>
@@ -189,7 +218,7 @@
     </processMetadataValues>
     <processType>AutoLaunchedFlow</processType>
     <start>
-        <locationX>1002</locationX>
+        <locationX>1233</locationX>
         <locationY>0</locationY>
         <connector>
             <targetReference>Evaluate_RecordType</targetReference>
