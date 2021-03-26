@@ -70,16 +70,16 @@
             </approver>
             <whenMultipleApprovers>FirstResponse</whenMultipleApprovers>
         </assignedApprover>
-        <description>Second approval step if order is greater than $2000</description>
+        <description>Second approval step if order is greater than $5000</description>
         <entryCriteria>
             <criteriaItems>
                 <field>AcctSeedERP__Purchase_Order__c.AcctSeedERP__Total__c</field>
-                <operation>greaterThan</operation>
-                <value>2000</value>
+                <operation>greaterOrEqual</operation>
+                <value>5000</value>
             </criteriaItems>
         </entryCriteria>
-        <label>Order greater than $2000</label>
-        <name>Order_greater_than_2000</name>
+        <label>Order greater than $5000</label>
+        <name>Order_greater_than_5000</name>
         <rejectBehavior>
             <type>RejectRequest</type>
         </rejectBehavior>
@@ -89,7 +89,7 @@
     <enableMobileDeviceAccess>true</enableMobileDeviceAccess>
     <entryCriteria>
         <criteriaItems>
-            <field>User.Warehouse__c</field>
+            <field>AcctSeedERP__Purchase_Order__c.Warehouse_Name__c</field>
             <operation>equals</operation>
             <value>Montreal</value>
         </criteriaItems>

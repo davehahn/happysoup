@@ -5,7 +5,8 @@
     <customButtons>Refund_All_CR_Balance</customButtons>
     <customButtons>Transaction_Detail</customButtons>
     <customButtons>Create_AP_Statement</customButtons>
-    <excludeButtons>DataDotComClean</excludeButtons>
+    <excludeButtons>DataDotComAccountInsights</excludeButtons>
+    <excludeButtons>DataDotComCompanyHierarchy</excludeButtons>
     <excludeButtons>DisableCustomerPortalAccount</excludeButtons>
     <excludeButtons>DisablePartnerPortalAccount</excludeButtons>
     <excludeButtons>IncludeOffline</excludeButtons>
@@ -160,6 +161,10 @@
             <layoutItems>
                 <behavior>Edit</behavior>
                 <field>Payable_Instruction__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>Cash_Disbursement_Instruction__c</field>
             </layoutItems>
         </layoutColumns>
         <style>TwoColumnsLeftToRight</style>
