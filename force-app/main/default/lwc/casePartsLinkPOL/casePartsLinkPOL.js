@@ -84,7 +84,7 @@ export default class CasePartsLinkPol extends LightningElement {
         casePartId: casePart.Id,
         quantity: casePart.Quantity__c,
         productName: casePart.Product__r.Name,
-        availablePOLs: this.purchaseOrderLines.filter( pol => casePart.Product__c === pol.productId  && casePart.Quantity__c < pol.qtyRemaining )
+        availablePOLs: this.purchaseOrderLines.filter( pol => casePart.Product__c === pol.productId  && pol.qtyRemaining >= casePart.Quantity__c )
       }
       item.hasPOLs = item.availablePOLs.length > 0;
       result.push( item );
