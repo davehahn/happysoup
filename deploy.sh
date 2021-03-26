@@ -65,7 +65,7 @@ echo 'Deploying the remaining metadata'
 if [ "$CHECKONLY" = true ]
 then
   echoOut 'VALIDATING ONLY'
-  if sfdx force:source:deploy --testlevel $TESTLEVEL --checkonly --targetusername $1 -g -w 180 ; then
+  if sfdx force:source:deploy --testlevel $TESTLEVEL --checkonly --targetusername $1 -p force-app -g -w 180 ; then
     if [ $DEPLOY_EXPERIENCES = true ]
     then
       echoOut 're-enable original .forceignore'
@@ -79,7 +79,7 @@ then
     exit 1
   fi
 else
-  if sfdx force:source:deploy --testlevel $TESTLEVEL --targetusername $1 -p force-app/main/default -g -w 180 ; then
+  if sfdx force:source:deploy --testlevel $TESTLEVEL --targetusername $1 -p force-app -g -w 180 ; then
     if [ $DEPLOY_EXPERIENCES = true ]
     then
       echoOut 're-enable original .forceignore'
