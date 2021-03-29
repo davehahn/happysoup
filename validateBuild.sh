@@ -39,7 +39,7 @@ echo 'modifying .forceignore to not deploy staticresources and experienceBundles
 echo -e "\nforce-app/main/default/staticresources" >> .forceignore
 echo -e "\nforce-app/main/default/experiences" >> .forceignore
 
-sfdx force:source:deploy --testlevel RunLocalTests --checkonly --targetusername ci-testValid -p force-app/main/default -g -w 120
+sfdx force:source:deploy --testlevel RunLocalTests --checkonly --targetusername ci-testValid -p force-app/ -g -w 120
 
 if [ $DEPLOY_EXPERIENCES = true ]
 then

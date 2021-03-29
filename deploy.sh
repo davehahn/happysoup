@@ -87,6 +87,7 @@ else
       mv .forceignore.orig .forceignore
       echoOut 'Deploying ExperienceBundles'
       sfdx force:source:deploy --testlevel NoTestRun --targetusername $1 -p force-app/main/default/experiences -g -w 180
+      sfdx force:source:deploy --testlevel NoTestRun --targetusername $1 -p force-app/BoatReservation/experiences -g -w 180
     fi
   else
     echoOut 'Deploy Fail'
