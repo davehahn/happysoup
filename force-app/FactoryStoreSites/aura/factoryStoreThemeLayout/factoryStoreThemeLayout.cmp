@@ -3,6 +3,8 @@
     <aura:attribute name="storePhoneNumbers" type="Aura.Component[]"/>
     <aura:attribute name="storeNavigation" type="Aura.Component[]"/>
     <aura:attribute name="storeFooter" type="Aura.Component[]"/>
+    <aura:attribute name="storeLegal" type="Aura.Component[]"/>
+
     <header class="storeHeader">
         <div class="storeDetails">
             <h1 class="storeLogo">
@@ -14,7 +16,7 @@
             <div class="phoneNumbers">
                 {!v.storePhoneNumbers}
             </div>
-            <div class="corporateLogo"></div>
+            <a class="corporateLogo" href="https://www.legendboats.com" target="_blank"></a>
         </div>
         <nav class="mainNavigation">
             <c:factoryStoreMainNavigation></c:factoryStoreMainNavigation>
@@ -23,7 +25,12 @@
 	  <article>
     	  {!v.body}
     </article>
-    <footer>
+    <c:factoryStoreFooterStayInTouch></c:factoryStoreFooterStayInTouch>
+    <footer class="storeFooter">
         {!v.storeFooter}
+        <section class="footerLegal">
+            {!v.storeLegal}
+        </section>
     </footer>
+
 </aura:component>

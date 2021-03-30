@@ -1,0 +1,69 @@
+/**
+ * Created by Tim on 2021-03-30.
+ */
+
+ /* screen reader only elements */
+ .ro{
+ 	position: absolute;
+ 	overflow: hidden;
+ 	clip: rect(0 0 0 0);
+ 	height: 1px; width: 1px;
+ 	margin: -1px; padding: 0; border: 0;
+ }
+.shoppingTools {
+    position: relative;
+    z-index: 2;
+    background-color: #0a4155;
+    padding: 2vw 0;
+}
+.shoppingTools .shoppingTools__list {
+    display: flex;
+    margin-top: 0;
+    margin-bottom: 0;
+    padding: 0;
+    align-items: center;
+    justify-content: center;
+}
+.shoppingTools .shoppingTools__list .shoppingTools__item {
+    border-right: 1px solid #fff;
+    padding: .5em 2vw;
+    list-style: none;
+}
+.shoppingTools .shoppingTools__list .shoppingTools__item a {
+    color: #fff;
+    display: flex;
+    align-items: center;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding-bottom: .25em;
+}
+.shoppingTools .shoppingTools__list .shoppingTools__item a span {
+    display: block;
+}
+.shoppingTools .shoppingTools__list .shoppingTools__item a span.icon {
+    margin-right: .5em;
+    height: 1.5em;
+    width: 1.5em;
+}
+.shoppingTools .shoppingTools__list .shoppingTools__item a span.icon svg {
+    height: 100%}
+.shoppingTools .shoppingTools__list .shoppingTools__item a span.icon svg path {
+    fill: #3bafd6 !important;
+}
+.shoppingTools .shoppingTools__list .shoppingTools__item a span.copy b {
+    white-space: nowrap;
+}
+.shoppingTools .shoppingTools__list .shoppingTools__item a:hover, .shoppingTools .shoppingTools__list .shoppingTools__item a:focus {
+    box-shadow: 0 1px 0 0 #fff;
+}
+.shoppingTools .shoppingTools__list .shoppingTools__item a.shoppingTools__quote span.icon svg path {
+    stroke: #3bafd6;
+    stroke-width: 2;
+}
+.shoppingTools .shoppingTools__list .shoppingTools__item:first-of-type {
+    padding-left: 0;
+}
+.shoppingTools .shoppingTools__list .shoppingTools__item:last-of-type {
+    border-right: none;
+    padding-right: 0;
+}

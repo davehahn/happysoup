@@ -1,0 +1,27 @@
+<!--
+ - Created by Tim on 2021-03-30.
+ -->
+
+<!-- Factory Store Phone Numbers -->
+<template>
+  <ul class="storePhoneNumbers">
+    <template if:true={hasPhoneSales}>
+      <li>
+        <span>Sales:</span>
+        <a href={phoneSalesLink}>{phoneSales}</a>
+      </li>
+    </template>
+    <template if:true={hasPhoneService}>
+      <li>
+        <span>Service:</span>
+        <a href={phoneServiceLink}>{phoneService}</a>
+      </li>
+    </template>
+    <template if:true={hasPhoneParts}>
+      <li>
+        <span>Parts:</span>
+        <a href={phonePartsLink}>{phoneParts}</a>
+      </li>
+    </template>
+  </ul>
+</template>
