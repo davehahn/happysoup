@@ -1,0 +1,29 @@
+<aura:component implements="forceCommunity:themeLayout">
+    <aura:attribute name="storeLocationAndHours" type="Aura.Component[]"/>
+    <aura:attribute name="storePhoneNumbers" type="Aura.Component[]"/>
+    <aura:attribute name="storeNavigation" type="Aura.Component[]"/>
+    <aura:attribute name="storeFooter" type="Aura.Component[]"/>
+    <header class="storeHeader">
+        <div class="storeDetails">
+            <h1 class="storeLogo">
+                <a href="/" class="storeLogoIcon">Legend Boats Sudbury</a>
+            </h1>
+            <div class="locationAndHours">
+                {!v.storeLocationAndHours}
+            </div>
+            <div class="phoneNumbers">
+                {!v.storePhoneNumbers}
+            </div>
+            <div class="corporateLogo"></div>
+        </div>
+        <nav class="mainNavigation">
+            <c:factoryStoreMainNavigation></c:factoryStoreMainNavigation>
+        </nav>
+    </header>
+	  <article>
+    	  {!v.body}
+    </article>
+    <footer>
+        {!v.storeFooter}
+    </footer>
+</aura:component>
