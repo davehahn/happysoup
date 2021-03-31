@@ -1,7 +1,16 @@
 .THIS {
   font-family: 'gotham_htf', Montserrat, Lato, Helvetica, Arial, sans-serif;
 	font-weight: 300;
+	position: relative;
 }
+
+.THIS.storeHeader{
+  z-index: 100;
+}
+.THIS.storeMain, .THIS.storeFooter{
+  z-index: 1;
+}
+
 .THIS .storeDetails{
     display: flex;
     align-items: center;
