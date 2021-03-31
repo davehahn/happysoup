@@ -1,4 +1,10 @@
 <aura:component implements="forceCommunity:themeLayout">
+    <ltng:require styles="{!join(',',
+        $Resource.GothamHTF + '/fonts.css',
+        $Resource.FactoryStoreGlobals + '/css/layout.css',
+        $Resource.FactoryStoreGlobals + '/css/headings.css',
+        $Resource.FactoryStoreGlobals + '/css/colours.css'
+    )}"/>
     <aura:attribute name="storeLocationAndHours" type="Aura.Component[]"/>
     <aura:attribute name="storePhoneNumbers" type="Aura.Component[]"/>
     <aura:attribute name="storeNavigation" type="Aura.Component[]"/>

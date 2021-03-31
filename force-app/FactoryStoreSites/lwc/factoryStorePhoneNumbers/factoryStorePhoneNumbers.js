@@ -3,8 +3,10 @@
  */
 
 import { LightningElement, api, wire, track } from 'lwc';
+import { loadStyle, loadScript } from 'lightning/platformResourceLoader';
 
 export default class FactoryStorePhoneNumbers extends LightningElement {
+
 	@api phoneSales;
 	@api phoneService;
 	@api phoneParts;
