@@ -332,6 +332,23 @@ public virtual class Customer
       }
     }
 
+    private AccountSaveResult forceAccountUpdate()
+    {
+      System.debug('forceAccountUpdate');
+      Database.DMLOptions dml = new Database.DMLOptions();
+      dml.DuplicateRuleHeader.allowSave = true;
+      dml.DuplicateRuleHeader.runAsCurrentUser = true;
+      Database.SaveResult saveResult = Database.update( revertToAccount(), dml );
+      if( saveResult.isSuccess() )
+      {
+        return handleSaveSuccess();
+      }
+      else
+      {
+        return handleErrors( saveResult.getErrors() );
+      }
+    }
+
     private AccountSaveResult forceAccountSave()
     {
       Database.DMLOptions dml = new Database.DMLOptions();
@@ -388,6 +405,8 @@ public virtual class Customer
         System.debug('we have duplicate records');
         if( result.duplicateRecords.size() == 1 )
         {
+          System.debug( 'Single Duplicate Error' );
+          System.debug( result.duplicateRecords[0] );
           if( result.duplicateRecords[0].get('PersonEmail') == this.email )
           {
             System.debug('EMAIL IS THE DUP');
@@ -396,11 +415,12 @@ public virtual class Customer
             ex.setMessage( err );
             throw ex;
           }
+          else
+          {
+            this.id = (Id) result.duplicateRecords[0].get('Id');
+          }
         }
-        else
-        {
-          this.id = (Id) result.duplicateRecords[0].get('Id');
-        }
+
 
         if( result.duplicateRecords.size() > 1 )
         {
@@ -420,7 +440,7 @@ public virtual class Customer
         }
         return this.id == null ?
           forceAccountSave() :
-          this.theLead != null ? convertLead() : doAccountSave();
+          this.theLead != null ? convertLead() : forceAccountUpdate();
       }
       return result;
     }
