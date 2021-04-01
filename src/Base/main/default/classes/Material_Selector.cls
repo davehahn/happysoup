@@ -12,6 +12,7 @@ public with sharing class Material_Selector extends Application_Selector {
       'Material__c',
       'AcctSeedERP__Project__c',
       'AcctSeedERP__Project_Task__c',
+      'AcctSeedERP__Project_Task__r.Name',
       'AcctSeedERP__Project_Task__r.Commission_Override_Project_Task__c',
       'AcctSeedERP__Product__c',
       'AcctSeedERP__Product__r.AcctSeed__Revenue_GL_Account__r.AcctSeed__Type__c',
@@ -20,8 +21,10 @@ public with sharing class Material_Selector extends Application_Selector {
       'AcctSeedERP__Product__r.Name',
       'AcctSeedERP__Product__r.Is_Residual_Insurance__c',
       'AcctSeedERP__Quantity_Per_Unit__c',
+      'AcctSeedERP__Quantity_Allocated__c',
       'AcctSeedERP__Comment__c',
       'GMBLASERP__Unit_Price__c',
+      'GMBLASERP__Price_Override__c',
       'Insurance_Coverage__c',
       'Insurance_Rate__c'
     };
@@ -35,6 +38,13 @@ public with sharing class Material_Selector extends Application_Selector {
       AcctSeedERP__Quantity_Per_Unit__c
     FROM AcctSeedERP__Material__c
     WHERE AcctSeedERP__Project_Task__c In :taskIds ];
+  }
+
+  public static List<AcctSeedERP__Material__c> allByProjectId( String projectId )
+  {
+    return new Material_Selector()
+      .addWhere( 'AcctSeedERP__Project__c = \'' + projectId + '\'' )
+      .query();
   }
 
   public static List<AcctSeedERP__Material__c> allInsuranceMaterialsByProjectIds( Set<Id> projectIds )
@@ -52,19 +62,6 @@ public with sharing class Material_Selector extends Application_Selector {
     Material_Selector selector = new Material_Selector();
     selector.addWhereIdIn( matIds );
     return selector.query();
-//    return [ SELECT Id,
-//                    Material__c,
-//                    AcctSeedERP__Project_Task__c,
-//                    AcctSeedERP__Project_Task__r.Commission_Override_Project_Task__c,
-//                    AcctSeedERP__Product__c,
-//                    AcctSeedERP__Product__r.AcctSeed__Revenue_GL_Account__r.AcctSeed__Type__c,
-//                    AcctSeedERP__Product__r.RecordTypeId,
-//                    AcctSeedERP__Product__r.Family,
-//                    AcctSeedERP__Quantity_Per_Unit__c,
-//                    AcctSeedERP__Comment__c,
-//                    GMBLASERP__Unit_Price__c
-//             FROM AcctSeedERP__Material__c
-//             WHERE Id IN :matIds];
   }
 
   public static Map<Id,AcctSeedERP__Material__c> mapAllByIds( Set<Id> matIds )

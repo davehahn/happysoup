@@ -75,6 +75,15 @@ public virtual class Application_Selector
     return this;
   }
 
+  public Application_Selector addWhereFieldNotIn( String fieldName, Set<String> ignoreStrings, String operator )
+  {
+    addWhere(
+      whereNotInClauseBuilder( fieldName, ignoreStrings ),
+      operator
+    );
+    return this;
+  }
+
   public Application_Selector addOrderBy( String orderBy )
   {
     this.orderBy = orderBy;
@@ -194,6 +203,23 @@ public virtual class Application_Selector
       return field + ' = \'' + new List<String>(matchers)[0] + '\'';
 
     String w = field + ' IN (';
+    for( Object m : matchers )
+    {
+      w += '\'' + m + '\',';
+    }
+    w = w.removeEnd(',') + ')';
+    return w;
+  }
+
+  public static String whereNotInClauseBuilder( String field, Set<String> matchers )
+  {
+    if( matchers == null || matchers.size() == 0  )
+      throw new SelectorException( 'WhereInClauseBuilder called with no matchers');
+
+    if( matchers != null && matchers.size() == 1 )
+      return field + ' <> \'' + new List<String>(matchers)[0] + '\'';
+
+    String w = field + ' NOT IN (';
     for( Object m : matchers )
     {
       w += '\'' + m + '\',';
