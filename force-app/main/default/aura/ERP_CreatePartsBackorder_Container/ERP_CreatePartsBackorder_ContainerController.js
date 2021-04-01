@@ -26,7 +26,7 @@
     let currentStep = component.get('v.currentStep');
     if( currentStep.value === 3 ) return;
     const steps = component.get('v.steps');
-    component.set( 'v.currentStep', steps[ currentStep.value + 1 ] );
+
     let cmp = component.find('backOrderCreator');
     switch( currentStep.value )
     {
@@ -36,7 +36,16 @@
       case 1:
         cmp.buildNewERP();
         break;
+      case 2:
+        cmp.createBackOrderRecords()
+        .then( () => {
+          return;
+        })
+        .catch( error => {
+          console.log( JSON.parse(JSON.stringify(error)) );
+        });
     }
+    component.set( 'v.currentStep', steps[ currentStep.value + 1 ] );
   },
 
   handleBack: function( component )
