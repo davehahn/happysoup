@@ -1,0 +1,68 @@
+<!--
+ - Created by dave on 2021-03-29.
+ -->
+
+<aura:component implements="force:lightningQuickActionWithoutHeader,force:hasRecordId">
+  <aura:attribute name="recordId" type="String" />
+  <aura:attribute name="steps" type="Array" />
+  <aura:attribute name="currentStep" type="Map" />
+
+  <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+
+  <aura:html tag="style">
+    .slds-modal__container {
+      padding: 0 !important;
+      width:100% !important;
+      max-width: 70rem;
+    }
+    .slds-modal__content{
+      overflow-y:hidden !important;
+      height:unset !important;
+      max-height:unset !important;
+    }
+    .cuf-content {
+      padding: 0 0rem !important;
+      margin: -1rem;
+    }
+  </aura:html>
+
+
+  <div class="modal-header slds-modal__header slds-size_1-of-1">
+    <h4 class="title slds-text-heading_medium">{!v.currentStep.title}</h4>
+  </div>
+
+  <div class="slds-modal__content">
+    <c:erpCreatePartsBackorder recordId="{!v.recordId}"
+                               aura:id="backOrderCreator"
+                               currentStep="{!v.currentStep.value}"
+                               oncancel="{!c.handleCancel}"/>
+  </div>
+
+  <footer class="slds-modal__footer  slds-grid slds-grid_align-spread">
+    <lightning:button variant="neutral"
+                      label="Cancel"
+                      onclick="{!c.handleCancel}"
+                      class="slds-float_left" />
+
+    <lightning:progressIndicator currentStep="{!v.currentStep.value}"
+                                  type="base">
+      <aura:iteration items="{!v.steps}" var="step">
+        <lightning:progressStep key="{!step.value}"
+                                 label="{!step.title}"
+                                 value="{!step.value}" />
+      </aura:iteration>
+    </lightning:progressIndicator>
+
+    <lightning:button label="Back"
+                      variant="neutral"
+                      value="{!v.currentStep.value}"
+                      disabled="{!equals(v.currentStep.value, 0)}"
+                      onclick="{!c.handleBack}"
+                      class="slds-m-right_small" />
+    <lightning:button label="{!v.currentStep.buttonLabel}"
+                      variant="brand"
+                      onclick="{!c.handleNext}"
+                      value="{!v.currentStep.value}" />
+  </footer>
+
+</aura:component>

@@ -1,0 +1,261 @@
+<!--
+ - Created by dave on 2021-03-29.
+ -->
+
+<!-- Erp Create Parts Backorder -->
+<template>
+
+  <!-- ***** STEP ONE ***** -->
+  <div if:true={isStepOne}>
+    <table class="slds-table slds-table_bordered slds-table_cell-buffer">
+      <thead>
+      <tr class="slds-text-title_caps">
+        <th scope="col">
+          <div class="slds-truncate slds-text-align_left" title="Product">Product</div>
+        </th>
+        <th scope="col">
+          <div class="slds-truncate slds-text-align_center" title="Task">Task</div>
+        </th>
+        <th scope="col">
+          <div class="slds-truncate slds-text-align_center" title="Quantity Ordered">Qty Ordered</div>
+        </th>
+        <th scope="col">
+          <div class="slds-truncate slds-text-align_center" title="Quantity WIP'd">Qty WIP'd</div>
+        </th>
+        <th scope="col"  style="width:4rem">
+          <div class="slds-truncate" title="Qty to Transfer">Qty to Transfer</div>
+        </th>
+      </tr>
+      </thead>
+      <tbody>
+      <template for:each={materials} for:item="mat">
+        <tr key={mat.Id}>
+          <th scope="row" data-label="Product">
+            <div class="slds-truncate slds-text-align_left">{mat.AcctSeedERP__Product__r.Name}</div>
+          </th>
+          <th scope="row" data-label="Task">
+            <div class="slds-truncate slds-text-align_center">{mat.AcctSeedERP__Project_Task__r.Name}</div>
+          </th>
+          <th scope="row" data-label="Quantity Ordered">
+            <div class="slds-truncate slds-text-align_center">{mat.AcctSeedERP__Quantity_Per_Unit__c}</div>
+          </th>
+          <th scope="row" data-label="Quantity WIP'd">
+            <div class="slds-truncate slds-text-align_center">{mat.AcctSeedERP__Quantity_Allocated__c}</div>
+          </th>
+          <th scope="row" data-label="Quantity to Transfer">
+            <lightning-input type="number"
+                             value={mat.quantityTransferred}
+                             name="material"
+                             class="slds-text-align_center"
+                             data-material-id={mat.Id}
+                             onchange={updateInput}
+                             variant="label-hidden"></lightning-input>
+          </th>
+        </tr>
+      </template>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ***** STEP TWO ***** -->
+  <div if:true={isStepTwo}>
+    <lightning-textarea label="Task Cause"
+                        value={taskCause}
+                        name="taskCause"
+                        onchange={updateInput}
+                        class="slds-m-around_large"></lightning-textarea>
+  </div>
+
+  <!-- ***** STEP THREE ***** -->
+  <div if:true={isStepThree}>
+    <div class="slds-p-around_large">
+
+      <!-- ERP Order -->
+      <lightning-card>
+        <h3 slot="title">
+          <lightning-icon icon-name="custom:custom68"
+                          size="small"
+                          class="slds-m-right_small"></lightning-icon>
+          ERP Order Details
+        </h3>
+        <div class="slds-border_top slds-m-bottom_small"></div>
+        <div class="slds-p-horizontal_small">
+
+          <lightning-layout multiple-rows="true">
+
+            <lightning-layout-item size="6"
+                                   padding="horizontal-small">
+              <div class="slds-form-element slds-form-element_readonly">
+                <span class="slds-form-element__label">Account</span>
+                <div class="slds-form-element__control">
+                  <div class="slds-form-element__static">
+                    {retailERP.AcctSeed__Account__r.Name}
+                  </div>
+                </div>
+              </div>
+            </lightning-layout-item>
+
+            <lightning-layout-item size="6"
+                                   padding="horizontal-small">
+              <div class="slds-form-element slds-form-element_readonly">
+                <span class="slds-form-element__label">Warehouse</span>
+                <div class="slds-form-element__control">
+                  <div class="slds-form-element__static">
+                    {retailERP.WarehouseName__c}
+                  </div>
+                </div>
+              </div>
+            </lightning-layout-item>
+
+            <lightning-layout-item size="6"
+                                   padding="horizontal-small">
+              <div class="slds-form-element slds-form-element_readonly">
+                <span class="slds-form-element__label">Stage</span>
+                <div class="slds-form-element__control">
+                  <div class="slds-form-element__static">
+                    {newERP.Stage__c}
+                  </div>
+                </div>
+              </div>
+            </lightning-layout-item>
+
+            <lightning-layout-item size="6"
+                                   padding="horizontal-small">
+              <div class="slds-form-element slds-form-element_readonly">
+                <span class="slds-form-element__label">Business Unit (GLV1)</span>
+                <div class="slds-form-element__control">
+                  <div class="slds-form-element__static">
+                    {retailERP.GL_Account_Variable_1__r.Name}
+                  </div>
+                </div>
+              </div>
+            </lightning-layout-item>
+
+            <lightning-layout-item size="6"
+                                   padding="horizontal-small">
+              <div class="slds-form-element slds-form-element_readonly">
+                <span class="slds-form-element__label">Job Status</span>
+                <div class="slds-form-element__control">
+                  <div class="slds-form-element__static">
+                    {newERP.Job_Status__c}
+                  </div>
+                </div>
+              </div>
+            </lightning-layout-item>
+
+            <lightning-layout-item size="6"
+                                   padding="horizontal-small">
+              <div class="slds-form-element slds-form-element_readonly">
+                <span class="slds-form-element__label">Department (GLV2)</span>
+                <div class="slds-form-element__control">
+                  <div class="slds-form-element__static">
+                    {retailERP.GL_Account_Variable_2__r.Name}
+                  </div>
+                </div>
+              </div>
+            </lightning-layout-item>
+
+            <lightning-layout-item size="6"
+                                   padding="horizontal-small">
+              <div class="slds-form-element slds-form-element_readonly">
+                <span class="slds-form-element__label">Original ERP</span>
+                <div class="slds-form-element__control">
+                  <div class="slds-form-element__static">
+                    {retailERP.Name}
+                  </div>
+                </div>
+              </div>
+            </lightning-layout-item>
+
+          </lightning-layout>
+
+        </div>
+      </lightning-card>
+
+      <!-- Task -->
+      <lightning-card>
+        <h3 slot="title">
+          <lightning-icon icon-name="custom:custom68"
+                          size="small"
+                          class="slds-m-right_small"></lightning-icon>
+          ERP Order Task Details
+        </h3>
+        <div class="slds-border_top slds-m-bottom_small"></div>
+        <div class="slds-p-horizontal_small">
+
+          <lightning-layout multiple-rows="true">
+
+            <lightning-layout-item size="6"
+                                   padding="horizontal-small">
+              <div class="slds-form-element slds-form-element_readonly">
+                <span class="slds-form-element__label">Name</span>
+                <div class="slds-form-element__control">
+                  <div class="slds-form-element__static">
+                    {newTask.Name}
+                  </div>
+                </div>
+              </div>
+            </lightning-layout-item>
+
+            <lightning-layout-item size="6"
+                                   padding="horizontal-small">
+              <div class="slds-form-element slds-form-element_readonly">
+                <span class="slds-form-element__label">Cause</span>
+                <div class="slds-form-element__control">
+                  <div class="slds-form-element__static">
+                    {newTask.Cause__c}
+                  </div>
+                </div>
+              </div>
+            </lightning-layout-item>
+
+          </lightning-layout>
+        </div>
+      </lightning-card>
+
+      <!-- Materials -->
+      <lightning-card>
+        <h3 slot="title">
+          <lightning-icon icon-name="standard:custom"
+                          size="small"
+                          class="slds-m-right_small"></lightning-icon>
+          ERP Order Items
+        </h3>
+        <div class="slds-border_top slds-m-bottom_small"></div>
+        <div class="slds-p-horizontal_small">
+
+          <table class="slds-table slds-table_bordered slds-table_cell-buffer">
+            <thead>
+            <tr class="slds-text-title_caps">
+              <th scope="col">Qty</th>
+              <th scope="col">Product</th>
+              <th scope="col">Price</th>
+            </tr>
+            </thead>
+            <tbody>
+            <template for:each={newMaterials} for:item="mat">
+              <tr key={mat.AcctSeedERP__Product__c}>
+                <td>{mat.AcctSeedERP__Quantity_Per_Unit__c}</td>
+                <td>
+                  <div>{mat._temp_ProductName}</div>
+                  <div if:true={mat.AcctSeedERP__Comment__c} style="font-size:0.7rem">
+                    {mat.AcctSeedERP__Comment__c}
+                  </div>
+                </td>
+                <td>
+                  <lightning-formatted-number value={mat.GMBLASERP__Unit_Price__c}
+                                              format-style="currency"
+                                              currency-code="CAD"></lightning-formatted-number>
+                </td>
+              </tr>
+            </template>
+            </tbody>
+          </table>
+
+        </div>
+      </lightning-card>
+
+    </div>
+  </div>
+
+</template>

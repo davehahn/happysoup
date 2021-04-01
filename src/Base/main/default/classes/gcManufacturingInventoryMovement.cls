@@ -68,11 +68,11 @@ global without sharing class gcManufacturingInventoryMovement {
 						setIdSerial.add(im.GMBLASERP__Serial_Number__c);
 			}
 			/// To update serial unit cost run time (future).
-			if(!setIdSerial.isEmpty()){
-				List<String> listId = new List<String>();
-				listId.addAll(setIdSerial);
-				gcSerialNumber.updateSerialUnitCostFuture(listId);
-			}
+//			if(!setIdSerial.isEmpty()){
+//				List<String> listId = new List<String>();
+//				listId.addAll(setIdSerial);
+//				gcSerialNumber.updateSerialUnitCostFuture(listId);
+//			}
 		}
 	}
 
@@ -86,10 +86,10 @@ global without sharing class gcManufacturingInventoryMovement {
 		 Boolean boolIsDelete)
 	{
 		/// This is only used in Dev Org
-//		if(boolIsBefore && (boolIsInsert || boolIsUpdate)){
-//			for(AcctSeedERP__Manufacturing_Inventory_Movement__c move :listNew)
-//				move.AcctSeedERP__Ledger__c = 'a124F000000leJoQAI';
-//
-//		}
+		if(boolIsBefore && (boolIsInsert || boolIsUpdate)){
+			for(AcctSeedERP__Manufacturing_Inventory_Movement__c move :listNew)
+				move.AcctSeedERP__Ledger__c = 'a121g000001929wAAA';
+
+		}
 	}
 }
