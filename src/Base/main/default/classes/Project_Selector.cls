@@ -10,6 +10,7 @@ public without sharing class Project_Selector Extends Application_Selector
     this.fields = new List<String>{
       'Id',
       'RecordTypeId',
+      'RecordType.Name',
       'Name',
       'Job_Status__c',
       'Parking_Spot__c',

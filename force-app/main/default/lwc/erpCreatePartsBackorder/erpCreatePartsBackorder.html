@@ -237,7 +237,7 @@
               <tr key={mat.AcctSeedERP__Product__c}>
                 <td>{mat.AcctSeedERP__Quantity_Per_Unit__c}</td>
                 <td>
-                  <div>{mat._temp_ProductName}</div>
+                  <div>{mat.AcctSeedERP__Product__r.Name}</div>
                   <div if:true={mat.AcctSeedERP__Comment__c} style="font-size:0.7rem">
                     {mat.AcctSeedERP__Comment__c}
                   </div>

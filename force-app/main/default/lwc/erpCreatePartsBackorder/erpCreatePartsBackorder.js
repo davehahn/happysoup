@@ -4,6 +4,7 @@
 
 import { LightningElement, api, wire, track } from 'lwc';
 import fetchMaterials from '@salesforce/apex/ERP_CreatePartsBackOrder_Controller.fetchMaterials';
+import createRecords from '@salesforce/apex/ERP_CreatePartsBackOrder_Controller.createBackOrderERP';
 
 export default class ErpCreatePartsBackorder extends LightningElement {
 
@@ -19,6 +20,7 @@ export default class ErpCreatePartsBackorder extends LightningElement {
   newTask={};
   newMaterials=[];
 
+  _creditProductId;
   _erpCopyFields = [
     'AcctSeed__Account__c',
     'GMBLASERP_Warehouse__c',
@@ -42,6 +44,8 @@ export default class ErpCreatePartsBackorder extends LightningElement {
 
       this.retailERP = result.data.retailERP;
       console.log( JSON.parse(JSON.stringify(this.materials)));
+
+      this._creditProductId = result.data.creditProductId;
       this.isBusy = false;
     }
     if( result.error )
@@ -68,15 +72,17 @@ export default class ErpCreatePartsBackorder extends LightningElement {
     });
     this.newERP.Stage__c = 'Pending Diagnostic';
     this.newERP.Job_Status__c = 'Boat Required';
+    this.newERP.Original_ERP__c = this.retailERP.Id;
     console.log( this.newERP );
 
     this.newTask = {
       Cause__c: this.taskCause,
-      Name: 'Retail Sale - We Owe'
+      Name: this.retailERP.RecordType.Name + ' - Back Order',
+      DisplayOnCustomerInvoice__c: true
     };
     console.log( this.newTask );
-
-    this.transferredMaterials.reduce( ( newMaterials, material ) => {
+    let totalCost = 0;
+    this.newMaterials = this.transferredMaterials.reduce( ( newMaterials, material ) => {
       if( material.quantityTransferred > 0 )
       {
         newMaterials.push({
@@ -85,12 +91,50 @@ export default class ErpCreatePartsBackorder extends LightningElement {
           GMBLASERP__Unit_Price__c: material.GMBLASERP__Unit_Price__c,
           GMBLASERP__Price_Override__c: material.GMBLASERP__Price_Override__c,
           AcctSeedERP__Comment__c: material.AcctSeedERP__Comment__c,
-          _temp_ProductName: material.AcctSeedERP__Product__r.Name,
-        })
+          AcctSeedERP__Product__r: {
+            Name: material.AcctSeedERP__Product__r.Name
+          }
+        });
+        totalCost += material.GMBLASERP__Unit_Price__c;
       }
       return newMaterials;
-    }, this.newMaterials );
+    }, [] );
+    this.newMaterials.push({
+      AcctSeedERP__Product__c: this._creditProductId,
+      AcctSeedERP__Quantity_Per_Unit__c: 1,
+      GMBLASERP__Unit_Price__c: -1 * totalCost,
+      GMBLASERP__Price_Override__c: true,
+      AcctSeedERP__Comment__c: 'Back Order Credit',
+      AcctSeedERP__Product__r: {
+        Name: 'Back Order Credit'
+      },
+    })
     console.log( this.newMaterials );
+  }
+
+  @api createBackOrderRecords()
+  {
+    return new Promise( (resolve, reject) => {
+      let mats = this.newMaterials.reduce( (result, material) => {
+        let m = {...material};
+        delete m.AcctSeedERP__Product__r;
+        result.push( m );
+        return result;
+       }, [] );
+      console.log( mats );
+      createRecords( {
+        erp: this.newERP,
+        task: this.newTask,
+        materials: mats
+      })
+      .then( result => {
+        console.log( JSON.parse(JSON.stringify(result)) );
+        resolve();
+      })
+      .catch( error => {
+        reject( error );
+      })
+    })
   }
 
   get isStepOne()
