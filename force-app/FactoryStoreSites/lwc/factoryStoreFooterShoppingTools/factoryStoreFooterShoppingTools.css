@@ -39,15 +39,20 @@
 }
 .shoppingTools .shoppingTools__list .shoppingTools__item a span {
     display: block;
+    font-weight: 800;
 }
 .shoppingTools .shoppingTools__list .shoppingTools__item a span.icon {
     margin-right: .5em;
     height: 1.5em;
     width: 1.5em;
 }
-.shoppingTools .shoppingTools__list .shoppingTools__item a span.icon svg {
-    height: 100%}
-.shoppingTools .shoppingTools__list .shoppingTools__item a span.icon svg path {
+.shoppingTools .shoppingTools__list .shoppingTools__item a span.icon svg.iconWrap{
+  width: 100%; overflow: visible;
+}
+.shoppingTools .shoppingTools__list .shoppingTools__item a span.icon svg, .shoppingTools .shoppingTools__list .shoppingTools__item a span.icon svg use {
+    height: 100%
+}
+.shoppingTools .shoppingTools__list .shoppingTools__item a span.icon svg use {
     fill: #3bafd6 !important;
 }
 .shoppingTools .shoppingTools__list .shoppingTools__item a span.copy b {

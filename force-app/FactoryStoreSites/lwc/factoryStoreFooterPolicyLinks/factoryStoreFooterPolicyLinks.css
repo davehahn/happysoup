@@ -1,0 +1,20 @@
+/**
+ * Created by Tim on 2021-04-01.
+ */
+
+.footerLegal__navList{
+  display: flex;
+  margin-bottom: 1em;
+}
+.footerLegal__navList .footerLegal__navItem::after{
+  display: inline-block;
+  content: '|';
+  padding: 0 1em;
+}
+.footerLegal__navList .footerLegal__navItem:last-of-type::after{
+  display: none;
+}
+.footerLegal__navList .footerLegal__navItem a{
+  font-size: 0.9em;
+  color: var(--primary);
+}

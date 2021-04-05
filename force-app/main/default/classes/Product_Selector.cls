@@ -58,4 +58,14 @@ public with sharing class Product_Selector extends Application_Selector
       return (Product2)results[0];
     return null;
   }
+
+  public static List<Product2> allBoatsInSeries( String series )
+  {
+    Product_Selector selector = new Product_Selector();
+    selector
+            .addFields( boatFields )
+            .addWhere('Series__c = \'' + series + '\'')
+            .addWhere('Model_Year_End__c = null', 'AND');
+    return (List<Product2>)selector.query();
+  }
 }

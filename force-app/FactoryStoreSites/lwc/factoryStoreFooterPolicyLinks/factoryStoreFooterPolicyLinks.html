@@ -1,0 +1,14 @@
+<!--
+ - Created by Tim on 2021-04-01.
+ -->
+
+<!-- Factory Store Footer Policy Links -->
+<template>
+  <ul class="footerLegal__navList" role="menu" aria-label="Legend Boats Policy Links">
+    <template for:each={allPolicyLinks} for:item="policy">
+      <li class="footerLegal__navItem" role="none" key={policy.label}>
+        <a class="footerLegal__navLink" href={policy.url} role="menuitem" target="_blank" arial-label={policy.ariaLabel}>{policy.label}</a>
+      </li>
+    </template>
+  </ul>
+</template>

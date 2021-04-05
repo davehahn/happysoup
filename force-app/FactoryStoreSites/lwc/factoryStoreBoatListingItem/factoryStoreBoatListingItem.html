@@ -1,0 +1,14 @@
+<!--
+ - Created by Tim on 2021-03-25.
+ -->
+
+<!-- Factory Store Boat Listing Item -->
+<template>
+  <li class="config-nav-item">
+    <button class="config-nav-title" data-record-id={boat.Id} onclick={selectBoat}>
+      {boat.Name}
+      <img src={boat.Default_Gallery_Image_Original__c}>
+    </button>
+    Length: {boat.Length__c}
+  </li>
+</template>

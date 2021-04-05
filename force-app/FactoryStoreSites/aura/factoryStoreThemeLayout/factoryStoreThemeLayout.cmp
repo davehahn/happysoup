@@ -8,8 +8,9 @@
     <aura:attribute name="storeLocationAndHours" type="Aura.Component[]"/>
     <aura:attribute name="storePhoneNumbers" type="Aura.Component[]"/>
     <aura:attribute name="storeNavigation" type="Aura.Component[]"/>
-    <aura:attribute name="storeFooter" type="Aura.Component[]"/>
+    <aura:attribute name="storeTools" type="Aura.Component[]"/>
     <aura:attribute name="storeLegal" type="Aura.Component[]"/>
+    <aura:attribute name="storePolicyLinks" type="Aura.Component[]"/>
 
     <header class="storeHeader">
         <div class="storeDetails">
@@ -33,9 +34,12 @@
     </article>
     <c:factoryStoreFooterStayInTouch></c:factoryStoreFooterStayInTouch>
     <footer class="storeFooter">
-        {!v.storeFooter}
+        {!v.storeTools}
         <section class="footerLegal">
+            {!v.storePolicyLinks}
+            <c:factoryStoreFooterCopyright></c:factoryStoreFooterCopyright>
             {!v.storeLegal}
+            <c:factoryStoreFooterAllInPricing></c:factoryStoreFooterAllInPricing>
         </section>
     </footer>
 

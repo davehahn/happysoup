@@ -1,6 +1,34 @@
 /**
  * Created by Tim on 2021-03-30.
  */
-*{
-  color: var(--strike);
+
+.hoursAndLocation{
+  font-size: 0.75em;
+  line-height: 1.125;
+}
+
+.hours{
+  display: flex;
+  flex-wrap: wrap;
+}
+.hours > *{
+  display: block;
+}
+.hours .currentStatus{
+  font-weight: bold;
+  text-transform: uppercase;
+  margin-right: 5px;
+}
+.hours .currentStatus.currentStatus--open{
+  color: #10640C;
+}
+.hours .currentDate{
+  width: 100%;
+}
+.location{
+  margin-top: 0.5em;
+}
+.location .addressLineOne{
+  font-weight: bold;
+  display: block;
 }

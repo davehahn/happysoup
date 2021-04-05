@@ -5,6 +5,8 @@
 import { LightningElement, api, wire, track } from 'lwc';
 import { loadStyle, loadScript } from 'lightning/platformResourceLoader';
 
+import FactoryStoreGlobals from '@salesforce/resourceUrl/FactoryStoreGlobals';
+
 export default class FactoryStoreShoppingTools extends LightningElement {
 
 	@api toolsFindADealer;
@@ -12,4 +14,8 @@ export default class FactoryStoreShoppingTools extends LightningElement {
 	@api toolsRequestAQuote;
 	@api toolsBuildPrice;
 	@api toolsDownloadCatalogue;
+
+	calendarIcon = `${FactoryStoreGlobals + '/img/calendar.svg'}#calendarIcon`;
+	contractIcon = `${FactoryStoreGlobals + '/img/contract.svg'}#contractIcon`;
+	downloadIcon = `${FactoryStoreGlobals + '/img/download.svg'}#downloadIcon`;
 }
