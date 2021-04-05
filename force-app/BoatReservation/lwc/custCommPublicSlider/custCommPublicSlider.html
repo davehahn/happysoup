@@ -1,0 +1,17 @@
+<!--
+ - Created by Tim on 2020-04-24.
+ -->
+
+<!-- Cust Comm Public Slider -->
+<template>
+  <div class="home">
+    <h2 class="content_overlay title">{activeTitle}</h2>
+    <button class="content_overlay button" data-record-id={activeLink} onclick={navToBoat}>Order now</button>
+    <p class="content_overlay deck">Order online for touchless delivery</p>
+<!--    <template for:each={boats.data} for:item="boat">-->
+<!--      <a key={boat.id} data-record-id={boat.id} onclick={navToBoat}>{boat.name}</a>-->
+<!--    </template>-->
+    <div class="wrap" data-id="wrap" lwc:dom="manual"></div>
+  </div>
+
+</template>

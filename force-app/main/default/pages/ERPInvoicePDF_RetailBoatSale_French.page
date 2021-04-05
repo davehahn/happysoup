@@ -375,7 +375,7 @@
               </apex:repeat>
             </apex:outputPanel>
 
-            <apex:outputPanel layout="none" rendered="{!trailer.AcctSeedERP__Product__r.Name_FR__c != null}">
+            <apex:outputPanel layout="none" rendered="{!AND(trailer.AcctSeedERP__Product__r.Name_FR__c != null, trailer.GMBLASERP__Serial_Number__c != null)}">
               <tr class="{!IF(MOD(rowCount,2)=0,'even','odd')}">
                 <td class="w5">{!trailer.GMBLASERP__Serial_Number__r.GMBLASERP__Lot__r.Name}</td>
                 <td class="10">{!trailer.AcctSeedERP__Product__r.Make__c}</td>
@@ -392,17 +392,19 @@
 
             <apex:outputPanel layout="none" rendered="{!trollingMotors.size > 0}">
               <apex:repeat value="{!trollingMotors}" var="trollingMotor">
-                <tr class="{!IF(MOD(rowCount,2)=0,'even','odd')}">
-                  <td class="w5">{!trollingMotor.GMBLASERP__Serial_Number__r.GMBLASERP__Lot__r.Name}</td>
-                  <td class="10">{!trollingMotor.AcctSeedERP__Product__r.Make__c}</td>
-                  <td class="w44">{!trollingMotor.AcctSeedERP__Product__r.Name_FR__c}</td>
-                  <td class="w25">{!trollingMotor.GMBLASERP__Serial_Number__r.name}</td>
-                  <td class="w15 right">
-                    <apex:outputText value="${0, number, ###,###,###,##0.00}">
-                      <apex:param value="{!trollingMotor.GMBLASERP__Total_Price__c}"/>
-                    </apex:outputText>
-                  </td>
-                </tr>
+                <apex:outputPanel layout="none" rendered="{!trollingMotor.GMBLASERP__Serial_Number__c != null}">
+                  <tr class="{!IF(MOD(rowCount,2)=0,'even','odd')}">
+                    <td class="w5">{!trollingMotor.GMBLASERP__Serial_Number__r.GMBLASERP__Lot__r.Name}</td>
+                    <td class="10">{!trollingMotor.AcctSeedERP__Product__r.Make__c}</td>
+                    <td class="w44">{!trollingMotor.AcctSeedERP__Product__r.Name_FR__c}</td>
+                    <td class="w25">{!trollingMotor.GMBLASERP__Serial_Number__r.name}</td>
+                    <td class="w15 right">
+                      <apex:outputText value="${0, number, ###,###,###,##0.00}">
+                        <apex:param value="{!trollingMotor.GMBLASERP__Total_Price__c}"/>
+                      </apex:outputText>
+                    </td>
+                  </tr>
+                </apex:outputPanel>
               </apex:repeat>
             </apex:outputPanel>
           </tbody>
@@ -419,64 +421,121 @@
         <apex:outputPanel layout="none">
           <table class="itemsTable">
             <thead>
-              <tr>
-                <td colspan="3">Options &amp; Accessoires</td>
-              </tr>
+            <tr>
+              <td colspan="3">Options &amp; Accessoires</td>
+            </tr>
             </thead>
-            <tbody>
-              <apex:variable value="{!1}" var="rowCount" />
-              <apex:variable value="{!0}" var="OptionsAcc" />
-                  <apex:outputPanel layout="none">
-                    <apex:repeat value="{!oppAccList}" var="oppAcc">
-                      <tr class="{!IF(MOD(rowCount,2)=0,'even','odd')}">
-                        <td class="w5">
-                        <apex:outputText value="{!oppAcc.quantity}"/>
-                        </td>
-                        <td class="w60">
-                          <apex:outputText value="{!oppAcc.descriptionFR}"/>
-                        </td>
-                        <td class="w35 right">
-                          <apex:outputText value="{!IF(oppAcc.price != 0,' ${0, number, ###,###,###,##0.00}','Included')} ">
-                            <apex:param value="{!oppAcc.price}"/>
-                        </apex:outputText>
-                        </td>
-                      </tr>
-                      <apex:variable value="{!rowCount+1}" var="rowCount" />
-                      <apex:variable value="{!OptionsAcc + oppAcc.price}" var="OptionsAcc" />
-                      <apex:outputPanel layout="none" rendered="{!oppAcc.includedFeatures.size > 0}">
-                        <apex:repeat value="{!oppAcc.includedFeatures}" var="feature">
-                          <tr class="{!IF(MOD(rowCount,2)=0,'even','odd')}">
-                          <td class="w5">
+          </table>
+          <apex:variable value="{!1}" var="rowCount" />
+          <apex:variable value="{!0}" var="OptionsAcc" />
 
-                          </td>
-                          <td class="w60">
-                            <div style="display:inline-block; padding: 0 5px 0 10px;">
-                              -
-                            </div>
-                            <apex:outputText value="{!feature.descriptionFR}"/>
-                          </td>
-                          <td class="w35 right">
-                            <apex:outputText value="{!IF(feature.price != 0,' ${0, number, ###,###,###,##0.00}','Included')} ">
-                              <apex:param value="{!feature.price}"/>
-                          </apex:outputText>
-                          </td>
-                        </tr>
-                        <apex:variable value="{!rowCount+1}" var="rowCount" />
-                      </apex:repeat>
-                      </apex:outputPanel>
-                    </apex:repeat>
-                  </apex:outputPanel>
-              <tr class="subTotal">
-                <td colspan="2">
-                  Sous-Total
+          <!-- if the Trailer does not have a Serial Number, Display it down here -->
+          <apex:outputPanel layout="none" rendered="{!trailer.GMBLASERP__Serial_Number__c == null}">
+            <table class="itemsTable">
+              <tbody>
+              <tr class="{!IF(MOD(rowCount,2)=0,'even','odd')}">
+                <td class="w5">
+                  <apex:outputText value="{0, number, 0.00}">
+                    <apex:param value="{!trailer.AcctSeedERP__Quantity_per_Unit__c}" />
+                  </apex:outputText>
+                </td>
+                <td class="w60">
+                  <apex:outputText value="{!trailer.AcctSeedERP__Product__r.Name_FR__c}"/>
                 </td>
                 <td class="w35 right">
-                  <apex:outputText value="${0, number, ###,###,###,##0.00}">
-                    <apex:param value="{!OptionsAcc}"/>
+                  <apex:outputText value="{!IF(trailer.GMBLASERP__Total_Price__c != 0,' ${0, number, ###,###,###,##0.00}','Included')} ">
+                    <apex:param value="{!trailer.GMBLASERP__Total_Price__c}"/>
                   </apex:outputText>
                 </td>
               </tr>
               <apex:variable value="{!rowCount+1}" var="rowCount" />
+              <apex:variable value="{!OptionsAcc + trailer.GMBLASERP__Total_Price__c}" var="OptionsAcc" />
+              </tbody>
+            </table>
+          </apex:outputPanel>
+
+          <!-- If the Trolling Motor(s) don't have a Serial Number, display then down here -->
+          <apex:outputPanel layout="none" rendered="{!trollingMotors.size > 0}">
+            <table class="itemsTable">
+              <tbody>
+              <apex:repeat value="{!trollingMotors}" var="trollingMotor">
+                <apex:outputPanel layout="none" rendered="{!trollingMotor.GMBLASERP__Serial_Number__c == null}">
+                  <tr class="{!IF(MOD(rowCount,2)=0,'even','odd')}">
+                    <td class="w5">
+                      <apex:outputText value="{0, number, 0.00}">
+                        <apex:param value="{!trollingMotor.AcctSeedERP__Quantity_per_Unit__c}" />
+                      </apex:outputText>
+                    </td>
+                    <td class="w60">
+                      <apex:outputText value="{!trollingMotor.AcctSeedERP__Product__r.Name_FR__c}"/>
+                    </td>
+                    <td class="w35 right">
+                      <apex:outputText value="{!IF(trollingMotor.GMBLASERP__Total_Price__c != 0,' ${0, number, ###,###,###,##0.00}','Included')} ">
+                        <apex:param value="{!trollingMotor.GMBLASERP__Total_Price__c}"/>
+                      </apex:outputText>
+                    </td>
+                  </tr>
+                  <apex:variable value="{!rowCount+1}" var="rowCount" />
+                  <apex:variable value="{!OptionsAcc + trollingMotor.GMBLASERP__Total_Price__c}" var="OptionsAcc" />
+                </apex:outputPanel>
+              </apex:repeat>
+              </tbody>
+            </table>
+          </apex:outputPanel>
+
+          <!-- Now the rest of the Options -->
+          <table class="itemsTable">
+            <tbody>
+            <apex:repeat value="{!oppAccList}" var="oppAcc">
+              <tr class="{!IF(MOD(rowCount,2)=0,'even','odd')}">
+                <td class="w5">
+                  <apex:outputText value="{!oppAcc.quantity}"/>
+                </td>
+                <td class="w60">
+                  <apex:outputText value="{!oppAcc.descriptionFR}"/>
+                </td>
+                <td class="w35 right">
+                  <apex:outputText value="{!IF(oppAcc.price != 0,' ${0, number, ###,###,###,##0.00}','Included')} ">
+                    <apex:param value="{!oppAcc.price}"/>
+                  </apex:outputText>
+                </td>
+              </tr>
+              <apex:variable value="{!rowCount+1}" var="rowCount" />
+              <apex:variable value="{!OptionsAcc + oppAcc.price}" var="OptionsAcc" />
+              <apex:outputPanel layout="none" rendered="{!oppAcc.includedFeatures.size > 0}">
+                <apex:repeat value="{!oppAcc.includedFeatures}" var="feature">
+                  <tr class="{!IF(MOD(rowCount,2)=0,'even','odd')}">
+                    <td class="w5">
+
+                    </td>
+                    <td class="w60">
+                      <div style="display:inline-block; padding: 0 5px 0 10px;">
+                        -
+                      </div>
+                      <apex:outputText value="{!feature.descriptionFR}"/>
+                    </td>
+                    <td class="w35 right">
+                      <apex:outputText value="{!IF(feature.price != 0,' ${0, number, ###,###,###,##0.00}','Included')} ">
+                        <apex:param value="{!feature.price}"/>
+                      </apex:outputText>
+                    </td>
+                  </tr>
+                  <apex:variable value="{!rowCount+1}" var="rowCount" />
+                </apex:repeat>
+              </apex:outputPanel>
+            </apex:repeat>
+
+            <tr class="subTotal">
+              <td colspan="2">
+                Sous-Total
+              </td>
+              <td class="w35 right">
+                <apex:outputText value="${0, number, ###,###,###,##0.00}">
+                  <apex:param value="{!OptionsAcc}"/>
+                </apex:outputText>
+              </td>
+            </tr>
+            <apex:variable value="{!rowCount+1}" var="rowCount" />
             </tbody>
           </table>
         </apex:outputPanel><!-- /Additional Fees -->

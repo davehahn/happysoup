@@ -122,17 +122,51 @@ private class Customer_T
       (Customer.Person)JSON.deserialize(
         custJSON, Customer.Person.class
       );
+    Customer.AccountSaveResult result;
+    String errorMsg;
+    String expectedError = errorMsg = email + ' is already in use by a Customer by the name of ' + acct.FirstName + ' ' + acct.LastName;
     Test.startTest();
     try
     {
-      Customer.AccountSaveResult result = person.upsertRecord();
+      result = person.upsertRecord();
     }
     catch(Exception e)
     {
-      String errorMsg = email + ' is already in use by a Customer by the name of ' + acct.FirstName + ' ' + acct.LastName;
-      System.assertEquals( errorMsg, e.getMessage() );
+      errorMsg = e.getMessage();
     }
     Test.stopTest();
+
+    System.debug( result );
+    System.assert( result == null );
+    System.assert( errorMsg != null );
+    System.assertEquals( expectedError, errorMsg );
+  }
+
+  @IsTest
+  static void newAccount_DupPhone_Test()
+  {
+    acct.PersonEmail = null;
+    insert acct;
+    String custJSON = JSON.serialize( cust );
+    Customer.Person person =
+      (Customer.Person)JSON.deserialize(
+        custJSON, Customer.Person.class
+      );
+
+    Test.startTest();
+    Customer.AccountSaveResult result = person.upsertRecord();
+    Test.stopTest();
+
+    System.assertEquals( 'success', result.status );
+    System.assertEquals( cust.get('firstName'), result.record.FirstName );
+    System.assertEquals( cust.get('lastName'), result.record.LastName );
+    System.assertEquals( cust.get('email'), result.record.PersonEmail );
+    System.assertEquals( cust.get('phone'), result.record.Phone );
+    System.assertEquals( cust.get('street'), result.record.BillingStreet );
+    System.assertEquals( cust.get('city'), result.record.BillingCity );
+    System.assertEquals( cust.get('state'), result.record.BillingState );
+    System.assertEquals( cust.get('country'), result.record.BillingCountry );
+    System.assertEquals( cust.get('postalCode'), result.record.BillingPostalCode );
 
   }
 

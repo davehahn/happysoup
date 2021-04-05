@@ -1,0 +1,35 @@
+<!--
+ - Created by Tim on 2020-04-22.
+ -->
+
+<!-- Cust Comm Order Options -->
+<template>
+    <section class="options" data-has-title={hasOptionsTitle}>
+        <template if:true={hasOptionsTitle}>
+            <h4 class="options_title">
+                <template if:true={isEN}>{optionsTitleEn}</template>
+                <template if:true={isFR}>{optionsTitleFr}</template>
+            </h4>
+        </template>
+        <fieldset>
+            <ul class="options_list" data-layout-type={layoutType}>
+                <template for:each={availableOptions} for:item="option">
+                    <li key={option.name} class={optionClasses} data-page={page} data-parentpage={parentPage} data-parentsku={option.parentSku}>
+                        <c-cust-comm-order-checkbox
+                                product-options={option}
+                                option-page={page}
+                                option-parent-page={parentPage}
+                                option-show-upgrade-price={showOptionPrice}
+                                option-boat-retail={boatRetailPrice}
+                                option-trigger-ui-change={triggerUiChange}
+                                option-is-addon={addons}
+                                option-layout={layoutType}
+                                option-grouping-name={groupingName}
+                                onswatchchange={handleSwatchChange}>
+                        </c-cust-comm-order-checkbox>
+                    </li>
+                </template>
+            </ul>
+        </fieldset>
+    </section>
+</template>

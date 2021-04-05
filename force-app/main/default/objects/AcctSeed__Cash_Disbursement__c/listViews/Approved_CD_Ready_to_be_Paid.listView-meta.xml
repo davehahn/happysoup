@@ -6,11 +6,18 @@
     <columns>AcctSeed__Reference__c</columns>
     <columns>AcctSeed__Disbursement_Date__c</columns>
     <columns>AcctSeed__Amount__c</columns>
+    <columns>AcctSeed__Type__c</columns>
+    <columns>Vendor_Instructions__c</columns>
     <filterScope>Everything</filterScope>
     <filters>
         <field>Approval_Status__c</field>
         <operation>equals</operation>
         <value>Approved</value>
+    </filters>
+    <filters>
+        <field>AcctSeed__Payment_Status__c</field>
+        <operation>notEqual</operation>
+        <value>Void</value>
     </filters>
     <label>Approved CD Ready to be Paid</label>
 </ListView>
