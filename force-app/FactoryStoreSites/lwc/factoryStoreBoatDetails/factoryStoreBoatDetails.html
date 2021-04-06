@@ -5,8 +5,16 @@
 <!-- Factory Store Boat Details -->
 <template>
   <article>
-    <h3>{boat.name}</h3>
-    <p>{boat.retailPrice}</p>
-    <p>With {boat.standardMotor.name} and {boat.standardTrailer.name}</p>
+    <template if:true={boatDataLoaded}>
+      <h3>{boatName}</h3>
+      <p>{boat.retailPrice}</p>
+      <p>With {standardMotorName} and {standardTrailerName}</p>
+    </template>
+    <template if:true={boatDataLookupRunning}>
+      <p>Looking For Data.</p>
+    </template>
+    <template if:true={resultEmpty}>
+      <p>Result Empty.</p>
+    </template>
   </article>
 </template>

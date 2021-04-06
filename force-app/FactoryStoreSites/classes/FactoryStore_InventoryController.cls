@@ -18,13 +18,18 @@ public with sharing class FactoryStore_InventoryController {
         return boats;
     }
 
+//    @AuraEnabled(Cacheable=true)
+//    public static Boat fetchBoat( String boatId )
+//    {
+//        Boat b = new Boat( '01ti0000007ruGkAAI' , 'retail');
+//        return b;
+//    }
     @AuraEnabled(Cacheable=true)
-    public static OnlineBoat fetchBoat( String boatId )
+    public static LGND_APIv2_Product fetchBoat( String boatId )
     {
-        OnlineBoat b = new OnlineBoat(
-            Product_Selector.getOnlineBoat( boatId )
-        );
-        return b;
+        LGND_APIv2_Product api = new LGND_APIv2_Product( boatId, 'retail', 'Boat' );
+        //System.debug( api );
+        return api;
     }
 
     @AuraEnabled(Cacheable=true)

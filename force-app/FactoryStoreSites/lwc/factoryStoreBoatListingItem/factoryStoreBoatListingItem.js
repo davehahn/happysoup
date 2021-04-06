@@ -3,18 +3,40 @@
  */
 
 import { LightningElement, api, wire, track } from 'lwc';
+import { NavigationMixin } from 'lightning/navigation';
+import { stringy, stripParentheses, rewriteMotorName, rewriteTrailerName } from 'c/factoryStoreUtils';
 
-export default class FactoryStoreBoatListingItem extends LightningElement {
+export default class FactoryStoreBoatListingItem extends NavigationMixin(LightningElement) {
  @api boat;
 
- selectBoat( event ){
-		console.log('select boat:', event.currentTarget.dataset.recordId);
-		const selectedBoat = event.currentTarget.dataset.recordId;
-		console.log('selectedBoat', selectedBoat);
-		const selectBoatEvent = new CustomEvent('selectboat', {
-			bubbles: true,
-			detail: selectedBoat
-		});
-		this.dispatchEvent(selectBoatEvent);
+ @track boatName;
+
+ navToBoat( event ){
+		console.log(JSON.stringify(event.currentTarget.dataset));
+		console.log(event.currentTarget.nodeName);
+		console.log(event.target.nodeName);
+		let page = 'boat-model',
+				params = {
+					c__recordId: event.currentTarget.dataset.record
+    		};
+    this.navigateToCommunityPage( page, params );
+    event.preventDefault();
 	}
+
+	navigateToCommunityPage( pageName, params ){
+	  console.log( pageName );
+	  console.log( params );
+	  this[NavigationMixin.Navigate]({
+	  	type: 'comm__namedPage',
+	  	attributes: {
+	  		pageName: pageName
+    	},
+    	state: params
+   	});
+ 	}
+
+ 	renderedCallback(){
+ 	  this.boatName = stripParentheses(this.boat.Name);
+  }
+
 }

@@ -27,6 +27,7 @@ export default class FactoryStoreBoatListing extends NavigationMixin(LightningEl
 	{
 	 	if( data )
 	  {
+	    console.log(this.seriesName, data);
 	    this.boats = data;
    	}
    	else if ( error )

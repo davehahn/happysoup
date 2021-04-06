@@ -1,40 +1,40 @@
 public without sharing class LGND_APIv2_Product {
 
-  public String Id { get; set; }
-  public String Name { get; set; }
-  public String Description { get; set; }
-  public String DescriptionFR { get; set; }
-  public String Family { get; set; }
-  public String RecordTypeName { get; set; }
-  public Map<String, String> DefaultImages { get; set; }
-  public Decimal RetailPrice { get; set; }
-  public Decimal RetailSpecialPrice { get; set; }
-  public String RetailSpecialPriceDescription { get; set; }
-  public Decimal PartnerPrice { get; set; }
-  public Decimal PartnerSpecialPrice { get; set; }
-  public String PartnerSpecialPriceDescription { get; set; }
-  public Decimal FactoryPrice { get; set; }
-  public Decimal FactorySpecialPrice { get; set; }
-  public String FactorySpecialPriceDescription { get; set; }
-  public Static Decimal ParentRetailPrice { get; set; }
-  public String DefaultImage { get; set; }
-  public UpgradeProduct StandardMotor { get; set; }
-  public SampleRetailSale SampleRetailSale { get; set; }
-  public UpgradeProduct StandardTrailer { get; set; }
-  public UpgradeProduct StandardTrollingMotor { get; set; }
-  public Boolean ExcludePartnerStandardTrailer { get; set; }
-  public Boolean ExcludePartnerStandardTrollingMotor { get; set; }
-  public UpgradeProduct MaximumMotor { get; set; }
-  public Map<String, List<PartProduct>> OptionalProducts { get; set; }
-  public List<UpgradeProduct> MotorUpgrades { get; set; }
-  public List<UpgradeProduct> TrailerUpgrades { get; set; }
-  public List<UpgradeProduct> TrollingMotorUpgrades { get; set; }
-  public List<MarketingImage> MarketingImages { get; set; }
-  public Map<String, List<String>> Features { get; set; }
-  public Map<String, List<FeeProduct>> Fees { get; set; }
-  public PremiumPackage PremiumPackage { get; set; }
-  public Map<String, String> BoatSpecs { get; set; }
-  public String PricebookName { get; set; }
+  @AuraEnabled public String Id { get; set; }
+  @AuraEnabled public String Name { get; set; }
+  @AuraEnabled public String Description { get; set; }
+  @AuraEnabled public String DescriptionFR { get; set; }
+  @AuraEnabled public String Family { get; set; }
+  @AuraEnabled public String RecordTypeName { get; set; }
+  @AuraEnabled public Map<String, String> DefaultImages { get; set; }
+  @AuraEnabled public Decimal RetailPrice { get; set; }
+  @AuraEnabled public Decimal RetailSpecialPrice { get; set; }
+  @AuraEnabled public String RetailSpecialPriceDescription { get; set; }
+  @AuraEnabled public Decimal PartnerPrice { get; set; }
+  @AuraEnabled public Decimal PartnerSpecialPrice { get; set; }
+  @AuraEnabled public String PartnerSpecialPriceDescription { get; set; }
+  @AuraEnabled public Decimal FactoryPrice { get; set; }
+  @AuraEnabled public Decimal FactorySpecialPrice { get; set; }
+  @AuraEnabled public String FactorySpecialPriceDescription { get; set; }
+  @AuraEnabled public Static Decimal ParentRetailPrice { get; set; }
+  @AuraEnabled public String DefaultImage { get; set; }
+  @AuraEnabled public UpgradeProduct StandardMotor { get; set; }
+  @AuraEnabled public SampleRetailSale SampleRetailSale { get; set; }
+  @AuraEnabled public UpgradeProduct StandardTrailer { get; set; }
+  @AuraEnabled public UpgradeProduct StandardTrollingMotor { get; set; }
+  @AuraEnabled public Boolean ExcludePartnerStandardTrailer { get; set; }
+  @AuraEnabled public Boolean ExcludePartnerStandardTrollingMotor { get; set; }
+  @AuraEnabled public UpgradeProduct MaximumMotor { get; set; }
+  @AuraEnabled public Map<String, List<PartProduct>> OptionalProducts { get; set; }
+  @AuraEnabled public List<UpgradeProduct> MotorUpgrades { get; set; }
+  @AuraEnabled public List<UpgradeProduct> TrailerUpgrades { get; set; }
+  @AuraEnabled public List<UpgradeProduct> TrollingMotorUpgrades { get; set; }
+  @AuraEnabled public List<MarketingImage> MarketingImages { get; set; }
+  @AuraEnabled public Map<String, List<String>> Features { get; set; }
+  @AuraEnabled public Map<String, List<FeeProduct>> Fees { get; set; }
+  @AuraEnabled public PremiumPackage PremiumPackage { get; set; }
+  @AuraEnabled public Map<String, String> BoatSpecs { get; set; }
+  @AuraEnabled public String PricebookName { get; set; }
   static Map<Id, Product2> allProductOptions;
   static String retailPartnerFilter;
   static Id retailPricebookId;
@@ -552,7 +552,7 @@ public without sharing class LGND_APIv2_Product {
     return this;
   }
 
-  public static Map<String, List<PartProduct>> buildOptionalProducts(List<Product2> parts) {
+  @AuraEnabled public static Map<String, List<PartProduct>> buildOptionalProducts(List<Product2> parts) {
     if( parts.isEmpty() ){
       return null;
     }
@@ -687,25 +687,25 @@ public without sharing class LGND_APIv2_Product {
   /* -------------------- UpgradeProduct Class ------------------------ */
   public Class UpgradeProduct {
 
-    public String Id { get; set; }
-    public String Name { get; set; }
-    public String Family { get; set; }
-    public Boolean DisplayOnWeb { get; set; }
-    public String DefaultImage { get; set; }
-    public Decimal RetailPrice { get; set; }
-    public Decimal PartnerPrice { get; set; }
-    public Decimal FactoryPrice { get; set; }
-    public Decimal RetailSpecialPrice { get; set; }
-    public String RetailSpecialPriceDescription { get; set; }
-    public Decimal PartnerSpecialPrice { get; set; }
-    public String PartnerSpecialPriceDescription { get; set; }
-    public Decimal RetailUpgradeCost { get; set; }
-    public Decimal PartnerUpgradeCost { get; set; }
-    public Decimal FactoryUpgradeCost { get; set; }
-    public Decimal WeeklyUpgradeCost { get; set; }
+    @AuraEnabled public String Id { get; set; }
+    @AuraEnabled public String Name { get; set; }
+    @AuraEnabled public String Family { get; set; }
+    @AuraEnabled public Boolean DisplayOnWeb { get; set; }
+    @AuraEnabled public String DefaultImage { get; set; }
+    @AuraEnabled public Decimal RetailPrice { get; set; }
+    @AuraEnabled public Decimal PartnerPrice { get; set; }
+    @AuraEnabled public Decimal FactoryPrice { get; set; }
+    @AuraEnabled public Decimal RetailSpecialPrice { get; set; }
+    @AuraEnabled public String RetailSpecialPriceDescription { get; set; }
+    @AuraEnabled public Decimal PartnerSpecialPrice { get; set; }
+    @AuraEnabled public String PartnerSpecialPriceDescription { get; set; }
+    @AuraEnabled public Decimal RetailUpgradeCost { get; set; }
+    @AuraEnabled public Decimal PartnerUpgradeCost { get; set; }
+    @AuraEnabled public Decimal FactoryUpgradeCost { get; set; }
+    @AuraEnabled public Decimal WeeklyUpgradeCost { get; set; }
     /* other motor related detail fields */
-    public Map<String, List<PartProduct>> OptionalProducts { get; set; }
-    public Boolean availableForMercDiscount { get; set; }
+    @AuraEnabled public Map<String, List<PartProduct>> OptionalProducts { get; set; }
+    @AuraEnabled public Boolean availableForMercDiscount { get; set; }
 
     public UpgradeProduct(Product2 m, Boolean excludedStandard)
     {
@@ -837,12 +837,12 @@ public without sharing class LGND_APIv2_Product {
 
   /* -------------------- Premium Package ------------------------- */
   public Class PremiumPackage {
-    public String Id { get; set; }
-    public String Name { get; set; }
-    public Decimal RetailPrice { get; set; }
-    public Decimal PartnerPrice { get; set; }
-    public String DefaultImage { get; set; }
-    public Map<String, List<Feature>> Contents { get; set; }
+    @AuraEnabled public String Id { get; set; }
+    @AuraEnabled public String Name { get; set; }
+    @AuraEnabled public Decimal RetailPrice { get; set; }
+    @AuraEnabled public Decimal PartnerPrice { get; set; }
+    @AuraEnabled public String DefaultImage { get; set; }
+    @AuraEnabled public Map<String, List<Feature>> Contents { get; set; }
 
     public PremiumPackage(Product2 p) {
       this.Contents = new Map<String, List<Feature>>();
@@ -893,11 +893,11 @@ public without sharing class LGND_APIv2_Product {
   }
 
   public Class Feature {
-    public String Id { get; set; }
-    public String Name { get; set; }
-    public String Description { get; set; }
-    public String Description_FR { get; set; }
-    public Decimal Value { get; set; }
+    @AuraEnabled public String Id { get; set; }
+    @AuraEnabled public String Name { get; set; }
+    @AuraEnabled public String Description { get; set; }
+    @AuraEnabled public String Description_FR { get; set; }
+    @AuraEnabled public Decimal Value { get; set; }
 
     public Feature( Product_Feature_Map__c pfm )
     {
@@ -912,12 +912,12 @@ public without sharing class LGND_APIv2_Product {
   /* -------------------- FeeProduct Class ------------------------- */
   public Class FeeProduct {
 
-    public String Id { get; set; }
-    public String Name { get; set; }
-    public String Family { get; set; }
-    public Decimal RetailPrice { get; set; }
-    public Decimal PartnerPrice { get; set; }
-    public Decimal FactoryPrice { get; set; }
+    @AuraEnabled public String Id { get; set; }
+    @AuraEnabled public String Name { get; set; }
+    @AuraEnabled public String Family { get; set; }
+    @AuraEnabled public Decimal RetailPrice { get; set; }
+    @AuraEnabled public Decimal PartnerPrice { get; set; }
+    @AuraEnabled public Decimal FactoryPrice { get; set; }
     //public Map<String,Decimal> Prices { get; set; }
 
     public FeeProduct(Product2 p)
@@ -978,22 +978,22 @@ public without sharing class LGND_APIv2_Product {
   /* -------------------- PartProduct Class ------------------------ */
   public Class PartProduct {
 
-    public String Id { get; set; }
-    public String Name { get; set; }
-    public Boolean HasOptions { get; set; }
-    public Decimal RetailPrice { get; set; }
-    public Decimal PartnerPrice { get; set; }
-    public Decimal FactoryPrice { get; set; }
-    public Decimal FactorySpecialPrice { get; set; }
-    public String FactorySpecialPriceDescription { get; set; }
-    public Decimal RetailSpecialPrice { get; set; }
-    public String RetailSpecialPriceDescription { get; set; }
-    public Decimal PartnerSpecialPrice { get; set; }
-    public String PartnerSpecialPriceDescription { get; set; }
-    public String DefaultImage { get; set; }
-    public Integer QuantityStandard { get; set; }
-    public Integer MaximumQuantity { get; set; }
-    public Boolean DisplayOnWeb { get; set; }
+    @AuraEnabled public String Id { get; set; }
+    @AuraEnabled public String Name { get; set; }
+    @AuraEnabled public Boolean HasOptions { get; set; }
+    @AuraEnabled public Decimal RetailPrice { get; set; }
+    @AuraEnabled  Decimal PartnerPrice { get; set; }
+    @AuraEnabled public Decimal FactoryPrice { get; set; }
+    @AuraEnabled public Decimal FactorySpecialPrice { get; set; }
+    @AuraEnabled public String FactorySpecialPriceDescription { get; set; }
+    @AuraEnabled public Decimal RetailSpecialPrice { get; set; }
+    @AuraEnabled public String RetailSpecialPriceDescription { get; set; }
+    @AuraEnabled public Decimal PartnerSpecialPrice { get; set; }
+    @AuraEnabled public String PartnerSpecialPriceDescription { get; set; }
+    @AuraEnabled public String DefaultImage { get; set; }
+    @AuraEnabled public Integer QuantityStandard { get; set; }
+    @AuraEnabled public Integer MaximumQuantity { get; set; }
+    @AuraEnabled public Boolean DisplayOnWeb { get; set; }
 
 
     public PartProduct(Product2 p) {
@@ -1055,14 +1055,14 @@ public without sharing class LGND_APIv2_Product {
   }
 
   public Class MarketingImage {
-    public String Name { get; set; }
-    public String EngDescription { get; set; }
-    public String FrDescription { get; set; }
-    public String AWS_Url_200_high { get; set; }
-    public String AWS_Url_500x500 { get; set; }
-    public String AWS_Url_700_wide { get; set; }
-    public String AWS_Url_1280_wide { get; set; }
-    public String AWS_Url_fullsize { get; set; }
+    @AuraEnabled public String Name { get; set; }
+    @AuraEnabled public String EngDescription { get; set; }
+    @AuraEnabled public String FrDescription { get; set; }
+    @AuraEnabled public String AWS_Url_200_high { get; set; }
+    @AuraEnabled public String AWS_Url_500x500 { get; set; }
+    @AuraEnabled public String AWS_Url_700_wide { get; set; }
+    @AuraEnabled public String AWS_Url_1280_wide { get; set; }
+    @AuraEnabled public String AWS_Url_fullsize { get; set; }
 
     public MarketingImage(Legend_Gallery_Image_Map__c lgim)
     {
@@ -1079,19 +1079,19 @@ public without sharing class LGND_APIv2_Product {
   }
 
   public class SampleRetailSale {
-    public Decimal small_volume_discount { get; set; }
-    public Decimal medium_volume_discount { get; set; }
-    public Decimal large_volume_discount { get; set; }
-    public String motor_upgrade_name { get; set; }
-    public Decimal motor_upgrade_partner_cost { get; set ;}
-    public Decimal motor_upgrade_retail_cost { get; set ;}
-    public Decimal xlarge_volume_discount { get; set; }
-    public Decimal wow_volume_discount { get; set; }
-    public Decimal boat_show_discount { get; set; }
-    public Decimal mercury_engine_discount { get; set; }
-    public Decimal battery_cost { get; set; }
-    public Decimal prop_cost { get; set; }
-    public Map<String, Decimal> retail_factory_freight {
+    @AuraEnabled public Decimal small_volume_discount { get; set; }
+    @AuraEnabled  Decimal medium_volume_discount { get; set; }
+    @AuraEnabled public Decimal large_volume_discount { get; set; }
+    @AuraEnabled  public String motor_upgrade_name { get; set; }
+    @AuraEnabled public Decimal motor_upgrade_partner_cost { get; set ;}
+    @AuraEnabled public Decimal motor_upgrade_retail_cost { get; set ;}
+    @AuraEnabled public Decimal xlarge_volume_discount { get; set; }
+    @AuraEnabled public Decimal wow_volume_discount { get; set; }
+    @AuraEnabled public Decimal boat_show_discount { get; set; }
+    @AuraEnabled public Decimal mercury_engine_discount { get; set; }
+    @AuraEnabled public Decimal battery_cost { get; set; }
+    @AuraEnabled public Decimal prop_cost { get; set; }
+    @AuraEnabled public Map<String, Decimal> retail_factory_freight {
       get {
         if( retail_factory_freight == null )
         {
@@ -1246,13 +1246,13 @@ public without sharing class LGND_APIv2_Product {
   }
 
   public class ExampleProduct {
-    public String Name { get; set; }
-    public Decimal RetailPrice { get; set; }
-    public Decimal PartnerPrice { get; set; }
-    public Decimal RetailSpecialPrice { get; set; }
-    public String RetailSpecialPriceDescription { get; set; }
-    public Decimal PartnerSpecialPrice { get; set; }
-    public String PartnerSpecialPriceDescription { get; set; }
+    @AuraEnabled public String Name { get; set; }
+    @AuraEnabled public Decimal RetailPrice { get; set; }
+    @AuraEnabled public Decimal PartnerPrice { get; set; }
+    @AuraEnabled  Decimal RetailSpecialPrice { get; set; }
+    @AuraEnabled public String RetailSpecialPriceDescription { get; set; }
+    @AuraEnabled public Decimal PartnerSpecialPrice { get; set; }
+    @AuraEnabled public String PartnerSpecialPriceDescription { get; set; }
 
     public ExampleProduct(Product2 p) {
       this.Name = p.Name;
