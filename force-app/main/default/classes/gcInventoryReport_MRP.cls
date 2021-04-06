@@ -448,6 +448,66 @@ public with sharing class gcInventoryReport_MRP {
 			}
 		}
 
+		/// Including Partner Parts Order ERPs April-5-2021
+		Id idWholesaleWarehouse = gcConstants.idWarehouseWholesale;
+		Id idTransitWarehouse = GMBLASERP__Inventory_Settings__c.getOrgDefaults().GMBLASERP__Transit_Warehouse_Id__c;
+		Id idRTPartsERP = gcConstants.idRtPartnerPartsOrder;
+		if(idWholesaleWarehouse != pIdWarehouse) {
+			listAggRes.clear();
+			soql = 'SELECT AcctSeedERP__Project__c idProject, AcctSeedERP__Product__c idProduct, sum(AcctSeedERP__Quantity_Per_Unit__c) qty FROM AcctSeedERP__Material__c';
+			soql += ' WHERE AcctSeedERP__Product__c IN:setIdProduct';
+			soql += ' AND AcctSeedERP__Quantity_Per_Unit__c > 0';
+			soql += ' AND AcctSeedERP__Project__r.RecordTypeId =:idRTPartsERP AND AcctSeedERP__Project__r.Locked__c = false AND AcctSeedERP__Project__r.Stage__c NOT IN (\'Quoting\',\'Closed Lost\',\'Draft\',\'Pending Review\') AND No_WIP__c = false';
+			if (pIdWarehouse != null) {
+				soql += ' AND AcctSeedERP__Project__r.GMBLASERP__Warehouse__c =:idWholesaleWarehouse';
+				soql += ' AND AcctSeedERP__Project__r.AcctSeed__Account__r.Warehouse__c =:pIdWarehouse';
+			}
+			soql += ' GROUP BY AcctSeedERP__Project__c, AcctSeedERP__Product__c';
+			soql += ' HAVING sum(AcctSeedERP__Quantity_Per_Unit__c) > 0';
+
+			listAggRes.addAll(Database.query(soql));
+			for (sObject aggRes : listAggRes) {
+				Id idProject = (Id) aggRes.get('idProject');
+				Id idProduct = (Id) aggRes.get('idProduct');
+				if (!(mapProjectSetProducts.containsKey(idProject) && mapProjectSetProducts.get(idProject).contains(idProduct))) {
+					cube cube = mapCube.get(idProduct);
+					if (cube == null) cube = new cube();
+					Decimal qty = (Decimal) aggRes.get('qty');
+					cube.partnerPartsERP += qty;
+					mapCube.put(idProduct, cube);
+				}
+			}
+
+			listAggRes.clear();
+			soql = 'SELECT AcctSeedERP__Outbound_Inventory_Movement__r.Material__r.AcctSeedERP__Project__c idProject, GMBLASERP__Product__c idProduct, sum(AcctSeedERP__Quantity__c) qty FROM AcctSeedERP__Inbound_Inventory_Movement__c';
+			soql += ' WHERE GMBLASERP__Product__c IN:setIdProduct';
+			soql += ' AND AcctSeedERP__Quantity__c <> 0';
+			soql += ' AND GMBLASERP__Warehouse__c !=:idTransitWarehouse';
+			soql += ' AND AcctSeedERP__Outbound_Inventory_Movement__r.Material__c != null';
+			soql += ' AND AcctSeedERP__Outbound_Inventory_Movement__r.Material__r.AcctSeedERP__Project__r.Locked__c = false';
+			//soql += ' AND Material__r.AcctSeedERP__Project__c NOT IN:setIdRetailProjectToDiscard ';
+			soql += ' AND AcctSeedERP__Outbound_Inventory_Movement__r.Material__r.AcctSeedERP__Project__r.RecordTypeId =:idRTPartsERP AND AcctSeedERP__Outbound_Inventory_Movement__r.Material__r.AcctSeedERP__Project__r.Stage__c NOT IN (\'Quoting\',\'Closed Lost\',\'Draft\',\'Pending Review\')';
+			if (pIdWarehouse != null) {
+				soql += ' AND AcctSeedERP__Outbound_Inventory_Movement__r.AcctSeedERP__Project__r.GMBLASERP__Warehouse__c =:idWholesaleWarehouse';
+				soql += ' AND AcctSeedERP__Outbound_Inventory_Movement__r.AcctSeedERP__Project__r.AcctSeed__Account__r.Warehouse__c =:pIdWarehouse';
+			}
+			soql += ' GROUP BY AcctSeedERP__Outbound_Inventory_Movement__r.Material__r.AcctSeedERP__Project__c, GMBLASERP__Product__c';
+			soql += ' HAVING sum(AcctSeedERP__Quantity__c) > 0';
+			System.debug('query');
+			System.debug(soql);
+			listAggRes.addAll(Database.query(soql));
+			for (sObject aggRes : listAggRes) {
+				Id idProject = (Id) aggRes.get('idProject');
+				Id idProduct = (Id) aggRes.get('idProduct');
+				if (!(mapProjectSetProducts.containsKey(idProject) && mapProjectSetProducts.get(idProject).contains(idProduct))) {
+					cube cube = mapCube.get(idProduct);
+					if (cube == null) cube = new cube();
+					cube.partnerPartsERP -= (Decimal) aggRes.get('qty');
+					mapCube.put(idProduct, cube);
+				}
+			}
+		}
+
 		mapCube.remove(null);
 
 		return mapCube;
@@ -834,14 +894,15 @@ public with sharing class gcInventoryReport_MRP {
 				Decimal required = cube.specified - cube.consumed;
 				m.put('required',String.valueOf(required.setScale(6)));
 				m.put('purchasing',String.valueOf(cube.purchasing.setScale(6)));
-
+				Decimal partsERP = cube.partnerPartsERP.setScale(6);
+				m.put('unreceivedPartERP',String.valueOf(partsERP));
 				Decimal inventory = cube.rigged + cube.notrigged + cube.inventoryParts - required;
 				m.put('inventory', String.valueOf(inventory.setScale(6)));
 
 				Decimal inventory2 = cube.rigged + cube.notrigged + cube.currentInventoryFromCube - required;
 				m.put('inventory2', String.valueOf(inventory2.setScale(6)));
 
-				Decimal expected = inventory + cube.purchasing;
+				Decimal expected = inventory + cube.purchasing + partsERP;
 				m.put('expected', String.valueOf(expected.setScale(6)));
 				m.put('available', String.valueOf((expected - required).setScale(6)));
 
@@ -882,6 +943,7 @@ public with sharing class gcInventoryReport_MRP {
 		public Decimal inventoryParts;
 		public Decimal purchasing;
 		public Decimal specified;
+		public Decimal partnerPartsERP;
 		public Decimal consumed;
 
 		cube()
@@ -892,6 +954,7 @@ public with sharing class gcInventoryReport_MRP {
 			inventoryParts = 0;
 			purchasing = 0;
 			specified = 0;
+			partnerPartsERP = 0;
 			consumed = 0;
 		}
 
@@ -903,6 +966,7 @@ public with sharing class gcInventoryReport_MRP {
 			inventoryParts = 0;
 			purchasing = 0;
 			specified = 0;
+			partnerPartsERP = 0;
 			consumed = 0;
 			idProduct = pIdProduct;
 			idWarehouse = pIdWarehouse;
