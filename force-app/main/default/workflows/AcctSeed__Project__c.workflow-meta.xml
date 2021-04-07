@@ -544,10 +544,6 @@
             <type>user</type>
         </recipients>
         <recipients>
-            <recipient>ewhiteside@legendboats.com</recipient>
-            <type>user</type>
-        </recipients>
-        <recipients>
             <recipient>jmaltais@legendboats.com</recipient>
             <type>user</type>
         </recipients>
@@ -556,8 +552,8 @@
             <type>user</type>
         </recipients>
         <recipients>
-            <recipient>smckeown@legendboats.com</recipient>
-            <type>user</type>
+            <field>Salesperson__c</field>
+            <type>userLookup</type>
         </recipients>
         <senderType>CurrentUser</senderType>
         <template>Sales_Process/Retail_Boat_Pickup_Email_Template</template>
@@ -2254,26 +2250,6 @@
             <operation>equals</operation>
             <value>Legend Fixed Asset</value>
         </criteriaItems>
-        <triggerType>onCreateOnly</triggerType>
-    </rules>
-    <rules>
-        <fullName>New Internal SWO for Factory Stores</fullName>
-        <actions>
-            <name>New_Internal_Service_Work_Order_Was_Created</name>
-            <type>Task</type>
-        </actions>
-        <active>true</active>
-        <criteriaItems>
-            <field>AcctSeed__Project__c.Name</field>
-            <operation>contains</operation>
-            <value>Whitefish,Barrie,Montreal</value>
-        </criteriaItems>
-        <criteriaItems>
-            <field>AcctSeed__Project__c.RecordTypeId</field>
-            <operation>equals</operation>
-            <value>Legend Service Work Order</value>
-        </criteriaItems>
-        <description>Notifies Cherlynn on new Internal Service Work Orders</description>
         <triggerType>onCreateOnly</triggerType>
     </rules>
     <rules>
@@ -4813,18 +4789,6 @@ Please ensure this is done to the best of your abilities and let Marianne know w
         <protected>false</protected>
         <status>Open</status>
         <subject>New Internal Partner Boat sale</subject>
-    </tasks>
-    <tasks>
-        <fullName>New_Internal_Service_Work_Order_Was_Created</fullName>
-        <assignedTo>cmclean@legendboats.com</assignedTo>
-        <assignedToType>user</assignedToType>
-        <description>This Task is to notify you that a new Service ERP has been created against one of the Factory Stores.</description>
-        <dueDateOffset>0</dueDateOffset>
-        <notifyAssignee>false</notifyAssignee>
-        <priority>Normal</priority>
-        <protected>false</protected>
-        <status>Open</status>
-        <subject>New Internal Service Work Order Was Created</subject>
     </tasks>
     <tasks>
         <fullName>New_Partner_Parts_Order_for_your_Approval</fullName>
