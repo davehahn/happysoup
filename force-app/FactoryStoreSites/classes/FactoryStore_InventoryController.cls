@@ -41,4 +41,15 @@ public with sharing class FactoryStore_InventoryController {
         }
         return boats;
     }
+
+//    @AuraEnabled(Cacheable=true)
+//    public static List<Sobject> fetchStandardProducts(  productIds )
+//    {
+//        List<Sobject> standards = new List<SObject>();
+//        for( Product2 p : Product_Selector.allWithFullDetailsById( productIds )){
+//            standards.add( p );
+//        }
+//        return standards;
+//    }
+
 }

@@ -59,10 +59,42 @@ const rewriteTrailerName = (payload) => {
 	}
 }
 
+/*===================
+┌─┐┌─┐┬  ┌─┐┬ ┬┬  ┌─┐┌┬┐┌─┐  ┬ ┬┌─┐┌─┐┬┌─┬ ┬ ┬  ┌─┐┌─┐┬ ┬┌┬┐┌─┐┌┐┌┌┬┐
+│  ├─┤│  │  │ ││  ├─┤ │ ├┤   │││├┤ ├┤ ├┴┐│ └┬┘  ├─┘├─┤└┬┘│││├┤ │││ │
+└─┘┴ ┴┴─┘└─┘└─┘┴─┘┴ ┴ ┴ └─┘  └┴┘└─┘└─┘┴ ┴┴─┘┴   ┴  ┴ ┴ ┴ ┴ ┴└─┘┘└┘ ┴
+=====================*/
+const weeklyPayment = (price, lang = 'en') => {
+	let rate = 0;
+	let total_payments = 0;
+	if(price >= 23000){
+		rate = 0.0599 / 52;
+		total_payments = 1040;
+	} else if(price >= 10000){
+		rate = 0.0599 / 52;
+		total_payments = 780;
+	} else if(price >= 1000){
+		//This should actually be >= 5000, but I need to figure out what to do with those that would come back as $0, and it's better to have a value greater than zero that can be dismissed as 'it's like $X/month, but you can't finance this one' rather than have it show it could be $0/week
+		rate = 0.0799 / 52;
+		total_payments = 364;
+	}
+
+	let weekly = price * ( rate / ( 1 - Math.pow( ( 1 + rate ), - total_payments ) ) );
+			weekly = weekly.toFixed(0);
+	return (lang === 'en') ? '$' + weekly.toLocaleString('en-CA') : weekly.toLocaleString('en-FR') + ' $';
+}
+
+const formatPrice = (price, round = false, lang = 'en') => {
+	price = (round) ? price.toFixed(0) : price;
+	return (lang === 'en') ? '$' + price.toLocaleString('en-CA') : price.toLocaleString('en-FR') + ' $';
+}
+
 export {
 	getTestimonials,
 	stringy,
 	stripParentheses,
 	rewriteMotorName,
-	rewriteTrailerName
+	rewriteTrailerName,
+	weeklyPayment,
+	formatPrice
 }

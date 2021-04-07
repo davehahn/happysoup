@@ -1,3 +1,45 @@
 /**
  * Created by Tim on 2021-03-25.
  */
+
+.modelListing{
+  width: 100%;
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--zebraAccent);
+  margin-bottom: 1.25em;
+}
+
+.modelListing .modelListing__photo{
+  display: block;
+  width: 42%; height: 0; padding-bottom: 22%;
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-color: var(--zebra);
+}
+
+.modelListing .modelListing__vitals{
+  width: 30%;
+  margin: 2%;
+  border-right: 1px solid var(--zebraAccent);
+}
+
+.modelListing .modelListing__ctas{
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  margin-right: 2%;
+}
+
+.modelListing .modelListing__ctas button{
+  width: 100%;
+  background: 0 none;
+  border: 1px solid var(--zebraAccent);
+  margin-bottom: 1em;
+  transition: all 0.2s;
+}
+
+.modelListing .modelListing__ctas button:hover, .modelListing .modelListing__ctas button:focus{
+  background-color: var(--zebraAccent);
+}

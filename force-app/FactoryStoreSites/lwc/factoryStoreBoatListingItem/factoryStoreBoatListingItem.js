@@ -5,16 +5,18 @@
 import { LightningElement, api, wire, track } from 'lwc';
 import { NavigationMixin } from 'lightning/navigation';
 import { stringy, stripParentheses, rewriteMotorName, rewriteTrailerName } from 'c/factoryStoreUtils';
+import fetchStandardProducts from '@salesforce/apex/FactoryStore_InventoryController.fetchBoat';
 
 export default class FactoryStoreBoatListingItem extends NavigationMixin(LightningElement) {
  @api boat;
 
  @track boatName;
+ @track modelListingPhoto;
+ @track standardMotorId;
+ @track standardTrailerId;
+ @track standardTollingMotorId;
 
  navToBoat( event ){
-		console.log(JSON.stringify(event.currentTarget.dataset));
-		console.log(event.currentTarget.nodeName);
-		console.log(event.target.nodeName);
 		let page = 'boat-model',
 				params = {
 					c__recordId: event.currentTarget.dataset.record
@@ -24,8 +26,6 @@ export default class FactoryStoreBoatListingItem extends NavigationMixin(Lightni
 	}
 
 	navigateToCommunityPage( pageName, params ){
-	  console.log( pageName );
-	  console.log( params );
 	  this[NavigationMixin.Navigate]({
 	  	type: 'comm__namedPage',
 	  	attributes: {
@@ -35,8 +35,29 @@ export default class FactoryStoreBoatListingItem extends NavigationMixin(Lightni
    	});
  	}
 
+ 	quickQuote( event ){
+ 	  console.log('trigger quick quote');
+ 	  event.preventDefault();
+  }
+
+  showroomVisit( event ){
+    console.log('trigger showroom visit');
+    event.preventDefault();
+  }
+
  	renderedCallback(){
  	  this.boatName = stripParentheses(this.boat.Name);
+ 	  this.modelListingPhoto = 'background-image: url(' + this.boat.Default_Gallery_Image_Original__c + ')';
+// 	  this.standardMotorId = rewriteMotorName(this.boat.StandardMotor);
+//		this.standardTrailerId = rewriteTrailerName(this.boat.StandardTrailer);
+		this.standardMotorId = this.boat.Standard_Motor__c;
+		this.standardTrailerId = this.boat.Standard_Trailer__c;
   }
+
+//  get standardMotorName(){
+//    let productIds = [this.standardMotorId, this.standardTrailerId, this.standardTollingMotorId];
+//    let standardProducts = fetchStandardProducts(productIds);
+//    console.log(standardProducts);
+//  }
 
 }

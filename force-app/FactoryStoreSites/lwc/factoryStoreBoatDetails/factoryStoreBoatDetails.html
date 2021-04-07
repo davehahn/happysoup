@@ -4,11 +4,72 @@
 
 <!-- Factory Store Boat Details -->
 <template>
-  <article>
+  <article class="model maxWidth maxWidth--thin">
     <template if:true={boatDataLoaded}>
-      <h3>{boatName}</h3>
-      <p>{boat.retailPrice}</p>
-      <p>With {standardMotorName} and {standardTrailerName}</p>
+
+      <header class="model__intro">
+        <div class="intro__vitals">
+          <h3>{boatName}</h3>
+
+          <div class="vitals__priceBlock">
+            <strong class="priceBlock__weekly" aria-describedby="vitals_includes">
+              {weeklyPrice} <span>Per Week</span>
+            </strong>
+            <strong class="priceBlock__retail" aria-describedby="vitals_includes">
+              {retailPrice}<sup>*</sup>
+            </strong>
+            <em class="priceBlock__includes" id="vitals_includes">
+              <p>With {standardMotorName} {standardTrailerName}</p>
+            </em>
+          </div>
+          <small>*Ontario and Quebec All-In Pricing. <a href="#">Click here</a> for national pricing details.</small>
+        </div>
+        <span class="intro__photo" style={introPhoto}></span>
+      </header>
+
+      <section class="model__specs">
+        <h3>Specifications</h3>
+        <ul>
+          <template for:each={boatSpecs} for:item="spec">
+            <li key={spec.Name}>
+              <span>{spec.Name}</span> <strong>{spec.Value}</strong>
+            </li>
+          </template>
+        </ul>
+      </section>
+
+      <section class="model__motors">
+        <h3>Choose Your Power</h3>
+        <ul>
+          <template for:each={motorUpgrades} for:item="motor">
+            <li key={motor.Name}>
+              <span>{motor.Name}</span>
+              <strong>{motor.WeeklyUpgradeCost} Per Week</strong>
+              <strong>{motor.RetailUpgradeCost}</strong>
+            </li>
+          </template>
+        </ul>
+      </section>
+
+      <section class="model__motors">
+        <h3>Preferred Equipment Package</h3>
+        <ul>
+          <template for:each={premiumPackItems} for:item="item">
+            <li key={item.description} class="premiumPackage_item">
+              <strong class="premiumPackage_itemName">
+                <template if:true={isEN}>{item.description}</template>
+                <template if:true={isFR}>{item.description_fr}</template>
+              </strong>
+              <span class="premiumPackage_itemPrice">
+                <template if:true={isEN}>{item.valueFormatted}</template>
+                <template if:true={isFR}>{item.valueFormatted_fr}</template>
+              </span>
+              <small class="premiumPackage_checkmark"></small>
+            </li>
+          </template>
+        </ul>
+      </section>
+
     </template>
     <template if:true={boatDataLookupRunning}>
       <p>Looking For Data.</p>

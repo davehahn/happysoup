@@ -43,25 +43,4 @@ export default class FactoryStoreBoatListing extends NavigationMixin(LightningEl
  		return (series.toLowerCase().indexOf('series') !== -1) ? series : series + '-Series';
   }
 
- 	handleOpenBoat( event ){
- 	  console.log('handleOpenBoat');
-		console.log('recordId', event.detail);
-		fetchBoat({ boatId: event.detail })
-			.then((data) => {
-				console.log('returned boat', data);
-				this.boat = data;
-				this.showBoat = true;
-				this.showListing = false;
-			})
-			.catch((error) => {
-				console.log('error fetching boat', error);
-			});
-	}
-
-	closeBoat( event ){
-		this.showBoat = false;
-		this.showListing = true;
-		this.recordId = null;
-	}
-
 }

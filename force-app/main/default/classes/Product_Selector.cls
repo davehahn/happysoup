@@ -11,6 +11,18 @@ public with sharing class Product_Selector extends Application_Selector
     'Standard_Trolling_Motor__c'
   };
 
+  private static List<String> boatListingFields = new List<String>{
+    'Standard_Motor__c',
+    'Standard_Trailer__c',
+    'Standard_Trolling_Motor__c',
+    'Centerline_Length__c',
+    'Package_Length__c',
+    'Towing_Weight__c',
+    'Beam__c',
+    'Length__c',
+    'Series__c'
+  };
+
   public Product_Selector()
   {
     this.sObjectName = 'Product2';
@@ -63,7 +75,7 @@ public with sharing class Product_Selector extends Application_Selector
   {
     Product_Selector selector = new Product_Selector();
     selector
-            .addFields( boatFields )
+            .addFields( boatListingFields )
             .addWhere('Series__c = \'' + series + '\'')
             .addWhere('Model_Year_End__c = null', 'AND');
     return (List<Product2>)selector.query();
