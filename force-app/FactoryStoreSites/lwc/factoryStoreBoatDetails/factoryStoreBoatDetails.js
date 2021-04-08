@@ -182,4 +182,14 @@ export default class FactoryStoreBoatDetails extends NavigationMixin(LightningEl
 			return packItems;
 		}
 	}
+
+	get flagshipLink(){
+		let Family = (this.boat.Family === 'Pontoon') ? 'pontoon-boats' : ((this.boat.Family === 'Deck Boat') ? 'deck-boats' : 'fishing-boats');
+		let Series = (this.boat.Series.toLowerCase().indexOf('series') !== -1) ? this.boat.Series.toLowerCase() : this.boat.Series.toLowerCase() + '-series';
+		let Model = stripParentheses(this.boat.Name.toLowerCase());
+		let Year = this.boat.PricebookName.replace(' - Retail', '');
+
+		return 'https://www.legendboats.com/' + Family + '/' + Series + '/' + Model + '/' + Year + '/';
+ 	}
+
 }

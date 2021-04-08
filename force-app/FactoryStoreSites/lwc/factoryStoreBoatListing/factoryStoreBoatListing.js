@@ -9,7 +9,6 @@ import fetchBoats from '@salesforce/apex/FactoryStore_InventoryController.fetchB
 import fetchBoatsBySeries from '@salesforce/apex/FactoryStore_InventoryController.fetchBoatsBySeries';
 import fetchBoat from '@salesforce/apex/FactoryStore_InventoryController.fetchBoat';
 import { loadStyle, loadScript } from 'lightning/platformResourceLoader';
-import gothamFonts from '@salesforce/resourceUrl/GothamHTF';
 
 export default class FactoryStoreBoatListing extends NavigationMixin(LightningElement) {
 	@api seriesName;
@@ -43,4 +42,8 @@ export default class FactoryStoreBoatListing extends NavigationMixin(LightningEl
  		return (series.toLowerCase().indexOf('series') !== -1) ? series : series + '-Series';
   }
 
+  get seriesClass(){
+    let series = this.seriesName.toLowerCase();
+    return (series.indexOf('series') !== -1) ? series : series + '-series';
+  }
 }

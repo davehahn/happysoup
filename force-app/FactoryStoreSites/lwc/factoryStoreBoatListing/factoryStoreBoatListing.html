@@ -5,10 +5,10 @@
 <!-- Factory Store Boat Listing -->
 <template>
   <template if:true={showListing}>
-    <section class="maxWidth maxWidth--thin">
-      <h2>{fullSeriesName}</h2>
-      <p>{seriesBlurb}</p>
-      <ul onselectboat={handleOpenBoat}>
+    <section class="allModels maxWidth maxWidth--thin">
+      <h2 class="heading heading-special" data-series-class={seriesClass}>{fullSeriesName}</h2>
+      <p class="copy copy-standard">{seriesBlurb}</p>
+      <ul class="modelListing" onselectboat={handleOpenBoat}>
         <template for:each={boats} for:item="boat">
           <c-factory-store-boat-listing-item boat={boat} key={boat.Id}></c-factory-store-boat-listing-item>
         </template>

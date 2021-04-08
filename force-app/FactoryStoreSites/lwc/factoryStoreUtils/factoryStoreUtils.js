@@ -81,12 +81,39 @@ const weeklyPayment = (price, lang = 'en') => {
 
 	let weekly = price * ( rate / ( 1 - Math.pow( ( 1 + rate ), - total_payments ) ) );
 			weekly = weekly.toFixed(0);
-	return (lang === 'en') ? '$' + weekly.toLocaleString('en-CA') : weekly.toLocaleString('en-FR') + ' $';
+	let settings = {style: "currency", currency: 'CAD'};
+	if(lang === 'en'){
+  	  return new Intl.NumberFormat('en-CA', {
+      												style: 'currency',
+      												currency: 'CAD',
+      												minimumFractionDigits: 0
+      												}).format(weekly);
+   	} else {
+   		return new Intl.NumberFormat('fr-CA', {
+      												style: 'currency',
+      												currency: 'CAD',
+      												minimumFractionDigits: 0
+      												}).format(weekly);
+    }
 }
 
 const formatPrice = (price, round = false, lang = 'en') => {
 	price = (round) ? price.toFixed(0) : price;
-	return (lang === 'en') ? '$' + price.toLocaleString('en-CA') : price.toLocaleString('en-FR') + ' $';
+	let settings = {style: "currency", currency: 'CAD'};
+	if(lang === 'en'){
+	  return new Intl.NumberFormat('en-CA', {
+    												style: 'currency',
+    												currency: 'CAD',
+    												minimumFractionDigits: 0
+    												}).format(price);
+ 	} else {
+ 		return new Intl.NumberFormat('fr-CA', {
+    												style: 'currency',
+    												currency: 'CAD',
+    												minimumFractionDigits: 0
+    												}).format(price);
+  }
+
 }
 
 export {

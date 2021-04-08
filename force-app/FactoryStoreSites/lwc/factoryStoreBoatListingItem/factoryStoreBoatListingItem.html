@@ -8,27 +8,26 @@
     <article class="modelListing">
       <span class="modelListing__photo" style={modelListingPhoto}></span>
       <div class="modelListing__vitals">
-        <h3>{boatName}</h3>
+        <h3 class="heading heading-m">{boatName}</h3>
         <p>{boat.retailPrice}</p>
         <p>With {standardMotorId} and {standardTrailerId}</p>
 
-        <h4>Quick Specs:</h4>
-        <ul>
-          <li><span>Centerline Length:</span> <strong>{boat.Length__c}</strong></li>
-          <li><span>Package Length:</span> <strong>{boat.Package_Length__c}</strong></li>
-          <li><span>Towing Weight:</span> <strong>{boat.Towing_Weight__c}</strong></li>
-          <li><span>Beam:</span> <strong>{boat.Beam__c}</strong></li>
-        </ul>
+        <section class="modelListing__quickSpecs">
+          <h4 class="heading">Quick Specs</h4>
+          <ul>
+            <li><span>Centerline Length:</span> <strong>{boat.Length__c}</strong></li>
+            <li><span>Package Length:</span> <strong>{boat.Package_Length__c}</strong></li>
+            <li><span>Towing Weight:</span> <strong>{boat.Towing_Weight__c}</strong></li>
+            <li><span>Beam:</span> <strong>{boat.Beam__c}</strong></li>
+          </ul>
+        </section>
+
       </div>
       <div class="modelListing__ctas">
-        <button data-record={boat.Id} onclick={navToBoat}>View Model</button>
-        <button data-record={boat.Id} onclick={quickQuote}>Quick Quote</button>
-        <button data-record={boat.Id} onclick={showroomVisit}>Come See It!</button>
+        <button class="btn btn--primary" data-record={boat.Id} onclick={navToBoat}>View Model</button>
+        <button class="btn btn--primary" data-record={boat.Id} onclick={quickQuote}>Quick Quote</button>
+        <button class="btn btn--primary" data-record={boat.Id} onclick={showroomVisit}>Come See It!</button>
       </div>
     </article>
-
-
-
-
   </li>
 </template>

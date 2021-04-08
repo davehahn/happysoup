@@ -22,7 +22,26 @@
 .modelListing .modelListing__vitals{
   width: 30%;
   margin: 2%;
+  padding-right: 2%;
   border-right: 1px solid var(--zebraAccent);
+}
+
+.modelListing .modelListing__vitals .modelListing__quickSpecs{
+  margin-top: 1.5em;
+}
+.modelListing .modelListing__vitals .modelListing__quickSpecs .heading{
+  text-transform: uppercase;
+  font-size: 0.83em;
+}
+.modelListing .modelListing__vitals .modelListing__quickSpecs ul{
+  width: 100%;
+}
+.modelListing .modelListing__vitals .modelListing__quickSpecs ul li{
+  display: flex;
+  justify-content: space-between;
+}
+.modelListing .modelListing__vitals .modelListing__quickSpecs li strong{
+  font-weight: 600;
 }
 
 .modelListing .modelListing__ctas{
@@ -34,12 +53,6 @@
 
 .modelListing .modelListing__ctas button{
   width: 100%;
-  background: 0 none;
-  border: 1px solid var(--zebraAccent);
   margin-bottom: 1em;
-  transition: all 0.2s;
-}
-
-.modelListing .modelListing__ctas button:hover, .modelListing .modelListing__ctas button:focus{
-  background-color: var(--zebraAccent);
+  justify-content: center;
 }

@@ -15,6 +15,7 @@ public with sharing class Product_Selector extends Application_Selector
     'Standard_Motor__c',
     'Standard_Trailer__c',
     'Standard_Trolling_Motor__c',
+    'Model_Year_Start__c',
     'Centerline_Length__c',
     'Package_Length__c',
     'Towing_Weight__c',
@@ -77,7 +78,7 @@ public with sharing class Product_Selector extends Application_Selector
     selector
             .addFields( boatListingFields )
             .addWhere('Series__c = \'' + series + '\'')
-            .addWhere('Model_Year_End__c = null', 'AND');
+            .addWhere('Available_on_Factory_Store_Sites__c = true', 'AND');
     return (List<Product2>)selector.query();
   }
 }

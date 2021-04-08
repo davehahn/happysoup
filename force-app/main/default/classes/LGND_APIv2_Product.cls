@@ -5,6 +5,7 @@ public without sharing class LGND_APIv2_Product {
   @AuraEnabled public String Description { get; set; }
   @AuraEnabled public String DescriptionFR { get; set; }
   @AuraEnabled public String Family { get; set; }
+  @AuraEnabled public String Series { get; set; }
   @AuraEnabled public String RecordTypeName { get; set; }
   @AuraEnabled public Map<String, String> DefaultImages { get; set; }
   @AuraEnabled public Decimal RetailPrice { get; set; }
@@ -113,6 +114,7 @@ public without sharing class LGND_APIv2_Product {
       this.Id = prod.Id;
       this.Name = prod.Name;
       this.Family = prod.Family;
+      this.Series = prod.Series__c;
       this.Description = prod.Description;
       this.DescriptionFR = prod.Description_FR__c;
       this.DefaultImage = prod.Default_Gallery_Image__c;
@@ -139,6 +141,7 @@ public without sharing class LGND_APIv2_Product {
       String[] commonProductFields = new String[]{'Id',
                                                   'Name',
                                                   'Family',
+                                                  'Series__c',
                                                   'Description',
                                                   'Description_FR__c',
                                                   'RecordType.Name',
