@@ -101,9 +101,9 @@ public without sharing class gcSerialNumber{
 					[SELECT Id, Name,
 						(SELECT Id FROM Serial_Numbers__r),
 						(SELECT Id FROM GMBLASERP__Outbound_Inventory_Movements__r LIMIT 1),
-						(SELECT Id FROM GMBLASERP__Inbound_Inventory_Movements__r LIMIT 1),
+						(SELECT Id FROM GMBLASERP__Inbound_Inventory_Movements__r ORDER BY AcctSeedERP__Movement_Date__c DESC LIMIT 1),
 						(SELECT Id FROM GMBLASERP__Purchase_Order_Inventory_Movements__r LIMIT 1),
-						(SELECT Id FROM GMBLASERP__Manufacturing_Inventory_Movements__r LIMIT 1),
+						(SELECT Id FROM GMBLASERP__Manufacturing_Inventory_Movements__r ORDER BY AcctSeedERP__Movement_Date__c DESC LIMIT 1),
 						(SELECT Id, Name FROM GMBLASERP__Materials__r LIMIT 1),
 						(SELECT Id, Locked__c FROM Projects__r LIMIT 1)
 					FROM GMBLASERP__Serial_Number__c
@@ -129,6 +129,20 @@ public without sharing class gcSerialNumber{
 							|| x.Billing_Revenue_Used__c != oldMap.get(x.Id).Billing_Revenue_Used__c)){
 						x.addError('Internal Billing related fields cannot be modified manually.');
 					}
+					Date lastMoveOutDate = System.today();
+					if(sn.GMBLASERP__Manufacturing_Inventory_Movements__r.isEmpty())
+						lastMoveOutDate = sn.GMBLASERP__Manufacturing_Inventory_Movements__r[0].AcctSeedERP__Movement_Date__c;
+					if(sn.GMBLASERP__Outbound_Inventory_Movements__r.isEmpty()) {
+						Date lastOutDate = sn.GMBLASERP__Outbound_Inventory_Movements__r[0].AcctSeedERP__Movement_Date__c;
+						if(lastMoveOutDate == null || (lastMoveOutDate != null && lastMoveOutDate < lastOutDate)){
+							lastMoveOutDate = lastOutDate;
+						}
+					}
+
+					if(x.GMBLASERP__Inventory_Balance__c == null && x.GMBLASERP__Inventory_Balance__c != oldMap.get(x.Id).GMBLASERP__Inventory_Balance__c)
+						x.Inventory_Out_Date__c = Datetime.newInstance(lastMoveOutDate.year(),lastMoveOutDate.month(),lastMoveOutDate.day());
+					else if(x.GMBLASERP__Inventory_Balance__c != null)
+						x.Inventory_Out_Date__c = null;
 
 					if(x.Current_Unit_Cost__c != oldMap.get(x.Id).Current_Unit_Cost__c)
 						x.Current_Unit_Cost__c = oldMap.get(x.Id).Current_Unit_Cost__c;
