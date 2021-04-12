@@ -13,6 +13,7 @@
     <aura:attribute name="storeTools" type="Aura.Component[]"/>
     <aura:attribute name="storeLegal" type="Aura.Component[]"/>
     <aura:attribute name="storePolicyLinks" type="Aura.Component[]"/>
+    <aura:attribute name="channelMenu" type="Aura.Component[]"/>
 
     <header class="storeHeader">
         <div class="storeDetails">
@@ -43,6 +44,7 @@
             {!v.storeLegal}
             <c:factoryStoreFooterAllInPricing></c:factoryStoreFooterAllInPricing>
         </section>
+        {!v.channelMenu}
     </footer>
 
 </aura:component>

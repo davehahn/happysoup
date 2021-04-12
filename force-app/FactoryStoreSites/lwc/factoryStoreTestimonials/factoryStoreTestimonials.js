@@ -13,10 +13,4 @@ export default class FactoryStoreTestimonials extends LightningElement {
 		 this.testimonials = getTestimonials(this.numberToShow);
  	}
 
-
-	get parseTestimonials(){
-		console.log('test', stringy(this.testimonials));
-		return this.testimonials;
- 	}
-
 }

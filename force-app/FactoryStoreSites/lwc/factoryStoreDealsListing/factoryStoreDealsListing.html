@@ -1,0 +1,42 @@
+<!--
+ - Created by Tim on 2021-04-08.
+ -->
+
+<!-- Factory Store Deals Listing -->
+<template>
+  <h3 class="ro">Current Deals</h3>
+  <template if:true={showAsList}>
+    <ul class="deals maxWidth maxWidth--thin">
+      <template for:each={deals} for:item="deal">
+        <li key={deal.DealId} class="deal deal--list">
+          <article>
+            <h3 class="heading heading-s">{deal.data.DealName}: <span>{deal.data.StartDate} - {deal.data.EndDate}</span></h3>
+            <a href={deal.data.ButtonLink} tabindex="-1">
+              <img class="bannerImg" src={deal.data.BannerGraphic} />
+            </a>
+            <p class="copy copy-standard">{deal.data.Description}</p>
+            <a href={deal.data.ButtonLink} class="btn btn--primary">{deal.data.ButtonText}</a>
+          </article>
+        </li>
+      </template>
+    </ul>
+  </template>
+
+  <template if:true={showAsSlideshow}>
+    <div class="dealsSwiper" data-id="dealsSwiper" lwc:dom="manual"></div>
+
+<!--    <ul class="deals">-->
+<!--      <template for:each={deals} for:item="deal">-->
+<!--        <li key={deal.DealName} class="deal deal&#45;&#45;slide">-->
+<!--          <article>-->
+<!--            <h3 class="heading heading-s ro">{deal.DealName}: <span>{deal.StartDate} - {deal.EndDate}</span></h3>-->
+<!--            <a href={deal.ButtonLink}>-->
+<!--              <img class="bannerImg" src={deal.BannerGraphic} alt={deal.Description} />-->
+<!--            </a>-->
+<!--          </article>-->
+<!--        </li>-->
+<!--      </template>-->
+<!--    </ul>-->
+  </template>
+
+</template>
