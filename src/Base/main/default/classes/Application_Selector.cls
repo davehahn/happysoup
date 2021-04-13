@@ -50,14 +50,12 @@ public virtual class Application_Selector
 
   public Application_Selector addWhereIdIn( Set<Id> ids )
   {
-    System.debug(ids);
     Set<String> s_ids = (Set<String>)JSON.deserialize( JSON.serialize( ids ), Set<String>.class );
     return addWhere( whereInClauseBuilder('Id', s_ids ) );
   }
 
   public Application_Selector addWhereIdIn( List<Id> listIds )
   {
-    System.debug( listIds );
     return addWhereIdIn( new Set<Id>( listIds ) );
   }
 
@@ -178,7 +176,6 @@ public virtual class Application_Selector
     {
       queryString += ' ORDER BY ' + this.orderBy;
     }
-    //System.debug(queryString);
     return queryString;
   }
 

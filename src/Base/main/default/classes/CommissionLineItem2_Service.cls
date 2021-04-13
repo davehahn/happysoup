@@ -37,11 +37,12 @@ public with sharing class CommissionLineItem2_Service
 
     public void calculate( CommissionLineItem2__c cli )
     {
+      System.debug('RatesCostCalculator.calculator()');
       Decimal cost = 0;
       Decimal rate = partsRate;
       Boolean paymentBasedOnProfit = false;
       CommissionRecord2__c comRec = this.commissionRecord_map.get( cli.CommissionRecord2__c);
-
+      System.debug( comRec.Calculation_Method__c );
       if( cli.Product__c != null )
       {
         String factoryPB_Product_Key = String.valueOf(comRec.Factory_Pricebook__c);

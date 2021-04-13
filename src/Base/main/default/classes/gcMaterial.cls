@@ -11,6 +11,40 @@ global without sharing class gcMaterial{
 		}
 	}
 
+	global static Boolean disableTaskLockCheck {
+		get {
+			if( disableTaskLockCheck == null ) return false;
+			return disableTaskLockCheck;
+		}
+		set {
+			if(value == null) disableTaskLockCheck = false;
+			else disableTaskLockCheck = value;
+		}
+	}
+
+	global static Boolean disableCommission {
+		get {
+			if( disableCommission == null ) return false;
+			return disableCommission;
+		}
+		set {
+			if(value == null) disableCommission = false;
+			else disableCommission = value;
+		}
+	}
+
+	global static Boolean allowKitPartDelete{
+		get{
+			if(allowKitPartDelete == null) return false;
+			else return allowKitPartDelete;
+		}
+		set{
+			if(value == null) allowKitPartDelete = false;
+			else allowKitPartDelete = value;
+		}
+	}
+
+
 	global static Boolean allowPartUpdate{
 		get{
 			if(allowPartUpdate == null) return false;
@@ -89,9 +123,12 @@ global without sharing class gcMaterial{
 		{
 			if(boolIsInsert)
 			{
-				CommissionLineItem2_Service service = new CommissionLineItem2_Service();
-				service.addMaterials( newMap.keySet() );
-				service.saveRecords();
+				if( !disableCommission )
+				{
+					CommissionLineItem2_Service service = new CommissionLineItem2_Service();
+					service.addMaterials(newMap.keySet());
+					service.saveRecords();
+				}
 				insertKitParts(newMap.keySet());
 			}
 			if(boolIsUpdate)
@@ -226,7 +263,7 @@ global without sharing class gcMaterial{
 								oldTask = mapProjectTask.get(oldMap.get(matl.Id).AcctSeedERP__Project_Task__c);
 							if((project.Locked__c && !gcProject.disableLockedCheck) && boolIsInsert)
 								matl.addError('Cannot add material on a locked ERP Order.');
-							if(task != null && task.Locked__c && boolIsInsert)
+							if(task != null && task.Locked__c && !disableTaskLockCheck && boolIsInsert)
 								matl.addError('Cannot add material on a locked ERP Order Task.');
 							if(boolIsUpdate
 								&& ((project.Locked__c && !gcProject.disableLockedCheck)
@@ -354,11 +391,11 @@ global without sharing class gcMaterial{
                         AcctSeed__Project_Task__c task = mapProjectTask.get(matl.AcctSeedERP__Project_Task__c);
                         if(project.Locked__c && !gcProject.disableLockedCheck)
                         	matl.addError('Materials Cannot be deleted from a locked ERP Order.');
-                        if(task != null && task.Locked__c)
+                        if(task != null && task.Locked__c && !gcMaterial.disableTaskLockCheck)
                         	matl.addError('Materials Cannot be deleted from a locked ERP Order Task.');
                     }
 
-					if(matl.Material__c != null && !oldMap.containsKey(matl.Material__c))
+					if(matl.Material__c != null && !oldMap.containsKey(matl.Material__c) && !gcMaterial.allowKitPartDelete)
 						matl.addError('Kit Parts cannot be deleted directly. Deleting Kit would aumatically delete Kit Parts.');
 					/// Checking Old Serial for Internal to not allow untag
 					if(matl.GMBLASERP__Serial_Number__c != null){

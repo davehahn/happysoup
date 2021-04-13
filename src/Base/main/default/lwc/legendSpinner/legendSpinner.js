@@ -9,6 +9,7 @@ export default class LegendSpinner extends LightningElement {
   @api visible = false;
   @api variant;
   spinner = SPINNER;
+  busyMessage;
 
   connectedCallback()
   {
@@ -30,7 +31,7 @@ export default class LegendSpinner extends LightningElement {
 
   @api toggle()
   {
-    this.visible = !this.visible;
+    this.visible ? this.close() : this.open();
   }
 
   @api open()
@@ -41,6 +42,12 @@ export default class LegendSpinner extends LightningElement {
   @api close()
   {
     this.visible = false;
+    this.busyMessage = undefined;
+  }
+
+  @api setMessage( msg )
+  {
+    this.busyMessage = msg;
   }
 
 }
