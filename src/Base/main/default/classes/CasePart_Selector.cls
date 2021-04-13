@@ -17,6 +17,7 @@ public virtual class CasePart_Selector extends Application_Selector
     'Product__r.Name',
     'Product_Code__c',
     'Purchase_Order_Line__c',
+    'Purchase_Order_Line__r.deliverDate__c',
     'Quantity__c',
     'Total_Price__c',
     'Unit_Price__c'

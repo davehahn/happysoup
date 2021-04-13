@@ -112,23 +112,13 @@ public with sharing class CommissionRecord2_Selector extends Application_Selecto
     selector.addWhere('Project_Task__c = \'' + taskId + '\'')
       .addOrderBy('Project_Task__r.Name');
     return (List<CommissionRecord2__c>)selector.query();
-//    return [ SELECT
-//      Id,
-//      Factory_Pricebook__c,
-//      TaxProvince__c,
-//      Project__c,
-//      Project_Task__c,
-//      Project_Task__r.Name,
-//      Calculation_Method__c,
-//      Status__c,
-//      Approved_By__c,
-//      Approved_By__r.Name,
-//      ( SELECT Id,
-//        Owner__c
-//      FROM Commission_Payments__r )
-//    FROM CommissionRecord2__c
-//    WHERE Project_Task__c = :taskId
-//    ORDER BY Project_Task__r.Name ];
+  }
+
+  public static List<CommissionRecord2__c> allByProjectTaskIds( Set<Id> taskIds )
+  {
+    return new CommissionRecord2_Selector()
+      .addWhereIdInField( taskIds, 'Project_Task__c')
+      .query();
   }
 
   public static Map<Id, CommissionRecord2__c> mapOfAllById_IncludingProjectTask( Set<Id> crIds )

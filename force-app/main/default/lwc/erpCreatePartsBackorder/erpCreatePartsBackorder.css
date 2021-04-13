@@ -7,3 +7,56 @@
    display:block;
  }
 
+ .step-content {
+   max-height: 600px;
+   overflow-x: auto;
+ }
+
+ .kit-part-row td {
+   border:none;
+ }
+
+ .kit-part-row td:first-child {
+    padding-left: 3rem;
+  }
+
+  .kit-part-row td:first-child:before {
+    position: absolute;
+    content: '';
+    width: 1rem;
+    height: 1.75rem;
+    border: 1px solid #CCC;
+    border-top-color: transparent;
+    border-right-color: transparent;
+    left: 1.75rem;
+    top: -0.5rem;
+  }
+
+  tr.kit-part-row ~ tr.kit-part-row > td:first-child:before {
+    height: 3rem;
+    top: -1.75rem;
+  }
+
+  .step-one-table tr.kit-part-row:first-child td:first-child:before {
+    height:1.5rem;
+  }
+
+  .case-select-btn {
+    --sds-c-button-text-color: initial;
+    --sds-c-button-neutral-color-background-active: transparent;
+    --sds-c-button-neutral-color-border-active: transparent;
+    --sds-c-button-neutral-color-background-hover: transparent;
+    --sds-c-button-shadow-focus: none;
+    --sds-c-button-neutral-spacing-inline-end: 0.4rem;
+  }
+
+  .case-select-btn[data-selected="true"] {
+    --sds-c-button-text-color: green;
+    --sds-c-button-text-color-active: green;
+    --sds-c-button-text-color-hover: green;
+    --sds-c-button-neutral-color-background-active: transparent;
+    --sds-c-button-neutral-color-border-active: transparent;
+    --sds-c-button-neutral-color-border-hover: transparent;
+    --sds-c-button-neutral-spacing-inline-end: initial;
+  }
+

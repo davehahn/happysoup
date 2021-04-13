@@ -141,6 +141,14 @@ public without sharing class Project_Selector Extends Application_Selector
     return selector.query();
   }
 
+  public static List<AcctSeed__Project__c> allByIdsWithTasks( Set<Id> ids )
+  {
+    return new Project_Selector()
+      .addChildQuery( new ProjectTask_Selector() )
+      .addWhereIdIn( ids )
+      .query();
+  }
+
   public static Map<Id, AcctSeed__Project__c> mapAllById(Set<Id> ids)
   {
     return new Map<Id, AcctSeed__Project__c>([

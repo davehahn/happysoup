@@ -37,7 +37,8 @@ public with sharing class Product_Selector extends Application_Selector
       'RecordType.Name',
       'ProductCode',
       'Description',
-      'Default_Gallery_Image_Original__c'
+      'Default_Gallery_Image_Original__c',
+      'Rigging_Time__c'
     };
   }
 
@@ -52,13 +53,9 @@ public with sharing class Product_Selector extends Application_Selector
 
   public static List<Product2> allWithFullDetailsById( Set<Id> productIds )
   {
-    Product_Selector selector = new Product_Selector();
-    selector
-      .addWhere( whereInClauseBuilder(
-      'Id',
-       productIds
-    ));
-    return (List<Product2>)selector.query();
+    return new Product_Selector()
+      .addWhereIdIn( productIds )
+      .query();
   }
 
   public static Product2 getOnlineBoat( String recordId )

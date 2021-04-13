@@ -70,6 +70,7 @@ public without sharing class CommissionLineItem2_TriggerHandler extends TriggerH
 
   private static void determineCostAndCommissionRate( List<CommissionLineItem2__c> listNew )
   {
+    System.debug( 'determineCostAndCommissionRate');
     CommissionLineItem2_Service.RateCostCalculator rateCalculator =
       new CommissionLineItem2_Service.RateCostCalculator( listNew );
 
@@ -102,6 +103,8 @@ public without sharing class CommissionLineItem2_TriggerHandler extends TriggerH
       }
       else
       {
+        System.debug('COMMISSION LINE RATE');
+        System.debug(cli.Commission_Rate__c );
         cli.Payment_Amount__c = cli.Sale_Price__c * cli.Quantity__c * cli.Commission_Rate__c;
         cli.Actual_Amount_for_Commission__c = cli.Sale_Price__c * cli.Quantity__c;
       }
