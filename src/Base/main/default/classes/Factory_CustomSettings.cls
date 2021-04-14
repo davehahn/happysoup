@@ -72,6 +72,16 @@ public class Factory_CustomSettings {
       {
         ups.Partner_Warranty_Labour__c = p.Id;
       }
+      if( p.Family == 'Maintenance Package' &&
+          p.Name == 'Back Ordered Parts - Credit' )
+      {
+        ups.Back_Order_Credit__c = p.Id;
+      }
+      if( p.Family == 'Maintenance Package' &&
+        p.Name == 'Back Ordered Parts - Prepaid' )
+      {
+        ups.Back_Order_Prepaid__c = p.Id;
+      }
     }
     insert ups;
 

@@ -66,4 +66,20 @@ public class Factory_Case {
     );
   }
 
+  public static Case createPartsRequestCase(
+    Id erpId,
+    Id acctId,
+    List<AcctSeedERP__Material__c> materials
+  )
+  {
+    Case result = new Case(
+      ERP_Order__c = erpId,
+      AccountId = acctId,
+      RecordTypeId = new Application_RecordType().getCaseRecordTypes().getPartOrderRequestId()
+    );
+    insert result;
+    Factory_CasePart.create( result.Id, materials);
+    return result;
+  }
+
 }
