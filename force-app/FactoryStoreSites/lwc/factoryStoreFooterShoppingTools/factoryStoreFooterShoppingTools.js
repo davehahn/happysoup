@@ -18,4 +18,5 @@ export default class FactoryStoreShoppingTools extends LightningElement {
 	calendarIcon = `${FactoryStoreGlobals + '/img/calendar.svg'}#calendarIcon`;
 	contractIcon = `${FactoryStoreGlobals + '/img/contract.svg'}#contractIcon`;
 	downloadIcon = `${FactoryStoreGlobals + '/img/download.svg'}#downloadIcon`;
+	pinIcon = `${FactoryStoreGlobals + '/img/pin.svg'}#pinIcon`;
 }

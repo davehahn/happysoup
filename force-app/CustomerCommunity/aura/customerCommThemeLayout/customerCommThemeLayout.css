@@ -1,0 +1,123 @@
+.THIS {
+  font-family: 'gotham_htf', Montserrat, Lato, Helvetica, Arial, sans-serif;
+	font-weight: 300;
+	position: relative;
+}
+.THIS [data-region-name="content"]{
+  width: 95%;
+  max-width: 1300px;
+  margin: 2vw auto;
+}
+
+.THIS.storeHeader{
+  z-index: 100;
+  background-color: var(--highlight);
+  display: flex;
+	align-items: center;
+	justify-content: space-between;
+	max-width: 1640px;
+	margin: 0 auto;
+	padding: 0 2.5em;
+}
+.THIS.storeMain, .THIS.storeFooter{
+  z-index: 1;
+}
+
+.THIS .mainNavigation{
+    width: 100%;
+}
+.THIS .storeLogoIcon{
+    background-image: t('url(' + brandLogoImage + ')');
+		background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: block;
+    text-indent: -99999px;
+    width: 170px;
+		height: 26px;
+		flex-shrink: 0;
+		transition: none;
+}
+.THIS .storeLogoIcon:hover, .THIS .storeLogoIcon:focus{
+  text-decoration: none;
+}
+
+.THIS .locationAndHours{
+  width: 190px;
+  flex-shrink: 0;
+  margin-left: 1em;
+}
+
+.THIS .phoneNumbers{
+  width: 100%;
+}
+
+.THIS.searchRegion{
+  width: 100%;
+  background-image: url('/sfsites/c/resource/FactoryStoreGlobals/img/support-banner-desktop.jpg');
+	background-size: cover;
+	background-position: center;
+	background-repeat: no-repeat;
+	padding: 10vw 0;
+	position: relative;
+}
+.THIS.searchRegion::before{
+  content: '';
+  display: block;
+  width: 100%; height: 100%;
+  position: absolute;
+  top: 0; right: 0; bottom: 0; left: 0;
+  background-color: rgba(0, 0, 0, 0.25);
+  z-index: 1;
+}
+.THIS.searchRegion .forceCommunityGlobalSearchInput{
+  max-width: 500px;
+  margin: 0 auto;
+  background-color: rgba(255, 255, 255, 0.95);
+  border-radius: 100vh;
+  position: relative;
+  z-index: 2;
+}
+.THIS .forceSearchInputDesktop .contentWrapper{
+  border-radius: 100vh!important;
+}
+
+.THIS .langSelector{
+  width: 120px;
+  flex-shrink: 0;
+}
+.THIS .langSelector .forceCommunityLanguageSelector43 input.slds-input {
+  background: transparent;
+  color: #FFF!important;
+  border: 0 none;
+  cursor: pointer;
+}
+.THIS .langSelector .forceCommunityLanguageSelector43 svg{
+  fill: #FFF;
+}
+.THIS .langSelector .slds-dropdown_fluid, .THIS .langSelector .slds-dropdown--fluid{
+  min-width: 0!important;
+}
+.THIS .langSelector .forceCommunityLanguageSelector43 .slds-icon-utility-check svg{
+  fill: #333!important;
+}
+
+.THIS .contactUs{
+  background-color: var(--zebra);
+  padding: 2.5em;
+	text-align: center;
+}
+
+.THIS .contactSupportButton{
+  margin-top: 0.5em!important;
+}
+
+.THIS .footerLegal{
+	max-width: 1300px;
+	margin: 0 auto;
+	padding: 2.5em;
+	font-family: 'gotham_htf', Montserrat, Lato, Helvetica, Arial, sans-serif;
+	font-weight: 300;
+	font-size: 0.825em;
+	line-height: 1.35;
+}

@@ -1,0 +1,59 @@
+<aura:component implements="forceCommunity:themeLayout" access="global">
+    <ltng:require styles="{!join(',',
+        $Resource.GothamHTF + '/fonts.css',
+        $Resource.Idlewild + '/fonts.css',
+        $Resource.FactoryStoreGlobals + '/css/layout.css',
+        $Resource.FactoryStoreGlobals + '/css/headings.css',
+        $Resource.FactoryStoreGlobals + '/css/colours.css',
+        $Resource.FactoryStoreGlobals + '/css/buttons.css'
+    )}"/>
+    <aura:attribute name="search" type="Aura.Component[]"/>
+    <aura:attribute name="langSelector" type="Aura.Component[]"/>
+    <aura:attribute name="storePhoneNumbers" type="Aura.Component[]"/>
+    <aura:attribute name="storeNavigation" type="Aura.Component[]"/>
+    <aura:attribute name="storeTools" type="Aura.Component[]"/>
+    <aura:attribute name="storeLegal" type="Aura.Component[]"/>
+    <aura:attribute name="storePolicyLinks" type="Aura.Component[]"/>
+    <aura:attribute name="channelMenu" type="Aura.Component[]"/>
+    <aura:attribute name="contactUs" type="Aura.Component[]"/>
+
+    <header class="storeHeader">
+        <h1 class="storeLogo">
+            <a href="/suppport/s/" class="storeLogoIcon">Legend Boats</a>
+        </h1>
+
+        <nav class="mainNavigation">
+            <c:factoryStoreMainNavigation ></c:factoryStoreMainNavigation>
+        </nav>
+
+        <div class="langSelector">
+            {!v.langSelector}
+        </div>
+    </header>
+
+    <div class="searchRegion">
+        {!v.search}
+    </div>
+
+	  <article class="storeMain">
+    	  {!v.body}
+    </article>
+    <footer class="storeFooter">
+        <section class="contactUs">
+            <h3 class="heading heading-m maxWidth maxWidth--thin">Can't find what you're looking for?</h3>
+            <p class="copy copy-standard maxWidth maxWidth--thin">
+                If you can't find what you're looking for in our support resources, contact customer support directly.
+            </p>
+            {!v.contactUs}
+        </section>
+
+        {!v.storeTools}
+        <section class="footerLegal">
+            {!v.storePolicyLinks}
+            <c:factoryStoreFooterCopyright></c:factoryStoreFooterCopyright>
+            {!v.storeLegal}
+        </section>
+        {!v.channelMenu}
+    </footer>
+
+</aura:component>
