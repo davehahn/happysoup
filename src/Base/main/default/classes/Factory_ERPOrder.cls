@@ -193,7 +193,10 @@ public class Factory_ERPOrder {
     erp.Delivery_Date__c = deliveryDate;
     erp.Pickup_Location__c = findPickupLocationFromWarehouse( warehouse.Name );
     insert erp;
-    AcctSeed__Project_Task__c task = buildProjectTask( erp.Id, 'Boat Sale' );
+//    AcctSeed__Project_Task__c task = buildProjectTask( erp.Id, 'Boat Sale' );
+//    task.Commission_Calculation_Method__c = 'Gross Margin';
+//    task.Is_Retail_Boat_Sale__c = true;
+    AcctSeed__Project_Task__c task = Factory_ERPOrderTask.buildRetailSaleTask( erp.Id );
     insert task;
     AcctSeedERP__Material__c mat = buildMaterial( erp.Id, task.Id, boatSerial.GMBLASERP__Product__c);
     mat.GMBLASERP__Serial_Number__c = boatSerial.Id;
@@ -346,37 +349,39 @@ public class Factory_ERPOrder {
     return Factory_ERPOrderTask.buildProjectTask( erpId, taskName );
   }
 
-  public static AcctSeedERP__Material__c[] buildMaterials( Id erpId,
-                                                          Id taskId,
-                                                          Product2[] products )
+  public static AcctSeedERP__Material__c[] buildMaterials(
+    Id erpId,
+    Id taskId,
+    Product2[] products )
   {
-    AcctSeedERP__Material__c[] result = new List<AcctSeedERP__Material__c>();
-    for( Product2 p : products )
-    {
-      result.add( buildMaterial( erpId, taskID, p.Id ) );
-    }
-    return result;
-  }
-
-  public static AcctSeedERP__Material__c buildMaterial( Id erpId, Id taskId, Id prodId )
-  {
-    return new AcctSeedERP__Material__c(
-      AcctSeedERP__Product__c = prodId,
-      AcctSeedERP__Quantity_Per_Unit__c = 1,
-      AcctSeedERP__Project__c = erpId,
-      AcctSeedERP__Project_Task__c = taskId,
-      GMBLASERP__Unit_Price__c = 10.00
+    return Factory_Material.buildMaterials(
+      erpId,
+      taskId,
+      products
     );
   }
 
-  public static AcctSeedERP__Material__c buildMaterial( Id erpId, Id taskId, PricebookEntry pbe )
+  public static AcctSeedERP__Material__c buildMaterial(
+    Id erpId,
+    Id taskId,
+    Id prodId )
   {
-    return new AcctSeedERP__Material__c(
-      AcctSeedERP__Product__c = pbe.Product2Id,
-      AcctSeedERP__Quantity_Per_Unit__c = 1,
-      AcctSeedERP__Project__c = erpId,
-      AcctSeedERP__Project_Task__c = taskId,
-      GMBLASERP__Unit_Price__c = pbe.UnitPrice
+    return Factory_Material.buildMaterial(
+      erpId,
+      taskId,
+      prodId
+    );
+  }
+
+  public static AcctSeedERP__Material__c buildMaterial(
+    Id erpId,
+    Id taskId,
+    PricebookEntry pbe )
+  {
+    return Factory_Material.buildMaterial(
+      erpId,
+      taskId,
+      pbe
     );
   }
 

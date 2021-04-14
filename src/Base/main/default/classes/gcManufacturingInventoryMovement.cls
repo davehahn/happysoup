@@ -87,8 +87,8 @@ global without sharing class gcManufacturingInventoryMovement {
 	{
 		/// This is only used in Dev Org
 		if(boolIsBefore && (boolIsInsert || boolIsUpdate)){
-			for(AcctSeedERP__Manufacturing_Inventory_Movement__c move :listNew)
-				move.AcctSeedERP__Ledger__c = 'a121g000001929wAAA';
+//			for(AcctSeedERP__Manufacturing_Inventory_Movement__c move :listNew)
+//				move.AcctSeedERP__Ledger__c = 'a121g000001929wAAA';
 
 		}
 	}

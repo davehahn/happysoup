@@ -36,7 +36,7 @@ export default class ErpCreatePartsBackorder extends LightningElement {
   _prepaidProductId;
   _erpCopyFields = [
     'AcctSeed__Account__c',
-    'GMBLASERP_Warehouse__c',
+    'GMBLASERP__Warehouse__c',
     'GL_Account_Variable_1__c',
     'GL_Account_Variable_2__c',
     'GL_Account_Variable_3__c'

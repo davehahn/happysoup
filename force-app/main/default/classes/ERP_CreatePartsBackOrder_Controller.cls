@@ -129,6 +129,8 @@ public with sharing class ERP_CreatePartsBackOrder_Controller
     Set<Id> productIds = new Set<Id>();
     for( AcctSeedERP__Material__c mat : materials )
     {
+      System.debug( mat.AcctSeedERP__Product__r.Name);
+      System.debug( mat.AcctSeedERP__Project_Task__c);
       productIds.add( mat.AcctSeedERP__Product__c );
       if( !materialsByTaskId.containsKey( mat.AcctSeedERP__Project_Task__c ) )
       {
@@ -139,7 +141,6 @@ public with sharing class ERP_CreatePartsBackOrder_Controller
       }
       materialsByTaskId.get( mat.AcctSeedERP__Project_Task__c ).add( mat );
     }
-
     Map<Id, CommissionRecord2__c> comRecordIdByTaskId = new Map<Id, CommissionRecord2__c>();
     for( CommissionRecord2__c cr : CommissionRecord2_Selector.allByProjectTaskIds( materialsByTaskId.keySet() ) )
     {
@@ -158,9 +159,14 @@ public with sharing class ERP_CreatePartsBackOrder_Controller
       Decimal labour = 0;
       for( AcctSeedERP__Material__c mat : materialsByTaskId.get( taskId ) )
       {
-        Decimal riggingTime = pricebookEntryByProductId.get( mat.AcctSeedERP__Product__c ).Product2.Rigging_Time__c;
+        Decimal riggingTime;
+        if( pricebookEntryByProductId.containsKey( mat.AcctSeedERP__Product__c) )
+        {
+          riggingTime = pricebookEntryByProductId.get(mat.AcctSeedERP__Product__c).Product2.Rigging_Time__c;
+          cost += pricebookEntryByProductId.get(mat.AcctSeedERP__Product__c).UnitPrice * mat.AcctSeedERP__Quantity_Per_Unit__c;
+        }
         sale += mat.GMBLASERP__Unit_Price__c * mat.AcctSeedERP__Quantity_Per_Unit__c;
-        cost += pricebookEntryByProductId.get( mat.AcctSeedERP__Product__c ).UnitPrice * mat.AcctSeedERP__Quantity_Per_Unit__c;
+
         labour += riggingTime == null ? 0 : riggingTime;
       }
       Decimal rate = comRecordIdByTaskId.get( taskId ).Calculation_Method__c == 'Gross Margin' ?
