@@ -89,6 +89,19 @@ public with sharing class ProjectTask_Service
     );
   }
 
+  public static AcctSeed__Project_Task__c buildBackOrderTask(
+    String taskName,
+    String cause
+  )
+  {
+    return new AcctSeed__Project_Task__c(
+      Cause_dh__c = cause,
+      Name = taskName,
+      DisplayOnCustomerInvoice__c = true,
+      Locked__c = true
+    );
+  }
+
   public static Map<String, AcctSeed__Project_Task__c> insertDefaultTasks(
     AcctSeed__Project__c project
   )

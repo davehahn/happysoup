@@ -142,6 +142,19 @@ public without sharing class Project_Selector Extends Application_Selector
     return selector.query();
   }
 
+  public static List<AcctSeed__Project__c> allByIdWithMaterialsById(
+    Set<Id> erpIds,
+    Set<Id> matIds
+  )
+  {
+    Material_Selector mSelector = new Material_Selector();
+    mSelector.addWhereIdIn( matIds );
+    return new Project_Selector()
+      .addChildQuery( mSelector )
+      .addWhereIdIn( erpIds )
+      .query();
+  }
+
   public static List<AcctSeed__Project__c> allByIdsWithTasks( Set<Id> ids )
   {
     return new Project_Selector()

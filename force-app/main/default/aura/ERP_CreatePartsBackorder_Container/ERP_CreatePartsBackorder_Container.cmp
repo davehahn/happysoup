@@ -42,6 +42,7 @@
                                  aura:id="backOrderCreator"
                                  currentStep="{!v.currentStep.value}"
                                  oninitialized="{!c.handleInit}"
+                                 onbackordercreatesuccess="{!c.handleCreateSuccess}"
                                  oncancel="{!c.handleCancel}"/>
     </div>
     <footer class="slds-modal__footer  slds-grid slds-grid_align-spread">
