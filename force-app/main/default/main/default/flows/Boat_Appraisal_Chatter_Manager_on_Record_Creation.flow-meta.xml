@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionCalls>
+        <name>Chatter_Manager_of_new_Appraisal</name>
+        <label>Chatter Manager of new Appraisal</label>
+        <locationX>50</locationX>
+        <locationY>431</locationY>
+        <actionName>chatterPost</actionName>
+        <actionType>chatterPost</actionType>
+        <inputParameters>
+            <name>text</name>
+            <value>
+                <elementReference>ChatterBodyPost</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>subjectNameOrId</name>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </inputParameters>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </actionCalls>
+    <apiVersion>51.0</apiVersion>
+    <decisions>
+        <name>Validate_Manager</name>
+        <label>Validate Manager</label>
+        <locationX>182</locationX>
+        <locationY>311</locationY>
+        <defaultConnectorLabel>Else</defaultConnectorLabel>
+        <rules>
+            <name>Valid</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Owner:User.Manager.IsActive</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Chatter_Manager_of_new_Appraisal</targetReference>
+            </connector>
+            <label>Valid</label>
+        </rules>
+    </decisions>
+    <description>Chatters the users Manager when a Boat Appraisal is created.</description>
+    <interviewLabel>Boat Appraisal: Chatter Manager on Record Creation {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Boat Appraisal: Chatter Manager on Record Creation</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <start>
+        <locationX>56</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Validate_Manager</targetReference>
+        </connector>
+        <object>Boat_Appraisal__c</object>
+        <recordTriggerType>Create</recordTriggerType>
+        <triggerType>RecordAfterSave</triggerType>
+    </start>
+    <status>Active</status>
+    <textTemplates>
+        <name>ChatterBodyPost</name>
+        <isViewedAsPlainText>true</isViewedAsPlainText>
+        <text>@[{!$Record.Owner:User.Manager.Id}] This following appraisal has been completed.</text>
+    </textTemplates>
+</Flow>
