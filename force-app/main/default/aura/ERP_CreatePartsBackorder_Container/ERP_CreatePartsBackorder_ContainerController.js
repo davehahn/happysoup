@@ -28,6 +28,13 @@
     $A.get('e.force:closeQuickAction').fire();
   },
 
+  handleCreateSuccess: function( component, event, helper )
+  {
+    const spinner = component.find('spinner');
+    spinner.setMessage('Updating Original Order');
+    console.log('Aura create Success');
+  },
+
   handleNext: function( component, event, helper )
   {
     let currentStep = component.get('v.currentStep');
@@ -37,13 +44,13 @@
     {
       spinner.setMessage('Checking for Parts Request Cases');
     }
-    if( currentStep.value === 3 )
-    {
-      spinner.setMessage('Creating Back Order ERP');
-    }
+//    if( currentStep.value === 3 )
+//    {
+//      spinner.setMessage('Creating Back Order ERP');
+//    }
     if( currentStep.value === 4 )
     {
-      spinner.setMessage('Updating Original ERP');
+      spinner.setMessage('Creating Back Order ERP');
     }
     spinner.toggle();
     const steps = component.get('v.steps');

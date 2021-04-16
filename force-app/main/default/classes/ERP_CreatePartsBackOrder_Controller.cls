@@ -69,6 +69,35 @@ public with sharing class ERP_CreatePartsBackOrder_Controller
   }
 
   @AuraEnabled
+  public static Map<String, Object> buildBackOrderERP(
+    Id originalErpId,
+    String transferredQuantityByMaterialId,
+    String taskCause
+  )
+  {
+    Map<Id,Decimal> quantityMap = (Map<Id,Decimal>)JSON.deserialize(
+      transferredQuantityByMaterialId,
+      Map<Id,Decimal>.class
+    );
+    Map<String, Object> result = new Map<String, Object>();
+    AcctSeed__Project__c originalERP = Project_Selector.allByIdWithMaterialsById(
+      new Set<Id>{ originalErpId },
+      quantityMap.keySet()
+    )[0];
+
+    result.put('erp', Project_Service.buildBackOrder( originalERP ) );
+    result.put('task', ProjectTask_Service.buildBackOrderTask(
+      originalERP.RecordType.Name + ' - Back Order',
+      taskCause
+    ));
+    result.put('materials', Material_Service.buildForBackOrder(
+      originalERP.AcctSeedERP__Project_Materials__r,
+      quantityMap
+    ));
+    return result;
+  }
+
+  @AuraEnabled
   public static Map<String, Object> createBackOrderERP(
     AcctSeed__Project__c erp,
     AcctSeed__Project_Task__c task,
@@ -76,9 +105,6 @@ public with sharing class ERP_CreatePartsBackOrder_Controller
     List<Id> caseIds
   )
   {
-    Id rtId = new Application_RecordType().getERPOrderRecordTypes().getServiceWorkOrderId();
-    erp.RecordTypeId = rtId;
-    erp.Name = 'BackOrder';
     insert erp;
 
     task.AcctSeed__Project__c = erp.Id;
@@ -89,7 +115,10 @@ public with sharing class ERP_CreatePartsBackOrder_Controller
       mat.AcctSeedERP__Project__c = erp.Id;
       mat.AcctSeedERP__Project_Task__c = task.Id;
     }
+    Boolean origState = gcMaterial.disableTaskLockCheck;
+    gcMaterial.disableTaskLockCheck = true;
     insert materials;
+    gcMaterial.disableTaskLockCheck = origState;
 
     if( caseIds.size() > 0 )
     {

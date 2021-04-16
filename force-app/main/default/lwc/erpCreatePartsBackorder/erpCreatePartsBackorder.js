@@ -6,6 +6,7 @@ import { LightningElement, api, wire, track } from 'lwc';
 import { gen8DigitId, reduceErrors } from 'c/utils';
 import fetchMaterials from '@salesforce/apex/ERP_CreatePartsBackOrder_Controller.fetchMaterials';
 import findCases from '@salesforce/apex/ERP_CreatePartsBackOrder_Controller.findPartsRequestCases';
+import buildRecords from '@salesforce/apex/ERP_CreatePartsBackOrder_Controller.buildBackOrderERP';
 import createRecords from '@salesforce/apex/ERP_CreatePartsBackOrder_Controller.createBackOrderERP';
 import buildCommissionLines from '@salesforce/apex/ERP_CreatePartsBackOrder_Controller.buildCommissionLines';
 import updateOriginalSale from '@salesforce/apex/ERP_CreatePartsBackOrder_Controller.updateOriginalSale';
@@ -133,7 +134,7 @@ export default class ErpCreatePartsBackorder extends LightningElement {
           }, [] );
           return Promise.resolve(2);
         }
-        return this.buildNewERP()
+        return this.buildNewERP();
       })
       .then( (step) => {
         resolve(step);
@@ -147,85 +148,36 @@ export default class ErpCreatePartsBackorder extends LightningElement {
   @api buildNewERP()
   {
     return new Promise( (resolve, reject) => {
-      this._erpCopyFields.forEach( field => {
-        this.newERP[ field ] = this.retailERP[field]
+      let materialMap = new Object();
+      this.transferredMaterials.forEach( mat => {
+        materialMap[ mat.Id ] = mat.quantityTransferred;
       });
-      this.newERP.Stage__c = 'Pending Diagnostic';
-      this.newERP.Job_Status__c = 'Boat Required';
-      this.newERP.Original_ERP__c = this.retailERP.Id;
-      console.log( this.newERP );
-
-      this.newTask = {
-        Cause_dh__c: this.taskCause,
-        Name: this.retailERP.RecordType.Name + ' - Back Order',
-        DisplayOnCustomerInvoice__c: true
+      console.log( materialMap );
+      let params = {
+        originalErpId: this.retailERP.Id,
+        transferredQuantityByMaterialId: JSON.stringify( materialMap ),
+        taskCause: this.taskCause
       };
-      console.log( this.newTask );
-      let totalCost = 0;
-      this.newMaterials = this.transferredMaterials.reduce( ( newMaterials, material ) => {
-        if( material.quantityTransferred > 0 )
-        {
-          newMaterials.push({
-            Id: gen8DigitId(),
-            AcctSeedERP__Product__c: material.AcctSeedERP__Product__c,
-            AcctSeedERP__Quantity_Per_Unit__c: material.quantityTransferred,
-            GMBLASERP__Unit_Price__c: material.GMBLASERP__Unit_Price__c,
-            GMBLASERP__Price_Override__c: material.GMBLASERP__Price_Override__c,
-            AcctSeedERP__Comment__c: material.AcctSeedERP__Comment__c,
-            AcctSeedERP__Product__r: {
-              Name: material.AcctSeedERP__Product__r.Name
-            }
-          });
-          totalCost += material.GMBLASERP__Unit_Price__c * material.quantityTransferred;
-        }
-        return newMaterials;
-      }, [] );
-      this.newMaterials.push({
-        Id: gen8DigitId(),
-        AcctSeedERP__Product__c: this._creditProductId,
-        AcctSeedERP__Quantity_Per_Unit__c: 1,
-        GMBLASERP__Unit_Price__c: -1 * totalCost,
-        GMBLASERP__Price_Override__c: true,
-        AcctSeedERP__Comment__c: 'Back Order Credit',
-        AcctSeedERP__Product__r: {
-          Name: 'Back Order Credit'
-        },
-      })
-      console.log( this.newMaterials );
-      if( this.partsCases )
-      {
-        this.selectedCases = this.partsCases.filter( pc => pc.isSelected );
-      }
-      console.log( this.selectedCases );
-      resolve(3);
-    });
-  }
-
-  @api createBackOrderRecords()
-  {
-    return new Promise( (resolve, reject) => {
-//      setTimeout( () => {
-//          resolve();
-//      }, 1000 );
-      let mats = this.newMaterials.reduce( (result, material) => {
-        const { AcctSeedERP__Product__r, Id, ...m } = material;
-        result.push( m );
-        return result;
-       }, [] );
-      let caseIds = this.selectedCases.map( c => c.Id );
-      createRecords( {
-        erp: this.newERP,
-        task: this.newTask,
-        materials: mats,
-        caseIds: caseIds
-      })
+      buildRecords( params )
       .then( result => {
         console.log( JSON.parse(JSON.stringify(result)) );
-        resolve();
+        this.newERP = result.erp;
+        this.newTask = result.task;
+        this.newMaterials = result.materials.reduce( (acc, mat) => {
+          mat.Id = gen8DigitId();
+          mat.lineTotal = mat.GMBLASERP__Unit_Price__c * mat.AcctSeedERP__Quantity_Per_Unit__c;
+          acc.push( mat );
+          return acc;
+        }, []);
+        if( this.partsCases )
+        {
+          this.selectedCases = this.partsCases.filter( pc => pc.isSelected );
+        }
+        resolve(3);
       })
       .catch( error => {
-        reject( error );
-      })
+        reject( reduceErrors( error ).join(', ') );
+      });
     });
   }
 
@@ -243,7 +195,49 @@ export default class ErpCreatePartsBackorder extends LightningElement {
     }
   }
 
-  @api updateOriginalOrder()
+  @api saveAllChanges()
+  {
+    return this.createBackOrderRecords()
+    .then( result => {
+      console.log( JSON.parse(JSON.stringify(result)));
+      console.log('lwc create success');
+      this.dispatchEvent(new CustomEvent('backordercreatesuccess') );
+      return this.updateOriginalOrder();
+    })
+    .catch( error => {
+      return Promise.reject( error );
+    })
+  }
+
+  createBackOrderRecords()
+    {
+      return new Promise( (resolve, reject) => {
+  //      setTimeout( () => {
+  //          resolve();
+  //      }, 1000 );
+        let mats = this.newMaterials.reduce( (result, material) => {
+          const { Id, lineTotal, ...m } = material;
+          result.push( m );
+          return result;
+         }, [] );
+        let caseIds = this.selectedCases.map( c => c.Id );
+        createRecords( {
+          erp: this.newERP,
+          task: this.newTask,
+          materials: mats,
+          caseIds: caseIds
+        })
+        .then( result => {
+          console.log( JSON.parse(JSON.stringify(result)) );
+          resolve(result);
+        })
+        .catch( error => {
+          reject( error );
+        })
+      });
+    }
+
+  updateOriginalOrder()
   {
     return new Promise( (resolve, reject) => {
       let params = {};

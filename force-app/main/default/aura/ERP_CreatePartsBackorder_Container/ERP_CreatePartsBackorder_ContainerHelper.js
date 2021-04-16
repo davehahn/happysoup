@@ -15,14 +15,14 @@
       case 2:
         return cmp.buildNewERP();
       case 3:
-        return cmp.createBackOrderRecords()
-        .then(
-          $A.getCallback( function() {
+//        return cmp.createBackOrderRecords()
+//        .then(
+//          $A.getCallback( function() {
             return cmp.initializeChangesToOriginalOrder();
-          })
-        );
+//          })
+//        );
       case 4:
-        return cmp.updateOriginalOrder();
+        return cmp.saveAllChanges();
       default:
         return Promise.resolve();
     }

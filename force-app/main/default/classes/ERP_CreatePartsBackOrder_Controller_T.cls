@@ -10,6 +10,7 @@ private class ERP_CreatePartsBackOrder_Controller_T
   private static AcctSeed__Project_Task__c erpTask;
   private static  List<AcctSeedERP__Material__c> materials;
   private static List<Id> materialIds;
+  private static CommissionRecord2__c commRec;
 
   @testSetup static void dataSetup()
   {
@@ -31,6 +32,10 @@ private class ERP_CreatePartsBackOrder_Controller_T
       DateTime.now().addDays(20),
       ser
     );
+    retailSale.GL_Account_Variable_1__c = gcConstants.idGlv1Whitefish;
+    retailSale.GL_Account_Variable_2__c = gcConstants.idGlv2Sales;
+    retailSale.GL_Account_Variable_3__c = gcConstants.idGlv3Ontario;
+    update retailSale;
     AcctSeed__Project_Task__c retailTask = [
       SELECT
         Id
@@ -55,6 +60,7 @@ private class ERP_CreatePartsBackOrder_Controller_T
       SELECT
         Id,
         AcctSeed__Account__c,
+        AcctSeed__Account__r.Name,
         GMBLASERP__Warehouse__c,
         GL_Account_Variable_1__c,
         GL_Account_Variable_2__c,
@@ -73,7 +79,8 @@ private class ERP_CreatePartsBackOrder_Controller_T
           GMBLASERP__Unit_Price__c,
           GMBLASERP__Price_Override__c,
           AcctSeedERP__Comment__c
-      FROM AcctSeedERP__Project_Materials__r )
+      FROM AcctSeedERP__Project_Materials__r
+      WHERE AcctSeedERP__Product__r.RecordTypeId = :new Application_RecordType().getProductRecordTypes().getPartId() )
       FROM
         AcctSeed__Project__c
       LIMIT 1][0];
@@ -85,7 +92,7 @@ private class ERP_CreatePartsBackOrder_Controller_T
       materials.add( mat );
       materialIds.add( mat.Id );
     }
-    CommissionRecord2__c commRec = new CommissionRecord2__c(
+    commRec = new CommissionRecord2__c(
       Project_Task__c = erpTask.Id,
       Calculation_Method__c = erpTask.Commission_Calculation_Method__c
     );
@@ -126,7 +133,7 @@ private class ERP_CreatePartsBackOrder_Controller_T
   static void findPartsRequestCases_OneCase_Test()
   {
     initErpData();
-    Case c = Factory_Case.createPartsRequestCase(
+    Factory_Case.createPartsRequestCase(
       erp.Id,
       erp.AcctSeed__Account__c,
       materials
@@ -183,10 +190,41 @@ private class ERP_CreatePartsBackOrder_Controller_T
   }
 
   @IsTest
+  static void buildBackOrderERP_Test()
+  {
+    initErpData();
+    Test.startTest();
+    Map<Id, Decimal> quantityMap = new Map<Id, Decimal>();
+    for( AcctSeedERP__Material__c mat : materials )
+    {
+      quantityMap.put( mat.Id, mat.AcctSeedERP__Quantity_Per_Unit__c );
+    }
+    Map<String, Object> result = ERP_CreatePartsBackOrder_Controller.buildBackOrderERP(
+      erp.Id,
+      JSON.serialize( quantityMap ),
+      '\'This a Back Order Task from Unit Test\''
+    );
+    Test.stopTest();
+    AcctSeed__Project__c resultERP = (AcctSeed__Project__c)result.get('erp');
+    AcctSeed__Project_Task__c resultTask = (AcctSeed__Project_Task__c)result.get('task');
+    List<AcctSeedERP__Material__c> resultMaterials =
+      (List<AcctSeedERP__Material__c>)result.get('materials');
+
+    System.assert( result != null );
+    System.assertEquals( erp.Id, resultERP.Original_ERP__c );
+    System.assert( resultERP.Name.contains( erp.AcctSeed__Account__r.Name ) );
+    System.assert( resultTask.Name.contains( erp.RecordType.Name ) );
+    System.assertEquals( true, resultTask.Locked__c );
+    System.assertEquals( (materials.size() + 1), resultMaterials.size() );
+  }
+
+  @IsTest
   static void createBackOrderERP_Test()
   {
     initErpData();
     AcctSeed__Project__c newErp = new AcctSeed__Project__c(
+      RecordTypeId = new Application_RecordType().getERPOrderRecordTypes().getServiceWorkOrderId(),
+      Name = erp.AcctSeed__Account__r.Name + '-Back Order',
       AcctSeed__Account__c = erp.AcctSeed__Account__c,
       GMBLASERP__Warehouse__c = erp.GMBLASERP__Warehouse__c,
       GL_Account_Variable_1__c = erp.GL_Account_Variable_1__c,
@@ -199,7 +237,8 @@ private class ERP_CreatePartsBackOrder_Controller_T
     AcctSeed__Project_Task__c newTask = new AcctSeed__Project_Task__c(
       Cause_dh__c = 'This a Back Order Task from Unit Test',
       Name = erp.RecordType.Name + ' - Back Order',
-      DisplayOnCustomerInvoice__c = true
+      DisplayOnCustomerInvoice__c = true,
+      Locked__c = true
     );
     List<AcctSeedERP__Material__c> newMats = new List<AcctSeedERP__Material__c>();
     Decimal total = 0;
@@ -240,10 +279,11 @@ private class ERP_CreatePartsBackOrder_Controller_T
     List<AcctSeedERP__Material__c> resultMaterials =
       (List<AcctSeedERP__Material__c>)result.get('materials');
 
-    System.debug( resultERP );
     System.assert( result != null );
     System.assertEquals( erp.Id, resultERP.Original_ERP__c );
+    System.assert( resultERP.Name.contains( erp.AcctSeed__Account__r.Name ) );
     System.assert( resultTask.Name.contains( erp.RecordType.Name ) );
+    System.assertEquals( true, resultTask.Locked__c );
     System.assertEquals( (materials.size() + 1), resultMaterials.size() );
   }
 
@@ -264,6 +304,59 @@ private class ERP_CreatePartsBackOrder_Controller_T
     System.assertEquals( 1, result.size() );
     System.assertEquals( totalSale, result[0].Sale_Price__c );
     System.assertEquals( CommissionLineItem2_Service.grossMarginRate, result[0].Commission_Rate__c );
+  }
+
+  @IsTest
+  static void updateOriginalSale_Test()
+  {
+    initErpData();
+    Decimal totalSale = 0;
+    List<Id> deleteMatIds = new List<Id>();
+    for( AcctSeedERP__Material__c mat : materials )
+    {
+      deleteMatIds.add( mat.Id );
+      totalSale += mat.GMBLASERP__Unit_Price__c * mat.AcctSeedERP__Quantity_Per_Unit__c;
+    }
+    List<AcctSeedERP__Material__c> newMats = new List<AcctSeedERP__Material__c>();
+    newMats.add( new AcctSeedERP__Material__c(
+      AcctSeedERP__Product__c = Utility_Products__c.getOrgDefaults().Back_Order_Prepaid__c,
+      AcctSeedERP__Project__c = erp.Id,
+      AcctSeedERP__Project_Task__c = erpTask.Id,
+      AcctSeedERP__Quantity_Per_Unit__c = 1,
+      GMBLASERP__Unit_Price__c = totalSale,
+      GMBLASERP__Price_Override__c = true,
+      AcctSeedERP__Comment__c = 'Prepaid Back Ordered Items'
+    ));
+    List<CommissionLineItem2__c> commLines = new List<CommissionLineItem2__c>();
+    commLines.add( new CommissionLineItem2__c(
+      Comment__c = 'Parts Back Order Entry',
+      CommissionRecord2__c = commRec.Id,
+      Cost__c = 0,
+      Sale_Price__c = totalSale,
+      Description__c = 'Parts Back Order Entry',
+      Labour_Cost__c = 0,
+      Quantity__c = 1,
+      Commission_Rate__c = CommissionLineItem2_Service.grossMarginRate
+    ));
+
+    Test.startTest();
+    ERP_CreatePartsBackOrder_Controller.updateOriginalSale(
+      deleteMatIds,
+      newMats,
+      commLines
+    );
+    Test.stopTest();
+
+    List<AcctSeedERP__Material__c> mats = [
+      SELECT
+        Id,
+        AcctSeedERP__Product__r.Name
+      FROM AcctSeedERP__Material__c
+      WHERE AcctSeedERP__Project__c = :erp.Id
+    ];
+    //one for the boat, one for the back order prepaid
+    System.debug( mats[0].AcctSeedERP__Product__r.Name );
+    System.assertEquals( 2, mats.size() );
   }
 
 }

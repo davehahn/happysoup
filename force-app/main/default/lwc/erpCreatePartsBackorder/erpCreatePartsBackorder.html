@@ -365,7 +365,8 @@
             <tr class="slds-text-title_caps">
               <th scope="col">Qty</th>
               <th scope="col">Product</th>
-              <th scope="col">Price</th>
+              <th scope="col" class="slds-text-align_center">Price</th>
+              <th scope="col" class="slds-text-align_right">Total</th>
             </tr>
             </thead>
             <tbody>
@@ -378,8 +379,13 @@
                     {mat.AcctSeedERP__Comment__c}
                   </div>
                 </td>
-                <td>
+                <td class="slds-text-align_center">
                   <lightning-formatted-number value={mat.GMBLASERP__Unit_Price__c}
+                                              format-style="currency"
+                                              currency-code="CAD"></lightning-formatted-number>
+                </td>
+                <td class="slds-text-align_right">
+                  <lightning-formatted-number value={mat.lineTotal}
                                               format-style="currency"
                                               currency-code="CAD"></lightning-formatted-number>
                 </td>
