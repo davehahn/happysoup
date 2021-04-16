@@ -5,6 +5,7 @@
 <!-- Factory Store Shopping Tools -->
 <template>
   <aside class="shoppingTools" aria-label="Shopping Tools">
+    {locale}
     <h3 class="ro">Shopping Tools</h3>
     <ul class="shoppingTools__list maxWidth maxWidth--thin">
       <template if:true={toolsFindADealer}>
@@ -16,7 +17,8 @@
                   <use href={pinIcon}></use>
               </svg>
 						</span>
-              <span class="copy">Find a Dealer</span>
+              <template if:true={isEN}><span class="copy">Find a Dealer</span></template>
+              <template if:true={isFR}><span class="copy">Localisateur de Concessionnaires</span></template>
             </a>
           </h4>
         </li>
@@ -30,7 +32,8 @@
                   <use href={calendarIcon}></use>
               </svg>
 						</span>
-              <span class="copy">Schedule a <b>Showroom Visit</b></span>
+              <template if:true={isEN}><span class="copy">Schedule a <b>Showroom Visit</b></span></template>
+              <template if:true={isFR}><span class="copy">Prévoir une visite</span></template>
             </a>
           </h4>
         </li>
@@ -44,7 +47,8 @@
                   <use href={contractIcon}></use>
               </svg>
 						</span>
-              <span class="copy">Request a <b>Quote</b></span>
+              <template if:true={isEN}><span class="copy">Request a <b>Quote</b></span></template>
+              <template if:true={isFR}><span class="copy">Demander un Soumission</span></template>
             </a>
           </h4>
         </li>
@@ -70,7 +74,8 @@
                   <use href={downloadIcon}></use>
               </svg>
 						</span>
-              <span class="copy">Download Catalogue</span>
+              <template if:true={isEN}><span class="copy">Download Catalogue</span></template>
+              <template if:true={isFR}><span class="copy">Téléchargez un catalogue</span></template>
             </a>
           </h4>
         </li>

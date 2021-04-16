@@ -7,6 +7,9 @@
         $Resource.FactoryStoreGlobals + '/css/colours.css',
         $Resource.FactoryStoreGlobals + '/css/buttons.css'
     )}"/>
+  <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+  <aura:attribute name="currentLocale" type="String"/>
+  <aura:attribute name="isEN" type="Map" default='{"active":true}'/>
   <aura:attribute name="search" type="Aura.Component[]"/>
   <aura:attribute name="langSelector" type="Aura.Component[]"/>
   <aura:attribute name="storePhoneNumbers" type="Aura.Component[]"/>
@@ -17,19 +20,21 @@
   <aura:attribute name="channelMenu" type="Aura.Component[]"/>
   <aura:attribute name="contactUs" type="Aura.Component[]"/>
 
-  <header class="storeHeader">
-    <h1 class="storeLogo">
-      <a href="/support/s/" class="storeLogoIcon">Legend Boats</a>
-    </h1>
+  <div class="headerWrap">
+    <header class="storeHeader">
+      <h1 class="storeLogo">
+        <a href="/suppport/s/" class="storeLogoIcon">Legend Boats</a>
+      </h1>
 
-    <nav class="mainNavigation">
-      <c:factoryStoreMainNavigation></c:factoryStoreMainNavigation>
-    </nav>
+      <nav class="mainNavigation">
+        <c:factoryStoreMainNavigation ></c:factoryStoreMainNavigation>
+      </nav>
 
-    <div class="langSelector">
-      {!v.langSelector}
-    </div>
-  </header>
+      <div class="langSelector">
+        {!v.langSelector}
+      </div>
+    </header>
+  </div>
 
   <div class="searchRegion">
     {!v.search}
@@ -40,10 +45,19 @@
   </article>
   <footer class="storeFooter">
     <section class="contactUs">
-      <h3 class="heading heading-m maxWidth maxWidth--thin">Can't find what you're looking for?</h3>
-      <p class="copy copy-standard maxWidth maxWidth--thin">
-        If you can't find what you're looking for in our support resources, contact customer support directly.
-      </p>
+      <aura:if isTrue="{!v.isEN.active}">
+        <h3 class="heading heading-m maxWidth maxWidth--thin">Can't find what you're looking for?</h3>
+        <p class="copy copy-standard maxWidth maxWidth--thin">
+          If you can't find what you're looking for in our support resources, contact customer support directly.
+        </p>
+        <aura:set attribute="else">
+          <h3 class="heading heading-m maxWidth maxWidth--thin">Vous ne trouvez pas ce que vous cherchez?</h3>
+          <p class="copy copy-standard maxWidth maxWidth--thin">
+            Si vous n’arrivez pas à trouver ce que vous cherchez parmi nos ressources de soutien, contactez directement le soutien à la clientèle.
+          </p>
+        </aura:set>
+      </aura:if>
+
       {!v.contactUs}
     </section>
 

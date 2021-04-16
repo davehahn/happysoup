@@ -1,5 +1,11 @@
 <aura:component extends="forceCommunity:navigationMenuBase">
-	<ul class="navList navList--topLevel" onclick="{!c.onClick}">
+  <button class="flyoutTriggerWrap" data-expander="true" onclick="{!c.onClick}">
+    <div id="flyoutTrigger">
+      <span class="ro">Click to open menu</span>
+      <div class="burger" aura:id="burger"><span></span><span></span><span></span><span></span></div>
+    </div>
+  </button>
+	<ul class="navList navList--topLevel" onclick="{!c.onClick}" aura:id="navList">
     	<aura:iteration items="{!v.menuItems}" var="item">
             <aura:if isTrue="{!item.subMenu}">
             	<li class="navItem navItem--topLevel">

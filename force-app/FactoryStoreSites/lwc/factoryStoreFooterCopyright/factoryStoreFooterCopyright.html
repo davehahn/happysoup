@@ -5,6 +5,7 @@
 <!-- Factory Store Footer Copyright -->
 <template>
   <p class="copyright">
-    &copy;{currentYear} Legend Boats, a division of Duhamel &amp; Dewar Inc.
+    <template if:true={isEN}>&copy;{currentYear} Legend Boats, a division of Duhamel &amp; Dewar Inc.</template>
+    <template if:true={isFR}>&copy;{currentYear} Legend Boats, une division de Duhamel & Dewar Inc.</template>
   </p>
 </template>

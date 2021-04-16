@@ -18,3 +18,19 @@
   font-size: 0.9em;
   color: var(--primary);
 }
+
+@media screen and (max-width: 480px){
+  .footerLegal__navList {
+  	 flex-wrap: wrap;
+  }
+  .footerLegal__navList .footerLegal__navItem {
+  	 width: 50%;
+  }
+  .footerLegal__navList .footerLegal__navItem::after {
+  	 display: none;
+  }
+  .footerLegal__navList .footerLegal__navItem:last-of-type {
+  	 width: 100%;
+  	 margin-top: 0.5em;
+  }
+}

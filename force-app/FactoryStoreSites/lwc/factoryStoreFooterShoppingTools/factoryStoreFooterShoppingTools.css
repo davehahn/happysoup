@@ -26,7 +26,7 @@
 }
 .shoppingTools .shoppingTools__list .shoppingTools__item {
     border-right: 1px solid #fff;
-    padding: .5em 2vw;
+    padding: .5em 1vw;
     list-style: none;
 }
 .shoppingTools .shoppingTools__list .shoppingTools__item a {
@@ -71,4 +71,59 @@
 .shoppingTools .shoppingTools__list .shoppingTools__item:last-of-type {
     border-right: none;
     padding-right: 0;
+}
+
+@media screen and (max-width: 900px){
+  .shoppingTools .shoppingTools__list {
+		 flex-wrap: wrap;
+	}
+	.shoppingTools .shoppingTools__list .shoppingTools__item {
+		 width: auto;
+		 padding-left: 5vw;
+		 padding-right: 5vw;
+	}
+  .shoppingTools .shoppingTools__list .shoppingTools__item:nth-of-type(2n) {
+		 border-right: 0 none;
+	}
+}
+
+@media screen and (max-width: 580px){
+  .shoppingTools {
+  	 padding: 0;
+  }
+   .shoppingTools .shoppingTools__list {
+  	 width: 100%;
+  }
+   .shoppingTools .shoppingTools__list .shoppingTools__item {
+  	 width: 100%;
+  	 padding: 0;
+  	 border-right: 0 none;
+  }
+   .shoppingTools .shoppingTools__list .shoppingTools__item::after {
+  	 content: '';
+  	 display: block;
+  	 width: 30px;
+  	 height: 1px;
+  	 background-color: #fff;
+  	 margin: 0 auto;
+  }
+   .shoppingTools .shoppingTools__list .shoppingTools__item:first-of-type a {
+  	 padding-top: 1em;
+  }
+   .shoppingTools .shoppingTools__list .shoppingTools__item:last-of-type::after {
+  	 display: none;
+  }
+   .shoppingTools .shoppingTools__list .shoppingTools__item:last-of-type a {
+  	 padding-bottom: 1em;
+  }
+   .shoppingTools .shoppingTools__list .shoppingTools__item a {
+  	 justify-content: center;
+  	 padding: 1em 0;
+  	 transition: all 0.2s;
+  }
+   .shoppingTools .shoppingTools__list .shoppingTools__item a:hover, .shoppingTools .shoppingTools__list .shoppingTools__item a:focus {
+  	 box-shadow: none;
+  	 background-color: #fff;
+  	 color: var(--highlight);
+  }
 }

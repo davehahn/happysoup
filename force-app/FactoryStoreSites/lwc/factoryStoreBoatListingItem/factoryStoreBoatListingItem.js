@@ -50,8 +50,8 @@ export default class FactoryStoreBoatListingItem extends NavigationMixin(Lightni
  	  this.modelListingPhoto = 'background-image: url(' + this.boat.Default_Gallery_Image_Original__c + ')';
 // 	  this.standardMotorId = rewriteMotorName(this.boat.StandardMotor);
 //		this.standardTrailerId = rewriteTrailerName(this.boat.StandardTrailer);
-		this.standardMotorId = this.boat.Standard_Motor__c;
-		this.standardTrailerId = this.boat.Standard_Trailer__c;
+		this.standardMotorId = this.boat.Standard_Motor__r.Name;
+		this.standardTrailerId = this.boat.Standard_Trailer__r.Name;
   }
 
 //  get standardMotorName(){

@@ -9,15 +9,18 @@
   margin: 2vw auto;
 }
 
-.THIS.storeHeader{
-  z-index: 100;
+.THIS.headerWrap{
   background-color: var(--highlight);
+}
+.THIS.headerWrap .storeHeader{
+  z-index: 100;
   display: flex;
 	align-items: center;
 	justify-content: space-between;
 	max-width: 1640px;
 	margin: 0 auto;
 	padding: 0 2.5em;
+	position: relative;
 }
 .THIS.storeMain, .THIS.storeFooter{
   z-index: 1;
@@ -120,4 +123,44 @@
 	font-weight: 300;
 	font-size: 0.825em;
 	line-height: 1.35;
+}
+
+.THIS .PHONE{
+  display: none!important;
+}
+
+@media screen and (max-width: 1315px){
+  .THIS .storeHeader .storeLogo{
+    order: 2;
+    width: 100%;
+  }
+  .THIS .storeHeader .storeLogo .storeLogoIcon{
+    margin: 0.5em auto;
+    width: 300px; height: 42px;
+  }
+  .THIS .storeHeader .mainNavigation{
+    order: 1;
+    width: auto;
+  }
+  .THIS .storeHeader .langSelector{
+    order: 3;
+  }
+}
+
+
+@media screen and (max-width: 480px){
+  .THIS.headerWrap .storeHeader{
+    padding: 0 0.5em;
+  }
+  .THIS .storeHeader .storeLogo .storeLogoIcon{
+		margin: 0.5em auto;
+		width: 170px; height: 28px;
+	}
+	.THIS .langSelector{
+    width: 34px;
+    flex-shrink: 0;
+  }
+  .THIS .langSelector .forceCommunityLanguageSelector43 svg{
+    display: none;
+  }
 }

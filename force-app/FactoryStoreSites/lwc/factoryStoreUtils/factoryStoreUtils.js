@@ -3,6 +3,7 @@
  */
 
 import { loadStyle, loadScript } from 'lightning/platformResourceLoader';
+import LANG from '@salesforce/i18n/lang';
 import FactoryStoreGlobals from '@salesforce/resourceUrl/FactoryStoreGlobals';
 
 const getTestimonials = (numToShow) => {
@@ -96,6 +97,19 @@ const rewriteTrailerName = (payload) => {
 	}
 }
 
+const renderEN = () => {
+  const lang = LANG;
+    //  console.log('renderEN', lang);
+      const options = ['en_US', 'en-US', 'en_CA', 'en-CA'];
+    	return options.includes(lang) ? true : false;
+}
+const renderFR = () => {
+  const lang = LANG;
+    //  console.log('renderFR', lang);
+    const options = ['fr', 'fr-CA', 'fr_CA'];
+    	return options.includes(lang) ? true : false;
+}
+
 /*===================
 ┌─┐┌─┐┬  ┌─┐┬ ┬┬  ┌─┐┌┬┐┌─┐  ┬ ┬┌─┐┌─┐┬┌─┬ ┬ ┬  ┌─┐┌─┐┬ ┬┌┬┐┌─┐┌┐┌┌┬┐
 │  ├─┤│  │  │ ││  ├─┤ │ ├┤   │││├┤ ├┤ ├┴┐│ └┬┘  ├─┘├─┤└┬┘│││├┤ │││ │
@@ -161,5 +175,7 @@ export {
 	rewriteMotorName,
 	rewriteTrailerName,
 	weeklyPayment,
-	formatPrice
+	formatPrice,
+	renderEN,
+	renderFR
 }
