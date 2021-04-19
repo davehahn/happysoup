@@ -25,21 +25,21 @@
             <name>Valid</name>
             <conditionLogic>1 AND (2 OR 3)</conditionLogic>
             <conditions>
-                <leftValueReference>ERPRecordTypeName</leftValueReference>
-                <operator>Contains</operator>
+                <leftValueReference>$Record.AcctSeedERP__Project__r.RecordType_Name__c</leftValueReference>
+                <operator>EqualTo</operator>
                 <rightValue>
                     <stringValue>Legend Trade In</stringValue>
                 </rightValue>
             </conditions>
             <conditions>
-                <leftValueReference>ProductRecordTypeName</leftValueReference>
+                <leftValueReference>$Record.GMBLASERP__Product__r.RecordType_Name__c</leftValueReference>
                 <operator>Contains</operator>
                 <rightValue>
                     <stringValue>Motor</stringValue>
                 </rightValue>
             </conditions>
             <conditions>
-                <leftValueReference>ProductRecordTypeName</leftValueReference>
+                <leftValueReference>$Record.GMBLASERP__Product__r.RecordType_Name__c</leftValueReference>
                 <operator>Contains</operator>
                 <rightValue>
                     <stringValue>Trolling Motor</stringValue>
@@ -72,97 +72,15 @@
         </value>
     </processMetadataValues>
     <processType>AutoLaunchedFlow</processType>
-    <recordLookups>
-        <name>Get_ERP_Record_Type_ID</name>
-        <label>Get ERP Record Type ID</label>
-        <locationX>215</locationX>
-        <locationY>332</locationY>
-        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
-        <connector>
-            <targetReference>Get_Product_Record_Type_ID</targetReference>
-        </connector>
-        <filterLogic>and</filterLogic>
-        <filters>
-            <field>Id</field>
-            <operator>EqualTo</operator>
-            <value>
-                <elementReference>$Record.AcctSeedERP__Project__c</elementReference>
-            </value>
-        </filters>
-        <object>AcctSeed__Project__c</object>
-        <outputAssignments>
-            <assignToReference>ERPRecordTypeID</assignToReference>
-            <field>RecordTypeId</field>
-        </outputAssignments>
-        <outputAssignments>
-            <assignToReference>ERPRecordTypeName</assignToReference>
-            <field>RecordType_Name__c</field>
-        </outputAssignments>
-    </recordLookups>
-    <recordLookups>
-        <name>Get_Product_Record_Type_ID</name>
-        <label>Get Product Record Type ID</label>
-        <locationX>409</locationX>
-        <locationY>332</locationY>
-        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
-        <connector>
-            <targetReference>Entry_Criteria</targetReference>
-        </connector>
-        <filterLogic>and</filterLogic>
-        <filters>
-            <field>Id</field>
-            <operator>EqualTo</operator>
-            <value>
-                <elementReference>$Record.AcctSeedERP__ProductId__c</elementReference>
-            </value>
-        </filters>
-        <object>Product2</object>
-        <outputAssignments>
-            <assignToReference>ProductRecordTypeID</assignToReference>
-            <field>RecordTypeId</field>
-        </outputAssignments>
-        <outputAssignments>
-            <assignToReference>ProductRecordTypeName</assignToReference>
-            <field>RecordType_Name__c</field>
-        </outputAssignments>
-    </recordLookups>
     <start>
         <locationX>50</locationX>
         <locationY>50</locationY>
         <connector>
-            <targetReference>Get_ERP_Record_Type_ID</targetReference>
+            <targetReference>Entry_Criteria</targetReference>
         </connector>
         <object>AcctSeedERP__Inbound_Inventory_Movement__c</object>
         <recordTriggerType>Create</recordTriggerType>
         <triggerType>RecordAfterSave</triggerType>
     </start>
     <status>Active</status>
-    <variables>
-        <name>ERPRecordTypeID</name>
-        <dataType>String</dataType>
-        <isCollection>false</isCollection>
-        <isInput>false</isInput>
-        <isOutput>false</isOutput>
-    </variables>
-    <variables>
-        <name>ERPRecordTypeName</name>
-        <dataType>String</dataType>
-        <isCollection>false</isCollection>
-        <isInput>false</isInput>
-        <isOutput>false</isOutput>
-    </variables>
-    <variables>
-        <name>ProductRecordTypeID</name>
-        <dataType>String</dataType>
-        <isCollection>false</isCollection>
-        <isInput>false</isInput>
-        <isOutput>false</isOutput>
-    </variables>
-    <variables>
-        <name>ProductRecordTypeName</name>
-        <dataType>String</dataType>
-        <isCollection>false</isCollection>
-        <isInput>false</isInput>
-        <isOutput>false</isOutput>
-    </variables>
 </Flow>
