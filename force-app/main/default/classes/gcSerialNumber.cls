@@ -130,9 +130,9 @@ public without sharing class gcSerialNumber{
 						x.addError('Internal Billing related fields cannot be modified manually.');
 					}
 					Date lastMoveOutDate = System.today();
-					if(sn.GMBLASERP__Manufacturing_Inventory_Movements__r.isEmpty())
+					if(!sn.GMBLASERP__Manufacturing_Inventory_Movements__r.isEmpty())
 						lastMoveOutDate = sn.GMBLASERP__Manufacturing_Inventory_Movements__r[0].AcctSeedERP__Movement_Date__c;
-					if(sn.GMBLASERP__Outbound_Inventory_Movements__r.isEmpty()) {
+					if(!sn.GMBLASERP__Outbound_Inventory_Movements__r.isEmpty()) {
 						Date lastOutDate = sn.GMBLASERP__Outbound_Inventory_Movements__r[0].AcctSeedERP__Movement_Date__c;
 						if(lastMoveOutDate == null || (lastMoveOutDate != null && lastMoveOutDate < lastOutDate)){
 							lastMoveOutDate = lastOutDate;
