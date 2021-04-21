@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionCalls>
+        <name>Chatter_Assigned_Boat_Specialist</name>
+        <label>Chatter Assigned Boat Specialist</label>
+        <locationX>50</locationX>
+        <locationY>431</locationY>
+        <actionName>chatterPost</actionName>
+        <actionType>chatterPost</actionType>
+        <inputParameters>
+            <name>text</name>
+            <value>
+                <elementReference>ChatterBody</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>subjectNameOrId</name>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </inputParameters>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </actionCalls>
+    <apiVersion>51.0</apiVersion>
+    <decisions>
+        <name>Validate_Boat_Specialist</name>
+        <label>Validate Boat Specialist</label>
+        <locationX>182</locationX>
+        <locationY>311</locationY>
+        <defaultConnectorLabel>Else</defaultConnectorLabel>
+        <rules>
+            <name>Valid</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Boat_Specialist__c</leftValueReference>
+                <operator>NotEqualTo</operator>
+                <rightValue>
+                    <elementReference>$Record__Prior.Boat_Specialist__c</elementReference>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.Boat_Specialist__r.IsActive</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Chatter_Assigned_Boat_Specialist</targetReference>
+            </connector>
+            <label>Valid</label>
+        </rules>
+    </decisions>
+    <description>Notifies the Boat Specialist via Chatter when they have been assigned to a Retail ERP.</description>
+    <interviewLabel>ERP Order: Notify Assigned Boat Specialist Retail ERP {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>ERP Order: Notify Assigned Boat Specialist Retail ERP</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <start>
+        <locationX>56</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Validate_Boat_Specialist</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Boat_Specialist__c</field>
+            <operator>IsNull</operator>
+            <value>
+                <booleanValue>false</booleanValue>
+            </value>
+        </filters>
+        <filters>
+            <field>RecordType_Name__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>Retail Boat Sale</stringValue>
+            </value>
+        </filters>
+        <object>AcctSeed__Project__c</object>
+        <recordTriggerType>CreateAndUpdate</recordTriggerType>
+        <triggerType>RecordAfterSave</triggerType>
+    </start>
+    <status>Active</status>
+    <textTemplates>
+        <name>ChatterBody</name>
+        <isViewedAsPlainText>true</isViewedAsPlainText>
+        <text>@[{!$Record.Boat_Specialist__r.Id}] You have been assigned as the Boat Specialist for this Retail ERP.</text>
+    </textTemplates>
+</Flow>
