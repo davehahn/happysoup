@@ -92,50 +92,6 @@
         <protected>false</protected>
         <reevaluateOnChange>true</reevaluateOnChange>
     </fieldUpdates>
-    <rules>
-        <fullName>MRP Values Less than 0 Notification to Wholesale Parts</fullName>
-        <actions>
-            <name>MRP_Quantity_on_on_this_Product_has_dropped_below_0</name>
-            <type>Task</type>
-        </actions>
-        <actions>
-            <name>MRP_Value_below_0</name>
-            <type>Task</type>
-        </actions>
-        <active>false</active>
-        <booleanFilter>1 or 2</booleanFilter>
-        <criteriaItems>
-            <field>Product2.MRP_Quantity__c</field>
-            <operation>lessOrEqual</operation>
-            <value>-1</value>
-        </criteriaItems>
-        <criteriaItems>
-            <field>Product2.MRP_Quantity__c</field>
-            <operation>notEqual</operation>
-        </criteriaItems>
-        <description>sends a Notification to Wholesale parts manager when MRP Quantity drops to below 0.</description>
-        <triggerType>onCreateOrTriggeringUpdate</triggerType>
-    </rules>
-    <rules>
-        <fullName>Product Oversold MRP</fullName>
-        <actions>
-            <name>Oversold_Product_Alert</name>
-            <type>Alert</type>
-        </actions>
-        <active>false</active>
-        <criteriaItems>
-            <field>Product2.MRP_Quantity__c</field>
-            <operation>lessOrEqual</operation>
-            <value>-1</value>
-        </criteriaItems>
-        <criteriaItems>
-            <field>Product2.AcctSeed__Inventory_Product__c</field>
-            <operation>equals</operation>
-            <value>True</value>
-        </criteriaItems>
-        <description>Email notification that a product has been oversold taking into account current inventory, purchase orders and ERP Orders</description>
-        <triggerType>onCreateOrTriggeringUpdate</triggerType>
-    </rules>
     <tasks>
         <fullName>MRP_Quantity_on_on_this_Product_has_dropped_below_0</fullName>
         <assignedTo>epaulino@legendboats.com</assignedTo>
