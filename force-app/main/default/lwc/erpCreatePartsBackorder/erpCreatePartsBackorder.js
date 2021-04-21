@@ -22,6 +22,8 @@ export default class ErpCreatePartsBackorder extends LightningElement {
   @track partsCases;
 
   transferredMaterials=[];
+  originalMaterialToDelete;
+  originalMaterialToUpdate;
   retailERP;
   newERP={};
   newTask={};
@@ -35,13 +37,6 @@ export default class ErpCreatePartsBackorder extends LightningElement {
   _originalSaleType;
   _creditProductId;
   _prepaidProductId;
-  _erpCopyFields = [
-    'AcctSeed__Account__c',
-    'GMBLASERP__Warehouse__c',
-    'GL_Account_Variable_1__c',
-    'GL_Account_Variable_2__c',
-    'GL_Account_Variable_3__c'
-  ];
 
   @wire( fetchMaterials, { recordId: '$recordId' } )
   wiredFetchMaterials( result )
@@ -152,7 +147,6 @@ export default class ErpCreatePartsBackorder extends LightningElement {
       this.transferredMaterials.forEach( mat => {
         materialMap[ mat.Id ] = mat.quantityTransferred;
       });
-      console.log( materialMap );
       let params = {
         originalErpId: this.retailERP.Id,
         transferredQuantityByMaterialId: JSON.stringify( materialMap ),
@@ -241,22 +235,21 @@ export default class ErpCreatePartsBackorder extends LightningElement {
   {
     return new Promise( (resolve, reject) => {
       let params = {};
-      params.deleteMaterialIds = this.transferredMaterials.reduce( (acc, mat) => {
-        acc.push( mat.Id );
-        return acc;
-      }, [] );
+      let materialMap = new Object();
+      this.transferredMaterials.forEach( mat => {
+        materialMap[ mat.Id ] = mat.quantityTransferred;
+      });
+//      params.deleteMaterialIds = this.transferredMaterials.reduce( (acc, mat) => {
+//        acc.push( mat.Id );
+//        return acc;
+//      }, [] );
+      params.quantityTransferredByMatId = JSON.stringify( materialMap );
       params.newMaterials = this.prepaidOffsetMaterials.reduce( (acc, mat) => {
-//        let m = {...mat};
-//        delete m.AcctSeedERP__Product__r;
-//        delete m.AcctSeedERP__Project_Task__r
-//        delete m.Id;
         const { AcctSeedERP__Product__r, AcctSeedERP__Project_Task__r, Id, ...m } = mat;
         acc.push( m );
         return acc;
       }, []);
       params.newCommissionLines = this.newCommissionLines.reduce( (acc, commLine) => {
-//        let cli = {...commLine};
-//        delete cli.CommissionRecord2__r;
         const { CommissionRecord2__r, ...cli } = commLine;
         acc.push( cli );
         return acc;
@@ -292,9 +285,35 @@ export default class ErpCreatePartsBackorder extends LightningElement {
   _buildOffsetMaterialsForOriginalOrderRetail( task )
   {
     let materials = [];
+    this.originalMaterialToUpdate = undefined;
+    this.originalMaterialToDelete = undefined;
+    this.prepaidOffsetMaterials = [];
     let offsetCost = 0;
 
-    this.transferredMaterials.forEach( mat => offsetCost += (mat.quantityTransferred * mat.GMBLASERP__Unit_Price__c) );
+    this.transferredMaterials.forEach( mat => {
+      offsetCost += (mat.quantityTransferred * mat.GMBLASERP__Unit_Price__c);
+      if( mat.quantityTransferred === mat.AcctSeedERP__Quantity_Per_Unit__c )
+      {
+        if( typeof( this.originalMaterialToDelete ) === 'undefined' )
+        {
+          this.originalMaterialToDelete = new Array();
+        }
+        this.originalMaterialToDelete.push( mat );
+      }
+      if( mat.quantityTransferred < mat.AcctSeedERP__Quantity_Per_Unit__c )
+      {
+        if( typeof( this.originalMaterialToUpdate) === 'undefined' )
+        {
+          this.originalMaterialToUpdate = new Array();
+        }
+        this.originalMaterialToUpdate.push( {
+          id: mat.Id,
+          originalQuantity: mat.AcctSeedERP__Quantity_Per_Unit__c,
+          newQuantity: mat.AcctSeedERP__Quantity_Per_Unit__c - mat.quantityTransferred,
+          productName: mat.AcctSeedERP__Product__r.Name
+        });
+      }
+    });
     this.prepaidOffsetMaterials.push({
       Id: gen8DigitId(),
       AcctSeedERP__Product__c: this._prepaidProductId,

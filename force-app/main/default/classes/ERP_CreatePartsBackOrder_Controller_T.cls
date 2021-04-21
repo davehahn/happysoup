@@ -10,6 +10,7 @@ private class ERP_CreatePartsBackOrder_Controller_T
   private static AcctSeed__Project_Task__c erpTask;
   private static  List<AcctSeedERP__Material__c> materials;
   private static List<Id> materialIds;
+  private static Id matWithMultipleId;
   private static CommissionRecord2__c commRec;
 
   @testSetup static void dataSetup()
@@ -47,11 +48,13 @@ private class ERP_CreatePartsBackOrder_Controller_T
       'Electronics',
       PARTS_COUNT
     );
-    Factory_Material.insertMaterials(
+    List<AcctSeedERP__Material__c> mats = Factory_Material.buildMaterials(
       retailSale.Id,
       retailTask.Id,
       parts
     );
+    mats[0].AcctSeedERP__Quantity_Per_Unit__c = 3;
+    insert mats;
   }
 
   private static void initErpData()
@@ -91,6 +94,10 @@ private class ERP_CreatePartsBackOrder_Controller_T
     {
       materials.add( mat );
       materialIds.add( mat.Id );
+      if( mat.AcctSeedERP__Quantity_Per_Unit__c > 1 )
+      {
+        matWithMultipleId = mat.Id;
+      }
     }
     commRec = new CommissionRecord2__c(
       Project_Task__c = erpTask.Id,
@@ -307,14 +314,16 @@ private class ERP_CreatePartsBackOrder_Controller_T
   }
 
   @IsTest
-  static void updateOriginalSale_Test()
+  static void updateOriginalSale_AllTransferred_Test()
   {
     initErpData();
     Decimal totalSale = 0;
-    List<Id> deleteMatIds = new List<Id>();
+    //List<Id> deleteMatIds = new List<Id>();
+    Map<Id, Decimal> qtyMap = new Map<id, Decimal>();
     for( AcctSeedERP__Material__c mat : materials )
     {
-      deleteMatIds.add( mat.Id );
+      //deleteMatIds.add( mat.Id );
+      qtyMap.put( mat.Id, mat.AcctSeedERP__Quantity_Per_Unit__c );
       totalSale += mat.GMBLASERP__Unit_Price__c * mat.AcctSeedERP__Quantity_Per_Unit__c;
     }
     List<AcctSeedERP__Material__c> newMats = new List<AcctSeedERP__Material__c>();
@@ -338,16 +347,23 @@ private class ERP_CreatePartsBackOrder_Controller_T
       Quantity__c = 1,
       Commission_Rate__c = CommissionLineItem2_Service.grossMarginRate
     ));
+    List<AcctSeedERP__Material__c> beforeMats = [
+      SELECT
+        Id,
+        AcctSeedERP__Product__r.Name
+      FROM AcctSeedERP__Material__c
+      WHERE AcctSeedERP__Project__c = :erp.Id
+    ];
 
     Test.startTest();
     ERP_CreatePartsBackOrder_Controller.updateOriginalSale(
-      deleteMatIds,
+      JSON.serialize( qtyMap ),
       newMats,
       commLines
     );
     Test.stopTest();
 
-    List<AcctSeedERP__Material__c> mats = [
+    List<AcctSeedERP__Material__c> afterMats = [
       SELECT
         Id,
         AcctSeedERP__Product__r.Name
@@ -355,8 +371,73 @@ private class ERP_CreatePartsBackOrder_Controller_T
       WHERE AcctSeedERP__Project__c = :erp.Id
     ];
     //one for the boat, one for the back order prepaid
-    System.debug( mats[0].AcctSeedERP__Product__r.Name );
-    System.assertEquals( 2, mats.size() );
+    System.debug( afterMats[0].AcctSeedERP__Product__r.Name );
+    System.assertEquals( PARTS_COUNT + 1, beforeMats.size() );
+    System.assertEquals( 2, afterMats.size() );
+  }
+
+  @IsTest
+  static void updateOriginalSale_SinglePartialTransferred_Test()
+  {
+    initErpData();
+    Decimal totalSale = materials[0].GMBLASERP__Unit_Price__c;
+    Map<Id, Decimal> qtyMap = new Map<Id, Decimal>{
+      materials[0].Id => 1
+    };
+    List<AcctSeedERP__Material__c> newMats = new List<AcctSeedERP__Material__c>();
+    newMats.add( new AcctSeedERP__Material__c(
+      AcctSeedERP__Product__c = Utility_Products__c.getOrgDefaults().Back_Order_Prepaid__c,
+      AcctSeedERP__Project__c = erp.Id,
+      AcctSeedERP__Project_Task__c = erpTask.Id,
+      AcctSeedERP__Quantity_Per_Unit__c = 1,
+      GMBLASERP__Unit_Price__c = totalSale,
+      GMBLASERP__Price_Override__c = true,
+      AcctSeedERP__Comment__c = 'Prepaid Back Ordered Items'
+    ));
+    List<CommissionLineItem2__c> commLines = new List<CommissionLineItem2__c>();
+    commLines.add( new CommissionLineItem2__c(
+      Comment__c = 'Parts Back Order Entry',
+      CommissionRecord2__c = commRec.Id,
+      Cost__c = 0,
+      Sale_Price__c = totalSale,
+      Description__c = 'Parts Back Order Entry',
+      Labour_Cost__c = 0,
+      Quantity__c = 1,
+      Commission_Rate__c = CommissionLineItem2_Service.grossMarginRate
+    ));
+    Map<Id, AcctSeedERP__Material__c> beforeMats = new Map<Id, AcctSeedERP__Material__c>([
+      SELECT
+        Id,
+        AcctSeedERP__Product__r.Name,
+        AcctSeedERP__Quantity_Per_Unit__c
+      FROM AcctSeedERP__Material__c
+      WHERE AcctSeedERP__Project__c = :erp.Id
+    ]);
+
+    Test.startTest();
+    ERP_CreatePartsBackOrder_Controller.updateOriginalSale(
+      JSON.serialize( qtyMap ),
+      newMats,
+      commLines
+    );
+    Test.stopTest();
+
+    Map<Id, AcctSeedERP__Material__c> afterMats = new Map<Id, AcctSeedERP__Material__c>([
+      SELECT
+        Id,
+        AcctSeedERP__Product__r.Name,
+        AcctSeedERP__Quantity_Per_Unit__c
+      FROM AcctSeedERP__Material__c
+      WHERE AcctSeedERP__Project__c = :erp.Id
+    ]);
+
+    System.assertEquals( PARTS_COUNT + 1, beforeMats.size() );
+    //No parts should be removed prepaid should be added
+    System.assertEquals( beforeMats.size() + 1, afterMats.size() );
+
+    System.assertEquals( 3, beforeMats.get( matWithMultipleId ).AcctSeedERP__Quantity_Per_Unit__c );
+    //Quantity should be decreased by one
+    System.assertEquals( 2, afterMats.get( matWithMultipleId).AcctSeedERP__Quantity_Per_Unit__c );
   }
 
 }

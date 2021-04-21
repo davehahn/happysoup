@@ -219,7 +219,7 @@ public with sharing class ERP_CreatePartsBackOrder_Controller
 
   @AuraEnabled
   public static void updateOriginalSale(
-    List<Id> deleteMaterialIds,
+    String quantityTransferredByMatId,
     List<AcctSeedERP__Material__c> newMaterials,
     List<CommissionLineItem2__c> newCommissionLines
   )
@@ -232,15 +232,32 @@ public with sharing class ERP_CreatePartsBackOrder_Controller
     gcMaterial.allowKitPartDelete = true;
     gcProject.disableLockedCheck = true;
     gcMaterial.disableCommission = true;
+
     List<AcctSeedERP__Material__c> deleteMats = new List<AcctSeedERP__Material__c>();
-    for( Id matId : deleteMaterialIds )
+    List<AcctSeedERP__Material__c> upsertMats = new List<AcctSeedERP__Material__c>();
+    upsertMats.addAll( newMaterials );
+
+    Map<Id, Decimal> qtyByMatId =
+      (Map<Id, Decimal>)JSON.deserialize(
+        quantityTransferredByMatId,
+        Map<Id, Decimal>.class
+      );
+    List<AcctSeedERP__Material__c> mats = Material_Selector.selectAllByIds( qtyByMatId.keySet() );
+
+    for( AcctSeedERP__Material__c mat : mats )
     {
-      deleteMats.add( new AcctSeedERP__Material__c(
-        Id = matId
-      ));
+      if( mat.AcctSeedERP__Quantity_Per_Unit__c == qtyByMatId.get(mat.Id) )
+      {
+        deleteMats.add( mat );
+      }
+      else
+      {
+        mat.AcctSeedERP__Quantity_Per_Unit__c = mat.AcctSeedERP__Quantity_Per_Unit__c - qtyByMatId.get( mat.Id );
+        upsertMats.add( mat );
+      }
     }
     delete deleteMats;
-    insert newMaterials;
+    upsert upsertMats;
     insert newCommissionLines;
     gcMaterial.disableTaskLockCheck = disableTaskLockCheck;
     gcMaterial.allowKitPartDelete =  allowKitPartDelete;
