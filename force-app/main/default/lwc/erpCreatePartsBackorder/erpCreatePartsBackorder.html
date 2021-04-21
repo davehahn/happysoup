@@ -411,26 +411,49 @@
       </h3>
       <div class="slds-border_top slds-m-bottom_small"></div>
       <div class="slds-p-horizontal_small">
-        <h4 class="slds-badge slds-theme_error slds-m-left_small slds-m-bottom_xx-small">Removed</h4>
-        <table class="slds-table slds-table_bordered slds-table_cell-buffer slds-m-bottom_small">
-          <thead>
-          <tr class="slds-text-title_caps">
-            <th scope="col">Qty</th>
-            <th scope="col">Product</th>
-          </tr>
-          </thead>
-          <tbody>
-          <template for:each={transferredMaterials} for:item="mat">
-            <tr key={mat.Id}>
-              <td>{mat.AcctSeedERP__Quantity_Per_Unit__c}</td>
-              <td>{mat.AcctSeedERP__Product__r.Name}</td>
+        <template if:true={originalMaterialToDelete}>
+          <h4 class="slds-badge slds-theme_error slds-m-left_small slds-m-bottom_xx-small">Removed</h4>
+          <table class="slds-table slds-table_bordered slds-table_cell-buffer slds-m-bottom_small">
+            <thead>
+            <tr class="slds-text-title_caps">
+              <th scope="col">Qty</th>
+              <th scope="col">Product</th>
             </tr>
-          </template>
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+            <template for:each={originalMaterialToDelete} for:item="mat">
+              <tr key={mat.Id}>
+                <td>{mat.AcctSeedERP__Quantity_Per_Unit__c}</td>
+                <td>{mat.AcctSeedERP__Product__r.Name}</td>
+              </tr>
+            </template>
+            </tbody>
+          </table>
+        </template>
+
+        <template if:true={originalMaterialToUpdate}>
+          <h4 class="slds-badge slds-theme_warning slds-m-left_small slds-m-bottom_xx-small">Modified</h4>
+          <table class="slds-table slds-table_bordered slds-table_cell-buffer slds-m-bottom_small">
+            <thead>
+            <tr class="slds-text-title_caps">
+              <th scope="col">Product</th>
+              <th scope="col" class="slds-text-align_center">Original Qty</th>
+              <th scope="col" class="slds-text-align_center">New Qty</th>
+            </tr>
+            </thead>
+            <tbody>
+            <template for:each={originalMaterialToUpdate} for:item="mat">
+              <tr key={mat.id}>
+                <td>{mat.productName}</td>
+                <td class="slds-text-align_center">{mat.originalQuantity}</td>
+                <td class="slds-text-align_center">{mat.newQuantity}</td>
+              </tr>
+            </template>
+            </tbody>
+          </table>
+        </template>
 
         <h4 class="slds-badge slds-theme_success slds-m-left_small slds-m-bottom_xx-small">Added</h4>
-
         <table class="slds-table slds-table_bordered slds-table_cell-buffer slds-m-bottom_small">
           <thead>
           <tr class="slds-text-title_caps">
