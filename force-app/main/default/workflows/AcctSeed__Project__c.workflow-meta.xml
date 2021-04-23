@@ -3250,31 +3250,6 @@
         <triggerType>onCreateOrTriggeringUpdate</triggerType>
     </rules>
     <rules>
-        <fullName>Tagging Pending ERP</fullName>
-        <actions>
-            <name>Tagging_Pending_ERP</name>
-            <type>Task</type>
-        </actions>
-        <active>true</active>
-        <criteriaItems>
-            <field>AcctSeed__Project__c.Stage__c</field>
-            <operation>equals</operation>
-            <value>Tagging Pending</value>
-        </criteriaItems>
-        <criteriaItems>
-            <field>AcctSeed__Project__c.RecordTypeId</field>
-            <operation>equals</operation>
-            <value>Retail Boat Sale</value>
-        </criteriaItems>
-        <criteriaItems>
-            <field>AcctSeed__Project__c.RecordTypeId</field>
-            <operation>notEqual</operation>
-            <value>Legend Manufacturing Work Order,Legend Service Work Order</value>
-        </criteriaItems>
-        <description>Letting the Tagger know that it is okay to Tag (Retail ERP version)</description>
-        <triggerType>onCreateOrTriggeringUpdate</triggerType>
-    </rules>
-    <rules>
         <fullName>Task Boat Specialist on Parts Required</fullName>
         <actions>
             <name>Parts_Required_for_this_ERP</name>
@@ -4692,20 +4667,6 @@ Please complete other tasks associated to this Partner Boat Sale and finalize th
         <protected>false</protected>
         <status>Open</status>
         <subject>Service Work Order is Approved</subject>
-    </tasks>
-    <tasks>
-        <fullName>Tagging_Pending_ERP</fullName>
-        <assignedTo>sboothe@legendboats.com</assignedTo>
-        <assignedToType>user</assignedToType>
-        <description>This deal has been approved to tag, go do your thing :)
-
-Thank you, you&apos;re awesome!</description>
-        <dueDateOffset>1</dueDateOffset>
-        <notifyAssignee>true</notifyAssignee>
-        <priority>Normal</priority>
-        <protected>false</protected>
-        <status>Open</status>
-        <subject>Tagging Pending ERP</subject>
     </tasks>
     <tasks>
         <fullName>TestTestttere</fullName>
