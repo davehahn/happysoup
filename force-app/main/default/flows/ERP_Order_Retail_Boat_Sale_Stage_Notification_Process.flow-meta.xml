@@ -43,18 +43,28 @@
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </actionCalls>
     <actionCalls>
-        <name>Pending_Inspection_Email_Store_Manager_Whitefish</name>
-        <label>Pending Inspection Email Store Manager Whitefish</label>
-        <locationX>50</locationX>
-        <locationY>671</locationY>
-        <actionName>AcctSeed__Project__c.Retail_ERP_Stage_Notification_Whitefish_Store_Manager</actionName>
-        <actionType>emailAlert</actionType>
+        <name>Chatter_Store_Manager_Pending_Inspection_Whitefish</name>
+        <label>Chatter Store Manager Pending Inspection</label>
+        <locationX>138</locationX>
+        <locationY>1151</locationY>
+        <actionName>chatterPost</actionName>
+        <actionType>chatterPost</actionType>
+        <connector>
+            <targetReference>Loop_Whitefish_Store_Managers</targetReference>
+        </connector>
         <inputParameters>
-            <name>SObjectRowId</name>
+            <name>text</name>
+            <value>
+                <elementReference>WhitefishStoreManagerPendingInspectionChatterPost</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>subjectNameOrId</name>
             <value>
                 <elementReference>$Record.Id</elementReference>
             </value>
         </inputParameters>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
     </actionCalls>
     <apiVersion>50.0</apiVersion>
     <decisions>
@@ -226,7 +236,7 @@
                 </rightValue>
             </conditions>
             <connector>
-                <targetReference>Pending_Inspection_Email_Store_Manager_Whitefish</targetReference>
+                <targetReference>Get_Role_ID</targetReference>
             </connector>
             <doesRequireRecordChangedToMeetCriteria>true</doesRequireRecordChangedToMeetCriteria>
             <label>Pending Inspection</label>
@@ -358,6 +368,31 @@
             <label>Active</label>
         </rules>
     </decisions>
+    <decisions>
+        <name>Validate_Whitefish_Store_Manager</name>
+        <label>Validate Whitefish Store Manager</label>
+        <locationX>270</locationX>
+        <locationY>1031</locationY>
+        <defaultConnector>
+            <targetReference>Loop_Whitefish_Store_Managers</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Else</defaultConnectorLabel>
+        <rules>
+            <name>Valid</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Loop_Whitefish_Store_Managers.Id</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Chatter_Store_Manager_Pending_Inspection_Whitefish</targetReference>
+            </connector>
+            <label>Valid</label>
+        </rules>
+    </decisions>
     <description>Slowly removing individual workflows / process builders that handle Retail ERP notifications and migrating them into this flow.</description>
     <formulas>
         <name>Now</name>
@@ -376,6 +411,17 @@
     </formulas>
     <interviewLabel>ERP Order: Retail Boat Sale Stage Notification Process {!$Flow.CurrentDateTime}</interviewLabel>
     <label>ERP Order: Retail Boat Sale Stage Notification Process</label>
+    <loops>
+        <name>Loop_Whitefish_Store_Managers</name>
+        <label>Loop Whitefish Store Managers</label>
+        <locationX>50</locationX>
+        <locationY>911</locationY>
+        <collectionReference>Get_Whitefish_Store_Manager</collectionReference>
+        <iterationOrder>Asc</iterationOrder>
+        <nextValueConnector>
+            <targetReference>Validate_Whitefish_Store_Manager</targetReference>
+        </nextValueConnector>
+    </loops>
     <processMetadataValues>
         <name>BuilderType</name>
         <value>
@@ -840,6 +886,29 @@
         </outputAssignments>
     </recordLookups>
     <recordLookups>
+        <name>Get_Role_ID</name>
+        <label>Get Role ID</label>
+        <locationX>50</locationX>
+        <locationY>671</locationY>
+        <assignNullValuesIfNoRecordsFound>true</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Get_Whitefish_Store_Manager</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>DeveloperName</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>Store_Manager_Whitefish</stringValue>
+            </value>
+        </filters>
+        <object>UserRole</object>
+        <outputAssignments>
+            <assignToReference>RoleID</assignToReference>
+            <field>Id</field>
+        </outputAssignments>
+    </recordLookups>
+    <recordLookups>
         <name>Get_Task_Record_Type</name>
         <label>Get Task Record Type</label>
         <locationX>1898</locationX>
@@ -869,6 +938,34 @@
             <field>Id</field>
         </outputAssignments>
     </recordLookups>
+    <recordLookups>
+        <name>Get_Whitefish_Store_Manager</name>
+        <label>Get Whitefish Store Manager</label>
+        <locationX>50</locationX>
+        <locationY>791</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Loop_Whitefish_Store_Managers</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>UserRoleId</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>RoleID</elementReference>
+            </value>
+        </filters>
+        <filters>
+            <field>IsActive</field>
+            <operator>EqualTo</operator>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </filters>
+        <getFirstRecordOnly>false</getFirstRecordOnly>
+        <object>User</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
     <start>
         <locationX>1772</locationX>
         <locationY>0</locationY>
@@ -893,8 +990,20 @@
         <isViewedAsPlainText>true</isViewedAsPlainText>
         <text>@[{!MiguelColletteUserID}] The following ERP Order Stage has been changed to {!$Record.Stage__c}</text>
     </textTemplates>
+    <textTemplates>
+        <name>WhitefishStoreManagerPendingInspectionChatterPost</name>
+        <isViewedAsPlainText>true</isViewedAsPlainText>
+        <text>@[{!Loop_Whitefish_Store_Managers.Id}] This Retail ERP is now Pending Inspection.</text>
+    </textTemplates>
     <variables>
         <name>MiguelColletteUserID</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>RoleID</name>
         <dataType>String</dataType>
         <isCollection>false</isCollection>
         <isInput>false</isInput>

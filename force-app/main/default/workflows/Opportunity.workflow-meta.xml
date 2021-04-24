@@ -1144,16 +1144,6 @@
         <triggerType>onCreateOrTriggeringUpdate</triggerType>
     </rules>
     <rules>
-        <fullName>Brandon Winterization and Storage Call</fullName>
-        <active>false</active>
-        <criteriaItems>
-            <field>Opportunity.Boat_Specialist__c</field>
-            <operation>equals</operation>
-            <value>Brandon Milne</value>
-        </criteriaItems>
-        <triggerType>onCreateOrTriggeringUpdate</triggerType>
-    </rules>
-    <rules>
         <fullName>Business Office Manager Barrie</fullName>
         <actions>
             <name>Business_Office_Manager_Approval_Barrie</name>
@@ -1194,30 +1184,6 @@
                 <type>Alert</type>
             </actions>
             <timeLength>1</timeLength>
-            <workflowTimeTriggerUnit>Days</workflowTimeTriggerUnit>
-        </workflowTimeTriggers>
-    </rules>
-    <rules>
-        <fullName>Chelsi Day Before Pick Up Instructions - Whitefish</fullName>
-        <active>false</active>
-        <criteriaItems>
-            <field>Opportunity.Probability</field>
-            <operation>greaterThan</operation>
-            <value>50</value>
-        </criteriaItems>
-        <criteriaItems>
-            <field>Opportunity.Boat_Specialist__c</field>
-            <operation>equals</operation>
-            <value>Chelsi Lauriault</value>
-        </criteriaItems>
-        <triggerType>onCreateOrTriggeringUpdate</triggerType>
-        <workflowTimeTriggers>
-            <actions>
-                <name>Chelsi_Pickup_Instructions_Infographic</name>
-                <type>Alert</type>
-            </actions>
-            <offsetFromField>Opportunity.Delivery_Date__c</offsetFromField>
-            <timeLength>-1</timeLength>
             <workflowTimeTriggerUnit>Days</workflowTimeTriggerUnit>
         </workflowTimeTriggers>
     </rules>
@@ -1274,36 +1240,6 @@
             <value>Barrie,Whitefish,Montreal</value>
         </criteriaItems>
         <description>Sent to customers who have decided not to buy a Legend for whatever reason.</description>
-        <triggerType>onCreateOrTriggeringUpdate</triggerType>
-    </rules>
-    <rules>
-        <fullName>Closed Lost Survey French</fullName>
-        <actions>
-            <name>Closed_Lost_Survey_French</name>
-            <type>Alert</type>
-        </actions>
-        <active>false</active>
-        <criteriaItems>
-            <field>Account.Type</field>
-            <operation>equals</operation>
-            <value>Legend Customer,Prospect</value>
-        </criteriaItems>
-        <criteriaItems>
-            <field>Opportunity.StageName</field>
-            <operation>equals</operation>
-            <value>Closed Lost</value>
-        </criteriaItems>
-        <criteriaItems>
-            <field>Opportunity.Reason_Lost__c</field>
-            <operation>equals</operation>
-            <value>Purchased Non-Competitive Product,Personal Issues,Other,Purchased a Used Boat privately</value>
-        </criteriaItems>
-        <criteriaItems>
-            <field>Opportunity.Sales_Department__c</field>
-            <operation>equals</operation>
-            <value>Montreal</value>
-        </criteriaItems>
-        <description>Sent to customers who have decided not to buy a Legend for whatever reason (and would have bought from the Montreal store)</description>
         <triggerType>onCreateOrTriggeringUpdate</triggerType>
     </rules>
     <rules>
@@ -1371,22 +1307,6 @@
             <field>Opportunity.Items_Shipped__c</field>
             <operation>equals</operation>
             <value>Items to be Shipped to Whitefish</value>
-        </criteriaItems>
-        <description>This boat has been tagged and the Orientation Specialist has made their Add-On Call. Please create the Work Order for this package.</description>
-        <triggerType>onCreateOrTriggeringUpdate</triggerType>
-    </rules>
-    <rules>
-        <fullName>Create Work Order Montreal</fullName>
-        <active>false</active>
-        <criteriaItems>
-            <field>Opportunity.StageName</field>
-            <operation>equals</operation>
-            <value>Pending Work Order</value>
-        </criteriaItems>
-        <criteriaItems>
-            <field>Opportunity.Pickup_Location__c</field>
-            <operation>equals</operation>
-            <value>Montreal - Pick-up,Montreal - Delivery</value>
         </criteriaItems>
         <description>This boat has been tagged and the Orientation Specialist has made their Add-On Call. Please create the Work Order for this package.</description>
         <triggerType>onCreateOrTriggeringUpdate</triggerType>
@@ -1563,55 +1483,6 @@
         </workflowTimeTriggers>
     </rules>
     <rules>
-        <fullName>Elisha Day Before Pick Up Instructions - Whitefish</fullName>
-        <active>false</active>
-        <criteriaItems>
-            <field>Opportunity.Probability</field>
-            <operation>greaterThan</operation>
-            <value>50</value>
-        </criteriaItems>
-        <criteriaItems>
-            <field>Opportunity.Boat_Specialist__c</field>
-            <operation>equals</operation>
-            <value>Elisha Sanders</value>
-        </criteriaItems>
-        <triggerType>onCreateOrTriggeringUpdate</triggerType>
-        <workflowTimeTriggers>
-            <actions>
-                <name>Elisha_Pickup_Instructions_Infographic</name>
-                <type>Alert</type>
-            </actions>
-            <offsetFromField>Opportunity.Delivery_Date__c</offsetFromField>
-            <timeLength>-1</timeLength>
-            <workflowTimeTriggerUnit>Days</workflowTimeTriggerUnit>
-        </workflowTimeTriggers>
-    </rules>
-    <rules>
-        <fullName>Elisha Multi Point Inspection Call</fullName>
-        <active>false</active>
-        <criteriaItems>
-            <field>Opportunity.StageName</field>
-            <operation>equals</operation>
-            <value>Picked Up / Won</value>
-        </criteriaItems>
-        <criteriaItems>
-            <field>Opportunity.Boat_Specialist__c</field>
-            <operation>equals</operation>
-            <value>Elisha Sanders</value>
-        </criteriaItems>
-        <criteriaItems>
-            <field>Opportunity.RecordTypeId</field>
-            <operation>notEqual</operation>
-            <value>Retail Counter Sale</value>
-        </criteriaItems>
-        <description>Notifying the Boat Specialist to call a customer 45 days after their pick up to schedule their Multi Point Inspection.</description>
-        <triggerType>onCreateOrTriggeringUpdate</triggerType>
-        <workflowTimeTriggers>
-            <timeLength>46</timeLength>
-            <workflowTimeTriggerUnit>Days</workflowTimeTriggerUnit>
-        </workflowTimeTriggers>
-    </rules>
-    <rules>
         <fullName>Extended Mercury Warranty Barrie</fullName>
         <active>true</active>
         <criteriaItems>
@@ -1647,7 +1518,7 @@
                 <type>Task</type>
             </actions>
             <offsetFromField>Opportunity.Delivery_Date__c</offsetFromField>
-            <timeLength>330</timeLength>
+            <timeLength>90</timeLength>
             <workflowTimeTriggerUnit>Days</workflowTimeTriggerUnit>
         </workflowTimeTriggers>
         <workflowTimeTriggers>
@@ -1656,7 +1527,7 @@
                 <type>Task</type>
             </actions>
             <offsetFromField>Opportunity.Delivery_Date__c</offsetFromField>
-            <timeLength>90</timeLength>
+            <timeLength>330</timeLength>
             <workflowTimeTriggerUnit>Days</workflowTimeTriggerUnit>
         </workflowTimeTriggers>
     </rules>
@@ -1687,6 +1558,11 @@
         <triggerType>onCreateOrTriggeringUpdate</triggerType>
         <workflowTimeTriggers>
             <offsetFromField>Opportunity.Delivery_Date__c</offsetFromField>
+            <timeLength>-14</timeLength>
+            <workflowTimeTriggerUnit>Days</workflowTimeTriggerUnit>
+        </workflowTimeTriggers>
+        <workflowTimeTriggers>
+            <offsetFromField>Opportunity.Delivery_Date__c</offsetFromField>
             <timeLength>90</timeLength>
             <workflowTimeTriggerUnit>Days</workflowTimeTriggerUnit>
         </workflowTimeTriggers>
@@ -1696,11 +1572,6 @@
                 <type>Task</type>
             </actions>
             <timeLength>330</timeLength>
-            <workflowTimeTriggerUnit>Days</workflowTimeTriggerUnit>
-        </workflowTimeTriggers>
-        <workflowTimeTriggers>
-            <offsetFromField>Opportunity.Delivery_Date__c</offsetFromField>
-            <timeLength>-14</timeLength>
             <workflowTimeTriggerUnit>Days</workflowTimeTriggerUnit>
         </workflowTimeTriggers>
     </rules>
@@ -1787,7 +1658,7 @@
         <description>Time-Based Follow ups that are created at specific intervals throughout the year, as long as the prospect remains in Quoting</description>
         <triggerType>onCreateOrTriggeringUpdate</triggerType>
         <workflowTimeTriggers>
-            <timeLength>180</timeLength>
+            <timeLength>7</timeLength>
             <workflowTimeTriggerUnit>Days</workflowTimeTriggerUnit>
         </workflowTimeTriggers>
         <workflowTimeTriggers>
@@ -1795,19 +1666,7 @@
             <workflowTimeTriggerUnit>Days</workflowTimeTriggerUnit>
         </workflowTimeTriggers>
         <workflowTimeTriggers>
-            <timeLength>270</timeLength>
-            <workflowTimeTriggerUnit>Days</workflowTimeTriggerUnit>
-        </workflowTimeTriggers>
-        <workflowTimeTriggers>
-            <timeLength>90</timeLength>
-            <workflowTimeTriggerUnit>Days</workflowTimeTriggerUnit>
-        </workflowTimeTriggers>
-        <workflowTimeTriggers>
             <timeLength>30</timeLength>
-            <workflowTimeTriggerUnit>Days</workflowTimeTriggerUnit>
-        </workflowTimeTriggers>
-        <workflowTimeTriggers>
-            <timeLength>360</timeLength>
             <workflowTimeTriggerUnit>Days</workflowTimeTriggerUnit>
         </workflowTimeTriggers>
         <workflowTimeTriggers>
@@ -1815,7 +1674,19 @@
             <workflowTimeTriggerUnit>Days</workflowTimeTriggerUnit>
         </workflowTimeTriggers>
         <workflowTimeTriggers>
-            <timeLength>7</timeLength>
+            <timeLength>90</timeLength>
+            <workflowTimeTriggerUnit>Days</workflowTimeTriggerUnit>
+        </workflowTimeTriggers>
+        <workflowTimeTriggers>
+            <timeLength>180</timeLength>
+            <workflowTimeTriggerUnit>Days</workflowTimeTriggerUnit>
+        </workflowTimeTriggers>
+        <workflowTimeTriggers>
+            <timeLength>270</timeLength>
+            <workflowTimeTriggerUnit>Days</workflowTimeTriggerUnit>
+        </workflowTimeTriggers>
+        <workflowTimeTriggers>
+            <timeLength>360</timeLength>
             <workflowTimeTriggerUnit>Days</workflowTimeTriggerUnit>
         </workflowTimeTriggers>
     </rules>
@@ -1960,88 +1831,6 @@
         </workflowTimeTriggers>
     </rules>
     <rules>
-        <fullName>Michel 3 Day Prior to Pick Up Followup</fullName>
-        <active>false</active>
-        <criteriaItems>
-            <field>Opportunity.Boat_Specialist__c</field>
-            <operation>equals</operation>
-            <value>Michel Capistran</value>
-        </criteriaItems>
-        <description>Call the customer to re-confirm their pick up date and see if they have any last minute questions about their orientation</description>
-        <triggerType>onCreateOrTriggeringUpdate</triggerType>
-        <workflowTimeTriggers>
-            <offsetFromField>Opportunity.Delivery_Date__c</offsetFromField>
-            <timeLength>-3</timeLength>
-            <workflowTimeTriggerUnit>Days</workflowTimeTriggerUnit>
-        </workflowTimeTriggers>
-    </rules>
-    <rules>
-        <fullName>Michel Customer Satisfaction Call</fullName>
-        <active>false</active>
-        <criteriaItems>
-            <field>Opportunity.StageName</field>
-            <operation>equals</operation>
-            <value>Picked Up / Won</value>
-        </criteriaItems>
-        <criteriaItems>
-            <field>Opportunity.Boat_Specialist__c</field>
-            <operation>equals</operation>
-            <value>Michel Capistran</value>
-        </criteriaItems>
-        <criteriaItems>
-            <field>Opportunity.RecordTypeId</field>
-            <operation>notEqual</operation>
-            <value>Retail Counter Sale</value>
-        </criteriaItems>
-        <description>Notifying the Boat Specialist to call a customer 1 week after their pick up to see how they&apos;re enjoying their boat so far.</description>
-        <triggerType>onCreateOrTriggeringUpdate</triggerType>
-        <workflowTimeTriggers>
-            <timeLength>7</timeLength>
-            <workflowTimeTriggerUnit>Days</workflowTimeTriggerUnit>
-        </workflowTimeTriggers>
-    </rules>
-    <rules>
-        <fullName>Michel Multi Point Inspection Call</fullName>
-        <active>false</active>
-        <criteriaItems>
-            <field>Opportunity.StageName</field>
-            <operation>equals</operation>
-            <value>Picked Up / Won</value>
-        </criteriaItems>
-        <criteriaItems>
-            <field>Opportunity.Boat_Specialist__c</field>
-            <operation>equals</operation>
-            <value>Michel Capistran</value>
-        </criteriaItems>
-        <criteriaItems>
-            <field>Opportunity.RecordTypeId</field>
-            <operation>notEqual</operation>
-            <value>Retail Counter Sale</value>
-        </criteriaItems>
-        <description>Notifying the Boat Specialist to call a customer 45 days after their pick up to schedule their Multi Point Inspection.</description>
-        <triggerType>onCreateOrTriggeringUpdate</triggerType>
-        <workflowTimeTriggers>
-            <timeLength>45</timeLength>
-            <workflowTimeTriggerUnit>Days</workflowTimeTriggerUnit>
-        </workflowTimeTriggers>
-    </rules>
-    <rules>
-        <fullName>Michel Orientation Specialist Add On Call</fullName>
-        <active>false</active>
-        <criteriaItems>
-            <field>Opportunity.StageName</field>
-            <operation>equals</operation>
-            <value>Orientation Specialist Add-On Call</value>
-        </criteriaItems>
-        <criteriaItems>
-            <field>Opportunity.Boat_Specialist__c</field>
-            <operation>equals</operation>
-            <value>Michel Capistran</value>
-        </criteriaItems>
-        <description>This deal has been tagged. Please call the customer to offer any add-on options before creating the Work Order.</description>
-        <triggerType>onCreateOrTriggeringUpdate</triggerType>
-    </rules>
-    <rules>
         <fullName>Next Day Customer Phone Call</fullName>
         <active>true</active>
         <criteriaItems>
@@ -2084,11 +1873,11 @@
         </criteriaItems>
         <triggerType>onCreateOrTriggeringUpdate</triggerType>
         <workflowTimeTriggers>
-            <timeLength>180</timeLength>
+            <timeLength>90</timeLength>
             <workflowTimeTriggerUnit>Days</workflowTimeTriggerUnit>
         </workflowTimeTriggers>
         <workflowTimeTriggers>
-            <timeLength>90</timeLength>
+            <timeLength>180</timeLength>
             <workflowTimeTriggerUnit>Days</workflowTimeTriggerUnit>
         </workflowTimeTriggers>
     </rules>
@@ -2111,22 +1900,6 @@
         </criteriaItems>
         <description>The Work Order has been created for this customer.  Once the boat is built, please change the Stage to &quot;Pending Inspection&quot; to notify the Salesperson that they need to inspect their customer&apos;s boat package.</description>
         <triggerType>onCreateOrTriggeringUpdate</triggerType>
-    </rules>
-    <rules>
-        <fullName>Vanessa 3 Day Prior to Pick Up Followup</fullName>
-        <active>false</active>
-        <criteriaItems>
-            <field>Opportunity.Boat_Specialist__c</field>
-            <operation>equals</operation>
-            <value>Vanessa Middaugh</value>
-        </criteriaItems>
-        <description>Call the customer to re-confirm their pick up date and see if they have any last minute questions about their orientation</description>
-        <triggerType>onCreateOrTriggeringUpdate</triggerType>
-        <workflowTimeTriggers>
-            <offsetFromField>Opportunity.Delivery_Date__c</offsetFromField>
-            <timeLength>-3</timeLength>
-            <workflowTimeTriggerUnit>Days</workflowTimeTriggerUnit>
-        </workflowTimeTriggers>
     </rules>
     <rules>
         <fullName>Vanessa Customer Satisfaction Call</fullName>
@@ -2152,70 +1925,6 @@
             <timeLength>7</timeLength>
             <workflowTimeTriggerUnit>Days</workflowTimeTriggerUnit>
         </workflowTimeTriggers>
-    </rules>
-    <rules>
-        <fullName>Vanessa Day Before Pick Up Instructions - Barrie</fullName>
-        <active>false</active>
-        <criteriaItems>
-            <field>Opportunity.Probability</field>
-            <operation>greaterThan</operation>
-            <value>50</value>
-        </criteriaItems>
-        <criteriaItems>
-            <field>Opportunity.Boat_Specialist__c</field>
-            <operation>equals</operation>
-            <value>Vanessa Middaugh</value>
-        </criteriaItems>
-        <triggerType>onCreateOrTriggeringUpdate</triggerType>
-        <workflowTimeTriggers>
-            <actions>
-                <name>Vanessa_Pick_Up_Instructions_Infographic</name>
-                <type>Alert</type>
-            </actions>
-            <offsetFromField>Opportunity.Delivery_Date__c</offsetFromField>
-            <timeLength>-1</timeLength>
-            <workflowTimeTriggerUnit>Days</workflowTimeTriggerUnit>
-        </workflowTimeTriggers>
-    </rules>
-    <rules>
-        <fullName>What to Expect - Cash</fullName>
-        <actions>
-            <name>What_to_Expect_Cash</name>
-            <type>Alert</type>
-        </actions>
-        <active>false</active>
-        <criteriaItems>
-            <field>Opportunity.StageName</field>
-            <operation>equals</operation>
-            <value>Tagging Pending</value>
-        </criteriaItems>
-        <criteriaItems>
-            <field>Opportunity.Payment_Method__c</field>
-            <operation>equals</operation>
-            <value>Cash</value>
-        </criteriaItems>
-        <description>Sent to the customer once the Deal becomes Business Manager Approved</description>
-        <triggerType>onCreateOrTriggeringUpdate</triggerType>
-    </rules>
-    <rules>
-        <fullName>What to Expect - Finance</fullName>
-        <actions>
-            <name>What_to_Expect_Finance</name>
-            <type>Alert</type>
-        </actions>
-        <active>false</active>
-        <criteriaItems>
-            <field>Opportunity.StageName</field>
-            <operation>equals</operation>
-            <value>Tagging Pending</value>
-        </criteriaItems>
-        <criteriaItems>
-            <field>Opportunity.Payment_Method__c</field>
-            <operation>equals</operation>
-            <value>Finance</value>
-        </criteriaItems>
-        <description>Sent to the customer once the Deal becomes Business Manager Approved</description>
-        <triggerType>onCreateOrTriggeringUpdate</triggerType>
     </rules>
     <tasks>
         <fullName>Barrie_Orientation_Specialist_Add_On_Call</fullName>
