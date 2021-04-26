@@ -1,0 +1,120 @@
+.btn, .contactSupportButton {
+    display: flex;
+    align-items: center;
+    transition: all .3s linear;
+    border: 1px solid #0d506d;
+    border-radius: 5px;
+    text-decoration: none;
+    width: fit-content;
+    width: -moz-fit-content;
+    cursor: pointer;
+    font-size: 1.25em !important;
+    font-weight: 900 !important;
+    line-height: 1;
+    box-sizing: border-box;
+    padding: .5em 1em;
+}
+.btn span {
+    display: block;
+}
+.btn span.icon {
+    margin-right: .75em;
+    height: 1.5em;
+    width: 1.5em;
+}
+
+.btn span.icon svg {
+    height: 100%;
+    transition: all .2s linear;
+}
+.btn span.icon svg path {
+    fill: rgba(255, 255, 255, .6) !important;
+}
+.btn:hover span.icon svg path, .btn:focus span.icon svg path {
+    fill: #0d506d !important;
+}
+.btn.btn--primary {
+    background-color: #0d506d;
+    color: #fff;
+}
+.btn.btn--primary:hover, .btn.btn--primary:focus {
+    background-color: #fff;
+    color: #0d506d;
+    text-decoration: none;
+}
+.btn.btn--fullWidth {
+    width: 100%;
+    text-align: center;
+}
+.btn.btn--secondary {
+    color: #0d506d;
+    background: transparent;
+    font-size: 1.5em !important;
+}
+.btn.btn--secondary.btn--secondarySolid {
+    background-color: #fff;
+}
+.btn.btn--secondary.btn--secondaryInverted {
+    color: #fff;
+    border-color: #fff;
+    background-color: rgba(255, 255, 255, .15);
+}
+.btn.btn--secondary:hover, .btn.btn--secondary:focus {
+    background-color: #0d506d;
+    color: #fff;
+    text-decoration: none;
+}
+.btn.btn--tertiary {
+    display: block;
+    color: #0d506d;
+    background: transparent;
+    font-size: 1em !important;
+    font-weight: 300 !important;
+    width: 100%}
+.btn.btn--tertiary span {
+    display: block;
+    font-weight: 900 !important;
+}
+.btn.btn--tertiary:hover, .btn.btn--tertiary:focus {
+    background-color: #0d506d;
+    color: #fff;
+    text-decoration: none;
+}
+.btn.btn--white {
+    display: block;
+    color: #fff;
+    background-color: transparent;
+    border-color: #fff;
+    color: #fff;
+}
+.btn.btn--white:hover, .btn.btn--white:focus {
+    background-color: #fff;
+    color: #333;
+    text-decoration: none;
+}
+.btn.btn--mini {
+    border: 0 none;
+    background: none;
+    font-weight: 600 !important;
+    font-size: 1em !important;
+    justify-content: center;
+    width: 100%;
+    padding: 1em 1em;
+    border-radius: 0;
+}
+.btn.btn--mini span {
+    transform: rotate(45deg);
+    padding-top: .25em;
+}
+.btn.btn--mini:hover, .btn.btn--mini:focus {
+    background: #333;
+    color: #fff;
+}
+.btn.btn--mini.inverted {
+    color: #fff;
+}
+@media screen and (max-width: 540px) {
+    .btn {
+    font-size: 1.125em;
+}
+}

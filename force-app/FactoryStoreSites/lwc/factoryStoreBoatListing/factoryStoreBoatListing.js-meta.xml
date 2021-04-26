@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+  <apiVersion>50.0</apiVersion>
+  <description>Factory Store Boat Details</description>
+  <isExposed>true</isExposed>
+  <targets>
+    <target>lightningCommunity__Page</target>
+    <target>lightningCommunity__Default</target>
+  </targets>
+  <targetConfigs>
+    <targetConfig targets="lightningCommunity__Default">
+      <property name="seriesName" type="String" label="Series to Show" datasource="X,XTR,XTE,F,R,Splash,E-Series,V-Series,Q-Series LE,Q-Series,VIBE"/>
+      <property name="seriesBlurb" type="String" label="Description of Series" />
+    </targetConfig>
+  </targetConfigs>
+  <masterLabel>Factory Store Boat Listing</masterLabel>
+</LightningComponentBundle>

@@ -1,0 +1,85 @@
+<!--
+ - Created by Tim on 2021-03-30.
+ -->
+
+<!-- Factory Store Shopping Tools -->
+<template>
+  <aside class="shoppingTools" aria-label="Shopping Tools">
+    {locale}
+    <h3 class="ro">Shopping Tools</h3>
+    <ul class="shoppingTools__list maxWidth maxWidth--thin">
+      <template if:true={toolsFindADealer}>
+        <li class="shoppingTools__item">
+          <h4>
+            <a class="shoppingTools__dealer" href="#">
+						<span class="icon">
+              <svg xmlns="http://www.w3.org/2000/svg" class="iconWrap">
+                  <use href={pinIcon}></use>
+              </svg>
+						</span>
+              <template if:true={isEN}><span class="copy">Find a Dealer</span></template>
+              <template if:true={isFR}><span class="copy">Localisateur de Concessionnaires</span></template>
+            </a>
+          </h4>
+        </li>
+      </template>
+      <template if:true={toolsShowroomVisit}>
+        <li class="shoppingTools__item">
+          <h4>
+            <a class="shoppingTools__showroom" href="#">
+						<span class="icon">
+              <svg xmlns="http://www.w3.org/2000/svg" class="iconWrap">
+                  <use href={calendarIcon}></use>
+              </svg>
+						</span>
+              <template if:true={isEN}><span class="copy">Schedule a <b>Showroom Visit</b></span></template>
+              <template if:true={isFR}><span class="copy">Prévoir une visite</span></template>
+            </a>
+          </h4>
+        </li>
+      </template>
+      <template if:true={toolsRequestAQuote}>
+        <li class="shoppingTools__item">
+          <h4>
+            <a class="shoppingTools__quote" href="#">
+						<span class="icon">
+              <svg xmlns="http://www.w3.org/2000/svg" class="iconWrap">
+                  <use href={contractIcon}></use>
+              </svg>
+						</span>
+              <template if:true={isEN}><span class="copy">Request a <b>Quote</b></span></template>
+              <template if:true={isFR}><span class="copy">Demander un Soumission</span></template>
+            </a>
+          </h4>
+        </li>
+      </template>
+      <template if:true={toolsBuildPrice}>
+        <li class="shoppingTools__item">
+          <h4>
+            <a class="shoppingTools__builder" href="#">
+						<span class="icon">
+
+						</span>
+              <span class="copy">Build &amp; Price</span>
+            </a>
+          </h4>
+        </li>
+      </template>
+      <template if:true={toolsDownloadCatalogue}>
+        <li class="shoppingTools__item">
+          <h4>
+            <a class="shoppingTools__brochure" href="#">
+						<span class="icon">
+              <svg xmlns="http://www.w3.org/2000/svg" class="iconWrap">
+                  <use href={downloadIcon}></use>
+              </svg>
+						</span>
+              <template if:true={isEN}><span class="copy">Download Catalogue</span></template>
+              <template if:true={isFR}><span class="copy">Téléchargez un catalogue</span></template>
+            </a>
+          </h4>
+        </li>
+      </template>
+    </ul>
+  </aside>
+</template>

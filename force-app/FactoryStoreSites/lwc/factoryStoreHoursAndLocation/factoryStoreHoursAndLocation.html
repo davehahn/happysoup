@@ -1,0 +1,22 @@
+<!--
+ - Created by Tim on 2021-03-30.
+ -->
+
+<!-- Factory Store Hours And Location -->
+<template>
+  <section class="hoursAndLocation">
+    <div class="hours">
+      <span class={statusClass}>{currentStatus}</span>
+      <span class="currentHours">{currentHours}</span>
+      <span class="currentDate">{currentDate}</span>
+    </div>
+    <div class="location">
+      <span class="addressLineOne">
+        {streetNumber} {route}
+      </span>
+      <span class="addressLineTwo">
+        {locality}, {administrativeArea} {postalCode}
+      </span>
+    </div>
+  </section>
+</template>

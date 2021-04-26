@@ -1,0 +1,300 @@
+.THIS {
+  font-family: 'gotham_htf', Montserrat, Lato, Helvetica, Arial, sans-serif;
+	font-weight: 300;
+	position: relative;
+}
+.THIS [data-region-name="content"]{
+  width: 95%;
+  max-width: 1300px;
+  margin: 2vw auto;
+}
+
+.THIS.headerWrap{
+  background-color: var(--highlight);
+}
+.THIS.headerWrap .storeHeader{
+  z-index: 100;
+  display: flex;
+	align-items: center;
+	justify-content: space-between;
+	max-width: 1640px;
+	margin: 0 auto;
+	padding: 0 2.5em;
+	position: relative;
+}
+.THIS.storeMain, .THIS.storeFooter{
+  z-index: 1;
+}
+
+.THIS .mainNavigation{
+    width: 100%;
+}
+.THIS .storeLogoIcon{
+    background-image: t('url(' + brandLogoImage + ')');
+		background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: block;
+    text-indent: -99999px;
+    width: 170px;
+		height: 28px;
+		flex-shrink: 0;
+		transition: none;
+}
+.THIS .storeLogoIcon:hover, .THIS .storeLogoIcon:focus{
+  text-decoration: none;
+}
+
+.THIS .locationAndHours{
+  width: 190px;
+  flex-shrink: 0;
+  margin-left: 1em;
+}
+
+.THIS .phoneNumbers{
+  width: 100%;
+}
+
+.THIS.searchRegion{
+  width: 100%;
+	padding: 1vw 0;
+	position: relative;
+}
+.THIS.searchRegion::before{
+  content: '';
+  display: block;
+  width: 100%; height: 100%;
+  position: absolute;
+  top: 0; right: 0; bottom: 0; left: 0;
+  background-color: rgba(0, 0, 0, 0.25);
+  z-index: 1;
+}
+.THIS.searchRegion .forceCommunityGlobalSearchInput{
+  max-width: 500px;
+  margin: 0 auto;
+  background-color: rgba(255, 255, 255, 0.95);
+  border-radius: 100vh;
+  position: relative;
+  z-index: 2;
+}
+.THIS .forceSearchInputDesktop .contentWrapper{
+  border-radius: 100vh!important;
+}
+
+.THIS .langSelector{
+  width: 120px;
+  flex-shrink: 0;
+}
+.THIS .langSelector .forceCommunityLanguageSelector43 input.slds-input {
+  background: transparent;
+  color: #FFF!important;
+  border: 0 none;
+  cursor: pointer;
+}
+.THIS .langSelector .forceCommunityLanguageSelector43 svg{
+  fill: #FFF;
+}
+.THIS .langSelector .slds-dropdown_fluid, .THIS .langSelector .slds-dropdown--fluid{
+  min-width: 0!important;
+}
+.THIS .langSelector .forceCommunityLanguageSelector43 .slds-icon-utility-check svg{
+  fill: #333!important;
+  display: block;
+}
+
+.THIS .contactUs{
+  background-color: var(--zebra);
+  padding: 2.5em;
+	text-align: center;
+}
+
+.THIS .contactSupportButton{
+  margin-top: 0.5em!important;
+}
+
+.THIS .footerLegal{
+	max-width: 1300px;
+	margin: 0 auto;
+	padding: 2.5em;
+	font-family: 'gotham_htf', Montserrat, Lato, Helvetica, Arial, sans-serif;
+	font-weight: 300;
+	font-size: 0.825em;
+	line-height: 1.35;
+}
+
+/* Dealer Locator Overrides */
+.THIS .cAccount_FindClosestPartner .slds-card__header-title{
+  font-weight: 900;
+  font-size: 1.5em;
+}
+.THIS .cAccount_FindClosestPartner .lookup-field input, .THIS .cAccount_FindClosestPartner .lookup-field button{
+  border: 1px solid #bebebe;
+  padding: 0.5em 0.5em 0.4em;
+  box-sizing: border-box;
+  font-size: 1.125em;
+}
+.THIS .cAccount_FindClosestPartner .lookup-field button{
+  width: 50px; height: 48.5px;
+}
+.THIS .cAccount_FindClosestPartner .lookup-field button:hover, .THIS .cAccount_FindClosestPartner .lookup-field button:focus{
+  background-color: var(--zebra);
+}
+.THIS .cAccount_FindClosestPartner .lookup-field button svg{
+  width: 30px; height: 30px;
+}
+
+/* Service Appointment Overrides */
+.THIS .flowRuntimeV2 .slds-form-element__label{
+  font-size: 1.12rem;
+}
+.THIS .flowRuntimeV2 .slds-input,
+.THIS .flowRuntimeV2 .slds-select,
+.THIS .flowRuntimeV2 .slds-textarea,
+.THIS .flowRuntimeV2 .uiInput--select{
+  border: 1px solid #bebebe;
+	box-sizing: border-box;
+	font-size: 1.125rem;
+}
+/*.THIS .flowRuntimeV2 .slds-input-has-icon_left-right .slds-input{*/
+/*  padding-left: var(--lwc-spacingXLarge,2rem);*/
+/*	padding-right: var(--lwc-spacingXLarge,2rem);*/
+/*}*/
+/*.THIS .flowRuntimeV2 .body{*/
+/*  display: flex;*/
+/*  flex-wrap: wrap;*/
+/*  align-items: flex-start;*/
+/*  justify-content: space-between;*/
+/*}*/
+/*.THIS .flowRuntimeV2 .body .slds-m-bottom_x-small{*/
+/*  width: calc(50% - 10px);*/
+/*}*/
+/*.THIS .flowRuntimeV2 .body > div:first-of-type{*/
+/*  width: 100%;*/
+/*  margin-bottom: 1.25em;*/
+/*}*/
+.THIS .flowRuntimeV2 .body div.slds-m-bottom_x-small:nth-of-type(2){
+  display: none!important;
+}
+/*.THIS .flowRuntimeV2 .body .cFlowProgressIndicator{*/
+/*  width: 100%;*/
+/*}*/
+.THIS .flowRuntimeV2 .body .cFlowProgressIndicator .slds-path__nav .slds-is-active,
+.THIS .flowRuntimeV2 .body .cFlowProgressIndicator .slds-path__nav .slds-is-active:first-child::before,
+.THIS .flowRuntimeV2 .body .cFlowProgressIndicator .slds-path__nav .slds-is-active:first-child::after,
+.THIS .slds-path__nav .slds-is-active::before,
+.THIS .slds-path__nav .slds-is-active::after{
+  background-color: var(--highlight);
+}
+.THIS .flowRuntimeV2 .body .cFlowProgressIndicator .slds-path__nav .slds-is-current:first-child:hover::before,
+.THIS .flowRuntimeV2 .body .cFlowProgressIndicator .slds-path__nav .slds-is-current:first-child:hover::after{
+  background-image: none;
+}
+.THIS .flowRuntimeV2 .body .cFlowProgressIndicator .slds-path__nav .slds-is-active .slds-path__link .slds-path__title{
+  font-weight: 900;
+}
+.THIS .flowRuntimeV2 .lgnd_form_address .slds-p-around_x-small, .THIS .flowRuntimeV2 .lgnd_form_address .slds-p-around--x-small{
+  padding-left: 0; padding-right: 0;
+}
+.THIS .flowRuntimeV2 .lgnd_form_address .slds-large-size_8-of-12, .THIS .flowRuntimeV2 .lgnd_form_address .slds-large-size--8-of-12{
+  padding-right: 1em;
+}
+.THIS .flowRuntimeV2 .actionsRight{
+  display: flex;
+}
+.THIS .flowRuntimeV2 .slds-button.slds-button_brand,
+.THIS .flowRuntimeV2 .slds-button.slds-button_neutral{
+    display: flex;
+  	align-items: center;
+  	transition: all .3s linear;
+  	border: 1px solid #0d506d;
+  	border-radius: 5px;
+  	text-decoration: none;
+  	width: fit-content;
+  	width: -moz-fit-content;
+  	cursor: pointer;
+  	font-size: 1.25em !important;
+  	font-weight: 900 !important;
+  	line-height: 1;
+  	box-sizing: border-box;
+  	padding: .5em 1em;
+  	color: #0d506d;
+}
+.THIS .flowRuntimeV2 .slds-button.slds-button_brand{
+	background-color: #0d506d;
+	color: #fff;
+}
+.THIS .flowRuntimeV2 .slds-button.slds-button_brand:hover, .THIS .flowRuntimeV2 .slds-button.slds-button_brand:focus{
+  background-color: #fff;
+	color: #0d506d;
+	text-decoration: none;
+}
+
+/* Contact Us Overrides */
+.THIS .forceCommunityCaseDeflection .slds-page-header__title, .THIS .forceCommunityContactSupportForm .slds-page-header__title{
+  font-weight: 900;
+  font-size: 1.25em;
+}
+.THIS .comm-topic-trending-articles__item a{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.2s;
+  padding-left: 1em; padding-right: 1em;
+}
+.THIS .selfServiceTopicTrendingArticles42 .slds-grid--vertical a:hover,
+.THIS .selfServiceTopicTrendingArticles42 .slds-grid--vertical a:focus,
+.THIS .selfServiceTopicTrendingArticles42 .slds-grid--vertical a:active{
+  color: var(--highlight)!important;
+  background-color: var(--zebra);
+}
+
+.THIS .forceCommunityContactSupportForm .slds-box_border,
+.THIS .forceCommunityContactSupportForm .slds-box--border,
+.THIS .forceCommunityContactSupportForm .uiInput--input .input,
+.THIS .forceCommunityContactSupportForm .uiInput--input.input,
+.THIS .forceCommunityContactSupportForm .uiInput--textarea .textarea,
+.THIS .forceCommunityContactSupportForm .uiInput--textarea.textarea,
+.THIS .forceCommunityContactSupportForm .slds-input,
+.THIS .forceCommunityContactSupportForm .slds-textarea{
+  border: 1px solid #bebebe;
+}
+.THIS .forceCommunityContactSupportForm .slds-box_border .uiInput--input .input,
+.THIS .forceCommunityContactSupportForm .slds-box--border .uiInput--input.input{
+  border: 0 none;
+}
+
+
+@media screen and (max-width: 1315px){
+  .THIS .storeHeader .storeLogo{
+    order: 2;
+    width: 100%;
+  }
+  .THIS .storeHeader .storeLogo .storeLogoIcon{
+    margin: 0.5em auto;
+    width: 300px; height: 42px;
+  }
+  .THIS .storeHeader .mainNavigation{
+    order: 1;
+    width: auto;
+  }
+  .THIS .storeHeader .langSelector{
+    order: 3;
+  }
+}
+
+@media screen and (max-width: 480px){
+  .THIS.headerWrap .storeHeader{
+    padding: 0 0.5em;
+  }
+  .THIS .storeHeader .storeLogo .storeLogoIcon{
+		margin: 0.5em auto;
+		width: 170px; height: 28px;
+	}
+	.THIS .langSelector{
+    width: 34px;
+    flex-shrink: 0;
+  }
+  .THIS .langSelector .forceCommunityLanguageSelector43 svg{
+    display: none;
+  }
+}
