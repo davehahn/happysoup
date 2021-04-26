@@ -1,0 +1,131 @@
+{
+  "appPageId" : "792e4aea-4991-4f22-bbec-e64df85a70b1",
+  "componentName" : "siteforce:sldsTwoCol84SidebarFeaturedLayout",
+  "id" : "3a4ae8a0-829a-4009-9e02-6c5201da8ecf",
+  "label" : "Article Detail",
+  "regions" : [ {
+    "id" : "812d71de-5312-434c-9d64-5c6e2c96536d",
+    "regionName" : "header",
+    "type" : "region"
+  }, {
+    "components" : [ {
+      "componentAttributes" : {
+        "uniqueNameOrId" : "{!urlName}"
+      },
+      "componentName" : "forceCommunity:breadcrumbs",
+      "id" : "600ca872-6a11-4e25-bd25-9a3ccf6c629c",
+      "renderPriority" : "NEUTRAL",
+      "renditionMap" : { },
+      "type" : "component"
+    }, {
+      "componentAttributes" : {
+        "enableVoting" : true,
+        "recordId" : "{!recordId}",
+        "showTitleInArticleHeader" : true,
+        "showTopicPills" : true,
+        "urlName" : "{!urlName}"
+      },
+      "componentName" : "selfService:singleArticleView",
+      "id" : "ce31235e-ab3b-47ca-8a06-4e12919ae8f7",
+      "renderPriority" : "NEUTRAL",
+      "renditionMap" : { },
+      "type" : "component"
+    } ],
+    "id" : "dd6c6253-09ad-4082-bf05-7e07a1850f4b",
+    "regionName" : "content",
+    "type" : "region"
+  }, {
+    "components" : [ {
+      "componentAttributes" : {
+        "numberOfItems" : 5,
+        "showViewCounts" : true,
+        "title" : "Related Articles"
+      },
+      "componentName" : "selfService:similarArticles42",
+      "id" : "38b03600-0718-460b-91f5-a8fd2f0ce2be",
+      "renderPriority" : "NEUTRAL",
+      "renditionMap" : { },
+      "type" : "component"
+    }, {
+      "componentAttributes" : {
+        "numberOfArticles" : 5,
+        "title" : "Trending Articles",
+        "topicId" : "{!topicId}"
+      },
+      "componentName" : "selfService:topicTrendingArticles42",
+      "id" : "13962475-08ec-4f48-94ad-f052a8dee7b8",
+      "renderPriority" : "NEUTRAL",
+      "renditionMap" : {
+        "fr" : "7671266f-f3ae-452f-b728-2e9a9fc89041"
+      },
+      "renditions" : [ {
+        "id" : "7671266f-f3ae-452f-b728-2e9a9fc89041",
+        "renditionValue" : {
+          "componentAttributes" : {
+            "title" : "Articles Tendances"
+          }
+        },
+        "type" : "renditionComponent"
+      } ],
+      "type" : "component"
+    }, {
+      "componentAttributes" : {
+        "buttonAlignment" : "center",
+        "buttonBgColor" : "",
+        "buttonBgHoverColor" : "",
+        "buttonBorderColor" : "",
+        "buttonMaxWidth" : 100,
+        "buttonRadius" : 0,
+        "buttonTextColor" : "",
+        "buttonTextHoverColor" : "",
+        "label" : "Contact Support"
+      },
+      "componentName" : "forceCommunity:contactSupportButton",
+      "id" : "f7fc3c01-b193-4d1f-a435-144823ba236f",
+      "renderPriority" : "NEUTRAL",
+      "renditionMap" : {
+        "fr" : "61b9791d-2518-4343-b825-09b0ec73bf3c",
+        "fr_ca" : "073bf389-9103-4635-a500-b13ba5744e14"
+      },
+      "renditions" : [ {
+        "id" : "073bf389-9103-4635-a500-b13ba5744e14",
+        "renditionValue" : {
+          "componentAttributes" : {
+            "label" : "Contactez le support"
+          }
+        },
+        "type" : "renditionComponent"
+      }, {
+        "id" : "61b9791d-2518-4343-b825-09b0ec73bf3c",
+        "renditionValue" : {
+          "componentAttributes" : {
+            "label" : "Contactez le support"
+          }
+        },
+        "type" : "renditionComponent"
+      } ],
+      "type" : "component"
+    } ],
+    "id" : "f73680f8-fcf9-4ee1-b7b3-2a9e8fde6b31",
+    "regionName" : "sidebar",
+    "type" : "region"
+  }, {
+    "components" : [ {
+      "componentAttributes" : {
+        "description" : "{!Record.Summary}",
+        "metaTags" : "",
+        "title" : "{!Record._Title}"
+      },
+      "componentName" : "forceCommunity:seoAssistant",
+      "id" : "a48f8e1a-461c-465a-b5e8-c8a89feca2fc",
+      "renditionMap" : { },
+      "type" : "component"
+    } ],
+    "id" : "00454bff-fb3d-49c3-ac58-ddb4bfa21a92",
+    "regionName" : "sfdcHiddenRegion",
+    "type" : "region"
+  } ],
+  "themeLayoutType" : "Fq9t59TLhSdsvHmfT206X5ZHrZqSpZ",
+  "type" : "view",
+  "viewType" : "article"
+}
