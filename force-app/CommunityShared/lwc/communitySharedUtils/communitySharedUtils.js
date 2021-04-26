@@ -4,7 +4,7 @@
 
 import { loadStyle, loadScript } from 'lightning/platformResourceLoader';
 import LANG from '@salesforce/i18n/lang';
-import FactoryStoreGlobals from '@salesforce/resourceUrl/FactoryStoreGlobals';
+import CommunitySharedResources from '@salesforce/resourceUrl/CommunitySharedResources';
 
 const getTestimonials = (numToShow) => {
   //console.log('showTestimonials', numToShow);
@@ -13,46 +13,13 @@ const getTestimonials = (numToShow) => {
  	  "UserName": "User Lastman",
  	  "UserCity": "Mindemoya",
  	  "UserProvince": "ON",
- 	  "UserPhoto": `${FactoryStoreGlobals + '/img/silhouette.png'}`,
+ 	  "UserPhoto": `${CommunitySharedResources + '/img/silhouette.png'}`,
  	  "UserTestimonial": "Morbi eget diam in risus finibus tempor vel id mi. Etiam aliquet sagittis dictum. Sed lacinia lobortis rhoncus. Cras vel elementum est. Praesent sit amet leo risus. Nunc vulputate velit a scelerisque facilisis. Suspendisse vestibulum urna eu eleifend condimentum. Nam ornare leo nulla, id tincidunt nisl tempor vitae. Curabitur in neque pharetra, blandit velit sit amet, hendrerit ligula. In tristique augue scelerisque scelerisque cursus. Sed eleifend enim sit amet tempor congue. Nulla ut sagittis tortor. Nam vitae ligula et lectus bibendum interdum vel at eros. Cras nisl metus, gravida sed viverra a, commodo id odio. In leo eros, eleifend et ligula eu, viverra pharetra mauris."
   }
   for(let i = 0; i < numToShow; ++i){
     testimonials[i] = testimonialJSON;
   }
   return testimonials;
-}
-
-const getDeals = (numToShow) => {
-  numToShow = (numToShow === 'All') ? 6 : parseInt(numToShow);
-  let dealsTemp = [];
-  let dealId = 1;
-  let dealsJSON = {
-    "data": {
-      "DealName": "Winterization",
-			"StartDate": "04/10/2021",
-			"EndDate": "08/18/2021",
-			"Description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent porttitor blandit nibh at congue. Nullam sed tortor lacus. Aenean aliquet quam quis elit molestie, id commodo eros euismod. Nulla eget odio fermentum dolor lobortis suscipit. Nunc vulputate dui mi, et iaculis erat accumsan at. Morbi interdum vestibulum nulla quis sagittis. Pellentesque non nisl ut ante convallis mollis. Cras in tempus massa. Curabitur at feugiat leo.",
-			"BannerGraphic": "https://mk0inventorylegv1t7j.kinstacdn.com/wp-content/uploads/2021/04/winterization-temp.jpg",
-			"ButtonText": "Learn more about winterization",
-			"ButtonURL": ""
-    },
-  };
-  for(let i=0; i<numToShow; ++i){
-    dealsTemp[i] = dealsJSON;
-  }
-	console.log('dealsTemp', dealsTemp);
-
-  const deals = dealsTemp.map(o => ({
-    ...o, DataId: gen8DigitId()
-  }));
-
-  return new Promise((resolve, reject) => {
-    if(deals.length > 0){
-      resolve(deals);
-    } else {
-      reject('Deals not found');
-    }
-  });
 }
 
 const stringy = (payload) => {
@@ -169,7 +136,6 @@ const formatPrice = (price, round = false, lang = 'en') => {
 
 export {
 	getTestimonials,
-	getDeals,
 	stringy,
 	stripParentheses,
 	rewriteMotorName,
@@ -177,5 +143,6 @@ export {
 	weeklyPayment,
 	formatPrice,
 	renderEN,
-	renderFR
+	renderFR,
+	gen8DigitId
 }

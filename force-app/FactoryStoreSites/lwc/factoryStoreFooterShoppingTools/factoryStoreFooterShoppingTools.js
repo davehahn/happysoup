@@ -4,7 +4,7 @@
 
 import { LightningElement, api, wire, track } from 'lwc';
 import { loadStyle, loadScript } from 'lightning/platformResourceLoader';
-import { renderEN, renderFR } from 'c/factoryStoreUtils';
+import { renderEN, renderFR } from 'c/communitySharedUtils';
 
 
 import FactoryStoreGlobals from '@salesforce/resourceUrl/FactoryStoreGlobals';

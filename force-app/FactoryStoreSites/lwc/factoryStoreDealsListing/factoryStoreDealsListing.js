@@ -3,7 +3,8 @@
  */
 
 import { LightningElement, api, wire, track } from 'lwc';
-import { getDeals, stringy } from 'c/factoryStoreUtils';
+import { stringy, gen8DigitId } from 'c/communitySharedUtils';
+import { getDeals } from 'c/factoryStoreUtils';
 import { loadStyle, loadScript } from 'lightning/platformResourceLoader';
 import swiperJS from '@salesforce/resourceUrl/SwiperJS';
 

@@ -2,10 +2,10 @@
   <ltng:require styles="{!join(',',
         $Resource.GothamHTF + '/fonts.css',
         $Resource.Idlewild + '/fonts.css',
-        $Resource.FactoryStoreGlobals + '/css/layout.css',
-        $Resource.FactoryStoreGlobals + '/css/headings.css',
-        $Resource.FactoryStoreGlobals + '/css/colours.css',
-        $Resource.FactoryStoreGlobals + '/css/buttons.css'
+        $Resource.CommunitySharedResources + '/css/layout.css',
+        $Resource.CommunitySharedResources + '/css/headings.css',
+        $Resource.CommunitySharedResources + '/css/colours.css',
+        $Resource.CommunitySharedResources + '/css/buttons.css'
     )}"/>
   <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
   <aura:attribute name="currentLocale" type="String"/>
@@ -19,15 +19,16 @@
   <aura:attribute name="storePolicyLinks" type="Aura.Component[]"/>
   <aura:attribute name="channelMenu" type="Aura.Component[]"/>
   <aura:attribute name="contactUs" type="Aura.Component[]"/>
+  <lightning:navigation aura:id="navService"/>
 
   <div class="headerWrap">
     <header class="storeHeader">
       <h1 class="storeLogo">
-        <a href="/suppport/s/" class="storeLogoIcon">Legend Boats</a>
+        <a href="javascript:void(0)" class="storeLogoIcon forceCommunityThemeLogo" data-aura-class="forceCommunityThemeLogo" onclick="{!c.goHome}">Legend Boats</a>
       </h1>
 
       <nav class="mainNavigation">
-        <c:factoryStoreMainNavigation ></c:factoryStoreMainNavigation>
+        <c:customerCommMainNavigation></c:customerCommMainNavigation>
       </nav>
 
       <div class="langSelector">
@@ -64,7 +65,7 @@
     {!v.storeTools}
     <section class="footerLegal">
       {!v.storePolicyLinks}
-      <c:factoryStoreFooterCopyright></c:factoryStoreFooterCopyright>
+      <c:communitySharedFooterCopyright></c:communitySharedFooterCopyright>
       {!v.storeLegal}
     </section>
     {!v.channelMenu}

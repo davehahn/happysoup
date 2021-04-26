@@ -4,7 +4,7 @@
 
 import { LightningElement, api, wire, track } from 'lwc';
 import { NavigationMixin, CurrentPageReference } from 'lightning/navigation';
-import { stringy, stripParentheses, rewriteMotorName, rewriteTrailerName, weeklyPayment, formatPrice } from 'c/factoryStoreUtils';
+import { stringy, stripParentheses, rewriteMotorName, rewriteTrailerName, weeklyPayment, formatPrice } from 'c/communitySharedUtils';
 import fetchBoat from '@salesforce/apex/FactoryStore_InventoryController.fetchBoat';
 import { fireEvent, registerListener, unregisterAllListeners} from 'c/pubsub';
 

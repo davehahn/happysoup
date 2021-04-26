@@ -3,7 +3,7 @@
  */
 
 import { LightningElement, api, track } from 'lwc';
-import { getTestimonials, stringy } from 'c/factoryStoreUtils';
+import { getTestimonials, stringy } from 'c/communitySharedUtils';
 
 export default class FactoryStoreTestimonials extends LightningElement {
 

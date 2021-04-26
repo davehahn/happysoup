@@ -4,7 +4,7 @@
 
 import { LightningElement, api, wire, track } from 'lwc';
 import { NavigationMixin } from 'lightning/navigation';
-import { stringy, stripParentheses, rewriteMotorName, rewriteTrailerName } from 'c/factoryStoreUtils';
+import { stringy, stripParentheses, rewriteMotorName, rewriteTrailerName } from 'c/communitySharedUtils';
 import fetchStandardProducts from '@salesforce/apex/FactoryStore_InventoryController.fetchBoat';
 
 export default class FactoryStoreBoatListingItem extends NavigationMixin(LightningElement) {

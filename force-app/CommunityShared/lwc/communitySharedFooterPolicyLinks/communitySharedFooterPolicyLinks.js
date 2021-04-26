@@ -3,7 +3,7 @@
  */
 
 import { LightningElement, api, track } from 'lwc';
-import { renderEN, renderFR, stringy } from 'c/factoryStoreUtils';
+import { renderEN, renderFR, stringy } from 'c/communitySharedUtils';
 
 
 export default class CommunitySharedFooterPolicyLinks extends LightningElement {

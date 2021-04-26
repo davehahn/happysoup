@@ -2,10 +2,10 @@
     <ltng:require styles="{!join(',',
         $Resource.GothamHTF + '/fonts.css',
         $Resource.Idlewild + '/fonts.css',
-        $Resource.FactoryStoreGlobals + '/css/layout.css',
-        $Resource.FactoryStoreGlobals + '/css/headings.css',
-        $Resource.FactoryStoreGlobals + '/css/colours.css',
-        $Resource.FactoryStoreGlobals + '/css/buttons.css'
+        $Resource.CommunitySharedResources + '/css/layout.css',
+        $Resource.CommunitySharedResources + '/css/headings.css',
+        $Resource.CommunitySharedResources + '/css/colours.css',
+        $Resource.CommunitySharedResources + '/css/buttons.css'
     )}"/>
     <aura:attribute name="storeLocationAndHours" type="Aura.Component[]"/>
     <aura:attribute name="storePhoneNumbers" type="Aura.Component[]"/>
@@ -14,11 +14,12 @@
     <aura:attribute name="storeLegal" type="Aura.Component[]"/>
     <aura:attribute name="storePolicyLinks" type="Aura.Component[]"/>
     <aura:attribute name="channelMenu" type="Aura.Component[]"/>
+    <lightning:navigation aura:id="navService"/>
 
     <header class="storeHeader">
         <div class="storeDetails">
             <h1 class="storeLogo">
-                <a href="/" class="storeLogoIcon">Legend Boats Sudbury</a>
+                <a href="javascript:void(0)" class="storeLogoIcon" onclick="{!c.goHome}">Legend Boats Sudbury</a>
             </h1>
             <div class="locationAndHours">
                 {!v.storeLocationAndHours}
@@ -40,7 +41,7 @@
         {!v.storeTools}
         <section class="footerLegal">
             {!v.storePolicyLinks}
-            <c:factoryStoreFooterCopyright></c:factoryStoreFooterCopyright>
+            <c:communitySharedFooterCopyright></c:communitySharedFooterCopyright>
             {!v.storeLegal}
             <c:factoryStoreFooterAllInPricing></c:factoryStoreFooterAllInPricing>
         </section>
