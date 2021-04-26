@@ -67,7 +67,7 @@ public without sharing class gcSerialNumber{
 		{
 			if(boolIsInsert)
 			{
-				
+
 			}
 			if(boolIsUpdate)
 			{
@@ -80,7 +80,7 @@ public without sharing class gcSerialNumber{
 			{
 
 			}
-		}			
+		}
 	}
 
 	public static void updateAndValidate
@@ -100,10 +100,10 @@ public without sharing class gcSerialNumber{
 				for(GMBLASERP__Serial_Number__c sn :
 					[SELECT Id, Name,
 						(SELECT Id FROM Serial_Numbers__r),
-						(SELECT Id FROM GMBLASERP__Outbound_Inventory_Movements__r LIMIT 1),
+						(SELECT Id, AcctSeedERP__Movement_Date__c FROM GMBLASERP__Outbound_Inventory_Movements__r LIMIT 1),
 						(SELECT Id FROM GMBLASERP__Inbound_Inventory_Movements__r ORDER BY AcctSeedERP__Movement_Date__c DESC LIMIT 1),
 						(SELECT Id FROM GMBLASERP__Purchase_Order_Inventory_Movements__r LIMIT 1),
-						(SELECT Id FROM GMBLASERP__Manufacturing_Inventory_Movements__r ORDER BY AcctSeedERP__Movement_Date__c DESC LIMIT 1),
+						(SELECT Id, AcctSeedERP__Movement_Date__c FROM GMBLASERP__Manufacturing_Inventory_Movements__r ORDER BY AcctSeedERP__Movement_Date__c DESC LIMIT 1),
 						(SELECT Id, Name FROM GMBLASERP__Materials__r LIMIT 1),
 						(SELECT Id, Locked__c FROM Projects__r LIMIT 1)
 					FROM GMBLASERP__Serial_Number__c
@@ -124,7 +124,7 @@ public without sharing class gcSerialNumber{
 							x.addError('This serial number '+x.Name+' cannot be used in a lot exchange. It has already been used as ERP Order item.');
 					}
 					/// Do not allow change of Internal Billing fields
-					if(boolIsUpdate 
+					if(boolIsUpdate
 						&& (x.Billing_Revenue_Internal__c != oldMap.get(x.Id).Billing_Revenue_Internal__c
 							|| x.Billing_Revenue_Used__c != oldMap.get(x.Id).Billing_Revenue_Used__c)){
 						x.addError('Internal Billing related fields cannot be modified manually.');
@@ -180,7 +180,7 @@ public without sharing class gcSerialNumber{
 				}
 			}
 		}
-		
+
 		if(!boolIsBefore && (boolIsInsert || boolIsUpdate))
 		{
 			map<Id,GMBLASERP__Serial_Number__c> mapSerial = new map<Id,GMBLASERP__Serial_Number__c>();
@@ -299,7 +299,7 @@ public without sharing class gcSerialNumber{
 			if(cpr.hasPermission('CanDeNestSerialNumbers'))
 				canDeNestSerialNumbers = true;
 		for(GMBLASERP__Serial_Number__c sn :
-			[SELECT Id, 
+			[SELECT Id,
 				Name,
 				Available_Wholesale__c,
 				Available_Retail__c,
@@ -311,15 +311,15 @@ public without sharing class gcSerialNumber{
 				GMBLASERP__Product__r.RecordType.Name,
 				GMBLASERP__Product__r.Can_be_Nest__c,
 				GMBLASERP__Product__r.Can_be_Nested__c,
-				(SELECT Id, 
-					AcctSeedERP__Project__r.Name, 
-					AcctSeedERP__Project__r.Locked__c, 
-					AcctSeedERP__Project__r.Internal_Partner_Boat_Sale__c, 
-					AcctSeedERP__Project__r.Internal_Partner_Parts_Order__c, 
-					AcctSeedERP__Project__r.Internal_Labour_Service__c, 
-					AcctSeedERP__Project__r.Serial_Number__c, 
-					AcctSeedERP__Project__r.Serial_Number__r.GMBLASERP__Product__r.Can_be_Nest__c, 
-					AcctSeedERP__Project__r.RecordTypeId 
+				(SELECT Id,
+					AcctSeedERP__Project__r.Name,
+					AcctSeedERP__Project__r.Locked__c,
+					AcctSeedERP__Project__r.Internal_Partner_Boat_Sale__c,
+					AcctSeedERP__Project__r.Internal_Partner_Parts_Order__c,
+					AcctSeedERP__Project__r.Internal_Labour_Service__c,
+					AcctSeedERP__Project__r.Serial_Number__c,
+					AcctSeedERP__Project__r.Serial_Number__r.GMBLASERP__Product__r.Can_be_Nest__c,
+					AcctSeedERP__Project__r.RecordTypeId
 				FROM GMBLASERP__Materials__r),
 				(SELECT Id, Name, Locked__c, Internal_Partner_Boat_Sale__c, Internal_Partner_Parts_Order__c, Internal_Labour_Service__c, RecordTypeId FROM Projects__r)
 			FROM GMBLASERP__Serial_Number__c
@@ -378,13 +378,13 @@ public without sharing class gcSerialNumber{
 					if(!setRecordTypesToExclude.contains(matl.AcctSeedERP__Project__r.RecordTypeId) && !matl.AcctSeedERP__Project__r.Locked__c)
 						taggedInRetailOrder = true;
 
-					if(matl.AcctSeedERP__Project__r.RecordTypeId == idRtProjectCounterSale 
+					if(matl.AcctSeedERP__Project__r.RecordTypeId == idRtProjectCounterSale
 							|| matl.AcctSeedERP__Project__r.RecordTypeId == idRtProjectBoatSale
 							|| matl.AcctSeedERP__Project__r.RecordTypeId == idRtProjectPartnerBoatSale)
 						inSaleProject = true;
 
-					if(matl.AcctSeedERP__Project__r.Serial_Number__c != null 
-						&& sn.Nest__c != matl.AcctSeedERP__Project__r.Serial_Number__c 
+					if(matl.AcctSeedERP__Project__r.Serial_Number__c != null
+						&& sn.Nest__c != matl.AcctSeedERP__Project__r.Serial_Number__c
 						&& sn.Id != matl.AcctSeedERP__Project__r.Serial_Number__c
 						&& sn.GMBLASERP__Product__r.Can_be_Nested__c)
 					{
@@ -407,32 +407,32 @@ public without sharing class gcSerialNumber{
 				System.debug(loggingLevel.error,'Case:1');
 				sn.Available_Retail__c = false;
 				sn.Available_Wholesale__c = false;
-				addInUpdate = true;				
+				addInUpdate = true;
 			}else if(sn.Location__c == 'Wholesale' && taggedInPartner && taggedInInternalPartnerOrder && !taggedInRetailOrder){
 				System.debug(loggingLevel.error,'Case:2');
 				sn.Available_Retail__c = true;
 				sn.Available_Wholesale__c = false;
-				addInUpdate = true;				
+				addInUpdate = true;
 			}else if(sn.Location__c == 'Wholesale' && taggedInPartner && !taggedInInternalPartnerOrder && !taggedInRetailOrder){
 				System.debug(loggingLevel.error,'Case:3');
 				sn.Available_Retail__c = false;
 				sn.Available_Wholesale__c = false;
-				addInUpdate = true;				
+				addInUpdate = true;
 			}else if(sn.Location__c == 'Wholesale' && !taggedInPartner && !taggedInInternalPartnerOrder && !taggedInRetailOrder){
 				System.debug(loggingLevel.error,'Case:4');
 				sn.Available_Retail__c = false;
 				sn.Available_Wholesale__c = true;
-				addInUpdate = true;				
+				addInUpdate = true;
 			}else if(sn.Location__c != 'Wholesale' && !taggedInRetailOrder){
 				System.debug(loggingLevel.error,'Case:5');
 				sn.Available_Retail__c = true;
 				sn.Available_Wholesale__c = false;
-				addInUpdate = true;				
+				addInUpdate = true;
 			}else if(sn.Location__c != 'Wholesale' && taggedInRetailOrder){
 				System.debug(loggingLevel.error,'Case:6');
 				sn.Available_Retail__c = false;
 				sn.Available_Wholesale__c = false;
-				addInUpdate = true;				
+				addInUpdate = true;
 			}
 
 
@@ -742,14 +742,14 @@ public without sharing class gcSerialNumber{
 			mapSerialCost.put(cube.idSerial, avg);
 		}
 		List<GMBLASERP__Serial_Number__c> listSerials = new List<GMBLASERP__Serial_Number__c>();
-		for(GMBLASERP__Serial_Number__c p : 
-				[SELECT Id, 
-					Current_Unit_Cost__c 
+		for(GMBLASERP__Serial_Number__c p :
+				[SELECT Id,
+					Current_Unit_Cost__c
 				FROM GMBLASERP__Serial_Number__c WHERE Id IN:mapSerialCost.keySet()])
 		{
 			Decimal avg = mapSerialCost.get(p.Id);
 			if(avg == null) avg = 0;
-			if(p.Current_Unit_Cost__c == null 
+			if(p.Current_Unit_Cost__c == null
 				|| p.Current_Unit_Cost__c.setScale(2) != avg.setScale(2))
 			{
 				p.Current_Unit_Cost__c = avg.setScale(2);
@@ -761,9 +761,9 @@ public without sharing class gcSerialNumber{
 			gcSerialNumber.disableTrigger = true;
 			update listSerials;
 			gcSerialNumber.disableTrigger = olVal;
-		}		
+		}
 	}
-	/// Auto de-nesting only happens from materials. 
+	/// Auto de-nesting only happens from materials.
 	/// If a serial number was selected but later changed then the previous serial will be de-nested
 	public static void deNestSrials(Set<Id> setIdSerial)
 	{
@@ -776,7 +776,7 @@ public without sharing class gcSerialNumber{
 		Boolean boolOld = disableTrigger;
 		disableTrigger = true;
 		update listSerialsToUpdate;
-		disableTrigger = boolOld;		
+		disableTrigger = boolOld;
 	}
 
 	public static void coverage(){

@@ -536,20 +536,12 @@
             <type>user</type>
         </recipients>
         <recipients>
-            <recipient>cthew@legendboats.com</recipient>
-            <type>user</type>
-        </recipients>
-        <recipients>
-            <recipient>d_alexander@legendboats.com</recipient>
-            <type>user</type>
-        </recipients>
-        <recipients>
             <recipient>jmaltais@legendboats.com</recipient>
             <type>user</type>
         </recipients>
         <recipients>
-            <recipient>jtaylor@legendboats.com</recipient>
-            <type>user</type>
+            <field>Boat_Specialist__c</field>
+            <type>userLookup</type>
         </recipients>
         <recipients>
             <field>Salesperson__c</field>
@@ -990,17 +982,6 @@
         <template>Surveys/Notification_on_ERP_Deilvered</template>
     </alerts>
     <alerts>
-        <fullName>Sends_email_to_Julie_on_ERP_Stage_to_Delivered</fullName>
-        <description>Sends email to Julie on ERP Stage to Delivered</description>
-        <protected>false</protected>
-        <recipients>
-            <recipient>cgrenier@legendboats.com</recipient>
-            <type>user</type>
-        </recipients>
-        <senderType>CurrentUser</senderType>
-        <template>Sales_Process/BOM_Notification_on_ERP_Deilvered</template>
-    </alerts>
-    <alerts>
         <fullName>Service_WOrk_Order_Parts_Required_Barrie</fullName>
         <description>Service WOrk Order Parts Required Barrie</description>
         <protected>false</protected>
@@ -1379,26 +1360,6 @@
         <reevaluateOnChange>true</reevaluateOnChange>
     </fieldUpdates>
     <rules>
-        <fullName>Austin Notified on Marianne creating a Counter Sale</fullName>
-        <actions>
-            <name>Marianne_French_Just_Created_a_Counter_Sale</name>
-            <type>Task</type>
-        </actions>
-        <active>true</active>
-        <criteriaItems>
-            <field>AcctSeed__Project__c.CreatedById</field>
-            <operation>contains</operation>
-            <value>French</value>
-        </criteriaItems>
-        <criteriaItems>
-            <field>AcctSeed__Project__c.RecordTypeId</field>
-            <operation>equals</operation>
-            <value>Legend Counter Sale</value>
-        </criteriaItems>
-        <description>This can be deleted as of Sept. 11 2020.  This is to assist in Marianne French working from home.</description>
-        <triggerType>onCreateOnly</triggerType>
-    </rules>
-    <rules>
         <fullName>Barrie 5 days prior to pickup - Infographic email send</fullName>
         <active>false</active>
         <criteriaItems>
@@ -1670,30 +1631,6 @@
         <triggerType>onCreateOrTriggeringUpdate</triggerType>
     </rules>
     <rules>
-        <fullName>Customer Satisfaction Survey ERP</fullName>
-        <active>false</active>
-        <criteriaItems>
-            <field>AcctSeed__Project__c.Stage__c</field>
-            <operation>equals</operation>
-            <value>Delivered</value>
-        </criteriaItems>
-        <criteriaItems>
-            <field>AcctSeed__Project__c.RecordTypeId</field>
-            <operation>equals</operation>
-            <value>Retail Boat Sale</value>
-        </criteriaItems>
-        <description>Sends out a Cust Sat survey when stage changed to &quot;Delivered&quot;</description>
-        <triggerType>onCreateOrTriggeringUpdate</triggerType>
-        <workflowTimeTriggers>
-            <actions>
-                <name>Sends_Retail_Boat_Experience_Survey</name>
-                <type>Alert</type>
-            </actions>
-            <timeLength>1</timeLength>
-            <workflowTimeTriggerUnit>Days</workflowTimeTriggerUnit>
-        </workflowTimeTriggers>
-    </rules>
-    <rules>
         <fullName>DC Order Submitted</fullName>
         <active>false</active>
         <criteriaItems>
@@ -1757,20 +1694,6 @@
             <value>5000</value>
         </criteriaItems>
         <description>Will send a notification to Jamie and Marc when an order is over $5000 from Montreal or Barrie Parts order</description>
-        <triggerType>onCreateOrTriggeringUpdate</triggerType>
-    </rules>
-    <rules>
-        <fullName>Dominic Add On Call ERP</fullName>
-        <actions>
-            <name>Dominic_s_Add_On_Call_ERP</name>
-            <type>Task</type>
-        </actions>
-        <active>true</active>
-        <criteriaItems>
-            <field>AcctSeed__Project__c.Stage__c</field>
-            <operation>equals</operation>
-            <value>Boat Specialist Add On Call</value>
-        </criteriaItems>
         <triggerType>onCreateOrTriggeringUpdate</triggerType>
     </rules>
     <rules>
@@ -1874,26 +1797,6 @@
         <triggerType>onCreateOrTriggeringUpdate</triggerType>
     </rules>
     <rules>
-        <fullName>ERP Order has Parts Required</fullName>
-        <actions>
-            <name>ERP_order_Parts_Required</name>
-            <type>Alert</type>
-        </actions>
-        <active>false</active>
-        <criteriaItems>
-            <field>AcctSeed__Project__c.Stage__c</field>
-            <operation>equals</operation>
-            <value>Parts Required</value>
-        </criteriaItems>
-        <criteriaItems>
-            <field>AcctSeed__Project__c.RecordTypeId</field>
-            <operation>notEqual</operation>
-            <value>Legend Warranty</value>
-        </criteriaItems>
-        <description>Trigger for parts required</description>
-        <triggerType>onCreateOrTriggeringUpdate</triggerType>
-    </rules>
-    <rules>
         <fullName>ERP Parts Received</fullName>
         <actions>
             <name>Parts_have_been_received</name>
@@ -1906,21 +1809,6 @@
             <value>Parts Received</value>
         </criteriaItems>
         <description>Trigger for parts received</description>
-        <triggerType>onCreateOrTriggeringUpdate</triggerType>
-    </rules>
-    <rules>
-        <fullName>ERP Parts Shipped</fullName>
-        <actions>
-            <name>Notification_Parts_Shipped_for_ERP_Order</name>
-            <type>Alert</type>
-        </actions>
-        <active>false</active>
-        <criteriaItems>
-            <field>AcctSeed__Project__c.Stage__c</field>
-            <operation>equals</operation>
-            <value>Parts Shipped</value>
-        </criteriaItems>
-        <description>Trigger for parts shipped</description>
         <triggerType>onCreateOrTriggeringUpdate</triggerType>
     </rules>
     <rules>
@@ -1952,61 +1840,6 @@
         </criteriaItems>
         <description>Sets Status to &quot;Ready for Accounting&quot; on Stage change to Closed/Lost</description>
         <triggerType>onCreateOrTriggeringUpdate</triggerType>
-    </rules>
-    <rules>
-        <fullName>ERP Ready for Acc on Delivered Stage</fullName>
-        <actions>
-            <name>Update_to_Ready_for_Accounting</name>
-            <type>FieldUpdate</type>
-        </actions>
-        <active>false</active>
-        <criteriaItems>
-            <field>AcctSeed__Project__c.Stage__c</field>
-            <operation>equals</operation>
-            <value>Delivered</value>
-        </criteriaItems>
-        <description>Sets Status to &quot;Ready for Accounting&quot; on Stage change to Delivered</description>
-        <triggerType>onCreateOrTriggeringUpdate</triggerType>
-    </rules>
-    <rules>
-        <fullName>ERP What to Expect - Cash</fullName>
-        <actions>
-            <name>Emails_Customer_the_What_to_Expect_Cash_Email_Template</name>
-            <type>Alert</type>
-        </actions>
-        <active>false</active>
-        <criteriaItems>
-            <field>AcctSeed__Project__c.RecordTypeId</field>
-            <operation>equals</operation>
-            <value>Retail Boat Sale</value>
-        </criteriaItems>
-        <criteriaItems>
-            <field>AcctSeed__Project__c.Payment_Method__c</field>
-            <operation>equals</operation>
-            <value>Cash</value>
-        </criteriaItems>
-        <description>Sends &quot;What to Expect for Cash&quot; email to customer when pushed to ERP from Oppy</description>
-        <triggerType>onCreateOnly</triggerType>
-    </rules>
-    <rules>
-        <fullName>ERP What to Expect - Finance</fullName>
-        <actions>
-            <name>Emails_Customer_the_What_to_Expect_Finance_Email_Template</name>
-            <type>Alert</type>
-        </actions>
-        <active>false</active>
-        <criteriaItems>
-            <field>AcctSeed__Project__c.RecordTypeId</field>
-            <operation>equals</operation>
-            <value>Retail Boat Sale</value>
-        </criteriaItems>
-        <criteriaItems>
-            <field>AcctSeed__Project__c.Payment_Method__c</field>
-            <operation>equals</operation>
-            <value>Finance</value>
-        </criteriaItems>
-        <description>Sends &quot;What to Expect for finance&quot; email to customer when pushed to ERP from Oppy</description>
-        <triggerType>onCreateOnly</triggerType>
     </rules>
     <rules>
         <fullName>ERP is Tagged</fullName>
@@ -2272,17 +2105,6 @@
         <triggerType>onCreateOnly</triggerType>
     </rules>
     <rules>
-        <fullName>New Trade In ERP</fullName>
-        <active>false</active>
-        <criteriaItems>
-            <field>AcctSeed__Project__c.RecordTypeId</field>
-            <operation>equals</operation>
-            <value>Legend Trade In</value>
-        </criteriaItems>
-        <description>Notifies Ben. F, Matt P, Michelle M on a new trade in ERP</description>
-        <triggerType>onCreateOnly</triggerType>
-    </rules>
-    <rules>
         <fullName>New Trade In ERP - Whitefish</fullName>
         <actions>
             <name>A_new_Trade_in_has_been_Created</name>
@@ -2317,7 +2139,6 @@
             <type>Alert</type>
         </actions>
         <active>true</active>
-        <booleanFilter>1 AND (2 OR 3 OR 4)</booleanFilter>
         <criteriaItems>
             <field>AcctSeed__Project__c.Stage__c</field>
             <operation>equals</operation>
@@ -2325,37 +2146,7 @@
         </criteriaItems>
         <criteriaItems>
             <field>AcctSeed__Project__c.Business_Manager__c</field>
-            <operation>equals</operation>
-            <value>Brigitte Kent</value>
-        </criteriaItems>
-        <criteriaItems>
-            <field>AcctSeed__Project__c.Business_Manager__c</field>
-            <operation>equals</operation>
-            <value>Jeana Davis</value>
-        </criteriaItems>
-        <criteriaItems>
-            <field>AcctSeed__Project__c.Business_Manager__c</field>
-            <operation>equals</operation>
-            <value>Catherine Grenier</value>
-        </criteriaItems>
-        <triggerType>onCreateOrTriggeringUpdate</triggerType>
-    </rules>
-    <rules>
-        <fullName>Notify BOM when Tagged</fullName>
-        <actions>
-            <name>Deal_is_Tagged</name>
-            <type>Alert</type>
-        </actions>
-        <active>true</active>
-        <criteriaItems>
-            <field>AcctSeed__Project__c.Stage__c</field>
-            <operation>equals</operation>
-            <value>Pending Work Order</value>
-        </criteriaItems>
-        <criteriaItems>
-            <field>AcctSeed__Project__c.Business_Manager__c</field>
-            <operation>equals</operation>
-            <value>Lisa Turcott</value>
+            <operation>notEqual</operation>
         </criteriaItems>
         <triggerType>onCreateOrTriggeringUpdate</triggerType>
     </rules>
@@ -2564,31 +2355,6 @@
         <triggerType>onCreateOrTriggeringUpdate</triggerType>
     </rules>
     <rules>
-        <fullName>Notify Julie BOM on ERP Stage Delivered</fullName>
-        <actions>
-            <name>Sends_email_to_Julie_on_ERP_Stage_to_Delivered</name>
-            <type>Alert</type>
-        </actions>
-        <active>true</active>
-        <criteriaItems>
-            <field>AcctSeed__Project__c.Stage__c</field>
-            <operation>equals</operation>
-            <value>Delivered</value>
-        </criteriaItems>
-        <criteriaItems>
-            <field>AcctSeed__Project__c.Business_Manager__c</field>
-            <operation>contains</operation>
-            <value>Lauzon</value>
-        </criteriaItems>
-        <criteriaItems>
-            <field>AcctSeed__Project__c.RecordTypeId</field>
-            <operation>equals</operation>
-            <value>Retail Boat Sale</value>
-        </criteriaItems>
-        <description>Notifies Julie on Stage Delivered on ERP.  This helps for ERPs that Julie is BOM for but the picukp is at another location.</description>
-        <triggerType>onCreateOrTriggeringUpdate</triggerType>
-    </rules>
-    <rules>
         <fullName>Notify LIsa BOM on ERP Stage Delivered</fullName>
         <actions>
             <name>Email_Notification_to_Lisa_Turcott_on_ERP_Delivered_and_Lisa_as_BOM</name>
@@ -2641,31 +2407,6 @@
             <operation>contains</operation>
             <value>Whitefish</value>
         </criteriaItems>
-        <triggerType>onCreateOrTriggeringUpdate</triggerType>
-    </rules>
-    <rules>
-        <fullName>Notify Matt on Pend Rig on Service ERP</fullName>
-        <actions>
-            <name>Parts_came_in_and_ready_for_scheduling</name>
-            <type>Task</type>
-        </actions>
-        <active>true</active>
-        <criteriaItems>
-            <field>AcctSeed__Project__c.RecordTypeId</field>
-            <operation>equals</operation>
-            <value>Legend Service Work Order</value>
-        </criteriaItems>
-        <criteriaItems>
-            <field>AcctSeed__Project__c.Stage__c</field>
-            <operation>equals</operation>
-            <value>Pending Rigging</value>
-        </criteriaItems>
-        <criteriaItems>
-            <field>AcctSeed__Project__c.WarehouseName__c</field>
-            <operation>contains</operation>
-            <value>white</value>
-        </criteriaItems>
-        <description>This can be deleted as of Sept. 1 2020, this is a backup workflow while i&apos;m on vacation - BF</description>
         <triggerType>onCreateOrTriggeringUpdate</triggerType>
     </rules>
     <rules>
@@ -2802,26 +2543,6 @@
         </criteriaItems>
         <description>Notifies Parts on Parts to be Ordered Stage on Warranty or Partner Parts Order</description>
         <triggerType>onCreateOrTriggeringUpdate</triggerType>
-    </rules>
-    <rules>
-        <fullName>One Year Boat Anniversary</fullName>
-        <active>false</active>
-        <criteriaItems>
-            <field>AcctSeed__Project__c.Stage__c</field>
-            <operation>equals</operation>
-            <value>Delivered</value>
-        </criteriaItems>
-        <criteriaItems>
-            <field>AcctSeed__Project__c.RecordTypeId</field>
-            <operation>equals</operation>
-            <value>Retail Boat Sale</value>
-        </criteriaItems>
-        <description>Sent to a customer 1 year after their boat pickup date.</description>
-        <triggerType>onCreateOrTriggeringUpdate</triggerType>
-        <workflowTimeTriggers>
-            <timeLength>365</timeLength>
-            <workflowTimeTriggerUnit>Days</workflowTimeTriggerUnit>
-        </workflowTimeTriggers>
     </rules>
     <rules>
         <fullName>One Year Boat Anniversary Pickup</fullName>
@@ -3529,31 +3250,6 @@
         <triggerType>onCreateOrTriggeringUpdate</triggerType>
     </rules>
     <rules>
-        <fullName>Tagging Pending ERP</fullName>
-        <actions>
-            <name>Tagging_Pending_ERP</name>
-            <type>Task</type>
-        </actions>
-        <active>true</active>
-        <criteriaItems>
-            <field>AcctSeed__Project__c.Stage__c</field>
-            <operation>equals</operation>
-            <value>Tagging Pending</value>
-        </criteriaItems>
-        <criteriaItems>
-            <field>AcctSeed__Project__c.RecordTypeId</field>
-            <operation>equals</operation>
-            <value>Retail Boat Sale</value>
-        </criteriaItems>
-        <criteriaItems>
-            <field>AcctSeed__Project__c.RecordTypeId</field>
-            <operation>notEqual</operation>
-            <value>Legend Manufacturing Work Order,Legend Service Work Order</value>
-        </criteriaItems>
-        <description>Letting the Tagger know that it is okay to Tag (Retail ERP version)</description>
-        <triggerType>onCreateOrTriggeringUpdate</triggerType>
-    </rules>
-    <rules>
         <fullName>Task Boat Specialist on Parts Required</fullName>
         <actions>
             <name>Parts_Required_for_this_ERP</name>
@@ -3888,166 +3584,6 @@
         <triggerType>onCreateOrTriggeringUpdate</triggerType>
     </rules>
     <rules>
-        <fullName>User Task Boat Specialist Assigned Alexander</fullName>
-        <actions>
-            <name>You_ve_been_assigned_as_Boat_Specialist_to_this_ERP_Dave_Alexander</name>
-            <type>Task</type>
-        </actions>
-        <active>false</active>
-        <criteriaItems>
-            <field>AcctSeed__Project__c.RecordTypeId</field>
-            <operation>equals</operation>
-            <value>Retail Boat Sale</value>
-        </criteriaItems>
-        <criteriaItems>
-            <field>AcctSeed__Project__c.Boat_Specialist__c</field>
-            <operation>contains</operation>
-            <value>Alexander</value>
-        </criteriaItems>
-        <description>Sends task to Boat Specialist that they are assigned as Boat Specialist.</description>
-        <triggerType>onCreateOrTriggeringUpdate</triggerType>
-    </rules>
-    <rules>
-        <fullName>User Task Boat Specialist Assigned Deseve</fullName>
-        <actions>
-            <name>You_have_been_assigned_as_the_Boat_Specialist_for_this_ERP</name>
-            <type>Task</type>
-        </actions>
-        <active>false</active>
-        <criteriaItems>
-            <field>AcctSeed__Project__c.RecordTypeId</field>
-            <operation>equals</operation>
-            <value>Retail Boat Sale</value>
-        </criteriaItems>
-        <criteriaItems>
-            <field>AcctSeed__Project__c.Boat_Specialist__c</field>
-            <operation>contains</operation>
-            <value>Louis</value>
-        </criteriaItems>
-        <description>Sends task to Boat Specialist that they are assigned as Boat Specialist. Also sends a notification to Parts Dept. that they can begin Pick and Pack Process</description>
-        <triggerType>onCreateOrTriggeringUpdate</triggerType>
-    </rules>
-    <rules>
-        <fullName>User Task Boat Specialist Assigned Deseve Start Pick and Pack</fullName>
-        <actions>
-            <name>This_ERP_has_Been_Created_You_can_Start_Pick_and_Pack_Process</name>
-            <type>Task</type>
-        </actions>
-        <active>true</active>
-        <criteriaItems>
-            <field>AcctSeed__Project__c.RecordTypeId</field>
-            <operation>equals</operation>
-            <value>Retail Boat Sale</value>
-        </criteriaItems>
-        <criteriaItems>
-            <field>AcctSeed__Project__c.Boat_Specialist__c</field>
-            <operation>contains</operation>
-            <value>Louis</value>
-        </criteriaItems>
-        <description>Sends task to Boat Specialist that they are assigned as Boat Specialist. Also sends a notification to Parts Dept. that they can begin Pick and Pack Process</description>
-        <triggerType>onCreateOrTriggeringUpdate</triggerType>
-    </rules>
-    <rules>
-        <fullName>User Task Boat Specialist Assigned Lafreniere</fullName>
-        <actions>
-            <name>You_ve_been_assigned_as_Boat_Specialist_to_this_ERP_Don_Levac</name>
-            <type>Task</type>
-        </actions>
-        <active>false</active>
-        <criteriaItems>
-            <field>AcctSeed__Project__c.RecordTypeId</field>
-            <operation>equals</operation>
-            <value>Retail Boat Sale</value>
-        </criteriaItems>
-        <criteriaItems>
-            <field>AcctSeed__Project__c.Boat_Specialist__c</field>
-            <operation>contains</operation>
-            <value>Lafreniere</value>
-        </criteriaItems>
-        <description>Sends task to Boat Specialist that they are assigned as Boat Specialist.</description>
-        <triggerType>onCreateOrTriggeringUpdate</triggerType>
-    </rules>
-    <rules>
-        <fullName>User Task Boat Specialist Assigned Lariviere</fullName>
-        <actions>
-            <name>You_ve_been_assigned_as_Boat_Specialist_to_this_ERP_Scott_Dormer</name>
-            <type>Task</type>
-        </actions>
-        <active>false</active>
-        <criteriaItems>
-            <field>AcctSeed__Project__c.RecordTypeId</field>
-            <operation>equals</operation>
-            <value>Retail Boat Sale</value>
-        </criteriaItems>
-        <criteriaItems>
-            <field>AcctSeed__Project__c.Boat_Specialist__c</field>
-            <operation>contains</operation>
-            <value>lariviere</value>
-        </criteriaItems>
-        <description>Sends task to Boat Specialist that they are assigned as Boat Specialist.</description>
-        <triggerType>onCreateOrTriggeringUpdate</triggerType>
-    </rules>
-    <rules>
-        <fullName>User Task Boat Specialist Assigned Milne</fullName>
-        <actions>
-            <name>You_ve_been_assigned_as_Boat_Specialist_to_this_ERP_Brandon_Milne</name>
-            <type>Task</type>
-        </actions>
-        <active>false</active>
-        <criteriaItems>
-            <field>AcctSeed__Project__c.RecordTypeId</field>
-            <operation>equals</operation>
-            <value>Retail Boat Sale</value>
-        </criteriaItems>
-        <criteriaItems>
-            <field>AcctSeed__Project__c.Boat_Specialist__c</field>
-            <operation>contains</operation>
-            <value>Milne</value>
-        </criteriaItems>
-        <description>Sends task to Boat Specialist that they are assigned as Boat Specialist.</description>
-        <triggerType>onCreateOrTriggeringUpdate</triggerType>
-    </rules>
-    <rules>
-        <fullName>User Task Boat Specialist Assigned Taylor</fullName>
-        <actions>
-            <name>You_have_been_assigned_as_the_Boat_Specialist_for_this_ERP_Taylor</name>
-            <type>Task</type>
-        </actions>
-        <active>false</active>
-        <criteriaItems>
-            <field>AcctSeed__Project__c.RecordTypeId</field>
-            <operation>equals</operation>
-            <value>Retail Boat Sale</value>
-        </criteriaItems>
-        <criteriaItems>
-            <field>AcctSeed__Project__c.Boat_Specialist__c</field>
-            <operation>contains</operation>
-            <value>Taylor</value>
-        </criteriaItems>
-        <description>Sends task to Boat Specialist that they are assigned as Boat Specialist.</description>
-        <triggerType>onCreateOrTriggeringUpdate</triggerType>
-    </rules>
-    <rules>
-        <fullName>User Task Boat Specialist Assigned Tessier</fullName>
-        <actions>
-            <name>You_have_been_assigned_as_the_Boat_Specialist_for_this_ERP_Grant</name>
-            <type>Task</type>
-        </actions>
-        <active>false</active>
-        <criteriaItems>
-            <field>AcctSeed__Project__c.RecordTypeId</field>
-            <operation>equals</operation>
-            <value>Retail Boat Sale</value>
-        </criteriaItems>
-        <criteriaItems>
-            <field>AcctSeed__Project__c.Boat_Specialist__c</field>
-            <operation>contains</operation>
-            <value>Tessier</value>
-        </criteriaItems>
-        <description>Sends task to Boat Specialist that they are assigned as Boat Specialist.</description>
-        <triggerType>onCreateOrTriggeringUpdate</triggerType>
-    </rules>
-    <rules>
         <fullName>User Task Boat Specialist Assigned Thew</fullName>
         <actions>
             <name>You_ve_been_assigned_as_Boat_Specialist_to_this_ERP_Chris_Thew</name>
@@ -4063,54 +3599,6 @@
             <field>AcctSeed__Project__c.Boat_Specialist__c</field>
             <operation>contains</operation>
             <value>Thew</value>
-        </criteriaItems>
-        <description>Sends task to Boat Specialist that they are assigned as Boat Specialist.</description>
-        <triggerType>onCreateOrTriggeringUpdate</triggerType>
-    </rules>
-    <rules>
-        <fullName>User Task Boat Specialist Gather Parts Dagenais</fullName>
-        <active>false</active>
-        <criteriaItems>
-            <field>AcctSeed__Project__c.RecordTypeId</field>
-            <operation>equals</operation>
-            <value>Retail Boat Sale</value>
-        </criteriaItems>
-        <criteriaItems>
-            <field>AcctSeed__Project__c.Boat_Specialist__c</field>
-            <operation>contains</operation>
-            <value>Dagenais</value>
-        </criteriaItems>
-        <description>Sends task to Boat Specialist that they are assigned as Boat Specialist.</description>
-        <triggerType>onCreateOrTriggeringUpdate</triggerType>
-    </rules>
-    <rules>
-        <fullName>User Task Boat Specialist Gather Parts Middaugh</fullName>
-        <active>false</active>
-        <criteriaItems>
-            <field>AcctSeed__Project__c.RecordTypeId</field>
-            <operation>equals</operation>
-            <value>Retail Boat Sale</value>
-        </criteriaItems>
-        <criteriaItems>
-            <field>AcctSeed__Project__c.Boat_Specialist__c</field>
-            <operation>contains</operation>
-            <value>Middaugh</value>
-        </criteriaItems>
-        <description>Sends task to Gather Parts as was just tagged to be the Boat Specialist</description>
-        <triggerType>onCreateOrTriggeringUpdate</triggerType>
-    </rules>
-    <rules>
-        <fullName>User Task Boat Specialist Gather Parts StGermain</fullName>
-        <active>false</active>
-        <criteriaItems>
-            <field>AcctSeed__Project__c.RecordTypeId</field>
-            <operation>equals</operation>
-            <value>Retail Boat Sale</value>
-        </criteriaItems>
-        <criteriaItems>
-            <field>AcctSeed__Project__c.Boat_Specialist__c</field>
-            <operation>contains</operation>
-            <value>germain</value>
         </criteriaItems>
         <description>Sends task to Boat Specialist that they are assigned as Boat Specialist.</description>
         <triggerType>onCreateOrTriggeringUpdate</triggerType>
@@ -4156,126 +3644,6 @@
         <triggerType>onCreateOrTriggeringUpdate</triggerType>
     </rules>
     <rules>
-        <fullName>User Task SalesPerson Get with Boat Specialist Gareau</fullName>
-        <actions>
-            <name>Please_review_this_ERP_for_Accuracy_with_Boat_Specialist_Gareau</name>
-            <type>Task</type>
-        </actions>
-        <active>false</active>
-        <criteriaItems>
-            <field>AcctSeed__Project__c.RecordTypeId</field>
-            <operation>equals</operation>
-            <value>Retail Boat Sale</value>
-        </criteriaItems>
-        <criteriaItems>
-            <field>AcctSeed__Project__c.Salesperson__c</field>
-            <operation>contains</operation>
-            <value>Gareau</value>
-        </criteriaItems>
-        <description>Task for SalesPeople to get with their Boat Specialist on Retail ERPs</description>
-        <triggerType>onCreateOrTriggeringUpdate</triggerType>
-    </rules>
-    <rules>
-        <fullName>User Task SalesPerson Get with Boat Specialist Monk</fullName>
-        <actions>
-            <name>Please_review_this_ERP_for_Accuracy_with_Boat_Specialist_monk</name>
-            <type>Task</type>
-        </actions>
-        <active>false</active>
-        <criteriaItems>
-            <field>AcctSeed__Project__c.RecordTypeId</field>
-            <operation>equals</operation>
-            <value>Retail Boat Sale</value>
-        </criteriaItems>
-        <criteriaItems>
-            <field>AcctSeed__Project__c.Salesperson__c</field>
-            <operation>contains</operation>
-            <value>Monk</value>
-        </criteriaItems>
-        <description>Task for SalesPeople to get with their Boat Specialist on Retail ERPs</description>
-        <triggerType>onCreateOrTriggeringUpdate</triggerType>
-    </rules>
-    <rules>
-        <fullName>User Task SalesPerson Get with Boat Specialist Nguyen</fullName>
-        <actions>
-            <name>Please_review_this_ERP_for_Accuracy_with_Boat_Specialist_Nguyen</name>
-            <type>Task</type>
-        </actions>
-        <active>false</active>
-        <criteriaItems>
-            <field>AcctSeed__Project__c.RecordTypeId</field>
-            <operation>equals</operation>
-            <value>Retail Boat Sale</value>
-        </criteriaItems>
-        <criteriaItems>
-            <field>AcctSeed__Project__c.Salesperson__c</field>
-            <operation>contains</operation>
-            <value>Nguyen</value>
-        </criteriaItems>
-        <description>Task for SalesPeople to get with their Boat Specialist on Retail ERPs</description>
-        <triggerType>onCreateOrTriggeringUpdate</triggerType>
-    </rules>
-    <rules>
-        <fullName>User Task SalesPerson Get with Boat Specialist Nichols</fullName>
-        <actions>
-            <name>Please_review_this_ERP_for_Accuracy_with_Boat_Specialist_nichols</name>
-            <type>Task</type>
-        </actions>
-        <active>false</active>
-        <criteriaItems>
-            <field>AcctSeed__Project__c.RecordTypeId</field>
-            <operation>equals</operation>
-            <value>Retail Boat Sale</value>
-        </criteriaItems>
-        <criteriaItems>
-            <field>AcctSeed__Project__c.Salesperson__c</field>
-            <operation>contains</operation>
-            <value>Nichols</value>
-        </criteriaItems>
-        <description>Task for SalesPeople to get with their Boat Specialist on Retail ERPs</description>
-        <triggerType>onCreateOrTriggeringUpdate</triggerType>
-    </rules>
-    <rules>
-        <fullName>User Task SalesPerson Get with Boat Specialist Santi</fullName>
-        <actions>
-            <name>Please_review_this_ERP_for_Accuracy_with_Boat_Specialist_Santi</name>
-            <type>Task</type>
-        </actions>
-        <active>false</active>
-        <criteriaItems>
-            <field>AcctSeed__Project__c.RecordTypeId</field>
-            <operation>equals</operation>
-            <value>Retail Boat Sale</value>
-        </criteriaItems>
-        <criteriaItems>
-            <field>AcctSeed__Project__c.Salesperson__c</field>
-            <operation>contains</operation>
-            <value>Santi</value>
-        </criteriaItems>
-        <description>Task for SalesPeople to get with their Boat Specialist on Retail ERPs</description>
-        <triggerType>onCreateOrTriggeringUpdate</triggerType>
-    </rules>
-    <rules>
-        <fullName>User Task SalesPerson Get with Boat Specialist VanDeligt</fullName>
-        <actions>
-            <name>Please_review_this_ERP_for_Accuracy_with_Boat_Specialist_van_de_ligt</name>
-            <type>Task</type>
-        </actions>
-        <active>false</active>
-        <criteriaItems>
-            <field>AcctSeed__Project__c.RecordTypeId</field>
-            <operation>equals</operation>
-            <value>Retail Boat Sale</value>
-        </criteriaItems>
-        <criteriaItems>
-            <field>AcctSeed__Project__c.Salesperson__c</field>
-            <operation>contains</operation>
-            <value>van de ligt</value>
-        </criteriaItems>
-        <description>Task for SalesPeople to get with their Boat Specialist on Retail ERPs</description>
-        <triggerType>onCreateOrTriggeringUpdate</triggerType>
-    </rules>
-    <rules>
         <fullName>Vanessa Add On Call ERP</fullName>
         <active>false</active>
         <criteriaItems>
@@ -4283,22 +3651,6 @@
             <operation>equals</operation>
             <value>Boat Specialist Add On Call</value>
         </criteriaItems>
-        <triggerType>onCreateOrTriggeringUpdate</triggerType>
-    </rules>
-    <rules>
-        <fullName>Warranty - Notify Service Advisor Place Boat in Rigger Schedule</fullName>
-        <active>true</active>
-        <criteriaItems>
-            <field>AcctSeed__Project__c.RecordTypeId</field>
-            <operation>equals</operation>
-            <value>Legend Warranty</value>
-        </criteriaItems>
-        <criteriaItems>
-            <field>AcctSeed__Project__c.Stage__c</field>
-            <operation>equals</operation>
-            <value>In Repair</value>
-        </criteriaItems>
-        <description>Notifies Service Advisors to schedule boat in Rigging Sdchedule</description>
         <triggerType>onCreateOrTriggeringUpdate</triggerType>
     </rules>
     <rules>
@@ -4452,26 +3804,6 @@
         <description>Notifies Service Manager and Team when a Retail boat Is scheduled or rescheduled for Pickup (Delivery Date)</description>
         <formula>OR(   AND(   ISPICKVAL(Pickup_Location__c,&quot;Whitefish - Pick-up&quot;),    ISCHANGED(Delivery_Date__c)   ),  AND(    ISPICKVAL(Pickup_Location__c,&quot;Whitefish - Delivery&quot;),    ISCHANGED(Delivery_Date__c)   ) )</formula>
         <triggerType>onAllChanges</triggerType>
-    </rules>
-    <rules>
-        <fullName>Work Order Ready for Accounting</fullName>
-        <actions>
-            <name>Work_Order_Status_Ready_for_Accounting</name>
-            <type>FieldUpdate</type>
-        </actions>
-        <active>false</active>
-        <criteriaItems>
-            <field>AcctSeed__Project__c.RecordTypeId</field>
-            <operation>equals</operation>
-            <value>Legend Service Work Order</value>
-        </criteriaItems>
-        <criteriaItems>
-            <field>AcctSeed__Project__c.Stage__c</field>
-            <operation>equals</operation>
-            <value>Pending Pickup,Pending Delivery,In Storage</value>
-        </criteriaItems>
-        <description>**Deactivated by BF after discussing with Cherlynn. Automatically changes the status to Ready for Accounting on a retail work order when the stage is set to Pending Pickup or Pending Delivery</description>
-        <triggerType>onCreateOrTriggeringUpdate</triggerType>
     </rules>
     <tasks>
         <fullName>A_New_Fixed_Asset_has_been_Created</fullName>
@@ -4696,17 +4028,6 @@ Thanks!  You rock!</description>
         <subject>Tagging Pending ERP Dealer</subject>
     </tasks>
     <tasks>
-        <fullName>Dominic_s_Add_On_Call_ERP</fullName>
-        <assignedTo>bgrenier@legendboats.com</assignedTo>
-        <assignedToType>user</assignedToType>
-        <dueDateOffset>0</dueDateOffset>
-        <notifyAssignee>true</notifyAssignee>
-        <priority>Normal</priority>
-        <protected>false</protected>
-        <status>Open</status>
-        <subject>Dominic&apos;s Add On Call ERP</subject>
-    </tasks>
-    <tasks>
         <fullName>ERP_Changed_to_Closed_Lost</fullName>
         <assignedTo>sboothe@legendboats.com</assignedTo>
         <assignedToType>user</assignedToType>
@@ -4751,21 +4072,6 @@ Thanks!  You rock!</description>
         <protected>false</protected>
         <status>Open</status>
         <subject>Inspect Your Customer&apos;s Boat</subject>
-    </tasks>
-    <tasks>
-        <fullName>Marianne_French_Just_Created_a_Counter_Sale</fullName>
-        <assignedTo>aseltzer@legendboats.com</assignedTo>
-        <assignedToType>user</assignedToType>
-        <description>Austin Seltzer,  You have been assigned the very special duty of picking and packing parts for this counter sale.   
-
-Please ensure this is done to the best of your abilities and let Marianne know when it is completed.</description>
-        <dueDateOffset>0</dueDateOffset>
-        <notifyAssignee>false</notifyAssignee>
-        <offsetFromField>AcctSeed__Project__c.CreatedDate</offsetFromField>
-        <priority>Normal</priority>
-        <protected>false</protected>
-        <status>Open</status>
-        <subject>Marianne French Just Created a Counter Sale</subject>
     </tasks>
     <tasks>
         <fullName>Montreal_Add_On_Call_ERP_Benoit</fullName>
@@ -4982,18 +4288,6 @@ Please complete other tasks associated to this Partner Boat Sale and finalize th
         <protected>false</protected>
         <status>Open</status>
         <subject>Parts are required on Warranty ERP</subject>
-    </tasks>
-    <tasks>
-        <fullName>Parts_came_in_and_ready_for_scheduling</fullName>
-        <assignedTo>mpatrakka@legendboats.com</assignedTo>
-        <assignedToType>user</assignedToType>
-        <description>THis ERP is ready for scheduling.  This is a temporary notification until Ben is back from vacation.</description>
-        <dueDateOffset>0</dueDateOffset>
-        <notifyAssignee>false</notifyAssignee>
-        <priority>Normal</priority>
-        <protected>false</protected>
-        <status>Open</status>
-        <subject>Parts came in and ready for scheduling</subject>
     </tasks>
     <tasks>
         <fullName>Parts_have_been_received</fullName>
@@ -5375,20 +4669,6 @@ Please complete other tasks associated to this Partner Boat Sale and finalize th
         <subject>Service Work Order is Approved</subject>
     </tasks>
     <tasks>
-        <fullName>Tagging_Pending_ERP</fullName>
-        <assignedTo>sboothe@legendboats.com</assignedTo>
-        <assignedToType>user</assignedToType>
-        <description>This deal has been approved to tag, go do your thing :)
-
-Thank you, you&apos;re awesome!</description>
-        <dueDateOffset>1</dueDateOffset>
-        <notifyAssignee>true</notifyAssignee>
-        <priority>Normal</priority>
-        <protected>false</protected>
-        <status>Open</status>
-        <subject>Tagging Pending ERP</subject>
-    </tasks>
-    <tasks>
         <fullName>TestTestttere</fullName>
         <assignedTo>jmaltais@legendboats.com</assignedTo>
         <assignedToType>user</assignedToType>
@@ -5438,8 +4718,8 @@ Thank you, you&apos;re awesome!</description>
     </tasks>
     <tasks>
         <fullName>This_Barrie_Retail_ERP_is_Ready_for_Tagging</fullName>
-        <assignedTo>hnguyen@legendboats.com</assignedTo>
-        <assignedToType>user</assignedToType>
+        <assignedTo>Sales_Manager_Barrie</assignedTo>
+        <assignedToType>role</assignedToType>
         <description>This Barrie Retail Boat is in Tagging Pending Stage and ready to be tagged.</description>
         <dueDateOffset>0</dueDateOffset>
         <notifyAssignee>false</notifyAssignee>
@@ -5475,18 +4755,6 @@ Please note, Luc and Elvis and Mel also get this notification.</description>
         <protected>false</protected>
         <status>Open</status>
         <subject>This Dealer Created a Parts Request</subject>
-    </tasks>
-    <tasks>
-        <fullName>This_ERP_has_Been_Created_You_can_Start_Pick_and_Pack_Process</fullName>
-        <assignedTo>mcollette@legendboats.com</assignedTo>
-        <assignedToType>user</assignedToType>
-        <description>This Retail Boat Sale has Been Created.  Please begin the Pick and Pack Process.</description>
-        <dueDateOffset>0</dueDateOffset>
-        <notifyAssignee>false</notifyAssignee>
-        <priority>Normal</priority>
-        <protected>false</protected>
-        <status>Open</status>
-        <subject>This ERP has Been Created, You can Start Pick and Pack Process</subject>
     </tasks>
     <tasks>
         <fullName>This_ERP_is_in_Pending_Rigging_Stage</fullName>

@@ -8,8 +8,10 @@ public without sharing class Lead_Selector extends Application_Selector
   public Lead_Selector()
   {
     this.sObjectName = 'Lead';
-    this.fields = new List<String>{
+    this.fields = new List<String>
+    {
       'Id',
+      'CreatedDate',
       'FirstName',
       'LastName',
       'Phone',
@@ -25,8 +27,20 @@ public without sharing class Lead_Selector extends Application_Selector
       'Country',
       'CountryCode',
       'PostalCode',
-      'Preferred_Language__c'
+      'Preferred_Language__c',
+      'hubspot_plan_to_purchase__c',
+      'hubspot_Boat_Type__c',
+      'BoatModel__c',
+      'hubspot_subscribe_legend_newsletter__c',
+      'Marketing_Cloud_Notes__c'
     };
+  }
+
+  public static List<Lead> allByIds( Set<Id> ids )
+  {
+    return new Lead_Selector()
+      .addWhereIdIn( ids )
+      .query();
   }
 
   public static Lead byIdIncludingCampaignMembers( Id recordId )
