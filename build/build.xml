@@ -46,7 +46,18 @@
       <replaceregexp match="&lt;icon&gt;(.+?)&lt;/icon&gt;\s*" replace="" flags="gm" byline="true">
         <fileset dir="${basedir}/force-app/main/default/tabs" includes="*.xml"/>
       </replaceregexp>
-
+      <!-- remove reportTypes from translations -->
+      <replaceregexp match="&lt;reportTypes&gt;[\s\S]*&lt;/reportTypes&gt;\s*" replace="" flags="gm" byline="false">
+        <fileset dir="${basedir}/force-app/main/default/translations" includes="*.xml"/>
+      </replaceregexp>
+      <!-- remove flowDefinitions from translations -->
+      <replaceregexp match="&lt;flowDefinitions&gt;[\s\S]*&lt;/flowDefinitions&gt;\s*" replace="" flags="gm" byline="false">
+        <fileset dir="${basedir}/force-app/main/default/translations" includes="*.xml"/>
+      </replaceregexp>
+      <!-- remove prompts from translations -->
+      <replaceregexp match="&lt;prompts&gt;[\s\S]*&lt;/prompts&gt;\s*" replace="" flags="gm" byline="false">
+        <fileset dir="${basedir}/force-app/main/default/translations" includes="*.xml"/>
+      </replaceregexp>
 
       <!-- Removes the Action Override for Lead object with Einstein IQ score component from apps -->
 <!--      <replaceregexp match="&lt;actionOverrides&gt;\s*&lt;actionName&gt;(.+?)&lt;/actionName&gt;\s*&lt;comment&gt;(.+?)&lt;/comment&gt;\s*&lt;content&gt;Lead_Record_Page_Einstein&lt;/content&gt;\s*&lt;formFactor&gt;(.+?)&lt;/formFactor&gt;\s*&lt;skipRecordTypeSelect&gt;(.+?)&lt;/skipRecordTypeSelect&gt;\s*&lt;type&gt;Flexipage&lt;/type&gt;\s*&lt;pageOrSobjectType&gt;Lead&lt;/pageOrSobjectType&gt;\s*&lt;/actionOverrides&gt;\s*" replace="" flags="gm" byline="false">-->

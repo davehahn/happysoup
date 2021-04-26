@@ -985,7 +985,7 @@ public without sharing class LGND_APIv2_Product {
     @AuraEnabled public String Name { get; set; }
     @AuraEnabled public Boolean HasOptions { get; set; }
     @AuraEnabled public Decimal RetailPrice { get; set; }
-    @AuraEnabled  Decimal PartnerPrice { get; set; }
+    @AuraEnabled public Decimal PartnerPrice { get; set; }
     @AuraEnabled public Decimal FactoryPrice { get; set; }
     @AuraEnabled public Decimal FactorySpecialPrice { get; set; }
     @AuraEnabled public String FactorySpecialPriceDescription { get; set; }
