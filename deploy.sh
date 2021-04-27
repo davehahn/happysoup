@@ -29,6 +29,10 @@ then
   CHECKONLY=true
 fi
 
+if [ ! -z $4 ] && [ $4 = true ]
+then
+  DEPLOY_EXPERIENCES=true
+fi
 
 echoOut 'Removing stupid Case Language field'
 rm -f force-app/main/default/objects/Case/fields/Language.field-meta.xml
@@ -60,6 +64,8 @@ cp .forceignore .forceignore.orig
 echoOut 'modifying .forceignore to not deploy staticresources or experiences'
 echo -e "\nforce-app/main/default/staticresources" >> .forceignore
 #echo -e "\nforce-app/main/default/experiences" >> .forceignore
+echo -e "\nforce-app/BoatReservation/experiences" >> .forceignore
+echo -e "\nforce-app/CustomerCommunity/experiences" >> .forceignore
 echo 'Deploying the remaining metadata'
 
 if [ "$CHECKONLY" = true ]
@@ -86,8 +92,9 @@ else
       rm -f .forceignore
       mv .forceignore.orig .forceignore
       echoOut 'Deploying ExperienceBundles'
-      sfdx force:source:deploy --testlevel NoTestRun --targetusername $1 -p force-app/main/default/experiences -g -w 180
+#      sfdx force:source:deploy --testlevel NoTestRun --targetusername $1 -p force-app/main/default/experiences -g -w 180
       sfdx force:source:deploy --testlevel NoTestRun --targetusername $1 -p force-app/BoatReservation/experiences -g -w 180
+      sfdx force:source:deploy --testlevel NoTestRun --targetusername $1 -p force-app/CustomerCommunity/experiences -g -w 180
     fi
   else
     echoOut 'Deploy Fail'
