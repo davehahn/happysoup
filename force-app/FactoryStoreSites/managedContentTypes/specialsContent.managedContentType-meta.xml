@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ManagedContentType xmlns="http://soap.sforce.com/2006/04/metadata">
+  <description>Posts outlining current specials available from Legend Boats</description>
+  <developerName>legendSpecials</developerName>
+  <managedContentNodeTypes>
+    <nodeLabel>Special Name</nodeLabel>
+    <nodeName>specialName</nodeName>
+    <nodeType>NAMEFIELD</nodeType>
+    <isRequired>true</isRequired>
+    <isLocalizable>true</isLocalizable>
+    <helpText>Title to be shown on the Deals page listing and in the post. Be sure to include the full name of the deal and the words "Deal" or "Special" along with the department the deal is for ("Parts", "Sales", etc.)</helpText>
+    <placeholderText>Enter and SEO friendly title...</placeholderText>
+  </managedContentNodeTypes>
+  <managedContentNodeTypes>
+    <nodeLabel>Start Date</nodeLabel>
+    <nodeName>specialStartDate</nodeName>
+    <nodeType>DATE</nodeType>
+    <isRequired>true</isRequired>
+    <isLocalizable>false</isLocalizable>
+    <helpText>Select the date this deal become active.</helpText>
+  </managedContentNodeTypes>
+  <managedContentNodeTypes>
+    <nodeLabel>End Date</nodeLabel>
+    <nodeName>specialEndDate</nodeName>
+    <nodeType>DATE</nodeType>
+    <isRequired>false</isRequired>
+    <isLocalizable>false</isLocalizable>
+    <helpText>Select the date this deal ends.</helpText>
+  </managedContentNodeTypes>
+  <managedContentNodeTypes>
+    <nodeLabel>Banner Image</nodeLabel>
+    <nodeName>specialBannerImage</nodeName>
+    <nodeType>IMG</nodeType>
+    <isRequired>true</isRequired>
+    <isLocalizable>false</isLocalizable>
+    <helpText>Select the banner image you'd like to display in galleries, lists, and at the top of the post.</helpText>
+  </managedContentNodeTypes>
+  <managedContentNodeTypes>
+    <nodeLabel>Excerpt</nodeLabel>
+    <nodeName>specialExcerpt</nodeName>
+    <nodeType>TEXT</nodeType>
+    <isRequired>false</isRequired>
+    <isLocalizable>true</isLocalizable>
+    <helpText>This is the text that will be displayed on the deal listings.</helpText>
+  </managedContentNodeTypes>
+  <managedContentNodeTypes>
+    <nodeLabel>Main Content</nodeLabel>
+    <nodeName>specialMainContent</nodeName>
+    <nodeType>RTE</nodeType>
+    <isRequired>false</isRequired>
+    <isLocalizable>true</isLocalizable>
+    <helpText>The content that will displayed within the body of the post.</helpText>
+    <placeholderText>Provide an outline of the deal here...</placeholderText>
+  </managedContentNodeTypes>
+  <masterLabel>Legend Specials</masterLabel>
+</ManagedContentType>

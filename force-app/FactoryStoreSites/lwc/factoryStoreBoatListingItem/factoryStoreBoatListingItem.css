@@ -1,0 +1,58 @@
+/**
+ * Created by Tim on 2021-03-25.
+ */
+
+.modelListing{
+  width: 100%;
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--zebraAccent);
+  margin-bottom: 1.25em;
+}
+
+.modelListing .modelListing__photo{
+  display: block;
+  width: 42%; height: 0; padding-bottom: 22%;
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-color: var(--zebra);
+}
+
+.modelListing .modelListing__vitals{
+  width: 30%;
+  margin: 2%;
+  padding-right: 2%;
+  border-right: 1px solid var(--zebraAccent);
+}
+
+.modelListing .modelListing__vitals .modelListing__quickSpecs{
+  margin-top: 1.5em;
+}
+.modelListing .modelListing__vitals .modelListing__quickSpecs .heading{
+  text-transform: uppercase;
+  font-size: 0.83em;
+}
+.modelListing .modelListing__vitals .modelListing__quickSpecs ul{
+  width: 100%;
+}
+.modelListing .modelListing__vitals .modelListing__quickSpecs ul li{
+  display: flex;
+  justify-content: space-between;
+}
+.modelListing .modelListing__vitals .modelListing__quickSpecs li strong{
+  font-weight: 600;
+}
+
+.modelListing .modelListing__ctas{
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  margin-right: 2%;
+}
+
+.modelListing .modelListing__ctas button{
+  width: 100%;
+  margin-bottom: 1em;
+  justify-content: center;
+}

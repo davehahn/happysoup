@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+  <apiVersion>50.0</apiVersion>
+  <description>Factory Store Phone Numbers</description>
+  <isExposed>true</isExposed>
+  <targets>
+    <target>lightningCommunity__Page</target>
+    <target>lightningCommunity__Default</target>
+  </targets>
+  <targetConfigs>
+    <targetConfig targets="lightningCommunity__Default">
+      <property name="phoneSales" type="String" label="Sales Department Phone Number"/>
+      <property name="phoneService" type="String" label="Service Department Phone Number"/>
+      <property name="phoneParts" type="String" label="Parts Department Phone Number"/>
+    </targetConfig>
+  </targetConfigs>
+  <masterLabel>Factory Store Phone Numbers</masterLabel>
+</LightningComponentBundle>

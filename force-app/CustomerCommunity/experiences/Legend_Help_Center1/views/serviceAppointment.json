@@ -1,0 +1,89 @@
+{
+  "appPageId" : "792e4aea-4991-4f22-bbec-e64df85a70b1",
+  "componentName" : "siteforce:dynamicLayout",
+  "id" : "9029d729-11ea-4e41-a02c-232d6d141111",
+  "label" : "service-appointment",
+  "regions" : [ {
+    "components" : [ {
+      "componentAttributes" : {
+        "background" : "background: rgba(0,0,0,0)",
+        "backgroundOverlay" : "rgba(0,0,0,0.5)",
+        "contentAreaWidth" : 100,
+        "sectionConfig" : {
+          "UUID" : "6c6035ef-b511-4aa9-938d-5ae8e94ed5d2",
+          "columns" : [ {
+            "UUID" : "31e0410c-054e-47f7-b044-dfb1e7ff568b",
+            "columnKey" : "1",
+            "columnName" : "Column 1",
+            "columnWidth" : "12",
+            "seedComponents" : [ ]
+          } ]
+        },
+        "sectionHeight" : 300
+      },
+      "componentName" : "forceCommunity:section",
+      "id" : "6c6035ef-b511-4aa9-938d-5ae8e94ed5d2",
+      "regions" : [ {
+        "components" : [ {
+          "componentAttributes" : {
+            "blurb" : "Request your next service appointment today!",
+            "title" : "Book a Service Appointment"
+          },
+          "componentName" : "c:communitySharedPageIntro",
+          "id" : "11f73e1b-c96d-4b0a-8134-983bdcfcae0d",
+          "renderPriority" : "NEUTRAL",
+          "renditionMap" : {
+            "fr" : "2e7e961b-f266-4a46-87c2-7e2823764ff5"
+          },
+          "renditions" : [ {
+            "id" : "2e7e961b-f266-4a46-87c2-7e2823764ff5",
+            "renditionValue" : {
+              "componentAttributes" : {
+                "blurb" : "Demandez votre prochain rendez-vous de service dès aujourd'hui!",
+                "title" : "Réservez un rendez-vous de service"
+              }
+            },
+            "type" : "renditionComponent"
+          } ],
+          "type" : "component"
+        }, {
+          "componentAttributes" : { },
+          "componentName" : "c:ServiceAppointmentFlow",
+          "id" : "71b0430d-72cb-48cf-b01c-c61572254834",
+          "renderPriority" : "NEUTRAL",
+          "renditionMap" : { },
+          "type" : "component"
+        } ],
+        "id" : "31e0410c-054e-47f7-b044-dfb1e7ff568b",
+        "regionLabel" : "Column 1",
+        "regionName" : "1",
+        "renditionMap" : { },
+        "type" : "region"
+      } ],
+      "renderPriority" : "NEUTRAL",
+      "renditionMap" : { },
+      "type" : "component"
+    } ],
+    "id" : "4fea7583-e077-4256-a9ff-d085c2015c38",
+    "regionName" : "content",
+    "type" : "region"
+  }, {
+    "components" : [ {
+      "componentAttributes" : {
+        "description" : "",
+        "metaTags" : "",
+        "title" : "Service Appointment"
+      },
+      "componentName" : "forceCommunity:seoAssistant",
+      "id" : "0690d639-c953-46b1-ab98-b1fe173ae0c0",
+      "renditionMap" : { },
+      "type" : "component"
+    } ],
+    "id" : "989733fd-5b53-4897-b77e-bc0d7de1ee66",
+    "regionName" : "sfdcHiddenRegion",
+    "type" : "region"
+  } ],
+  "themeLayoutType" : "Fq9t59TLhSdsvHmfT206X5ZHrZqSpZ",
+  "type" : "view",
+  "viewType" : "custom-service-appointment"
+}

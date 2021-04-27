@@ -42,7 +42,7 @@
 	      			 aura:id="address_combobox">
 
 		        <div class="slds-form-element">
-		        	<lightning:input name="Search" type="search" label="Search an Address" placeholder="Start typing to find your address." value="{!v.search}" aura:id="search" />
+		        	<lightning:input name="Search" type="search" label="{!$Label.c.AddressForm_Search}" placeholder="{!$Label.c.AddressForm_Search_Placeholder}" value="{!v.search}" aura:id="search" />
 		        </div>
 
 		        <div id="listbox-unique-id" role="listbox">
@@ -69,11 +69,11 @@
 		  </lightning:layoutItem>
 
 		  <lightning:layoutItem size="12" class="slds-p-around_x-small">
-		  	<lightning:textarea label="Street"
+		  	<lightning:textarea label="{!$Label.c.AddressForm_Street}"
 														aura:id="required-field"
 														value="{!v.street}"
 														required="{!v.allRequired}"
-														messageWhenValueMissing="Street is required" />
+														messageWhenValueMissing="{!$Label.c.AddressForm_Street_Error}" />
 		  </lightning:layoutItem>
 
 		  <lightning:layoutItem size="12"
@@ -82,11 +82,11 @@
                             largeDeviceSize="8"
                             class="slds-p-around_x-small">
         <lightning:input type="text"
-												 label="City"
+												 label="{!$Label.c.AddressForm_City}"
 												 aura:id="required-field"
 												 value="{!v.city}"
 												 required="{!v.allRequired}"
-												 messageWhenValueMissing="City is required" />
+												 messageWhenValueMissing="{!$Label.c.AddressForm_City_Error}" />
       </lightning:layoutItem>
 
       <lightning:layoutItem size="12"
@@ -95,11 +95,11 @@
                             largeDeviceSize="4"
                             class="slds-p-around_x-small">
         <lightning:select name="select"
-													label="State/Province"
+													label="{!$Label.c.AddressForm_Province}"
 													aura:id="required-field"
 													value="{!v.province_code}"
 													required="{!v.allRequired}"
-													messageWhenValueMissing="Province is required">
+													messageWhenValueMissing="{!$Label.c.AddressForm_Province_Error}">
 					<aura:iteration items="{!v.provinces}" var="item">
 						<option text="{!item.label}" value="{!item.value}" selected="{!item.selected}" />
 					</aura:iteration>
@@ -113,11 +113,11 @@
                             largeDeviceSize="8"
                             class="slds-p-around_x-small">
          <lightning:input type="text"
-													label="Postal Code"
+													label="{!$Label.c.AddressForm_Postal}"
 													aura:id="required-field"
 													value="{!v.zip}"
 													required="{!v.allRequired}"
-													messageWhenValueMissing="Postal Code is required" />
+													messageWhenValueMissing="{!$Label.c.AddressForm_Postal_Error}" />
       </lightning:layoutItem>
 
       <lightning:layoutItem size="12"
@@ -126,11 +126,11 @@
                             largeDeviceSize="4"
                             class="slds-p-around_x-small">
         <lightning:select name="select"
-													label="Country"
+													label="{!$Label.c.AddressForm_Country}"
 													aura:id="required-field"
 													value="{!v.country}"
 													required="{!v.allRequired}"
-													messageWhenValueMissing="Country is required">
+													messageWhenValueMissing="{!$Label.c.AddressForm_Country_Error}">
 					<aura:iteration items="{!v.countries}" var="item">
 						<option text="{!item.label}" value="{!item.value}" selected="{!item.selected}" />
 					</aura:iteration>
