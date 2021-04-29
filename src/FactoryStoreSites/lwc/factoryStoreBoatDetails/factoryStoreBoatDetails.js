@@ -2,57 +2,33 @@
  * Created by Tim on 2021-04-05.
  */
 
-import { LightningElement, api, wire } from 'lwc';
+import { LightningElement, api, wire, track } from 'lwc';
 import { NavigationMixin, CurrentPageReference } from 'lightning/navigation';
-import { stringy, stripParentheses, rewriteMotorName, rewriteTrailerName, weeklyPayment, formatPrice, setWrapperClass } from 'c/communitySharedUtils';
-import Id from '@salesforce/community/Id';
-import fetchCommunityDetails from '@salesforce/apex/CommSharedURL_Controller.fetchCommunityDetails';
+import { stringy, stripParentheses, rewriteMotorName, rewriteTrailerName, weeklyPayment, formatPrice } from 'c/communitySharedUtils';
 import fetchBoat from '@salesforce/apex/FactoryStore_InventoryController.fetchBoat';
 import passBoatModelId from '@salesforce/apex/FactoryStore_FlowController.passBoatModelId';
-
 import { fireEvent, registerListener, unregisterAllListeners} from 'c/pubsub';
 
 
 export default class FactoryStoreBoatDetails extends NavigationMixin(LightningElement) {
 
-	@api sectionWidth;
-
   isEN = true;
 	isFR = false;
 
-  recordId;
-  boat;
-  boatDataLookupRunning = true;
-  boatDataLoaded = false;
-  modelWrapperClass = 'model model--loading';
-  resultEmpty = false;
+  @track recordId;
+  @track boat;
+  @track boatDataLookupRunning = true;
+  @track boatDataLoaded = false;
+  @track resultEmpty = false;
 
-  boatName;
-  standardMotorName;
-  standardTrailerName;
-
-  // Lead forms
-	leadFormName;
-	@api campaignId;
-	locationName;
+  @track boatName;
+  @track standardMotorName;
+  @track standardTrailerName;
 
   @wire(CurrentPageReference)
   setCurrentPageReference(currentPageReference){
     this.recordId = currentPageReference.state.c__recordId;
   }
-
-  @wire( fetchCommunityDetails, {communityId: Id} )
-		wiredFetchCommunityDetails( { error, data } )
-		{
-			if( data )
-			{
-				this.locationName = data.name;
-			}
-			else if( error )
-			{
-				console.log('fetch community error: ', error);
-			}
-		}
 
   @wire( fetchBoat, { boatId: '$recordId' } )
   wiredFetchBoat( { error, data } )
@@ -75,10 +51,8 @@ export default class FactoryStoreBoatDetails extends NavigationMixin(LightningEl
 
   recordFound(){
     this.boatDataLoaded = true;
-    this.modelWrapperClass = setWrapperClass(this.sectionWidth, 'model');
     this.boatDataLookupRunning =  false;
     this.boatName = stripParentheses(this.boat.Name);
-    this.leadFormName = this.boatName + ' - Lead Form';
     this.standardMotorName = rewriteMotorName(this.boat.StandardMotor.Name);
     this.standardTrailerName = (this.boat.StandardTrailer.Name !== '') ? 'and ' + rewriteTrailerName(this.boat.StandardTrailer.Name) : '';
     this.passModelIdToFlow(this.boat.Id);
@@ -151,7 +125,7 @@ export default class FactoryStoreBoatDetails extends NavigationMixin(LightningEl
 				  if(sOption === pIndex){
 				  	sortedArray[sIndex] = {
 				  	 'Name': pIndex,
-				  	 'Value': '<strong>' + pOption + translate[pIndex].unit + '</strong>'
+				  	 'Value': pOption
        			};
       		}
     		}
