@@ -59,7 +59,9 @@ echoOut 'make a copy of .forceignore'
 cp .forceignore .forceignore.orig
 echoOut 'modifying .forceignore to not deploy staticresources or experiences'
 echo -e "\nforce-app/main/default/staticresources" >> .forceignore
-#echo -e "\nforce-app/main/default/experiences" >> .forceignore
+echo -e "\nforce-app/BoatReservation/experiences" >> .forceignore
+echo -e "\nforce-app/CustomerCommunity/experiences" >> .forceignore
+#echo -e "\nforce-app/FactoryStoreSites/experiences" >> .forceignore
 echo 'Deploying the remaining metadata'
 
 if [ "$CHECKONLY" = true ]
@@ -72,7 +74,9 @@ then
       rm -f .forceignore
       mv .forceignore.orig .forceignore
       echoOut 'Deploying ExperienceBundles'
-      sfdx force:source:deploy --testlevel NoTestRun --checkonly --targetusername $1 -p force-app/main/default/experiences -g -w 180
+      sfdx force:source:deploy --testlevel NoTestRun --checkonly --targetusername $1 -p force-app/BoatReservation/experiences -g -w 180
+      sfdx force:source:deploy --testlevel NoTestRun --checkonly --targetusername $1 -p force-app/CustomerCommunity/experiences -g -w 180
+      sfdx force:source:deploy --testlevel NoTestRun --checkonly --targetusername $1 -p force-app/FactoryStoreSites/experiences -g -w 180
     fi
   else
     echoOut 'Validation Fail'
@@ -86,8 +90,10 @@ else
       rm -f .forceignore
       mv .forceignore.orig .forceignore
       echoOut 'Deploying ExperienceBundles'
-      sfdx force:source:deploy --testlevel NoTestRun --targetusername $1 -p force-app/main/default/experiences -g -w 180
       sfdx force:source:deploy --testlevel NoTestRun --targetusername $1 -p force-app/BoatReservation/experiences -g -w 180
+      sfdx force:source:deploy --testlevel NoTestRun --targetusername $1 -p force-app/CustomerCommunity/experiences -g -w 180
+      sfdx force:source:deploy --testlevel NoTestRun --targetusername $1 -p force-app/FactoryStoreSites/experiences -g -w 180
+    fi
     fi
   else
     echoOut 'Deploy Fail'
