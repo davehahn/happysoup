@@ -22,17 +22,6 @@ const getTestimonials = (numToShow) => {
   return testimonials;
 }
 
-const getTestUser = () => {
-	const Lead = {
-	  'LeadSource': 'Online - Web',
-	  'FirstName': 'Fistester',
-	  'LastName': 'Lastmans',
-	  'Email': 'flastman@legendboats.com',
-	  'PostalCode': 'L5J2E9'
- }
- return Lead;
-}
-
 const stringy = (payload) => {
   return JSON.stringify(payload);
 }
@@ -46,6 +35,7 @@ const stripParentheses = (payload) => {
 }
 
 const rewriteMotorName = (payload) => {
+  console.log('rewriteMotorName', payload);
   let replaceFourStroke = ['4S', 'SSHS', 'FourStroke'];
   let replacementFourStroke = '4-Stroke';
 
@@ -60,6 +50,7 @@ const rewriteMotorName = (payload) => {
 }
 
 const rewriteTrailerName = (payload) => {
+  console.log(payload);
   let replaceTrailerName = ['Duv18TM', 'Dub22L'];
   let replacementTrailerName = ['Glide-on Trailer'];
 
@@ -148,53 +139,8 @@ const formatPrice = (price, round = false, lang = 'en') => {
 
 }
 
-const setWrapperClass = (width, additionalClassNames = null) => {
-	if(width === 'Screen'){
-		return additionalClassNames + ' fullWidth';
-	} else if(width === 'Container'){
-		return additionalClassNames;
-	} else if(width === 'Wide'){
-		return additionalClassNames + ' maxWidth';
-	} else if(width === 'Average'){
-		return additionalClassNames + ' maxWidth maxWidth--thin';
-	} else if(width === 'Thin'){
-		return additionalClassNames + ' maxWidth maxWidth--extraThin';
-	} else if(width === 'Extra Thin'){
-		return additionalClassNames + ' maxWidth maxWidth--ultraThin';
-	}
-}
-
-const convertLength = ( value, truncateLengthTrailingZero = true) => {
-  const baseValue = parseFloat( value ).toString();
-  const baseArray = baseValue.split( '.' );
-
-  const newFeet = (typeof baseArray[0] !== 'undefined' || baseArray[0] !== null) ? baseArray[0] + '&rsquo;' : '';
-  let inches = null;
-  if(typeof baseArray[1] !== 'undefined' || baseArray[1] !== null){
-    if(baseArray[1].substr(-1) === '0' && truncateLengthTrailingZero){
-      inches = baseArray[1].substr( 0, -1);
-    } else {
-      inches = baseArray[1];
-    }
-  }
-  const newInches = (typeof baseArray[1] !== 'undefined' || baseArray[1] !== null) ? inches + '&rdquo;' : '';
-  return '<strong>' + newFeet + newInches + '</strong>';
-}
-
-const parseLocationName = (locationName) => {
-	let name = locationName.replace('Legend Boats ', '');
-	if(name === 'Sudbury'){
-		name = 'Whitefish';
-	}
-	if((name.toLowerCase() === 'sainte marthe sur le lac') || (name.toLowerCase() === 'ste-marthe-sur-le-lac')){
-		name = 'Montreal';
-	}
-	return name;
-}
-
 export {
 	getTestimonials,
-	getTestUser,
 	stringy,
 	stripParentheses,
 	rewriteMotorName,
@@ -204,8 +150,5 @@ export {
 	renderEN,
 	renderFR,
 	decodeHTML,
-	gen8DigitId,
-	setWrapperClass,
-	convertLength,
-	parseLocationName
+	gen8DigitId
 }
