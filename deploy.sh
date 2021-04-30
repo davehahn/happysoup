@@ -29,6 +29,10 @@ then
   CHECKONLY=true
 fi
 
+if [ ! -z $4 ] && [ $4 = true ]
+then
+  DEPLOY_EXPERIENCES=true
+fi
 
 echoOut 'Removing stupid Case Language field'
 rm -f force-app/main/default/objects/Case/fields/Language.field-meta.xml
@@ -59,7 +63,15 @@ echoOut 'make a copy of .forceignore'
 cp .forceignore .forceignore.orig
 echoOut 'modifying .forceignore to not deploy staticresources or experiences'
 echo -e "\nforce-app/main/default/staticresources" >> .forceignore
+<<<<<<< HEAD
+echo -e "\nforce-app/BoatReservation/experiences" >> .forceignore
+echo -e "\nforce-app/CustomerCommunity/experiences" >> .forceignore
+#echo -e "\nforce-app/FactoryStoreSites/experiences" >> .forceignore
+=======
 #echo -e "\nforce-app/main/default/experiences" >> .forceignore
+echo -e "\nforce-app/BoatReservation/experiences" >> .forceignore
+echo -e "\nforce-app/CustomerCommunity/experiences" >> .forceignore
+>>>>>>> c00111a5eeb6af94fb8a383534b97e1b15eadd67
 echo 'Deploying the remaining metadata'
 
 if [ "$CHECKONLY" = true ]
@@ -72,7 +84,9 @@ then
       rm -f .forceignore
       mv .forceignore.orig .forceignore
       echoOut 'Deploying ExperienceBundles'
-      sfdx force:source:deploy --testlevel NoTestRun --checkonly --targetusername $1 -p force-app/main/default/experiences -g -w 180
+      sfdx force:source:deploy --testlevel NoTestRun --checkonly --targetusername $1 -p force-app/BoatReservation/experiences -g -w 180
+      sfdx force:source:deploy --testlevel NoTestRun --checkonly --targetusername $1 -p force-app/CustomerCommunity/experiences -g -w 180
+      sfdx force:source:deploy --testlevel NoTestRun --checkonly --targetusername $1 -p force-app/FactoryStoreSites/experiences -g -w 180
     fi
   else
     echoOut 'Validation Fail'
@@ -86,8 +100,16 @@ else
       rm -f .forceignore
       mv .forceignore.orig .forceignore
       echoOut 'Deploying ExperienceBundles'
-      sfdx force:source:deploy --testlevel NoTestRun --targetusername $1 -p force-app/main/default/experiences -g -w 180
+<<<<<<< HEAD
       sfdx force:source:deploy --testlevel NoTestRun --targetusername $1 -p force-app/BoatReservation/experiences -g -w 180
+      sfdx force:source:deploy --testlevel NoTestRun --targetusername $1 -p force-app/CustomerCommunity/experiences -g -w 180
+      sfdx force:source:deploy --testlevel NoTestRun --targetusername $1 -p force-app/FactoryStoreSites/experiences -g -w 180
+    fi
+=======
+#      sfdx force:source:deploy --testlevel NoTestRun --targetusername $1 -p force-app/main/default/experiences -g -w 180
+      sfdx force:source:deploy --testlevel NoTestRun --targetusername $1 -p force-app/BoatReservation/experiences -g -w 180
+      sfdx force:source:deploy --testlevel NoTestRun --targetusername $1 -p force-app/CustomerCommunity/experiences -g -w 180
+>>>>>>> c00111a5eeb6af94fb8a383534b97e1b15eadd67
     fi
   else
     echoOut 'Deploy Fail'

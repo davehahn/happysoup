@@ -1,0 +1,21 @@
+<!--
+ - Created by Tim on 2021-04-08.
+ -->
+
+<!-- Factory Store Deals Listing -->
+<template>
+  <h3 class="ro">Current Deals</h3>
+  <template if:true={showAsList}>
+    <ul class="deals maxWidth maxWidth--thin">
+      <template for:each={deals} for:item="deal">
+        <c-factory-store-deals-listing-item key={deal.DealId} deal={deal}></c-factory-store-deals-listing-item>
+
+      </template>
+    </ul>
+  </template>
+
+  <template if:true={showAsSlideshow}>
+    <div class="dealsSwiper" data-id="dealsSwiper" lwc:dom="manual"></div>
+  </template>
+
+</template>

@@ -37,7 +37,9 @@ cp .forceignore .forceignore.orig
 
 echo 'modifying .forceignore to not deploy staticresources and experienceBundles'
 echo -e "\nforce-app/main/default/staticresources" >> .forceignore
-echo -e "\nforce-app/main/default/experiences" >> .forceignore
+echo -e "\nforce-app/BoatReservation/experiences" >> .forceignore
+echo -e "\nforce-app/CustomerCommunity/experiences" >> .forceignore
+#echo -e "\nforce-app/FactoryStoreSites/experiences" >> .forceignore
 
 sfdx force:source:deploy --testlevel RunLocalTests --checkonly --targetusername ci-testValid -p force-app/ -g -w 120
 
@@ -47,5 +49,7 @@ then
   rm -f .forceignore
   mv .forceignore.orig .forceignore
   echoOut 'Deploying ExperienceBundles'
-  sfdx force:source:deploy --testlevel NoTestRun --checkonly --targetusername ci-testValid -p force-app/main/default/experiences -g -w 120
+  sfdx force:source:deploy --testlevel NoTestRun --checkonly --targetusername $1 -p force-app/BoatReservation/experiences -g -w 180
+  sfdx force:source:deploy --testlevel NoTestRun --checkonly --targetusername $1 -p force-app/CustomerCommunity/experiences -g -w 180
+  sfdx force:source:deploy --testlevel NoTestRun --checkonly --targetusername $1 -p force-app/FactoryStoreSites/experiences -g -w 180
 fi

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+  <apiVersion>50.0</apiVersion>
+  <description>Community Shared Footer Policy Links</description>
+  <isExposed>true</isExposed>
+  <targets>
+    <target>lightningCommunity__Page</target>
+    <target>lightningCommunity__Default</target>
+  </targets>
+  <targetConfigs>
+    <targetConfig targets="lightningCommunity__Default">
+      <property name="showPrivacyPolicyLink" type="Boolean" label="Show Privacy Policy Link"/>
+      <property name="privacyPolicyURL" type="String" label="Set Privacy Policy Link URL"/>
+      <property name="showCookiePolicyLink" type="Boolean" label="Show Cookie Policy Link"/>
+      <property name="cookiePolicyURL" type="String" label="Set Cookie Policy Link URL"/>
+      <property name="showTermsLink" type="Boolean" label="Show Terms and Conditions Link"/>
+      <property name="termsURL" type="String" label="Set Terms and Conditions Link URL"/>
+    </targetConfig>
+  </targetConfigs>
+  <masterLabel>Community Shared Footer Policy Links</masterLabel>
+</LightningComponentBundle>

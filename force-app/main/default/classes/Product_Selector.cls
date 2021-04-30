@@ -11,6 +11,21 @@ public with sharing class Product_Selector extends Application_Selector
     'Standard_Trolling_Motor__c'
   };
 
+  private static List<String> boatListingFields = new List<String>{
+    'Standard_Motor__c',
+    'Standard_Motor__r.Name',
+    'Standard_Trailer__c',
+    'Standard_Trailer__r.Name',
+    'Standard_Trolling_Motor__c',
+    'Model_Year_Start__c',
+    'Centerline_Length__c',
+    'Package_Length__c',
+    'Towing_Weight__c',
+    'Beam__c',
+    'Length__c',
+    'Series__c'
+  };
+
   public Product_Selector()
   {
     this.sObjectName = 'Product2';
@@ -57,5 +72,15 @@ public with sharing class Product_Selector extends Application_Selector
     if( results.size() > 0 )
       return (Product2)results[0];
     return null;
+  }
+
+  public static List<Product2> allBoatsInSeries( String series )
+  {
+    Product_Selector selector = new Product_Selector();
+    selector
+            .addFields( boatListingFields )
+            .addWhere('Series__c = \'' + series + '\'')
+            .addWhere('Available_on_Factory_Store_Sites__c = true', 'AND');
+    return (List<Product2>)selector.query();
   }
 }

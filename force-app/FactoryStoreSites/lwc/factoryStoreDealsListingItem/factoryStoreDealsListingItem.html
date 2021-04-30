@@ -1,0 +1,17 @@
+<!--
+ - Created by Tim on 2021-04-08.
+ -->
+
+<!-- Factory Store Deals Listing Item -->
+<template>
+    <li class="deal deal--list">
+        <article>
+            <h3 class="heading heading-s">{deal.data.DealName}: <span>{deal.data.StartDate} - {deal.data.EndDate}</span></h3>
+            <a href={deal.data.ButtonLink} tabindex="-1">
+                <img class="bannerImg" src={deal.data.BannerGraphic} />
+            </a>
+            <p class="copy copy-standard">{deal.data.Description}</p>
+            <a href={deal.data.ButtonLink} class="btn btn--primary">{deal.data.ButtonText}</a>
+        </article>
+    </li>
+</template>

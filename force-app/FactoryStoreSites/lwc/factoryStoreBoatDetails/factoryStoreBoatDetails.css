@@ -1,0 +1,166 @@
+/**
+ * Created by Tim on 2021-04-05.
+ */
+
+.model{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.model .model__intro{
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.model .model__intro .intro__vitals{
+}
+.model .model__intro .intro__vitals .vitals__priceBlock{
+  width: 45%;
+	min-width: 575px;
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
+	flex-wrap: wrap;
+	line-height: 1.25;
+	position: relative;
+}
+.model .model__intro .intro__vitals .vitals__priceBlock .priceBlock__weekly{
+  font-weight: 900;
+	font-size: 3.75em;
+	text-align: center;
+}
+.model .model__intro .intro__vitals .vitals__priceBlock .priceBlock__weekly span{
+  display: block;
+	text-transform: uppercase;
+	font-weight: 300;
+	font-size: 30%;
+}
+
+.model .model__intro .intro__vitals .vitals__priceBlock .priceBlock__retail{
+  width: 75%;
+	display: flex;
+	flex-wrap: wrap;
+	font-weight: 900;
+	font-size: 2.5em;
+}
+.model .model__intro .intro__vitals .vitals__priceBlock .priceBlock__retail sup{
+	font-size: .5em;
+	top: .9em;
+}
+.model .model__intro .intro__vitals .vitals__priceBlock .priceBlock__retail::before{
+  content: "";
+	display: block;
+	width: 1px;
+	background-color: rgba(51,51,51,.5);
+	margin: 0 1em;
+}
+
+.model .model__intro .intro__vitals .vitals__priceBlock .priceBlock__includes{
+  width: 100%;
+	font-style: normal;
+	font-size: 1.25em;
+	margin-top: .75em;
+}
+
+
+.model .model__intro .intro__photo{
+  display: block;
+  width: 60%; height: 0; padding-bottom: 25%;
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.model .model__specs, .model .model__motors{
+  width: calc(50% - 40px);
+  margin-top: 2em;
+}
+.model .model__specs ul li, .model .model__motors ul li{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5em 0.25em;
+	border-bottom: 1px solid #ddd;
+}
+.model .model__motors ul li span strong{
+  display: block;
+  text-align: right;
+}
+
+.model .model__premiumPack{
+  width: 100%;
+  margin-top: 2em;
+}
+.model .model__premiumPack ul{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.model .model__premiumPack ul .premiumPackage__item{
+  padding: 0.5em 0.25em;
+  border-bottom: 1px solid #ddd;
+  display: flex;
+  width: calc(50% - 40px);
+  align-items: center;
+}
+.model .model__premiumPack ul .premiumPackage__item .premiumPackage__itemDetail{
+	width: 100%;
+	padding-right: 2em;
+}
+.model .model__premiumPack ul .premiumPackage__item .premiumPackage__itemDetail .itemDetail__name{
+  font-weight: 900;
+}
+/*.model .model__premiumPack ul .premiumPackage__item:nth-of-type(even){*/
+/*  background-color: #efefef;*/
+/*}*/
+.model .model__premiumPack ul .premiumPackage__item:last-of-type{
+/*  border-bottom: 3px solid #333;*/
+}
+.model .model__premiumPack ul .premiumPackage__item .premiumPackage__itemDetail .itemDetail__value{
+  display: block;
+  position: relative;
+}
+
+.model .model__premiumPack ul .premiumPackage__item .premiumPackage__itemPrice{
+  width: 135px;
+	flex-shrink: 0;
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+}
+.model .model__premiumPack ul .premiumPackage__item .premiumPackage__itemPrice span{
+}
+.model .model__premiumPack ul .premiumPackage__item .premiumPackage__itemPrice strong{
+  font-size: 1.25em;
+  font-weight: 900;
+  margin-left: 0.25em;
+}
+
+.model .model__leadForm{
+  margin-top: 2.5em; width: 100%;
+}
+.model .model__leadForm .formPlaceholder{
+  padding-bottom: 25%;
+  background-color: var(--zebra);
+}
+
+.model .model__fullDetailsCta{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 2.5em;
+  margin-bottom: 2.5em;
+  padding: 5vw 0;
+  background-image: url('https://mk0inventorylegv1t7j.kinstacdn.com/wp-content/uploads/2020/07/footer-bg.jpg');
+  background-size: cover;
+  background-position: center bottom;
+  background-repeat: no-repeat;
+  color: #FFF;
+}
+.model .model__fullDetailsCta strong{
+  font-weight: 900;
+}

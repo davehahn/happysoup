@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+  <apiVersion>50.0</apiVersion>
+  <description>Factory Store Homepage Feature</description>
+  <isExposed>true</isExposed>
+  <targets>
+    <target>lightningCommunity__Page</target>
+    <target>lightningCommunity__Default</target>
+  </targets>
+  <targetConfigs>
+    <targetConfig targets="lightningCommunity__Default">
+      <property name="featureThumb" type="String" label="Feature Thumbnail" description="Make sure it's a full url from AWS or KinstaCDN. (i.e. AWS: https://boatuat-mylegend.cs44.force.com/factorystore/file-asset/trade_in_days_cover_photo?v=1 or KinstaCDN: https://mk0inventorylegv1t7j.kinstacdn.com/wp-content/uploads/2020/07/footer-bg.jpg)" />
+      <property name="featureHeading" type="String" label="Feature Heading" />
+      <property name="featureBlurb" type="String" label="Feature Blurb" />
+      <property name="buttonText" type="String" label="Button Text" />
+      <property name="buttonLink" type="String" label="Button Link" />
+    </targetConfig>
+  </targetConfigs>
+  <masterLabel>Factory Store Homepage Feature</masterLabel>
+</LightningComponentBundle>
