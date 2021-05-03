@@ -29,8 +29,8 @@ sfdx heber:staticresources:deploy -u $USER
 echo 'make a copy of .forceignore'
 cp .forceignore .forceignore.orig
 echoOut 'modifying .forceignore to not deploy staticresources or experiences'
-echo -e "\nforce-app/main/default/staticresources" >> .forceignore
-echo -e "\nforce-app/main/default/experiences" >> .forceignore
+echo -e "\nsrc/Base/main/default/staticresources" >> .forceignore
+echo -e "\nsrc/Base/main/default/experiences" >> .forceignore
 echo 'Deploying the remaining metadata'
 
 sfdx force:source:push -u $USER -f

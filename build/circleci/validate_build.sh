@@ -11,12 +11,12 @@ echo 'make a copy of .forceignore'
 cp .forceignore .forceignore.orig
 
 echo 'modifying .forceignore to not deploy staticresources and experienceBundles'
-echo -e "\nforce-app/main/default/staticresources" >> .forceignore
-echo -e "\nforce-app/BoatReservation/experiences" >> .forceignore
-echo -e "\nforce-app/CustomerCommunity/experiences" >> .forceignore
+echo -e "\nsrc/Base/main/default/staticresources" >> .forceignore
+echo -e "\nsrc/BoatReservation/experiences" >> .forceignore
+echo -e "\nsrc/CustomerCommunity/experiences" >> .forceignore
 #echo -e "\nforce-app/FactoryStoreSite/experiences" >> .forceignore
 
-sfdx force:source:deploy --testlevel RunLocalTests --checkonly --targetusername ci-testValid -p force-app -g -w 240
+sfdx force:source:deploy --testlevel RunLocalTests --checkonly --targetusername ci-testValid -p src -g -w 240
 
 if [ $DEPLOY_EXPERIENCES = true ]
 then
@@ -24,7 +24,7 @@ then
   rm -f .forceignore
   mv .forceignore.orig .forceignore
   echoOut 'Deploying ExperienceBundles'
-  sfdx force:source:deploy --testlevel NoTestRun --checkonly --targetusername ci-testValid -p force-app/BoatReservation/experiences -g -w 240
-  sfdx force:source:deploy --testlevel NoTestRun --checkonly --targetusername ci-testValid -p force-app/CustomerCommunity/experiences -g -w 240
-  #sfdx force:source:deploy --testlevel NoTestRun --checkonly --targetusername ci-testValid -p force-app/FactoryStoreSite/experiences -g -w 240
+  sfdx force:source:deploy --testlevel NoTestRun --checkonly --targetusername ci-testValid -p src/BoatReservation/experiences -g -w 240
+  sfdx force:source:deploy --testlevel NoTestRun --checkonly --targetusername ci-testValid -p src/CustomerCommunity/experiences -g -w 240
+  #sfdx force:source:deploy --testlevel NoTestRun --checkonly --targetusername ci-testValid -p src/FactoryStoreSite/experiences -g -w 240
 fi
