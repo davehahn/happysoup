@@ -38,7 +38,8 @@ public with sharing class Product_Selector extends Application_Selector
       'ProductCode',
       'Description',
       'Default_Gallery_Image_Original__c',
-      'Rigging_Time__c'
+      'Rigging_Time__c',
+      'Composite_Type__c'
     };
   }
 
@@ -69,6 +70,15 @@ public with sharing class Product_Selector extends Application_Selector
     if( results.size() > 0 )
       return (Product2)results[0];
     return null;
+  }
+
+  public static List<Product2> allKitsWithKitPartsById( Set<Id> prodIds )
+  {
+    return new Product_Selector()
+      .addChildQuery( new ProductPart_Selector(), 'AcctSeed__Product_Parts__r' )
+      .addWhereIdIn( prodIds )
+      .addWhere('Composite_Type__c = \'Kit\'', 'AND')
+      .query();
   }
 
   public static List<Product2> allBoatsInSeries( String series )

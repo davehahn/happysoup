@@ -116,6 +116,25 @@ public with sharing class Factory_Product {
     return p;
   }
 
+  public static Product2 createPartKit( Integer kitContentsCount )
+  {
+    List<Product2> parts = buildNonSerializedProducts( 'Part', 'Electronics', kitContentsCount + 1 );
+    //parts[0].Parts_Count__c = kitContentsCount;
+    parts[0].AcctSeed__Inventory_Product__c = false;
+    insert parts;
+    List<AcctSeed__Product_Part__c> productParts = new List<AcctSeed__Product_Part__c>();
+    for( Integer i=1; i<parts.size(); i++ )
+    {
+      productParts.add( new AcctSeed__Product_Part__c(
+        AcctSeed__Product__c = parts[0].Id,
+        AcctSeed__Product_Part__c = parts[i].Id,
+        AcctSeed__Quantity__c = 1
+      ));
+    }
+    insert productParts;
+    return parts[0];
+  }
+
   public static Product2 buildSerializedProduct( String recordTypeName,
                                                  String family )
   {

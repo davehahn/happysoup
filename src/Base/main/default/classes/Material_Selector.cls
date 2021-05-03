@@ -35,12 +35,6 @@ public with sharing class Material_Selector extends Application_Selector {
     return new Material_Selector()
       .addWhereIdInField( taskIds, 'AcctSeedERP__Project_Task__c')
       .query();
-//    [ SELECT Id,
-//      AcctSeedERP__Project_Task__c,
-//      AcctSeedERP__Product__c,
-//      AcctSeedERP__Quantity_Per_Unit__c
-//    FROM AcctSeedERP__Material__c
-//    WHERE AcctSeedERP__Project_Task__c In :taskIds ];
   }
 
   public static List<AcctSeedERP__Material__c> allByProjectId( String projectId )

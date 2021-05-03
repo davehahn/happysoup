@@ -4,6 +4,7 @@
 
 <aura:component implements="force:lightningQuickActionWithoutHeader,force:hasRecordId">
   <aura:attribute name="recordId" type="String" />
+  <aura:attribute name="disableNext" type="Boolean" default="false" />
   <aura:attribute name="steps" type="Array" />
   <aura:attribute name="currentStep" type="Map" />
 
@@ -42,6 +43,7 @@
                                  aura:id="backOrderCreator"
                                  currentStep="{!v.currentStep.value}"
                                  oninitialized="{!c.handleInit}"
+                                 onvaliditychange="{!c.handleValidityChange}"
                                  onbackordercreatesuccess="{!c.handleCreateSuccess}"
                                  oncancel="{!c.handleCancel}"/>
     </div>
@@ -70,6 +72,7 @@
                         variant="brand"
                         aura:id="nextBtn"
                         onclick="{!c.handleNext}"
+                        disabled="{!v.disableNext}"
                         value="{!v.currentStep.value}" />
     </footer>
   </div>

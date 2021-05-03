@@ -81,7 +81,8 @@ private class ERP_CreatePartsBackOrder_Controller_T
           AcctSeedERP__Quantity_Per_Unit__c,
           GMBLASERP__Unit_Price__c,
           GMBLASERP__Price_Override__c,
-          AcctSeedERP__Comment__c
+          AcctSeedERP__Comment__c,
+          Material__c
       FROM AcctSeedERP__Project_Materials__r
       WHERE AcctSeedERP__Product__r.RecordTypeId = :new Application_RecordType().getProductRecordTypes().getPartId() )
       FROM
@@ -201,10 +202,16 @@ private class ERP_CreatePartsBackOrder_Controller_T
   {
     initErpData();
     Test.startTest();
-    Map<Id, Decimal> quantityMap = new Map<Id, Decimal>();
+    Map<Id, Map<String, String>> quantityMap = new Map<Id, Map<String, String>>();
     for( AcctSeedERP__Material__c mat : materials )
     {
-      quantityMap.put( mat.Id, mat.AcctSeedERP__Quantity_Per_Unit__c );
+      quantityMap.put(
+        mat.Id,
+        new Map<String, String>{
+          'quantity' => String.valueOf(mat.AcctSeedERP__Quantity_Per_Unit__c),
+          'parentMatId' => mat.Material__c
+        }
+      );
     }
     Map<String, Object> result = ERP_CreatePartsBackOrder_Controller.buildBackOrderERP(
       erp.Id,
@@ -223,6 +230,64 @@ private class ERP_CreatePartsBackOrder_Controller_T
     System.assert( resultTask.Name.contains( erp.RecordType.Name ) );
     System.assertEquals( true, resultTask.Locked__c );
     System.assertEquals( (materials.size() + 1), resultMaterials.size() );
+  }
+
+  @IsTest
+  static void buildBackOrderERP_withKit_Test()
+  {
+    initErpData();
+    Product2 kit = Factory_Product.createPartKit( 3 );
+    kit = [ SELECT Id, Composite_Type__c, Parts_Count__c FROM Product2 WHERE Id = :kit.Id];
+    AcctSeedERP__Material__c kitMaterial = Factory_Material.buildMaterial( erp.Id, erpTask.Id, kit.Id );
+    insert kitMaterial;
+
+    AcctSeedERP__Material__c[] beforeMats = [
+      SELECT
+        Id,
+        AcctSeedERP__Quantity_Per_Unit__c,
+        Material__c
+      FROM AcctSeedERP__Material__c
+      WHERE AcctSeedERP__Project__c = :erp.Id
+    ];
+
+    Test.startTest();
+    Map<Id, Map<String, String>> quantityMap = new Map<Id, Map<String, String>>();
+    for( AcctSeedERP__Material__c mat : beforeMats )
+    {
+      if( mat.Id == kitMaterial.Id ||
+          mat.Material__c != null && mat.Material__c == kitMaterial.Id )
+      {
+        quantityMap.put(
+          mat.Id,
+          new Map<String, String>
+          {
+            'quantity' => String.valueOf(mat.AcctSeedERP__Quantity_Per_Unit__c),
+            'parentMatId' => mat.Material__c
+          }
+        );
+      }
+    }
+    System.debug( quantityMap );
+    Map<String, Object> result = ERP_CreatePartsBackOrder_Controller.buildBackOrderERP(
+      erp.Id,
+      JSON.serialize( quantityMap ),
+      '\'This a Back Order Task from Unit Test\''
+    );
+    Test.stopTest();
+    AcctSeed__Project__c resultERP = (AcctSeed__Project__c)result.get('erp');
+    AcctSeed__Project_Task__c resultTask = (AcctSeed__Project_Task__c)result.get('task');
+    List<AcctSeedERP__Material__c> resultMaterials =
+      (List<AcctSeedERP__Material__c>)result.get('materials');
+
+    // PARTS_COUNT + 1 Boat + 1 Kit + 3 Kit parts )
+    Integer beforeMatsCount = PARTS_COUNT + 1 + 4;
+    System.assertEquals( beforeMatsCount, beforeMats.size() );
+    System.assert( result != null );
+    System.assertEquals( erp.Id, resultERP.Original_ERP__c );
+    System.assert( resultERP.Name.contains( erp.AcctSeed__Account__r.Name ) );
+    System.assert( resultTask.Name.contains( erp.RecordType.Name ) );
+    System.assertEquals( true, resultTask.Locked__c );
+    System.assertEquals( 2, resultMaterials.size() );
   }
 
   @IsTest

@@ -104,10 +104,15 @@ public virtual class Application_Selector
 
   public Application_Selector addChildQuery( Application_Selector childSelector )
   {
-    return addChildQuery( buildChildQuery( childSelector ) );
+    return addChildQuery( buildChildQuery( childSelector, null ) );
   }
 
-  public String buildChildQuery( Application_Selector childSelector )
+  public Application_Selector addChildQuery( Application_Selector childSelector, String relationshipName )
+  {
+    return addChildQuery( buildChildQuery( childSelector, relationshipName ) );
+  }
+
+  public String buildChildQuery( Application_Selector childSelector, String relationshipName )
   {
     SObjectType sObjType = (
       (SObject) Type.forName(this.sObjectName).newInstance()
@@ -119,14 +124,18 @@ public virtual class Application_Selector
     }
     q = q.removeEnd(', ');
     q += ' FROM ';
-    for(Schema.ChildRelationship cr: sObjType.getDescribe().getChildRelationships() )
+    if( relationshipName == null )
     {
-      if( cr.getChildSObject().getDescribe().getName() == childSelector.sObjectName )
+      for (Schema.ChildRelationship cr : sObjType.getDescribe().getChildRelationships())
       {
-        q += cr.getRelationshipName() ;
-        break;
+        if (cr.getChildSObject().getDescribe().getName() == childSelector.sObjectName)
+        {
+          relationshipName = cr.getRelationshipName();
+          break;
+        }
       }
     }
+    q += relationshipName;
     if( childSelector.whereClause != null && childSelector.whereClause.size() > 0 )
     {
       for( String clause : childSelector.whereClause )
@@ -176,6 +185,7 @@ public virtual class Application_Selector
     {
       queryString += ' ORDER BY ' + this.orderBy;
     }
+    System.debug(queryString);
     return queryString;
   }
 

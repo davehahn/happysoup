@@ -14,6 +14,7 @@
     helper.getInitData(component)
     .then(
       $A.getCallback( function(result) {
+        console.log('ERPOrder_CreatePArtsRequest.afterScripts');
         console.log( JSON.parse(JSON.stringify(result)));
         if( Object.keys(result).indexOf('erp') >= 0 )
         {
