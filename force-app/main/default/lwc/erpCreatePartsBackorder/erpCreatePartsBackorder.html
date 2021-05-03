@@ -45,6 +45,10 @@
           <td scope="row" data-label="Quantity to Transfer">
             <lightning-input type="number"
                              value={mat.quantityTransferred}
+                             max={mat.AcctSeedERP__Quantity_Per_Unit__c}
+                             min="0"
+                             message-when-range-underflow="Can not Back Order negative quantities"
+                             message-when-range-overflow="Can not Back Order more than ordered"
                              name="material"
                              class="slds-text-align_center"
                              data-material-id={mat.Id}
@@ -71,9 +75,15 @@
                 <lightning-input type="number"
                                  value={kitMat.quantityTransferred}
                                  name="material"
+                                 max={kitMat.AcctSeedERP__Quantity_Per_Unit__c}
+                                 min="0"
+                                 message-when-range-underflow="Can not Back Order negative quantities"
+                                 message-when-range-overflow="Can not Back Order more than ordered"
                                  class="slds-text-align_center"
                                  data-material-id={kitMat.Id}
+                                 data-parent-material-id={mat.Id}
                                  onchange={updateInput}
+                                 disabled=true
                                  variant="label-hidden"></lightning-input>
               </td>
             </tr>
@@ -464,7 +474,7 @@
           </tr>
           </thead>
           <tbody>
-          <template for:each={prepaidOffsetMaterials} for:item="ppMat">
+          <template for:each={newMaterialsForOriginal} for:item="ppMat">
             <tr key={ppMat.Id}>
               <td>{ppMat.AcctSeedERP__Quantity_Per_Unit__c}</td>
               <td>{ppMat.AcctSeedERP__Product__r.Name}</td>

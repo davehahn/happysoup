@@ -28,26 +28,25 @@
     $A.get('e.force:closeQuickAction').fire();
   },
 
+  handleValidityChange: function( component, event, helper )
+  {
+    component.set('v.disableNext', !event.getParam('valid') );
+  },
+
   handleCreateSuccess: function( component, event, helper )
   {
     const spinner = component.find('spinner');
     spinner.setMessage('Updating Original Order');
-    console.log('Aura create Success');
   },
 
   handleNext: function( component, event, helper )
   {
     let currentStep = component.get('v.currentStep');
-    console.log(`%c Current Step %c${currentStep.value}`, 'color:red;', 'color:yellow');
     const spinner = component.find('spinner');
     if( currentStep.value === 1 )
     {
       spinner.setMessage('Checking for Parts Request Cases');
     }
-//    if( currentStep.value === 3 )
-//    {
-//      spinner.setMessage('Creating Back Order ERP');
-//    }
     if( currentStep.value === 4 )
     {
       spinner.setMessage('Creating Back Order ERP');
@@ -57,8 +56,6 @@
     helper.doNextPromise( component, currentStep.value )
     .then(
       $A.getCallback( (response) => {
-        console.log(`response = ${response}`);
-        console.log( currentStep.value);
         if( currentStep.value === 4 )
         {
           $A.get('e.force:closeQuickAction').fire();
@@ -103,7 +100,6 @@
     {
       nextStep --;
     }
-    console.log(`%cThe NextStep = ${nextStep}`, 'color:magenta;' )
     const steps = component.get('v.steps');
     component.set( 'v.currentStep', steps[nextStep] );
   }

@@ -47,6 +47,10 @@ public with sharing class ERP_CreatePartsBackOrder_Controller
       'prepaidProductId',
       utilityProducts.Back_Order_Prepaid__c
     );
+    result.put(
+      'kitContents',
+      kitsFromMaterials( materials )
+    );
     return result;
   }
 
@@ -75,9 +79,9 @@ public with sharing class ERP_CreatePartsBackOrder_Controller
     String taskCause
   )
   {
-    Map<Id,Decimal> quantityMap = (Map<Id,Decimal>)JSON.deserialize(
+    Map<Id,Map<String, String>> quantityMap = (Map<Id,Map<String,String>>)JSON.deserialize(
       transferredQuantityByMaterialId,
-      Map<Id,Decimal>.class
+      Map<Id,Map<String,String>>.class
     );
     Map<String, Object> result = new Map<String, Object>();
     AcctSeed__Project__c originalERP = Project_Selector.allByIdWithMaterialsById(
@@ -155,20 +159,33 @@ public with sharing class ERP_CreatePartsBackOrder_Controller
   {
     List<CommissionLineItem2__c> result = new List<CommissionLineItem2__c>();
     Map<Id, List<AcctSeedERP__Material__c>> materialsByTaskId = new Map<Id, List<AcctSeedERP__Material__c>>();
+    Set<Id> parentMatIds = new Set<Id>();
+    for( AcctSeedERP__Material__c mat : materials )
+    {
+      if( mat.Material__c == null )
+      {
+        parentMatIds.add( mat.Id );
+      }
+    }
     Set<Id> productIds = new Set<Id>();
     for( AcctSeedERP__Material__c mat : materials )
     {
-      System.debug( mat.AcctSeedERP__Product__r.Name);
-      System.debug( mat.AcctSeedERP__Project_Task__c);
-      productIds.add( mat.AcctSeedERP__Product__c );
-      if( !materialsByTaskId.containsKey( mat.AcctSeedERP__Project_Task__c ) )
+      if( mat.Material__c == null ||
+          ( mat.Material__c != null &&
+            !parentMatIds.contains(mat.Material__c)
+          )
+        )
       {
-        materialsByTaskId.put(
-          mat.AcctSeedERP__Project_Task__c,
-          new List<AcctSeedERP__Material__c>()
-        );
+        productIds.add(mat.AcctSeedERP__Product__c);
+        if (!materialsByTaskId.containsKey(mat.AcctSeedERP__Project_Task__c))
+        {
+          materialsByTaskId.put(
+            mat.AcctSeedERP__Project_Task__c,
+            new List<AcctSeedERP__Material__c>()
+          );
+        }
+        materialsByTaskId.get(mat.AcctSeedERP__Project_Task__c).add(mat);
       }
-      materialsByTaskId.get( mat.AcctSeedERP__Project_Task__c ).add( mat );
     }
     Map<Id, CommissionRecord2__c> comRecordIdByTaskId = new Map<Id, CommissionRecord2__c>();
     for( CommissionRecord2__c cr : CommissionRecord2_Selector.allByProjectTaskIds( materialsByTaskId.keySet() ) )
@@ -189,14 +206,16 @@ public with sharing class ERP_CreatePartsBackOrder_Controller
       for( AcctSeedERP__Material__c mat : materialsByTaskId.get( taskId ) )
       {
         Decimal riggingTime;
-        if( pricebookEntryByProductId.containsKey( mat.AcctSeedERP__Product__c) )
+        if( mat.Material__c == null )// if Material__c != null, then it was part of a kit and the price is included in the kit so all should be zero
         {
-          riggingTime = pricebookEntryByProductId.get(mat.AcctSeedERP__Product__c).Product2.Rigging_Time__c;
-          cost += pricebookEntryByProductId.get(mat.AcctSeedERP__Product__c).UnitPrice * mat.AcctSeedERP__Quantity_Per_Unit__c;
+          if (pricebookEntryByProductId.containsKey(mat.AcctSeedERP__Product__c))
+          {
+            riggingTime = pricebookEntryByProductId.get(mat.AcctSeedERP__Product__c).Product2.Rigging_Time__c;
+            cost += pricebookEntryByProductId.get(mat.AcctSeedERP__Product__c).UnitPrice * mat.AcctSeedERP__Quantity_Per_Unit__c;
+          }
+          sale += mat.GMBLASERP__Unit_Price__c * mat.AcctSeedERP__Quantity_Per_Unit__c;
+          labour += riggingTime == null ? 0 : riggingTime;
         }
-        sale += mat.GMBLASERP__Unit_Price__c * mat.AcctSeedERP__Quantity_Per_Unit__c;
-
-        labour += riggingTime == null ? 0 : riggingTime;
       }
       Decimal rate = comRecordIdByTaskId.get( taskId ).Calculation_Method__c == 'Gross Margin' ?
         CommissionLineItem2_Service.grossMarginRate :
@@ -225,11 +244,9 @@ public with sharing class ERP_CreatePartsBackOrder_Controller
   )
   {
     Boolean disableTaskLockCheck = gcMaterial.disableTaskLockCheck;
-    Boolean allowKitPartDelete = gcMaterial.allowKitPartDelete;
     Boolean disableProjectLockCheck = gcProject.disableLockedCheck;
     Boolean disableCommission = gcMaterial.disableCommission;
     gcMaterial.disableTaskLockCheck = true;
-    gcMaterial.allowKitPartDelete = true;
     gcProject.disableLockedCheck = true;
     gcMaterial.disableCommission = true;
 
@@ -242,27 +259,48 @@ public with sharing class ERP_CreatePartsBackOrder_Controller
         quantityTransferredByMatId,
         Map<Id, Decimal>.class
       );
-    List<AcctSeedERP__Material__c> mats = Material_Selector.selectAllByIds( qtyByMatId.keySet() );
-
-    for( AcctSeedERP__Material__c mat : mats )
+    if( qtyByMatId.size() > 0 )
     {
-      if( mat.AcctSeedERP__Quantity_Per_Unit__c == qtyByMatId.get(mat.Id) )
+      List<AcctSeedERP__Material__c> mats = Material_Selector.selectAllByIds(qtyByMatId.keySet());
+
+      for (AcctSeedERP__Material__c mat : mats)
       {
-        deleteMats.add( mat );
-      }
-      else
-      {
-        mat.AcctSeedERP__Quantity_Per_Unit__c = mat.AcctSeedERP__Quantity_Per_Unit__c - qtyByMatId.get( mat.Id );
-        upsertMats.add( mat );
+        if (mat.AcctSeedERP__Quantity_Per_Unit__c == qtyByMatId.get(mat.Id))
+        {
+          deleteMats.add(mat);
+        } else
+        {
+          mat.AcctSeedERP__Quantity_Per_Unit__c = mat.AcctSeedERP__Quantity_Per_Unit__c - qtyByMatId.get(mat.Id);
+          upsertMats.add(mat);
+        }
       }
     }
     delete deleteMats;
     upsert upsertMats;
     insert newCommissionLines;
     gcMaterial.disableTaskLockCheck = disableTaskLockCheck;
-    gcMaterial.allowKitPartDelete =  allowKitPartDelete;
     gcProject.disableLockedCheck = disableProjectLockCheck;
     gcMaterial.disableCommission = disableCommission;
+  }
+
+  private static Map<String, Object> kitsFromMaterials( List<AcctSeedERP__Material__c> mats )
+  {
+    Map<String, Object> result = new Map<String, Object>();
+    Set<Id> prodIds = new Set<Id>();
+    for( AcctSeedERP__Material__c m : mats )
+    {
+      prodIds.add( m.AcctSeedERP__Product__c );
+    }
+    for( Product2 kit : Product_Selector.allKitsWithKitPartsById( prodIds ) )
+    {
+      Map<String, Decimal> kitParts =  new Map<String, Decimal>();
+      for( AcctSeed__Product_Part__c pp : kit.AcctSeed__Product_Parts__r )
+      {
+        kitParts.put( pp.AcctSeed__Product_Part__c, pp.AcctSeed__Quantity__c );
+      }
+      result.put( kit.Id, kitParts );
+    }
+    return result;
   }
 
 }

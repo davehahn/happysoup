@@ -33,18 +33,6 @@ global without sharing class gcMaterial{
 		}
 	}
 
-	global static Boolean allowKitPartDelete{
-		get{
-			if(allowKitPartDelete == null) return false;
-			else return allowKitPartDelete;
-		}
-		set{
-			if(value == null) allowKitPartDelete = false;
-			else allowKitPartDelete = value;
-		}
-	}
-
-
 	global static Boolean allowPartUpdate{
 		get{
 			if(allowPartUpdate == null) return false;
@@ -147,8 +135,10 @@ global without sharing class gcMaterial{
 				for( AcctSeedERP__Material__c matl : listNew )
 				{
 					/// Product Kitting
-                    if(matl.AcctSeedERP__Quantity_per_Unit__c != oldMap.get(matl.Id).AcctSeedERP__Quantity_per_Unit__c)
-                        setIdUpdateMatl.add(matl.Id);
+					if( matl.AcctSeedERP__Quantity_per_Unit__c != oldMap.get(matl.Id).AcctSeedERP__Quantity_per_Unit__c )
+					{
+						setIdUpdateMatl.add(matl.Id);
+					}
 					/// ---
 					// serial number now set
 					if( matl.GMBLASERP__Serial_Number__c != null && oldMap.get(matl.Id).GMBLASERP__Serial_Number__c == null)
@@ -384,18 +374,18 @@ global without sharing class gcMaterial{
 				refreshStatics(oldMap.values());
 				for(AcctSeedERP__Material__c matl : oldMap.values())
 				{
-                    AcctSeed__Project__c project;
-                    if(matl.AcctSeedERP__Project__c != null)
-                    {
-                        project = mapProject.get(matl.AcctSeedERP__Project__c);
-                        AcctSeed__Project_Task__c task = mapProjectTask.get(matl.AcctSeedERP__Project_Task__c);
-                        if(project.Locked__c && !gcProject.disableLockedCheck)
-                        	matl.addError('Materials Cannot be deleted from a locked ERP Order.');
-                        if(task != null && task.Locked__c && !gcMaterial.disableTaskLockCheck)
-                        	matl.addError('Materials Cannot be deleted from a locked ERP Order Task.');
-                    }
+					AcctSeed__Project__c project;
+					if(matl.AcctSeedERP__Project__c != null)
+					{
+							project = mapProject.get(matl.AcctSeedERP__Project__c);
+							AcctSeed__Project_Task__c task = mapProjectTask.get(matl.AcctSeedERP__Project_Task__c);
+							if(project.Locked__c && !gcProject.disableLockedCheck)
+								matl.addError('Materials Cannot be deleted from a locked ERP Order.');
+							if(task != null && task.Locked__c && !gcMaterial.disableTaskLockCheck)
+								matl.addError('Materials Cannot be deleted from a locked ERP Order Task.');
+					}
 
-					if(matl.Material__c != null && !oldMap.containsKey(matl.Material__c) && !gcMaterial.allowKitPartDelete)
+					if(matl.Material__c != null && !oldMap.containsKey(matl.Material__c) )
 						matl.addError('Kit Parts cannot be deleted directly. Deleting Kit would aumatically delete Kit Parts.');
 					/// Checking Old Serial for Internal to not allow untag
 					if(matl.GMBLASERP__Serial_Number__c != null){
@@ -761,7 +751,7 @@ global without sharing class gcMaterial{
                     	AcctSeed__Product_Part__c,
                     	AcctSeed__Quantity__c
                     FROM AcctSeed__Product_Parts__r
-                    WHERE AcctSeed__Product__r.RecordTypeId != :LGND_Constants.productRtId_Bundle)
+                    WHERE AcctSeed__Product__r.RecordTypeId != :LGND_Constants.productRtId_Bundle)Fcommission
              FROM Product2
              WHERE Id In :mapKit.keySet()
              AND RecordTypeId != :LGND_Constants.productRtId_Bundle])
@@ -811,36 +801,36 @@ global without sharing class gcMaterial{
 
     private static void updateMaterialSpec(set<Id> setIdMatlKit)
     {
-        setIdMatlKit.remove(null);
-        if(setIdMatlKit.isEmpty()) return;
+			setIdMatlKit.remove(null);
+			if(setIdMatlKit.isEmpty()) return;
 
-        list<AcctSeedERP__Material__c> listMatl = new list<AcctSeedERP__Material__c>();
+			list<AcctSeedERP__Material__c> listMatl = new list<AcctSeedERP__Material__c>();
 
-        for(AcctSeedERP__Material__c matl :
-            [SELECT Id,
-                    Material__r.AcctSeedERP__Quantity_per_Unit__c,
-                    AcctSeedERP__Quantity_per_Unit__c,
-                    Part_Quantity_Specified_Multiplier__c
-            FROM AcctSeedERP__Material__c
-            WHERE Material__c IN :setIdMatlKit])
-        {
-            Decimal qtySpecified = (matl.Material__r.AcctSeedERP__Quantity_per_Unit__c == null ? 0 : matl.Material__r.AcctSeedERP__Quantity_per_Unit__c) * (matl.Part_Quantity_Specified_Multiplier__c == null ? 0 : matl.Part_Quantity_Specified_Multiplier__c);
-            qtySpecified = qtySpecified.setScale(6);
+			for(AcctSeedERP__Material__c matl :
+					[SELECT Id,
+									Material__r.AcctSeedERP__Quantity_per_Unit__c,
+									AcctSeedERP__Quantity_per_Unit__c,
+									Part_Quantity_Specified_Multiplier__c
+					FROM AcctSeedERP__Material__c
+					WHERE Material__c IN :setIdMatlKit])
+			{
+				Decimal qtySpecified = (matl.Material__r.AcctSeedERP__Quantity_per_Unit__c == null ? 0 : matl.Material__r.AcctSeedERP__Quantity_per_Unit__c) * (matl.Part_Quantity_Specified_Multiplier__c == null ? 0 : matl.Part_Quantity_Specified_Multiplier__c);
+				qtySpecified = qtySpecified.setScale(6);
 
-            if(matl.AcctSeedERP__Quantity_per_Unit__c == null || matl.AcctSeedERP__Quantity_per_Unit__c.setScale(6) != qtySpecified)
-            {
-                matl.AcctSeedERP__Quantity_per_Unit__c = qtySpecified;
-                listMatl.add(matl);
-            }
-        }
+				if(matl.AcctSeedERP__Quantity_per_Unit__c == null || matl.AcctSeedERP__Quantity_per_Unit__c.setScale(6) != qtySpecified)
+				{
+						matl.AcctSeedERP__Quantity_per_Unit__c = qtySpecified;
+						listMatl.add(matl);
+				}
+			}
 
-        if(!listMatl.isEmpty())
-        {
-        	Boolean boolOld = allowPartUpdate;
-        	allowPartUpdate = true;
-            update listMatl;
-            allowPartUpdate = boolOld;
-        }
+			if(!listMatl.isEmpty())
+			{
+				Boolean boolOld = allowPartUpdate;
+				allowPartUpdate = true;
+					update listMatl;
+					allowPartUpdate = boolOld;
+			}
     }
 
     public static void untagRetailERPItems(Set<Id> setIdRetailERP){
