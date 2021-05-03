@@ -11,7 +11,6 @@
     <aura:attribute name="storeLocationAndHours" type="Aura.Component[]"/>
     <aura:attribute name="storePhoneNumbers" type="Aura.Component[]"/>
     <aura:attribute name="storeNavigation" type="Aura.Component[]"/>
-    <aura:attribute name="stayInTouch" type="Aura.Component[]"/>
     <aura:attribute name="storeTools" type="Aura.Component[]"/>
     <aura:attribute name="storeLegal" type="Aura.Component[]"/>
     <aura:attribute name="storePolicyLinks" type="Aura.Component[]"/>
@@ -19,35 +18,27 @@
     <lightning:navigation aura:id="navService"/>
 
     <header class="storeHeader">
-        <div class="storeHeader__storeDetails">
-            <div class="storeHeader__locationAndHours">
-                {!v.storeLogo}
+        <div class="storeDetails">
+            {!v.storeLogo}
+            <div class="locationAndHours">
                 {!v.storeLocationAndHours}
             </div>
-            <div class="storeHeader__phoneNumbers">
+            <div class="phoneNumbers">
                 {!v.storePhoneNumbers}
             </div>
-            <div class="storeHeader__siteToggle">
-                <c:factoryStoreSiteToggle></c:factoryStoreSiteToggle>
-            </div>            
+            <a class="corporateLogo" href="https://www.legendboats.com" target="_blank"></a>
         </div>
-        <nav class="storeHeader__mainNavigation">
+        <nav class="mainNavigation">
             <c:factoryStoreMainNavigation></c:factoryStoreMainNavigation>
         </nav>
     </header>
 	  <article class="storeMain">
     	  {!v.body}
     </article>
-
+    <c:factoryStoreFooterStayInTouch></c:factoryStoreFooterStayInTouch>
     <footer class="storeFooter">
-        {!v.stayInTouch}
         {!v.storeTools}
-
-        <a class="storeFooter__legendCTA fullWidth" href="https://www.legendboats.com" target="_blank">
-            <span class="storeHeader__corporateLogo"></span>
-            <h4 class="legendCTA__heading heading heading--m heading--light">For more information about Legend Boats, visit us at <strong>LegendBoats.com</strong></h4>
-        </a>
-        <section class="storeFooter__footerLegal">
+        <section class="footerLegal">
             {!v.storePolicyLinks}
             <c:communitySharedFooterCopyright></c:communitySharedFooterCopyright>
             {!v.storeLegal}
