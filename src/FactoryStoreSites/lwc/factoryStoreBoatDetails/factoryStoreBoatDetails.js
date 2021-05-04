@@ -2,7 +2,7 @@
  * Created by Tim on 2021-04-05.
  */
 
-import { LightningElement, api, wire, track } from 'lwc';
+import { LightningElement, api, wire } from 'lwc';
 import { NavigationMixin, CurrentPageReference } from 'lightning/navigation';
 import { stringy, stripParentheses, rewriteMotorName, rewriteTrailerName, weeklyPayment, formatPrice } from 'c/communitySharedUtils';
 import fetchBoat from '@salesforce/apex/FactoryStore_InventoryController.fetchBoat';
@@ -15,15 +15,19 @@ export default class FactoryStoreBoatDetails extends NavigationMixin(LightningEl
   isEN = true;
 	isFR = false;
 
-  @track recordId;
-  @track boat;
-  @track boatDataLookupRunning = true;
-  @track boatDataLoaded = false;
-  @track resultEmpty = false;
+  recordId;
+  boat;
+  boatDataLookupRunning = true;
+  boatDataLoaded = false;
+  resultEmpty = false;
 
-  @track boatName;
-  @track standardMotorName;
-  @track standardTrailerName;
+  boatName;
+  standardMotorName;
+  standardTrailerName;
+
+  // Lead forms
+	leadFormName;
+	@api campaignId;
 
   @wire(CurrentPageReference)
   setCurrentPageReference(currentPageReference){
@@ -53,6 +57,7 @@ export default class FactoryStoreBoatDetails extends NavigationMixin(LightningEl
     this.boatDataLoaded = true;
     this.boatDataLookupRunning =  false;
     this.boatName = stripParentheses(this.boat.Name);
+    this.leadFormName = this.boatName + ' - Lead Form';
     this.standardMotorName = rewriteMotorName(this.boat.StandardMotor.Name);
     this.standardTrailerName = (this.boat.StandardTrailer.Name !== '') ? 'and ' + rewriteTrailerName(this.boat.StandardTrailer.Name) : '';
     this.passModelIdToFlow(this.boat.Id);
