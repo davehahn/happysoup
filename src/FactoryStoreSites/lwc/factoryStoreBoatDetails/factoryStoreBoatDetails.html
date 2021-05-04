@@ -4,12 +4,12 @@
 
 <!-- Factory Store Boat Details -->
 <template>
-  <article class={modelWrapperClass}>
+  <article class="model maxWidth maxWidth--thin">
     <template if:true={boatDataLoaded}>
 
       <header class="model__intro">
         <div class="intro__vitals">
-          <h2 class="intro__boatName heading heading--l">{boatName}</h2>
+          <h3 class="heading heading-l">{boatName}</h3>
 
           <div class="vitals__priceBlock">
             <strong class="priceBlock__weekly" aria-describedby="vitals_includes">
@@ -21,25 +21,25 @@
             <em class="priceBlock__includes" id="vitals_includes">
               <p>With {standardMotorName} {standardTrailerName}</p>
             </em>
-            <small class="priceBlock__pricingDetails">*Ontario and Quebec All-In Pricing. <a href="#">Click here</a> for national pricing details.</small>
           </div>
+          <small>*Ontario and Quebec All-In Pricing. <a href="#">Click here</a> for national pricing details.</small>
         </div>
         <span class="intro__photo" style={introPhoto}></span>
       </header>
 
       <section class="model__specs">
-        <h3 class="heading heading--m">Specifications</h3>
+        <h3 class="heading heading-m">Specifications</h3>
         <ul>
           <template for:each={boatSpecs} for:item="spec">
             <li key={spec.Name}>
-              <span>{spec.Name}</span> <lightning-formatted-rich-text value={spec.Value}></lightning-formatted-rich-text>
+              <span>{spec.Name}</span> <strong>{spec.Value}</strong>
             </li>
           </template>
         </ul>
       </section>
 
       <section class="model__motors">
-        <h3 class="heading heading--m">Choose Your Power</h3>
+        <h3 class="heading heading-m">Choose Your Power</h3>
         <ul>
           <template for:each={motorUpgrades} for:item="motor">
             <li key={motor.Name}>
@@ -54,7 +54,7 @@
       </section>
 
       <section class="model__premiumPack">
-        <h3 class="heading heading--m">Preferred Equipment Package</h3>
+        <h3 class="heading heading-m">Preferred Equipment Package</h3>
         <ul>
           <template for:each={premiumPackItems} for:item="item">
             <li key={item.description} class="premiumPackage__item">
@@ -85,39 +85,35 @@
 
       <div class="model__leadFormWrapper">
         <section class="model__leadForm">
-          <header class="">
-            <h3 class="heading heading--m">Interested?</h3>
-            <p class="copy copy--standard">Fill out the form below and a Legend Boats representative will contact you with more information.</p>
+          <header class="fullWidth">
+            <h3 class="heading heading-m maxWidth maxWidth--thin">Interested?</h3>
+            <p class="copy copy-standard maxWidth maxWidth--thin">Fill out the form below and a Legend Boats representative will contact you with more information.</p>
           </header>
-          <div class="form">
-            <c-community-shared-lead-form
-                    form-name={leadFormName}
-                    location-name={locationName}
-                    campaign-id={campaignId}
-                    boat-model-id={recordId}
-                    collect-first-name="true"
-                    collect-last-name="true"
-                    collect-street="true"
-                    collect-city="true"
-                    collect-province="true"
-                    collect-postal-code="true"
-                    collect-email="true"
-                    collect-phone="true"
-                    collect-plan-to-purchase="true"
-                    collect-notes="true"
-                    collect-newsletter-optin="true"
-                    section-width="Container"></c-community-shared-lead-form>
-          </div>
+          <c-community-shared-lead-form
+                  form-name={leadFormName}
+                  campaign-id={campaignId}
+                  boat-model-id={recordId}
+                  collect-first-name="true"
+                  collect-last-name="true"
+                  collect-street="true"
+                  collect-city="true"
+                  collect-province="true"
+                  collect-postal-code="true"
+                  collect-email="true"
+                  collect-phone="true"
+                  collect-plan-to-purchase="true"
+                  collect-notes="true"
+                  collect-newsletter-optin="true"></c-community-shared-lead-form>
         </section>
       </div>
 
       <a class="model__fullDetailsCta fullWidth" href={flagshipLink} target="_blank">
-        <h4 class="fullDetailsCta__heading heading heading--m heading--light">Visit <strong>LegendBoats.com</strong> for more information</h4>
+        <h4 class="heading heading-m heading-light">Visit <strong>LegendBoats.com</strong> for more information</h4>
       </a>
 
     </template>
     <template if:true={boatDataLookupRunning}>
-      <c-community-shared-loading></c-community-shared-loading>
+      <p>Looking For Data.</p>
     </template>
     <template if:true={resultEmpty}>
       <p>Result Empty.</p>
