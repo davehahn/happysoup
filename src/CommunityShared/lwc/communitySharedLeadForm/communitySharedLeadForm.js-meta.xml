@@ -11,13 +11,6 @@
     <targetConfig targets="lightningCommunity__Default">
       <property name="formName" type="String" label="Form Name"/>
       <property name="campaignId" type="String" label="Campaign Id"/>
-      <property name="introTitle" type="String" label="Intro Title" />
-      <property name="introBlurb" type="String" label="Intro Blurb"/>
-      <property name="sectionWidth"
-                type="String"
-                label="Maximum Width of Section"
-                datasource="Screen, Container, Wide, Average, Thin, Extra Thin"
-                description="Relative to containing element. Screen = Full Width of Screen, Container = Full Width of Containing Element, Wide = 1645px, Average = 1300px, Thin = 1080px, Extra Thin = 780px" default="Container" />
       <property name="collectFirstName" type="Boolean" label="Collect First Name" required="true" default="true"/>
       <property name="collectLastName" type="Boolean" label="Collect Last Name" required="true" default="true"/>
       <property name="collectStreet" type="Boolean" label="Collect Street"/>

@@ -4,20 +4,20 @@
 
 <!-- Factory Store Cms Content -->
 <template>
-  <article class="cmsPost maxWidth maxWidth--thin" data-content-key={contentKey}>
-    <header class="cmsPost__intro">
-      <h2 class="intro__heading heading heading--l">{postTitle}</h2>
-      <p class="intro__dates copy"><span>Starts: {startDate}</span> <span>Ends: {endDate}</span></p>
-      <span class="intro__banner fullWidth" style={bannerGraphic}></span>
+  <article class="maxWidth maxWidth--thin" data-content-key={contentKey}>
+    <header>
+      <h2 class="heading heading-l">{postTitle}</h2>
+      <p class="dates copy"><span>Starts: {startDate}</span> <span>Ends: {endDate}</span></p>
+      <span class="banner fullWidth" style={bannerGraphic}></span>
     </header>
     <template if:true={clickToFullDetails}>
-      <a href={fullDetailsLink} target="_blank" class="cmsCta btn btn--primary">Click here for full details</a>
+      <a href={fullDetailsLink} target="_blank" class="btn btn--primary">Click here for full details</a>
     </template>
 
     <lightning-formatted-rich-text value={mainContent}></lightning-formatted-rich-text>
 
     <template if:true={clickToFullDetails}>
-      <a href={fullDetailsLink} target="_blank" class="cmsCta btn btn--primary">Click here for full details</a>
+      <a href={fullDetailsLink} target="_blank" class="btn btn--primary">Click here for full details</a>
     </template>
   </article>
 </template>
