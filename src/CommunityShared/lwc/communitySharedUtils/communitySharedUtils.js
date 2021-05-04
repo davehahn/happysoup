@@ -26,7 +26,7 @@ const getTestUser = () => {
 	const Lead = {
 	  'LeadSource': 'Online - Web',
 	  'FirstName': 'Fistester',
-	  'LastName': 'Lastman',
+	  'LastName': 'Lastmans',
 	  'Email': 'flastman@legendboats.com',
 	  'PostalCode': 'L5J2E9'
  }
