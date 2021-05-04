@@ -1474,6 +1474,7 @@ public without sharing class gcProject_AccountingActions {
 		Map<Id,Map<Id,Map<Id,Id>>> mapPWLB = new Map<Id,Map<Id,Map<Id,Id>>>();
 		Map<Id,Decimal> mapUnitCost = new Map<Id,Decimal>();
 		Map<Id,Decimal> mapProfitShare = new Map<Id,Decimal>();
+        Boolean boatExist = false;
 		List<AcctSeedERP__Material__c> listMatl = new List<AcctSeedERP__Material__c>();
 		for(AcctSeedERP__Material__c matl : 
 		 		[SELECT Id, 
@@ -1494,25 +1495,30 @@ public without sharing class gcProject_AccountingActions {
 					AND AcctSeedERP__Product__r.AcctSeedERP__Serialized__c = TRUE
 					AND AcctSeedERP__Project__c = :idProject])
 		 {
-		 	Decimal glAmount = matl.AcctSeedERP__Manufacturing_Inventory_Movements__r[0].GMBLASERP__Inventory_GL_Amount__c;
-		 	if(matl.AcctSeedERP__Product__r.RecordType.Name != 'Boat'){
-			 	//if(matl.AcctSeedERP__Product__r.RecordType.Name == 'Motor'){
-			 	//	mapUnitCost.put(matl.GMBLASERP__Serial_Number__c, glAmount);
-			 	//	projectTotal -= glAmount;
-			 	//	mapProfitShare.put(matl.GMBLASERP__Serial_Number__c, 0);
-			 	//}
-			 	//else {
-			 		Decimal serialProfit = matl.GMBLASERP__Unit_Price__c - glAmount;
-			 		mapProfitShare.put(matl.GMBLASERP__Serial_Number__c, serialProfit);
-			 		mapUnitCost.put(matl.GMBLASERP__Serial_Number__c, matl.GMBLASERP__Unit_Price__c);
-			 		projectTotal -= matl.GMBLASERP__Unit_Price__c;
-			 		projectProfit -= serialProfit;
-			 	//}
-			 }
-
+             if(matl.AcctSeedERP__Product__r.RecordType.Name == 'Boat') {
+                 boatExist = true;
+             }
 		 	listMatl.add(matl);
 		 	mapPWLB.put(matl.AcctSeedERP__Product__c, new map<Id,map<Id,Id>>{idDestinationWarehouse => new map<Id,Id>{loc.Id => null}});
 		 }
+        for(AcctSeedERP__Material__c matl : listMatl)
+        {
+            Decimal glAmount = matl.AcctSeedERP__Manufacturing_Inventory_Movements__r[0].GMBLASERP__Inventory_GL_Amount__c;
+            if(matl.AcctSeedERP__Product__r.RecordType.Name != 'Boat'){
+                //if(matl.AcctSeedERP__Product__r.RecordType.Name == 'Motor'){
+                //	mapUnitCost.put(matl.GMBLASERP__Serial_Number__c, glAmount);
+                //	projectTotal -= glAmount;
+                //	mapProfitShare.put(matl.GMBLASERP__Serial_Number__c, 0);
+                //}
+                //else {
+                Decimal serialProfit = matl.GMBLASERP__Unit_Price__c - glAmount;
+                mapProfitShare.put(matl.GMBLASERP__Serial_Number__c, serialProfit);
+                mapUnitCost.put(matl.GMBLASERP__Serial_Number__c, matl.GMBLASERP__Unit_Price__c);
+                projectTotal -= matl.GMBLASERP__Unit_Price__c;
+                projectProfit -= serialProfit;
+                //}
+            }
+        }
 
         List<GMBLASERP__Serial_Number__c> listSerials = new List<GMBLASERP__Serial_Number__c>();
         if(!mapPWLB.isEmpty())
@@ -1523,8 +1529,11 @@ public without sharing class gcProject_AccountingActions {
         		Id idBalance = mapPWLB.get(matl.AcctSeedERP__Product__c).get(idDestinationWarehouse).get(loc.Id);
 
         		Decimal unitCost = 0;
-        		if(matl.AcctSeedERP__Product__r.RecordType.Name == 'Boat'){
+        		if(boatExist && matl.AcctSeedERP__Product__r.RecordType.Name == 'Boat'){
         			unitCost = projectTotal;
+        			listSerials.add(new GMBLASERP__Serial_Number__c(Id = matl.GMBLASERP__Serial_Number__c, Billing_Revenue_Internal__c = projectProfit));
+        		}else if(!boatExist && matl.AcctSeedERP__Product__r.RecordType.Name != 'Boat'){
+                    unitCost = mapUnitCost.get(matl.GMBLASERP__Serial_Number__c) + projectTotal;
         			listSerials.add(new GMBLASERP__Serial_Number__c(Id = matl.GMBLASERP__Serial_Number__c, Billing_Revenue_Internal__c = projectProfit));
         		}else{
         			unitCost = mapUnitCost.get(matl.GMBLASERP__Serial_Number__c);
