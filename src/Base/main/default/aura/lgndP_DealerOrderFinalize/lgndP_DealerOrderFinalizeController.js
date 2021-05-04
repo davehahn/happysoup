@@ -5,17 +5,7 @@
 ({
   doInit: function( component, event, helper )
   {
-    console.log('finalize doInit');
-
-    const isFactoryStore = component.get('v.dealerOrder').Account__r.Is_Internal__c;
-
-    if( isFactoryStore )
-      helper.initForFactoryStore( component );
-    else
-    {
-      component.set('v.applyFinished', false);
-      helper.initForPartner( component );
-    }
+    helper.init( component );
   },
 
   cancelOrder: function( component, event, helper )
@@ -27,7 +17,7 @@
   addToOrder: function( component, event, helper )
   {
      var nav = $A.get('e.c:lgndP_DealerOrderNav_Event');
-     nav.setParams({"firedBy" : 3,
+     nav.setParams({"firedBy" : 2,
                  "navigateTo": 1 });
      nav.fire();
   },
@@ -39,19 +29,32 @@
 
   submit: function( component, event, helper )
   {
-    helper.toggleSpinner(component, 'Submitting Order ');
-    helper.submitOrder( component )
+    const confirmParams = {
+      title: "Submit this order?",
+      message: "Once this order is submitted it will be locked from further editing!"
+    };
+    const isInternal = component.get('v.dealerOrder').Account__r.Is_Internal__c;
+    const spinnerMessage = isInternal ?
+      'Submitting Order' :
+      'Calculating and Applying Applicable Discounts under the Partner Program';
+
+    helper.confirm( component, confirmParams )
     .then(
       $A.getCallback( function() {
-        helper.navigateHome();
+        helper.toggleSpinner( component, spinnerMessage );
+        if( isInternal)
+        {
+          helper.submitOrder( component );
+        }
+        else
+        {
+          helper.savePartnerProgramAndSubmit( component );
+        }
       }),
-      $A.getCallback( function( err ){
-        LightningUtils.errorToast(err);
+      $A.getCallback( function() {
+        return Promise.reject();
       })
-    )
-    .finally( $A.getCallback( () => {
-      helper.toggleSpinner(component, '');
-    }));
+    );
   },
 
   handleTableAction: function( component, event, helper )
@@ -59,8 +62,6 @@
     var params = event.getParams(),
         groupId = params.id,
         action = params.action;
-    // if( action == 'delete' )
-    //   helper.deleteOrderRow( component, groupId );
     if( action == 'edit' )
       helper.editOrderRow( component, groupId );
     if( action == 'view' )

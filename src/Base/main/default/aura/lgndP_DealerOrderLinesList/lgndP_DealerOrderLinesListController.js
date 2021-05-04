@@ -35,28 +35,26 @@
       title: "Submit this order?",
       message: "Once this order is submitted it will be locked from further editing!"
     };
+    let dealerOrder = component.get('v.dealerOrder');
+    let spinnerMessage = dealerOrder.Account__r.Is_Internal__c ?
+      'Submitting Order' :
+      'Calculating and Applying Applicable Discounts under the Partner Program';
+
     helper.confirm( component, confirmParams )
     .then(
       $A.getCallback( function() {
-        return helper.submitOrder( component );
+        helper.toggleSpinner( component, spinnerMessage );
+        if( dealerOrder.Account__r.Is_Internal__c )
+        {
+          helper.submitOrder( component );
+        }
+        else
+        {
+          helper.applyPartnerProgramAndSubmit( component );
+        }
       }),
       $A.getCallback( function() {
         return Promise.reject();
-      })
-    )
-    .then(
-      $A.getCallback( function(result) {
-        $A.get('e.force:refreshView').fire();
-        var toast = $A.get('e.force:showToast');
-        toast.setParams({
-          message: 'Your order was submitted successfully!',
-          type: 'success'
-        })
-        .fire();
-      }),
-      $A.getCallback( function( err ) {
-        if( err !== undefined )
-          alert( err );
       })
     );
   },

@@ -32,10 +32,10 @@
   <aura:handler event="force:refreshView" action="{!c.doInit}" />
 
 
-  <lightning:empApi aura:id="empApi" />
-  <aura:if isTrue="{! !empty(v.sessionId)}">
-    <c:Utility_CometD sessionId="{!v.sessionId}" aura:id="cometD" />
-  </aura:if>
+<!--  <lightning:empApi aura:id="empApi" />-->
+<!--  <aura:if isTrue="{! !empty(v.sessionId)}">-->
+<!--    <c:Utility_CometD sessionId="{!v.sessionId}" aura:id="cometD" />-->
+<!--  </aura:if>-->
 
   <c:Lgnd_Spinner_dh aura:id="busy-indicator" />
 
@@ -49,6 +49,8 @@
       <aura:if isTrue="{!equals(v.currentView, 'list')}">
         <c:lgndP_DealerOrderLinesList dealerOrder="{!v.dealerOrder}"
                                       userType="{!v.userType}"
+                                      sessionId="{!v.sessionId}"
+                                      inCommunity="{!v.inCommunity}"
                                       aura:id="dealerOrderLines--Cmp" />
       </aura:if>
 

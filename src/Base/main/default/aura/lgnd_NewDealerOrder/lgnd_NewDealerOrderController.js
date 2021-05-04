@@ -1,9 +1,4 @@
 ({
-  doInit: function( component, event, helper )
-  {
-
-  },
-
 	afterScripts: function(component, event, helper)
   {
     helper.setUserData( component )
@@ -11,7 +6,6 @@
       $A.getCallback( (response) => {
         var navMap = ['order-details',
                           'build-boat',
-                          'review-container',
                           'finalize-container'];
         component.set('v.sessionId', response.sessionId );
         if( response.uiTheme !== 'Theme3' )
@@ -42,8 +36,7 @@
 
   nextStage: function( component, event, helper)
   {
-    var navMap = component.get("v.navMap"),
-        current = component.get("v.currentAction"),
+    var current = component.get("v.currentAction"),
         params = {
           navigateTo: current + 1,
           firedBy: current
@@ -79,6 +72,13 @@
   {
     var params = event.getParams(),
         msg = params.message;
-    helper.toggleIndicator( component, msg );
+    if( params.messageOnly )
+    {
+      helper.changeIndicatorMessage( component, msg );
+    }
+    else
+    {
+      helper.toggleIndicator( component, msg );
+    }
   }
 })

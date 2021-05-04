@@ -5,7 +5,7 @@
 <aura:component description="lgndP_DealerOrderFinalize" controller="DealerOrder_Ext">
 
   <aura:attribute name="dealerOrder" type="Dealer_Order__c" />
-  <aura:attribute name="applyFinished" type="Boolean" default="true" />
+<!--  <aura:attribute name="applyFinished" type="Boolean" default="true" />-->
   <aura:attribute name="sessionId" type="String" />
   <aura:attribute name="inCommunity" type="Boolean" default="true" />
   <aura:attribute name="partnerProgramSubscription" type="Map" />
@@ -30,106 +30,108 @@
     <c:Utility_CometD sessionId="{!v.sessionId}" aura:id="cometD" />
   </aura:if>
 
-  <aura:if isTrue="{! !v.applyFinished}">
-    <c:Lgnd_Spinner_dh busyMessage="Applying Partner Program"
-                       isVisible="true" />
-  </aura:if>
+<!--  <aura:if isTrue="{! !v.applyFinished}">-->
+<!--    <c:Lgnd_Spinner_dh busyMessage="Applying Partner Program"-->
+<!--                       isVisible="true" />-->
+<!--  </aura:if>-->
 
-  <aura:if isTrue="{!v.applyFinished}">
+  <c:lgnd_Confirm aura:id="lgnd-confirm"/>
 
-    <!-- +++++ DISCOUNT NOTIFICATION CENTER +++++++ -->
-    <c:lgndp_PartnerProgramNotification message="{!v.promotionMessage}" />
-    <!-- ====== DISCOUNT NOTIFICATION CENTER ======= -->
+<!--  <aura:if isTrue="{!v.applyFinished}">-->
 
-    <div class="slds-grid slds-wrap slds-grid--pull-padded-x-small"
-         style="margin-left:0; margin-right:0;">
-      <div class="slds-page-header">
-        <div class="slds-grid">
-          <div class="slds-col slds-has-flexi-truncate">
-            <div class="slds-media slds-no-space slds-grow">
-              <div class="slds-media__figure">
-                <lightning:icon iconName="custom:custom54" />
-              </div>
-              <div class="slds-media__body">
-                <p class="slds-text-title--caps slds-line-height--reset">Dealer Order</p>
-                <h1 class="slds-page-header__title slds-m-right--small slds-align-middle slds-truncate">
-                  {!v.dealerOrder.Name}
-                </h1>
-              </div>
+  <!-- +++++ DISCOUNT NOTIFICATION CENTER +++++++ -->
+  <c:lgndp_PartnerProgramNotification message="{!v.promotionMessage}" />
+  <!-- ====== DISCOUNT NOTIFICATION CENTER ======= -->
+
+  <div class="slds-grid slds-wrap slds-grid--pull-padded-x-small"
+       style="margin-left:0; margin-right:0;">
+    <div class="slds-page-header">
+      <div class="slds-grid">
+        <div class="slds-col slds-has-flexi-truncate">
+          <div class="slds-media slds-no-space slds-grow">
+            <div class="slds-media__figure">
+              <lightning:icon iconName="custom:custom54" />
             </div>
-          </div>
-          <div class="slds-col slds-no-flex slds-align-top">
-            <div class="slds-text-align_right">
-              <span class="slds-p-right_medium">Before Tax</span>
-              <lightning:formattedNumber value="{!v.dealerOrder.Order_Total__c}"
-                                         style="currency"
-                                         currencyCode="CAD"
-                                         class="order-total"/>
-            </div>
-            <div class="slds-text-align_right">
-              <span class="slds-p-right_medium">Before Tax/Fees/Discounts</span>
-              <lightning:formattedNumber value="{!v.dealerOrder.Order_Total_No_Fees_And_Discounts__c}"
-                                         style="currency"
-                                         currencyCode="CAD"
-                                         class="order-total-small"/>
+            <div class="slds-media__body">
+              <p class="slds-text-title--caps slds-line-height--reset">Dealer Order</p>
+              <h1 class="slds-page-header__title slds-m-right--small slds-align-middle slds-truncate">
+                {!v.dealerOrder.Name}
+              </h1>
             </div>
           </div>
         </div>
-        <ul class="slds-grid slds-page-header__detail-row">
-          <li class="slds-page-header__detail-block">
-            <p class="slds-text-title slds-truncate slds-m-bottom--xx-small" title="Financing Company">
-              Financing Company
-            </p>
-            <p class="slds-text-body--regular slds-truncate">
-              {!v.dealerOrder.Financing_Company__r.Financing_Company__r.Name}
-            </p>
-          </li>
-          <li class="slds-page-header__detail-block">
-            <p class="slds-text-title slds-truncate slds-m-bottom--xx-small" title="Booking Order">
-              Booking Order
-            </p>
-            <p class="slds-text-body--regular slds-truncate">
-              {!v.dealerOrder.Is_Booking_Order__c == true ? 'Yes' : 'No'}
-            </p>
-          </li>
-        </ul>
+        <div class="slds-col slds-no-flex slds-align-top">
+          <div class="slds-text-align_right">
+            <span class="slds-p-right_medium">Before Tax</span>
+            <lightning:formattedNumber value="{!v.dealerOrder.Order_Total__c}"
+                                       style="currency"
+                                       currencyCode="CAD"
+                                       class="order-total"/>
+          </div>
+          <div class="slds-text-align_right">
+            <span class="slds-p-right_medium">Before Tax/Fees/Discounts</span>
+            <lightning:formattedNumber value="{!v.dealerOrder.Order_Total_No_Fees_And_Discounts__c}"
+                                       style="currency"
+                                       currencyCode="CAD"
+                                       class="order-total-small"/>
+          </div>
+        </div>
       </div>
-
-      <aura:if isTrue="{!equals(v.currentView, 'list')}">
-        <c:lgndP_DealerOrderLinesList dealerOrder="{!v.dealerOrder}"
-                                      inOrderBuilder="true"
-                                      moreDetails="true"
-                                      aura:id="dealerOrderLines--Cmp" />
-      </aura:if>
-
-      <aura:if isTrue="{!equals(v.currentView, 'view')}">
-        <c:lgndP_DealerOrderLineView dealerOrder="{!v.dealerOrder}"
-                                     isViewing="true"
-                                     aura:id="dealerOrderLineView--Cmp" />
-      </aura:if>
+      <ul class="slds-grid slds-page-header__detail-row">
+        <li class="slds-page-header__detail-block">
+          <p class="slds-text-title slds-truncate slds-m-bottom--xx-small" title="Financing Company">
+            Financing Company
+          </p>
+          <p class="slds-text-body--regular slds-truncate">
+            {!v.dealerOrder.Financing_Company__r.Financing_Company__r.Name}
+          </p>
+        </li>
+        <li class="slds-page-header__detail-block">
+          <p class="slds-text-title slds-truncate slds-m-bottom--xx-small" title="Booking Order">
+            Booking Order
+          </p>
+          <p class="slds-text-body--regular slds-truncate">
+            {!v.dealerOrder.Is_Booking_Order__c == true ? 'Yes' : 'No'}
+          </p>
+        </li>
+      </ul>
     </div>
 
-    <div class="slds-modal__footer">
-      <lightning:button label="Cancel Order"
-                        iconName="utility:close"
-                        iconPosition="left"
-                        variant="destructive"
-                        class="slds-float_left"
-                        onclick="{!c.cancelOrder}" />
-      <lightning:button label="Add"
-                        iconName="utility:add"
-                        class="slds-button_success"
-                        iconPosition="left"
-                        onclick="{!c.addToOrder}" />
-      <lightning:button label="Save Draft"
-                        iconName="utility:process"
-                        iconPosition="left"
-                        onclick="{!c.saveDraft}" />
-      <lightning:button label="Submit"
-                        variant="brand"
-                        iconName="utility:upload"
-                        iconPosition="left"
-                        onclick="{!c.submit}" />
-    </div>
-  </aura:if>
+    <aura:if isTrue="{!equals(v.currentView, 'list')}">
+      <c:lgndP_DealerOrderLinesList dealerOrder="{!v.dealerOrder}"
+                                    inOrderBuilder="true"
+                                    moreDetails="true"
+                                    aura:id="dealerOrderLines--Cmp" />
+    </aura:if>
+
+    <aura:if isTrue="{!equals(v.currentView, 'view')}">
+      <c:lgndP_DealerOrderLineView dealerOrder="{!v.dealerOrder}"
+                                   isViewing="true"
+                                   aura:id="dealerOrderLineView--Cmp" />
+    </aura:if>
+  </div>
+
+  <div class="slds-modal__footer">
+    <lightning:button label="Cancel Order"
+                      iconName="utility:close"
+                      iconPosition="left"
+                      variant="destructive"
+                      class="slds-float_left"
+                      onclick="{!c.cancelOrder}" />
+    <lightning:button label="Add"
+                      iconName="utility:add"
+                      class="slds-button_success"
+                      iconPosition="left"
+                      onclick="{!c.addToOrder}" />
+    <lightning:button label="Save Draft"
+                      iconName="utility:process"
+                      iconPosition="left"
+                      onclick="{!c.saveDraft}" />
+    <lightning:button label="Submit"
+                      variant="brand"
+                      iconName="utility:upload"
+                      iconPosition="left"
+                      onclick="{!c.submit}" />
+  </div>
+<!--  </aura:if>-->
 </aura:component>

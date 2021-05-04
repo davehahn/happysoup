@@ -73,12 +73,15 @@
     var params = event.getParams(),
         indicator = component.find('busy-indicator');
 
-    console.log(`handling indicator, message = ${params.message}`);
-    indicator.toggle( params.message );
-//    if( params.isBusy )
-//      $A.util.removeClass( indicator, 'toggle' );
-//    else
-//      $A.util.addClass( indicator, 'toggle' );
+   if( params.messageOnly )
+   {
+     indicator.setMessage( params.message );
+   }
+   else
+   {
+     indicator.toggle( params.message );
+   }
+
   },
 
   handleViewChange: function( component, event, helper )
@@ -98,7 +101,7 @@
   {
     console.log('handle edit complete');
     let status = event.getParam('status');
-    const isFactoryStore = component.get('v.dealerOrder').Account__r.Is_Internal__c;
+    const isFactoryStore = true;//component.get('v.dealerOrder').Account__r.Is_Internal__c;
     if( status === 'cancel' )
     {
       helper.returnToLineView( component );
