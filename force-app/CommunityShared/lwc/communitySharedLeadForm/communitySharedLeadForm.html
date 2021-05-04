@@ -80,18 +80,87 @@
             </select>
             <span class="feedback" id="Province_feedback" aria-live="polite" aria-label=""></span>
           </li>
-          <template if:true={collectPostalCode}>
-            <li class="input input--text">
-              <label for="PostalCode">
-                Postal Code
-              </label>
-              <input name="PostalCode" type="text" maxlength="7" id="PostalCode" placeholder="" value="" required aria-required="true" pattern="([a-zA-Z]\d[a-zA-Z])[\s-]*(\d[a-zA-Z]\d)" aria-describedby="PostalCode_feedback" class="assertive valPostal">
-              <span class="feedback" id="PostalCode_feedback" aria-live="polite" aria-label=""></span>
-            </li>
-          </template>
+        </template>
+        <template if:true={collectPostalCode}>
+          <li class="input input--text">
+            <label for="PostalCode">
+              Postal Code
+            </label>
+            <input name="PostalCode" type="text" maxlength="7" id="PostalCode" placeholder="" value="" required aria-required="true" pattern="([a-zA-Z]\d[a-zA-Z])[\s-]*(\d[a-zA-Z]\d)" aria-describedby="PostalCode_feedback" class="assertive valPostal">
+            <span class="feedback" id="PostalCode_feedback" aria-live="polite" aria-label=""></span>
+          </li>
         </template>
       </ul>
-
+    </fieldset>
+    <fieldset>
+      <label>Inquiry Information</label>
+      <ul>
+        <template if:true={collectPlanToPurchase}>
+          <li class="input input--select">
+            <label for="WhenPurchase">
+              When do you plan on purchasing? <span class="optional">(Optional)</span>
+            </label>
+            <select name="WhenPurchase" id="WhenPurchase" aria-describedby="WhenPurchase_feedback" class="assertive">
+              <option value="">-- Select One --</option>
+              <option value="Within 3 months">Within 3 months</option>
+              <option value="3 to 6 months">3 to 6 months</option>
+              <option value="6 to 12 months">6 to 12 months</option>
+              <option value="12+ months">12+ months</option>
+              <option value="Not considering the purchase of a boat at this time">Not considering the purchase of a boat at this time</option>
+            </select>
+            <span class="feedback" id="WhenPurchase_feedback" aria-live="polite" aria-label=""></span>
+          </li>
+        </template>
+        <template if:true={collectTypeInterest}>
+          <li class="input input--select">
+            <template if:true={collectBoatInterest}>Warning: To use this field, please de-select "Collect Boat of Interest (Set of Picklists)"</template>
+            <template if:false={collectBoatInterest}>
+              <label for="BoatTypeSingle">
+                What are you most interested in? <span class="optional">(Optional)</span>
+              </label>
+              <select name="BoatTypeSingle" id="BoatTypeSingle" aria-describedby="BoatTypeSingle_feedback" class="assertive" required aria-required="true">
+                <option value="">-- Select One --</option>
+                <option value="Fishing Boats">Fishing Boats</option>
+                <option value="Pontoon Boats">Pontoon Boats</option>
+                <option value="Deck Boats">Deck Boats</option>
+              </select>
+              <span class="feedback" id="BoatTypeSingle_feedback" aria-live="polite" aria-label=""></span>
+            </template>
+          </li>
+        </template>
+        <template if:true={collectBoatInterest}>
+          <li class="input input--select">
+            <template if:true={collectTypeInterest}>Warning: To use this field, please de-select "Collect Boat Type Interest (Picklist)"</template>
+            <template if:false={collectTypeInterest}>
+              <label for="BoatType">
+                What model are you interested in? <span class="optional">(Optional)</span>
+              </label>
+              TBD
+              <select name="BoatType" id="BoatType" aria-describedby="BoatType_feedback" class="polite">
+              </select>
+              <span class="feedback" id="BoatType_feedback" aria-live="polite" aria-label=""></span>
+            </template>
+          </li>
+        </template>
+        <template if:true={collectNotes}>
+          <li class="input input--textarea">
+            <label for="Notes">
+              Notes <span>(Optional)</span>
+            </label>
+            <textarea name="Notes" id="Notes" aria-describedby="Messsage_feedback" class="polite valMessage"></textarea>
+            <span class="feedback" id="Messsage_feedback" aria-live="polite" aria-label=""></span>
+          </li>
+        </template>
+        <template if:true={collectNewsletterOptin}>
+          <li class="input input--checkbox">
+            <input type="checkbox" name="Newsletter" id="Newsletter">
+            <span class="customCheck"></span>
+            <label for="Newsletter">
+              <strong>Yes!</strong> I would like to subscribe to receive eNewsletters from Legend Boats. <span class="optional">(Optional)</span>
+            </label>
+          </li>
+        </template>
+      </ul>
     </fieldset>
   </form>
   <button id="submitLead" onclick={submitLead}>Submit Lead</button>
