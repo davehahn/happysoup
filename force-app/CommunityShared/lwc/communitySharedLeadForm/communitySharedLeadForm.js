@@ -20,11 +20,11 @@ export default class CommunitySharedLeadForm extends LightningElement {
   @api collectProvince;
   @api collectEmail;
   @api collectPhone;
+  @api collectTypeInterest;
+  @api collectBoatInterest;
   @api collectPlanToPurchase;
   @api collectNotes;
   @api collectNewsletterOptin;
-  @api collectBoatType;
-  @api collectBoatModel;
 
   labels = {
     LeadForm_FirstName,
