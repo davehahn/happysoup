@@ -5,12 +5,6 @@ private class Product_PrepaidBundleBuilder_Ctr_Test {
   static Product2[] packages;
   static Prepaid_Package_Item__c[] packageItems;
 
-	@testSetup static void dataSetup()
-  {
-    new Factory_TestData();
-    Factory_CustomSettings.setupInventorySettings();
-  }
-
   private static void init()
   {
     packages = Factory_Product.buildNonSerializedProducts( 'Protection and Services',
