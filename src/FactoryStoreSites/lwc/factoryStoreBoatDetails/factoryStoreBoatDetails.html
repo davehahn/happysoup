@@ -4,12 +4,12 @@
 
 <!-- Factory Store Boat Details -->
 <template>
-  <article class="model maxWidth maxWidth--thin">
+  <article class={modelWrapperClass}>
     <template if:true={boatDataLoaded}>
 
       <header class="model__intro">
         <div class="intro__vitals">
-          <h3 class="heading heading-l">{boatName}</h3>
+          <h2 class="heading heading-l">{boatName}</h2>
 
           <div class="vitals__priceBlock">
             <strong class="priceBlock__weekly" aria-describedby="vitals_includes">
@@ -113,7 +113,7 @@
 
     </template>
     <template if:true={boatDataLookupRunning}>
-      <p>Looking For Data.</p>
+      <c-community-shared-loading></c-community-shared-loading>
     </template>
     <template if:true={resultEmpty}>
       <p>Result Empty.</p>

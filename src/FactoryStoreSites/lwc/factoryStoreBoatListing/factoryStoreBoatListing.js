@@ -18,8 +18,7 @@ export default class FactoryStoreBoatListing extends NavigationMixin(LightningEl
 	boats;
 	@track boat;
 	@track selectedBoat;
-	@track showListing = true;
-	@track showBoat = false;
+	@track showListing = false;
 
 	@wire( fetchBoatsBySeries, { seriesName: '$seriesName' } )
 	wiredFetchBoatsBySeries( { error, data })
@@ -28,6 +27,7 @@ export default class FactoryStoreBoatListing extends NavigationMixin(LightningEl
 	  {
 	    console.log(this.seriesName, data);
 	    this.boats = data;
+	    this.showListing = true;
    	}
    	else if ( error )
    	{

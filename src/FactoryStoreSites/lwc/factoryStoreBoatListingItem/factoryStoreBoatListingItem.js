@@ -12,9 +12,9 @@ export default class FactoryStoreBoatListingItem extends NavigationMixin(Lightni
 
  @track boatName;
  @track modelListingPhoto;
- @track standardMotorId;
- @track standardTrailerId;
- @track standardTollingMotorId;
+ @track standardMotor;
+ @track standardTrailer;
+ @track standardTollingMotor;
 
  navToBoat( event ){
 		let page = 'boat-model',
@@ -48,10 +48,8 @@ export default class FactoryStoreBoatListingItem extends NavigationMixin(Lightni
  	renderedCallback(){
  	  this.boatName = stripParentheses(this.boat.Name);
  	  this.modelListingPhoto = 'background-image: url(' + this.boat.Default_Gallery_Image_Original__c + ')';
-// 	  this.standardMotorId = rewriteMotorName(this.boat.StandardMotor);
-//		this.standardTrailerId = rewriteTrailerName(this.boat.StandardTrailer);
-		this.standardMotorId = this.boat.Standard_Motor__r.Name;
-		this.standardTrailerId = this.boat.Standard_Trailer__r.Name;
+		this.standardMotor = (this.boat.Standard_Motor__r) ? rewriteMotorName(this.boat.Standard_Motor__r.Name) : '';
+		this.standardTrailer = (this.boat.Standard_Trailer__r) ? ' and ' + rewriteTrailerName(this.boat.Standard_Trailer__r.Name) : '';
   }
 
 //  get standardMotorName(){
