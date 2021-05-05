@@ -7,6 +7,7 @@ import { NavigationMixin, CurrentPageReference } from 'lightning/navigation';
 import { stringy, stripParentheses, rewriteMotorName, rewriteTrailerName, weeklyPayment, formatPrice } from 'c/communitySharedUtils';
 import fetchBoat from '@salesforce/apex/FactoryStore_InventoryController.fetchBoat';
 import passBoatModelId from '@salesforce/apex/FactoryStore_FlowController.passBoatModelId';
+
 import { fireEvent, registerListener, unregisterAllListeners} from 'c/pubsub';
 
 
@@ -19,6 +20,7 @@ export default class FactoryStoreBoatDetails extends NavigationMixin(LightningEl
   boat;
   boatDataLookupRunning = true;
   boatDataLoaded = false;
+  modelWrapperClass = 'model model--loading maxWidth maxWidth--thin';
   resultEmpty = false;
 
   boatName;
@@ -55,6 +57,7 @@ export default class FactoryStoreBoatDetails extends NavigationMixin(LightningEl
 
   recordFound(){
     this.boatDataLoaded = true;
+    this.modelWrapperClass = 'model maxWidth maxWidth--thin';
     this.boatDataLookupRunning =  false;
     this.boatName = stripParentheses(this.boat.Name);
     this.leadFormName = this.boatName + ' - Lead Form';

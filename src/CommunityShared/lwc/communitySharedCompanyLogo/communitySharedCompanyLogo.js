@@ -2,13 +2,14 @@
  * Created by Tim on 2021-05-03.
  */
 
-import { LightningElement, api, track, wire } from 'lwc';
+import { LightningElement, api, wire } from 'lwc';
 import Id from '@salesforce/community/Id';
 import getManagedContentByContentKeys from '@salesforce/apex/CommSharedMC_Controller.getManagedContentByContentKeys';
 
 export default class CommunitySharedCompanyLogo extends LightningElement {
 	@api companyLogo;
-	@track companyLogoBg;
+	@api companyName;
+	companyLogoBg;
 
 	renderedCallback(){
 		if(this.companyLogo){

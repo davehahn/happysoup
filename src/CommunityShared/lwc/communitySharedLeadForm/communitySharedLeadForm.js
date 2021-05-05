@@ -7,6 +7,7 @@ import insertLead from '@salesforce/apex/CommSharedLeadForm_Controller.insertLea
 import LeadForm_FirstName from '@salesforce/label/c.LeadForm_FirstName';
 import LeadForm_LastName from '@salesforce/label/c.LeadForm_LastName';
 import { getTestUser, renderEN, renderFR } from 'c/communitySharedUtils';
+import { validateLeadForm } from 'c/communitySharedLeadForm_Utils';
 
 export default class CommunitySharedLeadForm extends LightningElement {
 
@@ -38,10 +39,19 @@ export default class CommunitySharedLeadForm extends LightningElement {
 
 	defaultCampaignId = '701q0000000mL7GAAU';
 
-	submitLead(){
-	  console.log('start submit');
-	  const newLead = this.formatDataObject();
-	  console.log('newlead: ', newLead);
+	validateLead(){
+	  console.log('trigger validate');
+		const validateData = this.formatValidationObject();
+//		const newLead = this.formatLeadObject();
+		validateLeadForm.init( 'onFormSubmit', validateData )
+			.then( result => {
+			  console.log(result.Message + ': trigger submitLead( newLead )');
+   		}).catch(e => {
+   			console.log('validate error: ', JSON.stringify(e));
+     	});
+ }
+
+	submitLead( newLead ){
 	  const cid = (this.campaignId != undefined) ? this.campaignId : this.defaultCampaignId;
 	  const submit = insertLead({l: newLead, cid: cid})
 	  	.then( (result) =>{
@@ -53,7 +63,24 @@ export default class CommunitySharedLeadForm extends LightningElement {
      });
  	}
 
- 	formatDataObject(){
+ 	formatValidationObject(){
+ 		console.log('get validation object');
+ 		const data = {
+ 		  FirstName: {
+				Value: (this.template.querySelector('[data-id="FirstName"]')) ? this.template.querySelector('[data-id="FirstName"]').value : '',
+				Validation: (this.template.querySelector('[data-id="FirstName"]')) ? this.template.querySelector('[data-id="FirstName"]').dataset.validation : '',
+				Required: (this.template.querySelector('[data-id="FirstName"]')) ? this.template.querySelector('[data-id="FirstName"]').required : '',
+			},
+			LastName: {
+				Value: (this.template.querySelector('[data-id="LastName"]')) ? this.template.querySelector('[data-id="LastName"]').value : '',
+				Validation: (this.template.querySelector('[data-id="LastName"]')) ? this.template.querySelector('[data-id="LastName"]').dataset.validation : '',
+				Required: (this.template.querySelector('[data-id="LastName"]')) ? this.template.querySelector('[data-id="LastName"]').required : '',
+			},
+   }
+   return data;
+  }
+
+ 	formatLeadObject(){
  	  console.log('get data!');
  	  const data = {
  	    FirstName: (this.template.querySelector('[data-id="FirstName"]')) ? this.template.querySelector('[data-id="FirstName"]').value : '',
