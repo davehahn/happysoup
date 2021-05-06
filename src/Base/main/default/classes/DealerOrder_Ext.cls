@@ -707,6 +707,7 @@ public without sharing class DealerOrder_Ext {
     result.put('sessionId', UserInfo.getSessionId() );
     result.put('modelYear', currentYear );
     result.put('uiTheme', UserInfo.getUiThemeDisplayed() );
+    result.put('bookingStartMonthDay', Partner_Boat_Sale_Settings__c.getOrgDefaults().Booking_Order_Begin_Month_Day__c );
     List<Map<String, Object>> options = new List<Map<String,Object>>();
     for( String year : Partner_Program_Settings__c.getOrgDefaults().Available_Model_Years__c.split(',') )
     {

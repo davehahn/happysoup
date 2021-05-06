@@ -13,6 +13,7 @@
           component.set('v.trailers', result.trailers );
           component.set('v.trollingMotors', result.trollingMotors );
           self.setIsEditable( component );
+          component.set('v.canSubmit', self.setIsSubmittable( component ) );
           resolve();
         }),
         $A.getCallback( function( err ) {
@@ -73,6 +74,18 @@
         answer = true;
     }
     component.set('v.isEditable', answer );
+  },
+
+  setIsSubmittable: function( component )
+  {
+    const dealerOrder = component.get('v.dealerOrder');
+    if( dealerOrder.Stage__c !== 'Draft' ) return false;
+    if( !dealerOrder.Is_Booking_Order__c ) return true;
+
+    const startMonthDay = component.get('v.bookingOrderStartMonthDay').split('/');
+    const startDate = new Date( new Date().getFullYear(), startMonthDay[0] - 1, startMonthDay[1], 0, 0, 0 );
+
+    return Date.now() > startDate.getTime();
   },
 
   confirm: function( component, confirmParams )

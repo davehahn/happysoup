@@ -5,38 +5,19 @@
 ({
   init: function( component )
   {
-    //component.set('v.applyFinished', true);
+    const startMonthDay = component.get('v.bookingOrderStartMonthDay').split('/');
+    const startDate = new Date( new Date().getFullYear(), startMonthDay[0] - 1, startMonthDay[1], 0, 0, 0 );
+    let dealerOrder = component.get('v.dealerOrder');
+    let canSubmit = true;
+    if( dealerOrder.Is_Booking_Order__c	)
+    {
+      console.log( Date.now() );
+      console.log( startDate.getTime() );
+      canSubmit = Date.now() > startDate.getTime();
+    }
+    component.set('v.canSubmit', canSubmit	);
     this.initLines( component );
   },
-
-//  initForPartner: function( component )
-//  {
-//    const dealerOrderId = component.get('v.dealerOrder').Id;
-//    let empApi = component.get('v.inCommunity') ? component.find('cometD') : component.find('empApi');
-//
-////    empApi.onError($A.getCallback(error => {
-////        // Error can be any type of error (subscribe, unsubscribe...)
-////        console.error('EMP API error: ', JSON.stringify(error));
-////    }));
-//    empApi.subscribe(
-//      '/event/Partner_Program_Event__e',
-//      -1,
-//      $A.getCallback( eventReceived => {
-//        console.log('Received event ');
-//        console.log( eventReceived );
-//        if( eventReceived.data.payload.Status__c === 'success' &&
-//            eventReceived.data.payload.DealerOrderId__c === dealerOrderId )
-//          this.partnerProgramSuccess( component, eventReceived );
-//      })
-//    )
-//    .then(
-//      $A.getCallback( subscription => {
-//        console.log('Subscription request sent to: ', subscription.channel);
-//        component.set('v.partnerProgramSubscription', subscription);
-//        this.applyPartnerProgram( component );
-//      })
-//    );
-//  },
 
   savePartnerProgramAndSubmit: function( component )
   {
@@ -59,7 +40,6 @@
             eventReceived.data.payload.DealerOrderId__c === dealerOrderId )
         {
           console.log( 'partner Program apply success');
-          //component.set('v.applyFinished', true);
           self.unsubscribeToEvent( component );
           self.changeSpinnerMessage( component, 'Submitting Order' );
           self.submitOrder( component );
@@ -96,26 +76,6 @@
     });
     new LightningApex( this, action ).fire();
   },
-
-//  partnerProgramSuccess: function( component, eventReceived )
-//  {
-//    console.log( 'partner Program apply success');
-//    component.set('v.applyFinished', true);
-//    this.initLines( component );
-//    const subscription = component.get('v.partnerProgramSubscription'),
-//          inCommunity = component.get('v.inCommunity');
-//
-//    let empApi = inCommunity ? component.find('cometD') : component.find('empApi');
-//
-//    empApi.unsubscribe( subscription, $A.getCallback( unsubscribed => {
-//      console.log('Unsubscribed from channel '+ unsubscribed.subscription);
-//      component.set('v.partnerProgramSubscription', null);
-//    }));
-//
-//    console.log('PARTNER PROGRAM RESULT');
-//    console.log( JSON.parse( eventReceived.data.payload.Result__c ) );
-//    component.set('v.promotionMessage', JSON.parse( eventReceived.data.payload.Result__c ) );
-//  },
 
   initLines: function( component )
   {

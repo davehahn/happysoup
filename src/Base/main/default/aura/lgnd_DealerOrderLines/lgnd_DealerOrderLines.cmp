@@ -9,6 +9,7 @@
   <aura:attribute name="currentView" type="String" default="list" />
   <aura:attribute name="userType" type="String" />
   <aura:attribute name="sessionId" type="String" />
+  <aura:attribute name="bookingOrderStartMonthDay" type="String" />
   <aura:attribute name="applyingPartnerProgram" type="Boolean" default="false" />
   <aura:attribute name="partnerProgramSubscription" type="Map" />
   <aura:attribute name="inCommunity" type="Boolean" default="true" />
@@ -50,6 +51,7 @@
         <c:lgndP_DealerOrderLinesList dealerOrder="{!v.dealerOrder}"
                                       userType="{!v.userType}"
                                       sessionId="{!v.sessionId}"
+                                      bookingOrderStartMonthDay="{!v.bookingOrderStartMonthDay}"
                                       inCommunity="{!v.inCommunity}"
                                       aura:id="dealerOrderLines--Cmp" />
       </aura:if>

@@ -5,6 +5,7 @@
   <aura:attribute name="currentAction" type="Integer" access="global" />
   <aura:attribute name="currentStep" type="String" default="0" />
   <aura:attribute name="isFactoryStore" type="Boolean" default="false" />
+  <aura:attribute name="bookingOrderStartMonthDay" type="String" />
   <aura:attribute name="promotionMessage" type="Map" default="{}" />
   <aura:attribute name="partnerProgramSubscription" type="Map" />
   <aura:attribute name="dealerOrder"
@@ -114,6 +115,7 @@
         <c:lgndP_DealerOrderFinalize dealerOrder="{!v.dealerOrder}"
                                      sessionId="{!v.sessionId}"
                                      inCommunity="{!v.inCommunity}"
+                                     bookingOrderStartMonthDay="{!v.bookingOrderStartMonthDay}"
                                      aura:id="finalizeOrder-Cmp" />
       </aura:if>
     </div>

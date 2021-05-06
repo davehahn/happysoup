@@ -6,6 +6,7 @@
       $A.getCallback( function( result ) {
         component.set('v.userType', result.userType);
         component.set('v.sessionId', result.sessionId);
+        component.set('v.bookingOrderStartMonthDay', result.bookingStartMonthDay);
         if( result.uiTheme !== 'Theme3' )
            component.set('v.inCommunity', false );
         return helper.fetchDealerOrder( component );

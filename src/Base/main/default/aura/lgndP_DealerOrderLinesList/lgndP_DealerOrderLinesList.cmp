@@ -12,8 +12,10 @@
 
   <aura:attribute name="sessionId" type="String" />
   <aura:attribute name="inCommunity" type="Boolean" default="true" />
+  <aura:attribute name="bookingOrderStartMonthDay" type="String" />
   <aura:attribute name="partnerProgramSubscription" type="Map" />
   <aura:attribute name="promotionMessage" type="Map" default="{}" />
+  <aura:attribute name="canSubmit" type="Boolean" />
 
 
   <ltng:require scripts="{!join(',', $Resource.Libraries + '/js/LightningApex.js',
@@ -47,7 +49,7 @@
       <aura:if isTrue="{!and(v.isEditable, !v.inOrderBuilder)}">
         <lightning:button label="Add"
                           onclick="{! c.handleAdd }" />
-        <aura:if isTrue="{!equals(v.dealerOrder.Stage__c, 'Draft')}">
+        <aura:if isTrue="{!v.canSubmit}">
           <lightning:button label="Submit"
                             onclick="{! c.handleSubmit }"/>
         </aura:if>
