@@ -16,7 +16,7 @@ echo -e "\nsrc/BoatReservation/experiences" >> .forceignore
 echo -e "\nsrc/CustomerCommunity/experiences" >> .forceignore
 #echo -e "\nforce-app/FactoryStoreSite/experiences" >> .forceignore
 
-sfdx force:source:deploy --testlevel RunLocalTests --checkonly --targetusername ci-testValid -p src -g -w 240
+sfdx force:source:deploy --testlevel RunLocalTests --checkonly --targetusername ci-testValid -p src/ -g -w 240
 
 if [ $DEPLOY_EXPERIENCES = true ]
 then
