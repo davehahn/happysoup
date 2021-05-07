@@ -108,19 +108,21 @@ public virtual class PartnerProgramItem implements PartnerProgramItem_I, Promise
     Boolean updateDealerOrder = false;
     if( this.isApplicable() )
     {
-      upsert this.apply();
+      List<AcctSeedERP__Material__c> discountLines = this.apply();
+      if( !wrapper.checkOnly ) upsert discountLines;
       percent = this.getDiscountPercent();
       wrapper.appliedPrograms.add( this.getName() );
       wrapper.result.addAppliedDiscount( this );
-      updateDealerOrder = true;
+      updateDealerOrder = !wrapper.checkOnly;
     }
     else
     {
       if( this.wasAppliedPreviously() )
       {
-        delete this.revert();
+        List<AcctSeedERP__Material__c> deleteMats = this.revert();
+        if( !wrapper.checkOnly ) delete deleteMats;
         wrapper.appliedPrograms.remove( this.getName() );
-        updateDealerOrder = true;
+        updateDealerOrder = !wrapper.checkOnly;
       }
     }
 
@@ -132,7 +134,7 @@ public virtual class PartnerProgramItem implements PartnerProgramItem_I, Promise
         this.getBookingOrderFieldName(),
         percent
       );
-      upsert wrapper.bookingOrder;
+      if( !wrapper.checkOnly ) upsert wrapper.bookingOrder;
     }
     if( updateDealerOrder )
       wrapper.updateDealerOrder();

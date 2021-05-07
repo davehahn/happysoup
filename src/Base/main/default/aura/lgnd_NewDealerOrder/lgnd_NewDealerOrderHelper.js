@@ -9,48 +9,54 @@
   {
     var actionNumber = params.navigateTo,
         prevActionNumber = params.firedBy,
+        navMap = component.get('v.navMap'),
         isFactoryStore = component.get('v.dealerOrder').Account__r.Is_Internal__c,
-        c_name, i_name, c_cmp, i_cmp, prev_i_name, prev_i_cmp, navMap = component.get('v.navMap');
+        c_name, c_cmp;
+        //c_name, i_name, c_cmp, i_cmp, prev_i_name, prev_i_cmp, navMap = component.get('v.navMap');
+
+    console.log(`actionNumber ${actionNumber}`);
+    console.log(`prevActionNumber ${prevActionNumber}`);
 
     // If it is a factory store skip the summary and
     // apply Partner Program step
-    if( actionNumber === 2 && isFactoryStore )
-      actionNumber = 3;
+//    if( actionNumber === 2 && isFactoryStore )
+//      actionNumber = 3;
 
     component.set('v.currentAction', actionNumber );
-    i_name = navMap[actionNumber] + '-indicator';
-    i_cmp = component.find( i_name );
-
+    component.set('v.currentStep', actionNumber.toString() );
+//    i_name = navMap[actionNumber] + '-indicator';
+//    i_cmp = component.find( i_name );
+//
     for( var i=0; i<navMap.length; i++ )
     {
       c_name = navMap[i];
       c_cmp = component.find( c_name );
-      prev_i_name = navMap[ i ] + '-indicator';
-      prev_i_cmp = component.find( prev_i_name );
-
+//      prev_i_name = navMap[ i ] + '-indicator';
+//      prev_i_cmp = component.find( prev_i_name );
+//
       if( actionNumber === i )
       {
         $A.util.removeClass( c_cmp, 'toggle' );
-        $A.util.addClass( i_cmp,'slds-is-current');
-        $A.util.removeClass( i_cmp,'slds-is-incomplete');
+//        $A.util.addClass( i_cmp,'slds-is-current');
+//        $A.util.removeClass( i_cmp,'slds-is-incomplete');
       }
       else if( actionNumber > i )
       {
         $A.util.addClass( c_cmp, 'toggle' );
-        $A.util.removeClass( i_cmp,'slds-is-incomplete');
-        $A.util.addClass( prev_i_cmp,'slds-is-complete');
-        $A.util.removeClass( prev_i_cmp,'slds-is-current');
-        $A.util.removeClass( prev_i_cmp,'slds-is-incomplete');
+//        $A.util.removeClass( i_cmp,'slds-is-incomplete');
+//        $A.util.addClass( prev_i_cmp,'slds-is-complete');
+//        $A.util.removeClass( prev_i_cmp,'slds-is-current');
+//        $A.util.removeClass( prev_i_cmp,'slds-is-incomplete');
       }
       else if( actionNumber < i )
       {
         $A.util.addClass( c_cmp, 'toggle' );
-        $A.util.removeClass( i_cmp,'slds-is-complete');
-        $A.util.addClass( prev_i_cmp,'slds-is-incomplete');
-        $A.util.removeClass( prev_i_cmp,'slds-is-current');
-        $A.util.removeClass( prev_i_cmp,'slds-is-complete');
+//        $A.util.removeClass( i_cmp,'slds-is-complete');
+//        $A.util.addClass( prev_i_cmp,'slds-is-incomplete');
+//        $A.util.removeClass( prev_i_cmp,'slds-is-current');
+//        $A.util.removeClass( prev_i_cmp,'slds-is-complete');
       }
-
+//
     }
 
     //$A.util.addClass( i_cmp,'slds-is-current');
@@ -90,15 +96,15 @@
     //if we are going from the builder to review
     if( actionNumber === 2 && prevActionNumber === 1 )
     {
-      component.find("reviewOrder--Cmp").doInit();
+      component.find("finalizeOrder-Cmp").doInit();
     }
     //if we are going from review to finalize
-    if( actionNumber === 3 && ( prevActionNumber === 2 || prevActionNumber === 1 ) )
-    {
-      component.find('finalizeOrder-Cmp').doInit();
-    }
+//    if( actionNumber === 3 && ( prevActionNumber === 2 || prevActionNumber === 1 ) )
+//    {
+//      component.find('finalizeOrder-Cmp').doInit();
+//    }
     //if we are coming from review to build a boat we need to reset all the variables
-    if( actionNumber === 1 && ( prevActionNumber === 2 || prevActionNumber === 3 ) )
+    if( actionNumber === 1 && prevActionNumber === 2 )
     {
       if( params.groupId !== undefined && params.groupId.length > 0 )
         component.find("orderBuildBoat--Cmp").doInitForEdit( params.groupId );
@@ -140,5 +146,11 @@
   {
     let indicator = component.find('busy-indicator');
     indicator.toggle( message );
+  },
+
+  changeIndicatorMessage: function( component, msg )
+  {
+    let indicator = component.find('busy-indicator');
+    indicator.setMessage( msg );
   }
 })

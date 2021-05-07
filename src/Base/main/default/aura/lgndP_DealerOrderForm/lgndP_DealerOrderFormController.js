@@ -28,6 +28,25 @@
     }))
 	},
 
+	handleProgramYearChange: function( component, event, helper )
+	{
+	  helper.toggleSpinner( component, 'Checking for existing Booking Order' );
+    helper.checkForPartnerBookingOrder( component, event.getSource().get('v.value') )
+    .then(
+      $A.getCallback( (result) => {
+        let dealerOrder = component.get('v.dealerOrder');
+        dealerOrder.Is_Booking_Order__c = result === null;
+        component.set('v.dealerOrder', dealerOrder)
+      }),
+      $A.getCallback( (err) => {
+        LightningUtils.errorToast( err );
+      })
+    )
+    .finally( $A.getCallback( () => {
+      helper.toggleSpinner( component, '' );
+    }));
+  },
+
   handleAccountChange: function( component, event, helper )
   {
     var accountId = component.get('v.dealerOrder.Account__c'),

@@ -10,6 +10,18 @@
   <aura:attribute name="inOrderBuilder" type="Boolean" default="false" />
   <aura:attribute name="moreDetails" type="Boolean" default="false" />
 
+  <aura:attribute name="sessionId" type="String" />
+  <aura:attribute name="inCommunity" type="Boolean" default="true" />
+  <aura:attribute name="bookingOrderStartMonthDay" type="String" />
+  <aura:attribute name="partnerProgramSubscription" type="Map" />
+  <aura:attribute name="promotionMessage" type="Map" default="{}" />
+  <aura:attribute name="canSubmit" type="Boolean" />
+
+
+  <ltng:require scripts="{!join(',', $Resource.Libraries + '/js/LightningApex.js',
+                                     $Resource.Libraries + '/js/LightningUtils.js') }" />
+
+
   <!-- EVENTS -->
   <aura:registerEvent name="actionEvent"
                       type="c:lgndP_DealerOrderLinesTableAction_Event" />
@@ -17,8 +29,14 @@
                 event="c:lgndP_DealerOrderLinesTable_Delete_Event"
                 action="{!c.handleDelete}" />
   <aura:registerEvent name="busyIndicatorEvent" type="c:lgndP_BusyIndicator_Event" />
+
   <!-- METHODS -->
   <aura:method name="doInit" access="public" />
+
+  <lightning:empApi aura:id="empApi" />
+  <aura:if isTrue="{! !empty(v.sessionId)}">
+    <c:Utility_CometD sessionId="{!v.sessionId}" aura:id="cometD" />
+  </aura:if>
 
   <c:lgnd_Confirm aura:id="lgnd-confirm"/>
 
@@ -31,13 +49,21 @@
       <aura:if isTrue="{!and(v.isEditable, !v.inOrderBuilder)}">
         <lightning:button label="Add"
                           onclick="{! c.handleAdd }" />
-        <aura:if isTrue="{!equals(v.dealerOrder.Stage__c, 'Draft')}">
+        <aura:if isTrue="{!v.canSubmit}">
           <lightning:button label="Submit"
                             onclick="{! c.handleSubmit }"/>
+        </aura:if>
+        <aura:if isTrue="{! equals(v.dealerOrder.Stage__c, 'Draft')}">
+          <lightning:button label="Check Partner Program"
+                            onclick="{! c.handleCheckPartnerProgram}" />
         </aura:if>
       </aura:if>
     </lightning:buttonGroup>
   </div>
+
+  <!-- +++++ DISCOUNT NOTIFICATION CENTER +++++++ -->
+  <c:lgndp_PartnerProgramNotification message="{!v.promotionMessage}" />
+  <!-- ====== DISCOUNT NOTIFICATION CENTER ======= -->
 
   <div class="{! if( v.moreDetails, 'toggle', '')}">
     <c:lgndP_DealerOrderLinesTable boats="{!v.boats}"
