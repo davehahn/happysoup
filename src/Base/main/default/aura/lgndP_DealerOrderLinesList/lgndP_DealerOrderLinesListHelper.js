@@ -81,8 +81,10 @@
     const dealerOrder = component.get('v.dealerOrder');
     if( dealerOrder.Stage__c !== 'Draft' ) return false;
     if( !dealerOrder.Is_Booking_Order__c ) return true;
+    const bookingStart = component.get('v.bookingOrderStartMonthDay');
+    if( bookingStart === undefined ) return false;
 
-    const startMonthDay = component.get('v.bookingOrderStartMonthDay').split('/');
+    const startMonthDay = bookingStart.split('/');
     const startDate = new Date( new Date().getFullYear(), startMonthDay[0] - 1, startMonthDay[1], 0, 0, 0 );
 
     return Date.now() > startDate.getTime();
@@ -164,6 +166,39 @@
     });
   },
 
+  checkPartnerProgram: function( component )
+  {
+    let self = this;
+    const dealerOrderId = component.get('v.dealerOrder').Id;
+    const inCommunity = component.get('v.inCommunity');
+    let empApi = inCommunity ? component.find('cometD') : component.find('empApi');
+
+    empApi.subscribe(
+      '/event/Partner_Program_Event__e',
+      -1,
+      $A.getCallback( eventReceived => {
+        console.log('Received event ');
+        console.log( eventReceived );
+        if( eventReceived.data.payload.Status__c === 'success' &&
+            eventReceived.data.payload.DealerOrderId__c === dealerOrderId )
+         {
+          console.log( 'partner Program apply success');
+          self.unsubscribeToEvent( component );
+          self.toggleSpinner( component, '');
+          console.log( JSON.parse( eventReceived.data.payload.Result__c ) );
+          component.set('v.promotionMessage', JSON.parse( eventReceived.data.payload.Result__c ) );
+         }
+      })
+    )
+    .then(
+      $A.getCallback( subscription => {
+        console.log('Subscription request sent to: ', subscription.channel);
+        component.set('v.partnerProgramSubscription', subscription);
+        this.checkOrApplyPartnerProgram( component, 'c.checkPartnerProgram' );
+      })
+    );
+  },
+
   applyPartnerProgramAndSubmit: function(component )
   {
     let self = this;
@@ -193,7 +228,7 @@
       $A.getCallback( subscription => {
         console.log('Subscription request sent to: ', subscription.channel);
         component.set('v.partnerProgramSubscription', subscription);
-        this.applyPartnerProgram( component );
+        this.checkOrApplyPartnerProgram( component, 'c.applyPartnerProgram' );
       })
     );
   },
@@ -209,11 +244,11 @@
     }));
   },
 
-  applyPartnerProgram: function( component )
+  checkOrApplyPartnerProgram: function( component, actionName )
   {
     console.log('APPLY PARTNER ORDER');
     const dealerOrder = component.get('v.dealerOrder');
-    let action = component.get('c.applyPartnerProgram');
+    let action = component.get( actionName );
     action.setParams({
       dealerOrderId: dealerOrder.Id
     });

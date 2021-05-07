@@ -1,7 +1,7 @@
 ({
   doInit: function( component, event, helper )
   {
-    console.log('DOlines List init');
+    console.log('DOlines List init Toggle Spinner - ON');
     helper.toggleSpinner( component, 'Retrieving Order Details');
     helper.doInit( component )
     .then(
@@ -9,7 +9,7 @@
       $A.getCallback( () => {})
     )
     .finally( $A.getCallback( () => {
-      console.log('DOlines List done');
+      console.log('DOlines List done - toggle Spinner - OFF');
       helper.toggleSpinner( component );
     }));
   },
@@ -27,6 +27,13 @@
       action: 'add'
     })
     .fire();
+  },
+
+  handleCheckPartnerProgram: function( component, event, helper )
+  {
+    console.log('check PP');
+    helper.toggleSpinner( component, 'Calculating Applicable Discounts under the Partner Program');
+    helper.checkPartnerProgram( component );
   },
 
   handleSubmit: function( component, event, helper )

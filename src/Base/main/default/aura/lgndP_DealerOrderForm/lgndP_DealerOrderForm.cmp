@@ -59,7 +59,8 @@
       <div class="slds-col slds-large-size_6-of-12 slds-p-horizontal_small">
         <lightning:select name="program-year"
                           label="Program Year"
-                          value="{!v.dealerOrder.Program_Year__c}">
+                          value="{!v.dealerOrder.Program_Year__c}"
+                          onchange="{!c.handleProgramYearChange}">
           <aura:iteration items="{!v.programYearOptions}" var="year">
             <option value="{!year.value}" text="{!year.label}" selected="{! year.selected}" />
           </aura:iteration>

@@ -27,6 +27,12 @@
     helper.navigateHome();
   },
 
+  handleCheckPartnerProgram: function( component, event, helper )
+  {
+    helper.toggleSpinner( component, 'Calculating Applicable Discounts under the Partner Program');
+    helper.checkPartnerProgram( component );
+  },
+
   submit: function( component, event, helper )
   {
     const confirmParams = {

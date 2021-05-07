@@ -53,6 +53,10 @@
           <lightning:button label="Submit"
                             onclick="{! c.handleSubmit }"/>
         </aura:if>
+        <aura:if isTrue="{! equals(v.dealerOrder.Stage__c, 'Draft')}">
+          <lightning:button label="Check Partner Program"
+                            onclick="{! c.handleCheckPartnerProgram}" />
+        </aura:if>
       </aura:if>
     </lightning:buttonGroup>
   </div>

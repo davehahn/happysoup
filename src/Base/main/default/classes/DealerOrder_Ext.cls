@@ -766,22 +766,27 @@ public without sharing class DealerOrder_Ext {
     try
     {
       String uniq = dw.dealerOrder.Program_Year__c + '-' + dw.dealerOrder.Account__c;
-      dw.bookingOrder = [
-        SELECT
-          Id,
-          Name,
-          Dealer_Order__c,
-          Account__c,
-          V_Hull_Discount_Percent__c,
-          Pontoon_Volume_Discount_Percent__c,
-          Uniquifier__c
-        FROM Partner_Booking_Order__c
-        WHERE Uniquifier__c = :uniq];
+      dw.bookingOrder = PartnerBookingOrder_Selector.getUnique( uniq );
       dw.allowBookingOrder = false;
     }
     catch( Exception e ){}
     dw.dealerOrder.Is_Booking_Order__c = dw.bookingOrder == null;
     return JSON.serialize( dw );
+  }
+
+
+  @AuraEnabled
+  public static String findBookingOrder( String programYear, String accountId )
+  {
+    try
+    {
+      String uniq = programYear + '-' + accountId;
+      return JSON.serialize(PartnerBookingOrder_Selector.getUnique( uniq ) );
+    }
+    catch( Exception e )
+    {
+      return null;
+    }
   }
 
   @AuraEnabled
@@ -848,6 +853,19 @@ public without sharing class DealerOrder_Ext {
     else
       return JSON.serialize( viewDealerLineItemFromERP( dols ) );
 
+  }
+
+  @AuraEnabled
+  public static void checkPartnerProgram( String dealerOrderId )
+  {
+    doPartnerCheckFuture( dealerOrderId );
+  }
+
+  @Future
+  public static void doPartnerCheckFuture( String dealerOrderId )
+  {
+    PartnerProgram_Service ppService = new PartnerProgram_Service( new Set<Id>{ Id.valueOf(dealerOrderId)} );
+    ppService.check();
   }
 
   @AuraEnabled

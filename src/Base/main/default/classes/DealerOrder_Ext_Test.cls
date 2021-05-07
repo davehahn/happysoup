@@ -85,6 +85,59 @@ private class DealerOrder_Ext_Test {
   }
 
   @IsTest
+  static void findBookingOrder_Null_Test()
+  {
+    Account acct = findPartner();
+    User partnerUser = [SELECT Id FROM User WHERE AccountId = :acct.Id];
+    System.runAs( partnerUser )
+    {
+      Test.startTest();
+      String result = DealerOrder_Ext.findBookingOrder( '1990', acct.Id );
+      Test.stopTest();
+
+      System.assertEquals( null, result );
+    }
+  }
+
+  @IsTest
+  static void findBookingOrder_NotNull_Test()
+  {
+    Account acct = findPartner();
+    User partnerUser = [SELECT Id FROM User WHERE AccountId = :acct.Id];
+    String programYear = '2021';
+    System.runAs( partnerUser )
+    {
+      Dealer_Order__c order = new Dealer_Order__c(
+        Is_Booking_Order__c = true,
+        Program_Year__c = programYear,
+        Payment_Method__c = 'Cash',
+        Account__c = acct.Id,
+        Pricebook__c = gcConstants.idPricebookPartner
+      );
+      TriggerHandler.bypass('DealerOrder_TriggerHandler');
+      insert order;
+      TriggerHandler.clearBypass( 'DealerOrder_TriggerHandler');
+      Partner_Booking_Order__c pbo = new Partner_Booking_Order__c(
+        Account__c = acct.Id,
+        Dealer_Order__c = order.Id,
+        Name = programYear
+      );
+      insert pbo;
+
+      Test.startTest();
+      String result = DealerOrder_Ext.findBookingOrder( programYear, acct.Id );
+      Test.stopTest();
+
+      Partner_Booking_Order__c resultPbo = (Partner_Booking_Order__c)JSON.deserialize(
+        result, Partner_Booking_Order__c.class
+      );
+
+      System.assertNotEquals( null, result );
+      System.assertEquals( pbo.Id, resultPbo.Id );
+    }
+  }
+
+  @IsTest
   static void fetchFinanceCompanys_Test()
   {
     Account acct = findPartner();

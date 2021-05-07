@@ -154,11 +154,13 @@ public with sharing class PartnerProgram_Service
     public PartnerProgram_Service.Result result;
     public Set<String> appliedPrograms;
     public List<PartnerProgram_Service.ErpWrapper> erpWrappers;
+    public Boolean checkOnly;
 
     public DealerOrderWrapper( Dealer_Order__c dealerOrder,
                                List<AcctSeed__Project__c> erps,
                                Partner_Booking_Order__c bookingOrder )
     {
+      this.checkOnly = false;
       this.result = new PartnerProgram_Service.Result();
       this.dealerOrder = dealerOrder;
       this.appliedPrograms = new Set<String>();
@@ -194,6 +196,12 @@ public with sharing class PartnerProgram_Service
       }
       if( erps != null )
         wrapERPs( erps );
+    }
+
+    public DealerOrderWrapper setCheckOnly()
+    {
+      this.checkOnly = true;
+      return this;
     }
 
     public void updateDealerOrder()
@@ -258,6 +266,18 @@ public with sharing class PartnerProgram_Service
         pbo
       ) );
       this.result.put( doId, new Result() );
+    }
+  }
+
+  public void check()
+  {
+    for( Id doId : this.dealerOrderIds )
+    {
+      DealerOrderWrapper wrapper = this.dealerOrderWrappers.get( doId );
+      wrapper.setCheckOnly();
+      new PartnerProgram_Executor().execute(
+        wrapper
+      );
     }
   }
 
