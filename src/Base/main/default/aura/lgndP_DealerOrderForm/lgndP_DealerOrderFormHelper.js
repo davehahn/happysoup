@@ -20,6 +20,19 @@
     return la.fire();
   },
 
+  checkForPartnerBookingOrder: function( component, programYear )
+  {
+    const accountId = component.get('v.dealerOrder').Account__c;
+    let action = component.get('c.findBookingOrder');
+
+    action.setParams({
+      programYear: programYear,
+      accountId: accountId
+    });
+
+    return new LightningApex( this, action ).fire();
+  },
+
   saveOrder: function( component )
   {
     var self = this;

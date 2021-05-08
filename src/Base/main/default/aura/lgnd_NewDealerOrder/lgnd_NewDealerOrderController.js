@@ -1,9 +1,4 @@
 ({
-  doInit: function( component, event, helper )
-  {
-
-  },
-
 	afterScripts: function(component, event, helper)
   {
     helper.setUserData( component )
@@ -11,11 +6,14 @@
       $A.getCallback( (response) => {
         var navMap = ['order-details',
                           'build-boat',
-                          'review-container',
                           'finalize-container'];
+        console.log( JSON.parse(JSON.stringify(response)));
         component.set('v.sessionId', response.sessionId );
+        component.set('v.bookingOrderStartMonthDay', response.bookingStartMonthDay);
         if( response.uiTheme !== 'Theme3' )
+        {
           component.set('v.inCommunity', false );
+        }
         component.set('v.currentAction', 0);
         component.set('v.navMap', navMap);
         component.find("orderDetails--Cmp").doInit();
@@ -42,8 +40,7 @@
 
   nextStage: function( component, event, helper)
   {
-    var navMap = component.get("v.navMap"),
-        current = component.get("v.currentAction"),
+    var current = component.get("v.currentAction"),
         params = {
           navigateTo: current + 1,
           firedBy: current
@@ -79,6 +76,13 @@
   {
     var params = event.getParams(),
         msg = params.message;
-    helper.toggleIndicator( component, msg );
+    if( params.messageOnly )
+    {
+      helper.changeIndicatorMessage( component, msg );
+    }
+    else
+    {
+      helper.toggleIndicator( component, msg );
+    }
   }
 })

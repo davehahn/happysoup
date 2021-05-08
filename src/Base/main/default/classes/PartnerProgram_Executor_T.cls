@@ -124,6 +124,7 @@ public class PartnerProgram_Executor_T
     System.runAs(partnerUser)
     {
       createDealerOrder(1);
+      Integer materialCountBefore = erps[0].AcctSeedERP__Project_Materials__r.size();
       PartnerProgram_Service.DealerOrderWrapper orderWrapper =
         new PartnerProgram_Service.DealerOrderWrapper(
           order, erps, null
@@ -138,7 +139,10 @@ public class PartnerProgram_Executor_T
           events[0].Result__c);
       List<Object> appliedDiscounts = (List<Object>) result.get('appliedDiscounts');
       Map<String, Object> planResult = (Map<String, Object>) appliedDiscounts[0];
+      Integer materialCountAfter = [ SELECT COUNT() FROM AcctSeedERP__Material__c WHERE AcctSeedERP__Project__c = :erps[0].Id ];
+
       System.debug(appliedDiscounts);
+      System.assertEquals( (materialCountBefore + 1), materialCountAfter );
       System.assertEquals(1, events.size());
       System.assertEquals('success', events[0].Status__c);
       System.assertEquals(orderWrapper.dealerOrderId, events[0].DealerOrderId__c);
@@ -147,7 +151,46 @@ public class PartnerProgram_Executor_T
       System.assertEquals((Decimal) planResult.get('percentage'), programSettings.Coop_Discount_Percent__c);
       System.assertEquals((Decimal) result.get('totalSavings'), boatCost * (programSettings.Coop_Discount_Percent__c / 100));
     }
+  }
 
+  @IsTest
+  static void Coop_CheckOnly_Test()
+  {
+    Decimal boatCost = 50000;
+    PartnerProgram_Coop program = new PartnerProgram_Coop();
+    init('Pontoon', boatCost, null);
+
+    System.runAs(partnerUser)
+    {
+      createDealerOrder(1);
+      Integer materialCountBefore = erps[0].AcctSeedERP__Project_Materials__r.size();
+      PartnerProgram_Service.DealerOrderWrapper orderWrapper =
+        new PartnerProgram_Service.DealerOrderWrapper(
+          order, erps, null
+        );
+      orderWrapper.setCheckOnly();
+      Test.startTest();
+      new PartnerProgram_Executor().Test_Coop(orderWrapper);
+      Test.stopTest();
+
+      List<Partner_Program_Event__e> events = PartnerProgram_Executor.events;
+      Map<String, Object> result =
+        (Map<String, Object>) JSON.deserializeUntyped(
+          events[0].Result__c);
+      List<Object> appliedDiscounts = (List<Object>) result.get('appliedDiscounts');
+      Map<String, Object> planResult = (Map<String, Object>) appliedDiscounts[0];
+      Integer materialCountAfter = [ SELECT COUNT() FROM AcctSeedERP__Material__c WHERE AcctSeedERP__Project__c = :erps[0].Id ];
+
+      System.debug(appliedDiscounts);
+      System.assertEquals( materialCountBefore, materialCountAfter );
+      System.assertEquals(1, events.size());
+      System.assertEquals('success', events[0].Status__c);
+      System.assertEquals(orderWrapper.dealerOrderId, events[0].DealerOrderId__c);
+      System.assertEquals(1, appliedDiscounts.size());
+      System.assertEquals(planResult.get('name'), program.getName());
+      System.assertEquals((Decimal) planResult.get('percentage'), programSettings.Coop_Discount_Percent__c);
+      System.assertEquals((Decimal) result.get('totalSavings'), boatCost * (programSettings.Coop_Discount_Percent__c / 100));
+    }
   }
 
   @IsTest
@@ -164,6 +207,8 @@ public class PartnerProgram_Executor_T
         new PartnerProgram_Service.DealerOrderWrapper(
           order, erps, null
         );
+      Integer materialCountBefore = erps[0].AcctSeedERP__Project_Materials__r.size();
+
       Test.startTest();
       new PartnerProgram_Executor().Test_KickStart(orderWrapper);
       Test.stopTest();
@@ -174,16 +219,59 @@ public class PartnerProgram_Executor_T
           events[0].Result__c);
       List<Object> appliedDiscounts = (List<Object>) result.get('appliedDiscounts');
       Map<String, Object> planResult = (Map<String, Object>) appliedDiscounts[0];
+      Integer materialCountAfter = [ SELECT COUNT() FROM AcctSeedERP__Material__c WHERE AcctSeedERP__Project__c = :erps[0].Id ];
+
       System.debug(appliedDiscounts);
       System.assertEquals(1, events.size());
       System.assertEquals('success', events[0].Status__c);
+      System.assertEquals( (materialCountBefore + 1), materialCountAfter );
       System.assertEquals(orderWrapper.dealerOrderId, events[0].DealerOrderId__c);
       System.assertEquals(1, appliedDiscounts.size());
       System.assertEquals(planResult.get('name'), program.getName());
       System.assertEquals((Decimal) planResult.get('percentage'), programSettings.Kickstart_Booking_Order_Discount_Percent__c);
       System.assertEquals((Decimal) result.get('totalSavings'), boatCost * (programSettings.Kickstart_Booking_Order_Discount_Percent__c / 100));
     }
+  }
 
+  @IsTest
+  static void KickStart_CheckOnly_Test()
+  {
+    Decimal boatCost = 50000;
+    PartnerProgram_Kickstart_Booking program = new PartnerProgram_Kickstart_Booking();
+    init('Pontoon', boatCost, null);
+
+    System.runAs(partnerUser)
+    {
+      createDealerOrder(1);
+      PartnerProgram_Service.DealerOrderWrapper orderWrapper =
+        new PartnerProgram_Service.DealerOrderWrapper(
+          order, erps, null
+        );
+      orderWrapper.setCheckOnly();
+      Integer materialCountBefore = erps[0].AcctSeedERP__Project_Materials__r.size();
+
+      Test.startTest();
+      new PartnerProgram_Executor().Test_KickStart(orderWrapper);
+      Test.stopTest();
+
+      List<Partner_Program_Event__e> events = PartnerProgram_Executor.events;
+      Map<String, Object> result =
+        (Map<String, Object>) JSON.deserializeUntyped(
+          events[0].Result__c);
+      List<Object> appliedDiscounts = (List<Object>) result.get('appliedDiscounts');
+      Map<String, Object> planResult = (Map<String, Object>) appliedDiscounts[0];
+      Integer materialCountAfter = [ SELECT COUNT() FROM AcctSeedERP__Material__c WHERE AcctSeedERP__Project__c = :erps[0].Id ];
+
+      System.debug(appliedDiscounts);
+      System.assertEquals(1, events.size());
+      System.assertEquals('success', events[0].Status__c);
+      System.assertEquals( materialCountBefore, materialCountAfter );
+      System.assertEquals(orderWrapper.dealerOrderId, events[0].DealerOrderId__c);
+      System.assertEquals(1, appliedDiscounts.size());
+      System.assertEquals(planResult.get('name'), program.getName());
+      System.assertEquals((Decimal) planResult.get('percentage'), programSettings.Kickstart_Booking_Order_Discount_Percent__c);
+      System.assertEquals((Decimal) result.get('totalSavings'), boatCost * (programSettings.Kickstart_Booking_Order_Discount_Percent__c / 100));
+    }
   }
 
   @IsTest
@@ -200,6 +288,8 @@ public class PartnerProgram_Executor_T
       new PartnerProgram_Service.DealerOrderWrapper(
       order, erps, null
       );
+      Integer materialCountBefore = erps[0].AcctSeedERP__Project_Materials__r.size();
+
       Test.startTest();
       new PartnerProgram_Executor().Test_Cash( orderWrapper);
       Test.stopTest();
@@ -210,9 +300,53 @@ public class PartnerProgram_Executor_T
       events[0].Result__c );
       List<Object> appliedDiscounts = (List<Object>)result.get('appliedDiscounts');
       Map<String, Object> planResult = (Map<String, Object>)appliedDiscounts[0];
+      Integer materialCountAfter = [ SELECT COUNT() FROM AcctSeedERP__Material__c WHERE AcctSeedERP__Project__c = :erps[0].Id ];
+
       System.debug( appliedDiscounts );
       System.assertEquals( 1, events.size() );
       System.assertEquals('success', events[0].Status__c );
+      System.assertEquals( (materialCountBefore + 1), materialCountAfter );
+      System.assertEquals( orderWrapper.dealerOrderId, events[0].DealerOrderId__c );
+      System.assertEquals( 1, appliedDiscounts.size() );
+      System.assertEquals( planResult.get('name'), program.getName() );
+      System.assertEquals( (Decimal)planResult.get('percentage'), determineCashDiscount() );
+      System.assertEquals( (Decimal)result.get('totalSavings'), boatCost * ( determineCashDiscount() / 100 ) );
+    }
+  }
+
+  @IsTest
+  static void Cash_CheckOnly_Test()
+  {
+    Decimal boatCost = 50000;
+    PartnerProgram_Cash program = new PartnerProgram_Cash();
+    init('Pontoon', boatCost, null);
+
+    System.runAs( partnerUser )
+    {
+      createDealerOrder(1);
+      PartnerProgram_Service.DealerOrderWrapper orderWrapper =
+        new PartnerProgram_Service.DealerOrderWrapper(
+          order, erps, null
+        );
+      orderWrapper.setCheckOnly();
+      Integer materialCountBefore = erps[0].AcctSeedERP__Project_Materials__r.size();
+
+      Test.startTest();
+      new PartnerProgram_Executor().Test_Cash( orderWrapper);
+      Test.stopTest();
+
+      List<Partner_Program_Event__e> events = PartnerProgram_Executor.events;
+      Map<String, Object> result =
+        (Map<String, Object>)JSON.deserializeUntyped(
+          events[0].Result__c );
+      List<Object> appliedDiscounts = (List<Object>)result.get('appliedDiscounts');
+      Map<String, Object> planResult = (Map<String, Object>)appliedDiscounts[0];
+      Integer materialCountAfter = [ SELECT COUNT() FROM AcctSeedERP__Material__c WHERE AcctSeedERP__Project__c = :erps[0].Id ];
+
+      System.debug( appliedDiscounts );
+      System.assertEquals( 1, events.size() );
+      System.assertEquals('success', events[0].Status__c );
+      System.assertEquals( materialCountBefore, materialCountAfter );
       System.assertEquals( orderWrapper.dealerOrderId, events[0].DealerOrderId__c );
       System.assertEquals( 1, appliedDiscounts.size() );
       System.assertEquals( planResult.get('name'), program.getName() );
@@ -235,6 +369,8 @@ public class PartnerProgram_Executor_T
         new PartnerProgram_Service.DealerOrderWrapper(
           order, erps, null
         );
+      Integer materialCountBefore = erps[0].AcctSeedERP__Project_Materials__r.size();
+
       Test.startTest();
       new PartnerProgram_Executor().Test_Volume( orderWrapper);
       Test.stopTest();
@@ -245,9 +381,53 @@ public class PartnerProgram_Executor_T
           events[0].Result__c );
       List<Object> appliedDiscounts = (List<Object>)result.get('appliedDiscounts');
       Map<String, Object> planResult = (Map<String, Object>)appliedDiscounts[0];
+      Integer materialCountAfter = [ SELECT COUNT() FROM AcctSeedERP__Material__c WHERE AcctSeedERP__Project__c = :erps[0].Id ];
+
       System.debug( appliedDiscounts );
       System.assertEquals( 1, events.size() );
       System.assertEquals('success', events[0].Status__c );
+      System.assertEquals( (materialCountBefore + 1), materialCountAfter );
+      System.assertEquals( orderWrapper.dealerOrderId, events[0].DealerOrderId__c );
+      System.assertEquals( appliedDiscounts.size(), 1 );
+      System.assertEquals( program.getName(), planResult.get('name') );
+      System.assertEquals( 1, (Decimal)planResult.get('percentage') );
+      System.assertEquals( 4 * boatCost * 0.01, (Decimal)result.get('totalSavings')  );
+    }
+  }
+
+  @IsTest
+  static void Volume_CheckOnly_Test()
+  {
+    Decimal boatCost = 50000;
+    PartnerProgram_Volume program = new PartnerProgram_Volume();
+    init('Full Windshield', boatCost, null);
+
+    System.runAs( partnerUser )
+    {
+      createDealerOrder(4);
+      PartnerProgram_Service.DealerOrderWrapper orderWrapper =
+        new PartnerProgram_Service.DealerOrderWrapper(
+          order, erps, null
+        );
+      orderWrapper.setCheckOnly();
+      Integer materialCountBefore = erps[0].AcctSeedERP__Project_Materials__r.size();
+
+      Test.startTest();
+      new PartnerProgram_Executor().Test_Volume( orderWrapper);
+      Test.stopTest();
+
+      List<Partner_Program_Event__e> events = PartnerProgram_Executor.events;
+      Map<String, Object> result =
+        (Map<String, Object>)JSON.deserializeUntyped(
+          events[0].Result__c );
+      List<Object> appliedDiscounts = (List<Object>)result.get('appliedDiscounts');
+      Map<String, Object> planResult = (Map<String, Object>)appliedDiscounts[0];
+      Integer materialCountAfter = [ SELECT COUNT() FROM AcctSeedERP__Material__c WHERE AcctSeedERP__Project__c = :erps[0].Id ];
+
+      System.debug( appliedDiscounts );
+      System.assertEquals( 1, events.size() );
+      System.assertEquals('success', events[0].Status__c );
+      System.assertEquals( materialCountBefore, materialCountAfter );
       System.assertEquals( orderWrapper.dealerOrderId, events[0].DealerOrderId__c );
       System.assertEquals( appliedDiscounts.size(), 1 );
       System.assertEquals( program.getName(), planResult.get('name') );
@@ -270,6 +450,8 @@ public class PartnerProgram_Executor_T
         new PartnerProgram_Service.DealerOrderWrapper(
           order, erps, null
         );
+      Integer materialCountBefore = erps[0].AcctSeedERP__Project_Materials__r.size();
+
       Test.startTest();
       new PartnerProgram_Executor().Test_PontoonVolume( orderWrapper );
       Test.stopTest();
@@ -280,9 +462,53 @@ public class PartnerProgram_Executor_T
           events[0].Result__c );
       List<Object> appliedDiscounts = (List<Object>)result.get('appliedDiscounts');
       Map<String, Object> planResult = (Map<String, Object>)appliedDiscounts[0];
+      Integer materialCountAfter = [ SELECT COUNT() FROM AcctSeedERP__Material__c WHERE AcctSeedERP__Project__c = :erps[0].Id ];
+
       System.debug( appliedDiscounts );
       System.assertEquals( 1, events.size() );
       System.assertEquals('success', events[0].Status__c );
+      System.assertEquals( (materialCountBefore + 1), materialCountAfter );
+      System.assertEquals( orderWrapper.dealerOrderId, events[0].DealerOrderId__c );
+      System.assertEquals( appliedDiscounts.size(), 1 );
+      System.assertEquals( program.getName(), planResult.get('name') );
+      System.assertEquals( 1, (Decimal)planResult.get('percentage') );
+      System.assertEquals( 4 * boatCost * 0.01, (Decimal)result.get('totalSavings')  );
+    }
+  }
+
+  @IsTest
+  static void PontoonVolume_CheckOnly_Test()
+  {
+    Decimal boatCost = 50000;
+    PartnerProgram_PontoonVol program = new PartnerProgram_PontoonVol();
+    init('Pontoon', boatCost, null);
+
+    System.runAs( partnerUser )
+    {
+      createDealerOrder(4);
+      PartnerProgram_Service.DealerOrderWrapper orderWrapper =
+        new PartnerProgram_Service.DealerOrderWrapper(
+          order, erps, null
+        );
+      orderWrapper.setCheckOnly();
+      Integer materialCountBefore = erps[0].AcctSeedERP__Project_Materials__r.size();
+
+      Test.startTest();
+      new PartnerProgram_Executor().Test_PontoonVolume( orderWrapper );
+      Test.stopTest();
+
+      List<Partner_Program_Event__e> events = PartnerProgram_Executor.events;
+      Map<String, Object> result =
+        (Map<String, Object>)JSON.deserializeUntyped(
+          events[0].Result__c );
+      List<Object> appliedDiscounts = (List<Object>)result.get('appliedDiscounts');
+      Map<String, Object> planResult = (Map<String, Object>)appliedDiscounts[0];
+      Integer materialCountAfter = [ SELECT COUNT() FROM AcctSeedERP__Material__c WHERE AcctSeedERP__Project__c = :erps[0].Id ];
+
+      System.debug( appliedDiscounts );
+      System.assertEquals( 1, events.size() );
+      System.assertEquals('success', events[0].Status__c );
+      System.assertEquals( materialCountBefore, materialCountAfter );
       System.assertEquals( orderWrapper.dealerOrderId, events[0].DealerOrderId__c );
       System.assertEquals( appliedDiscounts.size(), 1 );
       System.assertEquals( program.getName(), planResult.get('name') );
@@ -305,6 +531,8 @@ public class PartnerProgram_Executor_T
         new PartnerProgram_Service.DealerOrderWrapper(
           order, erps, null
         );
+      Integer materialCountBefore = erps[0].AcctSeedERP__Project_Materials__r.size();
+
       Test.startTest();
       new PartnerProgram_Executor().Test_7for7( orderWrapper );
       Test.stopTest();
@@ -315,9 +543,53 @@ public class PartnerProgram_Executor_T
           events[0].Result__c );
       List<Object> appliedDiscounts = (List<Object>)result.get('appliedDiscounts');
       Map<String, Object> planResult = (Map<String, Object>)appliedDiscounts[0];
+      Integer materialCountAfter = [ SELECT COUNT() FROM AcctSeedERP__Material__c WHERE AcctSeedERP__Project__c = :erps[0].Id ];
+
       System.debug( appliedDiscounts );
       System.assertEquals( 1, events.size() );
       System.assertEquals('success', events[0].Status__c );
+      System.assertEquals( (materialCountBefore + 1), materialCountAfter );
+      System.assertEquals( orderWrapper.dealerOrderId, events[0].DealerOrderId__c );
+      System.assertEquals( appliedDiscounts.size(), 1 );
+      System.assertEquals( program.getName(), planResult.get('name') );
+      System.assertEquals( 7, (Decimal)planResult.get('percentage') );
+      System.assertEquals( 9 * boatCost * 0.07, (Decimal)result.get('totalSavings')  );
+    }
+  }
+
+  @IsTest
+  static void Seven4Seven_CheckOnly_Test()
+  {
+    Decimal boatCost = 10000;
+    PartnerProgram_7for7 program = new PartnerProgram_7for7();
+    init('Utility', boatCost, 3);
+
+    System.runAs( partnerUser )
+    {
+      createDealerOrder(9);
+      PartnerProgram_Service.DealerOrderWrapper orderWrapper =
+        new PartnerProgram_Service.DealerOrderWrapper(
+          order, erps, null
+        );
+      orderWrapper.setCheckOnly();
+      Integer materialCountBefore = erps[0].AcctSeedERP__Project_Materials__r.size();
+
+      Test.startTest();
+      new PartnerProgram_Executor().Test_7for7( orderWrapper );
+      Test.stopTest();
+
+      List<Partner_Program_Event__e> events = PartnerProgram_Executor.events;
+      Map<String, Object> result =
+        (Map<String, Object>)JSON.deserializeUntyped(
+          events[0].Result__c );
+      List<Object> appliedDiscounts = (List<Object>)result.get('appliedDiscounts');
+      Map<String, Object> planResult = (Map<String, Object>)appliedDiscounts[0];
+      Integer materialCountAfter = [ SELECT COUNT() FROM AcctSeedERP__Material__c WHERE AcctSeedERP__Project__c = :erps[0].Id ];
+
+      System.debug( appliedDiscounts );
+      System.assertEquals( 1, events.size() );
+      System.assertEquals('success', events[0].Status__c );
+      System.assertEquals( materialCountBefore, materialCountAfter );
       System.assertEquals( orderWrapper.dealerOrderId, events[0].DealerOrderId__c );
       System.assertEquals( appliedDiscounts.size(), 1 );
       System.assertEquals( program.getName(), planResult.get('name') );

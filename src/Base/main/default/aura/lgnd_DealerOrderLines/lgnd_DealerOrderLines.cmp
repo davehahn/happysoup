@@ -9,6 +9,7 @@
   <aura:attribute name="currentView" type="String" default="list" />
   <aura:attribute name="userType" type="String" />
   <aura:attribute name="sessionId" type="String" />
+  <aura:attribute name="bookingOrderStartMonthDay" type="String" />
   <aura:attribute name="applyingPartnerProgram" type="Boolean" default="false" />
   <aura:attribute name="partnerProgramSubscription" type="Map" />
   <aura:attribute name="inCommunity" type="Boolean" default="true" />
@@ -32,10 +33,10 @@
   <aura:handler event="force:refreshView" action="{!c.doInit}" />
 
 
-  <lightning:empApi aura:id="empApi" />
-  <aura:if isTrue="{! !empty(v.sessionId)}">
-    <c:Utility_CometD sessionId="{!v.sessionId}" aura:id="cometD" />
-  </aura:if>
+<!--  <lightning:empApi aura:id="empApi" />-->
+<!--  <aura:if isTrue="{! !empty(v.sessionId)}">-->
+<!--    <c:Utility_CometD sessionId="{!v.sessionId}" aura:id="cometD" />-->
+<!--  </aura:if>-->
 
   <c:Lgnd_Spinner_dh aura:id="busy-indicator" />
 
@@ -49,6 +50,9 @@
       <aura:if isTrue="{!equals(v.currentView, 'list')}">
         <c:lgndP_DealerOrderLinesList dealerOrder="{!v.dealerOrder}"
                                       userType="{!v.userType}"
+                                      sessionId="{!v.sessionId}"
+                                      bookingOrderStartMonthDay="{!v.bookingOrderStartMonthDay}"
+                                      inCommunity="{!v.inCommunity}"
                                       aura:id="dealerOrderLines--Cmp" />
       </aura:if>
 

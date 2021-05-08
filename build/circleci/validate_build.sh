@@ -16,7 +16,7 @@ echo -e "\nsrc/BoatReservation/experiences" >> .forceignore
 echo -e "\nsrc/CustomerCommunity/experiences" >> .forceignore
 #echo -e "\nforce-app/FactoryStoreSite/experiences" >> .forceignore
 
-sfdx force:source:deploy --testlevel RunLocalTests --checkonly --targetusername ci-testValid -p src/ -g -w 240
+sfdx force:source:deploy --testlevel RunLocalTests --targetusername ci-testValid -p src/ -g -w 240
 
 if [ $DEPLOY_EXPERIENCES = true ]
 then
@@ -24,7 +24,7 @@ then
   rm -f .forceignore
   mv .forceignore.orig .forceignore
   echoOut 'Deploying ExperienceBundles'
-  sfdx force:source:deploy --testlevel NoTestRun --checkonly --targetusername ci-testValid -p src/BoatReservation/experiences -g -w 240
-  sfdx force:source:deploy --testlevel NoTestRun --checkonly --targetusername ci-testValid -p src/CustomerCommunity/experiences -g -w 240
-  #sfdx force:source:deploy --testlevel NoTestRun --checkonly --targetusername ci-testValid -p src/FactoryStoreSite/experiences -g -w 240
+  sfdx force:source:deploy --testlevel NoTestRun --targetusername ci-testValid -p src/BoatReservation/experiences -g -w 240
+  sfdx force:source:deploy --testlevel NoTestRun --targetusername ci-testValid -p src/CustomerCommunity/experiences -g -w 240
+  #sfdx force:source:deploy --testlevel NoTestRun --targetusername ci-testValid -p src/FactoryStoreSite/experiences -g -w 240
 fi

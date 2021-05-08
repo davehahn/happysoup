@@ -3,16 +3,62 @@
  */
 
 ({
-  initForFactoryStore: function( component )
+  init: function( component )
   {
-    component.set('v.applyFinished', true);
+    const startMonthDay = component.get('v.bookingOrderStartMonthDay').split('/');
+    const startDate = new Date( new Date().getFullYear(), startMonthDay[0] - 1, startMonthDay[1], 0, 0, 0 );
+    let dealerOrder = component.get('v.dealerOrder');
+    let canSubmit = true;
+    if( dealerOrder.Is_Booking_Order__c	)
+    {
+      console.log( Date.now() );
+      console.log( startDate.getTime() );
+      canSubmit = Date.now() > startDate.getTime();
+    }
+    component.set('v.canSubmit', canSubmit	);
+    component.set('v.promotionMessage', null);
     this.initLines( component );
   },
 
-  initForPartner: function( component )
+  checkPartnerProgram: function( component )
   {
+    let self = this;
     const dealerOrderId = component.get('v.dealerOrder').Id;
-    let empApi = component.get('v.inCommunity') ? component.find('cometD') : component.find('empApi');
+    const inCommunity = component.get('v.inCommunity');
+    let empApi = inCommunity ? component.find('cometD') : component.find('empApi');
+
+    empApi.subscribe(
+      '/event/Partner_Program_Event__e',
+      -1,
+      $A.getCallback( eventReceived => {
+        console.log('Received event ');
+        console.log( eventReceived );
+        if( eventReceived.data.payload.Status__c === 'success' &&
+            eventReceived.data.payload.DealerOrderId__c === dealerOrderId )
+         {
+          console.log( 'partner Program apply success');
+          self.unsubscribeToEvent( component );
+          self.toggleSpinner( component, '');
+          console.log( JSON.parse( eventReceived.data.payload.Result__c ) );
+          component.set('v.promotionMessage', JSON.parse( eventReceived.data.payload.Result__c ) );
+         }
+      })
+    )
+    .then(
+      $A.getCallback( subscription => {
+        console.log('Subscription request sent to: ', subscription.channel);
+        component.set('v.partnerProgramSubscription', subscription);
+        this.checkOrApplyPartnerProgram( component, 'c.checkPartnerProgram' );
+      })
+    );
+  },
+
+  savePartnerProgramAndSubmit: function( component )
+  {
+    let self = this;
+    const dealerOrderId = component.get('v.dealerOrder').Id;
+    const inCommunity = component.get('v.inCommunity');
+    let empApi = inCommunity ? component.find('cometD') : component.find('empApi');
 
 //    empApi.onError($A.getCallback(error => {
 //        // Error can be any type of error (subscribe, unsubscribe...)
@@ -26,47 +72,43 @@
         console.log( eventReceived );
         if( eventReceived.data.payload.Status__c === 'success' &&
             eventReceived.data.payload.DealerOrderId__c === dealerOrderId )
-          this.partnerProgramSuccess( component, eventReceived );
+        {
+          console.log( 'partner Program apply success');
+          self.unsubscribeToEvent( component );
+          self.changeSpinnerMessage( component, 'Submitting Order' );
+          self.submitOrder( component );
+        }
       })
     )
     .then(
       $A.getCallback( subscription => {
         console.log('Subscription request sent to: ', subscription.channel);
         component.set('v.partnerProgramSubscription', subscription);
-        this.applyPartnerProgram( component );
+        this.checkOrApplyPartnerProgram( component, 'c.applyPartnerProgram' );
       })
     );
   },
 
-  applyPartnerProgram: function( component )
+  unsubscribeToEvent: function( component )
   {
-    console.log('APPLY PARTNER ORDER');
-    const dealerOrder = component.get('v.dealerOrder');
-    let action = component.get('c.applyPartnerProgram');
-    action.setParams({
-      dealerOrderId: dealerOrder.Id
-    });
-    new LightningApex( this, action ).fire();
-  },
-
-  partnerProgramSuccess: function( component, eventReceived )
-  {
-    console.log( 'partner Program apply success');
-    component.set('v.applyFinished', true);
-    this.initLines( component );
-    const subscription = component.get('v.partnerProgramSubscription'),
-          inCommunity = component.get('v.inCommunity');
-
+    const inCommunity = component.get('v.inCommunity');
     let empApi = inCommunity ? component.find('cometD') : component.find('empApi');
-
+    let subscription = component.get('v.partnerProgramSubscription');
     empApi.unsubscribe( subscription, $A.getCallback( unsubscribed => {
       console.log('Unsubscribed from channel '+ unsubscribed.subscription);
       component.set('v.partnerProgramSubscription', null);
     }));
+  },
 
-    console.log('PARTNER PROGRAM RESULT');
-    console.log( JSON.parse( eventReceived.data.payload.Result__c ) );
-    component.set('v.promotionMessage', JSON.parse( eventReceived.data.payload.Result__c ) );
+  checkOrApplyPartnerProgram: function( component, actionName )
+  {
+    console.log('APPLY PARTNER ORDER');
+    const dealerOrder = component.get('v.dealerOrder');
+    let action = component.get( actionName );
+    action.setParams({
+      dealerOrderId: dealerOrder.Id
+    });
+    new LightningApex( this, action ).fire();
   },
 
   initLines: function( component )
@@ -77,7 +119,7 @@
   editOrderRow: function( component, groupId )
   {
     var nav = $A.get('e.c:lgndP_DealerOrderNav_Event');
-    nav.setParams({"firedBy" : 3,
+    nav.setParams({"firedBy" : 2,
                 "navigateTo": 1,
                 "groupId": groupId });
     nav.fire();
@@ -101,19 +143,55 @@
   submitOrder: function( component )
   {
     var self = this,
-          action = component.get('c.submitDealerOrder');
+        action = component.get('c.submitDealerOrder');
 
     action.setParams({
       dealerOrderId: component.get('v.dealerOrder').Id
     });
-    return new LightningApex( this, action ).fire();
+
+    new LightningApex( this, action )
+    .fire()
+    .then(
+      $A.getCallback( function() {
+        self.navigateHome();
+      }),
+      $A.getCallback( function( err ){
+        LightningUtils.errorToast(err);
+      })
+    )
+    .finally( $A.getCallback( () => {
+      self.toggleSpinner(component, '');
+    }));
   },
 
   toggleSpinner: function( component, message )
   {
     var indEvt = $A.get('e.c:lgndP_BusyIndicator_Event');
     indEvt.setParams({message: message}).fire();
-  }
+  },
+
+  changeSpinnerMessage: function( component, message )
+  {
+    var indEvt = $A.get('e.c:lgndP_BusyIndicator_Event');
+    indEvt.setParams(
+      {
+        message: message,
+        messageOnly: true
+      }
+    ).fire();
+  },
+
+  confirm: function( component, confirmParams )
+  {
+    var confirmCmp = component.find('lgnd-confirm');
+
+    return new Promise( function( resolve, reject ) {
+      component.addEventHandler('c:lgnd_Confirm_Response_Event', function( auraEvent ) {
+        auraEvent.getParam('theResponse')  ? resolve() : reject();
+      });
+      confirmCmp.showConfirm( confirmParams );
+    });
+  },
 
 
 });
