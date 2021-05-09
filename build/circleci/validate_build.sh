@@ -7,6 +7,9 @@ USER="$(cat /workspace/org_info.json | jq -r '.username')"
 echo "$USER"
 sfdx sfpowerkit:auth:login -u $USER --password $PRODUCTION_PASSWORD -a ci-testValid
 
+echo "Deploying Static Resources"
+sfdx heber:staticresources:deploy -u ci-testValid
+
 echo 'make a copy of .forceignore'
 cp .forceignore .forceignore.orig
 
