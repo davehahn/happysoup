@@ -10,6 +10,7 @@ public without sharing class Project_Selector Extends Application_Selector
     this.fields = new List<String>{
       'Id',
       'RecordTypeId',
+      'RecordType.Name',
       'Name',
       'Job_Status__c',
       'Parking_Spot__c',
@@ -17,6 +18,12 @@ public without sharing class Project_Selector Extends Application_Selector
       'WarehouseName__c',
       'Serial_Product__c',
       'AcctSeedERP__Work_Order_Number__c',
+      'GL_Account_Variable_1__c',
+      'GL_Account_Variable_1__r.Name',
+      'GL_Account_Variable_2__c',
+      'GL_Account_Variable_2__r.Name',
+      'GL_Account_Variable_3__c',
+      'GL_Account_Variable_3__r.Name',
       'Estimated_Service_Duration__c',
       'Stage__c',
       'Owner.Name',
@@ -34,7 +41,8 @@ public without sharing class Project_Selector Extends Application_Selector
       'Service_Date__c',
       'On_Water_Orientation__c',
       'Payment_Method__c',
-      'Payment_Status__c'
+      'Payment_Status__c',
+      'Original_ERP__c'
     };
   }
 
@@ -132,6 +140,27 @@ public without sharing class Project_Selector Extends Application_Selector
       (Set<String>)JSON.deserialize( JSON.serialize( ids ), Set<String>.class ) )
     );
     return selector.query();
+  }
+
+  public static List<AcctSeed__Project__c> allByIdWithMaterialsById(
+    Set<Id> erpIds,
+    Set<Id> matIds
+  )
+  {
+    Material_Selector mSelector = new Material_Selector();
+    mSelector.addWhereIdIn( matIds );
+    return new Project_Selector()
+      .addChildQuery( mSelector )
+      .addWhereIdIn( erpIds )
+      .query();
+  }
+
+  public static List<AcctSeed__Project__c> allByIdsWithTasks( Set<Id> ids )
+  {
+    return new Project_Selector()
+      .addChildQuery( new ProjectTask_Selector() )
+      .addWhereIdIn( ids )
+      .query();
   }
 
   public static Map<Id, AcctSeed__Project__c> mapAllById(Set<Id> ids)

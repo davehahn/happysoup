@@ -114,6 +114,46 @@ public with sharing class Material_Service
     return mats;
   }
 
+  public static List<AcctSeedERP__Material__c> buildForBackOrder(
+    List<AcctSeedERP__Material__c> transferredMaterials,
+    Map<Id, Map<String, String>> quantityById
+  )
+  {
+    List<AcctSeedERP__Material__c> result = new List<AcctSeedERP__Material__c>();
+    Decimal totalTransfer = 0;
+    for( AcctSeedERP__Material__c mat : transferredMaterials )
+    {
+      Decimal qty = Decimal.valueOf( quantityById.get( mat.Id ).get('quantity') );
+      if( quantityById.get(mat.Id ).get('parentMatId') == null ||
+          ( quantityById.get(mat.Id ).get('parentMatId') != null &&
+            !quantityById.containsKey( quantityById.get(mat.Id ).get('parentMatId') )
+          )
+        )
+      {
+        result.add(new AcctSeedERP__Material__c(
+          AcctSeedERP__Product__c = mat.AcctSeedERP__Product__c,
+          AcctSeedERP__Product__r = mat.AcctSeedERP__Product__r,
+          AcctSeedERP__Quantity_Per_Unit__c = qty,
+          GMBLASERP__Unit_Price__c = mat.GMBLASERP__Unit_Price__c,
+          GMBLASERP__Price_Override__c = mat.GMBLASERP__Price_Override__c,
+          AcctSeedERP__Comment__c = mat.AcctSeedERP__Comment__c
+        ));
+        totalTransfer += qty * mat.GMBLASERP__Unit_Price__c;
+      }
+    }
+    Id backOrderCreditId = Utility_Products__c.getOrgDefaults().Back_Order_Credit__c;
+    Product2 boCreditProduct = [ SELECT Id, Name FROM Product2 WHERE Id = :backOrderCreditId ];
+    result.add( new AcctSeedERP__Material__c(
+      AcctSeedERP__Product__c = boCreditProduct.Id,
+      AcctSeedERP__Product__r = boCreditProduct,
+      AcctSeedERP__Quantity_Per_Unit__c = 1,
+      GMBLASERP__Unit_Price__c = -1 * totalTransfer,
+      GMBLASERP__Price_Override__c = true,
+      AcctSeedERP__Comment__c = 'Back Order Credit'
+    ));
+    return result;
+  }
+
 
 
 }

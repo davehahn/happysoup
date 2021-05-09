@@ -29,4 +29,14 @@ public with sharing class PricebookEntry_Selector extends Application_Selector
       ) );
     return (List<PricebookEntry>)selector.query();
   }
+
+  public static List<PricebookEntry> allFactoryEntriesByProductId( Set<Id> productIds )
+  {
+    Id factoryPbId = LGND_Constants.factoryPricebookId;
+    return new PricebookEntry_Selector()
+      .addFields( new List<String>{'Product2.Rigging_Time__c'} )
+      .addWhereIdInField( productIds, 'Product2Id' )
+      .addWhere( 'Pricebook2Id = \'' + factoryPbId + '\'')
+      .query();
+  }
 }

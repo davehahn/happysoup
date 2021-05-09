@@ -1,13 +1,13 @@
 public with sharing class ERPOrder_CreatePartsRequestController {
 
   public class PartWrapper implements Comparable {
-    public String materialId;
-    public String productId;
-    public String productName;
-    public Decimal quantityOrdered;
-    public Decimal quantityAllocated;
-    public Decimal quantityRequired;
-    public String taskName;
+    @AuraEnabled public String materialId;
+    @AuraEnabled public String productId;
+    @AuraEnabled public String productName;
+    @AuraEnabled public Decimal quantityOrdered;
+    @AuraEnabled public Decimal quantityAllocated;
+    @AuraEnabled public Decimal quantityRequired;
+    @AuraEnabled public String taskName;
 
     public PartWrapper( AcctSeedERP__Material__c mat )
     {
@@ -134,28 +134,35 @@ public with sharing class ERPOrder_CreatePartsRequestController {
   @AuraEnabled
   public static String getMaterials( String erpId )
   {
+    List<PartWrapper> parts = buildMaterialsList( erpId );
+    return JSON.serialize( parts );
+  }
+
+  public static List<PartWrapper> buildMaterialsList( String erpId )
+  {
     Set<String> ingnoreFamilies = new Set<String>{
       'Labour',
       'Premium Package',
       'Service Package',
       'Discount'
     };
+    Id partRtId = new Application_RecordType().getProductRecordTypes().getPartId();
     PartWrapper[] parts = new List<PartWrapper>();
     for( AcctSeedERP__Material__c mat : [SELECT Id,
-                                                AcctSeedERP__Product__c,
-                                                AcctSeedERP__Product__r.Name,
-                                                AcctSeedERP__Quantity_Per_Unit__c,
-                                                AcctSeedERP__Quantity_Allocated__c,
-                                                AcctSeedERP__Project_Task__r.Name
-                                         FROM AcctSeedERP__Material__c
-                                         WHERE AcctSeedERP__Project__c = :erpId
-                                         AND AcctSeedERP__Product__r.RecordTYpeId = :LGND_Constants.productRtId_Part
-                                         AND AcctSeedERP__Product__r.Family NOT IN :ingnoreFamilies] )
+      AcctSeedERP__Product__c,
+      AcctSeedERP__Product__r.Name,
+      AcctSeedERP__Quantity_Per_Unit__c,
+      AcctSeedERP__Quantity_Allocated__c,
+      AcctSeedERP__Project_Task__r.Name
+    FROM AcctSeedERP__Material__c
+    WHERE AcctSeedERP__Project__c = :erpId
+    AND AcctSeedERP__Product__r.RecordTypeId = :partRtId
+    AND AcctSeedERP__Product__r.Family NOT IN :ingnoreFamilies] )
     {
       parts.add( new PartWrapper( mat ) );
     }
     parts.sort();
-    return JSON.serialize( parts );
+    return parts;
   }
 
   @AuraEnabled

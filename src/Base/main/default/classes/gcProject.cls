@@ -402,7 +402,7 @@ public without sharing class gcProject {
             || (boolIsUpdate && p.GL_Account_Variable_1__c != oldRec.GL_Account_Variable_1__c)))
           {
             AcctSeed__Accounting_Variable__c glvBU = mapGlv.get(p.GL_Account_Variable_1__c);
-            if(glvBU.GL_Account_Variable_3__c != null)
+              if(glvBU.GL_Account_Variable_3__c != null)
               p.GL_Account_Variable_3__c = glvBU.GL_Account_Variable_3__c;
           }
         }

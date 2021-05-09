@@ -9,7 +9,7 @@ export default class CommissionLineItemRow extends LightningElement {
   @api lineItem;
   @api lineNumber;
   @api isChildRow=false;
-  @api renderRatePaymentColumns;
+  //@api renderRatePaymentColumns=false;
   @api recordCalculationMethod;
 
   get rowClass()

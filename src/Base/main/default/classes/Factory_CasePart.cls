@@ -21,4 +21,23 @@ public class Factory_CasePart
     return result;
   }
 
+  public static List<Case_Part__c> create(
+    Id caseId,
+    List<AcctSeedERP__Material__c> materials
+  )
+  {
+    List<Case_Part__c> result = new List<Case_Part__c>();
+    for( AcctSeedERP__Material__c mat : materials )
+    {
+      result.add( new Case_Part__c(
+        Case__c = caseId,
+        Material__c = mat.Id,
+        Product__c = mat.AcctSeedERP__Product__c,
+        Quantity__c = mat.AcctSeedERP__Quantity_Per_Unit__c
+      ));
+    }
+    insert result;
+    return result;
+  }
+
 }

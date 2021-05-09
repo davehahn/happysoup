@@ -50,14 +50,12 @@ public virtual class Application_Selector
 
   public Application_Selector addWhereIdIn( Set<Id> ids )
   {
-    System.debug(ids);
     Set<String> s_ids = (Set<String>)JSON.deserialize( JSON.serialize( ids ), Set<String>.class );
     return addWhere( whereInClauseBuilder('Id', s_ids ) );
   }
 
   public Application_Selector addWhereIdIn( List<Id> listIds )
   {
-    System.debug( listIds );
     return addWhereIdIn( new Set<Id>( listIds ) );
   }
 
@@ -72,6 +70,15 @@ public virtual class Application_Selector
   {
     Set<String> s_ids = (Set<String>)JSON.deserialize( JSON.serialize( ids ), Set<String>.class );
     addWhere( whereInClauseBuilder(idField, s_ids ), operator );
+    return this;
+  }
+
+  public Application_Selector addWhereFieldNotIn( String fieldName, Set<String> ignoreStrings, String operator )
+  {
+    addWhere(
+      whereNotInClauseBuilder( fieldName, ignoreStrings ),
+      operator
+    );
     return this;
   }
 
@@ -97,10 +104,15 @@ public virtual class Application_Selector
 
   public Application_Selector addChildQuery( Application_Selector childSelector )
   {
-    return addChildQuery( buildChildQuery( childSelector ) );
+    return addChildQuery( buildChildQuery( childSelector, null ) );
   }
 
-  public String buildChildQuery( Application_Selector childSelector )
+  public Application_Selector addChildQuery( Application_Selector childSelector, String relationshipName )
+  {
+    return addChildQuery( buildChildQuery( childSelector, relationshipName ) );
+  }
+
+  public String buildChildQuery( Application_Selector childSelector, String relationshipName )
   {
     SObjectType sObjType = (
       (SObject) Type.forName(this.sObjectName).newInstance()
@@ -112,14 +124,18 @@ public virtual class Application_Selector
     }
     q = q.removeEnd(', ');
     q += ' FROM ';
-    for(Schema.ChildRelationship cr: sObjType.getDescribe().getChildRelationships() )
+    if( relationshipName == null )
     {
-      if( cr.getChildSObject().getDescribe().getName() == childSelector.sObjectName )
+      for (Schema.ChildRelationship cr : sObjType.getDescribe().getChildRelationships())
       {
-        q += cr.getRelationshipName() ;
-        break;
+        if (cr.getChildSObject().getDescribe().getName() == childSelector.sObjectName)
+        {
+          relationshipName = cr.getRelationshipName();
+          break;
+        }
       }
     }
+    q += relationshipName;
     if( childSelector.whereClause != null && childSelector.whereClause.size() > 0 )
     {
       for( String clause : childSelector.whereClause )
@@ -169,7 +185,7 @@ public virtual class Application_Selector
     {
       queryString += ' ORDER BY ' + this.orderBy;
     }
-    //System.debug(queryString);
+    System.debug(queryString);
     return queryString;
   }
 
@@ -194,6 +210,23 @@ public virtual class Application_Selector
       return field + ' = \'' + new List<String>(matchers)[0] + '\'';
 
     String w = field + ' IN (';
+    for( Object m : matchers )
+    {
+      w += '\'' + m + '\',';
+    }
+    w = w.removeEnd(',') + ')';
+    return w;
+  }
+
+  public static String whereNotInClauseBuilder( String field, Set<String> matchers )
+  {
+    if( matchers == null || matchers.size() == 0  )
+      throw new SelectorException( 'WhereInClauseBuilder called with no matchers');
+
+    if( matchers != null && matchers.size() == 1 )
+      return field + ' <> \'' + new List<String>(matchers)[0] + '\'';
+
+    String w = field + ' NOT IN (';
     for( Object m : matchers )
     {
       w += '\'' + m + '\',';

@@ -285,6 +285,24 @@ public inherited sharing class Project_Service
     update retailERPs.values();
   }
 
+  public static AcctSeed__Project__c buildBackOrder(
+    AcctSeed__Project__c originalERP
+  )
+  {
+    return new AcctSeed__Project__c(
+      RecordTypeId = new Application_RecordType().getERPOrderRecordTypes().getServiceWorkOrderId(),
+      Name = originalERP.AcctSeed__Account__r.Name + '-Back Order',
+      Stage__c = 'Pending Diagnostic',
+      Job_Status__c = 'Boat Required',
+      Original_ERP__c = originalERP.Id,
+      AcctSeed__Account__c = originalERP.AcctSeed__Account__c,
+      GMBLASERP__Warehouse__c = originalERP.GMBLASERP__Warehouse__c,
+      GL_Account_Variable_1__c = originalERP.GL_Account_Variable_1__c,
+      GL_Account_Variable_2__c = originalERP.GL_Account_Variable_2__c,
+      GL_Account_Variable_3__c = originalERP.GL_Account_Variable_3__c
+    );
+  }
+
   /**
       ____  ____  _____     ___  _____ _____
      |  _ \|  _ \|_ _\ \   / / \|_   _| ____|

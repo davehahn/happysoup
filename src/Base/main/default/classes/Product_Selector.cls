@@ -37,7 +37,9 @@ public with sharing class Product_Selector extends Application_Selector
       'RecordType.Name',
       'ProductCode',
       'Description',
-      'Default_Gallery_Image_Original__c'
+      'Default_Gallery_Image_Original__c',
+      'Rigging_Time__c',
+      'Composite_Type__c'
     };
   }
 
@@ -52,13 +54,9 @@ public with sharing class Product_Selector extends Application_Selector
 
   public static List<Product2> allWithFullDetailsById( Set<Id> productIds )
   {
-    Product_Selector selector = new Product_Selector();
-    selector
-      .addWhere( whereInClauseBuilder(
-      'Id',
-       productIds
-    ));
-    return (List<Product2>)selector.query();
+    return new Product_Selector()
+      .addWhereIdIn( productIds )
+      .query();
   }
 
   public static Product2 getOnlineBoat( String recordId )
@@ -72,6 +70,15 @@ public with sharing class Product_Selector extends Application_Selector
     if( results.size() > 0 )
       return (Product2)results[0];
     return null;
+  }
+
+  public static List<Product2> allKitsWithKitPartsById( Set<Id> prodIds )
+  {
+    return new Product_Selector()
+      .addChildQuery( new ProductPart_Selector(), 'AcctSeed__Product_Parts__r' )
+      .addWhereIdIn( prodIds )
+      .addWhere('Composite_Type__c = \'Kit\'', 'AND')
+      .query();
   }
 
   public static List<Product2> allBoatsInSeries( String series )
