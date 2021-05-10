@@ -22,6 +22,17 @@ const getTestimonials = (numToShow) => {
   return testimonials;
 }
 
+const getTestUser = () => {
+	const Lead = {
+	  'LeadSource': 'Online - Web',
+	  'FirstName': 'Fistester',
+	  'LastName': 'Lastman',
+	  'Email': 'flastman@legendboats.com',
+	  'PostalCode': 'L5J2E9'
+ }
+ return Lead;
+}
+
 const stringy = (payload) => {
   return JSON.stringify(payload);
 }
@@ -141,6 +152,7 @@ const formatPrice = (price, round = false, lang = 'en') => {
 
 export {
 	getTestimonials,
+	getTestUser,
 	stringy,
 	stripParentheses,
 	rewriteMotorName,
