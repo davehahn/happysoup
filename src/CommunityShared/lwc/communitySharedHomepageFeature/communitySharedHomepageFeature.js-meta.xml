@@ -9,7 +9,7 @@
   </targets>
   <targetConfigs>
     <targetConfig targets="lightningCommunity__Default">
-      <property name="featureThumb" type="String" label="Feature Thumbnail" description="Make sure it's a full url from AWS or KinstaCDN. (i.e. AWS: https://boatuat-mylegend.cs44.force.com/factorystore/file-asset/trade_in_days_cover_photo?v=1 or KinstaCDN: https://mk0inventorylegv1t7j.kinstacdn.com/wp-content/uploads/2020/07/footer-bg.jpg)" />
+      <property name="featureThumb" type="ContentReference" label="Select Feature Thumbnail" description="If you can't find what you're looking for, upload it to Salesforce CMS" filter="cms_image"/>
       <property name="featureHeading" type="String" label="Feature Heading" />
       <property name="featureBlurb" type="String" label="Feature Blurb" />
       <property name="buttonText" type="String" label="Button Text" />
