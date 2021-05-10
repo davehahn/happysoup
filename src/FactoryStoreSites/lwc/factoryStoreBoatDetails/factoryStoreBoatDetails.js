@@ -6,6 +6,7 @@ import { LightningElement, api, wire, track } from 'lwc';
 import { NavigationMixin, CurrentPageReference } from 'lightning/navigation';
 import { stringy, stripParentheses, rewriteMotorName, rewriteTrailerName, weeklyPayment, formatPrice } from 'c/communitySharedUtils';
 import fetchBoat from '@salesforce/apex/FactoryStore_InventoryController.fetchBoat';
+import passBoatModelId from '@salesforce/apex/FactoryStore_FlowController.passBoatModelId';
 import { fireEvent, registerListener, unregisterAllListeners} from 'c/pubsub';
 
 
@@ -54,6 +55,7 @@ export default class FactoryStoreBoatDetails extends NavigationMixin(LightningEl
     this.boatName = stripParentheses(this.boat.Name);
     this.standardMotorName = rewriteMotorName(this.boat.StandardMotor.Name);
     this.standardTrailerName = (this.boat.StandardTrailer.Name !== '') ? 'and ' + rewriteTrailerName(this.boat.StandardTrailer.Name) : '';
+    this.passModelIdToFlow(this.boat.Id);
   }
 
   resultEmpty(){
@@ -191,5 +193,10 @@ export default class FactoryStoreBoatDetails extends NavigationMixin(LightningEl
 
 		return 'https://www.legendboats.com/' + Family + '/' + Series + '/' + Model + '/' + Year + '/';
  	}
+
+ 	passModelIdToFlow(modelId){
+ 	  console.log('pass to flow: ', modelId);
+ 	  passBoatModelId({ modelId: modelId });
+  }
 
 }

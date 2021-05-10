@@ -77,6 +77,11 @@ const renderFR = () => {
     	return options.includes(lang) ? true : false;
 }
 
+const decodeHTML = (html) => {
+	let txt = new DOMParser().parseFromString(html, "text/html");
+	return txt.documentElement.textContent;
+}
+
 /*===================
 ┌─┐┌─┐┬  ┌─┐┬ ┬┬  ┌─┐┌┬┐┌─┐  ┬ ┬┌─┐┌─┐┬┌─┬ ┬ ┬  ┌─┐┌─┐┬ ┬┌┬┐┌─┐┌┐┌┌┬┐
 │  ├─┤│  │  │ ││  ├─┤ │ ├┤   │││├┤ ├┤ ├┴┐│ └┬┘  ├─┘├─┤└┬┘│││├┤ │││ │
@@ -144,5 +149,6 @@ export {
 	formatPrice,
 	renderEN,
 	renderFR,
+	decodeHTML,
 	gen8DigitId
 }

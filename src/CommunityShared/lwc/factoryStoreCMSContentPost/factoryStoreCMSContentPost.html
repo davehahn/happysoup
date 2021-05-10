@@ -4,7 +4,20 @@
 
 <!-- Factory Store Cms Content -->
 <template>
-  <article data-content-key={contentKey}>
-    <h2 class="heading heading-l">{postTitle}</h2>
+  <article class="maxWidth maxWidth--thin" data-content-key={contentKey}>
+    <header>
+      <h2 class="heading heading-l">{postTitle}</h2>
+      <p class="dates copy"><span>Starts: {startDate}</span> <span>Ends: {endDate}</span></p>
+      <span class="banner fullWidth" style={bannerGraphic}></span>
+    </header>
+    <template if:true={clickToFullDetails}>
+      <a href={fullDetailsLink} target="_blank" class="btn btn--primary">Click here for full details</a>
+    </template>
+
+    <lightning-formatted-rich-text value={mainContent}></lightning-formatted-rich-text>
+
+    <template if:true={clickToFullDetails}>
+      <a href={fullDetailsLink} target="_blank" class="btn btn--primary">Click here for full details</a>
+    </template>
   </article>
 </template>
