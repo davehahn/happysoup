@@ -99,3 +99,94 @@ body > *, :root > *{
 .DESKTOP.comm-panels-container.uiContainerManager.siteforcePanelsContainer{
   display: none;
 }
+
+/* Service Appointment Overrides */
+.forceCommunityFlowCommunity{
+  border: 0 none!important;
+ 	max-width: 1300px;
+ 	margin: 0 auto;
+}
+.flowRuntimeV2 .slds-form-element__label{
+  font-size: 1.12rem;
+}
+.flowRuntimeV2 .slds-input,
+.flowRuntimeV2 .slds-select,
+.flowRuntimeV2 .slds-textarea,
+.flowRuntimeV2 .uiInput--select{
+  border: 1px solid #bebebe;
+	box-sizing: border-box;
+	font-size: 1.125rem;
+}
+/*.flowRuntimeV2 .slds-input-has-icon_left-right .slds-input{*/
+/*  padding-left: var(--lwc-spacingXLarge,2rem);*/
+/*	padding-right: var(--lwc-spacingXLarge,2rem);*/
+/*}*/
+/*.flowRuntimeV2 .body{*/
+/*  display: flex;*/
+/*  flex-wrap: wrap;*/
+/*  align-items: flex-start;*/
+/*  justify-content: space-between;*/
+/*}*/
+/*.flowRuntimeV2 .body .slds-m-bottom_x-small{*/
+/*  width: calc(50% - 10px);*/
+/*}*/
+/*.flowRuntimeV2 .body > div:first-of-type{*/
+/*  width: 100%;*/
+/*  margin-bottom: 1.25em;*/
+/*}*/
+.flowRuntimeV2 .body div.slds-m-bottom_x-small:nth-of-type(2){
+  display: none!important;
+}
+/*.flowRuntimeV2 .body .cFlowProgressIndicator{*/
+/*  width: 100%;*/
+/*}*/
+.flowRuntimeV2 .body .cFlowProgressIndicator .slds-path__nav .slds-is-active,
+.flowRuntimeV2 .body .cFlowProgressIndicator .slds-path__nav .slds-is-active:first-child::before,
+.flowRuntimeV2 .body .cFlowProgressIndicator .slds-path__nav .slds-is-active:first-child::after,
+.slds-path__nav .slds-is-active::before,
+.slds-path__nav .slds-is-active::after{
+  background-color: var(--highlight);
+}
+.flowRuntimeV2 .body .cFlowProgressIndicator .slds-path__nav .slds-is-current:first-child:hover::before,
+.flowRuntimeV2 .body .cFlowProgressIndicator .slds-path__nav .slds-is-current:first-child:hover::after{
+  background-image: none;
+}
+.flowRuntimeV2 .body .cFlowProgressIndicator .slds-path__nav .slds-is-active .slds-path__link .slds-path__title{
+  font-weight: 900;
+}
+.flowRuntimeV2 .lgnd_form_address .slds-p-around_x-small, .flowRuntimeV2 .lgnd_form_address .slds-p-around--x-small{
+  padding-left: 0; padding-right: 0;
+}
+.flowRuntimeV2 .lgnd_form_address .slds-large-size_8-of-12, .flowRuntimeV2 .lgnd_form_address .slds-large-size--8-of-12{
+  padding-right: 1em;
+}
+.flowRuntimeV2 .actionsRight{
+  display: flex;
+}
+.flowRuntimeV2 .slds-button.slds-button_brand,
+.flowRuntimeV2 .slds-button.slds-button_neutral{
+    display: flex;
+  	align-items: center;
+  	transition: all .3s linear;
+  	border: 1px solid #0d506d;
+  	border-radius: 5px;
+  	text-decoration: none;
+  	width: fit-content;
+  	width: -moz-fit-content;
+  	cursor: pointer;
+  	font-size: 1.25em !important;
+  	font-weight: 900 !important;
+  	line-height: 1;
+  	box-sizing: border-box;
+  	padding: .5em 1em;
+  	color: #0d506d;
+}
+.flowRuntimeV2 .slds-button.slds-button_brand{
+	background-color: #0d506d;
+	color: #fff;
+}
+.flowRuntimeV2 .slds-button.slds-button_brand:hover, .flowRuntimeV2 .slds-button.slds-button_brand:focus{
+  background-color: #fff;
+	color: #0d506d;
+	text-decoration: none;
+}
