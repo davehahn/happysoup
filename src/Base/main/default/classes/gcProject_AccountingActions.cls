@@ -1578,7 +1578,7 @@ public without sharing class gcProject_AccountingActions {
     @RemoteAction
 	public static List<ApexPages.Message> takeExpense(Id idFilter, String expenseDate)
 	{
-        System.debug('From MFG');
+        System.debug('From MFG or TradeIn');
 		Date cogsDate = Date.today();
 		if(expenseDate != null)
 			cogsDate = Date.parse(expenseDate);
@@ -1632,9 +1632,11 @@ public without sharing class gcProject_AccountingActions {
     		FROM AcctSeedERP__Material__c
     		WHERE (AcctSeedERP__Project__c = :idFilter OR AcctSeedERP__Project_Task__c = :idFilter)])
 		{
-			if(matl.AcctSeedERP__Project__r.RecordTypeId != gcConstants.idRtProjectManufacturing
-				|| (!matl.AcctSeedERP__Product__r.AcctSeed__Inventory_Product__c && matl.AcctSeedERP__Project__r.RecordTypeId == gcConstants.idRtProjectManufacturing))
+			if((matl.AcctSeedERP__Project__r.RecordTypeId != gcConstants.idRtProjectManufacturing && matl.AcctSeedERP__Project__r.RecordTypeId != gcConstants.idRtTradeIn)
+				|| (!matl.AcctSeedERP__Product__r.AcctSeed__Inventory_Product__c && (matl.AcctSeedERP__Project__r.RecordTypeId == gcConstants.idRtProjectManufacturing
+						|| matl.AcctSeedERP__Project__r.RecordTypeId == gcConstants.idRtTradeIn)))
 			{
+				System.debug('Inside');
 				if (idProject == null) idProject = matl.AcctSeedERP__Project__c;
 				if (matl.AcctSeedERP__Product__r.AcctSeed__Inventory_Product__c && matl.AcctSeedERP__Manufacturing_Inventory_Movements__r.isEmpty() && !matl.AcctSeedERP__Project__r.Internal_Warranty__c) continue;
 				Decimal qty = matl.AcctSeedERP__Quantity_Per_Unit__c;
@@ -1652,7 +1654,7 @@ public without sharing class gcProject_AccountingActions {
 						qty += oim.AcctSeedERP__Quantity__c == null ? 0 : oim.AcctSeedERP__Quantity__c;
 				}
 
-				if (!matl.AcctSeedERP__Product__r.AcctSeed__Inventory_Product__c && matl.AcctSeedERP__Project__r.RecordTypeId == gcConstants.idRtProjectManufacturing) {
+				if (!matl.AcctSeedERP__Product__r.AcctSeed__Inventory_Product__c && (matl.AcctSeedERP__Project__r.RecordTypeId == gcConstants.idRtProjectManufacturing || matl.AcctSeedERP__Project__r.RecordTypeId == gcConstants.idRtTradeIn)) {
 					unitCost = matl.AcctSeedERP__Product__r.AcctSeed__Unit_Cost__c;
 				}
 
@@ -1660,7 +1662,7 @@ public without sharing class gcProject_AccountingActions {
 					for (AcctSeed__Journal_Entry_Line__c jel : matl.Journal_Entry_Lines__r) {
 						qty -= jel.AcctSeed__Units__c == null ? 0 : jel.AcctSeed__Units__c;
 					}
-				if (matl.AcctSeedERP__Product__r.AcctSeed__Inventory_Product__c || (!matl.AcctSeedERP__Product__r.AcctSeed__Inventory_Product__c && matl.AcctSeedERP__Project__r.RecordTypeId == gcConstants.idRtProjectManufacturing))
+				if (matl.AcctSeedERP__Product__r.AcctSeed__Inventory_Product__c || (!matl.AcctSeedERP__Product__r.AcctSeed__Inventory_Product__c && (matl.AcctSeedERP__Project__r.RecordTypeId == gcConstants.idRtProjectManufacturing || matl.AcctSeedERP__Project__r.RecordTypeId == gcConstants.idRtTradeIn)))
 					amt = qty * unitCost;
 
 				if (qty != null && qty != 0) {
@@ -1670,10 +1672,10 @@ public without sharing class gcProject_AccountingActions {
 					qty = qty.setScale(6);
 					Id idDebitGL = idGlProjectParts;
 					Id idCreditGL = idGlProjectPartsClearing;
-					if (matl.AcctSeedERP__Product__r.AcctSeed__Inventory_Product__c && matl.AcctSeedERP__Project__r.RecordTypeId != gcConstants.idRtProjectManufacturing) {
+					if (matl.AcctSeedERP__Product__r.AcctSeed__Inventory_Product__c && (matl.AcctSeedERP__Project__r.RecordTypeId != gcConstants.idRtProjectManufacturing || matl.AcctSeedERP__Project__r.RecordTypeId != gcConstants.idRtTradeIn)) {
 						idDebitGL = idGlCogsParts;
 						idCreditGL = idGlWIP;
-					} else if (!matl.AcctSeedERP__Product__r.AcctSeed__Inventory_Product__c && matl.AcctSeedERP__Project__r.RecordTypeId == gcConstants.idRtProjectManufacturing) {
+					} else if (!matl.AcctSeedERP__Product__r.AcctSeed__Inventory_Product__c && (matl.AcctSeedERP__Project__r.RecordTypeId == gcConstants.idRtProjectManufacturing || matl.AcctSeedERP__Project__r.RecordTypeId == gcConstants.idRtTradeIn)) {
 						idDebitGL = idGlWIP;
 						idCreditGL = matl.AcctSeedERP__Product__r.AcctSeed__Expense_GL_Account__c;
 					}
@@ -1818,7 +1820,7 @@ public without sharing class gcProject_AccountingActions {
             	String jobCostOrWarranty = 'Job Cost for ';
             	if(project.Internal_Warranty__c)
             		jobCostOrWarranty = 'Internal Warranty for ';
-            	if(project.RecordTypeId == gcConstants.idRtProjectManufacturing)
+            	if(project.RecordTypeId == gcConstants.idRtProjectManufacturing || project.RecordTypeId == gcConstants.idRtTradeIn)
             		jobCostOrWarranty = 'Manufacturing Cost for ';
 
 	    		je = new AcctSeed__Journal_Entry__c(
