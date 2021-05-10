@@ -15,7 +15,7 @@ fi
 
 echoOut 'Copy .forceignore and add static resource to it'
 cp .forceignore .forceignore.orig
-echo -e "\nforce-app/main/default/staticresources" >> .forceignore
+echo -e "\nsrc/Base/main/default/staticresources" >> .forceignore
 
 echoOut 'Pulling remote metadata...'
 
