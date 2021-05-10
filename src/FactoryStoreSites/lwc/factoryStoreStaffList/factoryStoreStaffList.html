@@ -1,0 +1,26 @@
+<!--
+ - Created by Tim on 2021-05-07.
+ -->
+
+<!-- Factory Store Staff List -->
+<template>
+  <div class="staffWrapper">
+    <template if:true={showUserListing}>
+      <section class="staff maxWidth maxWidth--thin">
+        <ul class="staff__list">
+          <template for:each={users} for:item="user">
+            <li key={user.Id} class="staff__member">
+              <figure>
+                <span class="staff__image"></span>
+                <figcaption>
+                  <h4>{user.FirstName} {user.LastName} | <span>{user.Title}</span></h4>
+                  <a href="">{user.Email}</a> | <a href="#">{user.Phone}</a>
+                </figcaption>
+              </figure>
+            </li>
+          </template>
+        </ul>
+      </section>
+    </template>
+  </div>
+</template>

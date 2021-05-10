@@ -1,0 +1,28 @@
+/**
+ * Created by Tim on 2021-05-07.
+ */
+
+.staff__list{
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+.staff__list::after{
+  content: '';
+  flex: auto;
+}
+
+.staff__member{
+  width: calc(25% - 1em);
+  margin-bottom: 1em; margin-right: 1em;
+	border: 1px solid var(--zebra)
+}
+.staff__member .staff__image{
+  width: 100%; padding-bottom: 50%;
+  background-color: var(--zebra);
+  display: block;
+  margin-bottom: 0.75em;
+}
+.staff__member figcaption{
+  padding: 0 1em;
+}
