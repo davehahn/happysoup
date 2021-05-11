@@ -98,16 +98,55 @@ public virtual class PartnerProgram_Volume extends PartnerProgramItem
     {
       return (Decimal) orderWrapper.bookingOrder.get(this.fieldName);
     }
-    if( this.orderTotal < 150000 )
+    String programName = 'V_Hull_' + this.programYear;
+    Partner_Program_Volume_Setting__mdt vhullProgram;
+    try
+    {
+      vhullProgram = [
+        SELECT
+          Id,
+          Maximum_Applicable_Amount__c,
+          Maximum_Discount_Percent__c,
+          Minimum_Applicable_Amount__c, (
+          SELECT
+            Id,
+            Label,
+            Discount_Percent__c,
+            Upper_Cutoff__c
+          FROM Partner_Program_Volume_Levels__r
+          ORDER BY Upper_Cutoff__c
+        )
+        FROM Partner_Program_Volume_Setting__mdt
+        WHERE DeveloperName = :programName
+      ];
+    }
+    catch( Exception e )
+    {
       return 0;
-    if( this.orderTotal < 275000 )
-      return 1;
-    if( this.orderTotal < 400000 )
-      return 2;
-    if( this.orderTotal < 600000 )
-      return 4;
-    if( this.orderTotal < 875000 )
-      return 6;
-    return 8;
+    }
+
+    if( this.orderTotal < vhullProgram.Minimum_Applicable_Amount__c )
+      return 0;
+    if( this.orderTotal >= vhullProgram.Maximum_Applicable_Amount__c )
+      return vhullProgram.Maximum_Discount_Percent__c;
+
+    for( Partner_Program_Volume_Level__mdt level : vhullProgram.Partner_Program_Volume_Levels__r )
+    {
+      if( this.orderTotal <= level.Upper_Cutoff__c )
+        return level.Discount_Percent__c;
+    }
+    return 0;
+//
+//    if( this.orderTotal < 150000 )
+//      return 0;
+//    if( this.orderTotal < 275000 )
+//      return 1;
+//    if( this.orderTotal < 400000 )
+//      return 2;
+//    if( this.orderTotal < 600000 )
+//      return 4;
+//    if( this.orderTotal < 875000 )
+//      return 6;
+//    return 8;
   }
 }

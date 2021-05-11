@@ -134,7 +134,7 @@ private class PartnerProgramItem_T
   }
 
   @IsTest
-  static void PartnerProgram_Volume_Applicable_Test()
+  static void PartnerProgram_Volume_Applicable_Mini2021_Test()
   {
     init('Full Windshield', 50000, null);
 

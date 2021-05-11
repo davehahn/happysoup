@@ -6,9 +6,11 @@ public virtual class PartnerProgramItem implements PartnerProgramItem_I, Promise
 {
   protected String name;
   public Dealer_Order__c dealerOrder;
+  public String programYear;
   public List<PartnerProgram_Service.ErpWrapper> erpWrappers;
-  protected PartnerProgram_Service.ResultMessage resultMessage;
   public PartnerProgram_Service.DealerOrderWrapper orderWrapper;
+
+  protected PartnerProgram_Service.ResultMessage resultMessage;
   protected Boolean hasVerifiedBookingOrder = false;
   protected Decimal discountPercent {
     get {
@@ -33,6 +35,7 @@ public virtual class PartnerProgramItem implements PartnerProgramItem_I, Promise
   {
     this.orderWrapper = orderWrapper;
     this.dealerOrder = orderWrapper.dealerOrder;
+    this.programYear = orderWrapper.programYear;
     this.erpWrappers = new List<PartnerProgram_Service.ErpWrapper>();
     this.resultMessage = new PartnerProgram_Service.ResultMessage();
     if( !this.orderWrapper.isBookingOrder && this.orderWrapper.bookingOrder != null )
