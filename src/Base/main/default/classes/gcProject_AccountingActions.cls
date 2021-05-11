@@ -1474,6 +1474,7 @@ public without sharing class gcProject_AccountingActions {
 		Map<Id,Map<Id,Map<Id,Id>>> mapPWLB = new Map<Id,Map<Id,Map<Id,Id>>>();
 		Map<Id,Decimal> mapUnitCost = new Map<Id,Decimal>();
 		Map<Id,Decimal> mapProfitShare = new Map<Id,Decimal>();
+        Boolean boatExist = false;
 		List<AcctSeedERP__Material__c> listMatl = new List<AcctSeedERP__Material__c>();
 		for(AcctSeedERP__Material__c matl : 
 		 		[SELECT Id, 
@@ -1494,25 +1495,30 @@ public without sharing class gcProject_AccountingActions {
 					AND AcctSeedERP__Product__r.AcctSeedERP__Serialized__c = TRUE
 					AND AcctSeedERP__Project__c = :idProject])
 		 {
-		 	Decimal glAmount = matl.AcctSeedERP__Manufacturing_Inventory_Movements__r[0].GMBLASERP__Inventory_GL_Amount__c;
-		 	if(matl.AcctSeedERP__Product__r.RecordType.Name != 'Boat'){
-			 	//if(matl.AcctSeedERP__Product__r.RecordType.Name == 'Motor'){
-			 	//	mapUnitCost.put(matl.GMBLASERP__Serial_Number__c, glAmount);
-			 	//	projectTotal -= glAmount;
-			 	//	mapProfitShare.put(matl.GMBLASERP__Serial_Number__c, 0);
-			 	//}
-			 	//else {
-			 		Decimal serialProfit = matl.GMBLASERP__Unit_Price__c - glAmount;
-			 		mapProfitShare.put(matl.GMBLASERP__Serial_Number__c, serialProfit);
-			 		mapUnitCost.put(matl.GMBLASERP__Serial_Number__c, matl.GMBLASERP__Unit_Price__c);
-			 		projectTotal -= matl.GMBLASERP__Unit_Price__c;
-			 		projectProfit -= serialProfit;
-			 	//}
-			 }
-
+             if(matl.AcctSeedERP__Product__r.RecordType.Name == 'Boat') {
+                 boatExist = true;
+             }
 		 	listMatl.add(matl);
 		 	mapPWLB.put(matl.AcctSeedERP__Product__c, new map<Id,map<Id,Id>>{idDestinationWarehouse => new map<Id,Id>{loc.Id => null}});
 		 }
+        for(AcctSeedERP__Material__c matl : listMatl)
+        {
+            Decimal glAmount = matl.AcctSeedERP__Manufacturing_Inventory_Movements__r[0].GMBLASERP__Inventory_GL_Amount__c;
+            if(matl.AcctSeedERP__Product__r.RecordType.Name != 'Boat'){
+                //if(matl.AcctSeedERP__Product__r.RecordType.Name == 'Motor'){
+                //	mapUnitCost.put(matl.GMBLASERP__Serial_Number__c, glAmount);
+                //	projectTotal -= glAmount;
+                //	mapProfitShare.put(matl.GMBLASERP__Serial_Number__c, 0);
+                //}
+                //else {
+                Decimal serialProfit = matl.GMBLASERP__Unit_Price__c - glAmount;
+                mapProfitShare.put(matl.GMBLASERP__Serial_Number__c, serialProfit);
+                mapUnitCost.put(matl.GMBLASERP__Serial_Number__c, matl.GMBLASERP__Unit_Price__c);
+                projectTotal -= matl.GMBLASERP__Unit_Price__c;
+                projectProfit -= serialProfit;
+                //}
+            }
+        }
 
         List<GMBLASERP__Serial_Number__c> listSerials = new List<GMBLASERP__Serial_Number__c>();
         if(!mapPWLB.isEmpty())
@@ -1523,8 +1529,11 @@ public without sharing class gcProject_AccountingActions {
         		Id idBalance = mapPWLB.get(matl.AcctSeedERP__Product__c).get(idDestinationWarehouse).get(loc.Id);
 
         		Decimal unitCost = 0;
-        		if(matl.AcctSeedERP__Product__r.RecordType.Name == 'Boat'){
+        		if(boatExist && matl.AcctSeedERP__Product__r.RecordType.Name == 'Boat'){
         			unitCost = projectTotal;
+        			listSerials.add(new GMBLASERP__Serial_Number__c(Id = matl.GMBLASERP__Serial_Number__c, Billing_Revenue_Internal__c = projectProfit));
+        		}else if(!boatExist && matl.AcctSeedERP__Product__r.RecordType.Name != 'Boat'){
+                    unitCost = mapUnitCost.get(matl.GMBLASERP__Serial_Number__c) + projectTotal;
         			listSerials.add(new GMBLASERP__Serial_Number__c(Id = matl.GMBLASERP__Serial_Number__c, Billing_Revenue_Internal__c = projectProfit));
         		}else{
         			unitCost = mapUnitCost.get(matl.GMBLASERP__Serial_Number__c);
@@ -1569,7 +1578,7 @@ public without sharing class gcProject_AccountingActions {
     @RemoteAction
 	public static List<ApexPages.Message> takeExpense(Id idFilter, String expenseDate)
 	{
-        System.debug('From MFG');
+        System.debug('From MFG or TradeIn');
 		Date cogsDate = Date.today();
 		if(expenseDate != null)
 			cogsDate = Date.parse(expenseDate);
@@ -1623,9 +1632,11 @@ public without sharing class gcProject_AccountingActions {
     		FROM AcctSeedERP__Material__c
     		WHERE (AcctSeedERP__Project__c = :idFilter OR AcctSeedERP__Project_Task__c = :idFilter)])
 		{
-			if(matl.AcctSeedERP__Project__r.RecordTypeId != gcConstants.idRtProjectManufacturing
-				|| (!matl.AcctSeedERP__Product__r.AcctSeed__Inventory_Product__c && matl.AcctSeedERP__Project__r.RecordTypeId == gcConstants.idRtProjectManufacturing))
+			if((matl.AcctSeedERP__Project__r.RecordTypeId != gcConstants.idRtProjectManufacturing && matl.AcctSeedERP__Project__r.RecordTypeId != gcConstants.idRtTradeIn)
+				|| (!matl.AcctSeedERP__Product__r.AcctSeed__Inventory_Product__c && (matl.AcctSeedERP__Project__r.RecordTypeId == gcConstants.idRtProjectManufacturing
+						|| matl.AcctSeedERP__Project__r.RecordTypeId == gcConstants.idRtTradeIn)))
 			{
+				System.debug('Inside');
 				if (idProject == null) idProject = matl.AcctSeedERP__Project__c;
 				if (matl.AcctSeedERP__Product__r.AcctSeed__Inventory_Product__c && matl.AcctSeedERP__Manufacturing_Inventory_Movements__r.isEmpty() && !matl.AcctSeedERP__Project__r.Internal_Warranty__c) continue;
 				Decimal qty = matl.AcctSeedERP__Quantity_Per_Unit__c;
@@ -1643,7 +1654,7 @@ public without sharing class gcProject_AccountingActions {
 						qty += oim.AcctSeedERP__Quantity__c == null ? 0 : oim.AcctSeedERP__Quantity__c;
 				}
 
-				if (!matl.AcctSeedERP__Product__r.AcctSeed__Inventory_Product__c && matl.AcctSeedERP__Project__r.RecordTypeId == gcConstants.idRtProjectManufacturing) {
+				if (!matl.AcctSeedERP__Product__r.AcctSeed__Inventory_Product__c && (matl.AcctSeedERP__Project__r.RecordTypeId == gcConstants.idRtProjectManufacturing || matl.AcctSeedERP__Project__r.RecordTypeId == gcConstants.idRtTradeIn)) {
 					unitCost = matl.AcctSeedERP__Product__r.AcctSeed__Unit_Cost__c;
 				}
 
@@ -1651,7 +1662,7 @@ public without sharing class gcProject_AccountingActions {
 					for (AcctSeed__Journal_Entry_Line__c jel : matl.Journal_Entry_Lines__r) {
 						qty -= jel.AcctSeed__Units__c == null ? 0 : jel.AcctSeed__Units__c;
 					}
-				if (matl.AcctSeedERP__Product__r.AcctSeed__Inventory_Product__c || (!matl.AcctSeedERP__Product__r.AcctSeed__Inventory_Product__c && matl.AcctSeedERP__Project__r.RecordTypeId == gcConstants.idRtProjectManufacturing))
+				if (matl.AcctSeedERP__Product__r.AcctSeed__Inventory_Product__c || (!matl.AcctSeedERP__Product__r.AcctSeed__Inventory_Product__c && (matl.AcctSeedERP__Project__r.RecordTypeId == gcConstants.idRtProjectManufacturing || matl.AcctSeedERP__Project__r.RecordTypeId == gcConstants.idRtTradeIn)))
 					amt = qty * unitCost;
 
 				if (qty != null && qty != 0) {
@@ -1661,10 +1672,10 @@ public without sharing class gcProject_AccountingActions {
 					qty = qty.setScale(6);
 					Id idDebitGL = idGlProjectParts;
 					Id idCreditGL = idGlProjectPartsClearing;
-					if (matl.AcctSeedERP__Product__r.AcctSeed__Inventory_Product__c && matl.AcctSeedERP__Project__r.RecordTypeId != gcConstants.idRtProjectManufacturing) {
+					if (matl.AcctSeedERP__Product__r.AcctSeed__Inventory_Product__c && (matl.AcctSeedERP__Project__r.RecordTypeId != gcConstants.idRtProjectManufacturing || matl.AcctSeedERP__Project__r.RecordTypeId != gcConstants.idRtTradeIn)) {
 						idDebitGL = idGlCogsParts;
 						idCreditGL = idGlWIP;
-					} else if (!matl.AcctSeedERP__Product__r.AcctSeed__Inventory_Product__c && matl.AcctSeedERP__Project__r.RecordTypeId == gcConstants.idRtProjectManufacturing) {
+					} else if (!matl.AcctSeedERP__Product__r.AcctSeed__Inventory_Product__c && (matl.AcctSeedERP__Project__r.RecordTypeId == gcConstants.idRtProjectManufacturing || matl.AcctSeedERP__Project__r.RecordTypeId == gcConstants.idRtTradeIn)) {
 						idDebitGL = idGlWIP;
 						idCreditGL = matl.AcctSeedERP__Product__r.AcctSeed__Expense_GL_Account__c;
 					}
@@ -1809,7 +1820,7 @@ public without sharing class gcProject_AccountingActions {
             	String jobCostOrWarranty = 'Job Cost for ';
             	if(project.Internal_Warranty__c)
             		jobCostOrWarranty = 'Internal Warranty for ';
-            	if(project.RecordTypeId == gcConstants.idRtProjectManufacturing)
+            	if(project.RecordTypeId == gcConstants.idRtProjectManufacturing || project.RecordTypeId == gcConstants.idRtTradeIn)
             		jobCostOrWarranty = 'Manufacturing Cost for ';
 
 	    		je = new AcctSeed__Journal_Entry__c(
