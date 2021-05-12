@@ -4,7 +4,7 @@
         <processMetadataValues>
             <name>textJson</name>
             <value>
-                <stringValue>{&quot;mentions&quot;:[{&quot;name&quot;:&quot;Jesse Davis&quot;,&quot;id&quot;:&quot;005i0000002c3RpAAI&quot;},{&quot;name&quot;:&quot;Dan Rowe&quot;,&quot;id&quot;:&quot;005i0000002c3PuAAI&quot;},{&quot;name&quot;:&quot;Simon Labelle&quot;,&quot;id&quot;:&quot;0054z000007HKpBAAW&quot;},{&quot;name&quot;:&quot;Ryan Fraser&quot;,&quot;id&quot;:&quot;005i0000002c3RsAAI&quot;}],&quot;message&quot;:&quot;@[005i0000002c3RpAAI] @[005i0000002c3PuAAI]  @[0054z000007HKpBAAW]  @[005i0000002c3RsAAI]   This warranty claim for {![Case].Account.Name} has been denied&quot;}</stringValue>
+                <stringValue>{&quot;mentions&quot;:[{&quot;name&quot;:&quot;Jesse Davis&quot;,&quot;id&quot;:&quot;005i0000002c3RpAAI&quot;},{&quot;name&quot;:&quot;Dan Rowe&quot;,&quot;id&quot;:&quot;005i0000002c3PuAAI&quot;},{&quot;name&quot;:&quot;Simon Labelle&quot;,&quot;id&quot;:&quot;0054z000007HKpBAAW&quot;},{&quot;name&quot;:&quot;Ryan Fraser&quot;,&quot;id&quot;:&quot;005i0000002c3RsAAI&quot;},{&quot;name&quot;:&quot;Nelson Hall&quot;,&quot;id&quot;:&quot;005i0000002c3UXAAY&quot;},{&quot;name&quot;:&quot;John Winter&quot;,&quot;id&quot;:&quot;0051Y000009wKCwQAM&quot;}],&quot;message&quot;:&quot;@[005i0000002c3RpAAI] @[005i0000002c3PuAAI]  @[0054z000007HKpBAAW]  @[005i0000002c3RsAAI]  @[005i0000002c3UXAAY] @[0051Y000009wKCwQAM]  This warranty claim for {![Case].Account.Name} has been denied&quot;}</stringValue>
             </value>
         </processMetadataValues>
         <name>myRule_1_A1</name>
@@ -13,10 +13,11 @@
         <locationY>200</locationY>
         <actionName>chatterPost</actionName>
         <actionType>chatterPost</actionType>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
         <inputParameters>
             <name>text</name>
             <value>
-                <stringValue>@[005i0000002c3RpAAI] @[005i0000002c3PuAAI]  @[0054z000007HKpBAAW]  @[005i0000002c3RsAAI]   This warranty claim for {!myVariable_current.Account.Name} has been denied</stringValue>
+                <stringValue>@[005i0000002c3RpAAI] @[005i0000002c3PuAAI]  @[0054z000007HKpBAAW]  @[005i0000002c3RsAAI]  @[005i0000002c3UXAAY] @[0051Y000009wKCwQAM]  This warranty claim for {!myVariable_current.Account.Name} has been denied</stringValue>
             </value>
         </inputParameters>
         <inputParameters>
@@ -291,7 +292,7 @@
             <label>Previously Met - Prev</label>
         </rules>
     </decisions>
-    <interviewLabel>Chatter_to_Jesse_on_All_Cases_Denied-8_InterviewLabel</interviewLabel>
+    <interviewLabel>Chatter_to_Jesse_on_All_Cases_Denied-10_InterviewLabel</interviewLabel>
     <label>Chatter to Jesse on All Cases Denied</label>
     <processMetadataValues>
         <name>ObjectType</name>
