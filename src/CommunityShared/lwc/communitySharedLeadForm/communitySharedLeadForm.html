@@ -4,7 +4,13 @@
 
 <!-- Community Shared Lead Form -->
 <template>
-  <section class="leadFormWrapper">
+  <section class={wrapperClass}>
+    <template if:true={introTitle}>
+      <h3 class="heading heading-m">{introTitle}</h3>
+    </template>
+    <template if:true={introBlurb}>
+      <p>{introBlurb}</p>
+    </template>
     <template if:true={showForm}>
       <form id="leadForm" name="leadForm" data-id="leadForm" data-form-name={formName}>
         <fieldset class="leadForm_wrapper">

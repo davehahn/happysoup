@@ -150,6 +150,22 @@ const formatPrice = (price, round = false, lang = 'en') => {
 
 }
 
+const setWrapperClass = (width, additionalClassNames = null) => {
+	if(width === 'Screen'){
+		return additionalClassNames + ' fullWidth';
+	} else if(width === 'Container'){
+		return additionalClassNames;
+	} else if(width === 'Wide'){
+		return additionalClassNames + ' maxWidth';
+	} else if(width === 'Average'){
+		return additionalClassNames + ' maxWidth maxWidth--thin';
+	} else if(width === 'Thin'){
+		return additionalClassNames + ' maxWidth maxWidth--extraThin';
+	} else if(width === 'Extra Thin'){
+		return additionalClassNames + ' maxWidth maxWidth--ultraThin';
+	}
+}
+
 export {
 	getTestimonials,
 	getTestUser,
@@ -162,5 +178,6 @@ export {
 	renderEN,
 	renderFR,
 	decodeHTML,
-	gen8DigitId
+	gen8DigitId,
+	setWrapperClass
 }

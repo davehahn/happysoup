@@ -6,15 +6,28 @@
 <template>
   <div class="staffWrapper">
     <template if:true={showUserListing}>
-      <section class="staff maxWidth maxWidth--thin">
+      <section class={wrapperClass}>
+        <h3 class="ro">Staff Listing</h3>
         <ul class="staff__list">
           <template for:each={users} for:item="user">
             <li key={user.Id} class="staff__member">
               <figure>
-                <span class="staff__image"></span>
+                <span class="staff__image">
+                  <img src={user.ProfileImgUrl} />
+                </span>
                 <figcaption>
-                  <h4>{user.FirstName} {user.LastName} | <span>{user.Title}</span></h4>
-                  <a href="">{user.Email}</a> | <a href="#">{user.Phone}</a>
+                  <h4 class="staff__name">{user.FirstName} {user.LastName}</h4>
+                  <small class="staff__title"><span>{user.Title}</span></small>
+                  <p class="staff__contact">
+                    <lightning-icon icon-name="utility:email" alternative-text="email"></lightning-icon>
+                    <a href="#">{user.Email}</a>
+                  </p>
+                  <template if:true={user.Phone}>
+                    <p class="staff__contact">
+                      <lightning-icon icon-name="utility:call" alternative-text="Call"></lightning-icon>
+                      <a href="#">{user.Phone}</a>
+                    </p>
+                  </template>
                 </figcaption>
               </figure>
             </li>

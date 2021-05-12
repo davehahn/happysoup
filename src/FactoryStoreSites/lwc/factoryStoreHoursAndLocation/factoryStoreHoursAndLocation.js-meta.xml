@@ -9,7 +9,13 @@
   </targets>
   <targetConfigs>
     <targetConfig targets="lightningCommunity__Default">
-      <property name="storeLocation" type="String" datasource="Sudbury, Barrie, Montreal" label="Select Store Location" description="Selecting the location will populate the current days ours, and the store address next to the store logo."/>
+      <property name="streetNumber" type="String" label="Street Number" />
+      <property name="route" type="String" label="Street Name" />
+      <property name="locality" type="String" label="City" />
+      <property name="administrativeArea" type="String" label="Province" datasource="ON, QC"/>
+      <property name="postalCode" type="String" label="Postal Code" placeholder="P3A4P8" />
+      <property name="layout" type="String" label="Layout" datasource="Condensed, Expanded" description="TIP: Expanded includes a large map; only use it where there is room." />
+      <property name="zoomLevel" type="String" label="Map Zoom Level" datasource="1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20" default="11" />
     </targetConfig>
   </targetConfigs>
   <masterLabel>Factory Store Hours And Location</masterLabel>

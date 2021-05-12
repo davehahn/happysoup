@@ -5,6 +5,7 @@
 import { LightningElement, wire, api, track } from 'lwc';
 import { NavigationMixin, CurrentPageReference } from 'lightning/navigation';
 import { fireEvent, registerListener, unregisterAllListeners} from 'c/pubsub';
+import { setWrapperClass } from 'c/communitySharedUtils';
 import fetchBoats from '@salesforce/apex/FactoryStore_InventoryController.fetchBoats';
 import fetchBoatsBySeries from '@salesforce/apex/FactoryStore_InventoryController.fetchBoatsBySeries';
 import fetchBoat from '@salesforce/apex/FactoryStore_InventoryController.fetchBoat';
@@ -12,13 +13,16 @@ import { loadStyle, loadScript } from 'lightning/platformResourceLoader';
 
 export default class FactoryStoreBoatListing extends NavigationMixin(LightningElement) {
 	@api seriesName;
-	//fullSeriesName;
 	@api seriesBlurb;
+	@api sectionWidth;
+
 	isMobile = false;
 	boats;
 	@track boat;
 	@track selectedBoat;
 	@track showListing = false;
+
+	wrapperClass = 'allModels';
 
 	@wire( fetchBoatsBySeries, { seriesName: '$seriesName' } )
 	wiredFetchBoatsBySeries( { error, data })
@@ -28,6 +32,7 @@ export default class FactoryStoreBoatListing extends NavigationMixin(LightningEl
 	    console.log(this.seriesName, data);
 	    this.boats = data;
 	    this.showListing = true;
+	    this.wrapperClass = setWrapperClass(this.sectionWidth, 'allModels');
    	}
    	else if ( error )
    	{
