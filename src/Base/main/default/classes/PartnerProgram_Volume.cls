@@ -5,9 +5,7 @@
 public virtual class PartnerProgram_Volume extends PartnerProgramItem
 {
 
-
-  private Decimal orderTotal = 0;
-  private final String fieldName = 'V_Hull_Discount_Percent__c';
+//  private Decimal orderTotal = 0;
   private final Set<String> applicableBoatFamilies = new Set<String>{
     'Side Console',
     'Full Windshield',
@@ -17,13 +15,15 @@ public virtual class PartnerProgram_Volume extends PartnerProgramItem
   public PartnerProgram_Volume()
   {
     this.name = 'V-Hull / Deck Boat Volume Discount';
+    this.bookingOrderFieldName = 'V_Hull_Discount_Percent__c';
+    this.volumeType = 'V Hull';
   }
 
   public override void init( PartnerProgram_Service.DealerOrderWrapper orderWrapper )
   {
     super.init( orderWrapper );
-    calcOrderTotal();
-    System.debug( 'Volume order total = ' + this.orderTotal );
+//    calcOrderTotal();
+//    System.debug( 'Volume order total = ' + this.orderTotal );
   }
 
   public override Boolean isApplicable()
@@ -33,11 +33,6 @@ public virtual class PartnerProgram_Volume extends PartnerProgramItem
 //    if( !this.orderWrapper.isBookingOrder )
 //      return this.hasVerifiedBookingOrder;
     return false;
-  }
-
-  public override String getBookingOrderFieldName()
-  {
-    return this.fieldName;
   }
 
   public override Decimal getDiscountPercent()
@@ -73,7 +68,7 @@ public virtual class PartnerProgram_Volume extends PartnerProgramItem
     return discounts;
   }
 
-  private void calcOrderTotal()
+  protected override void calculateVolumeLevel()
   {
     Id discountProdId = LGND_Constants.savingsProductId;
     Id feeRtId = LGND_Constants.productRtId_Fees;
@@ -84,7 +79,7 @@ public virtual class PartnerProgram_Volume extends PartnerProgramItem
         if( mat.AcctSeedERP__Product__c != discountProdId &&
             mat.AcctSeedERP__Product__r.RecordTypeId != feeRtId )
         {
-          this.orderTotal += mat.GMBLASERP__Unit_Price__c;
+          this.volumeLevel += mat.GMBLASERP__Unit_Price__c;
         }
       }
     }
@@ -92,61 +87,7 @@ public virtual class PartnerProgram_Volume extends PartnerProgramItem
 
   protected override Decimal determineSavingsPercent()
   {
-    if( this.hasVerifiedBookingOrder &&
-        !this.orderWrapper.isBookingOrder &&
-        orderWrapper.bookingOrder.get( this.fieldName ) != null )
-    {
-      return (Decimal) orderWrapper.bookingOrder.get(this.fieldName);
-    }
-    String programName = 'V_Hull_' + this.programYear;
-    Partner_Program_Volume_Setting__mdt vhullProgram;
-    try
-    {
-      vhullProgram = [
-        SELECT
-          Id,
-          Maximum_Applicable_Amount__c,
-          Maximum_Discount_Percent__c,
-          Minimum_Applicable_Amount__c, (
-          SELECT
-            Id,
-            Label,
-            Discount_Percent__c,
-            Upper_Cutoff__c
-          FROM Partner_Program_Volume_Levels__r
-          ORDER BY Upper_Cutoff__c
-        )
-        FROM Partner_Program_Volume_Setting__mdt
-        WHERE DeveloperName = :programName
-      ];
-    }
-    catch( Exception e )
-    {
-      return 0;
-    }
-
-    if( this.orderTotal < vhullProgram.Minimum_Applicable_Amount__c )
-      return 0;
-    if( this.orderTotal >= vhullProgram.Maximum_Applicable_Amount__c )
-      return vhullProgram.Maximum_Discount_Percent__c;
-
-    for( Partner_Program_Volume_Level__mdt level : vhullProgram.Partner_Program_Volume_Levels__r )
-    {
-      if( this.orderTotal <= level.Upper_Cutoff__c )
-        return level.Discount_Percent__c;
-    }
-    return 0;
-//
-//    if( this.orderTotal < 150000 )
-//      return 0;
-//    if( this.orderTotal < 275000 )
-//      return 1;
-//    if( this.orderTotal < 400000 )
-//      return 2;
-//    if( this.orderTotal < 600000 )
-//      return 4;
-//    if( this.orderTotal < 875000 )
-//      return 6;
-//    return 8;
+    return this.determineSavingsPercentByVolume();
   }
+
 }

@@ -4,7 +4,12 @@
 
 public virtual class PartnerProgramItem implements PartnerProgramItem_I, Promise.Deferred
 {
+  @TestVisible
   protected String name;
+  protected String bookingOrderFieldName;
+  protected final String volumeType;
+  protected Decimal volumeLevel=0;
+
   public Dealer_Order__c dealerOrder;
   public String programYear;
   public List<PartnerProgram_Service.ErpWrapper> erpWrappers;
@@ -43,6 +48,7 @@ public virtual class PartnerProgramItem implements PartnerProgramItem_I, Promise
       this.hasVerifiedBookingOrder = true;
     }
     filterApplicableERPs( orderWrapper.erpWrappers );
+    this.calculateVolumeLevel();
   }
 
   public virtual String getName()
@@ -57,7 +63,7 @@ public virtual class PartnerProgramItem implements PartnerProgramItem_I, Promise
 
   public virtual String getBookingOrderFieldName()
   {
-    return null;
+    return this.bookingOrderFieldName;
   }
 
   public virtual Decimal getDiscountPercent()
@@ -152,6 +158,56 @@ public virtual class PartnerProgramItem implements PartnerProgramItem_I, Promise
   protected virtual Decimal determineSavingsPercent()
   {
     return 0;
+  }
+
+  protected virtual Decimal determineSavingsPercentByVolume()
+  {
+    if( this.hasVerifiedBookingOrder &&
+      !this.orderWrapper.isBookingOrder &&
+      orderWrapper.bookingOrder.get( this.bookingOrderFieldName ) != null )
+    {
+      return (Decimal) orderWrapper.bookingOrder.get(this.bookingOrderFieldName);
+    }
+
+    Partner_Volume_Program__mdt program;
+    try
+    {
+      program = [
+        SELECT
+          Id,
+        ( SELECT
+          Id,
+          Label,
+          Discount_Percent__c,
+          Lower_Limit__c,
+          Upper_Limit__c
+        FROM Partner_Volume_Levels__r
+        ORDER BY Upper_Limit__c
+        )
+        FROM Partner_Volume_Program__mdt
+        WHERE Type__c = :this.volumeType
+        AND Program_Year__c = :Integer.valueOf(this.programYear)
+      ];
+    }
+    catch( Exception e )
+    {
+      return 0;
+    }
+
+    for( Partner_Volume_Level__mdt level : program.Partner_Volume_Levels__r )
+    {
+      if( level.Upper_Limit__c == null && this.volumeLevel >= level.Lower_Limit__c )
+        return level.Discount_Percent__c;
+      if( this.volumeLevel >= level.Lower_Limit__c && this.volumeLevel <= level.Upper_Limit__c )
+        return level.Discount_Percent__c;
+    }
+    return 0;
+  }
+
+
+  protected virtual void calculateVolumeLevel()
+  {
+    this.volumeLevel = 0;
   }
 
   protected List<AcctSeedERP__Material__c> doStandardApply()

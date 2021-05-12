@@ -56,9 +56,9 @@ private class PartnerProgramItem_T
 
   private static void createDealerOrder( Integer quantity )
   {
-    order = Factory_DealerOrder.createDealerOrder(partner);
+    order = Factory_DealerOrder.buildDealerOrder(partner, '2021');
     order.Is_Booking_Order__c = true;
-    update order;
+    insert order;
     order = [
       SELECT
         Id,
@@ -114,10 +114,10 @@ private class PartnerProgramItem_T
   }
 
   @IsTest
-  static void PartnerProgram_Volume_NotApplicable_Test()
+  static void PartnerProgram_Volume_NotApplicable_AndOther_Test()
   {
     init('Full Windshield', 50000, null);
-
+    //2021 Program starts @ $150000 so 2 X 50000 = $100000 and not applicable
     System.runAs( partnerUser )
     {
       createDealerOrder( 2 );
@@ -129,13 +129,19 @@ private class PartnerProgramItem_T
       program.init( orderWrapper );
 
       System.assert( !program.isApplicable(), 'PartnerProgram_Volume should NOT be applicable');
+      System.assertEquals( 'V-Hull / Deck Boat Volume Discount', program.getName() );
+      System.assertEquals( 'V_Hull_Discount_Percent__c', program.getBookingOrderFieldName() );
+      System.assertEquals( orderWrapper.dealerOrderId, program.getOrderWrapper().dealerOrderId );
+      System.assertEquals( false, program.isApplicable() );
 
     }
   }
 
+
   @IsTest
   static void PartnerProgram_Volume_Applicable_Mini2021_Test()
   {
+    //2021 Program Mini level %1 if < $250000 so $50000 * 4 = 200000 and 1% discount
     init('Full Windshield', 50000, null);
 
     System.runAs( partnerUser )
@@ -162,7 +168,124 @@ private class PartnerProgramItem_T
   }
 
   @IsTest
-  static void PartnerProgram_PontoonVolume_Applicable_Test()
+  static void PartnerProgram_Volume_Applicable_Small2021_Test()
+  {
+    //2021 Program Small level %2 if > $250000 && < $400000 so $50000 * 7 = 350000 and 2% discount
+    init('Full Windshield', 50000, null);
+
+    System.runAs( partnerUser )
+    {
+      createDealerOrder( 7 );
+      PartnerProgram_Service.DealerOrderWrapper orderWrapper =
+        new PartnerProgram_Service.DealerOrderWrapper(
+          order, erps, null
+        );
+      PartnerProgram_Volume program = new PartnerProgram_Volume();
+      program.init( orderWrapper );
+
+      System.assert( program.isApplicable(), 'PartnerProgram_Volume should be applicable');
+      System.assert( !program.wasAppliedPreviously(), 'PartnerProgram_Volume should Not have been applied previously');
+      System.assertEquals( 2, program.getDiscountPercent(), 'Volume discount should be 2%' );
+
+      Decimal totalSavings = 7 * ( 50000 * 0.02 );
+      List<AcctSeedERP__Material__c> discounts = program.apply();
+      PartnerProgram_Service.ResultMessage result = program.getResult();
+
+      System.assertEquals( 7, discounts.size() );
+      System.assertEquals( totalSavings, result.totalSaving );
+    }
+  }
+
+  @IsTest
+  static void PartnerProgram_Volume_Applicable_Medium2021_Test()
+  {
+    //2021 Program Medium level %4 if > $400000 && < $600000 so $100000 * 5 = 500000 and 4% discount
+    init('Full Windshield', 100000, null);
+
+    System.runAs( partnerUser )
+    {
+      createDealerOrder( 5 );
+      PartnerProgram_Service.DealerOrderWrapper orderWrapper =
+        new PartnerProgram_Service.DealerOrderWrapper(
+          order, erps, null
+        );
+      PartnerProgram_Volume program = new PartnerProgram_Volume();
+      program.init( orderWrapper );
+
+      System.assert( program.isApplicable(), 'PartnerProgram_Volume should be applicable');
+      System.assert( !program.wasAppliedPreviously(), 'PartnerProgram_Volume should Not have been applied previously');
+      System.assertEquals( 4, program.getDiscountPercent(), 'Volume discount should be 4%' );
+
+      Decimal totalSavings = 5 * ( 100000 * 0.04 );
+      List<AcctSeedERP__Material__c> discounts = program.apply();
+      PartnerProgram_Service.ResultMessage result = program.getResult();
+
+      System.assertEquals( 5, discounts.size() );
+      System.assertEquals( totalSavings, result.totalSaving );
+    }
+  }
+
+  @IsTest
+  static void PartnerProgram_Volume_Applicable_Large021_Test()
+  {
+    //2021 Program Large level %6 if > $600000 && < $875000 so $100000 * 7 = 700000 and 6% discount
+    init('Full Windshield', 100000, null);
+
+    System.runAs( partnerUser )
+    {
+      createDealerOrder( 7 );
+      PartnerProgram_Service.DealerOrderWrapper orderWrapper =
+        new PartnerProgram_Service.DealerOrderWrapper(
+          order, erps, null
+        );
+      PartnerProgram_Volume program = new PartnerProgram_Volume();
+      program.init( orderWrapper );
+
+      System.assert( program.isApplicable(), 'PartnerProgram_Volume should be applicable');
+      System.assert( !program.wasAppliedPreviously(), 'PartnerProgram_Volume should Not have been applied previously');
+      System.assertEquals( 6, program.getDiscountPercent(), 'Volume discount should be 6%' );
+
+      Decimal totalSavings = 7 * ( 100000 * 0.06 );
+      List<AcctSeedERP__Material__c> discounts = program.apply();
+      PartnerProgram_Service.ResultMessage result = program.getResult();
+
+      System.assertEquals( 7, discounts.size() );
+      System.assertEquals( totalSavings, result.totalSaving );
+    }
+  }
+
+  @IsTest
+  static void PartnerProgram_Volume_Applicable_XLarge2021_Test()
+  {
+    //2021 Program X-Large level %8 if > $$875000 so $150000 * 6 = 900000 and 8% discount
+    init('Full Windshield', 150000, null);
+
+    System.runAs( partnerUser )
+    {
+      createDealerOrder( 6 );
+      PartnerProgram_Service.DealerOrderWrapper orderWrapper =
+        new PartnerProgram_Service.DealerOrderWrapper(
+          order, erps, null
+        );
+      PartnerProgram_Volume program = new PartnerProgram_Volume();
+      program.init( orderWrapper );
+
+      System.assert( program.isApplicable(), 'PartnerProgram_Volume should be applicable');
+      System.assert( !program.wasAppliedPreviously(), 'PartnerProgram_Volume should Not have been applied previously');
+      System.assertEquals( 8, program.getDiscountPercent(), 'Volume discount should be 6%' );
+
+      Decimal totalSavings = 6 * ( 150000 * 0.08 );
+      List<AcctSeedERP__Material__c> discounts = program.apply();
+      PartnerProgram_Service.ResultMessage result = program.getResult();
+
+      System.assertEquals( 6, discounts.size() );
+      System.assertEquals( totalSavings, result.totalSaving );
+    }
+  }
+
+
+  @IsTest
+  static void PartnerProgram_PontoonVolume_ApplicableMini_Test()
   {
     init('Pontoon', 50000, null);
 
@@ -185,6 +308,34 @@ private class PartnerProgramItem_T
       PartnerProgram_Service.ResultMessage result = program.getResult();
 
       System.assertEquals( 4, discounts.size() );
+      System.assertEquals( totalSavings, result.totalSaving );
+    }
+  }
+
+  @IsTest
+  static void PartnerProgram_PontoonVolume_ApplicableSmall_Test()
+  {
+    init('Pontoon', 50000, null);
+
+    System.runAs( partnerUser )
+    {
+      createDealerOrder( 10 );
+      PartnerProgram_Service.DealerOrderWrapper orderWrapper =
+        new PartnerProgram_Service.DealerOrderWrapper(
+          order, erps, null
+        );
+      PartnerProgram_PontoonVol program = new PartnerProgram_PontoonVol();
+      program.init( orderWrapper );
+
+      System.assert( program.isApplicable(), 'PartnerProgram_PontoonVol should be applicable');
+      System.assert( !program.wasAppliedPreviously(), 'PartnerProgram_PontoonVol should Not have been applied previously');
+      System.assertEquals( 2, program.getDiscountPercent(), 'Pontoon Volume discount should be 2%' );
+
+      Decimal totalSavings = 10 * ( 50000 * 0.02 );
+      List<AcctSeedERP__Material__c> discounts = program.apply();
+      PartnerProgram_Service.ResultMessage result = program.getResult();
+
+      System.assertEquals( 10, discounts.size() );
       System.assertEquals( totalSavings, result.totalSaving );
     }
   }
