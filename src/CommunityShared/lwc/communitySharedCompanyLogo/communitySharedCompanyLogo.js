@@ -4,22 +4,23 @@
 
 import { LightningElement, api, wire } from 'lwc';
 import Id from '@salesforce/community/Id';
-import getManagedContentByContentKeys from '@salesforce/apex/CommSharedMC_Controller.getManagedContentByContentKeys';
+import fetchCommunityUrl from '@salesforce/apex/CommSharedURL_Controller.fetchCommunityUrl';
 
 export default class CommunitySharedCompanyLogo extends LightningElement {
 	@api companyLogo;
 	@api companyName;
 	companyLogoBg;
+	companyLogoImg;
 
 	renderedCallback(){
 		if(this.companyLogo){
-		  getManagedContentByContentKeys({ communityId: Id, managedContentIds: this.companyLogo, pageParam: 0, pageSize: 1, language: 'en_US', managedContentType: 'cms_image', showAbsoluteUrl: false })
-				.then( (result) => {
-					this.companyLogoBg = 'background-image: url("' + result.items[0].contentNodes.source.url + '")';
-					console.log('result: ', result);
-				}).catch(e => {
-						console.log('error: ', e);
-				});
+		  fetchCommunityUrl({communityId: Id})
+		  	.then( (result) => {
+		  	  console.log('fetch community url result: ', result);
+		  	  this.companyLogoImg = 'background-image: url("' + result + '/cms/delivery/media/' + this.companyLogo + '")';
+				 }).catch(e => {
+					 console.log('fetch community url error: ', e);
+				 });
   	}
  	}
 }

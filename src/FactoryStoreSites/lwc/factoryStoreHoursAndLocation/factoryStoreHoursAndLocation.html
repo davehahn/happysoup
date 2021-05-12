@@ -4,19 +4,30 @@
 
 <!-- Factory Store Hours And Location -->
 <template>
-  <section class="hoursAndLocation">
-    <div class="hours">
-      <span class={statusClass}>{currentStatus}</span>
-      <span class="currentHours">{currentHours}</span>
-      <span class="currentDate">{currentDate}</span>
-    </div>
-    <div class="location">
+  <div class="hourAndLocationWrapper">
+    <template if:true={showCondensed}>
+      <section class="hoursAndLocation">
+        <div class="hours">
+          <span class={statusClass}>{currentStatus}</span>
+          <span class="currentHours">{currentHours}</span>
+          <span class="currentDate">{currentDate}</span>
+        </div>
+        <div class="location">
       <span class="addressLineOne">
         {streetNumber} {route}
       </span>
-      <span class="addressLineTwo">
+          <span class="addressLineTwo">
         {locality}, {administrativeArea} {postalCode}
       </span>
-    </div>
-  </section>
+        </div>
+      </section>
+    </template>
+    <template if:true={showExpanded}>
+      <lightning-map
+          map-markers={mapMarkers}
+          zoom-level={zoomLevel}>
+      </lightning-map>
+    </template>
+  </div>
+
 </template>

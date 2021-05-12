@@ -6,12 +6,14 @@ import { LightningElement, wire, api } from 'lwc';
 import insertLead from '@salesforce/apex/CommSharedLeadForm_Controller.insertLead';
 import LeadForm_FirstName from '@salesforce/label/c.LeadForm_FirstName';
 import LeadForm_LastName from '@salesforce/label/c.LeadForm_LastName';
-import { getTestUser, renderEN, renderFR } from 'c/communitySharedUtils';
+import { getTestUser, renderEN, renderFR, setWrapperClass } from 'c/communitySharedUtils';
 
 export default class CommunitySharedLeadForm extends LightningElement {
 
 	@api formName;
   @api campaignId;
+  @api introTitle;
+  @api introBlurb;
   @api collectFirstName;
   @api collectLastName;
   @api collectStreet;
@@ -25,9 +27,11 @@ export default class CommunitySharedLeadForm extends LightningElement {
   @api collectPlanToPurchase;
   @api collectNotes;
   @api collectNewsletterOptin;
+  @api sectionWidth;
 
   @api boatModelId;
 
+	wrapperClass = 'leadFormWrapper';
   showForm = true;
   showThankyou = false;
   showLoading = false;
@@ -40,6 +44,10 @@ export default class CommunitySharedLeadForm extends LightningElement {
   }
 
 	defaultCampaignId = '701q0000000mL7GAAU';
+
+	renderedCallback(){
+		this.wrapperClass = setWrapperClass(this.sectionWidth, 'leadFormWrapper');
+ 	}
 
 	validateLead( event ){
 		const allValid = [...this.template.querySelectorAll('lightning-input')]

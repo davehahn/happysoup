@@ -2,22 +2,47 @@
  * Created by Tim on 2021-03-30.
  */
 
-import { LightningElement, api, wire, track } from 'lwc';
+import { LightningElement, api, wire } from 'lwc';
 import { loadStyle, loadScript } from 'lightning/platformResourceLoader';
 
 
 export default class FactoryStoreHoursAndLocation extends LightningElement {
 
 	@api storeLocation;
+	@api layout;
 
-	@track currentStatus = 'Open';
-	@track currentHours = '8AM - 5PM';
+	currentStatus = 'Open';
+	currentHours = '8AM - 5PM';
 
-	@track streetNumber = '4795';
-	@track route = 'Regional Road 55';
-	@track locality = 'Whitefish';
-	@track administrativeArea = 'ON';
-	@track postalCode = 'POM 3EO';
+	@api streetNumber;
+	@api route;
+	@api locality;
+	@api administrativeArea;
+	@api postalCode;
+
+	mapMarkers;
+	@api zoomLevel;
+
+	connectedCallback(){
+	  const street = this.streetNumber + ' ' + this.route;
+	  console.log('street: ', street);
+
+	  this.mapMarkers = [{
+			location: {
+				Street: street,
+				City: this.locality,
+				Country: 'Canada'
+			},
+		}];
+ }
+
+	apiKey = 'AIzaSyBH4HHMg0ktDvCzZT7LiqXPdgFr32lMCNc';
+
+	renderedCallback(){
+		if(this.layout === 'Expanded'){
+
+  	}
+ 	}
 
 	get statusClass(){
 	  return (this.currentStatus === 'Open') ? 'currentStatus currentStatus--open' : 'currentStatus currentStatus--closed';
@@ -26,4 +51,13 @@ export default class FactoryStoreHoursAndLocation extends LightningElement {
  get currentDate(){
    return new Date().toLocaleDateString("en-CA", {weekday: 'long', month: 'long', day: 'numeric'});
  }
+
+ get showCondensed(){
+   return (this.layout === 'Condensed') ? true : false;
+ }
+
+ get showExpanded(){
+		return (this.layout === 'Expanded') ? true : false;
+	}
+
 }

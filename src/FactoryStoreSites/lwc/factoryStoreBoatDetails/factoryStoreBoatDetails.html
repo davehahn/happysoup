@@ -32,7 +32,7 @@
         <ul>
           <template for:each={boatSpecs} for:item="spec">
             <li key={spec.Name}>
-              <span>{spec.Name}</span> <strong>{spec.Value}</strong>
+              <span>{spec.Name}</span> <lightning-formatted-rich-text value={spec.Value}></lightning-formatted-rich-text>
             </li>
           </template>
         </ul>
@@ -103,7 +103,8 @@
                   collect-phone="true"
                   collect-plan-to-purchase="true"
                   collect-notes="true"
-                  collect-newsletter-optin="true"></c-community-shared-lead-form>
+                  collect-newsletter-optin="true"
+                  section-width="Container"></c-community-shared-lead-form>
         </section>
       </div>
 
