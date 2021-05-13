@@ -4,7 +4,7 @@
         <processMetadataValues>
             <name>textJson</name>
             <value>
-                <stringValue>{&quot;mentions&quot;:[{&quot;name&quot;:&quot;Jesse Davis&quot;,&quot;id&quot;:&quot;005i0000002c3RpAAI&quot;},{&quot;name&quot;:&quot;Marc Duhamel&quot;,&quot;id&quot;:&quot;005i0000000vFKFAA2&quot;},{&quot;name&quot;:&quot;Jamie Dewar&quot;,&quot;id&quot;:&quot;005i0000000vF3uAAE&quot;},{&quot;name&quot;:&quot;Steven Boothe&quot;,&quot;id&quot;:&quot;005i0000002cTYqAAM&quot;},{&quot;name&quot;:&quot;Ryan Fraser&quot;,&quot;id&quot;:&quot;005i0000002c3RsAAI&quot;}],&quot;message&quot;:&quot;@[005i0000002c3RpAAI] @[005i0000000vFKFAA2] @[005i0000000vF3uAAE] @[005i0000002cTYqAAM] @[005i0000002c3RsAAI] \n\n{![Dealer_Order__c].CreatedBy.CompanyName} has placed an order. \n\nhttps://legendboats.lightning.force.com/one/one.app#/sObject/{![Dealer_Order__c].Id}/view\n\n{![Dealer_Order__c].Name}\nOrder Total: ${![Dealer_Order__c].Order_Total__c}\nNumber of units: {![Dealer_Order__c].LineItemCount__c}\nBooking Order? {![Dealer_Order__c].Is_Booking_Order__c}&quot;}</stringValue>
+                <stringValue>{&quot;mentions&quot;:[{&quot;name&quot;:&quot;Jesse Davis&quot;,&quot;id&quot;:&quot;005i0000002c3RpAAI&quot;},{&quot;name&quot;:&quot;Marc Duhamel&quot;,&quot;id&quot;:&quot;005i0000000vFKFAA2&quot;},{&quot;name&quot;:&quot;Jamie Dewar&quot;,&quot;id&quot;:&quot;005i0000000vF3uAAE&quot;},{&quot;name&quot;:&quot;Steven Boothe&quot;,&quot;id&quot;:&quot;005i0000002cTYqAAM&quot;},{&quot;name&quot;:&quot;John Winter&quot;,&quot;id&quot;:&quot;0051Y000009wKCwQAM&quot;}],&quot;message&quot;:&quot;@[005i0000002c3RpAAI] @[005i0000000vFKFAA2] @[005i0000000vF3uAAE] @[005i0000002cTYqAAM] @[0051Y000009wKCwQAM] \n\n{![Dealer_Order__c].CreatedBy.CompanyName} has placed an order. \n\nhttps://legendboats.lightning.force.com/one/one.app#/sObject/{![Dealer_Order__c].Id}/view\n\n{![Dealer_Order__c].Name}\nOrder Total: ${![Dealer_Order__c].Order_Total__c}\nNumber of units: {![Dealer_Order__c].LineItemCount__c}\nBooking Order? {![Dealer_Order__c].Is_Booking_Order__c}&quot;}</stringValue>
             </value>
         </processMetadataValues>
         <name>myRule_1_A1</name>
@@ -13,10 +13,11 @@
         <locationY>200</locationY>
         <actionName>chatterPost</actionName>
         <actionType>chatterPost</actionType>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
         <inputParameters>
             <name>text</name>
             <value>
-                <stringValue>@[005i0000002c3RpAAI] @[005i0000000vFKFAA2] @[005i0000000vF3uAAE] @[005i0000002cTYqAAM] @[005i0000002c3RsAAI] 
+                <stringValue>@[005i0000002c3RpAAI] @[005i0000000vFKFAA2] @[005i0000000vF3uAAE] @[005i0000002cTYqAAM] @[0051Y000009wKCwQAM] 
 
 {!myVariable_current.CreatedBy.CompanyName} has placed an order. 
 
@@ -38,7 +39,7 @@ Booking Order? {!myVariable_current.Is_Booking_Order__c}</stringValue>
             </value>
         </inputParameters>
     </actionCalls>
-    <apiVersion>51.0</apiVersion>
+    <apiVersion>49.0</apiVersion>
     <decisions>
         <processMetadataValues>
             <name>index</name>
@@ -214,7 +215,7 @@ Booking Order? {!myVariable_current.Is_Booking_Order__c}</stringValue>
             <label>Previously Met - Prev</label>
         </rules>
     </decisions>
-    <description>Sends out a chatter on the Dealer order Record when in Pending Review.</description>
+    <description>Sends out a chatter on the Dealer order Record when in Pending Review.  Note Robert has his own notification on Dealers that belong only to him.</description>
     <interviewLabel>Chatter_to_Jamie_Marc_and-6_InterviewLabel</interviewLabel>
     <label>Chatter to Jamie, Marc and Jesse Dealer Order Pending Review</label>
     <processMetadataValues>
