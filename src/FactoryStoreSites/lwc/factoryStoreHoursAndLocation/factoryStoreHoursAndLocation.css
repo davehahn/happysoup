@@ -32,3 +32,41 @@
   font-weight: bold;
   display: block;
 }
+.location .addressLineOne b{
+  white-space: nowrap;
+}
+
+.mapWrapper{
+  display: block;
+  position: relative;
+}
+lightning-map{
+  position: relative;
+  width: 100%; height: 400px;
+  z-index: 1;
+}
+.mapLegend{
+  display: block;
+  position: absolute;
+  bottom: 5%; left: 2%;
+  width: fit-content;
+  width: -moz-fit-content;
+  height: 90%;
+  background-color: var(--zebra);
+  box-shadow: 0 0 20px 0px rgb(0 0 0 / 25%);
+  box-sizing: border-box;
+  padding: 1.5%;
+  z-index: 2;
+}
+
+.mapLegend .location{
+  margin-bottom: 0.75em;
+  font-size: 0.85em;
+}
+.mapLegend .location .addressLineOne{
+	font-weight: 300;
+}
+.mapLegend .storeHours{
+  margin-top: 0.5em;
+  font-size: 0.85em;
+}

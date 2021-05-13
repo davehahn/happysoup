@@ -4,7 +4,7 @@
 
 <!-- Factory Store Hours And Location -->
 <template>
-  <div class="hourAndLocationWrapper">
+  <div class={wrapperClass}>
     <template if:true={showCondensed}>
       <section class="hoursAndLocation">
         <div class="hours">
@@ -13,20 +13,42 @@
           <span class="currentDate">{currentDate}</span>
         </div>
         <div class="location">
-      <span class="addressLineOne">
-        {streetNumber} {route}
-      </span>
+          <span class="addressLineOne">
+            {street_number} {route}
+          </span>
           <span class="addressLineTwo">
-        {locality}, {administrativeArea} {postalCode}
-      </span>
+            {locality}, {administrative_area_level_1} {postal_code}
+          </span>
         </div>
       </section>
     </template>
     <template if:true={showExpanded}>
-      <lightning-map
-          map-markers={mapMarkers}
-          zoom-level={zoomLevel}>
-      </lightning-map>
+      <figure class="mapWrapper">
+        <lightning-map
+            map-markers={mapMarkers}
+            options={mapOptions}
+            zoom-level={zoomLevel}>
+        </lightning-map>
+        <figcaption class="mapLegend">
+          <h4 class="heading heading-s">{name}</h4>
+          <div class="location">
+            <span class="addressLineOne">
+              {street_number} {route}
+            </span>
+              <span class="addressLineTwo">
+              {locality}, {administrative_area_level_1} {postal_code}
+            </span>
+          </div>
+          <span class={statusClass}>{currentStatus}</span>
+          <ol class="storeHours">
+            <template for:each={weekday_text} for:item="day" for:index="index">
+              <li key={day.index}>
+                {day}
+              </li>
+            </template>
+          </ol>
+        </figcaption>
+      </figure>
     </template>
   </div>
 

@@ -4,45 +4,122 @@
 
 import { LightningElement, api, wire } from 'lwc';
 import { loadStyle, loadScript } from 'lightning/platformResourceLoader';
+import { setWrapperClass } from 'c/communitySharedUtils';
+import fetchPlacesApiResult from '@salesforce/apex/CommSharedPlacesApi_Controller.fetchPlacesApiResult';
+import fetchDistanceApiResult from '@salesforce/apex/CommSharedPlacesApi_Controller.fetchDistanceApiResult';
 
 
 export default class FactoryStoreHoursAndLocation extends LightningElement {
 
 	@api storeLocation;
 	@api layout;
+	@api sectionWidth;
 
-	currentStatus = 'Open';
-	currentHours = '8AM - 5PM';
+	wrapperClass = 'hourAndLocationWrapper';
 
-	@api streetNumber;
-	@api route;
-	@api locality;
-	@api administrativeArea;
-	@api postalCode;
+	currentStatus;
+	currentHours;
+	weekday_text;
 
+	name;
+	street_number;
+	route;
+	locality;
+	administrative_area_level_1;
+	postal_code;
+
+	lat;
+	lng;
 	mapMarkers;
+	mapOptions = {
+		 disableDefaultUI: true
+	};
 	@api zoomLevel;
 
-	connectedCallback(){
-	  const street = this.streetNumber + ' ' + this.route;
-	  console.log('street: ', street);
+	gpResult;
+	@api locationName;
+	inputType = 'textquery';
+	fields = 'photos,formatted_address,name,rating,opening_hours,geometry,place_id';
 
-	  this.mapMarkers = [{
-			location: {
-				Street: street,
-				City: this.locality,
-				Country: 'Canada'
-			},
-		}];
- }
+	@wire( fetchPlacesApiResult, {input: '$locationName', inputType: '$inputType', fields: '$fields'})
+		wiredFetchPlacesApiResult( { error, data } )
+		{
+			if( data )
+			{
+				console.log('my place api result: ', data);
+				this.gpResult = data;
+				this.updateLocationDetails();
+   		}
+   		else if ( error ){
+   			console.log('places api error: ', error);
+     	}
+ 	 	}
 
-	apiKey = 'AIzaSyBH4HHMg0ktDvCzZT7LiqXPdgFr32lMCNc';
+//	@wire( fetchDistanceApiResult, {origin: '40.6655101,-73.89188969999998', destinations: '40.6905615%2C-73.9976592%7C40.6905615%2C-73.9976592%7C40.6905615%2C-73.9976592%7C40.6905615%2C-73.9976592%7C40.6905615%2C-73.9976592%7C40.6905615%2C-73.9976592%7C40.659569%2C-73.933783%7C40.729029%2C-73.851524%7C40.6860072%2C-73.6334271%7C40.598566%2C-73.7527626%7C40.659569%2C-73.933783%7C40.729029%2C-73.851524%7C40.6860072%2C-73.6334271%7C40.598566%2C-73.7527626'})
+//		wiredFetchDistanceApiResult( {error, data} )
+//		{
+//			if( data )
+//			{
+//				console.log('destinations api result: ', data);
+//			}
+//			else if ( error ){
+//				console.log('destinations apir error: ', error);
+//			}
+//		}
 
-	renderedCallback(){
-		if(this.layout === 'Expanded'){
+ 	updateLocationDetails(){
+ 	  this.parseAddress();
+		this.currentStatus = (this.gpResult.opening_hours.open_now) ? 'Open' : 'Closed';
+		this.currentHours = this.parsePeriods();
 
-  	}
- 	}
+ 	  if(this.layout === 'Condensed'){
+
+    } else if(this.layout === 'Expanded'){
+      	this.wrapperClass = setWrapperClass(this.sectionWidth, 'hourAndLocationWrapper');
+				this.mapMarkers = [{
+					location: {
+						Latitude: this.gpResult.geometry.location.lat,
+						Longitude: this.gpResult.geometry.location.lng
+					},
+				}];
+				this.name = this.gpResult.name;
+				this.weekday_text = this.gpResult.opening_hours.weekday_text;
+		 }
+  }
+
+  parseAddress(){
+    const address_components = this.gpResult.address_components;
+		address_components.forEach((c, i) => {
+			if(c.types.indexOf('street_number') >= 0){
+				this.street_number = c.long_name;
+			} else if(c.types.indexOf('route') >= 0){
+				this.route = c.long_name;
+			} else if(c.types.indexOf('locality') >= 0){
+				this.locality = c.long_name;
+			} else if(c.types.indexOf('administrative_area_level_1') >= 0){
+				this.administrative_area_level_1 = c.long_name;
+			} else if(c.types.indexOf('postal_code') >= 0){
+				this.postal_code = c.long_name;
+			}
+		});
+  }
+
+  parsePeriods(){
+    const n = (new Date().getDay()) - 1;
+    const open = this.gpResult.opening_hours.periods[n].open.time;
+    let openHr = open.substr(0, 2);
+    let openMin = open.substr(2, 2);
+    let openAMPM = openHr >= 12 ? 'pm' : 'am';
+    openHr = (openHr % 12) || 12;
+
+    const close = this.gpResult.opening_hours.periods[n].close.time;
+    let closeHr = close.substr(0, 2);
+    let closeMin = close.substr(2, 2);
+    let closeAMPM = closeHr >= 12 ? 'pm' : 'am';
+    closeHr = (closeHr % 12) || 12;
+
+    return openHr + ':' + openMin +  openAMPM + ' - ' + closeHr + ':' + closeMin + closeAMPM;
+  }
 
 	get statusClass(){
 	  return (this.currentStatus === 'Open') ? 'currentStatus currentStatus--open' : 'currentStatus currentStatus--closed';

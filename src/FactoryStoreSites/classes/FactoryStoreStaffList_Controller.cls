@@ -30,6 +30,7 @@ public with sharing class FactoryStoreStaffList_Controller {
         {
             users.add( u );
         }
+        System.debug('Tim users: ' + users);
         return users;
     }
 }
