@@ -5,12 +5,18 @@ public class Factory_DealerOrder {
 	static Dealer_Order__c order;
 	static Dealer_Order_Line__c dol;
 
-  public static Dealer_Order__c buildDealerOrder( Account dealer )
+  public static Dealer_Order__c buildDealerOrder( Account dealer, String programYear )
   {
     return new Dealer_Order__c(
       Account__c = dealer.Id,
       Payment_method__c = 'Cash',
-      Program_Year__c = String.valueOf( Date.today().year() )
+      Program_Year__c = programYear
+    );
+  }
+
+  public static Dealer_Order__c buildDealerOrder( Account dealer )
+  {
+    return buildDealerOrder( dealer, String.valueOf( Date.today().year() )
     );
   }
 
