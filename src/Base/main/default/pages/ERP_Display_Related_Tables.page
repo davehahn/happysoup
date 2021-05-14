@@ -3459,15 +3459,16 @@ input.dateSelector{
                         });
                         alert(myString);
                     }
+                    takeExpense();
                 }
                 else
                 {
                     alert(event.message);
+                    refreshAll();
+                    rerenderDetail();
+                    rerenderJournalEntry();
+                    rerenderInboundMovements();
                 }
-                refreshAll();
-                rerenderDetail();
-                rerenderJournalEntry();
-                rerenderInboundMovements();
                 $gridDiv.pqGrid('hideLoading');
                 gSpinner.hide();
             },
