@@ -322,8 +322,8 @@ public with sharing class Profit_Analysis_Controller
           this.addItems( buildForERP() );
         }
       }
-      this.setPricebookValuesOnItems();
       this.sortAndGroupItems();
+      this.setPricebookValuesOnItems();
       this.buildFreightCharges();
     }
 
