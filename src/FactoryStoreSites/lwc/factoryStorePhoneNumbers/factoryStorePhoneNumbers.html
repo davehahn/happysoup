@@ -6,19 +6,19 @@
 <template>
   <ul class="storePhoneNumbers">
     <template if:true={hasPhoneSales}>
-      <li>
+      <li class="storePhoneNumbers__item">
         <span>Sales:</span>
         <a href={phoneSalesLink}>{phoneSales}</a>
       </li>
     </template>
     <template if:true={hasPhoneService}>
-      <li>
+      <li class="storePhoneNumbers__item">
         <span>Service:</span>
         <a href={phoneServiceLink}>{phoneService}</a>
       </li>
     </template>
     <template if:true={hasPhoneParts}>
-      <li>
+      <li class="storePhoneNumbers__item">
         <span>Parts:</span>
         <a href={phonePartsLink}>{phoneParts}</a>
       </li>

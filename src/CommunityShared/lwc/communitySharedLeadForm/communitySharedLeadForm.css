@@ -9,26 +9,26 @@
 form[data-id="leadForm"].complete {
 	 display: none;
 }
-form[data-id="leadForm"] .leadForm_wrapper {
+form[data-id="leadForm"] .leadForm__fieldset {
 	 border: 0 none;
 }
-form[data-id="leadForm"] .leadForm_wrapper .leadForm_subheading {
+form[data-id="leadForm"] .leadForm__fieldset .leadForm_subheading {
 	 font-size: 0.875em;
 }
-form[data-id="leadForm"] .leadForm_wrapper form[data-id="leadForm"]_errors.errors {
+form[data-id="leadForm"] .leadForm__fieldset form[data-id="leadForm"] [data-id="leadForm__errors"].errors {
 	 border: solid 2px #ba3713;
 	 box-sizing: border-box;
 	 padding: 1em;
 	 margin-bottom: 1em;
 }
-form[data-id="leadForm"] .leadForm_wrapper form[data-id="leadForm"]_errors.errors a {
+form[data-id="leadForm"] .leadForm__fieldset form[data-id="leadForm"] [data-id="leadForm__errors"].errors a {
 	 font-weight: 600;
 	 text-decoration: underline;
 }
-form[data-id="leadForm"] .leadForm_wrapper form[data-id="leadForm"]_errors.errors ol li {
+form[data-id="leadForm"] .leadForm__fieldset form[data-id="leadForm"] [data-id="leadForm__errors"].errors ol li {
 	 width: 100%;
 }
-form[data-id="leadForm"] .leadForm_wrapper form[data-id="leadForm"]_errors.errors ol li:last-of-type {
+form[data-id="leadForm"] .leadForm__fieldset form[data-id="leadForm"] [data-id="leadForm__errors"].errors ol li:last-of-type {
 	 margin-bottom: 0;
 }
 form[data-id="leadForm"] .loaderWrap {
@@ -108,45 +108,45 @@ form[data-id="leadForm"] .loaderWrap .loader.complete::after {
 form[data-id="leadForm"] .loaderWrap.active {
 	 display: block;
 }
-.leadForm_fieldList {
+.leadForm__fieldList {
 	 display: flex;
 	 flex-wrap: wrap;
 	 justify-content: space-between;
 	 margin: 1.25em 0 0;
 	 padding: 0;
 }
-.leadForm_fieldList .input {
+.leadForm__fieldList .input {
 	 width: 100%;
 	 margin-bottom: 1.25em;
 	 list-style: none;
 	 list-style-type: none !important;
 }
-.leadForm_fieldList .input fieldset {
+.leadForm__fieldList .input fieldset {
 	 padding: 0;
 	 margin: 0;
 	 border: 0 none;
 }
-.leadForm_fieldList .input fieldset legend {
+.leadForm__fieldList .input fieldset legend {
 	 font-weight: 600;
 }
-.leadForm_fieldList .input fieldset ol {
+.leadForm__fieldList .input fieldset ol {
 	 margin: 1em 0 0;
 	 padding: 0;
 	 display: flex;
 	 justify-content: flex-start;
 }
-.leadForm_fieldList .input label, .leadForm_fieldList .input legend {
+.leadForm__fieldList .input label, .leadForm__fieldList .input legend {
 	 margin-bottom: 0.25em;
 	 font-size: 1.125em;
 }
-.leadForm_fieldList .input label strong, .leadForm_fieldList .input legend strong {
+.leadForm__fieldList .input label strong, .leadForm__fieldList .input legend strong {
 	 font-weight: 600;
 }
-.leadForm_fieldList .input label .optional, .leadForm_fieldList .input legend .optional {
+.leadForm__fieldList .input label .optional, .leadForm__fieldList .input legend .optional {
 	 font-size: 0.8em;
 	 font-style: italic;
 }
-.leadForm_fieldList .input input:not([type='checkbox']), .leadForm_fieldList .input textarea, .leadForm_fieldList .input select {
+.leadForm__fieldList .input input:not([type='checkbox']), .leadForm__fieldList .input textarea, .leadForm__fieldList .input select {
 	 width: 100%;
 	 font-size: 1.125em;
 	 padding: 0.5em 0.5em 0.4em;
@@ -155,42 +155,42 @@ form[data-id="leadForm"] .loaderWrap.active {
 	 border-radius: 0;
 	 transition: all 0.2s linear;
 }
-.leadForm_fieldList .input select {
+.leadForm__fieldList .input select {
 	 appearance: none;
 	 background: #fff url(../../img/standard/icon-select.png) no-repeat top 18px right 20px;
 }
-.leadForm_fieldList .input textarea {
+.leadForm__fieldList .input textarea {
 	 height: 5em;
 }
-.leadForm_fieldList .input input:focus, .leadForm_fieldList .input textarea:focus, .leadForm_fieldList .input select:focus {
+.leadForm__fieldList .input input:focus, .leadForm__fieldList .input textarea:focus, .leadForm__fieldList .input select:focus {
 	 border: 1px solid #ffdf2e;
 	 box-shadow: 0 0 15px -5px rgba(0, 0, 0, 0.7) !important;
 	 outline: none;
 }
-.leadForm_fieldList .input input.error, .leadForm_fieldList .input textarea.error, .leadForm_fieldList .input select.error {
+.leadForm__fieldList .input input.error, .leadForm__fieldList .input textarea.error, .leadForm__fieldList .input select.error {
 	 border: 1px solid #eb3b3b;
 }
-.leadForm_fieldList .input input.clean, .leadForm_fieldList .input textarea.clean, .leadForm_fieldList .input select.clean {
+.leadForm__fieldList .input input.clean, .leadForm__fieldList .input textarea.clean, .leadForm__fieldList .input select.clean {
 	 border: 1px solid #7feb3b;
 }
-.leadForm_fieldList .input.input--textarea, .leadForm_fieldList .input.input--checkbox, .leadForm_fieldList .input.input--100 {
+.leadForm__fieldList .input.input--textarea, .leadForm__fieldList .input.input--checkbox, .leadForm__fieldList .input.input--100 {
 	 width: 100%;
 }
-.leadForm_fieldList .input.input--third {
+.leadForm__fieldList .input.input--third {
 	 width: 32%;
 	 margin-right: 1.8%;
 }
-.leadForm_fieldList .input.input--third:nth-of-type(3n) {
+.leadForm__fieldList .input.input--third:nth-of-type(3n) {
 	 margin-right: 0;
 }
-.leadForm_fieldList .input.input--checkbox {
+.leadForm__fieldList .input.input--checkbox {
 	 display: flex;
 	 position: relative;
 }
-.leadForm_fieldList .input.input--checkbox label {
+.leadForm__fieldList .input.input--checkbox label {
 	 padding-left: 1em;
 }
-.leadForm_fieldList .input.input--checkbox .customCheck {
+.leadForm__fieldList .input.input--checkbox .customCheck {
 	 position: absolute;
 	 top: 0;
 	 content: "";
@@ -201,7 +201,7 @@ form[data-id="leadForm"] .loaderWrap.active {
 	 border: 1px solid #bebebe;
 	 z-index: 1;
 }
-.leadForm_fieldList .input.input--checkbox input {
+.leadForm__fieldList .input.input--checkbox input {
 	 flex-shrink: 0;
 	 opacity: 0;
 	 position: relative;
@@ -209,10 +209,10 @@ form[data-id="leadForm"] .loaderWrap.active {
 	 width: 20px;
 	 height: 20px;
 }
-.leadForm_fieldList .input.input--checkbox input:focus + .customCheck {
+.leadForm__fieldList .input.input--checkbox input:focus + .customCheck {
 	 border: 1px solid #ffdf2e;
 }
-.leadForm_fieldList .input.input--checkbox input:checked + .customCheck::before {
+.leadForm__fieldList .input.input--checkbox input:checked + .customCheck::before {
 	 content: "";
 	 display: block;
 	 position: absolute;
@@ -224,7 +224,7 @@ form[data-id="leadForm"] .loaderWrap.active {
 	 top: 0px;
 	 background-color: var(--highlight);
 }
-.leadForm_fieldList .input.input--checkbox input:checked + .customCheck::after {
+.leadForm__fieldList .input.input--checkbox input:checked + .customCheck::after {
 	 content: "";
 	 display: block;
 	 position: absolute;
@@ -236,10 +236,10 @@ form[data-id="leadForm"] .loaderWrap.active {
 	 left: 12px;
 	 background-color: var(--highlight);
 }
-.leadForm_fieldList .input:not(.input--checkbox) label {
+.leadForm__fieldList .input:not(.input--checkbox) label {
 	 display: block;
 }
-.leadForm_fieldList .input .feedback.error {
+.leadForm__fieldList .input .feedback.error {
 	 width: 100%;
 	 display: block;
 	 padding: 0.25em;
@@ -247,81 +247,81 @@ form[data-id="leadForm"] .loaderWrap.active {
 	 color: #eb3b3b;
 	 font-weight: 600;
 }
-.leadForm_fieldList li.input.input--collections {
+.leadForm__fieldList li.input.input--collections {
 	 width: 100%;
 	 padding: 2%;
 	 border-top: 1px solid var(--hr);
 	 border-bottom: 1px solid var(--hr);
 }
-.leadForm_fieldList li.input.input--collections .collections {
+.leadForm__fieldList li.input.input--collections .collections {
 	 width: 100%;
 	 border: 0 none;
 	 padding: 0;
 }
-.leadForm_fieldList li.input.input--collections .collections legend {
+.leadForm__fieldList li.input.input--collections .collections legend {
 	 margin-bottom: 0.25em;
 	 font-size: 1.125em;
 }
-.leadForm_fieldList li.input.input--collections .collections legend strong {
+.leadForm__fieldList li.input.input--collections .collections legend strong {
 	 font-weight: 600;
 }
-.leadForm_fieldList li.input.input--collections .collections legend .optional {
+.leadForm__fieldList li.input.input--collections .collections legend .optional {
 	 font-size: 0.8em;
 	 font-style: italic;
 }
-.leadForm_fieldList li.input.input--collections .collections .collection {
+.leadForm__fieldList li.input.input--collections .collections .collection {
 	 width: 100%;
 	 border: 0 none;
 	 margin-top: 2em;
 	 padding: 0;
 }
-.leadForm_fieldList li.input.input--collections .collections .collection legend {
+.leadForm__fieldList li.input.input--collections .collections .collection legend {
 	 width: fix-content;
 	 width: -moz-fit-content;
 	 border-bottom: 1px solid;
 	 padding-bottom: 0.25em;
 	 margin-bottom: 1em;
 }
-.leadForm_fieldList li.input.input--collections .collections .collection .collection_list {
+.leadForm__fieldList li.input.input--collections .collections .collection .collection_list {
 	 margin: 0;
 	 padding: 0;
 	 display: flex;
 	 flex-wrap: wrap;
 }
-.leadForm_fieldList li.input.input--collections .collections .collection .collection_list .input--fancyCheckbox {
+.leadForm__fieldList li.input.input--collections .collections .collection .collection_list .input--fancyCheckbox {
 	 width: 32%;
 	 max-width: 390px;
 	 margin-right: 2%;
 }
-.leadForm_fieldList li.input.input--collections .collections .collection .collection_list .input--fancyCheckbox:nth-of-type(3n) {
+.leadForm__fieldList li.input.input--collections .collections .collection .collection_list .input--fancyCheckbox:nth-of-type(3n) {
 	 margin-right: 0;
 }
-.leadForm_fieldList li.input.input--collections .collections .collection .collection_list .input--fancyCheckbox label {
+.leadForm__fieldList li.input.input--collections .collections .collection .collection_list .input--fancyCheckbox label {
 	 padding-left: 0;
 	 position: relative;
 }
-.leadForm_fieldList li.input.input--collections .collections .collection .collection_list .input--fancyCheckbox label .check {
+.leadForm__fieldList li.input.input--collections .collections .collection .collection_list .input--fancyCheckbox label .check {
 	 position: absolute;
 	 top: 10px;
 	 left: 10px;
 	 z-index: 2;
 }
-.leadForm_fieldList li.input.input--collections .collections .collection .collection_list .input--fancyCheckbox label .check input, .leadForm_fieldList li.input.input--collections .collections .collection .collection_list .input--fancyCheckbox label .check .customCheck {
+.leadForm__fieldList li.input.input--collections .collections .collection .collection_list .input--fancyCheckbox label .check input, .leadForm__fieldList li.input.input--collections .collections .collection .collection_list .input--fancyCheckbox label .check .customCheck {
 	 width: 30px;
 	 height: 30px;
 }
-.leadForm_fieldList li.input.input--collections .collections .collection .collection_list .input--fancyCheckbox label .check .customCheck {
+.leadForm__fieldList li.input.input--collections .collections .collection .collection_list .input--fancyCheckbox label .check .customCheck {
 	 border: 1px solid #666;
 }
-.leadForm_fieldList li.input.input--collections .collections .collection .collection_list .input--fancyCheckbox label .check .customCheck::before {
+.leadForm__fieldList li.input.input--collections .collections .collection .collection_list .input--fancyCheckbox label .check .customCheck::before {
 	 top: 5px;
 	 left: 0;
 }
-.leadForm_fieldList li.input.input--collections .collections .collection .collection_list .input--fancyCheckbox label .check .customCheck::after {
+.leadForm__fieldList li.input.input--collections .collections .collection .collection_list .input--fancyCheckbox label .check .customCheck::after {
 	 top: -12px;
 	 left: 16px;
 }
-.leadForm_fieldList li.input.input--collections .collections .collection .collection_list .input--fancyCheckbox label .cardOuterContainer {
+.leadForm__fieldList li.input.input--collections .collections .collection .collection_list .input--fancyCheckbox label .cardOuterContainer {
 	 position: relative;
 	 z-index: 1;
 }
@@ -393,19 +393,19 @@ form[data-id="leadForm"] .loaderWrap.active {
 }
 
 @media screen and (min-width: 641px){
-  .leadForm_fieldList .input {
+  .leadForm__fieldList .input {
 			 width: 48%;
 		}
 }
 
  @media screen and (max-width: 880px) {
-	 .leadForm_fieldList li.input.input--collections .collections .collection .collection_list .input--fancyCheckbox {
+	 .leadForm__fieldList li.input.input--collections .collections .collection .collection_list .input--fancyCheckbox {
 		 width: 48%;
 	}
-	 .leadForm_fieldList li.input.input--collections .collections .collection .collection_list .input--fancyCheckbox:nth-of-type(2n) {
+	 .leadForm__fieldList li.input.input--collections .collections .collection .collection_list .input--fancyCheckbox:nth-of-type(2n) {
 		 margin-right: 0;
 	}
-	 .leadForm_fieldList li.input.input--collections .collections .collection .collection_list .input--fancyCheckbox:nth-of-type(3n) {
+	 .leadForm__fieldList li.input.input--collections .collections .collection .collection_list .input--fancyCheckbox:nth-of-type(3n) {
 		 margin-right: 2%;
 	}
 }
@@ -422,19 +422,19 @@ form[data-id="leadForm"] .loaderWrap.active {
 }
 
 @media screen and (max-width: 680px) {
-	 .leadForm_fieldList li.input.input--collections {
+	 .leadForm__fieldList li.input.input--collections {
 		 text-align: center;
 	}
-	 .leadForm_fieldList li.input.input--collections .collections .collection .collection_list {
+	 .leadForm__fieldList li.input.input--collections .collections .collection .collection_list {
 		 justify-content: center;
 	}
-	 .leadForm_fieldList li.input.input--collections .collections .collection .collection_list .input--fancyCheckbox {
+	 .leadForm__fieldList li.input.input--collections .collections .collection .collection_list .input--fancyCheckbox {
 		 width: 100%;
 	}
-	 .leadForm_fieldList li.input.input--collections .collections .collection .collection_list .input--fancyCheckbox:nth-of-type(2n) {
+	 .leadForm__fieldList li.input.input--collections .collections .collection .collection_list .input--fancyCheckbox:nth-of-type(2n) {
 		 margin-right: 0;
 	}
-	 .leadForm_fieldList li.input.input--collections .collections .collection .collection_list .input--fancyCheckbox:nth-of-type(3n) {
+	 .leadForm__fieldList li.input.input--collections .collections .collection .collection_list .input--fancyCheckbox:nth-of-type(3n) {
 		 margin-right: 0;
 	}
 }

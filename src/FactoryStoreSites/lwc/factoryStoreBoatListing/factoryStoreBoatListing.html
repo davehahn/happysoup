@@ -6,9 +6,9 @@
 <template>
   <template if:true={showListing}>
     <section class={wrapperClass}>
-      <h2 class="heading heading-special" data-series-class={seriesClass}>{fullSeriesName}</h2>
-      <p class="copy copy-standard">{seriesBlurb}</p>
-      <ul class="modelListing" onselectboat={handleOpenBoat}>
+      <h2 class="allModels__seriesName heading heading--special" data-series-class={seriesClass}>{fullSeriesName}</h2>
+      <p class="allModels__seriesBlurb copy copy--standard">{seriesBlurb}</p>
+      <ul class="allModels__modelListing" onselectboat={handleOpenBoat}>
         <template for:each={boats} for:item="boat">
           <c-factory-store-boat-listing-item boat={boat} key={boat.Id}></c-factory-store-boat-listing-item>
         </template>

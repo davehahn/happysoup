@@ -11,7 +11,7 @@
   z-index: 1;
 }
 
-.THIS .storeDetails{
+.THIS .storeHeader__storeDetails{
     display: flex;
     align-items: center;
     justify-content: flex-start;
@@ -19,36 +19,21 @@
     margin: 0 auto;
     padding: 1em 2.5em 1.5em;
 }
-.THIS .mainNavigation{
+.THIS .storeHeader__mainNavigation{
     width: 100%;
 }
-.THIS .storeLogo{
-    /*background-image: t('url(' + brandLogoImage + ')');*/
-		background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    display: block;
-    text-indent: -99999px;
-    width: 90px;
-		height: 74.5px;
-		flex-shrink: 0;
-		transition: none;
-}
-.THIS .storeLogo:hover, .THIS .storeLogo:focus{
-  text-decoration: none;
-}
 
-.THIS .locationAndHours{
+.THIS .storeHeader__locationAndHours{
   width: 190px;
   flex-shrink: 0;
   margin-left: 1em;
 }
 
-.THIS .phoneNumbers{
+.THIS .storeHeader__phoneNumbers{
   width: 100%;
 }
 
-.THIS .corporateLogo{
+.THIS .storeHeader__corporateLogo{
   display: block;
   width: 280px;
   height: 42px;
@@ -59,7 +44,11 @@
   background-repeat: no-repeat;
 }
 
-.THIS .footerLegal{
+.THIS .storeFooter{
+  margin-top: 2em;
+}
+
+.THIS .storeFooter__footerLegal{
 	max-width: 1300px;
 	margin: 0 auto;
 	padding: 2.5em;
@@ -69,3 +58,36 @@
 	line-height: 1.35;
 }
 
+.THIS .forceCommunitySection .cb-section_column{
+  padding: 0!important;
+}
+
+.THIS .carouselSlide h3{
+  font-size: 2em;
+}
+.THIS .forceCommunityCarousel .previousAction, .THIS .forceCommunityCarousel .nextAction{
+  position: absolute;
+  z-index: 2;
+}
+.THIS .forceCommunityCarousel .previousAction svg path, .THIS .forceCommunityCarousel .nextAction svg path{
+  fill: #FFF;
+}
+
+.THIS .forceCommunityCardLayout .mediaContainer{
+  position: relative;
+}
+.THIS .forceCommunityCardLayout .mediaContainer .contentImage {
+  position: relative;
+  clip-path: polygon(0 0, 100% 0, 90% 100%, 0 100%);
+  z-index: 2;
+}
+.THIS .forceCommunityCardLayout .mediaContainer::after{
+  content: '';
+  display: block;
+  position: absolute;
+  z-index: 1;
+  top: 0; right: -5px;
+  width: 100%; height: 100%;
+  background-color: #FFF;
+  clip-path: polygon(0 0, 100% 0, 90% 100%, 0 100%);
+}

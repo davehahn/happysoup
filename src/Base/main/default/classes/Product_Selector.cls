@@ -21,6 +21,8 @@ public with sharing class Product_Selector extends Application_Selector
     'Centerline_Length__c',
     'Package_Length__c',
     'Towing_Weight__c',
+    'Overall_Length__c',
+    'Maximum_Persons__c',
     'Beam__c',
     'Length__c',
     'Series__c'

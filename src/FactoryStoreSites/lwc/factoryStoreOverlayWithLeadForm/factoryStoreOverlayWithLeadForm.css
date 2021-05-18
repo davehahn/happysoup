@@ -1,0 +1,35 @@
+/**
+ * Created by Tim on 2021-05-17.
+ */
+
+.overlay{
+  display: none;
+}
+.overlay.open{
+  position: fixed;
+  z-index: 1000;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+	display: block;
+	box-sizing: border-box;
+	padding: 2%;
+	background-color: #FFF;
+	border: 2px solid #0d4f6d;
+	box-shadow: 0 0 150px 0px rgb(0 0 0 / 60%);
+}
+
+.overlay .overlay__boatName{
+  font-weight: 900;
+}
+
+.overlay .overlay__close{
+  position: absolute;
+  top: 10px; right: 10px;
+  font-size: 0.7em!important;
+}
+.overlay .overlay__close span{
+  transform: rotate(-45deg);
+  font-weight: 900;
+  display: inline-block;
+  margin: 0.2em 0 0 0.125em;
+}

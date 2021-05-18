@@ -4,5 +4,9 @@
 
 <!-- Community Shared Company Logo -->
 <template>
-  <h1 class="storeLogo" tabindex="0" style={companyLogoImg}>{companyName}</h1>
+  <h1>
+    <a href={url} class="storeLogo" tabindex="0" style={companyLogoImg} onclick={navigateToPage}>
+      {companyName}
+    </a>
+  </h1>
 </template>

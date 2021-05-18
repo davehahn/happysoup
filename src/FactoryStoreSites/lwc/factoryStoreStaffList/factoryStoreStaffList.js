@@ -15,6 +15,7 @@ export default class FactoryStoreStaffList extends LightningElement {
 
 	users;
 	showUserListing = false;
+	showLoading = true;
 	profilePhotoUrl;
 	communityUrl;
 	wrapperClass = 'staff';
@@ -26,6 +27,7 @@ export default class FactoryStoreStaffList extends LightningElement {
 			{
 				console.log('user Data: ', data);
 				this.showUserListing = true;
+				this.showLoading = false;
 				this.wrapperClass = setWrapperClass(this.sectionWidth, 'staff');
 				fetchCommunityUrl({communityId: Id})
 					.then( (result) => {

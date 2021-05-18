@@ -4,7 +4,7 @@
 
 import { LightningElement, api, track, wire } from 'lwc';
 import { NavigationMixin, CurrentPageReference } from 'lightning/navigation';
-import { fireEvent, registerListener, unregisterAllListeners} from 'c/pubsub';
+import { fireEvent, registerListener, unregisterAllListeners } from 'c/pubsub';
 
 export default class CustCommOrderCheckbox extends NavigationMixin(LightningElement) {
 	@api optionShowUpgradePrice;

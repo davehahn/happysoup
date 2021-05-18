@@ -5,6 +5,7 @@
 import { LightningElement, api, wire } from 'lwc';
 import Id from '@salesforce/community/Id';
 import fetchCommunityUrl from '@salesforce/apex/CommSharedURL_Controller.fetchCommunityUrl';
+import { setWrapperClass } from 'c/communitySharedUtils';
 
 export default class CommunitySharedHomepageFeature extends LightningElement {
 	@api featureHeading;
@@ -13,8 +14,14 @@ export default class CommunitySharedHomepageFeature extends LightningElement {
 	thumbnail;
 	@api buttonText;
 	@api buttonLink;
+	@api linkTarget;
+	@api sectionWidth;
+
+	wrapperClass = 'featureCard';
 
 	renderedCallback(){
+	  this.wrapperClass = setWrapperClass(this.sectionWidth, 'featureCard');
+
 		if(this.featureThumb){
 		  fetchCommunityUrl({communityId: Id})
 				.then( (result) => {
@@ -25,4 +32,8 @@ export default class CommunitySharedHomepageFeature extends LightningElement {
 				 });
 		}
 	}
+
+	get getTarget(){
+		return (this.linkTarget == 'Default') ? '' : '_blank';
+ 	}
 }
