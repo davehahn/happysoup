@@ -214,7 +214,7 @@ public with sharing class ERP_CreatePartsBackOrder_Controller
             cost += pricebookEntryByProductId.get(mat.AcctSeedERP__Product__c).UnitPrice * mat.AcctSeedERP__Quantity_Per_Unit__c;
           }
           sale += mat.GMBLASERP__Unit_Price__c * mat.AcctSeedERP__Quantity_Per_Unit__c;
-          labour += riggingTime == null ? 0 : riggingTime;
+          labour += riggingTime == null ? 0 : riggingTime * mat.AcctSeedERP__Quantity_Per_Unit__c;
         }
       }
       Decimal rate = comRecordIdByTaskId.get( taskId ).Calculation_Method__c == 'Gross Margin' ?
