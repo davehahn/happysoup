@@ -2,50 +2,50 @@
  * Created by Tim on 2021-03-30.
  */
 
-.hoursAndLocation{
+.hoursAndLocation.hoursAndLocation--condensed{
   font-size: 0.75em;
   line-height: 1.125;
 }
 
-.hours{
+.hoursAndLocation--condensed .hours{
   display: flex;
   flex-wrap: wrap;
 }
-.hours > *{
+.hoursAndLocation--condensed .hours > *{
   display: block;
 }
-.hours .currentStatus{
+.hoursAndLocation--condensed .hours .currentStatus{
   font-weight: bold;
   text-transform: uppercase;
   margin-right: 5px;
 }
-.hours .currentStatus.currentStatus--open{
+.hoursAndLocation--condensed .hours .currentStatus.currentStatus--open{
   color: #10640C;
 }
-.hours .currentDate{
+.hoursAndLocation--condensed .hours .currentDate{
   width: 100%;
 }
-.location{
+.hoursAndLocation--condensed .location{
   margin-top: 0.5em;
 }
-.location .addressLineOne{
+.hoursAndLocation--condensed .location .addressLineOne{
   font-weight: bold;
   display: block;
 }
-.location .addressLineOne b{
+.hoursAndLocation--condensed .location .addressLineOne b{
   white-space: nowrap;
 }
 
-.mapWrapper{
+.hoursAndLocation--expanded{
   display: block;
   position: relative;
 }
-lightning-map{
+.hoursAndLocation--expanded lightning-map{
   position: relative;
   width: 100%; height: 400px;
   z-index: 1;
 }
-.mapLegend{
+.hoursAndLocation--expanded .mapLegend{
   display: block;
   position: absolute;
   bottom: 5%; left: 2%;
@@ -55,18 +55,19 @@ lightning-map{
   background-color: var(--zebra);
   box-shadow: 0 0 20px 0px rgb(0 0 0 / 25%);
   box-sizing: border-box;
+  border: 2px solid #ccc;
   padding: 1.5%;
   z-index: 2;
 }
 
-.mapLegend .location{
+.hoursAndLocation--expanded .mapLegend .mapLegend__location{
   margin-bottom: 0.75em;
   font-size: 0.85em;
 }
-.mapLegend .location .addressLineOne{
+.hoursAndLocation--expanded .mapLegend .mapLegend__location .mapLegend__addressLineOne{
 	font-weight: 300;
 }
-.mapLegend .storeHours{
+.hoursAndLocation--expanded .mapLegend .mapLegend__storeHours{
   margin-top: 0.5em;
   font-size: 0.85em;
 }

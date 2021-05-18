@@ -1,0 +1,26 @@
+<!--
+ - Created by Tim on 2021-05-17.
+ -->
+
+<!-- Factory Store Overlay With Lead Form -->
+<template>
+  <aside class={wrapperClass}>
+    <header class="overlay__intro">
+      <h3 class="overlay__heading heading heading--m">{introHeading}</h3>
+      <p class="overlay__blurb copy copy--standard">
+        {introBlurb} <strong class="overlay__boatName">{boatName}</strong>.
+      </p>
+    </header>
+    <button class="overlay__close btn btn--primary" onclick={handleCloseOverlay}>Close <span>+</span></button>
+    <c-community-shared-lead-form
+            form-name={leadFormName}
+            campaign-id={campaignId}
+            boat-model-id={recordId}
+            collect-first-name="true"
+            collect-last-name="true"
+            collect-postal-code="true"
+            collect-email="true"
+            collect-plan-to-purchase="true"
+            section-width="Container"></c-community-shared-lead-form>
+  </aside>
+</template>

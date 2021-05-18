@@ -12,10 +12,10 @@ export default class CommunitySharedSimpleHeadDeck extends LightningElement {
 	@api introBlurb;
 	@api sectionWidth;
 
-	wrapperClass;
+	wrapperClass = 'simpleIntro';
 
 	renderedCallback(){
-	  this.wrapperClass = setWrapperClass(this.sectionWidth);
+	  this.wrapperClass = setWrapperClass(this.sectionWidth, 'simpleIntro');
  	}
 
 	get fullIntroTitle(){
@@ -24,17 +24,17 @@ export default class CommunitySharedSimpleHeadDeck extends LightningElement {
 
 	get headingOpenTag(){
 	  console.log('heading size: ', this.headingSize.toLowerCase());
-		let tag = '<h1 class="heading heading-' + this.headingSize.toLowerCase() + '">';
+		let tag = '<h1 class="simpleIntro__heading heading heading--' + this.headingSize.toLowerCase() + '">';
 		if(this.headingLevel === 'h2'){
-			tag = '<h2 class="heading heading-' + this.headingSize.toLowerCase() + '">';
+			tag = '<h2 class="simpleIntro__heading heading heading--' + this.headingSize.toLowerCase() + '">';
   	} else if(this.headingLevel === 'h3'){
-  		tag = '<h3 class="heading heading-' + this.headingSize.toLowerCase() + '">';
+  		tag = '<h3 class="simpleIntro__heading heading heading--' + this.headingSize.toLowerCase() + '">';
   	} else if(this.headingLevel === 'h4'){
-			tag = '<h4 class="heading heading-' + this.headingSize.toLowerCase() + '">';
+			tag = '<h4 class="simpleIntro__heading heading heading--' + this.headingSize.toLowerCase() + '">';
 		} else if(this.headingLevel === 'h5'){
-			tag = '<h5 class="heading heading-' + this.headingSize.toLowerCase() + '">';
+			tag = '<h5 class="simpleIntro__heading heading heading--' + this.headingSize.toLowerCase() + '">';
 		} else if(this.headingLevel === 'h6'){
-			tag = '<h6 class="heading heading-' + this.headingSize.toLowerCase() + '">';
+			tag = '<h6 class="simpleIntro__heading heading heading--' + this.headingSize.toLowerCase() + '">';
 		}
 
   	return tag;

@@ -2,19 +2,22 @@
  * Created by Tim on 2021-03-25.
  */
 
-import { LightningElement, api, wire, track } from 'lwc';
-import { NavigationMixin } from 'lightning/navigation';
+import { LightningElement, api, wire } from 'lwc';
+import { NavigationMixin, CurrentPageReference } from 'lightning/navigation';
+import { fireEvent, registerListener, unregisterAllListeners } from 'c/pubsub';
 import { stringy, stripParentheses, rewriteMotorName, rewriteTrailerName } from 'c/communitySharedUtils';
 import fetchStandardProducts from '@salesforce/apex/FactoryStore_InventoryController.fetchBoat';
 
 export default class FactoryStoreBoatListingItem extends NavigationMixin(LightningElement) {
  @api boat;
 
- @track boatName;
- @track modelListingPhoto;
- @track standardMotor;
- @track standardTrailer;
- @track standardTollingMotor;
+ boatName;
+ modelListingPhoto;
+ standardMotor;
+ standardTrailer;
+ standardTollingMotor;
+
+ @wire(CurrentPageReference) pageRef;
 
  navToBoat( event ){
 		let page = 'boat-model',
@@ -37,11 +40,23 @@ export default class FactoryStoreBoatListingItem extends NavigationMixin(Lightni
 
  	quickQuote( event ){
  	  console.log('trigger quick quote');
+ 	  console.log('display quick connect form for modelId: ', event.currentTarget.dataset.record);
+ 	  let details = {
+ 	    recordId: this.boat.Id,
+ 	    boatName: this.boatName
+    }
+    console.log('details to send to form: ', details);
+ 	  fireEvent(this.pageRef, 'openOverlay', details);
  	  event.preventDefault();
   }
 
   showroomVisit( event ){
     console.log('trigger showroom visit');
+    let page = 'Schedule_a_Showroom_Visit__c';
+    		params = {
+    			c__recordId: event.currentTarget.dataset.record
+      	}
+    this.navigateToCommunityPage( page, params );
     event.preventDefault();
   }
 
@@ -50,6 +65,10 @@ export default class FactoryStoreBoatListingItem extends NavigationMixin(Lightni
  	  this.modelListingPhoto = 'background-image: url(' + this.boat.Default_Gallery_Image_Original__c + ')';
 		this.standardMotor = (this.boat.Standard_Motor__r) ? rewriteMotorName(this.boat.Standard_Motor__r.Name) : '';
 		this.standardTrailer = (this.boat.Standard_Trailer__r) ? ' and ' + rewriteTrailerName(this.boat.Standard_Trailer__r.Name) : '';
+  }
+
+  get isPontoon{
+    return (this.boat.Family === 'Pontoon') ? true : false;
   }
 
 //  get standardMotorName(){

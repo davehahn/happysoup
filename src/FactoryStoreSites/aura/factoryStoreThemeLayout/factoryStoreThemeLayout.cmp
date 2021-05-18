@@ -11,6 +11,7 @@
     <aura:attribute name="storeLocationAndHours" type="Aura.Component[]"/>
     <aura:attribute name="storePhoneNumbers" type="Aura.Component[]"/>
     <aura:attribute name="storeNavigation" type="Aura.Component[]"/>
+    <aura:attribute name="stayInTouch" type="Aura.Component[]"/>
     <aura:attribute name="storeTools" type="Aura.Component[]"/>
     <aura:attribute name="storeLegal" type="Aura.Component[]"/>
     <aura:attribute name="storePolicyLinks" type="Aura.Component[]"/>
@@ -18,27 +19,28 @@
     <lightning:navigation aura:id="navService"/>
 
     <header class="storeHeader">
-        <div class="storeDetails">
+        <div class="storeHeader__storeDetails">
             {!v.storeLogo}
-            <div class="locationAndHours">
+            <div class="storeHeader__locationAndHours">
                 {!v.storeLocationAndHours}
             </div>
-            <div class="phoneNumbers">
+            <div class="storeHeader__phoneNumbers">
                 {!v.storePhoneNumbers}
             </div>
-            <a class="corporateLogo" href="https://www.legendboats.com" target="_blank"></a>
+            <a class="storeHeader__corporateLogo" href="https://www.legendboats.com" target="_blank"></a>
         </div>
-        <nav class="mainNavigation">
+        <nav class="storeHeader__mainNavigation">
             <c:factoryStoreMainNavigation></c:factoryStoreMainNavigation>
         </nav>
     </header>
 	  <article class="storeMain">
     	  {!v.body}
     </article>
-    <c:factoryStoreFooterStayInTouch></c:factoryStoreFooterStayInTouch>
+
     <footer class="storeFooter">
+        {!v.stayInTouch}
         {!v.storeTools}
-        <section class="footerLegal">
+        <section class="storeFooter__footerLegal">
             {!v.storePolicyLinks}
             <c:communitySharedFooterCopyright></c:communitySharedFooterCopyright>
             {!v.storeLegal}

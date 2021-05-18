@@ -16,15 +16,15 @@
                   <img src={user.ProfileImgUrl} />
                 </span>
                 <figcaption>
-                  <h4 class="staff__name">{user.FirstName} {user.LastName}</h4>
+                  <h4 class="staff__name heading heading--xs">{user.FirstName} {user.LastName}</h4>
                   <small class="staff__title"><span>{user.Title}</span></small>
                   <p class="staff__contact">
-                    <lightning-icon icon-name="utility:email" alternative-text="email"></lightning-icon>
+                    <lightning-icon icon-name="utility:email" size="x-small" alternative-text="Email"></lightning-icon>
                     <a href="#">{user.Email}</a>
                   </p>
                   <template if:true={user.Phone}>
                     <p class="staff__contact">
-                      <lightning-icon icon-name="utility:call" alternative-text="Call"></lightning-icon>
+                      <lightning-icon icon-name="utility:call" size="x-small" alternative-text="Call"></lightning-icon>
                       <a href="#">{user.Phone}</a>
                     </p>
                   </template>
@@ -34,6 +34,9 @@
           </template>
         </ul>
       </section>
+    </template>
+    <template if:true={showLoading}>
+      <c-community-shared-loading></c-community-shared-loading>
     </template>
   </div>
 </template>

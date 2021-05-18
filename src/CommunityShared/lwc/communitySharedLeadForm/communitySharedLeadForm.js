@@ -3,12 +3,13 @@
  */
 
 import { LightningElement, wire, api } from 'lwc';
+import { CurrentPageReference, NavigationMixin } from 'lightning/navigation';
 import insertLead from '@salesforce/apex/CommSharedLeadForm_Controller.insertLead';
 import LeadForm_FirstName from '@salesforce/label/c.LeadForm_FirstName';
 import LeadForm_LastName from '@salesforce/label/c.LeadForm_LastName';
 import { getTestUser, renderEN, renderFR, setWrapperClass } from 'c/communitySharedUtils';
 
-export default class CommunitySharedLeadForm extends LightningElement {
+export default class CommunitySharedLeadForm extends NavigationMixin(LightningElement) {
 
 	@api formName;
   @api campaignId;
@@ -31,6 +32,8 @@ export default class CommunitySharedLeadForm extends LightningElement {
 
   @api boatModelId;
 
+  emailPrefill;
+
 	wrapperClass = 'leadFormWrapper';
   showForm = true;
   showThankyou = false;
@@ -44,6 +47,14 @@ export default class CommunitySharedLeadForm extends LightningElement {
   }
 
 	defaultCampaignId = '701q0000000mL7GAAU';
+
+	@wire(CurrentPageReference)
+		setCurrentPageReference(currentPageReference){
+		  console.log('currentPageReference.state.c__preFillEmail: ', currentPageReference.state.c__preFillEmail);
+		  if(currentPageReference.state.c__preFillEmail){
+		  	this.emailPrefill = currentPageReference.state.c__preFillEmail;
+    	}
+  }
 
 	renderedCallback(){
 		this.wrapperClass = setWrapperClass(this.sectionWidth, 'leadFormWrapper');

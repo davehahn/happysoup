@@ -6,7 +6,7 @@
 <template>
   <div class={wrapperClass}>
     <template if:true={showCondensed}>
-      <section class="hoursAndLocation">
+      <section class="hoursAndLocation hoursAndLocation--condensed">
         <div class="hours">
           <span class={statusClass}>{currentStatus}</span>
           <span class="currentHours">{currentHours}</span>
@@ -23,24 +23,24 @@
       </section>
     </template>
     <template if:true={showExpanded}>
-      <figure class="mapWrapper">
+      <figure class="hoursAndLocation hoursAndLocation--expanded">
         <lightning-map
             map-markers={mapMarkers}
             options={mapOptions}
             zoom-level={zoomLevel}>
         </lightning-map>
         <figcaption class="mapLegend">
-          <h4 class="heading heading-s">{name}</h4>
-          <div class="location">
-            <span class="addressLineOne">
+          <h4 class="mapLegend__heading heading heading--s">{name}</h4>
+          <div class="mapLegend__location">
+            <span class="mapLegend__addressLineOne">
               {street_number} {route}
             </span>
-              <span class="addressLineTwo">
+              <span class="mapLegend__addressLineTwo">
               {locality}, {administrative_area_level_1} {postal_code}
             </span>
           </div>
           <span class={statusClass}>{currentStatus}</span>
-          <ol class="storeHours">
+          <ol class="mapLegend__storeHours">
             <template for:each={weekday_text} for:item="day" for:index="index">
               <li key={day.index}>
                 {day}
