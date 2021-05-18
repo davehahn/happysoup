@@ -305,6 +305,10 @@ export default class ErpCreatePartsBackorder extends LightningElement {
         }
         mats.get(childMat.Material__c).kitParts.push( childMat );
       }
+      else if( this.materials.has( childMat.Id ) )
+      {
+        this.materials.delete( childMat.Id );
+      }
     })
     this.groupedMaterials = Array.from( mats.values() );
   }
@@ -409,8 +413,6 @@ export default class ErpCreatePartsBackorder extends LightningElement {
     return new Promise( (resolve, reject) => {
       buildCommissionLines( { materials: mats } )
       .then( result => {
-        console.log('COMMISSION LINES');
-        console.log( JSON.parse(JSON.stringify(result)));
         this.newCommissionLines = result;
         resolve(4);
       })
