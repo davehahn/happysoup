@@ -62,7 +62,7 @@ sfdx heber:staticresources:deploy -u $1
 echoOut 'make a copy of .forceignore'
 cp .forceignore .forceignore.orig
 echoOut 'modifying .forceignore to not deploy staticresources or experiences'
-echo -e "\nsrc/main/default/staticresources" >> .forceignore
+echo -e "\nsrc/Base/main/default/staticresources" >> .forceignore
 echo -e "\nsrc/BoatReservation/experiences" >> .forceignore
 echo -e "\nsrc/CustomerCommunity/experiences" >> .forceignore
 #echo -e "\nsrc/FactoryStoreSites/experiences" >> .forceignore
