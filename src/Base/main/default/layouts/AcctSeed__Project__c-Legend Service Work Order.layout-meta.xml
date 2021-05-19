@@ -25,6 +25,10 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
+                <field>Original_ERP__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
                 <field>AcctSeed__Account__c</field>
             </layoutItems>
             <layoutItems>
@@ -268,6 +272,11 @@
     <platformActionList>
         <actionListContext>Record</actionListContext>
         <platformActionListItems>
+            <actionName>Edit</actionName>
+            <actionType>StandardButton</actionType>
+            <sortOrder>0</sortOrder>
+        </platformActionListItems>
+        <platformActionListItems>
             <actionName>AcctSeed__Project__c.Upload_Attachments</actionName>
             <actionType>QuickAction</actionType>
             <sortOrder>1</sortOrder>
@@ -323,11 +332,6 @@
             <sortOrder>11</sortOrder>
         </platformActionListItems>
         <platformActionListItems>
-            <actionName>Edit</actionName>
-            <actionType>StandardButton</actionType>
-            <sortOrder>0</sortOrder>
-        </platformActionListItems>
-        <platformActionListItems>
             <actionName>Account</actionName>
             <actionType>QuickAction</actionType>
             <sortOrder>12</sortOrder>
@@ -361,11 +365,6 @@
             <actionName>AcctSeed__Project__c.Create_New_Job</actionName>
             <actionType>QuickAction</actionType>
             <sortOrder>18</sortOrder>
-        </platformActionListItems>
-        <platformActionListItems>
-            <actionName>SendEmail</actionName>
-            <actionType>QuickAction</actionType>
-            <sortOrder>19</sortOrder>
         </platformActionListItems>
     </platformActionList>
     <quickActionList>

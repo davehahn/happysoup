@@ -219,8 +219,9 @@ export default class ErpCreatePartsBackorder extends LightningElement {
         return result;
        }, [] );
       let caseIds = this.selectedCases.map( c => c.Id );
+      const { Serial_Number__r, ...erp } = this.newERP;
       createRecords( {
-        erp: this.newERP,
+        erp: erp,
         task: this.newTask,
         materials: mats,
         caseIds: caseIds
@@ -408,6 +409,8 @@ export default class ErpCreatePartsBackorder extends LightningElement {
     return new Promise( (resolve, reject) => {
       buildCommissionLines( { materials: mats } )
       .then( result => {
+        console.log('COMMISSION LINES');
+        console.log( JSON.parse(JSON.stringify(result)));
         this.newCommissionLines = result;
         resolve(4);
       })

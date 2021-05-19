@@ -299,7 +299,9 @@ public inherited sharing class Project_Service
       GMBLASERP__Warehouse__c = originalERP.GMBLASERP__Warehouse__c,
       GL_Account_Variable_1__c = originalERP.GL_Account_Variable_1__c,
       GL_Account_Variable_2__c = originalERP.GL_Account_Variable_2__c,
-      GL_Account_Variable_3__c = originalERP.GL_Account_Variable_3__c
+      GL_Account_Variable_3__c = originalERP.GL_Account_Variable_3__c,
+      Serial_Number__c = originalERP.Serial_Number__c,
+      Serial_Number__r = originalERP.Serial_Number__r
     );
   }
 

@@ -42,7 +42,8 @@ public without sharing class Project_Selector Extends Application_Selector
       'On_Water_Orientation__c',
       'Payment_Method__c',
       'Payment_Status__c',
-      'Original_ERP__c'
+      'Original_ERP__c',
+      'Serial_Number__r.Name'
     };
   }
 
