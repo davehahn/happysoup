@@ -2,7 +2,7 @@
   calculate: function( component )
   {
     console.log('helper.calculate');
-    var amount = component.get('v.amount'),
+    var amount = component.get('v.amountWithoutDeposit'),
         deposit = component.get('v.deposit'),
         interestRate = component.get('v.interestRate'),
         term = component.get('v.term'),
@@ -19,6 +19,9 @@
     interestRate = interestRate === null ? 0 : interestRate;
     term = term === null ? 0 : term;
     amort = amort === null ? 0 : amort;
+    console.log(`Payment Calculator - Amount Financed = ${amount}`)
+    console.log(`Payment Calculator - deposit = ${deposit}`)
+    console.log(`Payment Calculator - Amount Financed = ${amountFinanced}`)
     if( parseFloat(interestRate) === 0 )
     {
       payment = ( amountFinanced / amort );
