@@ -22,7 +22,9 @@ public with sharing class ERP_CreatePartsBackOrder_Controller
     List<AcctSeedERP__Material__c> materials = new Material_Selector()
       .addWhere( 'AcctSeedERP__Project__c = \'' + recordId + '\'')
       .addWhereFieldNotIn( 'AcctSeedERP__Product__r.Family', ignoreFamilies, 'AND' )
-      .addWhere( 'AcctSeedERP__Product__r.RecordTypeId = \'' + productRts.getPartId() + '\'' )
+      .addWhereFieldNotIn( 'Material__r.AcctSeedERP__Product__r.Family', ignoreFamilies, 'AND' )
+      .addWhere( 'AcctSeedERP__Product__r.RecordTypeId = \'' + productRts.getPartId() + '\'', 'AND' )
+      .addWhere( '( Material__c = null OR Material__r.AcctSeedERP__Product__r.RecordTypeId = \'' + productRts.getPartId() + '\' )')
       .query();
     AcctSeed__Project__c project = Project_Selector.allByIdsWithTasks( new Set<Id>{Id.valueOf(recordId)} )[0];
     if( project.RecordTypeId == erpRts.getRetailBoatSaleId() )
@@ -214,7 +216,7 @@ public with sharing class ERP_CreatePartsBackOrder_Controller
             cost += pricebookEntryByProductId.get(mat.AcctSeedERP__Product__c).UnitPrice * mat.AcctSeedERP__Quantity_Per_Unit__c;
           }
           sale += mat.GMBLASERP__Unit_Price__c * mat.AcctSeedERP__Quantity_Per_Unit__c;
-          labour += riggingTime == null ? 0 : riggingTime;
+          labour += riggingTime == null ? 0 : riggingTime * mat.AcctSeedERP__Quantity_Per_Unit__c;
         }
       }
       Decimal rate = comRecordIdByTaskId.get( taskId ).Calculation_Method__c == 'Gross Margin' ?

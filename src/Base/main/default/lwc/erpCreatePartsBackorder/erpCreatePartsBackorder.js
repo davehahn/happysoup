@@ -219,8 +219,9 @@ export default class ErpCreatePartsBackorder extends LightningElement {
         return result;
        }, [] );
       let caseIds = this.selectedCases.map( c => c.Id );
+      const { Serial_Number__r, ...erp } = this.newERP;
       createRecords( {
-        erp: this.newERP,
+        erp: erp,
         task: this.newTask,
         materials: mats,
         caseIds: caseIds
@@ -303,6 +304,10 @@ export default class ErpCreatePartsBackorder extends LightningElement {
           mats.get(childMat.Material__c).kitParts = [];
         }
         mats.get(childMat.Material__c).kitParts.push( childMat );
+      }
+      else if( this.materials.has( childMat.Id ) )
+      {
+        this.materials.delete( childMat.Id );
       }
     })
     this.groupedMaterials = Array.from( mats.values() );

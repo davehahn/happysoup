@@ -6,6 +6,7 @@
 private class ERP_CreatePartsBackOrder_Controller_T
 {
   private static final Integer PARTS_COUNT = 3;
+  private static final String boatSerial = 'TESTFULLWINDSHIELD0001';
   private static AcctSeed__Project__c erp;
   private static AcctSeed__Project_Task__c erpTask;
   private static  List<AcctSeedERP__Material__c> materials;
@@ -22,7 +23,7 @@ private class ERP_CreatePartsBackOrder_Controller_T
     GMBLASERP__Serial_Number__c ser = Factory_SerialNumber.insertFullSerial(
       'Boat',
       'Full Windshield',
-      'TEST-FULLWINDSHIELD-0001'
+      boatSerial
     );
     gcProject.disableTrigger = true;
     gcProjectTask.disableTrigger = true;
@@ -68,6 +69,8 @@ private class ERP_CreatePartsBackOrder_Controller_T
         GL_Account_Variable_1__c,
         GL_Account_Variable_2__c,
         GL_Account_Variable_3__c,
+        Serial_Number__c,
+        Serial_Number__r.Name,
         RecordType.Name,
       ( SELECT
           Id,
@@ -227,6 +230,8 @@ private class ERP_CreatePartsBackOrder_Controller_T
     System.assert( result != null );
     System.assertEquals( erp.Id, resultERP.Original_ERP__c );
     System.assert( resultERP.Name.contains( erp.AcctSeed__Account__r.Name ) );
+    System.assertEquals( erp.Serial_Number__c, resultERP.Serial_Number__c );
+    System.assertEquals( boatSerial, resultERP.Serial_Number__r.Name );
     System.assert( resultTask.Name.contains( erp.RecordType.Name ) );
     System.assertEquals( true, resultTask.Locked__c );
     System.assertEquals( (materials.size() + 1), resultMaterials.size() );
@@ -302,6 +307,7 @@ private class ERP_CreatePartsBackOrder_Controller_T
       GL_Account_Variable_1__c = erp.GL_Account_Variable_1__c,
       GL_Account_Variable_2__c = erp.GL_Account_Variable_2__c,
       GL_Account_Variable_3__c = erp.GL_Account_Variable_3__c,
+      Serial_Number__c = erp.Serial_Number__c,
       Stage__c = 'Pending Diagnostic',
       Job_Status__c = 'Boat Required',
       Original_ERP__c = erp.Id
@@ -353,6 +359,7 @@ private class ERP_CreatePartsBackOrder_Controller_T
 
     System.assert( result != null );
     System.assertEquals( erp.Id, resultERP.Original_ERP__c );
+    System.assertEquals( erp.Serial_Number__c, resultERP.Serial_Number__c );
     System.assert( resultERP.Name.contains( erp.AcctSeed__Account__r.Name ) );
     System.assert( resultTask.Name.contains( erp.RecordType.Name ) );
     System.assertEquals( true, resultTask.Locked__c );
