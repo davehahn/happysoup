@@ -122,22 +122,38 @@ global without sharing class gcLegendMRP {
 		if(listProject.size() > 0)
 		{
 			insert listProject;
-			list<AcctSeed__Project_Task__c> listPT = new list<AcctSeed__Project_Task__c>();
+			Map<Id,AcctSeed__Project__c> mapP = new Map<Id,AcctSeed__Project__c>();
+			Map<Id,AcctSeed__Project_Task__c> mapPT = new Map<Id,AcctSeed__Project_Task__c>();
+			list<AcctSeedERP__Material__c> listMaterial = new list<AcctSeedERP__Material__c>();
 			for(AcctSeed__Project__c p : listProject)
 			{
 				String typeName = mapProduct.get(p.AcctSeedERP__Manufactured_Product__c).RecordType.Name;
 				String taskName = 'PRE-RIG';
 //				if(typeName != 'Boat')
 //					taskName = 'Modification';
-					
-				listPT.add(new AcctSeed__Project_Task__c(
+
+				AcctSeed__Project_Task__c pt = new AcctSeed__Project_Task__c(
 					AcctSeed__Project__c = p.Id,
 					Name = taskName,
 					Product__c = p.AcctSeedERP__Manufactured_Product__c,
 					Admin_Deletable_Only__c = true
+				);
+				mapPT.put(p.Id,pt);
+				mapP.put(p.Id,p);
+				/// Adding the ERP Serial as well in the material line - added on 19 May 2021
+				listMaterial.add(new AcctSeedERP__Material__c(
+					AcctSeedERP__Project__c = p.Id,
+					AcctSeedERP__Product__c = p.AcctSeedERP__Manufactured_Product__c,
+					GMBLASERP__Serial_Number__c = p.Serial_Number__c,
+					AcctSeedERP__Quantity_Per_Unit__c = 1
 				));
 			}
-			insert listPT;
+			insert mapPT.values();
+			for(AcctSeedERP__Material__c mt : listMaterial){
+				mt.AcctSeedERP__Project_Task__c = mapPT.get(mt.AcctSeedERP__Project__c).Id;
+			}
+			/// Insert first set of materials for the newly created projects
+			insert listMaterial;
 		}
 
 		return '';
