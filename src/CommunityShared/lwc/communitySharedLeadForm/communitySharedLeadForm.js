@@ -54,6 +54,9 @@ export default class CommunitySharedLeadForm extends NavigationMixin(LightningEl
 		  if(currentPageReference.state.c__preFillEmail){
 		  	this.emailPrefill = currentPageReference.state.c__preFillEmail;
     	}
+    	if(currentPageReference.state.c__recordId){
+    	  this.boatModelId = currentPageReference.state.c__recordId;
+     }
   }
 
 	renderedCallback(){

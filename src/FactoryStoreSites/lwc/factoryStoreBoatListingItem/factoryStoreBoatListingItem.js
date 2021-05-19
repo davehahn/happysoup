@@ -5,7 +5,7 @@
 import { LightningElement, api, wire } from 'lwc';
 import { NavigationMixin, CurrentPageReference } from 'lightning/navigation';
 import { fireEvent, registerListener, unregisterAllListeners } from 'c/pubsub';
-import { stringy, stripParentheses, rewriteMotorName, rewriteTrailerName } from 'c/communitySharedUtils';
+import { stringy, stripParentheses, rewriteMotorName, rewriteTrailerName, convertLength } from 'c/communitySharedUtils';
 import fetchStandardProducts from '@salesforce/apex/FactoryStore_InventoryController.fetchBoat';
 
 export default class FactoryStoreBoatListingItem extends NavigationMixin(LightningElement) {
@@ -16,6 +16,10 @@ export default class FactoryStoreBoatListingItem extends NavigationMixin(Lightni
  standardMotor;
  standardTrailer;
  standardTollingMotor;
+ overallLength;
+ centerlineLength;
+ packageLength;
+
 
  @wire(CurrentPageReference) pageRef;
 
@@ -52,10 +56,11 @@ export default class FactoryStoreBoatListingItem extends NavigationMixin(Lightni
 
   showroomVisit( event ){
     console.log('trigger showroom visit');
-    let page = 'Schedule_a_Showroom_Visit__c';
+    let page = 'schedule-a-showroom-visit',
     		params = {
     			c__recordId: event.currentTarget.dataset.record
-      	}
+      	};
+    console.log(params);
     this.navigateToCommunityPage( page, params );
     event.preventDefault();
   }
@@ -65,9 +70,18 @@ export default class FactoryStoreBoatListingItem extends NavigationMixin(Lightni
  	  this.modelListingPhoto = 'background-image: url(' + this.boat.Default_Gallery_Image_Original__c + ')';
 		this.standardMotor = (this.boat.Standard_Motor__r) ? rewriteMotorName(this.boat.Standard_Motor__r.Name) : '';
 		this.standardTrailer = (this.boat.Standard_Trailer__r) ? ' and ' + rewriteTrailerName(this.boat.Standard_Trailer__r.Name) : '';
+		if(this.boat.Overall_Length__c){
+			this.overallLength = convertLength(this.boat.Overall_Length__c);
+  	}
+  	if(this.boat.Length__c){
+  		this.centerlineLength = convertLength(this.boat.Length__c);
+   	}
+		if(this.boat.Package_Length__c){
+			this.packageLength = convertLength(this.boat.Package_Length__c);
+ 	 	}
   }
 
-  get isPontoon{
+  get isPontoon(){
     return (this.boat.Family === 'Pontoon') ? true : false;
   }
 

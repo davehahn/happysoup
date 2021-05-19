@@ -41,6 +41,24 @@ const getDeals = (numToShow) => {
   });
 }
 
+//public static function convertLength($value, $truncateLengthTrailingZero = true){
+//		//strip trailing zero
+//		$baseValue = (float)$value;
+//		//split base value at decimal
+//		$baseArray = explode('.', $value);
+//		// create new values
+//		$newFeet = (isset($baseArray[0])) ? $baseArray[0] . '&rsquo;' : '';
+//		if(isset($baseArray[1])){
+//			if(substr($baseArray[1], -1) === '0' && $truncateLengthTrailingZero){
+//				$inches = substr($baseArray[1], 0, -1);
+//			} else {
+//				$inches = $baseArray[1];
+//			}
+//		}
+//		$newInches = (isset($baseArray[1])) ? $inches . '&rdquo;' : '';
+//		$value = $newFeet . $newInches;
+//		return $value;
+
 export {
 	getDeals,
 }

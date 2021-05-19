@@ -16,16 +16,18 @@
           <h4 class="quickSpecs__heading heading heading--s">Quick Specs</h4>
           <template if:true={isPontoon}>
             <ul class="quickSpecs__list">
-              <li class="quickSpecs__item"><span>Overall Length:</span> <strong>{boat.Overall_Length__c}&rdquo;</strong></li>
-              <li class="quickSpecs__item"><span>Maximum Persons:</span> <strong>{boat.Maximum_Persons__c}lbs</strong></li>
+              <li class="quickSpecs__item"><span>Overall Length:</span> <lightning-formatted-rich-text value={overallLength}></lightning-formatted-rich-text></li>
+              <li class="quickSpecs__item"><span>Maximum Persons:</span> <strong>{boat.Maximum_Persons__c}</strong></li>
               <li class="quickSpecs__item"><span>Beam:</span> <strong>{boat.Beam__c}&rdquo;</strong></li>
             </ul>
           </template>
           <template if:false={isPontoon}>
-              <li class="quickSpecs__item"><span>Centerline Length:</span> <strong>{boat.Length__c}&rdquo;</strong></li>
-              <li class="quickSpecs__item"><span>Package Length:</span> <strong>{boat.Package_Length__c}&rdquo;</strong></li>
+            <ul class="quickSpecs__list">
+              <li class="quickSpecs__item"><span>Centerline Length:</span> <lightning-formatted-rich-text value={centerlineLength}></lightning-formatted-rich-text></li>
+              <li class="quickSpecs__item"><span>Package Length:</span> <lightning-formatted-rich-text value={packageLength}></lightning-formatted-rich-text></li>
               <li class="quickSpecs__item"><span>Towing Weight:</span> <strong>{boat.Towing_Weight__c}lbs</strong></li>
               <li class="quickSpecs__item"><span>Beam:</span> <strong>{boat.Beam__c}&rdquo;</strong></li>
+            </ul>
           </template>
 
         </section>
