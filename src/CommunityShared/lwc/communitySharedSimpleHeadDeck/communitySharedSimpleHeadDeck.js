@@ -9,7 +9,9 @@ export default class CommunitySharedSimpleHeadDeck extends LightningElement {
 	@api introTitle;
 	@api headingLevel;
 	@api headingSize;
+	@api headingAlignment;
 	@api introBlurb;
+	@api blurbAlignment;
 	@api sectionWidth;
 
 	wrapperClass = 'simpleIntro';
@@ -56,4 +58,16 @@ export default class CommunitySharedSimpleHeadDeck extends LightningElement {
 
 		 return tag;
 	}
+
+	get getHeadingAlignment(){
+	  if(this.headingAlignment){
+			return this.headingAlignment.toLowerCase();
+		}
+ 	}
+
+	get getBlurbAlignment(){
+		if(this.blurbAlignment){
+			return this.blurbAlignment.toLowerCase();
+  	}
+ 	}
 }

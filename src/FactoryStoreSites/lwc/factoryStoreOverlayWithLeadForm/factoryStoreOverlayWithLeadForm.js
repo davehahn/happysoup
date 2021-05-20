@@ -15,6 +15,7 @@ export default class FactoryStoreOverlayWithLeadForm extends LightningElement {
 	@api introHeading;
 	@api introBlurb;
 	@api sectionWidth;
+	@api location;
 
 	@wire(CurrentPageReference) pageRef;
 
