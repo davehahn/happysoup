@@ -50,11 +50,7 @@
               <div>
                 <label>Delivery Date</label>
                 <div>
-                  <apex:outputLink value="{!$Page.Retail_Schedule}" rendered="{!Opportunity.Probability > 69}">
-                    <apex:outputText value="{!formattedDeliveryDate}" />
-                    <apex:param name="active-id" value="{!Opportunity.Id}" />
-                  </apex:outputLink>
-
+                  <apex:outputText value="{!formattedDeliveryDate}" />
                 </div>
               </div>
             </div>
