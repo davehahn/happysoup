@@ -2,6 +2,14 @@
   scriptsLoaded: function(component, event, helper)
   {
     console.log( 'Payment calc recordId ' + component.get('v.recordId') );
+    let amount = component.get('v.amount'),
+          deposit = component.get('v.deposit');
+    if( deposit != null )
+    {
+      amount = amount + deposit;
+    }
+    component.set('v.amountWithoutDeposit', amount);
+    console.log(`amount = ${amount}`)
     helper.fetchTaxZones( component )
     .then(
       $A.getCallback( function( result )
