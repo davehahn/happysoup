@@ -82,6 +82,15 @@ public virtual class Application_Selector
     return this;
   }
 
+  public Application_Selector addWhereFieldIn( String fieldName, Set<String> acceptableStrings, String operator )
+  {
+    addWhere(
+            whereInClauseBuilder( fieldName, acceptableStrings ),
+            operator
+    );
+    return this;
+  }
+
   public Application_Selector addOrderBy( String orderBy )
   {
     this.orderBy = orderBy;

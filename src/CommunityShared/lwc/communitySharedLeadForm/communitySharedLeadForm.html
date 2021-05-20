@@ -5,13 +5,15 @@
 <!-- Community Shared Lead Form -->
 <template>
   <section class={wrapperClass}>
-    <template if:true={introTitle}>
-      <h3 class="leadFormWrapper__heading heading heading--m">{introTitle}</h3>
-    </template>
-    <template if:true={introBlurb}>
-      <p class="leadFormWrapper__introBlurb">{introBlurb}</p>
-    </template>
     <template if:true={showForm}>
+      <header class="form__intro">
+        <template if:true={introTitle}>
+          <h3 class="leadFormWrapper__heading heading heading--m">{introTitle}</h3>
+        </template>
+        <template if:true={introBlurb}>
+          <p class="leadFormWrapper__introBlurb">{introBlurb}</p>
+        </template>
+      </header>
       <form id="leadForm" name="leadForm" data-id="leadForm" data-form-name={formName}>
         <fieldset class="leadForm__fieldset">
           <legend class="ro">Lead Form</legend>
@@ -227,7 +229,9 @@
       </form>
     </template>
     <template if:true={showThankyou}>
-      <h2>Thanks for your submission, we'll be in touch.</h2>
+      <header class="thankyou">
+        <h2 class="thankyou__heading heading heading--m">Thanks for your submission, we'll be in touch.</h2>
+      </header>
     </template>
 
     <template if:true={showLoading}>

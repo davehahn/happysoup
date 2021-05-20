@@ -16,17 +16,25 @@
           <h4 class="quickSpecs__heading heading heading--s">Quick Specs</h4>
           <template if:true={isPontoon}>
             <ul class="quickSpecs__list">
-              <li class="quickSpecs__item"><span>Overall Length:</span> <lightning-formatted-rich-text value={overallLength}></lightning-formatted-rich-text></li>
-              <li class="quickSpecs__item"><span>Maximum Persons:</span> <strong>{boat.Maximum_Persons__c}</strong></li>
-              <li class="quickSpecs__item"><span>Beam:</span> <strong>{boat.Beam__c}&rdquo;</strong></li>
+              <template if:true={overallLength}><li class="quickSpecs__item"><span>Overall Length:</span> <lightning-formatted-rich-text value={overallLength}></lightning-formatted-rich-text></li></template>
+              <template if:true={boat.Maximum_Persons__c}><li class="quickSpecs__item"><span>Maximum Persons:</span> <strong>{boat.Maximum_Persons__c}</strong></li></template>
+              <template if:true={boat.Beam__c}><li class="quickSpecs__item"><span>Beam:</span> <strong>{boat.Beam__c}&rdquo;</strong></li></template>
             </ul>
           </template>
-          <template if:false={isPontoon}>
+          <template if:true={isDeckBoat}>
             <ul class="quickSpecs__list">
-              <li class="quickSpecs__item"><span>Centerline Length:</span> <lightning-formatted-rich-text value={centerlineLength}></lightning-formatted-rich-text></li>
-              <li class="quickSpecs__item"><span>Package Length:</span> <lightning-formatted-rich-text value={packageLength}></lightning-formatted-rich-text></li>
-              <li class="quickSpecs__item"><span>Towing Weight:</span> <strong>{boat.Towing_Weight__c}lbs</strong></li>
-              <li class="quickSpecs__item"><span>Beam:</span> <strong>{boat.Beam__c}&rdquo;</strong></li>
+              <template if:true={packageLength}><li class="quickSpecs__item"><span>Package Length:</span> <lightning-formatted-rich-text value={packageLength}></lightning-formatted-rich-text></li></template>
+              <template if:true={overallLength}><li class="quickSpecs__item"><span>Overall Length:</span> <lightning-formatted-rich-text value={overallLength}></lightning-formatted-rich-text></li></template>
+              <template if:true={boat.Maximum_Persons__c}><li class="quickSpecs__item"><span>Maximum Persons:</span> <strong>{boat.Maximum_Persons__c}</strong></li></template>
+              <template if:true={boat.Beam__c}><li class="quickSpecs__item"><span>Beam:</span> <strong>{boat.Beam__c}&rdquo;</strong></li></template>
+            </ul>
+          </template>
+          <template if:true={isFishingBoat}>
+            <ul class="quickSpecs__list">
+              <template if:true={centerlineLength}><li class="quickSpecs__item"><span>Centerline Length:</span> <lightning-formatted-rich-text value={centerlineLength}></lightning-formatted-rich-text></li></template>
+              <template if:true={packageLength}><li class="quickSpecs__item"><span>Package Length:</span> <lightning-formatted-rich-text value={packageLength}></lightning-formatted-rich-text></li></template>
+              <template if:true={boat.Towing_Weight__c}><li class="quickSpecs__item"><span>Towing Weight:</span> <strong>{boat.Towing_Weight__c}lbs</strong></li></template>
+              <template if:true={boat.Beam__c}><li class="quickSpecs__item"><span>Beam:</span> <strong>{boat.Beam__c}&rdquo;</strong></li></template>
             </ul>
           </template>
 
@@ -35,8 +43,8 @@
       </div>
       <div class="modelListing__ctas">
         <button class="ctas__btn btn btn--primary" data-record={boat.Id} onclick={navToBoat}>View Model</button>
-        <button class="ctas__btn btn btn--primary" data-record={boat.Id} onclick={quickQuote}>Quick Connect</button>
-        <button class="ctas__btn btn btn--primary" data-record={boat.Id} onclick={showroomVisit}>Come See It!</button>
+        <button class="ctas__btn btn btn--secondary" data-record={boat.Id} onclick={quickQuote}>Quick Connect</button>
+        <button class="ctas__btn btn btn--secondary" data-record={boat.Id} onclick={showroomVisit}>Come See It!</button>
       </div>
     </article>
   </li>

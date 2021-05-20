@@ -35,8 +35,18 @@ public with sharing class FactoryStore_InventoryController {
     @AuraEnabled(Cacheable=true)
     public static List<Sobject> fetchBoatsBySeries( String seriesName )
     {
+        Set<String> series = new Set<String>();
+        if(seriesName != 'R'){
+            series.add(seriesName);
+        } else {
+            series.add('WideBody');
+            series.add('ProSport');
+            series.add('Angler');
+            series.add('AllSport');
+            series.add('Ultralite');
+        }
         List<Sobject> boats = new List<SObject>();
-        for( Product2 p : Product_Selector.allBoatsInSeries( seriesName )){
+        for( Product2 p : Product_Selector.allBoatsInSeries( series )){
             boats.add( p );
         }
         return boats;

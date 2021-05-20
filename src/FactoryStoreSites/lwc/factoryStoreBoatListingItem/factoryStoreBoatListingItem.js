@@ -81,8 +81,15 @@ export default class FactoryStoreBoatListingItem extends NavigationMixin(Lightni
  	 	}
   }
 
+	get isDeckBoat(){
+	 return (this.boat.Family === 'Deck Boat') ? true : false;
+ 	}
   get isPontoon(){
     return (this.boat.Family === 'Pontoon') ? true : false;
+  }
+
+  get isFishingBoat(){
+    return (this.boat.Family !== 'Deck Boat' && this.boat.Family !== 'Pontoon') ? true : false;
   }
 
 //  get standardMotorName(){

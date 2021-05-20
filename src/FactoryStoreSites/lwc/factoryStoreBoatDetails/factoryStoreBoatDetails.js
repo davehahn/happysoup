@@ -32,6 +32,7 @@ export default class FactoryStoreBoatDetails extends NavigationMixin(LightningEl
   // Lead forms
 	leadFormName;
 	@api campaignId;
+	@api location;
 
   @wire(CurrentPageReference)
   setCurrentPageReference(currentPageReference){

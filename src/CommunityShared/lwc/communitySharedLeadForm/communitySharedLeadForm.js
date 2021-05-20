@@ -29,6 +29,7 @@ export default class CommunitySharedLeadForm extends NavigationMixin(LightningEl
   @api collectNotes;
   @api collectNewsletterOptin;
   @api sectionWidth;
+  @api location;
 
   @api boatModelId;
 
@@ -114,7 +115,7 @@ export default class CommunitySharedLeadForm extends NavigationMixin(LightningEl
 			hubspot_subscribe_legend_newsletter__c: (this.template.querySelector('[data-id="Newsletter"]')) ? ((this.template.querySelector('[data-id="Newsletter"]').checked) ? 'Yes' : 'No') : 'No',
 			Preferred_Language__c: (renderEN) ? 'English' : 'French',
 			Marketing_Cloud_Notes__c: (this.template.querySelector('[data-id="Notes"]')) ? this.template.querySelector('[data-id="Notes"]').value : '',
-			LeadSource: 'Online - Web'
+			LeadSource: this.location + ' Factory Store'
     }
     console.log('data: ', data);
  	  return data;

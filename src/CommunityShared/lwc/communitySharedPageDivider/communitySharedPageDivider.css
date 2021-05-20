@@ -1,0 +1,49 @@
+/**
+ * Created by Tim on 2021-05-20.
+ */
+
+hr{
+  display: block;
+}
+hr[data-width="Screen"]{
+  width: 100vw;
+ 	margin-left: calc(50% - 50vw);
+ 	margin-right: calc(50% - 50vw);
+}
+hr[data-width="Container"],
+hr[data-width="Wide"],
+hr[data-width="Average"],
+hr[data-width="Thin"],
+hr[data-width="Extra Thin"]{
+  margin: 0 auto;
+}
+hr[data-width="Container"]{
+  width: 100%;
+}
+hr[data-width="Wide"]{
+  width: 1645px;
+}
+hr[data-width="Average"]{
+  width: 1300px;
+}
+hr[data-width="Thin"]{
+  width: 1080px;
+}
+hr[data-width="Extra Thin"]{
+  width: 768px;
+}
+
+hr[data-space-above="Small"], hr[data-space-below="Small"]{
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+
+hr[data-space-above="Average"], hr[data-space-below="Average"]{
+  margin-top: 1.125em;
+  margin-bottom: 1.125em;
+}
+
+hr[data-space-above="Large"], hr[data-space-below="Large"]{
+  margin-top: 2em;
+  margin-bottom: 2em;
+}
