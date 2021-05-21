@@ -93,7 +93,6 @@ public inherited sharing class Project_Service
         Business_Manager__c = this.opportunity.Business_Manager__c,
         Salesperson__c = this.opportunity.OwnerId,
         Payment_Method__c = this.opportunity.Payment_Method__c,
-        Boat_Specialist__c = this.opportunity.Boat_Specialist_Id__c,
         Insurance_Term__c = this.opportunity.Insurance_Term__c,
         Finance_Term__c = this.opportunity.Finance_Term__c,
         Finance_Annual_Interest__c = this.opportunity.Finance_Annual_Interest__c,

@@ -29,8 +29,6 @@ public inherited sharing class Opportunity_Selector Extends Application_Selector
       'Owner.Name',
       'AccountId',
       'Account.Name',
-      'Account.Boat_Specialist__c',
-      'Account.Boat_Specialist__r.Name',
       'Total_Amount__c',
       'BoatId__c',
       'StageName',

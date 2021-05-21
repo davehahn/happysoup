@@ -122,6 +122,7 @@ public without sharing class gcProject {
       }
       if(boolIsUpdate)
       {
+        boatSpecialistChanged( listNew, oldMap );
         notifyOnOwnerChange( newMap, oldMap );
         rename(newMap.keySet());
         if(!disableRegistration)
@@ -154,6 +155,27 @@ public without sharing class gcProject {
       {
         erp.Stage__c = 'Pending Diagnostic';
       }
+    }
+  }
+
+  private static void boatSpecialistChanged(
+    List<AcctSeed__Project__c> listNew,
+    Map<Id, AcctSeed__Project__c> oldMap
+  )
+  {
+    Map<Id, Id> boatSpecialistIdByAccountId = new Map<Id, Id>();
+    for( AcctSeed__Project__c erp : listNew )
+    {
+      AcctSeed__Project__c oldErp = oldMap.get( erp.Id );
+      if( erp.Boat_Specialist__c != null &&
+          erp.Boat_Specialist__c != oldErp.Boat_Specialist__c )
+      {
+        boatSpecialistIdByAccountId.put( erp.AcctSeed__Account__c, erp.Boat_Specialist__c );
+      }
+    }
+    if( boatSpecialistIdByAccountId.size() > 0 )
+    {
+      Account_Service.updateOwner( boatSpecialistIdByAccountId );
     }
   }
 
