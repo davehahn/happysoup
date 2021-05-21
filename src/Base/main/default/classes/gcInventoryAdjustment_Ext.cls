@@ -438,7 +438,7 @@ global without sharing class gcInventoryAdjustment_Ext {
 				throw new gcException('An Adjustment Warehouse Id must be specified in the Inventory Settings.');
 			Id idLocation = [SELECT Id FROM AcctSeedERP__Location__c WHERE AcctSeedERP__Warehouse__c = :idWarehouse ORDER BY CreatedDate LIMIT 1][0].Id;
 
-			idBalance = GMBLASERP.gcInventoryBalance.findOrCreateBalance(idProduct,idWarehouse,idLocation);
+			idBalance = findOrCreateBalance(idProduct,idWarehouse,idLocation);
 		}
 
 		//If there is already a move for this balance and object then return
@@ -450,6 +450,11 @@ global without sharing class gcInventoryAdjustment_Ext {
 		AND AcctSeedERP__Inventory_Balance__c = :idBalance AND GMBLASERP__Lot__c =:idLot AND GMBLASERP__Serial_Number__c = :idSerial])
 		{
 			return new map<string,string>();
+		}
+
+		if(adj.GMBLASERP__Adjustment_Type__c !='Quantity'){
+			GMBLASERP.gcInboundInventoryMovement.disableTrigger = true;
+			GMBLASERP.gcOutboundInventoryMovement.disableTrigger = true;
 		}
 
 		AcctSeedERP__Inbound_Inventory_Movement__c moveIn = new AcctSeedERP__Inbound_Inventory_Movement__c(
@@ -496,6 +501,36 @@ global without sharing class gcInventoryAdjustment_Ext {
 		}
 
 		return retrieveMoves(moveIn.Id)[0];
+	}
+
+	global static Id findOrCreateBalance(Id idProduct, Id idWarehouse, Id idLocation)
+	{
+		AcctSeedERP__Inventory_Balance__c bal = new AcctSeedERP__Inventory_Balance__c();
+		for(AcctSeedERP__Inventory_Balance__c b :
+		[SELECT Id
+		FROM AcctSeedERP__Inventory_Balance__c
+		WHERE AcctSeedERP__Product__c = :idProduct
+		AND AcctSeedERP__Warehouse__c = :idWarehouse
+		AND AcctSeedERP__Location__c = :idLocation
+		ORDER BY Id
+		LIMIT 1])
+		{
+			bal = b;
+		}
+
+		if(bal.Id == NULL)
+		{
+			bal = new AcctSeedERP__Inventory_Balance__c
+				(
+					AcctSeedERP__Product__c = idProduct,
+					AcctSeedERP__Warehouse__c = idWarehouse,
+					AcctSeedERP__Location__c = idLocation
+				);
+
+			insert bal;
+		}
+
+		return bal.Id;
 	}
 
 	@RemoteAction
