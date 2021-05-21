@@ -1,4 +1,3 @@
-
 @isTest (seeAllData=false)
 public  class gcAccountPayable_Clone_T {
     @TestSetup
@@ -15,23 +14,22 @@ public  class gcAccountPayable_Clone_T {
 
         ApexPages.StandardController sc = new ApexPages.StandardController(accountPayable);
         gcAccountPayable_Clone accountPayableClone = new gcAccountPayable_Clone(sc);
-
+		Test.startTest();
         accountPayableClone.init();
         accountPayableClone.createClone();
+		Test.stopTest();        
 
     }
 
     @isTest
     static void testScenario2() {
         List<AcctSeed__Account_Payable__c> lstAccountPayable = [SELECT id FROM AcctSeed__Account_Payable__c ];
-        Test.startTest();
-        // Test.setCurrentPage(Page.YOUR_PAGE);
         ApexPages.currentPage().getParameters().put('retUrl','/apex/0');
         ApexPages.currentPage().getParameters().put('idFilter','abcd');
         ApexPages.StandardSetController sc = new ApexPages.StandardSetController(lstAccountPayable);
         gcAccountPayable_Clone accountPayableClone = new gcAccountPayable_Clone(sc);
         sc.setSelected(lstAccountPayable);
-        //YOUR_Extension ext = new YOUR_Extension(stdSetController);
+        Test.startTest();
         accountPayableClone.back();
         Test.stopTest();
     }
@@ -43,8 +41,10 @@ public  class gcAccountPayable_Clone_T {
         ApexPages.StandardController sc = new ApexPages.StandardController(accountPayable);
         gcAccountPayable_Clone accountPayableClone = new gcAccountPayable_Clone(sc);
         accountPayableClone.idFilter = null;
+        Test.startTest();
         accountPayableClone.init();
         accountPayableClone.createClone();
+        Test.stopTest();
 
     }
     @isTest
@@ -57,8 +57,10 @@ public  class gcAccountPayable_Clone_T {
         ApexPages.StandardController sc = new ApexPages.StandardController(accountPayable);
         gcAccountPayable_Clone accountPayableClone = new gcAccountPayable_Clone(sc);
         accountPayableClone.retUrl = null;
+        Test.startTest();
         accountPayableClone.init();
         gcAccountPayable_Clone objTest = new gcAccountPayable_Clone();
+        Test.stopTest();
     }
 
 
