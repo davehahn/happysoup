@@ -410,6 +410,8 @@ export default class ErpCreatePartsBackorder extends LightningElement {
       acc.push( mat );
       return acc;
     },[]);
+    console.log( 'MATERIALS');
+    console.log( JSON.parse(JSON.stringify(mats)));
     return new Promise( (resolve, reject) => {
       buildCommissionLines( { materials: mats } )
       .then( result => {

@@ -162,8 +162,10 @@ public with sharing class ERP_CreatePartsBackOrder_Controller
     List<CommissionLineItem2__c> result = new List<CommissionLineItem2__c>();
     Map<Id, List<AcctSeedERP__Material__c>> materialsByTaskId = new Map<Id, List<AcctSeedERP__Material__c>>();
     Set<Id> parentMatIds = new Set<Id>();
+    Set<Id> allMatIds = new Set<Id>();
     for( AcctSeedERP__Material__c mat : materials )
     {
+      allMatIds.add( mat.Id );
       if( mat.Material__c == null )
       {
         parentMatIds.add( mat.Id );
@@ -189,6 +191,11 @@ public with sharing class ERP_CreatePartsBackOrder_Controller
         materialsByTaskId.get(mat.AcctSeedERP__Project_Task__c).add(mat);
       }
     }
+    Map<Id, CommissionLineItem2__c> commLineByMatId = new Map<Id, CommissionLineItem2__c>();
+    for( CommissionLineItem2__c cli : CommissionLineItem2_Selector.allByMaterialIds( allMatIds ) )
+    {
+      commLineByMatId.put( cli.Material__c, cli );
+    }
     Map<Id, CommissionRecord2__c> comRecordIdByTaskId = new Map<Id, CommissionRecord2__c>();
     for( CommissionRecord2__c cr : CommissionRecord2_Selector.allByProjectTaskIds( materialsByTaskId.keySet() ) )
     {
@@ -210,13 +217,24 @@ public with sharing class ERP_CreatePartsBackOrder_Controller
         Decimal riggingTime;
         if( mat.Material__c == null )// if Material__c != null, then it was part of a kit and the price is included in the kit so all should be zero
         {
-          if (pricebookEntryByProductId.containsKey(mat.AcctSeedERP__Product__c))
+          //try to get cost, sale, labour prices from original commission line item
+          if( commLineByMatId.containsKey( mat.Id ) )
           {
-            riggingTime = pricebookEntryByProductId.get(mat.AcctSeedERP__Product__c).Product2.Rigging_Time__c;
-            cost += pricebookEntryByProductId.get(mat.AcctSeedERP__Product__c).UnitPrice * mat.AcctSeedERP__Quantity_Per_Unit__c;
+            CommissionLineItem2__c cli = commLineByMatId.get( mat.Id );
+            cost += cli.Total_Cost__c;
+            sale += cli.Total_Sale__c;
+            labour += cli.Total_Labour__c;
           }
-          sale += mat.GMBLASERP__Unit_Price__c * mat.AcctSeedERP__Quantity_Per_Unit__c;
-          labour += riggingTime == null ? 0 : riggingTime * mat.AcctSeedERP__Quantity_Per_Unit__c;
+          else
+          {
+            if (pricebookEntryByProductId.containsKey(mat.AcctSeedERP__Product__c))
+            {
+              riggingTime = pricebookEntryByProductId.get(mat.AcctSeedERP__Product__c).Product2.Rigging_Time__c;
+              cost += pricebookEntryByProductId.get(mat.AcctSeedERP__Product__c).UnitPrice * mat.AcctSeedERP__Quantity_Per_Unit__c;
+            }
+            sale += mat.GMBLASERP__Unit_Price__c * mat.AcctSeedERP__Quantity_Per_Unit__c;
+            labour += riggingTime == null ? 0 : riggingTime * mat.AcctSeedERP__Quantity_Per_Unit__c * LGND_Constants.retailLabourRate;
+          }
         }
       }
       Decimal rate = comRecordIdByTaskId.get( taskId ).Calculation_Method__c == 'Gross Margin' ?
@@ -229,7 +247,7 @@ public with sharing class ERP_CreatePartsBackOrder_Controller
           Cost__c = cost,
           Sale_Price__c = sale,
           Description__c = 'Parts Back Order Entry',
-          Labour_Cost__c = labour * LGND_Constants.retailLabourRate,
+          Labour_Cost__c = labour,
           Quantity__c = 1,
           Commission_Rate__c = rate
         )
