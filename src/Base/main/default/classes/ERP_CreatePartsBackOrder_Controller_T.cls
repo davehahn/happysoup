@@ -6,6 +6,10 @@
 private class ERP_CreatePartsBackOrder_Controller_T
 {
   private static final Integer PARTS_COUNT = 3;
+  private static final Decimal RIGGINNG_TIME = 1;
+  private static final Decimal COMM_COST = 50;
+  private static final Decimal COMM_SALE = 100;
+  private static final Decimal COMM_LABOUR = 150;
   private static final String boatSerial = 'TESTFULLWINDSHIELD0001';
   private static AcctSeed__Project__c erp;
   private static AcctSeed__Project_Task__c erpTask;
@@ -44,11 +48,20 @@ private class ERP_CreatePartsBackOrder_Controller_T
       FROM AcctSeed__Project_Task__c
       WHERE AcctSeed__Project__c = :retailSale.Id
     ];
-    List<Product2> parts = Factory_Product.createNonSerializedProducts(
+    List<Product2> parts = Factory_Product.buildNonSerializedProducts(
       'Part',
       'Electronics',
       PARTS_COUNT
     );
+    parts[0].Rigging_Time__c = RIGGINNG_TIME;
+    insert parts;
+
+    Factory_PricebookEntry.createStandardEntries( parts, 10 );
+    List<PricebookEntry> pbes = new List<PricebookEntry>();
+    pbes.addAll( Factory_PricebookEntry.buildEntries( parts, LGND_Constants.retailPricebookId, 10 ) );
+    pbes.addAll( Factory_PricebookEntry.buildEntries( parts, LGND_Constants.factoryPricebookId, 5 ) );
+    insert pbes;
+
     List<AcctSeedERP__Material__c> mats = Factory_Material.buildMaterials(
       retailSale.Id,
       retailTask.Id,
@@ -80,6 +93,7 @@ private class ERP_CreatePartsBackOrder_Controller_T
           Id,
           AcctSeedERP__Product__c,
           AcctSeedERP__Product__r.Name,
+          AcctSeedERP__Product__r.Rigging_Time__c,
           AcctSeedERP__Project_Task__c,
           AcctSeedERP__Quantity_Per_Unit__c,
           GMBLASERP__Unit_Price__c,
@@ -108,6 +122,33 @@ private class ERP_CreatePartsBackOrder_Controller_T
       Calculation_Method__c = erpTask.Commission_Calculation_Method__c
     );
     insert commRec;
+  }
+
+  private static void createCommissionRecord()
+  {
+    CommissionRecord2__c record = new CommissionRecord2__c(
+      Project_Task__c = erpTask.Id,
+      Calculation_Method__c = erpTask.Commission_Calculation_Method__c
+    );
+    insert record;
+    Decimal profit = ( COMM_SALE - COMM_COST - COMM_LABOUR ) * materials[0].AcctSeedERP__Quantity_Per_Unit__c;
+    Decimal rate = CommissionLineItem2_Service.grossMarginRate;
+
+    CommissionLineItem2__c line = new CommissionLineItem2__c(
+      CommissionRecord2__c = record.Id,
+      Material__c = materials[0].Id,
+      Quantity__c = materials[0].AcctSeedERP__Quantity_Per_Unit__c,
+      Sale_Price__c = COMM_SALE,
+      Cost__c = COMM_COST,
+      Labour_Cost__c = COMM_LABOUR,
+      Commission_Rate__c = rate,
+      Payment_Based_on_Profit__c = true,
+      Profit__c = profit,
+      Payment_Amount__c = profit * rate,
+      Actual_Amount_for_Commission__c = profit
+    );
+    TriggerHandler.bypass('CommissionLineItem2_TriggerHandler');
+    insert line;
   }
 
   @IsTest
@@ -367,21 +408,56 @@ private class ERP_CreatePartsBackOrder_Controller_T
   }
 
   @IsTest
-  static void buildCommissionLines_Test()
+  static void buildCommissionLines_NoPreviousCommission_Test() //should never happen
   {
     initErpData();
     Decimal totalSale = 0;
+    Decimal totalCost = 0;
+    Decimal totalLabour = 0;
     for( AcctSeedERP__Material__c mat : materials )
     {
       totalSale += mat.GMBLASERP__Unit_Price__c * mat.AcctSeedERP__Quantity_Per_Unit__c;
+      totalCost += 5 * mat.AcctSeedERP__Quantity_Per_Unit__c;
+      if( mat.AcctSeedERP__Product__r.Rigging_Time__c != null )
+      {
+        totalLabour += mat.AcctSeedERP__Product__r.Rigging_Time__c * LGND_Constants.retailLabourRate * mat.AcctSeedERP__Quantity_Per_Unit__c;
+      }
     }
     Test.startTest();
     List<CommissionLineItem2__c> result =
       ERP_CreatePartsBackOrder_Controller.buildCommissionLines( materials );
     Test.stopTest();
 
+    System.debug( result[0] );
+
     System.assertEquals( 1, result.size() );
     System.assertEquals( totalSale, result[0].Sale_Price__c );
+    System.assertEquals( totalCost, result[0].Cost__c );
+    System.assertEquals( totalLabour, result[0].Labour_Cost__c );
+    System.assertEquals( CommissionLineItem2_Service.grossMarginRate, result[0].Commission_Rate__c );
+  }
+
+  @IsTest
+  static void buildCommissionLines_PreviousCommission_Test()
+  {
+    initErpData();
+    createCommissionRecord();
+    AcctSeedERP__Material__c mat = materials[0];
+    Decimal totalSale = COMM_SALE * mat.AcctSeedERP__Quantity_Per_Unit__c;
+    Decimal totalCost = COMM_COST * mat.AcctSeedERP__Quantity_Per_Unit__c;
+    Decimal totalLabour = COMM_LABOUR * mat.AcctSeedERP__Quantity_Per_Unit__c;
+
+    Test.startTest();
+    List<CommissionLineItem2__c> result =
+      ERP_CreatePartsBackOrder_Controller.buildCommissionLines( new List<AcctSeedERP__Material__c>{materials[0]} );
+    Test.stopTest();
+
+    System.debug( result[0] );
+
+    System.assertEquals( 1, result.size() );
+    System.assertEquals( totalSale, result[0].Sale_Price__c );
+    System.assertEquals( totalCost, result[0].Cost__c );
+    System.assertEquals( totalLabour, result[0].Labour_Cost__c );
     System.assertEquals( CommissionLineItem2_Service.grossMarginRate, result[0].Commission_Rate__c );
   }
 

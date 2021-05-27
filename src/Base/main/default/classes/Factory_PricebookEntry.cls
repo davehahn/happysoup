@@ -19,6 +19,18 @@ public with sharing class Factory_PricebookEntry {
     return pbe;
   }
 
+  public static void insertStandardEntries( Set<Id> prodIds, Decimal unitPrice )
+  {
+    PricebookEntry[] pbes = new List<PricebookEntry>();
+    for( Id pId : prodIds )
+    {
+      pbes.add( buildEntry( pId,
+        Test.getStandardPricebookId(),
+        unitPrice ) );
+    }
+    insert pbes;
+  }
+
   public static void insertStandardEntries( Product2[] prods, Decimal unitPrice )
   {
     PricebookEntry[] pbes = new List<PricebookEntry>();
@@ -102,6 +114,16 @@ public with sharing class Factory_PricebookEntry {
     for( Product2 p : prods )
     {
       pbes.add( buildEntry( p.Id, pbId, price) );
+    }
+    return pbes;
+  }
+
+  public static PricebookEntry[] buildEntries( Set<Id> prodIds, Id pbId, Decimal price )
+  {
+    PricebookEntry[] pbes = new List<PricebookEntry>();
+    for( Id pId : prodIds )
+    {
+      pbes.add( buildEntry( pId, pbId, price) );
     }
     return pbes;
   }

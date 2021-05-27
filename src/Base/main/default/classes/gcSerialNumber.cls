@@ -33,6 +33,8 @@ public without sharing class gcSerialNumber{
 		}
 	}
 
+	public static Boolean checkPriorMovementsAlreadyDone = false;
+
 	public static void triggerHandler
 		(map<Id,GMBLASERP__Serial_Number__c> oldMap,
 		 map<Id,GMBLASERP__Serial_Number__c> newMap,
@@ -491,6 +493,8 @@ public without sharing class gcSerialNumber{
 	}
 
 	public static void checkPriorMovements(list<sObject> listMove, Map<Id,sObject> mapOldMoves){
+		if(checkPriorMovementsAlreadyDone) return;
+		else checkPriorMovementsAlreadyDone = true;
 		CustomPermissionsReader cpr = new CustomPermissionsReader();
 		Boolean canModifyLockedPurchaseOrder = false;
 		Boolean canMoveInventoryAnyDay = false;
@@ -723,6 +727,7 @@ public without sharing class gcSerialNumber{
 
 			}
 		}
+		checkPriorMovementsAlreadyDone = false;
 	}
 
 	@future

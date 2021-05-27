@@ -30,8 +30,6 @@ public without sharing class Project_Selector Extends Application_Selector
       'Salesperson__r.Name',
       'AcctSeed__Account__r.Name',
       'AcctSeed__Account__c',
-      'AcctSeed__Account__r.Boat_Specialist__c',
-      'AcctSeed__Account__r.Boat_Specialist__r.Name',
       'Grand_Total__c',
       'Boat_Product__c',
       'Boat_Product__r.Name',
