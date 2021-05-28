@@ -97,11 +97,12 @@
 	text-decoration: none;
 }
 
-@media screen and (max-width: 1315px){
+
+@media screen and (max-width: 760px){
   .THIS.flyoutTriggerWrap {
 		 display: flex;
 		 width: 100%;
-		 justify-content: flex-end;
+		 justify-content: flex-start;
 		 background: transparent;
 		 border: 0 none;
 	 }
@@ -185,15 +186,26 @@
 		 width: 0%;
 		 left: 50%;
 	 }
-		
+
 
   .THIS.navList{
     display: none;
     background-color: var(--highlight);
   }
   .THIS.navList.show{
-    position: absolute;
+    position: relative;
     flex-direction: column;
 		display: block;
+		width: 100vw;
+		margin-left: calc(50% - 50vw);
+		margin-right: calc(50% - 50vw);
 	}
+	.THIS.navList .navItem.navItem--topLevel:hover a.navTrigger.navTrigger--topLevel,
+  .THIS.navList .navItem.navItem--topLevel:hover button.navTrigger.navTrigger--topLevel{
+    width: 100%;
+  }
+	.THIS.navList .navItem.navItem--topLevel .navList.navList--subLevel{
+    width: 100%;
+    position: relative;
+  }
 }

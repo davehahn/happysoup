@@ -18,6 +18,7 @@ export default class FactoryStoreHoursAndLocation extends LightningElement {
 	wrapperClass = 'hourAndLocationWrapper';
 
 	currentStatus;
+	statusClass;
 	currentHours;
 	weekday_text;
 
@@ -69,11 +70,11 @@ export default class FactoryStoreHoursAndLocation extends LightningElement {
 
  	updateLocationDetails(){
  	  this.parseAddress();
-		this.currentStatus = (this.gpResult.opening_hours.open_now) ? 'Open' : 'Closed';
 		this.currentHours = this.parsePeriods();
+		this.statusClass = (this.gpResult.opening_hours.open_now) ? 'currentStatus currentStatus--open' : 'currentStatus currentStatus--closed';
 
  	  if(this.layout === 'Condensed'){
-
+			this.currentStatus = (this.gpResult.opening_hours.open_now) ? 'Open!' : 'Closed';
     } else if(this.layout === 'Expanded'){
       	this.wrapperClass = setWrapperClass(this.sectionWidth, 'hourAndLocationWrapper');
 				this.mapMarkers = [{
@@ -83,7 +84,8 @@ export default class FactoryStoreHoursAndLocation extends LightningElement {
 					},
 				}];
 				this.name = this.gpResult.name;
-				this.weekday_text = this.gpResult.opening_hours.weekday_text;
+				this.currentStatus = (this.gpResult.opening_hours.open_now) ? 'We\'re Open!' : 'Sorry, we\'re closed.';
+				this.weekday_text = this.parseWeekdayText(this.gpResult.opening_hours.weekday_text);
 		 }
   }
 
@@ -121,9 +123,18 @@ export default class FactoryStoreHoursAndLocation extends LightningElement {
     return openHr + ':' + openMin +  openAMPM + ' - ' + closeHr + ':' + closeMin + closeAMPM;
   }
 
-	get statusClass(){
-	  return (this.currentStatus === 'Open') ? 'currentStatus currentStatus--open' : 'currentStatus currentStatus--closed';
- }
+  parseWeekdayText(data){
+    let expandedDates = [];
+	  const n = (new Date().getDay()) - 1;
+    data.forEach( (day, index) => {
+      if(index === n){
+        expandedDates.push('<span class="heading heading--xs">' + day + '</span>');
+      } else {
+        expandedDates.push(day);
+      }
+    });
+    return expandedDates;
+  }
 
  get currentDate(){
    return new Date().toLocaleDateString("en-CA", {weekday: 'long', month: 'long', day: 'numeric'});

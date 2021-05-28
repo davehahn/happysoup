@@ -60,3 +60,49 @@
 .modelListing .modelListing__ctas button:last-of-type{
   margin-bottom: 0;
 }
+
+@media screen and (max-width: 860px){
+  .modelListing{
+    flex-wrap: wrap;
+  }
+  .modelListing .modelListing__vitals{
+    flex: 1;
+    width: auto;
+    border-right: 0 none;
+  }
+  .modelListing .modelListing__ctas{
+    width: 100%;
+    flex-direction: row;
+   	justify-self: center;
+   	justify-content: space-between;
+   	margin-right: 0;
+   	padding: 0 1.5em;
+  }
+  .modelListing .modelListing__ctas button{
+    width: 32%;
+  }
+  .modelListing .modelListing__ctas button:last-of-type{
+    margin-bottom: 1em;
+  }
+}
+
+@media screen and (max-width: 540px){
+	.modelListing .modelListing__photo{
+		width: 90%; padding-bottom: 42%;
+		margin: 1em auto 0;
+	}
+  .modelListing .modelListing__vitals{
+    width: 100%;
+    border-left: 0;
+    flex: inherit;
+  }
+}
+
+@media screen and (max-width: 460px){
+  .modelListing .modelListing__ctas{
+    flex-direction: column;
+  }
+  .modelListing .modelListing__ctas button{
+    width: 100%;
+  }
+}

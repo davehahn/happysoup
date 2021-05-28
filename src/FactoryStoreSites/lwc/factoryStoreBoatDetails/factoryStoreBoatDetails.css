@@ -61,7 +61,11 @@
 	margin: 0 1em;
 }
 
-.model .model__intro .intro__vitals .vitals__priceBlock .priceBlock__includes{
+.model .model__intro .intro__vitals .vitals__priceBlock .priceBlock__pricingDetails{
+  font-size: 0.75em;
+}
+
+.model .model__intro .intro__vitals .vitals__priceBlock .priceBlock__includes {
   width: 100%;
 	font-style: normal;
 	font-size: 1.25em;
@@ -176,4 +180,52 @@
 }
 .model .model__fullDetailsCta strong{
   font-weight: 900;
+}
+
+@media screen and (max-width: 860px){
+  .model .model__intro{
+		flex-direction: column-reverse;
+  }
+  .model .model__intro .intro__vitals .intro__boatName{
+    text-align: center;
+  }
+  .model .model__intro .intro__photo{
+    margin-top: 2em;
+    width: 80%;
+    padding-bottom: 40%;
+  }
+  .model .model__intro .intro__vitals .vitals__priceBlock{
+    width: 100%; min-width: 100%;
+    justify-content: center;
+  }
+  .model .model__intro .intro__vitals .vitals__priceBlock .priceBlock__retail{
+    width: fit-content;
+    width: -moz-fit-content;
+  }
+  .model .model__intro .intro__vitals .vitals__priceBlock .priceBlock__includes,
+  .model .model__intro .intro__vitals .vitals__priceBlock .priceBlock__pricingDetails{
+    text-align: center;
+  }
+
+}
+
+@media screen and (max-width: 760px){
+  .model .model__specs, .model .model__motors{
+    width: 100%;
+  }
+  .model .model__premiumPack ul .premiumPackage__item{
+    width: 100%;
+  }
+}
+
+@media screen and (max-width: 540px){
+  .model .model__intro .intro__vitals .vitals__priceBlock .priceBlock__weekly{
+   font-size: 2.25em;
+  }
+  .model .model__intro .intro__vitals .vitals__priceBlock .priceBlock__retail{
+    font-size: 1.75em;
+  }
+  .model .model__fullDetailsCta{
+    text-align: center;
+  }
 }

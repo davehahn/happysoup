@@ -2,6 +2,7 @@
   font-family: 'gotham_htf', Montserrat, Lato, Helvetica, Arial, sans-serif;
 	font-weight: 300;
 	position: relative;
+	overflow-x: hidden;
 }
 
 .THIS.storeHeader{
@@ -24,9 +25,11 @@
 }
 
 .THIS .storeHeader__locationAndHours{
-  width: 190px;
+  width: 270px;
   flex-shrink: 0;
-  margin-left: 1em;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .THIS .storeHeader__phoneNumbers{
@@ -90,4 +93,55 @@
   width: 100%; height: 100%;
   background-color: #FFF;
   clip-path: polygon(0 0, 100% 0, 90% 100%, 0 100%);
+}
+
+.THIS .PHONE.comm-panels-container.uiContainerManager.siteforcePanelsContainer{
+  display: none!important;
+}
+
+@media screen and (max-width: 1245px){
+  .THIS .storeHeader__corporateLogo{
+    flex-shrink: initial;
+    background-size: contain;
+  }
+}
+
+@media screen and (max-width: 1080px){
+  .THIS .storeHeader__corporateLogo{
+    display: none;
+  }
+}
+
+@media screen and (max-width: 940px){
+  .THIS .storeHeader__storeDetails{
+    flex-wrap: wrap;
+    padding: 1em 1.5em 1.5em;
+  }
+  .THIS .storeHeader__locationAndHours{
+    justify-content: center;
+    margin-bottom: 1em;
+  }
+  .THIS .storeHeader__locationAndHours, .THIS .storeHeader__phoneNumbers{
+    width: 100%;
+  }
+  .THIS .storeHeader__phoneNumbers a{
+    padding-left: 0;
+  }
+}
+
+@media screen and (max-width: 760px){
+  .THIS .storeHeader__mainNavigation{
+      width: auto;
+			background-color: var(--highlight);
+			padding: 0.65em 0.5em 0.4em;
+  }
+}
+
+@media screen and (max-width: 580px){
+  .THIS .storePhoneNumbers__item{
+		padding: 0 0.75em!important;
+	}
+  .THIS .storeHeader__phoneNumbers{
+    font-size: 0.55em;
+  }
 }
