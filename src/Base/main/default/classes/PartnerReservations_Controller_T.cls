@@ -125,10 +125,10 @@ private class PartnerReservations_Controller_T
   }
 
   @IsTest
-  static void isFactoryStore_Fail()
+  static void init_isFactoryStore_Fail()
   {
     try {
-      Boolean isFactoryStore = PartnerReservations_Controller.isFactoryStore();
+      String resultJSON = PartnerReservations_Controller.init();
     }
     catch( Exception e )
     {
@@ -138,16 +138,71 @@ private class PartnerReservations_Controller_T
   }
 
   @IsTest
-  static void isFactoryStore_False()
+  static void isFactoryStore_False_NoSettings()
   {
     setUser('partner');
     System.runAs( runningUser )
     {
       Test.startTest();
-      Boolean isFactoryStore = PartnerReservations_Controller.isFactoryStore();
+      String resultJSON = PartnerReservations_Controller.init();
+      Map<String, Boolean> result = (Map<String, Boolean>)JSON.deserialize(
+        resultJSON,
+        Map<String, Boolean>.class
+      );
       Test.stopTest();
 
-      System.assert( !isFactoryStore, 'Should not be a factory store');
+      System.assert( !result.get('isFactoryStore'), 'Should not be a factory store');
+      System.assert( !result.get('allowDraftBookingOrders'), 'Draft Booking Orders should not be allowed');
+    }
+  }
+
+  @IsTest
+  static void isFactoryStore_False_WithSettingsTrue()
+  {
+    Date tDay = Date.today();
+    String monthDayString = String.valueOf( tday.month() + 6 ) + '/01';
+    Partner_Boat_Sale_Settings__c settings = new Partner_Boat_Sale_Settings__c(
+      Booking_Order_Begin_Month_Day__c = monthDayString
+    );
+    insert settings;
+    setUser('partner');
+    System.runAs( runningUser )
+    {
+      Test.startTest();
+      String resultJSON = PartnerReservations_Controller.init();
+      Map<String, Boolean> result = (Map<String, Boolean>)JSON.deserialize(
+        resultJSON,
+        Map<String, Boolean>.class
+      );
+      Test.stopTest();
+
+      System.assert( !result.get('isFactoryStore'), 'Should not be a factory store');
+      System.assert( result.get('allowDraftBookingOrders'), 'Draft Booking Orders should be allowed');
+    }
+  }
+
+  @IsTest
+  static void isFactoryStore_False_WithSettingsFalse()
+  {
+    Date tDay = Date.today();
+    String monthDayString = String.valueOf( tday.month() - 6 ) + '/01';
+    Partner_Boat_Sale_Settings__c settings = new Partner_Boat_Sale_Settings__c(
+      Booking_Order_Begin_Month_Day__c = monthDayString
+    );
+    insert settings;
+    setUser('partner');
+    System.runAs( runningUser )
+    {
+      Test.startTest();
+      String resultJSON = PartnerReservations_Controller.init();
+      Map<String, Boolean> result = (Map<String, Boolean>)JSON.deserialize(
+        resultJSON,
+        Map<String, Boolean>.class
+      );
+      Test.stopTest();
+
+      System.assert( !result.get('isFactoryStore'), 'Should not be a factory store');
+      System.assert( !result.get('allowDraftBookingOrders'), 'Draft Booking Orders should not be allowed');
     }
   }
 
@@ -158,12 +213,18 @@ private class PartnerReservations_Controller_T
     System.runAs( runningUser )
     {
       Test.startTest();
-      Boolean isFactoryStore = PartnerReservations_Controller.isFactoryStore();
+      String resultJSON = PartnerReservations_Controller.init();
+      Map<String, Boolean> result = (Map<String, Boolean>)JSON.deserialize(
+        resultJSON,
+        Map<String, Boolean>.class
+      );
       Test.stopTest();
 
-      System.assert( isFactoryStore, 'Should be a factory store');
+      System.assert( result.get('isFactoryStore'), 'Should be a factory store');
     }
   }
+
+
 
   @IsTest
   static void fetchOutstandingBoatOrders_Test()

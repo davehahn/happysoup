@@ -13,31 +13,33 @@
 <!--   <aura:method name="doInit" access="public" /> -->
 
   <div class="slds-spinner_container toggle" aura:id="busy-indicator">
-    <div role="status" class="slds-spinner slds-spinner--medium">
+    <div role="status" class="slds-spinner slds-spinner_medium">
       <span class="slds-assistive-text">Loading</span>
       <div class="slds-spinner__dot-a"></div>
       <div class="slds-spinner__dot-b"></div>
     </div>
   </div>
 
-  <table class="slds-table slds-table--bordered
-                slds-table--cell-buffer
-                slds-max-medium-table--stacked ">
+  <table class="slds-table slds-table_bordered
+                slds-max-medium-table_stacked ">
     <thead>
-      <tr class="slds-text-title--caps">
-        <th scope="col" class="slds-size--1-of-12 slds-text-align--center">
+      <tr class="slds-text-title_caps">
+        <th scope="col" class="slds-size_1-of-12">
           <div class="slds-truncate" title="Quantity">Quantity</div>
         </th>
-        <th scope="col" class="slds-size--6-of-12">
+        <th scope="col" class="slds-size_1-of-12">
+          <div class="slds-truncate" title="Reserved">Reserved</div>
+        </th>
+        <th scope="col" class="slds-size_5-of-12">
           <div class="slds-truncate" title="Item Name">Item Name</div>
         </th>
-        <th scope="col" class="slds-size--2-of-12 slds-text-align--center">
+        <th scope="col" class="slds-size_2-of-12 slds-text-align_center">
           <div class="slds-truncate" title="Each">Each</div>
         </th>
-        <th scope="col" class="slds-size--2-of-12 slds-text-align--center">
+        <th scope="col" class="slds-size_2-of-12 slds-text-align_center">
           <div class="slds-truncate" title="Total">Total</div>
         </th>
-        <th scope="col" class="slds-size--1-of-12">
+        <th scope="col" class="slds-size_1-of-12">
           <div class="slds-th__action" title="Actions">
             <span class="slds-assistive-text">Actions</span>
           </div>
@@ -49,7 +51,12 @@
       <aura:if isTrue="{! !empty(v.boats)}">
         <aura:iteration items="{!v.boats}" var="item">
           <tr>
-            <td data-label="Quantity" class="slds-text-align--center">{!item.quantity}</td>
+            <td data-label="Quantity">
+              <div class="slds-p-left_large">{!item.quantity}</div>
+            </td>
+            <td data-label="Reserved">
+              <div class="slds-p-left_large">{!item.quantityReserved}</div>
+            </td>
             <td data-label="Item Name">
               {!item.boat.name}
               <aura:if isTrue="{! !empty(item.motor) }">
@@ -94,13 +101,13 @@
                 </aura:iteration>
               </aura:if>
             </td>
-            <td data-label="Each" class="slds-text-align--center">
+            <td data-label="Each" class="slds-text-align_center">
               <lightning:formattedNumber value="{!item.orderTotal}" style="currency" currencyCode="CAD" />
             </td>
-            <td data-label="Total" class="slds-text-align--center">
+            <td data-label="Total" class="slds-text-align_center">
               <lightning:formattedNumber value="{! item.grandTotal }" style="currency" currencyCode="CAD" />
             </td>
-            <td data-label="Actions" class="action-cell slds-text-align--right">
+            <td data-label="Actions" class="action-cell slds-text-align_right">
               <lightning:buttonMenu menuAlignment="right"
                                     onselect="{! c.handleTableAction }">
                   <lightning:menuItem label="View"
@@ -122,15 +129,16 @@
       <aura:if isTrue="{! !empty(v.motors)}">
         <aura:iteration items="{!v.motors}" var="item">
           <tr>
-            <td data-label="Quantity" class="slds-text-align--center">{!item.quantity}</td>
+            <td data-label="Quantity" class="slds-text-align_center">{!item.quantity}</td>
+            <td data-label="Reserved" class="slds-text-align_center">{!item.quantityReserved}</td>
             <td data-label="Item Name">{!item.motor.name}</td>
-            <td data-label="Each" class="slds-text-align--center">
+            <td data-label="Each" class="slds-text-align_center">
               <lightning:formattedNumber value="{!item.orderTotal}" style="currency" currencyCode="CAD" />
             </td>
-            <td data-label="Total" class="slds-text-align--center">
+            <td data-label="Total" class="slds-text-align_center">
               <lightning:formattedNumber value="{! item.grandTotal }" style="currency" currencyCode="CAD" />
             </td>
-            <td data-label="Actions" class="slds-text-align--right">
+            <td data-label="Actions" class="slds-text-align_right">
               <lightning:buttonMenu menuAlignment="right"
                                     onselect="{! c.handleTableAction }">
                   <lightning:menuItem label="View"
@@ -152,15 +160,16 @@
       <aura:if isTrue="{! !empty(v.trailers)}">
         <aura:iteration items="{!v.trailers}" var="item">
           <tr>
-            <td data-label="Quantity" class="slds-text-align--center">{!item.quantity}</td>
+            <td data-label="Quantity" class="slds-text-align_center">{!item.quantity}</td>
+            <td data-label="Reserved" class="slds-text-align_center">{!item.quantityReserved}</td>
             <td data-label="Item Name">{!item.trailer.name}</td>
-            <td data-label="Each" class="slds-text-align--center">
+            <td data-label="Each" class="slds-text-align_center">
               <lightning:formattedNumber value="{!item.orderTotal}" style="currency" currencyCode="CAD" />
             </td>
-            <td data-label="Total" class="slds-text-align--center">
+            <td data-label="Total" class="slds-text-align_center">
               <lightning:formattedNumber value="{! item.grandTotal }" style="currency" currencyCode="CAD" />
             </td>
-            <td data-label="Actions" class="slds-text-align--right">
+            <td data-label="Actions" class="slds-text-align_right">
               <lightning:buttonMenu menuAlignment="right"
                                     onselect="{! c.handleTableAction }">
                   <lightning:menuItem label="View"
@@ -182,15 +191,16 @@
       <aura:if isTrue="{! !empty(v.trollingMotors)}">
         <aura:iteration items="{!v.trollingMotors}" var="item">
           <tr>
-            <td data-label="Quantity" class="slds-text-align--center">{!item.quantity}</td>
+            <td data-label="Quantity" class="slds-text-align_center">{!item.quantity}</td>
+            <td data-label="Reserved" class="slds-text-align_center">{!item.quantityReserved}</td>
             <td data-label="Item Name">{!item.trollingMotor.name}</td>
-            <td data-label="Each" class="slds-text-align--center">
+            <td data-label="Each" class="slds-text-align_center">
               <lightning:formattedNumber value="{!item.orderTotal}" style="currency" currencyCode="CAD" />
             </td>
-            <td data-label="Total" class="slds-text-align--center">
+            <td data-label="Total" class="slds-text-align_center">
               <lightning:formattedNumber value="{! item.grandTotal }" style="currency" currencyCode="CAD" />
             </td>
-            <td data-label="Actions" class="slds-text-align--right">
+            <td data-label="Actions" class="slds-text-align_right">
               <lightning:buttonMenu menuAlignment="right"
                                     onselect="{! c.handleTableAction }">
                 <lightning:menuItem label="View"

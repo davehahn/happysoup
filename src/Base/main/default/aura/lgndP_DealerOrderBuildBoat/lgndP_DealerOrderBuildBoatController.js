@@ -47,7 +47,6 @@
       // initForEdit SUCCESS
       $A.getCallback( function( resp ) {
         result = JSON.parse( resp );
-        console.log( JSON.parse(JSON.stringify(result)));
         component.set('v.modelYear', result.modelYear);
         if( result.province !== undefined && result.province.length > 0 )
           component.set('v.province', result.province );
@@ -185,8 +184,8 @@
         }
       }),
       $A.getCallback( function(err) {
-        console.log(err);
         LightningUtils.errorToast(err);
+        helper.functions.toggleSpinner( component, false );
       })
     )
     .finally( $A.getCallback( function() {

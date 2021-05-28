@@ -5,24 +5,63 @@
 public without sharing class PartnerReservations_Controller
 {
 
+  public class PartnerReservation_Exception extends Exception{}
+
   @AuraEnabled
-  public static Boolean isFactoryStore()
+  public static String init()
+  {
+    Map<String, Boolean> result = new Map<String,Boolean>();
+    try
+    {
+      result.put( 'isFactoryStore', isFactoryStore() );
+      result.put( 'allowDraftBookingOrders', allowDraftBookingOrders() );
+      return JSON.serialize( result );
+    }
+    catch( Exception e )
+    {
+      AuraHandledException ex = new AuraHandledException( e.getMessage() );
+      ex.setMessage( e.getMessage() );
+      throw ex;
+    }
+  }
+
+
+  private static Boolean isFactoryStore()
   {
     try {
       return [SELECT Id, Account.Is_Internal__c FROM User WHERE Id = :UserInfo.getUserId() ].Account.Is_Internal__c;
     }
     catch( Exception e )
     {
-      AuraHandledException ex = new AuraHandledException('You appear to be logged in as a Non Partner User');
-      ex.setMessage('You appear to be logged in as a Non Partner User');
-      throw ex;
+      throw new PartnerReservation_Exception('You appear to be logged in as a Non Partner User');
     }
   }
 
-  @AuraEnabled
-  public static String fetchOutstandingBoatOrders()
+  // we want to allow draft booking orders to be reserved if we are
+  // before the date where submitting the Booking Order is allowed
+  private static Boolean allowDraftBookingOrders()
   {
-    return Partner_OutstandingBoatOrders.fetchOrderTypeDetails('boat');
+    String monthDayString = Partner_Boat_Sale_Settings__c.getOrgDefaults().Booking_Order_Begin_Month_Day__c;
+    if( monthDayString == null ) return false;
+
+    List<String> monthDayList = monthDayString.split('/');
+    Date tDay = Date.today();
+    Date bookingStartDate = Date.newInstance(
+      tDay.year(),
+      Integer.valueOf( monthDayList[0] ),
+      Integer.valueOf( monthDayList[1] )
+    );
+    return tDay < bookingStartDate;
+  }
+
+  @AuraEnabled
+  public static String fetchOutstandingBoatOrders(
+    Boolean allowDraft )
+  {
+    return Partner_OutstandingBoatOrders.fetchOrderTypeDetails(
+      'boat',
+      allowDraft
+    );
   }
 
   @AuraEnabled
