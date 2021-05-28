@@ -17,15 +17,15 @@
                 </span>
                 <figcaption>
                   <h4 class="staff__name heading heading--xs">{user.FirstName} {user.LastName}</h4>
-                  <small class="staff__title"><span>{user.Title}</span></small>
+                  <small class="staff__title">{user.Title}</small>
                   <p class="staff__contact">
                     <lightning-icon icon-name="utility:email" size="x-small" alternative-text="Email"></lightning-icon>
-                    <a href="#">{user.Email}</a>
+                    <a href={user.EmailLink}>Send {user.FirstName} an email</a>
                   </p>
                   <template if:true={user.Phone}>
                     <p class="staff__contact">
                       <lightning-icon icon-name="utility:call" size="x-small" alternative-text="Call"></lightning-icon>
-                      <a href="#">{user.Phone}</a>
+                      <a href={user.PhoneLink}>{user.Phone}</a>
                     </p>
                   </template>
                 </figcaption>

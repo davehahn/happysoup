@@ -29,12 +29,20 @@
   line-height: 1;
 }
 .staff__member figcaption .staff__title{
+  display: block;
   font-size: 0.85em;
+  line-height: 1;
+  padding: 0.25em 0;
 }
 .staff__member figcaption .staff__contact{
   display: flex;
-  align-items: center;
+  align-items: flex-start;
+  line-height: 1;
   font-size: 0.85em;
+  margin-bottom: 0.5em;
+}
+.staff__member figcaption .staff__contact:last-of-type{
+  margin-bottom: 0;
 }
 .staff__member figcaption .staff__contact:first-of-type{
   margin-top: 0.5em;
@@ -46,4 +54,16 @@
 }
 .staff__member figcaption .staff__contact a{
   margin-left: 0.5em;
+}
+
+@media screen and (max-width: 920px){
+  .staff__member{
+    width: calc(33.333333% - 1em);
+  }
+}
+
+@media screen and (max-width: 640px){
+  .staff__member{
+    width: calc(50% - 1em);
+  }
 }

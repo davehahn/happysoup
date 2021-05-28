@@ -36,7 +36,9 @@ export default class FactoryStoreStaffList extends LightningElement {
 							let trunkCommUrl = result.slice(0, (result.indexOf('.com') + 4));
 							let newData = data.map((item) => ({
 								...item,
-								ProfileImgUrl: trunkCommUrl + item.MediumPhotoUrl
+								ProfileImgUrl: trunkCommUrl + item.MediumPhotoUrl,
+								EmailLink: 'mailTo:' + item.Email,
+								PhoneLink: 'tel:' + item.Phone
 							}));
 							this.users = newData;
 					 }).catch(e => {
