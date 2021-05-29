@@ -6,6 +6,7 @@
                 controller="PartnerReservations_Controller"
                 implements="forceCommunity:availableForAllPageTypes">
   <aura:attribute name="isFactoryStore" type="Boolean" default="false" />
+  <aura:attribute name="allowDraftBookingOrders" type="Boolean" default="false" />
   <aura:attribute name="availableLists" type="String[]" />
   <aura:attribute name="selectedList" type="String" />
   <aura:attribute name="allRecords" type="List" />
