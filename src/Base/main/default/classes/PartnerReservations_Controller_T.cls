@@ -235,7 +235,7 @@ private class PartnerReservations_Controller_T
     {
       buildOrders();
       Test.startTest();
-      String resultJSON = PartnerReservations_Controller.fetchOutstandingBoatOrders();
+      String resultJSON = PartnerReservations_Controller.fetchOutstandingBoatOrders(false);
       List<Partner_OutstandingBoatOrders.OrderLine> result = (List<Partner_OutstandingBoatOrders.OrderLine>)JSON.deserialize(
         resultJSON, List<Partner_OutstandingBoatOrders.OrderLine>.class );
       System.assertEquals( 1, result.size() );
