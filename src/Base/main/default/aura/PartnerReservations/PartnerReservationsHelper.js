@@ -11,13 +11,16 @@
 
   init: function( component )
   {
-    let action = component.get('c.isFactoryStore');
+    let action = component.get('c.init');
     return new LightningApex( this, action ).fire();
   },
 
   fetchRecords: function( component )
   {
     let action = component.get('c.fetchOutstandingBoatOrders');
+    action.setParams({
+      allowDraft: component.get('v.allowDraftBookingOrders')
+    });
 
     return new Promise( (resolve, reject) => {
       new LightningApex( this, action ).fire()
@@ -131,7 +134,6 @@
     new LightningApex( this, action ).fire()
     .then(
       $A.getCallback( result => {
-        console.log( JSON.parse(JSON.stringify(result)));
         component.set('v.retailERPs', result);
         component.set('v.isReserving', true);
       })
@@ -150,7 +152,6 @@
 
   createReservation: function( component )
   {
-    console.log( 'helper.createReservation' );
     const currentStep = component.get('v.currentStep'),
           customerForm = component.find('customer-form'),
           spinner = component.find('spinner');
@@ -161,16 +162,12 @@
       this.doReservation( component )
       .then(
         $A.getCallback( result => {
-          console.log('selected Account');
-          console.log( JSON.parse(JSON.stringify(result)));
           component.set('v.customerId', result.Id);
           return this.checkForPromotions( component );
         })
       )
       .then(
         $A.getCallback( result => {
-          console.log('Available Promotions');
-          console.log( JSON.parse(JSON.stringify(result)));
           if( result === null || result.length === 0 )
           {
             this.reload( component, 'Finishing up');
@@ -202,7 +199,6 @@
 
   doReservation: function( component )
   {
-    console.log('helper.doReservation');
     const record = component.get('v.recordForReserve');
     let action = component.get('c.createReservation');
 

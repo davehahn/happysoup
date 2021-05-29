@@ -492,6 +492,7 @@ public without sharing class DealerOrder_Ext {
     public List<Map<String, Object>> discounts { get; set; }
     public String invoiceNumber { get; set; }
     public Integer quantity { get; set; }
+    public Integer quantityReserved { get; set; }
     public Decimal orderTotal { get; set; }
     public Boolean booking { get; set; }
     public String orderGroupId { get; set; }
@@ -1145,6 +1146,7 @@ public without sharing class DealerOrder_Ext {
     Map<String, Dealer_Order_Line__c> uniqueERPLines = new Map<String, Dealer_Order_Line__c>();
     List<Dealer_Order_Line__c> motorRequestLines = new List<Dealer_Order_Line__c>();
     Map<String, Integer> quantityMap = new Map<String, Integer>();
+    Map<String, Integer> reservedQuantityMap = new Map<String, Integer>();
     Map<Id, Dealer_Order_Line__c> erpIdMap = new Map<Id, Dealer_Order_Line__c>();
     for( Dealer_Order_Line__c line : [SELECT Id,
                                              Line_Total_Pre_Tax__c,
@@ -1154,6 +1156,7 @@ public without sharing class DealerOrder_Ext {
                                              Dealer_Motor_Request__r.Motor__r.Name,
                                              Dealer_Motor_Request__r.Quantity__c,
                                              ERP_Order__c,
+                                             ERP_Order__r.Reserved_For_Customer_Account__c,
                                              Notes__c
                                       FROM Dealer_Order_Line__c
                                       WHERE Dealer_Order__c = :recordId
@@ -1179,6 +1182,17 @@ public without sharing class DealerOrder_Ext {
       {
         Integer q = quantityMap.get( line.Order_Group_Id__c );
         quantityMap.put( line.Order_Group_Id__c, q + 1);
+      }
+
+      if( line.ERP_Order__r.Reserved_For_Customer_Account__c != null )
+      {
+        if( !reservedQuantityMap.containsKey( line.Order_Group_Id__c ) )
+          reservedQuantityMap.put( line.Order_Group_Id__c, 1 );
+        else
+        {
+          Integer q = reservedQuantityMap.get( line.Order_Group_Id__c );
+          reservedQuantityMap.put( line.Order_Group_Id__c, q + 1);
+        }
       }
     }
 
@@ -1207,6 +1221,8 @@ public without sharing class DealerOrder_Ext {
       DolViewWrapper r = new DolViewWrapper();
       r.orderTotal = workingLine.Line_Total_Pre_Tax__c;
       r.quantity = quantityMap.get( workingLine.Order_Group_Id__c );
+      r.quantityReserved = reservedQuantityMap.containsKey( workingLine.Order_Group_Id__c ) ?
+        reservedQuantityMap.get( workingLine.Order_Group_Id__c ) : 0;
       r.grandTotal = r.quantity * r.orderTotal;
       r.orderGroupId = workingLine.Order_Group_Id__c;
       r.notes = erp.Customer_Notes__c;
@@ -2374,13 +2390,38 @@ public without sharing class DealerOrder_Ext {
     Dealer_Order_Line__c[] dolsToDelete = new List<Dealer_Order_Line__c>();
     AcctSeedERP__Material__c[] oldMaterials = new List<AcctSeedERP__Material__c>();
     AcctSeedERP__Material__c[] newMaterials = new List<AcctSeedERP__Material__c>();
-    Dealer_Order_Line__c[] dols = [SELECT ERP_Order__c, Dealer_Order__c
-                                   FROM Dealer_Order_Line__c
-                                   WHERE Order_Group_Id__c = :wrapper.orderGroupId];
+    Dealer_Order_Line__c[] dols = [
+      SELECT
+        ERP_Order__c,
+        ERP_Order__r.Reserved_For_Customer_Account__c,
+        Dealer_Order__c
+      FROM Dealer_Order_Line__c
+      WHERE Order_Group_Id__c = :wrapper.orderGroupId
+    ];
+    Integer currentlyReservedCount = 0;
+    for( Dealer_Order_Line__c dol :  dols )
+    {
+      if( dol.ERP_Order__r.Reserved_For_Customer_Account__c != null )
+      {
+        currentlyReservedCount++;
+      }
+    }
+    Integer quantityAllowedToDelete = wrapper.quantity - currentlyReservedCount;
+    if( quantityAllowedToDelete < 0 )
+    {
+      String err = 'You currently have ' +
+        currentlyReservedCount + ' of this model Reserved for customers. ' +
+        'Please change the quantity to at least ' +
+        currentlyReservedCount;
+      AuraHandledException ex = new AuraHandledException( err );
+      ex.setMessage( err );
+      throw ex;
+    }
+
     Integer quantityDiff = wrapper.quantity - dols.size();
     for( Dealer_Order_Line__c dol :  dols )
     {
-      if( quantityDiff < 0 )
+      if( quantityDiff < 0 && dol.ERP_Order__r.Reserved_For_Customer_Account__c == null )
       {
         dolsToDelete.add( dol );
         quantityDiff++;
