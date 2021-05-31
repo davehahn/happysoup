@@ -78,8 +78,8 @@
         helper.returnToList( component );
       }),
       $A.getCallback( function( err ) {
-        if( err !== undefined )
-          alert( err );
+        LightningUtils.errorToast( err );
+        spinner.toggle();
       })
     );
   },

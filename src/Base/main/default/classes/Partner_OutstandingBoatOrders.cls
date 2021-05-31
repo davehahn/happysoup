@@ -94,6 +94,7 @@ public without sharing class Partner_OutstandingBoatOrders {
     public String majorItemId;
     public String dealerOrderId;
     public String dealerOrderName;
+    public String dealerOrderLineId;
     public String erpOrderNumber;
     public String erpOrderId;
     public String erpOrderStage;
@@ -126,6 +127,7 @@ public without sharing class Partner_OutstandingBoatOrders {
 
     private void init( Dealer_Order_Line__c dol )
     {
+      this.dealerOrderLineId = dol.Id;
       this.majorItemName = dol.Product__r.Name;
       this.majorItemId = dol.Product__c;
       this.dealerOrderId = dol.Dealer_Order__c;

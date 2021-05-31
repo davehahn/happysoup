@@ -52,7 +52,17 @@ public without sharing class DealerOrder_TriggerHandler extends TriggerHandler
   protected override void beforeDelete()
   {
     Map<Id, Dealer_Order__c> oldMap = (Map<Id, Dealer_Order__c>) Trigger.oldMap;
-    for (Dealer_Order__c dOrder : oldMap.values())
+    Map<Id, List<Dealer_Order_Line__c>> dealerOrderLinesByDealerOrderId = new Map<id, List<Dealer_Order_Line__c>>();
+    Set<Id> erpIdsToDelete = new Set<Id>();
+    for( Dealer_Order_Line__c dol : DealerOrderLine_Selector.allBYDealerOrder( oldMap.keySet() ) )
+    {
+      if( !dealerOrderLinesByDealerOrderId.containsKey( dol.Dealer_Order__c) )
+      {
+        dealerOrderLinesByDealerOrderId.put( dol.Dealer_Order__c, new List<Dealer_Order_Line__c>() );
+      }
+      dealerOrderLinesByDealerOrderId.get( dol.Dealer_Order__c ).add( dol );
+    }
+    for( Dealer_Order__c dOrder : (List<Dealer_Order__c>)Trigger.old )
     {
       if (dOrder.Stage__c != 'Draft')
       {
@@ -60,18 +70,25 @@ public without sharing class DealerOrder_TriggerHandler extends TriggerHandler
       }
       else
       {
-        Set<Id> erpIds = new Set<Id>();
-        for (Dealer_Order_Line__c dol : [
-          SELECT ERP_Order__c
-          FROM Dealer_Order_Line__c
-          WHERE Dealer_Order__c IN :oldMap.keySet()
-        ])
+        if( dealerOrderLinesByDealerOrderId.containsKey( dOrder.Id ) )
         {
-          erpIds.add(dol.ERP_Order__c);
+          for (Dealer_Order_Line__c dol : dealerOrderLinesByDealerOrderId.get(dOrder.Id))
+          {
+            if( dol.ERP_Order__r.Reserved_For_Customer_Account__c != null )
+            {
+              String err = 'You can not delete this Dealer Order.  One of the Line items is currently reserved for ' +
+                dol.ERP_Order__r.Reserved_For_Customer_Account__r.Name;
+              dOrder.addError( err );
+            }
+            else
+            {
+              erpIdsToDelete.add(dol.ERP_Order__c);
+            }
+          }
         }
-        DealerOrderLine_TriggerHandler.deleteERPs(erpIds);
       }
     }
+    DealerOrderLine_TriggerHandler.deleteERPs(erpIdsToDelete);
   }
 
   protected override void afterInsert()

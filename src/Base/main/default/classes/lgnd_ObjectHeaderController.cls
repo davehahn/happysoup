@@ -25,6 +25,16 @@ public with sharing class lgnd_ObjectHeaderController {
   @AuraEnabled
   public static void deleteRecord( String recordId )
   {
-    Database.delete( recordId );
+    try
+    {
+      Database.delete( recordId );
+    }
+    catch( Exception e )
+    {
+      AuraHandledException ahex = new AuraHandledException( e.getMessage() );
+      ahex.setMessage( e.getMessage() );
+      throw ahex;
+    }
+
   }
 }

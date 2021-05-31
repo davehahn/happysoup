@@ -21,6 +21,9 @@
   <aura:attribute name="alwaysEditFields" type="String" />
   <aura:attribute name="alwaysEditFields_List" type="List" />
 
+  <ltng:require scripts="{!join(',', $Resource.Libraries + '/js/LightningApex.js',
+                                     $Resource.Libraries + '/js/LightningUtils.js') }" />
+
   <!-- Events -->
   <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
   <aura:handler event="force:refreshView" action="{!c.doInit}" />

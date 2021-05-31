@@ -33,6 +33,14 @@ public without sharing class DealerOrderLine_TriggerHandler extends TriggerHandl
 
   protected override void beforeDelete()
   {
+    for( Dealer_Order_Line__c dol : (List<Dealer_Order_Line__c>)Trigger.old )
+    {
+      if( dol.Reserved_For_Customer_Id__c != null )
+      {
+        String err = 'You can not delete the line. It is currently reserved for a customer';
+        dol.addError( err );
+      }
+    }
   }
 
   protected override void afterInsert()

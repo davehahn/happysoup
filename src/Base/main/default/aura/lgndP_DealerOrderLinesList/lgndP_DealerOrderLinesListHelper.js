@@ -113,35 +113,29 @@
     action.setParams({
       groupId: groupId
     });
-    action.setCallback(this, function(response) {
-      var state = response.getState();
-      if (state === "SUCCESS")
-      {
-        self.toggleSpinner(component);
+
+    new LightningApex( this, action ).fire()
+    .then(
+      $A.getCallback( result => {
         $A.get('e.force:refreshView').fire();
         var toast = $A.get('e.force:showToast');
         toast.setParams({
-          message: 'Your order was submitted successfully!',
+          message: 'Line Item was successfully deleted!',
           type: 'success'
         })
         .fire();
-      }
-      else if (component.isValid() && state === "INCOMPLETE") {
-      }
-      else if (component.isValid() && state === "ERROR") {
+      })
+    )
+    .catch(
+      $A.getCallback( err => {
+        LightningUtils.errorToast( err );
+      })
+    )
+    .finally(
+      $A.getCallback( () => {
         self.toggleSpinner(component);
-        var errors = response.getError();
-        if (errors) {
-            if (errors[0] && errors[0].message) {
-                alert("Error message: " +
-                         errors[0].message);
-            }
-        } else {
-            alert("Unknown error");
-        }
-      }
-    });
-    $A.enqueueAction( action );
+      })
+    );
   },
 
   removeOrderLine: function( component, groupId, itemType )
