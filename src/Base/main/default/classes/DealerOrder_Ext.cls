@@ -822,7 +822,16 @@ public without sharing class DealerOrder_Ext {
   public static void deleteDealerOrder( String dealerOrderId )
   {
     Dealer_Order__c dOrder = new Dealer_Order__c( Id = dealerOrderId );
-    delete dOrder;
+    try
+    {
+      delete dOrder;
+    }
+    catch( Exception e )
+    {
+      AuraHandledException ahex = new AuraHandledException( e.getMessage() );
+      ahex.setMessage( e.getMessage() );
+      throw ahex;
+    }
   }
 
   @AuraEnabled
@@ -1882,7 +1891,16 @@ public without sharing class DealerOrder_Ext {
     Dealer_Order_Line__c[] dols = [ SELECT Id
                                     FROM Dealer_Order_Line__c
                                     WHERE Order_Group_Id__c = :groupId];
-    delete dols;
+    try
+    {
+      delete dols;
+    }
+    catch( Exception e )
+    {
+      AuraHandledException ex = new AuraHandledException( e.getMessage() );
+      ex.setMessage( e.getMessage() );
+      throw ex;
+    }
   }
 
   @AuraEnabled

@@ -36,6 +36,7 @@
     )
     .then(
       $A.getCallback( (result) => {
+        console.log( JSON.parse(JSON.stringify(result)));
         component.set('v.allRecords', result );
         component.find('listSelector--Cmp').doInit();
       })
