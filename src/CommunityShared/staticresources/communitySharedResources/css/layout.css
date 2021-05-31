@@ -5,6 +5,7 @@ body, html, :root {
 	 height: 100%;
 	 -webkit-font-smoothing: antialiased;
 	 -moz-osx-font-smoothing: grayscale;
+	 overflow-x: hidden;
 }
  body, :root {
 	 margin: 0;
@@ -189,4 +190,72 @@ body > *, :root > *{
   background-color: #fff;
 	color: #0d506d;
 	text-decoration: none;
+}
+
+
+.leadForm__fieldList .input label, .leadForm__fieldList .input legend, .leadForm__fieldList .input .slds-form-element__label {
+	 margin-bottom: 0.25em;
+	 font-size: 1.125em;
+}
+.leadForm__fieldList .input label strong, .leadForm__fieldList .input legend strong, .leadForm__fieldList .input .slds-form-element__label strong {
+	 font-weight: 600;
+}
+.leadForm__fieldList .input label .optional, .leadForm__fieldList .input legend .optional {
+	 font-size: 0.8em;
+	 font-style: italic;
+}
+.slds-input, .leadForm__fieldList .input textarea, .leadForm__fieldList .input select {
+	 width: 100%;
+	 font-size: 1.125em;
+	 padding: 0.3em 0.5em 0.2em;
+	 box-sizing: border-box;
+	 border: 1px solid #bebebe;
+	 border-radius: 0;
+	 transition: all 0.2s linear;
+}
+.leadForm__fieldList .input select {
+	 appearance: none;
+	 background: #fff url(../../img/standard/icon-select.png) no-repeat top 18px right 20px;
+}
+.leadForm__fieldList .input textarea {
+	 height: 5em;
+}
+.leadForm__fieldList .input input:focus, .leadForm__fieldList .input textarea:focus, .leadForm__fieldList .input select:focus {
+	 border: 1px solid #ffdf2e;
+	 box-shadow: 0 0 15px -5px rgba(0, 0, 0, 0.7) !important;
+	 outline: none;
+}
+.leadForm__fieldList .input.input--checkbox .slds-checkbox_faux {
+	 width: 20px;
+	 height: 20px;
+	 border: 1px solid #bebebe;
+}
+.leadForm__fieldList .input.input--checkbox input:focus + .slds-checkbox__label .slds-checkbox_faux {
+	 border: 1px solid #ffdf2e;
+}
+.leadForm__fieldList .input.input--checkbox input:checked + .slds-checkbox__label .slds-checkbox_faux::before {
+	 content: "";
+	 display: block;
+	 position: absolute;
+	 width: 8px;
+	 height: 16px;
+	 transform: rotate(-36deg);
+	 border-radius: 100vh;
+	 left: -1px;
+	 top: 3px;
+	 background-color: var(--highlight);
+	 border: none!important;
+}
+.leadForm__fieldList .input.input--checkbox input:checked + .slds-checkbox__label .slds-checkbox_faux::after {
+	 content: "";
+	 display: block;
+	 position: absolute;
+	 width: 8px;
+	 height: 38px;
+	 transform: rotate(38deg);
+	 border-radius: 100vh;
+	 top: -16px;
+	 left: 12px;
+	 background-color: var(--highlight);
+	 border: none!important;
 }

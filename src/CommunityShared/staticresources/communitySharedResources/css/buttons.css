@@ -1,4 +1,4 @@
-.btn, .contactSupportButton {
+.btn, .contactSupportButton, button[type="submit"] {
     display: flex;
     align-items: center;
     transition: all .3s linear;
@@ -33,11 +33,11 @@
 .btn:hover span.icon svg path, .btn:focus span.icon svg path {
     fill: #0d506d !important;
 }
-.btn.btn--primary {
+.btn.btn--primary, button[type="submit"] {
     background-color: #0d506d;
     color: #fff;
 }
-.btn.btn--primary:hover, .btn.btn--primary:focus {
+.btn.btn--primary:hover, .btn.btn--primary:focus, button[type="submit"]:hover, , button[type="submit"]:focus {
     background-color: #fff;
     color: #0d506d;
     text-decoration: none;

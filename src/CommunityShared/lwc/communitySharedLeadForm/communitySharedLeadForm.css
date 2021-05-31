@@ -119,7 +119,7 @@ form[data-id="leadForm"] .loaderWrap.active {
 }
 .leadForm__fieldList .input {
 	 width: 100%;
-	 margin-bottom: 1.25em;
+	 margin-bottom: .5em;
 	 list-style: none;
 	 list-style-type: none !important;
 }
@@ -137,38 +137,38 @@ form[data-id="leadForm"] .loaderWrap.active {
 	 display: flex;
 	 justify-content: flex-start;
 }
-.leadForm__fieldList .input label, .leadForm__fieldList .input legend {
-	 margin-bottom: 0.25em;
-	 font-size: 1.125em;
-}
-.leadForm__fieldList .input label strong, .leadForm__fieldList .input legend strong {
-	 font-weight: 600;
-}
-.leadForm__fieldList .input label .optional, .leadForm__fieldList .input legend .optional {
-	 font-size: 0.8em;
-	 font-style: italic;
-}
-.leadForm__fieldList .input input:not([type='checkbox']), .leadForm__fieldList .input textarea, .leadForm__fieldList .input select {
-	 width: 100%;
-	 font-size: 1.125em;
-	 padding: 0.5em 0.5em 0.4em;
-	 box-sizing: border-box;
-	 border: 1px solid #bebebe;
-	 border-radius: 0;
-	 transition: all 0.2s linear;
-}
-.leadForm__fieldList .input select {
-	 appearance: none;
-	 background: #fff url(../../img/standard/icon-select.png) no-repeat top 18px right 20px;
-}
-.leadForm__fieldList .input textarea {
-	 height: 5em;
-}
-.leadForm__fieldList .input input:focus, .leadForm__fieldList .input textarea:focus, .leadForm__fieldList .input select:focus {
-	 border: 1px solid #ffdf2e;
-	 box-shadow: 0 0 15px -5px rgba(0, 0, 0, 0.7) !important;
-	 outline: none;
-}
+/*.leadForm__fieldList .input label, .leadForm__fieldList .input legend {*/
+/*	 margin-bottom: 0.25em;*/
+/*	 font-size: 1.125em;*/
+/*}*/
+/*.leadForm__fieldList .input label strong, .leadForm__fieldList .input legend strong {*/
+/*	 font-weight: 600;*/
+/*}*/
+/*.leadForm__fieldList .input label .optional, .leadForm__fieldList .input legend .optional {*/
+/*	 font-size: 0.8em;*/
+/*	 font-style: italic;*/
+/*}*/
+/*.slds-input, .leadForm__fieldList .input textarea, .leadForm__fieldList .input select {*/
+/*	 width: 100%;*/
+/*	 font-size: 1.125em;*/
+/*	 padding: 0.5em 0.5em 0.4em;*/
+/*	 box-sizing: border-box;*/
+/*	 border: 1px solid orange;*/
+/*	 border-radius: 0;*/
+/*	 transition: all 0.2s linear;*/
+/*}*/
+/*.leadForm__fieldList .input select {*/
+/*	 appearance: none;*/
+/*	 background: #fff url(../../img/standard/icon-select.png) no-repeat top 18px right 20px;*/
+/*}*/
+/*.leadForm__fieldList .input textarea {*/
+/*	 height: 5em;*/
+/*}*/
+/*.leadForm__fieldList .input input:focus, .leadForm__fieldList .input textarea:focus, .leadForm__fieldList .input select:focus {*/
+/*	 border: 1px solid #ffdf2e;*/
+/*	 box-shadow: 0 0 15px -5px rgba(0, 0, 0, 0.7) !important;*/
+/*	 outline: none;*/
+/*}*/
 .leadForm__fieldList .input input.error, .leadForm__fieldList .input textarea.error, .leadForm__fieldList .input select.error {
 	 border: 1px solid #eb3b3b;
 }
@@ -211,33 +211,33 @@ form[data-id="leadForm"] .loaderWrap.active {
 	 width: 20px;
 	 height: 20px;
 }
-.leadForm__fieldList .input.input--checkbox input:focus + .customCheck {
-	 border: 1px solid #ffdf2e;
-}
-.leadForm__fieldList .input.input--checkbox input:checked + .customCheck::before {
-	 content: "";
-	 display: block;
-	 position: absolute;
-	 width: 9px;
-	 height: 24px;
-	 transform: rotate(-36deg);
-	 border-radius: 100vh;
-	 left: -3px;
-	 top: 0px;
-	 background-color: var(--highlight);
-}
-.leadForm__fieldList .input.input--checkbox input:checked + .customCheck::after {
-	 content: "";
-	 display: block;
-	 position: absolute;
-	 width: 9px;
-	 height: 42px;
-	 transform: rotate(38deg);
-	 border-radius: 100vh;
-	 top: -16px;
-	 left: 12px;
-	 background-color: var(--highlight);
-}
+/*.leadForm__fieldList .input.input--checkbox input:focus + .customCheck {*/
+/*	 border: 1px solid #ffdf2e;*/
+/*}*/
+/*.leadForm__fieldList .input.input--checkbox input:checked + .customCheck::before {*/
+/*	 content: "";*/
+/*	 display: block;*/
+/*	 position: absolute;*/
+/*	 width: 9px;*/
+/*	 height: 24px;*/
+/*	 transform: rotate(-36deg);*/
+/*	 border-radius: 100vh;*/
+/*	 left: -3px;*/
+/*	 top: 0px;*/
+/*	 background-color: var(--highlight);*/
+/*}*/
+/*.leadForm__fieldList .input.input--checkbox input:checked + .customCheck::after {*/
+/*	 content: "";*/
+/*	 display: block;*/
+/*	 position: absolute;*/
+/*	 width: 9px;*/
+/*	 height: 42px;*/
+/*	 transform: rotate(38deg);*/
+/*	 border-radius: 100vh;*/
+/*	 top: -16px;*/
+/*	 left: 12px;*/
+/*	 background-color: var(--highlight);*/
+/*}*/
 .leadForm__fieldList .input:not(.input--checkbox) label {
 	 display: block;
 }
