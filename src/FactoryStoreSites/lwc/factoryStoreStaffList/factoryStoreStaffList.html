@@ -11,25 +11,53 @@
         <ul class="staff__list">
           <template for:each={users} for:item="user">
             <li key={user.Id} class="staff__member">
-              <figure>
-                <span class="staff__image">
-                  <img src={user.ProfileImgUrl} />
-                </span>
-                <figcaption>
-                  <h4 class="staff__name heading heading--xs">{user.FirstName} {user.LastName}</h4>
-                  <small class="staff__title">{user.Title}</small>
-                  <p class="staff__contact">
-                    <lightning-icon icon-name="utility:email" size="x-small" alternative-text="Email"></lightning-icon>
-                    <a href={user.EmailLink}>Send {user.FirstName} an email</a>
-                  </p>
-                  <template if:true={user.Phone}>
-                    <p class="staff__contact">
-                      <lightning-icon icon-name="utility:call" size="x-small" alternative-text="Call"></lightning-icon>
-                      <a href={user.PhoneLink}>{user.Phone}</a>
-                    </p>
-                  </template>
-                </figcaption>
-              </figure>
+              <article class="staff__card">
+                <header class="card__header">
+                  <span class="card__landscape" style={user.LandscapeImg}></span>
+                  <span class="card__profileImage">
+                    <img src={user.ProfileImgUrl} />
+                    <span class="profileImage__frame"></span>
+                  </span>
+                  <h4 class="card__name heading heading--m">{user.FirstName} {user.LastName}</h4>
+                  <small class="card__title copy copy--standard">
+                    <template if:true={user.Title}>{user.Title}</template>
+                    <template if:false={user.Title}>Team Member</template>
+                  </small>
+                </header>
+                <div class="card__bioWrap">
+                  <section class="card__bio">
+                    <h5 class="bio__heading heading heading--s">About {user.FirstName}</h5>
+                    <ul class="card__vitals">
+                      <li class="vitals__detail">
+                        <strong>Hometown:</strong>
+                        <span>{user.Hometown}</span>
+                      </li>
+                      <li class="vitals__detail">
+                        <strong>Started at Legend Boats in:</strong>
+                        <span>{user.StartYear}</span>
+                      </li>
+                      <li class="vitals__detail">
+                        <strong>Something Unique About {user.FirstName}:</strong>
+                        <p>{user.Story}</p>
+                      </li>
+                    </ul>
+
+                    <section class="card__contact">
+                      <h5 class="ro">Get in touch with {user.FirstName}</h5>
+                      <p class="staff__contact">
+                        <lightning-icon icon-name="utility:email" size="x-small" alternative-text="Email"></lightning-icon>
+                        <a href={user.EmailLink}>{user.EmailTrunk}</a>
+                      </p>
+                      <template if:true={user.Phone}>
+                        <p class="staff__contact">
+                          <lightning-icon icon-name="utility:call" size="x-small" alternative-text="Call"></lightning-icon>
+                          <a href={user.PhoneLink}>{user.Phone}</a>
+                        </p>
+                      </template>
+                    </section>
+                  </section>
+                </div>
+              </article>
             </li>
           </template>
         </ul>

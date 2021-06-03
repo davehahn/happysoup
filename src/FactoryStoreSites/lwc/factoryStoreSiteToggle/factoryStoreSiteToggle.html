@@ -1,0 +1,18 @@
+<!--
+ - Created by Tim on 2021-05-31.
+ -->
+
+<!-- Factory Store Site Toggle -->
+<template>
+  <div class="moreSites">
+    <lightning-combobox
+            label="More Legend Boats Sites"
+            name="sites"
+            data-id="Sites"
+            value={value}
+            placeholder="-- Select one --"
+            options={siteList}
+            onchange={navigateToSite}>
+    </lightning-combobox>
+  </div>
+</template>
