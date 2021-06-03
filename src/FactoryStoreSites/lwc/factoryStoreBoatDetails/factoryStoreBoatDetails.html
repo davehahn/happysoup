@@ -85,27 +85,29 @@
 
       <div class="model__leadFormWrapper">
         <section class="model__leadForm">
-          <header class="fullWidth">
-            <h3 class="heading heading--m maxWidth maxWidth--thin">Interested?</h3>
-            <p class="copy copy--standard maxWidth maxWidth--thin">Fill out the form below and a Legend Boats representative will contact you with more information.</p>
+          <header class="">
+            <h3 class="heading heading--m">Interested?</h3>
+            <p class="copy copy--standard">Fill out the form below and a Legend Boats representative will contact you with more information.</p>
           </header>
-          <c-community-shared-lead-form
-                  location={location}
-                  form-name={leadFormName}
-                  campaign-id={campaignId}
-                  boat-model-id={recordId}
-                  collect-first-name="true"
-                  collect-last-name="true"
-                  collect-street="true"
-                  collect-city="true"
-                  collect-province="true"
-                  collect-postal-code="true"
-                  collect-email="true"
-                  collect-phone="true"
-                  collect-plan-to-purchase="true"
-                  collect-notes="true"
-                  collect-newsletter-optin="true"
-                  section-width="Container"></c-community-shared-lead-form>
+          <div class="form">
+            <c-community-shared-lead-form
+                    location={location}
+                    form-name={leadFormName}
+                    campaign-id={campaignId}
+                    boat-model-id={recordId}
+                    collect-first-name="true"
+                    collect-last-name="true"
+                    collect-street="true"
+                    collect-city="true"
+                    collect-province="true"
+                    collect-postal-code="true"
+                    collect-email="true"
+                    collect-phone="true"
+                    collect-plan-to-purchase="true"
+                    collect-notes="true"
+                    collect-newsletter-optin="true"
+                    section-width="Container"></c-community-shared-lead-form>
+          </div>
         </section>
       </div>
 
