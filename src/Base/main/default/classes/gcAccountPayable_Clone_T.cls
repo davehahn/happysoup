@@ -11,12 +11,12 @@ public  class gcAccountPayable_Clone_T {
     @isTest
     static void testScenario1() {
         AcctSeed__Account_Payable__c accountPayable = [SELECT id FROM AcctSeed__Account_Payable__c limit 1];
-
         ApexPages.StandardController sc = new ApexPages.StandardController(accountPayable);
         gcAccountPayable_Clone accountPayableClone = new gcAccountPayable_Clone(sc);
 		Test.startTest();
         accountPayableClone.init();
-        accountPayableClone.createClone();
+        pageReference pr = accountPayableClone.createClone();
+        System.assertEquals(null,pr);
 		Test.stopTest();        
 
     }
@@ -30,7 +30,8 @@ public  class gcAccountPayable_Clone_T {
         gcAccountPayable_Clone accountPayableClone = new gcAccountPayable_Clone(sc);
         sc.setSelected(lstAccountPayable);
         Test.startTest();
-        accountPayableClone.back();
+        pageReference pr = accountPayableClone.back();
+        System.assertNotEquals(null,pr);
         Test.stopTest();
     }
 
@@ -42,8 +43,11 @@ public  class gcAccountPayable_Clone_T {
         gcAccountPayable_Clone accountPayableClone = new gcAccountPayable_Clone(sc);
         accountPayableClone.idFilter = null;
         Test.startTest();
-        accountPayableClone.init();
-        accountPayableClone.createClone();
+        pageReference prInit = accountPayableClone.init();
+        pageReference pr = accountPayableClone.createClone();
+        
+        System.assertEquals(null,prInit);
+        System.assertEquals(null,pr);
         Test.stopTest();
 
     }
@@ -58,8 +62,11 @@ public  class gcAccountPayable_Clone_T {
         gcAccountPayable_Clone accountPayableClone = new gcAccountPayable_Clone(sc);
         accountPayableClone.retUrl = null;
         Test.startTest();
-        accountPayableClone.init();
+        pageReference pr = accountPayableClone.init();
         gcAccountPayable_Clone objTest = new gcAccountPayable_Clone();
+        
+        System.assertNotEquals(null,pr);
+        System.assertNotEquals(null,objTest);
         Test.stopTest();
     }
 

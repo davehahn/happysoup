@@ -49,6 +49,23 @@ public with sharing class gcAccountPayable_T {
 			Test.startTest();
         	Update lstAccountPayable;
         	Test.stopTest();
+
+         lstAccountPayable = [
+                SELECT
+                        Id,
+                        Tax_Amount_Fixed__c,
+                        Tax_Override__c,
+                        GL_Account_Variable_3__c
+
+                FROM
+                        AcctSeed__Account_Payable__c
+        ];
+        system.assertEquals(False, lstAccountPayable[0].Tax_Amount_Fixed__c);
+        system.assertEquals(False, lstAccountPayable[0].Tax_Override__c);
+        system.assertEquals(lstAccVariable[0].Id,lstAccountPayable[0].GL_Account_Variable_3__c);
+
+
+
     }
     
     @isTest
@@ -86,15 +103,39 @@ public with sharing class gcAccountPayable_T {
                                     AcctSeed__Type__c = 'GL Account Variable 3'
                 		];
 
-		AcctSeed__Account_Payable__c accPayable = lstAccountPayable[0];
-        accPayable.Tax_Amount_Fixed__c = true;
-        accPayable.Tax_Override__c = false;
-        accPayable.GL_Account_Variable_3__c = lstAccVariable[0].Id;
-        accPayable.AcctSeed__Date__c = System.today() + 5;
-        accPayable.Tax_Amount_Retail__c =5555;
+
+
+        AcctSeed__Accounting_Period__c accPeriod = [SELECT Id, AcctSeed__Start_Date__c, AcctSeed__End_Date__c, Name  FROM AcctSeed__Accounting_Period__c LIMIT 1];
+
+
+        lstAccountPayable[0].Tax_Amount_Fixed__c = true;
+        lstAccountPayable[0].Tax_Override__c = false;
+        lstAccountPayable[0].Tax_Amount_Retail__c =1235;
+        lstAccountPayable[0].GL_Account_Variable_3__c = lstAccVariable[0].Id;
+        lstAccountPayable[0].AcctSeed__Date__c = System.today() + 5;
+        lstAccountPayable[0].AcctSeed__Accounting_Period__c = accPeriod.id;
+
+
         Test.startTest();
         Update lstAccountPayable[0];
         Test.stopTest();
+
+        lstAccountPayable = [
+                SELECT
+                        Id,
+                        Tax_Amount_Fixed__c,
+                        Tax_Override__c,
+                        GL_Account_Variable_3__c,
+                        Tax_Amount_Retail__c,
+                        AcctSeed__Date__c
+
+                FROM
+                        AcctSeed__Account_Payable__c
+        ];
+        system.assertEquals(True, lstAccountPayable[0].Tax_Amount_Fixed__c);
+        system.assertEquals(True, lstAccountPayable[0].Tax_Override__c);
+        system.assertEquals(lstAccVariable[0].Id,lstAccountPayable[0].GL_Account_Variable_3__c);
+        system.assertEquals(System.today() + 5, lstAccountPayable[0].AcctSeed__Date__c);
     }
 
     @isTest
@@ -126,6 +167,7 @@ public with sharing class gcAccountPayable_T {
                             SELECT
                                 Id, 
             					AcctSeed__Type__c
+					           
                             FROM
                                 AcctSeed__Accounting_Variable__c
                             WHERE
@@ -140,6 +182,24 @@ public with sharing class gcAccountPayable_T {
         lstAccountPayable[0].Tax_Amount_Retail__c =1234;
         AcctSeed.AccountPayablePostService.postAccountPayables(lstAccountPayable);
         Test.stopTest();   
+        
+        lstAccountPayable = [
+                SELECT
+                        Id,
+                        Tax_Amount_Fixed__c,
+                        Tax_Override__c,
+                        GL_Account_Variable_3__c,
+                        Tax_Amount_Retail__c,
+                        AcctSeed__Date__c,
+			            AcctSeed__Status__c
+
+                FROM
+                        AcctSeed__Account_Payable__c
+        ];
+       
+        
+        system.assertEquals('Posted', lstAccountPayable[0].AcctSeed__Status__c);
+        
         gcAccountPayable.disableTrigger = null;
         gcAccountPayable.disableTrigger = true;
         gcAccountPayable.disableTrigger = false;

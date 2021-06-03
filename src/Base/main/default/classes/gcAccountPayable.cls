@@ -91,9 +91,7 @@ public without sharing class gcAccountPayable {
 						   ap.Tax_Amount_Provincial__c != oldRec.Tax_Amount_Provincial__c || 
 						   ap.Tax_Amount_Retail__c != oldRec.Tax_Amount_Retail__c)
 						{
-							if(!Test.isRunningTest()){
 								ap.addError('The Sales Tax settings of a Payable may not be changed, if the Payable is Posted.');
-							}
 						}
 					}
 				}
