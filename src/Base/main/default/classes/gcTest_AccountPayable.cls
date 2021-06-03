@@ -7,11 +7,12 @@ private class gcTest_AccountPayable{
     Factory_CustomSettings.setupInventorySettings();
   }
 
-	static testMethod void coverage_Test()
-	{
-    gcAccountPayable.coverage();
-    gcAccountPayable_Override.coverage();
-    gcAccountPayable_Clone.coverage();
+  static testMethod void coverage_Test()
+  {
+    //Pooja
+    //gcAccountPayable.coverage();
+    //gcAccountPayable_Override.coverage();
+    //gcAccountPayable_Clone.coverage();
   }
 
   @isTest
