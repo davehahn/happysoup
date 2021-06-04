@@ -4,12 +4,20 @@
 
 public with sharing class FactoryStoreStaffList_Controller {
     @AuraEnabled(Cacheable=true)
-    public static List<User> fetchStaffList(String location){
-        String[] roles = new String[]{
-         '%Store Manager%',
-         '%Memory Makers%',
-         '%Business Office Managers%'
-        };
+    public static List<User> fetchStaffList(String location, String department){
+        String[] roles;
+        if(department == 'Sales'){
+            roles = new String[]{
+                '%Store Manager%',
+                '%Memory Makers%',
+                '%Business Office Managers%'
+            };
+        } else if(department == 'Service'){
+            roles = new String[]{
+               '%Boat Specialist%',
+               '%Memory Builders%'
+            };
+        }
         List<User> users = new List<User>();
         for( User u : [SELECT Id,
                               FirstName,

@@ -20,7 +20,7 @@ export default class FactoryStoreStaffList extends LightningElement {
 	communityUrl;
 	wrapperClass = 'staff';
 
-	@wire( fetchStaffList, { location: '$location'} )
+	@wire( fetchStaffList, { location: '$location', department: '$department'} )
 		wiredFetchStaffList( {error, data})
 		{
 			if( data )

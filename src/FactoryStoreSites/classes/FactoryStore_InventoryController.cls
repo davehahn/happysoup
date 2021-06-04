@@ -52,14 +52,84 @@ public with sharing class FactoryStore_InventoryController {
         return boats;
     }
 
-//    @AuraEnabled(Cacheable=true)
-//    public static List<Sobject> fetchStandardProducts(  productIds )
-//    {
-//        List<Sobject> standards = new List<SObject>();
-//        for( Product2 p : Product_Selector.allWithFullDetailsById( productIds )){
-//            standards.add( p );
-//        }
-//        return standards;
-//    }
+    @AuraEnabled(Cacheable=true)
+    public static List<Sobject> fetchNewInStockCurrentBoats( String location, String year )
+    {
+        String fromLocation = location;
+        String currentModelYear = year;
+        List<Sobject> boats = new List<Sobject>();
+        for( SObject b : [SELECT Name,
+                                 GMBLASERP__Product__r.Name,
+                                 Model_Year__c,
+                                 GMBLASERP__Product__r.Make__c
+                          FROM GMBLASERP__Serial_Number__c
+                          WHERE Location__c = :fromLocation
+                          AND Product_Record_Type__c = 'Boat'
+                          AND GMBLASERP__Product__r.Make__c = 'Legend'
+                          AND Model_Year__c >= :currentModelYear
+                          AND Status__c NOT IN ('Used', 'At Supplier', 'Return to Supplier')
+                          AND Available_Retail__c = true
+                          ORDER BY Model_Year__c ASC])
+        {
+            boats.add( b );
+        }
+        System.debug('Boats: ' + boats);
+        return boats;
+    }
+
+    @AuraEnabled(Cacheable=true)
+    public static List<Sobject> fetchNewInStockNonCurrentBoats( String location, String year )
+    {
+        String fromLocation = location;
+        String currentModelYear = year;
+        List<Sobject> boats = new List<Sobject>();
+        for( SObject b : [SELECT Name,
+                                GMBLASERP__Product__r.Name,
+                                Model_Year__c,
+                                GMBLASERP__Product__r.Make__c
+                        FROM GMBLASERP__Serial_Number__c
+                        WHERE Location__c = :fromLocation
+                        AND Product_Record_Type__c = 'Boat'
+                        AND GMBLASERP__Product__r.Make__c = 'Legend'
+                        AND Model_Year__c < :currentModelYear
+                        AND Status__c NOT IN ('Used', 'At Supplier', 'Return to Supplier')
+                        AND Available_Retail__c = true
+                        ORDER BY Model_Year__c ASC])
+        {
+            boats.add( b );
+        }
+        System.debug('Boats: ' + boats);
+        return boats;
+    }
+
+    @AuraEnabled(Cacheable=true)
+    public static List<Sobject> fetchUsedInStockBoats( String location )
+    {
+        String fromLocation = location;
+        List<Sobject> boats = new List<Sobject>();
+        for( SObject b : [SELECT Name,
+                                GMBLASERP__Product__r.Name,
+                                Model_Year__c
+                            FROM GMBLASERP__Serial_Number__c
+                            WHERE Location__c = :fromLocation
+                            AND Product_Record_Type__c = 'Boat'
+                            AND Status__c = 'Used'
+                            AND Available_Retail__c = true
+                            ORDER BY Model_Year__c ASC])
+        {
+            boats.add( b );
+        }
+        System.debug('Boats: ' + boats);
+        return boats;
+    }
+
+    // Currents - Legends Only by Location
+    // SELECT Name, GMBLASERP__Product__r.Name, Model_Year__c, GMBLASERP__Product__r.Make__c FROM GMBLASERP__Serial_Number__c WHERE Location__c = 'Whitefish' AND Product_Record_Type__c = 'Boat' AND GMBLASERP__Product__r.Make__c = 'Legend' AND Model_Year__c >= 2021 AND Status__c NOT IN ('Used', 'At Supplier', 'Return to Supplier') AND Available_Retail__c = true ORDER BY Model_Year__c ASC
+
+    // Non-Currents - Legends Only by Location
+    // SELECT Name, GMBLASERP__Product__r.Name, Model_Year__c, GMBLASERP__Product__r.Make__c FROM GMBLASERP__Serial_Number__c WHERE Location__c = 'Whitefish' AND Product_Record_Type__c = 'Boat' AND GMBLASERP__Product__r.Make__c = 'Legend' AND Model_Year__c < 2021 AND Status__c NOT IN ('Used', 'At Supplier', 'Return to Supplier') AND Available_Retail__c = true ORDER BY Model_Year__c ASC
+
+    // Used by location
+    // SELECT Name, GMBLASERP__Product__r.Name, Model_Year__c FROM GMBLASERP__Serial_Number__c WHERE Location__c = 'Montreal' AND Product_Record_Type__c = 'Boat' AND Status__c = 'Used' AND Available_Retail__c = true ORDER BY Model_Year__c ASC
 
 }
