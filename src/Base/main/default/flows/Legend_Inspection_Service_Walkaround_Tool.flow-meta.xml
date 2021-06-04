@@ -3,8 +3,8 @@
     <actionCalls>
         <name>ErrorHandler</name>
         <label>ErrorHandler</label>
-        <locationX>440</locationX>
-        <locationY>998</locationY>
+        <locationX>754</locationX>
+        <locationY>1118</locationY>
         <actionName>c:Flow_Toast</actionName>
         <actionType>component</actionType>
         <inputParameters>
@@ -40,10 +40,10 @@
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </actionCalls>
     <actionCalls>
-        <name>SuccessHandler</name>
-        <label>SuccessHandler</label>
-        <locationX>176</locationX>
-        <locationY>1118</locationY>
+        <name>ErrorHandler_0</name>
+        <label>ErrorHandler</label>
+        <locationX>314</locationX>
+        <locationY>1478</locationY>
         <actionName>c:Flow_Toast</actionName>
         <actionType>component</actionType>
         <inputParameters>
@@ -61,7 +61,163 @@
         <inputParameters>
             <name>message</name>
             <value>
-                <stringValue>The record was successfully created!</stringValue>
+                <elementReference>$Flow.FaultMessage</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>title</name>
+            <value>
+                <stringValue>Error</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>type</name>
+            <value>
+                <stringValue>error</stringValue>
+            </value>
+        </inputParameters>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </actionCalls>
+    <actionCalls>
+        <name>ErrorHandler_0_0</name>
+        <label>ErrorHandler</label>
+        <locationX>314</locationX>
+        <locationY>2078</locationY>
+        <actionName>c:Flow_Toast</actionName>
+        <actionType>component</actionType>
+        <inputParameters>
+            <name>mode</name>
+            <value>
+                <stringValue>dismissible</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>duration</name>
+            <value>
+                <stringValue>5</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>message</name>
+            <value>
+                <elementReference>$Flow.FaultMessage</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>title</name>
+            <value>
+                <stringValue>Error</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>type</name>
+            <value>
+                <stringValue>error</stringValue>
+            </value>
+        </inputParameters>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </actionCalls>
+    <actionCalls>
+        <name>ErrorHandler_0_0_0</name>
+        <label>ErrorHandler</label>
+        <locationX>314</locationX>
+        <locationY>2678</locationY>
+        <actionName>c:Flow_Toast</actionName>
+        <actionType>component</actionType>
+        <inputParameters>
+            <name>mode</name>
+            <value>
+                <stringValue>dismissible</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>duration</name>
+            <value>
+                <stringValue>5</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>message</name>
+            <value>
+                <elementReference>$Flow.FaultMessage</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>title</name>
+            <value>
+                <stringValue>Error</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>type</name>
+            <value>
+                <stringValue>error</stringValue>
+            </value>
+        </inputParameters>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </actionCalls>
+    <actionCalls>
+        <name>ErrorHandler_0_0_0_0</name>
+        <label>ErrorHandler</label>
+        <locationX>314</locationX>
+        <locationY>3278</locationY>
+        <actionName>c:Flow_Toast</actionName>
+        <actionType>component</actionType>
+        <inputParameters>
+            <name>mode</name>
+            <value>
+                <stringValue>dismissible</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>duration</name>
+            <value>
+                <stringValue>5</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>message</name>
+            <value>
+                <elementReference>$Flow.FaultMessage</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>title</name>
+            <value>
+                <stringValue>Error</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>type</name>
+            <value>
+                <stringValue>error</stringValue>
+            </value>
+        </inputParameters>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </actionCalls>
+    <actionCalls>
+        <name>SuccessHandler_0</name>
+        <label>SuccessHandler</label>
+        <locationX>314</locationX>
+        <locationY>3638</locationY>
+        <actionName>c:Flow_Toast</actionName>
+        <actionType>component</actionType>
+        <inputParameters>
+            <name>mode</name>
+            <value>
+                <stringValue>dismissible</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>duration</name>
+            <value>
+                <stringValue>5</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>message</name>
+            <value>
+                <stringValue>The Inspection was successfully created.</stringValue>
             </value>
         </inputParameters>
         <inputParameters>
@@ -79,6 +235,106 @@
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </actionCalls>
     <apiVersion>51.0</apiVersion>
+    <decisions>
+        <name>AccountEmailUpdate</name>
+        <label>AccountEmailUpdate</label>
+        <locationX>314</locationX>
+        <locationY>1838</locationY>
+        <defaultConnector>
+            <targetReference>AccountPhoneUpdate</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>False</defaultConnectorLabel>
+        <rules>
+            <name>True_AccountEmail</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>NewCustomerEmail</leftValueReference>
+                <operator>NotEqualTo</operator>
+                <rightValue>
+                    <stringValue/>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Update_Account</targetReference>
+            </connector>
+            <label>True</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>AccountMobileUpdate</name>
+        <label>AccountMobileUpdate</label>
+        <locationX>314</locationX>
+        <locationY>3038</locationY>
+        <defaultConnector>
+            <targetReference>SuccessHandler_0</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>False</defaultConnectorLabel>
+        <rules>
+            <name>True_AccountMobile</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Update_Customer_Mobile.value</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Update_Account_0_0</targetReference>
+            </connector>
+            <label>True</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>AccountPhoneUpdate</name>
+        <label>AccountPhoneUpdate</label>
+        <locationX>314</locationX>
+        <locationY>2438</locationY>
+        <defaultConnector>
+            <targetReference>AccountMobileUpdate</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>False</defaultConnectorLabel>
+        <rules>
+            <name>True_AccountPhone</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Update_Customer_Phone.value</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Update_Account_0</targetReference>
+            </connector>
+            <label>True</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>ERP_Update</name>
+        <label>ERP Update</label>
+        <locationX>314</locationX>
+        <locationY>1238</locationY>
+        <defaultConnector>
+            <targetReference>AccountEmailUpdate</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>False</defaultConnectorLabel>
+        <rules>
+            <name>True_ERP</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>New_Parking_Spot</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Update_ERP</targetReference>
+            </connector>
+            <label>True</label>
+        </rules>
+    </decisions>
     <dynamicChoiceSets>
         <name>ParkingSpotChoices</name>
         <dataType>Picklist</dataType>
@@ -87,6 +343,11 @@
         <picklistField>Parking_Spot__c</picklistField>
         <picklistObject>AcctSeed__Project__c</picklistObject>
     </dynamicChoiceSets>
+    <formulas>
+        <name>Today</name>
+        <dataType>Date</dataType>
+        <expression>TODAY()</expression>
+    </formulas>
     <interviewLabel>Legend Inspection - Service Walkaround Tool {!$Flow.CurrentDateTime}</interviewLabel>
     <label>Legend Inspection - Service Walkaround Tool</label>
     <processMetadataValues>
@@ -111,8 +372,8 @@
     <recordCreates>
         <name>Create_Service_Walkaround_Record</name>
         <label>Create Service Walkaround Record</label>
-        <locationX>176</locationX>
-        <locationY>878</locationY>
+        <locationX>314</locationX>
+        <locationY>998</locationY>
         <assignRecordIdToReference>inspectionID</assignRecordIdToReference>
         <connector>
             <targetReference>Customer_Signature</targetReference>
@@ -157,6 +418,12 @@
             </value>
         </inputAssignments>
         <inputAssignments>
+            <field>Engine_Serial_Number__c</field>
+            <value>
+                <elementReference>Get_Nested_Motor_Serial_Numbers.Name</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
             <field>Fuel_Tank_Qty__c</field>
             <value>
                 <elementReference>Fuel_Tank_Qty</elementReference>
@@ -187,6 +454,12 @@
             </value>
         </inputAssignments>
         <inputAssignments>
+            <field>Name</field>
+            <value>
+                <elementReference>RecordName</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
             <field>Other_Serial_Numbers__c</field>
             <value>
                 <elementReference>Other_Serial_Numbers</elementReference>
@@ -196,6 +469,12 @@
             <field>Prop_Damage__c</field>
             <value>
                 <elementReference>Prop_Damage</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>RecordTypeId</field>
+            <value>
+                <elementReference>ServiceWalkaroundRecordTypeID</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -235,6 +514,12 @@
             </value>
         </inputAssignments>
         <inputAssignments>
+            <field>Trailer_Serial_Number__c</field>
+            <value>
+                <elementReference>Get_Nested_Trailer_Serial_Numbers.Name</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
             <field>Travel_Cover__c</field>
             <value>
                 <elementReference>Travel_Cover</elementReference>
@@ -251,7 +536,7 @@
     <recordLookups>
         <name>Get_ERP_Order</name>
         <label>Get ERP Order</label>
-        <locationX>176</locationX>
+        <locationX>314</locationX>
         <locationY>158</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
@@ -272,7 +557,7 @@
     <recordLookups>
         <name>Get_Nested_Motor_Serial_Numbers</name>
         <label>Get Nested Motor Serial Numbers</label>
-        <locationX>176</locationX>
+        <locationX>314</locationX>
         <locationY>398</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
@@ -300,7 +585,7 @@
     <recordLookups>
         <name>Get_Nested_Trailer_Serial_Numbers</name>
         <label>Get Nested Trailer Serial Numbers</label>
-        <locationX>176</locationX>
+        <locationX>314</locationX>
         <locationY>518</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
@@ -325,18 +610,161 @@
         <object>GMBLASERP__Serial_Number__c</object>
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </recordLookups>
+    <recordLookups>
+        <name>Get_Record_Type</name>
+        <label>Get Record Type</label>
+        <locationX>314</locationX>
+        <locationY>878</locationY>
+        <assignNullValuesIfNoRecordsFound>true</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Create_Service_Walkaround_Record</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>SobjectType</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>Legend_Inspection__c</stringValue>
+            </value>
+        </filters>
+        <filters>
+            <field>DeveloperName</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>Service_Walkaround</stringValue>
+            </value>
+        </filters>
+        <object>RecordType</object>
+        <outputAssignments>
+            <assignToReference>ServiceWalkaroundRecordTypeID</assignToReference>
+            <field>Id</field>
+        </outputAssignments>
+    </recordLookups>
+    <recordUpdates>
+        <name>Update_Account</name>
+        <label>Update Account</label>
+        <locationX>50</locationX>
+        <locationY>1958</locationY>
+        <connector>
+            <targetReference>AccountPhoneUpdate</targetReference>
+        </connector>
+        <faultConnector>
+            <targetReference>ErrorHandler_0_0</targetReference>
+        </faultConnector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>Get_ERP_Order.AcctSeed__Account__r.Id</elementReference>
+            </value>
+        </filters>
+        <inputAssignments>
+            <field>PersonEmail</field>
+            <value>
+                <elementReference>Update_Customer_Email.value</elementReference>
+            </value>
+        </inputAssignments>
+        <object>Account</object>
+    </recordUpdates>
+    <recordUpdates>
+        <name>Update_Account_0</name>
+        <label>Update Account</label>
+        <locationX>50</locationX>
+        <locationY>2558</locationY>
+        <connector>
+            <targetReference>AccountMobileUpdate</targetReference>
+        </connector>
+        <faultConnector>
+            <targetReference>ErrorHandler_0_0_0</targetReference>
+        </faultConnector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>Get_ERP_Order.AcctSeed__Account__r.Id</elementReference>
+            </value>
+        </filters>
+        <inputAssignments>
+            <field>Phone</field>
+            <value>
+                <elementReference>Update_Customer_Phone.value</elementReference>
+            </value>
+        </inputAssignments>
+        <object>Account</object>
+    </recordUpdates>
+    <recordUpdates>
+        <name>Update_Account_0_0</name>
+        <label>Update Account</label>
+        <locationX>50</locationX>
+        <locationY>3158</locationY>
+        <connector>
+            <targetReference>SuccessHandler_0</targetReference>
+        </connector>
+        <faultConnector>
+            <targetReference>ErrorHandler_0_0_0_0</targetReference>
+        </faultConnector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>Get_ERP_Order.AcctSeed__Account__r.Id</elementReference>
+            </value>
+        </filters>
+        <inputAssignments>
+            <field>PersonMobilePhone</field>
+            <value>
+                <elementReference>Update_Customer_Mobile.value</elementReference>
+            </value>
+        </inputAssignments>
+        <object>Account</object>
+    </recordUpdates>
+    <recordUpdates>
+        <name>Update_ERP</name>
+        <label>Update ERP</label>
+        <locationX>50</locationX>
+        <locationY>1358</locationY>
+        <connector>
+            <targetReference>AccountEmailUpdate</targetReference>
+        </connector>
+        <faultConnector>
+            <targetReference>ErrorHandler_0</targetReference>
+        </faultConnector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>recordId</elementReference>
+            </value>
+        </filters>
+        <inputAssignments>
+            <field>Parking_Spot__c</field>
+            <value>
+                <elementReference>New_Parking_Spot</elementReference>
+            </value>
+        </inputAssignments>
+        <object>AcctSeed__Project__c</object>
+    </recordUpdates>
     <runInMode>DefaultMode</runInMode>
     <screens>
         <name>Accessory_Check</name>
         <label>Accessory Check</label>
-        <locationX>176</locationX>
+        <locationX>314</locationX>
         <locationY>758</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
         <connector>
-            <targetReference>Create_Service_Walkaround_Record</targetReference>
+            <targetReference>Get_Record_Type</targetReference>
         </connector>
+        <fields>
+            <name>DisplayAccessoryOverview</name>
+            <fieldText>&lt;p&gt;&lt;b style=&quot;font-family: verdana; font-size: 18px;&quot;&gt;&lt;u&gt;Accessory Overview&lt;/u&gt;&lt;/b&gt;&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;</fieldText>
+            <fieldType>DisplayText</fieldType>
+        </fields>
         <fields>
             <name>Accessory_Check_Section1</name>
             <fieldType>RegionContainer</fieldType>
@@ -576,12 +1004,12 @@
             <isRequired>false</isRequired>
         </fields>
         <showFooter>true</showFooter>
-        <showHeader>true</showHeader>
+        <showHeader>false</showHeader>
     </screens>
     <screens>
         <name>Account_Overview</name>
         <label>Account Overview</label>
-        <locationX>176</locationX>
+        <locationX>314</locationX>
         <locationY>278</locationY>
         <allowBack>false</allowBack>
         <allowFinish>true</allowFinish>
@@ -589,6 +1017,11 @@
         <connector>
             <targetReference>Get_Nested_Motor_Serial_Numbers</targetReference>
         </connector>
+        <fields>
+            <name>DisplayAccountOverview</name>
+            <fieldText>&lt;p&gt;&lt;b style=&quot;font-family: verdana; font-size: 18px;&quot;&gt;&lt;u&gt;Account Overview&lt;/u&gt;&lt;/b&gt;&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;</fieldText>
+            <fieldType>DisplayText</fieldType>
+        </fields>
         <fields>
             <name>Account_Overview_Section1</name>
             <fieldType>RegionContainer</fieldType>
@@ -747,19 +1180,24 @@
             </visibilityRule>
         </fields>
         <showFooter>true</showFooter>
-        <showHeader>true</showHeader>
+        <showHeader>false</showHeader>
     </screens>
     <screens>
         <name>Customer_Signature</name>
         <label>Customer Signature</label>
-        <locationX>176</locationX>
-        <locationY>998</locationY>
-        <allowBack>true</allowBack>
+        <locationX>314</locationX>
+        <locationY>1118</locationY>
+        <allowBack>false</allowBack>
         <allowFinish>true</allowFinish>
-        <allowPause>true</allowPause>
+        <allowPause>false</allowPause>
         <connector>
-            <targetReference>SuccessHandler</targetReference>
+            <targetReference>ERP_Update</targetReference>
         </connector>
+        <fields>
+            <name>DisplaySignature</name>
+            <fieldText>&lt;p&gt;&lt;b style=&quot;font-size: 18px; font-family: verdana;&quot;&gt;&lt;u&gt;Customer Signature&lt;/u&gt;&lt;/b&gt;&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;</fieldText>
+            <fieldType>DisplayText</fieldType>
+        </fields>
         <fields>
             <name>Customer_Signature_Capture</name>
             <extensionName>BGSIGCAP:SignatureCapture</extensionName>
@@ -792,12 +1230,12 @@
             <storeOutputAutomatically>true</storeOutputAutomatically>
         </fields>
         <showFooter>true</showFooter>
-        <showHeader>true</showHeader>
+        <showHeader>false</showHeader>
     </screens>
     <screens>
         <name>ERP_Overview</name>
         <label>ERP Overview</label>
-        <locationX>176</locationX>
+        <locationX>314</locationX>
         <locationY>638</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
@@ -805,6 +1243,16 @@
         <connector>
             <targetReference>Accessory_Check</targetReference>
         </connector>
+        <fields>
+            <name>DisplayERPOverview</name>
+            <fieldText>&lt;p&gt;&lt;b style=&quot;font-family: verdana; font-size: 18px;&quot;&gt;&lt;u&gt;ERP Overview&lt;/u&gt;&lt;/b&gt;&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;</fieldText>
+            <fieldType>DisplayText</fieldType>
+        </fields>
+        <fields>
+            <name>DisplayGalleryImage</name>
+            <fieldText>&lt;p&gt;{!GalleryImage}&lt;/p&gt;</fieldText>
+            <fieldType>DisplayText</fieldType>
+        </fields>
         <fields>
             <name>ERP_Overview_Section1</name>
             <fieldType>RegionContainer</fieldType>
@@ -949,16 +1397,31 @@
             </visibilityRule>
         </fields>
         <showFooter>true</showFooter>
-        <showHeader>true</showHeader>
+        <showHeader>false</showHeader>
     </screens>
     <start>
-        <locationX>50</locationX>
+        <locationX>188</locationX>
         <locationY>0</locationY>
         <connector>
             <targetReference>Get_ERP_Order</targetReference>
         </connector>
     </start>
     <status>Active</status>
+    <textTemplates>
+        <name>GalleryImage</name>
+        <isViewedAsPlainText>true</isViewedAsPlainText>
+        <text>&lt;img src=&quot;{!Get_ERP_Order.Serial_Number__r.GMBLASERP__Product__r.Default_Gallery_Image__c}&quot;&gt;</text>
+    </textTemplates>
+    <textTemplates>
+        <name>NewCustomerEmail</name>
+        <isViewedAsPlainText>true</isViewedAsPlainText>
+        <text>{!Update_Customer_Email.value}</text>
+    </textTemplates>
+    <textTemplates>
+        <name>RecordName</name>
+        <isViewedAsPlainText>true</isViewedAsPlainText>
+        <text>{!Get_ERP_Order.AcctSeed__Account__r.FirstName} {!Get_ERP_Order.AcctSeed__Account__r.LastName} - Service WalkAround - {!Today}</text>
+    </textTemplates>
     <variables>
         <name>inspectionID</name>
         <dataType>String</dataType>
@@ -971,6 +1434,13 @@
         <dataType>String</dataType>
         <isCollection>false</isCollection>
         <isInput>true</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>ServiceWalkaroundRecordTypeID</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
         <isOutput>false</isOutput>
     </variables>
 </Flow>
