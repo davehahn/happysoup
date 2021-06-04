@@ -3,8 +3,8 @@
     <actionCalls>
         <name>ErrorHandler</name>
         <label>ErrorHandler</label>
-        <locationX>754</locationX>
-        <locationY>1118</locationY>
+        <locationX>1216</locationX>
+        <locationY>2078</locationY>
         <actionName>c:Flow_Toast</actionName>
         <actionType>component</actionType>
         <inputParameters>
@@ -42,8 +42,8 @@
     <actionCalls>
         <name>ErrorHandler_0</name>
         <label>ErrorHandler</label>
-        <locationX>314</locationX>
-        <locationY>1478</locationY>
+        <locationX>776</locationX>
+        <locationY>2558</locationY>
         <actionName>c:Flow_Toast</actionName>
         <actionType>component</actionType>
         <inputParameters>
@@ -81,8 +81,8 @@
     <actionCalls>
         <name>ErrorHandler_0_0</name>
         <label>ErrorHandler</label>
-        <locationX>314</locationX>
-        <locationY>2078</locationY>
+        <locationX>776</locationX>
+        <locationY>3158</locationY>
         <actionName>c:Flow_Toast</actionName>
         <actionType>component</actionType>
         <inputParameters>
@@ -120,8 +120,8 @@
     <actionCalls>
         <name>ErrorHandler_0_0_0</name>
         <label>ErrorHandler</label>
-        <locationX>314</locationX>
-        <locationY>2678</locationY>
+        <locationX>776</locationX>
+        <locationY>3758</locationY>
         <actionName>c:Flow_Toast</actionName>
         <actionType>component</actionType>
         <inputParameters>
@@ -159,8 +159,8 @@
     <actionCalls>
         <name>ErrorHandler_0_0_0_0</name>
         <label>ErrorHandler</label>
-        <locationX>314</locationX>
-        <locationY>3278</locationY>
+        <locationX>776</locationX>
+        <locationY>4358</locationY>
         <actionName>c:Flow_Toast</actionName>
         <actionType>component</actionType>
         <inputParameters>
@@ -198,8 +198,8 @@
     <actionCalls>
         <name>SuccessHandler_0</name>
         <label>SuccessHandler</label>
-        <locationX>314</locationX>
-        <locationY>3638</locationY>
+        <locationX>776</locationX>
+        <locationY>4718</locationY>
         <actionName>c:Flow_Toast</actionName>
         <actionType>component</actionType>
         <inputParameters>
@@ -235,11 +235,19 @@
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </actionCalls>
     <apiVersion>51.0</apiVersion>
+    <choices>
+        <name>ERPOrderTaskNames</name>
+        <choiceText>{!$Setup.ERP_Order_Settings__c.ERP_Order_Task_Names__c}</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <elementReference>$Setup.ERP_Order_Settings__c.ERP_Order_Task_Names__c</elementReference>
+        </value>
+    </choices>
     <decisions>
         <name>AccountEmailUpdate</name>
         <label>AccountEmailUpdate</label>
-        <locationX>314</locationX>
-        <locationY>1838</locationY>
+        <locationX>776</locationX>
+        <locationY>2918</locationY>
         <defaultConnector>
             <targetReference>AccountPhoneUpdate</targetReference>
         </defaultConnector>
@@ -263,8 +271,8 @@
     <decisions>
         <name>AccountMobileUpdate</name>
         <label>AccountMobileUpdate</label>
-        <locationX>314</locationX>
-        <locationY>3038</locationY>
+        <locationX>776</locationX>
+        <locationY>4118</locationY>
         <defaultConnector>
             <targetReference>SuccessHandler_0</targetReference>
         </defaultConnector>
@@ -288,8 +296,8 @@
     <decisions>
         <name>AccountPhoneUpdate</name>
         <label>AccountPhoneUpdate</label>
-        <locationX>314</locationX>
-        <locationY>2438</locationY>
+        <locationX>776</locationX>
+        <locationY>3518</locationY>
         <defaultConnector>
             <targetReference>AccountMobileUpdate</targetReference>
         </defaultConnector>
@@ -311,10 +319,35 @@
         </rules>
     </decisions>
     <decisions>
+        <name>Additional_Tasks_Required</name>
+        <label>Additional Tasks Required</label>
+        <locationX>364</locationX>
+        <locationY>1357</locationY>
+        <defaultConnector>
+            <targetReference>Get_Record_Type</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>False</defaultConnectorLabel>
+        <rules>
+            <name>True_AdditionalTasks</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Add_ERP_Order_Tasks</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>New_ERP_Order_Task_test_0</targetReference>
+            </connector>
+            <label>True</label>
+        </rules>
+    </decisions>
+    <decisions>
         <name>ERP_Update</name>
         <label>ERP Update</label>
-        <locationX>314</locationX>
-        <locationY>1238</locationY>
+        <locationX>768</locationX>
+        <locationY>2329</locationY>
         <defaultConnector>
             <targetReference>AccountEmailUpdate</targetReference>
         </defaultConnector>
@@ -335,6 +368,111 @@
             <label>True</label>
         </rules>
     </decisions>
+    <decisions>
+        <name>More_Additional_Tasks</name>
+        <label>More Additional Tasks</label>
+        <locationX>544</locationX>
+        <locationY>1635</locationY>
+        <defaultConnector>
+            <targetReference>Get_Record_Type</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>False</defaultConnectorLabel>
+        <rules>
+            <name>True_MoreTasks</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Add_Additional_Tasks</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>New_ERP_Order_Task_test_0</targetReference>
+            </connector>
+            <label>True</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Update_Tasks</name>
+        <label>Update Tasks</label>
+        <locationX>1329</locationX>
+        <locationY>989</locationY>
+        <defaultConnector>
+            <targetReference>Loop_Order_Tasks</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>False</defaultConnectorLabel>
+        <rules>
+            <name>True_UpdateTasks</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Update_ERP_Order_Task</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Update_Order_Task</targetReference>
+            </connector>
+            <label>True</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Validate_Serial_Number</name>
+        <label>Validate Serial Number</label>
+        <locationX>551</locationX>
+        <locationY>338</locationY>
+        <defaultConnector>
+            <targetReference>GetERPOrderTasks</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Else</defaultConnectorLabel>
+        <rules>
+            <name>Valid_Serial</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Get_ERP_Order.Serial_Number__c</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Get_Nested_Motor_Serial_Numbers</targetReference>
+            </connector>
+            <label>Valid Serial</label>
+        </rules>
+    </decisions>
+    <dynamicChoiceSets>
+        <name>LocationRecordChoiceSet</name>
+        <dataType>String</dataType>
+        <displayField>Name</displayField>
+        <filterLogic>or</filterLogic>
+        <filters>
+            <field>Name</field>
+            <operator>Contains</operator>
+            <value>
+                <stringValue>Barrie</stringValue>
+            </value>
+        </filters>
+        <filters>
+            <field>Name</field>
+            <operator>Contains</operator>
+            <value>
+                <stringValue>Whitefish</stringValue>
+            </value>
+        </filters>
+        <filters>
+            <field>Name</field>
+            <operator>Contains</operator>
+            <value>
+                <stringValue>Montreal</stringValue>
+            </value>
+        </filters>
+        <limit>3</limit>
+        <object>AcctSeedERP__Warehouse__c</object>
+        <valueField>Id</valueField>
+    </dynamicChoiceSets>
     <dynamicChoiceSets>
         <name>ParkingSpotChoices</name>
         <dataType>Picklist</dataType>
@@ -350,6 +488,20 @@
     </formulas>
     <interviewLabel>Legend Inspection - Service Walkaround Tool {!$Flow.CurrentDateTime}</interviewLabel>
     <label>Legend Inspection - Service Walkaround Tool</label>
+    <loops>
+        <name>Loop_Order_Tasks</name>
+        <label>Loop Order Tasks</label>
+        <locationX>776</locationX>
+        <locationY>1046</locationY>
+        <collectionReference>GetERPOrderTasks</collectionReference>
+        <iterationOrder>Asc</iterationOrder>
+        <nextValueConnector>
+            <targetReference>ERP_Order_Task_Overview</targetReference>
+        </nextValueConnector>
+        <noMoreValuesConnector>
+            <targetReference>Add_Additional_Order_Tasks</targetReference>
+        </noMoreValuesConnector>
+    </loops>
     <processMetadataValues>
         <name>BuilderType</name>
         <value>
@@ -359,7 +511,7 @@
     <processMetadataValues>
         <name>CanvasMode</name>
         <value>
-            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+            <stringValue>FREE_FORM_CANVAS</stringValue>
         </value>
     </processMetadataValues>
     <processMetadataValues>
@@ -370,13 +522,48 @@
     </processMetadataValues>
     <processType>Flow</processType>
     <recordCreates>
+        <name>Create_New_Order_Task</name>
+        <label>Create New Order Task</label>
+        <locationX>120</locationX>
+        <locationY>1767</locationY>
+        <connector>
+            <targetReference>More_Additional_Tasks</targetReference>
+        </connector>
+        <inputAssignments>
+            <field>AcctSeed__Project__c</field>
+            <value>
+                <elementReference>recordId</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Complaint_dh__c</field>
+            <value>
+                <elementReference>New_Complaint</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>DisplayOnCustomerInvoice__c</field>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Name</field>
+            <value>
+                <elementReference>TaskName</elementReference>
+            </value>
+        </inputAssignments>
+        <object>AcctSeed__Project_Task__c</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordCreates>
+    <recordCreates>
         <name>Create_Service_Walkaround_Record</name>
         <label>Create Service Walkaround Record</label>
-        <locationX>314</locationX>
-        <locationY>998</locationY>
+        <locationX>776</locationX>
+        <locationY>1958</locationY>
         <assignRecordIdToReference>inspectionID</assignRecordIdToReference>
         <connector>
-            <targetReference>Customer_Signature</targetReference>
+            <targetReference>Upload_Pictures</targetReference>
         </connector>
         <faultConnector>
             <targetReference>ErrorHandler</targetReference>
@@ -402,7 +589,7 @@
         <inputAssignments>
             <field>Complains_Notes__c</field>
             <value>
-                <elementReference>Complains_Notes</elementReference>
+                <elementReference>Complaints_Notes</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -536,8 +723,8 @@
     <recordLookups>
         <name>Get_ERP_Order</name>
         <label>Get ERP Order</label>
-        <locationX>314</locationX>
-        <locationY>158</locationY>
+        <locationX>776</locationX>
+        <locationY>206</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
             <targetReference>Account_Overview</targetReference>
@@ -557,8 +744,8 @@
     <recordLookups>
         <name>Get_Nested_Motor_Serial_Numbers</name>
         <label>Get Nested Motor Serial Numbers</label>
-        <locationX>314</locationX>
-        <locationY>398</locationY>
+        <locationX>776</locationX>
+        <locationY>446</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
             <targetReference>Get_Nested_Trailer_Serial_Numbers</targetReference>
@@ -585,11 +772,11 @@
     <recordLookups>
         <name>Get_Nested_Trailer_Serial_Numbers</name>
         <label>Get Nested Trailer Serial Numbers</label>
-        <locationX>314</locationX>
-        <locationY>518</locationY>
+        <locationX>776</locationX>
+        <locationY>566</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
-            <targetReference>ERP_Overview</targetReference>
+            <targetReference>GetERPOrderTasks</targetReference>
         </connector>
         <filterLogic>and</filterLogic>
         <filters>
@@ -613,8 +800,8 @@
     <recordLookups>
         <name>Get_Record_Type</name>
         <label>Get Record Type</label>
-        <locationX>314</locationX>
-        <locationY>878</locationY>
+        <locationX>776</locationX>
+        <locationY>1838</locationY>
         <assignNullValuesIfNoRecordsFound>true</assignNullValuesIfNoRecordsFound>
         <connector>
             <targetReference>Create_Service_Walkaround_Record</targetReference>
@@ -640,11 +827,32 @@
             <field>Id</field>
         </outputAssignments>
     </recordLookups>
+    <recordLookups>
+        <name>GetERPOrderTasks</name>
+        <label>GetERPOrderTasks</label>
+        <locationX>776</locationX>
+        <locationY>686</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>ERP_Overview</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>AcctSeed__Project__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>recordId</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>false</getFirstRecordOnly>
+        <object>AcctSeed__Project_Task__c</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
     <recordUpdates>
         <name>Update_Account</name>
         <label>Update Account</label>
-        <locationX>50</locationX>
-        <locationY>1958</locationY>
+        <locationX>512</locationX>
+        <locationY>3038</locationY>
         <connector>
             <targetReference>AccountPhoneUpdate</targetReference>
         </connector>
@@ -670,8 +878,8 @@
     <recordUpdates>
         <name>Update_Account_0</name>
         <label>Update Account</label>
-        <locationX>50</locationX>
-        <locationY>2558</locationY>
+        <locationX>512</locationX>
+        <locationY>3638</locationY>
         <connector>
             <targetReference>AccountMobileUpdate</targetReference>
         </connector>
@@ -697,8 +905,8 @@
     <recordUpdates>
         <name>Update_Account_0_0</name>
         <label>Update Account</label>
-        <locationX>50</locationX>
-        <locationY>3158</locationY>
+        <locationX>512</locationX>
+        <locationY>4238</locationY>
         <connector>
             <targetReference>SuccessHandler_0</targetReference>
         </connector>
@@ -724,8 +932,8 @@
     <recordUpdates>
         <name>Update_ERP</name>
         <label>Update ERP</label>
-        <locationX>50</locationX>
-        <locationY>1358</locationY>
+        <locationX>512</locationX>
+        <locationY>2438</locationY>
         <connector>
             <targetReference>AccountEmailUpdate</targetReference>
         </connector>
@@ -748,17 +956,41 @@
         </inputAssignments>
         <object>AcctSeed__Project__c</object>
     </recordUpdates>
+    <recordUpdates>
+        <name>Update_Order_Task</name>
+        <label>Update Order Task</label>
+        <locationX>1036</locationX>
+        <locationY>882</locationY>
+        <connector>
+            <targetReference>Loop_Order_Tasks</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>Loop_Order_Tasks.Id</elementReference>
+            </value>
+        </filters>
+        <inputAssignments>
+            <field>Complaint_dh__c</field>
+            <value>
+                <elementReference>Update_Complaint</elementReference>
+            </value>
+        </inputAssignments>
+        <object>AcctSeed__Project_Task__c</object>
+    </recordUpdates>
     <runInMode>DefaultMode</runInMode>
     <screens>
         <name>Accessory_Check</name>
         <label>Accessory Check</label>
-        <locationX>314</locationX>
-        <locationY>758</locationY>
+        <locationX>776</locationX>
+        <locationY>926</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
         <connector>
-            <targetReference>Get_Record_Type</targetReference>
+            <targetReference>Loop_Order_Tasks</targetReference>
         </connector>
         <fields>
             <name>DisplayAccessoryOverview</name>
@@ -988,8 +1220,8 @@
                     <isRequired>false</isRequired>
                 </fields>
                 <fields>
-                    <name>Complains_Notes</name>
-                    <fieldText>Complains &amp; Notes</fieldText>
+                    <name>Complaints_Notes</name>
+                    <fieldText>Complaints &amp; Notes</fieldText>
                     <fieldType>LargeTextArea</fieldType>
                     <isRequired>false</isRequired>
                 </fields>
@@ -1009,13 +1241,13 @@
     <screens>
         <name>Account_Overview</name>
         <label>Account Overview</label>
-        <locationX>314</locationX>
-        <locationY>278</locationY>
+        <locationX>776</locationX>
+        <locationY>326</locationY>
         <allowBack>false</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
         <connector>
-            <targetReference>Get_Nested_Motor_Serial_Numbers</targetReference>
+            <targetReference>Validate_Serial_Number</targetReference>
         </connector>
         <fields>
             <name>DisplayAccountOverview</name>
@@ -1183,10 +1415,31 @@
         <showHeader>false</showHeader>
     </screens>
     <screens>
+        <name>Add_Additional_Order_Tasks</name>
+        <label>Add Additional Order Tasks?</label>
+        <locationX>774</locationX>
+        <locationY>1272</locationY>
+        <allowBack>true</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>true</allowPause>
+        <connector>
+            <targetReference>Additional_Tasks_Required</targetReference>
+        </connector>
+        <fields>
+            <name>Add_ERP_Order_Tasks</name>
+            <dataType>Boolean</dataType>
+            <fieldText>Add ERP Order Tasks?</fieldText>
+            <fieldType>InputField</fieldType>
+            <isRequired>true</isRequired>
+        </fields>
+        <showFooter>true</showFooter>
+        <showHeader>false</showHeader>
+    </screens>
+    <screens>
         <name>Customer_Signature</name>
-        <label>Customer Signature</label>
-        <locationX>314</locationX>
-        <locationY>1118</locationY>
+        <label>Customer Overview/Signature</label>
+        <locationX>776</locationX>
+        <locationY>2198</locationY>
         <allowBack>false</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
@@ -1194,9 +1447,125 @@
             <targetReference>ERP_Update</targetReference>
         </connector>
         <fields>
-            <name>DisplaySignature</name>
-            <fieldText>&lt;p&gt;&lt;b style=&quot;font-size: 18px; font-family: verdana;&quot;&gt;&lt;u&gt;Customer Signature&lt;/u&gt;&lt;/b&gt;&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;</fieldText>
+            <name>DisplayCustomerOverview</name>
+            <fieldText>&lt;p&gt;&lt;b style=&quot;font-size: 18px; font-family: verdana;&quot;&gt;&lt;u&gt;Customer Overview&lt;/u&gt;&lt;/b&gt;&lt;/p&gt;</fieldText>
             <fieldType>DisplayText</fieldType>
+        </fields>
+        <fields>
+            <name>Customer_Signature_Section1</name>
+            <fieldType>RegionContainer</fieldType>
+            <fields>
+                <name>Customer_Signature_Section1_Column1</name>
+                <fieldType>Region</fieldType>
+                <fields>
+                    <name>DisplaySummary1</name>
+                    <fieldText>&lt;p&gt;&lt;b style=&quot;font-family: verdana;&quot;&gt;Key in Ignition:&lt;/b&gt;&lt;span style=&quot;font-family: verdana;&quot;&gt; {!Key_in_Ignition}&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;b style=&quot;font-family: verdana;&quot;&gt;Remove Boat Plugs:&lt;/b&gt;&lt;span style=&quot;font-family: verdana;&quot;&gt; {!Remove_Boat_Plugs}&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;b style=&quot;font-family: verdana;&quot;&gt;Prop Damage:&lt;/b&gt;&lt;span style=&quot;font-family: verdana;&quot;&gt; {!Prop_Damage}&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;b style=&quot;font-family: verdana;&quot;&gt;Spare Tire:&lt;/b&gt;&lt;span style=&quot;font-family: verdana;&quot;&gt; {!Spare_Tire}&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;b style=&quot;font-family: verdana;&quot;&gt;Skeg Damage:&lt;/b&gt;&lt;span style=&quot;font-family: verdana;&quot;&gt; {!Skeg_Damage}&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;b style=&quot;font-family: verdana;&quot;&gt;Tail Light Damage:&lt;/b&gt;&lt;span style=&quot;font-family: verdana;&quot;&gt; {!Tail_Light_Damage}&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;b style=&quot;font-family: verdana;&quot;&gt;Trolling Motor:&lt;/b&gt;&lt;span style=&quot;font-family: verdana;&quot;&gt; {!Trolling_Motor}&lt;/span&gt;&lt;/p&gt;</fieldText>
+                    <fieldType>DisplayText</fieldType>
+                </fields>
+                <inputParameters>
+                    <name>width</name>
+                    <value>
+                        <stringValue>6</stringValue>
+                    </value>
+                </inputParameters>
+                <isRequired>false</isRequired>
+            </fields>
+            <fields>
+                <name>Customer_Signature_Section1_Column2</name>
+                <fieldType>Region</fieldType>
+                <fields>
+                    <name>DisplaySummary2</name>
+                    <fieldText>&lt;p&gt;&lt;b style=&quot;font-family: verdana;&quot;&gt;Motor Locks:&lt;/b&gt;&lt;span style=&quot;font-family: verdana;&quot;&gt; {!Motor_Locks}&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;b style=&quot;font-family: verdana;&quot;&gt;Motor Trimmed:&lt;/b&gt;&lt;span style=&quot;font-family: verdana;&quot;&gt; {!Motor_Trimmed}&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;b style=&quot;font-family: verdana;&quot;&gt;Enclosure:&lt;/b&gt;&lt;span style=&quot;font-family: verdana;&quot;&gt; {!Enclosure}&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;b style=&quot;font-family: verdana;&quot;&gt;Travel Cover:&lt;/b&gt;&lt;span style=&quot;font-family: verdana;&quot;&gt; {!Travel_Cover}&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;b style=&quot;font-family: verdana;&quot;&gt;Remove all Personal Contents:&lt;/b&gt;&lt;span style=&quot;font-family: verdana;&quot;&gt; {!Remove_all_Personal_Contents}&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;b style=&quot;font-family: verdana;&quot;&gt;Battery:&lt;/b&gt;&lt;span style=&quot;font-family: verdana;&quot;&gt; {!Battery}&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;b style=&quot;font-family: verdana;&quot;&gt;Battery Qty: &lt;/b&gt;&lt;span style=&quot;font-family: verdana;&quot;&gt;{!Battery_Qty}&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;b style=&quot;font-family: verdana;&quot;&gt;Fuel Tank:&lt;/b&gt;&lt;span style=&quot;font-family: verdana;&quot;&gt; {!Fuel_Tank}&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;b style=&quot;font-family: verdana;&quot;&gt;Fuel Tank Qty:&lt;/b&gt;&lt;span style=&quot;font-family: verdana;&quot;&gt; {!Fuel_Tank_Qty}&lt;/span&gt;&lt;/p&gt;</fieldText>
+                    <fieldType>DisplayText</fieldType>
+                </fields>
+                <inputParameters>
+                    <name>width</name>
+                    <value>
+                        <stringValue>6</stringValue>
+                    </value>
+                </inputParameters>
+                <isRequired>false</isRequired>
+            </fields>
+            <isRequired>false</isRequired>
+        </fields>
+        <fields>
+            <name>Customer_Signature_Section2</name>
+            <fieldType>RegionContainer</fieldType>
+            <fields>
+                <name>Customer_Signature_Section2_Column1</name>
+                <fieldType>Region</fieldType>
+                <fields>
+                    <name>DisplayTrailerConditon</name>
+                    <fieldText>&lt;p&gt;&lt;b style=&quot;font-family: verdana;&quot;&gt;Trailer Condition:&lt;/b&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot;font-family: verdana;&quot;&gt;{!Trailer_Condition}&lt;/span&gt;&lt;/p&gt;</fieldText>
+                    <fieldType>DisplayText</fieldType>
+                </fields>
+                <inputParameters>
+                    <name>width</name>
+                    <value>
+                        <stringValue>12</stringValue>
+                    </value>
+                </inputParameters>
+                <isRequired>false</isRequired>
+            </fields>
+            <isRequired>false</isRequired>
+        </fields>
+        <fields>
+            <name>Customer_Signature_Section3</name>
+            <fieldType>RegionContainer</fieldType>
+            <fields>
+                <name>Customer_Signature_Section3_Column1</name>
+                <fieldType>Region</fieldType>
+                <fields>
+                    <name>DisplayNotesComplaints</name>
+                    <fieldText>&lt;p&gt;&lt;b style=&quot;font-family: verdana;&quot;&gt;Notes:&lt;/b&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot;font-family: verdana;&quot;&gt;{!Complaints_Notes}&lt;/span&gt;&lt;/p&gt;</fieldText>
+                    <fieldType>DisplayText</fieldType>
+                </fields>
+                <inputParameters>
+                    <name>width</name>
+                    <value>
+                        <stringValue>12</stringValue>
+                    </value>
+                </inputParameters>
+                <isRequired>false</isRequired>
+            </fields>
+            <isRequired>false</isRequired>
+        </fields>
+        <fields>
+            <name>DisplayCustomerSignature</name>
+            <fieldText>&lt;p&gt;&lt;b style=&quot;font-size: 18px; font-family: verdana;&quot;&gt;&lt;u&gt;Customer Signature&lt;/u&gt;&lt;/b&gt;&lt;/p&gt;</fieldText>
+            <fieldType>DisplayText</fieldType>
+        </fields>
+        <fields>
+            <name>Customer_Signature_Section4</name>
+            <fieldType>RegionContainer</fieldType>
+            <fields>
+                <name>Customer_Signature_Section4_Column1</name>
+                <fieldType>Region</fieldType>
+                <fields>
+                    <name>DisplayDisclosure</name>
+                    <fieldText>&lt;p&gt;&lt;span style=&quot;font-size: 10px; font-family: sans-serif;&quot;&gt;I hereby authorize the repair work hereinafter set forth to be done along with the necessary material and agree that you are not responsible for lost or damage to vehicle or articles left in the vehicle in case of fire, theft, or any other cause beyond your control or for any delays caused by the unavailability of parts or delays in parts shipments by the supplier or transporter. I hereby grant you and/or your employee&apos;s permission to operate the vehicle herein described on streets, highways or elsewhere for the purpose of testing and/or inspection. An express mechanic&apos;s lien is hereby acknowledged on the above vehicle to secure the amount of repairs thereto. &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;&lt;b style=&quot;font-size: 12px; font-family: sans-serif;&quot;&gt;&lt;u&gt;STATEMENT OF DISCLAIMER: &lt;/u&gt;&lt;/b&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot;font-size: 10px; font-family: sans-serif;&quot;&gt;Any warranties on products sold hereby are those made by the manufacturer. The seller hereby expressly disclaims all warranties, either express or implied, including any implied warranty of merchantability or fitness for other purposes, and neither assumes nor authorizes any other person to assume for it any liability in connection with the sale of said products. Any limitation contained herein does not apply where prohibited by law. &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;&lt;b style=&quot;font-size: 12px; font-family: sans-serif;&quot;&gt;&lt;u&gt;** WARNING- FREEZING TEMPERATURES ** &lt;/u&gt;&lt;/b&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot;font-size: 10px; font-family: sans-serif;&quot;&gt;Dear valued Legend customers, please be advised that while your boat is awaiting repair. Legend Boats will NOT be held responsible for any weather-related damages, snowfall, or potential damage caused by sub-zero temperatures. &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;&lt;b style=&quot;font-size: 12px; font-family: sans-serif;&quot;&gt;&lt;u&gt;Terms: &lt;/u&gt;&lt;/b&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot;font-size: 10px; font-family: sans-serif;&quot;&gt;Balance due within 30 days by certified funds or money transfer. After 30 days, a 2% interest per month will apply to unpaid balances&lt;/span&gt;&lt;/p&gt;</fieldText>
+                    <fieldType>DisplayText</fieldType>
+                </fields>
+                <inputParameters>
+                    <name>width</name>
+                    <value>
+                        <stringValue>6</stringValue>
+                    </value>
+                </inputParameters>
+                <isRequired>false</isRequired>
+            </fields>
+            <fields>
+                <name>Customer_Signature_Section4_Column2</name>
+                <fieldType>Region</fieldType>
+                <inputParameters>
+                    <name>width</name>
+                    <value>
+                        <stringValue>6</stringValue>
+                    </value>
+                </inputParameters>
+                <isRequired>false</isRequired>
+            </fields>
+            <isRequired>false</isRequired>
         </fields>
         <fields>
             <name>Customer_Signature_Capture</name>
@@ -1233,10 +1602,129 @@
         <showHeader>false</showHeader>
     </screens>
     <screens>
+        <name>ERP_Order_Task_Overview</name>
+        <label>ERP Order Task Overview</label>
+        <locationX>1338</locationX>
+        <locationY>1266</locationY>
+        <allowBack>true</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>false</allowPause>
+        <connector>
+            <targetReference>Update_Tasks</targetReference>
+        </connector>
+        <fields>
+            <name>DisplayERPTaskOverview</name>
+            <fieldText>&lt;p&gt;&lt;b style=&quot;font-family: verdana; font-size: 18px;&quot;&gt;&lt;u&gt;ERP Order Task Overview&lt;/u&gt;&lt;/b&gt;&lt;/p&gt;</fieldText>
+            <fieldType>DisplayText</fieldType>
+        </fields>
+        <fields>
+            <name>ERP_Order_Task_Overview_Section1</name>
+            <fieldType>RegionContainer</fieldType>
+            <fields>
+                <name>ERP_Order_Task_Overview_Section1_Column1</name>
+                <fieldType>Region</fieldType>
+                <fields>
+                    <name>DisplayTaskName</name>
+                    <fieldText>&lt;p&gt;{!Loop_Order_Tasks.Name}&lt;/p&gt;</fieldText>
+                    <fieldType>DisplayText</fieldType>
+                </fields>
+                <inputParameters>
+                    <name>width</name>
+                    <value>
+                        <stringValue>6</stringValue>
+                    </value>
+                </inputParameters>
+                <isRequired>false</isRequired>
+            </fields>
+            <fields>
+                <name>ERP_Order_Task_Overview_Section1_Column2</name>
+                <fieldType>Region</fieldType>
+                <fields>
+                    <name>DisplayTaskComplaint</name>
+                    <fieldText>&lt;p&gt;{!Loop_Order_Tasks.Complaint_dh__c}&lt;/p&gt;</fieldText>
+                    <fieldType>DisplayText</fieldType>
+                </fields>
+                <inputParameters>
+                    <name>width</name>
+                    <value>
+                        <stringValue>6</stringValue>
+                    </value>
+                </inputParameters>
+                <isRequired>false</isRequired>
+            </fields>
+            <isRequired>false</isRequired>
+        </fields>
+        <fields>
+            <name>ERP_Order_Task_Overview_Section2</name>
+            <fieldType>RegionContainer</fieldType>
+            <fields>
+                <name>ERP_Order_Task_Overview_Section2_Column1</name>
+                <fieldType>Region</fieldType>
+                <fields>
+                    <name>Update_ERP_Order_Task</name>
+                    <dataType>Boolean</dataType>
+                    <fieldText>Update ERP Order Task?</fieldText>
+                    <fieldType>InputField</fieldType>
+                    <isRequired>true</isRequired>
+                    <visibilityRule>
+                        <conditionLogic>and</conditionLogic>
+                        <conditions>
+                            <leftValueReference>Loop_Order_Tasks.Id</leftValueReference>
+                            <operator>IsNull</operator>
+                            <rightValue>
+                                <booleanValue>false</booleanValue>
+                            </rightValue>
+                        </conditions>
+                    </visibilityRule>
+                </fields>
+                <inputParameters>
+                    <name>width</name>
+                    <value>
+                        <stringValue>6</stringValue>
+                    </value>
+                </inputParameters>
+                <isRequired>false</isRequired>
+            </fields>
+            <fields>
+                <name>ERP_Order_Task_Overview_Section2_Column2</name>
+                <fieldType>Region</fieldType>
+                <fields>
+                    <name>Update_Complaint</name>
+                    <defaultValue>
+                        <stringValue>{!Loop_Order_Tasks.Complaint_dh__c}</stringValue>
+                    </defaultValue>
+                    <fieldText>Update Complaint</fieldText>
+                    <fieldType>LargeTextArea</fieldType>
+                    <isRequired>false</isRequired>
+                    <visibilityRule>
+                        <conditionLogic>and</conditionLogic>
+                        <conditions>
+                            <leftValueReference>Update_ERP_Order_Task</leftValueReference>
+                            <operator>EqualTo</operator>
+                            <rightValue>
+                                <booleanValue>true</booleanValue>
+                            </rightValue>
+                        </conditions>
+                    </visibilityRule>
+                </fields>
+                <inputParameters>
+                    <name>width</name>
+                    <value>
+                        <stringValue>6</stringValue>
+                    </value>
+                </inputParameters>
+                <isRequired>false</isRequired>
+            </fields>
+            <isRequired>false</isRequired>
+        </fields>
+        <showFooter>true</showFooter>
+        <showHeader>false</showHeader>
+    </screens>
+    <screens>
         <name>ERP_Overview</name>
         <label>ERP Overview</label>
-        <locationX>314</locationX>
-        <locationY>638</locationY>
+        <locationX>776</locationX>
+        <locationY>806</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
@@ -1399,14 +1887,161 @@
         <showFooter>true</showFooter>
         <showHeader>false</showHeader>
     </screens>
+    <screens>
+        <name>New_ERP_Order_Task_test_0</name>
+        <label>New ERP Order Task</label>
+        <locationX>142</locationX>
+        <locationY>1561</locationY>
+        <allowBack>true</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>true</allowPause>
+        <connector>
+            <targetReference>Create_New_Order_Task</targetReference>
+        </connector>
+        <fields>
+            <name>DisplayNewERPOrderTask</name>
+            <fieldText>&lt;p&gt;&lt;b style=&quot;font-size: 18px; font-family: verdana;&quot;&gt;&lt;u&gt;Additional ERP Order Task(s)&lt;/u&gt;&lt;/b&gt;&lt;/p&gt;</fieldText>
+            <fieldType>DisplayText</fieldType>
+        </fields>
+        <fields>
+            <name>New_ERP_Order_Task_test_0_Section1</name>
+            <fieldType>RegionContainer</fieldType>
+            <fields>
+                <name>New_ERP_Order_Task_test_0_Section1_Column1</name>
+                <fieldType>Region</fieldType>
+                <fields>
+                    <name>TaskName</name>
+                    <dataType>String</dataType>
+                    <fieldText>Task Name</fieldText>
+                    <fieldType>InputField</fieldType>
+                    <isRequired>false</isRequired>
+                </fields>
+                <inputParameters>
+                    <name>width</name>
+                    <value>
+                        <stringValue>6</stringValue>
+                    </value>
+                </inputParameters>
+                <isRequired>false</isRequired>
+            </fields>
+            <fields>
+                <name>New_ERP_Order_Task_test_0_Section1_Column2</name>
+                <fieldType>Region</fieldType>
+                <fields>
+                    <name>New_Complaint</name>
+                    <fieldText>Complaint</fieldText>
+                    <fieldType>LargeTextArea</fieldType>
+                    <isRequired>false</isRequired>
+                </fields>
+                <inputParameters>
+                    <name>width</name>
+                    <value>
+                        <stringValue>6</stringValue>
+                    </value>
+                </inputParameters>
+                <isRequired>false</isRequired>
+            </fields>
+            <isRequired>false</isRequired>
+        </fields>
+        <fields>
+            <name>Add_Additional_Tasks</name>
+            <dataType>Boolean</dataType>
+            <fieldText>Add Additional Tasks?</fieldText>
+            <fieldType>InputField</fieldType>
+            <isRequired>true</isRequired>
+        </fields>
+        <showFooter>true</showFooter>
+        <showHeader>false</showHeader>
+    </screens>
+    <screens>
+        <name>Upload_Pictures</name>
+        <label>Upload Pictures</label>
+        <locationX>776</locationX>
+        <locationY>2078</locationY>
+        <allowBack>false</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>false</allowPause>
+        <connector>
+            <targetReference>Customer_Signature</targetReference>
+        </connector>
+        <fields>
+            <name>DisplayUploadPicture</name>
+            <fieldText>&lt;p&gt;&lt;b style=&quot;font-size: 18px; font-family: verdana;&quot;&gt;&lt;u&gt;Upload Pictures&lt;/u&gt;&lt;/b&gt;&lt;/p&gt;</fieldText>
+            <fieldType>DisplayText</fieldType>
+        </fields>
+        <fields>
+            <name>Upload_Pictures_Section1</name>
+            <fieldType>RegionContainer</fieldType>
+            <fields>
+                <name>Upload_Pictures_Section1_Column1</name>
+                <fieldType>Region</fieldType>
+                <fields>
+                    <name>DisplayBoatPic</name>
+                    <fieldText>&lt;p&gt;{!BoatWireFramePicture}&lt;/p&gt;</fieldText>
+                    <fieldType>DisplayText</fieldType>
+                </fields>
+                <inputParameters>
+                    <name>width</name>
+                    <value>
+                        <stringValue>6</stringValue>
+                    </value>
+                </inputParameters>
+                <isRequired>false</isRequired>
+            </fields>
+            <fields>
+                <name>Upload_Pictures_Section1_Column2</name>
+                <fieldType>Region</fieldType>
+                <fields>
+                    <name>UploadBoatPic</name>
+                    <extensionName>forceContent:fileUpload</extensionName>
+                    <fieldType>ComponentInstance</fieldType>
+                    <inputParameters>
+                        <name>label</name>
+                        <value>
+                            <stringValue>Upload Pictures</stringValue>
+                        </value>
+                    </inputParameters>
+                    <inputParameters>
+                        <name>multiple</name>
+                        <value>
+                            <booleanValue>true</booleanValue>
+                        </value>
+                    </inputParameters>
+                    <inputParameters>
+                        <name>recordId</name>
+                        <value>
+                            <elementReference>inspectionID</elementReference>
+                        </value>
+                    </inputParameters>
+                    <isRequired>true</isRequired>
+                    <storeOutputAutomatically>true</storeOutputAutomatically>
+                </fields>
+                <inputParameters>
+                    <name>width</name>
+                    <value>
+                        <stringValue>6</stringValue>
+                    </value>
+                </inputParameters>
+                <isRequired>false</isRequired>
+            </fields>
+            <isRequired>false</isRequired>
+        </fields>
+        <showFooter>true</showFooter>
+        <showHeader>false</showHeader>
+    </screens>
     <start>
-        <locationX>188</locationX>
-        <locationY>0</locationY>
+        <locationX>650</locationX>
+        <locationY>48</locationY>
         <connector>
             <targetReference>Get_ERP_Order</targetReference>
         </connector>
     </start>
     <status>Active</status>
+    <textTemplates>
+        <name>BoatWireFramePicture</name>
+        <isViewedAsPlainText>true</isViewedAsPlainText>
+        <text>&lt;img src=&quot;https://salesforce-image-gallery.s3.amazonaws.com/Product2/2021/6/V-Hull+Photograph+Locations.png&quot;&gt;</text>
+    </textTemplates>
     <textTemplates>
         <name>GalleryImage</name>
         <isViewedAsPlainText>true</isViewedAsPlainText>
