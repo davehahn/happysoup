@@ -53,12 +53,13 @@ public with sharing class FactoryStore_InventoryController {
     }
 
     @AuraEnabled(Cacheable=true)
-    public static List<Sobject> fetchNewInStockCurrentBoats( String location, String year )
+    public static List<Sobject> fetchNewInStockCurrentBoats( String location, Decimal year )
     {
         String fromLocation = location;
-        String currentModelYear = year;
+        Decimal currentModelYear = year;
         List<Sobject> boats = new List<Sobject>();
-        for( SObject b : [SELECT Name,
+        for( SObject b : [SELECT Id,
+                                 Name,
                                  GMBLASERP__Product__r.Name,
                                  Model_Year__c,
                                  GMBLASERP__Product__r.Make__c
@@ -78,12 +79,13 @@ public with sharing class FactoryStore_InventoryController {
     }
 
     @AuraEnabled(Cacheable=true)
-    public static List<Sobject> fetchNewInStockNonCurrentBoats( String location, String year )
+    public static List<Sobject> fetchNewInStockNonCurrentBoats( String location, Decimal year )
     {
         String fromLocation = location;
-        String currentModelYear = year;
+        Decimal currentModelYear = year;
         List<Sobject> boats = new List<Sobject>();
-        for( SObject b : [SELECT Name,
+        for( SObject b : [SELECT Id,
+                                Name,
                                 GMBLASERP__Product__r.Name,
                                 Model_Year__c,
                                 GMBLASERP__Product__r.Make__c
@@ -107,7 +109,8 @@ public with sharing class FactoryStore_InventoryController {
     {
         String fromLocation = location;
         List<Sobject> boats = new List<Sobject>();
-        for( SObject b : [SELECT Name,
+        for( SObject b : [SELECT Id,
+                                Name,
                                 GMBLASERP__Product__r.Name,
                                 Model_Year__c
                             FROM GMBLASERP__Serial_Number__c
@@ -123,13 +126,38 @@ public with sharing class FactoryStore_InventoryController {
         return boats;
     }
 
+    @AuraEnabled(Cacheable=true)
+    public static List<Sobject> fetchRiggedEquipment( String serialId )
+    {
+        List<Sobject> equipment = new List<Sobject>();
+        for( SObject e : [SELECT Id,
+                                Name,
+                                GMBLASERP__Product__r.Name,
+                                Model_Year__c,
+                                GMBLASERP__Product__r.Make__c,
+                                Current_Unit_Cost__c,
+                                Product_Record_Type__c
+                        FROM GMBLASERP__Serial_Number__c
+                        WHERE Nest__c = :serialId
+                        AND Product_Record_Type__c IN ('Motor', 'Trailer')])
+        {
+            equipment.add( e );
+        }
+        System.debug('Boats: ' + equipment);
+        return equipment;
+    }
+
     // Currents - Legends Only by Location
-    // SELECT Name, GMBLASERP__Product__r.Name, Model_Year__c, GMBLASERP__Product__r.Make__c FROM GMBLASERP__Serial_Number__c WHERE Location__c = 'Whitefish' AND Product_Record_Type__c = 'Boat' AND GMBLASERP__Product__r.Make__c = 'Legend' AND Model_Year__c >= 2021 AND Status__c NOT IN ('Used', 'At Supplier', 'Return to Supplier') AND Available_Retail__c = true ORDER BY Model_Year__c ASC
+    // SELECT Id, Name, GMBLASERP__Product__r.Name, Model_Year__c, GMBLASERP__Product__r.Make__c FROM GMBLASERP__Serial_Number__c WHERE Location__c = 'Whitefish' AND Product_Record_Type__c = 'Boat' AND GMBLASERP__Product__r.Make__c = 'Legend' AND Model_Year__c >= 2021 AND Status__c NOT IN ('Used', 'At Supplier', 'Return to Supplier') AND Available_Retail__c = true ORDER BY Model_Year__c ASC
 
     // Non-Currents - Legends Only by Location
-    // SELECT Name, GMBLASERP__Product__r.Name, Model_Year__c, GMBLASERP__Product__r.Make__c FROM GMBLASERP__Serial_Number__c WHERE Location__c = 'Whitefish' AND Product_Record_Type__c = 'Boat' AND GMBLASERP__Product__r.Make__c = 'Legend' AND Model_Year__c < 2021 AND Status__c NOT IN ('Used', 'At Supplier', 'Return to Supplier') AND Available_Retail__c = true ORDER BY Model_Year__c ASC
+    // SELECT Id, Name, GMBLASERP__Product__r.Name, Model_Year__c, GMBLASERP__Product__r.Make__c FROM GMBLASERP__Serial_Number__c WHERE Location__c = 'Whitefish' AND Product_Record_Type__c = 'Boat' AND GMBLASERP__Product__r.Make__c = 'Legend' AND Model_Year__c < 2021 AND Status__c NOT IN ('Used', 'At Supplier', 'Return to Supplier') AND Available_Retail__c = true ORDER BY Model_Year__c ASC
 
     // Used by location
-    // SELECT Name, GMBLASERP__Product__r.Name, Model_Year__c FROM GMBLASERP__Serial_Number__c WHERE Location__c = 'Montreal' AND Product_Record_Type__c = 'Boat' AND Status__c = 'Used' AND Available_Retail__c = true ORDER BY Model_Year__c ASC
+    // SELECT Id, Name, GMBLASERP__Product__r.Name, Model_Year__c FROM GMBLASERP__Serial_Number__c WHERE Location__c = 'Montreal' AND Product_Record_Type__c = 'Boat' AND Status__c = 'Used' AND Available_Retail__c = true ORDER BY Model_Year__c ASC
+
+    // Get rigged Motor and Trailer associated to specific boat serial number record id (not the serial number (Name) the Id)
+    // SELECT Id, Name, GMBLASERP__Product__r.Name, Model_Year__c, GMBLASERP__Product__r.Make__c, Current_Unit_Cost__c, Product_Record_Type__c FROM GMBLASERP__Serial_Number__c WHERE Nest__c = 'a2I4z000000f4YAEAY' AND Product_Record_Type__c IN ('Motor', 'Trailer')
+
 
 }
