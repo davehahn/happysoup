@@ -206,7 +206,7 @@ public without sharing class CommissionRecord2_TriggerHandler extends TriggerHan
     );
     if( approved.size() > 0 )
     {
-      CommissionRecord2_Service.postApprovedMessage( approved );
+      //CommissionRecord2_Service.postApprovedMessage( approved );
     }
     if( approvedNow.size() > 0 )
     {
@@ -221,22 +221,8 @@ public without sharing class CommissionRecord2_TriggerHandler extends TriggerHan
   private static Boolean canUpdateStatus( List<CommissionRecord2__c> listNew,
                                           Map<Id, CommissionRecord2__c> oldMap )
   {
-//    Set<String> acceptableErpStatuses = new Set<String>{'Ready For Accounting', 'Completed'};
-//    Set<Id> erpIds = new Set<Id>();
-//    for( CommissionRecord2__c cr : listNew )
-//    {
-//      erpIds.add( cr.Project__c );
-//    }
-//    Map<Id, AcctSeed__Project__c> erpMap = Project_Selector.mapAllById(erpIds);
-
     for( CommissionRecord2__c cr: listNew )
     {
-//      if( cr.Status__c == 'Approved' &&
-//          erpMap.containsKey( cr.Project__c ) &&
-//          !acceptableErpStatuses.contains( erpMap.get( cr.Project__c).AcctSeed__Status__c) )
-//      {
-//        cr.addError('The underlying ERP Order must be Completed or Ready For Accounting');
-//      }
       if( oldMap != null &&
           oldMap.get(cr.Id).Status__c == 'Approved' &&
           beforeApproved.contains(cr.Status__c ) &&
