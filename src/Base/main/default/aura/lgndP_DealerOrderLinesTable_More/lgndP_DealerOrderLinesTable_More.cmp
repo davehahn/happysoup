@@ -10,53 +10,90 @@
   <aura:registerEvent name="deleteEvent" type="c:lgndP_DealerOrderLinesTable_Delete_Event" />
 
   <table class="slds-table
-                slds-table--bordered
+                slds-table_bordered
                 slds-no-row-hover
-                slds-table--cell-buffer
-                slds-max-medium-table--stacked ">
+                slds-max-medium-table_stacked ">
     <thead>
-      <tr class="slds-text-title--caps">
-        <th scope="col" class="slds-size--1-of-12">
-          <div>Quantity</div>
-        </th>
-        <th scope="col">
-          <div>Items</div>
-        </th>
-        <th class="slds-size--1-of-12">&nbsp;</th>
-      </tr>
+    <tr class="slds-text-title_caps">
+      <th scope="col" class="slds-size_1-of-12">
+        <div>Quantity</div>
+      </th>
+      <th scope="col" class="slds-size_1-of-12">
+        <div>Reserved</div>
+      </th>
+      <th scope="col">
+        <div>Items</div>
+      </th>
+      <th class="slds-size_1-of-12">&nbsp;</th>
+    </tr>
     </thead>
     <tbody>
-      <!-- +++++ BOAT LINES ++++++++ -->
-      <aura:if isTrue="{! !empty(v.boats)}">
-        <aura:iteration items="{!v.boats}" var="item">
-          <tr>
-            <td data-label="Quantity">{!item.quantity}</td>
-            <td>
-              <!-- Boat Line -->
-              <div class="slds-grid slds-wrap boat">
-                <div class="slds-col slds-size_9-of-12 majorItem">
-                  {!item.boat.name}
+    <!-- +++++ BOAT LINES ++++++++ -->
+    <aura:if isTrue="{! !empty(v.boats)}">
+      <aura:iteration items="{!v.boats}" var="item">
+        <tr>
+          <td data-label="Quantity">
+            <div class="slds-p-left_x-large">{!item.quantity}</div>
+          </td>
+          <td data-label="Reserved">
+            <div class="slds-p-left_x-large">{!item.quantityReserved}</div>
+          </td>
+          <td>
+            <!-- Boat Line -->
+            <div class="slds-grid slds-wrap boat">
+              <div class="slds-col slds-size_9-of-12 majorItem">
+                {!item.boat.name}
+              </div>
+              <div class="slds-col slds-size_3-of-12 majorItem slds-text-align_right slds-p-right_small">
+                <c:lgnd_currencyDisplay value="{!item.boat.cost}"
+                                        zeroLabel="Included" />
+              </div>
+            </div>
+
+            <!-- Motor Line -->
+            <aura:if isTrue="{! !empty(item.motor) }">
+              <div class="slds-grid slds-wrap">
+                <div class="slds-col slds-size_9-of-12">
+                  <div class="sub-item">
+                    {!item.motor.name}
+                  </div>
                 </div>
-                <div class="slds-col slds-size_3-of-12 majorItem slds-text-align_right slds-p-right_small">
-                  <c:lgnd_currencyDisplay value="{!item.boat.cost}"
+                <div class="slds-col slds-size_3-of-12 slds-text-align_right slds-p-right_small">
+                  <c:lgnd_currencyDisplay value="{!item.motor.cost}"
+                                          zeroLabel="Legend - Mercury Special Programs" />
+                </div>
+              </div>
+              <aura:iteration items="{!item.motor.options}" var="subOpt" indexVar="subIdx">
+                <div class="slds-grid slds-wrap kit-part">
+                  <div class="slds-col slds-size_9-of-12">
+                    <div class="{! join(' ', 'sub-item kit-item', concat('kit-item-',subIdx))}">
+                      {!subOpt.more_name}
+                    </div>
+                  </div>
+                  <div class="slds-col slds-size_3-of-12 slds-text-align_right slds-p-right_small">
+                    <c:lgnd_currencyDisplay value="{!subOpt.cost}"
+                                            zeroLabel="Included" />
+                  </div>
+                </div>
+              </aura:iteration>
+            </aura:if>
+
+
+            <!-- Trailer Line -->
+            <aura:if isTrue="{! !empty(item.trailer) }">
+              <div class="slds-grid slds-wrap">
+                <div class="slds-col slds-size_9-of-12">
+                  <div class="sub-item">
+                    {!item.trailer.name}
+                  </div>
+                </div>
+                <div class="slds-col slds-size_3-of-12 slds-text-align_right slds-p-right_small">
+                  <c:lgnd_currencyDisplay value="{!item.trailer.cost}"
                                           zeroLabel="Included" />
                 </div>
               </div>
-
-              <!-- Motor Line -->
-              <aura:if isTrue="{! !empty(item.motor) }">
-                <div class="slds-grid slds-wrap">
-                  <div class="slds-col slds-size_9-of-12">
-                    <div class="sub-item">
-                      {!item.motor.name}
-                    </div>
-                  </div>
-                  <div class="slds-col slds-size_3-of-12 slds-text-align_right slds-p-right_small">
-                    <c:lgnd_currencyDisplay value="{!item.motor.cost}"
-                                            zeroLabel="Legend - Mercury Special Programs" />
-                  </div>
-                </div>
-                <aura:iteration items="{!item.motor.options}" var="subOpt" indexVar="subIdx">
+              <aura:if isTrue="{! !empty(item.trailer.options) }">
+                <aura:iteration items="{!item.trailer.options}" var="subOpt" indexVar="subIdx">
                   <div class="slds-grid slds-wrap kit-part">
                     <div class="slds-col slds-size_9-of-12">
                       <div class="{! join(' ', 'sub-item kit-item', concat('kit-item-',subIdx))}">
@@ -70,601 +107,258 @@
                   </div>
                 </aura:iteration>
               </aura:if>
+            </aura:if>
 
-
-              <!-- Trailer Line -->
-              <aura:if isTrue="{! !empty(item.trailer) }">
-                <div class="slds-grid slds-wrap">
-                  <div class="slds-col slds-size_9-of-12">
-                    <div class="sub-item">
-                      {!item.trailer.name}
-                    </div>
-                  </div>
-                  <div class="slds-col slds-size_3-of-12 slds-text-align_right slds-p-right_small">
-                    <c:lgnd_currencyDisplay value="{!item.trailer.cost}"
-                                            zeroLabel="Included" />
+            <!-- Trolling Motor Line -->
+            <aura:if isTrue="{! !empty(item.trollingMotor) }">
+              <div class="slds-grid slds-wrap">
+                <div class="slds-col slds-size_9-of-12">
+                  <div class="sub-item">
+                    {!item.trollingMotor.name}
                   </div>
                 </div>
-                <aura:if isTrue="{! !empty(item.trailer.options) }">
-                  <aura:iteration items="{!item.trailer.options}" var="subOpt" indexVar="subIdx">
-                    <div class="slds-grid slds-wrap kit-part">
-                      <div class="slds-col slds-size_9-of-12">
-                        <div class="{! join(' ', 'sub-item kit-item', concat('kit-item-',subIdx))}">
-                          {!subOpt.more_name}
-                        </div>
-                      </div>
-                      <div class="slds-col slds-size_3-of-12 slds-text-align_right slds-p-right_small">
-                        <c:lgnd_currencyDisplay value="{!subOpt.cost}"
-                                                zeroLabel="Included" />
-                      </div>
-                    </div>
-                  </aura:iteration>
-                </aura:if>
-              </aura:if>
-
-              <!-- Trolling Motor Line -->
-              <aura:if isTrue="{! !empty(item.trollingMotor) }">
-                <div class="slds-grid slds-wrap">
-                  <div class="slds-col slds-size_9-of-12">
-                    <div class="sub-item">
-                      {!item.trollingMotor.name}
-                    </div>
-                  </div>
-                  <div class="slds-col slds-size_3-of-12 slds-text-align_right slds-p-right_small">
-                    <c:lgnd_currencyDisplay value="{!item.trollingMotor.cost}"
-                                            zeroLabel="Included" />
-                  </div>
-                </div>
-                <aura:iteration items="{!item.trollingMotor.options}" var="subOpt" indexVar="subIdx">
-                  <div class="slds-grid slds-wrap kit-part">
-                    <div class="slds-col slds-size_9-of-12">
-                      <div class="{! join(' ', 'sub-item kit-item', concat('kit-item-',subIdx))}">
-                        {!subOpt.more_name}
-                      </div>
-                    </div>
-                    <div class="slds-col slds-size_3-of-12 slds-text-align_right slds-p-right_small">
-                      <c:lgnd_currencyDisplay value="{!subOpt.cost}"
-                                              zeroLabel="Included" />
-                    </div>
-                  </div>
-                </aura:iteration>
-              </aura:if>
-
-              <!-- Options Lines -->
-              <aura:if isTrue="{! !empty(item.options) }">
-                <c:lgndP_OptionLine_More options="{!item.options}" />
-              </aura:if>
-
-              <!-- Fees Lines -->
-              <aura:if isTrue="{! !empty(item.fees) }">
-                <aura:iteration items="{!item.fees}" var="fee">
-                  <div class="slds-grid slds-wrap fee-row">
-                    <div class="slds-col slds-size_9-of-12">
-                      <div class="sub-item">
-                        {!fee.name}
-                      </div>
-                    </div>
-                    <div class="slds-col slds-size_3-of-12 slds-text-align_right slds-p-right_small">
-                      <c:lgnd_currencyDisplay value="{!fee.cost}"
-                                              zeroLabel="Included" />
-                    </div>
-                  </div>
-                </aura:iteration>
-              </aura:if>
-
-              <!-- Discount Lines -->
-              <aura:if isTrue="{! !empty(item.discounts) }">
-
-                <aura:iteration items="{!item.discounts}" var="disc">
-                  <div class="slds-grid slds-wrap discount-row">
-                    <div class="slds-col slds-size_9-of-12">
-                      <div class="sub-item">
-                        {!disc.name}
-                      </div>
-                    </div>
-                    <div class="slds-col slds-size_3-of-12 slds-text-align_right slds-p-right_small">
-                      <c:lgnd_currencyDisplay value="{!disc.cost}"
-                                              zeroLabel="Included" />
-                    </div>
-                  </div>
-                </aura:iteration>
-
-              </aura:if>
-
-              <!-- Notes and Totals -->
-              <div class="slds-grid slds-wrap total-row">
-
-                <!-- Notes -->
-                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-2">
-                  <aura:if isTrue="{! !empty(item.notes)}">
-                    <div class="slds-text-title_caps slds-m-top_small">Notes</div>
-                    <div class="slds-p-around_small
-                                slds-m-right_small
-                                slds-card
-                                notes-container">
-                      <aura:unescapedHtml value="{!item.notes}" />
-                    </div>
-                  </aura:if>
-                </div>
-
-                <!-- Totals -->
-                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-2">
-
-                  <aura:if isTrue="{! !empty(item.discounts) }">
-                    <!-- Total Before Savings -->
-                    <div class="slds-grid slds-wrap total-row border-top">
-                      <div class="slds-col
-                                slds-size_1-of-1
-                                slds-text-align_right
-                                slds-p-right_small
-                                sub-total-cell">
-                        <span class="slds-float_left slds-p-left_medium">
-                          Total Before Savings
-                        </span>
-                        <c:lgnd_currencyDisplay value="{!item.totalBeforeSavings}"
-                                              zeroLabel="0" />
-                      </div>
-                    </div>
-
-                    <!-- Total Savings -->
-                    <div class="slds-grid slds-wrap total-row">
-                      <div class="slds-col
-                                slds-size_1-of-1
-                                slds-text-align_right
-                                slds-p-right_small
-                                sub-total-cell green">
-                        <span class="slds-float_left slds-p-left_medium">
-                          Total Savings
-                        </span>
-                        <c:lgnd_currencyDisplay value="{!item.totalSavings}"
-                                              zeroLabel="0" />
-                      </div>
-                    </div>
-                  </aura:if>
-
-                  <!-- Individual Total -->
-                  <div class="slds-grid slds-wrap total-row">
-                    <div class="slds-col
-                                slds-size_1-of-1
-                                slds-text-align_right
-                                slds-p-right_small
-                                sub-total-cell grey">
-                        <span class="slds-float_left slds-p-left_medium">Individual Total</span>
-                        <c:lgnd_currencyDisplay value="{!add(item.totalBeforeSavings, item.totalSavings)}"
-                                              zeroLabel="0" />
-                    </div>
-                  </div>
-
-                  <!-- TOTAL -->
-                  <div class="slds-grid slds-wrap total-row">
-                    <div class="slds-col
-                                slds-size_1-of-1
-                                slds-text-align_right
-                                slds-p-right_small
-                                total-cell">
-                        <span class="slds-float_left slds-p-left_medium">TOTAL</span>
-                        <c:lgnd_currencyDisplay value="{!item.grandTotal}"
-                                              zeroLabel="0" />
-                    </div>
-                  </div>
-
-                </div>
-
-              </div>
-
-            </td>
-            <td data-label="Actions" class="action-cell slds-text-align--right">
-              <lightning:buttonMenu menuAlignment="right"
-                                    onselect="{! c.handleTableAction }">
-                  <lightning:menuItem label="View"
-                                      value="{! 'view:' + item.orderGroupId }" />
-                  <aura:if isTrue="{! v.isEditable}">
-                    <lightning:menuItem label="Edit"
-                                        value="{! 'edit:' + item.orderGroupId }" />
-                    <lightning:menuItem label="Delete"
-                                        value="{! 'delete:' + item.orderGroupId + ':boats' }"/>
-                  </aura:if>
-              </lightning:buttonMenu>
-            </td>
-          </tr>
-        </aura:iteration>
-      </aura:if>
-
-      <!-- +++++ MOTOR LINES ++++++++ -->
-      <aura:if isTrue="{! !empty(v.motors)}">
-        <aura:iteration items="{!v.motors}" var="item">
-          <tr>
-            <td data-label="Quantity">{!item.quantity}</td>
-            <td>
-
-              <div class="slds-grid slds-wrap boat">
-                <div class="slds-col slds-size_9-of-12 majorItem">
-                  {!item.motor.name}
-                </div>
-                <div class="slds-col slds-size_3-of-12 slds-text-align_right slds-p-right_small majorItem">
-                  <c:lgnd_currencyDisplay value="{!item.motor.cost}"
-                                          zeroLabel="Legend - Mercury Special Programs" /> (ea.)
-                </div>
-              </div>
-
-              <!-- Options Lines -->
-              <aura:if isTrue="{! !empty(item.options) }">
-                <c:lgndP_OptionLine_More options="{!item.options}" />
-              </aura:if>
-
-              <!-- Fees Lines -->
-              <aura:if isTrue="{! !empty(item.fees) }">
-                <aura:iteration items="{!item.fees}" var="fee">
-                  <div class="slds-grid slds-wrap fee-row">
-                    <div class="slds-col slds-size_9-of-12">
-                      <div class="sub-item">
-                        {!fee.name}
-                      </div>
-                    </div>
-                    <div class="slds-col slds-size_3-of-12 slds-text-align_right slds-p-right_small">
-                      <c:lgnd_currencyDisplay value="{!fee.cost}"
-                                              zeroLabel="Included" />
-                    </div>
-                  </div>
-                </aura:iteration>
-              </aura:if>
-
-              <!-- Discount Lines -->
-              <aura:if isTrue="{! !empty(item.discounts) }">
-
-                <aura:iteration items="{!item.discounts}" var="disc">
-                  <div class="slds-grid slds-wrap discount-row">
-                    <div class="slds-col slds-size_9-of-12">
-                      <div class="sub-item">
-                        {!disc.name}
-                      </div>
-                    </div>
-                    <div class="slds-col slds-size_3-of-12 slds-text-align_right slds-p-right_small">
-                      <c:lgnd_currencyDisplay value="{!disc.cost}"
-                                              zeroLabel="Included" />
-                    </div>
-                  </div>
-                </aura:iteration>
-
-              </aura:if>
-
-              <!-- Notes and Totals -->
-              <div class="slds-grid slds-wrap total-row">
-
-                <!-- Notes -->
-                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-2">
-                  <aura:if isTrue="{! !empty(item.notes)}">
-                    <div class="slds-text-title_caps slds-m-top_small">Notes</div>
-                    <div class="slds-p-around_small
-                                  slds-m-right_small
-                                  slds-card
-                                  notes-container">
-                      <aura:unescapedHtml value="{!item.notes}" />
-                    </div>
-                  </aura:if>
-                </div>
-
-                <!-- Totals -->
-                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-2">
-
-                  <aura:if isTrue="{! !empty(item.discounts) }">
-                    <!-- Total Before Savings -->
-                    <div class="slds-grid slds-wrap total-row border-top">
-                      <div class="slds-col
-                                  slds-size_1-of-1
-                                  slds-text-align_right
-                                  slds-p-right_small
-                                  sub-total-cell">
-                          <span class="slds-float_left slds-p-left_medium">
-                            Total Before Savings
-                          </span>
-                        <c:lgnd_currencyDisplay value="{!item.totalBeforeSavings}"
-                                                zeroLabel="Legend - Mercury Special Programs" /> (ea.)
-                      </div>
-                    </div>
-
-                    <!-- Total Savings -->
-                    <div class="slds-grid slds-wrap total-row">
-                      <div class="slds-col
-                                  slds-size_1-of-1
-                                  slds-text-align_right
-                                  slds-p-right_small
-                                  sub-total-cell green">
-                          <span class="slds-float_left slds-p-left_medium">
-                            Total Savings
-                          </span>
-                        <c:lgnd_currencyDisplay value="{!item.totalSavings}"
-                                                zeroLabel="0" />
-                      </div>
-                    </div>
-                  </aura:if>
-
-                  <!-- Individual Total -->
-                  <div class="slds-grid slds-wrap total-row">
-                    <div class="slds-col
-                                  slds-size_1-of-1
-                                  slds-text-align_right
-                                  slds-p-right_small
-                                  sub-total-cell grey">
-                      <span class="slds-float_left slds-p-left_medium">Individual Total</span>
-                      <c:lgnd_currencyDisplay value="{!add(item.totalBeforeSavings, item.totalSavings)}"
-                                              zeroLabel="Legend - Mercury Special Programs" /> (ea.)
-                    </div>
-                  </div>
-
-                  <!-- TOTAL -->
-                  <div class="slds-grid slds-wrap total-row">
-                    <div class="slds-col
-                                  slds-size_1-of-1
-                                  slds-text-align_right
-                                  slds-p-right_small
-                                  total-cell">
-                      <span class="slds-float_left slds-p-left_medium">TOTAL</span>
-                      <c:lgnd_currencyDisplay value="{!item.grandTotal}"
-                                              zeroLabel="Legend - Mercury Special Programs" />
-                    </div>
-                  </div>
-
-                </div>
-
-              </div>
-
-            </td>
-            <td data-label="Actions" class="action-cell slds-text-align--right">
-              <lightning:buttonMenu menuAlignment="right"
-                                    onselect="{! c.handleTableAction }">
-                <lightning:menuItem label="View"
-                                    value="{! 'view:' + item.orderGroupId }" />
-                <aura:if isTrue="{! v.isEditable}">
-                  <lightning:menuItem label="Edit"
-                                      value="{! 'edit:' + item.orderGroupId }" />
-                  <lightning:menuItem label="Delete"
-                                      value="{! 'delete:' + item.orderGroupId + ':trailers' }"/>
-                </aura:if>
-              </lightning:buttonMenu>
-            </td>
-          </tr>
-        </aura:iteration>
-      </aura:if>
-
-      <!-- +++++ Trailer LINES ++++++++ -->
-      <aura:if isTrue="{! !empty(v.trailers)}">
-        <aura:iteration items="{!v.trailers}" var="item">
-          <tr>
-            <td data-label="Quantity">{!item.quantity}</td>
-            <td>
-
-                <div class="slds-grid slds-wrap boat">
-                  <div class="slds-col slds-size_9-of-12 majorItem">
-                      {!item.trailer.name}
-                  </div>
-                  <div class="slds-col slds-size_3-of-12 slds-text-align_right slds-p-right_small majorItem">
-                    <c:lgnd_currencyDisplay value="{!item.trailer.cost}"
-                                            zeroLabel="Included" />
-                  </div>
-                </div>
-
-              <!-- Options Lines -->
-              <aura:if isTrue="{! !empty(item.options) }">
-                <c:lgndP_OptionLine_More options="{!item.options}" />
-              </aura:if>
-
-              <!-- Fees Lines -->
-              <aura:if isTrue="{! !empty(item.fees) }">
-                <aura:iteration items="{!item.fees}" var="fee">
-                  <div class="slds-grid slds-wrap fee-row">
-                    <div class="slds-col slds-size_9-of-12">
-                      <div class="sub-item">
-                        {!fee.name}
-                      </div>
-                    </div>
-                    <div class="slds-col slds-size_3-of-12 slds-text-align_right slds-p-right_small">
-                      <c:lgnd_currencyDisplay value="{!fee.cost}"
-                                              zeroLabel="Included" />
-                    </div>
-                  </div>
-                </aura:iteration>
-              </aura:if>
-
-              <!-- Discount Lines -->
-              <aura:if isTrue="{! !empty(item.discounts) }">
-
-                <aura:iteration items="{!item.discounts}" var="disc">
-                  <div class="slds-grid slds-wrap discount-row">
-                    <div class="slds-col slds-size_9-of-12">
-                      <div class="sub-item">
-                        {!disc.name}
-                      </div>
-                    </div>
-                    <div class="slds-col slds-size_3-of-12 slds-text-align_right slds-p-right_small">
-                      <c:lgnd_currencyDisplay value="{!disc.cost}"
-                                              zeroLabel="Included" />
-                    </div>
-                  </div>
-                </aura:iteration>
-
-              </aura:if>
-
-              <!-- Notes and Totals -->
-              <div class="slds-grid slds-wrap total-row">
-
-                <!-- Notes -->
-                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-2">
-                  <aura:if isTrue="{! !empty(item.notes)}">
-                    <div class="slds-text-title_caps slds-m-top_small">Notes</div>
-                    <div class="slds-p-around_small
-                                slds-m-right_small
-                                slds-card
-                                notes-container">
-                      <aura:unescapedHtml value="{!item.notes}" />
-                    </div>
-                  </aura:if>
-                </div>
-
-                <!-- Totals -->
-                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-2">
-
-                  <aura:if isTrue="{! !empty(item.discounts) }">
-                    <!-- Total Before Savings -->
-                    <div class="slds-grid slds-wrap total-row border-top">
-                      <div class="slds-col
-                                slds-size_1-of-1
-                                slds-text-align_right
-                                slds-p-right_small
-                                sub-total-cell">
-                        <span class="slds-float_left slds-p-left_medium">
-                          Total Before Savings
-                        </span>
-                        <c:lgnd_currencyDisplay value="{!item.totalBeforeSavings}"
-                                                zeroLabel="0" />
-                      </div>
-                    </div>
-
-                    <!-- Total Savings -->
-                    <div class="slds-grid slds-wrap total-row">
-                      <div class="slds-col
-                                slds-size_1-of-1
-                                slds-text-align_right
-                                slds-p-right_small
-                                sub-total-cell green">
-                        <span class="slds-float_left slds-p-left_medium">
-                          Total Savings
-                        </span>
-                        <c:lgnd_currencyDisplay value="{!item.totalSavings}"
-                                                zeroLabel="0" />
-                      </div>
-                    </div>
-                  </aura:if>
-
-                  <!-- Individual Total -->
-                  <div class="slds-grid slds-wrap total-row">
-                    <div class="slds-col
-                                slds-size_1-of-1
-                                slds-text-align_right
-                                slds-p-right_small
-                                sub-total-cell grey">
-                      <span class="slds-float_left slds-p-left_medium">Individual Total</span>
-                      <c:lgnd_currencyDisplay value="{!add(item.totalBeforeSavings, item.totalSavings)}"
-                                              zeroLabel="Included" /> (ea.)
-                    </div>
-                  </div>
-
-                  <!-- TOTAL -->
-                  <div class="slds-grid slds-wrap total-row">
-                    <div class="slds-col
-                                slds-size_1-of-1
-                                slds-text-align_right
-                                slds-p-right_small
-                                total-cell">
-                      <span class="slds-float_left slds-p-left_medium">TOTAL</span>
-                      <c:lgnd_currencyDisplay value="{!item.grandTotal}"
-                                              zeroLabel="Included" />
-                    </div>
-                  </div>
-
-                </div>
-
-              </div>
-
-            </td>
-            <td data-label="Actions" class="action-cell slds-text-align--right">
-              <lightning:buttonMenu menuAlignment="right"
-                                    onselect="{! c.handleTableAction }">
-                <lightning:menuItem label="View"
-                                    value="{! 'view:' + item.orderGroupId }" />
-                <aura:if isTrue="{! v.isEditable}">
-                  <lightning:menuItem label="Edit"
-                                      value="{! 'edit:' + item.orderGroupId }" />
-                  <lightning:menuItem label="Delete"
-                                      value="{! 'delete:' + item.orderGroupId + ':trailers' }"/>
-                </aura:if>
-              </lightning:buttonMenu>
-            </td>
-          </tr>
-        </aura:iteration>
-      </aura:if>
-
-      <!-- +++++ TROLLING MOTOR LINES ++++++++ -->
-      <aura:if isTrue="{! !empty(v.trollingMotors)}">
-        <aura:iteration items="{!v.trollingMotors}" var="item">
-          <tr>
-            <td data-label="Quantity">{!item.quantity}</td>
-            <td>
-
-              <div class="slds-grid slds-wrap boat">
-                <div class="slds-col slds-size_9-of-12 majorItem">
-                  {!item.trollingMotor.name}
-                </div>
-                <div class="slds-col slds-size_3-of-12 slds-text-align_right slds-p-right_small majorItem">
+                <div class="slds-col slds-size_3-of-12 slds-text-align_right slds-p-right_small">
                   <c:lgnd_currencyDisplay value="{!item.trollingMotor.cost}"
                                           zeroLabel="Included" />
                 </div>
               </div>
-
-              <!-- Options Lines -->
-              <aura:if isTrue="{! !empty(item.options) }">
-                <c:lgndP_OptionLine_More options="{!item.options}" />
-              </aura:if>
-
-              <!-- Fees Lines -->
-              <aura:if isTrue="{! !empty(item.fees) }">
-                <aura:iteration items="{!item.fees}" var="fee">
-                  <div class="slds-grid slds-wrap fee-row">
-                    <div class="slds-col slds-size_9-of-12">
-                      <div class="sub-item">
-                        {!fee.name}
-                      </div>
-                    </div>
-                    <div class="slds-col slds-size_3-of-12 slds-text-align_right slds-p-right_small">
-                      <c:lgnd_currencyDisplay value="{!fee.cost}"
-                                              zeroLabel="Included" />
+              <aura:iteration items="{!item.trollingMotor.options}" var="subOpt" indexVar="subIdx">
+                <div class="slds-grid slds-wrap kit-part">
+                  <div class="slds-col slds-size_9-of-12">
+                    <div class="{! join(' ', 'sub-item kit-item', concat('kit-item-',subIdx))}">
+                      {!subOpt.more_name}
                     </div>
                   </div>
-                </aura:iteration>
-              </aura:if>
+                  <div class="slds-col slds-size_3-of-12 slds-text-align_right slds-p-right_small">
+                    <c:lgnd_currencyDisplay value="{!subOpt.cost}"
+                                            zeroLabel="Included" />
+                  </div>
+                </div>
+              </aura:iteration>
+            </aura:if>
 
-              <!-- Discount Lines -->
-              <aura:if isTrue="{! !empty(item.discounts) }">
+            <!-- Options Lines -->
+            <aura:if isTrue="{! !empty(item.options) }">
+              <c:lgndP_OptionLine_More options="{!item.options}" />
+            </aura:if>
 
-                <aura:iteration items="{!item.discounts}" var="disc">
-                  <div class="slds-grid slds-wrap discount-row">
-                    <div class="slds-col slds-size_9-of-12">
-                      <div class="sub-item">
-                        {!disc.name}
-                      </div>
-                    </div>
-                    <div class="slds-col slds-size_3-of-12 slds-text-align_right slds-p-right_small">
-                      <c:lgnd_currencyDisplay value="{!disc.cost}"
-                                              zeroLabel="Included" />
+            <!-- Fees Lines -->
+            <aura:if isTrue="{! !empty(item.fees) }">
+              <aura:iteration items="{!item.fees}" var="fee">
+                <div class="slds-grid slds-wrap fee-row">
+                  <div class="slds-col slds-size_9-of-12">
+                    <div class="sub-item">
+                      {!fee.name}
                     </div>
                   </div>
-                </aura:iteration>
+                  <div class="slds-col slds-size_3-of-12 slds-text-align_right slds-p-right_small">
+                    <c:lgnd_currencyDisplay value="{!fee.cost}"
+                                            zeroLabel="Included" />
+                  </div>
+                </div>
+              </aura:iteration>
+            </aura:if>
 
-              </aura:if>
+            <!-- Discount Lines -->
+            <aura:if isTrue="{! !empty(item.discounts) }">
 
-              <!-- Notes and Totals -->
-              <div class="slds-grid slds-wrap total-row">
+              <aura:iteration items="{!item.discounts}" var="disc">
+                <div class="slds-grid slds-wrap discount-row">
+                  <div class="slds-col slds-size_9-of-12">
+                    <div class="sub-item">
+                      {!disc.name}
+                    </div>
+                  </div>
+                  <div class="slds-col slds-size_3-of-12 slds-text-align_right slds-p-right_small">
+                    <c:lgnd_currencyDisplay value="{!disc.cost}"
+                                            zeroLabel="Included" />
+                  </div>
+                </div>
+              </aura:iteration>
 
-                <!-- Notes -->
-                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-2">
-                  <aura:if isTrue="{! !empty(item.notes)}">
-                    <div class="slds-text-title_caps slds-m-top_small">Notes</div>
-                    <div class="slds-p-around_small
+            </aura:if>
+
+            <!-- Notes and Totals -->
+            <div class="slds-grid slds-wrap total-row">
+
+              <!-- Notes -->
+              <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-2">
+                <aura:if isTrue="{! !empty(item.notes)}">
+                  <div class="slds-text-title_caps slds-m-top_small">Notes</div>
+                  <div class="slds-p-around_small
+                              slds-m-right_small
+                              slds-card
+                              notes-container">
+                    <aura:unescapedHtml value="{!item.notes}" />
+                  </div>
+                </aura:if>
+              </div>
+
+              <!-- Totals -->
+              <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-2">
+
+                <aura:if isTrue="{! !empty(item.discounts) }">
+                  <!-- Total Before Savings -->
+                  <div class="slds-grid slds-wrap total-row border-top">
+                    <div class="slds-col
+                              slds-size_1-of-1
+                              slds-text-align_right
+                              slds-p-right_small
+                              sub-total-cell">
+                      <span class="slds-float_left slds-p-left_medium">
+                        Total Before Savings
+                      </span>
+                      <c:lgnd_currencyDisplay value="{!item.totalBeforeSavings}"
+                                            zeroLabel="0" />
+                    </div>
+                  </div>
+
+                  <!-- Total Savings -->
+                  <div class="slds-grid slds-wrap total-row">
+                    <div class="slds-col
+                              slds-size_1-of-1
+                              slds-text-align_right
+                              slds-p-right_small
+                              sub-total-cell green">
+                      <span class="slds-float_left slds-p-left_medium">
+                        Total Savings
+                      </span>
+                      <c:lgnd_currencyDisplay value="{!item.totalSavings}"
+                                            zeroLabel="0" />
+                    </div>
+                  </div>
+                </aura:if>
+
+                <!-- Individual Total -->
+                <div class="slds-grid slds-wrap total-row">
+                  <div class="slds-col
+                              slds-size_1-of-1
+                              slds-text-align_right
+                              slds-p-right_small
+                              sub-total-cell grey">
+                      <span class="slds-float_left slds-p-left_medium">Individual Total</span>
+                      <c:lgnd_currencyDisplay value="{!add(item.totalBeforeSavings, item.totalSavings)}"
+                                            zeroLabel="0" />
+                  </div>
+                </div>
+
+                <!-- TOTAL -->
+                <div class="slds-grid slds-wrap total-row">
+                  <div class="slds-col
+                              slds-size_1-of-1
+                              slds-text-align_right
+                              slds-p-right_small
+                              total-cell">
+                      <span class="slds-float_left slds-p-left_medium">TOTAL</span>
+                      <c:lgnd_currencyDisplay value="{!item.grandTotal}"
+                                            zeroLabel="0" />
+                  </div>
+                </div>
+
+              </div>
+
+            </div>
+
+          </td>
+          <td data-label="Actions" class="action-cell slds-text-align_right">
+            <lightning:buttonMenu menuAlignment="right"
+                                  onselect="{! c.handleTableAction }">
+                <lightning:menuItem label="View"
+                                    value="{! 'view:' + item.orderGroupId }" />
+                <aura:if isTrue="{! v.isEditable}">
+                  <lightning:menuItem label="Edit"
+                                      value="{! 'edit:' + item.orderGroupId }" />
+                  <lightning:menuItem label="Delete"
+                                      value="{! 'delete:' + item.orderGroupId + ':boats' }"/>
+                </aura:if>
+            </lightning:buttonMenu>
+          </td>
+        </tr>
+      </aura:iteration>
+    </aura:if>
+
+    <!-- +++++ MOTOR LINES ++++++++ -->
+    <aura:if isTrue="{! !empty(v.motors)}">
+      <aura:iteration items="{!v.motors}" var="item">
+        <tr>
+          <td data-label="Quantity">{!item.quantity}</td>
+          <td data-label="Reserved" class="slds-p-left_medium">{!item.quantityReserved}</td>
+          <td>
+
+            <div class="slds-grid slds-wrap boat">
+              <div class="slds-col slds-size_9-of-12 majorItem">
+                {!item.motor.name}
+              </div>
+              <div class="slds-col slds-size_3-of-12 slds-text-align_right slds-p-right_small majorItem">
+                <c:lgnd_currencyDisplay value="{!item.motor.cost}"
+                                        zeroLabel="Legend - Mercury Special Programs" /> (ea.)
+              </div>
+            </div>
+
+            <!-- Options Lines -->
+            <aura:if isTrue="{! !empty(item.options) }">
+              <c:lgndP_OptionLine_More options="{!item.options}" />
+            </aura:if>
+
+            <!-- Fees Lines -->
+            <aura:if isTrue="{! !empty(item.fees) }">
+              <aura:iteration items="{!item.fees}" var="fee">
+                <div class="slds-grid slds-wrap fee-row">
+                  <div class="slds-col slds-size_9-of-12">
+                    <div class="sub-item">
+                      {!fee.name}
+                    </div>
+                  </div>
+                  <div class="slds-col slds-size_3-of-12 slds-text-align_right slds-p-right_small">
+                    <c:lgnd_currencyDisplay value="{!fee.cost}"
+                                            zeroLabel="Included" />
+                  </div>
+                </div>
+              </aura:iteration>
+            </aura:if>
+
+            <!-- Discount Lines -->
+            <aura:if isTrue="{! !empty(item.discounts) }">
+
+              <aura:iteration items="{!item.discounts}" var="disc">
+                <div class="slds-grid slds-wrap discount-row">
+                  <div class="slds-col slds-size_9-of-12">
+                    <div class="sub-item">
+                      {!disc.name}
+                    </div>
+                  </div>
+                  <div class="slds-col slds-size_3-of-12 slds-text-align_right slds-p-right_small">
+                    <c:lgnd_currencyDisplay value="{!disc.cost}"
+                                            zeroLabel="Included" />
+                  </div>
+                </div>
+              </aura:iteration>
+
+            </aura:if>
+
+            <!-- Notes and Totals -->
+            <div class="slds-grid slds-wrap total-row">
+
+              <!-- Notes -->
+              <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-2">
+                <aura:if isTrue="{! !empty(item.notes)}">
+                  <div class="slds-text-title_caps slds-m-top_small">Notes</div>
+                  <div class="slds-p-around_small
                                 slds-m-right_small
                                 slds-card
                                 notes-container">
-                      <aura:unescapedHtml value="{!item.notes}" />
-                    </div>
-                  </aura:if>
-                </div>
+                    <aura:unescapedHtml value="{!item.notes}" />
+                  </div>
+                </aura:if>
+              </div>
 
-                <!-- Totals -->
-                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-2">
+              <!-- Totals -->
+              <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-2">
 
-                  <aura:if isTrue="{! !empty(item.discounts) }">
-                    <!-- Total Before Savings -->
-                    <div class="slds-grid slds-wrap total-row border-top">
-                      <div class="slds-col
+                <aura:if isTrue="{! !empty(item.discounts) }">
+                  <!-- Total Before Savings -->
+                  <div class="slds-grid slds-wrap total-row border-top">
+                    <div class="slds-col
                                 slds-size_1-of-1
                                 slds-text-align_right
                                 slds-p-right_small
@@ -672,14 +366,14 @@
                         <span class="slds-float_left slds-p-left_medium">
                           Total Before Savings
                         </span>
-                        <c:lgnd_currencyDisplay value="{!item.totalBeforeSavings}"
-                                                zeroLabel="Included" />(ea.)
-                      </div>
+                      <c:lgnd_currencyDisplay value="{!item.totalBeforeSavings}"
+                                              zeroLabel="Legend - Mercury Special Programs" /> (ea.)
                     </div>
+                  </div>
 
-                    <!-- Total Savings -->
-                    <div class="slds-grid slds-wrap total-row">
-                      <div class="slds-col
+                  <!-- Total Savings -->
+                  <div class="slds-grid slds-wrap total-row">
+                    <div class="slds-col
                                 slds-size_1-of-1
                                 slds-text-align_right
                                 slds-p-right_small
@@ -687,59 +381,375 @@
                         <span class="slds-float_left slds-p-left_medium">
                           Total Savings
                         </span>
-                        <c:lgnd_currencyDisplay value="{!item.totalSavings}"
-                                                zeroLabel="Included" />
-                      </div>
+                      <c:lgnd_currencyDisplay value="{!item.totalSavings}"
+                                              zeroLabel="0" />
                     </div>
-                  </aura:if>
+                  </div>
+                </aura:if>
 
-                  <!-- Individual Total -->
-                  <div class="slds-grid slds-wrap total-row">
-                    <div class="slds-col
+                <!-- Individual Total -->
+                <div class="slds-grid slds-wrap total-row">
+                  <div class="slds-col
                                 slds-size_1-of-1
                                 slds-text-align_right
                                 slds-p-right_small
                                 sub-total-cell grey">
-                      <span class="slds-float_left slds-p-left_medium">Individual Total</span>
-                      <c:lgnd_currencyDisplay value="{!add(item.totalBeforeSavings, item.totalSavings)}"
-                                              zeroLabel="0" />
-                    </div>
+                    <span class="slds-float_left slds-p-left_medium">Individual Total</span>
+                    <c:lgnd_currencyDisplay value="{!add(item.totalBeforeSavings, item.totalSavings)}"
+                                            zeroLabel="Legend - Mercury Special Programs" /> (ea.)
                   </div>
+                </div>
 
-                  <!-- TOTAL -->
-                  <div class="slds-grid slds-wrap total-row">
-                    <div class="slds-col
+                <!-- TOTAL -->
+                <div class="slds-grid slds-wrap total-row">
+                  <div class="slds-col
                                 slds-size_1-of-1
                                 slds-text-align_right
                                 slds-p-right_small
                                 total-cell">
-                      <span class="slds-float_left slds-p-left_medium">TOTAL</span>
-                      <c:lgnd_currencyDisplay value="{!item.grandTotal}"
-                                              zeroLabel="0" />
-                    </div>
+                    <span class="slds-float_left slds-p-left_medium">TOTAL</span>
+                    <c:lgnd_currencyDisplay value="{!item.grandTotal}"
+                                            zeroLabel="Legend - Mercury Special Programs" />
                   </div>
-
                 </div>
 
               </div>
 
-            </td>
-            <td data-label="Actions" class="action-cell slds-text-align--right">
-              <lightning:buttonMenu menuAlignment="right"
-                                    onselect="{! c.handleTableAction }">
-                <lightning:menuItem label="View"
-                                    value="{! 'view:' + item.orderGroupId }" />
-                <aura:if isTrue="{! v.isEditable}">
-                  <lightning:menuItem label="Edit"
-                                      value="{! 'edit:' + item.orderGroupId }" />
-                  <lightning:menuItem label="Delete"
-                                      value="{! 'delete:' + item.orderGroupId + ':trollingMotors' }"/>
+            </div>
+
+          </td>
+          <td data-label="Actions" class="action-cell slds-text-align--right">
+            <lightning:buttonMenu menuAlignment="right"
+                                  onselect="{! c.handleTableAction }">
+              <lightning:menuItem label="View"
+                                  value="{! 'view:' + item.orderGroupId }" />
+              <aura:if isTrue="{! v.isEditable}">
+                <lightning:menuItem label="Edit"
+                                    value="{! 'edit:' + item.orderGroupId }" />
+                <lightning:menuItem label="Delete"
+                                    value="{! 'delete:' + item.orderGroupId + ':trailers' }"/>
+              </aura:if>
+            </lightning:buttonMenu>
+          </td>
+        </tr>
+      </aura:iteration>
+    </aura:if>
+
+    <!-- +++++ Trailer LINES ++++++++ -->
+    <aura:if isTrue="{! !empty(v.trailers)}">
+      <aura:iteration items="{!v.trailers}" var="item">
+        <tr>
+          <td data-label="Quantity">{!item.quantity}</td>
+          <td data-label="Reserved" class="slds-p-left_medium">{!item.quantityReserved}</td>
+          <td>
+
+              <div class="slds-grid slds-wrap boat">
+                <div class="slds-col slds-size_9-of-12 majorItem">
+                    {!item.trailer.name}
+                </div>
+                <div class="slds-col slds-size_3-of-12 slds-text-align_right slds-p-right_small majorItem">
+                  <c:lgnd_currencyDisplay value="{!item.trailer.cost}"
+                                          zeroLabel="Included" />
+                </div>
+              </div>
+
+            <!-- Options Lines -->
+            <aura:if isTrue="{! !empty(item.options) }">
+              <c:lgndP_OptionLine_More options="{!item.options}" />
+            </aura:if>
+
+            <!-- Fees Lines -->
+            <aura:if isTrue="{! !empty(item.fees) }">
+              <aura:iteration items="{!item.fees}" var="fee">
+                <div class="slds-grid slds-wrap fee-row">
+                  <div class="slds-col slds-size_9-of-12">
+                    <div class="sub-item">
+                      {!fee.name}
+                    </div>
+                  </div>
+                  <div class="slds-col slds-size_3-of-12 slds-text-align_right slds-p-right_small">
+                    <c:lgnd_currencyDisplay value="{!fee.cost}"
+                                            zeroLabel="Included" />
+                  </div>
+                </div>
+              </aura:iteration>
+            </aura:if>
+
+            <!-- Discount Lines -->
+            <aura:if isTrue="{! !empty(item.discounts) }">
+
+              <aura:iteration items="{!item.discounts}" var="disc">
+                <div class="slds-grid slds-wrap discount-row">
+                  <div class="slds-col slds-size_9-of-12">
+                    <div class="sub-item">
+                      {!disc.name}
+                    </div>
+                  </div>
+                  <div class="slds-col slds-size_3-of-12 slds-text-align_right slds-p-right_small">
+                    <c:lgnd_currencyDisplay value="{!disc.cost}"
+                                            zeroLabel="Included" />
+                  </div>
+                </div>
+              </aura:iteration>
+
+            </aura:if>
+
+            <!-- Notes and Totals -->
+            <div class="slds-grid slds-wrap total-row">
+
+              <!-- Notes -->
+              <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-2">
+                <aura:if isTrue="{! !empty(item.notes)}">
+                  <div class="slds-text-title_caps slds-m-top_small">Notes</div>
+                  <div class="slds-p-around_small
+                              slds-m-right_small
+                              slds-card
+                              notes-container">
+                    <aura:unescapedHtml value="{!item.notes}" />
+                  </div>
                 </aura:if>
-              </lightning:buttonMenu>
-            </td>
-          </tr>
-        </aura:iteration>
-      </aura:if>
+              </div>
+
+              <!-- Totals -->
+              <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-2">
+
+                <aura:if isTrue="{! !empty(item.discounts) }">
+                  <!-- Total Before Savings -->
+                  <div class="slds-grid slds-wrap total-row border-top">
+                    <div class="slds-col
+                              slds-size_1-of-1
+                              slds-text-align_right
+                              slds-p-right_small
+                              sub-total-cell">
+                      <span class="slds-float_left slds-p-left_medium">
+                        Total Before Savings
+                      </span>
+                      <c:lgnd_currencyDisplay value="{!item.totalBeforeSavings}"
+                                              zeroLabel="0" />
+                    </div>
+                  </div>
+
+                  <!-- Total Savings -->
+                  <div class="slds-grid slds-wrap total-row">
+                    <div class="slds-col
+                              slds-size_1-of-1
+                              slds-text-align_right
+                              slds-p-right_small
+                              sub-total-cell green">
+                      <span class="slds-float_left slds-p-left_medium">
+                        Total Savings
+                      </span>
+                      <c:lgnd_currencyDisplay value="{!item.totalSavings}"
+                                              zeroLabel="0" />
+                    </div>
+                  </div>
+                </aura:if>
+
+                <!-- Individual Total -->
+                <div class="slds-grid slds-wrap total-row">
+                  <div class="slds-col
+                              slds-size_1-of-1
+                              slds-text-align_right
+                              slds-p-right_small
+                              sub-total-cell grey">
+                    <span class="slds-float_left slds-p-left_medium">Individual Total</span>
+                    <c:lgnd_currencyDisplay value="{!add(item.totalBeforeSavings, item.totalSavings)}"
+                                            zeroLabel="Included" /> (ea.)
+                  </div>
+                </div>
+
+                <!-- TOTAL -->
+                <div class="slds-grid slds-wrap total-row">
+                  <div class="slds-col
+                              slds-size_1-of-1
+                              slds-text-align_right
+                              slds-p-right_small
+                              total-cell">
+                    <span class="slds-float_left slds-p-left_medium">TOTAL</span>
+                    <c:lgnd_currencyDisplay value="{!item.grandTotal}"
+                                            zeroLabel="Included" />
+                  </div>
+                </div>
+
+              </div>
+
+            </div>
+
+          </td>
+          <td data-label="Actions" class="action-cell slds-text-align--right">
+            <lightning:buttonMenu menuAlignment="right"
+                                  onselect="{! c.handleTableAction }">
+              <lightning:menuItem label="View"
+                                  value="{! 'view:' + item.orderGroupId }" />
+              <aura:if isTrue="{! v.isEditable}">
+                <lightning:menuItem label="Edit"
+                                    value="{! 'edit:' + item.orderGroupId }" />
+                <lightning:menuItem label="Delete"
+                                    value="{! 'delete:' + item.orderGroupId + ':trailers' }"/>
+              </aura:if>
+            </lightning:buttonMenu>
+          </td>
+        </tr>
+      </aura:iteration>
+    </aura:if>
+
+    <!-- +++++ TROLLING MOTOR LINES ++++++++ -->
+    <aura:if isTrue="{! !empty(v.trollingMotors)}">
+      <aura:iteration items="{!v.trollingMotors}" var="item">
+        <tr>
+          <td data-label="Quantity">{!item.quantity}</td>
+          <td data-label="Reserved" class="slds-p-left_medium">{!item.quantityReserved}</td>
+          <td>
+
+            <div class="slds-grid slds-wrap boat">
+              <div class="slds-col slds-size_9-of-12 majorItem">
+                {!item.trollingMotor.name}
+              </div>
+              <div class="slds-col slds-size_3-of-12 slds-text-align_right slds-p-right_small majorItem">
+                <c:lgnd_currencyDisplay value="{!item.trollingMotor.cost}"
+                                        zeroLabel="Included" />
+              </div>
+            </div>
+
+            <!-- Options Lines -->
+            <aura:if isTrue="{! !empty(item.options) }">
+              <c:lgndP_OptionLine_More options="{!item.options}" />
+            </aura:if>
+
+            <!-- Fees Lines -->
+            <aura:if isTrue="{! !empty(item.fees) }">
+              <aura:iteration items="{!item.fees}" var="fee">
+                <div class="slds-grid slds-wrap fee-row">
+                  <div class="slds-col slds-size_9-of-12">
+                    <div class="sub-item">
+                      {!fee.name}
+                    </div>
+                  </div>
+                  <div class="slds-col slds-size_3-of-12 slds-text-align_right slds-p-right_small">
+                    <c:lgnd_currencyDisplay value="{!fee.cost}"
+                                            zeroLabel="Included" />
+                  </div>
+                </div>
+              </aura:iteration>
+            </aura:if>
+
+            <!-- Discount Lines -->
+            <aura:if isTrue="{! !empty(item.discounts) }">
+
+              <aura:iteration items="{!item.discounts}" var="disc">
+                <div class="slds-grid slds-wrap discount-row">
+                  <div class="slds-col slds-size_9-of-12">
+                    <div class="sub-item">
+                      {!disc.name}
+                    </div>
+                  </div>
+                  <div class="slds-col slds-size_3-of-12 slds-text-align_right slds-p-right_small">
+                    <c:lgnd_currencyDisplay value="{!disc.cost}"
+                                            zeroLabel="Included" />
+                  </div>
+                </div>
+              </aura:iteration>
+
+            </aura:if>
+
+            <!-- Notes and Totals -->
+            <div class="slds-grid slds-wrap total-row">
+
+              <!-- Notes -->
+              <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-2">
+                <aura:if isTrue="{! !empty(item.notes)}">
+                  <div class="slds-text-title_caps slds-m-top_small">Notes</div>
+                  <div class="slds-p-around_small
+                              slds-m-right_small
+                              slds-card
+                              notes-container">
+                    <aura:unescapedHtml value="{!item.notes}" />
+                  </div>
+                </aura:if>
+              </div>
+
+              <!-- Totals -->
+              <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-2">
+
+                <aura:if isTrue="{! !empty(item.discounts) }">
+                  <!-- Total Before Savings -->
+                  <div class="slds-grid slds-wrap total-row border-top">
+                    <div class="slds-col
+                              slds-size_1-of-1
+                              slds-text-align_right
+                              slds-p-right_small
+                              sub-total-cell">
+                      <span class="slds-float_left slds-p-left_medium">
+                        Total Before Savings
+                      </span>
+                      <c:lgnd_currencyDisplay value="{!item.totalBeforeSavings}"
+                                              zeroLabel="Included" />(ea.)
+                    </div>
+                  </div>
+
+                  <!-- Total Savings -->
+                  <div class="slds-grid slds-wrap total-row">
+                    <div class="slds-col
+                              slds-size_1-of-1
+                              slds-text-align_right
+                              slds-p-right_small
+                              sub-total-cell green">
+                      <span class="slds-float_left slds-p-left_medium">
+                        Total Savings
+                      </span>
+                      <c:lgnd_currencyDisplay value="{!item.totalSavings}"
+                                              zeroLabel="Included" />
+                    </div>
+                  </div>
+                </aura:if>
+
+                <!-- Individual Total -->
+                <div class="slds-grid slds-wrap total-row">
+                  <div class="slds-col
+                              slds-size_1-of-1
+                              slds-text-align_right
+                              slds-p-right_small
+                              sub-total-cell grey">
+                    <span class="slds-float_left slds-p-left_medium">Individual Total</span>
+                    <c:lgnd_currencyDisplay value="{!add(item.totalBeforeSavings, item.totalSavings)}"
+                                            zeroLabel="0" />
+                  </div>
+                </div>
+
+                <!-- TOTAL -->
+                <div class="slds-grid slds-wrap total-row">
+                  <div class="slds-col
+                              slds-size_1-of-1
+                              slds-text-align_right
+                              slds-p-right_small
+                              total-cell">
+                    <span class="slds-float_left slds-p-left_medium">TOTAL</span>
+                    <c:lgnd_currencyDisplay value="{!item.grandTotal}"
+                                            zeroLabel="0" />
+                  </div>
+                </div>
+
+              </div>
+
+            </div>
+
+          </td>
+          <td data-label="Actions" class="action-cell slds-text-align_right">
+            <lightning:buttonMenu menuAlignment="right"
+                                  onselect="{! c.handleTableAction }">
+              <lightning:menuItem label="View"
+                                  value="{! 'view:' + item.orderGroupId }" />
+              <aura:if isTrue="{! v.isEditable}">
+                <lightning:menuItem label="Edit"
+                                    value="{! 'edit:' + item.orderGroupId }" />
+                <lightning:menuItem label="Delete"
+                                    value="{! 'delete:' + item.orderGroupId + ':trollingMotors' }"/>
+              </aura:if>
+            </lightning:buttonMenu>
+          </td>
+        </tr>
+      </aura:iteration>
+    </aura:if>
     </tbody>
   </table>
 

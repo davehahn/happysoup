@@ -58,10 +58,33 @@ public without sharing class Partner_OutstandingBoatOrders {
   @AuraEnabled
   public static String fetchOrderTypeDetails( String orderType )
   {
+    return fetchOrderDetails(
+      orderType,
+      false
+    );
+  }
+
+  @AuraEnabled
+  public static String fetchOrderTypeDetails(
+    String orderType,
+    Boolean allowDraft
+  )
+  {
+    return fetchOrderDetails(
+      orderType,
+      allowDraft
+    );
+  }
+
+  private static String fetchOrderDetails(
+    String orderType,
+    Boolean allowDraft
+  )
+  {
     if( orderType == 'boat' )
-      return buildOutstandingBoatOrders();
+      return buildOutstandingBoatOrders( allowDraft );
     if( orderType == 'trailer' )
-      return buildOutstandingTrailerOrders();
+      return buildOutstandingTrailerOrders( allowDraft );
     return null;
   }
 
@@ -71,6 +94,7 @@ public without sharing class Partner_OutstandingBoatOrders {
     public String majorItemId;
     public String dealerOrderId;
     public String dealerOrderName;
+    public String dealerOrderLineId;
     public String erpOrderNumber;
     public String erpOrderId;
     public String erpOrderStage;
@@ -103,6 +127,7 @@ public without sharing class Partner_OutstandingBoatOrders {
 
     private void init( Dealer_Order_Line__c dol )
     {
+      this.dealerOrderLineId = dol.Id;
       this.majorItemName = dol.Product__r.Name;
       this.majorItemId = dol.Product__c;
       this.dealerOrderId = dol.Dealer_Order__c;
@@ -142,7 +167,9 @@ public without sharing class Partner_OutstandingBoatOrders {
 
   }
 
-  private static String buildOutstandingBoatOrders()
+  private static String buildOutstandingBoatOrders(
+    Boolean allowDraft
+  )
   {
     Id boatRtId = LGND_Constants.productRtId_Boat;
     Set<Id> matRecordTypes = new Set<Id>{
@@ -150,7 +177,11 @@ public without sharing class Partner_OutstandingBoatOrders {
       LGND_Constants.productRtId_Part,
       LGND_Constants.productRtId_TrollingMotor
     };
-    List<String> ignoreStages = new List<String>{'Draft', 'Delivered', 'Closed Lost'};
+    List<String> ignoreStages = new List<String>{ 'Delivered', 'Closed Lost'};
+    if( !allowDraft )
+    {
+      ignoreStages.add('Draft');
+    }
     User cu = [SELECT Id, AccountId FROM User WHERE Id = :UserInfo.getUserId() ];
     Map<Id, Dealer_Order_Line__c> erpId_dol_map = new Map<id, Dealer_Order_Line__c>();
 
@@ -204,10 +235,16 @@ public without sharing class Partner_OutstandingBoatOrders {
     return JSON.serialize( result );
   }
 
-  private static String buildOutstandingTrailerOrders()
+  private static String buildOutstandingTrailerOrders(
+    Boolean allowDraft
+  )
   {
     Id trailerRtId = LGND_Constants.productRtId_Trailer;
-    List<String> ignoreStages = new List<String>{'Draft', 'Delivered', 'Closed Lost'};
+    List<String> ignoreStages = new List<String>{ 'Delivered', 'Closed Lost'};
+    if( !allowDraft )
+    {
+      ignoreStages.add('Draft');
+    }
     User cu = [SELECT Id, AccountId FROM User WHERE Id = :UserInfo.getUserId() ];
     OrderLine[] result = new List<OrderLine>();
     for( Dealer_Order_Line__c dol : [SELECT Id,

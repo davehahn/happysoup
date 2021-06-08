@@ -25,10 +25,10 @@
     spinner.toggle();
     helper.init( component )
     .then(
-      $A.getCallback( (isFactoryStore) => {
-        console.log( `Is Factory Store = ${isFactoryStore}`);
-        let steps = isFactoryStore ? factorySteps : partnerSteps;
-        component.set('v.isFactoryStore', isFactoryStore );
+      $A.getCallback( (result) => {
+        let steps = result.isFactoryStore ? factorySteps : partnerSteps;
+        component.set('v.isFactoryStore', result.isFactoryStore );
+        component.set('v.allowDraftBookingOrders', result.allowDraftBookingOrders );
         component.set('v.reservationSteps', steps);
         component.set('v.currentStep', steps[0] );
         return helper.fetchRecords( component );
@@ -36,8 +36,8 @@
     )
     .then(
       $A.getCallback( (result) => {
+        console.log( JSON.parse(JSON.stringify(result)));
         component.set('v.allRecords', result );
-        console.log( JSON.parse( JSON.stringify( result ) ) );
         component.find('listSelector--Cmp').doInit();
       })
     )
@@ -56,7 +56,6 @@
   handleListChange: function( component, event, helper )
   {
     component.set('v.selectedList', event.getParam('listName') );
-    console.log( event.getParam('listName') );
     helper.filterResults( component );
   },
 
@@ -88,7 +87,6 @@
   handleFactoryReservation: function( component, event, helper )
   {
     const record = event.getSource().get('v.value');
-    console.log(JSON.parse(JSON.stringify(record)));
     LightningUtils.errorToast( 'Not yet Implemented' );
   },
 
@@ -136,9 +134,6 @@
     const promo = event.getSource().get('v.value'),
           spinner = component.find('spinner');
     let requiresDocuments = false;
-    console.log('SELECTED PROMO');
-    console.log( JSON.parse(JSON.stringify(promo)));
-    console.log(Object.keys(promo.Promotion__r));
 
     if( Object.keys(promo.Promotion__r).indexOf('Document_Requirements__c') >= 0 &&
         promo.Promotion__r.Document_Requirements__c !== undefined &&
