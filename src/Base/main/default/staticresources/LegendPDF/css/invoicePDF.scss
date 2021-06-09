@@ -97,8 +97,8 @@
       display:inline-block;
 
       p {
-        color:#666;
-        font-size: 10px;
+        color: #000; /* #666; */
+        font-size: 12px;
         line-height: 14px;
         span {
           color:inherit;
@@ -150,7 +150,7 @@
 
     & > p {
       padding-left: 6px;
-      color: #777;
+      color: #000;
       position:relative;
       top:50px;
       font-size: 14px;
@@ -166,10 +166,10 @@
         & + .company_name {
           top: -15px;
           font-size: 16px;
-          color: #777;
+          color: #000;
           line-height: 20px;
           & + .company_address {
-            color: #777;
+            color: #000;
             font-size: 10px;
             line-height: 14px;
             margin-bottom: 0px;
@@ -328,12 +328,12 @@
     width:95%;
     margin-right:5%;
     font-size:16px;
-    color: #777;
+    color: #000;
     line-height: 20px;
   }
 
   .buyer_address {
-    color:#777;
+    color:#000;
     font-size: 10px;
     line-height: 14px;
     margin-bottom:0px;
@@ -353,7 +353,7 @@
           & + td {
             width:45%;
             font-size:10px;
-            color:#777;
+            color:#000;
           }
         }
       }
@@ -368,7 +368,7 @@
     p {
       width:100%;
       text-align:center;
-      color:#777;
+      color:#000;
       font-size: 11px;
       margin-top: 14%;
       line-height:14px;
@@ -394,7 +394,7 @@
     line-height: 16px;
     font-size:12px;
     font-weight:bold;
-    color: #777;
+    color: #000;
     border-bottom: none;
   }
 }// /.invoice_body
@@ -408,7 +408,7 @@
   padding:0;
   p {
     font-size:9px;
-    color:#999;
+    color:#000;
     padding:0 10px;
     margin:0;
   }
@@ -422,7 +422,7 @@
     margin: 0 1%;
     border:1px solid #CCC;
     background: #f7f6f6;
-    color:#999;
+    color:#000;
     font-size: 10px;
     min-height:70px;
     p {
@@ -459,7 +459,7 @@
         padding:0 0 0 10px;
         line-height:14px;
         font-size: 11px;
-        color:#999;
+        color:#000;
         span {
           float:right;
           text-align:right;
@@ -500,14 +500,14 @@
       text-align:center;
       margin-top:10px;
       font-size:12px;
-      color: #777;
+      color: #000;
       border-bottom:none;
       & + p {
         width:100%;
         text-align:center;
         font-size:13px;
         font-weight:bold;
-        color:#777;
+        color:#000;
         border-bottom:none;
         margin-top:0;
       }
@@ -522,7 +522,7 @@
 
     p {
       font-size: 9px;
-      color: #777;
+      color: #000;
       &.details {
         padding: 3px 6px 0 6px;
         margin:0;
@@ -544,14 +544,14 @@
       & > p {
         font-size:10px;
         font-weight:bold;
-        color:#777;
+        color:#000;
         & + p {
           font-size:9px;
-          color:#777;
+          color:#000;
           & + p {
             margin-top:8px;
             font-size:9px;
-            color:#777;
+            color:#000;
             span {
               font-size:10px;
               font-weight:bold;
@@ -569,7 +569,7 @@
  .disclaimer {
     width:100%;
     font-size:9px;
-    color:#777;
+    color:#000;
     padding:0px 15px 10px 15px;
     border-bottom: 3px solid $blue;
   }
@@ -581,7 +581,7 @@
     width:100%;
     text-align:center;
     font-size:14px;
-    color:#777;
+    color:#000;
     line-height: 12px;
     height: 30px;
     margin-top:5px;
@@ -590,7 +590,7 @@
   .disclaimer {
     width:100%;
     font-size:9px;
-    color:#777;
+    color:#000;
     padding:0px 15px 10px 15px;
     border-bottom: 3px solid $blue;
   }
@@ -606,13 +606,13 @@
 
   .address p {
     font-size:10px;
-    color:#666;
+    color:#000;
     margin-top:0;
     border-right:1px solid #CCC;
   }
 
   .tax_numbers p {
-    color:#666;
+    color:#000;
     font-size: 9px;
     text-align:center;
     margin-top:0;
@@ -632,7 +632,7 @@
     font-size:9px;
     margin: 0px;
     padding: 0px 0px 0px 5px;
-    color:#444;
+    color:#000;
 
     &.odd {
       background: #f7f6f6;
@@ -680,10 +680,11 @@ table.itemsTable {
       line-height:16px;
 
       td {
-        color:#777;
+        color:#000;
+        border-bottom: 1px solid #333;
         font-size: 12px;
         font-weight:bold;
-        padding-bottom:0;
+        padding-bottom:5px;
         padding-top:0;
         & + td {
           padding-left:0;
@@ -703,9 +704,10 @@ table.itemsTable {
       // line-height:13px;
 
       td {
-        height:13px;
-        color:#444;
-        font-size:9px;
+        height:15px;
+        color:#000;
+        border-bottom: 1px solid #333;
+        font-size:10px;
         padding-left:8px;
         padding-bottom:0;
         padding-top:0;
@@ -829,11 +831,11 @@ table.itemsTable {
       }// td
 
       &.odd td {
-        background: #f7f6f6;
+        background: #FFF; /*  #f7f6f6; */
       }
 
       &.even td {
-        background: #e8e9ea;
+        background: #FFF; /* #e8e9ea; */
       }
 
       &.subTotal td {
@@ -857,7 +859,7 @@ table.itemsTable {
     tbody {
       tr {
         td {
-          color: #777;
+          color: #000;
           font-weight: bold;
           font-size: 13px;
 
@@ -950,7 +952,7 @@ table.costSummary {
       width:60%;
       text-align:right;
       font-size:13px;
-      color:#444;
+      color:#000;
 
       &.decrease {
         color:$blue;

@@ -1,5 +1,7 @@
 public with sharing class ERPInvoicePDF {
 
+  private final Application_RecordType.ERPOrderRTs recordTypes = new Application_RecordType().getERPOrderRecordTypes();
+
   public class PartLineItem {
     public Decimal quantity  {
         get {
@@ -818,15 +820,15 @@ public with sharing class ERPInvoicePDF {
 
   private void setupForRecordType()
   {
-    Id counterSaleRtId = gcConstants.idRtProjectCounterSale;
-    Id partnerPartOrder = gcConstants.idRtPartnerPartsOrder;
-    Id serviceRtId = gcConstants.idRtProjectService;
-    Id retailBoatSaleRtId = gcConstants.idRtProjectBoatSale;
-    Id partnerBoatSaleRtId = gcConstants.idRtProjectPartnerBoatSale;
-    Id manufacturingRtId = gcConstants.idRtProjectManufacturing;
-    Id warrantyRtId = gcConstants.idRtProjectWarranty;
-    Id tradeInRtId = gcConstants.idRtTradeIn;
-    Id fixedAssetRtId = gcConstants.idRtFixedAsset;
+    Id counterSaleRtId = recordTypes.getCounterSaleId(); // gcConstants.idRtProjectCounterSale;
+    Id partnerPartOrder = recordTypes.getPartnerPartsOrderId(); // gcConstants.idRtPartnerPartsOrder;
+    Id serviceRtId = recordTypes.getServiceWorkOrderId(); // gcConstants.idRtProjectService;
+    Id retailBoatSaleRtId = recordTypes.getRetailBoatSaleId(); // gcConstants.idRtProjectBoatSale;
+    Id partnerBoatSaleRtId = recordTypes.getPartnerBoatSaleId(); // gcConstants.idRtProjectPartnerBoatSale;
+    Id manufacturingRtId = recordTypes.getManufacturingId(); // gcConstants.idRtProjectManufacturing;
+    Id warrantyRtId = recordTypes.getWarrantyId(); // gcConstants.idRtProjectWarranty;
+    Id tradeInRtId = recordTypes.getTradeInId(); // gcConstants.idRtTradeIn;
+    Id fixedAssetRtId = recordTypes.getFixedAssetId(); // gcConstants.idRtFixedAsset;
     /*   Boat Sale    */
     if( this.erpOrder.RecordTypeId == retailBoatSaleRtId ||
         this.erpOrder.RecordTypeId == partnerBoatSaleRtId )
@@ -894,13 +896,16 @@ public with sharing class ERPInvoicePDF {
     this.deliveryDate = erpOrder.Delivery_Date__c == null ? '' :
                         erpOrder.Delivery_Date__c.format('MMM dd, yyyy');
     this.invoiceDate = erpOrder.createdDate.format('MMM dd, yyyy');
-    if( this.erpOrder.RecordTypeId == gcConstants.idRtProjectPartnerBoatSale )
+    if( this.erpOrder.RecordTypeId == recordTypes.getPartnerBoatSaleId() )
+    {
       this.invoiceDate = erpOrder.Delivery_Date__c == null ? '' :
-                         erpOrder.Delivery_Date__c.format('MMM dd, yyyy');
+        erpOrder.Delivery_Date__c.format('MMM dd, yyyy');
+    }
 
-    if( this.erpOrder.RecordTypeId == gcConstants.idRtProjectCounterSale ||
-        this.erpOrder.RecordTypeId == gcConstants.idRtPartnerPartsOrder ||
-        this.erpOrder.RecordTypeId == gcConstants.idRtProjectWarranty )
+    if( this.erpOrder.RecordTypeId == recordTypes.getCounterSaleId()  ||
+        this.erpOrder.RecordTypeId == recordTypes.getPartnerPartsOrderId() ||
+        this.erpOrder.RecordTypeId == recordTypes.getWarrantyId() ||
+        this.erpOrder.RecordTypeId == recordTypes.getTradeInId() )
     {
       this.invoiceDateLabel = 'Invoice Date';
       if( this.erpOrder.Delivery_Date__c != null )
@@ -988,16 +993,25 @@ public with sharing class ERPInvoicePDF {
     fetchPayments();
     fetchReturnPayables();
     fetchProjectTasks();
-    if( this.erpOrder.RecordTypeId == gcConstants.idRtFixedAsset )
+    if( this.erpOrder.RecordTypeId == recordTypes.getFixedAssetId() )
       fetchFixedAsset();
     else
      fetchSerialNumber();
+
     partsTotal = 0;
     labourTotal = 0;
-    if( this.erpOrder.RecordTypeId == gcConstants.idRtProjectService)
+    if( this.erpOrder.RecordTypeId == recordTypes.getServiceWorkOrderId() ||
+      this.erpOrder.RecordTypeId == recordTypes.getTradeInId() )
     {
       this.showServiceDisclaimer = true;
-      fetchDisclaimers( 'Service Order' );
+      if( this.erpOrder.RecordTypeId == recordTypes.getServiceWorkOrderId() )
+      {
+        fetchDisclaimers('Service Order');
+      }
+      if( this.erpOrder.RecordTypeId == recordTypes.getTradeInId() )
+      {
+        fetchDisclaimers('Trade In');
+      }
     }
     if( this.erpOrder.RecordTypeId == gcConstants.idRtProjectWarranty &&
         this.erpOrder.Warranty_Type__c == 'Warranty' )
