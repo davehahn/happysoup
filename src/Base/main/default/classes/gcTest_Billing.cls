@@ -3,10 +3,10 @@ private class gcTest_Billing{
 
 	static testMethod void test1()
 	{
-        gcBilling.coverage();
+       // gcBilling.coverage();
         gcBilling_PDF.coverage();
         gcBillingLine.coverage();
-        gcBilling_Clone.coverage();
+       // gcBilling_Clone.coverage();
     }/*
 
     static testMethod void test2()
