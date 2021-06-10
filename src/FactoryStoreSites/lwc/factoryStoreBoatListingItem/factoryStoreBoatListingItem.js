@@ -7,6 +7,7 @@ import { NavigationMixin, CurrentPageReference } from 'lightning/navigation';
 import { fireEvent, registerListener, unregisterAllListeners } from 'c/pubsub';
 import { stringy, stripParentheses, rewriteMotorName, rewriteTrailerName, convertLength } from 'c/communitySharedUtils';
 import fetchStandardProducts from '@salesforce/apex/FactoryStore_InventoryController.fetchBoat';
+import fetchNewInStockCurrentBoats from '@salesforce/apex/FactoryStore_InventoryController.fetchNewInStockCurrentBoats';
 
 export default class FactoryStoreBoatListingItem extends NavigationMixin(LightningElement) {
  @api boat;
@@ -19,6 +20,8 @@ export default class FactoryStoreBoatListingItem extends NavigationMixin(Lightni
  overallLength;
  centerlineLength;
  packageLength;
+
+ currentStockQuantity;
 
 
  @wire(CurrentPageReference) pageRef;
@@ -66,6 +69,7 @@ export default class FactoryStoreBoatListingItem extends NavigationMixin(Lightni
   }
 
  	renderedCallback(){
+ 	  console.log(this.boat.Name, JSON.parse(JSON.stringify(this.boat)));
  	  this.boatName = stripParentheses(this.boat.Name);
  	  this.modelListingPhoto = 'background-image: url(' + this.boat.Default_Gallery_Image_Original__c + ')';
 		this.standardMotor = (this.boat.Standard_Motor__r) ? rewriteMotorName(this.boat.Standard_Motor__r.Name) : '';
@@ -79,6 +83,13 @@ export default class FactoryStoreBoatListingItem extends NavigationMixin(Lightni
 		if(this.boat.Package_Length__c){
 			this.packageLength = convertLength(this.boat.Package_Length__c);
  	 	}
+
+ 	 	const inStock = fetchNewInStockCurrentBoats({location: 'Whitefish', year: 2021, id: this.boat.Id})
+ 	 		.then( (result) => {
+ 	 		  this.currentStockQuantity = result.length;
+     	}).catch( e => {
+     	  console.log('fetch inStock error: ', e);
+      });
   }
 
 	get isDeckBoat(){

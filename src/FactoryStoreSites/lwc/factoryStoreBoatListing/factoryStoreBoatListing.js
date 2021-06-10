@@ -12,6 +12,7 @@ import fetchBoat from '@salesforce/apex/FactoryStore_InventoryController.fetchBo
 import { loadStyle, loadScript } from 'lightning/platformResourceLoader';
 
 export default class FactoryStoreBoatListing extends NavigationMixin(LightningElement) {
+  @api location;
 	@api seriesName;
 	@api seriesBlurb;
 	@api sectionWidth;
