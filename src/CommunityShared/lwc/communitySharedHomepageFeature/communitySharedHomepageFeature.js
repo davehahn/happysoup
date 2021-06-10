@@ -33,7 +33,7 @@ export default class CommunitySharedHomepageFeature extends LightningElement {
 		}
 	}
 
-	get getTarget(){
+	get target(){
 		return (this.linkTarget == 'Default') ? '' : '_blank';
  	}
 }

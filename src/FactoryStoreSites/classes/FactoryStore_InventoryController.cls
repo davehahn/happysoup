@@ -53,10 +53,11 @@ public with sharing class FactoryStore_InventoryController {
     }
 
     @AuraEnabled(Cacheable=true)
-    public static List<Sobject> fetchNewInStockCurrentBoats( String location, Decimal year )
+    public static List<Sobject> fetchNewInStockCurrentBoats( String location, Decimal year, String id )
     {
         String fromLocation = location;
         Decimal currentModelYear = year;
+        String modelId = id;
         List<Sobject> boats = new List<Sobject>();
         for( SObject b : [SELECT Id,
                                  Name,
@@ -65,6 +66,7 @@ public with sharing class FactoryStore_InventoryController {
                                  GMBLASERP__Product__r.Make__c
                           FROM GMBLASERP__Serial_Number__c
                           WHERE Location__c = :fromLocation
+                          AND GMBLASERP__Product__r.Id = :modelId
                           AND Product_Record_Type__c = 'Boat'
                           AND GMBLASERP__Product__r.Make__c = 'Legend'
                           AND Model_Year__c >= :currentModelYear
@@ -79,18 +81,21 @@ public with sharing class FactoryStore_InventoryController {
     }
 
     @AuraEnabled(Cacheable=true)
-    public static List<Sobject> fetchNewInStockNonCurrentBoats( String location, Decimal year )
+    public static List<Sobject> fetchNewInStockNonCurrentBoats( String location, Decimal year, String id )
     {
         String fromLocation = location;
         Decimal currentModelYear = year;
+        String modelId = id;
         List<Sobject> boats = new List<Sobject>();
         for( SObject b : [SELECT Id,
                                 Name,
                                 GMBLASERP__Product__r.Name,
                                 Model_Year__c,
-                                GMBLASERP__Product__r.Make__c
+                                GMBLASERP__Product__r.Make__c,
+                                GMBLASERP__Product__r.Id
                         FROM GMBLASERP__Serial_Number__c
                         WHERE Location__c = :fromLocation
+                        AND GMBLASERP__Product__r.Id = :modelId
                         AND Product_Record_Type__c = 'Boat'
                         AND GMBLASERP__Product__r.Make__c = 'Legend'
                         AND Model_Year__c < :currentModelYear
