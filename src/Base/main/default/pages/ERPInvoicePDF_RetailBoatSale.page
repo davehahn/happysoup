@@ -438,10 +438,10 @@
                     <apex:param value="{!trailer.AcctSeedERP__Quantity_per_Unit__c}" />
                   </apex:outputText>
                 </td>
-                <td class="w60">
+                <td class="w70">
                   <apex:outputText value="{!trailer.Product_Name__c}"/>
                 </td>
-                <td class="w35 right">
+                <td class="w20 right">
                   <apex:outputText value="{!IF(trailer.GMBLASERP__Total_Price__c != 0,' ${0, number, ###,###,###,##0.00}','Included')} ">
                     <apex:param value="{!trailer.GMBLASERP__Total_Price__c}"/>
                   </apex:outputText>
@@ -465,10 +465,10 @@
                         <apex:param value="{!trollingMotor.AcctSeedERP__Quantity_per_Unit__c}" />
                       </apex:outputText>
                     </td>
-                    <td class="w60">
+                    <td class="w70">
                       <apex:outputText value="{!trollingMotor.Product_Name__c}"/>
                     </td>
-                    <td class="w35 right">
+                    <td class="w20 right">
                       <apex:outputText value="{!IF(trollingMotor.GMBLASERP__Total_Price__c != 0,' ${0, number, ###,###,###,##0.00}','Included')} ">
                         <apex:param value="{!trollingMotor.GMBLASERP__Total_Price__c}"/>
                       </apex:outputText>
@@ -486,14 +486,14 @@
           <table class="itemsTable">
             <tbody>
             <apex:repeat value="{!oppAccList}" var="oppAcc">
-              <tr class="{!IF(MOD(rowCount,2)=0,'even','odd')}">
+              <tr class="{!IF(oppAcc.includedFeatures.size > 0, 'has-features', '')}">
                 <td class="w5">
                   <apex:outputText value="{!oppAcc.quantity}"/>
                 </td>
-                <td class="w60">
+                <td class="w70">
                   <apex:outputText value="{!oppAcc.description}"/>
                 </td>
-                <td class="w35 right">
+                <td class="w20 right">
                   <apex:outputText value="{!IF(oppAcc.price != 0,' ${0, number, ###,###,###,##0.00}','Included')} ">
                     <apex:param value="{!oppAcc.price}"/>
                   </apex:outputText>
@@ -503,17 +503,17 @@
               <apex:variable value="{!OptionsAcc + oppAcc.price}" var="OptionsAcc" />
               <apex:outputPanel layout="none" rendered="{!oppAcc.includedFeatures.size > 0}">
                 <apex:repeat value="{!oppAcc.includedFeatures}" var="feature">
-                  <tr class="{!IF(MOD(rowCount,2)=0,'even','odd')}">
+                  <tr class="feature-row">
                     <td class="w5">
 
                     </td>
-                    <td class="w60">
+                    <td class="w70">
                       <div style="display:inline-block; padding: 0 5px 0 10px;">
                         -
                       </div>
                       <apex:outputText value="{!feature.description}"/>
                     </td>
-                    <td class="w35 right">
+                    <td class="w20 right">
                       <apex:outputText value="{!IF(feature.price != 0,' ${0, number, ###,###,###,##0.00}','Included')} ">
                         <apex:param value="{!feature.price}"/>
                       </apex:outputText>
