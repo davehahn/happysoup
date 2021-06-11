@@ -882,6 +882,9 @@
                       <th scope="col">
                         Delivery Date
                       </th>
+                      <th scope="col">
+                        Reserved?
+                      </th>
                     </tr>
                   </thead>
                   <tbody>
@@ -906,6 +909,21 @@
                       </th>
                       <th scope="row">
                         {{this.DeliveryDate}}
+                      </th>
+                      <th scope="row">
+                        {{#if (isReserved this ) }}
+                        <span class="slds-icon_container slds-icon-action-approval slds-icon_container_circle">
+                          <svg aria-hidden="true" class="slds-icon slds-icon_xx-small">
+                              <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/action-sprite/svg/symbols.svg#approval' )}"></use>
+                          </svg>
+                        </span>
+                        {{else}}
+                        <span class="slds-icon_container slds-icon-action-close slds-icon_container_circle">
+                          <svg aria-hidden="true" class="slds-icon slds-icon_xx-small">
+                              <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/action-sprite/svg/symbols.svg#close' )}"></use>
+                          </svg>
+                        </span>
+                        {{/if}}
                       </th>
                     </tr>
                     {{/each}}
@@ -1086,6 +1104,10 @@
           retailERP: "{!URLFOR($Asset.SLDS, 'assets/icons/standard-sprite/svg/symbols.svg#person_account')}",
           opportunity: "{!URLFOR($Asset.SLDS, 'assets/icons/standard-sprite/svg/symbols.svg#opportunity')}"
         };
+
+        Handlebars.registerHelper('isReserved', function (value) {
+          return value.IsReserved === 'true';
+        });
 
         Handlebars.registerHelper( 'recordSize', function(records) {
           return new Handlebars.SafeString( records.length)

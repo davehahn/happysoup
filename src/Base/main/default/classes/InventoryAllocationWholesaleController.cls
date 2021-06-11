@@ -220,6 +220,7 @@ public without sharing class InventoryAllocationWholesaleController {
                                                              GMBLASERP__Lot__r.Name,
                                                              AcctSeedERP__Project__r.AcctSeed__Account__r.Name,
                                                              AcctSeedERP__Project__r.AcctSeedERP__Work_Order_Number__c,
+                                                             AcctSeedERP__Project__r.Reserved_For_Customer_Account__c,
                                                              AcctSeedERP__Project__r.Stage__c,
                                                              AcctSeedERP__Project__r.CreatedDate,
                                                              AcctSeedERP__Project__r.Arrival_Date__c,
@@ -256,6 +257,7 @@ public without sharing class InventoryAllocationWholesaleController {
       pData.put('Id', objMaterial.AcctSeedERP__Project__c );
       pData.put('AccountName', objMaterial.AcctSeedERP__Project__r.AcctSeed__Account__r.Name);
       pData.put('Name', objMaterial.AcctSeedERP__Project__r.AcctSeedERP__Work_Order_Number__c );
+      pData.put('IsReserved', objMaterial.AcctSeedERP__Project__r.Reserved_For_Customer_Account__c == null ? 'false' : 'true' );
       pData.put('Stage', objMaterial.AcctSeedERP__Project__r.Stage__c);
       pData.put('CreatedDate', objMaterial.AcctSeedERP__Project__r.CreatedDate.format('MMM d, yyyy') );
       pData.put('ArrivalDate', objMaterial.AcctSeedERP__Project__r.Arrival_Date__c != null ? objMaterial.AcctSeedERP__Project__r.Arrival_Date__c.format() : '');
