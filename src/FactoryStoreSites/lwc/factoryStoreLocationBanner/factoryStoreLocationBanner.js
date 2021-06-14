@@ -5,7 +5,7 @@
 import { LightningElement, api } from 'lwc';
 import { stringy, stripParentheses, rewriteMotorName, rewriteTrailerName, weeklyPayment, formatPrice, setWrapperClass } from 'c/communitySharedUtils';
 import Id from '@salesforce/community/Id';
-import fetchCommunityUrl from '@salesforce/apex/CommSharedURL_Controller.fetchCommunityUrl';
+import fetchCommunityDetails from '@salesforce/apex/CommSharedURL_Controller.fetchCommunityDetails';
 
 export default class FactoryStoreLocationBanner extends LightningElement {
 	@api headingLineOne;
@@ -44,13 +44,13 @@ export default class FactoryStoreLocationBanner extends LightningElement {
 	  this.wrapperClass = setWrapperClass(this.sectionWidth, 'locationBanner');
 //	  this.teaserOneHeading = this.teaserOneHeading;
 	  if(this.backgroundImage){
-			fetchCommunityUrl({communityId: Id})
+			fetchCommunityDetails({communityId: Id})
 				.then( (result) => {
 					console.log('fetch community url result: ', result);
-					this.backgroundReference = 'background-image: url("' + result + '/cms/delivery/media/' + this.backgroundImage + '")';
+					this.backgroundReference = 'background-image: url("' + result.siteUrl + '/cms/delivery/media/' + this.backgroundImage + '")';
 					console.log('allTeasers 1: ', this.allTeasers);
 					if(this.teaserOneHeading){
-					  const backgroundRef = 'background-image: url("' + result + '/cms/delivery/media/' + this.teaserOneBackground + '")';
+					  const backgroundRef = 'background-image: url("' + result.siteUrl + '/cms/delivery/media/' + this.teaserOneBackground + '")';
 					  const target = (this.teaserOneLinkTarget == 'Default') ? '' : '_blank';
 						this.allTeasers.push({
 							'heading': this.teaserOneHeading,
@@ -63,7 +63,7 @@ export default class FactoryStoreLocationBanner extends LightningElement {
      			}
 					console.log('allTeasers 2: ', this.allTeasers);
      			if(this.teaserTwoHeading){
-						const backgroundRef = 'background-image: url("' + result + '/cms/delivery/media/' + this.teaserTwoBackground + '")';
+						const backgroundRef = 'background-image: url("' + result.siteUrl + '/cms/delivery/media/' + this.teaserTwoBackground + '")';
 						const target = (this.teaserTwoLinkTarget == 'Default') ? '' : '_blank';
 						this.allTeasers.push({
 							'heading': this.teaserTwoHeading,
@@ -76,7 +76,7 @@ export default class FactoryStoreLocationBanner extends LightningElement {
 					}
 					console.log('allTeasers 3: ', this.allTeasers);
 					if(this.teaserThreeHeading){
-						const backgroundRef = 'background-image: url("' + result + '/cms/delivery/media/' + this.teaserThreeBackground + '")';
+						const backgroundRef = 'background-image: url("' + result.siteUrl + '/cms/delivery/media/' + this.teaserThreeBackground + '")';
 						const target = (this.teaserThreeLinkTarget == 'Default') ? '' : '_blank';
 						this.allTeasers.push({
 							'heading': this.teaserThreeHeading,

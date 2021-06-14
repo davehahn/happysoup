@@ -5,7 +5,7 @@
 import { LightningElement, api, wire } from 'lwc';
 import Id from '@salesforce/community/Id';
 import { NavigationMixin } from 'lightning/navigation';
-import fetchCommunityUrl from '@salesforce/apex/CommSharedURL_Controller.fetchCommunityUrl';
+import fetchCommunityDetails from '@salesforce/apex/CommSharedURL_Controller.fetchCommunityDetails';
 
 export default class CommunitySharedCompanyLogo extends NavigationMixin(LightningElement) {
 	@api companyLogo;
@@ -39,10 +39,10 @@ export default class CommunitySharedCompanyLogo extends NavigationMixin(Lightnin
 
 	renderedCallback(){
 		if(this.companyLogo){
-		  fetchCommunityUrl({communityId: Id})
+		  fetchCommunityDetails({communityId: Id})
 		  	.then( (result) => {
 		  	  console.log('fetch community url result: ', result);
-		  	  this.companyLogoImg = 'background-image: url("' + result + '/cms/delivery/media/' + this.companyLogo + '")';
+		  	  this.companyLogoImg = 'background-image: url("' + result.siteUrl + '/cms/delivery/media/' + this.companyLogo + '")';
 				 }).catch(e => {
 					 console.log('fetch community url error: ', e);
 				 });

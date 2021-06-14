@@ -4,7 +4,7 @@
 
 import { LightningElement, api, wire } from 'lwc';
 import Id from '@salesforce/community/Id';
-import fetchCommunityUrl from '@salesforce/apex/CommSharedURL_Controller.fetchCommunityUrl';
+import fetchCommunityDetails from '@salesforce/apex/CommSharedURL_Controller.fetchCommunityDetails';
 import { setWrapperClass } from 'c/communitySharedUtils';
 
 export default class CommunitySharedHomepageFeature extends LightningElement {
@@ -23,10 +23,10 @@ export default class CommunitySharedHomepageFeature extends LightningElement {
 	  this.wrapperClass = setWrapperClass(this.sectionWidth, 'featureCard');
 
 		if(this.featureThumb){
-		  fetchCommunityUrl({communityId: Id})
+		  fetchCommunityDetails({communityId: Id})
 				.then( (result) => {
 					console.log('fetch community url result: ', result);
-					this.thumbnail = 'background-image: url("' + result + '/cms/delivery/media/' + this.featureThumb + '")';
+					this.thumbnail = 'background-image: url("' + result.siteUrl + '/cms/delivery/media/' + this.featureThumb + '")';
 				 }).catch(e => {
 					 console.log('fetch community url error: ', e);
 				 });

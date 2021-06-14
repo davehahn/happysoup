@@ -5,12 +5,13 @@
 import { LightningElement, api, wire } from 'lwc';
 import { NavigationMixin, CurrentPageReference } from 'lightning/navigation';
 import { fireEvent, registerListener, unregisterAllListeners } from 'c/pubsub';
-import { stringy, stripParentheses, rewriteMotorName, rewriteTrailerName, convertLength } from 'c/communitySharedUtils';
+import { stringy, stripParentheses, rewriteMotorName, rewriteTrailerName, convertLength, parseLocationName } from 'c/communitySharedUtils';
 import fetchStandardProducts from '@salesforce/apex/FactoryStore_InventoryController.fetchBoat';
 import fetchNewInStockCurrentBoats from '@salesforce/apex/FactoryStore_InventoryController.fetchNewInStockCurrentBoats';
 
 export default class FactoryStoreBoatListingItem extends NavigationMixin(LightningElement) {
  @api boat;
+ @api locationName;
 
  boatName;
  modelListingPhoto;
@@ -84,7 +85,7 @@ export default class FactoryStoreBoatListingItem extends NavigationMixin(Lightni
 			this.packageLength = convertLength(this.boat.Package_Length__c);
  	 	}
 
- 	 	const inStock = fetchNewInStockCurrentBoats({location: 'Whitefish', year: 2021, id: this.boat.Id})
+ 	 	const inStock = fetchNewInStockCurrentBoats({location: parseLocationName(this.locationName), year: 2021, id: this.boat.Id})
  	 		.then( (result) => {
  	 		  this.currentStockQuantity = result.length;
      	}).catch( e => {
