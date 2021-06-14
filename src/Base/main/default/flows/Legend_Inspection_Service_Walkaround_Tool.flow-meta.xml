@@ -42,8 +42,8 @@
     <actionCalls>
         <name>ErrorHandler_0</name>
         <label>ErrorHandler</label>
-        <locationX>776</locationX>
-        <locationY>2558</locationY>
+        <locationX>334</locationX>
+        <locationY>2614</locationY>
         <actionName>c:Flow_Toast</actionName>
         <actionType>component</actionType>
         <inputParameters>
@@ -81,8 +81,8 @@
     <actionCalls>
         <name>ErrorHandler_0_0</name>
         <label>ErrorHandler</label>
-        <locationX>776</locationX>
-        <locationY>3158</locationY>
+        <locationX>278</locationX>
+        <locationY>2964</locationY>
         <actionName>c:Flow_Toast</actionName>
         <actionType>component</actionType>
         <inputParameters>
@@ -100,7 +100,7 @@
         <inputParameters>
             <name>message</name>
             <value>
-                <elementReference>$Flow.FaultMessage</elementReference>
+                <stringValue>Invalid Email Address. The email was not sent to the customer.</stringValue>
             </value>
         </inputParameters>
         <inputParameters>
@@ -120,8 +120,8 @@
     <actionCalls>
         <name>ErrorHandler_0_0_0</name>
         <label>ErrorHandler</label>
-        <locationX>776</locationX>
-        <locationY>3758</locationY>
+        <locationX>762</locationX>
+        <locationY>3195</locationY>
         <actionName>c:Flow_Toast</actionName>
         <actionType>component</actionType>
         <inputParameters>
@@ -157,10 +157,10 @@
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </actionCalls>
     <actionCalls>
-        <name>ErrorHandler_0_0_0_0</name>
+        <name>ErrorHandler_0_0_0_0_0</name>
         <label>ErrorHandler</label>
-        <locationX>776</locationX>
-        <locationY>4358</locationY>
+        <locationX>1190</locationX>
+        <locationY>2423</locationY>
         <actionName>c:Flow_Toast</actionName>
         <actionType>component</actionType>
         <inputParameters>
@@ -194,14 +194,140 @@
             </value>
         </inputParameters>
         <storeOutputAutomatically>true</storeOutputAutomatically>
+    </actionCalls>
+    <actionCalls>
+        <name>ErrorHandler_0_0_0_0_0_0</name>
+        <label>ErrorHandler</label>
+        <locationX>120</locationX>
+        <locationY>1979</locationY>
+        <actionName>c:Flow_Toast</actionName>
+        <actionType>component</actionType>
+        <inputParameters>
+            <name>mode</name>
+            <value>
+                <stringValue>dismissible</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>duration</name>
+            <value>
+                <stringValue>5</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>message</name>
+            <value>
+                <elementReference>$Flow.FaultMessage</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>title</name>
+            <value>
+                <stringValue>Error</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>type</name>
+            <value>
+                <stringValue>error</stringValue>
+            </value>
+        </inputParameters>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </actionCalls>
+    <actionCalls>
+        <name>ErrorHandler_0_0_0_0_0_0_0</name>
+        <label>ErrorHandler</label>
+        <locationX>1040</locationX>
+        <locationY>670</locationY>
+        <actionName>c:Flow_Toast</actionName>
+        <actionType>component</actionType>
+        <inputParameters>
+            <name>mode</name>
+            <value>
+                <stringValue>dismissible</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>duration</name>
+            <value>
+                <stringValue>5</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>message</name>
+            <value>
+                <elementReference>$Flow.FaultMessage</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>title</name>
+            <value>
+                <stringValue>Error</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>type</name>
+            <value>
+                <stringValue>error</stringValue>
+            </value>
+        </inputParameters>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </actionCalls>
+    <actionCalls>
+        <description>Sends an email copy of the inspection to the customer.</description>
+        <name>Send_Email_Copy</name>
+        <label>Send Email Copy</label>
+        <locationX>760</locationX>
+        <locationY>3016</locationY>
+        <actionName>emailSimple</actionName>
+        <actionType>emailSimple</actionType>
+        <connector>
+            <targetReference>SuccessHandler_0_0</targetReference>
+        </connector>
+        <faultConnector>
+            <targetReference>ErrorHandler_0_0_0</targetReference>
+        </faultConnector>
+        <inputParameters>
+            <name>emailBody</name>
+            <value>
+                <elementReference>CustomerEmailBody</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailAddresses</name>
+            <value>
+                <elementReference>CustomerEmailAddress</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>sendRichBody</name>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>senderType</name>
+            <value>
+                <stringValue>CurrentUser</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailSubject</name>
+            <value>
+                <stringValue>Legend Service Summary </stringValue>
+            </value>
+        </inputParameters>
     </actionCalls>
     <actionCalls>
         <name>SuccessHandler_0</name>
         <label>SuccessHandler</label>
-        <locationX>776</locationX>
-        <locationY>4718</locationY>
+        <locationX>715</locationX>
+        <locationY>2752</locationY>
         <actionName>c:Flow_Toast</actionName>
         <actionType>component</actionType>
+        <connector>
+            <targetReference>Send_Customer_Email</targetReference>
+        </connector>
         <inputParameters>
             <name>mode</name>
             <value>
@@ -234,7 +360,97 @@
         </inputParameters>
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </actionCalls>
+    <actionCalls>
+        <name>SuccessHandler_0_0</name>
+        <label>SuccessHandler</label>
+        <locationX>891</locationX>
+        <locationY>3017</locationY>
+        <actionName>c:Flow_Toast</actionName>
+        <actionType>component</actionType>
+        <inputParameters>
+            <name>mode</name>
+            <value>
+                <stringValue>dismissible</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>duration</name>
+            <value>
+                <stringValue>5</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>message</name>
+            <value>
+                <stringValue>The email was successfully delivered to the customer.</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>title</name>
+            <value>
+                <stringValue>Success!</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>type</name>
+            <value>
+                <stringValue>success</stringValue>
+            </value>
+        </inputParameters>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </actionCalls>
     <apiVersion>51.0</apiVersion>
+    <assignments>
+        <name>Assign_ERP_Tasks_to_Var</name>
+        <label>Assign ERP Tasks to Var</label>
+        <locationX>100</locationX>
+        <locationY>2250</locationY>
+        <assignmentItems>
+            <assignToReference>varDisplayERPTasks</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>&lt;b&gt;Task Name: &lt;/b&gt;</stringValue>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>varDisplayERPTasks</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <elementReference>Loop_ERP_Order_Tasks.Name</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>varDisplayERPTasks</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>&lt;br&gt;</stringValue>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>varDisplayERPTasks</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>&lt;b&gt;Task Details: &lt;/b&gt;</stringValue>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>varDisplayERPTasks</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <elementReference>Loop_ERP_Order_Tasks.Complaint_dh__c</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>varDisplayERPTasks</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <stringValue>&lt;br&gt;</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Loop_ERP_Order_Tasks</targetReference>
+        </connector>
+    </assignments>
     <choices>
         <name>ERPOrderTaskNames</name>
         <choiceText>{!$Setup.ERP_Order_Settings__c.ERP_Order_Task_Names__c}</choiceText>
@@ -244,76 +460,26 @@
         </value>
     </choices>
     <decisions>
-        <name>AccountEmailUpdate</name>
-        <label>AccountEmailUpdate</label>
-        <locationX>776</locationX>
-        <locationY>2918</locationY>
+        <name>Account_Update</name>
+        <label>Account Update</label>
+        <locationX>1040</locationX>
+        <locationY>2226</locationY>
         <defaultConnector>
-            <targetReference>AccountPhoneUpdate</targetReference>
+            <targetReference>ERP_Update</targetReference>
         </defaultConnector>
         <defaultConnectorLabel>False</defaultConnectorLabel>
         <rules>
-            <name>True_AccountEmail</name>
+            <name>True_UpdateAccount</name>
             <conditionLogic>and</conditionLogic>
             <conditions>
-                <leftValueReference>NewCustomerEmail</leftValueReference>
-                <operator>NotEqualTo</operator>
+                <leftValueReference>Update_Account_Details</leftValueReference>
+                <operator>EqualTo</operator>
                 <rightValue>
-                    <stringValue/>
+                    <booleanValue>true</booleanValue>
                 </rightValue>
             </conditions>
             <connector>
-                <targetReference>Update_Account</targetReference>
-            </connector>
-            <label>True</label>
-        </rules>
-    </decisions>
-    <decisions>
-        <name>AccountMobileUpdate</name>
-        <label>AccountMobileUpdate</label>
-        <locationX>776</locationX>
-        <locationY>4118</locationY>
-        <defaultConnector>
-            <targetReference>SuccessHandler_0</targetReference>
-        </defaultConnector>
-        <defaultConnectorLabel>False</defaultConnectorLabel>
-        <rules>
-            <name>True_AccountMobile</name>
-            <conditionLogic>and</conditionLogic>
-            <conditions>
-                <leftValueReference>Update_Customer_Mobile.value</leftValueReference>
-                <operator>IsNull</operator>
-                <rightValue>
-                    <booleanValue>false</booleanValue>
-                </rightValue>
-            </conditions>
-            <connector>
-                <targetReference>Update_Account_0_0</targetReference>
-            </connector>
-            <label>True</label>
-        </rules>
-    </decisions>
-    <decisions>
-        <name>AccountPhoneUpdate</name>
-        <label>AccountPhoneUpdate</label>
-        <locationX>776</locationX>
-        <locationY>3518</locationY>
-        <defaultConnector>
-            <targetReference>AccountMobileUpdate</targetReference>
-        </defaultConnector>
-        <defaultConnectorLabel>False</defaultConnectorLabel>
-        <rules>
-            <name>True_AccountPhone</name>
-            <conditionLogic>and</conditionLogic>
-            <conditions>
-                <leftValueReference>Update_Customer_Phone.value</leftValueReference>
-                <operator>IsNull</operator>
-                <rightValue>
-                    <booleanValue>false</booleanValue>
-                </rightValue>
-            </conditions>
-            <connector>
-                <targetReference>Update_Account_0</targetReference>
+                <targetReference>Update_Account_Record</targetReference>
             </connector>
             <label>True</label>
         </rules>
@@ -346,10 +512,10 @@
     <decisions>
         <name>ERP_Update</name>
         <label>ERP Update</label>
-        <locationX>768</locationX>
-        <locationY>2329</locationY>
+        <locationX>788</locationX>
+        <locationY>2418</locationY>
         <defaultConnector>
-            <targetReference>AccountEmailUpdate</targetReference>
+            <targetReference>SuccessHandler_0</targetReference>
         </defaultConnector>
         <defaultConnectorLabel>False</defaultConnectorLabel>
         <rules>
@@ -394,6 +560,28 @@
         </rules>
     </decisions>
     <decisions>
+        <name>Send_Customer_Email</name>
+        <label>Send Customer Email</label>
+        <locationX>484</locationX>
+        <locationY>2755</locationY>
+        <defaultConnectorLabel>False</defaultConnectorLabel>
+        <rules>
+            <name>True_SendEmail</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Receive_Email_Copy</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Get_Updated_Email</targetReference>
+            </connector>
+            <label>True</label>
+        </rules>
+    </decisions>
+    <decisions>
         <name>Update_Tasks</name>
         <label>Update Tasks</label>
         <locationX>1329</locationX>
@@ -416,6 +604,31 @@
                 <targetReference>Update_Order_Task</targetReference>
             </connector>
             <label>True</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Validate_Email_Address</name>
+        <label>Validate Email Address</label>
+        <locationX>502</locationX>
+        <locationY>2960</locationY>
+        <defaultConnector>
+            <targetReference>ErrorHandler_0_0</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Invalid Email</defaultConnectorLabel>
+        <rules>
+            <name>Valid_Email</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>CustomerEmailAddress</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Send_Email_Copy</targetReference>
+            </connector>
+            <label>Valid Email</label>
         </rules>
     </decisions>
     <decisions>
@@ -489,6 +702,20 @@
     <interviewLabel>Legend Inspection - Service Walkaround Tool {!$Flow.CurrentDateTime}</interviewLabel>
     <label>Legend Inspection - Service Walkaround Tool</label>
     <loops>
+        <name>Loop_ERP_Order_Tasks</name>
+        <label>Loop ERP Order Tasks</label>
+        <locationX>427</locationX>
+        <locationY>2255</locationY>
+        <collectionReference>Get_ERP_Order_Tasks</collectionReference>
+        <iterationOrder>Asc</iterationOrder>
+        <nextValueConnector>
+            <targetReference>Assign_ERP_Tasks_to_Var</targetReference>
+        </nextValueConnector>
+        <noMoreValuesConnector>
+            <targetReference>Customer_Signature</targetReference>
+        </noMoreValuesConnector>
+    </loops>
+    <loops>
         <name>Loop_Order_Tasks</name>
         <label>Loop Order Tasks</label>
         <locationX>776</locationX>
@@ -529,6 +756,9 @@
         <connector>
             <targetReference>More_Additional_Tasks</targetReference>
         </connector>
+        <faultConnector>
+            <targetReference>ErrorHandler_0_0_0_0_0_0</targetReference>
+        </faultConnector>
         <inputAssignments>
             <field>AcctSeed__Project__c</field>
             <value>
@@ -742,6 +972,30 @@
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </recordLookups>
     <recordLookups>
+        <name>Get_ERP_Order_Tasks</name>
+        <label>Get ERP Order Tasks</label>
+        <locationX>667</locationX>
+        <locationY>2176</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Loop_ERP_Order_Tasks</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>AcctSeed__Project__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>recordId</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>false</getFirstRecordOnly>
+        <object>AcctSeed__Project_Task__c</object>
+        <queriedFields>Id</queriedFields>
+        <queriedFields>Name</queriedFields>
+        <queriedFields>Complaint_dh__c</queriedFields>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
         <name>Get_Nested_Motor_Serial_Numbers</name>
         <label>Get Nested Motor Serial Numbers</label>
         <locationX>776</locationX>
@@ -828,6 +1082,29 @@
         </outputAssignments>
     </recordLookups>
     <recordLookups>
+        <name>Get_Updated_Email</name>
+        <label>Get Updated Email</label>
+        <locationX>714</locationX>
+        <locationY>2870</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Validate_Email_Address</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>Get_ERP_Order.AcctSeed__Account__r.Id</elementReference>
+            </value>
+        </filters>
+        <object>Account</object>
+        <outputAssignments>
+            <assignToReference>CustomerEmailAddress</assignToReference>
+            <field>PersonEmail</field>
+        </outputAssignments>
+    </recordLookups>
+    <recordLookups>
         <name>GetERPOrderTasks</name>
         <label>GetERPOrderTasks</label>
         <locationX>776</locationX>
@@ -849,15 +1126,15 @@
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </recordLookups>
     <recordUpdates>
-        <name>Update_Account</name>
-        <label>Update Account</label>
-        <locationX>512</locationX>
-        <locationY>3038</locationY>
+        <name>Update_Account_Record</name>
+        <label>Update Account Record</label>
+        <locationX>1040</locationX>
+        <locationY>2423</locationY>
         <connector>
-            <targetReference>AccountPhoneUpdate</targetReference>
+            <targetReference>ERP_Update</targetReference>
         </connector>
         <faultConnector>
-            <targetReference>ErrorHandler_0_0</targetReference>
+            <targetReference>ErrorHandler_0_0_0_0_0</targetReference>
         </faultConnector>
         <filterLogic>and</filterLogic>
         <filters>
@@ -867,64 +1144,112 @@
                 <elementReference>Get_ERP_Order.AcctSeed__Account__r.Id</elementReference>
             </value>
         </filters>
+        <inputAssignments>
+            <field>BillingCity</field>
+            <value>
+                <elementReference>Update_Customer_Address.city</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>BillingCountry</field>
+            <value>
+                <elementReference>Update_Customer_Address.country</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>BillingPostalCode</field>
+            <value>
+                <elementReference>Update_Customer_Address.postalCode</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>BillingState</field>
+            <value>
+                <elementReference>Update_Customer_Address.province</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>BillingStreet</field>
+            <value>
+                <elementReference>Update_Customer_Address.street</elementReference>
+            </value>
+        </inputAssignments>
         <inputAssignments>
             <field>PersonEmail</field>
             <value>
                 <elementReference>Update_Customer_Email.value</elementReference>
             </value>
         </inputAssignments>
-        <object>Account</object>
-    </recordUpdates>
-    <recordUpdates>
-        <name>Update_Account_0</name>
-        <label>Update Account</label>
-        <locationX>512</locationX>
-        <locationY>3638</locationY>
-        <connector>
-            <targetReference>AccountMobileUpdate</targetReference>
-        </connector>
-        <faultConnector>
-            <targetReference>ErrorHandler_0_0_0</targetReference>
-        </faultConnector>
-        <filterLogic>and</filterLogic>
-        <filters>
-            <field>Id</field>
-            <operator>EqualTo</operator>
+        <inputAssignments>
+            <field>PersonMobilePhone</field>
             <value>
-                <elementReference>Get_ERP_Order.AcctSeed__Account__r.Id</elementReference>
+                <elementReference>Update_Customer_Mobile.value</elementReference>
             </value>
-        </filters>
+        </inputAssignments>
+        <inputAssignments>
+            <field>PersonOtherCity</field>
+            <value>
+                <elementReference>Update_Customer_CottageAddress.city</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>PersonOtherCountry</field>
+            <value>
+                <elementReference>Update_Customer_CottageAddress.country</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>PersonOtherPostalCode</field>
+            <value>
+                <elementReference>Update_Customer_CottageAddress.postalCode</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>PersonOtherState</field>
+            <value>
+                <elementReference>Update_Customer_CottageAddress.province</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>PersonOtherStreet</field>
+            <value>
+                <elementReference>Update_Customer_CottageAddress.street</elementReference>
+            </value>
+        </inputAssignments>
         <inputAssignments>
             <field>Phone</field>
             <value>
                 <elementReference>Update_Customer_Phone.value</elementReference>
             </value>
         </inputAssignments>
-        <object>Account</object>
-    </recordUpdates>
-    <recordUpdates>
-        <name>Update_Account_0_0</name>
-        <label>Update Account</label>
-        <locationX>512</locationX>
-        <locationY>4238</locationY>
-        <connector>
-            <targetReference>SuccessHandler_0</targetReference>
-        </connector>
-        <faultConnector>
-            <targetReference>ErrorHandler_0_0_0_0</targetReference>
-        </faultConnector>
-        <filterLogic>and</filterLogic>
-        <filters>
-            <field>Id</field>
-            <operator>EqualTo</operator>
-            <value>
-                <elementReference>Get_ERP_Order.AcctSeed__Account__r.Id</elementReference>
-            </value>
-        </filters>
         <inputAssignments>
-            <field>PersonMobilePhone</field>
+            <field>ShippingCity</field>
             <value>
-                <elementReference>Update_Customer_Mobile.value</elementReference>
+                <elementReference>Update_Customer_Address.city</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>ShippingCountry</field>
+            <value>
+                <elementReference>Update_Customer_Address.country</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>ShippingPostalCode</field>
+            <value>
+                <elementReference>Update_Customer_Address.postalCode</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>ShippingState</field>
+            <value>
+                <elementReference>Update_Customer_Address.province</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>ShippingStreet</field>
+            <value>
+                <elementReference>Update_Customer_Address.street</elementReference>
             </value>
         </inputAssignments>
         <object>Account</object>
@@ -935,7 +1260,7 @@
         <locationX>512</locationX>
         <locationY>2438</locationY>
         <connector>
-            <targetReference>AccountEmailUpdate</targetReference>
+            <targetReference>SuccessHandler_0</targetReference>
         </connector>
         <faultConnector>
             <targetReference>ErrorHandler_0</targetReference>
@@ -964,6 +1289,9 @@
         <connector>
             <targetReference>Loop_Order_Tasks</targetReference>
         </connector>
+        <faultConnector>
+            <targetReference>ErrorHandler_0_0_0_0_0_0_0</targetReference>
+        </faultConnector>
         <filterLogic>and</filterLogic>
         <filters>
             <field>Id</field>
@@ -976,6 +1304,12 @@
             <field>Complaint_dh__c</field>
             <value>
                 <elementReference>Update_Complaint</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Name</field>
+            <value>
+                <elementReference>Update_Task_Name</elementReference>
             </value>
         </inputAssignments>
         <object>AcctSeed__Project_Task__c</object>
@@ -1302,6 +1636,43 @@
             <isRequired>false</isRequired>
         </fields>
         <fields>
+            <name>Account_Overview_Section2</name>
+            <fieldType>RegionContainer</fieldType>
+            <fields>
+                <name>Account_Overview_Section2_Column1</name>
+                <fieldType>Region</fieldType>
+                <fields>
+                    <name>Customer_HomeAddress</name>
+                    <fieldText>&lt;p&gt;&lt;b style=&quot;font-family: verdana;&quot;&gt;Customer Home Address:&lt;/b&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot;font-family: verdana;&quot;&gt;{!Get_ERP_Order.AcctSeed__Account__r.BillingStreet}&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot;font-family: verdana; background-color: rgb(255, 255, 255); color: rgb(62, 62, 60);&quot;&gt;{!Get_ERP_Order.AcctSeed__Account__r.BillingCity} {!Get_ERP_Order.AcctSeed__Account__r.BillingState} {!Get_ERP_Order.AcctSeed__Account__r.BillingPostalCode}&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot;font-family: verdana; background-color: rgb(255, 255, 255); color: rgb(62, 62, 60);&quot;&gt;{!Get_ERP_Order.AcctSeed__Account__r.BillingCountry}&lt;/span&gt;&lt;/p&gt;</fieldText>
+                    <fieldType>DisplayText</fieldType>
+                </fields>
+                <inputParameters>
+                    <name>width</name>
+                    <value>
+                        <stringValue>6</stringValue>
+                    </value>
+                </inputParameters>
+                <isRequired>false</isRequired>
+            </fields>
+            <fields>
+                <name>Account_Overview_Section2_Column2</name>
+                <fieldType>Region</fieldType>
+                <fields>
+                    <name>Customer_CottageAddress</name>
+                    <fieldText>&lt;p&gt;&lt;b style=&quot;font-family: verdana;&quot;&gt;Customer Cottage Address:&lt;/b&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot;font-family: verdana;&quot;&gt;{!Get_ERP_Order.AcctSeed__Account__r.PersonOtherStreet}&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot;font-family: verdana; background-color: rgb(255, 255, 255);&quot;&gt;{!Get_ERP_Order.AcctSeed__Account__r.PersonOtherCity} {!Get_ERP_Order.AcctSeed__Account__r.PersonOtherState} {!Get_ERP_Order.AcctSeed__Account__r.PersonOtherPostalCode}&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot;font-family: verdana; background-color: rgb(255, 255, 255);&quot;&gt;{!Get_ERP_Order.AcctSeed__Account__r.PersonOtherCountry}&lt;/span&gt;&lt;/p&gt;</fieldText>
+                    <fieldType>DisplayText</fieldType>
+                </fields>
+                <inputParameters>
+                    <name>width</name>
+                    <value>
+                        <stringValue>6</stringValue>
+                    </value>
+                </inputParameters>
+                <isRequired>false</isRequired>
+            </fields>
+            <isRequired>false</isRequired>
+        </fields>
+        <fields>
             <name>Update_Account_Details</name>
             <dataType>Boolean</dataType>
             <defaultValue>
@@ -1312,10 +1683,10 @@
             <isRequired>true</isRequired>
         </fields>
         <fields>
-            <name>Account_Overview_Section2</name>
+            <name>Account_Overview_Section3</name>
             <fieldType>RegionContainer</fieldType>
             <fields>
-                <name>Account_Overview_Section2_Column1</name>
+                <name>Account_Overview_Section3_Column1</name>
                 <fieldType>Region</fieldType>
                 <fields>
                     <name>Update_Customer_Email</name>
@@ -1351,7 +1722,7 @@
                 <isRequired>false</isRequired>
             </fields>
             <fields>
-                <name>Account_Overview_Section2_Column2</name>
+                <name>Account_Overview_Section3_Column2</name>
                 <fieldType>Region</fieldType>
                 <fields>
                     <name>Update_Customer_Phone</name>
@@ -1411,6 +1782,123 @@
                 </conditions>
             </visibilityRule>
         </fields>
+        <fields>
+            <name>Account_Overview_Section4</name>
+            <fieldType>RegionContainer</fieldType>
+            <fields>
+                <name>Account_Overview_Section4_Column1</name>
+                <fieldType>Region</fieldType>
+                <fields>
+                    <name>Update_Customer_Address</name>
+                    <extensionName>flowruntime:address</extensionName>
+                    <fieldType>ComponentInstance</fieldType>
+                    <inputParameters>
+                        <name>city</name>
+                        <value>
+                            <elementReference>Get_ERP_Order.AcctSeed__Account__r.BillingCity</elementReference>
+                        </value>
+                    </inputParameters>
+                    <inputParameters>
+                        <name>country</name>
+                        <value>
+                            <elementReference>Get_ERP_Order.AcctSeed__Account__r.BillingCountry</elementReference>
+                        </value>
+                    </inputParameters>
+                    <inputParameters>
+                        <name>postalCode</name>
+                        <value>
+                            <elementReference>Get_ERP_Order.AcctSeed__Account__r.BillingPostalCode</elementReference>
+                        </value>
+                    </inputParameters>
+                    <inputParameters>
+                        <name>province</name>
+                        <value>
+                            <elementReference>Get_ERP_Order.AcctSeed__Account__r.BillingState</elementReference>
+                        </value>
+                    </inputParameters>
+                    <inputParameters>
+                        <name>street</name>
+                        <value>
+                            <elementReference>Get_ERP_Order.AcctSeed__Account__r.BillingStreet</elementReference>
+                        </value>
+                    </inputParameters>
+                    <isRequired>true</isRequired>
+                    <storeOutputAutomatically>true</storeOutputAutomatically>
+                </fields>
+                <inputParameters>
+                    <name>width</name>
+                    <value>
+                        <stringValue>6</stringValue>
+                    </value>
+                </inputParameters>
+                <isRequired>false</isRequired>
+            </fields>
+            <fields>
+                <name>Account_Overview_Section4_Column2</name>
+                <fieldType>Region</fieldType>
+                <fields>
+                    <name>Update_Customer_CottageAddress</name>
+                    <extensionName>flowruntime:address</extensionName>
+                    <fieldType>ComponentInstance</fieldType>
+                    <inputParameters>
+                        <name>addressLabel</name>
+                        <value>
+                            <stringValue>Cottage Address</stringValue>
+                        </value>
+                    </inputParameters>
+                    <inputParameters>
+                        <name>city</name>
+                        <value>
+                            <elementReference>Get_ERP_Order.AcctSeed__Account__r.PersonOtherCity</elementReference>
+                        </value>
+                    </inputParameters>
+                    <inputParameters>
+                        <name>country</name>
+                        <value>
+                            <elementReference>Get_ERP_Order.AcctSeed__Account__r.PersonOtherCountry</elementReference>
+                        </value>
+                    </inputParameters>
+                    <inputParameters>
+                        <name>postalCode</name>
+                        <value>
+                            <elementReference>Get_ERP_Order.AcctSeed__Account__r.PersonOtherPostalCode</elementReference>
+                        </value>
+                    </inputParameters>
+                    <inputParameters>
+                        <name>province</name>
+                        <value>
+                            <elementReference>Get_ERP_Order.AcctSeed__Account__r.PersonOtherState</elementReference>
+                        </value>
+                    </inputParameters>
+                    <inputParameters>
+                        <name>street</name>
+                        <value>
+                            <elementReference>Get_ERP_Order.AcctSeed__Account__r.PersonOtherStreet</elementReference>
+                        </value>
+                    </inputParameters>
+                    <isRequired>true</isRequired>
+                    <storeOutputAutomatically>true</storeOutputAutomatically>
+                </fields>
+                <inputParameters>
+                    <name>width</name>
+                    <value>
+                        <stringValue>6</stringValue>
+                    </value>
+                </inputParameters>
+                <isRequired>false</isRequired>
+            </fields>
+            <isRequired>false</isRequired>
+            <visibilityRule>
+                <conditionLogic>and</conditionLogic>
+                <conditions>
+                    <leftValueReference>Update_Account_Details</leftValueReference>
+                    <operator>EqualTo</operator>
+                    <rightValue>
+                        <booleanValue>true</booleanValue>
+                    </rightValue>
+                </conditions>
+            </visibilityRule>
+        </fields>
         <showFooter>true</showFooter>
         <showHeader>false</showHeader>
     </screens>
@@ -1438,13 +1926,13 @@
     <screens>
         <name>Customer_Signature</name>
         <label>Customer Overview/Signature</label>
-        <locationX>776</locationX>
-        <locationY>2198</locationY>
+        <locationX>774</locationX>
+        <locationY>2257</locationY>
         <allowBack>false</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
         <connector>
-            <targetReference>ERP_Update</targetReference>
+            <targetReference>Account_Update</targetReference>
         </connector>
         <fields>
             <name>DisplayCustomerOverview</name>
@@ -1498,11 +1986,47 @@
                     <name>DisplayTrailerConditon</name>
                     <fieldText>&lt;p&gt;&lt;b style=&quot;font-family: verdana;&quot;&gt;Trailer Condition:&lt;/b&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot;font-family: verdana;&quot;&gt;{!Trailer_Condition}&lt;/span&gt;&lt;/p&gt;</fieldText>
                     <fieldType>DisplayText</fieldType>
+                    <visibilityRule>
+                        <conditionLogic>and</conditionLogic>
+                        <conditions>
+                            <leftValueReference>Trailer_Condition</leftValueReference>
+                            <operator>IsNull</operator>
+                            <rightValue>
+                                <booleanValue>false</booleanValue>
+                            </rightValue>
+                        </conditions>
+                    </visibilityRule>
                 </fields>
                 <inputParameters>
                     <name>width</name>
                     <value>
-                        <stringValue>12</stringValue>
+                        <stringValue>6</stringValue>
+                    </value>
+                </inputParameters>
+                <isRequired>false</isRequired>
+            </fields>
+            <fields>
+                <name>Customer_Signature_Section2_Column2</name>
+                <fieldType>Region</fieldType>
+                <fields>
+                    <name>DisplayNotesComplaints</name>
+                    <fieldText>&lt;p&gt;&lt;b style=&quot;font-family: verdana;&quot;&gt;Notes:&lt;/b&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot;font-family: verdana;&quot;&gt;{!Complaints_Notes}&lt;/span&gt;&lt;/p&gt;</fieldText>
+                    <fieldType>DisplayText</fieldType>
+                    <visibilityRule>
+                        <conditionLogic>and</conditionLogic>
+                        <conditions>
+                            <leftValueReference>Complaints_Notes</leftValueReference>
+                            <operator>IsNull</operator>
+                            <rightValue>
+                                <booleanValue>false</booleanValue>
+                            </rightValue>
+                        </conditions>
+                    </visibilityRule>
+                </fields>
+                <inputParameters>
+                    <name>width</name>
+                    <value>
+                        <stringValue>6</stringValue>
                     </value>
                 </inputParameters>
                 <isRequired>false</isRequired>
@@ -1516,14 +2040,25 @@
                 <name>Customer_Signature_Section3_Column1</name>
                 <fieldType>Region</fieldType>
                 <fields>
-                    <name>DisplayNotesComplaints</name>
-                    <fieldText>&lt;p&gt;&lt;b style=&quot;font-family: verdana;&quot;&gt;Notes:&lt;/b&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot;font-family: verdana;&quot;&gt;{!Complaints_Notes}&lt;/span&gt;&lt;/p&gt;</fieldText>
+                    <name>DisplayERPOrderTaskSummary</name>
+                    <fieldText>&lt;p&gt;{!varDisplayERPTasks}&lt;/p&gt;</fieldText>
                     <fieldType>DisplayText</fieldType>
                 </fields>
                 <inputParameters>
                     <name>width</name>
                     <value>
-                        <stringValue>12</stringValue>
+                        <stringValue>6</stringValue>
+                    </value>
+                </inputParameters>
+                <isRequired>false</isRequired>
+            </fields>
+            <fields>
+                <name>Customer_Signature_Section3_Column2</name>
+                <fieldType>Region</fieldType>
+                <inputParameters>
+                    <name>width</name>
+                    <value>
+                        <stringValue>6</stringValue>
                     </value>
                 </inputParameters>
                 <isRequired>false</isRequired>
@@ -1549,18 +2084,7 @@
                 <inputParameters>
                     <name>width</name>
                     <value>
-                        <stringValue>6</stringValue>
-                    </value>
-                </inputParameters>
-                <isRequired>false</isRequired>
-            </fields>
-            <fields>
-                <name>Customer_Signature_Section4_Column2</name>
-                <fieldType>Region</fieldType>
-                <inputParameters>
-                    <name>width</name>
-                    <value>
-                        <stringValue>6</stringValue>
+                        <stringValue>12</stringValue>
                     </value>
                 </inputParameters>
                 <isRequired>false</isRequired>
@@ -1572,21 +2096,9 @@
             <extensionName>BGSIGCAP:SignatureCapture</extensionName>
             <fieldType>ComponentInstance</fieldType>
             <inputParameters>
-                <name>enterMsg</name>
-                <value>
-                    <stringValue>Customer Signature</stringValue>
-                </value>
-            </inputParameters>
-            <inputParameters>
                 <name>fileName</name>
                 <value>
                     <stringValue>CustomerSignature.png</stringValue>
-                </value>
-            </inputParameters>
-            <inputParameters>
-                <name>startMsg</name>
-                <value>
-                    <stringValue>Customer Signature</stringValue>
                 </value>
             </inputParameters>
             <inputParameters>
@@ -1598,13 +2110,23 @@
             <isRequired>true</isRequired>
             <storeOutputAutomatically>true</storeOutputAutomatically>
         </fields>
+        <fields>
+            <name>Receive_Email_Copy</name>
+            <dataType>Boolean</dataType>
+            <defaultValue>
+                <booleanValue>false</booleanValue>
+            </defaultValue>
+            <fieldText>I&apos;d like to receive an email copy</fieldText>
+            <fieldType>InputField</fieldType>
+            <isRequired>true</isRequired>
+        </fields>
         <showFooter>true</showFooter>
         <showHeader>false</showHeader>
     </screens>
     <screens>
         <name>ERP_Order_Task_Overview</name>
         <label>ERP Order Task Overview</label>
-        <locationX>1338</locationX>
+        <locationX>1337</locationX>
         <locationY>1266</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
@@ -1688,6 +2210,26 @@
             <fields>
                 <name>ERP_Order_Task_Overview_Section2_Column2</name>
                 <fieldType>Region</fieldType>
+                <fields>
+                    <name>Update_Task_Name</name>
+                    <dataType>String</dataType>
+                    <defaultValue>
+                        <elementReference>Loop_Order_Tasks.Name</elementReference>
+                    </defaultValue>
+                    <fieldText>Update Task Name</fieldText>
+                    <fieldType>InputField</fieldType>
+                    <isRequired>false</isRequired>
+                    <visibilityRule>
+                        <conditionLogic>and</conditionLogic>
+                        <conditions>
+                            <leftValueReference>Update_ERP_Order_Task</leftValueReference>
+                            <operator>EqualTo</operator>
+                            <rightValue>
+                                <booleanValue>true</booleanValue>
+                            </rightValue>
+                        </conditions>
+                    </visibilityRule>
+                </fields>
                 <fields>
                     <name>Update_Complaint</name>
                     <defaultValue>
@@ -1962,7 +2504,7 @@
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
         <connector>
-            <targetReference>Customer_Signature</targetReference>
+            <targetReference>Get_ERP_Order_Tasks</targetReference>
         </connector>
         <fields>
             <name>DisplayUploadPicture</name>
@@ -1977,54 +2519,43 @@
                 <fieldType>Region</fieldType>
                 <fields>
                     <name>DisplayBoatPic</name>
-                    <fieldText>&lt;p&gt;{!BoatWireFramePicture}&lt;/p&gt;</fieldText>
+                    <fieldText>&lt;p style=&quot;text-align: center;&quot;&gt;{!BoatWireFramePicture}&lt;/p&gt;</fieldText>
                     <fieldType>DisplayText</fieldType>
                 </fields>
                 <inputParameters>
                     <name>width</name>
                     <value>
-                        <stringValue>6</stringValue>
-                    </value>
-                </inputParameters>
-                <isRequired>false</isRequired>
-            </fields>
-            <fields>
-                <name>Upload_Pictures_Section1_Column2</name>
-                <fieldType>Region</fieldType>
-                <fields>
-                    <name>UploadBoatPic</name>
-                    <extensionName>forceContent:fileUpload</extensionName>
-                    <fieldType>ComponentInstance</fieldType>
-                    <inputParameters>
-                        <name>label</name>
-                        <value>
-                            <stringValue>Upload Pictures</stringValue>
-                        </value>
-                    </inputParameters>
-                    <inputParameters>
-                        <name>multiple</name>
-                        <value>
-                            <booleanValue>true</booleanValue>
-                        </value>
-                    </inputParameters>
-                    <inputParameters>
-                        <name>recordId</name>
-                        <value>
-                            <elementReference>inspectionID</elementReference>
-                        </value>
-                    </inputParameters>
-                    <isRequired>true</isRequired>
-                    <storeOutputAutomatically>true</storeOutputAutomatically>
-                </fields>
-                <inputParameters>
-                    <name>width</name>
-                    <value>
-                        <stringValue>6</stringValue>
+                        <stringValue>12</stringValue>
                     </value>
                 </inputParameters>
                 <isRequired>false</isRequired>
             </fields>
             <isRequired>false</isRequired>
+        </fields>
+        <fields>
+            <name>UploadBoatPic</name>
+            <extensionName>forceContent:fileUpload</extensionName>
+            <fieldType>ComponentInstance</fieldType>
+            <inputParameters>
+                <name>label</name>
+                <value>
+                    <stringValue>Upload Pictures</stringValue>
+                </value>
+            </inputParameters>
+            <inputParameters>
+                <name>multiple</name>
+                <value>
+                    <booleanValue>true</booleanValue>
+                </value>
+            </inputParameters>
+            <inputParameters>
+                <name>recordId</name>
+                <value>
+                    <elementReference>inspectionID</elementReference>
+                </value>
+            </inputParameters>
+            <isRequired>true</isRequired>
+            <storeOutputAutomatically>true</storeOutputAutomatically>
         </fields>
         <showFooter>true</showFooter>
         <showHeader>false</showHeader>
@@ -2043,6 +2574,11 @@
         <text>&lt;img src=&quot;https://salesforce-image-gallery.s3.amazonaws.com/Product2/2021/6/V-Hull+Photograph+Locations.png&quot;&gt;</text>
     </textTemplates>
     <textTemplates>
+        <name>CustomerEmailBody</name>
+        <isViewedAsPlainText>false</isViewedAsPlainText>
+        <text>&lt;p&gt;{!DisplaySummary1}&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;{!DisplaySummary2}&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;{!DisplayTrailerConditon}&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;{!DisplayNotesComplaints}&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;{!DisplayERPOrderTaskSummary}&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;</text>
+    </textTemplates>
+    <textTemplates>
         <name>GalleryImage</name>
         <isViewedAsPlainText>true</isViewedAsPlainText>
         <text>&lt;img src=&quot;{!Get_ERP_Order.Serial_Number__r.GMBLASERP__Product__r.Default_Gallery_Image__c}&quot;&gt;</text>
@@ -2057,6 +2593,13 @@
         <isViewedAsPlainText>true</isViewedAsPlainText>
         <text>{!Get_ERP_Order.AcctSeed__Account__r.FirstName} {!Get_ERP_Order.AcctSeed__Account__r.LastName} - Service WalkAround - {!Today}</text>
     </textTemplates>
+    <variables>
+        <name>CustomerEmailAddress</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
     <variables>
         <name>inspectionID</name>
         <dataType>String</dataType>
@@ -2073,6 +2616,13 @@
     </variables>
     <variables>
         <name>ServiceWalkaroundRecordTypeID</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>varDisplayERPTasks</name>
         <dataType>String</dataType>
         <isCollection>false</isCollection>
         <isInput>false</isInput>
