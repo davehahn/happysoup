@@ -62,6 +62,7 @@ input.dateSelector{
     var isInternal = {!AcctSeed__Project__c.AcctSeed__Account__r.Is_Internal__c};
     var paymentMethods = [];
     var currentTheme = "{!$User.UITheme}";
+    console.log(`%cCurrent Theme = ${ currentTheme} `, 'font-size:2rem;color:green;');
     var idDefaultWarehouse = '{!IF(idDefaultWarehouse == null,AcctSeed__Project__c.GMBLASERP__Warehouse__c,idDefaultWarehouse)}';
     $j(document).ready(function()
     {
@@ -1249,8 +1250,8 @@ input.dateSelector{
                         var myHTML = '';
                         if({!$ObjectType.AcctSeed__Project_Task__c.updateable})
                         {
-                            if(currentTheme == 'Theme4d')
-                                myHTML += '';//'<span class="link" onclick="createLighteningNavigation(\''+ui.rowData.idProjectTask+'\',\'edit\');">edit</span>';
+                            if(currentTheme == 'Theme4u')
+                                myHTML += '<span class="link" onclick="createLighteningNavigation(\''+ui.rowData.idProjectTask+'\',\'edit\');">edit</span>';
                             else
                                 myHTML += '<a href=\"/'+ ui.rowData.idProjectTask+'/e?retURL=%2F{!Id}\" target=\"_self\">edit</a>';
                         }
@@ -1272,7 +1273,8 @@ input.dateSelector{
                     {
                         if(ui.rowData.isTotal || !ui.rowData.idProjectTask) return;
                         if({!$ObjectType.AcctSeed__Project_Task__c.accessible})
-                            return '<a href=\"/'+ ui.rowData.idProjectTask+'\" target=\"_blank\">'+ui.rowData.projectTaskName+'</a>';
+                            return '<span class="link" onclick="createLighteningNavigation(\''+ui.rowData.idProjectTask+'\',\'view\');">'+ui.rowData.projectTaskName+'</span>';
+                            //return '<a href=\"/'+ ui.rowData.idProjectTask+'\" target=\"_blank\">'+ui.rowData.projectTaskName+'</a>';
                         return ui.rowData.projectTaskName;
                     }
                 });
@@ -2062,14 +2064,14 @@ input.dateSelector{
                         var myHTML = '';
                         if({!$ObjectType.AcctSeedERP__Material__c.updateable})
                         {
-                            if(currentTheme == 'Theme4d')
-                                myHTML += '';//<span class="link" onclick="createLighteningNavigation(\''+ui.rowData.idMaterial+'\',\'edit\');">edit</span>';
+                            if(currentTheme == 'Theme4u')
+                                myHTML += '<span class="link" onclick="createLighteningNavigation(\''+ui.rowData.idMaterial+'\',\'edit\');">edit</span>';
                             else
                                 myHTML += '<a href=\"/'+ ui.rowData.idMaterial+'/e?retURL=%2F{!Id}\" target=\"_self\">edit</a>';
                         }
                         if({!$ObjectType.AcctSeedERP__Material__c.accessible})
                         {
-                            if(currentTheme == 'Theme4d')
+                            if(currentTheme == 'Theme4d' || currentTheme == 'Theme4u')
                                 myHTML += '&nbsp;&nbsp;<span class="link" onclick="createLighteningNavigation(\''+ui.rowData.idMaterial+'\',\'view\');">view</span>';
                             else
                                 myHTML += '&nbsp;&nbsp;<a href=\"/'+ ui.rowData.idMaterial+'\" target=\"_blank\">view</a>';
