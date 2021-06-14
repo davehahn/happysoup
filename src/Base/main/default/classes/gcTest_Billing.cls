@@ -4,8 +4,8 @@ private class gcTest_Billing{
 	static testMethod void test1()
 	{
        // gcBilling.coverage();
-        gcBilling_PDF.coverage();
-        gcBillingLine.coverage();
+        //gcBilling_PDF.coverage();
+        //gcBillingLine.coverage();
        // gcBilling_Clone.coverage();
     }/*
 
