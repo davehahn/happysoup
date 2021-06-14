@@ -181,6 +181,17 @@ const convertLength = ( value, truncateLengthTrailingZero = true) => {
   return '<strong>' + newFeet + newInches + '</strong>';
 }
 
+const parseLocationName = (locationName) => {
+	let name = locationName.replace('Legend Boats ', '');
+	if(name === 'Sudbury'){
+		name = 'Whitefish';
+	}
+	if((name.toLowerCase() === 'sainte marthe sur le lac') || (name.toLowerCase() === 'ste-marthe-sur-le-lac')){
+		name = 'Montreal';
+	}
+	return name;
+}
+
 export {
 	getTestimonials,
 	getTestUser,
@@ -195,5 +206,6 @@ export {
 	decodeHTML,
 	gen8DigitId,
 	setWrapperClass,
-	convertLength
+	convertLength,
+	parseLocationName
 }

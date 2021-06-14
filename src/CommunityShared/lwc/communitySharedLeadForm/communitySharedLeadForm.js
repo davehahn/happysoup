@@ -4,6 +4,8 @@
 
 import { LightningElement, wire, api } from 'lwc';
 import { CurrentPageReference, NavigationMixin } from 'lightning/navigation';
+import Id from '@salesforce/community/Id';
+import fetchCommunityDetails from '@salesforce/apex/CommSharedURL_Controller.fetchCommunityDetails';
 import insertLead from '@salesforce/apex/CommSharedLeadForm_Controller.insertLead';
 import LeadForm_FirstName from '@salesforce/label/c.LeadForm_FirstName';
 import LeadForm_LastName from '@salesforce/label/c.LeadForm_LastName';
@@ -29,11 +31,11 @@ export default class CommunitySharedLeadForm extends NavigationMixin(LightningEl
   @api collectNotes;
   @api collectNewsletterOptin;
   @api sectionWidth;
-  @api location;
 
   @api boatModelId;
 
   emailPrefill;
+  locationName;
 
 	wrapperClass = 'leadFormWrapper';
   showForm = true;
@@ -59,6 +61,19 @@ export default class CommunitySharedLeadForm extends NavigationMixin(LightningEl
     	  this.boatModelId = currentPageReference.state.c__recordId;
      }
   }
+
+  @wire( fetchCommunityDetails, {communityId: Id} )
+		wiredFetchCommunityDetails( { error, data } )
+		{
+			if( data )
+			{
+				this.locationName = data.name;
+			}
+			else if( error )
+			{
+				console.log('fetch community error: ', error);
+			}
+		}
 
 	renderedCallback(){
 		this.wrapperClass = setWrapperClass(this.sectionWidth, 'leadFormWrapper');
@@ -97,7 +112,7 @@ export default class CommunitySharedLeadForm extends NavigationMixin(LightningEl
  	}
 
  	formatLeadObject(){
- 	  console.log('get data!');
+// 	  console.log('get data!');
  	  const data = {
  	    FirstName: (this.template.querySelector('[data-id="FirstName"]')) ? this.template.querySelector('[data-id="FirstName"]').value : '',
 			LastName: (this.template.querySelector('[data-id="LastName"]')) ? this.template.querySelector('[data-id="LastName"]').value : '',
@@ -115,9 +130,9 @@ export default class CommunitySharedLeadForm extends NavigationMixin(LightningEl
 			hubspot_subscribe_legend_newsletter__c: (this.template.querySelector('[data-id="Newsletter"]')) ? ((this.template.querySelector('[data-id="Newsletter"]').checked) ? 'Yes' : 'No') : 'No',
 			Preferred_Language__c: (renderEN) ? 'English' : 'French',
 			Marketing_Cloud_Notes__c: (this.template.querySelector('[data-id="Notes"]')) ? this.template.querySelector('[data-id="Notes"]').value : '',
-			LeadSource: this.location + ' Factory Store'
+			LeadSource: this.locationName + ' Factory Store'
     }
-    console.log('data: ', data);
+//    console.log('data: ', data);
  	  return data;
   }
 

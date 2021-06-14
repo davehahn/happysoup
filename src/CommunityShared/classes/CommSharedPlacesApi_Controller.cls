@@ -9,8 +9,8 @@ public with sharing class CommSharedPlacesApi_Controller {
     {
         GoogleAPI.PlacesMatrix gPlacesMatrix = new GoogleAPI.PlacesMatrix(input, inputType, fields);
         GoogleAPI.GooglePlacesSearch gpSearch = gPlacesMatrix.execute();
-        //System.debug('TIM gpSearch: ' + gpSearch);
-        //System.debug('place_id: ' + gpSearch.candidates[0].place_id);
+//        System.debug('TIM gpSearch: ' + gpSearch);
+//        System.debug('place_id: ' + gpSearch.candidates[0].place_id);
 
         GoogleAPI.PlacesDetailsMatrix gPlacesDetailsMatrix = new GoogleAPI.PlacesDetailsMatrix(gpSearch.candidates[0].place_id);
         GoogleAPI.GooglePlacesDetails gpResult = gPlacesDetailsMatrix.execute();

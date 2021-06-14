@@ -5,13 +5,14 @@
 import { LightningElement, api, wire } from 'lwc';
 import { loadStyle, loadScript } from 'lightning/platformResourceLoader';
 import { setWrapperClass } from 'c/communitySharedUtils';
+import Id from '@salesforce/community/Id';
+import fetchCommunityDetails from '@salesforce/apex/CommSharedURL_Controller.fetchCommunityDetails';
 import fetchPlacesApiResult from '@salesforce/apex/CommSharedPlacesApi_Controller.fetchPlacesApiResult';
 import fetchDistanceApiResult from '@salesforce/apex/CommSharedPlacesApi_Controller.fetchDistanceApiResult';
 
 
 export default class FactoryStoreHoursAndLocation extends LightningElement {
 
-	@api storeLocation;
 	@api layout;
 	@api sectionWidth;
 
@@ -38,23 +39,35 @@ export default class FactoryStoreHoursAndLocation extends LightningElement {
 	@api zoomLevel;
 
 	gpResult;
-	@api locationName;
+	locationName;
 	inputType = 'textquery';
 	fields = 'photos,formatted_address,name,rating,opening_hours,geometry,place_id';
 
-	@wire( fetchPlacesApiResult, {input: '$locationName', inputType: '$inputType', fields: '$fields'})
-		wiredFetchPlacesApiResult( { error, data } )
+	@wire( fetchCommunityDetails, {communityId: Id} )
+		wiredFetchCommunityDetails( { error, data } )
 		{
 			if( data )
 			{
-				console.log('my place api result: ', data);
-				this.gpResult = data;
-				this.updateLocationDetails();
+				this.locationName = data.name;
+				this.runPlacesApi();
    		}
-   		else if ( error ){
-   			console.log('places api error: ', error);
+   		else if( error )
+   		{
+   			console.log('fetch community error: ', error);
      	}
- 	 	}
+  	}
+
+	runPlacesApi(){
+	  if(this.locationName){
+	  	  fetchPlacesApiResult({input: this.locationName, inputType: this.inputType, fields: this.fields})
+	  	  	.then( (result) => {
+						this.gpResult = result;
+						this.updateLocationDetails();
+       		}).catch(e => {
+       		  console.log('fetch places api error: ', e);
+         });
+   	}
+ 	}
 
 //	@wire( fetchDistanceApiResult, {origin: '40.6655101,-73.89188969999998', destinations: '40.6905615%2C-73.9976592%7C40.6905615%2C-73.9976592%7C40.6905615%2C-73.9976592%7C40.6905615%2C-73.9976592%7C40.6905615%2C-73.9976592%7C40.6905615%2C-73.9976592%7C40.659569%2C-73.933783%7C40.729029%2C-73.851524%7C40.6860072%2C-73.6334271%7C40.598566%2C-73.7527626%7C40.659569%2C-73.933783%7C40.729029%2C-73.851524%7C40.6860072%2C-73.6334271%7C40.598566%2C-73.7527626'})
 //		wiredFetchDistanceApiResult( {error, data} )

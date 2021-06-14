@@ -6,13 +6,15 @@ import { LightningElement, wire, api, track } from 'lwc';
 import { NavigationMixin, CurrentPageReference } from 'lightning/navigation';
 import { fireEvent, registerListener, unregisterAllListeners} from 'c/pubsub';
 import { setWrapperClass } from 'c/communitySharedUtils';
+import Id from '@salesforce/community/Id';
+import fetchCommunityDetails from '@salesforce/apex/CommSharedURL_Controller.fetchCommunityDetails';
 import fetchBoats from '@salesforce/apex/FactoryStore_InventoryController.fetchBoats';
 import fetchBoatsBySeries from '@salesforce/apex/FactoryStore_InventoryController.fetchBoatsBySeries';
 import fetchBoat from '@salesforce/apex/FactoryStore_InventoryController.fetchBoat';
 import { loadStyle, loadScript } from 'lightning/platformResourceLoader';
 
 export default class FactoryStoreBoatListing extends NavigationMixin(LightningElement) {
-  @api location;
+  @api locationName;
 	@api seriesName;
 	@api seriesBlurb;
 	@api sectionWidth;
@@ -25,21 +27,33 @@ export default class FactoryStoreBoatListing extends NavigationMixin(LightningEl
 
 	wrapperClass = 'allModels';
 
-	@wire( fetchBoatsBySeries, { seriesName: '$seriesName' } )
-	wiredFetchBoatsBySeries( { error, data })
-	{
-	 	if( data )
-	  {
-	    console.log(this.seriesName, data);
-	    this.boats = data;
-	    this.showListing = true;
-	    this.wrapperClass = setWrapperClass(this.sectionWidth, 'allModels');
-   	}
-   	else if ( error )
-   	{
-    	console.log('fetch series error:', error);
-   	}
- }
+	@wire( fetchCommunityDetails, {communityId: Id} )
+		wiredFetchCommunityDetails( { error, data } )
+		{
+			if( data )
+			{
+				this.locationName = data.name;
+				this.runBoatsBySeries();
+			}
+			else if( error )
+			{
+				console.log('fetch community error: ', error);
+			}
+		}
+
+	runBoatsBySeries(){
+		if(this.locationName){
+				fetchBoatsBySeries({seriesName: this.seriesName})
+					.then( (result) => {
+						console.log(this.seriesName, result);
+						this.boats = result;
+						this.showListing = true;
+						this.wrapperClass = setWrapperClass(this.sectionWidth, 'allModels');
+					}).catch(e => {
+						console.log('fetch series error:', e);
+				 });
+		}
+	}
 
  @wire(CurrentPageReference) pageRef;
 

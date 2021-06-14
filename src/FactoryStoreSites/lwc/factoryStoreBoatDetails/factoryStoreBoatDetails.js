@@ -5,6 +5,8 @@
 import { LightningElement, api, wire } from 'lwc';
 import { NavigationMixin, CurrentPageReference } from 'lightning/navigation';
 import { stringy, stripParentheses, rewriteMotorName, rewriteTrailerName, weeklyPayment, formatPrice, setWrapperClass } from 'c/communitySharedUtils';
+import Id from '@salesforce/community/Id';
+import fetchCommunityDetails from '@salesforce/apex/CommSharedURL_Controller.fetchCommunityDetails';
 import fetchBoat from '@salesforce/apex/FactoryStore_InventoryController.fetchBoat';
 import passBoatModelId from '@salesforce/apex/FactoryStore_FlowController.passBoatModelId';
 
@@ -32,12 +34,25 @@ export default class FactoryStoreBoatDetails extends NavigationMixin(LightningEl
   // Lead forms
 	leadFormName;
 	@api campaignId;
-	@api location;
+	locationName;
 
   @wire(CurrentPageReference)
   setCurrentPageReference(currentPageReference){
     this.recordId = currentPageReference.state.c__recordId;
   }
+
+  @wire( fetchCommunityDetails, {communityId: Id} )
+		wiredFetchCommunityDetails( { error, data } )
+		{
+			if( data )
+			{
+				this.locationName = data.name;
+			}
+			else if( error )
+			{
+				console.log('fetch community error: ', error);
+			}
+		}
 
   @wire( fetchBoat, { boatId: '$recordId' } )
   wiredFetchBoat( { error, data } )
