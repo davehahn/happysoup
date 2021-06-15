@@ -53,32 +53,63 @@ public with sharing class FactoryStore_InventoryController {
     }
 
     @AuraEnabled(Cacheable=true)
-    public static List<Sobject> fetchNewInStockCurrentBoats( String location, Decimal year, String id )
+    public static List<FSInventory_Selector.RiggedBoat> fetchNewInStockInventory(String location, Integer year, String modelId)
     {
-        String fromLocation = location;
-        Decimal currentModelYear = year;
-        String modelId = id;
-        List<Sobject> boats = new List<Sobject>();
-        for( SObject b : [SELECT Id,
-                                 Name,
-                                 GMBLASERP__Product__r.Name,
-                                 Model_Year__c,
-                                 GMBLASERP__Product__r.Make__c
-                          FROM GMBLASERP__Serial_Number__c
-                          WHERE Location__c = :fromLocation
-                          AND GMBLASERP__Product__r.Id = :modelId
-                          AND Product_Record_Type__c = 'Boat'
-                          AND GMBLASERP__Product__r.Make__c = 'Legend'
-                          AND Model_Year__c >= :currentModelYear
-                          AND Status__c NOT IN ('Used', 'At Supplier', 'Return to Supplier')
-                          AND Available_Retail__c = true
-                          ORDER BY Model_Year__c ASC])
-        {
-            boats.add( b );
+        List<FSInventory_Selector.RiggedBoat> inventory = new List<FSInventory_Selector.RiggedBoat>();
+        for( FSInventory_Selector.RiggedBoat s : FSInventory_Selector.getSerialNumbers(location, year, modelId)){
+            inventory.add( s );
         }
-        System.debug('Boats: ' + boats);
-        return boats;
+        System.debug('Returned Inventory: ' + inventory);
+        return inventory;
     }
+
+//    @AuraEnabled(Cacheable=true)
+//    public static FSInventory_Selector fetchNewInStockInventory(String location, Integer year, String modelId)
+//    {
+//        FSInventory_Selector inventory = new FSInventory_Selector('new', location, year, modelId);
+//        return inventory;
+//    }
+
+//    @AuraEnabled(Cacheable=true)
+//    public static Map<Integer, List<SObject>> fetchNewInStockCurrentBoats( String location, Decimal year, String id )
+//    {
+//        String fromLocation = location;
+//        Decimal currentModelYear = year;
+//        String modelId = id;
+//        List<SObject> boats = new List<SObject>();
+//        Map<Integer, List<SObject>> riggedBoats = new Map<Integer, List<SObject>>();
+//        for( SObject b : [SELECT Id,
+//                                 Name,
+//                                 GMBLASERP__Product__r.Name,
+//                                 Model_Year__c,
+//                                 GMBLASERP__Product__r.Make__c
+//                          FROM GMBLASERP__Serial_Number__c
+//                          WHERE Location__c = :fromLocation
+//                          AND GMBLASERP__Product__r.Id = :modelId
+//                          AND Product_Record_Type__c = 'Boat'
+//                          AND GMBLASERP__Product__r.Make__c = 'Legend'
+//                          AND Model_Year__c >= :currentModelYear
+//                          AND Status__c NOT IN ('Used', 'At Supplier', 'Return to Supplier')
+//                          AND Available_Retail__c = true
+//                          ORDER BY Model_Year__c ASC])
+//        {
+//            boats.add( b );
+//        }
+//        System.debug('Boats: ' + boats);
+//
+//
+////        for(SObject thisBoat : boats){
+////            List<SObject> Rig = fetchRiggedEquipment(thisBoat.Id);
+////
+////            riggedBoats.put(thisBoat, Rig);
+////        }
+//        for( Integer i = 0; i < boats.size(); i++){
+//            List<SObject> Rig = fetchRiggedEquipment(boats[i].Id);
+//            riggedBoats.put(i, Rig);
+//            riggedBoats.put(i, boats[i]);
+//        }
+//        return riggedBoats;
+//    }
 
     @AuraEnabled(Cacheable=true)
     public static List<Sobject> fetchNewInStockNonCurrentBoats( String location, Decimal year, String id )
@@ -131,26 +162,26 @@ public with sharing class FactoryStore_InventoryController {
         return boats;
     }
 
-    @AuraEnabled(Cacheable=true)
-    public static List<Sobject> fetchRiggedEquipment( String serialId )
-    {
-        List<Sobject> equipment = new List<Sobject>();
-        for( SObject e : [SELECT Id,
-                                Name,
-                                GMBLASERP__Product__r.Name,
-                                Model_Year__c,
-                                GMBLASERP__Product__r.Make__c,
-                                Current_Unit_Cost__c,
-                                Product_Record_Type__c
-                        FROM GMBLASERP__Serial_Number__c
-                        WHERE Nest__c = :serialId
-                        AND Product_Record_Type__c IN ('Motor', 'Trailer')])
-        {
-            equipment.add( e );
-        }
-        System.debug('Boats: ' + equipment);
-        return equipment;
-    }
+//    @AuraEnabled(Cacheable=true)
+//    public static List<Sobject> fetchRiggedEquipment( String serialId )
+//    {
+//        List<Sobject> equipment = new List<Sobject>();
+//        for( SObject e : [SELECT Id,
+//                                Name,
+//                                GMBLASERP__Product__r.Name,
+//                                Model_Year__c,
+//                                GMBLASERP__Product__r.Make__c,
+//                                Current_Unit_Cost__c,
+//                                Product_Record_Type__c
+//                        FROM GMBLASERP__Serial_Number__c
+//                        WHERE Nest__c = :serialId
+//                        AND Product_Record_Type__c IN ('Motor', 'Trailer')])
+//        {
+//            equipment.add( e );
+//        }
+//        System.debug('Boats: ' + equipment);
+//        return equipment;
+//    }
 
     // Currents - Legends Only by Location
     // SELECT Id, Name, GMBLASERP__Product__r.Name, Model_Year__c, GMBLASERP__Product__r.Make__c FROM GMBLASERP__Serial_Number__c WHERE Location__c = 'Whitefish' AND Product_Record_Type__c = 'Boat' AND GMBLASERP__Product__r.Make__c = 'Legend' AND Model_Year__c >= 2021 AND Status__c NOT IN ('Used', 'At Supplier', 'Return to Supplier') AND Available_Retail__c = true ORDER BY Model_Year__c ASC

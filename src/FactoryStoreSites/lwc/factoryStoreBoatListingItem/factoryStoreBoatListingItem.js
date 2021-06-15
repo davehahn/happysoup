@@ -7,7 +7,9 @@ import { NavigationMixin, CurrentPageReference } from 'lightning/navigation';
 import { fireEvent, registerListener, unregisterAllListeners } from 'c/pubsub';
 import { stringy, stripParentheses, rewriteMotorName, rewriteTrailerName, convertLength, parseLocationName } from 'c/communitySharedUtils';
 import fetchStandardProducts from '@salesforce/apex/FactoryStore_InventoryController.fetchBoat';
-import fetchNewInStockCurrentBoats from '@salesforce/apex/FactoryStore_InventoryController.fetchNewInStockCurrentBoats';
+import fetchNewInStockInventory from '@salesforce/apex/FactoryStore_InventoryController.fetchNewInStockInventory';
+//import fetchNewInStockCurrentBoats from '@salesforce/apex/FactoryStore_InventoryController.fetchNewInStockCurrentBoats';
+//import fetchRiggedEquipment from '@salesforce/apex/FactoryStore_InventoryController.fetchRiggedEquipment';
 
 export default class FactoryStoreBoatListingItem extends NavigationMixin(LightningElement) {
  @api boat;
@@ -23,6 +25,7 @@ export default class FactoryStoreBoatListingItem extends NavigationMixin(Lightni
  packageLength;
 
  currentStockQuantity;
+ currentStock = [];
 
 
  @wire(CurrentPageReference) pageRef;
@@ -47,30 +50,29 @@ export default class FactoryStoreBoatListingItem extends NavigationMixin(Lightni
  	}
 
  	quickQuote( event ){
- 	  console.log('trigger quick quote');
- 	  console.log('display quick connect form for modelId: ', event.currentTarget.dataset.record);
+// 	  console.log('trigger quick quote');
+// 	  console.log('display quick connect form for modelId: ', event.currentTarget.dataset.record);
  	  let details = {
  	    recordId: this.boat.Id,
  	    boatName: this.boatName
     }
-    console.log('details to send to form: ', details);
+//    console.log('details to send to form: ', details);
  	  fireEvent(this.pageRef, 'openOverlay', details);
  	  event.preventDefault();
   }
 
   showroomVisit( event ){
-    console.log('trigger showroom visit');
+//    console.log('trigger showroom visit');
     let page = 'schedule-a-showroom-visit',
     		params = {
     			c__recordId: event.currentTarget.dataset.record
       	};
-    console.log(params);
+//    console.log(params);
     this.navigateToCommunityPage( page, params );
     event.preventDefault();
   }
 
  	renderedCallback(){
- 	  console.log(this.boat.Name, JSON.parse(JSON.stringify(this.boat)));
  	  this.boatName = stripParentheses(this.boat.Name);
  	  this.modelListingPhoto = 'background-image: url(' + this.boat.Default_Gallery_Image_Original__c + ')';
 		this.standardMotor = (this.boat.Standard_Motor__r) ? rewriteMotorName(this.boat.Standard_Motor__r.Name) : '';
@@ -85,12 +87,19 @@ export default class FactoryStoreBoatListingItem extends NavigationMixin(Lightni
 			this.packageLength = convertLength(this.boat.Package_Length__c);
  	 	}
 
- 	 	const inStock = fetchNewInStockCurrentBoats({location: parseLocationName(this.locationName), year: 2021, id: this.boat.Id})
+ 	 	const inventory = fetchNewInStockInventory({location: parseLocationName(this.locationName), year: 2021, modelId: this.boat.Id})
  	 		.then( (result) => {
+ 	 		  console.log('fetchInventory result: ', result);
+ 	 		  this.currentStock = result;
  	 		  this.currentStockQuantity = result.length;
-     	}).catch( e => {
-     	  console.log('fetch inStock error: ', e);
+      }).catch( e => {
+        console.log('Fetch Inventory Error: ', e);
       });
+  }
+
+  get allCurrentStock(){
+    console.log('allCurrentStock: ', this.currentStock);
+    return this.currentStock;
   }
 
 	get isDeckBoat(){
