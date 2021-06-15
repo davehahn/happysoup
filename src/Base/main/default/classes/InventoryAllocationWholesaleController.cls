@@ -220,6 +220,8 @@ public without sharing class InventoryAllocationWholesaleController {
                                                              GMBLASERP__Lot__r.Name,
                                                              AcctSeedERP__Project__r.AcctSeed__Account__r.Name,
                                                              AcctSeedERP__Project__r.AcctSeedERP__Work_Order_Number__c,
+                                                             AcctSeedERP__Project__r.Reserved_For_Customer_Account__c,
+                                                             AcctSeedERP__Project__r.Retail_ERP__c,
                                                              AcctSeedERP__Project__r.Stage__c,
                                                              AcctSeedERP__Project__r.CreatedDate,
                                                              AcctSeedERP__Project__r.Arrival_Date__c,
@@ -251,11 +253,16 @@ public without sharing class InventoryAllocationWholesaleController {
           mapDealerOrders.put(uniqueCombo, mapDealerOrders.get(uniqueCombo) + 1);
       else
           mapDealerOrders.put(uniqueCombo, 1);
-
+      String isReserved =
+        objMaterial.AcctSeedERP__Project__r.Reserved_For_Customer_Account__c == null &&
+          objMaterial.AcctSeedERP__Project__r.Retail_ERP__c == null ?
+        'false' :
+          'true';
       Map<String, String> pData = new Map<String, String>();
       pData.put('Id', objMaterial.AcctSeedERP__Project__c );
       pData.put('AccountName', objMaterial.AcctSeedERP__Project__r.AcctSeed__Account__r.Name);
       pData.put('Name', objMaterial.AcctSeedERP__Project__r.AcctSeedERP__Work_Order_Number__c );
+      pData.put('IsReserved', isReserved );
       pData.put('Stage', objMaterial.AcctSeedERP__Project__r.Stage__c);
       pData.put('CreatedDate', objMaterial.AcctSeedERP__Project__r.CreatedDate.format('MMM d, yyyy') );
       pData.put('ArrivalDate', objMaterial.AcctSeedERP__Project__r.Arrival_Date__c != null ? objMaterial.AcctSeedERP__Project__r.Arrival_Date__c.format() : '');
