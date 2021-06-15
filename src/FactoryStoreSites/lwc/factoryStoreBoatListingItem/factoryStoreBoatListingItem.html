@@ -47,6 +47,21 @@
         <button class="ctas__btn btn btn--secondary" data-record={boat.Id} onclick={quickQuote}>Quick Connect</button>
         <button class="ctas__btn btn btn--secondary" data-record={boat.Id} onclick={showroomVisit}>Come See It!</button>
       </div>
+
+      <div class="modelListing__currentStock">
+        <ul class="currentStock__list">
+          <template for:each={currentStock} for:item="stock">
+            <li key={stock.Serial.Id} class="currentStock__item">
+              <h5 class="heading">{stock.Serial.GMBLASERP__Product__r.Name}</h5>
+              <template for:each={stock.Equipment} for:item="rig">
+                <p key={rig.Id}>
+                  {rig.GMBLASERP__Product__r.Name}
+                </p>
+              </template>
+            </li>
+          </template>
+        </ul>
+      </div>
     </article>
   </li>
 </template>
