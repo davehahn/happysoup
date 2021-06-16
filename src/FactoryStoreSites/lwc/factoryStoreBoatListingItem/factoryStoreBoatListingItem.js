@@ -72,7 +72,7 @@ export default class FactoryStoreBoatListingItem extends NavigationMixin(Lightni
     event.preventDefault();
   }
 
- 	renderedCallback(){
+ 	connectedCallback(){
  	  this.boatName = stripParentheses(this.boat.Name);
  	  this.modelListingPhoto = 'background-image: url(' + this.boat.Default_Gallery_Image_Original__c + ')';
 		this.standardMotor = (this.boat.Standard_Motor__r) ? rewriteMotorName(this.boat.Standard_Motor__r.Name) : '';
@@ -89,17 +89,12 @@ export default class FactoryStoreBoatListingItem extends NavigationMixin(Lightni
 
  	 	const inventory = fetchNewInStockInventory({location: parseLocationName(this.locationName), year: 2021, modelId: this.boat.Id})
  	 		.then( (result) => {
- 	 		  console.log('fetchInventory result: ', result);
+ 	 		  console.log(this.boat.Name + ' inventory result: ', result);
  	 		  this.currentStock = result;
  	 		  this.currentStockQuantity = result.length;
       }).catch( e => {
         console.log('Fetch Inventory Error: ', e);
       });
-  }
-
-  get allCurrentStock(){
-    console.log('allCurrentStock: ', this.currentStock);
-    return this.currentStock;
   }
 
 	get isDeckBoat(){
