@@ -14,7 +14,7 @@ public with sharing class FSInventory_Selector {
 
     public static List<RiggedBoat> getSerialNumbers(String location, Integer year, String modelId){
         List<RiggedBoat> boats = new List<RiggedBoat>();
-        for( SObject b : [SELECT Id,
+        for( GMBLASERP__Serial_Number__c b : [SELECT Id,
                                  Name,
                                  GMBLASERP__Product__r.Name,
                                  Model_Year__c,
@@ -30,8 +30,11 @@ public with sharing class FSInventory_Selector {
                           ORDER BY Model_Year__c ASC])
         {
             String serialId = b.Id;
-            List<Sobject> equipment = new List<Sobject>();
-            for( SObject e : [SELECT Id,
+
+            BoatModel boatModel = new BoatModel( b );
+
+            List<Equipment> equipment = new List<Equipment>();
+            for( GMBLASERP__Serial_Number__c e : [SELECT Id,
                                     Name,
                                     GMBLASERP__Product__r.Name,
                                     Model_Year__c,
@@ -42,11 +45,13 @@ public with sharing class FSInventory_Selector {
                             WHERE Nest__c = :serialId
                             AND Product_Record_Type__c IN ('Motor', 'Trailer')])
             {
-                equipment.add( e );
+                System.debug('SOQL return: ' + e);
+                Equipment eq = new Equipment( e );
+                equipment.add( eq );
             }
             System.debug('getSerialNumbers Equipment: ' + equipment);
 
-            RiggedBoat rb = new RiggedBoat(b, equipment);
+            RiggedBoat rb = new RiggedBoat(boatModel, equipment);
 
             boats.add(rb);
         }
@@ -57,12 +62,47 @@ public with sharing class FSInventory_Selector {
     }
 
     public class RiggedBoat{
-        @AuraEnabled public SObject Serial;
-        @AuraEnabled public List<SObject> Equipment;
+        @AuraEnabled public BoatModel Serial;
+        @AuraEnabled public List<Equipment> Equipment;
 
-        public RiggedBoat(SObject s, List<SObject> e){
+        public RiggedBoat(BoatModel s, List<Equipment> e){
             Serial = s;
             Equipment = e;
+        }
+    }
+
+    public class BoatModel{
+        @AuraEnabled public String serialId;
+        @AuraEnabled public String serialNumber;
+        @AuraEnabled public Decimal serialModelYear;
+        @AuraEnabled public String productId;
+        @AuraEnabled public String productMake;
+        @AuraEnabled public String productName;
+
+        public BoatModel(GMBLASERP__Serial_Number__c b){
+            serialId = b.Id;
+            serialNumber = b.Name;
+            serialModelYear = b.Model_Year__c;
+            productId = b.GMBLASERP__Product__r.Id;
+            productMake = b.GMBLASERP__Product__r.Make__c;
+            productName = b.GMBLASERP__Product__r.Name;
+        }
+    }
+
+    public class Equipment{
+        @AuraEnabled public Decimal unitCost;
+        @AuraEnabled public String serialNumber;
+        @AuraEnabled public String productMake;
+        @AuraEnabled public String productName;
+        @AuraEnabled public String productId;
+
+        public Equipment(GMBLASERP__Serial_Number__c e){
+            System.debug('Equipment eq: ' + e);
+            unitCost = e.Current_Unit_Cost__c;
+            serialNumber = e.Name;
+            productMake = e.GMBLASERP__Product__r.Make__c;
+            productName = e.GMBLASERP__Product__r.Name;
+            productId = e.GMBLASERP__Product__r.Id;
         }
     }
 
