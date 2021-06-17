@@ -3,7 +3,7 @@ private class gcTest_Product{
 
 	static testMethod void test1()
 	{
-		gcProduct.coverage();
+		//gcProduct.coverage();
 		//gcProduct_UpdateMRPQty.coverage();
 	}
 	
