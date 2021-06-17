@@ -81,6 +81,13 @@ private class Product2ExtTest {
             isActive = true
             )
         );
+         feeProducts.add( new Product2(
+            Name = t+' Testing Clone',
+            Family = t,
+            RecordTypeId = feeRecordTypeId,
+            isActive = true
+            )
+        );
     }
     insert feeProducts;
     for( Product2 fp : feeProducts ){
@@ -89,7 +96,7 @@ private class Product2ExtTest {
           Product2Id = fp.Id,
           UnitPrice = 100.00,
           isActive = true
-        ) );
+     ) );
     }
     insert feePricebookEntries;
     List<Product_Fee_Map__c> pFeeMaps = new List<Product_Fee_Map__c>();
@@ -102,7 +109,22 @@ private class Product2ExtTest {
       );
     }
     insert pFeeMaps;
-
+      Boat_Rigging_Checklist_Item__c bi = new Boat_Rigging_Checklist_Item__c();
+      insert bi;
+	
+   Boat_Rigging_Checklist_Map__c b = new Boat_Rigging_Checklist_Map__c(
+          Product__c =oBoat.Id,
+          Checklist_Item__c = bi.Id,
+          Rank__c = 1.22
+        );
+      insert b;
+      
+ AcctSeed__Product_Part__c ap =     new AcctSeed__Product_Part__c(
+          AcctSeed__Product__c = oBoat.Id,
+          AcctSeed__Product_Part__c =feeProducts[1].Id,
+          AcctSeed__Quantity__c = 1);
+      insert ap;
+      
     PageReference pageRef;
     pageRef = Page.BoatForm;
     pageRef.getParameters().put('cloneId', oBoat.Id);
