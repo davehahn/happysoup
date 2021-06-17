@@ -9,7 +9,7 @@ private class gcTest_ProductPart{
 
 	static testMethod void coverage_Test()
 	{
-    gcProductPart.coverage();
+    //gcProductPart.coverage();
   }
 
   static testMethod void trigger_Test()
