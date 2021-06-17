@@ -45,41 +45,6 @@ public with sharing class Product2Ext {
       List<Product_Option__c> clonedOptions = cloneInOptions();
       List<Product_Feature_Map__c> clonedFeatures = cloneInFeatures();
       List<Product_Fee_Map__c> clonedFees = cloneInFees();
-      List<AcctSeed__Product_Part__c> clonedProductPart = cloneInPart();
-      List<Boat_Rigging_Checklist_Map__c> riggingCheckList = cloneInRiggingList();
-     
-      System.debug('@@Salman '+riggingCheckList);
-      if( clonedProductPart.size() > 0 ){
-        try {
-             System.debug('@@Salman '+clonedProductPart);
-          insert clonedProductPart;
-        }
-        catch(Exception e){
-          String msg=e.getMessage();
-             System.debug('@@Salman '+msg);
-          integer pos;
-
-          // if its field validation, this will be added to the messages by default
-          if (-1==(pos=msg.indexOf('FIELD_CUSTOM_VALIDATION_EXCEPTION, '))) {
-              ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, msg));
-          }
-        }
-      }
-      if( riggingCheckList.size() > 0 ){
-        try {
-          insert riggingCheckList;
-        }
-        catch(Exception e){
-          String msg=e.getMessage();
-          integer pos;
-
-          // if its field validation, this will be added to the messages by default
-          if (-1==(pos=msg.indexOf('FIELD_CUSTOM_VALIDATION_EXCEPTION, '))) {
-              ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, msg));
-          }
-        }
-      }
-      
       if( clonedOptions.size() > 0 ){
         try {
           insert clonedOptions;
@@ -128,17 +93,14 @@ public with sharing class Product2Ext {
 
   private List<String> fieldsToAdd() {
     Set<String> fieldNamesTest = new Set<String>();
-    Set<String> fieldsToRemove = new Set<String>();
     List<String> fNames = new List<String>();
-    fieldsToRemove.add('ProductCode');fieldsToRemove.add('Supplier_Product_Code__c');fieldsToRemove.add('Unique_Product_Code__c');
     Map<String, Schema.FieldSet> FsMap = Schema.SObjectType.Product2.fieldSets.getMap();
     for( Schema.Fieldset fs: FsMap.values() ) {
 
-        for( Schema.FieldSetMember f : fs.getFields()){
-          if( !fieldNamesTest.contains( f.getFieldPath()) &&  !fieldsToRemove.contains(f.getFieldPath()) ){
+        for( Schema.FieldSetMember f : fs.getFields() ){
+          if( !fieldNamesTest.contains( f.getFieldPath() ) ){
             fieldNamesTest.add( f.getFieldPath() );
             fNames.add(f.getFieldPath());
-              System.debug('@@Salman '+ f.getFieldPath());
           }
         }
     }
@@ -222,44 +184,6 @@ public with sharing class Product2Ext {
       );
     }
     return newFees;
-  }
-    
-    
-  private List<AcctSeed__Product_Part__c> cloneInPart(){
-    Product2 p = (Product2)stdCtrl.getRecord();
-    List<AcctSeed__Product_Part__c> newPart = new List<AcctSeed__Product_Part__c>();
-    List<AcctSeed__Product_Part__c> parts = [SELECT Id, Dump_Id__c,AcctSeed__Product__c,AcctSeed__Product_Part__c,AcctSeed__Quantity__c 
-                                            FROM AcctSeed__Product_Part__c
-                                       WHERE AcctSeed__Product__c = :cloneId];
-
-    for(AcctSeed__Product_Part__c pp: parts){
-      newPart.add( new AcctSeed__Product_Part__c(
-          AcctSeed__Product__c = p.Id,
-          AcctSeed__Product_Part__c = pp.AcctSeed__Product_Part__c,
-          AcctSeed__Quantity__c = pp.AcctSeed__Quantity__c
-        )
-      );
-    }
-    return newPart;
-  }
-    
-    
-  private List<Boat_Rigging_Checklist_Map__c> cloneInRiggingList(){
-    Product2 p = (Product2)stdCtrl.getRecord();
-    List<Boat_Rigging_Checklist_Map__c> newBoatRig = new List<Boat_Rigging_Checklist_Map__c>();
-    List<Boat_Rigging_Checklist_Map__c> boatRig = [SELECT Id,Checklist_Item__c,Product__c,Rank__c
-                                       FROM Boat_Rigging_Checklist_Map__c
-                                       WHERE Product__c = :cloneId];
-
-    for(Boat_Rigging_Checklist_Map__c br: boatRig){
-      newBoatRig.add( new Boat_Rigging_Checklist_Map__c(
-          Product__c = p.Id,
-          Checklist_Item__c = br.Checklist_Item__c,
-          Rank__c = br.Rank__c
-        )
-      );
-    }
-    return newBoatRig;
   }
 
 }
