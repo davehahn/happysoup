@@ -1,5 +1,5 @@
 @isTest(SeeAllData=false)
-public class gcBilling_T{    
+public class gcBilling_T{
     final static String RECORDTYPE = 'Motor';
     final static String FAMILY = 'Motor Accessories';
     final static String SERIALNUMBER = '123450';
@@ -15,29 +15,29 @@ public class gcBilling_T{
         Contact dealerContact;
 
 
-		Date startDate = Date.today().toStartOfMonth().addMonths(-4);
-		AcctSeed__Accounting_Period__c previousPeriod = new AcctSeed__Accounting_Period__c(
-			AcctSeed__End_Date__c = Date.today().addMonths(-1).toStartOfMonth().addDays(-1),
-			AcctSeed__Start_Date__c = startDate,
-			AcctSeed__Status__c = 'Open',
-			Name = Datetime.newInstance( startDate.year(),
-																	 startDate.month(),
-																	 startDate.day() ).format('YYYY-MM')
-		);
-		insert previousPeriod;
+        Date startDate = Date.today().toStartOfMonth().addMonths(-4);
+        AcctSeed__Accounting_Period__c previousPeriod = new AcctSeed__Accounting_Period__c(
+                AcctSeed__End_Date__c = Date.today().addMonths(-1).toStartOfMonth().addDays(-1),
+                AcctSeed__Start_Date__c = startDate,
+                AcctSeed__Status__c = 'Open',
+                Name = Datetime.newInstance( startDate.year(),
+                        startDate.month(),
+                        startDate.day() ).format('YYYY-MM')
+        );
+        insert previousPeriod;
         // Account
         Account dealer = AccountFactory.buildDealerAccount('Test Dealer UnitTester');
         insert dealer;
-            String email = LGND_Utilities.generateRandomString(5) + '@' + LGND_Utilities.generateRandomString(5) +'.org';
+        String email = LGND_Utilities.generateRandomString(5) + '@' + LGND_Utilities.generateRandomString(5) +'.org';
         dealerContact = Factory_Contact.buildContact(dealer.Id, 'My Amazing', 'Tester', email );
-            dealerContact.Receives_Monthly_Statements__c = true;
-            update dealerContact;
+        dealerContact.Receives_Monthly_Statements__c = true;
+        update dealerContact;
 
         // Serial
         GMBLASERP__Serial_Number__c serial = Factory_SerialNumber.insertFullSerial(
-            'Boat',
-            'Pontoon',
-            '1234567890-UNIT-TESTER'
+                'Boat',
+                'Pontoon',
+                '1234567890-UNIT-TESTER'
         );
 
         // Projects
@@ -76,65 +76,65 @@ public class gcBilling_T{
         // Billing
         AcctSeed__Billing_Format__c format = [SELECT Id FROM AcctSeed__Billing_Format__c WHERE Name = 'Billing PDF Format' LIMIT 1];
         AcctSeed__Ledger__c ledger = [SELECT Id FROM AcctSeed__Ledger__c LIMIT 1];
-		List<AcctSeed__Billing__c> billings = new List<AcctSeed__Billing__c>();
+        List<AcctSeed__Billing__c> billings = new List<AcctSeed__Billing__c>();
         List<AcctSeed__Cash_Receipt__c> lstCashReceipt = new List<AcctSeed__Cash_Receipt__c>();
         for( AcctSeed__Project__c erp : erps )
-		{
-			billings.add( new AcctSeed__Billing__c(
-					AcctSeed__Customer__c = dealer.Id,
-					AcctSeed__Billing_Format__c = format.Id,
-					GMBLASERP__Project__c = erp.Id,
-					AcctSeed__Ledger__c = ledger.Id
-				)
+        {
+            billings.add( new AcctSeed__Billing__c(
+                    AcctSeed__Customer__c = dealer.Id,
+                    AcctSeed__Billing_Format__c = format.Id,
+                    GMBLASERP__Project__c = erp.Id,
+                    AcctSeed__Ledger__c = ledger.Id
+            )
             );
-            
+
             lstCashReceipt.add(new AcctSeed__Cash_Receipt__c(
-                AcctSeed__Account__c = dealer.Id,
-                AcctSeed__Amount__c = 5.0,
-                AcctSeed__Receipt_Date__c = Date.today(),
-                AcctSeed__Payment_Reference__c = 'Cash',
-                AcctSeed__Ledger__c = ledger.Id,
-                AcctSeed__Project__c = erp.Id,
-                AcctSeed__Project_Task__c = erp_task_map.get(erp.Id).Id,
-                AcctSeed__Product__c = serializedProducts[0].Id
+                    AcctSeed__Account__c = dealer.Id,
+                    AcctSeed__Amount__c = 5.0,
+                    AcctSeed__Receipt_Date__c = Date.today(),
+                    AcctSeed__Payment_Reference__c = 'Cash',
+                    AcctSeed__Ledger__c = ledger.Id,
+                    AcctSeed__Project__c = erp.Id,
+                    AcctSeed__Project_Task__c = erp_task_map.get(erp.Id).Id,
+                    AcctSeed__Product__c = serializedProducts[0].Id
             ));
-		}
-		Date thisMonth = Date.today();
-		Date lastMonth = Date.today().toStartOfMonth().addMonths(-1);
-		Date nextMonth = Date.today().toStartOfMonth().addMonths(1);
-		//current
-		billings[0].Lgnd_Due_Date__c = Date.newInstance(thisMonth.year(), thisMonth.month(), 15);
-		//overdue
-		billings[1].Lgnd_Due_Date__c = Date.newInstance(lastMonth.year(), lastMonth.month(), 15);
-		//future
-		billings[2].Lgnd_Due_Date__c = Date.newInstance(nextMonth.year(), nextMonth.month(), 16);
+        }
+        Date thisMonth = Date.today();
+        Date lastMonth = Date.today().toStartOfMonth().addMonths(-1);
+        Date nextMonth = Date.today().toStartOfMonth().addMonths(1);
+        //current
+        billings[0].Lgnd_Due_Date__c = Date.newInstance(thisMonth.year(), thisMonth.month(), 15);
+        //overdue
+        billings[1].Lgnd_Due_Date__c = Date.newInstance(lastMonth.year(), lastMonth.month(), 15);
+        //future
+        billings[2].Lgnd_Due_Date__c = Date.newInstance(nextMonth.year(), nextMonth.month(), 16);
         insert billings;
-        insert lstCashReceipt;	
+        insert lstCashReceipt;
         List<AcctSeed__Billing_Line__c> billingLines = new List<AcctSeed__Billing_Line__c>();
 
-		for( AcctSeed__Billing__c billing : billings )
-		{
-			billingLines.add( new AcctSeed__Billing_Line__c(
-				AcctSeed__Billing__c = billing.Id,
-				AcctSeed__Revenue_GL_Account__c = gcConstants.idGlCustomerRefund,
-				AcctSeed__Hours_Units__c = 1,
-				AcctSeed__Rate__c = 5.0,
-				AcctSeed__GL_Account_Variable_1__c = gcConstants.idGlv1Wholesale,
-				AcctSeed__GL_Account_Variable_2__c = gcConstants.idGlv2Sales,
-				AcctSeed__Project__c = billing.GMBLASERP__Project__c,
-                AcctSeed__Project_Task__c = erp_task_map.get( billing.GMBLASERP__Project__c ).Id,
-                AcctSeed__List_Price__c=50,
-                AcctSeed__Product_Unit_Cost__c=50,
-                AcctSeed__Tax_Amount2__c=1.2
+        for( AcctSeed__Billing__c billing : billings )
+        {
+            billingLines.add( new AcctSeed__Billing_Line__c(
+                    AcctSeed__Billing__c = billing.Id,
+                    AcctSeed__Revenue_GL_Account__c = gcConstants.idGlCustomerRefund,
+                    AcctSeed__Hours_Units__c = 1,
+                    AcctSeed__Rate__c = 5.0,
+                    AcctSeed__GL_Account_Variable_1__c = gcConstants.idGlv1Wholesale,
+                    AcctSeed__GL_Account_Variable_2__c = gcConstants.idGlv2Sales,
+                    AcctSeed__Project__c = billing.GMBLASERP__Project__c,
+                    AcctSeed__Project_Task__c = erp_task_map.get( billing.GMBLASERP__Project__c ).Id,
+                    AcctSeed__List_Price__c=50,
+                    AcctSeed__Product_Unit_Cost__c=50,
+                    AcctSeed__Tax_Amount2__c=1.2
             ) );
 
-		}
+        }
         insert billingLines;
-        
+
         List<ERP_document__c> erpDocuments = new List<ERP_document__c>();
         integer i=0;
-		for( AcctSeed__Project__c erp : erps )
-		{ 
+        for( AcctSeed__Project__c erp : erps )
+        {
             ERP_document__c doc = new ERP_document__c();
             doc.Project__c = erp.Id;
             doc.Billing__c = billings[i].Id;
@@ -155,13 +155,13 @@ public class gcBilling_T{
 
     }
 
-    @isTest 
+    @isTest
     static void verifyProperties(){
         gcBilling.disableTrigger = null;
         system.assertEquals(false, gcBilling.disableTrigger);
         gcBilling.disableTrigger = true;
         system.assertEquals(true, gcBilling.disableTrigger);
-        
+
         gcBilling.allowBillingProjectForInternal = null;
         system.assertEquals(false, gcBilling.allowBillingProjectForInternal);
         gcBilling.allowBillingProjectForInternal = true;
@@ -171,15 +171,15 @@ public class gcBilling_T{
     }
 
     @isTest
-    static void testMethod1(){
+    static void testPostAndUnpostBillingData(){
         List<AcctSeed__Billing__c> lstBilling = new List<AcctSeed__Billing__c>();
         lstBilling = [
-            SELECT
-                Id, Tax_Rate_Retail__c, Tax_Override__c
-            FROM
-                AcctSeed__Billing__c
+                SELECT
+                        Id, Tax_Rate_Retail__c, Tax_Override__c
+                FROM
+                        AcctSeed__Billing__c
         ];
-        
+
         lstBilling[0].Tax_Rate_Retail__c = 9.2;
         update lstBilling[0];
         Test.StartTest();
@@ -189,7 +189,7 @@ public class gcBilling_T{
         Test.StopTest();
         lstBilling[0].Tax_Override__c = false;
         update lstBilling[0];
-        
+
         lstBilling[0].Tax_Rate_Retail__c = 8.2;
         update lstBilling[0];
 
@@ -197,15 +197,15 @@ public class gcBilling_T{
 
         //delete lstBilling;
     }
-    
+
     @isTest
-    static void testMethod2(){
+    static void testBillingData(){
         List<AcctSeed__Billing__c> lstBilling = new List<AcctSeed__Billing__c>();
         lstBilling = [
-            SELECT
-                Id, Tax_Rate_Retail__c, Tax_Override__c
-            FROM
-                AcctSeed__Billing__c
+                SELECT
+                        Id, Tax_Rate_Retail__c, Tax_Override__c
+                FROM
+                        AcctSeed__Billing__c
         ];
         update lstBilling;
 
@@ -214,19 +214,19 @@ public class gcBilling_T{
         Test.StopTest();
     }
     @isTest
-    static void testMethod3(){
+    static void testingthCashRceipt(){
         List<AcctSeed__Cash_Receipt__c> lstCashReceipt = new List<AcctSeed__Cash_Receipt__c>();
         lstCashReceipt = [
-            SELECT
-                Id, AcctSeed__Project__c, AcctSeed__Balance__c
-            FROM
-            AcctSeed__Cash_Receipt__c
+                SELECT
+                        Id, AcctSeed__Project__c, AcctSeed__Balance__c
+                FROM
+                        AcctSeed__Cash_Receipt__c
         ];
         List<AcctSeed__Billing__c> lstBilling = [
-            SELECT
-                Id, Tax_Rate_Retail__c, Tax_Override__c
-            FROM
-                AcctSeed__Billing__c
+                SELECT
+                        Id, Tax_Rate_Retail__c, Tax_Override__c
+                FROM
+                        AcctSeed__Billing__c
         ];
         update lstBilling;
         Test.StartTest();
@@ -235,33 +235,33 @@ public class gcBilling_T{
     }
 
     @isTest
-    static void testMethod4Delete(){
+    static void testDeleteBilling(){
         Test.startTest();
         Account dealer = [SELECT Id FROM Account Limit 1];
         //AccountFactory.buildDealerAccount('Test Dealer UnitTester');
         List<AcctSeed__Project__c> erps = [SELECT id FROM AcctSeed__Project__c];
         AcctSeed__Billing_Format__c format = [SELECT Id FROM AcctSeed__Billing_Format__c WHERE Name = 'Billing PDF Format' LIMIT 1];
         AcctSeed__Ledger__c ledger = [SELECT Id FROM AcctSeed__Ledger__c LIMIT 1];
-		List<AcctSeed__Billing__c> billings = new List<AcctSeed__Billing__c>();
+        List<AcctSeed__Billing__c> billings = new List<AcctSeed__Billing__c>();
         for( AcctSeed__Project__c erp : erps )
-		{
-			billings.add( new AcctSeed__Billing__c(
-					AcctSeed__Customer__c = dealer.Id,
-					AcctSeed__Billing_Format__c = format.Id,
-					GMBLASERP__Project__c = erp.Id,
-					AcctSeed__Ledger__c = ledger.Id
-				)
+        {
+            billings.add( new AcctSeed__Billing__c(
+                    AcctSeed__Customer__c = dealer.Id,
+                    AcctSeed__Billing_Format__c = format.Id,
+                    GMBLASERP__Project__c = erp.Id,
+                    AcctSeed__Ledger__c = ledger.Id
+            )
             );
-		}
-		Date thisMonth = Date.today();
-		Date lastMonth = Date.today().toStartOfMonth().addMonths(-1);
-		Date nextMonth = Date.today().toStartOfMonth().addMonths(1);
-		//current
-		billings[0].Lgnd_Due_Date__c = Date.newInstance(thisMonth.year(), thisMonth.month(), 15);
-		//overdue
-		billings[1].Lgnd_Due_Date__c = Date.newInstance(lastMonth.year(), lastMonth.month(), 15);
-		//future
-		billings[2].Lgnd_Due_Date__c = Date.newInstance(nextMonth.year(), nextMonth.month(), 16);
+        }
+        Date thisMonth = Date.today();
+        Date lastMonth = Date.today().toStartOfMonth().addMonths(-1);
+        Date nextMonth = Date.today().toStartOfMonth().addMonths(1);
+        //current
+        billings[0].Lgnd_Due_Date__c = Date.newInstance(thisMonth.year(), thisMonth.month(), 15);
+        //overdue
+        billings[1].Lgnd_Due_Date__c = Date.newInstance(lastMonth.year(), lastMonth.month(), 15);
+        //future
+        billings[2].Lgnd_Due_Date__c = Date.newInstance(nextMonth.year(), nextMonth.month(), 16);
         insert billings;
         delete billings;
         Test.stopTest();
