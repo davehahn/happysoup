@@ -3,10 +3,11 @@ private class gcTest_Product{
 
 	static testMethod void test1()
 	{
-		//gcProduct.coverage();
+		//gc
+		// Product.coverage();
 		//gcProduct_UpdateMRPQty.coverage();
 	}
-	
+
 	/*static testMethod void test2()
 	{
 		gcProduct.disableTrigger = true;

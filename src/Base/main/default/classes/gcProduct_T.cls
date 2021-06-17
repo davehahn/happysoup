@@ -45,7 +45,7 @@ public class gcProduct_T {
     static void testInsertAndUpdateProductForBoatRecordType(){
        	Product2[] products = Factory_Product.createSerializedProducts('Boat','Pontoon',12);
       //  insert products; 
-        
+
         List<Product2> productList = [select id,Allocated__c,Availability_Percentage__c,Sizes__c from Product2]; 
         List<Product2> productListForUpdate = new List<Product2>();
         if(!productList.isEmpty()){
