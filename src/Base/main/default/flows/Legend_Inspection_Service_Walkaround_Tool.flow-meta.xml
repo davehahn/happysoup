@@ -694,6 +694,14 @@
         <picklistField>Parking_Spot__c</picklistField>
         <picklistObject>AcctSeed__Project__c</picklistObject>
     </dynamicChoiceSets>
+    <dynamicChoiceSets>
+        <name>PreferredContactMethod</name>
+        <dataType>Picklist</dataType>
+        <displayField xsi:nil="true"/>
+        <object xsi:nil="true"/>
+        <picklistField>Preferred_Contact_Method__c</picklistField>
+        <picklistObject>Legend_Inspection__c</picklistObject>
+    </dynamicChoiceSets>
     <formulas>
         <name>Today</name>
         <dataType>Date</dataType>
@@ -775,6 +783,12 @@
             <field>DisplayOnCustomerInvoice__c</field>
             <value>
                 <booleanValue>true</booleanValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Estimated_Duration__c</field>
+            <value>
+                <elementReference>NewExpectedTime</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -880,6 +894,12 @@
             <field>Other_Serial_Numbers__c</field>
             <value>
                 <elementReference>Other_Serial_Numbers</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Preferred_Contact_Method__c</field>
+            <value>
+                <elementReference>Preferred_Contact_Method</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -1128,8 +1148,8 @@
     <recordUpdates>
         <name>Update_Account_Record</name>
         <label>Update Account Record</label>
-        <locationX>1040</locationX>
-        <locationY>2423</locationY>
+        <locationX>1039</locationX>
+        <locationY>2424</locationY>
         <connector>
             <targetReference>ERP_Update</targetReference>
         </connector>
@@ -1304,6 +1324,12 @@
             <field>Complaint_dh__c</field>
             <value>
                 <elementReference>Update_Complaint</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Estimated_Duration__c</field>
+            <value>
+                <elementReference>UpdateExpectedTime</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -1555,7 +1581,7 @@
                 </fields>
                 <fields>
                     <name>Complaints_Notes</name>
-                    <fieldText>Complaints &amp; Notes</fieldText>
+                    <fieldText>Notes</fieldText>
                     <fieldType>LargeTextArea</fieldType>
                     <isRequired>false</isRequired>
                 </fields>
@@ -1603,6 +1629,14 @@
                     <name>Customer_Phone</name>
                     <fieldText>&lt;p&gt;&lt;b style=&quot;font-family: verdana;&quot;&gt;Customer Phone Number: &lt;/b&gt;{!Get_ERP_Order.AcctSeed__Account__r.Phone}&lt;/p&gt;</fieldText>
                     <fieldType>DisplayText</fieldType>
+                </fields>
+                <fields>
+                    <name>Preferred_Contact_Method</name>
+                    <choiceReferences>PreferredContactMethod</choiceReferences>
+                    <dataType>String</dataType>
+                    <fieldText>Preferred Contact Method</fieldText>
+                    <fieldType>DropdownBox</fieldType>
+                    <isRequired>true</isRequired>
                 </fields>
                 <inputParameters>
                     <name>width</name>
@@ -1936,7 +1970,12 @@
         </connector>
         <fields>
             <name>DisplayCustomerOverview</name>
-            <fieldText>&lt;p&gt;&lt;b style=&quot;font-size: 18px; font-family: verdana;&quot;&gt;&lt;u&gt;Customer Overview&lt;/u&gt;&lt;/b&gt;&lt;/p&gt;</fieldText>
+            <fieldText>&lt;p style=&quot;text-align: center;&quot;&gt;&lt;b style=&quot;font-family: verdana; font-size: 18px;&quot;&gt;&lt;u&gt;Customer Overview&lt;/u&gt;&lt;/b&gt;&lt;/p&gt;</fieldText>
+            <fieldType>DisplayText</fieldType>
+        </fields>
+        <fields>
+            <name>DisplayAccessoryCheck</name>
+            <fieldText>&lt;p&gt;&lt;b style=&quot;font-family: verdana; font-size: 14px;&quot;&gt;Accessory Check Overview:&lt;/b&gt;&lt;/p&gt;</fieldText>
             <fieldType>DisplayText</fieldType>
         </fields>
         <fields>
@@ -1975,6 +2014,11 @@
                 <isRequired>false</isRequired>
             </fields>
             <isRequired>false</isRequired>
+        </fields>
+        <fields>
+            <name>DisplayAdditionalNotes</name>
+            <fieldText>&lt;p&gt;&lt;b style=&quot;font-size: 14px; font-family: verdana;&quot;&gt;Additional Notes Overview:&lt;/b&gt;&lt;/p&gt;</fieldText>
+            <fieldType>DisplayText</fieldType>
         </fields>
         <fields>
             <name>Customer_Signature_Section2</name>
@@ -2034,6 +2078,11 @@
             <isRequired>false</isRequired>
         </fields>
         <fields>
+            <name>DisplayTaskOverview</name>
+            <fieldText>&lt;p&gt;&lt;b style=&quot;font-size: 14px; font-family: verdana;&quot;&gt;Task Overview:&lt;/b&gt;&lt;/p&gt;</fieldText>
+            <fieldType>DisplayText</fieldType>
+        </fields>
+        <fields>
             <name>Customer_Signature_Section3</name>
             <fieldType>RegionContainer</fieldType>
             <fields>
@@ -2067,7 +2116,7 @@
         </fields>
         <fields>
             <name>DisplayCustomerSignature</name>
-            <fieldText>&lt;p&gt;&lt;b style=&quot;font-size: 18px; font-family: verdana;&quot;&gt;&lt;u&gt;Customer Signature&lt;/u&gt;&lt;/b&gt;&lt;/p&gt;</fieldText>
+            <fieldText>&lt;p&gt;&lt;b style=&quot;font-family: verdana; font-size: 14px;&quot;&gt;Customer Signature:&lt;/b&gt;&lt;/p&gt;</fieldText>
             <fieldType>DisplayText</fieldType>
         </fields>
         <fields>
@@ -2163,7 +2212,12 @@
                 <fieldType>Region</fieldType>
                 <fields>
                     <name>DisplayTaskComplaint</name>
-                    <fieldText>&lt;p&gt;{!Loop_Order_Tasks.Complaint_dh__c}&lt;/p&gt;</fieldText>
+                    <fieldText>&lt;p&gt;&lt;b&gt;Complaint: &lt;/b&gt;{!Loop_Order_Tasks.Complaint_dh__c}&lt;/p&gt;</fieldText>
+                    <fieldType>DisplayText</fieldType>
+                </fields>
+                <fields>
+                    <name>ExpectedTime</name>
+                    <fieldText>&lt;p&gt;&lt;b&gt;Expected Time: &lt;/b&gt;{!Loop_Order_Tasks.Estimated_Duration__c}&lt;/p&gt;</fieldText>
                     <fieldType>DisplayText</fieldType>
                 </fields>
                 <inputParameters>
@@ -2238,6 +2292,27 @@
                     <fieldText>Update Complaint</fieldText>
                     <fieldType>LargeTextArea</fieldType>
                     <isRequired>false</isRequired>
+                    <visibilityRule>
+                        <conditionLogic>and</conditionLogic>
+                        <conditions>
+                            <leftValueReference>Update_ERP_Order_Task</leftValueReference>
+                            <operator>EqualTo</operator>
+                            <rightValue>
+                                <booleanValue>true</booleanValue>
+                            </rightValue>
+                        </conditions>
+                    </visibilityRule>
+                </fields>
+                <fields>
+                    <name>UpdateExpectedTime</name>
+                    <dataType>Number</dataType>
+                    <defaultValue>
+                        <elementReference>Loop_Order_Tasks.Estimated_Duration__c</elementReference>
+                    </defaultValue>
+                    <fieldText>Update Expected Time</fieldText>
+                    <fieldType>InputField</fieldType>
+                    <isRequired>false</isRequired>
+                    <scale>2</scale>
                     <visibilityRule>
                         <conditionLogic>and</conditionLogic>
                         <conditions>
@@ -2475,6 +2550,14 @@
                     <fieldType>LargeTextArea</fieldType>
                     <isRequired>false</isRequired>
                 </fields>
+                <fields>
+                    <name>NewExpectedTime</name>
+                    <dataType>Number</dataType>
+                    <fieldText>Expected Time</fieldText>
+                    <fieldType>InputField</fieldType>
+                    <isRequired>false</isRequired>
+                    <scale>2</scale>
+                </fields>
                 <inputParameters>
                     <name>width</name>
                     <value>
@@ -2576,7 +2659,7 @@
     <textTemplates>
         <name>CustomerEmailBody</name>
         <isViewedAsPlainText>false</isViewedAsPlainText>
-        <text>&lt;p&gt;{!DisplaySummary1}&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;{!DisplaySummary2}&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;{!DisplayTrailerConditon}&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;{!DisplayNotesComplaints}&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;{!DisplayERPOrderTaskSummary}&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;</text>
+        <text>&lt;p style=&quot;text-align: center;&quot;&gt;&lt;b style=&quot;font-family: verdana; font-size: 18px;&quot;&gt;&lt;u&gt;Customer Overview&lt;/u&gt;&lt;/b&gt;&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;&lt;b style=&quot;font-size: 14px; font-family: verdana;&quot;&gt;Accessory Check Overview:&lt;/b&gt;&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot;font-family: verdana;&quot;&gt;{!DisplaySummary1}&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot;font-family: verdana;&quot;&gt;{!DisplaySummary2}&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;&lt;b style=&quot;font-family: verdana; font-size: 14px;&quot;&gt;Additional Notes Overview&lt;/b&gt;&lt;b style=&quot;font-family: verdana;&quot;&gt;:&lt;/b&gt;&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot;font-family: verdana;&quot;&gt;{!DisplayTrailerConditon}&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot;font-family: verdana;&quot;&gt;{!DisplayNotesComplaints}&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;&lt;b style=&quot;font-size: 14px; font-family: verdana;&quot;&gt;Task Overview:&lt;/b&gt;&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot;font-family: verdana;&quot;&gt;{!DisplayERPOrderTaskSummary}&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;</text>
     </textTemplates>
     <textTemplates>
         <name>GalleryImage</name>
