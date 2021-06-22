@@ -111,7 +111,7 @@ export default class CustCommOrderBuilder extends NavigationMixin(LightningEleme
   {
     if( data )
     {
-//      console.log('FETCH BOAT DATA');
+     console.log('FETCH BOAT DATA');
       console.log(data);
       this.boat = data;
     }

@@ -31,6 +31,7 @@ export default class CommunitySharedLeadForm extends NavigationMixin(LightningEl
   @api collectNotes;
   @api collectNewsletterOptin;
   @api sectionWidth;
+  @api serialNumber = "N/A";
 
   @api boatModelId;
 
@@ -59,7 +60,10 @@ export default class CommunitySharedLeadForm extends NavigationMixin(LightningEl
     	}
     	if(currentPageReference.state.c__recordId){
     	  this.boatModelId = currentPageReference.state.c__recordId;
-     }
+     	}
+		if (currentPageReference.state.c__SN) {
+			this.serialNumber = currentPageReference.state.c__SN;
+		}
   }
 
   @wire( fetchCommunityDetails, {communityId: Id} )
@@ -123,7 +127,7 @@ export default class CommunitySharedLeadForm extends NavigationMixin(LightningEl
 			PostalCode: (this.template.querySelector('[data-id="PostalCode"]')) ? this.template.querySelector('[data-id="PostalCode"]').value : '',
 			Email: (this.template.querySelector('[data-id="Email"]')) ? this.template.querySelector('[data-id="Email"]').value : '',
 			Phone: (this.template.querySelector('[data-id="Phone"]')) ? this.template.querySelector('[data-id="Phone"]').value : '',
-			Description: this.formName,
+			Description: this.formName + " | Serial Number: " + this.serialNumber,
 			hubspot_plan_to_purchase__c: (this.template.querySelector('[data-id="PurchaseByDate"]')) ? this.template.querySelector('[data-id="PurchaseByDate"]').value : '',
 			hubspot_Boat_Type__c: (this.template.querySelector('[data-id="BoatType"]')) ? this.template.querySelector('[data-id="BoatType"]').value : '',
 			BoatModel__c: (this.boatModelId) ? this.boatModelId : ((this.template.querySelector('[data-id="BoatModel"]')) ? this.template.querySelector('[data-id="BoatModel"]').value : ''),

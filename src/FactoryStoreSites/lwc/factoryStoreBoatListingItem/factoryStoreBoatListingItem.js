@@ -12,106 +12,103 @@ import fetchNewInStockInventory from '@salesforce/apex/FactoryStore_InventoryCon
 //import fetchRiggedEquipment from '@salesforce/apex/FactoryStore_InventoryController.fetchRiggedEquipment';
 
 export default class FactoryStoreBoatListingItem extends NavigationMixin(LightningElement) {
- @api boat;
- @api locationName;
+	@api boat;
+	@api locationName;
 
- boatName;
- modelListingPhoto;
- standardMotor;
- standardTrailer;
- standardTollingMotor;
- overallLength;
- centerlineLength;
- packageLength;
+	boatName;
+	modelListingPhoto;
+	standardMotor;
+	standardTrailer;
+	standardTollingMotor;
+	overallLength;
+	centerlineLength;
+	packageLength;
 
- currentStockQuantity;
- currentStock = [];
+	currentStockQuantity;
+	currentStock = [];
 
 
- @wire(CurrentPageReference) pageRef;
+	@wire(CurrentPageReference) pageRef;
 
- navToBoat( event ){
+	navToBoat(event) {
 		let page = 'boat-model',
-				params = {
-					c__recordId: event.currentTarget.dataset.record
-    		};
-    this.navigateToCommunityPage( page, params );
-    event.preventDefault();
+			params = {
+				c__recordId: event.currentTarget.dataset.record
+			};
+		this.navigateToCommunityPage(page, params);
+		event.preventDefault();
 	}
 
-	navigateToCommunityPage( pageName, params ){
-	  this[NavigationMixin.Navigate]({
-	  	type: 'comm__namedPage',
-	  	attributes: {
-	  		pageName: pageName
-    	},
-    	state: params
-   	});
- 	}
+	navigateToCommunityPage(pageName, params) {
+		this[NavigationMixin.Navigate]({
+			type: 'comm__namedPage',
+			attributes: {
+				pageName: pageName
+			},
+			state: params
+		});
+	}
 
- 	quickQuote( event ){
-// 	  console.log('trigger quick quote');
-// 	  console.log('display quick connect form for modelId: ', event.currentTarget.dataset.record);
- 	  let details = {
- 	    recordId: this.boat.Id,
- 	    boatName: this.boatName
-    }
-//    console.log('details to send to form: ', details);
- 	  fireEvent(this.pageRef, 'openOverlay', details);
- 	  event.preventDefault();
-  }
+	quickQuote(event) {
+		// 	  console.log('trigger quick quote');
+		// 	  console.log('display quick connect form for modelId: ', event.currentTarget.dataset.record);
+		let details = {
+			recordId: this.boat.Id,
+			boatName: this.boatName,
+			serialNumber: event.currentTarget.dataset.serial
+		}
+		console.log('details to send to form: ', details);
+		fireEvent(this.pageRef, 'openOverlay', details);
+		event.preventDefault();
+	}
 
-  showroomVisit( event ){
-//    console.log('trigger showroom visit');
-    let page = 'schedule-a-showroom-visit',
-    		params = {
-    			c__recordId: event.currentTarget.dataset.record
-      	};
-//    console.log(params);
-    this.navigateToCommunityPage( page, params );
-    event.preventDefault();
-  }
+	showroomVisit(event) {
+		//    console.log('trigger showroom visit');
+		let page = 'schedule-a-showroom-visit',
+			params = {
+				c__recordId: event.currentTarget.dataset.record,
+				c__SN: event.currentTarget.dataset.serial
+			};
+		//    console.log(params);
+		this.navigateToCommunityPage(page, params);
+		event.preventDefault();
+	}
 
- 	connectedCallback(){
- 	  this.boatName = stripParentheses(this.boat.Name);
- 	  this.modelListingPhoto = 'background-image: url(' + this.boat.Default_Gallery_Image_Original__c + ')';
+	connectedCallback() {
+		this.boatName = stripParentheses(this.boat.Name);
+		this.modelListingPhoto = 'background-image: url(' + this.boat.Default_Gallery_Image_Original__c + ')';
 		this.standardMotor = (this.boat.Standard_Motor__r) ? rewriteMotorName(this.boat.Standard_Motor__r.Name) : '';
 		this.standardTrailer = (this.boat.Standard_Trailer__r) ? ' and ' + rewriteTrailerName(this.boat.Standard_Trailer__r.Name) : '';
-		if(this.boat.Overall_Length__c){
+		if (this.boat.Overall_Length__c) {
 			this.overallLength = convertLength(this.boat.Overall_Length__c);
-  	}
-  	if(this.boat.Length__c){
-  		this.centerlineLength = convertLength(this.boat.Length__c);
-   	}
-		if(this.boat.Package_Length__c){
+		}
+		if (this.boat.Length__c) {
+			this.centerlineLength = convertLength(this.boat.Length__c);
+		}
+		if (this.boat.Package_Length__c) {
 			this.packageLength = convertLength(this.boat.Package_Length__c);
- 	 	}
+		}
 
- 	 	const inventory = fetchNewInStockInventory({location: parseLocationName(this.locationName), year: 2021, modelId: this.boat.Id})
- 	 		.then( (result) => {
- 	 		  console.log(this.boat.Name + ' inventory result: ', result);
- 	 		  this.currentStock = result;
- 	 		  this.currentStockQuantity = result.length;
-      }).catch( e => {
-        console.log('Fetch Inventory Error: ', e);
-      });
-  }
+		const inventory = fetchNewInStockInventory({ location: parseLocationName(this.locationName), year: 2021, modelId: this.boat.Id })
+			.then((result) => {
+				console.log(this.boat.Name + ' inventory result: ', result);
 
-	get isDeckBoat(){
-	 return (this.boat.Family === 'Deck Boat') ? true : false;
- 	}
-  get isPontoon(){
-    return (this.boat.Family === 'Pontoon') ? true : false;
-  }
+				this.currentStock = result;
+				this.currentStockQuantity = result.length;
+			}).catch(e => {
+				console.log('Fetch Inventory Error: ', e);
+			});
+	}
 
-  get isFishingBoat(){
-    return (this.boat.Family !== 'Deck Boat' && this.boat.Family !== 'Pontoon') ? true : false;
-  }
+	get isDeckBoat() {
+		return (this.boat.Family === 'Deck Boat') ? true : false;
+	}
+	get isPontoon() {
+		return (this.boat.Family === 'Pontoon') ? true : false;
+	}
 
-//  get standardMotorName(){
-//    let productIds = [this.standardMotorId, this.standardTrailerId, this.standardTollingMotorId];
-//    let standardProducts = fetchStandardProducts(productIds);
-//    console.log(standardProducts);
-//  }
+	get isFishingBoat() {
+		return (this.boat.Family !== 'Deck Boat' && this.boat.Family !== 'Pontoon') ? true : false;
+	}
 
 }
