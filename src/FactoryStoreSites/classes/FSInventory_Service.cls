@@ -2,12 +2,12 @@
  * Created by Tim on 2021-06-15.
  */
 
-public with sharing class FSInventory_Selector {
+public with sharing class FSInventory_Service {
 
     @AuraEnabled public List<RiggedBoat> riggedInventory;
 //    @AuraEnabled public List<SObject> Serials;
 
-    public FSInventory_Selector(List<RiggedBoat> ri){
+    public FSInventory_Service(List<RiggedBoat> ri){
        // use this to get used
         riggedInventory = ri;
     }
@@ -68,7 +68,7 @@ public with sharing class FSInventory_Selector {
             boats.add(rb);
         }
         System.debug('getSerialNumbers Boats: ' + boats);
-        FSInventory_Selector selector = new FSInventory_Selector(boats);
+        FSInventory_Service selector = new FSInventory_Service(boats);
 
         return selector.riggedInventory;
     }
