@@ -52,12 +52,16 @@
         <ul class="currentStock__list">
           <template for:each={currentStock} for:item="stock">
             <li key={stock.Serial.serialId} class="currentStock__item">
-              <h5 class="heading">{stock.Serial.productName}</h5>
-              <template for:each={stock.Equipment} for:item="rig">
-                <p key={rig.productId}>
-                  {rig.productName}
-                </p>
-              </template>
+              <h5 class="heading heading--s">
+                <span>{stock.Serial.productName}</span>
+                <template for:each={stock.Equipment} for:item="rig">
+                  <small key={rig.productId}>
+                    {rig.productName}
+                  </small>
+                </template>
+              </h5>       
+              <button class="ctas__btn btn btn--secondary" data-record={stock.Serial.productId} data-serial={stock.Serial.serialNumber} onclick={quickQuote}>Quick Connect</button>
+              <button class="ctas__btn btn btn--secondary" data-record={stock.Serial.productId} data-serial={stock.Serial.serialNumber} onclick={showroomVisit}>Come See It!</button>
             </li>
           </template>
         </ul>

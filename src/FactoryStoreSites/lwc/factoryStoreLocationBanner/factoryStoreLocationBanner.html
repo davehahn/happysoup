@@ -12,7 +12,7 @@
       </h2>
     </figcaption>
   </figure>
-
+ <!-- TODO : create a link handler that ensures the "/s/" is added to urls -->
   <div class="locationBanner__teasers--outer">
     <div class="locationBanner__teasers--inner">
       <template for:each={allTeasers} for:item="teaser">
@@ -24,5 +24,12 @@
         </article>
       </template>
     </div>
+  </div>
+
+  <div class="locationBanner__moreInfo--wrapper" style={moreInfoBackgroundRef}>
+    <section class="locationBanner__moreInfo">
+      <h3 class="moreInfo__heading heading heading--l"><span>{moreInfoHeadingLineOne}</span> {moreInfoHeadingLineTwo}</h3>
+      <a href={moreInfoButtonLink} class="btn btn--primary">{moreInfoButtonText}</a>      
+    </section>
   </div>
 </template>

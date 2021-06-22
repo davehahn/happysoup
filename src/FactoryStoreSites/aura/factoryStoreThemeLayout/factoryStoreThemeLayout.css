@@ -17,7 +17,7 @@
 
 .THIS .storeHeader__storeDetails{
     display: grid;
-    grid-template-columns: 270px 1fr 270px;
+    grid-template-columns: 380px 1fr 270px;
     align-items: center;
     max-width: 1640px;
     margin: 0 auto;
@@ -25,6 +25,7 @@
 }
 .THIS .storeHeader__mainNavigation{
     width: 100%;
+    display: block;
 }
 
 .THIS .storeHeader__locationAndHours{
@@ -32,12 +33,9 @@
   flex-shrink: 0;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: space-between;  
 }
 
-.THIS .storeHeader__phoneNumbers{
-  width: 100%;
-}
 .THIS .storeHeader__siteToggle{
   width: 250px;
 }
@@ -90,12 +88,18 @@
   fill: #FFF;
 }
 
+.THIS .forceCommunityCardLayout .container{
+  flex-direction: row-reverse;
+}
 .THIS .forceCommunityCardLayout .mediaContainer{
   position: relative;
 }
+.THIS .forceCommunityCardLayout .mediaContainer .js-content-eyebrow {
+  display: none;
+}
 .THIS .forceCommunityCardLayout .mediaContainer .contentImage {
   position: relative;
-  clip-path: polygon(0 0, 100% 0, 90% 100%, 0 100%);
+  clip-path: polygon(15% 0, 100% 0, 100% 100%, 15% 100%, 0 50%);
   z-index: 2;
 }
 .THIS .forceCommunityCardLayout .mediaContainer::after{
@@ -103,10 +107,14 @@
   display: block;
   position: absolute;
   z-index: 1;
-  top: 0; right: -5px;
+  top: 0; right: 22px;
   width: 100%; height: 100%;
-  background-color: #FFF;
-  clip-path: polygon(0 0, 100% 0, 90% 100%, 0 100%);
+  background-color: #00B0ED;
+  clip-path: polygon(15% 0, 100% 0, 100% 100%, 15% 100%, 0 50%);
+}
+
+.THIS .forceCommunityCardLayout .mediaContainer + div{
+  padding: 0 5%;
 }
 
 .THIS .PHONE.comm-panels-container.uiContainerManager.siteforcePanelsContainer{
@@ -116,13 +124,13 @@
 @media screen and (max-width: 1245px){
   .THIS .storeHeader__corporateLogo{
     flex-shrink: initial;
-    background-size: contain;
+    background-size: contain;    
   }
 }
 
 @media screen and (max-width: 1080px){
   .THIS .storeHeader__corporateLogo{
-    display: none;
+    display: none;    
   }
 }
 

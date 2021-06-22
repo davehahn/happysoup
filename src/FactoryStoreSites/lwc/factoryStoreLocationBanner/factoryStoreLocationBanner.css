@@ -107,3 +107,29 @@
   background: linear-gradient(172deg,#FFF 0%,#fff 25%,hsla(0,0%,100%,0) 73%);
   z-index: 2;
 }
+
+.locationBanner__moreInfo--wrapper{
+  width: 100%;
+  position: relative;
+  margin-top: -2em;
+  height: 0; padding-bottom: 15vw;
+  height: 25em;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: 1;
+}
+.locationBanner__moreInfo{
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80%; max-width: 775px;
+  text-align: center;
+}
+.locationBanner__moreInfo .moreInfo__heading span{
+  display: block; font-weight: 300;
+}
+
+.locationBanner__moreInfo .btn{
+  margin: 1em auto 0;
+}

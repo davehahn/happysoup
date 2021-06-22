@@ -62,6 +62,7 @@ public with sharing class FactoryStore_InventoryController {
         System.debug('Returned Inventory: ' + inventory);
         return inventory;
     }
+    
 
 //    @AuraEnabled(Cacheable=true)
 //    public static List<Sobject> fetchNewInStockNonCurrentBoats( String location, Decimal year, String id )

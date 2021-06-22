@@ -12,6 +12,7 @@ import { setWrapperClass } from 'c/communitySharedUtils';
 export default class FactoryStoreOverlayWithLeadForm extends LightningElement {
 	recordId;
 	boatName;
+	serialNumber = "N/A";
 	wrapperClass = 'overlay';
 
 	@api introHeading;
@@ -46,6 +47,7 @@ export default class FactoryStoreOverlayWithLeadForm extends LightningElement {
    console.log('recordId: ', detail.recordId);
    this.recordId = detail.recordId;
    this.boatName = detail.boatName;
+   this.serialNumber = detail.serialNumber;
    this.leadFormName = this.boatName + ' - Lead Form';
    this.wrapperClass = setWrapperClass(this.sectionWidth, 'overlay open');
  }

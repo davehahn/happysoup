@@ -33,6 +33,13 @@ export default class FactoryStoreLocationBanner extends LightningElement {
 	@api teaserThreeLinkTarget;
 	@api teaserThreeBackground;
 
+	@api moreInfoHeadingLineOne;
+	@api moreInfoHeadingLineTwo;
+	@api moreInfoButtonText;
+	@api moreInfoButtonLink;
+	@api moreInfoBackground;
+	moreInfoBackgroundRef;
+
 	@api sectionWidth;
 
 	wrapperClass = "locationBanner";
@@ -88,6 +95,11 @@ export default class FactoryStoreLocationBanner extends LightningElement {
 						});
 					}
 				console.log('teasers: ', this.allTeasers);
+
+				if(this.moreInfoBackground){
+					  const backgroundRef = 'background-image: url("' + result.siteUrl + '/cms/delivery/media/' + this.moreInfoBackground + '")';
+					  this.moreInfoBackgroundRef = backgroundRef;
+    		}
 			 }).catch(e => {
 				 console.log('fetch community url error: ', e);
 			 });
