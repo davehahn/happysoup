@@ -17,7 +17,7 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Chat_Transcript__c</field>
+                <field>LeadId__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
@@ -211,6 +211,24 @@
             </layoutItem>
         </relatedContentItems>
     </relatedContent>
+    <relatedLists>
+        <fields>Name</fields>
+        <fields>Owner</fields>
+        <fields>StartTime</fields>
+        <fields>EndTime</fields>
+        <fields>Status</fields>
+        <relatedList>RelatedLiveChatTranscriptList</relatedList>
+    </relatedLists>
+    <relatedLists>
+        <fields>Name</fields>
+        <fields>MessagingEndUser</fields>
+        <fields>Owner</fields>
+        <fields>StartTime</fields>
+        <fields>Status</fields>
+        <fields>EndTime</fields>
+        <fields>MessagingChannel</fields>
+        <relatedList>MessagingSession</relatedList>
+    </relatedLists>
     <relatedLists>
         <relatedList>RelatedAttachmentList</relatedList>
     </relatedLists>
