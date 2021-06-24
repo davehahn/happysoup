@@ -8,6 +8,14 @@
                     <value>true</value>
                 </componentInstanceProperties>
                 <componentInstanceProperties>
+                    <name>enableActionsConfiguration</name>
+                    <value>false</value>
+                </componentInstanceProperties>
+                <componentInstanceProperties>
+                    <name>hideChatterActions</name>
+                    <value>false</value>
+                </componentInstanceProperties>
+                <componentInstanceProperties>
                     <name>numVisibleActions</name>
                     <value>1</value>
                 </componentInstanceProperties>
@@ -25,7 +33,7 @@
                     <name>chatHeight</name>
                     <value>500</value>
                 </componentInstanceProperties>
-                <componentName>runtime_service_liveagent:chatBody</componentName>
+                <componentName>runtime_service_livemessage:chatBody</componentName>
             </componentInstance>
         </itemInstances>
         <mode>Replace</mode>
@@ -35,30 +43,7 @@
     <flexiPageRegions>
         <itemInstances>
             <componentInstance>
-                <componentName>runtime_service_liveagent:pastChats</componentName>
-            </componentInstance>
-        </itemInstances>
-        <mode>Replace</mode>
-        <name>pastChatsTabContent</name>
-        <type>Facet</type>
-    </flexiPageRegions>
-    <flexiPageRegions>
-        <itemInstances>
-            <componentInstance>
                 <componentName>force:detailPanel</componentName>
-            </componentInstance>
-        </itemInstances>
-        <itemInstances>
-            <componentInstance>
-                <componentInstanceProperties>
-                    <name>parentFieldApiName</name>
-                    <value>LiveChatTranscript.Id</value>
-                </componentInstanceProperties>
-                <componentInstanceProperties>
-                    <name>relatedListApiName</name>
-                    <value>LiveChatTranscriptEvents</value>
-                </componentInstanceProperties>
-                <componentName>force:relatedListSingleContainer</componentName>
             </componentInstance>
         </itemInstances>
         <mode>Replace</mode>
@@ -79,19 +64,6 @@
                 <componentInstanceProperties>
                     <name>title</name>
                     <value>Standard.Tab.chat</value>
-                </componentInstanceProperties>
-                <componentName>flexipage:tab</componentName>
-            </componentInstance>
-        </itemInstances>
-        <itemInstances>
-            <componentInstance>
-                <componentInstanceProperties>
-                    <name>body</name>
-                    <value>pastChatsTabContent</value>
-                </componentInstanceProperties>
-                <componentInstanceProperties>
-                    <name>title</name>
-                    <value>Standard.Tab.pastChats</value>
                 </componentInstanceProperties>
                 <componentName>flexipage:tab</componentName>
             </componentInstance>
@@ -123,11 +95,6 @@
                 <componentName>flexipage:tabset</componentName>
             </componentInstance>
         </itemInstances>
-        <itemInstances>
-            <componentInstance>
-                <componentName>forceKnowledge:articleSearchDesktop</componentName>
-            </componentInstance>
-        </itemInstances>
         <mode>Replace</mode>
         <name>main</name>
         <type>Region</type>
@@ -136,31 +103,40 @@
         <itemInstances>
             <componentInstance>
                 <componentInstanceProperties>
-                    <name>createQuickActionName</name>
-                    <value>NewContact</value>
+                    <name>lookupFieldName</name>
+                    <value>MessagingEndUserId</value>
                 </componentInstanceProperties>
                 <componentInstanceProperties>
-                    <name>lookupFieldName</name>
-                    <value>ContactId</value>
+                    <name>titleFieldName</name>
+                    <value>Messaging User</value>
                 </componentInstanceProperties>
                 <componentInstanceProperties>
                     <name>updateQuickActionName</name>
-                    <value>Contact._LightningRelatedContact</value>
+                    <value>MessagingEndUser._UpdateMessagingEndUser</value>
                 </componentInstanceProperties>
                 <componentName>console:relatedRecord</componentName>
             </componentInstance>
         </itemInstances>
         <itemInstances>
             <componentInstance>
+                <componentName>runtime_service_livemessage:messagingSessionLinkedRecords</componentName>
+            </componentInstance>
+        </itemInstances>
+        <itemInstances>
+            <componentInstance>
                 <componentInstanceProperties>
-                    <name>lookupFieldName</name>
-                    <value>Id</value>
+                    <name>flowArguments</name>
+                    <value>[{&quot;label&quot;:&quot;recordID&quot;,&quot;dataType&quot;:&quot;String&quot;,&quot;supportsRecordId&quot;:true,&quot;value&quot;:&quot;{!Record.Id}&quot;}]</value>
                 </componentInstanceProperties>
                 <componentInstanceProperties>
-                    <name>updateQuickActionName</name>
-                    <value>LiveChatTranscript._LightningUpdateLiveChatTranscript</value>
+                    <name>flowLayout</name>
+                    <value>oneColumn</value>
                 </componentInstanceProperties>
-                <componentName>console:relatedRecord</componentName>
+                <componentInstanceProperties>
+                    <name>flowName</name>
+                    <value>Case_Create_Support_Case_Internal</value>
+                </componentInstanceProperties>
+                <componentName>flowruntime:interview</componentName>
             </componentInstance>
         </itemInstances>
         <itemInstances>
@@ -184,9 +160,9 @@
         <name>sidebar</name>
         <type>Region</type>
     </flexiPageRegions>
-    <masterLabel>Chat Transcript Record Page</masterLabel>
-    <parentFlexiPage>runtime_service_liveagent__LCT_rec_L</parentFlexiPage>
-    <sobjectType>LiveChatTranscript</sobjectType>
+    <masterLabel>Messaging Session FlexiPage</masterLabel>
+    <parentFlexiPage>runtime_service_livemessage__MS_rec_L</parentFlexiPage>
+    <sobjectType>MessagingSession</sobjectType>
     <template>
         <name>flexipage:recordHomeTemplateDesktop</name>
     </template>
