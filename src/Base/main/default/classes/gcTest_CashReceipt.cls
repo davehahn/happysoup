@@ -3,9 +3,9 @@ private class gcTest_CashReceipt{
 
 	static testMethod void test1()
 	{
-        gcCashReceipt.coverage();
-        gcCashReceipt_PDF.coverage();
-        gcCashReceipt_Refund.coverage();
+       // gcCashReceipt.coverage();
+       // gcCashReceipt_PDF.coverage();
+      //  gcCashReceipt_Refund.coverage();
     }
     /*
     static testMethod void test2()
