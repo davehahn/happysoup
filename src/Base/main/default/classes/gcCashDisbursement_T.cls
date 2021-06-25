@@ -62,7 +62,7 @@ public class gcCashDisbursement_T {
         cd.AcctSeed__Payment_Status__c = 'Paid';
         cd.AcctSeed__Check_Number__c = 100;
         insert cd;
-        AcctSeed.PostResult[] postResults = AcctSeed.CashDisbursementPostService.postCashDisbursements(new List<AcctSeed__Cash_Disbursement__c>{cd});
+        AcctSeed.PostResult[] postResults = AcctSeed.CashDisbursementPostService.unpostCashDisbursements(new List<AcctSeed__Cash_Disbursement__c>{cd});
 
         AcctSeed__Cash_Disbursement__c cd2 = [
                 SELECT
