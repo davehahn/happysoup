@@ -7,7 +7,7 @@ private class gcTest_Actions{
 		//gcBilling_Clone.coverage();
 		//gcAccountPayable_Actions.coverage();
 		//gcJournalEntry_Actions.coverage();
-		gcCashReceipt_Actions.coverage();
+		//gcCashReceipt_Actions.coverage();
 		//gcPurchaseOrder_Actions.coverage();
 		//gcAdjustment_Actions.coverage();
 	}
