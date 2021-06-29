@@ -5,7 +5,6 @@ public with sharing class gcAccountPayable_T {
         new Factory_TestData();
         Factory_CustomSettings.setupInventorySettings();
         Factory_AccountPayable.insertAccountPayable(5);
-        new Factory_AccountingVariables();
     }
 
     @isTest

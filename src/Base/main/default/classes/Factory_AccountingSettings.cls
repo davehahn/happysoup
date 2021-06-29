@@ -114,7 +114,7 @@ public class Factory_AccountingSettings {
   {
     Date d = Date.Today().addMonths(-1);
     AcctSeed__Accounting_Period__c period = new AcctSeed__Accounting_Period__c(
-      AcctSeed__End_Date__c = d.addMonths(2).toStartOfMonth().addDays(-1),
+      AcctSeed__End_Date__c = d.addMonths(3).toStartOfMonth().addDays(-1),
       AcctSeed__Start_Date__c = d.toStartOfMonth(),
       AcctSeed__Status__c = 'Open',
       Name = Datetime.Now().format('YYYY-MM')
