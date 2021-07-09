@@ -4,119 +4,134 @@
 
 <!-- Factory Store Boat Details -->
 <template>
-  <article class={modelWrapperClass}>
-    <template if:true={boatDataLoaded}>
+  <div class="modelWrapper" style={bannerBg}>
+    <article class={modelWrapperClass}>
+      <template if:true={boatDataLoaded}>
 
-      <header class="model__intro">
-        <div class="intro__vitals">
-          <h2 class="heading heading-l">{boatName}</h2>
+        <header class="model__intro">
+          <div class="intro__vitals--wrapper">
+            <div class="intro__vitals">
+              <h2 class="intro__boatName heading heading--l">{boatName}</h2>
 
-          <div class="vitals__priceBlock">
-            <strong class="priceBlock__weekly" aria-describedby="vitals_includes">
-              {weeklyPrice} <span>Per Week</span>
-            </strong>
-            <strong class="priceBlock__retail" aria-describedby="vitals_includes">
-              {retailPrice}<sup>*</sup>
-            </strong>
-            <em class="priceBlock__includes" id="vitals_includes">
-              <p>With {standardMotorName} {standardTrailerName}</p>
-            </em>
-          </div>
-          <small>*Ontario and Quebec All-In Pricing. <a href="#">Click here</a> for national pricing details.</small>
-        </div>
-        <span class="intro__photo" style={introPhoto}></span>
-      </header>
-
-      <section class="model__specs">
-        <h3 class="heading heading-m">Specifications</h3>
-        <ul>
-          <template for:each={boatSpecs} for:item="spec">
-            <li key={spec.Name}>
-              <span>{spec.Name}</span> <strong>{spec.Value}</strong>
-            </li>
-          </template>
-        </ul>
-      </section>
-
-      <section class="model__motors">
-        <h3 class="heading heading-m">Choose Your Power</h3>
-        <ul>
-          <template for:each={motorUpgrades} for:item="motor">
-            <li key={motor.Name}>
-              <span>{motor.Name}</span>
-              <span>
-                <strong>+{motor.WeeklyUpgradeCost} Per Week</strong>
-                <strong>+{motor.RetailUpgradeCost}</strong>
-              </span>
-            </li>
-          </template>
-        </ul>
-      </section>
-
-      <section class="model__premiumPack">
-        <h3 class="heading heading-m">Preferred Equipment Package</h3>
-        <ul>
-          <template for:each={premiumPackItems} for:item="item">
-            <li key={item.description} class="premiumPackage__item">
-              <div class="premiumPackage__itemDetail">
-                <strong class="itemDetail__name">
-                  <template if:true={isEN}>{item.description}</template>
-                  <template if:true={isFR}>{item.description_fr}</template>
+              <div class="vitals__priceBlock">
+                <strong class="priceBlock__weekly" aria-describedby="vitals_includes">
+                  {weeklyPrice} <span>Per Week</span>
                 </strong>
-                <span class="itemDetail__value">
-                  <template if:true={isEN}>{item.valueFormatted}</template>
-                  <template if:true={isFR}>{item.valueFormatted_fr}</template>
-                </span>
+                <strong class="priceBlock__retail" aria-describedby="vitals_includes">
+                  {retailPrice}<sup>*</sup>
+                </strong>
+                <em class="priceBlock__includes" id="vitals_includes">
+                  <p>With {standardMotorName} {standardTrailerName}</p>
+                </em>
+                <small class="priceBlock__pricingDetails">*Ontario and Quebec All-In Pricing. <a href="#">Click here</a> for national pricing details.</small>
               </div>
-              <div class="premiumPackage__itemPrice">
-                <template if:true={isEN}>
-                  <span>You Pay:</span>
-                  <strong>$0</strong>
-                </template>
-                <template if:true={isFR}>
-                  <span>You Pay:</span>
-                  <strong>0 $</strong>
-                </template>
-              </div>
-            </li>
-          </template>
-        </ul>
-      </section>
+            </div>
+          </div>
 
-      <div class="model__leadFormWrapper">
-        <section class="model__leadForm">
-          <header class="fullWidth">
-            <h3 class="heading heading-m maxWidth maxWidth--thin">Interested?</h3>
-            <p class="copy copy-standard maxWidth maxWidth--thin">Fill out the form below and a Legend Boats representative will contact you with more information.</p>
-          </header>
-          <c-community-shared-lead-form
-                  form-name={leadFormName}
-                  campaign-id={campaignId}
-                  boat-model-id={recordId}
-                  collect-first-name="true"
-                  collect-last-name="true"
-                  collect-street="true"
-                  collect-city="true"
-                  collect-province="true"
-                  collect-postal-code="true"
-                  collect-email="true"
-                  collect-phone="true"
-                  collect-plan-to-purchase="true"
-                  collect-notes="true"
-                  collect-newsletter-optin="true"></c-community-shared-lead-form>
+          <span class="intro__photo" style={introPhoto}></span>
+        </header>
+
+        <c-factory-store-current-inventory-list boat={boat} boat-id={recordId} location-name={locationName}></c-factory-store-current-inventory-list>
+
+        <section class="model__specs model__block">
+          <h3 class="heading heading--l">Specifications</h3>
+          <ul>
+            <template for:each={boatSpecs} for:item="spec">
+              <li key={spec.Name}>
+                <span>{spec.Name}</span> <lightning-formatted-rich-text value={spec.Value}></lightning-formatted-rich-text>
+              </li>
+            </template>
+          </ul>
         </section>
-      </div>
 
-      <a class="model__fullDetailsCta fullWidth" href={flagshipLink} target="_blank">
-        <h4 class="heading heading-m heading-light">Visit <strong>LegendBoats.com</strong> for more information</h4>
-      </a>
+        <section class="model__motors model__block">
+          <h3 class="heading heading--l">Choose Your Power</h3>
+          <ul>
+            <template for:each={motorUpgrades} for:item="motor">
+              <li key={motor.Name}>
+                <span>{motor.Name}</span>
+                <span>
+                  <strong>+{motor.WeeklyUpgradeCost} Per Week</strong>
+                  <strong>+{motor.RetailUpgradeCost}</strong>
+                </span>
+              </li>
+            </template>
+          </ul>
+        </section>
 
-    </template>
-    <template if:true={boatDataLookupRunning}>
-      <c-community-shared-loading></c-community-shared-loading>
-    </template>
-    <template if:true={resultEmpty}>
-      <p>Result Empty.</p>
-    </template>
-  </article>
+        <section class="model__premiumPack model__block">
+          <h3 class="heading heading--l">Preferred Equipment Package</h3>
+          <ul>
+            <template for:each={premiumPackItems} for:item="item">
+              <li key={item.description} class="premiumPackage__item">
+                <div class="premiumPackage__itemDetail">
+                  <strong class="itemDetail__name">
+                    <template if:true={isEN}>{item.description}</template>
+                    <template if:true={isFR}>{item.description_fr}</template>
+                  </strong>
+                </div>
+                <div class="premiumPackage__itemPrice">
+                  <span class="itemDetail__value">
+                    <template if:true={isEN}>Value: <span>{item.valueFormatted}</span></template>
+                    <template if:true={isFR}>Value: <span>{item.valueFormatted_fr}</span></template>
+                  </span>
+                  <template if:true={isEN}>
+                    <div>
+                      <span>You Pay:</span>
+                      <strong>$0</strong>
+                    </div>
+                  </template>
+                  <template if:true={isFR}>
+                    <div>
+                      <span>You Pay:</span>
+                      <strong>$0</strong>
+                    </div>
+                  </template>
+                </div>
+              </li>
+            </template>
+          </ul>
+        </section>
+
+        <div class="model__leadFormWrapper">
+          <section class="model__leadForm">
+            <header class="">
+              <h3 class="heading heading--m">Interested?</h3>
+              <p class="copy copy--standard">Fill out the form below and a Legend Boats representative will contact you with more information.</p>
+            </header>
+            <div class="form">
+              <c-community-shared-lead-form
+                      form-name={leadFormName}
+                      location-name={locationName}
+                      campaign-id={campaignId}
+                      boat-model-id={recordId}
+                      collect-first-name="true"
+                      collect-last-name="true"
+                      collect-street="true"
+                      collect-city="true"
+                      collect-province="true"
+                      collect-postal-code="true"
+                      collect-email="true"
+                      collect-phone="true"
+                      collect-plan-to-purchase="true"
+                      collect-notes="true"
+                      collect-newsletter-optin="true"
+                      section-width="Container"></c-community-shared-lead-form>
+            </div>
+          </section>
+        </div>
+
+        <a class="model__fullDetailsCta fullWidth" href={flagshipLink} target="_blank">
+          <h4 class="fullDetailsCta__heading heading heading--m heading--light">Visit <strong>LegendBoats.com</strong> for more information</h4>
+        </a>
+
+      </template>
+      <template if:true={boatDataLookupRunning}>
+        <c-community-shared-loading></c-community-shared-loading>
+      </template>
+      <template if:true={resultEmpty}>
+        <p>Result Empty.</p>
+      </template>
+    </article>
+  </div>
 </template>

@@ -4,7 +4,10 @@
 
 import { LightningElement, api, wire } from 'lwc';
 import { NavigationMixin, CurrentPageReference } from 'lightning/navigation';
-import { stringy, stripParentheses, rewriteMotorName, rewriteTrailerName, weeklyPayment, formatPrice } from 'c/communitySharedUtils';
+import { stringy, stripParentheses, rewriteMotorName, rewriteTrailerName, weeklyPayment, formatPrice, setWrapperClass, convertLength } from 'c/communitySharedUtils';
+import Id from '@salesforce/community/Id';
+import BANNER from '@salesforce/resourceUrl/FactoryStoreModelBanner';
+import fetchCommunityDetails from '@salesforce/apex/CommSharedURL_Controller.fetchCommunityDetails';
 import fetchBoat from '@salesforce/apex/FactoryStore_InventoryController.fetchBoat';
 import passBoatModelId from '@salesforce/apex/FactoryStore_FlowController.passBoatModelId';
 
@@ -13,6 +16,8 @@ import { fireEvent, registerListener, unregisterAllListeners} from 'c/pubsub';
 
 export default class FactoryStoreBoatDetails extends NavigationMixin(LightningElement) {
 
+	@api sectionWidth;
+
   isEN = true;
 	isFR = false;
 
@@ -20,21 +25,37 @@ export default class FactoryStoreBoatDetails extends NavigationMixin(LightningEl
   boat;
   boatDataLookupRunning = true;
   boatDataLoaded = false;
-  modelWrapperClass = 'model model--loading maxWidth maxWidth--thin';
+  modelWrapperClass = 'model model--loading';
   resultEmpty = false;
 
   boatName;
   standardMotorName;
   standardTrailerName;
 
+  bannerBg = 'background-image: url(' + BANNER + ')';
+
   // Lead forms
 	leadFormName;
 	@api campaignId;
+	locationName;
 
   @wire(CurrentPageReference)
   setCurrentPageReference(currentPageReference){
     this.recordId = currentPageReference.state.c__recordId;
   }
+
+  @wire( fetchCommunityDetails, {communityId: Id} )
+		wiredFetchCommunityDetails( { error, data } )
+		{
+			if( data )
+			{
+				this.locationName = data.name;
+			}
+			else if( error )
+			{
+				console.log('fetch community error: ', error);
+			}
+		}
 
   @wire( fetchBoat, { boatId: '$recordId' } )
   wiredFetchBoat( { error, data } )
@@ -57,7 +78,7 @@ export default class FactoryStoreBoatDetails extends NavigationMixin(LightningEl
 
   recordFound(){
     this.boatDataLoaded = true;
-    this.modelWrapperClass = 'model maxWidth maxWidth--thin';
+    this.modelWrapperClass = setWrapperClass(this.sectionWidth, 'model');
     this.boatDataLookupRunning =  false;
     this.boatName = stripParentheses(this.boat.Name);
     this.leadFormName = this.boatName + ' - Lead Form';
@@ -131,9 +152,23 @@ export default class FactoryStoreBoatDetails extends NavigationMixin(LightningEl
 			sortOrder.forEach((sOption, sIndex) => {
 				for (const [pIndex, pOption] of Object.entries(props)) {
 				  if(sOption === pIndex){
+				    let spec = pOption + translate[pIndex].unit;
+						let unit = translate[pIndex].unit;
+				    if(translate[pIndex].unit === 'convertLength'){
+							let truncateLengthTrailingZero = true;
+							if((this.recordId === '01t1Y00000ATJfUQAX') && (pIndex === 'Overall Length')){
+								truncateLengthTrailingZero = false;
+							} else if((this.recordId === '01ti0000004zco9AAA') && (pIndex === 'Length')){
+								truncateLengthTrailingZero = false;
+							} else if((this.recordId === '01t1Y00000ATDipQAH') && (pIndex === 'Centerline Length' || pIndex === 'Deck Length')){
+								truncateLengthTrailingZero = false;
+							}
+							spec = convertLength(pOption, truncateLengthTrailingZero);
+        		}
+
 				  	sortedArray[sIndex] = {
 				  	 'Name': pIndex,
-				  	 'Value': pOption
+				  	 'Value': '<strong>' + spec + '</strong>'
        			};
       		}
     		}
