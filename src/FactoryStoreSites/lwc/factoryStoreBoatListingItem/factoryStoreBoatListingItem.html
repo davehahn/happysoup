@@ -50,25 +50,8 @@
         <button class="ctas__btn btn btn--secondary" data-record={boat.Base.Id} onclick={showroomVisit}>Come See It!</button>
       </div>
 
-      <div class="modelListing__currentStock">
-        <ul class="currentStock__list">
-          <template for:each={currentStock} for:item="stock">
-            <li key={stock.Base.SerialId} class="currentStock__item">
-              <h5 class="heading heading--s">
-                <span>{stock.Base.ProductName}</span>
-                <span>Starting At: {stock.Base.StartingWeeklyPrice} Per Week | {stock.Base.StartingRetailPrice}</span>
-                <template for:each={stock.Base.Equipment} for:item="rig">
-                  <small key={rig.ProductId}>
-                    {rig.ProductName}
-                  </small>
-                </template>
-              </h5>       
-              <button class="ctas__btn btn btn--secondary" data-record={stock.Base.ProductId} data-serial={stock.Base.SerialNumber} onclick={quickQuote}>Quick Connect</button>
-              <button class="ctas__btn btn btn--secondary" data-record={stock.Base.ProductId} data-serial={stock.Base.SerialNumber} onclick={showroomVisit}>Come See It!</button>
-            </li>
-          </template>
-        </ul>
-      </div>
+      <c-factory-store-current-inventory-list boat={boat} boat-id={boat.Base.Id} location-name={locationName}></c-factory-store-current-inventory-list>
+
     </article>
   </li>
 </template>
