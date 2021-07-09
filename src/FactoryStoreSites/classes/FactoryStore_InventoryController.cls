@@ -53,6 +53,13 @@ public with sharing class FactoryStore_InventoryController {
     }
 
     @AuraEnabled(Cacheable=true)
+    public static FSInventory_Service fetchFullBoatDetails(Id modelId)
+    {
+        FSInventory_Service boat = new FSInventory_Service(modelId);
+        return boat;
+    }
+
+    @AuraEnabled(Cacheable=true)
     public static List<FSInventory_Service.RiggedBoat> fetchNewInStockInventory(String location, Integer year, String modelId)
     {
         List<FSInventory_Service.RiggedBoat> inventory = new List<FSInventory_Service.RiggedBoat>();

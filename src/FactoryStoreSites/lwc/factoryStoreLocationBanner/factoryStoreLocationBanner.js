@@ -37,6 +37,7 @@ export default class FactoryStoreLocationBanner extends LightningElement {
 	@api moreInfoHeadingLineTwo;
 	@api moreInfoButtonText;
 	@api moreInfoButtonLink;
+	moreInfoButtonLinkRewrite;
 	@api moreInfoBackground;
 	moreInfoBackgroundRef;
 
@@ -63,7 +64,7 @@ export default class FactoryStoreLocationBanner extends LightningElement {
 							'heading': this.teaserOneHeading,
 							'deck': this.teaserOneDeck,
 							'buttonText': this.teaserOneButtonText,
-							'buttonLink': this.teaserOneButtonLink,
+							'buttonLink': result.siteUrl + '/s' + this.teaserOneButtonLink,
 							'buttonTarget': target,
 							'background': backgroundRef
       			});
@@ -76,7 +77,7 @@ export default class FactoryStoreLocationBanner extends LightningElement {
 							'heading': this.teaserTwoHeading,
 							'deck': this.teaserTwoDeck,
 							'buttonText': this.teaserTwoButtonText,
-							'buttonLink': this.teaserTwoButtonLink,
+							'buttonLink': result.siteUrl + '/s' + this.teaserTwoButtonLink,
 							'buttonTarget': target,
 							'background': backgroundRef
 						});
@@ -89,7 +90,7 @@ export default class FactoryStoreLocationBanner extends LightningElement {
 							'heading': this.teaserThreeHeading,
 							'deck': this.teaserThreeDeck,
 							'buttonText': this.teaserThreeButtonText,
-							'buttonLink': this.teaserThreeButtonLink,
+							'buttonLink': result.siteUrl + '/s' + this.teaserThreeButtonLink,
 							'buttonTarget': target,
 							'background': backgroundRef
 						});
@@ -99,6 +100,7 @@ export default class FactoryStoreLocationBanner extends LightningElement {
 				if(this.moreInfoBackground){
 					  const backgroundRef = 'background-image: url("' + result.siteUrl + '/cms/delivery/media/' + this.moreInfoBackground + '")';
 					  this.moreInfoBackgroundRef = backgroundRef;
+					  this.moreInfoButtonLinkRewrite = result.siteUrl + '/s' + this.moreInfoButtonLink;
     		}
 			 }).catch(e => {
 				 console.log('fetch community url error: ', e);
