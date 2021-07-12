@@ -47,6 +47,7 @@ export default class FactoryStoreBoatListing extends NavigationMixin(LightningEl
 		if(this.locationName){
 		    fetchBoatsBySeries({seriesName: this.seriesName})
 					.then( (boats) => {
+					  console.log('got boats: ', boats);
 						boats.forEach( (boat, i) => {
 						  this.boatPromises.push(
 							 	fetchFullBoatDetails({modelId: boat.Id})

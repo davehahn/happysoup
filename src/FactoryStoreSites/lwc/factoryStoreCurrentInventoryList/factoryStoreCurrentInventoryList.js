@@ -5,7 +5,7 @@
 import { LightningElement, api } from 'lwc';
 import { stringy, stripParentheses, rewriteMotorName, rewriteTrailerName, convertLength, parseLocationName, formatPrice, weeklyPayment } from 'c/communitySharedUtils';
 import fetchNewInStockInventory from '@salesforce/apex/FactoryStore_InventoryController.fetchNewInStockInventory';
-import fetchFullBoatDetails from '@salesforce/apex/FactoryStore_InventoryController.fetchFullBoatDetails';
+//import fetchFullBoatDetails from '@salesforce/apex/FactoryStore_InventoryController.fetchFullBoatDetails';
 
 export default class FactoryStoreCurrentInventoryList extends LightningElement {
 
@@ -23,57 +23,56 @@ export default class FactoryStoreCurrentInventoryList extends LightningElement {
 		const inventory = fetchNewInStockInventory({ location: parseLocationName(this.locationName), year: 2021, modelId: this.boatId })
 			.then((boats) => {
 				boats.forEach((boat, index) => {
-
 					this.stockPromises.push(
-
-						fetchFullBoatDetails({modelId: boat.Serial.productId})
-							.then( (fullBoat) => {
-
-								this.storeStock.push({
-									Base: {
-										SerialId: boat.Serial.serialId,
-										ProductName: stripParentheses(boat.Serial.productName),
-										ProductId: boat.Serial.productId,
-										SerialNumber: boat.Serial.serialNumber,
-										BaseRetailPrice: fullBoat.RetailPrice,
-										StartingWeeklyPrice: weeklyPayment(fullBoat.RetailPrice),
-										StartingRetailPrice: fullBoat.RetailPrice,
-										StartingWeeklyPrice: 0,
-										RetailUpgradeCost: 0,
-										WeeklyUpgradeCost: 0,
-										Equipment: []
-									},
-									Expanded: fullBoat
-								});
-								boat.Equipment.forEach((e, i) => {
-									let retailUpgradeCost = 0;
-									if(e.productType === 'Motor'){
-										fullBoat.MotorUpgrades.forEach( (motor, index) => {
-											if(motor.Id === e.productId){
-												retailUpgradeCost += motor.RetailUpgradeCost
-											}
-										});
-									} else {
-										fullBoat.TrailerUpgrades.forEach( (trailer, index) => {
-											if(trailer.Id === e.productId){
-												retailUpgradeCost += trailer.RetailUpgradeCost
-											}
-										});
-									}
-									this.storeStock[index].Base.RetailUpgradeCost += retailUpgradeCost;
-									this.storeStock[index].Base.StartingRetailPrice += retailUpgradeCost;
-
-									let productName = (e.productType === 'Motor') ? rewriteMotorName(e.productName) : ' and ' + rewriteTrailerName(e.productName);
-									this.storeStock[index].Base.Equipment.push({
-										ProductId: e.productId,
-										ProductName: productName
-									});
-
-								});
-
-							}).catch(e => {
-								console.log('fetchFullBoatDetails error: ', e);
-							})
+							boat
+//						fetchFullBoatDetails({modelId: boat.Serial.productId})
+//							.then( (fullBoat) => {
+//
+//								this.storeStock.push({
+//									Base: {
+//										SerialId: boat.Serial.serialId,
+//										ProductName: stripParentheses(boat.Serial.productName),
+//										ProductId: boat.Serial.productId,
+//										SerialNumber: boat.Serial.serialNumber,
+//										BaseRetailPrice: fullBoat.RetailPrice,
+//										StartingWeeklyPrice: weeklyPayment(fullBoat.RetailPrice),
+//										StartingRetailPrice: fullBoat.RetailPrice,
+//										StartingWeeklyPrice: 0,
+//										RetailUpgradeCost: 0,
+//										WeeklyUpgradeCost: 0,
+//										Equipment: []
+//									},
+//									Expanded: fullBoat
+//								});
+//								boat.Equipment.forEach((e, i) => {
+//									let retailUpgradeCost = 0;
+//									if(e.productType === 'Motor'){
+//										fullBoat.MotorUpgrades.forEach( (motor, index) => {
+//											if(motor.Id === e.productId){
+//												retailUpgradeCost += motor.RetailUpgradeCost
+//											}
+//										});
+//									} else {
+//										fullBoat.TrailerUpgrades.forEach( (trailer, index) => {
+//											if(trailer.Id === e.productId){
+//												retailUpgradeCost += trailer.RetailUpgradeCost
+//											}
+//										});
+//									}
+//									this.storeStock[index].Base.RetailUpgradeCost += retailUpgradeCost;
+//									this.storeStock[index].Base.StartingRetailPrice += retailUpgradeCost;
+//
+//									let productName = (e.productType === 'Motor') ? rewriteMotorName(e.productName) : ' and ' + rewriteTrailerName(e.productName);
+//									this.storeStock[index].Base.Equipment.push({
+//										ProductId: e.productId,
+//										ProductName: productName
+//									});
+//
+//								});
+//
+//							}).catch(e => {
+//								console.log('fetchFullBoatDetails error: ', e);
+//							})
 
 					);
 
@@ -94,6 +93,12 @@ export default class FactoryStoreCurrentInventoryList extends LightningElement {
 		});
 		this.currentStock = this.storeStock;
 		this.storeStockQuantity = this.storeStock.length;
+
+		const passStockEvent = new CustomEvent('updatestockvalue', {
+			detail: this.storeStockQuantity
+  	});
+
+		this.dispatchEvent(passStockEvent);
 	}
 
 }

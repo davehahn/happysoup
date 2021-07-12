@@ -28,6 +28,8 @@ export default class FactoryStoreBoatDetails extends NavigationMixin(LightningEl
   modelWrapperClass = 'model model--loading';
   resultEmpty = false;
 
+	currentStockQuantity;
+
   boatName;
   standardMotorName;
   standardTrailerName;
@@ -241,5 +243,9 @@ export default class FactoryStoreBoatDetails extends NavigationMixin(LightningEl
  	  console.log('pass to flow: ', modelId);
  	  passBoatModelId({ modelId: modelId });
   }
+
+  handleUpdateStockValue( e ){
+		this.currentStockQuantity = e.detail;
+	}
 
 }

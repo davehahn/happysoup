@@ -50,7 +50,7 @@
         <button class="ctas__btn btn btn--secondary" data-record={boat.Base.Id} onclick={showroomVisit}>Come See It!</button>
       </div>
 
-      <c-factory-store-current-inventory-list boat={boat} boat-id={boat.Base.Id} location-name={locationName}></c-factory-store-current-inventory-list>
+      <c-factory-store-current-inventory-list boat={boat} boat-id={boat.Base.Id} location-name={locationName} onupdatestockvalue={handleUpdateStockValue}></c-factory-store-current-inventory-list>
 
     </article>
   </li>

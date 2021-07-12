@@ -11,6 +11,7 @@
         <header class="model__intro">
           <div class="intro__vitals--wrapper">
             <div class="intro__vitals">
+              <span class="intro__stock">{currentStockQuantity} In-Stock</span>
               <h2 class="intro__boatName heading heading--l">{boatName}</h2>
 
               <div class="vitals__priceBlock">
@@ -31,7 +32,7 @@
           <span class="intro__photo" style={introPhoto}></span>
         </header>
 
-        <c-factory-store-current-inventory-list boat={boat} boat-id={recordId} location-name={locationName}></c-factory-store-current-inventory-list>
+        <c-factory-store-current-inventory-list boat={boat} boat-id={recordId} location-name={locationName} onupdatestockvalue={handleUpdateStockValue}></c-factory-store-current-inventory-list>
 
         <section class="model__specs model__block">
           <h3 class="heading heading--l">Specifications</h3>
