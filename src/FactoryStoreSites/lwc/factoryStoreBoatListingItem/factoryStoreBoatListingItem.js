@@ -7,8 +7,6 @@ import { NavigationMixin, CurrentPageReference } from 'lightning/navigation';
 import { fireEvent, registerListener, unregisterAllListeners } from 'c/pubsub';
 import { stringy, stripParentheses, rewriteMotorName, rewriteTrailerName, convertLength, parseLocationName, formatPrice, weeklyPayment } from 'c/communitySharedUtils';
 import fetchStandardProducts from '@salesforce/apex/FactoryStore_InventoryController.fetchBoat';
-//import fetchNewInStockCurrentBoats from '@salesforce/apex/FactoryStore_InventoryController.fetchNewInStockCurrentBoats';
-//import fetchRiggedEquipment from '@salesforce/apex/FactoryStore_InventoryController.fetchRiggedEquipment';
 
 export default class FactoryStoreBoatListingItem extends NavigationMixin(LightningElement) {
 	@api boat;
@@ -77,7 +75,7 @@ export default class FactoryStoreBoatListingItem extends NavigationMixin(Lightni
 	}
 
 	connectedCallback() {
-	  console.log(JSON.parse(JSON.stringify(this.boat)));
+//	  console.log(JSON.parse(JSON.stringify(this.boat)));
 	  this.startingRetailPrice = formatPrice(this.boat.Expanded.RetailPrice, true);
 	 	this.startingWeeklyPrice = weeklyPayment(this.boat.Expanded.RetailPrice);
 		this.boatName = stripParentheses(this.boat.Base.Name);
@@ -105,4 +103,8 @@ export default class FactoryStoreBoatListingItem extends NavigationMixin(Lightni
 	get isFishingBoat() {
 		return (this.boat.Base.Family !== 'Deck Boat' && this.boat.Base.Family !== 'Pontoon') ? true : false;
 	}
+
+	handleUpdateStockValue( e ){
+		this.currentStockQuantity = e.detail;
+ 	}
 }

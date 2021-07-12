@@ -53,19 +53,17 @@ public with sharing class FactoryStore_InventoryController {
     }
 
     @AuraEnabled(Cacheable=true)
-    public static FSInventory_Service fetchFullBoatDetails(Id modelId)
+    public static FSBoatDetails_Service fetchFullBoatDetails(Id modelId)
     {
-        FSInventory_Service boat = new FSInventory_Service(modelId);
+        FSBoatDetails_Service boat = new FSBoatDetails_Service(modelId);
         return boat;
     }
 
     @AuraEnabled(Cacheable=true)
-    public static List<FSInventory_Service.RiggedBoat> fetchNewInStockInventory(String location, Integer year, String modelId)
+    public static FSInventory_Service fetchNewInStockInventory(String location, Integer year, String modelId)
     {
-        List<FSInventory_Service.RiggedBoat> inventory = new List<FSInventory_Service.RiggedBoat>();
-        for( FSInventory_Service.RiggedBoat s : FSInventory_Service.getSerialNumbers(location, year, modelId)){
-            inventory.add( s );
-        }
+        FSInventory_Service inventory = new FSInventory_Service(location, year, modelId);
+
         System.debug('Returned Inventory: ' + inventory);
         return inventory;
     }
