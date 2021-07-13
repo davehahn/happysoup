@@ -59,9 +59,11 @@ public with sharing class FSInventory_Service {
         for(SerialNumberObject sno : serialNumberObjects){
             serialNumbers.add(sno.serialNumberId);
         }
+        Integer loopCount = 0;
 
         //loop through the serial number objects returned
         for( GMBLASERP__Serial_Number__c e : [SELECT Id,
+                Nest__c,
                 Name,
                 GMBLASERP__Product__r.Name,
                 Model_Year__c,
@@ -72,12 +74,14 @@ public with sharing class FSInventory_Service {
         WHERE Nest__c IN :serialNumbers
         AND Product_Record_Type__c IN ('Motor', 'Trailer')])
         {
+
             System.debug('SOQL Equipment return: ' + e);
 
             //create an Equipment object out of each
             RiggedEquipment eq = new RiggedEquipment( e );
             //add the new Equipment to the equipment list
             equipment.add( eq );
+
         }
 
         this.setRiggedBoats(serialNumberObjects, equipment);
@@ -86,26 +90,45 @@ public with sharing class FSInventory_Service {
     }
 
     private List<RiggedBoat> setRiggedBoats(List<SerialNumberObject> s, List<RiggedEquipment> e){
-//        Map<String, RiggedEquipment> equipmentObjMap = new Map<String, RiggedEquipment>();
+        Map<String, List<RiggedEquipment>> equipmentObjMap = new Map<String, List<RiggedEquipment>>();
 
         System.debug('setRiggedBoats using Serial Numbers: ' + s);
         System.debug('setRiggedBoats using Rigged Equipment: ' + e);
 
-//        List<RiggedBoat> rbs = new List<RiggedBoat>;
-//
-//        for(RiggedEquipment item : e){
-//            equipmentObjMap.put(item.serialNumber, item);
-//        }
-//
-//        for(SerialNumberObject snoItem : s){
-//            RiggedEquipment relatedEquipment = equipmentObjMap.get(snoItem.serialNumberValue);
-//            if(relatedEquipment != null){
-//                //snoItem.equipment.add( relatedEquipment );
-//                RiggedBoat rb = new RiggedBoat(snoItem, relatedEquipment);
-//            }
-//        }
+        List<RiggedBoat> rbs = new List<RiggedBoat>();
 
+        for(RiggedEquipment item : e){
+
+            if(equipmentObjMap.containsKey(item.parentSerialNumberId)){
+                List<RiggedEquipment> equipmentSet = equipmentObjMap.get(item.parentSerialNumberId);
+                equipmentSet.add(item);
+                equipmentObjMap.put(item.parentSerialNumberId, equipmentSet);
+            } else {
+                equipmentObjMap.put(item.parentSerialNumberId, new List<RiggedEquipment> {item});
+            }
+//            equipmentObjMap.put(item.parentSerialNumberId, item);
+        }
+
+        System.debug('equipmentObjMap: ' + equipmentObjMap);
+
+        for(SerialNumberObject snoItem : s){
+            System.debug('snoItem.serialNumberId: ' + snoItem.serialNumberId);
+            List<RiggedEquipment> relatedEquipment = equipmentObjMap.get(snoItem.serialNumberId);
+            System.debug('run if != null');
+            if(relatedEquipment != null){
+                System.debug('relatedEquipment != null: ' + relatedEquipment);
+                RiggedBoat rb = new RiggedBoat(snoItem, relatedEquipment);
+                rbs.add( rb );
+            } else {
+                RiggedBoat rb = new RiggedBoat(snoItem, null);
+                rbs.add( rb );
+            }
+        }
+
+        System.debug('rbs list: ' + rbs);
+        this.RiggedBoats = rbs;
         return null;
+        //return rbs;
     }
 
     private class SerialNumberObject{
@@ -116,12 +139,12 @@ public with sharing class FSInventory_Service {
         @AuraEnabled public String productId;
         @AuraEnabled public String productMake;
         @AuraEnabled public String productName;
-        @AuraEnabled public List<RiggedEquipment> equipment;
+//        @AuraEnabled public List<RiggedEquipment> equipment;
 
         public SerialNumberObject(GMBLASERP__Serial_Number__c s){
             serialNumberObject = s;
             serialNumberId = s.Id;
-            serialNumberValue = s.Id;
+            serialNumberValue = s.Name;
             serialModelYear = s.Model_Year__c;
             productId = s.GMBLASERP__Product__r.Id;
             productMake = s.GMBLASERP__Product__r.Make__c;
@@ -137,6 +160,7 @@ public with sharing class FSInventory_Service {
         @AuraEnabled public String productType;
         @AuraEnabled public String productName;
         @AuraEnabled public String productId;
+        @AuraEnabled public String parentSerialNumberId;
 
         public RiggedEquipment(GMBLASERP__Serial_Number__c e){
             System.debug('Equipment eq: ' + e);
@@ -146,6 +170,7 @@ public with sharing class FSInventory_Service {
             productType = e.Product_Record_Type__c;
             productName = e.GMBLASERP__Product__r.Name;
             productId = e.GMBLASERP__Product__r.Id;
+            parentSerialNumberId = e.Nest__c;
         }
     }
 //
