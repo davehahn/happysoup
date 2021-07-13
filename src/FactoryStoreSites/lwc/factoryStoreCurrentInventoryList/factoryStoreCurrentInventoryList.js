@@ -2,12 +2,14 @@
  * Created by Tim on 2021-07-09.
  */
 
-import { LightningElement, api } from 'lwc';
+import { LightningElement, api, wire } from 'lwc';
 import { stringy, stripParentheses, rewriteMotorName, rewriteTrailerName, convertLength, parseLocationName, formatPrice, weeklyPayment } from 'c/communitySharedUtils';
+import { fireEvent, registerListener, unregisterAllListeners } from 'c/pubsub';
+import { NavigationMixin, CurrentPageReference } from 'lightning/navigation';
 import fetchNewInStockInventory from '@salesforce/apex/FactoryStore_InventoryController.fetchNewInStockInventory';
 import fetchFullBoatDetails from '@salesforce/apex/FactoryStore_InventoryController.fetchFullBoatDetails';
 
-export default class FactoryStoreCurrentInventoryList extends LightningElement {
+export default class FactoryStoreCurrentInventoryList extends NavigationMixin(LightningElement) {
 
 	@api boat;
 	@api boatId;
@@ -32,7 +34,7 @@ export default class FactoryStoreCurrentInventoryList extends LightningElement {
 										SerialId: boat.Serial.serialId,
 										ProductName: stripParentheses(boat.Serial.productName),
 										ProductId: boat.Serial.productId,
-										SerialNumber: boat.Serial.serialNumber,
+										SerialNumber: boat.Serial.serialNumberValue,
 										BaseRetailPrice: fullBoat.RetailPrice,
 										StartingWeeklyPrice: weeklyPayment(fullBoat.RetailPrice),
 										StartingRetailPrice: fullBoat.RetailPrice,
@@ -43,31 +45,33 @@ export default class FactoryStoreCurrentInventoryList extends LightningElement {
 									},
 									Expanded: fullBoat
 								});
-								boat.Equipment.forEach((e, i) => {
-									let retailUpgradeCost = 0;
-									if(e.productType === 'Motor'){
-										fullBoat.MotorUpgrades.forEach( (motor, index) => {
-											if(motor.Id === e.productId){
-												retailUpgradeCost += motor.RetailUpgradeCost
-											}
-										});
-									} else {
-										fullBoat.TrailerUpgrades.forEach( (trailer, index) => {
-											if(trailer.Id === e.productId){
-												retailUpgradeCost += trailer.RetailUpgradeCost
-											}
-										});
-									}
-									this.storeStock[index].Base.RetailUpgradeCost += retailUpgradeCost;
-									this.storeStock[index].Base.StartingRetailPrice += retailUpgradeCost;
+								if(boat.Equipment){
+								 boat.Equipment.forEach((e, i) => {
+										let retailUpgradeCost = 0;
+										if(e.productType === 'Motor'){
+											fullBoat.MotorUpgrades.forEach( (motor, index) => {
+												if(motor.Id === e.productId){
+													retailUpgradeCost += motor.RetailUpgradeCost
+												}
+											});
+										} else {
+											fullBoat.TrailerUpgrades.forEach( (trailer, index) => {
+												if(trailer.Id === e.productId){
+													retailUpgradeCost += trailer.RetailUpgradeCost
+												}
+											});
+										}
+										this.storeStock[index].Base.RetailUpgradeCost += retailUpgradeCost;
+										this.storeStock[index].Base.StartingRetailPrice += retailUpgradeCost;
 
-									let productName = (e.productType === 'Motor') ? rewriteMotorName(e.productName) : ' and ' + rewriteTrailerName(e.productName);
-									this.storeStock[index].Base.Equipment.push({
-										ProductId: e.productId,
-										ProductName: productName
+										let productName = (e.productType === 'Motor') ? rewriteMotorName(e.productName) : ' and ' + rewriteTrailerName(e.productName);
+										this.storeStock[index].Base.Equipment.push({
+											ProductId: e.productId,
+											ProductName: productName
+										});
+
 									});
-
-								});
+        				}
 
 							}).catch(e => {
 								console.log('fetchFullBoatDetails error: ', e);
@@ -96,8 +100,45 @@ export default class FactoryStoreCurrentInventoryList extends LightningElement {
 		const passStockEvent = new CustomEvent('updatestockvalue', {
 			detail: this.storeStockQuantity
   	});
+  	this.dispatchEvent(passStockEvent);
 
-		this.dispatchEvent(passStockEvent);
+	}
+
+
+	@wire(CurrentPageReference) pageRef;
+	quickQuote(event) {
+		// 	  console.log('trigger quick quote');
+		// 	  console.log('display quick connect form for modelId: ', event.currentTarget.dataset.record);
+		let details = {
+			recordId: event.currentTarget.dataset.record,
+			boatName: event.currentTarget.dataset.name,
+			serialNumber: event.currentTarget.dataset.serial
+		}
+		console.log('details to send to form: ', details);
+		fireEvent(this.pageRef, 'openOverlay', details);
+		event.preventDefault();
+	}
+
+	showroomVisit(event) {
+		//    console.log('trigger showroom visit');
+		let page = 'schedule-a-showroom-visit',
+			params = {
+				c__recordId: event.currentTarget.dataset.record,
+				c__SN: event.currentTarget.dataset.serial
+			};
+		//    console.log(params);
+		this.navigateToCommunityPage(page, params);
+		event.preventDefault();
+	}
+
+	navigateToCommunityPage(pageName, params) {
+		this[NavigationMixin.Navigate]({
+			type: 'comm__namedPage',
+			attributes: {
+				pageName: pageName
+			},
+			state: params
+		});
 	}
 
 }

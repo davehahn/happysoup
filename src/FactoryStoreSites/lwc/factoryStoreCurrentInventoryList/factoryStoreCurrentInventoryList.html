@@ -11,14 +11,17 @@
         <li key={stock.Base.SerialId} class="currentStock__item">
           <h5 class="heading heading--s">
             <span>{stock.Base.ProductName}</span>
-            <span>Starting At: {stock.Base.StartingWeeklyPrice} Per Week | {stock.Base.StartingRetailPrice}</span>
             <template for:each={stock.Base.Equipment} for:item="rig">
               <small key={rig.ProductId}>
                 {rig.ProductName}
               </small>
             </template>
           </h5>
-          <button class="ctas__btn btn btn--secondary" data-record={stock.Base.ProductId} data-serial={stock.Base.SerialNumber} onclick={quickQuote}>Quick Connect</button>
+          <p class="item__pricing">
+            <span><strong>Starting At:</strong> {stock.Base.StartingWeeklyPrice} Per Week</span>
+            <span>{stock.Base.StartingRetailPrice}</span>
+          </p>
+          <button class="ctas__btn btn btn--secondary" data-record={stock.Base.ProductId} data-name={stock.Base.ProductName} data-serial={stock.Base.SerialNumber} onclick={quickQuote}>Quick Connect</button>
           <button class="ctas__btn btn btn--secondary" data-record={stock.Base.ProductId} data-serial={stock.Base.SerialNumber} onclick={showroomVisit}>Come See It!</button>
         </li>
       </template>
