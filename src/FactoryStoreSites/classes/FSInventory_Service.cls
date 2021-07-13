@@ -24,20 +24,22 @@ public with sharing class FSInventory_Service {
         List<SerialNumberObject> boatsSerialNumbers = new List<SerialNumberObject>();
 
         //loop through the serial number results of the following SOQL
-        for( GMBLASERP__Serial_Number__c b : [SELECT Id,
+        for( GMBLASERP__Serial_Number__c b : [
+                SELECT Id,
                 Name,
                 GMBLASERP__Product__r.Name,
                 Model_Year__c,
                 GMBLASERP__Product__r.Make__c
-        FROM GMBLASERP__Serial_Number__c
-        WHERE Location__c = :location
-        AND GMBLASERP__Product__r.Id = :modelId
-        AND Product_Record_Type__c = 'Boat'
-        AND GMBLASERP__Product__r.Make__c = 'Legend'
-        AND Model_Year__c >= :year
-        AND Status__c NOT IN ('Used', 'At Supplier', 'Return to Supplier')
-        AND Available_Retail__c = true
-        ORDER BY Model_Year__c ASC])
+                FROM GMBLASERP__Serial_Number__c
+                WHERE Location__c = :location
+                AND GMBLASERP__Product__r.Id = :modelId
+                AND Product_Record_Type__c = 'Boat'
+                AND GMBLASERP__Product__r.Make__c = 'Legend'
+                AND Model_Year__c >= :year
+                AND Status__c NOT IN ('Used', 'At Supplier', 'Return to Supplier')
+                AND Available_Retail__c = true
+                ORDER BY Model_Year__c ASC
+        ])
         {
             //create a SerialNumber out of each
             SerialNumberObject serialNumber = new SerialNumberObject( b );
@@ -106,7 +108,6 @@ public with sharing class FSInventory_Service {
             } else {
                 equipmentObjMap.put(item.parentSerialNumberId, new List<RiggedEquipment> {item});
             }
-//            equipmentObjMap.put(item.parentSerialNumberId, item);
         }
 
         System.debug('equipmentObjMap: ' + equipmentObjMap);
@@ -127,8 +128,8 @@ public with sharing class FSInventory_Service {
 
         System.debug('rbs list: ' + rbs);
         this.RiggedBoats = rbs;
+
         return null;
-        //return rbs;
     }
 
     private class SerialNumberObject{
@@ -139,7 +140,6 @@ public with sharing class FSInventory_Service {
         @AuraEnabled public String productId;
         @AuraEnabled public String productMake;
         @AuraEnabled public String productName;
-//        @AuraEnabled public List<RiggedEquipment> equipment;
 
         public SerialNumberObject(GMBLASERP__Serial_Number__c s){
             serialNumberObject = s;
