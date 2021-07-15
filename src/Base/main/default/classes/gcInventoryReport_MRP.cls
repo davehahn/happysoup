@@ -184,7 +184,7 @@ public with sharing class gcInventoryReport_MRP {
 		}
 		System.debug('mapProjectSetProducts'+mapProjectSetProducts);
 		list<map<String,String>> listJSON = new list<map<String,String>>();
-
+		Id idRtMfgERP = gcConstants.idRtProjectManufacturing;
 		set<Id> setIdProduct = new set<Id>();
 		setIdProduct.addAll(listIdProduct);
 		setIdProduct.remove(null);
@@ -211,7 +211,7 @@ public with sharing class gcInventoryReport_MRP {
 		WHERE AcctSeedERP__Quantity_Per_Unit__c > 0
 		AND No_WIP__c = false
 		AND AcctSeedERP__Project__r.Locked__c = false
-		//AND AcctSeedERP__Project__c NOT IN:setIdRetailProjectToDiscard
+		AND ((AcctSeedERP__Project__r.RecordTypeId !=:idRtMfgERP) OR (AcctSeedERP__Product__r.AcctSeedERP__Serialized__c = false AND AcctSeedERP__Project__r.RecordTypeId =:idRtMfgERP))
 		AND AcctSeedERP__Project__r.Stage__c NOT IN ('Quoting','Closed Lost','Draft','Pending Review')
 		AND AcctSeedERP__Product__c IN :setIdProduct
 		AND (IsDeleted =:checkDeleted OR AcctSeedERP__Project__r.GMBLASERP__Warehouse__c =:pIdWarehouse)
@@ -373,11 +373,12 @@ public with sharing class gcInventoryReport_MRP {
 				mapCube.put(idProduct, cube);
 			}
 		}
-
+		Id idRtMfgERP = gcConstants.idRtProjectManufacturing;
 		listAggRes.clear();
 		soql = 'SELECT AcctSeedERP__Project__c idProject, AcctSeedERP__Product__c idProduct, sum(AcctSeedERP__Quantity_Per_Unit__c) qty FROM AcctSeedERP__Material__c';
 		soql += ' WHERE AcctSeedERP__Product__c IN:setIdProduct';
 		soql += ' AND AcctSeedERP__Quantity_Per_Unit__c > 0';
+		soql += ' AND ((AcctSeedERP__Project__r.RecordTypeId !=:idRtMfgERP) OR (AcctSeedERP__Product__r.AcctSeedERP__Serialized__c = false AND AcctSeedERP__Project__r.RecordTypeId =:idRtMfgERP))';
 		//soql += ' AND AcctSeedERP__Project__c NOT IN:setIdRetailProjectToDiscard ';
 		soql += ' AND AcctSeedERP__Project__r.Locked__c = false AND AcctSeedERP__Project__r.Stage__c NOT IN (\'Quoting\',\'Closed Lost\',\'Draft\',\'Pending Review\') AND No_WIP__c = false';
 		if(pIdWarehouse != null)
