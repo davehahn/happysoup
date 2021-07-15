@@ -184,6 +184,7 @@ public without sharing class gcProject_AccountingActions {
 	@RemoteAction
 	public static list<String> createWipRA(Id idProject, String pIdWarehouse, String movementDate)
 	{
+		gcManufacturingInventoryMovement.allowMFGERPSerialWIP = true;
 		return stringifyPageMessages(createWip(idProject, pIdWarehouse, movementDate));
 	}
 
