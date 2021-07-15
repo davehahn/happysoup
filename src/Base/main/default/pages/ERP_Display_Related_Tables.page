@@ -2289,6 +2289,7 @@ input.dateSelector{
                         if(!ui.rowData.idMaterial) return '';
                         if(ui.rowData.productIsInventory == 'false' || ui.rowData.isFlagged == 'true') return '';
                         if( {!isInternalERP} && ui.rowData.productIsSerialized == 'true')  return '';
+                        if( {!isManufacturing} && ui.rowData.productIsSerialized == 'true')  return '';
                         if(ui.rowData.cannotModifySerialized == "true") return '';
                         return '<span class=\"link\">'+ htm + '</span>';
                     }
@@ -2402,7 +2403,7 @@ input.dateSelector{
                     else
                         ui.$editor.prop('id',ui.rowIndx);
                 }
-                else if(ui.dataIndx == 'qtyToMove' && (ui.rowData.productIsInventory == 'false' || ( {!isInternalERP} && ui.rowData.productIsSerialized == 'true') || ui.rowData.isFlagged == 'true' || ui.rowData.cannotModifySerialized == "true"))
+                else if(ui.dataIndx == 'qtyToMove' && (ui.rowData.productIsInventory == 'false' || ( {!isInternalERP} && ui.rowData.productIsSerialized == 'true') || ( {!isManufacturing} && ui.rowData.productIsSerialized == 'true') || ui.rowData.isFlagged == 'true' || ui.rowData.cannotModifySerialized == "true"))
                     $j(this).pqGrid( "quitEditMode" );
             }
             else

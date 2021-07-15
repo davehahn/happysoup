@@ -138,6 +138,7 @@ public without sharing class gcCashDisbursement {
 	private static void setBankGL(AcctSeed__Cash_Disbursement__c cd)
 	{
 		String paymentMethod = cd.AcctSeed__Type__c;
+        system.debug('Payment Method ---> ' + paymentMethod);
 		if(paymentMethod == 'MasterCard'
 			|| paymentMethod == 'Visa'
 			|| paymentMethod == 'Debit'

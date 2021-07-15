@@ -3,7 +3,7 @@ private class gcCashReceipt_Actions_Test{
 
 	static testMethod void test1()
 	{
-        gcCashReceipt_Actions.coverage();
+        //gcCashReceipt_Actions.coverage();
     }
 
     /*static testMethod void test2()

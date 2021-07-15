@@ -11,6 +11,17 @@ global without sharing class gcManufacturingInventoryMovement {
 		}
 	}
 
+	global static Boolean allowMFGERPSerialWIP{
+		get{
+			if(allowMFGERPSerialWIP == null) return false;
+			else return allowMFGERPSerialWIP;
+		}
+		set{
+			if(value == null) allowMFGERPSerialWIP = false;
+			else allowMFGERPSerialWIP = value;
+		}
+	}
+
 	public static void triggerHandler
 		(map<Id,AcctSeedERP__Manufacturing_Inventory_Movement__c> oldMap,
 		 map<Id,AcctSeedERP__Manufacturing_Inventory_Movement__c> newMap,
@@ -85,10 +96,34 @@ global without sharing class gcManufacturingInventoryMovement {
 		 Boolean boolIsUpdate,
 		 Boolean boolIsDelete)
 	{
+		/// This part is to check if a serialized item is being moved alone from MFG ERP
+		Id idRTMFGERP = gcConstants.idRtProjectManufacturing;
+		/// This is only used in Dev Org
+		Map<Id,Boolean> mapERPIsMFG = new Map<Id,Boolean>();
+		if(boolIsBefore && (boolIsInsert || boolIsUpdate)){
+			for(AcctSeedERP__Manufacturing_Inventory_Movement__c move :listNew){
+				if(move.GMBLASERP__Serial_Number__c != null && move.GMBLASERP__Project__c != null){
+					mapERPIsMFG.put(move.GMBLASERP__Project__c,false);
+				}
+			}
+			if(!mapERPIsMFG.isEmpty()){
+				for(AcctSeed__Project__c pr : [SELECT Id FROM AcctSeed__Project__c WHERE ID IN:mapERPIsMFG.keySet() AND RecordTypeId =:idRTMFGERP]){
+					mapERPIsMFG.put(pr.Id,true);
+				}
+			}
+			for(AcctSeedERP__Manufacturing_Inventory_Movement__c move :listNew) {
+				if (move.GMBLASERP__Serial_Number__c != null && move.GMBLASERP__Project__c != null) {
+					if(mapERPIsMFG.get(move.GMBLASERP__Project__c) && !allowMFGERPSerialWIP)
+						move.addError('Cannot move single serial number from MFG ERP.');
+				}
+			}
+		}
+
+
 		/// This is only used in Dev Org
 		if(boolIsBefore && (boolIsInsert || boolIsUpdate)){
 //			for(AcctSeedERP__Manufacturing_Inventory_Movement__c move :listNew)
-//				move.AcctSeedERP__Ledger__c = 'a121g000001929wAAA';
+//				move.AcctSeedERP__Ledger__c = 'a128A000003SnkCQAS';
 
 		}
 	}

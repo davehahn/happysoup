@@ -12,6 +12,8 @@ private class gcManufacturingInventoryMovement_Test{
   {
     //AcctSeed__Ledger__c ledger = [SELECT Id FROM AcctSeed__Ledger__c LIMIT 1];
     AcctSeed__Accounting_Settings__c accSetting = [SELECT AcctSeed__Default_Ledger__c FROM AcctSeed__Accounting_Settings__c ORDER BY CreatedDate][0];
+    System.debug('accSetting');
+    System.debug(accSetting);
     AcctSeedERP__Warehouse__c wh = [SELECT Id, Name, GL_Account_Variable_3__c FROM AcctSeedERP__Warehouse__c LIMIT 1];
     AcctSeedERP__Location__c loc = [SELECT Id FROM AcctSeedERP__Location__c WHERE AcctSeedERP__Warehouse__c =:wh.Id LIMIT 1];
     Account cust = Factory_Account.insertFullPersonAccount('TestFname', 'TestLname');

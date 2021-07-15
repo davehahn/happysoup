@@ -45,6 +45,9 @@
                 <field>Content__c</field>
             </layoutItems>
             <layoutItems>
+                <field>Answer__c</field>
+            </layoutItems>
+            <layoutItems>
                 <field>UrlName</field>
             </layoutItems>
             <layoutItems>
@@ -85,6 +88,9 @@
             </layoutItems>
         </layoutColumns>
         <layoutColumns>
+            <layoutItems>
+                <field>ValidationStatus</field>
+            </layoutItems>
             <layoutItems>
                 <field>FirstPublishedDate</field>
             </layoutItems>
@@ -184,6 +190,11 @@
             <actionName>SubmitKnowledgeArticleVersionForApproval</actionName>
             <actionType>StandardButton</actionType>
             <sortOrder>5</sortOrder>
+        </platformActionListItems>
+        <platformActionListItems>
+            <actionName>DeleteDraftKnowledgeArticleVersion</actionName>
+            <actionType>StandardButton</actionType>
+            <sortOrder>6</sortOrder>
         </platformActionListItems>
     </platformActionList>
     <relatedLists>

@@ -13,19 +13,11 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>ContactId</field>
-            </layoutItems>
-            <layoutItems>
-                <behavior>Edit</behavior>
                 <field>AccountId</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Chat_Transcript__c</field>
-            </layoutItems>
-            <layoutItems>
-                <behavior>Readonly</behavior>
-                <field>ContactPhone</field>
+                <field>LeadId__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
@@ -38,10 +30,6 @@
             <layoutItems>
                 <behavior>Edit</behavior>
                 <field>Contact_Language__c</field>
-            </layoutItems>
-            <layoutItems>
-                <behavior>Edit</behavior>
-                <field>SuppliedEmail</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Readonly</behavior>
@@ -67,11 +55,11 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Origin</field>
+                <field>Inquiry_Type__c</field>
             </layoutItems>
             <layoutItems>
-                <behavior>Readonly</behavior>
-                <field>Full_Name__c</field>
+                <behavior>Edit</behavior>
+                <field>Origin</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
@@ -85,6 +73,10 @@
                 <behavior>Readonly</behavior>
                 <field>LastModifiedById</field>
             </layoutItems>
+            <layoutItems>
+                <behavior>Readonly</behavior>
+                <field>CreatedById</field>
+            </layoutItems>
         </layoutColumns>
         <style>TwoColumnsLeftToRight</style>
     </layoutSections>
@@ -97,6 +89,24 @@
         <layoutColumns/>
         <layoutColumns/>
         <style>CustomLinks</style>
+    </layoutSections>
+    <layoutSections>
+        <customLabel>true</customLabel>
+        <detailHeading>true</detailHeading>
+        <editHeading>true</editHeading>
+        <label>Additional Fields</label>
+        <layoutColumns>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>ContactId</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>SuppliedEmail</field>
+            </layoutItems>
+        </layoutColumns>
+        <layoutColumns/>
+        <style>TwoColumnsLeftToRight</style>
     </layoutSections>
     <platformActionList>
         <actionListContext>Record</actionListContext>
@@ -201,6 +211,24 @@
             </layoutItem>
         </relatedContentItems>
     </relatedContent>
+    <relatedLists>
+        <fields>Name</fields>
+        <fields>Owner</fields>
+        <fields>StartTime</fields>
+        <fields>EndTime</fields>
+        <fields>Status</fields>
+        <relatedList>RelatedLiveChatTranscriptList</relatedList>
+    </relatedLists>
+    <relatedLists>
+        <fields>Name</fields>
+        <fields>MessagingEndUser</fields>
+        <fields>Owner</fields>
+        <fields>StartTime</fields>
+        <fields>Status</fields>
+        <fields>EndTime</fields>
+        <fields>MessagingChannel</fields>
+        <relatedList>MessagingSession</relatedList>
+    </relatedLists>
     <relatedLists>
         <relatedList>RelatedAttachmentList</relatedList>
     </relatedLists>
