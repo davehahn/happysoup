@@ -1,0 +1,10 @@
+<!--
+ - Created by dave on 2021-07-14.
+ -->
+
+<aura:component implements="flexipage:availableForAllPageTypes" access="global" >
+  <lightning:utilityBarAPI aura:id="utilityBarAPI" />
+
+  <c:issueLauncher onselected="{!c.handleSelected}"/>
+
+</aura:component>

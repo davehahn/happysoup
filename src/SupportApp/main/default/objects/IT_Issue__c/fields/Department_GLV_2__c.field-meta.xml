@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Department_GLV_2__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <description>The department where the Issue is ( Accounting Variable GLV2 )</description>
+    <externalId>false</externalId>
+    <label>Department</label>
+    <lookupFilter>
+        <active>true</active>
+        <filterItems>
+            <field>AcctSeed__Accounting_Variable__c.AcctSeed__Type__c</field>
+            <operation>equals</operation>
+            <value>GL Account Variable 2</value>
+        </filterItems>
+        <isOptional>false</isOptional>
+    </lookupFilter>
+    <referenceTo>AcctSeed__Accounting_Variable__c</referenceTo>
+    <relationshipLabel>IT Issues (Department)</relationshipLabel>
+    <relationshipName>IT_Issues_Department</relationshipName>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>
