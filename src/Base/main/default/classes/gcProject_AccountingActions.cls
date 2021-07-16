@@ -82,7 +82,7 @@ public without sharing class gcProject_AccountingActions {
 		}
 
 		list<ApexPages.Message> listMsg = new list<ApexPages.Message>();
-
+		gcManufacturingInventoryMovement.allowMFGERPSerialWIP = true;
 		listMsg.addAll(createWip(idProject,null,null));
 
 		if(isManufacturing)
@@ -683,6 +683,7 @@ public without sharing class gcProject_AccountingActions {
 	@RemoteAction
 	public static list<String> buildFinishedGoodsRA(Id idProject, String buildDate)
 	{
+		gcManufacturingInventoryMovement.allowMFGERPSerialWIP = true;
 		return stringifyPageMessages(buildFinishedGoods(idProject,buildDate));
 	}
 
@@ -987,6 +988,7 @@ public without sharing class gcProject_AccountingActions {
 	@RemoteAction
 	public static list<String> buildFinishedGoodsRATradeIn(Id idProject, Decimal tradeInAmount)
 	{
+		gcManufacturingInventoryMovement.allowMFGERPSerialWIP = true;
 		return stringifyPageMessages(buildFinishedGoodsTradeIn(idProject,tradeInAmount));
 	}
 
