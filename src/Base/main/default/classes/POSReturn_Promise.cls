@@ -330,6 +330,7 @@ public with sharing class POSReturn_Promise {
             }
         }
         /// Insert Manufacturing Moves
+        gcManufacturingInventoryMovement.allowMFGERPSerialWIP = true;
         insert listMove;
         /// Inserting all B lines
         insert listLine;

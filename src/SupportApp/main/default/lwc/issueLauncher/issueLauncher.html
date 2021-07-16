@@ -1,0 +1,84 @@
+<!--
+ - Created by dave on 2021-07-13.
+ -->
+
+<!-- Issue Launcher -->
+<template>
+  <lightning-layout multiple-rows="true"
+                            vertical-align="middle">
+    <template for:each={menuItems} for:item="menuItem">
+      <lightning-layout-item size="12"
+                             key={menuItem.Id}
+                             padding="horizontal-small">
+        <a href="javascript:void(0);"
+           class="slds-app-launcher__tile slds-text-link_reset"
+           data-sobject-name={menuItem.SObject_Name__c}
+           onclick={handleIssue}>
+          <div class="slds-app-launcher__tile-figure">
+            <lightning-avatar fallback-icon-name={menuItem.Icon_Name__c}></lightning-avatar>
+          </div>
+          <div class="slds-app-launcher__tile-body">
+            <span class="slds-text-link">{menuItem.MasterLabel}</span>
+            <p>
+              {menuItem.Description__c}
+            </p>
+          </div>
+        </a>
+      </lightning-layout-item>
+    </template>
+<!--    <lightning-layout-item size="12"-->
+<!--                           padding="horizontal-small">-->
+<!--      <a href="javascript:void(0);"-->
+<!--         class="slds-app-launcher__tile slds-text-link_reset"-->
+<!--         data-sobject-name="Accounting_Issue__c"-->
+<!--         onclick={handleIssue}>-->
+<!--        <div class="slds-app-launcher__tile-figure">-->
+<!--          <lightning-avatar fallback-icon-name="custom:custom55"></lightning-avatar>-->
+<!--        </div>-->
+<!--        <div class="slds-app-launcher__tile-body">-->
+<!--          <span class="slds-text-link">Accounting Issue</span>-->
+<!--          <p>-->
+<!--            Log an Accounting Issue-->
+<!--          </p>-->
+<!--        </div>-->
+<!--      </a>-->
+<!--    </lightning-layout-item>-->
+
+<!--    <lightning-layout-item size="12"-->
+<!--                           padding="horizontal-small">-->
+<!--      <a href="javascript:void(0);"-->
+<!--         class="slds-app-launcher__tile slds-text-link_reset"-->
+<!--         data-sobject-name="System_Issue__c"-->
+<!--         onclick={handleIssue}>-->
+<!--        <div class="slds-app-launcher__tile-figure">-->
+<!--          <lightning-avatar fallback-icon-name="custom:custom94"></lightning-avatar>-->
+<!--        </div>-->
+<!--        <div class="slds-app-launcher__tile-body">-->
+<!--          <span class="slds-text-link">System Issue</span>-->
+<!--          <p>-->
+<!--            Log an issue you are facing with the system-->
+<!--          </p>-->
+<!--        </div>-->
+<!--      </a>-->
+<!--    </lightning-layout-item>-->
+
+<!--    <lightning-layout-item size="12"-->
+<!--                           padding="horizontal-small">-->
+<!--      <a href="javascript:void(0);"-->
+<!--         class="slds-app-launcher__tile slds-text-link_reset"-->
+<!--         data-sobject-name="IT_Issue__c"-->
+<!--         onclick={handleIssue}>-->
+<!--        <div class="slds-app-launcher__tile-figure">-->
+<!--          <lightning-avatar fallback-icon-name="standard:screen"></lightning-avatar>-->
+<!--        </div>-->
+<!--        <div class="slds-app-launcher__tile-body">-->
+<!--          <span class="slds-text-link">IT Issue</span>-->
+<!--          <p>-->
+<!--            Log an issue you are facing computer hardware or other issues not system related-->
+<!--          </p>-->
+<!--        </div>-->
+<!--      </a>-->
+<!--    </lightning-layout-item>-->
+  </lightning-layout>
+
+</template>
