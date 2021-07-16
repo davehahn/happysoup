@@ -9,10 +9,10 @@
       <template if:true={boatDataLoaded}>
 
         <header class="model__intro">
-          <div class="intro__vitals--wrapper">
+          <div class="intro__vitals--wrapperOuter">
             <div class="intro__vitals">
-              <span class="intro__stock">{currentStockQuantity} In-Stock</span>
-              <h2 class="intro__boatName heading heading--l">{boatName}</h2>
+              <span class="intro__stock"><strong>{currentStockQuantity}</strong> In-Stock</span>
+              <h2 class="intro__boatName heading heading--xl">{boatName}</h2>
 
               <div class="vitals__priceBlock">
                 <strong class="priceBlock__weekly" aria-describedby="vitals_includes">
@@ -22,7 +22,7 @@
                   {retailPrice}<sup>*</sup>
                 </strong>
                 <em class="priceBlock__includes" id="vitals_includes">
-                  <p>With {standardMotorName} {standardTrailerName}</p>
+                  With {standardMotorName} {standardTrailerName}
                 </em>
                 <small class="priceBlock__pricingDetails">*Ontario and Quebec All-In Pricing. <a href="#">Click here</a> for national pricing details.</small>
               </div>
@@ -32,7 +32,19 @@
           <span class="intro__photo" style={introPhoto}></span>
         </header>
 
-        <c-factory-store-current-inventory-list boat={boat} boat-id={recordId} location-name={locationName} onupdatestockvalue={handleUpdateStockValue}></c-factory-store-current-inventory-list>
+        <template if:true={hasPhotoGallery}>
+          <section class="intro__gallery">
+            <h3 class="ro">Photo Gallery</h3>
+            <c-factory-store-photo-gallery content-type="default" content={photoGallery} section-width="Average"></c-factory-store-photo-gallery>
+          </section>
+        </template>
+
+        <section class={stockWrapperClass}>
+          <template if:true={currentStockQuantity}>
+            <h3 class="heading heading--l">New In-Stock {boatName}s</h3>
+          </template>
+          <c-factory-store-current-inventory-list boat={boat} boat-id={recordId} location-name={locationName} onupdatestockvalue={handleUpdateStockValue}></c-factory-store-current-inventory-list>
+        </section>
 
         <section class="model__specs model__block">
           <h3 class="heading heading--l">Specifications</h3>
@@ -61,7 +73,17 @@
         </section>
 
         <section class="model__premiumPack model__block">
-          <h3 class="heading heading--l">Preferred Equipment Package</h3>
+          <header>
+            <h3 class="heading heading--l">Preferred Equipment Package</h3>
+            <p class="copy copy--standard">
+              These features are typically optional on most comparable models, but come <strong>standard*</strong> on the {boatName}.
+            </p>
+            <p>
+              <span>Total Value: {premiumPackageRetailPrice}</span>
+              <span>You Pay: $0</span>
+            </p>
+          </header>
+
           <ul>
             <template for:each={premiumPackItems} for:item="item">
               <li key={item.description} class="premiumPackage__item">
@@ -92,12 +114,13 @@
               </li>
             </template>
           </ul>
+          <small>*No substitutions or exclusions.</small>
         </section>
 
         <div class="model__leadFormWrapper">
           <section class="model__leadForm">
             <header class="">
-              <h3 class="heading heading--m">Interested?</h3>
+              <h3 class="heading heading--l">Interested?</h3>
               <p class="copy copy--standard">Fill out the form below and a Legend Boats representative will contact you with more information.</p>
             </header>
             <div class="form">
@@ -117,7 +140,7 @@
                       collect-plan-to-purchase="true"
                       collect-notes="true"
                       collect-newsletter-optin="true"
-                      section-width="Container"></c-community-shared-lead-form>
+                      section-width="Average"></c-community-shared-lead-form>
             </div>
           </section>
         </div>
