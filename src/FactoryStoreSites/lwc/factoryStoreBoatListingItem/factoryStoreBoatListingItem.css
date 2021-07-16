@@ -28,6 +28,39 @@
   border-right: 1px solid var(--zebraAccent);
 }
 
+.modelListing .modelListing__vitals .vitals__standardEquipment{
+  font-size: 0.9em;
+}
+
+.modelListing .modelListing__vitals .vitals__pricing{
+  display: flex;
+  align-items: center;
+  margin-top: 1.5em;
+}
+.modelListing .modelListing__vitals .vitals__pricing span{
+  display: inline-block;
+	font-weight: 900;
+	line-height: 1;
+}
+.modelListing .modelListing__vitals .vitals__pricing .weekly{
+  font-size: 2em;
+}
+.modelListing .modelListing__vitals .vitals__pricing .retail{
+  font-size: 1.25em;
+}
+.modelListing .modelListing__vitals .vitals__pricing .retail::before{
+  display: inline-block;
+  content: '';
+  width: 1px; height: 20px;
+  background-color: var(--zebraAccent);
+  margin: 0 20px;
+}
+.modelListing .modelListing__vitals .vitals__pricing span small{
+  display: block;
+  font-size: 40%; font-weight: 300;
+  text-transform: uppercase;
+}
+
 .modelListing .modelListing__vitals .modelListing__quickSpecs{
   margin-top: 1.5em;
 }
@@ -77,6 +110,9 @@
   margin-bottom: 0;
 }
 
+.modelListing .modelListing__stock{
+  width: 100%;
+}
 
 @media screen and (max-width: 860px){
   .modelListing{

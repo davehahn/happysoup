@@ -28,7 +28,8 @@ export default class FactoryStoreBoatDetails extends NavigationMixin(LightningEl
   modelWrapperClass = 'model model--loading';
   resultEmpty = false;
 
-	currentStockQuantity;
+	currentStockQuantity = 0;
+	stockWrapperClass = 'model__currentStock';
 
   boatName;
   standardMotorName;
@@ -40,6 +41,9 @@ export default class FactoryStoreBoatDetails extends NavigationMixin(LightningEl
 	leadFormName;
 	@api campaignId;
 	locationName;
+
+	photoGallery;
+	hasPhotoGallery = false;
 
   @wire(CurrentPageReference)
   setCurrentPageReference(currentPageReference){
@@ -86,7 +90,8 @@ export default class FactoryStoreBoatDetails extends NavigationMixin(LightningEl
     this.leadFormName = this.boatName + ' - Lead Form';
     this.standardMotorName = rewriteMotorName(this.boat.StandardMotor.Name);
     this.standardTrailerName = (this.boat.StandardTrailer.Name !== '') ? 'and ' + rewriteTrailerName(this.boat.StandardTrailer.Name) : '';
-    this.passModelIdToFlow(this.boat.Id);
+    this.photoGallery = (this.boat.MarketingImages.length > 0) ? this.boat.MarketingImages : '';
+    this.hasPhotoGallery = (this.boat.MarketingImages.length > 0) ? true : false;
   }
 
   resultEmpty(){
@@ -230,6 +235,10 @@ export default class FactoryStoreBoatDetails extends NavigationMixin(LightningEl
 		}
 	}
 
+	get premiumPackageRetailPrice(){
+	  return formatPrice(this.boat.PremiumPackage.RetailPrice, true);
+ }
+
 	get flagshipLink(){
 		let Family = (this.boat.Family === 'Pontoon') ? 'pontoon-boats' : ((this.boat.Family === 'Deck Boat') ? 'deck-boats' : 'fishing-boats');
 		let Series = (this.boat.Series.toLowerCase().indexOf('series') !== -1) ? this.boat.Series.toLowerCase() : this.boat.Series.toLowerCase() + '-series';
@@ -246,6 +255,7 @@ export default class FactoryStoreBoatDetails extends NavigationMixin(LightningEl
 
   handleUpdateStockValue( e ){
 		this.currentStockQuantity = e.detail;
+		this.stockWrapperClass = 'model__currentStock model__currentStock--available';
 	}
 
 }

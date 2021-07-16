@@ -7,10 +7,11 @@ import { LightningElement, wire, api, track } from 'lwc';
 import initMethod from '@salesforce/apex/FactoryStore_MCWrapperController.initMethod';
 
 export default class FactoryStoreCmsContentList extends LightningElement {
-	@api contentType = 'Legend_Deals';
+	@api contentType;
+	@api topics = 'Sudbury Photos General';
 	@track content;
 
-  @wire( initMethod, { contentType: '$contentType' } )
+  @wire( initMethod, { contentType: '$contentType', getTopics: '$topics' } )
   	wiredInitMethod( { error, data })
   	{
   	 	if( data )

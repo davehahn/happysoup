@@ -9,7 +9,7 @@
     <ul class="currentStock__list">
       <template for:each={currentStock} for:item="stock">
         <li key={stock.Base.SerialId} class="currentStock__item">
-          <h5 class="heading heading--s">
+          <h5 class="heading heading--m">
             <span>{stock.Base.ProductName}</span>
             <template for:each={stock.Base.Equipment} for:item="rig">
               <small key={rig.ProductId}>
@@ -18,8 +18,9 @@
             </template>
           </h5>
           <p class="item__pricing">
-            <span><strong>Starting At:</strong> {stock.Base.StartingWeeklyPrice} Per Week</span>
-            <span>{stock.Base.StartingRetailPrice}</span>
+            <small>Starting At:</small>
+            <span class="pricing__weekly">{stock.Base.StartingWeeklyPrice} <strong>Per Week</strong></span>
+            <span class="pricing__retail">{stock.Base.StartingRetailPrice}</span>
           </p>
           <button class="ctas__btn btn btn--secondary" data-record={stock.Base.ProductId} data-name={stock.Base.ProductName} data-serial={stock.Base.SerialNumber} onclick={quickQuote}>Quick Connect</button>
           <button class="ctas__btn btn btn--secondary" data-record={stock.Base.ProductId} data-serial={stock.Base.SerialNumber} onclick={showroomVisit}>Come See It!</button>
