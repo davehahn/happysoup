@@ -32,8 +32,8 @@ export default class FactoryStoreSeriesListing extends NavigationMixin(Lightning
 	  	this.wrapperClass = setWrapperClass(this.sectionWidth, 'series');
 			this.profileImageSrc = result.siteUrl + '/cms/delivery/media/' + this.seriesModelShot;
 			this.profileImageAlt = 'Profile image of a model from the ' + this.seriesName;
-			this.seriesImageryClass = 'series_item_imagery ' + this.seriesName.toLowerCase();
-			this.seriesImageryBgClass = 'series_item_bg ' + this.seriesName.toLowerCase();
+			this.seriesImageryClass = 'series__imagery ' + this.seriesName.toLowerCase();
+			this.seriesImageryBgClass = 'series__bg ' + this.seriesName.toLowerCase();
 		}).catch(e => {
 			 console.log('fetch community url error: ', e);
 	 	});

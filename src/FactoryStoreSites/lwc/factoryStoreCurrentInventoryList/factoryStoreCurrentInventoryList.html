@@ -22,8 +22,10 @@
             <span class="pricing__weekly">{stock.Base.StartingWeeklyPrice} <strong>Per Week</strong></span>
             <span class="pricing__retail">{stock.Base.StartingRetailPrice}</span>
           </p>
-          <button class="ctas__btn btn btn--secondary" data-record={stock.Base.ProductId} data-name={stock.Base.ProductName} data-serial={stock.Base.SerialNumber} onclick={quickQuote}>Quick Connect</button>
-          <button class="ctas__btn btn btn--secondary" data-record={stock.Base.ProductId} data-serial={stock.Base.SerialNumber} onclick={showroomVisit}>Come See It!</button>
+          <p class="item__ctas">
+            <button class="ctas__btn btn btn--secondary" data-record={stock.Base.ProductId} data-name={stock.Base.ProductName} data-serial={stock.Base.SerialNumber} onclick={quickQuote}>Quick Connect</button>
+            <button class="ctas__btn btn btn--secondary" data-record={stock.Base.ProductId} data-serial={stock.Base.SerialNumber} onclick={showroomVisit}>Come See It!</button>
+          </p>
         </li>
       </template>
     </ul>

@@ -85,7 +85,8 @@
   flex-grow: 1;
   margin-right: 2%;
 }
-.modelListing .modelListing__ctas .ctas__currentStock{
+.modelListing .modelListing__ctas .ctas__currentStock span{
+  display: block;
   text-align: right;
   width: fit-content;
   width: -moz-fit-content;
@@ -97,7 +98,7 @@
   padding: 0.25em 0.5em;
   margin-bottom: 0.5em;
 }
-.modelListing .modelListing__ctas .ctas__currentStock strong{
+.modelListing .modelListing__ctas .ctas__currentStock span strong{
   font-weight: 900;
 }
 
@@ -125,12 +126,17 @@
   }
   .modelListing .modelListing__ctas{
     width: 100%;
+    flex-wrap: wrap;
     flex-direction: row;
    	justify-self: center;
    	justify-content: space-between;
    	margin-right: 0;
    	padding: 0 1.5em;
   }
+  .modelListing .modelListing__ctas .ctas__currentStock{
+    width: 100%;
+  }
+
   .modelListing .modelListing__ctas button{
     width: 32%;
   }

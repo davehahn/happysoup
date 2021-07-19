@@ -44,7 +44,9 @@
       </div>
 
       <div class="modelListing__ctas">
-        <h4 class="ctas__currentStock"><strong>{currentStockQuantity}</strong> in stock</h4>
+        <h4 class="ctas__currentStock">
+          <span><strong>{currentStockQuantity}</strong> in stock</span>
+        </h4>
         <button class="ctas__btn btn btn--primary" data-record={boat.Base.Id} onclick={navToBoat}>View Model</button>
         <button class="ctas__btn btn btn--secondary" data-record={boat.Base.Id} onclick={quickQuote}>Quick Connect</button>
         <button class="ctas__btn btn btn--secondary" data-record={boat.Base.Id} onclick={showroomVisit}>Come See It!</button>
