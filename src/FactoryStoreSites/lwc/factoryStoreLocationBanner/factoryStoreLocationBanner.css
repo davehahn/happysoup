@@ -133,3 +133,32 @@
 .locationBanner__moreInfo .btn{
   margin: 1em auto 0;
 }
+
+@media screen and ( max-width: 1080px ){
+  .locationBanner figcaption .heading__lineOne{
+    font-size: 6.5vw;
+  }
+  .locationBanner figcaption .heading__lineTwo{
+		font-size: 4.5vw;
+	}
+
+	.locationBanner__teasers--inner{
+    flex-wrap: wrap;
+  }
+  .locationBanner__teasers--inner .teaser{
+  	width: 75%;
+  	margin-right: 0;
+  	margin-bottom: 1.5em;
+		padding: 2em 2em 16%;
+  }
+  .locationBanner__teasers--inner .teaser:last-of-type{
+    margin-right: 0;
+    margin-bottom: 0;
+  }
+}
+
+@media screen and ( max-width: 540px ){
+  .locationBanner__teasers--inner .teaser{
+    	width: 90%;
+	}
+}

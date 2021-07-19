@@ -237,8 +237,9 @@
 }
 
 .model .model__leadFormWrapper{
-  width: 100%;
-  margin-top: 2.5em; margin-bottom: 2.5em;
+  margin-top: 2.5em;
+  background-color: var(--zebra);
+  padding-top: 2.5em;
 }
 .model .model__leadForm{
 	/*  color: #FFF;*/
@@ -260,12 +261,14 @@
 
 .model .model__fullDetailsCta{
   display: flex;
+	margin-top: 1.5em;
   align-items: center;
   justify-content: center;
 /*  margin-top: 2.5em;*/
 /*  margin-bottom: 2.5em;*/
   padding: 5vw 0;
-  background-image: url('https://mk0inventorylegv1t7j.kinstacdn.com/wp-content/uploads/2020/07/footer-bg.jpg');
+  background-color: #333;
+/*  background-image: url('https://mk0inventorylegv1t7j.kinstacdn.com/wp-content/uploads/2020/07/footer-bg.jpg');*/
   background-size: cover;
   background-position: center bottom;
   background-repeat: no-repeat;
@@ -303,7 +306,8 @@
 }
 
 @media screen and (max-width: 760px){
-  .model .model__specs, .model .model__motors{
+  .model .model__specs ul li,
+  .model .model__motors ul li{
     width: 100%;
   }
   .model .model__premiumPack ul .premiumPackage__item{
