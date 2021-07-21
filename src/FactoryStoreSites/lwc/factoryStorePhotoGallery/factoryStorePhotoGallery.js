@@ -22,7 +22,7 @@ export default class FactoryStoreCmsContentList extends LightningElement {
 	imageToShow;
 	@api content;
 
-	renderedCallback(){
+	connectedCallback(){
 	  if(this.contentType !== 'default'){
 	    initMethod({contentType: this.contentType, getTopics: this.topic})
 	    	.then( (data) => {
