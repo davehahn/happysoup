@@ -175,6 +175,11 @@
 .model .model__motors ul li span strong{
   display: block;
   text-align: right;
+  font-weight: 900;
+}
+.model .model__motors ul li span strong b{
+  text-transform: uppercase;
+  font-size: 0.7em;
 }
 
 .model .model__premiumPack{
@@ -185,6 +190,41 @@
   display: flex;
 	flex-direction: column;
 	align-items: center;
+}
+.model .model__premiumPack header .heading{
+  margin-bottom: 0.25em;
+}
+.model .model__premiumPack header .copy{
+  text-align: center;
+}
+.model .model__premiumPack header .premiumPack__totalValue{
+	margin-top: 1em;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-weight: 300;
+	font-size: 1.75em;
+}
+.model .model__premiumPack header .premiumPack__totalValue .totalValue{
+	display: flex;
+	align-items: center;
+	font-weight: 300;
+}
+.model .model__premiumPack header .premiumPack__totalValue .totalValue::after {
+	content: "";
+	display: block;
+	width: 1px;
+	height: 1.5em;
+	background: rgba(51,51,51,.2);
+	margin: 0 1em;
+}
+.model .model__premiumPack header .premiumPack__totalValue .included{
+	display: flex;
+	align-items: center;
+}
+.model .model__premiumPack header strong{
+  font-weight: 900;
+  color: var(--highlight);
 }
 .model .model__premiumPack ul{
   display: flex;
@@ -250,6 +290,7 @@
   align-items: center;
 }
 .model .model__leadForm header .copy{
+  text-align: center;
 }
 .model .model__leadForm .form{
   padding: 0 2.5rem;
@@ -322,7 +363,12 @@
   .model .model__intro .intro__vitals .vitals__priceBlock .priceBlock__retail{
     font-size: 1.75em;
   }
+  .model .model__premiumPack header .premiumPack__totalValue{
+    font-size: 1.125em;
+    margin-top: .5em;
+  }
   .model .model__fullDetailsCta{
     text-align: center;
   }
+
 }

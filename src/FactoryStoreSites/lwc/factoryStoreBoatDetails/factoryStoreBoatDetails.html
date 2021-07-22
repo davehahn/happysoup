@@ -64,7 +64,7 @@
               <li key={motor.Name}>
                 <span>{motor.Name}</span>
                 <span>
-                  <strong>+{motor.WeeklyUpgradeCost} Per Week</strong>
+                  <strong>+{motor.WeeklyUpgradeCost} <b>/Week</b></strong>
                   <strong>+{motor.RetailUpgradeCost}</strong>
                 </span>
               </li>
@@ -78,9 +78,9 @@
             <p class="copy copy--standard">
               These features are typically optional on most comparable models, but come <strong>standard*</strong> on the {boatName}.
             </p>
-            <p>
-              <span>Total Value: {premiumPackageRetailPrice}</span>
-              <span>You Pay: $0</span>
+            <p class="premiumPack__totalValue">
+              <span class="totalValue">Total Value: {premiumPackageRetailPrice}</span>
+              <span class="included">You Pay: <strong>$0</strong></span>
             </p>
           </header>
 

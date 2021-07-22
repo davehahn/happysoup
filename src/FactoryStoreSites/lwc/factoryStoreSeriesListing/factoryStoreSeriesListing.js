@@ -14,6 +14,7 @@ export default class FactoryStoreSeriesListing extends NavigationMixin(Lightning
 	@api seriesName;
 	@api seriesBlurb;
 	@api seriesModelShot;
+	@api seriesZebra;
 
 	@api seriesButtonText;
 	@api seriesButtonLink;
@@ -23,13 +24,16 @@ export default class FactoryStoreSeriesListing extends NavigationMixin(Lightning
 	seriesImageryClass;
 	seriesImageryBgClass;
 
+	outerWrapperClass = 'full';
 	wrapperClass = 'series';
 
 	connectedCallback(){
 	  fetchCommunityDetails({communityId: Id})
 	  .then( (result) => {
+	    this.outerWrapperClass = (this.seriesZebra) ? 'full zebra' : 'full';
+	    console.log('series wrapper class', this.wrapperClass);
 	  	this.seriesButtonLinkRewrite = result.siteUrl + '/s' + this.seriesButtonLink;
-	  	this.wrapperClass = setWrapperClass(this.sectionWidth, 'series');
+	  	this.wrapperClass = setWrapperClass(this.sectionWidth, this.wrapperClass);
 			this.profileImageSrc = result.siteUrl + '/cms/delivery/media/' + this.seriesModelShot;
 			this.profileImageAlt = 'Profile image of a model from the ' + this.seriesName;
 			this.seriesImageryClass = 'series__imagery ' + this.seriesName.toLowerCase();
