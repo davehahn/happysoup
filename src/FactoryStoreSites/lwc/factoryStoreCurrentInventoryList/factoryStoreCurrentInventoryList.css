@@ -8,7 +8,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 2.5% 5%;
+  padding: 1.25% 2.5%;
   border-bottom: 1px solid var(--zebraAccent);
   width: 100%;
   margin: 0 auto;
@@ -21,7 +21,7 @@
 }
 .modelListing__currentStock .currentStock__item .heading{
   line-height: 0.7;
-  width: 320px;
+  width: 250px;
   flex-shrink: 0;
 }
 .modelListing__currentStock .currentStock__item .heading span{
@@ -40,17 +40,15 @@
   align-items: center;
   justify-content: center;
   text-align: center;
-  border-left: 1px solid var(--zebraAccent);
-  border-right: 1px solid var(--zebraAccent);
+  padding: 0 1.25em;
 }
 .modelListing__currentStock .currentStock__item .item__pricing::before, .modelListing__currentStock .currentStock__item .item__pricing::after{
 
 }
 .modelListing__currentStock .currentStock__item .item__pricing small{
-  width: 100%;
-  font-weight: 900;
   text-transform: uppercase;
   font-size: 0.8em;
+  margin-right: 1.5em;
 }
 .modelListing__currentStock .currentStock__item .item__pricing span{
   display: block;
@@ -73,7 +71,20 @@
   display: inline-block;
   background-color: var(--zebraAccent);
   width: 1px; height: 25px;
-  margin: 0 50px;
+  margin: 0 25px;
+  vertical-align: middle;
+}
+.modelListing__currentStock .currentStock__item .item__ctas{
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+
+}
+.modelListing__currentStock .currentStock__item .item__ctas button{
+	margin-right: 1.25em;
+}
+.modelListing__currentStock .currentStock__item .item__ctas button:last-of-type{
+	margin-right: 0;
 }
 
 @media screen and (max-width: 1250px){
@@ -87,16 +98,8 @@
     flex-wrap: wrap;
   }
   .modelListing__currentStock .currentStock__item .item__ctas{
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    margin-top: 1.5em;
-  }
-  .modelListing__currentStock .currentStock__item .item__ctas button{
-    margin-right: 1.25em;
-  }
-  .modelListing__currentStock .currentStock__item .item__ctas button:last-of-type{
-    margin-right: 0;
+    	width: 100%;
+			margin-top: 1.5em;
   }
 }
 

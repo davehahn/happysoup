@@ -212,12 +212,23 @@
 		margin-left: calc(50% - 50vw);
 		margin-right: calc(50% - 50vw);
 	}
+	.THIS.navList .navItem.navItem--topLevel{
+		border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+ 	}
+ 	.THIS.navList .navItem.navItem--topLevel:last-of-type{
+ 	  border-bottom: 0 none;
+  }
 	.THIS.navList .navItem.navItem--topLevel:hover a.navTrigger.navTrigger--topLevel,
   .THIS.navList .navItem.navItem--topLevel:hover button.navTrigger.navTrigger--topLevel{
     width: 100%;
+    text-align: left;
   }
 	.THIS.navList .navItem.navItem--topLevel .navList.navList--subLevel{
     width: 100%;
     position: relative;
+    box-shadow: none;
+  }
+  .THIS.navList .navItem.navItem--topLevel .navList.navList--subLevel a{
+    padding-left: 3em;
   }
 }

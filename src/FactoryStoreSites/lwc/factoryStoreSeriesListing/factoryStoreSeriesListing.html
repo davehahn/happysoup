@@ -5,20 +5,21 @@
 <!-- Factory Store Series Listing -->
 <template>
 
-  <article class={wrapperClass}>
-    <h2 class="series__seriesName heading heading--special" data-series-class={seriesClass}>{fullSeriesName}</h2>
-    <div class="series__copyWrap">
-      <div class="series__copy">
-        <p class="series__seriesBlurb copy copy--standard">{seriesBlurb}</p>
-        <a href={seriesButtonLinkRewrite} class="btn btn--primary">{seriesButtonText}</a>
+  <div class={outerWrapperClass}>
+    <article class={wrapperClass}>
+      <h2 class="series__seriesName heading heading--special" data-series-class={seriesClass}>{fullSeriesName}</h2>
+      <div class="series__copyWrap">
+        <div class="series__copy">
+          <p class="series__seriesBlurb copy copy--standard">{seriesBlurb}</p>
+          <a href={seriesButtonLinkRewrite} class="btn btn--primary">{seriesButtonText}</a>
+        </div>
+        <div class="series__profile">
+          <img src={profileImageSrc} alt={profileImageAlt}/>
+        </div>
       </div>
-      <div class="series__profile">
-        <img src={profileImageSrc} alt={profileImageAlt}/>
+      <div class={seriesImageryClass}>
+        <span class={seriesImageryBgClass} style="background-image: url('https://mk0inventorylegv1t7j.kinstacdn.com/wp-content/uploads/2020/07/LegendLandscape-28.jpg')"></span>
       </div>
-    </div>
-    <div class={seriesImageryClass}>
-      <span class={seriesImageryBgClass} style="background-image: url('https://mk0inventorylegv1t7j.kinstacdn.com/wp-content/uploads/2020/07/LegendLandscape-28.jpg')"></span>
-    </div>
-  </article>
-
+    </article>
+  </div>
 </template>

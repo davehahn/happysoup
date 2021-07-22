@@ -168,7 +168,11 @@ const convertLength = ( value, truncateLengthTrailingZero = true) => {
 
   const newFeet = (typeof baseArray[0] !== 'undefined' || baseArray[0] !== null) ? baseArray[0] + '&rsquo;' : '';
   let inches = null;
-  if(typeof baseArray[1] !== 'undefined' || baseArray[1] !== null){
+  console.log('Covert Length Base Array: ', baseArray);
+  console.log('Covert Length Base Array[1]: ', baseArray[1]);
+  console.log('Covert Length Base Array[1] type: ', (typeof baseArray[1] !== 'undefined'));
+  if((typeof baseArray[1] !== 'undefined') || (baseArray[1] !== null)){
+    console.log('in if');
     if(baseArray[1].substr(-1) === '0' && truncateLengthTrailingZero){
       inches = baseArray[1].substr( 0, -1);
     } else {
