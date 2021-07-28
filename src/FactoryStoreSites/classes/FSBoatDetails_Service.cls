@@ -23,15 +23,15 @@ public with sharing class FSBoatDetails_Service {
     @AuraEnabled public Decimal RetailSpecialPrice { get; set; }
     @AuraEnabled public String RetailSpecialPriceDescription { get; set; }
     static Map<Id, Product2> allProductOptions;
-    @AuraEnabled public Map<String, List<String>> Features { get; set; }
+//    @AuraEnabled public Map<String, List<String>> Features { get; set; }
     @AuraEnabled public Map<String, List<PartProduct>> OptionalProducts { get; set; }
     @AuraEnabled public List<UpgradeProduct> MotorUpgrades { get; set; }
     @AuraEnabled public List<UpgradeProduct> TrailerUpgrades { get; set; }
     @AuraEnabled public UpgradeProduct MaximumMotor { get; set; }
 //    @AuraEnabled public PremiumPackage PremiumPackage { get; set; }
 //    @AuraEnabled public Map<String, List<FeeProduct>> Fees { get; set; }
-    @AuraEnabled public Map<String, String> DefaultImages { get; set; }
-    @AuraEnabled public Map<String, String> BoatSpecs { get; set; }
+//    @AuraEnabled public Map<String, String> DefaultImages { get; set; }
+//    @AuraEnabled public Map<String, String> BoatSpecs { get; set; }
 
     static Id retailPricebookId;
     static Map<Id, String> pricebookMap;
@@ -96,45 +96,10 @@ public with sharing class FSBoatDetails_Service {
         return this;
     }
 
-//    public FSBoatDetails_Service processStandardProducts(Product2 b){
-//
-//        try
-//        {
-//            Set<String> standardIds = new Set<String>();
-//            standardIds.add(b.Standard_Motor__r.Id);
-//            standardIds.add(b.Standard_Trailer__r.Id);
-//            standardIds.add(b.Standard_Trolling_Motor__r.Id);
-//
-//            List<Product2> standards = [SELECT Id, Name, RecordType.Name, Default_Gallery_Image__c, Available_For_Mercury_Partner_Discount__c,
-//            (SELECT Id, UnitPrice, Special_Price__c, Special_Price_Description__c, Pricebook2Id FROM PricebookEntries WHERE isActive = true AND Pricebook2.isActive = true),
-//            (SELECT Id, Standard__c, Maximum__c, From_Product__r.Id, From_Product__r.Name FROM To_Product_Options__r ORDER BY From_Product__r.Name)
-//            FROM Product2
-//            WHERE Id IN :standardIds
-//            ];
-//            for( Product2 p : standards ){
-//                if(p.RecordType.Name == 'Motor'){
-//                    setStandardMotor(p);
-//                }
-//                if(p.RecordType.Name == 'Trailer'){
-//                    setStandardTrailer(p);
-//                }
-//                if(p.RecordType.Name == 'Trolling Motor'){
-//                    setStandardTrollingMotor(p);
-//                }
-//            }
-//        }
-//        catch(Exception e){
-//            System.debug( e.getMessage());
-//        }
-//
-//        return this;
-//    }
-//
     private FSBoatDetails_Service processOptions(Product2 parentProduct){
         try
         {
-            if( parentProduct.To_Product_Options__r != null ||
-                    !parentProduct.To_Product_Options__r.isEmpty() )
+            if( parentProduct.To_Product_Options__r != null || !parentProduct.To_Product_Options__r.isEmpty() )
             {
                 Set<String> standardIds = new Set<String>();
                 if( parentProduct.RecordType.Name == 'Boat' )
@@ -231,167 +196,7 @@ public with sharing class FSBoatDetails_Service {
         catch(Exception e){}
         return this;
     }
-//
-//    private PremiumPackage processPremiumPackage( Product2 p )
-//    {
-//        p = [SELECT Id,
-//                Name,
-//                Family,
-//                RecordType.Name,
-//                Default_Gallery_Image__c,
-//        (SELECT Id,
-//                UnitPrice,
-//                Special_Price__c,
-//                Special_Price_Description__c,
-//                Pricebook2Id,
-//                Pricebook2.Name
-//        FROM PricebookEntries
-//        WHERE isActive = true
-//        AND Pricebook2.isActive = true),
-//        (SELECT Id,
-//                Name,
-//                Feature_Id__c,
-//                Feature_Id__r.Name,
-//                Feature_Id__r.description__c,
-//                Feature_Id__r.description_fr__c,
-//                Feature_Id__r.Category__c,
-//                Feature_Id__r.Value__c
-//        FROM Product_Feature_Maps__r )
-//        FROM Product2
-//        WHERE Id = :p.Id ];
-//        return new PremiumPackage(p);
-//    }
-//
-//    private FSBoatDetails_Service processFeatures(Product2 p){
-//        try
-//        {
-//            if( p.Product_Feature_Maps__r != null && !p.Product_Feature_Maps__r.isEmpty() ){
-//                this.Features = new Map<String, List<String>>();
-//                for( Product_Feature_Map__c pfm : p.Product_Feature_Maps__r ){
-//                    if( !this.Features.keySet().contains( pfm.Feature_ID__r.Category__c ) ){
-//                        this.Features.put( pfm.Feature_ID__r.Category__c, new List<String>() );
-//                    }
-//                    this.Features.get( pfm.Feature_ID__r.Category__c ).add(
-//                            pfm.Feature_Id__r.description__c
-//                    );
-//                }
-//            }
-//        }
-//        catch(Exception e){}
-//        return this;
-//    }
-//
-//    private FSBoatDetails_Service processFees(Product2 p)
-//    {
-//        try
-//        {
-//            if( p.Parent_Product_Fee_Maps__r != null && !p.Parent_Product_Fee_Maps__r.isEmpty() )
-//            {
-//                this.Fees = new Map<String, List<FeeProduct>>();
-//                Set<Id> ids = new Set<Id>();
-//                for( Product_Fee_Map__c pfm : p.Parent_Product_Fee_Maps__r )
-//                {
-//                    ids.add(pfm.Fee_Product__c);
-//                }
-//                Map<Id, Product2> fees = new Map<Id, Product2>([
-//                        SELECT Id, Name, Family
-//                        FROM Product2
-//                        WHERE Id IN :ids
-//                ]);
-//                List<Product_Fee_Amount__c> feeAmounts = [SELECT Id, Amount__c, Province__c, Fee_Product__c, Price_Book__c
-//                FROM Product_Fee_Amount__c
-//                WHERE Fee_Product__c IN :fees.keySet()
-//                AND Price_Book__c IN :pricebookMap.keySet() ];
-//
-//                Map<Id, Map<String, List<Product_Fee_Amount__c>>> feeMap = new Map<Id, Map<String, List<Product_Fee_Amount__c>>>();
-//                for(Product_Fee_Amount__c pfa : feeAmounts )
-//                {
-//                    if( !feeMap.containsKey( pfa.Fee_Product__c) )
-//                    {
-//                        feeMap.put( pfa.Fee_Product__c, new Map<String, List<Product_Fee_Amount__c>>() );
-//                    }
-//                    if( !feeMap.get( pfa.Fee_Product__c ).containsKey( pfa.Province__c) )
-//                    {
-//                        feeMap.get( pfa.Fee_Product__c ).put( pfa.Province__c, new List<Product_Fee_Amount__c>() );
-//                    }
-//                    feeMap.get( pfa.Fee_Product__c ).get( pfa.Province__c ).add( pfa );
-//                }
-//                for( Product2 f : fees.values() )
-//                {
-//                    for( String prov : feeMap.get(f.Id).keySet() )
-//                    {
-//                        if( !this.Fees.containsKey(prov) )
-//                        {
-//                            this.Fees.put(prov, new List<FeeProduct>() );
-//                        }
-//                        this.Fees.get(prov).add( new FeeProduct( f, feeMap.get(f.Id).get(prov) ) );
-//                    }
-//                }
-//            }
-//        }
-//        catch(Exception e){}
-//        return this;
-//    }
-//
-//    private FSBoatDetails_Service processImages(Product2 p){
-//        try
-//        {
-//            if( p.Legend_Gallery_Image__r != null )
-//            {
-//                this.DefaultImages = new Map<String,String>();
-//                this.DefaultImages.put('500x500', p.Legend_Gallery_Image__r.Active_S3_Object__r.URL_500x500__c);
-//                this.DefaultImages.put('700w', p.Legend_Gallery_Image__r.Active_S3_Object__r.URL_700w__c);
-//                this.DefaultImages.put('1280w', p.Legend_Gallery_Image__r.Active_S3_Object__r.URL_1280w__c);
-//                this.DefaultImages.put('Original', p.Legend_Gallery_Image__r.Active_S3_Object__r.URL_Original__c);
-//            }
-//            List<Legend_Gallery_Image_Map__c> imageMaps = [SELECT Legend_Gallery_Image__r.Active_S3_Object__r.URL_500x500__c,
-//                    Legend_Gallery_Image__r.Active_S3_Object__r.URL_Gallery__c,
-//                    Legend_Gallery_Image__r.Active_S3_Object__r.URL_700w__c,
-//                    Legend_Gallery_Image__r.Active_S3_Object__r.URL_Original__c,
-//                    Legend_Gallery_Image__r.Active_S3_Object__r.URL_1280w__c,
-//                    Legend_Gallery_Image__r.Name, Legend_Gallery_Image__r.ENG_Description__c,
-//                    Legend_Gallery_Image__r.FR_Description__c
-//            FROM Legend_Gallery_Image_Map__c
-//            WHERE Parent_object_Id__c = :p.Id];
-//
-////            if( imageMaps.size() > 0 ){
-////                this.MarketingImages = new List<MarketingImage>();
-////                for(Legend_Gallery_Image_Map__c lgim : imageMaps){
-////                    this.MarketingImages.add( new MarketingImage(lgim) );
-////                }
-////            }
-//        }
-//        catch(Exception e){}
-//        return this;
-//    }
-//
-//    private FSBoatDetails_Service processSpecs()
-//    {
-//        try {
-//            this.BoatSpecs = new Map<String, String>();
-//            String fieldSetName = this.Family.replace(' ', '_') + '_Specifications';
-//            Map<String, String> fieldSetMap = LGND_Utilities.fieldsFromFieldSet('Product2', fieldSetName );
-//            String queryString = 'SELECT Id, ';
-//            for( String fieldName : fieldSetMap.keySet() )
-//            {
-//                queryString += fieldName;
-//                queryString += ',';
-//            }
-//            queryString = queryString.removeEnd(',');
-//            queryString += ' FROM Product2 WHERE Id = \'';
-//            queryString += this.Id;
-//            queryString += '\'';
-//
-//            Product2 boat = Database.query( queryString );
-//            for( String fieldName : fieldSetMap.keySet() )
-//            {
-//                this.BoatSpecs.put( fieldSetMap.get(fieldName), String.valueOf( boat.get( fieldName ) ) );
-//            }
-//        }
-//        catch(Exception e){}
-//        return this;
-//    }
-//
+
     @AuraEnabled public static Map<String, List<PartProduct>> buildOptionalProducts(List<Product2> parts) {
         if( parts.isEmpty() ){
             return null;
@@ -458,59 +263,7 @@ public with sharing class FSBoatDetails_Service {
         }
         return this.TrailerUpgrades;
     }
-//
-//    private List<UpgradeProduct> buildTrollingMotorUpgrades(List<Product2> trollingMotors,
-//            Map<Id, Product_Upgrade__c> upgrades)
-//    {
-//        if( trollingMotors.isEmpty() ){
-//            return this.TrollingMotorUpgrades;
-//        }
-//        if(this.TrollingMotorUpgrades == null )
-//            this.TrollingMotorUpgrades = new List<UpgradeProduct>();
-//        for( Product2 p : trollingMotors){
-//            Boolean useTMotor = false;
-//            if( this.standardTrollingMotor == null && excludeStandardTrollingMotor == false )
-//                useTmotor = true;
-//            else
-//            {
-//                for(Product_Upgrade__c pu : upgrades.values() )
-//                {
-//                    if( p.Id == pu.To_Product__c )
-//                    {
-//                        useTmotor = true;
-//                        break;
-//                    }
-//                }
-//            }
-//            if( useTmotor )
-//                this.TrollingMotorUpgrades.add( new UpgradeProduct( p, upgrades, excludeStandardTrollingMotor ) );
-//        }
-//        return this.TrollingMotorUpgrades;
-//    }
-//
-//    private void setStandardMotor(Product2 motor){
-//        this.standardMotor = new UpgradeProduct(motor, false);
-//        this.standardMotor.DisplayOnWeb = true;
-//    }
-//
-//    private void setStandardTrailer(Product2 trailer){
-//        if( excludeStandardTrailer )
-//        {
-//            if( this.TrailerUpgrades == null )
-//                this.TrailerUpgrades = new List<UpgradeProduct>();
-//            this.TrailerUpgrades.add( new UpgradeProduct(trailer, true) );
-//        }
-//        else
-//                this.standardTrailer = new UpgradeProduct(trailer, false);
-//
-//        this.standardTrailer.DisplayOnWeb = true;
-//    }
-//
-//    private void setStandardTrollingMotor(Product2 trollingMotor){
-//        this.standardTrollingMotor = new UpgradeProduct(trollingMotor, false);
-//        this.standardTrollingMotor.DisplayOnWeb = true;
-//    }
-//
+
     public Product2 findProd(String prodId, Boolean fullResponse) {
         try {
             String standardMotorFields;
@@ -579,31 +332,31 @@ public with sharing class FSBoatDetails_Service {
         @AuraEnabled public Boolean DisplayOnWeb { get; set; }
         @AuraEnabled public String DefaultImage { get; set; }
         @AuraEnabled public Decimal RetailPrice { get; set; }
-        @AuraEnabled public Decimal PartnerPrice { get; set; }
-        @AuraEnabled public Decimal FactoryPrice { get; set; }
+//        @AuraEnabled public Decimal PartnerPrice { get; set; }
+//        @AuraEnabled public Decimal FactoryPrice { get; set; }
         @AuraEnabled public Decimal RetailSpecialPrice { get; set; }
         @AuraEnabled public String RetailSpecialPriceDescription { get; set; }
-        @AuraEnabled public Decimal PartnerSpecialPrice { get; set; }
-        @AuraEnabled public String PartnerSpecialPriceDescription { get; set; }
+//        @AuraEnabled public Decimal PartnerSpecialPrice { get; set; }
+//        @AuraEnabled public String PartnerSpecialPriceDescription { get; set; }
         @AuraEnabled public Decimal RetailUpgradeCost { get; set; }
-        @AuraEnabled public Decimal PartnerUpgradeCost { get; set; }
-        @AuraEnabled public Decimal FactoryUpgradeCost { get; set; }
+//        @AuraEnabled public Decimal PartnerUpgradeCost { get; set; }
+//        @AuraEnabled public Decimal FactoryUpgradeCost { get; set; }
         @AuraEnabled public Decimal WeeklyUpgradeCost { get; set; }
         /* other motor related detail fields */
         @AuraEnabled public Map<String, List<PartProduct>> OptionalProducts { get; set; }
         @AuraEnabled public Boolean availableForMercDiscount { get; set; }
 
-        public UpgradeProduct(Product2 m, Boolean excludedStandard)
-        {
-            this.Name = m.Name;
-            this.Family = m.RecordType.Name;
-            this.Id = m.Id;
-            this.DefaultImage = m.Default_Gallery_Image__c;
-            this.processOptions(m);
-            this.processPrices(m, excludedStandard);
-            this.WeeklyUpgradeCost = calcWeeklyCost();
-            this.availableForMercDiscount = m.Available_For_Mercury_Partner_Discount__c;
-        }
+//        public UpgradeProduct(Product2 m, Boolean excludedStandard)
+//        {
+//            this.Name = m.Name;
+//            this.Family = m.RecordType.Name;
+//            this.Id = m.Id;
+//            this.DefaultImage = m.Default_Gallery_Image__c;
+//            this.processOptions(m);
+//            this.processPrices(m, excludedStandard);
+//            this.WeeklyUpgradeCost = calcWeeklyCost();
+//            this.availableForMercDiscount = m.Available_For_Mercury_Partner_Discount__c;
+//        }
 
         public UpgradeProduct(Product2 m,
                 Map<Id, Product_Upgrade__c> upgrades,
@@ -655,14 +408,6 @@ public with sharing class FSBoatDetails_Service {
                         {
                             this.RetailUpgradeCost = puc.Cost__c;
                         }
-                        if( pricebookMap.get(puc.Price_Book__c) == 'partner' )
-                        {
-                            this.PartnerUpgradeCost = puc.Cost__c;
-                        }
-                        if( pricebookMap.get(puc.Price_Book__c) == 'factory' )
-                        {
-                            this.FactoryUpgradeCost = puc.Cost__c;
-                        }
                     }
                 }
             }
@@ -680,20 +425,6 @@ public with sharing class FSBoatDetails_Service {
                         this.RetailPrice = pbe.UnitPrice;
                         this.RetailSpecialPrice = pbe.Special_Price__c;
                         this.RetailSpecialPriceDescription = pbe.Special_Price_Description__c;
-                    }
-                    if( pricebookMap.get(pbe.Pricebook2Id) == 'partner' )
-                    {
-                        this.PartnerPrice = pbe.UnitPrice.setScale(2);
-                        this.PartnerSpecialPrice = pbe.Special_Price__c;
-                        this.PartnerSpecialPriceDescription = pbe.Special_Price_Description__c;
-                        if( (this.Family == 'Trailer' || this.Family == 'Trolling Motor') && excludedStandard == true )
-                            this.PartnerUpgradeCost = pbe.UnitPrice.setScale(2);
-                    }
-                    if( pricebookMap.get(pbe.Pricebook2Id) == 'factory' )
-                    {
-                        this.FactoryPrice = pbe.UnitPrice;
-                        if(this.Family == 'Trailer' || this.Family == 'Trolling Motor')
-                            this.FactoryUpgradeCost = pbe.UnitPrice;
                     }
                 }
             }
@@ -720,116 +451,7 @@ public with sharing class FSBoatDetails_Service {
         }
 
     }
-//
-//    /* -------------------- Premium Package ------------------------- */
-//    public Class PremiumPackage {
-//        @AuraEnabled public String Id { get; set; }
-//        @AuraEnabled public String Name { get; set; }
-//        @AuraEnabled public Decimal RetailPrice { get; set; }
-//        @AuraEnabled public Decimal PartnerPrice { get; set; }
-//        @AuraEnabled public String DefaultImage { get; set; }
-//        @AuraEnabled public Map<String, List<Feature>> Contents { get; set; }
-//
-//        public PremiumPackage(Product2 p) {
-//            this.Contents = new Map<String, List<Feature>>();
-//            this.Name = p.Name;
-//            this.Id = p.Id;
-//            this.DefaultImage = p.Default_Gallery_Image__c;
-//            this.processPriceBooks(p);
-//            processContents( p.Product_Feature_Maps__r );
-//        }
-//
-//        private PremiumPackage processPriceBooks(Product2 b)
-//        {
-//            try
-//            {
-//                //this.Prices = new Map<String, Decimal>();
-//                for( PricebookEntry pbe : b.PricebookEntries )
-//                {
-//                    // this.Prices.put(pbe.Pricebook2.Name, pbe.UnitPrice);
-//                    if( pricebookMap.containsKey(pbe.Pricebook2Id) )
-//                    {
-//                        if( pricebookMap.get(pbe.Pricebook2Id) == 'retail' )
-//                        {
-//                            this.RetailPrice = pbe.UnitPrice;
-//                        }
-//                        if( pricebookMap.get(pbe.Pricebook2Id) == 'partner' ||
-//                                pricebookMap.get(pbe.Pricebook2Id) == 'factory')
-//                        {
-//                            this.PartnerPrice = pbe.UnitPrice;
-//                        }
-//                    }
-//                }
-//            }
-//            catch(Exception e){}
-//            return this;
-//        }
-//
-//        private PremiumPackage processContents( Product_Feature_Map__c[] maps )
-//        {
-//            for( Product_Feature_Map__c pfm : maps )
-//            {
-//                if( !this.Contents.containsKey( pfm.Feature_Id__r.Category__c ) )
-//                    this.Contents.put( pfm.Feature_Id__r.Category__c, new List<Feature>() );
-//                this.Contents.get( pfm.Feature_Id__r.Category__c ).add( new Feature( pfm ) );
-//            }
-//            return this;
-//        }
-//
-//    }
-//
-//    public Class Feature {
-//        @AuraEnabled public String Id { get; set; }
-//        @AuraEnabled public String Name { get; set; }
-//        @AuraEnabled public String Description { get; set; }
-//        @AuraEnabled public String Description_FR { get; set; }
-//        @AuraEnabled public Decimal Value { get; set; }
-//
-//        public Feature( Product_Feature_Map__c pfm )
-//        {
-//            this.Id = pfm.Feature_Id__c;
-//            this.Name = pfm.Feature_Id__r.Name;
-//            this.Description = pfm.Feature_Id__r.description__c;
-//            this.Description_FR = pfm.Feature_Id__r.description_fr__c;
-//            this.Value = pfm.Feature_Id__r.Value__c;
-//        }
-//    }
-//
-//    /* -------------------- FeeProduct Class ------------------------- */
-//    public Class FeeProduct {
-//
-//        @AuraEnabled public String Id { get; set; }
-//        @AuraEnabled public String Name { get; set; }
-//        @AuraEnabled public String Family { get; set; }
-//        @AuraEnabled public Decimal RetailPrice { get; set; }
-//        @AuraEnabled public Decimal PartnerPrice { get; set; }
-//        @AuraEnabled public Decimal FactoryPrice { get; set; }
-//        //public Map<String,Decimal> Prices { get; set; }
-//
-//        public FeeProduct(Product2 p) {
-//            this.Id = p.Id;
-//            this.Name = p.Name;
-//            //processPriceBooks( p );
-//        }
-//
-//        public FeeProduct(Product2 feeProduct, List<Product_Fee_Amount__c> feeAmounts) {
-//            this.Id = feeProduct.Id;
-//            this.Name = feeProduct.Name;
-//            this.Family = feeProduct.Family;
-//            for (Product_Fee_Amount__c pfa : feeAmounts) {
-//                if (pricebookMap.get(pfa.Price_Book__c) == 'retail') {
-//                    this.RetailPrice = pfa.Amount__c;
-//                }
-//                if (pricebookMap.get(pfa.Price_Book__c) == 'partner') {
-//                    this.PartnerPrice = pfa.Amount__c;
-//                }
-//                if (pricebookMap.get(pfa.Price_Book__c) == 'factory') {
-//                    this.FactoryPrice = pfa.Amount__c;
-//                }
-//            }
-//        }
-//    }
-//
+
     /* -------------------- PartProduct Class ------------------------ */
     public Class PartProduct {
 
@@ -837,14 +459,14 @@ public with sharing class FSBoatDetails_Service {
         @AuraEnabled public String Name { get; set; }
         @AuraEnabled public Boolean HasOptions { get; set; }
         @AuraEnabled public Decimal RetailPrice { get; set; }
-        @AuraEnabled public Decimal PartnerPrice { get; set; }
-        @AuraEnabled public Decimal FactoryPrice { get; set; }
-        @AuraEnabled public Decimal FactorySpecialPrice { get; set; }
-        @AuraEnabled public String FactorySpecialPriceDescription { get; set; }
+//        @AuraEnabled public Decimal PartnerPrice { get; set; }
+//        @AuraEnabled public Decimal FactoryPrice { get; set; }
+//        @AuraEnabled public Decimal FactorySpecialPrice { get; set; }
+//        @AuraEnabled public String FactorySpecialPriceDescription { get; set; }
         @AuraEnabled public Decimal RetailSpecialPrice { get; set; }
         @AuraEnabled public String RetailSpecialPriceDescription { get; set; }
-        @AuraEnabled public Decimal PartnerSpecialPrice { get; set; }
-        @AuraEnabled public String PartnerSpecialPriceDescription { get; set; }
+//        @AuraEnabled public Decimal PartnerSpecialPrice { get; set; }
+//        @AuraEnabled public String PartnerSpecialPriceDescription { get; set; }
         @AuraEnabled public String DefaultImage { get; set; }
         @AuraEnabled public Integer QuantityStandard { get; set; }
         @AuraEnabled public Integer MaximumQuantity { get; set; }
@@ -880,18 +502,6 @@ public with sharing class FSBoatDetails_Service {
                             this.RetailPrice = pbe.UnitPrice;
                             this.RetailSpecialPrice = pbe.Special_Price__c;
                             this.RetailSpecialPriceDescription = pbe.Special_Price_Description__c;
-                        }
-                        if( pricebookMap.get(pbe.Pricebook2Id) == 'partner' )
-                        {
-                            this.PartnerPrice = pbe.UnitPrice;
-                            this.PartnerSpecialPrice = pbe.Special_Price__c;
-                            this.PartnerSpecialPriceDescription = pbe.Special_Price_Description__c;
-                        }
-                        if( pricebookMap.get(pbe.Pricebook2Id) == 'factory' )
-                        {
-                            this.FactoryPrice = pbe.UnitPrice;
-                            this.FactorySpecialPrice = pbe.Special_Price__c;
-                            this.FactorySpecialPriceDescription = pbe.Special_Price_Description__c;
                         }
                     }
                 }
