@@ -105,6 +105,29 @@ public with sharing class Factory_Product {
     return prods;
   }
 
+  public static Product2[] createSerializedProducts_AvailableOnline( String recordTypeName,
+                                                                      String family,
+                                                                      Integer count,
+                                                                      String series)
+  {
+    Product2[] prods = buildSerializedProducts_AvailableOnline(
+            recordTypeName,
+            family,
+            count
+    );
+
+    for( Product2 boat : prods){
+      boat.Series__c = series;
+      boat.Available_on_Factory_Store_Sites__c = true;
+    }
+
+    Boolean orig = gcProduct.disableTrigger;
+    gcProduct.disableTrigger = true;
+    insert prods;
+    gcProduct.disableTrigger = orig;
+    return prods;
+  }
+
   public static Product2 createNonSerializedProduct( String recordTypeName,
                                                      String family )
   {

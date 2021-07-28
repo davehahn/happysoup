@@ -38,6 +38,13 @@ public with sharing class Factory_Boat
     addPricebookEntries( boat.Id, BOAT_PRICE );
   }
 
+  public Factory_Boat( String family, Id pricebookId, String series )
+  {
+    this.pricebookId = pricebookId;
+    this.boat = Factory_Product.createSerializedProducts_AvailableOnline( 'Boat', family, 1, series)[0];
+    addPricebookEntries( boat.Id, BOAT_PRICE );
+  }
+
   public Id getPricebookEntry( Id productId )
   {
     for( PricebookEntry pb : this.pbEntries )
