@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
     <types>
-        <members>Accounting_Issues_Status</members>
         <members>Case_Promotion</members>
         <name>AnimationRule</name>
     </types>
@@ -253,7 +252,6 @@
         <members>InventoryTestFactory</members>
         <members>InventoryTransfer_ar</members>
         <members>InventoryTransfer_ar_Test</members>
-        <members>JiraConnect</members>
         <members>JournalEntryTriggerHandler_ar</members>
         <members>JournalEntryTriggerHandler_ar_Test</members>
         <members>JournalEntry_Service</members>
@@ -549,10 +547,6 @@
         <members>SurveyQuestionResponse_Test</members>
         <members>SurveySitesUtil</members>
         <members>SurveyTestingUtil</members>
-        <members>SystemIssue_Controller</members>
-        <members>SystemIssue_Controller_T</members>
-        <members>SystemIssue_TriggerHandler</members>
-        <members>SystemIssue_TriggerHandler_T</members>
         <members>Test_Constants</members>
         <members>Tests_CalloutMocks</members>
         <members>TradeInRecord_TriggerHandler</members>
@@ -1118,7 +1112,6 @@
         <members>Rigger_Job_Time_Entry</members>
         <members>Square_Transaction</members>
         <members>SurveyQuestionResponse</members>
-        <members>SystemIssue</members>
         <members>TradeInRecord</members>
         <members>TruckDeliveryItem</members>
         <members>TruckLoadLine</members>
@@ -1337,7 +1330,6 @@
         <members>SerialNumber_History_dh</members>
         <members>SerialNumber_RegisterWithSupplier</members>
         <members>ServiceAppointmentFlow</members>
-        <members>SystemIssue_New</members>
         <members>Template_Header_80_20_Content</members>
         <members>Toaster</members>
         <members>Utility_CometD</members>
@@ -1463,7 +1455,6 @@
         <members>AccountContactRole</members>
         <members>Account_Matching_Field__mdt</members>
         <members>Account_Number_Detail__c</members>
-        <members>Accounting_Issue__c</members>
         <members>AcctSeedERP__Inbound_Inventory_Movement__c</members>
         <members>AcctSeedERP__Location__c</members>
         <members>AcctSeedERP__Manufacturing_Inventory_Movement__c</members>
@@ -1596,8 +1587,6 @@
         <members>InventoryImport__c</members>
         <members>Inventory_Adjustment_Import__c</members>
         <members>InvoiceDisclaimer__mdt</members>
-        <members>Jira_Issue_Type__mdt</members>
-        <members>Jira_Project_Type__mdt</members>
         <members>JournalEntrySettings__c</members>
         <members>LGND_Store__c</members>
         <members>Labour_Rate__mdt</members>
@@ -1715,7 +1704,6 @@
         <members>SurveyTaker__c</members>
         <members>Survey_Question__c</members>
         <members>Survey__c</members>
-        <members>System_Issue__c</members>
         <members>Task</members>
         <members>TaxRate__c</members>
         <members>Tax_Class__c</members>
@@ -1750,6 +1738,8 @@
         <name>BusinessProcess</name>
     </types>
     <types>
+        <members>Accounting_Issue__c.Accounting_Issue</members>
+        <members>System_Issue__c.Default_System_Issue</members>
         <name>CompactLayout</name>
     </types>
     <types>
@@ -1821,6 +1811,32 @@
     <types>
         <members>AcctSeed__Transaction_Archive__b.AcctSeedERP__Sales_Order_Inventory_Movement__c</members>
         <members>trailheadapp__User_Trailmix__c.Running_User__c</members>
+        <members>Accounting_Issue__c.Closed_Date__c</members>
+        <members>Accounting_Issue__c.Days_Open__c</members>
+        <members>Accounting_Issue__c.Department__c</members>
+        <members>Accounting_Issue__c.Description__c</members>
+        <members>Accounting_Issue__c.Due_Date__c</members>
+        <members>Accounting_Issue__c.Issue_Type__c</members>
+        <members>Accounting_Issue__c.Location__c</members>
+        <members>Accounting_Issue__c.Status__c</members>
+        <members>Jira_Issue_Type__mdt.Jira_Issue_Id__c</members>
+        <members>Jira_Issue_Type__mdt.Jira_Project_Type__c</members>
+        <members>Jira_Issue_Type__mdt.Type__c</members>
+        <members>Jira_Project_Type__mdt.Jira_Project_Id__c</members>
+        <members>System_Issue__c.Department__c</members>
+        <members>System_Issue__c.Description__c</members>
+        <members>System_Issue__c.Epic_Name__c</members>
+        <members>System_Issue__c.Jira_Issue__c</members>
+        <members>System_Issue__c.Jira_Project__c</members>
+        <members>System_Issue__c.Priority__c</members>
+        <members>System_Issue__c.Record_Link__c</members>
+        <members>System_Issue__c.Reported_By__c</members>
+        <members>System_Issue__c.Status__c</members>
+        <members>System_Issue__c.Steps_To_Reproduce__c</members>
+        <members>System_Issue__c.Subject__c</members>
+        <members>System_Issue__c.Time_Spent__c</members>
+        <members>System_Issue__c.Time_Spent_msec__c</members>
+        <members>System_Issue__c.Type__c</members>
         <name>CustomField</name>
     </types>
     <types>
@@ -1881,12 +1897,6 @@
         <members>InvoiceDisclaimer.Service_Warranty_Disclaimer</members>
         <members>InvoiceDisclaimer.Warranty_Payable</members>
         <members>InvoiceDisclaimer.Winter_Service</members>
-        <members>Jira_Issue_Type.Bug_FSL</members>
-        <members>Jira_Issue_Type.Bug_SF_Issue</members>
-        <members>Jira_Issue_Type.New_Feature_FSL</members>
-        <members>Jira_Issue_Type.New_Feature_SF_Issue</members>
-        <members>Jira_Project_Type.FSL</members>
-        <members>Jira_Project_Type.Salesforce_Issues</members>
         <members>Labour_Rate.Retail</members>
         <members>Legend_Tax_Numbers.HST</members>
         <members>Legend_Tax_Numbers.QST</members>
@@ -1959,7 +1969,6 @@
     </types>
     <types>
         <members>Boat_Reservation</members>
-        <members>Legend_Help_Center</members>
         <name>CustomSite</name>
     </types>
     <types>
@@ -1967,7 +1976,6 @@
         <members>AR_Balance_Report</members>
         <members>Account_Number_Detail__c</members>
         <members>Account_Receivable_Balance</members>
-        <members>Accounting_Issue__c</members>
         <members>Aged_A_P</members>
         <members>Aged_A_R</members>
         <members>Balance_Sheet</members>
@@ -2038,7 +2046,6 @@
         <members>Square_Transaction__c</members>
         <members>SurveyTaker__c</members>
         <members>Survey__c</members>
-        <members>System_Issue__c</members>
         <members>Tax_Class__c</members>
         <members>Transaction_Detail</members>
         <members>Trial_Balance</members>
@@ -2116,8 +2123,6 @@
         <members>Account_Email_Templates/Enjoy_Your_Memories</members>
         <members>Account_Email_Templates/Thank_You_Template</members>
         <members>Account_Email_Templates/Your_Boat_is_Ready</members>
-        <members>Accounting_Issues</members>
-        <members>Accounting_Issues/Accounting_Issue_Complete</members>
         <members>Case_Templates</members>
         <members>Case_Templates/Billing_Warranty_Deficiency_Template</members>
         <members>Case_Templates/New_Report_Request</members>
@@ -2497,7 +2502,6 @@
         <members>Account_Record_Page_Acc_Console</members>
         <members>AccountingPPPdesktopDefault</members>
         <members>Accounting_Console_UtilityBar</members>
-        <members>Accounting_Issue</members>
         <members>Barrie</members>
         <members>Boat_Appraisal_Record_Page</members>
         <members>Boat_Product_Page</members>
@@ -2560,8 +2564,6 @@
         <members>ServiceConsoleHome</members>
         <members>Service_ERP_Record_Page</members>
         <members>Submit_for_Payment</members>
-        <members>System_Issue_Admin</members>
-        <members>System_Issue_Record_Page</members>
         <members>TradeIn_ERP_Record_Page</members>
         <members>Translation</members>
         <members>Warranty</members>
@@ -2574,8 +2576,6 @@
         <name>FlexiPage</name>
     </types>
     <types>
-        <members>Accounting_Issue_After_Update</members>
-        <members>Accounting_Issue_Before_Save</members>
         <members>Assign_Boat_Specialist_to_TradeIn_ERP</members>
         <members>Assign_Boat_Specialist_to_TradeIn_ERP_Process</members>
         <members>Assign_Customer_Support_Cases</members>
@@ -2683,7 +2683,6 @@
         <members>Account-Supplier Account</members>
         <members>AccountBrand-Account BrandLayout</members>
         <members>Account_Number_Detail__c-Account Number Detail Layout</members>
-        <members>Accounting_Issue__c-Accounting Issue Layout</members>
         <members>AcctSeedERP__Purchase_Order_Line__c-Legend Purchase Order Line Layout</members>
         <members>AcctSeed__Account_Payable__c-AcctSeed__Account Payable Layout</members>
         <members>AcctSeed__Bank_Deposit__c-AcctSeed__Bank Deposit Layout</members>
@@ -2792,8 +2791,6 @@
         <members>InventoryImport__c-InventoryImport Layout</members>
         <members>Inventory_Adjustment_Import__c-Inventory Adjustment Import Layout</members>
         <members>InvoiceDisclaimer__mdt-Invoice Disclaimer Layout</members>
-        <members>Jira_Issue_Type__mdt-Jira Issue Type Layout</members>
-        <members>Jira_Project_Type__mdt-Jira Project Type Layout</members>
         <members>Labour_Rate__mdt-Labour Rate Layout</members>
         <members>Lead-Lead Layout</members>
         <members>Legend_Accounting__c-Legend Accounting Layout</members>
@@ -2899,7 +2896,6 @@
         <members>SurveyTaker__c-SurveyTaker Layout</members>
         <members>Survey_Question__c-Survey Question Layout</members>
         <members>Survey__c-Survey Layout</members>
-        <members>System_Issue__c-System Issue Layout</members>
         <members>Task-Task Layout</members>
         <members>Tax_Class__c-Tax Class Layout</members>
         <members>Technican__c-Technician Layout</members>
@@ -2993,9 +2989,21 @@
         <members>factoryStoreSeriesListing</members>
         <members>factoryStoreCurrentInventoryList</members>
         <members>factoryStoreCMSPhotoGallery</members>
+        <members>factoryStorePhotoGallery</members>
         <name>LightningComponentBundle</name>
     </types>
     <types>
+        <members>Accounting_Issue__c.All</members>
+        <members>Accounting_Issue__c.Barrie</members>
+        <members>Accounting_Issue__c.Head_Office_Open</members>
+        <members>Accounting_Issue__c.Montreal</members>
+        <members>Accounting_Issue__c.My_Issues</members>
+        <members>Accounting_Issue__c.Whitefish</members>
+        <members>Accounting_Issue__c.Wholesale</members>
+        <members>System_Issue__c.All_Feature_Requests</members>
+        <members>System_Issue__c.All_Open_Issues</members>
+        <members>System_Issue__c.All_Reported_Bugs</members>
+        <members>System_Issue__c.Development_System_Issue</members>
         <name>ListView</name>
     </types>
     <types>
@@ -3020,7 +3028,6 @@
         <name>NetworkBranding</name>
     </types>
     <types>
-        <members>Accounting_Issues_Status</members>
         <members>Case_Parts_Request</members>
         <members>Case_Promotion</members>
         <members>Counter_Sale_Path</members>
@@ -3441,6 +3448,8 @@
         <name>Translations</name>
     </types>
     <types>
+        <members>Accounting_Issue__c.Restrict_Record_Editing</members>
+        <members>Accounting_Issue__c.Restrict_Status_Picklist</members>
         <name>ValidationRule</name>
     </types>
     <types>
