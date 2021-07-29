@@ -6,7 +6,7 @@ import { LightningElement, wire, api } from 'lwc';
 import { stringy, stripParentheses, rewriteMotorName, rewriteTrailerName, weeklyPayment, formatPrice, setWrapperClass, convertLength } from 'c/communitySharedUtils';
 import Id from '@salesforce/community/Id';
 
-import initMethod from '@salesforce/apex/FactoryStore_MCWrapperController.initMethod';
+//import initMethod from '@salesforce/apex/FactoryStore_MCWrapperController.initMethod';
 
 export default class FactoryStoreCmsContentList extends LightningElement {
 	@api contentType;
@@ -23,22 +23,22 @@ export default class FactoryStoreCmsContentList extends LightningElement {
 	@api content;
 
 	connectedCallback(){
-	  if(this.contentType !== 'default'){
-	    initMethod({contentType: this.contentType, getTopics: this.topic})
-	    	.then( (data) => {
-	    	  console.log('get ' + this.contentType, data);
-					this.content = data;
-					this.galleryFound();
-      	}).catch(e => {
-					console.log('fetch series error:', e);
-			 });
-   	} else {
+//	  if(this.contentType !== 'default'){
+//	    initMethod({contentType: this.contentType, getTopics: this.topic})
+//	    	.then( (data) => {
+//	    	  console.log('get ' + this.contentType, data);
+//					this.content = data;
+//					this.galleryFound();
+//      	}).catch(e => {
+//					console.log('fetch series error:', e);
+//			 });
+//   	} else {
    	  if(this.content.length > 0){
    	    this.isDefaultContentType = true;
    	    this.galleryFound();
    	    this.photoGalleryClass = 'photoGallery photoGallery--default';
       }
-    }
+//    }
  	}
 
    galleryFound(){
