@@ -8,7 +8,6 @@ import { fireEvent, registerListener, unregisterAllListeners} from 'c/pubsub';
 import { setWrapperClass } from 'c/communitySharedUtils';
 import Id from '@salesforce/community/Id';
 import fetchCommunityDetails from '@salesforce/apex/CommSharedURL_Controller.fetchCommunityDetails';
-import fetchBoats from '@salesforce/apex/FactoryStore_InventoryController.fetchBoats';
 import fetchBoatsBySeries from '@salesforce/apex/FactoryStore_InventoryController.fetchBoatsBySeries';
 import fetchBoat from '@salesforce/apex/FactoryStore_InventoryController.fetchBoat';
 import fetchFullBoatDetails from '@salesforce/apex/FactoryStore_InventoryController.fetchFullBoatDetails';
