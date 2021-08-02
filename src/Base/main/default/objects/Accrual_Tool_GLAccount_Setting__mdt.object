@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fields>
+        <fullName>Accrual_Type__c</fullName>
+        <description>Type of GL Account for Accrual</description>
+        <externalId>false</externalId>
+        <fieldManageability>DeveloperControlled</fieldManageability>
+        <inlineHelpText>Type of GL Account for Accrual</inlineHelpText>
+        <label>Accrual Type</label>
+        <required>true</required>
+        <type>Picklist</type>
+        <valueSet>
+            <restricted>true</restricted>
+            <valueSetDefinition>
+                <sorted>false</sorted>
+                <value>
+                    <fullName>Expense</fullName>
+                    <default>true</default>
+                    <label>Expense</label>
+                </value>
+                <value>
+                    <fullName>Revenue</fullName>
+                    <default>false</default>
+                    <label>Revenue</label>
+                </value>
+                <value>
+                    <fullName>Insurance</fullName>
+                    <default>false</default>
+                    <label>Insurance</label>
+                </value>
+                <value>
+                    <fullName>Commission</fullName>
+                    <default>false</default>
+                    <label>Commission</label>
+                </value>
+            </valueSetDefinition>
+        </valueSet>
+    </fields>
+    <fields>
+        <fullName>GLAccount__c</fullName>
+        <description>Enter GL Account Name</description>
+        <externalId>false</externalId>
+        <fieldManageability>DeveloperControlled</fieldManageability>
+        <inlineHelpText>Enter GL Account Name</inlineHelpText>
+        <label>GLAccount</label>
+        <length>255</length>
+        <required>true</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>GLV1__c</fullName>
+        <description>Enter GLV1 Name</description>
+        <externalId>false</externalId>
+        <fieldManageability>DeveloperControlled</fieldManageability>
+        <inlineHelpText>Enter GLV1 Name</inlineHelpText>
+        <label>GLV1</label>
+        <length>255</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>GLV2__c</fullName>
+        <description>Enter GLV2 Name</description>
+        <externalId>false</externalId>
+        <fieldManageability>DeveloperControlled</fieldManageability>
+        <inlineHelpText>Enter GLV2 Name</inlineHelpText>
+        <label>GLV2</label>
+        <length>255</length>
+        <required>false</required>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <label>Accrual Tool GLAccount Setting</label>
+    <pluralLabel>Accrual Tool GLAccount Settings</pluralLabel>
+    <visibility>Public</visibility>
+</CustomObject>

@@ -1,0 +1,506 @@
+<template>
+
+	<section role="dialog" tabindex="-1" aria-modal="true" class="slds-modal slds-fade-in-open">
+		<div class="slds-modal__container modalContainer">
+			<c-legend-spinner variant="contained"></c-legend-spinner>
+			<header class="slds-modal__header">
+				<button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={closeQuickAction}>
+                        <lightning-icon icon-name="utility:close"
+                            alternative-text="close"
+                            variant="inverse"
+                            size="small" ></lightning-icon>
+                        <span class="slds-assistive-text">Close</span>
+                    </button>
+				<h2 class="slds-modal__title slds-hyphenate">Accrual Tool</h2>
+			</header>
+			<div class="slds-modal__content slds-p-around_medium modalContent">
+				<lightning-layout multiple-rows="true">
+					<template if:true={step1}>
+						<lightning-layout-item size="12" padding="around-small">
+							<template if:true={lineItems}>
+								<h3 style="color: rgb(0, 156, 219);font-size: x-large;font-weight: 700;">
+									Are all the commission records reviewed?
+								</h3>
+								<br/>
+								<table class="slds-table slds-table_cell-buffer slds-table_bordered slds-border_left slds-border_right" style="width: 75%; margin-left: 12.5%;">
+									<thead>
+										<tr>
+											<th></th>
+											<th class="slds-text-align_left">Status</th>
+											<th class="slds-text-align_left">Commission Record</th>
+										</tr>
+									</thead>
+									<tbody>
+										<template for:each={lineItems} for:item="line" for:index="idx">
+											<tr key={line.id}>
+												<td>
+													<template if:true={line.isReviewed}>
+														<lightning-input type="checkbox" checked disabled>
+														</lightning-input>
+													</template>
+													<template if:false={line.isReviewed}>
+														<lightning-input type="checkbox" disabled></lightning-input>
+													</template>
+												</td>
+												<td>{line.commissionRecord.Status__c}</td>
+												<td>{line.commissionRecord.Project_Task__r.Name}</td>
+											</tr>
+										</template>
+									</tbody>
+								</table>
+
+							</template>
+						</lightning-layout-item>
+					</template>
+					<template if:true={step2}>
+						<lightning-layout-item size="12" padding="around-small">
+							<h3 style="color: rgb(0, 156, 219);font-size: x-large;font-weight: 700;">
+								Is this the date when the deal becomes tagged?
+							</h3>
+							<lightning-input type="date" name="journaldate" label="Journal entry Date" value={jedate} onchange={dateChange} style="width:25%;">
+								
+							</lightning-input>
+						</lightning-layout-item>
+					</template>
+					<template if:true={step3}>
+						<lightning-layout-item size="12" padding="around-small">
+							<template if:true={serializedProducts}>
+								<h3 style="color: rgb(0, 156, 219);font-size: x-large;font-weight: 700;">
+									What is the Status of all serialized products?
+								</h3>
+								<br/>
+								<table class="slds-table slds-table_cell-buffer slds-table_bordered  slds-border_left slds-border_right">
+									<thead>
+										<tr>
+											<th class="slds-text-align_left">Serial Number</th>
+											<th class="slds-text-align_left">Product</th>
+											<th class="slds-text-align_left">Status</th>
+											<th class="slds-text-align_left">Location</th>
+										</tr>
+									</thead>
+									<tbody>
+										<template for:each={serializedProducts} for:item="prod" for:index="idx">
+											<tr key={prod.id}>
+												<td>{prod.serialNumber}</td>
+												<td>{prod.productName}</td>
+												<td>{prod.Status}</td>
+												<td>{prod.Location}</td>
+											</tr>
+										</template>
+									</tbody>
+								</table>
+
+							</template>
+						</lightning-layout-item>
+					</template>
+					<template if:true={step4}>
+						<tamplate if:true={revenueData} style="width: -webkit-fill-available;">
+						<lightning-layout-item size="12" padding="around-small">
+							<table>
+								<tr>
+									<td style="width:66%;">
+										<h3 style="color: rgb(0, 156, 219);font-size: x-large;font-weight: 700;">
+											Receivable &amp; Revenue</h3>
+									</td>
+									<td style="font-weight: 700; font-size: larger;">Total Revenue Accural: $
+										<lightning-formatted-number value={revenueData.totalAmount}
+											maximum-fraction-digits="2" minimum-fraction-digits="2">
+										</lightning-formatted-number>
+									</td>
+								</tr>
+							</table>
+							<br/>
+							<template for:each={revenueData.departmentWrapper} for:item="dept" for:index="idx">
+								<div key={dept.id}>
+									<h2 style="color: #009CDB;font-weight: 700;">Department(GLV2): {dept.Department}
+									</h2>
+									<table class="slds-table slds-table_cell-buffer slds-table_bordered">
+										<thead>
+											<tr>
+												<th class="slds-text-align_left" style="width: 40%;">Revenue
+													GL Account
+												</th>
+												<th class="slds-text-align_left" style="width: 40%;">Product
+												</th>
+												<th class="slds-text-align_left">Total Price</th>
+											</tr>
+										</thead>
+									</table>
+
+									<template for:each={dept.lineItemWrapperList} for:item="lineItem" for:index="idx1">
+										<div key={lineItem.id}
+											style="background-color: lightgray; margin-bottom: -3.25%;margin-top: 0.5%;padding: .5%;color: lightgray;">
+											_</div>
+										<lightning-accordion allow-multiple-sections-open key={lineItem.id}>
+											<lightning-accordion-section name={lineItem.totalPrice}
+												label={lineItem.GLAccountName}>
+												<div slot="actions" style="font-weight: 700;width: 18.8%;">
+													$<lightning-formatted-number value={lineItem.totalPrice}
+														maximum-fraction-digits="2" minimum-fraction-digits="2">
+													</lightning-formatted-number>
+												</div>
+												<template for:each={lineItem.productPriceWrapperList}
+													for:item="productPrice" for:index="idx1">
+													<table key={productPrice.id}
+														class="slds-table slds-table_cell-buffer"
+														style="border-bottom: var(--lwc-borderWidthThin,1px) solid var(--lwc-colorBorder,rgb(221, 219, 218));">
+														<tbody>
+															<tr key={productPrice.id}>
+																<td style="width: 40%;">&nbsp;</td>
+																<td style="width: 40%;">
+																	{productPrice.productName}</td>
+																<td style="padding-left: 14px;">
+																	$<lightning-formatted-number
+																		value={productPrice.price}
+																		maximum-fraction-digits="2"
+																		minimum-fraction-digits="2">
+																	</lightning-formatted-number>
+																</td>
+															</tr>
+														</tbody>
+													</table>
+												</template>
+											</lightning-accordion-section>
+										</lightning-accordion>
+									</template>
+									<br />
+								</div>
+							</template>
+
+						</lightning-layout-item>
+						</tamplate>
+					</template>
+					<template if:true={step5}>
+						<lightning-layout-item size="12" padding="around-small">
+							<table>
+								<tr>
+									<td style="width:66%;">
+										<h3 style="color: rgb(0, 156, 219);font-size: x-large;font-weight: 700;">
+											Accrual &amp; Expenses</h3>
+									</td>
+									<td style="font-weight: 700; font-size: larger;">Total Expense Accural: $
+										<lightning-formatted-number value={expenseData.totalAmount}
+											maximum-fraction-digits="2" minimum-fraction-digits="2">
+										</lightning-formatted-number>
+									</td>
+								</tr>
+							</table>
+							<br/>
+							<div class="slds-scrollable_y" style="height:100%;">
+								<template for:each={expenseData.departmentWrapper} for:item="dept" for:index="idx">
+									<div key={dept.id}>
+										<h2 style="color: #009CDB;font-weight: 700;">Department(GLV2): {dept.Department}
+										</h2>
+
+										<table class="slds-table slds-table_cell-buffer slds-table_bordered">
+											<thead>
+												<tr>
+													<th class="slds-text-align_left" style="width: 40%;">Expense
+														GL Account
+													</th>
+													<th class="slds-text-align_left" style="width: 40%;">Product
+													</th>
+													<th class="slds-text-align_left">Total Price</th>
+												</tr>
+											</thead>
+										</table>
+
+										<template for:each={dept.lineItemWrapperList} for:item="lineItem"
+											for:index="idx1">
+
+											<div key={lineItem.id}
+												style="background-color: lightgray; margin-bottom: -3.25%;margin-top: 0.5%;padding: .5%;color: lightgray;">
+												_</div>
+											<lightning-accordion allow-multiple-sections-open key={lineItem.id}>
+												<lightning-accordion-section name={lineItem.totalPrice}
+													label={lineItem.GLAccountName}>
+													<div slot="actions" style="font-weight: 700;width: 18.8%;">
+														$<lightning-formatted-number value={lineItem.totalPrice}
+															maximum-fraction-digits="2" minimum-fraction-digits="2">
+														</lightning-formatted-number>
+													</div>
+													<template for:each={lineItem.productPriceWrapperList}
+														for:item="productPrice" for:index="idx1">
+														<table key={productPrice.id}
+															class="slds-table slds-table_cell-buffer"
+															style="border-bottom: var(--lwc-borderWidthThin,1px) solid var(--lwc-colorBorder,rgb(221, 219, 218));">
+															<tbody>
+																<tr key={productPrice.id}>
+																	<td style="width: 40%;">&nbsp;</td>
+																	<td style="width: 40%;">
+																		{productPrice.productName}</td>
+																	<td style="padding-left: 14px;">
+																		$<lightning-formatted-number
+																			value={productPrice.price}
+																			maximum-fraction-digits="2"
+																			minimum-fraction-digits="2">
+																		</lightning-formatted-number>
+																	</td>
+																</tr>
+															</tbody>
+														</table>
+													</template>
+												</lightning-accordion-section>
+											</lightning-accordion>
+										</template>
+										<br />
+								</div>
+								</template>
+							</div>
+						</lightning-layout-item>
+					</template>
+					<template if:true={step6}>
+						<lightning-layout-item size="12" padding="around-small">
+							<table>
+								<tr>
+									<td style="width:66%;">
+										<h3 style="color: rgb(0, 156, 219);font-size: x-large;font-weight: 700;">
+											Insurance Product Accrual &amp; Expenses</h3>
+									</td>
+									<td style="font-weight: 700; font-size: larger;">Total Expense Accural: $
+										<lightning-formatted-number value={insuranceData.totalAmount}
+											maximum-fraction-digits="2" minimum-fraction-digits="2">
+										</lightning-formatted-number>
+									</td>
+								</tr>
+							</table>
+							<br/>
+							<template for:each={insuranceData.departmentWrapper} for:item="dept" for:index="idx">
+								<div key={dept.id}>
+									<h2 style="color: #009CDB;font-weight: 700;">Department(GLV2): {dept.Department}
+									</h2>
+
+									<table class="slds-table slds-table_cell-buffer slds-table_bordered">
+										<thead>
+											<tr>
+												<th class="slds-text-align_left" style="width: 25%;">Expense
+													GL Account
+												</th>
+												<th class="slds-text-align_left" style="width: 25%;">Product
+												</th>
+												<th class="slds-text-align_left" style="width: 20%;">Insurance Profit
+													percent override
+												</th>
+												<th class="slds-text-align_left" style="width: 15%;">Total Price</th>
+												<th class="slds-text-align_left" style="width: 15%;">Total Cost</th>
+											</tr>
+										</thead>
+									</table>
+
+									<template for:each={dept.lineItemWrapperList} for:item="lineItem" for:index="idx1">
+
+										<div key={lineItem.id}
+											style="background-color: lightgray; margin-bottom: -3.25%;margin-top: 0.5%;padding: .5%;color: lightgray;">
+											_</div>
+										<lightning-accordion allow-multiple-sections-open key={lineItem.id}>
+											<lightning-accordion-section name={lineItem.totalPrice}
+												label={lineItem.GLAccountName}>
+												<template for:each={lineItem.productPriceWrapperList}
+													for:item="productPrice" for:index="idx1">
+													<table key={productPrice.id}
+														class="slds-table slds-table_cell-buffer"
+														style="border-bottom: var(--lwc-borderWidthThin,1px) solid var(--lwc-colorBorder,rgb(221, 219, 218));">
+														<tbody>
+															<tr key={productPrice.id}>
+																<td style="width: 25%;">&nbsp;</td>
+																<td style="width: 25%;">{productPrice.productName}</td>
+																<td style="width: 20%;">{productPrice.profit}</td>
+																<td style="padding-left: 14px;width: 15%;">
+																	$<lightning-formatted-number
+																		value={productPrice.price}
+																		maximum-fraction-digits="2"
+																		minimum-fraction-digits="2">
+																	</lightning-formatted-number>
+																</td>
+																<td style="padding-left: 14px;width: 15%;">
+																	$<lightning-formatted-number
+																		value={productPrice.cost}
+																		maximum-fraction-digits="2"
+																		minimum-fraction-digits="2">
+																	</lightning-formatted-number>
+																</td>
+															</tr>
+														</tbody>
+													</table>
+												</template>
+											</lightning-accordion-section>
+										</lightning-accordion>
+									</template>
+									<br />
+								</div>
+							</template>
+
+						</lightning-layout-item>
+					</template>
+					<template if:true={step7}>
+						<lightning-layout-item size="12" padding="around-small">
+							<h3 style="color: rgb(0, 156, 219);font-size: x-large;font-weight: 700;">Commissions</h3>
+							<br/>
+							<template for:each={commissionPayments} for:item="dept" for:index="idx">
+								<div key={dept.id}>
+									<h2 style="color: #009CDB;font-weight: 700;">Department(GLV2): {dept.Department}
+									</h2>
+
+									<table class="slds-table slds-table_cell-buffer slds-table_bordered ">
+										<thead>
+											<tr>
+												<th class="slds-text-align_left" style="width: 40%;">Commission Record
+												</th>
+												<th class="slds-text-align_left" style="width: 40%;">Status</th>
+												<th class="slds-text-align_left">Amount</th>
+											</tr>
+										</thead>
+										<tbody>
+											<template for:each={dept.commPayments} for:item="commpayments"
+												for:index="idx1">
+												<tr key={commpayments.id}>
+													<td style="width: 40%;">{commpayments.Name}</td>
+													<td style="width: 40%;">{commpayments.Status}</td>
+													<td>$<lightning-formatted-number value={commpayments.Amount}
+															maximum-fraction-digits="2" minimum-fraction-digits="2">
+														</lightning-formatted-number>
+													</td>
+												</tr>
+											</template>
+										</tbody>
+									</table>
+									<br />
+								</div>
+							</template>
+						</lightning-layout-item>
+					</template>
+					<template if:true={step8}>
+						<lightning-layout-item size="12" padding="around-small">
+							<h3 style="color: rgb(0, 156, 219);font-size: x-large;font-weight: 700;">Final Journal Entry
+							</h3>
+							<br/>
+							<table style="width:80%;">
+								<tr>
+									<td style="width:33%;">
+										<h2 style="color: rgb(0, 156, 219);font-weight: 700;">Gross
+											Margin</h2>
+										<lightning-formatted-number value={grossMargin} maximum-fraction-digits="2"
+											minimum-fraction-digits="2"></lightning-formatted-number>%
+									</td>
+									<td style="width:33%;">
+										<h2 style="color: rgb(0, 156, 219);font-weight: 700;">Total
+											Revenue</h2>
+										$<lightning-formatted-number value={totalRevenue} maximum-fraction-digits="2" minimum-fraction-digits="2">
+										</lightning-formatted-number>
+									</td>
+									<td style="width:33%;">
+										<h2 style="color: rgb(0, 156, 219);font-weight: 700;">Total
+											Expenses</h2>
+										$<lightning-formatted-number value={totalExpense} maximum-fraction-digits="2" minimum-fraction-digits="2">
+										</lightning-formatted-number>
+									</td>
+								</tr>
+								<tr>
+									<td style="width:33%;">
+										<h2 style="color: rgb(0, 156, 219);font-weight: 700;">Journal
+											Entry Date</h2>{jedate}</td>
+									<td colspan="2">
+										<h2 style="color: rgb(0, 156, 219);font-weight: 700;">Journal
+											Entry Name</h2>{journalEntryName}</td>
+								</tr>
+							</table>
+							<br/>
+							<table class="slds-table slds-table_cell-buffer slds-table_bordered">
+								<thead>
+									<tr>
+										<th class="slds-text-align_left" style="width: 25%;">GL Account</th>
+										<th class="slds-text-align_left" style="width: 25%;">GLV1</th>
+										<th class="slds-text-align_left" style="width: 20%;">GLV2</th>
+										<th class="slds-text-align_left" style="width: 15%;">Debit</th>
+										<th class="slds-text-align_left" style="width: 15%;">Credit</th>
+									</tr>
+								</thead>
+								<tbody>
+									<template for:each={journalLineData.journalEntryLineWrapper} for:item="journalLine"
+										for:index="idx">
+										<tr key={journalLine.id}>
+											<td style="width: 25%;">{journalLine.GLAccountName}</td>
+											<td style="width: 25%;">{journalLine.GLV1Name}</td>
+											<td style="width: 20%;">{journalLine.GLV2Name}</td>
+											<td style="padding-left: 14px;width: 15%;">
+												$<lightning-formatted-number value={journalLine.Debit}
+													maximum-fraction-digits="2" minimum-fraction-digits="2">
+												</lightning-formatted-number>
+											</td>
+											<td style="padding-left: 14px;width: 15%;">
+												$<lightning-formatted-number value={journalLine.Credit}
+													maximum-fraction-digits="2" minimum-fraction-digits="2">
+												</lightning-formatted-number>
+											</td>
+										</tr>
+									</template>
+
+									<tr style={totalJournalAmountHighlight}>
+										<td style="width: 25%;">&nbsp;</td>
+										<td style="width: 25%;">&nbsp;</td>
+										<td style="width: 20%;">&nbsp;</td>
+										<td style="padding-left: 14px;width: 15%;font-weight: 700;">
+											$<lightning-formatted-number value={totalDebit.totalAmount}
+												maximum-fraction-digits="2" minimum-fraction-digits="2">
+											</lightning-formatted-number>
+										</td>
+										<td style="padding-left: 14px;width: 15%;font-weight: 700;">
+											$<lightning-formatted-number value={totalCredit.totalAmount}
+												maximum-fraction-digits="2" minimum-fraction-digits="2">
+											</lightning-formatted-number>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</lightning-layout-item>
+					</template>
+				</lightning-layout>
+			</div>
+			<div class="slds-modal__footer">
+				<table>
+					<tr>
+						<td style="width:10%;">
+							<template if:true={showPrevious}>
+								<lightning-button style="float:left;" label="Previous" title="Previous"
+									onclick={previousClick} class="slds-m-left_x-small"></lightning-button>
+							</template>
+							<template if:false={showPrevious}>
+								&nbsp;
+							</template>
+						</td>
+						<td style="width:80%;">
+							<lightning-progress-indicator current-step={progressStep} type="base" has-error="true"
+								variant="base">
+								<lightning-progress-step label="Commission Records" value="1"></lightning-progress-step>
+								<lightning-progress-step label="Journal Entry Date" value="2"></lightning-progress-step>
+								<lightning-progress-step label="Serialized Products" value="3">
+								</lightning-progress-step>
+								<lightning-progress-step label="Receivable &amp; Revenue" value="4">
+								</lightning-progress-step>
+								<lightning-progress-step label="Accrual &amp; Expenses" value="5">
+								</lightning-progress-step>
+								<lightning-progress-step label="Insurance Product Accrual &amp; Expenses" value="6">
+								</lightning-progress-step>
+								<lightning-progress-step label="Commissions" value="7"></lightning-progress-step>
+								<lightning-progress-step label="Journal Entry" value="8"></lightning-progress-step>
+							</lightning-progress-indicator>
+
+						</td>
+						<td style="width:10%;">
+							<template if:true={showNext}>
+								<lightning-button variant="brand" style="float:right;" label="Next" title="Next"
+									onclick={nextClick} class="slds-m-left_x-small"></lightning-button>
+							</template>
+							<template if:true={showPost}>
+								<template if:true={step8}>
+									<lightning-button variant="brand" style="float:right;" label="Post" title="Post"
+										onclick={createJournalEntry} class="slds-m-left_x-small"></lightning-button>
+								</template>
+							</template>
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+	</section>
+</template>
