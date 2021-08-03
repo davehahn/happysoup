@@ -2,7 +2,7 @@
 // * Created by Tim on 2021-04-26.
 // */
 //
-//public with sharing class FactoryStore_MCWrapperController {
+public with sharing class FactoryStore_MCWrapperController {
 //
 //    @AuraEnabled(cacheable=true)
 //    public static List<ConnectApi.ManagedContentVersion> initMethod(String contentType, String getTopics){
@@ -43,4 +43,4 @@
 //            }
 //        }
 //    }
-//}
+}
