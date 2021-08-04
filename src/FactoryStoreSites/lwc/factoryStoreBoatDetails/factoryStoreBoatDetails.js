@@ -9,7 +9,6 @@ import Id from '@salesforce/community/Id';
 import BANNER from '@salesforce/resourceUrl/FactoryStoreModelBanner';
 import fetchCommunityDetails from '@salesforce/apex/CommSharedURL_Controller.fetchCommunityDetails';
 import fetchBoat from '@salesforce/apex/FactoryStore_InventoryController.fetchBoat';
-import passBoatModelId from '@salesforce/apex/FactoryStore_FlowController.passBoatModelId';
 
 import { fireEvent, registerListener, unregisterAllListeners} from 'c/pubsub';
 
@@ -247,11 +246,6 @@ export default class FactoryStoreBoatDetails extends NavigationMixin(LightningEl
 
 		return 'https://www.legendboats.com/' + Family + '/' + Series + '/' + Model + '/' + Year + '/';
  	}
-
- 	passModelIdToFlow(modelId){
- 	  console.log('pass to flow: ', modelId);
- 	  passBoatModelId({ modelId: modelId });
-  }
 
   handleUpdateStockValue( e ){
 		this.currentStockQuantity = e.detail;
