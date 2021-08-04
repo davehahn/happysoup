@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+  <apiVersion>52.0</apiVersion>
+  <description>Factory Store Series Listing</description>
+  <isExposed>true</isExposed>
+  <targets>
+    <target>lightningCommunity__Page</target>
+    <target>lightningCommunity__Default</target>
+  </targets>
+  <targetConfigs>
+    <targetConfig targets="lightningCommunity__Default">
+      <property name="seriesName" type="String" label="Series to Show" datasource="X,XTR,XTE,F,R,Splash,E-Series,V-Series,Q-Series LE,Q-Series,VIBE"/>
+      <property name="seriesBlurb" type="String" label="Description of Series" />
+      <property name="seriesButtonText" type="String" label="Button Text"/>
+      <property name="seriesButtonLink" type="String" label="Button Link"/>
+      <property name="seriesModelShot" type="ContentReference" label="Series Model Side Profile" description="If you can't find what you're looking for, upload it to Salesforce CMS" filter="cms_image"/>
+      <property name="seriesZebra" type="Boolean" label="Zebra" />
+      <property name="sectionWidth"
+                type="String"
+                label="Maximum Width of Section"
+                datasource="Screen, Container, Wide, Average, Thin, Extra Thin"
+                description="Relative to containing element. Screen = Full Width of Screen, Container = Full Width of Containing Element, Wide = 1645px, Average = 1300px, Thin = 1080px, Extra Thin = 780px" default="Container" />
+    </targetConfig>
+  </targetConfigs>
+  <masterLabel>Factory Store Series Listing</masterLabel>
+</LightningComponentBundle>

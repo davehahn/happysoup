@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+  <apiVersion>51.0</apiVersion>
+  <description>Factory Store Overlay With Lead Form</description>
+  <isExposed>true</isExposed>
+    <targets>
+        <target>lightningCommunity__Page</target>
+        <target>lightningCommunity__Default</target>
+    </targets>
+    <targetConfigs>
+      <targetConfig targets="lightningCommunity__Default">
+        <property name="campaignId" type="String" label="Lead Form Campaign Id" required="true" description="If you're unsure what this is, or where to get it, please contact the Marketing Director."/>
+        <property name="introHeading" type="String" label="Form Heading"/>
+        <property name="introBlurb" type="String" label="Form Blurb"/>
+        <property name="sectionWidth"
+                  type="String"
+                  label="Maximum Width of Section"
+                  datasource="Screen, Container, Wide, Average, Thin, Extra Thin"
+                  description="Relative to containing element. Screen = Full Width of Screen, Container = Full Width of Containing Element, Wide = 1645px, Average = 1300px, Thin = 1080px, Extra Thin = 780px" default="Container" />
+      </targetConfig>
+    </targetConfigs>
+  <masterLabel>Factory Store Overlay With Lead Form</masterLabel>
+</LightningComponentBundle>

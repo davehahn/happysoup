@@ -2,32 +2,65 @@
  * Created by Tim on 2021-04-05.
  */
 
-import { LightningElement, api, wire, track } from 'lwc';
+import { LightningElement, api, wire } from 'lwc';
 import { NavigationMixin, CurrentPageReference } from 'lightning/navigation';
-import { stringy, stripParentheses, rewriteMotorName, rewriteTrailerName, weeklyPayment, formatPrice } from 'c/communitySharedUtils';
+import { stringy, stripParentheses, rewriteMotorName, rewriteTrailerName, weeklyPayment, formatPrice, setWrapperClass, convertLength } from 'c/communitySharedUtils';
+import Id from '@salesforce/community/Id';
+import BANNER from '@salesforce/resourceUrl/FactoryStoreModelBanner';
+import fetchCommunityDetails from '@salesforce/apex/CommSharedURL_Controller.fetchCommunityDetails';
 import fetchBoat from '@salesforce/apex/FactoryStore_InventoryController.fetchBoat';
+
 import { fireEvent, registerListener, unregisterAllListeners} from 'c/pubsub';
 
 
 export default class FactoryStoreBoatDetails extends NavigationMixin(LightningElement) {
 
+	@api sectionWidth;
+
   isEN = true;
 	isFR = false;
 
-  @track recordId;
-  @track boat;
-  @track boatDataLookupRunning = true;
-  @track boatDataLoaded = false;
-  @track resultEmpty = false;
+  recordId;
+  boat;
+  boatDataLookupRunning = true;
+  boatDataLoaded = false;
+  modelWrapperClass = 'model model--loading';
+  resultEmpty = false;
 
-  @track boatName;
-  @track standardMotorName;
-  @track standardTrailerName;
+	currentStockQuantity = 0;
+	stockWrapperClass = 'model__currentStock';
+
+  boatName;
+  standardMotorName;
+  standardTrailerName;
+
+  bannerBg = 'background-image: url(' + BANNER + ')';
+
+  // Lead forms
+	leadFormName;
+	@api campaignId;
+	locationName;
+
+	photoGallery;
+	hasPhotoGallery = false;
 
   @wire(CurrentPageReference)
   setCurrentPageReference(currentPageReference){
     this.recordId = currentPageReference.state.c__recordId;
   }
+
+  @wire( fetchCommunityDetails, {communityId: Id} )
+		wiredFetchCommunityDetails( { error, data } )
+		{
+			if( data )
+			{
+				this.locationName = data.name;
+			}
+			else if( error )
+			{
+				console.log('fetch community error: ', error);
+			}
+		}
 
   @wire( fetchBoat, { boatId: '$recordId' } )
   wiredFetchBoat( { error, data } )
@@ -50,10 +83,14 @@ export default class FactoryStoreBoatDetails extends NavigationMixin(LightningEl
 
   recordFound(){
     this.boatDataLoaded = true;
+    this.modelWrapperClass = setWrapperClass(this.sectionWidth, 'model');
     this.boatDataLookupRunning =  false;
     this.boatName = stripParentheses(this.boat.Name);
+    this.leadFormName = this.boatName + ' - Lead Form';
     this.standardMotorName = rewriteMotorName(this.boat.StandardMotor.Name);
     this.standardTrailerName = (this.boat.StandardTrailer.Name !== '') ? 'and ' + rewriteTrailerName(this.boat.StandardTrailer.Name) : '';
+    this.photoGallery = (this.boat.MarketingImages.length > 0) ? this.boat.MarketingImages : '';
+    this.hasPhotoGallery = (this.boat.MarketingImages.length > 0) ? true : false;
   }
 
   resultEmpty(){
@@ -121,9 +158,23 @@ export default class FactoryStoreBoatDetails extends NavigationMixin(LightningEl
 			sortOrder.forEach((sOption, sIndex) => {
 				for (const [pIndex, pOption] of Object.entries(props)) {
 				  if(sOption === pIndex){
+				    let spec = pOption + translate[pIndex].unit;
+						let unit = translate[pIndex].unit;
+				    if(translate[pIndex].unit === 'convertLength'){
+							let truncateLengthTrailingZero = true;
+							if((this.recordId === '01t1Y00000ATJfUQAX') && (pIndex === 'Overall Length')){
+								truncateLengthTrailingZero = false;
+							} else if((this.recordId === '01ti0000004zco9AAA') && (pIndex === 'Length')){
+								truncateLengthTrailingZero = false;
+							} else if((this.recordId === '01t1Y00000ATDipQAH') && (pIndex === 'Centerline Length' || pIndex === 'Deck Length')){
+								truncateLengthTrailingZero = false;
+							}
+							spec = convertLength(pOption, truncateLengthTrailingZero);
+        		}
+
 				  	sortedArray[sIndex] = {
 				  	 'Name': pIndex,
-				  	 'Value': pOption
+				  	 'Value': '<strong>' + spec + '</strong>'
        			};
       		}
     		}
@@ -183,6 +234,10 @@ export default class FactoryStoreBoatDetails extends NavigationMixin(LightningEl
 		}
 	}
 
+	get premiumPackageRetailPrice(){
+	  return formatPrice(this.boat.PremiumPackage.RetailPrice, true);
+ }
+
 	get flagshipLink(){
 		let Family = (this.boat.Family === 'Pontoon') ? 'pontoon-boats' : ((this.boat.Family === 'Deck Boat') ? 'deck-boats' : 'fishing-boats');
 		let Series = (this.boat.Series.toLowerCase().indexOf('series') !== -1) ? this.boat.Series.toLowerCase() : this.boat.Series.toLowerCase() + '-series';
@@ -191,5 +246,10 @@ export default class FactoryStoreBoatDetails extends NavigationMixin(LightningEl
 
 		return 'https://www.legendboats.com/' + Family + '/' + Series + '/' + Model + '/' + Year + '/';
  	}
+
+  handleUpdateStockValue( e ){
+		this.currentStockQuantity = e.detail;
+		this.stockWrapperClass = 'model__currentStock model__currentStock--available';
+	}
 
 }

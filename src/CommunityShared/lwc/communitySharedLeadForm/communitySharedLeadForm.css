@@ -1,0 +1,488 @@
+/**
+ * Created by Tim on 2021-05-03.
+ */
+.leadFormWrapper{
+  padding-bottom: 2em;
+}
+.leadFormWrapper, form[data-id="leadForm"] {
+	 position: relative;
+/*	 color: #FFF;*/
+}
+form[data-id="leadForm"].complete {
+	 display: none;
+}
+form[data-id="leadForm"] .leadForm__fieldset {
+	 border: 0 none;
+}
+form[data-id="leadForm"] .leadForm__fieldset .leadForm_subheading {
+	 font-size: 0.875em;
+}
+form[data-id="leadForm"] .leadForm__fieldset form[data-id="leadForm"] [data-id="leadForm__errors"].errors {
+	 border: solid 2px #ba3713;
+	 box-sizing: border-box;
+	 padding: 1em;
+	 margin-bottom: 1em;
+}
+form[data-id="leadForm"] .leadForm__fieldset form[data-id="leadForm"] [data-id="leadForm__errors"].errors a {
+	 font-weight: 600;
+	 text-decoration: underline;
+}
+form[data-id="leadForm"] .leadForm__fieldset form[data-id="leadForm"] [data-id="leadForm__errors"].errors ol li {
+	 width: 100%;
+}
+form[data-id="leadForm"] .leadForm__fieldset form[data-id="leadForm"] [data-id="leadForm__errors"].errors ol li:last-of-type {
+	 margin-bottom: 0;
+}
+form[data-id="leadForm"] .loaderWrap {
+	 display: none;
+	 position: absolute;
+	 z-index: 2;
+	 top: 0;
+	 right: 0;
+	 bottom: 0;
+	 left: 0;
+	 height: 100%;
+	 width: 100%;
+	 background-color: rgba(255, 255, 255, 0.75);
+}
+form[data-id="leadForm"] .loaderWrap .loader {
+	 display: block;
+	 position: absolute;
+	 top: 45%;
+	 left: 47.5%;
+	 width: 70px;
+	 height: 70px;
+	 border-radius: 100%;
+	 border: 15px solid #f3f3f3;
+	 border-bottom: 15px solid #14a8dc;
+	 border-right: 15px solid #14a8dc;
+	 animation: spinLoader 1s cubic-bezier(0.44, 1.51, 0.72, -0.25) infinite;
+	 transition: all 0.2s linear;
+}
+form[data-id="leadForm"] .loaderWrap .loader::before {
+	 display: none;
+}
+form[data-id="leadForm"] .loaderWrap .loader.complete {
+	 border: 50px solid #7fed61 !important;
+	 height: 0;
+	 width: 0;
+	 animation: none;
+	 position: relative;
+}
+form[data-id="leadForm"] .loaderWrap .loader.complete::before {
+	 content: "";
+	 width: 18px;
+	 height: 40px;
+	 background-color: #fff;
+	 display: block;
+	 transform: rotate(-45deg) scaleY(1);
+	 opacity: 0;
+	 transform-origin: top left;
+	 position: absolute;
+	 top: 2px;
+	 left: -35px;
+	 border-radius: 100vh;
+	 animation-delay: 200ms;
+	 animation-name: checkmarkStep1;
+	 animation-duration: 200ms;
+	 animation-timing-function: ease;
+	 animation-fill-mode: forwards;
+}
+form[data-id="leadForm"] .loaderWrap .loader.complete::after {
+	 content: "";
+	 display: block;
+	 width: 18px;
+	 height: 60px;
+	 background-color: #fff;
+	 transform: rotate(-135deg) scaleY(1);
+	 opacity: 0;
+	 transform-origin: top left;
+	 position: absolute;
+	 border-radius: 100vh;
+	 top: 28px;
+	 left: -4px;
+	 animation-delay: 250ms;
+	 animation-name: checkmarkStep2;
+	 animation-duration: 200ms;
+	 animation-timing-function: ease;
+	 animation-fill-mode: forwards;
+}
+form[data-id="leadForm"] .loaderWrap.active {
+	 display: block;
+}
+.leadForm__fieldList {
+	 display: flex;
+	 flex-wrap: wrap;
+	 justify-content: space-between;
+	 margin: 1.25em 0 0;
+	 padding: 0;
+}
+.leadForm__fieldList .input {
+	 width: 100%;
+	 margin-bottom: .5em;
+	 list-style: none;
+	 list-style-type: none !important;
+}
+.leadForm__fieldList .input fieldset {
+	 padding: 0;
+	 margin: 0;
+	 border: 0 none;
+}
+.leadForm__fieldList .input fieldset legend {
+	 font-weight: 600;
+}
+.leadForm__fieldList .input fieldset ol {
+	 margin: 1em 0 0;
+	 padding: 0;
+	 display: flex;
+	 justify-content: flex-start;
+}
+/*.leadForm__fieldList .input label, .leadForm__fieldList .input legend {*/
+/*	 margin-bottom: 0.25em;*/
+/*	 font-size: 1.125em;*/
+/*}*/
+/*.leadForm__fieldList .input label strong, .leadForm__fieldList .input legend strong {*/
+/*	 font-weight: 600;*/
+/*}*/
+/*.leadForm__fieldList .input label .optional, .leadForm__fieldList .input legend .optional {*/
+/*	 font-size: 0.8em;*/
+/*	 font-style: italic;*/
+/*}*/
+/*.slds-input, .leadForm__fieldList .input textarea, .leadForm__fieldList .input select {*/
+/*	 width: 100%;*/
+/*	 font-size: 1.125em;*/
+/*	 padding: 0.5em 0.5em 0.4em;*/
+/*	 box-sizing: border-box;*/
+/*	 border: 1px solid orange;*/
+/*	 border-radius: 0;*/
+/*	 transition: all 0.2s linear;*/
+/*}*/
+/*.leadForm__fieldList .input select {*/
+/*	 appearance: none;*/
+/*	 background: #fff url(../../img/standard/icon-select.png) no-repeat top 18px right 20px;*/
+/*}*/
+/*.leadForm__fieldList .input textarea {*/
+/*	 height: 5em;*/
+/*}*/
+/*.leadForm__fieldList .input input:focus, .leadForm__fieldList .input textarea:focus, .leadForm__fieldList .input select:focus {*/
+/*	 border: 1px solid #ffdf2e;*/
+/*	 box-shadow: 0 0 15px -5px rgba(0, 0, 0, 0.7) !important;*/
+/*	 outline: none;*/
+/*}*/
+.leadForm__fieldList .input input.error, .leadForm__fieldList .input textarea.error, .leadForm__fieldList .input select.error {
+	 border: 1px solid #eb3b3b;
+}
+.leadForm__fieldList .input input.clean, .leadForm__fieldList .input textarea.clean, .leadForm__fieldList .input select.clean {
+	 border: 1px solid #7feb3b;
+}
+.leadForm__fieldList .input.input--textarea, .leadForm__fieldList .input.input--checkbox, .leadForm__fieldList .input.input--100 {
+	 width: 100%;
+}
+.leadForm__fieldList .input.input--third {
+	 width: 32%;
+	 margin-right: 1.8%;
+}
+.leadForm__fieldList .input.input--third:nth-of-type(3n) {
+	 margin-right: 0;
+}
+.leadForm__fieldList .input.input--checkbox {
+	 display: flex;
+	 position: relative;
+}
+.leadForm__fieldList .input.input--checkbox label {
+	 padding-left: 1em;
+}
+.leadForm__fieldList .input.input--checkbox .customCheck {
+	 position: absolute;
+	 top: 0;
+	 content: "";
+	 display: block;
+	 opacity: 1;
+	 width: 20px;
+	 height: 20px;
+	 border: 1px solid #bebebe;
+	 z-index: 1;
+}
+.leadForm__fieldList .input.input--checkbox input {
+	 flex-shrink: 0;
+	 opacity: 0;
+	 position: relative;
+	 z-index: 2;
+	 width: 20px;
+	 height: 20px;
+}
+/*.leadForm__fieldList .input.input--checkbox input:focus + .customCheck {*/
+/*	 border: 1px solid #ffdf2e;*/
+/*}*/
+/*.leadForm__fieldList .input.input--checkbox input:checked + .customCheck::before {*/
+/*	 content: "";*/
+/*	 display: block;*/
+/*	 position: absolute;*/
+/*	 width: 9px;*/
+/*	 height: 24px;*/
+/*	 transform: rotate(-36deg);*/
+/*	 border-radius: 100vh;*/
+/*	 left: -3px;*/
+/*	 top: 0px;*/
+/*	 background-color: var(--highlight);*/
+/*}*/
+/*.leadForm__fieldList .input.input--checkbox input:checked + .customCheck::after {*/
+/*	 content: "";*/
+/*	 display: block;*/
+/*	 position: absolute;*/
+/*	 width: 9px;*/
+/*	 height: 42px;*/
+/*	 transform: rotate(38deg);*/
+/*	 border-radius: 100vh;*/
+/*	 top: -16px;*/
+/*	 left: 12px;*/
+/*	 background-color: var(--highlight);*/
+/*}*/
+.leadForm__fieldList .input:not(.input--checkbox) label {
+	 display: block;
+}
+.leadForm__fieldList .input .feedback.error {
+	 width: 100%;
+	 display: block;
+	 padding: 0.25em;
+	 font-size: 0.8em;
+	 color: #eb3b3b;
+	 font-weight: 600;
+}
+.leadForm__fieldList li.input.input--collections {
+	 width: 100%;
+	 padding: 2%;
+	 border-top: 1px solid var(--hr);
+	 border-bottom: 1px solid var(--hr);
+}
+.leadForm__fieldList li.input.input--collections .collections {
+	 width: 100%;
+	 border: 0 none;
+	 padding: 0;
+}
+.leadForm__fieldList li.input.input--collections .collections legend {
+	 margin-bottom: 0.25em;
+	 font-size: 1.125em;
+}
+.leadForm__fieldList li.input.input--collections .collections legend strong {
+	 font-weight: 600;
+}
+.leadForm__fieldList li.input.input--collections .collections legend .optional {
+	 font-size: 0.8em;
+	 font-style: italic;
+}
+.leadForm__fieldList li.input.input--collections .collections .collection {
+	 width: 100%;
+	 border: 0 none;
+	 margin-top: 2em;
+	 padding: 0;
+}
+.leadForm__fieldList li.input.input--collections .collections .collection legend {
+	 width: fix-content;
+	 width: -moz-fit-content;
+	 border-bottom: 1px solid;
+	 padding-bottom: 0.25em;
+	 margin-bottom: 1em;
+}
+.leadForm__fieldList li.input.input--collections .collections .collection .collection_list {
+	 margin: 0;
+	 padding: 0;
+	 display: flex;
+	 flex-wrap: wrap;
+}
+.leadForm__fieldList li.input.input--collections .collections .collection .collection_list .input--fancyCheckbox {
+	 width: 32%;
+	 max-width: 390px;
+	 margin-right: 2%;
+}
+.leadForm__fieldList li.input.input--collections .collections .collection .collection_list .input--fancyCheckbox:nth-of-type(3n) {
+	 margin-right: 0;
+}
+.leadForm__fieldList li.input.input--collections .collections .collection .collection_list .input--fancyCheckbox label {
+	 padding-left: 0;
+	 position: relative;
+}
+.leadForm__fieldList li.input.input--collections .collections .collection .collection_list .input--fancyCheckbox label .check {
+	 position: absolute;
+	 top: 10px;
+	 left: 10px;
+	 z-index: 2;
+}
+.leadForm__fieldList li.input.input--collections .collections .collection .collection_list .input--fancyCheckbox label .check input, .leadForm__fieldList li.input.input--collections .collections .collection .collection_list .input--fancyCheckbox label .check .customCheck {
+	 width: 30px;
+	 height: 30px;
+}
+.leadForm__fieldList li.input.input--collections .collections .collection .collection_list .input--fancyCheckbox label .check .customCheck {
+	 border: 1px solid #666;
+}
+.leadForm__fieldList li.input.input--collections .collections .collection .collection_list .input--fancyCheckbox label .check .customCheck::before {
+	 top: 5px;
+	 left: 0;
+}
+.leadForm__fieldList li.input.input--collections .collections .collection .collection_list .input--fancyCheckbox label .check .customCheck::after {
+	 top: -12px;
+	 left: 16px;
+}
+.leadForm__fieldList li.input.input--collections .collections .collection .collection_list .input--fancyCheckbox label .cardOuterContainer {
+	 position: relative;
+	 z-index: 1;
+}
+
+.select-model {
+	 padding: 3em 0 0;
+	 display: flex;
+	 flex-wrap: wrap;
+	 align-items: center;
+	 justify-content: center;
+	 margin-top: 2em;
+	 border: 1px solid rgba(0, 0, 0, );
+	 background-color: rgba(0, 0, 0, );
+	 border-radius: 10px;
+	 padding: 2em;
+}
+.select-model.complete {
+	 display: none;
+}
+.select-model .select-model-heading {
+	 width: 100%;
+	 text-align: center;
+	 margin-bottom: 1rem;
+}
+.select-model fieldset {
+	 border: 0 none;
+	 flex: 1;
+	 padding: 0 5%;
+}
+.select-model fieldset select {
+	 background-color: #fff;
+}
+.select-model .cardList .cardList_item {
+	 width: 320px;
+	 max-width: 320px;
+	 min-width: 320px;
+}
+.select-model .card.card--partial {
+	 font-size: 80%;
+	 width: 320px;
+}
+.select-model .card .card_vitals .card_vitals_image {
+	 height: 160px;
+}
+.select-model .card .loading {
+	 display: block;
+	 width: 100%;
+	 height: 100%;
+	 position: absolute;
+	 top: 0;
+	 right: 0;
+	 bottom: 0;
+	 left: 0;
+	 background-color: rgba(255, 255, 255, 0.6);
+	 display: flex;
+	 align-items: center;
+	 justify-content: center;
+	 transition: all 0.2s;
+	 opacity: 1;
+	 z-index: 3;
+}
+ .select-model .card .loading img {
+	 display: block;
+	 width: 75%;
+	 max-width: 75px;
+}
+ .select-model .card .loading.hide {
+	 opacity: 0;
+}
+
+.thankyou{
+  text-align: center;
+  padding-bottom: 2em;
+}
+
+@media screen and (min-width: 641px){
+  .leadForm__fieldList .input {
+			 width: 48%;
+		}
+}
+
+ @media screen and (max-width: 880px) {
+	 .leadForm__fieldList li.input.input--collections .collections .collection .collection_list .input--fancyCheckbox {
+		 width: 48%;
+	}
+	 .leadForm__fieldList li.input.input--collections .collections .collection .collection_list .input--fancyCheckbox:nth-of-type(2n) {
+		 margin-right: 0;
+	}
+	 .leadForm__fieldList li.input.input--collections .collections .collection .collection_list .input--fancyCheckbox:nth-of-type(3n) {
+		 margin-right: 2%;
+	}
+}
+
+@media screen and (max-width: 820px) {
+	 .select-model {
+		 flex-direction: column;
+		 box-sizing: border-box;
+		 align-items: center;
+	}
+	 .select-model fieldset {
+		 margin-top: 2em;
+	}
+}
+
+@media screen and (max-width: 680px) {
+	 .leadForm__fieldList li.input.input--collections {
+		 text-align: center;
+	}
+	 .leadForm__fieldList li.input.input--collections .collections .collection .collection_list {
+		 justify-content: center;
+	}
+	 .leadForm__fieldList li.input.input--collections .collections .collection .collection_list .input--fancyCheckbox {
+		 width: 100%;
+	}
+	 .leadForm__fieldList li.input.input--collections .collections .collection .collection_list .input--fancyCheckbox:nth-of-type(2n) {
+		 margin-right: 0;
+	}
+	 .leadForm__fieldList li.input.input--collections .collections .collection .collection_list .input--fancyCheckbox:nth-of-type(3n) {
+		 margin-right: 0;
+	}
+}
+
+@media screen and (max-width: 450px) {
+	 .leadForm .select-model .cardList .cardList_item {
+		 width: 100%;
+		 max-width: 100%;
+		 min-width: 100%;
+	}
+	 .leadForm .select-model .card.card--partial {
+		 width: 100%;
+	}
+}
+
+@keyframes spinLoader {
+	 0% {
+		 transform: rotate(0deg);
+	}
+	 100% {
+		 transform: rotate(360deg);
+	}
+}
+@keyframes checkmarkStep1 {
+	 0% {
+		 transform: rotate(-45deg) scaleY(0);
+		 opacity: 1;
+	}
+	 100% {
+		 transform: rotate(-45deg) scaleY(1);
+		 opacity: 1;
+	}
+}
+@keyframes checkmarkStep2 {
+	 0% {
+		 transform: rotate(-135deg) scaleY(0);
+		 opacity: 1;
+	}
+	 100% {
+		 transform: rotate(-135deg) scaleY(1);
+		 opacity: 1;
+	}
+}
+

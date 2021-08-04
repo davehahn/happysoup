@@ -1,0 +1,35 @@
+<!--
+ - Created by Tim on 2021-06-09.
+ -->
+
+<!-- Factory Store Location Banner -->
+<template>
+  <figure class={wrapperClass} style={backgroundReference}>
+    <figcaption>
+      <h2 class="locationBanner__heading">
+        <span class="heading__lineOne">{headingLineOne}</span>
+        <span class="heading__lineTwo">{headingLineTwo}</span>
+      </h2>
+    </figcaption>
+  </figure>
+ <!-- TODO : create a link handler that ensures the "/s/" is added to urls -->
+  <div class="locationBanner__teasers--outer">
+    <div class="locationBanner__teasers--inner">
+      <template for:each={allTeasers} for:item="teaser">
+        <article key={teaser.buttonTarget} class="teaser">
+          <h3 class="teaser__heading heading heading--m">{teaser.heading}</h3>
+          <p class="teaser__deck copy copy--standard">{teaser.deck}</p>
+          <a href={teaser.buttonLink} class="btn btn--primary" target={teaser.buttonTarget}>{teaser.buttonText}</a>
+          <span key={teaser.background} class="teaser__background" style={teaser.background}></span>
+        </article>
+      </template>
+    </div>
+  </div>
+
+  <div class="locationBanner__moreInfo--wrapper" style={moreInfoBackgroundRef}>
+    <section class="locationBanner__moreInfo">
+      <h3 class="moreInfo__heading heading heading--l"><span>{moreInfoHeadingLineOne}</span> {moreInfoHeadingLineTwo}</h3>
+      <a href={moreInfoButtonLinkRewrite} class="btn btn--primary">{moreInfoButtonText}</a>
+    </section>
+  </div>
+</template>
