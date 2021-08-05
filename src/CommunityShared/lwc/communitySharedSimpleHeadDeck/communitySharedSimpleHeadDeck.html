@@ -1,0 +1,13 @@
+<!--
+ - Created by Tim on 2021-05-10.
+ -->
+
+<!-- Community Shared Simple Head Deck -->
+<template>
+  <header class={wrapperClass}>
+    <lightning-formatted-rich-text data-align={getHeadingAlignment} value={fullIntroTitle}></lightning-formatted-rich-text>
+    <template if:true={introBlurb}>
+      <p class="simpleIntro__blurb copy copy--standard" data-align={getBlurbAlignment}>{introBlurb}</p>
+    </template>
+  </header>
+</template>

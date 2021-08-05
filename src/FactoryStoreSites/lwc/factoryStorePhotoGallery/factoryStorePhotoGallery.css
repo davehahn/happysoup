@@ -1,0 +1,84 @@
+/**
+ * Created by Tim on 2021-07-16.
+ */
+
+
+.photoGallery{
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+.photoGallery.photoGallery--default{
+  justify-content: center;
+  margin-top: 2.5em;
+}
+
+.photoGallery .photoGallery__item{
+  width: calc(25% - 10px);
+  height: 0; padding-bottom: calc(25% - 10px);
+  position: relative;
+  margin: 0 10px 10px 0;
+}
+.photoGallery .photoGallery__item.photoGallery__item--default{
+  padding-bottom: calc(15% - 10px);
+}
+.photoGallery .photoGallery__item:nth-of-type(4n){
+  margin-right: 0;
+}
+.photoGallery .photoGallery__item a,
+.photoGallery .photoGallery__item img{
+  display: block;
+  position: absolute;
+}
+.photoGallery .photoGallery__item a{
+  width: 100%; height: 100%;
+  top: 0; right: 0; bottom: 0; left: 0;
+  overflow: hidden;
+}
+.photoGallery .photoGallery__item a:hover img,
+.photoGallery .photoGallery__item a:focus img{
+  transform: scale(1.1);
+}
+.photoGallery .photoGallery__item img{
+  width: 100%; height: 100%;
+  object-fit: cover;
+  transition: all 0.3s linear;
+}
+
+.gallery .photoOverlay.hidden{
+  display: none;
+}
+.gallery .photoOverlay.open{
+  display: flex;
+  position: fixed;
+  top: 0; right: 0; bottom: 0; left: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  align-items: center; justify-content: center;
+  z-index: 1000;
+}
+.gallery .photoOverlay.open .holder{
+  width: 80%; height: 80%;
+  position: relative;
+}
+.gallery .photoOverlay.open .holder .close{
+  position: absolute; top: -5px; right: -5px;
+  transform: rotate(45deg);
+  background-color: #FFF; color: #000;
+  width: 35px; height: 35px;
+  font-size: 1.125em;
+  border-radius: 100vh;
+  display: flex;
+  align-items: center; justify-content: center;
+  filter: drop-shadow(0 0 0.75rem #000);
+  z-index: 2;
+}
+.gallery .photoOverlay.open .holder .close span{
+  font-weight: 900;
+}
+.gallery .photoOverlay.open .holder img{
+  position: relative; z-index: 1;
+  width: 100%; height: 100%; object-fit: contain;
+  filter: drop-shadow(0 0 0.75rem var(--highlight));
+}

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+  <apiVersion>52.0</apiVersion>
+  <description>Factory Store Photo Gallery</description>
+    <isExposed>true</isExposed>
+    <targets>
+        <target>lightningCommunity__Page</target>
+        <target>lightningCommunity__Default</target>
+    </targets>
+    <targetConfigs>
+        <targetConfig targets="lightningCommunity__Default">
+            <property name="contentType" type="String" label="Type of Content to Display" datasource="default, cms_image, Legend_Deals, Legend_Testimonials, news" default="cms_image"/>
+            <property name="topic" type="String" label="Topic of Content to Display" placeholder="Sudbury Photos General" description="The name of the Topic, as it appears in the Name column of All Topics list in the Content Management board."/>
+            <property name="sectionWidth"
+                      type="String"
+                      label="Maximum Width of Section"
+                      datasource="Screen, Container, Wide, Average, Thin, Extra Thin"
+                      description="Relative to containing element. Screen = Full Width of Screen, Container = Full Width of Containing Element, Wide = 1645px, Average = 1300px, Thin = 1080px, Extra Thin = 780px" default="Container" />
+        </targetConfig>
+    </targetConfigs>
+  <masterLabel>Factory Store Photo Gallery</masterLabel>
+</LightningComponentBundle>

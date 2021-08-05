@@ -5,23 +5,18 @@
 <!-- Factory Store Boat Listing -->
 <template>
   <template if:true={showListing}>
-    <section class="allModels maxWidth maxWidth--thin">
-      <h2 class="heading heading-special" data-series-class={seriesClass}>{fullSeriesName}</h2>
-      <p class="copy copy-standard">{seriesBlurb}</p>
-      <ul class="modelListing" onselectboat={handleOpenBoat}>
+    <section class={wrapperClass}>
+      <h2 class="allModels__seriesName heading heading--special" data-series-class={seriesClass}>{fullSeriesName}</h2>
+      <p class="allModels__seriesBlurb copy copy--standard">{seriesBlurb}</p>
+      <ul class="allModels__modelListing" onselectboat={handleOpenBoat}>
         <template for:each={boats} for:item="boat">
-          <c-factory-store-boat-listing-item boat={boat} key={boat.Id}></c-factory-store-boat-listing-item>
+          <c-factory-store-boat-listing-item boat={boat} key={boat.Id} location-name={locationName}></c-factory-store-boat-listing-item>
         </template>
       </ul>
     </section>
   </template>
-  <!--
-  <template if:true={showBoat}>
-    <article>
-      <button onclick={closeBoat}>Back</button>
-      <c-factory-store-boat-details boat={boat}></c-factory-store-boat-details>
-    </article>
+  <template if:false={showListing}>
+    <c-community-shared-loading></c-community-shared-loading>
   </template>
-  -->
 
 </template>

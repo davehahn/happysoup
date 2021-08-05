@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+  <apiVersion>51.0</apiVersion>
+  <description>Factory Store Location Banner</description>
+  <isExposed>true</isExposed>
+    <targets>
+        <target>lightningCommunity__Page</target>
+        <target>lightningCommunity__Default</target>
+    </targets>
+    <targetConfigs>
+        <targetConfig targets="lightningCommunity__Default">
+            <property name="headingLineOne" type="String" label="Heading Line #1" required="true" default="Legend Boats Location"/>
+            <property name="headingLineTwo" type="String" label="Heading Line #2" required="true" default="Create memories"/>
+            <property name="backgroundImage" type="ContentReference" label="Select a Background Image" description="If you can't find what you're looking for, upload it to Salesforce CMS" filter="cms_image"/>
+
+            <property name="teaserOneHeading" type="String" label="Teaser #1: Heading" default="Teaser One Heading"/>
+            <property name="teaserOneDeck" type="String" label="Teaser #1: Deck" default="Teaser One Deck...Short description."/>
+            <property name="teaserOneButtonText" type="String" label="Teaser #1: Button Text" default="Learn more"/>
+            <property name="teaserOneButtonLink" type="String" label="Teaser #1: Button Link" default=""/>
+            <property name="teaserOneLinkTarget" type="String" label="Teaser #1: Link Target" datasource="Default, New Tab/Window" description="For pages on this site, select 'Default'. For links to other sites, select 'New Tab/Window'"/>
+            <property name="teaserOneBackground" type="ContentReference" label="Teaser #1: Select a Background Image" description="If you can't find what you're looking for, upload it to Salesforce CMS" filter="cms_image"/>
+
+            <property name="teaserTwoHeading" type="String" label="Teaser #2: Heading" default=""/>
+            <property name="teaserTwoDeck" type="String" label="Teaser #2: Deck" default=""/>
+            <property name="teaserTwoButtonText" type="String" label="Teaser #2: Button Text" default=""/>
+            <property name="teaserTwoButtonLink" type="String" label="Teaser #2: Button Link" default=""/>
+            <property name="teaserTwoLinkTarget" type="String" label="Teaser #2: Link Target" datasource="Default, New Tab/Window" description="For pages on this site, select 'Default'. For links to other sites, select 'New Tab/Window'"/>
+            <property name="teaserTwoBackground" type="ContentReference" label="Teaser #2: Select a Background Image" description="If you can't find what you're looking for, upload it to Salesforce CMS" filter="cms_image"/>
+
+            <property name="teaserThreeHeading" type="String" label="Teaser #3: Heading" default=""/>
+            <property name="teaserThreeDeck" type="String" label="Teaser #3: Deck" default=""/>
+            <property name="teaserThreeButtonText" type="String" label="Teaser #3: Button Text" default=""/>
+            <property name="teaserThreeButtonLink" type="String" label="Teaser #3: Button Link" default=""/>
+            <property name="teaserThreeLinkTarget" type="String" label="Teaser #3: Link Target" datasource="Default, New Tab/Window" description="For pages on this site, select 'Default'. For links to other sites, select 'New Tab/Window'"/>
+            <property name="teaserThreeBackground" type="ContentReference" label="Teaser #3: Select a Background Image" description="If you can't find what you're looking for, upload it to Salesforce CMS" filter="cms_image"/>
+
+            <property name="moreInfoHeadingLineOne" type="String" label="More Info: Heading Line #1" required="true" default="For more information about"/>
+            <property name="moreInfoHeadingLineTwo" type="String" label="More Info: Heading Line #2" required="true" default="Your Location Name"/>
+            <property name="moreInfoButtonText" type="String" label="More Info: Button Text"/>
+            <property name="moreInfoButtonLink" type="String" label="More Info: Button Link"/>
+            <property name="moreInfoBackground" type="ContentReference" label="More Info: Select a Background Image" description="If you can't find what you're looking for, upload it to Salesforce CMS" filter="cms_image"/>
+
+            <property name="sectionWidth"
+                      type="String"
+                      label="Maximum Width of Section"
+                      datasource="Screen, Container, Wide, Average, Thin, Extra Thin"
+                      description="Relative to containing element. Screen = Full Width of Screen, Container = Full Width of Containing Element, Wide = 1645px, Average = 1300px, Thin = 1080px, Extra Thin = 780px"
+                      default="Screen" />
+        </targetConfig>
+    </targetConfigs>
+  <masterLabel>Factory Store Location Banner</masterLabel>
+</LightningComponentBundle>

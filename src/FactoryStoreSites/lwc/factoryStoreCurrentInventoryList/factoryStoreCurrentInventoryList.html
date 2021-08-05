@@ -1,0 +1,34 @@
+<!--
+ - Created by Tim on 2021-07-09.
+ -->
+
+<!-- Factory Store Current Inventory List -->
+<template>
+
+  <div class="modelListing__currentStock">
+    <ul class="currentStock__list">
+      <template for:each={currentStock} for:item="stock">
+        <li key={stock.Base.SerialId} class="currentStock__item">
+          <h5 class="heading heading--m">
+            <span>{stock.Base.ProductName}</span>
+            <template for:each={stock.Base.Equipment} for:item="rig">
+              <small key={rig.ProductId}>
+                {rig.ProductName}
+              </small>
+            </template>
+          </h5>
+          <p class="item__pricing">
+            <small>From:</small>
+            <span class="pricing__weekly">{stock.Base.StartingWeeklyPrice} <strong>Per Week</strong></span>
+            <span class="pricing__retail">{stock.Base.StartingRetailPrice}</span>
+          </p>
+          <p class="item__ctas">
+            <button class="ctas__btn btn btn--secondary" data-record={stock.Base.ProductId} data-name={stock.Base.ProductName} data-serial={stock.Base.SerialNumber} onclick={quickQuote}>Quick Connect</button>
+            <button class="ctas__btn btn btn--secondary" data-record={stock.Base.ProductId} data-serial={stock.Base.SerialNumber} onclick={showroomVisit}>Come See It!</button>
+          </p>
+        </li>
+      </template>
+    </ul>
+  </div>
+
+</template>

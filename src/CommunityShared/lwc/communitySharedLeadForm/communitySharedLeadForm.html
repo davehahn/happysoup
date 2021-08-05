@@ -1,0 +1,242 @@
+<!--
+ - Created by Tim on 2021-05-03.
+ -->
+
+<!-- Community Shared Lead Form -->
+<template>
+  <section class={wrapperClass}>
+    <template if:true={showForm}>
+      <header class="form__intro">
+        <template if:true={introTitle}>
+          <h3 class="leadFormWrapper__heading heading heading--m">{introTitle}</h3>
+        </template>
+        <template if:true={introBlurb}>
+          <p class="leadFormWrapper__introBlurb">{introBlurb}</p>
+        </template>
+      </header>
+      <form id="leadForm" name="leadForm" data-id="leadForm" data-form-name={formName}>
+        <fieldset class="leadForm__fieldset">
+          <legend class="ro">Lead Form</legend>
+          <template if:true={formHasErrors}>
+            <div id="leadForm__errors" data-id="leadForm__errors">
+              <p>Your form has the following errors:</p>
+              <ul>
+                <template for:each={formErrors} for:item="error">
+                  <li key={error.Field}>
+                    {error.Message}
+                  </li>
+                </template>
+              </ul>
+            </div>
+          </template>
+
+
+          <fieldset>
+            <label class="ro">Personal Info</label>
+            <ol class="leadForm__fieldList">
+              <template if:true={collectFirstName}>
+                <li class="input input--text">
+                  <lightning-input
+                          type="text"
+                          label="First Name"
+                          name="FirstName"
+                          data-id="FirstName"
+                          maxlength="20"
+                          required
+                          aria-required="true"
+                          pattern="[a-zA-ZàâçéèêëîïôûùüÿæœÙÛÜŸÀÂÆÇÉÈÊËÏÎÔŒ  .'-]+"
+                          message-when-pattern-mismatch="The First Name you entered contains invalid characters."
+                          message-when-value-missing="First Name is a required field and cannot be left blank.">
+                  </lightning-input>
+                </li>
+              </template>
+              <template if:true={collectLastName}>
+                <li class="input input--text">
+                  <lightning-input
+                          type="text"
+                          label="Last Name"
+                          name="LastName"
+                          data-id="LastName"
+                          maxlength="20"
+                          required
+                          aria-required="true"
+                          pattern="[a-zA-ZàâçéèêëîïôûùüÿæœÙÛÜŸÀÂÆÇÉÈÊËÏÎÔŒ  .'-]+"
+                          message-when-pattern-mismatch="The Last Name you entered contains invalid characters."
+                          message-when-value-missing="Last Name is a required field and cannot be left blank.">
+                  </lightning-input>
+                </li>
+              </template>
+              <template if:true={collectEmail}>
+                <li class="input input--email">
+                  <lightning-input
+                          type="email"
+                          label="Email Address"
+                          name="Email"
+                          data-id="Email"
+                          value={emailPrefill}
+                          maxlength="50"
+                          placeholder="email@address.com"
+                          required aria-required="true"
+                          message-when-value-missing="Email Address is a required field and cannot be left blank."
+                          message-when-pattern-mismatch="The format of the Email Address you entered is invalid.">
+                  </lightning-input>
+                </li>
+              </template>
+              <template if:true={collectPhone}>
+                <li class="input input--tel">
+                  <lightning-input
+                          type="tel"
+                          label="Phone Number"
+                          name="Phone"
+                          data-id="Phone"
+                          placeholder="(123) 456-7890"
+                          required aria-required="true"
+                          pattern="(?:\(?)(\d{3})(?:\)?)(\s|\.|-)?(\d{3})(\s|\.|-)?(\d{4})"
+                          message-when-pattern-mismatch="The format of the Phone Number you entered is invalid.">
+                  </lightning-input>
+                </li>
+              </template>
+              <template if:true={collectStreet}>
+                <li class="input input--text">
+                  <lightning-input
+                          type="text"
+                          label="Address"
+                          name="Street"
+                          data-id="Street"
+                          maxlength="50"
+                          pattern="[a-zA-Z0-9àâçéèêëîïôûùüÿæœÙÛÜŸÀÂÆÇÉÈÊËÏÎÔŒ #'-.]+"
+                          message-when-pattern-mismatch="The Address you entered contains invalid characters.">
+                  </lightning-input>
+                </li>
+              </template>
+              <template if:true={collectCity}>
+                <li class="input input--text">
+                  <lightning-input
+                          type="text"
+                          label="City"
+                          name="City"
+                          data-id="City"
+                          maxlength="50"
+                          pattern="[a-zA-ZàâçéèêëîïôûùüÿæœÙÛÜŸÀÂÆÇÉÈÊËÏÎÔŒ  .'-]+"
+                          message-when-pattern-mismatch="The City you entered contains invalid characters.">
+                  </lightning-input>
+                </li>
+              </template>
+              <template if:true={collectProvince}>
+                <li class="input input--select">
+                  <lightning-combobox
+                          label="Province"
+                          name="Province"
+                          data-id="Province"
+                          value={value}
+                          placeholder="-- Select one --"
+                          options={provinces}>
+                  </lightning-combobox>
+                </li>
+              </template>
+              <template if:true={collectPostalCode}>
+                <li class="input input--text">
+                  <lightning-input
+                          type="text"
+                          label="Postal Code"
+                          name="PostalCode"
+                          data-id="PostalCode"
+                          maxlength="7"
+                          required
+                          aria-required="true"
+                          pattern="([a-zA-Z]\d[a-zA-Z])[\s-]*(\d[a-zA-Z]\d)"
+                          message-when-pattern-mismatch="The Postal Code you entered contains invalid characters."
+                          message-when-value-missing="Postal Code is a required field and cannot be left blank.">
+                  </lightning-input>
+                </li>
+              </template>
+            </ol>
+          </fieldset>
+
+          <fieldset>
+            <label class="ro">Inquiry Information</label>
+            <ol class="leadForm__fieldList">
+              <template if:true={collectPlanToPurchase}>
+                <li class="input input--select">
+                  <lightning-combobox
+                          label="When do you plan on purchasing?"
+                          name="PurchaseByDate"
+                          data-id="PurchaseByDate"
+                          value={value}
+                          placeholder="-- Select one --"
+                          options={purchaseByDateOptions}>
+                  </lightning-combobox>
+                </li>
+              </template>
+              <template if:true={collectTypeInterest}>
+                <li class="input input--select">
+                  <template if:true={collectBoatInterest}>Warning: To use this field, please de-select "Collect Boat of Interest (Set of Picklists)"</template>
+                  <template if:false={collectBoatInterest}>
+                    <lightning-combobox
+                            label="What are you most interested in?"
+                            name="BoatTypeSingle"
+                            data-id="BoatTypeSingle"
+                            value={value}
+                            placeholder="-- Select one --"
+                            options={boatTypeOptions}>
+                    </lightning-combobox>
+                  </template>
+                </li>
+              </template>
+              <template if:true={collectBoatInterest}>
+                <li class="input input--select">
+                  <template if:true={collectTypeInterest}>Warning: To use this field, please de-select "Collect Boat Type Interest (Picklist)"</template>
+                  <template if:false={collectTypeInterest}>
+                    TBD
+                    <!--                    <lightning-combobox-->
+                    <!--                            label="What are you most interested in?"-->
+                    <!--                            name="BoatType"-->
+                    <!--                            data-id="BoatType"-->
+                    <!--                            value={value}-->
+                    <!--                            placeholder="&#45;&#45; Select one &#45;&#45;"-->
+                    <!--                            options={boatTypeOptions}></lightning-combobox>-->
+                  </template>
+                </li>
+              </template>
+              <template if:true={collectNotes}>
+                <li class="input input--textarea">
+                  <lightning-textarea
+                          label="Notes"
+                          name="Notes"
+                          data-id="Notes">
+                  </lightning-textarea>
+                </li>
+              </template>
+              <template if:true={collectNewsletterOptin}>
+                <li class="input input--checkbox">
+                  <lightning-input
+                          type="checkbox"
+                          label="Yes! I would like to subscribe to receive eNewsletters from Legend Boats."
+                          name="Newsletter"
+                          data-id="Newsletter">
+                  </lightning-input>
+                </li>
+              </template>
+            </ol>
+          </fieldset>
+
+          <lightning-button
+                  type="submit"
+                  label="Submit Your Form"
+                  onclick={validateLead}>
+          </lightning-button>
+        </fieldset>
+      </form>
+    </template>
+    <template if:true={showThankyou}>
+      <header class="thankyou">
+        <h2 class="thankyou__heading heading heading--m">Thanks for your submission, we'll be in touch.</h2>
+      </header>
+    </template>
+
+    <template if:true={showLoading}>
+      <c-community-shared-loading overlay="true" overlay-opacity="0.6"></c-community-shared-loading>
+    </template>
+  </section>
+
+</template>

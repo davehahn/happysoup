@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
   <apiVersion>50.0</apiVersion>
-  <description>Factory Store Hours And Location</description>
+  <description>Factory Store Hours And Location - Based on Site Name in General Settings</description>
   <isExposed>true</isExposed>
   <targets>
     <target>lightningCommunity__Page</target>
@@ -9,7 +9,13 @@
   </targets>
   <targetConfigs>
     <targetConfig targets="lightningCommunity__Default">
-      <property name="storeLocation" type="String" datasource="Sudbury, Barrie, Montreal" label="Select Store Location" description="Selecting the location will populate the current days ours, and the store address next to the store logo."/>
+      <property name="layout" type="String" label="Layout" datasource="Condensed, Expanded" description="TIP: Expanded includes a large map; only use it where there is room." />
+      <property name="zoomLevel" type="String" label="Map Zoom Level" datasource="1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20" default="11" />
+      <property name="sectionWidth"
+                type="String"
+                label="Maximum Width of Section"
+                datasource="Screen, Container, Wide, Average, Thin, Extra Thin"
+                description="Don't use with Condensed. Relative to containing element. Screen = Full Width of Screen, Container = Full Width of Containing Element, Wide = 1645px, Average = 1300px, Thin = 1080px, Extra Thin = 780px" default="Container" />
     </targetConfig>
   </targetConfigs>
   <masterLabel>Factory Store Hours And Location</masterLabel>
