@@ -301,6 +301,14 @@ public with sharing class gcDealerReseved_Receipt {
 
             insert disbursement;
 
+            AcctSeed__AP_Disbursement__c apdisbursement = new AcctSeed__AP_Disbursement__c(
+                AcctSeed__Cash_Disbursement__c = disbursement.Id,
+                AcctSeed__Paid_Amount__c = disbursement.AcctSeed__Amount__c,
+                AcctSeed__Account_Payable__c = accountPayable.Id
+            );
+            insert apdisbursement;
+            /// We must post the Disbursement after APD is created. This is due to New Acct Seed update
+            /// Changed on Aug-09-2021
             AcctSeed.PostResult[] postResults = AcctSeed.CashDisbursementPostService.postCashDisbursements(new List<AcctSeed__Cash_Disbursement__c>{disbursement});
             for (AcctSeed.PostResult theResult : postResults) {
                 if (!theResult.isSuccess) {
@@ -309,13 +317,6 @@ public with sharing class gcDealerReseved_Receipt {
                     }
                 }
             }
-
-            AcctSeed__AP_Disbursement__c apdisbursement = new AcctSeed__AP_Disbursement__c(
-                AcctSeed__Cash_Disbursement__c = disbursement.Id,
-                AcctSeed__Paid_Amount__c = disbursement.AcctSeed__Amount__c,
-                AcctSeed__Account_Payable__c = accountPayable.Id
-            );
-            insert apdisbursement;
             idRet = 'disbursement__'+disbursement.Id;
         }
 		return idRet;
