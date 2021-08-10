@@ -99,7 +99,7 @@ private class gcConstants_Test {
 		gcConstants.convertUserDeptToGlv1('');
 		gcConstants.convertUserDeptToWhs('');
 
-		gcConstants.coverage();
-		gcConstants.coverage1();
+//		gcConstants.coverage();
+//		gcConstants.coverage1();
 	}	
 }
