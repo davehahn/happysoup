@@ -32,6 +32,7 @@ public with sharing class FSBoatDetails_Service {
 //    @AuraEnabled public Map<String, List<FeeProduct>> Fees { get; set; }
 //    @AuraEnabled public Map<String, String> DefaultImages { get; set; }
 //    @AuraEnabled public Map<String, String> BoatSpecs { get; set; }
+    @AuraEnabled public String PricebookName { get; set; }
 
     static Id retailPricebookId;
     static Map<Id, String> pricebookMap;
@@ -83,12 +84,16 @@ public with sharing class FSBoatDetails_Service {
                 //this.Prices = new Map<String, Decimal>();
                 for( PricebookEntry pbe : prod.PricebookEntries )
                 {
-
-                    RetailPrice = pbe.UnitPrice;
-                    ParentRetailPrice = pbe.UnitPrice;
-                    RetailSpecialPrice = pbe.Special_Price__c;
-                    RetailSpecialPriceDescription = pbe.Special_Price_Description__c;
-
+                    if( pricebookMap.containsKey(pbe.Pricebook2Id) ) {
+                        if (pricebookMap.get(pbe.Pricebook2Id) == 'retail' ||
+                            pricebookMap.get(pbe.Pricebook2Id) == 'dev-retail')
+                        {
+                            RetailPrice = pbe.UnitPrice;
+                            ParentRetailPrice = pbe.UnitPrice;
+                            RetailSpecialPrice = pbe.Special_Price__c;
+                            RetailSpecialPriceDescription = pbe.Special_Price_Description__c;
+                        }
+                    }
                 }
             }
         }
