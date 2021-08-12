@@ -36,7 +36,7 @@ public with sharing class FSInventory_Service {
                 AND Product_Record_Type__c = 'Boat'
                 AND GMBLASERP__Product__r.Make__c = 'Legend'
                 AND Model_Year__c >= :year
-                AND Status__c NOT IN ('Used', 'At Supplier', 'Return to Supplier')
+                AND Status__c NOT IN ('Used', 'At Supplier', 'Return to Supplier', 'Demo', 'Display Model')
                 AND Available_Retail__c = true
                 ORDER BY Model_Year__c ASC
         ])

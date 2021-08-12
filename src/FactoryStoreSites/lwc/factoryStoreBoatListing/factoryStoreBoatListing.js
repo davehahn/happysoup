@@ -72,7 +72,9 @@ export default class FactoryStoreBoatListing extends NavigationMixin(LightningEl
  @wire(CurrentPageReference) pageRef;
 
  triggerGallery(){
-//   console.log('all expanded boats?', this.boats);
+   console.log('all expanded boats?', this.boats);
+   this.boats.sort((firstItem, secondItem) => firstItem.Expanded.RetailPrice - secondItem.Expanded.RetailPrice);
+   this.boats.reverse();
    this.showListing = true;
 	 this.wrapperClass = setWrapperClass(this.sectionWidth, 'allModels');
  }
