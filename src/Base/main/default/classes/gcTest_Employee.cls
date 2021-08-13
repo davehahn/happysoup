@@ -9,9 +9,9 @@ private class gcTest_Employee{
 
   static testMethod void coverage_Test()
   {
-      gcEmployee.coverage();
-      gcEmployee_Ext.coverage();
-      gcEmployeeWageRate.coverage();
+    //  gcEmployee.coverage();
+     // gcEmployee_Ext.coverage();
+     // gcEmployeeWageRate.coverage();
   }
 
   static testMethod void trigger_Test()
