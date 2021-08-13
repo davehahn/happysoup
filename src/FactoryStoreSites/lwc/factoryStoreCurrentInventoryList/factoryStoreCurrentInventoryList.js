@@ -75,6 +75,9 @@ export default class FactoryStoreCurrentInventoryList extends NavigationMixin(Li
 											ProductId: e.productId,
 											ProductName: productName
 										});
+										this.storeStock[index].Base.Equipment.sort(function(a, b) {
+											 return a.ProductType.toLowerCase().localeCompare(b.ProductType.toLowerCase());
+										});
 
 									});
         				}
