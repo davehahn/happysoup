@@ -31,14 +31,13 @@ export default class FactoryStoreCurrentInventoryList extends NavigationMixin(Li
 
 								this.storeStock.push({
 									Base: {
-										SerialId: boat.Serial.serialId,
+										SerialId: boat.Serial.serialNumberId,
 										ProductName: stripParentheses(boat.Serial.productName),
 										ProductId: boat.Serial.productId,
 										SerialNumber: boat.Serial.serialNumberValue,
 										BaseRetailPrice: fullBoat.RetailPrice,
 										StartingWeeklyPrice: weeklyPayment(fullBoat.RetailPrice),
 										StartingRetailPrice: fullBoat.RetailPrice,
-										StartingWeeklyPrice: 0,
 										RetailUpgradeCost: 0,
 										WeeklyUpgradeCost: 0,
 										Equipment: []
@@ -47,16 +46,22 @@ export default class FactoryStoreCurrentInventoryList extends NavigationMixin(Li
 								});
 								if(boat.Equipment){
 								 boat.Equipment.forEach((e, i) => {
+								   console.log("Equipment Single: ", e);
 										let retailUpgradeCost = 0;
 										if(e.productType === 'Motor'){
+										  console.log('all Motors: ', fullBoat.MotorUpgrades);
 											fullBoat.MotorUpgrades.forEach( (motor, index) => {
 												if(motor.Id === e.productId){
-													retailUpgradeCost += motor.RetailUpgradeCost
+												  console.log('retailUpgradeCost: ', retailUpgradeCost);
+												  console.log('motor.RetailUpgradeCost: ', motor.RetailUpgradeCost);
+													retailUpgradeCost += motor.RetailUpgradeCost;
 												}
 											});
 										} else {
 											fullBoat.TrailerUpgrades.forEach( (trailer, index) => {
 												if(trailer.Id === e.productId){
+												  console.log('retailUpgradeCost: ', retailUpgradeCost);
+												  console.log('motor.RetailUpgradeCost: ', trailer.RetailUpgradeCost);
 													retailUpgradeCost += trailer.RetailUpgradeCost
 												}
 											});
@@ -66,6 +71,7 @@ export default class FactoryStoreCurrentInventoryList extends NavigationMixin(Li
 
 										let productName = (e.productType === 'Motor') ? rewriteMotorName(e.productName) : ' and ' + rewriteTrailerName(e.productName);
 										this.storeStock[index].Base.Equipment.push({
+										  ProductType: e.productType,
 											ProductId: e.productId,
 											ProductName: productName
 										});
