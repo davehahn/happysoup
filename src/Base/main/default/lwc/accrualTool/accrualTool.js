@@ -55,6 +55,8 @@ export default class AccrualTool extends LightningElement {
   @track step8;
 
   @track jedate;
+  @track jedate2;
+  @track usedStatus = false;;
 
   nextClick() {
     debugger;
@@ -70,7 +72,7 @@ export default class AccrualTool extends LightningElement {
     }
     this.progressStep = progStepNum.toString();
     this.showPrevious = true;
-    this.geturrentStep();
+    this.getcurrentStep();
     if (this.erpStageAllowed && progStepNum == 4) {
       this.fetchRevenueandExpenses();// need to invoke this at specific step
     }
@@ -87,19 +89,59 @@ export default class AccrualTool extends LightningElement {
     }
     this.showNext = true;
     this.progressStep = progStepNum.toString();
-    this.geturrentStep();
+    this.getcurrentStep();
   }
 
   dateChange(event) {
     debugger;
     this.jedate = event.target.value;
+    this.setVisibleDate(false);
+  }
+
+  setVisibleDate (onLoad) {
+    debugger;
+    var date;
+    var month;
+    var year;
+    if(onLoad) {
+      var today = new Date();
+     date = today.getDate();
+     month = today.getMonth() + 1;
+     year = today.getFullYear();
+    } else{
+       if(this.jedate != undefined){
+      year = this.jedate.substring(0,4);
+     month = parseInt(this.jedate.substring(5,7));
+     date = this.jedate.substring(8);
+    }
+    }
+    
+    //this.jedate = today.getDate() +"-" + (today.getMonth() + 1) +"-" + today.getFullYear() ;
+   
+    var monthStr;
+    switch(month) {
+      case 1: monthStr = 'Jan'; break;
+      case 2: monthStr = 'Feb'; break;
+      case 3: monthStr = 'Mar'; break;
+      case 4: monthStr = 'Apr'; break;
+      case 5: monthStr = 'May'; break;
+      case 6: monthStr = 'Jun'; break;
+      case 7: monthStr = 'Jul'; break;
+      case 8: monthStr = 'Aug'; break;
+      case 9: monthStr = 'Sep'; break;
+      case 10: monthStr = 'Oct'; break;
+      case 11: monthStr = 'Nov'; break;
+      case 12: monthStr = 'Dec';
+    }
+  this.jedate2 = date +"-"+ monthStr+"-"+year;
+
   }
 
   closeQuickAction() {
     this.dispatchEvent(new CloseActionScreenEvent());
   }
 
-  geturrentStep() {
+  getcurrentStep() {
     let progStepNum = Number(this.progressStep);
     switch (progStepNum) {
       case 1:
@@ -185,7 +227,10 @@ export default class AccrualTool extends LightningElement {
   }
   connectedCallback() {
     var today = new Date();
-    this.jedate = today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate();
+    //this.jedate = today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate();
+    this.jedate = today.getDate() +"-" + (today.getMonth() + 1) +"-" + today.getFullYear() ;
+
+    this.setVisibleDate(true);
     this.progressStep = "1";
     this.step1 = true;
     refreshApex(this.wiredGetErpRecord);
@@ -212,7 +257,10 @@ export default class AccrualTool extends LightningElement {
 
   checkERPStage() {
     debugger;
-    if (this.erprecord.Stage__c == "Tagging Pending" || this.erprecord.Stage__c == "Delivered" || this.erprecord.Stage__c == "Closed Lost") {
+    if(this.erprecord.Journal_Entries__r != null && this.erprecord.Journal_Entries__r.length != 0) {
+      this.closeQuickAction();
+      errorToast(this, 'Journal Entry for this ERP is already created.', ' Warning!');
+    }else if (this.erprecord.Stage__c == "Tagging Pending" || this.erprecord.Stage__c == "Delivered" || this.erprecord.Stage__c == "Closed Lost") {
       this.erpStageAllowed = false;
       this.closeQuickAction();
       errorToast(this, 'This function is not available for current stage', ' Warning!');
@@ -271,7 +319,7 @@ export default class AccrualTool extends LightningElement {
         if (this.totalRevenue == this.totalExpense) {
           this.grossMargin = 0;
         } else {
-          this.grossMargin = ((this.totalRevenue - this.totalExpese) / this.totalRevenue) * 100;
+          this.grossMargin = ((this.totalRevenue - this.totalExpense) / this.totalRevenue) * 100;
         }
       })
       .catch(error => {
@@ -312,6 +360,14 @@ export default class AccrualTool extends LightningElement {
       .then(result => {
         console.log(JSON.parse(JSON.stringify(result)));
         this.serializedProducts = [...result];
+
+        for(var i= 0 ; i< result.length;i++ ){
+          console.log(result[i].Status);
+          if(result[i].Status == 'Used'){
+          this.usedStatus = true;
+          }
+        }
+
       })
       .catch(error => {
         debugger;

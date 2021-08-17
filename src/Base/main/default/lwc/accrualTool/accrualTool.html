@@ -14,7 +14,7 @@
 				<h2 class="slds-modal__title slds-hyphenate">Accrual Tool</h2>
 			</header>
 			<div class="slds-modal__content slds-p-around_medium modalContent">
-				<lightning-layout multiple-rows="true">
+				<lightning-layout multiple-rows="true" style="width: 80%;margin-left: 10%;">
 					<template if:true={step1}>
 						<lightning-layout-item size="12" padding="around-small">
 							<template if:true={lineItems}>
@@ -22,7 +22,8 @@
 									Are all the commission records reviewed?
 								</h3>
 								<br/>
-								<table class="slds-table slds-table_cell-buffer slds-table_bordered slds-border_left slds-border_right" style="width: 75%; margin-left: 12.5%;">
+								<table
+									class="slds-table slds-table_cell-buffer slds-table_bordered slds-border_left slds-border_right">
 									<thead>
 										<tr>
 											<th></th>
@@ -57,8 +58,9 @@
 							<h3 style="color: rgb(0, 156, 219);font-size: x-large;font-weight: 700;">
 								Is this the date when the deal becomes tagged?
 							</h3>
-							<lightning-input type="date" name="journaldate" label="Journal entry Date" value={jedate} onchange={dateChange} style="width:25%;">
-								
+							<lightning-input type="date" name="journaldate" label="Journal entry Date" value={jedate}
+								onchange={dateChange} style="width:25%;">
+
 							</lightning-input>
 						</lightning-layout-item>
 					</template>
@@ -69,7 +71,8 @@
 									What is the Status of all serialized products?
 								</h3>
 								<br/>
-								<table class="slds-table slds-table_cell-buffer slds-table_bordered  slds-border_left slds-border_right">
+								<table
+									class="slds-table slds-table_cell-buffer slds-table_bordered  slds-border_left slds-border_right">
 									<thead>
 										<tr>
 											<th class="slds-text-align_left">Serial Number</th>
@@ -89,85 +92,90 @@
 										</template>
 									</tbody>
 								</table>
-
+								<template if:true={usedStatus}>
+									<h3 style="color: rgb(0, 156, 219);font-size: small;font-weight: 700;">
+										Please speak to your manager before proceeding.
+									</h3>
+								</template>
 							</template>
 						</lightning-layout-item>
 					</template>
 					<template if:true={step4}>
 						<tamplate if:true={revenueData} style="width: -webkit-fill-available;">
-						<lightning-layout-item size="12" padding="around-small">
-							<table>
-								<tr>
-									<td style="width:66%;">
-										<h3 style="color: rgb(0, 156, 219);font-size: x-large;font-weight: 700;">
-											Receivable &amp; Revenue</h3>
-									</td>
-									<td style="font-weight: 700; font-size: larger;">Total Revenue Accural: $
-										<lightning-formatted-number value={revenueData.totalAmount}
-											maximum-fraction-digits="2" minimum-fraction-digits="2">
-										</lightning-formatted-number>
-									</td>
-								</tr>
-							</table>
-							<br/>
-							<template for:each={revenueData.departmentWrapper} for:item="dept" for:index="idx">
-								<div key={dept.id}>
-									<h2 style="color: #009CDB;font-weight: 700;">Department(GLV2): {dept.Department}
-									</h2>
-									<table class="slds-table slds-table_cell-buffer slds-table_bordered">
-										<thead>
-											<tr>
-												<th class="slds-text-align_left" style="width: 40%;">Revenue
-													GL Account
-												</th>
-												<th class="slds-text-align_left" style="width: 40%;">Product
-												</th>
-												<th class="slds-text-align_left">Total Price</th>
-											</tr>
-										</thead>
-									</table>
+							<lightning-layout-item size="12" padding="around-small">
+								<table>
+									<tr>
+										<td style="width:66%;">
+											<h3 style="color: rgb(0, 156, 219);font-size: x-large;font-weight: 700;">
+												Receivable &amp; Revenue</h3>
+										</td>
+										<td style="font-weight: 700; font-size: larger;">Total Revenue Accrual: $
+											<lightning-formatted-number value={revenueData.totalAmount}
+												maximum-fraction-digits="2" minimum-fraction-digits="2">
+											</lightning-formatted-number>
+										</td>
+									</tr>
+								</table>
+								<br/>
+								<template for:each={revenueData.departmentWrapper} for:item="dept" for:index="idx">
+									<div key={dept.id}>
+										<h2 style="color: #009CDB;font-weight: 700;">Department(GLV2): {dept.Department}
+										</h2>
+										<table class="slds-table slds-table_cell-buffer slds-table_bordered">
+											<thead>
+												<tr>
+													<th class="slds-text-align_left" style="width: 40%;">Revenue
+														GL Account
+													</th>
+													<th class="slds-text-align_left" style="width: 40%;">Product
+													</th>
+													<th class="slds-text-align_left">Total Price</th>
+												</tr>
+											</thead>
+										</table>
 
-									<template for:each={dept.lineItemWrapperList} for:item="lineItem" for:index="idx1">
-										<div key={lineItem.id}
-											style="background-color: lightgray; margin-bottom: -3.25%;margin-top: 0.5%;padding: .5%;color: lightgray;">
-											_</div>
-										<lightning-accordion allow-multiple-sections-open key={lineItem.id}>
-											<lightning-accordion-section name={lineItem.totalPrice}
-												label={lineItem.GLAccountName}>
-												<div slot="actions" style="font-weight: 700;width: 18.8%;">
-													$<lightning-formatted-number value={lineItem.totalPrice}
-														maximum-fraction-digits="2" minimum-fraction-digits="2">
-													</lightning-formatted-number>
-												</div>
-												<template for:each={lineItem.productPriceWrapperList}
-													for:item="productPrice" for:index="idx1">
-													<table key={productPrice.id}
-														class="slds-table slds-table_cell-buffer"
-														style="border-bottom: var(--lwc-borderWidthThin,1px) solid var(--lwc-colorBorder,rgb(221, 219, 218));">
-														<tbody>
-															<tr key={productPrice.id}>
-																<td style="width: 40%;">&nbsp;</td>
-																<td style="width: 40%;">
-																	{productPrice.productName}</td>
-																<td style="padding-left: 14px;">
-																	$<lightning-formatted-number
-																		value={productPrice.price}
-																		maximum-fraction-digits="2"
-																		minimum-fraction-digits="2">
-																	</lightning-formatted-number>
-																</td>
-															</tr>
-														</tbody>
-													</table>
-												</template>
-											</lightning-accordion-section>
-										</lightning-accordion>
-									</template>
-									<br />
+										<template for:each={dept.lineItemWrapperList} for:item="lineItem"
+											for:index="idx1">
+											<div key={lineItem.id}
+												style="background-color: lightgray; margin-bottom: -3.25%;margin-top: 0.5%;padding: .5%;color: lightgray;">
+												_</div>
+											<lightning-accordion allow-multiple-sections-open key={lineItem.id}>
+												<lightning-accordion-section name={lineItem.totalPrice}
+													label={lineItem.GLAccountName}>
+													<div slot="actions" style="font-weight: 700;width: 18.8%;">
+														$<lightning-formatted-number value={lineItem.totalPrice}
+															maximum-fraction-digits="2" minimum-fraction-digits="2">
+														</lightning-formatted-number>
+													</div>
+													<template for:each={lineItem.productPriceWrapperList}
+														for:item="productPrice" for:index="idx1">
+														<table key={productPrice.id}
+															class="slds-table slds-table_cell-buffer"
+															style="border-bottom: var(--lwc-borderWidthThin,1px) solid var(--lwc-colorBorder,rgb(221, 219, 218));">
+															<tbody>
+																<tr key={productPrice.id}>
+																	<td style="width: 40%;">&nbsp;</td>
+																	<td style="width: 40%;">
+																		{productPrice.productName}</td>
+																	<td style="padding-left: 14px;">
+																		$<lightning-formatted-number
+																			value={productPrice.price}
+																			maximum-fraction-digits="2"
+																			minimum-fraction-digits="2">
+																		</lightning-formatted-number>
+																	</td>
+																</tr>
+															</tbody>
+														</table>
+													</template>
+												</lightning-accordion-section>
+											</lightning-accordion>
+										</template>
+										<br />
 								</div>
-							</template>
+								</template>
 
-						</lightning-layout-item>
+							</lightning-layout-item>
 						</tamplate>
 					</template>
 					<template if:true={step5}>
@@ -178,7 +186,7 @@
 										<h3 style="color: rgb(0, 156, 219);font-size: x-large;font-weight: 700;">
 											Accrual &amp; Expenses</h3>
 									</td>
-									<td style="font-weight: 700; font-size: larger;">Total Expense Accural: $
+									<td style="font-weight: 700; font-size: larger;">Total Expense Accrual: $
 										<lightning-formatted-number value={expenseData.totalAmount}
 											maximum-fraction-digits="2" minimum-fraction-digits="2">
 										</lightning-formatted-number>
@@ -257,7 +265,7 @@
 										<h3 style="color: rgb(0, 156, 219);font-size: x-large;font-weight: 700;">
 											Insurance Product Accrual &amp; Expenses</h3>
 									</td>
-									<td style="font-weight: 700; font-size: larger;">Total Expense Accural: $
+									<td style="font-weight: 700; font-size: larger;">Total Expense Accrual: $
 										<lightning-formatted-number value={insuranceData.totalAmount}
 											maximum-fraction-digits="2" minimum-fraction-digits="2">
 										</lightning-formatted-number>
@@ -385,23 +393,27 @@
 									<td style="width:33%;">
 										<h2 style="color: rgb(0, 156, 219);font-weight: 700;">Total
 											Revenue</h2>
-										$<lightning-formatted-number value={totalRevenue} maximum-fraction-digits="2" minimum-fraction-digits="2">
+										$<lightning-formatted-number value={totalRevenue} maximum-fraction-digits="2"
+											minimum-fraction-digits="2">
 										</lightning-formatted-number>
 									</td>
 									<td style="width:33%;">
 										<h2 style="color: rgb(0, 156, 219);font-weight: 700;">Total
 											Expenses</h2>
-										$<lightning-formatted-number value={totalExpense} maximum-fraction-digits="2" minimum-fraction-digits="2">
+										$<lightning-formatted-number value={totalExpense} maximum-fraction-digits="2"
+											minimum-fraction-digits="2">
 										</lightning-formatted-number>
 									</td>
 								</tr>
 								<tr>
 									<td style="width:33%;">
 										<h2 style="color: rgb(0, 156, 219);font-weight: 700;">Journal
-											Entry Date</h2>{jedate}</td>
+											Entry Date</h2>{jedate2}
+									</td>
 									<td colspan="2">
 										<h2 style="color: rgb(0, 156, 219);font-weight: 700;">Journal
-											Entry Name</h2>{journalEntryName}</td>
+											Entry Name</h2>{journalEntryName}
+									</td>
 								</tr>
 							</table>
 							<br/>

@@ -5,7 +5,7 @@ public class AccrualTool_Controller {
     {
         system.debug('erpId >> '+erpId);
         AcctSeed__Project__c erpRec ;
-        for(AcctSeed__Project__c erp : [SELECT Id,Name,Stage__c,AcctSeed__Status__c FROM AcctSeed__Project__c WHERE Id=:erpId LIMIT 1]) {
+        for(AcctSeed__Project__c erp : [SELECT Id,Name,Stage__c,AcctSeed__Status__c,(Select Id From Journal_Entries__r) FROM AcctSeed__Project__c WHERE Id=:erpId LIMIT 1]) {
             erpRec = erp;
         }
         return erpRec;
@@ -141,8 +141,8 @@ public class AccrualTool_Controller {
         }
         
         for(AcctSeedERP__Material__c material : [select id,Serial_Number__c,AcctSeedERP__Product__c,AcctSeedERP__Product__r.Name,GMBLASERP__Total_Price__c,
-                                                 AcctSeedERP__Product__r.AcctSeed__Expense_GL_Account__c,AcctSeedERP__Product__r.AcctSeed__Expense_GL_Account__r.Name,
-                                                 AcctSeedERP__Product__r.AcctSeed__Revenue_GL_Account__c,AcctSeedERP__Product__r.AcctSeed__Revenue_GL_Account__r.Name,
+                                                 AcctSeedERP__Product__r.AcctSeed__Expense_GL_Account__c,AcctSeedERP__Product__r.AcctSeed__Expense_GL_Account__r.Name,AcctSeedERP__Product__r.AcctSeed__Expense_GL_Account__r.AcctSeed__Type__c,
+                                                 AcctSeedERP__Product__r.AcctSeed__Revenue_GL_Account__c,AcctSeedERP__Product__r.AcctSeed__Revenue_GL_Account__r.Name,AcctSeedERP__Product__r.AcctSeed__Revenue_GL_Account__r.AcctSeed__Type__c,
                                                  AcctSeedERP__Product__r.RecordType.Name,
                                                  AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_1__c,AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_1__r.Name,
                                                  AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_2__c,AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_2__r.Name
@@ -150,7 +150,8 @@ public class AccrualTool_Controller {
                                                  where AcctSeedERP__Project__c =:erpId]) 
         {
             prodPrice = new ProductPriceWrapper(material.AcctSeedERP__Product__r.Name,material.GMBLASERP__Total_Price__c);
-            if(material.AcctSeedERP__Product__r.AcctSeed__Expense_GL_Account__c != null) // Expense GL Account 
+            if(material.AcctSeedERP__Product__r.AcctSeed__Expense_GL_Account__c != null 
+               && material.AcctSeedERP__Product__r.AcctSeed__Expense_GL_Account__r.AcctSeed__Type__c == 'Expense') // Expense GL Account 
             {
                 system.debug('Expense Type >> ');
                 //process for both Expense and Insurance
@@ -186,6 +187,13 @@ public class AccrualTool_Controller {
                 }
                 else {
                     
+                    //Use factory price here
+                    ProductPriceWrapper newProdPrice = prodPrice; 
+                    if(factoryPrice.containsKey(material.AcctSeedERP__Product__c)) {
+                        newProdPrice = new ProductPriceWrapper(material.AcctSeedERP__Product__r.Name,factoryPrice.get(material.AcctSeedERP__Product__c));
+                    } else {
+                        continue;
+                    }
                     if(!departmentMapExpense.containsKey(material.AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_2__r.Name)) {
                         departmentMapExpense.put(material.AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_2__r.Name,new Map<String,List<ProductPriceWrapper>>());
                     }
@@ -193,11 +201,6 @@ public class AccrualTool_Controller {
                     
                     if(!prodPriceMapExpense.containsKey(material.AcctSeedERP__Product__r.AcctSeed__Expense_GL_Account__r.Name)) {
                         prodPriceMapExpense.put(material.AcctSeedERP__Product__r.AcctSeed__Expense_GL_Account__r.Name, new List<ProductPriceWrapper>());
-                    }
-                    //Use factory price here
-                    ProductPriceWrapper newProdPrice = prodPrice; 
-                    if(factoryPrice.containsKey(material.AcctSeedERP__Product__c)) {
-                        newProdPrice = new ProductPriceWrapper(material.AcctSeedERP__Product__r.Name,factoryPrice.get(material.AcctSeedERP__Product__c));
                     }
                     prodPriceMapExpense.get(material.AcctSeedERP__Product__r.AcctSeed__Expense_GL_Account__r.Name).add(newProdPrice);
                     
@@ -220,7 +223,8 @@ public class AccrualTool_Controller {
                     }
                 }
             } 
-            if(material.AcctSeedERP__Product__r.AcctSeed__Revenue_GL_Account__c != null)
+            if(material.AcctSeedERP__Product__r.AcctSeed__Revenue_GL_Account__c != null 
+               && material.AcctSeedERP__Product__r.AcctSeed__Revenue_GL_Account__r.AcctSeed__Type__c == 'Revenue')
             {
                 system.debug('revenue GL >> ');
                 //process for Revenue 
