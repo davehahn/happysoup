@@ -1,37 +1,43 @@
 {
-  "activeBrandingSetId" : "555edc6f-c9bd-4949-b8a4-7b8a2df25dda",
-  "customCSS" : ".cCenterPanel {\n    margin-top:0 !important;\n    padding-left:0 !important;\n    padding-right:0 !important;\n    max-width: initial !important;\n    margin: 0 !important;\n}\n\n.contentRegion {\n    padding:0 !important;\n}",
+  "activeBrandingSetId" : "65c4bc1e-b9a3-4379-bce4-5ba81ed031d6",
+  "customCSS" : "",
   "developerName" : "starter",
-  "id" : "cb9ce554-7cb7-4845-a50f-f636bec23b8f",
+  "id" : "cf890d89-f419-464b-bd9f-7aa9298c768a",
   "label" : "Build Your Own",
   "layouts" : {
-    "Inner" : "2cbb8c68-3565-4073-b1b5-a8830a10c091",
-    "Login" : "4badd995-17db-4d3b-9555-4c26ca0fd649"
+    "Inner" : "8cfe0fc2-f02c-4521-9ac3-50eb7c9341a6",
+    "LjRIQBtYi7qqpINdY2ZXVvjeHANIyj" : "2f48bb04-e284-4fcb-be76-0f71b9071e9f",
+    "Login" : "b8b34048-e8d7-4f1b-b344-0170123f955f",
+    "ServiceNotAvailable" : "ada04d58-5c2b-49ce-b8e8-b56310b4c717",
+    "cd0dYtLtHWXDa2NoGbIYFZXVtDfx3R" : "69eaaf7b-3d57-4eee-96e9-0aaa008c7036"
   },
   "type" : "theme",
   "views" : [ {
     "componentAttributes" : { },
     "componentName" : "salesforceIdentity:loginBody2",
-    "id" : "4badd995-17db-4d3b-9555-4c26ca0fd649",
+    "id" : "b8b34048-e8d7-4f1b-b344-0170123f955f",
     "label" : "Login",
     "regions" : [ {
-      "id" : "036f1907-4a5f-4278-a9ab-41d9192920e7",
+      "id" : "cb44d7d9-6692-4e78-89ae-dfbb984ce4ce",
       "regionName" : "header",
       "type" : "region"
     }, {
-      "id" : "59c6a13d-f858-4470-bfa4-461cb62a5699",
+      "id" : "277f4034-e168-4be2-9245-63de76faca2c",
       "regionName" : "content",
       "type" : "region"
     }, {
-      "id" : "bc5ed23d-b042-4e25-9ba7-5920d1e21670",
+      "id" : "e5090778-70b2-4c34-9922-7b63cf7a2aaa",
       "regionName" : "footer",
       "type" : "region"
     } ],
     "type" : "view"
   }, {
-    "componentAttributes" : { },
+    "componentAttributes" : {
+      "fixedPageWidth" : 1440,
+      "isPageWidthFixed" : false
+    },
     "componentName" : "siteforce:starterBody",
-    "id" : "2cbb8c68-3565-4073-b1b5-a8830a10c091",
+    "id" : "8cfe0fc2-f02c-4521-9ac3-50eb7c9341a6",
     "label" : "Default",
     "regions" : [ {
       "components" : [ {
@@ -44,11 +50,11 @@
           } ]
         },
         "componentName" : "forceCommunity:globalSearchInput",
-        "id" : "701d12b2-2404-4ef8-86c2-3a8f39b68961",
+        "id" : "1ad01ded-70fd-4c54-b2b7-0932b258f1df",
         "renditionMap" : { },
         "type" : "component"
       } ],
-      "id" : "3175ce1a-6928-4ca6-adb8-8aae7439125f",
+      "id" : "5d466300-b21b-40f7-9a83-65ce61a3b933",
       "regionName" : "search",
       "type" : "region"
     }, {
@@ -65,17 +71,17 @@
           "loginLabel" : "Login",
           "logoutLabel" : "Logout",
           "myAccountLabel" : "My Account",
-          "showAccountManagement" : false,
+          "showAccountManagement" : true,
           "showUserSettings" : true,
           "userSettingsLabel" : "My Settings",
           "viewProfileLabel" : "My Profile"
         },
         "componentName" : "selfService:userProfileMenu",
-        "id" : "0a78179e-2684-45d7-8f66-f77b2ff15ce9",
+        "id" : "cbab0042-9d87-40e1-9dbe-d00af26bc647",
         "renditionMap" : { },
         "type" : "component"
       } ],
-      "id" : "82897bc0-57dc-4b8f-bcb8-b2ddbae42e1d",
+      "id" : "72f727d2-398d-4b5d-871a-aa829c28afbe",
       "regionName" : "profileMenu",
       "type" : "region"
     }, {
@@ -86,12 +92,342 @@
           "hideHomeText" : true
         },
         "componentName" : "forceCommunity:globalNavigation",
-        "id" : "91ad8b34-9de6-42c5-bd6d-cb7b86775bc1",
+        "id" : "71da0b5f-f130-48d3-b778-91d0bde0137e",
         "renditionMap" : { },
         "type" : "component"
       } ],
-      "id" : "ce7f90f8-0efe-4ff0-a7af-50391d1fa7de",
+      "id" : "1a0c742b-2f5b-4c33-a1ac-f47b2611503c",
       "regionName" : "navBar",
+      "type" : "region"
+    } ],
+    "type" : "view"
+  }, {
+    "componentAttributes" : { },
+    "componentName" : "c:factoryStoreThemeLayout",
+    "id" : "2f48bb04-e284-4fcb-be76-0f71b9071e9f",
+    "label" : "Factory Store Standard",
+    "regions" : [ {
+      "components" : [ {
+        "componentAttributes" : {
+          "maxAutoCompleteResults" : 5,
+          "searchLabel" : "Search...",
+          "searchObjects" : [ {
+            "isPublic" : true,
+            "name" : "Account"
+          } ]
+        },
+        "componentName" : "forceCommunity:globalSearchInput",
+        "id" : "2e4c1d7b-9e17-4b7f-9c7c-1d674c9062ec",
+        "renditionMap" : { },
+        "type" : "component"
+      } ],
+      "id" : "98ffcbf4-c124-4bd1-a207-140f0c33870b",
+      "regionName" : "search",
+      "type" : "region"
+    }, {
+      "components" : [ {
+        "componentAttributes" : {
+          "accountManagementLabel" : "Account Management",
+          "communityBuilderLabel" : "Experience Builder",
+          "communitySetupLabel" : "Salesforce Setup",
+          "contactSupportLabel" : "Contact Support",
+          "filterName" : "MyCases",
+          "homeLabel" : "Home",
+          "includeContactSupport" : true,
+          "includeMessages" : false,
+          "loginLabel" : "Login",
+          "logoutLabel" : "Logout",
+          "myAccountLabel" : "My Account",
+          "showAccountManagement" : true,
+          "showUserSettings" : true,
+          "userSettingsLabel" : "My Settings",
+          "viewProfileLabel" : "My Profile"
+        },
+        "componentName" : "selfService:userProfileMenu",
+        "id" : "bd5fc825-8348-4db2-89cf-1a64fbd2a4db",
+        "renditionMap" : { },
+        "type" : "component"
+      } ],
+      "id" : "1a344503-e1dc-4f3b-b607-78003bee1067",
+      "regionName" : "profileMenu",
+      "type" : "region"
+    }, {
+      "components" : [ {
+        "componentAttributes" : {
+          "NavigationMenuEditorRefresh" : "",
+          "hideAppLauncher" : true,
+          "hideHomeText" : true
+        },
+        "componentName" : "forceCommunity:globalNavigation",
+        "id" : "64f76de4-841f-421e-8e35-5e2a616770a7",
+        "renditionMap" : { },
+        "type" : "component"
+      } ],
+      "id" : "d2d9b601-a48b-4ed4-a21a-9a2597535202",
+      "regionName" : "navBar",
+      "type" : "region"
+    }, {
+      "id" : "5a37f5fc-aee6-43a0-86e2-5609f92fc499",
+      "regionName" : "header",
+      "type" : "region"
+    }, {
+      "id" : "67de39a1-d59d-475c-b88b-8d4fd939b2a5",
+      "regionName" : "footer",
+      "type" : "region"
+    }, {
+      "id" : "b5718a62-9081-4e84-8a6d-bcae6f35162a",
+      "regionName" : "globalHeader",
+      "type" : "region"
+    }, {
+      "id" : "f66cc7cc-15b1-4fd2-9e6c-bab03dd8b8ee",
+      "regionName" : "globalFooter",
+      "type" : "region"
+    }, {
+      "id" : "ad76ddc4-01d7-40cc-bfd3-80f932a9b628",
+      "regionName" : "storeHeader",
+      "type" : "region"
+    }, {
+      "id" : "0583c4b1-d884-4c14-9002-b44241170dfe",
+      "regionName" : "storeFooter",
+      "type" : "region"
+    }, {
+      "id" : "30b77103-f0f1-4efa-b963-775ef53993d1",
+      "regionName" : "locationAndHours",
+      "type" : "region"
+    }, {
+      "components" : [ {
+        "componentAttributes" : {
+          "layout" : "Condensed",
+          "sectionWidth" : "Container",
+          "zoomLevel" : "11"
+        },
+        "componentName" : "c:factoryStoreHoursAndLocation",
+        "id" : "8c3f8626-e7a3-4e5b-afa8-86c8bbafcdce",
+        "renditionMap" : { },
+        "type" : "component"
+      } ],
+      "id" : "c0ce4ed1-46c7-4c18-9ba9-72bb8ecb16cf",
+      "regionName" : "storeLocationAndHours",
+      "type" : "region"
+    }, {
+      "id" : "97378031-c442-4f16-9472-0e9c5eda4b15",
+      "regionName" : "storeNavigation",
+      "type" : "region"
+    }, {
+      "components" : [ {
+        "componentAttributes" : {
+          "phoneParts" : "(705) 866-2821",
+          "phoneSales" : "(705) 866-2821",
+          "phoneService" : "(705) 866-2821"
+        },
+        "componentName" : "c:factoryStorePhoneNumbers",
+        "id" : "bfa58d4d-fec5-4d78-bc65-1354b2a796b5",
+        "renditionMap" : { },
+        "type" : "component"
+      } ],
+      "id" : "768c4015-6f50-4d27-8532-39c557c82bc0",
+      "regionName" : "storePhoneNumbers",
+      "type" : "region"
+    }, {
+      "components" : [ {
+        "componentAttributes" : {
+          "richTextValue" : "<p><span style=\"font-size: 10px;\">Disclaimer: Prices, rates and specifications are subject to change or error. Pictures may show options. Ask for complete details at your local Legend Dealer. All illustrations, photographs and specifications in this website are based on the latest product information. See actual boat for complete accuracy. Your final pricing and product details will be available at your time of purchase. Legend reserves the right to make changes at any time, without notice, in prices, colours, materials, equipment, specifications and models, and to discontinue models or equipment. For information on accessories, contact your local Legend dealer.</span></p><p><br></p><p><span style=\"font-size: 10px;\">Please refer to your provincial laws regarding trailer brakes and ensure that your boat package and tow vehicle comply with the regulations in the provinces you intend to travel in. Brakes may be required in certain circumstances and can be purchased as an option or your trailer model can be upgraded before delivery if brakes are not available on certain trailers. It is your sole responsibility to ensure you comply with all provincial brake requirements for vehicles and also that you always operate your tow vehicle safely. Legend Boats accepts no responsibility with regards to provincial compliance.</span></p>"
+        },
+        "componentName" : "forceCommunity:richTextInline",
+        "id" : "d6ce033e-f7c2-4d9f-9707-1f8a5e835049",
+        "renditionMap" : { },
+        "type" : "component"
+      } ],
+      "id" : "c2764c9d-2d0e-4b0d-96b4-328c78359532",
+      "regionName" : "storeLegal",
+      "type" : "region"
+    }, {
+      "components" : [ {
+        "componentAttributes" : {
+          "toolsDownloadCatalogue" : true,
+          "toolsFindADealer" : false,
+          "toolsRequestAQuote" : true,
+          "toolsShowroomVisit" : true
+        },
+        "componentName" : "c:communitySharedFooterShoppingTools",
+        "id" : "93fd570d-9e16-4d88-ad8d-2c91107ce0c1",
+        "renditionMap" : { },
+        "type" : "component"
+      } ],
+      "id" : "4d510b8d-e5ed-4852-8dd7-d74dc02df3bf",
+      "regionName" : "storeTools",
+      "type" : "region"
+    }, {
+      "components" : [ {
+        "componentAttributes" : {
+          "cookiePolicyURL" : "https://www.legendboats.com/cookie-policy/",
+          "privacyPolicyURL" : "https://www.legendboats.com/privacy-policy/",
+          "showCookiePolicyLink" : true,
+          "showPrivacyPolicyLink" : true,
+          "showTermsLink" : true,
+          "termsURL" : "https://www.legendboats.com/terms-and-conditions/"
+        },
+        "componentName" : "c:communitySharedFooterPolicyLinks",
+        "id" : "c3018fa7-ca4d-4e70-85a0-a82b5215e867",
+        "renditionMap" : { },
+        "type" : "component"
+      } ],
+      "id" : "65c675d3-0bc6-4783-812d-29c2f4a85de6",
+      "regionName" : "storePolicyLinks",
+      "type" : "region"
+    }, {
+      "id" : "d99e91ab-e3c0-4f70-93e9-a781760fa4b0",
+      "regionName" : "homepageContent",
+      "type" : "region"
+    }, {
+      "id" : "8878022e-adf5-4122-afb4-2423f0d1666e",
+      "regionName" : "channelMenu",
+      "type" : "region"
+    }, {
+      "components" : [ {
+        "componentAttributes" : {
+          "storeLogo" : "MCREBZL2PUKBCOLGHWEBJMOP2V2Y"
+        },
+        "componentName" : "c:factoryStoreLogo",
+        "id" : "3b8d1271-b26c-4040-9ff1-e97d8141e8d1",
+        "renditionMap" : { },
+        "type" : "component"
+      } ],
+      "id" : "ea06cace-d52e-4d1a-80eb-b3b12480b1a1",
+      "regionName" : "storeLogo",
+      "type" : "region"
+    }, {
+      "components" : [ {
+        "componentAttributes" : { },
+        "componentName" : "c:factoryStoreFooterStayInTouch",
+        "id" : "58675fe6-40ce-462d-b339-068dc2cfe2af",
+        "renditionMap" : { },
+        "type" : "component"
+      } ],
+      "id" : "5e137a87-40e5-4ecf-b1f5-8ad7917429f1",
+      "regionName" : "stayInTouch",
+      "type" : "region"
+    } ],
+    "type" : "view"
+  }, {
+    "componentAttributes" : { },
+    "componentName" : "c:customerCommThemeLayout",
+    "id" : "69eaaf7b-3d57-4eee-96e9-0aaa008c7036",
+    "label" : "Customer Community",
+    "regions" : [ {
+      "components" : [ {
+        "componentAttributes" : {
+          "maxAutoCompleteResults" : 5,
+          "searchLabel" : "Search...",
+          "searchObjects" : [ {
+            "isPublic" : true,
+            "name" : "Account"
+          } ]
+        },
+        "componentName" : "forceCommunity:globalSearchInput",
+        "id" : "d5215795-b4dc-44ea-aaa9-f6d3bb8a4fcc",
+        "renditionMap" : { },
+        "type" : "component"
+      } ],
+      "id" : "08c83b3a-c8e4-463b-873e-bc7d9fc3211a",
+      "regionName" : "search",
+      "type" : "region"
+    }, {
+      "components" : [ {
+        "componentAttributes" : {
+          "accountManagementLabel" : "Account Management",
+          "communityBuilderLabel" : "Experience Builder",
+          "communitySetupLabel" : "Salesforce Setup",
+          "contactSupportLabel" : "Contact Support",
+          "filterName" : "MyCases",
+          "homeLabel" : "Home",
+          "includeContactSupport" : true,
+          "includeMessages" : false,
+          "loginLabel" : "Login",
+          "logoutLabel" : "Logout",
+          "myAccountLabel" : "My Account",
+          "showAccountManagement" : true,
+          "showUserSettings" : true,
+          "userSettingsLabel" : "My Settings",
+          "viewProfileLabel" : "My Profile"
+        },
+        "componentName" : "selfService:userProfileMenu",
+        "id" : "8b13c9b4-ede0-4b9a-8659-363b37e257eb",
+        "renditionMap" : { },
+        "type" : "component"
+      } ],
+      "id" : "fbd98186-e7e8-4530-984e-c1e79a750e89",
+      "regionName" : "profileMenu",
+      "type" : "region"
+    }, {
+      "components" : [ {
+        "componentAttributes" : {
+          "NavigationMenuEditorRefresh" : "",
+          "hideAppLauncher" : true,
+          "hideHomeText" : true
+        },
+        "componentName" : "forceCommunity:globalNavigation",
+        "id" : "b4044b50-49d9-4248-b622-81e5bf26e345",
+        "renditionMap" : { },
+        "type" : "component"
+      } ],
+      "id" : "541c6266-ec66-472f-ad00-b0dab5b30a4e",
+      "regionName" : "navBar",
+      "type" : "region"
+    }, {
+      "id" : "64e31269-308e-40a4-a2d7-c2d39823b5b8",
+      "regionName" : "langSelector",
+      "type" : "region"
+    }, {
+      "id" : "f80c32fb-889d-498e-a36d-26366d64d8eb",
+      "regionName" : "storePhoneNumbers",
+      "type" : "region"
+    }, {
+      "id" : "7b6de6c5-6e91-45cb-97bd-d26f5dcc3f00",
+      "regionName" : "storeNavigation",
+      "type" : "region"
+    }, {
+      "id" : "b7c9da33-2c0e-4fb3-8108-f5fa3f5899a3",
+      "regionName" : "storeTools",
+      "type" : "region"
+    }, {
+      "id" : "602a40e3-c0d0-4e4b-a7a0-7a9ed29227f5",
+      "regionName" : "storeLegal",
+      "type" : "region"
+    }, {
+      "id" : "9f6d76e9-01d0-47d7-8a88-29316918f26f",
+      "regionName" : "storePolicyLinks",
+      "type" : "region"
+    }, {
+      "id" : "d550a1a0-1b49-4730-84e2-6f222ace4de4",
+      "regionName" : "channelMenu",
+      "type" : "region"
+    }, {
+      "id" : "cb77c899-dd59-4c66-81cc-005bfdba69b1",
+      "regionName" : "contactUs",
+      "type" : "region"
+    } ],
+    "type" : "view"
+  }, {
+    "componentAttributes" : {
+      "fixedPageWidth" : 1170,
+      "headerBgColor" : "rgba(0, 0, 0, 0)",
+      "isHeaderPinned" : false,
+      "isHeroUnderHeader" : false,
+      "isPageWidthFixed" : true,
+      "showHeader" : true,
+      "showHero" : true
+    },
+    "componentName" : "siteforce:themeLayoutStarter",
+    "id" : "ada04d58-5c2b-49ce-b8e8-b56310b4c717",
+    "label" : "ServiceNotAvailable",
+    "regions" : [ {
+      "id" : "425c755b-2e7a-4ea5-929f-188f33f92cdc",
+      "regionName" : "themeHeader",
+      "type" : "region"
+    }, {
+      "id" : "3d24ef92-4df4-4e49-bd03-e63004f6ced2",
+      "regionName" : "themeFooter",
       "type" : "region"
     } ],
     "type" : "view"

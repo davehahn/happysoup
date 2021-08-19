@@ -1,0 +1,134 @@
+{
+  "appPageId" : "af32fb0b-4e3c-4d32-a81c-7e998bce0087",
+  "componentName" : "siteforce:dynamicLayout",
+  "id" : "226df8b0-b619-4d18-82ce-779b4f37bfef",
+  "label" : "Legend Boats Whitefish",
+  "regions" : [ {
+    "components" : [ {
+      "componentAttributes" : {
+        "background" : "background: rgba(0,0,0,0)",
+        "backgroundOverlay" : "rgba(0,0,0,0.5)",
+        "contentAreaWidth" : 100,
+        "sectionConfig" : {
+          "UUID" : "eac2840d-28aa-4ce0-a865-2ef3e9277ff0",
+          "columns" : [ {
+            "UUID" : "8dd8daf8-b6b2-4e88-8f00-f6b326305e9f",
+            "columnKey" : "1",
+            "columnName" : "Column 1",
+            "columnWidth" : "12",
+            "seedComponents" : [ ]
+          } ]
+        },
+        "sectionHeight" : 32
+      },
+      "componentName" : "forceCommunity:section",
+      "id" : "eac2840d-28aa-4ce0-a865-2ef3e9277ff0",
+      "regions" : [ {
+        "components" : [ {
+          "componentAttributes" : {
+            "backgroundImage" : "MCQ5SXOUHOBBGIZKOHACFPXAAXNE",
+            "headingLineOne" : "Legend Boats Sudbury",
+            "headingLineTwo" : "Create memories",
+            "moreInfoBackground" : "MCTPGIFRG5HJBZNOIHNLPFXPMYXQ",
+            "moreInfoButtonLink" : "/our-location",
+            "moreInfoButtonText" : "Click here",
+            "moreInfoHeadingLineOne" : "For more information about",
+            "moreInfoHeadingLineTwo" : "Legend Boats Sudbury",
+            "sectionWidth" : "Screen",
+            "teaserOneBackground" : "MC4DWDSI4VZBF5HG24DZ2GIMADAI",
+            "teaserOneButtonLink" : "/book-a-service-appointment",
+            "teaserOneButtonText" : "Book now",
+            "teaserOneDeck" : "Request your next service appointment today!",
+            "teaserOneHeading" : "Schedule a Service Appointment",
+            "teaserOneLinkTarget" : "Default",
+            "teaserThreeBackground" : "MCEX4HYOJEO5FHZMUNUQ2KL4PU4E",
+            "teaserThreeButtonLink" : "https://support.legendboats.com/s/orientation-videos",
+            "teaserThreeButtonText" : "Watch now",
+            "teaserThreeDeck" : "Get to know your boat. Learn the fundamentals of your Legend to make sure you’re making the most of your time on the water.",
+            "teaserThreeHeading" : "Orientation Videos",
+            "teaserThreeLinkTarget" : "New Tab/Window",
+            "teaserTwoBackground" : "MCNMY52WNNAFDTJN5IX576ZYOYPQ",
+            "teaserTwoButtonLink" : "/new-deck-boats",
+            "teaserTwoButtonText" : "Learn more",
+            "teaserTwoDeck" : "Is it a pontoon? Is it a fishing boat? No, it’s the Vibe. This deck boat offers the best of both worlds.",
+            "teaserTwoHeading" : "New Deck Boats",
+            "teaserTwoLinkTarget" : "Default"
+          },
+          "componentName" : "c:factoryStoreLocationBanner",
+          "id" : "8637fa61-e6e8-43f8-8005-05d66ddd0dfe",
+          "renderPriority" : "NEUTRAL",
+          "renditionMap" : { },
+          "type" : "component"
+        } ],
+        "id" : "8dd8daf8-b6b2-4e88-8f00-f6b326305e9f",
+        "regionLabel" : "Column 1",
+        "regionName" : "1",
+        "renditionMap" : { },
+        "type" : "region"
+      } ],
+      "renderPriority" : "NEUTRAL",
+      "renditionMap" : { },
+      "type" : "component"
+    }, {
+      "componentAttributes" : {
+        "background" : "background: rgba(0,0,0,0)",
+        "backgroundOverlay" : "rgba(0,0,0,0.5)",
+        "contentAreaWidth" : 100,
+        "sectionConfig" : {
+          "UUID" : "c8060ac5-6d1f-4ffd-9e22-28a1eccf5968",
+          "columns" : [ {
+            "UUID" : "1cb1ccf0-725a-4b22-ba33-e57d4458ee33",
+            "columnKey" : "1",
+            "columnName" : "Column 1",
+            "columnWidth" : "12",
+            "seedComponents" : [ ]
+          } ]
+        },
+        "sectionHeight" : 300
+      },
+      "componentName" : "forceCommunity:section",
+      "id" : "c8060ac5-6d1f-4ffd-9e22-28a1eccf5968",
+      "regions" : [ {
+        "components" : [ {
+          "componentAttributes" : {
+            "config" : "{\"dataProviderDefinition\":{\"componentName\":\"forceCommunity:managedContentCollectionDataProvider\",\"attributes\":{\"dataProviderType\":\"NamedCollection\",\"dataProviderInfo\":{\"apiName\":\"All_Deals_and_Promotions\"}}},\"schemaVersion\":\"V2.0\",\"collectionLayoutDefinition\":{\"componentName\":\"forceCommunity:dynamicCollectionCarousel\",\"attributes\":{\"limitItems\":10,\"showProgressIndicator\":true,\"contentIndicatorSpacing\":\"none\",\"showProgressArrows\":true,\"transitionType\":\"slide\",\"transitionSpeed\":600}},\"itemLayoutDefinition\":{\"componentName\":\"forceCommunity:cardLayout\",\"attributes\":{\"showTitle\":true,\"showFeaturedMedia\":true,\"showExcerpt\":true,\"showFlag\":true,\"showEyebrow\":true,\"showMetadata1\":true,\"showMetadata2\":true,\"showDateTime\":true,\"title\":\"{!CurrentItem.Title}\",\"subTitle\":\"{!CurrentItem.Excerpt}\",\"imageUrl\":\"{!CurrentItem.Banner_Graphic.url}\",\"imageAltText\":\"{!CurrentItem.Title}\",\"videoUrl\":\"\",\"flagText\":\"\",\"eyebrowText\":\"{!CurrentItem.Tag}\",\"metadata1Text\":\"\",\"metadata2Text\":\"\",\"datetime\":\"\",\"contentVerticalAlignment\":\"center\",\"textAlignment\":\"left\",\"contentBackgroundColor\":\"#ffffff\",\"componentPadding\":\"none\",\"contentOffset\":\"0\",\"contentOffsetPadding\":\"0\",\"contentOffsetBackgroundColor\":\"#ffffff\",\"borderColor\":\"\",\"componentBorderStyles\":\"\",\"useAspectRatio\":false,\"mediaHeight\":450,\"mediaAspectRatio\":\"16:9\",\"backgroundSize\":\"cover\",\"backgroundPosition\":\"center center\",\"imageAlignment\":\"left\",\"imageWidth\":50,\"imageBorderColor\":\"#ffffff\",\"imageBorderStyles\":\"\",\"flagBackgroundColor\":\"#ff0000\",\"flagTextColor\":\"#ffffff\",\"flagConstraints\":\"media\",\"flagAlignment\":\"top left\",\"flagRotation\":0,\"flagSpacing\":\"medium\",\"flagBorderColor\":\"#ffffff\",\"flagBorderStyles\":\"{\\\"borderTopLeftRadius\\\":{\\\"value\\\":\\\"0\\\"},\\\"borderTopRightRadius\\\":{\\\"value\\\":\\\"0\\\"},\\\"borderBottomRightRadius\\\":{\\\"value\\\":\\\"0\\\"},\\\"borderBottomLeftRadius\\\":{\\\"value\\\":\\\"0\\\"}}\",\"flagTextDecoration\":\"\",\"titleHeadingTag\":\"h3\",\"titleTextColor\":\"\",\"titleFontSize\":\"large\",\"titleTextDecoration\":\"{\\\"bold\\\":true}\",\"showTitleHighlight\":false,\"titleHighlightColor\":\"\",\"subTitleTextColor\":\"\",\"subTitleFontSize\":\"regular\",\"eyebrowTextColor\":\"\",\"eyebrowFontSize\":\"small\",\"eyebrowTextDecoration\":\"{\\\"textTransform\\\":\\\"uppercase\\\",\\\"bold\\\":false,\\\"underline\\\":true}\",\"showEyebrowHighlight\":false,\"eyebrowHighlightColor\":\"\",\"metadataTextColor\":\"rgb(255, 255, 255)\",\"metadataFontSize\":\"regular\",\"metadataTextDecoration\":\"\",\"showMetadata1Highlight\":true,\"metadata1HighlightColor\":\"rgb(37, 116, 169)\",\"showMetadata2Highlight\":false,\"metadata2HighlightColor\":\"\",\"defaultLinksOverrides\":\"{}\",\"additionalLinks\":\"{\\\"links\\\":[],\\\"alignment\\\":\\\"vertical\\\"}\",\"dateFormat\":\"none\",\"displayDayOfWeek\":false,\"timeFormat\":\"none\",\"timeZoneOptions\":\"none\",\"timeZoneDisplay\":\"short\",\"datetimeTextColor\":\"\",\"datetimeFontSize\":\"regular\",\"datetimeTextDecoration\":\"\",\"componentHoverEffect\":\"none\"}}}"
+          },
+          "componentName" : "forceCommunity:dynamicCollection",
+          "id" : "4e41405b-02d5-4419-ba0c-ac3d260a26ae",
+          "renderPriority" : "NEUTRAL",
+          "renditionMap" : { },
+          "type" : "component"
+        } ],
+        "id" : "1cb1ccf0-725a-4b22-ba33-e57d4458ee33",
+        "regionLabel" : "Column 1",
+        "regionName" : "1",
+        "renditionMap" : { },
+        "type" : "region"
+      } ],
+      "renderPriority" : "NEUTRAL",
+      "renditionMap" : { },
+      "type" : "component"
+    } ],
+    "id" : "96dcb5bf-42a0-4467-92f2-c8328ee2526c",
+    "regionName" : "content",
+    "type" : "region"
+  }, {
+    "components" : [ {
+      "componentAttributes" : {
+        "customHeadTags" : "",
+        "description" : "",
+        "title" : "Home"
+      },
+      "componentName" : "forceCommunity:seoAssistant",
+      "id" : "ee840797-1983-4711-981b-b29835393f68",
+      "renditionMap" : { },
+      "type" : "component"
+    } ],
+    "id" : "9d2b886b-96d2-494e-bb4f-1fcf0a8dbecb",
+    "regionName" : "sfdcHiddenRegion",
+    "type" : "region"
+  } ],
+  "themeLayoutType" : "LjRIQBtYi7qqpINdY2ZXVvjeHANIyj",
+  "type" : "view",
+  "viewType" : "home"
+}
