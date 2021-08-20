@@ -1,4 +1,4 @@
-<apex:component >
+<apex:component layout="none">
   <apex:attribute name="rowClass"
                   description="The CSS class applied to the row"
                   type="String"
@@ -16,19 +16,41 @@
                   type="String"
                   required="true" />
 
-  <p class="itemRow {!rowClass}">
-    <span class='quantity'>
+<!--  <p class="itemRow {!rowClass}">-->
+<!--    <span class='quantity'>-->
+<!--      <apex:outputText value="{!IF(quantity==null, '', quantity)}" />-->
+<!--    </span>-->
+<!--    <apex:outputText value="{!IF(description==null, '', description)}" />-->
+<!--    <span class="cost">-->
+<!--      <apex:outputText value="" rendered="{!cost == null}" />-->
+<!--      <apex:outputText value="{!cost}" rendered="{!cost == 'Included'}" />-->
+<!--      <apex:outputText value="${0, number, ###,###,###,##0.00}"-->
+<!--                       rendered="{!AND( cost != null, cost != 'Included' )}">-->
+<!--        <apex:param value="{!VALUE(cost)}"/>-->
+<!--      </apex:outputText>-->
+<!--    </span>-->
+<!--  </p>-->
+
+  <tr class="{!rowClass}">
+    <td class="w5">
       <apex:outputText value="{!IF(quantity==null, '', quantity)}" />
-    </span>
-    <apex:outputText value="{!IF(description==null, '', description)}" />
-    <span class="cost">
+    </td>
+    <td class="w70">
+      <apex:outputPanel layout="none" rendered="{!rowClass == 'feature-row'}">
+        <div style="display:inline-block; padding: 0 5px 0 10px;">
+          -
+        </div>
+      </apex:outputPanel>
+      <apex:outputText value="{!IF(description==null, '', description)}" />
+    </td>
+    <td class="w20 right">
       <apex:outputText value="" rendered="{!cost == null}" />
       <apex:outputText value="{!cost}" rendered="{!cost == 'Included'}" />
       <apex:outputText value="${0, number, ###,###,###,##0.00}"
                        rendered="{!AND( cost != null, cost != 'Included' )}">
         <apex:param value="{!VALUE(cost)}"/>
       </apex:outputText>
-    </span>
-  </p>
+    </td>
+  </tr>
 
 </apex:component>

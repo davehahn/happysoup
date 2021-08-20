@@ -21,9 +21,9 @@
 
         <div>
           <img src="{!URLFOR($Resource.LegendPDF,'Icons/Email.png')}" />
-          <p>info@legendboats.com</p>
-          <p>customercare@legendboats.com</p>
-          <p>sales@legendboats.com</p>
+          <p style="font-size:11px;">info@legendboats.com</p>
+          <p style="font-size:11px;">customercare@legendboats.com</p>
+          <p style="font-size:11px;">sales@legendboats.com</p>
         </div>
 
         <div>
@@ -362,59 +362,59 @@
 
       <table class="itemsTable">
         <thead>
-          <tr>
-            <td colspan="3">Description</td>
-            <td>Numéro de Série</td>
-          </tr>
+        <tr>
+          <td colspan="3">Description</td>
+          <td>Numéro de Série</td>
+        </tr>
         </thead>
         <apex:variable value="{!1}" var="rowCount" />
         <tbody>
-          <apex:outputPanel layout="none" rendered="{!boatBuilder.selectedBoatId != null}">
-            <tr class="{!IF(MOD(rowCount,2)=0,'even','odd')}">
-              <td class="w5">{!boatBuilder.opportunity.Boat_Model_Year__c}</td>
-              <td class="w10">{!boatBuilder.selectedBoat.Make__c}</td>
-              <td class="w44">{!boatBuilder.selectedBoat.Name_FR__c}</td>
-              <td class="w25">&nbsp;</td>
-              <td class="w15 right">
-                <apex:outputText value="${0, number, ###,###,###,##0.00}">
-                  <apex:param value="{!boatBuilder.basePrice}"/>
-                </apex:outputText>
-              </td>
-            </tr>
-            <apex:variable var="rowCount" value="{!rowCount+1}" />
-          </apex:outputPanel>
+        <apex:outputPanel layout="none" rendered="{!boatBuilder.selectedBoatId != null}">
+          <tr class="{!IF(MOD(rowCount,2)=0,'even','odd')}">
+            <td class="w5">{!boatBuilder.opportunity.Boat_Model_Year__c}</td>
+            <td class="w10">{!boatBuilder.selectedBoat.Make__c}</td>
+            <td class="w44">{!boatBuilder.selectedBoat.Name_FR__c}</td>
+            <td class="w25">&nbsp;</td>
+            <td class="w15 right">
+              <apex:outputText value="${0, number, ###,###,###,##0.00}">
+                <apex:param value="{!boatBuilder.basePrice}"/>
+              </apex:outputText>
+            </td>
+          </tr>
+          <apex:variable var="rowCount" value="{!rowCount+1}" />
+        </apex:outputPanel>
 
-          <apex:outputPanel layout="none" rendered="{!boatBuilder.selectedMotorId != null}">
-            <tr class="{!IF(MOD(rowCount,2)=0,'even','odd')}">
-              <td class="w5">{!boatBuilder.opportunity.Boat_Model_Year__c}</td>
-              <td class="w10">{!boatBuilder.selectedMotor.Make__c}</td>
-              <td class="w44">{!boatBuilder.selectedMotor.Name_FR__c}</td>
-              <td class="w25">&nbsp;</td>
-              <td class="w15 right">$ {!boatBuilder.motorUpgradePrice}</td>
-            </tr>
-            <apex:variable var="rowCount" value="{!rowCount+1}" />
-          </apex:outputPanel>
+        <apex:outputPanel layout="none" rendered="{!boatBuilder.selectedMotorId != null}">
+          <tr class="{!IF(MOD(rowCount,2)=0,'even','odd')}">
+            <td class="w5">{!boatBuilder.opportunity.Boat_Model_Year__c}</td>
+            <td class="w10">{!boatBuilder.selectedMotor.Make__c}</td>
+            <td class="w44">{!boatBuilder.selectedMotor.Name_FR__c}</td>
+            <td class="w25">&nbsp;</td>
+            <td class="w15 right">$ {!boatBuilder.motorUpgradePrice}</td>
+          </tr>
+          <apex:variable var="rowCount" value="{!rowCount+1}" />
+        </apex:outputPanel>
 
-          <apex:outputPanel layout="none" rendered="{!boatBuilder.selectedTrailerId != null}">
-            <tr class="{!IF(MOD(rowCount,2)=0,'even','odd')}">
-              <td class="w5">{!boatBuilder.opportunity.Trailer_Model_Year__c}</td>
-              <td class="w10">{!boatBuilder.selectedTrailer.Make__c}</td>
-              <td class="w44">{!boatBuilder.selectedTrailer.Name_FR__c}</td>
-              <td class="w25">&nbsp;</td>
-              <td class="w15 right">$ {!boatBuilder.trailerUpgradePrice}</td>
-            </tr>
-            <apex:variable var="rowCount" value="{!rowCount+1}" />
-          </apex:outputPanel>
+        <apex:outputPanel layout="none" rendered="{!boatBuilder.selectedTrailerId != null}">
+          <tr class="{!IF(MOD(rowCount,2)=0,'even','odd')}">
+            <td class="w5">{!boatBuilder.opportunity.Trailer_Model_Year__c}</td>
+            <td class="w10">{!boatBuilder.selectedTrailer.Make__c}</td>
+            <td class="w44">{!boatBuilder.selectedTrailer.Name_FR__c}</td>
+            <td class="w25">&nbsp;</td>
+            <td class="w15 right">$ {!boatBuilder.trailerUpgradePrice}</td>
+          </tr>
+          <apex:variable var="rowCount" value="{!rowCount+1}" />
+        </apex:outputPanel>
 
-          <apex:outputPanel layout="none" rendered="{!boatBuilder.selectedTrollingMotorId != null}">
-            <tr class="{!IF(MOD(rowCount,2)=0,'even','odd')}">
-              <td class="w5">{!boatBuilder.opportunity.Boat_Model_Year__c}</td>
-              <td class="w10">{!boatBuilder.selectedTrollingMotor.Make__c}</td>
-              <td class="w44">{!boatBuilder.selectedTrollingMotor.Name_FR__c}</td>
-              <td class="w25">&nbsp;</td>
-              <td class="w15 right">$ {!boatBuilder.trollingMotorUpgradePrice}</td>
-            </tr>
-          </apex:outputPanel>
+        <apex:outputPanel layout="none" rendered="{!boatBuilder.selectedTrollingMotorId != null}">
+          <tr class="{!IF(MOD(rowCount,2)=0,'even','odd')}">
+            <td class="w5">{!boatBuilder.opportunity.Boat_Model_Year__c}</td>
+            <td class="w10">{!boatBuilder.selectedTrollingMotor.Make__c}</td>
+            <td class="w44">{!boatBuilder.selectedTrollingMotor.Name_FR__c}</td>
+            <td class="w25">&nbsp;</td>
+            <td class="w15 right">$ {!boatBuilder.trollingMotorUpgradePrice}</td>
+          </tr>
+        </apex:outputPanel>
 
         </tbody>
 
@@ -431,139 +431,119 @@
 
         <apex:outputPanel >
 
-          <h3>Options &amp; Accessoires</h3>
-          <apex:variable value="{!1}" var="rowCount" />
-          <apex:variable value="{!0}" var="optionsTotal" />
-          <!-- +++++++++++++++++ Motor Options Items ++++++++++++++++++ -->
-          <apex:outputPanel layout="none" rendered="{!boatBuilder.selectedMotor != null}">
-            <apex:variable value="{!boatBuilder.selectedItemsMap['motor']}" var="items" />
+          <table class="itemsTable">
+            <thead>
+            <tr>
+              <td colspan="3">Options &amp; Accessoires</td>
+            </tr>
+            </thead>
+
+            <tbody>
+            <apex:variable value="{!0}" var="optionsTotal" />
+
+            <!-- +++++++++++++++++ Motor Options Items ++++++++++++++++++ -->
+            <apex:outputPanel layout="none" rendered="{!boatBuilder.selectedMotor != null}">
+              <apex:variable value="{!boatBuilder.selectedItemsMap['motor']}" var="items" />
+              <apex:repeat value="{!items}" var="key">
+                <c:InvoiceOptionLine rowClass=""
+                                     quantity="{!items[key].quantity}"
+                                     description="{!items[key].description_FR}"
+                                     cost="{!items[key].upgrade_cost}" />
+
+                <apex:variable value="{!optionsTotal + (IF(ISNUMBER(items[key].upgrade_cost), VALUE(items[key].upgrade_cost), 0) ) }" var="optionsTotal" />
+              </apex:repeat>
+            </apex:outputPanel>
+            <!-- ================= Motor Options Items ================== -->
+
+            <!-- +++++++++++++++++ Trailer Options Items ++++++++++++++++++ -->
+            <apex:outputPanel layout="none" rendered="{!boatBuilder.selectedTrailer != null}">
+              <apex:variable value="{!boatBuilder.selectedItemsMap['trailer']}" var="items" />
+              <apex:repeat value="{!items}" var="key">
+                <c:InvoiceOptionLine rowClass=""
+                                     quantity="{!items[key].quantity}"
+                                     description="{!items[key].description_FR}"
+                                     cost="{!items[key].upgrade_cost}" />
+                <apex:variable value="{!optionsTotal + (IF(ISNUMBER(items[key].upgrade_cost), VALUE(items[key].upgrade_cost), 0) ) }" var="optionsTotal" />
+              </apex:repeat>
+            </apex:outputPanel>
+            <!-- ================= Trailer Options Items ================== -->
+
+            <!-- +++++++++++++++++ Trolling Motor Options Items ++++++++++++++++++ -->
+            <apex:outputPanel layout="none" rendered="{!boatBuilder.selectedTrollingMotor != null}">
+              <apex:variable value="{!boatBuilder.selectedItemsMap['trolling motor']}" var="items" />
+              <apex:repeat value="{!items}" var="key">
+                <c:InvoiceOptionLine rowClass=""
+                                     quantity="{!items[key].quantity}"
+                                     description="{!items[key].description_FR}"
+                                     cost="{!items[key].upgrade_cost}" />
+                <apex:variable value="{!optionsTotal + (IF(ISNUMBER(items[key].upgrade_cost), VALUE(items[key].upgrade_cost), 0) ) }" var="optionsTotal" />
+              </apex:repeat>
+            </apex:outputPanel>
+            <!-- ================= Trolling Motor Options Items ================== -->
+
+            <!-- ++++++++++++++++++ BOAT OPTIONS ++++++++++++++++++++++++++++++++++ -->
+            <apex:variable value="{!boatBuilder.selectedItemsMap['boat']}" var="items" />
 
             <apex:repeat value="{!items}" var="key">
-
-              <c:InvoiceOptionLine rowClass="itemRow {!IF(MOD(rowCount,2)=0,'even','odd')}"
+              <c:InvoiceOptionLine rowClass="{!IF(items[key].features.size > 0, 'has-features', '')}"
                                    quantity="{!items[key].quantity}"
                                    description="{!items[key].description_FR}"
-                                   cost="{!items[key].upgrade_cost}" />
-
-              <apex:variable var="rowCount" value="{!rowCount+1}" />
+                                   cost="{!items[key].upgrade_cost}"/>
               <apex:variable value="{!optionsTotal + (IF(ISNUMBER(items[key].upgrade_cost), VALUE(items[key].upgrade_cost), 0) ) }" var="optionsTotal" />
+
+              <!-- ==== FEATURES ==== -->
+              <apex:outputPanel layout="none" rendered="{!items[key].features.size > 0}">
+                <apex:repeat value="{!items[key].featuresFR}" var="feature">
+                  <c:InvoiceOptionLine rowClass="feature-row"
+                                       description="{!feature}"
+                                       cost="Included"/>
+                </apex:repeat>
+              </apex:outputPanel>
+              <!-- ++++ /FEATURES +++ -->
+
+              <!-- ++++ SUB ITEMS ++++ -->
+              <apex:repeat value="{!items[key].subItems}" var="subkey">
+                <apex:variable value="{!items[key].subItems[subkey]}"
+                               var="subItem" />
+                <c:InvoiceOptionLine rowClass="subItemRow"
+                                     quantity="{!subItem.quantity}"
+                                     description="{!subItem.description_FR}"
+                                     cost="{!subItem.upgrade_cost}"/>
+                <apex:variable value="{!optionsTotal + (IF(CONTAINS(subItem.upgrade_cost, 'Included'), 0, VALUE(subItem.upgrade_cost) ) ) }" var="optionsTotal" />
+              </apex:repeat>
+              <!-- ==== /SUB ITEMS === -->
+
             </apex:repeat>
-          </apex:outputPanel>
-          <!-- ================= Motor Options Items ================== -->
+            <!-- ============================= /BOAT OPTIONS =================== -->
 
-          <!-- +++++++++++++++++ Trailer Options Items ++++++++++++++++++ -->
-          <apex:outputPanel layout="none" rendered="{!boatBuilder.selectedTrailer != null}">
-            <apex:variable value="{!boatBuilder.selectedItemsMap['trailer']}" var="items" />
+            <!-- +++++++++++++++++++++++++++++ ADDITIONAL ACCESORIES +++++++++++ -->
+            <apex:outputPanel layout="none" rendered="{!boatBuilder.additionalAccessories != null}">
+              <apex:repeat value="{!boatBuilder.additionalAccessories}" var="item">
+                <c:InvoiceOptionLine rowClass=""
+                                     quantity="{!item.quantity}"
+                                     description="{!item.productNameFR}, (${!item.unitPrice} ea.)"
+                                     cost="{!TEXT(item.totalPrice)}" />
+                <apex:variable value="{!optionsTotal + item.totalPrice }" var="optionsTotal" />
+              </apex:repeat>
 
-            <apex:repeat value="{!items}" var="key">
+            </apex:outputPanel>
+            <!-- ============================ /ADDITIONAL ACCESSORIES ============= -->
 
-              <c:InvoiceOptionLine rowClass="itemRow {!IF(MOD(rowCount,2)=0,'even','odd')}"
-                                   quantity="{!items[key].quantity}"
-                                   description="{!items[key].description_FR}"
-                                   cost="{!items[key].upgrade_cost}" />
+            <!-- +++++++ SUB TOTAL ++++ -->
+            <tr class="subTotal">
+              <td colspan="2">
+                Sous-Total
+              </td>
+              <td class="w35 right">
+                <apex:outputText value="${0, number, ###,###,###,##0.00}">
+                  <apex:param value="{!optionsTotal}"/>
+                </apex:outputText>
+              </td>
+            </tr>
+            <!-- ===== /SUB Total ==== -->
+            </tbody>
+          </table>
 
-              <apex:variable var="rowCount" value="{!rowCount+1}" />
-              <apex:variable value="{!optionsTotal + (IF(ISNUMBER(items[key].upgrade_cost), VALUE(items[key].upgrade_cost), 0) ) }" var="optionsTotal" />
-              <!-- <apex:variable value="{!optionsTotal + VALUE(items[key].upgrade_cost) }" var="optionsTotal" /> -->
-            </apex:repeat>
-          </apex:outputPanel>
-          <!-- ================= Trailer Options Items ================== -->
-
-          <!-- +++++++++++++++++ Trolling Motor Options Items ++++++++++++++++++ -->
-          <apex:outputPanel layout="none" rendered="{!boatBuilder.selectedTrollingMotor != null}">
-            <apex:variable value="{!boatBuilder.selectedItemsMap['trolling motor']}" var="items" />
-
-            <apex:repeat value="{!items}" var="key">
-
-              <c:InvoiceOptionLine rowClass="itemRow {!IF(MOD(rowCount,2)=0,'even','odd')}"
-                                   quantity="{!items[key].quantity}"
-                                   description="{!items[key].description_FR}"
-                                   cost="{!items[key].upgrade_cost}" />
-
-              <apex:variable var="rowCount" value="{!rowCount+1}" />
-              <apex:variable value="{!optionsTotal + (IF(ISNUMBER(items[key].upgrade_cost), VALUE(items[key].upgrade_cost), 0) ) }" var="optionsTotal" />
-              <!-- <apex:variable value="{!optionsTotal + VALUE(items[key].upgrade_cost) }" var="optionsTotal" /> -->
-            </apex:repeat>
-          </apex:outputPanel>
-          <!-- ================= Trolling Motor Options Items ================== -->
-
-          <!-- ++++++++++++++++++ BOAT OPTIONS ++++++++++++++++++++++++++++++++++ -->
-          <apex:variable value="{!boatBuilder.selectedItemsMap['boat']}" var="items" />
-
-          <apex:repeat value="{!items}" var="key">
-
-            <c:InvoiceOptionLine rowClass="itemRow {!IF(MOD(rowCount,2)=0,'even','odd')}"
-                                 quantity="{!items[key].quantity}"
-                                 description="{!items[key].description_FR}"
-                                 cost="{!items[key].upgrade_cost}" />
-
-            <apex:variable value="{!rowCount+1}" var="rowCount" />
-            <apex:variable value="{!optionsTotal + (IF(ISNUMBER(items[key].upgrade_cost), VALUE(items[key].upgrade_cost), 0) ) }" var="optionsTotal" />
-
-            <!-- Features contained on Item -->
-            <apex:repeat value="{!items[key].featuresFR}" var="feature">
-              <c:InvoiceOptionLine rowClass="itemRow subItemRow {!IF(MOD(rowCount,2)=0,'even','odd')}"
-                                   description="{!feature}"
-                                   cost="Included" />
-
-              <apex:variable value="{!rowCount+1}" var="rowCount" />
-            </apex:repeat>
-            <!-- /Features contained on Item -->
-
-            <apex:repeat value="{!items[key].subItems}" var="subkey">
-              <apex:variable value="{!items[key].subItems[subkey]}"
-                             var="subItem" />
-
-              <c:InvoiceOptionLine rowClass="itemRow subItemRow {!IF(MOD(rowCount,2)=0,'even','odd')}"
-                                   quantity="{!subItem.quantity}"
-                                   description="{!subItem.description_FR}"
-                                   cost="{!subItem.upgrade_cost}" />
-
-              <apex:variable value="{!rowCount+1}" var="rowCount" />
-              <apex:variable value="{!optionsTotal + (IF(CONTAINS(subItem.upgrade_cost, 'Included'), 0, VALUE(subItem.upgrade_cost) ) ) }" var="optionsTotal" />
-            </apex:repeat>
-          <!-- </div> -->
-          </apex:repeat>
-          <!-- ============================= /BOAT OPTIONS =================== -->
-
-          <!-- +++++++++++++++++++++++++++++ ADDITIONAL ACCESORIES +++++++++++ -->
-          <apex:outputPanel layout="none" rendered="{!boatBuilder.additionalAccessories != null}">
-            <apex:repeat value="{!boatBuilder.additionalAccessories}" var="item">
-
-              <c:InvoiceOptionLine rowClass="itemRow {!IF(MOD(rowCount,2)=0,'even','odd')}"
-                                   quantity="{!item.quantity}"
-                                   description="{!item.productNameFR}, (${!item.unitPrice} ea.)"
-                                   cost="{!TEXT(item.totalPrice)}" />
-
-               <apex:variable value="{!rowCount+1}" var="rowCount" />
-              <apex:variable value="{!optionsTotal + item.totalPrice }" var="optionsTotal" />
-            </apex:repeat>
-          </apex:outputPanel>
-        <!-- ============================ /ADDITIONAL ACCESSORIES ============= -->
-
-        <!-- ++++++++++++++++++++++++++ TABLE FILLER ++++++++++++++++++++++ -->
-        <apex:repeat value="{!boatBuilder.invoiceOptionRowFiller}" var="count">
-          <apex:outputPanel layout="none" rendered="{!count == (rowCount +1)}">
-            <c:InvoiceOptionLine rowClass="itemRow {!IF(MOD(rowCount,2)=0,'even','odd')}"
-                                   quantity="{!null}"
-                                   description="{!null}"
-                                   cost="{!null}" />
-            <apex:variable value="{!rowCount+1}" var="rowCount" />
-          </apex:outputPanel>
-
-        </apex:repeat>
-
-        <!-- ========================== /TABLE FILLER ===================== -->
-
-        <p class="itemRow sub_total">
-          <span class="quantity">&nbsp;</span>
-          Sous-Total
-          <span class="cost">
-            <apex:outputText value="${0, number, ###,###,###,##0.00}">
-              <apex:param value="{!optionsTotal}"/>
-            </apex:outputText>
-          </span>
-        </p>
 
         </apex:outputPanel>
 
@@ -578,48 +558,45 @@
         <apex:outputPanel layout="none" rendered="{!boatBuilder.renderSummaryFees}">
           <table class="itemsTable">
             <thead>
-              <tr>
-                <td colspan="3" style="padding-left:20px;">Frais Supplémentaires</td>
-              </tr>
+            <tr>
+              <td colspan="3" style="padding-left:20px;">Frais Supplémentaires</td>
+            </tr>
             </thead>
             <tbody>
-              <apex:variable value="{!1}" var="rowCount" />
-              <apex:variable value="{!0}" var="feeTotal" />
-              <apex:repeat value="{!boatBuilder.provinceFeesMap}" var="feeKey">
-                <apex:repeat value="{!boatBuilder.provinceFeesMap[feeKey]}" var="prov">
+            <apex:variable value="{!0}" var="feeTotal" />
+            <apex:repeat value="{!boatBuilder.provinceFeesMap}" var="feeKey">
+              <apex:repeat value="{!boatBuilder.provinceFeesMap[feeKey]}" var="prov">
 
-                  <apex:outputPanel layout="none" rendered="{!prov = boatBuilder.opportunity.GL_Account_Variable_3__r.Name}">
-                    <apex:repeat value="{!boatBuilder.provinceFeesMap[feeKey][prov]}" var="feeItem">
-                      <tr class="{!IF(MOD(rowCount,2)=0,'even','odd')}">
-                        <td class="w5">
-                            {!feeItem.quantity}
-                        </td>
-                        <td class="w60">
-                          <apex:outputText value="{!feeItem.description_FR}"/>
-                        </td>
-                        <td class="w35 right">
-                          <apex:outputText value="$ {!feeItem.total}" rendered="{!feeItem.total != 0}"/>
-                          <apex:outputText value="$ Inclus" rendered="{!feeItem.total == 0}"/>
-                        </td>
-                      </tr>
-                      <apex:variable value="{!rowCount+1}" var="rowCount" />
-                      <apex:variable value="{!feeTotal + feeItem.total}" var="feeTotal" />
-                    </apex:repeat>
-                  </apex:outputPanel>
+                <apex:outputPanel layout="none" rendered="{!prov = boatBuilder.opportunity.GL_Account_Variable_3__r.Name}">
+                  <apex:repeat value="{!boatBuilder.provinceFeesMap[feeKey][prov]}" var="feeItem">
+                    <tr class="{!IF(MOD(rowCount,2)=0,'even','odd')}">
+                      <td class="w5">
+                        {!feeItem.quantity}
+                      </td>
+                      <td class="w60">
+                        <apex:outputText value="{!feeItem.description_FR}"/>
+                      </td>
+                      <td class="w35 right">
+                        <apex:outputText value="$ {!feeItem.total}" rendered="{!feeItem.total != 0}"/>
+                        <apex:outputText value="$ Inclus" rendered="{!feeItem.total == 0}"/>
+                      </td>
+                    </tr>
+                    <apex:variable value="{!feeTotal + feeItem.total}" var="feeTotal" />
+                  </apex:repeat>
+                </apex:outputPanel>
 
-                </apex:repeat>
               </apex:repeat>
-              <tr class="subTotal">
-                <td colspan="2">
-                  Sous-Total
-                </td>
-                <td class="w35 right">
-                  <apex:outputText value="${0, number, ###,###,###,##0.00}">
-                    <apex:param value="{!feeTotal}"/>
-                  </apex:outputText>
-                </td>
-              </tr>
-              <apex:variable value="{!rowCount+1}" var="rowCount" />
+            </apex:repeat>
+            <tr class="subTotal" style="border-left:1px solid #555;">
+              <td colspan="2">
+                Sous-Total
+              </td>
+              <td class="w35 right">
+                <apex:outputText value="${0, number, ###,###,###,##0.00}">
+                  <apex:param value="{!feeTotal}"/>
+                </apex:outputText>
+              </td>
+            </tr>
             </tbody>
           </table>
         </apex:outputPanel><!-- /Additional Fees -->
@@ -630,32 +607,28 @@
         <apex:outputPanel layout="none" rendered="{!boatBuilder.renderProtectionProducts}">
           <table class="itemsTable" style="margin-top:10px;">
             <thead>
-              <tr>
-                <td colspan="2">Produits et Services de Protection</td>
-              </tr>
+            <tr>
+              <td colspan="2">Produits et Services de Protection</td>
+            </tr>
             </thead>
             <tbody>
             <apex:variable value="{!0}" var="p_optionsTotal" />
             <apex:variable value="{!boatBuilder.selectedItemsMap['protection']}" var="p_items" />
-             <apex:repeat value="{!p_items}" var="key">
+            <apex:repeat value="{!p_items}" var="key">
               <tr class="{!IF(MOD(rowCount,2)=0,'even','odd')}">
                 <td class="w70">{!p_items[key].description_FR}</td>
                 <td class="w30 right">$ {!p_items[key].upgrade_cost}</td>
               </tr>
-              <apex:variable value="{!rowCount+1}" var="rowCount" />
               <apex:variable value="{!p_optionsTotal + (IF(ISNUMBER(p_items[key].upgrade_cost), VALUE(p_items[key].upgrade_cost), 0) ) }" var="p_optionsTotal" />
             </apex:repeat>
-<!-- +++++ REPLACED ABOVE AUG 15 2016 +++++ -->
             <apex:repeat value="{!boatbuilder.insuranceItems}" var="in_item">
               <tr class="{!IF(MOD(rowCount,2)=0,'even','odd')}">
                 <td class="w70">{!in_item.PricebookEntry.Product2.Name} - {!in_item.InsuranceCoverage__c}</td>
                 <td class="w30 right">$ {!in_item.UnitPrice}</td>
               </tr>
-              <apex:variable value="{!rowCount+1}" var="rowCount" />
               <apex:variable value="{!p_optionsTotal + in_item.UnitPrice}" var="p_optionsTotal" />
             </apex:repeat>
-<!-- ===== REPLACED ABOVE AUG 15 2016 ===== -->
-            <tr class="subTotal">
+            <tr class="subTotal" style="border-left:1px solid #555;">
               <td class="w70">
                 Sous-Total
               </td>
@@ -665,7 +638,6 @@
                 </apex:outputText>
               </td>
             </tr>
-            <apex:variable value="{!rowCount+1}" var="rowCount" />
             </tbody>
           </table>
         </apex:outputPanel>
@@ -673,16 +645,15 @@
 
         <!-- +++++++++++++++++++++++++++  SPECIAL SAVINGS ++++++++++++++++++++++ -->
         <apex:outputPanel layout="none" rendered="{!boatBuilder.renderDiscountSummary}">
-        <table class="itemsTable" style="margin-top:10px;">
-          <thead>
+          <table class="itemsTable" style="margin-top:10px;">
+            <thead>
             <tr>
               <td colspan="2">Rabais spéciaux</td>
             </tr>
-          </thead>
-          <tbody>
-            <!-- <apex:variable value="{!1}" var="rowCount" /> -->
+            </thead>
+            <tbody>
             <apex:repeat value="{!boatBuilder.discountItems}" var="key">
-            <apex:variable value="{!boatBuilder.discountItems[key]}" var="discount" />
+              <apex:variable value="{!boatBuilder.discountItems[key]}" var="discount" />
 
               <tr class="{!IF(MOD(rowCount,2)=0,'even','odd')}">
                 <td class="w70">
@@ -706,8 +677,8 @@
               </td>
             </tr>
 
-          </tbody>
-        </table>
+            </tbody>
+          </table>
         </apex:outputPanel>
         <!-- ========================== SPECIAL SAVINGS =========================== -->
 
@@ -723,68 +694,68 @@
       <div class="col col60">
         <table class="itemsTable">
           <thead>
-            <tr>
-              <td colspan="3">Information sur le véhicule d'échange</td>
-              <td>Numéro de série</td>
-            </tr>
+          <tr>
+            <td colspan="3">Information sur le véhicule d'échange</td>
+            <td>Numéro de série</td>
+          </tr>
           </thead>
           <tbody>
-            <apex:variable value="{!1}" var="rowCount" />
-            <apex:repeat value="{!boatBuilder.tradeInPackageItems}" var="item">
-              <!--<apex:variable value="{!boatBuilder.trade_in_package.items[key]}" var="item" />-->
-              <tr class="{!IF(MOD(rowCount,2)=0,'even','odd')}">
-                <td class="w10">{!item.modelYear}</td>
-                <td class="w20">{!item.make}</td>
-                <td class="w40">{!item.model}</td>
-                <td class="w30">{!item.serialNumber}</td>
-              </tr>
-              <apex:variable var="rowCount" value="{!rowCount+1}" />
-            </apex:repeat>
-            <apex:outputPanel layout="none" rendered="{!rowCount == 1}">
-              <tr class="odd">
-                <td class="w10">&nbsp;</td>
-                <td class="w20">&nbsp;</td>
-                <td class="w40">&nbsp;</td>
-                <td class="w30">&nbsp;</td>
-              </tr>
-              <apex:variable var="rowCount" value="{!rowCount+1}" />
-            </apex:outputPanel>
-            <apex:outputPanel layout="none" rendered="{!rowCount == 2}">
-              <tr class="even">
-                <td class="w10">&nbsp;</td>
-                <td class="w20">&nbsp;</td>
-                <td class="w40">&nbsp;</td>
-                <td class="w30">&nbsp;</td>
-              </tr>
-              <apex:variable var="rowCount" value="{!rowCount+1}" />
-            </apex:outputPanel>
-            <apex:outputPanel layout="none" rendered="{!rowCount == 3}">
-              <tr class="odd">
-                <td class="w10">&nbsp;</td>
-                <td class="w20">&nbsp;</td>
-                <td class="w40">&nbsp;</td>
-                <td class="w30">&nbsp;</td>
-              </tr>
-              <apex:variable var="rowCount" value="{!rowCount+1}" />
-            </apex:outputPanel>
-            <apex:outputPanel layout="none" rendered="{!rowCount == 4}">
-              <tr class="even">
-                <td class="w10">&nbsp;</td>
-                <td class="w20">&nbsp;</td>
-                <td class="w40">&nbsp;</td>
-                <td class="w30">&nbsp;</td>
-              </tr>
-              <apex:variable var="rowCount" value="{!rowCount+1}" />
-            </apex:outputPanel>
-             <apex:outputPanel layout="none" rendered="{!rowCount == 5}">
-              <tr class="odd">
-                <td class="w10">&nbsp;</td>
-                <td class="w20">&nbsp;</td>
-                <td class="w40">&nbsp;</td>
-                <td class="w30">&nbsp;</td>
-              </tr>
-              <apex:variable var="rowCount" value="{!rowCount+1}" />
-            </apex:outputPanel>
+          <apex:variable value="{!1}" var="rowCount" />
+          <apex:repeat value="{!boatBuilder.tradeInPackageItems}" var="item">
+            <!--<apex:variable value="{!boatBuilder.trade_in_package.items[key]}" var="item" />-->
+            <tr class="{!IF(MOD(rowCount,2)=0,'even','odd')}">
+              <td class="w10">{!item.modelYear}</td>
+              <td class="w20">{!item.make}</td>
+              <td class="w40">{!item.model}</td>
+              <td class="w30">{!item.serialNumber}</td>
+            </tr>
+            <apex:variable var="rowCount" value="{!rowCount+1}" />
+          </apex:repeat>
+          <apex:outputPanel layout="none" rendered="{!rowCount == 1}">
+            <tr class="odd">
+              <td class="w10">&nbsp;</td>
+              <td class="w20">&nbsp;</td>
+              <td class="w40">&nbsp;</td>
+              <td class="w30">&nbsp;</td>
+            </tr>
+            <apex:variable var="rowCount" value="{!rowCount+1}" />
+          </apex:outputPanel>
+          <apex:outputPanel layout="none" rendered="{!rowCount == 2}">
+            <tr class="even">
+              <td class="w10">&nbsp;</td>
+              <td class="w20">&nbsp;</td>
+              <td class="w40">&nbsp;</td>
+              <td class="w30">&nbsp;</td>
+            </tr>
+            <apex:variable var="rowCount" value="{!rowCount+1}" />
+          </apex:outputPanel>
+          <apex:outputPanel layout="none" rendered="{!rowCount == 3}">
+            <tr class="odd">
+              <td class="w10">&nbsp;</td>
+              <td class="w20">&nbsp;</td>
+              <td class="w40">&nbsp;</td>
+              <td class="w30">&nbsp;</td>
+            </tr>
+            <apex:variable var="rowCount" value="{!rowCount+1}" />
+          </apex:outputPanel>
+          <apex:outputPanel layout="none" rendered="{!rowCount == 4}">
+            <tr class="even">
+              <td class="w10">&nbsp;</td>
+              <td class="w20">&nbsp;</td>
+              <td class="w40">&nbsp;</td>
+              <td class="w30">&nbsp;</td>
+            </tr>
+            <apex:variable var="rowCount" value="{!rowCount+1}" />
+          </apex:outputPanel>
+          <apex:outputPanel layout="none" rendered="{!rowCount == 5}">
+            <tr class="odd">
+              <td class="w10">&nbsp;</td>
+              <td class="w20">&nbsp;</td>
+              <td class="w40">&nbsp;</td>
+              <td class="w30">&nbsp;</td>
+            </tr>
+            <apex:variable var="rowCount" value="{!rowCount+1}" />
+          </apex:outputPanel>
           </tbody>
         </table>
       </div>
@@ -793,30 +764,30 @@
 
         <table class="itemsTable">
           <thead>
-            <tr>
-              <td colspan="2">Échange</td>
-            </tr>
+          <tr>
+            <td colspan="2">Échange</td>
+          </tr>
           </thead>
           <tbody>
-            <tr class="odd">
-              <td class="w75">Valeur de l'échange *</td>
-              <td class="w25 right">-$ {!boatBuilder.trade_in_package.value}</td>
-            </tr>
-            <tr class="even">
-              <td class="w75">Lien sur l'échange</td>
-              <td class="w25 right">$ {!boatBuilder.trade_in_package.lienAmount}</td>
-            </tr>
-            <tr class="odd">
-              <td colspan="2">* Prix d'échange conditionnel à l'inspection</td>
-            </tr>
-            <tr class="subTotal">
-              <td class="w75">Total net de l'échange</td>
-              <td class="w25 right">$ {!boatBuilder.trade_in_package.totalValue}</td>
-            </tr>
-            <tr class="odd">
-              <td class="w75">&nbsp;</td>
-              <td class="w25 right">&nbsp;</td>
-            </tr>
+          <tr class="odd">
+            <td class="w75">Valeur de l'échange *</td>
+            <td class="w25 right">-$ {!boatBuilder.trade_in_package.value}</td>
+          </tr>
+          <tr class="even">
+            <td class="w75">Lien sur l'échange</td>
+            <td class="w25 right">$ {!boatBuilder.trade_in_package.lienAmount}</td>
+          </tr>
+          <tr class="odd">
+            <td colspan="2">* Prix d'échange conditionnel à l'inspection</td>
+          </tr>
+          <tr class="subTotal">
+            <td class="w75">Total net de l'échange</td>
+            <td class="w25 right">$ {!boatBuilder.trade_in_package.totalValue}</td>
+          </tr>
+          <tr class="odd">
+            <td class="w75">&nbsp;</td>
+            <td class="w25 right">&nbsp;</td>
+          </tr>
           </tbody>
         </table>
       </div>
@@ -830,10 +801,15 @@
 
       <!-- ++++++++++++++++++++ SIGNATURES AND STUFF ++++++++++++++++++++++++++++ -->
       <div class="col col70">
-      <div class="notes_container" style="width:90%;margin:auto;margin-top:22px;padding:0 10px;min-height:90px;">
+        <div class="notes_container" style="width:90%;margin:auto;margin-top:5px;padding:0 10px;min-height:90px;">
           <p>
             <apex:outputField value="{!boatBuilder.opportunity.Customer_Notes__c}" />
           </p>
+          <apex:repeat value="{!boatBuilder.invoiceDisclaimers}" var="disclaimer">
+            <p style="margin:0;padding:0;">
+              {!disclaimer.French__c}
+            </p>
+          </apex:repeat>
         </div>
         <div style="width:90%;margin:auto;padding:0 10px">
           <b>S'il vous plait, veuillez vous rappeler:</b> Diamètre de la boule 2'' avec hauteur de 18'', couette à 4 fils plats, solde dû à la livraison payable par chèque certifié
@@ -853,15 +829,16 @@
             </td>
           </tr>
           <apex:outputPanel layout="none" rendered="{!boatBuilder.discountItems != null}">
-          <tr>
-            <td class="decrease">ÉCONOMIES:</td>
-            <td class="decrease">
-              - &nbsp;<apex:outputText value="${0, number, ###,###,###,##0.00}"
-                               rendered="{!boatBuilder.discountTotal != null}">
-                <apex:param value="{!boatBuilder.discountTotal}"/>
-              </apex:outputText>
-            </td>
-          </tr>
+            <tr>
+              <td class="decrease">ÉCONOMIES:</td>
+              <td class="decrease">
+                - &nbsp;
+                <apex:outputText value="${0, number, ###,###,###,##0.00}"
+                                 rendered="{!boatBuilder.discountTotal != null}">
+                  <apex:param value="{!boatBuilder.discountTotal}"/>
+                </apex:outputText>
+              </td>
+            </tr>
           </apex:outputPanel>
           <tr>
             <td>TOTAL AVANT TAXES:</td>
@@ -876,11 +853,10 @@
             <tr>
               <td> TAX: ({!boatbuilder.totalTAxRateDisplay}%) </td>
               <td>
-                  <apex:outputText value="${0, number, ###,###,###,##0.00}">
-                    <!-- <apex:param value="{!boatBuilder.runningTaxes}"/> -->
-                    <apex:param value="{!boatbuilder.opportunity.TotalTaxes__c}"/>
-                  </apex:outputText>
-                </td>
+                <apex:outputText value="${0, number, ###,###,###,##0.00}">
+                  <apex:param value="{!boatbuilder.opportunity.TotalTaxes__c}"/>
+                </apex:outputText>
+              </td>
             </tr>
           </apex:outputPanel>
           <!-- Combined Taxes -->
@@ -895,7 +871,7 @@
               </td>
             </tr>
           </apex:outputPanel>
-            <!-- Seperate taxes -->
+          <!-- Seperate taxes -->
           <apex:outputPanel layout="none" rendered="{!AND(boatbuilder.opportunity.Tax_Override__c == false, boatbuilder.opportunity.Tax_is_Harmonized__c == false )}">
             <tr>
               <td>TAX (TPS): {!boatBuilder.opportunity.Tax_Rate_Federal__c}%:</td>
@@ -906,7 +882,7 @@
               </td>
             </tr>
           </apex:outputPanel>
-           <apex:outputPanel layout="none" rendered="{!AND(boatbuilder.opportunity.Tax_Override__c == false, boatbuilder.opportunity.Tax_is_Harmonized__c == false, boatbuilder.opportunity.Tax_Rate_Provincial__c > 0)}">
+          <apex:outputPanel layout="none" rendered="{!AND(boatbuilder.opportunity.Tax_Override__c == false, boatbuilder.opportunity.Tax_is_Harmonized__c == false, boatbuilder.opportunity.Tax_Rate_Provincial__c > 0)}">
             <tr>
               <td>TAX ({!boatbuilder.provTaxRate.taxNameFrench}): {!boatbuilder.opportunity.Tax_Rate_Provincial__c}%:</td>
               <td>
@@ -930,7 +906,7 @@
           <tr>
             <td>DÉPÔT:</td>
             <td class="">
-               <apex:outputText value="- ${0, number, ###,###,###,##0.00}">
+              <apex:outputText value="- ${0, number, ###,###,###,##0.00}">
                 <apex:param value="{!NULLVALUE( boatBuilder.opportunity.Deposit__c  , 0 ) }"/>
               </apex:outputText>
             </td>
