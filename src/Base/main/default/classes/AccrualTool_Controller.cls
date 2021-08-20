@@ -1,5 +1,32 @@
 public class AccrualTool_Controller {
     
+    public static Map<String,AccuralWrapper> groupingWrapper = new Map<String,AccuralWrapper>();
+    public static ProductPriceWrapper prodPrice;
+    public static Map<String,List<ProductPriceWrapper>> prodPriceMapExpense = new Map<String,List<ProductPriceWrapper>>();
+    public static Map<String,List<ProductPriceWrapper>> prodPriceMapRevenue = new Map<String,List<ProductPriceWrapper>>();
+    public static Map<String,List<ProductPriceWrapper>> prodPriceMapInsurance = new Map<String,List<ProductPriceWrapper>>();
+    
+    public static Map<String,Map<String,List<ProductPriceWrapper>>> departmentMapExpense = new Map<String,Map<String,List<ProductPriceWrapper>>>();
+    public static Map<String,Map<String,List<ProductPriceWrapper>>> departmentMapRevenue = new Map<String,Map<String,List<ProductPriceWrapper>>>();
+    public static Map<String,Map<String,List<ProductPriceWrapper>>> departmentMapInsurance = new Map<String,Map<String,List<ProductPriceWrapper>>>();
+    
+    public static Map<Id,JournalEntryLineWrapper> jounralEntryLineWrapperExpense = new Map<Id,JournalEntryLineWrapper>();
+    public static Map<Id,JournalEntryLineWrapper> jounralEntryLineWrapperRevenue = new Map<Id,JournalEntryLineWrapper>();
+    public static Map<Id,JournalEntryLineWrapper> jounralEntryLineWrapperInsurance = new Map<Id,JournalEntryLineWrapper>();
+    public static List<JournalEntryLineWrapper> journalEntryLineWrapperList = new List<JournalEntryLineWrapper>();
+    
+    public static Map<String,Accrual_Tool_GLAccount_Setting__mdt> accrualSettingMap = new Map<String,Accrual_Tool_GLAccount_Setting__mdt>();
+    public static List<Accrual_Tool_GLAccount_Setting__mdt> accrualSettings = [Select Id,Accrual_Type__c,GLAccount__c,GLV1__c,GLV2__c FROM Accrual_Tool_GLAccount_Setting__mdt];
+    
+    public static Map<String,Id> glAccMap = new Map<String,Id>();
+    public static Map<String,Id> glVMap = new Map<String,Id>();
+    public static List<String> glAccounts = new List<String>();
+    public static List<String> glVs = new List<String>();
+    
+    //Fetch Factory PriceBook
+    public static Id factoryPriceBook = gcConstants.idPricebookFactory;
+    public static Map<Id,Decimal> factoryPrice = new Map<Id,Decimal>();
+    
     @AuraEnabled(Cacheable=true)
     public static AcctSeed__Project__c fetchERPData( String erpId )
     {
@@ -85,36 +112,9 @@ public class AccrualTool_Controller {
         return prodList;
     }
     
-    @AuraEnabled
-    public static Map<String,AccuralWrapper> fetchOrderLines( String erpId )
-    {
-        system.debug('erpId >> '+erpId);
-        Map<String,AccuralWrapper> groupingWrapper = new Map<String,AccuralWrapper>();
-        ProductPriceWrapper prodPrice;
-        Map<String,List<ProductPriceWrapper>> prodPriceMapExpense = new Map<String,List<ProductPriceWrapper>>();
-        Map<String,List<ProductPriceWrapper>> prodPriceMapRevenue = new Map<String,List<ProductPriceWrapper>>();
-        Map<String,List<ProductPriceWrapper>> prodPriceMapInsurance = new Map<String,List<ProductPriceWrapper>>();
-        
-        Map<String,Map<String,List<ProductPriceWrapper>>> departmentMapExpense = new Map<String,Map<String,List<ProductPriceWrapper>>>();
-        Map<String,Map<String,List<ProductPriceWrapper>>> departmentMapRevenue = new Map<String,Map<String,List<ProductPriceWrapper>>>();
-        Map<String,Map<String,List<ProductPriceWrapper>>> departmentMapInsurance = new Map<String,Map<String,List<ProductPriceWrapper>>>();
-        
-        Map<Id,JournalEntryLineWrapper> jounralEntryLineWrapperExpense = new Map<Id,JournalEntryLineWrapper>();
-        Map<Id,JournalEntryLineWrapper> jounralEntryLineWrapperRevenue = new Map<Id,JournalEntryLineWrapper>();
-        Map<Id,JournalEntryLineWrapper> jounralEntryLineWrapperInsurance = new Map<Id,JournalEntryLineWrapper>();
-        List<JournalEntryLineWrapper> journalEntryLineWrapperList = new List<JournalEntryLineWrapper>();
-        
-        //Fetch Factory PriceBook
-        Id factoryPriceBook = gcConstants.idPricebookFactory;
-        
+    public static void fetchCustomSetting(){
         //Process Accrual Tool Custom Metadata
-        Map<String,Accrual_Tool_GLAccount_Setting__mdt> accrualSettingMap = new Map<String,Accrual_Tool_GLAccount_Setting__mdt>();
         List<Accrual_Tool_GLAccount_Setting__mdt> accrualSettings = [Select Id,Accrual_Type__c,GLAccount__c,GLV1__c,GLV2__c FROM Accrual_Tool_GLAccount_Setting__mdt];
-        
-        Map<String,Id> glAccMap = new Map<String,Id>();
-        Map<String,Id> glVMap = new Map<String,Id>();
-        List<String> glAccounts = new List<String>();
-        List<String> glVs = new List<String>();
         
         for(Accrual_Tool_GLAccount_Setting__mdt accrualSetting : accrualSettings) {
             accrualSettingMap.put(accrualSetting.Accrual_Type__c,accrualSetting);
@@ -122,13 +122,16 @@ public class AccrualTool_Controller {
             glVs.add(accrualSetting.GLV1__c);
             glVs.add(accrualSetting.GLV2__c);
         }
+    }
+    public static void fetchGLAccounts(){
         for(AcctSeed__GL_Account__c glAcc : [Select Id,Name from AcctSeed__GL_Account__c Where Name IN:glAccounts]) {
             glAccMap.put(glAcc.Name,glAcc.Id);
         }
         for(AcctSeed__Accounting_Variable__c glv : [Select Id,Name from AcctSeed__Accounting_Variable__c Where Name IN:glVs]) {
             glVMap.put(glv.Name,glv.Id);
         }
-        Map<Id,Decimal> factoryPrice = new Map<Id,Decimal>();
+    }
+    public static void fetchFactoryPrice( String erpId ){
         for(Product2 prod : [SELECT Id, Landed_Unit_Cost__c, Partner_Price__c, 
                              (SELECT Id, UnitPrice FROM PricebookEntries 
                               WHERE Pricebook2Id =:factoryPriceBook 
@@ -139,129 +142,119 @@ public class AccrualTool_Controller {
                 factoryPrice.put(prod.Id,pbe.UnitPrice);
             }
         }
-        
-        for(AcctSeedERP__Material__c material : [select id,Serial_Number__c,AcctSeedERP__Product__c,AcctSeedERP__Product__r.Name,GMBLASERP__Total_Price__c,
-                                                 AcctSeedERP__Product__r.AcctSeed__Expense_GL_Account__c,AcctSeedERP__Product__r.AcctSeed__Expense_GL_Account__r.Name,AcctSeedERP__Product__r.AcctSeed__Expense_GL_Account__r.AcctSeed__Type__c,
-                                                 AcctSeedERP__Product__r.AcctSeed__Revenue_GL_Account__c,AcctSeedERP__Product__r.AcctSeed__Revenue_GL_Account__r.Name,AcctSeedERP__Product__r.AcctSeed__Revenue_GL_Account__r.AcctSeed__Type__c,
-                                                 AcctSeedERP__Product__r.RecordType.Name,
-                                                 AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_1__c,AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_1__r.Name,
-                                                 AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_2__c,AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_2__r.Name
-                                                 from AcctSeedERP__Material__c 
-                                                 where AcctSeedERP__Project__c =:erpId]) 
+    }
+    public static void processERPLine(AcctSeedERP__Material__c material){
+        prodPrice = new ProductPriceWrapper(material.AcctSeedERP__Product__r.Name,material.GMBLASERP__Total_Price__c);
+        if(material.AcctSeedERP__Product__r.AcctSeed__Expense_GL_Account__c != null 
+           && material.AcctSeedERP__Product__r.AcctSeed__Expense_GL_Account__r.AcctSeed__Type__c == 'Expense') // Expense GL Account 
         {
-            prodPrice = new ProductPriceWrapper(material.AcctSeedERP__Product__r.Name,material.GMBLASERP__Total_Price__c);
-            if(material.AcctSeedERP__Product__r.AcctSeed__Expense_GL_Account__c != null 
-               && material.AcctSeedERP__Product__r.AcctSeed__Expense_GL_Account__r.AcctSeed__Type__c == 'Expense') // Expense GL Account 
-            {
-                system.debug('Expense Type >> ');
-                //process for both Expense and Insurance
-                if(material.AcctSeedERP__Product__r.RecordType.Name == 'Insurance') {
-                    
-                    if(!departmentMapInsurance.containsKey(material.AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_2__r.Name)) {
-                        departmentMapInsurance.put(material.AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_2__r.Name,new Map<String,List<ProductPriceWrapper>>());
-                    }
-                    prodPriceMapInsurance = departmentMapInsurance.get(material.AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_2__r.Name);
-                    
-                    if(!prodPriceMapInsurance.containsKey(material.AcctSeedERP__Product__r.AcctSeed__Expense_GL_Account__r.Name)) {
-                        prodPriceMapInsurance.put(material.AcctSeedERP__Product__r.AcctSeed__Expense_GL_Account__r.Name, new List<ProductPriceWrapper>());
-                    }
-                    prodPriceMapInsurance.get(material.AcctSeedERP__Product__r.AcctSeed__Expense_GL_Account__r.Name).add(prodPrice);
-                    
-                    departmentMapInsurance.put(material.AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_2__r.Name,prodPriceMapInsurance);
-                    system.debug('prodPriceMapInsurance >> '+prodPriceMapInsurance);
-                    
-                    if(!jounralEntryLineWrapperInsurance.containsKey(material.AcctSeedERP__Product__r.AcctSeed__Expense_GL_Account__c)) {
-                        jounralEntryLineWrapperInsurance.put(material.AcctSeedERP__Product__r.AcctSeed__Expense_GL_Account__c,
-                                                             new JournalEntryLineWrapper(material.AcctSeedERP__Product__r.AcctSeed__Expense_GL_Account__c,
-                                                                                         material.AcctSeedERP__Product__r.AcctSeed__Expense_GL_Account__r.Name,
-                                                                                         material.AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_1__c,
-                                                                                         material.AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_1__r.Name,
-                                                                                         material.AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_2__c,
-                                                                                         material.AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_2__r.Name,
-                                                                                         material.GMBLASERP__Total_Price__c,0.0));
-                    } else {
-                        JournalEntryLineWrapper Insurance = jounralEntryLineWrapperInsurance.get(material.AcctSeedERP__Product__r.AcctSeed__Expense_GL_Account__c);
-                        Insurance.Debit = Insurance.Debit + material.GMBLASERP__Total_Price__c;
-                        jounralEntryLineWrapperInsurance.put(material.AcctSeedERP__Product__r.AcctSeed__Expense_GL_Account__c,Insurance);
-                    }
-                }
-                else {
-                    
-                    //Use factory price here
-                    ProductPriceWrapper newProdPrice = prodPrice; 
-                    if(factoryPrice.containsKey(material.AcctSeedERP__Product__c)) {
-                        newProdPrice = new ProductPriceWrapper(material.AcctSeedERP__Product__r.Name,factoryPrice.get(material.AcctSeedERP__Product__c));
-                    } else {
-                        continue;
-                    }
-                    if(!departmentMapExpense.containsKey(material.AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_2__r.Name)) {
-                        departmentMapExpense.put(material.AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_2__r.Name,new Map<String,List<ProductPriceWrapper>>());
-                    }
-                    prodPriceMapExpense = departmentMapExpense.get(material.AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_2__r.Name);
-                    
-                    if(!prodPriceMapExpense.containsKey(material.AcctSeedERP__Product__r.AcctSeed__Expense_GL_Account__r.Name)) {
-                        prodPriceMapExpense.put(material.AcctSeedERP__Product__r.AcctSeed__Expense_GL_Account__r.Name, new List<ProductPriceWrapper>());
-                    }
-                    prodPriceMapExpense.get(material.AcctSeedERP__Product__r.AcctSeed__Expense_GL_Account__r.Name).add(newProdPrice);
-                    
-                    departmentMapExpense.put(material.AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_2__r.Name,prodPriceMapExpense);
-                    system.debug('prodPriceMapExpense >> '+prodPriceMapExpense);
-                    
-                    if(!jounralEntryLineWrapperExpense.containsKey(material.AcctSeedERP__Product__r.AcctSeed__Expense_GL_Account__c)) {
-                        jounralEntryLineWrapperExpense.put(material.AcctSeedERP__Product__r.AcctSeed__Expense_GL_Account__c,
-                                                           new JournalEntryLineWrapper(material.AcctSeedERP__Product__r.AcctSeed__Expense_GL_Account__c,
-                                                                                       material.AcctSeedERP__Product__r.AcctSeed__Expense_GL_Account__r.Name,
-                                                                                       material.AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_1__c,
-                                                                                       material.AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_1__r.Name,
-                                                                                       material.AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_2__c,
-                                                                                       material.AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_2__r.Name,
-                                                                                       material.GMBLASERP__Total_Price__c,0.0));
-                    } else {
-                        JournalEntryLineWrapper Expense = jounralEntryLineWrapperExpense.get(material.AcctSeedERP__Product__r.AcctSeed__Expense_GL_Account__c);
-                        Expense.Debit = Expense.Debit + material.GMBLASERP__Total_Price__c;
-                        jounralEntryLineWrapperExpense.put(material.AcctSeedERP__Product__r.AcctSeed__Expense_GL_Account__c,Expense);
-                    }
-                }
-            } 
-            if(material.AcctSeedERP__Product__r.AcctSeed__Revenue_GL_Account__c != null 
-               && material.AcctSeedERP__Product__r.AcctSeed__Revenue_GL_Account__r.AcctSeed__Type__c == 'Revenue')
-            {
-                system.debug('revenue GL >> ');
-                //process for Revenue 
+            system.debug('Expense Type >> ');
+            //process for both Expense and Insurance
+            if(material.AcctSeedERP__Product__r.RecordType.Name == 'Insurance') {
                 
-                if(!departmentMapRevenue.containsKey(material.AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_2__r.Name)) {
-                    departmentMapRevenue.put(material.AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_2__r.Name,new Map<String,List<ProductPriceWrapper>>());
+                if(!departmentMapInsurance.containsKey(material.AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_2__r.Name)) {
+                    departmentMapInsurance.put(material.AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_2__r.Name,new Map<String,List<ProductPriceWrapper>>());
                 }
-                prodPriceMapRevenue = departmentMapRevenue.get(material.AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_2__r.Name);
+                prodPriceMapInsurance = departmentMapInsurance.get(material.AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_2__r.Name);
                 
-                if(!prodPriceMapRevenue.containsKey(material.AcctSeedERP__Product__r.AcctSeed__Revenue_GL_Account__r.Name)) {
-                    prodPriceMapRevenue.put(material.AcctSeedERP__Product__r.AcctSeed__Revenue_GL_Account__r.Name, new List<ProductPriceWrapper>());
+                if(!prodPriceMapInsurance.containsKey(material.AcctSeedERP__Product__r.AcctSeed__Expense_GL_Account__r.Name)) {
+                    prodPriceMapInsurance.put(material.AcctSeedERP__Product__r.AcctSeed__Expense_GL_Account__r.Name, new List<ProductPriceWrapper>());
                 }
-                prodPriceMapRevenue.get(material.AcctSeedERP__Product__r.AcctSeed__Revenue_GL_Account__r.Name).add(prodPrice);
+                prodPriceMapInsurance.get(material.AcctSeedERP__Product__r.AcctSeed__Expense_GL_Account__r.Name).add(prodPrice);
                 
-                departmentMapRevenue.put(material.AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_2__r.Name,prodPriceMapRevenue);
-                system.debug('prodPriceMapRevenue >> '+prodPriceMapRevenue);
+                departmentMapInsurance.put(material.AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_2__r.Name,prodPriceMapInsurance);
+                system.debug('prodPriceMapInsurance >> '+prodPriceMapInsurance);
                 
-                if(!jounralEntryLineWrapperRevenue.containsKey(material.AcctSeedERP__Product__r.AcctSeed__Expense_GL_Account__c)) {
-                    jounralEntryLineWrapperRevenue.put(material.AcctSeedERP__Product__r.AcctSeed__Expense_GL_Account__c,
+                if(!jounralEntryLineWrapperInsurance.containsKey(material.AcctSeedERP__Product__r.AcctSeed__Expense_GL_Account__c)) {
+                    jounralEntryLineWrapperInsurance.put(material.AcctSeedERP__Product__r.AcctSeed__Expense_GL_Account__c,
+                                                         new JournalEntryLineWrapper(material.AcctSeedERP__Product__r.AcctSeed__Expense_GL_Account__c,
+                                                                                     material.AcctSeedERP__Product__r.AcctSeed__Expense_GL_Account__r.Name,
+                                                                                     material.AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_1__c,
+                                                                                     material.AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_1__r.Name,
+                                                                                     material.AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_2__c,
+                                                                                     material.AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_2__r.Name,
+                                                                                     material.GMBLASERP__Total_Price__c,0.0));
+                } else {
+                    JournalEntryLineWrapper Insurance = jounralEntryLineWrapperInsurance.get(material.AcctSeedERP__Product__r.AcctSeed__Expense_GL_Account__c);
+                    Insurance.Debit = Insurance.Debit + material.GMBLASERP__Total_Price__c;
+                    jounralEntryLineWrapperInsurance.put(material.AcctSeedERP__Product__r.AcctSeed__Expense_GL_Account__c,Insurance);
+                }
+            }
+            else {
+                
+                //Use factory price here
+                ProductPriceWrapper newProdPrice = prodPrice; 
+                if(factoryPrice.containsKey(material.AcctSeedERP__Product__c)) {
+                    newProdPrice = new ProductPriceWrapper(material.AcctSeedERP__Product__r.Name,factoryPrice.get(material.AcctSeedERP__Product__c));
+                } else {
+                    return;
+                }
+                if(!departmentMapExpense.containsKey(material.AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_2__r.Name)) {
+                    departmentMapExpense.put(material.AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_2__r.Name,new Map<String,List<ProductPriceWrapper>>());
+                }
+                prodPriceMapExpense = departmentMapExpense.get(material.AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_2__r.Name);
+                
+                if(!prodPriceMapExpense.containsKey(material.AcctSeedERP__Product__r.AcctSeed__Expense_GL_Account__r.Name)) {
+                    prodPriceMapExpense.put(material.AcctSeedERP__Product__r.AcctSeed__Expense_GL_Account__r.Name, new List<ProductPriceWrapper>());
+                }
+                prodPriceMapExpense.get(material.AcctSeedERP__Product__r.AcctSeed__Expense_GL_Account__r.Name).add(newProdPrice);
+                
+                departmentMapExpense.put(material.AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_2__r.Name,prodPriceMapExpense);
+                system.debug('prodPriceMapExpense >> '+prodPriceMapExpense);
+                
+                if(!jounralEntryLineWrapperExpense.containsKey(material.AcctSeedERP__Product__r.AcctSeed__Expense_GL_Account__c)) {
+                    jounralEntryLineWrapperExpense.put(material.AcctSeedERP__Product__r.AcctSeed__Expense_GL_Account__c,
                                                        new JournalEntryLineWrapper(material.AcctSeedERP__Product__r.AcctSeed__Expense_GL_Account__c,
                                                                                    material.AcctSeedERP__Product__r.AcctSeed__Expense_GL_Account__r.Name,
                                                                                    material.AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_1__c,
                                                                                    material.AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_1__r.Name,
                                                                                    material.AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_2__c,
                                                                                    material.AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_2__r.Name,
-                                                                                   0.0,material.GMBLASERP__Total_Price__c));
+                                                                                   material.GMBLASERP__Total_Price__c,0.0));
                 } else {
-                    JournalEntryLineWrapper Revenue = jounralEntryLineWrapperRevenue.get(material.AcctSeedERP__Product__r.AcctSeed__Expense_GL_Account__c);
-                    Revenue.Credit = Revenue.Credit + material.GMBLASERP__Total_Price__c;
-                    jounralEntryLineWrapperRevenue.put(material.AcctSeedERP__Product__r.AcctSeed__Expense_GL_Account__c,Revenue);
+                    JournalEntryLineWrapper Expense = jounralEntryLineWrapperExpense.get(material.AcctSeedERP__Product__r.AcctSeed__Expense_GL_Account__c);
+                    Expense.Debit = Expense.Debit + material.GMBLASERP__Total_Price__c;
+                    jounralEntryLineWrapperExpense.put(material.AcctSeedERP__Product__r.AcctSeed__Expense_GL_Account__c,Expense);
                 }
-                
-                //lineItemMap.get('Revenue').add();
             }
+        } 
+        if(material.AcctSeedERP__Product__r.AcctSeed__Revenue_GL_Account__c != null 
+           && material.AcctSeedERP__Product__r.AcctSeed__Revenue_GL_Account__r.AcctSeed__Type__c == 'Revenue')
+        {
+            system.debug('revenue GL >> ');
+            //process for Revenue 
             
+            if(!departmentMapRevenue.containsKey(material.AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_2__r.Name)) {
+                departmentMapRevenue.put(material.AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_2__r.Name,new Map<String,List<ProductPriceWrapper>>());
+            }
+            prodPriceMapRevenue = departmentMapRevenue.get(material.AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_2__r.Name);
+            
+            if(!prodPriceMapRevenue.containsKey(material.AcctSeedERP__Product__r.AcctSeed__Revenue_GL_Account__r.Name)) {
+                prodPriceMapRevenue.put(material.AcctSeedERP__Product__r.AcctSeed__Revenue_GL_Account__r.Name, new List<ProductPriceWrapper>());
+            }
+            prodPriceMapRevenue.get(material.AcctSeedERP__Product__r.AcctSeed__Revenue_GL_Account__r.Name).add(prodPrice);
+            
+            departmentMapRevenue.put(material.AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_2__r.Name,prodPriceMapRevenue);
+            system.debug('prodPriceMapRevenue >> '+prodPriceMapRevenue);
+            
+            if(!jounralEntryLineWrapperRevenue.containsKey(material.AcctSeedERP__Product__r.AcctSeed__Expense_GL_Account__c)) {
+                jounralEntryLineWrapperRevenue.put(material.AcctSeedERP__Product__r.AcctSeed__Expense_GL_Account__c,
+                                                   new JournalEntryLineWrapper(material.AcctSeedERP__Product__r.AcctSeed__Expense_GL_Account__c,
+                                                                               material.AcctSeedERP__Product__r.AcctSeed__Expense_GL_Account__r.Name,
+                                                                               material.AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_1__c,
+                                                                               material.AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_1__r.Name,
+                                                                               material.AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_2__c,
+                                                                               material.AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_2__r.Name,
+                                                                               0.0,material.GMBLASERP__Total_Price__c));
+            } else {
+                JournalEntryLineWrapper Revenue = jounralEntryLineWrapperRevenue.get(material.AcctSeedERP__Product__r.AcctSeed__Expense_GL_Account__c);
+                Revenue.Credit = Revenue.Credit + material.GMBLASERP__Total_Price__c;
+                jounralEntryLineWrapperRevenue.put(material.AcctSeedERP__Product__r.AcctSeed__Expense_GL_Account__c,Revenue);
+            }
         }
-        
+    }
+    
+    public static void pricessJournalLines(String erpId){
         Decimal journalDebitTotal = 0.0;
         Decimal journalCreditTotal = 0.0;
         Decimal revenueGLTotal = 0.0;
@@ -303,10 +296,9 @@ public class AccrualTool_Controller {
         );
         journalCreditTotal+=insuranceGLTotal;
         
-        
-        
         Map<Id,JournalEntryLineWrapper> jounralEntryLineWrapperCommission = new Map<Id,JournalEntryLineWrapper>();
         CommissionWrapper commWrapper = fetchCommissionRecords( erpId );
+            
         for(CommissionPaymentWrapper commPaymentWrapper : commWrapper.commPaymentWrapper) {
             for(CommissionPaymentRecordsWrapper commPayments : commPaymentWrapper.commPayments) {
                 if(!jounralEntryLineWrapperCommission.containsKey(commPayments.GLAccountId)) {
@@ -354,11 +346,10 @@ public class AccrualTool_Controller {
         
         system.debug('journalEntryLineWrapperList >> '+journalEntryLineWrapperList);
         groupingWrapper.put('JournalLines',new AccuralWrapper(null,null,journalEntryLineWrapperList));
-        
+    }
+    
+    public static void processRevenueWrapper(){        
         List<DepartmentWrapper> revenueWrapper = new List<DepartmentWrapper>();
-        List<DepartmentWrapper> expenseWrapper = new List<DepartmentWrapper>();
-        List<DepartmentWrapper> InsuranceWrapper = new List<DepartmentWrapper>();
-        
         Decimal totalAmount = 0.0;
         for(String department: departmentMapRevenue.keyset()) {
             List<LineItemWrapper> lineItemWrapp = new List<LineItemWrapper>();
@@ -376,7 +367,12 @@ public class AccrualTool_Controller {
         }
         groupingWrapper.put('Revenue',new AccuralWrapper(totalAmount,revenueWrapper,null));
         
-        totalAmount = 0.0;
+    }
+    
+    public static void processExpenseWrapper(){
+        List<DepartmentWrapper> expenseWrapper = new List<DepartmentWrapper>();
+        
+        Decimal totalAmount = 0.0;
         for(String department: departmentMapExpense.keyset()) {
             List<LineItemWrapper> lineItemWrapp = new List<LineItemWrapper>();
             Map<String,List<ProductPriceWrapper>> tmpMap = departmentMapExpense.get(department);
@@ -392,8 +388,12 @@ public class AccrualTool_Controller {
             expenseWrapper.add(new DepartmentWrapper(department,lineItemWrapp));
         }
         groupingWrapper.put('Expense',new AccuralWrapper(totalAmount,expenseWrapper,null));
+    }
+    
+    public static void processInsuranceWrapper(){
+        List<DepartmentWrapper> InsuranceWrapper = new List<DepartmentWrapper>();
         
-        totalAmount = 0.0;
+        Decimal totalAmount = 0.0;
         for(String department: departmentMapInsurance.keyset()) {
             List<LineItemWrapper> lineItemWrapp = new List<LineItemWrapper>();
             Map<String,List<ProductPriceWrapper>> tmpMap = departmentMapInsurance.get(department);
@@ -409,7 +409,33 @@ public class AccrualTool_Controller {
             insuranceWrapper.add(new DepartmentWrapper(department,lineItemWrapp));
         }
         groupingWrapper.put('Insurance',new AccuralWrapper(totalAmount,insuranceWrapper,null));
+    }
+    
+    @AuraEnabled
+    public static Map<String,AccuralWrapper> fetchOrderLines( String erpId )
+    {
+        system.debug('erpId >> '+erpId);
         
+        fetchCustomSetting();
+        fetchGLAccounts();
+        fetchFactoryPrice(erpId);
+        
+        for(AcctSeedERP__Material__c material : [select id,Serial_Number__c,AcctSeedERP__Product__c,AcctSeedERP__Product__r.Name,GMBLASERP__Total_Price__c,
+                                                 AcctSeedERP__Product__r.AcctSeed__Expense_GL_Account__c,AcctSeedERP__Product__r.AcctSeed__Expense_GL_Account__r.Name,AcctSeedERP__Product__r.AcctSeed__Expense_GL_Account__r.AcctSeed__Type__c,
+                                                 AcctSeedERP__Product__r.AcctSeed__Revenue_GL_Account__c,AcctSeedERP__Product__r.AcctSeed__Revenue_GL_Account__r.Name,AcctSeedERP__Product__r.AcctSeed__Revenue_GL_Account__r.AcctSeed__Type__c,
+                                                 AcctSeedERP__Product__r.RecordType.Name,
+                                                 AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_1__c,AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_1__r.Name,
+                                                 AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_2__c,AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_2__r.Name
+                                                 from AcctSeedERP__Material__c 
+                                                 where AcctSeedERP__Project__c =:erpId]) 
+        {
+            processERPLine(material);
+        }
+        
+        pricessJournalLines(erpId);
+        processRevenueWrapper();
+        processExpenseWrapper();
+        processInsuranceWrapper();
         
         system.debug('groupingWrapper >> '+groupingWrapper);
         return groupingWrapper;
@@ -473,7 +499,7 @@ public class AccrualTool_Controller {
             }
             
             insert journalEntries;
-            //AcctSeed.JournalEntryPostService.postJournalEntries(new List<AcctSeed__Journal_Entry__c>{journalEntry});
+            AcctSeed.JournalEntryPostService.postJournalEntries(new List<AcctSeed__Journal_Entry__c>{journalEntry});
         }
         catch(Exception e) {
             Database.rollback(sp);

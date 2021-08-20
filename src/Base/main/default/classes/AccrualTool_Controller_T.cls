@@ -152,11 +152,18 @@ public class AccrualTool_Controller_T {
         initErpData();
         createCommissionRecord();
         Test.startTest();
-        AccrualTool_Controller.fetchERPData(String.valueOf(erp.Id));
-        AccrualTool_Controller.fetchCommissionRecords(String.valueOf(erp.Id));
+        AcctSeed__Project__c erpRecord = AccrualTool_Controller.fetchERPData(String.valueOf(erp.Id));
+        AccrualTool_Controller.CommissionWrapper commWrapper = AccrualTool_Controller.fetchCommissionRecords(String.valueOf(erp.Id));
         AccrualTool_Controller.fetchOrderLines(String.valueOf(erp.Id));
-        AccrualTool_Controller.fetchSerializedProducts(String.valueOf(erp.Id));
-        AccrualTool_Controller.createJournalEntry(String.valueOf(erp.Id), String.valueOf(Date.today()));
+        List<AccrualTool_Controller.ProductWrapper> products = AccrualTool_Controller.fetchSerializedProducts(String.valueOf(erp.Id));
+        String msg = AccrualTool_Controller.createJournalEntry(String.valueOf(erp.Id), String.valueOf(Date.today()));
         Test.stopTest();
+        
+        system.assertEquals(erp.Id, erpRecord.Id);
+        system.assertEquals(false,commWrapper.isReviewed);
+        system.assertEquals(2, commWrapper.commissionRecordsList.size());
+        system.assertEquals(1, commWrapper.commPaymentWrapper.size());
+        system.assertEquals(1, products.size());
+        system.assertEquals('Success', msg);
     }
 }
