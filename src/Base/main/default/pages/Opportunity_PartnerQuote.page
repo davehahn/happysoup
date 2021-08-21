@@ -465,7 +465,7 @@
           <!-- ++++++++++++++++++ OPTIONS & ACCESSORIES +++++++++++++++++++++++++++++++ -->
           <apex:repeat value="{!theCPQ.saleItems}" var="saleItem">
 
-            <c:InvoiceOptionLine rowClass="itemRow {!IF(MOD(rowCount,2)=0,'even','odd')}"
+            <c:Opportunity_PartnerQuoteOptionLine rowClass="itemRow {!IF(MOD(rowCount,2)=0,'even','odd')}"
                                  quantity="{!saleItem.quantity}"
                                  description="{!saleItem.productName}"
                                  cost="{!IF( saleItem.lineTotal=0,'Included',TEXT(saleItem.lineTotal))}" />
@@ -475,7 +475,7 @@
 
             <!-- Features contained inon Item -->
             <apex:repeat value="{!saleItem.premiumPackage}" var="feature">
-              <c:InvoiceOptionLine rowClass="itemRow subItemRow {!IF(MOD(rowCount,2)=0,'even','odd')}"
+              <c:Opportunity_PartnerQuoteOptionLine rowClass="itemRow subItemRow {!IF(MOD(rowCount,2)=0,'even','odd')}"
                                    description="{!feature}"
                                    cost="Included" />
 
@@ -485,7 +485,7 @@
 
             <apex:repeat value="{!saleItem.subSaleItems}" var="subSaleItem">
 
-              <c:InvoiceOptionLine rowClass="itemRow subItemRow {!IF(MOD(rowCount,2)=0,'even','odd')}"
+              <c:Opportunity_PartnerQuoteOptionLine rowClass="itemRow subItemRow {!IF(MOD(rowCount,2)=0,'even','odd')}"
                                    quantity="{!subSaleItem.quantity}"
                                    description="{!subSaleItem.productName}"
                                    cost="{!IF( subSaleItem.lineTotal=0,'Included',TEXT(subSaleItem.lineTotal))}" />
@@ -502,7 +502,7 @@
           <apex:outputPanel layout="none" rendered="{! NOT( theCPQ.customProducts.empty )}">
             <apex:repeat value="{!theCPQ.customProducts}" var="item">
 
-              <c:InvoiceOptionLine rowClass="itemRow {!IF(MOD(rowCount,2)=0,'even','odd')}"
+              <c:Opportunity_PartnerQuoteOptionLine rowClass="itemRow {!IF(MOD(rowCount,2)=0,'even','odd')}"
                                    quantity="{!item.quantity}"
                                    description="{!item.description}, (${!item.amount} ea.)"
                                    cost="{!TEXT(item.quantity * item.amount)}" />
@@ -516,7 +516,7 @@
         <!-- ++++++++++++++++++++++++++ TABLE FILLER ++++++++++++++++++++++ -->
        <!--  <apex:repeat value="{!boatBuilder.invoiceOptionRowFiller}" var="count">
           <apex:outputPanel layout="none" rendered="{!count == (rowCount +1)}">
-            <c:InvoiceOptionLine rowClass="itemRow {!IF(MOD(rowCount,2)=0,'even','odd')}"
+            <c:Opportunity_PartnerQuoteOptionLine rowClass="itemRow {!IF(MOD(rowCount,2)=0,'even','odd')}"
                                    quantity="{!null}"
                                    description="{!null}"
                                    cost="{!null}" />

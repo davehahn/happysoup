@@ -21,9 +21,9 @@
 
         <div>
           <img src="{!URLFOR($Resource.LegendPDF,'Icons/Email.png')}" />
-          <p>info@legendboats.com</p>
-          <p>customercare@legendboats.com</p>
-          <p>sales@legendboats.com</p>
+          <p style="font-size:11px;">info@legendboats.com</p>
+          <p style="font-size:11px;">customercare@legendboats.com</p>
+          <p style="font-size:11px;">sales@legendboats.com</p>
         </div>
 
         <div>
@@ -361,59 +361,59 @@
 
       <table class="itemsTable">
         <thead>
-          <tr>
-            <td colspan="3">Description</td>
-            <td>Numéro de série</td>
-          </tr>
+        <tr>
+          <td colspan="3">Description</td>
+          <td>Numéro de série</td>
+        </tr>
         </thead>
         <apex:variable value="{!1}" var="rowCount" />
         <tbody>
-          <apex:outputPanel layout="none" rendered="{!selectedBoatId != null}">
-            <tr class="{!IF(MOD(rowCount,2)=0,'even','odd')}">
-              <td class="w5">{!Opportunity.Boat_Model_Year__c}</td>
-              <td class="w10">{!selectedBoat.Make__c}</td>
-              <td class="w44">{!selectedBoat.Name_FR__c}</td>
-              <td class="w25">&nbsp;</td>
-              <td class="w15 right">
-                <apex:outputText value="${0, number, ###,###,###,##0.00}">
-                  <apex:param value="{!basePrice}"/>
-                </apex:outputText>
-              </td>
-            </tr>
-            <apex:variable var="rowCount" value="{!rowCount+1}" />
-          </apex:outputPanel>
+        <apex:outputPanel layout="none" rendered="{!selectedBoatId != null}">
+          <tr class="{!IF(MOD(rowCount,2)=0,'even','odd')}">
+            <td class="w5">{!Opportunity.Boat_Model_Year__c}</td>
+            <td class="w10">{!selectedBoat.Make__c}</td>
+            <td class="w44">{!selectedBoat.Name_FR__c}</td>
+            <td class="w25">&nbsp;</td>
+            <td class="w15 right">
+              <apex:outputText value="${0, number, ###,###,###,##0.00}">
+                <apex:param value="{!basePrice}"/>
+              </apex:outputText>
+            </td>
+          </tr>
+          <apex:variable var="rowCount" value="{!rowCount+1}" />
+        </apex:outputPanel>
 
-          <apex:outputPanel layout="none" rendered="{!selectedMotorId != null}">
-            <tr class="{!IF(MOD(rowCount,2)=0,'even','odd')}">
-              <td class="w5">{!Opportunity.Boat_Model_Year__c}</td>
-              <td class="w10">{!selectedMotor.Make__c}</td>
-              <td class="w44">{!selectedMotor.Name_FR__c}</td>
-              <td class="w25">&nbsp;</td>
-              <td class="w15 right">$ {!motorUpgradePrice}</td>
-            </tr>
-            <apex:variable var="rowCount" value="{!rowCount+1}" />
-          </apex:outputPanel>
+        <apex:outputPanel layout="none" rendered="{!selectedMotorId != null}">
+          <tr class="{!IF(MOD(rowCount,2)=0,'even','odd')}">
+            <td class="w5">{!Opportunity.Boat_Model_Year__c}</td>
+            <td class="w10">{!selectedMotor.Make__c}</td>
+            <td class="w44">{!selectedMotor.Name_FR__c}</td>
+            <td class="w25">&nbsp;</td>
+            <td class="w15 right">$ {!motorUpgradePrice}</td>
+          </tr>
+          <apex:variable var="rowCount" value="{!rowCount+1}" />
+        </apex:outputPanel>
 
-          <apex:outputPanel layout="none" rendered="{!selectedTrailerId != null}">
-            <tr class="{!IF(MOD(rowCount,2)=0,'even','odd')}">
-              <td class="w5">{!Opportunity.Trailer_Model_Year__c}</td>
-              <td class="w10">{!selectedTrailer.Make__c}</td>
-              <td class="w44">{!selectedTrailer.Name_FR__c}</td>
-              <td class="w25">&nbsp;</td>
-              <td class="w15 right">$ {!trailerUpgradePrice}</td>
-            </tr>
-            <apex:variable var="rowCount" value="{!rowCount+1}" />
-          </apex:outputPanel>
+        <apex:outputPanel layout="none" rendered="{!selectedTrailerId != null}">
+          <tr class="{!IF(MOD(rowCount,2)=0,'even','odd')}">
+            <td class="w5">{!Opportunity.Trailer_Model_Year__c}</td>
+            <td class="w10">{!selectedTrailer.Make__c}</td>
+            <td class="w44">{!selectedTrailer.Name_FR__c}</td>
+            <td class="w25">&nbsp;</td>
+            <td class="w15 right">$ {!trailerUpgradePrice}</td>
+          </tr>
+          <apex:variable var="rowCount" value="{!rowCount+1}" />
+        </apex:outputPanel>
 
-          <apex:outputPanel layout="none" rendered="{!selectedTrollingMotorId != null}">
-            <tr class="{!IF(MOD(rowCount,2)=0,'even','odd')}">
-              <td class="w5">{!Opportunity.Boat_Model_Year__c}</td>
-              <td class="w10">{!selectedTrollingMotor.Make__c}</td>
-              <td class="w44">{!selectedTrollingMotor.Name_FR__c}</td>
-              <td class="w25">&nbsp;</td>
-              <td class="w15 right">$ {!trollingMotorUpgradePrice}</td>
-            </tr>
-          </apex:outputPanel>
+        <apex:outputPanel layout="none" rendered="{!selectedTrollingMotorId != null}">
+          <tr class="{!IF(MOD(rowCount,2)=0,'even','odd')}">
+            <td class="w5">{!Opportunity.Boat_Model_Year__c}</td>
+            <td class="w10">{!selectedTrollingMotor.Make__c}</td>
+            <td class="w44">{!selectedTrollingMotor.Name_FR__c}</td>
+            <td class="w25">&nbsp;</td>
+            <td class="w15 right">$ {!trollingMotorUpgradePrice}</td>
+          </tr>
+        </apex:outputPanel>
 
         </tbody>
 
@@ -430,140 +430,118 @@
 
         <apex:outputPanel >
 
-          <h3>Options &amp; Accessoires</h3>
-          <apex:variable value="{!1}" var="rowCount" />
-          <apex:variable value="{!0}" var="optionsTotal" />
-          <!-- +++++++++++++++++ Motor Options Items ++++++++++++++++++ -->
-          <apex:outputPanel layout="none" rendered="{!selectedMotor != null}">
-            <apex:variable value="{!selectedItemsMap['motor']}" var="items" />
+          <table class="itemsTable">
+            <thead>
+            <tr>
+              <td colspan="3">Options &amp; Accessoires</td>
+            </tr>
+            </thead>
+
+            <tbody>
+            <apex:variable value="{!0}" var="optionsTotal" />
+
+            <!-- +++++++++++++++++ Motor Options Items ++++++++++++++++++ -->
+            <apex:outputPanel layout="none" rendered="{!selectedMotor != null}">
+              <apex:variable value="{!selectedItemsMap['motor']}" var="items" />
+              <apex:repeat value="{!items}" var="key">
+                <c:InvoiceOptionLine rowClass=""
+                                     quantity="{!items[key].quantity}"
+                                     description="{!items[key].description_FR}"
+                                     cost="{!items[key].upgrade_cost}" />
+
+                <apex:variable value="{!optionsTotal + (IF(ISNUMBER(items[key].upgrade_cost), VALUE(items[key].upgrade_cost), 0) ) }" var="optionsTotal" />
+              </apex:repeat>
+            </apex:outputPanel>
+            <!-- ================= Motor Options Items ================== -->
+
+            <!-- +++++++++++++++++ Trailer Options Items ++++++++++++++++++ -->
+            <apex:outputPanel layout="none" rendered="{!selectedTrailer != null}">
+              <apex:variable value="{!selectedItemsMap['trailer']}" var="items" />
+              <apex:repeat value="{!items}" var="key">
+                <c:InvoiceOptionLine rowClass=""
+                                     quantity="{!items[key].quantity}"
+                                     description="{!items[key].description_FR}"
+                                     cost="{!items[key].upgrade_cost}" />
+                <apex:variable value="{!optionsTotal + (IF(ISNUMBER(items[key].upgrade_cost), VALUE(items[key].upgrade_cost), 0) ) }" var="optionsTotal" />
+              </apex:repeat>
+            </apex:outputPanel>
+            <!-- ================= Trailer Options Items ================== -->
+
+            <!-- +++++++++++++++++ Trolling Motor Options Items ++++++++++++++++++ -->
+            <apex:outputPanel layout="none" rendered="{!selectedTrollingMotor != null}">
+              <apex:variable value="{!selectedItemsMap['trolling motor']}" var="items" />
+              <apex:repeat value="{!items}" var="key">
+                <c:InvoiceOptionLine rowClass=""
+                                     quantity="{!items[key].quantity}"
+                                     description="{!items[key].description_FR}"
+                                     cost="{!items[key].upgrade_cost}" />
+                <apex:variable value="{!optionsTotal + (IF(ISNUMBER(items[key].upgrade_cost), VALUE(items[key].upgrade_cost), 0) ) }" var="optionsTotal" />
+              </apex:repeat>
+            </apex:outputPanel>
+            <!-- ================= Trolling Motor Options Items ================== -->
+
+            <!-- ++++++++++++++++++ BOAT OPTIONS ++++++++++++++++++++++++++++++++++ -->
+            <apex:variable value="{!selectedItemsMap['boat']}" var="items" />
 
             <apex:repeat value="{!items}" var="key">
-
-              <c:InvoiceOptionLine rowClass="itemRow {!IF(MOD(rowCount,2)=0,'even','odd')}"
+              <c:InvoiceOptionLine rowClass="{!IF(items[key].features.size > 0, 'has-features', '')}"
                                    quantity="{!items[key].quantity}"
                                    description="{!items[key].description_FR}"
-                                   cost="{!items[key].upgrade_cost}" />
-
-              <apex:variable var="rowCount" value="{!rowCount+1}" />
+                                   cost="{!items[key].upgrade_cost}"/>
               <apex:variable value="{!optionsTotal + (IF(ISNUMBER(items[key].upgrade_cost), VALUE(items[key].upgrade_cost), 0) ) }" var="optionsTotal" />
+
+              <!-- ==== FEATURES ==== -->
+              <apex:outputPanel layout="none" rendered="{!items[key].features.size > 0}">
+                <apex:repeat value="{!items[key].featuresFR}" var="feature">
+                  <c:InvoiceOptionLine rowClass="feature-row"
+                                       description="{!feature}"
+                                       cost="Included"/>
+                </apex:repeat>
+              </apex:outputPanel>
+              <!-- ++++ /FEATURES +++ -->
+
+              <!-- ++++ SUB ITEMS ++++ -->
+              <apex:repeat value="{!items[key].subItems}" var="subkey">
+                <apex:variable value="{!items[key].subItems[subkey]}"
+                               var="subItem" />
+                <c:InvoiceOptionLine rowClass="subItemRow"
+                                     quantity="{!subItem.quantity}"
+                                     description="{!subItem.description_FR}"
+                                     cost="{!subItem.upgrade_cost}"/>
+                <apex:variable value="{!optionsTotal + (IF(CONTAINS(subItem.upgrade_cost, 'Included'), 0, VALUE(subItem.upgrade_cost) ) ) }" var="optionsTotal" />
+              </apex:repeat>
+              <!-- ==== /SUB ITEMS === -->
+
             </apex:repeat>
-          </apex:outputPanel>
-          <!-- ================= Motor Options Items ================== -->
+            <!-- ============================= /BOAT OPTIONS =================== -->
 
-          <!-- +++++++++++++++++ Trailer Options Items ++++++++++++++++++ -->
-          <apex:outputPanel layout="none" rendered="{!selectedTrailer != null}">
-            <apex:variable value="{!selectedItemsMap['trailer']}" var="items" />
+            <!-- +++++++++++++++++++++++++++++ ADDITIONAL ACCESORIES +++++++++++ -->
+            <apex:outputPanel layout="none" rendered="{!additionalAccessories != null}">
+              <apex:repeat value="{!additionalAccessories}" var="item">
+                <c:InvoiceOptionLine rowClass=""
+                                     quantity="{!item.quantity}"
+                                     description="{!item.productNameFR}, (${!item.unitPrice} ea.)"
+                                     cost="{!TEXT(item.totalPrice)}" />
+                <apex:variable value="{!optionsTotal + item.totalPrice }" var="optionsTotal" />
+              </apex:repeat>
 
-            <apex:repeat value="{!items}" var="key">
+            </apex:outputPanel>
+            <!-- ============================ /ADDITIONAL ACCESSORIES ============= -->
 
-              <c:InvoiceOptionLine rowClass="itemRow {!IF(MOD(rowCount,2)=0,'even','odd')}"
-                                   quantity="{!items[key].quantity}"
-                                   description="{!items[key].description_FR}"
-                                   cost="{!items[key].upgrade_cost}" />
-
-              <apex:variable var="rowCount" value="{!rowCount+1}" />
-              <apex:variable value="{!optionsTotal + (IF(ISNUMBER(items[key].upgrade_cost), VALUE(items[key].upgrade_cost), 0) ) }" var="optionsTotal" />
-              <!-- <apex:variable value="{!optionsTotal + VALUE(items[key].upgrade_cost) }" var="optionsTotal" /> -->
-            </apex:repeat>
-          </apex:outputPanel>
-          <!-- ================= Trailer Options Items ================== -->
-
-          <!-- +++++++++++++++++ Trolling Motor Options Items ++++++++++++++++++ -->
-          <apex:outputPanel layout="none" rendered="{!selectedTrollingMotor != null}">
-            <apex:variable value="{!selectedItemsMap['trolling motor']}" var="items" />
-
-            <apex:repeat value="{!items}" var="key">
-
-              <c:InvoiceOptionLine rowClass="itemRow {!IF(MOD(rowCount,2)=0,'even','odd')}"
-                                   quantity="{!items[key].quantity}"
-                                   description="{!items[key].description_FR}"
-                                   cost="{!items[key].upgrade_cost}" />
-
-              <apex:variable var="rowCount" value="{!rowCount+1}" />
-              <apex:variable value="{!optionsTotal + (IF(ISNUMBER(items[key].upgrade_cost), VALUE(items[key].upgrade_cost), 0) ) }" var="optionsTotal" />
-              <!-- <apex:variable value="{!optionsTotal + VALUE(items[key].upgrade_cost) }" var="optionsTotal" /> -->
-            </apex:repeat>
-          </apex:outputPanel>
-          <!-- ================= Trolling Motor Options Items ================== -->
-
-          <!-- ++++++++++++++++++ BOAT OPTIONS ++++++++++++++++++++++++++++++++++ -->
-          <apex:variable value="{!selectedItemsMap['boat']}" var="items" />
-
-          <apex:repeat value="{!items}" var="key">
-
-            <c:InvoiceOptionLine rowClass="itemRow {!IF(MOD(rowCount,2)=0,'even','odd')}"
-                                 quantity="{!items[key].quantity}"
-                                 description="{!items[key].description_FR}"
-                                 cost="{!items[key].upgrade_cost}" />
-
-            <apex:variable value="{!rowCount+1}" var="rowCount" />
-            <apex:variable value="{!optionsTotal + (IF(ISNUMBER(items[key].upgrade_cost), VALUE(items[key].upgrade_cost), 0) ) }" var="optionsTotal" />
-
-            <!-- Features contained on an Item -->
-            <apex:repeat value="{!items[key].featuresFR}" var="feature">
-              <c:InvoiceOptionLine rowClass="itemRow subItemRow {!IF(MOD(rowCount,2)=0,'even','odd')}"
-                                   description="{!feature}"
-                                   cost="Included" />
-
-              <apex:variable value="{!rowCount+1}" var="rowCount" />
-            </apex:repeat>
-            <!-- /Features contained on an Item -->
-
-            <apex:repeat value="{!items[key].subItems}" var="subkey">
-              <apex:variable value="{!items[key].subItems[subkey]}"
-                             var="subItem" />
-
-              <c:InvoiceOptionLine rowClass="itemRow subItemRow {!IF(MOD(rowCount,2)=0,'even','odd')}"
-                                   quantity="{!subItem.quantity}"
-                                   description="{!subItem.description_FR}"
-                                   cost="{!subItem.upgrade_cost}" />
-
-              <apex:variable value="{!rowCount+1}" var="rowCount" />
-              <apex:variable value="{!optionsTotal + (IF(CONTAINS(subItem.upgrade_cost, 'Included'), 0, VALUE(subItem.upgrade_cost) ) ) }" var="optionsTotal" />
-            </apex:repeat>
-          <!-- </div> -->
-          </apex:repeat>
-          <!-- ============================= /BOAT OPTIONS =================== -->
-
-          <!-- +++++++++++++++++++++++++++++ ADDITIONAL ACCESORIES +++++++++++ -->
-          <apex:outputPanel layout="none" rendered="{!additionalAccessories != null}">
-            <apex:repeat value="{!additionalAccessories}" var="item">
-
-              <c:InvoiceOptionLine rowClass="itemRow {!IF(MOD(rowCount,2)=0,'even','odd')}"
-                                   quantity="{!item.quantity}"
-                                   description="{!item.productNameFR}, (${!item.unitPrice} ea.)"
-                                   cost="{!TEXT(item.totalPrice)}" />
-
-               <apex:variable value="{!rowCount+1}" var="rowCount" />
-              <apex:variable value="{!optionsTotal + item.totalPrice }" var="optionsTotal" />
-            </apex:repeat>
-          </apex:outputPanel>
-        <!-- ============================ /ADDITIONAL ACCESSORIES ============= -->
-
-        <!-- ++++++++++++++++++++++++++ TABLE FILLER ++++++++++++++++++++++ -->
-        <apex:repeat value="{!invoiceOptionRowFiller}" var="count">
-          <apex:outputPanel layout="none" rendered="{!count == (rowCount +1)}">
-            <c:InvoiceOptionLine rowClass="itemRow {!IF(MOD(rowCount,2)=0,'even','odd')}"
-                                   quantity="{!null}"
-                                   description="{!null}"
-                                   cost="{!null}" />
-            <apex:variable value="{!rowCount+1}" var="rowCount" />
-          </apex:outputPanel>
-
-        </apex:repeat>
-
-        <!-- ========================== /TABLE FILLER ===================== -->
-
-        <p class="itemRow sub_total">
-          <span class="quantity">&nbsp;</span>
-          Sous-Total
-          <span class="cost">
-            <apex:outputText value="${0, number, ###,###,###,##0.00}">
-              <apex:param value="{!optionsTotal}"/>
-            </apex:outputText>
-          </span>
-        </p>
-
+            <!-- +++++++ SUB TOTAL ++++ -->
+            <tr class="subTotal">
+              <td colspan="2">
+                Sous-Total
+              </td>
+              <td class="w35 right">
+                <apex:outputText value="${0, number, ###,###,###,##0.00}">
+                  <apex:param value="{!optionsTotal}"/>
+                </apex:outputText>
+              </td>
+            </tr>
+            <!-- ===== /SUB Total ==== -->
+            </tbody>
+          </table>
         </apex:outputPanel>
 
       </div>
@@ -577,48 +555,45 @@
         <apex:outputPanel layout="none" rendered="{!renderSummaryFees}">
           <table class="itemsTable">
             <thead>
-              <tr>
-                <td colspan="3" style="padding-left:20px;">Frais Supplémentaires</td>
-              </tr>
+            <tr>
+              <td colspan="3" style="padding-left:20px;">Frais Supplémentaires</td>
+            </tr>
             </thead>
             <tbody>
-              <apex:variable value="{!1}" var="rowCount" />
-              <apex:variable value="{!0}" var="feeTotal" />
-              <apex:repeat value="{!provinceFeesMap}" var="feeKey">
-                <apex:repeat value="{!provinceFeesMap[feeKey]}" var="prov">
+            <apex:variable value="{!0}" var="feeTotal" />
+            <apex:repeat value="{!provinceFeesMap}" var="feeKey">
+              <apex:repeat value="{!provinceFeesMap[feeKey]}" var="prov">
 
-                  <apex:outputPanel layout="none" rendered="{!prov = opportunity.GL_Account_Variable_3__r.Name}">
-                    <apex:repeat value="{!provinceFeesMap[feeKey][prov]}" var="feeItem">
-                      <tr class="{!IF(MOD(rowCount,2)=0,'even','odd')}">
-                        <td class="w5">
-                            {!feeItem.quantity}
-                        </td>
-                        <td class="w60">
-                          <apex:outputText value="{!feeItem.description_FR}"/>
-                        </td>
-                        <td class="w35 right">
-                          <apex:outputText value="$ {!feeItem.total}" rendered="{!feeItem.total != 0}"/>
-                          <apex:outputText value="$ Inclus" rendered="{!feeItem.total == 0}"/>
-                        </td>
-                      </tr>
-                      <apex:variable value="{!rowCount+1}" var="rowCount" />
-                      <apex:variable value="{!feeTotal + feeItem.total}" var="feeTotal" />
-                    </apex:repeat>
-                  </apex:outputPanel>
+                <apex:outputPanel layout="none" rendered="{!prov = opportunity.GL_Account_Variable_3__r.Name}">
+                  <apex:repeat value="{!provinceFeesMap[feeKey][prov]}" var="feeItem">
+                    <tr class="{!IF(MOD(rowCount,2)=0,'even','odd')}">
+                      <td class="w5">
+                        {!feeItem.quantity}
+                      </td>
+                      <td class="w60">
+                        <apex:outputText value="{!feeItem.description_FR}"/>
+                      </td>
+                      <td class="w35 right">
+                        <apex:outputText value="$ {!feeItem.total}" rendered="{!feeItem.total != 0}"/>
+                        <apex:outputText value="$ Inclus" rendered="{!feeItem.total == 0}"/>
+                      </td>
+                    </tr>
+                    <apex:variable value="{!feeTotal + feeItem.total}" var="feeTotal" />
+                  </apex:repeat>
+                </apex:outputPanel>
 
-                </apex:repeat>
               </apex:repeat>
-              <tr class="subTotal">
-                <td colspan="2">
-                  Sous-Total
-                </td>
-                <td class="w35 right">
-                  <apex:outputText value="${0, number, ###,###,###,##0.00}">
-                    <apex:param value="{!feeTotal}"/>
-                  </apex:outputText>
-                </td>
-              </tr>
-              <apex:variable value="{!rowCount+1}" var="rowCount" />
+            </apex:repeat>
+            <tr class="subTotal">
+              <td colspan="2">
+                Sous-Total
+              </td>
+              <td class="w35 right">
+                <apex:outputText value="${0, number, ###,###,###,##0.00}">
+                  <apex:param value="{!feeTotal}"/>
+                </apex:outputText>
+              </td>
+            </tr>
             </tbody>
           </table>
         </apex:outputPanel><!-- /Additional Fees -->
@@ -629,33 +604,29 @@
         <apex:outputPanel layout="none" rendered="{!renderProtectionProducts}">
           <table class="itemsTable" style="margin-top:10px;">
             <thead>
-              <tr>
-                <td colspan="2">Produits et Services de Protection</td>
-              </tr>
+            <tr>
+              <td colspan="2">Produits et Services de Protection</td>
+            </tr>
             </thead>
             <tbody>
 
             <apex:variable value="{!0}" var="p_optionsTotal" />
             <apex:variable value="{!selectedItemsMap['protection']}" var="p_items" />
-             <apex:repeat value="{!p_items}" var="key">
+            <apex:repeat value="{!p_items}" var="key">
               <tr class="{!IF(MOD(rowCount,2)=0,'even','odd')}">
                 <td class="w70">{!p_items[key].description_FR}</td>
                 <td class="w30 right">$ {!p_items[key].upgrade_cost}</td>
               </tr>
-              <apex:variable value="{!rowCount+1}" var="rowCount" />
               <apex:variable value="{!p_optionsTotal + (IF(ISNUMBER(p_items[key].upgrade_cost), VALUE(p_items[key].upgrade_cost), 0) ) }" var="p_optionsTotal" />
             </apex:repeat>
 
-<!-- ++++ AUG 15 2016 ++++ -->
             <apex:repeat value="{!insuranceItems}" var="in_item">
               <tr class="{!IF(MOD(rowCount,2)=0,'even','odd')}">
                 <td class="w70">{!in_item.PricebookEntry.Product2.Name_FR__c} - {!in_item.InsuranceCoverage__c}</td>
                 <td class="w30 right">$ {!in_item.UnitPrice}</td>
               </tr>
-              <apex:variable value="{!rowCount+1}" var="rowCount" />
               <apex:variable value="{!p_optionsTotal + in_item.UnitPrice}" var="p_optionsTotal" />
             </apex:repeat>
-<!-- ==== AUG 15 2016 ==== -->
 
             <tr class="subTotal">
               <td class="w70">
@@ -675,18 +646,16 @@
 
         <!-- +++++++++++++++++++++++++++  SPECIAL SAVINGS ++++++++++++++++++++++ -->
         <apex:outputPanel layout="none" rendered="{!renderDiscountSummary}">
-       <!--  <table class="itemsTable" style="margin-top:{!10 + (13*(31 - 4 - rowCount - discountItems.size))}px;"> -->
-         <table class="itemsTable" style="margin-top:10px;">
-          <thead>
+          <!--  <table class="itemsTable" style="margin-top:{!10 + (13*(31 - 4 - rowCount - discountItems.size))}px;"> -->
+          <table class="itemsTable" style="margin-top:10px;">
+            <thead>
             <tr>
               <td colspan="2">Rabais spéciaux</td>
             </tr>
-          </thead>
-          <tbody>
-            <!-- <apex:variable value="{!1}" var="rowCount" /> -->
+            </thead>
+            <tbody>
             <apex:repeat value="{!discountItems}" var="key">
               <apex:variable value="{!discountItems[key]}" var="discount" />
-
               <tr class="{!IF(MOD(rowCount,2)=0,'even','odd')}">
                 <td class="w70">
                   {!discount.description}
@@ -695,7 +664,6 @@
                   <apex:outputText value="-$ {!discount.amount}" />
                 </td>
               </tr>
-              <apex:variable value="{!rowCount+1}" var="rowCount" />
             </apex:repeat>
             <tr class="total_savings">
               <td class="w70">
@@ -708,8 +676,8 @@
                 </apex:outputText>
               </td>
             </tr>
-          </tbody>
-        </table>
+            </tbody>
+          </table>
         </apex:outputPanel>
         <!-- ========================== SPECIAL SAVINGS =========================== -->
 
@@ -725,68 +693,68 @@
       <div class="col col60">
         <table class="itemsTable">
           <thead>
-            <tr>
-              <td colspan="3">Information sur le véhicule d'échange</td>
-              <td>Numéro de série</td>
-            </tr>
+          <tr>
+            <td colspan="3">Information sur le véhicule d'échange</td>
+            <td>Numéro de série</td>
+          </tr>
           </thead>
           <tbody>
-            <apex:variable value="{!1}" var="rowCount" />
-            <apex:repeat value="{!trade_in_package.items}" var="key">
-            <apex:variable value="{!trade_in_package.items[key]}" var="item" />
-              <tr class="{!IF(MOD(rowCount,2)=0,'even','odd')}">
-                <td class="w10">{!item.modelYear}</td>
-                <td class="w20">{!item.make}</td>
-                <td class="w40">{!item.model}</td>
-                <td class="w30">{!item.serialNumber}</td>
-              </tr>
-              <apex:variable var="rowCount" value="{!rowCount+1}" />
-            </apex:repeat>
-            <apex:outputPanel layout="none" rendered="{!rowCount == 1}">
-              <tr class="odd">
-                <td class="w10">&nbsp;</td>
-                <td class="w20">&nbsp;</td>
-                <td class="w40">&nbsp;</td>
-                <td class="w30">&nbsp;</td>
-              </tr>
-              <apex:variable var="rowCount" value="{!rowCount+1}" />
-            </apex:outputPanel>
-            <apex:outputPanel layout="none" rendered="{!rowCount == 2}">
-              <tr class="even">
-                <td class="w10">&nbsp;</td>
-                <td class="w20">&nbsp;</td>
-                <td class="w40">&nbsp;</td>
-                <td class="w30">&nbsp;</td>
-              </tr>
-              <apex:variable var="rowCount" value="{!rowCount+1}" />
-            </apex:outputPanel>
-            <apex:outputPanel layout="none" rendered="{!rowCount == 3}">
-              <tr class="odd">
-                <td class="w10">&nbsp;</td>
-                <td class="w20">&nbsp;</td>
-                <td class="w40">&nbsp;</td>
-                <td class="w30">&nbsp;</td>
-              </tr>
-              <apex:variable var="rowCount" value="{!rowCount+1}" />
-            </apex:outputPanel>
-            <apex:outputPanel layout="none" rendered="{!rowCount == 4}">
-              <tr class="even">
-                <td class="w10">&nbsp;</td>
-                <td class="w20">&nbsp;</td>
-                <td class="w40">&nbsp;</td>
-                <td class="w30">&nbsp;</td>
-              </tr>
-              <apex:variable var="rowCount" value="{!rowCount+1}" />
-            </apex:outputPanel>
-            <apex:outputPanel layout="none" rendered="{!rowCount == 5}">
-              <tr class="odd">
-                <td class="w10">&nbsp;</td>
-                <td class="w20">&nbsp;</td>
-                <td class="w40">&nbsp;</td>
-                <td class="w30">&nbsp;</td>
-              </tr>
-              <apex:variable var="rowCount" value="{!rowCount+1}" />
-            </apex:outputPanel>
+          <apex:variable value="{!1}" var="rowCount" />
+          <apex:repeat value="{!trade_in_package.items}" var="key">
+          <apex:variable value="{!trade_in_package.items[key]}" var="item" />
+            <tr class="{!IF(MOD(rowCount,2)=0,'even','odd')}">
+              <td class="w10">{!item.modelYear}</td>
+              <td class="w20">{!item.make}</td>
+              <td class="w40">{!item.model}</td>
+              <td class="w30">{!item.serialNumber}</td>
+            </tr>
+            <apex:variable var="rowCount" value="{!rowCount+1}" />
+          </apex:repeat>
+          <apex:outputPanel layout="none" rendered="{!rowCount == 1}">
+            <tr class="odd">
+              <td class="w10">&nbsp;</td>
+              <td class="w20">&nbsp;</td>
+              <td class="w40">&nbsp;</td>
+              <td class="w30">&nbsp;</td>
+            </tr>
+            <apex:variable var="rowCount" value="{!rowCount+1}" />
+          </apex:outputPanel>
+          <apex:outputPanel layout="none" rendered="{!rowCount == 2}">
+            <tr class="even">
+              <td class="w10">&nbsp;</td>
+              <td class="w20">&nbsp;</td>
+              <td class="w40">&nbsp;</td>
+              <td class="w30">&nbsp;</td>
+            </tr>
+            <apex:variable var="rowCount" value="{!rowCount+1}" />
+          </apex:outputPanel>
+          <apex:outputPanel layout="none" rendered="{!rowCount == 3}">
+            <tr class="odd">
+              <td class="w10">&nbsp;</td>
+              <td class="w20">&nbsp;</td>
+              <td class="w40">&nbsp;</td>
+              <td class="w30">&nbsp;</td>
+            </tr>
+            <apex:variable var="rowCount" value="{!rowCount+1}" />
+          </apex:outputPanel>
+          <apex:outputPanel layout="none" rendered="{!rowCount == 4}">
+            <tr class="even">
+              <td class="w10">&nbsp;</td>
+              <td class="w20">&nbsp;</td>
+              <td class="w40">&nbsp;</td>
+              <td class="w30">&nbsp;</td>
+            </tr>
+            <apex:variable var="rowCount" value="{!rowCount+1}" />
+          </apex:outputPanel>
+          <apex:outputPanel layout="none" rendered="{!rowCount == 5}">
+            <tr class="odd">
+              <td class="w10">&nbsp;</td>
+              <td class="w20">&nbsp;</td>
+              <td class="w40">&nbsp;</td>
+              <td class="w30">&nbsp;</td>
+            </tr>
+            <apex:variable var="rowCount" value="{!rowCount+1}" />
+          </apex:outputPanel>
           </tbody>
         </table>
       </div>
@@ -795,30 +763,30 @@
 
         <table class="itemsTable">
           <thead>
-            <tr>
-              <td colspan="2">Échange</td>
-            </tr>
+          <tr>
+            <td colspan="2">Échange</td>
+          </tr>
           </thead>
           <tbody>
-            <tr class="odd">
-              <td class="w75">Valeur de l'échange *</td>
-              <td class="w25 right">-$ {!trade_in_package.value}</td>
-            </tr>
-            <tr class="even">
-              <td class="w75">Lien sur l'échange</td>
-              <td class="w25 right">$ {!trade_in_package.lienAmount}</td>
-            </tr>
-            <tr class="odd">
-              <td colspan="2">* Prix d'échange conditionnel à l'inspection</td>
-            </tr>
-            <tr class="subTotal">
-              <td class="w75">Total net de l'échange</td>
-              <td class="w25 right">$ {!trade_in_package.totalValue}</td>
-            </tr>
-            <tr class="odd">
-              <td class="w75">&nbsp;</td>
-              <td class="w25 right">&nbsp;</td>
-            </tr>
+          <tr class="odd">
+            <td class="w75">Valeur de l'échange *</td>
+            <td class="w25 right">-$ {!trade_in_package.value}</td>
+          </tr>
+          <tr class="even">
+            <td class="w75">Lien sur l'échange</td>
+            <td class="w25 right">$ {!trade_in_package.lienAmount}</td>
+          </tr>
+          <tr class="odd">
+            <td colspan="2">* Prix d'échange conditionnel à l'inspection</td>
+          </tr>
+          <tr class="subTotal">
+            <td class="w75">Total net de l'échange</td>
+            <td class="w25 right">$ {!trade_in_package.totalValue}</td>
+          </tr>
+          <tr class="odd">
+            <td class="w75">&nbsp;</td>
+            <td class="w25 right">&nbsp;</td>
+          </tr>
           </tbody>
         </table>
       </div>
@@ -843,6 +811,11 @@
           <p>
             <apex:outputField value="{!Opportunity.Customer_Notes__c}" />
           </p>
+          <apex:repeat value="{!invoiceDisclaimers}" var="disclaimer">
+            <p>
+              {!disclaimer.French__c}
+            </p>
+          </apex:repeat>
         </div>
         <div>
           <b>S'il vous plait, veuillez vous rappeler:</b> Diamètre de la boule 2'' avec hauteur de 18'', couette à 4 fils plats, solde dû à la livraison payable par chèque certifié
@@ -853,33 +826,33 @@
       <!-- +++++++++++++++++++++++++++++++ FINAnCIAL DETAILS ++++++++++++++++++++++ -->
       <div class="col col30 finacial_details">
         <apex:outputPanel layout="none" rendered="{!Opportunity.Payment_Method__c != 'Cash'}">
-        <div class="fd_container">
-          <p class="title">Détails Financière</p>
-          <p>
-            Termes en mois
-            <span>{!Opportunity.Finance_Term__c}</span>
-          </p>
-          <p>
-            Taux d'intérêt annuel
-            <span>{!Opportunity.Finance_Annual_Interest__c} %</span>
-          </p>
-          <p>
-            Amortissent en mois
-            <span>{!Opportunity.Finance_Ammortization__c}</span>
-          </p>
-          <p>
-            Numéro de paiements par années
-            <span>{!Opportunity.Finance_Payments_Per_Year__c}</span>
-          </p>
-          <p class="summary">
-            {!paymentString}
-            <span>
-              <apex:outputText value="${0, number, ###,###,###,##0.00}">
-                <apex:param value="{!paymentAmount}"/>
-              </apex:outputText>
-            </span>
-          </p>
-        </div>
+          <div class="fd_container">
+            <p class="title">Détails Financière</p>
+            <p>
+              Termes en mois
+              <span>{!Opportunity.Finance_Term__c}</span>
+            </p>
+            <p>
+              Taux d'intérêt annuel
+              <span>{!Opportunity.Finance_Annual_Interest__c} %</span>
+            </p>
+            <p>
+              Amortissent en mois
+              <span>{!Opportunity.Finance_Ammortization__c}</span>
+            </p>
+            <p>
+              Numéro de paiements par années
+              <span>{!Opportunity.Finance_Payments_Per_Year__c}</span>
+            </p>
+            <p class="summary">
+              {!paymentString}
+              <span>
+                <apex:outputText value="${0, number, ###,###,###,##0.00}">
+                  <apex:param value="{!paymentAmount}"/>
+                </apex:outputText>
+              </span>
+            </p>
+          </div>
         </apex:outputPanel>
       </div>
       <!-- =============================== FINACIAL DETAILS ======================= -->
@@ -902,28 +875,28 @@
             <div class="row">
               <div class="col col49 signature_container">
                 <p>&nbsp;</p>
-                <p>{!Opportunity.Account.Name}</p>
+                <p>{!buyer.Contact.Name}</p>
                 <p style="">Signature du client</p>
               </div>
 
-              <apex:outputPanel layout="none" rendered="{!Opportunity.OpportunityContactRoles.size > 0}">
+              <apex:outputPanel layout="none" rendered="{!cobuyer != null}">
                 <div class="col col49 signature_container">
                   <p>&nbsp;</p>
-                  <p>{!Opportunity.OpportunityContactRoles[0].Contact.Name}</p>
+                  <p>{!cobuyer.Contact.Name}</p>
                   <p>Signature du client</p>
                 </div>
               </apex:outputPanel>
 
               <apex:outputPanel layout="none" rendered="{!Opportunity.OpportunityContactRoles.size = 0}">
                 <div class="col col50">
-                 &nbsp;
+                  &nbsp;
                 </div>
               </apex:outputPanel>
             </div>
             <apex:outputPanel layout="none" rendered="{! tempDisclaimer != null}">
               <div class="row temp_disclaimer">
                 <div class="col col75">
-                    <p class="details">{! tempDisclaimer}</p>
+                  <p class="details">{! tempDisclaimer}</p>
                 </div>
                 <div class="col col20">
                   <p class="initial">Initiale: ________</p>
@@ -966,15 +939,16 @@
             </td>
           </tr>
           <apex:outputPanel layout="none" rendered="{!discountItems != null}">
-          <tr>
-            <td class="decrease">ÉCONOMIES:</td>
-            <td class="decrease">
-              - &nbsp;<apex:outputText value="${0, number, ###,###,###,##0.00}"
-                               rendered="{!discountTotal != null}">
-                <apex:param value="{!discountTotal}"/>
-              </apex:outputText>
-            </td>
-          </tr>
+            <tr>
+              <td class="decrease">ÉCONOMIES:</td>
+              <td class="decrease">
+                - &nbsp;
+                <apex:outputText value="${0, number, ###,###,###,##0.00}"
+                                 rendered="{!discountTotal != null}">
+                  <apex:param value="{!discountTotal}"/>
+                </apex:outputText>
+              </td>
+            </tr>
           </apex:outputPanel>
           <tr>
             <td>TOTAL AVANT TAXES:</td>
@@ -989,14 +963,13 @@
             <tr>
               <td> TAX: ({!totalTaxRateDisplay}%) </td>
               <td>
-                  <apex:outputText value="${0, number, ###,###,###,##0.00}">
-                    <!-- <apex:param value="{!boatBuilder.runningTaxes}"/> -->
-                    <apex:param value="{!Opportunity.TotalTaxes__c}"/>
-                  </apex:outputText>
-                </td>
+                <apex:outputText value="${0, number, ###,###,###,##0.00}">
+                  <apex:param value="{!Opportunity.TotalTaxes__c}"/>
+                </apex:outputText>
+              </td>
             </tr>
           </apex:outputPanel>
-            <!-- Standard Provincial Taxes -->
+          <!-- Standard Provincial Taxes -->
           <apex:outputPanel layout="none" rendered="{!AND(Opportunity.Tax_Override__c == false, opportunity.Tax_is_Harmonized__c == true)}">
             <!-- Combined Taxes -->
             <tr>
@@ -1009,13 +982,13 @@
               </td>
             </tr>
           </apex:outputPanel>
-            <!-- Seperate taxes -->
+          <!-- Seperate taxes -->
           <apex:outputPanel layout="none" rendered="{!AND(Opportunity.Tax_Override__c == false, opportunity.Tax_is_Harmonized__c == false)}">
             <tr>
               <td>TPS: {!opportunity.Tax_Rate_Federal__c}%:</td>
               <td>
                 <apex:outputText value="${0, number, ###,###,###,##0.00}">
-                  <!-- <apex:param value="{!boatBuilder.runningTaxes}"/> -->
+                  <!-- <apex:param value="{!runningTaxes}"/> -->
                   <apex:param value="{!Opportunity.Tax_Amount_Federal__c}"/>
                 </apex:outputText>
               </td>
@@ -1044,7 +1017,7 @@
           <tr>
             <td>DÉPÔT <span class="deposit_method">by {!depositMethod}</span>:</td>
             <td class="">
-               <apex:outputText value="- ${0, number, ###,###,###,##0.00}">
+              <apex:outputText value="- ${0, number, ###,###,###,##0.00}">
                 <apex:param value="{!NULLVALUE( Opportunity.Deposit__c  , 0 ) }"/>
               </apex:outputText>
             </td>
@@ -1115,100 +1088,99 @@
           La vente ou Ia location along terme d'une motocyclette d'occasion adaptee au transport sur les chemins publics comporte une garantie de bon fonctionnement de Ia motocyclelte et de ses accessoires; a) durant deux mois, si Ia motocyclette est de Ia categorie A; b) durant un mois, si Ia motocyclette est de Ia categorie B; c) aucune, si le vehicule est de Ia categorie C. Elle ne s'applique cependant pas au vehicule d'occasion vendu aux presentes a l'acheteur designe au vendeur par le proprietaire anterieur de ce vehicule d'occasion.
           <table class="frenchonly">
             <tbody>
-              <tr>
-                <td>
-                  Vehicule A-1
-                </td>
-                <td>
-                  <div class="checkbox"></div>
-                  <div>(A) 2 mois</div>
-                </td>
-                <td>
-                  <div class="checkbox"></div>
-                  <div>(B) 1 mois</div>
-                </td>
-                <td>
-                  <div class="checkbox"></div>
-                  <div>(C) <p></p></div>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  Vehicule A-2
-                </td>
-                <td>
-                  <div class="checkbox"></div>
-                  <div>(A) 2 mois</div>
-                </td>
-                <td>
-                  <div class="checkbox"></div>
-                  <div>(B) 1 mois</div>
-                </td>
-                <td>
-                  <div class="checkbox"></div>
-                  <div>(C) <p></p></div>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  Vehicule A-3
-                </td>
-                <td>
-                  <div class="checkbox"></div>
-                  <div>(A) 2 mois</div>
-                </td>
-                <td>
-                  <div class="checkbox"></div>
-                  <div>(B) 1 mois</div>
-                </td>
-                <td>
-                  <div class="checkbox"></div>
-                  <div>(C) <p></p></div>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  Vehicule A-4
-                </td>
-                <td>
-                  <div class="checkbox"></div>
-                  <div>(A) 2 mois</div>
-                </td>
-                <td>
-                  <div class="checkbox"></div>
-                  <div>(B) 1 mois</div>
-                </td>
-                <td>
-                  <div class="checkbox"></div>
-                  <div>(C) <p></p></div>
-                </td>
-              </tr>
+            <tr>
+              <td>
+                Vehicule A-1
+              </td>
+              <td>
+                <div class="checkbox"></div>
+                <div>(A) 2 mois</div>
+              </td>
+              <td>
+                <div class="checkbox"></div>
+                <div>(B) 1 mois</div>
+              </td>
+              <td>
+                <div class="checkbox"></div>
+                <div>(C) <p></p></div>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                Vehicule A-2
+              </td>
+              <td>
+                <div class="checkbox"></div>
+                <div>(A) 2 mois</div>
+              </td>
+              <td>
+                <div class="checkbox"></div>
+                <div>(B) 1 mois</div>
+              </td>
+              <td>
+                <div class="checkbox"></div>
+                <div>(C) <p></p></div>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                Vehicule A-3
+              </td>
+              <td>
+                <div class="checkbox"></div>
+                <div>(A) 2 mois</div>
+              </td>
+              <td>
+                <div class="checkbox"></div>
+                <div>(B) 1 mois</div>
+              </td>
+              <td>
+                <div class="checkbox"></div>
+                <div>(C) <p></p></div>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                Vehicule A-4
+              </td>
+              <td>
+                <div class="checkbox"></div>
+                <div>(A) 2 mois</div>
+              </td>
+              <td>
+                <div class="checkbox"></div>
+                <div>(B) 1 mois</div>
+              </td>
+              <td>
+                <div class="checkbox"></div>
+                <div>(C) <p></p></div>
+              </td>
+            </tr>
             </tbody>
           </table>
         </p>
         <p>
-          Les motocyclettes d'occasion adaptees au transport sur les chemins publics sont reparties selon les categories suivantes :
-          <br />
+          Les motocyclettes d'occasion adaptees au transport sur les chemins publics sont reparties selon les categories suivantes :<br />
           <table style="width: 95%; margin: 10px auto; font-size: 9px;">
             <tbody>
-              <tr>
-                <td style="width: 5%; vertical-align: top; text-align: center">a.</td>
-                <td style="width:95%">
-                  une motocyclette est de Ia categorie A lorsqu'au plus deux ans se sont ecoules depuis Ia date de Ia mise sur le marche par le manufacturier de ses motocyclettes du meme modele et de Ia meme annee de fabrication jusqu'a Ia date de Ia vente visee au present article;
-                </td>
-              </tr>
-              <tr>
-                <td style="width: 5%; vertical-align: top; text-align: center">b.</td>
-                <td style="width:95%">
-                  une motocyclette est de Ia categorie B lorsque plus de deux ans, mais au plus trois ans, se sont ecoules depuis Ia date de Ia mise sur le marche, par le manufacturier, de ses motocyclettes du meme modele et de Ia meme annee de fabrication jusqu'a Ia date de Ia vente visee au present article;
-                </td>
-              </tr>
-              <tr>
-                <td style="width: 5%; vertical-align: top; text-align: center">c.</td>
-                <td style="width:95%">
-                  un vehicule est de Ia categorie c lorsqu'il n'est pas visee ni dans le paragraphe a) ni dans le paragraphe b).
-                </td>
-              </tr>
+            <tr>
+              <td style="width: 5%; vertical-align: top; text-align: center">a.</td>
+              <td style="width:95%">
+                une motocyclette est de Ia categorie A lorsqu'au plus deux ans se sont ecoules depuis Ia date de Ia mise sur le marche par le manufacturier de ses motocyclettes du meme modele et de Ia meme annee de fabrication jusqu'a Ia date de Ia vente visee au present article;
+              </td>
+            </tr>
+            <tr>
+              <td style="width: 5%; vertical-align: top; text-align: center">b.</td>
+              <td style="width:95%">
+                une motocyclette est de Ia categorie B lorsque plus de deux ans, mais au plus trois ans, se sont ecoules depuis Ia date de Ia mise sur le marche, par le manufacturier, de ses motocyclettes du meme modele et de Ia meme annee de fabrication jusqu'a Ia date de Ia vente visee au present article;
+              </td>
+            </tr>
+            <tr>
+              <td style="width: 5%; vertical-align: top; text-align: center">c.</td>
+              <td style="width:95%">
+                un vehicule est de Ia categorie c lorsqu'il n'est pas visee ni dans le paragraphe a) ni dans le paragraphe b).
+              </td>
+            </tr>
             </tbody>
           </table>
         </p>
@@ -1223,17 +1195,17 @@
         </p>
 
         <table class="signatureTable">
-        <tr>
-          <td>Signature:</td>
-          <td>
-            <p></p>
-            <p>L'ACHETEUR</p>
-          </td>
-          <td>
-            <p></p>
-            <p>CO-ACHETEUR</p>
-          </td>
-        </tr>
+          <tr>
+            <td>Signature:</td>
+            <td>
+              <p></p>
+              <p>L'ACHETEUR</p>
+            </td>
+            <td>
+              <p></p>
+              <p>CO-ACHETEUR</p>
+            </td>
+          </tr>
         </table>
 
         <p>
@@ -1241,17 +1213,17 @@
         </p>
 
         <table class="signatureTable">
-        <tr>
-          <td>Signature:</td>
-          <td>
-            <p></p>
-            <p>L'ACHETEUR</p>
-          </td>
-          <td>
-            <p></p>
-            <p>CO-ACHETEUR</p>
-          </td>
-        </tr>
+          <tr>
+            <td>Signature:</td>
+            <td>
+              <p></p>
+              <p>L'ACHETEUR</p>
+            </td>
+            <td>
+              <p></p>
+              <p>CO-ACHETEUR</p>
+            </td>
+          </tr>
         </table>
 
       </div><!-- /left column -->
@@ -1259,33 +1231,33 @@
       <div class="column right">
 
         <p>
-        <b>4. CHANGEMENT DE PRIX ET DE TAXE -</b> Nonobstant le prix indique au present contra!, toute augmentation par le manufacturier et/ou distributeur du prix du vehicule decrit au present contra!, s'il y a lieu et justitiae par des documents emanant dudit manufacturier et/ou distributeur, toute augmentation de taxe directe ou indirecte ainsi que toute nouvelle taxe pouvant affecter le cout de revient du vehicule, seront ajoutees au prix du present contra! et seront aIa charge de l'acheteur.
+          <b>4. CHANGEMENT DE PRIX ET DE TAXE -</b> Nonobstant le prix indique au present contra!, toute augmentation par le manufacturier et/ou distributeur du prix du vehicule decrit au present contra!, s'il y a lieu et justitiae par des documents emanant dudit manufacturier et/ou distributeur, toute augmentation de taxe directe ou indirecte ainsi que toute nouvelle taxe pouvant affecter le cout de revient du vehicule, seront ajoutees au prix du present contra! et seront aIa charge de l'acheteur.
         </p>
 
-         <p>
+        <p>
           <b>5. LIVRAISON -</b> Le vehicule sera livre a Ia date convenue entre les parties ou aussitot que possible apres cette date. Cependant, le vendeur n'est pas responsable du defaut ou du retard de livraison du vehicule resultant d'un cas de force majeure, de problemas de transport, d'un incendie, d'un conflit ouvrier ou de tout autre evenement hors du controle du vendeur. L'acheteur convient de prendre livraison du vehicule et accessoires additionnels et d'en acquitter le prix al'adresse du vendeur, ou atout autre endroit convenu entre les parties, dans les soixante- douze (72) heures suivant !'avis qui lui aura ete donne lui indiquant que le vehicule est pret pour livraison. Si l'acheteur refuse de prendre livraison du vehicule et accessoires additionnels decrits au present contrat, dans le delai prescrit au contra!, le vendeur pourra demander soit !'execution de !'obligation, soit l'annulation de Ia vente; dans ce dernier cas, le vendeur pourra reclamer les dommages et interets courus subies dO a!'inexecution du present contrat.
         </p>
         <table class="signatureDateTable">
-        <tr>
-          <td class="center">Signature:</td>
-          <td>
-            <p></p>
-            <p>L'ACHETEUR</p>
-          </td>
-          <td class="center">Date:</td>
-          <td>
-            <p></p>
-            <p>Année</p>
-          </td>
-          <td>
-            <p></p>
-            <p>Mois</p>
-          </td>
-          <td>
-            <p></p>
-            <p>Jour</p>
-          </td>
-        </tr>
+          <tr>
+            <td class="center">Signature:</td>
+            <td>
+              <p></p>
+              <p>L'ACHETEUR</p>
+            </td>
+            <td class="center">Date:</td>
+            <td>
+              <p></p>
+              <p>Année</p>
+            </td>
+            <td>
+              <p></p>
+              <p>Mois</p>
+            </td>
+            <td>
+              <p></p>
+              <p>Jour</p>
+            </td>
+          </tr>
         </table>
 
         <p>
@@ -1305,52 +1277,52 @@
           <b>7. COMMUNICATIONS ET RENSEIGNEMENTS PERSONNELS -</b> Conformement aIa (aux) Loi(s) sur Ia protection des renseignements personnels, l'acheteur reconnait que le vendeur a un interet serieux et legitime a recueillir des renseignements personnels concernant l'acheteur aupres de lui-meme ou de tiers, pour les fins de !'exploitation de l'entreprise du vendeur, plus specifiquement a des fins d'identification, de commercialisation, de service aIa clientele, de reparation, d'obtention de credit pour l'acheteur ou pour fins de revente du vehicule cede en echange. Aux memes fins, l'acheteur reconnait que le vendeur peut constituer un dossier avec les renseignements personnels recueillis, en faire une lisle nominative et les communiquer a tout tiers lui demontrant un interet serieux et legitime a les obtenir, principalement au constructeur du vehicule et/ou ses societas affiliees faisant !'objet de Ia presente vente, a l'assureur du vehicule, a tout acquereur eventual du vehicule, atoutes compagnies de credit et atout autre vendeur de vehicules. Le dossier ainsi constitue par le vendeur sera detenu a Ia place d'affaires du vendeur indique au present contra! et pounra etre consulte uniquement par le personnel autorise, particulierement le personnel cadre et les membres du secretariat du vendeur. L'acheteur aura le droit en tout temps, en faisant une demande serite, d'y avoir acces ou de demander au vendeur Ia correction ou Ia suppression d'un renseignement personnel inexact, perime ou non- conforme a !'objet du dossier. L'acheteur consent a ce que le vendeur, le constructeur (s'il y a lieu, ses societas affiliees) ou leurs fournisseurs de services communique(nt) avec lui par telephone, par Ia poste, par courriel ou autres modes de communication electronique. Ce consentement peut etre retire en communiquant avec le vendeur. Une reproduction de Ia presente clause fait preuve au meme titre que l'original.
         </p>
         <table class="signatureDateTable">
-        <tr>
-          <td class="center">Signature:</td>
-          <td>
-            <p></p>
-            <p>L'ACHETEUR</p>
-          </td>
-          <td class="center">Date:</td>
-          <td>
-            <p></p>
-            <p>Année</p>
-          </td>
-          <td>
-            <p></p>
-            <p>Mois</p>
-          </td>
-          <td>
-            <p></p>
-            <p>Jour</p>
-          </td>
-        </tr>
+          <tr>
+            <td class="center">Signature:</td>
+            <td>
+              <p></p>
+              <p>L'ACHETEUR</p>
+            </td>
+            <td class="center">Date:</td>
+            <td>
+              <p></p>
+              <p>Année</p>
+            </td>
+            <td>
+              <p></p>
+              <p>Mois</p>
+            </td>
+            <td>
+              <p></p>
+              <p>Jour</p>
+            </td>
+          </tr>
         </table>
 
         <p>
           <b>8. PRISE DE LIVRAISON -</b> L'acheteur reconnait avoir pris livraison du vehicule(s) decrit au present contra! et s'en declare satisfait.
         </p>
         <table class="signatureDateTable">
-        <tr>
-          <td class="center">Signature:</td>
-          <td>
-            <p></p>
-            <p>L'ACHETEUR</p>
-          </td>
-          <td class="center">Date:</td>
-          <td>
-            <p></p>
-            <p>Année</p>
-          </td>
-          <td>
-            <p></p>
-            <p>Mois</p>
-          </td>
-          <td>
-            <p></p>
-            <p>Jour</p>
-          </td>
-        </tr>
+          <tr>
+            <td class="center">Signature:</td>
+            <td>
+              <p></p>
+              <p>L'ACHETEUR</p>
+            </td>
+            <td class="center">Date:</td>
+            <td>
+              <p></p>
+              <p>Année</p>
+            </td>
+            <td>
+              <p></p>
+              <p>Mois</p>
+            </td>
+            <td>
+              <p></p>
+              <p>Jour</p>
+            </td>
+          </tr>
         </table>
 
       </div><!-- /right column -->
@@ -1360,20 +1332,20 @@
           <b>9. EN FOI DE QUOI</b>, les parties ont signe aIa date et au lieu mentionne au present contrat. Le present contra! lie les parties ainsi que leurs successeurs, heritiers, legataires, ayants droit, mandataires ou preposes. Si l'acheteur est une entreprise, le signataire a le plein pouvoir de liar l'entreprise qu'il represente et il garantit que toute action appropriee et necessaire a ete accomplie pour autoriser Ia signature par lui du present contrat. L'acheteur ne peut, d'aucune facon, vendre, transferer, ceder ou autrement aliener le present contra! ou les droits, interets ou avantages qui en decoulent.
         </p>
         <table class="threeSignatureTable">
-        <tr>
-          <td>
-            <p></p>
-            <p>L'ACHETEUR</p>
-          </td>
-          <td>
-            <p></p>
-            <p>CO-ACHETEUR</p>
-          </td>
-          <td>
-            <p></p>
-            <p>LE VENDEUR (Représentant autorisé)</p>
-          </td>
-        </tr>
+          <tr>
+            <td>
+              <p></p>
+              <p>L'ACHETEUR</p>
+            </td>
+            <td>
+              <p></p>
+              <p>CO-ACHETEUR</p>
+            </td>
+            <td>
+              <p></p>
+              <p>LE VENDEUR (Représentant autorisé)</p>
+            </td>
+          </tr>
         </table>
       </div>
 
@@ -1388,64 +1360,64 @@
 
         <table class="customer_ack">
           <tbody>
-            <tr>
-              <td>
-                <div>Protection assurance vie</div>
-                <div>Le solde du financement de votre véhicule est payé en cas de votre décès.</div>
-              </td>
-              <td>
-                <div class="checkbox"></div>
-                <div>Assurance refusée</div>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <div>Protection maladies graves</div>
-                <div>
-                  Le solde du financement de votre véhicule est payé en cas: de crise cardiaque, de cancer, de transplantation, d’accident vasculaire cérébral, de paralysie ou de pontage.
-                </div>
-              </td>
-              <td>
-                <div class="checkbox"></div>
-                <div>Assurance refusée</div>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <div>Protection accident - maladie </div>
-                <div>
-                  Couvre le paiement du financement de votre véhicule si vous êtes incapable de travailler. Le paiement se fait en plus de votre couverture d’emploi ou des régimes privés.
-                </div>
-              </td>
-              <td>
-                <div class="checkbox"></div>
-                <div>Assurance refusée</div>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <div>Perte d'emploi</div>
-                <div>
-                  Couvre le paiement du financement de votre véhicule si vous perdez involontairement votre emploi. Elle comprend également la couverture des blessures accidentelles.
-                </div>
-              </td>
-              <td>
-                <div class="checkbox"></div>
-                <div>Assurance refusée</div>
-              </td>
-            </tr>
-             <tr>
-              <td>
-                <div>Protection de garantie prolongée</div>
-                <div>
-                  Couvre toutes réparations nécessaires applicables qui surviennent après échéance des garanties du concessionnaire.
-                </div>
-              </td>
-              <td>
-                <div class="checkbox"></div>
-                <div>Garantie refusée</div>
-              </td>
-            </tr>
+          <tr>
+            <td>
+              <div>Protection assurance vie</div>
+              <div>Le solde du financement de votre véhicule est payé en cas de votre décès.</div>
+            </td>
+            <td>
+              <div class="checkbox"></div>
+              <div>Assurance refusée</div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div>Protection maladies graves</div>
+              <div>
+                Le solde du financement de votre véhicule est payé en cas: de crise cardiaque, de cancer, de transplantation, d’accident vasculaire cérébral, de paralysie ou de pontage.
+              </div>
+            </td>
+            <td>
+              <div class="checkbox"></div>
+              <div>Assurance refusée</div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div>Protection accident - maladie </div>
+              <div>
+                Couvre le paiement du financement de votre véhicule si vous êtes incapable de travailler. Le paiement se fait en plus de votre couverture d’emploi ou des régimes privés.
+              </div>
+            </td>
+            <td>
+              <div class="checkbox"></div>
+              <div>Assurance refusée</div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div>Perte d'emploi</div>
+              <div>
+                Couvre le paiement du financement de votre véhicule si vous perdez involontairement votre emploi. Elle comprend également la couverture des blessures accidentelles.
+              </div>
+            </td>
+            <td>
+              <div class="checkbox"></div>
+              <div>Assurance refusée</div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div>Protection de garantie prolongée</div>
+              <div>
+                Couvre toutes réparations nécessaires applicables qui surviennent après échéance des garanties du concessionnaire.
+              </div>
+            </td>
+            <td>
+              <div class="checkbox"></div>
+              <div>Garantie refusée</div>
+            </td>
+          </tr>
           </tbody>
         </table>
 
