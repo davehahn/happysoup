@@ -34,7 +34,7 @@ global with sharing class Lead_RestResource
     public String notes;
     public String leadSource;
     public String description;
-    public String leadNotificationPending;
+    public Boolean leadNotificationPending;
 
     public WebToLeadWrapper(){}
 
@@ -58,7 +58,7 @@ global with sharing class Lead_RestResource
         Preferred_Language__c = this.language,
         Marketing_Cloud_Notes__c = this.notes,
         LeadSource = this.leadSource,
-        Lead_Notication_Pending__c = true
+        Lead_Notification_Pending__c = true
       );
       return this;
     }
@@ -87,7 +87,7 @@ global with sharing class Lead_RestResource
       this.language = this.record.Preferred_Language__c;
       this.notes = this.record.Marketing_Cloud_Notes__c;
       this.leadSource = this.record.LeadSource;
-      this.leadNotificationPending = this.record.Lead_Notication_Pending__c;
+      this.leadNotificationPending = this.record.Lead_Notification_Pending__c;
       return this;
     }
 
