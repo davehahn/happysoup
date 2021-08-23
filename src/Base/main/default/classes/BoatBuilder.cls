@@ -327,6 +327,7 @@ public with sharing class BoatBuilder {
   public Boolean isLooseItemSale {get; private set;}
   public Boolean isDealerOrder { get; set; }
   public String tempDisclaimer { get; set; }
+  public List<InvoiceDisclaimer__mdt> invoiceDisclaimers { get; set; }
   //public LGND_Store lgnd_store { get; set; }
 
   //public String taxationProvince { get; set; }
@@ -356,7 +357,6 @@ public with sharing class BoatBuilder {
   public BoatBuilder(Id oppId)
   {
     this.opportunity_id = oppId;
-    //provincialTaxInfo = LGND_Utilities.fetchProvincialTaxInfo();
     init();
   }
 
@@ -427,6 +427,19 @@ public with sharing class BoatBuilder {
 
   }
 
+  private void buildInvoiceDisclaimers()
+  {
+    this.invoiceDisclaimers = [
+      SELECT
+        Id,
+        English__c,
+        French__c
+      FROM InvoiceDisclaimer__mdt
+      WHERE isActive__c = TRUE
+      AND Invoice_Type__c = 'Quote And Sales Agreement'
+    ];
+  }
+
   public void init() {
     soldToBusiness = false;
     hasChanged = false;
@@ -434,6 +447,7 @@ public with sharing class BoatBuilder {
     tempDisclaimer =  language == 'french' ?
       Legend_Settings__c.getOrgDefaults().Invoice_temp_disclaimer_french__c :
       Legend_Settings__c.getOrgDefaults().Invoice_temp_disclaimer__c;
+    this.buildInvoiceDisclaimers();
     isLooseItemSale = false;
     isDealerOrder = false;
     renderBuilder = false;
