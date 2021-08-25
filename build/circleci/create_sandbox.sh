@@ -9,6 +9,9 @@ DEPLOY_KEY=$SFDC_SERVER_KEY
 USERNAME=$PRODUCTION_USER
 CONSUMER_KEY=$PRODUCTION_CONSUMER_KEY
 
+echo "SFDX Version"
+sfdx --version
+
 mkdir -p workspace
 echo $DEPLOY_KEY | base64 --decode > deploy.key
 sfdx force:auth:jwt:grant -u $USERNAME -i $CONSUMER_KEY -f deploy.key --setalias ci-prod --instanceurl https://login.salesforce.com
