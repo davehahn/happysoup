@@ -32,7 +32,8 @@ public without sharing class Lead_Selector extends Application_Selector
       'hubspot_Boat_Type__c',
       'BoatModel__c',
       'hubspot_subscribe_legend_newsletter__c',
-      'Marketing_Cloud_Notes__c'
+      'Marketing_Cloud_Notes__c',
+      'Lead_Notification_Pending__c'
     };
   }
 
