@@ -17,20 +17,28 @@ export default class FactoryStoreFooterStayInTouch extends NavigationMixin(Light
   }
 
 	clickHandler( e ){
+	  e.preventDefault();
+	  e.stopPropagation;
 		console.log('hello?');
-		this.emailAddress = this.template.querySelector('[data-id="newsEmail"]').value;
-		console.log('emailAddress', this.emailAddress);
+		const emailAddress = this.template.querySelector('[data-id="newsEmail"]').value;
+		console.log('emailAddress', emailAddress);
 		this.newsPageRef = {
 			type: 'comm__namedPage',
 			attributes: {
-				name: 'Stay_in_Touch__c'
+				pageName: 'Stay_in_Touch__c'
 			},
-			state : {
-				c__preFillEmail: this.emailAddress
+			state: {
+				c__preFillEmail: emailAddress
 			}
-		};
-		this[NavigationMixin.Navigate](this.newsPageRef);
-
-		e.preventDefault();
+		}
+		this.navigateToPage();
  	}
+
+ 	navigateToPage(){
+ 	  console.log('please got to page');
+ 	  console.log(this.newsPageRef);
+ 	  this[NavigationMixin.Navigate](this.newsPageRef);
+ 	  console.log('after navigate');
+  }
+
 }

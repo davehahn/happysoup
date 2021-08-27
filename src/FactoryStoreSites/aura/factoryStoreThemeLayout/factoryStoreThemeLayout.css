@@ -16,7 +16,7 @@
   z-index: 1;
 }
 
-.THIS .storeHeader__storeDetails{
+.THIS.storeHeader .storeDetails{
     display: grid;
     grid-template-columns: 380px 1fr 270px;
     align-items: center;
@@ -24,12 +24,12 @@
     margin: 0 auto;
     padding: 1em 2.5em 1.5em;
 }
-.THIS .storeHeader__mainNavigation{
+.THIS.storeHeader .storeDetails .mainNavigation{
     width: 100%;
     display: block;
 }
 
-.THIS .storeHeader__locationAndHours{
+.THIS.storeHeader .storeDetails .locationAndHours{
   width: 380px;
   flex-shrink: 0;
   display: flex;
@@ -37,11 +37,11 @@
   justify-content: space-between;  
 }
 
-.THIS .storeHeader__siteToggle{
+.THIS.storeHeader .siteToggle{
   width: 250px;
 }
 
-.THIS .storeHeader__corporateLogo{
+.THIS.storeHeader .storeDetails .corporateLogo{
   display: block;
   width: 280px;
   height: 42px;
@@ -52,11 +52,11 @@
   background-repeat: no-repeat;
 }
 
-.THIS .storeFooter{
+.THIS.storeFooter{
   margin-top: 2em;
 }
 
-.THIS .storeFooter__footerLegal{
+.THIS.storeFooter .footerLegal{
 	max-width: 1300px;
 	margin: 0 auto;
 	padding: 2.5em;
@@ -66,14 +66,14 @@
 	line-height: 1.35;
 }
 
-.THIS .storeFooter__legendCTA{
+.THIS.storeFooter .legendCTA{
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   padding: 1.5em 0;
 }
-.THIS .storeFooter__legendCTA .legendCTA__heading{
+.THIS.storeFooter .legendCTA .legendCTA__heading{
   text-align: center;
 }
 
@@ -197,7 +197,7 @@
     font-size: 0.7em;
   }
 
-  .THIS .storeFooter__legendCTA .legendCTA__heading{
+  .THIS.storeFooter .legendCTA .legendCTA__heading{
     font-size: 1.25em;
     margin-top: 0.5em;
     padding: 0 1em;

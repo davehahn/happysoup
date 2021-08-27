@@ -1,0 +1,269 @@
+{
+  "appPageId" : "af32fb0b-4e3c-4d32-a81c-7e998bce0087",
+  "componentName" : "siteforce:dynamicLayout",
+  "id" : "ab003bd6-3e1e-425e-a8a7-c0c84c694e5e",
+  "label" : "Parts and Service",
+  "regions" : [ {
+    "components" : [ {
+      "componentAttributes" : {
+        "background" : "background: rgba(0,0,0,0)",
+        "backgroundOverlay" : "rgba(0,0,0,0.5)",
+        "contentAreaWidth" : 100,
+        "sectionConfig" : {
+          "UUID" : "32c2bdc5-8b1f-45d4-94e4-043fd4d5c510",
+          "columns" : [ {
+            "UUID" : "5e45f95d-ec17-4717-8eac-0ef96306283f",
+            "columnKey" : "1",
+            "columnName" : "Column 1",
+            "columnWidth" : "12",
+            "seedComponents" : [ ]
+          } ]
+        },
+        "sectionHeight" : 32
+      },
+      "componentName" : "forceCommunity:section",
+      "id" : "32c2bdc5-8b1f-45d4-94e4-043fd4d5c510",
+      "regions" : [ {
+        "components" : [ {
+          "componentAttributes" : {
+            "sectionWidth" : "Extra Thin",
+            "title" : "Parts & Service"
+          },
+          "componentName" : "c:communitySharedPageIntro",
+          "id" : "eabae0b9-0c2c-46b8-8d8f-bdf4b2c4d10d",
+          "renderPriority" : "NEUTRAL",
+          "renditionMap" : { },
+          "type" : "component"
+        } ],
+        "id" : "5e45f95d-ec17-4717-8eac-0ef96306283f",
+        "regionLabel" : "Column 1",
+        "regionName" : "1",
+        "renditionMap" : { },
+        "type" : "region"
+      } ],
+      "renderPriority" : "NEUTRAL",
+      "renditionMap" : { },
+      "type" : "component"
+    }, {
+      "componentAttributes" : {
+        "background" : "background: rgba(0,0,0,0)",
+        "backgroundOverlay" : "rgba(0,0,0,0.5)",
+        "contentAreaWidth" : 100,
+        "sectionConfig" : {
+          "UUID" : "d5f692f6-e007-4874-accd-6b298af73b32",
+          "columns" : [ {
+            "UUID" : "dd05b988-a1cf-48de-a441-ce84eaf0e3a9",
+            "columnKey" : "1",
+            "columnName" : "Column 1",
+            "columnWidth" : "12",
+            "seedComponents" : [ ]
+          } ]
+        },
+        "sectionHeight" : 300
+      },
+      "componentName" : "forceCommunity:section",
+      "id" : "d5f692f6-e007-4874-accd-6b298af73b32",
+      "regions" : [ {
+        "components" : [ {
+          "componentAttributes" : {
+            "headingLevel" : "h3",
+            "headingSize" : "M",
+            "introBlurb" : "Pellentesque a cursus lacus. Cras libero nunc, malesuada sed venenatis in, hendrerit eu diam. Pellentesque dignissim efficitur orci id sagittis. Fusce accumsan ultrices lorem, ut tristique sem rutrum et. Praesent consequat leo felis. Ut sollicitudin urna aliquam massa pellentesque pulvinar. Cras ac neque massa. Quisque aliquet dignissim euismod. Etiam neque mi, gravida eget enim quis, rutrum lacinia tortor. Nullam massa leo, porttitor dictum metus at, semper aliquet est. Nulla facilisi. Nullam dictum sagittis faucibus. Donec tincidunt mollis ipsum, ut aliquet risus tempus ac.",
+            "introTitle" : "Our Services",
+            "sectionWidth" : "Average"
+          },
+          "componentName" : "c:communitySharedSimpleHeadDeck",
+          "id" : "eae963ec-1d4f-4888-84f6-c075f28ce6e2",
+          "renderPriority" : "NEUTRAL",
+          "renditionMap" : { },
+          "type" : "component"
+        }, {
+          "componentAttributes" : {
+            "config" : "{\"dataProviderDefinition\":{\"componentName\":\"forceCommunity:managedContentCollectionDataProvider\",\"attributes\":{\"dataProviderType\":\"NamedCollection\",\"dataProviderInfo\":{\"apiName\":\"Service_Specials_and_Promotions\"}}},\"schemaVersion\":\"V2.0\",\"collectionLayoutDefinition\":{\"componentName\":\"forceCommunity:dynamicCollectionCarousel\",\"attributes\":{\"limitItems\":10,\"showProgressIndicator\":true,\"contentIndicatorSpacing\":\"none\",\"showProgressArrows\":true,\"transitionType\":\"slide\",\"transitionSpeed\":600}},\"itemLayoutDefinition\":{\"componentName\":\"forceCommunity:bannerLayout\",\"attributes\":{\"showTitle\":true,\"showCaption\":true,\"showButton\":true,\"showFlag\":true,\"showEyebrow\":true,\"showMetadata1\":true,\"showMetadata2\":true,\"showDateTime\":true,\"title\":\"{!CurrentItem.Title}\",\"subTitle\":\"{!CurrentItem.Excerpt}\",\"imageUrl\":\"{!CurrentItem.BannerGraphic.url}\",\"imageAltText\":\"\",\"videoUrl\":\"\",\"flagText\":\"\",\"eyebrowText\":\"\",\"metadata1Text\":\"\",\"metadata2Text\":\"\",\"datetime\":\"{!CurrentItem.StartDate}\",\"useAspectRatio\":false,\"bannerAspectRatio\":\"16:9\",\"bannerHeight\":450,\"contentWidth\":\"100\",\"textAlignment\":\"center center\",\"overlayBackgroundColor\":\"rgba(0, 0, 0, 0.4)\",\"backgroundSize\":\"cover\",\"backgroundPosition\":\"center center\",\"hideTextElementsForVideo\":false,\"flagBackgroundColor\":\"#ff0000\",\"flagTextColor\":\"#ffffff\",\"flagAlignment\":\"top left\",\"flagRotation\":0,\"flagSpacing\":\"medium\",\"flagBorderColor\":\"#ffffff\",\"flagBorderStyles\":\"{\\\"borderTopLeftRadius\\\":{\\\"value\\\":\\\"0\\\"},\\\"borderTopRightRadius\\\":{\\\"value\\\":\\\"0\\\"},\\\"borderBottomRightRadius\\\":{\\\"value\\\":\\\"0\\\"},\\\"borderBottomLeftRadius\\\":{\\\"value\\\":\\\"0\\\"}}\",\"flagTextDecoration\":\"\",\"titleHeadingTag\":\"p\",\"titleTextDecoration\":\"\",\"bannerTitleTextColor\":\"#ffffff\",\"titleFontSize\":\"large\",\"showTitleHighlight\":false,\"titleHighlightColor\":\"\",\"bannerSubTitleTextColor\":\"#ffffff\",\"subTitleFontSize\":\"regular\",\"eyebrowTextColor\":\"#ffffff\",\"eyebrowFontSize\":\"regular\",\"eyebrowTextDecoration\":\"\",\"showEyebrowHighlight\":false,\"eyebrowHighlightColor\":\"\",\"metadataTextColor\":\"#ffffff\",\"metadataFontSize\":\"regular\",\"metadataTextDecoration\":\"\",\"showMetadata1Highlight\":false,\"metadata1HighlightColor\":\"\",\"showMetadata2Highlight\":false,\"metadata2HighlightColor\":\"\",\"callToActionLabel\":\"View\",\"callToActionButtonBorderStyles\":\"\",\"callToActionButtonBackgroundColor\":\"\",\"callToActionButtonBackgroundColorHover\":\"\",\"callToActionButtonTextColor\":\"\",\"callToActionButtonTextColorHover\":\"\",\"callToActionButtonBorderColor\":\"\",\"callToActionButtonBorderColorHover\":\"\",\"defaultLinksOverrides\":\"{}\",\"additionalLinks\":\"{}\",\"dateFormat\":\"none\",\"displayDayOfWeek\":false,\"timeFormat\":\"none\",\"timeZoneOptions\":\"none\",\"timeZoneDisplay\":\"short\",\"datetimeTextColor\":\"#ffffff\",\"datetimeFontSize\":\"regular\",\"datetimeTextDecoration\":\"\",\"componentHoverEffect\":\"none\"}}}"
+          },
+          "componentName" : "forceCommunity:dynamicCollection",
+          "id" : "b2f1b793-524e-4e66-b3c4-f0229a233808",
+          "renderPriority" : "NEUTRAL",
+          "renditionMap" : { },
+          "type" : "component"
+        } ],
+        "id" : "dd05b988-a1cf-48de-a441-ce84eaf0e3a9",
+        "regionLabel" : "Column 1",
+        "regionName" : "1",
+        "renditionMap" : { },
+        "type" : "region"
+      } ],
+      "renderPriority" : "NEUTRAL",
+      "renditionMap" : { },
+      "type" : "component"
+    }, {
+      "componentAttributes" : {
+        "background" : "background: rgba(0,0,0,0)",
+        "backgroundOverlay" : "rgba(0,0,0,0.5)",
+        "contentAreaWidth" : 100,
+        "sectionConfig" : {
+          "UUID" : "03f58153-ecac-4e43-9e53-7eaa72066e2c",
+          "columns" : [ {
+            "UUID" : "0b572603-2748-4b7a-8f72-634612e88804",
+            "columnKey" : "1",
+            "columnName" : "Column 1",
+            "columnWidth" : "12",
+            "seedComponents" : [ ]
+          } ]
+        },
+        "sectionHeight" : 32
+      },
+      "componentName" : "forceCommunity:section",
+      "id" : "03f58153-ecac-4e43-9e53-7eaa72066e2c",
+      "regions" : [ {
+        "components" : [ {
+          "componentAttributes" : {
+            "headingLevel" : "h3",
+            "headingSize" : "M",
+            "introBlurb" : "Etiam sodales pulvinar elit eu dictum. Vestibulum laoreet orci quis leo commodo, et eleifend ante hendrerit. Ut sit amet augue diam. In tortor nunc, feugiat quis consectetur non, malesuada in justo.",
+            "introTitle" : "What we offer",
+            "sectionWidth" : "Average"
+          },
+          "componentName" : "c:communitySharedSimpleHeadDeck",
+          "id" : "75b486cd-a4b2-40cb-9ffd-03b5de5a7981",
+          "renderPriority" : "NEUTRAL",
+          "renditionMap" : { },
+          "type" : "component"
+        }, {
+          "componentAttributes" : {
+            "richTextValue" : "<p>Replace this text with content of your own.</p>"
+          },
+          "componentName" : "forceCommunity:richTextInline",
+          "id" : "b4562181-a921-45bd-996a-c14759e72845",
+          "renderPriority" : "NEUTRAL",
+          "renditionMap" : { },
+          "type" : "component"
+        } ],
+        "id" : "0b572603-2748-4b7a-8f72-634612e88804",
+        "regionLabel" : "Column 1",
+        "regionName" : "1",
+        "renditionMap" : { },
+        "type" : "region"
+      } ],
+      "renderPriority" : "NEUTRAL",
+      "renditionMap" : { },
+      "type" : "component"
+    }, {
+      "componentAttributes" : {
+        "background" : "background: rgba(0,0,0,0)",
+        "backgroundOverlay" : "rgba(0,0,0,0.5)",
+        "contentAreaWidth" : 100,
+        "sectionConfig" : {
+          "UUID" : "be2fe4c8-f398-4c70-a591-6eb9fc3ee2d7",
+          "columns" : [ {
+            "UUID" : "6e0334c4-18e0-4b89-80ec-28d9a29497f3",
+            "columnKey" : "1",
+            "columnName" : "Column 1",
+            "columnWidth" : "12",
+            "seedComponents" : [ ]
+          } ]
+        },
+        "sectionHeight" : 300
+      },
+      "componentName" : "forceCommunity:section",
+      "id" : "be2fe4c8-f398-4c70-a591-6eb9fc3ee2d7",
+      "regions" : [ {
+        "id" : "6e0334c4-18e0-4b89-80ec-28d9a29497f3",
+        "regionLabel" : "Column 1",
+        "regionName" : "1",
+        "renditionMap" : { },
+        "type" : "region"
+      } ],
+      "renderPriority" : "NEUTRAL",
+      "renditionMap" : { },
+      "type" : "component"
+    }, {
+      "componentAttributes" : {
+        "background" : "background: rgba(0,0,0,0)",
+        "backgroundOverlay" : "rgba(0,0,0,0.5)",
+        "contentAreaWidth" : 100,
+        "sectionConfig" : {
+          "UUID" : "375e6fbd-d1b7-4a42-805f-41d10efb321a",
+          "columns" : [ {
+            "UUID" : "05b96546-470f-41b3-a06d-945f37ecdb63",
+            "columnKey" : "1",
+            "columnName" : "Column 1",
+            "columnWidth" : "12",
+            "seedComponents" : [ ]
+          } ]
+        },
+        "sectionHeight" : 300
+      },
+      "componentName" : "forceCommunity:section",
+      "id" : "375e6fbd-d1b7-4a42-805f-41d10efb321a",
+      "regions" : [ {
+        "components" : [ {
+          "componentAttributes" : {
+            "colour" : "rgba(0, 0, 0, 0.5)",
+            "sectionWidth" : "Container",
+            "spaceAbove" : "Average",
+            "spaceBelow" : "Average",
+            "thickness" : "1"
+          },
+          "componentName" : "c:communitySharedPageDivider",
+          "id" : "074d511d-226b-4665-90ac-538fe6a1637b",
+          "renderPriority" : "NEUTRAL",
+          "renditionMap" : { },
+          "type" : "component"
+        }, {
+          "componentAttributes" : {
+            "blurbAlignment" : "Left",
+            "headingAlignment" : "Center",
+            "headingLevel" : "h3",
+            "headingSize" : "M",
+            "introTitle" : "What our customers are saying",
+            "sectionWidth" : "Container"
+          },
+          "componentName" : "c:communitySharedSimpleHeadDeck",
+          "id" : "89c912c9-80f1-4988-92a1-c651d7d8d167",
+          "renderPriority" : "NEUTRAL",
+          "renditionMap" : { },
+          "type" : "component"
+        }, {
+          "componentAttributes" : {
+            "config" : "{\"dataProviderDefinition\":{\"componentName\":\"forceCommunity:managedContentCollectionDataProvider\",\"attributes\":{\"dataProviderType\":\"NamedCollection\",\"dataProviderInfo\":{\"apiName\":\"Service_Testimonials\"}}},\"schemaVersion\":\"V2.0\",\"collectionLayoutDefinition\":{\"componentName\":\"forceCommunity:dynamicCollectionCarousel\",\"attributes\":{\"limitItems\":5,\"showProgressIndicator\":true,\"contentIndicatorSpacing\":\"none\",\"showProgressArrows\":true,\"transitionType\":\"slide\",\"transitionSpeed\":600}},\"itemLayoutDefinition\":{\"componentName\":\"forceCommunity:bannerLayout\",\"attributes\":{\"showTitle\":true,\"showCaption\":true,\"showButton\":false,\"showFlag\":true,\"showEyebrow\":true,\"showMetadata1\":true,\"showMetadata2\":true,\"showDateTime\":true,\"title\":\"{!CurrentItem.Title}\",\"subTitle\":\"{!CurrentItem.FullTestimonial}\",\"imageUrl\":\"\",\"imageAltText\":\"\",\"videoUrl\":\"\",\"flagText\":\"\",\"eyebrowText\":\"\",\"metadata1Text\":\"{!CurrentItem.CustomerName}\",\"metadata2Text\":\"{!CurrentItem.CustomerLocation}\",\"datetime\":\"{!CurrentItem.DateSubmitted}\",\"useAspectRatio\":false,\"bannerAspectRatio\":\"16:9\",\"bannerHeight\":\"320\",\"contentWidth\":\"70\",\"textAlignment\":\"center left\",\"overlayBackgroundColor\":\"rgb(13, 80, 109)\",\"backgroundSize\":\"cover\",\"backgroundPosition\":\"center center\",\"hideTextElementsForVideo\":false,\"flagBackgroundColor\":\"#ff0000\",\"flagTextColor\":\"#ffffff\",\"flagAlignment\":\"top left\",\"flagRotation\":0,\"flagSpacing\":\"medium\",\"flagBorderColor\":\"#ffffff\",\"flagBorderStyles\":\"{\\\"borderTopLeftRadius\\\":{\\\"value\\\":\\\"0\\\"},\\\"borderTopRightRadius\\\":{\\\"value\\\":\\\"0\\\"},\\\"borderBottomRightRadius\\\":{\\\"value\\\":\\\"0\\\"},\\\"borderBottomLeftRadius\\\":{\\\"value\\\":\\\"0\\\"}}\",\"flagTextDecoration\":\"\",\"titleHeadingTag\":\"h4\",\"titleTextDecoration\":\"{\\\"bold\\\":true}\",\"bannerTitleTextColor\":\"rgb(255, 255, 255)\",\"titleFontSize\":\"large\",\"showTitleHighlight\":false,\"titleHighlightColor\":\"\",\"bannerSubTitleTextColor\":\"rgb(255, 255, 255)\",\"subTitleFontSize\":\"regular\",\"eyebrowTextColor\":\"rgb(0, 0, 0)\",\"eyebrowFontSize\":\"regular\",\"eyebrowTextDecoration\":\"\",\"showEyebrowHighlight\":false,\"eyebrowHighlightColor\":\"\",\"metadataTextColor\":\"rgb(255, 255, 255)\",\"metadataFontSize\":\"regular\",\"metadataTextDecoration\":\"\",\"showMetadata1Highlight\":false,\"metadata1HighlightColor\":\"\",\"showMetadata2Highlight\":false,\"metadata2HighlightColor\":\"\",\"callToActionLabel\":\"View\",\"callToActionButtonBorderStyles\":\"\",\"callToActionButtonBackgroundColor\":\"\",\"callToActionButtonBackgroundColorHover\":\"\",\"callToActionButtonTextColor\":\"\",\"callToActionButtonTextColorHover\":\"\",\"callToActionButtonBorderColor\":\"\",\"callToActionButtonBorderColorHover\":\"\",\"defaultLinksOverrides\":\"{}\",\"additionalLinks\":\"{}\",\"dateFormat\":\"MonthDayYear\",\"displayDayOfWeek\":false,\"timeFormat\":\"none\",\"timeZoneOptions\":\"none\",\"timeZoneDisplay\":\"short\",\"datetimeTextColor\":\"rgb(255, 255, 255)\",\"datetimeFontSize\":\"regular\",\"datetimeTextDecoration\":\"\",\"componentHoverEffect\":\"none\"}}}"
+          },
+          "componentName" : "forceCommunity:dynamicCollection",
+          "id" : "8b265f1a-3e23-4273-8797-aed46298e16d",
+          "renderPriority" : "NEUTRAL",
+          "renditionMap" : { },
+          "type" : "component"
+        } ],
+        "id" : "05b96546-470f-41b3-a06d-945f37ecdb63",
+        "regionLabel" : "Column 1",
+        "regionName" : "1",
+        "renditionMap" : { },
+        "type" : "region"
+      } ],
+      "renderPriority" : "NEUTRAL",
+      "renditionMap" : { },
+      "type" : "component"
+    } ],
+    "id" : "953f7d00-bc90-4b40-bcec-a7ce91701ead",
+    "regionName" : "content",
+    "type" : "region"
+  }, {
+    "components" : [ {
+      "componentAttributes" : {
+        "customHeadTags" : "",
+        "description" : "",
+        "title" : "Parts and Service"
+      },
+      "componentName" : "forceCommunity:seoAssistant",
+      "id" : "1c702319-82b9-4609-adf6-f82628d70ead",
+      "renditionMap" : { },
+      "type" : "component"
+    } ],
+    "id" : "bd712fe6-7888-4e4d-884e-5973c308af5b",
+    "regionName" : "sfdcHiddenRegion",
+    "type" : "region"
+  } ],
+  "themeLayoutType" : "LjRIQBtYi7qqpINdY2ZXVvjeHANIyj",
+  "type" : "view",
+  "viewType" : "custom-parts-and-service"
+}

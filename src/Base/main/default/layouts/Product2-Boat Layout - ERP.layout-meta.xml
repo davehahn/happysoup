@@ -121,6 +121,10 @@
                 <behavior>Edit</behavior>
                 <field>Available_Online__c</field>
             </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>Available_on_Factory_Store_Sites__c</field>
+            </layoutItems>
         </layoutColumns>
         <style>TwoColumnsTopToBottom</style>
     </layoutSections>
@@ -362,6 +366,16 @@
     <platformActionList>
         <actionListContext>Record</actionListContext>
         <platformActionListItems>
+            <actionName>Update_MRP_Quantity</actionName>
+            <actionType>CustomButton</actionType>
+            <sortOrder>12</sortOrder>
+        </platformActionListItems>
+        <platformActionListItems>
+            <actionName>Gallery</actionName>
+            <actionType>CustomButton</actionType>
+            <sortOrder>13</sortOrder>
+        </platformActionListItems>
+        <platformActionListItems>
             <actionName>Task</actionName>
             <actionType>QuickAction</actionType>
             <sortOrder>0</sortOrder>
@@ -420,16 +434,6 @@
             <actionName>PrintableView</actionName>
             <actionType>StandardButton</actionType>
             <sortOrder>11</sortOrder>
-        </platformActionListItems>
-        <platformActionListItems>
-            <actionName>Update_MRP_Quantity</actionName>
-            <actionType>CustomButton</actionType>
-            <sortOrder>12</sortOrder>
-        </platformActionListItems>
-        <platformActionListItems>
-            <actionName>Gallery</actionName>
-            <actionType>CustomButton</actionType>
-            <sortOrder>13</sortOrder>
         </platformActionListItems>
     </platformActionList>
     <quickActionList>

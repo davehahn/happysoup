@@ -47,6 +47,7 @@ jobs:
           at: /workspace
       - run:
           name: Validate deployment
+          no_output_timeout: 20m
           command: |
             . build/circleci/cleancode.sh
             . build/circleci/validate_build.sh
