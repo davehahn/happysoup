@@ -23,6 +23,7 @@ public class Factory_CustomSettings {
       LegendMontrealAccountId__c = legendAccountsMap.get('Legend Boats Montreal').Id,
       LegendWholesaleAccountId__c = legendAccountsMap.get('Legend Boats Wholesale').Id ,
       FederalTaxRate__c = 5.0,
+      Purchase_Order_Line_Lot__c = String.valueOf(Date.today().year()),
       Email_Logo_Id_English__c = 'theEnglishId',
       Email_Logo_Id_French__c = 'theFrenchId'
     );
@@ -33,6 +34,20 @@ public class Factory_CustomSettings {
       pbMap.get('retail').Id ).substring(0, 15);
     invSettings.Work_Order_Partner_Pricebook_Id__c = String.valueOf(
       pbMap.get('partner').Id ).substring(0, 15);
+    invSettings.GMBLASERP__disable_gtInboundInventoryMovement__c = true;
+    invSettings.GMBLASERP__disable_gtManufacturingInventoryMovement__c = true;
+    invSettings.GMBLASERP__disable_gtOutboundInventoryMovement__c = true;
+    invSettings.GMBLASERP__disable_gtPurchaseOrderInventoryMovement__c = true;
+    invSettings.GMBLASERP__disable_gtMaterial__c = true;
+    invSettings.GMBLASERP__disable_gtPurchaseOrderLine__c = true;
+    for(AcctSeedERP__Warehouse__c whs : [SELECT Id, Name FROM AcctSeedERP__Warehouse__c]){
+      if( whs.Name == 'In Transit' ){
+        invSettings.GMBLASERP__Transit_Warehouse_Id__c = String.valueOf(whs.Id).left(15);
+      }
+      if( whs.Name == 'Adjustments' ){
+        invSettings.GMBLASERP__Adjustment_Warehouse_Id__c = String.valueOf(whs.Id).left(15);
+      }
+    }
     insert invSettings;
 
     // disable the gcCashReceipt trigger handler in GMBLASG package due to
@@ -85,7 +100,7 @@ public class Factory_CustomSettings {
     }
     insert ups;
 
-    Id feeRtId = [SELECT Id FROM RecordType WHERE DeveloperName = 'Fees' AND SobjectType = 'Product2'].Id;
+    Id feeRtId = LGND_Constants.productRtId_Fees;// [SELECT Id FROM RecordType WHERE DeveloperName = 'Fees' AND SobjectType = 'Product2'].Id;
     Product2 ppsa = new Product2(
       RecordTypeId = feeRtId,
       Family = 'Bank Registration PPSA Fee',

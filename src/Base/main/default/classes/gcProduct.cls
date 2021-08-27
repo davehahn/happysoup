@@ -111,6 +111,7 @@ public without sharing class gcProduct {
 
 	private static void settings(list<Product2> listNew)
 	{
+		System.debug('Product Trigger');
 		map<String,Id> mapGL = new map<String,Id>();
 
 		for(AcctSeed__GL_Account__c gl :
@@ -121,16 +122,20 @@ public without sharing class gcProduct {
 			mapGL.put(gl.Uniquefier__c,gl.Id);
 		}
 
-		map<Id,String> mapRecordType = new map<Id,String>();
-		for(RecordType rt : [SELECT Id, Name FROM RecordType WHERE sObjectType = 'Product2'])
-		{
-			mapRecordType.put(rt.Id,rt.Name);
-		}
-
+//		map<Id,String> mapRecordType = new map<Id,String>();
+//		for(RecordType rt : [SELECT Id, Name FROM RecordType WHERE sObjectType = 'Product2'])
+//		{
+//			mapRecordType.put(rt.Id,rt.Name);
+//		}
+		Id idRTBoatProduct = LGND_constants.productRtId_Boat;
+		Id idRTMotor = LGND_constants.productRtId_Motor;
+		Id idRTTrailer = LGND_constants.productRtId_Trailer;
+		Id idRTTrollingMotor = LGND_constants.productRtId_TrollingMotor;
+		Id idRTPart = LGND_constants.productRtId_Part;
 		for(Product2 p : listNew)
 		{
-			String strRecordTypeName = mapRecordType.get(p.RecordTypeId);
-			if(strRecordTypeName == 'Boat')
+//			String strRecordTypeName = mapRecordType.get(p.RecordTypeId);
+			if(p.RecordTypeId == idRTBoatProduct)
 			{
 				p.AcctSeed__Inventory_GL_Account__c = mapGL.get('InventoryBoats');
 				p.AcctSeed__Expense_GL_Account__c = mapGL.get('CogsBoats');
@@ -145,10 +150,10 @@ public without sharing class gcProduct {
 				p.Can_be_Nest__c = true;
 				p.Can_be_Nested__c = false;
 			}
-			else if(strRecordTypeName == 'Motor' ||
-					    strRecordTypeName == 'Trailer' ||
-					    strRecordTypeName == 'Trolling Motor' ||
-					    ( strRecordTypeName == 'Part' && p.Family != null && p.Family.contains('Hull') ) )
+			else if(p.RecordTypeId == idRTMotor ||
+					p.RecordTypeId == idRTTrailer ||
+					p.RecordTypeId == idRTTrollingMotor ||
+					    ( p.RecordTypeId == idRTPart && p.Family != null && p.Family.contains('Hull') ) )
 			{
 				p.AcctSeed__Inventory_GL_Account__c = mapGL.get('InventoryParts');
 				p.AcctSeed__Expense_GL_Account__c = mapGL.get('CogsParts');

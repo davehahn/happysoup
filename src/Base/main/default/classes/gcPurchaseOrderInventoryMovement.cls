@@ -24,7 +24,11 @@ global without sharing class gcPurchaseOrderInventoryMovement {
 		if(newMap == NULL) newMap = new map<Id,AcctSeedERP__Purchase_Order_Inventory_Movement__c>();
 		if(listNew == NULL) listNew = new list<AcctSeedERP__Purchase_Order_Inventory_Movement__c>();
 
+		GMBLASERP.gcPurchaseOrder.disableTrigger = true;
+		GMBLASERP.gcPurchaseOrderLine.disableTrigger = true;
+
 		updateAndValidate(oldMap,newMap,listNew,boolIsBefore,boolIsInsert,boolIsUpdate,boolIsDelete);
+		GCR_InventoryMovement.triggerHandler(oldMap, newMap, listNew, boolIsBefore, boolIsInsert, boolIsUpdate, boolIsDelete);
 
 		if(boolIsBefore)
 		{
@@ -104,13 +108,19 @@ global without sharing class gcPurchaseOrderInventoryMovement {
 
 			for(AcctSeedERP__Purchase_Order_Line__c pol: 
 					[SELECT Id, 
-					 GMBLASERP__Lot__c,
-					 AcctSeedERP__Product__c,
-					 AcctSeedERP__Product__r.RecordType.Name,
-					 AcctSeedERP__Project__c,
-					 AcctSeedERP__Project__r.Retail_ERP__c,
-					 AcctSeedERP__Project_Task__c,
-					 AcctSeedERP__Quantity_Received__c
+						GMBLASERP__Lot__c,
+						AcctSeedERP__Product__c,
+						AcctSeedERP__Product__r.RecordType.Name,
+						AcctSeedERP__Project__r.Retail_ERP__c,
+						AcctSeedERP__Quantity_Received__c,
+						AcctSeedERP__GL_Account_Variable_1__c,
+						AcctSeedERP__GL_Account_Variable_2__c,
+						AcctSeedERP__GL_Account_Variable_3__c,
+						AcctSeedERP__GL_Account_Variable_4__c,
+						AcctSeedERP__Project__c,
+						AcctSeedERP__Project_Task__c,
+						AcctSeedERP__Purchase_Order__c,
+						AcctSeedERP__Unit_Price__c
 					 FROM AcctSeedERP__Purchase_Order_Line__c
 					 WHERE Id IN : mapPurchLine.keySet()])
 			{
@@ -121,6 +131,18 @@ global without sharing class gcPurchaseOrderInventoryMovement {
 			for(AcctSeedERP__Purchase_Order_Inventory_Movement__c move : listNew)
 			{
 				AcctSeedERP__Purchase_Order_Line__c pol = mapPurchLine.get(move.AcctSeedERP__Purchase_Order_Line__c);
+				move.AcctSeedERP__GL_Account_Variable_1__c  = pol.AcctSeedERP__GL_Account_Variable_1__c;
+				move.AcctSeedERP__GL_Account_Variable_2__c  = pol.AcctSeedERP__GL_Account_Variable_2__c;
+				move.AcctSeedERP__GL_Account_Variable_3__c  = pol.AcctSeedERP__GL_Account_Variable_3__c;
+				move.AcctSeedERP__GL_Account_Variable_4__c  = pol.AcctSeedERP__GL_Account_Variable_4__c;
+				move.AcctSeedERP__Project__c 				= pol.AcctSeedERP__Project__c;
+				move.AcctSeedERP__Project_Task__c 			= pol.AcctSeedERP__Project_Task__c;
+				move.AcctSeedERP__Unit_Cost__c 				= pol.AcctSeedERP__Unit_Price__c;
+				move.GMBLASERP__Purchase_Order__c 			= pol.AcctSeedERP__Purchase_Order__c;
+
+				//VALIDATION FROM GMBLASERP
+				if(boolIsUpdate && move.GMBLASERP__Account_Payable_Line__c != null)
+					move.addError('The Purchase Order Inventory Movement cannot be modified because it looks up to a Payable Line.  If necessary, delete the Payable Line. '+move.Name);
 				/// If the Permission is not assigned then the lot must be the same.
 				if(!canReceiveAnyLotPOL && pol.AcctSeedERP__Product__r.RecordType.Name == 'Boat')
 					move.GMBLASERP__Lot__c  = pol.GMBLASERP__Lot__c;
@@ -135,11 +157,6 @@ global without sharing class gcPurchaseOrderInventoryMovement {
 					if(pol.AcctSeedERP__Project__c != null){
 						mapProjectProductSerial.put(pol.AcctSeedERP__Project__c, new Map<Id,Id>());
 						mapProjectProductSerial.get(pol.AcctSeedERP__Project__c).put(pol.AcctSeedERP__Product__c,move.GMBLASERP__Serial_Number__c);
-
-						//if(pol.AcctSeedERP__Project__r.Retail_ERP__c != null){
-						//	mapProjectProductSerial.put(pol.AcctSeedERP__Project__r.Retail_ERP__c, new Map<Id,Id>());
-						//	mapProjectProductSerial.get(pol.AcctSeedERP__Project__r.Retail_ERP__c).put(pol.AcctSeedERP__Product__c,move.GMBLASERP__Serial_Number__c);
-						//}
 					}
 				}
 			}
@@ -149,6 +166,14 @@ global without sharing class gcPurchaseOrderInventoryMovement {
 				gcMaterial.allowUntagRetail = true;
 				gcMaterial.updateRetailMaterialSerial(mapProjectProductSerial);
 				gcMaterial.allowUntagRetail = oldV;
+			}
+		}
+		if(boolIsBefore && boolIsDelete)
+		{
+			for(AcctSeedERP__Purchase_Order_Inventory_Movement__c move : oldMap.values())
+			{
+				if(move.GMBLASERP__Account_Payable_Line__c != null)
+					move.addError('The Purchase Order Inventory Movement cannot be deleted because it looks up to a Payable Line.  If necessary, delete the Payable Line. '+move.Name);
 			}
 		}
 		/// Delete the serial number

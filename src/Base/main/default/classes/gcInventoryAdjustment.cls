@@ -121,6 +121,60 @@ global without sharing class gcInventoryAdjustment {
               mapGlv1ByName.put(glv.Name,glv);
       }
   }
+	private static void cascadeUpdate(set<Id> setIdAdjustment)
+	{
+		setIdAdjustment.remove(NULL);
+		list<sObject> listChildren = new list<sObject>();
+		for(AcctSeedERP__Inbound_Inventory_Movement__c move :
+		[SELECT Id,
+				AcctSeedERP__Movement_Date__c,
+				GMBLASERP__Inventory_Adjustment__c,
+				GMBLASERP__Inventory_Adjustment__r.GMBLASERP__Adjustment_Date__c
+		FROM AcctSeedERP__Inbound_Inventory_Movement__c
+		WHERE GMBLASERP__Inventory_Adjustment__c IN :setIdAdjustment])
+		{
+			if(move.AcctSeedERP__Movement_Date__c != move.GMBLASERP__Inventory_Adjustment__r.GMBLASERP__Adjustment_Date__c)
+			{
+				move.AcctSeedERP__Movement_Date__c = move.GMBLASERP__Inventory_Adjustment__r.GMBLASERP__Adjustment_Date__c;
+				listChildren.add(move);
+			}
+		}
+
+		if (listChildren.size() > 0) {
+			gcInboundInventoryMovement.disableTrigger = true;
+			update listChildren;
+			gcInboundInventoryMovement.disableTrigger = false;
+		}
+	}
+
+	public static void cascadeDeleteChildrenOfInbound(set<Id> setIdMoveIn)
+	{
+		list<AcctSeedERP__Inbound_Inventory_Movement__c> listMoveInUpdate = new list<AcctSeedERP__Inbound_Inventory_Movement__c>();
+		list<AcctSeedERP__Outbound_Inventory_Movement__c> listMoveOutDelete = new list<AcctSeedERP__Outbound_Inventory_Movement__c>();
+
+		for(AcctSeedERP__Inbound_Inventory_Movement__c moveIn :
+		[SELECT Id, AcctSeedERP__Quantity__c, GMBLASERP__Serial_Number__c,
+		(SELECT Id FROM AcctSeedERP__Outbound_Inventory_Movements__r)
+		FROM AcctSeedERP__Inbound_Inventory_Movement__c
+		WHERE Id IN :setIdMoveIn
+		AND GMBLASERP__Inventory_Adjustment__c != null])
+		{
+			//if the inbound move is for a serialized item, and if it has children, first update the quantity to zero.
+			if(moveIn.AcctSeedERP__Outbound_Inventory_Movements__r.size() > 0)
+			{
+				if(moveIn.GMBLASERP__Serial_Number__c != null)
+				{
+					moveIn.AcctSeedERP__Quantity__c = 0;
+					listMoveInUpdate.add(moveIn);
+				}
+				listMoveOutDelete.addAll(moveIn.AcctSeedERP__Outbound_Inventory_Movements__r);
+			}
+		}
+		if(listMoveInUpdate.size() > 0)
+			update listMoveInUpdate;
+		if(listMoveOutDelete.size() > 0)
+			delete listMoveOutDelete;
+	}
 
  	public static void coverage(){
 		integer i;	
