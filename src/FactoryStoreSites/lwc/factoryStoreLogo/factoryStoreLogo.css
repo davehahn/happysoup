@@ -1,0 +1,25 @@
+/**
+ * Created by Tim on 2021-08-12.
+ */
+.storeLogo{
+    /*background-image: t('url(' + brandLogoImage + ')');*/
+		background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: block;
+    text-indent: -99999px;
+    width: 122px;
+		height: 117px;
+		flex-shrink: 0;
+		transition: none;
+}
+
+.storeLogo:hover, .storeLogo:focus{
+  text-decoration: none;
+}
+
+@media screen and (max-width: 380px){
+  .storeLogo{
+    width: 65px; height: 70px;
+  }
+}

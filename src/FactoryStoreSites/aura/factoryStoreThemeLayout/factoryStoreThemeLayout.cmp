@@ -2,10 +2,10 @@
     <ltng:require styles="{!join(',',
         $Resource.GothamHTF + '/fonts.css',
         $Resource.Idlewild + '/fonts.css',
-        $Resource.CommunitySharedResources + '/css/layout.css',
-        $Resource.CommunitySharedResources + '/css/headings.css',
-        $Resource.CommunitySharedResources + '/css/colours.css',
-        $Resource.CommunitySharedResources + '/css/buttons.css'
+        $Resource.communitySharedResources + '/css/layout.css',
+        $Resource.communitySharedResources + '/css/headings.css',
+        $Resource.communitySharedResources + '/css/colours.css',
+        $Resource.communitySharedResources + '/css/buttons.css'
     )}"/>
     <aura:attribute name="storeLogo" type="Aura.Component[]"/>
     <aura:attribute name="storeLocationAndHours" type="Aura.Component[]"/>
@@ -19,8 +19,8 @@
 
     <header class="storeHeader">
         <div class="storeDetails">
-            {!v.storeLogo}
             <div class="locationAndHours">
+                {!v.storeLogo}
                 {!v.storeLocationAndHours}
             </div>
             <div class="phoneNumbers">

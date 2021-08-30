@@ -8,14 +8,14 @@ public with sharing class FactoryStoreStaffList_Controller {
         String[] roles;
         if(department == 'Sales'){
             roles = new String[]{
-                'Store Manager',
-                'Memory Makers',
-                'Business Office Managers'
+                '%Store Manager%',
+                '%Memory Makers%',
+                '%Business Office Managers%'
             };
         } else if(department == 'Service'){
             roles = new String[]{
-               'Boat Specialist',
-               'Memory Builders'
+                '%Boat Specialist%',
+                '%Memory Builders%'
             };
         }
         return [
@@ -33,7 +33,7 @@ public with sharing class FactoryStoreStaffList_Controller {
                 IsActive
             FROM User
             WHERE Warehouse__c = :location
-            AND UserRole.Name IN :roles
+            AND UserRole.Name LIKE :roles
             AND IsActive = true
             ORDER BY LastName ASC
         ];

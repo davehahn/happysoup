@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ManagedContentType xmlns="http://soap.sforce.com/2006/04/metadata">
+    <developerName>Legend_Deals_and_Promos</developerName>
+    <managedContentNodeTypes>
+        <helpText>Title to be shown on the Deals page listing and in the post. Be sure to include the full name of the deal and the words &quot;Deal&quot; or &quot;Special&quot; along with the department the deal is for (&quot;Parts&quot;, &quot;Sales&quot;, etc.)</helpText>
+        <isLocalizable>true</isLocalizable>
+        <isRequired>true</isRequired>
+        <nodeLabel>Title</nodeLabel>
+        <nodeName>Title</nodeName>
+        <nodeType>NAMEFIELD</nodeType>
+        <placeholderText>Enter and SEO friendly title...</placeholderText>
+    </managedContentNodeTypes>
+    <managedContentNodeTypes>
+        <helpText>Text that will appear above the title in a listing that indicates what kind of content the post contains.</helpText>
+        <isLocalizable>true</isLocalizable>
+        <isRequired>true</isRequired>
+        <nodeLabel>Tag</nodeLabel>
+        <nodeName>Tag</nodeName>
+        <nodeType>TEXT</nodeType>
+        <placeholderText>Promotion</placeholderText>
+    </managedContentNodeTypes>
+    <managedContentNodeTypes>
+        <helpText>This is the text that will be displayed on the deal listings.</helpText>
+        <isLocalizable>true</isLocalizable>
+        <isRequired>true</isRequired>
+        <nodeLabel>Excerpt</nodeLabel>
+        <nodeName>Excerpt</nodeName>
+        <nodeType>TEXT</nodeType>
+    </managedContentNodeTypes>
+    <managedContentNodeTypes>
+        <helpText>Select the date this deal will become available to customers.</helpText>
+        <isLocalizable>false</isLocalizable>
+        <isRequired>true</isRequired>
+        <nodeLabel>Start Date</nodeLabel>
+        <nodeName>Start_Date</nodeName>
+        <nodeType>DATE</nodeType>
+    </managedContentNodeTypes>
+    <managedContentNodeTypes>
+        <helpText>Select the date this deal expires.</helpText>
+        <isLocalizable>false</isLocalizable>
+        <isRequired>false</isRequired>
+        <nodeLabel>End Date</nodeLabel>
+        <nodeName>End_Date</nodeName>
+        <nodeType>DATE</nodeType>
+    </managedContentNodeTypes>
+    <managedContentNodeTypes>
+        <helpText>Select the banner image you&apos;d like to display in galleries, lists, and at the top of the post. NOTE: Ensure the image does not include text as it not possible to add one per language.</helpText>
+        <isLocalizable>false</isLocalizable>
+        <isRequired>true</isRequired>
+        <nodeLabel>Banner Graphic</nodeLabel>
+        <nodeName>Banner_Graphic</nodeName>
+        <nodeType>IMG</nodeType>
+    </managedContentNodeTypes>
+    <managedContentNodeTypes>
+        <helpText>The content that will displayed within the body of the post. Simply outline the deal, or include a link to additional details on the Legend Corporate Site.</helpText>
+        <isLocalizable>true</isLocalizable>
+        <isRequired>true</isRequired>
+        <nodeLabel>Main Content</nodeLabel>
+        <nodeName>Main_Content</nodeName>
+        <nodeType>RTE</nodeType>
+        <placeholderText>Provide an outline of the deal here...</placeholderText>
+    </managedContentNodeTypes>
+    <managedContentNodeTypes>
+        <helpText>Enter the text that will appear in the button displayed in galleries and lists.</helpText>
+        <isLocalizable>true</isLocalizable>
+        <isRequired>true</isRequired>
+        <nodeLabel>Button Text</nodeLabel>
+        <nodeName>Button_Text</nodeName>
+        <nodeType>TEXT</nodeType>
+        <placeholderText>Learn more...</placeholderText>
+    </managedContentNodeTypes>
+    <managedContentNodeTypes>
+        <helpText>The Id of the Campaign you&apos;d like Leads from this deal to role up to. If you&apos;re unsure, please reach out to a member of the Marketing team.</helpText>
+        <isLocalizable>true</isLocalizable>
+        <isRequired>true</isRequired>
+        <nodeLabel>Campaign Id</nodeLabel>
+        <nodeName>Campaign_Id</nodeName>
+        <nodeType>TEXT</nodeType>
+    </managedContentNodeTypes>
+    <managedContentNodeTypes>
+        <helpText>If applicable, link to the associated landing page on LegendBoats.com - buttons will be added to the page automatically if a URL is provided.</helpText>
+        <isLocalizable>true</isLocalizable>
+        <isRequired>false</isRequired>
+        <nodeLabel>LegendBoats.com Landing Page URL</nodeLabel>
+        <nodeName>Legend_Landing_Url</nodeName>
+        <nodeType>TEXT</nodeType>
+    </managedContentNodeTypes>
+    <masterLabel>Legend Deals and Promos</masterLabel>
+</ManagedContentType>

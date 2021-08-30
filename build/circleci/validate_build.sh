@@ -17,7 +17,7 @@ echo 'modifying .forceignore to not deploy staticresources and experienceBundles
 echo -e "\nsrc/Base/main/default/staticresources" >> .forceignore
 echo -e "\nsrc/BoatReservation/experiences" >> .forceignore
 echo -e "\nsrc/CustomerCommunity/experiences" >> .forceignore
-#echo -e "\nforce-app/FactoryStoreSite/experiences" >> .forceignore
+#echo -e "\nsrc/FactoryStoreSite/experiences" >> .forceignore
 
 sfdx force:source:deploy --testlevel RunLocalTests --targetusername ci-testValid -p src/ -g -w 240
 
@@ -29,5 +29,5 @@ then
   echoOut 'Deploying ExperienceBundles'
   sfdx force:source:deploy --testlevel NoTestRun --targetusername ci-testValid -p src/BoatReservation/experiences -g -w 240
   sfdx force:source:deploy --testlevel NoTestRun --targetusername ci-testValid -p src/CustomerCommunity/experiences -g -w 240
-  #sfdx force:source:deploy --testlevel NoTestRun --targetusername ci-testValid -p src/FactoryStoreSite/experiences -g -w 240
+  sfdx force:source:deploy --testlevel NoTestRun --targetusername ci-testValid -p src/FactoryStoreSite/experiences -g -w 240
 fi
