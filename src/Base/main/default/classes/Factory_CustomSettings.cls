@@ -40,6 +40,7 @@ public class Factory_CustomSettings {
     invSettings.GMBLASERP__disable_gtPurchaseOrderInventoryMovement__c = true;
     invSettings.GMBLASERP__disable_gtMaterial__c = true;
     invSettings.GMBLASERP__disable_gtPurchaseOrderLine__c = true;
+//    invSettings.GMBLASERP__Inventory_Transfer_Same_Day__c = true;
     for(AcctSeedERP__Warehouse__c whs : [SELECT Id, Name FROM AcctSeedERP__Warehouse__c]){
       if( whs.Name == 'In Transit' ){
         invSettings.GMBLASERP__Transit_Warehouse_Id__c = String.valueOf(whs.Id).left(15);

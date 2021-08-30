@@ -114,7 +114,7 @@ global without sharing class gcOutboundInventoryMovement {
 			Map<Id,GMBLASERP__Inventory_Adjustment__c> mapAdjustmentGLV = new Map<Id,GMBLASERP__Inventory_Adjustment__c>();
 			for(AcctSeedERP__Outbound_Inventory_Movement__c move :listNew)
 			{
-				//move.AcctSeedERP__Ledger__c = 'a124F000000leJoQAI';
+				if(!Test.isRunningTest())move.AcctSeedERP__Ledger__c = 'a128A000003SnkCQAS';
 				if(move.Adjustment_Id_From_Inbound__c != null)
 					mapAdjustmentGLV.put(move.Adjustment_Id_From_Inbound__c, null);
 				if(move.GMBLASERP__Sales_Order_Line__c != NULL)
