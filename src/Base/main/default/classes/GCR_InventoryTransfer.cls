@@ -147,12 +147,13 @@ public with sharing class GCR_InventoryTransfer {
     VERIFY INBOUND TO TRANSIT, I.E. CHILDREN OF OUTBOUND FROM ORIGIN
     CALL THIS METHOD AFTER INSERT, AFTER UPDATE OF OUTBOUND INVENTORY MOVEMENT
     */
+    /*
+    The purpose of this method is to ensure that the "Outbound from Origin" movement has all and only the correct children, i.e. that the "Inbound to Transit" movements are correct.
+    */
+    /// Commenting this method off
+    /// This is not really required as we do not try this normally
     public static void verifyChildrenOfOutboundFromOrigin(set<Id> setIdMove)
     {
-        /*
-        The purpose of this method is to ensure that the "Outbound from Origin" movement has all and only the correct children, i.e. that the "Inbound to Transit" movements are correct.
-        */
-
         initStatics();
 
         list<AcctSeedERP__Outbound_Inventory_Movement__c> listMove = new list<AcctSeedERP__Outbound_Inventory_Movement__c>();
@@ -333,12 +334,13 @@ public with sharing class GCR_InventoryTransfer {
 VERIFY OUTBOUND FROM TRANSIT, I.E. CHILDREN OF INBOUND TO TRANSIT
 CALL THIS METHOD AFTER INSERT, AFTER UPDATE OF INBOUND INVENTORY MOVEMENT
 */
-
-    public static void verifyChildrenOfInboundToTransit(set<Id> setIdMove)
+    /*
+    The purpose of this method is to ensure that the "Inbound to Transit" movement has all and only the correct children, i.e. that the "Outbound from Transit" movements are correct.
+    */
+    /// Commenting this method off
+    /// This is not really required as we do not try this normally
+    /*public static void verifyChildrenOfInboundToTransit(set<Id> setIdMove)
     {
-        /*
-        The purpose of this method is to ensure that the "Inbound to Transit" movement has all and only the correct children, i.e. that the "Outbound from Transit" movements are correct.
-        */
         System.debug('verifyChildrenOfInboundToTransit');
         initStatics();
 
@@ -495,7 +497,7 @@ CALL THIS METHOD AFTER INSERT, AFTER UPDATE OF INBOUND INVENTORY MOVEMENT
         if(listSObjectDelete.size() > 0) delete listSObjectDelete;
         if(listSObjectUpdate.size() > 0) update listSObjectUpdate;
         if(listSObjectInsert.size() > 0) insert listSObjectInsert;
-    }
+    }*/
 
 /*
 VERIFY INBOUND TO DESTINATION, I.E. CHILDREN OF OUTBOUND FROM TRANSIT
@@ -503,8 +505,8 @@ CALL THIS METHOD AFTER INSERT, AFTER UPDATE OF OUTBOUND INVENTORY MOVEMENT
 */
     public static void verifyChildrenOfOutboundFromTransit(set<Id> setIdMove)
     {
+        System.debug('verifyChildrenOfOutboundFromTransit');
         initStatics();
-
         list<AcctSeedERP__Outbound_Inventory_Movement__c> listMove = new list<AcctSeedERP__Outbound_Inventory_Movement__c>();
         map<Id,list<AcctSeedERP__Inbound_Inventory_Movement__c>> mapMoveToChildren = new map<Id, list<AcctSeedERP__Inbound_Inventory_Movement__c>>();
         list<AcctSeedERP__Inbound_Inventory_Movement__c> listChildren = new list<AcctSeedERP__Inbound_Inventory_Movement__c>();

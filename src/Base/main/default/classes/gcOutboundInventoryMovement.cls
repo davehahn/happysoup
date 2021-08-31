@@ -64,6 +64,7 @@ global without sharing class gcOutboundInventoryMovement {
 					if(oim.GMBLASERP__Serial_Number__c != null)
 						setIdSerial.add(oim.GMBLASERP__Serial_Number__c);
 				GCR_InventoryTransfer.verifyChildrenOfOutboundFromOrigin(newMap.keySet());
+				System.debug('After the Insert');
 				GCR_InventoryTransfer.verifyChildrenOfOutboundFromTransit(newMap.keySet());
 			}
 			if(boolIsUpdate)
@@ -75,6 +76,7 @@ global without sharing class gcOutboundInventoryMovement {
 					if(oim.GMBLASERP__Serial_Number__c != null)
 						setIdSerial.add(oim.GMBLASERP__Serial_Number__c);
 				GCR_InventoryTransfer.verifyChildrenOfOutboundFromOrigin(newMap.keySet());
+				System.debug('After the Update');
 				GCR_InventoryTransfer.verifyChildrenOfOutboundFromTransit(newMap.keySet());
 			}
 			if(boolIsDelete)

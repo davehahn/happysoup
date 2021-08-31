@@ -73,15 +73,19 @@ global without sharing class gcInboundInventoryMovement {
 					if (im.GMBLASERP__Serial_Number__c != null) {
 						setIdSerial.add(im.GMBLASERP__Serial_Number__c);
 					}
+					/// As of now we are turning this one off.
+					/// Not really needed after we took out GMBLASERP
 					/// One in a list should trigger this
-					if(im.AcctSeedERP__Project__c != null){
-						shouldCheckInboundForTransfer = false;
-					}else{
-						shouldCheckInboundForTransfer = true;
-					}
+					/// if(im.AcctSeedERP__Project__c != null){
+					/// 	shouldCheckInboundForTransfer = false;
+					/// }else{
+					/// 	shouldCheckInboundForTransfer = true;
+					/// }
 				}
-				if(shouldCheckInboundForTransfer)
-					GCR_InventoryTransfer.verifyChildrenOfInboundToTransit(newMap.keySet());
+				/// As of now we are turning this one off.
+				/// Not really needed after we took out GMBLASERP
+				/// if(shouldCheckInboundForTransfer)
+				/// 	GCR_InventoryTransfer.verifyChildrenOfInboundToTransit(newMap.keySet());
 			}
 			if(boolIsUpdate)
 			{
@@ -90,12 +94,14 @@ global without sharing class gcInboundInventoryMovement {
 					if (im.GMBLASERP__Serial_Number__c != null) {
 						setIdSerial.add(im.GMBLASERP__Serial_Number__c);
 					}
+					/// As of now we are turning this one off.
+					/// Not really needed after we took out GMBLASERP
 					/// One in a list should trigger this
-					if(im.AcctSeedERP__Project__c != null){
-						shouldCheckInboundForTransfer = false;
-					}else{
-						shouldCheckInboundForTransfer = true;
-					}
+					/// if(im.AcctSeedERP__Project__c != null){
+					/// 	shouldCheckInboundForTransfer = false;
+					/// }else{
+					/// 	shouldCheckInboundForTransfer = true;
+					/// }
 				}
 				for(AcctSeedERP__Inbound_Inventory_Movement__c im : oldMap.values())
 				{
@@ -103,8 +109,11 @@ global without sharing class gcInboundInventoryMovement {
 						setIdSerial.add(im.GMBLASERP__Serial_Number__c);
 					}
 				}
-				if(shouldCheckInboundForTransfer)
-					GCR_InventoryTransfer.verifyChildrenOfInboundToTransit(newMap.keySet());
+				/// As of now we are turning this one off.
+				/// Not really needed after we took out GMBLASERP
+				/// if(shouldCheckInboundForTransfer) {
+				/// 	GCR_InventoryTransfer.verifyChildrenOfInboundToTransit(newMap.keySet());
+				/// }
 			}
 			if(boolIsDelete)
 			{
