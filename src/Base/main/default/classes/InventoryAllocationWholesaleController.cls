@@ -36,9 +36,9 @@ public without sharing class InventoryAllocationWholesaleController {
     transient Map<String, Map<String, List<Map<String,String>>>> hoverOverDealerOrderDetails {get; set;}
     transient Map<String, Map<String, List<Map<String,String>>>> hoverOverRetailSoldDetails {get; set;}
 
-    private Map<String,ProductLotReservation__c> mapProdLot ;
-    private Map<String, Set<String>> mapProductIdToSetYear;
-    private MAP<String,Integer> mapLocations;
+    transient Map<String,ProductLotReservation__c> mapProdLot ;
+    transient Map<String, Set<String>> mapProductIdToSetYear;
+    transient MAP<String,Integer> mapLocations;
     private Integer numberOfDamages,numberOfSpecials,numberOfDemos, numberOfUsed;
 
     /* Added by Dave Hahn May 29/17 */
