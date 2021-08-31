@@ -14,34 +14,19 @@ private class gcTest_OutboundInventoryMovement {
 
   static testMethod void trigger_Test()
   {
-    //AcctSeed__Ledger__c ledger = [SELECT Id FROM AcctSeed__Ledger__c LIMIT 1];
-    AcctSeed__Accounting_Settings__c accSetting = [SELECT AcctSeed__Default_Ledger__c FROM AcctSeed__Accounting_Settings__c ORDER BY CreatedDate][0];
-    AcctSeed__GL_Account__c glA = [SELECT Id
-                                   FROM AcctSeed__GL_Account__c
-                                   LIMIT 1];
-    AcctSeedERP__Warehouse__c wh = [SELECT Id FROM AcctSeedERP__Warehouse__c LIMIT 1];
-    AcctSeedERP__Location__c loc = new AcctSeedERP__Location__c(
-      Name = 'Test Loc',
-      AcctSeedERP__Warehouse__c = wh.Id
-    );
-    insert loc;
     Product2 part = Factory_Product.createNonSerializedProduct('Part', 'Electronics');
-    AcctSeedERP__Inventory_Balance__c balance = new AcctSeedERP__Inventory_Balance__c(
-      AcctSeedERP__Location__c = loc.Id,
-      AcctSeedERP__Warehouse__c = wh.Id,
-      AcctSeedERP__Product__c = part.Id
-    );
-    insert balance;
+    Id idWarehouse = gcConstants.idWarehouseMontreal;
+    AcctSeedERP__Location__c loc = [SELECT Id FROM AcctSeedERP__Location__c WHERE AcctSeedERP__Warehouse__c =:idWarehouse LIMIT 1];
+    Id idBalance = GCR_InventoryBalance.findOrCreateBalance(part.Id,idWarehouse,loc.Id);
     AcctSeedERP__Outbound_Inventory_Movement__c movement = new AcctSeedERP__Outbound_Inventory_Movement__c(
       AcctSeedERP__Unit_Cost__c = 10,
-      AcctSeedERP__Type__c = 'Inventory Transfer',
+      AcctSeedERP__Type__c = 'Accounting',
       AcctSeedERP__Quantity__c = 1,
-      AcctSeedERP__Debit_GL_Account__c = glA.Id,
-      AcctSeedERP__Inventory_Balance__c = balance.Id,
-      AcctSeedERP__Ledger__c = accSetting.AcctSeed__Default_Ledger__c,
-      GMBLASERP__Warehouse__c = wh.Id
+      AcctSeedERP__Debit_GL_Account__c = gcConstants.idGlClearingARAP,
+      AcctSeedERP__Inventory_Balance__c = idBalance,
+      AcctSeedERP__Ledger__c = gcConstants.idActualLedger,
+      GMBLASERP__Warehouse__c = idWarehouse
     );
-    GMBLASERP.gcOutboundInventoryMovement.disableTrigger = true;
     insert movement;
   }
 }
