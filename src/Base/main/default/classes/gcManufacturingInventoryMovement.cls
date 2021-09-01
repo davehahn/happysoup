@@ -34,8 +34,10 @@ global without sharing class gcManufacturingInventoryMovement {
 		if(oldMap == NULL) oldMap = new map<Id,AcctSeedERP__Manufacturing_Inventory_Movement__c>();
 		if(newMap == NULL) newMap = new map<Id,AcctSeedERP__Manufacturing_Inventory_Movement__c>();
 		if(listNew == NULL) listNew = new list<AcctSeedERP__Manufacturing_Inventory_Movement__c>();
-
+		Boolean boolDisableParent = gcMaterial.disableTrigger;
+		gcMaterial.disableTrigger = true;
 		updateAndValidate(oldMap,newMap,listNew,boolIsBefore,boolIsInsert,boolIsUpdate,boolIsDelete);
+		GCR_InventoryMovement.triggerHandler(oldMap, newMap, listNew, boolIsBefore, boolIsInsert, boolIsUpdate, boolIsDelete);
 
 		if(boolIsBefore)
 		{
@@ -85,6 +87,7 @@ global without sharing class gcManufacturingInventoryMovement {
 //				gcSerialNumber.updateSerialUnitCostFuture(listId);
 //			}
 		}
+		gcMaterial.disableTrigger = boolDisableParent;
 	}
 
 	private static void updateAndValidate
@@ -119,12 +122,48 @@ global without sharing class gcManufacturingInventoryMovement {
 			}
 		}
 
+		if(boolIsBefore && (boolIsInsert || boolIsUpdate))
+		{
+			//collect and map the parent materials
+			map<Id,AcctSeedERP__Material__c> mapMatl = new map<Id,AcctSeedERP__Material__c>();
+			for(AcctSeedERP__Manufacturing_Inventory_Movement__c move : listNew)
+			{
+				mapMatl.put(move.AcctSeedERP__Material__c, NULL);
+			}
+
+			for(AcctSeedERP__Material__c matl :
+			[SELECT Id,
+					AcctSeedERP__GL_Account_Variable_1__c,
+					AcctSeedERP__GL_Account_Variable_2__c,
+					AcctSeedERP__GL_Account_Variable_3__c,
+					AcctSeedERP__GL_Account_Variable_4__c,
+					AcctSeedERP__Project__c,
+					AcctSeedERP__Project_Task__c
+			FROM AcctSeedERP__Material__c
+			WHERE Id IN : mapMatl.keySet()])
+			{
+				mapMatl.put(matl.Id, matl);
+			}
+
+			for(AcctSeedERP__Manufacturing_Inventory_Movement__c move : listNew)
+			{
+				//SET FIELD VALUES
+				AcctSeedERP__Material__c matl = mapMatl.get(move.AcctSeedERP__Material__c);
+
+				//set field values on the purchase movement to match field values on the parent purchase order line
+				move.AcctSeedERP__GL_Account_Variable_1__c  = matl.AcctSeedERP__GL_Account_Variable_1__c;
+				move.AcctSeedERP__GL_Account_Variable_2__c  = matl.AcctSeedERP__GL_Account_Variable_2__c;
+				move.AcctSeedERP__GL_Account_Variable_3__c  = matl.AcctSeedERP__GL_Account_Variable_3__c;
+				move.AcctSeedERP__GL_Account_Variable_4__c  = matl.AcctSeedERP__GL_Account_Variable_4__c;
+				move.GMBLASERP__Project__c 					= matl.AcctSeedERP__Project__c;
+				move.GMBLASERP__Project_Task__c 			= matl.AcctSeedERP__Project_Task__c;
+			}
+		}
 
 		/// This is only used in Dev Org
 		if(boolIsBefore && (boolIsInsert || boolIsUpdate)){
-//			for(AcctSeedERP__Manufacturing_Inventory_Movement__c move :listNew)
-//				move.AcctSeedERP__Ledger__c = 'a128A000003SnkCQAS';
-
+			for(AcctSeedERP__Manufacturing_Inventory_Movement__c move :listNew)
+				if(!Test.isRunningTest())move.AcctSeedERP__Ledger__c = 'a128A000003SnkCQAS';
 		}
 	}
 }

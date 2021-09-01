@@ -36,7 +36,7 @@ global without sharing class gcInboundInventoryMovement {
 		if(listNew == NULL) listNew = new list<AcctSeedERP__Inbound_Inventory_Movement__c>();
 
 		updateAndValidate(oldMap,newMap,listNew,boolIsBefore,boolIsInsert,boolIsUpdate,boolIsDelete);
-
+		GCR_InventoryMovement.triggerHandler(oldMap, newMap, listNew, boolIsBefore, boolIsInsert, boolIsUpdate, boolIsDelete);
 		if(boolIsBefore)
 		{
 			gcSerialNumber.checkPriorMovements(listNew,oldMap);
@@ -59,7 +59,8 @@ global without sharing class gcInboundInventoryMovement {
 			}
 			if(boolIsDelete)
 			{
-
+				gcInventoryAdjustment.cascadeDeleteChildrenOfInbound(oldMap.keySet());
+				GCR_InventoryTransfer.cascadeDeleteChildrenOfInbound(oldMap.keySet());
 			}
 		}
 		else //i.e. trigger.isAfter
@@ -67,24 +68,60 @@ global without sharing class gcInboundInventoryMovement {
 			Set<String> setIdSerial = new Set<String>();
 			if(boolIsInsert)
 			{
-				for(AcctSeedERP__Inbound_Inventory_Movement__c im : listNew)
-					if(im.GMBLASERP__Serial_Number__c != null)
+				Boolean shouldCheckInboundForTransfer = true;
+				for(AcctSeedERP__Inbound_Inventory_Movement__c im : listNew) {
+					if (im.GMBLASERP__Serial_Number__c != null) {
 						setIdSerial.add(im.GMBLASERP__Serial_Number__c);
+					}
+					/// As of now we are turning this one off.
+					/// Not really needed after we took out GMBLASERP
+					/// One in a list should trigger this
+					/// if(im.AcctSeedERP__Project__c != null){
+					/// 	shouldCheckInboundForTransfer = false;
+					/// }else{
+					/// 	shouldCheckInboundForTransfer = true;
+					/// }
+				}
+				/// As of now we are turning this one off.
+				/// Not really needed after we took out GMBLASERP
+				/// if(shouldCheckInboundForTransfer)
+				/// 	GCR_InventoryTransfer.verifyChildrenOfInboundToTransit(newMap.keySet());
 			}
 			if(boolIsUpdate)
 			{
-				for(AcctSeedERP__Inbound_Inventory_Movement__c im : listNew)
-					if(im.GMBLASERP__Serial_Number__c != null)
+				Boolean shouldCheckInboundForTransfer = true;
+				for(AcctSeedERP__Inbound_Inventory_Movement__c im : listNew) {
+					if (im.GMBLASERP__Serial_Number__c != null) {
 						setIdSerial.add(im.GMBLASERP__Serial_Number__c);
+					}
+					/// As of now we are turning this one off.
+					/// Not really needed after we took out GMBLASERP
+					/// One in a list should trigger this
+					/// if(im.AcctSeedERP__Project__c != null){
+					/// 	shouldCheckInboundForTransfer = false;
+					/// }else{
+					/// 	shouldCheckInboundForTransfer = true;
+					/// }
+				}
 				for(AcctSeedERP__Inbound_Inventory_Movement__c im : oldMap.values())
-					if(im.GMBLASERP__Serial_Number__c != null)
+				{
+					if (im.GMBLASERP__Serial_Number__c != null) {
 						setIdSerial.add(im.GMBLASERP__Serial_Number__c);
+					}
+				}
+				/// As of now we are turning this one off.
+				/// Not really needed after we took out GMBLASERP
+				/// if(shouldCheckInboundForTransfer) {
+				/// 	GCR_InventoryTransfer.verifyChildrenOfInboundToTransit(newMap.keySet());
+				/// }
 			}
 			if(boolIsDelete)
 			{
-				for(AcctSeedERP__Inbound_Inventory_Movement__c im : oldMap.values())
-					if(im.GMBLASERP__Serial_Number__c != null)
+				for(AcctSeedERP__Inbound_Inventory_Movement__c im : oldMap.values()) {
+					if (im.GMBLASERP__Serial_Number__c != null) {
 						setIdSerial.add(im.GMBLASERP__Serial_Number__c);
+					}
+				}
 			}
 			/// To update serial unit cost run time (future).
 			if(!setIdSerial.isEmpty()){
@@ -112,7 +149,7 @@ global without sharing class gcInboundInventoryMovement {
 				Map<Id,GMBLASERP__Inventory_Adjustment__c> mapAdjustmentGLV1 = new Map<Id,GMBLASERP__Inventory_Adjustment__c>();
 				for(AcctSeedERP__Inbound_Inventory_Movement__c move :listNew)
 				{
-					//move.AcctSeedERP__Ledger__c = 'a124F000000leJoQAI';
+					if(!Test.isRunningTest())move.AcctSeedERP__Ledger__c = 'a128A000003SnkCQAS';
 					if(move.GMBLASERP__Inventory_Adjustment__c != null)
 						mapAdjustmentGLV1.put(move.GMBLASERP__Inventory_Adjustment__c, null);
 				}

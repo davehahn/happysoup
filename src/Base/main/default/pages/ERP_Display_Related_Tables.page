@@ -111,7 +111,7 @@ input.dateSelector{
                                 })
                                 response(result);
                             } else {
-                                alert(event.message);
+                                showToast(event.message);
                             }
                         }, {
                             buffer: true,
@@ -161,7 +161,7 @@ input.dateSelector{
                                 })
                                 response(result);
                             } else {
-                                alert(event.message);
+                                showToast(event.message);
                             }
                         }, {
                             buffer: true,
@@ -211,7 +211,7 @@ input.dateSelector{
                                 })
                                 response(result);
                             } else {
-                                alert(event.message);
+                                showToast(event.message);
                             }
                         }, {
                             buffer: true,
@@ -261,7 +261,7 @@ input.dateSelector{
                 else
                 {
                     refreshGrid_tasks();
-                    alert(event.message);
+                    showToast(event.message);
                 }
                 $gridDiv.pqGrid('hideLoading');
             },
@@ -286,7 +286,7 @@ input.dateSelector{
                 else
                 {
                     refreshGrid_materials();
-                    alert(event.message);
+                    showToast(event.message);
                 }
                 $gridDiv.pqGrid('hideLoading');
             },
@@ -646,7 +646,7 @@ input.dateSelector{
                 }
                 else
                 {
-                    alert(event.message);
+                    showToast(event.message);
                 }
             },
             {buffer:true, escape:true, timeout:120000});
@@ -693,7 +693,7 @@ input.dateSelector{
                 }
                 else
                 {
-                    alert(event.message);
+                    showToast(event.message);
                 }
             },
             {buffer:true, escape:true, timeout:120000});
@@ -723,7 +723,7 @@ input.dateSelector{
                 }
                 else
                 {
-                    alert(event.message);
+                    showToast(event.message);
                 }
             },
             {buffer:true, escape:true, timeout:120000});
@@ -897,7 +897,7 @@ input.dateSelector{
                 }
                 else
                 {
-                    alert(event.message);
+                    showToast(event.message);
                 }
                 $gridDiv.pqGrid('hideLoading');
             },
@@ -921,7 +921,7 @@ input.dateSelector{
                 }
                 else
                 {
-                    alert(event.message);
+                    showToast(event.message);
                 }
                 $gridDiv.pqGrid('hideLoading');
             },
@@ -946,7 +946,7 @@ input.dateSelector{
                 }
                 else
                 {
-                    alert(event.message);
+                    showToast(event.message);
                 }
                 $gridDiv.pqGrid('hideLoading');
             },
@@ -970,7 +970,7 @@ input.dateSelector{
                 }
                 else
                 {
-                    alert(event.message);
+                    showToast(event.message);
                 }
                 $gridDiv.pqGrid('hideLoading');
             },
@@ -999,12 +999,12 @@ input.dateSelector{
                             myString += msg;
                             myString += '\n\n';
                         });
-                        alert(myString);
+                        showToast(myString);
                     }
                 }
                 else
                 {
-                    alert(event.message);
+                    showToast(event.message);
                 }
                 $gridDiv.pqGrid('hideLoading');
             },
@@ -1164,7 +1164,7 @@ input.dateSelector{
                 }
                 else
                 {
-                    alert(event.message);
+                    showToast(event.message);
                 }
                 $gridDiv.pqGrid('hideLoading');
             },
@@ -1490,7 +1490,7 @@ input.dateSelector{
                         updateBudgetRevenue(rowIndx, idProjectTask, newRow.budgetRevenue);
                     else
                     {
-                        alert('The Budget Revenue must be numerical.');
+                        showToast('The Budget Revenue must be numerical.');
                         rowData.budgetRevenue = oldRow.budgetRevenue;
                     }
                 }
@@ -1500,7 +1500,7 @@ input.dateSelector{
                         updateBudgetExpense(rowIndx, idProjectTask, newRow.budgetExpense);
                     else
                     {
-                        alert('The Budget Expense must be numerical.');
+                        showToast('The Budget Expense must be numerical.');
                         rowData.budgetExpense = oldRow.budgetExpense;
                     }
                 }
@@ -1528,7 +1528,7 @@ input.dateSelector{
                 }
                 else
                 {
-                    alert(event.message);
+                    showToast(event.message);
                 }
                 $gridDiv.pqGrid('hideLoading');
             },
@@ -1600,7 +1600,7 @@ input.dateSelector{
                 }
                 else
                 {
-                    alert(event.message);
+                    showToast(event.message);
                 }
                 gSpinner.hide();
             },
@@ -1626,7 +1626,7 @@ input.dateSelector{
                 }
                 else
                 {
-                    alert(event.message);
+                    showToast(event.message);
                 }
                 gSpinner.hide();
             },
@@ -1658,7 +1658,7 @@ input.dateSelector{
                 }
                 else
                 {
-                    alert(event.message);
+                    showToast(event.message);
                     refreshAll();
                 }
                 rerenderDetail();
@@ -1682,7 +1682,7 @@ input.dateSelector{
                 }
                 else
                 {
-                    alert(event.message);
+                    showToast(event.message);
                     //refreshAll();
                 }
                 $gridDiv.pqGrid('hideLoading');
@@ -1705,7 +1705,7 @@ input.dateSelector{
                 }
                 else
                 {
-                    alert(event.message);
+                    showToast(event.message);
                     //refreshAll();
                 }
                 $gridDiv.pqGrid('hideLoading');
@@ -1730,7 +1730,7 @@ input.dateSelector{
                 }
                 else
                 {
-                    alert(event.message);
+                    showToast(event.message);
                     refreshAll();
                 }
                 $gridDiv.pqGrid('hideLoading');
@@ -1755,7 +1755,7 @@ input.dateSelector{
                 }
                 else
                 {
-                    alert(event.message);
+                    showToast(event.message);
                     refreshAll();
                 }
                 $gridDiv.pqGrid('hideLoading');
@@ -1786,7 +1786,7 @@ input.dateSelector{
                 }
                 else
                 {
-                    alert(event.message);
+                    showToast(event.message);
                     refreshAll();
                 }
                 $gridDiv.pqGrid('hideLoading');
@@ -1924,7 +1924,7 @@ input.dateSelector{
                 }
                 else
                 {
-                    alert(event.message);
+                    showToast(event.message);
                 }
                 $gridDiv.pqGrid('hideLoading');
             },
@@ -1951,7 +1951,7 @@ input.dateSelector{
                 }
                 else
                 {
-                    alert(event.message);
+                    showToast(event.message);
                 }
                 $gridDiv.pqGrid('hideLoading');
             },
@@ -2440,7 +2440,7 @@ input.dateSelector{
                         updateQtySpecified(rowIndx, idMaterial, newRow.qtySpecified);
                     else
                     {
-                        alert('The Quantity Specified must be numerical.');
+                        showToast('The Quantity Specified must be numerical.');
                         rowData.qtySpecified = oldRow.qtySpecified;
                     }
                 }
@@ -2449,10 +2449,10 @@ input.dateSelector{
                 {
                     if(newRow.qtyToMove == null || isNaN(newRow.qtyToMove))
                     {
-                        alert('The Quantity To Move must be numerical.');
+                        showToast('The Quantity To Move must be numerical.');
                         rowData.qtyToMove = oldRow.qtyToMove;
                     }else if(parseFloat(rowData.qtyCanBeMoved) < parseFloat(newRow.qtyToMove)){
-                        alert('Quantity to Move cannot be more than quantity left to move.');
+                        showToast('Quantity to Move cannot be more than quantity left to move.');
                         rowData.qtyToMove = oldRow.qtyToMove;
                     }
                     else if(newRow.qtyToMove == 0){
@@ -2475,7 +2475,7 @@ input.dateSelector{
                         updateUnitPrice(rowIndx, idMaterial, newRow.unitPrice);
                     else
                     {
-                        alert('The Unit Price must be numerical.');
+                        showToast('The Unit Price must be numerical.');
                         rowData.unitPrice = oldRow.unitPrice;
                     }
                 }
@@ -2502,7 +2502,7 @@ input.dateSelector{
                 }
                 else
                 {
-                    alert(event.message);
+                    showToast(event.message);
                 }
                 $gridDiv.pqGrid('hideLoading');
             },
@@ -2538,7 +2538,7 @@ input.dateSelector{
                 }
                 else
                 {
-                    alert(event.message);
+                    showToast(event.message);
                     refreshAll();
                 }
                 rerenderDetail();
@@ -2567,7 +2567,7 @@ input.dateSelector{
                 }
                 else
                 {
-                    alert(event.message);
+                    showToast(event.message);
                     refreshAll();
                 }
                 rerenderDetail();
@@ -2593,7 +2593,7 @@ input.dateSelector{
                 }
                 else
                 {
-                    alert(event.message);
+                    showToast(event.message);
                     refreshAll();
                 }
                 rerenderDetail();
@@ -2747,7 +2747,7 @@ input.dateSelector{
                 }
                 else
                 {
-                    alert(event.message);
+                    showToast(event.message);
                 }
                 $gridDiv.pqGrid('hideLoading');
             },
@@ -2781,7 +2781,7 @@ input.dateSelector{
                 }
                 else
                 {
-                    alert(event.message);
+                    showToast(event.message);
                 }
                 $gridDiv.pqGrid('hideLoading');
             },
@@ -2911,7 +2911,7 @@ input.dateSelector{
                     }
                     else if(isNaN(newRow.action))
                     {
-                        alert('The Quantity must be numerical.');
+                        showToast('The Quantity must be numerical.');
                     }
                 }
                 //ok to continue
@@ -2944,7 +2944,7 @@ input.dateSelector{
                 }
                 else
                 {
-                    alert(event.message);
+                    showToast(event.message);
                 }
             },
             {buffer:true, escape:true, timeout:120000});
@@ -2956,7 +2956,7 @@ input.dateSelector{
         var idProjectTask = $j('#selectProjectTask').val();
         if(!idProjectTask)
         {
-            alert('Select an ERP Order Task, before searching Products.');
+            showToast('Select an ERP Order Task, before searching Products.');
             return;
         }
 
@@ -2974,7 +2974,7 @@ input.dateSelector{
                 }
                 else
                 {
-                    alert(event.message);
+                    showToast(event.message);
                 }
                 $gridDiv.pqGrid('hideLoading');
             },
@@ -3007,7 +3007,7 @@ input.dateSelector{
         var idProjectTask = $j('#selectProjectTask').val();
         if(!idProjectTask)
         {
-            alert('Select an ERP Order Task, before selecting a Product.');
+            showToast('Select an ERP Order Task, before selecting a Product.');
             return;
         }
 
@@ -3027,7 +3027,7 @@ input.dateSelector{
                 }
                 else
                 {
-                    alert(event.message);
+                    showToast(event.message);
                 }
                 rerenderDetail();
                 $gridDiv.pqGrid('hideLoading');
@@ -3066,7 +3066,7 @@ input.dateSelector{
                             myString += msg;
                             myString += '\n\n';
                         });
-                        alert(myString);
+                        showToast(myString);
                         refreshAll();
                         rerenderDetail();
                         rerenderJournalEntry();
@@ -3083,7 +3083,7 @@ input.dateSelector{
                     rerenderDetail();
                     rerenderJournalEntry();
                     rerenderInboundMovements();
-                    alert(event.message);
+                    showToast(event.message);
                 }
                 $gridDiv.pqGrid('hideLoading');
                 gSpinner.hide();
@@ -3112,12 +3112,12 @@ input.dateSelector{
                             myString += msg;
                             myString += '\n\n';
                         });
-                        alert(myString);
+                        showToast(myString);
                     }
                 }
                 else
                 {
-                    alert(event.message);
+                    showToast(event.message);
                 }
                 refreshAll();
                 rerenderDetail();
@@ -3155,12 +3155,12 @@ input.dateSelector{
                             myString += msg;
                             myString += '\n\n';
                         });
-                        alert(myString);
+                        showToast(myString);
                     }
                 }
                 else
                 {
-                    alert(event.message);
+                    showToast(event.message);
                 }
                 refreshAll();
                 rerenderDetail();
@@ -3201,12 +3201,12 @@ input.dateSelector{
                             myString += msg;
                             myString += '\n\n';
                         });
-                        alert(myString);
+                        showToast(myString);
                     }
                 }
                 else
                 {
-                    alert(event.message);
+                    showToast(event.message);
                 }
                 refreshAll();
                 rerenderDetail();
@@ -3245,7 +3245,7 @@ input.dateSelector{
 
         if(listIdMatrl.length == 0)
         {
-            alert('Select materials and put Quantity to fill.');
+            showToast('Select materials and put Quantity to fill.');
             return;
         }
 
@@ -3270,12 +3270,12 @@ input.dateSelector{
                             myString += msg;
                             myString += '\n\n';
                         });
-                        alert(myString);
+                        showToast(myString);
                     }
                 }
                 else
                 {
-                    alert(event.message);
+                    showToast(event.message);
                 }
                 refreshAll();
                 rerenderDetail();
@@ -3313,12 +3313,12 @@ input.dateSelector{
                             myString += msg;
                             myString += '\n\n';
                         });
-                        alert(myString);
+                        showToast(myString);
                     }
                 }
                 else
                 {
-                    alert(event.message);
+                    showToast(event.message);
                 }
                 refreshAll();
                 rerenderDetail();
@@ -3349,7 +3349,7 @@ input.dateSelector{
 
         if(listIdMatrl.length == 0)
         {
-            alert('Select materials to reverse WIP.');
+            showToast('Select materials to reverse WIP.');
             return;
         }
         gSpinner.show();
@@ -3372,12 +3372,12 @@ input.dateSelector{
                             myString += msg;
                             myString += '\n\n';
                         });
-                        alert(myString);
+                        showToast(myString);
                     }
                 }
                 else
                 {
-                    alert(event.message);
+                    showToast(event.message);
                 }
                 refreshAll();
                 rerenderDetail();
@@ -3416,7 +3416,7 @@ input.dateSelector{
         $dialogDiv.find('button#btnTradeIn').click(function(){
             var tradeInAmount = $dialogDiv.find('#inputTradeInAmount').val();
             if(isNaN(tradeInAmount)){
-                alert("Trade In amount must be greater than or equal to zero.");
+                showToast("Trade In amount must be greater than or equal to zero.");
                 return;
             }
             buildFinishedGoodsForTradeIn(tradeInAmount);
@@ -3460,13 +3460,13 @@ input.dateSelector{
                             myString += msg;
                             myString += '\n\n';
                         });
-                        alert(myString);
+                        showToast(myString);
                     }
                     takeExpense();
                 }
                 else
                 {
-                    alert(event.message);
+                    showToast(event.message);
                     refreshAll();
                     rerenderDetail();
                     rerenderJournalEntry();
@@ -3501,14 +3501,14 @@ input.dateSelector{
                             myString += msg;
                             myString += '\n\n';
                         });
-                        alert(myString);
+                        showToast(myString);
                     }
                     if({!isManufacturing})
                         takeExpense();
                 }
                 else
                 {
-                    alert(event.message);
+                    showToast(event.message);
                 }
                 refreshAll();
                 rerenderDetail();
@@ -3541,12 +3541,12 @@ input.dateSelector{
                             myString += msg;
                             myString += '\n\n';
                         });
-                        alert(myString);
+                        showToast(myString);
                     }
                 }
                 else
                 {
-                    alert(event.message);
+                    showToast(event.message);
                 }
                 refreshAll();
                 rerenderDetail();
@@ -3580,14 +3580,14 @@ input.dateSelector{
                             myString += msg;
                             myString += '\n\n';
                         });
-                        alert(myString);
+                        showToast(myString);
                     }
                     if({!isPartnerBoatSale})
                         createInternalInboundMoves();
                 }
                 else
                 {
-                    alert(event.message);
+                    showToast(event.message);
                 }
                 refreshAll();
                 rerenderDetail();
@@ -3619,12 +3619,12 @@ input.dateSelector{
                             myString += msg;
                             myString += '\n\n';
                         });
-                        alert(myString);
+                        showToast(myString);
                     }
                 }
                 else
                 {
-                    alert(event.message);
+                    showToast(event.message);
                 }
                 refreshAll();
                 rerenderDetail();
@@ -3658,12 +3658,12 @@ input.dateSelector{
                             myString += msg;
                             myString += '\n\n';
                         });
-                        alert(myString);
+                        showToast(myString);
                     }
                 }
                 else
                 {
-                    alert(event.message);
+                    showToast(event.message);
                 }
                 rerenderInboundMovements();
                 $gridDiv.pqGrid('hideLoading');
@@ -3693,12 +3693,12 @@ input.dateSelector{
                             myString += msg;
                             myString += '\n\n';
                         });
-                        alert(myString);
+                        showToast(myString);
                     }
                 }
                 else
                 {
-                    alert(event.message);
+                    showToast(event.message);
                 }
                 refreshAll();
                 rerenderDetail();
@@ -3734,12 +3734,12 @@ input.dateSelector{
                             myString += msg;
                             myString += '\n\n';
                         });
-                        alert(myString);
+                        showToast(myString);
                     }
                 }
                 else
                 {
-                    alert(event.message);
+                    showToast(event.message);
                 }
                 refreshAll();
                 rerenderDetail();
@@ -3848,7 +3848,7 @@ input.dateSelector{
                 }
                 else
                 {
-                    alert(event.message);
+                    showToast(event.message);
                 }
                 $gridDiv.pqGrid('hideLoading');
             },
@@ -4060,7 +4060,7 @@ input.dateSelector{
                 }
                 else
                 {
-                    alert(event.message);
+                    showToast(event.message);
                 }
             },
             {buffer:true, escape:false, timeout:120000});
@@ -4080,7 +4080,7 @@ input.dateSelector{
                 }
                 else
                 {
-                    alert(event.message);
+                    showToast(event.message);
                 }
             },
             {buffer:true, escape:false, timeout:120000});
@@ -4105,7 +4105,7 @@ input.dateSelector{
 
         if(isNaN(depositAmount) || depositAmount <= 0)
         {
-            alert('The amount of the deposit must be positive.');
+            showToast('The amount of the deposit must be positive.');
             return;
         }
 
@@ -4114,7 +4114,7 @@ input.dateSelector{
         var checkPostProject = false;//$j('#checkPostProject').is(':checked');
         if(!depositPaymentReference || depositPaymentReference.length < 1)
         {
-            alert('A payment reference must be entered.');
+            showToast('A payment reference must be entered.');
             return;
         }
         if((paymentMethod == 'Visa' || paymentMethod == 'MasterCard') && (parseFloat(depositCreditAmount) + parseFloat(depositAmount)) > 2000)
@@ -4157,7 +4157,7 @@ input.dateSelector{
 
         if(isNaN(depositAmount) || depositAmount <= 0)
         {
-            alert('The amount of the deposit must be positive.');
+            showToast('The amount of the deposit must be positive.');
             return;
         }
 
@@ -4175,7 +4175,7 @@ input.dateSelector{
                 {
                     // if(result == 'OK')
                     // {
-                    alert('A Cash Receipt record has been created.');
+                    showToast('A Cash Receipt record has been created.');
                     if({!OR(isCounterSale,isPartnerPartsOrder)} && checkCreateBilling)
                         createInvoice(result);
                     rerenderDetail();
@@ -4189,12 +4189,12 @@ input.dateSelector{
                     // }
                     // else
                     // {
-                    //     alert(result);
+                    //     showToast(result);
                     // }
                 }
                 else
                 {
-                    alert(event.message);
+                    showToast(event.message);
                     refreshAll();
                 }
                 gSpinner.hide();
@@ -4224,7 +4224,7 @@ input.dateSelector{
                             myString += msg;
                             myString += '\n\n';
                         });
-                        alert(myString);
+                        showToast(myString);
                         refreshAll();
                         rerenderDetail();
                         rerenderJournalEntry();
@@ -4242,7 +4242,7 @@ input.dateSelector{
                     rerenderDetail();
                     rerenderJournalEntry();
                     rerenderInboundMovements();
-                    alert(event.message);
+                    showToast(event.message);
                 }
                 $gridDiv.pqGrid('hideLoading');
                 gSpinner.hide();
@@ -4269,7 +4269,7 @@ input.dateSelector{
                     if({!OR(isCounterSale,isPartnerPartsOrder)} && mapParams.checkCreateBilling)
                         createInvoice(result);
                     else
-                        alert('Payment/Billing information has been saved.');
+                        showToast('Payment/Billing information has been saved.');
 
                     rerenderDetail();
                     refreshGrid_tasks();
@@ -4282,7 +4282,7 @@ input.dateSelector{
                 }
                 else
                 {
-                    alert(event.message);
+                    showToast(event.message);
                     refreshAll();
                 }
                 gSpinner.hide();
@@ -4302,7 +4302,7 @@ input.dateSelector{
 
         if(checkPaymentMethod != '' && (isNaN(depositAmount) || depositAmount <= 0))
         {
-            alert('The amount of the deposit must be positive.');
+            showToast('The amount of the deposit must be positive.');
             return;
         }
 
@@ -4311,7 +4311,7 @@ input.dateSelector{
         var checkPostProject = false;//$j('#checkPostProject').is(':checked');
         if(checkPaymentMethod != '' && (!depositPaymentReference || depositPaymentReference.length < 1))
         {
-            alert('A payment reference must be entered.');
+            showToast('A payment reference must be entered.');
             return;
         }
         if((paymentMethod == 'Visa' || paymentMethod == 'MasterCard') && (parseFloat(depositCreditAmount) + parseFloat(depositAmount)) > 2000)
@@ -4447,10 +4447,10 @@ function createBilling(selectedDate){
             {
                 if(event.status)
                 {
-                    //alert(result);
+                    //showToast(result);
                     if(result != null)
                     {
-                        alert('A new Billing has been created.');
+                        showToast('A new Billing has been created.');
                         if({!OR(isCounterSale,isPartnerPartsOrder,isInternalWarranty)})
                             createInvoice(result);
 
@@ -4467,7 +4467,7 @@ function createBilling(selectedDate){
                 }
                 else
                 {
-                    alert(event.message);
+                    showToast(event.message);
                     refreshAll();
                 }
                 gSpinner.hide();
@@ -4490,11 +4490,11 @@ function createInvoice(idBill){
             {
                 if(event.status)
                 {
-                    alert("A new {!If(OR(isPartnerPartsOrder,isInternalWarranty),'Slip','Invoice')} has been created.");
+                    showToast("A new {!If(OR(isPartnerPartsOrder,isInternalWarranty),'Slip','Invoice')} has been created.");
                 }
                 else
                 {
-                    alert("{!If(OR(isPartnerPartsOrder,isInternalWarranty),'Transfer','Billing')} was created but the A new {!If(isPartnerPartsOrder,'Slip','Invoice')} was not. "+event.message);
+                    showToast("{!If(OR(isPartnerPartsOrder,isInternalWarranty),'Transfer','Billing')} was created but the A new {!If(isPartnerPartsOrder,'Slip','Invoice')} was not. "+event.message);
                 }
                 gSpinner.hide();
             },
@@ -4512,7 +4512,7 @@ function createAP(){
             {
                 if(result != null)
                 {
-                    alert('A new AP has been created.');
+                    showToast('A new AP has been created.');
                     rerenderDetail();
                     rerenderAPLines();
                     refreshGrid_tasks();
@@ -4521,7 +4521,7 @@ function createAP(){
             }
             else
             {
-                alert(event.message);
+                showToast(event.message);
                 refreshAll();
             }
             gSpinner.hide();
@@ -4644,7 +4644,7 @@ function initGrid_timeCardLedger()
                 }
                 else
                 {
-                    alert(event.message);
+                    showToast(event.message);
                 }
                 $gridDiv.pqGrid('hideLoading');
             },
@@ -4706,7 +4706,7 @@ function initGrid_timeCardLedger()
     {
         if($j('#inputJournalEntry').val() == '' || $j('#inputJournalEntryId').val() == '')
         {
-            alert('Please select a Journal Entry to clone from.');
+            showToast('Please select a Journal Entry to clone from.');
             return;
         }
         var idJournal = $j('#inputJournalEntryId').val();
@@ -4729,7 +4729,7 @@ function initGrid_timeCardLedger()
                 }
                 else
                 {
-                    alert(event.message);
+                    showToast(event.message);
                 }
                 gSpinner.hide();
             },
@@ -4758,7 +4758,7 @@ function initGrid_timeCardLedger()
                             })
                             response(result);
                         } else {
-                            alert(event.message);
+                            showToast(event.message);
                         }
                     }, {
                         buffer: true,
@@ -4798,7 +4798,7 @@ function initGrid_timeCardLedger()
 
             if(rows.length == 0)
             {
-                alert('Please select ERP Order Items to Proceed.');
+                showToast('Please select ERP Order Items to Proceed.');
                 return;
             }
         }
@@ -4896,7 +4896,7 @@ function initGrid_timeCardLedger()
                 }
                 else
                 {
-                    alert(event.message);
+                    showToast(event.message);
                 }
             },
             {buffer:true, escape:true, timeout:120000});
@@ -4922,7 +4922,7 @@ function initGrid_timeCardLedger()
 
         if(listIdMatrl.length == 0)
         {
-            alert('Select materials and put quantity to fill.');
+            showToast('Select materials and put quantity to fill.');
             return;
         }
         gSpinner.show();
@@ -4941,7 +4941,7 @@ function initGrid_timeCardLedger()
                 {
                     if(result == '')
                     {
-                        alert('Nothing has been transferred');
+                        showToast('Nothing has been transferred');
                     }else
                         createInvoice(result);
 
@@ -4953,7 +4953,7 @@ function initGrid_timeCardLedger()
                 }
                 else
                 {
-                    alert(event.message);
+                    showToast(event.message);
                 }
                 $gridDiv.pqGrid('hideLoading');
                 gSpinner.hide();
@@ -4980,7 +4980,7 @@ function initGrid_timeCardLedger()
 
         if(listIdMatrl.length == 0)
         {
-            alert('Select materials to undo transfer.');
+            showToast('Select materials to undo transfer.');
             return;
         }
         gSpinner.show();
@@ -5005,12 +5005,12 @@ function initGrid_timeCardLedger()
                             myString += msg;
                             myString += '\n\n';
                         });
-                        alert(myString);
+                        showToast(myString);
                     }
                 }
                 else
                 {
-                    alert(event.message);
+                    showToast(event.message);
                 }
                 refreshAll();
                 rerenderDetail();
@@ -5044,13 +5044,13 @@ function initGrid_timeCardLedger()
                 {
                     if(result == '')
                     {
-                        alert('Nothing has been transferred');
+                        showToast('Nothing has been transferred');
                     }else
                         createInvoice(result);
                 }
                 else
                 {
-                    alert(event.message);
+                    showToast(event.message);
                 }
                 refreshAll();
                 rerenderInventoryTransfers();
@@ -5085,12 +5085,12 @@ function initGrid_timeCardLedger()
                             myString += msg;
                             myString += '\n\n';
                         });
-                        alert(myString);
+                        showToast(myString);
                     }
                 }
                 else
                 {
-                    alert(event.message);
+                    showToast(event.message);
                 }
                 refreshAll();
                 rerenderDetail();
@@ -5099,6 +5099,27 @@ function initGrid_timeCardLedger()
                 gSpinner.hide();
             },
             {buffer:true, escape:false, timeout:120000});
+    }
+    
+    function showToast(message){
+        var $messageDiv = $j('<div></div>');
+            $messageDiv.html(message);        
+            $messageDiv.dialog({
+                autoOpen: true,
+                width: 'auto',
+                modal: true,
+                //position:{my:'center top', at:'center top', of:'#pageBlock_cash'},
+                close:function(){
+                    $messageDiv.dialog('destroy');
+                    $messageDiv.remove();
+                },
+                title: 'Message',
+                buttons:{
+                    'OK':function(){
+                        $messageDiv.dialog('close');
+                    }
+                }
+            });
     }
 </script>
 
