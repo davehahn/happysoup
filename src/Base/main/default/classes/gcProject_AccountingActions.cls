@@ -573,7 +573,7 @@ public without sharing class gcProject_AccountingActions {
     	}
 
     	System.debug(loggingLevel.Error,'undoWIP Start:'+idProject);
-    	Date dateEarliestOpen = GMBLASERP.gcAccountingPeriod.dateEarliestOpen();
+    	Date dateEarliestOpen = GCR_AccountingPeriod.dateEarliestOpen();
     	list<AcctSeedERP__Manufacturing_Inventory_Movement__c> listMoveInsert = new list<AcctSeedERP__Manufacturing_Inventory_Movement__c>();
     	list<AcctSeedERP__Manufacturing_Inventory_Movement__c> listMoveDelete = new list<AcctSeedERP__Manufacturing_Inventory_Movement__c>();
     	List<AcctSeedERP__Manufacturing_Inventory_Movement__c> listMovesNonWhs = new list<AcctSeedERP__Manufacturing_Inventory_Movement__c>();
@@ -656,7 +656,7 @@ public without sharing class gcProject_AccountingActions {
 	    if(!listOutMoves.isEmpty())
 	    {
 	    	insert listOutMoves;
-	    	GMBLASERP.gcInventoryBalance.findOrCreateBalances(mapPWLB);
+	    	GCR_InventoryBalance.findOrCreateBalances(mapPWLB);
 			for(AcctSeedERP__Outbound_Inventory_Movement__c moveOut : listOutMoves)
 			{	
 				Id idProduct = moveOut.GMBLASERP__Product__c;
@@ -902,7 +902,7 @@ public without sharing class gcProject_AccountingActions {
 		}
 
     	AcctSeedERP__Location__c loc = [SELECT Id FROM AcctSeedERP__Location__c WHERE AcctSeedERP__Warehouse__c = :project.GMBLASERP__Warehouse__c][0];
-    	Id idBalance = GMBLASERP.gcInventoryBalance.findOrCreateBalance(project.AcctSeedERP__Manufactured_Product__c,project.GMBLASERP__Warehouse__c,loc.Id);
+    	Id idBalance = GCR_InventoryBalance.findOrCreateBalance(project.AcctSeedERP__Manufactured_Product__c,project.GMBLASERP__Warehouse__c,loc.Id);
     	insert new AcctSeedERP__Inbound_Inventory_Movement__c(
     			AcctSeedERP__Credit_GL_Account__c = idGlWIP,
     			AcctSeedERP__Inventory_Balance__c = idBalance,
@@ -939,7 +939,7 @@ public without sharing class gcProject_AccountingActions {
 			return listMsg;	
 		}
 
-		Date dateEarliestOpen = GMBLASERP.gcAccountingPeriod.dateEarliestOpen();
+		Date dateEarliestOpen = GCR_AccountingPeriod.dateEarliestOpen();
 
 		list<AcctSeedERP__Inbound_Inventory_Movement__c> listInboundUpsert = new list<AcctSeedERP__Inbound_Inventory_Movement__c>();
 		list<AcctSeedERP__Inbound_Inventory_Movement__c> listInboundDelete = new list<AcctSeedERP__Inbound_Inventory_Movement__c>();
@@ -1193,7 +1193,7 @@ public without sharing class gcProject_AccountingActions {
 		//	update inb;
 		//}else{
     	AcctSeedERP__Location__c loc = [SELECT Id FROM AcctSeedERP__Location__c WHERE AcctSeedERP__Warehouse__c = :project.GMBLASERP__Warehouse__c][0];
-    	Id idBalance = GMBLASERP.gcInventoryBalance.findOrCreateBalance(project.AcctSeedERP__Manufactured_Product__c,project.GMBLASERP__Warehouse__c,loc.Id);
+    	Id idBalance = GCR_InventoryBalance.findOrCreateBalance(project.AcctSeedERP__Manufactured_Product__c,project.GMBLASERP__Warehouse__c,loc.Id);
     	insert new AcctSeedERP__Inbound_Inventory_Movement__c(
     			AcctSeedERP__Credit_GL_Account__c = idGlWIP,
     			AcctSeedERP__Inventory_Balance__c = idBalance,
@@ -1404,7 +1404,7 @@ public without sharing class gcProject_AccountingActions {
         }
         if(!mapPWLB.isEmpty())
         {
-			GMBLASERP.gcInventoryBalance.findOrCreateBalances(mapPWLB);
+			GCR_InventoryBalance.findOrCreateBalances(mapPWLB);
         	for(GMBLASERP__Serial_Number__c serial : listSerials)
         	{
         		Id idBalance = mapPWLB.get(serial.GMBLASERP__Product__c).get(project.GMBLASERP__Warehouse__c).get(loc.Id);
@@ -2212,7 +2212,7 @@ public without sharing class gcProject_AccountingActions {
 				mapPWLB.put(idProduct, new map<Id,map<Id,Id>>{idWarehouse => new map<Id,Id>{idLocation => null}});
 			}
 
-			GMBLASERP.gcInventoryBalance.findOrCreateBalances(mapPWLB);
+			GCR_InventoryBalance.findOrCreateBalances(mapPWLB);
 
 			for(Id idProduct : mapPWLB.keySet())
 			{
@@ -2354,7 +2354,7 @@ public without sharing class gcProject_AccountingActions {
     	}
 
     	System.debug(loggingLevel.Error,'undoWIP Start:'+idProject);
-    	Date dateEarliestOpen = GMBLASERP.gcAccountingPeriod.dateEarliestOpen();
+    	Date dateEarliestOpen = GCR_AccountingPeriod.dateEarliestOpen();
     	list<AcctSeedERP__Manufacturing_Inventory_Movement__c> listMoveInsert = new list<AcctSeedERP__Manufacturing_Inventory_Movement__c>();
     	list<AcctSeedERP__Manufacturing_Inventory_Movement__c> listMoveDelete = new list<AcctSeedERP__Manufacturing_Inventory_Movement__c>();
     	List<AcctSeedERP__Manufacturing_Inventory_Movement__c> listMovesNonWhs = new list<AcctSeedERP__Manufacturing_Inventory_Movement__c>();
@@ -2517,7 +2517,7 @@ public without sharing class gcProject_AccountingActions {
 
 	    if(!mapPWLB.isEmpty())
 	    {
-	    	GMBLASERP.gcInventoryBalance.findOrCreateBalances(mapPWLB);
+	    	GCR_InventoryBalance.findOrCreateBalances(mapPWLB);
 	    	GMBLASERP__Inventory_Transfer__c newTsf = new GMBLASERP__Inventory_Transfer__c(
 	    														ERP_Order__c = project.Id,
 	    														GMBLASERP__Warehouse_From__c = pIdWarehouse,
@@ -2622,7 +2622,7 @@ public without sharing class gcProject_AccountingActions {
 
 	    if(!mapPWLB.isEmpty())
 	    {
-	    	GMBLASERP.gcInventoryBalance.findOrCreateBalances(mapPWLB);
+	    	GCR_InventoryBalance.findOrCreateBalances(mapPWLB);
 	    	GMBLASERP__Inventory_Transfer__c newTsf = new GMBLASERP__Inventory_Transfer__c(
 	    														ERP_Order__c = project.Id,
 	    														GMBLASERP__Warehouse_From__c = pIdWarehouse,

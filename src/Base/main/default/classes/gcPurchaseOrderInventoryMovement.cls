@@ -54,7 +54,7 @@ global without sharing class gcPurchaseOrderInventoryMovement {
 			{
 				for(AcctSeedERP__Purchase_Order_Inventory_Movement__c im : listNew)
 					if(im.GMBLASERP__Serial_Number__c != null)
-						setIdSerial.add(im.GMBLASERP__Serial_Number__c);
+						.add(im.GMBLASERP__Serial_Number__c);
 			}
 			if(boolIsUpdate)
 			{
