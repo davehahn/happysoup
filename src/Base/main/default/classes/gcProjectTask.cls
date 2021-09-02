@@ -660,6 +660,45 @@ System.debug('gcProjectTrigger 627');
 		gcProjectTask.disableTrigger = boolOld;
 	}
 
+	//// FROM GMBLASERP Package
+	public static void recalcQtyFilled(set<Id> setIdProjectTask)
+	{
+		list<AcctSeed__Project_Task__c> listTaskUpdate = new list<AcctSeed__Project_Task__c>();
+		for(AcctSeed__Project_Task__c pt :
+		[SELECT Id,
+				GMBLASERP__Product__c,
+				GMBLASERP__Quantity_Filled__c,
+		(SELECT Id,
+				AcctSeedERP__Inventory_Balance__r.AcctSeedERP__Product__c,
+				AcctSeedERP__Quantity__c
+		FROM AcctSeedERP__Outbound_Inventory_Movements__r
+		WHERE (AcctSeedERP__Quantity__c < 0 OR AcctSeedERP__Quantity__c > 0))
+		FROM AcctSeed__Project_Task__c
+		WHERE Id IN :setIdProjectTask
+		AND GMBLASERP__Product__c != null])
+		{
+			Decimal qty = 0;
+			for(AcctSeedERP__Outbound_Inventory_Movement__c move : pt.AcctSeedERP__Outbound_Inventory_Movements__r)
+			{
+				if(pt.GMBLASERP__Product__c == move.AcctSeedERP__Inventory_Balance__r.AcctSeedERP__Product__c)
+					qty += move.AcctSeedERP__Quantity__c;
+			}
+
+			if(pt.GMBLASERP__Quantity_Filled__c == null || (qty.setScale(6) != pt.GMBLASERP__Quantity_Filled__c.setScale(6)))
+			{
+				pt.GMBLASERP__Quantity_Filled__c = qty.setScale(6);
+				listTaskUpdate.add(pt);
+			}
+		}
+		if(!listTaskUpdate.isEmpty())
+		{
+			Boolean boolOld = disableTrigger;
+			disableTrigger = true;
+			update listTaskUpdate;
+			disableTrigger = boolOld;
+		}
+	}
+
  	global static void coverage(){
 		integer i;
 		i=1;

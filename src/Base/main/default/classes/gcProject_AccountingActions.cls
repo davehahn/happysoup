@@ -399,7 +399,7 @@ public without sharing class gcProject_AccountingActions {
 				mapPWLB.put(idProduct, new map<Id,map<Id,Id>>{idWarehouse => new map<Id,Id>{idLocation => null}});
 			}
 
-			GMBLASERP.gcInventoryBalance.findOrCreateBalances(mapPWLB);
+			GCR_InventoryBalance.findOrCreateBalances(mapPWLB);
 
 			for(Id idProduct : mapPWLB.keySet())
 			{
@@ -1526,7 +1526,7 @@ public without sharing class gcProject_AccountingActions {
         List<GMBLASERP__Serial_Number__c> listSerials = new List<GMBLASERP__Serial_Number__c>();
         if(!mapPWLB.isEmpty())
         {
-			GMBLASERP.gcInventoryBalance.findOrCreateBalances(mapPWLB);
+			GCR_InventoryBalance.findOrCreateBalances(mapPWLB);
         	for(AcctSeedERP__Material__c matl : listMatl)
         	{
         		Id idBalance = mapPWLB.get(matl.AcctSeedERP__Product__c).get(idDestinationWarehouse).get(loc.Id);

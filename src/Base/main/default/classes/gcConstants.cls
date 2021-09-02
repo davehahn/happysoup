@@ -577,10 +577,57 @@ public without sharing class gcConstants {
 		}
 		set;
 	}
+//'InventoryBoats', 'InventoryParts', 'CogsBoats', 'SalesParts', 'NonInvCogs'
+	public static Id idGlInventoryBoats{
+		get{
+			if(idGlCCPayable == null) fetchGlAccounts();
+			// For this we will not return any error
+			//if(idGlInventoryBoats == null) throw new gcException('A Cash Flow GL Account with Uniquefier [InventoryBoats] does not exist.');
+			return idGlInventoryBoats;
+		}
+		set;
+	}
+	public static Id idGlInventoryParts{
+		get{
+			if(idGlCCPayable == null) fetchGlAccounts();
+			//
+			//if(idGlInventoryParts == null) throw new gcException('A Cash Flow GL Account with Uniquefier [InventoryParts] does not exist.');
+			return idGlInventoryParts;
+		}
+		set;
+	}
+	public static Id idGlCogsBoats{
+		get{
+			if(idGlCCPayable == null) fetchGlAccounts();
+			// For this we will not return any error
+			//if(idGlCogsBoats == null) throw new gcException('A Cash Flow GL Account with Uniquefier [CogsBoats] does not exist.');
+			return idGlCogsBoats;
+		}
+		set;
+	}
+	public static Id idGlSalesParts{
+		get{
+			if(idGlCCPayable == null) fetchGlAccounts();
+			// For this we will not return any error
+			//if(idGlSalesParts == null) throw new gcException('A Cash Flow GL Account with Uniquefier [SalesParts] does not exist.');
+			return idGlSalesParts;
+		}
+		set;
+	}
+	public static Id idGlNonInvCogs{
+		get{
+			if(idGlCCPayable == null) fetchGlAccounts();
+			// For this we will not return any error
+			//if(idGlNonInvCogs == null) throw new gcException('A Cash Flow GL Account with Uniquefier [NonInvCogs] does not exist.');
+			return idGlNonInvCogs;
+		}
+		set;
+	}
 
 	private static void fetchGlAccounts()
 	{
 		List<String> listUniquefier = new list<String>{
+			'InventoryBoats', 'InventoryParts', 'CogsBoats', 'SalesParts', 'NonInvCogs',
 			'Cash',
 			'CreditCard',
 			'CogsParts',
@@ -699,6 +746,16 @@ public without sharing class gcConstants {
 				idGlCCPayable = gl.Id;
 			else if(gl.Uniquefier__c == 'WellsFargoLoan')
 				idGlWellsFargoLoan = gl.Id;
+			else if(gl.Uniquefier__c == 'InventoryBoats')
+				idGlInventoryBoats = gl.Id;
+			else if(gl.Uniquefier__c == 'InventoryParts')
+				idGlInventoryParts = gl.Id;
+			else if(gl.Uniquefier__c == 'CogsBoats')
+				idGlCogsBoats = gl.Id;
+			else if(gl.Uniquefier__c == 'SalesParts')
+				idGlSalesParts = gl.Id;
+			else if(gl.Uniquefier__c == 'NonInvCogs')
+				idGlNonInvCogs = gl.Id;
 		}
 	}
 

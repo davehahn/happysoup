@@ -495,239 +495,245 @@ public without sharing class gcSerialNumber{
 	public static void checkPriorMovements(list<sObject> listMove, Map<Id,sObject> mapOldMoves){
 		if(checkPriorMovementsAlreadyDone) return;
 		else checkPriorMovementsAlreadyDone = true;
+		System.debug('Serial Checking Prior Moves');
 		CustomPermissionsReader cpr = new CustomPermissionsReader();
 		Boolean canModifyLockedPurchaseOrder = false;
 		Boolean canMoveInventoryAnyDay = false;
-			if(cpr.hasPermission('CanMoveInventoryAnyDay'))
-				canMoveInventoryAnyDay = true;
-
-			if(!canMoveInventoryAnyDay)
-			{
-			Map<Id,GMBLASERP__Serial_Number__c> mapSerials = new Map<Id,GMBLASERP__Serial_Number__c>();
-			for(sObject obj : listMove)
-			{
-				Id idSerial = (Id)obj.get('GMBLASERP__Serial_Number__c');
-				System.debug(loggingLevel.error,'idSerial:'+idSerial);
-
-				if(idSerial != null){
-					mapSerials.put(idSerial, null);
+		Set<Id> setCheckPosted  = new Set<Id>();
+		for(sObject move : listMove)
+		{
+			if(Trigger.isExecuting && Trigger.isUpdate){
+				String moveStatus = (String) move.get('AcctSeedERP__Status__c');
+				String oldMoveStatus = (String) mapOldMoves.get(move.Id).get('AcctSeedERP__Status__c');
+				if(moveStatus == 'Posted' && oldMoveStatus != moveStatus){
+					setCheckPosted.add(move.Id);
 				}
-			}
-			// Old Moves As well for Delete
-			if(Trigger.isDelete)
-			for(sObject obj : mapOldMoves.values())
-			{
-				Id idSerial = (Id)obj.get('GMBLASERP__Serial_Number__c');
-				System.debug(loggingLevel.error,'idSerial:'+idSerial);
-
-				if(idSerial != null){
-					mapSerials.put(idSerial, null);
-				}
-			}
-
-			if(!mapSerials.isEmpty()){
-				for(GMBLASERP__Serial_Number__c sn :
-					[SELECT Id, Name,
-						(SELECT Id, AcctSeedERP__Movement_Date__c FROM GMBLASERP__Outbound_Inventory_Movements__r ORDER BY AcctSeedERP__Movement_Date__c DESC LIMIT 2),
-						(SELECT Id, AcctSeedERP__Movement_Date__c FROM GMBLASERP__Inbound_Inventory_Movements__r ORDER BY AcctSeedERP__Movement_Date__c DESC LIMIT 2),
-						(SELECT Id, AcctSeedERP__Movement_Date__c FROM GMBLASERP__Purchase_Order_Inventory_Movements__r ORDER BY AcctSeedERP__Movement_Date__c DESC LIMIT 2),
-						(SELECT Id, AcctSeedERP__Movement_Date__c FROM GMBLASERP__Manufacturing_Inventory_Movements__r ORDER BY AcctSeedERP__Movement_Date__c DESC LIMIT 2)
-					FROM GMBLASERP__Serial_Number__c
-					WHERE Id IN :mapSerials.keySet()])
-				{
-					mapSerials.put(sn.Id,sn);
-				}
-			}
-			System.debug(loggingLevel.error,'Trigger.isInsert:'+Trigger.isInsert);
-			System.debug(loggingLevel.error,'Trigger.isUpdate:'+Trigger.isUpdate);
-			if(Trigger.isInsert || Trigger.isUpdate)
-			for(sObject obj : listMove)
-			{
-				Id idSerial = (Id)obj.get('GMBLASERP__Serial_Number__c');
-				Date moveDate = (Date)obj.get('AcctSeedERP__Movement_Date__c');
-				System.debug(loggingLevel.error,'moveDate:'+moveDate);
-
-				Date oldMoveDate;
-				Id updateId;
-				if(Trigger.isUpdate){
-					updateId = (Id)obj.get('Id');
-					oldMoveDate = (Date)mapOldMoves.get(updateId).get('AcctSeedERP__Movement_Date__c');
-					System.debug(loggingLevel.error,'updateId:'+updateId);
-					System.debug(loggingLevel.error,'oldMoveDate:'+oldMoveDate);
-				}
-				if(idSerial != null)
-				{
-					Map<Date,sObject> mapDateMove = new Map<Date,sObject>();
-					Map<Date,Set<Id>> mapDateIds = new Map<Date,Set<Id>>();
-					GMBLASERP__Serial_Number__c serialInfo = mapSerials.get(idSerial);
-					System.debug(loggingLevel.error,'serialInfo:'+serialInfo);
-
-					/// Outbound Moves
-					sObject mc;
-					sObject mc2;
-					for(AcctSeedERP__Outbound_Inventory_Movement__c oim : serialInfo.GMBLASERP__Outbound_Inventory_Movements__r){
-						mapDateMove.put(oim.AcctSeedERP__Movement_Date__c, oim);
-						if(!mapDateIds.containsKey(oim.AcctSeedERP__Movement_Date__c))
-							mapDateIds.put(oim.AcctSeedERP__Movement_Date__c,new Set<Id>());
-						mapDateIds.get(oim.AcctSeedERP__Movement_Date__c).add(oim.Id);
-					}
-					/// Inbound Moves
-					for(AcctSeedERP__Inbound_Inventory_Movement__c iim : serialInfo.GMBLASERP__Inbound_Inventory_Movements__r){
-						mapDateMove.put(iim.AcctSeedERP__Movement_Date__c, iim);
-						if(!mapDateIds.containsKey(iim.AcctSeedERP__Movement_Date__c))
-							mapDateIds.put(iim.AcctSeedERP__Movement_Date__c,new Set<Id>());
-						mapDateIds.get(iim.AcctSeedERP__Movement_Date__c).add(iim.Id);
-					}
-					/// Manufacturing Moves
-					for(AcctSeedERP__Manufacturing_Inventory_Movement__c mim : serialInfo.GMBLASERP__Manufacturing_Inventory_Movements__r){
-						mapDateMove.put(mim.AcctSeedERP__Movement_Date__c, mim);
-						if(!mapDateIds.containsKey(mim.AcctSeedERP__Movement_Date__c))
-							mapDateIds.put(mim.AcctSeedERP__Movement_Date__c,new Set<Id>());
-						mapDateIds.get(mim.AcctSeedERP__Movement_Date__c).add(mim.Id);
-					}
-					/// Purchase Moves
-					for(AcctSeedERP__Purchase_Order_Inventory_Movement__c pim : serialInfo.GMBLASERP__Purchase_Order_Inventory_Movements__r){
-						mapDateMove.put(pim.AcctSeedERP__Movement_Date__c, pim);
-						if(!mapDateIds.containsKey(pim.AcctSeedERP__Movement_Date__c))
-							mapDateIds.put(pim.AcctSeedERP__Movement_Date__c,new Set<Id>());
-						mapDateIds.get(pim.AcctSeedERP__Movement_Date__c).add(pim.Id);
-					}
-					if(!mapDateMove.isEmpty())
-					{
-						System.debug(loggingLevel.error,'mapDateMove:'+mapDateMove);
-						List<Date> listAllKeys = new List<Date>();
-						listAllKeys.addAll(mapDateMove.keySet());
-						listAllKeys.sort();
-						System.debug(loggingLevel.error,'listAllKeys:'+listAllKeys);
-						Integer lstSize = listAllKeys.size();
-						Integer lastIndx = lstSize - 1;
-						mc = mapDateMove.get(listAllKeys[lastIndx]);
-						Date mcDate = (Date)mc.get('AcctSeedERP__Movement_Date__c');
-						Id mcId = (Id)mc.get('Id');
-						System.debug(loggingLevel.error,'mcId:'+mcId);
-						System.debug(loggingLevel.error,'mcDate:'+mcDate);
-						Date mc2Date;
-						Id mc2Id;
-						if(listAllKeys.size() > 1){
-							lastIndx = lstSize - 2;
-							mc2 = mapDateMove.get(listAllKeys[lastIndx]);
-							mc2Date = (Date)mc2.get('AcctSeedERP__Movement_Date__c');
-							mc2Id = (Id)mc2.get('Id');
-						}
-						//// Validation Starts here
-						if(Trigger.isInsert && (Date)mc.get('AcctSeedERP__Movement_Date__c') > moveDate)
-							obj.addError('The Last movement for serial number '+serialInfo.Name+' was made on '+mcDate.format()+'. New movements must be made on or after that day.');
-
-						if(Trigger.isUpdate)
-						{
-							if(mapDateIds.get(mcDate).contains(updateId) && mc2 != null && mc2Date > moveDate){
-								System.debug(loggingLevel.error,'move:'+obj);
-								System.debug(loggingLevel.error,'mc:'+mc);
-								obj.addError('The movement date for serial number '+serialInfo.Name+' cannot be modified. Previous Movement was made on '+mc2Date.format()+'. Current movement must be made on or after that day.');
-							}else if(mc2 != null && mapDateIds.get(mc2Date).contains(updateId) && moveDate != oldMoveDate){
-								System.debug(loggingLevel.error,'move:'+obj);
-								System.debug(loggingLevel.error,'Error 2:'+mc);
-								obj.addError('The movement date for serial number '+serialInfo.Name+' cannot be modified. There are movements after this movement.');
-							}
-							else if(moveDate != oldMoveDate && !mapDateIds.get(mcDate).contains(updateId) && moveDate > mcDate){
-								System.debug(loggingLevel.error,'move:'+obj);
-								System.debug(loggingLevel.error,'Error 3:'+mc);
-								obj.addError('The movement date for serial number '+serialInfo.Name+' cannot be modified. There are movements after this movement.');
-							}
-							else if(moveDate != oldMoveDate && !mapDateIds.get(mcDate).contains(updateId) && mc2 != null && !mapDateIds.get(mc2Date).contains(updateId)){
-								System.debug(loggingLevel.error,'move:'+obj);
-								System.debug(loggingLevel.error,'Error 4:'+mc);
-								obj.addError('The movement date for '+serialInfo.Name+' cannot be modified. There are movements after this movement.');
-							}
-						}
-					}
-				}
-			}
-
-			/// If deleting an old move with serial
-			if(Trigger.isDelete)
-			{
-				for(sObject obj : mapOldMoves.values())
-				{
-					Id idSerial = (Id)obj.get('GMBLASERP__Serial_Number__c');
-					Date moveDate = (Date)obj.get('AcctSeedERP__Movement_Date__c');
-					Id deleteId = (Id)obj.get('Id');
-					System.debug(loggingLevel.error,'deleteId:'+deleteId);
-
-					if(idSerial != null)
-					{
-						Map<Date,sObject> mapDateMove = new Map<Date,sObject>();
-						Map<Date,Set<Id>> mapDateIds = new Map<Date,Set<Id>>();
-						GMBLASERP__Serial_Number__c serialInfo = mapSerials.get(idSerial);
-						System.debug(loggingLevel.error,'serialInfo:'+serialInfo);
-
-						/// Outbound Moves
-						sObject mc;
-						sObject mc2;
-						for(AcctSeedERP__Outbound_Inventory_Movement__c oim : serialInfo.GMBLASERP__Outbound_Inventory_Movements__r){
-							mapDateMove.put(oim.AcctSeedERP__Movement_Date__c, oim);
-							if(!mapDateIds.containsKey(oim.AcctSeedERP__Movement_Date__c))
-								mapDateIds.put(oim.AcctSeedERP__Movement_Date__c,new Set<Id>());
-							mapDateIds.get(oim.AcctSeedERP__Movement_Date__c).add(oim.Id);
-						}
-						/// Inbound Moves
-						for(AcctSeedERP__Inbound_Inventory_Movement__c iim : serialInfo.GMBLASERP__Inbound_Inventory_Movements__r){
-							mapDateMove.put(iim.AcctSeedERP__Movement_Date__c, iim);
-							if(!mapDateIds.containsKey(iim.AcctSeedERP__Movement_Date__c))
-								mapDateIds.put(iim.AcctSeedERP__Movement_Date__c,new Set<Id>());
-							mapDateIds.get(iim.AcctSeedERP__Movement_Date__c).add(iim.Id);
-						}
-						/// Manufacturing Moves
-						for(AcctSeedERP__Manufacturing_Inventory_Movement__c mim : serialInfo.GMBLASERP__Manufacturing_Inventory_Movements__r){
-							System.debug(loggingLevel.error,'mim:'+mim);
-							mapDateMove.put(mim.AcctSeedERP__Movement_Date__c, mim);
-							if(!mapDateIds.containsKey(mim.AcctSeedERP__Movement_Date__c))
-								mapDateIds.put(mim.AcctSeedERP__Movement_Date__c,new Set<Id>());
-							mapDateIds.get(mim.AcctSeedERP__Movement_Date__c).add(mim.Id);
-						}
-						/// Purchase Moves
-						for(AcctSeedERP__Purchase_Order_Inventory_Movement__c pim : serialInfo.GMBLASERP__Purchase_Order_Inventory_Movements__r){
-							System.debug(loggingLevel.error,'pim:'+pim);
-							mapDateMove.put(pim.AcctSeedERP__Movement_Date__c, pim);
-							if(!mapDateIds.containsKey(pim.AcctSeedERP__Movement_Date__c))
-								mapDateIds.put(pim.AcctSeedERP__Movement_Date__c,new Set<Id>());
-							mapDateIds.get(pim.AcctSeedERP__Movement_Date__c).add(pim.Id);
-						}
-						if(!mapDateMove.isEmpty())
-						{
-							System.debug(loggingLevel.error,'mapDateIds:'+mapDateIds);
-							System.debug(loggingLevel.error,'mapDateMove:'+mapDateMove);
-							List<Date> listAllKeys = new List<Date>();
-							listAllKeys.addAll(mapDateMove.keySet());
-							listAllKeys.sort();
-							System.debug(loggingLevel.error,'listAllKeys:'+listAllKeys);
-							Integer lstSize = listAllKeys.size();
-							Integer lastIndx = lstSize - 1;
-							mc = mapDateMove.get(listAllKeys[lastIndx]);
-							Date mcDate = (Date)mc.get('AcctSeedERP__Movement_Date__c');
-							Id mcId = (Id)mc.get('Id');
-							System.debug(loggingLevel.error,'mcId:'+mcId);
-							System.debug(loggingLevel.error,'mcDate:'+mcDate);
-							Date mc2Date;
-							Id mc2Id;
-							if(listAllKeys.size() > 1){
-								lastIndx = lstSize - 2;
-								mc2 = mapDateMove.get(listAllKeys[lastIndx]);
-								mc2Date = (Date)mc2.get('AcctSeedERP__Movement_Date__c');
-								mc2Id = (Id)mc2.get('Id');
-							}
-							if(!mapDateIds.get(mcDate).contains(deleteId)){
-								System.debug(loggingLevel.error,'moveDel:'+obj);
-								System.debug(loggingLevel.error,'mcD:'+mc);
-								obj.addError('The movement cannot be deleted for serial number '+serialInfo.Name+'. There are movements after this movement.');
-							}
-						}
-					}
-				}
-
 			}
 		}
-		checkPriorMovementsAlreadyDone = false;
+		System.debug(Trigger.isAfter);
+		System.debug(Trigger.isBefore);
+		System.debug(Trigger.isInsert);
+		System.debug(Trigger.isUpdate);
+		System.debug(listMove);
+		System.debug(listMove.getSObjectType());
+		if(!setCheckPosted.isEmpty() || !Trigger.isExecuting || Trigger.isDelete || Trigger.isInsert) {
+
+			if (cpr.hasPermission('CanMoveInventoryAnyDay'))
+				canMoveInventoryAnyDay = true;
+
+			if (!canMoveInventoryAnyDay) {
+				Map<Id, GMBLASERP__Serial_Number__c> mapSerials = new Map<Id, GMBLASERP__Serial_Number__c>();
+				for (sObject obj : listMove) {
+					Id idSerial = (Id) obj.get('GMBLASERP__Serial_Number__c');
+					System.debug(loggingLevel.error, 'idSerial:' + idSerial);
+
+					if (idSerial != null) {
+						mapSerials.put(idSerial, null);
+					}
+				}
+				// Old Moves As well for Delete
+				if (Trigger.isDelete)
+					for (sObject obj : mapOldMoves.values()) {
+						Id idSerial = (Id) obj.get('GMBLASERP__Serial_Number__c');
+						System.debug(loggingLevel.error, 'idSerial:' + idSerial);
+
+						if (idSerial != null) {
+							mapSerials.put(idSerial, null);
+						}
+					}
+
+				if (!mapSerials.isEmpty()) {
+					for (GMBLASERP__Serial_Number__c sn : [
+							SELECT Id, Name, (SELECT Id, AcctSeedERP__Movement_Date__c FROM GMBLASERP__Outbound_Inventory_Movements__r ORDER BY AcctSeedERP__Movement_Date__c DESC LIMIT 2), (SELECT Id, AcctSeedERP__Movement_Date__c FROM GMBLASERP__Inbound_Inventory_Movements__r ORDER BY AcctSeedERP__Movement_Date__c DESC LIMIT 2), (SELECT Id, AcctSeedERP__Movement_Date__c FROM GMBLASERP__Purchase_Order_Inventory_Movements__r ORDER BY AcctSeedERP__Movement_Date__c DESC LIMIT 2), (SELECT Id, AcctSeedERP__Movement_Date__c FROM GMBLASERP__Manufacturing_Inventory_Movements__r ORDER BY AcctSeedERP__Movement_Date__c DESC LIMIT 2)
+							FROM GMBLASERP__Serial_Number__c
+							WHERE Id IN :mapSerials.keySet()
+					]) {
+						System.debug('sn.Id');
+						System.debug(sn.Id);
+						mapSerials.put(sn.Id, sn);
+					}
+				}
+				System.debug(loggingLevel.error, 'Trigger.isInsert:' + Trigger.isInsert);
+				System.debug(loggingLevel.error, 'Trigger.isUpdate:' + Trigger.isUpdate);
+				if (Trigger.isInsert || Trigger.isUpdate)
+					for (sObject obj : listMove) {
+						Id idSerial = (Id) obj.get('GMBLASERP__Serial_Number__c');
+						Date moveDate = (Date) obj.get('AcctSeedERP__Movement_Date__c');
+						System.debug(loggingLevel.error, 'moveDate:' + moveDate);
+
+						Date oldMoveDate;
+						Id updateId;
+						if (Trigger.isUpdate) {
+							updateId = (Id) obj.get('Id');
+							oldMoveDate = (Date) mapOldMoves.get(updateId).get('AcctSeedERP__Movement_Date__c');
+							System.debug(loggingLevel.error, 'updateId:' + updateId);
+							System.debug(loggingLevel.error, 'oldMoveDate:' + oldMoveDate);
+						}
+						if (idSerial != null) {
+							Map<Date, sObject> mapDateMove = new Map<Date, sObject>();
+							Map<Date, Set<Id>> mapDateIds = new Map<Date, Set<Id>>();
+							GMBLASERP__Serial_Number__c serialInfo = mapSerials.get(idSerial);
+							System.debug(loggingLevel.error, 'serialInfo:' + serialInfo);
+
+							/// Outbound Moves
+							sObject mc;
+							sObject mc2;
+							for (AcctSeedERP__Outbound_Inventory_Movement__c oim : serialInfo.GMBLASERP__Outbound_Inventory_Movements__r) {
+								mapDateMove.put(oim.AcctSeedERP__Movement_Date__c, oim);
+								if (!mapDateIds.containsKey(oim.AcctSeedERP__Movement_Date__c))
+									mapDateIds.put(oim.AcctSeedERP__Movement_Date__c, new Set<Id>());
+								mapDateIds.get(oim.AcctSeedERP__Movement_Date__c).add(oim.Id);
+							}
+							/// Inbound Moves
+							for (AcctSeedERP__Inbound_Inventory_Movement__c iim : serialInfo.GMBLASERP__Inbound_Inventory_Movements__r) {
+								mapDateMove.put(iim.AcctSeedERP__Movement_Date__c, iim);
+								if (!mapDateIds.containsKey(iim.AcctSeedERP__Movement_Date__c))
+									mapDateIds.put(iim.AcctSeedERP__Movement_Date__c, new Set<Id>());
+								mapDateIds.get(iim.AcctSeedERP__Movement_Date__c).add(iim.Id);
+							}
+							/// Manufacturing Moves
+							for (AcctSeedERP__Manufacturing_Inventory_Movement__c mim : serialInfo.GMBLASERP__Manufacturing_Inventory_Movements__r) {
+								mapDateMove.put(mim.AcctSeedERP__Movement_Date__c, mim);
+								if (!mapDateIds.containsKey(mim.AcctSeedERP__Movement_Date__c))
+									mapDateIds.put(mim.AcctSeedERP__Movement_Date__c, new Set<Id>());
+								mapDateIds.get(mim.AcctSeedERP__Movement_Date__c).add(mim.Id);
+							}
+							/// Purchase Moves
+							for (AcctSeedERP__Purchase_Order_Inventory_Movement__c pim : serialInfo.GMBLASERP__Purchase_Order_Inventory_Movements__r) {
+								mapDateMove.put(pim.AcctSeedERP__Movement_Date__c, pim);
+								if (!mapDateIds.containsKey(pim.AcctSeedERP__Movement_Date__c))
+									mapDateIds.put(pim.AcctSeedERP__Movement_Date__c, new Set<Id>());
+								mapDateIds.get(pim.AcctSeedERP__Movement_Date__c).add(pim.Id);
+							}
+							if (!mapDateMove.isEmpty()) {
+								System.debug(loggingLevel.error, 'mapDateMove:' + mapDateMove);
+								List<Date> listAllKeys = new List<Date>();
+								listAllKeys.addAll(mapDateMove.keySet());
+								listAllKeys.sort();
+								System.debug(loggingLevel.error, 'listAllKeys:' + listAllKeys);
+								Integer lstSize = listAllKeys.size();
+								Integer lastIndx = lstSize - 1;
+								mc = mapDateMove.get(listAllKeys[lastIndx]);
+								Date mcDate = (Date) mc.get('AcctSeedERP__Movement_Date__c');
+								Id mcId = (Id) mc.get('Id');
+								System.debug(loggingLevel.error, 'mcId:' + mcId);
+								System.debug(loggingLevel.error, 'mcDate:' + mcDate);
+								Date mc2Date;
+								Id mc2Id;
+								if (listAllKeys.size() > 1) {
+									lastIndx = lstSize - 2;
+									mc2 = mapDateMove.get(listAllKeys[lastIndx]);
+									mc2Date = (Date) mc2.get('AcctSeedERP__Movement_Date__c');
+									mc2Id = (Id) mc2.get('Id');
+								}
+								//// Validation Starts here
+								if (Trigger.isInsert && (Date) mc.get('AcctSeedERP__Movement_Date__c') > moveDate)
+									obj.addError('The Last movement for serial number ' + serialInfo.Name + ' was made on ' + mcDate.format() + '. New movements must be made on or after that day.');
+
+								if (Trigger.isUpdate) {
+									if (mapDateIds.get(mcDate).contains(updateId) && mc2 != null && mc2Date > moveDate) {
+										System.debug(loggingLevel.error, 'move:' + obj);
+										System.debug(loggingLevel.error, 'mc:' + mc);
+										obj.addError('The movement date for serial number ' + serialInfo.Name + ' cannot be modified. Previous Movement was made on ' + mc2Date.format() + '. Current movement must be made on or after that day.');
+									} else if (mc2 != null && mapDateIds.get(mc2Date).contains(updateId) && moveDate != oldMoveDate) {
+										System.debug(loggingLevel.error, 'move:' + obj);
+										System.debug(loggingLevel.error, 'Error 2:' + mc);
+										obj.addError('The movement date for serial number ' + serialInfo.Name + ' cannot be modified. There are movements after this movement.');
+									} else if (moveDate != oldMoveDate && !mapDateIds.get(mcDate).contains(updateId) && moveDate > mcDate) {
+										System.debug(loggingLevel.error, 'move:' + obj);
+										System.debug(loggingLevel.error, 'Error 3:' + mc);
+										obj.addError('The movement date for serial number ' + serialInfo.Name + ' cannot be modified. There are movements after this movement.');
+									} else if (moveDate != oldMoveDate && !mapDateIds.get(mcDate).contains(updateId) && mc2 != null && !mapDateIds.get(mc2Date).contains(updateId)) {
+										System.debug(loggingLevel.error, 'move:' + obj);
+										System.debug(loggingLevel.error, 'Error 4:' + mc);
+										obj.addError('The movement date for ' + serialInfo.Name + ' cannot be modified. There are movements after this movement.');
+									}
+								}
+							}
+						}
+					}
+
+				/// If deleting an old move with serial
+				if (Trigger.isDelete) {
+					for (sObject obj : mapOldMoves.values()) {
+						Id idSerial = (Id) obj.get('GMBLASERP__Serial_Number__c');
+						Date moveDate = (Date) obj.get('AcctSeedERP__Movement_Date__c');
+						Id deleteId = (Id) obj.get('Id');
+						System.debug(loggingLevel.error, 'deleteId:' + deleteId);
+
+						if (idSerial != null) {
+							Map<Date, sObject> mapDateMove = new Map<Date, sObject>();
+							Map<Date, Set<Id>> mapDateIds = new Map<Date, Set<Id>>();
+							GMBLASERP__Serial_Number__c serialInfo = mapSerials.get(idSerial);
+							System.debug(loggingLevel.error, 'serialInfo:' + serialInfo);
+
+							/// Outbound Moves
+							sObject mc;
+							sObject mc2;
+							for (AcctSeedERP__Outbound_Inventory_Movement__c oim : serialInfo.GMBLASERP__Outbound_Inventory_Movements__r) {
+								mapDateMove.put(oim.AcctSeedERP__Movement_Date__c, oim);
+								if (!mapDateIds.containsKey(oim.AcctSeedERP__Movement_Date__c))
+									mapDateIds.put(oim.AcctSeedERP__Movement_Date__c, new Set<Id>());
+								mapDateIds.get(oim.AcctSeedERP__Movement_Date__c).add(oim.Id);
+							}
+							/// Inbound Moves
+							for (AcctSeedERP__Inbound_Inventory_Movement__c iim : serialInfo.GMBLASERP__Inbound_Inventory_Movements__r) {
+								mapDateMove.put(iim.AcctSeedERP__Movement_Date__c, iim);
+								if (!mapDateIds.containsKey(iim.AcctSeedERP__Movement_Date__c))
+									mapDateIds.put(iim.AcctSeedERP__Movement_Date__c, new Set<Id>());
+								mapDateIds.get(iim.AcctSeedERP__Movement_Date__c).add(iim.Id);
+							}
+							/// Manufacturing Moves
+							for (AcctSeedERP__Manufacturing_Inventory_Movement__c mim : serialInfo.GMBLASERP__Manufacturing_Inventory_Movements__r) {
+								System.debug(loggingLevel.error, 'mim:' + mim);
+								mapDateMove.put(mim.AcctSeedERP__Movement_Date__c, mim);
+								if (!mapDateIds.containsKey(mim.AcctSeedERP__Movement_Date__c))
+									mapDateIds.put(mim.AcctSeedERP__Movement_Date__c, new Set<Id>());
+								mapDateIds.get(mim.AcctSeedERP__Movement_Date__c).add(mim.Id);
+							}
+							/// Purchase Moves
+							for (AcctSeedERP__Purchase_Order_Inventory_Movement__c pim : serialInfo.GMBLASERP__Purchase_Order_Inventory_Movements__r) {
+								System.debug(loggingLevel.error, 'pim:' + pim);
+								mapDateMove.put(pim.AcctSeedERP__Movement_Date__c, pim);
+								if (!mapDateIds.containsKey(pim.AcctSeedERP__Movement_Date__c))
+									mapDateIds.put(pim.AcctSeedERP__Movement_Date__c, new Set<Id>());
+								mapDateIds.get(pim.AcctSeedERP__Movement_Date__c).add(pim.Id);
+							}
+							if (!mapDateMove.isEmpty()) {
+								System.debug(loggingLevel.error, 'mapDateIds:' + mapDateIds);
+								System.debug(loggingLevel.error, 'mapDateMove:' + mapDateMove);
+								List<Date> listAllKeys = new List<Date>();
+								listAllKeys.addAll(mapDateMove.keySet());
+								listAllKeys.sort();
+								System.debug(loggingLevel.error, 'listAllKeys:' + listAllKeys);
+								Integer lstSize = listAllKeys.size();
+								Integer lastIndx = lstSize - 1;
+								mc = mapDateMove.get(listAllKeys[lastIndx]);
+								Date mcDate = (Date) mc.get('AcctSeedERP__Movement_Date__c');
+								Id mcId = (Id) mc.get('Id');
+								System.debug(loggingLevel.error, 'mcId:' + mcId);
+								System.debug(loggingLevel.error, 'mcDate:' + mcDate);
+								Date mc2Date;
+								Id mc2Id;
+								if (listAllKeys.size() > 1) {
+									lastIndx = lstSize - 2;
+									mc2 = mapDateMove.get(listAllKeys[lastIndx]);
+									mc2Date = (Date) mc2.get('AcctSeedERP__Movement_Date__c');
+									mc2Id = (Id) mc2.get('Id');
+								}
+								if (!mapDateIds.get(mcDate).contains(deleteId)) {
+									System.debug(loggingLevel.error, 'moveDel:' + obj);
+									System.debug(loggingLevel.error, 'mcD:' + mc);
+									obj.addError('The movement cannot be deleted for serial number ' + serialInfo.Name + '. There are movements after this movement.');
+								}
+							}
+						}
+					}
+
+				}
+			}
+		}
+		//checkPriorMovementsAlreadyDone = false;
 	}
 
 	@future
