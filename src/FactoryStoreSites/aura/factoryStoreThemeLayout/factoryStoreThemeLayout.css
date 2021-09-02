@@ -133,43 +133,44 @@
   font-size: 2em; line-height: 1;
 }
 
-@media screen and (max-width: 1245px){
-  .THIS .storeHeader__corporateLogo{
-    flex-shrink: initial;
-    background-size: contain;    
-  }
-}
-
-@media screen and (max-width: 940px){
-  .THIS .storeHeader__storeDetails{
-    display: flex;
-    flex-wrap: wrap;
-    padding: 1em 1.5em 1.5em;
-  }
-  .THIS .storeHeader__locationAndHours{
-    justify-content: center;
-    margin-bottom: 1em;
-  }
-  .THIS .storeHeader__locationAndHours, .THIS .storeHeader__phoneNumbers{
-    width: 100%;
-  }
-  .THIS .storeHeader__phoneNumbers a{
-    padding-left: 0;
-  }
-
-  .THIS .storeHeader__siteToggle{
+@media screen and (max-width: 1340px){
+  .THIS.storeHeader .storeDetails .corporateLogo{
     display: none;
   }
 }
 
-@media screen and (max-width: 768px){
-  .THIS .storeHeader__mainNavigation{
-      width: auto;
-			background-color: var(--highlight);
-			padding: 0.65em 0.5em 0.4em;
+@media screen and (max-width: 940px){
+  .THIS.storeHeader .storeDetails{
+    display: flex;
+    flex-wrap: wrap;
+    padding: 1em 1.5em 1.5em;
+  }
+  .THIS.storeHeader .storeDetails .locationAndHours{
+    justify-content: center;
+    margin-bottom: 1em;
+  }
+  .THIS.storeHeader .storeDetails .locationAndHours, .THIS.storeHeader .phoneNumbers{
+    width: 100%;
+  }
+  .THIS.storeHeader .storeDetails .phoneNumbers a{
+    padding-left: 0;
   }
 
-	.THIS .forceCommunityCardLayout .container{
+  .THIS.storeHeader .storeDetails .siteToggle{
+    display: none;
+  }
+}
+
+@media screen and (max-width: 820px){
+  .THIS.storeHeader .mainNavigation{
+			width: auto;
+			background-color: var(--highlight);
+			padding: 0.65em 0.5em 0.4em;
+	}
+}
+
+@media screen and (max-width: 768px){
+  .THIS .forceCommunityCardLayout .container{
     flex-direction: column;
   }
   .THIS .forceCommunityCardLayout .mediaContainer,
@@ -193,7 +194,7 @@
   .THIS .storePhoneNumbers__item{
 		padding: 0 0.75em!important;
 	}
-  .THIS .storeHeader__phoneNumbers{
+  .THIS.storeHeader .phoneNumbers{
     font-size: 0.7em;
   }
 
