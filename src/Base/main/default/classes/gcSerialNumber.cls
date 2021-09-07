@@ -114,46 +114,44 @@ public without sharing class gcSerialNumber{
 					mapSerial.put(sn.Id,sn);
 				}
 
-				if(boolIsUpdate)
-				for(GMBLASERP__Serial_Number__c x : listNew)
-				{
-					GMBLASERP__Serial_Number__c sn = mapSerial.get(x.Id);
-					GMBLASERP__Serial_Number__c oldSerial = oldMap.get(x.Id);
-					if(enableExchangeUpdate){
-						if(x.Lot_Exchange__c != null && oldSerial.Lot_Exchange__c == null && !sn.Projects__r.isEmpty())
-							x.addError('This serial number '+x.Name+' cannot be used in a lot exchange. It has already been used as ERP Order Serial.');
-						else if(x.Lot_Exchange__c != null && oldSerial.Lot_Exchange__c == null && !sn.GMBLASERP__Materials__r.isEmpty())
-							x.addError('This serial number '+x.Name+' cannot be used in a lot exchange. It has already been used as ERP Order item.');
-					}
-					/// Do not allow change of Internal Billing fields
-					if(boolIsUpdate
-						&& (x.Billing_Revenue_Internal__c != oldMap.get(x.Id).Billing_Revenue_Internal__c
-							|| x.Billing_Revenue_Used__c != oldMap.get(x.Id).Billing_Revenue_Used__c)){
-						x.addError('Internal Billing related fields cannot be modified manually.');
-					}
-					Date lastMoveOutDate = System.today();
-					if(!sn.GMBLASERP__Manufacturing_Inventory_Movements__r.isEmpty())
-						lastMoveOutDate = sn.GMBLASERP__Manufacturing_Inventory_Movements__r[0].AcctSeedERP__Movement_Date__c;
-					if(!sn.GMBLASERP__Outbound_Inventory_Movements__r.isEmpty()) {
-						Date lastOutDate = sn.GMBLASERP__Outbound_Inventory_Movements__r[0].AcctSeedERP__Movement_Date__c;
-						if(lastMoveOutDate == null || (lastMoveOutDate != null && lastMoveOutDate < lastOutDate)){
-							lastMoveOutDate = lastOutDate;
+				if(boolIsUpdate) {
+					for (GMBLASERP__Serial_Number__c x : listNew) {
+						GMBLASERP__Serial_Number__c sn = mapSerial.get(x.Id);
+						GMBLASERP__Serial_Number__c oldSerial = oldMap.get(x.Id);
+						if (enableExchangeUpdate) {
+							if (x.Lot_Exchange__c != null && oldSerial.Lot_Exchange__c == null && !sn.Projects__r.isEmpty())
+								x.addError('This serial number ' + x.Name + ' cannot be used in a lot exchange. It has already been used as ERP Order Serial.'); else if (x.Lot_Exchange__c != null && oldSerial.Lot_Exchange__c == null && !sn.GMBLASERP__Materials__r.isEmpty())
+								x.addError('This serial number ' + x.Name + ' cannot be used in a lot exchange. It has already been used as ERP Order item.');
 						}
-					}
+						/// Do not allow change of Internal Billing fields
+						if (boolIsUpdate
+								&& (x.Billing_Revenue_Internal__c != oldMap.get(x.Id).Billing_Revenue_Internal__c
+								|| x.Billing_Revenue_Used__c != oldMap.get(x.Id).Billing_Revenue_Used__c)) {
+							x.addError('Internal Billing related fields cannot be modified manually.');
+						}
+						Date lastMoveOutDate = System.today();
+						if (!sn.GMBLASERP__Manufacturing_Inventory_Movements__r.isEmpty())
+							lastMoveOutDate = sn.GMBLASERP__Manufacturing_Inventory_Movements__r[0].AcctSeedERP__Movement_Date__c;
+						if (!sn.GMBLASERP__Outbound_Inventory_Movements__r.isEmpty()) {
+							Date lastOutDate = sn.GMBLASERP__Outbound_Inventory_Movements__r[0].AcctSeedERP__Movement_Date__c;
+							if (lastMoveOutDate == null || (lastMoveOutDate != null && lastMoveOutDate < lastOutDate)) {
+								lastMoveOutDate = lastOutDate;
+							}
+						}
 
-					if(x.GMBLASERP__Inventory_Balance__c == null && x.GMBLASERP__Inventory_Balance__c != oldMap.get(x.Id).GMBLASERP__Inventory_Balance__c)
-						x.Inventory_Out_Date__c = Datetime.newInstance(lastMoveOutDate.year(),lastMoveOutDate.month(),lastMoveOutDate.day());
-					else if(x.GMBLASERP__Inventory_Balance__c != null)
-						x.Inventory_Out_Date__c = null;
+						if (x.GMBLASERP__Inventory_Balance__c == null && x.GMBLASERP__Inventory_Balance__c != oldMap.get(x.Id).GMBLASERP__Inventory_Balance__c)
+							x.Inventory_Out_Date__c = Datetime.newInstance(lastMoveOutDate.year(), lastMoveOutDate.month(), lastMoveOutDate.day()); else if (x.GMBLASERP__Inventory_Balance__c != null)
+							x.Inventory_Out_Date__c = null;
 
-					if(x.Current_Unit_Cost__c != oldMap.get(x.Id).Current_Unit_Cost__c)
-						x.Current_Unit_Cost__c = oldMap.get(x.Id).Current_Unit_Cost__c;
+						if (x.Current_Unit_Cost__c != oldMap.get(x.Id).Current_Unit_Cost__c)
+							x.Current_Unit_Cost__c = oldMap.get(x.Id).Current_Unit_Cost__c;
 
-					if(!enableAvailabilityUpdate){
-						if(oldSerial.Available_Retail__c != x.Available_Retail__c)
-							x.Available_Retail__c = oldSerial.Available_Retail__c;
-						if(oldSerial.Available_Wholesale__c != x.Available_Wholesale__c)
-							x.Available_Wholesale__c = oldSerial.Available_Wholesale__c;
+						if (!enableAvailabilityUpdate) {
+							if (oldSerial.Available_Retail__c != x.Available_Retail__c)
+								x.Available_Retail__c = oldSerial.Available_Retail__c;
+							if (oldSerial.Available_Wholesale__c != x.Available_Wholesale__c)
+								x.Available_Wholesale__c = oldSerial.Available_Wholesale__c;
+						}
 					}
 				}
 
@@ -200,6 +198,7 @@ public without sharing class gcSerialNumber{
 						GMBLASERP__Product__r.Id,
 						GMBLASERP__Product__r.Name,
 						GMBLASERP__Product__r.Can_be_Nested__c,
+						GMBLASERP__Inventory_Balance__r.AcctSeedERP__Warehouse__c,
 						(SELECT Id, Name FROM Nested_Serial_Numbers__r LIMIT 1),
 						(SELECT Id, Name FROM GMBLASERP__Materials__r LIMIT 1),
 						(SELECT Id, Locked__c FROM Projects__r LIMIT 1)
@@ -208,7 +207,10 @@ public without sharing class gcSerialNumber{
 			{
 				mapSerial.put(sn.Id,sn);
 			}
-
+			Id idWarehouseWholesale = GMBLASERP__Inventory_Settings__c.getOrgDefaults().Wholesale_Warehouse_Id__c;
+			Id idWarehouseAdjustment = GMBLASERP__Inventory_Settings__c.getOrgDefaults().GMBLASERP__Adjustment_Warehouse_Id__c;
+			Id idWarehouseTransit = GMBLASERP__Inventory_Settings__c.getOrgDefaults().GMBLASERP__Transit_Warehouse_Id__c;
+			List<GMBLASERP__Serial_Number__c> listSerialToUpdateRetailDate = new List<GMBLASERP__Serial_Number__c>();
 			for(GMBLASERP__Serial_Number__c x : listNew)
 			{
 				GMBLASERP__Serial_Number__c sn = mapSerial.get(x.Id);
@@ -226,6 +228,25 @@ public without sharing class gcSerialNumber{
 				//	x.addError('This serial number '+x.Name+' cannot be used in a lot exchange. It has already been used as ERP Order item.');
 				//else if(enableExchangeUpdate && !sn.Projects__r.isEmpty())
 				//	x.addError('This serial number '+x.Name+' cannot be used in a lot exchange. It has already been used as ERP Order Serial.');
+				///
+				/// This part of the code was already running because of other checks.
+				/// Removing Retail Receive Date Process Builder in before trigger
+				///
+				if(boolIsUpdate
+						&& x.GMBLASERP__Inventory_Balance__c != null
+						&& sn.GMBLASERP__Inventory_Balance__r.AcctSeedERP__Warehouse__c != idWarehouseWholesale && sn.GMBLASERP__Inventory_Balance__r.AcctSeedERP__Warehouse__c != idWarehouseAdjustment && sn.GMBLASERP__Inventory_Balance__r.AcctSeedERP__Warehouse__c != idWarehouseTransit
+						&& x.GMBLASERP__Inventory_Balance__c != oldMap.get(x.Id).GMBLASERP__Inventory_Balance__c){
+					listSerialToUpdateRetailDate.add(new GMBLASERP__Serial_Number__c(Id = sn.Id,Retail_Receive_Date__c = Date.today()));
+				}
+			}
+			if(!listSerialToUpdateRetailDate.isEmpty()){
+				Boolean oldVal = disableTrigger;
+				disableTrigger = true;
+				Boolean oldValGMBLASERP = GMBLASERP.gcSerialNumber.disableTrigger;
+				GMBLASERP.gcSerialNumber.disableTrigger = true;
+				update listSerialToUpdateRetailDate;
+				disableTrigger = oldVal;
+				GMBLASERP.gcSerialNumber.disableTrigger = oldValGMBLASERP;
 			}
 		}
 	}

@@ -58,7 +58,7 @@ private class gcPurchaseOrderInventoryMovement_Test{
       AcctSeedERP__Purchase_Order_Line__c = pol.Id,
       GMBLASERP__Purchase_Order__c = po.Id
     );
-    GMBLASERP.gcPurchaseOrderInventoryMovement.disableTrigger = true;
+    //gcPurchaseOrderInventoryMovement.disableTrigger = true;
     insert movement;
   }
 }
