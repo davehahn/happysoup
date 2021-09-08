@@ -161,9 +161,9 @@ global without sharing class gcManufacturingInventoryMovement {
 		}
 
 		/// This is only used in Dev Org
-		if(boolIsBefore && (boolIsInsert || boolIsUpdate)){
-			for(AcctSeedERP__Manufacturing_Inventory_Movement__c move :listNew)
-				if(!Test.isRunningTest())move.AcctSeedERP__Ledger__c = 'a128A000003SnkCQAS';
-		}
+//		if(boolIsBefore && (boolIsInsert || boolIsUpdate)){
+//			for(AcctSeedERP__Manufacturing_Inventory_Movement__c move :listNew)
+//				if(!Test.isRunningTest())move.AcctSeedERP__Ledger__c = 'a128A000003SnkCQAS';
+//		}
 	}
 }

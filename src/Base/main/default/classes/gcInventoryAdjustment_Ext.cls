@@ -453,8 +453,8 @@ global without sharing class gcInventoryAdjustment_Ext {
 		}
 
 		if(adj.GMBLASERP__Adjustment_Type__c !='Quantity'){
-			GMBLASERP.gcInboundInventoryMovement.disableTrigger = true;
-			GMBLASERP.gcOutboundInventoryMovement.disableTrigger = true;
+			gcInboundInventoryMovement.disableTrigger = true;
+			gcOutboundInventoryMovement.disableTrigger = true;
 		}
 
 		AcctSeedERP__Inbound_Inventory_Movement__c moveIn = new AcctSeedERP__Inbound_Inventory_Movement__c(

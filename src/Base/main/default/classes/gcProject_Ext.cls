@@ -6,7 +6,7 @@ global without sharing class gcProject_Ext {
   global gcProject_Ext(ApexPages.StandardController c){
 
     isBoatSale = false;
-    isPartnerBoatSale = false;
+    isPartnerBoatSale = false; 
     isCounterSale = false;
         isService = false;
         isFixedAsset = false;

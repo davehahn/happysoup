@@ -9,7 +9,7 @@ global without sharing class gcPurchaseOrder_Ext {
 	{
 		list<map<string,string>> listJSON = new list<map<string,string>>();
 
-		Date dateEarliestOpen = GMBLASERP.gcAccountingPeriod.dateEarliestOpen();
+		Date dateEarliestOpen = GCR_AccountingPeriod.dateEarliestOpen();
 	 	List<AcctSeedERP__Purchase_Order_Line__c> listPOL = new List<AcctSeedERP__Purchase_Order_Line__c>();
 	 	Map<Id,List<AcctSeedERP__Purchase_Order_Inventory_Movement__c>> maplistPOIM = new Map<Id,List<AcctSeedERP__Purchase_Order_Inventory_Movement__c>>();
 	 	Map<Id,List<AcctSeed__Account_Payable_Line__c>> maplistAPL = new Map<Id,List<AcctSeed__Account_Payable_Line__c>>();
@@ -656,7 +656,7 @@ global without sharing class gcPurchaseOrder_Ext {
 	global static list<map<string,string>> retrieveMoves(Id idFilter)
 	{
 		list<map<string,string>> listJSON = new list<map<string,string>>();
-		Date dateEarliestOpen = GMBLASERP.gcAccountingPeriod.dateEarliestOpen();
+		Date dateEarliestOpen = GCR_AccountingPeriod.dateEarliestOpen();
 		for(AcctSeedERP__Purchase_Order_Inventory_Movement__c move :
 			[SELECT Id, Name,
 					AcctSeedERP__Inventory_Balance__r.AcctSeedERP__Warehouse__r.Name,
@@ -780,7 +780,7 @@ global without sharing class gcPurchaseOrder_Ext {
 			{
 				mapPWLB.put(idProduct, new map<Id,map<Id,Id>>{idWarehouse => new map<Id,Id>{idLocation => null}});
 			}
-			GMBLASERP.gcInventoryBalance.findOrCreateBalances(mapPWLB);
+			GCR_InventoryBalance.findOrCreateBalances(mapPWLB);
 			for(AcctSeedERP__Purchase_Order_Line__c pol : listPOL)
 			{
 				listMove.add(new AcctSeedERP__Purchase_Order_Inventory_Movement__c(
@@ -817,7 +817,7 @@ global without sharing class gcPurchaseOrder_Ext {
 			idLocation = loc.Id;
 		}
 		AcctSeed__Accounting_Settings__c accSetting = [SELECT AcctSeed__Default_Ledger__c FROM AcctSeed__Accounting_Settings__c ORDER BY CreatedDate][0];
-		Id idBalance = GMBLASERP.gcInventoryBalance.findOrCreateBalance(idProduct, idWarehouse, idLocation);
+		Id idBalance = GCR_InventoryBalance.findOrCreateBalance(idProduct, idWarehouse, idLocation);
 
 		Product2 product = [SELECT Id, AcctSeedERP__Serialized__c, GMBLASERP__Lot_Tracked__c FROM Product2 WHERE Id =:idProduct][0];
 
@@ -1297,9 +1297,9 @@ global without sharing class gcPurchaseOrder_Ext {
 			listMove.add(move);
 		}
 
-		GMBLASERP.gcPurchaseOrderInventoryMovement.disableTrigger = true;
+		gcPurchaseOrderInventoryMovement.disableTrigger = true;
 		update listMove;
-		GMBLASERP.gcPurchaseOrderInventoryMovement.disableTrigger = false;
+		gcPurchaseOrderInventoryMovement.disableTrigger = false;
  		return ap.Id;
 	}
 
