@@ -188,9 +188,9 @@ public with sharing class gcAccountPayable_Actions {
 			listMove.add(move);
 		}
 
-		GMBLASERP.gcPurchaseOrderInventoryMovement.disableTrigger = true;
+		gcPurchaseOrderInventoryMovement.disableTrigger = true;
 		update listMove;
-		GMBLASERP.gcPurchaseOrderInventoryMovement.disableTrigger = false;
+		gcPurchaseOrderInventoryMovement.disableTrigger = false;
  		//ApexPages.addMessage(new ApexPages.message(ApexPages.Severity.CONFIRM, 'Account Payable has been created. <a target="_blank" href="/'+ap.Id+'">Click here to view AP detail.</a>'));
  		return new pageReference('/'+ap.Id);
 	}
