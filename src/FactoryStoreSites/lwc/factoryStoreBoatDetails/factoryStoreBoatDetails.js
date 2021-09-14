@@ -182,23 +182,28 @@ export default class FactoryStoreBoatDetails extends NavigationMixin(LightningEl
 			let filteredArray = sortedArray.filter((el) => {
 				return el != null;
    		});
+   		console.log('filteredArray', filteredArray);
    		return filteredArray;
   }
 
   get motorUpgrades(){
     let allMotors = JSON.parse(stringy(this.boat.MotorUpgrades));
+    console.log('allMotors', allMotors);
     let availableMotors = allMotors.filter( (el) => {
       return el.DisplayOnWeb == true;
     });
+    console.log('availableMotors', availableMotors);
     let reducedMotorsDetails = [];
     availableMotors.forEach( (motor, index) => {
+//      console.log('motor ' + index, motor);
+      console.log(motor.Name);
       reducedMotorsDetails[index] = {
-        'Name': motor.Name,
+//        'Name': motor.Name,
         'RetailUpgradeCost': formatPrice(motor.RetailUpgradeCost, true),
         'WeeklyUpgradeCost': formatPrice(motor.WeeklyUpgradeCost, true)
       }
     });
-
+		console.log('reducedMotorsDetails', reducedMotorsDetails);
     return reducedMotorsDetails;
   }
 
@@ -243,7 +248,7 @@ export default class FactoryStoreBoatDetails extends NavigationMixin(LightningEl
 		let Series = (this.boat.Series.toLowerCase().indexOf('series') !== -1) ? this.boat.Series.toLowerCase() : this.boat.Series.toLowerCase() + '-series';
 		let Model = stripParentheses(this.boat.Name.toLowerCase());
 		let Year = this.boat.PricebookName.replace(' - Retail', '');
-
+		console.log('https://www.legendboats.com/' + Family + '/' + Series + '/' + Model + '/' + Year + '/');
 		return 'https://www.legendboats.com/' + Family + '/' + Series + '/' + Model + '/' + Year + '/';
  	}
 
