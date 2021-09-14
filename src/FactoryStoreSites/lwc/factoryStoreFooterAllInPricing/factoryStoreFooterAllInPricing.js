@@ -3,7 +3,9 @@
  */
 
 import { LightningElement } from 'lwc';
+import { renderEN, renderFR } from 'c/communitySharedUtils';
 
 export default class FactoryStoreFooterAllInPricing extends LightningElement {
-
+	isEN = renderEN();
+	isFR = renderFR();
 }
