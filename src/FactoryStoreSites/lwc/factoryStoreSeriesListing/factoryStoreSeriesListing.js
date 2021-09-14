@@ -4,7 +4,7 @@
 
 import { LightningElement, api, wire } from 'lwc';
 import { NavigationMixin, CurrentPageReference } from 'lightning/navigation';
-import { stringy, stripParentheses, rewriteMotorName, rewriteTrailerName, weeklyPayment, formatPrice, setWrapperClass } from 'c/communitySharedUtils';
+import { stringy, stripParentheses, rewriteMotorName, rewriteTrailerName, weeklyPayment, formatPrice, setWrapperClass, renderEN, renderFR } from 'c/communitySharedUtils';
 import Id from '@salesforce/community/Id';
 import fetchCommunityDetails from '@salesforce/apex/CommSharedURL_Controller.fetchCommunityDetails';
 
@@ -23,6 +23,9 @@ export default class FactoryStoreSeriesListing extends NavigationMixin(Lightning
 	profileImageAlt;
 	seriesImageryClass;
 	seriesImageryBgClass;
+
+	isEN = renderEN();
+	isFR = renderFR();
 
 	outerWrapperClass = 'full';
 	wrapperClass = 'series';
@@ -51,7 +54,12 @@ export default class FactoryStoreSeriesListing extends NavigationMixin(Lightning
 
 	get fullSeriesName(){
 		let series = this.seriesName;
-		return ((series.toLowerCase().indexOf('series') !== -1) || (series.toLowerCase().indexOf('splash') !== -1)) ? series : series + '-Series';
+		if(this.isEN){
+			return ((series.toLowerCase().indexOf('series') !== -1) || (series.toLowerCase().indexOf('splash') !== -1)) ? series : series + '-Series';
+  	} else {
+  	  return ((series.toLowerCase().indexOf('series') !== -1) || (series.toLowerCase().indexOf('splash') !== -1)) ? series : 'Serie ' + series;
+   }
+
  }
 
  get seriesClass(){
