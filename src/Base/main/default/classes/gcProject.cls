@@ -237,11 +237,21 @@ public without sharing class gcProject {
       for(AcctSeed__Project__c p : listNew)
       {
         AcctSeed__Project__c oldRec = oldMap.get(p.Id);
+
         /* ADDED BY DAVE HAHN - set default counter sale type */
-        if( boolIsInsert && p.RecordTypeId == idRtCounterSale &&
+        if( boolIsInsert &&
           p.AcctSeed__Account__c != null &&
           mapAccount.get(p.AcctSeed__Account__c).IsPersonAccount == true )
-          p.Counter_Sale_Type__c = 'Retail';
+        {
+          if(p.RecordTypeId == idRtCounterSale ){
+            p.Counter_Sale_Type__c = 'Retail';
+          }
+          /* populate contactEmail field from Account */
+          if( p.ContactEmail__c == null ){
+            p.ContactEmail__c = mapAccount.get(p.AcctSeed__Account__c).PersonEmail;
+          }
+        }
+
 
         if(boolIsUpdate)
         {
@@ -778,6 +788,7 @@ public without sharing class gcProject {
         RecordTypeId,
         RecordType.Name,
         IsPersonAccount,
+        PersonEmail,
         Is_Internal__c,
         OwnerId
       FROM Account
