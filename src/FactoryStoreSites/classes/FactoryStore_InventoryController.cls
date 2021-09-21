@@ -24,6 +24,8 @@ public with sharing class FactoryStore_InventoryController {
             series.add('Angler');
             series.add('AllSport');
             series.add('Ultralite');
+            series.add('ProSport TL');
+            series.add('ProSport SC');
         }
         return Product_Selector.allBoatsInSeries( series );
     }
@@ -42,6 +44,21 @@ public with sharing class FactoryStore_InventoryController {
 
         System.debug('Returned Inventory: ' + inventory);
         return inventory;
+    }
+
+    @AuraEnabled(Cacheable=true)
+    public static GMBLASERP__Serial_Number__c fetchSerialNumber( String serialId )
+    {
+        return SerialNumber_Selector.getSerialNumber( serialId );
+    }
+
+    @AuraEnabled(Cacheable=true)
+    public static FSImage_Processor fetchImages( GMBLASERP__Serial_Number__c serialNumber )
+    {
+        FSImage_Processor images = new FSImage_Processor( serialNumber );
+        System.debug('Processed Images: ' + images);
+
+        return images;
     }
 
 }
