@@ -95,6 +95,6 @@
     <textTemplates>
         <name>ChatterPost</name>
         <isViewedAsPlainText>true</isViewedAsPlainText>
-        <text>@[{!$Record.SalespersonId__r.Id}] This survey has been completed by your retail customer. {!$Record.SalespersonId__r.Manager.Id}</text>
+        <text>@[{!$Record.SalespersonId__r.Id}] This survey has been completed by your retail customer. @[{!$Record.SalespersonId__r.Manager.Id}]</text>
     </textTemplates>
 </Flow>
