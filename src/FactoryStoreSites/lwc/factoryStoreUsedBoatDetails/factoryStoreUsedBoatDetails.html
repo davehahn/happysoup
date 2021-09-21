@@ -7,9 +7,15 @@
   <div class="serialWrapper">
     <article class={serialWrapperClass}>
       <template if:true={serialDataLoaded}>
-        <h3>{serial.Product_Name__c}</h3>
-        <p>{serial.RetailSalePrice__c}</p>
-        <p>{serial.Description__c}</p>
+        <figure class="serialDetails">
+          <span class="featureImage"><img src={serial.Default_Gallery_Image__c} alt="" /></span>
+          <figcaption>
+            <h3 class="heading heading--l">{boatName}</h3>
+            <p class="heading heading--m">{retailPrice}</p>
+            <p>{serial.Description__c}</p>
+          </figcaption>
+        </figure>
+
         <template if:true={hasPhotoGallery}>
           <section class="intro__gallery">
             <h3 class="ro">Photo Gallery</h3>

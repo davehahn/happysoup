@@ -22,6 +22,7 @@ export default class FactoryStoreUsedBoatDetails extends NavigationMixin(Lightni
 
 	photoGallery;
 	hasPhotoGallery = false;
+	boatName;
 
 	serialWrapperClass = 'serial serial--loading';
 
@@ -56,6 +57,7 @@ export default class FactoryStoreUsedBoatDetails extends NavigationMixin(Lightni
 		this.serialDataLoaded = true;
 		this.serialDataLookupRunning =  false;
 		this.serialWrapperClass = setWrapperClass(this.sectionWidth, 'serial');
+		this.boatName = stripParentheses(this.serial.Product_Name__c);
 		fetchImages({serialNumber: this.serial})
 				.then( (images) => {
 					console.log('got images: ', images);
@@ -65,6 +67,10 @@ export default class FactoryStoreUsedBoatDetails extends NavigationMixin(Lightni
 				console.log('fetch images error:', e);
 		 });
 
+	}
+
+	get retailPrice(){
+		return formatPrice(this.serial.RetailSalePrice__c, true);
 	}
 
 	resultEmpty(){
