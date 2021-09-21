@@ -26,7 +26,7 @@
     <decisions>
         <name>Record_Type_Split</name>
         <label>Record Type Split</label>
-        <locationX>567</locationX>
+        <locationX>611</locationX>
         <locationY>335</locationY>
         <defaultConnectorLabel>Else</defaultConnectorLabel>
         <rules>
@@ -56,6 +56,13 @@
             <conditionLogic>and</conditionLogic>
             <conditions>
                 <leftValueReference>JurneeUserID</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>JurneeManagerID</leftValueReference>
                 <operator>IsNull</operator>
                 <rightValue>
                     <booleanValue>false</booleanValue>
@@ -140,9 +147,13 @@
             <assignToReference>JurneeUserID</assignToReference>
             <field>Id</field>
         </outputAssignments>
+        <outputAssignments>
+            <assignToReference>JurneeManagerID</assignToReference>
+            <field>ManagerId</field>
+        </outputAssignments>
     </recordLookups>
     <start>
-        <locationX>441</locationX>
+        <locationX>485</locationX>
         <locationY>0</locationY>
         <connector>
             <targetReference>Record_Type_Split</targetReference>
@@ -163,8 +174,15 @@
     <textTemplates>
         <name>ChatterBodyJurnee</name>
         <isViewedAsPlainText>true</isViewedAsPlainText>
-        <text>@[{!JurneeUserID}] This survey has been completed by a Whitefish retail customer.</text>
+        <text>@[{!JurneeUserID}] This survey has been completed by a Whitefish retail customer. @[{!JurneeManagerID}]</text>
     </textTemplates>
+    <variables>
+        <name>JurneeManagerID</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
     <variables>
         <name>JurneeUserID</name>
         <dataType>String</dataType>
