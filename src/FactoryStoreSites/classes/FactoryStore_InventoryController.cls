@@ -52,13 +52,13 @@ public with sharing class FactoryStore_InventoryController {
         return SerialNumber_Selector.getSerialNumber( serialId );
     }
 
-    @AuraEnabled(Cacheable=true)
-    public static FSImage_Processor fetchImages( GMBLASERP__Serial_Number__c serialNumber )
-    {
-        FSImage_Processor images = new FSImage_Processor( serialNumber );
-        System.debug('Processed Images: ' + images);
-
-        return images;
-    }
+//    @AuraEnabled(Cacheable=true)
+//    public static FSImage_Processor fetchImages( GMBLASERP__Serial_Number__c serialNumber )
+//    {
+//        FSImage_Processor images = new FSImage_Processor( serialNumber );
+//        System.debug('Processed Images: ' + images);
+//
+//        return images;
+//    }
 
 }

@@ -6,7 +6,7 @@ import { LightningElement, api, wire } from 'lwc';
 import { NavigationMixin, CurrentPageReference } from 'lightning/navigation';
 import { stringy, stripParentheses, rewriteMotorName, rewriteTrailerName, weeklyPayment, formatPrice, setWrapperClass, convertLength } from 'c/communitySharedUtils';
 import fetchSerialNumber from '@salesforce/apex/FactoryStore_InventoryController.fetchSerialNumber';
-import fetchImages from '@salesforce/apex/FactoryStore_InventoryController.fetchImages';
+//import fetchImages from '@salesforce/apex/FactoryStore_InventoryController.fetchImages';
 
 export default class FactoryStoreUsedBoatDetails extends NavigationMixin(LightningElement) {
 
@@ -58,14 +58,14 @@ export default class FactoryStoreUsedBoatDetails extends NavigationMixin(Lightni
 		this.serialDataLookupRunning =  false;
 		this.serialWrapperClass = setWrapperClass(this.sectionWidth, 'serial');
 		this.boatName = stripParentheses(this.serial.Product_Name__c);
-		fetchImages({serialNumber: this.serial})
-				.then( (images) => {
-					console.log('got images: ', images);
-					this.photoGallery = (images.MarketingImages.length > 0) ? images.MarketingImages : '';
-					this.hasPhotoGallery = (images.MarketingImages.length > 0) ? true : false;
-				}).catch(e => {
-				console.log('fetch images error:', e);
-		 });
+//		fetchImages({serialNumber: this.serial})
+//				.then( (images) => {
+//					console.log('got images: ', images);
+//					this.photoGallery = (images.MarketingImages.length > 0) ? images.MarketingImages : '';
+//					this.hasPhotoGallery = (images.MarketingImages.length > 0) ? true : false;
+//				}).catch(e => {
+//				console.log('fetch images error:', e);
+//		 });
 
 	}
 
