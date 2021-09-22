@@ -5,12 +5,16 @@
 import { LightningElement } from 'lwc';
 import { NavigationMixin } from 'lightning/navigation';
 import { loadStyle, loadScript } from 'lightning/platformResourceLoader';
+import { renderEN, renderFR } from 'c/communitySharedUtils';
 
 export default class FactoryStoreFooterStayInTouch extends NavigationMixin(LightningElement) {
 
 	newsPageRef;
   emailAddress;
   url;
+
+	isEN = renderEN();
+	isFR = renderFR();
 
   connectedCallback(){
     console.log('in newsletter callback');
@@ -41,4 +45,11 @@ export default class FactoryStoreFooterStayInTouch extends NavigationMixin(Light
  	  console.log('after navigate');
   }
 
+
+	get placeholder(){
+		return (this.isEN) ? 'Please enter your email address' : 'Veuillez SVP entrer votre adresse courriel';
+ 	}
+ 	get submitButton(){
+ 	  return (this.isEN) ? 'Continue' : 'Continuer';
+  }
 }
