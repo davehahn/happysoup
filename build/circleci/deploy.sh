@@ -9,7 +9,7 @@ echo -e "\nsrc/BoatReservation/experiences" >> .forceignore
 echo -e "\nsrc/CustomerCommunity/experiences" >> .forceignore
 #echo -e "\nsrc/FactoryStoreSites/experiences" >> .forceignore
 
-if sfdx force:source:deploy --testlevel RunLocalTests --targetusername ci-deploy -p src/ -g -w 240 ; then
+if sfdx force:source:deploy --verbose --testlevel RunLocalTests --targetusername ci-deploy -p src/ -g -w 240 ; then
   rm -f .forceignore
   mv .forceignore.orig .forceignore
 else
