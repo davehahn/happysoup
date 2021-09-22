@@ -5,7 +5,7 @@
 import { LightningElement, wire, api, track } from 'lwc';
 import { NavigationMixin, CurrentPageReference } from 'lightning/navigation';
 import { fireEvent, registerListener, unregisterAllListeners} from 'c/pubsub';
-import { setWrapperClass } from 'c/communitySharedUtils';
+import { setWrapperClass, renderEN, renderFR } from 'c/communitySharedUtils';
 import Id from '@salesforce/community/Id';
 import fetchCommunityDetails from '@salesforce/apex/CommSharedURL_Controller.fetchCommunityDetails';
 import fetchBoatsBySeries from '@salesforce/apex/FactoryStore_InventoryController.fetchBoatsBySeries';
@@ -25,6 +25,9 @@ export default class FactoryStoreBoatListing extends NavigationMixin(LightningEl
 	@track boat;
 	@track selectedBoat;
 	@track showListing = false;
+
+	isEN = renderEN();
+	isFR = renderFR();
 
 	wrapperClass = 'allModels';
 
@@ -81,7 +84,11 @@ export default class FactoryStoreBoatListing extends NavigationMixin(LightningEl
 
  	get fullSeriesName(){
  	  let series = this.seriesName;
- 		return (series.toLowerCase().indexOf('series') !== -1) ? series : series + '-Series';
+ 		if(this.isEN){
+				return ((series.toLowerCase().indexOf('series') !== -1) || (series.toLowerCase().indexOf('splash') !== -1)) ? series : series + '-Series';
+			} else {
+				return ((series.toLowerCase().indexOf('series') !== -1) || (series.toLowerCase().indexOf('splash') !== -1)) ? series : 'Serie ' + series;
+		 }
   }
 
   get seriesClass(){
