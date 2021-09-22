@@ -1,47 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Workflow xmlns="http://soap.sforce.com/2006/04/metadata">
-    <alerts>
-        <fullName>Notify_Dealer_Care_upon_Partner_Boat_Sale_Reservation</fullName>
-        <ccEmails>dealercare@legendboats.com</ccEmails>
-        <description>Notify Dealer Care upon Partner Boat Sale Reservation</description>
+    <tasks>
+        <fullName>This_ERP_is_in_Pending_Rigging_Stage_Ben_Fram</fullName>
+        <assignedTo>bfram@legendboats.com</assignedTo>
+        <assignedToType>user</assignedToType>
+        <description>This ERP is in Pending RIgging Stage.</description>
+        <dueDateOffset>0</dueDateOffset>
+        <notifyAssignee>false</notifyAssignee>
+        <priority>Normal</priority>
         <protected>false</protected>
-        <recipients>
-            <recipient>jdavis@legendboats.com</recipient>
-            <type>user</type>
-        </recipients>
-        <recipients>
-            <recipient>jwinter@legendboats.com</recipient>
-            <type>user</type>
-        </recipients>
-        <recipients>
-            <recipient>slabelle@legendboats.com</recipient>
-            <type>user</type>
-        </recipients>
-        <senderType>CurrentUser</senderType>
-        <template>To_Do_Notification_Templates/New_Partner_Boat_Sale_Reservation</template>
-    </alerts>
-    <rules>
-        <fullName>Whitefish Notification Assign Boat Specialist Retail ERP</fullName>
-        <actions>
-            <name>Whitefish_Notification_Assign_Boat_Specialist_Retail_ERP</name>
-            <type>Alert</type>
-        </actions>
-        <active>true</active>
-        <description>Sends email notification to Service Manager to Assign Boat Specialist</description>
-        <formula>AND(
-		OR(
-			RecordType.Name = &apos;Legend Service Work Order&apos;,
-			RecordType.Name = &apos;Retail Boat Sale&apos;
-		  ),
-		  OR(
-			ISCHANGED(Boat_Specialist__c),
-			ISNEW()
-			
-		  ),
-
-		CONTAINS(WarehouseName__c,&quot;Whitefish&quot;)
-		
-	)</formula>
-        <triggerType>onAllChanges</triggerType>
-    </rules>
+        <status>Open</status>
+        <subject>This ERP is in Pending Rigging Stage</subject>
+    </tasks>
 </Workflow>
