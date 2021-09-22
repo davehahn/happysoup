@@ -5,7 +5,8 @@
 <!-- Factory Store Footer All In Pricing -->
 <template>
   <p class="allInPricingMice">
-    *Ontario Pricing. For All-In price details <a href="https://www.legendboats.com/are-you-all-in/" target="_blank">click here</a>.
+    <template if:true={isEN}>*Ontario Pricing. For All-In price details <a href="https://www.legendboats.com/are-you-all-in/" target="_blank">click here</a>.</template>
+    <template if:true={isFR}>*Tarification de l'Ontario. Pour les détails du prix Tout-Inclus <a href="https://www.legendboats.com/fr/nous-vous-offrons-le-plus-dequipement-de-serie/" target="_blank">cliquez ici</a>.</template>
   </p>
   <!-- TODO: create overlay with freight details -->
 </template>

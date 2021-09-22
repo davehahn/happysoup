@@ -47,7 +47,7 @@ const stripParentheses = (payload) => {
 
 const rewriteMotorName = (payload) => {
   let replaceFourStroke = ['4S', 'SSHS', 'FourStroke'];
-  let replacementFourStroke = '4-Stroke';
+  let replacementFourStroke = (renderEN()) ? '4-Stroke' : '4-Temps';
 
 	for(let i = 0; i < replaceFourStroke.length; ++i){
 		if(payload.indexOf(replaceFourStroke[i])){
@@ -67,7 +67,7 @@ const rewriteTrailerName = (payload) => {
 	if(payload.indexOf(replaceTrailerName) > 0){
 		return replacementTrailerName;
 	} else{
-		return 'Glide-on Trailer';
+		return (renderEN()) ? 'Glide-on Trailer' : 'Remorque «Glide-on»';
 	}
 }
 

@@ -11,7 +11,10 @@
         <header class="model__intro">
           <div class="intro__vitals--wrapperOuter">
             <div class="intro__vitals">
-              <span class="intro__stock"><strong>{currentStockQuantity}</strong> In-Stock</span>
+              <span class="intro__stock">
+                <template if:true={isEN}><span><strong>{currentStockQuantity}</strong> In-Stock</span></template>
+                <template if:true={isFR}><span><strong>{currentStockQuantity}</strong> en stock</span></template>
+              </span>
               <h2 class="intro__boatName heading heading--xl">{boatName}</h2>
 
               <div class="vitals__priceBlock">

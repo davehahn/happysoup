@@ -4,9 +4,10 @@
         <name>Chatter_Salesperson</name>
         <label>Chatter Salesperson</label>
         <locationX>176</locationX>
-        <locationY>311</locationY>
+        <locationY>335</locationY>
         <actionName>chatterPost</actionName>
         <actionType>chatterPost</actionType>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
         <inputParameters>
             <name>text</name>
             <value>
@@ -50,7 +51,7 @@
         <connector>
             <targetReference>Chatter_Salesperson</targetReference>
         </connector>
-        <filterLogic>1 AND (2 OR 3 OR 4)</filterLogic>
+        <filterLogic>1 AND (2 OR 3 OR 4 OR 5)</filterLogic>
         <filters>
             <field>SalespersonId__c</field>
             <operator>IsNull</operator>
@@ -79,6 +80,13 @@
                 <stringValue>GetFeedback Survey Response: Your Legend Experience</stringValue>
             </value>
         </filters>
+        <filters>
+            <field>Name</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>GetFeedback Survey Response: Customer Care Experience Survey</stringValue>
+            </value>
+        </filters>
         <object>GetFeedback_Survey_Response__c</object>
         <recordTriggerType>Create</recordTriggerType>
         <triggerType>RecordAfterSave</triggerType>
@@ -87,6 +95,6 @@
     <textTemplates>
         <name>ChatterPost</name>
         <isViewedAsPlainText>true</isViewedAsPlainText>
-        <text>@[{!$Record.SalespersonId__r.Id}] This survey has been completed by your retail customer.</text>
+        <text>@[{!$Record.SalespersonId__r.Id}] This survey has been completed by your retail customer. @[{!$Record.SalespersonId__r.Manager.Id}]</text>
     </textTemplates>
 </Flow>

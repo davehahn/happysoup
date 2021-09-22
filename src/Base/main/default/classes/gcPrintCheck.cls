@@ -10,6 +10,7 @@ global without sharing class gcPrintCheck{
 	{
 		listCDWraps = new List<cdWrap>();
  		Id idFilter = ApexPages.currentPage().getParameters().get('idFilter');
+		cdWrap cdw;
 		for(AcctSeed__Cash_Disbursement__c cashDisb :	
 				[SELECT Id, 
 					Name,
@@ -38,31 +39,31 @@ global without sharing class gcPrintCheck{
 			 		OR AcctSeed__Cash_Disbursement_Batch__c =:idFilter
 			 	ORDER BY AcctSeed__Check_Number__c])
 		{
-			cdWrap cdw = new cdWrap(cashDisb);
+			cdw = new cdWrap(cashDisb);
 			//Decimal totalAP = 0;
-			if(!cashDisb.AcctSeed__Account_Payable_Cash_Disbursements__r.isEmpty())
-			{
-				cdw.totalAP = cashDisb.AcctSeed__Account_Payable_Cash_Disbursements__r.size();
-				//apList = new List<Map<String,String>>();
-				Integer i = 0;
-				for(AcctSeed__AP_Disbursement__c ap : cashDisb.AcctSeed__Account_Payable_Cash_Disbursements__r)
-				{
-					Map<String,String> m = new Map<String,String>();
-					m.put('apName', ap.AcctSeed__Account_Payable__r.Name);
-					m.put('apType', ap.AcctSeed__Account_Payable__r.AcctSeed__Type__c == null ? '' : ap.AcctSeed__Account_Payable__r.AcctSeed__Type__c);
-					m.put('apRef', ap.AcctSeed__Payee_Reference__c == null?'':ap.AcctSeed__Payee_Reference__c);
-					m.put('apDate', ap.AcctSeed__Account_Payable__r.AcctSeed__Date__c == null ? '' : ap.AcctSeed__Account_Payable__r.AcctSeed__Date__c.format());
-					m.put('apNet', ap.AcctSeed__Net_Amount__c == null?'0.00':String.valueOf(ap.AcctSeed__Net_Amount__c.setScale(2)));
-					m.put('apDiscount', ap.AcctSeed__Discount_Amount__c == null?'0.00':String.valueOf(ap.AcctSeed__Discount_Amount__c.setScale(2)));
-					m.put('apPaid', ap.AcctSeed__Paid_Amount__c == null?'0.00':String.valueOf(ap.AcctSeed__Paid_Amount__c.setScale(2)));
-					m.put('apAmount', ap.AcctSeed__Payable_Amount__c == null?'0.00':String.valueOf(ap.AcctSeed__Payable_Amount__c.setScale(2)));
-					cdw.apList.add(m);
-					i++;
-					if(i == 10) break;
-				}
-				//cdw.apList = apList;
-				//cdw.totalAP = totalAP;
-			}
+//			if(!cashDisb.AcctSeed__Account_Payable_Cash_Disbursements__r.isEmpty())
+//			{
+//				cdw.totalAP = cashDisb.AcctSeed__Account_Payable_Cash_Disbursements__r.size();
+//				//apList = new List<Map<String,String>>();
+//				Integer i = 0;
+//				for(AcctSeed__AP_Disbursement__c ap : cashDisb.AcctSeed__Account_Payable_Cash_Disbursements__r)
+//				{
+//					Map<String,String> m = new Map<String,String>();
+//					m.put('apName', ap.AcctSeed__Account_Payable__r.Name);
+//					m.put('apType', ap.AcctSeed__Account_Payable__r.AcctSeed__Type__c == null ? '' : ap.AcctSeed__Account_Payable__r.AcctSeed__Type__c);
+//					m.put('apRef', ap.AcctSeed__Payee_Reference__c == null?'':ap.AcctSeed__Payee_Reference__c);
+//					m.put('apDate', ap.AcctSeed__Account_Payable__r.AcctSeed__Date__c == null ? '' : ap.AcctSeed__Account_Payable__r.AcctSeed__Date__c.format());
+//					m.put('apNet', ap.AcctSeed__Net_Amount__c == null?'0.00':String.valueOf(ap.AcctSeed__Net_Amount__c.setScale(2)));
+//					m.put('apDiscount', ap.AcctSeed__Discount_Amount__c == null?'0.00':String.valueOf(ap.AcctSeed__Discount_Amount__c.setScale(2)));
+//					m.put('apPaid', ap.AcctSeed__Paid_Amount__c == null?'0.00':String.valueOf(ap.AcctSeed__Paid_Amount__c.setScale(2)));
+//					m.put('apAmount', ap.AcctSeed__Payable_Amount__c == null?'0.00':String.valueOf(ap.AcctSeed__Payable_Amount__c.setScale(2)));
+//					cdw.apList.add(m);
+//					i++;
+//					if(i == 10) break;
+//				}
+//				//cdw.apList = apList;
+//				//cdw.totalAP = totalAP;
+//			}
 			Map<String,String> cashDisbMap = new Map<String,String>();
 			cashDisbMap.put('payee', cashDisb.Payee_New__c);
 			cashDisbMap.put('check', cashDisb.AcctSeed__Check_Number__c == null ? '' : String.valueOf(cashDisb.AcctSeed__Check_Number__c));
@@ -77,6 +78,36 @@ global without sharing class gcPrintCheck{
 
 			listCDWraps.add(cdw);
 		}
+		Integer i = 0;
+		for(AcctSeed__AP_Disbursement__c ap : [SELECT Id,
+				AcctSeed__Account_Payable__r.Name,
+				AcctSeed__Account_Payable__r.AcctSeed__Type__c,
+				AcctSeed__Account_Payable__r.AcctSeed__Date__c,
+				AcctSeed__Discount_Amount__c,
+				AcctSeed__Net_Amount__c,
+				AcctSeed__Paid_Amount__c,
+				AcctSeed__Payable_Amount__c,
+				AcctSeed__Payee_Reference__c
+		FROM AcctSeed__AP_Disbursement__c
+		WHERE (AcctSeed__Cash_Disbursement__c =:idFilter OR AcctSeed__Cash_Disbursement__r.AcctSeed__Cash_Disbursement_Batch__c =:idFilter)
+		ORDER BY AcctSeed__Account_Payable__r.AcctSeed__Date__c,
+				AcctSeed__Account_Payable__r.Name])
+		{
+			Map<String,String> m = new Map<String,String>();
+			m.put('apName', ap.AcctSeed__Account_Payable__r.Name);
+			m.put('apType', ap.AcctSeed__Account_Payable__r.AcctSeed__Type__c == null ? '' : ap.AcctSeed__Account_Payable__r.AcctSeed__Type__c);
+			m.put('apRef', ap.AcctSeed__Payee_Reference__c == null?'':ap.AcctSeed__Payee_Reference__c);
+			m.put('apDate', ap.AcctSeed__Account_Payable__r.AcctSeed__Date__c == null ? '' : ap.AcctSeed__Account_Payable__r.AcctSeed__Date__c.format());
+			m.put('apNet', ap.AcctSeed__Net_Amount__c == null?'0.00':String.valueOf(ap.AcctSeed__Net_Amount__c.setScale(2)));
+			m.put('apDiscount', ap.AcctSeed__Discount_Amount__c == null?'0.00':String.valueOf(ap.AcctSeed__Discount_Amount__c.setScale(2)));
+			m.put('apPaid', ap.AcctSeed__Paid_Amount__c == null?'0.00':String.valueOf(ap.AcctSeed__Paid_Amount__c.setScale(2)));
+			m.put('apAmount', ap.AcctSeed__Payable_Amount__c == null?'0.00':String.valueOf(ap.AcctSeed__Payable_Amount__c.setScale(2)));
+			i++;
+			if(i <= 10){
+				cdw.apList.add(m);
+			}
+		}
+		cdw.totalAP = i;
 	}
 
 
