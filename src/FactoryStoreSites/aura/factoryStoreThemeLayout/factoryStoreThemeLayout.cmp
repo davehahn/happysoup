@@ -27,7 +27,7 @@
             <div class="phoneNumbers">
                 {!v.storePhoneNumbers}
             </div>
-            <aura:if isTrue="{!v.isEN}">
+            <aura:if isTrue="{!$Locale.language == 'en'}">
                 <a class="corporateLogo" href="https://www.legendboats.com" target="_blank"></a>
                 <aura:set attribute="else">
                     <a class="corporateLogo corporateLogo--fr" href="https://www.legendboats.com/fr/" target="_blank"></a>
