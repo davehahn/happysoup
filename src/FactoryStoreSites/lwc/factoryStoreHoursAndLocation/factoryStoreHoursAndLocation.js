@@ -4,7 +4,7 @@
 
 import { LightningElement, api, wire } from 'lwc';
 import { loadStyle, loadScript } from 'lightning/platformResourceLoader';
-import { setWrapperClass } from 'c/communitySharedUtils';
+import { setWrapperClass, renderEN, renderFR } from 'c/communitySharedUtils';
 import Id from '@salesforce/community/Id';
 import fetchCommunityDetails from '@salesforce/apex/CommSharedURL_Controller.fetchCommunityDetails';
 import fetchPlacesApiResult from '@salesforce/apex/CommSharedPlacesApi_Controller.fetchPlacesApiResult';
@@ -38,9 +38,13 @@ export default class FactoryStoreHoursAndLocation extends LightningElement {
 	};
 	@api zoomLevel;
 
+	isEN = renderEN();
+	isFR = renderFR();
+
 	gpResult;
 	locationName;
 	inputType = 'textquery';
+	mapLanguage = (this.isEN) ? 'en' : 'fr-CA';
 	fields = 'photos,formatted_address,name,rating,opening_hours,geometry,place_id';
 
 	@wire( fetchCommunityDetails, {communityId: Id} )
@@ -59,7 +63,7 @@ export default class FactoryStoreHoursAndLocation extends LightningElement {
 
 	runPlacesApi(){
 	  if(this.locationName){
-	  	  fetchPlacesApiResult({input: this.locationName, inputType: this.inputType, fields: this.fields})
+	  	  fetchPlacesApiResult({input: this.locationName, inputType: this.inputType, fields: this.fields, language: this.mapLanguage})
 	  	  	.then( (result) => {
 						this.gpResult = result;
 						this.updateLocationDetails();
@@ -87,7 +91,7 @@ export default class FactoryStoreHoursAndLocation extends LightningElement {
 		this.statusClass = (this.gpResult.opening_hours.open_now) ? 'currentStatus currentStatus--open' : 'currentStatus currentStatus--closed';
 
  	  if(this.layout === 'Condensed'){
-			this.currentStatus = (this.gpResult.opening_hours.open_now) ? 'Open!' : 'Closed';
+			this.currentStatus = (this.gpResult.opening_hours.open_now) ? ((this.isEN) ? 'Open!' : 'Ouvert!') : ((this.isEN) ? 'Closed' : 'Fermé');
     } else if(this.layout === 'Expanded'){
       	this.wrapperClass = setWrapperClass(this.sectionWidth, 'hourAndLocationWrapper');
 				this.mapMarkers = [{
@@ -97,8 +101,36 @@ export default class FactoryStoreHoursAndLocation extends LightningElement {
 					},
 				}];
 				this.name = this.gpResult.name;
-				this.currentStatus = (this.gpResult.opening_hours.open_now) ? 'We\'re Open!' : 'Sorry, we\'re closed.';
+				this.currentStatus = (this.gpResult.opening_hours.open_now) ? ((this.isEN) ? 'We\'re Open!' : 'Étaient ouverts!') : ((this.isFR) ? 'Sorry, we\'re closed.' : 'Désolé, nous sommes fermés');
 				this.weekday_text = this.parseWeekdayText(this.gpResult.opening_hours.weekday_text);
+				let weekday_text_fr = [];
+				if(this.isFR){
+					this.weekday_text.forEach((day, index) => {
+//					  console.log(day.replace('Monday', 'Lundi'));
+//						day.replace('Monday', 'Lundi')
+//								.replace('Tuesday', 'Mardi')
+//								.replace('Wednesday', 'Mercredi')
+//								.replace('Thursday', 'Jeudi')
+//								.replace('Friday', 'Vendredi')
+//								.replace('Saturday', 'Samedi')
+//								.replace('Sunday', 'Dimanche');
+//
+//						console.log('day', day);
+						const mapObj = {
+              Monday: 'Lundi',
+              Tuesday: 'Mardi',
+              Wednesday: 'Mercredi',
+              Thursday: 'Jeudi',
+              Friday: 'Vendredi',
+              Saturday: 'Samedi',
+              Sunday: 'Dimanche',
+              Closed: 'Fermé'
+            };
+            day = day.replace(/\b(?:Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday|Closed)\b/gi, matched => mapObj[matched]);
+						weekday_text_fr.push(day);
+     			});
+     			this.weekday_text = weekday_text_fr;
+    		}
 		 }
   }
 
@@ -150,7 +182,7 @@ export default class FactoryStoreHoursAndLocation extends LightningElement {
   }
 
  get currentDate(){
-   return new Date().toLocaleDateString("en-CA", {weekday: 'long', month: 'long', day: 'numeric'});
+   return (this.isEN) ? new Date().toLocaleDateString("en-CA", {weekday: 'long', month: 'long', day: 'numeric'}) : new Date().toLocaleDateString("fr-CA", {weekday: 'long', month: 'long', day: 'numeric'});
  }
 
  get showCondensed(){

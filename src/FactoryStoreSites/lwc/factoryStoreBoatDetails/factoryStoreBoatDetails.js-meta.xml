@@ -10,6 +10,7 @@
   <targetConfigs>
     <targetConfig targets="lightningCommunity__Default">
       <property name="campaignId" type="String" label="Lead Form Campaign Id" required="true" description="If you're unsure what this is, or where to get it, please contact the Marketing Director."/>
+      <property name="moreInfoBackground" type="ContentReference" label="More Info Background Image" description="If you can't find what you're looking for, upload it to Salesforce CMS" filter="cms_image"/>
       <property name="sectionWidth"
                 type="String"
                 label="Maximum Width of Section"

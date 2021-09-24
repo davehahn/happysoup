@@ -3,7 +3,7 @@
  */
 
 import { LightningElement, api, wire } from 'lwc';
-import { stringy, stripParentheses, rewriteMotorName, rewriteTrailerName, convertLength, parseLocationName, formatPrice, weeklyPayment } from 'c/communitySharedUtils';
+import { stringy, stripParentheses, rewriteMotorName, rewriteTrailerName, convertLength, parseLocationName, formatPrice, weeklyPayment, renderEN, renderFR } from 'c/communitySharedUtils';
 import { fireEvent, registerListener, unregisterAllListeners } from 'c/pubsub';
 import { NavigationMixin, CurrentPageReference } from 'lightning/navigation';
 import fetchNewInStockInventory from '@salesforce/apex/FactoryStore_InventoryController.fetchNewInStockInventory';
@@ -20,6 +20,8 @@ export default class FactoryStoreCurrentInventoryList extends NavigationMixin(Li
 	currentStock = [];
 	stockPromises = [];
 
+	isEN = renderEN();
+	isFR = renderFR();
 
 	renderedCallback(){
 		const inventory = fetchNewInStockInventory({ location: parseLocationName(this.locationName), year: 2021, modelId: this.boatId })
@@ -100,8 +102,8 @@ export default class FactoryStoreCurrentInventoryList extends NavigationMixin(Li
  	triggerStockList(){
 		console.log('current inventory (component): ', this.storeStock);
 		this.storeStock.forEach((boat, index) => {
-			boat.Base.StartingWeeklyPrice = weeklyPayment(boat.Base.StartingRetailPrice);
-			boat.Base.StartingRetailPrice = formatPrice(boat.Base.StartingRetailPrice, true);
+		  boat.Base.StartingWeeklyPrice = (this.isEN) ? formatPrice(boat.Base.StartingRetailPrice, true) : formatPrice(boat.Base.StartingRetailPrice, true, 'fr');
+			boat.Base.StartingRetailPrice = (this.isEN) ? weeklyPayment(boat.Base.StartingRetailPrice) : weeklyPayment(boat.Base.StartingRetailPrice, 'fr');
 		});
 		this.currentStock = this.storeStock;
 		this.storeStockQuantity = this.storeStock.length;

@@ -19,15 +19,19 @@
 
               <div class="vitals__priceBlock">
                 <strong class="priceBlock__weekly" aria-describedby="vitals_includes">
-                  {weeklyPrice} <span>Per Week</span>
+                  {weeklyPrice}
+                  <template if:true={isEN}><span>Per Week</span></template>
+                  <template if:true={isFR}><span>Par Semaine</span></template>
                 </strong>
                 <strong class="priceBlock__retail" aria-describedby="vitals_includes">
                   {retailPrice}<sup>*</sup>
                 </strong>
                 <em class="priceBlock__includes" id="vitals_includes">
-                  With {standardMotorName} {standardTrailerName}
+                  <template if:true={isEN}><span>With</span></template>
+                  <template if:true={isFR}><span>Avec</span></template> {standardMotorName} {standardTrailerName}
                 </em>
-                <small class="priceBlock__pricingDetails">*Ontario and Quebec All-In Pricing. <a href="https://www.legendboats.com/are-you-all-in/" target="_blank">Click here</a> for national pricing details.</small>
+                <template if:true={isEN}><small class="priceBlock__pricingDetails">*Ontario and Quebec All-In Pricing. <a href="https://www.legendboats.com/are-you-all-in/" target="_blank">Click here</a> for national pricing details.</small></template>
+                <template if:true={isFR}><small class="priceBlock__pricingDetails">*Tarifs tout compris pour l'Ontario et le Québec. <a href="https://www.legendboats.com/fr/nous-vous-offrons-le-plus-dequipement-de-serie/" target="_blank">Cliquez ici</a> pour les détails des prix nationaux.</small></template>
               </div>
             </div>
           </div>
@@ -44,13 +48,19 @@
 
         <section class={stockWrapperClass}>
           <template if:true={currentStockQuantity}>
-            <h3 class="heading heading--l">New In-Stock {boatName}s</h3>
+            <h3 class="heading heading--l">
+              <template if:true={isEN}>New In-Stock {boatName}s</template>
+              <template if:true={isFR}>Nouvelles {boatName} en stock</template>
+            </h3>
           </template>
           <c-factory-store-current-inventory-list boat={boat} boat-id={recordId} location-name={locationName} onupdatestockvalue={handleUpdateStockValue}></c-factory-store-current-inventory-list>
         </section>
 
         <section class="model__specs model__block">
-          <h3 class="heading heading--l">Specifications</h3>
+          <h3 class="heading heading--l">
+            <template if:true={isEN}>Specifications</template>
+            <template if:true={isFR}>Spécifications</template>
+          </h3>
           <ul>
             <template for:each={boatSpecs} for:item="spec">
               <li key={spec.Name}>
@@ -61,13 +71,20 @@
         </section>
 
         <section class="model__motors model__block">
-          <h3 class="heading heading--l">Choose Your Power</h3>
+          <h3 class="heading heading--l">
+            <template if:true={isEN}>Choose Your Power</template>
+            <template if:true={isFR}>Choisissez votre puissance</template>
+          </h3>
           <ul>
             <template for:each={motorUpgrades} for:item="motor">
               <li key={motor.Name}>
                 <span>{motor.Name}</span>
                 <span>
-                  <strong>+{motor.WeeklyUpgradeCost} <b>/Week</b></strong>
+                  <strong>
+                    +{motor.WeeklyUpgradeCost}
+                    <template if:true={isEN}><b>/Week</b></template>
+                    <template if:true={isFR}><b>Par semaine</b></template>
+                  </strong>
                   <strong>+{motor.RetailUpgradeCost}</strong>
                 </span>
               </li>
@@ -77,13 +94,23 @@
 
         <section class="model__premiumPack model__block">
           <header>
-            <h3 class="heading heading--l">Preferred Equipment Package</h3>
+            <h3 class="heading heading--l">
+              <template if:true={isEN}>Preferred Equipment Package</template>
+              <template if:true={isFR}>Ensemble Équipement Privilège</template>
+            </h3>
             <p class="copy copy--standard">
-              These features are typically optional on most comparable models, but come <strong>standard*</strong> on the {boatName}.
+              <template if:true={isEN}>These features are typically optional on most comparable models, but come <strong>standard*</strong> on the {boatName}.</template>
+              <template if:true={isFR}>Ces caractéristiques sont généralement offertes en option sur la plupart des autres marques, mais <strong>sont standard*</strong> sur le {boatName}.</template>
             </p>
             <p class="premiumPack__totalValue">
-              <span class="totalValue">Total Value: {premiumPackageRetailPrice}</span>
-              <span class="included">You Pay: <strong>$0</strong></span>
+              <span class="totalValue">
+                <template if:true={isEN}>Total Value: {premiumPackageRetailPrice}</template>
+                <template if:true={isFR}>Valeur totale: {premiumPackageRetailPrice}</template>
+              </span>
+              <span class="included">
+                <template if:true={isEN}>You Pay: <strong>$0</strong></template>
+                <template if:true={isFR}>Tu payes: <strong>0 $</strong></template>
+              </span>
             </p>
           </header>
 
@@ -99,7 +126,7 @@
                 <div class="premiumPackage__itemPrice">
                   <span class="itemDetail__value">
                     <template if:true={isEN}>Value: <span>{item.valueFormatted}</span></template>
-                    <template if:true={isFR}>Value: <span>{item.valueFormatted_fr}</span></template>
+                    <template if:true={isFR}>Valeur: <span>{item.valueFormatted_fr}</span></template>
                   </span>
                   <template if:true={isEN}>
                     <div>
@@ -109,22 +136,31 @@
                   </template>
                   <template if:true={isFR}>
                     <div>
-                      <span>You Pay:</span>
-                      <strong>$0</strong>
+                      <span>Tu payes:</span>
+                      <strong>0 $</strong>
                     </div>
                   </template>
                 </div>
               </li>
             </template>
           </ul>
-          <small>*No substitutions or exclusions.</small>
+          <small>
+            <template if:true={isEN}>*No substitutions or exclusions.</template>
+            <template if:true={isFR}>*Aucune substitution ou exclusion.</template>
+          </small>
         </section>
 
         <div class="model__leadFormWrapper fullWidth">
           <section class="model__leadForm">
             <header class="">
-              <h3 class="heading heading--l">Interested?</h3>
-              <p class="copy copy--standard">Fill out the form below and a Legend Boats representative will contact you with more information.</p>
+              <h3 class="heading heading--l">
+                <template if:true={isEN}>Interested?</template>
+                <template if:true={isFR}>Intéressé?</template>
+              </h3>
+              <p class="copy copy--standard">
+                <template if:true={isEN}>Fill out the form below and a Legend Boats representative will contact you with more information.</template>
+                <template if:true={isFR}>Veuillez remplir le formulaire ci-dessous et votre concessionnaire Legend sera en contact avec vous.</template>
+              </p>
             </header>
             <div class="form">
               <c-community-shared-lead-form
@@ -148,8 +184,11 @@
           </section>
         </div>
 
-        <a class="model__fullDetailsCta fullWidth" href={flagshipLink} target="_blank">
-          <h4 class="fullDetailsCta__heading heading heading--m heading--light">Visit <strong>LegendBoats.com</strong> for more information</h4>
+        <a class="model__fullDetailsCta fullWidth" href={flagshipLink} target="_blank" style={backgroundReference}>
+          <h4 class="fullDetailsCta__heading heading heading--m heading--light">
+            <template if:true={isEN}>Visit <strong>LegendBoats.com</strong> for more information</template>
+            <template if:true={isFR}>Visitez <strong>BateauxLegend.com</strong> pour plus d'informations</template>
+          </h4>
         </a>
 
       </template>

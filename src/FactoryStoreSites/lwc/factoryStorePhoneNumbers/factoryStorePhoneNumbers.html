@@ -7,19 +7,22 @@
   <ul class="storePhoneNumbers">
     <template if:true={hasPhoneSales}>
       <li class="storePhoneNumbers__item">
-        <span>Sales:</span>
+        <template if:true={isEN}><span>Sales:</span></template>
+        <template if:true={isFR}><span>Ventes:</span></template>
         <a href={phoneSalesLink}>{phoneSales}</a>
       </li>
     </template>
     <template if:true={hasPhoneService}>
       <li class="storePhoneNumbers__item">
-        <span>Service:</span>
+        <template if:true={isEN}><span>Service:</span></template>
+        <template if:true={isFR}><span>Services:</span></template>
         <a href={phoneServiceLink}>{phoneService}</a>
       </li>
     </template>
     <template if:true={hasPhoneParts}>
       <li class="storePhoneNumbers__item">
-        <span>Parts:</span>
+        <template if:true={isEN}><span>Parts:</span></template>
+        <template if:true={isFR}><span>Pièces:</span></template>
         <a href={phonePartsLink}>{phoneParts}</a>
       </li>
     </template>
