@@ -1,4 +1,4 @@
-@isTest (seeAllData=false)
+@isTest
 public  class gcAccountPayable_Clone_T {
     @TestSetup
     static void testData(){
