@@ -106,16 +106,7 @@ export default class FactoryStoreHoursAndLocation extends LightningElement {
 				let weekday_text_fr = [];
 				if(this.isFR){
 					this.weekday_text.forEach((day, index) => {
-//					  console.log(day.replace('Monday', 'Lundi'));
-//						day.replace('Monday', 'Lundi')
-//								.replace('Tuesday', 'Mardi')
-//								.replace('Wednesday', 'Mercredi')
-//								.replace('Thursday', 'Jeudi')
-//								.replace('Friday', 'Vendredi')
-//								.replace('Saturday', 'Samedi')
-//								.replace('Sunday', 'Dimanche');
-//
-//						console.log('day', day);
+
 						const mapObj = {
               Monday: 'Lundi',
               Tuesday: 'Mardi',
