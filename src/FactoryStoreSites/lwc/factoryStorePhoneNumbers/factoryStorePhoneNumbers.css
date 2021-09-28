@@ -20,3 +20,18 @@
   white-space: nowrap;
   color: #000;
 }
+
+.slds-icon-utility-call{
+  --sds-c-icon-color-foreground: #00b0ed;
+  --sds-c-icon-color-foreground-default: #00b0ed;
+}
+
+
+@media screen and (max-width: 420px){
+  .storePhoneNumbers .storePhoneNumbers__item .label{
+    display: none;
+  }
+  .storePhoneNumbers .storePhoneNumbers--service, .storePhoneNumbers .storePhoneNumbers--parts{
+    display: none;
+  }
+}
