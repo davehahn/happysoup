@@ -4,7 +4,7 @@
 
 import { LightningElement, api, wire } from 'lwc';
 import { NavigationMixin, CurrentPageReference } from 'lightning/navigation';
-import { stringy, stripParentheses, rewriteMotorName, rewriteTrailerName, weeklyPayment, formatPrice, setWrapperClass, convertLength } from 'c/communitySharedUtils';
+import { stringy, stripParentheses, rewriteMotorName, rewriteTrailerName, weeklyPayment, formatPrice, setWrapperClass, convertLength, renderEN, renderFR } from 'c/communitySharedUtils';
 import Id from '@salesforce/community/Id';
 import BANNER from '@salesforce/resourceUrl/FactoryStoreModelBanner';
 import fetchCommunityDetails from '@salesforce/apex/CommSharedURL_Controller.fetchCommunityDetails';
@@ -16,9 +16,11 @@ import { fireEvent, registerListener, unregisterAllListeners} from 'c/pubsub';
 export default class FactoryStoreBoatDetails extends NavigationMixin(LightningElement) {
 
 	@api sectionWidth;
+	@api moreInfoBackground;
+	@api backgroundReference;
 
-  isEN = true;
-	isFR = false;
+  isEN = renderEN();
+	isFR = renderFR();
 
   recordId;
   boat;
@@ -55,6 +57,7 @@ export default class FactoryStoreBoatDetails extends NavigationMixin(LightningEl
 			if( data )
 			{
 				this.locationName = data.name;
+				this.backgroundReference = 'background-image: url("' + data.siteUrl + '/cms/delivery/media/' + this.moreInfoBackground + '")';
 			}
 			else if( error )
 			{
@@ -88,7 +91,7 @@ export default class FactoryStoreBoatDetails extends NavigationMixin(LightningEl
     this.boatName = stripParentheses(this.boat.Name);
     this.leadFormName = this.boatName + ' - Lead Form';
     this.standardMotorName = rewriteMotorName(this.boat.StandardMotor.Name);
-    this.standardTrailerName = (this.boat.StandardTrailer.Name !== '') ? 'and ' + rewriteTrailerName(this.boat.StandardTrailer.Name) : '';
+    this.standardTrailerName = (this.boat.StandardTrailer.Name !== '') ? ((this.isEN) ? 'and ' + rewriteTrailerName(this.boat.StandardTrailer.Name) : 'et ' + rewriteTrailerName(this.boat.StandardTrailer.Name)) : '';
     this.photoGallery = (this.boat.MarketingImages.length > 0) ? this.boat.MarketingImages : '';
     this.hasPhotoGallery = (this.boat.MarketingImages.length > 0) ? true : false;
   }
@@ -99,11 +102,11 @@ export default class FactoryStoreBoatDetails extends NavigationMixin(LightningEl
   }
 
   get weeklyPrice(){
-    return weeklyPayment(this.boat.RetailPrice);
+    return (this.isEN) ? weeklyPayment(this.boat.RetailPrice) : weeklyPayment(this.boat.RetailPrice, 'fr');
   }
 
   get retailPrice(){
-    return formatPrice(this.boat.RetailPrice, true);
+    return (this.isEN) ? formatPrice(this.boat.RetailPrice, true) : formatPrice(this.boat.RetailPrice, true, 'fr');
   }
 
   get introPhoto(){
@@ -172,8 +175,9 @@ export default class FactoryStoreBoatDetails extends NavigationMixin(LightningEl
 							spec = convertLength(pOption, truncateLengthTrailingZero);
         		}
 
+						let specName = (this.isEN) ? pIndex : translate[pIndex].fr;
 				  	sortedArray[sIndex] = {
-				  	 'Name': pIndex,
+				  	 'Name': specName,
 				  	 'Value': '<strong>' + spec + '</strong>'
        			};
       		}
@@ -198,7 +202,7 @@ export default class FactoryStoreBoatDetails extends NavigationMixin(LightningEl
 //      console.log('motor ' + index, motor);
       console.log(motor.Name);
       reducedMotorsDetails[index] = {
-//        'Name': motor.Name,
+        'Name': motor.Name,
         'RetailUpgradeCost': formatPrice(motor.RetailUpgradeCost, true),
         'WeeklyUpgradeCost': formatPrice(motor.WeeklyUpgradeCost, true)
       }
@@ -240,7 +244,7 @@ export default class FactoryStoreBoatDetails extends NavigationMixin(LightningEl
 	}
 
 	get premiumPackageRetailPrice(){
-	  return formatPrice(this.boat.PremiumPackage.RetailPrice, true);
+	  return (this.isEN) ? formatPrice(this.boat.PremiumPackage.RetailPrice, true) : formatPrice(this.boat.PremiumPackage.RetailPrice, true, 'fr');
  }
 
 	get flagshipLink(){

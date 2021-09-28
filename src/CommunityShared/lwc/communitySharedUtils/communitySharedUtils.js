@@ -95,8 +95,8 @@ const decodeHTML = (html) => {
 └─┘┴ ┴┴─┘└─┘└─┘┴─┘┴ ┴ ┴ └─┘  └┴┘└─┘└─┘┴ ┴┴─┘┴   ┴  ┴ ┴ ┴ ┴ ┴└─┘┘└┘ ┴
 =====================*/
 const weeklyPayment = (price, lang = 'en') => {
-	if(price){
-	  let rate = 0;
+  if(price){
+  	let rate = 0;
     	let total_payments = 0;
     	if(price >= 23000){
     		rate = 0.0599 / 52;
@@ -120,18 +120,19 @@ const weeklyPayment = (price, lang = 'en') => {
           												minimumFractionDigits: 0
           												}).format(weekly);
        	} else {
-       		return new Intl.NumberFormat('fr-CA', {
+       		let formattedPrice = new Intl.NumberFormat('fr', {
           												style: 'currency',
           												currency: 'CAD',
           												minimumFractionDigits: 0
           												}).format(weekly);
+          return formattedPrice.replace('CA', '');
         }
- 	}
+  }
 }
 
 const formatPrice = (price, round = false, lang = 'en') => {
-  if(price){
-    price = (round) ? price.toFixed(0) : price;
+	if(price){
+	  price = (round) ? price.toFixed(0) : price;
     	let settings = {style: "currency", currency: 'CAD'};
     	if(lang === 'en'){
     	  return new Intl.NumberFormat('en-CA', {
@@ -140,15 +141,14 @@ const formatPrice = (price, round = false, lang = 'en') => {
         												minimumFractionDigits: 0
         												}).format(price);
      	} else {
-     		return new Intl.NumberFormat('fr-CA', {
-        												style: 'currency',
-        												currency: 'CAD',
-        												minimumFractionDigits: 0
-        												}).format(price);
+     		let formattedPrice = new Intl.NumberFormat('fr', {
+																style: 'currency',
+																currency: 'CAD',
+																minimumFractionDigits: 0
+																}).format(price);
+				return formattedPrice.replace('CA', '');
       }
-  }
-
-
+ }
 }
 
 const setWrapperClass = (width, additionalClassNames = null) => {

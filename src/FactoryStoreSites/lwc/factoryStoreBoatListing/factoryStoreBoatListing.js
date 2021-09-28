@@ -87,7 +87,7 @@ export default class FactoryStoreBoatListing extends NavigationMixin(LightningEl
  		if(this.isEN){
 				return ((series.toLowerCase().indexOf('series') !== -1) || (series.toLowerCase().indexOf('splash') !== -1)) ? series : series + '-Series';
 			} else {
-				return ((series.toLowerCase().indexOf('series') !== -1) || (series.toLowerCase().indexOf('splash') !== -1)) ? series : 'Serie ' + series;
+				return ((series.toLowerCase().indexOf('series') !== -1) || (series.toLowerCase().indexOf('splash') !== -1)) ? 'Série ' + series.replace('-Series', '') : 'Série ' + series;
 		 }
   }
 

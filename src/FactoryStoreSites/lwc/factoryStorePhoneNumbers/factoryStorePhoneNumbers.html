@@ -6,20 +6,24 @@
 <template>
   <ul class="storePhoneNumbers">
     <template if:true={hasPhoneSales}>
-      <li class="storePhoneNumbers__item">
-        <span>Sales:</span>
+      <li class="storePhoneNumbers__item storePhoneNumbers--sales">
+        <template if:true={isEN}><span class="label">Sales:</span></template>
+        <template if:true={isFR}><span class="label">Ventes:</span></template>
+        <lightning-icon icon-name="utility:call" alternative-text="Call Us!" size="small" title="Call Us"></lightning-icon>
         <a href={phoneSalesLink}>{phoneSales}</a>
       </li>
     </template>
     <template if:true={hasPhoneService}>
-      <li class="storePhoneNumbers__item">
-        <span>Service:</span>
+      <li class="storePhoneNumbers__item storePhoneNumbers--service">
+        <template if:true={isEN}><span class="label">Service:</span></template>
+        <template if:true={isFR}><span class="label">Services:</span></template>
         <a href={phoneServiceLink}>{phoneService}</a>
       </li>
     </template>
     <template if:true={hasPhoneParts}>
-      <li class="storePhoneNumbers__item">
-        <span>Parts:</span>
+      <li class="storePhoneNumbers__item storePhoneNumbers--parts">
+        <template if:true={isEN}><span class="label">Parts:</span></template>
+        <template if:true={isFR}><span class="label">Pièces:</span></template>
         <a href={phonePartsLink}>{phoneParts}</a>
       </li>
     </template>

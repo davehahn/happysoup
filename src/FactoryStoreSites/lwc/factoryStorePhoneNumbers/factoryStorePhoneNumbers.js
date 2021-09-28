@@ -4,12 +4,16 @@
 
 import { LightningElement, api, wire, track } from 'lwc';
 import { loadStyle, loadScript } from 'lightning/platformResourceLoader';
+import { renderEN, renderFR } from 'c/communitySharedUtils';
 
 export default class FactoryStorePhoneNumbers extends LightningElement {
 
 	@api phoneSales;
 	@api phoneService;
 	@api phoneParts;
+
+	isEN = renderEN();
+	isFR = renderFR();
 
 	get hasPhoneSales(){
 		return (this.phoneSales !== '') ? true : false;
