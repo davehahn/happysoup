@@ -18,6 +18,7 @@ public with sharing class FSBoatDetails_Service {
     @AuraEnabled public String Description { get; set; }
     @AuraEnabled public String DescriptionFR { get; set; }
     @AuraEnabled public String DefaultImage { get; set; }
+    @AuraEnabled public Map<String, String> DefaultImages { get; set; }
     @AuraEnabled public Decimal RetailPrice { get; set; }
     @AuraEnabled public Static Decimal ParentRetailPrice { get; set; }
     @AuraEnabled public Decimal RetailSpecialPrice { get; set; }
@@ -27,6 +28,7 @@ public with sharing class FSBoatDetails_Service {
     @AuraEnabled public Map<String, List<PartProduct>> OptionalProducts { get; set; }
     @AuraEnabled public List<UpgradeProduct> MotorUpgrades { get; set; }
     @AuraEnabled public List<UpgradeProduct> TrailerUpgrades { get; set; }
+    @AuraEnabled public List<MarketingImage> MarketingImages { get; set; }
     @AuraEnabled public UpgradeProduct MaximumMotor { get; set; }
 //    @AuraEnabled public PremiumPackage PremiumPackage { get; set; }
 //    @AuraEnabled public Map<String, List<FeeProduct>> Fees { get; set; }
@@ -65,7 +67,7 @@ public with sharing class FSBoatDetails_Service {
             this.processOptions(prod);
 //            this.processFeatures(prod);
 //            this.processFees(prod);
-//            this.processImages(prod);
+            this.processImages(prod);
 //            this.processSpecs();
         }
         else
@@ -86,7 +88,7 @@ public with sharing class FSBoatDetails_Service {
                 {
                     if( pricebookMap.containsKey(pbe.Pricebook2Id) ) {
                         if (pricebookMap.get(pbe.Pricebook2Id) == 'retail' ||
-                            pricebookMap.get(pbe.Pricebook2Id) == 'dev-retail')
+                                pricebookMap.get(pbe.Pricebook2Id) == 'dev-retail')
                         {
                             RetailPrice = pbe.UnitPrice;
                             ParentRetailPrice = pbe.UnitPrice;
@@ -200,6 +202,62 @@ public with sharing class FSBoatDetails_Service {
         }
         catch(Exception e){}
         return this;
+    }
+
+    private FSBoatDetails_Service processImages(Product2 p){
+        try
+        {
+            if( p.Legend_Gallery_Image__r != null )
+            {
+                this.DefaultImages = new Map<String,String>();
+                this.DefaultImages.put('500x500', p.Legend_Gallery_Image__r.Active_S3_Object__r.URL_500x500__c);
+                this.DefaultImages.put('700w', p.Legend_Gallery_Image__r.Active_S3_Object__r.URL_700w__c);
+                this.DefaultImages.put('1280w', p.Legend_Gallery_Image__r.Active_S3_Object__r.URL_1280w__c);
+                this.DefaultImages.put('Original', p.Legend_Gallery_Image__r.Active_S3_Object__r.URL_Original__c);
+            }
+            List<Legend_Gallery_Image_Map__c> imageMaps = [SELECT Legend_Gallery_Image__r.Active_S3_Object__r.URL_500x500__c,
+                    Legend_Gallery_Image__r.Active_S3_Object__r.URL_Gallery__c,
+                    Legend_Gallery_Image__r.Active_S3_Object__r.URL_700w__c,
+                    Legend_Gallery_Image__r.Active_S3_Object__r.URL_Original__c,
+                    Legend_Gallery_Image__r.Active_S3_Object__r.URL_1280w__c,
+                    Legend_Gallery_Image__r.Name, Legend_Gallery_Image__r.ENG_Description__c,
+                    Legend_Gallery_Image__r.FR_Description__c
+            FROM Legend_Gallery_Image_Map__c
+            WHERE Parent_object_Id__c = :p.Id];
+
+            if( imageMaps.size() > 0 ){
+                this.MarketingImages = new List<MarketingImage>();
+                for(Legend_Gallery_Image_Map__c lgim : imageMaps){
+                    this.MarketingImages.add( new MarketingImage(lgim) );
+                }
+            }
+        }
+        catch(Exception e){}
+        return this;
+    }
+
+    public Class MarketingImage {
+        @AuraEnabled public String Name { get; set; }
+        @AuraEnabled public String EngDescription { get; set; }
+        @AuraEnabled public String FrDescription { get; set; }
+        @AuraEnabled public String AWS_Url_200_high { get; set; }
+        @AuraEnabled public String AWS_Url_500x500 { get; set; }
+        @AuraEnabled public String AWS_Url_700_wide { get; set; }
+        @AuraEnabled public String AWS_Url_1280_wide { get; set; }
+        @AuraEnabled public String AWS_Url_fullsize { get; set; }
+
+        public MarketingImage(Legend_Gallery_Image_Map__c lgim)
+        {
+            this.Name = lgim.Legend_Gallery_Image__r.Name;
+            this.EngDescription = lgim.Legend_Gallery_Image__r.ENG_Description__c;
+            this.FrDescription = lgim.Legend_Gallery_Image__r.FR_Description__c;
+            this.AWS_Url_fullsize = lgim.Legend_Gallery_Image__r.Active_S3_Object__r.URL_Original__c;
+            this.AWS_Url_200_high = lgim.Legend_Gallery_Image__r.Active_S3_Object__r.URL_Gallery__c;
+            this.AWS_Url_500x500 = lgim.Legend_Gallery_Image__r.Active_S3_Object__r.URL_500x500__c;
+            this.AWS_Url_700_wide = lgim.Legend_Gallery_Image__r.Active_S3_Object__r.URL_700w__c;
+            this.AWS_Url_1280_wide = lgim.Legend_Gallery_Image__r.Active_S3_Object__r.URL_1280w__c;
+        }
+
     }
 
     @AuraEnabled public static Map<String, List<PartProduct>> buildOptionalProducts(List<Product2> parts) {

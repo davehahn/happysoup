@@ -1,0 +1,35 @@
+<!--
+ - Created by Tim on 2021-09-17.
+ -->
+
+<!-- Factory Store Used Boat Details -->
+<template>
+  <div class="serialWrapper">
+    <article class={serialWrapperClass}>
+      <template if:true={serialDataLoaded}>
+        <figure class="serialDetails">
+          <span class="featureImage"><img src={serial.Default_Gallery_Image__c} alt="" /></span>
+          <figcaption>
+            <h3 class="heading heading--l">{boatName}</h3>
+            <p class="heading heading--m">{retailPrice}</p>
+            <p>{serial.Description__c}</p>
+          </figcaption>
+        </figure>
+
+<!--        <template if:true={hasPhotoGallery}>-->
+<!--          <section class="intro__gallery">-->
+<!--            <h3 class="ro">Photo Gallery</h3>-->
+<!--            <c-factory-store-photo-gallery content-type="default" content={photoGallery} section-width="Average"></c-factory-store-photo-gallery>-->
+<!--          </section>-->
+<!--        </template>-->
+      </template>
+
+      <template if:true={serialDataLookupRunning}>
+        <c-community-shared-loading></c-community-shared-loading>
+      </template>
+      <template if:true={resultEmpty}>
+        <p>Result Empty.</p>
+      </template>
+    </article>
+  </div>
+</template>
