@@ -247,6 +247,7 @@ global without sharing class gcMaterial{
 					if(matl.AcctSeedERP__Project__c != null)
 					{
 							project = mapProject.get(matl.AcctSeedERP__Project__c);
+							Product2 product = mapProduct.get(matl.AcctSeedERP__Product__c);
 							AcctSeed__Project_Task__c task = mapProjectTask.get(matl.AcctSeedERP__Project_Task__c);
 							AcctSeed__Project_Task__c oldTask;
 							if(boolIsUpdate)
@@ -255,6 +256,9 @@ global without sharing class gcMaterial{
 								matl.addError('Cannot add material on a locked ERP Order.');
 							if(task != null && task.Locked__c && !disableTaskLockCheck && boolIsInsert)
 								matl.addError('Cannot add material on a locked ERP Order Task.');
+							if(project.RecordTypeId == gcConstants.idRtProjectCounterSale && product.AcctSeedERP__Serialized__c){
+								matl.addError('Cannot add serialized product on a counter sale ERP');
+							}
 							if(boolIsUpdate
 								&& ((project.Locked__c && !gcProject.disableLockedCheck)
 									|| (task.Locked__c && oldTask.Locked__c)
