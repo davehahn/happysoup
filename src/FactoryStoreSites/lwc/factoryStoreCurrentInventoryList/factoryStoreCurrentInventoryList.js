@@ -48,7 +48,7 @@ export default class FactoryStoreCurrentInventoryList extends NavigationMixin(Li
 								});
 								if(boat.Equipment){
 								 boat.Equipment.forEach((e, i) => {
-								   console.log("Equipment Single: ", e);
+//								   console.log("Equipment Single: ", e);
 										let retailUpgradeCost = 0;
 										if(e.productType === 'Motor'){
 										  console.log('all Motors: ', fullBoat.MotorUpgrades);
