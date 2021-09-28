@@ -59,7 +59,6 @@ export default class FactoryStoreBoatListingItem extends NavigationMixin(Lightni
 			boatName: this.boatName,
 			serialNumber: event.currentTarget.dataset.serial
 		}
-		console.log('details to send to form: ', details);
 		fireEvent(this.pageRef, 'openOverlay', details);
 		event.preventDefault();
 	}
