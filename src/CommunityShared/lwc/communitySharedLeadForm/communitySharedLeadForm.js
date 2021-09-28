@@ -38,6 +38,10 @@ export default class CommunitySharedLeadForm extends NavigationMixin(LightningEl
   emailPrefill;
   locationName;
 
+  isEN = renderEN();
+  isFR = renderFR();
+  currLang;
+
 	wrapperClass = 'leadFormWrapper';
   showForm = true;
   showThankyou = false;
@@ -143,16 +147,30 @@ export default class CommunitySharedLeadForm extends NavigationMixin(LightningEl
   get provinces() {
     return [
       { label: 'Alberta', value: 'Alberta' },
-      { label: 'British Columbia', value: 'British Columbia' },
-      { label: 'Manitoba', value: 'Manitoba' },
-      { label: 'New Brunswick', value: 'New Brunswick' },
-      { label: 'Newfoundland and Labrador', value: 'Newfoundland and Labrador' },
-      { label: 'Nova Scotia', value: 'Nova Scotia' },
-      { label: 'Ontario', value: 'Ontario' },
-      { label: 'Prince Edward Island', value: 'Prince Edward Island' },
-      { label: 'Quebec', value: 'Quebec' },
-      { label: 'Saskatchewan', value: 'Saskatchewan' },
+			 { label: 'British Columbia', value: 'British Columbia' },
+			 { label: 'Manitoba', value: 'Manitoba' },
+			 { label: 'New Brunswick', value: 'New Brunswick' },
+			 { label: 'Newfoundland and Labrador', value: 'Newfoundland and Labrador' },
+			 { label: 'Nova Scotia', value: 'Nova Scotia' },
+			 { label: 'Ontario', value: 'Ontario' },
+			 { label: 'Prince Edward Island', value: 'Prince Edward Island' },
+			 { label: 'Quebec', value: 'Quebec' },
+			 { label: 'Saskatchewan', value: 'Saskatchewan' },
     ];
+  }
+  get provincesFR(){
+    return [
+      { label: 'Alberta', value: 'Alberta' },
+			 { label: 'Colombie-Britannique', value: 'British Columbia' },
+			 { label: 'Manitoba', value: 'Manitoba' },
+			 { label: 'Nouveau-Brunswick', value: 'New Brunswick' },
+			 { label: 'Terre-Neuve-et-Labrador', value: 'Newfoundland and Labrador' },
+			 { label: 'Nouvelle-Écosse', value: 'Nova Scotia' },
+			 { label: 'Ontario', value: 'Ontario' },
+			 { label: 'Île-du-Prince-Édouard', value: 'Prince Edward Island' },
+			 { label: 'Québec', value: 'Quebec' },
+			 { label: 'Saskatchewan', value: 'Saskatchewan' }
+    ]
   }
   get purchaseByDateOptions(){
     return [
@@ -163,11 +181,27 @@ export default class CommunitySharedLeadForm extends NavigationMixin(LightningEl
       { label: 'Not considering the purchase of a boat at this time', value: 'Not considering the purchase of a boat at this time' },
     ];
   }
+  get purchaseByDateOptionsFR(){
+      return [
+        { label: 'Les 3 mois', value: 'Within 3 months' },
+        { label: '3 à 6 mois', value: '3 to 6 months' },
+        { label: '6 à 12 mois', value: '6 to 12 months' },
+        { label: '12+ mois', value: '12+ months' },
+        { label: 'Ne considère pas l\'achat d\'un nouveau bateau en ce moment', value: 'Not considering the purchase of a boat at this time' },
+      ];
+    }
   get boatTypeOptions(){
 		return [
 			{ label: 'Fishing Boats', value: 'Fishing Boats' },
 			{ label: 'Pontoon Boats', value: 'Pontoon Boats' },
 			{ label: 'Deck Boats', value: 'Deck Boats' },
+		];
+	}
+	get boatTypeOptionsFR(){
+		return [
+			{ label: 'Bateaux de Pêche', value: 'Fishing Boats' },
+			{ label: 'Bateaux Pontons', value: 'Pontoon Boats' },
+			{ label: 'Bateaux Pontés', value: 'Deck Boats' },
 		];
 	}
 

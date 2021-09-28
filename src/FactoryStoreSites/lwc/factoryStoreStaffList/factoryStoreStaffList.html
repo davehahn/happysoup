@@ -26,21 +26,25 @@
                 </header>
                 <div class="card__bioWrap">
                   <section class="card__bio">
-                    <h5 class="bio__heading heading heading--s">About {user.FirstName}</h5>
-                    <ul class="card__vitals">
-                      <li class="vitals__detail">
-                        <strong>Hometown:</strong>
-                        <span>{user.Hometown}</span>
-                      </li>
-                      <li class="vitals__detail">
-                        <strong>Started at Legend Boats in:</strong>
-                        <span>{user.StartYear}</span>
-                      </li>
-                      <li class="vitals__detail">
-                        <strong>Something Unique About {user.FirstName}:</strong>
-                        <p>{user.Story}</p>
-                      </li>
-                    </ul>
+                    <h5 class="bio__heading heading heading--s">
+                      <template if:true={isEN}>About</template>
+                      <template if:true={isFR}>À propos de </template>
+                      {user.FirstName}
+                    </h5>
+<!--                    <ul class="card__vitals">-->
+<!--                      <li class="vitals__detail">-->
+<!--                        <strong>Hometown:</strong>-->
+<!--                        <span>{user.Hometown}</span>-->
+<!--                      </li>-->
+<!--                      <li class="vitals__detail">-->
+<!--                        <strong>Started at Legend Boats in:</strong>-->
+<!--                        <span>{user.StartYear}</span>-->
+<!--                      </li>-->
+<!--                      <li class="vitals__detail">-->
+<!--                        <strong>Something Unique About {user.FirstName}:</strong>-->
+<!--                        <p>{user.Story}</p>-->
+<!--                      </li>-->
+<!--                    </ul>-->
 
                     <section class="card__contact">
                       <h5 class="ro">Get in touch with {user.FirstName}</h5>

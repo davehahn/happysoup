@@ -11,11 +11,13 @@
     <aura:attribute name="storeLocationAndHours" type="Aura.Component[]"/>
     <aura:attribute name="storePhoneNumbers" type="Aura.Component[]"/>
     <aura:attribute name="storeNavigation" type="Aura.Component[]"/>
+    <aura:attribute name="storeDetails" type="Aura.Component[]"/>
     <aura:attribute name="storeTools" type="Aura.Component[]"/>
     <aura:attribute name="storeLegal" type="Aura.Component[]"/>
     <aura:attribute name="storePolicyLinks" type="Aura.Component[]"/>
     <aura:attribute name="channelMenu" type="Aura.Component[]"/>
     <lightning:navigation aura:id="navService"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
 
     <header class="storeHeader">
         <div class="storeDetails">
@@ -26,7 +28,12 @@
             <div class="phoneNumbers">
                 {!v.storePhoneNumbers}
             </div>
-            <a class="corporateLogo" href="https://www.legendboats.com" target="_blank"></a>
+            <aura:if isTrue="{!$Locale.language == 'en'}">
+                <a class="corporateLogo" href="https://www.legendboats.com" target="_blank"></a>
+                <aura:set attribute="else">
+                    <a class="corporateLogo corporateLogo--fr" href="https://www.legendboats.com/fr/" target="_blank"></a>
+                </aura:set>
+            </aura:if>
         </div>
         <nav class="mainNavigation">
             <c:factoryStoreMainNavigation></c:factoryStoreMainNavigation>
@@ -38,6 +45,7 @@
     <c:factoryStoreFooterStayInTouch></c:factoryStoreFooterStayInTouch>
     <footer class="storeFooter">
         {!v.storeTools}
+        {!v.storeDetails}
         <section class="footerLegal">
             {!v.storePolicyLinks}
             <c:communitySharedFooterCopyright></c:communitySharedFooterCopyright>

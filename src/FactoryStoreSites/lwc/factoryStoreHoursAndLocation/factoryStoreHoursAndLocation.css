@@ -86,8 +86,14 @@
   }
 }
 
-@media screen and (max-width: 380px){
+@media screen and (max-width: 420px){
   .hoursAndLocation.hoursAndLocation--condensed{
     font-size: 0.7em;
+  }
+  .hoursAndLocation--condensed .hours .currentDate{
+    display: none;
+  }
+  .hoursAndLocation--condensed .location{
+    margin-top: 0;
   }
 }
