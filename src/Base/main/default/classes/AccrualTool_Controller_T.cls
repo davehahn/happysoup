@@ -28,6 +28,30 @@ public class AccrualTool_Controller_T {
         gcProject.disableTrigger = true;
         gcProjectTask.disableTrigger = true;
         gcMaterial.disableTrigger = true;
+        
+        AcctSeed__GL_Account__c revenueAccount;
+        AcctSeed__GL_Account__c expenseAccount;
+        AcctSeed__GL_Account__c commissionAccount;
+        List<AcctSeed__GL_Account__c> glAccts = new List<AcctSeed__GL_Account__c>();
+        revenueAccount = new AcctSeed__GL_Account__c(Name='Test Revenue Account',
+                                                     AcctSeed__Active__c = true,
+                                                     AcctSeed__Type__c = 'Revenue',
+                                                     Uniquefier__c = 'AccruedRevenue');
+        expenseAccount = new AcctSeed__GL_Account__c(Name='Test Expense Account',
+                                                     AcctSeed__Active__c = true,
+                                                     AcctSeed__Type__c = 'Expense',
+                                                     Uniquefier__c = 'AccruedExpenses');
+        commissionAccount = new AcctSeed__GL_Account__c(Name='Test Inventory Account',
+                                                       AcctSeed__Active__c = true,
+                                                       AcctSeed__Sub_Type_1__c = 'Assets',
+                                                       AcctSeed__Type__c = 'Balance Sheet',
+                                                       Uniquefier__c = 'CommissionExpense');
+        glAccts.add(revenueAccount);
+       // glAccts.add(expenseAccount);
+        //glAccts.add(commissionAccount);
+        
+        insert glAccts;
+        
         AcctSeed__Project__c retailSale = Factory_ERPOrder.insertRetailBoatSale(
             customer,
             wh,
@@ -157,6 +181,7 @@ public class AccrualTool_Controller_T {
         AccrualTool_Controller.fetchOrderLines(String.valueOf(erp.Id));
         List<AccrualTool_Controller.ProductWrapper> products = AccrualTool_Controller.fetchSerializedProducts(String.valueOf(erp.Id));
         String msg = AccrualTool_Controller.createJournalEntry(String.valueOf(erp.Id), String.valueOf(Date.today()));
+        String errorMsg = AccrualTool_Controller.createJournalEntry(String.valueOf(erp.Id), 'error Date');
         Test.stopTest();
         
         system.assertEquals(erp.Id, erpRecord.Id);
@@ -164,6 +189,9 @@ public class AccrualTool_Controller_T {
         system.assertEquals(2, commWrapper.commissionRecordsList.size());
         system.assertEquals(1, commWrapper.commPaymentWrapper.size());
         system.assertEquals(1, products.size());
-        system.assertEquals('Success', msg);
+        system.assertEquals('Journal Entry Created!', msg);
+        if(errorMsg.containsIgnoreCase('Error')) {
+            system.assert(true, errorMsg);
+        }
     }
 }

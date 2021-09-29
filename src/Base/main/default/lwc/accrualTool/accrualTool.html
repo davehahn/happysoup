@@ -23,7 +23,7 @@
 								</h3>
 								<br/>
 								<table
-									class="slds-table slds-table_cell-buffer slds-table_bordered slds-border_left slds-border_right">
+									class="slds-table slds-table_cell-buffer slds-table_bordered slds-border_left slds-border_right fontlarger">
 									<thead>
 										<tr>
 											<th></th>
@@ -72,7 +72,7 @@
 								</h3>
 								<br/>
 								<table
-									class="slds-table slds-table_cell-buffer slds-table_bordered  slds-border_left slds-border_right">
+									class="slds-table slds-table_cell-buffer slds-table_bordered  slds-border_left slds-border_right fontlarger">
 									<thead>
 										<tr>
 											<th class="slds-text-align_left">Serial Number</th>
@@ -85,35 +85,37 @@
 										<template for:each={serializedProducts} for:item="prod" for:index="idx">
 											<tr key={prod.id}>
 												<td>{prod.serialNumber}</td>
-												<td>{prod.productName}</td>
+												<td class="wrapText">{prod.productName}</td>
 												<td>{prod.Status}</td>
 												<td>{prod.Location}</td>
 											</tr>
 										</template>
 									</tbody>
 								</table>
-								<template if:true={usedStatus}>
-									<h3 class="h3Header">
-										Please speak to your manager before proceeding.
-									</h3>
-								</template>
 							</template>
 						</lightning-layout-item>
 					</template>
 					<template if:true={step4}>
-						<tamplate if:true={revenueData} class="webKitWidth">
+						<template if:true={revenueData} class="webKitWidth">
 							<lightning-layout-item size="12" padding="around-small">
 								<table>
 									<tr>
-										<td class="width66">
+										<td class="width66 verticalAlignTop">
 											<h3 class="h3Header">
 												Receivable &amp; Revenue</h3>
 										</td>
-										<td class="tdHeader">Total Revenue Accrual: 
-											<lightning-formatted-number value={revenueData.totalAmount}
-												maximum-fraction-digits="2" minimum-fraction-digits="2"
-												format-style="currency" currency-code="CAD">
-											</lightning-formatted-number>
+										<td class="totalBox floatRight">
+											<div class="cERP_AccountBalance">
+												<a class="balance-container slds-p-around_xx-small">
+													<span class="totalSpan">Total Revenue Accrual</span>
+													<div class="balance">
+														<lightning-formatted-number value={revenueData.totalAmount}
+															maximum-fraction-digits="2" minimum-fraction-digits="2"
+															format-style="currency" currency-code="CAD">
+														</lightning-formatted-number>
+													</div>
+												</a>
+											</div>
 										</td>
 									</tr>
 								</table>
@@ -125,25 +127,25 @@
 										<table class="slds-table slds-table_cell-buffer slds-table_bordered">
 											<thead>
 												<tr>
-													<th class="slds-text-align_left width40">Revenue
+													<th class="slds-text-align_left width40 materialTableHeader">Revenue
 														GL Account
 													</th>
-													<th class="slds-text-align_left width40">Product
+													<th class="slds-text-align_left width40 materialTableHeader">Product
 													</th>
-													<th class="slds-text-align_left">Total Price</th>
+													<th class="slds-text-align_left materialTableHeader rightAlign">Total Price
+													</th>
 												</tr>
 											</thead>
 										</table>
 
 										<template for:each={dept.lineItemWrapperList} for:item="lineItem"
 											for:index="idx1">
-											<div key={lineItem.id}
-												class="accordionContaier">
+											<div key={lineItem.id} class="accordionContaier">
 												_</div>
 											<lightning-accordion allow-multiple-sections-open key={lineItem.id}>
 												<lightning-accordion-section name={lineItem.totalPrice}
 													label={lineItem.GLAccountName}>
-													<div slot="actions" class="divSlot">
+													<div slot="actions" class="divSlot fontlarger">
 														<lightning-formatted-number value={lineItem.totalPrice}
 															maximum-fraction-digits="2" minimum-fraction-digits="2"
 															format-style="currency" currency-code="CAD">
@@ -152,18 +154,17 @@
 													<template for:each={lineItem.productPriceWrapperList}
 														for:item="productPrice" for:index="idx1">
 														<table key={productPrice.id}
-															class="slds-table slds-table_cell-buffer tableBorder" >
+															class="slds-table slds-table_cell-buffer tableBorder">
 															<tbody>
 																<tr key={productPrice.id}>
 																	<td class="width40">&nbsp;</td>
-																	<td class="width40">
+																	<td class="width40 fontlarger">
 																		{productPrice.productName}</td>
-																	<td class="paddingLeft14">
+																	<td class="paddingLeft14 rightAlign fontlarger">
 																		<lightning-formatted-number
 																			value={productPrice.price}
 																			maximum-fraction-digits="2"
-																			minimum-fraction-digits="2"
-																			format-style="currency" currency-code="CAD">
+																			minimum-fraction-digits="2">
 																		</lightning-formatted-number>
 																	</td>
 																</tr>
@@ -178,21 +179,28 @@
 								</template>
 
 							</lightning-layout-item>
-						</tamplate>
+						</template>
 					</template>
 					<template if:true={step5}>
 						<lightning-layout-item size="12" padding="around-small">
 							<table>
 								<tr>
-									<td class="width66">
+									<td class="width66 verticalAlignTop">
 										<h3 class="h3Header">
 											Accrual &amp; Expenses</h3>
 									</td>
-									<td class="tdHeader">Total Expense Accrual: 
-										<lightning-formatted-number value={expenseData.totalAmount}
-											maximum-fraction-digits="2" minimum-fraction-digits="2"
-											format-style="currency" currency-code="CAD">
-										</lightning-formatted-number>
+									<td class="totalBox floatRight">
+										<div class="cERP_AccountBalance">
+											<a class="balance-container slds-p-around_xx-small">
+												<span class="totalSpan">Total Expense Accrual</span>
+												<div class="balance">
+													<lightning-formatted-number value={expenseData.totalAmount}
+														maximum-fraction-digits="2" minimum-fraction-digits="2"
+														format-style="currency" currency-code="CAD">
+													</lightning-formatted-number>
+												</div>
+											</a>
+										</div>
 									</td>
 								</tr>
 							</table>
@@ -206,12 +214,13 @@
 										<table class="slds-table slds-table_cell-buffer slds-table_bordered">
 											<thead>
 												<tr>
-													<th class="slds-text-align_left width40">Expense
+													<th class="slds-text-align_left width40 materialTableHeader">Expense
 														GL Account
 													</th>
-													<th class="slds-text-align_left width40">Product
+													<th class="slds-text-align_left width40 materialTableHeader">Product
 													</th>
-													<th class="slds-text-align_left">Total Price</th>
+													<th class="slds-text-align_left materialTableHeader rightAlign">Total Price
+													</th>
 												</tr>
 											</thead>
 										</table>
@@ -219,13 +228,12 @@
 										<template for:each={dept.lineItemWrapperList} for:item="lineItem"
 											for:index="idx1">
 
-											<div key={lineItem.id}
-												class="accordionContaier">
+											<div key={lineItem.id} class="accordionContaier">
 												_</div>
 											<lightning-accordion allow-multiple-sections-open key={lineItem.id}>
 												<lightning-accordion-section name={lineItem.totalPrice}
 													label={lineItem.GLAccountName}>
-													<div slot="actions" class="divSlot">
+													<div slot="actions" class="divSlot fontlarger">
 														<lightning-formatted-number value={lineItem.totalPrice}
 															maximum-fraction-digits="2" minimum-fraction-digits="2"
 															format-style="currency" currency-code="CAD">
@@ -238,14 +246,13 @@
 															<tbody>
 																<tr key={productPrice.id}>
 																	<td class="width40">&nbsp;</td>
-																	<td class="width40">
+																	<td class="width40 fontlarger">
 																		{productPrice.productName}</td>
-																	<td class="paddingLeft14">
+																	<td class="paddingLeft14 rightAlign fontlarger">
 																		<lightning-formatted-number
 																			value={productPrice.price}
 																			maximum-fraction-digits="2"
-																			minimum-fraction-digits="2"
-																			format-style="currency" currency-code="CAD">
+																			minimum-fraction-digits="2">
 																		</lightning-formatted-number>
 																	</td>
 																</tr>
@@ -265,15 +272,22 @@
 						<lightning-layout-item size="12" padding="around-small">
 							<table>
 								<tr>
-									<td class="width66">
+									<td class="width66 verticalAlignTop">
 										<h3 class="h3Header">
 											Insurance Product Accrual &amp; Expenses</h3>
 									</td>
-									<td class="tdHeader">Total Expense Accrual: 
-										<lightning-formatted-number value={insuranceData.totalAmount}
-											maximum-fraction-digits="2" minimum-fraction-digits="2"
-											format-style="currency" currency-code="CAD">
-										</lightning-formatted-number>
+									<td class="totalBox floatRight">
+										<div class="cERP_AccountBalance">
+											<a class="balance-container slds-p-around_xx-small">
+												<span class="totalSpan">Total Expense Accrual</span>
+												<div class="balance">
+													<lightning-formatted-number value={insuranceData.totalAmount}
+														maximum-fraction-digits="2" minimum-fraction-digits="2"
+														format-style="currency" currency-code="CAD">
+													</lightning-formatted-number>
+												</div>
+											</a>
+										</div>
 									</td>
 								</tr>
 							</table>
@@ -286,51 +300,70 @@
 									<table class="slds-table slds-table_cell-buffer slds-table_bordered">
 										<thead>
 											<tr>
-												<th class="slds-text-align_left width25">Expense
+												<th class="slds-text-align_left width20 materialTableHeader">Expense
 													GL Account
 												</th>
-												<th class="slds-text-align_left width25">Product
+												<th class="slds-text-align_left width25 materialTableHeader">Product
 												</th>
-												<th class="slds-text-align_left width20">Insurance Profit
-													percent override
+												<th class="slds-text-align_left width25 materialTableHeader">Insurance
+													Profit % Override
 												</th>
-												<th class="slds-text-align_left width15">Total Price</th>
-												<th class="slds-text-align_left width15">Total Cost</th>
+												<th class="slds-text-align_left width15 materialTableHeader rightAlign">Total Price
+												</th>
+												<th class="slds-text-align_left width15 materialTableHeader rightAlign">Total Cost
+												</th>
 											</tr>
 										</thead>
 									</table>
 
 									<template for:each={dept.lineItemWrapperList} for:item="lineItem" for:index="idx1">
 
-										<div key={lineItem.id}
-											class="accordionContaier">
+										<div key={lineItem.id} class="accordionContaier">
 											_</div>
 										<lightning-accordion allow-multiple-sections-open key={lineItem.id}>
 											<lightning-accordion-section name={lineItem.totalPrice}
 												label={lineItem.GLAccountName}>
+												<div slot="actions" class="divSlot2 fontlarger">
+													<table>
+														<tr>
+															<td class="width44 paddingLeft1 rightAlign">
+																<lightning-formatted-number value={lineItem.totalPrice}
+																	maximum-fraction-digits="2"
+																	minimum-fraction-digits="2" format-style="currency"
+																	currency-code="CAD">
+																</lightning-formatted-number>
+															</td>
+															<td class="paddingLeft2 alignRight paddingright9 rightAlign">
+																<lightning-formatted-number value={lineItem.totalCost}
+																	maximum-fraction-digits="2"
+																	minimum-fraction-digits="2" format-style="currency"
+																	currency-code="CAD">
+																</lightning-formatted-number>
+															</td>
+														</tr>
+													</table>
+												</div>
 												<template for:each={lineItem.productPriceWrapperList}
 													for:item="productPrice" for:index="idx1">
 													<table key={productPrice.id}
 														class="slds-table slds-table_cell-buffer tableBorder">
 														<tbody>
 															<tr key={productPrice.id}>
-																<td class="width25">&nbsp;</td>
-																<td class="width25">{productPrice.productName}</td>
-																<td class="width20">{productPrice.profit}</td>
-																<td class="paddingLeft14 width15">
+																<td class="width20">&nbsp;</td>
+																<td class="width25 fontlarger">{productPrice.productName}</td>
+																<td class="width25 fontlarger">{productPrice.profit}</td>
+																<td class="paddingLeft2 width15 rightAlign fontlarger">
 																	<lightning-formatted-number
 																		value={productPrice.price}
 																		maximum-fraction-digits="2"
-																		minimum-fraction-digits="2"
-																		format-style="currency" currency-code="CAD">
+																		minimum-fraction-digits="2">
 																	</lightning-formatted-number>
 																</td>
-																<td class="paddingLeft14 width15">
+																<td class="paddingLeft2 width15 rightAlign fontlarger">
 																	<lightning-formatted-number
 																		value={productPrice.cost}
 																		maximum-fraction-digits="2"
-																		minimum-fraction-digits="2"
-																		format-style="currency" currency-code="CAD">
+																		minimum-fraction-digits="2">
 																	</lightning-formatted-number>
 																</td>
 															</tr>
@@ -348,7 +381,26 @@
 					</template>
 					<template if:true={step7}>
 						<lightning-layout-item size="12" padding="around-small">
-							<h3 class="h3Header">Commissions</h3>
+							<table>
+								<tr>
+									<td class="width66 verticalAlignTop">
+										<h3 class="h3Header">Commissions</h3>
+									</td>
+									<td class="totalBox floatRight">
+										<div class="cERP_AccountBalance">
+											<a class="balance-container slds-p-around_xx-small">
+												<span class="totalSpan">Total Commission</span>
+												<div class="balance">
+													<lightning-formatted-number value={totalCommissions}
+														maximum-fraction-digits="2" minimum-fraction-digits="2"
+														format-style="currency" currency-code="CAD">
+													</lightning-formatted-number>
+												</div>
+											</a>
+										</div>
+									</td>
+								</tr>
+							</table>
 							<br/>
 							<template for:each={commissionPayments} for:item="dept" for:index="idx">
 								<div key={dept.id}>
@@ -358,10 +410,11 @@
 									<table class="slds-table slds-table_cell-buffer slds-table_bordered ">
 										<thead>
 											<tr>
-												<th class="slds-text-align_left width40">Commission Record
+												<th class="slds-text-align_left width40 materialTableHeader">Commission
+													Record
 												</th>
-												<th class="slds-text-align_left width40">Status</th>
-												<th class="slds-text-align_left">Amount</th>
+												<th class="slds-text-align_left width40 materialTableHeader">Status</th>
+												<th class="slds-text-align_left materialTableHeader">Amount</th>
 											</tr>
 										</thead>
 										<tbody>
@@ -370,7 +423,8 @@
 												<tr key={commpayments.id}>
 													<td class="width40">{commpayments.Name}</td>
 													<td class="width40">{commpayments.Status}</td>
-													<td><lightning-formatted-number value={commpayments.Amount}
+													<td>
+														<lightning-formatted-number value={commpayments.Amount}
 															maximum-fraction-digits="2" minimum-fraction-digits="2"
 															format-style="currency" currency-code="CAD">
 														</lightning-formatted-number>
@@ -391,33 +445,43 @@
 							<br/>
 							<table class="width80">
 								<tr>
-									<td class="width33">
+									<td class="width25">
 										<h2 class="h2Header">Gross
 											Margin</h2>
 										<lightning-formatted-number value={grossMargin} maximum-fraction-digits="2"
 											minimum-fraction-digits="2"></lightning-formatted-number>%
 									</td>
-									<td class="width33">
+									<td class="width25">
 										<h2 class="h2Header">Total
 											Revenue</h2>
 										<lightning-formatted-number value={totalRevenue} maximum-fraction-digits="2"
 											minimum-fraction-digits="2" format-style="currency" currency-code="CAD">
 										</lightning-formatted-number>
 									</td>
-									<td class="width33">
+									<td class="width25">
 										<h2 class="h2Header">Total
 											Expenses</h2>
 										<lightning-formatted-number value={totalExpense} maximum-fraction-digits="2"
 											minimum-fraction-digits="2" format-style="currency" currency-code="CAD">
 										</lightning-formatted-number>
 									</td>
+									<td class="width25">
+										<h2 class="h2Header">Boat
+											Model</h2>
+										{boatModel}
+									</td>
 								</tr>
 								<tr>
-									<td class="width33">
+									<td>&nbsp;</td>
+									<td>&nbsp;</td>
+									<td>&nbsp;</td>
+								</tr>
+								<tr>
+									<td class="width25">
 										<h2 class="h2Header">Journal
 											Entry Date</h2>{jedate2}
 									</td>
-									<td colspan="2">
+									<td colspan="3">
 										<h2 class="h2Header">Journal
 											Entry Name</h2>{journalEntryName}
 									</td>
@@ -430,8 +494,8 @@
 										<th class="slds-text-align_left width25">GL Account</th>
 										<th class="slds-text-align_left width25">GLV1</th>
 										<th class="slds-text-align_left width20">GLV2</th>
-										<th class="slds-text-align_left width15">Debit</th>
-										<th class="slds-text-align_left width15">Credit</th>
+										<th class="slds-text-align_right width15">Debit</th>
+										<th class="slds-text-align_right width15">Credit</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -441,13 +505,13 @@
 											<td class="width25">{journalLine.GLAccountName}</td>
 											<td class="width25">{journalLine.GLV1Name}</td>
 											<td class="width20">{journalLine.GLV2Name}</td>
-											<td class="paddingLeft14 width15">
+											<td class="slds-text-align_right width15">
 												<lightning-formatted-number value={journalLine.Debit}
 													maximum-fraction-digits="2" minimum-fraction-digits="2"
 													format-style="currency" currency-code="CAD">
 												</lightning-formatted-number>
 											</td>
-											<td class="paddingLeft14 width15">
+											<td class="slds-text-align_right width15">
 												<lightning-formatted-number value={journalLine.Credit}
 													maximum-fraction-digits="2" minimum-fraction-digits="2"
 													format-style="currency" currency-code="CAD">
@@ -460,13 +524,13 @@
 										<td class="width25">&nbsp;</td>
 										<td class="width25">&nbsp;</td>
 										<td class="width20">&nbsp;</td>
-										<td class="paddingLeft14 width15 font700">
+										<td class="slds-text-align_right width15 font700">
 											<lightning-formatted-number value={totalDebit.totalAmount}
 												maximum-fraction-digits="2" minimum-fraction-digits="2"
 												format-style="currency" currency-code="CAD">
 											</lightning-formatted-number>
 										</td>
-										<td class="paddingLeft14 width15 font700">
+										<td class="slds-text-align_right width15 font700">
 											<lightning-formatted-number value={totalCredit.totalAmount}
 												maximum-fraction-digits="2" minimum-fraction-digits="2"
 												format-style="currency" currency-code="CAD">
@@ -480,12 +544,20 @@
 				</lightning-layout>
 			</div>
 			<div class="slds-modal__footer">
+
+				<template if:true={usedStatusBlock}>
+					<div class="footerErrorDiv">
+						<h3 class="h3Alert">
+							Please speak to your manager before proceeding.
+						</h3>
+					</div>
+				</template>
 				<table>
 					<tr>
 						<td class="width10">
 							<template if:true={showPrevious}>
-								<lightning-button label="Previous" title="Previous"
-									onclick={previousClick} class="slds-m-left_x-small floatLeft"></lightning-button>
+								<lightning-button label="Previous" title="Previous" onclick={previousClick}
+									class="slds-m-left_x-small floatLeft"></lightning-button>
 							</template>
 							<template if:false={showPrevious}>
 								&nbsp;
@@ -511,13 +583,14 @@
 						</td>
 						<td class="width10">
 							<template if:true={showNext}>
-								<lightning-button variant="brand" label="Next" title="Next"
-									onclick={nextClick} class="slds-m-left_x-small floatRight"></lightning-button>
+								<lightning-button variant="brand" label="Next" title="Next" onclick={nextClick}
+									class="slds-m-left_x-small floatRight"></lightning-button>
 							</template>
 							<template if:true={showPost}>
 								<template if:true={step8}>
 									<lightning-button variant="brand" label="Post" title="Post"
-										onclick={createJournalEntry} class="slds-m-left_x-small floatRight"></lightning-button>
+										onclick={createJournalEntry} class="slds-m-left_x-small floatRight">
+									</lightning-button>
 								</template>
 							</template>
 						</td>

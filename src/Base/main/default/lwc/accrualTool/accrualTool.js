@@ -23,6 +23,7 @@ export default class AccrualTool extends LightningElement {
 
   @track lineItems;
   @track commissionPayments;
+  @track totalCommissions;
   @track allCommissionReviewed;
   @track serializedProducts;
   @track revenueData;
@@ -36,7 +37,8 @@ export default class AccrualTool extends LightningElement {
   @track totalRevenue;
   @track totalExpense;
   @track grossMargin;
-  @track journalEntryName
+  @track journalEntryName;
+  @track boatModel;
 
   @track progressStep = "1";
   @track showPrevious = false;
@@ -56,7 +58,8 @@ export default class AccrualTool extends LightningElement {
 
   @track jedate;
   @track jedate2;
-  @track usedStatus = false;;
+  @track usedStatus = false;
+  @track usedStatusBlock = false;
 
   nextClick() {
     debugger;
@@ -64,6 +67,12 @@ export default class AccrualTool extends LightningElement {
     this.checkERPStage();
     if (progStepNum == 1 && !this.erpStageAllowed) {
       this.showNext = false;
+    }
+    if(progStepNum == 2 && this.usedStatus) {
+      this.showNext = false;
+      this.usedStatusBlock = true;
+    } else {
+      this.usedStatusBlock = false;
     }
 
     progStepNum = progStepNum + 1;
@@ -74,7 +83,8 @@ export default class AccrualTool extends LightningElement {
     this.showPrevious = true;
     this.getcurrentStep();
     if (this.erpStageAllowed && progStepNum == 4) {
-      this.fetchRevenueandExpenses();// need to invoke this at specific step
+     
+       this.getCommissionLineItems(progStepNum);// need to invoke this at specific step
     }
 
   }
@@ -226,9 +236,10 @@ export default class AccrualTool extends LightningElement {
     }
   }
   connectedCallback() {
+    debugger;
     var today = new Date();
-    //this.jedate = today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate();
-    this.jedate = today.getDate() +"-" + (today.getMonth() + 1) +"-" + today.getFullYear() ;
+    this.jedate = today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate();
+    //this.jedate = today.getDate() +"-" + (today.getMonth() + 1) +"-" + today.getFullYear() ;
 
     this.setVisibleDate(true);
     this.progressStep = "1";
@@ -247,6 +258,7 @@ export default class AccrualTool extends LightningElement {
     if (result.data) {
       this.erprecord = result.data;
       this.journalEntryName = "Accrual Entry - " + this.erprecord.Name;
+      this.boatModel = this.erprecord.Model_Name__c;
       this.checkERPStage();
       if (this.erpStageAllowed) {
         this.getCommissionLineItems();
@@ -277,7 +289,12 @@ export default class AccrualTool extends LightningElement {
       .then(result => {
         debugger;
         console.log(result);
-        successToast(this, result, ' Journal Entry Created!');
+        if(result.indexOf('Error') != -1) {
+          errorToast(this, result, ' Error!');
+        } else {
+          successToast(this, result, 'Journal Entry Creation Status!', );
+        }
+        this.closeQuickAction();
       })
       .catch(error => {
         debugger;
@@ -286,12 +303,12 @@ export default class AccrualTool extends LightningElement {
       })
       .finally(function () {
         spinner.toggle();
-        this.showPost = false;
-        this.closeQuickAction();
+        //this.showPost = false;
+        //this.closeQuickAction();
       });
   }
 
-  fetchRevenueandExpenses() {
+  fetchRevenueandExpenses(commissionData) {
     debugger;
     let spinner = this.template.querySelector("c-legend-spinner");
     spinner.toggle();
@@ -314,12 +331,15 @@ export default class AccrualTool extends LightningElement {
           this.showPost = true;
         }
 
-        this.totalExpense = this.expenseData.totalAmount;// + this.insuranceData.totalAmount;
+        this.totalExpense = parseFloat(this.expenseData.totalAmount) + parseFloat(this.insuranceData.totalAmount);
+        for(var commAmt in commissionData) {
+          this.totalExpense = parseFloat(this.totalExpense) + parseFloat(commissionData[commAmt].commPayments[0].Amount);
+        }
         this.totalRevenue = this.revenueData.totalAmount;// + this.journalLineData.totalAmount;
         if (this.totalRevenue == this.totalExpense) {
           this.grossMargin = 0;
         } else {
-          this.grossMargin = ((this.totalRevenue - this.totalExpense) / this.totalRevenue) * 100;
+          this.grossMargin = ((parseFloat(this.totalRevenue) - parseFloat(this.totalExpense)) / parseFloat(this.totalRevenue)) * 100;
         }
       })
       .catch(error => {
@@ -331,20 +351,24 @@ export default class AccrualTool extends LightningElement {
       });
   }
 
-  getCommissionLineItems() {
+  getCommissionLineItems(progStepNum) {
     debugger;
+    
     fetchCommissionLineItems({ erpId: this.recordId })
       .then(result => {
         console.log(JSON.parse(JSON.stringify(result)));
-        let commissionData = result;
+        var commissionData = result;
         this.allCommissionReviewed = commissionData.isReviewed;
         this.lineItems = commissionData.commissionRecordsList;
         this.commissionPayments = commissionData.commPaymentWrapper;
+        this.totalCommissions = commissionData.totalAmount;
 
         if (!this.allCommissionReviewed) {
           this.showNext = false;
         }
-
+        if (this.erpStageAllowed && progStepNum == 4){
+        this.fetchRevenueandExpenses(commissionData.commPaymentWrapper);
+        }
       })
       .catch(error => {
         debugger;

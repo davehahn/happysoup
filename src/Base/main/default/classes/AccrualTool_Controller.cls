@@ -10,15 +10,15 @@ public class AccrualTool_Controller {
     public static Map<String,Map<String,List<ProductPriceWrapper>>> departmentMapRevenue = new Map<String,Map<String,List<ProductPriceWrapper>>>();
     public static Map<String,Map<String,List<ProductPriceWrapper>>> departmentMapInsurance = new Map<String,Map<String,List<ProductPriceWrapper>>>();
     
-    public static Map<Id,JournalEntryLineWrapper> jounralEntryLineWrapperExpense = new Map<Id,JournalEntryLineWrapper>();
-    public static Map<Id,JournalEntryLineWrapper> jounralEntryLineWrapperRevenue = new Map<Id,JournalEntryLineWrapper>();
-    public static Map<Id,JournalEntryLineWrapper> jounralEntryLineWrapperInsurance = new Map<Id,JournalEntryLineWrapper>();
+    public static Map<String,JournalEntryLineWrapper> jounralEntryLineWrapperExpense = new Map<String,JournalEntryLineWrapper>();
+    public static Map<String,JournalEntryLineWrapper> jounralEntryLineWrapperRevenue = new Map<String,JournalEntryLineWrapper>();
+    public static Map<String,JournalEntryLineWrapper> jounralEntryLineWrapperInsurance = new Map<String,JournalEntryLineWrapper>();
     public static List<JournalEntryLineWrapper> journalEntryLineWrapperList = new List<JournalEntryLineWrapper>();
     
     public static Map<String,Accrual_Tool_GLAccount_Setting__mdt> accrualSettingMap = new Map<String,Accrual_Tool_GLAccount_Setting__mdt>();
     public static List<Accrual_Tool_GLAccount_Setting__mdt> accrualSettings = [Select Id,Accrual_Type__c,GLAccount__c,GLV1__c,GLV2__c FROM Accrual_Tool_GLAccount_Setting__mdt];
     
-    public static Map<String,Id> glAccMap = new Map<String,Id>();
+    public static Map<Id,String> glAccMap = new Map<Id,String>();
     public static Map<String,Id> glVMap = new Map<String,Id>();
     public static List<String> glAccounts = new List<String>();
     public static List<String> glVs = new List<String>();
@@ -32,7 +32,7 @@ public class AccrualTool_Controller {
     {
         system.debug('erpId >> '+erpId);
         AcctSeed__Project__c erpRec ;
-        for(AcctSeed__Project__c erp : [SELECT Id,Name,Stage__c,AcctSeed__Status__c,(Select Id From Journal_Entries__r) FROM AcctSeed__Project__c WHERE Id=:erpId LIMIT 1]) {
+        for(AcctSeed__Project__c erp : [SELECT Id,Name,Stage__c,AcctSeed__Status__c,Model_Name__c,(Select Id From Journal_Entries__r Where (Name Like 'Accrual%')) FROM AcctSeed__Project__c WHERE Id=:erpId LIMIT 1]) {
             erpRec = erp;
         }
         return erpRec;
@@ -48,6 +48,11 @@ public class AccrualTool_Controller {
         Map<String,List<CommissionPaymentRecordsWrapper>> commPaymentMap = new Map<String,List<CommissionPaymentRecordsWrapper>>();
         
         Boolean allReviewed = true;
+        Decimal totalAmount = 0.0;
+        
+        List<AcctSeed__GL_Account__c> debitGLAcc = [Select id,name from AcctSeed__GL_Account__c 
+                                                    Where Id =:gcConstants.idGlCommissionExpense Limit 1];
+        
         for(CommissionRecord2__c commissionRecord : [SELECT Id,Name,Status__c,Project_Task__r.Name,
                                                      Project_Task__r.AcctSeed__Labor_GL_Account__c,Project_Task__r.AcctSeed__Labor_GL_Account__r.name,
                                                      Project_Task__r.AcctSeed__GL_Account_Variable_1__c,Project_Task__r.AcctSeed__GL_Account_Variable_1__r.name,
@@ -65,22 +70,27 @@ public class AccrualTool_Controller {
                 commPaymentMap.put(commissionRecord.Project_Task__r.AcctSeed__GL_Account_Variable_2__r.Name, new List<CommissionPaymentRecordsWrapper>());
             }
             for(CommissionPayment2__c commPmnt : commissionRecord.Commission_Payments__r) {
-                commPaymentMap.get(commissionRecord.Project_Task__r.AcctSeed__GL_Account_Variable_2__r.Name).add(
-                    new CommissionPaymentRecordsWrapper(
-                        commissionRecord.Project_Task__r.Name,commissionRecord.Status__c,commPmnt.Amount__c,commissionRecord.Project_Task__r.AcctSeed__Labor_GL_Account__c,
-                        commissionRecord.Project_Task__r.AcctSeed__Labor_GL_Account__r.name,
-                        commissionRecord.Project_Task__r.AcctSeed__GL_Account_Variable_1__c,commissionRecord.Project_Task__r.AcctSeed__GL_Account_Variable_1__r.name,
-                        commissionRecord.Project_Task__r.AcctSeed__GL_Account_Variable_2__c,commissionRecord.Project_Task__r.AcctSeed__GL_Account_Variable_2__r.name
-                    ));
+                totalAmount += commPmnt.Amount__c;
+                if(debitGLAcc != null) {
+                    commPaymentMap.get(commissionRecord.Project_Task__r.AcctSeed__GL_Account_Variable_2__r.Name).add(
+                        new CommissionPaymentRecordsWrapper(
+                            commissionRecord.Project_Task__r.Name,commissionRecord.Status__c,commPmnt.Amount__c,
+                            debitGLAcc[0].Id,
+                            debitGLAcc[0].name,
+                            commissionRecord.Project_Task__r.AcctSeed__GL_Account_Variable_1__c,commissionRecord.Project_Task__r.AcctSeed__GL_Account_Variable_1__r.name,
+                            commissionRecord.Project_Task__r.AcctSeed__GL_Account_Variable_2__c,commissionRecord.Project_Task__r.AcctSeed__GL_Account_Variable_2__r.name
+                        ));
+                }
             }
         }
+        
         for(String dept: commPaymentMap.keyset()) {
             commPaymentWrapperList.add(new CommissionPaymentWrapper(dept,commPaymentMap.get(dept)));
         }
         system.debug('commissionRecords >> '+commissionRecordsList);
         system.debug('commPaymentWrapperList >> '+commPaymentWrapperList);
         
-        CommissionWrapper commWrapper = new CommissionWrapper(allReviewed,commissionRecordsList,commPaymentWrapperList);
+        CommissionWrapper commWrapper = new CommissionWrapper(allReviewed,commissionRecordsList,commPaymentWrapperList,totalAmount);
         
         return commWrapper;
     }
@@ -112,25 +122,6 @@ public class AccrualTool_Controller {
         return prodList;
     }
     
-    public static void fetchCustomSetting(){
-        //Process Accrual Tool Custom Metadata
-        List<Accrual_Tool_GLAccount_Setting__mdt> accrualSettings = [Select Id,Accrual_Type__c,GLAccount__c,GLV1__c,GLV2__c FROM Accrual_Tool_GLAccount_Setting__mdt];
-        
-        for(Accrual_Tool_GLAccount_Setting__mdt accrualSetting : accrualSettings) {
-            accrualSettingMap.put(accrualSetting.Accrual_Type__c,accrualSetting);
-            glAccounts.add(accrualSetting.GLAccount__c);
-            glVs.add(accrualSetting.GLV1__c);
-            glVs.add(accrualSetting.GLV2__c);
-        }
-    }
-    public static void fetchGLAccounts(){
-        for(AcctSeed__GL_Account__c glAcc : [Select Id,Name from AcctSeed__GL_Account__c Where Name IN:glAccounts]) {
-            glAccMap.put(glAcc.Name,glAcc.Id);
-        }
-        for(AcctSeed__Accounting_Variable__c glv : [Select Id,Name from AcctSeed__Accounting_Variable__c Where Name IN:glVs]) {
-            glVMap.put(glv.Name,glv.Id);
-        }
-    }
     public static void fetchFactoryPrice( String erpId ){
         for(Product2 prod : [SELECT Id, Landed_Unit_Cost__c, Partner_Price__c, 
                              (SELECT Id, UnitPrice FROM PricebookEntries 
@@ -144,7 +135,7 @@ public class AccrualTool_Controller {
         }
     }
     public static void processERPLine(AcctSeedERP__Material__c material){
-        prodPrice = new ProductPriceWrapper(material.AcctSeedERP__Product__r.Name,material.GMBLASERP__Total_Price__c);
+        prodPrice = new ProductPriceWrapper(material.AcctSeedERP__Product__r.Name,material.GMBLASERP__Total_Price__c,material.AcctSeedERP__Product__r.Insurance_Profit_Percent_Override__c);
         if(material.AcctSeedERP__Product__r.AcctSeed__Expense_GL_Account__c != null 
            && material.AcctSeedERP__Product__r.AcctSeed__Expense_GL_Account__r.AcctSeed__Type__c == 'Expense') // Expense GL Account 
         {
@@ -164,20 +155,26 @@ public class AccrualTool_Controller {
                 
                 departmentMapInsurance.put(material.AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_2__r.Name,prodPriceMapInsurance);
                 system.debug('prodPriceMapInsurance >> '+prodPriceMapInsurance);
-                
-                if(!jounralEntryLineWrapperInsurance.containsKey(material.AcctSeedERP__Product__r.AcctSeed__Expense_GL_Account__c)) {
-                    jounralEntryLineWrapperInsurance.put(material.AcctSeedERP__Product__r.AcctSeed__Expense_GL_Account__c,
+                String key = material.AcctSeedERP__Product__r.AcctSeed__Expense_GL_Account__c+
+                    ''+material.AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_1__c+
+                    ''+material.AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_2__c;
+
+                Decimal profitPercent = material.AcctSeedERP__Product__r.Insurance_Profit_Percent_Override__c;
+                profitPercent = ( profitPercent == null ) ? 50.00 : profitPercent;
+                Decimal debitAmt = (material.GMBLASERP__Total_Price__c)*(1-(profitPercent/100));
+                if(!jounralEntryLineWrapperInsurance.containsKey(key)) {
+                    jounralEntryLineWrapperInsurance.put(key,
                                                          new JournalEntryLineWrapper(material.AcctSeedERP__Product__r.AcctSeed__Expense_GL_Account__c,
                                                                                      material.AcctSeedERP__Product__r.AcctSeed__Expense_GL_Account__r.Name,
                                                                                      material.AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_1__c,
                                                                                      material.AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_1__r.Name,
                                                                                      material.AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_2__c,
                                                                                      material.AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_2__r.Name,
-                                                                                     material.GMBLASERP__Total_Price__c,0.0));
+                                                                                     debitAmt,0.0));
                 } else {
-                    JournalEntryLineWrapper Insurance = jounralEntryLineWrapperInsurance.get(material.AcctSeedERP__Product__r.AcctSeed__Expense_GL_Account__c);
-                    Insurance.Debit = Insurance.Debit + material.GMBLASERP__Total_Price__c;
-                    jounralEntryLineWrapperInsurance.put(material.AcctSeedERP__Product__r.AcctSeed__Expense_GL_Account__c,Insurance);
+                    JournalEntryLineWrapper Insurance = jounralEntryLineWrapperInsurance.get(key);
+                    Insurance.Debit = Insurance.Debit + debitAmt;
+                    jounralEntryLineWrapperInsurance.put(key,Insurance);
                 }
             }
             else {
@@ -185,9 +182,10 @@ public class AccrualTool_Controller {
                 //Use factory price here
                 ProductPriceWrapper newProdPrice = prodPrice; 
                 if(factoryPrice.containsKey(material.AcctSeedERP__Product__c)) {
-                    newProdPrice = new ProductPriceWrapper(material.AcctSeedERP__Product__r.Name,factoryPrice.get(material.AcctSeedERP__Product__c));
+                    newProdPrice = new ProductPriceWrapper(material.AcctSeedERP__Product__r.Name,factoryPrice.get(material.AcctSeedERP__Product__c),material.AcctSeedERP__Product__r.Insurance_Profit_Percent_Override__c);
                 } else {
-                    return;
+                    newProdPrice = new ProductPriceWrapper(material.AcctSeedERP__Product__r.Name,0.0,material.AcctSeedERP__Product__r.Insurance_Profit_Percent_Override__c);
+                    //return;
                 }
                 if(!departmentMapExpense.containsKey(material.AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_2__r.Name)) {
                     departmentMapExpense.put(material.AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_2__r.Name,new Map<String,List<ProductPriceWrapper>>());
@@ -201,20 +199,23 @@ public class AccrualTool_Controller {
                 
                 departmentMapExpense.put(material.AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_2__r.Name,prodPriceMapExpense);
                 system.debug('prodPriceMapExpense >> '+prodPriceMapExpense);
-                
-                if(!jounralEntryLineWrapperExpense.containsKey(material.AcctSeedERP__Product__r.AcctSeed__Expense_GL_Account__c)) {
-                    jounralEntryLineWrapperExpense.put(material.AcctSeedERP__Product__r.AcctSeed__Expense_GL_Account__c,
+                String key = material.AcctSeedERP__Product__r.AcctSeed__Expense_GL_Account__c+
+                    ''+material.AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_1__c+
+                    ''+material.AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_2__c;
+            
+                if(!jounralEntryLineWrapperExpense.containsKey(key)) {
+                    jounralEntryLineWrapperExpense.put(key,
                                                        new JournalEntryLineWrapper(material.AcctSeedERP__Product__r.AcctSeed__Expense_GL_Account__c,
                                                                                    material.AcctSeedERP__Product__r.AcctSeed__Expense_GL_Account__r.Name,
                                                                                    material.AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_1__c,
                                                                                    material.AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_1__r.Name,
                                                                                    material.AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_2__c,
                                                                                    material.AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_2__r.Name,
-                                                                                   material.GMBLASERP__Total_Price__c,0.0));
+                                                                                   newProdPrice.price,0.0));
                 } else {
-                    JournalEntryLineWrapper Expense = jounralEntryLineWrapperExpense.get(material.AcctSeedERP__Product__r.AcctSeed__Expense_GL_Account__c);
-                    Expense.Debit = Expense.Debit + material.GMBLASERP__Total_Price__c;
-                    jounralEntryLineWrapperExpense.put(material.AcctSeedERP__Product__r.AcctSeed__Expense_GL_Account__c,Expense);
+                    JournalEntryLineWrapper Expense = jounralEntryLineWrapperExpense.get(key);
+                    Expense.Debit = Expense.Debit + newProdPrice.price;
+                    jounralEntryLineWrapperExpense.put(key,Expense);
                 }
             }
         } 
@@ -236,36 +237,56 @@ public class AccrualTool_Controller {
             
             departmentMapRevenue.put(material.AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_2__r.Name,prodPriceMapRevenue);
             system.debug('prodPriceMapRevenue >> '+prodPriceMapRevenue);
-            
-            if(!jounralEntryLineWrapperRevenue.containsKey(material.AcctSeedERP__Product__r.AcctSeed__Expense_GL_Account__c)) {
-                jounralEntryLineWrapperRevenue.put(material.AcctSeedERP__Product__r.AcctSeed__Expense_GL_Account__c,
-                                                   new JournalEntryLineWrapper(material.AcctSeedERP__Product__r.AcctSeed__Expense_GL_Account__c,
-                                                                               material.AcctSeedERP__Product__r.AcctSeed__Expense_GL_Account__r.Name,
+            String key = material.AcctSeedERP__Product__r.AcctSeed__Revenue_GL_Account__c+
+                ''+material.AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_1__c+
+                ''+material.AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_2__c;
+            if(!jounralEntryLineWrapperRevenue.containsKey(key)) {
+                jounralEntryLineWrapperRevenue.put(key,
+                                                   new JournalEntryLineWrapper(material.AcctSeedERP__Product__r.AcctSeed__Revenue_GL_Account__c,
+                                                                               material.AcctSeedERP__Product__r.AcctSeed__Revenue_GL_Account__r.Name,
                                                                                material.AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_1__c,
                                                                                material.AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_1__r.Name,
                                                                                material.AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_2__c,
                                                                                material.AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_2__r.Name,
                                                                                0.0,material.GMBLASERP__Total_Price__c));
             } else {
-                JournalEntryLineWrapper Revenue = jounralEntryLineWrapperRevenue.get(material.AcctSeedERP__Product__r.AcctSeed__Expense_GL_Account__c);
+                JournalEntryLineWrapper Revenue = jounralEntryLineWrapperRevenue.get(key);
                 Revenue.Credit = Revenue.Credit + material.GMBLASERP__Total_Price__c;
-                jounralEntryLineWrapperRevenue.put(material.AcctSeedERP__Product__r.AcctSeed__Expense_GL_Account__c,Revenue);
+                jounralEntryLineWrapperRevenue.put(key,Revenue);
             }
         }
     }
     
-    public static void pricessJournalLines(String erpId){
+    public static void processJournalLines(String erpId){
         Decimal journalDebitTotal = 0.0;
         Decimal journalCreditTotal = 0.0;
         Decimal revenueGLTotal = 0.0;
+        
+        AcctSeed__Project__c erpRec ;
+        
+        for(AcctSeed__Project__c erp : [SELECT Id,Name,GL_Account_Variable_1__c,GL_Account_Variable_1__r.Name,
+                                        GL_Account_Variable_2__c,GL_Account_Variable_2__r.Name,
+                                        (Select Id From Journal_Entries__r Where (Name Like 'Accrual%')) 
+                                        FROM AcctSeed__Project__c WHERE Id=:erpId LIMIT 1]) 
+        {
+            erpRec = erp;
+        }
+        glAccounts.add(gcConstants.idGlAccruedRevenue);
+        glAccounts.add(gcConstants.idGlAccruedExpenses);
+        glAccounts.add(gcConstants.idGlCommissionExpense);
+        
+        for(AcctSeed__GL_Account__c glAcc : [Select Id,Name from AcctSeed__GL_Account__c Where Id IN:glAccounts]) {
+            glAccMap.put(glAcc.Id,glAcc.Name);
+        }
+        
         for(JournalEntryLineWrapper lineWrapper: jounralEntryLineWrapperRevenue.values()) {
             revenueGLTotal += lineWrapper.Credit;
             journalCreditTotal += lineWrapper.Credit;
         }
         JournalEntryLineWrapper revenueGL = new JournalEntryLineWrapper(
-            glAccMap.get(accrualSettingMap.get('Revenue').GLAccount__c),accrualSettingMap.get('Revenue').GLAccount__c,
-            glVMap.get(accrualSettingMap.get('Revenue').GLV1__c),accrualSettingMap.get('Revenue').GLV1__c,
-            glVMap.get(accrualSettingMap.get('Revenue').GLV2__c),accrualSettingMap.get('Revenue').GLV2__c,
+            gcConstants.idGlAccruedRevenue,glAccMap.get(gcConstants.idGlAccruedRevenue),
+            erpRec.GL_Account_Variable_1__c,erpRec.GL_Account_Variable_1__r.Name,
+            erpRec.GL_Account_Variable_2__c,erpRec.GL_Account_Variable_2__r.Name,
             revenueGLTotal,0.0
         );
         journalDebitTotal+=revenueGLTotal;
@@ -276,9 +297,9 @@ public class AccrualTool_Controller {
             journalDebitTotal += lineWrapper.Debit;
         }
         JournalEntryLineWrapper expenseGL = new JournalEntryLineWrapper(
-            glAccMap.get(accrualSettingMap.get('Expense').GLAccount__c),accrualSettingMap.get('Expense').GLAccount__c,
-            glVMap.get(accrualSettingMap.get('Expense').GLV1__c),accrualSettingMap.get('Expense').GLV1__c,
-            glVMap.get(accrualSettingMap.get('Expense').GLV2__c),accrualSettingMap.get('Expense').GLV2__c,
+            gcConstants.idGlAccruedExpenses,glAccMap.get(gcConstants.idGlAccruedExpenses),
+            erpRec.GL_Account_Variable_1__c,erpRec.GL_Account_Variable_1__r.Name,
+            erpRec.GL_Account_Variable_2__c,erpRec.GL_Account_Variable_2__r.Name,
             0.0,expenseGLTotal
         );
         journalCreditTotal+=expenseGLTotal;
@@ -289,45 +310,47 @@ public class AccrualTool_Controller {
             journalDebitTotal += lineWrapper.Debit;
         }
         JournalEntryLineWrapper insuranceGL = new JournalEntryLineWrapper(
-            glAccMap.get(accrualSettingMap.get('Insurance').GLAccount__c),accrualSettingMap.get('Insurance').GLAccount__c,
-            glVMap.get(accrualSettingMap.get('Insurance').GLV1__c),accrualSettingMap.get('Insurance').GLV1__c,
-            glVMap.get(accrualSettingMap.get('Insurance').GLV2__c),accrualSettingMap.get('Insurance').GLV2__c,
+            gcConstants.idGlAccruedExpenses,glAccMap.get(gcConstants.idGlAccruedExpenses),
+            erpRec.GL_Account_Variable_1__c,erpRec.GL_Account_Variable_1__r.Name,
+            erpRec.GL_Account_Variable_2__c,erpRec.GL_Account_Variable_2__r.Name,
             0.0,insuranceGLTotal
         );
         journalCreditTotal+=insuranceGLTotal;
         
-        Map<Id,JournalEntryLineWrapper> jounralEntryLineWrapperCommission = new Map<Id,JournalEntryLineWrapper>();
+        Map<string,JournalEntryLineWrapper> jounralEntryLineWrapperCommission = new Map<string,JournalEntryLineWrapper>();
         CommissionWrapper commWrapper = fetchCommissionRecords( erpId );
             
         for(CommissionPaymentWrapper commPaymentWrapper : commWrapper.commPaymentWrapper) {
             for(CommissionPaymentRecordsWrapper commPayments : commPaymentWrapper.commPayments) {
-                if(!jounralEntryLineWrapperCommission.containsKey(commPayments.GLAccountId)) {
-                    jounralEntryLineWrapperCommission.put(commPayments.GLAccountId,
+                 String key = commPayments.GLAccountId+ ''+commPayments.GLV1Id+ ''+commPayments.GLV2Id;
+                if(!jounralEntryLineWrapperCommission.containsKey(key)) {
+                    jounralEntryLineWrapperCommission.put(key,
                                                           new JournalEntryLineWrapper(commPayments.GLAccountId,
                                                                                       commPayments.GLAccountName,
                                                                                       commPayments.GLV1Id,
                                                                                       commPayments.GLV1Name,
                                                                                       commPayments.GLV2Id,
                                                                                       commPayments.GLV2Name,
-                                                                                      0.0,
-                                                                                      commPayments.Amount));
+                                                                                      commPayments.Amount,
+                                                                                      0.0));
                 } else {
-                    JournalEntryLineWrapper commission = jounralEntryLineWrapperCommission.get(commPayments.GLAccountId);
-                    commission.Credit = commission.Credit + commPayments.Amount;
-                    jounralEntryLineWrapperCommission.put(commPayments.GLAccountId,commission);
+                    JournalEntryLineWrapper commission = jounralEntryLineWrapperCommission.get(key);
+                    commission.Debit = commission.Debit + commPayments.Amount;
+                    jounralEntryLineWrapperCommission.put(key,commission);
                 }
             }
         }
         Decimal commissionGLTotal = 0.0;
         for(JournalEntryLineWrapper lineWrapper: jounralEntryLineWrapperCommission.values()) {
-            commissionGLTotal += lineWrapper.Credit;
-            journalCreditTotal += lineWrapper.Credit;
+            commissionGLTotal += lineWrapper.Debit;
+            journalCreditTotal += lineWrapper.Debit;
         }
         JournalEntryLineWrapper commissionGL = new JournalEntryLineWrapper(
-            glAccMap.get(accrualSettingMap.get('Commission').GLAccount__c),accrualSettingMap.get('Commission').GLAccount__c,
-            glVMap.get(accrualSettingMap.get('Commission').GLV1__c),accrualSettingMap.get('Commission').GLV1__c,
-            glVMap.get(accrualSettingMap.get('Commission').GLV2__c),accrualSettingMap.get('Commission').GLV2__c,
-            commissionGLTotal,0.0
+            gcConstants.idGlAccruedExpenses,glAccMap.get(gcConstants.idGlAccruedExpenses),
+            //gcConstants.idGlCommissionExpense,glAccMap.get(gcConstants.idGlCommissionExpense),
+            erpRec.GL_Account_Variable_1__c,erpRec.GL_Account_Variable_1__r.Name,
+            erpRec.GL_Account_Variable_2__c,erpRec.GL_Account_Variable_2__r.Name,
+            0.0,commissionGLTotal
         );
         journalDebitTotal+=commissionGLTotal;
         
@@ -356,12 +379,14 @@ public class AccrualTool_Controller {
             Map<String,List<ProductPriceWrapper>> tmpMap = departmentMapRevenue.get(department);
             for(String glAccount : tmpMap.keyset()) {
                 Decimal totalPrice = 0.0;
+                Decimal totalCost = 0.0;
                 for(ProductPriceWrapper prodPriceVar : tmpMap.get(glAccount)) {
                     totalPrice += prodPriceVar.price;
                     totalAmount += prodPriceVar.price;
+                    totalCost += prodPriceVar.cost;
                 }
                 
-                lineItemWrapp.add(new LineItemWrapper(tmpMap.get(glAccount),glAccount,totalPrice));
+                lineItemWrapp.add(new LineItemWrapper(tmpMap.get(glAccount),glAccount,totalPrice,totalCost));
             }
             revenueWrapper.add(new DepartmentWrapper(department,lineItemWrapp));
         }
@@ -378,12 +403,14 @@ public class AccrualTool_Controller {
             Map<String,List<ProductPriceWrapper>> tmpMap = departmentMapExpense.get(department);
             for(String glAccount : tmpMap.keyset()) {
                 Decimal totalPrice = 0.0;
+                Decimal totalCost = 0.0;
                 for(ProductPriceWrapper prodPriceVar : tmpMap.get(glAccount)) {
                     totalPrice += prodPriceVar.price;
                     totalAmount += prodPriceVar.price;
+                    totalCost += prodPriceVar.cost;
                 }
                 
-                lineItemWrapp.add(new LineItemWrapper(tmpMap.get(glAccount),glAccount,totalPrice));
+                lineItemWrapp.add(new LineItemWrapper(tmpMap.get(glAccount),glAccount,totalPrice,totalCost));
             }
             expenseWrapper.add(new DepartmentWrapper(department,lineItemWrapp));
         }
@@ -399,12 +426,14 @@ public class AccrualTool_Controller {
             Map<String,List<ProductPriceWrapper>> tmpMap = departmentMapInsurance.get(department);
             for(String glAccount : tmpMap.keyset()) {
                 Decimal totalPrice = 0.0;
+                Decimal totalCost = 0.0;
                 for(ProductPriceWrapper prodPriceVar : tmpMap.get(glAccount)) {
                     totalPrice += prodPriceVar.price;
-                    totalAmount += prodPriceVar.price;
+                    totalAmount += prodPriceVar.cost;
+                    totalCost += prodPriceVar.cost;
                 }
                 
-                lineItemWrapp.add(new LineItemWrapper(tmpMap.get(glAccount),glAccount,totalPrice));
+                lineItemWrapp.add(new LineItemWrapper(tmpMap.get(glAccount),glAccount,totalPrice,totalCost));
             }
             insuranceWrapper.add(new DepartmentWrapper(department,lineItemWrapp));
         }
@@ -416,14 +445,12 @@ public class AccrualTool_Controller {
     {
         system.debug('erpId >> '+erpId);
         
-        fetchCustomSetting();
-        fetchGLAccounts();
         fetchFactoryPrice(erpId);
         
         for(AcctSeedERP__Material__c material : [select id,Serial_Number__c,AcctSeedERP__Product__c,AcctSeedERP__Product__r.Name,GMBLASERP__Total_Price__c,
                                                  AcctSeedERP__Product__r.AcctSeed__Expense_GL_Account__c,AcctSeedERP__Product__r.AcctSeed__Expense_GL_Account__r.Name,AcctSeedERP__Product__r.AcctSeed__Expense_GL_Account__r.AcctSeed__Type__c,
                                                  AcctSeedERP__Product__r.AcctSeed__Revenue_GL_Account__c,AcctSeedERP__Product__r.AcctSeed__Revenue_GL_Account__r.Name,AcctSeedERP__Product__r.AcctSeed__Revenue_GL_Account__r.AcctSeed__Type__c,
-                                                 AcctSeedERP__Product__r.RecordType.Name,
+                                                 AcctSeedERP__Product__r.RecordType.Name,AcctSeedERP__Product__r.Insurance_Profit_Percent_Override__c,
                                                  AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_1__c,AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_1__r.Name,
                                                  AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_2__c,AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_2__r.Name
                                                  from AcctSeedERP__Material__c 
@@ -432,7 +459,7 @@ public class AccrualTool_Controller {
             processERPLine(material);
         }
         
-        pricessJournalLines(erpId);
+        processJournalLines(erpId);
         processRevenueWrapper();
         processExpenseWrapper();
         processInsuranceWrapper();
@@ -447,19 +474,19 @@ public class AccrualTool_Controller {
         system.debug('erpId >> '+erpId);
         system.debug('jounralEntryDate >> '+jounralEntryDate);
         
-        String message = 'Success';
+        String message = 'Journal Entry Created!';
         Map<String,AccuralWrapper> groupingWrapper = fetchOrderLines(erpId);
         AccuralWrapper wrapper = groupingWrapper.get('JournalLines');
         List<JournalEntryLineWrapper> journalEntryLineWrapper = wrapper.journalEntryLineWrapper;
         
-        Date jeDate = Date.valueOf(jounralEntryDate);
-        
         Savepoint sp = Database.setSavepoint();
         try{
+            Date jeDate = Date.valueOf(jounralEntryDate);
+            
             AcctSeed__Project__c project = [SELECT Id,Name,Stage__c,AcctSeed__Status__c,AcctSeedERP__Work_Order_Number__c
                                             FROM AcctSeed__Project__c WHERE Id=:erpId LIMIT 1];
             
-            List<AcctSeed__Journal_Entry__c> existingEntry = [Select Id From AcctSeed__Journal_Entry__c Where Project__c =:project.Id];
+            //List<AcctSeed__Journal_Entry__c> existingEntry = [Select Id From AcctSeed__Journal_Entry__c Where Project__c =:project.Id];
             
             List<AcctSeed__Journal_Entry_Line__c> journalEntries = new List<AcctSeed__Journal_Entry_Line__c>();
             AcctSeed__Journal_Entry__c journalEntry = new AcctSeed__Journal_Entry__c(
@@ -469,24 +496,24 @@ public class AccrualTool_Controller {
                 Project__c = project.Id
             );
             
-            if(existingEntry.size() > 0) {
-                journalEntry.Id = existingEntry[0].Id;
-            }
+            //if(existingEntry.size() > 0) {
+              //  journalEntry.Id = existingEntry[0].Id;
+            //}
             
-            upsert journalEntry;
+            insert journalEntry;
             
-            if(existingEntry.size() > 0) {
+            //if(existingEntry.size() > 0) {
                 // delete existing lines
-                delete ([Select Id From AcctSeed__Journal_Entry_Line__c Where AcctSeed__Journal_Entry__c =:journalEntry.Id]);
-            }
+            //    delete ([Select Id From AcctSeed__Journal_Entry_Line__c Where AcctSeed__Journal_Entry__c =:journalEntry.Id]);
+            //}
             for(JournalEntryLineWrapper wrap : journalEntryLineWrapper) {
                 
                 AcctSeed__Journal_Entry_Line__c je = new AcctSeed__Journal_Entry_Line__c();
                 je.AcctSeed__GL_Account__c = wrap.GLAccountId;
-                if(wrap.Credit != null && wrap.Credit > 0.0) {
-                    je.AcctSeed__Credit__c = wrap.Credit;
+                if(wrap.Credit!=null && wrap.Credit!=0.0) {
+                je.AcctSeed__Credit__c = wrap.Credit;
                 } else {
-                    je.AcctSeed__Debit__c = wrap.Debit;
+                je.AcctSeed__Debit__c = wrap.Debit;
                 }
                 //je.AcctSeed__Project__c = project.Id;
                 je.AcctSeed__GL_Account_Variable_1__c = wrap.GLV1Id;
@@ -498,13 +525,28 @@ public class AccrualTool_Controller {
                 journalEntries.add(je);
             }
             
+            try{
             insert journalEntries;
-            AcctSeed.JournalEntryPostService.postJournalEntries(new List<AcctSeed__Journal_Entry__c>{journalEntry});
+            }
+            catch(Exception e){
+                message = 'Error while Jounral Entry Creation';
+                system.debug('Exception : '+e.getMessage());
+                system.debug(e.getStackTraceString());
+                return message;
+            }
+            
+            try{
+                AcctSeed.JournalEntryPostService.postJournalEntries(new List<AcctSeed__Journal_Entry__c>{journalEntry});
+            }
+            catch(Exception e){
+                message = 'Error while Posting Jounral Entry '+e.getMessage();
+                return message;
+            }
         }
         catch(Exception e) {
             Database.rollback(sp);
             system.debug('Exception - '+e);
-            message = e.getMessage();
+            message = 'Error: '+e.getMessage();
         }
         return message;
         
@@ -527,11 +569,13 @@ public class AccrualTool_Controller {
         @AuraEnabled public Boolean isReviewed;
         @AuraEnabled public List<CommissionRecordWrapper> commissionRecordsList;
         @AuraEnabled public List<CommissionPaymentWrapper> commPaymentWrapper;
+        @AuraEnabled public Decimal totalAmount;
         
-        public CommissionWrapper(Boolean isReviewed, List<CommissionRecordWrapper> commissionRecordsList, List<CommissionPaymentWrapper> commPaymentWrapper) {
+        public CommissionWrapper(Boolean isReviewed, List<CommissionRecordWrapper> commissionRecordsList, List<CommissionPaymentWrapper> commPaymentWrapper, Decimal totalAmount) {
             this.isReviewed = isReviewed;
             this.commissionRecordsList = commissionRecordsList;
             this.commPaymentWrapper = commPaymentWrapper;
+            this.totalAmount = totalAmount;
         }
     }
     public class CommissionRecordWrapper {
@@ -600,11 +644,13 @@ public class AccrualTool_Controller {
         @AuraEnabled public List<ProductPriceWrapper> productPriceWrapperList;
         @AuraEnabled public String GLAccountName;
         @AuraEnabled public Decimal totalPrice;
+        @AuraEnabled public Decimal totalCost;
         
-        public LineItemWrapper(List<ProductPriceWrapper> productPriceWrapperList, String GLAccountName,Decimal totalPrice) {
+        public LineItemWrapper(List<ProductPriceWrapper> productPriceWrapperList, String GLAccountName,Decimal totalPrice,Decimal totalCost) {
             this.productPriceWrapperList = productPriceWrapperList;
             this.GLAccountName = GLAccountName;
             this.totalPrice = totalPrice;
+            this.totalCost = totalCost;
         }
     }
     public class ProductPriceWrapper {
@@ -613,11 +659,17 @@ public class AccrualTool_Controller {
         @AuraEnabled public Decimal price;
         @AuraEnabled public Decimal cost;
         
-        public ProductPriceWrapper(String productName,Decimal price) {
+        public ProductPriceWrapper(String productName,Decimal price, Decimal profitPercent) {
             this.productName = productName;
             this.price = price;
-            this.profit = '50%';
-            this.cost = price*(1-0.5);
+            String strProfit = String.valueOf(profitPercent);
+            if(!String.isBlank(strProfit) && strProfit.indexOf('.') > 0)
+            {
+                strProfit = strProfit.substring(0,strProfit.indexOf('.'));
+            }
+            this.profit = profitPercent == null ? '50%' : strProfit +'%';
+            Decimal percentOverride = profitPercent == null ? 50.00 : profitPercent;
+            this.cost = price*(1-(percentOverride/100));
         }
     }
     public class JournalEntryLineWrapper {
