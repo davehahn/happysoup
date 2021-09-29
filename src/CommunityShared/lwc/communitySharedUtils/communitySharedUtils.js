@@ -95,55 +95,60 @@ const decodeHTML = (html) => {
 └─┘┴ ┴┴─┘└─┘└─┘┴─┘┴ ┴ ┴ └─┘  └┴┘└─┘└─┘┴ ┴┴─┘┴   ┴  ┴ ┴ ┴ ┴ ┴└─┘┘└┘ ┴
 =====================*/
 const weeklyPayment = (price, lang = 'en') => {
-	let rate = 0;
-	let total_payments = 0;
-	if(price >= 23000){
-		rate = 0.0599 / 52;
-		total_payments = 1040;
-	} else if(price >= 10000){
-		rate = 0.0599 / 52;
-		total_payments = 780;
-	} else if(price >= 1000){
-		//This should actually be >= 5000, but I need to figure out what to do with those that would come back as $0, and it's better to have a value greater than zero that can be dismissed as 'it's like $X/month, but you can't finance this one' rather than have it show it could be $0/week
-		rate = 0.0799 / 52;
-		total_payments = 364;
-	}
+  if(price){
+  	let rate = 0;
+    	let total_payments = 0;
+    	if(price >= 23000){
+    		rate = 0.0599 / 52;
+    		total_payments = 1040;
+    	} else if(price >= 10000){
+    		rate = 0.0599 / 52;
+    		total_payments = 780;
+    	} else if(price >= 1000){
+    		//This should actually be >= 5000, but I need to figure out what to do with those that would come back as $0, and it's better to have a value greater than zero that can be dismissed as 'it's like $X/month, but you can't finance this one' rather than have it show it could be $0/week
+    		rate = 0.0799 / 52;
+    		total_payments = 364;
+    	}
 
-	let weekly = price * ( rate / ( 1 - Math.pow( ( 1 + rate ), - total_payments ) ) );
-			weekly = weekly.toFixed(0);
-	let settings = {style: "currency", currency: 'CAD'};
-	if(lang === 'en'){
-  	  return new Intl.NumberFormat('en-CA', {
-      												style: 'currency',
-      												currency: 'CAD',
-      												minimumFractionDigits: 0
-      												}).format(weekly);
-   	} else {
-   		return new Intl.NumberFormat('fr-CA', {
-      												style: 'currency',
-      												currency: 'CAD',
-      												minimumFractionDigits: 0
-      												}).format(weekly);
-    }
+    	let weekly = price * ( rate / ( 1 - Math.pow( ( 1 + rate ), - total_payments ) ) );
+    			weekly = weekly.toFixed(0);
+    	let settings = {style: "currency", currency: 'CAD'};
+    	if(lang === 'en'){
+      	  return new Intl.NumberFormat('en-CA', {
+          												style: 'currency',
+          												currency: 'CAD',
+          												minimumFractionDigits: 0
+          												}).format(weekly);
+       	} else {
+       		let formattedPrice = new Intl.NumberFormat('fr', {
+          												style: 'currency',
+          												currency: 'CAD',
+          												minimumFractionDigits: 0
+          												}).format(weekly);
+          return formattedPrice.replace('CA', '');
+        }
+  }
 }
 
 const formatPrice = (price, round = false, lang = 'en') => {
-	price = (round) ? price.toFixed(0) : price;
-	let settings = {style: "currency", currency: 'CAD'};
-	if(lang === 'en'){
-	  return new Intl.NumberFormat('en-CA', {
-    												style: 'currency',
-    												currency: 'CAD',
-    												minimumFractionDigits: 0
-    												}).format(price);
- 	} else {
- 		return new Intl.NumberFormat('fr-CA', {
-    												style: 'currency',
-    												currency: 'CAD',
-    												minimumFractionDigits: 0
-    												}).format(price);
-  }
-
+	if(price){
+	  price = (round) ? price.toFixed(0) : price;
+    	let settings = {style: "currency", currency: 'CAD'};
+    	if(lang === 'en'){
+    	  return new Intl.NumberFormat('en-CA', {
+        												style: 'currency',
+        												currency: 'CAD',
+        												minimumFractionDigits: 0
+        												}).format(price);
+     	} else {
+     		let formattedPrice = new Intl.NumberFormat('fr', {
+																style: 'currency',
+																currency: 'CAD',
+																minimumFractionDigits: 0
+																}).format(price);
+				return formattedPrice.replace('CA', '');
+      }
+ }
 }
 
 const setWrapperClass = (width, additionalClassNames = null) => {

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
-  <apiVersion>50.0</apiVersion>
-  <description>Factory Store Boat Details</description>
+  <apiVersion>52.0</apiVersion>
+  <description>Factory Store Used Boat Details</description>
   <isExposed>true</isExposed>
   <targets>
     <target>lightningCommunity__Page</target>
@@ -9,8 +9,7 @@
   </targets>
   <targetConfigs>
     <targetConfig targets="lightningCommunity__Default">
-      <property name="campaignId" type="String" label="Lead Form Campaign Id" required="true" description="If you're unsure what this is, or where to get it, please contact the Marketing Director."/>
-      <property name="moreInfoBackground" type="ContentReference" label="More Info Background Image" description="If you can't find what you're looking for, upload it to Salesforce CMS" filter="cms_image"/>
+      <property name="recordId" type="String" label="Record ID" required="true"/>
       <property name="sectionWidth"
                 type="String"
                 label="Maximum Width of Section"
@@ -18,5 +17,5 @@
                 description="Relative to containing element. Screen = Full Width of Screen, Container = Full Width of Containing Element, Wide = 1645px, Average = 1300px, Thin = 1080px, Extra Thin = 780px" default="Container" />
     </targetConfig>
   </targetConfigs>
-  <masterLabel>Factory Store Boat Details</masterLabel>
+  <masterLabel>Factory Store Used Boat Details</masterLabel>
 </LightningComponentBundle>

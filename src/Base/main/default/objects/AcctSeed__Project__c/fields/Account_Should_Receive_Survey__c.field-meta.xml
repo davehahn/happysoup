@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Account_Should_Receive_Survey__c</fullName>
+    <externalId>false</externalId>
+    <formula>IF( AcctSeed__Account__r.IsPersonAccount , NOT(AcctSeed__Account__r.PersonContact.Do_Not_Send_Survey__c) , false)</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Account Should Receive Survey</label>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

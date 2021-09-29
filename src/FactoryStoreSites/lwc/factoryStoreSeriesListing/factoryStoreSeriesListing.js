@@ -57,7 +57,8 @@ export default class FactoryStoreSeriesListing extends NavigationMixin(Lightning
 		if(this.isEN){
 			return ((series.toLowerCase().indexOf('series') !== -1) || (series.toLowerCase().indexOf('splash') !== -1)) ? series : series + '-Series';
   	} else {
-  	  return ((series.toLowerCase().indexOf('series') !== -1) || (series.toLowerCase().indexOf('splash') !== -1)) ? series : 'Serie ' + series;
+  	  console.log('series name: ', series);
+  	  return ((series.toLowerCase().indexOf('series') !== -1) || (series.toLowerCase().indexOf('splash') !== -1)) ? 'Série ' + series.replace('-Series', '') : 'Série ' + series;
    }
 
  }

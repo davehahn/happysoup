@@ -4,7 +4,7 @@
 
 import { LightningElement, api, wire } from 'lwc';
 import fetchStaffList from '@salesforce/apex/FactoryStoreStaffList_Controller.fetchStaffList';
-import { setWrapperClass } from 'c/communitySharedUtils';
+import { setWrapperClass, renderEN, renderFR } from 'c/communitySharedUtils';
 import Id from '@salesforce/community/Id';
 import fetchCommunityDetails from '@salesforce/apex/CommSharedURL_Controller.fetchCommunityDetails';
 import { stringy, stripParentheses, rewriteMotorName, rewriteTrailerName, convertLength, parseLocationName } from 'c/communitySharedUtils';
@@ -20,6 +20,9 @@ export default class FactoryStoreStaffList extends LightningElement {
 	profilePhotoUrl;
 	communityUrl;
 	wrapperClass = 'staff';
+
+	isEN = renderEN();
+	isFR = renderFR();
 
 	@wire( fetchCommunityDetails, {communityId: Id} )
 		wiredFetchCommunityDetails( { error, data } )

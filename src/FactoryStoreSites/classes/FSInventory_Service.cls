@@ -26,10 +26,10 @@ public without sharing class FSInventory_Service {
         //loop through the serial number results of the following SOQL
         for( GMBLASERP__Serial_Number__c b : [
                 SELECT Id,
-                Name,
-                GMBLASERP__Product__r.Name,
-                Model_Year__c,
-                GMBLASERP__Product__r.Make__c
+                        Name,
+                        GMBLASERP__Product__r.Name,
+                        Model_Year__c,
+                        GMBLASERP__Product__r.Make__c
                 FROM GMBLASERP__Serial_Number__c
                 WHERE Location__c = :location
                 AND GMBLASERP__Product__r.Id = :modelId
@@ -183,6 +183,5 @@ public without sharing class FSInventory_Service {
             Equipment = e;
         }
     }
-
 
 }

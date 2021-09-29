@@ -12,5 +12,11 @@
         }
       }
       navService.navigate(pageReference);
-    }
+    },
+
+   doInit : function(component, event, helper) {
+   			var locale = $A.get("$Locale.language");
+   			var isEN = (locale === 'en') ? true : false;
+   		}
 });
+
