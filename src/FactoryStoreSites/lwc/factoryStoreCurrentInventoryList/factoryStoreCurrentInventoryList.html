@@ -18,7 +18,8 @@
             </template>
           </h5>
           <p class="item__pricing">
-            <small>À partir de:</small>
+            <template if:true={isEN}><small>Starting at:</small></template>
+            <template if:true={isFR}><small>À partir de:</small></template>
             <span class="pricing__weekly">
               {stock.Base.StartingWeeklyPrice}
               <template if:true={isEN}><strong>Per Week</strong></template>

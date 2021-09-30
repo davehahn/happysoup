@@ -102,8 +102,8 @@ export default class FactoryStoreCurrentInventoryList extends NavigationMixin(Li
  	triggerStockList(){
 		console.log('current inventory (component): ', this.storeStock);
 		this.storeStock.forEach((boat, index) => {
-		  boat.Base.StartingWeeklyPrice = (this.isEN) ? formatPrice(boat.Base.StartingRetailPrice, true) : formatPrice(boat.Base.StartingRetailPrice, true, 'fr');
-			boat.Base.StartingRetailPrice = (this.isEN) ? weeklyPayment(boat.Base.StartingRetailPrice) : weeklyPayment(boat.Base.StartingRetailPrice, 'fr');
+		  boat.Base.StartingWeeklyPrice = (this.isEN) ? weeklyPayment(boat.Base.StartingRetailPrice) : weeklyPayment(boat.Base.StartingRetailPrice, 'fr');
+			boat.Base.StartingRetailPrice = (this.isEN) ? formatPrice(boat.Base.StartingRetailPrice, true) : formatPrice(boat.Base.StartingRetailPrice, true, 'fr');
 		});
 		this.currentStock = this.storeStock;
 		this.storeStockQuantity = this.storeStock.length;
