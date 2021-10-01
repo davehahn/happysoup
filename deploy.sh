@@ -66,7 +66,7 @@ echoOut 'modifying .forceignore to not deploy staticresources or experiences'
 echo -e "\nsrc/Base/main/default/staticresources" >> .forceignore
 echo -e "\nsrc/BoatReservation/experiences" >> .forceignore
 echo -e "\nsrc/CustomerCommunity/experiences" >> .forceignore
-#echo -e "\nsrc/FactoryStoreSites/experiences" >> .forceignore
+echo -e "\nsrc/FactoryStoreSites/experiences" >> .forceignore
 echo 'Deploying the remaining metadata'
 
 if [ "$CHECKONLY" = true ]
