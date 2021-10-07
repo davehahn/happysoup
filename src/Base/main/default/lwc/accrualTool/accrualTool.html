@@ -58,7 +58,7 @@
 							<h3 class="h3Header">
 								Is this the date when the deal becomes tagged?
 							</h3>
-							<lightning-input type="date" name="journaldate" label="Journal entry Date" value={jedate}
+							<lightning-input type="date" max={maxDate} min={minDate} name="journaldate" label="Journal entry Date" value={jedate}
 								onchange={dateChange} class="width25">
 
 							</lightning-input>

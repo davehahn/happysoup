@@ -28,6 +28,16 @@ public class AccrualTool_Controller {
     public static Map<Id,Decimal> factoryPrice = new Map<Id,Decimal>();
     
     @AuraEnabled(Cacheable=true)
+    public static Map<String,String> dateRanges()
+    {
+        Map<String,String> m = new Map<String,String>();
+        Date earliestOpen = GCR_AccountingPeriod.dateEarliestOpen();
+        m.put('minDate', Datetime.newInstance(earliestOpen.year(),earliestOpen.month(),earliestOpen.day()).format('YYYY-MM-dd'));
+        m.put('maxDate', Datetime.now().format('YYYY-MM-dd'));
+        return m;
+    }
+    
+      @AuraEnabled(Cacheable=true)
     public static AcctSeed__Project__c fetchERPData( String erpId )
     {
         system.debug('erpId >> '+erpId);
@@ -37,7 +47,7 @@ public class AccrualTool_Controller {
         }
         return erpRec;
     }
-    
+
     @AuraEnabled
     public static CommissionWrapper fetchCommissionRecords( String erpId )
     {

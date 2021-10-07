@@ -12,15 +12,16 @@ import fetchCommissionLineItems from '@salesforce/apex/AccrualTool_Controller.fe
 import fetchSerializedProductsData from '@salesforce/apex/AccrualTool_Controller.fetchSerializedProducts';
 import loadExpenseAndRevenue from '@salesforce/apex/AccrualTool_Controller.fetchOrderLines';
 import createJournalEntries from '@salesforce/apex/AccrualTool_Controller.createJournalEntry';
+import fetchDateRanges from '@salesforce/apex/AccrualTool_Controller.dateRanges';
 
 import NAME_FIELD from "@salesforce/schema/AcctSeed__Project__c.Name";
 
 const fields = [NAME_FIELD]; //comma separated
-
 export default class AccrualTool extends LightningElement {
 
   @api recordId;
-
+  maxDate;
+  minDate;
   @track lineItems;
   @track commissionPayments;
   @track totalCommissions;
@@ -83,7 +84,7 @@ export default class AccrualTool extends LightningElement {
     this.showPrevious = true;
     this.getcurrentStep();
     if (this.erpStageAllowed && progStepNum == 4) {
-     
+
        this.getCommissionLineItems(progStepNum);// need to invoke this at specific step
     }
 
@@ -104,8 +105,22 @@ export default class AccrualTool extends LightningElement {
 
   dateChange(event) {
     debugger;
-    this.jedate = event.target.value;
-    this.setVisibleDate(false);
+    var jeDateSelected = event.target.value;
+    console.log('Compare');
+    console.log(this.jedate);
+    console.log(this.maxDate);
+    if(jeDateSelected > this.maxDate){
+        this.showNext = false;
+        errorToast(this, 'Journal Entry Date must be less than Today.', 'Error');
+    }
+    else if(jeDateSelected < this.minDate){
+        this.showNext = false;
+        errorToast(this, 'Journal Entry Date must be greater than the last open Period Date.', 'Error');
+    } else{
+        this.showNext = true;
+        this.jedate = jeDateSelected;
+        this.setVisibleDate(false);
+    }
   }
 
   setVisibleDate (onLoad) {
@@ -125,9 +140,9 @@ export default class AccrualTool extends LightningElement {
      date = this.jedate.substring(8);
     }
     }
-    
+
     //this.jedate = today.getDate() +"-" + (today.getMonth() + 1) +"-" + today.getFullYear() ;
-   
+
     var monthStr;
     switch(month) {
       case 1: monthStr = 'Jan'; break;
@@ -249,7 +264,17 @@ export default class AccrualTool extends LightningElement {
 
   //@wire(fetchERPRecord, { erpId: '$recordId' })
   //erprecord;
-
+  @wire( fetchDateRanges, {} )
+    wiredDateRanges(result){
+      console.log('this data: ', result);
+      if( result != undefined && result.data != undefined)
+      {
+          console.log('mxd');
+          console.log(result.data.maxDate);
+        this.maxDate = result.data.maxDate;
+        this.minDate = result.data.minDate;
+      }
+    }
 
   @wire(fetchERPRecord, { erpId: '$recordId' })
   wiredGetErpRecord(result) {
@@ -353,7 +378,7 @@ export default class AccrualTool extends LightningElement {
 
   getCommissionLineItems(progStepNum) {
     debugger;
-    
+
     fetchCommissionLineItems({ erpId: this.recordId })
       .then(result => {
         console.log(JSON.parse(JSON.stringify(result)));
