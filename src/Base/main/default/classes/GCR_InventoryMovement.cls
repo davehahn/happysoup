@@ -426,7 +426,7 @@ public without sharing class GCR_InventoryMovement {
         String objectName = listIdMove[0].getSObjectType().getDescribe().getName();
         listIdMove.clear();
 
-        if(objectName == 'AcctSeedERP__Sales_Order_Inventory_Movement__c') return;
+        //if(objectName == 'AcctSeedERP__Sales_Order_Inventory_Movement__c') return;
 
         String soql = '';
         soql += ' SELECT Id, AcctSeedERP__Inventory_Balance__r.AcctSeedERP__Product__r.AcctSeed__Inventory_GL_Account__c, GMBLASERP__Inventory_GL_Amount__c, ';
