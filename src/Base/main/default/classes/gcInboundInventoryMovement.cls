@@ -149,7 +149,7 @@ global without sharing class gcInboundInventoryMovement {
 				Map<Id,GMBLASERP__Inventory_Adjustment__c> mapAdjustmentGLV1 = new Map<Id,GMBLASERP__Inventory_Adjustment__c>();
 				for(AcctSeedERP__Inbound_Inventory_Movement__c move :listNew)
 				{
-					//if(!Test.isRunningTest())move.AcctSeedERP__Ledger__c = 'a128A000003SnkCQAS';
+					//if(!Test.isRunningTest())move.AcctSeedERP__Ledger__c = 'a123C000002DEQBQA4';
 					if(move.GMBLASERP__Inventory_Adjustment__c != null)
 						mapAdjustmentGLV1.put(move.GMBLASERP__Inventory_Adjustment__c, null);
 				}
@@ -191,12 +191,14 @@ global without sharing class gcInboundInventoryMovement {
 				setIdPTrecalcFg.add(move.AcctSeedERP__Project_Task__c);
 			}
 			setIdPTrecalcFg.remove(null);
-
-			if(!setIdPTrecalcFg.isEmpty())
-				rollUpFg(setIdPTrecalcFg);
+			if(!setIdPTrecalcFg.isEmpty()) {
+				rollUpFgFuture(setIdPTrecalcFg);
+			}
 		}
 	}
-   
+	public static void rollUpFgFuture(set<Id> setIdProjectTask) {
+		rollUpFg(setIdProjectTask);
+	}
 	public static void rollUpFg(set<Id> setIdProjectTask)
 	{
 		setIdProjectTask.remove(null);
@@ -216,6 +218,8 @@ global without sharing class gcInboundInventoryMovement {
 
 			for(AcctSeedERP__Inbound_Inventory_Movement__c move : pt.AcctSeedERP__Inbound_Inventory_Movements__r)
 			{
+				System.debug('move pt');
+				System.debug(move);
 				finishedGoods += move.GMBLASERP__Inventory_GL_Amount__c;
 			}
 
