@@ -421,6 +421,41 @@
 .customer_notes {
   margin-top: 15px;
 
+  .disclaimer-container {
+            width:98%;
+            border:1px solid #CCC;
+            color:#777;
+            font-size: 9px;
+            min-height:70px;
+            margin: 10px 1% 0;
+            &.no-border {
+              border: none;
+            }
+
+            p {
+              margin:8px;
+            }
+            .signature_container {
+              p:first-child {
+                margin-top:50px;
+                border-bottom:1px solid #777;
+                span {
+                  float:right;
+                  font-size: 11px;
+                  color: #777;
+                  position: relative;
+                  display:block;
+                  margin-top: -15px;
+                }
+                & + p {
+                  font-size: 14px;
+                  text-align: left;
+                  padding-left: 20px;
+                }
+              }
+            }
+          }
+
   .notes_container {
     width:98%;
     margin: 0 1%;
