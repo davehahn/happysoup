@@ -1,4 +1,4 @@
-<apex:page controller="ERPInvoicePDF" showHeader="false" sidebar="false" standardStylesheets="false" renderAs="pdf">
+<apex:page controller="ERPInvoicePDF" showHeader="false" sidebar="false" standardStylesheets="false" renderAs="PDF">
 
 <apex:stylesheet value="{!URLFOR($Resource.LegendPDF,'css/invoicePDF.min.css')}" />
 <apex:stylesheet value="{!URLFOR($Resource.LegendPDF,'css/invoice_page.css')}" />
@@ -883,6 +883,33 @@
         <div>
           <b>Please Remember:</b> 2" Ball at 18" height, flat 4-wiring, balance to be paid by certified funds
         </div>
+        <div class="disclaimer-container">
+
+          <apex:outputPanel rendered="{!disclaimers.size > 0}">
+            <apex:repeat value="{!disclaimers}" var="disclaimer">
+              <p>
+                <apex:outputPanel rendered="{!disclaimer.Title__c != null}" layout="none">
+                  <strong>{!disclaimer.Title__c}</strong><br />
+                </apex:outputPanel>
+                {!disclaimer.English__c}
+              </p>
+            </apex:repeat>
+          </apex:outputPanel>
+
+          <apex:outputPanel rendered="{!disclaimerRequiresSignature}">
+            <div class="signature_container">
+              <p>
+                <span>
+                  <apex:outputText value="{0, date, MMM dd'/'yy}">
+                    <apex:param value="{!NOW()}" />
+                  </apex:outputText>
+                </span>
+              </p>
+              <p>Customer Signature</p>
+            </div>
+          </apex:outputPanel>
+        </div>
+
       </div>
       <!-- ================================= CUSTOMER NOTES ========================= -->
 
