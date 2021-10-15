@@ -111,7 +111,7 @@ const weeklyPayment = (price, lang = 'en') => {
     	}
 
     	let weekly = price * ( rate / ( 1 - Math.pow( ( 1 + rate ), - total_payments ) ) );
-    			weekly = weekly.toFixed(0);
+    			weekly = parseFloat(weekly).toFixed(0);
     	let settings = {style: "currency", currency: 'CAD'};
     	if(lang === 'en'){
       	  return new Intl.NumberFormat('en-CA', {
@@ -132,7 +132,7 @@ const weeklyPayment = (price, lang = 'en') => {
 
 const formatPrice = (price, round = false, lang = 'en') => {
 	if(price){
-	  price = (round) ? price.toFixed(0) : price;
+	  price = (round) ? parseFloat(price).toFixed(0) : price;
     	let settings = {style: "currency", currency: 'CAD'};
     	if(lang === 'en'){
     	  return new Intl.NumberFormat('en-CA', {
