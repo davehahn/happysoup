@@ -29,22 +29,28 @@
 }
 
 .modelListing .modelListing__vitals .vitals__standardEquipment{
-  font-size: 0.9em;
+  font-size: 0.75em;
+  margin-top: 0.5em;
 }
 .modelListing .modelListing__vitals .vitals__standardEquipment .standardTrailer{
   white-space: nowrap;
 }
-
+.modelListing .modelListing__vitals .starting{
+	display: block;
+  font-size: 0.9em;
+  text-transform: uppercase;
+  margin: 1.25em 0 0;
+}
 .modelListing .modelListing__vitals .vitals__pricing{
   display: flex;
   align-items: center;
-  margin-top: 1.5em;
 }
 .modelListing .modelListing__vitals .vitals__pricing span{
   display: inline-block;
 	font-weight: 900;
 	line-height: 1;
 }
+
 .modelListing .modelListing__vitals .vitals__pricing .weekly{
   font-size: 2em;
 }
@@ -103,6 +109,9 @@
 }
 .modelListing .modelListing__ctas .ctas__currentStock span strong{
   font-weight: 900;
+}
+.modelListing .modelListing__ctas .ctas__currentStock span sup{
+  font-size: 0.5em;
 }
 
 .modelListing .modelListing__ctas button{

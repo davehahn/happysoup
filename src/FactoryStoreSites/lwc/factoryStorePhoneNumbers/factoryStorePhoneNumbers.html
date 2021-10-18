@@ -4,28 +4,40 @@
 
 <!-- Factory Store Phone Numbers -->
 <template>
-  <ul class="storePhoneNumbers">
-    <template if:true={hasPhoneSales}>
+  <template if:false={showOneNumber}>
+    <ul class="storePhoneNumbers">
+      <template if:true={hasPhoneSales}>
+        <li class="storePhoneNumbers__item storePhoneNumbers--sales">
+          <template if:true={isEN}><span class="label">Sales:</span></template>
+          <template if:true={isFR}><span class="label">Ventes:</span></template>
+          <lightning-icon icon-name="utility:call" alternative-text="Call Us!" size="small" title="Call Us"></lightning-icon>
+          <a href={phoneSalesLink}>{phoneSales}</a>
+        </li>
+      </template>
+      <template if:true={hasPhoneService}>
+        <li class="storePhoneNumbers__item storePhoneNumbers--service">
+          <template if:true={isEN}><span class="label">Service:</span></template>
+          <template if:true={isFR}><span class="label">Services:</span></template>
+          <a href={phoneServiceLink}>{phoneService}</a>
+        </li>
+      </template>
+      <template if:true={hasPhoneParts}>
+        <li class="storePhoneNumbers__item storePhoneNumbers--parts">
+          <template if:true={isEN}><span class="label">Parts:</span></template>
+          <template if:true={isFR}><span class="label">Pièces:</span></template>
+          <a href={phonePartsLink}>{phoneParts}</a>
+        </li>
+      </template>
+    </ul>
+  </template>
+  <template if:true={showOneNumber}>
+    <ul class="storePhoneNumbers">
       <li class="storePhoneNumbers__item storePhoneNumbers--sales">
-        <template if:true={isEN}><span class="label">Sales:</span></template>
-        <template if:true={isFR}><span class="label">Ventes:</span></template>
+        <span class="label">{showOneNumberLabel}</span>
         <lightning-icon icon-name="utility:call" alternative-text="Call Us!" size="small" title="Call Us"></lightning-icon>
-        <a href={phoneSalesLink}>{phoneSales}</a>
+        <a href={phoneSingle}>{showOneNumberDigits}</a>
       </li>
-    </template>
-    <template if:true={hasPhoneService}>
-      <li class="storePhoneNumbers__item storePhoneNumbers--service">
-        <template if:true={isEN}><span class="label">Service:</span></template>
-        <template if:true={isFR}><span class="label">Services:</span></template>
-        <a href={phoneServiceLink}>{phoneService}</a>
-      </li>
-    </template>
-    <template if:true={hasPhoneParts}>
-      <li class="storePhoneNumbers__item storePhoneNumbers--parts">
-        <template if:true={isEN}><span class="label">Parts:</span></template>
-        <template if:true={isFR}><span class="label">Pièces:</span></template>
-        <a href={phonePartsLink}>{phoneParts}</a>
-      </li>
-    </template>
-  </ul>
+    </ul>
+  </template>
+
 </template>
