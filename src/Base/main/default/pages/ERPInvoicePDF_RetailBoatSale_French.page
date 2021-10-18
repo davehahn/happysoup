@@ -884,6 +884,18 @@
         <div>
           <b>S'il vous plait, veuillez vous rappeler:</b> Diamètre de la boule 2'' avec hauteur de 18'', couette à 4 fils plats, solde dû à la livraison payable par chèque certifié
         </div>
+        <div class="disclaimer-container">
+          <apex:outputPanel rendered="{!disclaimers.size > 0}">
+            <apex:repeat value="{!disclaimers}" var="disclaimer">
+              <p>
+                <apex:outputPanel rendered="{!disclaimer.Title__c != null}" layout="none">
+                  <strong>{!disclaimer.Title__c}</strong><br />
+                </apex:outputPanel>
+                {!disclaimer.French__c}
+              </p>
+            </apex:repeat>
+          </apex:outputPanel>
+        </div>
       </div>
       <!-- ================================= CUSTOMER NOTES ========================= -->
 
