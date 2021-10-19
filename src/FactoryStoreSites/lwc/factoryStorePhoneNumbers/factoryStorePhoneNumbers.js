@@ -11,6 +11,9 @@ export default class FactoryStorePhoneNumbers extends LightningElement {
 	@api phoneSales;
 	@api phoneService;
 	@api phoneParts;
+	@api showOneNumber;
+	@api showOneNumberLabel;
+	@api showOneNumberDigits;
 
 	isEN = renderEN();
 	isFR = renderFR();
@@ -35,4 +38,8 @@ export default class FactoryStorePhoneNumbers extends LightningElement {
 	get phonePartsLink(){
 		return 'tel:' + this.phoneParts;
 	}
+
+	get phoneSingle(){
+	  return 'tel:' + this.showOneNumberDigits;
+ }
 }

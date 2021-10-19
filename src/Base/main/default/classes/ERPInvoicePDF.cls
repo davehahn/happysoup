@@ -923,6 +923,7 @@ public with sharing class ERPInvoicePDF {
     fetchPayments();
     fetchReturnPayables();
     fetchMaterial();
+    fetchDisclaimers('Quote And Sales Agreement');
     try
     {
       this.tradeinRecord = [SELECT Lien_Amount__c, Total_Value__c

@@ -24,6 +24,7 @@ export default class FactoryStoreBoatListingItem extends NavigationMixin(Lightni
 	packageLength;
 
 	currentStockQuantity;
+	hasCurrentStock = false;
 	currentStock = [];
 	stockPromises = [];
 
@@ -115,5 +116,7 @@ export default class FactoryStoreBoatListingItem extends NavigationMixin(Lightni
 
 	handleUpdateStockValue( e ){
 		this.currentStockQuantity = e.detail;
+		this.hasCurrentStock = (e.detail > 0) ? true : false;
+
  	}
 }

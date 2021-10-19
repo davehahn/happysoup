@@ -8,12 +8,9 @@
     <article class="modelListing">
       <span class="modelListing__photo" style={modelListingPhoto}></span>
       <div class="modelListing__vitals">
-        <h3 class="vitals__boatName heading heading--m">{boatName}</h3>
-        <p class="vitals__standardEquipment">
-          <template if:true={isEN}>With </template>
-          <template if:true={isFR}>Avec </template>
-          {standardMotor} <span class="standardTrailer">{standardTrailer}</span>
-        </p>
+        <h3 class="vitals__boatName heading heading--l">{boatName}</h3>
+        <template if:true={isEN}><small class="starting">Starting at:</small></template>
+        <template if:true={isFR}><small class="starting">À partir de:</small></template>
         <p class="vitals__pricing">
           <span class="weekly">
             {startingWeeklyPrice}
@@ -21,6 +18,11 @@
             <template if:true={isFR}><small>Par Semaine</small></template>
           </span>
           <span class="retail">{startingRetailPrice}</span>
+        </p>
+        <p class="vitals__standardEquipment">
+          <template if:true={isEN}>With </template>
+          <template if:true={isFR}>Avec </template>
+          {standardMotor} <span class="standardTrailer">{standardTrailer}</span>
         </p>
 
         <section class="modelListing__quickSpecs">
@@ -121,10 +123,18 @@
       </div>
 
       <div class="modelListing__ctas">
-        <h4 class="ctas__currentStock">
-          <template if:true={isEN}><span><strong>{currentStockQuantity}</strong> in stock</span></template>
-          <template if:true={isFR}><span><strong>{currentStockQuantity}</strong> en stock</span></template>
-        </h4>
+        <template if:true={hasCurrentStock}>
+          <h4 class="ctas__currentStock">
+            <template if:true={isEN}><span><strong>{currentStockQuantity}</strong> in stock<sup>&dagger;</sup></span></template>
+            <template if:true={isFR}><span><strong>{currentStockQuantity}</strong> en stock<sup>&dagger;</sup></span></template>
+          </h4>
+        </template>
+        <template if:false={hasCurrentStock}>
+          <h4 class="ctas__currentStock">
+            <template if:true={isEN}><span>Call Us!</span></template>
+            <template if:true={isFR}><span>Appelez-nous !</span></template>
+          </h4>
+        </template>
         <button class="ctas__btn btn btn--primary" data-record={boat.Base.Id} onclick={navToBoat}>
           <template if:true={isEN}>View Model</template>
           <template if:true={isFR}>En Savoir Plus</template>

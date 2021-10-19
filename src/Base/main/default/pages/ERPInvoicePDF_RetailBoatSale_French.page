@@ -884,6 +884,18 @@
         <div>
           <b>S'il vous plait, veuillez vous rappeler:</b> Diamètre de la boule 2'' avec hauteur de 18'', couette à 4 fils plats, solde dû à la livraison payable par chèque certifié
         </div>
+        <div class="disclaimer-container">
+          <apex:outputPanel rendered="{!disclaimers.size > 0}">
+            <apex:repeat value="{!disclaimers}" var="disclaimer">
+              <p>
+                <apex:outputPanel rendered="{!disclaimer.Title__c != null}" layout="none">
+                  <strong>{!disclaimer.Title__c}</strong><br />
+                </apex:outputPanel>
+                {!disclaimer.French__c}
+              </p>
+            </apex:repeat>
+          </apex:outputPanel>
+        </div>
       </div>
       <!-- ================================= CUSTOMER NOTES ========================= -->
 
@@ -1287,52 +1299,109 @@
 
         <table class="customer_ack">
           <tbody>
-            <tr>
-              <td>
-                <div>Protection assurance vie</div>
-                <div>Le solde du financement de votre véhicule est payé en cas de votre décès.</div>
-              </td>
-              <td>
-                <div class="checkbox"></div>
-                <div>Assurance refusée</div>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <div>Protection maladies graves</div>
-                <div>
-                  Le solde du financement de votre véhicule est payé en cas: de crise cardiaque, de cancer, de transplantation, d’accident vasculaire cérébral, de paralysie ou de pontage.
-                </div>
-              </td>
-              <td>
-                <div class="checkbox"></div>
-                <div>Assurance refusée</div>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <div>Protection accident - maladie </div>
-                <div>
-                  Couvre le paiement du financement de votre véhicule si vous êtes incapable de travailler. Le paiement se fait en plus de votre couverture d’emploi ou des régimes privés.
-                </div>
-              </td>
-              <td>
-                <div class="checkbox"></div>
-                <div>Assurance refusée</div>
-              </td>
-            </tr>
-             <tr>
-              <td>
-                <div>Protection de garantie prolongée</div>
-                <div>
-                  Couvre toutes réparations nécessaires applicables qui surviennent après échéance des garanties du concessionnaire.
-                </div>
-              </td>
-              <td>
-                <div class="checkbox"></div>
-                <div>Garantie refusée</div>
-              </td>
-            </tr>
+          <tr>
+            <td>
+              <div>Protection d'assurance-vie</div>
+              <div>Paie le solde de votre prêt automobile en cas de décès.</div>
+            </td>
+            <td>
+              <div class="checkbox"></div>
+              <div>Assurance Refusée</div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div>Protection d'assurance contre les maladies graves</div>
+              <div>Paie le solde de votre prêt automobile en cas de: cancer menaçant, greffe d'organe majeur, crise cardiaque, paralysie, accident vasculaire cérébral.</div>
+            </td>
+            <td>
+              <div class="checkbox"></div>
+              <div>Assurance Refusée</div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div>Protection d'assurance d’invalidité</div>
+              <div>
+                Effectue le paiement de votre prêt pour vous si vous ne pouvez pas travailler. Paye en plus de tout plan professionnel ou privé.
+              </div>
+            </td>
+            <td>
+              <div class="checkbox"></div>
+              <div>Assurance Refusée</div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div>Garantie prolongée de Mercury</div>
+              <div>
+                Couvre toutes les réparations applicables et nécessaires à votre moteur Mercury qui sont engagées après l'expiration de la garantie du fabricant.
+              </div>
+            </td>
+            <td>
+              <div class="checkbox"></div>
+              <div>Garantie Refusée</div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div>Couverture des pannes mécaniques</div>
+              <div>
+                Fournit une couverture pour protéger contre les coûts de réparation électriques et mécaniques imprévus.
+              </div>
+            </td>
+            <td>
+              <div class="checkbox"></div>
+              <div>Assurance Refusée</div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div>Protection contre la perte de valeur du véhicule</div>
+              <div>
+                Réduit l'écart entre le versement d'une assurance et l'encours de crédit en cas d'accident entraînant la perte totale de votre bateau.              </div>
+            </td>
+            <td>
+              <div class="checkbox"></div>
+              <div>Assurance Refusée</div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div>Protection Legend Shield</div>
+              <div>
+                Protège les finitions intérieures et extérieures et est couvert par une garantie de 5 ans.
+              </div>
+            </td>
+            <td>
+              <div class="checkbox"></div>
+              <div>Assurance Refusée</div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div>Protection de pneus et jantes</div>
+              <div>
+                Couvre le coût des dommages aux pneus et aux jantes causés par les dangers de la route.
+              </div>
+            </td>
+            <td>
+              <div class="checkbox"></div>
+              <div>Assurance Refusée</div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div>Couverture antivol</div>
+              <div>
+                Aide à dissuader le vol et à défaut, aide à récupérer le bateau volé et aide aux dépenses connexes.
+              </div>
+            </td>
+            <td>
+              <div class="checkbox"></div>
+              <div>Assurance Refusée</div>
+            </td>
+          </tr>
           </tbody>
         </table>
 

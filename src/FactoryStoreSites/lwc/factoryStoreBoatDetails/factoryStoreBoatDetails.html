@@ -7,14 +7,13 @@
   <div class="modelWrapper" style={bannerBg}>
     <article class={modelWrapperClass}>
       <template if:true={boatDataLoaded}>
-
         <header class="model__intro">
           <div class="intro__vitals--wrapperOuter">
             <div class="intro__vitals">
-              <span class="intro__stock">
-                <template if:true={isEN}><span><strong>{currentStockQuantity}</strong> In-Stock</span></template>
-                <template if:true={isFR}><span><strong>{currentStockQuantity}</strong> en stock</span></template>
-              </span>
+<!--              <span class="intro__stock">-->
+<!--                <template if:true={isEN}><span><strong>{currentStockQuantity}</strong> In-Stock</span></template>-->
+<!--                <template if:true={isFR}><span><strong>{currentStockQuantity}</strong> en stock</span></template>-->
+<!--              </span>-->
               <h2 class="intro__boatName heading heading--xl">{boatName}</h2>
 
               <div class="vitals__priceBlock">
@@ -46,15 +45,15 @@
           </section>
         </template>
 
-        <section class={stockWrapperClass}>
-          <template if:true={currentStockQuantity}>
-            <h3 class="heading heading--l">
-              <template if:true={isEN}>New In-Stock {boatName}s</template>
-              <template if:true={isFR}>Nouvelles {boatName} en stock</template>
-            </h3>
-          </template>
-          <c-factory-store-current-inventory-list boat={boat} boat-id={recordId} location-name={locationName} onupdatestockvalue={handleUpdateStockValue}></c-factory-store-current-inventory-list>
-        </section>
+<!--        <section class={stockWrapperClass}>-->
+<!--          <template if:true={currentStockQuantity}>-->
+<!--            <h3 class="heading heading&#45;&#45;l">-->
+<!--              <template if:true={isEN}>New In-Stock {boatName}s</template>-->
+<!--              <template if:true={isFR}>Nouvelles {boatName} en stock</template>-->
+<!--            </h3>-->
+<!--          </template>-->
+<!--          <c-factory-store-current-inventory-list boat={boat} boat-id={recordId} location-name={locationName} onupdatestockvalue={handleUpdateStockValue}></c-factory-store-current-inventory-list>-->
+<!--        </section>-->
 
         <section class="model__specs model__block">
           <h3 class="heading heading--l">
@@ -92,63 +91,65 @@
           </ul>
         </section>
 
-        <section class="model__premiumPack model__block">
-          <header>
-            <h3 class="heading heading--l">
-              <template if:true={isEN}>Preferred Equipment Package</template>
-              <template if:true={isFR}>Ensemble Équipement Privilège</template>
-            </h3>
-            <p class="copy copy--standard">
-              <template if:true={isEN}>These features are typically optional on most comparable models, but come <strong>standard*</strong> on the {boatName}.</template>
-              <template if:true={isFR}>Ces caractéristiques sont généralement offertes en option sur la plupart des autres marques, mais <strong>sont standard*</strong> sur le {boatName}.</template>
-            </p>
-            <p class="premiumPack__totalValue">
+        <template if:true={hasPremiumPack}>
+          <section class="model__premiumPack model__block">
+            <header>
+              <h3 class="heading heading--l">
+                <template if:true={isEN}>Preferred Equipment Package</template>
+                <template if:true={isFR}>Ensemble Équipement Privilège</template>
+              </h3>
+              <p class="copy copy--standard">
+                <template if:true={isEN}>These features are typically optional on most comparable models, but come <strong>standard*</strong> on the {boatName}.</template>
+                <template if:true={isFR}>Ces caractéristiques sont généralement offertes en option sur la plupart des autres marques, mais <strong>sont standard*</strong> sur le {boatName}.</template>
+              </p>
+              <p class="premiumPack__totalValue">
               <span class="totalValue">
                 <template if:true={isEN}>Total Value: {premiumPackageRetailPrice}</template>
                 <template if:true={isFR}>Valeur totale: {premiumPackageRetailPrice}</template>
               </span>
-              <span class="included">
+                <span class="included">
                 <template if:true={isEN}>You Pay: <strong>$0</strong></template>
                 <template if:true={isFR}>Tu payes: <strong>0 $</strong></template>
               </span>
-            </p>
-          </header>
+              </p>
+            </header>
 
-          <ul class="premiumPackage__list">
-            <template for:each={premiumPackItems} for:item="item">
-              <li key={item.description} class="premiumPackage__item">
-                <div class="premiumPackage__itemDetail">
-                  <strong class="itemDetail__name">
-                    <template if:true={isEN}>{item.description}</template>
-                    <template if:true={isFR}>{item.description_fr}</template>
-                  </strong>
-                </div>
-                <div class="premiumPackage__itemPrice">
+            <ul class="premiumPackage__list">
+              <template for:each={premiumPackItems} for:item="item">
+                <li key={item.description} class="premiumPackage__item">
+                  <div class="premiumPackage__itemDetail">
+                    <strong class="itemDetail__name">
+                      <template if:true={isEN}>{item.description}</template>
+                      <template if:true={isFR}>{item.description_fr}</template>
+                    </strong>
+                  </div>
+                  <div class="premiumPackage__itemPrice">
                   <span class="itemDetail__value">
                     <template if:true={isEN}>Value: <span>{item.valueFormatted}</span></template>
                     <template if:true={isFR}>Valeur: <span>{item.valueFormatted_fr}</span></template>
                   </span>
-                  <template if:true={isEN}>
-                    <div>
-                      <span>You Pay:</span>
-                      <strong>$0</strong>
-                    </div>
-                  </template>
-                  <template if:true={isFR}>
-                    <div>
-                      <span>Tu payes:</span>
-                      <strong>0 $</strong>
-                    </div>
-                  </template>
-                </div>
-              </li>
-            </template>
-          </ul>
-          <small>
-            <template if:true={isEN}>*No substitutions or exclusions.</template>
-            <template if:true={isFR}>*Aucune substitution ou exclusion.</template>
-          </small>
-        </section>
+                    <template if:true={isEN}>
+                      <div>
+                        <span>You Pay:</span>
+                        <strong>$0</strong>
+                      </div>
+                    </template>
+                    <template if:true={isFR}>
+                      <div>
+                        <span>Tu payes:</span>
+                        <strong>0 $</strong>
+                      </div>
+                    </template>
+                  </div>
+                </li>
+              </template>
+            </ul>
+            <small>
+              <template if:true={isEN}>*No substitutions or exclusions.</template>
+              <template if:true={isFR}>*Aucune substitution ou exclusion.</template>
+            </small>
+          </section>
+        </template>
 
         <div class="model__leadFormWrapper fullWidth">
           <section class="model__leadForm">
