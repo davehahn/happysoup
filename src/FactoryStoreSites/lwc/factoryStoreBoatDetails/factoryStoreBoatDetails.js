@@ -35,6 +35,7 @@ export default class FactoryStoreBoatDetails extends NavigationMixin(LightningEl
   boatName;
   standardMotorName;
   standardTrailerName;
+  hasPremiumPack = false;
 
   bannerBg = 'background-image: url(' + BANNER + ')';
 
@@ -85,15 +86,17 @@ export default class FactoryStoreBoatDetails extends NavigationMixin(LightningEl
   }
 
   recordFound(){
+    console.log('record found!');
     this.boatDataLoaded = true;
     this.modelWrapperClass = setWrapperClass(this.sectionWidth, 'model');
     this.boatDataLookupRunning =  false;
     this.boatName = stripParentheses(this.boat.Name);
     this.leadFormName = this.boatName + ' - Lead Form';
     this.standardMotorName = rewriteMotorName(this.boat.StandardMotor.Name);
-    this.standardTrailerName = (this.boat.StandardTrailer.Name !== '') ? ((this.isEN) ? 'and ' + rewriteTrailerName(this.boat.StandardTrailer.Name) : 'et ' + rewriteTrailerName(this.boat.StandardTrailer.Name)) : '';
-    this.photoGallery = (this.boat.MarketingImages.length > 0) ? this.boat.MarketingImages : '';
-    this.hasPhotoGallery = (this.boat.MarketingImages.length > 0) ? true : false;
+    this.standardTrailerName = (typeof this.boat.StandardTrailer !== 'undefined') ? ((this.isEN) ? 'and ' + rewriteTrailerName(this.boat.StandardTrailer.Name) : 'et ' + rewriteTrailerName(this.boat.StandardTrailer.Name)) : '';
+    this.hasPhotoGallery = (typeof this.boat.MarketingImages !== 'undefined') ? true : false;
+    this.photoGallery = (this.hasPhotoGallery) ? this.boat.MarketingImages : '';
+    this.hasPremiumPack = (typeof this.boat.PremiumPackage !== 'undefined') ? true : false;
   }
 
   resultEmpty(){
@@ -212,7 +215,6 @@ export default class FactoryStoreBoatDetails extends NavigationMixin(LightningEl
   }
 
   get premiumPackItems(){
-		if(this.boat.PremiumPackage.Contents){
 			const contents = this.boat.PremiumPackage.Contents;
 			const sections = Object.entries(contents);
 			let packItems = [];
@@ -240,7 +242,6 @@ export default class FactoryStoreBoatDetails extends NavigationMixin(LightningEl
 			});
 //   		console.log(packItems);
 			return packItems;
-		}
 	}
 
 	get premiumPackageRetailPrice(){

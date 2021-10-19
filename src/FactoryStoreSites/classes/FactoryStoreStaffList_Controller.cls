@@ -15,7 +15,8 @@ public with sharing class FactoryStoreStaffList_Controller {
         } else if(department == 'Service'){
             roles = new String[]{
                 '%Boat Specialist%',
-                '%Memory Builders%'
+                '%Memory Builders%',
+                '%Director of Customer Service%'
             };
         }
         return [
