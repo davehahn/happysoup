@@ -110,4 +110,29 @@ private class FSInventory_Service_T {
 
         System.assertEquals(5, result.RiggedBoats.size());
     }
+
+//    @IsTest
+//    static void fetchNonCurrentNewInStockInventory_Test()
+//    {
+//        String location = [SELECT Name FROM AcctSeedERP__Warehouse__c WHERE Id = :Test_Constants.idWarehouse].Name;
+//        Integer inventoryYear = 2020;
+//        Integer currentYear = 2021;
+//
+//        dataSetupForInStockInventory(inventoryYear);
+//
+//        GMBLASERP__Serial_Number__c testSerial = [ SELECT Id, Model_Year__c, Location__c FROM GMBLASERP__Serial_Number__c LIMIT 1 ][0];
+//        System.debug( 'WAREHOUSE NAME = ' + location);
+//        System.debug( testSerial );
+//
+//        Test.startTest();
+//        FSInventory_Service result = new FSInventory_Service(
+//                location,
+//                currentYear,
+//                inventoryBoat.Id,
+//                true
+//        );
+//        Test.stopTest();
+//
+//        System.assertEquals(5, result.RiggedBoats.size());
+//    }
 }

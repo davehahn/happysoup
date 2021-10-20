@@ -18,13 +18,25 @@ export default class FactoryStoreCurrentInventoryList extends NavigationMixin(Li
 	currentStockQuantity;
 	storeStock = [];
 	currentStock = [];
+	hasCurrentStock = false;
+	nonCurrentStock = [];
+	hasNonCurrentStock = false;
+
+	parseCurrentStock = [];
+	parseNonCurrentStock = [];
+
 	stockPromises = [];
 
 	pBoat;
+	pBoatName;
 	pStock = [];
 
 	isEN = renderEN();
 	isFR = renderFR();
+
+	calendarYear = new Date().getFullYear();
+	calendarMonth = new Date().getMonth();
+	modelYear;
 
 	lookupHasRunPreviously = false;
 
@@ -36,27 +48,39 @@ export default class FactoryStoreCurrentInventoryList extends NavigationMixin(Li
 		  console.log('clear stock array');
 		  if(this.currentStock.length > 0){
 		    this.currentStock.length = 0;
+		    this.parseCurrentStock.length = 0;
+		    this.parseNonCurrentStock.length = 0;
     	}
 		}
 
 	  this.pBoat = JSON.parse(JSON.stringify(this.boat));
+	  this.pBoatName = stripParentheses(this.pBoat.Base.Name);
 	  console.log('run lookup for ' + this.pBoat.Base.Name);
 
+	  this.modelYear = (this.calendarMonth >= 9) ? this.calendarYear + 1 : this.calendarYear;
+	  console.log('current model year: ', this.modelYear);
 
-		const inventory = fetchNewInStockInventory({ location: parseLocationName(this.locationName), year: 2021, modelId: this.boatId })
+
+		const inventory = fetchNewInStockInventory({ location: parseLocationName(this.locationName), year: this.modelYear, modelId: this.boatId })
 			.then((boats) => {
 			  this.lookupHasRunPreviously = true;
 			  if(boats.RiggedBoats.length > 0){
 			    boats.RiggedBoats.forEach((boat, index) => {
+						let setSavings = (typeof boat.Serial.serialSavings === 'undefined') ? 0 : boat.Serial.serialSavings;
 						this.storeStock.push({
 							Base: {
 								SerialId: boat.Serial.serialNumberId,
 								ProductName: stripParentheses(boat.Serial.productName),
 								ProductId: boat.Serial.productId,
 								SerialNumber: boat.Serial.serialNumberValue,
+								SerialModelYear: boat.Serial.serialModelYear,
 								BaseRetailPrice: this.pBoat.Expanded.RetailPrice,
 								StartingWeeklyPrice: weeklyPayment(this.pBoat.Expanded.RetailPrice),
 								StartingRetailPrice: this.pBoat.Expanded.RetailPrice,
+								SpecialRetailPrice: 0,
+								SpecialWeeklyPrice: 0,
+								HasSpecialPrice: false,
+								Savings: setSavings,
 								ActualRetailPrice: 'TBD',
 								ActualWeeklyPrice: 'TBD',
 								Equipment: []
@@ -101,25 +125,39 @@ export default class FactoryStoreCurrentInventoryList extends NavigationMixin(Li
 							console.log('full upgrade cost boat ' + index + ':', retailUpgradeCost);
 							this.storeStock[index].Base.RetailUpgradeCost = retailUpgradeCost;
 							this.storeStock[index].Base.StartingRetailPrice = this.pBoat.Expanded.RetailPrice + retailUpgradeCost;
+
+							this.storeStock[index].Base.HasSpecialPrice = (this.storeStock[index].Base.Savings < 0) ? true : false;
+							this.storeStock[index].Base.SpecialRetailPrice = (this.pBoat.Expanded.RetailPrice + this.storeStock[index].Base.Savings) + retailUpgradeCost;
+
+							if(this.storeStock[index].Base.SerialModelYear === this.modelYear){
+								 this.parseCurrentStock.push(this.storeStock[index]);
+       				} else {
+       					this.parseNonCurrentStock.push(this.storeStock[index]);
+           		}
 						}
 					});
-					this.triggerStockList(this.pBoat.Base.Name);
+					this.triggerStockList();
      		} //if(boats.length > 0){
 			}).catch(e => {
 				console.log('Fetch Inventory Error: ', e);
 			});
  	}
 
- 	triggerStockList(boatName){
-		console.log('current ' + boatName + ' inventory (component): ', this.storeStock);
+ 	triggerStockList(){
+//		console.log('current ' + boatName + ' inventory (component): ', this.storeStock);
 
-		this.storeStock.forEach((boat, index) => {
-			boat.Base.StartingWeeklyPrice = (this.isEN) ? weeklyPayment(boat.Base.StartingRetailPrice) : weeklyPayment(boat.Base.StartingRetailPrice, 'fr');
-			boat.Base.StartingRetailPrice = (this.isEN) ? formatPrice(boat.Base.StartingRetailPrice, true) : formatPrice(boat.Base.StartingRetailPrice, true, 'fr');
-		});
+		console.log('current year stock: ', this.parseCurrentStock);
+		console.log('non current year stock: ', this.parseNonCurrentStock);
 
-		this.currentStock = this.storeStock;
-		this.storeStockQuantity = this.currentStock.length;
+		this.formatListingPrices(this.parseCurrentStock);
+		this.formatListingPrices(this.parseNonCurrentStock);
+
+		this.currentStock = this.parseCurrentStock;
+		this.nonCurrentStock = this.parseNonCurrentStock;
+
+		this.hasCurrentStock = (this.currentStock.length > 0) ? true : false;
+		this.hasNonCurrentStock = (this.nonCurrentStock.length > 0) ? true : false;
+		this.storeStockQuantity = this.currentStock.length + this.nonCurrentStock.length;
 
 		const passStockEvent = new CustomEvent('updatestockvalue', {
 			detail: this.storeStockQuantity
@@ -127,6 +165,17 @@ export default class FactoryStoreCurrentInventoryList extends NavigationMixin(Li
   	this.dispatchEvent(passStockEvent);
 
 	}
+
+	formatListingPrices(list){
+	  list.forEach((boat, index) => {
+			boat.Base.StartingWeeklyPrice = (this.isEN) ? weeklyPayment(boat.Base.StartingRetailPrice) : weeklyPayment(boat.Base.StartingRetailPrice, 'fr');
+			boat.Base.StartingRetailPrice = (this.isEN) ? formatPrice(boat.Base.StartingRetailPrice, true) : formatPrice(boat.Base.StartingRetailPrice, true, 'fr');
+
+			boat.Base.SpecialWeeklyPrice = (this.isEN) ? weeklyPayment(boat.Base.SpecialRetailPrice) : weeklyPayment(boat.Base.SpecialRetailPrice, 'fr')
+			boat.Base.SpecialRetailPrice = (this.isEN) ? formatPrice(boat.Base.SpecialRetailPrice, true) : formatPrice(boat.Base.SpecialRetailPrice, true, 'fr');
+		});
+		return list;
+ 	}
 
 	quickQuote(event) {
 		// 	  console.log('trigger quick quote');
