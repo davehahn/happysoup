@@ -5,41 +5,99 @@
 <!-- Factory Store Current Inventory List -->
 <template>
 
-  <div class="modelListing__currentStock">
-    <ul class="currentStock__list">
-      <template for:each={currentStock} for:item="stock">
-        <li key={stock.Base.SerialId} class="currentStock__item">
-          <h5 class="heading heading--m">
-            <span>{stock.Base.ProductName}</span>
-            <template for:each={stock.Base.Equipment} for:item="rig">
-              <small key={rig.ProductId}>
-                {rig.ProductName}
-              </small>
-            </template>
-          </h5>
-          <p class="item__pricing">
-<!--            <template if:true={isEN}><small>Starting at:</small></template>-->
-<!--            <template if:true={isFR}><small>À partir de:</small></template>-->
-            <span class="pricing__weekly">
-              {stock.Base.StartingWeeklyPrice}
-              <template if:true={isEN}><strong>Per Week</strong></template>
-              <template if:true={isFR}><strong>Par Semaine</strong></template>
-            </span>
-            <span class="pricing__retail">{stock.Base.StartingRetailPrice}</span>
-          </p>
-          <p class="item__ctas">
-            <button class="ctas__btn btn btn--secondary" data-record={stock.Base.ProductId} data-name={stock.Base.ProductName} data-serial={stock.Base.SerialNumber} onclick={quickQuote}>
-              <template if:true={isEN}>Quick Connect</template>
-              <template if:true={isFR}>Connexion Rapide</template>
-            </button>
-            <button class="ctas__btn btn btn--secondary" data-record={stock.Base.ProductId} data-serial={stock.Base.SerialNumber} onclick={showroomVisit}>
-              <template if:true={isEN}>Come See It!</template>
-              <template if:true={isFR}>Viens le Voir</template>
-            </button>
-          </p>
+  <section class="modelListing__outline">
+
+    <nav class="outline__nav">
+      <ul class="nav__list">
+        <li class="nav__item" data-target="details">
+          <template if:true={isEN}><button class="tab" onclick={changeTab} data-target="details">Details</button></template>
+          <template if:true={isFR}><button class="tab" onclick={changeTab} data-target="details">Des détails</button></template>
         </li>
-      </template>
-    </ul>
-  </div>
+        <li class="nav__item" data-target="current">
+          <template if:true={isEN}><button class="tab" onclick={changeTab} data-target="current">2022</button></template>
+          <template if:true={isFR}><button class="tab" onclick={changeTab} data-target="current">2022</button></template>
+        </li>
+        <li class="nav__item" data-target="noncurrent">
+          <template if:true={isEN}><button class="tab" onclick={changeTab} data-target="noncurrent">Specials</button></template>
+          <template if:true={isFR}><button class="tab" onclick={changeTab} data-target="noncurrent">Promotions</button></template>
+        </li>
+      </ul>
+    </nav>
+
+    <div class="modelListing__outlineTabs">
+      <section class="outline__section outline__section--details" data-target="details">
+        <header class="vitalsWrapper">
+          <div class="vitals">
+            <template if:true={isEN}><small class="starting">Starting at:</small></template>
+            <template if:true={isFR}><small class="starting">À partir de:</small></template>
+            <p class="vitals__pricing">
+              <span class="weekly">
+                {startingWeeklyPrice}
+                <template if:true={isEN}><small>Per Week</small></template>
+                <template if:true={isFR}><small>Par Semaine</small></template>
+              </span>
+              <span class="retail">{startingRetailPrice}</span>
+            </p>
+            <p class="vitals__standardEquipment">
+              <template if:true={isEN}>With </template>
+              <template if:true={isFR}>Avec </template>
+              {standardMotor} <span class="standardTrailer">{standardTrailer}</span>
+            </p>
+          </div>
+
+          <button class="ctas__btn btn btn--secondary btn--secondarySolid" data-record={boat.Base.Id} onclick={navToBoat}>
+            <template if:true={isEN}>View Model</template>
+            <template if:true={isFR}>En Savoir Plus</template>
+          </button>
+        </header>
+
+        <ul class="specs">
+          <template for:each={boatSpecs} for:item="spec">
+            <li key={spec.Name}>
+              <span>{spec.Name}</span> <lightning-formatted-rich-text value={spec.Value}></lightning-formatted-rich-text>
+            </li>
+          </template>
+        </ul>
+      </section>
+
+      <section class="outline__section outline__section--current" data-target="current">
+        <template if:true={hasCurrentStock}>
+          <div class="modelListing__stock modelListing__stock--current">
+            <h5 class="stock__heading heading heading-s">{currentStockQuantity} <span>In-Stock</span></h5>
+            <ul class="currentStock__list">
+              <template for:each={currentStock} for:item="stock">
+                <c-factory-store-current-inventory-item stock={stock} key={stock.Base.SerialId} is-current="true"></c-factory-store-current-inventory-item>
+              </template>
+            </ul>
+          </div>
+        </template>
+        <template if:false={hasCurrentStock}>
+          <div class="modelListing__stock modelListing__stock--current">
+            <h5 class="stock__heading heading heading-s">Contact us for availability.</h5>
+          </div>
+        </template>
+      </section>
+
+      <section class="outline__section outline__section--noncurrent" data-target="noncurrent">
+        <template if:true={hasNonCurrentStock}>
+          <div class="modelListing__stock modelListing__stock--noncurrent">
+            <h5 class="stock__heading heading heading-s">{nonCurrentStockQuantity} <span>In-Stock</span></h5>
+            <ul class="currentStock__list">
+              <template for:each={nonCurrentStock} for:item="stock">
+                <c-factory-store-current-inventory-item stock={stock} key={stock.Base.SerialId} is-current="false"></c-factory-store-current-inventory-item>
+              </template>
+            </ul>
+          </div>
+        </template>
+        <template if:false={hasNonCurrentStock}>
+          <div class="modelListing__stock modelListing__stock--current">
+            <h5 class="stock__heading heading heading-s">Contact us for availability.</h5>
+          </div>
+        </template>
+      </section>
+    </div>
+
+
+  </section>
 
 </template>

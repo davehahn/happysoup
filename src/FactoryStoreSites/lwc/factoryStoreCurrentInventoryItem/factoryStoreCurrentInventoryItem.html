@@ -1,0 +1,78 @@
+<!--
+ - Created by Tim on 2021-10-19.
+ -->
+
+<!-- Factory Store Current Inventory Item -->
+<template>
+  <li class="currentStock__item">
+    <template if:false={isCurrentModel}>
+      <div class="savings">
+        <template if:true={isEN}><strong>Save {savings}!</strong></template>
+        <template if:true={isFR}><strong>Économisez {savings} !</strong></template>
+      </div>
+    </template>
+
+    <div class="itemWrapper">
+      <h6 class="heading heading--m">
+      <span>
+        <template if:false={isCurrentModel}>
+          <small class="modelYear">{stock.Base.SerialModelYear}</small>
+        </template>
+        {stock.Base.ProductName}
+      </span>
+        <template for:each={stock.Base.Equipment} for:item="rig">
+          <small key={rig.ProductId}>
+            {rig.ProductName}
+          </small>
+        </template>
+      </h6>
+
+      <section class="pricingWrapper">
+        <template if:true={stock.Base.HasSpecialPrice}>
+          <p class="item__pricing">
+              <span class="pricing__weekly">
+                {stock.Base.SpecialWeeklyPrice}
+                <template if:true={isEN}><strong>Per Week</strong></template>
+                <template if:true={isFR}><strong>Par Semaine</strong></template>
+              </span>
+            <span class="pricing__retail">{stock.Base.SpecialRetailPrice}</span>
+          </p>
+
+          <p class="item__pricing item__pricing--mini">
+            <span class="label">Prix habituel:</span>
+            <span class="pricing__weekly">
+              {stock.Base.StartingWeeklyPrice}
+            </span>
+            <span class="pricing__retail">{stock.Base.StartingRetailPrice}</span>
+          </p>
+        </template>
+
+        <template if:false={stock.Base.HasSpecialPrice}>
+          <p class="item__pricing">
+            <!--<template if:true={isEN}><small>Starting at:</small></template>-->
+            <!--<template if:true={isFR}><small>À partir de:</small></template>-->
+            <span class="pricing__weekly">
+                {stock.Base.StartingWeeklyPrice}
+                <template if:true={isEN}><strong>Per Week</strong></template>
+                <template if:true={isFR}><strong>Par Semaine</strong></template>
+              </span>
+            <span class="pricing__retail">{stock.Base.StartingRetailPrice}</span>
+          </p>
+        </template>
+      </section>
+
+
+      <p class="item__ctas">
+        <button class="ctas__btn btn btn--secondary btn--secondarySolid" data-record={stock.Base.ProductId} data-name={stock.Base.ProductName} data-serial={stock.Base.SerialNumber} onclick={quickQuote}>
+          <template if:true={isEN}>Quick Connect</template>
+          <template if:true={isFR}>Connexion Rapide</template>
+        </button>
+        <button class="ctas__btn btn btn--secondary btn--secondarySolid" data-record={stock.Base.ProductId} data-serial={stock.Base.SerialNumber} onclick={showroomVisit}>
+          <template if:true={isEN}>Come See It!</template>
+          <template if:true={isFR}>Viens le Voir</template>
+        </button>
+      </p>
+    </div>
+
+  </li>
+</template>

@@ -15,6 +15,10 @@ public without sharing class FSInventory_Service {
         init(getSerialObjects(location, year, modelId));
     }
 
+//    public FSInventory_Service(String location, Integer year, String modelId, Boolean getNonCurrent){
+//        init(getNonCurrentSerialObjects(location, year, modelId));
+//    }
+
     public void init(List<SerialNumberObject> serialNumbers){
         this.getRiggedEquipmentSerials(serialNumbers);
     }
@@ -29,13 +33,14 @@ public without sharing class FSInventory_Service {
                         Name,
                         GMBLASERP__Product__r.Name,
                         Model_Year__c,
-                        GMBLASERP__Product__r.Make__c
+                        GMBLASERP__Product__r.Make__c,
+                        Savings__c
                 FROM GMBLASERP__Serial_Number__c
                 WHERE Location__c = :location
                 AND GMBLASERP__Product__r.Id = :modelId
                 AND Product_Record_Type__c = 'Boat'
                 AND GMBLASERP__Product__r.Make__c = 'Legend'
-                AND Model_Year__c >= :year
+//                AND Model_Year__c >= :year
                 AND Status__c NOT IN ('Used', 'At Supplier', 'Return to Supplier', 'Demo', 'Display Model')
                 AND Available_Retail__c = true
                 ORDER BY Model_Year__c ASC
@@ -50,6 +55,38 @@ public without sharing class FSInventory_Service {
         //return the list of boatSerialNumbers
         return boatsSerialNumbers;
     }
+
+//    private List<SerialNumberObject> getNonCurrentSerialObjects(String location, Integer year, String modelId){
+//        //define a list of serial number objects
+//        List<SerialNumberObject> boatsSerialNumbers = new List<SerialNumberObject>();
+//
+//        //loop through the serial number results of the following SOQL
+//        for( GMBLASERP__Serial_Number__c b : [
+//                SELECT Id,
+//                        Name,
+//                        GMBLASERP__Product__r.Name,
+//                        Model_Year__c,
+//                        GMBLASERP__Product__r.Make__c
+//                FROM GMBLASERP__Serial_Number__c
+//                WHERE Location__c = :location
+//                AND GMBLASERP__Product__r.Id = :modelId
+//                AND Product_Record_Type__c = 'Boat'
+//                AND GMBLASERP__Product__r.Make__c = 'Legend'
+//                AND Model_Year__c < :year
+//                AND Status__c NOT IN ('Used', 'At Supplier', 'Return to Supplier', 'Demo', 'Display Model')
+//                AND Available_Retail__c = true
+//                ORDER BY Model_Year__c ASC
+//        ])
+//        {
+//            //create a SerialNumber out of each
+//            SerialNumberObject serialNumber = new SerialNumberObject( b );
+//            //Add the new Serial Number to the boatSerialNumbers List
+//            boatsSerialNumbers.add(serialNumber);
+//        }
+//
+//        //return the list of boatSerialNumbers
+//        return boatsSerialNumbers;
+//    }
 
     private List<RiggedEquipment> getRiggedEquipmentSerials(List<SerialNumberObject> serialNumberObjects){
         //define a list of equipment rigged serials to all available boats (SerialNumbers)
@@ -137,6 +174,7 @@ public without sharing class FSInventory_Service {
         @AuraEnabled public String serialNumberId;
         @AuraEnabled public String serialNumberValue;
         @AuraEnabled public Decimal serialModelYear;
+        @AuraEnabled public Decimal serialSavings;
         @AuraEnabled public String productId;
         @AuraEnabled public String productMake;
         @AuraEnabled public String productName;
@@ -146,10 +184,10 @@ public without sharing class FSInventory_Service {
             serialNumberId = s.Id;
             serialNumberValue = s.Name;
             serialModelYear = s.Model_Year__c;
+            serialSavings = s.Savings__c;
             productId = s.GMBLASERP__Product__r.Id;
             productMake = s.GMBLASERP__Product__r.Make__c;
             productName = s.GMBLASERP__Product__r.Name;
-
         }
     }
 

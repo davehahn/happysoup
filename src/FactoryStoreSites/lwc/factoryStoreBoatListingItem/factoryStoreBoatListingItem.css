@@ -5,183 +5,58 @@
 .modelListing{
   width: 100%;
   display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  border: 1px solid var(--zebraAccent);
+  align-items: flex-start;
+  justify-content: space-between;
+  border: 1px solid #D1D1D1;
+	border-radius: 4px;
   margin-bottom: 1.25em;
+  padding: 2.75em 2em;
+  box-sizing: border-box;
 }
 
-.modelListing .modelListing__photo{
+.modelListing .modelListing__intro{
+  width: 32%;
+}
+
+.modelListing .modelListing__intro .modelListing__name{
+  text-align: center;
+  line-height: 1;
+}
+.modelListing .modelListing__intro .modelListing__name.heading.heading--special{
+	font-family: 'gotham_htf'!important;
+	font-weight: 900;
+}
+
+.modelListing .modelListing__intro .modelListing__photo{
   display: block;
-  width: 42%; height: 0; padding-bottom: 22%;
+  width: 100%; height: 0; padding-bottom: 50%;
   background-position: center;
   background-size: contain;
   background-repeat: no-repeat;
 }
 
-.modelListing .modelListing__vitals{
-  width: 30%;
-  margin: 2%;
-  padding-right: 2%;
-  padding-left: 2%;
-  border-left: 1px solid var(--zebraAccent);
-  border-right: 1px solid var(--zebraAccent);
+.modelListing .modelListing__outlineWrapper{
+  overflow: hidden;
+  width: 66%;
 }
 
-.modelListing .modelListing__vitals .vitals__standardEquipment{
-  font-size: 0.75em;
-  margin-top: 0.5em;
-}
-.modelListing .modelListing__vitals .vitals__standardEquipment .standardTrailer{
-  white-space: nowrap;
-}
-.modelListing .modelListing__vitals .starting{
-	display: block;
-  font-size: 0.9em;
-  text-transform: uppercase;
-  margin: 1.25em 0 0;
-}
-.modelListing .modelListing__vitals .vitals__pricing{
-  display: flex;
-  align-items: center;
-}
-.modelListing .modelListing__vitals .vitals__pricing span{
-  display: inline-block;
-	font-weight: 900;
-	line-height: 1;
-}
-
-.modelListing .modelListing__vitals .vitals__pricing .weekly{
-  font-size: 2em;
-}
-.modelListing .modelListing__vitals .vitals__pricing .retail{
-  font-size: 1.25em;
-}
-.modelListing .modelListing__vitals .vitals__pricing .retail::before{
-  display: inline-block;
-  content: '';
-  width: 1px; height: 20px;
-  background-color: var(--zebraAccent);
-  margin: 0 20px;
-}
-.modelListing .modelListing__vitals .vitals__pricing span small{
-  display: block;
-  font-size: 40%; font-weight: 300;
-  text-transform: uppercase;
-}
-
-.modelListing .modelListing__vitals .modelListing__quickSpecs{
-  margin-top: 1.5em;
-}
-.modelListing .modelListing__vitals .modelListing__quickSpecs .heading{
-  text-transform: uppercase;
-  font-size: 0.83em;
-}
-.modelListing .modelListing__vitals .modelListing__quickSpecs ul{
-  width: 100%;
-}
-.modelListing .modelListing__vitals .modelListing__quickSpecs ul li{
-  display: flex;
-  justify-content: space-between;
-}
-.modelListing .modelListing__vitals .modelListing__quickSpecs li span strong{
-  font-weight: 600;
-}
-
-.modelListing .modelListing__ctas{
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1;
-  margin-right: 2%;
-}
-.modelListing .modelListing__ctas .ctas__currentStock span{
-  display: block;
-  text-align: right;
-  width: fit-content;
-  width: -moz-fit-content;
-  align-self: flex-end;
-  border: 1px solid var(--zebraAccent);
-  border-radius: 3px;
-  font-size: 1em;
-  background: var(--zebra);
-  padding: 0.25em 0.5em;
-  margin-bottom: 0.5em;
-}
-.modelListing .modelListing__ctas .ctas__currentStock span strong{
-  font-weight: 900;
-}
-.modelListing .modelListing__ctas .ctas__currentStock span sup{
-  font-size: 0.5em;
-}
-
-.modelListing .modelListing__ctas button{
-  width: 100%;
-  margin-bottom: 1em;
-  justify-content: center;
-}
-.modelListing .modelListing__ctas button:last-of-type{
-  margin-bottom: 0;
-}
-
-.modelListing .modelListing__stock{
-  width: 100%;
-}
-
-@media screen and (max-width: 860px){
+@media screen and (max-width: 1020px){
   .modelListing{
-    flex-wrap: wrap;
-  }
-  .modelListing .modelListing__vitals{
-    flex: 1;
-    width: auto;
-    border-right: 0 none;
-  }
-
-  .modelListing .modelListing__vitals .modelListing__quickSpecs{
-    border-top: 1px solid var(--zebraAccent);
-    border-bottom: 1px solid var(--zebraAccent);
-    padding: 1em 0;
-    margin-bottom: 1em;
-  }
-
-  .modelListing .modelListing__ctas{
-    width: 100%;
-    flex-wrap: wrap;
-    flex-direction: row;
-   	justify-self: center;
-   	justify-content: space-between;
-   	margin-right: 0;
-   	padding: 0 1.5em;
-  }
-  .modelListing .modelListing__ctas .ctas__currentStock{
-    width: 100%;
-  }
-
-  .modelListing .modelListing__ctas button{
-    width: 32%;
-  }
-  .modelListing .modelListing__ctas button:last-of-type{
-    margin-bottom: 1em;
-  }
-}
-
-@media screen and (max-width: 540px){
-	.modelListing .modelListing__photo{
-		width: 90%; padding-bottom: 42%;
-		margin: 1em auto 0;
-	}
-  .modelListing .modelListing__vitals{
-    width: 100%;
-    border-left: 0;
-    flex: inherit;
-  }
-}
-
-@media screen and (max-width: 460px){
-  .modelListing .modelListing__ctas{
     flex-direction: column;
+    align-items: center;
+    padding: 1.5em 1em;
   }
-  .modelListing .modelListing__ctas button{
+  .modelListing .modelListing__intro{
+    width: 60%;
+  }
+  .modelListing .modelListing__outlineWrapper{
     width: 100%;
+    margin-top: 1.5em;
   }
+}
+
+@media screen and (max-width: 660px){
+  .modelListing .modelListing__intro{
+      width: 90%;
+    }
 }
