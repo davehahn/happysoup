@@ -153,6 +153,11 @@ global without sharing class gcPurchaseOrderLine {
 							pol.addError('The Purchase Order is locked and cannot modify PO Line fields. Please unlock the PO to proceed.');
 						}
 					}
+                    // SFISSUES-771 Starts
+                    if(boolIsInsert && pol.deliverDate__c == null){
+						pol.deliverDate__c = po.Estimated_Time_of_Arrival_ETA__c;
+					}
+                    // SFISSUES-771 Ends
 					if(serial != null)
 					{
 						pol.AcctSeedERP__Product__c = serial.GMBLASERP__Product__c;
@@ -450,6 +455,7 @@ global without sharing class gcPurchaseOrderLine {
 						Locked__c,
 						GMBLASERP__Pricebook__c,
 						GMBLASERP__Project__c,
+                 		Estimated_Time_of_Arrival_ETA__c,	
 						GMBLASERP__Project_Task__r.AcctSeed__Project__c
 				 FROM AcctSeedERP__Purchase_Order__c
 				 WHERE Id IN : setIdPurchaseOrder])
