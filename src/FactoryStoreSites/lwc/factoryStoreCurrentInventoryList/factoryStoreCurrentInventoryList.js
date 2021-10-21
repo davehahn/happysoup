@@ -15,12 +15,24 @@ export default class FactoryStoreCurrentInventoryList extends NavigationMixin(Li
 	@api boatId;
 	@api locationName;
 
-	currentStockQuantity;
+	startingRetailPrice;
+	startingWeeklyPrice;
+	boatName;
+	modelListingPhoto;
+	standardMotor;
+	standardTrailer;
+	standardTollingMotor;
+	overallLength;
+	centerlineLength;
+	packageLength;
+
 	storeStock = [];
 	currentStock = [];
 	hasCurrentStock = false;
+	currentStockQuantity;
 	nonCurrentStock = [];
 	hasNonCurrentStock = false;
+	nonCurrentStockQuantity;
 
 	parseCurrentStock = [];
 	parseNonCurrentStock = [];
@@ -42,7 +54,31 @@ export default class FactoryStoreCurrentInventoryList extends NavigationMixin(Li
 
 	@wire(CurrentPageReference) pageRef;
 
+	connectedCallback(){
+	  this.startingRetailPrice = (this.isEN) ? formatPrice(this.boat.Expanded.RetailPrice, true) : formatPrice(this.boat.Expanded.RetailPrice, true, 'fr');
+		this.startingWeeklyPrice = (this.isEN) ? weeklyPayment(this.boat.Expanded.RetailPrice) : weeklyPayment(this.boat.Expanded.RetailPrice, 'fr');
+		this.boatName = this.setBoatName(stripParentheses(this.boat.Base.Name));
+		this.modelListingPhoto = 'background-image: url(' + this.boat.Base.Default_Gallery_Image_Original__c + ')';
+		this.standardMotor = (this.boat.Base.Standard_Motor__r) ? rewriteMotorName(this.boat.Base.Standard_Motor__r.Name) : '';
+		if(this.isEN){
+			this.standardTrailer = (this.boat.Base.Standard_Trailer__r) ? ' and ' + rewriteTrailerName(this.boat.Base.Standard_Trailer__r.Name) : '';
+		} else {
+			this.standardTrailer = (this.boat.Base.Standard_Trailer__r) ? ' et ' + rewriteTrailerName(this.boat.Base.Standard_Trailer__r.Name) : '';
+		}
+		if (this.boat.Base.Overall_Length__c) {
+			this.overallLength = convertLength(this.boat.Base.Overall_Length__c);
+		}
+		if (this.boat.Base.Length__c) {
+			this.centerlineLength = convertLength(this.boat.Base.Length__c);
+		}
+		if (this.boat.Base.Package_Length__c) {
+			this.packageLength = convertLength(this.boat.Base.Package_Length__c);
+		}
+ }
+
 	renderedCallback(){
+
+	  this.initTabs('details');
 
 		if(this.lookupHasRunPreviously){
 		  console.log('clear stock array');
@@ -111,7 +147,7 @@ export default class FactoryStoreCurrentInventoryList extends NavigationMixin(Li
 									}
 								}
 
-								let productName = (e.productType === 'Motor') ? rewriteMotorName(e.productName) : ' and ' + rewriteTrailerName(e.productName);
+								let productName = (e.productType === 'Motor') ? rewriteMotorName(e.productName) : rewriteTrailerName(e.productName);
 								this.storeStock[index].Base.Equipment.push({
 									ProductType: e.productType,
 									ProductId: e.productId,
@@ -156,8 +192,10 @@ export default class FactoryStoreCurrentInventoryList extends NavigationMixin(Li
 		this.nonCurrentStock = this.parseNonCurrentStock;
 
 		this.hasCurrentStock = (this.currentStock.length > 0) ? true : false;
+		this.currentStockQuantity = this.currentStock.length;
 		this.hasNonCurrentStock = (this.nonCurrentStock.length > 0) ? true : false;
-		this.storeStockQuantity = this.currentStock.length + this.nonCurrentStock.length;
+		this.nonCurrentStockQuantity = this.nonCurrentStock.length;
+//		this.storeStockQuantity = this.currentStock.length + this.nonCurrentStock.length;
 
 		const passStockEvent = new CustomEvent('updatestockvalue', {
 			detail: this.storeStockQuantity
@@ -177,31 +215,6 @@ export default class FactoryStoreCurrentInventoryList extends NavigationMixin(Li
 		return list;
  	}
 
-	quickQuote(event) {
-		// 	  console.log('trigger quick quote');
-		// 	  console.log('display quick connect form for modelId: ', event.currentTarget.dataset.record);
-		let details = {
-			recordId: event.currentTarget.dataset.record,
-			boatName: event.currentTarget.dataset.name,
-			serialNumber: event.currentTarget.dataset.serial
-		}
-		console.log('details to send to form: ', details);
-		fireEvent(this.pageRef, 'openOverlay', details);
-		event.preventDefault();
-	}
-
-	showroomVisit(event) {
-		//    console.log('trigger showroom visit');
-		let page = 'schedule-a-showroom-visit',
-			params = {
-				c__recordId: event.currentTarget.dataset.record,
-				c__SN: event.currentTarget.dataset.serial
-			};
-		//    console.log(params);
-		this.navigateToCommunityPage(page, params);
-		event.preventDefault();
-	}
-
 	navigateToCommunityPage(pageName, params) {
 		this[NavigationMixin.Navigate]({
 			type: 'comm__namedPage',
@@ -211,5 +224,123 @@ export default class FactoryStoreCurrentInventoryList extends NavigationMixin(Li
 			state: params
 		});
 	}
+
+	setBoatName(name){
+		return (this.isFR) ? 'Serie ' + name.replace('-Series', '') : name;
+	}
+
+	initTabs(target){
+		let tabs = this.template.querySelectorAll('.nav__item');
+		let sections = this.template.querySelectorAll('.outline__section');
+		tabs.forEach((tab, index) => {
+		  let thisTarget = tab.dataset.target;
+			if(target === thisTarget){
+				tab.classList.add('active');
+   		} else{
+   			tab.classList.remove('active');
+     	}
+  	});
+  	sections.forEach((section, index) => {
+  	  let thisTarget = section.dataset.target;
+			if(target === thisTarget){
+				section.classList.add('active');
+				section.classList.remove('inactive');
+			} else {
+			  section.classList.remove('active');
+				section.classList.add('inactive');
+   		}
+		});
+ 	}
+
+	changeTab(event){
+	  console.log('change tab!');
+	  console.log(event.currentTarget.dataset.target);
+	  this.initTabs(event.currentTarget.dataset.target);
+ 	}
+
+	navToBoat(event) {
+		let page = 'boat-model',
+			params = {
+				c__recordId: event.currentTarget.dataset.record
+			};
+		this.navigateToCommunityPage(page, params);
+		event.preventDefault();
+	}
+
+	get boatSpecs(){
+      let props = JSON.parse(stringy(this.boat.Expanded.BoatSpecs));
+      let translate = {
+      		'Package Width' : { 'fr' : 'Largeur de l’ensemble', 'unit' : '&rdquo;'},
+      		'Package Length': {'fr' : 'Longueur de l’ensemble', 'unit' : 'convertLength'},
+      		'Bottom Width' : {'fr' : 'Largeur du fond', 'unit' : '&rdquo;'},
+      		'Inside Depth' : {'fr' : 'Profondeur intérieure', 'unit' : '&rdquo;'},
+      		'Hull Depth' : {'fr' : 'Profondeur max.', 'unit' : '&rdquo;'},
+      		'Aluminum Thickness' : {'fr' : 'Épaisseur d’aluminium', 'unit' : ''},
+      		'Color' : {'fr' : 'Couleur', 'unit' : '', 'translations' : {'Black' : 'Noir', 'Black / Charcoal' : 'Noir / Charbon', 'White / Black' : 'Blanc / Noir', 'Dark Blue/White' : 'Bleu Foncé/Blanc'}},
+      		'Cup Holders' : {'fr' : 'Portes-gobelets', 'unit' : ''},
+      		'Maximum Horsepower' : {'fr' : 'Puissance max.', 'unit' : ''},
+      		'Maximum Capacity' : {'fr' : 'Charge max.', 'unit' : ' lbs'},
+      		'Beam' : {'fr' : 'Largeur', 'unit' : '&rdquo;'},
+      		'Centerline Length' : {'fr' : 'Longueur du centre', 'unit' : 'convertLength'},
+      		'Length' : {'fr' : 'Longueur du centre', 'unit' : 'convertLength'},
+      		'Towing Weight' : {'fr' : 'Poids de remorquage', 'unit' : ' lbs'},
+      		'Fuel Capacity' : {'fr' : 'Réservoir d’essence', 'unit' : ''},
+      		'Pontoon Aluminum Thickness' : {'fr' : 'Épaisseur des tubes', 'unit' : ''},
+      		'Pontoon Diameter' : {'fr' : 'Diamètre des tubes', 'unit' : '&rdquo;'},
+      		'Overall Length' : {'fr' : 'Longueur', 'unit' : 'convertLength'},
+      		'Maximum Persons' : {'fr' : 'Capacité-personnes', 'unit' : ''},
+      		'Pontoon Length' : {'fr' : 'Longueur des tubes', 'unit' : 'convertLength'},
+      		'Deck Length' : {'fr' : 'Longueur de pont', 'unit' : 'convertLength'},
+      		'Livewell / Cooler' : {'fr' : 'Vivier/ Glacière', 'unit' : ''},
+      		'Weight' : {'fr' : 'Poids', 'unit' : ' lbs'}
+      	};
+
+      	let sortOrder;
+      	let sortedArray = [];
+
+      	if(this.boat.Expanded.Family === 'Pontoon'){
+      	  console.log("it's a pontoon");
+      		sortOrder = ['Overall Length', 'Beam', 'Maximum Horsepower', 'Fuel Capacity', 'Deck Length', 'Pontoon Length', 'Pontoon Diameter', 'Maximum Persons', 'Maximum Capacity', 'Weight'];
+      	} else if(this.boat.Expanded.Family === 'Deck Boat'){
+      	  console.log("it's a deck boat");
+      		sortOrder = ['Overall Length', 'Beam', 'Inside Depth', 'Maximum Horsepower', 'Fuel Capacity', 'Hull Depth', 'Package Length', 'Maximum Persons', 'Towing Weight', 'Maximum Capacity'];
+      	} else {
+      	  console.log("it's a fishing boat");
+      	  sortOrder = ['Centerline Length', 'Beam', 'Hull Depth', 'Inside Depth', 'Aluminum Thickness', 'Maximum Horsepower', 'Maximum Capacity', 'Weight', 'Bottom Width', 'Package Length', 'Package Width', 'Towing Weight', 'Livewell / Cooler', 'Fuel Capacity'];
+       }
+  			console.log('sortOrder', sortOrder);
+  			console.log('props', props);
+
+  			sortOrder.forEach((sOption, sIndex) => {
+  				for (const [pIndex, pOption] of Object.entries(props)) {
+  				  if(sOption === pIndex){
+  				    let spec = pOption + translate[pIndex].unit;
+  						let unit = translate[pIndex].unit;
+  				    if(translate[pIndex].unit === 'convertLength'){
+  							let truncateLengthTrailingZero = true;
+  							if((this.recordId === '01t1Y00000ATJfUQAX') && (pIndex === 'Overall Length')){
+  								truncateLengthTrailingZero = false;
+  							} else if((this.recordId === '01ti0000004zco9AAA') && (pIndex === 'Length')){
+  								truncateLengthTrailingZero = false;
+  							} else if((this.recordId === '01t1Y00000ATDipQAH') && (pIndex === 'Centerline Length' || pIndex === 'Deck Length')){
+  								truncateLengthTrailingZero = false;
+  							}
+  							spec = convertLength(pOption, truncateLengthTrailingZero);
+          		}
+
+  						let specName = (this.isEN) ? pIndex : translate[pIndex].fr;
+  				  	sortedArray[sIndex] = {
+  				  	 'Name': specName,
+  				  	 'Value': '<strong>' + spec + '</strong>'
+         			};
+        		}
+      		}
+     		});
+  			let filteredArray = sortedArray.filter((el) => {
+  				return el != null;
+     		});
+     		console.log('filteredArray', filteredArray);
+     		return filteredArray;
+    }
 
 }

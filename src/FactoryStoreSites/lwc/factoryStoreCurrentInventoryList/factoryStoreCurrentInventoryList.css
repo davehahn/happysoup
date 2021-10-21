@@ -1,10 +1,156 @@
 /**
  * Created by Tim on 2021-07-09.
  */
-.modelListing__currentStock{
+
+.modelListing__outline{
+
+}
+.modelListing__outline .outline__nav{
+  position: relative;
+  z-index: 2;
+  margin-left: 1.125em;
+}
+.modelListing__outline .outline__nav .nav__list{
+ display: flex;
+}
+.modelListing__outline .outline__nav .nav__list .nav__item{
+  width: 135px;
+  margin-right: 5px;
+}
+.modelListing__outline .outline__nav .nav__list .nav__item:last-of-type{
+  margin-right: 0;
+}
+.modelListing__outline .outline__nav .nav__list .nav__item button{
   width: 100%;
+  border: 1px solid #333;
+  border-bottom: 0 none;
+  border-radius: 0;
+  background-color: #333;
+  color: #FFF;
+  font-size: 1.125em;
+  font-weight: 900;
+  padding: 0.5em 0;
+  transition: all 0.2s linear;
+}
+.modelListing__outline .outline__nav .nav__list .nav__item button:hover,
+.modelListing__outline .outline__nav .nav__list .nav__item button:focus,
+.modelListing__outline .outline__nav .nav__list .nav__item.active button{
+  background-color: #FFF;
+  color: #333;
 }
 
-.modelListing__stock .stock__heading{
+.modelListing__outline .modelListing__outlineTabs{
+  border-top: 1px solid #333;
+  background-color: #FFF;
+  margin-top: -1px;
+  position: relative;
+  z-index: 1;
+  padding: 1.125em;
+}
 
+.modelListing__outline .modelListing__outlineTabs .outline__section.active{
+  display: flex;
+}
+.modelListing__outline .modelListing__outlineTabs .outline__section.inactive{
+  display: none;
+}
+
+.modelListing__outline .modelListing__outlineTabs .outline__section.outline__section--details{
+  align-items: center;
+  justify-content: space-between;
+}
+.modelListing__outline .modelListing__outlineTabs .outline__section.outline__section--details .vitalsWrapper{
+	flex-direction: column;
+	align-items: center;
+}
+.modelListing__outline .modelListing__outlineTabs .outline__section.outline__section--details .vitalsWrapper .vitals{
+  background-color: #595959;
+  color: #FFF;
+  text-align: center;
+  display: flex;
+	flex-direction: column;
+	align-items: center;
+	padding: 1.75em 1.5em;
+	box-sizing: border-box;
+	margin-bottom: 1.25em;
+}
+.modelListing__outline .modelListing__outlineTabs .outline__section.outline__section--details .vitalsWrapper .vitals .starting{
+  font-size: 1.25em;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+.modelListing__outline .modelListing__outlineTabs .outline__section.outline__section--details .vitalsWrapper .vitals .vitals__pricing{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.modelListing__outline .modelListing__outlineTabs .outline__section.outline__section--details .vitalsWrapper .vitals .vitals__pricing span{
+  font-weight: 900;
+	line-height: 1;
+}
+.modelListing__outline .modelListing__outlineTabs .outline__section.outline__section--details .vitalsWrapper .vitals .vitals__pricing .weekly{
+	font-size: 3.75em;
+}
+.modelListing__outline .modelListing__outlineTabs .outline__section.outline__section--details .vitalsWrapper .vitals .vitals__pricing .retail{
+	font-size: 2.5em;
+}
+.modelListing__outline .modelListing__outlineTabs .outline__section.outline__section--details .vitalsWrapper .vitals .vitals__pricing .retail::before{
+    content: '';
+    display: block;
+    width: 20px; height: 1px;
+    background-color: var(--zebraAccent);
+    margin: 10px auto;
+}
+.modelListing__outline .modelListing__outlineTabs .outline__section.outline__section--details .vitalsWrapper .vitals .vitals__pricing span small{
+  display: block;
+	font-size: 40%; font-weight: 300;
+	text-transform: uppercase;
+}
+.modelListing__outline .modelListing__outlineTabs .outline__section.outline__section--details .vitalsWrapper .vitals .vitals__standardEquipment{
+  margin: 0.5em 0;
+  text-align: center;
+  line-height: 1;
+}
+.modelListing__outline .modelListing__outlineTabs .outline__section.outline__section--details .vitalsWrapper .vitals .vitals__standardEquipment span{
+  display: block;
+}
+.modelListing__outline .modelListing__outlineTabs .outline__section.outline__section--details .vitalsWrapper .ctas__btn{
+  margin: 0 auto;
+}
+
+.modelListing__outline .modelListing__outlineTabs .outline__section.outline__section--details .specs{
+  flex-grow: 1;
+  margin: 0 2em;
+}
+.modelListing__outline .modelListing__outlineTabs .outline__section.outline__section--details .specs li{
+  display: flex;
+	align-items: center;
+	justify-content: space-between;
+	list-style: none;
+	padding: .5em .5em .5em 0;
+	border-bottom: 1px solid rgba(51,51,51,.3);
+}
+.modelListing__outline .modelListing__outlineTabs .outline__section .modelListing__stock{
+  width: 100%;
+}
+.modelListing__outline .modelListing__outlineTabs .outline__section .modelListing__stock .stock__heading span{
+  font-weight: 300;
+}
+
+@media screen and (max-width: 660px){
+  .modelListing__outline .modelListing__outlineTabs .outline__section.outline__section--details{
+		flex-direction: column;
+	}
+	.modelListing__outline .modelListing__outlineTabs .outline__section.outline__section--details .vitalsWrapper .vitals{
+		flex-direction: row;
+ 	}
+	.modelListing__outline .modelListing__outlineTabs .outline__section.outline__section--details .specs{
+	  width: 100%;
+ 	}
+}
+
+@media screen and (max-width: 540px){
+  .modelListing__outline .modelListing__outlineTabs .outline__section.outline__section--details .vitalsWrapper .vitals{
+		flex-direction: column;
+	}
 }

@@ -39,6 +39,7 @@ export default class FactoryStoreOverlayWithLeadForm extends LightningElement {
 		}
 
 	renderedCallback(){
+	  console.log('overlay exists');
 	  registerListener('openOverlay', this.handleOpenOverlay, this);
  }
 
