@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Parent_System_Issue__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <description>The Parent System Issue, usually and Epic in JIRA</description>
+    <externalId>false</externalId>
+    <label>Parent System Issue</label>
+    <lookupFilter>
+        <active>true</active>
+        <filterItems>
+            <field>$Source.RecordTypeId</field>
+            <operation>notEqual</operation>
+            <value>Epic</value>
+        </filterItems>
+        <filterItems>
+            <field>$Source.Type__c</field>
+            <operation>notEqual</operation>
+            <value>Epic</value>
+        </filterItems>
+        <isOptional>false</isOptional>
+    </lookupFilter>
+    <referenceTo>System_Issue__c</referenceTo>
+    <relationshipLabel>User Stories</relationshipLabel>
+    <relationshipName>System_Issues</relationshipName>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

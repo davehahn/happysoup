@@ -11,6 +11,7 @@ import fetchStandardProducts from '@salesforce/apex/FactoryStore_InventoryContro
 export default class FactoryStoreBoatListingItem extends NavigationMixin(LightningElement) {
 	@api boat;
 	@api locationName;
+	@api seriesClass;
 
 	startingRetailPrice;
 	startingWeeklyPrice;
@@ -52,51 +53,28 @@ export default class FactoryStoreBoatListingItem extends NavigationMixin(Lightni
 		});
 	}
 
-	quickQuote(event) {
-		// 	  console.log('trigger quick quote');
-		// 	  console.log('display quick connect form for modelId: ', event.currentTarget.dataset.record);
-		let details = {
-			recordId: this.boat.Base.Id,
-			boatName: this.boatName,
-			serialNumber: event.currentTarget.dataset.serial
-		}
-		fireEvent(this.pageRef, 'openOverlay', details);
-		event.preventDefault();
-	}
-
-	showroomVisit(event) {
-		//    console.log('trigger showroom visit');
-		let page = 'schedule-a-showroom-visit',
-			params = {
-				c__recordId: event.currentTarget.dataset.record,
-				c__SN: event.currentTarget.dataset.serial
-			};
-		//    console.log(params);
-		this.navigateToCommunityPage(page, params);
-		event.preventDefault();
-	}
 
 	connectedCallback() {
 //	  console.log(JSON.parse(JSON.stringify(this.boat)));
-	  this.startingRetailPrice = (this.isEN) ? formatPrice(this.boat.Expanded.RetailPrice, true) : formatPrice(this.boat.Expanded.RetailPrice, true, 'fr');
-	 	this.startingWeeklyPrice = (this.isEN) ? weeklyPayment(this.boat.Expanded.RetailPrice) : weeklyPayment(this.boat.Expanded.RetailPrice, 'fr');
+//	  this.startingRetailPrice = (this.isEN) ? formatPrice(this.boat.Expanded.RetailPrice, true) : formatPrice(this.boat.Expanded.RetailPrice, true, 'fr');
+//	 	this.startingWeeklyPrice = (this.isEN) ? weeklyPayment(this.boat.Expanded.RetailPrice) : weeklyPayment(this.boat.Expanded.RetailPrice, 'fr');
 		this.boatName = this.setBoatName(stripParentheses(this.boat.Base.Name));
 		this.modelListingPhoto = 'background-image: url(' + this.boat.Base.Default_Gallery_Image_Original__c + ')';
-		this.standardMotor = (this.boat.Base.Standard_Motor__r) ? rewriteMotorName(this.boat.Base.Standard_Motor__r.Name) : '';
-		if(this.isEN){
-			this.standardTrailer = (this.boat.Base.Standard_Trailer__r) ? ' and ' + rewriteTrailerName(this.boat.Base.Standard_Trailer__r.Name) : '';
-  	} else {
-  		this.standardTrailer = (this.boat.Base.Standard_Trailer__r) ? ' et ' + rewriteTrailerName(this.boat.Base.Standard_Trailer__r.Name) : '';
-   	}
-		if (this.boat.Base.Overall_Length__c) {
-			this.overallLength = convertLength(this.boat.Base.Overall_Length__c);
-		}
-		if (this.boat.Base.Length__c) {
-			this.centerlineLength = convertLength(this.boat.Base.Length__c);
-		}
-		if (this.boat.Base.Package_Length__c) {
-			this.packageLength = convertLength(this.boat.Base.Package_Length__c);
-		}
+//		this.standardMotor = (this.boat.Base.Standard_Motor__r) ? rewriteMotorName(this.boat.Base.Standard_Motor__r.Name) : '';
+//		if(this.isEN){
+//			this.standardTrailer = (this.boat.Base.Standard_Trailer__r) ? ' and ' + rewriteTrailerName(this.boat.Base.Standard_Trailer__r.Name) : '';
+//  	} else {
+//  		this.standardTrailer = (this.boat.Base.Standard_Trailer__r) ? ' et ' + rewriteTrailerName(this.boat.Base.Standard_Trailer__r.Name) : '';
+//   	}
+//		if (this.boat.Base.Overall_Length__c) {
+//			this.overallLength = convertLength(this.boat.Base.Overall_Length__c);
+//		}
+//		if (this.boat.Base.Length__c) {
+//			this.centerlineLength = convertLength(this.boat.Base.Length__c);
+//		}
+//		if (this.boat.Base.Package_Length__c) {
+//			this.packageLength = convertLength(this.boat.Base.Package_Length__c);
+//		}
 	}
 
 	get isDeckBoat() {
@@ -111,7 +89,14 @@ export default class FactoryStoreBoatListingItem extends NavigationMixin(Lightni
 	}
 
 	setBoatName(name){
-		return (this.isFR) ? 'Serie ' + name.replace('-Series', '') : name;
+	  console.log('set name: ', name);
+	  console.log('index of ', name.indexOf('Series'));
+	  if(name.indexOf('Series') > 0){
+	  	return (this.isFR) ? 'Serie ' + name.replace('-Series', '') : name;
+   	} else {
+   	  return name;
+    }
+
  	}
 
 	handleUpdateStockValue( e ){

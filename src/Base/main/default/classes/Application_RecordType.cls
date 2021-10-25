@@ -77,6 +77,16 @@ public virtual class Application_RecordType
     }
     private set;
   }
+  private SystemIssueRTs systemIssueRTs {
+    get {
+      if( this.systemIssueRTs == null )
+      {
+        this.systemIssueRTs = new SystemIssueRTs();
+      }
+      return systemIssueRTs;
+    }
+    private set;
+  }
 //  private WorkOrderRTs workOrderRTs {
 //    get {
 //      if( this.workOrderRTs == null )
@@ -118,6 +128,10 @@ public virtual class Application_RecordType
   public ProductRTs getProductRecordTypes()
   {
     return this.productRTs;
+  }
+
+  public SystemIssueRTs getSystemIssueRecordTypes(){
+    return this.systemIssueRTs;
   }
 
 //  public WorkOrderRTs getWorkOrderRecordTypes()
@@ -458,6 +472,20 @@ public virtual class Application_RecordType
       return this.getIdFromDeveloperName('Trolling_Motor');
     }
 
+  }
+
+  public virtual class SystemIssueRTs extends SObjectRecordType {
+    public SystemIssueRTs(){
+      super('System_Issue__c');
+    }
+
+    public Id getStandardId(){
+      return this.getIdFromDeveloperName('Standard');
+    }
+
+    public Id getEpicId(){
+      return this.getIdFromDeveloperName('Epic');
+    }
   }
 
 //  public virtual class WorkOrderRTs extends SObjectRecordType
