@@ -299,7 +299,6 @@
         .dataTables_length_year{
             position: relative;
             float: left;
-            margin-left: -120px;
         }
         }
         .dataTables_length {
@@ -307,7 +306,7 @@
             float: left;
             margin-left: 15px !important;
         }
-        .dataTables_length_year select {
+        .dataTables_length_year select, .dataTables_length_family select {
             background-color: #FFF;
             color: #16325C;
             border: 1px solid #D8DDE6;
@@ -464,7 +463,7 @@
                         <p class="slds-page-header__title slds-truncate inventaryAllocation slds-p-top--none" style="font-size:35px;">Inventory Allocations (Wholesale)</p>
                     </div>
 
-                    <div class="dataTables_length_year" id="tableData_length">
+                    <div class="dataTables_length_year">
                         <label>YEAR&nbsp;&nbsp;
                             <select name="tableData_length" id="selectedLot" aria-controls="tableData" class="" onchange="changeColorYears(this)">
                                 <option value="All" id="All"><h1 id="All" class="ex1">&nbsp;&nbsp;All&nbsp;&nbsp;</h1></option>
@@ -477,8 +476,20 @@
                         </label>
                     </div>
 
+                    <div class="dataTables_length_family">
+                        <label>&nbsp;&nbsp;Family&nbsp;&nbsp;
+                            <select name="tableData_length" id="selectedFamily" aria-controls="tableData" class="" onchange="changeFamily(this)">
+                                <apex:repeat value="{!productFamilyList}" var="fam">
+                                    <option value="{!fam}" id="{!fam}">
+                                        <h1 id="{!fam}" class="ex1">&nbsp;&nbsp;{!fam}&nbsp;&nbsp;</h1>
+                                    </option>
+                                </apex:repeat>
+                            </select>
+                        </label>
+                    </div>
 
-                    <div class="dataTables_length" id="tableData_length">
+
+                    <div class="dataTables_length">
                         <label>TYPES &nbsp;&nbsp;
                             <select name="tableData_length" aria-controls="tableData" class="" onChange="changeColorType(this)">
                                 <!-- <option value="-1" Id="All">
@@ -702,6 +713,9 @@
             </apex:actionFunction>
             <apex:actionFunction action="{!filterMethod}" name="filterTypeJS" rerender="table" status="counterStatus" oncomplete="initTab()">
                 <apex:param name="type" assignTo="{!filterType}" value="" />
+            </apex:actionFunction>
+            <apex:actionFunction action="{!filterMethod}" name="filterFamilyJS" rerender="table" status="counterStatus" oncomplete="initTab()">
+                <apex:param name="pfamily" assignTo="{!filterFamily}" value="" />
             </apex:actionFunction>
         </apex:form>
     </div>
@@ -1477,14 +1491,28 @@
             var h3s = document.getElementsByTagName("h3");
             for (var i = 0; i < h3s.length; i++) {
                 var h3 = h3s[i];
-                //h3.style.background = "rgb(246, 246, 246)";
-                //h3.style.color = "#222";
             }
-            // this.filterTypeJS(header[header.selectedIndex].id);
             var txt = header[header.selectedIndex].id;
             this.filterTypeJS(txt);
-            if(txt == 'Boat') $(".dataTables_length_year").show();
-            else $(".dataTables_length_year").hide();
+            if(txt == 'Boat') {
+                $(".dataTables_length_year").show();
+                $(".dataTables_length_family").show();
+            }
+            else {
+                $(".dataTables_length_year").hide();
+                $(".dataTables_length_family").hide();
+            }
+        }
+
+        function changeFamily(header) {
+            var h3s = document.getElementsByTagName("h3");
+            for (var i = 0; i < h3s.length; i++) {
+                var h3 = h3s[i];
+            }
+            console.log('header');
+            console.log(header);
+            var txt = header[header.selectedIndex].id;
+            this.filterFamilyJS(txt);
         }
 
 
