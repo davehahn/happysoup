@@ -162,6 +162,20 @@ private class Application_RecordType_T
     System.assert( resultRTs.getTrollingMotorId() != null );
   }
 
+  @IsTest
+  static void SystemIssuesRecordTypes_Test()
+  {
+    fetchRecords( 'System_Issue__c' );
+
+    Test.startTest();
+    Application_RecordType.SystemIssueRTs  resultRTs=
+      new Application_RecordType().getSystemIssueRecordTypes();
+    Test.stopTest();
+
+    System.assertEquals( rts.size(), resultRTs.getRecordTypeCount() );
+    System.assert( resultRTs.getStandardId() != null );
+    System.assert( resultRTs.getEpicId() != null );
+  }
 //  @IsTest
 //  static void WorkOrderRecordTypes_Test()
 //  {
