@@ -9,6 +9,7 @@ public with sharing class FactoryStoreStaffList_Controller {
         if(department == 'Sales'){
             roles = new String[]{
                 '%Store Manager%',
+                '%Sales Manager%',
                 '%Memory Makers%',
                 '%Business Office Managers%'
             };
@@ -16,7 +17,7 @@ public with sharing class FactoryStoreStaffList_Controller {
             roles = new String[]{
                 '%Boat Specialist%',
                 '%Memory Builders%',
-                '%Director of Customer Service%'
+                '%Director of Customer Servigice%'
             };
         }
         return [

@@ -3,7 +3,7 @@ global without sharing class createValueAdjustmentFromImportBatch implements Sch
 	global createValueAdjustmentFromImportBatch() {}
 	
 	global Database.QueryLocator start(Database.BatchableContext BC) {
-		String query = 'SELECT Id, Product__c, Adjustment_Value_Per_Quantity__c, Has_Inbound__c, Adjusted__c, Existing_Quantity__c, Existing_Value__c FROM Import_Adjustment_New__c WHERE Adjustable__c = true and Adjusted__c = false';
+		String query = 'SELECT Id, Product__c, Adjustment_Value_Per_Quantity__c, Has_Inbound__c, Adjusted__c, Existing_Quantity__c, Existing_Value__c, Import_Date__c, GL_Account_Variable_1__c, GL_Account_Variable_2__c, Adjustment_Amount__c  FROM Import_Adjustment_New__c WHERE Adjustable__c = true and Adjusted__c = false';
 		return Database.getQueryLocator(query);
 	}
 
@@ -12,10 +12,13 @@ global without sharing class createValueAdjustmentFromImportBatch implements Sch
    		Map<Id,GMBLASERP__Inventory_Adjustment__c> mapAdjustment = new Map<Id,GMBLASERP__Inventory_Adjustment__c>();
    		Set<Id> setIdProduct = new Set<Id>();
    		Id idGlCostVariance = gcConstants.idGlCostVariance;
+		Date moveDate = Date.today();
 		for(SObject sObj : scope) {
 			Import_Adjustment_New__c imp = (Import_Adjustment_New__c) sObj;
-			if(!mapAdjustment.containsKey(imp.Product__c))
-				mapAdjustment.put(imp.Product__c, new GMBLASERP__Inventory_Adjustment__c(GMBLASERP__Product__c = imp.Product__c, GMBLASERP__Adjustment_Date__c = Date.today(), GMBLASERP__Adjustment_Type__c = 'Value', GMBLASERP__GL_Account__c = idGlCostVariance));
+			if(!mapAdjustment.containsKey(imp.Product__c)) {
+				moveDate = imp.Import_Date__c;
+				mapAdjustment.put(imp.Product__c, new GMBLASERP__Inventory_Adjustment__c(GMBLASERP__Product__c = imp.Product__c, GMBLASERP__Adjustment_Date__c = moveDate, GMBLASERP__Adjustment_Type__c = 'Value', GMBLASERP__GL_Account__c = idGlCostVariance, GL_Account_Variable_1__c = imp.GL_Account_Variable_1__c, Department_GLV_2__c = imp.GL_Account_Variable_2__c));
+			}
 			setIdProduct.add(imp.Product__c);
 			listImport.add(imp);
 		}
@@ -36,13 +39,13 @@ global without sharing class createValueAdjustmentFromImportBatch implements Sch
 		GMBLASERP.gcInventoryBalance.findOrCreateBalances(mapPWLB);
         Map<Id,Decimal> mapPQty = new Map<Id,Decimal>();
         Map<Id,Decimal> mapPVal = new Map<Id,Decimal>();
-        for(AggregateResult aggRes : 
+        for(AggregateResult aggRes :
             [SELECT GMBLASERP__Product__c idProduct, 	
             	sum(GMBLASERP__Quantity__c) qty, 
             	sum(GMBLASERP__Inventory_GL_Amount__c) amt
              FROM GMBLASERP__Inventory_Movement_Cube__c
              WHERE GMBLASERP__Product__c IN:setIdProduct
-               	AND GMBLASERP__Movement_Date__c <= TODAY
+               	AND GMBLASERP__Movement_Date__c <=: moveDate
              GROUP BY GMBLASERP__Product__c])
         {
             Decimal qtyInv = (Decimal)aggRes.get('qty');
@@ -74,7 +77,7 @@ global without sharing class createValueAdjustmentFromImportBatch implements Sch
 					            GMBLASERP__Inventory_Adjustment__c = mapAdjustment.get(imp.Product__c).Id,
 					            AcctSeedERP__Credit_GL_Account__c = mapAdjustment.get(imp.Product__c).GMBLASERP__GL_Account__c,
 					            AcctSeedERP__Inventory_Balance__c = idBalance,
-					            AcctSeedERP__Movement_Date__c = Date.today(),       
+					            AcctSeedERP__Movement_Date__c = imp.Import_Date__c,
 					            AcctSeedERP__Quantity__c = cQty,
 					            AcctSeedERP__Type__c = 'Accounting',
 					            AcctSeedERP__Unit_Cost__c = 0,
@@ -110,7 +113,8 @@ global without sharing class createValueAdjustmentFromImportBatch implements Sch
 			AcctSeedERP__Inbound_Inventory_Movement__c inMove = mapIdMove.get(imp.Id);
 			if(inMove != null)
 			{
-				inMove.AcctSeedERP__Unit_Cost__c = imp.Adjustment_Value_Per_Quantity__c;
+				Decimal adjustmentPerQ = imp.Existing_Quantity__c > 0 ? ((imp.Existing_Value__c + imp.Adjustment_Amount__c) / imp.Existing_Quantity__c) : 0;
+				inMove.AcctSeedERP__Unit_Cost__c = adjustmentPerQ;
 				inMove.GMBLASERP__Cost_Override__c = true;
 				imp.Has_Inbound__c = true;
 				imp.Adjusted__c = true;

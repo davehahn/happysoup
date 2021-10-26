@@ -142,13 +142,14 @@ public without sharing class gcTransactionParent {
 		{
 			AcctSeed__Project__c p;
 			AcctSeed__Project_Task__c pt;
-			Id idGLV1;
-			Id idGLV2;
+			Id idGLV1, idGLV2, idGLV1P, idGLV2P;
 			if(projectTaskField != null && obj.get(projectTaskField) != null) {
 				pt = mapProjectTask.get((Id) obj.get(projectTaskField));
 				p = pt.AcctSeed__Project__r;
-				idGLV1 = pt.AcctSeed__GL_Account_Variable_1__c == null ? p.GL_Account_Variable_1__c : pt.AcctSeed__GL_Account_Variable_1__c;
-				idGLV2 = pt.AcctSeed__GL_Account_Variable_2__c == null ? p.GL_Account_Variable_2__c : pt.AcctSeed__GL_Account_Variable_2__c;
+				idGLV1P = p.GL_Account_Variable_1__c;
+				idGLV2P = p.GL_Account_Variable_2__c;
+				idGLV1 = pt.AcctSeed__GL_Account_Variable_1__c == null ? idGLV1P : pt.AcctSeed__GL_Account_Variable_1__c;
+				idGLV2 = pt.AcctSeed__GL_Account_Variable_2__c == null ? idGLV2P : pt.AcctSeed__GL_Account_Variable_2__c;
 			}else if(projectField != null && obj.get(projectField) != null){
 				p = mapProject.get((Id) obj.get(projectField));
 				idGLV1 = p.GL_Account_Variable_1__c;
@@ -158,21 +159,23 @@ public without sharing class gcTransactionParent {
 			if(p != null)
 			{
 				if(p.GL_Account_Variable_1__c != null){
-					if(!p.Internal_Labour_Service__c && !p.Internal_Partner_Boat_Sale__c && !p.Internal_Warranty__c)
+					if(!p.Internal_Labour_Service__c && !p.Internal_Partner_Boat_Sale__c && !p.Internal_Warranty__c) {
 						obj.put(prefix + 'GL_Account_Variable_1__c', idGLV1);
-					else if(obj.get(prefix + 'GL_Account_Variable_1__c') == null){
+					}else if(p.Internal_Labour_Service__c && obj.getSObjectType().getDescribe().getName() == 'AcctSeed__Billing_Line__c'){
+						obj.put(prefix + 'GL_Account_Variable_1__c', idGLV1P);
+					}else if(obj.get(prefix + 'GL_Account_Variable_1__c') == null){
 						obj.put(prefix + 'GL_Account_Variable_1__c', idGLV1);
 					}
 				}
 				if(idGLV1 != null){
-					if(!p.Internal_Labour_Service__c &&
-						 !p.Internal_Partner_Boat_Sale__c &&
-						 !p.Internal_Warranty__c &&
-							obj.get(prefix + 'GL_Account_Variable_2__c') == null )
+					System.debug('Object Name');
+					System.debug(obj.getSObjectType().getDescribe().getName());
+					if(!p.Internal_Labour_Service__c && !p.Internal_Partner_Boat_Sale__c && !p.Internal_Warranty__c && obj.get(prefix + 'GL_Account_Variable_2__c') == null )
 					{
 						obj.put(prefix + 'GL_Account_Variable_2__c', idGLV2);
-					}
-					else if(obj.get(prefix + 'GL_Account_Variable_2__c') == null)
+					}else if(p.Internal_Labour_Service__c && obj.getSObjectType().getDescribe().getName() == 'AcctSeed__Billing_Line__c') {
+						obj.put(prefix + 'GL_Account_Variable_2__c', idGLV2P);
+					}else if(obj.get(prefix + 'GL_Account_Variable_2__c') == null)
 					{
 						obj.put(prefix + 'GL_Account_Variable_2__c', idGLV2);
 					}

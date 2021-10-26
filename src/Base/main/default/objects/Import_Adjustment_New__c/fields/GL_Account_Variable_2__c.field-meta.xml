@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>GL_Account_Variable_2__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <externalId>false</externalId>
+    <label>GL Account Variable 2</label>
+    <lookupFilter>
+        <active>true</active>
+        <errorMessage>Must be of Type GL Account Variable 2</errorMessage>
+        <filterItems>
+            <field>AcctSeed__Accounting_Variable__c.AcctSeed__Type__c</field>
+            <operation>equals</operation>
+            <value>GL Account Variable 2</value>
+        </filterItems>
+        <isOptional>false</isOptional>
+    </lookupFilter>
+    <referenceTo>AcctSeed__Accounting_Variable__c</referenceTo>
+    <relationshipLabel>Import Adjustment Values (GL Account Variable 2)</relationshipLabel>
+    <relationshipName>Import_Adjustment_Values1</relationshipName>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

@@ -12,8 +12,10 @@ public without sharing class InventoryAllocationWholesaleController {
     private final String queryProductOwner                      {get;set;}
     public List<String> listFilterYear                          {get;set;}
     public Set<String> listLotNames                             {get;set;}
+    public Set<String> productFamilyList                        {get;set;}
     public String filterYear                                    {get;set;}
     public String filterType                                    {get;set;}
+    public String filterFamily                                  {get;set;}
     public String filterWarehouse                               {get;set;}
 
 
@@ -376,16 +378,31 @@ public without sharing class InventoryAllocationWholesaleController {
     {
         this.allProducts = new Set<ID>();
         this.listLotNames = new Set<String>();
-        String lotQuery = ' SELECT Id, GMBLASERP__Product__c, Name FROM GMBLASERP__Lot__c WHERE GMBLASERP__Product__r.RecordType.Name =:filterType ';
+        this.productFamilyList = new Set<String>();
+        List<Family_by_Record_Type__mdt> frts = Family_by_Record_Type__mdt.getAll().values();
+        for( Family_by_Record_Type__mdt frt : frts){
+            if(frt.Family_by_Record_Type__c == this.filterType) {
+                productFamilyList.add(frt.Label);
+            }
+        }
+        /// Loading all boat lots
+        String lotQuery = ' SELECT Id, GMBLASERP__Product__c, Name, GMBLASERP__Product__r.Family FROM GMBLASERP__Lot__c WHERE GMBLASERP__Product__r.RecordType.Name =:filterType ';
         if(this.filterYear != 'All' && this.filterType == 'Boat'){
           listFilterYear = new List<String>();
           listFilterYear = this.filterYear.split(',');
           lotQuery += ' AND Name IN:listFilterYear ';
         }
+//        if(this.filterFamily != ''){
+//            System.debug(this.filterFamily);
+//            lotQuery += ' AND GMBLASERP__Product__r.Family =:filterFamily ';
+//        }
         List<String> lotNames = new List<String>();
         for (GMBLASERP__Lot__c objLot : Database.query(lotQuery))
         {
-            allProducts.add(objLot.GMBLASERP__Product__c);
+            if(this.filterFamily == objLot.GMBLASERP__Product__r.Family && this.filterType == 'Boat')
+                allProducts.add(objLot.GMBLASERP__Product__c);
+            else if(this.filterType != 'Boat')
+                allProducts.add(objLot.GMBLASERP__Product__c);
             lotNames.add(objLot.Name);
         }
         if(!lotNames.isEmpty()){
@@ -393,9 +410,12 @@ public without sharing class InventoryAllocationWholesaleController {
           listLotNames.addAll(lotNames);
         }
 
+        System.debug(loggingLevel.error,'lotQuery:'+lotQuery);
+        System.debug(loggingLevel.error,'productFamilyList:'+productFamilyList);
         System.debug(loggingLevel.error,'this.filterYear 1:'+this.filterYear);
         System.debug(loggingLevel.error,'this.filterType 1:'+this.filterType);
         System.debug(loggingLevel.error,'this.allProducts 1:'+this.allProducts);
+        System.debug(loggingLevel.error,'listLotNames:'+listLotNames);
     }
 
     private void buildMapStock()
