@@ -158,14 +158,6 @@
         <connector>
             <targetReference>Record_Type_Split</targetReference>
         </connector>
-        <filterLogic>and</filterLogic>
-        <filters>
-            <field>Related_to_ERP__c</field>
-            <operator>IsNull</operator>
-            <value>
-                <booleanValue>false</booleanValue>
-            </value>
-        </filters>
         <object>GetFeedback_Survey_Response__c</object>
         <recordTriggerType>Create</recordTriggerType>
         <triggerType>RecordAfterSave</triggerType>
