@@ -1,0 +1,56 @@
+<!--
+ - Created by dave on 2021-10-27.
+ -->
+<aura:component implements="lightning:recordHomeTemplate" description=" Full Header, 80/20 split, 66/33 Spit Content">
+  <aura:attribute name="header" type="Aura.Component[]" />
+  <aura:attribute name="leftTop" type="Aura.Component[]" />
+  <aura:attribute name="rightTop" type="Aura.Component[]" />
+  <aura:attribute name="leftContent" type="Aura.Component[]" />
+  <aura:attribute name="rightContent" type="Aura.Component[]" />
+
+  <div>
+    <!-- HEADER -->
+    <lightning:layout>
+      <lightning:layoutItem size="12">
+        {!v.header}
+      </lightning:layoutItem>
+    </lightning:layout>
+
+    <!-- 80/20 Split-->
+    <lightning:layout multipleRows="true" verticalAlign="center">
+      <lightning:layoutItem size="12"
+                            smallDeviceSize="12"
+                            mediumDeviceSize="8"
+                            largeDeviceSize="10"
+                            class="slds-p-right_small slds-p-top_small slds-p-bottom_small">
+        {!v.leftTop}
+      </lightning:layoutItem>
+      <lightning:layoutItem size="12"
+                            smallDeviceSize="12"
+                            mediumDeviceSize="4"
+                            largeDeviceSize="2"
+                            class="slds-p-left_small slds-p-top_small slds-p-bottom_small">
+        {!v.rightTop}
+      </lightning:layoutItem>
+    </lightning:layout>
+
+    <!-- 66/33 Split-->
+    <lightning:layout multipleRows="true" verticalAlign="start">
+      <lightning:layoutItem size="12"
+                            smallDeviceSize="12"
+                            mediumDeviceSize="12"
+                            largeDeviceSize="8"
+                            class="slds-p-right_small slds-p-top_small slds-p-bottom_small">
+        {!v.leftContent}
+      </lightning:layoutItem>
+      <lightning:layoutItem size="12"
+                            smallDeviceSize="12"
+                            mediumDeviceSize="12"
+                            largeDeviceSize="4"
+                            class="slds-p-left_small slds-p-top_small slds-p-bottom_small">
+        {!v.rightContent}
+      </lightning:layoutItem>
+    </lightning:layout>
+  </div>
+
+</aura:component>

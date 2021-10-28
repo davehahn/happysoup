@@ -1,0 +1,38 @@
+<!--
+ - Created by dave on 2021-10-27.
+ -->
+
+<!-- System Issue Percentage Complete -->
+<template>
+  <div class="slds-card">
+    <lightning-layout
+      vertical-align="stretch"
+      multiple-rows="true"
+      horizontal-align="center"
+    >
+      <lightning-layout-item
+        size="6"
+        small-device-size="12"
+        medium-device-size="12"
+        large-device-size="6"
+        padding="horizontal-small"
+      >
+        <canvas class="chart" height="300" width="300" lwc:dom="manual"></canvas>
+      </lightning-layout-item>
+      <lightning-layout-item
+        size="6"
+        small-device-size="12"
+        medium-device-size="12"
+        large-device-size="6"
+        padding="horizontal-small"
+        class="slds-is-relative"
+      >
+        <div class="gauge-reading">
+          <div class="value">{done}%</div>
+          <div class="label">Completed</div>
+        </div>
+        <canvas class="gauge" height="300" width="250" lwc:dom="manual" ></canvas>
+      </lightning-layout-item>
+    </lightning-layout>
+  </div>
+</template>

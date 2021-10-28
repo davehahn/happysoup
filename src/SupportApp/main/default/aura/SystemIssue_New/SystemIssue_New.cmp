@@ -3,7 +3,7 @@
  -->
 
 <aura:component controller="SystemIssue_Controller"
-                implements="flexipage:availableForRecordHome,lightning:actionOverride,force:hasRecordId"
+                implements="flexipage:availableForRecordHome,lightning:actionOverride,force:hasRecordId,force:lightningQuickActionWithoutHeader"
                 access="global">
 
   <ltng:require scripts="{!join(',', $Resource.Libraries +'/js/LightningApex.js',

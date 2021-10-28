@@ -158,16 +158,16 @@ public virtual class Application_Selector
 
   public List<SObject> query()
   {
-    try
-    {
+//    try
+//    {
       String qString = this.buildQueryString();
       return Database.query(qString);
-    }
-    catch( Exception e )
-    {
-      throwError( e.getMessage() );
-      return null;
-    }
+//    }
+//    catch( Exception e )
+//    {
+//      throwError( e.getMessage() );
+//      return null;
+//    }
   }
 
   public String buildQueryString()
