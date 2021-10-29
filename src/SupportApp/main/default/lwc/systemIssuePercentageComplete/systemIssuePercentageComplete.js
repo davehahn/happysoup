@@ -15,6 +15,7 @@ export default class SystemIssuePercentageComplete extends LightningElement {
   done = 0;
   todo = 0;
   inProgress = 0;
+  complete=0;
   chart;
   gauge;
   scriptsLoaded = false;
@@ -28,6 +29,7 @@ export default class SystemIssuePercentageComplete extends LightningElement {
       this.todo = getFieldValue(result.data, PERCENT_TODO_FIELD);
       this.inProgress = getFieldValue(result.data, PERCENT_INPROGRESS_FIELD);
       this.done = getFieldValue(result.data, PERCENT_DONE_FIELD);
+      this.complete = this.done.toFixed();
       this.initialize();
     }
     if (result.error) {
@@ -59,7 +61,7 @@ export default class SystemIssuePercentageComplete extends LightningElement {
         datasets: [
           {
             label: ["Complete"],
-            data: [this.done, 100 - this.done],
+            data: [this.complete, 100 - this.complete],
             backgroundColor: ["#02716B", "#DDDBDA"]
           }
         ]
@@ -104,15 +106,16 @@ export default class SystemIssuePercentageComplete extends LightningElement {
       data: {
         datasets: [
           {
-            data: [this.todo, this.inProgress, this.done],
-            backgroundColor: ["#C13934", "#FFB75C", "#02716B"],
+            data: [this.done, this.inProgress, this.todo],
+            backgroundColor: ["#02716B", "#0176D3", "#C13934"],
             label: "Individual Story Statues"
           }
         ],
-        labels: ["To Do", "In Progress", "Done"]
+        labels: ["Done", "In Progress", "To Do"]
       },
       options: {
         responsive: false,
+        rotation: 180,
         plugins: {
           legend: {
             position: "bottom"

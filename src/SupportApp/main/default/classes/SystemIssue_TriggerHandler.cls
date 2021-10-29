@@ -154,12 +154,12 @@ public without sharing class SystemIssue_TriggerHandler extends TriggerHandler {
       }
       System_Issue__c si = new System_Issue__c(
         Id = parentId,
-        Percent_Done__c = (doneCount /
-          issuesByParentRecordId.get(parentId).size() ) * 100,
-        Percent_To_Do__c = (toDoCount /
-          issuesByParentRecordId.get(parentId).size() ) * 100,
-        Percent_In_Progress__c = (inProgressCount /
-          issuesByParentRecordId.get(parentId).size() ) * 100
+        Percent_Done__c = ((doneCount /
+          issuesByParentRecordId.get(parentId).size() ) * 100).setScale(2,System.RoundingMode.HALF_UP),
+        Percent_To_Do__c = ((toDoCount /
+          issuesByParentRecordId.get(parentId).size() ) * 100).setScale(2,System.RoundingMode.HALF_UP),
+        Percent_In_Progress__c = ((inProgressCount /
+          issuesByParentRecordId.get(parentId).size() ) * 100).setScale(2,System.RoundingMode.HALF_UP)
       );
       parentIssues.add(
         si
