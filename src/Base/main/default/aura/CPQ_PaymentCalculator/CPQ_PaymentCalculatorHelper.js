@@ -1,27 +1,24 @@
 ({
   calculate: function( component )
   {
-    console.log('helper.calculate');
-    var amount = component.get('v.amountWithoutDeposit'),
+    var amount = component.get('v.amount'),
         deposit = component.get('v.deposit'),
         interestRate = component.get('v.interestRate'),
         term = component.get('v.term'),
         amort = component.get('v.amort'),
         compound_per_year = 12,
-        amountFinanced = amount - deposit,
         compoundInterest,
         remaining,
         payment, m_payment, bw_payment, w_payment,
         fireEvent = !component.get('v.updateViaButton'),
         evt = $A.get("e.c:CPQ_PaymentCalculator_PaymentsChanged_Event");
 
-    deposit = deposit === null ? 0 : deposit;
     interestRate = interestRate === null ? 0 : interestRate;
+    deposit = deposit === null ? 0 : deposit;
+    const amountFinanced = amount;
+
     term = term === null ? 0 : term;
     amort = amort === null ? 0 : amort;
-    console.log(`Payment Calculator - Amount Financed = ${amount}`)
-    console.log(`Payment Calculator - deposit = ${deposit}`)
-    console.log(`Payment Calculator - Amount Financed = ${amountFinanced}`)
     if( parseFloat(interestRate) === 0 )
     {
       payment = ( amountFinanced / amort );
@@ -96,5 +93,6 @@
         break;
       }
     }
+    this.calculate( component );
   }
 })

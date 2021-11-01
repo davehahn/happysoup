@@ -389,6 +389,27 @@
                                          currencyCode="CAD"
                                          class="slds-p-right_x-small" />
             </lightning:layoutItem>
+            <!-- Before Tax -->
+            <lightning:layoutItem size="6"
+                                  largeDeviceSize="10"
+                                  mediumDeviceSize="10"
+                                  smallDeviceSize="7"
+                                  padding="horizontal-small"
+                                  class="slds-text-align_right">
+              <span class="before-tax">Before Tax:</span>
+            </lightning:layoutItem>
+            <lightning:layoutItem size="6"
+                                  largeDeviceSize="2"
+                                  mediumDeviceSize="2"
+                                  smallDeviceSize="5"
+                                  padding="horizontal-small"
+                                  class="slds-text-align_right">
+              <lightning:formattedNumber value="{!v.subTotal + v.savingsTotal}"
+                                         style="currency"
+                                         currencyCode="CAD"
+                                         class="slds-p-right_x-small  before-tax" />
+            </lightning:layoutItem>
+
 
              <!-- HARMONIZED TAXES -->
             <aura:if isTrue="{! v.cpq.taxZone.isHarmonized}">
