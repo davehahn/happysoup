@@ -20,6 +20,7 @@
 
   <aura:handler event="c:Retail_Sales_Tool_OppCreated_Event"
                 action="{!c.handleOppCreated}" />
+  <aura:handler name="change" value="{!v.saleTotal}" action="{!c.saleTotalChange}" />
 
   <div>
     <c:Lgnd_Spinner_dh aura:id="spinner" />
@@ -109,30 +110,30 @@
                                               alternativeText="Show menu"
                                               onselect="{!c.handleMobileMenuChange}"
                                               menuAlignment="right">
-                            <aura:if isTrue="{! not(v.isQuoting) }" >
-                              <lightning:menuItem label="Builder"
-                                                  value="builder"
-                                                  checked="{! equals(v.mobileMenuValue, 'builder')}"/>
-                              <lightning:menuItem label="Summary"
-                                                  value="summary"
-                                                  checked="{! equals(v.mobileMenuValue, 'summary')}"/>
-                              <lightning:menuItem label="Payment Calculator"
-                                                  value="calc"
-                                                  checked="false"/>
-                              <aura:if isTrue="{! empty( v.recordId )}">
-                                 <lightning:menuItem label="Save Quote"
-                                                     value="createQuote"
-                                                     checked="{! equals(v.mobileMenuValue, 'createQuote')}"/>
-                              </aura:if>
-                              <aura:if isTrue="{! !empty( v.recordId )}">
-                                <lightning:menuItem label="Save Quote"
-                                                     value="updateQuote"
-                                                     checked="{! equals(v.mobileMenuValue, 'createQuote')}"/>
-                              </aura:if>
+                          <aura:if isTrue="{! not(v.isQuoting) }" >
+                            <lightning:menuItem label="Builder"
+                                                value="builder"
+                                                checked="{! equals(v.mobileMenuValue, 'builder')}"/>
+                            <lightning:menuItem label="Summary"
+                                                value="summary"
+                                                checked="{! equals(v.mobileMenuValue, 'summary')}"/>
+                            <lightning:menuItem label="Payment Calculator"
+                                                value="calc"
+                                                checked="false"/>
+                            <aura:if isTrue="{! empty( v.recordId )}">
+                               <lightning:menuItem label="Save Quote"
+                                                   value="createQuote"
+                                                   checked="{! equals(v.mobileMenuValue, 'createQuote')}"/>
                             </aura:if>
-                            <aura:if isTrue="{! v.isQuoting }">
-                              <lightning:menuItem label="Return to Builder" value="return" />
+                            <aura:if isTrue="{! !empty( v.recordId )}">
+                              <lightning:menuItem label="Save Quote"
+                                                   value="updateQuote"
+                                                   checked="{! equals(v.mobileMenuValue, 'createQuote')}"/>
                             </aura:if>
+                          </aura:if>
+                          <aura:if isTrue="{! v.isQuoting }">
+                            <lightning:menuItem label="Return to Builder" value="return" />
+                          </aura:if>
                         </lightning:buttonMenu>
                       </aura:if>
                     </div>

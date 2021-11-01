@@ -21,6 +21,10 @@
     }
   },
 
+  saleTotalChange: function(component, event){
+    console.log( `SaleTotal Change ${event.getParam("value")}`);
+  },
+
 	doInit : function(component, event, helper) {
     helper.doInit(component);
 	},
@@ -86,8 +90,6 @@
     {
       quoteName += ' / ' + cpq.theMotor.name;
     }
-    console.log('QUOTENAME');
-    console.log(quoteName);
     component.set('v.quoteName', quoteName );
     component.set('v.recordId', oppId);
     //component.set('v.opportunityId', oppId);
