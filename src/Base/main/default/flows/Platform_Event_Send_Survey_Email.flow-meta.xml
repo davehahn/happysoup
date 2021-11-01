@@ -247,7 +247,7 @@
         <defaultConnectorLabel>Else</defaultConnectorLabel>
         <rules>
             <name>Valid_Email</name>
-            <conditionLogic>or</conditionLogic>
+            <conditionLogic>and</conditionLogic>
             <conditions>
                 <leftValueReference>Get_ERP_Order.AcctSeed__Account__r.PersonEmail</leftValueReference>
                 <operator>IsNull</operator>
