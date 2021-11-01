@@ -1,0 +1,27 @@
+<!--
+ - Created by dave on 2021-10-27.
+ -->
+
+<design:component label="Header, 80/20, 66/33">
+  <flexipage:template >
+    <flexipage:region name="header"
+                      label="Header"
+                      defaultWidth="Medium" />
+    <flexipage:region name="leftTop"
+                      label="Top Left Region"
+                      defaultWidth="Large" />
+    <flexipage:region name="rightTop"
+                      label="Top Right Region"
+                      defaultWidth="Small" />
+    <flexipage:region name="leftContent"
+                      label="Content Left Region"
+                      defaultWidth="Large" />
+    <flexipage:region name="rightContent"
+                      label="Content Right Region"
+                      defaultWidth="Small" />
+  </flexipage:template>
+  <design:supportedFormFactors>
+    <design:supportedFormFactor type="Small"/>
+    <design:supportedFormFactor type="Large"/>
+  </design:supportedFormFactors>
+</design:component>

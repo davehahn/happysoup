@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Flow xmlns="http://soap.sforce.com/2006/04/metadata">
     <apiVersion>53.0</apiVersion>
-    <interviewLabel>ERP Order : Update Account Platform Event {!$Flow.CurrentDateTime}</interviewLabel>
-    <label>ERP Order : Update Account Platform Event</label>
+    <interviewLabel>Platform Event: Update Account X30 Flag {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Platform Event: Update Account X30 Flag</label>
     <processMetadataValues>
         <name>BuilderType</name>
         <value>
@@ -23,8 +23,8 @@
     </processMetadataValues>
     <processType>AutoLaunchedFlow</processType>
     <recordUpdates>
-        <name>Update_X30_Flag</name>
-        <label>Update X30 Flag</label>
+        <name>Uncheck_X30_Flag</name>
+        <label>Uncheck X30 Flag</label>
         <locationX>176</locationX>
         <locationY>194</locationY>
         <filterLogic>and</filterLogic>
@@ -38,7 +38,7 @@
         <inputAssignments>
             <field>X30_Day_Survey_Flag__c</field>
             <value>
-                <booleanValue>true</booleanValue>
+                <booleanValue>false</booleanValue>
             </value>
         </inputAssignments>
         <object>Account</object>
@@ -47,7 +47,7 @@
         <locationX>50</locationX>
         <locationY>0</locationY>
         <connector>
-            <targetReference>Update_X30_Flag</targetReference>
+            <targetReference>Uncheck_X30_Flag</targetReference>
         </connector>
         <object>ERP_Order_Update_Account__e</object>
         <triggerType>PlatformEvent</triggerType>

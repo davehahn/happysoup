@@ -9,7 +9,7 @@ public with sharing class SystemIssue_Controller
   public static String initForm()
   {
     Map<String, List<String>> result = new Map<String, List<String>>{
-      'typeOptions' => LGND_Utilities.getPicklistValues('System_Issue__c', 'Type__c'),
+      'typeOptions' => getTypeOptions(),
       'priorityOptions' => LGND_Utilities.getPicklistValues('System_Issue__c', 'Priority__c'),
       'jiraProjectOptions' => LGND_Utilities.getPicklistValues('System_Issue__c', 'Jira_Project__c'),
       'departmentOptions' => LGND_Utilities.getPicklistValues('System_Issue__c', 'Department__c')
@@ -22,6 +22,15 @@ public with sharing class SystemIssue_Controller
   {
     insert issue;
     return issue;
+  }
+
+  private  static List<String> getTypeOptions(){
+    List<String> result = new List<String>();
+    for( Jira_Issue_Type__mdt jit : Jira_Issue_Type__mdt.getAll().values() ){
+      result.add( jit.Type__c );
+    }
+    result.sort();
+    return result;
   }
 
 }

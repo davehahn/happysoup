@@ -73,7 +73,7 @@ public without sharing class InventoryAllocationWholesaleController {
         if(this.filterType != 'Boat')
           this.filterYear = '';
         else if(this.filterYear == '')
-          this.filterYear = 'All';
+          this.filterYear = '';
 
         this.buildProductList();
         this.buildMapStock();
@@ -383,6 +383,8 @@ public without sharing class InventoryAllocationWholesaleController {
         for( Family_by_Record_Type__mdt frt : frts){
             if(frt.Family_by_Record_Type__c == this.filterType) {
                 productFamilyList.add(frt.Label);
+                if(this.filterFamily == null)
+                    this.filterFamily = frt.Label;
             }
         }
         /// Loading all boat lots
@@ -392,16 +394,18 @@ public without sharing class InventoryAllocationWholesaleController {
           listFilterYear = this.filterYear.split(',');
           lotQuery += ' AND Name IN:listFilterYear ';
         }
-//        if(this.filterFamily != ''){
-//            System.debug(this.filterFamily);
-//            lotQuery += ' AND GMBLASERP__Product__r.Family =:filterFamily ';
-//        }
+        if(this.filterFamily != ''){
+            System.debug(this.filterFamily);
+            lotQuery += ' AND GMBLASERP__Product__r.Family IN:productFamilyList ';
+        }
         List<String> lotNames = new List<String>();
         for (GMBLASERP__Lot__c objLot : Database.query(lotQuery))
         {
-            if(this.filterFamily == objLot.GMBLASERP__Product__r.Family && this.filterType == 'Boat')
+            if(this.filterYear == 'ALL')
+                this.filterYear = objLot.Name;
+            if(this.filterFamily == objLot.GMBLASERP__Product__r.Family && this.filterType == 'Boat') {
                 allProducts.add(objLot.GMBLASERP__Product__c);
-            else if(this.filterType != 'Boat')
+            }else if(this.filterType != 'Boat')
                 allProducts.add(objLot.GMBLASERP__Product__c);
             lotNames.add(objLot.Name);
         }
@@ -414,6 +418,7 @@ public without sharing class InventoryAllocationWholesaleController {
         System.debug(loggingLevel.error,'productFamilyList:'+productFamilyList);
         System.debug(loggingLevel.error,'this.filterYear 1:'+this.filterYear);
         System.debug(loggingLevel.error,'this.filterType 1:'+this.filterType);
+        System.debug(loggingLevel.error,'this.filterFamily 1:'+this.filterFamily);
         System.debug(loggingLevel.error,'this.allProducts 1:'+this.allProducts);
         System.debug(loggingLevel.error,'listLotNames:'+listLotNames);
     }
@@ -760,13 +765,13 @@ public without sharing class InventoryAllocationWholesaleController {
         String returnDateQuery;
         boolean entroAlWhere = false;
         if('All' == this.filterYear && this.filterType == 'Boat') {
-            returnDateQuery = this.queryInv;
+            returnDateQuery = this.queryInv + ' AND GMBLASERP__Lot__r.GMBLASERP__Product__r.Family = ' + '\'' + this.filterFamily + '\'';
         } else if(this.filterType == 'Boat'){
           if(listFilterYear == null){
             listFilterYear = new List<String>();
             listFilterYear = this.filterYear.split(',');
           }
-          returnDateQuery = this.queryInv + ' AND GMBLASERP__Lot__r.name IN:listFilterYear ';
+          returnDateQuery = this.queryInv + ' AND GMBLASERP__Lot__r.name IN:listFilterYear AND GMBLASERP__Lot__r.GMBLASERP__Product__r.Family = ' + '\'' + this.filterFamily + '\'';
           entroAlWhere = true;
         }else{
             returnDateQuery = this.queryInv;

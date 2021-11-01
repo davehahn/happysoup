@@ -386,7 +386,8 @@ public with sharing class ERPInvoicePDF {
                             Partner_External_PO_Number__c,
                             Parking_Spot__c,
                             Warranty_Type__c,
-                            Stage__c
+                            Stage__c,
+                            Service_Date__c
                      FROM AcctSeed__Project__c
                      WHERE Id =: erpId ];
 
@@ -901,6 +902,12 @@ public with sharing class ERPInvoicePDF {
       this.invoiceDate = erpOrder.Delivery_Date__c == null ? '' :
         erpOrder.Delivery_Date__c.format('MMM dd, yyyy');
     }
+
+    // SFISSUES-862 [START]
+    if( this.erpOrder.RecordTypeId == gcConstants.idRtProjectService){
+      this.invoiceDate = erpOrder.Service_Date__c == null ? erpOrder.createdDate.format('MMM dd, yyyy') : erpOrder.Service_Date__c.format('MMM dd, yyyy');
+    }
+    // SFISSUES-862 [END]
 
     if( this.erpOrder.RecordTypeId == recordTypes.getCounterSaleId()  ||
         this.erpOrder.RecordTypeId == recordTypes.getPartnerPartsOrderId() ||
