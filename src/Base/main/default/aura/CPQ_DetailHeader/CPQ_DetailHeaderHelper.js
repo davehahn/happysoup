@@ -9,3 +9,4 @@
     component.set('v.total', totals.grandTotal );
   }
 })
+
