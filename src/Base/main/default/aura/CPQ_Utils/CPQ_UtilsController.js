@@ -129,9 +129,10 @@
 
     if( cpq.tradeIn !== undefined && cpq.tradeIn !== null )
     {
+      console.log( JSON.parse( JSON.stringify( cpq.tradeIn ) ) );
       if( cpq.tradeIn.value !== undefined )
       {
-        totals.taxableTotal -= cpq.tradeIn.value;
+        totals.taxableTotal -= cpq.tradeIn.value - cpq.tradeIn.lien;
       }
     }
     totals.fedTax = cpq.isTaxExempt ? 0 : (totals.taxableTotal * cpq.taxZone.federalRate) / 100;
