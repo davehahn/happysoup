@@ -12,11 +12,22 @@ private class Application_RecordType_T
   {
     rts = [
       SELECT
-        Id
+        Id,
+        DeveloperName
       FROM RecordType
       WHERE SobjectType = :sObjectName
       AND IsActive = true
     ];
+  }
+
+  @IsTest
+  static void getDeveloperNameById_Test(){
+    fetchRecords('Product2');
+    Test.startTest();
+    String rtName = new Application_RecordType().getDeveloperNameById( rts[0].Id );
+    Test.stopTest();
+
+    System.assertEquals( rts[0].DeveloperName, rtName );
   }
 
   @IsTest
