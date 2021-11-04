@@ -6,7 +6,6 @@
   handleConfigChange : function(component, event, helper)
   {
     var params = event.getParams();
-console.log( JSON.parse( JSON.stringify(params)));
     component.set('v.boat', params.boat);
     component.set('v.trailer', params.trailer);
     component.set('v.motor', params.motor);

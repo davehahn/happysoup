@@ -23,6 +23,7 @@ public with sharing class Material_Selector extends Application_Selector {
       'AcctSeedERP__Comment__c',
       'GMBLASERP__Unit_Price__c',
       'GMBLASERP__Price_Override__c',
+      'Parent_Product__c',
       'Insurance_Coverage__c',
       'Insurance_Rate__c'
     };
