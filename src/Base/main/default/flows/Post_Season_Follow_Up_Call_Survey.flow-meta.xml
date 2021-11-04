@@ -1,10 +1,50 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Flow xmlns="http://soap.sforce.com/2006/04/metadata">
     <actionCalls>
+        <name>ErrorHandler</name>
+        <label>ErrorHandler</label>
+        <locationX>2161</locationX>
+        <locationY>76</locationY>
+        <actionName>c:Flow_Toast</actionName>
+        <actionType>component</actionType>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>mode</name>
+            <value>
+                <stringValue>dismissible</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>duration</name>
+            <value>
+                <stringValue>10</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>message</name>
+            <value>
+                <elementReference>$Flow.FaultMessage</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>title</name>
+            <value>
+                <stringValue>Error!</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>type</name>
+            <value>
+                <stringValue>error</stringValue>
+            </value>
+        </inputParameters>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </actionCalls>
+    <actionCalls>
         <name>Log_Activity</name>
         <label>Log Activity</label>
-        <locationX>2763</locationX>
-        <locationY>2211</locationY>
+        <locationX>2263</locationX>
+        <locationY>289</locationY>
         <actionName>LogACall</actionName>
         <actionType>quickAction</actionType>
         <connector>
@@ -13,6 +53,7 @@
         <faultConnector>
             <targetReference>ErrorHandler</targetReference>
         </faultConnector>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
         <inputParameters>
             <name>Description</name>
             <value>
@@ -38,6 +79,47 @@
             </value>
         </inputParameters>
     </actionCalls>
+    <actionCalls>
+        <name>SuccessHandler</name>
+        <label>SuccessHandler</label>
+        <locationX>2513</locationX>
+        <locationY>288</locationY>
+        <actionName>c:Flow_Toast</actionName>
+        <actionType>component</actionType>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>mode</name>
+            <value>
+                <stringValue>dismissible</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>duration</name>
+            <value>
+                <stringValue>10</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>message</name>
+            <value>
+                <stringValue>The Post-Season Survey has been created successfully.</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>title</name>
+            <value>
+                <stringValue>Success!</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>type</name>
+            <value>
+                <stringValue>success</stringValue>
+            </value>
+        </inputParameters>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </actionCalls>
+    <apiVersion>49.0</apiVersion>
     <choices>
         <name>Abigboxstore</name>
         <choiceText>A big box store</choiceText>
@@ -178,100 +260,9 @@
         <name>EmptyString</name>
         <dataType>String</dataType>
         <value>
-            <stringValue/>
+            <stringValue></stringValue>
         </value>
     </constants>
-    <decisions>
-        <name>AssignQueue</name>
-        <label>AssignQueue</label>
-        <locationX>2720</locationX>
-        <locationY>1564</locationY>
-        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
-        <rules>
-            <name>WhitefishQueue</name>
-            <conditionLogic>and</conditionLogic>
-            <conditions>
-                <leftValueReference>Preferred_Service_Location</leftValueReference>
-                <operator>EqualTo</operator>
-                <rightValue>
-                    <stringValue>Sudbury</stringValue>
-                </rightValue>
-            </conditions>
-            <connector>
-                <targetReference>GetWhitefishQueueID</targetReference>
-            </connector>
-            <label>Whitefish</label>
-        </rules>
-        <rules>
-            <name>BarrieQueue</name>
-            <conditionLogic>and</conditionLogic>
-            <conditions>
-                <leftValueReference>Preferred_Service_Location</leftValueReference>
-                <operator>EqualTo</operator>
-                <rightValue>
-                    <stringValue>Barrie</stringValue>
-                </rightValue>
-            </conditions>
-            <connector>
-                <targetReference>GetBarrieQueueID</targetReference>
-            </connector>
-            <label>Barrie</label>
-        </rules>
-        <rules>
-            <name>MontrealQueue</name>
-            <conditionLogic>and</conditionLogic>
-            <conditions>
-                <leftValueReference>Preferred_Service_Location</leftValueReference>
-                <operator>EqualTo</operator>
-                <rightValue>
-                    <stringValue>Montreal</stringValue>
-                </rightValue>
-            </conditions>
-            <connector>
-                <targetReference>GetMontrealQueueID</targetReference>
-            </connector>
-            <label>Montreal</label>
-        </rules>
-    </decisions>
-    <decisions>
-        <name>Create_Service_Case</name>
-        <label>Create Service Case</label>
-        <locationX>2455</locationX>
-        <locationY>1527</locationY>
-        <defaultConnector>
-            <targetReference>Log_Activity</targetReference>
-        </defaultConnector>
-        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
-        <rules>
-            <name>Yes_Case</name>
-            <conditionLogic>or</conditionLogic>
-            <conditions>
-                <leftValueReference>Preferred_Service_Location</leftValueReference>
-                <operator>EqualTo</operator>
-                <rightValue>
-                    <stringValue>Sudbury</stringValue>
-                </rightValue>
-            </conditions>
-            <conditions>
-                <leftValueReference>Preferred_Service_Location</leftValueReference>
-                <operator>EqualTo</operator>
-                <rightValue>
-                    <stringValue>Barrie</stringValue>
-                </rightValue>
-            </conditions>
-            <conditions>
-                <leftValueReference>Preferred_Service_Location</leftValueReference>
-                <operator>EqualTo</operator>
-                <rightValue>
-                    <stringValue>Montreal</stringValue>
-                </rightValue>
-            </conditions>
-            <connector>
-                <targetReference>GetServiceAppointmentRecordType</targetReference>
-            </connector>
-            <label>Yes</label>
-        </rules>
-    </decisions>
     <decisions>
         <name>Screen1Logic</name>
         <label>Screen1Logic</label>
@@ -298,60 +289,10 @@
         </rules>
     </decisions>
     <decisions>
-        <name>Screen1Other</name>
-        <label>Screen1Other</label>
-        <locationX>2289</locationX>
-        <locationY>283</locationY>
-        <defaultConnector>
-            <targetReference>Screen2Other</targetReference>
-        </defaultConnector>
-        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
-        <rules>
-            <name>IfScreen1Other</name>
-            <conditionLogic>and</conditionLogic>
-            <conditions>
-                <leftValueReference>What_are_your_plans_for_storing_your_boat_this_winter</leftValueReference>
-                <operator>EqualTo</operator>
-                <rightValue>
-                    <stringValue>Other</stringValue>
-                </rightValue>
-            </conditions>
-            <connector>
-                <targetReference>Update_Screen_1_Other</targetReference>
-            </connector>
-            <label>IfScreen1Other</label>
-        </rules>
-    </decisions>
-    <decisions>
-        <name>Screen2Other</name>
-        <label>Screen2Other</label>
-        <locationX>2328</locationX>
-        <locationY>488</locationY>
-        <defaultConnector>
-            <targetReference>Screen4Other</targetReference>
-        </defaultConnector>
-        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
-        <rules>
-            <name>IfScreen2Other</name>
-            <conditionLogic>and</conditionLogic>
-            <conditions>
-                <leftValueReference>What_is_the_reason_for_not_storing_your_boat_with_Legend</leftValueReference>
-                <operator>EqualTo</operator>
-                <rightValue>
-                    <stringValue>Other</stringValue>
-                </rightValue>
-            </conditions>
-            <connector>
-                <targetReference>Update_Screen_2_Other</targetReference>
-            </connector>
-            <label>IfScreen2Other</label>
-        </rules>
-    </decisions>
-    <decisions>
         <name>Screen4Logic</name>
         <label>Screen4Logic</label>
-        <locationX>1119</locationX>
-        <locationY>506</locationY>
+        <locationX>1084</locationX>
+        <locationY>514</locationY>
         <defaultConnector>
             <targetReference>Screen_5</targetReference>
         </defaultConnector>
@@ -370,31 +311,6 @@
                 <targetReference>Screen_8</targetReference>
             </connector>
             <label>LegendBoats</label>
-        </rules>
-    </decisions>
-    <decisions>
-        <name>Screen4Other</name>
-        <label>Screen4Other</label>
-        <locationX>2330</locationX>
-        <locationY>662</locationY>
-        <defaultConnector>
-            <targetReference>Screen5Other</targetReference>
-        </defaultConnector>
-        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
-        <rules>
-            <name>IfScreen4Other</name>
-            <conditionLogic>and</conditionLogic>
-            <conditions>
-                <leftValueReference>If_you_store_your_boat_Privately_or_with_another_dealership_marina_where_do_you</leftValueReference>
-                <operator>EqualTo</operator>
-                <rightValue>
-                    <stringValue>Other</stringValue>
-                </rightValue>
-            </conditions>
-            <connector>
-                <targetReference>Update_Screen_4_Other</targetReference>
-            </connector>
-            <label>IfScreen4Other</label>
         </rules>
     </decisions>
     <decisions>
@@ -423,31 +339,6 @@
         </rules>
     </decisions>
     <decisions>
-        <name>Screen5Other</name>
-        <label>Screen5Other</label>
-        <locationX>2333</locationX>
-        <locationY>801</locationY>
-        <defaultConnector>
-            <targetReference>Screen6Other</targetReference>
-        </defaultConnector>
-        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
-        <rules>
-            <name>IfScreen5Other</name>
-            <conditionLogic>and</conditionLogic>
-            <conditions>
-                <leftValueReference>What_is_the_reason_for_not_getting_these_services_done_at_Legend_Boats</leftValueReference>
-                <operator>EqualTo</operator>
-                <rightValue>
-                    <stringValue>Other</stringValue>
-                </rightValue>
-            </conditions>
-            <connector>
-                <targetReference>Update_Screen_5_Other</targetReference>
-            </connector>
-            <label>IfScreen5Other</label>
-        </rules>
-    </decisions>
-    <decisions>
         <name>Screen6Logic</name>
         <label>Screen6Logic</label>
         <locationX>1823</locationX>
@@ -472,56 +363,6 @@
             <label>LegendBoats</label>
         </rules>
     </decisions>
-    <decisions>
-        <name>Screen6Other</name>
-        <label>Screen6Other</label>
-        <locationX>2329</locationX>
-        <locationY>943</locationY>
-        <defaultConnector>
-            <targetReference>Screen7Other</targetReference>
-        </defaultConnector>
-        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
-        <rules>
-            <name>IfScreen6Other</name>
-            <conditionLogic>and</conditionLogic>
-            <conditions>
-                <leftValueReference>If_you_do_the_maintenance_and_winterizing_on_your_own_where_do_you_purchase_your</leftValueReference>
-                <operator>EqualTo</operator>
-                <rightValue>
-                    <stringValue>Other</stringValue>
-                </rightValue>
-            </conditions>
-            <connector>
-                <targetReference>Update_Screen_6_Other</targetReference>
-            </connector>
-            <label>IfScreen6Other</label>
-        </rules>
-    </decisions>
-    <decisions>
-        <name>Screen7Other</name>
-        <label>Screen7Other</label>
-        <locationX>2331</locationX>
-        <locationY>1110</locationY>
-        <defaultConnector>
-            <targetReference>Create_Appointment_Case</targetReference>
-        </defaultConnector>
-        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
-        <rules>
-            <name>IfScreen7Other</name>
-            <conditionLogic>and</conditionLogic>
-            <conditions>
-                <leftValueReference>What_is_your_reason_for_not_buying_your_maintenance_supplies_from_Legend_Boats</leftValueReference>
-                <operator>EqualTo</operator>
-                <rightValue>
-                    <stringValue>Other</stringValue>
-                </rightValue>
-            </conditions>
-            <connector>
-                <targetReference>Update_Screen_7_Other</targetReference>
-            </connector>
-            <label>IfScreen7Other</label>
-        </rules>
-    </decisions>
     <formulas>
         <name>now</name>
         <dataType>DateTime</dataType>
@@ -536,6 +377,12 @@
         </value>
     </processMetadataValues>
     <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>FREE_FORM_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
         <name>OriginBuilderType</name>
         <value>
             <stringValue>LightningFlowBuilder</stringValue>
@@ -545,11 +392,11 @@
     <recordCreates>
         <name>Create_GetFeedback_Record</name>
         <label>Create GetFeedback Record</label>
-        <locationX>2131</locationX>
-        <locationY>281</locationY>
+        <locationX>2107</locationX>
+        <locationY>289</locationY>
         <assignRecordIdToReference>GetFeedbackRecordID</assignRecordIdToReference>
         <connector>
-            <targetReference>Screen1Other</targetReference>
+            <targetReference>Log_Activity</targetReference>
         </connector>
         <faultConnector>
             <targetReference>ErrorHandler</targetReference>
@@ -628,86 +475,6 @@
         </inputAssignments>
         <object>GetFeedback_Survey_Response__c</object>
     </recordCreates>
-    <recordCreates>
-        <name>Create_Service_Appointment_Case</name>
-        <label>Create Service Appointment Case</label>
-        <locationX>3146</locationX>
-        <locationY>1558</locationY>
-        <connector>
-            <targetReference>Log_Activity</targetReference>
-        </connector>
-        <faultConnector>
-            <targetReference>ErrorHandler</targetReference>
-        </faultConnector>
-        <inputAssignments>
-            <field>AccountId</field>
-            <value>
-                <elementReference>recordId</elementReference>
-            </value>
-        </inputAssignments>
-        <inputAssignments>
-            <field>Contact_Language__c</field>
-            <value>
-                <elementReference>AccountPreferredLanguage</elementReference>
-            </value>
-        </inputAssignments>
-        <inputAssignments>
-            <field>Description</field>
-            <value>
-                <elementReference>Service_Appointment_Description</elementReference>
-            </value>
-        </inputAssignments>
-        <inputAssignments>
-            <field>Origin</field>
-            <value>
-                <stringValue>Phone</stringValue>
-            </value>
-        </inputAssignments>
-        <inputAssignments>
-            <field>OwnerId</field>
-            <value>
-                <elementReference>QueueID</elementReference>
-            </value>
-        </inputAssignments>
-        <inputAssignments>
-            <field>Priority</field>
-            <value>
-                <stringValue>High</stringValue>
-            </value>
-        </inputAssignments>
-        <inputAssignments>
-            <field>RecordTypeId</field>
-            <value>
-                <elementReference>ServiceAppointmentRecordTypeID</elementReference>
-            </value>
-        </inputAssignments>
-        <inputAssignments>
-            <field>Service_Location__c</field>
-            <value>
-                <elementReference>Preferred_Service_Location</elementReference>
-            </value>
-        </inputAssignments>
-        <inputAssignments>
-            <field>Status</field>
-            <value>
-                <stringValue>New</stringValue>
-            </value>
-        </inputAssignments>
-        <inputAssignments>
-            <field>Subject</field>
-            <value>
-                <stringValue>Post-Season Call - Service Appointment</stringValue>
-            </value>
-        </inputAssignments>
-        <inputAssignments>
-            <field>SuppliedEmail</field>
-            <value>
-                <elementReference>accountEmail</elementReference>
-            </value>
-        </inputAssignments>
-        <object>Case</object>
-        <storeOutputAutomatically>true</storeOutputAutomatically>
-    </recordCreates>
     <recordLookups>
         <name>Get_Post_Season_Record_Type_ID</name>
         <label>Get Post Season Record Type ID</label>
@@ -720,6 +487,7 @@
         <faultConnector>
             <targetReference>ErrorHandler</targetReference>
         </faultConnector>
+        <filterLogic>and</filterLogic>
         <filters>
             <field>Name</field>
             <operator>EqualTo</operator>
@@ -733,152 +501,18 @@
             <field>Id</field>
         </outputAssignments>
     </recordLookups>
-    <recordLookups>
-        <name>GetAccountDetails</name>
-        <label>GetAccountDetails</label>
-        <locationX>2580</locationX>
-        <locationY>1730</locationY>
-        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
-        <connector>
-            <targetReference>AssignQueue</targetReference>
-        </connector>
-        <filters>
-            <field>Id</field>
-            <operator>EqualTo</operator>
-            <value>
-                <elementReference>recordId</elementReference>
-            </value>
-        </filters>
-        <object>Account</object>
-        <outputAssignments>
-            <assignToReference>accountEmail</assignToReference>
-            <field>PersonEmail</field>
-        </outputAssignments>
-        <outputAssignments>
-            <assignToReference>AccountPreferredLanguage</assignToReference>
-            <field>Preferred_Language__c</field>
-        </outputAssignments>
-    </recordLookups>
-    <recordLookups>
-        <name>GetBarrieQueueID</name>
-        <label>GetBarrieQueueID</label>
-        <locationX>2729</locationX>
-        <locationY>1790</locationY>
-        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
-        <connector>
-            <targetReference>Create_Service_Appointment_Case</targetReference>
-        </connector>
-        <filters>
-            <field>Name</field>
-            <operator>EqualTo</operator>
-            <value>
-                <stringValue>Customer Support Case Barrie</stringValue>
-            </value>
-        </filters>
-        <filters>
-            <field>Type</field>
-            <operator>EqualTo</operator>
-            <value>
-                <stringValue>Queue</stringValue>
-            </value>
-        </filters>
-        <object>Group</object>
-        <outputAssignments>
-            <assignToReference>QueueID</assignToReference>
-            <field>Id</field>
-        </outputAssignments>
-    </recordLookups>
-    <recordLookups>
-        <name>GetMontrealQueueID</name>
-        <label>GetMontrealQueueID</label>
-        <locationX>2857</locationX>
-        <locationY>1789</locationY>
-        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
-        <connector>
-            <targetReference>Create_Service_Appointment_Case</targetReference>
-        </connector>
-        <filters>
-            <field>Name</field>
-            <operator>EqualTo</operator>
-            <value>
-                <stringValue>Customer Support Case Montreal</stringValue>
-            </value>
-        </filters>
-        <filters>
-            <field>Type</field>
-            <operator>EqualTo</operator>
-            <value>
-                <stringValue>Queue</stringValue>
-            </value>
-        </filters>
-        <object>Group</object>
-        <outputAssignments>
-            <assignToReference>QueueID</assignToReference>
-            <field>Id</field>
-        </outputAssignments>
-    </recordLookups>
-    <recordLookups>
-        <name>GetServiceAppointmentRecordType</name>
-        <label>GetServiceAppointmentRecordType</label>
-        <locationX>2446</locationX>
-        <locationY>1731</locationY>
-        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
-        <connector>
-            <targetReference>GetAccountDetails</targetReference>
-        </connector>
-        <filters>
-            <field>Name</field>
-            <operator>EqualTo</operator>
-            <value>
-                <stringValue>Service Appointment</stringValue>
-            </value>
-        </filters>
-        <object>RecordType</object>
-        <outputAssignments>
-            <assignToReference>ServiceAppointmentRecordTypeID</assignToReference>
-            <field>Id</field>
-        </outputAssignments>
-    </recordLookups>
-    <recordLookups>
-        <name>GetWhitefishQueueID</name>
-        <label>GetWhitefishQueueID</label>
-        <locationX>3024</locationX>
-        <locationY>1738</locationY>
-        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
-        <connector>
-            <targetReference>Create_Service_Appointment_Case</targetReference>
-        </connector>
-        <filters>
-            <field>Name</field>
-            <operator>EqualTo</operator>
-            <value>
-                <stringValue>Customer Support Case Whitefish</stringValue>
-            </value>
-        </filters>
-        <filters>
-            <field>Type</field>
-            <operator>EqualTo</operator>
-            <value>
-                <stringValue>Queue</stringValue>
-            </value>
-        </filters>
-        <object>Group</object>
-        <outputAssignments>
-            <assignToReference>QueueID</assignToReference>
-            <field>Id</field>
-        </outputAssignments>
-    </recordLookups>
     <recordUpdates>
         <name>Update_Call_Complete_Field</name>
         <label>Update Call Complete Field</label>
-        <locationX>2928</locationX>
-        <locationY>2211</locationY>
+        <locationX>2388</locationX>
+        <locationY>289</locationY>
         <connector>
-            <targetReference>Success</targetReference>
+            <targetReference>SuccessHandler</targetReference>
         </connector>
         <faultConnector>
             <targetReference>ErrorHandler</targetReference>
         </faultConnector>
+        <filterLogic>and</filterLogic>
         <filters>
             <field>Id</field>
             <operator>EqualTo</operator>
@@ -894,259 +528,7 @@
         </inputAssignments>
         <object>Account</object>
     </recordUpdates>
-    <recordUpdates>
-        <name>Update_Screen_1_Other</name>
-        <label>Update Screen 1 Other</label>
-        <locationX>2505</locationX>
-        <locationY>388</locationY>
-        <connector>
-            <targetReference>Screen2Other</targetReference>
-        </connector>
-        <faultConnector>
-            <targetReference>ErrorHandler</targetReference>
-        </faultConnector>
-        <filters>
-            <field>Id</field>
-            <operator>EqualTo</operator>
-            <value>
-                <elementReference>GetFeedbackRecordID</elementReference>
-            </value>
-        </filters>
-        <inputAssignments>
-            <field>Plans_for_storing_boat__c</field>
-            <value>
-                <elementReference>OtherScreen1</elementReference>
-            </value>
-        </inputAssignments>
-        <object>GetFeedback_Survey_Response__c</object>
-    </recordUpdates>
-    <recordUpdates>
-        <name>Update_Screen_2_Other</name>
-        <label>Update Screen 2 Other</label>
-        <locationX>2591</locationX>
-        <locationY>576</locationY>
-        <connector>
-            <targetReference>Screen4Other</targetReference>
-        </connector>
-        <faultConnector>
-            <targetReference>ErrorHandler</targetReference>
-        </faultConnector>
-        <filters>
-            <field>Id</field>
-            <operator>EqualTo</operator>
-            <value>
-                <elementReference>GetFeedbackRecordID</elementReference>
-            </value>
-        </filters>
-        <inputAssignments>
-            <field>Reason_for_not_storing__c</field>
-            <value>
-                <elementReference>OtherScreen2</elementReference>
-            </value>
-        </inputAssignments>
-        <object>GetFeedback_Survey_Response__c</object>
-    </recordUpdates>
-    <recordUpdates>
-        <name>Update_Screen_4_Other</name>
-        <label>Update Screen 4 Other</label>
-        <locationX>2594</locationX>
-        <locationY>718</locationY>
-        <connector>
-            <targetReference>Screen5Other</targetReference>
-        </connector>
-        <faultConnector>
-            <targetReference>ErrorHandler</targetReference>
-        </faultConnector>
-        <filters>
-            <field>Id</field>
-            <operator>EqualTo</operator>
-            <value>
-                <elementReference>GetFeedbackRecordID</elementReference>
-            </value>
-        </filters>
-        <inputAssignments>
-            <field>Where_do_you_do_season_end_maintenance__c</field>
-            <value>
-                <elementReference>OtherScreen4</elementReference>
-            </value>
-        </inputAssignments>
-        <object>GetFeedback_Survey_Response__c</object>
-    </recordUpdates>
-    <recordUpdates>
-        <name>Update_Screen_5_Other</name>
-        <label>Update Screen 5 Other</label>
-        <locationX>2617</locationX>
-        <locationY>888</locationY>
-        <connector>
-            <targetReference>Screen6Other</targetReference>
-        </connector>
-        <faultConnector>
-            <targetReference>ErrorHandler</targetReference>
-        </faultConnector>
-        <filters>
-            <field>Id</field>
-            <operator>EqualTo</operator>
-            <value>
-                <elementReference>GetFeedbackRecordID</elementReference>
-            </value>
-        </filters>
-        <inputAssignments>
-            <field>Reason_for_not_servicing_at_Legend__c</field>
-            <value>
-                <elementReference>OtherScreen5</elementReference>
-            </value>
-        </inputAssignments>
-        <object>GetFeedback_Survey_Response__c</object>
-    </recordUpdates>
-    <recordUpdates>
-        <name>Update_Screen_6_Other</name>
-        <label>Update Screen 6 Other</label>
-        <locationX>2656</locationX>
-        <locationY>1046</locationY>
-        <connector>
-            <targetReference>Screen7Other</targetReference>
-        </connector>
-        <faultConnector>
-            <targetReference>ErrorHandler</targetReference>
-        </faultConnector>
-        <filters>
-            <field>Id</field>
-            <operator>EqualTo</operator>
-            <value>
-                <elementReference>GetFeedbackRecordID</elementReference>
-            </value>
-        </filters>
-        <inputAssignments>
-            <field>Where_do_you_purchase_supplies__c</field>
-            <value>
-                <elementReference>OtherScreen6</elementReference>
-            </value>
-        </inputAssignments>
-        <object>GetFeedback_Survey_Response__c</object>
-    </recordUpdates>
-    <recordUpdates>
-        <name>Update_Screen_7_Other</name>
-        <label>Update Screen 7 Other</label>
-        <locationX>2603</locationX>
-        <locationY>1262</locationY>
-        <connector>
-            <targetReference>Create_Appointment_Case</targetReference>
-        </connector>
-        <faultConnector>
-            <targetReference>ErrorHandler</targetReference>
-        </faultConnector>
-        <filters>
-            <field>Id</field>
-            <operator>EqualTo</operator>
-            <value>
-                <elementReference>GetFeedbackRecordID</elementReference>
-            </value>
-        </filters>
-        <inputAssignments>
-            <field>Reason_for_not_buying_supplies_from_LB__c</field>
-            <value>
-                <elementReference>OtherScreen7</elementReference>
-            </value>
-        </inputAssignments>
-        <object>GetFeedback_Survey_Response__c</object>
-    </recordUpdates>
     <runInMode>SystemModeWithoutSharing</runInMode>
-    <screens>
-        <name>Create_Appointment_Case</name>
-        <label>Create Appointment Case</label>
-        <locationX>2440</locationX>
-        <locationY>1374</locationY>
-        <allowBack>false</allowBack>
-        <allowFinish>true</allowFinish>
-        <allowPause>false</allowPause>
-        <connector>
-            <targetReference>Create_Service_Case</targetReference>
-        </connector>
-        <fields>
-            <name>DisplayCaseCreate</name>
-            <fieldText>&lt;p&gt;&lt;span style=&quot;font-family: verdana;&quot;&gt;Do you wish to create a Service Appointment case? A service advisor will be calling the customer shortly to discuss / schedule Post-Season Services.&lt;/span&gt;&lt;/p&gt;</fieldText>
-            <fieldType>DisplayText</fieldType>
-        </fields>
-        <fields>
-            <name>CreateServiceApp</name>
-            <extensionName>flowruntime:toggle</extensionName>
-            <fieldType>ComponentInstance</fieldType>
-            <inputParameters>
-                <name>label</name>
-                <value>
-                    <stringValue>Create Service Appointment Case?</stringValue>
-                </value>
-            </inputParameters>
-            <inputParameters>
-                <name>messageToggleActive</name>
-                <value>
-                    <stringValue>Yes</stringValue>
-                </value>
-            </inputParameters>
-            <inputParameters>
-                <name>messageToggleInactive</name>
-                <value>
-                    <stringValue>No</stringValue>
-                </value>
-            </inputParameters>
-            <isRequired>true</isRequired>
-            <storeOutputAutomatically>true</storeOutputAutomatically>
-        </fields>
-        <fields>
-            <name>Preferred_Service_Location</name>
-            <choiceReferences>Barrie</choiceReferences>
-            <choiceReferences>Montreal</choiceReferences>
-            <choiceReferences>Sudbury</choiceReferences>
-            <dataType>String</dataType>
-            <fieldText>Preferred Service Location</fieldText>
-            <fieldType>DropdownBox</fieldType>
-            <isRequired>true</isRequired>
-            <visibilityRule>
-                <conditionLogic>and</conditionLogic>
-                <conditions>
-                    <leftValueReference>EmptyString</leftValueReference>
-                    <operator>NotEqualTo</operator>
-                    <rightValue>
-                        <elementReference>CreateServiceApp.value</elementReference>
-                    </rightValue>
-                </conditions>
-            </visibilityRule>
-        </fields>
-        <fields>
-            <name>Service_Appointment_Description</name>
-            <fieldText>Service Appointment Description</fieldText>
-            <fieldType>LargeTextArea</fieldType>
-            <isRequired>true</isRequired>
-            <visibilityRule>
-                <conditionLogic>and</conditionLogic>
-                <conditions>
-                    <leftValueReference>EmptyString</leftValueReference>
-                    <operator>NotEqualTo</operator>
-                    <rightValue>
-                        <elementReference>CreateServiceApp.value</elementReference>
-                    </rightValue>
-                </conditions>
-            </visibilityRule>
-        </fields>
-        <showFooter>true</showFooter>
-        <showHeader>true</showHeader>
-    </screens>
-    <screens>
-        <name>ErrorHandler</name>
-        <label>ErrorHandler</label>
-        <locationX>3340</locationX>
-        <locationY>1013</locationY>
-        <allowBack>false</allowBack>
-        <allowFinish>true</allowFinish>
-        <allowPause>false</allowPause>
-        <fields>
-            <name>DisplayError</name>
-            <fieldText>&lt;p&gt;&lt;b style=&quot;font-family: verdana; color: rgb(237, 4, 4);&quot;&gt;Error: &lt;/b&gt;&lt;span style=&quot;font-family: verdana; color: rgb(0, 0, 0);&quot;&gt;{!$Flow.FaultMessage}&lt;/span&gt;&lt;/p&gt;</fieldText>
-            <fieldType>DisplayText</fieldType>
-        </fields>
-        <showFooter>true</showFooter>
-        <showHeader>true</showHeader>
-    </screens>
     <screens>
         <name>Landing</name>
         <label>Landing</label>
@@ -1471,22 +853,6 @@
             <fieldText>How can we improve our post-season service and storage offering?</fieldText>
             <fieldType>LargeTextArea</fieldType>
             <isRequired>false</isRequired>
-        </fields>
-        <showFooter>true</showFooter>
-        <showHeader>true</showHeader>
-    </screens>
-    <screens>
-        <name>Success</name>
-        <label>Success</label>
-        <locationX>3120</locationX>
-        <locationY>2211</locationY>
-        <allowBack>false</allowBack>
-        <allowFinish>true</allowFinish>
-        <allowPause>false</allowPause>
-        <fields>
-            <name>DisplaySuccess</name>
-            <fieldText>&lt;p&gt;&lt;b style=&quot;color: rgb(13, 208, 13); background-color: rgb(255, 255, 255);&quot;&gt;The application has finished successfully&lt;/b&gt;&lt;/p&gt;</fieldText>
-            <fieldType>DisplayText</fieldType>
         </fields>
         <showFooter>true</showFooter>
         <showHeader>true</showHeader>
