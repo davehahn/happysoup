@@ -18,7 +18,6 @@
     .then(
       $A.getCallback( function( result ) {
         component.set( 'v.dealerOrder', result );
-        console.log('DOlines done');
         component.find('dealerOrderLines--Cmp').doInit();
       }),
       $A.getCallback( function( err ) {
@@ -50,7 +49,6 @@
     var params = event.getParams(),
         id = params.id,
         action = params.action;
-    console.log(`handling action ${action}`);
 
     if( action === 'edit' )
     {
@@ -100,7 +98,6 @@
 
   handleEditComplete: function( component, event, helper )
   {
-    console.log('handle edit complete');
     let status = event.getParam('status');
     const isFactoryStore = true;//component.get('v.dealerOrder').Account__r.Is_Internal__c;
     if( status === 'cancel' )
