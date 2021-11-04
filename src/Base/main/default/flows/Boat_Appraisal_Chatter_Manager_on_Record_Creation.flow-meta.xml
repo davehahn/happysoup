@@ -3,10 +3,11 @@
     <actionCalls>
         <name>Chatter_Manager_of_new_Appraisal</name>
         <label>Chatter Manager of new Appraisal</label>
-        <locationX>50</locationX>
-        <locationY>431</locationY>
+        <locationX>490</locationX>
+        <locationY>575</locationY>
         <actionName>chatterPost</actionName>
         <actionType>chatterPost</actionType>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
         <inputParameters>
             <name>text</name>
             <value>
@@ -21,12 +22,59 @@
         </inputParameters>
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </actionCalls>
+    <actionCalls>
+        <name>Chatter_Manager_of_new_Appraisal_0</name>
+        <label>Chatter Manager of new Appraisal</label>
+        <locationX>50</locationX>
+        <locationY>695</locationY>
+        <actionName>chatterPost</actionName>
+        <actionType>chatterPost</actionType>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>text</name>
+            <value>
+                <elementReference>ChatterBodyPostBarrie</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>subjectNameOrId</name>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </inputParameters>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </actionCalls>
     <apiVersion>51.0</apiVersion>
+    <decisions>
+        <name>Retail_Location</name>
+        <label>Retail Location</label>
+        <locationX>402</locationX>
+        <locationY>335</locationY>
+        <defaultConnector>
+            <targetReference>Validate_Manager</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Else</defaultConnectorLabel>
+        <rules>
+            <name>Barrie</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.CreatedBy.Warehouse__c</leftValueReference>
+                <operator>Contains</operator>
+                <rightValue>
+                    <stringValue>Barrie</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Get_Barrie_Manager_ID</targetReference>
+            </connector>
+            <label>Barrie</label>
+        </rules>
+    </decisions>
     <decisions>
         <name>Validate_Manager</name>
         <label>Validate Manager</label>
-        <locationX>182</locationX>
-        <locationY>311</locationY>
+        <locationX>622</locationX>
+        <locationY>455</locationY>
         <defaultConnectorLabel>Else</defaultConnectorLabel>
         <rules>
             <name>Valid</name>
@@ -40,6 +88,28 @@
             </conditions>
             <connector>
                 <targetReference>Chatter_Manager_of_new_Appraisal</targetReference>
+            </connector>
+            <label>Valid</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Validate_Manager_Barrie</name>
+        <label>Validate Manager</label>
+        <locationX>182</locationX>
+        <locationY>575</locationY>
+        <defaultConnectorLabel>Else</defaultConnectorLabel>
+        <rules>
+            <name>Valid_Barrie</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Get_Barrie_Manager_ID.IsActive</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Chatter_Manager_of_new_Appraisal_0</targetReference>
             </connector>
             <label>Valid</label>
         </rules>
@@ -66,11 +136,32 @@
         </value>
     </processMetadataValues>
     <processType>AutoLaunchedFlow</processType>
+    <recordLookups>
+        <name>Get_Barrie_Manager_ID</name>
+        <label>Get Barrie Manager ID</label>
+        <locationX>182</locationX>
+        <locationY>455</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Validate_Manager_Barrie</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Username</field>
+            <operator>Contains</operator>
+            <value>
+                <stringValue>hnguyen@legendboats.com</stringValue>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>User</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
     <start>
-        <locationX>56</locationX>
+        <locationX>276</locationX>
         <locationY>0</locationY>
         <connector>
-            <targetReference>Validate_Manager</targetReference>
+            <targetReference>Retail_Location</targetReference>
         </connector>
         <object>Boat_Appraisal__c</object>
         <recordTriggerType>Create</recordTriggerType>
@@ -80,6 +171,11 @@
     <textTemplates>
         <name>ChatterBodyPost</name>
         <isViewedAsPlainText>true</isViewedAsPlainText>
-        <text>@[{!$Record.Owner:User.Manager.Id}] This following appraisal has been completed.</text>
+        <text>@[{!$Record.Owner:User.Manager.Id}] The following appraisal has been completed.</text>
+    </textTemplates>
+    <textTemplates>
+        <name>ChatterBodyPostBarrie</name>
+        <isViewedAsPlainText>true</isViewedAsPlainText>
+        <text>@[{!Get_Barrie_Manager_ID.Id}] The following appraisal has been completed.</text>
     </textTemplates>
 </Flow>
