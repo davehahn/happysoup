@@ -450,8 +450,6 @@
           $A.getCallback( function(response)
           {
             boat = JSON.parse(response);
-            console.log( 'BOAT' );
-            console.log( boat );
             helper.functions.clearConfigVars( component );
             component.set('v.selectedBoat_Id', boatId );
             component.set( 'v.trailerSelectOptions', boat.trailerUpgrades );
@@ -517,20 +515,14 @@
       for( var productId in selectedOptions )
       {
         allOptions.forEach( (option) => {
-          console.log(`productId = ${productId}`);
-          console.log(`option.id = ${option.id}`);
-
           if( productId === option.id )
           {
-            console.log('option is selected');
             if( option.isCheckbox )
             {
-              console.log( 'option is a checkbox');
               option.isSelected = true;
             }
             else
             {
-              console.log('option is a select');
               option.quantitySelected = selectedOptions[productId].quantitySelected;
             }
           }
@@ -542,9 +534,6 @@
 
   handleTrailer: function( component, trailerId, selectedOptions )
   {
-    console.log('seriously what the fuck');
-    console.log('trailer selected Options')
-    console.log( selectedOptions );
     var self = this,
         dealerOrder = component.get('v.dealerOrder'),
         changeData;
@@ -621,7 +610,6 @@
 
   handleMotor: function( component, motorId, selectedOptions )
   {
-    console.log(`handleMotor motorId = ${motorId}`);
     var self = this,
         dealerOrder = component.get('v.dealerOrder'),
         isFactoryStore = component.get('v.isFactoryStore'),
@@ -655,7 +643,6 @@
         .then( function( response )
         {
           motor = JSON.parse(response);
-          console.log( JSON.parse(JSON.stringify(motor)));
           component.set('v.productSelected', true);
           if( motor.fees !== undefined &&
               motor.fees !== null &&

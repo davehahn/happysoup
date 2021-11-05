@@ -4,8 +4,6 @@
     var self = this,
         spinner = component.find('spinner');
     spinner.toggle();
-    console.log( 'recordId = ' + component.get('v.recordId'));
-    console.log( 'opportunityId = ' + component.get('v.opportunityId'));
     self.initCPQ( component )
     .then(
       $A.getCallback( function( result ) {
@@ -31,19 +29,6 @@
     })
     return new LightningApex( this, action ).fire();
   },
-
-  // buildPopulateCPQFromRecord: function( component, cpq )
-  // {
-  //   console.log( 'in buildPopulateCPQFromRecord' );
-  //   var recordId = component.get('v.recordId'), action;
-  //   console.log( recordId );
-  //   if( recordId === undefined || recordId === null )
-  //   {
-  //     return Promise.resolve(cpq);
-  //   }
-  //   cpq.saveToRecordId = recordId;
-  //   action = populate
-  // },
 
   handleScroll: function( component, scrollTrue )
   {
