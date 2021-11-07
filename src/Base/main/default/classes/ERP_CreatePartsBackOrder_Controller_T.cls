@@ -29,6 +29,7 @@ private class ERP_CreatePartsBackOrder_Controller_T
       'Full Windshield',
       boatSerial
     );
+    User salesPerson = Factory_User.createUser('Sales', 'Person', 'Legend Standard User - New');
     gcProject.disableTrigger = true;
     gcProjectTask.disableTrigger = true;
     gcMaterial.disableTrigger = true;
@@ -41,6 +42,7 @@ private class ERP_CreatePartsBackOrder_Controller_T
     retailSale.GL_Account_Variable_1__c = gcConstants.idGlv1Whitefish;
     retailSale.GL_Account_Variable_2__c = gcConstants.idGlv2Sales;
     retailSale.GL_Account_Variable_3__c = gcConstants.idGlv3Ontario;
+    retailSale.Salesperson__c = salesPerson.Id;
     update retailSale;
     AcctSeed__Project_Task__c retailTask = [
       SELECT
@@ -85,6 +87,7 @@ private class ERP_CreatePartsBackOrder_Controller_T
         Serial_Number__c,
         Serial_Number__r.Name,
         RecordType.Name,
+        Salesperson__c,
       ( SELECT
           Id,
           Commission_Calculation_Method__c
@@ -274,6 +277,8 @@ private class ERP_CreatePartsBackOrder_Controller_T
     System.assertEquals( erp.Serial_Number__c, resultERP.Serial_Number__c );
     System.assertEquals( boatSerial, resultERP.Serial_Number__r.Name );
     System.assert( resultTask.Name.contains( erp.RecordType.Name ) );
+    System.assertEquals( erp.Salesperson__c, resultERP.Salesperson__c );
+    System.assert( resultERP.Survey_Flag__c, 'Survey flag should be true');
     System.assertEquals( true, resultTask.Locked__c );
     System.assertEquals( (materials.size() + 1), resultMaterials.size() );
   }
@@ -351,7 +356,9 @@ private class ERP_CreatePartsBackOrder_Controller_T
       Serial_Number__c = erp.Serial_Number__c,
       Stage__c = 'Pending Diagnostic',
       Job_Status__c = 'Boat Required',
-      Original_ERP__c = erp.Id
+      Original_ERP__c = erp.Id,
+      Salesperson__c = erp.Salesperson__c,
+      Survey_Flag__c = true
     );
     AcctSeed__Project_Task__c newTask = new AcctSeed__Project_Task__c(
       Cause_dh__c = 'This a Back Order Task from Unit Test',
@@ -402,6 +409,8 @@ private class ERP_CreatePartsBackOrder_Controller_T
     System.assertEquals( erp.Id, resultERP.Original_ERP__c );
     System.assertEquals( erp.Serial_Number__c, resultERP.Serial_Number__c );
     System.assert( resultERP.Name.contains( erp.AcctSeed__Account__r.Name ) );
+    System.assertEquals( erp.Salesperson__c, resultERP.Salesperson__c );
+    System.assert( resultERP.Survey_Flag__c, 'Survey flag should be true');
     System.assert( resultTask.Name.contains( erp.RecordType.Name ) );
     System.assertEquals( true, resultTask.Locked__c );
     System.assertEquals( (materials.size() + 1), resultMaterials.size() );
