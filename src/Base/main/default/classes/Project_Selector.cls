@@ -26,7 +26,9 @@ public without sharing class Project_Selector Extends Application_Selector
       'GL_Account_Variable_3__r.Name',
       'Estimated_Service_Duration__c',
       'Stage__c',
+      'OwnerId',
       'Owner.Name',
+      'Salesperson__c',
       'Salesperson__r.Name',
       'AcctSeed__Account__r.Name',
       'AcctSeed__Account__c',
@@ -41,7 +43,8 @@ public without sharing class Project_Selector Extends Application_Selector
       'Payment_Method__c',
       'Payment_Status__c',
       'Original_ERP__c',
-      'Serial_Number__r.Name'
+      'Serial_Number__r.Name',
+      'Survey_Flag__c'
     };
   }
 
