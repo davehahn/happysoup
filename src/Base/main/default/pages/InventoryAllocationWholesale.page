@@ -466,9 +466,8 @@
                     <div class="dataTables_length_year">
                         <label>YEAR&nbsp;&nbsp;
                             <select name="tableData_length" id="selectedLot" aria-controls="tableData" class="" onchange="changeColorYears(this)">
-
                                 <apex:repeat value="{!listLotNames}" var="lot">
-                                    <option value="{!lot}" id="{!lot}">
+                                    <option {!IF(currentYear == lot, "selected=selected","")} value="{!lot}" id="{!lot}">
                                         <h1 id="{!lot}" class="ex1">&nbsp;&nbsp;{!lot}&nbsp;&nbsp;</h1>
                                     </option>
                                 </apex:repeat>

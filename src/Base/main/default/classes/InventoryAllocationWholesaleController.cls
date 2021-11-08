@@ -10,6 +10,8 @@ public without sharing class InventoryAllocationWholesaleController {
     private final String queryRetail                            {get;set;}
     private final String queryDealerOrder                       {get;set;}
     private final String queryProductOwner                      {get;set;}
+    public String currentYear                               {get;set;}
+
     public List<String> listFilterYear                          {get;set;}
     public Set<String> listLotNames                             {get;set;}
     public Set<String> productFamilyList                        {get;set;}
@@ -74,7 +76,7 @@ public without sharing class InventoryAllocationWholesaleController {
           this.filterYear = '';
         else if(this.filterYear == '')
           this.filterYear = '';
-
+        this.currentYear = String.valueOf(Date.today().year());
         this.buildProductList();
         this.buildMapStock();
         this.buildMapSpecialDamages();
