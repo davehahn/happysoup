@@ -123,8 +123,8 @@ public with sharing class GCR_InventoryTransfer {
         {
             listIdOutboundMoveDelete.add(move.Id);
         }
-
-        Database.delete(listIdOutboundMoveDelete);
+        if(!listIdOutboundMoveDelete.isEmpty())
+            Database.delete(listIdOutboundMoveDelete);
     }
 
     public static void cascadeDeleteChildrenOfOutbound(set<Id> setIdOutboundMove)
@@ -139,8 +139,8 @@ public with sharing class GCR_InventoryTransfer {
         {
             listIdInboundMoveDelete.add(move.Id);
         }
-
-        Database.delete(listIdInboundMoveDelete);
+        if(!listIdInboundMoveDelete.isEmpty())
+            Database.delete(listIdInboundMoveDelete);
     }
 
     /*

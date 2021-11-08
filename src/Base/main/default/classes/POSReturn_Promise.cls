@@ -538,7 +538,7 @@ public with sharing class POSReturn_Promise {
                 AcctSeed__Source__c = 'Account Payable',
                 AcctSeed__Vendor__c = posPay.AcctSeed__Vendor__c,
                 AcctSeed__Status__c = 'Approved',
-                AcctSeed__Reference__c = System.now().format(),
+                AcctSeed__Reference__c = String.valueOf(System.now()) + '- refund',
                 AcctSeed__Debit_GL_Account__c = gcConstants.idGlAPayable,
                 AcctSeed__Payment_Status__c = 'Paid',
                 AcctSeed__Project__c = idProject,

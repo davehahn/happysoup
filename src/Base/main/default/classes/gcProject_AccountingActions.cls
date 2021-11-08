@@ -182,6 +182,142 @@ public without sharing class gcProject_AccountingActions {
 	}
 
 	@RemoteAction
+	public static list<String> checkFGMaterialRA(Id idProject, String pIdWarehouse, String movementDate)
+	{
+		gcManufacturingInventoryMovement.allowMFGERPSerialWIP = true;
+		return stringifyPageMessages(checkFGMaterial(idProject, pIdWarehouse, movementDate));
+	}
+
+	@RemoteAction
+	public static List<ApexPages.Message> checkFGMaterial(Id idProject, String pIdWarehouse, String movementDate)
+	{
+		Date moveDate = Date.today();
+		if(movementDate != null)
+			moveDate = Date.parse(movementDate);
+		List<ApexPages.Message> listMsg = new list<ApexPages.Message>();
+
+		String projectLabel = AcctSeed__Project__c.sObjectType.getDescribe().getLabel();
+		String materialLabel = AcctSeedERP__Material__c.sObjectType.getDescribe().getLabel();
+		AcctSeed__Project__c project = new AcctSeed__Project__c();
+		Id idWarehouse;
+		AcctSeed__Project_Task__c projectTask;
+		Id idInternalDestinationWarehouse;
+		Boolean isInternalPartnerBoat = false;
+		Boolean isMFGOrder = false;
+
+		for(AcctSeed__Project__c px :
+		[SELECT Id, Name, RecordTypeId,
+				GMBLASERP__Warehouse__c,
+				Internal_Destination_WarehouseId__c,
+				Internal_Partner_Boat_Sale__c,
+				Serial_Number__c,
+				AcctSeedERP__Manufactured_Product__c,
+				(SELECT Id FROM AcctSeed__Project_Tasks__r ORDER BY CreatedDate DESC LIMIT 1)
+		FROM AcctSeed__Project__c
+		WHERE Id = :idProject])
+		{
+			if(px.RecordTypeId == gcConstants.idRtProjectManufacturing)
+				isMFGOrder = true;
+			idWarehouse = px.GMBLASERP__Warehouse__c;
+			idInternalDestinationWarehouse = px.Internal_Destination_WarehouseId__c;
+			isInternalPartnerBoat = px.Internal_Partner_Boat_Sale__c;
+			project = px;
+			projectTask = px.AcctSeed__Project_Tasks__r[0];
+		}
+
+		if(isInternalPartnerBoat)
+			idWarehouse = gcConstants.idWarehouseWholesale;
+
+		if(project == null)
+		{
+			listMsg.add(new ApexPages.Message(ApexPages.Severity.ERROR, 'A '+projectLabel+' with the specified Id does not exist.'));
+			return listMsg;
+		}
+
+		if(idWarehouse == null)
+		{
+			listMsg.add(new ApexPages.Message(ApexPages.Severity.ERROR, 'A Warehouse has not been specified for the '+projectLabel+'.'));
+			return listMsg;
+		}
+		AcctSeedERP__Material__c mfgMaterial;
+		Boolean updateMFGMatl = false;
+		set<Id> setIdProductReturn = new set<Id>();
+		Map<Id,Boolean> mapSerialMFG = new Map<Id,Boolean>();
+		for(AcctSeedERP__Material__c matl :
+		[SELECT Id, Name,
+				AcctSeedERP__GL_Account_Variable_1__c,
+				AcctSeedERP__GL_Account_Variable_2__c,
+				AcctSeedERP__GL_Account_Variable_3__c,
+				AcctSeedERP__GL_Account_Variable_4__c,
+				AcctSeedERP__Product__c,
+				AcctSeedERP__Product__r.Name,
+				AcctSeedERP__Product__r.AcctSeedERP__Serialized__c,
+				AcctSeedERP__Product__r.GMBLASERP__Lot_Tracked__c,
+				AcctSeedERP__Project__c,
+				AcctSeedERP__Project_Task__c,
+				AcctSeedERP__Quantity_Allocated__c,
+				AcctSeedERP__Quantity_Per_Unit__c,
+				GMBLASERP__Lot__c,
+				GMBLASERP__Serial_Number__c
+		FROM AcctSeedERP__Material__c
+		WHERE AcctSeedERP__Project__c = :idProject
+		AND AcctSeedERP__Product__r.AcctSeed__Inventory_Product__c = true
+		AND No_WIP__c = false])
+		{
+			Decimal qty = (matl.AcctSeedERP__Quantity_Per_Unit__c == null ? 0 : matl.AcctSeedERP__Quantity_Per_Unit__c);
+			qty -= (matl.AcctSeedERP__Quantity_Allocated__c == null ? 0 : matl.AcctSeedERP__Quantity_Allocated__c);
+
+			qty = qty.setScale(6);
+
+			if(qty != 0) {
+
+				Product2 product = matl.AcctSeedERP__Product__r;
+
+				if (product.AcctSeedERP__Serialized__c && matl.GMBLASERP__Serial_Number__c == null) {
+					String msg = 'Product [' + product.Name + '] was not moved from inventory to WIP because the product is serialized and a serial number has not been specified on ' + materialLabel + ' ' + matl.Name;
+					if (isInternalPartnerBoat)
+						throw new gcException('For Internal Boat Sale all Inventory Products must be moved at the Same time. ' + msg);
+					listMsg.add(new ApexPages.Message(ApexPages.Severity.WARNING, msg));
+					continue;
+				}
+
+				if (product.GMBLASERP__Lot_Tracked__c && matl.GMBLASERP__Lot__c == null) {
+					String msg = 'Product [' + product.Name + '] was not moved from inventory to WIP because the product is lot-tracked and a lot has not been specified on ' + materialLabel + ' ' + matl.Name;
+					if (isInternalPartnerBoat)
+						throw new gcException('For Internal Boat Sale all Inventory Products must be moved at the Same time. ' + msg);
+					listMsg.add(new ApexPages.Message(ApexPages.Severity.WARNING, msg));
+				}else {
+					if (qty < 0)
+						setIdProductReturn.add(matl.AcctSeedERP__Product__c);
+
+					if (!isMFGOrder && product.AcctSeedERP__Serialized__c && matl.GMBLASERP__Serial_Number__c != null)
+						mapSerialMFG.put(matl.GMBLASERP__Serial_Number__c, false);
+				}
+				if(isMFGOrder && matl.AcctSeedERP__Product__c == project.AcctSeedERP__Manufactured_Product__c){
+					mfgMaterial = matl;
+					if(matl.GMBLASERP__Serial_Number__c == null){
+						mfgMaterial.GMBLASERP__Serial_Number__c = project.Serial_Number__c;
+						updateMFGMatl = true;
+					}
+				}
+			}
+		}
+		/// Validate Manufacturing Order
+		retrieveIncompleteSerialMFG(mapSerialMFG,idProject);
+
+		if(!listMsg.isEmpty())
+		{
+			listMsg.add(new ApexPages.Message(ApexPages.Severity.WARNING, 'INV --> WIP actions incomplete.'));
+		}
+		if(isMFGOrder && mfgMaterial == null){
+			insert new AcctSeedERP__Material__c(AcctSeedERP__Project__c = project.Id, AcctSeedERP__Project_Task__c = projectTask.Id, AcctSeedERP__Product__c = project.AcctSeedERP__Manufactured_Product__c, GMBLASERP__Serial_Number__c = project.Serial_Number__c, AcctSeedERP__Quantity_Per_Unit__c = 1);
+		}else if(isMFGOrder && mfgMaterial != null && updateMFGMatl){
+			update mfgMaterial;
+		}
+		return listMsg;
+	}
+
+	@RemoteAction
 	public static list<String> createWipRA(Id idProject, String pIdWarehouse, String movementDate)
 	{
 		gcManufacturingInventoryMovement.allowMFGERPSerialWIP = true;
@@ -323,7 +459,7 @@ public without sharing class gcProject_AccountingActions {
 				mapSerialMFG.put(matl.GMBLASERP__Serial_Number__c, false);
 		}
 		/// Validate Manufacturing Order
-		retrieveIncompleteSerialMFG(mapSerialMFG,idProject);
+		//retrieveIncompleteSerialMFG(mapSerialMFG,idProject);
 
 		mapProduct.remove(null);
 

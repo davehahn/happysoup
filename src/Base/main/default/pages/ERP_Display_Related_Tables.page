@@ -3052,6 +3052,51 @@ input.dateSelector{
         if($j("#cogsDate").length) movementDate = $j("#cogsDate").val();
 
         Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.gcProject_AccountingActions.checkFGMaterialRA}',
+            '{!Id}', idWarehouse, movementDate,
+            function(result,event)
+            {
+                if(event.status)
+                {
+                    if(result.length > 0)
+                    {
+                        var myString = '';
+                        jQuery.each(result, function(i,msg)
+                        {
+                            myString += msg;
+                            myString += '\n\n';
+                        });
+                        showToast(myString);
+                        refreshAll();
+                        rerenderDetail();
+                        rerenderJournalEntry();
+                        rerenderInboundMovements();
+                    }else
+                        postProject_breakDown_New(idWarehouse);
+                }
+                else
+                {
+                    refreshAll();
+                    rerenderDetail();
+                    rerenderJournalEntry();
+                    rerenderInboundMovements();
+                    showToast(event.message);
+                }
+                $gridDiv.pqGrid('hideLoading');
+                gSpinner.hide();
+            },
+            {buffer:true, escape:false, timeout:120000});
+    }
+
+    function postProject_breakDown_New(idWarehouse)
+    {
+        gSpinner.show();
+        var $gridDiv = $j('#ledger');
+        $gridDiv.pqGrid('showLoading');
+        var movementDate = null;
+        if($j("#cogsDate").length) movementDate = $j("#cogsDate").val();
+
+        Visualforce.remoting.Manager.invokeAction(
             '{!$RemoteAction.gcProject_AccountingActions.createWipRA}',
             '{!Id}', idWarehouse, movementDate,
             function(result,event)
@@ -3085,44 +3130,6 @@ input.dateSelector{
                     rerenderInboundMovements();
                     showToast(event.message);
                 }
-                $gridDiv.pqGrid('hideLoading');
-                gSpinner.hide();
-            },
-            {buffer:true, escape:false, timeout:120000});
-    }
-
-    function postProject_bk()
-    {
-        gSpinner.show();
-        var $gridDiv = $j('#ledger');
-        $gridDiv.pqGrid('showLoading');
-
-        Visualforce.remoting.Manager.invokeAction(
-            '{!$RemoteAction.gcProject_AccountingActions.postProjectRA}',
-            '{!Id}',
-            function(result,event)
-            {
-                if(event.status)
-                {
-                    if(result.length > 0)
-                    {
-                        var myString = '';
-                        jQuery.each(result, function(i,msg)
-                        {
-                            myString += msg;
-                            myString += '\n\n';
-                        });
-                        showToast(myString);
-                    }
-                }
-                else
-                {
-                    showToast(event.message);
-                }
-                refreshAll();
-                rerenderDetail();
-                rerenderJournalEntry();
-                rerenderInboundMovements();
                 $gridDiv.pqGrid('hideLoading');
                 gSpinner.hide();
             },
