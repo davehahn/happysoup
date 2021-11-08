@@ -1,4 +1,4 @@
-@isTest(SeeAllData=false)
+@isTest
 public class gcBilling_Actions_T {
     final static String RECORDTYPE = 'Motor';
     final static String FAMILY = 'Motor Accessories';
@@ -128,7 +128,7 @@ public class gcBilling_Actions_T {
 
         AcctSeed__Cash_Receipt__c cashReceipt_inprocess = new AcctSeed__Cash_Receipt__c();
         cashReceipt_inprocess.AcctSeed__Accounting_Period__c = period.Id;
-        cashReceipt_inprocess.AcctSeed__Amount__c = 3000;
+        cashReceipt_inprocess.AcctSeed__Amount__c = 3200;
         cashReceipt_inprocess.AcctSeed__Bank_Account__c = gcConstants.idGlBankFees;
         cashReceipt_inprocess.AcctSeed__Cash_Flow_Category__c = gcConstants.idGlRevenueCF;
         cashReceipt_inprocess.AcctSeed__Cleared_Date__c = Date.Today().addMonths(-1);
@@ -145,22 +145,25 @@ public class gcBilling_Actions_T {
         cashReceipt_inprocess.AcctSeed__Receipt_Date__c = Date.Today();
         cashReceipt_inprocess.AcctSeed__Purpose__c = 'Customer Receipt';
         cashReceipt_inprocess.AcctSeed__Payment_Reference__c = 'Test Payment Reference';
+        cashReceipt_inprocess.AcctSeed__Cash_Flow_Category__c = gcConstants.idGlRevenueCF;
         insert cashReceipt_inprocess;
 
         Test.StartTest();
         //AcctSeed.BillingPostService.unpostBillings(billings);
         AcctSeed.BillingPostService.postBillings(billings);
         Test.StopTest();
-
-        AcctSeed__Billing_Cash_Receipt__c billingCashReceipt = new AcctSeed__Billing_Cash_Receipt__c();
-        billingCashReceipt.AcctSeed__Adjustment_GL_Account__c = gcConstants.idGlCash;
+        AcctSeed__Cash_Receipt__c cr = [SELECT AcctSeed__Balance__c FROM AcctSeed__Cash_Receipt__c WHERE  Id =:cashReceipt_inprocess.Id];
+        System.debug('cr cr');
+        System.debug(cr);
+        /*AcctSeed__Billing_Cash_Receipt__c billingCashReceipt = new AcctSeed__Billing_Cash_Receipt__c();
+        //billingCashReceipt.AcctSeed__Adjustment_GL_Account__c = gcConstants.idGlCash;
         billingCashReceipt.AcctSeed__Accounting_Period__c = period.Id;
         billingCashReceipt.AcctSeed__Billing__c = billings[0].Id;
         billingCashReceipt.AcctSeed__Cash_Receipt__c = cashReceipt_inprocess.Id;
-        billingCashReceipt.AcctSeed__Status__c = 'Approved';
+//        billingCashReceipt.AcctSeed__Status__c = 'Approved';
         billingCashReceipt.AcctSeed__Applied_Amount__c = 2800;
-        billingCashReceipt.AcctSeed__Adjustment_Amount__c = 200;
-        insert billingCashReceipt;
+//        billingCashReceipt.AcctSeed__Adjustment_Amount__c = 200;
+        insert billingCashReceipt;*/
 
     }
     private static AcctSeed__Billing__c generateBillingCreditMemo(
