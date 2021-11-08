@@ -29,9 +29,11 @@ input.autoComplete
 </head>
 <body>
     <div style="width:98%; margin:0 auto">
-        <apex:outputPanel id="theDetail">
+       <!-- SFISSUES-669 [Start] --> 
+       <!-- <apex:outputPanel id="theDetail">
             <apex:detail subject="{!Id}" relatedList="false"></apex:detail>
-        </apex:outputPanel>
+        </apex:outputPanel> -->
+        <!-- SFISSUES-669 [End] -->         
         <apex:pageBlock mode="edit" title="Journal Entry Lines">
             <table width="100%">
                 <tr>
