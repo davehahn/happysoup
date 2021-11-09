@@ -1,7 +1,6 @@
 ({
   doInit: function( component, event, helper )
   {
-    console.log('DOlines List init Toggle Spinner - ON');
     helper.toggleSpinner( component, 'Retrieving Order Details');
     helper.doInit( component )
     .then(
@@ -9,7 +8,6 @@
       $A.getCallback( () => {})
     )
     .finally( $A.getCallback( () => {
-      console.log('DOlines List done - toggle Spinner - OFF');
       helper.toggleSpinner( component );
     }));
   },
@@ -31,7 +29,6 @@
 
   handleCheckPartnerProgram: function( component, event, helper )
   {
-    console.log('check PP');
     helper.toggleSpinner( component, 'Calculating Applicable Discounts under the Partner Program');
     helper.checkPartnerProgram( component );
   },
@@ -76,7 +73,6 @@
     helper.confirm( component, confirmParams )
     .then(
       $A.getCallback( function() {
-        console.log('yes delete row')
         helper.deleteOrderRow( component, params.groupId, params.itemType );
       }),
       $A.getCallback( function() {

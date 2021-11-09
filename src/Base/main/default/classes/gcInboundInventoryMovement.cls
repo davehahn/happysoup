@@ -196,6 +196,7 @@ global without sharing class gcInboundInventoryMovement {
 			}
 		}
 	}
+	@Future
 	public static void rollUpFgFuture(set<Id> setIdProjectTask) {
 		rollUpFg(setIdProjectTask);
 	}

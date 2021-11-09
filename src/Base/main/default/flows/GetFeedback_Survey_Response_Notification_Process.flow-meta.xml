@@ -31,12 +31,19 @@
         <defaultConnectorLabel>Else</defaultConnectorLabel>
         <rules>
             <name>Internal_Survey</name>
-            <conditionLogic>and</conditionLogic>
+            <conditionLogic>or</conditionLogic>
             <conditions>
                 <leftValueReference>$Record.RecordType.Name</leftValueReference>
                 <operator>EqualTo</operator>
                 <rightValue>
                     <stringValue>Internal Survey</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.RecordType.Name</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Customer Experience FollowUp Survey</stringValue>
                 </rightValue>
             </conditions>
             <connector>
@@ -82,9 +89,16 @@
         <defaultConnectorLabel>Else</defaultConnectorLabel>
         <rules>
             <name>Whitefish</name>
-            <conditionLogic>and</conditionLogic>
+            <conditionLogic>or</conditionLogic>
             <conditions>
                 <leftValueReference>$Record.Related_to_ERP__r.WarehouseName__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Whitefish</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.SalespersonId__r.Warehouse__c</leftValueReference>
                 <operator>EqualTo</operator>
                 <rightValue>
                     <stringValue>Whitefish</stringValue>
@@ -129,8 +143,8 @@
         </connector>
         <filterLogic>and</filterLogic>
         <filters>
-            <field>Email</field>
-            <operator>EqualTo</operator>
+            <field>Username</field>
+            <operator>Contains</operator>
             <value>
                 <stringValue>jparisottocharron@legendboats.com</stringValue>
             </value>

@@ -129,6 +129,7 @@
 
     if( cpq.tradeIn !== undefined && cpq.tradeIn !== null )
     {
+      console.log( JSON.parse( JSON.stringify( cpq.tradeIn ) ) );
       if( cpq.tradeIn.value !== undefined )
       {
         totals.taxableTotal -= cpq.tradeIn.value;

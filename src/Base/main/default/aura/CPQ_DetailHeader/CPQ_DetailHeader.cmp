@@ -6,21 +6,24 @@
   <aura:attribute name="biWeeklyPayment" type="Decimal" />
   <aura:attribute name="weeklyPayment" type="Decimal" />
 
-  <aura:handler name="init"
-                value="{!this}"
-                action="{!c.handleCPQChange}" />
-  <aura:handler name="change"
-                value="{!v.cpq}"
-                action="{!c.handleCPQChange}" />
-  <aura:handler event="c:CPQ_PaymentCalculator_PaymentsChanged_Event"
-                action="{!c.handlePaymentChange}" />
+  <aura:handler name="init" value="{!this}" action="{!c.handleCPQChange}" />
+  <aura:handler name="change" value="{!v.cpq}" action="{!c.handleCPQChange}" />
+  <aura:handler
+    event="c:CPQ_PaymentCalculator_PaymentsChanged_Event"
+    action="{!c.handlePaymentChange}"
+  />
 
   <c:CPQ_Utils aura:id="CpqUtils" />
 
   <div>
     <div class="slds-page-header">
       <lightning:layout verticalAlign="center">
-        <lightning:layoutItem size="6" smallDeviceSize="6" mediumDeviceSize="4" largeDeviceSize="2">
+        <lightning:layoutItem
+          size="6"
+          smallDeviceSize="6"
+          mediumDeviceSize="4"
+          largeDeviceSize="2"
+        >
           <div class="slds-media slds-no-space slds-grow">
             <div class="slds-media__figure header-image-container">
               <span class="slds-icon_container" title="{!v.cpq.theBoat.name}">
@@ -30,46 +33,89 @@
           </div>
         </lightning:layoutItem>
         <!-- TOTAL -->
-        <lightning:layoutItem size="6" smallDeviceSize="6" mediumDeviceSize="8" largeDeviceSize="10">
+        <lightning:layoutItem
+          size="6"
+          smallDeviceSize="6"
+          mediumDeviceSize="8"
+          largeDeviceSize="10"
+        >
           <lightning:layout multipleRows="true" verticalAlign="center">
-            <lightning:layoutItem size="12" smallDeviceSize="12" mediumDeviceSize="12" largeDeviceSize="12" class="slds-align_absolute-center">
-              <lightning:formattedNumber value="{!v.preTaxTotal}"
-                                          style="currency"
-                                          currencyCode="CAD"
-                                          class="cpq-total" />
+            <lightning:layoutItem
+              size="12"
+              smallDeviceSize="12"
+              mediumDeviceSize="12"
+              largeDeviceSize="12"
+              class="slds-align_absolute-center"
+            >
+              <lightning:formattedNumber
+                value="{!v.preTaxTotal}"
+                style="currency"
+                currencyCode="CAD"
+                class="cpq-total"
+              />
             </lightning:layoutItem>
-            <lightning:layoutItem size="12" smallDeviceSize="12" mediumDeviceSize="12" largeDeviceSize="12">
-              <lightning:layout multipleRows="true"
-                            verticalAlign="center"
-                            horizontalAlign="center">
-                <lightning:layoutItem size="12" smallDeviceSize="12" mediumDeviceSize="4" largeDeviceSize="4" class="slds-text-align_center">
+            <lightning:layoutItem
+              size="12"
+              smallDeviceSize="12"
+              mediumDeviceSize="12"
+              largeDeviceSize="12"
+            >
+              <lightning:layout
+                multipleRows="true"
+                verticalAlign="center"
+                horizontalAlign="center"
+              >
+                <lightning:layoutItem
+                  size="12"
+                  smallDeviceSize="12"
+                  mediumDeviceSize="4"
+                  largeDeviceSize="4"
+                  class="slds-text-align_center"
+                >
                   <p class="slds-text-title payment-amount_label">Weekly</p>
-                  <lightning:formattedNumber value="{!v.weeklyPayment}"
-                                         style="currency"
-                                         currencyCode="CAD"
-                                         class="payment-amount" />
+                  <lightning:formattedNumber
+                    value="{!v.weeklyPayment}"
+                    style="currency"
+                    currencyCode="CAD"
+                    class="payment-amount"
+                  />
                 </lightning:layoutItem>
-                <lightning:layoutItem size="12" smallDeviceSize="12" mediumDeviceSize="4" largeDeviceSize="4" class="slds-text-align_center">
+                <lightning:layoutItem
+                  size="12"
+                  smallDeviceSize="12"
+                  mediumDeviceSize="4"
+                  largeDeviceSize="4"
+                  class="slds-text-align_center"
+                >
                   <p class="slds-text-title payment-amount_label">Bi-Weekly</p>
-                  <lightning:formattedNumber value="{!v.biWeeklyPayment}"
-                                         style="currency"
-                                         currencyCode="CAD"
-                                         class="payment-amount" />
+                  <lightning:formattedNumber
+                    value="{!v.biWeeklyPayment}"
+                    style="currency"
+                    currencyCode="CAD"
+                    class="payment-amount"
+                  />
                 </lightning:layoutItem>
-                <lightning:layoutItem size="12" smallDeviceSize="12" mediumDeviceSize="4" largeDeviceSize="4" class="slds-text-align_center">
+                <lightning:layoutItem
+                  size="12"
+                  smallDeviceSize="12"
+                  mediumDeviceSize="4"
+                  largeDeviceSize="4"
+                  class="slds-text-align_center"
+                >
                   <p class="slds-text-title payment-amount_label">Monthly</p>
-                  <lightning:formattedNumber value="{!v.monthlyPayment}"
-                                         style="currency"
-                                         currencyCode="CAD"
-                                         class="payment-amount" />
+                  <lightning:formattedNumber
+                    value="{!v.monthlyPayment}"
+                    style="currency"
+                    currencyCode="CAD"
+                    class="payment-amount"
+                  />
                 </lightning:layoutItem>
               </lightning:layout>
             </lightning:layoutItem>
           </lightning:layout>
-
-        </lightning:layoutItem>
-      </lightning:layout><!--/grid-->
-    </div><!-- /page-header -->
+        </lightning:layoutItem> </lightning:layout
+      ><!--/grid-->
+    </div>
+    <!-- /page-header -->
   </div>
-
 </aura:component>

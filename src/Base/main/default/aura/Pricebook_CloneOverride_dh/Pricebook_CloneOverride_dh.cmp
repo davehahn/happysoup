@@ -45,10 +45,16 @@
                                value="{!v.pricebook.Name}" />
             </lightning:layoutItem>
 
-            <lightning:layoutItem size="4" class="slds-m-bottom_medium">
+            <lightning:layoutItem size="2" class="slds-m-bottom_medium">
               <lightning:input type="text"
                                label="Sales Year"
                                value="{!v.pricebook.Sales_Year__c}" />
+            </lightning:layoutItem>
+
+            <lightning:layoutItem size="2" class="slds-m-bottom_medium">
+              <lightning:input type="text"
+                               label="Version"
+                               value="{!v.pricebook.Version__c}" />
             </lightning:layoutItem>
 
             <lightning:layoutItem size="12" class="slds-m-bottom_medium">

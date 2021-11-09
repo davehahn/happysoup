@@ -535,6 +535,7 @@ public without sharing class gcSerialNumber{
 		System.debug(Trigger.isBefore);
 		System.debug(Trigger.isInsert);
 		System.debug(Trigger.isUpdate);
+		System.debug(Trigger.isDelete);
 		System.debug(listMove);
 		System.debug(listMove.getSObjectType());
 		if(!setCheckPosted.isEmpty() || !Trigger.isExecuting || Trigger.isDelete || Trigger.isInsert) {

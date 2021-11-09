@@ -1611,45 +1611,36 @@ public without sharing class DealerOrder_Ext {
     AcctSeedERP__Material__c[] fees = new List<AcctSeedERP__Material__c>();
     result.province = dols[0].Dealer_Order__r.Account__r.BillingState;
     // fetch Materials form a single ERP
-    AcctSeedERP__Material__c[] mats = [SELECT Id,
-                                              AcctSeedERP__Product__c,
-                                              AcctSeedERP__Product__r.Name,
-                                              AcctSeedERP__Product__r.RecordType.Name,
-                                              AcctSeedERP__Product__r.Family,
-                                              AcctSeedERP__Comment__c,
-                                              AcctSeedERP__Quantity_per_Unit__c,
-                                              Parent_Product__c,
-                                              GMBLASERP__Unit_Price__c
-                                       FROM AcctSeedERP__Material__c
-                                       WHERE AcctSeedERP__Project__c = : dols[0].ERP_Order__c];
+    AcctSeedERP__Material__c[] mats = Material_Selector.allByProjectId( dols[0].ERP_Order__c );
     //Iterate through materials to determine Boat, Trailer Options and subOptions
+    Application_RecordType.ProductRTs productRts = new Application_RecordType().getProductRecordTypes();
     for( AcctSeedERP__Material__c mat : mats )
     {
-      if( mat.AcctSeedERP__Product__r.RecordType.Name == 'Boat' )
+      if( mat.AcctSeedERP__Product__r.RecordTypeId == productRts.getBoatId() )
       {
         boat = mat;
         productIds.add( mat.AcctSeedERP__Product__c );
       }
-      if( mat.AcctSeedERP__Product__r.RecordType.Name == 'Trailer' )
+      if( mat.AcctSeedERP__Product__r.RecordTypeId == productRts.getTrailerId() )
       {
         trailer = mat;
         productIds.add( mat.AcctSeedERP__Product__c );
       }
-      if( mat.AcctSeedERP__Product__r.RecordType.Name == 'Motor' )
+      if( mat.AcctSeedERP__Product__r.RecordTypeId == productRts.getMotorId() )
       {
         motor = mat;
         productIds.add( mat.AcctSeedERP__Product__c );
       }
-      if( mat.AcctSeedERP__Product__r.RecordType.Name == 'Trolling Motor' )
+      if( mat.AcctSeedERP__Product__r.RecordTypeId == productRts.getTrollingMotorId() )
       {
         trollingMotor = mat;
         productIds.add( mat.AcctSeedERP__Product__c );
       }
-      if( mat.AcctSeedERP__Product__r.RecordType.Name == 'Part' )
+      if( mat.AcctSeedERP__Product__r.RecordTypeId == productRts.getPartId() )
       {
         parts.add( mat );
       }
-      if( mat.AcctSeedERP__Product__r.RecordType.Name == 'Fee' )
+      if( mat.AcctSeedERP__Product__r.RecordTypeId == productRts.getFeesId() )
       {
         fees.add( mat );
       }
@@ -1716,6 +1707,8 @@ public without sharing class DealerOrder_Ext {
           if Parent Product is null then this is first level option and we
           need to find all the available subOptions
         */
+        System.debug('MATERIAL');
+        System.debug(mat);
         if( mat.Parent_Product__c != null )
         {
           String key = mat.Parent_Product__c + '-' + mat.AcctSeedERP__Product__c;
@@ -1751,8 +1744,20 @@ public without sharing class DealerOrder_Ext {
             selectedParentChildMap.get( mat.Parent_Product__c ).add( mat.AcctSeedERP__Product__c );
           }
         }
+        /*
+         If Material__c is populated than this is a Kit part and we map it to the parent Part
+        */
+        else if( mat.Material__c != null ){
+          if( !selectedParentChildMap.containsKey(mat.Material__c) )
+          {
+            selectedParentChildMap.put(mat.Material__c, new Set<Id>());
+          }
+          selectedParentChildMap.get( mat.Material__c ).add( mat.AcctSeedERP__Product__c );
+        }
         else
         {
+          System.debug('add Part a primary');
+          System.debug( mat);
           parentIds.add(mat.AcctSeedERP__Product__c);
         }
       }
@@ -1833,7 +1838,7 @@ public without sharing class DealerOrder_Ext {
       */
       for( AcctSeedERP__Material__c mat : parts )
       {
-        if( mat.Parent_Product__c == null )
+        if( mat.Parent_Product__c == null && mat.Material__c == null )
         {
           OptionWrapper ow;
           if( optionMap.containsKey( mat.AcctSeedERP__Product__c) )

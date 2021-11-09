@@ -17,6 +17,17 @@ public virtual class Application_RecordType
     set;
   }
 
+  public Map<Id, String> developerNameById {
+    get {
+      if( developerNameById == null )
+      {
+        fetchAllRecordTypes();
+      }
+      return developerNameById;
+    }
+    set;
+  }
+
   private AccountRTs accountRTs {
     get {
       if( this.accountRTs == null )
@@ -99,6 +110,22 @@ public virtual class Application_RecordType
 //  }
 
   public Application_RecordType(){}
+
+  public String getDeveloperNameById( Id recordId ){
+    System.debug(this.developerNameById );
+    System.debug( this.recordTypesBySobjectName.get('Pricebook2'));
+    System.debug(recordId);
+    if( this.developerNameById.containsKey(recordId) ){
+      return this.developerNameById.get(recordId);
+    }
+    String err = 'A record type with Id [' + recordId + '] does not exist.';
+    Application_RecordType_Exception ex = new Application_RecordType_Exception(
+      err
+    );
+    ex.setMessage( err );
+    throw ex;
+  }
+
 
   public AccountRTs getAccountRecordTypes()
   {
@@ -184,6 +211,16 @@ public virtual class Application_RecordType
       for( RecordType rt : super.recordTypesBySobjectName.get( sObjectName ) )
       {
         result.put( rt.DeveloperName, rt );
+      }
+      return result;
+    }
+
+    private Map<Id, String> buildNameMapFor( String sObjectName )
+    {
+      Map<Id, String> result = new Map<Id, String>();
+      for( RecordType rt : super.recordTypesBySobjectName.get( sObjectName ) )
+      {
+        result.put( rt.Id, rt.DeveloperName );
       }
       return result;
     }
@@ -525,7 +562,9 @@ public virtual class Application_RecordType
 
   private void fetchAllRecordTypes()
   {
+    System.debug('fetching all rerordTypes');
     this.recordTypesBySobjectName = new Map<String, List<RecordType>>();
+    this.developerNameById = new Map<Id, String>();
     List<RecordType> rts = [
       SELECT
         Id,
@@ -537,6 +576,7 @@ public virtual class Application_RecordType
     ];
     for( RecordType rt : rts )
     {
+      this.developerNameById.put( rt.Id, rt.DeveloperName );
       if( !this.recordTypesBySobjectName.containsKey( rt.SobjectType ) )
       {
         this.recordTypesBySobjectName.put( rt.SobjectType, new List<RecordType>() );

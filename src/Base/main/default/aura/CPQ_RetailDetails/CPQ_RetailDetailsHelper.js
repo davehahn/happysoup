@@ -78,6 +78,8 @@
     var cpq = component.get('v.cpq'),
         cpqUtils = component.find('CpqUtils'),
         totals = cpqUtils.calcCpqTotals( cpq );
+        
+        console.log( JSON.parse( JSON.stringify( totals ) ) );
 
     component.set('v.subTotal', totals.subTotal);
     component.set('v.savingsTotal', totals.savingsTotal);
