@@ -27,6 +27,7 @@ private class gcTest_CashDisbursement {
       AcctSeed__Vendor__c = supplier.Id,
       AcctSeed__Status__c = 'Approved',
       AcctSeed__Disbursement_Date__c = Date.today(),
+      AcctSeed__Cash_Flow_Category__c = gcConstants.idGlRevenueCF,
       AcctSeed__Debit_GL_Account__c = null
     );
     Test.startTest();
@@ -60,6 +61,7 @@ private class gcTest_CashDisbursement {
         AcctSeed__Vendor__c = supplier.Id,
         AcctSeed__Status__c = 'Approved',
         AcctSeed__Disbursement_Date__c = Date.today(),
+        AcctSeed__Cash_Flow_Category__c = gcConstants.idGlRevenueCF,
         AcctSeed__Debit_GL_Account__c = gcConstants.idGlCustomerRefund,
         AcctSeed__Payment_Status__c = 'Paid'
     );
@@ -95,6 +97,7 @@ private class gcTest_CashDisbursement {
         AcctSeed__Vendor__c = supplier.Id,
         AcctSeed__Status__c = 'Approved',
         AcctSeed__Disbursement_Date__c = Date.today(),
+        AcctSeed__Cash_Flow_Category__c = gcConstants.idGlRevenueCF,
         AcctSeed__Debit_GL_Account__c = gcConstants.idGlCustomerRefund,
         AcctSeed__Payment_Status__c = 'Paid'
     );

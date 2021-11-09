@@ -96,7 +96,8 @@ system.debug( glv4.Name );
 			AcctSeed__Payment_Reference__c = customerId,
 			Payment_Method__c = 'Cash',
 			AcctSeed__Purpose__c = 'Customer Receipt',
-			AcctSeed__Ledger__c = ledger.Id
+			AcctSeed__Ledger__c = ledger.Id,
+			AcctSeed__Cash_Flow_Category__c = gcConstants.idGlRevenueCF
 		);
 		insert newCR;
     //arAccountStatement.applyCashReceipts(customerId, newCR.Id, 'create');
