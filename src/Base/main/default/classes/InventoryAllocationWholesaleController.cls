@@ -10,7 +10,7 @@ public without sharing class InventoryAllocationWholesaleController {
     private final String queryRetail                            {get;set;}
     private final String queryDealerOrder                       {get;set;}
     private final String queryProductOwner                      {get;set;}
-    public String currentYear                               {get;set;}
+    public String currentYear                                   {get;set;}
 
     public List<String> listFilterYear                          {get;set;}
     public Set<String> listLotNames                             {get;set;}
@@ -21,7 +21,7 @@ public without sharing class InventoryAllocationWholesaleController {
     public String filterWarehouse                               {get;set;}
 
 
-    public List<Inventory> inventory                            {get;set;}
+    public List<Inventory> inventory                               {get;set;}
     transient Map<String,Set<Id>> mapIncludedERP                   {get;set;}
     transient Map<String,List<SerialNumber>> mapInventoryList      {get;set;}
     transient Set<ID> allProducts                                  {get;set;}
@@ -77,6 +77,8 @@ public without sharing class InventoryAllocationWholesaleController {
         else if(this.filterYear == '')
           this.filterYear = '';
         this.currentYear = String.valueOf(Date.today().year());
+        //if(this.filterYear == 'All' && this.filterType == 'Boat')
+        //    this.filterYear = this.currentYear;
         this.buildProductList();
         this.buildMapStock();
         this.buildMapSpecialDamages();
@@ -404,7 +406,7 @@ public without sharing class InventoryAllocationWholesaleController {
         for (GMBLASERP__Lot__c objLot : Database.query(lotQuery))
         {
             if(this.filterYear == 'ALL')
-                this.filterYear = objLot.Name;
+                this.filterYear = this.currentYear;
             if(this.filterFamily == objLot.GMBLASERP__Product__r.Family && this.filterType == 'Boat') {
                 allProducts.add(objLot.GMBLASERP__Product__c);
             }else if(this.filterType != 'Boat')
