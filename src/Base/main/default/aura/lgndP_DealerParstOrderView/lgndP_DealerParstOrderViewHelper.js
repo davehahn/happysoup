@@ -5,19 +5,14 @@
       action.setParams({
           "orderId" : recordId
       });
-console.log('loadERP');
       action.setCallback(this, function(response){
-        console.log( 'get record response');
-        console.log( JSON.parse(JSON.stringify(response)));
           if(response.error && response.error.length){
               //return $A.error('Unexpected error: '+response.error[0].message);
           }
           var data = response.getReturnValue();
-          console.log( 'get record response');
-          console.log( JSON.parse(JSON.stringify(data)));
           if(data != null){
-              console.log( JSON.parse( JSON.stringify(data)));
               component.set("v.erpOrder", data.erpOrder);
+              console.log( JSON.parse( JSON.stringify( data ) ) );
               var matList = data.materialList;
               if(matList.length > 0) {
                   for(var record in matList) {

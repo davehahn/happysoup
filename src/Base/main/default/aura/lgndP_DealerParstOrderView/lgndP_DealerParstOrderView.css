@@ -13,6 +13,35 @@
   width:30%;
 }
 
+.THIS table tbody tr.kit-part-row td {
+  border: none;
+}
+
+.THIS table tbody tr.kit-part-row td:first-child {
+  text-align: right;
+}
+
+.THIS table tbody tr.kit-part-row td:first-child:before {
+  position:absolute;
+  height:100%;
+  width: 15px;
+  content: '';
+  border:1px solid #333;
+  border-top-color: transparent;
+  border-right-color: transparent;
+  left: 50%;
+  top: -50%;
+}
+
+.THIS table tbody tr.kit-part-row.row-one td:first-child:before {
+  height:50%;
+  top: 0;
+}
+
+.THIS table tbody tr.kit-part-row td:first-child + td {
+
+}
+
 .THIS .quantity-remaining {
   display:flex;
   justify-content: center;
