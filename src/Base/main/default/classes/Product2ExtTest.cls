@@ -1,162 +1,183 @@
-@isTest  (seeAllData=true)
+@isTest
 private class Product2ExtTest {
-
-  static InventoryTestFactory factory;
-  static Product2 boat;
-  static ApexPages.StandardController stdCtrl;
-  static Product2Ext p2e;
-   static {
-     /* disable the Gimbal Trigger handler gtProduct.trigger
-       until Gimbals code gets deployed, this needs to be commented out for production */
-    //gcProduct.disableTrigger = true;
+  @testSetup
+  static void dataSetup() {
+    new Factory_TestData();
+    Factory_CustomSettings.setupInventorySettings();
   }
 
-  private static void init() {
-    factory = new InventoryTestFactory();
-    boat = factory.buildTestBoat();
-    insert boat;
-    stdCtrl = new ApexPages.StandardController(boat);
-    p2e = new Product2Ext(stdCtrl);
-  }
-
-	//testMethod static void getBoatTypesTest() {
- //   init();
- //   Test.startTest();
- //   List<Schema.PicklistEntry> values = Product2.Boat_Type__c.getDescribe().getPickListValues();
- //   List<SelectOption> selectOpts = p2e.getBoatTypes();
- //   Test.stopTest();
- //   System.assertEquals( selectOpts.size(), (values.size() +1) );
-	//}
-
-  testMethod static void saveTest() {
+  @IsTest
+  static void saveTest() {
     BoatTestFactory f = new BoatTestFactory();
-    Pricebook2 spb = [Select Id, Name, IsActive From Pricebook2 where IsStandard = true LIMIT 1];
-    Product2 oBoat = f.insertFullTestBoats(1, spb)[0];
+    Product2 oBoat = f.insertFullTestBoats(1, Test.getStandardPricebookId())[0];
     PageReference pageRef;
     pageRef = Page.BoatForm;
     pageRef.getParameters().put('cloneId', oBoat.Id);
     pageRef.getParameters().put('Id', null);
     Test.setCurrentPage(pageRef);
     Test.startTest();
-    ApexPages.StandardController sController = new ApexPages.StandardController(oBoat);
+    ApexPages.StandardController sController = new ApexPages.StandardController(
+      oBoat
+    );
     Product2Ext p2Ext = new Product2Ext(sController);
     p2Ext.product.Name = 'I am a cloned Boat';
     p2Ext.save();
     Test.stopTest();
 
-    Product2 newBoat = [SELECT Id, Name, Family FROM Product2 WHERE Id = :sController.getId()];
+    Product2 newBoat = [
+      SELECT Id, Name, Family
+      FROM Product2
+      WHERE Id = :sController.getId()
+    ];
 
     System.assertEquals(oBoat.Family, newBoat.Family);
+    System.assert( p2Ext.renderDeepCloneButton );
   }
 
-  testMethod static void cloningTest() {
-    BoatTestFactory f = new BoatTestFactory();
-    Pricebook2 spb = [Select Id, Name, IsActive From Pricebook2 where IsStandard = true LIMIT 1];
-    Product2 oBoat = f.insertFullTestBoats(1, spb)[0];
-    List<Feature__c> features = f.buildAllFeatures(5);
-    insert features;
-    List<Product_Feature_Map__C> pFeatureMaps = new List<Product_Feature_Map__c>();
-    for(Integer i=0; i<features.size(); i++){
-      pFeatureMaps.add( new Product_Feature_Map__c(
-        Rank__c = i,
-        Product_Id__c = oBoat.Id,
-        Feature_Id__c = features[i].Id
+  @IsTest
+  static void clone_Test() {
+    Set<String> feeFamilies = new Set<String>{
+      'Bank Registration PPSA Fee',
+      'Documentation Fee',
+      'Freight'
+    };
+    Product2 boat = Factory_Product.createSerializedProduct('Boat', 'Pontoon');
+    Product2 clone = boat.clone(false, false, false, false);
+    List<Product2> optionalParts = Factory_Product.createNonSerializedProducts(
+      'Part',
+      'Electronics',
+      5
+    );
+    List<Product2> productPartParts = Factory_Product.createNonSerializedProducts(
+      'Part',
+      'Electronics',
+      5
+    );
+
+    List<Product_Option__c> origOptions = new List<Product_Option__c>();
+    for (Product2 op : optionalParts) {
+      origOptions.add(
+        new Product_Option__c(
+          From_Product__c = op.Id,
+          To_Product__c = boat.Id,
+          Standard__c = 0,
+          Maximum__c = 1
         )
       );
     }
-    insert pFeatureMaps;
-    //create 3 Fee Products
-    //get record type Id for fees product record type
-    Schema.DescribeSObjectResult cfrSchema = Schema.SObjectType.Product2;
-    Map<String,Schema.RecordTypeInfo> Product2RecordTypeInfo = cfrSchema.getRecordTypeInfosByName();
-    Id feeRecordTypeId = Product2RecordTypeInfo.get('Fees').getRecordTypeId();
+    insert origOptions;
+
+    List<AcctSeed__Product_Part__c> origProductParts = new List<AcctSeed__Product_Part__c>();
+    for (Product2 ppp : productPartParts) {
+      origProductParts.add(
+        new AcctSeed__Product_Part__c(
+          AcctSeed__Product__c = boat.Id,
+          AcctSeed__Product_Part__c = ppp.Id,
+          AcctSeed__Quantity__c = 1
+        )
+      );
+    }
+    insert origProductParts;
+
+    List<Product_Feature_Map__c> origFeatures = Factory_ProductFeature.createAllFeatures(
+      boat.Id,
+      10
+    );
+
     List<Product2> feeProducts = new List<Product2>();
-    List<PricebookEntry> feePricebookEntries = new List<PricebookEntry>();
-    List<Product_Fee_Map__c> productFeeMaps = new List<Product_Fee_Map__c>();
-    for(String t : new Set<String>{'Bank Registration PPSA Fee', 'Documentation Fee','Freight'}){
-        feeProducts.add( new Product2(
-            Name = t,
-            Family = t,
-            RecordTypeId = feeRecordTypeId,
-            isActive = true
-            )
-        );
-         feeProducts.add( new Product2(
-            Name = t+' Testing Clone',
-            Family = t,
-            RecordTypeId = feeRecordTypeId,
-            isActive = true
-            )
-        );
+    for (String familyName : feeFamilies) {
+      feeProducts.add(
+        Factory_Product.buildNonSerializedProduct('Fees', familyName)
+      );
     }
     insert feeProducts;
-    for( Product2 fp : feeProducts ){
-      feePricebookEntries.add( new PricebookEntry(
-          Pricebook2Id = spb.Id,
-          Product2Id = fp.Id,
-          UnitPrice = 100.00,
-          isActive = true
-     ) );
-    }
-    insert feePricebookEntries;
-    List<Product_Fee_Map__c> pFeeMaps = new List<Product_Fee_Map__c>();
-    for(Integer i=0; i<feeProducts.size(); i++){
-      pFeeMaps.add( new Product_Fee_Map__c(
-        Rank__c = i,
-        Parent_Product__c = oBoat.Id,
-        Fee_Product__c = feeProducts[i].Id
+    List<Product_Fee_Map__c> origProductFeeMaps = new List<Product_Fee_Map__c>();
+    for (Integer i = 0; i < feeProducts.size(); i++) {
+      origProductFeeMaps.add(
+        new Product_Fee_Map__c(
+          Rank__c = i,
+          Parent_Product__c = boat.Id,
+          Fee_Product__c = feeProducts[i].Id
         )
       );
     }
-    insert pFeeMaps;
-      Boat_Rigging_Checklist_Item__c bi = new Boat_Rigging_Checklist_Item__c();
-      insert bi;
-	
-   Boat_Rigging_Checklist_Map__c b = new Boat_Rigging_Checklist_Map__c(
-          Product__c =oBoat.Id,
-          Checklist_Item__c = bi.Id,
-          Rank__c = 1.22
+    insert origProductFeeMaps;
+
+    List<Boat_Rigging_Checklist_Map__c> origChecklistMaps = new List<Boat_Rigging_Checklist_Map__c>();
+    List<Boat_Rigging_Checklist_Item__c> origChecklistItems = new List<Boat_Rigging_Checklist_Item__c>();
+    for (
+      Schema.PickListEntry ple : Boat_Rigging_Checklist_Item__c.Category__c.getDescribe()
+        .getPicklistValues()
+    ) {
+      for (Integer i = 0; i < 3; i++) {
+        origChecklistItems.add(
+          new Boat_Rigging_Checklist_Item__c(
+            Category__c = ple.getValue(),
+            Description__c = ple.getValue() + '-' + String.valueOf(i)
+          )
         );
-      insert b;
-      
- AcctSeed__Product_Part__c ap =     new AcctSeed__Product_Part__c(
-          AcctSeed__Product__c = oBoat.Id,
-          AcctSeed__Product_Part__c =feeProducts[1].Id,
-          AcctSeed__Quantity__c = 1);
-      insert ap;
-      
-    PageReference pageRef;
-    pageRef = Page.BoatForm;
-    pageRef.getParameters().put('cloneId', oBoat.Id);
+      }
+    }
+    insert origChecklistItems;
+    for (Boat_Rigging_Checklist_Item__c item : origChecklistItems) {
+      origChecklistMaps.add(
+        new Boat_Rigging_Checklist_Map__c(
+          Product__c = boat.Id,
+          Checklist_Item__c = item.Id
+        )
+      );
+    }
+    insert origChecklistMaps;
+
+    Id rtId = new Application_RecordType().getProductRecordTypes().getBoatId();
+    PageReference pageRef = Page.BoatForm;
+    pageRef.getParameters().put('cloneId', boat.Id);
     pageRef.getParameters().put('Id', null);
-    Test.setCurrentPage(pageRef);
+    pageRef.setRedirect(true);
     Test.startTest();
-    ApexPages.StandardController sController = new ApexPages.StandardController(oBoat);
+    Test.setCurrentPage(pageRef);
+    ApexPages.StandardController sController = new ApexPages.StandardController(
+      clone
+    );
     Product2Ext p2Ext = new Product2Ext(sController);
-    p2Ext.product.Name = 'I am a cloned Boat';
+    p2Ext.product.Unique_Product_Code__c = boat.ProductCode + 'Cloned';
     p2Ext.saveWithOptions();
     Test.stopTest();
 
-    List<Product_Option__c> origOptions = [Select Id FROM Product_Option__c
-                                                    WHERE To_Product__c = :oBoat.Id ];
-    List<Product_Option__c> newOptions = [Select Id FROM Product_Option__c
-                                                    WHERE To_Product__c = :sController.getId() ];
-    List<Product_Feature_Map__c> origFeatureMaps = [SELECT Id
-                                                   FROM Product_Feature_Map__c
-                                                   WHERE Product_Id__c = :oBoat.Id ];
-    List<Product_Feature_Map__c> newFeatureMaps = [SELECT Id
-                                                   FROM Product_Feature_Map__c
-                                                   WHERE Product_Id__c = :sController.getId() ];
-    List<Product_Fee_Map__c> origFeeMaps = [SELECT Id
-                                            FROM Product_Fee_Map__c
-                                            WHERE Parent_Product__c = :oBoat.Id ];
-    List<Product_Fee_Map__c> newFeeMaps = [SELECT Id
-                                                   FROM Product_Fee_Map__c
-                                                   WHERE Parent_Product__c = :sController.getId() ];
-    System.assertEquals( newOptions.size(), origOptions.size() );
-    System.assertEquals( newFeatureMaps.size(), origFeatureMaps.size() );
-    System.assertEquals( newFeeMaps.size(), origFeeMaps.size() );
+    Product2[] boats = [SELECT Id FROM Product2 WHERE RecordTypeId = :rtId];
 
+    System.assertEquals(2, boats.size());
+
+    List<Product_Option__c> clonedOptions = [
+      SELECT Id
+      FROM Product_Option__c
+      WHERE To_Product__c = :p2Ext.product.Id
+    ];
+    List<AcctSeed__Product_Part__c> clonedProductParts = [
+      SELECT Id
+      FROM AcctSeed__Product_Part__c
+      WHERE AcctSeed__Product__c = :p2Ext.product.Id
+    ];
+    List<Product_Feature_Map__c> clonedFeatureMaps = [
+      SELECT Id
+      FROM Product_Feature_Map__c
+      WHERE Product_Id__c = :p2Ext.product.Id
+    ];
+    List<Product_Fee_Map__c> clonedFeeMaps = [
+      SELECT Id
+      FROM Product_Fee_Map__c
+      WHERE Parent_Product__c = :p2Ext.product.Id
+    ];
+    List<Boat_Rigging_Checklist_Map__c> clonedChecklistMap = [
+      SELECT Id
+      FROM Boat_Rigging_Checklist_Map__c
+      WHERE Product__c = :p2Ext.product.Id
+    ];
+
+    System.assertEquals(origOptions.size(), clonedOptions.size());
+    System.assertEquals(origProductParts.size(), clonedProductParts.size());
+    System.assertEquals(origFeatures.size(), clonedFeatureMaps.size());
+    System.assertEquals(origProductFeeMaps.size(), clonedFeeMaps.size());
+    System.assertEquals(origChecklistMaps.size(), clonedChecklistMap.size());
   }
-
 }
