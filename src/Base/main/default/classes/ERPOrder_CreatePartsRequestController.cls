@@ -8,6 +8,8 @@ public with sharing class ERPOrder_CreatePartsRequestController {
     @AuraEnabled public Decimal quantityAllocated;
     @AuraEnabled public Decimal quantityRequired;
     @AuraEnabled public String taskName;
+    @AuraEnabled public String uniqueProductCode;
+
 
     public PartWrapper( AcctSeedERP__Material__c mat )
     {
@@ -18,6 +20,7 @@ public with sharing class ERPOrder_CreatePartsRequestController {
       this.quantityAllocated = mat.AcctSeedERP__Quantity_Allocated__c;
       this.quantityRequired = this.quantityOrdered - this.quantityAllocated;
       this.taskName = mat.AcctSeedERP__Project_Task__r.Name;
+      this.uniqueProductCode = mat.AcctSeedERP__Product__r.Unique_Product_Code__c;
     }
 
     public Integer compareTo(Object compareTo) {
@@ -38,6 +41,7 @@ public with sharing class ERPOrder_CreatePartsRequestController {
     public String status;
     public Date eta;
 
+
     public List<Map<String, String>> caseParts;
 
     public CaseWrapper( Case c )
@@ -57,6 +61,7 @@ public with sharing class ERPOrder_CreatePartsRequestController {
       {
         Map<String, String> p = new Map<String, String>();
         p.put('productName', cp.Product__r.Name );
+        p.put('uniqueProductCode', cp.Product__r.Unique_Product_Code__c);
         p.put('quantity', String.valueOf( cp.Quantity__c) );
         Date eta = cp.Purchase_Order_Line__r.deliverDate__c == null ?
           cp.Purchase_Order_Line__r.AcctSeedERP__Purchase_Order__r.Estimated_Time_of_Arrival_ETA__c :
@@ -91,6 +96,7 @@ public with sharing class ERPOrder_CreatePartsRequestController {
         Status,
       ( SELECT
         Product__R.Name,
+        Product__R.Unique_Product_Code__c,
         Quantity__c,
         Purchase_Order_Line__r.deliverDate__c,
         Purchase_Order_Line__r.AcctSeedERP__Purchase_Order__r.Estimated_Time_of_Arrival_ETA__c
@@ -151,6 +157,7 @@ public with sharing class ERPOrder_CreatePartsRequestController {
     for( AcctSeedERP__Material__c mat : [SELECT Id,
       AcctSeedERP__Product__c,
       AcctSeedERP__Product__r.Name,
+      AcctSeedERP__Product__r.Unique_Product_Code__c,
       AcctSeedERP__Quantity_Per_Unit__c,
       AcctSeedERP__Quantity_Allocated__c,
       AcctSeedERP__Project_Task__r.Name
@@ -161,6 +168,7 @@ public with sharing class ERPOrder_CreatePartsRequestController {
     {
       parts.add( new PartWrapper( mat ) );
     }
+    System.debug('parts: '+parts);
     parts.sort();
     return parts;
   }

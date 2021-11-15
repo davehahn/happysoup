@@ -85,6 +85,9 @@
                     <div class="slds-truncate slds-text-align_left" title="Product">Product</div>
                   </th>
                   <th scope="col">
+                    <div class="slds-truncate slds-text-align_left" title="ProductNo">Product Number</div>
+                  </th>
+                  <th scope="col">
                     <div class="slds-truncate slds-text-align_center" title="Task">Task</div>
                   </th>
                   <th scope="col">
@@ -103,6 +106,9 @@
                   <tr>
                     <th scope="row" data-label="Product">
                       <div class="slds-truncate slds-text-align_left">{!mat.productName}</div>
+                    </th>
+                    <th scope="row" data-label="ProductCode">
+                      <div class="slds-truncate slds-text-align_left">{!mat.uniqueProductCode}</div>
                     </th>
                     <th scope="row" data-label="Task">
                       <div class="slds-truncate slds-text-align_center">{!mat.taskName}</div>
