@@ -215,7 +215,7 @@
         .slds-media__body {
             flex: 1;
             min-width: 0;
-            max-width: 754px;
+            max-width: 600px;
         }
 
         .custom-pills {
@@ -1071,6 +1071,19 @@
                         {{this.DeliveryDate}}
                       </th>
                     </tr>
+                    {{#if this.erpMaterials}}
+                    <tr class="notopborder">
+                        <th colspan="6" class="materials">
+                            <ul>
+                                {{#each this.erpMaterials}}
+                                <li>
+                                    {{this.productName}}
+                                </li>
+                                {{/each}}
+                            </ul>
+                        </th>
+                    </tr>
+                    {{/if}}
                     {{/each}}
                   </tbody>
                 </table>
