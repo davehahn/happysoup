@@ -111,23 +111,20 @@ public class AccrualTool_Controller {
         system.debug('erpId >> '+erpId);
         List<ProductWrapper> prodList = new List<ProductWrapper>();
         List<Id> prodIdList = new List<Id>();
-        for(AcctSeedERP__Material__c material : [select id,Serial_Number__c,AcctSeedERP__Product__c,AcctSeedERP__Product__r.Name,
-                                                 AcctSeedERP__Product__r.AcctSeedERP__Serialized__c ,AcctSeedERP__Product__r.Status__c,AcctSeedERP__Product__r.Physical_Location__c
-                                                 from AcctSeedERP__Material__c 
-                                                 where AcctSeedERP__Product__r.AcctSeedERP__Serialized__c = true 
-                                                 AND AcctSeedERP__Project__c =:erpId]) 
-        {
+        for(AcctSeedERP__Material__c material :
+            [select id,GMBLASERP__Serial_Number__c, GMBLASERP__Serial_Number__r.Name, GMBLASERP__Serial_Number__r.Status__c, GMBLASERP__Serial_Number__r.Location__c,
+                    AcctSeedERP__Product__c,AcctSeedERP__Product__r.Name, AcctSeedERP__Product__r.AcctSeedERP__Serialized__c ,AcctSeedERP__Product__r.Status__c,AcctSeedERP__Product__r.Physical_Location__c from AcctSeedERP__Material__c where AcctSeedERP__Product__r.AcctSeedERP__Serialized__c = true AND GMBLASERP__Serial_Number__c != NULL AND AcctSeedERP__Project__c =:erpId]) {
+            prodList.add(new ProductWrapper(material.GMBLASERP__Serial_Number__r.Name,material.AcctSeedERP__Product__r.Name,material.GMBLASERP__Serial_Number__r.Status__c,material.GMBLASERP__Serial_Number__r.Location__c ));
             prodIdList.add(material.AcctSeedERP__Product__c);
             //prodList.add(new ProductWrapper(material.Serial_Number__c,material.AcctSeedERP__Product__r.Name,material.AcctSeedERP__Product__r.Status__c,material.AcctSeedERP__Product__r.Physical_Location__c ));
         }
-        
-        for(Product2 prod : [Select Id,Name,Status__c,(Select Id,Name,Status__c,Location__c From GMBLASERP__Serial_Numbers__r) From Product2 Where Id IN: prodIdList])
-        {
-            for(GMBLASERP__Serial_Number__c sn : prod.GMBLASERP__Serial_Numbers__r) {
-                prodList.add(new ProductWrapper(sn.Name,prod.Name,sn.Status__c,sn.Location__c ));
-                break;
-            }
-        }
+//        for(Product2 prod : [Select Id,Name,Status__c,(Select Id,Name,Status__c,Location__c From GMBLASERP__Serial_Numbers__r) From Product2 Where Id IN: prodIdList])
+//        {
+//            for(GMBLASERP__Serial_Number__c sn : prod.GMBLASERP__Serial_Numbers__r) {
+//                prodList.add(new ProductWrapper(sn.Name,prod.Name,sn.Status__c,sn.Location__c ));
+//                break;
+//            }
+//        }
         system.debug('prodList >> '+prodList);
         return prodList;
     }

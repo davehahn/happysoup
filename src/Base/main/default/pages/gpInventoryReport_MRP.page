@@ -35,6 +35,12 @@ div.pq-grid-footer{
                             <apex:selectOptions value="{!listProductType}"/>
                         </apex:selectList>
                         </span>
+                        Select a Product Family:
+                        <span class="familySelector">
+                        <apex:selectList size="1">
+                            <apex:selectOptions value="{!listProductFamily}"/>
+                        </apex:selectList>
+                        </span>
                         &nbsp;&nbsp;Select a Warehouse:
                         <span class="warehouseSelector">
                         <apex:selectList size="1" value="{!idDefaultWarehouse}">
@@ -238,9 +244,10 @@ div.pq-grid-footer{
         var idWarehouse = $j('span.warehouseSelector select').val();
         if(idWarehouse == '') idWarehouse = null;
         var idType = $j('span.typeSelector select').val();
+        var selectedFamily = $j('span.familySelector select').val();
         Visualforce.remoting.Manager.invokeAction(
-            '{!$RemoteAction.gcInventoryReport_MRP.retrieveProducts}',
-            list, idWarehouse, idType, 
+            '{!$RemoteAction.gcInventoryReport_MRP.retrieveProductsByFamily}',
+            list, idWarehouse, idType, selectedFamily,
             function(result,event){
                 if(event.status){
                     gGrid.refreshGrid_callback($gridDiv,result);

@@ -50,6 +50,19 @@ public with sharing class gcInventoryReport_MRP {
 		return listOptions;
 	}
 
+	@RemoteAction
+	public static List<SelectOption> getListProductFamily() {
+		List<SelectOption> listOptions = new List<SelectOption>();
+
+		Schema.DescribeFieldResult fieldResult = Product2.Family.getDescribe();
+		List<Schema.PicklistEntry> ple = fieldResult.getPicklistValues();
+		for( Schema.PicklistEntry f : ple) {
+			listOptions.add(new selectOption(f.getValue(), f.getLabel()));
+		}
+
+		return listOptions;
+	}
+
 	@RemoteAction @ReadOnly
 	public static list<map<String,String>> retrieveSerialNumbers(list<Id> listIdProduct, Id pIdWarehouse)
 	{
@@ -854,6 +867,18 @@ public with sharing class gcInventoryReport_MRP {
 		return mapCube;
 	}
 
+
+	@RemoteAction @ReadOnly
+	public static list<map<String,String>> retrieveProductsByFamily(List<Id> listIdProducts, Id pIdWarehouse, Id pIdProductType, String selectedFamily){
+		Set<Id> setIdProducts = new Set<Id>();
+		for(Product2 p : [SELECT Id FROM Product2 WHERE AcctSeed__Inventory_Product__c = true AND Family =:selectedFamily AND RecordTypeId =:pIdProductType])
+			setIdProducts.add(p.Id);
+
+		listIdProducts.clear();
+		listIdProducts.addAll(setIdProducts);
+
+		return retrieveProducts(listIdProducts,pIdWarehouse,pIdProductType);
+	}
 
 	@RemoteAction @ReadOnly
 	public static list<map<String,String>> retrieveProducts(List<Id> listIdProducts, Id pIdWarehouse, Id pIdProductType)
