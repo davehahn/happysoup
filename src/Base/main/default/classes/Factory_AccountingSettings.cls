@@ -143,7 +143,8 @@ public class Factory_AccountingSettings {
       AcctSeed__Default_Billing_Format__c = defaultBillingFormat.Id,
       AcctSeed__Default_Purchase_Order_Format__c = purchaseOrderStatementFormat.Id,
       AcctSeed__Billing_Activity_Statement_Format__c = billingActivityStatementFormat.Id,
-      AcctSeed__Billing_Outstanding_Statement_Format__c = billingOutstandingStatementFormat.Id
+      AcctSeed__Billing_Outstanding_Statement_Format__c = billingOutstandingStatementFormat.Id,
+      AcctSeed__Enable_Cash_Flow_Statement__c = true
     );
     rec.AcctSeed__Inventory_Valuation_Method__c = 'Standard Cost';
     insert rec;

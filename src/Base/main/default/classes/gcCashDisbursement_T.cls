@@ -342,6 +342,7 @@ public class gcCashDisbursement_T {
         cd.AcctSeed__Disbursement_Date__c = Date.today();
         cd.AcctSeed__Debit_GL_Account__c = gcConstants.idGlCustomerRefund;
         cd.AcctSeed__Payment_Status__c = 'Paid';
+        cd.AcctSeed__Cash_Flow_Category__c = gcConstants.idGlRevenueCF;
         insert cd;
         AcctSeed.PostResult[] postResults = AcctSeed.CashDisbursementPostService.postCashDisbursements(new List<AcctSeed__Cash_Disbursement__c>{cd});
         String errorMsg = '';

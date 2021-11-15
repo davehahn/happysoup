@@ -87,6 +87,8 @@ public without sharing class GCR_InventoryMovement {
                 if((Id)move.get('GMBLASERP__Lot__c')!= null)
                     mapLot.put((Id)move.get('GMBLASERP__Lot__c'),null);
                 if(boolIsUpdate){
+                    System.debug('move new'+move);
+                    System.debug('move old'+oldMap.get(move.Id));
                     String moveStatus = (String) move.get('AcctSeedERP__Status__c');
                     String oldMoveStatus = (String) oldMap.get(move.Id).get('AcctSeedERP__Status__c');
                     if(moveStatus == 'Posted' && oldMoveStatus != moveStatus){
@@ -95,6 +97,7 @@ public without sharing class GCR_InventoryMovement {
                 }
             }
             if(setCheckPosted.isEmpty()) {
+                System.debug(setCheckPosted);
                 mapSerial.remove(null);
                 mapLot.remove(null);
 
@@ -142,7 +145,8 @@ public without sharing class GCR_InventoryMovement {
                 Boolean boolIsOutboundMove = false;
                 Boolean boolIsPurchaseMove = false;
                 Boolean boolIsSalesMove = false;
-
+                System.debug('SOBJ Name');
+                System.debug(listNew.getSObjectType().getDescribe().getName());
                 if (listNew.getSObjectType() == AcctSeedERP__Inbound_Inventory_Movement__c.sObjectType)
                     boolIsInboundMove = true; else if (listNew.getSObjectType() == AcctSeedERP__Manufacturing_Inventory_Movement__c.sObjectType)
                     boolIsManufacturingMove = true; else if (listNew.getSObjectType() == AcctSeedERP__Outbound_Inventory_Movement__c.sObjectType)
@@ -289,6 +293,7 @@ public without sharing class GCR_InventoryMovement {
 
                 listMove.addAll(listNew);
                 listMove.addAll(oldMap.values());
+                System.debug('After delete ' + Trigger.isDelete);
                 System.debug('After update inventory ' + Limits.getQueries());
                 GCR_InventoryMovementCube.recalc(listMove);
                 System.debug('After recalc ' + Limits.getQueries());

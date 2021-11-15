@@ -1,4 +1,4 @@
-@IsTest(SeeAllData=false)
+@IsTest
 public class gcCashReceipt_Refund_T {
 
     final static String RECORDTYPE = 'Motor';
@@ -92,14 +92,15 @@ public class gcCashReceipt_Refund_T {
         ledger = [SELECT Id FROM AcctSeed__Ledger__c LIMIT 1];
         AcctSeed__Cash_Receipt__c cashReceipt = new AcctSeed__Cash_Receipt__c(
                 AcctSeed__Account__c = dealer.Id,
-                AcctSeed__Amount__c = 5.0,
+                AcctSeed__Amount__c = 500.0,
                 AcctSeed__Receipt_Date__c = Date.today(),
                 AcctSeed__Payment_Reference__c = 'Cash',
                 AcctSeed__Ledger__c = ledger.Id,
                 AcctSeed__Project__c = erps[0].Id,
                 AcctSeed__Project_Task__c = erp_task_map.get(erps[0].Id).Id,
                 AcctSeed__Product__c = parts[0].Id,
-                Payment_Method__c = 'Visa'
+                Payment_Method__c = 'Visa',
+                AcctSeed__Cash_Flow_Category__c = gcConstants.idGlRevenueCF
         );
         insert cashReceipt;
     }
