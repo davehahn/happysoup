@@ -212,7 +212,7 @@
         .slds-media__body {
             flex: 1;
             min-width: 0;
-            max-width: 754px;
+            max-width: 354px;
         }
 
         .custom-pills {
@@ -466,11 +466,17 @@
                     <div class="dataTables_length_year">
                         <label>YEAR&nbsp;&nbsp;
                             <select name="tableData_length" id="selectedLot" aria-controls="tableData" class="" onchange="changeColorYears(this)">
-
                                 <apex:repeat value="{!listLotNames}" var="lot">
-                                    <option value="{!lot}" id="{!lot}">
+                                    <apex:outputText rendered="{!currentYear == lot}" escape="false">
+                                    <option selected="selected" value="{!lot}" id="{!lot}">
                                         <h1 id="{!lot}" class="ex1">&nbsp;&nbsp;{!lot}&nbsp;&nbsp;</h1>
                                     </option>
+                                    </apex:outputText>
+                                    <apex:outputText rendered="{!currentYear != lot}" escape="false">
+                                        <option value="{!lot}" id="{!lot}">
+                                            <h1 id="{!lot}" class="ex1">&nbsp;&nbsp;{!lot}&nbsp;&nbsp;</h1>
+                                        </option>
+                                    </apex:outputText>
                                 </apex:repeat>
                             </select>
                         </label>
