@@ -445,10 +445,12 @@
                     Ignition Key #<br/>
                     <div class="fake-input">{!ignitionKeyNumber}</div>
                   </td>
+                    <!-- SFISSUES-843 starts
                   <td width="50%">
                     Compartment Key #<br/>
                     <div class="fake-input">{!compartmentKeyNumber}</div>
-                  </td>
+                  </td> 
+					SFISSUES-843 ends-->
                 </tr>
               </table>
             </apex:form>
@@ -715,7 +717,8 @@
     <!-- ================================= /ITEMS ===================================== -->
     <div class="nobreak">
       <!-- +++++++++++++++++++++++ KEY NUMBER INFO +++++++++++++++++++++++++++++++++++++ -->
-      <div class="row key-info">
+      <!-- SFISSUES-843 starts
+        <div class="row key-info">
         <div class="col col20 label">
           Ignition Key #
         </div>
@@ -724,6 +727,7 @@
             {!ignitionKeyNumber}
           </div>
         </div>
+		        
         <div class="col col20 label">
           Compartment Key #
         </div>
@@ -732,7 +736,11 @@
             {!compartmentKeyNumber}
           </div>
         </div>
+		
       </div>
+	  
+		SFISSUES-843 Ends	
+-->
       <!-- ======================= KEY NUMBER INFO ===================================== -->
 
       <!-- +++++++++++++++++++++++++++++ NOTES AND TOTALS +++++++++++++++++++++++++++++ -->
