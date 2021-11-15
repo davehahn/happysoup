@@ -534,6 +534,7 @@ public without sharing class DealerPartsOrderController {
   public static List<MaterialWrapper> getAddedMaterials(String erpOrderId)
   {
     List<MaterialWrapper> results = new List<MaterialWrapper>();
+    Map<Id, List<MaterialWrapper>> kitPartsByParentMaterialId = new Map<Id, List<MaterialWrapper>>();
     if(String.isNotBlank(erpOrderId))
     {
       Id idWarehouse;
@@ -551,9 +552,11 @@ public without sharing class DealerPartsOrderController {
           GMBLASERP__Unit_Price__c,
           AcctSeedERP__Project__c,
           AcctSeedERP__Project__r.GMBLASERP__Warehouse__c,
-          AcctSeedERP__Project_Task__c
+          AcctSeedERP__Project_Task__c,
+          Material__c
         FROM AcctSeedERP__Material__c
         WHERE AcctSeedERP__Project_Task__r.AcctSeed__Project__c =:erpOrderId
+        //AND Material__c = NULL
       ];
 
       for(AcctSeedERP__Material__c mat : materialList)
@@ -563,7 +566,17 @@ public without sharing class DealerPartsOrderController {
           idWarehouse = mat.AcctSeedERP__Project__r.GMBLASERP__Warehouse__c;
         }
         setIdProduct.add(mat.AcctSeedERP__Product__c);
-        results.add( new MaterialWrapper( mat ) );
+        //group kitParts
+        if( mat.Material__c != null ) {
+          if( !kitPartsByParentMaterialId.containsKey(mat.Material__c) ){
+            kitPartsByParentMaterialId.put( mat.Material__c, new List<MaterialWrapper>() );
+          }
+          kitPartsByParentMaterialId.get( mat.Material__c ).add( new MaterialWrapper(mat) );
+        }
+        else
+        {
+          results.add(new MaterialWrapper(mat));
+        }
       }
       Map<Id, gcInventoryReport_MRP.cube> allCubes = gcInventoryReport_MRP.retrieveProducts(setIdProduct,idWarehouse);
 
@@ -584,7 +597,27 @@ public without sharing class DealerPartsOrderController {
         {
           newWr.setBackOrderStatus( arrivalDates.get(newWr.pdtId ) );
         }
+        //TODO: THIS IS GROSS FIGURE THIS OUT LATER
+        if( kitPartsByParentMaterialId.containsKey(newWr.matId) ){
+          for(MaterialWrapper kitPartWrapper : kitPartsByParentMaterialId.get(newWr.matId))
+          {
+            if (allCubes.containsKey(kitPartWrapper.pdtId))
+            {
+              gcInventoryReport_MRP.cube cube = allCubes.get(kitPartWrapper.pdtId);
+              kitPartWrapper.AvailableQuantitySelf = cube.inventoryParts - (cube.specified - cube.consumed);
+            } else
+            {
+              kitPartWrapper.AvailableQuantitySelf = 0;
+            }
+            if (arrivalDates.containsKey(kitPartWrapper.pdtId))
+            {
+              newWr.setBackOrderStatus(arrivalDates.get(kitPartWrapper.pdtId));
+            }
+          }
+          newWr.kitParts.addAll( kitPartsByParentMaterialId.get(newWr.matId) );
+        }
       }
+
     }
     return results;
   }
@@ -689,6 +722,8 @@ public without sharing class DealerPartsOrderController {
     public Boolean onBackOrder;
     @AuraEnabled
     public Date estimatedArrivalDate;
+    @AuraEnabled
+    public List<MaterialWrapper> kitParts;
 
     public MaterialWrapper(AcctSeedERP__Material__c mat)
     {
@@ -703,6 +738,7 @@ public without sharing class DealerPartsOrderController {
       this.matImgUrl = mat.AcctSeedERP__Product__r.Default_Image_Thumb__c;
       this.totalPrice = (mat.GMBLASERP__Unit_Price__c * mat.AcctSeedERP__Quantity_Per_Unit__c).setScale(2);
       this.taskId = mat.AcctSeedERP__Project_Task__c;
+      this.kitParts = new List<MaterialWrapper>();
     }
 
     public Boolean isComplete()

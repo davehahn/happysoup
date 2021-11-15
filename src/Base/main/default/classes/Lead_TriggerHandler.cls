@@ -5,6 +5,31 @@
 public without sharing class Lead_TriggerHandler extends TriggerHandler
 {
 
+  private static  List<Lead_Source_Assignment__mdt> leadSourceAssignments {
+    get {
+      if( leadSourceAssignments == null ){
+        leadSourceAssignments = Lead_Source_Assignment__mdt.getAll().values();
+      }
+      return leadSourceAssignments;
+    }
+    set;
+  }
+
+  @TestVisible
+  private static Map<String, String> factoryAccountIdByLeadSource {
+    get {
+      if( factoryAccountIdByLeadSource == null ){
+        factoryAccountIdByLeadSource = new Map<String, String>();
+        Legend_Settings__c settings = Legend_Settings__c.getOrgDefaults();
+        for( Lead_Source_Assignment__mdt assignment : leadSourceAssignments ){
+          factoryAccountIdByLeadSource.put( assignment.Lead_Source__c, String.valueOf(settings.get( assignment.Custom_Settings_Name__c )) );
+        }
+      }
+      return factoryAccountIdByLeadSource;
+    }
+    set;
+  }
+
 //  protected override void bulkBefore()
 //  {
 //  }
@@ -29,11 +54,13 @@ public without sharing class Lead_TriggerHandler extends TriggerHandler
         l.Company = null;
       }
     }
+    setClosestByLeadSource( (List<Lead>)Trigger.new );
   }
 
-//  protected override void beforeUpdate()
-//  {
-//  }
+  protected override void beforeUpdate()
+  {
+    setClosestByLeadSource( (List<Lead>)Trigger.new );
+  }
 
 //  protected override void beforeDelete()
 //  {
@@ -61,12 +88,22 @@ public without sharing class Lead_TriggerHandler extends TriggerHandler
 //  {
 //  }
 
+  private static void setClosestByLeadSource( List<Lead> newList ){
+    for( Lead l : newList ){
+      if( factoryAccountIdByLeadSource.containsKey( l.LeadSource ) ){
+        l.Closest_Partner__c = factoryAccountIdByLeadSource.get( l.LeadSource );
+      }
+    }
+  }
+
   private static void shouldSetClosestPartner( List<Lead> listNew,
                                                Map<Id, Lead> oldMap )
   {
     Set<Id> setClosestPartner = new Set<Id>();
     for( Lead l : listNew )
     {
+      //skip any records with a specific Lead Source found in Lead_Source_Assignment__mdt
+      if( factoryAccountIdByLeadSource.containsKey( l.LeadSource ) ) continue;
       // during INSERT
       if( oldMap == null )
       {
@@ -124,7 +161,6 @@ public without sharing class Lead_TriggerHandler extends TriggerHandler
           origin = l.IP_City__c;
         else if( l.hubspot_IP_City_Lead__c != null )
           origin = l.hubspot_IP_City_Lead__c;
-System.debug( 'ORIGIN = ' + origin);
         if( origin != null )
         {
           PartnerLocator.SearchResult result = locator.execute( origin, 1 );

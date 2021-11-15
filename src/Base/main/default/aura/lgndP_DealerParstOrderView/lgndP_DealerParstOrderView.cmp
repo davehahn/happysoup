@@ -87,19 +87,6 @@
                           </aura:if>
                         </span>
                       </div>
-<!--                      <div class="eta slds-grid slds-grid_vertical-align-center">-->
-<!--                        <div class="slds-col slds-size_1-of-3 slds-text-align_right slds-p-right_xx-small">-->
-<!--                          ETA:-->
-<!--                        </div>-->
-<!--                        <div class="slds-col slds-text-align_left">-->
-<!--                          <aura:if isTrue="{! !empty(mat.estimatedArrivalDate)}">-->
-<!--                            <lightning:formattedDateTime value="{!mat.estimatedArrivalDate}" />-->
-<!--                            <aura:set attribute="else">-->
-<!--                              unknown-->
-<!--                            </aura:set>-->
-<!--                          </aura:if>-->
-<!--                        </div>-->
-<!--                      </div>-->
                     </div>
                   </aura:if>
                 </div>
@@ -116,6 +103,64 @@
                                            currencyCode="CAD" />
               </td>
             </tr>
+            <aura:iteration items="{!mat.kitParts}" var="kitPart" indexVar="idx">
+              <tr class="{! if(equals(idx, 0), 'kit-part-row row-one', 'kit-part-row')}">
+                <td data-label="Quantity">
+                  {!kitPart.matQuantity}
+                </td>
+                <td class="slds-p-left_medium" data-label="Name">
+                  <div class="slds-truncate">{!kitPart.pdtName}</div>
+                </td>
+                <td class="slds-text-align_center" data-label="Code">
+                  {!kitPart.pdtcode}
+                </td>
+                <td class="slds-text-align_center" data-label="Quantity Shipped">
+                  {!kitPart.matQuantityShipped}
+                </td>
+                <td class="slds-text-align_center" data-label="Quantity Remaining">
+                  <div class="quantity-remaining">
+                    <div>
+                      {!kitPart.matQuantityOutstanding}
+                    </div>
+                    <aura:if isTrue="{!kitPart.onBackOrder}">
+                      <div>
+                        <div class="slds-grid slds-grid_vertical-align-center">
+                          <lightning:icon iconName="utility:warning"
+                                          size="x-small"
+                                          variant="error"
+                                          class="slds-m-left_small"></lightning:icon>
+                          <span style="color:#c23a35" class="slds-m-left_x-small">
+                          On Backorder
+                        </span>
+                        </div>
+                        <div class="eta">
+                          ETA:
+                          <span class="slds-m-left_xx-small">
+                          <aura:if isTrue="{! !empty(kitPart.estimatedArrivalDate)}">
+                            <lightning:formattedDateTime value="{!kitPart.estimatedArrivalDate}" />
+                            <aura:set attribute="else">
+                              unknown
+                            </aura:set>
+                          </aura:if>
+                        </span>
+                        </div>
+                      </div>
+                    </aura:if>
+                  </div>
+
+                </td>
+                <td class="slds-text-align_center" data-label="Unit Price">
+                  <lightning:formattedNumber value="{!kitPart.pricePerQuantity}"
+                                             style="currency"
+                                             currencyCode="CAD" />
+                </td>
+                <td class="slds-text-align_right" data-label="Total">
+                  <lightning:formattedNumber value="{!kitPart.totalPrice}"
+                                             style="currency"
+                                             currencyCode="CAD" />
+                </td>
+              </tr>
+            </aura:iteration>
           </aura:iteration>
           </tbody>
         </table>

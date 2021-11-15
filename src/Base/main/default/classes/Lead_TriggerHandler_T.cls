@@ -11,6 +11,9 @@ private class Lead_TriggerHandler_T
   @TestSetup
   static void dataSetup()
   {
+    new Factory_TestData();
+    Factory_CustomSettings.setupInventorySettings();
+
     Account orillia = Factory_Account.buildDealerAccounts(1)[0];
     orillia.Name = 'Orillia Dealer';
     orillia.BillingStreet = '139 Fittons Rd East';
@@ -70,6 +73,24 @@ private class Lead_TriggerHandler_T
 
     System.assertEquals( null, afterPerson.Company );
     System.assertEquals( businesslead.Company, afterBusiness.Company  );
+  }
+
+  @IsTest
+  static void leadSourceSpecific_Test(){
+    Lead personLead = buildLead( true );
+    List<String> leadSources = new List<String>( Lead_TriggerHandler.factoryAccountIdByLeadSource.keySet() );
+    personLead.LeadSource = leadSources[0];
+
+    insert personLead;
+
+    personLead = [ SELECT Id, Closest_Partner__c FROM Lead WHERE Id = :personLead.Id ];
+    System.assertEquals( Lead_TriggerHandler.factoryAccountIdByLeadSource.get( leadSources[0]), personLead.Closest_Partner__c );
+
+    personLead.LeadSource = leadSources[1];
+    update personLead;
+
+    personLead = [ SELECT Id, Closest_Partner__c FROM Lead WHERE Id = :personLead.Id ];
+    System.assertEquals( Lead_TriggerHandler.factoryAccountIdByLeadSource.get( leadSources[1]), personLead.Closest_Partner__c );
   }
 
   @IsTest
