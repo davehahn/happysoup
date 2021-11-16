@@ -5,7 +5,7 @@
         <name>Validate_ERP_Record_Type</name>
         <label>Validate ERP Record Type</label>
         <locationX>182</locationX>
-        <locationY>253</locationY>
+        <locationY>335</locationY>
         <defaultConnectorLabel>Else</defaultConnectorLabel>
         <rules>
             <name>isWholesaleLegendServiceWorkOrder</name>
@@ -37,6 +37,13 @@
         <expression>NOW()</expression>
     </formulas>
     <formulas>
+        <name>TaskDueDate</name>
+        <dataType>Date</dataType>
+        <expression>IF( MONTH( TODAY() ) = 12, 
+DATE( YEAR( TODAY() ), 12, 31 ), 
+DATE( YEAR( TODAY() ), MONTH( TODAY() ) + 1, 1) - 1)</expression>
+    </formulas>
+    <formulas>
         <name>Today</name>
         <dataType>Date</dataType>
         <expression>TODAY()</expression>
@@ -66,11 +73,11 @@
         <name>Create_Internal_Service_ERP_Task</name>
         <label>Create Internal Service ERP Task</label>
         <locationX>50</locationX>
-        <locationY>613</locationY>
+        <locationY>695</locationY>
         <inputAssignments>
             <field>ActivityDate</field>
             <value>
-                <elementReference>Today</elementReference>
+                <elementReference>TaskDueDate</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -140,7 +147,7 @@
         <name>Get_Accounting_User_ID</name>
         <label>Get Accounting User ID</label>
         <locationX>50</locationX>
-        <locationY>373</locationY>
+        <locationY>455</locationY>
         <assignNullValuesIfNoRecordsFound>true</assignNullValuesIfNoRecordsFound>
         <connector>
             <targetReference>Get_Task_Record_Type</targetReference>
@@ -150,7 +157,7 @@
             <field>Name</field>
             <operator>EqualTo</operator>
             <value>
-                <stringValue>Emilie Arbour</stringValue>
+                <stringValue>Brooklyn Burns</stringValue>
             </value>
         </filters>
         <object>User</object>
@@ -163,7 +170,7 @@
         <name>Get_Task_Record_Type</name>
         <label>Get Task Record Type</label>
         <locationX>50</locationX>
-        <locationY>493</locationY>
+        <locationY>575</locationY>
         <assignNullValuesIfNoRecordsFound>true</assignNullValuesIfNoRecordsFound>
         <connector>
             <targetReference>Create_Internal_Service_ERP_Task</targetReference>
