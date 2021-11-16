@@ -51,7 +51,7 @@
         <connector>
             <targetReference>Chatter_Salesperson</targetReference>
         </connector>
-        <filterLogic>1 AND (2 OR 3 OR 4 OR 5)</filterLogic>
+        <filterLogic>1 AND (2 OR 3 OR 4 OR 5 OR 6 OR 7)</filterLogic>
         <filters>
             <field>SalespersonId__c</field>
             <operator>IsNull</operator>
@@ -85,6 +85,20 @@
             <operator>EqualTo</operator>
             <value>
                 <stringValue>GetFeedback Survey Response: Customer Care Experience Survey</stringValue>
+            </value>
+        </filters>
+        <filters>
+            <field>Name</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>GetFeedback Survey Response: Customer Care Experience Follow-up Survey</stringValue>
+            </value>
+        </filters>
+        <filters>
+            <field>Name</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>GetFeedback Survey Response: Your Legend Experience Follow-up</stringValue>
             </value>
         </filters>
         <object>GetFeedback_Survey_Response__c</object>
