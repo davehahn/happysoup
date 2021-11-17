@@ -31,15 +31,15 @@ div.pq-grid-footer{
                     <div style="display: {!IF($CurrentPage.parameters.id == null,'','none;')}">
                         Select a Product Type:
                         <span class="typeSelector">
-                        <apex:selectList size="1">
+                        <apex:selectList size="1" onChange="loadFamilyByType();">
                             <apex:selectOptions value="{!listProductType}"/>
                         </apex:selectList>
                         </span>
                         Select a Product Family:
                         <span class="familySelector">
-                        <apex:selectList size="1">
-                            <apex:selectOptions value="{!listProductFamily}"/>
-                        </apex:selectList>
+                            <select name="familySelector">
+                                <option value="">--All--</option>
+                            </select>
                         </span>
                         &nbsp;&nbsp;Select a Warehouse:
                         <span class="warehouseSelector">
@@ -97,6 +97,7 @@ div.pq-grid-footer{
         initGrid_purchaseOrders();
         initGrid_projects();
         initGrid_products();
+        loadFamilyByType();
     });
 
     accounting.settings = {
@@ -263,6 +264,28 @@ div.pq-grid-footer{
 
         filter = null;
         groupBy = null;
+    }
+
+    function loadFamilyByType()
+    {
+        var idType = $j('span.typeSelector select').val();
+        var familySelector = $j('span.familySelector select');
+        familySelector.html('<option value="">--All--</option>');
+        Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.gcInventoryReport_MRP.listProductFamily}',
+            idType,
+            function(result,event){
+                if(event.status){
+                    console.log(result);
+                    $j.each( result, function( key, value ) {
+                        familySelector.append($j("<option>").val(value).text(value));
+                    });
+                }
+                else{
+                    alert(event.message);
+                }
+            },
+            {buffer:true, escape:true, timeout:120000});
     }
 
     function initGrid_serialNumbers()

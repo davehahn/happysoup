@@ -51,15 +51,16 @@ public with sharing class gcInventoryReport_MRP {
 	}
 
 	@RemoteAction
-	public static List<SelectOption> getListProductFamily() {
-		List<SelectOption> listOptions = new List<SelectOption>();
-
-		Schema.DescribeFieldResult fieldResult = Product2.Family.getDescribe();
-		List<Schema.PicklistEntry> ple = fieldResult.getPicklistValues();
-		for( Schema.PicklistEntry f : ple) {
-			listOptions.add(new selectOption(f.getValue(), f.getLabel()));
+	public static List<String> listProductFamily(String recordTypeId) {
+		List<String> listOptions = new List<String>();
+		Map<Id,Schema.RecordTypeInfo> productRecordTypeInfo = Schema.SObjectType.Product2.getRecordTypeInfosById();
+		String recordTypeName = productRecordTypeInfo.get(recordTypeId).getName();
+		List<Family_by_Record_Type__mdt> frts = Family_by_Record_Type__mdt.getAll().values();
+		for( Family_by_Record_Type__mdt frt : frts){
+			if(frt.Family_by_Record_Type__c == recordTypeName) {
+				listOptions.add(frt.Label);
+			}
 		}
-
 		return listOptions;
 	}
 
@@ -871,12 +872,12 @@ public with sharing class gcInventoryReport_MRP {
 	@RemoteAction @ReadOnly
 	public static list<map<String,String>> retrieveProductsByFamily(List<Id> listIdProducts, Id pIdWarehouse, Id pIdProductType, String selectedFamily){
 		Set<Id> setIdProducts = new Set<Id>();
-		for(Product2 p : [SELECT Id FROM Product2 WHERE AcctSeed__Inventory_Product__c = true AND Family =:selectedFamily AND RecordTypeId =:pIdProductType])
-			setIdProducts.add(p.Id);
-
-		listIdProducts.clear();
-		listIdProducts.addAll(setIdProducts);
-
+		if(selectedFamily != '') {
+			for (Product2 p : [SELECT Id FROM Product2 WHERE AcctSeed__Inventory_Product__c = true AND Family = :selectedFamily AND RecordTypeId = :pIdProductType])
+				setIdProducts.add(p.Id);
+			listIdProducts.clear();
+			listIdProducts.addAll(setIdProducts);
+		}
 		return retrieveProducts(listIdProducts,pIdWarehouse,pIdProductType);
 	}
 
