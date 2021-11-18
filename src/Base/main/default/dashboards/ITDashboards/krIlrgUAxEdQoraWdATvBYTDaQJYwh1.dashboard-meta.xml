@@ -36,7 +36,7 @@
                 <showValues>false</showValues>
             </dashboardComponent>
             <rowIndex>0</rowIndex>
-            <rowSpan>6</rowSpan>
+            <rowSpan>7</rowSpan>
         </dashboardGridComponents>
         <dashboardGridComponents>
             <colSpan>4</colSpan>
@@ -48,7 +48,7 @@
                     <axisBinding>y</axisBinding>
                     <column>RowCount</column>
                 </chartSummary>
-                <componentType>Bar</componentType>
+                <componentType>Donut</componentType>
                 <decimalPrecision>-1</decimalPrecision>
                 <displayUnits>Auto</displayUnits>
                 <drillEnabled>false</drillEnabled>
@@ -62,17 +62,48 @@
                         <sortOrder>a</sortOrder>
                     </groupingSorts>
                 </groupingSortProperties>
-                <header>Badges Earned this Qtr</header>
-                <legendPosition>Bottom</legendPosition>
-                <report>ITReports/Copy_of_My_Team_Badges_This_Qtr_2fK</report>
+                <header>IT Trailhead Badges</header>
+                <legendPosition>Right</legendPosition>
+                <maxValuesDisplayed>6</maxValuesDisplayed>
+                <report>ITReports/IT_Trailhead_Badges</report>
                 <showPercentage>false</showPercentage>
-                <showPicturesOnCharts>false</showPicturesOnCharts>
+                <showTotal>true</showTotal>
                 <showValues>true</showValues>
                 <sortBy>RowLabelAscending</sortBy>
                 <useReportChart>false</useReportChart>
             </dashboardComponent>
             <rowIndex>0</rowIndex>
-            <rowSpan>6</rowSpan>
+            <rowSpan>7</rowSpan>
+        </dashboardGridComponents>
+        <dashboardGridComponents>
+            <colSpan>4</colSpan>
+            <columnIndex>8</columnIndex>
+            <dashboardComponent>
+                <autoselectColumnsFromReport>false</autoselectColumnsFromReport>
+                <chartSummary>
+                    <axisBinding>y</axisBinding>
+                    <column>RowCount</column>
+                </chartSummary>
+                <componentType>Gauge</componentType>
+                <decimalPrecision>-1</decimalPrecision>
+                <displayUnits>Auto</displayUnits>
+                <gaugeMax>20.0</gaugeMax>
+                <gaugeMin>0.0</gaugeMin>
+                <groupingSortProperties/>
+                <header>Trailhead Badges KPI</header>
+                <indicatorBreakpoint1>10.0</indicatorBreakpoint1>
+                <indicatorBreakpoint2>15.0</indicatorBreakpoint2>
+                <indicatorHighColor>#00716B</indicatorHighColor>
+                <indicatorLowColor>#C23934</indicatorLowColor>
+                <indicatorMiddleColor>#FFB75D</indicatorMiddleColor>
+                <report>ITReports/IT_Trailhead_Badges</report>
+                <showPercentage>false</showPercentage>
+                <showRange>false</showRange>
+                <showTotal>true</showTotal>
+                <showValues>false</showValues>
+            </dashboardComponent>
+            <rowIndex>0</rowIndex>
+            <rowSpan>7</rowSpan>
         </dashboardGridComponents>
         <dashboardGridComponents>
             <colSpan>2</colSpan>
@@ -80,22 +111,22 @@
             <dashboardComponent>
                 <autoselectColumnsFromReport>false</autoselectColumnsFromReport>
                 <chartSummary>
-                    <column>FORMULA1</column>
+                    <column>RowCount</column>
                 </chartSummary>
                 <componentType>Metric</componentType>
                 <decimalPrecision>-1</decimalPrecision>
                 <displayUnits>Auto</displayUnits>
                 <groupingSortProperties/>
                 <header>Unassigned Bugs</header>
-                <indicatorBreakpoint1>5.0</indicatorBreakpoint1>
+                <indicatorBreakpoint1>4.0</indicatorBreakpoint1>
                 <indicatorBreakpoint2>10.0</indicatorBreakpoint2>
                 <indicatorHighColor>#C23934</indicatorHighColor>
-                <indicatorLowColor>#00716B</indicatorLowColor>
+                <indicatorLowColor>#00706B</indicatorLowColor>
                 <indicatorMiddleColor>#FFB75D</indicatorMiddleColor>
                 <report>ITReports/System_Issue_Unassigned_Bugs_o8E</report>
                 <showRange>false</showRange>
             </dashboardComponent>
-            <rowIndex>6</rowIndex>
+            <rowIndex>7</rowIndex>
             <rowSpan>4</rowSpan>
         </dashboardGridComponents>
         <dashboardGridComponents>
@@ -143,8 +174,8 @@
                         <type>detail</type>
                     </flexTableColumn>
                     <flexTableSortInfo>
-                        <sortColumn>System_Issue__c.Priority__c</sortColumn>
-                        <sortOrder>1</sortOrder>
+                        <sortColumn>System_Issue__c.CreatedDate</sortColumn>
+                        <sortOrder>2</sortOrder>
                     </flexTableSortInfo>
                     <hideChatterPhotos>true</hideChatterPhotos>
                 </flexComponentProperties>
@@ -152,7 +183,7 @@
                 <header>Unassigned Bugs</header>
                 <report>ITReports/System_Issue_Unassigned_Bugs_o8E</report>
             </dashboardComponent>
-            <rowIndex>6</rowIndex>
+            <rowIndex>7</rowIndex>
             <rowSpan>9</rowSpan>
         </dashboardGridComponents>
         <dashboardGridComponents>
@@ -190,7 +221,7 @@
                 <sortBy>RowLabelAscending</sortBy>
                 <useReportChart>false</useReportChart>
             </dashboardComponent>
-            <rowIndex>15</rowIndex>
+            <rowIndex>16</rowIndex>
             <rowSpan>9</rowSpan>
         </dashboardGridComponents>
         <dashboardGridComponents>
@@ -225,7 +256,7 @@
                 <sortBy>RowLabelAscending</sortBy>
                 <useReportChart>false</useReportChart>
             </dashboardComponent>
-            <rowIndex>15</rowIndex>
+            <rowIndex>16</rowIndex>
             <rowSpan>9</rowSpan>
         </dashboardGridComponents>
         <dashboardGridComponents>
@@ -255,7 +286,7 @@
                 <showTotal>true</showTotal>
                 <showValues>false</showValues>
             </dashboardComponent>
-            <rowIndex>15</rowIndex>
+            <rowIndex>16</rowIndex>
             <rowSpan>9</rowSpan>
         </dashboardGridComponents>
         <dashboardGridComponents>
@@ -293,7 +324,7 @@
                 <sortBy>RowLabelAscending</sortBy>
                 <useReportChart>false</useReportChart>
             </dashboardComponent>
-            <rowIndex>24</rowIndex>
+            <rowIndex>25</rowIndex>
             <rowSpan>9</rowSpan>
         </dashboardGridComponents>
         <dashboardGridComponents>
@@ -329,7 +360,7 @@
                 <sortBy>RowLabelAscending</sortBy>
                 <useReportChart>false</useReportChart>
             </dashboardComponent>
-            <rowIndex>24</rowIndex>
+            <rowIndex>25</rowIndex>
             <rowSpan>9</rowSpan>
         </dashboardGridComponents>
         <dashboardGridComponents>
@@ -360,7 +391,7 @@
                 <showTotal>true</showTotal>
                 <showValues>false</showValues>
             </dashboardComponent>
-            <rowIndex>24</rowIndex>
+            <rowIndex>25</rowIndex>
             <rowSpan>9</rowSpan>
         </dashboardGridComponents>
         <numberOfColumns>12</numberOfColumns>
