@@ -543,6 +543,11 @@ public class AccrualTool_Controller {
             }
             
             try{
+                /// New requirement to update a checkbox on ERP ater the accrual Journal Entry has been created.
+                Boolean oldVal = gcProject.disableTrigger;
+                gcProject.disableTrigger = true;
+                update new AcctSeed__Project__c(Id = project.Id, Accrual_JE_created__c = true);
+                gcProject.disableTrigger = oldVal;
                 AcctSeed.JournalEntryPostService.postJournalEntries(new List<AcctSeed__Journal_Entry__c>{journalEntry});
             }
             catch(Exception e){

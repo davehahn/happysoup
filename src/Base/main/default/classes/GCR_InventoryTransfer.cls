@@ -154,6 +154,7 @@ public with sharing class GCR_InventoryTransfer {
     /// This is not really required as we do not try this normally
     public static void verifyChildrenOfOutboundFromOrigin(set<Id> setIdMove)
     {
+        System.debug('verifyChildrenOfOutboundFromOrigin');
         initStatics();
 
         list<AcctSeedERP__Outbound_Inventory_Movement__c> listMove = new list<AcctSeedERP__Outbound_Inventory_Movement__c>();
@@ -225,6 +226,7 @@ public with sharing class GCR_InventoryTransfer {
                 {
                     //if there's a moveChild whose master inventory balance does not match the move parent, remove it
                     if((!sameDay && moveChild.AcctSeedERP__Inventory_Balance__r.AcctSeedERP__Warehouse__c != idWarehouseTransit) ||
+                            ( !sameDay && xfr.GMBLASERP__Inbound_Date__c != null) ||
                             ( sameDay && moveChild.AcctSeedERP__Inventory_Balance__r.AcctSeedERP__Warehouse__c != xfr.GMBLASERP__Warehouse_To__c) ||
                             moveChild.AcctSeedERP__Inventory_Balance__r.AcctSeedERP__Product__c != move.AcctSeedERP__Inventory_Balance__r.AcctSeedERP__Product__c)
                     {
@@ -235,7 +237,7 @@ public with sharing class GCR_InventoryTransfer {
                     else if(listChildren.size() == 1)
                     {
                         moveChild.AcctSeedERP__Credit_GL_Account__c = move.AcctSeedERP__Debit_GL_Account__c;
-                        moveChild.AcctSeedERP__Movement_Date__c = move.AcctSeedERP__Movement_Date__c;
+                        moveChild.AcctSeedERP__Movement_Date__c = xfr.GMBLASERP__Inbound_Date__c == null? move.AcctSeedERP__Movement_Date__c : xfr.GMBLASERP__Inbound_Date__c;
                         moveChild.AcctSeedERP__Quantity__c = move.AcctSeedERP__Quantity__c;
                         moveChild.AcctSeedERP__Type__c = move.AcctSeedERP__Type__c;
                         moveChild.AcctSeedERP__Unit_Cost__c = move.AcctSeedERP__Unit_Cost__c;
@@ -266,13 +268,18 @@ public with sharing class GCR_InventoryTransfer {
 
             //if there is no child, create one.  first, we'll need to get the inventorybalanceId
             intChildren = listChildren.size();
+
+            System.debug('listChildren');
+            System.debug(listChildren);
+            System.debug(intChildren);
             if(intChildren == 0)
             {
                 Id idProduct = move.AcctSeedERP__Inventory_Balance__r.AcctSeedERP__Product__c;
                 Id idWarehouse = idWarehouseTransit;
                 Id idLocation  = idLocationTransit;
-                if(sameDay)
+                if(sameDay || move.GMBLASERP__Inventory_Transfer__r.GMBLASERP__Inbound_Date__c != null)
                 {
+                    System.debug('Here I am ' + sameDay);
                     idWarehouse = xfr.GMBLASERP__Warehouse_To__c;
                     idLocation = mapDefaultLocation.get(xfr.GMBLASERP__Warehouse_To__c);
                 }
@@ -301,8 +308,11 @@ public with sharing class GCR_InventoryTransfer {
                 Id idProduct = move.AcctSeedERP__Inventory_Balance__r.AcctSeedERP__Product__c;
                 Id idWarehouse = idWarehouseTransit;
                 Id idLocation  = idLocationTransit;
-                if(sameDay)
+                System.debug('move from Origin');
+                System.debug(move);
+                if(sameDay || move.GMBLASERP__Inventory_Transfer__r.GMBLASERP__Inbound_Date__c != null)
                 {
+                    System.debug('Here I am 2 ' + sameDay);
                     idWarehouse = xfr.GMBLASERP__Warehouse_To__c;
                     idLocation = mapDefaultLocation.get(xfr.GMBLASERP__Warehouse_To__c);
                 }
@@ -312,7 +322,7 @@ public with sharing class GCR_InventoryTransfer {
                         (
                                 AcctSeedERP__Credit_GL_Account__c = move.AcctSeedERP__Debit_GL_Account__c,
                                 AcctSeedERP__Inventory_Balance__c = idBalance,
-                                AcctSeedERP__Movement_Date__c = move.AcctSeedERP__Movement_Date__c,
+                                AcctSeedERP__Movement_Date__c = xfr.GMBLASERP__Inbound_Date__c == null? move.AcctSeedERP__Movement_Date__c : xfr.GMBLASERP__Inbound_Date__c,
                                 AcctSeedERP__Outbound_Inventory_Movement__c = move.Id,
                                 AcctSeedERP__Quantity__c = move.AcctSeedERP__Quantity__c,
                                 AcctSeedERP__Type__c = move.AcctSeedERP__Type__c,
@@ -503,7 +513,7 @@ CALL THIS METHOD AFTER INSERT, AFTER UPDATE OF INBOUND INVENTORY MOVEMENT
 VERIFY INBOUND TO DESTINATION, I.E. CHILDREN OF OUTBOUND FROM TRANSIT
 CALL THIS METHOD AFTER INSERT, AFTER UPDATE OF OUTBOUND INVENTORY MOVEMENT
 */
-    public static void verifyChildrenOfOutboundFromTransit(set<Id> setIdMove)
+    /*public static void verifyChildrenOfOutboundFromTransit(set<Id> setIdMove)
     {
         System.debug('verifyChildrenOfOutboundFromTransit');
         initStatics();
@@ -563,9 +573,13 @@ CALL THIS METHOD AFTER INSERT, AFTER UPDATE OF OUTBOUND INVENTORY MOVEMENT
 
         for(AcctSeedERP__Outbound_Inventory_Movement__c move : listMove)
         {
+            System.debug('move from transit');
+            System.debug(move);
             xfr = move.AcctSeedERP__Inbound_Inventory_Movement__r.AcctSeedERP__Outbound_Inventory_Movement__r.GMBLASERP__Inventory_Transfer__r;
 
             listChildren = mapMoveToChildren.get(move.Id);
+            System.debug('intChildren from transit');
+            System.debug(intChildren);
 
             intChildren = listChildren.size();
             for(Integer i = intChildren - 1; i >= 0 ; i--)
@@ -574,6 +588,8 @@ CALL THIS METHOD AFTER INSERT, AFTER UPDATE OF OUTBOUND INVENTORY MOVEMENT
 
                 if(moveChild.AcctSeedERP__Movement_Date__c >= dateEarliestOpen)
                 {
+                    System.debug('dateEarliestOpen from transit');
+                    System.debug(dateEarliestOpen);
                     //if there's a moveChild whose master inventory balance does not match the move parent, remove it
                     if(moveChild.AcctSeedERP__Inventory_Balance__r.AcctSeedERP__Warehouse__c != xfr.GMBLASERP__Warehouse_To__c ||
                             moveChild.AcctSeedERP__Inventory_Balance__r.AcctSeedERP__Product__c != move.AcctSeedERP__Inventory_Balance__r.AcctSeedERP__Product__c)
@@ -585,7 +601,7 @@ CALL THIS METHOD AFTER INSERT, AFTER UPDATE OF OUTBOUND INVENTORY MOVEMENT
                     else if(listChildren.size() == 1)
                     {
                         moveChild.AcctSeedERP__Credit_GL_Account__c = move.AcctSeedERP__Debit_GL_Account__c;
-                        moveChild.AcctSeedERP__Movement_Date__c = move.AcctSeedERP__Movement_Date__c;
+                        moveChild.AcctSeedERP__Movement_Date__c = xfr.GMBLASERP__Inbound_Date__c == null? move.AcctSeedERP__Movement_Date__c : xfr.GMBLASERP__Inbound_Date__c;
                         moveChild.AcctSeedERP__Quantity__c = move.AcctSeedERP__Quantity__c;
                         moveChild.AcctSeedERP__Type__c = move.AcctSeedERP__Type__c;
                         moveChild.AcctSeedERP__Unit_Cost__c = move.AcctSeedERP__Unit_Cost__c;
@@ -593,6 +609,8 @@ CALL THIS METHOD AFTER INSERT, AFTER UPDATE OF OUTBOUND INVENTORY MOVEMENT
                         moveChild.GMBLASERP__Inventory_Transfer__c = xfr.Id;
                         moveChild.GMBLASERP__Serial_Number__c = move.GMBLASERP__Serial_Number__c;
                         moveChild.GMBLASERP__Lot__c = move.GMBLASERP__Lot__c;
+                        System.debug('dateEarliestOpen from transit');
+                        System.debug(dateEarliestOpen);
 
                         listSObjectUpdate.add(moveChild);
                     }
@@ -610,6 +628,8 @@ CALL THIS METHOD AFTER INSERT, AFTER UPDATE OF OUTBOUND INVENTORY MOVEMENT
                     {
                         listSObjectDelete.add(moveChild);
                         listChildren.remove(i);
+                        System.debug('listSObjectDelete from transit');
+                        System.debug(listSObjectDelete);
                     }
                 }
             }
@@ -618,6 +638,8 @@ CALL THIS METHOD AFTER INSERT, AFTER UPDATE OF OUTBOUND INVENTORY MOVEMENT
             intChildren = listChildren.size();
             if(intChildren == 0)
             {
+                System.debug('intChildren from transit');
+                System.debug(intChildren);
                 Id idProduct = move.AcctSeedERP__Inventory_Balance__r.AcctSeedERP__Product__c;
                 Id idWarehouse = xfr.GMBLASERP__Warehouse_To__c;
                 Id idLocation = mapDefaultLocation.get(xfr.GMBLASERP__Warehouse_To__c);
@@ -633,15 +655,22 @@ CALL THIS METHOD AFTER INSERT, AFTER UPDATE OF OUTBOUND INVENTORY MOVEMENT
 
         if(mapPWLB.size() > 0)
             GCR_InventoryBalance.findOrCreateBalances(mapPWLB);
-
+        System.debug('listMove');
+        System.debug(listMove);
+        System.debug('listChildren');
+        System.debug(listChildren);
         for(AcctSeedERP__Outbound_Inventory_Movement__c move : listMove)
         {
             xfr = move.AcctSeedERP__Inbound_Inventory_Movement__r.AcctSeedERP__Outbound_Inventory_Movement__r.GMBLASERP__Inventory_Transfer__r;
             listChildren = mapMoveToChildren.get(move.Id);
+            System.debug('listChildren inside');
+            System.debug(listChildren);
 
             intChildren = listChildren.size();
             if(intChildren == 0)
             {
+                System.debug('intChildren inside');
+                System.debug(intChildren);
                 Id idProduct = move.AcctSeedERP__Inventory_Balance__r.AcctSeedERP__Product__c;
                 Id idBalance = mapPWLB.get(idProduct).get(xfr.GMBLASERP__Warehouse_To__c).get(mapDefaultLocation.get(xfr.GMBLASERP__Warehouse_To__c));
 
@@ -649,7 +678,7 @@ CALL THIS METHOD AFTER INSERT, AFTER UPDATE OF OUTBOUND INVENTORY MOVEMENT
                         (
                                 AcctSeedERP__Credit_GL_Account__c = move.AcctSeedERP__Debit_GL_Account__c,
                                 AcctSeedERP__Inventory_Balance__c = idBalance,
-                                AcctSeedERP__Movement_Date__c = move.AcctSeedERP__Movement_Date__c,
+                                AcctSeedERP__Movement_Date__c = xfr.GMBLASERP__Inbound_Date__c == null? move.AcctSeedERP__Movement_Date__c : xfr.GMBLASERP__Inbound_Date__c,
                                 AcctSeedERP__Outbound_Inventory_Movement__c = move.Id,
                                 AcctSeedERP__Quantity__c = move.AcctSeedERP__Quantity__c,
                                 AcctSeedERP__Type__c = move.AcctSeedERP__Type__c,
@@ -664,5 +693,5 @@ CALL THIS METHOD AFTER INSERT, AFTER UPDATE OF OUTBOUND INVENTORY MOVEMENT
         if(listSObjectDelete.size() > 0) delete listSObjectDelete;
         if(listSObjectUpdate.size() > 0) update listSObjectUpdate;
         if(listSObjectInsert.size() > 0) insert listSObjectInsert;
-    }
+    }*/
 }

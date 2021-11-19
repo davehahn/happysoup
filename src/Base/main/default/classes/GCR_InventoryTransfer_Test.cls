@@ -168,4 +168,45 @@ private class GCR_InventoryTransfer_Test {
         System.assertEquals(moves.size(),1);
         Test.stopTest();
     }
+
+    @IsTest
+    static void updateTransferInDate(){
+        init();
+        /// Adding the outbound which should be creating an inbound
+        Id idLot = ser.GMBLASERP__Lot__c;
+        Id idSerial = ser.Id;
+        Id idGLDebit = ser.GMBLASERP__Product__r.AcctSeed__Inventory_GL_Account__c;
+        /// We do not need this trigger to run
+        gcSerialNumber.disableTrigger = true;
+        AcctSeedERP__Outbound_Inventory_Movement__c outmove = new AcctSeedERP__Outbound_Inventory_Movement__c
+                (
+                        AcctSeedERP__Debit_GL_Account__c = idGLDebit,
+                        AcctSeedERP__Inventory_Balance__c = idBalance,
+                        AcctSeedERP__Movement_Date__c = xfr.GMBLASERP__Outbound_Date__c,
+                        AcctSeedERP__Quantity__c = 1,
+                        AcctSeedERP__Type__c = 'Non-Accounting',
+                        AcctSeedERP__Unit_Cost__c = 0,
+                        GMBLASERP__Cost_Override__c = true,
+                        GMBLASERP__Inventory_Transfer__c = xfr.Id,
+                        GMBLASERP__Lot__c = idLot,
+                        GMBLASERP__Serial_Number__c = idSerial
+                );
+        Test.startTest();
+        insert outmove;
+        xfr.GMBLASERP__Inbound_Date__c = date.today();
+        update xfr;
+//        List<AcctSeedERP__Inbound_Inventory_Movement__c> listInMove = new List<AcctSeedERP__Inbound_Inventory_Movement__c>();
+//        for(AcctSeedERP__Inbound_Inventory_Movement__c inmove : [SELECT Id FROM AcctSeedERP__Inbound_Inventory_Movement__c WHERE AcctSeedERP__Outbound_Inventory_Movement__c = :outmove.Id]){
+//            listInMove.add(inmove);
+//        }
+//        // An Inbound should have been created automatically
+//        System.assertEquals(listInMove.size(),1);
+//        System.debug(listInMove);
+//        if(!listInMove.isEmpty())
+//            delete listInMove;
+//        AcctSeedERP__Outbound_Inventory_Movement__c[] moves = [SELECT Id FROM AcctSeedERP__Outbound_Inventory_Movement__c WHERE GMBLASERP__Inventory_Transfer__c =:xfr.Id];
+//        // This inbound does not have any children and should not delete any Outbound from XFR
+//        System.assertEquals(moves.size(),1);
+        Test.stopTest();
+    }
 }
