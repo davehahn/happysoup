@@ -724,6 +724,13 @@ public without sharing class DealerPartsOrderController {
     public Date estimatedArrivalDate;
     @AuraEnabled
     public List<MaterialWrapper> kitParts;
+    @AuraEnabled
+    public Boolean hasKitParts {
+      get {
+        return this.kitParts != null && this.kitParts.size() > 0;
+      }
+      private set;
+    }
 
     public MaterialWrapper(AcctSeedERP__Material__c mat)
     {
