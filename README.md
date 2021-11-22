@@ -1,3 +1,4 @@
+
 # Legend Bug Fix Week Process
 
 ### Step 1 - Setup dev and validation orgs
