@@ -58,12 +58,22 @@
                 {!mat.pdtcode}
               </td>
               <td class="slds-text-align_center" data-label="Quantity Shipped">
-                {!mat.matQuantityShipped}
+                <aura:if isTrue="{!mat.hasKitParts}">
+                  <span> - </span>
+                  <aura:set attribute="else">
+                    {!mat.matQuantityShipped}
+                  </aura:set>
+                </aura:if>
               </td>
               <td class="slds-text-align_center" data-label="Quantity Remaining">
                 <div class="quantity-remaining">
                   <div>
-                    {!mat.matQuantityOutstanding}
+                    <aura:if isTrue="{!mat.hasKitParts}">
+                      <span> - </span>
+                      <aura:set attribute="else">
+                        {!mat.matQuantityOutstanding}
+                      </aura:set>
+                    </aura:if>
                   </div>
                   <aura:if isTrue="{!mat.onBackOrder}">
                     <div>
@@ -77,7 +87,7 @@
                         </span>
                       </div>
                       <div class="eta">
-                          ETA:
+                        ETA:
                         <span class="slds-m-left_xx-small">
                           <aura:if isTrue="{! !empty(mat.estimatedArrivalDate)}">
                             <lightning:formattedDateTime value="{!mat.estimatedArrivalDate}" />
