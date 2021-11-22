@@ -11,7 +11,7 @@
       .then(
         $A.getCallback(function (result) {
           console.log(result);
-          component.set("v.typeOptions", result.typeOptions);
+          component.set("v.issueTypesByProject", result.issueTypesByProject);
           component.set("v.priorityOptions", result.priorityOptions);
           component.set("v.jiraProjectOptions", result.jiraProjectOptions);
           let dOpts = [];
@@ -38,6 +38,19 @@
 
   handleNav: function (component, event, helper) {
     component.set("v.currentStep", event.getSource().get("v.value"));
+  },
+
+  handleJiraProjectChange: function (component, event, helper) {
+    const issueTypesByProject = component.get("v.issueTypesByProject");
+    const proj = event.getSource().get("v.value");
+    let issue = component.get('v.issue');
+    issue.Type__c = null;
+    component.set('v.issue', issue);
+    console.log(proj);
+    if (Object.keys(issueTypesByProject).indexOf(proj >= 0)) {
+      component.set("v.typeOptions", issueTypesByProject[proj]);
+    }
+    component.set("v.formValid", helper.isFormValid(component));
   },
 
   checkValidity: function (component, event, helper) {
