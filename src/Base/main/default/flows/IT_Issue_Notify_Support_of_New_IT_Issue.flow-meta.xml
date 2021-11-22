@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Flow xmlns="http://soap.sforce.com/2006/04/metadata">
     <actionCalls>
-        <name>Send_Email_to_Steven_Nadeau</name>
-        <label>Send Email to Steven Nadeau</label>
+        <name>Send_Email_to_Ben_Fram</name>
+        <label>Send Email to Ben Fram</label>
         <locationX>176</locationX>
         <locationY>335</locationY>
         <actionName>emailSimple</actionName>
@@ -17,7 +17,7 @@
         <inputParameters>
             <name>emailAddresses</name>
             <value>
-                <stringValue>snadeau@legendboats.com</stringValue>
+                <stringValue>bfram@legendboats.com, snadeau@legendboats.com</stringValue>
             </value>
         </inputParameters>
         <inputParameters>
@@ -60,7 +60,7 @@
         <locationX>50</locationX>
         <locationY>0</locationY>
         <connector>
-            <targetReference>Send_Email_to_Steven_Nadeau</targetReference>
+            <targetReference>Send_Email_to_Ben_Fram</targetReference>
         </connector>
         <object>IT_Issue__c</object>
         <recordTriggerType>Create</recordTriggerType>
