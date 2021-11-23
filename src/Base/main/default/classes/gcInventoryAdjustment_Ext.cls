@@ -536,8 +536,29 @@ global without sharing class gcInventoryAdjustment_Ext {
 	@RemoteAction
 	global static string deleteMove(String idMove)
 	{
-		//return GMBLASERP.gcInventoryAdjustment_Ext.deleteMove(idMove);
-		delete [SELECT Id FROM AcctSeedERP__Inbound_Inventory_Movement__c WHERE Id = :idMove];
+		list<AcctSeedERP__Inbound_Inventory_Movement__c> listMoveInUpdate = new list<AcctSeedERP__Inbound_Inventory_Movement__c>();
+		for(AcctSeedERP__Inbound_Inventory_Movement__c moveIn :
+		[SELECT Id, AcctSeedERP__Quantity__c, GMBLASERP__Serial_Number__c,
+		(SELECT Id FROM AcctSeedERP__Outbound_Inventory_Movements__r)
+		FROM AcctSeedERP__Inbound_Inventory_Movement__c
+		WHERE Id =:idMove])
+		{
+			//if the inbound move is for a serialized item, and if it has children, first update the quantity to zero.
+			if(moveIn.AcctSeedERP__Outbound_Inventory_Movements__r.size() > 0)
+			{
+				if(moveIn.GMBLASERP__Serial_Number__c != null && moveIn.AcctSeedERP__Quantity__c != 0)
+				{
+					moveIn.AcctSeedERP__Quantity__c = 0;
+					listMoveInUpdate.add(moveIn);
+				}
+			}
+		}
+		if(listMoveInUpdate.size() > 0)
+			update listMoveInUpdate;
+		//delete [SELECT Id FROM AcctSeedERP__Inbound_Inventory_Movement__c WHERE Id = :idMove];
+		/// Relying on the package to do the delete.
+		/// We have reached the 101SOQL limit
+		GMBLASERP.gcInventoryAdjustment_Ext.deleteMove(idMove);
 		return '';
 	}
 }
