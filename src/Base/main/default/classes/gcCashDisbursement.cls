@@ -76,8 +76,13 @@ public without sharing class gcCashDisbursement {
 			{
                 //cd.AcctSeed__Ledger__c = 'a121D000001muWMQAY';
 				if(!cd.GMBLASG__Posted__c){
-					if(cd.AcctSeed__Reference__c != null && cd.AcctSeed__Reference__c.contains('refund'))
+					if(cd.AcctSeed__Reference__c != null && cd.AcctSeed__Reference__c.contains('refund')) {
 						cd.AcctSeed__Cash_Flow_Category__c = gcConstants.idGlRevenueCF;
+					}
+					/// SFISSUES-970
+					if(cd.AcctSeed__Bank_Account__c == gcConstants.idGlCCPayable && cd.AcctSeed__GL_Account_Variable_4__c == null){
+						cd.addError('For Company Credit Card a GL Variable 4 must be selected.');
+					}
 				}
 				if(!cd.GMBLASG__Posted__c && (boolIsInsert || (boolIsUpdate && cd.AcctSeed__Bank_Account__c == null))) {
 					System.debug('Not Posted');
