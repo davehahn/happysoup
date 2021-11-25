@@ -83,6 +83,10 @@ public without sharing class gcCashDisbursement {
 					if(cd.AcctSeed__Bank_Account__c == gcConstants.idGlCCPayable && cd.AcctSeed__GL_Account_Variable_4__c == null){
 						cd.addError('For Company Credit Card a GL Variable 4 must be selected.');
 					}
+					/// SFISSUES-778
+					if(cd.AcctSeed__Check_Number__c != null && cd.AcctSeed__Bank_Account__c != null){
+						cd.Unique_Check_Number__c = cd.AcctSeed__Bank_Account__c + String.valueOf(cd.AcctSeed__Check_Number__c);
+					}
 				}
 				if(!cd.GMBLASG__Posted__c && (boolIsInsert || (boolIsUpdate && cd.AcctSeed__Bank_Account__c == null))) {
 					System.debug('Not Posted');
