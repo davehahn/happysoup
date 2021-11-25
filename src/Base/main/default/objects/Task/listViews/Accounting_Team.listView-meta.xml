@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ListView xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>Accounting_Team_Assigned</fullName>
+    <fullName>Accounting_Team</fullName>
     <columns>SUBJECT</columns>
     <columns>WHO_NAME</columns>
     <columns>WHAT_NAME</columns>
@@ -10,18 +10,9 @@
     <columns>PRIORITY</columns>
     <columns>STATUS</columns>
     <columns>UPDATEDBY_USER.ALIAS</columns>
-    <filterScope>Mine</filterScope>
-    <filters>
-        <field>CORE.USERS.FULL_NAME</field>
-        <operation>contains</operation>
-        <value>Downey,Christina,Mary,Missy,Arbour,Cherlynn,Brooklyn</value>
-    </filters>
-    <filters>
-        <field>STATUS</field>
-        <operation>notEqual</operation>
-        <value>Completed</value>
-    </filters>
-    <label>Accounting Team - Assigned</label>
+    <filterScope>Queue</filterScope>
+    <label>Accounting Team</label>
+    <queue>Accounting_Team</queue>
     <sharedTo>
         <group>Accounting_Team</group>
     </sharedTo>
