@@ -424,6 +424,7 @@
         .damaged-div {font-size: 12px; border-radius: 5px; background: red; text-align: center; padding: 5px; width: 100px !important}
         .demo-div {font-size: 12px; border-radius: 5px; background: yellow; text-align: center; padding: 5px; width: 100px !important}
         .used-div {font-size: 12px; border-radius: 5px; background: cyan; text-align: center; padding: 5px; width: 100px !important; border-color:#FFF}
+        .boat-show-div {font-size: 12px; border-radius: 5px; background: #71e471; text-align: center; padding: 5px; width: 100px !important; border-color:#FFF}
 
         .greenback{
             background-color: lightgreen; 
@@ -497,6 +498,8 @@
                     htm =  '<span title="'+status+'" class="slds-avatar__initials slds-icon-custom-19 iconTitleTooltip"><img src="'+resourceURL+'custom19_60.png" /></span>';
                 }else if(status == 'Used'){
                     htm =  '<span title="'+status+'" class="slds-avatar__initials slds-icon-custom-13 iconTitleTooltip"><img src="'+resourceURL+'custom13_60.png" /></span>';
+                }else if(status == 'Boat Show'){
+                    htm =  '<span title="'+status+'" class="slds-avatar__initials slds-icon-custom-61 iconTitleTooltip"><img src="'+resourceURL+'custom61_60.png" /></span>';
                 }else{
                     htm =  '<span title="In Inventory" class="slds-avatar__initials slds-icon-custom-48 iconTitleTooltip"><img src="'+resourceURL+'custom48_60.png" /></span>';
                 }
@@ -675,6 +678,14 @@
                                                                 data-displaydetails="{!item.displayModels}">Display ( {!item.dms} )</div>
                                                     </td>
                                                 </tr>
+                                              <tr style="display:{!IF(!item.showBoatShow,'none','')};">
+                                                <td>
+                                                  <div id="boatshow-{!item.product.Id}-{!item.lotName}"
+                                                       class="custom-pills specials-boxes boat-show-div"
+                                                       data-special-type="boatshowdetails"
+                                                       data-boatshowdetails="{!item.boatShowDetails}">Boat Show ( {!item.boatShows} )</div>
+                                                </td>
+                                              </tr>
 
                                            </table>
                                         </td>
@@ -1504,6 +1515,16 @@
                                 </td>
                             </tr>
                             {{/if}}
+                          {{#if this.showBoatShow}}
+                          <tr>
+                            <td>
+                              <div id="boatshow-{{this.productId}}-{{this.lotName}}"
+                                   class="custom-pills specials-boxes boat-show-div"
+                                   data-special-type="boatshowdetails"
+                                   data-boatshowdetails="{{this.boatShowDetails}}">Boat Show ( {{this.boatShows}} )</div>
+                            </td>
+                          </tr>
+                          {{/if}}
                        </table>
                     </td>
                     <td style="border-bottom: 1px solid #ddd;border-right:1px solid #ddd; font-size: 10px; color: #16325c; " >

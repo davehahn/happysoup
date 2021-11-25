@@ -979,6 +979,14 @@
                 System.debug(loggingLevel.error,'inv.displayModel:'+inv.displayModels);
             }
 
+            String boatShowKey =pro.Id + '-' + 'Boat Show' + yearSection;
+            if (this.mapSpecialDamages.get(boatShowKey) != null) {
+              inv.boatShows =  this.mapSpecialDamages.get(boatShowKey);
+              inv.showBoatShow = true;
+              inv.boatShowDetails = JSON.serialize(new Map<String,List<SerialNumber>>{pro.Name => mapSpecialDamagesList.get(boatShowKey)});
+              System.debug(loggingLevel.error,'inv.boatShow:'+inv.boatShows);
+            }
+
             if (mapRetailSold.get(pro.Id + yearSection) != null)
                 inv.retailSold = mapRetailSold.get(pro.Id + yearSection);
 
@@ -997,6 +1005,7 @@
             allSpecials += inv.useds == null ? 0 : inv.useds;
             allSpecials += inv.demos == null ? 0 : inv.demos;
             allSpecials += inv.dms == null ? 0 : inv.dms;
+            allSpecials += inv.boatShows == null ? 0 : inv.boatShows;
 
             inv.availabeForRetail = inv.inStock - (allSpecials != null ? allSpecials : 0) - (inv.retailSold != null ? inv.retailSold : 0);
             inv.availabeToShipDelears = inv.inStock - allSpecials;
@@ -1722,6 +1731,8 @@
             public String damagesDetails                    {get;set;}
             public Integer specials                         {get;set;}
             public String specialsDetails                   {get;set;}
+              public Integer boatShows                      {get; set;}
+              public String boatShowDetails                 {get; set;}
             public String displayModels                     {get;set;}
             public Integer demos                            {get;set;}
             public String demosDetails                      {get;set;}
@@ -1737,6 +1748,7 @@
             public Boolean showDM                           {get;set;}
             public Boolean showDemos                        {get;set;}
             public Boolean showUsed                         {get;set;}
+              public Boolean showBoatShow                   {get; set;}
             public Boolean showWhitefish                    {get;set;}
             public Boolean showMontreal                     {get;set;}
             public Boolean showBarrie                       {get;set;}
@@ -1763,10 +1775,12 @@
                 this.showBarrie = false;
                 this.showOUT = false;
                 this.showDM= false;
+                this.showBoatShow = false;
                 this.damages = 0;
                 this.specials = 0;
                 this.useds = 0;
                 this.dms = 0;
+                this.boatShows = 0;
                 this.product = product;
                 this.availabe = 1;
                 this.wholesaleNonPOL = 0;
