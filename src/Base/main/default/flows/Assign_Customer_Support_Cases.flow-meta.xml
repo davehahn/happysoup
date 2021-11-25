@@ -13,6 +13,7 @@
         <locationY>300</locationY>
         <actionName>Case.Notify_Service_Team_of_new_Service_Case_Whitefish</actionName>
         <actionType>emailAlert</actionType>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
         <inputParameters>
             <name>SObjectRowId</name>
             <value>
@@ -33,6 +34,7 @@
         <locationY>300</locationY>
         <actionName>Case.Notify_Service_Team_of_new_Service_Case_Barrie</actionName>
         <actionType>emailAlert</actionType>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
         <inputParameters>
             <name>SObjectRowId</name>
             <value>
@@ -53,6 +55,7 @@
         <locationY>300</locationY>
         <actionName>Case.Notify_Service_Team_of_new_Service_Case_Montreal</actionName>
         <actionType>emailAlert</actionType>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
         <inputParameters>
             <name>SObjectRowId</name>
             <value>
@@ -60,6 +63,7 @@
             </value>
         </inputParameters>
     </actionCalls>
+    <apiVersion>53.0</apiVersion>
     <decisions>
         <processMetadataValues>
             <name>index</name>
@@ -402,29 +406,7 @@
         </rules>
     </decisions>
     <description>Assigns Customer Support Cases to Employees since Global Actions don&apos;t trigger assignment rules.</description>
-    <formulas>
-        <processMetadataValues>
-            <name>originalFormula</name>
-            <value>
-                <stringValue>Today()</stringValue>
-            </value>
-        </processMetadataValues>
-        <name>formula_8_myRule_7_A2_6134131593</name>
-        <dataType>Date</dataType>
-        <expression>Today()</expression>
-    </formulas>
-    <formulas>
-        <processMetadataValues>
-            <name>originalFormula</name>
-            <value>
-                <stringValue>Now()</stringValue>
-            </value>
-        </processMetadataValues>
-        <name>formula_9_myRule_7_A2_6883501548</name>
-        <dataType>DateTime</dataType>
-        <expression>Now()</expression>
-    </formulas>
-    <interviewLabel>Assign_Customer_Support_Cases-8_InterviewLabel</interviewLabel>
+    <interviewLabel>Assign_Customer_Support_Cases-10_InterviewLabel</interviewLabel>
     <label>Assign Customer Support Cases</label>
     <processMetadataValues>
         <name>ObjectType</name>
@@ -451,379 +433,6 @@
         </value>
     </processMetadataValues>
     <processType>Workflow</processType>
-    <recordCreates>
-        <name>myRule_7_A2</name>
-        <label>Create Task - Tess</label>
-        <locationX>700</locationX>
-        <locationY>300</locationY>
-        <inputAssignments>
-            <processMetadataValues>
-                <name>dataType</name>
-                <value>
-                    <stringValue>Date</stringValue>
-                </value>
-            </processMetadataValues>
-            <processMetadataValues>
-                <name>isRequired</name>
-                <value>
-                    <booleanValue>false</booleanValue>
-                </value>
-            </processMetadataValues>
-            <processMetadataValues>
-                <name>leftHandSideLabel</name>
-                <value>
-                    <stringValue>Due Date Only</stringValue>
-                </value>
-            </processMetadataValues>
-            <processMetadataValues>
-                <name>leftHandSideReferenceTo</name>
-                <value>
-                    <stringValue/>
-                </value>
-            </processMetadataValues>
-            <processMetadataValues>
-                <name>rightHandSideType</name>
-                <value>
-                    <stringValue>Formula</stringValue>
-                </value>
-            </processMetadataValues>
-            <field>ActivityDate</field>
-            <value>
-                <elementReference>formula_8_myRule_7_A2_6134131593</elementReference>
-            </value>
-        </inputAssignments>
-        <inputAssignments>
-            <processMetadataValues>
-                <name>dataType</name>
-                <value>
-                    <stringValue>String</stringValue>
-                </value>
-            </processMetadataValues>
-            <processMetadataValues>
-                <name>isRequired</name>
-                <value>
-                    <booleanValue>false</booleanValue>
-                </value>
-            </processMetadataValues>
-            <processMetadataValues>
-                <name>leftHandSideLabel</name>
-                <value>
-                    <stringValue>Description</stringValue>
-                </value>
-            </processMetadataValues>
-            <processMetadataValues>
-                <name>leftHandSideReferenceTo</name>
-                <value>
-                    <stringValue/>
-                </value>
-            </processMetadataValues>
-            <processMetadataValues>
-                <name>rightHandSideType</name>
-                <value>
-                    <stringValue>String</stringValue>
-                </value>
-            </processMetadataValues>
-            <field>Description</field>
-            <value>
-                <stringValue>A new Customer Support Case has been assigned to you</stringValue>
-            </value>
-        </inputAssignments>
-        <inputAssignments>
-            <processMetadataValues>
-                <name>dataType</name>
-                <value>
-                    <stringValue>Boolean</stringValue>
-                </value>
-            </processMetadataValues>
-            <processMetadataValues>
-                <name>isRequired</name>
-                <value>
-                    <booleanValue>false</booleanValue>
-                </value>
-            </processMetadataValues>
-            <processMetadataValues>
-                <name>leftHandSideLabel</name>
-                <value>
-                    <stringValue>Reminder Set</stringValue>
-                </value>
-            </processMetadataValues>
-            <processMetadataValues>
-                <name>leftHandSideReferenceTo</name>
-                <value>
-                    <stringValue/>
-                </value>
-            </processMetadataValues>
-            <processMetadataValues>
-                <name>rightHandSideType</name>
-                <value>
-                    <stringValue>Boolean</stringValue>
-                </value>
-            </processMetadataValues>
-            <field>IsReminderSet</field>
-            <value>
-                <booleanValue>true</booleanValue>
-            </value>
-        </inputAssignments>
-        <inputAssignments>
-            <processMetadataValues>
-                <name>dataType</name>
-                <value>
-                    <stringValue>ID</stringValue>
-                </value>
-            </processMetadataValues>
-            <processMetadataValues>
-                <name>isRequired</name>
-                <value>
-                    <booleanValue>false</booleanValue>
-                </value>
-            </processMetadataValues>
-            <processMetadataValues>
-                <name>leftHandSideLabel</name>
-                <value>
-                    <stringValue>Assigned To ID</stringValue>
-                </value>
-            </processMetadataValues>
-            <processMetadataValues>
-                <name>leftHandSideReferenceTo</name>
-                <value>
-                    <stringValue>Group;User</stringValue>
-                </value>
-            </processMetadataValues>
-            <processMetadataValues>
-                <name>rightHandSideLabel</name>
-                <value>
-                    <stringValue>Tess Peterson - Marketing Coordinator</stringValue>
-                </value>
-            </processMetadataValues>
-            <processMetadataValues>
-                <name>rightHandSideType</name>
-                <value>
-                    <stringValue>User</stringValue>
-                </value>
-            </processMetadataValues>
-            <field>OwnerId</field>
-            <value>
-                <stringValue>0051Y000009x9GLQAY</stringValue>
-            </value>
-        </inputAssignments>
-        <inputAssignments>
-            <processMetadataValues>
-                <name>dataType</name>
-                <value>
-                    <stringValue>Picklist</stringValue>
-                </value>
-            </processMetadataValues>
-            <processMetadataValues>
-                <name>isRequired</name>
-                <value>
-                    <booleanValue>false</booleanValue>
-                </value>
-            </processMetadataValues>
-            <processMetadataValues>
-                <name>leftHandSideLabel</name>
-                <value>
-                    <stringValue>Priority</stringValue>
-                </value>
-            </processMetadataValues>
-            <processMetadataValues>
-                <name>leftHandSideReferenceTo</name>
-                <value>
-                    <stringValue/>
-                </value>
-            </processMetadataValues>
-            <processMetadataValues>
-                <name>rightHandSideType</name>
-                <value>
-                    <stringValue>Picklist</stringValue>
-                </value>
-            </processMetadataValues>
-            <field>Priority</field>
-            <value>
-                <stringValue>Normal</stringValue>
-            </value>
-        </inputAssignments>
-        <inputAssignments>
-            <processMetadataValues>
-                <name>dataType</name>
-                <value>
-                    <stringValue>DateTime</stringValue>
-                </value>
-            </processMetadataValues>
-            <processMetadataValues>
-                <name>isRequired</name>
-                <value>
-                    <booleanValue>false</booleanValue>
-                </value>
-            </processMetadataValues>
-            <processMetadataValues>
-                <name>leftHandSideLabel</name>
-                <value>
-                    <stringValue>Reminder Date/Time</stringValue>
-                </value>
-            </processMetadataValues>
-            <processMetadataValues>
-                <name>leftHandSideReferenceTo</name>
-                <value>
-                    <stringValue/>
-                </value>
-            </processMetadataValues>
-            <processMetadataValues>
-                <name>rightHandSideType</name>
-                <value>
-                    <stringValue>Formula</stringValue>
-                </value>
-            </processMetadataValues>
-            <field>ReminderDateTime</field>
-            <value>
-                <elementReference>formula_9_myRule_7_A2_6883501548</elementReference>
-            </value>
-        </inputAssignments>
-        <inputAssignments>
-            <processMetadataValues>
-                <name>dataType</name>
-                <value>
-                    <stringValue>Picklist</stringValue>
-                </value>
-            </processMetadataValues>
-            <processMetadataValues>
-                <name>isRequired</name>
-                <value>
-                    <booleanValue>false</booleanValue>
-                </value>
-            </processMetadataValues>
-            <processMetadataValues>
-                <name>leftHandSideLabel</name>
-                <value>
-                    <stringValue>Status</stringValue>
-                </value>
-            </processMetadataValues>
-            <processMetadataValues>
-                <name>leftHandSideReferenceTo</name>
-                <value>
-                    <stringValue/>
-                </value>
-            </processMetadataValues>
-            <processMetadataValues>
-                <name>rightHandSideType</name>
-                <value>
-                    <stringValue>Picklist</stringValue>
-                </value>
-            </processMetadataValues>
-            <field>Status</field>
-            <value>
-                <stringValue>Open</stringValue>
-            </value>
-        </inputAssignments>
-        <inputAssignments>
-            <processMetadataValues>
-                <name>dataType</name>
-                <value>
-                    <stringValue>String</stringValue>
-                </value>
-            </processMetadataValues>
-            <processMetadataValues>
-                <name>isRequired</name>
-                <value>
-                    <booleanValue>false</booleanValue>
-                </value>
-            </processMetadataValues>
-            <processMetadataValues>
-                <name>leftHandSideLabel</name>
-                <value>
-                    <stringValue>Subject</stringValue>
-                </value>
-            </processMetadataValues>
-            <processMetadataValues>
-                <name>leftHandSideReferenceTo</name>
-                <value>
-                    <stringValue/>
-                </value>
-            </processMetadataValues>
-            <processMetadataValues>
-                <name>rightHandSideType</name>
-                <value>
-                    <stringValue>String</stringValue>
-                </value>
-            </processMetadataValues>
-            <field>Subject</field>
-            <value>
-                <stringValue>Follow-up with new Customer Support Case</stringValue>
-            </value>
-        </inputAssignments>
-        <inputAssignments>
-            <processMetadataValues>
-                <name>dataType</name>
-                <value>
-                    <stringValue>Picklist</stringValue>
-                </value>
-            </processMetadataValues>
-            <processMetadataValues>
-                <name>isRequired</name>
-                <value>
-                    <booleanValue>false</booleanValue>
-                </value>
-            </processMetadataValues>
-            <processMetadataValues>
-                <name>leftHandSideLabel</name>
-                <value>
-                    <stringValue>Type</stringValue>
-                </value>
-            </processMetadataValues>
-            <processMetadataValues>
-                <name>leftHandSideReferenceTo</name>
-                <value>
-                    <stringValue/>
-                </value>
-            </processMetadataValues>
-            <processMetadataValues>
-                <name>rightHandSideType</name>
-                <value>
-                    <stringValue>Picklist</stringValue>
-                </value>
-            </processMetadataValues>
-            <field>Type</field>
-            <value>
-                <stringValue>To Do</stringValue>
-            </value>
-        </inputAssignments>
-        <inputAssignments>
-            <processMetadataValues>
-                <name>dataType</name>
-                <value>
-                    <stringValue>ID</stringValue>
-                </value>
-            </processMetadataValues>
-            <processMetadataValues>
-                <name>isRequired</name>
-                <value>
-                    <booleanValue>false</booleanValue>
-                </value>
-            </processMetadataValues>
-            <processMetadataValues>
-                <name>leftHandSideLabel</name>
-                <value>
-                    <stringValue>Related To ID</stringValue>
-                </value>
-            </processMetadataValues>
-            <processMetadataValues>
-                <name>leftHandSideReferenceTo</name>
-                <value>
-                    <stringValue>AWS_S3_Object__c;Account;Account_Number_Detail__c;AcctSeedERP__Inbound_Inventory_Movement__c;AcctSeedERP__Inventory_Balance__c;AcctSeedERP__Location__c;AcctSeedERP__Manufacturing_Inventory_Movement__c;AcctSeedERP__Material__c;AcctSeedERP__Outbound_Inventory_Movement__c;AcctSeedERP__Purchase_Order_Inventory_Movement__c;AcctSeedERP__Purchase_Order_Line__c;AcctSeedERP__Purchase_Order__c;AcctSeedERP__Sales_Order_Inventory_Movement__c;AcctSeedERP__Sales_Order_Line__c;AcctSeedERP__Sales_Order__c;AcctSeedERP__Shipment_Line__c;AcctSeedERP__Shipment__c;AcctSeedERP__Warehouse__c;AcctSeed__AP_Credit_Memo__c;AcctSeed__AP_Disbursement__c;AcctSeed__Account_Payable_Line__c;AcctSeed__Account_Payable__c;AcctSeed__Accounting_Period__c;AcctSeed__Accounting_Variable__c;AcctSeed__Bank_Adjustment__c;AcctSeed__Bank_Deposit__c;AcctSeed__Bank_Reconciliation2__c;AcctSeed__Bank_Reconciliation_Line2__c;AcctSeed__Bank_Reconciliation__c;AcctSeed__Billing_Cash_Receipt__c;AcctSeed__Billing_Credit_Memo__c;AcctSeed__Billing_Format__c;AcctSeed__Billing_Line__c;AcctSeed__Billing_Rates__c;AcctSeed__Billing__c;AcctSeed__Cash_Disbursement_Batch__c;AcctSeed__Cash_Disbursement__c;AcctSeed__Cash_Receipt__c;AcctSeed__Cost_Rates__c;AcctSeed__Expense_Line__c;AcctSeed__Expense_Report__c;AcctSeed__Financial_Cube__c;AcctSeed__Fixed_Asset__c;AcctSeed__GL_Account__c;AcctSeed__Journal_Entry_Line__c;AcctSeed__Journal_Entry__c;AcctSeed__Ledger__c;AcctSeed__Product_Part__c;AcctSeed__Project_Task__c;AcctSeed__Project__c;AcctSeed__Recurring_Account_Payable_Line__c;AcctSeed__Recurring_Account_Payable__c;AcctSeed__Recurring_Billing_Line__c;AcctSeed__Recurring_Billing__c;AcctSeed__Recurring_Journal_Entry_Line__c;AcctSeed__Recurring_Journal_Entry__c;AcctSeed__Scheduled_Revenue_Expense__c;AcctSeed__Time_Card_Accounting_Period__c;AcctSeed__Time_Card_Day__c;AcctSeed__Time_Card_Line__c;AcctSeed__Time_Card_Period__c;AcctSeed__Time_Card__c;Asset;AssetRelationship;Campaign;Case;ChannelProgram;ChannelProgramLevel;CommSubscriptionConsent;CommissionLineItem2__c;CommissionPayment2__c;CommissionRecord2__c;ContactRequest;Contract;ContractLineItem;Dealer_Financing_Request__c;Dealer_Order_Line__c;Dealer_Order__c;Employee_Wage_Rate__c;Employee__c;Entitlement;Financing_Amount_Used__c;Financing_Company__c;Freight_Charges__c;Fundraiser__c;GMBLASERP__Inventory_Adjustment__c;GMBLASERP__Inventory_Transfer__c;GMBLASERP__Serial_Number__c;GetFeedback_Survey_Response__c;Legend_Accounting__c;Legend_Production_Home__c;Legend_Sales_Home__c;ListEmail;LiveAgentSession;LiveChatTranscript;Lot_Exchange__c;Opportunity;PartnerFundAllocation;PartnerFundClaim;PartnerFundRequest;PartnerMarketingBudget;PartyConsent;Performance_Tracker__c;Prepaid_Service_Redeemed__c;Prepaid_Service__c;Product2;Project_Labor_Rate__c;Prop_Chart__c;Quote;Rigger_Job__c;ServiceContract;ServiceResource;Solution;System_Issue__c;Technican__c;Time_Card_Entry__c;Truck_Destination__c;WorkOrder;WorkOrderLineItem;Yard_Location__c;et4ae5__Triggered_Send_Execution__c</stringValue>
-                </value>
-            </processMetadataValues>
-            <processMetadataValues>
-                <name>rightHandSideType</name>
-                <value>
-                    <stringValue>Reference</stringValue>
-                </value>
-            </processMetadataValues>
-            <field>WhatId</field>
-            <value>
-                <elementReference>myVariable_current.Id</elementReference>
-            </value>
-        </inputAssignments>
-        <object>Task</object>
-    </recordCreates>
     <recordUpdates>
         <processMetadataValues>
             <name>evaluationType</name>
@@ -856,6 +465,7 @@
         <connector>
             <targetReference>myRule_1_A2</targetReference>
         </connector>
+        <filterLogic>and</filterLogic>
         <filters>
             <processMetadataValues>
                 <name>implicit</name>
@@ -945,6 +555,7 @@
         <connector>
             <targetReference>myRule_3_A2</targetReference>
         </connector>
+        <filterLogic>and</filterLogic>
         <filters>
             <processMetadataValues>
                 <name>implicit</name>
@@ -1034,6 +645,7 @@
         <connector>
             <targetReference>myRule_5_A2</targetReference>
         </connector>
+        <filterLogic>and</filterLogic>
         <filters>
             <processMetadataValues>
                 <name>implicit</name>
@@ -1120,9 +732,7 @@
         <label>Change Ownership</label>
         <locationX>700</locationX>
         <locationY>200</locationY>
-        <connector>
-            <targetReference>myRule_7_A2</targetReference>
-        </connector>
+        <filterLogic>and</filterLogic>
         <filters>
             <processMetadataValues>
                 <name>implicit</name>
