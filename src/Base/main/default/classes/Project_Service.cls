@@ -302,7 +302,7 @@ public inherited sharing class Project_Service
       GL_Account_Variable_3__c = originalERP.GL_Account_Variable_3__c,
       Serial_Number__c = originalERP.Serial_Number__c,
       Serial_Number__r = originalERP.Serial_Number__r,
-      Survey_Flag__c = true
+      Survey_Flag__c = false
     );
   }
 
