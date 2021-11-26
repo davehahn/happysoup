@@ -16,6 +16,7 @@
   <aura:attribute name="loaded" type="Boolean" default="false" />
 
   <aura:attribute name="jiraProjectOptions" type="List" />
+  <aura:attribute name="issueTypesByProject" type="Map" />
   <aura:attribute name="typeOptions" type="List" />
   <aura:attribute name="departmentOptions" type="List" />
   <aura:attribute name="priorityOptions" type="Object" />
@@ -50,7 +51,7 @@
                                     required="true"
                                     aura:id="requiredField"
                                     messageWhenValueMissing="Project is Required"
-                                    onchange="{!c.checkValidity}">
+                                    onchange="{!c.handleJiraProjectChange}">
                     <option value="">choose one...</option>
                     <aura:iteration items="{!v.jiraProjectOptions}" var="p">
                       <option value="{!p}" text="{!p}"></option>
@@ -65,7 +66,8 @@
                                     required="true"
                                     aura:id="requiredField"
                                     messageWhenValueMissing="Type is Required"
-                                    onchange="{!c.checkValidity}">
+                                    onchange="{!c.checkValidity}"
+                                    disabled="{!empty(v.typeOptions)}">
                     <option value="">choose one...</option>
                     <aura:iteration items="{!v.typeOptions}" var="t">
                       <option value="{!t}" text="{!t}"></option>
