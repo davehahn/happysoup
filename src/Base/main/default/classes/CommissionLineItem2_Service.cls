@@ -362,7 +362,10 @@ public with sharing class CommissionLineItem2_Service
     }
     if( changedMatIds.size() > 0 )
     {
-      doMaterialSync( changedMatIds );
+//      doMaterialSync( changedMatIds );
+      CommissionLineItem2_Service service = new CommissionLineItem2_Service();
+      service.addMaterials( changedMatIds );
+      service.saveRecords();
     }
   }
 
@@ -490,6 +493,7 @@ public with sharing class CommissionLineItem2_Service
 
   private static void doMaterialSync( Set<Id> matIds )
   {
+    Set<Id> noCommissionLineId = new Set<Id>();
     Map<Id, AcctSeedERP__Material__c> materialMap = Material_Selector.mapAllByIds( matIds );
     List<CommissionLineItem2__c> commLineItems =
       CommissionLineItem2_Selector.allByMaterialIds(
