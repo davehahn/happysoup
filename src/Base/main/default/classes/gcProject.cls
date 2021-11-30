@@ -898,6 +898,11 @@ public without sharing class gcProject {
       gcProject.disableTrigger = boolOld;
     }
   }
+  //lockProjects() method couldn't get the require data because of the sync process, so adding future method to add some delay to call lockProjects
+  @Future
+  public static void lockIfNoBalanceDueFuture(Set<Id> setIdProject){
+    lockIfNoBalanceDue(setIdProject);
+  }
 
   public static void lockProjects(Set<Id> setIdProject)
   {
@@ -910,7 +915,9 @@ public without sharing class gcProject {
       if(project.AcctSeed__Status__c != 'Completed'){
         if( project.RecordTypeId == recordTypes.getCounterSaleId() ||
             project.RecordTypeId == recordTypes.getManufacturingId() ||
-            project.RecordTypeId == recordTypes.getPartnerBoatSaleId()	)
+            project.RecordTypeId == recordTypes.getPartnerBoatSaleId() ||
+            project.RecordTypeId == recordTypes.getServiceWorkOrderId()
+                )
         {
           project.AcctSeed__Status__c = 'Completed';
           listProjects.add(project);
