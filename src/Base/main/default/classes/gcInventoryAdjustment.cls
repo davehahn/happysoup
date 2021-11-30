@@ -124,6 +124,7 @@ global without sharing class gcInventoryAdjustment {
 
 	public static void cascadeDeleteChildrenOfInbound(set<Id> setIdMoveIn)
 	{
+		System.debug('cascadeDeleteChildrenOfInbound');
 		list<AcctSeedERP__Inbound_Inventory_Movement__c> listMoveInUpdate = new list<AcctSeedERP__Inbound_Inventory_Movement__c>();
 		list<AcctSeedERP__Outbound_Inventory_Movement__c> listMoveOutDelete = new list<AcctSeedERP__Outbound_Inventory_Movement__c>();
 
@@ -137,7 +138,7 @@ global without sharing class gcInventoryAdjustment {
 			//if the inbound move is for a serialized item, and if it has children, first update the quantity to zero.
 			if(moveIn.AcctSeedERP__Outbound_Inventory_Movements__r.size() > 0)
 			{
-				if(moveIn.GMBLASERP__Serial_Number__c != null)
+				if(moveIn.GMBLASERP__Serial_Number__c != null && moveIn.AcctSeedERP__Quantity__c != 0)
 				{
 					moveIn.AcctSeedERP__Quantity__c = 0;
 					listMoveInUpdate.add(moveIn);
