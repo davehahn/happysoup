@@ -278,7 +278,7 @@ private class ERP_CreatePartsBackOrder_Controller_T
     System.assertEquals( boatSerial, resultERP.Serial_Number__r.Name );
     System.assert( resultTask.Name.contains( erp.RecordType.Name ) );
     System.assertEquals( erp.Salesperson__c, resultERP.Salesperson__c );
-    System.assert( resultERP.Survey_Flag__c, 'Survey flag should be true');
+    System.assertEquals( false, resultERP.Survey_Flag__c, 'Survey flag should be false');
     System.assertEquals( true, resultTask.Locked__c );
     System.assertEquals( (materials.size() + 1), resultMaterials.size() );
   }

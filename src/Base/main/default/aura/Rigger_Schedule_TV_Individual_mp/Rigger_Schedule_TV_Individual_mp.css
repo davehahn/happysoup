@@ -1,243 +1,270 @@
 .THIS .teamSelector {
-	position: absolute;
-	top: 1em;
-	right: 1em;
-	font-weight: bold;
+  position: absolute;
+  top: 1em;
+  right: 1em;
+  font-weight: bold;
 }
 
 .THIS .dropzone {
-	height: 50px;
-	width: 100%;
-	border: 1px dashed #ccc;
-	border-radius: 0.25em;
-	text-align: center;
-	line-height: 50px;
-	color: #ccc;
-	margin: 10px 0 0 0;
+  height: 50px;
+  width: 100%;
+  border: 1px dashed #ccc;
+  border-radius: 0.25em;
+  text-align: center;
+  line-height: 50px;
+  color: #ccc;
+  margin: 10px 0 0 0;
 }
 
 .THIS h1 {
-	font-size: 18px;
-	margin-bottom: 0.5em;
+  font-size: 18px;
+  margin-bottom: 0.5em;
 }
 
 .THIS .backlog {
-	background: #333;
-	border-color: #333;
+  background: #333;
+  border-color: #333;
 }
-	.THIS .backlog h1 {color: #fff;}
-
-.THIS .riggers {	
-	overflow-x: scroll;
-	white-space: nowrap;
-	display: inline-block;
-	min-width: 100%;
-	max-width: 100%;
+.THIS .backlog h1 {
+  color: #fff;
 }
 
-.THIS .rigger {	
-	display: inline-block;
-/*	flex: none;
+.THIS .riggers {
+  overflow-x: scroll;
+  white-space: nowrap;
+  display: inline-block;
+  min-width: 100%;
+  max-width: 100%;
+}
+
+.THIS .rigger {
+  display: inline-block;
+  /*	flex: none;
 	width: 20%;*/
 }
 
 .THIS .done {
-	background: #14a8dc;
-	border-color: #14a8dc;
+  background: #14a8dc;
+  border-color: #14a8dc;
 }
-	.THIS .done h1 {color: #fff;}
-	.THIS .done .dropzone { color: #fff; }
+.THIS .done h1 {
+  color: #fff;
+}
+.THIS .done .dropzone {
+  color: #fff;
+}
 
 .THIS .garbage {
-	background: #990000;
-	border-color: #990000;
+  background: #990000;
+  border-color: #990000;
 }
-	.THIS .garbage h1 {color: #fff;}
+.THIS .garbage h1 {
+  color: #fff;
+}
 
 .THIS .dragItem {
-	margin: 0 -2px 0 -2px;
-	background: #fff;
-	/*background: linear-gradient(0deg, #eee, #fff);*/
+  margin: 0 -2px 0 -2px;
+  background: #fff;
+  /*background: linear-gradient(0deg, #eee, #fff);*/
 }
 
-	.THIS .dragItem:hover {
-		background: #fff;
-		/*background: linear-gradient(0deg, #dfdfdf, #fdfdfd);*/
-	}
+.THIS .dragItem:hover {
+  background: #fff;
+  /*background: linear-gradient(0deg, #dfdfdf, #fdfdfd);*/
+}
 
-	.THIS .dragItem.dueToday {
-		background: #fff;
-		border-color: #90EE90;
-		/*background: linear-gradient(0deg, #90EE90, #fff);*/
-	}
+.THIS .dragItem.dueToday {
+  background: #fff;
+  border-color: #90ee90;
+  /*background: linear-gradient(0deg, #90EE90, #fff);*/
+}
 
-	.THIS .dragItem.dueDateMissed {
-		background: #fff;
-		/*background: linear-gradient(0deg, #ffbbbb, #fff);*/
-		border-color: #ff0000;
-	}
+.THIS .dragItem.dueDateMissed {
+  background: #fff;
+  /*background: linear-gradient(0deg, #ffbbbb, #fff);*/
+  border-color: #ff0000;
+}
 
-	.THIS .dragItem.inProgress {
-		background: lightgreen;
-	}
+.THIS .dragItem.inProgress {
+  background: lightgreen;
+}
 
-	.THIS .dragItem.onHold {
-		background: pink;
-	}
+.THIS .dragItem.onHold {
+  background: pink;
+}
 
-	.THIS .dragItem.yellow {
-		background: #FF5;
-	}
+.THIS .dragItem.yellow {
+  background: #ff5;
+}
 
 .THIS .grey {
-	color: #ccc;
+  color: #ccc;
 }
-	.THIS h1 .grey {
-		font-size: 0.75em;
-	}
+.THIS h1 .grey {
+  font-size: 0.75em;
+}
 
 .THIS dt {
-	font-weight: bold;
+  font-weight: bold;
 }
 .THIS dd {
-	margin: 0 0 0.5em 0;
+  margin: 0 0 0.5em 0;
 }
 
 .THIS .age {
-	float: right;
-	text-align: center;
-	line-height: 1;
-	font-size: 0.75em;
+  float: right;
+  text-align: center;
+  line-height: 1;
+  font-size: 0.75em;
 }
-	.THIS .age span {
-		font-size: 2.5em;
-		font-weight: bold;
-		display: block;
-	}
+
+.THIS .progress .slds-progress-bar {
+  overflow: hidden;
+}
+
+.THIS .progress .slds-progress-bar > .slds-progress-bar__value.in-progress {
+  background-color: green;
+}
+
+.THIS .progress .slds-progress-bar > .slds-progress-bar__value.over-time {
+  background-color: red;
+}
+
+.THIS .age span {
+  font-size: 2.5em;
+  font-weight: bold;
+  display: block;
+}
 
 .THIS .slds-card {
-	padding: 0.65em;
+  padding: 0.65em;
 }
 .THIS .slds-box,
 .THIS .slds-p-around_small {
-	padding: 0.5em;
+  padding: 0.5em;
 }
 .THIS .slds-box {
-	position: relative;
-	overflow: hidden;
+  position: relative;
+  overflow: hidden;
 }
 .THIS .overlay {
-	position: absolute;
-	width: 100%; /* Full width (cover the whole page) */
+  position: absolute;
+  width: 100%; /* Full width (cover the whole page) */
   height: 100%; /* Full height (cover the whole page) */
-  top: 0; 
+  top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0,0,0,0); /* Black background with opacity */
+  background-color: rgba(0, 0, 0, 0); /* Black background with opacity */
   z-index: 2; /* Specify a stack order in case you're using a different order for other elements */
   cursor: pointer; /* Add a pointer on hover */
 }
-.THIS .pull-right { float: right; }
-.THIS .heavy { font-weight: bold; }
+.THIS .pull-right {
+  float: right;
+}
+.THIS .heavy {
+  font-weight: bold;
+}
 .THIS .toggle {
-    display: none;
+  display: none;
 }
 .THIS .initials {
-	float: right;
-	background: #14a8dc;
-	color: #fff;
-	border-radius: 100%;
-	padding: 0.5em;
-	font-weight: bold;
+  float: right;
+  background: #14a8dc;
+  color: #fff;
+  border-radius: 100%;
+  padding: 0.5em;
+  font-weight: bold;
 }
 .THIS .RecordType {
-	margin: 0 -0.25em;
-	padding: 0.25em 0.5em 0 0.5em;
-	background: #999;
-	color: #fff;
-	text-align: center;
+  margin: 0 -0.25em;
+  padding: 0.25em 0.5em 0 0.5em;
+  background: #999;
+  color: #fff;
+  text-align: center;
 }
 
-	.THIS .dueToday .RecordType {
-		background: #90EE90;
-		color: #000;
-	}
+.THIS .dueToday .RecordType {
+  background: #90ee90;
+  color: #000;
+}
 
-	.THIS .dueDateMissed .RecordType {
-		background: #ff0000;
-	}
+.THIS .dueDateMissed .RecordType {
+  background: #ff0000;
+}
 
 .THIS input {
-	margin: 8px 0;
+  margin: 8px 0;
 }
 
-.THIS .noLabel label { 
-	display: none;
+.THIS .noLabel label {
+  display: none;
 }
 
 .THIS .button-backlog_new {
-	padding: 0.25em 0.5em;
-	line-height: 1;
+  padding: 0.25em 0.5em;
+  line-height: 1;
 }
 
 .THIS .hasERP {
-	border: 1px solid #999;
-	margin: 0.5em 0;
-	padding: 0 0.25em;
+  border: 1px solid #999;
+  margin: 0.5em 0;
+  padding: 0 0.25em;
 }
 
 .THIS .hasNoERP {
-		margin: 0.5em 0;
-		padding: 0 0.25em;
-	}
-
-.THIS .placeholder {
-	background: #fff;
-	border: 1px dashed #ccc;
-	margin: 0.5em -1px;
-	padding: 3px;
+  margin: 0.5em 0;
+  padding: 0 0.25em;
 }
 
-	.THIS .placeholder button { display: none; }
+.THIS .placeholder {
+  background: #fff;
+  border: 1px dashed #ccc;
+  margin: 0.5em -1px;
+  padding: 3px;
+}
 
-	.THIS .placeholder .RecordType {
-		display: none;
-	}
+.THIS .placeholder button {
+  display: none;
+}
 
-	.THIS .placeholder .hasNoERP {
-		margin: 0.5em 0;
-		padding: 0 0.25em;
-	}
+.THIS .placeholder .RecordType {
+  display: none;
+}
 
-	.THIS .placeholder .hasERP {
-		display: none;
-	}
+.THIS .placeholder .hasNoERP {
+  margin: 0.5em 0;
+  padding: 0 0.25em;
+}
+
+.THIS .placeholder .hasERP {
+  display: none;
+}
 
 .THIS .slds-modal__content {
-	min-height: 300px;
+  min-height: 300px;
 }
 
 .THIS .timerBtn {
-	position: absolute;
-	bottom: 0.25em;
-	right: 0.25em;
-	font-size: 1em;
-	line-height: 1;
-	padding: 0.25em 0.5em;
-	z-index: 50;
+  position: absolute;
+  bottom: 0.25em;
+  right: 0.25em;
+  font-size: 1em;
+  line-height: 1;
+  padding: 0.25em 0.5em;
+  z-index: 50;
 }
 
 .THIS span.timerBtn {
-	color: #999;
+  color: #999;
 }
 
 .THIS .jobsContainer {
-	max-height: 400px;
-	overflow-y: scroll;
+  max-height: 400px;
+  overflow-y: scroll;
 }
 .THIS .clearfix::after {
-    content: "";
-    clear: both;
-    display: table;
+  content: "";
+  clear: both;
+  display: table;
 }

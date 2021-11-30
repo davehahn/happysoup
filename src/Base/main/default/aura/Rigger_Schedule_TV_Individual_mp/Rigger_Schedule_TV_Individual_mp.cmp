@@ -17,12 +17,34 @@
 							<div class="RecordType">
 								{!j.job.ERP_Order__r.RecordType.Name}
 							</div>
-							<p class="age">
-								<aura:if isTrue="{!j.timeEstimate != null}">
-									<span>{!j.timeEstimate}</span> hours<br/>
-									<br/>
-								</aura:if>
-							</p>
+<!--							<p class="age">-->
+<!--								<aura:if isTrue="{!j.timeEstimate != null}">-->
+<!--									<span>{!j.timeEstimate}</span> hours<br/>-->
+<!--									<br/>-->
+<!--								</aura:if>-->
+<!--							</p>-->
+							<div class="progress slds-border_bottom slds-m-bottom_small">
+								<div class="slds-grid slds-grid_vertical-align-end">
+									<div class="slds-col slds-text-align_center slds-border_right slds-size_1-of-2">
+										<div style="font-size:1.1rem">
+											<lightning:formattedNumber value="{!j.timeSpent}" maximumFractionDigits="2" />
+											<span class="slds-text-body_small slds-m-left_xx-small">hrs</span>
+										</div>
+										<div class="slds-text-body_small" style="margin-top: -8px;">Actual</div>
+									</div>
+									<div class="slds-col slds-text-align_center">
+										<div style="font-size:1.1rem">
+											<lightning:formattedNumber value="{!j.timeEstimate}" maximumFractionDigits="2" />
+											<span class="slds-text-body_small slds-m-left_xx-small">hrs</span>
+										</div>
+										<div class="slds-text-body_small" style="margin-top: -8px;">Estimated</div>
+									</div>
+								</div>
+								<div class="slds-progress-bar slds-progress-bar_large">
+												<span class="{! join( ' ', 'slds-progress-bar__value', j.progressClass)}"
+															style="{! join('', 'width:', j.progress, '%;')}"></span>
+								</div>
+							</div>
 							<aura:if isTrue="{!j.job.ERP_Order__r.Parking_Spot__c != null}">
 								<p><strong>Parking Spot</strong>: {!j.job.ERP_Order__r.Parking_Spot__c}</p>
 							</aura:if>
