@@ -154,6 +154,7 @@ public with sharing class gcOpportunityTradeIn {
           Pricebook2Id,
           AccountId,
           Account.Name,
+          ownerId,
         ( SELECT
             Id
           FROM AcctSeed__Projects__r
@@ -169,10 +170,11 @@ public with sharing class gcOpportunityTradeIn {
       AcctSeed__Project__c  project = new AcctSeed__Project__c(
                                                                 Name = projectName,
                                                                 RecordTypeId = gcConstants.idRtTradeIn,
-                                    AcctSeed__Account__c = oppy.AccountId,
+                                     AcctSeed__Account__c = oppy.AccountId,
                                       AcctSeed__Opportunity__c = oppy.Id,
                                       GMBLASERP__Pricebook__c = oppy.Pricebook2Id,
-                                      Business_Manager__c = oppy.Business_Manager__c
+                                      Business_Manager__c = oppy.Business_Manager__c,
+                                      Salesperson__c= oppy.OwnerId
                                                               );
 
       List<GMBLASERP__Serial_Number__c> listSerials = new List<GMBLASERP__Serial_Number__c>();
