@@ -50,6 +50,25 @@ public with sharing class gcInventoryReport_MRP {
 		return listOptions;
 	}
 
+	public List<SelectOption> getListProductSuppliers()
+	{
+		List<SelectOption> listOptions = new List<SelectOption>();
+		listOptions.add(new selectOption('', '-ALL-'));
+		listOptions.add(new selectOption('BLANK', '( BLANK )'));
+		Set<Id> setIdSupplier = new Set<Id>();
+		for(SObject pr : [SELECT AcctSeedERP__Default_Vendor__c supplerId FROM Product2 WHERE AcctSeedERP__Default_Vendor__c != null GROUP BY AcctSeedERP__Default_Vendor__c])
+		{
+			setIdSupplier.add((Id)pr.get('supplerId'));
+		}
+		if(!setIdSupplier.isEmpty()){
+			for(Account acc : [SELECT Id, Name FROM Account WHERE Id IN:setIdSupplier]){
+				listOptions.add(new selectOption(acc.Id, acc.Name));
+			}
+		}
+
+		return listOptions;
+	}
+
 	@RemoteAction
 	public static List<String> listProductFamily(String recordTypeId) {
 		List<String> listOptions = new List<String>();
@@ -868,6 +887,20 @@ public with sharing class gcInventoryReport_MRP {
 		return mapCube;
 	}
 
+	@RemoteAction @ReadOnly
+	public static list<map<String,String>> retrieveProductsBySupplier(List<Id> listIdProducts, Id pIdWarehouse, Id pIdProductType, String idSupplier){
+		Set<Id> setIdProducts = new Set<Id>();
+		if(idSupplier != '') {
+			if(idSupplier == 'BLANK')
+				idSupplier = null;
+			for (Product2 p : [SELECT Id FROM Product2 WHERE AcctSeed__Inventory_Product__c = true AND AcctSeedERP__Default_Vendor__c = :idSupplier AND RecordTypeId = :pIdProductType])
+				setIdProducts.add(p.Id);
+			listIdProducts.clear();
+			listIdProducts.addAll(setIdProducts);
+			if(listIdProducts.isEmpty()) return new list<map<String,String>>();
+		}
+		return retrieveProducts(listIdProducts,pIdWarehouse,pIdProductType);
+	}
 
 	@RemoteAction @ReadOnly
 	public static list<map<String,String>> retrieveProductsByFamily(List<Id> listIdProducts, Id pIdWarehouse, Id pIdProductType, String selectedFamily){
