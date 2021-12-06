@@ -156,10 +156,6 @@
             <type>user</type>
         </recipients>
         <recipients>
-            <recipient>mpatrakka@legendboats.com</recipient>
-            <type>user</type>
-        </recipients>
-        <recipients>
             <recipient>ndegen@legendboats.com</recipient>
             <type>user</type>
         </recipients>
@@ -336,30 +332,6 @@
         <template>Surveys/Legend_Boat_Sale_Experience_FR</template>
     </alerts>
     <alerts>
-        <fullName>Matt_Introduction</fullName>
-        <description>Matt Introduction</description>
-        <protected>false</protected>
-        <recipients>
-            <field>ContactEmail__c</field>
-            <type>email</type>
-        </recipients>
-        <senderAddress>mpatrakka@legendboats.com</senderAddress>
-        <senderType>OrgWideEmailAddress</senderType>
-        <template>Customer_Follow_Up_Templates/Matt_Intro</template>
-    </alerts>
-    <alerts>
-        <fullName>Matt_Pick_Up_Instructions_Inforgraphic</fullName>
-        <description>Matt Pick Up Instructions Inforgraphic</description>
-        <protected>false</protected>
-        <recipients>
-            <field>ContactEmail__c</field>
-            <type>email</type>
-        </recipients>
-        <senderAddress>mpatrakka@legendboats.com</senderAddress>
-        <senderType>OrgWideEmailAddress</senderType>
-        <template>Customer_Follow_Up_Templates/Day_before_pick_up_whitefish_infographic</template>
-    </alerts>
-    <alerts>
         <fullName>Next_Day_Survey</fullName>
         <description>Next Day Survey</description>
         <protected>false</protected>
@@ -416,10 +388,6 @@
         <protected>false</protected>
         <recipients>
             <recipient>esanders@legendboats.com</recipient>
-            <type>user</type>
-        </recipients>
-        <recipients>
-            <recipient>mpatrakka@legendboats.com</recipient>
             <type>user</type>
         </recipients>
         <senderType>DefaultWorkflowUser</senderType>
@@ -1753,80 +1721,6 @@
             </actions>
             <offsetFromField>Opportunity.Extended_Warranty_3_Year_Follow_Up__c</offsetFromField>
             <timeLength>-1</timeLength>
-            <workflowTimeTriggerUnit>Days</workflowTimeTriggerUnit>
-        </workflowTimeTriggers>
-    </rules>
-    <rules>
-        <fullName>Matt Customer Satisfaction Call</fullName>
-        <active>true</active>
-        <criteriaItems>
-            <field>Opportunity.StageName</field>
-            <operation>equals</operation>
-            <value>Picked Up / Won</value>
-        </criteriaItems>
-        <criteriaItems>
-            <field>Opportunity.Boat_Specialist__c</field>
-            <operation>equals</operation>
-            <value>Matt Patrakka</value>
-        </criteriaItems>
-        <criteriaItems>
-            <field>Opportunity.RecordTypeId</field>
-            <operation>notEqual</operation>
-            <value>Retail Counter Sale</value>
-        </criteriaItems>
-        <description>Notifying the Boat Specialist to call a customer 1 week after their pick up to see how they&apos;re enjoying their boat so far.</description>
-        <triggerType>onCreateOrTriggeringUpdate</triggerType>
-        <workflowTimeTriggers>
-            <timeLength>7</timeLength>
-            <workflowTimeTriggerUnit>Days</workflowTimeTriggerUnit>
-        </workflowTimeTriggers>
-    </rules>
-    <rules>
-        <fullName>Matt Day Before Pick Up Instructions - Whitefish</fullName>
-        <active>true</active>
-        <criteriaItems>
-            <field>Opportunity.Probability</field>
-            <operation>greaterThan</operation>
-            <value>50</value>
-        </criteriaItems>
-        <criteriaItems>
-            <field>Opportunity.Boat_Specialist__c</field>
-            <operation>equals</operation>
-            <value>Matt Patrakka</value>
-        </criteriaItems>
-        <triggerType>onCreateOrTriggeringUpdate</triggerType>
-        <workflowTimeTriggers>
-            <actions>
-                <name>Matt_Pick_Up_Instructions_Inforgraphic</name>
-                <type>Alert</type>
-            </actions>
-            <offsetFromField>Opportunity.Delivery_Date__c</offsetFromField>
-            <timeLength>-1</timeLength>
-            <workflowTimeTriggerUnit>Days</workflowTimeTriggerUnit>
-        </workflowTimeTriggers>
-    </rules>
-    <rules>
-        <fullName>Matt Multi Point Inspection Call</fullName>
-        <active>true</active>
-        <criteriaItems>
-            <field>Opportunity.StageName</field>
-            <operation>equals</operation>
-            <value>Picked Up / Won</value>
-        </criteriaItems>
-        <criteriaItems>
-            <field>Opportunity.Boat_Specialist__c</field>
-            <operation>equals</operation>
-            <value>Matt Patrakka</value>
-        </criteriaItems>
-        <criteriaItems>
-            <field>Opportunity.RecordTypeId</field>
-            <operation>notEqual</operation>
-            <value>Retail Counter Sale</value>
-        </criteriaItems>
-        <description>Notifying the Boat Specialist to call a customer 45 days after their pick up to schedule their Multi Point Inspection.</description>
-        <triggerType>onCreateOrTriggeringUpdate</triggerType>
-        <workflowTimeTriggers>
-            <timeLength>45</timeLength>
             <workflowTimeTriggerUnit>Days</workflowTimeTriggerUnit>
         </workflowTimeTriggers>
     </rules>
