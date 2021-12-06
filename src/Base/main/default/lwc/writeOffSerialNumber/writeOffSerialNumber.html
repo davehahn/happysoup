@@ -1,0 +1,36 @@
+<!--
+ - Created by Legend on 6/12/21.
+ -->
+
+<!-- Write Off Serial Number -->
+<template>
+    <c-legend-spinner variant="contained"></c-legend-spinner>
+        <lightning-messages></lightning-messages>
+        <template if:true={ready}>
+            <lightning-card title="Write off Serial Number" icon-name="standard:record">
+            <div class="slds-grid slds-m-around_medium">
+                <div class="slds-col slds-size_1-of-2">
+                <lightning-record-edit-form object-api-name={outObject} onsubmit={handleSubmit}>
+                        <lightning-input-field required field-name={debitField}></lightning-input-field>
+                        <lightning-input-field required field-name={glv1Field}></lightning-input-field>
+                        <lightning-input-field required field-name={glv2Field}></lightning-input-field>
+                </lightning-record-edit-form>
+                </div>
+                <div class="slds-col slds-size_1-of-2">
+                <lightning-record-edit-form object-api-name={serialObject} onsubmit={handleSubmit}>
+                        <lightning-input-field required field-name={statusField}></lightning-input-field>
+                        <lightning-input-field required field-name={descField}></lightning-input-field>
+                </lightning-record-edit-form>
+                </div>
+            </div>
+        </lightning-card>
+        <lightning-card title="">
+            <div class="slds-grid slds-m-around_medium">
+                <lightning-button type="submit" onclick= {clickSubmit} variant="brand" label="Write Off"></lightning-button>
+            </div>
+        </lightning-card>
+        </template>
+        <template if:true={error}>
+            <p class="slds-text-align_center slds-theme_error slds-size_full slds-box">{error}</p>
+        </template>
+</template>

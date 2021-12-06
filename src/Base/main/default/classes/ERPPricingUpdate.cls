@@ -38,24 +38,37 @@ public with sharing class ERPPricingUpdate {
     {
         List<matlWrapper> listWrap = new List<matlWrapper>();
         Set<Id> setIdProducts = new Set<Id>();
-        List<AcctSeedERP__Material__c> matlList = Material_Selector.allByProjectId( erpId );
+        List<AcctSeedERP__Material__c> matlList = Material_Selector.allPartMaterialsByProjectIds( new Set<Id>{erpId} );
         for(AcctSeedERP__Material__c matl : matlList){
-            setIdProducts.add(matl.AcctSeedERP__Product__c);
-            matlWrapper mw = new matlWrapper(matl);
-            listWrap.add(mw);
+            if(matl.AcctSeedERP__Product__r.Family != 'Labour' ||  matl.AcctSeedERP__Product__r.Family != 'Discount') {
+                setIdProducts.add(matl.AcctSeedERP__Product__c);
+                matlWrapper mw = new matlWrapper(matl);
+                listWrap.add(mw);
+            }
         }
-        Id idPricebook = [SELECT Id, GMBLASERP__Pricebook__c FROM AcctSeed__Project__c WHERE Id=:erpId].GMBLASERP__Pricebook__c;
-        Map<Id,Decimal> mapProductPrice = new Map<Id,Decimal>();
-        for(PricebookEntry pbe : [SELECT Id, Product2Id, UnitPrice FROM PricebookEntry WHERE Pricebook2Id=:idPricebook AND Product2Id IN:setIdProducts]){
-            mapProductPrice.put(pbe.Product2Id, pbe.UnitPrice);
+        Id idPricebook;
+        Boolean readyToGo = true;
+        for(AcctSeed__Project__c proj : [SELECT Id, GMBLASERP__Pricebook__c, AcctSeed__Status__c FROM AcctSeed__Project__c WHERE Id=:erpId]){
+            if(proj.AcctSeed__Status__c == 'Completed' || proj.AcctSeed__Status__c == 'Ready for Accounting'){
+                readyToGo = false;
+            }
+            idPricebook = proj.GMBLASERP__Pricebook__c;
         }
-        for(matlWrapper mw : listWrap){
-            if(mapProductPrice.containsKey(mw.idProduct)) {
-                mw.priceBookUnitPrice = mapProductPrice.get(mw.idProduct);
-                if(mw.priceBookUnitPrice != mw.currentUnitPrice){
-                    mw.isDifferent = true;
+        if(readyToGo && idPricebook != null) {
+            Map<Id, Decimal> mapProductPrice = new Map<Id, Decimal>();
+            for (PricebookEntry pbe : [SELECT Id, Product2Id, UnitPrice FROM PricebookEntry WHERE Pricebook2Id = :idPricebook AND Product2Id IN:setIdProducts]) {
+                mapProductPrice.put(pbe.Product2Id, pbe.UnitPrice);
+            }
+            for (matlWrapper mw : listWrap) {
+                if (mapProductPrice.containsKey(mw.idProduct)) {
+                    mw.priceBookUnitPrice = mapProductPrice.get(mw.idProduct);
+                    if (mw.priceBookUnitPrice != mw.currentUnitPrice) {
+                        mw.isDifferent = true;
+                    }
                 }
             }
+        }else{
+            throw new AuraHandledException('The Project is not eligible for price update. Please check if the project is locked or there is no Pricebook.');
         }
         System.debug('listWrap');
         System.debug(listWrap);

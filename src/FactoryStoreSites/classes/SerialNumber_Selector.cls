@@ -13,6 +13,8 @@ public with sharing class SerialNumber_Selector extends Application_Selector {
          'Name',
          'Model_Year__c',
          'GMBLASERP__Product__c',
+         'GMBLASERP__Lot__c',
+         'GMBLASERP__Inventory_Balance__c',
          'Product_Name__c',
          'Product_Record_Type__c',
          'Status__c',

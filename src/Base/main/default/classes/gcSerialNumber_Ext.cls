@@ -2,6 +2,21 @@ global without sharing class gcSerialNumber_Ext {
 	global gcSerialNumber_Ext() {}
 	global gcSerialNumber_Ext(ApexPages.StandardController c){}
 
+	@AuraEnabled(Cacheable=true)
+	public static String fetchSerialInfo( Id serialId ) {
+		GMBLASERP__Serial_Number__c serial = SerialNumber_Selector.getSerialNumber(serialId);
+		return JSON.serialize(serial);
+	}
+
+	@AuraEnabled
+	public static void createWriteOffSerial( GMBLASERP__Serial_Number__c serial, AcctSeedERP__Outbound_Inventory_Movement__c outbound ) {
+		Boolean oldVal = gcSerialNumber.disableTrigger;
+		gcSerialNumber.disableTrigger = true;
+		update serial;
+		gcSerialNumber.disableTrigger =oldVal;
+		insert outbound;
+	}
+
 	@RemoteAction @ReadOnly
 	global static list<map<string,string>> retrieveNestedSerials(Id idParent)
 	{

@@ -6,6 +6,7 @@ import { LightningElement, api, wire } from 'lwc';
 import {refreshApex} from '@salesforce/apex';
 import fetchERPOrderItems from '@salesforce/apex/ERPPricingUpdate.fetchERPItems';
 import updateMaterials from '@salesforce/apex/ERPPricingUpdate.updateMaterialRecords';
+import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import { errorToast, reduceErrors } from 'c/utils';
 const COLS=[
    {label:'Product',fieldName:'productName', type:'text'},
@@ -19,6 +20,7 @@ export default class ERPPricingUpdate extends LightningElement {
     @api materialIds;
     @api materialList;
     ready=false;
+    error;
     _spinner;
     _rendered = false;
     _dataLoaded = false;
@@ -35,14 +37,18 @@ export default class ERPPricingUpdate extends LightningElement {
     }
 
     @wire(fetchERPOrderItems, { erpId: '$recordId'})
-    wiredItems(result){
-        if(result.data){
+    wiredItems({error, data}){
+        if(data){
             console.log('result');
-            console.log(result);
-            //console.log( JSON.parse( JSON.stringify( result.data ) ) );
-            this.materialList = JSON.parse(result.data);
+//            console.log(data);
+            this.materialList = JSON.parse(data);
             this._dataLoaded = true;
             this.ready = true;
+        }else if(error){
+            console.log('error');
+//            console.log(error);
+            this.error = error.body.message;
+            this._spinner.close();
         }
     }
 
@@ -72,10 +78,13 @@ export default class ERPPricingUpdate extends LightningElement {
                 console.log(result.data);
                 this.materialList = JSON.parse(result);
                 this._spinner.close();
+                this.showToast('Success','Update successful. Please refresh this page to reload records.','success');
                 return refreshApex(this.materialList);
             })
             .catch(error=>{
-                alert('Problem in updating records: '+JSON.stringify(error));
+                console.log('error');
+                console.log(error);
+                this.showToast('Error',JSON.stringify(error),'error');
                 this._spinner.close();
             })
         }
@@ -84,5 +93,14 @@ export default class ERPPricingUpdate extends LightningElement {
     getERPItems()
     {
       return fetchERPOrderItems( { erpId: this.recordId} );
+    }
+
+    showToast(tTitle,tMessage,tVariant) {
+        const event = new ShowToastEvent({
+            title: tTitle,
+            message: tMessage,
+            variant: tVariant
+        });
+        this.dispatchEvent(event);
     }
 }

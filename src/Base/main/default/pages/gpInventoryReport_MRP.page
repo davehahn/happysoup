@@ -37,7 +37,7 @@ div.pq-grid-footer{
                         </span>
                         &nbsp;Select a Vendor:
                         <span class="supplierSelector">
-                        <apex:selectList size="1" onChange="loadFamilyByType();">
+                        <apex:selectList size="1">
                             <apex:selectOptions value="{!listProductSuppliers}"/>
                         </apex:selectList>
                         </span>
@@ -103,7 +103,7 @@ div.pq-grid-footer{
         initGrid_purchaseOrders();
         initGrid_projects();
         initGrid_products();
-        loadFamilyByType();
+        //loadFamilyByType();
     });
 
     accounting.settings = {
