@@ -15,6 +15,7 @@
 	<aura:attribute type="Integer"	name="lot" default="2017"/>
 	<aura:attribute type="String"		name="description"/>
 	<aura:attribute type="String"		name="partnerReference"/>
+	<aura:attribute name="stepOneValid" type="Boolean" default="true" />
 
 	<aura:handler name="init" value="{!this}" action="{!c.doInit}" />
 
@@ -104,10 +105,22 @@
     			      		</header>
     			      	</div>
     		      		<div class="slds-p-around--small">
-    		      			<ui:inputText label="Boat serial number" value="{!v.sernoName}" />
-    		      		</div>
+<!--    		      			<ui:inputText required="true" blur="{! c.handleBlur }" aura:id="boatSerialNumberId" label="Boat serial number" value="{!v.sernoName}" />-->
+
+							<lightning:input type="text"
+											 value="{!v.sernoName}"
+											 name="boatSerialNumberId"
+
+											 label="Boat serial number"
+											 onblur="{! c.validateSerialNo }"
+											 required="true"
+											 messageWhenValueMissing="You must specify Boat serial number"
+											 aura:id="boatSerialNumberId"
+											 step="0.01" />
+
+						</div>
     		      		<div class="slds-p-around--small">
-    		      			<ui:inputText label="Model" value="{!v.ProductName}" />
+    		      			<ui:inputText   label="Model" value="{!v.ProductName}" />
     		      		</div>
     		      		<div class="slds-p-around--small">
     		      			<lightning:input name="lot" label="Model Year" value="{!v.lot}"/>
@@ -160,7 +173,7 @@
 
     <div class="slds-p-around--medium slds-text-align_right">
       <aura:if isTrue="{!v.onStep lt 1}">
-        <button class="slds-button slds-button--brand" onclick="{!c.next}">Next</button>
+        <button class="slds-button slds-button--brand" onclick="{!c.next}" disabled="{!v.stepOneValid}">Next</button>
       </aura:if>
       <aura:if isTrue="{!v.onStep == 1}">
         <button class="slds-button slds-button--brand" onclick="{!c.done}">Done</button>

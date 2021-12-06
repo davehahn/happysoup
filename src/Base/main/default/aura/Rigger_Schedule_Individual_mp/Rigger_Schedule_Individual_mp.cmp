@@ -163,6 +163,10 @@
 												<dt>Delivery Date:</dt>
 												<dd>{!j.job.ERP_Order__r.Delivery_Date__c}</dd>
 											</aura:if>
+											<aura:if isTrue="{!j.job.ERP_Order__r.Inventory_ETA__c != null}">
+												<dt>Inventory ETA Date:</dt>
+												<dd>{!j.job.ERP_Order__r.Inventory_ETA__c}</dd>
+											</aura:if>
 											<aura:if isTrue="{!j.job.ERP_Order__r.Parking_Spot__c != null}">
 												<dt>Parking Spot</dt>
 												<dd>{!j.job.ERP_Order__r.Parking_Spot__c}</dd>
@@ -217,6 +221,9 @@
 										</aura:if>
 										<aura:if isTrue="{!j.job.ERP_Order__r.Delivery_Date__c != null}">
 											<p>Delivery Date: {!j.job.ERP_Order__r.Delivery_Date__c}</p>
+										</aura:if>
+										<aura:if isTrue="{!j.job.ERP_Order__r.Inventory_ETA__c != null}">
+											<p>Inventory ETA Date: {!j.job.ERP_Order__r.Inventory_ETA__c}</p>
 										</aura:if>
 										<aura:if isTrue="{!j.serviceDate != null}">
 											<p>{!j.serviceDate}</p>

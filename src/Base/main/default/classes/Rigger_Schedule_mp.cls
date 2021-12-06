@@ -153,6 +153,7 @@ public with sharing class Rigger_Schedule_mp {
 
 		private void setServiceDate()
 		{
+			System.debug('@@ in setServiceDate');
 			if( this.job.ERP_Order__c != null &&
 		  		this.job.ERP_Order__r.Service_Date__c != null )
 			{
@@ -363,6 +364,7 @@ public with sharing class Rigger_Schedule_mp {
 									 										 ERP_Order__r.AcctSeed__Opportunity__r.BoatId__r.Rigging_Time__c,
 									 										 ERP_Order__r.Oppy_Boat_Model__c,
 									 										 ERP_Order__r.Job_Status__c,
+																			 ERP_Order__r.Inventory_ETA__c,
 																			 ExpectedTime__c,
 																			 Id,
 																			 Job_Class__c,
@@ -559,6 +561,7 @@ public with sharing class Rigger_Schedule_mp {
 		query += 'ERP_Order__r.Manufactured_Product_Name__c, ';
 		query += 'ERP_Order__r.Oppy_Boat_Model__c, ';
 		query += 'ERP_Order__r.Job_Status__c, ';
+		query += 'ERP_Order__r.Inventory_ETA__c, ';
 		query += 'ExpectedTime__c, ';
 		query += 'Id, ';
 		query += 'Job_Class__c, ';
@@ -596,6 +599,8 @@ public with sharing class Rigger_Schedule_mp {
 				query += ' AND ERP_Order__r.RecordTypeId = \'' + gcConstants.idRtProjectService + '\'';
 			else if (filter == 'tradein')
 				query += ' AND ERP_Order__r.RecordTypeId = \'' + gcConstants.idRtTradeIn + '\'';
+			else if (filter == 'LegendFixedAsset')
+				query += ' AND ERP_Order__r.RecordTypeId = \'' + gcConstants.idRtFixedAsset + '\'';
 		}
 
 		if (limitToCity) {
@@ -604,7 +609,7 @@ public with sharing class Rigger_Schedule_mp {
 
 		query += ' ORDER BY ERP_Order__r.Delivery_Date__c ASC NULLS LAST, ERP_Order__r.Service_Date__c ASC NULLS LAST, CreatedDate ASC';
     query += ' LIMIT 500';
-
+		System.debug('@@ query= '+query);
 		List<Rigger_Job__c> jobs =  Database.query(query);
 
 		String countQuery = 'SELECT COUNT() FROM Rigger_Job__c WHERE Employee__c = null AND Status__c != \'Completed\' AND ERP_Order__r.AcctSeed__Status__c != \'Ready For Accounting\' AND ERP_Order__r.AcctSeed__Status__c != \'Completed\'';
@@ -621,6 +626,8 @@ public with sharing class Rigger_Schedule_mp {
 				countQuery += ' AND ERP_Order__r.RecordTypeId = \'' + gcConstants.idRtProjectService + '\'';
 			else if (filter == 'tradein')
 				countQuery += ' AND ERP_Order__r.RecordTypeId = \'' + gcConstants.idRtTradeIn + '\'';
+			else if (filter == 'LegendFixedAsset')
+				countQuery += ' AND ERP_Order__r.RecordTypeId = \'' + gcConstants.idRtFixedAsset+ '\'';
 		}
 
 		if (limitToCity) {
@@ -634,12 +641,14 @@ public with sharing class Rigger_Schedule_mp {
 		Set<Id> jobKeys = new Set<Id>();
 		for (Rigger_Job__c job : jobs) {
 			if (job.ERP_Order__c != null) {
+				System.debug('@@ job.ERP_Order__c= '+job.ERP_Order__c);
 				jobKeys.add(job.ERP_Order__c);
 			} else {
+				System.debug('@@ job.Id= '+job.Id);
 				jobKeys.add(job.Id);
 			}
 		}
-
+		System.debug('@@ jobKey= '+jobKeys);
 		Map<Id, List<AcctSeedERP__Material__c>> materialsMap = new Map<Id, List<AcctSeedERP__Material__c>>();
 
 		for (AcctSeedERP__Material__c m : [SELECT Id,
@@ -690,6 +699,7 @@ public with sharing class Rigger_Schedule_mp {
 
 	@AuraEnabled
 	public static void assignJob(String riggerId, String jobId) {
+
 		Rigger_Job__c job = [SELECT Id,
 																ActualStart__c,
 																Employee__c,
@@ -769,6 +779,7 @@ public with sharing class Rigger_Schedule_mp {
 
 	@AuraEnabled
 	public static String getJob(String jobId) {
+
 		Rigger_Job__c job = [SELECT ActualEnd__c,
 															 ActualStart__c,
 															 Actual_Time_Spent__c,
@@ -802,6 +813,7 @@ public with sharing class Rigger_Schedule_mp {
 															 ERP_Order__r.Shipping_Status__c,
 															 ERP_Order__r.Stage__c,
 															 ERP_Order__r.GMBLASERP__Warehouse__r.Name,
+															 ERP_Order__r.Inventory_ETA__c,
 															 ExpectedTime__c,
 															 Id,
 															 Job_Class__c,
@@ -1093,6 +1105,7 @@ public with sharing class Rigger_Schedule_mp {
 		recordTypes.add(gcConstants.idRtProjectManufacturing);
 		recordTypes.add(gcConstants.idRtProjectService);
 		recordTypes.add(gcConstants.idRtTradeIn);
+		recordTypes.add(gcConstants.idRtFixedAsset);
 		for (AcctSeed__Project__c erp : [SELECT Id,
 																						RecordTypeId,
 																						Customer_Notes__c,

@@ -21,6 +21,7 @@
         $A.getCallback( 
           function( wrappedJobs ) {
             console.log('getJobs callback');
+            console.log('JSON.stringify(wrappedJobs )= '+JSON.stringify(wrappedJobs ));
             console.log( JSON.parse(JSON.stringify(wrappedJobs )));
             wrappedJobs.forEach( j => {
               console.log(j);

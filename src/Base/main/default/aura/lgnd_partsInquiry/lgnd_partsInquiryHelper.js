@@ -29,7 +29,9 @@
             resolve();
           }),
           $A.getCallback(function(error) {
-            component.set('v.error', error);
+            component.set('v.error', error[0].message);
+            self.closeSpinner(component);
+            reject();
           })
         );
       });
@@ -52,19 +54,19 @@
 	},
 
 	callAction: function(component, methodName, parameters) {
-    console.log('partsInquiry.helper.callAction:' + methodName);
+    console.log('partsInquiry.helper.callAction method name:' + methodName);
     var action = component.get("c." + methodName);
     action.setParams(parameters);
     return new Promise(function(resolve, reject) {
       action.setCallback(this, function(response) {
-    		console.log('b');
+
         var responseState = response.getState();
-        console.log(responseState);
+        console.log('state: '+responseState);
         if (responseState == "SUCCESS") {
           resolve(response.getReturnValue());
         } else if (responseState === "ERROR") {
         	console.log(response.getError());
-          reject(response.getError());
+            reject(response.getError());
         } else {
           reject(responseState);
         }
