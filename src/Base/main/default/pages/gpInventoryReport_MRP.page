@@ -31,16 +31,22 @@ div.pq-grid-footer{
                     <div style="display: {!IF($CurrentPage.parameters.id == null,'','none;')}">
                         Select a Product Type:
                         <span class="typeSelector">
-                        <apex:selectList size="1" onChange="loadFamilyByType();">
+                        <apex:selectList size="1">
                             <apex:selectOptions value="{!listProductType}"/>
                         </apex:selectList>
                         </span>
-                        Select a Product Family:
-                        <span class="familySelector">
-                            <select name="familySelector">
-                                <option value="">--All--</option>
-                            </select>
+                        &nbsp;Select a Vendor:
+                        <span class="supplierSelector">
+                        <apex:selectList size="1">
+                            <apex:selectOptions value="{!listProductSuppliers}"/>
+                        </apex:selectList>
                         </span>
+<!--                        &nbsp;Select a Product Family:-->
+<!--                        <span class="familySelector">-->
+<!--                            <select name="familySelector">-->
+<!--                                <option value="">&#45;&#45;All&#45;&#45;</option>-->
+<!--                            </select>-->
+<!--                        </span>-->
                         &nbsp;&nbsp;Select a Warehouse:
                         <span class="warehouseSelector">
                         <apex:selectList size="1" value="{!idDefaultWarehouse}">
@@ -97,7 +103,7 @@ div.pq-grid-footer{
         initGrid_purchaseOrders();
         initGrid_projects();
         initGrid_products();
-        loadFamilyByType();
+        //loadFamilyByType();
     });
 
     accounting.settings = {
@@ -245,10 +251,11 @@ div.pq-grid-footer{
         var idWarehouse = $j('span.warehouseSelector select').val();
         if(idWarehouse == '') idWarehouse = null;
         var idType = $j('span.typeSelector select').val();
-        var selectedFamily = $j('span.familySelector select').val();
+        var idSupplier = $j('span.supplierSelector select').val();
+//        var selectedFamily = $j('span.familySelector select').val();
         Visualforce.remoting.Manager.invokeAction(
-            '{!$RemoteAction.gcInventoryReport_MRP.retrieveProductsByFamily}',
-            list, idWarehouse, idType, selectedFamily,
+            '{!$RemoteAction.gcInventoryReport_MRP.retrieveProductsBySupplier}',
+            list, idWarehouse, idType, idSupplier,
             function(result,event){
                 if(event.status){
                     gGrid.refreshGrid_callback($gridDiv,result);

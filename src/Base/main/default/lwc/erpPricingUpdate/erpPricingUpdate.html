@@ -16,5 +16,8 @@
                 </div>
             </lightning-card>
         </template>
+        <template if:true={error}>
+            <p class="slds-text-align_center slds-theme_error slds-size_full slds-box">{error}</p>
+        </template>
     </div>
 </template>

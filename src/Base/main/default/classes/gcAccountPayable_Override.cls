@@ -112,8 +112,7 @@ public without sharing class gcAccountPayable_Override {
         	[SELECT Id, 
         		Name
         	FROM AcctSeed__Project__c 
-        	WHERE Locked__c = false
-        		AND (Name like :searchTxt 
+        	WHERE (Name like :searchTxt
         			OR AcctSeedERP__Work_Order_Number__c  like :searchTxt)
         	ORDER BY Name 
         	LIMIT 10])

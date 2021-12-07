@@ -60,6 +60,20 @@ public with sharing class Material_Selector extends Application_Selector {
       .query();
   }
 
+  public static List<AcctSeedERP__Material__c> allPartMaterialsByProjectIds(
+    Set<Id> projectIds
+  ) {
+    String partRt = String.valueOf(LGND_Constants.productRtId_Part);
+    return new Material_Selector()
+      .addWhereIdInField(projectIds, 'AcctSeedERP__Project__c')
+      .addWhere(
+        'AcctSeedERP__Product__r.RecordTypeId = \'' +
+        partRt +
+        '\''
+      )
+      .query();
+  }
+
   public static List<AcctSeedERP__Material__c> selectAllByIds(Set<Id> matIds) {
     Material_Selector selector = new Material_Selector();
     selector.addWhereIdIn(matIds);
