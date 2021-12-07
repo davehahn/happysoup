@@ -26,7 +26,7 @@ sfdx force:auth:jwt:grant -u $USERNAME -i $CONSUMER_KEY -f deploy.key --setalias
 
 echo "Creating Sandbox"
 echo ""
-sfdx force:org:create --type sandbox sandboxName=$SANDBOXNAME licenseType=Developer --targetusername ci-prod -a ValidateDeploy -w 120
+sfdx force:org:create --type sandbox sandboxName=$SANDBOXNAME licenseType=Developer --targetusername ci-prod -a ValidateDeploy -w 200
 echo "Saving Sandbox info to workspace"
 #sfdx force:org:display --targetusername ValidateDeploy --json | jq  '.result' > workspace/org_info.json
 #jq . < workspace/org_info.json
