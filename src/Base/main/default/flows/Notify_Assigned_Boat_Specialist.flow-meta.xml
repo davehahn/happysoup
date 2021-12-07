@@ -13,6 +13,7 @@
         <locationY>200</locationY>
         <actionName>AcctSeed__Project__c.Notify_Boat_Specialist_they_are_assigned_to_the_ERP</actionName>
         <actionType>emailAlert</actionType>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
         <inputParameters>
             <name>SObjectRowId</name>
             <value>
@@ -93,7 +94,7 @@ OR(ISNEW(), ISCHANGED({!myVariable_current.Boat_Specialist__c} ))</expression>
     </processMetadataValues>
     <processType>Workflow</processType>
     <startElementReference>myDecision</startElementReference>
-    <status>Obsolete</status>
+    <status>Draft</status>
     <variables>
         <name>myVariable_current</name>
         <dataType>SObject</dataType>
