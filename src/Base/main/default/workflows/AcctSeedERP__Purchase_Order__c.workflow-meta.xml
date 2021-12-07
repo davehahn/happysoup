@@ -527,26 +527,6 @@
         <triggerType>onCreateOrTriggeringUpdate</triggerType>
     </rules>
     <rules>
-        <fullName>Task to Purchase Order Creator Parts are Received</fullName>
-        <actions>
-            <name>Please_Update_the_Case_to_Parts_Received</name>
-            <type>Task</type>
-        </actions>
-        <active>true</active>
-        <criteriaItems>
-            <field>AcctSeedERP__Purchase_Order__c.CreatedById</field>
-            <operation>contains</operation>
-            <value>levac</value>
-        </criteriaItems>
-        <criteriaItems>
-            <field>AcctSeedERP__Purchase_Order__c.Stage__c</field>
-            <operation>equals</operation>
-            <value>Received</value>
-        </criteriaItems>
-        <description>This is for when a PO is received, it will notify the PO creator to update the Case status to Received, which will move the associated Service ERP to Pending Scheduling</description>
-        <triggerType>onCreateOrTriggeringUpdate</triggerType>
-    </rules>
-    <rules>
         <fullName>Unlocked_If_Open</fullName>
         <actions>
             <name>Unlocked_If_Open</name>
