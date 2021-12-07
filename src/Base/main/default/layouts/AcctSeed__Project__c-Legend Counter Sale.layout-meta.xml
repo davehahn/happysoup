@@ -78,6 +78,10 @@
                 <behavior>Edit</behavior>
                 <field>Survey_Flag__c</field>
             </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>Accrual_JE_created__c</field>
+            </layoutItems>
         </layoutColumns>
         <layoutColumns>
             <layoutItems>
@@ -221,6 +225,11 @@
     <platformActionList>
         <actionListContext>Record</actionListContext>
         <platformActionListItems>
+            <actionName>Edit</actionName>
+            <actionType>StandardButton</actionType>
+            <sortOrder>0</sortOrder>
+        </platformActionListItems>
+        <platformActionListItems>
             <actionName>Delete</actionName>
             <actionType>StandardButton</actionType>
             <sortOrder>1</sortOrder>
@@ -301,9 +310,9 @@
             <sortOrder>16</sortOrder>
         </platformActionListItems>
         <platformActionListItems>
-            <actionName>Edit</actionName>
-            <actionType>StandardButton</actionType>
-            <sortOrder>0</sortOrder>
+            <actionName>AcctSeed__Project__c.Order_Items_Pricing_Update</actionName>
+            <actionType>QuickAction</actionType>
+            <sortOrder>17</sortOrder>
         </platformActionListItems>
     </platformActionList>
     <relatedLists>

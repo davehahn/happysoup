@@ -84,6 +84,10 @@
                 <behavior>Edit</behavior>
                 <field>Rigging_Parts_Added__c</field>
             </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>Accrual_JE_created__c</field>
+            </layoutItems>
         </layoutColumns>
         <layoutColumns>
             <layoutItems>
@@ -323,6 +327,21 @@
             <sortOrder>7</sortOrder>
         </platformActionListItems>
         <platformActionListItems>
+            <actionName>FeedItem.PollPost</actionName>
+            <actionType>QuickAction</actionType>
+            <sortOrder>8</sortOrder>
+        </platformActionListItems>
+        <platformActionListItems>
+            <actionName>Event</actionName>
+            <actionType>QuickAction</actionType>
+            <sortOrder>9</sortOrder>
+        </platformActionListItems>
+        <platformActionListItems>
+            <actionName>Account</actionName>
+            <actionType>QuickAction</actionType>
+            <sortOrder>10</sortOrder>
+        </platformActionListItems>
+        <platformActionListItems>
             <actionName>Share</actionName>
             <actionType>StandardButton</actionType>
             <sortOrder>11</sortOrder>
@@ -378,19 +397,9 @@
             <sortOrder>21</sortOrder>
         </platformActionListItems>
         <platformActionListItems>
-            <actionName>FeedItem.PollPost</actionName>
+            <actionName>AcctSeed__Project__c.Order_Items_Pricing_Update</actionName>
             <actionType>QuickAction</actionType>
-            <sortOrder>8</sortOrder>
-        </platformActionListItems>
-        <platformActionListItems>
-            <actionName>Event</actionName>
-            <actionType>QuickAction</actionType>
-            <sortOrder>9</sortOrder>
-        </platformActionListItems>
-        <platformActionListItems>
-            <actionName>Account</actionName>
-            <actionType>QuickAction</actionType>
-            <sortOrder>10</sortOrder>
+            <sortOrder>22</sortOrder>
         </platformActionListItems>
     </platformActionList>
     <relatedLists>

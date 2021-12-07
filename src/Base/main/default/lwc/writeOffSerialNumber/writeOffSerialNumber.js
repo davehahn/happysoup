@@ -35,6 +35,7 @@ export default class WriteOffSerialNumber extends LightningElement {
     glv2Field = GLV2_FIELD;
     ready=false;
     error;
+    wiredResult;
     _spinner;
     _rendered = false;
     _dataLoaded = false;
@@ -98,7 +99,7 @@ export default class WriteOffSerialNumber extends LightningElement {
             this._spinner.close();
             this.showToast('Success','Update successful.','success');
             getRecordNotifyChange([{recordId: this.recordId}]);
-            refreshApex(this.fetchSerialInformation);
+            refreshApex(this.wiredResult);
             eval("$A.get('e.force:refreshView').fire();");
             this.dispatchEvent(new CloseActionScreenEvent());
         })
@@ -115,11 +116,12 @@ export default class WriteOffSerialNumber extends LightningElement {
     }
 
     @wire(fetchSerialInformation, { serialId: '$recordId'})
-        wiredItems({error, data}){
-            if(data){
+        wiredItems(result){
+            this.wiredResult = result;
+            if(result.data){
                 console.log('result');
-                console.log(JSON.parse(data));
-                this.serialNumber = JSON.parse(data);
+                console.log(JSON.parse(result.data));
+                this.serialNumber = JSON.parse(result.data);
                 if(!hasPermission){
                     this.error = 'You do not have permission to access this feature.';
                     this._spinner.close();
@@ -131,10 +133,10 @@ export default class WriteOffSerialNumber extends LightningElement {
                     this._dataLoaded = true;
                     this.ready = true;
                 }
-            }else if(error){
+            }else if(result.error){
                 console.log('error');
-                console.log(error);
-                this.error = error.body.message;
+                console.log(result.error);
+                this.error = result.error.body.message;
                 this._spinner.close();
             }
         }
