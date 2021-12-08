@@ -2,7 +2,9 @@ public with sharing class lgnd_partsInquiryController {
 	@AuraEnabled
 	public static String save(String sernoName, String model, Integer lot, String description, String partnerReference) {
 		Id accountId;
-
+        if( String.isBlank(sernoName)){
+            throw  new SerialNumber_Exception('You must specify Boat serial number');
+        }
 		Case c = new Case(
     	Inquiry_Serial_Number__c = sernoName,
 	    Inquiry_Product_Name__c = model,
@@ -28,6 +30,10 @@ public with sharing class lgnd_partsInquiryController {
 
     upsert c;
 
-    return c.Id;
+   return c.Id;
+       // throw new Exception('').getMessage();
+    //return new Exception('invalid').getMessage();
+
 	}
+    public class SerialNumber_Exception extends Exception {}
 }

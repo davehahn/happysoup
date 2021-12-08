@@ -2454,6 +2454,12 @@
             </value>
         </inputAssignments>
         <inputAssignments>
+            <field>Financial_Institution__c</field>
+            <value>
+                <elementReference>Financial_Institution</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
             <field>Floor_Material__c</field>
             <value>
                 <elementReference>Floor_Material</elementReference>
@@ -3926,6 +3932,13 @@
             <fieldType>InputField</fieldType>
             <isRequired>true</isRequired>
             <scale>0</scale>
+        </fields>
+        <fields>
+            <name>Financial_Institution</name>
+            <dataType>String</dataType>
+            <fieldText>Financial Institution</fieldText>
+            <fieldType>InputField</fieldType>
+            <isRequired>false</isRequired>
         </fields>
         <showFooter>true</showFooter>
         <showHeader>true</showHeader>
