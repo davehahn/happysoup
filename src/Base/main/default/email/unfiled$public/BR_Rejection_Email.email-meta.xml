@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <description>This Bank Rec has been Denied. Please Review Comments.</description>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <letterhead>Legend_Letterhead</letterhead>
+    <name>BR Rejection Email</name>
+    <style>freeForm</style>
+    <subject>This Bank Rec Approval Has Been Denied.  Please Review Comments.</subject>
+    <textOnly>The following Payable is ready to be reviewed and actioned:
+
+
+
+Vendor: {!AcctSeed__Account_Payable__c.AcctSeed__Vendor__c}
+
+Payee Reference: {!AcctSeed__Account_Payable__c.AcctSeed__Payee_Reference__c}
+
+Total: {!AcctSeed__Account_Payable__c.AcctSeed__Total__c}
+
+Issue Date: {!AcctSeed__Account_Payable__c.AcctSeed__Date__c}
+
+URL: {!AcctSeed__Account_Payable__c.Link}</textOnly>
+    <type>html</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>
