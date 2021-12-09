@@ -29,12 +29,16 @@ div.pq-grid-footer{
 <body>
     <div id="thePageBlock">
         <apex:pageBlock mode="edit" title="Purchase Order Lines">
-            <apex:pageBlockButtons location="top" rendered="{!IF(OR(!AcctSeedERP__Purchase_Order__c.Locked__c,$Permission.CanModifyLockedPurchaseOrder),true,false)}">
-                <button type="button" class="btn" id="btnLaunchSearchProduct" onclick="launchSearchProduct();">New Purchase Order Line</button>
-                <button type="button" class="btn" id="btnLaunchSearchProduct" onclick="launchFreightCharge();">Apply Freight Charge</button>
-                <button type="button" class="btn" id="btnLaunchSearchProduct" onclick="allFreightCharges();">Freight Charges Applied</button>
-                <button type="button" class="btn" id="btnCreateAPWithSelected" onclick="createAPWithSelected();">Create AP With (Selected Lines)</button>
-                <button type="button" class="btn" id="btnExpandMaterial"    onclick="expandGrid_Lines();">Expand</button>
+            <apex:pageBlockButtons location="top">
+                <apex:outputText rendered="{!IF(OR(!AcctSeedERP__Purchase_Order__c.Locked__c,$Permission.CanModifyLockedPurchaseOrder),true,false)}">
+                    <button type="button" class="btn" id="btnLaunchSearchProduct" onclick="launchSearchProduct();">New Purchase Order Line</button>
+                    <button type="button" class="btn" id="btnCreateAPWithSelected" onclick="createAPWithSelected();">Create AP With (Selected Lines)</button>
+                    <button type="button" class="btn" id="btnExpandMaterial"    onclick="expandGrid_Lines();">Expand</button>
+                </apex:outputText>
+                <apex:outputText rendered="{!IF(OR(!AcctSeedERP__Purchase_Order__c.Locked__c,$Permission.CanModifyLockedPurchaseOrder,AcctSeedERP__Purchase_Order__c.Stage__c == 'Submitted', AcctSeedERP__Purchase_Order__c.Stage__c == 'Partially Received'),true,false)}">
+                    <button type="button" class="btn" id="btnLaunchSearchProduct" onclick="launchFreightCharge();">Apply Freight Charge</button>
+                    <button type="button" class="btn" id="btnLaunchSearchProduct" onclick="allFreightCharges();">Freight Charges Applied</button>
+                </apex:outputText>
             </apex:pageBlockButtons>
             <apex:outputText rendered="{!IF(OR(!AcctSeedERP__Purchase_Order__c.Locked__c,$Permission.CanModifyLockedPurchaseOrder),true,false)}">
             <table width="100%">
@@ -592,7 +596,7 @@ div.pq-grid-footer{
             } 
             else if(col.dataIndx == 'qtyReceived')
             {
-                if({!OR(!AcctSeedERP__Purchase_Order__c.Locked__c,$Permission.CanModifyLockedPurchaseOrder)} && '{!AcctSeedERP__Purchase_Order__c.AcctSeedERP__Type__c}' != 'Drop Shipment')
+                if({!OR(!AcctSeedERP__Purchase_Order__c.Locked__c,$Permission.CanModifyLockedPurchaseOrder, AcctSeedERP__Purchase_Order__c.Stage__c == 'Submitted', AcctSeedERP__Purchase_Order__c.Stage__c == 'Partially Received')} && '{!AcctSeedERP__Purchase_Order__c.AcctSeedERP__Type__c}' != 'Drop Shipment')
                 {
                     col.title += '<br/><button type=\"button\" cls=\"btn\" onclick=\"launchReceiveAllInventory()\">Receive All</button>';
                     col.sortable = false;
@@ -632,7 +636,7 @@ div.pq-grid-footer{
             }
             else if(col.dataIndx == 'qtyReceivedNonInventory')
             {
-                if({!OR(!AcctSeedERP__Purchase_Order__c.Locked__c,$Permission.CanModifyLockedPurchaseOrder)})
+                if({!OR(!AcctSeedERP__Purchase_Order__c.Locked__c,$Permission.CanModifyLockedPurchaseOrder, AcctSeedERP__Purchase_Order__c.Stage__c == 'Submitted', AcctSeedERP__Purchase_Order__c.Stage__c == 'Partially Received')})
                 {
                     col.title += '<br/><button type=\"button\" cls=\"btn\" onclick=\"receiveAllNonInventory()\">Receive All</button>';
                     col.sortable = false;
