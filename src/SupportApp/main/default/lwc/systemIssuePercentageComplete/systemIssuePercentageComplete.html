@@ -16,7 +16,12 @@
         medium-device-size="12"
         large-device-size="6"
         padding="horizontal-small"
+        class="slds-is-relative donut"
       >
+        <div class="gauge-reading">
+          <div class="value">{storyCount}</div>
+          <div class="label">Total Stories</div>
+        </div>
         <canvas class="chart" height="300" width="300" lwc:dom="manual"></canvas>
       </lightning-layout-item>
       <lightning-layout-item
@@ -25,7 +30,7 @@
         medium-device-size="12"
         large-device-size="6"
         padding="horizontal-small"
-        class="slds-is-relative"
+        class="slds-is-relative gauge"
       >
         <div class="gauge-reading">
           <div class="value">{complete}%</div>

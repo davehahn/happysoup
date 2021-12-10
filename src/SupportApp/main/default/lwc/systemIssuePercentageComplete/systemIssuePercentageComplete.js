@@ -6,9 +6,10 @@ import { LightningElement, api, wire } from "lwc";
 import { getRecord, getFieldValue } from "lightning/uiRecordApi";
 import { loadScript } from "lightning/platformResourceLoader";
 import Chart from "@salesforce/resourceUrl/ChartJS";
-import PERCENT_TODO_FIELD from "@salesforce/schema/System_Issue__c.Percent_To_Do__c";
-import PERCENT_INPROGRESS_FIELD from "@salesforce/schema/System_Issue__c.Percent_In_Progress__c";
-import PERCENT_DONE_FIELD from "@salesforce/schema/System_Issue__c.Percent_Done__c";
+import STORY_COUNT_FIELD from '@salesforce/schema/System_Issue__c.Story_Count__c';
+import PERCENT_TODO_FIELD from "@salesforce/schema/System_Issue__c.Story_Count_To_Do__c";
+import PERCENT_INPROGRESS_FIELD from "@salesforce/schema/System_Issue__c.Story_Count_In_Progress__c";
+import PERCENT_DONE_FIELD from "@salesforce/schema/System_Issue__c.Story_Count_Done__c";
 
 export default class SystemIssuePercentageComplete extends LightningElement {
   @api recordId;
@@ -16,20 +17,23 @@ export default class SystemIssuePercentageComplete extends LightningElement {
   todo = 0;
   inProgress = 0;
   complete=0;
+  storyCount=0;
   chart;
   gauge;
   scriptsLoaded = false;
 
   @wire(getRecord, {
     recordId: "$recordId",
-    fields: [PERCENT_DONE_FIELD, PERCENT_INPROGRESS_FIELD, PERCENT_TODO_FIELD]
+    fields: [PERCENT_DONE_FIELD, PERCENT_INPROGRESS_FIELD, PERCENT_TODO_FIELD, STORY_COUNT_FIELD]
   })
   wiredSystemIssue(result) {
     if (result.data) {
+      console.log( JSON.parse( JSON.stringify( result.data ) ) );
       this.todo = getFieldValue(result.data, PERCENT_TODO_FIELD);
       this.inProgress = getFieldValue(result.data, PERCENT_INPROGRESS_FIELD);
-      this.done = getFieldValue(result.data, PERCENT_DONE_FIELD);
-      this.complete = this.done.toFixed();
+      this.done = getFieldValue(result.data, PERCENT_DONE_FIELD) || 0;
+      this.storyCount = getFieldValue( result.data, STORY_COUNT_FIELD) || 0;
+      this.complete = (( (this.done / this.storyCount ) * 100 ) || 0).toFixed();
       this.initialize();
     }
     if (result.error) {
@@ -116,17 +120,18 @@ export default class SystemIssuePercentageComplete extends LightningElement {
       options: {
         responsive: false,
         rotation: 180,
+        cutout: "65%",
         plugins: {
           legend: {
             position: "bottom"
           },
           tooltip: {
-            callbacks: {
-              label: function (context) {
-                console.log(context);
-                return "  " + context.parsed + "%";
-              }
-            }
+//            callbacks: {
+//              label: function (context) {
+//                console.log(context);
+//                return "  " + context.parsed + "%";
+//              }
+//            }
           },
           title: {
             display: true,

@@ -172,10 +172,10 @@ private class SystemIssue_TriggerHandler_T {
     stories[4].Status__c = 'In Progress';
     update stories;
 
-    epic = [SELECT Id, Percent_Done__c, Percent_In_Progress__c, Percent_To_Do__c FROM System_Issue__c WHERE Id = :epic.Id];
-    System.assertEquals( 30, epic.Percent_Done__c, 'Should be 30% complete');
-    System.assertEquals( 20, epic.Percent_In_Progress__c, 'Should be 20% in Progress');
-    System.assertEquals( 50, epic.Percent_To_Do__c, 'Should be 50% To Do');
+    epic = [SELECT Id, Story_Count_Done__c, Story_Count_In_Progress__c, Story_Count_To_Do__c FROM System_Issue__c WHERE Id = :epic.Id];
+    System.assertEquals( 3, epic.Story_Count_Done__c, 'Should be 3 complete');
+    System.assertEquals( 2, epic.Story_Count_In_Progress__c, 'Should be 2 in Progress');
+    System.assertEquals( 5, epic.Story_Count_To_Do__c, 'Should be 5 To Do');
 
   }
 

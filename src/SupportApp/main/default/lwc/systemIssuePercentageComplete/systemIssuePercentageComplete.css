@@ -6,7 +6,6 @@
   position: absolute;
   text-align: center;
   height: 75px;
-  top: calc(50% - 15px);
   color: #02716b;
   left: calc(50% - 125px);
 }
@@ -19,6 +18,14 @@
 .gauge-reading .label {
   line-height: 15px;
   font-size: 12px;
+}
+
+.gauge .gauge-reading {
+  top: calc(50% - 20px);
+}
+
+.donut .gauge-reading {
+  top: calc(50% - 30px);
 }
 
 canvas {
