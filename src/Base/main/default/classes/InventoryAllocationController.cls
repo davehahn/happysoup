@@ -107,13 +107,13 @@
             this.buildMapStock();
             this.buildMapSpecialDamages();
             this.buildMapShipments();
-            this.buildMapERPMaterials();
             //this.builtHoverOverRetailSold();
             //this.builtHoverOverDelearOrder();
             //this.buildHoverOvers();
             //this.buildMapRetailSold();
             //this.buildMapDealerOrder();
             this.buildOutstandingOrders();
+            this.buildMapERPMaterials();
             this.buildWholeSaleERPOrders();
             this.buildMapProductOwner();
             this.buildMapCanvasERP();
@@ -325,6 +325,7 @@
               //addToRetailERPOrders( uniqueCombo, objMaterial );
               mapRetailLinked.put(objMaterial.AcctSeedERP__Project__c, false);
               listRetailMaterials.add(objMaterial);
+              this.setIdERP.add(objMaterial.AcctSeedERP__Project__c);
             }
           }
             System.debug('listRetailMaterials');
@@ -993,13 +994,21 @@
             if( hoverOverDealerOrderDetails.get(pro.Id + yearSection) != null )
                 inv.dealerOrderDetails = JSON.serialize( hoverOverDealerOrderDetails.get(pro.Id + yearSection) );
 
-            if( hoverOverRetailSoldDetails.get(pro.Id + yearSection) != null )
-              inv.retailSoldDetails = JSON.serialize( hoverOverRetailSoldDetails.get(pro.Id + yearSection) );
+            System.debug('hoverOverRetailSoldDetails');
+            System.debug(hoverOverRetailSoldDetails);
+            if( hoverOverRetailSoldDetails.get(pro.Id + yearSection) != null ) {
+                System.debug('hoverOverRetailSoldDetails.get(pro.Id + yearSection)');
+                String mls = JSON.serialize(hoverOverRetailSoldDetails.get(pro.Id + yearSection));
+                System.debug(mls);
+                Map<String,List<RetailERP>> retDS = (Map<String,List<RetailERP>>)JSON.deserialize(mls, Map<String,List<RetailERP>>.class);
+                for(RetailERP m : retDS.get('ERP Orders')){
+                    m.erpMaterials = this.mapERPMaterial.get(m.Id);
+                }
+                inv.retailSoldDetails = JSON.serialize(retDS);
+                System.debug('mls');
+                System.debug(mls);
+            }
 
-            //if(mapERPRetailWholeSale.containsKey(pro.Id + yearSection))
-            //  inv.wholesaleNonPOL = mapERPRetailWholeSale.get(pro.Id + yearSection);
-            //if( hoverOverWholeSaleERP.containsKey(pro.Id + yearSection))
-            //  inv.wholesaleERPDetails = JSON.serialize( hoverOverWholeSaleERP.get(pro.Id + yearSection) );
             Integer allSpecials = inv.specials == null ? 0 : inv.specials;
             allSpecials += inv.damages == null ? 0 : inv.damages;
             allSpecials += inv.useds == null ? 0 : inv.useds;
@@ -1978,7 +1987,7 @@
                   this.retailErpId = null;
                   this.retailErpName = null;
                 }
-                this.accountName = erp.AcctSeed__Account__r.Name;
+                this.accountName = erp.AcctSeed__Account__r.Name + ' Hell';
                 this.idSerial = erp.Serial_Number__c;
                 this.serialName = erp.Serial_Number__r.Name;
                 this.erpStage = erp.Stage__c;
@@ -1997,7 +2006,7 @@
                 this.retailErpId = null;
                 this.retailErpName = null;
                 this.boatName = matl.AcctSeedERP__Project__r.Serial_Number__r.Product_Name__c;
-                this.accountName = matl.AcctSeedERP__Project__r.AcctSeed__Account__r.Name;
+                this.accountName = matl.AcctSeedERP__Project__r.AcctSeed__Account__r.Name + ' Heav';
                 this.idSerial = matl.GMBLASERP__Serial_Number__c;
                 this.serialName = matl.GMBLASERP__Serial_Number__c != null ? matl.GMBLASERP__Serial_Number__r.Name : '';
                 this.erpStage = matl.AcctSeedERP__Project__r.Stage__c;
@@ -2033,6 +2042,19 @@
                 this.idLot = matl.GMBLASERP__Lot__c;
                 this.lotName = matl.GMBLASERP__Lot__r.Name;
             }
+        }
+
+        public class RetailERP {
+            public String Id              {get;set;}
+            public String AccountName     {get;set;}
+            public String Name            {get;set;}
+            public String idSerial        {get;set;}
+            public String serialName      {get;set;}
+            public String Stage           {get;set;}
+            public String CreatedDate     {get;set;}
+            public String DeliveryDate    {get;set;}
+            public String type            {get;set;}
+            public List<Material> erpMaterials  {get;set;}
         }
 
         public static void coverage()
