@@ -5,6 +5,9 @@
         component.set("v.clearingReference", "");
         component.set("v.clearingAmount", 0);
     },
+    closeModalAttachment: function(component, event, helper) {
+        component.set("v.hasAttachment", false); 
+    },
     onSearch: function(component, event, helper) {
         var searchText = component.get("v.searchText");
         

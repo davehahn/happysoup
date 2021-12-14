@@ -22,6 +22,11 @@
         component.set("v.selectedBillingId", idBill);
         component.set("v.clearingAmount", amount);
     },
+    openAttachmentModal: function( component, event, helper )
+    {
+        component.set('v.hasAttachment', true );
+        
+    },
     validate: function(component, event, helper) {
         helper.validate(component, event, helper);
     },
@@ -56,9 +61,14 @@
                 }
                 return;
             }
-            // var results = response.getReturnValue();
+            var results = response.getReturnValue();
+            if(results != null || results.length != 0 ){
+                component.set('v.hasAttachment', true );
+                component.set('v.recordId', results );
+            }
             helper.closeModal(component, event, helper);
             helper.onSearch(component, event, helper);
+            
             // navEvt.setParams({
             //   "recordId": results,
             //   "slideDevName": "related"
@@ -68,5 +78,14 @@
     },
     closeModal: function(component, event, helper) {
         helper.closeModal(component, event, helper);  
+    },
+     closeModalAttachment: function(component, event, helper) {
+        helper.closeModalAttachment(component, event, helper);  
+    },
+    handleUploadFinished: function (cmp, event) {
+        // Get the list of uploaded files
+        var uploadedFiles = event.getParam("files");
+        // Get the file name
+        uploadedFiles.forEach(file => console.log(file.name));
     }
 })

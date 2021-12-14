@@ -6,9 +6,14 @@
     <aura:attribute name="clearingAmount" type="Decimal" default="0.00"  />
     <aura:attribute name="columns" type="List" />
     <aura:attribute name="hasSelections" type="boolean" default="false"/>
+    <aura:attribute name="hasAttachment" type="boolean" default="false"/>
     <aura:attribute name="btnDisabled" type="boolean" default="true"/>
     <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
     <aura:handler name="change" value="{!v.searchText}" action="{!c.onSearch}" />
+    <aura:attribute name="filetype" type="List" default="['.png', '.jpg', '.jpeg']" />
+    <aura:attribute name="multiple" type="Boolean" default="true" />
+    <aura:attribute name="disabled" type="Boolean" default="true" />
+    <aura:attribute name="recordId" type="String" />
     <lightning:card >
         <aura:set attribute="title">
             Search by ERP Order Name, ERP Order Number, Billing Name or Customer Name
@@ -21,7 +26,7 @@
                 </div>
             </div>
         </div>
-        
+
     </lightning:card>
     <lightning:card >
         <aura:set attribute="title">
@@ -105,6 +110,39 @@
           </div>
           <div class="slds-backdrop slds-backdrop--open"></div>
      </aura:if>
+    
+	 <aura:if isTrue="{!v.hasAttachment}"> 
+          <div role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+              <div class="slds-modal__header">
+                <h2 id="header99" class="slds-text-heading--medium">Billing Attachment</h2>
+              </div>
+              <div class="slds-modal__content slds-p-around--medium">
+                <div class="slds-form slds-form_stacked slds-m-horizontal_large">
+                    <div class="slds-form-element">
+                        <div class="slds-form-element__control">
+                       		<lightning:fileUpload label="Attach receipt"
+                                    name="fileUploader"
+                                    multiple="true"
+                                    accept="{!v.filetype}"
+                                    recordId="{!v.recordId}"
+                                    onuploadfinished="{!c.handleUploadFinished}" />
+                        
+                        </div>
+                    </div>
+                    
+                </div>
+              </div>
+             
+              <div class="slds-modal__footer">
+               <button class="slds-button slds-button--neutral" onclick="{!c.closeModalAttachment}" >Close</button>
+            </div>    
+            </div>
+            
+          </div>
+          <div class="slds-backdrop slds-backdrop--open"></div>
+     </aura:if>
+   
     <lightning:spinner aura:id="spinner" />
     <br/>
 </aura:component>
