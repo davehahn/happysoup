@@ -39,7 +39,10 @@
           </p>
 
           <p class="item__pricing item__pricing--mini">
-            <span class="label">Prix habituel:</span>
+            <span class="label">
+              <template if:true={isEN}><strong>Regular Price:</strong></template>
+              <template if:true={isFR}><strong>Prix habituel:</strong></template>
+            </span>
             <span class="pricing__weekly">
               {stock.Base.StartingWeeklyPrice}
             </span>

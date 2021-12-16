@@ -12,9 +12,14 @@
           <figcaption>
             <h3 class="heading heading--l">{boatName}</h3>
             <p class="heading heading--m">{retailPrice}</p>
-            <p>{serial.Description__c}</p>
           </figcaption>
         </figure>
+
+        <div class="serialDetails">
+          <lightning-formatted-rich-text
+                  value={serial.Description_Used__c}
+          ></lightning-formatted-rich-text>
+        </div>
 
 <!--        <template if:true={hasPhotoGallery}>-->
 <!--          <section class="intro__gallery">-->

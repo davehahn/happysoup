@@ -74,11 +74,8 @@ export default class FactoryStoreCurrentInventoryList extends NavigationMixin(Li
 		if (this.boat.Base.Package_Length__c) {
 			this.packageLength = convertLength(this.boat.Base.Package_Length__c);
 		}
- }
 
-	renderedCallback(){
 
-	  this.initTabs('details');
 
 		if(this.lookupHasRunPreviously){
 		  console.log('clear stock array');
@@ -170,7 +167,19 @@ export default class FactoryStoreCurrentInventoryList extends NavigationMixin(Li
        				} else {
        					this.parseNonCurrentStock.push(this.storeStock[index]);
            		}
-						}
+						} else {
+						  this.storeStock[index].Base.RetailUpgradeCost = 0;
+							this.storeStock[index].Base.StartingRetailPrice = this.pBoat.Expanded.RetailPrice;
+
+							this.storeStock[index].Base.HasSpecialPrice = (this.storeStock[index].Base.Savings < 0) ? true : false;
+							this.storeStock[index].Base.SpecialRetailPrice = (this.pBoat.Expanded.RetailPrice + this.storeStock[index].Base.Savings);
+
+							if(this.storeStock[index].Base.SerialModelYear === this.modelYear){
+								 this.parseCurrentStock.push(this.storeStock[index]);
+							} else {
+								this.parseNonCurrentStock.push(this.storeStock[index]);
+							}
+      			}
 					});
 					this.triggerStockList();
      		} //if(boats.length > 0){
@@ -178,6 +187,10 @@ export default class FactoryStoreCurrentInventoryList extends NavigationMixin(Li
 				console.log('Fetch Inventory Error: ', e);
 			});
  	}
+
+ 	renderedCallback(){
+  	  this.initTabs('details');
+	}
 
  	triggerStockList(){
 //		console.log('current ' + boatName + ' inventory (component): ', this.storeStock);

@@ -38,11 +38,10 @@ public without sharing class FSInventory_Service {
                 FROM GMBLASERP__Serial_Number__c
                 WHERE Location__c = :location
                 AND GMBLASERP__Product__r.Id = :modelId
-                AND Product_Record_Type__c = 'Boat'
-                AND GMBLASERP__Product__r.Make__c = 'Legend'
+                AND List_on_Retail_Website__c = true
 //                AND Model_Year__c >= :year
-                AND Status__c NOT IN ('Used', 'At Supplier', 'Return to Supplier', 'Demo', 'Display Model')
-                AND Available_Retail__c = true
+                AND Status__c NOT IN ('Used', 'At Supplier', 'Return to Supplier', 'Demo', 'Display Model', 'Boat Show')
+//                AND Available_Retail__c = true
                 ORDER BY Model_Year__c ASC
         ])
         {

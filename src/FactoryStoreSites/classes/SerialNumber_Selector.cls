@@ -19,7 +19,9 @@ public with sharing class SerialNumber_Selector extends Application_Selector {
          'Product_Record_Type__c',
          'Status__c',
          'Description__c',
+         'Description_Used__c',
          'RetailSalePrice__c',
+         'List_on_Retail_Website__c',
          'Default_Gallery_Image__c',
          'Legend_Gallery_Image__c'
         };
