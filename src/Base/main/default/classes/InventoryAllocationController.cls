@@ -1,4 +1,4 @@
-    public without sharing class InventoryAllocationController {
+public without sharing class InventoryAllocationController {
         public class InventoryAllocationException extends Exception {}
         public static Boolean DESCLIST = false;
         private final String queryInv                                  {get;set;}
@@ -1001,8 +1001,10 @@
                 String mls = JSON.serialize(hoverOverRetailSoldDetails.get(pro.Id + yearSection));
                 System.debug(mls);
                 Map<String,List<RetailERP>> retDS = (Map<String,List<RetailERP>>)JSON.deserialize(mls, Map<String,List<RetailERP>>.class);
-                for(RetailERP m : retDS.get('ERP Orders')){
-                    m.erpMaterials = this.mapERPMaterial.get(m.Id);
+                if(retDS.containsKey('ERP Orders')) {
+                    for (RetailERP m : retDS.get('ERP Orders')) {
+                        m.erpMaterials = this.mapERPMaterial.get(m.Id);
+                    }
                 }
                 inv.retailSoldDetails = JSON.serialize(retDS);
                 System.debug('mls');
