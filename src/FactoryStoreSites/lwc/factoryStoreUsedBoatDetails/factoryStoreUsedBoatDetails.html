@@ -4,20 +4,26 @@
 
 <!-- Factory Store Used Boat Details -->
 <template>
-  <div class="serialWrapper">
+  <div class="serialWrapper" style={bannerBg}>
     <article class={serialWrapperClass}>
       <template if:true={serialDataLoaded}>
         <figure class="serialDetails">
+          <div class="vitals__wrapperOuter">
+            <figcaption class="vitals">
+              <h3 class="heading heading--l">
+                <template if:true={isEN}><small>Used</small></template>
+                <template if:true={isFR}><small>Usagé</small></template>
+                {boatName}
+              </h3>
+              <p class="heading heading--m">{retailPrice}</p>
+            </figcaption>
+          </div>
           <span class="featureImage"><img src={serial.Default_Gallery_Image__c} alt="" /></span>
-          <figcaption>
-            <h3 class="heading heading--l">{boatName}</h3>
-            <p class="heading heading--m">{retailPrice}</p>
-          </figcaption>
         </figure>
 
-        <div class="serialDetails">
+        <div class="serialFullDescription">
           <lightning-formatted-rich-text
-                  value={serial.Description_Used__c}
+                  value={fullDescription}
           ></lightning-formatted-rich-text>
         </div>
 

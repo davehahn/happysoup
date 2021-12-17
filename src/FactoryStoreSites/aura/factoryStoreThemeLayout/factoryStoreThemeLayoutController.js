@@ -17,6 +17,14 @@
    doInit : function(component, event, helper) {
    			var locale = $A.get("$Locale.language");
    			var isEN = (locale === 'en') ? true : false;
-   		}
+   	},
+
+//   onRender: function(cmp, event, helper) {
+//       if(!cmp.get("v.isDoneRendering")){
+//         cmp.set("v.isDoneRendering", true);
+//         //do something after component is first rendered
+//         console.log('miniGallery: ' + event.getSource().get('v.miniGallery'));
+//       }
+//     }
 });
 

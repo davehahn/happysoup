@@ -1,12 +1,77 @@
 /**
  * Created by Tim on 2021-09-17.
  */
+.serialWrapper{
+  background-position: center -12em;
+	background-size: 100% contain;
+	background-repeat: no-repeat;
+	width: calc(100% + 24px);
+	margin-top: -0.75rem;
+	margin-left: -12px;
+	padding: 2em;
+}
 
 .serialDetails{
   display: flex;
   align-items: center;
+  justify-content: center;
+  gap: 20px;
 }
 .serialDetails .featureImage{
-  width: 55%;
+  width: 25%;
   margin-right: 5%;
+}
+
+.serialDetails .vitals__wrapperOuter{
+  position: relative;
+  max-width: 540px;
+  min-width: 20%;
+}
+.serialDetails .vitals__wrapperOuter::before{
+  content: ''; display: block;
+	position: absolute;
+	background-color: var(--secondaryHighlight);
+	width: 100%; height: 95%;
+	top: 0; left: 7px;
+	clip-path: polygon(0 0, 85% 0, 100% 15%, 100% 100%, 15% 99%, 0 85%);
+}
+
+
+.serialDetails .vitals{
+  position: relative;
+  background-color: var(--highlight);
+  color: #FFF;
+  height: 100%;
+  padding: 10% 10% 15%;
+  margin: 0.5em 0;
+  clip-path: polygon(0 0, 85% 0, 100% 15%, 100% 100%, 15% 99%, 0 85%);
+}
+
+.serialDetails .vitals .heading small{
+  display: block;
+  font-size: 25%;
+  text-transform: uppercase;
+}
+
+.serialFullDescription{
+  margin-top: 2em;
+}
+.serialFullDescription .slds-rich-text-editor__output span p{
+  margin: 1em 0;
+}
+.serialFullDescription .slds-rich-text-editor__output .mini-gallery{
+  display: flex;
+}
+
+@media screen and (max-width: 740px){
+ .serialDetails{
+   flex-direction: column;
+ }
+ .serialDetails .featureImage{
+   width: 90%;
+   max-width: 380px;
+ }
+ .serialDetails .vitals__wrapperOuter{
+   min-width: 50%;
+ }
 }

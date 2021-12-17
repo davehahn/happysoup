@@ -4,7 +4,8 @@
 
 import { LightningElement, api, wire } from 'lwc';
 import { NavigationMixin, CurrentPageReference } from 'lightning/navigation';
-import { stringy, stripParentheses, rewriteMotorName, rewriteTrailerName, weeklyPayment, formatPrice, setWrapperClass, convertLength } from 'c/communitySharedUtils';
+import { stringy, stripParentheses, rewriteMotorName, rewriteTrailerName, weeklyPayment, formatPrice, setWrapperClass, convertLength, renderEN, renderFR } from 'c/communitySharedUtils';
+import BANNER from '@salesforce/resourceUrl/FactoryStoreModelBanner';
 import fetchSerialNumber from '@salesforce/apex/FactoryStore_InventoryController.fetchSerialNumber';
 //import fetchImages from '@salesforce/apex/FactoryStore_InventoryController.fetchImages';
 
@@ -12,6 +13,11 @@ export default class FactoryStoreUsedBoatDetails extends NavigationMixin(Lightni
 
 	@api recordId;
 	@api sectionWidth;
+
+	isEN = renderEN();
+  	isFR = renderFR();
+
+	bannerBg = 'background-image: url(' + BANNER + ')';
 
 	displayRecordId;
 	serial;
@@ -23,6 +29,10 @@ export default class FactoryStoreUsedBoatDetails extends NavigationMixin(Lightni
 	photoGallery;
 	hasPhotoGallery = false;
 	boatName;
+
+	fullDescription;
+
+	richTextGallery;
 
 	serialWrapperClass = 'serial serial--loading';
 
@@ -58,6 +68,9 @@ export default class FactoryStoreUsedBoatDetails extends NavigationMixin(Lightni
 		this.serialDataLookupRunning =  false;
 		this.serialWrapperClass = setWrapperClass(this.sectionWidth, 'serial');
 		this.boatName = stripParentheses(this.serial.Product_Name__c);
+		this.fullDescription = this.serial.Description_Used__c;
+		this.fullDescription = this.fullDescription.replace('%%START_GALLERY%%', '<div class="mini-gallery">');
+		this.fullDescription = this.fullDescription.replace('%%END_GALLERY%%', '</div>');
 //		fetchImages({serialNumber: this.serial})
 //				.then( (images) => {
 //					console.log('got images: ', images);
@@ -66,7 +79,6 @@ export default class FactoryStoreUsedBoatDetails extends NavigationMixin(Lightni
 //				}).catch(e => {
 //				console.log('fetch images error:', e);
 //		 });
-
 	}
 
 	get retailPrice(){
