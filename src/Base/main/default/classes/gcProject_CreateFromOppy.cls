@@ -46,7 +46,17 @@ global class gcProject_CreateFromOppy {
 
 	global Static Id createProject2(Id idOppy)
 	{
-		return Project_Service.newFromOpportunityId( idOppy ).Id;
+		/// Adding a validation first to check Retail ERP SFISSUES-499
+		Application_RecordType.ERPOrderRTs erpRts = new Application_RecordType().getERPOrderRecordTypes();
+		Set<Id> setIDRTs = new Set<Id>{erpRts.getRetailBoatSaleId(),erpRts.getPartnerRetailBoatSaleId()};
+		AcctSeed__Project__c retailProject;
+		for(AcctSeed__Project__c reProject : [SELECT Id FROM AcctSeed__Project__c WHERE AcctSeed__Opportunity__c =:idOppy AND RecordTypeId IN:setIDRTs LIMIT 1]){
+			retailProject = reProject;
+		}
+		if(retailProject == null)
+			return Project_Service.newFromOpportunityId( idOppy ).Id;
+		else
+			return retailProject.Id;
 	}
 
   global static void coverage(){
