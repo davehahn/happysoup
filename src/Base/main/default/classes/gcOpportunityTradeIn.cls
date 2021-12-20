@@ -162,8 +162,11 @@ public with sharing class gcOpportunityTradeIn {
         FROM Opportunity
         WHERE Id = :idOppy
       ][0];
-      if(!oppy.AcctSeed__Projects__r.isEmpty())
-        throw new gcException('The opportunity already has Trade In ERP Order Created.');
+      if(!oppy.AcctSeed__Projects__r.isEmpty()){
+          /// Not returning an error to check for Retail SFISSUES-499
+          return;
+      }
+        //throw new gcException('The opportunity already has Trade In ERP Order Created.');
 
       String projectName = (oppy.Account.Name.length()>=50?oppy.Account.Name.trim().substring(0,50):oppy.Account.Name) + ' - Trade In';
 
