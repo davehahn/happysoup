@@ -43,12 +43,6 @@ private class gcProjectLaborJobCost_test {
         mat.GMBLASERP__Serial_Number__c = ser.Id;
         mat.GMBLASERP__Lot__c = ser.GMBLASERP__Lot__c;
         insert mat;
-    }
-
-    @IsTest
-    static void testProjectLabourValue()
-    {
-        initMFG();
         AcctSeed__Accounting_Settings__c accSetting = [SELECT AcctSeed__Default_Ledger__c FROM AcctSeed__Accounting_Settings__c ORDER BY CreatedDate][0];
         System.debug('accSetting');
         System.debug(accSetting);
@@ -87,5 +81,30 @@ private class gcProjectLaborJobCost_test {
         /// Inv to WIP to COGS
         String currentDate = Datetime.now().format('dd/MM/yyyy');
         gcProject_AccountingActions.createWipRA(erp.Id,wh.Id,currentDate);
+    }
+
+    @IsTest
+    static void testProjectLabourValue()
+    {
+        initMFG();
+        Test.startTest();
+        system.schedule('Job Cost Labor Cleansweep','0 10 * * * ?',new gcProjectLaborJobCost_BatchSchedulable());
+        Test.stopTest();
+    }
+    @IsTest
+    static void testProjectLabourValueBatch()
+    {
+        initMFG();
+        Test.startTest();
+        Database.executeBatch(new gcProjectLaborJobCost_Batch());
+        Test.stopTest();
+    }
+    @IsTest
+    static void testProjectLabourRefresh()
+    {
+        initMFG();
+        Test.startTest();
+        gcProjectLaborJobCost.refreshJobCost(new Set<Id>{erp.Id},new Set<Date>());
+        Test.stopTest();
     }
 }
