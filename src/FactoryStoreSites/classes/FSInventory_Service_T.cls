@@ -42,7 +42,7 @@ private class FSInventory_Service_T {
             GMBLASERP__Serial_Number__c serial = Factory_SerialNumber.buildSerial(inventoryBoat.Id, lot.Id, 'testSerial-0' + String.valueOf(i));
             serial.Model_Year__c = year;
             serial.GMBLASERP__Inventory_Balance__c = balance.Id;
-            serial.Available_Retail__c = true;
+            serial.List_on_Retail_Website__c = true;
             boatSerials.add(serial);
         }
 
