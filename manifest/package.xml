@@ -5052,6 +5052,8 @@
         <members>ERPPricingUpdate_Test</members>
         <members>ERPPricingUpdate</members>
         <members>gcInventoryReport_MRP_Test</members>
+        <members>ContentVersion_TriggerHandler</members>
+        <members>ContentVersion_TriggerHandler_T</members>
         <name>ApexClass</name>
     </types>
     <types>
@@ -5403,6 +5405,7 @@
         <members>productDeleteTrigger</members>
         <members>Pricebook</members>
         <members>IT_Issue</members>
+        <members>ContentVersion</members>
         <name>ApexTrigger</name>
     </types>
     <types>
@@ -5427,16 +5430,29 @@
         <members>Opportunity.Retail_Sales_Approval</members>
         <members>Product2.Product_Creation_Approval</members>
         <members>Product2.Product_Creation_Approval_No_Serials</members>
+        <members>AcctSeed__Bank_Reconciliation2__c.Bank_Rec_Submit_for_Approval</members>
         <name>ApprovalProcess</name>
     </types>
     <types>
         <members>unfiled$public/BR_Approval_Email</members>
         <members>unfiled$public/BR_Approved_Email</members>
         <members>unfiled$public/BR_Rejection_Email</members>
+        <members>Accounting_Issues</members>
+        <members>Accounting_Issues/Accounting_Issue_Complete</members>
         <name>EmailTemplate</name>
     </types>
     <types>
         <members>MemoryMakerConsole_Home</members>
+        <members>Accounting_Issue</members>
+        <members>Chat_Transcript_FlexiPage</members>
+        <members>IT_Home</members>
+        <members>IT_Issue_Record_Page</members>
+        <members>IT_Issue_Record_Page_Admin</members>
+        <members>Messaging_Session_FlexiPage</members>
+        <members>System_Issue_Admin</members>
+        <members>System_Issue_Epic</members>
+        <members>System_Issue_Epic_Admin</members>
+        <members>System_Issue_Record_Page</members>
         <name>FlexiPage</name>
     </types>
     <types>
@@ -5963,12 +5979,59 @@
         <members>ITReports/System_Issues_Bugs_YOY</members>
         <members>ITReports/System_Issues_This_Year</members>
         <members>ITReports/System_Issues_All_Bugs</members>
+        <members>ITReports/Salesforce_Issues_Completed_Last_Month_N2J</members>
+        <members>Parts_and_Service_Reports/My_Delivered_ERPs_with_Issues_IbJ</members>
         <name>Report</name>
     </types>
     <types>
         <members>AcctSeed__Bank_Reconciliation2__c.Email_Notification_that_the_Bank_Rec_Approval_has_been_Denied</members>
         <members>AcctSeed__Bank_Reconciliation2__c.Sends_an_Email_Alert_the_Bank_Rec_has_been_Approved</members>
         <name>WorkflowAlert</name>
+    </types>
+    <types>
+        <members>SystemIssue_New</members>
+        <members>Template_Header_80_20_SplitContent</members>
+        <members>UtilityBar_CreateAnIssue</members>
+        <name>AuraDefinitionBundle</name>
+    </types>
+    <types>
+        <name>CompactLayout</name>
+    </types>
+    <types>
+        <members>Can_Write_Off_Serial_Number</members>
+        <name>CustomPermission</name>
+    </types>
+    <types>
+        <members>Accounting_Issue__c</members>
+        <members>IT_Issue__c</members>
+        <members>System_Issue__c</members>
+        <name>CustomTab</name>
+    </types>
+    <types>
+        <members>ITDashboards</members>
+        <members>ITDashboards/krIlrgUAxEdQoraWdATvBYTDaQJYwh1</members>
+        <members>ScalingUp</members>
+        <members>ScalingUp/krIlrgUAxEdQoraWdATvBYTDaQJYwh</members>
+        <name>Dashboard</name>
+    </types>
+    <types>
+        <name>FieldSet</name>
+    </types>
+    <types>
+        <members>System_Issues</members>
+        <name>ReportType</name>
+    </types>
+    <types>
+        <members>ChartJS</members>
+        <members>FactoryStoreModelBanner</members>
+        <members>LegendLogoFR</members>
+        <name>StaticResource</name>
+    </types>
+    <types>
+        <name>ValidationRule</name>
+    </types>
+    <types>
+        <name>WebLink</name>
     </types>
     <version>53.0</version>
 </Package>

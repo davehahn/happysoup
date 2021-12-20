@@ -1989,7 +1989,7 @@ public without sharing class InventoryAllocationController {
                   this.retailErpId = null;
                   this.retailErpName = null;
                 }
-                this.accountName = erp.AcctSeed__Account__r.Name + ' Hell';
+                this.accountName = erp.AcctSeed__Account__r.Name;
                 this.idSerial = erp.Serial_Number__c;
                 this.serialName = erp.Serial_Number__r.Name;
                 this.erpStage = erp.Stage__c;
@@ -2008,7 +2008,7 @@ public without sharing class InventoryAllocationController {
                 this.retailErpId = null;
                 this.retailErpName = null;
                 this.boatName = matl.AcctSeedERP__Project__r.Serial_Number__r.Product_Name__c;
-                this.accountName = matl.AcctSeedERP__Project__r.AcctSeed__Account__r.Name + ' Heav';
+                this.accountName = matl.AcctSeedERP__Project__r.AcctSeed__Account__r.Name;
                 this.idSerial = matl.GMBLASERP__Serial_Number__c;
                 this.serialName = matl.GMBLASERP__Serial_Number__c != null ? matl.GMBLASERP__Serial_Number__r.Name : '';
                 this.erpStage = matl.AcctSeedERP__Project__r.Stage__c;
