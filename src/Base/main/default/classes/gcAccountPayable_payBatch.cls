@@ -112,17 +112,18 @@ global with sharing class gcAccountPayable_payBatch {
 		}
 		//Id idGlBank = null;
 		//if(!String.isBlank(selectedAcc)) idGlBank = Id.valueOf(selectedAcc);
+		try {
+			Id idBatch = pay(setIdAp, cdHolder);
 
-		Id idBatch = pay(setIdAp, cdHolder);
-
-		if(idBatch == null)
-		{
-			ApexPages.addMessage(new ApexPages.message(ApexPages.severity.WARNING,'There are no qualifying AP records.'));
-			return null;  
-		}
-		else
-		{
-			return new pageReference('/' + idBatch);
+			if (idBatch == null) {
+				ApexPages.addMessage(new ApexPages.message(ApexPages.severity.WARNING, 'There are no qualifying AP records.'));
+				return null;
+			} else {
+				return new pageReference('/' + idBatch);
+			}
+		}catch(Exception e){
+			ApexPages.addMessage(new ApexPages.message(ApexPages.severity.ERROR, e.getMessage()));
+			return null;
 		}
 	}
 
@@ -154,6 +155,7 @@ global with sharing class gcAccountPayable_payBatch {
 		Date disbursementDate = cdHolder.AcctSeed__Disbursement_Date__c;
 		Id idGlBank = cdHolder.AcctSeed__Bank_Account__c;
 		Id idGlV1 = cdHolder.AcctSeed__GL_Account_Variable_1__c;
+		Id idGlV4 = cdHolder.AcctSeed__GL_Account_Variable_4__c;
 		Id idCashFlowCategory = cdHolder.AcctSeed__Cash_Flow_Category__c;
 		//Id idGlBank = selectedAcc;
 		Id idGlDiscount = null;
@@ -235,6 +237,7 @@ global with sharing class gcAccountPayable_payBatch {
 					AcctSeed__Disbursement_Date__c = disbursementDate,
 					AcctSeed__Debit_GL_Account__c = gcConstants.idGlAPayable,
 					AcctSeed__GL_Account_Variable_1__c = idGlV1,
+					AcctSeed__GL_Account_Variable_4__c = idGlV4,
 					AcctSeed__Cash_Flow_Category__c = idCashFlowCategory,
 					AcctSeed__Source__c = 'Account Payable'
 					//AcctSeed__Check_Number__c = nextCheckNumber
