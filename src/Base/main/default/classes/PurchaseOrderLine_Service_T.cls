@@ -59,6 +59,11 @@ private class PurchaseOrderLine_Service_T
       vendor.Id, null
     );
     pols = new List<AcctSeedERP__Purchase_Order_Line__c>();
+    GMBLASERP__Lot__c lot = new GMBLASERP__Lot__c(
+      GMBLASERP__Product__c = boat.Id,
+      Name = String.valueOf( Date.today().year() )
+    );
+    insert lot;
     for( AcctSeed__Project__c erp : partnerERPs )
     {
       AcctSeedERP__Purchase_Order_Line__c pol = Factory_PurchaseOrder.buildLineItem(
@@ -68,12 +73,12 @@ private class PurchaseOrderLine_Service_T
       );
       pol.AcctSeedERP__Project__c = erp.Id;
       pol.AcctSeedERP__Project_Task__c = erp.AcctSeed__Project_Tasks__r[0].Id;
+      pol.GMBLASERP__Lot__c = lot.Id;
       pols.add( pol );
     }
-    gcPurchaseOrderLine.disableTrigger = true;
-    lgndPurchaseOrderLine.disableTrigger = true;
+    TriggerBase.bypass('AcctSeedERP__Purchase_Order_Line__c');
     insert pols;
-    lgndPurchaseOrderLine.disableTrigger = false;
+    TriggerBase.clearBypass('AcctSeedERP__Purchase_Order_Line__c');
   }
 
   @IsTest
@@ -82,11 +87,10 @@ private class PurchaseOrderLine_Service_T
     initData();
     AcctSeedERP__Purchase_Order_Line__c pol = pols[0];
     Date deliverDate = Date.today().addMonths(2);
-    Boolean orig = lgndPurchaseOrderLine.disableTrigger;
-    lgndPurchaseOrderLine.disableTrigger = true;
+    TriggerBase.bypass('AcctSeedERP__Purchase_Order_Line__c');
     pol.deliverDate__c = deliverDate;
     update pol;
-    lgndPurchaseOrderLine.disableTrigger = orig;
+    TriggerBase.clearBypass('AcctSeedERP__Purchase_Order_Line__c');
     Test.startTest();
     PurchaseOrderLine_Service.propagateDeliveryDate( new Set<Id>{ pol.Id } );
     Test.stopTest();
@@ -131,8 +135,7 @@ private class PurchaseOrderLine_Service_T
   {
     initData();
     Date deliverDate = Date.today().addMonths(2);
-    Boolean orig = lgndPurchaseOrderLine.disableTrigger;
-    lgndPurchaseOrderLine.disableTrigger = true;
+    TriggerBase.bypass('AcctSeedERP__Purchase_Order_Line__c');
     Set<Id> polIds = new Set<Id>();
     for( AcctSeedERP__Purchase_Order_Line__c pol : pols )
     {
@@ -140,7 +143,7 @@ private class PurchaseOrderLine_Service_T
       polIds.add( pol.Id );
     }
     update pols;
-    lgndPurchaseOrderLine.disableTrigger = orig;
+    TriggerBase.clearBypass('AcctSeedERP__Purchase_Order_Line__c');
     Test.startTest();
     PurchaseOrderLine_Service.propagateDeliveryDate( polIds );
     Test.stopTest();
