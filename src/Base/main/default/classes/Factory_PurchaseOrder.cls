@@ -1,13 +1,12 @@
 @isTest
 public with sharing class Factory_PurchaseOrder {
 
-  public static AcctSeedERP__Purchase_Order__c createMinimalPO( Id vendorId,
-                                                                Id shipToId )
+  public static AcctSeedERP__Purchase_Order__c buildMinimalPO(
+    Id vendorId,
+    Id shipToId
+  )
   {
-    //AcctSeed__Billing_Format__c pdf_format = [SELECT Id FROM AcctSeed__Billing_Format__c LIMIT 1];
-    //AcctSeedERP__Warehouse__c wh = [SELECT Id FROM AcctSeedERP__Warehouse__c LIMIT 1];
-    //AcctSeed__Ledger__c ledger = [SELECT Id FROM AcctSeed__Ledger__c LIMIT 1];
-    AcctSeedERP__Purchase_Order__c po = new AcctSeedERP__Purchase_Order__c(
+    return new AcctSeedERP__Purchase_Order__c(
       AcctSeedERP__Shipping_Company__c = shipToId,
       AcctSeedERP__Vendor__c = vendorId,
       AcctSeedERP__Type__c = 'Standard',
@@ -15,7 +14,15 @@ public with sharing class Factory_PurchaseOrder {
       AcctSeedERP__Purchase_Order_Format__c = Test_Constants.idPdfFormat,
       Warehouse__c = Test_Constants.idWareHouse,
       AcctSeedERP__Ledger__c = Test_Constants.idLedger
-      //AcctSeedERP__Vendor_Country__c = 'Canada'
+    );
+  }
+
+  public static AcctSeedERP__Purchase_Order__c createMinimalPO( Id vendorId,
+    Id shipToId )
+  {
+    AcctSeedERP__Purchase_Order__c po  = buildMinimalPO(
+      vendorId,
+      shipToId
     );
     insert po;
     return po;
