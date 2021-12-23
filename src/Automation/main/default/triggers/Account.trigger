@@ -11,5 +11,6 @@ trigger Account on Account (
   after delete,
   after undelete )
 {
-  new Account_TriggerHandler().run();
+//  new Account_TriggerHandler().run();
+  new MetadataTriggerHandler().run();
 }
