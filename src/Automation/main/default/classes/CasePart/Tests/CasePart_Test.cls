@@ -37,19 +37,19 @@ private class CasePart_Test {
   }
 
   /* should have a material associated with it after create */
-  //@isTest( seeAllData=true )
   @isTest
-  static void createTest()
+  static void TA_CasePart_CreateMaterial_Test()
   {
     init();
     System.runAs( partner )
     {
-      Test.startTest();
       Case c = Factory_Case.createWarrantyCase( dealer );
       Account supplier = AccountFactory.buildSupplierAccount('Test supplier');
       insert supplier;
       CaseLexController.createWarrantyRecoverableERP( supplier.Id, c.Id );
-      Case_Part__c[] cParts = buildCaseParts( c, 2 );
+      Test.startTest();
+      buildCaseParts( c, 2 );
+      Test.stopTest();
       c = [SELECT Id, Warranty_ERP__c, Recoverable_Erp__c FROM Case WHERE Id = :c.Id];
       AcctSeedERP__Material__c[] mats = [SELECT Id
                                          FROM AcctSeedERP__Material__c
@@ -57,42 +57,63 @@ private class CasePart_Test {
       AcctSeedERP__Material__c[] mats_r = [SELECT Id
                                          FROM AcctSeedERP__Material__c
                                          WHERE AcctSeedERP__Project__c = :c.Recoverable_ERP__c ];
-      Test.stopTest();
       System.assertEquals( 2, mats.size() );
       System.assertEquals( 2, mats_r.size() );
     }
   }
 
-  //@isTest( seeAllData=true )
   @isTest
-  static void deleteTest()
+  static void TA_CasePart_DeleteMaterial_Test()
   {
     init();
     System.runAs( partner )
     {
-      Test.startTest();
+      TriggerBase.bypass('Case_Part__c');
       Case c = Factory_Case.createWarrantyCase( dealer );
       Account supplier = AccountFactory.buildSupplierAccount('Test supplier');
       insert supplier;
       CaseLexController.createWarrantyRecoverableERP( supplier.Id, c.Id );
       Case_Part__c[] cParts = buildCaseParts( c, 2 );
       c = [SELECT Id, Warranty_ERP__c, Recoverable_ERP__c FROM Case WHERE Id = :c.Id];
-      AcctSeedERP__Material__c[] mats_before = [SELECT Id
-                                                FROM AcctSeedERP__Material__c
-                                                WHERE AcctSeedERP__Project__c = :c.Warranty_ERP__c ];
-      AcctSeedERP__Material__c[] mats_r_before = [SELECT Id
-                                                FROM AcctSeedERP__Material__c
-                                                WHERE AcctSeedERP__Project__c = :c.Recoverable_ERP__c ];
+      AcctSeed__Project__c wERP = [SELECT Id, (SELECT Id FROM AcctSeed__Project_Tasks__r) FROM AcctSeed__Project__c WHERE Id = :c.Warranty_ERP__c];
+      AcctSeed__Project__c rERP = [SELECT Id, (SELECT Id FROM AcctSeed__Project_Tasks__r) FROM AcctSeed__Project__c WHERE Id = :c.Recoverable_ERP__c];
+
+      AcctSeedERP__Material__c[] mats = new List<AcctSeedERP__Material__c>();
+
+
+      for( Case_Part__c cp : cParts ){
+        mats.add( new AcctSeedERP__Material__c(
+          AcctSeedERP__Product__c = cp.Product__c,
+          AcctSeedERP__Quantity_Per_Unit__c = cp.Quantity__c,
+          AcctSeedERP__Project__c = wERP.Id,
+          AcctSeedERP__Project_Task__c = wERP.AcctSeed__Project_Tasks__r[0].Id,
+          GMBLASERP__Unit_Price__c = cp.Unit_Price__c,
+          Case_Part__c = cp.Id
+        ));
+        mats.add( new AcctSeedERP__Material__c(
+          AcctSeedERP__Product__c = cp.Product__c,
+          AcctSeedERP__Quantity_Per_Unit__c = cp.Quantity__c,
+          AcctSeedERP__Project__c = rERP.Id,
+          AcctSeedERP__Project_Task__c = rERP.AcctSeed__Project_Tasks__r[0].Id,
+          GMBLASERP__Unit_Price__c = cp.Unit_Price__c,
+          Case_Part__c = cp.Id
+        ));
+      }
+
+      insert mats;
+      TriggerBase.clearBypass('Case_Part__c');
+
+      Test.startTest();
       delete cParts[0];
+      Test.stopTest();
+
       AcctSeedERP__Material__c[] mats_after = [SELECT Id
                                                FROM AcctSeedERP__Material__c
                                                WHERE AcctSeedERP__Project__c = :c.Warranty_ERP__c ];
       AcctSeedERP__Material__c[] mats_r_after = [SELECT Id
                                                 FROM AcctSeedERP__Material__c
                                                 WHERE AcctSeedERP__Project__c = :c.Recoverable_ERP__c ];
-      Test.stopTest();
-      System.assertEquals(2, mats_before.size());
-      System.assertEquals(2, mats_r_before.size());
+      System.assertEquals( 4, mats.size() );
       System.assertEquals(1, mats_after.size());
       System.assertEquals(1, mats_r_after.size());
     }

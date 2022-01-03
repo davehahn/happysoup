@@ -85,4 +85,8 @@ public with sharing class Material_Selector extends Application_Selector {
       Material_Selector.selectAllByIds(matIds)
     );
   }
+
+  public static List<AcctSeedERP__Material__c> allByCasePartIds( Set<id> casePartIds ){
+    return new Material_Selector().addWhereIdInField( casePartIds, 'Case_Part__c' ).query();
+  }
 }
