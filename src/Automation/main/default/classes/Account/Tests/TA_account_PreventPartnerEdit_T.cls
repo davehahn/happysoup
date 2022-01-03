@@ -24,12 +24,7 @@ private class TA_account_PreventPartnerEdit_T {
 
   @IsTest
   static void standardUser_DealerAccountUpdate_Test() {
-    User stduser = Factory_User.newUser(
-      'Standard',
-      'TestUser',
-      'System Administrator',
-      null
-    );
+    User stduser = Factory_User.newUser('Standard', 'TestUser', 'System Administrator', null);
     buildTriggerVariables();
     System.runAs(stduser) {
       new TA_Account_PreventPartnerEdit().beforeUpdate(newList, oldList);
@@ -62,12 +57,7 @@ private class TA_account_PreventPartnerEdit_T {
       try {
         new TA_Account_PreventPartnerEdit().beforeUpdate(newList, oldList);
       } catch (Exception e) {
-        System.assert(
-          e.getMessage()
-            .contains(
-              'You are not allowed to edit another Partners information'
-            )
-        );
+        System.assert(e.getMessage().contains('You are not allowed to edit another Partners information'));
       }
     }
   }

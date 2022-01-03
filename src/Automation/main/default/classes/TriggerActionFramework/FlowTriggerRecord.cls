@@ -16,52 +16,52 @@
 
 @SuppressWarnings('PMD.EmptyStatementBlock')
 public abstract class FlowTriggerRecord {
-	public static Map<String, SObject> triggerActionFlowIdAndIndexToNewRecord = new Map<String, SObject>();
-	private static final String INVALID_INPUT = 'The index of new list and the Flow identifier are required.';
-	@TestVisible
-	private static final String PIPE = '|';
-	private Integer newListIndex;
-	private Integer triggerActionFlowId;
+  public static Map<String, SObject> triggerActionFlowIdAndIndexToNewRecord = new Map<String, SObject>();
+  private static final String INVALID_INPUT = 'The index of new list and the Flow identifier are required.';
+  @TestVisible
+  private static final String PIPE = '|';
+  private Integer newListIndex;
+  private Integer triggerActionFlowId;
 
-	public FlowTriggerRecord() {
-		// no argument constructor necessary to use Type.ForName
-	}
+  public FlowTriggerRecord() {
+    // no argument constructor necessary to use Type.ForName
+  }
 
-	protected FlowTriggerRecord(
-		SObject newSobject,
-		SObject oldSObject,
-		Integer newListIndex,
-		Integer triggerActionFlowId
-	) {
-		this.newListIndex = newListIndex;
-		this.triggerActionFlowId = triggerActionFlowId;
-		this.newSobject = newSobject;
-		this.oldSobject = oldSobject;
-	}
+  protected FlowTriggerRecord(
+    SObject newSobject,
+    SObject oldSObject,
+    Integer newListIndex,
+    Integer triggerActionFlowId
+  ) {
+    this.newListIndex = newListIndex;
+    this.triggerActionFlowId = triggerActionFlowId;
+    this.newSobject = newSobject;
+    this.oldSobject = oldSobject;
+  }
 
-	public abstract Map<String, Object> getFlowInput(
-		List<SObject> newList,
-		List<SObject> oldList,
-		Integer triggerActionFlowId
-	);
+  public abstract Map<String, Object> getFlowInput(
+    List<SObject> newList,
+    List<SObject> oldList,
+    Integer triggerActionFlowId
+  );
 
-	protected SObject newSobject {
-		get {
-			return newSobject;
-		}
-		set {
-			if (this.newListIndex == null || triggerActionFlowId == null) {
-				throw new IllegalArgumentException(INVALID_INPUT);
-			}
-			this.newSobject = value;
-			FlowTriggerRecord.triggerActionFlowIdAndIndexToNewRecord.put(
-				this.triggerActionFlowId +
-				PIPE +
-				this.newListIndex,
-				newSobject
-			);
-		}
-	}
+  protected SObject newSobject {
+    get {
+      return newSobject;
+    }
+    set {
+      if (this.newListIndex == null || triggerActionFlowId == null) {
+        throw new IllegalArgumentException(INVALID_INPUT);
+      }
+      this.newSobject = value;
+      FlowTriggerRecord.triggerActionFlowIdAndIndexToNewRecord.put(
+        this.triggerActionFlowId +
+        PIPE +
+        this.newListIndex,
+        newSobject
+      );
+    }
+  }
 
-	protected SObject oldSobject;
+  protected SObject oldSobject;
 }

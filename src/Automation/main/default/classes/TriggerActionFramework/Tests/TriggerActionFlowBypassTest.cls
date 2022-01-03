@@ -16,107 +16,85 @@
 
 @IsTest(isParallel=true)
 private class TriggerActionFlowBypassTest {
-	private static final String MY_STRING = 'MY_STRING';
-	private static List<TriggerActionFlowBypass.Request> requests = new List<TriggerActionFlowBypass.Request>();
-	private static TriggerActionFlowBypass.Request request = new TriggerActionFlowBypass.Request();
-	private static Exception myException;
+  private static final String MY_STRING = 'MY_STRING';
+  private static List<TriggerActionFlowBypass.Request> requests = new List<TriggerActionFlowBypass.Request>();
+  private static TriggerActionFlowBypass.Request request = new TriggerActionFlowBypass.Request();
+  private static Exception myException;
 
-	@IsTest
-	private static void bypassObjectShouldSucceedWithValidRequest() {
-		request.Name = MY_STRING;
-		request.bypassType = TriggerActionFlow.OBJECT_STRING;
-		requests.add(request);
+  @IsTest
+  private static void bypassObjectShouldSucceedWithValidRequest() {
+    request.Name = MY_STRING;
+    request.bypassType = TriggerActionFlow.OBJECT_STRING;
+    requests.add(request);
 
-		TriggerActionFlowBypass.bypass(requests);
+    TriggerActionFlowBypass.bypass(requests);
 
-		System.assertEquals(
-			true,
-			TriggerBase.isBypassed(MY_STRING),
-			'The Object should be bypassed'
-		);
-	}
+    System.assertEquals(true, TriggerBase.isBypassed(MY_STRING), 'The Object should be bypassed');
+  }
 
-	@IsTest
-	private static void bypassApexShouldSucceedWithValidRequest() {
-		request.Name = MY_STRING;
-		request.bypassType = TriggerActionFlow.APEX_STRING;
-		requests.add(request);
+  @IsTest
+  private static void bypassApexShouldSucceedWithValidRequest() {
+    request.Name = MY_STRING;
+    request.bypassType = TriggerActionFlow.APEX_STRING;
+    requests.add(request);
 
-		TriggerActionFlowBypass.bypass(requests);
+    TriggerActionFlowBypass.bypass(requests);
 
-		System.assertEquals(
-			true,
-			MetadataTriggerHandler.isBypassed(MY_STRING),
-			'The Apex should be bypassed'
-		);
-	}
+    System.assertEquals(true, MetadataTriggerHandler.isBypassed(MY_STRING), 'The Apex should be bypassed');
+  }
 
-	@IsTest
-	private static void bypassFlowShouldSucceedWithValidRequest() {
-		request.Name = MY_STRING;
-		request.bypassType = TriggerActionFlow.FLOW_STRING;
-		requests.add(request);
+  @IsTest
+  private static void bypassFlowShouldSucceedWithValidRequest() {
+    request.Name = MY_STRING;
+    request.bypassType = TriggerActionFlow.FLOW_STRING;
+    requests.add(request);
 
-		TriggerActionFlowBypass.bypass(requests);
+    TriggerActionFlowBypass.bypass(requests);
 
-		System.assertEquals(
-			true,
-			TriggerActionFlow.isBypassed(MY_STRING),
-			'The Flow should be bypassed'
-		);
-	}
+    System.assertEquals(true, TriggerActionFlow.isBypassed(MY_STRING), 'The Flow should be bypassed');
+  }
 
-	@IsTest
-	private static void bypassShouldFailWithInvalidRequest() {
-		try {
-			TriggerActionFlowBypass.bypass(
-				new List<TriggerActionFlowBypass.Request>()
-			);
-		} catch (Exception e) {
-			myException = e;
-		}
+  @IsTest
+  private static void bypassShouldFailWithInvalidRequest() {
+    try {
+      TriggerActionFlowBypass.bypass(new List<TriggerActionFlowBypass.Request>());
+    } catch (Exception e) {
+      myException = e;
+    }
 
-		System.assertNotEquals(
-			null,
-			myException,
-			'We should have an exception thrown in this scenario'
-		);
-		System.assert(
-			myException instanceof TriggerActionFlowBypass.TriggerActionFlowBypassObjectException,
-			'The exception should be of the correct type'
-		);
-		System.assertEquals(
-			myException.getMessage(),
-			TriggerActionFlowBypass.INVALID_REQUEST,
-			'The exeption should contain the message we are looking for'
-		);
-	}
+    System.assertNotEquals(null, myException, 'We should have an exception thrown in this scenario');
+    System.assert(
+      myException instanceof TriggerActionFlowBypass.TriggerActionFlowBypassObjectException,
+      'The exception should be of the correct type'
+    );
+    System.assertEquals(
+      myException.getMessage(),
+      TriggerActionFlowBypass.INVALID_REQUEST,
+      'The exeption should contain the message we are looking for'
+    );
+  }
 
-	@IsTest
-	private static void bypassShouldFailWithInvalidType() {
-		request.Name = MY_STRING;
-		request.bypassType = MY_STRING;
-		requests.add(request);
+  @IsTest
+  private static void bypassShouldFailWithInvalidType() {
+    request.Name = MY_STRING;
+    request.bypassType = MY_STRING;
+    requests.add(request);
 
-		try {
-			TriggerActionFlowBypass.bypass(requests);
-		} catch (Exception e) {
-			myException = e;
-		}
+    try {
+      TriggerActionFlowBypass.bypass(requests);
+    } catch (Exception e) {
+      myException = e;
+    }
 
-		System.assertNotEquals(
-			null,
-			myException,
-			'We should have an exception thrown in this scenario'
-		);
-		System.assert(
-			myException instanceof TriggerActionFlowBypass.TriggerActionFlowBypassObjectException,
-			'The exception should be of the correct type'
-		);
-		System.assertEquals(
-			myException.getMessage(),
-			TriggerActionFlow.INVALID_TYPE,
-			'The exeption should contain the message we are looking for'
-		);
-	}
+    System.assertNotEquals(null, myException, 'We should have an exception thrown in this scenario');
+    System.assert(
+      myException instanceof TriggerActionFlowBypass.TriggerActionFlowBypassObjectException,
+      'The exception should be of the correct type'
+    );
+    System.assertEquals(
+      myException.getMessage(),
+      TriggerActionFlow.INVALID_TYPE,
+      'The exeption should contain the message we are looking for'
+    );
+  }
 }
