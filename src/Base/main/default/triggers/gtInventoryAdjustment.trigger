@@ -11,4 +11,4 @@ trigger gtInventoryAdjustment on GMBLASERP__Inventory_Adjustment__c (after delet
 //			 trigger.isUpdate,
 //			 trigger.isDelete);
 //	}
-}   
+}
