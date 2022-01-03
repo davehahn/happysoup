@@ -24,7 +24,7 @@ private class gcPurchaseOrderInventoryMovement_Test{
       AcctSeedERP__Warehouse__c = wh.Id
     );
     insert loc;
-    Product2 part = Factory_Product.createNonSerializedProduct('Part', 'Electronics');
+    Product2 part = Factory_Product.createNonSerializedProduct('Part', 'Hardware');
     AcctSeedERP__Inventory_Balance__c balance = new AcctSeedERP__Inventory_Balance__c(
       AcctSeedERP__Location__c = loc.Id,
       AcctSeedERP__Warehouse__c = wh.Id,

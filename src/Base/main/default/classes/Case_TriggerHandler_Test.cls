@@ -302,7 +302,7 @@ private class Case_TriggerHandler_Test {
 		initForWarranty();
 		partner = [SELECT Id, ContactId, AccountId FROM USer WHERE Id = :partner.Id ];
 		Product2 boat = Factory_Product.createSerializedProducts('Boat', 'Pontoon', 1)[0];
-		Product2 part = Factory_Product.createNonSerializedProduct('Part', 'Electronics');
+		Product2 part = Factory_Product.createNonSerializedProduct('Part', 'Hardware');
 		AcctSeed__Project__c erp = Factory_ERPOrder.createPartnerBoatSales( dealer, new List<Product2>{boat}, 1)[0];
 		Promotion__c promo = Factory_Promotion.buildPromotions(1)[0];
 		promo.Available_On__c = 'Reservation';

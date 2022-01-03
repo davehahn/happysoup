@@ -68,7 +68,7 @@ private class lgnd_QuickPartsCreateController_Test {
   @isTest
   static void fetchInitOptions_withLinkedMercuryProduct_Test()
   {
-    Product2 p = Factory_Product.createNonSerializedProduct( 'Part', 'Electronics' );
+    Product2 p = Factory_Product.createNonSerializedProduct( 'Part', 'Hardware' );
     Mercury_Product__c mp = new Mercury_Product__c(
       Description__c = 'Test Merc Part',
       Code__c = '1000001-test',

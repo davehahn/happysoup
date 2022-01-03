@@ -5,7 +5,7 @@ private class Batch_SandboxRefresh_Tests {
     Product2[] parts = new List<Product2>();
     for (Integer i = 0; i < 200; i++) {
       parts.add(
-        Factory_Product.buildNonSerializedProduct('Part', 'Electronics')
+        Factory_Product.buildNonSerializedProduct('Part', 'Hardware')
       );
     }
     insert parts;
@@ -73,7 +73,7 @@ private class Batch_SandboxRefresh_Tests {
   static void createPricebookEntries_Test() {
     Product2[] parts = Factory_Product.buildNonSerializedProducts(
       'Part',
-      'Electronics',
+      'Hardware',
       20
     );
     insert parts;

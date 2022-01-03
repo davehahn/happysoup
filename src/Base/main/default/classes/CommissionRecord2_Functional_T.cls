@@ -55,7 +55,7 @@ private class CommissionRecord2_Functional_T
 
   private static void setupPB(Decimal retailPrice, Decimal factoryPrice){
     Legend_Settings__c settings = Legend_Settings__c.getOrgDefaults();
-    products = Factory_Product.createNonSerializedProducts( 'Part', 'Electronics', 10 );
+    products = Factory_Product.createNonSerializedProducts( 'Part', 'Hardware', 10 );
     Factory_PricebookEntry.insertStandardEntries( products, 100 );
     List<PricebookEntry> pbes = new List<PricebookEntry>();
     pbes.addAll(
@@ -281,7 +281,7 @@ private class CommissionRecord2_Functional_T
 
     insert retailRigTask;
 
-    for( Product2 p : Factory_Product.createNonSerializedProducts( 'Part', 'Electronics', 2 ) )
+    for( Product2 p : Factory_Product.createNonSerializedProducts( 'Part', 'Hardware', 2 ) )
     {
       materials.add( new AcctSeedERP__Material__c(
         AcctSeedERP__Product__c = p.Id,

@@ -19,12 +19,12 @@ private class ProductPart_Selector_T
   {
     parentProducts = Factory_Product.createNonSerializedProducts(
       'Part',
-      'Electronics',
+      'Hardware',
       4
     );
     parts = Factory_Product.createNonSerializedProducts(
       'Part',
-      'Electronics',
+      'Hardware',
       10
     );
     productParts = new List<AcctSeed__Product_Part__c>();

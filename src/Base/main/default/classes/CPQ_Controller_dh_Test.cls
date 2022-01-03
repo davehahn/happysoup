@@ -367,8 +367,8 @@ private class CPQ_Controller_dh_Test {
   static void fetchSubOptions_Test()
   {
     Test.startTest();
-    Product2 parent = Factory_Product.buildNonSerializedProduct('Part', 'Electronics');
-    Product2[] children = Factory_Product.buildNonSerializedProducts('Part', 'Electronics', 5);
+    Product2 parent = Factory_Product.buildNonSerializedProduct('Part', 'Hardware');
+    Product2[] children = Factory_Product.buildNonSerializedProducts('Part', 'Hardware', 5);
     Product2[] allPs = new List<Product2>();
     allPs.add( parent );
     allPs.addAll( children );

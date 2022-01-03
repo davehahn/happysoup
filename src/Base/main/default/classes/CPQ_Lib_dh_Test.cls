@@ -428,7 +428,7 @@ private class CPQ_Lib_dh_Test {
   @isTest
   static void CPQ_SaleLineItem_FromOptionProduct()
   {
-    setOptionAttrs('Electronics', false);
+    setOptionAttrs('Hardware', false);
     //setupOpportunity();
     CPQ_Lib_dh.OptionProduct op = new CPQ_Lib_dh.OptionProduct( optionProduct, null, 1, 2 );
     op.quantitySelected = 2;
@@ -443,7 +443,7 @@ private class CPQ_Lib_dh_Test {
   static void CPQ_SaleLineItem_FromOppLine_Test()
   {
     setupOpportunity(false);
-    Product2 part = Factory_Product.createNonSerializedProduct('Part', 'Electronics');
+    Product2 part = Factory_Product.createNonSerializedProduct('Part', 'Hardware');
     Factory_PricebookEntry.createAllDefaultEntriesEntries( part.Id, 100 );
     PricebookEntry pbe = [SELECT Id, UnitPrice
                           FROM PricebookEntry
@@ -475,7 +475,7 @@ private class CPQ_Lib_dh_Test {
   static void CPQ_SaleLineItem_FromQuoteLine_Test()
   {
     setupOpportunity(true);
-    Product2 part = Factory_Product.createNonSerializedProduct('Part', 'Electronics');
+    Product2 part = Factory_Product.createNonSerializedProduct('Part', 'Hardware');
     Factory_PricebookEntry.createAllDefaultEntriesEntries( part.Id, 100 );
     PricebookEntry pbe = [SELECT Id, UnitPrice
                           FROM PricebookEntry
@@ -518,7 +518,7 @@ private class CPQ_Lib_dh_Test {
   @isTest
   static void CPQ_SubOption_Test()
   {
-    setOptionAttrs('Electronics', true);
+    setOptionAttrs('Hardware', true);
     Test.startTest();
     CPQ_Lib_dh.SubOptionProduct sop = new CPQ_Lib_dh.SubOptionProduct( subOptionProduct,
                                                                        optionProduct.Id,
@@ -814,7 +814,7 @@ private class CPQ_Lib_dh_Test {
   //Legacy found in Business office tools
 	@isTest static void OptionWrapper_Test()
   {
-    Product2 p = Factory_Product.createNonSerializedProduct('Part', 'Electronics');
+    Product2 p = Factory_Product.createNonSerializedProduct('Part', 'Hardware');
     PricebookEntry pbe = Factory_PricebookEntry.createStandardEntry( p.Id, 10 );
     pbe = [SELECT Id,
                   Product2.Name,

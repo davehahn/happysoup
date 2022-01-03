@@ -15,8 +15,8 @@ private class Mercury_Product_dh_Test {
   private static void init( Integer productCount, Boolean createPbEntries )
   {
     Id mercAccount = Utility_Account__c.getOrgDefaults().Mercury__c;
-    prods = Factory_Product.buildNonSerializedProducts('Part', 'Electronics', productCount);
-    merc_prods = Factory_Product.buildNonSerializedProducts('Part', 'Electronics', productCount);
+    prods = Factory_Product.buildNonSerializedProducts('Part', 'Hardware', productCount);
+    merc_prods = Factory_Product.buildNonSerializedProducts('Part', 'Hardware', productCount);
     for( Product2 p : merc_prods )
     {
       p.AcctSeedERP__Default_Vendor__c = mercAccount;

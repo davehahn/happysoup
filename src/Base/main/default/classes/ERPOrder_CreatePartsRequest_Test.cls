@@ -33,7 +33,7 @@ private class ERPOrder_CreatePartsRequest_Test {
   {
     AcctSeed__Project_Task__c task = Factory_ERPOrder.buildProjectTask( serviceOrder.Id, 'Testing Task' );
     insert task;
-    Product2[] parts = Factory_Product.buildNonSerializedProducts( 'Part', 'Electronics', materialCount);
+    Product2[] parts = Factory_Product.buildNonSerializedProducts( 'Part', 'Hardware', materialCount);
     insert parts;
     mats = Factory_ERPOrder.buildMaterials( serviceOrder.Id,
                                             task.Id,

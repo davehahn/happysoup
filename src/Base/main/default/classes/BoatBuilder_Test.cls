@@ -573,7 +573,7 @@ private class BoatBuilder_Test {
     //    insert new Product_Fee_Map__c(Parent_Product__c = bb.selectedMotorId, Fee_Product__c = feeProducts[0].Id);
     //    bb.selectMotor();
     //    //running price should now be 700
-    //    //select 1 Electronics option and 1 of its sub options
+    //    //select 1 Hardware option and 1 of its sub options
     //    String eOptionPid;
     //    for( String id: bb.availableBoatOptions.get( bb_p_families.get(0) ).keySet() ){
     //        eOptionPid = id;

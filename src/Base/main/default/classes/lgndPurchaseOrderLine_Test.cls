@@ -7,12 +7,8 @@ private class lgndPurchaseOrderLine_Test {
     Factory_CustomSettings.setupInventorySettings();
   }
 
-	@isTest static void coverageTest() {
-		lgndPurchaseOrderLine.coverage();
-	}
-
 	@isTest static void triggerTest() {
-		Product2 boat = Factory_Product.createNonSerializedProduct( 'Part', 'Electronics');
+		Product2 boat = Factory_Product.createNonSerializedProduct( 'Part', 'Hardware');
     AcctSeed__Ledger__c ledger = [SELECT Id FROM AcctSeed__Ledger__c LIMIT 1];
     AcctSeedERP__Purchase_Order__c po =  new AcctSeedERP__Purchase_Order__c(
       AcctSeedERP__Order_Date__c = date.Today(),

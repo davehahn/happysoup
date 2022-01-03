@@ -25,7 +25,7 @@ private class QuoteLineItem_TriggerHandler_Test {
   {
     qlis = new List<QuoteLineItem>();
     Product2[] prods = new List<Product2>();
-    for( Product2 p : Factory_Product.buildNonSerializedProducts('Part', 'Electronics', 5) )
+    for( Product2 p : Factory_Product.buildNonSerializedProducts('Part', 'Hardware', 5) )
     {
       p.Taxable__c = true;
       prods.add( p );

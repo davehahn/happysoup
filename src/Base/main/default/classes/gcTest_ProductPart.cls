@@ -14,7 +14,7 @@ private class gcTest_ProductPart{
 
   static testMethod void trigger_Test()
   {
-    Product2[] parts = Factory_Product.buildNonSerializedProducts('Part', 'Electronics', 2);
+    Product2[] parts = Factory_Product.buildNonSerializedProducts('Part', 'Hardware', 2);
     insert parts;
   	insert new AcctSeed__Product_Part__c(
       AcctSeed__Product__c = parts[0].Id,
