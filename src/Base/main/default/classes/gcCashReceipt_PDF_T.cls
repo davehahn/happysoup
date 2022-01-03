@@ -61,7 +61,7 @@ public class gcCashReceipt_PDF_T {
             erp_task_map.put( erp.Id, Factory_ERPOrder.buildProjectTask( erp.Id, 'Dealer Order' ) );
         }
         insert erp_task_map.values();
-        Product2[] parts = Factory_Product.buildNonSerializedProducts('Part', 'Electronics', 5);
+        Product2[] parts = Factory_Product.buildNonSerializedProducts('Part', 'Hardware', 5);
         insert parts;
 
         List<Product2> serializedProducts = Factory_Product.createSerializedProducts(RECORDTYPE, FAMILY, 10);

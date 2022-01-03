@@ -24,7 +24,7 @@ private class ProductUpgrade_Selector_T
     );
     upgradeProducts = Factory_Product.createNonSerializedProducts(
       'Part',
-      'Electronics',
+      'Hardware',
       10
     );
     upgrades = new List<Product_Upgrade__c>();

@@ -18,7 +18,7 @@ private class PricebookEntry_Selector_T
   {
     products = Factory_Product.createNonSerializedProducts(
       'Part',
-      'Electronics',
+      'Hardware',
       10
     );
     List<PricebookEntry> stdPBEntries =

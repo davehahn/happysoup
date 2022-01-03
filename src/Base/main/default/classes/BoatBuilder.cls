@@ -2388,7 +2388,7 @@ public with sharing class BoatBuilder {
   /*
     This constructs all the options for the selected Boat as well as for available motor/trailer/trolling motor upgrade
     - Boat options get stored in availableBoatOptions Map<Product2.Family, Map<Product2.Id, Product2>>
-      ie.{ 'Electronics', { '782gbc2c8347', sObject(Product2) } }
+      ie.{ 'Hardware', { '782gbc2c8347', sObject(Product2) } }
     - motor/trailer/trolling motor upgradess get stored availableProductUpgrades Map<'Product2.Record_Type', List<Product2>>
       ie {'motor', List<Product2>(all motors availble to this boat)}
   */

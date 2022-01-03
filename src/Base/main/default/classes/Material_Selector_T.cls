@@ -50,7 +50,7 @@ private class Material_Selector_T {
     List<AcctSeedERP__Material__c> materials = new List<AcctSeedERP__Material__c>();
     List<Product2> parts = Factory_Product.createNonSerializedProducts(
       'Part',
-      'Electronics',
+      'Hardware',
       PARTS_COUNT
     );
     materials.addAll(

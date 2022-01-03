@@ -107,7 +107,7 @@ private class Pricebook2_CloneController_Test_dh {
     buildPb();
     Product2[] parts = Factory_Product.buildNonSerializedProducts(
       'Part',
-      'Electronics',
+      'Hardware',
       20
     );
     insert parts;

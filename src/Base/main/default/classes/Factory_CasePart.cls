@@ -8,7 +8,7 @@ public class Factory_CasePart
   public static List<Case_Part__c> create( Case theCase, Integer count )
   {
     List<Case_Part__c> result = new List<Case_Part__c>();
-    for( Product2 p : Factory_Product.createNonSerializedProducts('Part', 'Electronics', count) )
+    for( Product2 p : Factory_Product.createNonSerializedProducts('Part', 'Hardware', count) )
     {
       result.add( new Case_Part__c(
         Case__c = theCase.Id,

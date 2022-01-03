@@ -234,14 +234,14 @@ private class LGND_API_Tests {
   @isTest
   static void product_options_test_v1()
   {
-    Product2 part = Factory_Product.buildNonSerializedProduct('Part', 'Electronics');
+    Product2 part = Factory_Product.buildNonSerializedProduct('Part', 'Hardware');
     insert part;
     Factory_PricebookEntry.createStandardEntry(part.Id, 10);
     insert Factory_PricebookEntry.buildEntry( part.Id,
                                               Legend_Settings__c.getOrgDefaults().Default_Retail_Pricebook__c,
                                               10 );
     Product2[] option_prods = Factory_Product.buildNonSerializedProducts('Part',
-                                                                    'Electronics',
+                                                                    'Hardware',
                                                                     15);
     insert option_prods;
     Product_Option__c[] options = Factory_ProductOption.buildProductOptions( part.Id, option_prods, 0, 2 );

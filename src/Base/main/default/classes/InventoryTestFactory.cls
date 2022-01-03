@@ -278,8 +278,8 @@ public class InventoryTestFactory {
       - 8 motor upgrades cost starting at 100 and incrementing 100 for every upgrade
       - 2 trailer upgrades cost starting at 100 and incrementing 100 for every upgrade
       - 5 trailer upgrades cost starting at 100 and incrementing 100 for every upgrade
-      - 5 safety, electronics,  accessories, price starting at 100 increment by 100 each. Each has max of 4 and first has one included
-      - 5 electronics, price starting at 100 increment by 100 each. Each has max of 4 and first has one included
+      - 5 safety, hardware,  accessories, price starting at 100 increment by 100 each. Each has max of 4 and first has one included
+      - 5 hardware, price starting at 100 increment by 100 each. Each has max of 4 and first has one included
   */
   //public List<Product2> insertFullTestBoats(Integer count, PriceBook2 standardPb) {
   //  List<Product2> boats = insertTestBoatsWithAllPriceBookEntries(count, standardPb);
@@ -336,7 +336,7 @@ public class InventoryTestFactory {
   //    insert upgrades;
   //    /* Build 5 options  for all types*/
   //    //List<Product2> accessories = insertTestProducts(5, 'Part', 'Accessories');
-  //    List<Product2> electronics = insertTestProducts(5, 'Part', 'Electronics');
+  //    List<Product2> hardware = insertTestProducts(5, 'Part', 'Hardware');
   //    List<Product2> graphics = insertTestProducts(5, 'Part', 'Graphics ans Decals');
   //    List<Product2> fAndE = insertTestProducts(5, 'Part', 'Fun and Entertainment');
   //    List<Product2> pontoonCovers = insertTestProducts(5, 'Part', 'Pontoon Covers');
@@ -354,7 +354,7 @@ public class InventoryTestFactory {
   //    //   inc = 0;
   //    // }
   //    inc = 1;
-  //    for(Product2 p : electronics){
+  //    for(Product2 p : hardware){
   //      Product_Option__c po = new Product_Option__c();
   //      po.Standard__c = inc;
   //      po.Maximum__c = 4;

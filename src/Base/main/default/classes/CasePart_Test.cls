@@ -20,7 +20,7 @@ private class CasePart_Test {
   static Case_Part__c[] buildCaseParts( Case c, Integer count )
   {
     InventoryTestFactory factory = new InventoryTestFactory();
-    Product2[] parts = factory.buildTestProducts( count, 'Part', 'Electronics' );
+    Product2[] parts = factory.buildTestProducts( count, 'Part', 'Hardware' );
     insert parts;
     Case_Part__c[] cParts = new List<Case_Part__c>();
     for( Product2 p : parts )

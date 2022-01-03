@@ -65,7 +65,7 @@ public class Factory_CustomSettings {
     for( sObject o : prods )
     {
       Product2 p = (Product2)o;
-      if( p.Family == 'Major Boat & Pontoon Components' &&
+      if( p.Family == 'Other Boat Components' &&
           p.Name == 'Sublet Weld / Vinyl / Canvas Repair' )
       {
         ups.Sublet__c = p.Id;

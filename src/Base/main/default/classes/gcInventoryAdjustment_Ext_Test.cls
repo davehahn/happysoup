@@ -10,7 +10,7 @@ private class gcInventoryAdjustment_Ext_Test{
     @IsTest
     static void testAdjustmentValue()
     {
-        Product2 part = Factory_Product.createNonSerializedProduct('Part', 'Electronics');
+        Product2 part = Factory_Product.createNonSerializedProduct('Part', 'Hardware');
         Id idWarehouse = gcConstants.idWarehouseMontreal;
         AcctSeedERP__Location__c loc = [SELECT Id FROM AcctSeedERP__Location__c WHERE AcctSeedERP__Warehouse__c =:idWarehouse LIMIT 1];
         Id idBalance = GCR_InventoryBalance.findOrCreateBalance(part.Id,idWarehouse,loc.Id);
@@ -81,7 +81,7 @@ private class gcInventoryAdjustment_Ext_Test{
     {
         Id idWarehouse = gcConstants.idWarehouseMontreal;
         AcctSeedERP__Location__c loc = [SELECT Id FROM AcctSeedERP__Location__c WHERE AcctSeedERP__Warehouse__c =:idWarehouse LIMIT 1];
-        Product2 part = Factory_Product.createNonSerializedProduct('Part', 'Electronics');
+        Product2 part = Factory_Product.createNonSerializedProduct('Part', 'Hardware');
         Id idBalance = GCR_InventoryBalance.findOrCreateBalance(part.Id,idWarehouse,loc.Id);
         Account[] accts = Factory_Account.insertSupplierAccounts(2);
         Account vendor = accts[0];
@@ -130,7 +130,7 @@ private class gcInventoryAdjustment_Ext_Test{
     @IsTest
     static void testAdjustmentDelete()
     {
-        Product2 part = Factory_Product.createNonSerializedProduct('Part', 'Electronics');
+        Product2 part = Factory_Product.createNonSerializedProduct('Part', 'Hardware');
         Account[] accts = Factory_Account.insertSupplierAccounts(2);
         Account vendor = accts[0];
         Account shipTo = accts[1];

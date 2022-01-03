@@ -11,7 +11,7 @@ public class gcAdjustment_Actions_T {
     }
     @isTest
     static void testMethod1WithSingleRecord(){
-        Product2 part = Factory_Product.createNonSerializedProduct('Part', 'Electronics');
+        Product2 part = Factory_Product.createNonSerializedProduct('Part', 'Hardware');
 
         GMBLASERP__Inventory_Adjustment__c adj = new GMBLASERP__Inventory_Adjustment__c();
         adj.GL_Account_Variable_1__c = gcConstants.idGlv1Wholesale;
@@ -31,7 +31,7 @@ public class gcAdjustment_Actions_T {
     
     @isTest
     static void testMethod1WithSingleRecordWithoutIdFilter(){
-        Product2 part = Factory_Product.createNonSerializedProduct('Part', 'Electronics');
+        Product2 part = Factory_Product.createNonSerializedProduct('Part', 'Hardware');
 
         GMBLASERP__Inventory_Adjustment__c adj = new GMBLASERP__Inventory_Adjustment__c();
         adj.GL_Account_Variable_1__c = gcConstants.idGlv1Wholesale;
@@ -49,7 +49,7 @@ public class gcAdjustment_Actions_T {
     }
     @isTest
     static void testMethod1WithStandardSetRecordWithProduct(){
-        Product2 part = Factory_Product.createNonSerializedProduct('Part', 'Electronics');
+        Product2 part = Factory_Product.createNonSerializedProduct('Part', 'Hardware');
 		List<GMBLASERP__Inventory_Adjustment__c> listAdj = new List<GMBLASERP__Inventory_Adjustment__c>();
         GMBLASERP__Inventory_Adjustment__c adj1 = new GMBLASERP__Inventory_Adjustment__c();
         adj1.GL_Account_Variable_1__c = gcConstants.idGlv1Wholesale;
@@ -79,7 +79,7 @@ public class gcAdjustment_Actions_T {
     
     @isTest
     static void testMethod1WithStandardSetRecordWithNonInventoryProduct(){
-        Product2 part = Factory_Product.createNonSerializedProduct('Motor', 'Motor Accessories');
+        Product2 part = Factory_Product.createNonSerializedProduct('Part', 'Hardware');
                 
         AcctSeedERP__Warehouse__c warehouse = new AcctSeedERP__Warehouse__c();
         warehouse.Name = 'Test Warehouse';
@@ -126,7 +126,7 @@ public class gcAdjustment_Actions_T {
     
     @isTest
     static void testMethod1WithStandardSetRecordWithoutProduct(){
-        Product2 part = Factory_Product.createNonSerializedProduct('Part', 'Electronics');
+        Product2 part = Factory_Product.createNonSerializedProduct('Part', 'Hardware');
         AcctSeedERP__Warehouse__c warehouse = new AcctSeedERP__Warehouse__c();
         warehouse.Name = 'Test Warehouse';
         warehouse.City__c = 'Test City';
@@ -172,7 +172,7 @@ public class gcAdjustment_Actions_T {
     
     @isTest
     static void testMethod1WithStandardSetRecordIdNotExist(){
-        Product2 part = Factory_Product.createNonSerializedProduct('Part', 'Electronics');
+        Product2 part = Factory_Product.createNonSerializedProduct('Part', 'Hardware');
         AcctSeedERP__Warehouse__c warehouse = new AcctSeedERP__Warehouse__c();
         warehouse.Name = 'Test Warehouse';
         warehouse.City__c = 'Test City';
@@ -217,7 +217,7 @@ public class gcAdjustment_Actions_T {
     static void testMethod1WithInventoryMovement(){
         Id idWarehouseMontreal = gcConstants.idWarehouseMontreal;
         AcctSeedERP__Location__c loc = [SELECT Id FROM AcctSeedERP__Location__c WHERE AcctSeedERP__Warehouse__c = :idWarehouseMontreal LIMIT 1];
-        Product2 part = Factory_Product.createNonSerializedProduct('Part', 'Electronics');
+        Product2 part = Factory_Product.createNonSerializedProduct('Part', 'Hardware');
 		List<GMBLASERP__Inventory_Adjustment__c> listAdj = new List<GMBLASERP__Inventory_Adjustment__c>();
         GMBLASERP__Inventory_Adjustment__c adj1 = new GMBLASERP__Inventory_Adjustment__c();
         adj1.GL_Account_Variable_1__c = gcConstants.idGlv1Wholesale;

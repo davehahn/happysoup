@@ -271,7 +271,7 @@ private class EmailComponentController_Test {
     gcProjectTask.disableTrigger = orig;
 
     List<AcctSeedERP__Material__c> mats = new List<AcctSeedERP__Material__c>();
-    for( Product2 p : Factory_Product.createNonSerializedProducts( 'Part', 'Electronics', 3 ) )
+    for( Product2 p : Factory_Product.createNonSerializedProducts( 'Part', 'Hardware', 3 ) )
     {
       AcctSeedERP__Material__c mat = Factory_ERPOrder.buildMaterial( recoverable.Id, task.Id, p.Id );
       mat.GMBLASERP__Price_Override__c = true;
