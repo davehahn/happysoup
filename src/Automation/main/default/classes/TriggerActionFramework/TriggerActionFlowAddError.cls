@@ -15,51 +15,35 @@
  */
 
 public inherited sharing class TriggerActionFlowAddError {
-	@TestVisible
-	private static final String CLASS_NAME = 'TriggerActionFlowAddError';
-	@TestVisible
-	private static final String INVALID_REQUEST = String.format(
-		TriggerActionFlow.INVALID_BYPASS_REQUEST,
-		new List<String>{ CLASS_NAME }
-	);
+  @TestVisible
+  private static final String CLASS_NAME = 'TriggerActionFlowAddError';
+  @TestVisible
+  private static final String INVALID_REQUEST = String.format(
+    TriggerActionFlow.INVALID_BYPASS_REQUEST,
+    new List<String>{ CLASS_NAME }
+  );
 
-	@InvocableMethod(
-		category='Trigger Action Flow'
-		label='Add Error'
-		description='Adds an error to an sObject'
-	)
-	public static void addError(List<Request> requests) {
-		if (requests.size() != 1) {
-			throw new TriggerActionFlowAddErrorException(INVALID_REQUEST);
-		}
-		if (!String.isBlank(requests[0].fieldName)) {
-			requests[0]
-				.record.addError(requests[0].fieldName, requests[0].errorMessage);
-		} else {
-			requests[0].record.addError(requests[0].errorMessage);
-		}
-	}
+  @InvocableMethod(category='Trigger Action Flow' label='Add Error' description='Adds an error to an sObject')
+  public static void addError(List<Request> requests) {
+    if (requests.size() != 1) {
+      throw new TriggerActionFlowAddErrorException(INVALID_REQUEST);
+    }
+    if (!String.isBlank(requests[0].fieldName)) {
+      requests[0].record.addError(requests[0].fieldName, requests[0].errorMessage);
+    } else {
+      requests[0].record.addError(requests[0].errorMessage);
+    }
+  }
 
-	public class Request {
-		@InvocableVariable(
-			label='Record'
-			description='Record to add the error to'
-			required=true
-		)
-		public SObject record;
-		@InvocableVariable(
-			label='Field Name'
-			description='API name of corresponding field'
-		)
-		public String fieldName;
-		@InvocableVariable(
-			label='Error Message'
-			description='Error Message'
-			required=true
-		)
-		public String errorMessage;
-	}
+  public class Request {
+    @InvocableVariable(label='Record' description='Record to add the error to' required=true)
+    public SObject record;
+    @InvocableVariable(label='Field Name' description='API name of corresponding field')
+    public String fieldName;
+    @InvocableVariable(label='Error Message' description='Error Message' required=true)
+    public String errorMessage;
+  }
 
-	public class TriggerActionFlowAddErrorException extends Exception {
-	}
+  public class TriggerActionFlowAddErrorException extends Exception {
+  }
 }

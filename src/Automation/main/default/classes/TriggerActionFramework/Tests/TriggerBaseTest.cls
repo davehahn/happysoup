@@ -16,210 +16,191 @@
 
 @IsTest(isParallel=true)
 private class TriggerBaseTest {
-	private static final String ACCOUNT = 'Account';
-	private static final Account MY_ACCOUNT = new Account(
-		Id = TestUtility.getFakeId(Schema.Account.SObjectType),
-		Name = 'My Account'
-	);
-	private static BaseTest base = new BaseTest();
-	private static Exception myException;
+  private static final String ACCOUNT = 'Account';
+  private static final Account MY_ACCOUNT = new Account(
+    Id = TestUtility.getFakeId(Schema.Account.SObjectType),
+    Name = 'My Account'
+  );
+  private static BaseTest base = new BaseTest();
+  private static Exception myException;
 
-	static {
-		base.triggerNew = new List<SObject>{ MY_ACCOUNT };
-		base.triggerOld = new List<SObject>{ MY_ACCOUNT };
-	}
+  static {
+    base.triggerNew = new List<SObject>{ MY_ACCOUNT };
+    base.triggerOld = new List<SObject>{ MY_ACCOUNT };
+  }
 
-	@IsTest
-	private static void beforeInsertShouldSucceed() {
-		MY_ACCOUNT.Id = null;
-		base.context = System.TriggerOperation.BEFORE_INSERT;
+  @IsTest
+  private static void beforeInsertShouldSucceed() {
+    MY_ACCOUNT.Id = null;
+    base.context = System.TriggerOperation.BEFORE_INSERT;
 
-		base.run();
+    base.run();
 
-		System.assertEquals(true, base.executed, 'Run should be successful');
-	}
+    System.assertEquals(true, base.executed, 'Run should be successful');
+  }
 
-	@IsTest
-	private static void afterInsertShouldSucceed() {
-		base.context = System.TriggerOperation.AFTER_INSERT;
+  @IsTest
+  private static void afterInsertShouldSucceed() {
+    base.context = System.TriggerOperation.AFTER_INSERT;
 
-		base.run();
+    base.run();
 
-		System.assertEquals(true, base.executed, 'Run should be successful');
-	}
+    System.assertEquals(true, base.executed, 'Run should be successful');
+  }
 
-	@IsTest
-	private static void beforeUpdateShouldSucceed() {
-		base.context = System.TriggerOperation.BEFORE_UPDATE;
+  @IsTest
+  private static void beforeUpdateShouldSucceed() {
+    base.context = System.TriggerOperation.BEFORE_UPDATE;
 
-		base.run();
+    base.run();
 
-		System.assertEquals(true, base.executed, 'Run should be successful');
-	}
+    System.assertEquals(true, base.executed, 'Run should be successful');
+  }
 
-	@IsTest
-	private static void afterUpdateShouldSucceed() {
-		base.context = System.TriggerOperation.After_UPDATE;
+  @IsTest
+  private static void afterUpdateShouldSucceed() {
+    base.context = System.TriggerOperation.After_UPDATE;
 
-		base.run();
+    base.run();
 
-		System.assertEquals(true, base.executed, 'Run should be successful');
-	}
+    System.assertEquals(true, base.executed, 'Run should be successful');
+  }
 
-	@IsTest
-	private static void beforeDeleteShouldSucceed() {
-		base.context = System.TriggerOperation.BEFORE_DELETE;
+  @IsTest
+  private static void beforeDeleteShouldSucceed() {
+    base.context = System.TriggerOperation.BEFORE_DELETE;
 
-		base.run();
+    base.run();
 
-		System.assertEquals(true, base.executed, 'Run should be successful');
-	}
+    System.assertEquals(true, base.executed, 'Run should be successful');
+  }
 
-	@IsTest
-	private static void afterDeleteShouldSucceed() {
-		base.context = System.TriggerOperation.AFTER_DELETE;
+  @IsTest
+  private static void afterDeleteShouldSucceed() {
+    base.context = System.TriggerOperation.AFTER_DELETE;
 
-		base.run();
+    base.run();
 
-		System.assertEquals(true, base.executed, 'Run should be successful');
-	}
+    System.assertEquals(true, base.executed, 'Run should be successful');
+  }
 
-	@IsTest
-	private static void afterUndeleteShouldSucceed() {
-		base.context = System.TriggerOperation.AFTER_UNDELETE;
+  @IsTest
+  private static void afterUndeleteShouldSucceed() {
+    base.context = System.TriggerOperation.AFTER_UNDELETE;
 
-		base.run();
+    base.run();
 
-		System.assertEquals(true, base.executed, 'Run should be successful');
-	}
+    System.assertEquals(true, base.executed, 'Run should be successful');
+  }
 
-	@IsTest
-	private static void idToNumberOfTimesSeenBeforeUpdate() {
-		base.context = System.TriggerOperation.BEFORE_UPDATE;
+  @IsTest
+  private static void idToNumberOfTimesSeenBeforeUpdate() {
+    base.context = System.TriggerOperation.BEFORE_UPDATE;
 
-		base.run();
-		base.run();
+    base.run();
+    base.run();
 
-		System.assertEquals(
-			2,
-			TriggerBase.idToNumberOfTimesSeenBeforeUpdate.get(MY_ACCOUNT.Id),
-			'The number of time seen should be populated properly'
-		);
-	}
+    System.assertEquals(
+      2,
+      TriggerBase.idToNumberOfTimesSeenBeforeUpdate.get(MY_ACCOUNT.Id),
+      'The number of time seen should be populated properly'
+    );
+  }
 
-	@IsTest
-	private static void idToNumberOfTimesSeenAfterUpdate() {
-		base.context = System.TriggerOperation.AFTER_UPDATE;
+  @IsTest
+  private static void idToNumberOfTimesSeenAfterUpdate() {
+    base.context = System.TriggerOperation.AFTER_UPDATE;
 
-		base.run();
-		base.run();
+    base.run();
+    base.run();
 
-		System.assertEquals(
-			2,
-			TriggerBase.idToNumberOfTimesSeenAfterUpdate.get(MY_ACCOUNT.Id),
-			'The number of time seen should be populated properly'
-		);
-	}
+    System.assertEquals(
+      2,
+      TriggerBase.idToNumberOfTimesSeenAfterUpdate.get(MY_ACCOUNT.Id),
+      'The number of time seen should be populated properly'
+    );
+  }
 
-	@IsTest
-	private static void runShouldFailWhenCalledOutsideTrigger() {
-		try {
-			base.run();
-		} catch (Exception e) {
-			myException = e;
-		}
+  @IsTest
+  private static void runShouldFailWhenCalledOutsideTrigger() {
+    try {
+      base.run();
+    } catch (Exception e) {
+      myException = e;
+    }
 
-		System.assertNotEquals(null, myException, 'An exception should be thrown');
-		System.assert(
-			myException.getMessage()
-				.contains(TriggerBase.HANDLER_OUTSIDE_TRIGGER_MESSAGE),
-			'The exception should be the one we are looking for'
-		);
-	}
+    System.assertNotEquals(null, myException, 'An exception should be thrown');
+    System.assert(
+      myException.getMessage().contains(TriggerBase.HANDLER_OUTSIDE_TRIGGER_MESSAGE),
+      'The exception should be the one we are looking for'
+    );
+  }
 
-	@IsTest
-	private static void runShouldDoNothingWhenBypassed() {
-		MY_ACCOUNT.Id = null;
-		TriggerBase.bypass(ACCOUNT);
-		base.context = System.TriggerOperation.BEFORE_INSERT;
+  @IsTest
+  private static void runShouldDoNothingWhenBypassed() {
+    MY_ACCOUNT.Id = null;
+    TriggerBase.bypass(ACCOUNT);
+    base.context = System.TriggerOperation.BEFORE_INSERT;
 
-		base.run();
+    base.run();
 
-		System.assertEquals(
-			false,
-			base.executed,
-			'The base should not have executed'
-		);
-	}
+    System.assertEquals(false, base.executed, 'The base should not have executed');
+  }
 
-	@IsTest
-	private static void bypassShouldSucceed() {
-		TriggerBase.bypass(ACCOUNT);
+  @IsTest
+  private static void bypassShouldSucceed() {
+    TriggerBase.bypass(ACCOUNT);
 
-		System.assert(
-			TriggerBase.bypassedObjects.contains(ACCOUNT),
-			'The bypasses should be configured correctly'
-		);
-	}
+    System.assert(TriggerBase.bypassedObjects.contains(ACCOUNT), 'The bypasses should be configured correctly');
+  }
 
-	@IsTest
-	private static void clearBypassShouldSucceed() {
-		TriggerBase.bypass(ACCOUNT);
+  @IsTest
+  private static void clearBypassShouldSucceed() {
+    TriggerBase.bypass(ACCOUNT);
 
-		TriggerBase.clearBypass(ACCOUNT);
+    TriggerBase.clearBypass(ACCOUNT);
 
-		System.assert(
-			!TriggerBase.bypassedObjects.contains(ACCOUNT),
-			'The bypasses should be configured correctly'
-		);
-	}
+    System.assert(!TriggerBase.bypassedObjects.contains(ACCOUNT), 'The bypasses should be configured correctly');
+  }
 
-	@IsTest
-	private static void isBypassedShouldSucceed() {
-		TriggerBase.bypass(ACCOUNT);
+  @IsTest
+  private static void isBypassedShouldSucceed() {
+    TriggerBase.bypass(ACCOUNT);
 
-		System.assertEquals(
-			true,
-			TriggerBase.isBypassed(ACCOUNT),
-			'The bypasses should be configured correctly'
-		);
-	}
+    System.assertEquals(true, TriggerBase.isBypassed(ACCOUNT), 'The bypasses should be configured correctly');
+  }
 
-	@IsTest
-	private static void clearAllBypassesShouldSucceed() {
-		TriggerBase.bypass(ACCOUNT);
+  @IsTest
+  private static void clearAllBypassesShouldSucceed() {
+    TriggerBase.bypass(ACCOUNT);
 
-		TriggerBase.clearAllBypasses();
+    TriggerBase.clearAllBypasses();
 
-		System.assertEquals(
-			0,
-			TriggerBase.bypassedObjects.size(),
-			'The bypasses should be configured correctly'
-		);
-	}
+    System.assertEquals(0, TriggerBase.bypassedObjects.size(), 'The bypasses should be configured correctly');
+  }
 
-	class BaseTest extends TriggerBase implements TriggerAction.BeforeInsert, TriggerAction.AfterInsert, TriggerAction.BeforeUpdate, TriggerAction.AfterUpdate, TriggerAction.BeforeDelete, TriggerAction.AfterDelete, TriggerAction.AfterUndelete {
-		public Boolean executed = false;
-		public void beforeInsert(List<SObject> newList) {
-			this.executed = true;
-		}
-		public void afterInsert(List<SObject> newList) {
-			this.executed = true;
-		}
-		public void beforeUpdate(List<SObject> newList, List<SObject> oldList) {
-			this.executed = true;
-		}
-		public void afterUpdate(List<SObject> newList, List<SObject> oldList) {
-			this.executed = true;
-		}
-		public void beforeDelete(List<SObject> oldList) {
-			this.executed = true;
-		}
-		public void afterDelete(List<SObject> newList) {
-			this.executed = true;
-		}
-		public void afterUndelete(List<SObject> newList) {
-			this.executed = true;
-		}
-	}
+  class BaseTest extends TriggerBase implements TriggerAction.BeforeInsert, TriggerAction.AfterInsert, TriggerAction.BeforeUpdate, TriggerAction.AfterUpdate, TriggerAction.BeforeDelete, TriggerAction.AfterDelete, TriggerAction.AfterUndelete {
+    public Boolean executed = false;
+    public void beforeInsert(List<SObject> newList) {
+      this.executed = true;
+    }
+    public void afterInsert(List<SObject> newList) {
+      this.executed = true;
+    }
+    public void beforeUpdate(List<SObject> newList, List<SObject> oldList) {
+      this.executed = true;
+    }
+    public void afterUpdate(List<SObject> newList, List<SObject> oldList) {
+      this.executed = true;
+    }
+    public void beforeDelete(List<SObject> oldList) {
+      this.executed = true;
+    }
+    public void afterDelete(List<SObject> newList) {
+      this.executed = true;
+    }
+    public void afterUndelete(List<SObject> newList) {
+      this.executed = true;
+    }
+  }
 }

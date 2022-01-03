@@ -15,48 +15,46 @@
  */
 
 public inherited sharing class TriggerActionFlowIsBypassed {
-	@TestVisible
-	private static final String CLASS_NAME = 'TriggerActionFlowIsBypassed';
-	@TestVisible
-	private static final String INVALID_REQUEST = String.format(
-		TriggerActionFlow.INVALID_BYPASS_REQUEST,
-		new List<String>{ CLASS_NAME }
-	);
+  @TestVisible
+  private static final String CLASS_NAME = 'TriggerActionFlowIsBypassed';
+  @TestVisible
+  private static final String INVALID_REQUEST = String.format(
+    TriggerActionFlow.INVALID_BYPASS_REQUEST,
+    new List<String>{ CLASS_NAME }
+  );
 
-	@InvocableMethod(
-		category='Trigger Action Flow'
-		label='Is Bypassed'
-		description='Returns if the bypass for this object, apex action, or flow action is set to true.'
-	)
-	public static List<Boolean> isBypassed(List<Request> requests) {
-		if (requests.size() != 1) {
-			throw new TriggerActionFlowIsBypassedObjectException(INVALID_REQUEST);
-		}
-		if (!TriggerActionFlow.REQUEST_TYPES.contains(requests[0].bypassType)) {
-			throw new TriggerActionFlowIsBypassedObjectException(
-				TriggerActionFlow.INVALID_TYPE
-			);
-		}
-		Boolean result = false;
-		if (requests[0].bypassType == TriggerActionFlow.OBJECT_STRING) {
-			result = TriggerBase.isBypassed(requests[0].name);
-		}
-		if (requests[0].bypassType == TriggerActionFlow.APEX_STRING) {
-			result = MetadataTriggerHandler.isBypassed(requests[0].name);
-		}
-		if (requests[0].bypassType == TriggerActionFlow.FLOW_STRING) {
-			result = TriggerActionFlow.isBypassed(requests[0].name);
-		}
-		return new List<Boolean>{ result };
-	}
+  @InvocableMethod(
+    category='Trigger Action Flow'
+    label='Is Bypassed'
+    description='Returns if the bypass for this object, apex action, or flow action is set to true.'
+  )
+  public static List<Boolean> isBypassed(List<Request> requests) {
+    if (requests.size() != 1) {
+      throw new TriggerActionFlowIsBypassedObjectException(INVALID_REQUEST);
+    }
+    if (!TriggerActionFlow.REQUEST_TYPES.contains(requests[0].bypassType)) {
+      throw new TriggerActionFlowIsBypassedObjectException(TriggerActionFlow.INVALID_TYPE);
+    }
+    Boolean result = false;
+    if (requests[0].bypassType == TriggerActionFlow.OBJECT_STRING) {
+      result = TriggerBase.isBypassed(requests[0].name);
+    }
+    if (requests[0].bypassType == TriggerActionFlow.APEX_STRING) {
+      result = MetadataTriggerHandler.isBypassed(requests[0].name);
+    }
+    if (requests[0].bypassType == TriggerActionFlow.FLOW_STRING) {
+      result = TriggerActionFlow.isBypassed(requests[0].name);
+    }
+    return new List<Boolean>{ result };
+  }
 
-	public class Request {
-		@InvocableVariable
-		public String name;
-		@InvocableVariable
-		public String bypassType;
-	}
+  public class Request {
+    @InvocableVariable
+    public String name;
+    @InvocableVariable
+    public String bypassType;
+  }
 
-	public class TriggerActionFlowIsBypassedObjectException extends Exception {
-	}
+  public class TriggerActionFlowIsBypassedObjectException extends Exception {
+  }
 }
