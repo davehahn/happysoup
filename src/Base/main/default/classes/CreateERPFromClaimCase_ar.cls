@@ -81,9 +81,9 @@ public without sharing class CreateERPFromClaimCase_ar {
 
 	    if(!listCaseToUpdate.isEmpty())
 			{
-	    	TriggerHandler.bypass('Case_TriggerHandler');
+	    	TriggerBase.bypass('Case');
 	    	update listCaseToUpdate;
-				TriggerHandler.clearBypass('Case_TriggerHandler');
+				TriggerBase.clearBypass('Case');
 	    }
     }
 }

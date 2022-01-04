@@ -112,9 +112,6 @@ public virtual class Application_RecordType
   public Application_RecordType(){}
 
   public String getDeveloperNameById( Id recordId ){
-    System.debug(this.developerNameById );
-    System.debug( this.recordTypesBySobjectName.get('Pricebook2'));
-    System.debug(recordId);
     if( this.developerNameById.containsKey(recordId) ){
       return this.developerNameById.get(recordId);
     }
@@ -562,7 +559,6 @@ public virtual class Application_RecordType
 
   private void fetchAllRecordTypes()
   {
-    System.debug('fetching all rerordTypes');
     this.recordTypesBySobjectName = new Map<String, List<RecordType>>();
     this.developerNameById = new Map<Id, String>();
     List<RecordType> rts = [

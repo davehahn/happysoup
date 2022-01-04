@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-    <label>TA_CasePart_CreateMaterial</label>
+    <label>TA Case HandleSubletLines AU</label>
     <protected>false</protected>
     <values>
         <field>After_Delete__c</field>
@@ -8,7 +8,7 @@
     </values>
     <values>
         <field>After_Insert__c</field>
-        <value xsi:type="xsd:string">Case_Part</value>
+        <value xsi:nil="true"/>
     </values>
     <values>
         <field>After_Undelete__c</field>
@@ -16,7 +16,7 @@
     </values>
     <values>
         <field>After_Update__c</field>
-        <value xsi:nil="true"/>
+        <value xsi:type="xsd:string">Case</value>
     </values>
     <values>
         <field>Allow_Flow_Recursion__c</field>
@@ -24,7 +24,7 @@
     </values>
     <values>
         <field>Apex_Class_Name__c</field>
-        <value xsi:type="xsd:string">TA_CasePart_CreateMaterial</value>
+        <value xsi:type="xsd:string">TA_Case_HandleSubletLines</value>
     </values>
     <values>
         <field>Before_Delete__c</field>
@@ -48,7 +48,7 @@
     </values>
     <values>
         <field>Description__c</field>
-        <value xsi:type="xsd:string">Creates matching MAterial line on Warranty and Recoverable ERP&apos;s if present</value>
+        <value xsi:type="xsd:string">Handles changes to the Sublet Line on the Warranty ERP if the Sublet information changes on a Warranty Case</value>
     </values>
     <values>
         <field>Flow_Name__c</field>
@@ -56,7 +56,7 @@
     </values>
     <values>
         <field>Order__c</field>
-        <value xsi:type="xsd:double">1.0</value>
+        <value xsi:type="xsd:double">2.0</value>
     </values>
     <values>
         <field>Required_Permission__c</field>

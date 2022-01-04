@@ -19,41 +19,42 @@ public without sharing class Case_TriggerHandler extends TriggerHandler
   {
   }
 
-  protected override void beforeInsert()
-  {
-    setContactAndPricebookOnPartnerWarrantyCase( (List<Case>)Trigger.new );
-    createRequiredWarrantyPayableErps( (List<Case>)Trigger.new );
-  }
+//  protected override void beforeInsert()
+//  {
+//    setContactAndPricebookOnPartnerWarrantyCase( (List<Case>)Trigger.new );
+//    createRequiredWarrantyPayableErps( (List<Case>)Trigger.new );
+//  }
 
-  protected override void beforeUpdate()
-  {
-    validateStatusChange( (List<Case>)Trigger.new, (Map<Id, Case>)Trigger.oldMap );
-  }
+//  protected override void beforeUpdate()
+//  {
+//    validateStatusChange( (List<Case>)Trigger.new, (Map<Id, Case>)Trigger.oldMap );
+//  }
 
-  protected override void beforeDelete()
-  {
-    deleteRelatedERPs( (List<Case>)Trigger.oldMap.values() );
-  }
+//  protected override void beforeDelete()
+//  {
+//    deleteRelatedERPs( (List<Case>)Trigger.oldMap.values() );
+//  }
 
   protected override void afterInsert()
   {
-    createPartnerPartsOrderForApprovedWarrantyCases( (List<Case>)Trigger.new, null );
-    makeCommentOnErpAboutCaseNumberAndLink( (List<Case>)Trigger.new );
-    handleSubletLines( (List<Case>)Trigger.new, null );
-    enforceAssignmentRules( Trigger.newMap.keySet() );
+    //    createPartnerPartsOrderForApprovedWarrantyCases( (List<Case>)Trigger.new, null );
+    // 1   makeCommentOnErpAboutCaseNumberAndLink( (List<Case>)Trigger.new );
+    // 2  handleSubletLines( (List<Case>)Trigger.new, null );
+    // 3 enforceAssignmentRules( Trigger.newMap.keySet() );
     //new JiraConnect( Trigger.new, Trigger.oldMap ).createIssues();
   }
 
   protected override void afterUpdate()
   {
-    createPartnerPartsOrderForApprovedWarrantyCases( (List<Case>)Trigger.new,
-                                                     (Map<Id, Case>)Trigger.oldMap );
-    closeLostERPsIfDenied( (List<Case>)Trigger.new,
-                           (Map<Id, Case>)Trigger.oldMap );
-    handleSubletLines( (List<Case>)Trigger.new,
-                       (Map<Id, Case>)Trigger.oldMap );
-    addPromotionalProductsToERP( (List<Case>)Trigger.new,
-                                 (Map<Id, Case>)Trigger.oldMap );
+// 1   createPartnerPartsOrderForApprovedWarrantyCases( (List<Case>)Trigger.new,
+//                                                     (Map<Id, Case>)Trigger.oldMap );
+// 2    handleSubletLines( (List<Case>)Trigger.new,
+//      (Map<Id, Case>)Trigger.oldMap );
+// 3    closeLostERPsIfDenied( (List<Case>)Trigger.new,
+//                           (Map<Id, Case>)Trigger.oldMap );
+
+// 4    addPromotionalProductsToERP( (List<Case>)Trigger.new,
+//                                 (Map<Id, Case>)Trigger.oldMap );
     //new JiraConnect( Trigger.new, Trigger.oldMap ).updateIssues();
   }
 
