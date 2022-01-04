@@ -15,5 +15,6 @@ trigger CaseTrigger on Case (
       c.IsForUnitTest__c = true;
     }
   }
-  new Case_TriggerHandler().run();
+  new MetadataTriggerHandler().run();
+  //new Case_TriggerHandler().run();
 }
