@@ -153,13 +153,13 @@ DATE( YEAR( TODAY() ), MONTH( TODAY() ) + 1, 1) - 1)</expression>
             <targetReference>Get_Task_Record_Type</targetReference>
         </connector>
         <filterLogic>and</filterLogic>
-        <filters>
-            <field>Name</field>
-            <operator>EqualTo</operator>
-            <value>
-                <stringValue>Brooklyn Burns</stringValue>
-            </value>
-        </filters>
+            <filters>
+                <field>Name</field>
+                <operator>EqualTo</operator>
+                <value>
+                    <stringValue>Brooklyn Burns</stringValue>
+                </value>
+            </filters>
         <object>User</object>
         <outputAssignments>
             <assignToReference>AccountingUserID</assignToReference>
