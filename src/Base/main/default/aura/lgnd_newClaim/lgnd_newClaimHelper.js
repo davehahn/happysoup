@@ -6,16 +6,17 @@
     return new Promise(
       function(resolve, reject) {
         if (step == 1) {
-          component.set('v.disableNextButton', true);
+         // component.set('v.disableNextButton', true);
           self.doStepOne(component, event)
           .then(
             function() {
+
               component.set('v.disableNextButton', false);
               resolve();
             }
           );
         } else if (step == 2) {
-          component.set('v.disableNextButton', true);
+         // component.set('v.disableNextButton', true);
           self.doStepTwo(component, event)
           .then(
             function() {
@@ -90,6 +91,7 @@
           claim.case.Serial_Number__c = component.get('v.sernoId');
           claim.case.Customer_Name__c = component.get('v.accountName');
           claim.case.Serial_Number_Registered_To__c = component.get('v.accountId');
+          console.log('claim= '+claim);
           component.set('v.claim', claim);
         }
 
@@ -116,7 +118,9 @@
           reject();
         } else {
 
-          if (hours > 0) {
+          if (hours > 0 && !component.get('v.labourAdded')) {
+
+
             self.callAction(component, 'getProduct', {
               "id" : productId
             }).then(
@@ -136,6 +140,7 @@
                   Quantity__c: hours,
                   Unit_Price__c: laborPrice
                 });
+                component.set('v.labourAdded',true);
                 component.set("v.parts", parts);
               })
             );
@@ -335,6 +340,7 @@
               $A.getCallback(function(result) {
                 parts.splice(partsIndex, 1);
                 component.set("v.parts", parts);
+
                 resolve();
               }),
               $A.getCallback(function(err) {
@@ -348,6 +354,69 @@
       component.set("v.parts", parts);
     }
   },
+  updateWholesaleLabour: function(component,event) {
+
+      var parts = component.get("v.parts");
+      var self = this;
+      if(parts.length >0){
+        var part;
+        var hours = component.get('v.claim.case.Labor_Hours__c');
+
+          	for (i = 0; i < parts.length; i++) {
+          		if(parts[i].Product__c == component.get("v.productId")){
+
+                    console.log("parts json= "+JSON.stringify(parts[i]));
+                    parts[i].Quantity__c = hours;
+                    if(hours > 0){
+						if(parts[i].Id != undefined){
+
+							return new Promise(function(resolve, reject) {
+							self.callAction(component, "updatePartById", {
+								  "idPart": parts[i].Id,
+								  "qty": hours
+								})
+								.then(
+								  $A.getCallback(function(result) {
+									component.set("v.parts", parts);
+        							resolve();
+								  }),
+								  $A.getCallback(function(err) {
+									console.log(err);
+									reject(err);
+								  })
+								);
+						  });
+
+						}
+					}else{
+
+						return new Promise(function(resolve, reject) {
+							self.callAction(component, "deletePartById", {
+							"idPart": parts[i].Id
+						})
+						.then(
+							  $A.getCallback(function(result) {
+								parts.splice(i, 1);
+								component.set("v.parts", parts);
+								component.set("v.labourAdded", false);
+								resolve();
+							  }),
+							  $A.getCallback(function(err) {
+								console.log(err);
+								reject(err);
+							  })
+							);
+						});
+					}
+
+                    break;
+          		}
+      		}
+            component.set("v.parts",parts);
+
+      }
+
+    },
 
   getParts: function(component) {
     var self = this,

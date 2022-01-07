@@ -40,7 +40,7 @@ public with sharing class lgnd_newClaimController {
       } else {
         c.AccountId = '';
       }
-    }
+    }SFISSUES-530
     catch( Exception e ){
       System.debug(e);
     }
@@ -195,6 +195,13 @@ public with sharing class lgnd_newClaimController {
   @AuraEnabled
   public static void deletePartById(Id idPart) {
     delete [SELECT Id FROM Case_Part__c WHERE Id =:idPart];
+  }
+
+  @AuraEnabled
+  public static void updatePartById(Id idPart,String qty) {
+    Case_Part__c part = [SELECT Id FROM Case_Part__c WHERE Id =:idPart];
+    part.Quantity__c = Integer.valueOf(qty);
+    update part;
   }
 
   @AuraEnabled
