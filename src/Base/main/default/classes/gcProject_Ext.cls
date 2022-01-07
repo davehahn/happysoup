@@ -409,17 +409,22 @@ global without sharing class gcProject_Ext {
           AcctSeed__GL_Account_Variable_2__c,
           AcctSeed__GL_Account_Variable_2__r.Name,
           Partslist_Generated__c,
+          Task_Order__c,
           (SELECT Id FROM AcctSeedERP__Materials__r LIMIT 1),
           (SELECT AcctSeedERP__Total__c FROM AcctSeedERP__Sales_Order_Line__r)
        FROM AcctSeed__Project_Task__c
        WHERE Id = :idFilter
           OR AcctSeed__Project__c = :idFilter
-       ORDER BY Name])
+       ORDER BY Task_Order__c,index__c
+       //Name
+
+      ])
     {
       map<string,string> m = new map<string,string>();
 
       m.put('idProjectTask',pt.Id);
       m.put('projectTaskName',pt.Name);
+      m.put('taskOrder',String.valueOf(pt.Task_Order__c));
       m.put('partListGenerated',pt.Partslist_Generated__c ? 'true' : 'false');
       m.put('taskGLV1','');
       m.put('taskGLV2','');
@@ -611,6 +616,20 @@ global without sharing class gcProject_Ext {
     if(dec == null) dec = 0;
 
     task.AcctSeed__Budgeted_Amount__c = dec;
+
+    update task;
+
+    return retrieveTasks(task.Id)[0];
+  }
+
+  @RemoteAction
+  global static map<string,string> updateTaskOrder(Id idTask, Decimal dec)
+  {
+    AcctSeed__Project_Task__c task = [SELECT Id FROM AcctSeed__Project_Task__c WHERE Id =:idTask][0];
+
+    if(dec == null) dec = 0;
+
+    task.Task_Order__c = dec;
 
     update task;
 
