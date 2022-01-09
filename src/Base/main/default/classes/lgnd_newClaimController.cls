@@ -40,7 +40,7 @@ public with sharing class lgnd_newClaimController {
       } else {
         c.AccountId = '';
       }
-    }SFISSUES-530
+    }
     catch( Exception e ){
       System.debug(e);
     }
