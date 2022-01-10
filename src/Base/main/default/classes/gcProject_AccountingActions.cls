@@ -47,7 +47,7 @@ public without sharing class gcProject_AccountingActions {
 				[SELECT Id 
 				FROM AcctSeed__Journal_Entry__c 
 				WHERE Project__c = :idProject 
-					AND (Name like '%Job Cost for%' OR Name like '%Internal Labour for%' OR Name like '%Internal Warranty for%')
+					AND (Name like '%Job Cost for%' OR Name like '%Manufacturing Cost for%' OR Name like '%Internal Labour for%' OR Name like '%Internal Warranty for%')
 				LIMIT 1])
 		{
 			return true;
@@ -293,12 +293,12 @@ public without sharing class gcProject_AccountingActions {
 					if (!isMFGOrder && product.AcctSeedERP__Serialized__c && matl.GMBLASERP__Serial_Number__c != null)
 						mapSerialMFG.put(matl.GMBLASERP__Serial_Number__c, false);
 				}
-				if(isMFGOrder && matl.AcctSeedERP__Product__c == project.AcctSeedERP__Manufactured_Product__c){
-					mfgMaterial = matl;
-					if(matl.GMBLASERP__Serial_Number__c == null){
-						mfgMaterial.GMBLASERP__Serial_Number__c = project.Serial_Number__c;
-						updateMFGMatl = true;
-					}
+			}
+			if(isMFGOrder && matl.AcctSeedERP__Product__c == project.AcctSeedERP__Manufactured_Product__c){
+				mfgMaterial = matl;
+				if(matl.GMBLASERP__Serial_Number__c == null){
+					mfgMaterial.GMBLASERP__Serial_Number__c = project.Serial_Number__c;
+					updateMFGMatl = true;
 				}
 			}
 		}
@@ -830,16 +830,9 @@ public without sharing class gcProject_AccountingActions {
 		Date moveDate = Date.today();
 		if(buildDate != null)
 			moveDate = Date.parse(buildDate);
-//		for(AggregateResult aggRes : [SELECT AcctSeedERP__Material__r.AcctSeedERP__Project__c idProject,
-//								SUM(AcctSeedERP__Quantity__c) totQty
-//							FROM AcctSeedERP__Manufacturing_Inventory_Movement__c
-//							WHERE AcctSeedERP__Material__r.AcctSeedERP__Project__c = :idProject
-//							GROUP BY AcctSeedERP__Material__r.AcctSeedERP__Project__c])
-//		{
-//			Id idBalance = (Id)aggRes.get('idProject');
-//			Decimal qtyMoved = (Decimal)aggRes.get('totQty');
-//		}
-		AcctSeed__Project__c project = 
+		Boolean projectHasCogs = checkProjectHasCOGS(idProject);
+
+		AcctSeed__Project__c project =
 		[SELECT Id,
 				RecordTypeId,
 				AcctSeedERP__Manufactured_Product__c,
@@ -961,7 +954,7 @@ public without sharing class gcProject_AccountingActions {
 							if(matl == null || matl.GMBLASERP__Serial_Number__c == project.Serial_Number__c)
 								matl = mx;
 						}
-					}else{
+					}else if(!projectHasCogs){
 						Decimal qt = mx.AcctSeedERP__Quantity_Per_Unit__c == null ? 0 : mx.AcctSeedERP__Quantity_Per_Unit__c;
 						Decimal am = mx.AcctSeedERP__Product__r.AcctSeed__Unit_Cost__c == null ? 0 : mx.AcctSeedERP__Product__r.AcctSeed__Unit_Cost__c;
 						nonInventoryPrice += (qt * am);

@@ -951,6 +951,8 @@ public without sharing class gcProject {
       mapProjectTotal.put(p.Id, p.Grand_Total__c == null ? 0 : p.Grand_Total__c);
       mapProjectData.put(p.Id, p);
     }
+    System.debug('mapProjectTotal');
+    System.debug(mapProjectTotal);
     Set<Id> setIdProjectLock = new Set<Id>();
     for(sObject txn :
     [SELECT
@@ -962,6 +964,8 @@ public without sharing class gcProject {
     GROUP BY AcctSeed__Project__c])
     {
       Decimal gTotal = (Decimal) txn.get('grandTotal');
+      System.debug('gTotal');
+      System.debug(gTotal);
       Id idProject = (Id) txn.get('idProject');
       if(mapProjectTotal.get(idProject).setScale(2) <= gTotal.setScale(2)
         && mapProjectData.get(idProject).RecordTypeId != idRtBoatSale
@@ -970,12 +974,12 @@ public without sharing class gcProject {
     }
 
     if(!setIdProjectLock.isEmpty()){
-      try{
+      //try{
         checkProjectHasUnWIPUnCogsQty(setIdProjectLock);
         lockProjects(setIdProjectLock);
-      }catch(Exception e){
+      //}catch(Exception e){
         System.debug('setIdProjectLock:'+setIdProjectLock);
-      }
+      //}
     }
   }
 
