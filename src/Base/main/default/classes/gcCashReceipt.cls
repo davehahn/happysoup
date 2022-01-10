@@ -113,11 +113,15 @@ public without sharing class gcCashReceipt {
 			Set<Id> setIdProject = new Set<Id>();
 			for(AcctSeed__Cash_Receipt__c cr : listAll)
 			{
-	            if(cr.AcctSeed__Project__c != null && cr.GMBLASG__Posted__c)
+				//System.debug('Checking multiple');
+	            if(cr.AcctSeed__Project__c != null && cr.AcctSeed__Status__c == 'Posted' && (boolIsInsert || (boolIsUpdate && oldMap.get(cr.Id).AcctSeed__Status__c != cr.AcctSeed__Status__c)))
 	                setIdProject.add(cr.AcctSeed__Project__c);
 			}
-			if(!setIdProject.isEmpty())
-				gcProject.lockIfNoBalanceDue(setIdProject);
+			if(!setIdProject.isEmpty()) {
+				//System.debug('setIdProject');
+				//System.debug(setIdProject);
+				gcProject.lockIfNoBalanceDueFuture(setIdProject);
+			}
 		}
 	}
 
