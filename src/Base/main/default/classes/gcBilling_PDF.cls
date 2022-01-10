@@ -8,6 +8,7 @@ global without sharing class gcBilling_PDF{
 	}
 
 	global transient AcctSeed__Billing__c bill{get;set;}
+	global transient List<Legend_Tax_Numbers__mdt> taxNumbers{get;set;}
 	global transient List<Map<String,String>> polList{get;set;}
 
 	global void init()
@@ -80,6 +81,7 @@ global without sharing class gcBilling_PDF{
 				polList.add(m);
 			}
 		}
+		taxNumbers = Legend_Tax_Numbers__mdt.getAll().values();
 	}
 
 
