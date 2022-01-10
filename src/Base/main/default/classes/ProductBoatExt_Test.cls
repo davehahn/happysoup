@@ -38,7 +38,7 @@ private class ProductBoatExt_Test {
     Product2 boat = factory.insertTestBoatWithFeatures(7);
     List<Feature__c> features = factory.buildAllFeatures(10);
     insert features;
-    List<Product_Option__c> opts = factory.buildPartOptions(boat, 5, 'Electronics');
+    List<Product_Option__c> opts = factory.buildPartOptions(boat, 5, 'Hardware');
     insert opts;
 
 
@@ -76,7 +76,7 @@ private class ProductBoatExt_Test {
     Product2 boat = factory.buildTestBoat();
     insert boat;
     Map<String, Integer> optionSetupMap = new Map<String, Integer>();
-    optionSetupMap.put('Electronics', 4);
+    optionSetupMap.put('Hardware', 4);
     optionSetupMap.put('Fun and Entertainment', 6);
     optionSetupMap.put('Graphics and Decals', 8);
     optionSetupMap.put('Pontoon Covers', 3);

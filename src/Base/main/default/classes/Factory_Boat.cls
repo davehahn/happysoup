@@ -13,7 +13,7 @@ public with sharing class Factory_Boat
   public static final Decimal PREMIUM_PACKAGE_PRICE = 5000;
   public static final List<Schema.PickListEntry> FEATURE_CATEGORIES = Feature__c.Category__c.getDescribe().getPicklistValues();
   public static final Integer FEATURE_COUNT = 3;
-  public static final List<String> PART_FAMILIES = new List<String>{'Electronics', 'Saftey', 'Canvas'};
+  public static final List<String> PART_FAMILIES = new List<String>{'Hardware', 'Saftey', 'Canvas'};
   public Product2 boat;
   public Product2 standardTrailer;
   public Product2 standardMotor;
@@ -92,7 +92,7 @@ public with sharing class Factory_Boat
   {
     this.trollingMotors = addUpgrades(
       'Trolling Motor',
-      'Electronics', count
+      'Hardware', count
     );
     return this;
   }
@@ -153,7 +153,7 @@ public with sharing class Factory_Boat
         boatFilter.get( part.Family ).add( part.Id );
         parentId = this.boat.Id;
         availableOnline = true;
-        for( Product2 pp : Factory_Product.createNonSerializedProducts('Part', 'Electronics', 3) )
+        for( Product2 pp : Factory_Product.createNonSerializedProducts('Part', 'Hardware', 3) )
         {
           addPricebookEntries( pp.Id, 0 );
           productParts.add( new AcctSeed__Product_Part__c(

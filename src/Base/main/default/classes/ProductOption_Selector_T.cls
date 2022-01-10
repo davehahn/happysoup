@@ -25,7 +25,7 @@ private class ProductOption_Selector_T
     );
     optionalProducts = Factory_Product.createNonSerializedProducts(
       'Part',
-      'Electronics',
+      'Hardware',
       10
     );
     options = new List<Product_Option__c>();

@@ -17,8 +17,8 @@ private class Product_Controller_Test {
   private static void init2()
   {
     Product2[] prods = new List<Product2>();
-    parts4All = Factory_Product.buildNonserializedProducts('Part', 'Electronics', 20 );
-    partsRetailOnly = Factory_Product.buildNonserializedProducts('Part', 'Electronics', 20 );
+    parts4All = Factory_Product.buildNonserializedProducts('Part', 'Hardware', 20 );
+    partsRetailOnly = Factory_Product.buildNonserializedProducts('Part', 'Hardware', 20 );
     prods.addAll( parts4All );
     prods.addAll( partsRetailOnly );
     insert prods;

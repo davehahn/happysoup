@@ -14,7 +14,7 @@ private class gcInventoryReport_MRP_Test {
     static void testInventoryMRP()
     {
         map<Id,map<Id,map<Id,Id>>> mapPWLB = new map<Id,map<Id,map<Id,Id>>>();
-        Product2 part = Factory_Product.createNonSerializedProduct('Part', 'Electronics');
+        Product2 part = Factory_Product.createNonSerializedProduct('Part', 'Hardware');
         Product2 serialProd = Factory_Product.createSerializedProduct('Boat','Full Windshield');
         GMBLASERP__Serial_Number__c serial = Factory_SerialNumber.insertSerialNumber(serialProd,'1234567');
         Id idWarehouse = gcConstants.idWarehouseMontreal;
@@ -121,7 +121,7 @@ private class gcInventoryReport_MRP_Test {
         listProductIds.addAll(setProductIds);
         gcInventoryReport_MRP.listProductFamily(idRTPart);
         gcInventoryReport_MRP.retrieveProducts(setProductIds,idWarehouse);
-        gcInventoryReport_MRP.retrieveProductsByFamily(listProductIds,idWarehouse,idRTPart,'Electronics');
+        gcInventoryReport_MRP.retrieveProductsByFamily(listProductIds,idWarehouse,idRTPart,'Hardware');
         gcInventoryReport_MRP.retrieveSerialNumbers(new List<Id>{serialProd.Id},null);
         gcInventoryReport_MRP.retrieveProductsByWarehouse(setProductIds,new Set<ID>{idWarehouse});
         gcInventoryReport_MRP.retrievePurchaseOrders(new List<Id>{part.Id},null);
@@ -135,7 +135,7 @@ private class gcInventoryReport_MRP_Test {
     static void testInventoryMRPProject()
     {
         map<Id,map<Id,map<Id,Id>>> mapPWLB = new map<Id,map<Id,map<Id,Id>>>();
-        Product2 part = Factory_Product.createNonSerializedProduct('Part', 'Electronics');
+        Product2 part = Factory_Product.createNonSerializedProduct('Part', 'Hardware');
         Product2 serialProd = Factory_Product.createSerializedProduct('Boat','Full Windshield');
         GMBLASERP__Serial_Number__c serial = Factory_SerialNumber.insertSerialNumber(serialProd,'1234567');
         Id idWarehouse = gcConstants.idWarehouseMontreal;

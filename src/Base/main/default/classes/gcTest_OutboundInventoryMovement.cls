@@ -14,7 +14,7 @@ private class gcTest_OutboundInventoryMovement {
 
   static testMethod void trigger_Test()
   {
-    Product2 part = Factory_Product.createNonSerializedProduct('Part', 'Electronics');
+    Product2 part = Factory_Product.createNonSerializedProduct('Part', 'Hardware');
     Id idWarehouse = gcConstants.idWarehouseMontreal;
     AcctSeedERP__Location__c loc = [SELECT Id FROM AcctSeedERP__Location__c WHERE AcctSeedERP__Warehouse__c =:idWarehouse LIMIT 1];
     Id idBalance = GCR_InventoryBalance.findOrCreateBalance(part.Id,idWarehouse,loc.Id);

@@ -70,7 +70,7 @@ public class AccrualTool_Controller_T {
         ];
         List<Product2> parts = Factory_Product.buildNonSerializedProducts(
             'Part',
-            'Electronics',
+            'Hardware',
             PARTS_COUNT
         );
         parts[0].Rigging_Time__c = RIGGINNG_TIME;

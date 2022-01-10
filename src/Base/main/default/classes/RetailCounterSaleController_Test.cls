@@ -205,7 +205,7 @@ private class RetailCounterSaleController_Test {
         IsActive = true,
         RecordTypeId = salesRtId,
         Sales_Year__c = String.valueOf(Date.today().year()),
-        Version__c = 2
+        Version__c = 98
       )
     );
     pbs.add(
@@ -214,7 +214,7 @@ private class RetailCounterSaleController_Test {
         IsActive = true,
         RecordTypeId = salesRtId,
         Sales_Year__c = String.valueOf(Date.today().year()),
-        Version__c = 3
+        Version__c = 99
       )
     );
     insert pbs;

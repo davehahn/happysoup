@@ -843,7 +843,7 @@ private class BusinessOffice_Controller_Test {
 
   private static void insertProducts() {
     boat = Factory_Product.buildSerializedProduct('Boat', 'Pontoon');
-    part = Factory_Product.buildNonSerializedProduct('Part', 'Electronics');
+    part = Factory_Product.buildNonSerializedProduct('Part', 'Hardware');
     serviceProducts = Factory_Product.buildNonSerializedProducts(
       'Protection and Services',
       'Maintenance Package',
