@@ -901,7 +901,7 @@ public without sharing class gcProject {
   //lockProjects() method couldn't get the require data because of the sync process, so adding future method to add some delay to call lockProjects
   @Future
   public static void lockIfNoBalanceDueFuture(Set<Id> setIdProject){
-    lockIfNoBalanceDue(setIdProject);
+    lockIfNoBalanceDue(setIdProject, false);
   }
 
   public static void lockProjects(Set<Id> setIdProject)
@@ -938,7 +938,11 @@ public without sharing class gcProject {
     }
   }
 
-  public static void lockIfNoBalanceDue(Set<Id> setIdProject)
+  public static void lockIfNoBalanceDue(Set<Id> setIdProject){
+    lockIfNoBalanceDue(setIdProject,true);
+  }
+
+  public static void lockIfNoBalanceDue(Set<Id> setIdProject, Boolean throwExceptions)
   {
     setIdProject.remove(null);
     if(setIdProject.isEmpty()) return;
@@ -974,12 +978,16 @@ public without sharing class gcProject {
     }
 
     if(!setIdProjectLock.isEmpty()){
-      //try{
+      try{
         checkProjectHasUnWIPUnCogsQty(setIdProjectLock);
         lockProjects(setIdProjectLock);
-      //}catch(Exception e){
-        System.debug('setIdProjectLock:'+setIdProjectLock);
-      //}
+      }catch(Exception e){
+        if(throwExceptions){
+          throw new gcException(e.getMessage());
+        }else{
+          System.debug(e.getMessage());
+        }
+      }
     }
   }
 
