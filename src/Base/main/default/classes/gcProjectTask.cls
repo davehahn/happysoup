@@ -310,9 +310,12 @@ global without sharing class gcProjectTask {
           pt.addError('Cannot add new task. The parent ERP Order is locked.');
 
         if (boolIsInsert) {
+         pt.Task_Order__c =
           pt.Index__c =
             mapProjectIndex.get(pt.AcctSeed__Project__c).setScale(0) + 1;
-          mapProjectIndex.put(pt.AcctSeed__Project__c, pt.Index__c);
+            mapProjectIndex.put(pt.AcctSeed__Project__c, pt.Index__c);
+
+
         }
 
         if (pt.Expense__c == null)

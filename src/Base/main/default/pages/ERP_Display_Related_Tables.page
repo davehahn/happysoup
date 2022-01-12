@@ -1181,8 +1181,8 @@ input.dateSelector{
     {
         var gridObj = { title:"Project Tasks",
                         collapsible:{on:false,collapsed:false,toggle:false},
-                        columnTemplate: {sortable:true,editable:false, minWidth:50},
-                        dataModel:{data:[], sorting:'local', location:'local', sortDir:'up', sortIndx:'projectTaskName'},
+                        columnTemplate: {sortable:true,editable:true, minWidth:50},
+                        dataModel:{data:[], sorting:'local', location:'local', sortDir:'up', sortIndx:'taskOrder'},
                         dragColumns:{enabled:false},
                         editable:true,
                         editModel: {clicksToEdit:1, saveKey: jQuery.ui.keyCode.ENTER, keyUpDown: false, onSave:null, onBlur:'save'},
@@ -1218,6 +1218,8 @@ input.dateSelector{
         gridObj.colModel=[{dataIndx:'action',               title:'', maxWidth:100, align:'center'},
                           {dataIndx:'isLocked',             title:'Locked',    gFormat:'checkbox', align:'center', minWidth:45, maxWidth:45, hidden:{!!$Permission.CanLockUnlockERPTask}},
                           {dataIndx:'projectTaskName',      title:'ERP Order Task', minWidth:150},
+                          {dataIndx:'taskOrder',            title:'Task Order',  gFormat:'number',  align:'center', maxWidth:80,editable:true, cls:'highlight'},
+
                           {dataIndx:'taskGLV1',             title:'Task GLV1',        minWidth:150, hidden:{!!isInternalLabour}, editor:{ type: 'textbox', cls: 'glv1AutoComplete', select: true}, editable:true},
                           {dataIndx:'taskGLV2',             title:'Task GLV2',        minWidth:150, hidden:{!!isInternalLabour}, editor:{ type: 'textbox', cls: 'glv2AutoComplete', select: true}, editable:true},
                           {dataIndx:'productName',          title:'Parts List', hidden:{!IF(isManufacturing,false,true)}},
@@ -1275,6 +1277,20 @@ input.dateSelector{
                             return '<span class="link" onclick="createLighteningNavigation(\''+ui.rowData.idProjectTask+'\',\'view\');">'+ui.rowData.projectTaskName+'</span>';
                             //return '<a href=\"/'+ ui.rowData.idProjectTask+'\" target=\"_blank\">'+ui.rowData.projectTaskName+'</a>';
                         return ui.rowData.projectTaskName;
+                    }
+                });
+            }
+            else if(col.dataIndx == 'taskOrder')
+            {
+                $j.extend(col,{
+                    render:function(ui)
+                    {
+                        var htm = ui.rowData.taskOrder;
+						console.log('htm in taskorder= '+htm);
+                        //return '<span class=\"link\">'+ htm + '</span>';
+                        if (ui.rowData.taskOrder == 'undefine' || ui.rowData.taskOrder == null)
+                            return "";
+                        return ui.rowData.taskOrder;
                     }
                 });
             }
@@ -1459,6 +1475,11 @@ input.dateSelector{
                 else
                     $j(this).pqGrid( "quitEditMode" );
             }
+            else if(ui.dataIndx == 'taskOrder' ){
+                // alert('in task order if');
+				ui.$editor.prop('id',ui.rowIndx);
+                //alert('in task order if after');
+			}
             else
             {
                 //quit editing of cell
@@ -1501,6 +1522,19 @@ input.dateSelector{
                     {
                         showToast('The Budget Expense must be numerical.');
                         rowData.budgetExpense = oldRow.budgetExpense;
+                    }
+                }
+
+                 if(newRow.taskOrder !== undefined && newRow.taskOrder != oldRow.taskOrder)
+                {
+                    console.log('in update task');
+                    if(newRow.taskOrder == null || !isNaN(newRow.taskOrder)){
+                        console.log('about to update');
+                        updateTaskOrder(rowIndx, idProjectTask, newRow.taskOrder);}
+                    else
+                    {
+                        showToast('The Task Order must be numerical.');
+                        rowData.taskOrder = oldRow.taskOrder;
                     }
                 }
             }
@@ -1751,6 +1785,33 @@ input.dateSelector{
                     $gridDiv.pqGrid('deleteRow',{rowIndx:rowIndx});
                     $gridDiv.pqGrid('removeData',{rowIndx:rowIndx});
                     $gridDiv.pqGrid('addRow',{rowIndx:rowIndx, rowData:result, checkEditable:false, source:'add'});
+                }
+                else
+                {
+                    showToast(event.message);
+                    refreshAll();
+                }
+                $gridDiv.pqGrid('hideLoading');
+            },
+            {buffer:true, escape:true, timeout:120000});
+    }
+
+     function updateTaskOrder(rowIndx, idProjectTask, taskOrder)
+    {
+        var $gridDiv = $j('#tasks');
+        $gridDiv.pqGrid('showLoading');
+
+        Visualforce.remoting.Manager.invokeAction(
+            '{!$RemoteAction.gcProject_Ext.updateTaskOrder}',
+            idProjectTask, taskOrder,
+            function(result,event){
+                alert('event.status= '+event.status);
+                if(event.status)
+                {
+                    $gridDiv.pqGrid('deleteRow',{rowIndx:rowIndx});
+                    $gridDiv.pqGrid('removeData',{rowIndx:rowIndx});
+                    $gridDiv.pqGrid('addRow',{rowIndx:rowIndx, rowData:result, checkEditable:false, source:'add'});
+                    refreshAll();
                 }
                 else
                 {
