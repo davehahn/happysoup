@@ -1,10 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Flow xmlns="http://soap.sforce.com/2006/04/metadata">
     <actionCalls>
-        <name>Chatter_Jurnee_Charon</name>
-        <label>Chatter Jurnee Charon</label>
+        <name>Chatter_Brittany</name>
+        <label>ChatterBrittany</label>
         <locationX>50</locationX>
-        <locationY>815</locationY>
+        <locationY>935</locationY>
+        <actionName>chatterPost</actionName>
+        <actionType>chatterPost</actionType>
+        <connector>
+            <targetReference>Chatter_Jurnee_0</targetReference>
+        </connector>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>text</name>
+            <value>
+                <elementReference>ChatterBrittany</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>subjectNameOrId</name>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </inputParameters>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </actionCalls>
+    <actionCalls>
+        <name>Chatter_Jurnee_0</name>
+        <label>ChatterBrittany</label>
+        <locationX>50</locationX>
+        <locationY>1055</locationY>
         <actionName>chatterPost</actionName>
         <actionType>chatterPost</actionType>
         <flowTransactionModel>CurrentTransaction</flowTransactionModel>
@@ -56,13 +81,13 @@
         <name>Validate_User</name>
         <label>Validate User</label>
         <locationX>182</locationX>
-        <locationY>695</locationY>
+        <locationY>815</locationY>
         <defaultConnectorLabel>Else</defaultConnectorLabel>
         <rules>
             <name>Active_User</name>
             <conditionLogic>and</conditionLogic>
             <conditions>
-                <leftValueReference>JurneeUserID</leftValueReference>
+                <leftValueReference>BrittanyUserID</leftValueReference>
                 <operator>IsNull</operator>
                 <rightValue>
                     <booleanValue>false</booleanValue>
@@ -75,8 +100,15 @@
                     <booleanValue>false</booleanValue>
                 </rightValue>
             </conditions>
+            <conditions>
+                <leftValueReference>JurneeUserID</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
             <connector>
-                <targetReference>Chatter_Jurnee_Charon</targetReference>
+                <targetReference>Chatter_Brittany</targetReference>
             </connector>
             <label>Active User</label>
         </rules>
@@ -105,7 +137,7 @@
                 </rightValue>
             </conditions>
             <connector>
-                <targetReference>Get_User_ID</targetReference>
+                <targetReference>Get_User_ID_0</targetReference>
             </connector>
             <label>Whitefish</label>
         </rules>
@@ -133,10 +165,40 @@
     </processMetadataValues>
     <processType>AutoLaunchedFlow</processType>
     <recordLookups>
-        <name>Get_User_ID</name>
+        <name>Get_User_ID_0</name>
         <label>Get User ID</label>
         <locationX>182</locationX>
         <locationY>575</locationY>
+        <assignNullValuesIfNoRecordsFound>true</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Get_User_ID_0_0</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Username</field>
+            <operator>Contains</operator>
+            <value>
+                <stringValue>bwright@legendboats.com</stringValue>
+            </value>
+        </filters>
+        <filters>
+            <field>IsActive</field>
+            <operator>EqualTo</operator>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </filters>
+        <object>User</object>
+        <outputAssignments>
+            <assignToReference>BrittanyUserID</assignToReference>
+            <field>Id</field>
+        </outputAssignments>
+    </recordLookups>
+    <recordLookups>
+        <name>Get_User_ID_0_0</name>
+        <label>Get User ID</label>
+        <locationX>182</locationX>
+        <locationY>695</locationY>
         <assignNullValuesIfNoRecordsFound>true</assignNullValuesIfNoRecordsFound>
         <connector>
             <targetReference>Validate_User</targetReference>
@@ -180,8 +242,20 @@
     <textTemplates>
         <name>ChatterBodyJurnee</name>
         <isViewedAsPlainText>true</isViewedAsPlainText>
-        <text>@[{!JurneeUserID}] This survey has been completed by a Whitefish retail customer. @[{!JurneeManagerID}]</text>
+        <text>@[{!JurneeUserID}] This survey has been completed by a Whitefish retail customer.</text>
     </textTemplates>
+    <textTemplates>
+        <name>ChatterBrittany</name>
+        <isViewedAsPlainText>true</isViewedAsPlainText>
+        <text>@[{!BrittanyUserID}] This survey has been completed by a Whitefish retail customer.</text>
+    </textTemplates>
+    <variables>
+        <name>BrittanyUserID</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
     <variables>
         <name>JurneeManagerID</name>
         <dataType>String</dataType>

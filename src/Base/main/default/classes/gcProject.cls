@@ -901,7 +901,7 @@ public without sharing class gcProject {
   //lockProjects() method couldn't get the require data because of the sync process, so adding future method to add some delay to call lockProjects
   @Future
   public static void lockIfNoBalanceDueFuture(Set<Id> setIdProject){
-    lockIfNoBalanceDue(setIdProject);
+    lockIfNoBalanceDue(setIdProject, false);
   }
 
   public static void lockProjects(Set<Id> setIdProject)
@@ -938,7 +938,11 @@ public without sharing class gcProject {
     }
   }
 
-  public static void lockIfNoBalanceDue(Set<Id> setIdProject)
+  public static void lockIfNoBalanceDue(Set<Id> setIdProject){
+    lockIfNoBalanceDue(setIdProject,true);
+  }
+
+  public static void lockIfNoBalanceDue(Set<Id> setIdProject, Boolean throwExceptions)
   {
     setIdProject.remove(null);
     if(setIdProject.isEmpty()) return;
@@ -951,6 +955,8 @@ public without sharing class gcProject {
       mapProjectTotal.put(p.Id, p.Grand_Total__c == null ? 0 : p.Grand_Total__c);
       mapProjectData.put(p.Id, p);
     }
+    System.debug('mapProjectTotal');
+    System.debug(mapProjectTotal);
     Set<Id> setIdProjectLock = new Set<Id>();
     for(sObject txn :
     [SELECT
@@ -962,6 +968,8 @@ public without sharing class gcProject {
     GROUP BY AcctSeed__Project__c])
     {
       Decimal gTotal = (Decimal) txn.get('grandTotal');
+      System.debug('gTotal');
+      System.debug(gTotal);
       Id idProject = (Id) txn.get('idProject');
       if(mapProjectTotal.get(idProject).setScale(2) <= gTotal.setScale(2)
         && mapProjectData.get(idProject).RecordTypeId != idRtBoatSale
@@ -974,7 +982,11 @@ public without sharing class gcProject {
         checkProjectHasUnWIPUnCogsQty(setIdProjectLock);
         lockProjects(setIdProjectLock);
       }catch(Exception e){
-        System.debug('setIdProjectLock:'+setIdProjectLock);
+        if(throwExceptions){
+          throw new gcException(e.getMessage());
+        }else{
+          System.debug(e.getMessage());
+        }
       }
     }
   }

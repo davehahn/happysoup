@@ -53,6 +53,23 @@ public with sharing class JournalEntry_dh {
         if( dateMap.size() > 0 )
           updateJournalEntryDates( dateMap );
 
+          /// Lock Project
+          list<AcctSeed__Journal_Entry__c> listAll = new list<AcctSeed__Journal_Entry__c>();
+          listAll.addAll(listNew);
+          listAll.addAll(oldMap.values());
+          Set<Id> setIdProject = new Set<Id>();
+          for(AcctSeed__Journal_Entry__c je : listAll)
+          {
+            //System.debug('Checking multiple JE');
+            if(je.Project__c != null && je.AcctSeed__Status__c == 'Posted' && oldMap.get(je.Id).AcctSeed__Status__c != je.AcctSeed__Status__c)
+              setIdProject.add(je.Project__c);
+          }
+          if(!setIdProject.isEmpty()) {
+            //System.debug('setIdProjectJE');
+            //System.debug(setIdProject);
+            gcProject.lockIfNoBalanceDueFuture(setIdProject);
+          }
+          /// Lock Project
       }
       if(boolIsDelete)
       {
