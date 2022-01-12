@@ -269,6 +269,10 @@
   removePart: function(component, event, helper) {
     helper.deletePart(component,event);
   },
+  updateWholesaleLabour: function(component, event, helper) {
+     // alert("in update fun");
+      helper.updateWholesaleLabour(component,event);
+    },
 
   uploaderInitialized: function(component, event) {
     console.log('newClaim.uploaderInitialized');
@@ -277,6 +281,7 @@
   },
 
   validateParts: function(component) {
+
     var part = component.get('v.partLookupValue'),
         quantity = component.get('v.partLookupQuantityValue');
 
