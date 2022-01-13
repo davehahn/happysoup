@@ -152,8 +152,7 @@ public without sharing class gcProduct {
 			}
 			else if(p.RecordTypeId == idRTMotor ||
 					p.RecordTypeId == idRTTrailer ||
-					p.RecordTypeId == idRTTrollingMotor ||
-					    ( p.RecordTypeId == idRTPart && p.Family != null && p.Family.contains('Hull') ) )
+					p.RecordTypeId == idRTTrollingMotor)
 			{
 				p.AcctSeed__Inventory_GL_Account__c = mapGL.get('InventoryParts');
 				p.AcctSeed__Expense_GL_Account__c = mapGL.get('CogsParts');
