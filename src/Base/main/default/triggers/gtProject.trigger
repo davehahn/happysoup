@@ -1,3 +1,4 @@
+/* TODO: DELETE ME */
 trigger gtProject on AcctSeed__Project__c (after delete, after insert, after undelete, after update, before delete, before insert, before update) {
 
 //	// set this flag if we are running unit tests

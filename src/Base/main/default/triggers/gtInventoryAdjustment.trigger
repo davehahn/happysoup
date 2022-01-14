@@ -1,3 +1,4 @@
+/* TODO: DELETE ME */
 trigger gtInventoryAdjustment on GMBLASERP__Inventory_Adjustment__c (after delete, after insert, after undelete, after update, before delete, before insert, before update) {
 //
 //	if(!gcInventoryAdjustment.disableTrigger)
