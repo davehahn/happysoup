@@ -1,3 +1,4 @@
+/* TODO: DELETE ME */
 trigger gtProduct on Product2 (after delete, after insert, after undelete, after update, before delete, before insert, before update) {
 
 //	// set this flag if we are running unit tests

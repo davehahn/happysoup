@@ -1,3 +1,4 @@
+/* TODO: DELETE ME */
 trigger gtOutboundInventoryMovement on AcctSeedERP__Outbound_Inventory_Movement__c (after delete, after insert, after undelete, after update, before delete, before insert, before update) {
 
 //	if(!gcOutboundInventoryMovement.disableTrigger)

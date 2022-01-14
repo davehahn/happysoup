@@ -1,3 +1,4 @@
+/* TODO: DELETE ME */
 trigger gtEmployee on Employee__c (after delete, after insert, after undelete, after update, before delete, before insert, before update) {
 
 //    if(!gcEmployee.disableTrigger)

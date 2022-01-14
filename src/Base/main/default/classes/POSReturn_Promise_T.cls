@@ -24,7 +24,7 @@ public class POSReturn_Promise_T
     static void testStepOnePromise()
     {
         TriggerHandler.bypass('CommissionPayment2_TriggerHandler');
-        TriggerHandler.bypass('CommissionRecord2_TriggerHandler');
+        TriggerBase.bypass('CommissionRecord2__c');
         gcProjectTask.ignoreCommissions = true;
         project = ProjectTestFactory.insertCounterSale();
         System.debug('projectm');
@@ -83,7 +83,7 @@ public class POSReturn_Promise_T
     static void testStepTwoPromise()
     {
         TriggerHandler.bypass('CommissionPayment2_TriggerHandler');
-        TriggerHandler.bypass('CommissionRecord2_TriggerHandler');
+        TriggerBase.bypass('CommissionRecord2__c');
         gcProjectTask.ignoreCommissions = true;
         project = ProjectTestFactory.insertCounterSale();
         System.debug('projectm');
@@ -405,7 +405,7 @@ public class POSReturn_Promise_T
     static void testStepThreePromise()
     {
         TriggerHandler.bypass('CommissionPayment2_TriggerHandler');
-        TriggerHandler.bypass('CommissionRecord2_TriggerHandler');
+        TriggerBase.bypass('CommissionRecord2__c');
         gcProjectTask.ignoreCommissions = true;
         project = ProjectTestFactory.insertCounterSale();
         System.debug('projectm');
@@ -471,7 +471,7 @@ public class POSReturn_Promise_T
     static void testStepFourPromise()
     {
         TriggerHandler.bypass('CommissionPayment2_TriggerHandler');
-        TriggerHandler.bypass('CommissionRecord2_TriggerHandler');
+        TriggerBase.bypass('CommissionRecord2__c');
         gcProjectTask.ignoreCommissions = true;
         project = ProjectTestFactory.insertCounterSale();
         System.debug('projectm');

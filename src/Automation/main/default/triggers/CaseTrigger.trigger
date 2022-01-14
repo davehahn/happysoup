@@ -16,5 +16,4 @@ trigger CaseTrigger on Case (
     }
   }
   new MetadataTriggerHandler().run();
-  //new Case_TriggerHandler().run();
 }

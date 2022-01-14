@@ -1,3 +1,4 @@
+/* TODO: DELETE ME */
 trigger gtMaterial on AcctSeedERP__Material__c  (after delete, after insert, after undelete, after update, before delete, before insert, before update) {
 
 //	if(!gcMaterial.disableTrigger)
