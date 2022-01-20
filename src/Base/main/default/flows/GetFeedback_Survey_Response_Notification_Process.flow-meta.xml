@@ -1,42 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Flow xmlns="http://soap.sforce.com/2006/04/metadata">
     <actionCalls>
-        <name>Chatter_Brittany</name>
-        <label>ChatterBrittany</label>
+        <name>Chatter_Whitefish_CES</name>
+        <label>Chatter Whitefish CES</label>
         <locationX>50</locationX>
         <locationY>935</locationY>
         <actionName>chatterPost</actionName>
         <actionType>chatterPost</actionType>
-        <connector>
-            <targetReference>Chatter_Jurnee_0</targetReference>
-        </connector>
         <flowTransactionModel>CurrentTransaction</flowTransactionModel>
         <inputParameters>
             <name>text</name>
             <value>
-                <elementReference>ChatterBrittany</elementReference>
-            </value>
-        </inputParameters>
-        <inputParameters>
-            <name>subjectNameOrId</name>
-            <value>
-                <elementReference>$Record.Id</elementReference>
-            </value>
-        </inputParameters>
-        <storeOutputAutomatically>true</storeOutputAutomatically>
-    </actionCalls>
-    <actionCalls>
-        <name>Chatter_Jurnee_0</name>
-        <label>ChatterBrittany</label>
-        <locationX>50</locationX>
-        <locationY>1055</locationY>
-        <actionName>chatterPost</actionName>
-        <actionType>chatterPost</actionType>
-        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
-        <inputParameters>
-            <name>text</name>
-            <value>
-                <elementReference>ChatterBodyJurnee</elementReference>
+                <elementReference>ChatterBodyWhitefishCES</elementReference>
             </value>
         </inputParameters>
         <inputParameters>
@@ -78,8 +53,8 @@
         </rules>
     </decisions>
     <decisions>
-        <name>Validate_User</name>
-        <label>Validate User</label>
+        <name>Validate_Users</name>
+        <label>Validate Users</label>
         <locationX>182</locationX>
         <locationY>815</locationY>
         <defaultConnectorLabel>Else</defaultConnectorLabel>
@@ -108,7 +83,7 @@
                 </rightValue>
             </conditions>
             <connector>
-                <targetReference>Chatter_Brittany</targetReference>
+                <targetReference>Chatter_Whitefish_CES</targetReference>
             </connector>
             <label>Active User</label>
         </rules>
@@ -137,7 +112,7 @@
                 </rightValue>
             </conditions>
             <connector>
-                <targetReference>Get_User_ID_0</targetReference>
+                <targetReference>Get_BWright_User_ID</targetReference>
             </connector>
             <label>Whitefish</label>
         </rules>
@@ -165,13 +140,13 @@
     </processMetadataValues>
     <processType>AutoLaunchedFlow</processType>
     <recordLookups>
-        <name>Get_User_ID_0</name>
-        <label>Get User ID</label>
+        <name>Get_BWright_User_ID</name>
+        <label>Get BWright User ID</label>
         <locationX>182</locationX>
         <locationY>575</locationY>
         <assignNullValuesIfNoRecordsFound>true</assignNullValuesIfNoRecordsFound>
         <connector>
-            <targetReference>Get_User_ID_0_0</targetReference>
+            <targetReference>Get_Jurnee_User_ID</targetReference>
         </connector>
         <filterLogic>and</filterLogic>
         <filters>
@@ -195,13 +170,13 @@
         </outputAssignments>
     </recordLookups>
     <recordLookups>
-        <name>Get_User_ID_0_0</name>
-        <label>Get User ID</label>
+        <name>Get_Jurnee_User_ID</name>
+        <label>Get Jurnee User ID</label>
         <locationX>182</locationX>
         <locationY>695</locationY>
         <assignNullValuesIfNoRecordsFound>true</assignNullValuesIfNoRecordsFound>
         <connector>
-            <targetReference>Validate_User</targetReference>
+            <targetReference>Validate_Users</targetReference>
         </connector>
         <filterLogic>and</filterLogic>
         <filters>
@@ -240,14 +215,9 @@
     </start>
     <status>Active</status>
     <textTemplates>
-        <name>ChatterBodyJurnee</name>
+        <name>ChatterBodyWhitefishCES</name>
         <isViewedAsPlainText>true</isViewedAsPlainText>
-        <text>@[{!JurneeUserID}] This survey has been completed by a Whitefish retail customer.</text>
-    </textTemplates>
-    <textTemplates>
-        <name>ChatterBrittany</name>
-        <isViewedAsPlainText>true</isViewedAsPlainText>
-        <text>@[{!BrittanyUserID}] This survey has been completed by a Whitefish retail customer.</text>
+        <text>@[{!JurneeUserID}] @[{!BrittanyUserID}] This survey has been completed by a Whitefish retail customer. @[{!JurneeManagerID}]</text>
     </textTemplates>
     <variables>
         <name>BrittanyUserID</name>
