@@ -56,7 +56,8 @@ private class OpportunityTrigger_Test {
                     Tax_Override__c,
                     Tax_Rate_Provincial__c,
                     Tax_Rate_Federal__c,
-                    Warehouse__c
+                    Warehouse__c,
+                    Pricebook2Id
              FROM Opportunity
              WHERE Id = :opp1.Id];
     }
@@ -80,6 +81,7 @@ private class OpportunityTrigger_Test {
     Test.stopTest();
 
     System.assertEquals( whitefishWarehouse.Id, opp1.Warehouse__c );
+    System.assertEquals( Test_Constants.idRetailPricebook, opp1.Pricebook2Id );
     //System.assertEquals( wh1.GL_Account_Variable_3__c, opp1.GL_Account_Variable_3__c);
     //System.assertEquals( wh1.GL_Account_Variable_3__r.Tax_is_Harmonized__c, opp1.Tax_is_Harmonized__c );
     //System.assertEquals( wh1.GL_Account_Variable_3__r.Tax_Rate_Provincial__c, opp1.Tax_Rate_Provincial__c );

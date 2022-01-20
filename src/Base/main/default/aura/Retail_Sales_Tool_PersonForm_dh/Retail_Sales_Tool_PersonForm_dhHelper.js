@@ -8,7 +8,6 @@
 
   fetchCustomer : function( component, objectId )
   {
-    console.log( 'helper.fetchCustomer with ID of ' + objectId);
     var action = component.get('c.fetchCustomer'), la;
     action.setParams({
       objectId: objectId
@@ -55,7 +54,6 @@
     if( oppId === undefined )
     {
       var action = component.get('c.createSale'), la;
-      console.log( JSON.parse( JSON.stringify( component.get('v.customer') ) ) );
       action.setParams({
         customerJSON: JSON.stringify(component.get('v.customer') ),
         oppJSON: JSON.stringify(component.get('v.opp') )
@@ -94,7 +92,6 @@
           //  result = JSON.parse(result);
           component.set("v.showPop", true);
           component.set('v.listData', result );
-          console.log(result);
         })
       )
       .finally( $A.getCallback( function() {
@@ -127,10 +124,7 @@
             }),
             $A.getCallback( function( err ) {
               var duplicateMessage = err;//'DUPLICATES_DETECTED';
-                          console.log(err);
                 if(duplicateMessage.includes('DUPLICATES_DETECTED') || duplicateMessage.includes('Duplicate Alert')){
-                    console.log('DUPLICATES_DETECTED');
-                  console.log(duplicateMessage);
                   helper.handleDuplicate(component, event, helper);
                 }else{
                   LightningUtils.errorToast( err );

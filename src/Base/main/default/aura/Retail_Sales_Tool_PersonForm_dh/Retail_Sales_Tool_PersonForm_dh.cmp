@@ -3,6 +3,9 @@
                                      $Resource.Libraries +'/js/LightningUtils.js') }"
                 afterScriptsLoaded="{!c.afterScripts}" />
 
+  <aura:attribute name="leadId" type="String" />
+  <aura:attribute name="renderedInModal" type="Boolean" default="false" />
+  <aura:attribute name="hasExternalNav" type="Boolean" default="false" />
   <aura:attribute name="fromCPQ" type="Boolean" default="false" />
   <aura:attribute name="showPop" type="Boolean" default="false" />
   <aura:attribute name="hasSelections" type="Boolean" default="false" />
@@ -12,6 +15,7 @@
   <aura:attribute name="listData" type="sObject[]" />
   <aura:attribute name="dupAccounts" type="String" />
   <aura:attribute name="currentStep" type="String" />
+  <aura:attribute name="onLastStep" type="Boolean" default="false" />
   <aura:attribute name="selectOptions" type="Object" />
   <aura:attribute name="customer" type="Object" />
   <aura:attribute name="opp" type="Object" />
@@ -29,33 +33,38 @@
   <aura:handler name="lgnd_registration_event"
                 event="c:lgnd_registration_event"
                 action="{!c.handleCreateAccount}" />
+  <aura:method name="next" action="{!c.handleNext}" />
+  <aura:method name="back" action="{!c.handleBack}" />
+  <aura:method name="continue" action="{!c.handleContinue}" />
 
   <c:Lgnd_Spinner_dh aura:id="spinner" />
 
 <!-- PROGRESS INDICATOR -->
-  <lightning:layout horizontalAlign="center" verticalAlign="center" class="slds-m-bottom_small">
-    <lightning:layoutItem size="12"
-                          smallDeviceSize="12"
-                          mediumDeviceSize="12"
-                          largeDeviceSize="8"
-                          padding="around-small"
-                          class="slds-card">
-      <lightning:progressIndicator currentStep="{!v.currentStep}" type="base">
-          <lightning:progressStep label="{!v.steps[0]}"
-                                  title="{!v.steps[0]}"
-                                  value="{!v.steps[0]}"/>
-          <lightning:progressStep label="{!v.steps[1]}"
-                                  title="{!v.steps[1]}"
-                                  value="{!v.steps[1]}"/>
-          <lightning:progressStep label="{!v.steps[2]}"
-                                  title="{!v.steps[2]}"
-                                  value="{!v.steps[2]}"/>
-          <lightning:progressStep label="{!v.steps[3]}"
-                                  title="{!v.steps[3]}"
-                                  value="{!v.steps[3]}"/>
-      </lightning:progressIndicator>
-    </lightning:layoutItem>
-  </lightning:layout>
+  <aura:if isTrue="{! not(v.hasExternalNav)}">
+    <lightning:layout horizontalAlign="center" verticalAlign="center" class="slds-m-bottom_small">
+      <lightning:layoutItem size="12"
+                            smallDeviceSize="12"
+                            mediumDeviceSize="12"
+                            largeDeviceSize="8"
+                            padding="around-small"
+                            class="slds-card">
+        <lightning:progressIndicator currentStep="{!v.currentStep}" type="base">
+            <lightning:progressStep label="{!v.steps[0]}"
+                                    title="{!v.steps[0]}"
+                                    value="{!v.steps[0]}"/>
+            <lightning:progressStep label="{!v.steps[1]}"
+                                    title="{!v.steps[1]}"
+                                    value="{!v.steps[1]}"/>
+            <lightning:progressStep label="{!v.steps[2]}"
+                                    title="{!v.steps[2]}"
+                                    value="{!v.steps[2]}"/>
+            <lightning:progressStep label="{!v.steps[3]}"
+                                    title="{!v.steps[3]}"
+                                    value="{!v.steps[3]}"/>
+        </lightning:progressIndicator>
+      </lightning:layoutItem>
+    </lightning:layout>
+  </aura:if>
 
 <!-- STEP 1 ( Account Search and initial details ) ************* -->
   <div class="{!if( equals(v.currentStep, v.steps[0]), 'slds-visible', 'slds-hidden')}">
@@ -63,18 +72,21 @@
       <lightning:layoutItem size="12"
                             smallDeviceSize="12"
                             mediumDeviceSize="12"
-                            largeDeviceSize="8"
+                            largeDeviceSize="{! if( v.renderedInModal, '12', '8')}"
                             padding="around-small"
                             class="slds-card min-height-container">
+        <aura:if isTrue="{! not(v.renderedInModal)}">
           <h1 class="slds-text-heading_medium
                    slds-m-bottom_medium
                    slds-p-bottom_small
                    slds-text-align_center
                    slds-border_bottom">Find or Create your Customer</h1>
-
+        </aura:if>
+        <aura:if isTrue="{! empty(v.leadId)}">
           <c:lgnd_account_search scope="customer"
                                  selectorOnly="true"
                                  fieldLabel="Search Current Customers" />
+        </aura:if>
 
         <aura:if isTrue="{!v.showPersonForm}">
           <div class='slds-m-top_small'>
@@ -265,15 +277,16 @@
             <lightning:layoutItem size="12"
                                   smallDeviceSize="12"
                                   mediumDeviceSize="12"
-                                  largeDeviceSize="8"
+                                  largeDeviceSize="{! if( v.renderedInModal, '12', '8')}"
                                   padding="around-small"
                                   class="slds-card min-height-container">
-
+              <aura:if isTrue="{! not(v.renderedInModal)}">
                 <h1 class="slds-text-heading_medium
                        slds-m-bottom_medium
                        slds-p-bottom_small
                        slds-text-align_center
                        slds-border_bottom">Account F.O.R.M.A.T.</h1>
+              </aura:if>
 
                 <div class="slds-m-top_small">
                   <lightning:layout multipleRows="true">
@@ -384,15 +397,16 @@
           <lightning:layoutItem size="12"
                                 smallDeviceSize="12"
                                 mediumDeviceSize="12"
-                                largeDeviceSize="8"
+                                largeDeviceSize="{! if( v.renderedInModal, '12', '8')}"
                                 padding="around-small"
                                 class="slds-card min-height-container">
-
-            <h1 class="slds-text-heading_medium
-                     slds-m-bottom_medium
-                     slds-p-bottom_small
-                     slds-text-align_center
-                     slds-border_bottom">WOW Notes</h1>
+            <aura:if isTrue="{! not(v.renderedInModal)}">
+              <h1 class="slds-text-heading_medium
+                       slds-m-bottom_medium
+                       slds-p-bottom_small
+                       slds-text-align_center
+                       slds-border_bottom">WOW Notes</h1>
+            </aura:if>
 
             <lightning:layout horizontalAlign="center">
               <lightning:layoutItem size="12"
@@ -415,15 +429,17 @@
           <lightning:layoutItem size="12"
                                 smallDeviceSize="12"
                                 mediumDeviceSize="12"
-                                largeDeviceSize="8"
+                                largeDeviceSize="{! if( v.renderedInModal, '12', '8')}"
                                 padding="around-small"
                                 class="slds-card min-height-container">
 
+            <aura:if isTrue="{! not(v.renderedInModal)}">
                <h1 class="slds-text-heading_medium
                      slds-m-bottom_medium
                      slds-p-bottom_small
                      slds-text-align_center
                      slds-border_bottom">Opportunity</h1>
+            </aura:if>
 
               <lightning:layout multipleRows="true">
 
@@ -508,41 +524,43 @@
   </aura:if>
 
 <!-- BUTTONS ******* -->
-  <lightning:layout horizontalAlign="center" verticalAlign="center">
-    <lightning:layoutItem size="12"
-                          smallDeviceSize="12"
-                          mediumDeviceSize="12"
-                          largeDeviceSize="8">
+    <aura:if isTrue="{!not(v.hasExternalNav)}">
+      <lightning:layout horizontalAlign="center" verticalAlign="center">
+        <lightning:layoutItem size="12"
+                              smallDeviceSize="12"
+                              mediumDeviceSize="12"
+                              largeDeviceSize="8">
 
-      <div class="slds-modal__footer">
-       <!-- Back Button -->
-        <lightning:button label="Back"
-                          variant="neutral"
-                          onclick="{!c.handleBack}"
-                          iconName="utility:chevronleft"
-                          iconPosition="left"
-                          class="slds-float_left" />
+          <div class="slds-modal__footer">
+           <!-- Back Button -->
+            <lightning:button label="Back"
+                              variant="neutral"
+                              onclick="{!c.handleBack}"
+                              iconName="utility:chevronleft"
+                              iconPosition="left"
+                              class="slds-float_left" />
 
-        <aura:if isTrue="{! not( equals(v.currentStep, v.steps[3]) )}">
-          <lightning:button label="Next"
-                            variant="brand"
-                            iconName="utility:chevronright"
-                            iconPosition="right"
-                            onclick="{!c.handleNext}" />
-        </aura:if>
+            <aura:if isTrue="{! not( equals(v.currentStep, v.steps[3]) )}">
+              <lightning:button label="Next"
+                                variant="brand"
+                                iconName="utility:chevronright"
+                                iconPosition="right"
+                                onclick="{!c.handleNext}" />
+            </aura:if>
 
-        <aura:if isTrue="{! equals(v.currentStep, v.steps[3])}">
-          <lightning:button label="{!if( v.fromCPQ,
-                                         'Create Quote',
-                                         'Build your Boat' )}"
-                            variant="brand"
-                            iconName="utility:chevronright"
-                            iconPosition="right"
-                            onclick="{!c.handleContinue}" />
-        </aura:if>
-      </div>
-    </lightning:layoutItem>
-  </lightning:layout>
+            <aura:if isTrue="{! equals(v.currentStep, v.steps[3])}">
+              <lightning:button label="{!if( v.fromCPQ,
+                                             'Create Quote',
+                                             'Build your Boat' )}"
+                                variant="brand"
+                                iconName="utility:chevronright"
+                                iconPosition="right"
+                                onclick="{!c.handleContinue}" />
+            </aura:if>
+          </div>
+        </lightning:layoutItem>
+      </lightning:layout>
+    </aura:if>
   <lightning:layout horizontalAlign="center" verticalAlign="center">
     <lightning:layoutItem size="12"
                           smallDeviceSize="12"

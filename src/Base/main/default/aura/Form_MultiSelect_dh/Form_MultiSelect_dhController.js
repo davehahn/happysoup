@@ -1,10 +1,8 @@
 ({
 	doInit : function(component, event, helper)
   {
-    console.log('multi select do init');
     var value = component.get('v.value'),
         options = component.get('v.options');
-        console.log( JSON.parse( JSON.stringify(options )));
     if( options === undefined || options === null)
     {
       options = [];
@@ -30,9 +28,7 @@
 
   handleValueChange: function( component, event, helper )
   {
-    console.log( 'multi select value changed' );
     var value = component.get('v.value');
-    console.log( value );
     helper.setSelected( component );
   },
 
