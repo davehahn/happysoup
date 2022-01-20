@@ -121,7 +121,6 @@ public class OpportunityTriggerHandler {
         Set<Id> acctIds = new Set<Id>();
         Set<Id> ownerIds = new Set<Id>();
 
-        Id retailId = LGND_Utilities.recordTypeIdFromName('Opportunity', 'Retail');
         for(Opportunity opp : listNew)
         {
           acctIds.add(opp.AccountId);
@@ -188,11 +187,6 @@ public class OpportunityTriggerHandler {
           setTaxes( opp,
                     acctsMap.get(opp.AccountId),
                     oppOwner );
-           // Retail Opps
-          if(opp.RecordTypeId == retailId && disableAutoPricebookSet == false)
-          {
-            opp.Pricebook2Id = LGND_Constants.retailPricebookId;
-          }
         }
 
       }
@@ -234,10 +228,18 @@ public class OpportunityTriggerHandler {
                                      Account.PersonEmail,
                                      Account.AccountEmail__c,
                                      Account.PersonContactId,
-                                     createdFromLeadConversion__c
+                                     createdFromLeadConversion__c,
+                                     RecordTypeId
                               FROM Opportunity
                               WHERE Id IN :newMap.keySet() ];
-
+        Id retailRtId = new Application_RecordType().getOpportunityRecordTypes().getRetailId();
+        for( Opportunity opp : opps ){
+          // Retail Opps
+          if(opp.RecordTypeId == retailRtId && disableAutoPricebookSet == false)
+          {
+            opp.Pricebook2Id = LGND_Constants.retailPricebookId;
+          }
+        }
         setPrimaryContactInformation(opps);
       }
       if(boolIsUpdate)
@@ -441,7 +443,10 @@ public class OpportunityTriggerHandler {
         o.ContactEmail__c = o.Account.AccountEmail__c;
       }
     }
+    Boolean orig = OpportunityTriggerHandler.disableTrigger;
+    OpportunityTriggerHandler.disableTrigger = true;
     update opps;
+    OpportunityTriggerHandler.disableTrigger = orig;
     if( !ocRoles.isEmpty() ){
       upsert ocRoles;
     }

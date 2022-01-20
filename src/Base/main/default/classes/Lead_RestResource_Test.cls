@@ -45,8 +45,11 @@ private class Lead_RestResource_Test
         res.responseBody.toString(),
         Lead_RestResource.WebToLeadWrapper.class
       );
+
+    Lead l = [SELECT Id, Lead_Notification_Pending__c FROM Lead WHERE Id = :resultWrapper.id];
     System.assertEquals( 200, res.statusCode );
     System.assert( resultWrapper.id != null );
+    System.assertEquals( true, l.Lead_Notification_Pending__c);
   }
 
   @IsTest
@@ -62,6 +65,8 @@ private class Lead_RestResource_Test
     System.debug( response );
     System.assertEquals( 'success', response.status );
     System.assert( response.data.id != null );
+    System.assertEquals( 'Tester', response.data.firstName);
+    System.assertEquals( true, response.data.leadNotificationPending );
   }
 
   @IsTest
