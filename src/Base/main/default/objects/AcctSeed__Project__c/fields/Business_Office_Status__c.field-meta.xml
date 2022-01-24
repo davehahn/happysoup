@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Business_Office_Status__c</fullName>
+    <externalId>false</externalId>
+    <label>Business Office Status</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <controllingField>Payment_Method__c</controllingField>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Deposit Collected</fullName>
+                <default>false</default>
+                <label>Deposit Collected</label>
+            </value>
+            <value>
+                <fullName>Credit App Submitted</fullName>
+                <default>false</default>
+                <label>Credit App Submitted</label>
+            </value>
+            <value>
+                <fullName>Presentation Scheduled</fullName>
+                <default>false</default>
+                <label>Presentation Scheduled</label>
+            </value>
+            <value>
+                <fullName>Presentation Complete</fullName>
+                <default>false</default>
+                <label>Presentation Complete</label>
+            </value>
+            <value>
+                <fullName>Loan Docs Sent</fullName>
+                <default>false</default>
+                <label>Loan Docs Sent</label>
+            </value>
+            <value>
+                <fullName>Loan Docs Submitted</fullName>
+                <default>false</default>
+                <label>Loan Docs Submitted</label>
+            </value>
+            <value>
+                <fullName>Funded</fullName>
+                <default>false</default>
+                <label>Funded</label>
+            </value>
+            <value>
+                <fullName>Invoice Sent</fullName>
+                <default>false</default>
+                <label>Invoice Sent</label>
+            </value>
+            <value>
+                <fullName>Paid in Full</fullName>
+                <default>false</default>
+                <label>Paid in Full</label>
+            </value>
+        </valueSetDefinition>
+        <valueSettings>
+            <controllingFieldValue>Cash</controllingFieldValue>
+            <controllingFieldValue>Finance</controllingFieldValue>
+            <valueName>Deposit Collected</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Cash</controllingFieldValue>
+            <controllingFieldValue>Finance</controllingFieldValue>
+            <valueName>Presentation Scheduled</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Cash</controllingFieldValue>
+            <controllingFieldValue>Finance</controllingFieldValue>
+            <valueName>Presentation Complete</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Cash</controllingFieldValue>
+            <valueName>Invoice Sent</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Cash</controllingFieldValue>
+            <valueName>Paid in Full</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Finance</controllingFieldValue>
+            <valueName>Credit App Submitted</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Finance</controllingFieldValue>
+            <valueName>Loan Docs Sent</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Finance</controllingFieldValue>
+            <valueName>Loan Docs Submitted</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Finance</controllingFieldValue>
+            <valueName>Funded</valueName>
+        </valueSettings>
+    </valueSet>
+</CustomField>
