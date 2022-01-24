@@ -248,17 +248,21 @@ public class AccrualTool_Controller {
                 ''+material.AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_1__c+
                 ''+material.AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_2__c;
             if(!jounralEntryLineWrapperRevenue.containsKey(key)) {
-                jounralEntryLineWrapperRevenue.put(key,
-                                                   new JournalEntryLineWrapper(material.AcctSeedERP__Product__r.AcctSeed__Revenue_GL_Account__c,
-                                                                               material.AcctSeedERP__Product__r.AcctSeed__Revenue_GL_Account__r.Name,
-                                                                               material.AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_1__c,
-                                                                               material.AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_1__r.Name,
-                                                                               material.AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_2__c,
-                                                                               material.AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_2__r.Name,
-                                                                               0.0,material.GMBLASERP__Total_Price__c));
+                JournalEntryLineWrapper jelw = new JournalEntryLineWrapper(material.AcctSeedERP__Product__r.AcctSeed__Revenue_GL_Account__c,
+                        material.AcctSeedERP__Product__r.AcctSeed__Revenue_GL_Account__r.Name,
+                        material.AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_1__c,
+                        material.AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_1__r.Name,
+                        material.AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_2__c,
+                        material.AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_2__r.Name,
+                        0.0,material.GMBLASERP__Total_Price__c);
+                jelw.ProductId = material.AcctSeedERP__Product__c;
+                jounralEntryLineWrapperRevenue.put(key,jelw);
             } else {
                 JournalEntryLineWrapper Revenue = jounralEntryLineWrapperRevenue.get(key);
                 Revenue.Credit = Revenue.Credit + material.GMBLASERP__Total_Price__c;
+                if(Revenue.ProductId == null){
+                    Revenue.ProductId = material.AcctSeedERP__Product__c;
+                }
                 jounralEntryLineWrapperRevenue.put(key,Revenue);
             }
         }
@@ -289,13 +293,21 @@ public class AccrualTool_Controller {
         for(JournalEntryLineWrapper lineWrapper: jounralEntryLineWrapperRevenue.values()) {
             revenueGLTotal += lineWrapper.Credit;
             journalCreditTotal += lineWrapper.Credit;
+            JournalEntryLineWrapper jelw = new JournalEntryLineWrapper(
+                    gcConstants.idGlAccruedRevenue,glAccMap.get(gcConstants.idGlAccruedRevenue),
+                    erpRec.GL_Account_Variable_1__c,erpRec.GL_Account_Variable_1__r.Name,
+                    erpRec.GL_Account_Variable_2__c,erpRec.GL_Account_Variable_2__r.Name,
+                    lineWrapper.Credit,0.0
+            );
+            jelw.ProductId = lineWrapper.ProductId;
+            journalEntryLineWrapperList.add(jelw);
         }
-        JournalEntryLineWrapper revenueGL = new JournalEntryLineWrapper(
-            gcConstants.idGlAccruedRevenue,glAccMap.get(gcConstants.idGlAccruedRevenue),
-            erpRec.GL_Account_Variable_1__c,erpRec.GL_Account_Variable_1__r.Name,
-            erpRec.GL_Account_Variable_2__c,erpRec.GL_Account_Variable_2__r.Name,
-            revenueGLTotal,0.0
-        );
+//        JournalEntryLineWrapper revenueGL = new JournalEntryLineWrapper(
+//            gcConstants.idGlAccruedRevenue,glAccMap.get(gcConstants.idGlAccruedRevenue),
+//            erpRec.GL_Account_Variable_1__c,erpRec.GL_Account_Variable_1__r.Name,
+//            erpRec.GL_Account_Variable_2__c,erpRec.GL_Account_Variable_2__r.Name,
+//            revenueGLTotal,0.0
+//        );
         journalDebitTotal+=revenueGLTotal;
         
         Decimal expenseGLTotal = 0.0;
@@ -366,7 +378,7 @@ public class AccrualTool_Controller {
         groupingWrapper.put('TotalCredit',new AccuralWrapper(journalCreditTotal,null,null));
         
         journalEntryLineWrapperList.addAll(jounralEntryLineWrapperRevenue.values());
-        journalEntryLineWrapperList.add(revenueGL);
+        //journalEntryLineWrapperList.add(revenueGL);
         journalEntryLineWrapperList.addAll(jounralEntryLineWrapperExpense.values());
         journalEntryLineWrapperList.add(expenseGL);
         journalEntryLineWrapperList.addAll(jounralEntryLineWrapperInsurance.values());
@@ -517,6 +529,11 @@ public class AccrualTool_Controller {
                 
                 AcctSeed__Journal_Entry_Line__c je = new AcctSeed__Journal_Entry_Line__c();
                 je.AcctSeed__GL_Account__c = wrap.GLAccountId;
+                /// SFISSUES - 1309
+                //if(je.AcctSeed__GL_Account__c == gcConstants.idGlAccruedRevenue){
+                    je.AcctSeed__Product__c = wrap.ProductId;
+                //}
+
                 if(wrap.Credit!=null && wrap.Credit!=0.0) {
                 je.AcctSeed__Credit__c = wrap.Credit;
                 } else {
@@ -686,6 +703,7 @@ public class AccrualTool_Controller {
     }
     public class JournalEntryLineWrapper {
         @AuraEnabled public String GLAccountId;
+        @AuraEnabled public String ProductId;
         @AuraEnabled public String GLAccountName;
         @AuraEnabled public String GLV1Id;
         @AuraEnabled public String GLV1Name;
