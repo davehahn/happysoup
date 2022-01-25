@@ -127,6 +127,7 @@ private class gcManufacturingInventoryMovement_Test{
     gcMaterial.disableTrigger = true;
     AcctSeedERP__Material__c matl2 = new AcctSeedERP__Material__c(
             AcctSeedERP__Project__c = p.Id,
+            AcctSeedERP__Project_Task__c = pt.Id,
             AcctSeedERP__Product__c = p.AcctSeedERP__Manufactured_Product__c,
             GMBLASERP__Serial_Number__c = p.Serial_Number__c,
             AcctSeedERP__Quantity_Per_Unit__c = 1,

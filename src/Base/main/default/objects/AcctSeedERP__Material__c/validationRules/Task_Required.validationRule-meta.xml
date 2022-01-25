@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Task_Required</fullName>
+    <active>true</active>
+    <description>A task must be added before inserting or updating a material</description>
+    <errorConditionFormula>AcctSeedERP__Project_Task__c == null</errorConditionFormula>
+    <errorMessage>Task is required to add/update ERP order Item.</errorMessage>
+</ValidationRule>
