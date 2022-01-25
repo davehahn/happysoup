@@ -200,6 +200,7 @@ public class Factory_ERPOrder {
     insert task;
     AcctSeedERP__Material__c mat = buildMaterial( erp.Id, task.Id, boatSerial.GMBLASERP__Product__c);
     mat.GMBLASERP__Serial_Number__c = boatSerial.Id;
+    mat.GMBLASERP__Total_Price__c = mat.AcctSeedERP__Quantity_Per_Unit__c * mat.GMBLASERP__Unit_Price__c;
     insert mat;
     return erp;
   }

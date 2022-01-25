@@ -26,6 +26,7 @@ public virtual class Case_Selector extends Application_Selector {
     return new Case_Selector()
       .addFields(new List<String>{ 'Warranty_Erp__c, Recoverable_Erp__c' })
       .addWhereIdIn(ids)
+      .addWhere('Warranty_ERP__c <> null ', 'AND')
       .query();
   }
 }
