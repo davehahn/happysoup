@@ -1,47 +1,55 @@
 ({
-  handleSelect :function(component, event, helper)
-  {
-    var fieldName = component.get('v.pickListField'),
-        fieldValue = event.getParam('detail').value,
-        spinner = component.find('spinner'),
-        simpleRecord = component.get('v.simpleRecord'),
-        readOnly = component.get('v.readOnly');
-
-    if( readOnly )
-    {
-      event.preventDefault();
-      return;
-    }
-    simpleRecord[fieldName] = fieldValue;
-    component.set('v.simpleRecord', simpleRecord );
-    $A.util.toggleClass(spinner, "slds-hide");
-
-    component.find('recordHandler').saveRecord(
-      $A.getCallback( function(saveResult) {
-        console.log( JSON.parse( JSON.stringify(saveResult)));
-        if (saveResult.state === "SUCCESS" || saveResult.state === "DRAFT")
-        {
-          $A.get("e.force:refreshView").fire();
-          $A.util.toggleClass(spinner, "slds-hide");
+  doInit: function (component, event, helper) {
+    helper.initialize(component).then(
+      $A.getCallback((result) => {
+        helper.initComplete = true;
+        console.log("init complete");
+        if (result) {
+          console.log("we have dependents");
+          component.set("v.isDependentPicklist", true);
+          component.set("v.controlFieldName", result.controlFieldName);
+          component.set("v.dependentOptionsByControlField", result.valueMap);
+          helper.setup(component);
         }
-        else if (saveResult.state === "INCOMPLETE")
-        {
-          LightningUtils.errorToast("User is offline, device doesn't support drafts.");
-        }
-        else if (saveResult.state === "ERROR")
-        {
-          LightningUtils.errorToast('Problem saving record, error: ' + JSON.stringify(saveResult.error));
-        }
-        else
-        {
-          LightningUtils.errorToast('Unknown problem, state: ' + saveResult.state + ', error: ' + JSON.stringify(saveResult.error));
-        }
+      }),
+      $A.getCallback((err) => {
+        LightningUtils.errorToast("Problem saving record, error: " + err);
       })
     );
   },
 
-  reloadRecord: function( component, event, helper )
-  {
-    component.find('recordHandler').reloadRecord(true)
+  handleRecordUpdated: function (component, event, helper) {
+    var eventParams = event.getParams();
+    if (eventParams.changeType === "LOADED") {
+      helper.recordLoaded = true;
+      helper.setup(component);
+    }
+  },
+
+  handleButton: function (component, event, helper) {
+    console.log("handleButton");
+    let selectedStatus = component.get("v.selectedStatus");
+    let currentStatus = component.get("v.currentValue");
+    let options = component.get("v.dependentOptions");
+    let value =
+      selectedStatus == currentStatus
+        ? options[options.indexOf(selectedStatus) + 1]
+        : selectedStatus;
+    helper.saveRecord(component, value);
+  },
+
+  pathClick: function (component, event, helper) {
+    event.preventDefault();
+    let selectedStatus = event.getSource().get("v.value");
+    let currentStatus = component.get("v.currentValue");
+    component.set("v.selectedStatus", selectedStatus);
+  },
+
+  handleSelect: function (component, event, helper) {
+    helper.saveRecord(component, event.getParam("detail").value);
+  },
+
+  reloadRecord: function (component, event, helper) {
+    component.find("recordHandler").reloadRecord(true);
   }
-})
+});
