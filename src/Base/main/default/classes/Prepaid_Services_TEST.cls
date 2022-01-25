@@ -78,7 +78,9 @@ private class Prepaid_Services_TEST {
 		warehouse = [SELECT Id, Name FROM AcctSeedERP__Warehouse__c WHERE Name like '%Whitefish%' LIMIT 1];
 		DateTime deliveryDate = System.now();
 		GMBLASERP__Serial_Number__c serial = Factory_SerialNumber.insertFullSerial('Boat', 'Pontoon', 'qwertyuiop');
+		gcProject.disableTrigger = true;
 		project = Factory_ERPOrder.insertRetailBoatSale(account, warehouse, deliveryDate, serial);
+		gcProject.disableTrigger = false;
 	}
 
 	private static void initProjects() {
@@ -252,12 +254,18 @@ private class Prepaid_Services_TEST {
 
 		AcctSeed__Project_Task__c[] tasks = new List<AcctSeed__Project_Task__c>();
 
-		AcctSeed__Project_Task__c t = new AcctSeed__Project_Task__c();
+		AcctSeed__Project_Task__c t;
+		for(AcctSeed__Project_Task__c pt : [SELECT Id, Name, AcctSeed__Project__c, Complaint_dh__c, Estimated_Duration__c FROM AcctSeed__Project_Task__c WHERE AcctSeed__Project__c =:project.Id]){
+			t = pt;
+		}
+		gcProjectTask.disableTrigger = true;
+		if(t == null)
+			insert t;
+		gcProjectTask.disableTrigger = false;
 		t.Name = p.product;
 		t.Complaint_dh__c = 'No complaints, really.';
 		t.Estimated_Duration__c = 1;
 		tasks.add( t );
-
 		Prepaid_Services_mp.redeemPrepaids(JSON.serialize(prepaids), account.Id, project.Id, tasks);
 
 		Prepaid_Service__c[] preps = [SELECT Id, Quantity__c, Balance__c, Redeemed__c FROM Prepaid_Service__c WHERE Account__c = :account.Id];
