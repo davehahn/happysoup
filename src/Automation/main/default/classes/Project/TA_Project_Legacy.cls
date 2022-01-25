@@ -4,6 +4,11 @@
 
 public inherited sharing class TA_Project_Legacy implements TriggerAction.BeforeInsert, TriggerAction.BeforeUpdate, TriggerAction.BeforeDelete, TriggerAction.AfterInsert, TriggerAction.AfterUpdate, TriggerAction.AfterDelete {
   public void beforeInsert(List<AcctSeed__Project__c> newList) {
+    if (Test.isRunningTest()) {
+      for (AcctSeed__Project__c p : newList) {
+        p.IsForUnitTest__c = true;
+      }
+    }
     if (!gcProject.disableTrigger) {
       gcProject.triggerHandler(null, null, newList, true, true, false, false);
     }
