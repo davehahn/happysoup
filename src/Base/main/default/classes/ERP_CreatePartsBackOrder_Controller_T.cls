@@ -150,7 +150,7 @@ private class ERP_CreatePartsBackOrder_Controller_T
       Payment_Amount__c = profit * rate,
       Actual_Amount_for_Commission__c = profit
     );
-    TriggerHandler.bypass('CommissionLineItem2_TriggerHandler');
+    TriggerBase.bypass('CommissionLineItem2__c');
     insert line;
   }
 
