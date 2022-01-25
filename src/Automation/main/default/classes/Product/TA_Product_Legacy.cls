@@ -4,6 +4,11 @@
 
 public inherited sharing class TA_Product_Legacy implements TriggerAction.BeforeInsert, TriggerAction.BeforeUpdate, TriggerAction.BeforeDelete, TriggerAction.AfterInsert, TriggerAction.AfterUpdate, TriggerAction.AfterDelete {
   public void beforeInsert(List<Product2> newList) {
+    if (Test.isRunningTest()) {
+      for (Product2 p : newList) {
+        p.IsForUnitTest__c = true;
+      }
+    }
     if (!gcProduct.disableTrigger) {
       gcProduct.triggerHandler(null, null, newList, true, true, false, false);
     }
