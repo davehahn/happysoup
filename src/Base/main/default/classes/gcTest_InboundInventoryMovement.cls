@@ -9,7 +9,7 @@ private class gcTest_InboundInventoryMovement{
 
 	static testMethod void coverage_Test()
 	{
-    gcInboundInventoryMovement.coverage();
+  //  gcInboundInventoryMovement.coverage();
   }
 
   @isTest
