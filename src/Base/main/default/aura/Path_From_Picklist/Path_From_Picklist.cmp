@@ -1,36 +1,94 @@
-<aura:component implements="force:hasRecordId,flexipage:availableForAllPageTypes">
+<aura:component
+  controller="PathFromPicklist_Controller"
+  implements="force:hasRecordId,flexipage:availableForAllPageTypes"
+>
   <aura:attribute name="recordId" type="String" />
   <aura:attribute name="readOnly" type="Boolean" default="false" />
   <aura:attribute name="pickListField" type="String" required="true" />
-  <aura:attribute name="pathType" type="String" required="true" default="linear" />
+  <aura:attribute name="isDependentPicklist" type="Boolean" default="false" />
   <aura:attribute name="title" type="String" />
-  <aura:attribute name="record" type="Object"/>
-  <aura:attribute name="simpleRecord" type="Object"/>
-  <aura:attribute name="recordError" type="String"/>
+  <aura:attribute name="record" type="Object" />
+  <aura:attribute name="simpleRecord" type="Object" />
+  <aura:attribute name="recordError" type="String" />
+  <aura:attribute name="controlFieldName" type="String" />
+  <aura:attribute name="dependentOptionsByControlField" type="Map" />
+  <aura:attribute name="dependentOptions" type="List" />
+  <aura:attribute name="currentValue" type="String" />
+  <aura:attribute name="selectedStatus" type="String" />
+  <aura:attribute
+    name="pathType"
+    type="String"
+    required="true"
+    default="linear"
+  />
+
+  <ltng:require
+    scripts="{!join(',', $Resource.Libraries +'/js/LightningApex.js',
+                                     $Resource.Libraries +'/js/LightningUtils.js') }"
+    afterScriptsLoaded="{!c.doInit}"
+  />
 
   <ltng:require scripts="{!$Resource.Libraries +'/js/LightningUtils.js' }" />
   <aura:handler event="force:refreshView" action="{!c.reloadRecord}" />
 
-    <force:recordData aura:id="recordHandler"
-      recordId="{!v.recordId}"
-      layoutType="FULL"
-      targetRecord="{!v.record}"
-      targetFields="{!v.simpleRecord}"
-      targetError="{!v.recordError}"
-      mode="EDIT"
-      />
-
+  <force:recordData
+    aura:id="recordHandler"
+    recordId="{!v.recordId}"
+    layoutType="FULL"
+    targetRecord="{!v.record}"
+    targetFields="{!v.simpleRecord}"
+    targetError="{!v.recordError}"
+    mode="EDIT"
+    recordUpdated="{!c.handleRecordUpdated}"
+  />
 
   <div class="slds-card">
-    <lightning:spinner alternativeText="Loading"
-                       size="small"
-                       aura:id="spinner"
-                       class="slds-hide" />
-    <h1 class="slds-text-title_caps slds-text-align_center">{!v.title}</h1>
-    <lightning:picklistPath aura:id="picklistPath" recordId="{!v.recordId}"
+    <lightning:spinner
+      alternativeText="Loading"
+      size="small"
+      aura:id="spinner"
+      class="slds-hide"
+    />
+    <aura:if isTrue="{! !empty(v.title)}">
+      <h1 class="slds-text-title_caps slds-text-align_center">{!v.title}</h1>
+    </aura:if>
+    <aura:if isTrue="{! not(v.isDependentPicklist)}">
+      <lightning:picklistPath
+        aura:id="picklistPath"
+        recordId="{!v.recordId}"
         picklistFieldApiName="{!v.pickListField}"
         variant="{!v.pathType}"
-        onselect="{!c.handleSelect}">
-    </lightning:picklistPath>
+        onselect="{!c.handleSelect}"
+      >
+      </lightning:picklistPath>
+    </aura:if>
+
+    <aura:if isTrue="{!v.isDependentPicklist}">
+      <div class="slds-card__body slds-card__body_inner">
+        <lightning:layout multipleRows="true">
+          <lightning:layoutItem size="12" smallDeviceSize="12" mediumDeviceSize="12" largeDeviceSize="10">
+            <lightning:progressIndicator
+              currentStep="{!v.currentValue}"
+              type="path"
+              variant="base"
+            >
+              <aura:iteration items="{!v.dependentOptions}" var="opt">
+                <lightning:progressStep label="{!opt}" value="{!opt}" onclick="{!c.pathClick}"/>
+              </aura:iteration>
+            </lightning:progressIndicator>
+          </lightning:layoutItem>
+          <lightning:layoutItem size="12" smallDeviceSize="12" mediumDeviceSize="12" largeDeviceSize="2" class="slds-text-align_center">
+            <aura:if isTrue="{! equals( v.currentValue, v.selectedStatus)}">
+              <lightning:button label="Mark Stage as Complete" onclick="{!c.handleButton}" variant="brand" iconName="utility:check" iconPosition="left" />
+            </aura:if>
+            <aura:if isTrue="{! !equals( v.currentValue, v.selectedStatus)}">
+              <lightning:button label="Mark as Current Stage" onclick="{!c.handleButton}" variant="brand" />
+            </aura:if>
+
+          </lightning:layoutItem>
+        </lightning:layout>
+
+      </div>
+    </aura:if>
   </div>
 </aura:component>
