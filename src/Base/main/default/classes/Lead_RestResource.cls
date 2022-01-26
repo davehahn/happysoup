@@ -36,6 +36,7 @@ global with sharing class Lead_RestResource
     public String leadSource;
     public String description;
     public Boolean leadNotificationPending;
+    public String closestDealer;
 
     public WebToLeadWrapper(){}
 
@@ -89,6 +90,8 @@ global with sharing class Lead_RestResource
       this.notes = this.record.Marketing_Cloud_Notes__c;
       this.leadSource = this.record.LeadSource;
       this.leadNotificationPending = this.record.Lead_Notification_Pending__c;
+//      this.closestDealer = this.record.Closest_Partner__c;
+
       return this;
     }
 
@@ -126,21 +129,28 @@ global with sharing class Lead_RestResource
     public String email;
     public String purchaseByDate;
     public String boatType;
+    public String boatSeries;
     public String boatModel;
+    public String boatName;
     public String subscribeToNewsletter;
     public String campaignId;
+    public String conversionId;
     public String language;
     public String notes;
     public String leadSource;
     public String description;
+    public String formName;
+    public String specialConditions;
     public Boolean leadNotificationPending;
+    public String closestDealer;
+    public String leadStatus;
 
     public LeadSubmissionHistoryWrapper() {
     }
 
-    public LeadSubmissionHistoryWrapper toSubmissionHistoryObject(String LeadID) {
+    public LeadSubmissionHistoryWrapper toSubmissionHistoryObject(RestResult result) {
       this.submission = new Lead_Submission_History__c(
-              Lead_ID__c = LeadID,
+              Lead_ID__c = result.data.id,
               First_Name__c = this.firstName,
               Last_Name__c = this.lastName,
               Address__c = this.street,
@@ -152,12 +162,19 @@ global with sharing class Lead_RestResource
               Description__c = this.description,
               Purchase_By_Date__c = this.purchaseByDate,
               Boat_Type__c = this.boatType,
+              Boat_Series__c = this.boatSeries,
               Boat_Model__c = this.boatModel,
-              Subscribe_to_Newsletter__c = false,
+              Boat_Name__c = this.boatName,
+              Subscribe_to_Newsletter__c = this.subscribeToNewsletter,
               Preferred_Language__c = this.language,
               Notes__c = this.notes,
               Lead_Source__c = this.leadSource,
+              Form_Name__c = this.formName,
+              Campaign__c = this.campaignId,
+              Conversion_Id__c = this.conversionId,
+              Special_Conditions__c = this.specialConditions,
               Lead_Notification_Pending__c = true
+//              Closest_Dealer__c = result.data.closestDealer
       );
       return this;
     }
@@ -189,24 +206,20 @@ global with sharing class Lead_RestResource
       );
 
       // this is where I'll need to trigger the lead submission history with the result.data.id as the most important value
-      Database.DMLOptions dml = new Database.DMLOptions();
-      dml.optAllOrNone = false;
       LeadSubmissionHistoryWrapper lshWrapper =
-      (LeadSubmissionHistoryWrapper)JSON.deserialize(
-              jsonWrapper,
-              LeadSubmissionHistoryWrapper.class
-      );
-      Database.SaveResult saveResult = Database.insert( lshWrapper.toSubmissionHistoryObject(result.data.id).lshGetRecord(), dml );
-      if( saveResult.isSuccess() )
-      {
-        res.responseBody = Blob.valueOf(
-          '{"status": "success", "id": "' + result.data.id + '", "lshStatus": "success"}'
+        (LeadSubmissionHistoryWrapper)JSON.deserialize(
+                jsonWrapper,
+                LeadSubmissionHistoryWrapper.class
         );
-      }
-      else
-      {
+      //wrap insert in try catch for errors , exception.getMessage
+      try{
+        insert lshWrapper.toSubmissionHistoryObject(result).lshGetRecord();
         res.responseBody = Blob.valueOf(
-          '{"status": "success", "id": "' + result.data.id + '", "lshStatus": "error"}'
+          '{"status": "success", "id": "' + result.data.id + '", "lshStatus": "success", "jsonWrapper": "'+ jsonWrapper +'"}'
+        );
+      } catch (Exception error) {
+        res.responseBody = Blob.valueOf(
+                '{"status": "success", "id": "' + result.data.id + '", "lshStatus": "error", "lshError": "'+ error.getMessage() +'"}'
         );
       }
     }
