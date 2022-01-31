@@ -32,7 +32,10 @@ export default class FactoryStoreBoatDetails extends NavigationMixin(LightningEl
 	currentStockQuantity = 0;
 	stockWrapperClass = 'model__currentStock';
 
+  boatType;
+  boatSeries;
   boatName;
+  modelYear;
   standardMotorName;
   standardTrailerName;
   hasPremiumPack = false;
@@ -90,13 +93,16 @@ export default class FactoryStoreBoatDetails extends NavigationMixin(LightningEl
     this.boatDataLoaded = true;
     this.modelWrapperClass = setWrapperClass(this.sectionWidth, 'model');
     this.boatDataLookupRunning =  false;
-    this.boatName = stripParentheses(this.boat.Name);
-    this.leadFormName = this.boatName + ' - Lead Form';
     this.standardMotorName = rewriteMotorName(this.boat.StandardMotor.Name);
     this.standardTrailerName = (typeof this.boat.StandardTrailer !== 'undefined') ? ((this.isEN) ? 'and ' + rewriteTrailerName(this.boat.StandardTrailer.Name) : 'et ' + rewriteTrailerName(this.boat.StandardTrailer.Name)) : '';
     this.hasPhotoGallery = (typeof this.boat.MarketingImages !== 'undefined') ? true : false;
     this.photoGallery = (this.hasPhotoGallery) ? this.boat.MarketingImages : '';
     this.hasPremiumPack = (typeof this.boat.PremiumPackage !== 'undefined') ? true : false;
+    this.boatType = this.boat.Family;
+		this.boatSeries = this.boat.Series;
+		this.boatName = stripParentheses(this.boat.Name);
+		this.modelYear = this.boat.PricebookName.replace(' - Retail', '');
+		this.leadFormName = this.boatName + ' - Lead Form';
   }
 
   resultEmpty(){

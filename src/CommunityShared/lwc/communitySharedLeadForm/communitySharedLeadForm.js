@@ -5,6 +5,7 @@
 import { LightningElement, wire, api } from 'lwc';
 import { CurrentPageReference, NavigationMixin } from 'lightning/navigation';
 import Id from '@salesforce/community/Id';
+import { fireEvent, registerListener, unregisterAllListeners } from 'c/pubsub';
 import fetchCommunityDetails from '@salesforce/apex/CommSharedURL_Controller.fetchCommunityDetails';
 import insertLead from '@salesforce/apex/CommSharedLeadForm_Controller.insertLead';
 import LeadForm_FirstName from '@salesforce/label/c.LeadForm_FirstName';
@@ -17,6 +18,10 @@ export default class CommunitySharedLeadForm extends NavigationMixin(LightningEl
   @api campaignId;
   @api introTitle;
   @api introBlurb;
+  @api boatType;
+  @api boatSeries;
+  @api boatName;
+  @api boatModelId;
   @api collectFirstName;
   @api collectLastName;
   @api collectStreet;
@@ -32,8 +37,7 @@ export default class CommunitySharedLeadForm extends NavigationMixin(LightningEl
   @api collectNewsletterOptin;
   @api sectionWidth;
   @api serialNumber = "N/A";
-
-  @api boatModelId;
+  @api serialNumberId = 'N/A';
 
   emailPrefill;
   locationName;
@@ -54,7 +58,9 @@ export default class CommunitySharedLeadForm extends NavigationMixin(LightningEl
     LeadForm_LastName
   }
 
-	defaultCampaignId = '701q0000000mL7GAAU';
+	@wire(CurrentPageReference) pageRef;
+
+//	defaultCampaignId = '701q0000000mL7GAAU';
 
 	@wire(CurrentPageReference)
 		setCurrentPageReference(currentPageReference){
@@ -64,9 +70,10 @@ export default class CommunitySharedLeadForm extends NavigationMixin(LightningEl
     	}
     	if(currentPageReference.state.c__recordId){
     	  this.boatModelId = currentPageReference.state.c__recordId;
+    	  console.log('this.boatModelId', this.boatModelId);
      	}
 		if (currentPageReference.state.c__SN) {
-			this.serialNumber = currentPageReference.state.c__SN;
+			this.serialNumberId = currentPageReference.state.c__SN;
 		}
   }
 
@@ -85,7 +92,16 @@ export default class CommunitySharedLeadForm extends NavigationMixin(LightningEl
 
 	renderedCallback(){
 		this.wrapperClass = setWrapperClass(this.sectionWidth, 'leadFormWrapper');
+		registerListener('exposeUsedModelDetails', this.handleUsedModelDetails, this);
  	}
+
+ 	handleUsedModelDetails( details ){
+ 	  console.log('caught used model details: ', details);
+ 	  this.boatName = details.boatName;
+ 	  this.boatModelId = details.recordId;
+ 	  this.serialNumber = details.serialNumber;
+ 	  this.serialNumberId = details.serialNumberId;
+  }
 
 	validateLead( event ){
 		const allValid = [...this.template.querySelectorAll('lightning-input')]
@@ -107,8 +123,10 @@ export default class CommunitySharedLeadForm extends NavigationMixin(LightningEl
 	submitLead(){
 	  this.showLoading = true;
 	  const newLead = this.formatLeadObject();
+	  const newLeadHistory = this.formatLeadHistoryObject();
 	  const cid = (this.campaignId != undefined) ? this.campaignId : this.defaultCampaignId;
-	  const submit = insertLead({l: newLead, cid: cid})
+	  console.log('newLeadHistory', newLeadHistory);
+	  const submit = insertLead({l: newLead, cid: cid, lsh: newLeadHistory})
 	  	.then( (result) =>{
 	  		console.log('submitLead result: ', result);
 	  		this.showForm = false;
@@ -138,10 +156,43 @@ export default class CommunitySharedLeadForm extends NavigationMixin(LightningEl
 			hubspot_subscribe_legend_newsletter__c: (this.template.querySelector('[data-id="Newsletter"]')) ? ((this.template.querySelector('[data-id="Newsletter"]').checked) ? 'Yes' : 'No') : 'No',
 			Preferred_Language__c: (renderEN) ? 'English' : 'French',
 			Marketing_Cloud_Notes__c: (this.template.querySelector('[data-id="Notes"]')) ? this.template.querySelector('[data-id="Notes"]').value : '',
-			LeadSource: this.locationName + ' Factory Store'
+			LeadSource: this.locationName + ' Factory Store',
+			Lead_Notification_Pending__c: true
     }
 //    console.log('data: ', data);
  	  return data;
+  }
+
+  formatLeadHistoryObject(){
+    const data = {
+      First_Name__c: (this.template.querySelector('[data-id="FirstName"]')) ? this.template.querySelector('[data-id="FirstName"]').value : '',
+			Last_Name__c: (this.template.querySelector('[data-id="LastName"]')) ? this.template.querySelector('[data-id="LastName"]').value : '',
+			Address__c: (this.template.querySelector('[data-id="Street"]')) ? this.template.querySelector('[data-id="Street"]').value : '',
+			City__c: (this.template.querySelector('[data-id="City"]')) ? this.template.querySelector('[data-id="City"]').value : '',
+			Province__c: (this.template.querySelector('[data-id="Province"]')) ? this.template.querySelector('[data-id="Province"]').value : '',
+			Postal_Code__c: (this.template.querySelector('[data-id="PostalCode"]')) ? this.template.querySelector('[data-id="PostalCode"]').value : '',
+			Email__c: (this.template.querySelector('[data-id="Email"]')) ? this.template.querySelector('[data-id="Email"]').value : '',
+			Phone_Number__c: (this.template.querySelector('[data-id="Phone"]')) ? this.template.querySelector('[data-id="Phone"]').value : '',
+			Description__c: this.formName,
+			Purchase_By_Date__c: (this.template.querySelector('[data-id="PurchaseByDate"]')) ? this.template.querySelector('[data-id="PurchaseByDate"]').value : '',
+			Boat_Type__c: this.boatType,
+			Boat_Series__c: this.boatSeries,
+			Boat_Model__c: (this.boatModelId) ? this.boatModelId : ((this.template.querySelector('[data-id="BoatModel"]')) ? this.template.querySelector('[data-id="BoatModel"]').value : ''),
+			Boat_Name__c: this.boatName,
+			Subscribe_to_Newsletter__c: (this.template.querySelector('[data-id="Newsletter"]')) ? ((this.template.querySelector('[data-id="Newsletter"]').checked) ? 'Yes' : 'No') : 'No',
+			Preferred_Language__c: (renderEN) ? 'English' : 'French',
+			Notes__c: (this.template.querySelector('[data-id="Notes"]')) ? this.template.querySelector('[data-id="Notes"]').value : '',
+			Lead_Source__c: this.locationName + ' Factory Store',
+			Campaign__c: (this.campaignId != undefined) ? this.campaignId : this.defaultCampaignId,
+			Form_Name__c: this.formName,
+			Campaign__c: (this.campaignId != undefined) ? this.campaignId : this.defaultCampaignId,
+			Serial_Number__c: (this.serialNumber !== "N/A") ? this.serialNumber : '',
+			Serial_Number_Lookup__c	: (this.serialNumberId !== "N/A") ? this.serialNumberId : '',
+			//Conversion_Id__c
+			//Special_Conditions__c
+			Lead_Notification_Pending__c: true
+    }
+    return data;
   }
 
   get provinces() {
