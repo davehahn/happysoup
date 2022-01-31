@@ -66,12 +66,16 @@ global without sharing class gcInboundInventoryMovement {
 		else //i.e. trigger.isAfter
 		{
 			Set<String> setIdSerial = new Set<String>();
+			Set<Id> setIdS = new Set<Id>();
 			if(boolIsInsert)
 			{
 				Boolean shouldCheckInboundForTransfer = true;
 				for(AcctSeedERP__Inbound_Inventory_Movement__c im : listNew) {
 					if (im.GMBLASERP__Serial_Number__c != null) {
 						setIdSerial.add(im.GMBLASERP__Serial_Number__c);
+					}
+					if(im.GMBLASERP__Serial_Number__c != null && im.AcctSeedERP__Project__c != null){
+						setIdS.add(im.GMBLASERP__Serial_Number__c);
 					}
 					/// As of now we are turning this one off.
 					/// Not really needed after we took out GMBLASERP
@@ -94,6 +98,9 @@ global without sharing class gcInboundInventoryMovement {
 					if (im.GMBLASERP__Serial_Number__c != null) {
 						setIdSerial.add(im.GMBLASERP__Serial_Number__c);
 					}
+					if(im.GMBLASERP__Serial_Number__c != null && im.AcctSeedERP__Project__c != null){
+						setIdS.add(im.GMBLASERP__Serial_Number__c);
+					}
 					/// As of now we are turning this one off.
 					/// Not really needed after we took out GMBLASERP
 					/// One in a list should trigger this
@@ -108,6 +115,9 @@ global without sharing class gcInboundInventoryMovement {
 					if (im.GMBLASERP__Serial_Number__c != null) {
 						setIdSerial.add(im.GMBLASERP__Serial_Number__c);
 					}
+					if(im.GMBLASERP__Serial_Number__c != null && im.AcctSeedERP__Project__c != null){
+						setIdS.add(im.GMBLASERP__Serial_Number__c);
+					}
 				}
 				/// As of now we are turning this one off.
 				/// Not really needed after we took out GMBLASERP
@@ -121,6 +131,9 @@ global without sharing class gcInboundInventoryMovement {
 					if (im.GMBLASERP__Serial_Number__c != null) {
 						setIdSerial.add(im.GMBLASERP__Serial_Number__c);
 					}
+					if(im.GMBLASERP__Serial_Number__c != null && im.AcctSeedERP__Project__c != null){
+						setIdS.add(im.GMBLASERP__Serial_Number__c);
+					}
 				}
 			}
 			/// To update serial unit cost run time (future).
@@ -128,6 +141,7 @@ global without sharing class gcInboundInventoryMovement {
 				List<String> listId = new List<String>();
 				listId.addAll(setIdSerial);
 				gcSerialNumber.updateSerialUnitCostFuture(listId);
+				gcSerialNumber.updateSerialIsAvailableFuture(setIdS);
 			}
 		}			
 	}
