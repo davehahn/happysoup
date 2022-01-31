@@ -1,6 +1,16 @@
 @isTest
 public class Test_Constants {
 
+  private static Legend_Settings__c legendSettings {
+    get{
+      if( legendSettings == null ){
+        legendSettings = Legend_Settings__c.getOrgDefaults();
+      }
+      return legendSettings;
+    }
+    set {}
+  }
+
   public static Id idPdfFormat {
     get {
       if( idPdfFormat == null )
@@ -67,9 +77,20 @@ public class Test_Constants {
     get {
       if( idRetailPricebook == null )
       {
-        idRetailPricebook = Legend_Settings__c.getOrgDefaults().Default_Retail_Pricebook__c;
+        idRetailPricebook = legendSettings.Default_Retail_Pricebook__c;
       }
       return idRetailPricebook;
+    }
+    set;
+  }
+
+  public static Id idFactoryPricebook{
+    get {
+      if( idFactoryPricebook == null )
+      {
+        idFactoryPricebook = legendSettings.Default_Factory_Pricebook__c;
+      }
+      return idFactoryPricebook;
     }
     set;
   }

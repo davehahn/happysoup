@@ -14,7 +14,7 @@ private class gcTest_InventoryAdjustment{
 
   @IsTest
   static void testAdjustment(){
-    Product2 part = Factory_Product.createNonSerializedProduct('Part', 'Electronics');
+    Product2 part = Factory_Product.createNonSerializedProduct('Part', 'Hardware');
     Id idWarehouse = gcConstants.idWarehouseMontreal;
     Id idGL = gcConstants.idGlClearingARAP;
     GMBLASERP__Inventory_Adjustment__c adj = new GMBLASERP__Inventory_Adjustment__c(
@@ -51,7 +51,7 @@ private class gcTest_InventoryAdjustment{
 
   @IsTest
   static void testValueAdjustment(){
-    Product2 part = Factory_Product.createNonSerializedProduct('Part', 'Electronics');
+    Product2 part = Factory_Product.createNonSerializedProduct('Part', 'Hardware');
     Id idWarehouse = gcConstants.idWarehouseMontreal;
     Id idGL = gcConstants.idGlClearingARAP;
     GMBLASERP__Inventory_Adjustment__c adj = new GMBLASERP__Inventory_Adjustment__c(
@@ -97,7 +97,7 @@ private class gcTest_InventoryAdjustment{
 
   @IsTest
   static void testDeleteAdjustment(){
-    Product2 part = Factory_Product.createNonSerializedProduct('Part', 'Electronics');
+    Product2 part = Factory_Product.createNonSerializedProduct('Part', 'Hardware');
     Id idWarehouse = gcConstants.idWarehouseMontreal;
     Id idGL = gcConstants.idGlClearingARAP;
     GMBLASERP__Inventory_Adjustment__c adj = new GMBLASERP__Inventory_Adjustment__c(

@@ -1,7 +1,7 @@
 @IsTest(SeeAllData=false)
 private class gcBilling_Clone_T {
     final static String RECORDTYPE = 'Motor';
-    final static String FAMILY = 'Motor Accessories';
+    final static String FAMILY = 'Remote';
     final static String SERIALNUMBER = '123450';
     final static String FNAME = 'TestFirstName';
     final static String LNAME = 'TestLastName';
@@ -60,7 +60,7 @@ private class gcBilling_Clone_T {
             erp_task_map.put( erp.Id, Factory_ERPOrder.buildProjectTask( erp.Id, 'Dealer Order' ) );
         }
         insert erp_task_map.values();
-        Product2[] parts = Factory_Product.buildNonSerializedProducts('Part', 'Electronics', 5);
+        Product2[] parts = Factory_Product.buildNonSerializedProducts('Part', 'Hardware', 5);
         insert parts;
         List<AcctSeedERP__Material__c> mats = new List<AcctSeedERP__Material__c>();
         for( AcctSeed__Project_Task__c task : erp_task_map.values() )

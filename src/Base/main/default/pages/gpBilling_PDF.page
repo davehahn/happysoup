@@ -346,25 +346,38 @@
                 </tbody>
             </table>
             <br/>
-            <table style="width:200px;border-collapse:collapse;float:right">
+            <table style="width:100%;border-collapse:collapse;">
                 <tr>
-                    <td style="padding:6px"><span style="font-weight:bold"><apex:outputText value="{!$ObjectType.AcctSeed__Billing__c.Fields.AcctSeed__Total__c.Label}"/></span>
+                    <td style="vertical-align:top;">
+                        <div class="tax_numbers">
+                            <apex:repeat value="{!taxNumbers}" var="tn">
+                                <div><b>{!tn.DeveloperName}#</b> {!tn.Tax_Number__c}</div>
+                            </apex:repeat>
+                        </div>
                     </td>
-                    <td style="text-align:right;padding:6px"><span style="font-weight:bold"><apex:outputField value="{!AcctSeed__Billing__c.AcctSeed__Total__c}"/></span>
-                    </td>
-                </tr>
-                <tr>
-                    <td style="padding:6px">Amount Paid</td>
-                    <td style="text-align:right;padding:6px">
-		                <apex:outputText value="${0, number,###,##0.00}">
-		                    <apex:param value="{!AcctSeed__Billing__c.AcctSeed__Total__c - AcctSeed__Billing__c.AcctSeed__Balance__c}"/>
-		                </apex:outputText>
-                    </td>
-                </tr>
-                <tr class="tableRowAmount">
-                    <td><span style="font-weight:bold;padding:6px">Amount Due</span>
-                    </td>
-                    <td style="text-align:right;padding:6px"><span style="font-weight:bold"><apex:outputField value="{!AcctSeed__Billing__c.AcctSeed__Balance__c}"/></span>
+                    <td>
+                        <table style="width:200px;border-collapse:collapse;float:right">
+                            <tr>
+                                <td style="padding:6px"><span style="font-weight:bold"><apex:outputText value="{!$ObjectType.AcctSeed__Billing__c.Fields.AcctSeed__Total__c.Label}"/></span>
+                                </td>
+                                <td style="text-align:right;padding:6px"><span style="font-weight:bold"><apex:outputField value="{!AcctSeed__Billing__c.AcctSeed__Total__c}"/></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding:6px">Amount Paid</td>
+                                <td style="text-align:right;padding:6px">
+                                    <apex:outputText value="${0, number,###,##0.00}">
+                                        <apex:param value="{!AcctSeed__Billing__c.AcctSeed__Total__c - AcctSeed__Billing__c.AcctSeed__Balance__c}"/>
+                                    </apex:outputText>
+                                </td>
+                            </tr>
+                            <tr class="tableRowAmount">
+                                <td><span style="font-weight:bold;padding:6px">Amount Due</span>
+                                </td>
+                                <td style="text-align:right;padding:6px"><span style="font-weight:bold"><apex:outputField value="{!AcctSeed__Billing__c.AcctSeed__Balance__c}"/></span>
+                                </td>
+                            </tr>
+                        </table>
                     </td>
                 </tr>
             </table>

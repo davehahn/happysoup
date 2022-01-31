@@ -94,7 +94,7 @@ public with sharing class OpportunityFactory {
     Map<String, Decimal> priceMap = new Map<String, Decimal>{'Test Boat' => 12000.00,
                                                              'Test Motor' => 4000,
                                                              'Test Trailer' => 3000,
-                                                             'Test Electronic Part' => 200,
+                                                             'Test Hardware Part' => 200,
                                                              'Test Seating Part' => 200,
                                                              'Test Safety Part' => 200,
                                                              'Test Warranty Coverage' => 200 };
@@ -123,8 +123,8 @@ public with sharing class OpportunityFactory {
 
     Product2 part1 = new Product2(
       RecordTypeId = recordTypeIdFromString('Part'),
-      Name = 'Test Electronic Part',
-      Family = 'Electronic',
+      Name = 'Test Hardware Part',
+      Family = 'Hardware',
       isActive = true
     );
     products.add(part1);
@@ -208,7 +208,7 @@ public with sharing class OpportunityFactory {
         oli.UnitPrice = 0;
         oli.Description = 'Included With Boat';
       }
-      else if( p.Name == 'Test Electronic Part')
+      else if( p.Name == 'Test Hardware Part')
       {
         oli.BoatBuilderItem__c = false;
         oli.UnitPrice = 0;

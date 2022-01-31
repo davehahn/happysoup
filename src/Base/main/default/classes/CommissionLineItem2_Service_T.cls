@@ -11,7 +11,7 @@ private class CommissionLineItem2_Service_T
   {
     new Factory_TestData();
     Factory_CustomSettings.setupInventorySettings();
-    List<Product2> parts = Factory_Product.createNonSerializedProducts('Part', 'Electronics', partsCount );
+    List<Product2> parts = Factory_Product.createNonSerializedProducts('Part', 'Hardware', partsCount );
     Factory_PricebookEntry.createAllDefaultEntriesEntries( parts, 100 );
     List<AcctSeed__Project__c> projects = new List<AcctSeed__Project__c>();
     for( Account customer : Factory_Account.insertCustomerAccounts(4) )

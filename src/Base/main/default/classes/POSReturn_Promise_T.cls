@@ -23,12 +23,10 @@ public class POSReturn_Promise_T
     @IsTest
     static void testStepOnePromise()
     {
-        TriggerHandler.bypass('CommissionPayment2_TriggerHandler');
-        TriggerHandler.bypass('CommissionRecord2_TriggerHandler');
+        TriggerBase.bypass('CommissionPayment2__c');
+        TriggerBase.bypass('CommissionRecord2__c');
         gcProjectTask.ignoreCommissions = true;
         project = ProjectTestFactory.insertCounterSale();
-        System.debug('projectm');
-        System.debug(project);
         AcctSeed__Project__c pr = [SELECT Id, AcctSeed__Account__c, GMBLASERP__Warehouse__c FROM AcctSeed__Project__c LIMIT 1][0];
         Id idAccount = pr.AcctSeed__Account__c;
         List<POSReturn_Promise.materialData> listMaterials = new List<POSReturn_Promise.materialData>();
@@ -82,8 +80,8 @@ public class POSReturn_Promise_T
     @IsTest
     static void testStepTwoPromise()
     {
-        TriggerHandler.bypass('CommissionPayment2_TriggerHandler');
-        TriggerHandler.bypass('CommissionRecord2_TriggerHandler');
+        TriggerBase.bypass('CommissionPayment2__c');
+        TriggerBase.bypass('CommissionRecord2__c');
         gcProjectTask.ignoreCommissions = true;
         project = ProjectTestFactory.insertCounterSale();
         System.debug('projectm');
@@ -404,8 +402,8 @@ public class POSReturn_Promise_T
     @IsTest
     static void testStepThreePromise()
     {
-        TriggerHandler.bypass('CommissionPayment2_TriggerHandler');
-        TriggerHandler.bypass('CommissionRecord2_TriggerHandler');
+        TriggerBase.bypass('CommissionPayment2__c');
+        TriggerBase.bypass('CommissionRecord2__c');
         gcProjectTask.ignoreCommissions = true;
         project = ProjectTestFactory.insertCounterSale();
         System.debug('projectm');
@@ -470,8 +468,8 @@ public class POSReturn_Promise_T
     @IsTest
     static void testStepFourPromise()
     {
-        TriggerHandler.bypass('CommissionPayment2_TriggerHandler');
-        TriggerHandler.bypass('CommissionRecord2_TriggerHandler');
+        TriggerBase.bypass('CommissionPayment2__c');
+        TriggerBase.bypass('CommissionRecord2__c');
         gcProjectTask.ignoreCommissions = true;
         project = ProjectTestFactory.insertCounterSale();
         System.debug('projectm');

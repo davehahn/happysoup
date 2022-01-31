@@ -33,7 +33,7 @@ private with sharing class Case_CreatePurchaseOrderController_Test {
     Application_RecordType appRecordTypes = new Application_RecordType();
     supplier = Factory_Account.insertSupplierAccounts(1)[0];
     dealer = Factory_Account.insertDealerAccounts(1)[0];
-    parts = Factory_Product.buildNonSerializedProducts('Part', 'Electronics', partCount );
+    parts = Factory_Product.buildNonSerializedProducts('Part', 'Hardware', partCount );
     for( Product2 p : parts )
     {
       p.AcctSeedERP__Default_Vendor__c = supplier.Id;
@@ -102,7 +102,7 @@ private with sharing class Case_CreatePurchaseOrderController_Test {
       ERP_Order__c = serviceOrder.Id
     );
     insert theCase;
-    parts = Factory_Product.buildNonSerializedProducts('Part', 'Electronics', partCount );
+    parts = Factory_Product.buildNonSerializedProducts('Part', 'Hardware', partCount );
     if( addPartsSupplier )
     {
       for( Product2 p : parts )

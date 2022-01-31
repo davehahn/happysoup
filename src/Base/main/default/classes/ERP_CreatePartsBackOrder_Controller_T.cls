@@ -52,7 +52,7 @@ private class ERP_CreatePartsBackOrder_Controller_T
     ];
     List<Product2> parts = Factory_Product.buildNonSerializedProducts(
       'Part',
-      'Electronics',
+      'Hardware',
       PARTS_COUNT
     );
     parts[0].Rigging_Time__c = RIGGINNG_TIME;
@@ -150,7 +150,7 @@ private class ERP_CreatePartsBackOrder_Controller_T
       Payment_Amount__c = profit * rate,
       Actual_Amount_for_Commission__c = profit
     );
-    TriggerHandler.bypass('CommissionLineItem2_TriggerHandler');
+    TriggerBase.bypass('CommissionLineItem2__c');
     insert line;
   }
 
@@ -213,7 +213,7 @@ private class ERP_CreatePartsBackOrder_Controller_T
     );
     List<Product2> newParts = Factory_Product.createNonSerializedProducts(
       'Part',
-      'Electronics',
+      'Hardware',
       1
     );
     gcMaterial.disableTrigger = true;

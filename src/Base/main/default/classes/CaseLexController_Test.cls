@@ -193,7 +193,7 @@ private class CaseLexController_Test {
         Name = 'Test Task'
       );
       insert task;
-      List<Product2> parts = Factory_Product.buildNonSerializedProducts( 'Part', 'Electronics', 3 );
+      List<Product2> parts = Factory_Product.buildNonSerializedProducts( 'Part', 'Hardware', 3 );
       insert parts;
       List<AcctSeedERP__Material__c> materials = new List<AcctSeedERP__Material__c>();
       for( Product2 p : parts )

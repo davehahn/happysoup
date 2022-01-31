@@ -45,12 +45,12 @@ private class Product2ExtTest {
     Product2 clone = boat.clone(false, false, false, false);
     List<Product2> optionalParts = Factory_Product.createNonSerializedProducts(
       'Part',
-      'Electronics',
+      'Hardware',
       5
     );
     List<Product2> productPartParts = Factory_Product.createNonSerializedProducts(
       'Part',
-      'Electronics',
+      'Hardware',
       5
     );
 

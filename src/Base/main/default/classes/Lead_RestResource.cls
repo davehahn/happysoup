@@ -116,13 +116,11 @@ global with sharing class Lead_RestResource
     RestRequest req = RestContext.request;
     RestResponse res = RestContext.response;
     String jsonWrapper = req.requestBody.toString();
-    System.debug( jsonWrapper);
     WebToLeadWrapper wrapper =
       (WebToLeadWrapper)JSON.deserialize(
         jsonWrapper,
         WebToLEadWrapper.class
       );
-    System.debug( wrapper );
     RestResult result = handlePost( wrapper );
     if( result.status == 'success' )
     {
@@ -145,6 +143,7 @@ global with sharing class Lead_RestResource
   {
     System.Savepoint savePoint = Database.setSavepoint();
     RestResult response = new RestResult();
+    System.debug(  wrapper.toLeadObject().getRecord() );
     Lead_Service service = new Lead_Service( wrapper.toLeadObject().getRecord() );
     Lead_Service.LeadSaveResult sr = service.insertOrUpdateDuplicate();
     if( sr.isSuccess() )

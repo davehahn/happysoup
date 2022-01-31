@@ -121,24 +121,47 @@ export default class FactoryStoreCurrentInventoryList extends NavigationMixin(Li
 							Expanded: this.pBoat
 						});
 						if(boat.Equipment){
+						  console.log('%chas equipment, figure out price', 'font-size:2rem;color:lightblue;');
 						 let retailUpgradeCost = 0;
 						 boat.Equipment.forEach((e, i) => {
 								if(e.productType === 'Motor'){
+								  console.log('%cthis is the motor upgrade, figure out price', 'font-size:2rem;color:lightblue;');
 									// TO FIX!! fullBoat is not the full boat details. need to figure this out for upgrade stuff to work!
 									if(typeof this.pBoat.Expanded.MotorUpgrades !== 'undefined'){
 										this.pBoat.Expanded.MotorUpgrades.forEach( (motor, index) => {
 											if(motor.Id === e.productId){
-												console.log('motor.RetailUpgradeCost boat ' + index + ': ', motor.RetailUpgradeCost);
-												retailUpgradeCost += motor.RetailUpgradeCost;
+											  // TODO - check to see if retail upgrade cost !== undefined, else set to 0.
+//												console.log('motor.RetailUpgradeCost boat ' + index + ': ', motor.RetailUpgradeCost);
+//												retailUpgradeCost += motor.RetailUpgradeCost;
+												let upgradeCost = motor.RetailUpgradeCost;
+												console.log('motor.RetailUpgradeCost boat ' + index + ': ', upgradeCost);
+												if(upgradeCost === void 0){
+													console.log('%cmotor upgrade cost is undefined, set to 0', 'font-size:2rem;color:lightblue;');
+													retailUpgradeCost += 0;
+												} else{
+													console.log('%cmotor upgrade cost is defined, use it', 'font-size:2rem;color:lightblue;');
+													retailUpgradeCost += upgradeCost;
+												}
 											}
 										});
 									}
 								} else {
 									if(typeof this.pBoat.Expanded.TrailerUpgrades !== 'undefined'){
+									  console.log('%cthis is the trailer upgrade, figure out price', 'font-size:2rem;color:lightblue;');
 										this.pBoat.Expanded.TrailerUpgrades.forEach( (trailer, index) => {
 											if(trailer.Id === e.productId){
-												console.log('trailer.RetailUpgradeCost boat ' + index + ': ', trailer.RetailUpgradeCost);
-												retailUpgradeCost += trailer.RetailUpgradeCost
+											  // TODO - check to see if retail upgrade cost !== undefined, else set to 0.
+//												console.log('trailer.RetailUpgradeCost boat ' + index + ': ', trailer.RetailUpgradeCost);
+//												retailUpgradeCost += trailer.RetailUpgradeCost;
+												let upgradeCost = trailer.RetailUpgradeCost;
+												console.log('trailer.RetailUpgradeCost boat ' + index + ': ', upgradeCost);
+												if(upgradeCost === void 0){
+												  console.log('%ctrailer upgrade cost is undefined, set to 0', 'font-size:2rem;color:lightblue;');
+													retailUpgradeCost += 0;
+												} else{
+												  console.log('%ctrailer upgrade cost is defined, use it', 'font-size:2rem;color:lightblue;');
+													retailUpgradeCost += upgradeCost;
+												}
 											}
 										});
 									}
@@ -155,7 +178,9 @@ export default class FactoryStoreCurrentInventoryList extends NavigationMixin(Li
 								});
 
 							});
+
 							console.log('full upgrade cost boat ' + index + ':', retailUpgradeCost);
+
 							this.storeStock[index].Base.RetailUpgradeCost = retailUpgradeCost;
 							this.storeStock[index].Base.StartingRetailPrice = this.pBoat.Expanded.RetailPrice + retailUpgradeCost;
 
@@ -168,6 +193,7 @@ export default class FactoryStoreCurrentInventoryList extends NavigationMixin(Li
        					this.parseNonCurrentStock.push(this.storeStock[index]);
            		}
 						} else {
+						  console.log('%cno equipment, show standard retail price', 'color:green;font-size:1rem');
 						  this.storeStock[index].Base.RetailUpgradeCost = 0;
 							this.storeStock[index].Base.StartingRetailPrice = this.pBoat.Expanded.RetailPrice;
 

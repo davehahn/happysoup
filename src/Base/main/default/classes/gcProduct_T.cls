@@ -15,7 +15,7 @@ public class gcProduct_T {
 
     @isTest
     static void testInsertAndUpdateProduct(){
-        Product2[] parts = Factory_Product.buildNonSerializedProducts('Part', 'Electronics', 5);
+        Product2[] parts = Factory_Product.buildNonSerializedProducts('Part', 'Hardware', 5);
         insert parts; 
         
         List<Product2> productList = [select id,Allocated__c,Availability_Percentage__c,Sizes__c from Product2]; 
@@ -103,7 +103,7 @@ public class gcProduct_T {
     }
      @isTest
     static void testInsertAndUpdateProductForInventoryTypeNotPurchased(){
-        Product2[] parts = Factory_Product.buildNonSerializedProducts('Motor', 'Electronics', 5);
+        Product2[] parts = Factory_Product.buildNonSerializedProducts('Motor', 'Hardware', 5);
         insert parts; 
         
         List<Product2> productList = [select id,Allocated__c,Availability_Percentage__c,Sizes__c,AcctSeed__Inventory_Type__c from Product2]; 
@@ -131,7 +131,7 @@ public class gcProduct_T {
 
      @isTest
     static void testDeleteProductWithLot(){
-        Product2[] parts = Factory_Product.buildNonSerializedProducts('Part', 'Electronics', 5);
+        Product2[] parts = Factory_Product.buildNonSerializedProducts('Part', 'Hardware', 5);
         insert parts; 
         
         List<Product2> productList = [select id,Allocated__c,Availability_Percentage__c,Sizes__c from Product2 limit 1]; 
@@ -176,7 +176,7 @@ public class gcProduct_T {
     
      @isTest
     static void testDeleteProductWithoutLot(){
-        Product2[] parts = Factory_Product.buildNonSerializedProducts('Part', 'Electronics', 5);
+        Product2[] parts = Factory_Product.buildNonSerializedProducts('Part', 'Hardware', 5);
         insert parts;
          Test.startTest();
         List<Product2> productList = [select id,Allocated__c,Availability_Percentage__c,Sizes__c from Product2 limit 1]; 

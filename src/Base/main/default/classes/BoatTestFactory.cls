@@ -5,15 +5,8 @@ public class BoatTestFactory {
   static AcctSeed__GL_Account__c inventoryAccount;
 
   static Id stdPBId = Test.getStandardPricebookId();
-  //private String partTypesString = Legend_Settings__c.getOrgDefaults().BB_Product_Families__c;
+
   private static List<String> partTypes;// = new Set<String>( partTypesString.split(',') );
-  //private Set<String> partTypes = new Set<String>{'Electronics',
-  //                                                'Fun and Entertainment',
-  //                                                'Graphics and Decals',
-  //                                                'Pontoon Covers',
-  //                                                'Safety',
-  //                                                'Seating',
-  //                                                'Trailering and Covers'};
 
   private Set<String> feeTypes = new Set<String>{'Bank Registration PPSA Fee',
                                                 'Documentation Fee',
@@ -212,7 +205,7 @@ public class BoatTestFactory {
     //add 1 'Trailering and Covers' option to each motor and 1 extended warranty
    // List<String> pts = partTypesString.split(',');
     List<Product2> covers = sortedPartsMap.get( partTypes[0] );
-    List<Product2> electronics = sortedPartsMap.get( partTypes[1] );
+    List<Product2> hardware = sortedPartsMap.get( partTypes[1] );
     List<Product2> warranty = sortedProtectionMap.get('Extended Warranty');
     List<Product2> contracts = sortedProtectionMap.get('Service Contract');
     for( Product2 motor : motors ){
@@ -241,11 +234,11 @@ public class BoatTestFactory {
         )
       );
     }
-    //add 1 'Electronics' option to each trolling_motor
+    //add 1 'Hardware' option to each trolling_motor
     for( Product2 trolling_motor : trolling_motors ){
       allOptions.add( new Product_Option__c(
           To_Product__c = trolling_motor.Id,
-          From_Product__c = electronics[0].Id,
+          From_Product__c = hardware[0].Id,
           Standard__c = 0,
           Maximum__c = 1
         )

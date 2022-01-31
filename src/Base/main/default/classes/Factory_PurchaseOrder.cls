@@ -60,7 +60,7 @@ public with sharing class Factory_PurchaseOrder {
   public static void addPOLines( Integer count,  Id poId )
   {
     AcctSeedERP__Purchase_Order_Line__c[] pols = new List<AcctSeedERP__Purchase_Order_Line__c>();
-    Product2[] parts = Factory_Product.buildNonSerializedProducts( 'Part', 'Electronics', count );
+    Product2[] parts = Factory_Product.buildNonSerializedProducts( 'Part', 'Hardware', count );
     insert parts;
     for( Product2 p : parts )
     {

@@ -87,7 +87,7 @@ private class ProductUpgrades_Test {
         isActive = true,
         RecordTypeId = salesRTId,
         Sales_Year__c = String.valueOf(Date.today().year()),
-        Version__c = 2
+        Version__c = 98
       )
     );
     pricebooks.add(
@@ -96,7 +96,7 @@ private class ProductUpgrades_Test {
         isActive = true,
         RecordTypeId = salesRTId,
         Sales_Year__c = String.valueOf(Date.today().year()),
-        Version__c = 3
+        Version__c = 99
       )
     );
     insert pricebooks;

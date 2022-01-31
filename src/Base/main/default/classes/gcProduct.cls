@@ -111,7 +111,6 @@ public without sharing class gcProduct {
 
 	private static void settings(list<Product2> listNew)
 	{
-		System.debug('Product Trigger');
 		map<String,Id> mapGL = new map<String,Id>();
 
 		for(AcctSeed__GL_Account__c gl :
@@ -152,8 +151,7 @@ public without sharing class gcProduct {
 			}
 			else if(p.RecordTypeId == idRTMotor ||
 					p.RecordTypeId == idRTTrailer ||
-					p.RecordTypeId == idRTTrollingMotor ||
-					    ( p.RecordTypeId == idRTPart && p.Family != null && p.Family.contains('Hull') ) )
+					p.RecordTypeId == idRTTrollingMotor)
 			{
 				p.AcctSeed__Inventory_GL_Account__c = mapGL.get('InventoryParts');
 				p.AcctSeed__Expense_GL_Account__c = mapGL.get('CogsParts');
@@ -195,7 +193,6 @@ public without sharing class gcProduct {
 				}
 				else
 				{
-					System.debug(p.AcctSeed__Inventory_Type__c);
 					if(p.AcctSeed__Inventory_Type__c != 'Purchased' && p.AcctSeed__Inventory_Type__c != 'Raw Materials') {
 						p.AcctSeed__Inventory_Type__c = null;
 						p.AcctSeed__Inventory_GL_Account__c = null;

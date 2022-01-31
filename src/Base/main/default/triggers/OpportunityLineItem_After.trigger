@@ -1,3 +1,4 @@
+/* TODO: DELETE ME */
 trigger OpportunityLineItem_After on OpportunityLineItem (after insert, after update, after delete) {
 	if(Legend_Settings__c.getOrgDefaults().TriggerEnable_OpportunityLineItem_After__c)
 	{

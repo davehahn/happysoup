@@ -198,6 +198,13 @@ public with sharing class lgnd_newClaimController {
   }
 
   @AuraEnabled
+  public static void updatePartById(Id idPart,String qty) {
+    Case_Part__c part = [SELECT Id FROM Case_Part__c WHERE Id =:idPart];
+    part.Quantity__c = Integer.valueOf(qty);
+    update part;
+  }
+
+  @AuraEnabled
   public static Decimal getUnitPrice(String productId) {
     System.debug( '>>>>>>>>>>>>>>>> ' + productId + ' <<<<<<<<<<<<<<');
     try {

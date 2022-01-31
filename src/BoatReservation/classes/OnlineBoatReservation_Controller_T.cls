@@ -105,7 +105,7 @@ private class OnlineBoatReservation_Controller_T
     boat = Factory_Product.createSerializedProduct( 'Boat', 'Full Windshield' );
     motor = Factory_Product.createSerializedProduct( 'Motor', ' Remote' );
     trailer = Factory_Product.createSerializedProduct( 'Trailer', 'Boat Trailer' );
-    parts = Factory_Product.createNonSerializedProducts( 'Part', 'Electronics', 5 );
+    parts = Factory_Product.createNonSerializedProducts( 'Part', 'Hardware', 5 );
     List<Product2> allProds = new List<Product2>();
     allProds.add( boat );
     allProds.add( motor );
@@ -575,7 +575,7 @@ private class OnlineBoatReservation_Controller_T
     );
     marketingContent.add(
       new Marketing_Content__c(
-        Product_Option__c = boat.optionalProducts.get('electronics')[0].optionId,
+        Product_Option__c = boat.optionalProducts.get('hardware')[0].optionId,
         Label__c = 'images',
         Content__c = 'backLeft:option-image-url|backRight:backright-image-url'
       )
@@ -609,9 +609,9 @@ private class OnlineBoatReservation_Controller_T
     ));
 
     olis.add( Factory_OpportunityLineItem.buildLineItem(
-      boat.optionalProducts.get('electronics')[0].pricebookEntryId,
+      boat.optionalProducts.get('hardware')[0].pricebookEntryId,
       opp.Id,
-      boat.optionalProducts.get('electronics')[0].retailPrice,
+      boat.optionalProducts.get('hardware')[0].retailPrice,
       1,
       boat.id
     ));
@@ -680,7 +680,7 @@ private class OnlineBoatReservation_Controller_T
     );
     marketingContent.add(
       new Marketing_Content__c(
-        Product_Option__c = boat.optionalProducts.get('electronics')[0].optionId,
+        Product_Option__c = boat.optionalProducts.get('hardware')[0].optionId,
         Label__c = 'images',
         Content__c = 'backLeft:option-image-url|backRight:backright-image-url'
       )
@@ -714,9 +714,9 @@ private class OnlineBoatReservation_Controller_T
     ));
 
     olis.add( Factory_OpportunityLineItem.buildLineItem(
-      boat.optionalProducts.get('electronics')[0].pricebookEntryId,
+      boat.optionalProducts.get('hardware')[0].pricebookEntryId,
       opp.Id,
-      boat.optionalProducts.get('electronics')[0].retailPrice,
+      boat.optionalProducts.get('hardware')[0].retailPrice,
       1,
       boat.id
     ));

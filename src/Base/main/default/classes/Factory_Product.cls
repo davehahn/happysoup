@@ -142,7 +142,7 @@ public with sharing class Factory_Product {
   public static Product2 createPartKit(Integer kitContentsCount) {
     List<Product2> parts = buildNonSerializedProducts(
       'Part',
-      'Electronics',
+      'Hardware',
       kitContentsCount + 1
     );
     //parts[0].Parts_Count__c = kitContentsCount;

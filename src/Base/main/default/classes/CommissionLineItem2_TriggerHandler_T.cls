@@ -133,7 +133,7 @@ private class CommissionLineItem2_TriggerHandler_T
       Project_Task__c = tasks[0].Id
     );
     insert record;
-    Product2 part = Factory_Product.buildNonSerializedProduct('Part', 'Electronics');
+    Product2 part = Factory_Product.buildNonSerializedProduct('Part', 'Hardware');
     part.Rigging_Time__c = riggingTime;
     insert part;
     Factory_PricebookEntry.createAllDefaultEntriesEntries( part.Id, 10000 );

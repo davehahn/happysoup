@@ -55,7 +55,7 @@ public class Factory_Opportunity {
     prods.add( trailer );
     Product2 trollingMotor = Factory_Product.buildSerializedProduct( 'Trolling Motor', '');
     prods.add( trollingMotor );
-    Product2[] parts = Factory_Product.buildNonSerializedProducts( 'Part', 'Electronic', 5 );
+    Product2[] parts = Factory_Product.buildNonSerializedProducts( 'Part', 'Hardware', 5 );
     prods.addAll( parts );
     Boolean orig = gcProduct.disableTrigger;
     gcProduct.disableTrigger = true;

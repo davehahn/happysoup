@@ -26,7 +26,7 @@ private class MarketingContent_Selector_T
     );
     optionalProducts = Factory_Product.createNonSerializedProducts(
       'Part',
-      'Electronics',
+      'Hardware',
       10
     );
     productId = products[0].Id;

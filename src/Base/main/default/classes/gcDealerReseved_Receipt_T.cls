@@ -2,7 +2,7 @@
 private class gcDealerReseved_Receipt_T {
     Static String businessAccountName = 'Test Business Account';
     final static String RECORDTYPE = 'Motor';
-    final static String FAMILY = 'Motor Accessories';
+    final static String FAMILY = 'Remote';
     final static String SERIALNUMBER = '123450';
     final static String FNAME = 'TestFirstName';
     final static String LNAME = 'TestLastName';

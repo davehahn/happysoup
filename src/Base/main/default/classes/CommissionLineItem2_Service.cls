@@ -41,6 +41,8 @@ public with sharing class CommissionLineItem2_Service
       Decimal cost = 0;
       Decimal rate = partsRate;
       Boolean paymentBasedOnProfit = false;
+      System.debug('COMMISSIONRECORD_MAP');
+      System.debug(this.commissionRecord_map);
       CommissionRecord2__c comRec = this.commissionRecord_map.get( cli.CommissionRecord2__c);
       System.debug( comRec.Calculation_Method__c );
       if( cli.Product__c != null )

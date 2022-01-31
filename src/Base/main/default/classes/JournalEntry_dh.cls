@@ -24,6 +24,8 @@ public with sharing class JournalEntry_dh {
     if(newMap == NULL) newMap = new Map<Id,AcctSeed__Journal_Entry__c>();
     if(listNew == NULL) listNew = new List<AcctSeed__Journal_Entry__c>();
 
+    updateAndValidate(oldMap,newMap,listNew,boolIsBefore,boolIsInsert,boolIsUpdate,boolIsDelete);
+
     if(boolIsBefore)
     {
       if(boolIsInsert)
@@ -53,6 +55,23 @@ public with sharing class JournalEntry_dh {
         if( dateMap.size() > 0 )
           updateJournalEntryDates( dateMap );
 
+          /// Lock Project
+          list<AcctSeed__Journal_Entry__c> listAll = new list<AcctSeed__Journal_Entry__c>();
+          listAll.addAll(listNew);
+          listAll.addAll(oldMap.values());
+          Set<Id> setIdProject = new Set<Id>();
+          for(AcctSeed__Journal_Entry__c je : listAll)
+          {
+            //System.debug('Checking multiple JE');
+            if(je.Project__c != null && je.AcctSeed__Status__c == 'Posted' && oldMap.get(je.Id).AcctSeed__Status__c != je.AcctSeed__Status__c)
+              setIdProject.add(je.Project__c);
+          }
+          if(!setIdProject.isEmpty()) {
+            //System.debug('setIdProjectJE');
+            //System.debug(setIdProject);
+            gcProject.lockIfNoBalanceDueFuture(setIdProject);
+          }
+          /// Lock Project
       }
       if(boolIsDelete)
       {
@@ -73,6 +92,44 @@ public with sharing class JournalEntry_dh {
     gcJournalEntryLine.disableTrigger = true;
     update jels;
     gcJournalEntryLine.disableTrigger = origTriggerState;
+  }
+
+  private static void updateAndValidate
+    (map<Id,AcctSeed__Journal_Entry__c> oldMap,
+      map<Id,AcctSeed__Journal_Entry__c> newMap,
+      list<AcctSeed__Journal_Entry__c> listNew,
+      Boolean boolIsBefore,
+      Boolean boolIsInsert,
+      Boolean boolIsUpdate,
+      Boolean boolIsDelete)
+  {
+    if(boolIsBefore && (boolIsUpdate || boolIsInsert)) {
+      for (AcctSeed__Journal_Entry__c je : listNew) {
+        je.AcctSeed__Ledger__c = gcConstants.idActualLedger;
+      }
+    }
+    if(!boolIsBefore && (boolIsUpdate || boolIsInsert))
+    {
+      Set<Id> setIdJE = new Set<Id>();
+      for(AcctSeed__Journal_Entry__c je : listNew){
+        String journalName = je.Name;
+        if(je.Project__c != null && (boolIsInsert || (boolIsUpdate && je.Project__c != oldMap.get(je.Id).Project__c)))
+          setIdJE.add(je.Id);
+      }
+
+      if(!setIdJE.isEmpty()){
+        List<AcctSeed__Journal_Entry_Line__c> listJEL = new List<AcctSeed__Journal_Entry_Line__c>();
+        for(AcctSeed__Journal_Entry_Line__c jel : [SELECT Id FROM AcctSeed__Journal_Entry_Line__c WHERE AcctSeed__Journal_Entry__c IN:setIdJE]){
+          listJEL.add(jel);
+        }
+        if(!listJEL.isEmpty()){
+          Boolean oldV = gcJournalEntryLine.allowProjectAndTask;
+          gcJournalEntryLine.allowProjectAndTask = true;
+          update listJEL;
+          gcJournalEntryLine.allowProjectAndTask = oldV;
+        }
+      }
+    }
   }
 
   public static void coverage(){

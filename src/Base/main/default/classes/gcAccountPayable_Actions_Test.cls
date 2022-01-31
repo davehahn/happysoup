@@ -14,7 +14,7 @@ private class gcAccountPayable_Actions_Test {
     static void init()
     {
         map<Id,map<Id,map<Id,Id>>> mapPWLB = new map<Id,map<Id,map<Id,Id>>>();
-        Product2 part = Factory_Product.createNonSerializedProduct('Part', 'Electronics');
+        Product2 part = Factory_Product.createNonSerializedProduct('Part', 'Hardware');
         Product2 part2 = Factory_Product.createNonSerializedProduct('Part', 'Vehicle and Equipment Parts');
         Id idWarehouse = gcConstants.idWarehouseMontreal;
         AcctSeedERP__Location__c loc = [SELECT Id FROM AcctSeedERP__Location__c WHERE AcctSeedERP__Warehouse__c =:idWarehouse LIMIT 1];

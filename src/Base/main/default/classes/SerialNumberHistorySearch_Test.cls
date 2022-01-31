@@ -23,7 +23,7 @@ private class SerialNumberHistorySearch_Test{
       AcctSeedERP__Warehouse__c = wh.Id
     );
     insert loc;
-    part = Factory_Product.createNonSerializedProduct('Part', 'Electronics');
+    part = Factory_Product.createNonSerializedProduct('Part', 'Hardware');
     inventoryBalances.put('part', new AcctSeedERP__Inventory_Balance__c(
       AcctSeedERP__Location__c = loc.Id,
       AcctSeedERP__Warehouse__c = wh.Id,

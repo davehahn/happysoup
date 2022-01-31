@@ -16,104 +16,76 @@
 
 @IsTest(isParallel=true)
 private class TriggerActionFlowClearAllBypassesTest {
-	private static final String MY_STRING = 'MY_STRING';
+  private static final String MY_STRING = 'MY_STRING';
 
-	@IsTest
-	private static void clearAllBypassObjectShouldSucceedWithValidRequest() {
-		TriggerBase.bypass(MY_STRING);
+  @IsTest
+  private static void clearAllBypassObjectShouldSucceedWithValidRequest() {
+    TriggerBase.bypass(MY_STRING);
 
-		TriggerActionFlowClearAllBypasses.clearAllBypasses(
-			new List<String>{ TriggerActionFlow.OBJECT_STRING }
-		);
+    TriggerActionFlowClearAllBypasses.clearAllBypasses(new List<String>{ TriggerActionFlow.OBJECT_STRING });
 
-		System.assertEquals(
-			false,
-			TriggerBase.isBypassed(MY_STRING),
-			'The Object should not be bypassed'
-		);
-	}
+    System.assertEquals(false, TriggerBase.isBypassed(MY_STRING), 'The Object should not be bypassed');
+  }
 
-	@IsTest
-	private static void clearAllBypassApexShouldSucceedWithValidRequest() {
-		MetadataTriggerHandler.bypass(MY_STRING);
+  @IsTest
+  private static void clearAllBypassApexShouldSucceedWithValidRequest() {
+    MetadataTriggerHandler.bypass(MY_STRING);
 
-		TriggerActionFlowClearAllBypasses.clearAllBypasses(
-			new List<String>{ TriggerActionFlow.APEX_STRING }
-		);
+    TriggerActionFlowClearAllBypasses.clearAllBypasses(new List<String>{ TriggerActionFlow.APEX_STRING });
 
-		System.assertEquals(
-			false,
-			MetadataTriggerHandler.isBypassed(MY_STRING),
-			'The Apex should be not bypassed'
-		);
-	}
+    System.assertEquals(false, MetadataTriggerHandler.isBypassed(MY_STRING), 'The Apex should be not bypassed');
+  }
 
-	@IsTest
-	private static void clearAllBypassFlowShouldSucceedWithValidRequest() {
-		TriggerActionFlow.bypass(MY_STRING);
+  @IsTest
+  private static void clearAllBypassFlowShouldSucceedWithValidRequest() {
+    TriggerActionFlow.bypass(MY_STRING);
 
-		TriggerActionFlowClearAllBypasses.clearAllBypasses(
-			new List<String>{ TriggerActionFlow.FLOW_STRING }
-		);
+    TriggerActionFlowClearAllBypasses.clearAllBypasses(new List<String>{ TriggerActionFlow.FLOW_STRING });
 
-		System.assertEquals(
-			false,
-			TriggerActionFlow.isBypassed(MY_STRING),
-			'The Flow should not be bypassed'
-		);
-	}
+    System.assertEquals(false, TriggerActionFlow.isBypassed(MY_STRING), 'The Flow should not be bypassed');
+  }
 
-	@IsTest
-	private static void clearAllBypassShouldFailWithInvalidRequest() {
-		Exception myException;
+  @IsTest
+  private static void clearAllBypassShouldFailWithInvalidRequest() {
+    Exception myException;
 
-		try {
-			TriggerActionFlowClearAllBypasses.clearAllBypasses(new List<String>());
-		} catch (Exception e) {
-			myException = e;
-		}
+    try {
+      TriggerActionFlowClearAllBypasses.clearAllBypasses(new List<String>());
+    } catch (Exception e) {
+      myException = e;
+    }
 
-		System.assertNotEquals(
-			null,
-			myException,
-			'We should have an exception thrown in this scenario'
-		);
-		System.assert(
-			myException instanceof TriggerActionFlowClearAllBypasses.TriggerActionFlowClearAllBypassesObjectException,
-			'The exception should be of the correct type'
-		);
-		System.assertEquals(
-			myException.getMessage(),
-			TriggerActionFlowClearAllBypasses.INVALID_REQUEST,
-			'The exeption should contain the message we are looking for'
-		);
-	}
+    System.assertNotEquals(null, myException, 'We should have an exception thrown in this scenario');
+    System.assert(
+      myException instanceof TriggerActionFlowClearAllBypasses.TriggerActionFlowClearAllBypassesObjectException,
+      'The exception should be of the correct type'
+    );
+    System.assertEquals(
+      myException.getMessage(),
+      TriggerActionFlowClearAllBypasses.INVALID_REQUEST,
+      'The exeption should contain the message we are looking for'
+    );
+  }
 
-	@IsTest
-	private static void clearAllBypassShouldFailWithInvalidType() {
-		Exception myException;
+  @IsTest
+  private static void clearAllBypassShouldFailWithInvalidType() {
+    Exception myException;
 
-		try {
-			TriggerActionFlowClearAllBypasses.clearAllBypasses(
-				new List<String>{ MY_STRING }
-			);
-		} catch (Exception e) {
-			myException = e;
-		}
+    try {
+      TriggerActionFlowClearAllBypasses.clearAllBypasses(new List<String>{ MY_STRING });
+    } catch (Exception e) {
+      myException = e;
+    }
 
-		System.assertNotEquals(
-			null,
-			myException,
-			'We should have an exception thrown in this scenario'
-		);
-		System.assert(
-			myException instanceof TriggerActionFlowClearAllBypasses.TriggerActionFlowClearAllBypassesObjectException,
-			'The exception should be of the correct type'
-		);
-		System.assertEquals(
-			myException.getMessage(),
-			TriggerActionFlow.INVALID_TYPE,
-			'The exeption should contain the message we are looking for'
-		);
-	}
+    System.assertNotEquals(null, myException, 'We should have an exception thrown in this scenario');
+    System.assert(
+      myException instanceof TriggerActionFlowClearAllBypasses.TriggerActionFlowClearAllBypassesObjectException,
+      'The exception should be of the correct type'
+    );
+    System.assertEquals(
+      myException.getMessage(),
+      TriggerActionFlow.INVALID_TYPE,
+      'The exeption should contain the message we are looking for'
+    );
+  }
 }

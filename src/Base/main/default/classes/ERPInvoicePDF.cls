@@ -653,7 +653,7 @@ public with sharing class ERPInvoicePDF {
 
   private void fetchProjectTasks()
   {
-    String queryString = 'SELECT Id, Name, Complaint_dh__c, Cause_dh__c, Correction_dh__c, Estimated_Duration__c, ';
+    String queryString = 'SELECT Id, Name, Complaint_dh__c, Cause_dh__c, Correction_dh__c, Estimated_Duration__c,Task_Order__c,index__c, ';
     queryString += 'AcctSeed__GL_Account_Variable_1__r.Name, AcctSeed__GL_Account_Variable_2__r.Name, ';
     queryString += '(SELECT Id, Product_Name__c, Material__c, AcctSeedERP__Comment__c, AcctSeedERP__Product__c, ';
     queryString += 'AcctSeedERP__Product__r.Name_FR__c, AcctSeedERP__Product__r.Family, AcctSeedERP__Product__r.Composite_Type__c, ';
@@ -665,6 +665,8 @@ public with sharing class ERPInvoicePDF {
     queryString += erpOrder.Id + '\'';
     if( !internalOverRide )
       queryString += ' AND DisplayOnCustomerInvoice__c = true';
+    queryString+= ' order by Task_Order__c,index__c';
+
     this.projectTasks = Database.query( queryString );
   }
 
@@ -1043,7 +1045,7 @@ public with sharing class ERPInvoicePDF {
           partsTotal += mat.GMBLASERP__Total_Price__c == null ? 0 : mat.GMBLASERP__Total_Price__c;
       }
     }
-    this.taskLineItems.sort();
+    //this.taskLineItems.sort();
   }
 
 

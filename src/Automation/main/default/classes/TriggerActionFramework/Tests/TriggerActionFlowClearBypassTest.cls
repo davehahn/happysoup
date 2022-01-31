@@ -16,110 +16,88 @@
 
 @isTest
 private class TriggerActionFlowClearBypassTest {
-	private static final String MY_STRING = 'MY_STRING';
-	private static List<TriggerActionFlowClearBypass.Request> requests = new List<TriggerActionFlowClearBypass.Request>();
-	private static TriggerActionFlowClearBypass.Request request = new TriggerActionFlowClearBypass.Request();
-	private static Exception myException;
+  private static final String MY_STRING = 'MY_STRING';
+  private static List<TriggerActionFlowClearBypass.Request> requests = new List<TriggerActionFlowClearBypass.Request>();
+  private static TriggerActionFlowClearBypass.Request request = new TriggerActionFlowClearBypass.Request();
+  private static Exception myException;
 
-	@IsTest
-	private static void clearBypassObjecthouldSucceedWithValidRequest() {
-		TriggerBase.bypass(MY_STRING);
-		request.Name = MY_STRING;
-		request.bypassType = TriggerActionFlow.OBJECT_STRING;
-		requests.add(request);
+  @IsTest
+  private static void clearBypassObjecthouldSucceedWithValidRequest() {
+    TriggerBase.bypass(MY_STRING);
+    request.Name = MY_STRING;
+    request.bypassType = TriggerActionFlow.OBJECT_STRING;
+    requests.add(request);
 
-		TriggerActionFlowClearBypass.clearBypass(requests);
+    TriggerActionFlowClearBypass.clearBypass(requests);
 
-		System.assertEquals(
-			false,
-			TriggerBase.isBypassed(MY_STRING),
-			'The Object should not be bypassed'
-		);
-	}
+    System.assertEquals(false, TriggerBase.isBypassed(MY_STRING), 'The Object should not be bypassed');
+  }
 
-	@IsTest
-	private static void clearBypassApexShouldSucceedWithValidRequest() {
-		MetadataTriggerHandler.bypass(MY_STRING);
-		request.Name = MY_STRING;
-		request.bypassType = TriggerActionFlow.APEX_STRING;
-		requests.add(request);
+  @IsTest
+  private static void clearBypassApexShouldSucceedWithValidRequest() {
+    MetadataTriggerHandler.bypass(MY_STRING);
+    request.Name = MY_STRING;
+    request.bypassType = TriggerActionFlow.APEX_STRING;
+    requests.add(request);
 
-		TriggerActionFlowClearBypass.clearBypass(requests);
+    TriggerActionFlowClearBypass.clearBypass(requests);
 
-		System.assertEquals(
-			false,
-			MetadataTriggerHandler.isBypassed(MY_STRING),
-			'The Apex should be not bypassed'
-		);
-	}
+    System.assertEquals(false, MetadataTriggerHandler.isBypassed(MY_STRING), 'The Apex should be not bypassed');
+  }
 
-	@IsTest
-	private static void clearBypassFlowShouldSucceedWithValidRequest() {
-		TriggerActionFlow.bypass(MY_STRING);
-		request.Name = MY_STRING;
-		request.bypassType = TriggerActionFlow.FLOW_STRING;
-		requests.add(request);
+  @IsTest
+  private static void clearBypassFlowShouldSucceedWithValidRequest() {
+    TriggerActionFlow.bypass(MY_STRING);
+    request.Name = MY_STRING;
+    request.bypassType = TriggerActionFlow.FLOW_STRING;
+    requests.add(request);
 
-		TriggerActionFlowClearBypass.clearBypass(requests);
+    TriggerActionFlowClearBypass.clearBypass(requests);
 
-		System.assertEquals(
-			false,
-			TriggerActionFlow.isBypassed(MY_STRING),
-			'The Flow should not be bypassed'
-		);
-	}
+    System.assertEquals(false, TriggerActionFlow.isBypassed(MY_STRING), 'The Flow should not be bypassed');
+  }
 
-	@IsTest
-	private static void clearBypassShouldFailWithInvalidRequest() {
-		try {
-			TriggerActionFlowClearBypass.clearBypass(
-				new List<TriggerActionFlowClearBypass.Request>()
-			);
-		} catch (Exception e) {
-			myException = e;
-		}
+  @IsTest
+  private static void clearBypassShouldFailWithInvalidRequest() {
+    try {
+      TriggerActionFlowClearBypass.clearBypass(new List<TriggerActionFlowClearBypass.Request>());
+    } catch (Exception e) {
+      myException = e;
+    }
 
-		System.assertNotEquals(
-			null,
-			myException,
-			'We should have an exception thrown in this scenario'
-		);
-		System.assert(
-			myException instanceof TriggerActionFlowClearBypass.TriggerActionFlowClearBypassObjectException,
-			'The exception should be of the correct type'
-		);
-		System.assertEquals(
-			myException.getMessage(),
-			TriggerActionFlowClearBypass.INVALID_REQUEST,
-			'The exeption should contain the message we are looking for'
-		);
-	}
+    System.assertNotEquals(null, myException, 'We should have an exception thrown in this scenario');
+    System.assert(
+      myException instanceof TriggerActionFlowClearBypass.TriggerActionFlowClearBypassObjectException,
+      'The exception should be of the correct type'
+    );
+    System.assertEquals(
+      myException.getMessage(),
+      TriggerActionFlowClearBypass.INVALID_REQUEST,
+      'The exeption should contain the message we are looking for'
+    );
+  }
 
-	@IsTest
-	private static void clearBypassShouldFailWithInvalidType() {
-		request.Name = MY_STRING;
-		request.bypassType = MY_STRING;
-		requests.add(request);
+  @IsTest
+  private static void clearBypassShouldFailWithInvalidType() {
+    request.Name = MY_STRING;
+    request.bypassType = MY_STRING;
+    requests.add(request);
 
-		try {
-			TriggerActionFlowClearBypass.clearBypass(requests);
-		} catch (Exception e) {
-			myException = e;
-		}
+    try {
+      TriggerActionFlowClearBypass.clearBypass(requests);
+    } catch (Exception e) {
+      myException = e;
+    }
 
-		System.assertNotEquals(
-			null,
-			myException,
-			'We should have an exception thrown in this scenario'
-		);
-		System.assert(
-			myException instanceof TriggerActionFlowClearBypass.TriggerActionFlowClearBypassObjectException,
-			'The exception should be of the correct type'
-		);
-		System.assertEquals(
-			myException.getMessage(),
-			TriggerActionFlow.INVALID_TYPE,
-			'The exeption should contain the message we are looking for'
-		);
-	}
+    System.assertNotEquals(null, myException, 'We should have an exception thrown in this scenario');
+    System.assert(
+      myException instanceof TriggerActionFlowClearBypass.TriggerActionFlowClearBypassObjectException,
+      'The exception should be of the correct type'
+    );
+    System.assertEquals(
+      myException.getMessage(),
+      TriggerActionFlow.INVALID_TYPE,
+      'The exeption should contain the message we are looking for'
+    );
+  }
 }

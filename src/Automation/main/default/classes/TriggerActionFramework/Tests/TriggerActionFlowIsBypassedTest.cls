@@ -16,124 +16,102 @@
 
 @isTest
 private class TriggerActionFlowIsBypassedTest {
-	private static final String MY_STRING = 'MY_STRING';
-	private static List<TriggerActionFlowIsBypassed.Request> requests = new List<TriggerActionFlowIsBypassed.Request>();
-	private static TriggerActionFlowIsBypassed.Request request = new TriggerActionFlowIsBypassed.Request();
-	private static Exception myException;
+  private static final String MY_STRING = 'MY_STRING';
+  private static List<TriggerActionFlowIsBypassed.Request> requests = new List<TriggerActionFlowIsBypassed.Request>();
+  private static TriggerActionFlowIsBypassed.Request request = new TriggerActionFlowIsBypassed.Request();
+  private static Exception myException;
 
-	@IsTest
-	private static void isBypassedObjectShouldSucceedWithValidRequest() {
-		request.Name = MY_STRING;
-		request.bypassType = TriggerActionFlow.OBJECT_STRING;
-		requests.add(request);
+  @IsTest
+  private static void isBypassedObjectShouldSucceedWithValidRequest() {
+    request.Name = MY_STRING;
+    request.bypassType = TriggerActionFlow.OBJECT_STRING;
+    requests.add(request);
 
-		List<Boolean> isBypassed = TriggerActionFlowIsBypassed.isBypassed(requests);
+    List<Boolean> isBypassed = TriggerActionFlowIsBypassed.isBypassed(requests);
 
-		System.assertEquals(
-			1,
-			isBypassed.size(),
-			'We should only have one result for our request'
-		);
-		System.assertEquals(
-			TriggerBase.isBypassed(MY_STRING),
-			isBypassed[0],
-			'The result should contain the same result as the TriggerBase'
-		);
-	}
+    System.assertEquals(1, isBypassed.size(), 'We should only have one result for our request');
+    System.assertEquals(
+      TriggerBase.isBypassed(MY_STRING),
+      isBypassed[0],
+      'The result should contain the same result as the TriggerBase'
+    );
+  }
 
-	@IsTest
-	private static void isBypassedApexShouldSucceedWithValidRequest() {
-		request.Name = MY_STRING;
-		request.bypassType = TriggerActionFlow.APEX_STRING;
-		requests.add(request);
+  @IsTest
+  private static void isBypassedApexShouldSucceedWithValidRequest() {
+    request.Name = MY_STRING;
+    request.bypassType = TriggerActionFlow.APEX_STRING;
+    requests.add(request);
 
-		List<Boolean> isBypassed = TriggerActionFlowIsBypassed.isBypassed(requests);
+    List<Boolean> isBypassed = TriggerActionFlowIsBypassed.isBypassed(requests);
 
-		System.assertEquals(
-			1,
-			isBypassed.size(),
-			'We should only have one result for our request'
-		);
-		System.assertEquals(
-			MetadataTriggerHandler.isBypassed(MY_STRING),
-			isBypassed[0],
-			'The result should contain the same result as the MetadataTriggerHandler'
-		);
-	}
+    System.assertEquals(1, isBypassed.size(), 'We should only have one result for our request');
+    System.assertEquals(
+      MetadataTriggerHandler.isBypassed(MY_STRING),
+      isBypassed[0],
+      'The result should contain the same result as the MetadataTriggerHandler'
+    );
+  }
 
-	@IsTest
-	private static void isBypassedFlowShouldSucceedWithValidRequest() {
-		request.Name = MY_STRING;
-		request.bypassType = TriggerActionFlow.FLOW_STRING;
-		requests.add(request);
+  @IsTest
+  private static void isBypassedFlowShouldSucceedWithValidRequest() {
+    request.Name = MY_STRING;
+    request.bypassType = TriggerActionFlow.FLOW_STRING;
+    requests.add(request);
 
-		List<Boolean> isBypassed = TriggerActionFlowIsBypassed.isBypassed(requests);
+    List<Boolean> isBypassed = TriggerActionFlowIsBypassed.isBypassed(requests);
 
-		System.assertEquals(
-			1,
-			isBypassed.size(),
-			'We should only have one result for our request'
-		);
-		System.assertEquals(
-			TriggerActionFlow.isBypassed(MY_STRING),
-			isBypassed[0],
-			'The result should contain the same result as the TriggerActionFlow'
-		);
-	}
+    System.assertEquals(1, isBypassed.size(), 'We should only have one result for our request');
+    System.assertEquals(
+      TriggerActionFlow.isBypassed(MY_STRING),
+      isBypassed[0],
+      'The result should contain the same result as the TriggerActionFlow'
+    );
+  }
 
-	@IsTest
-	private static void isBypassedShouldFailWithInvalidRequest() {
-		try {
-			List<Boolean> isBypassed = TriggerActionFlowIsBypassed.isBypassed(
-				new List<TriggerActionFlowIsBypassed.Request>()
-			);
-		} catch (Exception e) {
-			myException = e;
-		}
+  @IsTest
+  private static void isBypassedShouldFailWithInvalidRequest() {
+    try {
+      List<Boolean> isBypassed = TriggerActionFlowIsBypassed.isBypassed(
+        new List<TriggerActionFlowIsBypassed.Request>()
+      );
+    } catch (Exception e) {
+      myException = e;
+    }
 
-		System.assertNotEquals(
-			null,
-			myException,
-			'We should have an exception thrown in this scenario'
-		);
-		System.assert(
-			myException instanceof TriggerActionFlowIsBypassed.TriggerActionFlowIsBypassedObjectException,
-			'The exception should be of the correct type'
-		);
-		System.assertEquals(
-			myException.getMessage(),
-			TriggerActionFlowIsBypassed.INVALID_REQUEST,
-			'The exeption should contain the message we are looking for'
-		);
-	}
+    System.assertNotEquals(null, myException, 'We should have an exception thrown in this scenario');
+    System.assert(
+      myException instanceof TriggerActionFlowIsBypassed.TriggerActionFlowIsBypassedObjectException,
+      'The exception should be of the correct type'
+    );
+    System.assertEquals(
+      myException.getMessage(),
+      TriggerActionFlowIsBypassed.INVALID_REQUEST,
+      'The exeption should contain the message we are looking for'
+    );
+  }
 
-	@IsTest
-	private static void isBypassedShouldFailWithInvalidType() {
-		request.Name = MY_STRING;
-		request.bypassType = MY_STRING;
-		requests.add(request);
+  @IsTest
+  private static void isBypassedShouldFailWithInvalidType() {
+    request.Name = MY_STRING;
+    request.bypassType = MY_STRING;
+    requests.add(request);
 
-		try {
-			List<Boolean> isBypassed = TriggerActionFlowIsBypassed.isBypassed(
-				requests
-			);
-		} catch (Exception e) {
-			myException = e;
-		}
+    try {
+      List<Boolean> isBypassed = TriggerActionFlowIsBypassed.isBypassed(requests);
+    } catch (Exception e) {
+      myException = e;
+    }
 
-		System.assertNotEquals(
-			null,
-			myException,
-			'We should have an exception thrown in this scenario'
-		);
-		System.assert(
-			myException instanceof TriggerActionFlowIsBypassed.TriggerActionFlowIsBypassedObjectException,
-			'The exception should be of the correct type'
-		);
-		System.assertEquals(
-			myException.getMessage(),
-			TriggerActionFlow.INVALID_TYPE,
-			'The exeption should contain the message we are looking for'
-		);
-	}
+    System.assertNotEquals(null, myException, 'We should have an exception thrown in this scenario');
+    System.assert(
+      myException instanceof TriggerActionFlowIsBypassed.TriggerActionFlowIsBypassedObjectException,
+      'The exception should be of the correct type'
+    );
+    System.assertEquals(
+      myException.getMessage(),
+      TriggerActionFlow.INVALID_TYPE,
+      'The exeption should contain the message we are looking for'
+    );
+  }
 }

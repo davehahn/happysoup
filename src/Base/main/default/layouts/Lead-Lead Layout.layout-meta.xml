@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Layout xmlns="http://soap.sforce.com/2006/04/metadata">
     <excludeButtons>Clone</excludeButtons>
-    <excludeButtons>DataDotComClean</excludeButtons>
     <excludeButtons>FindDup</excludeButtons>
     <excludeButtons>Share</excludeButtons>
     <excludeButtons>Submit</excludeButtons>
@@ -47,6 +46,10 @@
             <layoutItems>
                 <behavior>Edit</behavior>
                 <field>PartnerEmail__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>Lead_Notification_Pending__c</field>
             </layoutItems>
         </layoutColumns>
         <layoutColumns>
@@ -148,6 +151,10 @@
             <layoutItems>
                 <behavior>Edit</behavior>
                 <field>Marketing_Cloud_Notes__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>hubspot_plan_to_purchase__c</field>
             </layoutItems>
         </layoutColumns>
         <layoutColumns>
@@ -284,8 +291,8 @@
             <sortOrder>7</sortOrder>
         </platformActionListItems>
         <platformActionListItems>
-            <actionName>Convert</actionName>
-            <actionType>StandardButton</actionType>
+            <actionName>Lead.Convert_and_Configure</actionName>
+            <actionType>QuickAction</actionType>
             <sortOrder>8</sortOrder>
         </platformActionListItems>
         <platformActionListItems>

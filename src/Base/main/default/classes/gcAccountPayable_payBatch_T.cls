@@ -1,7 +1,7 @@
-@IsTest(SeeAllData=False)
+@IsTest
 private class gcAccountPayable_payBatch_T {
     final static String RECORDTYPE = 'Motor';
-    final static String FAMILY = 'Motor Accessories';
+    final static String FAMILY = 'Remote';
 
     @TestSetup
     static void testData(){     

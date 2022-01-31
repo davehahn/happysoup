@@ -160,7 +160,7 @@ private class DealerPartOrdersStatement_Test {
 			erp_task_map.put( erp.Id, Factory_ERPOrder.buildProjectTask( erp.Id, 'Dealer Order' ) );
 		}
     insert erp_task_map.values();
-		Product2[] parts = Factory_Product.buildNonSerializedProducts('Part', 'Electronics', 5);
+		Product2[] parts = Factory_Product.buildNonSerializedProducts('Part', 'Hardware', 5);
 		insert parts;
 		List<AcctSeedERP__Material__c> mats = new List<AcctSeedERP__Material__c>();
 		for( AcctSeed__Project_Task__c task : erp_task_map.values() )
