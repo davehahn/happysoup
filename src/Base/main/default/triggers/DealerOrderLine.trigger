@@ -1,3 +1,4 @@
+//TODO : Need to delete
 trigger DealerOrderLine on Dealer_Order_Line__c (
   before insert,
   before update,
@@ -7,6 +8,6 @@ trigger DealerOrderLine on Dealer_Order_Line__c (
   after delete,
   after undelete) {
 
-  new DealerOrderLine_TriggerHandler().run();
+  //new DealerOrderLine_TriggerHandler().run();
 
 }
