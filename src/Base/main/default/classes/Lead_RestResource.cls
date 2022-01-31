@@ -132,6 +132,8 @@ global with sharing class Lead_RestResource
     public String boatSeries;
     public String boatModel;
     public String boatName;
+    public String serialNumber;
+    public String serialNumberId;
     public String subscribeToNewsletter;
     public String campaignId;
     public String conversionId;
@@ -165,6 +167,8 @@ global with sharing class Lead_RestResource
               Boat_Series__c = this.boatSeries,
               Boat_Model__c = this.boatModel,
               Boat_Name__c = this.boatName,
+              Serial_Number__c = this.serialNumber,
+              Serial_Number_Lookup__c = this.serialNumberId,
               Subscribe_to_Newsletter__c = this.subscribeToNewsletter,
               Preferred_Language__c = this.language,
               Notes__c = this.notes,
@@ -205,13 +209,12 @@ global with sharing class Lead_RestResource
         '{"status": "success", "id": "' + result.data.id + '"}'
       );
 
-      // this is where I'll need to trigger the lead submission history with the result.data.id as the most important value
+      // Add record to Lead Submission History
       LeadSubmissionHistoryWrapper lshWrapper =
         (LeadSubmissionHistoryWrapper)JSON.deserialize(
                 jsonWrapper,
                 LeadSubmissionHistoryWrapper.class
         );
-      //wrap insert in try catch for errors , exception.getMessage
       try{
         insert lshWrapper.toSubmissionHistoryObject(result).lshGetRecord();
         res.responseBody = Blob.valueOf(

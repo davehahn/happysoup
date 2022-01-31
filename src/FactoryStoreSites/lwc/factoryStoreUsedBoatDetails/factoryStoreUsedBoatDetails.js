@@ -7,6 +7,7 @@ import { NavigationMixin, CurrentPageReference } from 'lightning/navigation';
 import { stringy, stripParentheses, rewriteMotorName, rewriteTrailerName, weeklyPayment, formatPrice, setWrapperClass, convertLength, renderEN, renderFR } from 'c/communitySharedUtils';
 import BANNER from '@salesforce/resourceUrl/FactoryStoreModelBanner';
 import fetchSerialNumber from '@salesforce/apex/FactoryStore_InventoryController.fetchSerialNumber';
+import { fireEvent, registerListener, unregisterAllListeners } from 'c/pubsub';
 //import fetchImages from '@salesforce/apex/FactoryStore_InventoryController.fetchImages';
 
 export default class FactoryStoreUsedBoatDetails extends NavigationMixin(LightningElement) {
@@ -35,6 +36,8 @@ export default class FactoryStoreUsedBoatDetails extends NavigationMixin(Lightni
 	richTextGallery;
 
 	serialWrapperClass = 'serial serial--loading';
+
+	@wire(CurrentPageReference) pageRef;
 
  	@wire(CurrentPageReference)
 	setCurrentPageReference(currentPageReference){
@@ -79,6 +82,15 @@ export default class FactoryStoreUsedBoatDetails extends NavigationMixin(Lightni
 //				}).catch(e => {
 //				console.log('fetch images error:', e);
 //		 });
+
+		let details = {
+				recordId: this.recordId,
+				boatName: this.boatName,
+				serialNumber: this.serial.Name,
+				serialNumberId: this.serial.Id
+			}
+			console.log('Used details to send to form: ', details);
+			fireEvent(this.pageRef, 'exposeUsedModelDetails', details);
 	}
 
 	get retailPrice(){
