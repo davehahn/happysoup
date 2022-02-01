@@ -220,11 +220,11 @@ global with sharing class Lead_RestResource
       try{
         insert lshWrapper.toSubmissionHistoryObject(result).lshGetRecord();
         res.responseBody = Blob.valueOf(
-          '{"status": "success", "id": "' + result.data.id + '", "lshStatus": "success", "jsonWrapper": "'+ jsonWrapper +'"}'
+          '{"status": "success", "id": "' + result.data.id + '", "lshStatus": "success"}'
         );
       } catch (Exception error) {
         res.responseBody = Blob.valueOf(
-                '{"status": "success", "id": "' + result.data.id + '", "lshStatus": "error", "lshError": "'+ error.getMessage() +'"}'
+          '{"status": "success", "id": "' + result.data.id + '", "lshStatus": "error", "lshError": "'+ error.getMessage() +'"}'
         );
       }
     }
