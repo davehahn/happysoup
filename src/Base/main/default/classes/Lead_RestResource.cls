@@ -132,8 +132,8 @@ global with sharing class Lead_RestResource
     public String boatSeries;
     public String boatModel;
     public String boatName;
-    public String serialNumber;
-    public String serialNumberId;
+    public String modelOfInterestSerialNumber;
+    public String modelOfInterestSerialNumberId;
     public String subscribeToNewsletter;
     public String campaignId;
     public String conversionId;
@@ -167,8 +167,8 @@ global with sharing class Lead_RestResource
               Boat_Series__c = this.boatSeries,
               Boat_Model__c = this.boatModel,
               Boat_Name__c = this.boatName,
-              Serial_Number__c = this.serialNumber,
-              Serial_Number_Lookup__c = this.serialNumberId,
+              Model_of_Interest_Serial_Number__c = this.modelOfInterestSerialNumber,
+              Model_of_Interest_Serial_Number_Lookup__c = this.modelOfInterestSerialNumberId,
               Subscribe_to_Newsletter__c = this.subscribeToNewsletter,
               Preferred_Language__c = this.language,
               Notes__c = this.notes,

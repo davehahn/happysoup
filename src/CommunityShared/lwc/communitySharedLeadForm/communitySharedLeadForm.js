@@ -186,8 +186,8 @@ export default class CommunitySharedLeadForm extends NavigationMixin(LightningEl
 			Campaign__c: (this.campaignId != undefined) ? this.campaignId : this.defaultCampaignId,
 			Form_Name__c: this.formName,
 			Campaign__c: (this.campaignId != undefined) ? this.campaignId : this.defaultCampaignId,
-			Serial_Number__c: (this.serialNumber !== "N/A") ? this.serialNumber : '',
-			Serial_Number_Lookup__c	: (this.serialNumberId !== "N/A") ? this.serialNumberId : '',
+			Model_of_Interest_Serial_Number__c: (this.serialNumber !== "N/A") ? this.serialNumber : '',
+			Model_of_Interest_Serial_Number_Lookup__c	: (this.serialNumberId !== "N/A") ? this.serialNumberId : '',
 			//Conversion_Id__c
 			//Special_Conditions__c
 			Lead_Notification_Pending__c: true
