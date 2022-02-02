@@ -909,8 +909,8 @@ public without sharing class gcProject {
     if(setIdProject.isEmpty()) return;
     List<AcctSeed__Project__c> listProjects = new List<AcctSeed__Project__c>();
     Application_RecordType.ERPOrderRTs recordTypes = new Application_RecordType.ERPOrderRTs();
-
-    for(AcctSeed__Project__c project : [SELECT Id, RecordTypeId, Name, Locked__c, AcctSeed__Status__c, Internal_Partner_Boat_Sale__c FROM AcctSeed__Project__c WHERE Id IN :setIdProject])
+    Set<Id> setIdSerial = new Set<Id>();
+    for(AcctSeed__Project__c project : [SELECT Id, RecordTypeId, Name, Locked__c, AcctSeed__Status__c, Internal_Partner_Boat_Sale__c, (SELECT Id, GMBLASERP__Serial_Number__c FROM AcctSeedERP__Project_Materials__r) FROM AcctSeed__Project__c WHERE Id IN :setIdProject])
     {
       if(project.AcctSeed__Status__c != 'Completed'){
         if( project.RecordTypeId == recordTypes.getCounterSaleId() ||
@@ -927,6 +927,10 @@ public without sharing class gcProject {
           project.AcctSeed__Status__c = 'Ready For Accounting';
           listProjects.add(project);
         }
+        for(AcctSeedERP__Material__c matl : project.AcctSeedERP__Project_Materials__r){
+          if(matl.GMBLASERP__Serial_Number__c != null)
+            setIdSerial.add(matl.GMBLASERP__Serial_Number__c);
+        }
       }
     }
     if(!listProjects.isEmpty())
@@ -935,6 +939,8 @@ public without sharing class gcProject {
       gcProject.disableTrigger = true;
       update listProjects;
       gcProject.disableTrigger = boolOld;
+      if(!setIdSerial.isEmpty())
+        gcSerialNumber.updateSerialIsAvailable(setIdSerial);
     }
   }
 
