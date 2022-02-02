@@ -13,6 +13,7 @@ export default class FactoryStoreOverlayWithLeadForm extends LightningElement {
 	recordId;
 	boatName;
 	serialNumber = "N/A";
+	serialNumberId = "N/A";
 	wrapperClass = 'overlay';
 
 	@api introHeading;
@@ -45,10 +46,11 @@ export default class FactoryStoreOverlayWithLeadForm extends LightningElement {
 
  handleOpenOverlay(detail){
    console.log('handleOpenOverlay');
-   console.log('recordId: ', detail.recordId);
+   console.log('record: ', detail);
    this.recordId = detail.recordId;
    this.boatName = detail.boatName;
    this.serialNumber = detail.serialNumber;
+   this.serialNumberId = detail.serialNumberId;
    this.leadFormName = this.boatName + ' - Lead Form';
    this.wrapperClass = setWrapperClass(this.sectionWidth, 'overlay open');
  }

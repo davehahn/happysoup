@@ -30,7 +30,8 @@ export default class FactoryStoreCurrentInventoryItem extends NavigationMixin(Li
 		let details = {
 			recordId: event.currentTarget.dataset.record,
 			boatName: event.currentTarget.dataset.name,
-			serialNumber: event.currentTarget.dataset.serial
+			serialNumber: event.currentTarget.dataset.serial,
+			serialNumberId: event.currentTarget.dataset.serialId
 		}
 		console.log('details to send to form: ', details);
 		fireEvent(this.pageRef, 'openOverlay', details);

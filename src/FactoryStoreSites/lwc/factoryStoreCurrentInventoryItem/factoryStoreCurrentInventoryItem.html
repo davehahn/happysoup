@@ -66,7 +66,7 @@
 
 
       <p class="item__ctas">
-        <button class="ctas__btn btn btn--secondary btn--secondarySolid" data-record={stock.Base.ProductId} data-name={stock.Base.ProductName} data-serial={stock.Base.SerialNumber} onclick={quickQuote}>
+        <button class="ctas__btn btn btn--secondary btn--secondarySolid" data-record={stock.Base.ProductId} data-name={stock.Base.ProductName} data-serial={stock.Base.SerialNumber} data-serial-id={stock.Base.SerialId} onclick={quickQuote}>
           <template if:true={isEN}>Quick Connect</template>
           <template if:true={isFR}>Connexion Rapide</template>
         </button>
