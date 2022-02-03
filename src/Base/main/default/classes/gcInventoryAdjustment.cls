@@ -152,5 +152,5 @@ global without sharing class gcInventoryAdjustment {
 			delete listMoveOutDelete;
 	}
 
-	public static void coverage(){}
+
 }
