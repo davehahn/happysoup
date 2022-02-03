@@ -12,7 +12,8 @@ private class ContentVersion_TriggerHandler_T {
       Title = FILE_NAME,
       PathOnClient = '/' + FILE_NAME + '.jpg',
       VersionData = Blob.valueOf('version data blob'),
-      Origin = 'C'
+      Origin = 'C',
+      Visibility__c = 'public'
     );
 
     Test.startTest();
@@ -58,7 +59,8 @@ private class ContentVersion_TriggerHandler_T {
       Title = FILE_NAME,
       PathOnClient = '/' + FILE_NAME + '.jpg',
       VersionData = Blob.valueOf('version data blob'),
-      Origin = 'C'
+      Origin = 'C',
+      Visibility__c = 'public'
     );
     insert cv;
     cv = [SELECT Id, SharingPrivacy FROM ContentVersion WHERE Id = :cv.Id];
