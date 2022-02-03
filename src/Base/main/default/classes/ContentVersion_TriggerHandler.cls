@@ -4,6 +4,9 @@
 
 public without sharing class ContentVersion_TriggerHandler extends TriggerHandler {
 
+  @TestVisible
+  private static final  List<String> defaultPublicFileTitles = new List<String>{'Purchase_Order_PDF'};
+
   //  protected override void bulkBefore()
   //  {
   //    system.debug('[ContentVersion_TriggerHandler] bulk before');
@@ -15,6 +18,7 @@ public without sharing class ContentVersion_TriggerHandler extends TriggerHandle
   //  }
 
   protected override void beforeInsert() {
+    setVisibilityOnSpecific( (List<ContentVersion>)Trigger.new);
     setPrivacy((List<ContentVersion>) Trigger.new);
   }
 
@@ -51,6 +55,16 @@ public without sharing class ContentVersion_TriggerHandler extends TriggerHandle
   //  {
   //    system.debug('[ContentVersion_TriggerHandler] final actions');
   //  }
+
+  private static void setVisibilityOnSpecific( List<ContentVersion> newList ){
+    for( ContentVersion cv : newList ){
+      for( String title :  defaultPublicFileTitles ){
+        if( cv.Title.contains(title) ){
+          cv.Visibility__c = 'Public';
+        }
+      }
+    }
+  }
 
   private static void setPrivacy(
     List<ContentVersion> newList
