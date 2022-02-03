@@ -56,9 +56,9 @@ public without sharing class ContentVersion_TriggerHandler extends TriggerHandle
     List<ContentVersion> newList
   ) {
     for (ContentVersion cv : newList) {
-      if( cv.Visibility__c == null ){
-        cv.Visibility__c = 'Public';
-      }
+//      if( cv.Visibility__c == null ){
+//        cv.Visibility__c = 'Public';
+//      }
       if (cv.Visibility__c == 'Private') {
         cv.SharingPrivacy = 'P';
       }
