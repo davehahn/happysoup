@@ -48,6 +48,7 @@ global without sharing class gcPurchaseOrder_PDF{
 								AcctSeedERP__Product__r.ProductCode,
 								AcctSeedERP__Product__r.Unique_Product_Code__c,
 								AcctSeedERP__Product__r.Product_Type__c,
+								AcctSeedERP__Product__r.Unit_of_Measurement__c,
 								AcctSeedERP__Quantity__c,
 							    AcctSeedERP__Quantity_Received__c,
 								AcctSeedERP__Quantity_Unreceived__c,
@@ -72,6 +73,7 @@ global without sharing class gcPurchaseOrder_PDF{
 				m.put('idProduct', pol.AcctSeedERP__Product__c);
 				m.put('productName', pol.AcctSeedERP__Product__r.Name);
 				m.put('productDescription', pol.AcctSeedERP__Product__r.Description == null?'':pol.AcctSeedERP__Product__r.Description);
+				m.put('unitOfMeasurement', pol.AcctSeedERP__Product__r.Unit_of_Measurement__c == null?'':pol.AcctSeedERP__Product__r.Unit_of_Measurement__c);
 				m.put('productCode', pol.AcctSeedERP__Product__r.ProductCode == null?'':pol.AcctSeedERP__Product__r.ProductCode);
 				m.put('productUniqueCode', pol.AcctSeedERP__Product__r.Unique_Product_Code__c == null?'':pol.AcctSeedERP__Product__r.Unique_Product_Code__c);
 				m.put('productType', pol.AcctSeedERP__Product__r.Product_Type__c == null?'':pol.AcctSeedERP__Product__r.Product_Type__c);
