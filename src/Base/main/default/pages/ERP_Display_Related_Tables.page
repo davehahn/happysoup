@@ -4271,7 +4271,47 @@ input.dateSelector{
         $dialogDiv.dialog('close');
     }
 
-    function postProjectBeforeDeposit(mapParams,$dialogDiv)
+    function postProjectBeforeDeposit(mapParams,$dialogDiv){
+        if({!OR(isPartnerBoatSale,isPartnerPartsOrder)}{
+            gSpinner.show();
+            var $gridDiv = $j('#ledger');
+            $gridDiv.pqGrid('showLoading');
+            Visualforce.remoting.Manager.invokeAction(
+                '{!$RemoteAction.gcProject_AccountingActions.checkIncompleteSerialMFG}',
+                '{!Id}',
+                function(result,event)
+                {
+                    if(event.status)
+                    {
+                        if(result.length > 0)
+                        {
+                            var myString = '';
+                            jQuery.each(result, function(i,msg)
+                            {
+                                myString += msg;
+                                myString += '\n\n';
+                            });
+                        }else
+                            postProjectBeforeDeposit_Original(mapParams,$dialogDiv);
+                    }
+                    else
+                    {
+                        refreshAll();
+                        rerenderDetail();
+                        rerenderJournalEntry();
+                        rerenderInboundMovements();
+                        showToast(event.message);
+                    }
+                    $gridDiv.pqGrid('hideLoading');
+                    gSpinner.hide();
+                },
+                {buffer:true, escape:false, timeout:120000});
+        }else{
+            postProjectBeforeDeposit_Original(mapParams,$dialogDiv);
+        }
+    }
+
+    function postProjectBeforeDeposit_Original(mapParams,$dialogDiv)
     {
         gSpinner.show();
         var $gridDiv = $j('#ledger');

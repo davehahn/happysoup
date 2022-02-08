@@ -14,31 +14,13 @@ private class FactoryStoreStaffList_Controller_T {
         insert wh;
     }
 
-    private static void init()
+    private static void init(String department)
     {
-        Map<String, String[]> roleNamesByDepartment = new Map<String, String[]>{
-                'Sales' => new List<String>{
-                        'Store Manager',
-                        'Memory Makers',
-                        'Business Office Managers'
-                },
-                'Service' => new List<String>{
-                        'Boat Specialist',
-                        'Memory Builders'
-                }
-        };
-        Map<String, UserRole> roles = new Map<String, UserRole>();
-        for( String department : roleNamesByDepartment.keySet() )
-        {
-            for (String roleName : roleNamesByDepartment.get(department))
-            {
-                roles.put( roleName, new UserRole(
-                        Name = roleName,
-                        DeveloperName = roleName.replace(' ', '')
-                ));
-            }
+        if(department == 'Sales'){
+            department = 'Display on Sales Team Page';
+        } else if(department == 'Service'){
+            department = 'Display on Parts and Service Team Page';
         }
-        insert roles.values();
 
         Profile sysAdmin = [
                 SELECT
@@ -48,32 +30,25 @@ private class FactoryStoreStaffList_Controller_T {
         ];
 
         List<User> users = new List<User>();
-        for( String department : roleNamesByDepartment.keySet() )
-        {
-            System.debug(department);
-            for (String roleName : roleNamesByDepartment.get(department))
-            {
-                Integer random = Integer.valueOf( Math.random() * 1000 );
-                User u = Factory_User.buildUser(
-                        String.valueOf(random) + 'fName',
-                        'lName',
-                        sysAdmin.Id
-                );
-                u.Department = department;
-                u.UserRoleId = roles.get( roleName ).Id;
-                u.Warehouse__c = WH_NAME;
-                users.add( u );
-            }
-        }
+        Integer random = Integer.valueOf( Math.random() * 1000 );
+        User u = Factory_User.buildUser(
+                String.valueOf(random) + 'fName',
+                'lName',
+                sysAdmin.Id
+        );
+        u.Display_User_on_Retail_Site_Staff_List__c = department;
+        u.Warehouse__c = WH_NAME;
+        users.add( u );
+
         insert users;
     }
 
     @IsTest
     static void fetchStaffList_Sales()
     {
-        init();
         String location = WH_NAME;
         String department = 'Sales';
+        init(department);
         Test.startTest();
         List<User> result = FactoryStoreStaffList_Controller.fetchStaffList(
                 location,
@@ -81,15 +56,15 @@ private class FactoryStoreStaffList_Controller_T {
         );
         Test.stopTest();
 
-        System.assertEquals( 3, result.size() );
+        System.assertEquals( 1, result.size() );
     }
 
     @IsTest
     static void fetchStaffList_Service()
     {
-        init();
         String location = WH_NAME;
         String department = 'Service';
+        init(department);
         Test.startTest();
         List<User> result = FactoryStoreStaffList_Controller.fetchStaffList(
                 location,
@@ -97,7 +72,7 @@ private class FactoryStoreStaffList_Controller_T {
         );
         Test.stopTest();
 
-        System.assertEquals( 2, result.size() );
+        System.assertEquals( 1, result.size() );
     }
 
 }
