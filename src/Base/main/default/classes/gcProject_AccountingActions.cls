@@ -640,6 +640,24 @@ public without sharing class gcProject_AccountingActions {
 		return listMsg;
 	}
 
+	@RemoteAction
+	public static void checkIncompleteSerialMFG(Id idProject){
+		Map<Id,Boolean> mapSerialMFG = new Map<Id,Boolean>();
+		Boolean isMFGOrder = false;
+		for(AcctSeedERP__Material__c matl : [SELECT Id, AcctSeedERP__Project__r.RecordTypeId, GMBLASERP__Serial_Number__c, AcctSeedERP__Product__r.AcctSeedERP__Serialized__c FROM AcctSeedERP__Material__c
+			WHERE AcctSeedERP__Project__c =:idProject
+			AND AcctSeedERP__Product__r.AcctSeed__Inventory_Product__c = true])
+		{
+			if(matl.AcctSeedERP__Project__r.RecordTypeId == gcConstants.idRtProjectManufacturing)
+				isMFGOrder = true;
+			if(!isMFGOrder && matl.AcctSeedERP__Product__r.AcctSeedERP__Serialized__c && matl.GMBLASERP__Serial_Number__c != null)
+				mapSerialMFG.put(matl.GMBLASERP__Serial_Number__c, false);
+		}
+		if(!mapSerialMFG.isEmpty()){
+			retrieveIncompleteSerialMFG(mapSerialMFG,idProject);
+		}
+	}
+
 	public static void retrieveIncompleteSerialMFG(Map<Id,Boolean> mapSerialMFG, Id idProject){
 		Id idRtProjectManufacturing = gcConstants.idRtProjectManufacturing;
 		for(GMBLASERP__Serial_Number__c sn :

@@ -206,22 +206,26 @@ public class AccrualTool_Controller {
                 
                 departmentMapExpense.put(material.AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_2__r.Name,prodPriceMapExpense);
                 system.debug('prodPriceMapExpense >> '+prodPriceMapExpense);
-                String key = material.AcctSeedERP__Product__r.AcctSeed__Expense_GL_Account__c+
+                String key = material.AcctSeedERP__Product__c+
+                    ''+material.AcctSeedERP__Product__r.AcctSeed__Expense_GL_Account__c+
                     ''+material.AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_1__c+
                     ''+material.AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_2__c;
             
                 if(!jounralEntryLineWrapperExpense.containsKey(key)) {
-                    jounralEntryLineWrapperExpense.put(key,
-                                                       new JournalEntryLineWrapper(material.AcctSeedERP__Product__r.AcctSeed__Expense_GL_Account__c,
-                                                                                   material.AcctSeedERP__Product__r.AcctSeed__Expense_GL_Account__r.Name,
-                                                                                   material.AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_1__c,
-                                                                                   material.AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_1__r.Name,
-                                                                                   material.AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_2__c,
-                                                                                   material.AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_2__r.Name,
-                                                                                   newProdPrice.price,0.0));
+                    JournalEntryLineWrapper jew = new JournalEntryLineWrapper(material.AcctSeedERP__Product__r.AcctSeed__Expense_GL_Account__c,
+                            material.AcctSeedERP__Product__r.AcctSeed__Expense_GL_Account__r.Name,
+                            material.AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_1__c,
+                            material.AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_1__r.Name,
+                            material.AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_2__c,
+                            material.AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_2__r.Name,
+                            newProdPrice.price,0.0);
+                    jew.ProductId = material.AcctSeedERP__Product__c;
+                    jounralEntryLineWrapperExpense.put(key,jew);
                 } else {
                     JournalEntryLineWrapper Expense = jounralEntryLineWrapperExpense.get(key);
                     Expense.Debit = Expense.Debit + newProdPrice.price;
+                    if(Expense.ProductId == null)
+                        Expense.ProductId = material.AcctSeedERP__Product__c;
                     jounralEntryLineWrapperExpense.put(key,Expense);
                 }
             }
