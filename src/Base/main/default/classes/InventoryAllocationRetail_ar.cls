@@ -361,7 +361,7 @@ public without sharing class InventoryAllocationRetail_ar {
 			                                                     AcctSeedERP__Project__r.Serial_Number__r.Name
 			                                              FROM AcctSeedERP__Material__c
 			                                              WHERE AcctSeedERP__Product__c != null 
-			                                                AND AcctSeedERP__Product__r.Family IN ('Canvas')
+			                                                AND AcctSeedERP__Product__r.Family IN ('Canvas and Cover Components')
 			                                                AND AcctSeedERP__Project__r.Serial_Number__c != null
 			                                                AND AcctSeedERP__Project__r.Serial_Number__c IN:allSerials])
 			{
