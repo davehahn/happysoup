@@ -34,7 +34,6 @@ private class CommissionCalculatorController_Test {
       CommissionCalculatorController ccc = new CommissionCalculatorController();
 
       System.assertEquals(project.Id, ccc.erpOrderId);
-      System.assertEquals(project.Name, ccc.OppName);
 
       CommissionRecord__c cRec;
       CommissionRecord__c[] comRecords = [SELECT Id FROM CommissionRecord__c WHERE ERP_Order__c = :project.Id];
@@ -46,7 +45,7 @@ private class CommissionCalculatorController_Test {
       pageRef.getParameters().remove('erp_order_id');
       Test.setCurrentPage(pageRef);
       ccc = new CommissionCalculatorController();
-      System.assertEquals(project.Name, ccc.OppName);
+      //System.assertEquals(project.Name, ccc.OppName);
     }
   }
 

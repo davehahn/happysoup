@@ -9,7 +9,7 @@ private class gcTest_InventoryAdjustment{
 
   static testMethod void coverage_Test()
   {
-    gcInventoryAdjustment.coverage();
+    //gcInventoryAdjustment.coverage();
   }
 
   @IsTest

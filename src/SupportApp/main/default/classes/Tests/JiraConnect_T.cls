@@ -88,7 +88,7 @@ private class JiraConnect_T
     System_Issue__c si = Factory_SystemIssue.buildIssue();
     insert si;
     TriggerHandler.clearBypass('SystemIssue_TriggerHandler');
-    ContentVersion contentVersion = new ContentVersion(PathOnClient = 'PathOnClient', VersionData = Blob.valueOf('Test'));
+    ContentVersion contentVersion = new ContentVersion(PathOnClient = 'PathOnClient', VersionData = Blob.valueOf('Test'), Visibility__c='Public');
     insert contentVersion;
     ContentVersion createdContentVersion = [SELECT ContentDocumentId FROM ContentVersion WHERE Id = :contentVersion.Id];
     TriggerHandler.bypass('ContentDocumentLink_TriggerHandler');
