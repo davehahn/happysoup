@@ -256,7 +256,8 @@ public class OpportunityTriggerHandler {
               ( opp.Deposit__c != oOpp.Deposit__c ) ||
               ( opp.Finance_Annual_Interest__c != oOpp.Finance_Annual_Interest__c ) ||
               ( opp.Finance_Ammortization__c != oOpp.Finance_Ammortization__c ) ||
-              ( opp.Insurance_Term__c != oOpp.Insurance_Term__c )
+              ( opp.Insurance_Term__c != oOpp.Insurance_Term__c ) ||
+                ( opp.Insurance_Term_Disability__c != oOpp.Insurance_Term_Disability__c )
             )
           {
             Map<String, String> data = new Map<String, String>();

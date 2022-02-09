@@ -3,7 +3,8 @@ global class Batch_SandboxRefresh_Pricebooks implements Database.Batchable<sObje
 	String query;
 
 	global Batch_SandboxRefresh_Pricebooks() {
-		query = 'SELECT Id FROM Pricebook2';
+		Id supplierRtId = new Application_RecordType().getPricebookRecordTypes().getSupplierId();
+		query = 'SELECT Id FROM Pricebook2 WHERE RecordTypeId <> \'' + String.valueOf(supplierRtId) + '\'';
 	}
 
 	global Database.QueryLocator start(Database.BatchableContext BC) {

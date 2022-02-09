@@ -75,6 +75,7 @@ public without sharing class gcProject {
       Boolean boolIsUpdate,
       Boolean boolIsDelete)
   {
+    System.debug('gcProject TriggerHandler');
     if(oldMap == NULL) oldMap = new map<Id,AcctSeed__Project__c>();
     if(newMap == NULL) newMap = new map<Id,AcctSeed__Project__c>();
     if(listNew == NULL) listNew = new list<AcctSeed__Project__c>();
@@ -1025,6 +1026,7 @@ public without sharing class gcProject {
       if(
         ( erp.Pre_Insurance_Total__c != oErp.Pre_Insurance_Total__c ) ||
           ( erp.Insurance_Term__c != oErp.Insurance_Term__c ) ||
+          ( erp.Insurance_Term_Disability__c != oErp.Insurance_Term_Disability__c ) ||
           ( erp.Deposit__c != oErp.Deposit__c ) ||
           ( erp.Finance_Annual_Interest__c != oErp.Finance_Annual_Interest__c ) ||
           ( erp.Finance_Ammortization__c != oErp.Finance_Ammortization__c )
