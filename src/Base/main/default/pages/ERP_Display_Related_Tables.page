@@ -4272,7 +4272,7 @@ input.dateSelector{
     }
 
     function postProjectBeforeDeposit(mapParams,$dialogDiv){
-        if({!OR(isPartnerBoatSale,isPartnerPartsOrder)}{
+        if({!OR(isPartnerBoatSale,isPartnerPartsOrder)}){
             gSpinner.show();
             var $gridDiv = $j('#ledger');
             $gridDiv.pqGrid('showLoading');
