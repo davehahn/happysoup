@@ -889,10 +889,11 @@ public without sharing class InventoryAllocationWholesaleController {
     public static Boolean saveShipmentReseved(String shipId, Integer quantity) {
         AcctSeedERP__Purchase_Order_Line__c shipmentToUpdate = [Select Id, Reserved__c, AcctSeedERP__Project__c from AcctSeedERP__Purchase_Order_Line__c Where Id =: shipId ];
         shipmentToUpdate.Reserved__c = quantity;
-        Boolean origTriggerState = lgndPurchaseOrderLine.disableTrigger;
-        lgndPurchaseOrderLine.disableTrigger = true;
+        MetadataTriggerHandler.bypass('TA_POL_SetReserved');
+        MetadataTriggerHandler.bypass('TA_POL_UpdateProductReservation');
+        MetadataTriggerHandler.bypass('TA_PropagateEtaToRetailArrivalDate');
         update shipmentToUpdate;
-        lgndPurchaseOrderLine.disableTrigger = origTriggerState;
+        MetadataTriggerHandler.clearAllBypasses();
         return true;
     }
     @RemoteAction

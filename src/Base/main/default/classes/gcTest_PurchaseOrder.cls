@@ -6,7 +6,7 @@ private class gcTest_PurchaseOrder{
         gcPurchaseOrder.coverage();
         gcPurchaseOrder_Actions.coverage();
         gcPurchaseOrder_Ext.coverage();
-        gcPurchaseOrderLine.coverage();
+//        gcPurchaseOrderLine.coverage();
         gcPurchaseOrder_PDF.coverage();
     }
 

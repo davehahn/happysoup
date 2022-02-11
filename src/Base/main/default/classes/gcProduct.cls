@@ -111,7 +111,6 @@ public without sharing class gcProduct {
 
 	private static void settings(list<Product2> listNew)
 	{
-		System.debug('Product Trigger');
 		map<String,Id> mapGL = new map<String,Id>();
 
 		for(AcctSeed__GL_Account__c gl :
@@ -194,7 +193,6 @@ public without sharing class gcProduct {
 				}
 				else
 				{
-					System.debug(p.AcctSeed__Inventory_Type__c);
 					if(p.AcctSeed__Inventory_Type__c != 'Purchased' && p.AcctSeed__Inventory_Type__c != 'Raw Materials') {
 						p.AcctSeed__Inventory_Type__c = null;
 						p.AcctSeed__Inventory_GL_Account__c = null;

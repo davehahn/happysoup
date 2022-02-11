@@ -154,6 +154,23 @@ public with sharing class Material_Service
     return result;
   }
 
+  public static List<AcctSeedERP__Material__c> buildFromPromotionalIncentiveProducts( List<Promotion_Incentive_Product__c> promoProducts, Id projectId, Id projectTaskId, String comment ){
+    List<AcctSeedERP__Material__c> result = new List<AcctSeedERP__Material__c>();
+    for (Promotion_Incentive_Product__c iProd : promoProducts)
+    {
+      result.add(new AcctSeedERP__Material__c(
+        AcctSeedERP__Project__c = projectId,
+        AcctSeedERP__Project_Task__c = projectTaskId,
+        AcctSeedERP__Product__c = iProd.Product__c,
+        AcctSeedERP__Quantity_Per_Unit__c = iProd.Quantity__c,
+        GMBLASERP__Unit_Price__c = 0,
+        GMBLASERP__Price_Override__c = true,
+        AcctSeedERP__Comment__c = comment
+      ));
+    }
+    return result;
+  }
+
 
 
 }

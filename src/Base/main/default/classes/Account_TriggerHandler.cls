@@ -1,3 +1,4 @@
+/* TODO: DELETE ME */
 /**
  * Created by dave on 2020-05-01.
  */
@@ -20,10 +21,10 @@ public without sharing class Account_TriggerHandler extends TriggerHandler
 //    system.debug('[Account_TriggerHandler] before insert');
 //  }
 
-  protected override void beforeUpdate()
-  {
-    validate( (List<Account>)Trigger.new );
-  }
+//  protected override void beforeUpdate()
+//  {
+//    validate( (List<Account>)Trigger.new );
+//  }
 
 //  protected override void beforeDelete()
 //  {
@@ -55,20 +56,20 @@ public without sharing class Account_TriggerHandler extends TriggerHandler
 //    system.debug('[Account_TriggerHandler] final actions');
 //  }
 
-  private void validate( List<Account> listNew )
-  {
-    User user = [SELECT Id, AccountId FROM User WHERE Id = :UserInfo.getUserId()];
-    Id dealerRtId = LGND_Constants.accountRtId_Dealer;
-    if( user.AccountId != null )
-    {
-      for( Account a : listNew )
-      {
-        if( a.Id != user.AccountId &&
-            a.RecordTypeId == dealerRtId )
-        {
-          a.addError('You are not allowed to edit another Partners information');
-        }
-      }
-    }
-  }
+//  private void validate( List<Account> listNew )
+//  {
+//    User user = [SELECT Id, AccountId FROM User WHERE Id = :UserInfo.getUserId()];
+//    Id dealerRtId = LGND_Constants.accountRtId_Dealer;
+//    if( user.AccountId != null )
+//    {
+//      for( Account a : listNew )
+//      {
+//        if( a.Id != user.AccountId &&
+//            a.RecordTypeId == dealerRtId )
+//        {
+//          a.addError('You are not allowed to edit another Partners information');
+//        }
+//      }
+//    }
+//  }
 }
