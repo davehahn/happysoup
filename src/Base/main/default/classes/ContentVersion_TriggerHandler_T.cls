@@ -7,12 +7,37 @@ private class ContentVersion_TriggerHandler_T {
   private static final String FILE_NAME = 'TestFile';
 
   @IsTest
+  static void defaultPublicFiles_Test(){
+    String fileName = ContentVersion_TriggerHandler.defaultPublicFileTitles[0] + '_UnitTest.pdf';
+    ContentVersion cv = new ContentVersion(
+      Title = fileName,
+      PathOnClient = '/' + fileName,
+      VersionData = Blob.valueOf('version data blob'),
+      Origin = 'C'
+    );
+
+    Test.startTest();
+    insert cv;
+    Test.stopTest();
+
+    cv = [SELECT Id, Visibility__C, SharingPrivacy FROM ContentVersion WHERE Id = :cv.Id];
+
+    System.assertEquals( 'Public', cv.Visibility__c, 'Visibility should be Public');
+    System.assertEquals(
+      'N',
+      cv.SharingPrivacy,
+      'Should be visible to Everyone'
+    );
+  }
+
+  @IsTest
   static void insertPublic() {
     ContentVersion cv = new ContentVersion(
       Title = FILE_NAME,
       PathOnClient = '/' + FILE_NAME + '.jpg',
       VersionData = Blob.valueOf('version data blob'),
-      Origin = 'C'
+      Origin = 'C',
+      Visibility__c = 'public'
     );
 
     Test.startTest();
@@ -58,7 +83,8 @@ private class ContentVersion_TriggerHandler_T {
       Title = FILE_NAME,
       PathOnClient = '/' + FILE_NAME + '.jpg',
       VersionData = Blob.valueOf('version data blob'),
-      Origin = 'C'
+      Origin = 'C',
+      Visibility__c = 'public'
     );
     insert cv;
     cv = [SELECT Id, SharingPrivacy FROM ContentVersion WHERE Id = :cv.Id];

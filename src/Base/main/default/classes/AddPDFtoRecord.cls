@@ -29,6 +29,7 @@ global with sharing class AddPDFtoRecord{
       doc.VersionData = body;
       doc.PathOnClient = '/' + doc.Title;
       doc.RecordTypeId = rtId;
+      doc.Visibility__c = 'Public';
       docAcctMap.put(accId, doc);
     }
     insert docAcctMap.values();

@@ -301,6 +301,9 @@ body {
                     <th class="tableHeader columnHeader" style="width:70px">
                         <apex:outputText value="{!$ObjectType.AcctSeedERP__Purchase_Order_Line__c.Fields.AcctSeedERP__Quantity__c.Label}" />
                     </th>
+                    <th class="tableHeader" style="width:70px">
+                        <apex:outputText value="{!IF($ObjectType.Product2.accessible,$ObjectType.Product2.Fields.Unit_of_Measurement__c.Label,'Unit')}" />
+                    </th>
                     <th class="tableHeader columnHeader" style="width:70px">
                         <apex:outputText value="{!$ObjectType.AcctSeedERP__Purchase_Order_Line__c.Fields.AcctSeedERP__Unit_Price__c.Label}" />
                     </th>
@@ -325,6 +328,9 @@ body {
                         </td>
                         <td class="{!rowClass} alignRight">
                             <apex:outputText value="{!item['quantity']}" />
+                        </td>
+                        <td class="{!rowClass}" style="width:70px !important;word-break: break-all !important;">
+                            <apex:outputText value="{!item['unitOfMeasurement']}" />
                         </td>
                         <td class="{!rowClass} alignRight">
                             <apex:outputText value="${!item['unitPrice']}" />

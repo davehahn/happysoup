@@ -142,7 +142,7 @@ public without sharing class InventoryAllocationController {
                                                                  AcctSeedERP__Project__r.Serial_Number__r.Product_Name__c
                                                           FROM AcctSeedERP__Material__c
                                                           WHERE AcctSeedERP__Product__r.RecordType.Name != 'Boat'
-                                                            AND (AcctSeedERP__Product__r.AcctSeedERP__Serialized__c = true OR AcctSeedERP__Product__r.Family IN ('Canvas','Boat Build Option'))
+                                                            AND (AcctSeedERP__Product__r.AcctSeedERP__Serialized__c = true OR AcctSeedERP__Product__r.Family IN ('Canvas and Cover Components','Boat Build Option'))
                                                             AND AcctSeedERP__Project__c IN:this.setIdERP])
           {
             Material mat = new Material(objMaterial);
@@ -178,7 +178,7 @@ public without sharing class InventoryAllocationController {
                                                                  AcctSeedERP__Quantity_Allocated__c
                                                           FROM AcctSeedERP__Material__c
                                                           WHERE AcctSeedERP__Product__c != null
-                                                            AND AcctSeedERP__Product__r.Family IN ('Canvas','Boat Build Option')
+                                                            AND AcctSeedERP__Product__r.Family IN ('Canvas and Cover Components','Boat Build Option')
                                                             AND AcctSeedERP__Project__r.Serial_Number__c != null
                                                             AND AcctSeedERP__Project__r.Serial_Number__c IN:this.allSerials])
           {
