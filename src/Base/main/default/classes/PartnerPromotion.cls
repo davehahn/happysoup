@@ -183,6 +183,7 @@ public with sharing class PartnerPromotion {
           {
             ErpWrapper wrapper = bs.erpWrappers[i];
             //Savings 7% AFTER coop discount which 2%
+            System.debug('Boat Cost = ' + wrapper.boatCost );
             Decimal savings = (wrapper.boatCost - ( wrapper.boatCost * 0.02 ) )  * this.discountPercent;
             if( !wrapper.promotionClaimed )
             {

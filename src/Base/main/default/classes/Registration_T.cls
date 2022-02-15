@@ -45,6 +45,7 @@ private class Registration_T
                                                        DateTime.now().addDays(10),
                                                        boatSerial,
                                                        motorSerial);
+    System.debug('init retailERP.Id = ' + retailERP.Id);
     gcProjectTask.ignoreCommissions = orig;
     List<Registration__c> regs = new List<Registration__c>();
     regs.add( Factory_Registration.buildRegistration( null, customer.Id, boatSerial.Id ) );
@@ -227,6 +228,7 @@ private class Registration_T
                                    SerialNumber__r.GMBLASERP__Product__r.RecordTypeId
                            FROM Registration__c
                            WHERE ErpOrder__c <> null ];
+    System.debug('test reg.erp_order__c = ' + reg.ErpOrder__c);
     Test.startTest();
     Registration_Helper.execute_AfterInsert_recordChanges( new Set<Id>{ reg.Id } );
     Test.stopTest();

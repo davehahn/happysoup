@@ -18,6 +18,21 @@ public class Factory_Material
     );
   }
 
+  public static AcctSeedERP__Material__c buildMaterial(
+    Id erpId,
+    Id taskId,
+    Id prodId,
+    Decimal unitPrice)
+  {
+    AcctSeedERP__Material__c m = Factory_Material.buildMaterial(
+      erpId,
+      taskId,
+      prodId
+    );
+    m.GMBLASERP__Unit_Price__c = unitPrice;
+    return m;
+  }
+
   public static AcctSeedERP__Material__c[] buildMaterials(
     Id erpId,
     Id taskId,

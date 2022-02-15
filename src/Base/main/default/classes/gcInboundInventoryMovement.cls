@@ -39,7 +39,7 @@ global without sharing class gcInboundInventoryMovement {
 		GCR_InventoryMovement.triggerHandler(oldMap, newMap, listNew, boolIsBefore, boolIsInsert, boolIsUpdate, boolIsDelete);
 		if(boolIsBefore)
 		{
-			gcSerialNumber.checkPriorMovements(listNew,oldMap);
+			gcSerialNumber.checkPriorMovements((List<SObject>)listNew,(Map<Id, SObject>)oldMap);
 			
 			if(boolIsInsert)
 			{

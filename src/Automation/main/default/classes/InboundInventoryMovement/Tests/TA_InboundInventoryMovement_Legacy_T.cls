@@ -5,24 +5,7 @@ public class TA_InboundInventoryMovement_Legacy_T {
     final static String FAMILY = 'Electronics';
     static list<AcctSeedERP__Inbound_Inventory_Movement__c> movement;
     private static list<AcctSeedERP__Inbound_Inventory_Movement__c> getData(){
-        return [
-                SELECT
-                        Id,
-                        AcctSeedERP__Unit_Cost__c,
-                        AcctSeedERP__Type__c,
-                        AcctSeedERP__Quantity__c,
-                        AcctSeedERP__Credit_GL_Account__c,
-                        AcctSeedERP__Inventory_Balance__c,
-                        AcctSeedERP__Ledger__c,
-                        GMBLASERP__Warehouse__c,
-                        GMBLASERP__Serial_Number__c,
-                        GMBLASERP__Lot__c,
-                        GMBLASERP__Inventory_Adjustment__c,
-                        AcctSeedERP__Project_Task__c,
-                        AcctSeedERP__Project__c
-                FROM
-                        AcctSeedERP__Inbound_Inventory_Movement__c
-        ];
+        return Database.query(LGND_Utilities.getAllFieldsSOQL('AcctSeedERP__Inbound_Inventory_Movement__c'));
     }
     @TestSetup
     static void makeData(){
@@ -44,25 +27,12 @@ public class TA_InboundInventoryMovement_Legacy_T {
         insert loc;
         Product2 part = Factory_Product.createNonSerializedProduct('Part', 'Electronics');
         List<Product2> serializedProducts = Factory_Product.createSerializedProducts(RECORDTYPE, FAMILY, 1);
-        // Serial
-        // GMBLASERP__Serial_Number__c serial = Factory_SerialNumber.insertFullSerial(
-        //         'Boat',
-        //         'Pontoon',
-        //         '1234567890-UNIT-TESTER'
-        // );
         GMBLASERP__Serial_Number__c serial = Factory_SerialNumber.insertFullSerialWithProduct(
                 RECORDTYPE,
                 FAMILY,
                 '1234567890-UNIT-TESTER',
                 serializedProducts[0]);
 
-        Date today = Date.today();
-        /*GMBLASERP__Lot__c lot = new GMBLASERP__Lot__c(
-                                        GMBLASERP__Product__c = serializedProducts[0].Id,
-                                        Name = String.valueOf( today.year() ),
-                                        GMBLASERP__Uniquefier__c = serializedProducts[0].Id + '-' + String.valueOf(today.year())
-                                    );
-        insert lot;*/
         GMBLASERP__Lot__c lot = [SELECT Id FROM GMBLASERP__Lot__c WHERE GMBLASERP__Product__c =: serializedProducts[0].Id];
 
         AcctSeed__Project__c erp = Factory_ERPOrder.buildERP(dealer, serial.Id, gcConstants.idRtPartnerPartsOrder);
@@ -141,8 +111,9 @@ public class TA_InboundInventoryMovement_Legacy_T {
     }
     @IsTest
     static void beforeDeleteTest() {
+        movement = getData();
         Test.startTest();
-        new TA_InboundInventoryMovement_Legacy().beforeDelete(getData());
+        new TA_InboundInventoryMovement_Legacy().beforeDelete(movement);
         Test.stopTest();
     }
     @IsTest
