@@ -124,9 +124,10 @@ export default class CommunitySharedLeadForm extends NavigationMixin(LightningEl
 	  this.showLoading = true;
 	  const newLead = this.formatLeadObject();
 	  const newLeadHistory = this.formatLeadHistoryObject();
-	  const cid = (this.campaignId != undefined) ? this.campaignId : this.defaultCampaignId;
+	  const campaignId = (this.campaignId != undefined) ? this.campaignId : this.defaultCampaignId;
 	  console.log('newLeadHistory', newLeadHistory);
-	  const submit = insertLead({l: newLead, cid: cid, lsh: newLeadHistory})
+	  console.log('campaignId', campaignId);
+	  const submit = insertLead({l: newLead, cid: campaignId, lsh: newLeadHistory})
 	  	.then( (result) =>{
 	  		console.log('submitLead result: ', result);
 	  		this.showForm = false;
