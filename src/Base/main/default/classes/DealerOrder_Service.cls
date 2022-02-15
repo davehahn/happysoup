@@ -137,10 +137,12 @@ public with sharing class DealerOrder_Service {
             msgList.add(mail);
         }
         if( !Test.isRunningTest() )
+        {
             Messaging.sendEmail(msgList);
-        TriggerHandler.bypass('DealerOrder_TriggerHandler');
+        }
+        TriggerBase.bypass('Dealer_Order__c');
         update dealerOrders;
-        TriggerHandler.clearBypass('DealerOrder_TriggerHandler');
+        TriggerBase.clearBypass('Dealer_Order__c');
     }
 
     public static void propagateOwner( Map<Id, Id> ownerChanged )

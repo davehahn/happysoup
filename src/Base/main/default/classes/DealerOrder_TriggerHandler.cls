@@ -343,10 +343,12 @@ public without sharing class DealerOrder_TriggerHandler extends TriggerHandler
       msgList.add(mail);
     }
     if( !Test.isRunningTest() )
+    {
       Messaging.sendEmail(msgList);
-    TriggerHandler.bypass('DealerOrder_TriggerHandler');
+    }
+    TriggerBase.bypass('Dealer_Order__c');
     update dealerOrders;
-    TriggerHandler.clearBypass('DealerOrder_TriggerHandler');
+    TriggerBase.clearBypass('Dealer_Order__c');
   }
 
 }

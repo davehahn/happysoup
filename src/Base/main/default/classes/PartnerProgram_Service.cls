@@ -209,9 +209,9 @@ public with sharing class PartnerProgram_Service
       if( this.appliedPrograms.size() > 0 )
       {
         this.dealerOrder.Applied_Partner_Program_Discounts__c = setToMultiSelect(this.appliedPrograms);
-        TriggerHandler.bypass('DealerOrder_TriggerHandler');
+        TriggerBase.bypass('Dealer_Order__c');
         update this.dealerOrder;
-        TriggerHandler.clearBypass('DealerOrder_TriggerHandler');
+        TriggerBase.clearBypass('Dealer_Order__c');
       }
     }
 

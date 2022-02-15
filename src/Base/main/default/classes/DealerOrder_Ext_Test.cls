@@ -114,9 +114,9 @@ private class DealerOrder_Ext_Test {
         Account__c = acct.Id,
         Pricebook__c = gcConstants.idPricebookPartner
       );
-      TriggerHandler.bypass('DealerOrder_TriggerHandler');
+      TriggerBase.bypass('Dealer_Order__c');
       insert order;
-      TriggerHandler.clearBypass( 'DealerOrder_TriggerHandler');
+      TriggerBase.clearBypass( 'Dealer_Order__c');
       Partner_Booking_Order__c pbo = new Partner_Booking_Order__c(
         Account__c = acct.Id,
         Dealer_Order__c = order.Id,
