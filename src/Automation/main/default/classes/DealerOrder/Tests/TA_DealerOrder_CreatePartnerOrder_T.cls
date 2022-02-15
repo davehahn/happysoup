@@ -10,7 +10,7 @@ public with sharing class TA_DealerOrder_CreatePartnerOrder_T {
     }
     @IsTest
     static void afterInsert_Test() {
-		TA_DealerOrder_TestHelper.init();
+		    TA_DealerOrder_TestHelper.init();
         Dealer_Order__c order = TA_DealerOrder_TestHelper.insertDealerOrder(true, 'Draft');
         insert order;
         Test.startTest();
