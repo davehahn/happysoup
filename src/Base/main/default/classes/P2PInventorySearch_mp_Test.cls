@@ -119,8 +119,9 @@ private class P2PInventorySearch_mp_Test {
         boat2
       )
     );
-    DealerOrderLine_TriggerHandler.disablePartnerProgram = true;
+    MetadataTriggerHandler.bypass('TA_DealerOrderLine_HandlePartnerPro');
     insert dols;
+    MetadataTriggerHandler.clearBypass('TA_DealerOrderLine_HandlePartnerPro');
   }
 
   @isTest
