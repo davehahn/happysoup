@@ -10,7 +10,6 @@ public with sharing class TA_DealerOrder_DeleteERPs_T {
     static void BeforeDelete_Test() {
         TA_DealerOrder_TestHelper.init();
         Dealer_Order__c order = TA_DealerOrder_TestHelper.insertDealerOrder(true, 'Pending Review');
-        insert order;
         Test.startTest();
         try
         {
@@ -36,7 +35,6 @@ public with sharing class TA_DealerOrder_DeleteERPs_T {
 
 
         Dealer_Order__c order = TA_DealerOrder_TestHelper.insertDealerOrder(true, 'Draft');
-        insert order;
         TA_DealerOrder_TestHelper.createDealerOrderLines(order, 3);
         Test.startTest();
         new TA_DealerOrder_DeleteERPs().beforeDelete(new List<Dealer_Order__c>{order});

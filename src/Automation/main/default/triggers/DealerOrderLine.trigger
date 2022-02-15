@@ -8,6 +8,6 @@ trigger DealerOrderLine on Dealer_Order_Line__c (
   after delete,
   after undelete) {
 
-  //new DealerOrderLine_TriggerHandler().run();
+  new MetadataTriggerHandler().run();
 
 }

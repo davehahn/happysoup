@@ -118,9 +118,9 @@ public with sharing class Dealer_Order_Line_Ext {
           Boat_Serial_Number__c = erpId_Material_map.get( dol.ERP_Order__c ).GMBLASERP__Serial_Number__c
         ));
       }
-      TriggerHandler.bypass('DealerOrderLine_TriggerHandler');
+      TriggerBase.bypass('Dealer_Order_Line___c');
       update dols;
-      TriggerHandler.clearBypass('DealerOrderLine_TriggerHandler');
+      TriggerBase.clearBypass('Dealer_Order_Line___c');
     }
   }
 

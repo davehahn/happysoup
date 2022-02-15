@@ -15,7 +15,6 @@ public with sharing class DealerOrder_Service_T {
     static void afterInsert_Test() {
         TA_DealerOrder_TestHelper.init();
         Dealer_Order__c order = TA_DealerOrder_TestHelper.insertDealerOrder(true, 'Draft');
-        insert order;
         Test.startTest();
         new TA_DealerOrder_CreatePartnerOrder().afterInsert(new List<Dealer_Order__c>{order});
         System.assert(TA_DealerOrder_TestHelper.getPartnerBookingOrder().size()>0);
@@ -29,7 +28,6 @@ public with sharing class DealerOrder_Service_T {
     static void BeforeDelete_Test() {
         TA_DealerOrder_TestHelper.init();
         Dealer_Order__c order = TA_DealerOrder_TestHelper.insertDealerOrder(true, 'Pending Review');
-        insert order;
         Test.startTest();
         try
         {
@@ -55,7 +53,6 @@ public with sharing class DealerOrder_Service_T {
 
 
         Dealer_Order__c order = TA_DealerOrder_TestHelper.insertDealerOrder(true, 'Draft');
-        insert order;
         TA_DealerOrder_TestHelper.createDealerOrderLines(order, 3);
         Test.startTest();
         new TA_DealerOrder_DeleteERPs().beforeDelete(new List<Dealer_Order__c>{order});
@@ -72,7 +69,6 @@ public with sharing class DealerOrder_Service_T {
         TA_DealerOrder_TestHelper.init();
         TA_DealerOrder_TestHelper.buildBoat('Pontoon', 50000, null);
         order = TA_DealerOrder_TestHelper.insertDealerOrder(true, 'Pending Review');
-        insert order;
 
         Dealer_Order__c orderOld = new   Dealer_Order__c();
         orderOld = TA_DealerOrder_TestHelper.getOldList()[0];
@@ -99,7 +95,6 @@ public with sharing class DealerOrder_Service_T {
 
 
         Dealer_Order__c order = TA_DealerOrder_TestHelper.insertDealerOrder(true, 'Draft');
-        insert order;
         TA_DealerOrder_TestHelper.createDealerOrderLines(order, 1);
         Dealer_Order__c orderOld = new   Dealer_Order__c();
         orderOld = TA_DealerOrder_TestHelper.getOldList()[0];
@@ -121,7 +116,6 @@ public with sharing class DealerOrder_Service_T {
 
 
         Dealer_Order__c order = TA_DealerOrder_TestHelper.insertDealerOrder(true, 'Draft');
-        insert order;
         TA_DealerOrder_TestHelper.createDealerOrderLines(order, 1);
         Dealer_Order__c orderOld = new   Dealer_Order__c();
         orderOld = TA_DealerOrder_TestHelper.getOldList()[0];
@@ -143,7 +137,6 @@ public with sharing class DealerOrder_Service_T {
 
 
         Dealer_Order__c order = TA_DealerOrder_TestHelper.insertDealerOrder(true, 'Draft');
-        insert order;
         TA_DealerOrder_TestHelper.createDealerOrderLines(order, 1);
         Dealer_Order__c orderOld = new   Dealer_Order__c();
         orderOld = TA_DealerOrder_TestHelper.getOldList()[0];
@@ -162,7 +155,6 @@ public with sharing class DealerOrder_Service_T {
     static void beforeUpdate_Test() {
         TA_DealerOrder_TestHelper.init();
         Dealer_Order__c order = TA_DealerOrder_TestHelper.insertDealerOrder(true, 'Draft');
-        insert order;
 
         System.assert(TA_DealerOrder_TestHelper.getDealerOrder()[0].Date_Submitted__c == null);
         Test.startTest();
@@ -180,7 +172,7 @@ public with sharing class DealerOrder_Service_T {
     static void beforeInsert_Test()
     {
         TA_DealerOrder_TestHelper.init();
-        Dealer_Order__c order = TA_DealerOrder_TestHelper.insertDealerOrder(true, 'Pending Review');
+        Dealer_Order__c order = TA_DealerOrder_TestHelper.buildDealerOrder(true, 'Pending Review');
         DateTime tNow = DateTime.now();
         Test.startTest();
         new TA_DealerOrder_SetSubmittedDate().beforeInsert(new List<Dealer_Order__c>{order});
@@ -200,7 +192,6 @@ public with sharing class DealerOrder_Service_T {
         TA_DealerOrder_TestHelper.init();
         TA_DealerOrder_TestHelper.buildMotor( 2000 );
         Dealer_Order__c order = TA_DealerOrder_TestHelper.insertDealerOrder(true, 'Draft');
-        insert order;
         Dealer_Order__c orderOld = new   Dealer_Order__c();
         orderOld = TA_DealerOrder_TestHelper.getOldList()[0];
         List<Dealer_Order__c> oldlist = new List<Dealer_Order__c>{orderOld};
@@ -229,8 +220,7 @@ public with sharing class DealerOrder_Service_T {
         TA_DealerOrder_TestHelper.init();
 
         Dealer_Order__c order = TA_DealerOrder_TestHelper.insertDealerOrder(true, 'Draft');
-        insert order;
-        Dealer_Order__c orderOld = new   Dealer_Order__c();
+        Dealer_Order__c orderOld = new Dealer_Order__c();
         orderOld = TA_DealerOrder_TestHelper.getOldList()[0];
         List<Dealer_Order__c> oldlist = new List<Dealer_Order__c>{orderOld};
 

@@ -22,9 +22,9 @@ private class PartnerBookingOrder_Selector_T
       Account__c = partner.Id,
       Pricebook__c = gcConstants.idPricebookPartner
     );
-    TriggerHandler.bypass('DealerOrder_TriggerHandler');
+    TriggerBase.bypass('Dealer_Order__c');
     insert order;
-    TriggerHandler.clearBypass( 'DealerOrder_TriggerHandler');
+    TriggerBase.clearBypass( 'Dealer_Order__c');
     Partner_Booking_Order__c pbo = new Partner_Booking_Order__c(
       Account__c = partner.Id,
       Dealer_Order__c = order.Id,
