@@ -1,4 +1,3 @@
-//TODO : Need to delete
 trigger DealerOrder on Dealer_Order__c (
   before insert,
   before update,
@@ -8,5 +7,5 @@ trigger DealerOrder on Dealer_Order__c (
   after delete,
   after undelete)
 {
-  //new DealerOrder_TriggerHandler().run();
+  new MetadataTriggerHandler().run();
 }

@@ -20,7 +20,7 @@ private class PartnerPromotion_Test {
     insert b;
     Factory_PricebookEntry.createAllDefaultEntriesEntries( b.Id, 10000 );
     Account p = Factory_Account.insertDealerAccounts(1)[0];
-    Factory_ERPOrder.createPartnerBoatSales( p, new List<Product2>{b}, 12 );
+    Factory_ERPOrder.createPartnerBoatSales( p, new List<Product2>{b}, 12, 10000 );
   }
 
   private static void setup()

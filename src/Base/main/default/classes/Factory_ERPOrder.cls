@@ -94,6 +94,40 @@ public class Factory_ERPOrder {
     return erps;
   }
 
+  public static AcctSeed__Project__c[] createPartnerBoatSales( Account acct, Product2[] prods, Integer count, Decimal boatPrice )
+  {
+    AcctSeed__Project__c[] erps = new List<AcctSeed__Project__c>();
+    for( Integer i=0; i<count; i++ )
+    {
+      AcctSeed__Project__c erp = buildERP( acct, null, gcConstants.idRtProjectPartnerBoatSale );
+      erp.Stage__c = 'Draft';
+      erps.add( erp );
+    }
+    Boolean origTrig = gcProject.disableTrigger;
+    gcProject.disableTrigger = true;
+    insert erps;
+    gcProject.disableTrigger = origTrig;
+    Map<Id, AcctSeed__Project_Task__c> erpId_task_map = new  Map<Id, AcctSeed__Project_Task__c>();
+    for( AcctSeed__Project__c erp :erps )
+    {
+      erpId_task_map.put( erp.Id, buildProjectTask( erp.Id, 'Dealer Order' ) );
+    }
+    insert erpId_task_map.values();
+    AcctSeedERP__Material__c[] mats = new List<AcctSeedERP__Material__c>();
+    for( AcctSeed__Project__c erp :erps )
+    {
+      for(Product2 p : prods )
+      {
+        mats.add( buildMaterial( erp.Id, erpId_task_map.get( erp.Id ).Id, p.Id, boatPrice) );
+      }
+    }
+    origTrig = gcMaterial.disableTrigger;
+    gcMaterial.disableTrigger = true;
+    insert mats;
+    gcMaterial.disableTrigger = origTrig;
+    return erps;
+  }
+
   public static AcctSeed__Project__c[] createPartnerBoatSales( Account acct, Product2[] prods, Integer count )
   {
     AcctSeed__Project__c[] erps = new List<AcctSeed__Project__c>();
@@ -225,7 +259,7 @@ public class Factory_ERPOrder {
     List<AcctSeedERP__Material__c> mats = new List<AcctSeedERP__Material__c>();
     for( GMBLASERP__Serial_Number__c serial : new List<GMBLASERP__Serial_Number__c>{ boatSerial, motorSerial } )
     {
-      AcctSeedERP__Material__c mat = buildMaterial( erp.Id, task.Id, boatSerial.GMBLASERP__Product__c);
+      AcctSeedERP__Material__c mat = buildMaterial( erp.Id, task.Id, serial.GMBLASERP__Product__c);
       mat.GMBLASERP__Serial_Number__c = serial.Id;
       mats.add( mat );
     }
@@ -373,6 +407,20 @@ public class Factory_ERPOrder {
       prodId
     );
   }
+  public static AcctSeedERP__Material__c buildMaterial(
+    Id erpId,
+    Id taskId,
+    Id prodId,
+    Decimal boatPrice)
+  {
+    return Factory_Material.buildMaterial(
+      erpId,
+      taskId,
+      prodId,
+      boatPrice
+    );
+  }
+
 
   public static AcctSeedERP__Material__c buildMaterial(
     Id erpId,

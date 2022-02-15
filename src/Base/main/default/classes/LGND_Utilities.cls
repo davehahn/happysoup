@@ -238,6 +238,20 @@ public without sharing class LGND_Utilities {
   }
 
   // Returns a dynamic SOQL statement for the whole object, includes only creatable fields since we will be inserting a cloned result of this query
+  public static string getAllFieldsSOQL(String objectName){
+    // Get a map of field name and field token
+    Map<String, Schema.SObjectField> fMap = Schema.getGlobalDescribe().get(objectName.toLowerCase()).getDescribe().Fields.getMap();
+    list<string> selectFields = new list<string>();
+
+    if (fMap != null){
+      for (Schema.SObjectField ft : fMap.values()){ // loop through all field tokens (ft)
+        selectFields.add(ft.getDescribe().getName());
+      }
+    }
+    return buildQuery( selectFields, objectName, null );
+  }
+
+  // Returns a dynamic SOQL statement for the whole object, includes only creatable fields since we will be inserting a cloned result of this query
   public static string getCreatableFieldsSOQL(String objectName, String whereClause){
 
 
