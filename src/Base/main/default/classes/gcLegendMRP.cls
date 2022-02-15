@@ -27,14 +27,16 @@ global without sharing class gcLegendMRP {
 	public static list<map<string,string>> retrieveUnimprovedHulls(Id idPurchaseOrder)
 	{
 		list<map<string,string>> listJSON = new list<map<string,string>>();
-
+		Application_RecordType appRT = new Application_RecordType();
+		Application_RecordType.ProductRTs productRts = appRT.getProductRecordTypes();
+		Set<Id> setIdRT = new Set<Id>{productRts.getBoatId(),productRts.getTrailerId(),productRts.getTrollingMotorId()};
 		String soql = '';
 		soql += ' SELECT Id, Name, GMBLASERP__Lot__r.Name, GMBLASERP__Product__r.Name, GMBLASERP__Product__r.ProductCode, GMBLASERP__Inventory_Balance__r.AcctSeedERP__Warehouse__r.Name, ';
 		//soql += ' 	(SELECT GMBLASERP__Quantity__c FROM GMBLASERP__Inventory_Movement_Cubes__r WHERE GMBLASERP__Quantity__c != null AND GMBLASERP__Quantity__c != 0), ';
 		soql += '	(SELECT AcctSeedERP__Movement_Date__c FROM GMBLASERP__Purchase_Order_Inventory_Movements__r WHERE AcctSeedERP__Quantity__c > 0 ORDER BY AcctSeedERP__Movement_Date__c DESC LIMIT 1), ';
 		soql += ' 	(SELECT Id FROM Projects__r WHERE AcctSeedERP__Manufactured_Product__c != null LIMIT 1) ';
 		soql += ' FROM GMBLASERP__Serial_Number__c ';
-		soql += ' WHERE GMBLASERP__Product__c IN (SELECT Id FROM Product2 WHERE RecordType.Name = \'Boat\' OR RecordType.Name = \'Trailer\') ';
+		soql += ' WHERE GMBLASERP__Product__c IN (SELECT Id FROM Product2 WHERE RecordTypeId IN:setIdRT) ';
 		soql += '   AND GMBLASERP__Inventory_Balance__c != null ';
 		if(idPurchaseOrder != null)
 		soql += '   AND Id IN (SELECT GMBLASERP__Serial_Number__c FROM AcctSeedERP__Purchase_Order_Inventory_Movement__c WHERE AcctSeedERP__Purchase_Order_Line__r.AcctSeedERP__Purchase_Order__c =:idPurchaseOrder) ';
