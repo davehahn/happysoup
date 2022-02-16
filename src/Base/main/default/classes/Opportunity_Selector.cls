@@ -35,7 +35,6 @@ public inherited sharing class Opportunity_Selector Extends Application_Selector
       'GL_Account_Variable_3__c',
       'InvoiceNumber__c',
       'Insurance_Term__c',
-      'Insurance_Term_Disability__c',
       'IsPickupDealershipPartner__c',
       'LeadSource',
       'Name',
