@@ -9,55 +9,58 @@ public inherited sharing class Opportunity_Selector Extends Application_Selector
     this.sObjectName = 'Opportunity';
     this.fields = new List<String>{
       'Id',
-      'CampaignId',
-      'LeadSource',
-      'Name',
-      'RecordTypeId',
-      'RecordType.Name',
-      'Trade_In_Amount__c',
-      'Trade_In_Value__c',
-      'Business_Manager__c',
-      'Warehouse__c',
-      'Deposit__c',
-      'Deposit_Method__c',
-      'On_Water_Orientation__c',
-      'Finance_Status__c',
-      'Customer_Notes__c',
-      'Pricebook2Id',
-      'ContactEmail__c',
-      'OwnerId',
-      'Owner.Name',
       'AccountId',
       'Account.Name',
-      'Total_Amount__c',
+      'Account.BillingState',
       'BoatId__c',
-      'StageName',
       'BoatId__r.Name',
-      'Pickup_Location__c',
+      'Boat_Model_Year__c',
+      'Boat_Specialist_Id__c',
+      'Business_Manager__c',
+      'CampaignId',
+      'Contract_Start_Date__c',
+      'ContactEmail__c',
+      'Customer_Notes__c',
       'Delivery_Date__c',
-      'Payment_Method__c',
-      'InvoiceNumber__c',
-      'Reference_Number__c',
-      'GL_Account_Variable_3__c',
-      'Insurance_Term__c',
-      'Finance_Term__c',
-      'Finance_Annual_Interest__c',
+      'Deposit__c',
+      'Deposit_Method__c',
       'Finance_Ammortization__c',
-      'Finance_Payments_Per_Year__c',
+      'Finance_Annual_Interest__c',
       'Finance_Compound__c',
+      'Financing_Account__c',
+      'Finance_Payments_Per_Year__c',
+      'Finance_Term__c',
+      'Finance_Status__c',
+      'First_Payment_Date__c',
+      'GL_Account_Variable_3__c',
+      'InvoiceNumber__c',
+      'Insurance_Term__c',
+      'IsPickupDealershipPartner__c',
+      'LeadSource',
+      'Name',
+      'On_Water_Orientation__c',
+      'OwnerId',
+      'Owner.Name',
+      'Payment_Method__c',
+      'PickupDealership__c',
+      'PickupDealership__r.Id',
+      'PickupDealership__r.Name',
+      'Pickup_Location__c',
+      'Pre_Insurance_Total__c',
+      'Pricebook2Id',
+      'RecordTypeId',
+      'RecordType.Name',
+      'Reference_Number__c',
+      'StageName',
       'Tax_Override__c',
       'Tax_Rate_Federal__c',
       'Tax_Rate_Provincial__c',
       'Tax_Rate_Retail__c',
-      'Boat_Specialist_Id__c',
-      'Boat_Model_Year__c',
+      'Total_Amount__c',
+      'Trade_In_Amount__c',
+      'Trade_In_Value__c',
       'Trailer_Model_Year__c',
-      'IsPickupDealershipPartner__c',
-      'PickupDealership__c',
-      'PickupDealership__r.Id',
-      'PickupDealership__r.Name',
-      'Contract_Start_Date__c',
-      'First_Payment_Date__c'
+      'Warehouse__c'
     };
   }
 
@@ -101,6 +104,16 @@ public inherited sharing class Opportunity_Selector Extends Application_Selector
   public static Opportunity[] selectAllByIdWithLineItems( Set<Id> oppIds )
   {
     OpportunityLineItem_Selector oliSelector = new OpportunityLineItem_Selector();
+    return new Opportunity_Selector()
+      .addWhereIdIn( oppIds )
+      .addChildQuery( oliSelector )
+      .query();
+  }
+
+  public static Opportunity[] selectAllByIdWithInsuranceLineItems( Set<Id> oppIds )
+  {
+    OpportunityLineItem_Selector oliSelector = new OpportunityLineItem_Selector();
+    oliSelector.addWhere('IsInsurance__c = true');
     return new Opportunity_Selector()
       .addWhereIdIn( oppIds )
       .addChildQuery( oliSelector )

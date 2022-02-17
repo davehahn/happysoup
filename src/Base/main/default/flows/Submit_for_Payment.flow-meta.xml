@@ -1,42 +1,89 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Flow xmlns="http://soap.sforce.com/2006/04/metadata">
-    <decisions>
-        <name>Period_Status</name>
-        <label>Period Status</label>
-        <locationX>629</locationX>
-        <locationY>60</locationY>
-        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
-        <rules>
-            <name>Open</name>
-            <conditionLogic>and</conditionLogic>
-            <conditions>
-                <leftValueReference>PeriodStatus</leftValueReference>
-                <operator>EqualTo</operator>
-                <rightValue>
-                    <stringValue>Open</stringValue>
-                </rightValue>
-            </conditions>
-            <connector>
-                <targetReference>Create_Payable</targetReference>
-            </connector>
-            <label>Open</label>
-        </rules>
-        <rules>
-            <name>Closed</name>
-            <conditionLogic>and</conditionLogic>
-            <conditions>
-                <leftValueReference>PeriodStatus</leftValueReference>
-                <operator>EqualTo</operator>
-                <rightValue>
-                    <stringValue>Closed</stringValue>
-                </rightValue>
-            </conditions>
-            <connector>
-                <targetReference>Error</targetReference>
-            </connector>
-            <label>Closed</label>
-        </rules>
-    </decisions>
+    <actionCalls>
+        <name>ErrorHandler</name>
+        <label>ErrorHandler</label>
+        <locationX>686</locationX>
+        <locationY>236</locationY>
+        <actionName>c:Flow_Toast</actionName>
+        <actionType>component</actionType>
+        <connector>
+            <targetReference>Select_Vendor</targetReference>
+        </connector>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>mode</name>
+            <value>
+                <stringValue>dismissible</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>duration</name>
+            <value>
+                <stringValue>7</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>message</name>
+            <value>
+                <elementReference>$Flow.FaultMessage</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>title</name>
+            <value>
+                <stringValue>Error</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>type</name>
+            <value>
+                <stringValue>error</stringValue>
+            </value>
+        </inputParameters>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </actionCalls>
+    <actionCalls>
+        <name>SuccessHandler</name>
+        <label>SuccessHandler</label>
+        <locationX>1084</locationX>
+        <locationY>61</locationY>
+        <actionName>c:Flow_Toast</actionName>
+        <actionType>component</actionType>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>mode</name>
+            <value>
+                <stringValue>dismissible</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>duration</name>
+            <value>
+                <stringValue>7</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>message</name>
+            <value>
+                <stringValue>Your submission was successful. Thank you!</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>title</name>
+            <value>
+                <stringValue>Success!</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>type</name>
+            <value>
+                <stringValue>success</stringValue>
+            </value>
+        </inputParameters>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </actionCalls>
+    <apiVersion>49.0</apiVersion>
     <formulas>
         <name>TodayDate</name>
         <dataType>Date</dataType>
@@ -56,6 +103,12 @@
         </value>
     </processMetadataValues>
     <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>FREE_FORM_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
         <name>OriginBuilderType</name>
         <value>
             <stringValue>LightningFlowBuilder</stringValue>
@@ -65,14 +118,14 @@
     <recordCreates>
         <name>Create_AP_Line</name>
         <label>Create AP Line</label>
-        <locationX>888</locationX>
-        <locationY>214</locationY>
+        <locationX>802</locationX>
+        <locationY>68</locationY>
         <assignRecordIdToReference>PayableLineID</assignRecordIdToReference>
         <connector>
             <targetReference>Upload_Attachment</targetReference>
         </connector>
         <faultConnector>
-            <targetReference>Error_Validation</targetReference>
+            <targetReference>ErrorHandler</targetReference>
         </faultConnector>
         <inputAssignments>
             <field>AcctSeed__Account_Payable__c</field>
@@ -103,14 +156,14 @@
     <recordCreates>
         <name>Create_Payable</name>
         <label>Create Payable</label>
-        <locationX>814</locationX>
-        <locationY>61</locationY>
+        <locationX>591</locationX>
+        <locationY>68</locationY>
         <assignRecordIdToReference>PayableRecordID</assignRecordIdToReference>
         <connector>
             <targetReference>Create_AP_Line</targetReference>
         </connector>
         <faultConnector>
-            <targetReference>Error_Validation</targetReference>
+            <targetReference>ErrorHandler</targetReference>
         </faultConnector>
         <inputAssignments>
             <field>AcctSeed__Date__c</field>
@@ -162,267 +215,241 @@
         </inputAssignments>
         <object>AcctSeed__Account_Payable__c</object>
     </recordCreates>
-    <recordLookups>
-        <name>Validate_Accounting_Period</name>
-        <label>Validate Accounting Period</label>
-        <locationX>525</locationX>
-        <locationY>58</locationY>
-        <assignNullValuesIfNoRecordsFound>true</assignNullValuesIfNoRecordsFound>
-        <connector>
-            <targetReference>Period_Status</targetReference>
-        </connector>
-        <filters>
-            <field>AcctSeed__End_Date__c</field>
-            <operator>GreaterThanOrEqualTo</operator>
-            <value>
-                <elementReference>Issue_Date</elementReference>
-            </value>
-        </filters>
-        <object>AcctSeed__Accounting_Period__c</object>
-        <outputAssignments>
-            <assignToReference>PeriodStatus</assignToReference>
-            <field>AcctSeed__Status__c</field>
-        </outputAssignments>
-    </recordLookups>
     <runInMode>SystemModeWithSharing</runInMode>
-    <screens>
-        <name>Error</name>
-        <label>Error - Period Closed</label>
-        <locationX>503</locationX>
-        <locationY>346</locationY>
-        <allowBack>false</allowBack>
-        <allowFinish>true</allowFinish>
-        <allowPause>false</allowPause>
-        <connector>
-            <targetReference>Select_Vendor</targetReference>
-        </connector>
-        <fields>
-            <name>PeriodClosedError</name>
-            <fieldText>&lt;p&gt;&lt;span style=&quot;color: rgb(244, 6, 6);&quot;&gt;Issue date is in a closed accounting period.&lt;/span&gt;&lt;/p&gt;</fieldText>
-            <fieldType>DisplayText</fieldType>
-        </fields>
-        <showFooter>true</showFooter>
-        <showHeader>true</showHeader>
-    </screens>
-    <screens>
-        <name>Error_Validation</name>
-        <label>Error - Validation</label>
-        <locationX>721</locationX>
-        <locationY>220</locationY>
-        <allowBack>false</allowBack>
-        <allowFinish>true</allowFinish>
-        <allowPause>false</allowPause>
-        <fields>
-            <name>APCreationError</name>
-            <fieldText>&lt;p&gt;&lt;b style=&quot;color: rgb(36, 39, 41); background-color: rgb(255, 255, 255); font-size: 15px; font-family: Arial, &amp;quot;Helvetica Neue&amp;quot;, Helvetica, sans-serif;&quot;&gt;Error on creation:&lt;/b&gt;&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot;color: rgb(250, 0, 0); background-color: rgb(255, 255, 255); font-size: 15px; font-family: Arial, &amp;quot;Helvetica Neue&amp;quot;, Helvetica, sans-serif;&quot;&gt;{!$Flow.FaultMessage}&lt;/span&gt;&lt;/p&gt;</fieldText>
-            <fieldType>DisplayText</fieldType>
-        </fields>
-        <showFooter>true</showFooter>
-        <showHeader>true</showHeader>
-    </screens>
     <screens>
         <name>Select_Vendor</name>
         <label>Select Vendor</label>
-        <locationX>390</locationX>
-        <locationY>58</locationY>
+        <locationX>429</locationX>
+        <locationY>68</locationY>
         <allowBack>false</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
         <connector>
-            <targetReference>Validate_Accounting_Period</targetReference>
+            <targetReference>Create_Payable</targetReference>
         </connector>
         <fields>
-            <name>Vendor</name>
-            <extensionName>flowruntime:lookup</extensionName>
-            <fieldType>ComponentInstance</fieldType>
-            <inputParameters>
-                <name>fieldApiName</name>
-                <value>
-                    <stringValue>AcctSeed__Vendor__c</stringValue>
-                </value>
-            </inputParameters>
-            <inputParameters>
-                <name>label</name>
-                <value>
-                    <stringValue>Vendor</stringValue>
-                </value>
-            </inputParameters>
-            <inputParameters>
-                <name>objectApiName</name>
-                <value>
-                    <stringValue>AcctSeed__Account_Payable__c</stringValue>
-                </value>
-            </inputParameters>
-            <inputParameters>
-                <name>required</name>
-                <value>
-                    <booleanValue>true</booleanValue>
-                </value>
-            </inputParameters>
-            <isRequired>true</isRequired>
-            <outputParameters>
-                <assignToReference>SelectedVendor</assignToReference>
-                <name>recordId</name>
-            </outputParameters>
-        </fields>
-        <fields>
-            <name>GLV1_Lookup</name>
-            <extensionName>flowruntime:lookup</extensionName>
-            <fieldType>ComponentInstance</fieldType>
-            <inputParameters>
-                <name>label</name>
-                <value>
-                    <stringValue>Business Unit</stringValue>
-                </value>
-            </inputParameters>
-            <inputParameters>
-                <name>fieldApiName</name>
-                <value>
-                    <stringValue>GL_Account_Variable_1__c</stringValue>
-                </value>
-            </inputParameters>
-            <inputParameters>
-                <name>objectApiName</name>
-                <value>
-                    <stringValue>AcctSeed__Account_Payable__c</stringValue>
-                </value>
-            </inputParameters>
-            <inputParameters>
-                <name>required</name>
-                <value>
-                    <booleanValue>true</booleanValue>
-                </value>
-            </inputParameters>
-            <isRequired>true</isRequired>
-            <outputParameters>
-                <assignToReference>SelectedGLV1</assignToReference>
-                <name>recordId</name>
-            </outputParameters>
-        </fields>
-        <fields>
-            <name>GLV2_Lookup</name>
-            <extensionName>flowruntime:lookup</extensionName>
-            <fieldType>ComponentInstance</fieldType>
-            <inputParameters>
-                <name>label</name>
-                <value>
-                    <stringValue>Department</stringValue>
-                </value>
-            </inputParameters>
-            <inputParameters>
-                <name>fieldApiName</name>
-                <value>
-                    <stringValue>GL_Account_Variable_2__c</stringValue>
-                </value>
-            </inputParameters>
-            <inputParameters>
-                <name>objectApiName</name>
-                <value>
-                    <stringValue>AcctSeed__Account_Payable__c</stringValue>
-                </value>
-            </inputParameters>
-            <inputParameters>
-                <name>required</name>
-                <value>
-                    <booleanValue>true</booleanValue>
-                </value>
-            </inputParameters>
-            <isRequired>true</isRequired>
-            <outputParameters>
-                <assignToReference>SelectedGLV2</assignToReference>
-                <name>recordId</name>
-            </outputParameters>
-        </fields>
-        <fields>
-            <name>Subtotal</name>
-            <dataType>Number</dataType>
-            <fieldText>Subtotal before Sales Taxes</fieldText>
-            <fieldType>InputField</fieldType>
-            <isRequired>true</isRequired>
-            <scale>0</scale>
-        </fields>
-        <fields>
-            <name>GLAccount_Lookup</name>
-            <extensionName>flowruntime:lookup</extensionName>
-            <fieldType>ComponentInstance</fieldType>
-            <inputParameters>
-                <name>objectApiName</name>
-                <value>
-                    <stringValue>AcctSeed__Account_Payable_Line__c</stringValue>
-                </value>
-            </inputParameters>
-            <inputParameters>
-                <name>fieldApiName</name>
-                <value>
-                    <stringValue>APL_GL_Account__c</stringValue>
-                </value>
-            </inputParameters>
-            <inputParameters>
-                <name>label</name>
-                <value>
-                    <stringValue>Category</stringValue>
-                </value>
-            </inputParameters>
-            <inputParameters>
-                <name>required</name>
-                <value>
-                    <booleanValue>true</booleanValue>
-                </value>
-            </inputParameters>
-            <isRequired>true</isRequired>
-            <outputParameters>
-                <assignToReference>Selected_GLAccount</assignToReference>
-                <name>recordId</name>
-            </outputParameters>
-        </fields>
-        <fields>
-            <name>Invoice_Number</name>
-            <dataType>String</dataType>
-            <fieldText>Invoice Number</fieldText>
-            <fieldType>InputField</fieldType>
-            <isRequired>true</isRequired>
-        </fields>
-        <fields>
-            <name>Issue_Date</name>
-            <dataType>Date</dataType>
-            <defaultValue>
-                <elementReference>TodayDate</elementReference>
-            </defaultValue>
-            <fieldText>Issue Date</fieldText>
-            <fieldType>InputField</fieldType>
-            <isRequired>true</isRequired>
-        </fields>
-        <fields>
-            <name>Due_Date</name>
-            <dataType>Date</dataType>
-            <defaultValue>
-                <elementReference>TodayPlus10</elementReference>
-            </defaultValue>
-            <fieldText>Due Date</fieldText>
-            <fieldType>InputField</fieldType>
-            <isRequired>true</isRequired>
-        </fields>
-        <fields>
-            <name>Internal_Comments</name>
-            <fieldText>Internal Comments</fieldText>
-            <fieldType>LargeTextArea</fieldType>
+            <name>Select_Vendor_Section1</name>
+            <fieldType>RegionContainer</fieldType>
+            <fields>
+                <name>Select_Vendor_Section1_Column1</name>
+                <fieldType>Region</fieldType>
+                <fields>
+                    <name>Vendor</name>
+                    <extensionName>flowruntime:lookup</extensionName>
+                    <fieldType>ComponentInstance</fieldType>
+                    <inputParameters>
+                        <name>fieldApiName</name>
+                        <value>
+                            <stringValue>AcctSeed__Vendor__c</stringValue>
+                        </value>
+                    </inputParameters>
+                    <inputParameters>
+                        <name>label</name>
+                        <value>
+                            <stringValue>Vendor</stringValue>
+                        </value>
+                    </inputParameters>
+                    <inputParameters>
+                        <name>objectApiName</name>
+                        <value>
+                            <stringValue>AcctSeed__Account_Payable__c</stringValue>
+                        </value>
+                    </inputParameters>
+                    <inputParameters>
+                        <name>required</name>
+                        <value>
+                            <booleanValue>true</booleanValue>
+                        </value>
+                    </inputParameters>
+                    <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
+                    <isRequired>true</isRequired>
+                    <outputParameters>
+                        <assignToReference>SelectedVendor</assignToReference>
+                        <name>recordId</name>
+                    </outputParameters>
+                </fields>
+                <fields>
+                    <name>GLV1_Lookup</name>
+                    <extensionName>flowruntime:lookup</extensionName>
+                    <fieldType>ComponentInstance</fieldType>
+                    <inputParameters>
+                        <name>label</name>
+                        <value>
+                            <stringValue>Business Unit</stringValue>
+                        </value>
+                    </inputParameters>
+                    <inputParameters>
+                        <name>fieldApiName</name>
+                        <value>
+                            <stringValue>GL_Account_Variable_1__c</stringValue>
+                        </value>
+                    </inputParameters>
+                    <inputParameters>
+                        <name>objectApiName</name>
+                        <value>
+                            <stringValue>AcctSeed__Account_Payable__c</stringValue>
+                        </value>
+                    </inputParameters>
+                    <inputParameters>
+                        <name>required</name>
+                        <value>
+                            <booleanValue>true</booleanValue>
+                        </value>
+                    </inputParameters>
+                    <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
+                    <isRequired>true</isRequired>
+                    <outputParameters>
+                        <assignToReference>SelectedGLV1</assignToReference>
+                        <name>recordId</name>
+                    </outputParameters>
+                </fields>
+                <fields>
+                    <name>GLV2_Lookup</name>
+                    <extensionName>flowruntime:lookup</extensionName>
+                    <fieldType>ComponentInstance</fieldType>
+                    <inputParameters>
+                        <name>label</name>
+                        <value>
+                            <stringValue>Department</stringValue>
+                        </value>
+                    </inputParameters>
+                    <inputParameters>
+                        <name>fieldApiName</name>
+                        <value>
+                            <stringValue>GL_Account_Variable_2__c</stringValue>
+                        </value>
+                    </inputParameters>
+                    <inputParameters>
+                        <name>objectApiName</name>
+                        <value>
+                            <stringValue>AcctSeed__Account_Payable__c</stringValue>
+                        </value>
+                    </inputParameters>
+                    <inputParameters>
+                        <name>required</name>
+                        <value>
+                            <booleanValue>true</booleanValue>
+                        </value>
+                    </inputParameters>
+                    <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
+                    <isRequired>true</isRequired>
+                    <outputParameters>
+                        <assignToReference>SelectedGLV2</assignToReference>
+                        <name>recordId</name>
+                    </outputParameters>
+                </fields>
+                <fields>
+                    <name>GLAccount_Lookup</name>
+                    <extensionName>flowruntime:lookup</extensionName>
+                    <fieldType>ComponentInstance</fieldType>
+                    <inputParameters>
+                        <name>objectApiName</name>
+                        <value>
+                            <stringValue>AcctSeed__Account_Payable_Line__c</stringValue>
+                        </value>
+                    </inputParameters>
+                    <inputParameters>
+                        <name>fieldApiName</name>
+                        <value>
+                            <stringValue>APL_GL_Account__c</stringValue>
+                        </value>
+                    </inputParameters>
+                    <inputParameters>
+                        <name>label</name>
+                        <value>
+                            <stringValue>Category</stringValue>
+                        </value>
+                    </inputParameters>
+                    <inputParameters>
+                        <name>required</name>
+                        <value>
+                            <booleanValue>true</booleanValue>
+                        </value>
+                    </inputParameters>
+                    <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
+                    <isRequired>true</isRequired>
+                    <outputParameters>
+                        <assignToReference>Selected_GLAccount</assignToReference>
+                        <name>recordId</name>
+                    </outputParameters>
+                </fields>
+                <inputParameters>
+                    <name>width</name>
+                    <value>
+                        <stringValue>6</stringValue>
+                    </value>
+                </inputParameters>
+                <isRequired>false</isRequired>
+            </fields>
+            <fields>
+                <name>Select_Vendor_Section1_Column2</name>
+                <fieldType>Region</fieldType>
+                <fields>
+                    <name>Invoice_Number</name>
+                    <dataType>String</dataType>
+                    <fieldText>Invoice Number</fieldText>
+                    <fieldType>InputField</fieldType>
+                    <isRequired>true</isRequired>
+                </fields>
+                <fields>
+                    <name>Subtotal</name>
+                    <dataType>Number</dataType>
+                    <fieldText>Subtotal before Sales Taxes</fieldText>
+                    <fieldType>InputField</fieldType>
+                    <isRequired>true</isRequired>
+                    <scale>0</scale>
+                </fields>
+                <fields>
+                    <name>Issue_Date</name>
+                    <dataType>Date</dataType>
+                    <defaultValue>
+                        <elementReference>TodayDate</elementReference>
+                    </defaultValue>
+                    <fieldText>Issue Date</fieldText>
+                    <fieldType>InputField</fieldType>
+                    <isRequired>true</isRequired>
+                </fields>
+                <fields>
+                    <name>Due_Date</name>
+                    <dataType>Date</dataType>
+                    <defaultValue>
+                        <elementReference>TodayPlus10</elementReference>
+                    </defaultValue>
+                    <fieldText>Due Date</fieldText>
+                    <fieldType>InputField</fieldType>
+                    <isRequired>true</isRequired>
+                </fields>
+                <inputParameters>
+                    <name>width</name>
+                    <value>
+                        <stringValue>6</stringValue>
+                    </value>
+                </inputParameters>
+                <isRequired>false</isRequired>
+            </fields>
             <isRequired>false</isRequired>
         </fields>
-        <showFooter>true</showFooter>
-        <showHeader>true</showHeader>
-    </screens>
-    <screens>
-        <name>Thank_You</name>
-        <label>Thank You</label>
-        <locationX>1100</locationX>
-        <locationY>61</locationY>
-        <allowBack>false</allowBack>
-        <allowFinish>true</allowFinish>
-        <allowPause>false</allowPause>
         <fields>
-            <name>ThankYouMessage</name>
-            <fieldText>&lt;p&gt;&lt;span style=&quot;color: rgb(23, 144, 5);&quot;&gt;Your submission was successful. Thank you!&lt;/span&gt;&lt;/p&gt;</fieldText>
-            <fieldType>DisplayText</fieldType>
+            <name>Select_Vendor_Section2</name>
+            <fieldType>RegionContainer</fieldType>
+            <fields>
+                <name>Select_Vendor_Section2_Column1</name>
+                <fieldType>Region</fieldType>
+                <fields>
+                    <name>Internal_Comments</name>
+                    <fieldText>Internal Comments</fieldText>
+                    <fieldType>LargeTextArea</fieldType>
+                    <isRequired>false</isRequired>
+                </fields>
+                <inputParameters>
+                    <name>width</name>
+                    <value>
+                        <stringValue>12</stringValue>
+                    </value>
+                </inputParameters>
+                <isRequired>false</isRequired>
+            </fields>
+            <isRequired>false</isRequired>
         </fields>
         <showFooter>true</showFooter>
         <showHeader>true</showHeader>
@@ -436,7 +463,7 @@
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
         <connector>
-            <targetReference>Thank_You</targetReference>
+            <targetReference>SuccessHandler</targetReference>
         </connector>
         <fields>
             <name>UploadDoc</name>
@@ -460,6 +487,7 @@
                     <booleanValue>true</booleanValue>
                 </value>
             </inputParameters>
+            <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
             <isRequired>true</isRequired>
         </fields>
         <showFooter>true</showFooter>
