@@ -3,9 +3,11 @@
  */
 
 public without sharing class ContentVersion_TriggerHandler extends TriggerHandler {
-
   @TestVisible
-  private static final  List<String> defaultPublicFileTitles = new List<String>{'Purchase_Order_PDF'};
+  private static final List<String> defaultPublicFileTitles = new List<String>{
+    'Purchase_Order_PDF',
+    'Bank Reconciliation'
+  };
 
   //  protected override void bulkBefore()
   //  {
@@ -18,7 +20,7 @@ public without sharing class ContentVersion_TriggerHandler extends TriggerHandle
   //  }
 
   protected override void beforeInsert() {
-    setVisibilityOnSpecific( (List<ContentVersion>)Trigger.new);
+    setVisibilityOnSpecific((List<ContentVersion>) Trigger.new);
     setPrivacy((List<ContentVersion>) Trigger.new);
   }
 
@@ -56,23 +58,21 @@ public without sharing class ContentVersion_TriggerHandler extends TriggerHandle
   //    system.debug('[ContentVersion_TriggerHandler] final actions');
   //  }
 
-  private static void setVisibilityOnSpecific( List<ContentVersion> newList ){
-    for( ContentVersion cv : newList ){
-      for( String title :  defaultPublicFileTitles ){
-        if( cv.Title.contains(title) ){
+  private static void setVisibilityOnSpecific(List<ContentVersion> newList) {
+    for (ContentVersion cv : newList) {
+      for (String title : defaultPublicFileTitles) {
+        if (cv.Title.contains(title)) {
           cv.Visibility__c = 'Public';
         }
       }
     }
   }
 
-  private static void setPrivacy(
-    List<ContentVersion> newList
-  ) {
+  private static void setPrivacy(List<ContentVersion> newList) {
     for (ContentVersion cv : newList) {
-//      if( cv.Visibility__c == null ){
-//        cv.Visibility__c = 'Public';
-//      }
+      //      if( cv.Visibility__c == null ){
+      //        cv.Visibility__c = 'Public';
+      //      }
       if (cv.Visibility__c == 'Private') {
         cv.SharingPrivacy = 'P';
       }
