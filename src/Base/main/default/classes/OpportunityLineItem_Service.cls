@@ -1,0 +1,168 @@
+/**
+ * Created by dhavalmacbook on 27/01/22.
+ */
+
+public with sharing class OpportunityLineItem_Service {
+
+    public static void putInsuranceRateValueOnLineItem(List<OpportunityLineItem> listNew )
+    {
+
+        Set<ID> productIDs = new Set<ID>();
+        Set<ID> opportunityID = new Set<ID>();
+
+        for (opportunityLIneItem oli: listNew)
+        {
+            productIDs.add(oli.Product2Id);
+            opportunityID.add(oli.OpportunityId);
+        }
+
+        List<Insurance_Rate__c> Rates = New List<Insurance_Rate__c >();
+        Rates = [Select Id, Tax_Zone__c, Tax_Zone__r.Name, Joint__c, Single__c, Joint_Factored_Result__c, Lower_Term__c, Upper_Term__c, Lower_Finance_Term__c, Upper_Finance_Term__c, Product__c  FROM Insurance_Rate__c WHERE Product__c IN: productIDs];
+
+        Map<id, List<Insurance_Rate__c>> RatesMap = new Map<id, List<Insurance_Rate__c>>();
+        Double insRate = 0;
+
+        List<Insurance_Rate__c> prodRates = new List<Insurance_Rate__c>();
+
+        for (OpportunityLineItem opl : listNew)
+        {
+            if (opl.IsInsurance__c) {
+                for(Insurance_Rate__c ir : Rates){
+                    if (RatesMap.containsKey(ir.Product__c)){
+                        RatesMap.get(ir.Product__c).add(ir);
+                    }
+                    else{
+                        RatesMap.put(ir.Product__c, new  List <Insurance_Rate__c> { ir });
+                    }
+                }
+
+                prodRates = RatesMap.get(opl.Product2Id);
+
+                if (prodRates != NULL)
+                {
+
+                    for (Insurance_Rate__c ir : prodRates) {
+                        Decimal it = opl.Insurance_Term__c;
+                        Decimal ft = opl.Finance_Term__c;
+                        if( ir.Tax_Zone__c == opl.Opp_Tax_Zone__c &&
+                                (
+                                        (
+                                                it >= ir.Lower_Term__c &&
+                                                        it <= ir.Upper_Term__c &&
+                                                        ft >= ir.Lower_Finance_Term__c &&
+                                                        ft <= ir.Upper_Finance_Term__c
+                                        )
+                                                ||
+                                                (
+                                                        it >= ir.Lower_Term__c &&
+                                                                it <= ir.Upper_Term__c &&
+                                                                (
+                                                                        ir.Lower_Finance_Term__c == null ||
+                                                                                ir.Upper_Finance_Term__c == null
+                                                                )
+                                                )
+                                )
+                                )
+                        {
+                            if( opl.InsuranceCoverage__c == 'Single' )
+                                opl.Insurance_Rate__c = ir.Single__c;
+                            if( opl.InsuranceCoverage__c == 'Joint' ) {
+                                if (ir.Tax_Zone__r.Name == 'Quebec')
+                                    opl.Insurance_Rate__c = ir.Joint_Factored_Result__c;
+                                else
+                                        opl.Insurance_Rate__c = ir.Joint__c;
+                            }
+                        }
+                    }
+                }
+
+                if (opl.Insurance_Rate__c != null)
+                {
+                    System.debug('opl.Insurance_Rate__c= '+opl.Insurance_Rate__c);
+                    System.debug(' opl.Opp_Calculate_Insurance_Amount__c= '+opl.Opp_Calculate_Insurance_Amount__c);
+                    Decimal price = (opl.Insurance_Rate__c * opl.Opp_Calculate_Insurance_Amount__c) / 100;
+                    if (price != 0  && price == opl.UnitPrice)
+                    {
+                        opl.UnitPrice = price;
+                    }
+                }
+            }
+        }
+    }
+
+    public static void setBoatId( Set<Id> oliIds )
+    {
+        System.debug('PricebookEntry.Product2.RecordType.Name= '+PricebookEntry.Product2.RecordType.Name);
+        Map<Id, OpportunityLineItem> opp_li_Map = new Map<Id, OpportunityLineItem>();
+        OpportunityLineItem[] olis = [SELECT Id, OpportunityId, PricebookEntry.Product2Id
+        FROM OpportunityLineItem
+        WHERE Id IN :oliIds
+        AND PricebookEntry.Product2.RecordType.Name = 'Boat'];
+        if( olis.size() > 0 )
+        {
+            for( OpportunityLineItem oli : olis )
+            {
+                opp_li_Map.put( oli.OpportunityId, oli );
+            }
+            Opportunity[] opps = [SELECT Id FROM Opportunity WHERE Id IN :opp_li_Map.keySet() ];
+            for( Opportunity opp : opps )
+            {
+                opp.BoatId__c = opp_li_Map.get( opp.Id ).PricebookEntry.Product2Id;
+            }
+            update opps;
+        }
+
+    }
+
+
+    public static void setFlags( List<OpportunityLineItem> listNew )
+    {
+        Set<Id> pbeIds = new Set<Id>();
+        Set<Id> oppIds = new Set<Id>();
+        for( OpportunityLineItem oli : listNew )
+        {
+            pbeIds.add( oli.PricebookEntryId );
+            oppIds.add( oli.OpportunityId );
+        }
+        Map<Id, PricebookEntry> pbEntries = new Map<Id, PricebookEntry>(
+        [ SELECT Id, Product2.RecordType.Name, Product2.Family, Product2.Taxable__c
+        FROM PricebookEntry
+        WHERE Id IN :pbeIds ]);
+        Map<Id, Opportunity> oppsMap = new Map<Id, Opportunity>([
+                SELECT Id, GL_Account_Variable_3__c, GL_Account_Variable_3__r.Name
+                FROM Opportunity
+                WHERE Id IN :oppIds
+        ]);
+        for( OpportunityLineItem oli  : listNew )
+        {
+            PricebookEntry pb = pbEntries.get( oli.PricebookEntryId );
+            Opportunity opp = oppsMap.get( oli.OpportunityId );
+
+            oli.Taxable_Federal__c = pb.Product2.Taxable__c;
+            oli.Taxable_Provincial__c = pb.Product2.Taxable__c;
+            if( pb.Product2.RecordType.Name == 'Insurance' )
+            {
+                oli.Taxable_Federal__c = false;
+                oli.Taxable_Provincial__c = false;
+                oli.Taxable_Retail__c = true;
+                oli.isInsurance__c = true;
+            }
+            if( pb.Product2.Family == 'Discount')
+                oli.isDiscount__c = true;
+        }
+    }
+
+    public static void updateOppotuities( List<OpportunityLineItem> listNew )
+    {
+        set<id> oppIds =  new set<Id>();
+        for(opportunityLIneItem opl : listNew){
+            oppIds.add(opl.OpportunityId);
+        }
+
+        List<Opportunity> opps = new list<Opportunity>([select Id from opportunity where Id IN :oppIds]);
+        if(opps.size() > 0)
+            update opps;
+    }
+
+
+}
