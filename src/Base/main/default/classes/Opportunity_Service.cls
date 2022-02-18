@@ -182,11 +182,9 @@ public  class Opportunity_Service {
         }
         if( activeTaxZone != null )
         {
-            System.debug('111');
             opp.Tax_is_Harmonized__c = activeTaxZone.isHarmonized;
             if( !opp.Tax_Override__c )
             {
-                System.debug('222');
                 opp.Tax_Rate_Provincial__c = activeTaxZone.rate;
                 opp.TAx_Rate_Retail__c = activeTaxZone.retailRate;
                 opp.Tax_Rate_Federal__c = fedTaxRate;
@@ -219,8 +217,6 @@ public  class Opportunity_Service {
         MetadataTriggerHandler.bypass('Opportunity');
         update opps;
         MetadataTriggerHandler.clearBypass('Opportunity');
-        System.debug('## oops='+opps );
-        System.debug('## ocRoles= '+ocRoles);
         if( !ocRoles.isEmpty() ){
             upsert ocRoles;
         }
@@ -235,7 +231,6 @@ public  class Opportunity_Service {
     public static void recalcInsuranceLines( Map<Id, Map<String, String>> changeMap )
     {
         assignValues();
-        System.debug('changeMap= '+changeMap);
         List<OpportunityLineItem> toUpdate = new List<OpportunityLineItem>();
         Map<Id, List<OpportunityLineItem>> oliMap = new Map<Id, List<OpportunityLineItem>>();
         for( OpportunityLineItem oli : [SELECT Id,
@@ -288,13 +283,10 @@ public  class Opportunity_Service {
                 for( OpportunityLineItem oli : oliMap.get( oppId) )
                 {
                     Boolean foundTerm = false;
-                    System.debug('prodMap.get( oli.Product2Id).Insurance_Rates__r= '+prodMap.get( oli.Product2Id).Insurance_Rates__r);
                     for( Insurance_Rate__c ir : prodMap.get( oli.Product2Id).Insurance_Rates__r )
                     {
                         Decimal it = Decimal.valueOf( changeMap.get( oppId ).get('insTerm') );
                         Decimal ft = Decimal.valueOf( changeMap.get( oppId ).get('finTerm') );
-                        System.debug('it= '+it);
-                        System.debug('ft= '+ft);
                         if( ir.Tax_Zone__c == changeMap.get( oppId ).get('taxZone') &&
                                 (
                                         (
@@ -385,9 +377,7 @@ public  class Opportunity_Service {
                 acctIds.add(opp.AccountId);
                 ownerIds.add( opp.OwnerId );
             }
-        	System.debug('acctIds : '+acctIds);
-        	System.debug('ownerIds: '+ownerIds);
-            Map<Id, Account> acctsMap = new Map<Id, Account>([
+          Map<Id, Account> acctsMap = new Map<Id, Account>([
                     SELECT Id, BillingState FROM Account WHERE Id IN :acctIds
             ]);
             Map<String, AcctSeedERP__Warehouse__c> warehouseMap = new Map<String, AcctSeedERP__Warehouse__c>();
@@ -398,7 +388,6 @@ public  class Opportunity_Service {
             {
                 warehouseMap.put( wh.Name, wh );
             }
-        System.debug('warehouseMap= '+warehouseMap);
             AcctSeedERP__Warehouse__c warehouseFallback;
             //try {
             //  warehouseFallback = warehouseMap.get('Whitefish');
@@ -423,16 +412,12 @@ public  class Opportunity_Service {
                     Warehouse__c
             FROM User
             WHERE ID IN :ownerIds]);
-        	System.debug('users map= '+users);
-            System.debug('ownerIds= '+ownerIds);
-            for( Opportunity opp : newList )
+             for( Opportunity opp : newList )
             {
                 
                 opp.Tax_Rate_Federal__c = Opportunity_Service.fedTaxRate;
                 if( users.containsKey( opp.OwnerId ) )
                     opp.Business_Manager__c = users.get( opp.OwnerId ).Business_Office_Manager__c;
-                System.debug('users.get( opp.OwnerId )= '+users.get( opp.OwnerId ));
-                System.debug('warehouseMap.containsKey( users.get( opp.OwnerId ).Warehouse__c ) = '+warehouseMap.containsKey( users.get( opp.OwnerId ).Warehouse__c ) );
                 if( users.get( opp.OwnerId ).Warehouse__c == null )
                 {
                     opp.Warehouse__c = warehouseFallback.Id;
@@ -448,7 +433,6 @@ public  class Opportunity_Service {
                         opp.Warehouse__c = warehouseFallback.id;
                     }
                 }
-                System.debug('opp.Warehouse__c= '+opp.Warehouse__c);
                 User oppOwner = users.containsKey( opp.OwnerId ) ?
                         users.get( opp.OwnerId ) :
                         null;
