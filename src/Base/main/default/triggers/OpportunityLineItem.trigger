@@ -7,12 +7,12 @@ trigger OpportunityLineItem on OpportunityLineItem (
 	after delete,
 	after undelete) {
 
-		OpportunityLineItem_TriggerHandler.doHandle
-			(trigger.oldMap,
-       trigger.newMap,
-       trigger.new,
-       trigger.isBefore,
-       trigger.isInsert,
-       trigger.isUpdate,
-       trigger.isDelete);
+//		OpportunityLineItem_TriggerHandler.doHandle
+//			(trigger.oldMap,
+//       trigger.newMap,
+//       trigger.new,
+//       trigger.isBefore,
+//       trigger.isInsert,
+//       trigger.isUpdate,
+//       trigger.isDelete);
 }

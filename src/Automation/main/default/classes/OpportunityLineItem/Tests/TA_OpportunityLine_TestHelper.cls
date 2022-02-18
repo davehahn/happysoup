@@ -109,10 +109,8 @@ public class TA_OpportunityLine_TestHelper {
       olis.add(oli);
     }
     insert olis;
-    System.debug('@@@olis= '+olis);   
-    olis = [Select id,UnitPrice,Quantity,ParentProductId__c,PricebookEntryId,Opp_Tax_Zone__c,Insurance_Term__c,Finance_Term__c,OpportunityId,Product2Id,Insurance_Rate__c,InsuranceCoverage__c,IsInsurance__c,Opp_Calculate_Insurance_Amount__c from OpportunityLineItem];     
-    
-         //       new TA_OppLineItem_SetFlag_BI().beforeInsert(olis);
+    olis = [Select id,UnitPrice,Quantity,ParentProductId__c,PricebookEntryId,Opp_Tax_Zone__c,Insurance_Term__c,Finance_Term__c,OpportunityId,Product2Id,Insurance_Rate__c,InsuranceCoverage__c,IsInsurance__c,Opp_Calculate_Insurance_Amount__c from OpportunityLineItem];
+
     }
     
     public static List<OpportunityLineItem> getOldList() {

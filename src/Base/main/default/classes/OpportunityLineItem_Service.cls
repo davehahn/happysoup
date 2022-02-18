@@ -78,8 +78,6 @@ public with sharing class OpportunityLineItem_Service {
 
                 if (opl.Insurance_Rate__c != null)
                 {
-                    System.debug('opl.Insurance_Rate__c= '+opl.Insurance_Rate__c);
-                    System.debug(' opl.Opp_Calculate_Insurance_Amount__c= '+opl.Opp_Calculate_Insurance_Amount__c);
                     Decimal price = (opl.Insurance_Rate__c * opl.Opp_Calculate_Insurance_Amount__c) / 100;
                     if (price != 0  && price == opl.UnitPrice)
                     {
@@ -92,7 +90,6 @@ public with sharing class OpportunityLineItem_Service {
 
     public static void setBoatId( Set<Id> oliIds )
     {
-        System.debug('PricebookEntry.Product2.RecordType.Name= '+PricebookEntry.Product2.RecordType.Name);
         Map<Id, OpportunityLineItem> opp_li_Map = new Map<Id, OpportunityLineItem>();
         OpportunityLineItem[] olis = [SELECT Id, OpportunityId, PricebookEntry.Product2Id
         FROM OpportunityLineItem
