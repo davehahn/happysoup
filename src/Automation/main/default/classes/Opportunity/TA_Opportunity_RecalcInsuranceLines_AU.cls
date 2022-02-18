@@ -21,10 +21,7 @@ public inherited sharing class  TA_Opportunity_RecalcInsuranceLines_AU implement
                             ( opp.Insurance_Term__c != oOpp.Insurance_Term__c )
                     )
             {
-                System.debug('here opp= '+opp);
-                System.debug('opp.Trade_In_Value__c= '+opp.Trade_In_Value__c);
-                    System.debug('opp.Pre_Insurance_Total__c= '+opp.Pre_Insurance_Total__c);
-                Map<String, String> data = new Map<String, String>();
+                 Map<String, String> data = new Map<String, String>();
                 data.put('amount', String.ValueOf( opp.Pre_Insurance_Total__c) );
                 data.put('deposit', opp.Deposit__c == null ? '0' : String.ValueOf( opp.Deposit__c) );
                 data.put('finTerm', String.ValueOf( opp.Finance_Term__c) );

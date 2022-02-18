@@ -216,7 +216,9 @@ public  class Opportunity_Service {
                 o.ContactEmail__c = o.Account.AccountEmail__c;
             }
         }
+        MetadataTriggerHandler.bypass('Opportunity');
         update opps;
+        MetadataTriggerHandler.clearBypass('Opportunity');
         System.debug('## oops='+opps );
         System.debug('## ocRoles= '+ocRoles);
         if( !ocRoles.isEmpty() ){

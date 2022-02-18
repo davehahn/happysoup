@@ -5,8 +5,9 @@ private class OpportunityDetailExt_Test {
   static Opportunity opp;
 
   static {
-    OpportunityTriggerHandler.disableAutoPricebookSet = true;
+    //OpportunityTriggerHandler.disableAutoPricebookSet = true;
     opp = OpportunityFactory.insertRetailBoatSale();
+    Opportunity_Service.disableAutoPricebookSet = true;
     ApexPages.StandardController std = new ApexPages.StandardController(opp);
     ode = new OpportunityDetailExt(std);
   }

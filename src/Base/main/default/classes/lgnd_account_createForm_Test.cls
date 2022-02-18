@@ -2,8 +2,9 @@
 private class lgnd_account_createForm_Test {
 
 	@isTest static void createLeadAndConvert_Test() {
-    OpportunityTriggerHandler.disableTrigger = true;
-    Test.startTest();
+    //OpportunityTriggerHandler.disableTrigger = true;
+    MetadataTriggerHandler.bypass('Opportunity');
+        Test.startTest();
     TriggerHandler.bypass('Lead_TriggerHandler');
 		Account acct = lgnd_account_createForm.createLeadAndConvert(
       'Dingus',

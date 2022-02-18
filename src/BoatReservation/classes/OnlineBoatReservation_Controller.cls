@@ -342,11 +342,13 @@ public without sharing class OnlineBoatReservation_Controller
         CloseDate = Date.today().addMonths( 1 )
       );
       upsert opp;
-      Boolean o = OpportunityTriggerHandler.disableTrigger;
-      OpportunityTriggerHandler.disableTrigger = true;
+      //Boolean o = OpportunityTriggerHandler.disableTrigger;
+      //OpportunityTriggerHandler.disableTrigger = true;
       opp.Pricebook2Id = LGND_Constants.retailPricebookId;
+      MetadataTriggerHandler.bypass('Opportunity');
       update opp;
-      OpportunityTriggerHandler.disableTrigger = o;
+     // OpportunityTriggerHandler.disableTrigger = o;
+      MetadataTriggerHandler.clearBypass('Opportunity');
       System.debug( opp );
       return Opportunity_Selector.allByIds( new Set<Id>{ opp.Id } )[0];
     }

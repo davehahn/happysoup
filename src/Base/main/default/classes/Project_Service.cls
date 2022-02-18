@@ -152,10 +152,12 @@ public inherited sharing class Project_Service
     insert materials;
 
     opp.StageName = 'Sent to ERP';
-    Boolean oldOppyTriggerVal = OpportunityTriggerHandler.disableTrigger;
-    OpportunityTriggerHandler.disableTrigger = true;
+   // Boolean oldOppyTriggerVal = OpportunityTriggerHandler.disableTrigger;
+    //OpportunityTriggerHandler.disableTrigger = true;
+    MetadataTriggerHandler.bypass('Opportunity');
     update opp;
-    OpportunityTriggerHandler.disableTrigger = oldOppyTriggerVal;
+    MetadataTriggerHandler.clearBypass('Opportunity');
+    // OpportunityTriggerHandler.disableTrigger = oldOppyTriggerVal;
     /// Lock the task now
     AcctSeed__Project_Task__c salesTask =  [SELECT Id, Name FROM AcctSeed__Project_Task__c WHERE Id = :projectTasks.get('Sale').Id ];
     salesTask.Locked__c = true;
