@@ -91,7 +91,9 @@ public without sharing class PartnerLocator {
       this.id = wrapper.id;
       this.value = wrapper.id;
       this.title = wrapper.name + ' ( ' + wrapper.distance_text + ' )';
-      this.icon = wrapper.isFactoryStore ? 'standard:goals' : 'standard:delegated_account';
+      this.icon = wrapper.isFactoryStore
+        ? 'standard:goals'
+        : 'standard:delegated_account';
       this.description = wrapper.description;
       this.distance = wrapper.distance_text;
       this.duration = wrapper.duration_text;
@@ -99,9 +101,11 @@ public without sharing class PartnerLocator {
       this.phone = wrapper.phone;
       this.email = wrapper.email;
       this.website = wrapper.website;
-      this.mapIcon = wrapper.isFactoryStore
-        ? standardMapMarker('#57AADF')
-        : standardMapMarker('#06834C');
+      if (!Test.isRunningTest()) {
+        this.mapIcon = wrapper.isFactoryStore
+          ? standardMapMarker('#57AADF')
+          : standardMapMarker('#06834C');
+      }
     }
 
     private Map<String, Object> standardMapMarker(String color) {

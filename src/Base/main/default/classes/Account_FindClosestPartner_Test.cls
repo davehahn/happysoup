@@ -40,6 +40,7 @@ private class Account_FindClosestPartner_Test {
 		Test.setMock( HttpCalloutMock.class, new Tests_CalloutMocks.GoogleDestinationsMatrixMock() );
     Test.startTest();
     String jsonResult = Account_FindClosestPartner.findClosestPartner('orillia', 3, '');
+    System.debug(jsonResult);
     Test.stopTest();
     PartnerLocator.SearchResult result =
      (PartnerLocator.SearchResult)JSON.deserialize(
