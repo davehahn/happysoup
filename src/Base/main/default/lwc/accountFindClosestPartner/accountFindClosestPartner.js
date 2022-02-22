@@ -90,6 +90,7 @@ export default class AccountFindClosestPartner extends LightningElement {
       .then( result => {
         let r = JSON.parse( result );
         this.mapMarkers = r.mapMarkers;
+        console.log( JSON.parse( JSON.stringify( this.mapMarkers ) ) );
         this.originAddress = r.origin_address;
         resolve('success');
       })
