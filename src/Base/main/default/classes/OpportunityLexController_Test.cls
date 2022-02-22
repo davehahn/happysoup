@@ -12,7 +12,8 @@ private class OpportunityLexController_Test {
 
   private static void doInit4Opp()
   {
-    OpportunityTriggerHandler.disableTrigger = true;
+    //OpportunityTriggerHandler.disableTrigger = true;
+    MetadataTriggerHandler.bypass('Opportunity');
     Id retailRT = LGND_Utilities.recordTypeIdFromName('Opportunity', 'Retail');
     opp = new Opportunity(
       AccountId = acct.Id,

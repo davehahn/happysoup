@@ -1536,7 +1536,8 @@ public with sharing class BoatBuilder {
     Dealer_Order_Line__c dol;
     if ( opportunity == null || opportunity.Id == null )
     {
-      OpportunityTriggerHandler.disableAutoPricebookSet = true;
+      //OpportunityTriggerHandler.disableAutoPricebookSet = true;
+      Opportunity_Service.disableAutoPricebookSet = true;
       opportunity = new Opportunity(
         AccountId = dealerOrder.Account__c,
         RecordTypeId = LGND_Utilities.recordTypeIdFromName('Opportunity', 'Partner Boat Sale'),
