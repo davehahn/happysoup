@@ -2,7 +2,7 @@
  * Created by Tim on 2021-05-07.
  */
 
-public with sharing class FactoryStoreStaffList_Controller {
+public without sharing class FactoryStoreStaffList_Controller {
     @AuraEnabled(Cacheable=true)
     public static List<User> fetchStaffList(String location, String department){
         if(department == 'Sales'){

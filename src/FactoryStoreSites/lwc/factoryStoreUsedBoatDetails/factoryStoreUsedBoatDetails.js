@@ -30,6 +30,7 @@ export default class FactoryStoreUsedBoatDetails extends NavigationMixin(Lightni
 	photoGallery;
 	hasPhotoGallery = false;
 	boatName;
+	boatSKU;
 
 	fullDescription;
 
@@ -71,9 +72,13 @@ export default class FactoryStoreUsedBoatDetails extends NavigationMixin(Lightni
 		this.serialDataLookupRunning =  false;
 		this.serialWrapperClass = setWrapperClass(this.sectionWidth, 'serial');
 		this.boatName = stripParentheses(this.serial.Product_Name__c);
-		this.fullDescription = this.serial.Description_Used__c;
-		this.fullDescription = this.fullDescription.replace('%%START_GALLERY%%', '<div class="mini-gallery">');
-		this.fullDescription = this.fullDescription.replace('%%END_GALLERY%%', '</div>');
+		this.boatSKU = this.serial.GMBLASERP__Product__c;
+		if(this.serial.Description_Used__c){
+		  this.fullDescription = this.serial.Description_Used__c;
+			this.fullDescription = this.fullDescription.replace('%%START_GALLERY%%', '<div class="mini-gallery">');
+			this.fullDescription = this.fullDescription.replace('%%END_GALLERY%%', '</div>');
+  	}
+
 //		fetchImages({serialNumber: this.serial})
 //				.then( (images) => {
 //					console.log('got images: ', images);
@@ -84,7 +89,7 @@ export default class FactoryStoreUsedBoatDetails extends NavigationMixin(Lightni
 //		 });
 
 		let details = {
-				recordId: this.recordId,
+				boatSKU: this.boatSKU,
 				boatName: this.boatName,
 				serialNumber: this.serial.Name,
 				serialNumberId: this.serial.Id

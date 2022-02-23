@@ -75,6 +75,7 @@ public without sharing class gcProject {
       Boolean boolIsUpdate,
       Boolean boolIsDelete)
   {
+    System.debug('gcProject TriggerHandler');
     if(oldMap == NULL) oldMap = new map<Id,AcctSeed__Project__c>();
     if(newMap == NULL) newMap = new map<Id,AcctSeed__Project__c>();
     if(listNew == NULL) listNew = new list<AcctSeed__Project__c>();

@@ -61,7 +61,7 @@ public with sharing class gcInventoryReport_MRP {
 			setIdSupplier.add((Id)pr.get('supplerId'));
 		}
 		if(!setIdSupplier.isEmpty()){
-			for(Account acc : [SELECT Id, Name FROM Account WHERE Id IN:setIdSupplier]){
+			for(Account acc : [SELECT Id, Name FROM Account WHERE Id IN:setIdSupplier ORDER BY Name ASC]){
 				listOptions.add(new selectOption(acc.Id, acc.Name));
 			}
 		}
