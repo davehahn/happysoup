@@ -54,7 +54,7 @@ private class SerialNumberHistorySearch_Test{
 
     AcctSeedERP__Purchase_Order_Inventory_Movement__c movement = new AcctSeedERP__Purchase_Order_Inventory_Movement__c(
       AcctSeedERP__Unit_Cost__c = 10,
-      AcctSeedERP__Quantity__c = 5,
+      AcctSeedERP__Quantity__c = 1,
       AcctSeedERP__Inventory_Balance__c = inventoryBalances.get('part').Id,
       AcctSeedERP__Ledger__c = gcConstants.idActualLedger,
       GMBLASERP__Warehouse__c = wh.Id,
