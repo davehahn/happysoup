@@ -5,6 +5,12 @@ private class OpportunityLexController_Test {
   static Opportunity opp;
   static AcctSeed__Project__c erp;
 
+  @testSetup
+  public static void dataSetup() {
+    new Factory_TestData();
+    Factory_CustomSettings.setupInventorySettings();
+  }
+
   static {
     acct = AccountFactory.buildPersonAccount('Rando', 'Bobando');
     insert acct;
