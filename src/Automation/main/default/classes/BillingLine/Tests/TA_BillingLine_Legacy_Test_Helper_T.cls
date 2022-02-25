@@ -1,5 +1,3 @@
-//TODO : Remove disableTrigger
-@isTest
 public class TA_BillingLine_Legacy_Test_Helper_T {
 
     final static String RECORDTYPE = 'Motor';

@@ -1,4 +1,3 @@
-//TODO : Remove disableTrigger
 @isTest
 public class TA_InventoryAdjustment_Legacy_T {
 

@@ -1,4 +1,3 @@
-//TODO : Remove disableTrigger
 @isTest
 public class TA_Billing_Test_Helper_T {
     final static String RECORDTYPE = 'Motor';

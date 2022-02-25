@@ -1,3 +1,4 @@
+/* TODO: DELETE ME */
 trigger lgndPurchaseOrderLine on AcctSeedERP__Purchase_Order_Line__c (after delete, after insert, after undelete, after update, before delete, before insert, before update) {
 
 //  if(!lgndPurchaseOrderLine.disableTrigger)
