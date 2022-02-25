@@ -4,16 +4,7 @@
     <actionOnUpdate>Allow</actionOnUpdate>
     <alertText>A duplicate has been detected</alertText>
     <description>Check for Matching Email</description>
-    <duplicateRuleFilter>
-        <booleanFilter xsi:nil="true"/>
-        <duplicateRuleFilterItems>
-            <field>LeadSource</field>
-            <operation>equals</operation>
-            <value>Online - Web</value>
-            <sortOrder>1</sortOrder>
-            <table>Lead</table>
-        </duplicateRuleFilterItems>
-    </duplicateRuleFilter>
+    <duplicateRuleFilter xsi:nil="true"/>
     <duplicateRuleMatchRules>
         <matchRuleSObjectType>Lead</matchRuleSObjectType>
         <matchingRule>Lead_Duplicate_Matching_matching_rule</matchingRule>
