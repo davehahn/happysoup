@@ -1,0 +1,52 @@
+<!--
+ - Created by dave on 2020-12-09.
+ -->
+
+<!-- Service Resource My Inventory -->
+<template>
+  <div class="slds-card">
+    <div class="slds-page-header">
+      <div class="slds-page-header__row">
+        <div class="slds-page-header__col-title">
+          <div class="slds-media">
+            <div class="slds-media__figure">
+              <lightning-icon icon-name="standard:hierarchy"></lightning-icon>
+            </div>
+            <div class="slds-media__body">
+              <div class="slds-page-header__name">
+                <div class="slds-page-header__name-title">
+                  <h1>
+                    <span class="slds-page-header__title slds-truncate">
+                      My Current Inventory
+                    </span>
+                  </h1>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="list">
+      <table class="slds-table slds-table_bordered slds-table_cell-buffer slds-max-medium-table--stacked " aura:id="listTable">
+      <thead>
+        <tr class="slds-text-title_caps slds-line-height_reset">
+          <th>Product</th>
+          <th class="slds-text-align_center">Product Code</th>
+          <th class="slds-text-align_center">Quantity</th>
+        </tr>
+      </thead>
+      <tbody>
+        <template for:each={inventoryLines} for:item="line">
+          <tr key={line.Id}>
+            <td class="slds-cell-wrap">{line.ProductName}</td>
+            <td class="slds-cell-wrap slds-text-align_center">{line.Product2.ProductCode}</td>
+            <td class="slds-text-align_center">{line.QuantityOnHand}</td>
+          </tr>
+        </template>
+      </tbody>
+    </table>
+    </div>
+  </div>
+</template>
