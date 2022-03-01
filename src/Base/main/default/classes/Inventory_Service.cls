@@ -29,11 +29,11 @@ public with sharing class Inventory_Service {
 
     public class CreateInventoryTransaction_FSL implements Queueable
     {
-        public final List<wrapMovement> listMovements;
+        public final List<AcctSeedMovementWrapper_FSL> listMovements;
         public final String moveType;
         public Set<String> moveIds;
 
-        public CreateInventoryTransaction_FSL( List<wrapMovement> pListMovements, String movementType)
+        public CreateInventoryTransaction_FSL( List<AcctSeedMovementWrapper_FSL> pListMovements, String movementType)
         {
             this.listMovements = pListMovements;
             this.moveType = movementType;
@@ -43,9 +43,9 @@ public with sharing class Inventory_Service {
         {
             System.debug('this.moveType:'+this.moveType);
             System.debug('this.listMovements:'+this.listMovements);
-            List<wrapMovement> listPOL = new List<wrapMovement>();
+            List<AcctSeedMovementWrapper_FSL> listPOL = new List<AcctSeedMovementWrapper_FSL>();
             Map<Id,AcctSeedERP__Inventory_Balance__c> mapInventoryBalance = new Map<Id,AcctSeedERP__Inventory_Balance__c>();
-            for(wrapMovement pol : this.listMovements){
+            for(AcctSeedMovementWrapper_FSL pol : this.listMovements){
                 if(this.moveIds == null)
                     this.moveIds = new Set<String>();
                 //if(!this.moveIds.contains(pol.objId)) {
@@ -69,7 +69,7 @@ public with sharing class Inventory_Service {
                 }
                 map<Id,map<Id,Id>> mapPWL = new map<Id,map<Id,Id>>();
                 List<ProductItemTransaction> listPIT = new List<ProductItemTransaction>();
-                for(wrapMovement pol : listPOL){
+                for(AcctSeedMovementWrapper_FSL pol : listPOL){
                     System.debug('pol:'+pol);
                     if(!mapPWL.containsKey(pol.idProduct))
                         mapPWL.put(pol.idProduct, new Map<Id,Id>());
@@ -80,7 +80,7 @@ public with sharing class Inventory_Service {
                 ProductItemInventoryBalance.findOrCreatePIBalances(mapPWL);
                 System.debug('mapPWL');
                 System.debug(mapPWL);
-                for(wrapMovement pol : listPOL){
+                for(AcctSeedMovementWrapper_FSL pol : listPOL){
                     Id idWarehouse = mapInventoryBalance.get(pol.idBalance).AcctSeedERP__Warehouse__c;
                     Id idProductItem;
                     if(mapPWL.containsKey(pol.idProduct)

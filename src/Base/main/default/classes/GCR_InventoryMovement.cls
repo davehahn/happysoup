@@ -444,7 +444,7 @@ public without sharing class GCR_InventoryMovement {
                         }
                     }
                     if (!listAll.isEmpty()) {
-                        List<wrapMovement> listWrapPOL = AcctSeedMovementWrapper_FSL.generateMovementWrapperVoid(listAll);
+                        List<AcctSeedMovementWrapper_FSL> listWrapPOL = AcctSeedMovementWrapper_FSL.generateMovementWrapperVoid(listAll);
                         Inventory_Service.createPI_FSL(listWrapPOL, 'Inbound');
                     }
                 }
