@@ -3,7 +3,7 @@
  */
 public with sharing class Inventory_Service {
 
-    public static void createPI_FSL( List<wrapMovement> pListMovements, String movementType ) {
+    public static void createPI_FSL( List<AcctSeedMovementWrapper_FSL> pListMovements, String movementType ) {
         if( Test.isRunningTest() )
         {
             CreateInventoryTransaction_FSL queue = new CreateInventoryTransaction_FSL(pListMovements, movementType);
