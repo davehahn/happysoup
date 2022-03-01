@@ -5,9 +5,8 @@ public inherited sharing class TA_DealerOrderLine_DeleteErps implements TriggerA
         Set<Id> erpIds = new Set<Id>();
         Set<Id> dealerOrderIds = new Set<Id>();
 
-        List<Dealer_Order_Line__c> dols = (List<Dealer_Order_Line__c>)Trigger.oldMap.values();
 
-        for( Dealer_Order_Line__c dol : dols )
+        for( Dealer_Order_Line__c dol : oldList )
         {
             if( dol.ERP_Order__c != null )
             {

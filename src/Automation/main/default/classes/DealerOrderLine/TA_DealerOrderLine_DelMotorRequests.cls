@@ -7,9 +7,8 @@ public inherited sharing  class TA_DealerOrderLine_DelMotorRequests implements T
 
     public void afterDelete(List<Dealer_Order_Line__c> oldList) {
         Set<Id> motorRequestIds = new Set<Id>();
-        List<Dealer_Order_Line__c> dols = (List<Dealer_Order_Line__c>)Trigger.oldMap.values();
 
-        for( Dealer_Order_Line__c dol : dols )
+        for( Dealer_Order_Line__c dol : oldList )
         {
             if( dol.Dealer_Motor_Request__c != null )
                 motorRequestIds.add( dol.Dealer_Motor_Request__c );
