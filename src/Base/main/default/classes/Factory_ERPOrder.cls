@@ -56,6 +56,41 @@ public class Factory_ERPOrder {
     return erps;
   }
 
+  public static List<AcctSeed__Project__c> createPartnerBoatSales(
+    Account acct,
+    List<GMBLASERP__Serial_Number__c> serials
+  )
+  {
+    Map<Id,AcctSeed__Project__c> serialId_erp_map = new Map<Id, AcctSeed__Project__c>();
+    for( GMBLASERP__Serial_Number__c serial : serials )
+    {
+      serialId_erp_map.put( serial.Id,  buildERP( acct, serial.Id, gcConstants.idRtProjectPartnerBoatSale ) );
+    }
+    Boolean origTrig = gcProject.disableTrigger;
+    gcProject.disableTrigger = true;
+    insert serialId_erp_map.values();
+    gcProject.disableTrigger = origTrig;
+    Map<Id, AcctSeed__Project_Task__c> erpId_task_map = new Map<Id, AcctSeed__Project_Task__c>();
+    for( AcctSeed__Project__c erp : serialId_erp_map.values() )
+    {
+      erpId_task_map.put( erp.Id, buildProjectTask( erp.Id, 'Dealer Order' ) );
+    }
+    insert erpId_task_map.values();
+    List<AcctSeedERP__Material__c> materials = new List<AcctSeedERP__Material__c>();
+    for( GMBLASERP__Serial_Number__c serial : serials )
+    {
+      Id erpId = serialId_erp_map.get(serial.Id).Id;
+      AcctSeedERP__Material__c mat = buildMaterial( erpId, erpId_task_map.get( erpId ).Id, serial.GMBLASERP__Product__c);
+      mat.GMBLASERP__Serial_Number__c = serial.Id;
+      materials.add( mat );
+    }
+    origTrig = gcMaterial.disableTrigger;
+    gcMaterial.disableTrigger = true;
+    insert materials;
+    gcMaterial.disableTrigger = origTrig;
+    return serialId_erp_map.values();
+  }
+
   public static AcctSeed__Project__c[] createPartnerBoatSales(
     Account acct,
     Product2[] prods,
@@ -227,9 +262,6 @@ public class Factory_ERPOrder {
     erp.Delivery_Date__c = deliveryDate;
     erp.Pickup_Location__c = findPickupLocationFromWarehouse( warehouse.Name );
     insert erp;
-//    AcctSeed__Project_Task__c task = buildProjectTask( erp.Id, 'Boat Sale' );
-//    task.Commission_Calculation_Method__c = 'Gross Margin';
-//    task.Is_Retail_Boat_Sale__c = true;
     AcctSeed__Project_Task__c task = Factory_ERPOrderTask.buildRetailSaleTask( erp.Id );
     insert task;
     AcctSeedERP__Material__c mat = buildMaterial( erp.Id, task.Id, boatSerial.GMBLASERP__Product__c);

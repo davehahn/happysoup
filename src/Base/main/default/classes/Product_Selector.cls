@@ -42,8 +42,16 @@ public with sharing class Product_Selector extends Application_Selector
       'Description',
       'Default_Gallery_Image_Original__c',
       'Rigging_Time__c',
-      'Composite_Type__c'
+      'Composite_Type__c',
+      'AcctSeed__Inventory_Product__c'
     };
+  }
+
+  public static Map<Id, Product2> allByIdAsMap( Set<Id> ids )
+  {
+    Product_Selector selector = new Product_Selector();
+    selector.addWhereIdIn( ids );
+    return new Map<Id, Product2>( (List<Product2>)selector.query() );
   }
 
   public static List<Product2> allBoatsAvailableForOnlineSale()

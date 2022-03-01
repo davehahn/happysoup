@@ -175,4 +175,16 @@ public without sharing class Project_Selector Extends Application_Selector
       WHERE Id IN :ids
     ]);
   }
+
+  public static List<AcctSeed__Project__c> selectAllPartnerBoatSalesById( Set<Id> ids )
+  {
+    return [ SELECT Id,
+      Name,
+      GMBLASERP__Pricebook__c,
+      AcctSeed__Account__c,
+      GMBLASERP__Warehouse__c
+    FROM AcctSeed__Project__c
+    WHERE Id IN :ids
+    AND RecordTypeId = :gcConstants.idRtProjectPartnerBoatSale ];
+  }
 }

@@ -42,7 +42,7 @@ public with sharing class OpportunityToWorkOrderAndERP_Promise {
   public static Id stepOne( Id oppId )
   {
     TriggerBase.bypass('WorkOrder');
-    Opportunity opp = Opportunity_Selector.selectAllById( new Set<Id>{ (Id)oppId } )[0];
+    Opportunity opp = Opportunity_Selector.allByIds( new Set<Id>{ (Id)oppId } )[0];
     WorkOrder wo = WorkOrder_Service.createFromOppy( opp );
     System.debug('Created WO');
     insert wo;

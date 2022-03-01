@@ -2,11 +2,8 @@
  * Created by dave on 2021-04-06.
  */
 
-public virtual class ProjectTask_Selector extends Application_Selector
-{
-
-  private final List<String> defaultFields = new List<String>
-  {
+public virtual class ProjectTask_Selector extends Application_Selector {
+  private final List<String> defaultFields = new List<String>{
     'Id',
     'Name',
     'Cause_dh__c',
@@ -24,13 +21,16 @@ public virtual class ProjectTask_Selector extends Application_Selector
     'AcctSeed__GL_Account_Variable_2__c'
   };
 
-  public ProjectTask_Selector()
-  {
+  public ProjectTask_Selector() {
     this.sObjectName = 'AcctSeed__Project_Task__c';
     this.fields = defaultFields;
   }
 
-  public static List<AcctSeed__Project_Task__c> allById( Set<Id> ids ){
+  public static List<AcctSeed__Project_Task__c> allById(Set<Id> ids) {
     return new ProjectTask_Selector().addWhereIdIn(ids).query();
+  }
+
+  public static List<AcctSeed__Project_Task__c> selectAllByProjectId(Set<Id> projectIds) {
+    return new ProjectTask_Selector().addWhereIdInField(projectIds, 'AcctSeed__Project__c').query();
   }
 }
