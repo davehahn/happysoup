@@ -98,16 +98,16 @@ public virtual class Application_RecordType
     }
     private set;
   }
-//  private WorkOrderRTs workOrderRTs {
-//    get {
-//      if( this.workOrderRTs == null )
-//      {
-//        this.workOrderRTs = new WorkOrderRTs();
-//      }
-//      return workOrderRTs;
-//    }
-//    private set;
-//  }
+  private WorkOrderRTs workOrderRTs {
+    get {
+      if( this.workOrderRTs == null )
+      {
+        this.workOrderRTs = new WorkOrderRTs();
+      }
+      return workOrderRTs;
+    }
+    private set;
+  }
 
   public Application_RecordType(){}
 
@@ -158,10 +158,10 @@ public virtual class Application_RecordType
     return this.systemIssueRTs;
   }
 
-//  public WorkOrderRTs getWorkOrderRecordTypes()
-//  {
-//    return this.workOrderRTs;
-//  }
+  public WorkOrderRTs getWorkOrderRecordTypes()
+  {
+    return this.workOrderRTs;
+  }
 
   public virtual class SObjectRecordType extends Application_RecordType
   {
@@ -522,40 +522,40 @@ public virtual class Application_RecordType
     }
   }
 
-//  public virtual class WorkOrderRTs extends SObjectRecordType
-//  {
-//
-//    public WorkOrderRTs()
-//    {
-//      super('WorkOrder');
-//    }
-//
-//    public Id getManufacturingId()
-//    {
-//      return this.getIdFromDeveloperName('Manufacturing');
-//    }
-//
-//    public Id getPartnerSaleId()
-//    {
-//      return this.getIdFromDeveloperName('Partner_Sale');
-//    }
-//
-//    public Id getRetailSaleId()
-//    {
-//      return this.getIdFromDeveloperName('Retail_Sale');
-//    }
-//
-//    public Id getRetailServiceId()
-//    {
-//      return this.getIdFromDeveloperName('Retail_Service');
-//    }
-//
-//    public Id getWholesaleServiceId()
-//    {
-//      return this.getIdFromDeveloperName('Wholesale_Service');
-//    }
-//
-//  }
+  public virtual class WorkOrderRTs extends SObjectRecordType
+  {
+
+    public WorkOrderRTs()
+    {
+      super('WorkOrder');
+    }
+
+    public Id getManufacturingId()
+    {
+      return this.getIdFromDeveloperName('Manufacturing');
+    }
+
+    public Id getPartnerSaleId()
+    {
+      return this.getIdFromDeveloperName('Partner_Sale');
+    }
+
+    public Id getRetailSaleId()
+    {
+      return this.getIdFromDeveloperName('Retail_Sale');
+    }
+
+    public Id getRetailServiceId()
+    {
+      return this.getIdFromDeveloperName('Retail_Service');
+    }
+
+    public Id getWholesaleServiceId()
+    {
+      return this.getIdFromDeveloperName('Wholesale_Service');
+    }
+
+  }
 
   private void fetchAllRecordTypes()
   {
