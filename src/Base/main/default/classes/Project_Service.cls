@@ -5,6 +5,17 @@
 public inherited sharing class Project_Service
 {
 
+  private static Application_RecordType.ERPOrderRTs recordTypes {
+    get {
+      if( recordTypes == null ){
+        recordTypes = new Application_RecordType().getERPOrderRecordTypes();
+      }
+      return recordTypes;
+    }
+    set {}
+
+}
+
   public static AcctSeed__Project__c constructFromOpportunityAndWorkOrder( Opportunity opp,
     WorkOrder wo )
   {
@@ -37,7 +48,7 @@ public inherited sharing class Project_Service
   public static AcctSeed__Project__c constructMFGFromWorkOrder( WorkOrder wo )
   {
     return new AcctSeed__Project__c(
-      RecordTypeId = gcConstants.idRtProjectManufacturing,
+      RecordTypeId = recordTypes.getManufacturingId(),
       Name = (wo.Warehouse_Name__c + ' - ' + wo.Serial_Name__c),
       Serial_Number__c = wo.Serial_Number__c,
       AcctSeedERP__Manufactured_Product__c = wo.Manufacturing_Product_Id__c,
@@ -82,6 +93,7 @@ public inherited sharing class Project_Service
 
     public void execute( QueueableContext context )
     {
+      Id manuWoRtID = new Application_RecordType().getWorkOrderRecordTypes().getManufacturingId();
       List<WorkOrder> workOrders = WorkOrder_Selector.selectAllWithOutERPOrders_ByIds( this.workOrderIds );
       Map<Id, WorkOrder> WO_Map = new Map<Id, WorkOrder>();
       for( WorkOrder wo : workOrders ) {
@@ -96,7 +108,7 @@ public inherited sharing class Project_Service
       Set<Id> setIdMFGWO = new Set<Id>();
       for( WorkOrder wo : workOrders )
       {
-        if(wo.RecordTypeId == gcConstants.idRtWorkOrderManufacturing){
+        if(wo.RecordTypeId == manuWoRtID){
           /// We do not want the ERP if there is not Serial Number
           /// Discussed with Dave on 1 June 2021
           if(wo.Serial_Number__c != null) {
@@ -332,7 +344,7 @@ public inherited sharing class Project_Service
   {
     return new AcctSeed__Project__c (
       Name =  accountName.trim(),
-      RecordTypeId = gcConstants.idRtProjectWarranty,
+      RecordTypeId = recordTypes.getWarrantyId(),
       AcctSeed__Account__c = c.AccountId,
       Serial_Number__c = c.Serial_Number__c,
       GMBLASERP__Pricebook__c = c.Price_Book__c
@@ -346,11 +358,9 @@ public inherited sharing class Project_Service
   {
     Map<Id, AcctSeed__Project__c> retailErps = new Map<Id, AcctSeed__Project__c>();
     Map<Id, AcctSeed__Project__c> linkedRetailHasChanged = new Map<Id, AcctSeed__Project__c>();
-    Application_RecordType.ERPOrderRTs erpRts = new Application_RecordType()
-      .getERPOrderRecordTypes();
     for( AcctSeed__Project__c erp : listNew )
     {
-      if( erp.RecordTypeId == erpRts.getPartnerBoatSaleId() )
+      if( erp.RecordTypeId == recordTypes.getPartnerBoatSaleId() )
       {
         if( oldMap != null && oldMap.size() > 0 )
         {
@@ -425,7 +435,7 @@ public inherited sharing class Project_Service
   )
   {
     return new AcctSeed__Project__c(
-      RecordTypeId = new Application_RecordType().getERPOrderRecordTypes().getServiceWorkOrderId(),
+      RecordTypeId = recordTypes.getServiceWorkOrderId(),
       Salesperson__c = originalERP.Salesperson__c,
       Name = originalERP.AcctSeed__Account__r.Name + '-Back Order',
       Stage__c = 'Pending Diagnostic',
