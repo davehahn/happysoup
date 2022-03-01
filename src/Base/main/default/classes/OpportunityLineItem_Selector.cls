@@ -29,4 +29,11 @@ public virtual class OpportunityLineItem_Selector extends Application_Selector
     this.sObjectName = 'OpportunityLineItem';
     this.fields = defaultFields;
   }
+
+  public static List<OpportunityLineItem> selectAllByOpportunityId( Id oppId )
+  {
+    return new OpportunityLineItem_Selector()
+      .addWhere( 'OpportunityId = \'' + oppId + '\'' )
+      .query();
+  }
 }

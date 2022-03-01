@@ -84,7 +84,7 @@ private class ProductTransferTool_Controller_T
     );
     workOrder = Factory_WorkOrder.buildNew( null, pbId );
     workOrder.LocationId = warehouseLocation.Id;
-    workOrder.RecordTypeId = gcConstants.idRtWorkOrderManufacturing;
+    workOrder.RecordTypeId = new Application_RecordType().getWorkOrderRecordTypes().getManufacturingId();
     workOrder.Serial_Number__c = serial.Id;
     insert workOrder;
     System.debug('workOrder 1');

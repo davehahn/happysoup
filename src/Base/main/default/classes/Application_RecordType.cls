@@ -6,6 +6,31 @@ public virtual class Application_RecordType
 {
   public class Application_RecordType_Exception extends Exception{}
 
+  @InvocableMethod(
+    Label='Get RecordType Id'
+    Description='Pass in sObjectName and RecordTypeDeveloperName to retrieve the RecordTypeId'
+    Category='Application Utilities'
+  )
+  public static List<String> getRecordTypeId(
+    List<FlowRecordTypeDescriptor> descriptors
+  )
+  {
+    return new List<String>
+    {
+      (String) new SObjectRecordType(descriptors[0].sObjectName)
+        .getIdFromDeveloperName(descriptors[0].recordTypeDeveloperName)
+    };
+  }
+
+  public class FlowRecordTypeDescriptor {
+    @InvocableVariable
+    public String sObjectName;
+    @InvocableVariable
+    public String recordTypeDeveloperName;
+
+    public FlowRecordTypeDescriptor(){}
+  }
+
   private Map<String,List<RecordType>> recordTypesBySobjectName {
     get {
       if( recordTypesBySobjectName == null )

@@ -4,6 +4,17 @@
 
 public without sharing class GCR_InventoryMovement {
 
+    public static Boolean disableFSL{
+        get{
+            if(disableFSL == null) return false;
+            else return disableFSL;
+        }
+        set{
+            if(value == null) disableFSL = false;
+            else disableFSL = value;
+        }
+    }
+
     public static Boolean disableCostUpdate{
         get{
             if(disableCostUpdate == null) return false;
@@ -417,6 +428,26 @@ public without sharing class GCR_InventoryMovement {
                 }
 
                 if (listSerialUpdate.size() > 0) update listSerialUpdate;
+                if(!disableFSL)
+                {
+                    List<SObject> listAll = new List<SObject>();
+                    if (boolIsInsert)
+                        listAll.addAll(listNew);
+                    else if (boolIsDelete) listAll.addAll(oldMap.values());
+                    else if (boolIsUpdate) {
+                        for (SObject pol : listNew) {
+                            if (pol.get('AcctSeedERP__Quantity__c') != oldMap.get(pol.Id).get('AcctSeedERP__Quantity__c')) {
+                                SObject polNew = pol.clone(false, true);
+                                polNew.put('AcctSeedERP__Quantity__c', ((Decimal) pol.get('AcctSeedERP__Quantity__c') - (Decimal) oldMap.get(pol.Id).get('AcctSeedERP__Quantity__c')));
+                                listAll.add(polNew);
+                            }
+                        }
+                    }
+                    if (!listAll.isEmpty()) {
+                        List<wrapMovement> listWrapPOL = AcctSeedMovementWrapper_FSL.generateMovementWrapperVoid(listAll);
+                        Inventory_Service.createPI_FSL(listWrapPOL, 'Inbound');
+                    }
+                }
             }
         }
     }

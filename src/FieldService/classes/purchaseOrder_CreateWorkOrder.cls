@@ -6,8 +6,6 @@ public without sharing class purchaseOrder_CreateWorkOrder {
     @RemoteAction @AuraEnabled
     public static String createWOFromSerial(String idPurchaseOrder, String listSerial)
     {
-        System.debug(loggingLevel.ERROR,'idPurchaseOrder:'+idPurchaseOrder);
-        System.debug(loggingLevel.ERROR,'listSerial:'+listSerial);
         AcctSeedERP__Purchase_Order__c po = [SELECT Id, Warehouse__c FROM AcctSeedERP__Purchase_Order__c WHERE Id =:idPurchaseOrder][0];
         if(po.Warehouse__c == null)
             throw new AuraHandledException('A warehouse was not defined in the PO');
@@ -23,7 +21,7 @@ public without sharing class purchaseOrder_CreateWorkOrder {
         if(!listMapSerialNumbers.isEmpty()) {
             Map<Id,WorkOrder> mapSerialWO = new Map<Id,WorkOrder>();
             Map<Id,Product2> mapProduct = new Map<Id,Product2>();
-            Id idRTWORecordType = gcConstants.idRtWorkOrderManufacturing;
+            Id idRTWORecordType = new Application_RecordType().getWorkOrderRecordTypes().getManufacturingId();
             for (Map<String, String> m : listMapSerialNumbers) {
                 mapProduct.put(m.get('idProduct'),null);
             }
