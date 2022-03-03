@@ -15,7 +15,7 @@ public without sharing class ProductTransferTriggerHandler extends TriggerHandle
   protected override void beforeInsert()
   {
     system.debug('[ProductTransferTriggerHandler] before insert');
-    ProductTransfer_CreationControl.creationControl((list<ProductTransfer>)Trigger.new);
+    //ProductTransfer_CreationControl.creationControl((list<ProductTransfer>)Trigger.new);
     ProductTransfers transfers = new ProductTransfers( Trigger.new, null );
     transfers.onBeforeInsert();
   }
