@@ -47,7 +47,7 @@ public with sharing class MFGWorkOrderToERP_Promise {
         for( WorkOrder wo : workOrders ) {
             woId_ERP_Map.put(wo.Id, Project_Service.constructMFGFromWorkOrder(wo));
         }
-        insert woId_ERP_Map.values();
+            insert woId_ERP_Map.values();
         workOrders = new List<WorkOrder>();
         for( Id woId : woId_ERP_Map.keySet() )
         {

@@ -81,8 +81,8 @@ public with sharing class ProjectTask_Service {
       DisplayOnCustomerInvoice__c = woli.Visible_to_Customer__c,
       Name = 'PRE-RIG',
       Work_Order_Line_item__c = woli.Id,
-      AcctSeed__Project__c = wo.ERP_Order__c,
-      Product__c = wo.Manufacturing_Product_Id__c
+      Product__c = wo.Manufacturing_Product_Id__c,
+      AcctSeed__Project__c = wo.ERP_Order__c
     );
   }
 

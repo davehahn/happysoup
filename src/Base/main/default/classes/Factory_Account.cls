@@ -1,79 +1,66 @@
 @isTest
 public class Factory_Account {
-
-  public static Account[] buildDealerAccounts( Integer count )
-  {
-    return buildAccounts( count, 'Dealer' );
+  public static Account[] buildDealerAccounts(Integer count) {
+    return buildAccounts(count, 'Dealer');
   }
 
-  public static Account[] insertDealerAccounts( Integer count )
-  {
-    return insertAccounts( count, 'Dealer' );
+  public static Account[] insertDealerAccounts(Integer count) {
+    return insertAccounts(count, 'Dealer');
   }
 
-  public static Account[] insertSupplierAccounts( Integer count )
-  {
-    return insertAccounts( count, 'Supplier' );
+  public static Account[] insertSupplierAccounts(Integer count) {
+    return insertAccounts(count, 'Supplier');
   }
 
-  public static Account[] insertFinancialInstitutions( Integer count )
-  {
+  public static Account[] insertFinancialInstitutions(Integer count) {
     Account[] result = new List<Account>();
-    for( Account acct : buildAccounts( count, 'Supplier' ) )
-    {
+    for (Account acct : buildAccounts(count, 'Supplier')) {
       acct.Financing_Vendor__c = true;
-      result.add( acct );
+      result.add(acct);
     }
     insert result;
     return result;
   }
 
-  public static Account[] insertCustomerAccounts( Integer count )
-  {
+  public static Account[] insertCustomerAccounts(Integer count) {
     String aType = 'Person Account';
     Id rtId = LGND_Utilities.recordTypeIdFromName('Account', aType);
     Account[] result = new List<Account>();
-    for( Integer i=0; i<count; i++ )
-    {
-      result.add( new Account(
-        RecordTypeId = rtId,
-        FirstName = aType,
-        LastName =  aType + ' - ' + String.valueOf( i ),
-        Type = aType,
-        PersonEmail = 'noemail@legendboats.com'
-      ));
+    for (Integer i = 0; i < count; i++) {
+      result.add(
+        new Account(
+          RecordTypeId = rtId,
+          FirstName = aType,
+          LastName = aType + ' - ' + String.valueOf(i),
+          Type = aType,
+          PersonEmail = 'noemail@legendboats.com'
+        )
+      );
     }
     insert result;
     return result;
   }
 
-  public static Account[] buildAccounts( Integer count, String aType )
-  {
+  public static Account[] buildAccounts(Integer count, String aType) {
     Id rtId = LGND_Utilities.recordTypeIdFromName('Account', aType);
     Account[] result = new List<Account>();
-    for( Integer i=0; i<count; i++ )
-    {
-      result.add( new Account(
-        RecordTypeId = rtId,
-        Name = aType + ' - ' + String.valueOf( i ),
-        Type = aType,
-        Active__c = true
-      ));
+    for (Integer i = 0; i < count; i++) {
+      result.add(
+        new Account(RecordTypeId = rtId, Name = aType + ' - ' + String.valueOf(i), Type = aType, Active__c = true)
+      );
     }
     return result;
   }
 
-   private static Account[] insertAccounts( Integer count, String aType )
-  {
-    Account[] result = buildAccounts( count, aType );
+  private static Account[] insertAccounts(Integer count, String aType) {
+    Account[] result = buildAccounts(count, aType);
     insert result;
     return result;
   }
 
-  public static Account insertBusinessAccountWithContacts( String name, Integer contactCount )
-  {
-    Id rTid = LGND_Utilities.recordTypeIdFromName('Account', 'Business Account');
+  public static Account insertAccountWithContacts(String name, Id acctRecordTypeId, Integer contactCount) {
     Account a = new Account(
+      RecordTypeId = acctRecordTypeId,
       Name = name,
       Phone = '111-111-1111',
       Fax = '222-222-2222',
@@ -90,18 +77,26 @@ public class Factory_Account {
     );
     insert a;
     Contact[] conts = new List<Contact>();
-    for( Integer i=0; i< contactCount; i++ )
-    {
-      conts.add( Factory_Contact.newContact( a.Id,
-                                             'contFirstName' + String.valueOf(i),
-                                             'contLastName' + String.valueOf(i) ) );
+    for (Integer i = 0; i < contactCount; i++) {
+      conts.add(
+        Factory_Contact.newContact(a.Id, 'contFirstName' + String.valueOf(i), 'contLastName' + String.valueOf(i))
+      );
     }
     insert conts;
     return a;
   }
 
-  public static Account buildFullPersonAccount(String fName, String lName)
-  {
+  public static Account insertBusinessAccountWithContacts(String name, Integer contactCount) {
+    Id rTid = new Application_RecordType().getAccountRecordTypes().getBusinessAccountId();
+    return insertAccountWithContacts(name, rTid, contactCount);
+  }
+
+  public static Account insertSupplierAccountWithContacts(String name, Integer contactCount) {
+    Id rTid = new Application_RecordType().getAccountRecordTypes().getSupplierId();
+    return insertAccountWithContacts(name, rTid, contactCount);
+  }
+
+  public static Account buildFullPersonAccount(String fName, String lName) {
     String[] hobbies = LGND_Utilities.getPicklistValues('Account', 'Hobbies__c');
     String[] emoMoto = LGND_Utilities.getPicklistValues('Account', 'Emotional_Motivation__c');
     String[] animals = LGND_Utilities.getPicklistValues('Account', 'Animals__c');
@@ -136,9 +131,8 @@ public class Factory_Account {
     );
   }
 
-  public static Account insertFullPersonAccount(String fName, String lName)
-  {
-    Account a = buildFullPersonAccount( fName, lName );
+  public static Account insertFullPersonAccount(String fName, String lName) {
+    Account a = buildFullPersonAccount(fName, lName);
     insert a;
     return a;
   }

@@ -76,6 +76,8 @@ public inherited sharing class TriggerActionFlow implements TriggerAction.Before
   }
 
   public void afterInsert(List<SObject> newList) {
+    System.debug('afterInsert FlowName = ' + flowName);
+    System.debug('afterInsert flowTriggerRecordClassName = ' + flowTriggerRecordClassName);
     if (!thisFlowIsBypassed()) {
       Flow.Interview myFlow = Flow.Interview.createInterview(flowName, getFlowInput(newList, null));
       myFlow.start();

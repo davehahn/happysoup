@@ -146,6 +146,10 @@ public class Factory_CustomSettings {
     insert tNames;
   }
 
+  public static void setupFslConstants(){
+    Factory_ServiceTerritory.insertWholeSale();
+  }
+
   private static  Map<String, Pricebook2> buildPricebooks()
   {
     Map<String, Pricebook2> result = new Map<String, Pricebook2>();
@@ -173,4 +177,5 @@ public class Factory_CustomSettings {
     insert result.values();
     return result;
   }
+
 }

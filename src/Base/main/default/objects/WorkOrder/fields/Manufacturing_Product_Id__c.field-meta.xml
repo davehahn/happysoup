@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Manufacturing_Product_Id__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
     <externalId>false</externalId>
-    <formula>Serial_Number__r.GMBLASERP__Product__c</formula>
-    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
     <label>Manufacturing Product Id</label>
+    <referenceTo>Product2</referenceTo>
+    <relationshipLabel>Work Orders</relationshipLabel>
+    <relationshipName>Work_Orders</relationshipName>
     <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
     <trackHistory>false</trackHistory>
-    <type>Text</type>
-    <unique>false</unique>
+    <type>Lookup</type>
 </CustomField>

@@ -3,23 +3,7 @@ public class TA_ManufacturingInvMovement_Legacy_T {
 
     static List<AcctSeedERP__Manufacturing_Inventory_Movement__c> manufacturingInv;
     private static List<AcctSeedERP__Manufacturing_Inventory_Movement__c> getData(){
-        return [Select
-                id ,
-                AcctSeedERP__Unit_Cost__c,
-                AcctSeedERP__Material__c,
-                AcctSeedERP__Quantity__c,
-                AcctSeedERP__Inventory_Balance__c,
-                AcctSeedERP__Ledger__c,
-                AcctSeedERP__Movement_Date__c,
-                GMBLASERP__Lot__c ,
-                GMBLASERP__Serial_Number__c,
-                AcctSeedERP__Status__c,
-                GMBLASERP__Project__c,
-                GMBLASERP__Cost_Override__c
-
-        From
-                AcctSeedERP__Manufacturing_Inventory_Movement__c
-        ];
+      return Database.query(LGND_Utilities.getAllFieldsSOQL('AcctSeedERP__Manufacturing_Inventory_Movement__c'));
     }
     @testSetup
     static void dataSetup()

@@ -301,7 +301,7 @@ private class ProductConsumed_CreationControl_Test {
         Test.stopTest();
 
         List<ProductConsumed> ProductConsumedCreated = [SELECT Id, ProductId__c FROM ProductConsumed WHERE WorkOrderId = :testWorkOrder.Id];
-        System.assertEquals(0, ProductConsumedCreated.size(), 'The Product Consumed has been created.');
+        System.assertEquals(0, ProductConsumedCreated.size(), 'The Product Consumed should not be created.');
 
     }
 }

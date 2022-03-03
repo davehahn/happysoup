@@ -53,8 +53,7 @@ private class MFGWorkOrderToERP_Test {
         );
         pol.deliverDate__c = Date.today();
         insert pol;
-        System.debug('pol');
-        System.debug(pol);
+        //'Create Manufacturing WO on insert of POL for Boat' Flow creates Wo, Woli and Service Appointment
         AcctSeedERP__Purchase_Order_Inventory_Movement__c movement = new AcctSeedERP__Purchase_Order_Inventory_Movement__c(
                 AcctSeedERP__Unit_Cost__c = 10,
                 AcctSeedERP__Quantity__c = 1,
@@ -77,10 +76,11 @@ private class MFGWorkOrderToERP_Test {
     {
         init();
         AcctSeedERP__Purchase_Order_Line__c polSelect = [SELECT ID, Work_Order__c FROM AcctSeedERP__Purchase_Order_Line__c WHERE Id =:pol.Id][0];
-        Set<Id> erpIds = new Set<Id>{polSelect.Work_Order__c};
+        Set<Id> woIds = new Set<Id>{polSelect.Work_Order__c};
+        System.debug('### WOIDS = ' + woIds );
         Test.startTest();
         //new MFGWorkOrderToERP_Promise.createMFGERP_Promise().resolve( (Object) erpIds );
-        MFGWorkOrderToERP_Promise.stepOne( new Set<Id>{polSelect.Work_Order__c} );
+        MFGWorkOrderToERP_Promise.stepOne(  woIds );
         Test.stopTest();
         WorkOrder woSelect = [SELECT Id, ERP_Order__c FROM WorkOrder WHERE Id =:polSelect.Work_Order__c][0];
         System.assertEquals( woSelect.ERP_Order__c != null, true, 'The ERP Has Been Created');

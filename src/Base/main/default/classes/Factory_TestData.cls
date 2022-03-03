@@ -15,6 +15,7 @@ public class Factory_TestData {
     productConstants = buildProductConstants();
     Factory_CustomSettings.setupUtilityProducts();
     Factory_CustomSettings.setupUtilityAccounts();
+    Factory_CustomSettings.setupFslConstants();
 	}
 
   private void setFslSites( List<sObject> whs )
