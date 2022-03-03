@@ -13,7 +13,7 @@ public virtual class PurchaseOrderLine_Selector extends Application_Selector
     'AcctSeedERP__Product__r.Pre_Rig_Work_Type__c',
     'AcctSeedERP__Project__c',
     'AcctSeedERP__Project__r.RecordTypeId',
-    'deliverDate__c',
+    'deliverDate__c'
   };
 
   public PurchaseOrderLine_Selector()
