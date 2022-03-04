@@ -199,9 +199,9 @@ public with sharing class Inventory_Service {
             if(mapWarehouseIdByWOLineItem.containsKey(idWOI)) {
                 Id idWarehouse = mapWarehouseIdByWOLineItem.get(idWOI).WorkOrder.ERP_Order__r.GMBLASERP__Warehouse__c;
                 Id idERP = mapWarehouseIdByWOLineItem.get(idWOI).WorkOrder.ERP_Order__c;
-                GCR_InventoryMovement.disableFSL = true;
+                ProductItemTransaction_Service.bypassFslTransactions();
                 gcProject_AccountingActions.createWipRASelected(idERP, idWarehouse, mapWOMapString.get(idWOI), Date.today().format());
-                GCR_InventoryMovement.disableFSL = false;
+                ProductItemTransaction_Service.clearFslTransactionsBypass();
             }
         }
     }
