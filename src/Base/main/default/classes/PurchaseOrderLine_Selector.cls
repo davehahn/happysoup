@@ -9,7 +9,7 @@ public virtual class PurchaseOrderLine_Selector extends Application_Selector
   {
     'Id',
     'AcctSeedERP__Product__c',
-    'AcctSeed__Product__r.RecordTypeId',
+    'AcctSeedERP__Product__r.RecordTypeId',
     'AcctSeedERP__Product__r.Pre_Rig_Work_Type__c',
     'AcctSeedERP__Project__c',
     'AcctSeedERP__Project__r.RecordTypeId',
