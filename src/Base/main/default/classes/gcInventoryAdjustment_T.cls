@@ -5,6 +5,7 @@
 public class gcInventoryAdjustment_T {
     final static String RECORDTYPE = 'Boat';
     final static String FAMILY = 'Electronics';
+
     @TestSetup
     static void makeData(){
         new Factory_TestData();
@@ -72,7 +73,9 @@ public class gcInventoryAdjustment_T {
         );
         GMBLASERP.gcInboundInventoryMovement.disableTrigger = true;
         Test.StartTest();
+        MetadataTriggerHandler.bypass('TA_Inbound_CreateInvTransactionsFSL');
         insert movement;
+        MetadataTriggerHandler.clearBypass('TA_Inbound_CreateInvTransactionsFSL');
         Test.StopTest();
 
         AcctSeedERP__Outbound_Inventory_Movement__c outBoundMovement = new AcctSeedERP__Outbound_Inventory_Movement__c(
@@ -89,7 +92,9 @@ public class gcInventoryAdjustment_T {
         );
 
         GMBLASERP.gcOutboundInventoryMovement.disableTrigger = true;
+        MetadataTriggerHandler.bypass('TA_Outbound_CreateInvTransactionsFSL');
         insert outBoundMovement;
+        MetadataTriggerHandler.clearBypass('TA_Outbound_CreateInvTransactionsFSL');
     }
 
     @IsTest
@@ -118,7 +123,11 @@ public class gcInventoryAdjustment_T {
         Test.StartTest();
         //GMBLASERP.gcOutboundInventoryMovement.disableTrigger = true;
         gcInboundInventoryMovement.disableTrigger = true;
+        MetadataTriggerHandler.bypass('TA_Inbound_CreateInvTransactionsFSL');
+        MetadataTriggerHandler.bypass('TA_Outbound_CreateInvTransactionsFSL');
         gcInventoryAdjustment.cascadeDeleteChildrenOfInbound(setIdMoveIn);
+        MetadataTriggerHandler.clearBypass('TA_Inbound_CreateInvTransactionsFSL');
+        MetadataTriggerHandler.clearBypass('TA_Outbound_CreateInvTransactionsFSL');
         Test.StopTest();
         movement = [
                 SELECT
