@@ -19,6 +19,7 @@ private class MFGWorkOrderToERP_Test {
 
     private static void init() {
         supplier = Factory_Account.insertSupplierAccounts(1)[0];
+        Account dealer = Factory_Account.insertDealerAccounts(1)[0];
         po = Factory_PurchaseOrder.createMinimalPO( supplier.Id, null );
         boat = Factory_Product.buildSerializedProduct( 'Boat', 'Pontoon' );
         insert boat;

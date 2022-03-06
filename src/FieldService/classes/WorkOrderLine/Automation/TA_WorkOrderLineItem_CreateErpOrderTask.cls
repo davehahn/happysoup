@@ -20,7 +20,7 @@ public inherited sharing class TA_WorkOrderLineItem_CreateErpOrderTask implement
       requiresOrderTask.add( wo.Id );
     }
     if( requiresOrderTask.size() > 0 )
-      ProjectTask_Service.newFromWorkOrderLineItemIds_queue( requiresOrderTask );
+      ProjectTask_ServiceFSL.newFromWorkOrderLineItemIds_queue( requiresOrderTask );
   }
 
   public void afterUpdate (List<WorkOrderLineItem> newList, List<WorkOrderLineItem> oldList)
@@ -38,7 +38,7 @@ public inherited sharing class TA_WorkOrderLineItem_CreateErpOrderTask implement
       requiresOrderTask.add( wo.Id );
     }
     if( requiresOrderTask.size() > 0 )
-      ProjectTask_Service.newFromWorkOrderLineItemIds_queue( requiresOrderTask );
+      ProjectTask_ServiceFSL.newFromWorkOrderLineItemIds_queue( requiresOrderTask );
   }
 
 }

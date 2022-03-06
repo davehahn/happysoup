@@ -19,7 +19,7 @@ public inherited sharing class TA_WorkOrder_CreateERP implements TriggerAction.A
     }
     if( requiresERP.size() > 0 )
     {
-      Project_Service.createFromWorkOrderIds( requiresERP );
+      Project_ServiceFSL.createFromWorkOrderIds( requiresERP );
     }
   }
 
@@ -40,7 +40,7 @@ public inherited sharing class TA_WorkOrder_CreateERP implements TriggerAction.A
     }
     if( requiresERP.size() > 0 )
     {
-      Project_Service.createFromWorkOrderIds( requiresERP );
+      Project_ServiceFSL.createFromWorkOrderIds( requiresERP );
     }
   }
 

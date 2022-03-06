@@ -7,6 +7,10 @@ USER="$(cat /workspace/org_info.json | jq -r '.username')"
 echo "$USER"
 sfdx sfpowerkit:auth:login -u $USER --password $PRODUCTION_PASSWORD -a ci-testValid
 
+echo "Set sfdx-project.json for production"
+rm -f sfdx-project.json
+mv sfdx-project.json.prod sfdx-project.json
+
 echo "Deploying Static Resources"
 sfdx heber:staticresources:deploy -u ci-testValid
 

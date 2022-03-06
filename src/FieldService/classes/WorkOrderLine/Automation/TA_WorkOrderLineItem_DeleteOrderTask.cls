@@ -8,6 +8,6 @@ public inherited sharing class TA_WorkOrderLineItem_DeleteOrderTask implements T
     List<WorkOrderLineItem> oldList
   )
   {
-    ProjectTask_Service.deleteERPOrderTask( oldList );
+    ProjectTask_ServiceFSL.deleteERPOrderTask( oldList );
   }
 }

@@ -9,6 +9,6 @@ public inherited sharing class TA_WorkOrder_DeleteAssociatedErpOrders implements
     List<WorkOrder> oldList
   )
   {
-    Project_Service.deleteERPOrder( oldList );
+    Project_ServiceFSL.deleteERPOrder( oldList );
   }
 }

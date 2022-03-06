@@ -48,7 +48,7 @@ public with sharing class OpportunityToWorkOrderAndERP_Promise {
     insert wo;
     System.debug('InsertedWorkOrder');
     System.debug(wo);
-    Project_Service.createFromOpportunityAndWorkOrder( opp, wo );
+    Project_ServiceFSL.createFromOpportunityAndWorkOrder( opp, wo );
     TriggerBase.clearBypass('WorkOrder');
     return wo.Id;
   }
