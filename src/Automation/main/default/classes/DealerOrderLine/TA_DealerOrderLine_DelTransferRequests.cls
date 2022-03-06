@@ -4,12 +4,11 @@
 
 public inherited sharing class TA_DealerOrderLine_DelTransferRequests implements TriggerAction.AfterDelete{
 
-    public void afterDelete(List<SObject> oldList) {
+    public void afterDelete(List<Dealer_Order_Line__c> oldList) {
         Set<Id> transferIds = new Set<Id>();
 
-        List<Dealer_Order_Line__c> dols = (List<Dealer_Order_Line__c>)Trigger.oldMap.values();
 
-        for( Dealer_Order_Line__c dol : dols ) {
+        for( Dealer_Order_Line__c dol : oldList ) {
             if (dol.Legend_Transfer_Request__c != null) {
                 transferIds.add(dol.Legend_Transfer_Request__c);
             }
