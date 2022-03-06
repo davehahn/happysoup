@@ -2,21 +2,7 @@
 public class TA_PurchaseOrderInvMovement_Legacy_T {
     static List<AcctSeedERP__Purchase_Order_Inventory_Movement__c> poMovements;
     private static List<AcctSeedERP__Purchase_Order_Inventory_Movement__c> getData(){
-        return [Select
-                Id,
-                AcctSeedERP__Unit_Cost__c,
-                AcctSeedERP__Quantity__c,
-                AcctSeedERP__Inventory_Balance__c,
-                AcctSeedERP__Ledger__c,
-                GMBLASERP__Warehouse__c,
-                AcctSeedERP__Movement_Date__c,
-                GMBLASERP__Product__c,
-                AcctSeedERP__Purchase_Order_Line__c,
-                GMBLASERP__Purchase_Order__c,
-                GMBLASERP__Serial_Number__c
-        From
-                AcctSeedERP__Purchase_Order_Inventory_Movement__c
-        ];
+        return Database.query(LGND_Utilities.getAllFieldsSOQL('AcctSeedERP__Purchase_Order_Inventory_Movement__c'));
     }
     @testSetup
     static void dataSetup()

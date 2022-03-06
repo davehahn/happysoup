@@ -14,7 +14,7 @@ public with sharing class TA_DealerOrderLine_DeleteErps_T {
         TA_DealerOrderLine_TestHelper.createDealerOrderLines(TA_DealerOrderLine_TestHelper.order,2);
         new TA_DealerOrderLine_DeleteErps().afterDelete(TA_DealerOrderLine_TestHelper.dealerOrderLines);
         List<AcctSeed__Project__c> erpIds = [SELECT Id FROM AcctSeed__Project__c WHERE Id IN :TA_DealerOrderLine_TestHelper.erpIds];
-        System.assertEquals(erpIds,null);
+        System.assertEquals(0, erpIds.size());
 
     }
 
