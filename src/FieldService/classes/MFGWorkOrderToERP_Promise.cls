@@ -69,7 +69,7 @@ public with sharing class MFGWorkOrderToERP_Promise {
         for(WorkOrderLineItem woli : WorkOrderLineItem_Selector.selectAllWithoutERPTask_ByWorkOrderIds(woIds)){
             setWOLIIds.add(woli.Id);
         }
-        ProjectTask_Service.newFromWorkOrderLineItemIds( setWOLIIds);
+        ProjectTask_ServiceFSL.newFromWorkOrderLineItemIds( setWOLIIds);
         return setWOLIIds;
     }
 
@@ -80,7 +80,7 @@ public with sharing class MFGWorkOrderToERP_Promise {
         for(ProductRequired pr : ProductRequired_Selector.selectAllByWorkOrderLineIds(woLIIds)){
             setPRIds.add(pr.Id);
         }
-        Material_Service.createFromProductRequiredIds(setPRIds);
+        Material_ServiceFSL.createFromProductRequiredIds(setPRIds);
     }
 
     /* DEFERRED CLASSES */

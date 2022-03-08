@@ -36,7 +36,7 @@ public inherited sharing class TA_ProductRequired_CreateMaterials implements Tri
 
     if( toCreateMaterials.size() > 0 )
     {
-      Material_Service.createFromProductRequiredIds_queue(toCreateMaterials);
+      Material_ServiceFSL.createFromProductRequiredIds_queue(toCreateMaterials);
     }
   }
 

@@ -1,4 +1,4 @@
-ƒ<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <Flow xmlns="http://soap.sforce.com/2006/04/metadata">
     <actionCalls>
         <name>Get_Is_Flow_Bypassed</name>
@@ -25,19 +25,37 @@
         </inputParameters>
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </actionCalls>
+    <actionCalls>
+        <name>Get_Manufacturing_RecordType_Id</name>
+        <label>Get Manufacturing RecordType Id</label>
+        <locationX>50</locationX>
+        <locationY>695</locationY>
+        <actionName>Application_RecordType</actionName>
+        <actionType>apex</actionType>
+        <connector>
+            <targetReference>Create_Work_Order_0</targetReference>
+        </connector>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>recordTypeDeveloperName</name>
+            <value>
+                <stringValue>Manufacturing</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>sObjectName</name>
+            <value>
+                <stringValue>WorkOrder</stringValue>
+            </value>
+        </inputParameters>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </actionCalls>
     <apiVersion>54.0</apiVersion>
     <constants>
         <name>BOAT_RECORDTYPE_ID</name>
         <dataType>String</dataType>
         <value>
             <stringValue>012i0000000rP6KAAU</stringValue>
-        </value>
-    </constants>
-    <constants>
-        <name>MANUFACTURING_WORKORDER_RECORDTYPE_ID</name>
-        <dataType>String</dataType>
-        <value>
-            <stringValue>012040000004NfPAAU</stringValue>
         </value>
     </constants>
     <decisions>
@@ -57,7 +75,7 @@
                 </rightValue>
             </conditions>
             <connector>
-                <targetReference>Create_Work_Order_0</targetReference>
+                <targetReference>Get_Manufacturing_RecordType_Id</targetReference>
             </connector>
             <label>Is a Boat</label>
         </rules>
@@ -131,7 +149,7 @@
         <name>Create_Service_Appointment_0</name>
         <label>Create Service Appointment</label>
         <locationX>50</locationX>
-        <locationY>935</locationY>
+        <locationY>1055</locationY>
         <connector>
             <targetReference>Link_Work_Order_and_Work_Order_Line_0</targetReference>
         </connector>
@@ -161,7 +179,7 @@
         <name>Create_Work_Order_0</name>
         <label>Create Work Order</label>
         <locationX>50</locationX>
-        <locationY>695</locationY>
+        <locationY>815</locationY>
         <connector>
             <targetReference>Create_Work_Order_Line_Item_0</targetReference>
         </connector>
@@ -186,7 +204,7 @@
         <inputAssignments>
             <field>RecordTypeId</field>
             <value>
-                <elementReference>MANUFACTURING_WORKORDER_RECORDTYPE_ID</elementReference>
+                <elementReference>Get_Manufacturing_RecordType_Id</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -208,7 +226,7 @@
         <name>Create_Work_Order_Line_Item_0</name>
         <label>Create Work Order Line Item</label>
         <locationX>50</locationX>
-        <locationY>815</locationY>
+        <locationY>935</locationY>
         <connector>
             <targetReference>Create_Service_Appointment_0</targetReference>
         </connector>
@@ -249,7 +267,7 @@
         <name>Link_Work_Order_and_Work_Order_Line_0</name>
         <label>Link Work Order and Work Order Line</label>
         <locationX>50</locationX>
-        <locationY>1055</locationY>
+        <locationY>1175</locationY>
         <inputAssignments>
             <field>Work_Order_Line_Item__c</field>
             <value>

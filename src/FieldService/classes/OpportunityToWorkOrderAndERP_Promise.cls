@@ -57,7 +57,7 @@ public with sharing class OpportunityToWorkOrderAndERP_Promise {
   {
     TriggerBase.bypass('WorkOrderLineItem');
     WorkOrderLineItem woli = WorkOrderLineItem_Service.createForRetailBoatSale( (Id)workOrderId );
-    AcctSeed__Project_Task__c task = ProjectTask_Service.newFromWorkOrderLineItemIds( new Set<Id>{ woli.Id })[0];
+    AcctSeed__Project_Task__c task = ProjectTask_ServiceFSL.newFromWorkOrderLineItemIds( new Set<Id>{ woli.Id })[0];
     woli.ERP_Order_Task__c = task.Id;
     update woli;
     TriggerBase.clearBypass('WorkOrderLineItem');

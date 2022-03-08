@@ -6,20 +6,22 @@ public virtual class Application_RecordType
 {
   public class Application_RecordType_Exception extends Exception{}
 
-  @InvocableMethod(
-    Label='Get RecordType Id'
-    Description='Pass in sObjectName and RecordTypeDeveloperName to retrieve the RecordTypeId'
-    Category='Application Utilities'
-  )
-  public static List<String> getRecordTypeId(
-    List<FlowRecordTypeDescriptor> descriptors
-  )
-  {
-    return new List<String>
-    {
-      (String) new SObjectRecordType(descriptors[0].sObjectName)
-        .getIdFromDeveloperName(descriptors[0].recordTypeDeveloperName)
-    };
+  private static Application_RecordType instance = null;
+  private static SObjectRecordType sobjectRecordTypeInstance = null;
+
+  public static Application_RecordType getInstance(){
+    if( instance == null ) instance = new Application_RecordType();
+    return instance;
+  }
+
+  public static SObjectRecordType getSObjectRecordTypeInstance(String sObjectName){
+    if( sobjectRecordTypeInstance == null ){
+      sobjectRecordTypeInstance = new SObjectRecordType(sObjectName);
+    }
+    else {
+      sobjectRecordTypeInstance.setSObjectName(sObjectName);
+    }
+    return sobjectRecordTypeInstance;
   }
 
   public class FlowRecordTypeDescriptor {
@@ -29,6 +31,24 @@ public virtual class Application_RecordType
     public String recordTypeDeveloperName;
 
     public FlowRecordTypeDescriptor(){}
+  }
+
+  @InvocableMethod(
+    Label='Get RecordType Id'
+    Description='Pass in sObjectName and RecordTypeDeveloperName to retrieve the RecordTypeId'
+    Category='Application Utilities'
+  )
+  public static List<String> getRecordTypeId(
+    List<FlowRecordTypeDescriptor> descriptors
+  )
+  {
+    List<String> result = new List<String>();
+    for( FlowRecordTypeDescriptor d : descriptors ){
+      result.add(
+        (String)Application_RecordType.getSObjectRecordTypeInstance(d.sObjectName).getIdFromDeveloperName(d.recordTypeDeveloperName)
+      );
+    }
+    return result;
   }
 
   private Map<String,List<RecordType>> recordTypesBySobjectName {
@@ -203,8 +223,14 @@ public virtual class Application_RecordType
       set;
     }
 
+    public SObjectRecordType(){}
+
     public SObjectRecordType( String sObjectName )
     {
+      this.sObjectName = sObjectName;
+    }
+
+    public void setSObjectName(String sObjectName){
       this.sObjectName = sObjectName;
     }
 

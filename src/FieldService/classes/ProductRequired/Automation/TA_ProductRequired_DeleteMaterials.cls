@@ -9,7 +9,7 @@ public inherited sharing class TA_ProductRequired_DeleteMaterials implements Tri
     List<ProductRequired> oldList
   )
   {
-    Material_Service.deleteMaterials( oldList );
+    Material_ServiceFSL.deleteMaterials( oldList );
   }
 
 }
