@@ -14,6 +14,10 @@ mv sfdx-project.json.prod sfdx-project.json
 echo "Deploying Static Resources"
 sfdx heber:staticresources:deploy -u ci-testValid
 
+echo "Setting up .forceignore for Prod"
+rm -f .forceignore
+cp .forceignore.prod .forceignore
+
 echo 'make a copy of .forceignore'
 cp .forceignore .forceignore.orig
 
@@ -29,7 +33,7 @@ if [ $DEPLOY_EXPERIENCES = true ]
 then
   echoOut 're-enable original .forceignore'
   rm -f .forceignore
-  mv .forceignore.orig .forceignore
+  cp .forceignore.prod .forceignore
   echoOut 'Deploying ExperienceBundles'
   sfdx force:source:deploy --testlevel NoTestRun --targetusername ci-testValid -p src/BoatReservation/experiences -g -w 240
   sfdx force:source:deploy --testlevel NoTestRun --targetusername ci-testValid -p src/CustomerCommunity/experiences -g -w 240
