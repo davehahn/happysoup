@@ -37,7 +37,7 @@
                 <stringValue>Today()</stringValue>
             </value>
         </processMetadataValues>
-        <name>formula_2_myRule_1_A1_7553518287</name>
+        <name>formula_2_myRule_1_A1_5581315791</name>
         <dataType>Date</dataType>
         <expression>Today()</expression>
     </formulas>
@@ -48,7 +48,7 @@
                 <stringValue>Now()</stringValue>
             </value>
         </processMetadataValues>
-        <name>formula_3_myRule_1_A1_7315005458</name>
+        <name>formula_3_myRule_1_A1_4046320442</name>
         <dataType>DateTime</dataType>
         <expression>Now()</expression>
     </formulas>
@@ -58,6 +58,7 @@
             <value>
                 <stringValue>[AcctSeed__Project__c].RecordType.Name = &quot;Retail Boat Sale&quot; &amp;&amp;
 NOT(ISBLANK([AcctSeed__Project__c].Salesperson__c )) &amp;&amp;
+[AcctSeed__Project__c].Salesperson__r.IsActive = True &amp;&amp;
 OR(ISNEW(), ISCHANGED([AcctSeed__Project__c].Salesperson__c ))</stringValue>
             </value>
         </processMetadataValues>
@@ -65,9 +66,10 @@ OR(ISNEW(), ISCHANGED([AcctSeed__Project__c].Salesperson__c ))</stringValue>
         <dataType>Boolean</dataType>
         <expression>{!myVariable_current.RecordType.Name} = &quot;Retail Boat Sale&quot; &amp;&amp;
 NOT(ISBLANK({!myVariable_current.Salesperson__c} )) &amp;&amp;
+{!myVariable_current.Salesperson__r.IsActive} = True &amp;&amp;
 OR(ISNEW(), ISCHANGED({!myVariable_current.Salesperson__c} ))</expression>
     </formulas>
-    <interviewLabel>Notify_Assigned_Salesperson-1_InterviewLabel</interviewLabel>
+    <interviewLabel>Notify_Assigned_Salesperson-3_InterviewLabel</interviewLabel>
     <label>Notify Assigned Salesperson</label>
     <processMetadataValues>
         <name>ObjectType</name>
@@ -121,7 +123,7 @@ OR(ISNEW(), ISCHANGED({!myVariable_current.Salesperson__c} ))</expression>
             <processMetadataValues>
                 <name>leftHandSideReferenceTo</name>
                 <value>
-                    <stringValue/>
+                    <stringValue></stringValue>
                 </value>
             </processMetadataValues>
             <processMetadataValues>
@@ -132,7 +134,7 @@ OR(ISNEW(), ISCHANGED({!myVariable_current.Salesperson__c} ))</expression>
             </processMetadataValues>
             <field>ActivityDate</field>
             <value>
-                <elementReference>formula_2_myRule_1_A1_7553518287</elementReference>
+                <elementReference>formula_2_myRule_1_A1_5581315791</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -157,7 +159,7 @@ OR(ISNEW(), ISCHANGED({!myVariable_current.Salesperson__c} ))</expression>
             <processMetadataValues>
                 <name>leftHandSideReferenceTo</name>
                 <value>
-                    <stringValue/>
+                    <stringValue></stringValue>
                 </value>
             </processMetadataValues>
             <processMetadataValues>
@@ -193,7 +195,7 @@ OR(ISNEW(), ISCHANGED({!myVariable_current.Salesperson__c} ))</expression>
             <processMetadataValues>
                 <name>leftHandSideReferenceTo</name>
                 <value>
-                    <stringValue/>
+                    <stringValue></stringValue>
                 </value>
             </processMetadataValues>
             <processMetadataValues>
@@ -265,7 +267,7 @@ OR(ISNEW(), ISCHANGED({!myVariable_current.Salesperson__c} ))</expression>
             <processMetadataValues>
                 <name>leftHandSideReferenceTo</name>
                 <value>
-                    <stringValue/>
+                    <stringValue></stringValue>
                 </value>
             </processMetadataValues>
             <processMetadataValues>
@@ -301,7 +303,7 @@ OR(ISNEW(), ISCHANGED({!myVariable_current.Salesperson__c} ))</expression>
             <processMetadataValues>
                 <name>leftHandSideReferenceTo</name>
                 <value>
-                    <stringValue/>
+                    <stringValue></stringValue>
                 </value>
             </processMetadataValues>
             <processMetadataValues>
@@ -312,7 +314,7 @@ OR(ISNEW(), ISCHANGED({!myVariable_current.Salesperson__c} ))</expression>
             </processMetadataValues>
             <field>ReminderDateTime</field>
             <value>
-                <elementReference>formula_3_myRule_1_A1_7315005458</elementReference>
+                <elementReference>formula_3_myRule_1_A1_4046320442</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -337,7 +339,7 @@ OR(ISNEW(), ISCHANGED({!myVariable_current.Salesperson__c} ))</expression>
             <processMetadataValues>
                 <name>leftHandSideReferenceTo</name>
                 <value>
-                    <stringValue/>
+                    <stringValue></stringValue>
                 </value>
             </processMetadataValues>
             <processMetadataValues>
@@ -373,7 +375,7 @@ OR(ISNEW(), ISCHANGED({!myVariable_current.Salesperson__c} ))</expression>
             <processMetadataValues>
                 <name>leftHandSideReferenceTo</name>
                 <value>
-                    <stringValue/>
+                    <stringValue></stringValue>
                 </value>
             </processMetadataValues>
             <processMetadataValues>
@@ -409,7 +411,7 @@ OR(ISNEW(), ISCHANGED({!myVariable_current.Salesperson__c} ))</expression>
             <processMetadataValues>
                 <name>leftHandSideReferenceTo</name>
                 <value>
-                    <stringValue/>
+                    <stringValue></stringValue>
                 </value>
             </processMetadataValues>
             <processMetadataValues>
@@ -462,7 +464,7 @@ OR(ISNEW(), ISCHANGED({!myVariable_current.Salesperson__c} ))</expression>
         <object>Task</object>
     </recordCreates>
     <startElementReference>myDecision</startElementReference>
-    <status>Obsolete</status>
+    <status>Active</status>
     <variables>
         <name>myVariable_current</name>
         <dataType>SObject</dataType>
