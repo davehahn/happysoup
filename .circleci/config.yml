@@ -35,7 +35,6 @@ jobs:
           root: workspace
           paths:
             - org_info.json
-
   validate-build:
     docker:
       - image: legendarydevs/sfdx_deploy
@@ -55,7 +54,25 @@ jobs:
           name: Create Pull Request
           command: . build/circleci/create_pull_request.sh staging
           when: on_success
-
+  validate-build-fsl:
+    docker:
+      - image: legendarydevs/sfdx_deploy
+    environment:
+      GIT_BRANCH: << pipeline.git.branch >>
+    steps:
+      - checkout
+      - attach_workspace:
+          at: /workspace
+      - run:
+          name: Validate deployment
+          no_output_timeout: 30m
+          command: |
+            . build/circleci/cleancode.sh
+            . build/circleci/validate_build_fsl.sh
+      - run:
+          name: Create Pull Request
+          command: . build/circleci/create_pull_request.sh FSL/staging
+          when: on_success
   stage:
     docker:
       - image: legendarydevs/sfdx_deploy
@@ -74,7 +91,21 @@ jobs:
       # - run:
       #     name: Deploy Experience Bundles to Staging
       #     command: . build/circleci/deploy_experience_bundles.sh
-
+  stageFSL:
+    docker:
+      - image: legendarydevs/sfdx_deploy
+    steps:
+      - checkout
+      - run:
+          name: Authenticate Staging
+          command: . build/circleci/authenticate.sh $STAGING_FSL_USER $STAGING_FSL_CONSUMER_KEY https://test.salesforce.com
+      - run:
+          name: Clean
+          command: . build/circleci/cleancode.sh
+      - run:
+          name: Deploy to Staging
+          no_output_timeout: 30m
+          command: . build/circleci/deploy_fsl.sh
   deploy:
     docker:
       - image: legendarydevs/sfdx_deploy
@@ -102,6 +133,13 @@ workflows:
             branches:
               only:
                 - staging
+  deploy_to_staging_fsl:
+    jobs:
+      - stageFSL:
+          filters:
+            branches:
+              only:
+                - stagingFSL
   deploy_to_production:
     jobs:
       - deploy:
@@ -123,6 +161,19 @@ workflows:
           requires:
             - check-for-changes
       - validate-build:
+          requires:
+            - build-validation-env
+  validate-fsl:
+    jobs:
+      - check-for-changes:
+          filters:
+            branches:
+              only:
+                - /FSL\/.*/
+      - build-validation-env:
+          requires:
+            - check-for-changes
+      - validate-build-fsl:
           requires:
             - build-validation-env
 

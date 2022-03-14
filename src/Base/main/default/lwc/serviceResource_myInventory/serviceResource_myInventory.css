@@ -1,0 +1,19 @@
+/**
+ * Created by dave on 2020-12-09.
+ */
+table {
+  table-layout: fixed;
+}
+
+.list {
+  margin-top:1rem;
+  max-height: 450px;
+  overflow-y: auto;
+  padding-bottom: 0;
+}
+
+.list table thead tr th {
+  position: sticky; top: 0;
+  z-index: 10000;
+  box-shadow: inset 0px 0px var(--lwc-colorBorder), 0 1px var(--lwc-colorBorder);
+}

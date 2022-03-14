@@ -5,6 +5,12 @@ private class OpportunityLexController_Test {
   static Opportunity opp;
   static AcctSeed__Project__c erp;
 
+  @testSetup
+  public static void dataSetup() {
+    new Factory_TestData();
+    Factory_CustomSettings.setupInventorySettings();
+  }
+
   static {
     acct = AccountFactory.buildPersonAccount('Rando', 'Bobando');
     insert acct;
@@ -12,7 +18,8 @@ private class OpportunityLexController_Test {
 
   private static void doInit4Opp()
   {
-    OpportunityTriggerHandler.disableTrigger = true;
+    //OpportunityTriggerHandler.disableTrigger = true;
+    MetadataTriggerHandler.bypass('Opportunity');
     Id retailRT = LGND_Utilities.recordTypeIdFromName('Opportunity', 'Retail');
     opp = new Opportunity(
       AccountId = acct.Id,

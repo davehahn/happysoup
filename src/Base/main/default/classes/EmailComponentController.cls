@@ -35,6 +35,8 @@ global class EmailComponentController {
     {
       for( AcctSeedERP__Material__c mat : materials )
       {
+        System.debug('MAT');
+        System.debug(mat);
         this.grandTotal += mat.Supplier_Credit_Requested__c ? mat.GMBLASERP__Total_Price__c : 0;
         if( mat.AcctSeedERP__Product__c == Utility_Products__c.getOrgDefaults().Sublet__c )
         {

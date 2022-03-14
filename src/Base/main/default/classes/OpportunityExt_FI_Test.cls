@@ -11,8 +11,9 @@ private class OpportunityExt_FI_Test {
         rTId = AccountRecordTypeInfo.get('Person Account').getRecordTypeId();
         acct = new Account(FirstName= 'Test', LastName='User', RecordTypeId=rTId);
         insert acct;
-        OpportunityTriggerHandler.disableAutoPricebookSet = true;
-        opp = new Opportunity(
+        //OpportunityTriggerHandler.disableAutoPricebookSet = true;
+       Opportunity_Service.disableAutoPricebookSet = true;
+       opp = new Opportunity(
           Name = 'Test Opportunity',
           CloseDate= Date.today(),
           StageName='Quoting',

@@ -87,7 +87,11 @@ public class AccrualTool_Controller_T {
             retailTask.Id,
             parts
         );
+        for( AcctSeedERP__Material__c mat : mats ){
+          mat.GMBLASERP__Total_Price__c = mat.AcctSeedERP__Quantity_Per_Unit__c * mat.GMBLASERP__Unit_Price__c;
+        }
         mats[0].AcctSeedERP__Quantity_Per_Unit__c = 3;
+        mats[0].GMBLASERP__Total_Price__c = mats[0].GMBLASERP__Total_Price__c * 3;
         insert mats;
     }
     
@@ -111,6 +115,7 @@ public class AccrualTool_Controller_T {
              FROM AcctSeed__Project_Tasks__r ),
             ( SELECT
              Id,
+              GMBLASERP__Total_Price__c,
              AcctSeedERP__Product__c,
              AcctSeedERP__Product__r.Name,
              AcctSeedERP__Product__r.Rigging_Time__c,
@@ -130,12 +135,13 @@ public class AccrualTool_Controller_T {
         materials = new List<AcctSeedERP__Material__c>();
         for( AcctSeedERP__Material__c mat : erp.AcctSeedERP__Project_Materials__r )
         {
-            materials.add( mat );
-            materialIds.add( mat.Id );
-            if( mat.AcctSeedERP__Quantity_Per_Unit__c > 1 )
-            {
-                matWithMultipleId = mat.Id;
-            }
+          System.debug('material total - ' + mat.GMBLASERP__Total_Price__c );
+          materials.add( mat );
+          materialIds.add( mat.Id );
+          if( mat.AcctSeedERP__Quantity_Per_Unit__c > 1 )
+          {
+              matWithMultipleId = mat.Id;
+          }
         }
         commRec = new CommissionRecord2__c(
             Project_Task__c = erpTask.Id,
@@ -167,7 +173,7 @@ public class AccrualTool_Controller_T {
             Payment_Amount__c = profit * rate,
             Actual_Amount_for_Commission__c = profit
         );
-        TriggerHandler.bypass('CommissionLineItem2_TriggerHandler');
+        TriggerBase.bypass('CommissionLineItem2__c');
         insert line;
     }
     @IsTest
@@ -175,6 +181,30 @@ public class AccrualTool_Controller_T {
     {
         initErpData();
         createCommissionRecord();
+      for (AcctSeedERP__Material__c material : [
+        SELECT
+          id,
+          Serial_Number__c,
+          AcctSeedERP__Product__c,
+          AcctSeedERP__Product__r.Name,
+          GMBLASERP__Total_Price__c,
+          AcctSeedERP__Product__r.AcctSeed__Expense_GL_Account__c,
+          AcctSeedERP__Product__r.AcctSeed__Expense_GL_Account__r.Name,
+          AcctSeedERP__Product__r.AcctSeed__Expense_GL_Account__r.AcctSeed__Type__c,
+          AcctSeedERP__Product__r.AcctSeed__Revenue_GL_Account__c,
+          AcctSeedERP__Product__r.AcctSeed__Revenue_GL_Account__r.Name,
+          AcctSeedERP__Product__r.AcctSeed__Revenue_GL_Account__r.AcctSeed__Type__c,
+          AcctSeedERP__Product__r.RecordType.Name,
+          AcctSeedERP__Product__r.Insurance_Profit_Percent_Override__c,
+          AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_1__c,
+          AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_1__r.Name,
+          AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_2__c,
+          AcctSeedERP__Project_Task__r.AcctSeed__GL_Account_Variable_2__r.Name
+        FROM AcctSeedERP__Material__c
+        WHERE AcctSeedERP__Project__c = :erp.Id
+      ]) {
+        System.debug(material.AcctSeedERP__Product__r.Name + ' - ' + material.GMBLASERP__Total_Price__c );
+      }
         Test.startTest();
         AcctSeed__Project__c erpRecord = AccrualTool_Controller.fetchERPData(String.valueOf(erp.Id));
         AccrualTool_Controller.CommissionWrapper commWrapper = AccrualTool_Controller.fetchCommissionRecords(String.valueOf(erp.Id));

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Calculated_Duration__c</fullName>
+    <description>The duration in minutes needed to complete all Line Items</description>
+    <externalId>false</externalId>
+    <inlineHelpText>The duration in minutes needed to complete all Line Items</inlineHelpText>
+    <label>Calculated Duration</label>
+    <summarizedField>WorkOrderLineItem.DurationInMinutes</summarizedField>
+    <summaryForeignKey>WorkOrderLineItem.WorkOrderId</summaryForeignKey>
+    <summaryOperation>sum</summaryOperation>
+    <trackHistory>false</trackHistory>
+    <type>Summary</type>
+</CustomField>
