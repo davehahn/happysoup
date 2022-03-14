@@ -2314,7 +2314,8 @@ global without sharing class gcProject_Ext {
           {
             System.debug(loggingLevel.error,'thisKitBillRate:'+thisBillRate);
             System.debug(loggingLevel.error,'KitmatlRate:'+matlRate);
-            thisBillQty = 1;
+            // SFISSUES-1501 (Checking)
+            //thisBillQty = 1;
             thisBillRate = thisBillAmt;
           }
           System.debug(loggingLevel.error,'KitmatlQty:'+matlQty);
