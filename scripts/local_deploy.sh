@@ -37,7 +37,16 @@ cmd=$(pwd)
 mkdir ~/$CLONEDIR
 cd ~/$CLONEDIR
 git clone "${cmd}" .
-chmod +x deploy.sh
-./deploy.sh $SFDX_ALIAS $TESTLEVEL
+
+echo "Set sfdx-project.json for Production"
+rm -f sfdx-project.json
+mv sfdx-project.json.prod sfdx-project.json
+
+echo "Setting up .forceignore for Production"
+rm -f .forceignore
+cp .forceignore.prod .forceignore
+
+chmod +x scripts/deploy.sh
+./scripts/deploy.sh $SFDX_ALIAS $TESTLEVEL
 echoOut 'Ceaning up'
 cd .. && rm -fR $CLONEDIR
