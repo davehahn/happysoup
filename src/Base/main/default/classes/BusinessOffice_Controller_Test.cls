@@ -32,9 +32,11 @@ private class BusinessOffice_Controller_Test {
       init();
     }
     finAccounts = Factory_Account.insertFinancialInstitutions(7);
-    OpportunityTriggerHandler.disableAutoPricebookSet = true;
+   // OpportunityTriggerHandler.disableAutoPricebookSet = true;
+    Opportunity_Service.disableAutoPricebookSet = true;
     opp = OpportunityFactory.buildBasicRetail(personAccount.Id);
-    OpportunityTriggerHandler.disableAutoPricebookSet = true;
+    //OpportunityTriggerHandler.disableAutoPricebookSet = true;
+    Opportunity_Service.disableAutoPricebookSet = true;
     opp.Financing_Account__c = finAccounts[0].Id;
     insert opp;
     opp.Pricebook2Id = customPb.Id;

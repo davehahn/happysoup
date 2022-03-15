@@ -5,7 +5,8 @@ private class OpportunityExt_Test {
 
    //get the Id of the Person Account Record Type
   static {
-      OpportunityTriggerHandler.disableAutoPricebookSet = true;
+      //OpportunityTriggerHandler.disableAutoPricebookSet = true;
+      Opportunity_Service.disableAutoPricebookSet = true;
       Schema.DescribeSObjectResult cfrSchema = Schema.SObjectType.Account;
       Map<String,Schema.RecordTypeInfo> AccountRecordTypeInfo = cfrSchema.getRecordTypeInfosByName();
       rTId = AccountRecordTypeInfo.get('Person Account').getRecordTypeId();

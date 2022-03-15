@@ -22,6 +22,10 @@ global without sharing class gcLegendMRP {
 		return false;
 	}
 
+	@RemoteAction @ReadOnly @AuraEnabled
+	public static list<map<string,string>> retrieveUnimprovedHulls_LWC(Id idPurchaseOrder, String timeString){
+		return retrieveUnimprovedHulls(idPurchaseOrder);
+	}
 
 	@RemoteAction @ReadOnly
 	public static list<map<string,string>> retrieveUnimprovedHulls(Id idPurchaseOrder)

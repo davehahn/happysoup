@@ -1,0 +1,33 @@
+# List files or directories below to ignore them when running force:source:push, force:source:pull, and force:source:status
+# More information: https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_exclude_source.htm
+#
+# .forceignore v2
+
+package.xml
+
+# LWC configuration files
+**/jsconfig.json
+**/.eslintrc.json
+
+# LWC Jest
+**/__tests__/**
+
+#Profile
+src/Base/main/default/profiles/
+
+src/Base/main/default/applications/*.xml
+#src/Base/main/default/workflows/
+#src/Base/main/default/workflows/Opportunity.*
+
+src/Base/main/default/quickActions/Case.SendEmail.*
+src/*/experiences
+src/*/main/default/experiences
+src/*/sites
+src/*/main/default/sites
+src/*/network
+src/*/main/default/network
+src/*/objects/listViews
+src/*/main/default/objects/listViews
+
+#FieldService
+src/FieldService

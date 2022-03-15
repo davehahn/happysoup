@@ -26,12 +26,14 @@ public with sharing class OpportunityFactory {
     insert glAccts;
     warehouse = AcctSeed_Settings_Factory.getWarehouse('Whitefish');
     ontarioTaxZone = AcctSeed_Settings_Factory.getTaxZone('Ontario');
-    OpportunityTriggerHandler.disableAutoPricebookSet = true;
+    //OpportunityTriggerHandler.disableAutoPricebookSet = true;
+    Opportunity_Service.disableAutoPricebookSet = true;
   }
 
   public static Opportunity buildBasicRetail(Id acctId)
   {
-    opportunityTriggerHandler.disableAutoPricebookSet = false;
+    //opportunityTriggerHandler.disableAutoPricebookSet = false;
+    Opportunity_Service.disableAutoPricebookSet = false;
     Id retailRT = LGND_Utilities.recordTypeIdFromName('Opportunity', 'Retail');
     return new Opportunity(
       AccountId = acctId,

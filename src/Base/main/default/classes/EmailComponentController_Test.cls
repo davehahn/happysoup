@@ -276,6 +276,7 @@ private class EmailComponentController_Test {
       AcctSeedERP__Material__c mat = Factory_ERPOrder.buildMaterial( recoverable.Id, task.Id, p.Id );
       mat.GMBLASERP__Price_Override__c = true;
       mat.Supplier_Credit_Requested__c = true;
+      mat.GMBLASERP__Total_Price__c = mat.AcctSeedERP__Quantity_Per_Unit__c * mat.GMBLASERP__Unit_Price__c;
       mats.add( mat );
     }
     orig = gcMaterial.disableTrigger;

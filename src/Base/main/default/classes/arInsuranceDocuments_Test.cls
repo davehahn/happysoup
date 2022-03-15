@@ -32,9 +32,11 @@ private class arInsuranceDocuments_Test {
   }
 
   private static void oppInit() {
-    OpportunityTriggerHandler.disableAutoPricebookSet = true;
+    //OpportunityTriggerHandler.disableAutoPricebookSet = true;
+    Opportunity_Service.disableAutoPricebookSet = true;
     opp = OpportunityFactory.buildBasicRetail(personAccount.Id);
-    OpportunityTriggerHandler.disableAutoPricebookSet = true;
+    //OpportunityTriggerHandler.disableAutoPricebookSet = true;
+    Opportunity_Service.disableAutoPricebookSet = true;
     insert opp;
   }
 

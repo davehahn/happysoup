@@ -47,7 +47,8 @@ private class RetailSalesToolController_Test {
     towVehicleEntries = Account.Tow_Vehicle__c.getDescribe().getPicklistValues();
     preferredLanguages = Account.Preferred_Language__c.getDescribe().getPicklistValues();
 
-    OpportunityTriggerHandler.disableAutoPricebookSet = true;
+ //   OpportunityTriggerHandler.disableAutoPricebookSet = true;
+    Opportunity_Service.disableAutoPricebookSet = true;
   }
 
   @testSetup static void dataSetup()

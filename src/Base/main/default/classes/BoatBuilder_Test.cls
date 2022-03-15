@@ -42,7 +42,8 @@ private class BoatBuilder_Test {
               Pricebook2Id = standard_pb2.Id,
               AccountId = null
             );
-        OpportunityTriggerHandler.disableAutoPricebookSet = true;
+       // OpportunityTriggerHandler.disableAutoPricebookSet = true;
+        Opportunity_Service.disableAutoPricebookSet = true;
         insert opp;
         //create 3 Fee Products
         //get record type Id for fees product record type

@@ -292,6 +292,8 @@ public with sharing class Registration_Helper {
 
     private List<Registration__c> setMotor( Map<Id, Registration__c> erpId_Reg_map )
     {
+      System.debug('SETMOTOR');
+      System.debug(erpId_Reg_map.keySet());
       Id motorRt = LGND_Constants.productRtId_Motor;
       for( AcctSeedERP__Material__c mat : [ SELECT Id,
         AcctSeedERP__Project__c,
@@ -302,6 +304,7 @@ public with sharing class Registration_Helper {
       AND AcctSeedERP__Product__r.RecordTypeId = :motorRt
       AND AcctSeedERP__Product__r.Family <> 'Kicker Motor'] )
       {
+        System.debug(mat);
         if( erpId_Reg_map.containsKey( mat.AcctSeedERP__Project__c ) )
         {
           erpId_Reg_map.get( mat.AcctSeedERP__Project__c ).Registered_Motor__c = mat.AcctSeedERP__Product__c;

@@ -6,6 +6,51 @@ public virtual class Application_RecordType
 {
   public class Application_RecordType_Exception extends Exception{}
 
+  private static Application_RecordType instance = null;
+  private static SObjectRecordType sobjectRecordTypeInstance = null;
+
+  public static Application_RecordType getInstance(){
+    if( instance == null ) instance = new Application_RecordType();
+    return instance;
+  }
+
+  public static SObjectRecordType getSObjectRecordTypeInstance(String sObjectName){
+    if( sobjectRecordTypeInstance == null ){
+      sobjectRecordTypeInstance = new SObjectRecordType(sObjectName);
+    }
+    else {
+      sobjectRecordTypeInstance.setSObjectName(sObjectName);
+    }
+    return sobjectRecordTypeInstance;
+  }
+
+  public class FlowRecordTypeDescriptor {
+    @InvocableVariable
+    public String sObjectName;
+    @InvocableVariable
+    public String recordTypeDeveloperName;
+
+    public FlowRecordTypeDescriptor(){}
+  }
+
+  @InvocableMethod(
+    Label='Get RecordType Id'
+    Description='Pass in sObjectName and RecordTypeDeveloperName to retrieve the RecordTypeId'
+    Category='Application Utilities'
+  )
+  public static List<String> getRecordTypeId(
+    List<FlowRecordTypeDescriptor> descriptors
+  )
+  {
+    List<String> result = new List<String>();
+    for( FlowRecordTypeDescriptor d : descriptors ){
+      result.add(
+        (String)Application_RecordType.getSObjectRecordTypeInstance(d.sObjectName).getIdFromDeveloperName(d.recordTypeDeveloperName)
+      );
+    }
+    return result;
+  }
+
   private Map<String,List<RecordType>> recordTypesBySobjectName {
     get {
       if( recordTypesBySobjectName == null )
@@ -98,23 +143,20 @@ public virtual class Application_RecordType
     }
     private set;
   }
-//  private WorkOrderRTs workOrderRTs {
-//    get {
-//      if( this.workOrderRTs == null )
-//      {
-//        this.workOrderRTs = new WorkOrderRTs();
-//      }
-//      return workOrderRTs;
-//    }
-//    private set;
-//  }
+  private WorkOrderRTs workOrderRTs {
+    get {
+      if( this.workOrderRTs == null )
+      {
+        this.workOrderRTs = new WorkOrderRTs();
+      }
+      return workOrderRTs;
+    }
+    private set;
+  }
 
   public Application_RecordType(){}
 
   public String getDeveloperNameById( Id recordId ){
-    System.debug(this.developerNameById );
-    System.debug( this.recordTypesBySobjectName.get('Pricebook2'));
-    System.debug(recordId);
     if( this.developerNameById.containsKey(recordId) ){
       return this.developerNameById.get(recordId);
     }
@@ -161,10 +203,10 @@ public virtual class Application_RecordType
     return this.systemIssueRTs;
   }
 
-//  public WorkOrderRTs getWorkOrderRecordTypes()
-//  {
-//    return this.workOrderRTs;
-//  }
+  public WorkOrderRTs getWorkOrderRecordTypes()
+  {
+    return this.workOrderRTs;
+  }
 
   public virtual class SObjectRecordType extends Application_RecordType
   {
@@ -181,8 +223,14 @@ public virtual class Application_RecordType
       set;
     }
 
+    public SObjectRecordType(){}
+
     public SObjectRecordType( String sObjectName )
     {
+      this.sObjectName = sObjectName;
+    }
+
+    public void setSObjectName(String sObjectName){
       this.sObjectName = sObjectName;
     }
 
@@ -525,44 +573,43 @@ public virtual class Application_RecordType
     }
   }
 
-//  public virtual class WorkOrderRTs extends SObjectRecordType
-//  {
-//
-//    public WorkOrderRTs()
-//    {
-//      super('WorkOrder');
-//    }
-//
-//    public Id getManufacturingId()
-//    {
-//      return this.getIdFromDeveloperName('Manufacturing');
-//    }
-//
-//    public Id getPartnerSaleId()
-//    {
-//      return this.getIdFromDeveloperName('Partner_Sale');
-//    }
-//
-//    public Id getRetailSaleId()
-//    {
-//      return this.getIdFromDeveloperName('Retail_Sale');
-//    }
-//
-//    public Id getRetailServiceId()
-//    {
-//      return this.getIdFromDeveloperName('Retail_Service');
-//    }
-//
-//    public Id getWholesaleServiceId()
-//    {
-//      return this.getIdFromDeveloperName('Wholesale_Service');
-//    }
-//
-//  }
+  public virtual class WorkOrderRTs extends SObjectRecordType
+  {
+
+    public WorkOrderRTs()
+    {
+      super('WorkOrder');
+    }
+
+    public Id getManufacturingId()
+    {
+      return this.getIdFromDeveloperName('Manufacturing');
+    }
+
+    public Id getPartnerSaleId()
+    {
+      return this.getIdFromDeveloperName('Partner_Sale');
+    }
+
+    public Id getRetailSaleId()
+    {
+      return this.getIdFromDeveloperName('Retail_Sale');
+    }
+
+    public Id getRetailServiceId()
+    {
+      return this.getIdFromDeveloperName('Retail_Service');
+    }
+
+    public Id getWholesaleServiceId()
+    {
+      return this.getIdFromDeveloperName('Wholesale_Service');
+    }
+
+  }
 
   private void fetchAllRecordTypes()
   {
-    System.debug('fetching all rerordTypes');
     this.recordTypesBySobjectName = new Map<String, List<RecordType>>();
     this.developerNameById = new Map<Id, String>();
     List<RecordType> rts = [
