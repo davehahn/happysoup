@@ -2,7 +2,7 @@
  * Created by dave on 2021-07-09.
  */
 
-public inherited sharing class TA_PurchaseOrderLine_Legacy implements TriggerAction.BeforeInsert, TriggerAction.BeforeUpdate, TriggerAction.BeforeDelete, TriggerAction.AfterInsert, TriggerAction.AfterUpdate, TriggerAction.AfterDelete {
+public without sharing class TA_PurchaseOrderLine_Legacy implements TriggerAction.BeforeInsert, TriggerAction.BeforeUpdate, TriggerAction.BeforeDelete, TriggerAction.AfterInsert, TriggerAction.AfterUpdate, TriggerAction.AfterDelete {
   public void beforeInsert(List<AcctSeedERP__Purchase_Order_Line__c> newList) {
     if (!gcPurchaseOrderLine.disableTrigger) {
       gcPurchaseOrderLine.triggerHandler(null, null, newList, true, true, false, false);

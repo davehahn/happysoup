@@ -1,5 +1,5 @@
 
-public inherited sharing class TA_DealerOrder_SetSubmittedDate implements TriggerAction.BeforeInsert{
+public without sharing class TA_DealerOrder_SetSubmittedDate implements TriggerAction.BeforeInsert{
 
     public void beforeInsert( List<Dealer_Order__c> newList)
     {

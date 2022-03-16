@@ -2,7 +2,7 @@
  * Created by dave on 2022-01-11.
  */
 
-public inherited sharing class TA_CommRec2_setValuesFromProjectTask implements TriggerAction.BeforeInsert {
+public without sharing class TA_CommRec2_setValuesFromProjectTask implements TriggerAction.BeforeInsert {
   public void beforeInsert(List<CommissionRecord2__c> newList) {
     Map<Id, CommissionRecord2__c> taskIdMap = new Map<Id, CommissionRecord2__c>();
     for (CommissionRecord2__c cr : newList) {

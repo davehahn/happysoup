@@ -2,7 +2,7 @@
  * Created by Pooja on 2022-01-01.
  */
 
-public inherited sharing class TA_PurchaseOrderInventoryMovement_Legacy implements TriggerAction.BeforeInsert, TriggerAction.BeforeUpdate, TriggerAction.BeforeDelete, TriggerAction.AfterInsert, TriggerAction.AfterUpdate, TriggerAction.AfterDelete {
+public without sharing class TA_PurchaseOrderInventoryMovement_Legacy implements TriggerAction.BeforeInsert, TriggerAction.BeforeUpdate, TriggerAction.BeforeDelete, TriggerAction.AfterInsert, TriggerAction.AfterUpdate, TriggerAction.AfterDelete {
   public void beforeInsert(List<AcctSeedERP__Purchase_Order_Inventory_Movement__c> newList) {
     if (!gcPurchaseOrderInventoryMovement.disableTrigger) {
       gcPurchaseOrderInventoryMovement.triggerHandler(null, null, newList, true, true, false, false);

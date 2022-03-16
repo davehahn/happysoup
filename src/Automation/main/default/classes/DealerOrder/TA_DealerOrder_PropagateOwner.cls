@@ -1,5 +1,5 @@
 
-public inherited sharing class  TA_DealerOrder_PropagateOwner implements TriggerAction.AfterUpdate {
+public without sharing class  TA_DealerOrder_PropagateOwner implements TriggerAction.AfterUpdate {
 
     public void afterUpdate(List<Dealer_Order__c> newList, List<Dealer_Order__c> oldList) {
 

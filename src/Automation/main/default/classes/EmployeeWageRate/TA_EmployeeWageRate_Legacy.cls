@@ -2,7 +2,7 @@
  * Created by Pooja on 2022-01-01.
  */
 
-public inherited sharing class TA_EmployeeWageRate_Legacy implements TriggerAction.BeforeInsert, TriggerAction.BeforeUpdate, TriggerAction.BeforeDelete, TriggerAction.AfterInsert, TriggerAction.AfterUpdate, TriggerAction.AfterDelete {
+public without sharing class TA_EmployeeWageRate_Legacy implements TriggerAction.BeforeInsert, TriggerAction.BeforeUpdate, TriggerAction.BeforeDelete, TriggerAction.AfterInsert, TriggerAction.AfterUpdate, TriggerAction.AfterDelete {
   public void beforeInsert(List<Employee_Wage_Rate__c> newList) {
     if (!gcEmployeeWageRate.disableTrigger) {
       gcEmployeeWageRate.triggerHandler(null, null, newList, true, true, false, false);

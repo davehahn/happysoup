@@ -2,7 +2,7 @@
  * Created by dhavalmacbook on 19/01/22.
  */
 
-public inherited sharing class TA_DealerOrder_DeleteERPs implements TriggerAction.BeforeDelete{
+public without sharing class TA_DealerOrder_DeleteERPs implements TriggerAction.BeforeDelete{
 
     public void beforeDelete(List<Dealer_Order__c> oldList) {
 

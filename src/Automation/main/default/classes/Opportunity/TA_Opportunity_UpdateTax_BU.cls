@@ -2,7 +2,7 @@
  * Created by dhavalmacbook on 27/01/22.
  */
 
-public inherited sharing class TA_Opportunity_UpdateTax_BU implements TriggerAction.BeforeUpdate {
+public without sharing class TA_Opportunity_UpdateTax_BU implements TriggerAction.BeforeUpdate {
 
     public void beforeUpdate(List<Opportunity> newList, List<Opportunity> oldList) {
         Map<Id, Opportunity> oldMap = new Map<Id, Opportunity> (oldList);

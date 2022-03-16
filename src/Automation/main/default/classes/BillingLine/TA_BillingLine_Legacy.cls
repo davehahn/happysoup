@@ -2,7 +2,7 @@
  * Created by dave on 2021-12-22.
  */
 
-public inherited sharing class TA_BillingLine_Legacy implements TriggerAction.BeforeInsert, TriggerAction.BeforeUpdate, TriggerAction.BeforeDelete, TriggerAction.AfterInsert, TriggerAction.AfterUpdate, TriggerAction.AfterDelete {
+public without sharing class TA_BillingLine_Legacy implements TriggerAction.BeforeInsert, TriggerAction.BeforeUpdate, TriggerAction.BeforeDelete, TriggerAction.AfterInsert, TriggerAction.AfterUpdate, TriggerAction.AfterDelete {
   public void beforeInsert(List<AcctSeed__Billing_Line__c> newList) {
     if (!gcBillingLine.disableTrigger) {
       gcBillingLine.triggerHandler(null, null, newList, true, true, false, false);

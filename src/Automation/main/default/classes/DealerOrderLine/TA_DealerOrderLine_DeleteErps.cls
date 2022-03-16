@@ -1,5 +1,5 @@
 
-public inherited sharing class TA_DealerOrderLine_DeleteErps implements TriggerAction.AfterDelete{
+public without sharing class TA_DealerOrderLine_DeleteErps implements TriggerAction.AfterDelete{
 
     public void afterDelete(List<Dealer_Order_Line__c> oldList) {
         Set<Id> erpIds = new Set<Id>();

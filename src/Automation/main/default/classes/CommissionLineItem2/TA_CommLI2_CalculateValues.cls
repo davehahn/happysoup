@@ -2,7 +2,7 @@
  * Created by dave on 2022-01-14.
  */
 
-public inherited sharing class TA_CommLI2_CalculateValues implements TriggerAction.BeforeInsert, TriggerAction.BeforeUpdate {
+public without sharing class TA_CommLI2_CalculateValues implements TriggerAction.BeforeInsert, TriggerAction.BeforeUpdate {
   public void beforeInsert(List<CommissionLineItem2__c> newList) {
     doCalculation( newList );
   }

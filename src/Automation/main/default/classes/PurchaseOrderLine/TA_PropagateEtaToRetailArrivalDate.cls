@@ -2,7 +2,7 @@
  * Created by dave on 2021-07-27.
  */
 
-public inherited sharing class TA_PropagateEtaToRetailArrivalDate implements TriggerAction.AfterInsert, TriggerAction.AfterUpdate {
+public without sharing class TA_PropagateEtaToRetailArrivalDate implements TriggerAction.AfterInsert, TriggerAction.AfterUpdate {
   public void afterInsert(List<AcctSeedERP__Purchase_Order_Line__c> newList) {
     Set<Id> deliverDateSet = new Set<Id>();
     for (AcctSeedERP__Purchase_Order_Line__c pol : newList) {

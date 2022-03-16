@@ -2,7 +2,7 @@
  * Created by dhavalmacbook on 20/01/22.
  */
 
-public inherited sharing class TA_DealerOrderLine_HandlePartnerPro implements TriggerAction.AfterInsert, TriggerAction.AfterUpdate, TriggerAction.AfterDelete {
+public without sharing class TA_DealerOrderLine_HandlePartnerPro implements TriggerAction.AfterInsert, TriggerAction.AfterUpdate, TriggerAction.AfterDelete {
 
   public void afterInsert(List<Dealer_Order_Line__c> newList) {
     System.debug('RUNNING TA_DealerOrderLine_HandlePartnerPro.afterInsert');

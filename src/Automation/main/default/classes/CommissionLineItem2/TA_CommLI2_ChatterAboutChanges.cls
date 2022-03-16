@@ -2,7 +2,7 @@
  * Created by dave on 2022-01-18.
  */
 
-public inherited sharing class TA_CommLI2_ChatterAboutChanges implements TriggerAction.AfterInsert, TriggerAction.AfterUpdate, TriggerAction.AfterDelete {
+public without sharing class TA_CommLI2_ChatterAboutChanges implements TriggerAction.AfterInsert, TriggerAction.AfterUpdate, TriggerAction.AfterDelete {
   public void afterInsert(List<CommissionLineItem2__c> newList) {
     buildChangeMap(newList, null, 'insert');
   }

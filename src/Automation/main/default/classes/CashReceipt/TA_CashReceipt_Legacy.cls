@@ -2,7 +2,7 @@
  * Created by Pooja on 2022-01-01.
  */
 
-public inherited sharing class TA_CashReceipt_Legacy implements TriggerAction.BeforeInsert, TriggerAction.BeforeUpdate, TriggerAction.BeforeDelete, TriggerAction.AfterInsert, TriggerAction.AfterUpdate, TriggerAction.AfterDelete {
+public without sharing class TA_CashReceipt_Legacy implements TriggerAction.BeforeInsert, TriggerAction.BeforeUpdate, TriggerAction.BeforeDelete, TriggerAction.AfterInsert, TriggerAction.AfterUpdate, TriggerAction.AfterDelete {
   public void beforeInsert(List<AcctSeed__Cash_Receipt__c> newList) {
     if (!gcCashReceipt.disableTrigger) {
       gcCashReceipt.triggerHandler(null, null, newList, true, true, false, false);

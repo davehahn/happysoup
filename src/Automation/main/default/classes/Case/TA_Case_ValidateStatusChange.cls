@@ -2,7 +2,7 @@
  * Created by dave on 2022-01-04.
  */
 
-public inherited sharing class TA_Case_ValidateStatusChange implements TriggerAction.BeforeUpdate
+public without sharing class TA_Case_ValidateStatusChange implements TriggerAction.BeforeUpdate
 {
   public void beforeUpdate( List<Case> newList, List<Case> oldList ){
     Map<Id, Case> oldMap = new Map<Id, Case>( oldList );

@@ -2,7 +2,7 @@
  * Created by dave on 2022-01-05.
  */
 
-public inherited sharing class TA_Case_CommentOnWarrantyERP implements TriggerAction.AfterInsert
+public without sharing class TA_Case_CommentOnWarrantyERP implements TriggerAction.AfterInsert
 {
   public void afterInsert( List<Case> newList ){
     List<AcctSeed__Project__c> erps = new List<AcctSeed__Project__c>();

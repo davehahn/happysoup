@@ -2,7 +2,7 @@
  * Created by dave on 2022-01-13.
  */
 
-public inherited sharing class TA_CommRec2_StatusHandlerAfter implements TriggerAction.AfterUpdate
+public without sharing class TA_CommRec2_StatusHandlerAfter implements TriggerAction.AfterUpdate
 {
   public void afterUpdate( List<CommissionRecord2__c> newList, List<CommissionRecord2__c> oldList){
     Map<Id, CommissionRecord2__c> oldMap = new Map<Id, CommissionRecord2__c>( oldList );

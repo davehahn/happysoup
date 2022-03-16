@@ -1,5 +1,5 @@
 
-public inherited sharing class  TA_DealerOrder_SetERPStage implements TriggerAction.AfterUpdate {
+public without sharing class  TA_DealerOrder_SetERPStage implements TriggerAction.AfterUpdate {
 
 
 

@@ -1,5 +1,5 @@
 
-public inherited sharing class TA_DealerOrder_SetStageWiseSubmittedDate implements TriggerAction.BeforeUpdate{
+public without sharing class TA_DealerOrder_SetStageWiseSubmittedDate implements TriggerAction.BeforeUpdate{
 
 
 

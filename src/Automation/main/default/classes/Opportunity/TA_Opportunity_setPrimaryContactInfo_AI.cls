@@ -2,7 +2,7 @@
  * Created by dhavalmacbook on 27/01/22.
  */
 
-public inherited sharing class TA_Opportunity_setPrimaryContactInfo_AI implements TriggerAction.AfterInsert{
+public without sharing class TA_Opportunity_setPrimaryContactInfo_AI implements TriggerAction.AfterInsert{
 
     public void afterInsert(List<Opportunity> newList) {
         Map<Id, Opportunity> newMap = new Map<Id, Opportunity> (newList);

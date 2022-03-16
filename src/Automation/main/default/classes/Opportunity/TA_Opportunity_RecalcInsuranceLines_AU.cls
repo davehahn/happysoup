@@ -2,7 +2,7 @@
  * Created by dhavalmacbook on 27/01/22.
  */
 
-public inherited sharing class  TA_Opportunity_RecalcInsuranceLines_AU implements TriggerAction.AfterUpdate{
+public without sharing class  TA_Opportunity_RecalcInsuranceLines_AU implements TriggerAction.AfterUpdate{
 
     public void afterUpdate(List<Opportunity> newList, List<Opportunity> oldList) {
 
