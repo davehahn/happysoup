@@ -2,7 +2,7 @@
  * Created by dave on 2022-01-05.
  */
 
-public inherited sharing class TA_Case_CreatePartnerPartsOrder implements  TriggerAction.AfterUpdate
+public without sharing class TA_Case_CreatePartnerPartsOrder implements  TriggerAction.AfterUpdate
 {
 
   public void afterUpdate( List<Case> newList, List<Case> oldList ){

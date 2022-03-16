@@ -2,7 +2,7 @@
  * Created by dave on 2022-01-12.
  */
 
-public inherited sharing class TA_CommRec2_StatusHandlerBefore implements TriggerAction.BeforeUpdate
+public without sharing class TA_CommRec2_StatusHandlerBefore implements TriggerAction.BeforeUpdate
 {
   public void beforeUpdate( List<CommissionRecord2__c> newList, List<CommissionRecord2__c> oldList ){
     Map<Id, CommissionRecord2__c> oldMap = new Map<Id, CommissionRecord2__c>(oldList);

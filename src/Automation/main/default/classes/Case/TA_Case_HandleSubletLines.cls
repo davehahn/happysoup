@@ -2,7 +2,7 @@
  * Created by dave on 2022-01-05.
  */
 
-public inherited sharing class TA_Case_HandleSubletLines implements TriggerAction.AfterInsert, TriggerAction.AfterUpdate {
+public without sharing class TA_Case_HandleSubletLines implements TriggerAction.AfterInsert, TriggerAction.AfterUpdate {
   public void afterInsert(List<Case> newList) {
     handleSublet(newList, null);
   }

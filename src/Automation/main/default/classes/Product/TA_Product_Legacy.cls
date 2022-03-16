@@ -2,7 +2,7 @@
  * Created by Pooja on 2022-01-01.
  */
 
-public inherited sharing class TA_Product_Legacy implements TriggerAction.BeforeInsert, TriggerAction.BeforeUpdate, TriggerAction.BeforeDelete, TriggerAction.AfterInsert, TriggerAction.AfterUpdate, TriggerAction.AfterDelete {
+public without sharing class TA_Product_Legacy implements TriggerAction.BeforeInsert, TriggerAction.BeforeUpdate, TriggerAction.BeforeDelete, TriggerAction.AfterInsert, TriggerAction.AfterUpdate, TriggerAction.AfterDelete {
   public void beforeInsert(List<Product2> newList) {
     if (Test.isRunningTest()) {
       for (Product2 p : newList) {

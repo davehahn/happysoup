@@ -2,7 +2,7 @@
  * Created by dave on 2022-01-04.
  */
 
-public inherited sharing class TA_Case_PartnerWarrantyDefaults implements TriggerAction.BeforeInsert
+public without sharing class TA_Case_PartnerWarrantyDefaults implements TriggerAction.BeforeInsert
 {
   public void beforeInsert( List<Case> newList ){
     Id warrantyRtId = new Application_RecordType().getCaseRecordTypes().getWarrantyId();

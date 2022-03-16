@@ -2,7 +2,7 @@
  * Created by dave on 2022-01-07.
  */
 
-public inherited sharing class TA_Case_CloseLostERPOnDenied implements TriggerAction.AfterUpdate
+public without sharing class TA_Case_CloseLostERPOnDenied implements TriggerAction.AfterUpdate
 {
   public void afterUpdate( List<Case> newList, List<Case> oldList ){
     Map<Id, Case> oldMap = new Map<Id, Case>(oldList);

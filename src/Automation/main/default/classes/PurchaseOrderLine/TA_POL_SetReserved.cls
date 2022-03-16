@@ -2,7 +2,7 @@
  * Created by dave on 2021-07-27.
  */
 
-public inherited sharing class TA_POL_SetReserved implements TriggerAction.BeforeUpdate {
+public without sharing class TA_POL_SetReserved implements TriggerAction.BeforeUpdate {
   public void beforeUpdate(
     List<AcctSeedERP__Purchase_Order_Line__c> newList,
     List<AcctSeedERP__Purchase_Order_Line__c> oldList

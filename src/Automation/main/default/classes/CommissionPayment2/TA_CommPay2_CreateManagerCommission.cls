@@ -2,7 +2,7 @@
  * Created by dave on 2022-01-25.
  */
 
-public inherited sharing class TA_CommPay2_CreateManagerCommission implements TriggerAction.AfterInsert
+public without sharing class TA_CommPay2_CreateManagerCommission implements TriggerAction.AfterInsert
 {
   public void afterInsert( List<CommissionPayment2__c> newList){
     Set<Id> setIdCommPay = new Set<Id>();

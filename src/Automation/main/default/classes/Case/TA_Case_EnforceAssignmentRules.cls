@@ -2,7 +2,7 @@
  * Created by dave on 2022-01-06.
  */
 
-public inherited sharing class TA_Case_EnforceAssignmentRules implements TriggerAction.AfterInsert
+public without sharing class TA_Case_EnforceAssignmentRules implements TriggerAction.AfterInsert
 {
   public void afterInsert( List<Case> newList ){
     Map<Id, Case> newMap = new Map<Id, Case>(newList);

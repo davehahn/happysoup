@@ -2,7 +2,7 @@
  * Created by dave on 2022-01-26.
  */
 
-public inherited sharing class TA_JournalEntry_Legacy
+public without sharing class TA_JournalEntry_Legacy
   implements
       TriggerAction.BeforeInsert,
       TriggerAction.BeforeUpdate,

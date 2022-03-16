@@ -2,7 +2,7 @@
  * Created by dave on 2022-01-25.
  */
 
-public inherited sharing class TA_CommPay2_HandleStatusChange implements TriggerAction.AfterUpdate
+public without sharing class TA_CommPay2_HandleStatusChange implements TriggerAction.AfterUpdate
 {
   public void afterUpdate( List<CommissionPayment2__c> newList, List<CommissionPayment2__c> oldList ){
     Map<Id, CommissionPayment2__c> oldMap = new Map<Id, CommissionPayment2__c>( oldList );

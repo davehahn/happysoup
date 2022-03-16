@@ -2,7 +2,7 @@
  * Created by dave on 2022-01-03.
  */
 
-public inherited sharing class TA_CasePart_CreateMaterial implements TriggerAction.AfterInsert
+public without sharing class TA_CasePart_CreateMaterial implements TriggerAction.AfterInsert
 {
   public void afterInsert( List<Case_Part__c> newList ){
     Map<Id, List<Case_Part__c>> caseMap = new Map<Id, List<Case_Part__c>>();

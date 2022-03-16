@@ -2,7 +2,7 @@
  * Created by dave on 2022-01-12.
  */
 
-public inherited sharing class TA_CommRec2_setFactoryPB implements TriggerAction.BeforeInsert
+public without sharing class TA_CommRec2_setFactoryPB implements TriggerAction.BeforeInsert
 {
   public void beforeInsert( List<CommissionRecord2__c> newList){
     Map<Id, Id> retail2Factory_Map = Pricebook2_Service.getRetailToFactory_Map();
