@@ -38,15 +38,15 @@ mkdir ~/$CLONEDIR
 cd ~/$CLONEDIR
 git clone "${cmd}" .
 
-echo "Set sfdx-project.json for FSL"
+echoOut "Set sfdx-project.json for FSL"
 rm -f sfdx-project.json
 mv sfdx-project.json.fsl sfdx-project.json
 
-echo "Setting up .forceignore for FSL"
+echoOut "Setting up .forceignore for FSL"
 rm -f .forceignore
 cp .forceignore.fsl .forceignore
 
 chmod +x scripts/deploy.sh
 ./scripts/deploy.sh $SFDX_ALIAS $TESTLEVEL
-echoOut 'Ceaning up'
+echoOut 'Cleaning up'
 cd .. && rm -fR $CLONEDIR
