@@ -2,7 +2,7 @@
  * Created by dave on 2020-01-29.
  */
 
-public with sharing class Pricebook2_Service
+public inherited sharing class Pricebook2_Service
 {
 
   public static Map<Id, Id> getRetailToFactory_Map()

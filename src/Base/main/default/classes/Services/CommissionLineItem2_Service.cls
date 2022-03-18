@@ -2,7 +2,7 @@
  * Created by dave on 2020-01-28.
  */
 
-public with sharing class CommissionLineItem2_Service
+public inherited sharing class CommissionLineItem2_Service
 {
   public static Decimal grossMarginRate = 0.10;
   public static Decimal insuranceRate = 0.30;

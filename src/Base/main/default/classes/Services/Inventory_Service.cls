@@ -1,7 +1,7 @@
 /**
  * Created by rubel on 2019-08-19.
  */
-public with sharing class Inventory_Service {
+public inherited sharing class Inventory_Service {
 
     public static void createPI_FSL( List<AcctSeedMovementWrapper_FSL> pListMovements, String movementType ) {
         if( Test.isRunningTest() )

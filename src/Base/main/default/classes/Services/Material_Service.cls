@@ -2,7 +2,7 @@
  * Created by dave on 2019-08-22.
  */
 
-public with sharing class Material_Service {
+public inherited sharing class Material_Service {
   public static AcctSeedERP__Material__c buildFromOpportunityLineItem(OpportunityLineItem oli, Id erpId, Id taskId) {
     return new AcctSeedERP__Material__c(
       AcctSeedERP__Product__c = oli.Product2Id,

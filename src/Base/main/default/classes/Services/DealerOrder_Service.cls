@@ -2,7 +2,7 @@
  * Created by Pooja on 20/01/22.
  */
 
-public with sharing class DealerOrder_Service {
+public inherited sharing class DealerOrder_Service {
 
     public static void setErpStage( Map<Id, Dealer_Order__c> newMap )
     {

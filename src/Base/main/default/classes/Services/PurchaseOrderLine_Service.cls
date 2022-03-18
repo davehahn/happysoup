@@ -2,7 +2,7 @@
  * Created by dave on 2021-03-09.
  */
 
-public with sharing class PurchaseOrderLine_Service
+public inherited sharing class PurchaseOrderLine_Service
 {
 
 

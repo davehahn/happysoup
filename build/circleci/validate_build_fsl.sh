@@ -7,14 +7,14 @@ USER="$(cat /workspace/org_info.json | jq -r '.username')"
 echo "$USER"
 sfdx sfpowerkit:auth:login -u $USER --password $PRODUCTION_PASSWORD -a ci-testValid
 
-echo "Set sfdx-project.json for production"
+echo "Set sfdx-project.json for FSL"
 rm -f sfdx-project.json
 mv sfdx-project.json.fsl sfdx-project.json
 
 echo "Deploying Static Resources"
 sfdx heber:staticresources:deploy -u ci-testValid
 
-echo "Setting up .forceignore for Prod"
+echo "Setting up .forceignore for FSL"
 rm -f .forceignore
 cp .forceignore.fsl .forceignore
 

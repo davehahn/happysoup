@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionCalls>
+        <name>Notify_Admins</name>
+        <label>Notify Admins</label>
+        <locationX>176</locationX>
+        <locationY>335</locationY>
+        <actionName>emailSimple</actionName>
+        <actionType>emailSimple</actionType>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>emailBody</name>
+            <value>
+                <elementReference>htmlEmailBody</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailAddresses</name>
+            <value>
+                <elementReference>DevelopersEmailAddress</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>sendRichBody</name>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailSubject</name>
+            <value>
+                <elementReference>emailSubject</elementReference>
+            </value>
+        </inputParameters>
+    </actionCalls>
+    <apiVersion>52.0</apiVersion>
+    <constants>
+        <name>emailSubject</name>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>A Queueable Exception has Occurred</stringValue>
+        </value>
+    </constants>
+    <description>Sends an Email notification to a System Admin when a new Queueable Exception Log is created</description>
+    <formulas>
+        <name>RecordId</name>
+        <dataType>String</dataType>
+        <expression>{!$Record.Id}</expression>
+    </formulas>
+    <formulas>
+        <name>recordURL</name>
+        <dataType>String</dataType>
+        <expression>{!LEFT($Api.Enterprise_Server_URL_520, FIND( &apos;/services&apos;, $Api.Enterprise_Server_URL_520))}&amp;{!$Record.Id}</expression>
+    </formulas>
+    <interviewLabel>Queueable Exception Log - Send Notification {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Queueable Exception Log - Send Notification</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <start>
+        <locationX>50</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Notify_Admins</targetReference>
+        </connector>
+        <object>Queueable_Exception_Log__c</object>
+        <recordTriggerType>Create</recordTriggerType>
+        <triggerType>RecordAfterSave</triggerType>
+    </start>
+    <status>Active</status>
+    <textTemplates>
+        <name>htmlEmailBody</name>
+        <isViewedAsPlainText>false</isViewedAsPlainText>
+        <text>&lt;p&gt;&lt;span style=&quot;color: rgb(0, 0, 0);&quot;&gt;Unfortunately, a {!$Record.Type__c} has occured in a Queueable action.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;&lt;b style=&quot;color: rgb(0, 0, 0); font-size: 14px;&quot;&gt;&lt;u&gt;Module Name: &lt;/u&gt;&lt;/b&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot;color: rgb(42, 105, 255);&quot;&gt;{!$Record.Module_Name__c}&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;b style=&quot;color: rgb(0, 0, 0); font-size: 14px;&quot;&gt;&lt;u&gt;Class.Method:&lt;/u&gt;&lt;/b&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot;color: rgb(42, 105, 255);&quot;&gt;{!$Record.Class_Name__c}.{!$Record.Method_Name__c} on Line {!$Record.Line_Number__c}&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;b style=&quot;color: rgb(0, 0, 0); font-size: 14px;&quot;&gt;&lt;u&gt;Message:&lt;/u&gt;&lt;/b&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot;color: rgb(42, 105, 255); font-size: 12px;&quot;&gt;{!$Record.Message__c}&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;b style=&quot;color: rgb(0, 0, 0); font-size: 14px;&quot;&gt;&lt;u&gt;Stack Trace:&lt;/u&gt;&lt;/b&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot;color: rgb(42, 105, 255); font-size: 12px;&quot;&gt;{!$Record.Stack_Trace__c}&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot;color: rgb(0, 0, 0); font-size: 12px;&quot;&gt;Please check into this error ASAP. &lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot;background-color: rgb(255, 255, 255); color: rgb(62, 62, 60);&quot;&gt;{!recordURL}&lt;/span&gt;&lt;/p&gt;</text>
+    </textTemplates>
+    <variables>
+        <name>DevelopersEmailAddress</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>true</isOutput>
+        <value>
+            <stringValue>devs@legendboats.com</stringValue>
+        </value>
+    </variables>
+</Flow>

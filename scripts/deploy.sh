@@ -35,39 +35,23 @@ then
   DEPLOY_EXPERIENCES=true
 fi
 
-echoOut 'Removing stupid Case Language field'
-rm -f src/main/default/objects/Case/fields/Language.field-meta.xml
-echoOut 'Removing Lead list views'
-rm -fR src/main/default/objects/Lead/listViews
-echoOut 'Removing Opportunity list views'
-rm -fR src/main/default/objects/Opportunity/listViews
-echoOut 'Removing Lead IqScore field'
-rm -f src/main/default/objects/Lead/fields/IqScore.field-meta.xml
-echoOut 'Removing Opportunity IqScore field'
-rm -f src/main/default/objects/Opportunity/fields/IqScore.field-meta.xml
-echoOut 'Removing troublesome LiveChatTranscript layouts'
-rm -f src/main/default/layouts/LiveChatTranscriptActive-Live\ Chat\ Transcript\ %28In\ Progress%29\ Layout.layout-meta.xml
-rm -f src/main/default/layouts/LiveChatTranscriptWaiting-Live\ Chat\ Transcript\ %28Waiting%29\ Layout.layout-meta.xml
-echoOut 'Removing Accounting Home1 tab'
-rm -f src/main/default/tabs/AcctSeed__Accounting_Home1.tab-meta.xml
-echoOut 'removing mcdm_15__ weblinks from Account'
-rm -f src/main/default/objects/Account/webLinks/mcdm_15__*
-echoOut 'removing mcdm_15__ weblinks from Lead'
-rm -f src/main/default/objects/Lead/webLinks/mcdm_15__*
-echoOut 'removing mcdm_15__ weblinks from Contact'
-rm -f src/main/default/objects/Contact/webLinks/mcdm_15__*
-echoOut 'Running ant doMetadataClean'
-ant -buildfile build/build.xml doMetadataClean
+echoOut "Cleaning up undeployable/unwanted code...."
+chmod +x scripts/clean_code.sh
+./scripts/clean_code.sh
+
 echoOut 'Deploying static resources'
 sfdx heber:staticresources:deploy -u $1
+
 echoOut 'make a copy of .forceignore'
 cp .forceignore .forceignore.orig
+
 echoOut 'modifying .forceignore to not deploy staticresources or experiences'
 echo -e "\nsrc/Base/main/default/staticresources" >> .forceignore
 echo -e "\nsrc/BoatReservation/experiences" >> .forceignore
 echo -e "\nsrc/CustomerCommunity/experiences" >> .forceignore
 echo -e "\nsrc/FactoryStoreSites/experiences" >> .forceignore
-echo 'Deploying the remaining metadata'
+
+echoOut 'Deploying the remaining metadata'
 
 if [ "$CHECKONLY" = true ]
 then

@@ -19,8 +19,8 @@ public without sharing class TA_CommLI2_CalculateValues implements TriggerAction
     for (CommissionLineItem2__c cli : newList) {
       if (cli.Product__c != null) {
         rateCalculator.calculate(cli);
-        calculateValues(cli);
       }
+      calculateValues(cli);
     }
   }
 

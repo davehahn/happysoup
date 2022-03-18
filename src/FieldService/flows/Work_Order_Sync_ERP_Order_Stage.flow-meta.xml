@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>51.0</apiVersion>
+    <assignments>
+        <name>Assign_ERP_Stage</name>
+        <label>Assign ERP Stage</label>
+        <locationX>506</locationX>
+        <locationY>551</locationY>
+        <assignmentItems>
+            <assignToReference>ERP_Stage</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>$Record.Status</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Update_ERP_Order</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>Assign_ERP_Stage_0</name>
+        <label>Assign ERP Stage</label>
+        <locationX>242</locationX>
+        <locationY>551</locationY>
+        <assignmentItems>
+            <assignToReference>ERP_Stage</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <stringValue>Completed</stringValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Update_ERP_Order</targetReference>
+        </connector>
+    </assignments>
+    <decisions>
+        <name>Evaluate_Status_Change</name>
+        <label>Evaluate Status Change</label>
+        <locationX>176</locationX>
+        <locationY>311</locationY>
+        <defaultConnector>
+            <targetReference>Validate_Status</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>New Status</defaultConnectorLabel>
+        <rules>
+            <name>Existing_Status</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Status</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <elementReference>$Record__Prior.Status</elementReference>
+                </rightValue>
+            </conditions>
+            <label>Existing Status</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Validate_Status</name>
+        <label>Validate Status</label>
+        <locationX>374</locationX>
+        <locationY>431</locationY>
+        <defaultConnector>
+            <targetReference>Assign_ERP_Stage</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Valid</defaultConnectorLabel>
+        <rules>
+            <name>Cannot_Complete</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Status</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Cannot Complete</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Assign_ERP_Stage_0</targetReference>
+            </connector>
+            <label>Cannot Complete</label>
+        </rules>
+    </decisions>
+    <description>Syncs the ERP Order stage whenever the Work Order status is modified.</description>
+    <interviewLabel>Work Order: Sync ERP Order Stage {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Work Order: Sync ERP Order Stage</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordUpdates>
+        <name>Update_ERP_Order</name>
+        <label>Update ERP Order</label>
+        <locationX>374</locationX>
+        <locationY>767</locationY>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.ERP_Order__c</elementReference>
+            </value>
+        </filters>
+        <inputAssignments>
+            <field>Stage__c</field>
+            <value>
+                <elementReference>ERP_Stage</elementReference>
+            </value>
+        </inputAssignments>
+        <object>AcctSeed__Project__c</object>
+    </recordUpdates>
+    <start>
+        <locationX>50</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Evaluate_Status_Change</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>ERP_Order__c</field>
+            <operator>IsNull</operator>
+            <value>
+                <booleanValue>false</booleanValue>
+            </value>
+        </filters>
+        <object>WorkOrder</object>
+        <recordTriggerType>CreateAndUpdate</recordTriggerType>
+        <triggerType>RecordAfterSave</triggerType>
+    </start>
+    <status>Obsolete</status>
+    <variables>
+        <name>ERP_Stage</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+</Flow>

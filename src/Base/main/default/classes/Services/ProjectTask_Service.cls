@@ -2,7 +2,7 @@
  * Created by dave on 2019-11-14.
  */
 
-public with sharing class ProjectTask_Service {
+public inherited sharing class ProjectTask_Service {
 
   public static String warrantyPayableTaskName = 'Warranty Payable';
   public static String warrantyRecoverableTaskName = 'Warranty Recoverable';

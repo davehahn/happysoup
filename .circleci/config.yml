@@ -71,7 +71,7 @@ jobs:
             . build/circleci/validate_build_fsl.sh
       - run:
           name: Create Pull Request
-          command: . build/circleci/create_pull_request.sh FSL/staging
+          command: . build/circleci/create_pull_request.sh stagingFSL
           when: on_success
   stage:
     docker:
