@@ -2,7 +2,7 @@
  * Created by aminrubel on 7/5/20.
  */
 
-public with sharing class JournalEntry_Service {
+public inherited sharing class JournalEntry_Service {
     /// Create JE for Task from ERP
     @future
     public static void takeExpenseFuture(Set<Id> setIdFilter) {

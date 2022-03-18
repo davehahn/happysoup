@@ -2,7 +2,7 @@
  * Created by dave on 2020-02-18.
  */
 
-public with sharing class CommissionPayment2_Service
+public inherited sharing class CommissionPayment2_Service
 {
   public static Decimal defaultGrossMarginPaymentPercent = 10;
   public static Decimal defaultGrossMarginPaymentPercentManager = 0;

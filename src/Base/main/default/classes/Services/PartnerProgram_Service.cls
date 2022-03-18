@@ -2,7 +2,7 @@
  * Created by dave on 2020-07-24.
  */
 
-public with sharing class PartnerProgram_Service
+public inherited sharing class PartnerProgram_Service
 {
   public Set<Id> dealerOrderIds;
   public Map<Id, Dealer_Order__c> dealerOrderMap;

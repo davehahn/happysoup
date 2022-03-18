@@ -2,7 +2,7 @@
  * Created by dave on 2020-01-30.
  */
 
-public with sharing class CommissionRecord2_Service {
+public inherited sharing class CommissionRecord2_Service {
   public List<AcctSeed__Project_Task__c> tasks;
   public List<AcctSeed__Project_Task__c> tasksToRemove;
   public List<CommissionRecord2__c> commissionRecords;
