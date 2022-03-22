@@ -1,4 +1,4 @@
-public with sharing class JournalEntry_dh {
+public inherited sharing class JournalEntry_dh {
 
 	public static Boolean disableTrigger{
     get{
