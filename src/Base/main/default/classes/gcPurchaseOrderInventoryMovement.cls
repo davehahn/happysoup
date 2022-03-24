@@ -183,10 +183,15 @@ global without sharing class gcPurchaseOrderInventoryMovement {
 				if(move.GMBLASERP__Serial_Number__c != null)
 					setIdSerial.add(move.GMBLASERP__Serial_Number__c);
 			}
-
-			if(!setIdSerial.isEmpty())
-				delete [SELECT Id FROM GMBLASERP__Serial_Number__c WHERE Id IN:setIdSerial];
+			// If this is not in a future context. Normally Purchase Order lines are deleted right away from our UI
+			if(!setIdSerial.isEmpty() && !System.isFuture())
+				removeSerial(setIdSerial);
 		}
+	}
+
+	@Future
+	public static void removeSerial(Set<Id> setIdSerials){
+		delete [SELECT Id FROM GMBLASERP__Serial_Number__c WHERE Id IN:setIdSerials];
 	}
 
 	public static void coverage(){
