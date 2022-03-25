@@ -10,7 +10,7 @@
                                      $Resource.Libraries +'/js/LightningUtils.js') }"
                 afterScriptsLoaded="{!c.doInit}" />
 
-  <aura:attribute name="acceptedImageTypes" type="List" default="['.jpg', '.jpeg', '.png']"/>
+  <aura:attribute name="acceptedImageTypes" type="List" default="['.jpg', '.jpeg', '.png', '.pdf', 'csv', .'xlsx', '.ods']"/>
   <aura:attribute name="recordId" type="String" />
   <aura:attribute name="issue" type="System_Issue__c" default="{'sobjectType':'System_Issue__c'}" />
   <aura:attribute name="loaded" type="Boolean" default="false" />
