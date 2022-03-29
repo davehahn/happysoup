@@ -82,4 +82,16 @@ public class Factory_Case {
     return result;
   }
 
+  public static Case insertCustomerCommunityCase(){
+    Case c = new Case(
+      SuppliedEmail = 'test@unittesting.net',
+      Status = 'New',
+      Subject = 'Unit Test',
+      Description = 'Created in a Unit Test',
+      RecordTypeId = new Application_RecordType().getCaseRecordTypes().getCustomerCommunityId()
+    );
+    insert c;
+    return c;
+  }
+
 }
