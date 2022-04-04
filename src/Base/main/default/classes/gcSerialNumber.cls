@@ -418,6 +418,7 @@ public without sharing class gcSerialNumber {
         Dealer_Rigged__c,
         Usage__c,
         Nest__c,
+        Status__c,
         GMBLASERP__Product__r.RecordType.Name,
         GMBLASERP__Product__r.Can_be_Nest__c,
         GMBLASERP__Product__r.Can_be_Nested__c,
@@ -617,6 +618,16 @@ public without sharing class gcSerialNumber {
       } else if (sn.Location__c == 'Out') {
         if (sn.Usage__c != null) {
           sn.Usage__c = null;
+          addInUpdate = true;
+        }
+      }
+      if(sn.Status__c == 'Return to Supplier'){
+        if(sn.Available_Retail__c) {
+          sn.Available_Retail__c = false;
+          addInUpdate = true;
+        }
+        if(sn.Available_Wholesale__c) {
+          sn.Available_Wholesale__c = false;
           addInUpdate = true;
         }
       }
