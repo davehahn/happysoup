@@ -2,7 +2,7 @@
  * Created by aminrubel on 2019-08-20.
  */
 
-public with sharing class ProductItemInventoryBalance {
+public inherited sharing class ProductItemInventoryBalance {
     @RemoteAction
     public static String findOrCreatePIBalances(map<Id,map<Id,Id>> mapPWB)
     {

@@ -2,7 +2,7 @@
  * Created by dhavalmacbook on 27/01/22.
  */
 
-public  class Opportunity_Service {
+public inherited sharing class Opportunity_Service {
     public static Map<String, LGND_Utilities.ProvincialTax> provincialTaxInfo;
     public static Decimal fedTaxRate;
     public static Map<Id, LGND_Utilities.ProvincialTax> provincialTaxMapById;

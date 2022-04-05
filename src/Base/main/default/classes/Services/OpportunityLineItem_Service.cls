@@ -2,7 +2,7 @@
  * Created by dhavalmacbook on 27/01/22.
  */
 
-public with sharing class OpportunityLineItem_Service {
+public inherited sharing class OpportunityLineItem_Service {
 
     public static void putInsuranceRateValueOnLineItem(List<OpportunityLineItem> listNew )
     {
