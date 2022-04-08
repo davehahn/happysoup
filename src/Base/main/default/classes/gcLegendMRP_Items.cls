@@ -107,7 +107,8 @@ global without sharing class gcLegendMRP_Items {
 				listPT.add(new AcctSeed__Project_Task__c(
 					AcctSeed__Project__c = p.Id,
 					Name = 'Modification',
-					Product__c = p.AcctSeedERP__Manufactured_Product__c
+					Product__c = p.AcctSeedERP__Manufactured_Product__c,
+					Locked__c = true
 				));
 			}
 			if(!includePreRig){
@@ -115,8 +116,12 @@ global without sharing class gcLegendMRP_Items {
 				gcProjectTask.disableUpdateMaterialSpec = true;
 				insert listPT;
 				gcProjectTask.disableUpdateMaterialSpec = boolOld;
-			}else
+			}else {
+				Boolean currentStatus = gcMaterial.disableTaskLockCheck;
+				gcMaterial.disableTaskLockCheck = true;
 				insert listPT;
+				gcMaterial.disableTaskLockCheck = currentStatus;
+			}
 		}
 
 		return '';
