@@ -37,12 +37,15 @@ public with sharing class gcPurchaseOrder_Actions {
 	public pageReference checkBoatsAvailableFromPO()
 	{
 		Boolean hasBoats = false;
+		Application_RecordType appRT = new Application_RecordType();
+		Application_RecordType.ProductRTs productRts = appRT.getProductRecordTypes();
+		Set<Id> setIdRT = new Set<Id>{productRts.getBoatId(),productRts.getTrailerId(),productRts.getTrollingMotorId()};
 		for(GMBLASERP__Serial_Number__c x :
 			[SELECT Id, (SELECT Id FROM Projects__r WHERE AcctSeedERP__Manufactured_Product__c != null LIMIT 1) 
 			 FROM GMBLASERP__Serial_Number__c
 			 WHERE Id IN (SELECT GMBLASERP__Serial_Number__c FROM AcctSeedERP__Purchase_Order_Inventory_Movement__c WHERE AcctSeedERP__Purchase_Order_Line__r.AcctSeedERP__Purchase_Order__c =:idFilter) 
 			   AND GMBLASERP__Inventory_Balance__c != null
-			   AND GMBLASERP__Product__c IN (SELECT Id FROM Product2 WHERE (RecordType.Name = 'Boat' OR RecordType.Name = 'Trailer'))])
+			   AND GMBLASERP__Product__c IN (SELECT Id FROM Product2 WHERE RecordTypeId IN:setIdRT)])
 		{
 			if(x.Projects__r.size() == 0)
 			{

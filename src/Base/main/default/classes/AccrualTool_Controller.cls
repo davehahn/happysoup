@@ -535,7 +535,7 @@ public class AccrualTool_Controller {
                 je.AcctSeed__GL_Account__c = wrap.GLAccountId;
                 /// SFISSUES - 1309
                 //if(je.AcctSeed__GL_Account__c == gcConstants.idGlAccruedRevenue){
-                    je.AcctSeed__Product__c = wrap.ProductId;
+                    je.Accrual_Product__c = wrap.ProductId;
                 //}
 
                 if(wrap.Credit!=null && wrap.Credit!=0.0) {
