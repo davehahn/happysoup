@@ -270,12 +270,79 @@ public inherited sharing class Project_Service {
     );
   }
 
+  public static void createFlexibleAccessoryCreditProjects(Set<Id> retailIds) {
+    List<AcctSeedERP__Material__c> origMats = Material_Selector.allFlexibleAccessoryCreditLinesByProjectIds(retailIds);
+    Map<Id, AcctSeed__Project__c> newProjectByOriginalProjectId = new Map<Id, AcctSeed__Project__c>();
+    Map<Id, AcctSeed__Project_Task__c> taskByProjectId = new Map<Id, AcctSeed__Project_Task__c>();
+    List<AcctSeedERP__Material__c> newMats = new List<AcctSeedERP__Material__c>();
+
+    //Create the Projects
+    for (AcctSeedERP__Material__c mat : origMats) {
+      Id boatSpecialist = mat.AcctSeedERP__Project__r.Boat_Specialist__c == null
+        ? mat.AcctSeedERP__Project__r.Salesperson__c
+        : mat.AcctSeedERP__Project__r.Boat_Specialist__c;
+      newProjectByOriginalProjectId.put(
+        mat.AcctSeedERP__Project__c,
+        new AcctSeed__Project__c(
+          RecordTypeId = recordTypes.getServiceWorkOrderId(),
+          Name = mat.AcctSeedERP__Project__r.AcctSeed__Account__r.Name + '-FAC',
+          Salesperson__c = boatSpecialist,
+          OwnerId = boatSpecialist,
+          AcctSeed__Account__c = mat.AcctSeedERP__Project__r.AcctSeed__Account__c,
+          Serial_Number__c = mat.AcctSeedERP__Project__r.Serial_Number__c,
+          Stage__c = 'Pending Diagnostic',
+          GMBLASERP__Warehouse__c = mat.AcctSeedERP__Project__r.GMBLASERP__Warehouse__c,
+          GL_Account_Variable_1__c = mat.AcctSeedERP__Project__r.GL_Account_Variable_1__c,
+          GL_Account_Variable_2__c = mat.AcctSeedERP__Project__r.GL_Account_Variable_2__c,
+          GL_Account_Variable_3__c = mat.AcctSeedERP__Project__r.GL_Account_Variable_3__c,
+          Survey_Flag__c = false
+        )
+      );
+    }
+    insert newProjectByOriginalProjectId.values();
+
+    //Create the tasks
+    for (AcctSeedERP__Material__c mat : origMats) {
+      taskByProjectId.put(
+        newProjectByOriginalProjectId.get(mat.AcctSeedERP__Project__c).Id,
+        ProjectTask_Service.buildFlexibleAccessoryCreditTask(
+          newProjectByOriginalProjectId.get(mat.AcctSeedERP__Project__c),
+          mat.AcctSeedERP__Project__r.AcctSeedERP__Work_Order_Number__c
+        )
+      );
+    }
+    insert taskByProjectId.values();
+
+    //Create Materials
+    for (AcctSeedERP__Material__c mat : origMats) {
+      Id newProjectId = newProjectByOriginalProjectId.get(mat.AcctSeedERP__Project__c).Id;
+      newMats.add(
+        new AcctSeedERP__Material__c(
+          AcctSeedERP__Project__c = newProjectId,
+          AcctSeedERP__Project_Task__c = taskByProjectId.get(newProjectId).Id,
+          AcctSeedERP__Product__c = mat.AcctSeedERP__Product__c,
+          AcctSeedERP__Quantity_Per_Unit__c = mat.AcctSeedERP__Quantity_Per_Unit__c,
+          GMBLASERP__Price_Override__c = mat.GMBLASERP__Price_Override__c,
+          GMBLASERP__Unit_Price__c = mat.GMBLASERP__Unit_Price__c
+        )
+      );
+    }
+    insert newMats;
+
+    //Lock the tasks
+    for (AcctSeed__Project_Task__c task : taskByProjectId.values()) {
+      task.Locked__c = true;
+    }
+    update taskByProjectId.values();
+  }
+
   /**
       ____  ____  _____     ___  _____ _____
      |  _ \|  _ \|_ _\ \   / / \|_   _| ____|
      | |_) | |_) || | \ \ / / _ \ | | |  _|
      |  __/|  _ < | |  \ V / ___ \| | | |___
      |_|   |_| \_\___|  \_/_/   \_\_| |_____|
+
   **/
 
   private static Map<Id, Account> buildAccountMap(List<Case> cases) {
