@@ -50,10 +50,6 @@ jobs:
           command: |
             . build/circleci/cleancode.sh
             . build/circleci/validate_build.sh
-      - run:
-          name: Create Pull Request
-          command: . build/circleci/create_pull_request.sh staging
-          when: on_success
   validate-build-fsl:
     docker:
       - image: legendarydevs/sfdx_deploy
@@ -69,10 +65,6 @@ jobs:
           command: |
             . build/circleci/cleancode.sh
             . build/circleci/validate_build_fsl.sh
-      - run:
-          name: Create Pull Request
-          command: . build/circleci/create_pull_request.sh stagingFSL
-          when: on_success
   stage:
     docker:
       - image: legendarydevs/sfdx_deploy
