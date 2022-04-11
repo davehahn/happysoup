@@ -150,6 +150,8 @@ public with sharing class gcJournalEntry_Override {
 					AcctSeed__Journal_Entry__r.AcctSeed__Accounting_Period__r.AcctSeed__Status__c,					
 					AcctSeed__Product__c,
 					AcctSeed__Product__r.Name,					
+					Accrual_Product__c,
+					Accrual_Product__r.Name,
 					AcctSeed__Project__c,
 					AcctSeed__Project__r.Name,					
 					AcctSeed__Project_Task__c,
@@ -181,6 +183,10 @@ public with sharing class gcJournalEntry_Override {
 			m.put('lineName', jel.Name);
 			m.put('idProduct', jel.AcctSeed__Product__c);
 			m.put('productName', jel.AcctSeed__Product__r.Name);
+			if(jel.Accrual_Product__c != null) {
+				m.put('idProduct', jel.AcctSeed__Product__c);
+				m.put('productName', jel.Accrual_Product__r.Name);
+			}
 			m.put('idProject', jel.AcctSeed__Project__c);
 			m.put('projectName', jel.AcctSeed__Project__r.Name);
 			m.put('idTask', jel.AcctSeed__Project_Task__c);

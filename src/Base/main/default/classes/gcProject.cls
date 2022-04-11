@@ -1350,8 +1350,9 @@ public without sharing class gcProject {
     {
       mapProjectFinishedMoves.put((Id)move.get('idProject'), (Decimal)move.get('fgQty'));
     }
-    /// COGS Entries
+    /// COGS Entries 
     Map<Id,Map<Id,Map<Id,Decimal>>> mapPTPQty = new Map<Id,Map<Id,Map<Id,Decimal>>>();
+    String accrualText = '%Accrual Entry%';
     for(AcctSeed__Journal_Entry_Line__c cogsJE :
     [SELECT AcctSeed__Project__c,
       AcctSeed__Project_Task__c,
@@ -1360,6 +1361,7 @@ public without sharing class gcProject {
     FROM AcctSeed__Journal_Entry_Line__c
     WHERE Internal_Wholesale_Cost__c = false
     AND AcctSeed__Project__c IN:mapProjectFinishedMoves.keySet()
+    AND (NOT AcctSeed__Journal_Entry__r.Name like:accrualText)
     AND AcctSeed__GL_Account__c IN:setIdGlCogsParts])
     {
       if(!mapPTPQty.containsKey(cogsJE.AcctSeed__Project__c))
@@ -1443,7 +1445,8 @@ public without sharing class gcProject {
         noCogsQty = 0;//cube.allQtySpecified - cube.cogsQty;
         cube.noCogsQty = 0;//cube.allQtySpecified - cube.cogsQty;
       }
-
+      System.debug('cube');
+      System.debug(JSON.serialize(cube));
       if(proj.RecordTypeId == gcConstants.idRtProjectManufacturing && (cube.qtyUnWIP != 0 || fgQty == 0)){
         throw new gcException(proj.Name + ' has unfinished tasks. Please move all inventory items to WIP and create Finished Goods before making the project completed.');
       }else if(proj.RecordTypeId == gcConstants.idRtTradeIn && cube.qtyUnWIP != 0){

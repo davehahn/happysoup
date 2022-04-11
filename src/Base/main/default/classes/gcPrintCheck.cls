@@ -9,8 +9,8 @@ global without sharing class gcPrintCheck{
 	global void init()
 	{
 		listCDWraps = new List<cdWrap>();
+		Map<Id,cdWrap> mapListCDW = new Map<Id,cdWrap>();
  		Id idFilter = ApexPages.currentPage().getParameters().get('idFilter');
-		cdWrap cdw;
 		for(AcctSeed__Cash_Disbursement__c cashDisb :	
 				[SELECT Id, 
 					Name,
@@ -39,7 +39,7 @@ global without sharing class gcPrintCheck{
 			 		OR AcctSeed__Cash_Disbursement_Batch__c =:idFilter
 			 	ORDER BY AcctSeed__Check_Number__c])
 		{
-			cdw = new cdWrap(cashDisb);
+			cdWrap cdw = new cdWrap(cashDisb);
 			//Decimal totalAP = 0;
 //			if(!cashDisb.AcctSeed__Account_Payable_Cash_Disbursements__r.isEmpty())
 //			{
@@ -75,8 +75,8 @@ global without sharing class gcPrintCheck{
 			cashDisbMap.put('payeeCountry', cashDisb.AcctSeed__Payee_Country__c == null ? '' : cashDisb.AcctSeed__Payee_Country__c);
 			
 			cdw.cashDisbMap = cashDisbMap;
-
-			listCDWraps.add(cdw);
+			mapListCDW.put(cashDisb.Id,cdw);
+			//listCDWraps.add(cdw);
 		}
 		Integer i = 0;
 		for(AcctSeed__AP_Disbursement__c ap : [SELECT Id,
@@ -87,12 +87,14 @@ global without sharing class gcPrintCheck{
 				AcctSeed__Net_Amount__c,
 				AcctSeed__Paid_Amount__c,
 				AcctSeed__Payable_Amount__c,
-				AcctSeed__Payee_Reference__c
+				AcctSeed__Payee_Reference__c,
+				AcctSeed__Cash_Disbursement__c
 		FROM AcctSeed__AP_Disbursement__c
 		WHERE (AcctSeed__Cash_Disbursement__c =:idFilter OR AcctSeed__Cash_Disbursement__r.AcctSeed__Cash_Disbursement_Batch__c =:idFilter)
 		ORDER BY AcctSeed__Account_Payable__r.AcctSeed__Date__c,
 				AcctSeed__Account_Payable__r.Name])
 		{
+			cdWrap cdw = mapListCDW.get(ap.AcctSeed__Cash_Disbursement__c);
 			Map<String,String> m = new Map<String,String>();
 			m.put('apName', ap.AcctSeed__Account_Payable__r.Name);
 			m.put('apType', ap.AcctSeed__Account_Payable__r.AcctSeed__Type__c == null ? '' : ap.AcctSeed__Account_Payable__r.AcctSeed__Type__c);
@@ -106,8 +108,9 @@ global without sharing class gcPrintCheck{
 			if(i <= 10){
 				cdw.apList.add(m);
 			}
+			cdw.totalAP = i;
 		}
-		cdw.totalAP = i;
+		listCDWraps.addAll(mapListCDW.values());
 	}
 
 

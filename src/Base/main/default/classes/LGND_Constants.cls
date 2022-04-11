@@ -1,3 +1,5 @@
+/* TODO: Move to Application Constants */
+
 public without sharing class LGND_Constants {
   public class LGND_Constants_Exception extends Exception {}
   public static String WarrantyPayableTaskName = 'Warranty Payable';
