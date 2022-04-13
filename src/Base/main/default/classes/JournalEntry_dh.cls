@@ -60,18 +60,16 @@ public inherited sharing class JournalEntry_dh {
           listAll.addAll(listNew);
           listAll.addAll(oldMap.values());
           Set<Id> setIdProject = new Set<Id>();
-          for(AcctSeed__Journal_Entry__c je : listAll)
-          {
-            //System.debug('Checking multiple JE');
-            if(je.Project__c != null && je.AcctSeed__Status__c == 'Posted' && oldMap.get(je.Id).AcctSeed__Status__c != je.AcctSeed__Status__c)
-              setIdProject.add(je.Project__c);
+          /// We do not need to run this from a future context.
+          if(!System.isFuture()) {
+            for (AcctSeed__Journal_Entry__c je : listAll) {
+              if (je.Project__c != null && je.AcctSeed__Status__c == 'Posted' && oldMap.get(je.Id).AcctSeed__Status__c != je.AcctSeed__Status__c)
+                setIdProject.add(je.Project__c);
+            }
+            if (!setIdProject.isEmpty()) {
+              gcProject.lockIfNoBalanceDueFuture(setIdProject);
+            }
           }
-          if(!setIdProject.isEmpty()) {
-            //System.debug('setIdProjectJE');
-            //System.debug(setIdProject);
-            gcProject.lockIfNoBalanceDueFuture(setIdProject);
-          }
-          /// Lock Project
       }
       if(boolIsDelete)
       {

@@ -22,11 +22,21 @@ public class Test_Constants {
     set;
   }
 
+  public static AcctSeedERP__Warehouse__c warehouse {
+    get{
+      if( warehouse == null ){
+        warehouse = [SELECT Id, Name FROM AcctSeedERP__Warehouse__c LIMIT 1];
+      }
+      return warehouse;
+    }
+    set {}
+  }
+
   public static Id idWarehouse {
     get {
       if( idWarehouse == null )
       {
-        idWarehouse = [SELECT Id FROM AcctSeedERP__Warehouse__c LIMIT 1].Id;
+        idWarehouse = warehouse.Id;
       }
       return idWarehouse;
     }
