@@ -19,6 +19,7 @@
   <aura:attribute name="url" type="String" />
   <aura:attribute name="showPDF" type="Boolean" default="true" />
   <aura:attribute name="showPaymentsOnPDF" type="Boolean" default="false" />
+  <aura:attribute name="isOutdated" type="Boolean" default="false" />
 
   <aura:handler name="render" value="{!this}" action="{!c.onRender}"/>
   <aura:handler name="change"
@@ -52,6 +53,7 @@
                              class="quote-list-toggle" />
         </lightning:layoutItem>
       </aura:if>
+
       <lightning:layoutItem size="12"
                             smallDeviceSize="12"
                             mediumDeviceSize="8"
@@ -64,14 +66,16 @@
           <aura:if isTrue="{! not(or(equals(v.selectedQuoteId, v.syncedQuoteId), v.creatingNewQuote))}">
             <lightning:button label="Sync to Opportunity" onclick="{!c.handleSyncQuote}" />
           </aura:if>
-          <aura:if isTrue="{! not(v.loadCPQ) }">
-            <lightning:button label="New Quote" onclick="{!c.handleNewQuote}" />
-          </aura:if>
-          <aura:if isTrue="{! and( not(v.loadCPQ), !empty(v.selectedQuoteId) )}">
-            <lightning:button label="Edit Quote" onclick="{!c.handleEditQuote}" />
-          </aura:if>
-          <aura:if isTrue="{! v.loadCPQ }">
-            <lightning:button label="Cancel" onclick="{!c.cancelEditOrNew}" />
+          <aura:if isTrue="{! not(v.isOutdated)}">
+            <aura:if isTrue="{! not(v.loadCPQ) }">
+              <lightning:button label="New Quote" onclick="{!c.handleNewQuote}" />
+            </aura:if>
+            <aura:if isTrue="{! and( not(v.loadCPQ), !empty(v.selectedQuoteId) )}">
+              <lightning:button label="Edit Quote" onclick="{!c.handleEditQuote}" />
+            </aura:if>
+            <aura:if isTrue="{! v.loadCPQ }">
+              <lightning:button label="Cancel" onclick="{!c.cancelEditOrNew}" />
+            </aura:if>
           </aura:if>
         </lightning:buttonGroup>
       </lightning:layoutItem>

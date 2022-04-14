@@ -132,12 +132,15 @@
 
   handlePaymentChange: function( component, event, helper )
   {
+    console.log('handlePaymentChange')
     var params = event.getParams(),
         quote = {},
         spinner = component.find('spinner'),
-        quoteList = component.find('quote-list');
+        quoteList = component.find('quote-list'),
+        cpqLoaded = component.get('v.loadCPQ');
     if( params.recordId === undefined ||
-        params.recordId === null )
+        params.recordId === null ||
+        cpqLoaded )
     {
       return;
     }

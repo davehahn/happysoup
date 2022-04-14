@@ -49,6 +49,7 @@
 
   changeComplete: function( component )
   {
+    console.log('firing option change');
     this.fireOptionChangeEvent( component );
   },
 

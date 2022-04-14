@@ -14,9 +14,13 @@ public class CPQ {
   public Decimal interestRate;
   public List<CPQ_Lib_dh.OptionsWrapper> baseProductOptions;
   public String boatId;
+  public SObject boatLine;
   public String motorId;
+  public SObject motorLine;
   public String trailerId;
+  public SObject trailerLine;
   public String trollingMotorId;
+  public SObject trollingMotorLine;
   public CPQ_Lib_dh.Boat theBoat { get; set; }
   public CPQ_Lib_dh.UpgradeProduct theMotor { get; set; }
   public CPQ_Lib_dh.UpgradeProduct theTrailer { get; set; }
@@ -36,21 +40,7 @@ public class CPQ {
   public Boolean isTaxExempt { get; set; }
   public Boolean isTaxExemptStatusFixed { get; set; }
 
-  private static Map<String, Id> defaultPricebooks {
-    get {
-      if( defaultPricebooks == null )
-      {
-        Legend_Settings__c lSettings = Legend_Settings__c.getOrgDefaults();
-        defaultPricebooks = new Map<String, Id>{
-          'partner' => lSettings.Default_Partner_Pricebook__c,
-          'retail' => lSettings.Default_Retail_Pricebook__c,
-          'factory' => lSettings.Default_Factory_Pricebook__c
-        };
-      }
-      return defaultPricebooks;
-    }
-    set;
-  }
+  public static Map<String, Id> defaultPricebooks = CPQ_Lib_dh.defaultPricebooks;
 
   public CPQ( String saleType )
   {
@@ -87,7 +77,12 @@ public class CPQ {
 
   public void selectBoat()
   {
-    this.theBoat = new CPQ_Lib_dh.Boat( this.boatId, this.saleProvince );
+    if( this.boatLine == null )
+    {
+      this.theBoat = new CPQ_Lib_dh.Boat(this.boatId, this.saleProvince);
+    } else {
+      this.theBoat = new CPQ_Lib_dh.Boat( this.boatLine, this.saleProvince );
+    }
     if( this.motorId == null )
       this.motorId = this.theBoat.standardMotorId;
     //this.theMotor = null;
@@ -282,6 +277,7 @@ public class CPQ {
   public static CPQ_Lib_dh.OptionProduct[] fetchAllOptions( String parentProductId,
                                                             String activePricebookId )
   {
+    CPQ_Lib_dh.addRetailOverridePricebook(activePricebookId);
     Map<Id, Product_Option__c> optionMap = new Map<Id, Product_Option__c>();
     List<CPQ_Lib_dh.OptionProduct> result = new List<CPQ_Lib_dh.OptionProduct>();
     Id partId = LGND_Constants.productRtId_Part;
@@ -463,6 +459,7 @@ public class CPQ {
                       GL_Account_Variable_3__r.Tax_is_Harmonized__c,
                       GL_Account_Variable_3__r.Tax_Rate_Provincial_Statutory__c,
                       GL_Account_Variable_3__r.Tax_Rate_Retail__c,
+                      Pricebook2Id,
                ( SELECT Id,
                         Description,
                         Taxable_Provincial__c,
@@ -480,6 +477,11 @@ public class CPQ {
                  FROM QuoteLineItems )
                FROM Quote
                WHERE Id = :this.saveToRecordId ];
+
+
+    if( !CPQ_Lib_dh.defaultPricebooks.containsKey('active') ){
+      CPQ_Lib_dh.addRetailOverridePricebook(q.Pricebook2Id);
+    }
     if( q.GL_Account_Variable_3__r != null )
     {
       this.taxZone = new CPQ_Lib_dh.TaxZone( q.GL_Account_Variable_3__r );
@@ -499,6 +501,9 @@ public class CPQ {
                                           q.ExpirationDate.day() );
       this.quoteExpirationDate = dt.format( 'yyyy-MM-dd');
     }
+    if( this.activePricebookId != q.Pricebook2Id ){
+      this.activePricebookId = q.Pricebook2Id;
+    }
     // Sort the Opportunity Line Items
     for( QuoteLineItem qli : q.QuoteLineItems )
     {
@@ -509,21 +514,25 @@ public class CPQ {
         this.baseProductFamily = qli.PricebookEntry.Product2.Family;
         this.baseProductRecordType_Name = qli.PricebookEntry.Product2.RecordType.Name;
         this.baseProductRecordType_Id = qli.PricebookEntry.Product2.RecordTypeId;
+        this.boatLine = qli;
       }
       if( qli.PricebookEntry.Product2.RecordType.Name == 'Motor' )
       {
         serializedIds.add( qli.PricebookEntry.Product2Id );
         this.motorId = qli.PricebookEntry.Product2Id;
+        this.motorLine = qli;
       }
       if( qli.PricebookEntry.Product2.RecordType.Name == 'Trailer' )
       {
         serializedIds.add( qli.PricebookEntry.Product2Id );
         this.trailerId = qli.PricebookEntry.Product2Id;
+        this.trailerLine = qli;
       }
       if( qli.PricebookEntry.Product2.RecordType.Name == 'Trolling Motor' )
       {
         serializedIds.add( qli.PricebookEntry.Product2Id );
         this.trollingMotorId = qli.PricebookEntry.Product2Id;
+        this.trollingMotorLine = qli;
       }
       if( qli.PricebookEntry.Product2.RecordType.Name == 'Part' )
       {
@@ -600,6 +609,7 @@ public class CPQ {
                               Finance_Term__c,
                               Finance_Annual_Interest__c,
                               IsAccountTaxExempt__c,
+                              Pricebook2Id,
                        ( SELECT Id,
                                 Description,
                                 Taxable_Provincial__c,
@@ -618,6 +628,10 @@ public class CPQ {
                          FROM OpportunityLineItems )
                        FROM Opportunity
                        WHERE Id = :this.saveToRecordId ];
+    Set<Id> pbIds = new Set<Id>(defaultPricebooks.values());
+    if( !pbIds.contains(opp.Pricebook2Id ) ){
+      CPQ_Lib_dh.addRetailOverridePricebook(opp.Pricebook2Id);
+    }
     this.deposit = opp.Deposit__c;
     this.term = opp.Finance_Term__c;
     this.amort = opp.Finance_Ammortization__c;
@@ -787,6 +801,7 @@ public class CPQ {
                                                                String activePricebookId,
                                                                String prov )
   {
+    CPQ_Lib_dh.addRetailOverridePricebook( activePricebookId );
     LIST<CPQ_Lib_dh.UpgradeProduct> result = new List<CPQ_Lib_dh.UpgradeProduct>();
     Set<Id> prodIds = new Set<Id>();
     for( Product_Option__c opt : [SELECT Id, From_Product__c

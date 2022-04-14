@@ -8,6 +8,8 @@
       self.doFetchQuotes( component ).then(
         $A.getCallback( function( result ) {
           var selectedId;
+          console.log( JSON.parse( JSON.stringify( result ) ) );
+          component.set('v.isOutdated', result.isOutdated);
           if( result.syncedQuoteId !== undefined &&
               result.syncedQuoteId !== null )
           {
