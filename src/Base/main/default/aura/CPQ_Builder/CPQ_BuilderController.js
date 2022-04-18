@@ -16,6 +16,7 @@
 
   handleOptionChange: function( component, event, helper )
   {
+    console.log('handling optionChange');
     var opt = event.getParams().optionItem;
     helper.updateSaleItems( component, opt );
   }

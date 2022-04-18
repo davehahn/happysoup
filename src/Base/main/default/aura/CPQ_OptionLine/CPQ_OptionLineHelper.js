@@ -43,6 +43,7 @@
 
   fireOptionChangeEvent: function( component )
   {
+    console.log('firing option changed event');
     var optionChangeEvt = component.getEvent('optionChanged');
     var params = {
       optionItem: component.get('v.optionItem')

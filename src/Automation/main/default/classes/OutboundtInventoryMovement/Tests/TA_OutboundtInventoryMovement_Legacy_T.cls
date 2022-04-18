@@ -20,7 +20,7 @@ public class TA_OutboundtInventoryMovement_Legacy_T {
     AcctSeedERP__Location__c loc = new AcctSeedERP__Location__c(Name = 'Test Loc', AcctSeedERP__Warehouse__c = wh.Id);
     insert loc;
     Product2 part = Factory_Product.buildNonSerializedProduct('Part', 'Hardware');
-    part.AcctSeed__Inventory_GL_Account__c = glA.Id;
+    //part.AcctSeed__Inventory_GL_Account__c = glA.Id;
     insert part;
     AcctSeedERP__Inventory_Balance__c balance = new AcctSeedERP__Inventory_Balance__c(
       AcctSeedERP__Location__c = loc.Id,
@@ -33,7 +33,7 @@ public class TA_OutboundtInventoryMovement_Legacy_T {
       AcctSeedERP__Unit_Cost__c = 10,
       AcctSeedERP__Type__c = 'Inventory Transfer',
       AcctSeedERP__Quantity__c = 1,
-      AcctSeedERP__Debit_GL_Account__c = glA.Id,
+      AcctSeedERP__Debit_GL_Account__c = part.AcctSeed__Inventory_GL_Account__c,
       AcctSeedERP__Inventory_Balance__c = balance.Id,
       AcctSeedERP__Ledger__c = accSetting.AcctSeed__Default_Ledger__c,
       GMBLASERP__Warehouse__c = wh.Id

@@ -58,7 +58,7 @@
   updateCPQ: function( component, action )
   {
     var spinner = component.find('spinner');
-
+    console.log('calling update CPQ');
     spinner.toggle();
     return new Promise( function( resolve, reject ) {
       new LightningApex( this, action ).fire()
@@ -80,7 +80,6 @@
 
   updateSaleItems: function( component, option )
   {
-    console.log( JSON.parse( JSON.stringify( option ) ) );
     var cpq = component.get('v.cpq'),
         saleItems = cpq.saleItems,
         cpqUtils = component.find('CpqUtils'),

@@ -405,7 +405,7 @@
               <td class="w25">&nbsp;</td>
               <td class="w15 right">
                 <apex:outputText value="${0, number, ###,###,###,##0.00}">
-                  <apex:param value="{!theCPQ.TheBoat.retailPrice}"/>
+                  <apex:param value="{!theCPQ.theBoat.activePrice}"/>
                 </apex:outputText>
               </td>
             </tr>
@@ -418,7 +418,7 @@
               <td class="w10">{!theCPQ.theMotor.make}</td>
               <td class="w44">{!theCPQ.theMotor.name}</td>
               <td class="w25">&nbsp;</td>
-              <td class="w15 right">$ {!theCPQ.theMotor.retailUpgradeCost}</td>
+              <td class="w15 right">$ {!theCPQ.theMotor.activeUpgradeCost}</td>
             </tr>
             <apex:variable var="rowCount" value="{!rowCount+1}" />
           </apex:outputPanel>
@@ -429,7 +429,7 @@
               <td class="w10">{!theCPQ.theTrailer.make}</td>
               <td class="w44">{!theCPQ.theTrailer.name}</td>
               <td class="w25">&nbsp;</td>
-              <td class="w15 right">$ {!theCPQ.theTrailer.retailUpgradeCost}</td>
+              <td class="w15 right">$ {!theCPQ.theTrailer.activeUpgradeCost}</td>
             </tr>
             <apex:variable var="rowCount" value="{!rowCount+1}" />
           </apex:outputPanel>
@@ -440,7 +440,7 @@
               <td class="w10">{!theCPQ.theTrollingMotor.make}</td>
               <td class="w44">{!theCPQ.theTrollingMotor.name}</td>
               <td class="w25">&nbsp;</td>
-              <td class="w15 right">$ {!theCPQ.theTrollingMotor.retailUpgradeCost}</td>
+              <td class="w15 right">$ {!theCPQ.theTrollingMotor.activeUpgradeCost}</td>
             </tr>
           </apex:outputPanel>
 

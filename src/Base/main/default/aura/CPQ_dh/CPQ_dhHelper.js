@@ -140,7 +140,6 @@
           taxZoneJSON: JSON.stringify( cpq.taxZone )
         };
     action.setParams(params);
-
     return new LightningApex( this, action ).fire();
   },
 

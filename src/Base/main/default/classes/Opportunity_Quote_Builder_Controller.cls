@@ -5,6 +5,7 @@ public with sharing class Opportunity_Quote_Builder_Controller {
     public String syncedQuoteId;
     public String syncedQuoteName;
     public List<Quote> quotes;
+    public Boolean isOutdated = false;
 
     public InitWrapper( String oppId )
     {
@@ -15,7 +16,7 @@ public with sharing class Opportunity_Quote_Builder_Controller {
         LGND_Constants.productRTId_Trailer,
         LGND_Constants.productRTId_TrollingMotor
       };
-      Opportunity opp = [SELECT Id, SyncedQuoteId, SyncedQuote.Name FROM Opportunity WHERE Id =:oppId];
+      Opportunity opp = [SELECT Id, Pricebook2Id, SyncedQuoteId, SyncedQuote.Name FROM Opportunity WHERE Id =:oppId];
       this.syncedQuoteId = opp.SyncedQuoteId;
       this.syncedQuoteName = opp.SyncedQuote.Name;
       this.quotes = [SELECT Id,
@@ -35,6 +36,7 @@ public with sharing class Opportunity_Quote_Builder_Controller {
                      FROM Quote
                      WHERE OpportunityId = :oppId
                      ORDER BY IsSyncing DESC];
+      this.isOutdated = opp.Pricebook2Id != LGND_Constants.retailPricebookId;
     }
   }
 

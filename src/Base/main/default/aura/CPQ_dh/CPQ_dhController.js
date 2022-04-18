@@ -32,6 +32,7 @@
   handleRefresh: function(component, event, helper )
   {
     var readOnly = component.get('v.readOnly');
+     console.log(`handleRefresh - ${readOnly}`);
     if( readOnly )
       helper.doInit(component);
   },

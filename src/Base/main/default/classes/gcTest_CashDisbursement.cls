@@ -1,6 +1,8 @@
 @isTest
 private class gcTest_CashDisbursement {
 
+  static  AcctSeed__Cash_Disbursement__c cd;
+
   @testSetup static void dataSetup()
   {
     new Factory_TestData();
@@ -11,14 +13,13 @@ private class gcTest_CashDisbursement {
     insert cdb;
   }
 
-  static testMethod void trigger_TestInsertPost()
-  {
+  static void init( Id debitGlAccount ){
     AcctSeed__Ledger__c ledger = [SELECT Id FROM AcctSeed__Ledger__c LIMIT 1];
     AcctSeed__Cash_Disbursement_Batch__c cdb = [SELECT Id FROM AcctSeed__Cash_Disbursement_Batch__c LIMIT 1][0];
     AcctSeed__Accounting_Period__c period = [SELECT Id FROM AcctSeed__Accounting_Period__c LIMIT 1];
-    AcctSeed__GL_Account__c bank = [SELECT Id FROM AcctSeed__GL_Account__c WHERE AcctSeed__Bank__c = true LIMIT 1];
+    AcctSeed__GL_Account__c bank = [SELECT Id FROM AcctSeed__GL_Account__c WHERE AcctSeed__Bank__c = true AND Uniquefier__c = 'CASH' LIMIT 1];
     Account supplier = Factory_Account.insertSupplierAccounts(1)[0];
-    AcctSeed__Cash_Disbursement__c cd = new AcctSeed__Cash_Disbursement__c(
+    cd = new AcctSeed__Cash_Disbursement__c(
       AcctSeed__Amount__c = 10,
       AcctSeed__Accounting_Period__c = period.Id,
       AcctSeed__Bank_Account__c = bank.Id,
@@ -28,8 +29,13 @@ private class gcTest_CashDisbursement {
       AcctSeed__Status__c = 'Approved',
       AcctSeed__Disbursement_Date__c = Date.today(),
       AcctSeed__Cash_Flow_Category__c = gcConstants.idGlRevenueCF,
-      AcctSeed__Debit_GL_Account__c = null
+      AcctSeed__Debit_GL_Account__c = debitGlAccount
     );
+  }
+
+  static testMethod void trigger_TestInsertPost()
+  {
+    init(null);
     Test.startTest();
     insert cd;
     AcctSeed.PostResult[] postResults = AcctSeed.CashDisbursementPostService.postCashDisbursements(new List<AcctSeed__Cash_Disbursement__c>{cd});
@@ -47,24 +53,7 @@ private class gcTest_CashDisbursement {
 
   static testMethod void trigger_TestInsert()
   {
-    AcctSeed__Ledger__c ledger = [SELECT Id FROM AcctSeed__Ledger__c LIMIT 1];
-    AcctSeed__Cash_Disbursement_Batch__c cdb = [SELECT Id FROM AcctSeed__Cash_Disbursement_Batch__c LIMIT 1][0];
-    AcctSeed__Accounting_Period__c period = [SELECT Id FROM AcctSeed__Accounting_Period__c LIMIT 1];
-    AcctSeed__GL_Account__c bank = [SELECT Id FROM AcctSeed__GL_Account__c WHERE AcctSeed__Bank__c = true LIMIT 1];
-    Account supplier = Factory_Account.insertSupplierAccounts(1)[0];
-    AcctSeed__Cash_Disbursement__c cd = new AcctSeed__Cash_Disbursement__c(
-        AcctSeed__Amount__c = 10,
-        AcctSeed__Accounting_Period__c = period.Id,
-        AcctSeed__Bank_Account__c = bank.Id,
-        AcctSeed__Cash_Disbursement_Batch__c = cdb.Id,
-        AcctSeed__Ledger__c = ledger.Id,
-        AcctSeed__Vendor__c = supplier.Id,
-        AcctSeed__Status__c = 'Approved',
-        AcctSeed__Disbursement_Date__c = Date.today(),
-        AcctSeed__Cash_Flow_Category__c = gcConstants.idGlRevenueCF,
-        AcctSeed__Debit_GL_Account__c = gcConstants.idGlCustomerRefund,
-        AcctSeed__Payment_Status__c = 'Paid'
-    );
+    init(gcConstants.idGlCustomerRefund);
     Test.startTest();
     insert cd;
     AcctSeed.PostResult[] postResults = AcctSeed.CashDisbursementPostService.postCashDisbursements(new List<AcctSeed__Cash_Disbursement__c>{cd});
@@ -83,24 +72,7 @@ private class gcTest_CashDisbursement {
 
   static testMethod void trigger_TestUpdate()
   {
-    AcctSeed__Ledger__c ledger = [SELECT Id FROM AcctSeed__Ledger__c LIMIT 1];
-    AcctSeed__Cash_Disbursement_Batch__c cdb = [SELECT Id FROM AcctSeed__Cash_Disbursement_Batch__c LIMIT 1][0];
-    AcctSeed__Accounting_Period__c period = [SELECT Id FROM AcctSeed__Accounting_Period__c LIMIT 1];
-    AcctSeed__GL_Account__c bank = [SELECT Id FROM AcctSeed__GL_Account__c WHERE AcctSeed__Bank__c = true LIMIT 1];
-    Account supplier = Factory_Account.insertSupplierAccounts(1)[0];
-    AcctSeed__Cash_Disbursement__c cd = new AcctSeed__Cash_Disbursement__c(
-        AcctSeed__Amount__c = 10,
-        AcctSeed__Accounting_Period__c = period.Id,
-        AcctSeed__Bank_Account__c = bank.Id,
-        AcctSeed__Cash_Disbursement_Batch__c = cdb.Id,
-        AcctSeed__Ledger__c = ledger.Id,
-        AcctSeed__Vendor__c = supplier.Id,
-        AcctSeed__Status__c = 'Approved',
-        AcctSeed__Disbursement_Date__c = Date.today(),
-        AcctSeed__Cash_Flow_Category__c = gcConstants.idGlRevenueCF,
-        AcctSeed__Debit_GL_Account__c = gcConstants.idGlCustomerRefund,
-        AcctSeed__Payment_Status__c = 'Paid'
-    );
+    init(gcConstants.idGlCustomerRefund);
     Test.startTest();
     insert cd;
     AcctSeed.PostResult[] postResults = AcctSeed.CashDisbursementPostService.postCashDisbursements(new List<AcctSeed__Cash_Disbursement__c>{cd});
