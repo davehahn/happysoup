@@ -143,6 +143,9 @@ div.pq-grid-footer{
 
         if('{!locale}' == 'en_CA') $j('#datepicker').datepicker( "option", "dateFormat", "dd/mm/yy" );
         if('{!locale}' == 'en_CA') $j('#datepickerTill').datepicker( "option", "dateFormat", "dd/mm/yy" );
+        if('{!locale}' == 'fr_CA') $j('#datepicker').datepicker( "option", "dateFormat", "yy-mm-dd" );
+        if('{!locale}' == 'fr_CA') $j('#datepickerTill').datepicker( "option", "dateFormat", "yy-mm-dd" );
+        
 
         // $j('#datepicker').datepicker('setDate', new Date(2017, 9, 1));
         var timeNow = new Date();
