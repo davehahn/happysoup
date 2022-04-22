@@ -11,6 +11,16 @@ public class Test_Constants {
     set {}
   }
 
+  private static Utility_Account__c utilityAccounts {
+    get {
+      if( utilityAccounts ==  null ){
+        utilityAccounts = Utility_Account__c.getOrgDefaults();
+      }
+      return utilityAccounts;
+    }
+    set {}
+  }
+
   public static Id idPdfFormat {
     get {
       if( idPdfFormat == null )
@@ -101,6 +111,16 @@ public class Test_Constants {
         idFactoryPricebook = legendSettings.Default_Factory_Pricebook__c;
       }
       return idFactoryPricebook;
+    }
+    set;
+  }
+
+  public static Id idMercuryAccount {
+    get {
+      if( idMercuryAccount == null ){
+        idMercuryAccount = utilityAccounts.Mercury__c;
+      }
+      return idMercuryAccount;
     }
     set;
   }
