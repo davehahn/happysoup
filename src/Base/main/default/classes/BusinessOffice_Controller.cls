@@ -404,7 +404,8 @@ public with sharing class BusinessOffice_Controller {
                                                   Insurance_Coverage__c,
                                                   Insurance_Rate__c
                                            FROM AcctSeedERP__Materials__r
-                                           WHERE AcctSeedERP__Product__r.RecordTypeId = :LGND_Constants.productRtId_Insurance)
+                                           WHERE AcctSeedERP__Product__r.RecordTypeId = :LGND_Constants.productRtId_Insurance
+                                           AND AcctSeedERP__Product__r.InsurancePlan__c <> null )
                                         FROM AcctSeed__Project_Task__c
                                         WHERE AcctSeed__Project__c = :recordId
                                         AND AcctSeed__GL_Account_Variable_2__c = :LGND_Constants.GLV2Id_BusinessOffice] )
