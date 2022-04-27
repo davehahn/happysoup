@@ -138,6 +138,10 @@ export default class FslTransferTool extends LightningElement {
     return !r;
   }
 
+  get selectedProductValue(){
+    return this.selectedProduct === undefined ? '' : this.selectedProduct.Name
+  }
+
   init()
   {
     if( this._locations != null )
@@ -382,6 +386,7 @@ export default class FslTransferTool extends LightningElement {
 
   handleProductSelect( event )
   {
+    console.log( JSON.parse( JSON.stringify( event.detail.value ) ) );
     this.selectedProduct = event.detail.value;
     this.template.querySelector('.product-required-quantity').focus();
   }

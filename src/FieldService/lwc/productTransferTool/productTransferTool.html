@@ -252,15 +252,19 @@
                                    medium-device-size="6"
                                    small-device-size="12"
                                    padding="around-medium">
-              <c-live-lookup-input label="Required Product"
-                                   placeholder="Search for Product"
-                                   result-icon="standard:product"
-                                   s-object-type="Product2"
-                                   return-fields={productSearchReturnFields}
-                                   filter-on-fields={productSearchFilterFields}
-                                   where-clause="IsActive = true"
-                                   display-fields={productSearchReturnFields}
-                                   onselect={handleProductSelect} ></c-live-lookup-input>
+              <c-live-lookup-input
+                label="Required Product"
+                value={selectedProductValue}
+                placeholder="Search for product"
+                result-icon="standard:product"
+                s-object-type="Product2"
+                return-fields={productSearchReturnFields}
+                filter-on-fields={productSearchFilterFields}
+                where-clause="IsActive = true"
+                value-field="Name"
+                display-fields={productSearchReturnFields}
+                onselect={handleProductSelect}>
+              </c-live-lookup-input>
             </lightning-layout-item>
 
             <lightning-layout-item size="12"
