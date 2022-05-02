@@ -16,6 +16,7 @@ global without sharing class EcwidEvents{
             requestPayloadModel.headers.XEcwidWebhookSignature = EcwidRestUtils.parseHeader(JSON.serialize( request ));
             System.debug('Signature= '+requestPayloadModel.headers.XEcwidWebhookSignature);
             //EcwidRestUtils.ecvidEvent(serviceLog,requestPayloadModel.body );
+
 			EcwidRestUtils.storeId = requestPayloadModel.body.storeId;
             if(EcwidRestUtils.verifySignature(requestPayloadModel.headers.XEcwidWebhookSignature, requestPayloadModel.body )){
                 response.statusCode = 200;

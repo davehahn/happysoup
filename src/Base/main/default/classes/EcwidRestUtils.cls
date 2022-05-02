@@ -1,5 +1,6 @@
 global without sharing class EcwidRestUtils {
-	public final String WAREHOUSE='Wholesale';
+
+    public final String WAREHOUSE='Wholesale';
     public final String GLV1='Wholesale';
     public final String GLV2='Sales';
     
@@ -30,15 +31,17 @@ global without sharing class EcwidRestUtils {
         getWarehouse();
     }
     private static void getWarehouse(){
-       AcctSeedERP__Warehouse__c warehouse = [Select id from AcctSeedERP__Warehouse__c where Name =:setting.GLV1__c];
-       wareHouseId = String.valueOf(warehouse.Id);
+       List<AcctSeedERP__Warehouse__c> warehouse = [Select id from AcctSeedERP__Warehouse__c where Name =:setting.GLV1__c];
+        if(!warehouse.isEmpty()){
+            wareHouseId = String.valueOf(warehouse[0].Id);
+        }
     }
     private static void getGLV1AndGLV2Values(){
        List<AcctSeed__Accounting_Variable__c> acVariable_list = [SELECT Id,Name,AcctSeed__Type__c FROM AcctSeed__Accounting_Variable__c where 
                                                     (Name= :setting.GLV1__c and AcctSeed__Type__c = 'GL Account Variable 1') or (Name= :setting.GLV2__c and AcctSeed__Type__c = 'GL Account Variable 2')];
         for(AcctSeed__Accounting_Variable__c acc :acVariable_list){
             if(acc.AcctSeed__Type__c == 'GL Account Variable 1'){
-            	 glv1Id = acc.id;   
+                 glv1Id = acc.id;   
             }else if(acc.AcctSeed__Type__c == 'GL Account Variable 2'){
                 glv2Id = acc.id;
             }
@@ -60,21 +63,22 @@ global without sharing class EcwidRestUtils {
     }
 
     public static Ecwid_API_Setting__mdt  getDataFromSetting(){
-		System.debug('@@ storeId= '+storeId);
+
+        System.debug('@@ storeId= '+storeId);
         setting  = [SELECT
                             Public_Key__c,
                             Secret_Key__c,
                             Base_URL__c,
                             Store_Id__c,
                             Verification_Key__c,
-                    		Freight_Purolator_SKU__c,
-                    		GLV1__c,
-                    		GLV2__c
-                    		
+                            Freight_Purolator_SKU__c,
+                            GLV1__c,
+                            GLV2__c
+                            
                     FROM
                             Ecwid_API_Setting__mdt 
                     WHERE
-                    		Store_Id__c =:storeId
+                            Store_Id__c =:storeId
                    ];
 
         System.debug('setting= '+setting);
@@ -119,7 +123,7 @@ global without sharing class EcwidRestUtils {
                                                                               WHERE
                                                                                 Is_Active__c=TRUE
                                                                           ),
-                                                                     	  (
+                                                                          (
                                                                                 SELECT 
                                                                                   Data_Type__c,
                                                                                   Default_Value__c,
@@ -128,8 +132,8 @@ global without sharing class EcwidRestUtils {
                                                                                   Source_Field__c
                                                                                 FROM
                                                                                   Ecwid_Field_Mapping__r
-                                                                              	WHERE
-                                                                              	  	Is_Active__c=TRUE
+                                                                                WHERE
+                                                                                    Is_Active__c=TRUE
                                                                           )
                                                                       FROM
                                                                           Ecwid_Object_Mapping__mdt

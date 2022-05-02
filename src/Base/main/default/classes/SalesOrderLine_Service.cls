@@ -31,8 +31,7 @@ public without sharing class SalesOrderLine_Service{
 				mapProduct.put(p.Id,p);
 			}
     }
-    public static void updateSalesTax(set<Id> salesOrder_Id_Set){}
-    public static void updateSalesTax1(set<Id> salesOrder_Id_Set)
+    public static void updateSalesTax(set<Id> salesOrder_Id_Set)
         { 
         Id idProductSalesTaxFederal    = gcConstants.idProductSalesTaxFederal;
         Id idProductSalesTaxProvincial = gcConstants.idProductSalesTaxProvincial;

@@ -23,7 +23,7 @@ public without sharing class gcCashReceipt {
 		if(oldMap == NULL) oldMap = new map<Id,AcctSeed__Cash_Receipt__c>();
 		if(newMap == NULL) newMap = new map<Id,AcctSeed__Cash_Receipt__c>();
 		if(listNew == NULL) listNew = new list<AcctSeed__Cash_Receipt__c>();
-
+		System.debug('@@ before listNew '+listNew);
 		updateAndValidate(oldMap,newMap,listNew,boolIsBefore,boolIsInsert,boolIsUpdate,boolIsDelete);
 		
 		if(boolIsBefore)
@@ -76,7 +76,7 @@ public without sharing class gcCashReceipt {
 		{
 			//code pulled from GMBLASG package gcCashReceipt class
 			setPeriod( oldMap, newMap, listNew, boolIsBefore, boolIsInsert, boolIsUpdate, boolIsDelete);
-
+			System.debug('@@ listNew= '+listNew);
 			retrieveStatics(listNew);
 			for(AcctSeed__Cash_Receipt__c cr : listNew)
 			{
@@ -107,21 +107,34 @@ public without sharing class gcCashReceipt {
 
 		if(!boolIsBefore && (boolIsInsert || boolIsUpdate))
 		{
+			System.debug('in is before');
 			list<AcctSeed__Cash_Receipt__c> listAll = new list<AcctSeed__Cash_Receipt__c>();
+			list<AcctSeed__Cash_Receipt__c> lstCashReceipt = new list<AcctSeed__Cash_Receipt__c>();
 			listAll.addAll(listNew);
 			listAll.addAll(oldMap.values());
 			Set<Id> setIdProject = new Set<Id>();
 			for(AcctSeed__Cash_Receipt__c cr : listAll)
 			{
-				//System.debug('Checking multiple');
-	            if(cr.AcctSeed__Project__c != null && cr.AcctSeed__Status__c == 'Posted' && (boolIsInsert || (boolIsUpdate && oldMap.get(cr.Id).AcctSeed__Status__c != cr.AcctSeed__Status__c)))
+	            if(cr.AcctSeed__Project__c != null && cr.GMBLASG__Posted__c)
 	                setIdProject.add(cr.AcctSeed__Project__c);
 			}
-			if(!setIdProject.isEmpty()) {
-				//System.debug('setIdProject');
-				//System.debug(setIdProject);
-				gcProject.lockIfNoBalanceDueFuture(setIdProject);
+			for(AcctSeed__Cash_Receipt__c cr : listNew)
+			{
+				if(!cr.GMBLASG__Posted__c && cr.Sales_Order__c != null){
+					lstCashReceipt.add(cr);
+				}
 			}
+			if(!setIdProject.isEmpty())
+				gcProject.lockIfNoBalanceDueFuture(setIdProject);
+
+			AcctSeed.PostResult[] postResultsAP = AcctSeed.CashReceiptPostService.postCashReceipts(lstCashReceipt);
+//			for (AcctSeed.PostResult theResult : postResultsAP) {
+//				if (!theResult.isSuccess) {
+//					for (AcctSeed.PostResult.PostErrorResult errorResult: theResult.errors) {
+//						throw new gcException('Cash Receipt was not posted. Please try again. REASON: ' + errorResult.message);
+//					}
+//				}
+//			}
 		}
 	}
 
@@ -141,7 +154,7 @@ public without sharing class gcCashReceipt {
 			{
 				if(cr.AcctSeed__Status__c == 'Posted') continue;
 
-				if(boolIsInsert || (boolIsUpdate && (cr.AcctSeed__Receipt_Date__c != oldMap.get(cr.Id).AcctSeed__Receipt_Date__c || cr.AcctSeed__Accounting_Period__c != oldMap.get(cr.Id).AcctSeed__Accounting_Period__c)))
+				if((boolIsInsert && cr.AcctSeed__Accounting_Period__c == null) || (boolIsUpdate && (cr.AcctSeed__Receipt_Date__c != oldMap.get(cr.Id).AcctSeed__Receipt_Date__c || cr.AcctSeed__Accounting_Period__c != oldMap.get(cr.Id).AcctSeed__Accounting_Period__c)))
 				{
 					listRecordToSetPeriod.add(cr);
 				}
