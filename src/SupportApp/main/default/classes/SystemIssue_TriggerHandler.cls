@@ -14,7 +14,8 @@ public without sharing class SystemIssue_TriggerHandler extends TriggerHandler {
     'Awaiting Deployment' => 'Done',
     'Deployed' => 'Done',
     'Done' => 'Done',
-    'Denied' => 'Done'
+    'Denied' => 'Done',
+    'No Fix Available' => 'Done'
   };
 
   public Id devQueueId {

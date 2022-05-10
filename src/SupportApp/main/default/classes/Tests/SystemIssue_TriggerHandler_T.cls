@@ -112,9 +112,9 @@ private class SystemIssue_TriggerHandler_T {
       'The should be 1 In Progress'
     );
     System.assertEquals(
-      4,
+      5,
       countByCategory.get('Done'),
-      'There should be 4 Done'
+      'There should be 5 Done'
     );
   }
 
@@ -151,9 +151,9 @@ private class SystemIssue_TriggerHandler_T {
       'The should be 0 In Progress'
     );
     System.assertEquals(
-      5,
+      6,
       countByCategory.get('Done'),
-      'There should be 5 Done'
+      'There should be 6 Done'
     );
   }
 
