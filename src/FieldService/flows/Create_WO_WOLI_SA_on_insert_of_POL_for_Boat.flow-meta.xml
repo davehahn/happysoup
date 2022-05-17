@@ -160,15 +160,33 @@
             </value>
         </inputAssignments>
         <inputAssignments>
+            <field>Duration</field>
+            <value>
+                <elementReference>$Record.AcctSeedERP__Product__r.Pre_Rig_Work_Type__r.EstimatedDuration</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>DurationType</field>
+            <value>
+                <elementReference>$Record.AcctSeedERP__Product__r.Pre_Rig_Work_Type__r.DurationType</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
             <field>EarliestStartTime</field>
             <value>
                 <elementReference>EarliestStartTime</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
+            <field>FSL__GanttLabel__c</field>
+            <value>
+                <elementReference>$Record.AcctSeedERP__Product__r.Pre_Rig_Work_Type__r.Name</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
             <field>ParentRecordId</field>
             <value>
-                <elementReference>Create_Work_Order_0</elementReference>
+                <elementReference>Create_Work_Order_Line_Item_0</elementReference>
             </value>
         </inputAssignments>
         <object>ServiceAppointment</object>
