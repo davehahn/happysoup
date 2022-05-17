@@ -12,6 +12,7 @@ public virtual class ServiceAppointment_Selector extends Application_Selector
     'ParentRecordType',
     'ParentRecord.Name',
     'ServiceTerritoryId',
+    'FSL__GanttLabel__c',
     'AccountId'
   };
 

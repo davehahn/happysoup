@@ -2,7 +2,7 @@
  * Created by dave on 2020-12-09.
  */
 
-public with sharing class ServiceResource_MyInventory_Controller
+public inherited sharing class ServiceResource_MyInventory_Controller
 {
 
   @AuraEnabled(Cacheable=true)

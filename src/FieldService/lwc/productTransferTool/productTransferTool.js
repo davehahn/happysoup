@@ -52,6 +52,8 @@ export default class FslTransferTool extends LightningElement {
     try
     {
       this._locations = await getLocations( { workOrderId: this.recordId } );
+      console.log('connectedCallback');
+      console.log( JSON.parse( JSON.stringify( this._locations ) ) );
       this.init();
     }
     catch( err )

@@ -2,7 +2,7 @@
  * Created by dave on 2019-08-06.
  */
 
-public with sharing class WorkOrder_Service {
+public inherited sharing class WorkOrder_Service {
 
   private Id recordId;
 
@@ -45,7 +45,10 @@ public with sharing class WorkOrder_Service {
     get {
       if( serviceAppointments == null )
       {
+
         serviceAppointments = ServiceAppointment_Selector.allByWorkOrderId_asMAp( this.recordId );
+        System.debug('Service Appointments');
+        System.debug(serviceAppointments);
       }
       return serviceAppointments;
     }
@@ -66,6 +69,8 @@ public with sharing class WorkOrder_Service {
             AssignedResource_Selector.allByServiceAppointmentIds(
               this.serviceAppointments.keySet()
             );
+          System.debug('Assigned Resources');
+          System.debug( assignedResources);
         }
       }
       return assignedResources;
