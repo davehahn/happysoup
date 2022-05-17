@@ -138,6 +138,8 @@ public without sharing class gcBilling {
 
 			for(AcctSeed__Billing__c b : listNew)
 			{
+                //b.AcctSeed__Ledger__c = 'a1278000000DiAUAA0';
+                //b.AcctSeed__Billing_Format__c = 'a0e78000000HRGOAA4';
 				AcctSeed__Billing__c oldRec;
 				if(boolIsUpdate)
 					oldRec = oldMap.get(b.Id);
@@ -343,13 +345,14 @@ public without sharing class gcBilling {
 
 	public static void applyCash(set<Id> setIdBilling)
 	{
+        System.debug('Well at least I am here to create bill');
 		setIdBilling.remove(null);
 		if(setIdBilling.isEmpty()) return;
 
 		map<Id,Decimal> mapBillingBalance = new map<Id,Decimal>();
 		map<Id,Decimal> mapReceiptBalance = new map<Id,Decimal>();
 
-		map<Id,list<AcctSeed__Billing__c>> mapProjectBillings = new map<Id,list<AcctSeed__Billing__c>>();
+		map<Id,list<AcctSeed__Billing__c>> mapProjectSOBillings = new map<Id,list<AcctSeed__Billing__c>>();
 		map<Id,list<AcctSeed__Cash_Receipt__c>> mapProjectReceipts = new map<Id,list<AcctSeed__Cash_Receipt__c>>();
 
 		Id idPeriod;
@@ -361,15 +364,15 @@ public without sharing class gcBilling {
 		{
 			idPeriod = period.Id;
 		}
-
+		System.debug('idPeriod: '+idPeriod);
 		if(idPeriod == null)
 			return;
 
 		for(AcctSeed__Billing__c b :
-			[SELECT Id, AcctSeed__Balance__c,
-					(SELECT Id, AcctSeed__Project__c
+			[SELECT Id, AcctSeed__Balance__c, AcctSeedERP__Sales_Order__c,
+					(SELECT Id, AcctSeed__Project__c, AcctSeedERP__Sales_Order_Line__c
 					 FROM AcctSeed__Project_Billing_Lines__r
-					 WHERE AcctSeed__Project__c != null
+					 WHERE (AcctSeed__Project__c != null OR AcctSeedERP__Sales_Order_Line__c != null)
 					 ORDER BY CreatedDate
 					 LIMIT 1)
 			 FROM AcctSeed__Billing__c
@@ -380,68 +383,62 @@ public without sharing class gcBilling {
 			if(b.AcctSeed__Project_Billing_Lines__r.isEmpty())
 				continue;
 
-			Id idProject = b.AcctSeed__Project_Billing_Lines__r[0].AcctSeed__Project__c;
+			Id idProjectSO = b.AcctSeed__Project_Billing_Lines__r[0].AcctSeed__Project__c;
+			if(b.AcctSeedERP__Sales_Order__c != null)
+				idProjectSO = b.AcctSeedERP__Sales_Order__c;
 
-			if(!mapProjectBillings.containsKey(idProject))
-				mapProjectBillings.put(idProject, new list<AcctSeed__Billing__c>());
+			if(!mapProjectSOBillings.containsKey(idProjectSO))
+				mapProjectSOBillings.put(idProjectSO, new list<AcctSeed__Billing__c>());
 
-			mapProjectBillings.get(idProject).add(b);
+			mapProjectSOBillings.get(idProjectSO).add(b);
 			mapBillingBalance.put(b.Id,b.AcctSeed__Balance__c);
 		}
-
+		System.debug('mapProjectSOBillings: '+mapProjectSOBillings);
+        System.debug('mapBillingBalance: '+mapBillingBalance);
 		for(AcctSeed__Cash_Receipt__c cr :
-			[SELECT Id, AcctSeed__Project__c, AcctSeed__Balance__c
+			[SELECT Id, AcctSeed__Project__c, Sales_Order__c, AcctSeed__Balance__c
 			 FROM AcctSeed__Cash_Receipt__c
-			 WHERE AcctSeed__Project__c IN :mapProjectBillings.keySet()
+			 WHERE (AcctSeed__Project__c IN :mapProjectSOBillings.keySet() OR Sales_Order__c IN :mapProjectSOBillings.keySet())
 			   AND AcctSeed__Status__c = 'Posted'
 			   AND AcctSeed__Balance__c > 0
 			 ORDER BY AcctSeed__Receipt_Date__c, CreatedDate, AcctSeed__Balance__c])
 		{
-			Id idProject = cr.AcctSeed__Project__c;
+			Id idProjectSO = cr.AcctSeed__Project__c;
+			if(cr.Sales_Order__c != null){
+				idProjectSO = cr.Sales_Order__c;
+			}
 
-			if(!mapProjectReceipts.containsKey(idProject))
-				mapProjectReceipts.put(idProject, new list<AcctSeed__Cash_Receipt__c>());
+			if(!mapProjectReceipts.containsKey(idProjectSO))
+				mapProjectReceipts.put(idProjectSO, new list<AcctSeed__Cash_Receipt__c>());
 
-			mapProjectReceipts.get(idProject).add(cr);
+			mapProjectReceipts.get(idProjectSO).add(cr);
 
 			mapReceiptBalance.put(cr.Id, cr.AcctSeed__Balance__c);
 		}
 
 		list<AcctSeed__Billing_Cash_Receipt__c> listBCR = new list<AcctSeed__Billing_Cash_Receipt__c>();
-
-		for(Id idProject : mapProjectBillings.keySet())
+		System.debug('mapProjectReceipts: '+mapProjectReceipts);
+		for(Id idProject : mapProjectSOBillings.keySet())
 		{
-			for(AcctSeed__Billing__c billing : mapProjectBillings.get(idProject))
+			for(AcctSeed__Billing__c billing : mapProjectSOBillings.get(idProject))
 			{
 				Decimal billingBalance = mapBillingBalance.get(billing.Id);
 				if(!(billingBalance == null || billingBalance <= 0)) {
-					//System.debug('billingBalance');
-					//System.debug(billingBalance);
 					if (mapProjectReceipts.containsKey(idProject)) {
 						for (AcctSeed__Cash_Receipt__c receipt : mapProjectReceipts.get(idProject)) {
 							billingBalance = mapBillingBalance.get(billing.Id);
-							//System.debug('billingBalance2');
-							//System.debug(billingBalance);
 							Decimal receiptBalance = mapReceiptBalance.get(receipt.Id);
-							//System.debug('receiptBalance');
-							//System.debug(receiptBalance);
 							if (!(receiptBalance == null || receiptBalance <= 0)) {
 
 								Decimal applyAmount = receiptBalance;
 								if (applyAmount > billingBalance)
 									applyAmount = billingBalance;
-								//System.debug('applyAmount');
-								//System.debug(applyAmount);
 								listBCR.add(new AcctSeed__Billing_Cash_Receipt__c(
 									AcctSeed__Accounting_Period__c = idPeriod,
 									AcctSeed__Applied_Amount__c = applyAmount,
 									AcctSeed__Billing__c = billing.Id,
 									AcctSeed__Cash_Receipt__c = receipt.Id
 								));
-								//System.debug('ba');
-								//System.debug(billingBalance - applyAmount);
-								//System.debug('ra');
-								//System.debug(receiptBalance - applyAmount);
 								mapBillingBalance.put(billing.Id, billingBalance - applyAmount);
 								mapReceiptBalance.put(receipt.Id, receiptBalance - applyAmount);
 							}

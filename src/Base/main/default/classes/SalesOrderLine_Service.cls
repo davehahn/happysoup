@@ -372,15 +372,13 @@ public without sharing class SalesOrderLine_Service{
         System.debug('salesOrderLine_List= '+salesOrderLine_List);
         if(!salesOrderLine_ToBe_Deleted_List.isEmpty() || !salesOrderLine_List.isEmpty())
         {
-            Boolean boolOld = gcBillingLine.disableTrigger;
-            gcBillingLine.disableTrigger = true;
+            TriggerBase.bypass('AcctSeedERP__Sales_Order__c');
+            TriggerBase.bypass('AcctSeedERP__Sales_Order_Line__c');
             if (!salesOrderLine_ToBe_Deleted_List.isEmpty())
                 delete salesOrderLine_ToBe_Deleted_List;
             if (!salesOrderLine_List.isEmpty())
                 upsert salesOrderLine_List;
-            gcBillingLine.disableTrigger = boolOld;
-
-            
+            TriggerBase.clearAllBypasses();
         }
     }
 

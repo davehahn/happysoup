@@ -63,11 +63,29 @@ public without sharing class  EcwidOrderService{
             }
             salesOrder = orderMessageProcessing.createSalesOrder(accountForOrder,lstSalesOrder!=null && ! lstSalesOrder.isEmpty() ? lstSalesOrder[0] : new AcctSeedERP__Sales_Order__c() );
           	System.debug('salesOrder= '+salesOrder);
-           // List<AcctSeed__Billing__c> lstBilling = orderMessageProcessing.Billing(new List<AcctSeedERP__Sales_Order__c>{salesOrder});
-           // orderMessageProcessing.billingCashReceipt(lstBilling); 
-            List<AcctSeedERP__Sales_Order__c>lstSalesOrderForCashReceipt = [Select Id,AcctSeedERP__Customer__c,GL_Account_Variable_1__c,GL_Account_Variable_2__c,AcctSeedERP__Total__c,Name from AcctSeedERP__Sales_Order__c where Id = :salesOrder.id];    
+            //List<AcctSeed__Billing__c> lstBilling = orderMessageProcessing.Billing(new List<AcctSeedERP__Sales_Order__c>{salesOrder});
+            //orderMessageProcessing.billingCashReceipt(lstBilling);
+
+            Ecwid_Sales_Order__e evt = new Ecwid_Sales_Order__e(
+                    Status__c = true,
+                    Sales_Order_Id__c = salesOrder.id
+            );
+            Database.SaveResult result = EventBus.publish( evt );
+
+            // Inspect publishing result for each event
+            if (result.isSuccess()) {
+                System.debug('Successfully published event SO Ecwid.');
+            } else {
+                for(Database.Error err : result.getErrors()) {
+                    System.debug('Error returned: ' +
+                            err.getStatusCode() +
+                            ' - ' +
+                            err.getMessage());
+                }
+            }
+            //List<AcctSeedERP__Sales_Order__c>lstSalesOrderForCashReceipt = [Select Id,AcctSeedERP__Customer__c,GL_Account_Variable_1__c,GL_Account_Variable_2__c,AcctSeedERP__Total__c,Name from AcctSeedERP__Sales_Order__c where Id = :salesOrder.id];
     	
-            SalesOrder_Service.generateCashReceipt(lstSalesOrderForCashReceipt);
+            //SalesOrder_Service.generateCashReceipt(lstSalesOrderForCashReceipt);
             
         }
     }

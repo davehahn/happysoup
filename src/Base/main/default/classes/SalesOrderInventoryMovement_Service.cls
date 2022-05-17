@@ -34,19 +34,16 @@ public without sharing class SalesOrderInventoryMovement_Service {
         createJE(setIdSO);
     }
 
-    public static void createJE(Set<Id> setIdSO)
+    public static void createJE(Set<Id> setFilter)
     {
         Date cogsDate = Date.today();
         Id idGlWip = gcConstants.idGlWip;
         Id idGlCogsParts = gcConstants.idGlCogsParts;
         Id idGlProjectParts = gcConstants.idGlProjectParts;
         Id idGlProjectPartsClearing = gcConstants.idGlProjectPartsClearing;
-
+        Set<Id> setIdSO = new Set<Id>();
         list<AcctSeed__Journal_Entry_Line__c> listJEL = new list<AcctSeed__Journal_Entry_Line__c>();
-        list<AcctSeed__Journal_Entry_Line__c> listJELLabour = new list<AcctSeed__Journal_Entry_Line__c>();
-        List<AcctSeedERP__Sales_Order_Line__c> listMatlNow = new List<AcctSeedERP__Sales_Order_Line__c>();
-        Map<Id,Map<Id,Decimal>> mapPTQ = new Map<Id,Map<Id,Decimal>>();
-        for(AcctSeedERP__Sales_Order_Line__c matl :
+        for(AcctSeedERP__Sales_Order_Line__c soLine :
         [SELECT Id,
                 AcctSeedERP__Product__c,
                 AcctSeedERP__Product__r.RecordType.Name,
@@ -70,30 +67,31 @@ public without sharing class SalesOrderInventoryMovement_Service {
         (SELECT Id, AcctSeed__Units__c FROM Journal_Entry_Lines__r),
         (SELECT Id, AcctSeedERP__Unit_Cost__c FROM AcctSeedERP__Sales_Order_Inventory_Movements__r LIMIT 1)
         FROM AcctSeedERP__Sales_Order_Line__c
-        WHERE (AcctSeedERP__Sales_Order__c IN :setIdSO OR Id = :setIdSO)])
+        WHERE (AcctSeedERP__Sales_Order__c IN :setFilter OR Id = :setFilter)])
         {
-            if((matl.AcctSeedERP__Sales_Order__r.RecordTypeId != gcConstants.idRtProjectManufacturing && matl.AcctSeedERP__Sales_Order__r.RecordTypeId != gcConstants.idRtTradeIn)
-                    || (!matl.AcctSeedERP__Product__r.AcctSeed__Inventory_Product__c && (matl.AcctSeedERP__Sales_Order__r.RecordTypeId == gcConstants.idRtProjectManufacturing
-                    || matl.AcctSeedERP__Sales_Order__r.RecordTypeId == gcConstants.idRtTradeIn)))
+            setIdSO.add(soLine.AcctSeedERP__Sales_Order__c);
+            if((soLine.AcctSeedERP__Sales_Order__r.RecordTypeId != gcConstants.idRtProjectManufacturing && soLine.AcctSeedERP__Sales_Order__r.RecordTypeId != gcConstants.idRtTradeIn)
+                    || (!soLine.AcctSeedERP__Product__r.AcctSeed__Inventory_Product__c && (soLine.AcctSeedERP__Sales_Order__r.RecordTypeId == gcConstants.idRtProjectManufacturing
+                    || soLine.AcctSeedERP__Sales_Order__r.RecordTypeId == gcConstants.idRtTradeIn)))
             {
                 System.debug('Inside');
-                Decimal qty = matl.AcctSeedERP__Quantity_Ordered__c;
-                Decimal amt = matl.AcctSeedERP__Product__r.AcctSeed__Unit_Cost__c;
+                Decimal qty = soLine.AcctSeedERP__Quantity_Ordered__c;
+                Decimal amt = soLine.AcctSeedERP__Product__r.AcctSeed__Unit_Cost__c;
                 Decimal unitCost = 0;
-                if (matl.AcctSeedERP__Product__r.AcctSeed__Inventory_Product__c && !matl.AcctSeedERP__Sales_Order_Inventory_Movements__r.isEmpty()) {
-                    qty = matl.AcctSeedERP__Quantity_Allocated__c;
-                    unitCost = matl.AcctSeedERP__Sales_Order_Inventory_Movements__r[0].AcctSeedERP__Unit_Cost__c;
+                if (soLine.AcctSeedERP__Product__r.AcctSeed__Inventory_Product__c && !soLine.AcctSeedERP__Sales_Order_Inventory_Movements__r.isEmpty()) {
+                    qty = soLine.AcctSeedERP__Quantity_Allocated__c;
+                    unitCost = soLine.AcctSeedERP__Sales_Order_Inventory_Movements__r[0].AcctSeedERP__Unit_Cost__c;
                 }
 
-                if (!matl.AcctSeedERP__Product__r.AcctSeed__Inventory_Product__c) {
-                    unitCost = matl.AcctSeedERP__Product__r.AcctSeed__Unit_Cost__c;
+                if (!soLine.AcctSeedERP__Product__r.AcctSeed__Inventory_Product__c) {
+                    unitCost = soLine.AcctSeedERP__Product__r.AcctSeed__Unit_Cost__c;
                 }
 
-                if (!matl.Journal_Entry_Lines__r.isEmpty())
-                    for (AcctSeed__Journal_Entry_Line__c jel : matl.Journal_Entry_Lines__r) {
+                if (!soLine.Journal_Entry_Lines__r.isEmpty())
+                    for (AcctSeed__Journal_Entry_Line__c jel : soLine.Journal_Entry_Lines__r) {
                         qty -= jel.AcctSeed__Units__c == null ? 0 : jel.AcctSeed__Units__c;
                     }
-                if (matl.AcctSeedERP__Product__r.AcctSeed__Inventory_Product__c || (!matl.AcctSeedERP__Product__r.AcctSeed__Inventory_Product__c && (matl.AcctSeedERP__Sales_Order__r.RecordTypeId == gcConstants.idRtProjectManufacturing || matl.AcctSeedERP__Sales_Order__r.RecordTypeId == gcConstants.idRtTradeIn)))
+                if (soLine.AcctSeedERP__Product__r.AcctSeed__Inventory_Product__c || (!soLine.AcctSeedERP__Product__r.AcctSeed__Inventory_Product__c && (soLine.AcctSeedERP__Sales_Order__r.RecordTypeId == gcConstants.idRtProjectManufacturing || soLine.AcctSeedERP__Sales_Order__r.RecordTypeId == gcConstants.idRtTradeIn)))
                     amt = qty * unitCost;
 
                 if (qty != null && qty != 0) {
@@ -103,19 +101,19 @@ public without sharing class SalesOrderInventoryMovement_Service {
                     qty = qty.setScale(6);
                     Id idDebitGL = idGlProjectParts;
                     Id idCreditGL = idGlProjectPartsClearing;
-                    if (matl.AcctSeedERP__Product__r.AcctSeed__Inventory_Product__c && (matl.AcctSeedERP__Sales_Order__r.RecordTypeId != gcConstants.idRtProjectManufacturing || matl.AcctSeedERP__Sales_Order__r.RecordTypeId != gcConstants.idRtTradeIn)) {
+                    if (soLine.AcctSeedERP__Product__r.AcctSeed__Inventory_Product__c && (soLine.AcctSeedERP__Sales_Order__r.RecordTypeId != gcConstants.idRtProjectManufacturing || soLine.AcctSeedERP__Sales_Order__r.RecordTypeId != gcConstants.idRtTradeIn)) {
                         idDebitGL = idGlCogsParts;
                         idCreditGL = idGlWIP;
-                    } else if (!matl.AcctSeedERP__Product__r.AcctSeed__Inventory_Product__c && (matl.AcctSeedERP__Sales_Order__r.RecordTypeId == gcConstants.idRtProjectManufacturing || matl.AcctSeedERP__Sales_Order__r.RecordTypeId == gcConstants.idRtTradeIn)) {
+                    } else if (!soLine.AcctSeedERP__Product__r.AcctSeed__Inventory_Product__c && (soLine.AcctSeedERP__Sales_Order__r.RecordTypeId == gcConstants.idRtProjectManufacturing || soLine.AcctSeedERP__Sales_Order__r.RecordTypeId == gcConstants.idRtTradeIn)) {
                         idDebitGL = idGlWIP;
-                        idCreditGL = matl.AcctSeedERP__Product__r.AcctSeed__Expense_GL_Account__c;
+                        idCreditGL = soLine.AcctSeedERP__Product__r.AcctSeed__Expense_GL_Account__c;
                     }
                     AcctSeed__Journal_Entry_Line__c debitJE = new AcctSeed__Journal_Entry_Line__c(
                             AcctSeed__Debit__c = amt,
                             AcctSeed__GL_Account__c = idDebitGL,
-                            AcctSeed__Product__c = matl.AcctSeedERP__Product__c,
-                            Sales_Order__c = matl.AcctSeedERP__Sales_Order__c,
-                            Sales_Order_Line__c = matl.Id,
+                            AcctSeed__Product__c = soLine.AcctSeedERP__Product__c,
+                            Sales_Order__c = soLine.AcctSeedERP__Sales_Order__c,
+                            Sales_Order_Line__c = soLine.Id,
                             AcctSeed__Date__c = cogsDate,
                             AcctSeed__Units__c = qty
                     );
@@ -123,9 +121,9 @@ public without sharing class SalesOrderInventoryMovement_Service {
                     AcctSeed__Journal_Entry_Line__c creditJE = new AcctSeed__Journal_Entry_Line__c(
                             AcctSeed__Credit__c = amt,
                             AcctSeed__GL_Account__c = idCreditGL,
-                            AcctSeed__Product__c = matl.AcctSeedERP__Product__c,
-                            Sales_Order__c = matl.AcctSeedERP__Sales_Order__c,
-                            Sales_Order_Line__c = matl.Id,
+                            AcctSeed__Product__c = soLine.AcctSeedERP__Product__c,
+                            Sales_Order__c = soLine.AcctSeedERP__Sales_Order__c,
+                            Sales_Order_Line__c = soLine.Id,
                             AcctSeed__Date__c = cogsDate,
                             AcctSeed__Units__c = qty * (-1)
                     );

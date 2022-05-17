@@ -110,16 +110,19 @@ public without sharing class SalesOrder_Service {
             
          }
          if(!lstCashReceipt.isEmpty()){
+             System.debug('lstCashReceipt:'+lstCashReceipt);
              insert lstCashReceipt;
          }
-      	 /*AcctSeed.PostResult[] postResultsAP = AcctSeed.CashReceiptPostService.postCashReceipts(lstCashReceipt);
+      	 AcctSeed.PostResult[] postResultsAP = AcctSeed.CashReceiptPostService.postCashReceipts(lstCashReceipt);
          for (AcctSeed.PostResult theResult : postResultsAP) {
            if (!theResult.isSuccess) {
                for (AcctSeed.PostResult.PostErrorResult errorResult: theResult.errors) {
                    throw new gcException('Cash Receipt was not posted. Please try again. REASON: ' + errorResult.message);
                }
+           }else{
+               System.debug('Posted! CR');
            }
-       }*/
+       }
     }
    public static void salesInventoryMovement(List<AcctSeedERP__Sales_Order__c>lstSalesOrder){
        System.debug('in salesInventoryMovement');

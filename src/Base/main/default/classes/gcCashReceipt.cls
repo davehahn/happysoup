@@ -95,13 +95,22 @@ public without sharing class gcCashReceipt {
 					setBankGL(cr);
 				if(cr.Payment_Method__c == 'Legend Bucks' && !cr.Is_Legend_Employee__c)
 					cr.addError('To Use Legend bucks the customer must be a Legend Employee.');
-
-				User usr = mapUser.get(UserInfo.getUserId());
-				String glv1Name = usr.GL_Account_Variable_1__c;
-		        if(cr.AcctSeed__GL_Account_Variable_1__c == null
-		        	&& !cr.GMBLASG__Posted__c
-		        	&& glv1Name != null)
-		        	cr.AcctSeed__GL_Account_Variable_1__c = mapGlv1ByName.get(glv1Name).Id;
+				if(mapUser != null) {
+					System.debug('mapUser:'+mapUser);
+					System.debug('UserInfo.getUserId():'+UserInfo.getUserId());
+					User usr = mapUser.get(UserInfo.getUserId());
+					System.debug('usr:'+usr);
+					if(usr != null) {
+						String glv1Name = usr.GL_Account_Variable_1__c;
+						System.debug('glv1Name:' + glv1Name);
+						if (cr.AcctSeed__GL_Account_Variable_1__c == null
+								&& !cr.GMBLASG__Posted__c
+								&& glv1Name != null
+								&& mapGlv1ByName.containsKey(glv1Name)) {
+							cr.AcctSeed__GL_Account_Variable_1__c = mapGlv1ByName.get(glv1Name).Id;
+						}
+					}
+				}
 			}
 		}
 
