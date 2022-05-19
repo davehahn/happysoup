@@ -7,11 +7,12 @@
     <columns>Department__c</columns>
     <columns>Reported_By__c</columns>
     <columns>Status__c</columns>
+    <columns>LAST_UPDATE</columns>
     <filterScope>Everything</filterScope>
     <filters>
         <field>Status__c</field>
         <operation>notEqual</operation>
-        <value>Deployed,Denied</value>
+        <value>Deployed,Done,Denied</value>
     </filters>
     <label>All Open Issues</label>
 </ListView>
