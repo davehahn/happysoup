@@ -19,7 +19,7 @@ private class EcwidSalesOrder_T {
         Ecwid_Sales_Order__e evt = new Ecwid_Sales_Order__e(Status__c = true, Sales_Order_Id__c = so.Id);
         Database.SaveResult sr = EventBus.publish(evt);
         Test.stopTest();
-        for(Database.Error err : sr.getErrors()) {
+        for(Database.Error err : sr.getErrors()) { 
             System.debug('Error returned: ' +
                     err.getStatusCode() +
                     ' - ' +

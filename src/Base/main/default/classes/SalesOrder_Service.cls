@@ -3,84 +3,84 @@ public without sharing class SalesOrder_Service {
 	private static map<Id,AcctSeed__Accounting_Variable__c> mapGlv;
 	private static map<String,AcctSeed__Accounting_Variable__c> mapGlv3ByName;
 	
-     public static List<AcctSeed__Billing__c> Billing(List<AcctSeedERP__Sales_Order__c>lstSalesOrder){
-         System.debug('@@ lstSalesOrder= '+lstSalesOrder);
-        List<AcctSeed__Billing__c> lstBilingToBeSaved = new List<AcctSeed__Billing__c>();
-        List<AcctSeed__Billing_Line__c> lstBilingLineToBeSaved = new List<AcctSeed__Billing_Line__c>();
-        List<BillingWrapper> lstBillingWrapper = new List<BillingWrapper>();
-        List<AcctSeedERP__Sales_Order_Line__c> SalesOrderLineList = new List<AcctSeedERP__Sales_Order_Line__c>();
-        BillingWrapper billingWrapper = new BillingWrapper();
-        Map<id,List<AcctSeedERP__Sales_Order_Line__c>> SalesOrderToSOLineMap = getSalesOrder(lstSalesOrder);
-        for(AcctSeedERP__Sales_Order__c so :lstSalesOrder){
-            //AcctSeed__Billing__c billing = new AcctSeed__Billing__c();
-           // billingWrapper.billing.AcctSeed__Billing_City__c =so.AcctSeedERP__Billing_City__c !=null?so.AcctSeedERP__Billing_City__c:null;
-            //billingWrapper.billing.AcctSeed__Billing_Country__c = so.AcctSeedERP__Billing_Country__c!=null?so.AcctSeedERP__Billing_Country__c:null;
-            billingWrapper.billing.AcctSeed__Customer__c = so.AcctSeedERP__Customer__c!=null ?so.AcctSeedERP__Customer__c:null;
-            billingWrapper.billing.Lgnd_Due_Date__c = Date.today().addMonths(1);
-         	//billing.GL_Account_Variable_3__c = ;
-         	billingWrapper.billing.AcctSeed__Date__c = Date.today();
-            billingWrapper.billing.AcctSeed__Billing_Format__c = 'a0e7h0000023LwkAAE';
-            billingWrapper.billing.Tax_Override__c = true;
-            billingWrapper.billing.AcctSeedERP__Sales_Order__c = so.Id;
-            billingWrapper.billing.AcctSeed__Ledger__c = so.AcctSeedERP__Ledger__c; 
-            billingWrapper.billing.AcctSeed__Status__c = 'Posted';
-           // List<AcctSeedERP__Sales_Order_Line__c> listSalesOrderLine = so.AcctSeedERP__Sales_Order_Line__r;
-            System.debug('@@ SalesOrderLineList= '+SalesOrderToSOLineMap.get(so.Id));
-            for(AcctSeedERP__Sales_Order_Line__c sol :SalesOrderToSOLineMap.get(so.Id)){
-            	AcctSeed__Billing_Line__c billingLine = new AcctSeed__Billing_Line__c();
-                billingLine.AcctSeed__Comment__c=sol.AcctSeedERP__Comment__c;
-                billingLine.AcctSeed__Date__c = Date.today();
-                billingLine.AcctSeed__GL_Account_Variable_2__c=sol.AcctSeedERP__GL_Account_Variable_2__c;
-                billingLine.AcctSeed__GL_Account_Variable_1__c=sol.AcctSeedERP__GL_Account_Variable_1__c;
-                billingLine.AcctSeed__Product__c=sol.AcctSeedERP__Product__c;
-                billingLine.AcctSeed__Product_Unit_Cost__c=sol.AcctSeedERP__Unit_Price__c;
-                billingLine.AcctSeed__Hours_Units__c=sol.AcctSeedERP__Quantity_Ordered__c;
-                billingLine.AcctSeedERP__Sales_Order_Line__c =sol.Id;
-                billingLine.AcctSeed__GL_Account_Variable_3__c=sol.AcctSeedERP__GL_Account_Variable_3__c;
-                billingLine.AcctSeed__Rate__c=sol.AcctSeedERP__Unit_Price__c;
-                billingWrapper.lstBillingLine.add(billingLine);
-               // billingLine.AcctSeed__Rate__c = ;
-            }
-           // lstBillingWrapper.add(new BillingWrapper(billing,lstBilingLineToBeSaved));
-            lstBillingWrapper.add(billingWrapper);
-        }
-        
-
-        
-        System.debug('@@ lstBillingWrapper= '+lstBillingWrapper);
-        for(BillingWrapper wrapper :lstBillingWrapper){
-            lstBilingToBeSaved.add(wrapper.billing);
-        }
-        if(!lstBilingToBeSaved.isEmpty()){
-            System.debug('@@# lstBilingToBeSaved= '+lstBilingToBeSaved);
-            insert lstBilingToBeSaved;
-            
-            System.debug('@@# after insert');
-        }
-        
-        for(BillingWrapper wrapper :lstBillingWrapper){
-            for(AcctSeed__Billing_Line__c billingLine :wrapper.lstBillingLine){
-            	billingLine.AcctSeed__Billing__c =  wrapper.billing.Id;	    
-                lstBilingLineToBeSaved.add(billingLine);
-            }  
-        }
-       System.debug('lstBilingLineToBeSaved= '+lstBilingLineToBeSaved);
-        if(!lstBilingLineToBeSaved.isEmpty()){
-            insert lstBilingLineToBeSaved; 
-        }
-        if(!lstBilingToBeSaved.isEmpty()){ 
-            AcctSeed.PostResult[] postResultsAP = AcctSeed.BillingPostService.postBillings(lstBilingToBeSaved);
-                for (AcctSeed.PostResult theResult : postResultsAP) {
-                    if (!theResult.isSuccess) {
-                        for (AcctSeed.PostResult.PostErrorResult errorResult: theResult.errors) {
-                            throw new gcException('Billing was not posted. Please try again. REASON: ' + errorResult.message);
-                        }
-                    }
-                }
-         }
-        return lstBilingToBeSaved;
-    }
-    
+//     public static List<AcctSeed__Billing__c> Billing(List<AcctSeedERP__Sales_Order__c>lstSalesOrder){
+//         System.debug('@@ lstSalesOrder= '+lstSalesOrder);
+//        List<AcctSeed__Billing__c> lstBilingToBeSaved = new List<AcctSeed__Billing__c>();
+//        List<AcctSeed__Billing_Line__c> lstBilingLineToBeSaved = new List<AcctSeed__Billing_Line__c>();
+//        List<BillingWrapper> lstBillingWrapper = new List<BillingWrapper>();
+//        List<AcctSeedERP__Sales_Order_Line__c> SalesOrderLineList = new List<AcctSeedERP__Sales_Order_Line__c>();
+//        BillingWrapper billingWrapper = new BillingWrapper();
+//        Map<id,List<AcctSeedERP__Sales_Order_Line__c>> SalesOrderToSOLineMap = getSalesOrder(lstSalesOrder);
+//        for(AcctSeedERP__Sales_Order__c so :lstSalesOrder){
+//            //AcctSeed__Billing__c billing = new AcctSeed__Billing__c();
+//           // billingWrapper.billing.AcctSeed__Billing_City__c =so.AcctSeedERP__Billing_City__c !=null?so.AcctSeedERP__Billing_City__c:null;
+//            //billingWrapper.billing.AcctSeed__Billing_Country__c = so.AcctSeedERP__Billing_Country__c!=null?so.AcctSeedERP__Billing_Country__c:null;
+//            billingWrapper.billing.AcctSeed__Customer__c = so.AcctSeedERP__Customer__c!=null ?so.AcctSeedERP__Customer__c:null;
+//            billingWrapper.billing.Lgnd_Due_Date__c = Date.today().addMonths(1);
+//         	//billing.GL_Account_Variable_3__c = ;
+//         	billingWrapper.billing.AcctSeed__Date__c = Date.today();
+//            billingWrapper.billing.AcctSeed__Billing_Format__c = 'a0e7h0000023LwkAAE';
+//            billingWrapper.billing.Tax_Override__c = true;
+//            billingWrapper.billing.AcctSeedERP__Sales_Order__c = so.Id;
+//            billingWrapper.billing.AcctSeed__Ledger__c = so.AcctSeedERP__Ledger__c;
+//            billingWrapper.billing.AcctSeed__Status__c = 'Posted';
+//           // List<AcctSeedERP__Sales_Order_Line__c> listSalesOrderLine = so.AcctSeedERP__Sales_Order_Line__r;
+//            System.debug('@@ SalesOrderLineList= '+SalesOrderToSOLineMap.get(so.Id));
+//            for(AcctSeedERP__Sales_Order_Line__c sol :SalesOrderToSOLineMap.get(so.Id)){
+//            	AcctSeed__Billing_Line__c billingLine = new AcctSeed__Billing_Line__c();
+//                billingLine.AcctSeed__Comment__c=sol.AcctSeedERP__Comment__c;
+//                billingLine.AcctSeed__Date__c = Date.today();
+//                billingLine.AcctSeed__GL_Account_Variable_2__c=sol.AcctSeedERP__GL_Account_Variable_2__c;
+//                billingLine.AcctSeed__GL_Account_Variable_1__c=sol.AcctSeedERP__GL_Account_Variable_1__c;
+//                billingLine.AcctSeed__Product__c=sol.AcctSeedERP__Product__c;
+//                billingLine.AcctSeed__Product_Unit_Cost__c=sol.AcctSeedERP__Unit_Price__c;
+//                billingLine.AcctSeed__Hours_Units__c=sol.AcctSeedERP__Quantity_Ordered__c;
+//                billingLine.AcctSeedERP__Sales_Order_Line__c =sol.Id;
+//                billingLine.AcctSeed__GL_Account_Variable_3__c=sol.AcctSeedERP__GL_Account_Variable_3__c;
+//                billingLine.AcctSeed__Rate__c=sol.AcctSeedERP__Unit_Price__c;
+//                billingWrapper.lstBillingLine.add(billingLine);
+//               // billingLine.AcctSeed__Rate__c = ;
+//            }
+//           // lstBillingWrapper.add(new BillingWrapper(billing,lstBilingLineToBeSaved));
+//            lstBillingWrapper.add(billingWrapper);
+//        }
+//
+//
+//
+//        System.debug('@@ lstBillingWrapper= '+lstBillingWrapper);
+//        for(BillingWrapper wrapper :lstBillingWrapper){
+//            lstBilingToBeSaved.add(wrapper.billing);
+//        }
+//        if(!lstBilingToBeSaved.isEmpty()){
+//            System.debug('@@# lstBilingToBeSaved= '+lstBilingToBeSaved);
+//            insert lstBilingToBeSaved;
+//
+//            System.debug('@@# after insert');
+//        }
+//
+//        for(BillingWrapper wrapper :lstBillingWrapper){
+//            for(AcctSeed__Billing_Line__c billingLine :wrapper.lstBillingLine){
+//            	billingLine.AcctSeed__Billing__c =  wrapper.billing.Id;
+//                lstBilingLineToBeSaved.add(billingLine);
+//            }
+//        }
+//       System.debug('lstBilingLineToBeSaved= '+lstBilingLineToBeSaved);
+//        if(!lstBilingLineToBeSaved.isEmpty()){
+//            insert lstBilingLineToBeSaved;
+//        }
+//        if(!lstBilingToBeSaved.isEmpty()){
+//            AcctSeed.PostResult[] postResultsAP = AcctSeed.BillingPostService.postBillings(lstBilingToBeSaved);
+//                for (AcctSeed.PostResult theResult : postResultsAP) {
+//                    if (!theResult.isSuccess) {
+//                        for (AcctSeed.PostResult.PostErrorResult errorResult: theResult.errors) {
+//                            throw new gcException('Billing was not posted. Please try again. REASON: ' + errorResult.message);
+//                        }
+//                    }
+//                }
+//         }
+//        return lstBilingToBeSaved;
+//    }
+//
    public static void generateCashReceipt(List<AcctSeedERP__Sales_Order__c>lstSalesOrder){
         List<AcctSeed__Cash_Receipt__c> lstCashReceipt = new List<AcctSeed__Cash_Receipt__c>();
         Id idGlCashFloat = gcConstants.idGlCashFloat;
@@ -124,83 +124,84 @@ public without sharing class SalesOrder_Service {
            }
        }
     }
-   public static void salesInventoryMovement(List<AcctSeedERP__Sales_Order__c>lstSalesOrder){
-       System.debug('in salesInventoryMovement');
-       map<Id,map<Id,map<Id,Id>>> mapPWLB = new map<Id,map<Id,map<Id,Id>>>();
-       Map<Id,Id> WarehouseToLocationMap = new Map<Id,Id>(); 
-       Id idLocation;
-        String pIdWarehouse ; 
-        Set<Id> warehouseSet = new Set<Id>();
-       for(AcctSeedERP__Sales_Order__c so :lstSalesOrder){
-           warehouseSet.add(so.Warehouse__c);
-       }
-       
-       
-       for(AcctSeedERP__Location__c loc : [SELECT Id,AcctSeedERP__Warehouse__c FROM AcctSeedERP__Location__c WHERE AcctSeedERP__Warehouse__c in :warehouseSet ORDER BY CreatedDate LIMIT 1]){
-           WarehouseToLocationMap.put(loc.AcctSeedERP__Warehouse__c,loc.Id);
-       }
-        Map<id,List<AcctSeedERP__Sales_Order_Line__c>> SalesOrderToSOLineMap = getSalesOrder(lstSalesOrder);
-		//	idLocation = loc.Id;
-        for(AcctSeedERP__Sales_Order__c so :lstSalesOrder){
-            List<AcctSeedERP__Sales_Order_Line__c> listSalesOrderLine = SalesOrderToSOLineMap.get(so.Id);
-            for(AcctSeedERP__Sales_Order_Line__c sol :listSalesOrderLine){
-                if(sol.AcctSeedERP__Quantity_Needed__c > 0 && sol.AcctSeedERP__Product__r.AcctSeed__Inventory_Product__c){
-                   pIdWarehouse = String.valueOf(so.Warehouse__c);
-                   idLocation = WarehouseToLocationMap.get(so.Warehouse__c);
-                  // System.debug('@@ so.Warehouse__r.id = '+so.Warehouse__r.id);
-                  // System.debug('@@ so.Warehouse__c = '+so.Warehouse__c);
-                    
-                    if(!mapPWLB.containsKey(sol.AcctSeedERP__Product__c) && sol.AcctSeedERP__Product__r.AcctSeed__Inventory_Product__c){
-                        mapPWLB.put(sol.AcctSeedERP__Product__c, new map<Id,map<Id,Id>>{pIdWarehouse => new map<Id,Id>{idLocation => null}});
-                	}
-                }
-            }
-        }
-        System.debug('mapPWLB= '+mapPWLB);
-        GMBLASERP.gcInventoryBalance.findOrCreateBalances(mapPWLB);
-        List<AcctSeedERP__Sales_Order_Inventory_Movement__c> lstSOMovement = new List<AcctSeedERP__Sales_Order_Inventory_Movement__c>();
-       // Integer existingMovementQty = 0; 
-        for(AcctSeedERP__Sales_Order__c so :lstSalesOrder){
-            
-            List<AcctSeedERP__Sales_Order_Line__c> listSalesOrderLine = SalesOrderToSOLineMap.get(so.Id);
-            System.debug('## so.Id= '+so.Id);
-            System.debug('## listSalesOrderLine= '+listSalesOrderLine);
-            for(AcctSeedERP__Sales_Order_Line__c sol :listSalesOrderLine){
-                if(sol.AcctSeedERP__Quantity_Needed__c > 0 && sol.AcctSeedERP__Product__r.AcctSeed__Inventory_Product__c){
-                    pIdWarehouse = String.valueOf(so.Warehouse__c);
-                    idLocation = WarehouseToLocationMap.get(so.Warehouse__c);
-                    /*if(solToInvMovement_map.containsKey(sol.Id)){
-                        for(AcctSeedERP__Sales_Order_Inventory_Movement__c inv :solToInvMovement_map.get(sol.Id)){
-                            existingMovementQty += Integer.valueOf(inv.AcctSeedERP__Quantity__c);   
-                        } 
-                    }*/
-                    if(sol.AcctSeedERP__Product__r.AcctSeed__Inventory_Product__c){
-                        Id idBalance = mapPWLB.get(sol.AcctSeedERP__Product__c).get(pIdWarehouse).get(idLocation);
-                        System.debug('sol.id= '+sol.id);
-                        System.debug('sol.AcctSeedERP__Quantity_Ordered__c= '+sol.AcctSeedERP__Quantity_Ordered__c);
-                        System.debug('sol.AcctSeedERP__Quantity_Ordered__c= '+sol.AcctSeedERP__Quantity_Allocated__c);
-                        
-                            AcctSeedERP__Sales_Order_Inventory_Movement__c soMovement = new AcctSeedERP__Sales_Order_Inventory_Movement__c();
-                            soMovement.GMBLASERP__Product__c = sol.AcctSeedERP__Product__c;
-                            soMovement.AcctSeedERP__Inventory_Balance__c = idBalance;
-                            soMovement.AcctSeedERP__Movement_Date__c = System.today();
-                            soMovement.AcctSeedERP__Quantity__c = sol.AcctSeedERP__Quantity_Needed__c; //sales order line
-                            soMovement.AcctSeedERP__GL_Account_Variable_1__c = sol.AcctSeedERP__GL_Account_Variable_1__c;
-                            soMovement.AcctSeedERP__GL_Account_Variable_2__c = sol.AcctSeedERP__GL_Account_Variable_2__c;
-                            soMovement.AcctSeedERP__GL_Account_Variable_3__c = sol.AcctSeedERP__GL_Account_Variable_3__c;
-                            soMovement.AcctSeedERP__Sales_Order_Line__c = sol.Id;
-                            lstSOMovement.add(soMovement);
-                        
-                     }
-                }    
-            } //end of for
-        
-        }
-        if(!lstSOMovement.isEmpty())
-        	insert lstSOMovement;
-       
-    }
-   public static void refreshStatics(list<AcctSeedERP__Sales_Order__c> listNew)
+//   public static void salesInventoryMovement(List<AcctSeedERP__Sales_Order__c>lstSalesOrder){
+//       System.debug('in salesInventoryMovement');
+//       map<Id,map<Id,map<Id,Id>>> mapPWLB = new map<Id,map<Id,map<Id,Id>>>();
+//       Map<Id,Id> WarehouseToLocationMap = new Map<Id,Id>();
+//       Id idLocation;
+//        String pIdWarehouse ;
+//        Set<Id> warehouseSet = new Set<Id>();
+//       for(AcctSeedERP__Sales_Order__c so :lstSalesOrder){
+//           warehouseSet.add(so.Warehouse__c);
+//       }
+//
+//
+//       for(AcctSeedERP__Location__c loc : [SELECT Id,AcctSeedERP__Warehouse__c FROM AcctSeedERP__Location__c WHERE AcctSeedERP__Warehouse__c in :warehouseSet ORDER BY CreatedDate LIMIT 1]){
+//           WarehouseToLocationMap.put(loc.AcctSeedERP__Warehouse__c,loc.Id);
+//       }
+//        Map<id,List<AcctSeedERP__Sales_Order_Line__c>> SalesOrderToSOLineMap = getSalesOrder(lstSalesOrder);
+//		//	idLocation = loc.Id;
+//        for(AcctSeedERP__Sales_Order__c so :lstSalesOrder){
+//            List<AcctSeedERP__Sales_Order_Line__c> listSalesOrderLine = SalesOrderToSOLineMap.get(so.Id);
+//            for(AcctSeedERP__Sales_Order_Line__c sol :listSalesOrderLine){
+//                if(sol.AcctSeedERP__Quantity_Needed__c > 0 && sol.AcctSeedERP__Product__r.AcctSeed__Inventory_Product__c){
+//                   pIdWarehouse = String.valueOf(so.Warehouse__c);
+//                   idLocation = WarehouseToLocationMap.get(so.Warehouse__c);
+//                  // System.debug('@@ so.Warehouse__r.id = '+so.Warehouse__r.id);
+//                  // System.debug('@@ so.Warehouse__c = '+so.Warehouse__c);
+//
+//                    if(!mapPWLB.containsKey(sol.AcctSeedERP__Product__c) && sol.AcctSeedERP__Product__r.AcctSeed__Inventory_Product__c){
+//                        mapPWLB.put(sol.AcctSeedERP__Product__c, new map<Id,map<Id,Id>>{pIdWarehouse => new map<Id,Id>{idLocation => null}});
+//                	}
+//                }
+//            }
+//        }
+//        System.debug('mapPWLB= '+mapPWLB);
+//        GMBLASERP.gcInventoryBalance.findOrCreateBalances(mapPWLB);
+//        List<AcctSeedERP__Sales_Order_Inventory_Movement__c> lstSOMovement = new List<AcctSeedERP__Sales_Order_Inventory_Movement__c>();
+//       // Integer existingMovementQty = 0;
+//        for(AcctSeedERP__Sales_Order__c so :lstSalesOrder){
+//
+//            List<AcctSeedERP__Sales_Order_Line__c> listSalesOrderLine = SalesOrderToSOLineMap.get(so.Id);
+//            System.debug('## so.Id= '+so.Id);
+//            System.debug('## listSalesOrderLine= '+listSalesOrderLine);
+//            for(AcctSeedERP__Sales_Order_Line__c sol :listSalesOrderLine){
+//                if(sol.AcctSeedERP__Quantity_Needed__c > 0 && sol.AcctSeedERP__Product__r.AcctSeed__Inventory_Product__c){
+//                    pIdWarehouse = String.valueOf(so.Warehouse__c);
+//                    idLocation = WarehouseToLocationMap.get(so.Warehouse__c);
+//                    /*if(solToInvMovement_map.containsKey(sol.Id)){
+//                        for(AcctSeedERP__Sales_Order_Inventory_Movement__c inv :solToInvMovement_map.get(sol.Id)){
+//                            existingMovementQty += Integer.valueOf(inv.AcctSeedERP__Quantity__c);
+//                        }
+//                    }*/
+//                    if(sol.AcctSeedERP__Product__r.AcctSeed__Inventory_Product__c){
+//                        Id idBalance = mapPWLB.get(sol.AcctSeedERP__Product__c).get(pIdWarehouse).get(idLocation);
+//                        System.debug('sol.id= '+sol.id);
+//                        System.debug('sol.AcctSeedERP__Quantity_Ordered__c= '+sol.AcctSeedERP__Quantity_Ordered__c);
+//                        System.debug('sol.AcctSeedERP__Quantity_Ordered__c= '+sol.AcctSeedERP__Quantity_Allocated__c);
+//
+//                            AcctSeedERP__Sales_Order_Inventory_Movement__c soMovement = new AcctSeedERP__Sales_Order_Inventory_Movement__c();
+//                            soMovement.GMBLASERP__Product__c = sol.AcctSeedERP__Product__c;
+//                            soMovement.AcctSeedERP__Inventory_Balance__c = idBalance;
+//                            soMovement.AcctSeedERP__Movement_Date__c = System.today();
+//                            soMovement.AcctSeedERP__Quantity__c = sol.AcctSeedERP__Quantity_Needed__c; //sales order line
+//                            soMovement.AcctSeedERP__GL_Account_Variable_1__c = sol.AcctSeedERP__GL_Account_Variable_1__c;
+//                            soMovement.AcctSeedERP__GL_Account_Variable_2__c = sol.AcctSeedERP__GL_Account_Variable_2__c;
+//                            soMovement.AcctSeedERP__GL_Account_Variable_3__c = sol.AcctSeedERP__GL_Account_Variable_3__c;
+//                            soMovement.AcctSeedERP__Sales_Order_Line__c = sol.Id;
+//                            lstSOMovement.add(soMovement);
+//
+//                     }
+//                }
+//            } //end of for
+//
+//        }
+//        if(!lstSOMovement.isEmpty())
+//        	insert lstSOMovement;
+//
+//    }
+//
+    public static void refreshStatics(list<AcctSeedERP__Sales_Order__c> listNew)
 	{
 		if(mapGlv == null)
 		{
@@ -256,49 +257,50 @@ public without sharing class SalesOrder_Service {
 		}
 	}
     
-    class BillingWrapper{
-        AcctSeed__Billing__c billing;
-        List<AcctSeed__Billing_Line__c> lstBillingLine;
-        
-        BillingWrapper(){
-            billing = new AcctSeed__Billing__c();
-            lstBillingLine = new List<AcctSeed__Billing_Line__c>();
-        }
-        BillingWrapper(AcctSeed__Billing__c billing, List<AcctSeed__Billing_Line__c> lstBillingLine){
-            this.billing = billing;
-            this.lstBillingLine = lstBillingLine;
-        }
-        
-        
-    }
-    private Static Map<id,List<AcctSeedERP__Sales_Order_Line__c>> SalesOrderToSOLineMapForInv = new Map<id,List<AcctSeedERP__Sales_Order_Line__c>>();
-    private static Set<Id> SalesOrderLineId_Set = new Set<Id>();
-    private static List<AcctSeedERP__Sales_Order_Line__c> salesOrderLineForInvMovement = new List<AcctSeedERP__Sales_Order_Line__c>();
-    private static Map<id,List<AcctSeedERP__Sales_Order_Line__c>> getSalesOrder(List<AcctSeedERP__Sales_Order__c> lstSalesOrder){
-    
-        Set<Id> SalesOrderIdSet = new Set<Id>();
-        Map<id,List<AcctSeedERP__Sales_Order_Line__c>> SalesOrderToSOLineMap = new Map<id,List<AcctSeedERP__Sales_Order_Line__c>>();
-        for(AcctSeedERP__Sales_Order__c so :lstSalesOrder){
-        	SalesOrderIdSet.add(so.id);
-        }
-        System.debug('@@ SalesOrderIdSet= '+SalesOrderIdSet);
-        List<AcctSeedERP__Sales_Order_Line__c>SalesOrderLineList = [select id,AcctSeedERP__Quantity_Allocated__c,AcctSeedERP__Comment__c,AcctSeedERP__GL_Account_Variable_3__c,AcctSeedERP__GL_Account_Variable_2__c,AcctSeedERP__GL_Account_Variable_1__c,AcctSeedERP__Product__c,AcctSeedERP__Product__r.AcctSeed__Inventory_Product__c
-									 ,AcctSeedERP__Unit_Price__c,AcctSeedERP__Quantity_Ordered__c,AcctSeedERP__Sales_Order__c,AcctSeedERP__Quantity_Needed__c from AcctSeedERP__Sales_Order_Line__c where 	AcctSeedERP__Sales_Order__c in :SalesOrderIdSet];
-        //List<Ecwid_Field_Mapping__mdt> lstFieldMapping = EcwidRestUtils.dynamicFielddMap.get('Billing Line');
-       for(AcctSeedERP__Sales_Order_Line__c sol :SalesOrderLineList){
-           if(SalesOrderToSOLineMap.containsKey(sol.AcctSeedERP__Sales_Order__c)){
-               SalesOrderToSOLineMap.get(sol.AcctSeedERP__Sales_Order__c).add(sol);
-           }else{
-               SalesOrderToSOLineMap.put(sol.AcctSeedERP__Sales_Order__c,new List<AcctSeedERP__Sales_Order_Line__c>{sol});
-           }
-           
-           
-           SalesOrderLineId_Set.add(sol.id);
-          
-       } 
-        System.debug('@@ SalesOrderToSOLineMap= '+SalesOrderToSOLineMap);
-       return SalesOrderToSOLineMap; 
-    }
+//    class BillingWrapper{
+//        AcctSeed__Billing__c billing;
+//        List<AcctSeed__Billing_Line__c> lstBillingLine;
+//
+//        BillingWrapper(){
+//            billing = new AcctSeed__Billing__c();
+//            lstBillingLine = new List<AcctSeed__Billing_Line__c>();
+//        }
+//        BillingWrapper(AcctSeed__Billing__c billing, List<AcctSeed__Billing_Line__c> lstBillingLine){
+//            this.billing = billing;
+//            this.lstBillingLine = lstBillingLine;
+//        }
+//
+//
+//    }
+//
+   // private Static Map<id,List<AcctSeedERP__Sales_Order_Line__c>> SalesOrderToSOLineMapForInv = new Map<id,List<AcctSeedERP__Sales_Order_Line__c>>();
+  //  private static Set<Id> SalesOrderLineId_Set = new Set<Id>();
+   // private static List<AcctSeedERP__Sales_Order_Line__c> salesOrderLineForInvMovement = new List<AcctSeedERP__Sales_Order_Line__c>();
+//    private static Map<id,List<AcctSeedERP__Sales_Order_Line__c>> getSalesOrder(List<AcctSeedERP__Sales_Order__c> lstSalesOrder){
+//
+//        Set<Id> SalesOrderIdSet = new Set<Id>();
+//        Map<id,List<AcctSeedERP__Sales_Order_Line__c>> SalesOrderToSOLineMap = new Map<id,List<AcctSeedERP__Sales_Order_Line__c>>();
+//        for(AcctSeedERP__Sales_Order__c so :lstSalesOrder){
+//        	SalesOrderIdSet.add(so.id);
+//        }
+//        System.debug('@@ SalesOrderIdSet= '+SalesOrderIdSet);
+//        List<AcctSeedERP__Sales_Order_Line__c>SalesOrderLineList = [select id,AcctSeedERP__Quantity_Allocated__c,AcctSeedERP__Comment__c,AcctSeedERP__GL_Account_Variable_3__c,AcctSeedERP__GL_Account_Variable_2__c,AcctSeedERP__GL_Account_Variable_1__c,AcctSeedERP__Product__c,AcctSeedERP__Product__r.AcctSeed__Inventory_Product__c
+//									 ,AcctSeedERP__Unit_Price__c,AcctSeedERP__Quantity_Ordered__c,AcctSeedERP__Sales_Order__c,AcctSeedERP__Quantity_Needed__c from AcctSeedERP__Sales_Order_Line__c where 	AcctSeedERP__Sales_Order__c in :SalesOrderIdSet];
+//        //List<Ecwid_Field_Mapping__mdt> lstFieldMapping = EcwidRestUtils.dynamicFielddMap.get('Billing Line');
+//       for(AcctSeedERP__Sales_Order_Line__c sol :SalesOrderLineList){
+//           if(SalesOrderToSOLineMap.containsKey(sol.AcctSeedERP__Sales_Order__c)){
+//               SalesOrderToSOLineMap.get(sol.AcctSeedERP__Sales_Order__c).add(sol);
+//           }else{
+//               SalesOrderToSOLineMap.put(sol.AcctSeedERP__Sales_Order__c,new List<AcctSeedERP__Sales_Order_Line__c>{sol});
+//           }
+//
+//
+//           SalesOrderLineId_Set.add(sol.id);
+//
+//       }
+//        System.debug('@@ SalesOrderToSOLineMap= '+SalesOrderToSOLineMap);
+//       return SalesOrderToSOLineMap;
+//    }
 
     /*private static  Map<Id,List<AcctSeedERP__Sales_Order_Inventory_Movement__c>> fetchExistingInventoryMovementForSOL(Set<Id> SalesOrderLineId_Set){
         Map<Id,List<AcctSeedERP__Sales_Order_Inventory_Movement__c>> solToInvMovement_map = new Map<Id,List<AcctSeedERP__Sales_Order_Inventory_Movement__c>>();
@@ -313,7 +315,7 @@ public without sharing class SalesOrder_Service {
         return solToInvMovement_map;
     }*/
     
-    public static void deleteDocumentAndUpdateSerials(Set<Id> salesOrderIdSet){
+  /*  public static void deleteDocumentAndUpdateSerials(Set<Id> salesOrderIdSet){
        
 			List<GMBLASERP__Serial_Number__c> listSerials = new List<GMBLASERP__Serial_Number__c>();
 			List<ERP_document__c> listERPDocs = new List<ERP_document__c>();
@@ -356,7 +358,7 @@ public without sharing class SalesOrder_Service {
 		
  
     }	
-
+*/
     public static void updateSalesTax(List<AcctSeedERP__Sales_Order__c> SalesOrderList, map<Id,AcctSeedERP__Sales_Order__c> oldMap ){
         
 			set<Id> setIdBillingApply = new set<Id>();
@@ -385,8 +387,8 @@ public without sharing class SalesOrder_Service {
 			if(!setIdBillingUpdateTax.isEmpty())
 				SalesOrderLine.updateSalesTax(setIdBillingUpdateTax);
 		}
-   
-    public static void updateAndValidate
+  
+/*    public static void updateAndValidate
 		(map<Id,AcctSeedERP__Sales_Order__c> oldMap,
 		 map<Id,AcctSeedERP__Sales_Order__c> newMap,
 		 list<AcctSeedERP__Sales_Order__c> listNew,
@@ -412,7 +414,7 @@ public without sharing class SalesOrder_Service {
 					&& !allowBillingProjectForInternal
 					&& (b.Internal_Billing__c || oldRec.Internal_Billing__c))
 					b.addError('The ERP Order of an Internal Billing Cannot be changed');
-*/
+*//*
 				if(b.AcctSeedERP__Status__c == 'Posted')
 				{
 					if(boolIsUpdate)
@@ -478,8 +480,8 @@ public without sharing class SalesOrder_Service {
 		if(!boolIsBefore && boolIsUpdate){
 			updateSalesTax(listNew,oldMap);
 		}
-	}
-    
+	}*/
+   
     public static void setTaxVariablesBI(List<AcctSeedERP__Sales_Order__c> SalesOrderList ){
     	for(AcctSeedERP__Sales_Order__c b : SalesOrderList){
 			if(b.AcctSeedERP__Status__c != 'Posted'){

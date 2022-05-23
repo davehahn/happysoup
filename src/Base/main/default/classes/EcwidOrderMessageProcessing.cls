@@ -184,7 +184,7 @@ public without sharing class EcwidOrderMessageProcessing {
 		salesOrder.Ecwid_Order_Id__c = this.order_wrapper.id;  
         System.debug('this.order_wrapper.fulfillmentStatus= '+this.order_wrapper.fulfillmentStatus);
         salesOrder.Stage__c = this.order_wrapper.fulfillmentStatus;
-        if(this.order_wrapper.shippingPerson != null){
+        if(this.order_wrapper.billingPerson != null){
                 salesOrder.AcctSeedERP__Billing_Street__c = this.order_wrapper.billingPerson.street;
                 salesOrder.AcctSeedERP__Billing_City__c = this.order_wrapper.billingPerson.city;
                 salesOrder.AcctSeedERP__Billing_State__c = this.order_wrapper.billingPerson.stateOrProvinceName;
@@ -212,6 +212,7 @@ public without sharing class EcwidOrderMessageProcessing {
         for(Ecwid_Field_Mapping__mdt fieldMapping :lstFieldMapping){
             System.debug('fieldMapping= '+fieldMapping);
             if(fieldMapping.Data_Type__c.equalsIgnoreCase('Query')){
+                System.debug('fieldMapping.Default_Value__c= '+fieldMapping.Default_Value__c);
                 List<SObject> lstObject = Database.query(fieldMapping.Default_Value__c);
                 salesOrder.put(fieldMapping.SF_Field_API_Name__c,lstObject[0].get(fieldMapping.Source_Field__c));
             }
@@ -233,6 +234,11 @@ public without sharing class EcwidOrderMessageProcessing {
         System.debug('this.order_wrapper.paymentStatus= '+this.order_wrapper.paymentStatus);
         salesOrder.Payment_Status__c = this.order_wrapper.paymentStatus;
         salesOrder.Ecwid_Store_Id__c = EcwidRestUtils.storeId;
+        
+        System.debug('salesOrder.AcctSeedERP__Ledger__c= '+salesOrder.AcctSeedERP__Ledger__c);
+        AcctSeed__Ledger__c led = [Select id,AcctSeed__Type__c from AcctSeed__Ledger__c];
+        System.debug('@@led= '+led);
+        salesOrder.AcctSeedERP__Ledger__c = led.id;
         upsert salesOrder;
         System.debug('Sales Order created id= '+salesOrder.Id);
         System.debug('this.order_wrapper.items= '+this.order_wrapper.items);
@@ -317,6 +323,7 @@ public without sharing class EcwidOrderMessageProcessing {
                         List<Ecwid_Field_Mapping__mdt> lstFieldMapping = EcwidRestUtils.dynamicFielddMap.get('Sales Order Line Items');
                         for(Ecwid_Field_Mapping__mdt fieldMapping :lstFieldMapping){
                             if(fieldMapping.Data_Type__c.equalsIgnoreCase('Query')){
+                                System.debug('@@fieldMapping.Default_Value__c ='+fieldMapping.Default_Value__c );
                                 List<SObject> lstObject = Database.query(fieldMapping.Default_Value__c);
                                 OrderLineItem.put(fieldMapping.SF_Field_API_Name__c,
                                                   lstObject[0].get(fieldMapping.Source_Field__c)!= null ?lstObject[0].get(fieldMapping.Source_Field__c):null);
@@ -347,7 +354,7 @@ public without sharing class EcwidOrderMessageProcessing {
          	System.debug('Exception in updateAccount: '+e.getMessage());   
         }
     }
-    
+  /*  
     public List<AcctSeed__Billing__c> Billing(List<AcctSeedERP__Sales_Order__c>lstSalesOrder){
         List<AcctSeed__Billing__c> lstBilingToBeSaved = new List<AcctSeed__Billing__c>();
         List<AcctSeed__Billing_Line__c> lstBilingLineToBeSaved = new List<AcctSeed__Billing_Line__c>();
@@ -529,7 +536,7 @@ public without sharing class EcwidOrderMessageProcessing {
             Id job_id = System.enqueueJob(chatter_job);
         }
     }
-    
+    */
     public List<Product2> getProductData(List<String> lstProductSku){
         List<Product2> lstProduct = [
                                         SELECT 
@@ -551,7 +558,7 @@ public without sharing class EcwidOrderMessageProcessing {
         } 
         return mapProductPrice;
     }
-    class BillingWrapper{
+   /* class BillingWrapper{
         AcctSeed__Billing__c billing;
         List<AcctSeed__Billing_Line__c> lstBillingLine;
         
@@ -566,5 +573,5 @@ public without sharing class EcwidOrderMessageProcessing {
         
         
     }
-
+*/
 }
