@@ -4,9 +4,11 @@
 @isTest
 public class Factory_SalesOrder {
 
-    public static AcctSeedERP__Sales_Order__c createSalesOrder( Account acct)
+    public static AcctSeedERP__Sales_Order__c createSalesOrder( Account acct, Id idWarehouse)
     {
         AcctSeedERP__Sales_Order__c so = buildSO( acct );
+        if(idWarehouse != null)
+            so.Warehouse__c = idWarehouse;
         insert so;
         InventoryTestFactory itf = new InventoryTestFactory();
         Product2[] prods = itf.buildTestProducts( 1, 'Part' );
@@ -15,8 +17,20 @@ public class Factory_SalesOrder {
         gcProduct.disableTrigger = false;
         AcctSeedERP__Sales_Order_Line__c[] sols = new List<AcctSeedERP__Sales_Order_Line__c>();
         for( Product2 p : prods ) {
-            sols.add( buildSOL( so.Id, p.Id) );
+            sols.add( buildSOL( so, p.Id) );
         }
+        insert sols;
+        return so;
+    }
+
+    public static AcctSeedERP__Sales_Order__c createSalesOrder( Account acct, Id idWarehouse, Id idProduct)
+    {
+        AcctSeedERP__Sales_Order__c so = buildSO( acct );
+        if(idWarehouse != null)
+            so.Warehouse__c = idWarehouse;
+        insert so;
+        AcctSeedERP__Sales_Order_Line__c[] sols = new List<AcctSeedERP__Sales_Order_Line__c>();
+        sols.add( buildSOL( so, idProduct) );
         insert sols;
         return so;
     }
@@ -45,5 +59,14 @@ public class Factory_SalesOrder {
                 soId,
                 prodId
         );
+    }
+
+    public static AcctSeedERP__Sales_Order_Line__c buildSOL(AcctSeedERP__Sales_Order__c so, Id prodId )
+    {
+        AcctSeedERP__Sales_Order_Line__c sol = Factory_SalesOrderLine.buildSOL(so.Id, prodId);
+        sol.AcctSeedERP__GL_Account_Variable_1__c = so.GL_Account_Variable_1__c;
+        sol.AcctSeedERP__GL_Account_Variable_2__c = so.GL_Account_Variable_2__c;
+        sol.AcctSeedERP__GL_Account_Variable_3__c = so.GL_Account_Variable_3__c;
+        return sol;
     }
 }

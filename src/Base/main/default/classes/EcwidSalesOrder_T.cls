@@ -15,7 +15,7 @@ private class EcwidSalesOrder_T {
     static void afterInsert() {
         Account customer = Factory_Account.insertCustomerAccounts(1)[0];
         Test.startTest();
-        AcctSeedERP__Sales_Order__c so = Factory_SalesOrder.createSalesOrder(customer);
+        AcctSeedERP__Sales_Order__c so = Factory_SalesOrder.createSalesOrder(customer,null);
         Ecwid_Sales_Order__e evt = new Ecwid_Sales_Order__e(Status__c = true, Sales_Order_Id__c = so.Id);
         Database.SaveResult sr = EventBus.publish(evt);
         Test.stopTest();

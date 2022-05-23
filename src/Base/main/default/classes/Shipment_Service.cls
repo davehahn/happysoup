@@ -116,6 +116,7 @@ public without sharing class Shipment_Service {
                 priorBillAmt = priorBillAmt.setScale(6);
                 Decimal matlAmt = shipmentLine.AcctSeedERP__Sales_Order_Line__r.AcctSeedERP__Total__c;
                 Decimal matlQty = (shipmentLine.AcctSeedERP__Quantity_Shipped__c == null ? 0 : shipmentLine.AcctSeedERP__Quantity_Shipped__c);
+                Decimal matlRate = shipmentLine.AcctSeedERP__Sales_Order_Line__r.AcctSeedERP__Unit_Price__c;
                 Decimal thisBillQty = matlQty - priorBillQty;
                 if (matlQty != 0) {
                     if (priorBillAmt != matlAmt || (hasPriorBill == false && matlAmt == 0) || (hasPriorBill == true && matlAmt == 0 && thisBillQty <> 0)) {
