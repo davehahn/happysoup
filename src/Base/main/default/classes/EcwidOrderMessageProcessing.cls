@@ -239,6 +239,8 @@ public without sharing class EcwidOrderMessageProcessing {
         AcctSeed__Ledger__c led = [Select id,AcctSeed__Type__c from AcctSeed__Ledger__c];
         System.debug('@@led= '+led);
         salesOrder.AcctSeedERP__Ledger__c = led.id;
+        Id isOnlineOrderRT =  Schema.SObjectType.AcctSeedERP__Sales_Order__c.getRecordTypeInfosByDeveloperName().get('Online_Orders').getRecordTypeId();
+        salesOrder.RecordTypeId = isOnlineOrderRT;
         upsert salesOrder;
         System.debug('Sales Order created id= '+salesOrder.Id);
         System.debug('this.order_wrapper.items= '+this.order_wrapper.items);
