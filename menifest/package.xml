@@ -85,6 +85,7 @@
         <members>Case_Promotion</members>
         <members>Case_Warranty_Status</members>
         <members>IT_Issues</members>
+        <members>Shipment_Status</members>
         <name>AnimationRule</name>
     </types>
     <types>
@@ -1250,6 +1251,24 @@
         <members>SalesOrderInventoryMovement_Service</members>
         <members>TA_SalesOrderInvMovement_BI</members>
         <members>Shipment_Service</members>
+        <members>EcwidOrderCalloutMock_T</members>
+        <members>EcwidOrderService_T</members>
+        <members>EcwidSalesOrder_T</members>
+        <members>Factory_SalesOrder</members>
+        <members>Factory_SalesOrderLine</members>
+        <members>SalesOrderLine_Service_T</members>
+        <members>SalesOrder_Service_T</members>
+        <members>Shipment_Service_T</members>
+        <members>TA_EcwidSalesOrder_AI</members>
+        <members>TA_Project_Test_Helper_T</members>
+        <members>TA_SalesOrderInvMovement_AI</members>
+        <members>TA_SalesOrderLine_TaxSetup_BI_BU</members>
+        <members>TA_SalesOrderLine_UpdateTax</members>
+        <members>TA_SalesOrderLine_calculateTax_AI</members>
+        <members>TA_SalesOrder_CashReceipt_AI</members>
+        <members>TA_SalesOrder_TaxSetUp</members>
+        <members>TA_SalesOrder_UpdateSalesTax</members>
+        <members>TA_Shipment_CreateBilling</members>
         <name>ApexClass</name>
     </types>
     <types>
@@ -1638,6 +1657,10 @@
         <members>lgndPurchaseOrderLine</members>
         <members>productDeleteTrigger</members>
         <members>SalesOrderInventoryMovement</members>
+        <members>EcwidSalesOrder</members>
+        <members>SalesOrder</members>
+        <members>SalesOrderLine</members>
+        <members>Shipment</members>
         <name>ApexTrigger</name>
     </types>
     <types>
@@ -2339,6 +2362,42 @@
         <members>sObject_Trigger_Setting.Work_Order</members>
         <members>sObject_Trigger_Setting.Work_Order_Line_Item</members>
         <members>sObject_Trigger_setting.Account</members>
+        <members>EcwidAPI.Order</members>
+        <members>EcwidAPI.Order_Status_Update</members>
+        <members>Ecwid_API_Setting.Security_Keys</members>
+        <members>Ecwid_Field_Mapping.BL_Billing_Format</members>
+        <members>Ecwid_Field_Mapping.SL_GVL1</members>
+        <members>Ecwid_Field_Mapping.SO_Ledger</members>
+        <members>Ecwid_Field_Mapping.SO_PriceBook</members>
+        <members>Ecwid_Field_Mapping.SO_RecordType</members>
+        <members>Ecwid_Field_Mapping.SO_Warehouse</members>
+        <members>Ecwid_Object_Mapping.Billing_Line</members>
+        <members>Ecwid_Object_Mapping.Duplicate_Account</members>
+        <members>Ecwid_Object_Mapping.SL_GLV3</members>
+        <members>Ecwid_Object_Mapping.Sales_Order</members>
+        <members>Ecwid_Object_Mapping.Sales_Order_Line_Items</members>
+        <members>Ecwid_Query_Field_Mapping.BillingState</members>
+        <members>Ecwid_Query_Field_Mapping.Email</members>
+        <members>Ecwid_Query_Field_Mapping.Name</members>
+        <members>Trigger_Action.TA_EcwidSalesOrder_AI</members>
+        <members>Trigger_Action.TA_SalesOrderInvMovement_AI</members>
+        <members>Trigger_Action.TA_SalesOrderInvMovement_BI</members>
+        <members>Trigger_Action.TA_SalesOrderLine_BU</members>
+        <members>Trigger_Action.TA_SalesOrderLine_KIT_AI</members>
+        <members>Trigger_Action.TA_SalesOrderLine_KIT_AU</members>
+        <members>Trigger_Action.TA_SalesOrderLine_KIT_BD</members>
+        <members>Trigger_Action.TA_SalesOrderLine_TaxSetup_BI</members>
+        <members>Trigger_Action.TA_SalesOrderLine_TaxSetup_BU</members>
+        <members>Trigger_Action.TA_SalesOrderLine_calculateTax_AI</members>
+        <members>Trigger_Action.TA_SalesOrder_TaxSetUp</members>
+        <members>Trigger_Action.TA_SalesOrder_TaxSetUp_BU</members>
+        <members>Trigger_Action.TA_SalesOrder_UpdateSalesTax</members>
+        <members>Trigger_Action.TA_Shipment_CreateBilling</members>
+        <members>sObject_Trigger_Setting.Ecwid_Sales_Order</members>
+        <members>sObject_Trigger_Setting.Sales_Order</members>
+        <members>sObject_Trigger_Setting.Sales_Order_Inventory_Movement</members>
+        <members>sObject_Trigger_Setting.Sales_Order_Line</members>
+        <members>sObject_Trigger_Setting.Shipment</members>
         <name>CustomMetadata</name>
     </types>
     <types>
@@ -2656,6 +2715,13 @@
         <members>quotesync__QuoteLineSyncField__c</members>
         <members>quotesync__QuoteSyncField__c</members>
         <members>sObject_Trigger_Setting__mdt</members>
+        <members>EcwidAPI__mdt</members>
+        <members>Ecwid_API_Setting__mdt</members>
+        <members>Ecwid_Field_Mapping__mdt</members>
+        <members>Ecwid_Object_Mapping__mdt</members>
+        <members>Ecwid_Query_Field_Mapping__mdt</members>
+        <members>Ecwid_Sales_Order__e</members>
+        <members>Rest_Service_Log__c</members>
         <name>CustomObject</name>
     </types>
     <types>
@@ -3410,6 +3476,8 @@
         <members>Whitefish</members>
         <members>Work_Order_Line_Item_Record_Page</members>
         <members>desktopDefault</members>
+        <members>Sales_Order_Record_Home1</members>
+        <members>Shipment_Record_Home11</members>
         <name>FlexiPage</name>
     </types>
     <types>
@@ -3538,6 +3606,9 @@
         <members>trailheadapp__Assigned_Badge_Notification</members>
         <members>trailheadapp__Populate_External_Id</members>
         <members>trailheadapp__Populate_UserTrailmix_External_Id</members>
+        <members>Ecwid_Callout</members>
+        <members>Ecwid_Chatter_Post_For_Price_Review</members>
+        <members>Ecwid_Update_Order_Status</members>
         <name>Flow</name>
     </types>
     <types>
