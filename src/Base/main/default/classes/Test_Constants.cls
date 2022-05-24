@@ -93,6 +93,38 @@ public class Test_Constants {
     set;
   }
 
+  public static Id idGlV1 {
+    get {
+      if( idGlV1 == null ){
+        idGlV1 = [
+          SELECT
+            Id
+          FROM AcctSeed__Accounting_Variable__c
+          WHERE AcctSeed__Type__c = 'GL Account Variable 1'
+          AND AcctSeed__Active__c = true
+          LIMIT 1].Id;
+      }
+      return idGLV1;
+    }
+    set;
+  }
+
+  public static Id idGlV2 {
+    get {
+      if( idGlV2 == null ){
+        idGlV2 = [
+          SELECT
+            Id
+          FROM AcctSeed__Accounting_Variable__c
+          WHERE AcctSeed__Type__c = 'GL Account Variable 2'
+          AND AcctSeed__Active__c = true
+          LIMIT 1].Id;
+      }
+      return idGLV2;
+    }
+    set;
+  }
+
   public static Id idRetailPricebook{
     get {
       if( idRetailPricebook == null )

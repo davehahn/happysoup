@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Completed_Info_required_on_Completion</fullName>
+    <active>true</active>
+    <description>Completed On and Completed At are required when the request is completed</description>
+    <errorConditionFormula>AND( OR( ISNULL(Completed_By__c), ISNULL(Completed_On__c)  ),   IsComplete__c  )</errorConditionFormula>
+    <errorMessage>Completed By and Completed On Fields are required if the Request is Complete</errorMessage>
+</ValidationRule>
