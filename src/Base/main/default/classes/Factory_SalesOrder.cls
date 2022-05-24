@@ -4,6 +4,10 @@
 @isTest
 public class Factory_SalesOrder {
 
+    public static AcctSeedERP__Sales_Order__c createSalesOrder( Account acct){
+        return createSalesOrder( acct, null);
+    }
+
     public static AcctSeedERP__Sales_Order__c createSalesOrder( Account acct, Id idWarehouse)
     {
         AcctSeedERP__Sales_Order__c so = buildSO( acct );
