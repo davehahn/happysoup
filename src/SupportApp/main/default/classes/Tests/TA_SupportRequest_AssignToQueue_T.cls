@@ -14,16 +14,6 @@ private class TA_SupportRequest_AssignToQueue_T {
   private static Id que = [SELECT Id FROM Group WHERE Type = 'Queue' AND Name = 'Support Queue' LIMIT 1].Id;
 
   @IsTest
-  static void beforeInsert() {
-    List<Support_Request__c> newList = new List<Support_Request__c>();
-    newList.add(Factory_SupportRequest.buildSupportRequest());
-
-    new TA_SupportRequest_AssignToQueue().beforeInsert(newList);
-
-    System.assertEquals(que, newList[0].OwnerId);
-  }
-
-  @IsTest
   static void triggerTest(){
     Support_Request__c req = Factory_SupportRequest.buildSupportRequest();
 
