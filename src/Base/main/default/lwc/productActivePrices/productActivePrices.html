@@ -1,0 +1,148 @@
+<!--
+ - Created by dave on 2022-05-26.
+ -->
+
+<!-- Product Active Prices -->
+<template>
+  <lightning-card title="Current Pricebooks & Entries" icon-name="standard:price_books">
+    <template if:true={prices}>
+      <lightning-layout multiple-rows="true">
+        <lightning-layout-item size="4" padding="horizontal-small">
+          <div class="card-wrap">
+            <lightning-card title="Retail" icon-name="standard:webcart">
+              <template if:true={prices.retail.pricebookEntryId}>
+                <lightning-button-icon
+                  icon-name="utility:edit"
+                  size="small"
+                  slot="actions"
+                  onclick={handleEdit}
+                  data-record-id={prices.retail.pricebookEntryId}
+                ></lightning-button-icon>
+              </template>
+              <div class="slds-p-left_medium">
+                <div class="slds-text-title slds-m-bottom_x-small">{prices.retail.pricebookName}</div>
+                <template if:true={prices.retail.pricebookEntryId}>
+                  <div class={prices.retail.priceCssClass}>
+                    <lightning-formatted-number
+                      value={prices.retail.price}
+                      format-style="currency"
+                      currency-display-as="symbol"
+                    ></lightning-formatted-number>
+                  </div>
+                </template>
+                <template if:false={prices.retail.pricebookEntryId}>
+                  <div class="slds-align_absolute-center">
+                    <lightning-button label="Add Price" onclick={handleCreateEntry} data-pricebook-id={prices.retail.pricebookId}></lightning-button>
+                  </div>
+                </template>
+              </div>
+            </lightning-card>
+          </div>
+        </lightning-layout-item>
+        <lightning-layout-item size="4" padding="horizontal-small">
+          <div class="card-wrap">
+            <lightning-card title="Partner" icon-name="standard:asset_relationship">
+              <template if:true={prices.partner.pricebookEntryId}>
+                <lightning-button-icon
+                  icon-name="utility:edit"
+                  size="small"
+                  slot="actions"
+                  onclick={handleEdit}
+                  data-record-id={prices.partner.pricebookEntryId}
+                ></lightning-button-icon>
+              </template>
+              <div class="slds-p-left_medium">
+                <div class="slds-text-title slds-m-bottom_x-small">{prices.partner.pricebookName}</div>
+                <template if:true={prices.partner.pricebookEntryId}>
+                  <div class={prices.partner.priceCssClass}>
+                    <lightning-formatted-number
+                      value={prices.partner.price}
+                      format-style="currency"
+                      currency-display-as="symbol"
+                    ></lightning-formatted-number>
+                  </div>
+                </template>
+                <template if:false={prices.partner.pricebookEntryId}>
+                  <div class="slds-align_absolute-center">
+                    <lightning-button label="Add Price" onclick={handleCreateEntry} data-pricebook-id={prices.partner.pricebookId}></lightning-button>
+                  </div>
+                </template>
+              </div>
+            </lightning-card>
+          </div>
+        </lightning-layout-item>
+        <lightning-layout-item size="4" padding="horizontal-small">
+          <div class="card-wrap">
+            <lightning-card title="Factory" icon-name="standard:store_group">
+              <template if:true={prices.factory.pricebookEntryId}>
+                <lightning-button-icon
+                  icon-name="utility:edit"
+                  size="small"
+                  slot="actions"
+                  onclick={handleEdit}
+                  data-record-id={prices.factory.pricebookEntryId}
+                ></lightning-button-icon>
+              </template>
+              <div class="slds-p-left_medium">
+                <div class="slds-text-title slds-m-bottom_x-small">{prices.factory.pricebookName}</div>
+                <template if:true={prices.factory.pricebookEntryId}>
+                  <div class={prices.factory.priceCssClass}>
+                    <lightning-formatted-number
+                      value={prices.factory.price}
+                      format-style="currency"
+                      currency-display-as="symbol"
+                    ></lightning-formatted-number>
+                  </div>
+                </template>
+                <template if:false={prices.factory.pricebookEntryId}>
+                  <div class="slds-align_absolute-center">
+                    <lightning-button label="Add Price" onclick={handleCreateEntry} data-pricebook-id={prices.factory.pricebookId}></lightning-button>
+                  </div>
+                </template>
+              </div>
+            </lightning-card>
+          </div>
+        </lightning-layout-item>
+      </lightning-layout>
+    </template>
+  </lightning-card>
+
+  <!-- Edit Modal -->
+  <template if:true={showForm}>
+    <section
+      role="dialog"
+      tabindex="-1"
+      aria-labelledby="modal-heading-01"
+      aria-modal="true"
+      aria-describedby="modal-content-id-1"
+      class="slds-modal slds-fade-in-open"
+    >
+      <div class="slds-modal__container">
+        <template if:true={isBusy}>
+          <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+        </template>
+        <lightning-record-edit-form record-id={editingRecordId} object-api-name={editObjectApiName} onsubmit={handleEditSubmit} onsuccess={handleEditSuccess} onerror={handleEditError}>
+          <header class="slds-modal__header">
+            <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">{formHeader}</h2>
+          </header>
+          <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+            <lightning-messages></lightning-messages>
+            <div class="slds-m-around_medium">
+              <template if:true={pricebookId}>
+                <lightning-input-field field-name={pricebookIdField} value={pricebookId} disabled="true"></lightning-input-field>
+                <lightning-input-field field-name={productIdFiled} value={recordId} disabled="true"></lightning-input-field>
+              </template>
+              <lightning-input-field field-name={isActiveField}></lightning-input-field>
+              <lightning-input-field field-name={unitPriceField}></lightning-input-field>
+            </div>
+          </div>
+          <footer class="slds-modal__footer">
+            <lightning-button label="Cancel" variant="neutral" onclick={handleCancel} class="slds-m-right_small"></lightning-button>
+            <lightning-button variant="brand" type="submit" name="save" label="Save"></lightning-button>
+          </footer>
+        </lightning-record-edit-form>
+      </div>
+    </section>
+    <div class="slds-backdrop slds-backdrop_open"></div>
+  </template>
+</template>

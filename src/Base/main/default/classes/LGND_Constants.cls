@@ -187,7 +187,7 @@ public without sharing class LGND_Constants {
     get {
       if( retailPricebookId == null )
       {
-        retailPricebookId = Legend_Settings__c.getOrgDefaults().Default_Retail_Pricebook__c;
+        retailPricebookId = Application_Constants.getInstance().activePricebooks.retailId;
       }
       return retailPricebookId;
     }
@@ -198,7 +198,7 @@ public without sharing class LGND_Constants {
     get {
       if( partnerPricebookId == null )
       {
-        partnerPricebookId = Legend_Settings__c.getOrgDefaults().Default_Partner_Pricebook__c;
+        partnerPricebookId =Application_Constants.getInstance().activePricebooks.partnerId;
       }
       return partnerPricebookId;
     }
@@ -209,7 +209,7 @@ public without sharing class LGND_Constants {
     get {
       if( factoryPricebookId == null )
       {
-        factoryPricebookId = Legend_Settings__c.getOrgDefaults().Default_Factory_Pricebook__c;
+        factoryPricebookId = Application_Constants.getInstance().activePricebooks.factoryId;
       }
       return factoryPricebookId;
     }

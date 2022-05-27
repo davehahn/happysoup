@@ -26,6 +26,16 @@ public inherited sharing class Application_Constants
     private set;
   }
 
+  public ActivePricebooks activePricebooks {
+    get {
+      if( activePricebooks == null ){
+        activePricebooks = new ActivePricebooks();
+      }
+      return activePricebooks;
+    }
+    set {}
+  }
+
   public UtilityProducts utilityProducts {
     get {
       if( utilityProducts == null ){
@@ -53,6 +63,35 @@ public inherited sharing class Application_Constants
   {
     if( instance == null ) instance = new Application_Constants();
     return instance;
+  }
+
+  public class ActivePricebooks {
+    private final Legend_Settings__c settings {
+      get {
+        if( settings == null ){
+          settings = Legend_Settings__c.getOrgDefaults();
+        }
+        return settings;
+      }
+      set{}
+    }
+    public Id retailId;
+    public Id partnerId;
+    public Id factoryId;
+
+    public ActivePricebooks() {
+      this.retailId = settings.Default_Retail_Pricebook__c;
+      this.partnerId = settings.Default_Partner_Pricebook__c;
+      this.factoryId = settings.Default_Factory_Pricebook__c;
+    }
+
+    public Set<Id> idSet(){
+      Set<Id> result = new Set<Id>();
+      result.add(this.retailId);
+      result.add(this.partnerId);
+      result.add(this.factoryId);
+      return result;
+    }
   }
 
 
