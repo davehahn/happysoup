@@ -236,10 +236,12 @@ public without sharing class EcwidOrderMessageProcessing {
         salesOrder.Payment_Status__c = this.order_wrapper.paymentStatus;
         salesOrder.Ecwid_Store_Id__c = EcwidRestUtils.storeId;
         
-        System.debug('salesOrder.AcctSeedERP__Ledger__c= '+salesOrder.AcctSeedERP__Ledger__c);
-        AcctSeed__Ledger__c led = [Select id,AcctSeed__Type__c from AcctSeed__Ledger__c WHERE AcctSeed__Type__c = 'Transactional' limit 1]; 
-        System.debug('@@led= '+led);
-        salesOrder.AcctSeedERP__Ledger__c = led.id;
+       // System.debug('salesOrder.AcctSeedERP__Ledger__c= '+salesOrder.AcctSeedERP__Ledger__c);
+       if(Test.isRunningTest()) {
+           AcctSeed__Ledger__c led = [Select id,AcctSeed__Type__c from AcctSeed__Ledger__c WHERE AcctSeed__Type__c = 'Transactional' limit 1];
+           System.debug('@@led= ' + led);
+           salesOrder.AcctSeedERP__Ledger__c = led.id;
+       }
         Id isOnlineOrderRT =  Schema.SObjectType.AcctSeedERP__Sales_Order__c.getRecordTypeInfosByDeveloperName().get('Online_Orders').getRecordTypeId();
         salesOrder.RecordTypeId = isOnlineOrderRT;
         Legend_Settings__c settings = Legend_Settings__c.getOrgDefaults();
