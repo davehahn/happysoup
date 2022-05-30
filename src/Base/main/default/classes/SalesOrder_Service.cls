@@ -99,7 +99,7 @@ public without sharing class SalesOrder_Service {
                 AcctSeed__Amount__c = so.AcctSeedERP__Total__c,
 				AcctSeed__Bank_Account__c = idGlBank,
 				AcctSeed__Payment_Reference__c = so.Name + '_' + System.now().format(),
-				Payment_Method__c = 'Cash',
+				Payment_Method__c = 'Online Store',
 				AcctSeed__Purpose__c = 'Customer Receipt',
                 AcctSeed__Receipt_Date__c = System.today(),
                 AcctSeed__GL_Account_Variable_2__c = so.GL_Account_Variable_2__c,
