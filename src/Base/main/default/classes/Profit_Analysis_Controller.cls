@@ -129,6 +129,8 @@ public with sharing class Profit_Analysis_Controller
     private String sObjectId;
     private String sObjectName;
     private String pricebookName;
+    private String pricebookSalesYear;
+    private Decimal pricebookVersion;
 
     public ResultWrapper( String recordId, String pbId, String province )
     {
@@ -212,8 +214,10 @@ public with sharing class Profit_Analysis_Controller
       {
         when 'Opportunity'
         {
-          Opportunity opp = [ SELECT Id, GL_Account_Variable_3__r.Name, Pricebook2.Name FROM Opportunity WHERE Id = :this.sObjectId ];
+          Opportunity opp = [ SELECT Id, GL_Account_Variable_3__r.Name, Pricebook2.Name, Pricebook2.Sales_Year__c, Pricebook2.Version__c FROM Opportunity WHERE Id = :this.sObjectId ];
           this.pricebookName = opp.Pricebook2.Name;
+          this.pricebookVersion = opp.Pricebook2.Version__c;
+          this.pricebookSalesYear = opp.Pricebook2.Sales_Year__c;
           if( this.currentProvince == null )
           {
             this.currentProvince = opp.GL_Account_Variable_3__r.Name;
@@ -221,8 +225,10 @@ public with sharing class Profit_Analysis_Controller
         }
         when 'AcctSeed__Project__c'
         {
-          AcctSeed__Project__c project = [ SELECT Id, GL_Account_Variable_3__r.Name, GMBLASERP__Pricebook__r.Name FROM AcctSeed__Project__c WHERE Id = :this.sObjectId ];
+          AcctSeed__Project__c project = [ SELECT Id, GL_Account_Variable_3__r.Name, GMBLASERP__Pricebook__r.Name, GMBLASERP__Pricebook__r.Sales_Year__c, GMBLASERP__Pricebook__r.Version__c FROM AcctSeed__Project__c WHERE Id = :this.sObjectId ];
           this.pricebookName = project.GMBLASERP__Pricebook__r.Name;
+          this.pricebookSalesYear = project.GMBLASERP__Pricebook__r.Sales_Year__c;
+          this.pricebookVersion = project.GMBLASERP__Pricebook__r.Version__c;
           if( this.currentProvince == null )
           {
             this.currentProvince = project.GL_Account_Variable_3__r.Name;
@@ -241,10 +247,11 @@ public with sharing class Profit_Analysis_Controller
 
     private void setCurrentPB()
     {
-      String recordPbYear =  findRecordPricebookYear();
+      String matcher =  findRecordPricebookMatcher();
       for(Map<String, String> pbOpt : this.pbOptions )
       {
-        if(pbOpt.get('name').contains( recordPbYear) )
+        String factoryMatcher = pbOpt.get('year') + '-' + pbOpt.get('version');
+        if( matcher == factoryMatcher )
         {
           this.pbId = pbOpt.get('id');
           break;
@@ -273,23 +280,25 @@ public with sharing class Profit_Analysis_Controller
 
     private void createOptions()
     {
-      for( Pricebook2 pb : [SELECT Id, Name FROM Pricebook2 WHERE Name LIKE '%Factory%'] )
+      for( Pricebook2 pb : [SELECT Id, Name, Sales_Year__c, Version__c FROM Pricebook2 WHERE Name LIKE '%Factory%'] )
       {
         this.pbOptions.add( new Map<String, String>{
           'id' => pb.Id,
-          'name' => pb.Name
+          'name' => pb.Name,
+          'year' => pb.Sales_Year__c,
+          'version' => String.valueOf( pb.Version__c)
         });
       }
       this.provinceOptions = LGND_Utilities.getPicklistValues('Product_Fee_Amount__c', 'Province__c' );
     }
 
-    private String findRecordPricebookYear()
+    private String findRecordPricebookMatcher()
     {
-      if( this.pricebookName != null )
+      if( this.pricebookSalesYear != null && this.pricebookVersion != null )
       {
         try
         {
-          return this.pricebookName.remove(' ').split('-')[0];
+          return this.pricebookSalesYear + '-' + this.pricebookVersion;
         }
         catch( Exception e ){}
       }
