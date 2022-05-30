@@ -207,7 +207,7 @@ public without sharing class EcwidOrderMessageProcessing {
                 //salesOrder. = this.order_wrapper.billingPerson.phone;
             }
         
-        List<Ecwid_Field_Mapping__mdt> lstFieldMapping = EcwidRestUtils.dynamicFielddMap.get('Sales Order');
+       /* List<Ecwid_Field_Mapping__mdt> lstFieldMapping = EcwidRestUtils.dynamicFielddMap.get('Sales Order');
         
         for(Ecwid_Field_Mapping__mdt fieldMapping :lstFieldMapping){
             System.debug('fieldMapping= '+fieldMapping);
@@ -222,6 +222,7 @@ public without sharing class EcwidOrderMessageProcessing {
                 salesOrder.put(fieldMapping.SF_Field_API_Name__c,fieldMapping.Default_Value__c);
             }
         }
+        */
         if(!String.isEmpty(account.AcctSeed__GL_Account_Variable_3__c )){
             salesOrder.GL_Account_Variable_3__c = account.AcctSeed__GL_Account_Variable_3__c;
         }else{
@@ -236,11 +237,14 @@ public without sharing class EcwidOrderMessageProcessing {
         salesOrder.Ecwid_Store_Id__c = EcwidRestUtils.storeId;
         
         System.debug('salesOrder.AcctSeedERP__Ledger__c= '+salesOrder.AcctSeedERP__Ledger__c);
-        AcctSeed__Ledger__c led = [Select id,AcctSeed__Type__c from AcctSeed__Ledger__c];
+        AcctSeed__Ledger__c led = [Select id,AcctSeed__Type__c from AcctSeed__Ledger__c WHERE AcctSeed__Type__c = 'Transactional' limit 1]; 
         System.debug('@@led= '+led);
         salesOrder.AcctSeedERP__Ledger__c = led.id;
         Id isOnlineOrderRT =  Schema.SObjectType.AcctSeedERP__Sales_Order__c.getRecordTypeInfosByDeveloperName().get('Online_Orders').getRecordTypeId();
         salesOrder.RecordTypeId = isOnlineOrderRT;
+        Legend_Settings__c settings = Legend_Settings__c.getOrgDefaults();
+		Id retailPbId = settings.Default_Retail_Pricebook__c;
+        salesOrder.Pricebook__c = retailPbId;
         upsert salesOrder;
         System.debug('Sales Order created id= '+salesOrder.Id);
         System.debug('this.order_wrapper.items= '+this.order_wrapper.items);
@@ -321,8 +325,8 @@ public without sharing class EcwidOrderMessageProcessing {
                             OrderLineItem.AcctSeedERP__Sales_Order__c = salesOrder.id;
                         }
                         
-                        
-                        List<Ecwid_Field_Mapping__mdt> lstFieldMapping = EcwidRestUtils.dynamicFielddMap.get('Sales Order Line Items');
+                          
+                        /*List<Ecwid_Field_Mapping__mdt> lstFieldMapping = EcwidRestUtils.dynamicFielddMap.get('Sales Order Line Items');
                         for(Ecwid_Field_Mapping__mdt fieldMapping :lstFieldMapping){
                             if(fieldMapping.Data_Type__c.equalsIgnoreCase('Query')){
                                 System.debug('@@fieldMapping.Default_Value__c ='+fieldMapping.Default_Value__c );
@@ -330,7 +334,7 @@ public without sharing class EcwidOrderMessageProcessing {
                                 OrderLineItem.put(fieldMapping.SF_Field_API_Name__c,
                                                   lstObject[0].get(fieldMapping.Source_Field__c)!= null ?lstObject[0].get(fieldMapping.Source_Field__c):null);
                             }
-                        }
+                        }*/
                         lstOrderLineItemToSave.add(OrderLineItem);
                     }  
                 }

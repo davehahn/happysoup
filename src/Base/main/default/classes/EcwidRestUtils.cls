@@ -122,18 +122,6 @@ global without sharing class EcwidRestUtils {
                                                                                 Ecwid_Query_Field_Mapping__r
                                                                               WHERE
                                                                                 Is_Active__c=TRUE
-                                                                          ),
-                                                                          (
-                                                                                SELECT 
-                                                                                  Data_Type__c,
-                                                                                  Default_Value__c,
-                                                                                  JSON_Field__c,
-                                                                                  SF_Field_API_Name__c,
-                                                                                  Source_Field__c
-                                                                                FROM
-                                                                                  Ecwid_Field_Mapping__r
-                                                                                WHERE
-                                                                                    Is_Active__c=TRUE
                                                                           )
                                                                       FROM
                                                                           Ecwid_Object_Mapping__mdt
@@ -144,16 +132,16 @@ global without sharing class EcwidRestUtils {
 
         for(Ecwid_Object_Mapping__mdt query :ecwidDynamicQueriesList ){
             List<Ecwid_Query_Field_Mapping__mdt> fieldList = new List<Ecwid_Query_Field_Mapping__mdt>();
-            List<Ecwid_Field_Mapping__mdt> lstFieldMapping = new List<Ecwid_Field_Mapping__mdt>();
+            //List<Ecwid_Field_Mapping__mdt> lstFieldMapping = new List<Ecwid_Field_Mapping__mdt>();
             for(Ecwid_Query_Field_Mapping__mdt field : query.Ecwid_Query_Field_Mapping__r){
                 fieldList.add(field);
             }
-             for(Ecwid_Field_Mapping__mdt fieldMapping : query.Ecwid_Field_Mapping__r){
+             /*for(Ecwid_Field_Mapping__mdt fieldMapping : query.Ecwid_Field_Mapping__r){
                 lstFieldMapping.add(fieldMapping);
-            }
+            }*/
             dynamicQueryMap.put(query.MasterLabel,query.Query__c);
             dynamicQueryFieldMap.put(query.MasterLabel,fieldList);
-            dynamicFielddMap.put(query.MasterLabel,lstFieldMapping);
+            //dynamicFielddMap.put(query.MasterLabel,lstFieldMapping);
             System.debug('dynamicQueryMap= '+dynamicQueryMap);
 
         }
