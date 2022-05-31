@@ -242,7 +242,7 @@ public without sharing class EcwidOrderMessageProcessing {
            System.debug('@@led= ' + led);
            salesOrder.AcctSeedERP__Ledger__c = led.id;
        }
-        Id isOnlineOrderRT =  Schema.SObjectType.AcctSeedERP__Sales_Order__c.getRecordTypeInfosByDeveloperName().get('Online_Orders').getRecordTypeId();
+        Id isOnlineOrderRT =  LGND_Utilities.recordTypeIdFromName('AcctSeedERP__Sales_Order__c', 'Online Orders');
         salesOrder.RecordTypeId = isOnlineOrderRT;
         Legend_Settings__c settings = Legend_Settings__c.getOrgDefaults();
 		Id retailPbId = settings.Default_Retail_Pricebook__c;
