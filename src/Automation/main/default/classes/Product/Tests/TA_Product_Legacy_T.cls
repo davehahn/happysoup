@@ -1,8 +1,10 @@
 @isTest
 public class TA_Product_Legacy_T {
 
-    final static String RECORDTYPE = 'Insurance';
-    final static String FAMILY = 'Insurance';
+    final static String NONSERIALIZED_RECORDTYPE = 'Insurance';
+    final static String NONSERIALIZED_FAMILY = 'Insurance';
+    final static String SERIALIZED_RECORDTYPE = 'Boat';
+    final static String SERIALIZED_FAMILY = 'Pontoon';
     static List<Product2> products;
     private static List<Product2> getData(){
         return [Select
@@ -28,7 +30,8 @@ public class TA_Product_Legacy_T {
         Factory_CustomSettings.setupInventorySettings();
         Factory_AccountPayable.insertAccountPayable(5);
         new Factory_AccountingVariables();
-        List<Product2> serializedProducts = Factory_Product.createSerializedProducts(RECORDTYPE, FAMILY, 10);
+        Factory_Product.createSerializedProducts(SERIALIZED_RECORDTYPE, SERIALIZED_FAMILY, 10);
+        Factory_Product.createNonSerializedProducts(NONSERIALIZED_RECORDTYPE, NONSERIALIZED_FAMILY, 10);
     }
 
     @IsTest
