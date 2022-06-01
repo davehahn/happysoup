@@ -6,8 +6,13 @@ public with sharing class Flow_Bypasser
 {
   private static Flow_Bypasser instance = null;
 
-  public Boolean isBypassed( String sObjectName, String flowName ){
-    return TriggerBase.isBypassed( sObjectName ) || TriggerActionFlow.isBypassed( flowName );
+//  public Boolean isBypassed( String sObjectName, String flowName ){
+//    return TriggerBase.isBypassed( sObjectName ) || TriggerActionFlow.isBypassed( flowName );
+//  }
+
+  public Boolean isBypassed( FlowBypasserDescriptor flowDescriptor ){
+    if( Test.isRunningTest() && flowDescriptor.alwaysBypassDuringApexUnitTests == true ) return true;
+    return TriggerBase.isBypassed( flowDescriptor.sObjectName ) || TriggerActionFlow.isBypassed( flowDescriptor.flowName );
   }
 
   private Flow_Bypasser(){}
@@ -22,6 +27,8 @@ public with sharing class Flow_Bypasser
     public String sObjectName;
     @InvocableVariable
     public String flowName;
+    @InvocableVariable
+    public Boolean alwaysBypassDuringApexUnitTests;
 
     public FlowBypasserDescriptor(){}
   }
@@ -34,7 +41,7 @@ public with sharing class Flow_Bypasser
   public static List<Boolean> isFlowBypassed( List<FlowBypasserDescriptor> descriptors ){
     List<Boolean> result = new List<Boolean>();
     for( FlowBypasserDescriptor d : descriptors ){
-      result.add(Flow_Bypasser.getInstance().isBypassed(descriptors[0].sObjectName, descriptors[0].flowName) );
+      result.add(Flow_Bypasser.getInstance().isBypassed(d) );
     }
     return result;
   }
