@@ -151,8 +151,7 @@ global class EmailComponentController {
                         GMBLASERP__Total_Price__c,
                         GMBLASERP__Unit_Price__c,
                         Product_Record_Type__c,
-                        AcctSeedERP__Comment__c,
-                        AcctSeedERP__Product__r.Unique_Product_Code__c
+                        AcctSeedERP__Comment__c
                  FROM AcctSeedERP__Materials__r)
                FROM AcctSeed__Project_Task__c
                WHERE AcctSeed__Project__c = :erpId

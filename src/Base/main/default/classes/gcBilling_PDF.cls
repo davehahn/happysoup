@@ -46,7 +46,6 @@ global without sharing class gcBilling_PDF{
 								AcctSeed__Product__r.Name,
 								AcctSeed__Product__r.Description,
 								AcctSeed__Product__r.ProductCode,
-								AcctSeed__Product__r.Unique_Product_Code__c,
 								AcctSeed__Product__r.Product_Type__c,
 								AcctSeed__Hours_Units__c,
 								AcctSeed__Total__c,
@@ -71,7 +70,6 @@ global without sharing class gcBilling_PDF{
 				m.put('productName', line.AcctSeed__Product__r.Name);
 				m.put('productDescription', line.AcctSeed__Product__r.Description == null?'':line.AcctSeed__Product__r.Description);
 				m.put('productCode', line.AcctSeed__Product__r.ProductCode == null?'':line.AcctSeed__Product__r.ProductCode);
-				m.put('productUniqueCode', line.AcctSeed__Product__r.Unique_Product_Code__c == null?'':line.AcctSeed__Product__r.Unique_Product_Code__c);
 				m.put('productType', line.AcctSeed__Product__r.Product_Type__c == null?'':line.AcctSeed__Product__r.Product_Type__c);
 				m.put('quantity', String.valueOf((line.AcctSeed__Hours_Units__c == null?0:line.AcctSeed__Hours_Units__c).setScale(2)));
 				m.put('totalAmount', String.valueOf((line.AcctSeed__Total__c == null?0:line.AcctSeed__Total__c).setScale(2)));

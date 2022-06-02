@@ -39,7 +39,7 @@ global with sharing class RetailCounterSaleController {
       this.pricebookEntryId = oli.PricebookEntryId;
       this.name = oli.Description;
       this.nameFR = oli.PricebookEntry.Product2.Name_FR__c;
-      this.productCode = prod.Unique_Product_Code__c == null ? '-' : prod.Unique_Product_Code__c;
+      this.productCode = prod.ProductCode == null ? '-' : prod.ProductCode;
       this.productRecordType = prod.recordType.Name;
       this.isTaxableProduct =  oli.PricebookEntry.Product2.AcctSeed__Accounting_Type__c == 'Taxable Product' ? true : false;
       processKitComponents(prod.To_Product_Options__r);
@@ -67,7 +67,7 @@ global with sharing class RetailCounterSaleController {
     {
       this.Id = prod.Id;
       this.isKit = false;
-      this.productCode = prod.Unique_Product_Code__c == null ? '-' : prod.Unique_Product_Code__c;
+      this.productCode = prod.ProductCode == null ? '-' : prod.ProductCode;
       this.quantity = 1;
       this.productRecordType = prod.RecordType.Name;
       this.productFamily = prod.Family;
@@ -293,7 +293,7 @@ global with sharing class RetailCounterSaleController {
     List<LineItemWrapper> result = new List<LineItemWrapper>();
     Id feeRT = LGND_Utilities.recordTypeIdFromName('Product2', 'Fees');
     String s = '%' + searchString + '%';
-    List<Product2> products = [SELECT Id, Name, Name_FR__c, ProductCode, Description, Description_FR__c, Family, RecordType.Name, Unique_Product_Code__c, AcctSeed__Accounting_Type__c, AcctSeed__Inventory_Type__c,
+    List<Product2> products = [SELECT Id, Name, Name_FR__c, ProductCode, Description, Description_FR__c, Family, RecordType.Name, AcctSeed__Accounting_Type__c, AcctSeed__Inventory_Type__c,
             (SELECT Id,
                     Standard__c,
                     Maximum__c,
@@ -312,7 +312,7 @@ global with sharing class RetailCounterSaleController {
               AND UnitPrice > 0
               LIMIT 1)
             FROM Product2
-            WHERE ( Name LIKE :s OR ProductCode LIKE :s OR Unique_Product_Code__c LIKE :s OR IEM_Unique_Part_Number__c LIKE :s)
+            WHERE ( Name LIKE :s OR ProductCode LIKE :s OR IEM_Unique_Part_Number__c LIKE :s)
             AND isActive = true
             AND RecordTypeId <> :feeRT
             AND Id IN (SELECT Product2Id FROM PricebookEntry WHERE Product2Id != '' AND Pricebook2Id =:pricebookId
@@ -627,7 +627,7 @@ global with sharing class RetailCounterSaleController {
                                Description_FR__c,
                                Family,
                                RecordType.Name,
-                               Unique_Product_Code__c,
+                               ProductCode,
                                AcctSeed__Accounting_Type__c,
                                AcctSeed__Inventory_Type__c,
                         (SELECT Id,
@@ -637,7 +637,7 @@ global with sharing class RetailCounterSaleController {
                                 From_Product__r.Name,
                                 From_Product__r.Name_FR__c,
                                 From_Product__r.RecordType.Name,
-                                From_Product__r.Unique_Product_Code__c,
+                                From_Product__r.ProductCode,
                                 From_Product__r.Family
                          FROM To_Product_Options__r
                          ORDER BY From_Product__r.Name)

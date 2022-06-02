@@ -927,7 +927,7 @@ public with sharing class gcInventoryReport_MRP {
 		Map<Id,cube> mapCube = retrieveProducts(setIdProducts,pIdWarehouse);
 
 		for(Product2 p :
-		[SELECT Id, Name, Unique_Product_Code__c, Family, RecordType.Name, AcctSeedERP__Default_Vendor__r.Name
+		[SELECT Id, Name, ProductCode, Family, RecordType.Name, AcctSeedERP__Default_Vendor__r.Name
 		FROM Product2
 		WHERE Id IN:setIdProducts])
 		{
@@ -935,7 +935,7 @@ public with sharing class gcInventoryReport_MRP {
 			m.put('idProduct',p.Id);
 			m.put('productName',p.Name);
 			m.put('supplierName',p.AcctSeedERP__Default_Vendor__r.Name);
-			m.put('productCode',(p.Unique_Product_Code__c == null ? '' :p.Unique_Product_Code__c));
+			m.put('productCode',(p.ProductCode == null ? '' :p.ProductCode));
 			m.put('recordType',p.RecordType.Name);
 			m.put('productFamily',p.Family);
 

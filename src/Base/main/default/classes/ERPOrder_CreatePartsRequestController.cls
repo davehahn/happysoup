@@ -20,7 +20,7 @@ public with sharing class ERPOrder_CreatePartsRequestController {
       this.quantityAllocated = mat.AcctSeedERP__Quantity_Allocated__c;
       this.quantityRequired = this.quantityOrdered - this.quantityAllocated;
       this.taskName = mat.AcctSeedERP__Project_Task__r.Name;
-      this.uniqueProductCode = mat.AcctSeedERP__Product__r.Unique_Product_Code__c;
+      this.uniqueProductCode = mat.AcctSeedERP__Product__r.ProductCode;
     }
 
     public Integer compareTo(Object compareTo) {
@@ -61,7 +61,7 @@ public with sharing class ERPOrder_CreatePartsRequestController {
       {
         Map<String, String> p = new Map<String, String>();
         p.put('productName', cp.Product__r.Name );
-        p.put('uniqueProductCode', cp.Product__r.Unique_Product_Code__c);
+        p.put('uniqueProductCode', cp.Product__r.ProductCode);
         p.put('quantity', String.valueOf( cp.Quantity__c) );
         Date eta = cp.Purchase_Order_Line__r.deliverDate__c == null ?
           cp.Purchase_Order_Line__r.AcctSeedERP__Purchase_Order__r.Estimated_Time_of_Arrival_ETA__c :
@@ -95,8 +95,8 @@ public with sharing class ERPOrder_CreatePartsRequestController {
         CreatedDate,
         Status,
       ( SELECT
-        Product__R.Name,
-        Product__R.Unique_Product_Code__c,
+        Product__r.Name,
+        Product__r.ProductCode,
         Quantity__c,
         Purchase_Order_Line__r.deliverDate__c,
         Purchase_Order_Line__r.AcctSeedERP__Purchase_Order__r.Estimated_Time_of_Arrival_ETA__c
@@ -157,7 +157,7 @@ public with sharing class ERPOrder_CreatePartsRequestController {
     for( AcctSeedERP__Material__c mat : [SELECT Id,
       AcctSeedERP__Product__c,
       AcctSeedERP__Product__r.Name,
-      AcctSeedERP__Product__r.Unique_Product_Code__c,
+      AcctSeedERP__Product__r.ProductCode,
       AcctSeedERP__Quantity_Per_Unit__c,
       AcctSeedERP__Quantity_Allocated__c,
       AcctSeedERP__Project_Task__r.Name

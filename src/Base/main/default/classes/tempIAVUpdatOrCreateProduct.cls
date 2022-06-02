@@ -19,9 +19,9 @@ global without sharing class tempIAVUpdatOrCreateProduct implements Schedulable,
 		setProductCode.remove(null);
 		Id idRTPart = Schema.SObjectType.Product2.getRecordTypeInfosByName().get('Part').getRecordTypeId();
 		/// Generate all the products
-		for(Product2 p : [SELECT Id, IsActive, Unique_Product_Code__c, ProductCode, AcctSeed__Inventory_Product__c FROM Product2 WHERE Unique_Product_Code__c IN:setProductCode])
+		for(Product2 p : [SELECT Id, IsActive,  ProductCode, AcctSeed__Inventory_Product__c FROM Product2 WHERE ProductCode IN:setProductCode])
 		{
-			String pc = p.Unique_Product_Code__c.toLowerCase();
+			String pc = p.ProductCode.toLowerCase();
 			mapCodeProduct.put(pc, p);
 		}
 
@@ -32,7 +32,7 @@ global without sharing class tempIAVUpdatOrCreateProduct implements Schedulable,
 			{
 				String pc = imp.Product_Code__c.toLowerCase();
 				if(!mapCodeProduct.containsKey(pc)){
-					Product2 prod = new Product2(IsActive = true, Name = (imp.Production_Description__c == null ? pc : imp.Production_Description__c), Unique_Product_Code__c = pc, ProductCode = imp.Product_Code__c, AcctSeed__Inventory_Product__c = (imp.Create_As_Non_Inventory__c ? false : true), RecordTypeId = idRTPart);
+					Product2 prod = new Product2(IsActive = true, Name = (imp.Production_Description__c == null ? pc : imp.Production_Description__c),  ProductCode = imp.Product_Code__c, AcctSeed__Inventory_Product__c = (imp.Create_As_Non_Inventory__c ? false : true), RecordTypeId = idRTPart);
 					mapCodeProduct.put(pc,prod);
 					listNewProducts.add(prod);
 				}
