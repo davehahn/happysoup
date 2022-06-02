@@ -6,7 +6,7 @@
                 'Family': '',
                 'Description': '',
                 'Description_FR__c': '',
-                'Unique_Product_Code__c': '',
+                'ProductCode': '',
                 'AcctSeed__Unit_Cost__c': '',
                 'AcctSeedERP__Default_Vendor__c': '',
                 'AcctSeed__Inventory_Product__c': true,
@@ -77,7 +77,7 @@
 
     createdEvent.setParams({
       productId : part.Id,
-      productCode: part.Unique_Product_Code__c
+      productCode: part.ProductCode
     })
     .fire();
 

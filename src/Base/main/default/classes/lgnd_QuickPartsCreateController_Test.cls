@@ -97,7 +97,7 @@ private class lgnd_QuickPartsCreateController_Test {
     dw.part = new Product2(
       Name = 'testPart',
       Description = 'This is just a part from a test class',
-      Unique_Product_code__c = 'test123test567',
+      ProductCode = 'test123test567',
       Taxable__c = true,
       AcctSeed__Inventory_Product__c = true,
       AcctSeedERP__Default_Vendor__c = suppliers[0].Id
@@ -132,7 +132,7 @@ private class lgnd_QuickPartsCreateController_Test {
     dw.part = new Product2(
       Name = mp.Description__c,
       Description = 'This is just a part from a test class',
-      Unique_Product_code__c = mp.Code__c,
+      ProductCode = mp.Code__c,
       Taxable__c = true,
       AcctSeed__Inventory_Product__c = true
     );

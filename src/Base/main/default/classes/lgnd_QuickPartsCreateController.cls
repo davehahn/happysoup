@@ -35,7 +35,7 @@ public with sharing class lgnd_QuickPartsCreateController {
       this.retailPrice = mp.MSRP__c;
       this.part = new Product2(
         Name = mp.Description__c,
-        Unique_Product_Code__c = mp.Code__c,
+        ProductCode = mp.Code__c,
         Bar_Code__c = mp.UPC__c,
         AcctSeed__Unit_Cost__c = mp.List_Price__c,
         Taxable__c = true,
