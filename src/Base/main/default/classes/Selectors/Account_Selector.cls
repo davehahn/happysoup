@@ -53,7 +53,11 @@ public virtual class Account_Selector extends Application_Selector
   };
 
   private final List<String> defaultDealerFields = new List<String>{
-    'Is_Internal__c'
+    'Is_Internal__c',
+    'AccountEmail__c',
+    'Website',
+    'BillingLongitude',
+    'BillingLatitude'
   };
 
   public Account_Selector()
@@ -132,6 +136,15 @@ public virtual class Account_Selector extends Application_Selector
   {
     return new DealerAccount_Selector()
       .addWhere('Active__c = true')
+      .query();
+  }
+
+  public static Account[] allActiveDealersWithGeolocation()
+  {
+    return new DealerAccount_Selector()
+      .addWhere('Active__c = true', 'AND')
+      .addWhere( 'BillingLongitude != NULL', 'AND')
+      .addWhere('BillingLatitude != NULL', 'AND')
       .query();
   }
 
