@@ -21,9 +21,46 @@ public inherited sharing class SalesOrder_Selector extends Application_Selector 
     SalesOrderLine_Selector solSelector = new SalesOrderLine_Selector();
     return new SalesOrder_Selector()
        .addWhere('Id IN ' + salesOrder_Set )
-       .addWhere('AcctSeed__Status__c != \'Posted\'')
+       .addWhere('AcctSeedERP__Status__c = \'Open\'')
        .addChildQuery( solSelector )
        .query();
-  }    
+  }
+
+    public static List<AcctSeedERP__Sales_Order__c> byIdsIncludingSOL( Set<Id> recordIds )
+    {
+        SalesOrder_Selector selector = new SalesOrder_Selector();
+        selector.addWhereIdIn( recordIds )
+                .addWhere('AcctSeedERP__Status__c = \'Open\'')
+                .addChildQuery(
+                '(SELECT Id, ' +
+                        '                        AcctSeedERP__GL_Account_Variable_1__c, ' +
+                        '                        AcctSeedERP__GL_Account_Variable_2__c, ' +
+                        '                        AcctSeedERP__GL_Account_Variable_3__c, ' +
+                        '                        AcctSeedERP__Product__c, ' +
+                        '                        AcctSeedERP__Product__r.RecordType.Name, ' +
+                        '                        AcctSeedERP__Total__c, ' +
+                        '                        AcctSeedERP__Unit_Price__c, ' +
+                        '                        Taxable_Federal__c, ' +
+                        '                        Taxable_Provincial__c, ' +
+                        '                        Taxable_Retail__c, ' +
+                        '                        GMBLASERP__Serial_Number__c, ' +
+                        '                        GMBLASERP__Revenue__c, ' +
+                        '                        Review_Price__c, ' +
+                        '                        AcctSeedERP__Quantity_Ordered__c ' +
+                        '                    FROM AcctSeedERP__Sales_Order_Line__r ' +
+                        '                    ORDER BY CreatedDate)'
+        );
+        List<SObject> result = selector.query();
+        if( result.size() == 0 )
+        {
+            throw new Application_Selector.SelectorException(
+                    'No SO records found with supplied Ids'
+            );
+        }
+        else
+        {
+            return result;
+        }
+    }
 
 }

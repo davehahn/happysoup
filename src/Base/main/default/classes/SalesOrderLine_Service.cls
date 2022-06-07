@@ -32,80 +32,23 @@ public without sharing class SalesOrderLine_Service{
 			}
     }
     public static void updateSalesTax(set<Id> salesOrder_Id_Set)
-        { 
-        Id idProductSalesTaxFederal    = gcConstants.idProductSalesTaxFederal;
-        Id idProductSalesTaxProvincial = gcConstants.idProductSalesTaxProvincial;
-        Id idProductSalesTaxRetail = gcConstants.idProductSalesTaxRetail;
+    {
         Id idProductSalesTaxHarmonized = gcConstants.idProductSalesTaxHarmonized;
-        Id idProductPrecisionFix = gcConstants.idProductPrecisionFix;
-        Id idProductInternalLabour = gcConstants.idProductInternalLabour;
-        Id idProductInternalBilling = gcConstants.idProductInternalBilling;
-        Id idProductInternalBalance = gcConstants.idProductInternalBalance;
-        String internalProductRecordTypeName = gcConstants.internalProductRecordTypeName;
-
-        Id idGlv1HeadOfficeOverhead = gcConstants.idGlv1HeadOfficeOverhead;
-        Id idGlInternalLabour = gcConstants.idGlInternalLabour;
-        Id idGLInternalWarrantyClearing = gcConstants.idGLInternalWarrantyClearing;
-        Id idGlv2Sales = gcConstants.idGlv2Sales;
-        Id idGlv3Others = gcConstants.idGlv3Others;
-
         List<AcctSeedERP__Sales_Order_Line__c> salesOrderLine_List = new List<AcctSeedERP__Sales_Order_Line__c>();
         List<AcctSeedERP__Sales_Order_Line__c> salesOrderLine_ToBe_Deleted_List = new List<AcctSeedERP__Sales_Order_Line__c>();
-        //List<AcctSeedERP__Sales_Order__c> salesOrder_List = SalesOrder_Selector.allBySalesOrderIdIncludingLineItems(salesOrder_Id_Set);
-            System.debug('salesOrder_Id_Set = '+salesOrder_Id_Set);
-            for(AcctSeedERP__Sales_Order__c salesOrder :
-                [SELECT Id,
-                        GL_Account_Variable_3__c,
-                        Tax_is_Harmonized__c,
-                        Tax_Rate_Federal__c,
-                        Tax_Rate_Provincial__c,
-                        Tax_Rate_Retail__c,
-                        Revenue__c,
-                        Expense__c,
-                        Profit__c,
-                    (SELECT Id,
-                     
-                        AcctSeedERP__GL_Account_Variable_1__c,
-                        AcctSeedERP__GL_Account_Variable_2__c,
-                        AcctSeedERP__GL_Account_Variable_3__c,
-                        AcctSeedERP__Product__c,
-                        AcctSeedERP__Product__r.RecordType.Name,
-                        AcctSeedERP__Total__c,
-                        AcctSeedERP__Unit_Price__c,
-                        Taxable_Federal__c,
-                        Taxable_Provincial__c,
-                        Taxable_Retail__c,
-                        GMBLASERP__Serial_Number__c,
-                        GMBLASERP__Revenue__c,
-                        Review_Price__c,
-                        AcctSeedERP__Quantity_Ordered__c
-            
-                    FROM AcctSeedERP__Sales_Order_Line__r
-                    ORDER BY CreatedDate)
-                FROM AcctSeedERP__Sales_Order__c
-                WHERE Id IN :salesOrder_Id_Set
-                    AND AcctSeedERP__Status__c != 'Posted'])
-        //for(AcctSeedERP__Sales_Order__c salesOrder :salesOrder_List)        
+        List<AcctSeedERP__Sales_Order__c> listSO = SalesOrder_Selector.byIdsIncludingSOL(salesOrder_Id_Set);
+        for(AcctSeedERP__Sales_Order__c salesOrder : listSO)
         {
-            System.debug('in loop');
             AcctSeedERP__Sales_Order_Line__c taxLineFederal;
             AcctSeedERP__Sales_Order_Line__c taxLineProvincial;
             AcctSeedERP__Sales_Order_Line__c taxLineRetail;
             AcctSeedERP__Sales_Order_Line__c taxLineHarmonized;
             AcctSeedERP__Sales_Order_Line__c lineProductPrecisionFix;
-            AcctSeedERP__Sales_Order_Line__c lineInternalBillingRevenue;
-            AcctSeedERP__Sales_Order_Line__c lineInternalBillingBalance;
-            AcctSeedERP__Sales_Order_Line__c lineInternalWarrantyBalance;
-            Map<Id,AcctSeed__Billing_Line__c> mapTaskLabour = new Map<Id,AcctSeed__Billing_Line__c>();
 
             Decimal taxRateFederal = (salesOrder.Tax_Rate_Federal__c == null ? 0 : salesOrder.Tax_Rate_Federal__c)/100;
             Decimal taxRateProvincial = (salesOrder.Tax_Rate_Provincial__c == null ? 0 : salesOrder.Tax_Rate_Provincial__c)/100;
             Decimal taxRateRetail = (salesOrder.Tax_Rate_Retail__c == null ? 0 : salesOrder.Tax_Rate_Retail__c)/100;
             Decimal taxRateHarmonized = (salesOrder.Tax_is_Harmonized__c == true ? (taxRateFederal + taxRateProvincial) : 0);
-            System.debug('taxRateFederal= '+taxRateFederal);
-            System.debug('taxRateProvincial= '+taxRateProvincial);
-            System.debug('taxRateHarmonized= '+taxRateHarmonized);
-            System.debug('salesOrder.Tax_is_Harmonized__c= '+salesOrder.Tax_is_Harmonized__c);
             if(salesOrder.Tax_is_Harmonized__c)
             {
                 taxRateFederal = 0;
@@ -117,15 +60,8 @@ public without sharing class SalesOrderLine_Service{
             Decimal taxableAmountRetail = 0;
             Decimal taxableAmountHarmonized = 0;
             Decimal totalLineAmount = 0;
-            Decimal totalSerialRevenue = 0;
-            Map<Id,Decimal> mapTotalLabour = new Map<Id,Decimal>();
-            //Decimal totalLabour = 0;
             for(AcctSeedERP__Sales_Order_Line__c bl : salesOrder.AcctSeedERP__Sales_Order_Line__r)
             {
-                
-                System.debug('bl.AcctSeedERP__Product__c= '+bl.AcctSeedERP__Product__c);
-                System.debug('idProductSalesTaxHarmonized= '+idProductSalesTaxHarmonized);
-                
                 if(bl.AcctSeedERP__Product__c == idProductSalesTaxHarmonized)
                 {
                     if(taxRateHarmonized == 0 || taxLineHarmonized != null)
@@ -134,12 +70,8 @@ public without sharing class SalesOrderLine_Service{
                         taxLineHarmonized = bl;
                     continue;
                 }
-                
-                System.debug('bl.AcctSeedERP__Total__c = '+bl.AcctSeedERP__Total__c );
-                System.debug('totalLineAmount before='+totalLineAmount);
                 totalLineAmount += (bl.AcctSeedERP__Total__c == null ? 0 : bl.AcctSeedERP__Total__c);
-                System.debug('totalLineAmount='+totalLineAmount);
-                
+
                 if(bl.Taxable_Federal__c)
                     taxableAmountFederal += (bl.AcctSeedERP__Total__c == null ? 0 : bl.AcctSeedERP__Total__c);
                 if(bl.Taxable_Provincial__c)
@@ -149,17 +81,11 @@ public without sharing class SalesOrderLine_Service{
                 if(bl.Taxable_Retail__c)
                     taxableAmountRetail += (bl.AcctSeedERP__Total__c == null ? 0 : bl.AcctSeedERP__Total__c);
 
-                System.debug('taxableAmountFederal= '+taxableAmountFederal);
-                System.debug('taxableAmountProvincial= '+taxableAmountProvincial);
-                System.debug('taxableAmountHarmonized= '+taxableAmountHarmonized);
-                System.debug('taxableAmountRetail= '+taxableAmountRetail);
                 if(bl.AcctSeedERP__GL_Account_Variable_3__c != salesOrder.GL_Account_Variable_3__c)
                 {
                     bl.AcctSeedERP__GL_Account_Variable_3__c = salesOrder.GL_Account_Variable_3__c;
                     salesOrderLine_List.add(bl);
                 }
-
-                
             }
 
             if(taxableAmountFederal == 0)
@@ -167,40 +93,12 @@ public without sharing class SalesOrderLine_Service{
                 if(taxLineFederal != null)
                     salesOrderLine_ToBe_Deleted_List.add(taxLineFederal);
             }
-            else
+            else if(taxRateFederal != 0)
             {
-                if(taxRateFederal != 0)
-                {
-                    if(taxLineFederal != null)
-                    {
-                        if(taxLineFederal.AcctSeedERP__Quantity_Ordered__c != taxRateFederal.setScale(5) ||
-                           taxLineFederal.AcctSeedERP__Unit_Price__c  != taxableAmountFederal.setScale(2) ||
-                           taxLineFederal.AcctSeedERP__GL_Account_Variable_3__c != salesOrder.GL_Account_Variable_3__c ||
-                           taxLineFederal.AcctSeedERP__GL_Account_Variable_3__c == null ||
-                           taxLineFederal.Taxable_Federal__c == true)
-                        {
-                            taxLineFederal.AcctSeedERP__Quantity_Ordered__c = taxRateFederal.setScale(5);
-                            taxLineFederal.AcctSeedERP__Unit_Price__c  = taxableAmountFederal.setScale(2);
-                            if(taxLineFederal.AcctSeedERP__GL_Account_Variable_3__c == null)
-                                taxLineFederal.AcctSeedERP__GL_Account_Variable_3__c = salesOrder.GL_Account_Variable_3__c;
-                            taxLineFederal.Taxable_Federal__c = false;
-                            salesOrderLine_List.add(taxLineFederal);
-                        }
-                    }
-                    else
-                    {
-                        taxLineFederal = new AcctSeedERP__Sales_Order_Line__c(
-                            AcctSeedERP__Sales_Order__c = salesOrder.Id,
-                            AcctSeedERP__GL_Account_Variable_3__c = salesOrder.GL_Account_Variable_3__c,
-                            AcctSeedERP__Product__c = idProductSalesTaxFederal,
-                            AcctSeedERP__Quantity_Ordered__c = taxRateFederal.setScale(5),
-                            AcctSeedERP__Unit_Price__c  = taxableAmountFederal.setScale(2),
-                            Taxable_Federal__c = false
-                        );
-                        salesOrderLine_List.add(taxLineFederal);
-                    }
-                    totalLineAmount += (taxRateFederal.setScale(5) * taxableAmountFederal.setScale(2)).setScale(2);
-                }
+                taxLineFederal = checkAndProcessSOL(taxRateFederal,taxLineFederal,salesOrder,taxableAmountFederal,'Federal');
+                taxLineFederal.Taxable_Provincial__c = false;
+                totalLineAmount += (taxRateFederal.setScale(5) * taxableAmountFederal.setScale(2)).setScale(2);
+                salesOrderLine_List.add(taxLineFederal);
             }
 
             if(taxableAmountProvincial == 0)
@@ -208,41 +106,12 @@ public without sharing class SalesOrderLine_Service{
                 if(taxLineProvincial != null)
                     salesOrderLine_ToBe_Deleted_List.add(taxLineProvincial);
             }
-            else
+            else if(taxRateProvincial != 0)
             {
-                if(taxRateProvincial != 0)
-                {
-                    if(taxLineProvincial != null)
-                    {
-                        
-                        if(taxLineProvincial.AcctSeedERP__Quantity_Ordered__c != taxRateProvincial.setScale(5) ||
-                           taxLineProvincial.AcctSeedERP__Unit_Price__c  != taxableAmountProvincial.setScale(2) ||
-                           taxLineProvincial.AcctSeedERP__GL_Account_Variable_3__c != salesOrder.GL_Account_Variable_3__c ||
-                           taxLineProvincial.AcctSeedERP__GL_Account_Variable_3__c == null ||
-                           taxLineProvincial.Taxable_Provincial__c == true)
-                        {
-                            taxLineProvincial.AcctSeedERP__Quantity_Ordered__c = taxRateProvincial.setScale(5);
-                            taxLineProvincial.AcctSeedERP__Unit_Price__c  = taxableAmountProvincial.setScale(2);
-                            if(taxLineProvincial.AcctSeedERP__GL_Account_Variable_3__c == null)
-                                taxLineProvincial.AcctSeedERP__GL_Account_Variable_3__c = salesOrder.GL_Account_Variable_3__c;
-                            taxLineProvincial.Taxable_Provincial__c = false;
-                            salesOrderLine_List.add(taxLineProvincial);
-                        }
-                    }
-                    else
-                    {
-                        taxLineProvincial = new AcctSeedERP__Sales_Order_Line__c(
-                            AcctSeedERP__Sales_Order__c = salesOrder.Id,
-                            AcctSeedERP__GL_Account_Variable_3__c = salesOrder.GL_Account_Variable_3__c,
-                            AcctSeedERP__Product__c = idProductSalesTaxProvincial,
-                            AcctSeedERP__Quantity_Ordered__c = taxRateProvincial.setScale(5),
-                            AcctSeedERP__Unit_Price__c  = taxableAmountProvincial.setScale(2),
-                            Taxable_Provincial__c = false
-                        );
-                        salesOrderLine_List.add(taxLineProvincial);
-                    }
-                    totalLineAmount += (taxRateProvincial.setScale(5) * taxableAmountProvincial.setScale(2)).setScale(2);
-                }
+                taxLineProvincial = checkAndProcessSOL(taxRateProvincial,taxLineProvincial,salesOrder,taxableAmountProvincial,'Provincial');
+                taxLineProvincial.Taxable_Provincial__c = false;
+                totalLineAmount += (taxRateProvincial.setScale(5) * taxableAmountProvincial.setScale(2)).setScale(2);
+                salesOrderLine_List.add(taxLineProvincial);
             }
 
             if(taxableAmountRetail == 0)
@@ -250,82 +119,24 @@ public without sharing class SalesOrderLine_Service{
                 if(taxLineRetail != null)
                     salesOrderLine_ToBe_Deleted_List.add(taxLineRetail);
             }
-            else
+            else if(taxRateRetail != 0)
             {
-                if(taxRateRetail != 0)
-                {
-                    if(taxLineRetail != null)
-                    {
-                        if(taxLineRetail.AcctSeedERP__Quantity_Ordered__c != taxRateRetail.setScale(5) ||
-                           taxLineRetail.AcctSeedERP__Unit_Price__c  != taxableAmountRetail.setScale(2) ||
-                           taxLineRetail.AcctSeedERP__GL_Account_Variable_3__c != salesOrder.GL_Account_Variable_3__c ||
-                           taxLineRetail.AcctSeedERP__GL_Account_Variable_3__c == null ||
-                           taxLineRetail.Taxable_Retail__c == true)
-                        {
-                            taxLineRetail.AcctSeedERP__Quantity_Ordered__c = taxRateRetail.setScale(5);
-                            taxLineRetail.AcctSeedERP__Unit_Price__c  = taxableAmountRetail.setScale(2);
-                            if(taxLineRetail.AcctSeedERP__GL_Account_Variable_3__c == null)
-                                taxLineRetail.AcctSeedERP__GL_Account_Variable_3__c = salesOrder.GL_Account_Variable_3__c;
-                            taxLineRetail.Taxable_Retail__c = false;
-                            salesOrderLine_List.add(taxLineRetail);
-                        }
-                    }
-                    else
-                    {
-                        taxLineRetail = new AcctSeedERP__Sales_Order_Line__c(
-                            AcctSeedERP__Sales_Order__c = salesOrder.Id,
-                            AcctSeedERP__Product__c = idProductSalesTaxRetail,
-                            AcctSeedERP__Quantity_Ordered__c = taxRateRetail.setScale(5),
-                            AcctSeedERP__Unit_Price__c = taxableAmountRetail.setScale(2),
-                            AcctSeedERP__GL_Account_Variable_3__c = salesOrder.GL_Account_Variable_3__c,
-                            Taxable_Retail__c = false
-                        );
-                        salesOrderLine_List.add(taxLineRetail);
-                    }
-                    totalLineAmount += (taxRateRetail.setScale(5) * taxableAmountRetail.setScale(2)).setScale(2);
-                }
+                taxLineRetail = checkAndProcessSOL(taxRateRetail,taxLineRetail,salesOrder,taxableAmountRetail,'Retail');
+                taxLineRetail.Taxable_Retail__c = false;
+                totalLineAmount += (taxRateRetail.setScale(5) * taxableAmountRetail.setScale(2)).setScale(2);
+                salesOrderLine_List.add(taxLineRetail);
             }
-            System.debug('taxableAmountHarmonized= '+taxableAmountHarmonized);
             if(taxableAmountHarmonized == 0)
             {
                 if(taxLineHarmonized != null)
                     salesOrderLine_ToBe_Deleted_List.add(taxLineHarmonized);
             }
-            else
+            else if(taxRateHarmonized != 0)
             {
-                if(taxRateHarmonized != 0)
-                {
-                    if(taxLineHarmonized != null)
-                    { 
-                        if(taxLineHarmonized.AcctSeedERP__Quantity_Ordered__c != taxRateHarmonized.setScale(5) ||
-                           taxLineHarmonized.AcctSeedERP__Unit_Price__c  != taxableAmountHarmonized.setScale(2) ||
-                           taxLineHarmonized.AcctSeedERP__GL_Account_Variable_3__c != salesOrder.GL_Account_Variable_3__c ||
-                           taxLineHarmonized.AcctSeedERP__GL_Account_Variable_3__c == null ||
-                           taxLineHarmonized.Taxable_Provincial__c == true)
-                        {
-                            taxLineHarmonized.AcctSeedERP__Quantity_Ordered__c = taxRateHarmonized.setScale(5);
-                            taxLineHarmonized.AcctSeedERP__Unit_Price__c  = taxableAmountHarmonized.setScale(2);
-                            if(taxLineHarmonized.AcctSeedERP__GL_Account_Variable_3__c == null)
-                                taxLineHarmonized.AcctSeedERP__GL_Account_Variable_3__c = salesOrder.GL_Account_Variable_3__c;
-                            taxLineHarmonized.Taxable_Provincial__c = false;
-                            salesOrderLine_List.add(taxLineHarmonized);
-                        }
-                    }
-                    else
-                    {
-                        System.debug('@@ in else');
-                        taxLineHarmonized = new AcctSeedERP__Sales_Order_Line__c(
-                            AcctSeedERP__Sales_Order__c = salesOrder.Id,
-                            AcctSeedERP__Product__c = idProductSalesTaxHarmonized,
-                            AcctSeedERP__Quantity_Ordered__c = taxRateHarmonized.setScale(5),
-                            AcctSeedERP__Unit_Price__c  = taxableAmountHarmonized.setScale(2),
-                            AcctSeedERP__GL_Account_Variable_3__c = salesOrder.GL_Account_Variable_3__c,
-                            Taxable_Provincial__c = false
-                        );
-                        salesOrderLine_List.add(taxLineHarmonized);
-                    }
-                    totalLineAmount += (taxRateHarmonized.setScale(5) * taxableAmountHarmonized.setScale(2)).setScale(2);
-                }
+                taxLineHarmonized = checkAndProcessSOL(taxRateHarmonized,taxLineHarmonized,salesOrder,taxableAmountHarmonized,'Harmonized');
+                taxLineHarmonized.Taxable_Provincial__c = false;
+                totalLineAmount += (taxRateHarmonized.setScale(5) * taxableAmountHarmonized.setScale(2)).setScale(2);
+                salesOrderLine_List.add(taxLineHarmonized);
             }
 
             Decimal actualValue = totalLineAmount.setScale(6);
@@ -333,43 +144,15 @@ public without sharing class SalesOrderLine_Service{
             Decimal currentPrecision = (acctSeedValue - actualValue).setScale(6);
             if(currentPrecision != 0)
             {
-                //if(currentPrecision < 0.005) currentPrecision = currentPrecision * -1;
-                if(lineProductPrecisionFix != null)
-                {
-                    lineProductPrecisionFix.AcctSeedERP__Quantity_Ordered__c = 1;
-                    lineProductPrecisionFix.AcctSeedERP__Unit_Price__c  = currentPrecision;
-                    lineProductPrecisionFix.Taxable_Federal__c = false;
-                    lineProductPrecisionFix.Taxable_Provincial__c = false;
-                    lineProductPrecisionFix.Taxable_Retail__c = false;
-                    salesOrderLine_List.add(lineProductPrecisionFix);
-                }
-                else
-                {
-                    lineProductPrecisionFix = new AcctSeedERP__Sales_Order_Line__c(
-                        AcctSeedERP__Sales_Order__c = salesOrder.Id,
-                        AcctSeedERP__GL_Account_Variable_3__c = idGlv3Others,
-                        AcctSeedERP__Product__c = idProductPrecisionFix,
-                        AcctSeedERP__Quantity_Ordered__c = 1,
-                        AcctSeedERP__Unit_Price__c  = currentPrecision,
-                        Taxable_Federal__c = false,
-                        Taxable_Provincial__c = false,
-                        Taxable_Retail__c = false
-                    );
-                    salesOrderLine_List.add(lineProductPrecisionFix);
-                }
+                lineProductPrecisionFix = checkPrecision(currentPrecision,lineProductPrecisionFix,salesOrder);
+                salesOrderLine_List.add(lineProductPrecisionFix);
             }
             else
             {
                 if(lineProductPrecisionFix != null)
                     salesOrderLine_ToBe_Deleted_List.add(lineProductPrecisionFix);
             }
-
-            
         }
-            
-            
-        System.debug('salesOrderLine_ToBe_Deleted_List= '+salesOrderLine_ToBe_Deleted_List);
-        System.debug('salesOrderLine_List= '+salesOrderLine_List);
         if(!salesOrderLine_ToBe_Deleted_List.isEmpty() || !salesOrderLine_List.isEmpty())
         {
             TriggerBase.bypass('AcctSeedERP__Sales_Order__c');
@@ -499,6 +282,82 @@ public without sharing class SalesOrderLine_Service{
             update listSOL;
             MetadataTriggerHandler.clearBypass('TA_SalesOrderLine_BU');
         }
+    }
+
+    private static AcctSeedERP__Sales_Order_Line__c checkAndProcessSOL(Decimal taxRate, AcctSeedERP__Sales_Order_Line__c taxLine, AcctSeedERP__Sales_Order__c salesOrder, Decimal taxableAmount, String type)
+    {
+        Id idProductSalesTaxFederal    = gcConstants.idProductSalesTaxFederal;
+        Id idProductSalesTaxProvincial = gcConstants.idProductSalesTaxProvincial;
+        Id idProductSalesTaxRetail = gcConstants.idProductSalesTaxRetail;
+        Id idProductSalesTaxHarmonized = gcConstants.idProductSalesTaxHarmonized;
+        Id idProductSalesTax;
+        if(type == 'Retail'){
+            idProductSalesTax = idProductSalesTaxRetail;
+        }else if(type == 'Federal'){
+            idProductSalesTax = idProductSalesTaxFederal;
+        }else if(type == 'Provincial'){
+            idProductSalesTax = idProductSalesTaxProvincial;
+        }else if(type == 'Harmonized'){
+            idProductSalesTax = idProductSalesTaxHarmonized;
+        }
+
+        if(taxLine != null)
+        {
+            if(taxLine.AcctSeedERP__Quantity_Ordered__c != taxRate.setScale(5) ||
+                    taxLine.AcctSeedERP__Unit_Price__c  != taxableAmount.setScale(2) ||
+                    taxLine.AcctSeedERP__GL_Account_Variable_3__c != salesOrder.GL_Account_Variable_3__c ||
+                    taxLine.AcctSeedERP__GL_Account_Variable_3__c == null ||
+                    taxLine.Taxable_Retail__c == true)
+            {
+                taxLine.AcctSeedERP__Quantity_Ordered__c = taxRate.setScale(5);
+                taxLine.AcctSeedERP__Unit_Price__c  = taxableAmount.setScale(2);
+                if(taxLine.AcctSeedERP__GL_Account_Variable_3__c == null)
+                    taxLine.AcctSeedERP__GL_Account_Variable_3__c = salesOrder.GL_Account_Variable_3__c;
+                taxLine.Taxable_Retail__c = false;
+            }
+        }
+        else
+        {
+            taxLine = new AcctSeedERP__Sales_Order_Line__c(
+                    AcctSeedERP__Sales_Order__c = salesOrder.Id,
+                    AcctSeedERP__Product__c = idProductSalesTax,
+                    AcctSeedERP__Quantity_Ordered__c = taxRate.setScale(5),
+                    AcctSeedERP__Unit_Price__c = taxableAmount.setScale(2),
+                    AcctSeedERP__GL_Account_Variable_3__c = salesOrder.GL_Account_Variable_3__c,
+                    Taxable_Retail__c = false
+            );
+        }
+
+        return taxLine;
+    }
+
+    private static AcctSeedERP__Sales_Order_Line__c checkPrecision(Decimal currentPrecision, AcctSeedERP__Sales_Order_Line__c lineProductPrecisionFix, AcctSeedERP__Sales_Order__c salesOrder)
+    {
+        Id idProductPrecisionFix = gcConstants.idProductPrecisionFix;
+        Id idGlv3Others = gcConstants.idGlv3Others;
+        if(lineProductPrecisionFix != null)
+        {
+            lineProductPrecisionFix.AcctSeedERP__Quantity_Ordered__c = 1;
+            lineProductPrecisionFix.AcctSeedERP__Unit_Price__c  = currentPrecision;
+            lineProductPrecisionFix.Taxable_Federal__c = false;
+            lineProductPrecisionFix.Taxable_Provincial__c = false;
+            lineProductPrecisionFix.Taxable_Retail__c = false;
+        }
+        else
+        {
+            lineProductPrecisionFix = new AcctSeedERP__Sales_Order_Line__c(
+                    AcctSeedERP__Sales_Order__c = salesOrder.Id,
+                    AcctSeedERP__GL_Account_Variable_3__c = idGlv3Others,
+                    AcctSeedERP__Product__c = idProductPrecisionFix,
+                    AcctSeedERP__Quantity_Ordered__c = 1,
+                    AcctSeedERP__Unit_Price__c  = currentPrecision,
+                    Taxable_Federal__c = false,
+                    Taxable_Provincial__c = false,
+                    Taxable_Retail__c = false
+            );
+        }
+
+        return lineProductPrecisionFix;
     }
     
 }
