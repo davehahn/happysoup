@@ -102,7 +102,7 @@ public with sharing class gcInventoryAdjustment_ZeroInventory {
 		for(Product2 p :
 			[SELECT Id, Name, 
 				Family, 
-				Unique_Product_Code__c, 
+				ProductCode,
 				AcctSeedERP__Serialized__c,
 				GMBLASERP__Lot_Tracked__c, 
 				RecordType.Name, 
@@ -119,7 +119,7 @@ public with sharing class gcInventoryAdjustment_ZeroInventory {
 			m.put('isLotTracked',p.GMBLASERP__Lot_Tracked__c ?'true':'false');
 			m.put('isSerialized',p.AcctSeedERP__Serialized__c ?'true':'false');
 			m.put('supplierName',p.AcctSeedERP__Default_Vendor__r.Name);
-			m.put('productCode',(p.Unique_Product_Code__c == null ? '' :p.Unique_Product_Code__c));
+			m.put('productCode',(p.ProductCode == null ? '' :p.ProductCode));
 			m.put('recordType',p.RecordType.Name);
 			m.put('productFamily',p.Family);
 			listJSON.add(m);

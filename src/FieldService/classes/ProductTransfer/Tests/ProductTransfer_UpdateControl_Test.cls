@@ -39,7 +39,6 @@ private class ProductTransfer_UpdateControl_Test {
 //        testProduct0 = new Product2(
 //            Name = 'Test Product 0',
 //            ProductCode = 'Test12340',
-//            Unique_Product_Code__c = 'TestCode12340',
 //            isActive = true,
 //            AcctSeed__Inventory_Product__c = false,
 //            AcctSeed__Inventory_Type__c = 'Manufactured',
@@ -71,7 +70,6 @@ private class ProductTransfer_UpdateControl_Test {
 //        testProduct1 = new Product2(
 //            Name = 'Test Product 1',
 //            ProductCode = 'Test1234',
-//            Unique_Product_Code__c = 'TestCode1234',
 //            isActive = true,
 //            AcctSeed__Inventory_Product__c = true,
 //            AcctSeed__Inventory_Type__c = 'Manufactured',

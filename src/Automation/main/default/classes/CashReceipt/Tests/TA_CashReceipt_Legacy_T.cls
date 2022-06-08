@@ -97,6 +97,7 @@ public class TA_CashReceipt_Legacy_T {
         return [
                 SELECT
                         id,
+                        Sales_Order__c,
                         AcctSeed__Account__c,
                         AcctSeed__Amount__c,
                         AcctSeed__Receipt_Date__c,

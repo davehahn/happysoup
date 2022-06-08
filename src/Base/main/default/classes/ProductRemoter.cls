@@ -16,7 +16,7 @@ global with sharing class ProductRemoter {
       this.Description = pbe.Product2.Description;
       this.Family = pbe.Product2.Family;
       this.RecordType = pbe.Product2.RecordType.Name;
-      this.ProductCode = pbe.Product2.Unique_Product_Code__c;
+      this.ProductCode = pbe.Product2.ProductCode;
       this.UnitPrice = pbe.UnitPrice;
     }
   }
@@ -60,7 +60,7 @@ global with sharing class ProductRemoter {
                                         Product2.Description,
                                         Product2.Family,
                                         Product2.RecordType.Name,
-                                        Product2.Unique_Product_Code__c,
+                                        Product2.ProductCode,
                                         Product2.AcctSeed__Accounting_Type__c,
                                         Product2.AcctSeed__Inventory_Type__c
                                    FROM PricebookEntry
@@ -70,7 +70,7 @@ global with sharing class ProductRemoter {
                                    AND ( Product2.Name LIKE :s OR
                                          Product2.ProductCode LIKE :s OR
                                          Product2.IEM_Unique_Part_Number__c LIKE :s OR
-                                         Product2.Unique_Product_Code__c LIKE :s) ];
+                                         Product2.ProductCode LIKE :s) ];
     for(PricebookEntry pbe : pbes)
     {
       results.add( new ProductWrapper(pbe) );

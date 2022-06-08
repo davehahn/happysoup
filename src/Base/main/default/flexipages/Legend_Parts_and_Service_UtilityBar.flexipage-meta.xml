@@ -9,6 +9,41 @@
                     <value>false</value>
                 </componentInstanceProperties>
                 <componentInstanceProperties>
+                    <name>height</name>
+                    <type>decorator</type>
+                    <value>600</value>
+                </componentInstanceProperties>
+                <componentInstanceProperties>
+                    <name>icon</name>
+                    <type>decorator</type>
+                    <value>help_center</value>
+                </componentInstanceProperties>
+                <componentInstanceProperties>
+                    <name>label</name>
+                    <type>decorator</type>
+                    <value>Support</value>
+                </componentInstanceProperties>
+                <componentInstanceProperties>
+                    <name>scrollable</name>
+                    <type>decorator</type>
+                    <value>true</value>
+                </componentInstanceProperties>
+                <componentInstanceProperties>
+                    <name>width</name>
+                    <type>decorator</type>
+                    <value>450</value>
+                </componentInstanceProperties>
+                <componentName>UtilityBar_CreateAnIssue</componentName>
+            </componentInstance>
+        </itemInstances>
+        <itemInstances>
+            <componentInstance>
+                <componentInstanceProperties>
+                    <name>eager</name>
+                    <type>decorator</type>
+                    <value>false</value>
+                </componentInstanceProperties>
+                <componentInstanceProperties>
                     <name>familyOptions</name>
                     <value>Canvas;Electronics;Flooring;Fuels, Lubricants and Maintenance;Fun and Entertainment;Hardware;Legend Gear;Lighting;Major Boat &amp; Pontoon Components;Marketing Material;Motor Accessories;Performance Package;Pontoon Furniture;Safety;Seating;Shop Supplies;Trailer Accessories;Trailering and Covers;Vehicle and Equipment Parts</value>
                 </componentInstanceProperties>
@@ -95,41 +130,6 @@
                 <componentInstanceProperties>
                     <name>label</name>
                     <type>decorator</type>
-                    <value>Log Issue</value>
-                </componentInstanceProperties>
-                <componentInstanceProperties>
-                    <name>scrollable</name>
-                    <type>decorator</type>
-                    <value>true</value>
-                </componentInstanceProperties>
-                <componentInstanceProperties>
-                    <name>width</name>
-                    <type>decorator</type>
-                    <value>340</value>
-                </componentInstanceProperties>
-                <componentName>lgnd_WebToCase</componentName>
-            </componentInstance>
-        </itemInstances>
-        <itemInstances>
-            <componentInstance>
-                <componentInstanceProperties>
-                    <name>eager</name>
-                    <type>decorator</type>
-                    <value>false</value>
-                </componentInstanceProperties>
-                <componentInstanceProperties>
-                    <name>height</name>
-                    <type>decorator</type>
-                    <value>480</value>
-                </componentInstanceProperties>
-                <componentInstanceProperties>
-                    <name>icon</name>
-                    <type>decorator</type>
-                    <value>fallback</value>
-                </componentInstanceProperties>
-                <componentInstanceProperties>
-                    <name>label</name>
-                    <type>decorator</type>
                     <value>Claim Warranty</value>
                 </componentInstanceProperties>
                 <componentInstanceProperties>
@@ -153,9 +153,17 @@
         <name>utilityItems</name>
         <type>Region</type>
     </flexiPageRegions>
+    <flexiPageRegions>
+        <name>backgroundComponents</name>
+        <type>Background</type>
+    </flexiPageRegions>
     <masterLabel>Legend Parts and Service UtilityBar</masterLabel>
     <template>
         <name>one:utilityBarTemplateDesktop</name>
+        <properties>
+            <name>isLeftAligned</name>
+            <value>true</value>
+        </properties>
     </template>
     <type>UtilityBar</type>
 </FlexiPage>

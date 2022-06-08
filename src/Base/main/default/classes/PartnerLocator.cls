@@ -143,15 +143,13 @@ public without sharing class PartnerLocator {
 
   public String origin;
   public String destinations;
-  public List<String> excludeAccountIds;
+  public Set<String> excludeAccountIds;
   public Integer resultSize;
   private Map<String, AccountWrapper> accountMap;
   private List<Account> partners;
 
   public PartnerLocator() {
-    this.excludeAccountIds = new List<String>{
-      Legend_Settings__c.getOrgDefaults().LegendWholesaleAccountId__c
-    };
+    setDefaultExcludes();
   }
 
   public void exclude(String excludeAccountIds) {
@@ -163,6 +161,14 @@ public without sharing class PartnerLocator {
     this.resultSize = resultSize == null ? 1 : resultSize;
     setDestinations();
     return processResult(doGoogleCallout());
+  }
+
+  private void setDefaultExcludes(){
+    this.excludeAccountIds = new Set<String>();
+    for( Partner_Locator_Excludes__c setting : Partner_Locator_Excludes__c.getAll().values()){
+      this.excludeAccountIds.add( setting.AccountId__c );
+    }
+
   }
 
   private void setDestinations() {
@@ -194,28 +200,7 @@ public without sharing class PartnerLocator {
   }
 
   private void fetchPartners() {
-    this.partners = [
-      SELECT
-        Id,
-        Name,
-        Phone,
-        AccountEmail__c,
-        Website,
-        BillingCity,
-        BillingStreet,
-        BillingCountry,
-        BillingPostalCode,
-        BillingState,
-        BillingLongitude,
-        BillingLatitude,
-        Is_Internal__c
-      FROM Account
-      WHERE
-        RecordType.Name = 'Dealer'
-        AND Active__c = TRUE
-        AND BillingLongitude != NULL
-        AND BillingLatitude != NULL
-    ];
+    this.partners = Account_Selector.allActiveDealersWithGeolocation();
   }
 
   private GoogleAPI.GoogleDestinationsResult doGoogleCallout() {

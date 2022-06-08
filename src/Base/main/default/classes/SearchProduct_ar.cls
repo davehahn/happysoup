@@ -8,14 +8,14 @@ public class SearchProduct_ar {
 				Name, 
 				RecordType.Name, 
 				Family, 
-				Unique_Product_Code__c, 
+				ProductCode,
 				CreatedDate 
 			FROM Product2 
 			WHERE AcctSeed__Inventory_Product__c = true
              	AND (Name =:searchString
              		OR(	Name like :searchStringMod 
                         OR Family like :searchStringMod
-                        OR Unique_Product_Code__c like :searchStringMod
+                        OR ProductCode like :searchStringMod
                         OR RecordType.Name like :searchStringMod))
 			ORDER BY CreatedDate DESC 
 			LIMIT 10])
@@ -25,7 +25,7 @@ public class SearchProduct_ar {
 			m.put('productName', product.Name);
 			m.put('productCreated', product.CreatedDate.format());
 			m.put('productFamily', product.Family);
-            m.put('productCode', product.Unique_Product_Code__c);
+            m.put('productCode', product.ProductCode);
             m.put('productType', product.RecordType.Name);
 			listJSON.add(m);
 		}

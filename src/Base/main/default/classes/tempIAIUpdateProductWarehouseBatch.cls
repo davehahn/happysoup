@@ -22,30 +22,14 @@ global without sharing class tempIAIUpdateProductWarehouseBatch implements Sched
 		setProductCode.remove(null);
 		Id idRTPart = Schema.SObjectType.Product2.getRecordTypeInfosByName().get('Part').getRecordTypeId();
 		/// Generate all the products
-		for(Product2 p : [SELECT Id, IsActive, Unique_Product_Code__c, ProductCode, AcctSeed__Inventory_Product__c FROM Product2 WHERE Unique_Product_Code__c IN:setProductCode])
+		for(Product2 p : [SELECT Id, IsActive,  ProductCode, AcctSeed__Inventory_Product__c FROM Product2 WHERE ProductCode IN:setProductCode])
 		{
-			String pc = p.Unique_Product_Code__c.toLowerCase();
+			String pc = p.ProductCode.toLowerCase();
 			mapCodeProduct.put(pc, p);
 		}
 		/// Generate all the warehouses
 		for(AcctSeedERP__Warehouse__c whs : [SELECT Id, Name FROM AcctSeedERP__Warehouse__c WHERE Name IN:setWarehouseName])
 			mapNameWarehouse.put(whs.Name, whs.Id);
-
-		//List<Product2> listNewProducts = new List<Product2>();
-		//for(Inventory_Adjustment_Import__c imp : listImport)
-		//{
-		//	if(imp.Product_Code__c != null)
-		//	{
-		//		String pc = imp.Product_Code__c.toLowerCase();
-		//		if(!mapCodeProduct.containsKey(pc)){
-		//			Product2 prod = new Product2(IsActive = true, Name = (imp.Product_Description__c == null ? pc : imp.Product_Description__c), Unique_Product_Code__c = pc, ProductCode = imp.Product_Code__c, AcctSeed__Inventory_Product__c = (imp.Inventory_Non_Inventory__c ? false : true), RecordTypeId = idRTPart);
-		//			mapCodeProduct.put(pc,prod);
-		//			listNewProducts.add(prod);
-		//		}
-		//	}
-		//}
-		//if(!listNewProducts.isEmpty())
-		//	insert listNewProducts;
 
 		for(Inventory_Adjustment_Import__c imp : listImport)
 		{

@@ -293,7 +293,7 @@ body {
                         <apex:outputText value="{!IF($ObjectType.Product2.accessible,$ObjectType.AcctSeedERP__Purchase_Order_Line__c.Fields.AcctSeedERP__Product__c.Label,'Product')}" />
                     </th>
                     <th class="tableHeader" style="width:90px">
-                        <apex:outputText value="{!IF($ObjectType.Product2.accessible,$ObjectType.Product2.Fields.Unique_Product_Code__c.Label,'Unique Product Code')}" />
+                        <apex:outputText value="{!IF($ObjectType.Product2.accessible,$ObjectType.Product2.Fields.ProductCode.Label,'Product Code')}" />
                     </th>
                     <th class="tableHeader" style="width:150px">
                         <apex:outputText value="{!IF($ObjectType.Product2.accessible,$ObjectType.Product2.Fields.Description.Label,'Description')}" />
@@ -321,7 +321,7 @@ body {
                             <apex:outputText value="{!item['productName']}" />
                         </td>
                         <td class="{!rowClass}">
-                            <apex:outputText value="{!item['productUniqueCode']}" />
+                            <apex:outputText value="{!item['productCode']}" />
                         </td>
                         <td class="{!rowClass}" style="width:150px !important;word-break: break-all !important;">
                             <apex:outputText value="{!item['productDescription']}" />

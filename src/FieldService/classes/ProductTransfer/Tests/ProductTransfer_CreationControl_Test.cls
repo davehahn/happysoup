@@ -37,7 +37,6 @@ private class ProductTransfer_CreationControl_Test {
 //        testProduct0 = new Product2(
 //            Name = 'Test Product 0',
 //            ProductCode = 'Test12340',
-//            Unique_Product_Code__c = 'TestCode12340',
 //            isActive = true,
 //            AcctSeed__Inventory_Product__c = false,
 //            AcctSeed__Inventory_Type__c = 'Manufactured',
@@ -53,7 +52,6 @@ private class ProductTransfer_CreationControl_Test {
 //        testProduct1 = new Product2(
 //            Name = 'Test Product 1',
 //            ProductCode = 'Test1234',
-//            Unique_Product_Code__c = 'TestCode1234',
 //            isActive = true,
 //            AcctSeed__Inventory_Product__c = false,
 //            AcctSeed__Inventory_Type__c = 'Manufactured',
@@ -69,7 +67,6 @@ private class ProductTransfer_CreationControl_Test {
 //        testProduct2 = new Product2(
 //            Name = 'Test Product 2',
 //            ProductCode = 'Test4567',
-//            Unique_Product_Code__c = 'TestCode4567',
 //            isActive = true,
 //            AcctSeed__Inventory_Product__c = false,
 //            AcctSeed__Inventory_Type__c = 'Manufactured',
@@ -80,7 +77,6 @@ private class ProductTransfer_CreationControl_Test {
 //        testProduct3 = new Product2(
 //            Name = 'Test Product 3',
 //            ProductCode = 'Test987',
-//            Unique_Product_Code__c = 'TestCode987',
 //            isActive = true,
 //            AcctSeed__Inventory_Product__c = false,
 //            AcctSeed__Inventory_Type__c = 'Manufactured',

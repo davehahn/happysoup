@@ -4,13 +4,13 @@ public without sharing class gcSerialNumber {
       if (disableTrigger == null)
         return false;
       else
-        return disableTrigger;
+              return disableTrigger;
     }
     set {
       if (value == null)
         disableTrigger = false;
       else
-        disableTrigger = value;
+              disableTrigger = value;
     }
   }
 
@@ -19,13 +19,13 @@ public without sharing class gcSerialNumber {
       if (enableExchangeUpdate == null)
         return false;
       else
-        return enableExchangeUpdate;
+              return enableExchangeUpdate;
     }
     set {
       if (value == null)
         enableExchangeUpdate = false;
       else
-        enableExchangeUpdate = value;
+              enableExchangeUpdate = value;
     }
   }
 
@@ -34,26 +34,26 @@ public without sharing class gcSerialNumber {
       if (enableAvailabilityUpdate == null)
         return false;
       else
-        return enableAvailabilityUpdate;
+              return enableAvailabilityUpdate;
     }
     set {
       if (value == null)
         enableAvailabilityUpdate = false;
       else
-        enableAvailabilityUpdate = value;
+              enableAvailabilityUpdate = value;
     }
   }
 
   public static Boolean checkPriorMovementsAlreadyDone = false;
 
   public static void triggerHandler(
-    map<Id, GMBLASERP__Serial_Number__c> oldMap,
-    map<Id, GMBLASERP__Serial_Number__c> newMap,
-    list<GMBLASERP__Serial_Number__c> listNew,
-    Boolean boolIsBefore,
-    Boolean boolIsInsert,
-    Boolean boolIsUpdate,
-    Boolean boolIsDelete
+          map<Id, GMBLASERP__Serial_Number__c> oldMap,
+          map<Id, GMBLASERP__Serial_Number__c> newMap,
+          list<GMBLASERP__Serial_Number__c> listNew,
+          Boolean boolIsBefore,
+          Boolean boolIsInsert,
+          Boolean boolIsUpdate,
+          Boolean boolIsDelete
   ) {
     if (oldMap == null)
       oldMap = new Map<Id, GMBLASERP__Serial_Number__c>();
@@ -87,40 +87,40 @@ public without sharing class gcSerialNumber {
   }
 
   public static void updateAndValidate(
-    map<Id, GMBLASERP__Serial_Number__c> oldMap,
-    map<Id, GMBLASERP__Serial_Number__c> newMap,
-    list<GMBLASERP__Serial_Number__c> listNew,
-    Boolean boolIsBefore,
-    Boolean boolIsInsert,
-    Boolean boolIsUpdate,
-    Boolean boolIsDelete
+          map<Id, GMBLASERP__Serial_Number__c> oldMap,
+          map<Id, GMBLASERP__Serial_Number__c> newMap,
+          list<GMBLASERP__Serial_Number__c> listNew,
+          Boolean boolIsBefore,
+          Boolean boolIsInsert,
+          Boolean boolIsUpdate,
+          Boolean boolIsDelete
   ) {
     if (boolIsBefore) {
       if (boolIsUpdate || boolIsDelete) {
         map<Id, GMBLASERP__Serial_Number__c> mapSerial = new Map<Id, GMBLASERP__Serial_Number__c>();
         for (GMBLASERP__Serial_Number__c sn : [
-          SELECT
-            Id,
-            Name,
-            (SELECT Id FROM Serial_Numbers__r),
-            (SELECT Id, AcctSeedERP__Movement_Date__c FROM GMBLASERP__Outbound_Inventory_Movements__r LIMIT 1),
-            (
-              SELECT Id
-              FROM GMBLASERP__Inbound_Inventory_Movements__r
-              ORDER BY AcctSeedERP__Movement_Date__c DESC
-              LIMIT 1
-            ),
-            (SELECT Id FROM GMBLASERP__Purchase_Order_Inventory_Movements__r LIMIT 1),
-            (
-              SELECT Id, AcctSeedERP__Movement_Date__c
-              FROM GMBLASERP__Manufacturing_Inventory_Movements__r
-              ORDER BY AcctSeedERP__Movement_Date__c DESC
-              LIMIT 1
-            ),
-            (SELECT Id, Name FROM GMBLASERP__Materials__r LIMIT 1),
-            (SELECT Id, Locked__c FROM Projects__r LIMIT 1)
-          FROM GMBLASERP__Serial_Number__c
-          WHERE Id IN :oldMap.keySet()
+                SELECT
+                        Id,
+                        Name,
+                (SELECT Id FROM Serial_Numbers__r),
+                (SELECT Id, AcctSeedERP__Movement_Date__c FROM GMBLASERP__Outbound_Inventory_Movements__r LIMIT 1),
+                (
+                        SELECT Id
+                        FROM GMBLASERP__Inbound_Inventory_Movements__r
+                        ORDER BY AcctSeedERP__Movement_Date__c DESC
+                        LIMIT 1
+                ),
+                (SELECT Id FROM GMBLASERP__Purchase_Order_Inventory_Movements__r LIMIT 1),
+                (
+                        SELECT Id, AcctSeedERP__Movement_Date__c
+                        FROM GMBLASERP__Manufacturing_Inventory_Movements__r
+                        ORDER BY AcctSeedERP__Movement_Date__c DESC
+                        LIMIT 1
+                ),
+                (SELECT Id, Name FROM GMBLASERP__Materials__r LIMIT 1),
+                (SELECT Id, Locked__c FROM Projects__r LIMIT 1)
+                FROM GMBLASERP__Serial_Number__c
+                WHERE Id IN :oldMap.keySet()
         ]) {
           mapSerial.put(sn.Id, sn);
         }
@@ -132,27 +132,27 @@ public without sharing class gcSerialNumber {
             if (enableExchangeUpdate) {
               if (x.Lot_Exchange__c != null && oldSerial.Lot_Exchange__c == null && !sn.Projects__r.isEmpty())
                 x.addError(
-                  'This serial number ' +
-                  x.Name +
-                  ' cannot be used in a lot exchange. It has already been used as ERP Order Serial.'
+                        'This serial number ' +
+                                x.Name +
+                                ' cannot be used in a lot exchange. It has already been used as ERP Order Serial.'
                 );
               else if (
-                x.Lot_Exchange__c != null &&
-                oldSerial.Lot_Exchange__c == null &&
-                !sn.GMBLASERP__Materials__r.isEmpty()
-              )
+                      x.Lot_Exchange__c != null &&
+                              oldSerial.Lot_Exchange__c == null &&
+                              !sn.GMBLASERP__Materials__r.isEmpty()
+                      )
                 x.addError(
-                  'This serial number ' +
-                  x.Name +
-                  ' cannot be used in a lot exchange. It has already been used as ERP Order item.'
+                        'This serial number ' +
+                                x.Name +
+                                ' cannot be used in a lot exchange. It has already been used as ERP Order item.'
                 );
             }
             /// Do not allow change of Internal Billing fields
             if (
-              boolIsUpdate &&
-              (x.Billing_Revenue_Internal__c != oldMap.get(x.Id).Billing_Revenue_Internal__c ||
-              x.Billing_Revenue_Used__c != oldMap.get(x.Id).Billing_Revenue_Used__c)
-            ) {
+                    boolIsUpdate &&
+                            (x.Billing_Revenue_Internal__c != oldMap.get(x.Id).Billing_Revenue_Internal__c ||
+                                    x.Billing_Revenue_Used__c != oldMap.get(x.Id).Billing_Revenue_Used__c)
+                    ) {
               x.addError('Internal Billing related fields cannot be modified manually.');
             }
             Date lastMoveOutDate = System.today();
@@ -166,13 +166,13 @@ public without sharing class gcSerialNumber {
             }
 
             if (
-              x.GMBLASERP__Inventory_Balance__c == null &&
-              x.GMBLASERP__Inventory_Balance__c != oldMap.get(x.Id).GMBLASERP__Inventory_Balance__c
-            )
+                    x.GMBLASERP__Inventory_Balance__c == null &&
+                            x.GMBLASERP__Inventory_Balance__c != oldMap.get(x.Id).GMBLASERP__Inventory_Balance__c
+                    )
               x.Inventory_Out_Date__c = Datetime.newInstance(
-                lastMoveOutDate.year(),
-                lastMoveOutDate.month(),
-                lastMoveOutDate.day()
+                      lastMoveOutDate.year(),
+                      lastMoveOutDate.month(),
+                      lastMoveOutDate.day()
               );
             else if (x.GMBLASERP__Inventory_Balance__c != null)
               x.Inventory_Out_Date__c = null;
@@ -194,31 +194,31 @@ public without sharing class gcSerialNumber {
             GMBLASERP__Serial_Number__c sn = mapSerial.get(x.Id);
             if (!sn.Serial_Numbers__r.isEmpty() && boolIsUpdate)
               newMap.get(x.Id)
-                .addError('This serial number ' + x.Name + ' has been used in a lot exchange. Cannot be modified.');
+                      .addError('This serial number ' + x.Name + ' has been used in a lot exchange. Cannot be modified.');
             if (boolIsDelete) {
               if (x.Old_Serial_Number__c != null || !sn.GMBLASERP__Outbound_Inventory_Movements__r.isEmpty())
                 x.addError(
-                  'This serial number ' +
-                  x.Name +
-                  ' has been used in a lot exchange. Cannot be deleted. Please delete the releated lot exchange to proceed.'
+                        'This serial number ' +
+                                x.Name +
+                                ' has been used in a lot exchange. Cannot be deleted. Please delete the releated lot exchange to proceed.'
                 );
               if (
-                !sn.GMBLASERP__Outbound_Inventory_Movements__r.isEmpty() ||
-                !sn.GMBLASERP__Inbound_Inventory_Movements__r.isEmpty() ||
-                !sn.GMBLASERP__Purchase_Order_Inventory_Movements__r.isEmpty() ||
-                !sn.GMBLASERP__Manufacturing_Inventory_Movements__r.isEmpty()
-              ) {
+                      !sn.GMBLASERP__Outbound_Inventory_Movements__r.isEmpty() ||
+                              !sn.GMBLASERP__Inbound_Inventory_Movements__r.isEmpty() ||
+                              !sn.GMBLASERP__Purchase_Order_Inventory_Movements__r.isEmpty() ||
+                              !sn.GMBLASERP__Manufacturing_Inventory_Movements__r.isEmpty()
+                      ) {
                 x.addError(
-                  'This serial number ' +
-                  x.Name +
-                  ' cannot be deleted. It has Inventory Movements. Please delete all the related movements to proceed.'
+                        'This serial number ' +
+                                x.Name +
+                                ' cannot be deleted. It has Inventory Movements. Please delete all the related movements to proceed.'
                 );
               }
               if (!sn.GMBLASERP__Materials__r.isEmpty() || !sn.Projects__r.isEmpty()) {
                 x.addError(
-                  'This serial number ' +
-                  x.Name +
-                  ' cannot be deleted. It has been used in an ERP Order. Please delete the project relation or the Material first to proceed.'
+                        'This serial number ' +
+                                x.Name +
+                                ' cannot be deleted. It has been used in an ERP Order. Please delete the project relation or the Material first to proceed.'
                 );
               }
             }
@@ -229,33 +229,35 @@ public without sharing class gcSerialNumber {
     if (!boolIsBefore && (boolIsInsert || boolIsUpdate)) {
       map<Id, GMBLASERP__Serial_Number__c> mapSerial = new Map<Id, GMBLASERP__Serial_Number__c>();
       for (GMBLASERP__Serial_Number__c sn : [
-        SELECT
-          Id,
-          Name,
-          Nest__c,
-          Nest__r.Id,
-          Nest__r.Name,
-          Nest__r.GMBLASERP__Product__c,
-          Nest__r.GMBLASERP__Product__r.Id,
-          Nest__r.GMBLASERP__Product__r.Can_be_Nest__c,
-          Nest__r.Nest__c,
-          Nest__r.Nest__r.Name,
-          GMBLASERP__Product__c,
-          GMBLASERP__Product__r.Id,
-          GMBLASERP__Product__r.Name,
-          GMBLASERP__Product__r.Can_be_Nested__c,
-          GMBLASERP__Inventory_Balance__r.AcctSeedERP__Warehouse__c,
-          (SELECT Id, Name FROM Nested_Serial_Numbers__r LIMIT 1),
-          (SELECT Id, Name FROM GMBLASERP__Materials__r LIMIT 1),
-          (SELECT Id, Locked__c FROM Projects__r LIMIT 1)
-        FROM GMBLASERP__Serial_Number__c
-        WHERE Id IN :newMap.keySet()
+              SELECT
+                      Id,
+                      Name,
+                      Nest__c,
+                      Nest__r.Id,
+                      Nest__r.Name,
+                      Nest__r.GMBLASERP__Product__c,
+                      Nest__r.GMBLASERP__Product__r.Id,
+                      Nest__r.GMBLASERP__Product__r.Can_be_Nest__c,
+                      Nest__r.Nest__c,
+                      Nest__r.Nest__r.Name,
+                      Retail_Receive_Date__c,
+                      GMBLASERP__Product__c,
+                      GMBLASERP__Product__r.Id,
+                      GMBLASERP__Product__r.Name,
+                      GMBLASERP__Product__r.Can_be_Nested__c,
+                      GMBLASERP__Inventory_Balance__r.AcctSeedERP__Warehouse__c,
+                      GMBLASERP__Inventory_Balance__r.LastModifiedDate,
+              (SELECT Id, Name FROM Nested_Serial_Numbers__r LIMIT 1),
+              (SELECT Id, Name FROM GMBLASERP__Materials__r LIMIT 1),
+              (SELECT Id, Locked__c FROM Projects__r LIMIT 1)
+              FROM GMBLASERP__Serial_Number__c
+              WHERE Id IN :newMap.keySet()
       ]) {
         mapSerial.put(sn.Id, sn);
       }
       Id idWarehouseWholesale = GMBLASERP__Inventory_Settings__c.getOrgDefaults().Wholesale_Warehouse_Id__c;
       Id idWarehouseAdjustment = GMBLASERP__Inventory_Settings__c.getOrgDefaults()
-        .GMBLASERP__Adjustment_Warehouse_Id__c;
+              .GMBLASERP__Adjustment_Warehouse_Id__c;
       Id idWarehouseTransit = GMBLASERP__Inventory_Settings__c.getOrgDefaults().GMBLASERP__Transit_Warehouse_Id__c;
       List<GMBLASERP__Serial_Number__c> listSerialToUpdateRetailDate = new List<GMBLASERP__Serial_Number__c>();
       for (GMBLASERP__Serial_Number__c x : listNew) {
@@ -265,36 +267,36 @@ public without sharing class gcSerialNumber {
           x.addError('The Serial Number ' + sn.Name + ' is of a Product that cannot be nested.');
         else if (sn.Nest__c != null && !sn.Nest__r.GMBLASERP__Product__r.Can_be_Nest__c)
           x.addError(
-            'The Serial Number ' +
-            sn.Name +
-            ' cannot be nested to ' +
-            sn.Nest__r.Name +
-            ' because ' +
-            sn.Nest__r.Name +
-            ' is of a Product that cannot be a nest.'
+                  'The Serial Number ' +
+                          sn.Name +
+                          ' cannot be nested to ' +
+                          sn.Nest__r.Name +
+                          ' because ' +
+                          sn.Nest__r.Name +
+                          ' is of a Product that cannot be a nest.'
           );
         else if (sn.Nest__c != null && sn.Nest__r.Nest__c != null)
           x.addError(
-            'The Serial Number ' +
-            sn.Name +
-            ' cannot be nested to ' +
-            sn.Nest__r.Name +
-            ' because ' +
-            sn.Nest__r.Name +
-            ' is itself nested to ' +
-            sn.Nest__r.Nest__r.Name +
-            ' and multi-level nesting is not allowed.'
+                  'The Serial Number ' +
+                          sn.Name +
+                          ' cannot be nested to ' +
+                          sn.Nest__r.Name +
+                          ' because ' +
+                          sn.Nest__r.Name +
+                          ' is itself nested to ' +
+                          sn.Nest__r.Nest__r.Name +
+                          ' and multi-level nesting is not allowed.'
           );
         else if (sn.Nest__c != null && sn.Nested_Serial_Numbers__r.size() > 0)
           x.addError(
-            'The Serial Number ' +
-            sn.Name +
-            ' cannot be nested to ' +
-            sn.Nest__r.Name +
-            ' because ' +
-            sn.Name +
-            ' is itself a nest for other serial numbers, including ' +
-            sn.Nested_Serial_Numbers__r[0].Name
+                  'The Serial Number ' +
+                          sn.Name +
+                          ' cannot be nested to ' +
+                          sn.Nest__r.Name +
+                          ' because ' +
+                          sn.Name +
+                          ' is itself a nest for other serial numbers, including ' +
+                          sn.Nested_Serial_Numbers__r[0].Name
           );
         /// Is lot exchange
         //if(enableExchangeUpdate && !sn.GMBLASERP__Materials__r.isEmpty())
@@ -306,15 +308,15 @@ public without sharing class gcSerialNumber {
         /// Removing Retail Receive Date Process Builder in before trigger
         ///
         if (
-          boolIsUpdate &&
-          x.GMBLASERP__Inventory_Balance__c != null &&
-          sn.GMBLASERP__Inventory_Balance__r.AcctSeedERP__Warehouse__c != idWarehouseWholesale &&
-          sn.GMBLASERP__Inventory_Balance__r.AcctSeedERP__Warehouse__c != idWarehouseAdjustment &&
-          sn.GMBLASERP__Inventory_Balance__r.AcctSeedERP__Warehouse__c != idWarehouseTransit &&
-          x.GMBLASERP__Inventory_Balance__c != oldMap.get(x.Id).GMBLASERP__Inventory_Balance__c
-        ) {
+                boolIsUpdate &&
+                        x.GMBLASERP__Inventory_Balance__c != null && sn.Retail_Receive_Date__c == null &&
+                        sn.GMBLASERP__Inventory_Balance__r.AcctSeedERP__Warehouse__c != idWarehouseWholesale &&
+                        sn.GMBLASERP__Inventory_Balance__r.AcctSeedERP__Warehouse__c != idWarehouseAdjustment &&
+                        sn.GMBLASERP__Inventory_Balance__r.AcctSeedERP__Warehouse__c != idWarehouseTransit &&
+                        x.GMBLASERP__Inventory_Balance__c != oldMap.get(x.Id).GMBLASERP__Inventory_Balance__c
+                ) {
           listSerialToUpdateRetailDate.add(
-            new GMBLASERP__Serial_Number__c(Id = sn.Id, Retail_Receive_Date__c = Date.today())
+                  new GMBLASERP__Serial_Number__c(Id = sn.Id, Retail_Receive_Date__c = sn.GMBLASERP__Inventory_Balance__r.LastModifiedDate)
           );
         }
       }
@@ -334,21 +336,21 @@ public without sharing class gcSerialNumber {
     if (warehouseType == 'Wholesale')
       updateWholesaleAvailability(setIdSerial);
     else
-      updateRetailAvailability(setIdSerial);
+            updateRetailAvailability(setIdSerial);
   }
 
   /// Update Wholesale Availability
   public static void updateWholesaleAvailability(Set<Id> setIdSerial) {
     List<GMBLASERP__Serial_Number__c> listSerial = new List<GMBLASERP__Serial_Number__c>();
     for (GMBLASERP__Serial_Number__c sn : [
-      SELECT Id, Name, GMBLASERP__Inventory_Balance__c, Location__c, Available_Wholesale__c
-      FROM GMBLASERP__Serial_Number__c
-      WHERE Id IN :setIdSerial
+            SELECT Id, Name, GMBLASERP__Inventory_Balance__c, Location__c, Available_Wholesale__c
+            FROM GMBLASERP__Serial_Number__c
+            WHERE Id IN :setIdSerial
     ]) {
       if (sn.GMBLASERP__Inventory_Balance__c == null || sn.Location__c != 'Wholesale')
         sn.Available_Wholesale__c = false;
       else
-        sn.Available_Wholesale__c = true;
+              sn.Available_Wholesale__c = true;
       listSerial.add(sn);
     }
     if (!listSerial.isEmpty()) {
@@ -363,14 +365,14 @@ public without sharing class gcSerialNumber {
   public static void updateRetailAvailability(Set<Id> setIdSerial) {
     List<GMBLASERP__Serial_Number__c> listSerial = new List<GMBLASERP__Serial_Number__c>();
     for (GMBLASERP__Serial_Number__c sn : [
-      SELECT Id, Available_Retail__c, GMBLASERP__Inventory_Balance__c
-      FROM GMBLASERP__Serial_Number__c
-      WHERE Id IN :setIdSerial
+            SELECT Id, Available_Retail__c, GMBLASERP__Inventory_Balance__c
+            FROM GMBLASERP__Serial_Number__c
+            WHERE Id IN :setIdSerial
     ]) {
       if (sn.GMBLASERP__Inventory_Balance__c == null)
         sn.Available_Retail__c = false;
       else
-        sn.Available_Retail__c = true;
+              sn.Available_Retail__c = true;
       listSerial.add(sn);
     }
     if (!listSerial.isEmpty()) {
@@ -408,46 +410,46 @@ public without sharing class gcSerialNumber {
     if (cpr.hasPermission('CanDeNestSerialNumbers'))
       canDeNestSerialNumbers = true;
     for (GMBLASERP__Serial_Number__c sn : [
-      SELECT
-        Id,
-        Name,
-        Available_Wholesale__c,
-        Available_Retail__c,
-        Available__c,
-        Location__c,
-        Dealer_Rigged__c,
-        Usage__c,
-        Nest__c,
-        Status__c,
-        GMBLASERP__Product__r.RecordType.Name,
-        GMBLASERP__Product__r.Can_be_Nest__c,
-        GMBLASERP__Product__r.Can_be_Nested__c,
-        (
-          SELECT
-            Id,
-            AcctSeedERP__Project__r.Name,
-            AcctSeedERP__Project__r.Locked__c,
-            AcctSeedERP__Project__r.Internal_Partner_Boat_Sale__c,
-            AcctSeedERP__Project__r.Internal_Partner_Parts_Order__c,
-            AcctSeedERP__Project__r.Internal_Labour_Service__c,
-            AcctSeedERP__Project__r.Serial_Number__c,
-            AcctSeedERP__Project__r.Serial_Number__r.GMBLASERP__Product__r.Can_be_Nest__c,
-            AcctSeedERP__Project__r.RecordTypeId
-          FROM GMBLASERP__Materials__r
-        ),
-        (
-          SELECT
-            Id,
-            Name,
-            Locked__c,
-            Internal_Partner_Boat_Sale__c,
-            Internal_Partner_Parts_Order__c,
-            Internal_Labour_Service__c,
-            RecordTypeId
-          FROM Projects__r
-        )
-      FROM GMBLASERP__Serial_Number__c
-      WHERE Id IN :setIdSerial
+            SELECT
+                    Id,
+                    Name,
+                    Available_Wholesale__c,
+                    Available_Retail__c,
+                    Available__c,
+                    Location__c,
+                    Dealer_Rigged__c,
+                    Usage__c,
+                    Nest__c,
+                    Status__c,
+                    GMBLASERP__Product__r.RecordType.Name,
+                    GMBLASERP__Product__r.Can_be_Nest__c,
+                    GMBLASERP__Product__r.Can_be_Nested__c,
+            (
+                    SELECT
+                            Id,
+                            AcctSeedERP__Project__r.Name,
+                            AcctSeedERP__Project__r.Locked__c,
+                            AcctSeedERP__Project__r.Internal_Partner_Boat_Sale__c,
+                            AcctSeedERP__Project__r.Internal_Partner_Parts_Order__c,
+                            AcctSeedERP__Project__r.Internal_Labour_Service__c,
+                            AcctSeedERP__Project__r.Serial_Number__c,
+                            AcctSeedERP__Project__r.Serial_Number__r.GMBLASERP__Product__r.Can_be_Nest__c,
+                            AcctSeedERP__Project__r.RecordTypeId
+                    FROM GMBLASERP__Materials__r
+            ),
+            (
+                    SELECT
+                            Id,
+                            Name,
+                            Locked__c,
+                            Internal_Partner_Boat_Sale__c,
+                            Internal_Partner_Parts_Order__c,
+                            Internal_Labour_Service__c,
+                            RecordTypeId
+                    FROM Projects__r
+            )
+            FROM GMBLASERP__Serial_Number__c
+            WHERE Id IN :setIdSerial
     ]) {
       Boolean inSaleProjectSerial = false;
       Boolean inSaleProject = false;
@@ -469,27 +471,27 @@ public without sharing class gcSerialNumber {
 
           /// If already in a Project // && p.Locked__c == false)
           if (
-            p.RecordTypeId == idRtProjectCounterSale ||
-            p.RecordTypeId == idRtProjectPartnerBoatSale ||
-            p.RecordTypeId == idRtProjectBoatSale
-          )
+                  p.RecordTypeId == idRtProjectCounterSale ||
+                          p.RecordTypeId == idRtProjectPartnerBoatSale ||
+                          p.RecordTypeId == idRtProjectBoatSale
+                  )
             inSaleProjectSerial = true;
           /// If Dealer Rigged
           String productRT = sn.GMBLASERP__Product__r.RecordType.Name;
           if (
-            p.RecordTypeId == idRtManufacturing &&
-            p.Locked__c == true &&
-            (productRT.equals('Boat') || productRT.equals('Trailer')) &&
-            p.Name.contains('PRE-RIG')
-          )
+                  p.RecordTypeId == idRtManufacturing &&
+                          p.Locked__c == true &&
+                          (productRT.equals('Boat') || productRT.equals('Trailer')) &&
+                          p.Name.contains('PRE-RIG')
+                  )
             dealerRigged = true;
           else if (
-            !dealerRigged &&
-            p.RecordTypeId == idRtManufacturing &&
-            p.Locked__c == false &&
-            (productRT.equals('Boat') || productRT.equals('Trailer')) &&
-            p.Name.contains('PRE-RIG')
-          )
+                  !dealerRigged &&
+                          p.RecordTypeId == idRtManufacturing &&
+                          p.Locked__c == false &&
+                          (productRT.equals('Boat') || productRT.equals('Trailer')) &&
+                          p.Name.contains('PRE-RIG')
+                  )
             dealerRigged = false;
         }
       Boolean addInUpdate = false;
@@ -505,36 +507,36 @@ public without sharing class gcSerialNumber {
             inUnlockedMfgProject = true;
 
           if (
-            matl.AcctSeedERP__Project__r.RecordTypeId == idRtProjectPartnerBoatSale &&
-            !matl.AcctSeedERP__Project__r.Locked__c
-          )
+                  matl.AcctSeedERP__Project__r.RecordTypeId == idRtProjectPartnerBoatSale &&
+                          !matl.AcctSeedERP__Project__r.Locked__c
+                  )
             taggedInPartner = true;
           if (matl.AcctSeedERP__Project__r.Internal_Partner_Boat_Sale__c && !matl.AcctSeedERP__Project__r.Locked__c)
             taggedInInternalPartnerOrder = true;
           if (
-            !setRecordTypesToExclude.contains(matl.AcctSeedERP__Project__r.RecordTypeId) &&
-            !matl.AcctSeedERP__Project__r.Locked__c
-          )
+                  !setRecordTypesToExclude.contains(matl.AcctSeedERP__Project__r.RecordTypeId) &&
+                          !matl.AcctSeedERP__Project__r.Locked__c
+                  )
             taggedInRetailOrder = true;
 
           if (
-            matl.AcctSeedERP__Project__r.RecordTypeId == idRtProjectCounterSale ||
-            matl.AcctSeedERP__Project__r.RecordTypeId == idRtProjectBoatSale ||
-            matl.AcctSeedERP__Project__r.RecordTypeId == idRtProjectPartnerBoatSale
-          )
+                  matl.AcctSeedERP__Project__r.RecordTypeId == idRtProjectCounterSale ||
+                          matl.AcctSeedERP__Project__r.RecordTypeId == idRtProjectBoatSale ||
+                          matl.AcctSeedERP__Project__r.RecordTypeId == idRtProjectPartnerBoatSale
+                  )
             inSaleProject = true;
 
           if (
-            matl.AcctSeedERP__Project__r.Serial_Number__c != null &&
-            sn.Nest__c != matl.AcctSeedERP__Project__r.Serial_Number__c &&
-            sn.Id != matl.AcctSeedERP__Project__r.Serial_Number__c &&
-            sn.GMBLASERP__Product__r.Can_be_Nested__c
-          ) {
+                  matl.AcctSeedERP__Project__r.Serial_Number__c != null &&
+                          sn.Nest__c != matl.AcctSeedERP__Project__r.Serial_Number__c &&
+                          sn.Id != matl.AcctSeedERP__Project__r.Serial_Number__c &&
+                          sn.GMBLASERP__Product__r.Can_be_Nested__c
+                  ) {
             /// We will by pass this section if the user has de-nest permission
             if (
-              !canDeNestSerialNumbers &&
-              matl.AcctSeedERP__Project__r.Serial_Number__r.GMBLASERP__Product__r.Can_be_Nest__c
-            ) {
+                    !canDeNestSerialNumbers &&
+                            matl.AcctSeedERP__Project__r.Serial_Number__r.GMBLASERP__Product__r.Can_be_Nest__c
+                    ) {
               sn.Nest__c = matl.AcctSeedERP__Project__r.Serial_Number__c;
               addInUpdate = true;
             }
@@ -552,31 +554,31 @@ public without sharing class gcSerialNumber {
         sn.Available_Wholesale__c = false;
         addInUpdate = true;
       } else if (
-        sn.Location__c == 'Wholesale' &&
-        taggedInPartner &&
-        taggedInInternalPartnerOrder &&
-        !taggedInRetailOrder
-      ) {
+              sn.Location__c == 'Wholesale' &&
+                      taggedInPartner &&
+                      taggedInInternalPartnerOrder &&
+                      !taggedInRetailOrder
+              ) {
         System.debug(loggingLevel.error, 'Case:2');
         sn.Available_Retail__c = true;
         sn.Available_Wholesale__c = false;
         addInUpdate = true;
       } else if (
-        sn.Location__c == 'Wholesale' &&
-        taggedInPartner &&
-        !taggedInInternalPartnerOrder &&
-        !taggedInRetailOrder
-      ) {
+              sn.Location__c == 'Wholesale' &&
+                      taggedInPartner &&
+                      !taggedInInternalPartnerOrder &&
+                      !taggedInRetailOrder
+              ) {
         System.debug(loggingLevel.error, 'Case:3');
         sn.Available_Retail__c = false;
         sn.Available_Wholesale__c = false;
         addInUpdate = true;
       } else if (
-        sn.Location__c == 'Wholesale' &&
-        !taggedInPartner &&
-        !taggedInInternalPartnerOrder &&
-        !taggedInRetailOrder
-      ) {
+              sn.Location__c == 'Wholesale' &&
+                      !taggedInPartner &&
+                      !taggedInInternalPartnerOrder &&
+                      !taggedInRetailOrder
+              ) {
         System.debug(loggingLevel.error, 'Case:4');
         sn.Available_Retail__c = false;
         sn.Available_Wholesale__c = true;
@@ -647,7 +649,7 @@ public without sharing class gcSerialNumber {
     if (checkPriorMovementsAlreadyDone || !Trigger.isExecuting )
       return;
     else
-      checkPriorMovementsAlreadyDone = true;
+            checkPriorMovementsAlreadyDone = true;
     System.debug('Serial Checking Prior Moves');
     CustomPermissionsReader cpr = new CustomPermissionsReader();
     Boolean canModifyLockedPurchaseOrder = false;
@@ -692,35 +694,35 @@ public without sharing class gcSerialNumber {
 
         if (!mapSerials.isEmpty()) {
           for (GMBLASERP__Serial_Number__c sn : [
-            SELECT
-              Id,
-              Name,
-              (
-                SELECT Id, AcctSeedERP__Movement_Date__c
-                FROM GMBLASERP__Outbound_Inventory_Movements__r
-                ORDER BY AcctSeedERP__Movement_Date__c DESC
-                LIMIT 2
-              ),
-              (
-                SELECT Id, AcctSeedERP__Movement_Date__c
-                FROM GMBLASERP__Inbound_Inventory_Movements__r
-                ORDER BY AcctSeedERP__Movement_Date__c DESC
-                LIMIT 2
-              ),
-              (
-                SELECT Id, AcctSeedERP__Movement_Date__c
-                FROM GMBLASERP__Purchase_Order_Inventory_Movements__r
-                ORDER BY AcctSeedERP__Movement_Date__c DESC
-                LIMIT 2
-              ),
-              (
-                SELECT Id, AcctSeedERP__Movement_Date__c
-                FROM GMBLASERP__Manufacturing_Inventory_Movements__r
-                ORDER BY AcctSeedERP__Movement_Date__c DESC
-                LIMIT 2
-              )
-            FROM GMBLASERP__Serial_Number__c
-            WHERE Id IN :mapSerials.keySet()
+                  SELECT
+                          Id,
+                          Name,
+                  (
+                          SELECT Id, AcctSeedERP__Movement_Date__c
+                          FROM GMBLASERP__Outbound_Inventory_Movements__r
+                          ORDER BY AcctSeedERP__Movement_Date__c DESC
+                          LIMIT 2
+                  ),
+                  (
+                          SELECT Id, AcctSeedERP__Movement_Date__c
+                          FROM GMBLASERP__Inbound_Inventory_Movements__r
+                          ORDER BY AcctSeedERP__Movement_Date__c DESC
+                          LIMIT 2
+                  ),
+                  (
+                          SELECT Id, AcctSeedERP__Movement_Date__c
+                          FROM GMBLASERP__Purchase_Order_Inventory_Movements__r
+                          ORDER BY AcctSeedERP__Movement_Date__c DESC
+                          LIMIT 2
+                  ),
+                  (
+                          SELECT Id, AcctSeedERP__Movement_Date__c
+                          FROM GMBLASERP__Manufacturing_Inventory_Movements__r
+                          ORDER BY AcctSeedERP__Movement_Date__c DESC
+                          LIMIT 2
+                  )
+                  FROM GMBLASERP__Serial_Number__c
+                  WHERE Id IN :mapSerials.keySet()
           ]) {
             System.debug('sn.Id');
             System.debug(sn.Id);
@@ -753,7 +755,7 @@ public without sharing class gcSerialNumber {
               sObject mc;
               sObject mc2;
               for (
-                AcctSeedERP__Outbound_Inventory_Movement__c oim : serialInfo.GMBLASERP__Outbound_Inventory_Movements__r
+                      AcctSeedERP__Outbound_Inventory_Movement__c oim : serialInfo.GMBLASERP__Outbound_Inventory_Movements__r
               ) {
                 mapDateMove.put(oim.AcctSeedERP__Movement_Date__c, oim);
                 if (!mapDateIds.containsKey(oim.AcctSeedERP__Movement_Date__c))
@@ -762,7 +764,7 @@ public without sharing class gcSerialNumber {
               }
               /// Inbound Moves
               for (
-                AcctSeedERP__Inbound_Inventory_Movement__c iim : serialInfo.GMBLASERP__Inbound_Inventory_Movements__r
+                      AcctSeedERP__Inbound_Inventory_Movement__c iim : serialInfo.GMBLASERP__Inbound_Inventory_Movements__r
               ) {
                 mapDateMove.put(iim.AcctSeedERP__Movement_Date__c, iim);
                 if (!mapDateIds.containsKey(iim.AcctSeedERP__Movement_Date__c))
@@ -771,7 +773,7 @@ public without sharing class gcSerialNumber {
               }
               /// Manufacturing Moves
               for (
-                AcctSeedERP__Manufacturing_Inventory_Movement__c mim : serialInfo.GMBLASERP__Manufacturing_Inventory_Movements__r
+                      AcctSeedERP__Manufacturing_Inventory_Movement__c mim : serialInfo.GMBLASERP__Manufacturing_Inventory_Movements__r
               ) {
                 mapDateMove.put(mim.AcctSeedERP__Movement_Date__c, mim);
                 if (!mapDateIds.containsKey(mim.AcctSeedERP__Movement_Date__c))
@@ -780,7 +782,7 @@ public without sharing class gcSerialNumber {
               }
               /// Purchase Moves
               for (
-                AcctSeedERP__Purchase_Order_Inventory_Movement__c pim : serialInfo.GMBLASERP__Purchase_Order_Inventory_Movements__r
+                      AcctSeedERP__Purchase_Order_Inventory_Movement__c pim : serialInfo.GMBLASERP__Purchase_Order_Inventory_Movements__r
               ) {
                 mapDateMove.put(pim.AcctSeedERP__Movement_Date__c, pim);
                 if (!mapDateIds.containsKey(pim.AcctSeedERP__Movement_Date__c))
@@ -811,11 +813,11 @@ public without sharing class gcSerialNumber {
                 //// Validation Starts here
                 if (Trigger.isInsert && (Date) mc.get('AcctSeedERP__Movement_Date__c') > moveDate)
                   obj.addError(
-                    'The Last movement for serial number ' +
-                    serialInfo.Name +
-                    ' was made on ' +
-                    mcDate.format() +
-                    '. New movements must be made on or after that day.'
+                          'The Last movement for serial number ' +
+                                  serialInfo.Name +
+                                  ' was made on ' +
+                                  mcDate.format() +
+                                  '. New movements must be made on or after that day.'
                   );
 
                 if (Trigger.isUpdate) {
@@ -823,44 +825,44 @@ public without sharing class gcSerialNumber {
                     System.debug(loggingLevel.error, 'move:' + obj);
                     System.debug(loggingLevel.error, 'mc:' + mc);
                     obj.addError(
-                      'The movement date for serial number ' +
-                      serialInfo.Name +
-                      ' cannot be modified. Previous Movement was made on ' +
-                      mc2Date.format() +
-                      '. Current movement must be made on or after that day.'
+                            'The movement date for serial number ' +
+                                    serialInfo.Name +
+                                    ' cannot be modified. Previous Movement was made on ' +
+                                    mc2Date.format() +
+                                    '. Current movement must be made on or after that day.'
                     );
                   } else if (mc2 != null && mapDateIds.get(mc2Date).contains(updateId) && moveDate != oldMoveDate) {
                     System.debug(loggingLevel.error, 'move:' + obj);
                     System.debug(loggingLevel.error, 'Error 2:' + mc);
                     obj.addError(
-                      'The movement date for serial number ' +
-                      serialInfo.Name +
-                      ' cannot be modified. There are movements after this movement.'
+                            'The movement date for serial number ' +
+                                    serialInfo.Name +
+                                    ' cannot be modified. There are movements after this movement.'
                     );
                   } else if (
-                    moveDate != oldMoveDate &&
-                    !mapDateIds.get(mcDate).contains(updateId) &&
-                    moveDate > mcDate
-                  ) {
+                          moveDate != oldMoveDate &&
+                                  !mapDateIds.get(mcDate).contains(updateId) &&
+                                  moveDate > mcDate
+                          ) {
                     System.debug(loggingLevel.error, 'move:' + obj);
                     System.debug(loggingLevel.error, 'Error 3:' + mc);
                     obj.addError(
-                      'The movement date for serial number ' +
-                      serialInfo.Name +
-                      ' cannot be modified. There are movements after this movement.'
+                            'The movement date for serial number ' +
+                                    serialInfo.Name +
+                                    ' cannot be modified. There are movements after this movement.'
                     );
                   } else if (
-                    moveDate != oldMoveDate &&
-                    !mapDateIds.get(mcDate).contains(updateId) &&
-                    mc2 != null &&
-                    !mapDateIds.get(mc2Date).contains(updateId)
-                  ) {
+                          moveDate != oldMoveDate &&
+                                  !mapDateIds.get(mcDate).contains(updateId) &&
+                                  mc2 != null &&
+                                  !mapDateIds.get(mc2Date).contains(updateId)
+                          ) {
                     System.debug(loggingLevel.error, 'move:' + obj);
                     System.debug(loggingLevel.error, 'Error 4:' + mc);
                     obj.addError(
-                      'The movement date for ' +
-                      serialInfo.Name +
-                      ' cannot be modified. There are movements after this movement.'
+                            'The movement date for ' +
+                                    serialInfo.Name +
+                                    ' cannot be modified. There are movements after this movement.'
                     );
                   }
                 }
@@ -886,7 +888,7 @@ public without sharing class gcSerialNumber {
               sObject mc;
               sObject mc2;
               for (
-                AcctSeedERP__Outbound_Inventory_Movement__c oim : serialInfo.GMBLASERP__Outbound_Inventory_Movements__r
+                      AcctSeedERP__Outbound_Inventory_Movement__c oim : serialInfo.GMBLASERP__Outbound_Inventory_Movements__r
               ) {
                 mapDateMove.put(oim.AcctSeedERP__Movement_Date__c, oim);
                 if (!mapDateIds.containsKey(oim.AcctSeedERP__Movement_Date__c))
@@ -895,7 +897,7 @@ public without sharing class gcSerialNumber {
               }
               /// Inbound Moves
               for (
-                AcctSeedERP__Inbound_Inventory_Movement__c iim : serialInfo.GMBLASERP__Inbound_Inventory_Movements__r
+                      AcctSeedERP__Inbound_Inventory_Movement__c iim : serialInfo.GMBLASERP__Inbound_Inventory_Movements__r
               ) {
                 mapDateMove.put(iim.AcctSeedERP__Movement_Date__c, iim);
                 if (!mapDateIds.containsKey(iim.AcctSeedERP__Movement_Date__c))
@@ -904,7 +906,7 @@ public without sharing class gcSerialNumber {
               }
               /// Manufacturing Moves
               for (
-                AcctSeedERP__Manufacturing_Inventory_Movement__c mim : serialInfo.GMBLASERP__Manufacturing_Inventory_Movements__r
+                      AcctSeedERP__Manufacturing_Inventory_Movement__c mim : serialInfo.GMBLASERP__Manufacturing_Inventory_Movements__r
               ) {
                 System.debug(loggingLevel.error, 'mim:' + mim);
                 mapDateMove.put(mim.AcctSeedERP__Movement_Date__c, mim);
@@ -914,7 +916,7 @@ public without sharing class gcSerialNumber {
               }
               /// Purchase Moves
               for (
-                AcctSeedERP__Purchase_Order_Inventory_Movement__c pim : serialInfo.GMBLASERP__Purchase_Order_Inventory_Movements__r
+                      AcctSeedERP__Purchase_Order_Inventory_Movement__c pim : serialInfo.GMBLASERP__Purchase_Order_Inventory_Movements__r
               ) {
                 System.debug(loggingLevel.error, 'pim:' + pim);
                 mapDateMove.put(pim.AcctSeedERP__Movement_Date__c, pim);
@@ -948,9 +950,9 @@ public without sharing class gcSerialNumber {
                   System.debug(loggingLevel.error, 'moveDel:' + obj);
                   System.debug(loggingLevel.error, 'mcD:' + mc);
                   obj.addError(
-                    'The movement cannot be deleted for serial number ' +
-                    serialInfo.Name +
-                    '. There are movements after this movement.'
+                          'The movement cannot be deleted for serial number ' +
+                                  serialInfo.Name +
+                                  '. There are movements after this movement.'
                   );
                 }
               }
@@ -973,8 +975,8 @@ public without sharing class gcSerialNumber {
     map<String, list<String>> mapFilters = new Map<String, list<String>>();
     mapFilters.put('idSerial', listIdSerials);
     List<gcInventoryMovementCube_Report.cube> allCubes = gcInventoryMovementCube_Report.inventoryAggRes(
-      mapFilters,
-      new List<String>{ 'idSerial' }
+            mapFilters,
+            new List<String>{ 'idSerial' }
     );
     Map<Id, Decimal> mapSerialCost = new Map<Id, Decimal>();
     for (gcInventoryMovementCube_Report.cube cube : allCubes) {
@@ -983,9 +985,9 @@ public without sharing class gcSerialNumber {
     }
     List<GMBLASERP__Serial_Number__c> listSerials = new List<GMBLASERP__Serial_Number__c>();
     for (GMBLASERP__Serial_Number__c p : [
-      SELECT Id, Current_Unit_Cost__c
-      FROM GMBLASERP__Serial_Number__c
-      WHERE Id IN :mapSerialCost.keySet()
+            SELECT Id, Current_Unit_Cost__c
+            FROM GMBLASERP__Serial_Number__c
+            WHERE Id IN :mapSerialCost.keySet()
     ]) {
       Decimal avg = mapSerialCost.get(p.Id);
       if (avg == null)
@@ -1007,9 +1009,9 @@ public without sharing class gcSerialNumber {
   public static void deNestSrials(Set<Id> setIdSerial) {
     List<GMBLASERP__Serial_Number__c> listSerialsToUpdate = new List<GMBLASERP__Serial_Number__c>();
     for (GMBLASERP__Serial_Number__c sn : [
-      SELECT Id, Nest__c
-      FROM GMBLASERP__Serial_Number__c
-      WHERE Id IN :setIdSerial
+            SELECT Id, Nest__c
+            FROM GMBLASERP__Serial_Number__c
+            WHERE Id IN :setIdSerial
     ]) {
       sn.Nest__c = null;
       listSerialsToUpdate.add(sn);

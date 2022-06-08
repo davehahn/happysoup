@@ -140,7 +140,7 @@ private class Product2ExtTest {
       clone
     );
     Product2Ext p2Ext = new Product2Ext(sController);
-    p2Ext.product.Unique_Product_Code__c = boat.ProductCode + 'Cloned';
+    p2Ext.product.ProductCode = boat.ProductCode + 'Cloned';
     p2Ext.saveWithOptions();
     Test.stopTest();
 

@@ -1,8 +1,10 @@
 @isTest
 public class TA_Product_Legacy_T {
 
-    final static String RECORDTYPE = 'Insurance';
-    final static String FAMILY = 'Insurance';
+    final static String NONSERIALIZED_RECORDTYPE = 'Insurance';
+    final static String NONSERIALIZED_FAMILY = 'Insurance';
+    final static String SERIALIZED_RECORDTYPE = 'Boat';
+    final static String SERIALIZED_FAMILY = 'Pontoon';
     static List<Product2> products;
     private static List<Product2> getData(){
         return [Select
@@ -28,7 +30,8 @@ public class TA_Product_Legacy_T {
         Factory_CustomSettings.setupInventorySettings();
         Factory_AccountPayable.insertAccountPayable(5);
         new Factory_AccountingVariables();
-        List<Product2> serializedProducts = Factory_Product.createSerializedProducts(RECORDTYPE, FAMILY, 10);
+        Factory_Product.createSerializedProducts(SERIALIZED_RECORDTYPE, SERIALIZED_FAMILY, 10);
+        Factory_Product.createNonSerializedProducts(NONSERIALIZED_RECORDTYPE, NONSERIALIZED_FAMILY, 10);
     }
 
     @IsTest
@@ -71,6 +74,35 @@ public class TA_Product_Legacy_T {
         Test.startTest();
         new TA_Product_Legacy().afterDelete(getData());
         Test.stopTest();
+    }
+
+    @IsTest
+    static void productCodeTest(){
+        Product2 part = Factory_product.buildNonSerializedProduct('Part', 'Hardware');
+        Test.startTest();
+        insert part;
+        Test.stopTest();
+        part = [SELECT Id, ProductCode, Unique_Product_Code__c FROM Product2 WHERE Id = :part.Id];
+
+        System.assertEquals( part.ProductCode, part.Unique_Product_Code__c, 'ProductCode and Unique Product Code should be the same');
+    }
+
+    @IsTest
+    static void productCodeUniquenessTest(){
+        List<Product2> parts = Factory_product.buildNonSerializedProducts('Part', 'Hardware', 2);
+        String pCode = 'IamTheSame';
+        String errorMsg;
+        parts[0].ProductCode = pCode;
+        parts[1].ProductCode = pCode;
+        Test.startTest();
+        try{
+            insert parts;
+        }
+        catch( Exception e ){
+            errorMsg = e.getMessage();
+        }
+        System.debug( errorMsg );
+        System.assert( errorMsg != null );
     }
 
 

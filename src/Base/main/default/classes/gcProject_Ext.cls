@@ -1886,14 +1886,6 @@ global without sharing class gcProject_Ext {
       if(mapData.containsKey('productIsLotTracked'))
         productIsLotTracked = mapData.get('productIsLotTracked');
 
-      /// if a product was not specified then it is a non legend service
-      /*
-      /// From now the suer must select a product
-      if(idProduct == null)
-      {
-        idProduct = [SELECT Id FROM Product2 where Unique_Product_Code__c = 'NonLegend'][0].Id;
-      }*/
-
       /// Find or create a lot
       if(productIsLotTracked.equals('true'))
       {

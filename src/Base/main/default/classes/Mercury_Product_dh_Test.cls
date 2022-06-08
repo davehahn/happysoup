@@ -52,7 +52,7 @@ private class Mercury_Product_dh_Test {
       mps.add( new Mercury_Product__c(
         MSRP__c = 100,
         List_Price__c = 50,
-        Code__c = p.Unique_Product_Code__c,
+        Code__c = p.ProductCode,
         Item_Class__c = '1'
       ));
     }
@@ -85,7 +85,7 @@ private class Mercury_Product_dh_Test {
       mps.add( new Mercury_Product__c(
         MSRP__c = 100,
         List_Price__c = 50,
-        Code__c = p.Unique_Product_Code__c
+        Code__c = p.ProductCode
       ));
     }
     System.debug('Should hit trigger here');
@@ -117,11 +117,11 @@ private class Mercury_Product_dh_Test {
       mps.add( new Mercury_Product__c(
         MSRP__c = 1,
         List_Price__c = 1,
-        Code__c = p.Unique_Product_Code__c
+        Code__c = p.ProductCode
       ));
     }
     System.debug('Product 0 code');
-    System.debug( merc_prods[0].Unique_Product_Code__c);
+    System.debug( merc_prods[0].ProductCode);
     System.debug( 'mps 0 code');
     System.debug( mps[0].Code__c );
     System.debug('Should NOT hit trigger here');

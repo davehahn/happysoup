@@ -75,7 +75,7 @@ public with sharing class CaseLexController {
   @AuraEnabled
   public static Case_Part__c[] fetchCaseParts( String caseId )
   {
-    return [SELECT Id, Name, Product__c, Quantity__c, Order_Quantity__c, Product__r.Name, Product__r.Unique_Product_Code__c
+    return [SELECT Id, Name, Product__c, Quantity__c, Order_Quantity__c, Product__r.Name, Product__r.ProductCode
             FROM Case_Part__c
             WHERE Case__c = :caseId];
   }
