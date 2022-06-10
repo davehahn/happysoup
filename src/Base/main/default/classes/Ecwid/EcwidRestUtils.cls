@@ -23,7 +23,6 @@ global without sharing class EcwidRestUtils {
 
     }
     public static void init(){
-        System.debug('@@ in inti method');
         setting = getDataFromSetting();
         getEcwidApiConfiguration();
         getEwidDynamicQuery();
@@ -54,17 +53,12 @@ global without sharing class EcwidRestUtils {
         getEcwidApiConfiguration();
         getEwidDynamicQuery();
         String keyData = requestBody.eventCreated +'.'+requestBody.eventId ;
-        System.debug('keyData= '+keyData);
-        System.debug('setting= '+setting);
         Blob data = crypto.generateMac('HmacSHA256',Blob.valueOf(keyData), Blob.valueOf(setting.Verification_Key__c));
-        System.debug('EncodingUtil.base64Encode(data)= '+EncodingUtil.base64Encode(data));
         return EncodingUtil.base64Encode(data);
 
     }
 
     public static Ecwid_API_Setting__mdt  getDataFromSetting(){
-
-        System.debug('@@ storeId= '+storeId);
         setting  = [SELECT
                             Public_Key__c,
                             Secret_Key__c,
@@ -81,7 +75,6 @@ global without sharing class EcwidRestUtils {
                             Store_Id__c =:storeId
                    ];
 
-        System.debug('setting= '+setting);
         return setting  ;
     }
     private static void getEcwidApiConfiguration(){
@@ -128,28 +121,17 @@ global without sharing class EcwidRestUtils {
                                                                       WHERE
                                                                           Is_Active__c=TRUE
                                                                     ];
-        System.debug('ecwidDynamicQueriesList= '+ecwidDynamicQueriesList);
-
         for(Ecwid_Object_Mapping__mdt query :ecwidDynamicQueriesList ){
             List<Ecwid_Query_Field_Mapping__mdt> fieldList = new List<Ecwid_Query_Field_Mapping__mdt>();
-            //List<Ecwid_Field_Mapping__mdt> lstFieldMapping = new List<Ecwid_Field_Mapping__mdt>();
             for(Ecwid_Query_Field_Mapping__mdt field : query.Ecwid_Query_Field_Mapping__r){
                 fieldList.add(field);
             }
-             /*for(Ecwid_Field_Mapping__mdt fieldMapping : query.Ecwid_Field_Mapping__r){
-                lstFieldMapping.add(fieldMapping);
-            }*/
             dynamicQueryMap.put(query.MasterLabel,query.Query__c);
             dynamicQueryFieldMap.put(query.MasterLabel,fieldList);
-            //dynamicFielddMap.put(query.MasterLabel,lstFieldMapping);
-            System.debug('dynamicQueryMap= '+dynamicQueryMap);
-
         }
     }
 
     public static EcwidRestCommon.RequestPayloadBody parseRequest(String requestBody){
-        System.debug('requestBody= '+requestBody);
-        System.debug('Encoded= '+(EncodingUtil.base64Decode(requestBody)).toString());
         return ( EcwidRestCommon.RequestPayloadBody ) JSON.deserialize((EncodingUtil.base64Decode(requestBody).toString()), EcwidRestCommon.RequestPayloadBody  .class);
     }
     public static String parseHeader(String request){
@@ -184,7 +166,6 @@ global without sharing class EcwidRestUtils {
         serviceLog.Entity_Id__c = body.entityId;
         serviceLog.recordTypeId =  Schema.SObjectType.Rest_Service_Log__c.getRecordTypeInfosByDeveloperName().get('Ecwid_Inbound').getRecordTypeId();
         serviceLog.Store_Id__c = body.storeId;
-        System.debug('@@ serviceLog.Store_Id__c= '+serviceLog.Store_Id__c);
         insert serviceLog;
 
         return serviceLog;
@@ -200,15 +181,4 @@ global without sharing class EcwidRestUtils {
 
         return errorMsg + '\n';
     }
-
-   /* public static void ecvidEvent(Rest_Service_Log__c serviceLog, EcwidRestCommon.RequestPayloadBody body){
-        
-        Ecwid_Event__c ecwidEvent = new Ecwid_Event__c();
-        ecwidEvent.EntityId__c = body.eventId;
-        ecwidEvent.EventId__c = body.eventType;
-        ecwidEvent.EventType__c = body.eventType;
-        ecwidEvent.Service_Log_Id__c = serviceLog.id;
-
-        insert ecwidEvent;
-    }*/
 }
