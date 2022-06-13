@@ -20,7 +20,7 @@ private class TA_Case_ValidateStatusChange_T {
   }
 
   @IsTest
-  static void TA_BeforeUpdate() {
+  static void validateOnPartsOrderExists() {
     init();
     TriggerBase.bypass('AcctSeed__Project__c');
     AcctSeed__Project__c partsOrderERP = Factory_ERPOrder.insertPartnerPartsOrder(dealer, null);
@@ -45,5 +45,70 @@ private class TA_Case_ValidateStatusChange_T {
     System.assert(
       error.contains('This case has a related parts order. Please remove the parts order first to change status.')
     );
+  }
+
+  @IsTest
+  static void validateWarrantyChangeHasAnActualOwner_error(){
+    init();
+    //Id cUser = UserInfo.getUserId();
+    Id que = [
+      SELECT Id
+      FROM Group
+      WHERE Type = 'Queue' AND DeveloperName = 'Warranty_Cases'
+      LIMIT 1
+    ].Id;
+    c.OwnerId = que;
+
+    TriggerBase.bypass('Case');
+    insert c;
+    TriggerBase.clearBypass('Case');
+
+    c.Status = 'Approved';
+
+    String error;
+    Test.startTest();
+    try {
+      update c;
+    } catch (Exception e) {
+      error = e.getMessage();
+    }
+    Test.stopTest();
+
+    System.assert(error != null);
+    System.assert(
+      error.contains('Status change is not allowed until the Case is Owned by a Person')
+    );
+  }
+
+  @IsTest
+  static void validateWarrantyChangeHasAnActualOwner_noError(){
+    init();
+    Id cUser = UserInfo.getUserId();
+    Id que = [
+      SELECT Id
+      FROM Group
+      WHERE Type = 'Queue' AND DeveloperName = 'Warranty_Cases'
+      LIMIT 1
+    ].Id;
+    c.OwnerId = que;
+
+    TriggerBase.bypass('Case');
+    insert c;
+    TriggerBase.clearBypass('Case');
+
+
+    c.OwnerId = cUser;
+    c.Status = 'Approved';
+
+    String error;
+    Test.startTest();
+    try {
+      update c;
+    } catch (Exception e) {
+      error = e.getMessage();
+    }
+    Test.stopTest();
+
+    System.assert(error == null);
   }
 }
