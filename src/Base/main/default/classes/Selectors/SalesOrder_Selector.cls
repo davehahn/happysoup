@@ -21,9 +21,20 @@ public inherited sharing class SalesOrder_Selector extends Application_Selector 
     SalesOrderLine_Selector solSelector = new SalesOrderLine_Selector();
     return new SalesOrder_Selector()
        .addWhere('Id IN ' + salesOrder_Set )
-       .addWhere('AcctSeed__Status__c != \'Posted\'')
+       .addWhere('AcctSeedERP__Status__c = \'Open\'')
        .addChildQuery( solSelector )
        .query();
-  }    
+  }
+
+    public static List<AcctSeedERP__Sales_Order__c> byIdsIncludingSOL( Set<Id> recordIds )
+    {
+        SalesOrderLine_Selector salesOrderLineSelector = new SalesOrderLine_Selector();
+        salesOrderLineSelector.addOrderBy('CreatedDate');
+        return new SalesOrder_Selector()
+                .addWhereIdIn( recordIds )
+                .addWhere('AcctSeedERP__Status__c = \'Open\'')
+                .addChildQuery(salesOrderLineSelector)
+                .query();
+    }
 
 }

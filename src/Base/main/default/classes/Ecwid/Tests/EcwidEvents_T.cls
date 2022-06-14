@@ -7,7 +7,6 @@ public class EcwidEvents_T {
         Pricebook2    customPb = new Pricebook2(
                                       Name = 'CustomPb',
                                       isActive = true,
-                                     // RecordTypeId = salesRtId,
                                       Sales_Year__c = String.valueOf(Date.today().year()),
                                       Version__c = 2
                                     );
@@ -31,22 +30,7 @@ public class EcwidEvents_T {
         acc.PersonEmail = 'test@malinattor.com';
         acc.lastName = 'TestName';
         insert acc;
-        /*Account accNew = new Account();
-        accNew.RecordTypeId  = personAccountRecordTypeId;
-        accNew.BillingStreet = 'testNewTest';
-        accNew.BillingCity='testNewTest';
-        accNew.BillingState = 'Ontario';
-        accNew.BillingStateCode='ON';
-        accNew.BillingCountry = 'Canada';
-        accNew.BillingCountryCode='CA';
-        accNew.BillingPostalCode = '91761';
-        accNew.ShippingCountry='Canada';
-        accNew.BillingPostalCode = '91761';
-        accNew.ShippingCountry='Canada';
-        accNew.ShippingCountryCode = 'CA';
-        accNew.PersonEmail = 'test@malinattor.com';
-        accNew.lastName = 'NewAccountTest';
-        insert accNew;*/
+
         AcctSeedERP__Warehouse__c warehouse = new AcctSeedERP__Warehouse__c(name = 'Wholesale');
         insert warehouse;
         AcctSeed__Accounting_Variable__c accVariable = new AcctSeed__Accounting_Variable__c(
@@ -174,18 +158,8 @@ public class EcwidEvents_T {
         req.requestBody =  Blob.valueOf(body);
         RestContext.request = req;
         RestContext.response= res;
-        //EcwidOrderService service = new EcwidOrderService();
-        //Test.startTest();
-       // EcwidRestCallOutService.mock = new EcwidOrderCalloutMock_T();
       	Test.setMock( HttpCalloutMock.class, new EcwidOrderCalloutMock_T() );
         EcwidEvents.process();
-       // service.proessCustomerData(EcwidOrderCalloutMock_T.responseBody);
-        
-       // Test.setMock(HttpCalloutMock.class, new EcwidOrderCalloutMock_T());
-       
-    	//System.debug('@@ EcwidRestCallOutService.mock= '+EcwidOrderCalloutMock_T.responseBody);
-      //  System.debug('@@ responseBody= '+EcwidOrderCalloutMock_T.responseBody);
-       // Test.stopTest(); 
     }
 
    

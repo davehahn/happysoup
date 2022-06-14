@@ -14,11 +14,9 @@ public  class gcAccountPayable_Clone_T {
         ApexPages.StandardController sc = new ApexPages.StandardController(accountPayable);
         gcAccountPayable_Clone accountPayableClone = new gcAccountPayable_Clone(sc);
 		Test.startTest();
-        accountPayableClone.init();
-        pageReference pr = accountPayableClone.createClone();
-        System.assertEquals(null,pr);
-		Test.stopTest();        
-
+        pageReference pr = accountPayableClone.init();
+        System.assertEquals(pr != null,true);
+		Test.stopTest();
     }
 
     @isTest
