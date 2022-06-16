@@ -32,15 +32,15 @@ public without sharing class CreateERPFromClaimCase_ar {
     	Map<Id,Case> mapIdCase = new Map<Id,Case>();
     	Map<Id,AcctSeed__Project__c> mapIdERP = new Map<Id,AcctSeed__Project__c>();
     	Map<Id,AcctSeed__Project_Task__c> mapIdERPTask = new Map<Id,AcctSeed__Project_Task__c>();
-    	for(Case ca : [SELECT Id, AccountId, Account.Name, CreatedById, CaseNumber, Partner_Reference__c FROM Case WHERE Id IN:setIdCase])
+    	for(Case ca : [SELECT Id, AccountId, Account.Name, OwnerId, CaseNumber, Partner_Reference__c FROM Case WHERE Id IN:setIdCase])
 			{
     		mapIdCase.put(ca.Id, ca);
 	    	AcctSeed__Project__c partsOrderERP = new AcctSeed__Project__c (
 					Name = ca.Account.Name + ' (W)',
 					RecordTypeId = gcConstants.idRtPartnerPartsOrder,
 					AcctSeed__Account__c = ca.AccountId,
-					Salesperson__c = ca.CreatedById,
-					OwnerId = ca.CreatedById,
+					Salesperson__c = ca.OwnerId,
+					OwnerId = ca.OwnerId,
 					Warranty_Case__c = ca.Id,
 					Customer_Notes__c = 'Warranty Case # ' + ca.CaseNumber,
 					Partner_External_PO_Number__c = ca.Partner_Reference__c

@@ -9,6 +9,7 @@ private class TA_Case_CreatePartnerPartsOrder_T
   private static Case c;
   private static Account dealer;
   private static User partner;
+  private static Id testUserId;
 
   @testSetup
   static void dataSetup() {
@@ -21,6 +22,8 @@ private class TA_Case_CreatePartnerPartsOrder_T
     insert dealer;
     c = Factory_Case.buildWarrantyCase(dealer);
     partner = Factory_User.createPartnerUser(dealer);
+    User testUser = Factory_User.createUser('TestDave', 'TestHahn', 'System Administrator');
+    testUserId = testUser.Id;
   }
 
   @IsTest
@@ -30,6 +33,8 @@ private class TA_Case_CreatePartnerPartsOrder_T
       TriggerBase.bypass('Case');
       TriggerBase.bypass('Case_Part__c');
       insert c;
+      c.OwnerId = partner.Id;
+      update c;
       Case oldC = c.clone(true, true, true, true);
       List<Case> oldList = new List<Case>{oldC};
       List<Case_Part__c> cParts = Factory_CasePart.create(c, 3);
@@ -63,6 +68,8 @@ private class TA_Case_CreatePartnerPartsOrder_T
       TriggerBase.bypass('Case');
       TriggerBase.bypass('Case_Part__c');
       insert c;
+      c.OwnerId = partner.Id;
+      update c;
       List<Case_Part__c> cParts = Factory_CasePart.create(c, 3);
       TriggerBase.clearBypass('Case');
       TriggerBase.clearBypass('Case_Part__c');
