@@ -152,9 +152,9 @@ private class RegistrationExt_Test {
       Email = 'atester@someplace.somedomain',
       Phone = '111-111-1111'
     );
-    TriggerHandler.bypass('Lead_TriggerHandler');
+    TriggerBase.bypass('Lead');
     insert l;
-    TriggerHandler.clearBypass('Lead_TriggerHandler');
+    TriggerBase.clearBypass('Lead');
     String custJSON = RegistrationExt.fetchCustomer( l.Id );
     Customer.Person person =
       (Customer.Person)JSON.deserialize( custJSON, Customer.Person.class );

@@ -5,7 +5,7 @@ private class lgnd_account_createForm_Test {
     //OpportunityTriggerHandler.disableTrigger = true;
     MetadataTriggerHandler.bypass('Opportunity');
         Test.startTest();
-    TriggerHandler.bypass('Lead_TriggerHandler');
+    TriggerBase.bypass('Lead');
 		Account acct = lgnd_account_createForm.createLeadAndConvert(
       'Dingus',
       'McPhlappypants',
@@ -20,7 +20,7 @@ private class lgnd_account_createForm_Test {
       'A1A 1A1',
       '123-987-5647'
     );
-    TriggerHandler.clearBypass('Lead_TriggerHandler');
+    TriggerBase.clearBypass('Lead');
     Test.stopTest();
     Opportunity[] opps = [SELECT Id FROM Opportunity WHERE AccountId = :acct.Id];
     Lead ld = [SELECT Id, IsConverted

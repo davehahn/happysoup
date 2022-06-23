@@ -28,7 +28,7 @@ private class Lead_RestResource_Test
   @IsTest
   static void doPost_Test()
   {
-    TriggerHandler.bypass('Lead_TriggerHandler');
+    TriggerBase.bypass('Lead');
     Lead_RestResource.WebToLeadWrapper wrapper = buildWrapper();
     RestRequest req = new RestRequest();
     RestResponse res = new RestResponse();
@@ -55,7 +55,7 @@ private class Lead_RestResource_Test
   @IsTest
   static void handlePost_Test()
   {
-    TriggerHandler.bypass('Lead_TriggerHandler');
+    TriggerBase.bypass('Lead');
     Lead_RestResource.WebToLeadWrapper wrapper = buildWrapper();
     Test.startTest();
     Lead_RestResource.RestResult response =
@@ -72,7 +72,7 @@ private class Lead_RestResource_Test
   @IsTest
   static void handlePost_Fail_Test()
   {
-    TriggerHandler.bypass('Lead_TriggerHandler');
+    TriggerBase.bypass('Lead');
     Lead_RestResource.WebToLeadWrapper wrapper = buildWrapper();
     wrapper.purchaseByDate = 'Invalid Data';
     Test.startTest();
@@ -89,7 +89,7 @@ private class Lead_RestResource_Test
   @IsTest
   static void handlePost_withCampaign_Test()
   {
-    TriggerHandler.bypass('Lead_TriggerHandler');
+    TriggerBase.bypass('Lead');
     Campaign camp = Factory_Campaign.createCampaign('Test Campaign');
     Lead_RestResource.WebToLeadWrapper wrapper = buildWrapper();
     wrapper.campaignId = camp.Id;

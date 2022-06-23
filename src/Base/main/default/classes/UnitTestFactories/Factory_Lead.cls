@@ -25,6 +25,16 @@ public class Factory_Lead {
     return l;
   }
 
+  public static Lead buildLead(Boolean isPersonAccount)
+  {
+    String uniq = LGND_Utilities.generateRandomString(6);
+    return new Lead( FirstName = '_unitTest_First_' + uniq,
+      LastName = '_unitTest_Last_' +  uniq,
+      Email = 'unitTest_' + uniq +'@testing.net',
+      isPersonAccount__c = isPersonAccount,
+      Company = '_unitTest_Company_' + uniq );
+  }
+
   public static Lead insertLead( String fName, String lName )
   {
     Lead l = buildLead( fName, lName );
