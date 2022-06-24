@@ -2,11 +2,10 @@
  * Created by Legend on 16/5/22.
  */
 
-public inherited sharing class TA_EcwidSalesOrder_AI implements  TriggerAction.AfterInsert
+public without sharing class TA_EcwidSalesOrder_AI implements TriggerAction.AfterInsert
 {
     public void afterInsert( List<Ecwid_Sales_Order__e> newList)
     {
-        System.debug('Hello it is a pip');
         Set<Id> setIdSO = new Set<Id>();
         for(Ecwid_Sales_Order__e eso : newList){
             if(eso.Sales_Order_Id__c != null){
