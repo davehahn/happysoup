@@ -5,7 +5,7 @@ GREEN=`tput setaf 2`
 BLUE=`tput setaf 4`
 RESET=`tput sgr0`
 
-SOURCE='Production'
+SOURCE=$2
 DESTINATION=$1
 
 parent_path=$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )
@@ -23,6 +23,10 @@ echoBlue() {
 if [[ -z $DESTINATION ]]; then
   echoRed "You need to supply the sfdx org alias which you are trying to Seed data into"
   exit 1
+fi
+
+if [[ -z $SOURCE ]]; then
+  SOURCE='Production'
 fi
 
 verifySFDX(){
