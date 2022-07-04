@@ -1614,7 +1614,8 @@ public without sharing class gcProject_AccountingActions {
 			return listMsg;	 	
 		}
 		Decimal projectTotal = project.Order_Item_Total__c;
-		Decimal projectProfit = project.Order_Item_Total__c - project.Expense__c;
+		Decimal projectProfitActual = project.Order_Item_Total__c - project.Expense__c;
+		Decimal projectProfit = projectProfitActual;
     	List<AcctSeedERP__Inbound_Inventory_Movement__c> listInbound = new List<AcctSeedERP__Inbound_Inventory_Movement__c>();
     	Id idGlInternalBilling = gcConstants.idGlInternalBilling;
 
@@ -1651,25 +1652,23 @@ public without sharing class gcProject_AccountingActions {
 		 	listMatl.add(matl);
 		 	mapPWLB.put(matl.AcctSeedERP__Product__c, new map<Id,map<Id,Id>>{idDestinationWarehouse => new map<Id,Id>{loc.Id => null}});
 		 }
+		Integer numSR = 0;
         for(AcctSeedERP__Material__c matl : listMatl)
         {
             Decimal glAmount = matl.AcctSeedERP__Manufacturing_Inventory_Movements__r[0].GMBLASERP__Inventory_GL_Amount__c;
             if(matl.AcctSeedERP__Product__r.RecordType.Name != 'Boat'){
-                //if(matl.AcctSeedERP__Product__r.RecordType.Name == 'Motor'){
-                //	mapUnitCost.put(matl.GMBLASERP__Serial_Number__c, glAmount);
-                //	projectTotal -= glAmount;
-                //	mapProfitShare.put(matl.GMBLASERP__Serial_Number__c, 0);
-                //}
-                //else {
+				numSR++;
                 Decimal serialProfit = matl.GMBLASERP__Unit_Price__c - glAmount;
                 mapProfitShare.put(matl.GMBLASERP__Serial_Number__c, serialProfit);
                 mapUnitCost.put(matl.GMBLASERP__Serial_Number__c, matl.GMBLASERP__Unit_Price__c);
                 projectTotal -= matl.GMBLASERP__Unit_Price__c;
                 projectProfit -= serialProfit;
-                //}
             }
         }
-
+		/// ISSUE-1690 and JIRA SFISSUES-1874. If there is only one serial number and which is not a boat then add the whole in that serial just like boat
+		if(numSR == 1 && !boatExist){
+			projectProfit = projectProfitActual;
+		}
         List<GMBLASERP__Serial_Number__c> listSerials = new List<GMBLASERP__Serial_Number__c>();
         if(!mapPWLB.isEmpty())
         {
