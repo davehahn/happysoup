@@ -945,11 +945,6 @@ public without sharing class gcProject_AccountingActions {
 					listMsg.add(new ApexPages.Message(ApexPages.Severity.ERROR, 'Finished Goods were not built, because the specified Serial Number is for a different Product than the Manufactured Product.'));
 					return listMsg;	 	
 				}
-			 	/*else if(project.Serial_Number__r.GMBLASERP__Inventory_Balance__c == null)
-				{
-					listMsg.add(new ApexPages.Message(ApexPages.Severity.ERROR, 'Finished Goods were not built, because the Project Serial Number is not in inventory.'));
-					return listMsg;	 	
-				}*/
 			 	else if(checkProjectHasFinishedGoods(idProject))
 				{
 					listMsg.add(new ApexPages.Message(ApexPages.Severity.ERROR, 'Finished Goods were not built, because the Project already has Finished Goods.  All Finished Goods must be deleted or reversed, before building Finished Goods.'));
@@ -957,7 +952,6 @@ public without sharing class gcProject_AccountingActions {
 				}
 
 				//move the projects serial into WIP
-
 				//first, find or create a Material record
 				Decimal qtyOrdered = 0;
 				Decimal qtyFilled = 0;
@@ -1315,11 +1309,6 @@ public without sharing class gcProject_AccountingActions {
 			}
 		}
 
-    	//create an inventory movement to move the finished good from WIP to inventory.
-    	//AcctSeedERP__Inbound_Inventory_Movement__c inb;
-    	//for(AcctSeedERP__Inbound_Inventory_Movement__c i : [SELECT Id, AcctSeedERP__Unit_Cost__c FROM AcctSeedERP__Inbound_Inventory_Movement__c WHERE GMBLASERP__Serial_Number__c =:project.Serial_Number__c AND AcctSeedERP__Project__c =:idProject]){
-    	//	inb = i;
-    	//}
     	Id idGlWIP = gcConstants.idGlWip;
     	Decimal amtWip = 0; // = inb != null ? (inb.AcctSeedERP__Unit_Cost__c == null ? 0 : inb.AcctSeedERP__Unit_Cost__c) : tradeInAmount;
 		for(AggregateResult aggRes : 
@@ -1334,11 +1323,6 @@ public without sharing class gcProject_AccountingActions {
 				amt = (Decimal)aggRes.get('amt');
 			amtWip += (amt == null ? 0 : amt);
 		}
-
-		//if(inb != null){
-		//	inb.AcctSeedERP__Unit_Cost__c = amtWip;
-		//	update inb;
-		//}else{
     	AcctSeedERP__Location__c loc = [SELECT Id FROM AcctSeedERP__Location__c WHERE AcctSeedERP__Warehouse__c = :project.GMBLASERP__Warehouse__c][0];
     	Id idBalance = GCR_InventoryBalance.findOrCreateBalance(project.AcctSeedERP__Manufactured_Product__c,project.GMBLASERP__Warehouse__c,loc.Id);
     	insert new AcctSeedERP__Inbound_Inventory_Movement__c(
@@ -1354,57 +1338,6 @@ public without sharing class gcProject_AccountingActions {
     			GMBLASERP__Lot__c = project.Serial_Number__r.GMBLASERP__Lot__c,
     			GMBLASERP__Serial_Number__c = project.Serial_Number__c
     		);
-    	/// Now Create the auto inbound moves
-  //  	List<AcctSeedERP__Inbound_Inventory_Movement__c> listInbound = new List<AcctSeedERP__Inbound_Inventory_Movement__c>();
-  //  	Id idGlTradeIn = gcConstants.idGlTradeIn;
-  //  	List<GMBLASERP__Serial_Number__c> listSerials = new List<GMBLASERP__Serial_Number__c>();
-		//Map<Id,Map<Id,Map<Id,Id>>> mapPWLB = new Map<Id,Map<Id,Map<Id,Id>>>();
-  //  	for(GMBLASERP__Serial_Number__c nested :
-  //          [SELECT 
-  //          	Id, 
-  //          	GMBLASERP__Lot__c, 
-  //          	GMBLASERP__Product__c, 
-  //          	GMBLASERP__Inventory_Balance__c,
-  //          	(SELECT Id FROM GMBLASERP__Manufacturing_Inventory_Movements__r LIMIT 1)
-  //          FROM GMBLASERP__Serial_Number__c
-  //          WHERE Nest__c =:project.Serial_Number__c])
-  //      {
-		//	/// If it is already in inventory then no need
-		//	if(nested.GMBLASERP__Inventory_Balance__c != null) continue;
-		//	/// If the serial was used in WIP then no need
-		//	if(!nested.GMBLASERP__Manufacturing_Inventory_Movements__r.isEmpty()) continue;
-			
-		//	listSerials.add(nested);
-		//	if(!mapPWLB.containsKey(nested.GMBLASERP__Product__c))
-		//	{
-		//		mapPWLB.put(nested.GMBLASERP__Product__c, new map<Id,map<Id,Id>>{project.GMBLASERP__Warehouse__c => new map<Id,Id>{loc.Id => null}});
-		//	}
-  //      }
-  //      if(!mapPWLB.isEmpty())
-  //      {
-		//	GMBLASERP.gcInventoryBalance.findOrCreateBalances(mapPWLB);
-  //      	for(GMBLASERP__Serial_Number__c serial : listSerials)
-  //      	{
-  //      		Id idSNBalance = mapPWLB.get(serial.GMBLASERP__Product__c).get(project.GMBLASERP__Warehouse__c).get(loc.Id);
-  //      		listInbound.add(new AcctSeedERP__Inbound_Inventory_Movement__c(
-		//			    			AcctSeedERP__Credit_GL_Account__c = idGlTradeIn,
-		//			    			AcctSeedERP__Inventory_Balance__c = idSNBalance,
-		//			    			AcctSeedERP__Movement_Date__c = date.today(),
-		//			    			AcctSeedERP__Project__c = idProject,
-		//			    			AcctSeedERP__Project_Task__c = idProjectTask,
-		//			    			AcctSeedERP__Quantity__c = 1,
-		//			    			AcctSeedERP__Type__c = 'Accounting',
-		//			    			AcctSeedERP__Unit_Cost__c = 0,
-		//			    			GMBLASERP__Cost_Override__c = true,
-		//			    			GMBLASERP__Lot__c = serial.GMBLASERP__Lot__c,
-		//			    			GMBLASERP__Serial_Number__c = serial.Id
-		//			    		));
-		//   	}
-  //      }
-
-  //      if(!listInbound.isEmpty())
-  //  		insert listInbound;
-	    //}
 
 		return listMsg;
 	}
