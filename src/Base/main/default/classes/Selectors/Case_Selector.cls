@@ -5,6 +5,12 @@
 public virtual class Case_Selector extends Application_Selector {
   private final List<String> defaultFields = new List<String>{
     'Id',
+    'AccountId',
+    'Account.Name',
+    'OwnerId',
+    'CreatedById',
+    'CreatedBy.IsActive',
+    'Partner_Reference__c',
     'CaseNumber',
     'Status',
     'Erp_Order__c',
@@ -14,6 +20,10 @@ public virtual class Case_Selector extends Application_Selector {
   public Case_Selector() {
     this.sObjectName = 'Case';
     this.fields = defaultFields;
+  }
+
+  public static List<Case> allByIds(Set<Id> ids) {
+    return new Case_Selector().addWhereIdIn(ids).query();
   }
 
   public static List<Case> allByErpOrderIdIncludingCasePartsWithMaterial(Id erpId, Set<Id> matIds) {
