@@ -88,7 +88,6 @@ public class Factory_TestData {
         Name = uni,
         RecordTypeId = LGND_Constants.productRtId_Fees,
         ProductCode = uni,
-        Unique_Product_Code__c = uni,
         isActive = true,
         AcctSeed__Expense_GL_Account__c = accountingSettings.salesTaxPaid.Id,
         AcctSeed__Revenue_GL_Account__c = accountingSettings.salesTaxCollected.Id,

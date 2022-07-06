@@ -12,7 +12,7 @@ public class SearchSerialController_ar {
 				GMBLASERP__Product__c, 
 				GMBLASERP__Product__r.Name, 
 				GMBLASERP__Product__r.RecordType.Name, 
-				GMBLASERP__Product__r.Unique_Product_Code__c
+				GMBLASERP__Product__r.ProductCode
 			FROM GMBLASERP__Serial_Number__c 
 			WHERE (Name =:searchString OR Name like :searchStringMod)
 			ORDER BY CreatedDate DESC 
@@ -23,7 +23,7 @@ public class SearchSerialController_ar {
 			m.put('serialName', serial.Name);
 			m.put('lotName', serial.GMBLASERP__Lot__r.Name);
 			m.put('productName', serial.GMBLASERP__Product__r.Name);
-            m.put('productCode', serial.GMBLASERP__Product__r.Unique_Product_Code__c);
+            m.put('productCode', serial.GMBLASERP__Product__r.ProductCode);
             m.put('productType', serial.GMBLASERP__Product__r.RecordType.Name);
 			listJSON.add(m);
 		}

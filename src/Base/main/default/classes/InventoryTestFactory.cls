@@ -50,7 +50,7 @@ public class InventoryTestFactory {
                                 AcctSeed__Inventory_GL_Account__c = inventoryAccount.Id,
                                 AcctSeed__Revenue_GL_Account__c = revenueAccount.Id,
                                 AcctSeed__Unit_Cost__c = 100.00,
-                                Unique_Product_Code__c = 'pcode-' + LGND_Utilities.generateRandomString(6),
+                                ProductCode = 'pcode-' + LGND_Utilities.generateRandomString(6),
                                 isActive = true);
       products.add(p);
     }

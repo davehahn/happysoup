@@ -355,7 +355,7 @@ public without sharing class gcNonInventoryReport_MRP {
 		Map<Id,cube> mapCube = retrieveProducts(setIdProducts,pIdWarehouse);
 
 		for(Product2 p :
-			[SELECT Id, Name, Unique_Product_Code__c, Family, RecordType.Name, AcctSeedERP__Default_Vendor__r.Name, AcctSeed__Inventory_Product__c, Composite_Type__c
+			[SELECT Id, Name, ProductCode, Family, RecordType.Name, AcctSeedERP__Default_Vendor__r.Name, AcctSeed__Inventory_Product__c, Composite_Type__c
 			 FROM Product2
 			 WHERE Id IN:setIdProducts])
 		{
@@ -363,7 +363,7 @@ public without sharing class gcNonInventoryReport_MRP {
 			m.put('idProduct',p.Id);
 			m.put('productName',p.Name);
 			m.put('supplierName',p.AcctSeedERP__Default_Vendor__r.Name);
-			m.put('productCode',(p.Unique_Product_Code__c == null ? '' :p.Unique_Product_Code__c));
+			m.put('productCode',(p.ProductCode == null ? '' :p.ProductCode));
 			m.put('recordType',p.RecordType.Name);
 			m.put('productFamily',p.Family);
 			m.put('isInventory',p.AcctSeed__Inventory_Product__c ? 'true' : 'false');

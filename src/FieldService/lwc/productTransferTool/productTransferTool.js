@@ -52,6 +52,8 @@ export default class FslTransferTool extends LightningElement {
     try
     {
       this._locations = await getLocations( { workOrderId: this.recordId } );
+      console.log('connectedCallback');
+      console.log( JSON.parse( JSON.stringify( this._locations ) ) );
       this.init();
     }
     catch( err )
@@ -136,6 +138,10 @@ export default class FslTransferTool extends LightningElement {
               this.productQuantity !== undefined &&
               this.productQuantity > 0 );
     return !r;
+  }
+
+  get selectedProductValue(){
+    return this.selectedProduct === undefined ? '' : this.selectedProduct.Name
   }
 
   init()
@@ -382,6 +388,7 @@ export default class FslTransferTool extends LightningElement {
 
   handleProductSelect( event )
   {
+    console.log( JSON.parse( JSON.stringify( event.detail.value ) ) );
     this.selectedProduct = event.detail.value;
     this.template.querySelector('.product-required-quantity').focus();
   }

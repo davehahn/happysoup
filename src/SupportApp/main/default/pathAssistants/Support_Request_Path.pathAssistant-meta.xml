@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PathAssistant xmlns="http://soap.sforce.com/2006/04/metadata">
+    <active>true</active>
+    <entityName>Support_Request__c</entityName>
+    <fieldName>Status__c</fieldName>
+    <masterLabel>Support Request Path</masterLabel>
+    <pathAssistantSteps>
+        <fieldNames>Completed_By__c</fieldNames>
+        <fieldNames>Completed_On__c</fieldNames>
+        <fieldNames>Reason_for_Denial__c</fieldNames>
+        <info>&lt;p&gt;Please specify why the Request was denied.&lt;/p&gt;</info>
+        <picklistValueName>Denied</picklistValueName>
+    </pathAssistantSteps>
+    <pathAssistantSteps>
+        <fieldNames>Completed_By__c</fieldNames>
+        <fieldNames>Completed_On__c</fieldNames>
+        <info>&lt;p&gt;Who completed this and when.  Was it you? Take some credit for your hard work.&lt;/p&gt;</info>
+        <picklistValueName>Done</picklistValueName>
+    </pathAssistantSteps>
+    <recordTypeName>__MASTER__</recordTypeName>
+</PathAssistant>

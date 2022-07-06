@@ -13,7 +13,7 @@ public inherited sharing class TA_SA_SetGanttLabelFromWorkOrderName implements T
     List<ServiceAppointment> toUpdate = new List<ServiceAppointment>();
     for( ServiceAppointment sa : ServiceAppointment_Selector.allById( newMap.keySet() ) )
     {
-      if( sa.ParentRecordId != null )
+      if( sa.ParentRecordId != null && sa.FSL__GanttLabel__c == null )
       {
         sa.FSL__GanttLabel__c = sa.ParentRecord.Name;
         toUpdate.add( sa );

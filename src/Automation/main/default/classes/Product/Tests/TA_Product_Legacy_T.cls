@@ -76,5 +76,34 @@ public class TA_Product_Legacy_T {
         Test.stopTest();
     }
 
+    @IsTest
+    static void productCodeTest(){
+        Product2 part = Factory_product.buildNonSerializedProduct('Part', 'Hardware');
+        Test.startTest();
+        insert part;
+        Test.stopTest();
+        part = [SELECT Id, ProductCode, Unique_Product_Code__c FROM Product2 WHERE Id = :part.Id];
+
+        System.assertEquals( part.ProductCode, part.Unique_Product_Code__c, 'ProductCode and Unique Product Code should be the same');
+    }
+
+    @IsTest
+    static void productCodeUniquenessTest(){
+        List<Product2> parts = Factory_product.buildNonSerializedProducts('Part', 'Hardware', 2);
+        String pCode = 'IamTheSame';
+        String errorMsg;
+        parts[0].ProductCode = pCode;
+        parts[1].ProductCode = pCode;
+        Test.startTest();
+        try{
+            insert parts;
+        }
+        catch( Exception e ){
+            errorMsg = e.getMessage();
+        }
+        System.debug( errorMsg );
+        System.assert( errorMsg != null );
+    }
+
 
 }

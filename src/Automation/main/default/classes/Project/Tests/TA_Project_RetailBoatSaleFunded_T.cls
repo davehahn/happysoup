@@ -25,7 +25,7 @@ private class TA_Project_RetailBoatSaleFunded_T
       Payment_Method__c = 'Finance',
       Business_Office_Status__c = TA_Project_RetailBoatSaleFunded.FUNDED_STATUS
     );
-
+    System.debug('here');
     Test.startTest();
     MetadataTriggerHandler.bypass('TA_Project_Legacy');
     update sale;
@@ -33,6 +33,7 @@ private class TA_Project_RetailBoatSaleFunded_T
     Test.stopTest();
 
     tasks = [SELECT Id, CreatedDate, ActivityDate FROM Task WHERE WhatId = :boatSaleId];
+    System.debug(tasks);
     DateTime created = tasks[1].CreatedDate.addDays( Task_Service.DUEDATE_OFFSET );
     Date expected = Date.newInstance( created.year(), created.month(), created.day() );
 

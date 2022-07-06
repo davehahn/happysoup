@@ -263,7 +263,12 @@ public virtual class Customer
         return doAccountSave();
       }
     }
-
+    
+      //This method is added by Pooja as a part of Ecwid Integration 
+      public AccountSaveResult convertLead(String operation){
+          return convertLead();
+      }
+      
     private AccountSaveResult convertLead()
     {
 

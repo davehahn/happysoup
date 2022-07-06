@@ -62,7 +62,7 @@
           if( result.length > 0 )
           {
             console.log( 'result' );
-            console.log( result );
+            console.log( JSON.parse( JSON.stringify( result ) ) );
             var obj = {
               inventoryParts2: parseFloat(result[0].inventoryParts2),
               all: parseFloat(result[0].inventoryParts),

@@ -7,8 +7,14 @@ public with sharing class BoatSampleRetailSale_Ext_Test {
 
   static {
     BoatTestFactory factory = new BoatTestFactory();
-    Pricebook2 pb =  new Pricebook2( Name = 'Test PB 1', isActive = true);
-    insert pb;
+    Pricebook2 pb;
+    for(Pricebook2 pb1 : [SELECT Id,Name FROM Pricebook2 WHERE IsActive = true]){
+      pb = pb1;
+    }
+    if(pb == null) {
+      pb = new Pricebook2( Name = 'Test PB 1', isActive = true);
+      insert pb;
+    }
     boat = factory.insertFullTestBoats(1, pb, 'Pontoon')[0];
     srs = new Boat_Sample_Retail_Sale__c(Boat__c = boat.Id);
     ext = new BoatSampleRetailSale_Ext( new ApexPages.StandardController(srs) );

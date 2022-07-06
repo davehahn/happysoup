@@ -47,9 +47,9 @@ private class Customer_T
       Country = cust.get('country'),
       PostalCode = cust.get('postalCode')
     );
-    TriggerHandler.bypass('Lead_TriggerHandler');
+    TriggerBase.bypass('Lead');
     insert l;
-    TriggerHandler.clearBypass('Lead_TriggerHandler');
+    TriggerBase.clearBypass('Lead');
     return l;
   }
 

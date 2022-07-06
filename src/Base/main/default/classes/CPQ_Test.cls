@@ -17,7 +17,7 @@ private class CPQ_Test {
   private static void dataSetup_AccountContactUser()
   {
     Account a = Factory_Account.insertDealerAccounts(1)[0];
-    Contact c = Factory_Contact.buildContact( a.Id, 'Pfname', 'Plname', 'test@partner.com');
+    Contact c = Factory_Contact.buildContact( a.Id, 'Pfname', 'Plname', 'test5@partner.com');
   }
 
   private static Product2 dataSetup_insertBoat()

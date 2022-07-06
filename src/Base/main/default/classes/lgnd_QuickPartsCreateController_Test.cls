@@ -11,21 +11,30 @@ private class lgnd_QuickPartsCreateController_Test {
   static void fetchInitOptions_withoutExternalProduct_Test()
   {
 		Account[] suppliers = Factory_Account.insertSupplierAccounts(10);
+    Test.startTest();
     String jsonResult = lgnd_QuickPartsCreateController.fetchInitOptions( null );
+    Test.stopTest();
     lgnd_QuickPartsCreateController.OptionsWrapper result =
       (lgnd_QuickPartsCreateController.OptionsWrapper)JSON.deserialize( jsonResult,
                                                                         lgnd_QuickPartsCreateController.OptionsWrapper.class);
+    Integer famCount = 0;
+    for( Family_by_Record_Type__mdt f : Family_by_Record_Type__mdt.getAll().values() ){
+      if( f.Family_by_Record_Type__c == 'Part' ){
+        famCount++;
+      }
+    }
     /* we have to add 1 to account for the Mercury
        Account which gets created in Factory_CustomSettings
     */
     System.assertEquals( ( suppliers.size() + 1 ), result.suppliers.size() );
+    System.assertEquals( famCount, result.familyOptions.size() );
 	}
 
   @isTest
   static void fetchInitOptions_withMercuryProduct_Test()
   {
     Account[] suppliers = Factory_Account.insertSupplierAccounts(10);
-    insert new Utility_Account__c( Mercury__c = suppliers[0].Id );
+//    insert new Utility_Account__c( Mercury__c = suppliers[0].Id );
     Mercury_Product__c mp = new Mercury_Product__c(
       Description__c = 'Test Merc Part',
       Code__c = '1000001-test',
@@ -48,7 +57,7 @@ private class lgnd_QuickPartsCreateController_Test {
     System.assert( result.dataWrapper.part != null );
     System.assertEquals( mp.MSRP__c, result.dataWrapper.retailPrice );
     System.assertEquals( mp.Description__c, result.dataWrapper.part.Name );
-    System.assertEquals( suppliers[0].Id, result.dataWrapper.part.AcctSeedERP__Default_Vendor__c);
+    System.assertEquals( Test_Constants.idMercuryAccount, result.dataWrapper.part.AcctSeedERP__Default_Vendor__c);
     System.assertEquals( mp.List_Price__c, result.dataWrapper.part.AcctSeed__Unit_Cost__c);
   }
 
@@ -117,7 +126,7 @@ private class lgnd_QuickPartsCreateController_Test {
   static void createPart_withMercuryProduct_Test()
   {
     Account[] suppliers = Factory_Account.insertSupplierAccounts(10);
-    insert new Utility_Account__c( Mercury__c = suppliers[0].Id );
+//    insert new Utility_Account__c( Mercury__c = suppliers[0].Id );
     Mercury_Product__c mp = new Mercury_Product__c(
       Description__c = 'Test Merc Part',
       Code__c = '1000001-test',

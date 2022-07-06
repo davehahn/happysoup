@@ -6,7 +6,7 @@
 private class Account_Selector_T
 {
   static final Application_RecordType.AccountRTs recordTypes =
-    new Application_RecordType().getAccountRecordTypes();
+   Application_RecordType.getInstance().getAccountRecordTypes();
 
   @testSetup static void dataSetup()
   {
@@ -67,6 +67,16 @@ private class Account_Selector_T
     Test.stopTest();
 
     System.assertEquals( 5, dealers.size(), 'There should be 5 dealers');
+  }
+
+  @IsTest
+  static void dealerAccountWithGeolocation_Test()
+  {
+    Test.startTest();
+    Account[] dealers = Account_Selector.allActiveDealersWithGeolocation();
+    Test.stopTest();
+
+    System.assertEquals( 0, dealers.size(), 'No Dealers have address information set');
   }
 
   @IsTest

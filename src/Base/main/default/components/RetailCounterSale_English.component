@@ -169,7 +169,7 @@
                   <table>
                     <apex:repeat value="{!oli.kitComponents}" var="comp">
                       <tr>
-                        <td>{!comp.From_Product__r.Unique_Product_Code__c}</td>
+                        <td>{!comp.From_Product__r.ProductCode}</td>
                         <td><apex:outputText value="{!comp.From_Product__r.Name}" escape="false"></apex:outputText></td>
                         <td>{!comp.Standard__c}</td>
                       </tr>

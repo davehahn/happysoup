@@ -75,18 +75,22 @@ public class UtilityComponent_Controller
       }
       this.queryString = this.queryString.removeEnd(',');
       this.queryString += ' FROM ' + this.sObjectName + ' WHERE ';
-      for( String field : this.filterFields )
+      if( this.filterFields != null && this.filterFields.size() > 0 )
       {
-        this.queryString += field + ' LIKE \'%' + this.filterString + '%\' AND ';
+        this.queryString +='( ';
+        for (String field : this.filterFields)
+        {
+          this.queryString += field + ' LIKE \'%' + this.filterString + '%\' OR ';
+        }
+        this.queryString = this.queryString.removeEnd(' OR ');
+        this.queryString += ' ) AND ';
       }
       if( this.whereClause != null && this.whereClause.length() > 0 )
       {
         this.queryString += this.whereClause;
       }
-      else
-      {
-        this.queryString = this.queryString.removeEnd(' AND ');
-      }
+      this.queryString = this.queryString.removeEnd(' AND ');
+      this.queryString = this.queryString.removeEnd(' WHERE ');
       System.debug( this.queryString );
     }
   }

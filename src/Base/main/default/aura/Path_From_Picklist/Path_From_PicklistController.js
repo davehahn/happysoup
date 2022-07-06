@@ -46,6 +46,9 @@
   },
 
   handleSelect: function (component, event, helper) {
+    event.preventDefault();
+    const readOnly = component.get("v.readOnly");
+    if (readOnly) return;
     helper.saveRecord(component, event.getParam("detail").value);
   },
 

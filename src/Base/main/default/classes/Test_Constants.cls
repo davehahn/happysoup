@@ -11,6 +11,16 @@ public class Test_Constants {
     set {}
   }
 
+  private static Utility_Account__c utilityAccounts {
+    get {
+      if( utilityAccounts ==  null ){
+        utilityAccounts = Utility_Account__c.getOrgDefaults();
+      }
+      return utilityAccounts;
+    }
+    set {}
+  }
+
   public static Id idPdfFormat {
     get {
       if( idPdfFormat == null )
@@ -83,6 +93,38 @@ public class Test_Constants {
     set;
   }
 
+  public static Id idGlV1 {
+    get {
+      if( idGlV1 == null ){
+        idGlV1 = [
+          SELECT
+            Id
+          FROM AcctSeed__Accounting_Variable__c
+          WHERE AcctSeed__Type__c = 'GL Account Variable 1'
+          AND AcctSeed__Active__c = true
+          LIMIT 1].Id;
+      }
+      return idGLV1;
+    }
+    set;
+  }
+
+  public static Id idGlV2 {
+    get {
+      if( idGlV2 == null ){
+        idGlV2 = [
+          SELECT
+            Id
+          FROM AcctSeed__Accounting_Variable__c
+          WHERE AcctSeed__Type__c = 'GL Account Variable 2'
+          AND AcctSeed__Active__c = true
+          LIMIT 1].Id;
+      }
+      return idGLV2;
+    }
+    set;
+  }
+
   public static Id idRetailPricebook{
     get {
       if( idRetailPricebook == null )
@@ -101,6 +143,16 @@ public class Test_Constants {
         idFactoryPricebook = legendSettings.Default_Factory_Pricebook__c;
       }
       return idFactoryPricebook;
+    }
+    set;
+  }
+
+  public static Id idMercuryAccount {
+    get {
+      if( idMercuryAccount == null ){
+        idMercuryAccount = utilityAccounts.Mercury__c;
+      }
+      return idMercuryAccount;
     }
     set;
   }

@@ -11,10 +11,24 @@ public with sharing class PricebookEntry_Selector extends Application_Selector
       'Id',
       'Pricebook2Id',
       'Pricebook2.Name',
+      'Pricebook2.RecordTypeId',
+      'Pricebook2.RecordTYpe.Name',
+      'Pricebook2.Sales_Year__c',
+      'Pricebook2.Version__c',
       'Product2Id',
       'Product2.Name',
-      'UnitPrice'
+      'UnitPrice',
+      'IsActive'
     };
+  }
+
+  public static List<PricebookEntry> allDefaultEntriesByProductId( Id prodId ){
+    Set<Id> activePbIds = Application_Constants.getInstance().activePricebooks.idSet();
+    System.debug(activePbIds);
+    return new PricebookEntry_Selector()
+      .addWhereIdInField( activePbIds, 'Pricebook2Id' )
+      .addWhere( 'Product2Id = \'' + String.valueOf(prodId) + '\'', 'AND')
+      .query();
   }
 
   public static List<PricebookEntry> allRetailEntriesByProductId( Set<Id> productIds )

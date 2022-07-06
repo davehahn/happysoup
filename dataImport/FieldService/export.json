@@ -1,6 +1,42 @@
 {
     "objects": [
         {
+            "label": "Field Service Mobile Settings",
+            "operation": "Upsert",
+            "externalId": "DeveloperName",
+            "mockFields": [],
+            "fieldMapping": [],
+            "deleteOldData": false,
+            "updateWithMockData": false,
+            "mockCSVData": false,
+            "targetRecordsFilter": "",
+            "excluded": false,
+            "useCSVValuesMapping": false,
+            "useFieldMapping": false,
+            "useValuesMapping": false,
+            "master": true,
+            "excludedFields": [],
+            "query": "SELECT DeveloperName, Id, BgGeoLocationAccuracy, BgGeoLocationMinUpdateFreqMins, BrandInvertedColor, ContrastInvertedColor, ContrastPrimaryColor, ContrastQuaternaryColor, ContrastQuinaryColor, ContrastSecondaryColor, ContrastTertiaryColor, DefaultListViewDeveloperName, FeedbackPrimaryColor, FeedbackSecondaryColor, FeedbackSelectedColor, FutureDaysInDatePicker, GeoLocationAccuracy, GeoLocationMinUpdateFreqMins, IsAssignmentNotification, IsDispatchNotification, IsSendLocationHistory, IsShowEditFullRecord, IsTimeSheetEnabled, Language, MasterLabel, MetadataCacheTimeDays, NavbarBackgroundColor, NavbarInvertedColor, PastDaysInDatePicker, PrimaryBrandColor, RecordDataCacheTimeMins, SecondaryBrandColor, TimeIntervalSetupMins, UpdateScheduleTimeMins FROM FieldServiceMobileSettings"
+        },
+        {
+            "label": "App Extensions",
+            "operation": "Upsert",
+            "externalId": "AppExtensionName",
+            "mockFields": [],
+            "fieldMapping": [],
+            "deleteOldData": false,
+            "updateWithMockData": false,
+            "mockCSVData": false,
+            "targetRecordsFilter": "",
+            "excluded": false,
+            "useCSVValuesMapping": false,
+            "useFieldMapping": false,
+            "useValuesMapping": false,
+            "master": true,
+            "excludedFields": [],
+            "query": "SELECT Id, AppExtensionLabel, AppExtensionName, InstallationUrl, LaunchValue, ScopedToObjectTypes, Type, FieldServiceMobileSettingsId FROM AppExtension"
+        },
+        {
             "label": "Warehouse",
             "operation": "Readonly",
             "externalId": "Name",
@@ -52,7 +88,7 @@
             "useValuesMapping": false,
             "master": true,
             "excludedFields": [],
-            "query": "SELECT Id, Name, Warehouse__c, CloseDate, ConstructionEndDate, ConstructionStartDate, Description, DrivingDirections, ExternalReference, IsInventoryLocation, IsMobile, Latitude, LocationType, Longitude, OpenDate, PossessionDate, RemodelEndDate, RemodelStartDate, TimeZone, ParentLocationId FROM Location WHERE LocationType <> 'Work Order Holding'"
+            "query": "SELECT Id, Name, Warehouse__c, CloseDate, ConstructionEndDate, ConstructionStartDate, Description, DrivingDirections, ExternalReference, IsInventoryLocation, IsMobile, Latitude, LocationType, Longitude, OpenDate, PossessionDate, RemodelEndDate, RemodelStartDate, TimeZone, ParentLocationId FROM Location WHERE LocationType NOT IN ('Work Order Holding', 'Technician', 'Employee')"
         },
         {
             "label": "Service Territory",
@@ -70,11 +106,11 @@
             "useValuesMapping": false,
             "master": true,
             "excludedFields": [],
-            "query": "SELECT FSL__Hide_Emergency_Map__c, FSL__Internal_SLR_Geolocation__Latitude__s, FSL__Internal_SLR_Geolocation__Longitude__s, FSL__NumberOfServicesToDripFeed__c, FSL__Service_Cluster_Min_Size__c, FSL__Service_Cluster_Proximity__c, FSL__System_Jobs__c, FSL__TerritoryLevel__c, City, Country, CountryCode, Description, GeocodeAccuracy, Id, IsActive, Latitude, Longitude, Name, PostalCode, State, StateCode, Street, TypicalInTerritoryTravelTime, ParentTerritoryId FROM ServiceTerritory"
+            "query": "SELECT FSL__Hide_Emergency_Map__c, FSL__Internal_SLR_Geolocation__Latitude__s, FSL__Internal_SLR_Geolocation__Longitude__s, FSL__NumberOfServicesToDripFeed__c, FSL__Service_Cluster_Min_Size__c, FSL__Service_Cluster_Proximity__c, FSL__System_Jobs__c, FSL__TerritoryLevel__c, City, Country, CountryCode, Description, GeocodeAccuracy, Id, IsActive, Latitude, Longitude, Name, OperatingHoursId, PostalCode, State, StateCode, Street, TypicalInTerritoryTravelTime, ParentTerritoryId FROM ServiceTerritory"
         },
         {
             "label": "Work Type",
-            "operation": "Readonly",
+            "operation": "Upsert",
             "externalId": "Name",
             "mockFields": [],
             "fieldMapping": [],
@@ -88,7 +124,43 @@
             "useValuesMapping": false,
             "master": true,
             "excludedFields": [],
-            "query": "SELECT FSL__Due_Date_Offset__c, FSL__Exact_Appointments__c, Work_Type_Category__c, Description, DurationType, EstimatedDuration, Id, MinimumCrewSize, Name, RecommendedCrewSize, ShouldAutoCreateSvcAppt FROM WorkType WHERE Work_Type_Category__c <> 'Pre-Rig'"
+            "query": "SELECT FSL__Due_Date_Offset__c, FSL__Exact_Appointments__c, Work_Type_Category__c, Description, DurationType, EstimatedDuration, Id, MinimumCrewSize, Name, RecommendedCrewSize, ShouldAutoCreateSvcAppt FROM WorkType"
+        },
+        {
+            "label": "Product2",
+            "operation": "Upsert",
+            "externalId": "Id",
+            "mockFields": [],
+            "fieldMapping": [],
+            "deleteOldData": false,
+            "updateWithMockData": false,
+            "mockCSVData": false,
+            "targetRecordsFilter": "",
+            "excluded": false,
+            "useCSVValuesMapping": false,
+            "useFieldMapping": false,
+            "useValuesMapping": false,
+            "master": true,
+            "excludedFields": [],
+            "query": "SELECT Pre_Rig_Work_Type__c, Id, Name, RecordTypeId FROM Product2"
+        },
+        {
+            "label": "ProductRequired",
+            "operation": "Upsert",
+            "externalId": "ProductRequiredNumber",
+            "mockFields": [],
+            "fieldMapping": [],
+            "deleteOldData": false,
+            "updateWithMockData": false,
+            "mockCSVData": false,
+            "targetRecordsFilter": "",
+            "excluded": false,
+            "useCSVValuesMapping": false,
+            "useFieldMapping": false,
+            "useValuesMapping": false,
+            "master": true,
+            "excludedFields": [],
+            "query": "SELECT Id, QuantityRequired, QuantityUnitOfMeasure, ProductRequiredNumber, Product2Id, ParentRecordId$WorkType FROM ProductRequired WHERE ParentRecord.Type = 'WorkType'"
         },
         {
             "label": "Skill",
@@ -107,6 +179,24 @@
             "master": true,
             "excludedFields": [],
             "query": "SELECT Id, MasterLabel, Description, DeveloperName, Language FROM Skill"
+        },
+        {
+            "label": "Skill Requirement",
+            "operation": "Upsert",
+            "externalId": "SkillNumber",
+            "mockFields": [],
+            "fieldMapping": [],
+            "deleteOldData": false,
+            "updateWithMockData": false,
+            "mockCSVData": false,
+            "targetRecordsFilter": "",
+            "excluded": false,
+            "useCSVValuesMapping": false,
+            "useFieldMapping": false,
+            "useValuesMapping": false,
+            "master": true,
+            "excludedFields": [],
+            "query": "SELECT Id, IsAdditionalSkill, SkillLevel, SkillPriority, SkillNumber, SkillId, RelatedRecordId$WorkType FROM SkillRequirement WHERE RelatedRecord.Type = 'WorkType'"
         },
         {
             "label": "FSL__Criteria__c",
@@ -253,3 +343,4 @@
     "fileLog": true,
     "allowFieldTruncation": false
 }
+

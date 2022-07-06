@@ -15,6 +15,7 @@ export default class LiveLookupInput extends LightningElement {
   @api returnFields;
   @api filterOnFields;
   @api valueField;
+  @api displayFields;
   @api whereClause;
   @track selectedRecord;
   @track results;
@@ -56,6 +57,10 @@ export default class LiveLookupInput extends LightningElement {
     return this._searchActive;
   }
 
+  get inputValue() {
+    return this.value === undefined ? null : this.value;
+  }
+
   clearInput()
   {
     this.value = null;
@@ -93,9 +98,11 @@ export default class LiveLookupInput extends LightningElement {
         whereClause: this.whereClause
       })
       .then( result => {
+        console.log( JSON.parse( JSON.stringify( result ) ) );
         this.results = result;
         this.displayResults = [];
-        result.forEach( r => this.displayResults.push( { id: r.Id, value: r[this.valueField] } ) );
+        result.forEach( r => this.displayResults.push( this._resultToDisplayObject(r) ) );
+        console.log( JSON.parse( JSON.stringify( this.displayResults ) ) );
       })
       .catch( error => {
         console.log('LIVE LOOKUP INPUT ERROR:');
@@ -126,6 +133,23 @@ export default class LiveLookupInput extends LightningElement {
       detail: { value }
     });
     this.dispatchEvent( evt );
+  }
+
+  _resultToDisplayObject(result) {
+    let obj = {
+      id: result.Id,
+      value: result[this.valueField],
+      extraFields: []
+    };
+    if( this.displayFields ){
+      obj.extraFields = this.displayFields.reduce( (acc, val) => {
+        if( val !== this.valueField ){
+          acc.push(result[val]);
+        }
+        return acc;
+      }, []);
+    }
+    return obj;
   }
 
 }

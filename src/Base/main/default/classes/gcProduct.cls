@@ -74,7 +74,7 @@ public without sharing class gcProduct {
 				settings(listNew);
 				for(Product2 p : listNew)
 				{
-					if( p.ProductCode != null && p.Unique_Product_Code__c != p.ProductCode )
+//					if( p.ProductCode != null && p.Unique_Product_Code__c != p.ProductCode )
 						p.Unique_Product_Code__c = p.ProductCode;
 					if(boolIsInsert)
 						p.IsActive = true;

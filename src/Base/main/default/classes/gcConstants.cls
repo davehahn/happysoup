@@ -900,32 +900,32 @@ public without sharing class gcConstants {
 		};
 
 		for(Product2 p :
-			[SELECT Id, Unique_Product_Code__c
+			[SELECT Id, ProductCode
 			 FROM Product2
-			 WHERE Unique_Product_Code__c IN :listUniquefier
+			 WHERE ProductCode IN :listUniquefier
 			 ORDER BY CreatedDate DESC])
 		{
-			if(p.Unique_Product_Code__c == 'SalesTaxFederal')
+			if(p.ProductCode == 'SalesTaxFederal')
 				idProductSalesTaxFederal = p.Id;
-			else if(p.Unique_Product_Code__c == 'SalesTaxHarmonized')
+			else if(p.ProductCode == 'SalesTaxHarmonized')
 				idProductSalesTaxHarmonized = p.Id;
-			else if(p.Unique_Product_Code__c == 'SalesTaxProvincial')
+			else if(p.ProductCode == 'SalesTaxProvincial')
 				idProductSalesTaxProvincial = p.Id;
-			else if(p.Unique_Product_Code__c == 'SalesTaxRetail')
+			else if(p.ProductCode == 'SalesTaxRetail')
 				idProductSalesTaxRetail = p.Id;
-			else if(p.Unique_Product_Code__c == 'Trade in')
+			else if(p.ProductCode == 'Trade in')
 				idProductTradeIn = p.Id;
-			else if(p.Unique_Product_Code__c == 'Trade in Lien')
+			else if(p.ProductCode == 'Trade in Lien')
 				idProductTradeInLien = p.Id;
-			else if(p.Unique_Product_Code__c == 'TradeInBoats')
+			else if(p.ProductCode == 'TradeInBoats')
 				idProductTradeInBoats = p.Id;
-			else if(p.Unique_Product_Code__c == 'PrecisionFix')
+			else if(p.ProductCode == 'PrecisionFix')
 				idProductPrecisionFix = p.Id;
-			else if(p.Unique_Product_Code__c == 'InternalLabour')
+			else if(p.ProductCode == 'InternalLabour')
 				idProductInternalLabour = p.Id;
-			else if(p.Unique_Product_Code__c == 'InternalBilling')
+			else if(p.ProductCode == 'InternalBilling')
 				idProductInternalBilling = p.Id;
-			else if(p.Unique_Product_Code__c == 'InternalBalance')
+			else if(p.ProductCode == 'InternalBalance')
 				idProductInternalBalance = p.Id;
 		}
 	}

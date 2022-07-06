@@ -95,7 +95,7 @@ public with sharing class Factory_CPQ {
     dealerAccount.BillingCountry = 'Canada';
     dealerAccount.BillingState = 'Ontario';
     update dealerAccount;
-    Contact c = Factory_Contact.buildContact( dealerAccount.Id, 'CPQ_fname', 'CPQ_lname', 'test@partner.com');
+    Contact c = Factory_Contact.buildContact( dealerAccount.Id, 'CPQ_fname', 'CPQ_lname', 'testCPQ@partner.com');
     partnerUser = [SELECT Id FROM User WHERE ContactId = :c.Id];
     if( prov != null )
     {

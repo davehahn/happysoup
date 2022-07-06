@@ -185,7 +185,7 @@ public with sharing class Factory_Product {
       AcctSeed__Inventory_GL_Account__c = inventoryAccount.Id,
       AcctSeed__Revenue_GL_Account__c = revenueAccount.Id,
       AcctSeed__Unit_Cost__c = 100.00,
-      Unique_Product_Code__c = 'pcode-' +
+      ProductCode = 'pcode-' +
         LGND_Utilities.generateRandomString(6),
       isActive = true
     );
@@ -212,7 +212,7 @@ public with sharing class Factory_Product {
       AcctSeed__Inventory_GL_Account__c = inventoryAccount.Id,
       AcctSeed__Revenue_GL_Account__c = revenueAccount.Id,
       AcctSeed__Unit_Cost__c = 100.00,
-      Unique_Product_Code__c = 'pcode-' +
+      ProductCode = 'pcode-' +
         LGND_Utilities.generateRandomString(6),
       isActive = true
     );
@@ -249,7 +249,7 @@ public with sharing class Factory_Product {
     Id rt = LGND_Utilities.recordTypeIdFromName('Product2', 'Part');
     Product2 savings = new Product2(
       Name = 'Savings',
-      Unique_Product_Code__c = 'Savings',
+      ProductCode = 'Savings',
       Family = 'Discount',
       RecordTypeId = rt,
       AcctSeed__Inventory_Product__c = false,
@@ -285,7 +285,7 @@ public with sharing class Factory_Product {
     ppsa.AcctSeed__Expense_GL_Account__c = expenseAccount.Id;
     ppsa.AcctSeed__Inventory_Product__c = false;
     ppsa.AcctSeed__Inventory_Type__c = null;
-    ppsa.Unique_Product_Code__c =
+    ppsa.ProductCode =
       'ppsa-' + LGND_Utilities.generateRandomString(6);
     ppsa.AcctSeed__Unit_Cost__c = 0;
     ppsa.AcctSeedERP__Serialized__c = false;
@@ -319,7 +319,7 @@ public with sharing class Factory_Product {
       AcctSeed__Expense_GL_Account__c = null,
       AcctSeed__Inventory_Product__c = false,
       AcctSeed__Inventory_Type__c = null,
-      Unique_Product_Code__c = 'name-' + LGND_Utilities.generateRandomString(6),
+      ProductCode = 'name-' + LGND_Utilities.generateRandomString(6),
       AcctSeed__Unit_Cost__c = 0,
       AcctSeedERP__Serialized__c = false,
       GMBLASERP__Lot_Tracked__c = false

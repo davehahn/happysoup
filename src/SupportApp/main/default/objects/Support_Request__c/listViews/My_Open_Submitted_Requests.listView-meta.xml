@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>My_Open_Submitted_Requests</fullName>
+    <columns>NAME</columns>
+    <columns>Status__c</columns>
+    <columns>Type__c</columns>
+    <columns>Subject__c</columns>
+    <columns>Location_GLV1__c</columns>
+    <columns>Department_GLV2__c</columns>
+    <columns>Priority__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>CreatedByMe__c</field>
+        <operation>equals</operation>
+        <value>1</value>
+    </filters>
+    <filters>
+        <field>IsComplete__c</field>
+        <operation>equals</operation>
+        <value>0</value>
+    </filters>
+    <label>My Open Submitted Requests</label>
+</ListView>

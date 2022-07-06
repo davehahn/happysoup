@@ -20,7 +20,7 @@
           <div class="slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right" role="none">
             <input type="text" class="slds-input slds-combobox__input"
                                placeholder={placeholder}
-                               value={value}
+                               value={inputValue}
                                onkeyup={handleKeyup} />
             <div if:true={displayBusyIcon}>
               <span class="slds-icon_container slds-icon-utility-search slds-input__icon slds-input__icon_right">
@@ -55,8 +55,13 @@
                     </span>
                     <span class="slds-media__body">
                       <span class="slds-listbox__option-text slds-listbox__option-text_entity">
-                        {result.value}
+                        <strong>{result.value}</strong>
                       </span>
+                      <template for:each={result.extraFields} for:item="eField">
+                        <span key={eField} class="slds-listbox__option-text slds-listbox__option-text_entity">
+                          {eField}
+                        </span>
+                      </template>
                     </span>
                   </div>
                 </li>

@@ -71,7 +71,9 @@ public with sharing class lgnd_QuickPartsCreateController {
     public String[] unitsOfMeasure { get; set; }
     public String[] familyOptions { get; set; }
     public DataWrapper dataWrapper { get; set; }
-    public OptionsWrapper(){}
+    public OptionsWrapper(){
+      setFamilyOptions();
+    }
     public OptionsWrapper( String externalProductId )
     {
       this.familyOptions = new List<String>();
@@ -80,6 +82,16 @@ public with sharing class lgnd_QuickPartsCreateController {
         this.dataWrapper = new DataWrapper( externalProductId );
         this.familyOptions = LGND_Utilities.getPicklistValues('Product2', 'Family');
       }
+    }
+
+    private void setFamilyOptions(){
+      this.familyOptions = new List<String>();
+      for( Family_by_Record_Type__mdt f : Family_by_Record_Type__mdt.getAll().values() ){
+        if( f.Family_by_Record_Type__c == 'Part' ){
+          this.familyOptions.add(f.Label);
+        }
+      }
+      this.familyOptions.sort();
     }
 
   }

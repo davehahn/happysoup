@@ -26,13 +26,8 @@
   saveRecord: function (component, value) {
     var fieldName = component.get("v.pickListField"),
       spinner = component.find("spinner"),
-      simpleRecord = component.get("v.simpleRecord"),
-      readOnly = component.get("v.readOnly");
+      simpleRecord = component.get("v.simpleRecord");
 
-    if (readOnly) {
-      event.preventDefault();
-      return;
-    }
     simpleRecord[fieldName] = value;
     component.set("v.simpleRecord", simpleRecord);
     $A.util.toggleClass(spinner, "slds-hide");

@@ -87,6 +87,7 @@ export default class ProductTransferToolLine extends LightningElement {
 
   populateTransferQuantity( quantity )
   {
+    console.log( JSON.parse( JSON.stringify( this.transferLine ) ) );
     this.transferLine.quantityTransferred = parseFloat( quantity );
   }
 
