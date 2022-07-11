@@ -233,7 +233,7 @@
         <locationX>386</locationX>
         <locationY>0</locationY>
         <doesRequireRecordChangedToMeetCriteria>true</doesRequireRecordChangedToMeetCriteria>
-        <filterLogic>1 AND 2 AND 3 AND 4 AND (5 OR 6 OR 7) AND 8</filterLogic>
+        <filterLogic>1 AND 2 AND 3 AND 4 AND (5 OR 6 OR 7) AND 8 AND 9</filterLogic>
         <filters>
             <field>Stage__c</field>
             <operator>EqualTo</operator>
@@ -288,6 +288,13 @@
             <operator>EqualTo</operator>
             <value>
                 <booleanValue>true</booleanValue>
+            </value>
+        </filters>
+        <filters>
+            <field>WarehouseName__c</field>
+            <operator>NotEqualTo</operator>
+            <value>
+                <stringValue>Boat Better</stringValue>
             </value>
         </filters>
         <object>AcctSeed__Project__c</object>
