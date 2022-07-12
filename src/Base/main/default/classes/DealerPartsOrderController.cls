@@ -313,7 +313,7 @@ public without sharing class DealerPartsOrderController {
       //String RecordtypeId= Schema.SObjectType.AcctSeed__Project__c.getRecordTypeInfosByName().get('Legend Counter Sale').getRecordTypeId();
       Id RecordtypeId = gcConstants.idRtPartnerPartsOrder;
       if(String.isNotBlank(acc.accId)) {
-        String projectName = (acc.accName.length()>=5?acc.accName.trim().substring(0,4):acc.accName)+'_'+DateTime.now().format('yyyyMMdd');
+        String projectName = (acc.accName.length()>=5?acc.accName.trim().substring(0,20):acc.accName)+'_'+DateTime.now().format('yyyyMMdd');
 
         erpOrder.Name=projectName;
         erpOrder.Partner_External_PO_Number__c = internalPoNumber;
