@@ -1216,7 +1216,8 @@ public without sharing class gcProject {
         GL_Account_Variable_1__c,
         Warehouse__c
       FROM Account
-      WHERE Is_Internal__c = true])
+      WHERE Is_Internal__c = true
+      ORDER BY CreatedDate DESC])
       {
         mapAccInternal.put(acc.GL_Account_Variable_1__c, acc);
       }

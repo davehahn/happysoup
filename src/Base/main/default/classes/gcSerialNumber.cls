@@ -229,7 +229,7 @@ public without sharing class gcSerialNumber {
                         x.GMBLASERP__Inventory_Balance__c != oldMap.get(x.Id).GMBLASERP__Inventory_Balance__c
                 ) {
           listSerialToUpdateRetailDate.add(
-                  new GMBLASERP__Serial_Number__c(Id = sn.Id, Retail_Receive_Date__c = sn.GMBLASERP__Inventory_Balance__r.LastModifiedDate)
+                  new GMBLASERP__Serial_Number__c(Id = sn.Id, Retail_Receive_Date__c = System.now())
           );
         }
       }
