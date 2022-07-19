@@ -8,13 +8,17 @@ public without sharing class TA_Lead_AcceptedTimeStamp implements TriggerAction.
     Map<Id, Lead> oldMap = new Map<Id, Lead>( oldList);
     for( Lead newLead : newList ){
       Lead oldLead = oldMap.get(newLead.Id);
+      //Now Accepted
       if( LGND_Utilities.sObjectNameFromId(oldLead.OwnerId) == 'Group' &&
         LGND_Utilities.sObjectNameFromId(newLead.OwnerId) == 'User' ){
         newLead.Accepted_On__c = DateTime.now();
+        newLead.Status = 'Accepted';
       }
+      //Unaccepted
       if( LGND_Utilities.sObjectNameFromId(oldLead.OwnerId) == 'User' &&
         LGND_Utilities.sObjectNameFromId(newLead.OwnerId) == 'Group' ){
         newLead.Accepted_On__c = null;
+        newLead.Status = 'New';
       }
     }
   }
