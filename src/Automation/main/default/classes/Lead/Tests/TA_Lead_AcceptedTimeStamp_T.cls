@@ -4,68 +4,50 @@
 
 @IsTest
 private class TA_Lead_AcceptedTimeStamp_T {
-  @testSetup
-  static void dataSetup() {
-    //TA_Lead_TestHelper.dataSetup();
-  }
-
-
   @IsTest
   static void beforeUpdate_accepted_TA() {
-    Group queue = new Group(
-      Type = 'Queue',
-      DeveloperName = 'Lead_UnitTest_Queue',
-      Name = 'Lead UnitTest Queue'
-    );
-    User u = Factory_User.createUser('Lead', 'UnitTester', 'System Administrator');
-    insert queue;
-    Lead oldLead = Factory_Lead.buildLead( true );
+    TA_Lead_TestHelper helper = new TA_Lead_TestHelper();
+    Lead oldLead = Factory_Lead.buildLead(true);
     oldLead.Id = TestUtility.getFakeId(Lead.SObjectType);
-    oldLead.OwnerId = queue.Id;
+    oldLead.OwnerId = helper.getQueue().Id;
     oldLead.Status = 'New';
-    Lead newLead = oldLead.clone( true, true, true, true );
-    newLead.OwnerId = u.Id;
+    Lead newLead = oldLead.clone(true, true, true, true);
+    newLead.OwnerId = helper.getUser().Id;
 
-    List<Lead> newList = new List<Lead>{newLead};
-    List<Lead> oldList = new List<Lead>{oldLead};
+    List<Lead> newList = new List<Lead>{ newLead };
+    List<Lead> oldList = new List<Lead>{ oldLead };
 
     Test.startTest();
-    new TA_Lead_AcceptedTimeStamp().beforeUpdate( newList, oldList );
+    new TA_Lead_AcceptedTimeStamp().beforeUpdate(newList, oldList);
     Test.stopTest();
 
-    System.assert( oldList[0].Accepted_On__c == null );
-    System.assert( newList[0].Accepted_On__c != null );
-    System.assert( oldList[0].Status == 'New' );
-    System.assert( newList[0].Status == 'Accepted' );
+    System.assert(oldList[0].Accepted_On__c == null);
+    System.assert(newList[0].Accepted_On__c != null);
+    System.assert(oldList[0].Status == 'New');
+    System.assert(newList[0].Status == 'Accepted');
   }
 
   @IsTest
   static void beforeUpdate_unaccepted_TA() {
-    Group queue = new Group(
-      Type = 'Queue',
-      DeveloperName = 'Lead_UnitTest_Queue',
-      Name = 'Lead UnitTest Queue'
-    );
-    User u = Factory_User.createUser('Lead', 'UnitTester', 'System Administrator');
-    insert queue;
-    Lead oldLead = Factory_Lead.buildLead( true );
+    TA_Lead_TestHelper helper = new TA_Lead_TestHelper();
+    Lead oldLead = Factory_Lead.buildLead(true);
     oldLead.Id = TestUtility.getFakeId(Lead.SObjectType);
-    oldLead.OwnerId = u.Id;
+    oldLead.OwnerId = helper.getUser().Id;
     oldLead.Accepted_On__c = DateTime.now();
     oldLead.Status = 'Accepted';
-    Lead newLead = oldLead.clone( true, true, true, true );
-    newLead.OwnerId = queue.Id;
+    Lead newLead = oldLead.clone(true, true, true, true);
+    newLead.OwnerId = helper.getQueue().Id;
 
-    List<Lead> newList = new List<Lead>{newLead};
-    List<Lead> oldList = new List<Lead>{oldLead};
+    List<Lead> newList = new List<Lead>{ newLead };
+    List<Lead> oldList = new List<Lead>{ oldLead };
 
     Test.startTest();
-    new TA_Lead_AcceptedTimeStamp().beforeUpdate( newList, oldList );
+    new TA_Lead_AcceptedTimeStamp().beforeUpdate(newList, oldList);
     Test.stopTest();
 
-    System.assert( oldList[0].Accepted_On__c != null );
-    System.assert( newList[0].Accepted_On__c == null );
-    System.assert( oldList[0].Status == 'Accepted' );
-    System.assert( newList[0].Status == 'New' );
+    System.assert(oldList[0].Accepted_On__c != null);
+    System.assert(newList[0].Accepted_On__c == null);
+    System.assert(oldList[0].Status == 'Accepted');
+    System.assert(newList[0].Status == 'New');
   }
 }

@@ -5,6 +5,30 @@
 @IsTest
 public class TA_Lead_TestHelper
 {
+  private Group leadQueue;
+  private User user;
+
+  public TA_Lead_TestHelper(){}
+
+  public Group getQueue(){
+    if( this.leadQueue == null ){
+      this.leadQueue = new Group(
+        Type = 'Queue',
+        DeveloperName = 'Lead_UnitTest_Queue',
+        Name = 'Lead UnitTest Queue'
+      );
+      insert this.leadQueue;
+    }
+    return this.leadQueue;
+  }
+
+  public User getUser(){
+    if( this.user == null ){
+      this.user = Factory_User.createUser('Lead', 'UnitTester', 'System Administrator');
+    }
+    return this.user;
+  }
+
   public static Account orillia;
   public static Account barrie;
 
