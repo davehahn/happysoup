@@ -35,6 +35,7 @@ public without sharing class Lead_Selector extends Application_Selector
       'Preferred_Language__c',
       'State',
       'StateCode',
+      'Status',
       'Street'
     };
   }

@@ -1,6 +1,8 @@
 @isTest
 public class Factory_Lead {
 
+  private static TA_Lead_TestHelper helper = TA_Lead_TestHelper.getInstance();
+
   public static Lead buildLead( String fName, String lName )
   {
     String[] langs = LGND_Utilities.getPicklistValues('Lead', 'Preferred_Language__c');
@@ -10,7 +12,9 @@ public class Factory_Lead {
       LastName = lname,
       Phone = '111-111-1111',
       MobilePhone = '222-222-2222',
-      Preferred_Language__c = langs[0]
+      Preferred_Language__c = langs[0],
+      Status = 'New',
+      OwnerId = helper.getQueue().Id
     );
     return l;
   }
@@ -32,6 +36,8 @@ public class Factory_Lead {
       LastName = '_unitTest_Last_' +  uniq,
       Email = 'unitTest_' + uniq +'@testing.net',
       isPersonAccount__c = isPersonAccount,
+      Status = 'New',
+      OwnerId = helper.getQueue().Id,
       Company = '_unitTest_Company_' + uniq );
   }
 

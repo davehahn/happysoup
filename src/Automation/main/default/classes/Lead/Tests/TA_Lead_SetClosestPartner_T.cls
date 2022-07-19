@@ -10,7 +10,7 @@ private class TA_Lead_SetClosestPartner_T {
   }
 
   @IsTest
-  static void AfterInsert_Trigger_ByLeadSource() {
+  static void afterInsert_Trigger_ByLeadSource() {
     Lead personLead = Factory_Lead.buildLead(true);
     List<String> leadSources = new List<String>(Lead_Service.factoryAccountIdByLeadSource.keySet());
     personLead.LeadSource = leadSources[0];

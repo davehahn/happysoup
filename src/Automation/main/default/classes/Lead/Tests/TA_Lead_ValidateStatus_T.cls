@@ -6,7 +6,7 @@
 private class TA_Lead_ValidateStatus_T {
   @IsTest
   static void beforeInsert_TA() {
-    TA_Lead_TestHelper helper = new TA_Lead_TestHelper();
+    TA_Lead_TestHelper helper = TA_Lead_TestHelper.getInstance();
     Lead newLead = Factory_Lead.buildLead(true);
     newLead.Id = TestUtility.getFakeId(Lead.SObjectType);
     newLead.OwnerId = helper.getQueue().Id;
@@ -28,7 +28,7 @@ private class TA_Lead_ValidateStatus_T {
 
   @IsTest
   static void beforeUpdate_TA() {
-    TA_Lead_TestHelper helper = new TA_Lead_TestHelper();
+    TA_Lead_TestHelper helper = TA_Lead_TestHelper.getInstance();
     Lead oldLead = Factory_Lead.buildLead(true);
     oldLead.Id = TestUtility.getFakeId(Lead.SObjectType);
     oldLead.OwnerId = helper.getQueue().Id;

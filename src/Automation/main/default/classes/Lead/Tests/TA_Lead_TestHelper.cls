@@ -7,17 +7,34 @@ public class TA_Lead_TestHelper
 {
   private Group leadQueue;
   private User user;
+  private static TA_Lead_TestHelper instance;
+  private String QUEUEDEVNAME = 'Lead_UnitTest_Queue';
 
   public TA_Lead_TestHelper(){}
 
+  public static TA_Lead_TestHelper getInstance(){
+    if( instance == null ) instance = new TA_Lead_TestHelper();
+    return instance;
+  }
+
   public Group getQueue(){
     if( this.leadQueue == null ){
-      this.leadQueue = new Group(
-        Type = 'Queue',
-        DeveloperName = 'Lead_UnitTest_Queue',
-        Name = 'Lead UnitTest Queue'
-      );
-      insert this.leadQueue;
+      try {
+        this.leadQueue = [SELECT Id FROM Group WHERE DeveloperName = :QUEUEDEVNAME];
+      }
+      catch( Exception e ){
+        this.leadQueue = new Group(
+          Type = 'Queue',
+          DeveloperName = QUEUEDEVNAME,
+          Name = QUEUEDEVNAME.replace('_', ' ')
+        );
+        insert this.leadQueue;
+        System.runAs(new User(Id=UserInfo.getUserId()))
+        {
+          insert new QueueSObject(QueueId = this.leadQueue.Id, SobjectType = 'Lead');
+        }
+      }
+
     }
     return this.leadQueue;
   }
