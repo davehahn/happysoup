@@ -1,40 +1,38 @@
 @isTest
 private class lgnd_QuickPartsCreateController_Test {
-
-  @testSetup static void dataSetup()
-  {
+  @testSetup
+  static void dataSetup() {
     new Factory_TestData();
     Factory_CustomSettings.setupInventorySettings();
   }
 
-	@isTest
-  static void fetchInitOptions_withoutExternalProduct_Test()
-  {
-		Account[] suppliers = Factory_Account.insertSupplierAccounts(10);
+  @isTest
+  static void fetchInitOptions_withoutExternalProduct_Test() {
+    Account[] suppliers = Factory_Account.insertSupplierAccounts(10);
     Test.startTest();
-    String jsonResult = lgnd_QuickPartsCreateController.fetchInitOptions( null );
+    String jsonResult = lgnd_QuickPartsCreateController.fetchInitOptions(null);
     Test.stopTest();
-    lgnd_QuickPartsCreateController.OptionsWrapper result =
-      (lgnd_QuickPartsCreateController.OptionsWrapper)JSON.deserialize( jsonResult,
-                                                                        lgnd_QuickPartsCreateController.OptionsWrapper.class);
+    lgnd_QuickPartsCreateController.OptionsWrapper result = (lgnd_QuickPartsCreateController.OptionsWrapper) JSON.deserialize(
+      jsonResult,
+      lgnd_QuickPartsCreateController.OptionsWrapper.class
+    );
     Integer famCount = 0;
-    for( Family_by_Record_Type__mdt f : Family_by_Record_Type__mdt.getAll().values() ){
-      if( f.Family_by_Record_Type__c == 'Part' ){
+    for (Family_by_Record_Type__mdt f : Family_by_Record_Type__mdt.getAll().values()) {
+      if (f.Family_by_Record_Type__c == 'Part') {
         famCount++;
       }
     }
     /* we have to add 1 to account for the Mercury
        Account which gets created in Factory_CustomSettings
     */
-    System.assertEquals( ( suppliers.size() + 1 ), result.suppliers.size() );
-    System.assertEquals( famCount, result.familyOptions.size() );
-	}
+    System.assertEquals((suppliers.size() + 1), result.suppliers.size());
+    System.assertEquals(famCount, result.familyOptions.size());
+  }
 
   @isTest
-  static void fetchInitOptions_withMercuryProduct_Test()
-  {
+  static void fetchInitOptions_withMercuryProduct_Test() {
     Account[] suppliers = Factory_Account.insertSupplierAccounts(10);
-//    insert new Utility_Account__c( Mercury__c = suppliers[0].Id );
+    //    insert new Utility_Account__c( Mercury__c = suppliers[0].Id );
     Mercury_Product__c mp = new Mercury_Product__c(
       Description__c = 'Test Merc Part',
       Code__c = '1000001-test',
@@ -44,40 +42,37 @@ private class lgnd_QuickPartsCreateController_Test {
     );
     insert mp;
     Test.startTest();
-    String jsonResult = lgnd_QuickPartsCreateController.fetchInitOptions( mp.Id );
-    lgnd_QuickPartsCreateController.OptionsWrapper result =
-      (lgnd_QuickPartsCreateController.OptionsWrapper)JSON.deserialize( jsonResult,
-                                                                        lgnd_QuickPartsCreateController.OptionsWrapper.class);
+    String jsonResult = lgnd_QuickPartsCreateController.fetchInitOptions(mp.Id);
+    lgnd_QuickPartsCreateController.OptionsWrapper result = (lgnd_QuickPartsCreateController.OptionsWrapper) JSON.deserialize(
+      jsonResult,
+      lgnd_QuickPartsCreateController.OptionsWrapper.class
+    );
     Test.stopTest();
     /* we have to add 1 to account for the Mercury
        Account which gets created in Factory_CustomSettings
      */
-    System.assertEquals( ( suppliers.size() + 1 ), result.suppliers.size() );
-    System.assertEquals( mp.Id, result.dataWrapper.externalReferenceId );
-    System.assert( result.dataWrapper.part != null );
-    System.assertEquals( mp.MSRP__c, result.dataWrapper.retailPrice );
-    System.assertEquals( mp.Description__c, result.dataWrapper.part.Name );
-    System.assertEquals( Test_Constants.idMercuryAccount, result.dataWrapper.part.AcctSeedERP__Default_Vendor__c);
-    System.assertEquals( mp.List_Price__c, result.dataWrapper.part.AcctSeed__Unit_Cost__c);
+    System.assertEquals((suppliers.size() + 1), result.suppliers.size());
+    System.assertEquals(mp.Id, result.dataWrapper.externalReferenceId);
+    System.assert(result.dataWrapper.part != null);
+    System.assertEquals(mp.MSRP__c, result.dataWrapper.retailPrice);
+    System.assertEquals(mp.Description__c, result.dataWrapper.part.Name);
+    System.assertEquals(Test_Constants.idMercuryAccount, result.dataWrapper.part.AcctSeedERP__Default_Vendor__c);
+    System.assertEquals(mp.List_Price__c, result.dataWrapper.part.AcctSeed__Unit_Cost__c);
   }
 
   @isTest
-  static void fetchInitOptions_withInvalidExternalProduct_Test()
-  {
+  static void fetchInitOptions_withInvalidExternalProduct_Test() {
     Account[] suppliers = Factory_Account.insertSupplierAccounts(10);
     try {
-      String jsonResult = lgnd_QuickPartsCreateController.fetchInitOptions( suppliers[0].Id );
-    }
-    catch( Exception e )
-    {
-      System.assertEquals('Invalid External Product Id Supplied', e.getMessage() );
+      String jsonResult = lgnd_QuickPartsCreateController.fetchInitOptions(suppliers[0].Id);
+    } catch (Exception e) {
+      System.assertEquals('Invalid External Product Id Supplied', e.getMessage());
     }
   }
 
   @isTest
-  static void fetchInitOptions_withLinkedMercuryProduct_Test()
-  {
-    Product2 p = Factory_Product.createNonSerializedProduct( 'Part', 'Hardware' );
+  static void fetchInitOptions_withLinkedMercuryProduct_Test() {
+    Product2 p = Factory_Product.createNonSerializedProduct('Part', 'Hardware');
     Mercury_Product__c mp = new Mercury_Product__c(
       Description__c = 'Test Merc Part',
       Code__c = '1000001-test',
@@ -88,17 +83,14 @@ private class lgnd_QuickPartsCreateController_Test {
     );
     insert mp;
     try {
-      String jsonResult = lgnd_QuickPartsCreateController.fetchInitOptions( mp.Id );
-    }
-    catch( Exception e )
-    {
-      System.assertEquals('Mercury Product already linked to a Salesforce Product', e.getMessage() );
+      String jsonResult = lgnd_QuickPartsCreateController.fetchInitOptions(mp.Id);
+    } catch (Exception e) {
+      System.assertEquals('Mercury Product already linked to a Salesforce Product', e.getMessage());
     }
   }
 
   @isTest
-  static void createPart_Test()
-  {
+  static void createPart_Test() {
     Account[] suppliers = Factory_Account.insertSupplierAccounts(10);
     lgnd_QuickPartsCreateController.DataWrapper dw = new lgnd_QuickPartsCreateController.DataWrapper();
     dw.retailPrice = 20.00;
@@ -112,21 +104,20 @@ private class lgnd_QuickPartsCreateController_Test {
       AcctSeedERP__Default_Vendor__c = suppliers[0].Id
     );
     Test.startTest();
-    Product2 result = lgnd_QuickPartsCreateController.createPart( JSON.serialize( dw ) );
-    PricebookEntry[] pbes = [SELECT Id FROM PricebookEntry WHERE Product2Id = : result.Id ];
+    Product2 result = lgnd_QuickPartsCreateController.createPart(JSON.serialize(dw));
+    PricebookEntry[] pbes = [SELECT Id FROM PricebookEntry WHERE Product2Id = :result.Id];
     Test.stopTest();
-    System.assertEquals( 3, pbes.size() );
-    System.assertEquals( dw.part.Name, result.Name );
-    System.assertEquals( dw.part.Name, result.Name_FR__c );
-    System.assertEquals( dw.part.Description, result.Description );
-    System.assertEquals( dw.part.Description, result.Description_FR__c );
+    System.assertEquals(3, pbes.size());
+    System.assertEquals(dw.part.Name, result.Name);
+    System.assertEquals(dw.part.Name, result.Name_FR__c);
+    System.assertEquals(dw.part.Description, result.Description);
+    System.assertEquals(dw.part.Description, result.Description_FR__c);
   }
 
-   @isTest
-  static void createPart_withMercuryProduct_Test()
-  {
+  @isTest
+  static void createPart_withMercuryProduct_Test() {
     Account[] suppliers = Factory_Account.insertSupplierAccounts(10);
-//    insert new Utility_Account__c( Mercury__c = suppliers[0].Id );
+    //    insert new Utility_Account__c( Mercury__c = suppliers[0].Id );
     Mercury_Product__c mp = new Mercury_Product__c(
       Description__c = 'Test Merc Part',
       Code__c = '1000001-test',
@@ -146,17 +137,15 @@ private class lgnd_QuickPartsCreateController_Test {
       AcctSeed__Inventory_Product__c = true
     );
     Test.startTest();
-    Product2 result = lgnd_QuickPartsCreateController.createPart( JSON.serialize( dw ) );
-    PricebookEntry[] pbes = [SELECT Id FROM PricebookEntry WHERE Product2Id = : result.Id ];
-    Mercury_Product__c mercProd = [SELECT Id, Salesforce_Product__c
-                                   FROM Mercury_Product__c
-                                   WHERE Id = :mp.Id];
+    Product2 result = lgnd_QuickPartsCreateController.createPart(JSON.serialize(dw));
+    PricebookEntry[] pbes = [SELECT Id FROM PricebookEntry WHERE Product2Id = :result.Id];
+    Mercury_Product__c mercProd = [SELECT Id, Salesforce_Product__c FROM Mercury_Product__c WHERE Id = :mp.Id];
     Test.stopTest();
-    System.assertEquals( 2, pbes.size() );
-    System.assertEquals( dw.part.Name, result.Name );
-    System.assertEquals( dw.part.Name, result.Name_FR__c );
-    System.assertEquals( dw.part.Description, result.Description );
-    System.assertEquals( dw.part.Description, result.Description_FR__c );
-    System.assertEquals( result.Id, mercProd.Salesforce_Product__c );
+    System.assertEquals(2, pbes.size());
+    System.assertEquals(dw.part.Name, result.Name);
+    System.assertEquals(dw.part.Name, result.Name_FR__c);
+    System.assertEquals(dw.part.Description, result.Description);
+    System.assertEquals(dw.part.Description, result.Description_FR__c);
+    System.assertEquals(result.Id, mercProd.Salesforce_Product__c);
   }
 }

@@ -2,107 +2,85 @@
  * Created by dave on 2020-04-22.
  */
 
-public with sharing class SquareProcessor
-{
-  public class SquareException extends Exception {}
+public with sharing class SquareProcessor {
+  public class SquareException extends Exception {
+  }
 
-  private static Boolean inSandbox
-  {
-    get
-    {
-      if (inSandbox == null)
-      {
+  private static Boolean inSandbox {
+    get {
+      if (inSandbox == null) {
         inSandbox = LGND_Constants.runningInASandbox;
       }
       return inSandbox;
     }
-    private set{}
+    private set {
+    }
   }
 
   @TestVisible
-  private static Square_Setting__mdt squareSettings
-  {
-    get
-    {
-      if( squareSettings == null )
-      {
-        try
-        {
+  private static Square_Setting__mdt squareSettings {
+    get {
+      if (squareSettings == null) {
+        try {
           squareSettings = [
-            SELECT ApplicationId__c,
-                   AuthToken__c,
-                   Version__c,
-                   PaymentEndpoint__c,
-                   Payment_Form_JS__c
+            SELECT ApplicationId__c, AuthToken__c, Version__c, PaymentEndpoint__c, Payment_Form_JS__c
             FROM Square_Setting__mdt
             WHERE IsSandbox__c = :inSandbox
           ];
-        }
-        catch( Exception e )
-        {
+        } catch (Exception e) {
           String env = inSandbox ? 'Sandbox' : 'Production';
-          throw new SquareException( 'Square setting for ' + env + ' not found. Please contact your administrator' );
+          throw new SquareException('Square setting for ' + env + ' not found. Please contact your administrator');
         }
       }
       return squareSettings;
     }
-    private set{}
+    private set {
+    }
   }
 
-  public SquareProcessor()
-  {
+  public SquareProcessor() {
   }
 
-  public PaymentResponse postPayment( Decimal amount, String referenceId, String nonce )
-  {
+  public PaymentResponse postPayment(Decimal amount, String referenceId, String nonce) {
     System.debug('SQUARE_PROCESSOR.postPayment');
     //Square only handle cents
     amount = amount * 100;
-    String jsonData = JSON.serialize( new Payment( amount, referenceId, nonce ) );
+    String jsonData = JSON.serialize(new Payment(amount, referenceId, nonce));
     jsonData = jsonData.replace('"currency_type":', '"currency":');
-    System.debug( jsonData );
+    System.debug(jsonData);
     Http http = new Http();
     HttpRequest request = new HttpRequest();
-    request.setEndpoint( squareSettings.PaymentEndpoint__c );
-    request.setMethod( 'POST' );
-    request.setHeader( 'Authorization', 'Bearer ' + squareSettings.AuthToken__c );
-    request.setHeader( 'Content-Type', 'application/json' );
-    request.setHeader( 'Square-Version', squareSettings.Version__c );
-    request.setBody( jsonData );
+    request.setEndpoint(squareSettings.PaymentEndpoint__c);
+    request.setMethod('POST');
+    request.setHeader('Authorization', 'Bearer ' + squareSettings.AuthToken__c);
+    request.setHeader('Content-Type', 'application/json');
+    request.setHeader('Square-Version', squareSettings.Version__c);
+    request.setBody(jsonData);
 
-    try
-    {
+    try {
       HttpResponse response = http.send(request);
       String jsonResponse = response.getBody();
       jsonResponse = jsonResponse.replace('"currency":', '"currency_type":');
-      PaymentResponse r = (PaymentResponse)JSON.deserialize( jsonResponse, PaymentResponse.class );
-      try
-      {
-        if (LGND_Utilities.sObjectNameFromId(referenceId) == 'Opportunity' &&
-          r.errors == null)
-        {
+      PaymentResponse r = (PaymentResponse) JSON.deserialize(jsonResponse, PaymentResponse.class);
+      try {
+        if (LGND_Utilities.sObjectNameFromId(referenceId) == 'Opportunity' && r.errors == null) {
           SquareTransaction_Service.newFromOnlineBoatReservation(r.payment);
         }
-      }
-      catch( Exception e ){} //invalid or non-existant referenceId, which is ok and valid
+      } catch (Exception e) {
+      } //invalid or non-existant referenceId, which is ok and valid
       return r;
+    } catch (System.CalloutException e) {
+      System.debug('Callout error: ' + e);
+      System.debug(request.toString());
+      throw new SquareException(e.getMessage());
     }
-    catch( System.CalloutException e )
-    {
-      System.debug( 'Callout error: '+ e );
-      System.debug( request.toString() );
-      throw new SquareException(e.getMessage() );
-    }
-
   }
 
-  public static String getApplicationId()
-  {
+  public static String getApplicationId() {
     return squareSettings.ApplicationId__c;
   }
 
-  public static String getPaymentFormJsUrl()
-  {
+  public static String getPaymentFormJsUrl() {
     return squareSettings.Payment_Form_JS__c;
   }
 
@@ -115,43 +93,34 @@ public with sharing class SquareProcessor
     public PaymentAmount amount_money;
     public CustomerAddress billing_address;
     private Id accountId;
-    public Payment( Decimal amount, String referenceId, String nonce )
-    {
-      this.idempotency_key = LGND_Utilities.generateRandomString( 22 );
+    public Payment(Decimal amount, String referenceId, String nonce) {
+      this.idempotency_key = LGND_Utilities.generateRandomString(22);
       this.source_id = nonce;
       this.reference_id = referenceId;
-      this.amount_money = new PaymentAmount( amount );
+      this.amount_money = new PaymentAmount(amount);
       setReferenceSpecificFields();
     }
 
-    private void setReferenceSpecificFields()
-    {
-      if( this.reference_id == null ) return;
+    private void setReferenceSpecificFields() {
+      if (this.reference_id == null)
+        return;
       String referenceType;
       try {
-        referenceType = LGND_Utilities.sObjectNameFromId( this.reference_id );
-      }
-      catch( Exception e )
-      {
+        referenceType = LGND_Utilities.sObjectNameFromId(this.reference_id);
+      } catch (Exception e) {
         return;
       }
-      switch on referenceType
-      {
-        when 'Square_Transaction__c'
-        {
+      switch on referenceType {
+        when 'Square_Transaction__c' {
           handleSquareTransaction();
         }
       }
       setAccountDetails();
     }
 
-    private void handleSquareTransaction()
-    {
+    private void handleSquareTransaction() {
       Square_Transaction__c sqT = [
-        SELECT
-          Id,
-          Description__c,
-          Account__c
+        SELECT Id, Description__c, Account__c
         FROM Square_Transaction__c
         WHERE Id = :this.reference_id
       ];
@@ -159,9 +128,9 @@ public with sharing class SquareProcessor
       this.accountId = sqT.Account__c;
     }
 
-    private void setAccountDetails()
-    {
-      if( this.accountId == null ) return;
+    private void setAccountDetails() {
+      if (this.accountId == null)
+        return;
       Account acct = [
         SELECT
           Id,
@@ -178,14 +147,15 @@ public with sharing class SquareProcessor
         WHERE Id = :this.accountId
       ];
       this.buyer_email_address = acct.PersonEmail;
-      this.billing_address = new CustomerAddress( acct );
+      this.billing_address = new CustomerAddress(acct);
     }
   }
 
   public class PaymentResponse {
     public List<PaymentError> errors;
     public PaymentResult payment;
-    public PaymentResponse(){}
+    public PaymentResponse() {
+    }
   }
 
   public class PaymentResult {
@@ -202,23 +172,24 @@ public with sharing class SquareProcessor
     public PaymentAmount total_money;
     public String receipt_number;
     public String receipt_url;
-    public PaymentResult(){}
+    public PaymentResult() {
+    }
   }
 
-  public class PaymentError
-  {
+  public class PaymentError {
     public String code;
     public String detail;
     public String category;
-    public PaymentError(){}
+    public PaymentError() {
+    }
   }
 
   public class PaymentAmount {
     public Decimal amount;
     public String currency_type;
-    public PaymentAmount(){}
-    public PaymentAmount( Decimal amount )
-    {
+    public PaymentAmount() {
+    }
+    public PaymentAmount(Decimal amount) {
       this.amount = amount;
       this.currency_type = 'CAD';
     }
@@ -231,7 +202,8 @@ public with sharing class SquareProcessor
     public String cvv_status;
     public String avs_status;
     public String statement_description;
-    public PaymentCardDetails(){}
+    public PaymentCardDetails() {
+    }
   }
 
   public class PaymentCard {
@@ -242,11 +214,11 @@ public with sharing class SquareProcessor
     public String fingerprint;
     public String card_type;
     public String bin;
-    public PaymentCard(){}
+    public PaymentCard() {
+    }
   }
 
-  public class CustomerAddress
-  {
+  public class CustomerAddress {
     public String address_line_1;
     public String administrative_district_level_1;
     public String administrative_district_level_2;
@@ -256,8 +228,7 @@ public with sharing class SquareProcessor
     public String locality;
     public String postal_code;
 
-    public CustomerAddress( Account acct )
-    {
+    public CustomerAddress(Account acct) {
       this.first_name = acct.FirstName;
       this.last_name = acct.LastName;
       this.address_line_1 = acct.BillingStreet;

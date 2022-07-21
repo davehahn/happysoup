@@ -1,7 +1,5 @@
 /* TODO: CONVERT TO TRIGGER ACTION FRAMEWORK */
-public without sharing class ProductTransferTriggerHandler extends TriggerHandler
-{
-
+public without sharing class ProductTransferTriggerHandler extends TriggerHandler {
   /*protected override void bulkBefore()
   {
       system.debug('[ProductTransferTriggerHandler] bulk before');
@@ -12,29 +10,25 @@ public without sharing class ProductTransferTriggerHandler extends TriggerHandle
       system.debug('[ProductTransferTriggerHandler] bulk after');
   }*/
 
-  protected override void beforeInsert()
-  {
+  protected override void beforeInsert() {
     system.debug('[ProductTransferTriggerHandler] before insert');
     //ProductTransfer_CreationControl.creationControl((list<ProductTransfer>)Trigger.new);
-    ProductTransfers transfers = new ProductTransfers( Trigger.new, null );
+    ProductTransfers transfers = new ProductTransfers(Trigger.new, null);
     transfers.onBeforeInsert();
   }
 
-  protected override void beforeUpdate()
-  {
+  protected override void beforeUpdate() {
     system.debug('[ProductTransferTriggerHandler] before update');
     //ProductTransfer_UpdateControl.updateControl((list<ProductTransfer>)Trigger.new, (Map<Id,ProductTransfer>)Trigger.oldMap);
   }
 
-  protected override void beforeDelete()
-  {
+  protected override void beforeDelete() {
     system.debug('[ProductTransferTriggerHandler] before delete');
     //ProductTransfer_DeleteControl.deleteControl((Map<Id,ProductTransfer>)Trigger.oldMap);
   }
 
-  protected override void afterInsert()
-  {
-    ProductTransfers transfers = new ProductTransfers( Trigger.new, null );
+  protected override void afterInsert() {
+    ProductTransfers transfers = new ProductTransfers(Trigger.new, null);
     transfers.onAfterInsert();
   }
   /*

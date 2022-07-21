@@ -49,7 +49,7 @@ public with sharing class TA_Opportunity_TestHelper {
           'Life (One)',
           plan.Id,
           false,
-          Test_Constants.idRetailPricebook//LGND_Constants.retailPricebookId
+          Test_Constants.idRetailPricebook //LGND_Constants.retailPricebookId
         )
         .Id
     );

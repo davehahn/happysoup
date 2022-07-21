@@ -6,7 +6,7 @@
 private class TA_Lead_AcceptedTimeStamp_T {
   @IsTest
   static void beforeUpdate_accepted_TA() {
-    TA_Lead_TestHelper helper =  TA_Lead_TestHelper.getInstance();
+    TA_Lead_TestHelper helper = TA_Lead_TestHelper.getInstance();
     Lead oldLead = Factory_Lead.buildLead(true);
     oldLead.Id = TestUtility.getFakeId(Lead.SObjectType);
     Lead newLead = oldLead.clone(true, true, true, true);

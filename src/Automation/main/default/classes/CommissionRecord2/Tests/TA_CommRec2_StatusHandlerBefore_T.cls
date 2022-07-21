@@ -24,10 +24,10 @@ private class TA_CommRec2_StatusHandlerBefore_T {
     TA_CommRec2_TestHelper helper = new TA_CommRec2_TestHelper();
     helper.commRec.Id = TestUtility.getFakeId(CommissionRecord2__c.SObjectType);
     helper.commRec.Status__c = startStatus;
-    if( startStatus == 'Reviewed' ){
+    if (startStatus == 'Reviewed') {
       helper.commRec.Reviewed_By__c = u.Id;
     }
-    if( startStatus == 'Approved' ){
+    if (startStatus == 'Approved') {
       helper.commRec.Reviewed_By__c = u.Id;
       helper.commRec.Approved_By__c = u.Id;
       helper.commRec.Approved_On__c = DateTime.now();
@@ -62,7 +62,7 @@ private class TA_CommRec2_StatusHandlerBefore_T {
       Test.stopTest();
 
       System.assertEquals(u.Id, newList[0].Approved_By__c);
-      System.assert( newList[0].Approved_On__c != null );
+      System.assert(newList[0].Approved_On__c != null);
     }
   }
 
@@ -75,7 +75,7 @@ private class TA_CommRec2_StatusHandlerBefore_T {
       new TA_CommRec2_StatusHandlerBefore().beforeUpdate(newList, oldList);
       Test.stopTest();
 
-      System.assert( newList[0].Reviewed_By__c == null );
+      System.assert(newList[0].Reviewed_By__c == null);
     }
   }
 
@@ -88,10 +88,10 @@ private class TA_CommRec2_StatusHandlerBefore_T {
       new TA_CommRec2_StatusHandlerBefore().beforeUpdate(newList, oldList);
       Test.stopTest();
 
-      System.assert( newList[0].Reviewed_By__c != null );
-      System.assert( newList[0].Approved_By__c == null );
-      System.assert( newList[0].Approved_On__c == null );
-      System.assert( newList[0].Previously_Approved_On__c != null );
+      System.assert(newList[0].Reviewed_By__c != null);
+      System.assert(newList[0].Approved_By__c == null);
+      System.assert(newList[0].Approved_On__c == null);
+      System.assert(newList[0].Previously_Approved_On__c != null);
     }
   }
 }

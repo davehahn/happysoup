@@ -2,8 +2,7 @@
  * Created by dave on 2021-11-23.
  */
 @IsTest
-public class Factory_IT_Issue
-{
+public class Factory_IT_Issue {
   public class JiraSuccessCalloutMock implements HttpCalloutMock {
     public HTTPResponse respond(HTTPRequest req) {
       HttpResponse response = new HttpResponse();
@@ -12,15 +11,9 @@ public class Factory_IT_Issue
     }
   }
 
-  public static IT_Issue__c buildIssue(){
-    String priority = LGND_Utilities.getPicklistValues(
-      'IT_Issue__c',
-      'Priority__c'
-    )[0];
-    String category = LGND_Utilities.getPicklistValues(
-      'IT_Issue__c',
-      'Category__c'
-    )[0];
+  public static IT_Issue__c buildIssue() {
+    String priority = LGND_Utilities.getPicklistValues('IT_Issue__c', 'Priority__c')[0];
+    String category = LGND_Utilities.getPicklistValues('IT_Issue__c', 'Category__c')[0];
     return new IT_Issue__c(
       Priority__c = priority,
       Category__c = category,
@@ -30,5 +23,4 @@ public class Factory_IT_Issue
       Status__c = 'New'
     );
   }
-
 }

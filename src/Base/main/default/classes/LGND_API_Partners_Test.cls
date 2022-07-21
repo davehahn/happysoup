@@ -1,6 +1,5 @@
 @isTest
 private class LGND_API_Partners_Test {
-
   private class partnersWrapper {
     public String id;
     public String name;
@@ -18,21 +17,18 @@ private class LGND_API_Partners_Test {
 
   static Integer acctCount = 20;
 
-  @testSetup static void dataSetup()
-  {
+  @testSetup
+  static void dataSetup() {
     Factory_Account.insertDealerAccounts(acctCount);
   }
 
-
-
-	@isTest
+  @isTest
   static void partners_test() {
-
     // set up the request object
     RestRequest req = new RestRequest();
     RestResponse res = new RestResponse();
 
-    req.requestURI =    '/v2/partners';
+    req.requestURI = '/v2/partners';
     req.httpMethod = 'GET';
     RestContext.request = req;
     RestContext.response = res;
@@ -40,13 +36,9 @@ private class LGND_API_Partners_Test {
     Test.startTest();
     LGND_API_Partners.fetchPartners();
     String jsonData = res.responseBody.toString();
-    List<partnersWrapper> result = (List<partnersWrapper>)JSON.deserialize( jsonData,  List<partnersWrapper>.class );
+    List<partnersWrapper> result = (List<partnersWrapper>) JSON.deserialize(jsonData, List<partnersWrapper>.class);
     Test.stopTest();
 
-    System.assertEquals( acctCount, result.size() );
-	}
-
-
-
-
+    System.assertEquals(acctCount, result.size());
+  }
 }

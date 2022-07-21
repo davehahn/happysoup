@@ -46,12 +46,7 @@ private class Flow_Create_WO_From_POL_for_Boat_T {
     Test.stopTest();
 
     pol = [
-      SELECT
-        Id,
-        Name,
-        AcctSeedERP__Purchase_Order__r.Name,
-        Work_Order__c,
-        Work_Order_Line_Item__c
+      SELECT Id, Name, AcctSeedERP__Purchase_Order__r.Name, Work_Order__c, Work_Order_Line_Item__c
       FROM AcctSeedERP__Purchase_Order_Line__c
       WHERE Id = :pol.Id
     ];
@@ -73,15 +68,12 @@ private class Flow_Create_WO_From_POL_for_Boat_T {
 
     System.assertEquals(1, wos.size(), 'Should be 1 WorkOrder');
     //System.assertEquals( shipperContact.Id, wos[0].ContactId );
-    System.assertEquals(
-      new Application_RecordType().getWorkOrderRecordTypes().getManufacturingId(),
-      wo.RecordTypeId
-    );
+    System.assertEquals(new Application_RecordType().getWorkOrderRecordTypes().getManufacturingId(), wo.RecordTypeId);
     System.assert(wo.Description.contains(pol.AcctSeedERP__Purchase_Order__r.Name));
     System.assert(wo.Description.contains(pol.Name));
     System.assertEquals(FSL_Constants.getServiceTerritoryWholeSale(), wo.ServiceTerritoryId);
     System.assertEquals('New', wo.Status);
-    System.assertEquals( boat.Id, wo.Manufacturing_Product_Id__c );
+    System.assertEquals(boat.Id, wo.Manufacturing_Product_Id__c);
 
     System.assertEquals(1, wos[0].WorkOrderLineItems.size(), 'Work Order should have 1 Line Item');
     System.assert(woli.Description.contains(pol.AcctSeedERP__Purchase_Order__r.Name));

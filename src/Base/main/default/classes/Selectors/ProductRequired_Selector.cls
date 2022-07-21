@@ -2,8 +2,7 @@
  * Created by dave on 2019-08-16.
  */
 
-public virtual class ProductRequired_Selector Extends Application_Selector {
-
+public virtual class ProductRequired_Selector extends Application_Selector {
   private final List<String> defaultFields = new List<String>{
     'Id',
     'Product2Id',
@@ -20,32 +19,22 @@ public virtual class ProductRequired_Selector Extends Application_Selector {
     'IsHandOutComplete__c'
   };
 
-  public ProductRequired_Selector()
-  {
+  public ProductRequired_Selector() {
     this.sObjectName = 'ProductRequired';
     this.fields = defaultFields;
   }
 
-  public static Map<Id, ProductRequired> allByIdMap( Set<Id> recordIds )
-  {
+  public static Map<Id, ProductRequired> allByIdMap(Set<Id> recordIds) {
     ProductRequired_Selector selector = new ProductRequired_Selector();
-    selector.addWhereIdIn( recordIds );
-    return new Map<Id, ProductRequired>( (List<ProductRequired>)selector.query() );
+    selector.addWhereIdIn(recordIds);
+    return new Map<Id, ProductRequired>((List<ProductRequired>) selector.query());
   }
 
-  public static ProductRequired[] selectAllWithoutMaterialByIds( Set<Id> recordIds )
-  {
-    return new ProductRequired_Selector()
-      .addWhereIdIn( recordIds )
-      .addWhere( 'Material__c = null' )
-      .query();
+  public static ProductRequired[] selectAllWithoutMaterialByIds(Set<Id> recordIds) {
+    return new ProductRequired_Selector().addWhereIdIn(recordIds).addWhere('Material__c = null').query();
   }
 
-  public static ProductRequired[] selectAllByWorkOrderLineIds( Set<Id> recordIds )
-  {
-    return new ProductRequired_Selector()
-      .addWhereIdInField( recordIds, 'ParentRecordId' )
-      .query();
+  public static ProductRequired[] selectAllByWorkOrderLineIds(Set<Id> recordIds) {
+    return new ProductRequired_Selector().addWhereIdInField(recordIds, 'ParentRecordId').query();
   }
-
 }

@@ -1,7 +1,6 @@
-@isTest(SeeAllData=TRUE)
+@isTest(SeeAllData=true)
 public class gcTest_legendMRP {
-
-	/*static testMethod void gcTest2()
+  /*static testMethod void gcTest2()
 	{
 		//retrieve an existing GL
 		Id idGL = [SELECT Id FROM AcctSeed__GL_Account__c LIMIT 1][0].Id;
@@ -60,8 +59,7 @@ public class gcTest_legendMRP {
 
 		Test.stopTest();
 	}*/
-	static testMethod void gcTest1()
-	{
-		gcLegendMRP.coverage();
-	}
+  static testMethod void gcTest1() {
+    gcLegendMRP.coverage();
+  }
 }

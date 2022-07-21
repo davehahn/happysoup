@@ -1,9 +1,7 @@
 @isTest
 private class OpportunityRemoter_Test {
-
-	@isTest
+  @isTest
   static void coverage_Test() {
-		OpportunityRemoter.coverage();
-	}
-
+    OpportunityRemoter.coverage();
+  }
 }

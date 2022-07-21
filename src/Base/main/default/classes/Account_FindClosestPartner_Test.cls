@@ -1,11 +1,10 @@
 @isTest
 private class Account_FindClosestPartner_Test {
-
   private static Account orillia;
   private static Account barrie;
 
-  @testSetup static void dataSetup()
-  {
+  @testSetup
+  static void dataSetup() {
     new Factory_TestData();
     Factory_CustomSettings.setupInventorySettings();
   }
@@ -34,38 +33,34 @@ private class Account_FindClosestPartner_Test {
     insert new List<Account>{ barrie, orillia };
   }
 
-
-	@isTest
+  @isTest
   static void findClosestPartner_Test() {
-		Test.setMock( HttpCalloutMock.class, new Tests_CalloutMocks.GoogleDestinationsMatrixMock() );
+    Test.setMock(HttpCalloutMock.class, new Tests_CalloutMocks.GoogleDestinationsMatrixMock());
     Test.startTest();
     String jsonResult = Account_FindClosestPartner.findClosestPartner('orillia', 3, '');
     System.debug(jsonResult);
     Test.stopTest();
-    PartnerLocator.SearchResult result =
-     (PartnerLocator.SearchResult)JSON.deserialize(
-       jsonResult, PartnerLocator.SearchResult.class );
+    PartnerLocator.SearchResult result = (PartnerLocator.SearchResult) JSON.deserialize(
+      jsonResult,
+      PartnerLocator.SearchResult.class
+    );
 
-    System.assertEquals( orillia.Name, result.mapMarkers[0].name);
-    System.assertEquals( '3.0 km', result.mapMarkers[0].distance );
-    System.assertEquals( '6 mins', result.mapMarkers[0].duration );
-	}
+    System.assertEquals(orillia.Name, result.mapMarkers[0].name);
+    System.assertEquals('3.0 km', result.mapMarkers[0].distance);
+    System.assertEquals('6 mins', result.mapMarkers[0].duration);
+  }
 
   @isTest
-  static void findClosestPartner_fail_Test()
-  {
+  static void findClosestPartner_fail_Test() {
     String errMsg;
-    Test.setMock( HttpCalloutMock.class, new Tests_CalloutMocks.GoogleDestinationsMatrixMock_NoOrigin() );
+    Test.setMock(HttpCalloutMock.class, new Tests_CalloutMocks.GoogleDestinationsMatrixMock_NoOrigin());
     Test.startTest();
     try {
       Account_FindClosestPartner.findClosestPartner('Fail origin', 3, '');
-    }
-    catch( Exception e )
-    {
+    } catch (Exception e) {
       errMsg = e.getMessage();
     }
     Test.stopTest();
-    System.assertEquals( 'Fail origin does not appear to be valid', errMsg );
+    System.assertEquals('Fail origin does not appear to be valid', errMsg);
   }
-
 }

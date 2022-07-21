@@ -3,19 +3,18 @@
  */
 
 @IsTest
-private class TA_CommRec2_CreateInitialLines_T
-{
+private class TA_CommRec2_CreateInitialLines_T {
   @testSetup
   static void dataSetup() {
     TA_CommRec2_TestHelper.testDataSetup();
   }
 
   @IsTest
-  static void TA_afterInsert(){
+  static void TA_afterInsert() {
     TA_CommRec2_TestHelper helper = new TA_CommRec2_TestHelper();
     AcctSeed__Project_Task__c boTask;
-    for( AcctSeed__Project_Task__c task : helper.tasks ){
-      if( task.AcctSeed__GL_Account_Variable_2__c == LGND_Constants.GLV2Id_BusinessOffice ){
+    for (AcctSeed__Project_Task__c task : helper.tasks) {
+      if (task.AcctSeed__GL_Account_Variable_2__c == LGND_Constants.GLV2Id_BusinessOffice) {
         boTask = task;
         break;
       }
@@ -32,14 +31,18 @@ private class TA_CommRec2_CreateInitialLines_T
     insert record;
     TriggerBase.clearBypass('CommissionRecord2__c');
 
-    List<CommissionRecord2__c> newList = new List<CommissionRecord2__c>{record};
+    List<CommissionRecord2__c> newList = new List<CommissionRecord2__c>{ record };
 
     Test.startTest();
-    new TA_CommRec2_CreateInitialLines().afterInsert( newList );
+    new TA_CommRec2_CreateInitialLines().afterInsert(newList);
     Test.stopTest();
 
-    List<CommissionLineItem2__c> lines = [SELECT Id FROM CommissionLineItem2__c WHERE CommissionRecord2__c = :record.Id];
+    List<CommissionLineItem2__c> lines = [
+      SELECT Id
+      FROM CommissionLineItem2__c
+      WHERE CommissionRecord2__c = :record.Id
+    ];
 
-    System.assert( lines.size() > 0 );
+    System.assert(lines.size() > 0);
   }
 }

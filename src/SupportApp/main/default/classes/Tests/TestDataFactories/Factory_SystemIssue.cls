@@ -12,22 +12,10 @@ public class Factory_SystemIssue {
   }
 
   public static System_Issue__c buildIssue() {
-    String priority = LGND_Utilities.getPicklistValues(
-      'System_Issue__c',
-      'Priority__c'
-    )[0];
-    String type = LGND_Utilities.getPicklistValues(
-      'System_Issue__c',
-      'Type__c'
-    )[0];
-    String jiraProject = LGND_Utilities.getPicklistValues(
-      'System_Issue__c',
-      'Jira_Project__c'
-    )[0];
-    String department = LGND_Utilities.getPicklistValues(
-      'System_Issue__c',
-      'Department__c'
-    )[0];
+    String priority = LGND_Utilities.getPicklistValues('System_Issue__c', 'Priority__c')[0];
+    String type = LGND_Utilities.getPicklistValues('System_Issue__c', 'Type__c')[0];
+    String jiraProject = LGND_Utilities.getPicklistValues('System_Issue__c', 'Jira_Project__c')[0];
+    String department = LGND_Utilities.getPicklistValues('System_Issue__c', 'Department__c')[0];
     return new System_Issue__c(
       Priority__c = priority,
       Department__c = department,
@@ -60,21 +48,16 @@ public class Factory_SystemIssue {
 
   public static LIst<System_Issue__c> buildOneOfEachStatus() {
     List<System_Issue__c> issues = new List<System_Issue__c>();
-    for (
-      String status : LGND_Utilities.getPicklistValues(
-        'System_Issue__c',
-        'Status__c'
-      )
-    ) {
+    for (String status : LGND_Utilities.getPicklistValues('System_Issue__c', 'Status__c')) {
       issues.add(Factory_SystemIssue.buildIssueWithStatus(status));
     }
     return issues;
   }
 
-  public static List<System_Issue__c> buildChildIssues( Id parentId, Integer count){
-    List<System_Issue__c> children = new LIst<System_Issue__c>();
-    for( Integer i=0; i<count; i++ ){
-      children.add( buildChildIssueWithTypeAndStatus( parentId, 'Story', 'New' ) );
+  public static List<System_Issue__c> buildChildIssues(Id parentId, Integer count) {
+    List<System_Issue__c> children = new List<System_Issue__c>();
+    for (Integer i = 0; i < count; i++) {
+      children.add(buildChildIssueWithTypeAndStatus(parentId, 'Story', 'New'));
     }
     return children;
   }

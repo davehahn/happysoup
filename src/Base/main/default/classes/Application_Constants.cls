@@ -2,24 +2,16 @@
  * Created by dave on 2021-06-03.
  */
 
-public inherited sharing class Application_Constants
-{
-  private class QueuesException extends Exception{}
+public inherited sharing class Application_Constants {
+  private class QueuesException extends Exception {
+  }
 
   private static Application_Constants instance = null;
 
   public User currentUser {
     get {
-      if( currentUser == null )
-      {
-        currentUser = [
-          SELECT
-            Id,
-            Sales_Department__c,
-            Warehouse__c
-          FROM User
-          WHERE Id = :UserInfo.getUserId()
-        ];
+      if (currentUser == null) {
+        currentUser = [SELECT Id, Sales_Department__c, Warehouse__c FROM User WHERE Id = :UserInfo.getUserId()];
       }
       return currentUser;
     }
@@ -28,52 +20,56 @@ public inherited sharing class Application_Constants
 
   public ActivePricebooks activePricebooks {
     get {
-      if( activePricebooks == null ){
+      if (activePricebooks == null) {
         activePricebooks = new ActivePricebooks();
       }
       return activePricebooks;
     }
-    set {}
+    set {
+    }
   }
 
   public UtilityProducts utilityProducts {
     get {
-      if( utilityProducts == null ){
+      if (utilityProducts == null) {
         utilityProducts = new UtilityProducts();
       }
       return utilityProducts;
     }
-    set {}
+    set {
+    }
   }
 
-  public Queues queues{
-    get{
-      if( queues == null ){
+  public Queues queues {
+    get {
+      if (queues == null) {
         queues = new Queues();
       }
       return queues;
     }
-    set {}
+    set {
+    }
   }
 
+  private Application_Constants() {
+  }
 
-  private Application_Constants(){}
-
-  public static Application_Constants getInstance()
-  {
-    if( instance == null ) instance = new Application_Constants();
+  public static Application_Constants getInstance() {
+    if (instance == null)
+      instance = new Application_Constants();
     return instance;
   }
 
   public class ActivePricebooks {
     private final Legend_Settings__c settings {
       get {
-        if( settings == null ){
+        if (settings == null) {
           settings = Legend_Settings__c.getOrgDefaults();
         }
         return settings;
       }
-      set{}
+      set {
+      }
     }
     public Id retailId;
     public Id partnerId;
@@ -85,7 +81,7 @@ public inherited sharing class Application_Constants
       this.factoryId = settings.Default_Factory_Pricebook__c;
     }
 
-    public Set<Id> idSet(){
+    public Set<Id> idSet() {
       Set<Id> result = new Set<Id>();
       result.add(this.retailId);
       result.add(this.partnerId);
@@ -94,78 +90,74 @@ public inherited sharing class Application_Constants
     }
   }
 
-
   public class UtilityProducts {
-
     private Utility_Products__c uProds {
       get {
-        if( uProds == null ){
+        if (uProds == null) {
           uProds = Utility_Products__c.getOrgDefaults();
         }
         return uProds;
       }
-      set {}
+      set {
+      }
     }
 
-    public UtilityProducts(){}
+    public UtilityProducts() {
+    }
 
-    public Id getBackOrderCredit(){
+    public Id getBackOrderCredit() {
       return this.uProds.Back_Order_Credit__c;
     }
-    public Id getBackOrderPrepaid(){
+    public Id getBackOrderPrepaid() {
       return this.uProds.Back_Order_Prepaid__c;
     }
-    public Id getFlexibleAccessoriesCredit(){
+    public Id getFlexibleAccessoriesCredit() {
       return this.uProds.Flexible_Accessories_Credit__c;
     }
-    public Id getFreight(){
+    public Id getFreight() {
       return this.uProds.Freight__c;
     }
-    public Id getPartnerCustomProduct(){
+    public Id getPartnerCustomProduct() {
       return this.uProds.Partner_Custom_Product__c;
     }
-    public Id getPartnerWarrantyLabour(){
+    public Id getPartnerWarrantyLabour() {
       return this.uProds.Partner_Warranty_Labour__c;
     }
-    public Id getSavings(){
+    public Id getSavings() {
       return this.uProds.Savings__c;
     }
-    public Id getSublet(){
+    public Id getSublet() {
       return this.uProds.Sublet__c;
     }
-
-
   }
 
   public class Queues {
-
     private Map<String, Group> allQueuesByDeveloperName {
       get {
-        if( allQueuesByDeveloperName == null ){
+        if (allQueuesByDeveloperName == null) {
           allQueuesByDeveloperName = new Map<String, Group>();
-          for( Group g : [SELECT Id, Name, DeveloperName FROM Group WHERE Type = 'Queue'] ){
+          for (Group g : [SELECT Id, Name, DeveloperName FROM Group WHERE Type = 'Queue']) {
             allQueuesByDeveloperName.put(g.DeveloperName, g);
           }
         }
         return allQueuesByDeveloperName;
       }
-      set {}
+      set {
+      }
     }
 
-    public Queues(){}
+    public Queues() {
+    }
 
-    public Id getIdByDeveloperName(String devName ){
-      try{
+    public Id getIdByDeveloperName(String devName) {
+      try {
         return this.allQueuesByDeveloperName.get(devName).Id;
-      }
-      catch( Exception e){
-        throw new Application_Constants.QueuesException('Queue does not exist with Developer Name \"' + devName + '\"' );
+      } catch (Exception e) {
+        throw new Application_Constants.QueuesException('Queue does not exist with Developer Name \"' + devName + '\"');
       }
     }
-    public Id getAccountTeamId(){
+    public Id getAccountTeamId() {
       return getIdByDeveloperName('Accounting_Team');
     }
-
   }
-
 }

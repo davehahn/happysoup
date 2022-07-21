@@ -2,32 +2,44 @@
  * Created by dave on 2020-02-11.
  */
 
-public class CommissionWrapper
-{
-
+public class CommissionWrapper {
   public class Record {
+    @AuraEnabled
+    public String id;
+    @AuraEnabled
+    public String factoryPricebookId;
+    @AuraEnabled
+    public String taxationProvince;
+    @AuraEnabled
+    public String calculationMethod;
+    @AuraEnabled
+    public String status;
+    @AuraEnabled
+    public String approvedById;
+    @AuraEnabled
+    public String approvedByName;
+    @AuraEnabled
+    public String projectId;
+    @AuraEnabled
+    public String taskId;
+    @AuraEnabled
+    public String taskName;
+    @AuraEnabled
+    public Boolean isViewable;
+    @AuraEnabled
+    public Boolean projectIsClosedLost;
 
-    @AuraEnabled public String id;
-    @AuraEnabled public String factoryPricebookId;
-    @AuraEnabled public String taxationProvince;
-    @AuraEnabled public String calculationMethod;
-    @AuraEnabled public String status;
-    @AuraEnabled public String approvedById;
-    @AuraEnabled public String approvedByName;
-    @AuraEnabled public String projectId;
-    @AuraEnabled public String taskId;
-    @AuraEnabled public String taskName;
-    @AuraEnabled public Boolean isViewable;
-    @AuraEnabled public Boolean projectIsClosedLost;
+    @AuraEnabled
+    public Boolean canViewAllCommissions = LGND_Utilities.CustomPermissions.canViewAllCommissionRecord;
+    @AuraEnabled
+    public Boolean canUndoApproved = LGND_Utilities.CustomPermissions.canReOpenCommissionRecord;
+    @AuraEnabled
+    public Boolean canChangeStage = Schema.sObjectType.CommissionRecord2__c.fields.Status__c.isUpdateable();
 
-    @AuraEnabled public Boolean canViewAllCommissions = LGND_Utilities.CustomPermissions.canViewAllCommissionRecord;
-    @AuraEnabled public Boolean canUndoApproved = LGND_Utilities.CustomPermissions.canReOpenCommissionRecord;
-    @AuraEnabled public Boolean canChangeStage = Schema.sObjectType.CommissionRecord2__c.fields.Status__c.isUpdateable();
+    public Record() {
+    }
 
-    public Record(){}
-
-    public Record( CommissionRecord2__c cRec )
-    {
+    public Record(CommissionRecord2__c cRec) {
       this.id = cRec.Id;
       this.factoryPricebookId = cRec.Factory_Pricebook__c;
       this.taxationProvince = cRec.TaxProvince__c;
@@ -38,20 +50,17 @@ public class CommissionWrapper
       this.projectId = cRec.Project__c;
       this.taskId = cRec.Project_Task__c;
       this.taskName = cRec.Project_Task__r.Name;
-      this.isViewable = checkAccess( cRec.Commission_Payments__r );
+      this.isViewable = checkAccess(cRec.Commission_Payments__r);
       this.projectIsClosedLost = cRec.Project__r.Stage__c == 'Closed Lost';
     }
 
-    private Boolean checkAccess( List<CommissionPayment2__c> payments )
-    {
-      if( this.canViewAllCommissions )
+    private Boolean checkAccess(List<CommissionPayment2__c> payments) {
+      if (this.canViewAllCommissions)
         return true;
       Boolean result = false;
       Id userId = UserInfo.getUserId();
-      for( CommissionPayment2__c p : payments )
-      {
-        if( userId == p.Owner__c )
-        {
+      for (CommissionPayment2__c p : payments) {
+        if (userId == p.Owner__c) {
           result = true;
           break;
         }
@@ -60,87 +69,98 @@ public class CommissionWrapper
     }
   }
 
-
   public class LineItems {
     public List<LineItem> items;
 
-    public LineItems()
-    {
+    public LineItems() {
       this.items = new List<LineItem>();
     }
 
-    public void addAll( List<CommissionLineItem2__c> clis )
-    {
-      for( CommissionLineItem2__c cli : clis )
-      {
-        add( cli );
+    public void addAll(List<CommissionLineItem2__c> clis) {
+      for (CommissionLineItem2__c cli : clis) {
+        add(cli);
       }
     }
 
-    public void add( CommissionLineItem2__c cli )
-    {
-      this.items.add( new LineItem( cli ) );
+    public void add(CommissionLineItem2__c cli) {
+      this.items.add(new LineItem(cli));
     }
 
-    public List<LineItem> groupKits()
-    {
+    public List<LineItem> groupKits() {
       List<LineItem> grouped = new List<LineItem>();
       Map<String, List<LineItem>> parentId_item_map = new Map<String, List<LineItem>>();
-      for( LineItem li : this.items )
-      {
-        if( !parentId_item_map.containsKey( li.parentMatId) )
-        {
-          parentId_item_map.put( li.parentMatId, new List<LineItem>() );
+      for (LineItem li : this.items) {
+        if (!parentId_item_map.containsKey(li.parentMatId)) {
+          parentId_item_map.put(li.parentMatId, new List<LineItem>());
         }
-        parentId_item_map.get( li.parentMatId ).add( li );
+        parentId_item_map.get(li.parentMatId).add(li);
       }
-      for( LineItem li : this.items )
-      {
-        if( li.parentMatId == null )
-        {
-          if( li.matId != null && parentId_item_map.containsKey( li.matId ) )
-          {
-            li.kitParts.addAll( parentId_item_map.get(li.matId) );
+      for (LineItem li : this.items) {
+        if (li.parentMatId == null) {
+          if (li.matId != null && parentId_item_map.containsKey(li.matId)) {
+            li.kitParts.addAll(parentId_item_map.get(li.matId));
           }
-          grouped.add( li );
+          grouped.add(li);
         }
       }
       this.items = new List<LineItem>();
-      this.items.addAll( grouped );
+      this.items.addAll(grouped);
       return this.items;
     }
   }
 
-
   public class LineItem {
-    @AuraEnabled public String id;
-    @AuraEnabled public String description;
-    @AuraEnabled public String productId;
-    @AuraEnabled public String comment;
-    @AuraEnabled public Decimal salePrice;
-    @AuraEnabled public Decimal unitCost;
-    @AuraEnabled public Decimal totalSale;
-    @AuraEnabled public Decimal totalCost;
-    @AuraEnabled public Decimal totalLabour;
-    @AuraEnabled public Decimal quantity;
-    @AuraEnabled public Decimal labourCost;
-    @AuraEnabled public Decimal profit;
-    @AuraEnabled public Decimal commissionRate;
-    @AuraEnabled public Decimal payment;
-    @AuraEnabled public Boolean basedOnProfit;
-    @AuraEnabled public Boolean hasMultiple;
-    @AuraEnabled public List<LineItem> kitParts;
-    @AuraEnabled public String matId;
-    @AuraEnabled public String parentMatId;
-    @AuraEnabled public String commissionRecordId;
-    @AuraEnabled public String commissionRecordStatus;
-    @AuraEnabled public Boolean isCustomItem;
-    @AuraEnabled public Boolean isEditable;
+    @AuraEnabled
+    public String id;
+    @AuraEnabled
+    public String description;
+    @AuraEnabled
+    public String productId;
+    @AuraEnabled
+    public String comment;
+    @AuraEnabled
+    public Decimal salePrice;
+    @AuraEnabled
+    public Decimal unitCost;
+    @AuraEnabled
+    public Decimal totalSale;
+    @AuraEnabled
+    public Decimal totalCost;
+    @AuraEnabled
+    public Decimal totalLabour;
+    @AuraEnabled
+    public Decimal quantity;
+    @AuraEnabled
+    public Decimal labourCost;
+    @AuraEnabled
+    public Decimal profit;
+    @AuraEnabled
+    public Decimal commissionRate;
+    @AuraEnabled
+    public Decimal payment;
+    @AuraEnabled
+    public Boolean basedOnProfit;
+    @AuraEnabled
+    public Boolean hasMultiple;
+    @AuraEnabled
+    public List<LineItem> kitParts;
+    @AuraEnabled
+    public String matId;
+    @AuraEnabled
+    public String parentMatId;
+    @AuraEnabled
+    public String commissionRecordId;
+    @AuraEnabled
+    public String commissionRecordStatus;
+    @AuraEnabled
+    public Boolean isCustomItem;
+    @AuraEnabled
+    public Boolean isEditable;
 
-    public LineItem(){}
+    public LineItem() {
+    }
 
-    public LineItem( CommissionLineItem2__c cli )
-    {
+    public LineItem(CommissionLineItem2__c cli) {
       this.id = cli.Id;
       this.description = cli.Product__c != null ? cli.Product__r.Name : cli.Description__c;
       this.productId = cli.Product__c;
@@ -166,15 +186,13 @@ public class CommissionWrapper
       this.kitParts = new List<LineItem>();
     }
 
-    public LineItem upsertLineItem()
-    {
+    public LineItem upsertLineItem() {
       CommissionLineItem2__c cli = this.toSObject();
       upsert cli;
-      return new LineItem( CommissionLineItem2_Selector.allById( new Set<Id>{ cli.Id } )[0] );
+      return new LineItem(CommissionLineItem2_Selector.allById(new Set<Id>{ cli.Id })[0]);
     }
 
-    private CommissionLineItem2__c toSObject()
-    {
+    private CommissionLineItem2__c toSObject() {
       return new CommissionLineItem2__c(
         Id = this.id,
         Description__c = this.description,
@@ -187,31 +205,44 @@ public class CommissionWrapper
         Commission_Rate__c = this.commissionRate
       );
     }
-
   }
 
-  public class Payment
-  {
-    @AuraEnabled public String id;
-    @AuraEnabled public String cType;
-    @AuraEnabled public String mcType;
-    @AuraEnabled public String owner;
-    @AuraEnabled public String ownerId;
-    @AuraEnabled public String avatarURL;
-    @AuraEnabled public String status;
-    @AuraEnabled public String commissionRecordId;
-    @AuraEnabled public String commissionRecordStatus;
-    @AuraEnabled public Boolean usesGrossCalculation;
-    @AuraEnabled public Decimal amount;
-    @AuraEnabled public Decimal totalProfit;
-    @AuraEnabled public Decimal totalPayment;
-    @AuraEnabled public Decimal split;
-    @AuraEnabled public Decimal grossMarginPaymentPercent;
+  public class Payment {
+    @AuraEnabled
+    public String id;
+    @AuraEnabled
+    public String cType;
+    @AuraEnabled
+    public String mcType;
+    @AuraEnabled
+    public String owner;
+    @AuraEnabled
+    public String ownerId;
+    @AuraEnabled
+    public String avatarURL;
+    @AuraEnabled
+    public String status;
+    @AuraEnabled
+    public String commissionRecordId;
+    @AuraEnabled
+    public String commissionRecordStatus;
+    @AuraEnabled
+    public Boolean usesGrossCalculation;
+    @AuraEnabled
+    public Decimal amount;
+    @AuraEnabled
+    public Decimal totalProfit;
+    @AuraEnabled
+    public Decimal totalPayment;
+    @AuraEnabled
+    public Decimal split;
+    @AuraEnabled
+    public Decimal grossMarginPaymentPercent;
 
-    public Payment(){}
+    public Payment() {
+    }
 
-    public Payment( CommissionPayment2__c p )
-    {
+    public Payment(CommissionPayment2__c p) {
       this.id = p.Id;
       this.cType = p.Type__c == null ? 'Standard' : p.Type__c;
       this.mcType = p.Manager_Commission_Type__c == null ? 'Gross Margin' : p.Manager_Commission_Type__c;
@@ -229,8 +260,7 @@ public class CommissionWrapper
       this.grossMarginPaymentPercent = p.Gross_Margin_Payment_Percent__c;
     }
 
-    public CommissionPayment2__c toSObject()
-    {
+    public CommissionPayment2__c toSObject() {
       return new CommissionPayment2__c(
         Id = this.id,
         Owner__c = this.ownerId,

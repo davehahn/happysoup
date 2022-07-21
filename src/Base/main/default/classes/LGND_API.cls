@@ -1,5 +1,4 @@
 public with sharing class LGND_API {
-
   public class ProductWrapper {
     public String Id { get; set; }
     public String Name { get; set; }
@@ -9,29 +8,22 @@ public with sharing class LGND_API {
     public Map<String, String> DefaultImages { get; set; }
     public List<Boat.MarketingImage> AllImages { get; set; }
 
-    public ProductWrapper(Product2 p, Boolean includePrice)
-    {
+    public ProductWrapper(Product2 p, Boolean includePrice) {
       this.Id = p.Id;
       this.Name = p.Name;
       this.DefaultImages = buildDefaultImageObject(p);
-      if( includePrice )
-      {
+      if (includePrice) {
         handlePrices(p);
       }
     }
 
-    public ProductWrapper handlePrices(Product2 p)
-    {
-      for(PricebookEntry pbe : p.PricebookEntries )
-      {
-        if( pricebookMap.containsKey(pbe.Pricebook2Id) )
-        {
-          if( pricebookMap.get(pbe.Pricebook2Id) == 'retail')
-          {
+    public ProductWrapper handlePrices(Product2 p) {
+      for (PricebookEntry pbe : p.PricebookEntries) {
+        if (pricebookMap.containsKey(pbe.Pricebook2Id)) {
+          if (pricebookMap.get(pbe.Pricebook2Id) == 'retail') {
             this.RetailPrice = pbe.UnitPrice;
           }
-          if( pricebookMap.get(pbe.Pricebook2Id) == 'partner')
-          {
+          if (pricebookMap.get(pbe.Pricebook2Id) == 'partner') {
             this.PartnerPrice = pbe.UnitPrice;
           }
         }
@@ -39,12 +31,9 @@ public with sharing class LGND_API {
       return this;
     }
 
-    public Map<String,String> buildDefaultImageObject(Product2 p)
-    {
-      Map<String, String> imageMap = new Map<String,String>();
-      if( p.Legend_Gallery_Image__r != null )
-      {
-
+    public Map<String, String> buildDefaultImageObject(Product2 p) {
+      Map<String, String> imageMap = new Map<String, String>();
+      if (p.Legend_Gallery_Image__r != null) {
         imageMap.put('500x500', p.Legend_Gallery_Image__r.Active_S3_Object__r.URL_500x500__c);
         imageMap.put('700w', p.Legend_Gallery_Image__r.Active_S3_Object__r.URL_700w__c);
         imageMap.put('1280w', p.Legend_Gallery_Image__r.Active_S3_Object__r.URL_1280w__c);
@@ -74,104 +63,91 @@ public with sharing class LGND_API {
     pricebookNameMap.put('partner', partnerPricebookId);
   }
 
-  public static String productsJSON( String recordTypeName, String apiType)
-  {
+  public static String productsJSON(String recordTypeName, String apiType) {
     List<Product2> prods = fetchProducts(pricebookNameMap.get(apiType), recordTypeName);
     Map<String, List<ProductWrapper>> groupedProds = groupProductsByFamily(prods, false);
-    return buildJSONString( groupedProds);
+    return buildJSONString(groupedProds);
   }
 
-  public static Product2[] fetchProducts(Id pricebookId, String recordTypeName)
-  {
+  public static Product2[] fetchProducts(Id pricebookId, String recordTypeName) {
     //Get all Items with RecordType.Name == 'boat' these are selectedBoats (duh)
     Set<Id> productIdsInPricebook = new Set<Id>();
-    PricebookEntry[] pbes = [SELECT Product2Id, Pricebook2Id
-                             FROM PricebookEntry
-                             WHERE Pricebook2Id = :pricebookId
-                             AND isActive = true
-                             AND Pricebook2.isActive = true
-                             AND Product2.RecordType.Name = :recordTypeName];
-    for( PricebookEntry pbe :pbes )
-    {
+    PricebookEntry[] pbes = [
+      SELECT Product2Id, Pricebook2Id
+      FROM PricebookEntry
+      WHERE
+        Pricebook2Id = :pricebookId
+        AND isActive = TRUE
+        AND Pricebook2.isActive = TRUE
+        AND Product2.RecordType.Name = :recordTypeName
+    ];
+    for (PricebookEntry pbe : pbes) {
       productIdsInPricebook.add(pbe.Product2Id);
     }
-    return [SELECT Id,
-                   Name,
-                   Family,
-                   Legend_Gallery_Image__r.Active_S3_Object__r.URL_Original__c,
-                   Legend_Gallery_Image__r.Active_S3_Object__r.URL_500x500__c,
-                   Legend_Gallery_Image__r.Active_S3_Object__r.URL_700w__c,
-                   Legend_Gallery_Image__r.Active_S3_Object__r.URL_1280w__c,
-             (SELECT UnitPrice, Pricebook2.Name, CreatedDate, Pricebook2Id
-              FROM PricebookEntries
-              WHERE Pricebook2.isActive = true
-              AND isActive = true
-              AND Pricebook2Id IN :pricebookMap.keySet()
-              ORDER BY CreatedDate DESC
-             )
-             FROM Product2
-             WHERE RecordType.Name = :recordTypeName
-             AND IsActive = True
-             AND Id IN :productIdsInPricebook
-             ORDER BY Name];
+    return [
+      SELECT
+        Id,
+        Name,
+        Family,
+        Legend_Gallery_Image__r.Active_S3_Object__r.URL_Original__c,
+        Legend_Gallery_Image__r.Active_S3_Object__r.URL_500x500__c,
+        Legend_Gallery_Image__r.Active_S3_Object__r.URL_700w__c,
+        Legend_Gallery_Image__r.Active_S3_Object__r.URL_1280w__c,
+        (
+          SELECT UnitPrice, Pricebook2.Name, CreatedDate, Pricebook2Id
+          FROM PricebookEntries
+          WHERE Pricebook2.isActive = TRUE AND isActive = TRUE AND Pricebook2Id IN :pricebookMap.keySet()
+          ORDER BY CreatedDate DESC
+        )
+      FROM Product2
+      WHERE RecordType.Name = :recordTypeName AND IsActive = TRUE AND Id IN :productIdsInPricebook
+      ORDER BY Name
+    ];
   }
 
-  public  static Map<String, List<ProductWrapper>> groupProductsByFamily(Product2[] products, Boolean includePrice)
-  {
+  public static Map<String, List<ProductWrapper>> groupProductsByFamily(Product2[] products, Boolean includePrice) {
     // sort the selectedBoats and group them by selectedBoat type
     Map<String, List<ProductWrapper>> groupedProducts = new Map<String, List<ProductWrapper>>();
     Schema.DescribeFieldResult productTypes = Product2.Family.getDescribe();
 
-    for( Schema.PickListEntry pt : productTypes.getPicklistValues() )
-    {
-        groupedProducts.put( pt.getLabel(), new List<ProductWrapper>() );
+    for (Schema.PickListEntry pt : productTypes.getPicklistValues()) {
+      groupedProducts.put(pt.getLabel(), new List<ProductWrapper>());
     }
-    for( Product2 p :products)
-    {
-        if( groupedProducts.keySet().contains( p.Family) )
-        {
-            groupedProducts.get( p.Family ).add( new ProductWrapper(p, includePrice) );
-        }
+    for (Product2 p : products) {
+      if (groupedProducts.keySet().contains(p.Family)) {
+        groupedProducts.get(p.Family).add(new ProductWrapper(p, includePrice));
+      }
     }
     return groupedProducts;
   }
 
-  private static String buildJSONString(Map<String, List<ProductWrapper>> groupedProducts)
-  {
+  private static String buildJSONString(Map<String, List<ProductWrapper>> groupedProducts) {
     JSONGenerator json_gen = JSON.createGenerator(true);
     //start JSON object
     json_gen.writeStartObject();
-    for( String pFam :groupedProducts.keySet() )
-    {
-      if( !groupedProducts.get(pFam).isEmpty() )
-      {
+    for (String pFam : groupedProducts.keySet()) {
+      if (!groupedProducts.get(pFam).isEmpty()) {
         json_gen.writeFieldName(pFam);
         json_gen.writeStartArray();
         // this will return everything we queried and null for other fields
         //Or we can customize to show just what we want
-        for( ProductWrapper pw : groupedProducts.get(pFam) )
-        {
+        for (ProductWrapper pw : groupedProducts.get(pFam)) {
           json_gen.writeStartObject();
           json_gen.writeStringField('id', pw.Id);
           json_gen.writeStringField('name', pw.Name);
-          if(pw.RetailPrice != null)
-          {
+          if (pw.RetailPrice != null) {
             json_gen.writeNumberField('retail_price', pw.RetailPrice);
           }
-          if(pw.PartnerPrice != null)
-          {
+          if (pw.PartnerPrice != null) {
             json_gen.writeNumberField('partner_price', pw.PartnerPrice);
           }
-          if( pw.DefaultImages != null )
-          {
+          if (pw.DefaultImages != null) {
             json_gen.writeObjectField('Default Images', pw.DefaultImages);
           }
-          if( pw.AllImages != null )
-          {
+          if (pw.AllImages != null) {
             json_gen.writeObjectField('All Images', pw.AllImages);
           }
-          if( pw.Prices != null )
-          {
+          if (pw.Prices != null) {
             json_gen.writeObjectField('Prices', pw.Prices);
           }
           json_gen.writeEndObject(); //parent item object
@@ -182,6 +158,4 @@ public with sharing class LGND_API {
     json_gen.writeEndObject(); //END JSON OBJECT
     return json_gen.getAsString();
   }
-
-
 }

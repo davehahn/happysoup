@@ -1,12 +1,10 @@
-@isTest(SeeAllData=TRUE)
-private class gcTest_ProjectTask{
+@isTest(SeeAllData=true)
+private class gcTest_ProjectTask {
+  static testMethod void test1() {
+    gcProjectTask.coverage();
+  }
 
-	static testMethod void test1()
-	{
-        gcProjectTask.coverage();
-    }
-    
-    /*static testMethod void test2()
+  /*static testMethod void test2()
     {
 		Boolean boolOld = gcProjectTask.disableTrigger;
         gcProjectTask.disableTrigger = true;

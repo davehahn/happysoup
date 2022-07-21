@@ -2,11 +2,8 @@
  * Created by dave on 2020-12-08.
  */
 
-public virtual class AssignedResource_Selector extends Application_Selector
-{
-
-  private final List<String> defaultFields = new List<String>
-  {
+public virtual class AssignedResource_Selector extends Application_Selector {
+  private final List<String> defaultFields = new List<String>{
     'Id',
     'ServiceCrewId',
     'ServiceCrew.Name',
@@ -22,16 +19,14 @@ public virtual class AssignedResource_Selector extends Application_Selector
     'ServiceResource.RelatedRecord.Name'
   };
 
-  public AssignedResource_Selector()
-  {
+  public AssignedResource_Selector() {
     this.sObjectName = 'AssignedResource';
     this.fields = defaultFields;
   }
 
-  public static List<AssignedResource> allByServiceAppointmentIds( Set<Id> saIds )
-  {
+  public static List<AssignedResource> allByServiceAppointmentIds(Set<Id> saIds) {
     AssignedResource_Selector selector = new AssignedResource_Selector();
-    selector.addWhereIdInField( saIds, 'ServiceAppointmentId' );
+    selector.addWhereIdInField(saIds, 'ServiceAppointmentId');
     return selector.query();
   }
 }

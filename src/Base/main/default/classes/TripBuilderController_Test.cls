@@ -1,8 +1,7 @@
 @isTest
 private class TripBuilderController_Test {
-
-	@isTest static void fakeCoverageTest() {
-		TripBuilderController.coverage();
-	}
-
+  @isTest
+  static void fakeCoverageTest() {
+    TripBuilderController.coverage();
+  }
 }

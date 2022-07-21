@@ -2,10 +2,8 @@
  * Created by dave on 2019-08-06.
  */
 
-public inherited sharing class Opportunity_Selector Extends Application_Selector {
-
-  public Opportunity_Selector()
-  {
+public inherited sharing class Opportunity_Selector extends Application_Selector {
+  public Opportunity_Selector() {
     this.sObjectName = 'Opportunity';
     this.fields = new List<String>{
       'Id',
@@ -64,60 +62,50 @@ public inherited sharing class Opportunity_Selector Extends Application_Selector
     };
   }
 
-  public static Opportunity[] allByIds( Set<Id> ids )
-  {
+  public static Opportunity[] allByIds(Set<Id> ids) {
     Opportunity_Selector selector = new Opportunity_Selector();
-    selector.addWhereIdIn( ids );
+    selector.addWhereIdIn(ids);
     return selector.query();
   }
 
-  public static Opportunity[] allSchedulableRetailBoatSaleByLocation( String warehouseName )
-  {
+  public static Opportunity[] allSchedulableRetailBoatSaleByLocation(String warehouseName) {
     String locString = '%' + warehouseName + '%';
     Id oppBoatSaleRT = LGND_Utilities.recordTypeIdFromName('Opportunity', 'Retail');
     Opportunity_Selector selector = new Opportunity_Selector();
     selector
       .addWhere('RecordTYpeId = \'' + oppBoatSaleRT + '\'')
-      .addWhere( '(Pickup_Location__c LIKE \'' + locString + '\' OR Pickup_Location__c = null)')
-      .addWhere( 'Delivery_Date__c = null')
+      .addWhere('(Pickup_Location__c LIKE \'' + locString + '\' OR Pickup_Location__c = null)')
+      .addWhere('Delivery_Date__c = null')
       .addWhere('Probability > 69')
       .addWhere('Probability < 100')
       .addOrderBy('Pickup_Location__c DESC');
     return selector.query();
   }
 
-  public static Opportunity[] allRetailBoatSaleByLocationAndDeliveryDateRange( String location,
-                                                                                Date startDate,
-                                                                                Date endDate )
-  {
+  public static Opportunity[] allRetailBoatSaleByLocationAndDeliveryDateRange(
+    String location,
+    Date startDate,
+    Date endDate
+  ) {
     String locString = '%' + location + '%';
     Opportunity_Selector selector = new Opportunity_Selector();
     selector
-      .addWhere('Probability < 100' )
-      .addWhere('Probability > 0' )
+      .addWhere('Probability < 100')
+      .addWhere('Probability > 0')
       .addWhere('Pickup_Location__c LIKE \'' + locString + '\'')
-      .addWhere('Delivery_Date__c >= ' + toDateString( startDate ) )
-      .addWhere('Delivery_Date__c <= ' + toDateString( endDate ) );
+      .addWhere('Delivery_Date__c >= ' + toDateString(startDate))
+      .addWhere('Delivery_Date__c <= ' + toDateString(endDate));
     return selector.query();
   }
 
-  public static Opportunity[] selectAllByIdWithLineItems( Set<Id> oppIds )
-  {
+  public static Opportunity[] selectAllByIdWithLineItems(Set<Id> oppIds) {
     OpportunityLineItem_Selector oliSelector = new OpportunityLineItem_Selector();
-    return new Opportunity_Selector()
-      .addWhereIdIn( oppIds )
-      .addChildQuery( oliSelector )
-      .query();
+    return new Opportunity_Selector().addWhereIdIn(oppIds).addChildQuery(oliSelector).query();
   }
 
-  public static Opportunity[] selectAllByIdWithInsuranceLineItems( Set<Id> oppIds )
-  {
+  public static Opportunity[] selectAllByIdWithInsuranceLineItems(Set<Id> oppIds) {
     OpportunityLineItem_Selector oliSelector = new OpportunityLineItem_Selector();
     oliSelector.addWhere('IsInsurance__c = true');
-    return new Opportunity_Selector()
-      .addWhereIdIn( oppIds )
-      .addChildQuery( oliSelector )
-      .query();
+    return new Opportunity_Selector().addWhereIdIn(oppIds).addChildQuery(oliSelector).query();
   }
-
 }

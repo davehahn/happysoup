@@ -3,32 +3,21 @@
  */
 
 @IsTest
-private class MarketingContent_Selector_T
-{
-
+private class MarketingContent_Selector_T {
   static Product2[] products;
   static Product2[] optionalProducts;
   static Id productOptionId;
   static Id productId;
 
-  @testSetup static void dataSetup()
-  {
+  @testSetup
+  static void dataSetup() {
     new Factory_TestData();
     Factory_CustomSettings.setupInventorySettings();
   }
 
-  private static void initData()
-  {
-    products = Factory_Product.createSerializedProducts(
-      'Boat',
-      'Full Windshield',
-      5
-    );
-    optionalProducts = Factory_Product.createNonSerializedProducts(
-      'Part',
-      'Hardware',
-      10
-    );
+  private static void initData() {
+    products = Factory_Product.createSerializedProducts('Boat', 'Full Windshield', 5);
+    optionalProducts = Factory_Product.createNonSerializedProducts('Part', 'Hardware', 10);
     productId = products[0].Id;
     Product_Option__c po = new Product_Option__c(
       To_Product__c = productId,
@@ -40,33 +29,32 @@ private class MarketingContent_Selector_T
     insert po;
     productOptionId = po.Id;
     Marketing_Content__c[] mContents = new List<Marketing_Content__c>();
-    mContents.add( new Marketing_Content__c(
-      Product_Option__c = productOptionId,
-      Label__c = 'Product Option',
-      Content__c = 'This is a Product Options Marketing Content'
-    ));
-    mContents.add( new Marketing_Content__c(
-      Product__c = productId,
-      Label__c = 'Product',
-      Content__c = 'This is a Product Marketing Content'
-    ));
+    mContents.add(
+      new Marketing_Content__c(
+        Product_Option__c = productOptionId,
+        Label__c = 'Product Option',
+        Content__c = 'This is a Product Options Marketing Content'
+      )
+    );
+    mContents.add(
+      new Marketing_Content__c(
+        Product__c = productId,
+        Label__c = 'Product',
+        Content__c = 'This is a Product Marketing Content'
+      )
+    );
     insert mContents;
   }
 
   @IsTest
-  static void allByProductAndProductOption_Test()
-  {
+  static void allByProductAndProductOption_Test() {
     initData();
-    Set<Id> ids = new Set<Id>{
-      productId,
-      productOptionId
-    };
+    Set<Id> ids = new Set<Id>{ productId, productOptionId };
 
     Test.startTest();
-    List<Marketing_Content__c> result =
-      MarketingContent_Selector.allByProductAndProductOption( ids );
+    List<Marketing_Content__c> result = MarketingContent_Selector.allByProductAndProductOption(ids);
     Test.stopTest();
 
-    System.assertEquals( 2, result.size() );
+    System.assertEquals(2, result.size());
   }
 }

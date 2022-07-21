@@ -3,10 +3,9 @@
  */
 
 public with sharing class GCR_SalesOrderLine {
-    public static void rollup(set<Id> pSetIdSalesOrderLine)
-    {
-        map<Id,cube> mapCube = new map<Id,cube>();
-        /*pSetIdSalesOrderLine.remove(NULL);
+  public static void rollup(set<Id> pSetIdSalesOrderLine) {
+    map<Id, cube> mapCube = new Map<Id, cube>();
+    /*pSetIdSalesOrderLine.remove(NULL);
         if(pSetIdSalesOrderLine.size() == 0) return;
 
         list<AcctSeedERP__Sales_Order_Line__c> listSOLupdate = new list<AcctSeedERP__Sales_Order_Line__c>();
@@ -74,16 +73,15 @@ public with sharing class GCR_SalesOrderLine {
         if(listSOLupdate.size() > 0) {
             update listSOLupdate;
         }*/
-    }
+  }
 
-    private class cube
-    {
-        Decimal expense{get;set;}
-        Decimal revenue{get;set;}
+  private class cube {
+    Decimal expense { get; set; }
+    Decimal revenue { get; set; }
 
-        cube(){
-            expense = 0;
-            revenue = 0;
-        }
+    cube() {
+      expense = 0;
+      revenue = 0;
     }
+  }
 }

@@ -510,16 +510,13 @@ public without sharing class Promotion_mp {
       LeadStatus cStatus = [SELECT Id, MasterLabel FROM LeadStatus WHERE IsConverted = TRUE LIMIT 1];
       lc.setConvertedStatus(cStatus.MasterLabel);
       lc.setDoNotCreateOpportunity(true);
-			try
-			{
-				Database.LeadConvertResult lcr = Database.convertLead(lc);
-				return lcr.getAccountId();
-			}
-			catch( Exception e ){
-				System.debug('LeadId = ' + customerId);
-				return customerId;
-			}
-
+      try {
+        Database.LeadConvertResult lcr = Database.convertLead(lc);
+        return lcr.getAccountId();
+      } catch (Exception e) {
+        System.debug('LeadId = ' + customerId);
+        return customerId;
+      }
     }
     return customerId;
   }

@@ -1,9 +1,7 @@
-@isTest (seeAllData=true)
+@isTest(seeAllData=true)
 private class ProductOptionsExt_Test {
-
   @isTest
-  static void coverageTest()
-  {
+  static void coverageTest() {
     ProductOptionsExt.coverage();
   }
 
@@ -168,8 +166,6 @@ private class ProductOptionsExt_Test {
   //  System.assertEquals( (familyCount * 5) - 1, secondSearchSize );
   //}// search_Test
 
-
-
   //testMethod static void selectOptions_Test()
   //{
   //  Test.startTest();
@@ -222,7 +218,4 @@ private class ProductOptionsExt_Test {
   //  }
   //  System.assertEquals(2, ext.optionsMap.get('Extended Warranty').selected.size() );
   //}//changeOptions_Test
-
-
-
 }

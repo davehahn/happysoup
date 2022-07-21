@@ -1,11 +1,10 @@
 @isTest(seeAllData=true)
 private class ERPInvoicePDF_TEST {
-
-    @isTest static void tempTest()
-    {
-        ERPInvoicePDF.coverage();
-    }
-    /*
+  @isTest
+  static void tempTest() {
+    ERPInvoicePDF.coverage();
+  }
+  /*
     @isTest static void ERPInvoiceConstructor() {
     	Test.startTest();
     	AcctSeed__Project__c p = [SELECT id, AcctSeed__Opportunity__c from AcctSeed__Project__c WHERE AcctSeed__Account__c != null AND AcctSeed__Opportunity__c != null  LIMIT 1];
@@ -53,7 +52,7 @@ private class ERPInvoicePDF_TEST {
     	insert trade;
     }
     */
-    /*
+  /*
     @future
     private static void generateProject(User u) {
         AcctSeed__Project__c proj = new AcctSeed__Project__c();

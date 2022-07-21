@@ -22,7 +22,7 @@
  *  OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
  *  OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-**/
+ **/
 
 /**
  * This class is designed to help with caching the results of querying (via SOQL) Custom Permissions for the
@@ -33,7 +33,6 @@
  *   thus constructing the object carries no SOQL / database overhead.
  **/
 public virtual class CustomPermissionsReader {
-
   private SObjectType managedObject;
 
   private Set<String> customPermissionNames;
@@ -61,10 +60,10 @@ public virtual class CustomPermissionsReader {
 
   public Boolean hasPermission(String customPermissionName) {
     // Demand load the custom permissions from the database?
-    if(customPermissionNames==null)
+    if (customPermissionNames == null)
       init();
     // Is this a valid custom permission name?
-    if(!customPermissionNames.contains(customPermissionName))
+    if (!customPermissionNames.contains(customPermissionName))
       throw new CustomPermissionsException('Custom Permission ' + customPermissionName + ' is not valid.');
     // Has this user been assigned this custom permission?
     return customPermissionsForCurrentUser.contains(customPermissionName);
@@ -75,13 +74,12 @@ public virtual class CustomPermissionsReader {
    *   the current namespace context (derived from the managed object reference)
    **/
   private void init() {
-
     customPermissionNames = new Set<String>();
     customPermissionsForCurrentUser = new Set<String>();
 
     // Determine the namespace context for the custom permissions via the SObject passed in?
     String namespacePrefix = null;
-    if(managedObject!=null) {
+    if (managedObject != null) {
       DescribeSObjectResult describe = managedObject.getDescribe();
       String name = describe.getName();
       String localName = describe.getLocalName();
@@ -90,25 +88,28 @@ public virtual class CustomPermissionsReader {
 
     // Query the full set of Custom Permissions for the given namespace
     Map<Id, String> customPermissionNamesById = new Map<Id, String>();
-    List<CustomPermission> customPermissions =
-      [select Id, DeveloperName from CustomPermission where NamespacePrefix = :namespacePrefix];
-    for(CustomPermission customPermission : customPermissions) {
+    List<CustomPermission> customPermissions = [
+      SELECT Id, DeveloperName
+      FROM CustomPermission
+      WHERE NamespacePrefix = :namespacePrefix
+    ];
+    for (CustomPermission customPermission : customPermissions) {
       customPermissionNames.add(customPermission.DeveloperName);
       customPermissionNamesById.put(customPermission.Id, customPermission.DeveloperName);
     }
 
     // Query to determine which of these custome settings are assigned to this user
-    List<SetupEntityAccess> setupEntities =
-      [SELECT SetupEntityId
-        FROM SetupEntityAccess
-        WHERE SetupEntityId in :customPermissionNamesById.keySet() AND
-            ParentId
-            IN (SELECT PermissionSetId
-                FROM PermissionSetAssignment
-                WHERE AssigneeId = :UserInfo.getUserId())];
-    for(SetupEntityAccess setupEntity : setupEntities)
+    List<SetupEntityAccess> setupEntities = [
+      SELECT SetupEntityId
+      FROM SetupEntityAccess
+      WHERE
+        SetupEntityId IN :customPermissionNamesById.keySet()
+        AND ParentId IN (SELECT PermissionSetId FROM PermissionSetAssignment WHERE AssigneeId = :UserInfo.getUserId())
+    ];
+    for (SetupEntityAccess setupEntity : setupEntities)
       customPermissionsForCurrentUser.add(customPermissionNamesById.get(setupEntity.SetupEntityId));
   }
 
-  public class CustomPermissionsException extends Exception {}
+  public class CustomPermissionsException extends Exception {
+  }
 }

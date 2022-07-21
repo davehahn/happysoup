@@ -4,8 +4,8 @@
 
 @IsTest
 private class GCR_SalesOrderLine_Test {
-    @IsTest
-    static void testBehavior() {
-        GCR_SalesOrderLine.rollup(new Set<Id>());
-    }
+  @IsTest
+  static void testBehavior() {
+    GCR_SalesOrderLine.rollup(new Set<Id>());
+  }
 }

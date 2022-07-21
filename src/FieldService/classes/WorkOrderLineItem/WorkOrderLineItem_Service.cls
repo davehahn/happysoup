@@ -3,9 +3,7 @@
  */
 
 public with sharing class WorkOrderLineItem_Service {
-
-  public static WorkOrderLineItem createForRetailBoatSale( Id workOrderId )
-  {
+  public static WorkOrderLineItem createForRetailBoatSale(Id workOrderId) {
     WorkOrderLineItem woli = new WorkOrderLineItem(
       WorkOrderId = workOrderId,
       Description = 'Retail Sale',
@@ -16,19 +14,17 @@ public with sharing class WorkOrderLineItem_Service {
     return woli;
   }
 
-  public static WorkOrderLineItem createForManufacturing( WorkOrder wo)
-  {
+  public static WorkOrderLineItem createForManufacturing(WorkOrder wo) {
     WorkOrderLineItem woli = new WorkOrderLineItem(
-        WorkOrderId = wo.Id,
-        Description = 'PRE-RIG',
-        Visible_to_Customer__c = true/*,
-        WorkTypeId = wo.WorkTypeId*/
+      WorkOrderId = wo.Id,
+      Description = 'PRE-RIG',
+      Visible_to_Customer__c = true /*,
+       WorkTypeId = wo.WorkTypeId*/
     );
     return woli;
   }
 
-  public static WorkOrderLineItem newFromProjectTask( AcctSeed__Project_Task__c task, Id workOrderId )
-  {
+  public static WorkOrderLineItem newFromProjectTask(AcctSeed__Project_Task__c task, Id workOrderId) {
     return new WorkOrderLineItem(
       WorkOrderId = workOrderId,
       Description = task.Name,
@@ -36,5 +32,4 @@ public with sharing class WorkOrderLineItem_Service {
       ERP_Order_Task__c = task.Id
     );
   }
-
 }

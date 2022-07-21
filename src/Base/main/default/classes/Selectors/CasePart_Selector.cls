@@ -2,11 +2,8 @@
  * Created by dave on 2021-02-26.
  */
 
-public virtual class CasePart_Selector extends Application_Selector
-{
-
-  private final List<String> defaultFields = new List<String>
-  {
+public virtual class CasePart_Selector extends Application_Selector {
+  private final List<String> defaultFields = new List<String>{
     'Id',
     'Name',
     'Inventory_Product__c',
@@ -23,16 +20,12 @@ public virtual class CasePart_Selector extends Application_Selector
     'Unit_Price__c'
   };
 
-  public CasePart_Selector()
-  {
+  public CasePart_Selector() {
     this.sObjectName = 'Case_Part__c';
     this.fields = defaultFields;
   }
 
-  public static List<Case_Part__c> allByIds( List<Id> ids )
-  {
-    return new CasePart_Selector()
-      .addWhereIdIn( ids )
-      .query();
+  public static List<Case_Part__c> allByIds(List<Id> ids) {
+    return new CasePart_Selector().addWhereIdIn(ids).query();
   }
 }

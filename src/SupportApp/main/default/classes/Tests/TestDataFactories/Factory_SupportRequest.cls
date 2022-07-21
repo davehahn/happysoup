@@ -2,17 +2,10 @@
  * Created by dave on 2022-05-20.
  */
 @IsTest
-public class Factory_SupportRequest
-{
-  public static Support_Request__c buildSupportRequest(){
-    String priority = LGND_Utilities.getPicklistValues(
-      'Support_Request__c',
-      'Priority__c'
-    )[0];
-    String type = LGND_Utilities.getPicklistValues(
-      'Support_Request__c',
-      'Type__c'
-    )[0];
+public class Factory_SupportRequest {
+  public static Support_Request__c buildSupportRequest() {
+    String priority = LGND_Utilities.getPicklistValues('Support_Request__c', 'Priority__c')[0];
+    String type = LGND_Utilities.getPicklistValues('Support_Request__c', 'Type__c')[0];
 
     return new Support_Request__c(
       Priority__c = priority,
@@ -24,5 +17,4 @@ public class Factory_SupportRequest
       Department_GLV2__c = Test_Constants.idGlV2
     );
   }
-
 }

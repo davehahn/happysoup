@@ -35,10 +35,7 @@ public with sharing class Factory_Product {
       insert glAccts;
   }
 
-  public static Product2 createSerializedProduct(
-    String recordTypeName,
-    String family
-  ) {
+  public static Product2 createSerializedProduct(String recordTypeName, String family) {
     Product2 p = buildSerializedProduct(recordTypeName, family);
     Boolean orig = gcProduct.disableTrigger;
     gcProduct.disableTrigger = true;
@@ -47,11 +44,7 @@ public with sharing class Factory_Product {
     return p;
   }
 
-  public static Product2[] buildSerializedProducts(
-    String recordTypeName,
-    String family,
-    Integer count
-  ) {
+  public static Product2[] buildSerializedProducts(String recordTypeName, String family, Integer count) {
     Product2[] prods = new List<Product2>();
     for (Integer i = 0; i < count; i++) {
       prods.add(buildSerializedProduct(recordTypeName, family));
@@ -59,11 +52,7 @@ public with sharing class Factory_Product {
     return prods;
   }
 
-  public static Product2[] createSerializedProducts(
-    String recordTypeName,
-    String family,
-    Integer count
-  ) {
+  public static Product2[] createSerializedProducts(String recordTypeName, String family, Integer count) {
     Product2[] prods = buildSerializedProducts(recordTypeName, family, count);
     Boolean orig = gcProduct.disableTrigger;
     gcProduct.disableTrigger = true;
@@ -91,11 +80,7 @@ public with sharing class Factory_Product {
     String family,
     Integer count
   ) {
-    Product2[] prods = buildSerializedProducts_AvailableOnline(
-      recordTypeName,
-      family,
-      count
-    );
+    Product2[] prods = buildSerializedProducts_AvailableOnline(recordTypeName, family, count);
     Boolean orig = gcProduct.disableTrigger;
     gcProduct.disableTrigger = true;
     insert prods;
@@ -109,11 +94,7 @@ public with sharing class Factory_Product {
     Integer count,
     String series
   ) {
-    Product2[] prods = buildSerializedProducts_AvailableOnline(
-      recordTypeName,
-      family,
-      count
-    );
+    Product2[] prods = buildSerializedProducts_AvailableOnline(recordTypeName, family, count);
 
     for (Product2 boat : prods) {
       boat.Series__c = series;
@@ -127,10 +108,7 @@ public with sharing class Factory_Product {
     return prods;
   }
 
-  public static Product2 createNonSerializedProduct(
-    String recordTypeName,
-    String family
-  ) {
+  public static Product2 createNonSerializedProduct(String recordTypeName, String family) {
     Product2 p = buildNonSerializedProduct(recordTypeName, family);
     Boolean orig = gcProduct.disableTrigger;
     gcProduct.disableTrigger = true;
@@ -140,11 +118,7 @@ public with sharing class Factory_Product {
   }
 
   public static Product2 createPartKit(Integer kitContentsCount) {
-    List<Product2> parts = buildNonSerializedProducts(
-      'Part',
-      'Hardware',
-      kitContentsCount + 1
-    );
+    List<Product2> parts = buildNonSerializedProducts('Part', 'Hardware', kitContentsCount + 1);
     //parts[0].Parts_Count__c = kitContentsCount;
     parts[0].AcctSeed__Inventory_Product__c = false;
     insert parts;
@@ -162,10 +136,7 @@ public with sharing class Factory_Product {
     return parts[0];
   }
 
-  public static Product2 buildSerializedProduct(
-    String recordTypeName,
-    String family
-  ) {
+  public static Product2 buildSerializedProduct(String recordTypeName, String family) {
     buildGlAccounts();
     Id rt = LGND_Utilities.recordTypeIdFromName('Product2', recordTypeName);
     String fam = recordTypeName == 'Motor' ? 'Mercury' : 'Legend';
@@ -185,16 +156,12 @@ public with sharing class Factory_Product {
       AcctSeed__Inventory_GL_Account__c = inventoryAccount.Id,
       AcctSeed__Revenue_GL_Account__c = revenueAccount.Id,
       AcctSeed__Unit_Cost__c = 100.00,
-      ProductCode = 'pcode-' +
-        LGND_Utilities.generateRandomString(6),
+      ProductCode = 'pcode-' + LGND_Utilities.generateRandomString(6),
       isActive = true
     );
   }
 
-  public static Product2 buildNonSerializedProduct(
-    String recordTypeName,
-    String family
-  ) {
+  public static Product2 buildNonSerializedProduct(String recordTypeName, String family) {
     buildGlAccounts();
     Id rt = LGND_Utilities.recordTypeIdFromName('Product2', recordTypeName);
     return new Product2(
@@ -212,31 +179,18 @@ public with sharing class Factory_Product {
       AcctSeed__Inventory_GL_Account__c = inventoryAccount.Id,
       AcctSeed__Revenue_GL_Account__c = revenueAccount.Id,
       AcctSeed__Unit_Cost__c = 100.00,
-      ProductCode = 'pcode-' +
-        LGND_Utilities.generateRandomString(6),
+      ProductCode = 'pcode-' + LGND_Utilities.generateRandomString(6),
       isActive = true
     );
   }
 
-  public static Product2[] createNonSerializedProducts(
-    String recordTypeName,
-    String family,
-    Integer count
-  ) {
-    Product2[] prods = buildNonSerializedProducts(
-      recordTypeName,
-      family,
-      count
-    );
+  public static Product2[] createNonSerializedProducts(String recordTypeName, String family, Integer count) {
+    Product2[] prods = buildNonSerializedProducts(recordTypeName, family, count);
     insert prods;
     return prods;
   }
 
-  public static Product2[] buildNonSerializedProducts(
-    String recordTypeName,
-    String family,
-    Integer count
-  ) {
+  public static Product2[] buildNonSerializedProducts(String recordTypeName, String family, Integer count) {
     Product2[] products = new List<Product2>();
     for (Integer i = 0; i < count; i++) {
       products.add(buildNonSerializedProduct(recordTypeName, family));
@@ -285,8 +239,7 @@ public with sharing class Factory_Product {
     ppsa.AcctSeed__Expense_GL_Account__c = expenseAccount.Id;
     ppsa.AcctSeed__Inventory_Product__c = false;
     ppsa.AcctSeed__Inventory_Type__c = null;
-    ppsa.ProductCode =
-      'ppsa-' + LGND_Utilities.generateRandomString(6);
+    ppsa.ProductCode = 'ppsa-' + LGND_Utilities.generateRandomString(6);
     ppsa.AcctSeed__Unit_Cost__c = 0;
     ppsa.AcctSeedERP__Serialized__c = false;
     ppsa.GMBLASERP__Lot_Tracked__c = false;
@@ -299,17 +252,9 @@ public with sharing class Factory_Product {
     return ppsa;
   }
 
-  public static Product2 buildInsuranceProduct(
-    String family,
-    String name,
-    Id insurancePlanId,
-    Boolean isResidual
-  ) {
+  public static Product2 buildInsuranceProduct(String family, String name, Id insurancePlanId, Boolean isResidual) {
     return new Product2(
-      RecordTypeId = LGND_Utilities.recordTypeIdFromName(
-        'Product2',
-        'Insurance'
-      ),
+      RecordTypeId = LGND_Utilities.recordTypeIdFromName('Product2', 'Insurance'),
       Name = name,
       Family = family,
       IsActive = true,
@@ -335,14 +280,7 @@ public with sharing class Factory_Product {
   ) {
     List<Product2> prods = new List<Product2>();
     for (Integer i = 0; i < count; i++) {
-      prods.add(
-        buildInsuranceProduct(
-          family,
-          name + String.valueOF(i),
-          insurancePlanId,
-          isResidual
-        )
-      );
+      prods.add(buildInsuranceProduct(family, name + String.valueOF(i), insurancePlanId, isResidual));
     }
 
     Boolean orig = gcProduct.disableTrigger;
@@ -359,12 +297,7 @@ public with sharing class Factory_Product {
     Boolean isResidual,
     Id pbId
   ) {
-    Product2 p = buildInsuranceProduct(
-      family,
-      name,
-      insurancePlanId,
-      isResidual
-    );
+    Product2 p = buildInsuranceProduct(family, name, insurancePlanId, isResidual);
     //Boolean orig = gcProduct.disableTrigger;
     //gcProduct.disableTrigger = true;
     insert p;

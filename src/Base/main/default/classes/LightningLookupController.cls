@@ -1,34 +1,33 @@
 public class LightningLookupController {
-
   /*
    * Loads the initial value of the given SObject type with ID "value"
    */
   @AuraEnabled
-  public static String getCurrentValue(String type, String value){
-    if(String.isBlank(type)){
+  public static String getCurrentValue(String type, String value) {
+    if (String.isBlank(type)) {
       return null;
     }
 
     ID lookupId = null;
-    try{
-      lookupId = (ID)value;
-    }catch(Exception e){
+    try {
+      lookupId = (ID) value;
+    } catch (Exception e) {
       return null;
     }
 
-    if(String.isBlank(lookupId)){
+    if (String.isBlank(lookupId)) {
       return null;
     }
 
     SObjectType objType = Schema.getGlobalDescribe().get(type);
-    if(objType == null){
+    if (objType == null) {
       return null;
     }
 
     String nameField = getSobjectNameField(objType);
-    String query = 'Select Id, '+nameField+' From '+type+' Where Id = \''+lookupId+'\'';
+    String query = 'Select Id, ' + nameField + ' From ' + type + ' Where Id = \'' + lookupId + '\'';
     List<SObject> oList = Database.query(query);
-    if(oList.size()==0) {
+    if (oList.size() == 0) {
       return null;
     }
     return (String) oList[0].get(nameField);
@@ -36,24 +35,23 @@ public class LightningLookupController {
 
   /*
    * Utility class for search results
-  */
-  public class SearchResult{
-    public String value{get;Set;}
-    public String id{get;set;}
-    public String secondary{get;Set;}
+   */
+  public class SearchResult {
+    public String value { get; set; }
+    public String id { get; set; }
+    public String secondary { get; set; }
   }
 
   /*
    * Returns the "Name" field for a given SObject (e.g. Case has CaseNumber, Account has Name)
-  */
-  private static String getSobjectNameField(SobjectType sobjType){
-
+   */
+  private static String getSobjectNameField(SobjectType sobjType) {
     //describes lookup obj and gets its name field
     String nameField = 'Name';
     Schema.DescribeSObjectResult dfrLkp = sobjType.getDescribe();
-    for(schema.SObjectField sotype : dfrLkp.fields.getMap().values()){
+    for (schema.SObjectField sotype : dfrLkp.fields.getMap().values()) {
       Schema.DescribeFieldResult fieldDescObj = sotype.getDescribe();
-      if(fieldDescObj.isNameField() ){
+      if (fieldDescObj.isNameField()) {
         nameField = fieldDescObj.getName();
         break;
       }
@@ -70,16 +68,16 @@ public class LightningLookupController {
     String searchString,
     String serializedFilters,
     String pricebookId,
-    String secondaryField )
-  {
-    System.debug( searchString);
-    System.debug( serializedFilters );
-    if(String.isBlank(sObjectType) || String.isBlank(searchString)){
+    String secondaryField
+  ) {
+    System.debug(searchString);
+    System.debug(serializedFilters);
+    if (String.isBlank(sObjectType) || String.isBlank(searchString)) {
       return null;
     }
 
     SObjectType objType = Schema.getGlobalDescribe().get(sObjectType);
-    if(objType == null){
+    if (objType == null) {
       return null;
     }
 
@@ -89,22 +87,23 @@ public class LightningLookupController {
     }
 
     String nameField = getSobjectNameField(objType);
-    searchString = '\'*'+searchString+'*\'';
+    searchString = '\'*' + searchString + '*\'';
 
     // parse filters
     String whereString = '';
-    if (!String.isBlank(serializedFilters))
-    {
+    if (!String.isBlank(serializedFilters)) {
       //get a map of field data so we know how to add to the query
-      Map<String, SObjectField> fieldMap = ((SObject)(Type.forName('Schema.'+sObjectType).newInstance()))
+      Map<String, SObjectField> fieldMap = ((SObject) (Type.forName('Schema.' + sObjectType).newInstance()))
         .getSObjectType()
         .getDescribe()
         .fields.getMap();
 
-      List<Map<String,String>> filters =
-        (List<Map<String,String>>)JSON.deserialize(serializedFilters, List<Map<String,String>>.class);
-      for (Integer i=0; i<filters.size(); i++) {
-        Map<String,String> filter = filters[i];
+      List<Map<String, String>> filters = (List<Map<String, String>>) JSON.deserialize(
+        serializedFilters,
+        List<Map<String, String>>.class
+      );
+      for (Integer i = 0; i < filters.size(); i++) {
+        Map<String, String> filter = filters[i];
         if (!filter.containsKey('field') || !filter.containsKey('comparator') || !filter.containsKey('value')) {
           // this filter is missing info, so skip the search
           return null;
@@ -112,14 +111,11 @@ public class LightningLookupController {
         if (whereString.length() > 0) {
           whereString += ' AND ';
         }
-        whereString += filter.get('field') + ' ' + filter.get('comparator') ;
-        if( fieldMap.get( filter.get('field') ).getDescribe().getType().name() == 'BOOLEAN' )
-        {
+        whereString += filter.get('field') + ' ' + filter.get('comparator');
+        if (fieldMap.get(filter.get('field')).getDescribe().getType().name() == 'BOOLEAN') {
           whereString += ' ' + filter.get('value');
-        }
-        else
-        {
-          whereString += + ' \'' + filter.get('value') + '\'';
+        } else {
+          whereString += +' \'' + filter.get('value') + '\'';
         }
       }
       if (whereString.length() > 0) {
@@ -139,20 +135,31 @@ public class LightningLookupController {
       fields += ', ' + secondaryField;
     }
 
-    String soslQuery = 'FIND ' + searchString + ' IN NAME FIELDS RETURNING '
-      + sObjectType +'(Id, '+fields+whereString+' ORDER BY '+nameField+')'+withPricebook+' LIMIT 20';
-    List<List<SObject>> results =  Search.query(soslQuery);
+    String soslQuery =
+      'FIND ' +
+      searchString +
+      ' IN NAME FIELDS RETURNING ' +
+      sObjectType +
+      '(Id, ' +
+      fields +
+      whereString +
+      ' ORDER BY ' +
+      nameField +
+      ')' +
+      withPricebook +
+      ' LIMIT 20';
+    List<List<SObject>> results = Search.query(soslQuery);
 
     List<SearchResult> output = new List<SearchResult>();
-    if(results.size()>0){
-      for(SObject sobj : results[0]){
+    if (results.size() > 0) {
+      for (SObject sobj : results[0]) {
         SearchResult sr = new SearchResult();
-        sr.id = (String)sobj.get('Id');
-        sr.value = (String)sobj.get(nameField);
+        sr.id = (String) sobj.get('Id');
+        sr.value = (String) sobj.get(nameField);
         if (secondaryField != null && secondaryField != '') {
-          sr.secondary = (String)sobj.get(secondaryField);
+          sr.secondary = (String) sobj.get(secondaryField);
         }
-        output.add(sr)   ;
+        output.add(sr);
       }
     }
     return JSON.serialize(output);
@@ -161,7 +168,7 @@ public class LightningLookupController {
   @AuraEnabled
   public static String getSObjectLabel(String type) {
     SObjectType objType = Schema.getGlobalDescribe().get(type);
-    if(objType == null){
+    if (objType == null) {
       return null;
     }
     return objType.getDescribe().getLabel();

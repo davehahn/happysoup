@@ -1,15 +1,12 @@
 global with sharing class OpportunityDocument {
-
   public BoatBuilder boatBuilder { get; private set; }
   public String renderType { get; private set; }
   public Boolean renderSeperateTaxes { get; private set; }
   public TaxRate__c provTaxRate { get; private set; }
 
-  global OpportunityDocument()
-  {
+  global OpportunityDocument() {
     Id oppId = ApexPages.currentPage().getParameters().get('opportunity_id');
-    if( oppId == null )
-    {
+    if (oppId == null) {
       oppId = ApexPages.currentPage().getParameters().get('id');
     }
     String rType = ApexPages.currentPAge().getParameters().get('render_type');
@@ -18,35 +15,35 @@ global with sharing class OpportunityDocument {
     //if( validQuoteDate !== null )
     //  quoteDate = Date.parse( validDate );
     renderType = '';
-    if( rType != null )
-    {
+    if (rType != null) {
       renderType = rType;
     }
-    if( oppId != null )
-    {
+    if (oppId != null) {
       this.boatBuilder = new BoatBuilder(oppId);
       //this.provTaxRate = TaxRate__c.getAll().get( this.boatBuilder.opportunity.TaxationProvince__c );
     }
   }
 
-  global OpportunityDocument(ApexPages.StandardController ctr){ }
+  global OpportunityDocument(ApexPages.StandardController ctr) {
+  }
 
-  global static void triggerHandler
-    (map<Id,Opportunity_Document__c> oldMap,
-     map<Id,Opportunity_Document__c> newMap,
-     list<Opportunity_Document__c> listNew,
-     Boolean boolIsBefore,
-     Boolean boolIsInsert,
-     Boolean boolIsUpdate,
-     Boolean boolIsDelete)
-  {
+  global static void triggerHandler(
+    map<Id, Opportunity_Document__c> oldMap,
+    map<Id, Opportunity_Document__c> newMap,
+    list<Opportunity_Document__c> listNew,
+    Boolean boolIsBefore,
+    Boolean boolIsInsert,
+    Boolean boolIsUpdate,
+    Boolean boolIsDelete
+  ) {
+    if (oldMap == null)
+      oldMap = new Map<Id, Opportunity_Document__c>();
+    if (newMap == null)
+      newMap = new Map<Id, Opportunity_Document__c>();
+    if (listNew == null)
+      listNew = new List<Opportunity_Document__c>();
 
-    if(oldMap == NULL) oldMap = new map<Id,Opportunity_Document__c>();
-    if(newMap == NULL) newMap = new map<Id,Opportunity_Document__c>();
-    if(listNew == NULL) listNew = new list<Opportunity_Document__c>();
-
-    if(boolIsBefore)
-    {
+    if (boolIsBefore) {
       //if(boolIsInsert)
       //{
       //  return;
@@ -59,8 +56,7 @@ global with sharing class OpportunityDocument {
       //{
       //  return;
       //}
-    }
-    else //i.e. trigger.isAfter
+    } else //i.e. trigger.isAfter
     {
       //if(boolIsInsert)
       //{
@@ -70,22 +66,17 @@ global with sharing class OpportunityDocument {
       //{
       //  return;
       //}
-      if(boolIsDelete)
-      {
+      if (boolIsDelete) {
         Set<Id> docIds = new Set<Id>();
-        for( Opportunity_Document__c od : oldMap.values() )
-        {
+        for (Opportunity_Document__c od : oldMap.values()) {
           docIds.add(od.Document_Id__c);
         }
-        if( !docIds.isEmpty() )
-        {
+        if (!docIds.isEmpty()) {
           List<Document> docs = [SELECT Id FROM Document WHERE Id IN :docIds];
           delete docs;
         }
         return;
       }
     }
-
-
-  }// /triggerHandler
+  } // /triggerHandler
 }

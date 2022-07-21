@@ -2,11 +2,8 @@
  * Created by dave on 2021-05-30.
  */
 
-public virtual class DealerOrderLine_Selector extends Application_Selector
-{
-
-  private final List<String> defaultFields = new List<String>
-  {
+public virtual class DealerOrderLine_Selector extends Application_Selector {
+  private final List<String> defaultFields = new List<String>{
     'Id',
     'ERP_Order__c',
     'ERP_Order__r.Reserved_For_Customer_Account__c',
@@ -18,16 +15,12 @@ public virtual class DealerOrderLine_Selector extends Application_Selector
     'Order_Group_Id__c'
   };
 
-  public DealerOrderLine_Selector()
-  {
+  public DealerOrderLine_Selector() {
     this.sObjectName = 'Dealer_Order_Line__c';
     this.fields = defaultFields;
   }
 
-  public static List<Dealer_Order_Line__c> allBYDealerOrder( Set<Id> dealerOrderIds )
-  {
-    return new DealerOrderLine_Selector()
-      .addWhereIdInField( dealerOrderIds, 'Dealer_Order__c' )
-      .query();
+  public static List<Dealer_Order_Line__c> allBYDealerOrder(Set<Id> dealerOrderIds) {
+    return new DealerOrderLine_Selector().addWhereIdInField(dealerOrderIds, 'Dealer_Order__c').query();
   }
 }

@@ -7,20 +7,18 @@
 
 ---------------------------------------------------------------------------- */
 
-global with sharing class AddPDFtoRecord{
-
+global with sharing class AddPDFtoRecord {
   global static ContentDocumentLink[] doPost(list<String> accountIdList, String documentName, String recType) {
-
     System.debug('++++++++++++++++ AddPDFtoRecord.doPost ++++++++++++++++');
 
     Map<String, ContentVersion> docAcctMap = new Map<String, ContentVersion>();
     Id rtId = Schema.SObjectType.ContentVersion.getRecordTypeInfosByName().get(recType).getRecordTypeId();
 
-    for (String accId: accountIdList) {
+    for (String accId : accountIdList) {
       ContentVersion doc = new ContentVersion();
       PageReference pr = new PageReference('/apex/' + documentName + '?Account=' + accId);
       Blob body;
-      if ( !test.isRunningTest() ) {
+      if (!test.isRunningTest()) {
         body = pr.getContent();
       } else {
         body = blob.valueOf('TEST');
@@ -38,12 +36,16 @@ global with sharing class AddPDFtoRecord{
     for (ContentVersion doc : docAcctMap.values()) {
       docIds.add(doc.Id);
     }
-    
+
     ContentDocumentLink[] links = new List<ContentDocumentLink>();
 
     Map<Id, ContentVersion> cvMap = new Map<Id, ContentVersion>();
 
-    for (ContentVersion v : [SELECT Id, ContentDocumentId, ExternalDataSourceId, Title FROM ContentVersion WHERE Id IN :docIds] ) {
+    for (ContentVersion v : [
+      SELECT Id, ContentDocumentId, ExternalDataSourceId, Title
+      FROM ContentVersion
+      WHERE Id IN :docIds
+    ]) {
       cvMap.put(v.Id, v);
     }
 
@@ -53,7 +55,7 @@ global with sharing class AddPDFtoRecord{
 
     for (Id key : docAcctMap.keySet()) {
       ContentVersion doc = docAcctMap.get(key);
-      if ( docAcctMap.values().size() > 0) {
+      if (docAcctMap.values().size() > 0) {
         ContentDocumentLink link = new ContentDocumentLink();
         link.ContentDocumentId = cvMap.get(doc.Id).ContentDocumentId;
         link.LinkedEntityId = key;

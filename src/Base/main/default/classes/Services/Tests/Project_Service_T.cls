@@ -308,7 +308,10 @@ private class Project_Service_T {
         AcctSeed__Account__c,
         Serial_Number__c,
         (SELECT Id, Correction_dh__c FROM AcctSeed__Project_Tasks__r),
-        (SELECT Id, AcctSeedERP__Product__c, GMBLASERP__Unit_Price__c, AcctSeedERP__Quantity_Per_Unit__c FROM AcctSeedERP__Project_Materials__r)
+        (
+          SELECT Id, AcctSeedERP__Product__c, GMBLASERP__Unit_Price__c, AcctSeedERP__Quantity_Per_Unit__c
+          FROM AcctSeedERP__Project_Materials__r
+        )
       FROM AcctSeed__Project__c
       WHERE Id != :retailBoatSaleId AND AcctSeed__Account__c = :boatSale.AcctSeed__Account__c
     ];
@@ -319,7 +322,9 @@ private class Project_Service_T {
     System.assertEquals(boatSale.Boat_Specialist__c, result[0].OwnerId);
     System.assertEquals(boatSale.Serial_Number__c, result[0].Serial_Number__c);
     System.assertEquals(1, result[0].AcctSeed__Project_Tasks__r.size());
-    System.assert(result[0].AcctSeed__Project_Tasks__r[0].Correction_dh__c.contains(boatSale.AcctSeedERP__Work_Order_Number__c));
+    System.assert(
+      result[0].AcctSeed__Project_Tasks__r[0].Correction_dh__c.contains(boatSale.AcctSeedERP__Work_Order_Number__c)
+    );
     System.assertEquals(1, result[0].AcctSeedERP__Project_Materials__r.size());
     System.assertEquals(
       Application_Constants.getInstance().utilityProducts.getFlexibleAccessoriesCredit(),

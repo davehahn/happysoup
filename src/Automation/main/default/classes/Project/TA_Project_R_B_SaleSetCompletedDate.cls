@@ -29,7 +29,7 @@ public without sharing class TA_Project_R_B_SaleSetCompletedDate implements Trig
     return '';
   }
 
-  public static String getBeforeTriggeringState(){
+  public static String getBeforeTriggeringState() {
     for (String stageName : retailBoatSalesStageValueMap.keySet()) {
       if (retailBoatSalesStageValueMap.get(stageName) == (STAGE_VALUE_TARGET - 1)) {
         return stageName;
@@ -38,7 +38,7 @@ public without sharing class TA_Project_R_B_SaleSetCompletedDate implements Trig
     return '';
   }
 
-  public static String getAfterTriggeringState(){
+  public static String getAfterTriggeringState() {
     for (String stageName : retailBoatSalesStageValueMap.keySet()) {
       if (retailBoatSalesStageValueMap.get(stageName) == (STAGE_VALUE_TARGET + 1)) {
         return stageName;
@@ -59,7 +59,7 @@ public without sharing class TA_Project_R_B_SaleSetCompletedDate implements Trig
         System.debug('newStageValue ' + newStageValue);
         if (oldStageValue == newStageValue)
           continue;
-        System.debug('continue' );
+        System.debug('continue');
         if (oldStageValue < STAGE_VALUE_TARGET && newStageValue >= STAGE_VALUE_TARGET) {
           erp.Completed_Date__c = Datetime.now();
         }

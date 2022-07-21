@@ -3,14 +3,12 @@
  */
 
 @IsTest
-private class TA_ActivityMetric_LeadFirstActivity_T
-{
-
+private class TA_ActivityMetric_LeadFirstActivity_T {
   static Lead theLead;
   static DateTime timeStamp;
 
   private static void init() {
-    theLead= Factory_Lead.buildLead( true );
+    theLead = Factory_Lead.buildLead(true);
     TriggerBase.bypass('Lead');
     insert theLead;
     TriggerBase.clearBypass('Lead');
@@ -18,7 +16,7 @@ private class TA_ActivityMetric_LeadFirstActivity_T
   }
 
   @IsTest
-  static void afterInsert(){
+  static void afterInsert() {
     init();
 
     ActivityMetric am = new ActivityMetric(
@@ -30,18 +28,15 @@ private class TA_ActivityMetric_LeadFirstActivity_T
     insert am;
     Test.stopTest();
 
-    theLead = [SELECT Id, First_Activity_Date__c FROM Lead WHERE Id = : theLead.Id];
-    System.assertEquals( timeStamp, theLEad.First_Activity_Date__c );
-
+    theLead = [SELECT Id, First_Activity_Date__c FROM Lead WHERE Id = :theLead.Id];
+    System.assertEquals(timeStamp, theLEad.First_Activity_Date__c);
   }
 
   @IsTest
-  static void afterUpdate(){
+  static void afterUpdate() {
     init();
 
-    ActivityMetric am = new ActivityMetric(
-      BaseId = theLead.Id
-    );
+    ActivityMetric am = new ActivityMetric(BaseId = theLead.Id);
     TriggerBase.bypass('ActivityMetric');
     insert am;
     TriggerBase.clearBypass('ActivityMetric');
@@ -52,9 +47,7 @@ private class TA_ActivityMetric_LeadFirstActivity_T
     update am;
     Test.stopTest();
 
-    theLead = [SELECT Id, First_Activity_Date__c FROM Lead WHERE Id = : theLead.Id];
-    System.assertEquals( timeStamp, theLEad.First_Activity_Date__c );
-
+    theLead = [SELECT Id, First_Activity_Date__c FROM Lead WHERE Id = :theLead.Id];
+    System.assertEquals(timeStamp, theLEad.First_Activity_Date__c);
   }
-
 }

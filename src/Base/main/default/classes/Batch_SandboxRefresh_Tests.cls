@@ -4,9 +4,7 @@ private class Batch_SandboxRefresh_Tests {
   static void Products_Test() {
     Product2[] parts = new List<Product2>();
     for (Integer i = 0; i < 200; i++) {
-      parts.add(
-        Factory_Product.buildNonSerializedProduct('Part', 'Hardware')
-      );
+      parts.add(Factory_Product.buildNonSerializedProduct('Part', 'Hardware'));
     }
     insert parts;
 
@@ -61,21 +59,13 @@ private class Batch_SandboxRefresh_Tests {
     Database.executeBatch(new Batch_SandboxRefresh_Pricebooks());
     Test.stopTest();
 
-    Pricebook2[] pricebooks = [
-      SELECT Id
-      FROM Pricebook2
-      WHERE Dump_Id__c = NULL
-    ];
+    Pricebook2[] pricebooks = [SELECT Id FROM Pricebook2 WHERE Dump_Id__c = NULL];
     System.assertEquals(0, pricebooks.size());
   }
 
   @isTest
   static void createPricebookEntries_Test() {
-    Product2[] parts = Factory_Product.buildNonSerializedProducts(
-      'Part',
-      'Hardware',
-      20
-    );
+    Product2[] parts = Factory_Product.buildNonSerializedProducts('Part', 'Hardware', 20);
     insert parts;
     Factory_PricebookEntry.createStandardEntries(parts, 10.00);
 
@@ -83,11 +73,7 @@ private class Batch_SandboxRefresh_Tests {
     Database.executeBatch(new Batch_SandboxRefresh_PricebookEntries());
     Test.stopTest();
 
-    PricebookEntry[] pbes = [
-      SELECT Id
-      FROM PricebookEntry
-      WHERE Dump_Id__c = NULL
-    ];
+    PricebookEntry[] pbes = [SELECT Id FROM PricebookEntry WHERE Dump_Id__c = NULL];
     System.assertEquals(0, pbes.size());
   }
 }

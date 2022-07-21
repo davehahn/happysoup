@@ -59,7 +59,7 @@ private class TA_Case_PartnerWarrantyDefaults_T {
   static void automatedUser_beforeInsert() {
     init();
     User auto = [SELECT Id, Name, Alias FROM User WHERE Name = 'Automated Process'];
-    System.runAs(auto){
+    System.runAs(auto) {
       List<Case> newList = new List<Case>{ c };
 
       Test.startTest();

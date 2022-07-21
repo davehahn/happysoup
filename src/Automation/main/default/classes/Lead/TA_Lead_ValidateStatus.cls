@@ -17,7 +17,7 @@ public without sharing class TA_Lead_ValidateStatus implements TriggerAction.Bef
         l.addError('Status', 'A Lead owned by a Queue can only have a Status of \"' + Lead_Service.NEW_STATUS + '\"');
       }
       if (LGND_Utilities.sObjectNameFromId(l.OwnerId) == 'User' && l.Status == Lead_Service.NEW_STATUS) {
-        l.addError('Status','Only Leads owned by a Queue can have a Status of \"' + Lead_Service.NEW_STATUS + '\"');
+        l.addError('Status', 'Only Leads owned by a Queue can have a Status of \"' + Lead_Service.NEW_STATUS + '\"');
       }
     }
   }

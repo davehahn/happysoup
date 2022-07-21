@@ -48,15 +48,10 @@ private class TA_Case_ValidateStatusChange_T {
   }
 
   @IsTest
-  static void validateWarrantyChangeHasAnActualOwner_error(){
+  static void validateWarrantyChangeHasAnActualOwner_error() {
     init();
     //Id cUser = UserInfo.getUserId();
-    Id que = [
-      SELECT Id
-      FROM Group
-      WHERE Type = 'Queue' AND DeveloperName = 'Warranty_Cases'
-      LIMIT 1
-    ].Id;
+    Id que = [SELECT Id FROM Group WHERE Type = 'Queue' AND DeveloperName = 'Warranty_Cases' LIMIT 1].Id;
     c.OwnerId = que;
 
     TriggerBase.bypass('Case');
@@ -75,27 +70,19 @@ private class TA_Case_ValidateStatusChange_T {
     Test.stopTest();
 
     System.assert(error != null);
-    System.assert(
-      error.contains('Status change is not allowed until the Case is Owned by a Person')
-    );
+    System.assert(error.contains('Status change is not allowed until the Case is Owned by a Person'));
   }
 
   @IsTest
-  static void validateWarrantyChangeHasAnActualOwner_noError(){
+  static void validateWarrantyChangeHasAnActualOwner_noError() {
     init();
     Id cUser = UserInfo.getUserId();
-    Id que = [
-      SELECT Id
-      FROM Group
-      WHERE Type = 'Queue' AND DeveloperName = 'Warranty_Cases'
-      LIMIT 1
-    ].Id;
+    Id que = [SELECT Id FROM Group WHERE Type = 'Queue' AND DeveloperName = 'Warranty_Cases' LIMIT 1].Id;
     c.OwnerId = que;
 
     TriggerBase.bypass('Case');
     insert c;
     TriggerBase.clearBypass('Case');
-
 
     c.OwnerId = cUser;
     c.Status = 'Approved';

@@ -4,14 +4,14 @@
 
 public without sharing class TA_CommLI2_CalculateValues implements TriggerAction.BeforeInsert, TriggerAction.BeforeUpdate {
   public void beforeInsert(List<CommissionLineItem2__c> newList) {
-    doCalculation( newList );
+    doCalculation(newList);
   }
 
-  public void beforeUpdate( List<CommissionLineItem2__c> newList, List<CommissionLineItem2__c> oldList ){
-    doCalculation( newList );
+  public void beforeUpdate(List<CommissionLineItem2__c> newList, List<CommissionLineItem2__c> oldList) {
+    doCalculation(newList);
   }
 
-  private void doCalculation( List<CommissionLineItem2__c> newList ){
+  private void doCalculation(List<CommissionLineItem2__c> newList) {
     CommissionLineItem2_Service.RateCostCalculator rateCalculator = new CommissionLineItem2_Service.RateCostCalculator(
       newList
     );

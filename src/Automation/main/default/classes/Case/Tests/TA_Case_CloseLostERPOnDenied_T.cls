@@ -1,12 +1,9 @@
-
 /**
  * Created by dave on 2022-01-07.
  */
 
 @IsTest
-private class TA_Case_CloseLostERPOnDenied_T
-{
-
+private class TA_Case_CloseLostERPOnDenied_T {
   private static List<Case> cases;
   private static List<Case> oldList;
   private static Account dealer;

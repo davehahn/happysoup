@@ -39,7 +39,6 @@ private class TA_Case_CreateWarrantyPayableERPs_T {
   static void Trigger_BeforeInsert() {
     init();
     System.runAs(partner) {
-
       Test.startTest();
       insert c;
       Test.stopTest();

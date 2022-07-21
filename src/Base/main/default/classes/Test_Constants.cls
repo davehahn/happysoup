@@ -1,30 +1,30 @@
 @isTest
 public class Test_Constants {
-
   private static Legend_Settings__c legendSettings {
-    get{
-      if( legendSettings == null ){
+    get {
+      if (legendSettings == null) {
         legendSettings = Legend_Settings__c.getOrgDefaults();
       }
       return legendSettings;
     }
-    set {}
+    set {
+    }
   }
 
   private static Utility_Account__c utilityAccounts {
     get {
-      if( utilityAccounts ==  null ){
+      if (utilityAccounts == null) {
         utilityAccounts = Utility_Account__c.getOrgDefaults();
       }
       return utilityAccounts;
     }
-    set {}
+    set {
+    }
   }
 
   public static Id idPdfFormat {
     get {
-      if( idPdfFormat == null )
-      {
+      if (idPdfFormat == null) {
         idPdfFormat = [SELECT Id FROM AcctSeed__Billing_Format__c LIMIT 1].Id;
       }
       return idPdfFormat;
@@ -33,19 +33,19 @@ public class Test_Constants {
   }
 
   public static AcctSeedERP__Warehouse__c warehouse {
-    get{
-      if( warehouse == null ){
+    get {
+      if (warehouse == null) {
         warehouse = [SELECT Id, Name FROM AcctSeedERP__Warehouse__c LIMIT 1];
       }
       return warehouse;
     }
-    set {}
+    set {
+    }
   }
 
   public static Id idWarehouse {
     get {
-      if( idWarehouse == null )
-      {
+      if (idWarehouse == null) {
         idWarehouse = warehouse.Id;
       }
       return idWarehouse;
@@ -55,8 +55,7 @@ public class Test_Constants {
 
   public static Id idLedger {
     get {
-      if( idLedger == null )
-      {
+      if (idLedger == null) {
         idLedger = [SELECT Id FROM AcctSeed__Ledger__c LIMIT 1].Id;
       }
       return idLedger;
@@ -66,8 +65,7 @@ public class Test_Constants {
 
   public static Id idPeriod {
     get {
-      if( idPeriod == null )
-      {
+      if (idPeriod == null) {
         idPeriod = [SELECT Id FROM AcctSeed__Accounting_Period__c LIMIT 1].Id;
       }
       return idPeriod;
@@ -77,16 +75,14 @@ public class Test_Constants {
 
   public static Id idExpenseGLAccount {
     get {
-      if( idExpenseGLAccount == null )
-      {
+      if (idExpenseGLAccount == null) {
         idExpenseGLAccount = [
-          SELECT
-            Id
+          SELECT Id
           FROM AcctSeed__GL_Account__c
-          WHERE AcctSeed__Active__c = TRUE
-          AND AcctSeed__Type__c = 'Expense'
+          WHERE AcctSeed__Active__c = TRUE AND AcctSeed__Type__c = 'Expense'
           LIMIT 1
-        ].Id;
+        ]
+        .Id;
       }
       return idExpenseGLAccount;
     }
@@ -95,14 +91,14 @@ public class Test_Constants {
 
   public static Id idGlV1 {
     get {
-      if( idGlV1 == null ){
+      if (idGlV1 == null) {
         idGlV1 = [
-          SELECT
-            Id
+          SELECT Id
           FROM AcctSeed__Accounting_Variable__c
-          WHERE AcctSeed__Type__c = 'GL Account Variable 1'
-          AND AcctSeed__Active__c = true
-          LIMIT 1].Id;
+          WHERE AcctSeed__Type__c = 'GL Account Variable 1' AND AcctSeed__Active__c = TRUE
+          LIMIT 1
+        ]
+        .Id;
       }
       return idGLV1;
     }
@@ -111,24 +107,23 @@ public class Test_Constants {
 
   public static Id idGlV2 {
     get {
-      if( idGlV2 == null ){
+      if (idGlV2 == null) {
         idGlV2 = [
-          SELECT
-            Id
+          SELECT Id
           FROM AcctSeed__Accounting_Variable__c
-          WHERE AcctSeed__Type__c = 'GL Account Variable 2'
-          AND AcctSeed__Active__c = true
-          LIMIT 1].Id;
+          WHERE AcctSeed__Type__c = 'GL Account Variable 2' AND AcctSeed__Active__c = TRUE
+          LIMIT 1
+        ]
+        .Id;
       }
       return idGLV2;
     }
     set;
   }
 
-  public static Id idRetailPricebook{
+  public static Id idRetailPricebook {
     get {
-      if( idRetailPricebook == null )
-      {
+      if (idRetailPricebook == null) {
         idRetailPricebook = legendSettings.Default_Retail_Pricebook__c;
       }
       return idRetailPricebook;
@@ -136,10 +131,9 @@ public class Test_Constants {
     set;
   }
 
-  public static Id idFactoryPricebook{
+  public static Id idFactoryPricebook {
     get {
-      if( idFactoryPricebook == null )
-      {
+      if (idFactoryPricebook == null) {
         idFactoryPricebook = legendSettings.Default_Factory_Pricebook__c;
       }
       return idFactoryPricebook;
@@ -149,12 +143,11 @@ public class Test_Constants {
 
   public static Id idMercuryAccount {
     get {
-      if( idMercuryAccount == null ){
+      if (idMercuryAccount == null) {
         idMercuryAccount = utilityAccounts.Mercury__c;
       }
       return idMercuryAccount;
     }
     set;
   }
-
 }

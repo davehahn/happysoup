@@ -21,11 +21,7 @@ private class ContentVersion_TriggerHandler_T {
 
     cv = [SELECT Id, SharingPrivacy FROM ContentVersion WHERE Id = :cv.Id];
 
-    System.assertEquals(
-      'N',
-      cv.SharingPrivacy,
-      'Should be visible to Everyone'
-    );
+    System.assertEquals('N', cv.SharingPrivacy, 'Should be visible to Everyone');
   }
 
   @IsTest
@@ -44,16 +40,11 @@ private class ContentVersion_TriggerHandler_T {
 
     cv = [SELECT Id, SharingPrivacy FROM ContentVersion WHERE Id = :cv.Id];
 
-    System.assertEquals(
-      'P',
-      cv.SharingPrivacy,
-      'Should be Private'
-    );
+    System.assertEquals('P', cv.SharingPrivacy, 'Should be Private');
   }
 
   @IsTest
   static void changeVisibility() {
-
     ContentVersion cv = new ContentVersion(
       Title = FILE_NAME,
       PathOnClient = '/' + FILE_NAME + '.jpg',
@@ -62,11 +53,7 @@ private class ContentVersion_TriggerHandler_T {
     );
     insert cv;
     cv = [SELECT Id, SharingPrivacy FROM ContentVersion WHERE Id = :cv.Id];
-    System.assertEquals(
-      'N',
-      cv.SharingPrivacy,
-      'Should be visible to Everyone'
-    );
+    System.assertEquals('N', cv.SharingPrivacy, 'Should be visible to Everyone');
 
     cv.Visibility__c = 'Private';
 
@@ -76,10 +63,6 @@ private class ContentVersion_TriggerHandler_T {
 
     cv = [SELECT Id, SharingPrivacy FROM ContentVersion WHERE Id = :cv.Id];
 
-    System.assertEquals(
-      'P',
-      cv.SharingPrivacy,
-      'Should be Private'
-    );
+    System.assertEquals('P', cv.SharingPrivacy, 'Should be Private');
   }
 }

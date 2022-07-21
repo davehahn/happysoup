@@ -3,18 +3,10 @@
  */
 
 @IsTest
-public class Factory_OperatingHours
-{
-
-
-  public static OperatingHours insertBase()
-  {
-    OperatingHours record = new OperatingHours(
-      Name = 'Base Calendar',
-      TimeZone = 'America/New_York'
-    );
+public class Factory_OperatingHours {
+  public static OperatingHours insertBase() {
+    OperatingHours record = new OperatingHours(Name = 'Base Calendar', TimeZone = 'America/New_York');
     insert record;
     return record;
   }
-
 }

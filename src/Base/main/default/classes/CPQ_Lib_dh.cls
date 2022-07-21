@@ -92,18 +92,14 @@ public with sharing class CPQ_Lib_dh {
 
     public CPQ_Product(SObject lineItem) {
       this.originalLineItem = lineItem;
-      try
-      {
+      try {
         this.id = String.valueOf(lineItem.getSObject('PricebookEntry').get('Product2Id'));
         this.prod = findProduct();
         construct();
-      }
-      catch( Exception e) {
+      } catch (Exception e) {
         throw new CPQ.CPQ_Exception('This does not appear to be an OpportunityLineItem or a QuoteLineItem');
       }
-
     }
-
 
     private void construct() {
       setAttrs();

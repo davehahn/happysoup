@@ -2,12 +2,8 @@
  * Created by dave on 2021-05-07.
  */
 
-public virtual class PartnerBookingOrder_Selector extends Application_Selector
-{
-
-
-  private final List<String> defaultFields = new List<String>
-  {
+public virtual class PartnerBookingOrder_Selector extends Application_Selector {
+  private final List<String> defaultFields = new List<String>{
     'Id',
     'Name',
     'Dealer_Order__c',
@@ -17,17 +13,15 @@ public virtual class PartnerBookingOrder_Selector extends Application_Selector
     'Uniquifier__c'
   };
 
-  public PartnerBookingOrder_Selector()
-  {
+  public PartnerBookingOrder_Selector() {
     this.sObjectName = 'Partner_Booking_Order__c';
     this.fields = defaultFields;
   }
 
-  public static Partner_Booking_Order__c getUnique( String uniquifier )
-  {
+  public static Partner_Booking_Order__c getUnique(String uniquifier) {
     List<SObject> results = new PartnerBookingOrder_Selector()
-      .addWhere( 'Uniquifier__c = \'' + uniquifier + '\'')
+      .addWhere('Uniquifier__c = \'' + uniquifier + '\'')
       .query();
-    return (Partner_Booking_Order__c)results[0];
+    return (Partner_Booking_Order__c) results[0];
   }
 }

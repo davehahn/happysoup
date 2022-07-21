@@ -22,11 +22,10 @@
  *  OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
  *  OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-**/
+ **/
 
 @IsTest
 private class CustomPermissionsReader_Test {
-
   /**
    * This will need to be modified to reflect a Custom Permission in the org,
    *   since DML in test code cannot create them :-(
@@ -34,7 +33,7 @@ private class CustomPermissionsReader_Test {
   private static final String TEST_CUSTOM_PERMISSION;
   private static final User testUser;
   static {
-    CustomPermission[] cps = [SELECT DeveloperName FROM CustomPermission WHERE NamespacePrefix = null];
+    CustomPermission[] cps = [SELECT DeveloperName FROM CustomPermission WHERE NamespacePrefix = NULL];
     TEST_CUSTOM_PERMISSION = cps[0].DeveloperName;
 
     testUser = User_TestFactory.newUser('testFirst', 'testLast', 'Standard User');
@@ -43,8 +42,7 @@ private class CustomPermissionsReader_Test {
 
   @IsTest
   private static void testCustomPermissionAssigned() {
-    System.runAs( testUser )
-    {
+    System.runAs(testUser) {
       // Create PermissionSet with Custom Permission and asisgn to test user
       PermissionSet ps = new PermissionSet();
       ps.Name = 'CustomPermissionsReaderTest';
@@ -52,7 +50,7 @@ private class CustomPermissionsReader_Test {
       insert ps;
       SetupEntityAccess sea = new SetupEntityAccess();
       sea.ParentId = ps.Id;
-      sea.SetupEntityId = [select Id from CustomPermission where DeveloperName = :TEST_CUSTOM_PERMISSION][0].Id;
+      sea.SetupEntityId = [SELECT Id FROM CustomPermission WHERE DeveloperName = :TEST_CUSTOM_PERMISSION][0].Id;
       insert sea;
       PermissionSetAssignment psa = new PermissionSetAssignment();
       psa.AssigneeId = testUser.Id;
@@ -70,17 +68,17 @@ private class CustomPermissionsReader_Test {
 
   @IsTest
   private static void testCustomPermissionNotAssigned() {
-    System.runAs( testUser )
-    {
+    System.runAs(testUser) {
       // Assert the CustomPermissionsReader confirms custom permission not assigned
-      System.assertEquals(false, new CustomPermissionsReader(Account.SObjectType).hasPermission(TEST_CUSTOM_PERMISSION));
+      System.assertEquals(
+        false,
+        new CustomPermissionsReader(Account.SObjectType).hasPermission(TEST_CUSTOM_PERMISSION)
+      );
     }
   }
 
-
   @IsTest
   private static void testCustomPermissionNotValid() {
-
     try {
       // Assert the CustomPermissionsReader throws an exception for an invalid custom permission
       System.assertEquals(false, new CustomPermissionsReader(Account.SObjectType).hasPermission('NotValid'));
@@ -92,8 +90,7 @@ private class CustomPermissionsReader_Test {
 
   @IsTest
   private static void testCustomPermisionDefaultConstructor() {
-    System.runAs( testUser )
-    {
+    System.runAs(testUser) {
       // Assert the CustomPermissionsReader confirms custom permission not assigned
       System.assertEquals(false, new CustomPermissionsReader().hasPermission(TEST_CUSTOM_PERMISSION));
     }

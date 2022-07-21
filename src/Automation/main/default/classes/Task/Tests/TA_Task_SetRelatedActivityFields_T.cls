@@ -3,13 +3,9 @@
  */
 
 @IsTest
-private class TA_Task_SetRelatedActivityFields_T
-{
-
+private class TA_Task_SetRelatedActivityFields_T {
   @IsTest
-  static void afterInsert()
-  {
-
+  static void afterInsert() {
     Case c = Factory_Case.insertCustomerCommunityCase();
     Task t = new Task(
       Description = 'Unit Test Email',
@@ -28,7 +24,7 @@ private class TA_Task_SetRelatedActivityFields_T
     new TA_Task_SetRelatedActivityFields().afterInsert(newList);
     Test.stopTest();
 
-    c = [SELECT Id, Last_Activity_Date__c FROM Case WHERE Id = : c.Id];
-    System.assertEquals( newList[0].CreatedDate, c.Last_Activity_Date__c  );
+    c = [SELECT Id, Last_Activity_Date__c FROM Case WHERE Id = :c.Id];
+    System.assertEquals(newList[0].CreatedDate, c.Last_Activity_Date__c);
   }
 }

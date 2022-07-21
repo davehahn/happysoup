@@ -2,9 +2,7 @@
  * Created by dave on 2021-06-17.
  */
 
-public class Queueable_Exception_Logger
-{
-
+public class Queueable_Exception_Logger {
   public String moduleName;
   public String stackTrace;
   public String className;
@@ -16,84 +14,56 @@ public class Queueable_Exception_Logger
   public String initialInputType;
   public String initialInputJSON;
 
-  public void log(
-    Exception ex
-  )
-  {
-    try
-    {
-      readException( ex );
+  public void log(Exception ex) {
+    try {
+      readException(ex);
       writeObject();
-
-    }
-    catch( Exception e )
-    {
-//      new Queueable_Exception_Logger()
-//        .setModule('Queueable_Exception_Logger')
-//        .log( e );
-      System.debug( e.getMessage() );
+    } catch (Exception e) {
+      //      new Queueable_Exception_Logger()
+      //        .setModule('Queueable_Exception_Logger')
+      //        .log( e );
+      System.debug(e.getMessage());
     }
   }
 
-  public Queueable_Exception_Logger setModule(
-    String name
-  )
-  {
+  public Queueable_Exception_Logger setModule(String name) {
     this.moduleName = name;
     return this;
   }
 
-  public Queueable_Exception_Logger setInitialInputType(
-    String type
-  )
-  {
+  public Queueable_Exception_Logger setInitialInputType(String type) {
     this.initialInputType = type;
     return this;
   }
 
-  public Queueable_Exception_Logger setInitialInput(
-    Object input
-  )
-  {
-    this.initialInputJSON = JSON.serialize( input );
+  public Queueable_Exception_Logger setInitialInput(Object input) {
+    this.initialInputJSON = JSON.serialize(input);
     return this;
   }
 
-  private void readException(
-    Exception ex
-  )
-  {
-    try
-    {
-      String stackTraceString = ex.getStackTraceString()
-        .substringBefore('\n');
+  private void readException(Exception ex) {
+    try {
+      String stackTraceString = ex.getStackTraceString().substringBefore('\n');
 
-      this.className = stackTraceString.substringAfter('.')
-        .substringBefore('.');
+      this.className = stackTraceString.substringAfter('.').substringBefore('.');
 
-      this.methodName = stackTraceString.substringBefore(':')
-        .substringAfter(className)
-        .substringAfter('.');
+      this.methodName = stackTraceString.substringBefore(':').substringAfter(className).substringAfter('.');
 
       this.lineNumber = ex.getLineNumber();
       this.stackTrace = ex.getStackTraceString();
       this.type = ex.getTypeName();
-      this.cause = String.valueOf( ex.getCause() );
+      this.cause = String.valueOf(ex.getCause());
       this.message = ex.getMessage();
-    }
-    catch( Exception e )
-    {
-//      new Queueable_Exception_Logger()
-//        .setModule('Queueable_Exception_Logger')
-//        .log( e );
-      System.debug( e.getMessage() );
+    } catch (Exception e) {
+      //      new Queueable_Exception_Logger()
+      //        .setModule('Queueable_Exception_Logger')
+      //        .log( e );
+      System.debug(e.getMessage());
     }
   }
 
-  private void writeObject()
-  {
-    try
-    {
+  private void writeObject() {
+    try {
       insert new Queueable_Exception_Log__c(
         Cause__c = this.cause,
         Class_Name__c = this.className,
@@ -106,14 +76,11 @@ public class Queueable_Exception_Logger
         Stack_Trace__c = this.stackTrace,
         Type__c = this.type
       );
-    }
-    catch( Exception e )
-    {
-//      new Queueable_Exception_Logger()
-//        .setModule('Queueable_Exception_Logger')
-//        .log( e );
-      System.debug( e.getMessage() );
+    } catch (Exception e) {
+      //      new Queueable_Exception_Logger()
+      //        .setModule('Queueable_Exception_Logger')
+      //        .log( e );
+      System.debug(e.getMessage());
     }
   }
-
 }

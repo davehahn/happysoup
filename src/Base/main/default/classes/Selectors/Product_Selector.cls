@@ -2,9 +2,7 @@
  * Created by dave on 2020-04-23.
  */
 
-public with sharing class Product_Selector extends Application_Selector
-{
-
+public with sharing class Product_Selector extends Application_Selector {
   private static List<String> boatFields = new List<String>{
     'Standard_Motor__c',
     'Standard_Trailer__c',
@@ -29,8 +27,7 @@ public with sharing class Product_Selector extends Application_Selector
     'Series__c'
   };
 
-  public Product_Selector()
-  {
+  public Product_Selector() {
     this.sObjectName = 'Product2';
     this.fields = new List<String>{
       'Id',
@@ -47,58 +44,46 @@ public with sharing class Product_Selector extends Application_Selector
     };
   }
 
-  public static Map<Id, Product2> allByIdAsMap( Set<Id> ids )
-  {
+  public static Map<Id, Product2> allByIdAsMap(Set<Id> ids) {
     Product_Selector selector = new Product_Selector();
-    selector.addWhereIdIn( ids );
-    return new Map<Id, Product2>( (List<Product2>)selector.query() );
+    selector.addWhereIdIn(ids);
+    return new Map<Id, Product2>((List<Product2>) selector.query());
   }
 
-  public static List<Product2> allBoatsAvailableForOnlineSale()
-  {
+  public static List<Product2> allBoatsAvailableForOnlineSale() {
     Id boatRtId = LGND_Constants.productRtId_Boat;
     Product_Selector selector = new Product_Selector();
-    selector.addWhere('RecordTypeId = \'' + boatRtId + '\'')
-      .addWhere('Available_Online__c = true');
-    return (List<Product2>)selector.query();
+    selector.addWhere('RecordTypeId = \'' + boatRtId + '\'').addWhere('Available_Online__c = true');
+    return (List<Product2>) selector.query();
   }
 
-  public static List<Product2> allWithFullDetailsById( Set<Id> productIds )
-  {
-    return new Product_Selector()
-      .addWhereIdIn( productIds )
-      .query();
+  public static List<Product2> allWithFullDetailsById(Set<Id> productIds) {
+    return new Product_Selector().addWhereIdIn(productIds).query();
   }
 
-  public static Product2 getOnlineBoat( String recordId )
-  {
+  public static Product2 getOnlineBoat(String recordId) {
     Product_Selector selector = new Product_Selector();
-    selector
-      .addFields( boatFields )
-      .addWhere('Id = \'' + recordId + '\'')
-      .addWhere( 'Available_online__c = true', 'AND');
+    selector.addFields(boatFields).addWhere('Id = \'' + recordId + '\'').addWhere('Available_online__c = true', 'AND');
     List<Sobject> results = selector.query();
-    if( results.size() > 0 )
-      return (Product2)results[0];
+    if (results.size() > 0)
+      return (Product2) results[0];
     return null;
   }
 
-  public static List<Product2> allKitsWithKitPartsById( Set<Id> prodIds )
-  {
+  public static List<Product2> allKitsWithKitPartsById(Set<Id> prodIds) {
     return new Product_Selector()
-      .addChildQuery( new ProductPart_Selector(), 'AcctSeed__Product_Parts__r' )
-      .addWhereIdIn( prodIds )
+      .addChildQuery(new ProductPart_Selector(), 'AcctSeed__Product_Parts__r')
+      .addWhereIdIn(prodIds)
       .addWhere('Composite_Type__c = \'Kit\'', 'AND')
       .query();
   }
 
-  public static List<Product2> allBoatsInSeries( Set<String> series )
-  {
+  public static List<Product2> allBoatsInSeries(Set<String> series) {
     Product_Selector selector = new Product_Selector();
     selector
-            .addFields( boatListingFields )
-            .addWhereFieldIn('Series__c', series, null)
-            .addWhere('Available_on_Factory_Store_Sites__c = true', 'AND');
-    return (List<Product2>)selector.query();
+      .addFields(boatListingFields)
+      .addWhereFieldIn('Series__c', series, null)
+      .addWhere('Available_on_Factory_Store_Sites__c = true', 'AND');
+    return (List<Product2>) selector.query();
   }
 }

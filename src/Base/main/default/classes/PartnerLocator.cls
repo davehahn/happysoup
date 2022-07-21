@@ -91,9 +91,7 @@ public without sharing class PartnerLocator {
       this.id = wrapper.id;
       this.value = wrapper.id;
       this.title = wrapper.name + ' ( ' + wrapper.distance_text + ' )';
-      this.icon = wrapper.isFactoryStore
-        ? 'standard:goals'
-        : 'standard:delegated_account';
+      this.icon = wrapper.isFactoryStore ? 'standard:goals' : 'standard:delegated_account';
       this.description = wrapper.description;
       this.distance = wrapper.distance_text;
       this.duration = wrapper.duration_text;
@@ -102,9 +100,7 @@ public without sharing class PartnerLocator {
       this.email = wrapper.email;
       this.website = wrapper.website;
       if (!Test.isRunningTest()) {
-        this.mapIcon = wrapper.isFactoryStore
-          ? standardMapMarker('#57AADF')
-          : standardMapMarker('#06834C');
+        this.mapIcon = wrapper.isFactoryStore ? standardMapMarker('#57AADF') : standardMapMarker('#06834C');
       }
     }
 
@@ -163,12 +159,11 @@ public without sharing class PartnerLocator {
     return processResult(doGoogleCallout());
   }
 
-  private void setDefaultExcludes(){
+  private void setDefaultExcludes() {
     this.excludeAccountIds = new Set<String>();
-    for( Partner_Locator_Excludes__c setting : Partner_Locator_Excludes__c.getAll().values()){
-      this.excludeAccountIds.add( setting.AccountId__c );
+    for (Partner_Locator_Excludes__c setting : Partner_Locator_Excludes__c.getAll().values()) {
+      this.excludeAccountIds.add(setting.AccountId__c);
     }
-
   }
 
   private void setDestinations() {
@@ -188,12 +183,7 @@ public without sharing class PartnerLocator {
 
     for (Account a : this.partners) {
       if (!this.excludeAccountIds.contains(a.Id)) {
-        result.put(
-          String.valueOf(a.BillingLatitude) +
-          ',' +
-          String.valueOf(a.BillingLongitude),
-          new AccountWrapper(a)
-        );
+        result.put(String.valueOf(a.BillingLatitude) + ',' + String.valueOf(a.BillingLongitude), new AccountWrapper(a));
       }
     }
     return result;
@@ -204,39 +194,26 @@ public without sharing class PartnerLocator {
   }
 
   private GoogleAPI.GoogleDestinationsResult doGoogleCallout() {
-    GoogleAPI.DistanceMatrix gDistanceMatrix = new GoogleAPI.DistanceMatrix(
-      this.origin,
-      this.destinations
-    );
+    GoogleAPI.DistanceMatrix gDistanceMatrix = new GoogleAPI.DistanceMatrix(this.origin, this.destinations);
     GoogleAPI.GoogleDestinationsResult gdResult = gDistanceMatrix.execute();
     if (
       gdResult.status != 'OK' ||
       gdResult.origin_addresses.size() == 0 ||
       gdResult.rows[0].elements[0].status == 'NOT_FOUND'
     ) {
-      throw new PartnerLocator_Exception(
-        origin + ' does not appear to be valid'
-      );
+      throw new PartnerLocator_Exception(origin + ' does not appear to be valid');
     }
     return gdResult;
   }
 
-  private SearchResult processResult(
-    GoogleAPI.GoogleDestinationsResult gdResult
-  ) {
+  private SearchResult processResult(GoogleAPI.GoogleDestinationsResult gdResult) {
     SearchResult result = new SearchResult();
     result.origin_address = gdResult.origin_addresses[0];
     for (Integer i = 0; i < this.accountMap.keySet().size(); i++) {
       if (gdResult.rows[0].elements[i].status == 'OK') {
-        accountMap.values()[i].distance = Decimal.valueOf(
-          gdResult.rows[0].elements[i].distance.get('value')
-        );
-        accountMap.values()[i].distance_text = gdResult.rows[0]
-          .elements[i]
-          .distance.get('text');
-        accountMap.values()[i].duration_text = gdResult.rows[0]
-          .elements[i]
-          .duration.get('text');
+        accountMap.values()[i].distance = Decimal.valueOf(gdResult.rows[0].elements[i].distance.get('value'));
+        accountMap.values()[i].distance_text = gdResult.rows[0].elements[i].distance.get('text');
+        accountMap.values()[i].duration_text = gdResult.rows[0].elements[i].duration.get('text');
       }
     }
     List<AccountWrapper> sortedAccounts = accountMap.values();

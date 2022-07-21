@@ -37,16 +37,13 @@ public with sharing class Product2Ext {
   }
 
   public PageReference cancel() {
-    return cloneId == null
-      ? new PageReference('/o1t/o')
-      : new PageReference('/' + cloneId);
+    return cloneId == null ? new PageReference('/o1t/o') : new PageReference('/' + cloneId);
   }
 
   public PageReference saveWithOptions() {
     this.product = (Product2) stdCtrl.getRecord();
     insert this.product;
-    PageReference returnPage = new ApexPages.StandardController(this.product)
-      .view();
+    PageReference returnPage = new ApexPages.StandardController(this.product).view();
     List<Product_Option__c> clonedOptions = cloneInOptions();
     List<Product_Feature_Map__c> clonedFeatures = cloneInFeatures();
     List<Product_Fee_Map__c> clonedFees = cloneInFees();
@@ -97,9 +94,7 @@ public with sharing class Product2Ext {
 
     // if its field validation, this will be added to the messages by default
     if (-1 == (pos = msg.indexOf('FIELD_CUSTOM_VALIDATION_EXCEPTION, '))) {
-      ApexPages.addMessage(
-        new ApexPages.Message(ApexPages.Severity.ERROR, msg)
-      );
+      ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, msg));
     }
   }
 
@@ -137,7 +132,16 @@ public with sharing class Product2Ext {
   private List<Product_Option__c> cloneInOptions() {
     List<Product_Option__c> newOptions = new List<Product_Option__c>();
     List<Product_Option__c> options = [
-      SELECT Id, Standard__c, Maximum__c, From_Product__c, displayOnWeb__c, Available_Online__c, IsBiggestMotor__c, Rank__c, Step__c
+      SELECT
+        Id,
+        Standard__c,
+        Maximum__c,
+        From_Product__c,
+        displayOnWeb__c,
+        Available_Online__c,
+        IsBiggestMotor__c,
+        Rank__c,
+        Step__c
       FROM Product_Option__c
       WHERE To_Product__c = :cloneId
     ];
@@ -177,11 +181,7 @@ public with sharing class Product2Ext {
 
     for (Product_Feature_Map__c pfm : features) {
       newFeatures.add(
-        new Product_Feature_Map__c(
-          Product_Id__c = p.Id,
-          Rank__c = pfm.Rank__c,
-          Feature_Id__c = pfm.Feature_Id__c
-        )
+        new Product_Feature_Map__c(Product_Id__c = p.Id, Rank__c = pfm.Rank__c, Feature_Id__c = pfm.Feature_Id__c)
       );
     }
     return newFeatures;
@@ -198,11 +198,7 @@ public with sharing class Product2Ext {
 
     for (Product_Fee_Map__c fm : fees) {
       newFees.add(
-        new Product_Fee_Map__c(
-          Parent_Product__c = p.Id,
-          Rank__c = fm.Rank__c,
-          Fee_Product__c = fm.Fee_Product__c
-        )
+        new Product_Fee_Map__c(Parent_Product__c = p.Id, Rank__c = fm.Rank__c, Fee_Product__c = fm.Fee_Product__c)
       );
     }
     return newFees;
@@ -227,15 +223,21 @@ public with sharing class Product2Ext {
     return result;
   }
 
-  private List<Boat_Rigging_Checklist_Map__c> cloneInRiggingChecklist(){
+  private List<Boat_Rigging_Checklist_Map__c> cloneInRiggingChecklist() {
     List<Boat_Rigging_Checklist_Map__c> result = new List<Boat_Rigging_Checklist_Map__c>();
-    List<Boat_Rigging_Checklist_Map__c> existing = [ SELECT Id, Checklist_Item__c, Rank__c FROM Boat_Rigging_Checklist_Map__c WHERE Product__c = :this.cloneId ];
-    for( Boat_Rigging_Checklist_Map__c checklistMap : existing ){
-      result.add( new Boat_Rigging_Checklist_Map__c(
-        Product__c = this.product.Id,
-        Checklist_Item__c = checklistMap.Checklist_Item__c,
-        Rank__c = checklistMap.Rank__c
-      ));
+    List<Boat_Rigging_Checklist_Map__c> existing = [
+      SELECT Id, Checklist_Item__c, Rank__c
+      FROM Boat_Rigging_Checklist_Map__c
+      WHERE Product__c = :this.cloneId
+    ];
+    for (Boat_Rigging_Checklist_Map__c checklistMap : existing) {
+      result.add(
+        new Boat_Rigging_Checklist_Map__c(
+          Product__c = this.product.Id,
+          Checklist_Item__c = checklistMap.Checklist_Item__c,
+          Rank__c = checklistMap.Rank__c
+        )
+      );
     }
     return result;
   }

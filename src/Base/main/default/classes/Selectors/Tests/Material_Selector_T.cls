@@ -28,10 +28,7 @@ private class Material_Selector_T {
       LIMIT 1
     ];
     Product2 boat = Factory_Product.createSerializedProduct('Boat', 'Pontoon');
-    GMBLASERP__Serial_Number__c serial = Factory_SerialNumber.insertSerialNumber(
-      boat,
-      'TestSerial1234'
-    );
+    GMBLASERP__Serial_Number__c serial = Factory_SerialNumber.insertSerialNumber(boat, 'TestSerial1234');
     Boolean gcProjectOrig = gcProject.disableTrigger;
     Boolean gcProjectTaskOrig = gcProjectTask.disableTrigger;
     gcProject.disableTrigger = true;
@@ -48,30 +45,15 @@ private class Material_Selector_T {
       WHERE AcctSeed__Project__c = :project.Id
     ];
     List<AcctSeedERP__Material__c> materials = new List<AcctSeedERP__Material__c>();
-    List<Product2> parts = Factory_Product.createNonSerializedProducts(
-      'Part',
-      'Hardware',
-      PARTS_COUNT
-    );
-    materials.addAll(
-      Factory_Material.buildMaterials(project.Id, task.Id, parts)
-    );
+    List<Product2> parts = Factory_Product.createNonSerializedProducts('Part', 'Hardware', PARTS_COUNT);
+    materials.addAll(Factory_Material.buildMaterials(project.Id, task.Id, parts));
     List<Product2> insuranceProductsWithNotRates = Factory_Product.createNonSerializedProducts(
       'Insurance',
       'Critical Illness Coverage',
       INSURANCE_ITEMS_NORATE_COUNT
     );
-    materials.addAll(
-      Factory_Material.buildMaterials(
-        project.Id,
-        task.Id,
-        insuranceProductsWithNotRates
-      )
-    );
-    InsurancePlan__c iPlan = new InsurancePlan__c(
-      Name = 'Insurance Plan One',
-      Profit_Percent__c = 50
-    );
+    materials.addAll(Factory_Material.buildMaterials(project.Id, task.Id, insuranceProductsWithNotRates));
+    InsurancePlan__c iPlan = new InsurancePlan__c(Name = 'Insurance Plan One', Profit_Percent__c = 50);
     insert iPlan;
     List<Product2> insuranceProducts = Factory_Product.createInsuranceProducts(
       'Critical Illness Coverage',
@@ -95,62 +77,51 @@ private class Material_Selector_T {
     gcProjectTask.disableTrigger = gcProjectTaskOrig;
   }
 
-  private static void init(){
-    project = [ SELECT Id FROM AcctSeed__Project__c LIMIT 1];
-    task = [
+  private static void init() {
+    project = [SELECT Id FROM AcctSeed__Project__c LIMIT 1];
+    task = [SELECT Id FROM AcctSeed__Project_Task__c WHERE AcctSeed__Project__c = :project.Id];
+    materials = [
       SELECT Id
-      FROM AcctSeed__Project_Task__c
-      WHERE AcctSeed__Project__c = :project.Id
+      FROM AcctSeedERP__Material__c
+      WHERE AcctSeedERP__Project__c = :project.Id AND AcctSeedERP__Project_Task__c = :task.Id
     ];
-    materials = [SELECT Id FROM AcctSeedERP__Material__c WHERE AcctSeedERP__Project__c = :project.Id AND AcctSeedERP__Project_Task__c = :task.Id ];
     matIds = new Map<Id, AcctSeedERP__Material__c>(materials).keySet();
   }
 
   @IsTest
   static void selectAllByTaskId_Test() {
     init();
-    List<AcctSeedERP__Material__c> result = Material_Selector.selectAllByTaskId(
-      new Set<Id>{ task.Id }
-    );
+    List<AcctSeedERP__Material__c> result = Material_Selector.selectAllByTaskId(new Set<Id>{ task.Id });
     System.assertEquals(materials.size(), result.size());
   }
 
   @IsTest
-  static void allByProjectId_Test(){
+  static void allByProjectId_Test() {
     init();
-    List<AcctSeedERP__Material__c> result= Material_Selector.allByProjectId(
-      project.Id
-    );
+    List<AcctSeedERP__Material__c> result = Material_Selector.allByProjectId(project.Id);
     System.assertEquals(materials.size(), result.size());
   }
 
   @IsTest
-  static void allInsuranceMaterialsByProjectIds_Test(){
+  static void allInsuranceMaterialsByProjectIds_Test() {
     init();
     List<AcctSeedERP__Material__c> result = Material_Selector.allInsuranceMaterialsByProjectIds(
       new Set<Id>{ project.Id }
     );
-    System.assertEquals(
-      INSURANCE_ITEMS_COUNT,
-      result.size()
-    );
+    System.assertEquals(INSURANCE_ITEMS_COUNT, result.size());
   }
 
   @IsTest
-  static void selectAllByIds_Test(){
+  static void selectAllByIds_Test() {
     init();
-    List<AcctSeedERP__Material__c> result = Material_Selector.selectAllByIds(
-      matIds
-    );
+    List<AcctSeedERP__Material__c> result = Material_Selector.selectAllByIds(matIds);
     System.assertEquals(materials.size(), result.size());
   }
 
   @IsTest
-  static void mapAllByIds_Test(){
+  static void mapAllByIds_Test() {
     init();
-    Map<Id, AcctSeedERP__Material__c> result = Material_Selector.mapAllByIds(
-      matIds
-    );
+    Map<Id, AcctSeedERP__Material__c> result = Material_Selector.mapAllByIds(matIds);
     System.assertEquals(materials.size(), result.size());
   }
 }

@@ -12,12 +12,7 @@ private class Pricebook_TriggerHandler_T {
 
   @IsTest
   static void unquefierBeforeInsert_FailUniqueness_Test() {
-    RecordType rt = [
-      SELECT Id, DeveloperName
-      FROM RecordType
-      WHERE SobjectType = 'Pricebook2'
-      LIMIT 1
-    ];
+    RecordType rt = [SELECT Id, DeveloperName FROM RecordType WHERE SobjectType = 'Pricebook2' LIMIT 1];
     System.debug(rt);
     String y = String.valueOf(Date.today().year());
     Pricebook2 pb = new Pricebook2(
@@ -42,12 +37,7 @@ private class Pricebook_TriggerHandler_T {
 
   @IsTest
   static void unquefierBeforeInsert_PassUniqueness_Test() {
-    RecordType rt = [
-      SELECT Id, DeveloperName
-      FROM RecordType
-      WHERE SobjectType = 'Pricebook2'
-      LIMIT 1
-    ];
+    RecordType rt = [SELECT Id, DeveloperName FROM RecordType WHERE SobjectType = 'Pricebook2' LIMIT 1];
     System.debug(rt);
     String y = String.valueOf(Date.today().year());
     Pricebook2 pb = new Pricebook2(
@@ -69,12 +59,7 @@ private class Pricebook_TriggerHandler_T {
 
   @IsTest
   static void unquefierBeforeUpdate_FailUniqueness_Test() {
-    RecordType rt = [
-      SELECT Id, DeveloperName
-      FROM RecordType
-      WHERE SobjectType = 'Pricebook2'
-      LIMIT 1
-    ];
+    RecordType rt = [SELECT Id, DeveloperName FROM RecordType WHERE SobjectType = 'Pricebook2' LIMIT 1];
     String y = String.valueOf(Date.today().year());
     Pricebook2 pb = new Pricebook2(
       Name = 'Test PB',
@@ -82,7 +67,7 @@ private class Pricebook_TriggerHandler_T {
       RecordTypeId = rt.Id,
       Version__c = 2,
       Sales_Year__c = y,
-      Uniquefier__c =  y + '_' + rt.DeveloperName + '_v.2'
+      Uniquefier__c = y + '_' + rt.DeveloperName + '_v.2'
     );
     TriggerHandler.bypass('Pricebook_TriggerHandler');
     insert pb;
@@ -104,12 +89,7 @@ private class Pricebook_TriggerHandler_T {
 
   @IsTest
   static void unquefierUpdateInsert_PassUniqueness_Test() {
-    RecordType rt = [
-      SELECT Id, DeveloperName
-      FROM RecordType
-      WHERE SobjectType = 'Pricebook2'
-      LIMIT 1
-    ];
+    RecordType rt = [SELECT Id, DeveloperName FROM RecordType WHERE SobjectType = 'Pricebook2' LIMIT 1];
     String y = String.valueOf(Date.today().year());
     Pricebook2 pb = new Pricebook2(
       Name = 'Test PB',
@@ -117,7 +97,7 @@ private class Pricebook_TriggerHandler_T {
       RecordTypeId = rt.Id,
       Version__c = 2,
       Sales_Year__c = y,
-      Uniquefier__c =  y + '_' + rt.DeveloperName + '_v.2'
+      Uniquefier__c = y + '_' + rt.DeveloperName + '_v.2'
     );
     TriggerHandler.bypass('Pricebook_TriggerHandler');
     insert pb;

@@ -2,9 +2,7 @@
  * Created by dave on 2021-07-26.
  */
 @IsTest
-public class Factory_PurchaseOrderInventoryMovement
-{
-
+public class Factory_PurchaseOrderInventoryMovement {
   public static AcctSeedERP__Purchase_Order_Inventory_Movement__c createMovement(
     Id purchaseOrderLineId,
     Decimal quantity,
@@ -12,9 +10,7 @@ public class Factory_PurchaseOrderInventoryMovement
     Id erpTaskId,
     Id balanceId,
     Decimal unitCost
-  )
-  {
-
+  ) {
     AcctSeedERP__Purchase_Order_Inventory_Movement__c movement = new AcctSeedERP__Purchase_Order_Inventory_Movement__c(
       AcctSeedERP__Purchase_Order_Line__c = purchaseOrderLineId,
       AcctSeedERP__Ledger__c = Test_Constants.idLedger,

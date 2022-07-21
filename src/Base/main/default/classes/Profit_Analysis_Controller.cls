@@ -2,24 +2,20 @@
  * Created by dave on 2019-11-06.
  */
 
-public with sharing class Profit_Analysis_Controller
-{
-  public class Profit_Analysis_Exception extends Exception{}
+public with sharing class Profit_Analysis_Controller {
+  public class Profit_Analysis_Exception extends Exception {
+  }
 
-  private static final Decimal riggingRate
-  {
-    get
-    {
-      if( riggingRate == null )
-      {
-        try
-        {
+  private static final Decimal riggingRate {
+    get {
+      if (riggingRate == null) {
+        try {
           Labour_Rate__mdt rate = [SELECT Hourly_Rate__c FROM Labour_Rate__mdt WHERE DeveloperName = 'Retail'];
           riggingRate = rate.Hourly_Rate__c;
-        }
-        catch( Exception e )
-        {
-          throw new Profit_Analysis_Exception( 'No Retail Labour Rate set.  Please have your administrator set a Retail Labour rate in Labour Rates Custom Metadata Type');
+        } catch (Exception e) {
+          throw new Profit_Analysis_Exception(
+            'No Retail Labour Rate set.  Please have your administrator set a Retail Labour rate in Labour Rates Custom Metadata Type'
+          );
         }
       }
       return riggingRate;
@@ -27,8 +23,7 @@ public with sharing class Profit_Analysis_Controller
     set;
   }
 
-  public class DataWrapper implements Comparable
-  {
+  public class DataWrapper implements Comparable {
     public Boolean include;
     public String id;
     public String productId;
@@ -48,8 +43,7 @@ public with sharing class Profit_Analysis_Controller
     public List<DataWrapper> kitParts;
     public String province;
 
-    public DataWrapper( Product_Fee_Amount__c pfa )
-    {
+    public DataWrapper(Product_Fee_Amount__c pfa) {
       this.include = true;
       this.quantity = 1;
       this.productName = pfa.Fee_Product__r.Name;
@@ -63,8 +57,7 @@ public with sharing class Profit_Analysis_Controller
       this.province = pfa.Province__c;
     }
 
-    public DataWrapper( OpportunityLineItem oli, Decimal riggingRate )
-    {
+    public DataWrapper(OpportunityLineItem oli, Decimal riggingRate) {
       this.include = true;
       this.id = oli.Id;
       this.quantity = oli.Quantity;
@@ -83,8 +76,7 @@ public with sharing class Profit_Analysis_Controller
       this.kitParts = new List<DataWrapper>();
     }
 
-    public DataWrapper( AcctSeedERP__Material__c mat, Decimal riggingRate )
-    {
+    public DataWrapper(AcctSeedERP__Material__c mat, Decimal riggingRate) {
       this.include = true;
       this.id = mat.Id;
       this.parentRecordId = mat.Material__c;
@@ -95,20 +87,25 @@ public with sharing class Profit_Analysis_Controller
       this.isSerialized = mat.AcctSeedERP__Product__r.AcctSeedERP__Serialized__c;
       this.salePrice = mat.GMBLASERP__Unit_Price__c;
       this.saleTotal = mat.GMBLASERP__Total_Price__c;
-      this.costPrice = mat.AcctSeedERP__Product__r.Landed_Unit_Cost__c == null ? 0 : mat.AcctSeedERP__Product__r.Landed_Unit_Cost__c;
+      this.costPrice = mat.AcctSeedERP__Product__r.Landed_Unit_Cost__c == null
+        ? 0
+        : mat.AcctSeedERP__Product__r.Landed_Unit_Cost__c;
       this.costTotal = this.costPrice * this.quantity;
       this.factoryPb = 0;
       this.factoryPbTotal = 0;
-      this.riggingTime = mat.AcctSeedERP__Product__r.Rigging_Time__c == null ? 0 : mat.AcctSeedERP__Product__r.Rigging_Time__c;
+      this.riggingTime = mat.AcctSeedERP__Product__r.Rigging_Time__c == null
+        ? 0
+        : mat.AcctSeedERP__Product__r.Rigging_Time__c;
       this.riggingCost = this.riggingTime * riggingRate;
       this.kitParts = new List<DataWrapper>();
     }
 
-    public Integer compareTo( Object compareTo )
-    {
-      DataWrapper compareOW = (DataWrapper)compareTo;
-      if( productName == compareOW.productName ) return 0;
-      if( productName > compareOW.productName ) return 1;
+    public Integer compareTo(Object compareTo) {
+      DataWrapper compareOW = (DataWrapper) compareTo;
+      if (productName == compareOW.productName)
+        return 0;
+      if (productName > compareOW.productName)
+        return 1;
       return -1;
     }
   }
@@ -132,11 +129,10 @@ public with sharing class Profit_Analysis_Controller
     private String pricebookSalesYear;
     private Decimal pricebookVersion;
 
-    public ResultWrapper( String recordId, String pbId, String province )
-    {
+    public ResultWrapper(String recordId, String pbId, String province) {
       this.sObjectId = recordId;
-      this.sObjectName = LGND_Utilities.sObjectNameFromId( Id.valueOf( recordId ) );
-      this.pbOptions = new List<Map<String,String>>();
+      this.sObjectName = LGND_Utilities.sObjectNameFromId(Id.valueOf(recordId));
+      this.pbOptions = new List<Map<String, String>>();
       this.items = new List<DataWrapper>();
       this.saleItems = new List<DataWrapper>();
       this.businessOfficeItems = new List<DataWrapper>();
@@ -147,188 +143,165 @@ public with sharing class Profit_Analysis_Controller
       buildItems();
     }
 
-    public void addItems( List<DataWrapper> items )
-    {
-      if( items != null )
-        this.items.addAll( items );
+    public void addItems(List<DataWrapper> items) {
+      if (items != null)
+        this.items.addAll(items);
     }
 
-    public void setPricebookValuesOnItems()
-    {
+    public void setPricebookValuesOnItems() {
       Set<String> prodIds = new Set<String>();
-      for( DataWrapper dw : this.items )
-      {
-        prodIds.add( dw.productId );
+      for (DataWrapper dw : this.items) {
+        prodIds.add(dw.productId);
       }
-      Map<Id, Decimal> prod_cost_map = findProductCost( prodIds, this.pbId );
-      for( DataWrapper dw : this.items)
-      {
-        if( prod_cost_map.containsKey( dw.productId ) )
-        {
-          dw.factoryPb = prod_cost_map.get( dw.productId );
+      Map<Id, Decimal> prod_cost_map = findProductCost(prodIds, this.pbId);
+      for (DataWrapper dw : this.items) {
+        if (prod_cost_map.containsKey(dw.productId)) {
+          dw.factoryPb = prod_cost_map.get(dw.productId);
           dw.factoryPbTotal = dw.quantity * dw.factoryPb;
         }
       }
     }
 
-    public void sortAndGroupItems()
-    {
+    public void sortAndGroupItems() {
       List<DataWrapper> serialized = new List<DataWrapper>();
       List<DataWrapper> nonSerialized = new List<DataWrapper>();
       Map<String, List<DataWrapper>> parentId_item_map = new Map<String, List<DataWrapper>>();
-      for( DataWrapper dw : this.items )
-      {
-        if( dw.parentRecordId != null )
-        {
-          if( !parentId_Item_map.containsKey( dw.parentRecordId ) )
-            parentId_Item_map.put( dw.parentRecordId, new List<DataWrapper>() );
-          parentId_Item_map.get( dw.parentRecordId ).add( dw );
+      for (DataWrapper dw : this.items) {
+        if (dw.parentRecordId != null) {
+          if (!parentId_Item_map.containsKey(dw.parentRecordId))
+            parentId_Item_map.put(dw.parentRecordId, new List<DataWrapper>());
+          parentId_Item_map.get(dw.parentRecordId).add(dw);
         }
       }
-      for( DataWrapper dw : this.items )
-      {
-        if (dw.parentRecordId == null)
-        {
-          if( parentId_item_map.containsKey( dw.id ) )
-          {
+      for (DataWrapper dw : this.items) {
+        if (dw.parentRecordId == null) {
+          if (parentId_item_map.containsKey(dw.id)) {
             dw.kitParts.addAll(parentId_item_map.get(dw.id));
             dw.kitParts.sort();
           }
-          if( dw.isSerialized )
-            serialized.add( dw );
+          if (dw.isSerialized)
+            serialized.add(dw);
           else
-            nonSerialized.add( dw );
+            nonSerialized.add(dw);
         }
       }
       serialized.sort();
       nonSerialized.sort();
       this.items = new List<DataWrapper>();
-      this.items.addAll( serialized );
-      this.items.addAll( nonSerialized );
+      this.items.addAll(serialized);
+      this.items.addAll(nonSerialized);
       this.separateByDepartments();
     }
 
-    private void findTheRecordAndSetDefaults()
-    {
-      switch on this.sObjectName
-      {
-        when 'Opportunity'
-        {
-          Opportunity opp = [ SELECT Id, GL_Account_Variable_3__r.Name, Pricebook2.Name, Pricebook2.Sales_Year__c, Pricebook2.Version__c FROM Opportunity WHERE Id = :this.sObjectId ];
+    private void findTheRecordAndSetDefaults() {
+      switch on this.sObjectName {
+        when 'Opportunity' {
+          Opportunity opp = [
+            SELECT Id, GL_Account_Variable_3__r.Name, Pricebook2.Name, Pricebook2.Sales_Year__c, Pricebook2.Version__c
+            FROM Opportunity
+            WHERE Id = :this.sObjectId
+          ];
           this.pricebookName = opp.Pricebook2.Name;
           this.pricebookVersion = opp.Pricebook2.Version__c;
           this.pricebookSalesYear = opp.Pricebook2.Sales_Year__c;
-          if( this.currentProvince == null )
-          {
+          if (this.currentProvince == null) {
             this.currentProvince = opp.GL_Account_Variable_3__r.Name;
           }
         }
-        when 'AcctSeed__Project__c'
-        {
-          AcctSeed__Project__c project = [ SELECT Id, GL_Account_Variable_3__r.Name, GMBLASERP__Pricebook__r.Name, GMBLASERP__Pricebook__r.Sales_Year__c, GMBLASERP__Pricebook__r.Version__c FROM AcctSeed__Project__c WHERE Id = :this.sObjectId ];
+        when 'AcctSeed__Project__c' {
+          AcctSeed__Project__c project = [
+            SELECT
+              Id,
+              GL_Account_Variable_3__r.Name,
+              GMBLASERP__Pricebook__r.Name,
+              GMBLASERP__Pricebook__r.Sales_Year__c,
+              GMBLASERP__Pricebook__r.Version__c
+            FROM AcctSeed__Project__c
+            WHERE Id = :this.sObjectId
+          ];
           this.pricebookName = project.GMBLASERP__Pricebook__r.Name;
           this.pricebookSalesYear = project.GMBLASERP__Pricebook__r.Sales_Year__c;
           this.pricebookVersion = project.GMBLASERP__Pricebook__r.Version__c;
-          if( this.currentProvince == null )
-          {
+          if (this.currentProvince == null) {
             this.currentProvince = project.GL_Account_Variable_3__r.Name;
           }
         }
       }
-      if( this.currentProvince == null )
-      {
+      if (this.currentProvince == null) {
         this.currentProvince = 'Ontario';
       }
-      if( this.pbId == null )
-      {
+      if (this.pbId == null) {
         setCurrentPb();
       }
     }
 
-    private void setCurrentPB()
-    {
-      String matcher =  findRecordPricebookMatcher();
-      for(Map<String, String> pbOpt : this.pbOptions )
-      {
+    private void setCurrentPB() {
+      String matcher = findRecordPricebookMatcher();
+      for (Map<String, String> pbOpt : this.pbOptions) {
         String factoryMatcher = pbOpt.get('year') + '-' + pbOpt.get('version');
-        if( matcher == factoryMatcher )
-        {
+        if (matcher == factoryMatcher) {
           this.pbId = pbOpt.get('id');
           break;
         }
       }
-      if( this.pbId == null )
-      {
+      if (this.pbId == null) {
         this.pbId = Legend_Settings__c.getOrgDefaults().Default_Factory_Pricebook__c;
       }
     }
 
-    private void separateByDepartments()
-    {
-      for( DataWrapper dw : this.items )
-      {
-        if( this.businessOfficeProductRTs.contains( dw.productRecordTypeId ) )
-        {
+    private void separateByDepartments() {
+      for (DataWrapper dw : this.items) {
+        if (this.businessOfficeProductRTs.contains(dw.productRecordTypeId)) {
           this.businessOfficeItems.add(dw);
-        }
-        else
-        {
+        } else {
           this.saleItems.add(dw);
         }
       }
     }
 
-    private void createOptions()
-    {
-      for( Pricebook2 pb : [SELECT Id, Name, Sales_Year__c, Version__c FROM Pricebook2 WHERE Name LIKE '%Factory%'] )
-      {
-        this.pbOptions.add( new Map<String, String>{
-          'id' => pb.Id,
-          'name' => pb.Name,
-          'year' => pb.Sales_Year__c,
-          'version' => String.valueOf( pb.Version__c)
-        });
+    private void createOptions() {
+      for (Pricebook2 pb : [SELECT Id, Name, Sales_Year__c, Version__c FROM Pricebook2 WHERE Name LIKE '%Factory%']) {
+        this.pbOptions.add(
+          new Map<String, String>{
+            'id' => pb.Id,
+            'name' => pb.Name,
+            'year' => pb.Sales_Year__c,
+            'version' => String.valueOf(pb.Version__c)
+          }
+        );
       }
-      this.provinceOptions = LGND_Utilities.getPicklistValues('Product_Fee_Amount__c', 'Province__c' );
+      this.provinceOptions = LGND_Utilities.getPicklistValues('Product_Fee_Amount__c', 'Province__c');
     }
 
-    private String findRecordPricebookMatcher()
-    {
-      if( this.pricebookSalesYear != null && this.pricebookVersion != null )
-      {
-        try
-        {
+    private String findRecordPricebookMatcher() {
+      if (this.pricebookSalesYear != null && this.pricebookVersion != null) {
+        try {
           return this.pricebookSalesYear + '-' + this.pricebookVersion;
+        } catch (Exception e) {
         }
-        catch( Exception e ){}
       }
       return null;
     }
 
-    private Map<Id, Decimal> findProductCost( Set<String> prodIds, String factoryPBId )
-    {
+    private Map<Id, Decimal> findProductCost(Set<String> prodIds, String factoryPBId) {
       Map<Id, Decimal> result = new Map<Id, Decimal>();
-      for( PricebookEntry pbe : [ SELECT Id, UnitPrice, Product2Id
-                                  FROM PricebookEntry
-                                  WHERE Pricebook2Id = :factoryPBId
-                                  AND Product2Id IN :prodIds] )
-      {
-        result.put( pbe.Product2Id, pbe.UnitPrice );
+      for (PricebookEntry pbe : [
+        SELECT Id, UnitPrice, Product2Id
+        FROM PricebookEntry
+        WHERE Pricebook2Id = :factoryPBId AND Product2Id IN :prodIds
+      ]) {
+        result.put(pbe.Product2Id, pbe.UnitPrice);
       }
       return result;
     }
 
-    private void buildItems()
-    {
-      switch on this.sObjectName
-      {
-        when 'Opportunity'
-        {
-          this.addItems( buildForOpportunity() );
+    private void buildItems() {
+      switch on this.sObjectName {
+        when 'Opportunity' {
+          this.addItems(buildForOpportunity());
         }
-        when 'AcctSeed__Project__c'
-        {
-          this.addItems( buildForERP() );
+        when 'AcctSeed__Project__c' {
+          this.addItems(buildForERP());
         }
       }
       this.sortAndGroupItems();
@@ -336,98 +309,92 @@ public with sharing class Profit_Analysis_Controller
       this.buildFreightCharges();
     }
 
-    private void buildFreightCharges()
-    {
+    private void buildFreightCharges() {
       List<DataWrapper> freights = new List<DataWrapper>();
       Set<Id> productIds = new Set<Id>();
       Set<Id> feeProdIds = new Set<Id>();
-      for( DataWrapper dw : this.items )
-      {
-        productIds.add( dw.productId );
+      for (DataWrapper dw : this.items) {
+        productIds.add(dw.productId);
       }
-      for( Product_Fee_Map__c pfm : [ SELECT Id, Fee_Product__c, Fee_Product__r.Name
-                                      FROM Product_Fee_Map__c
-                                      WHERE Parent_Product__c IN :productIds
-                                      AND Fee_Product__r.Family = 'Freight'] )
-      {
-        feeProdIds.add( pfm.Fee_Product__c );
+      for (Product_Fee_Map__c pfm : [
+        SELECT Id, Fee_Product__c, Fee_Product__r.Name
+        FROM Product_Fee_Map__c
+        WHERE Parent_Product__c IN :productIds AND Fee_Product__r.Family = 'Freight'
+      ]) {
+        feeProdIds.add(pfm.Fee_Product__c);
       }
-      for( Product_Fee_Amount__c pfa : [SELECT Id, Amount__c, Fee_Product__r.Name, Province__c
-                                        FROM Product_Fee_Amount__c
-                                        WHERE Fee_Product__c IN :feeProdIds
-                                        AND Province__c = :this.currentProvince
-                                        AND Price_Book__c = :this.pbId] )
-      {
-        freights.add( new DataWrapper( pfa ) );
+      for (Product_Fee_Amount__c pfa : [
+        SELECT Id, Amount__c, Fee_Product__r.Name, Province__c
+        FROM Product_Fee_Amount__c
+        WHERE Fee_Product__c IN :feeProdIds AND Province__c = :this.currentProvince AND Price_Book__c = :this.pbId
+      ]) {
+        freights.add(new DataWrapper(pfa));
       }
-      this.items.addAll( freights );
-      this.saleItems.addAll( freights );
+      this.items.addAll(freights);
+      this.saleItems.addAll(freights);
     }
 
-    private List<DataWrapper> buildForOpportunity()
-    {
+    private List<DataWrapper> buildForOpportunity() {
       List<DataWrapper> result = new List<DataWrapper>();
-      List<OpportunityLineItem> olis = [ SELECT Id,
-                                                Quantity,
-                                                UnitPrice,
-                                                TotalPrice,
-                                                Product2Id,
-                                                Product2.Name,
-                                                Product2.RecordTypeId,
-                                                Product2.Landed_Unit_Cost__c,
-                                                Product2.Rigging_Time__c,
-                                                Product2.AcctSeedERP__Serialized__c
-                                          FROM OpportunityLineItem
-                                          WHERE OpportunityId = :this.sObjectId
-                                          AND Product2.AcctSeed__Revenue_GL_Account__r.AcctSeed__Type__c  = 'Revenue'];
-      for( OpportunityLineItem oli : olis )
-      {
-        result.add( new DataWrapper( oli, riggingRate ) );
+      List<OpportunityLineItem> olis = [
+        SELECT
+          Id,
+          Quantity,
+          UnitPrice,
+          TotalPrice,
+          Product2Id,
+          Product2.Name,
+          Product2.RecordTypeId,
+          Product2.Landed_Unit_Cost__c,
+          Product2.Rigging_Time__c,
+          Product2.AcctSeedERP__Serialized__c
+        FROM OpportunityLineItem
+        WHERE OpportunityId = :this.sObjectId AND Product2.AcctSeed__Revenue_GL_Account__r.AcctSeed__Type__c = 'Revenue'
+      ];
+      for (OpportunityLineItem oli : olis) {
+        result.add(new DataWrapper(oli, riggingRate));
       }
       return result;
     }
 
-    private List<DataWrapper> buildForERP()
-    {
+    private List<DataWrapper> buildForERP() {
       List<DataWrapper> result = new List<DataWrapper>();
-      List<AcctSeedERP__Material__c> materials = [ SELECT Id,
-                                                          AcctSeedERP__Quantity_Per_Unit__c,
-                                                          GMBLASERP__Unit_Price__c,
-                                                          GMBLASERP__Total_Price__c,
-                                                          AcctSeedERP__Product__c,
-                                                          AcctSeedERP__Product__r.RecordTypeId,
-                                                          AcctSeedERP__Product__r.AcctSeedERP__Serialized__c,
-                                                          AcctSeedERP__Product__r.Rigging_Time__c,
-                                                          AcctSeedERP__Product__r.Name,
-                                                          AcctSeedERP__Product__r.Landed_Unit_Cost__c,
-                                                          AcctSeedERP__Product__r.AcctSeed__Revenue_GL_Account__r.AcctSeed__Type__c,
-                                                          Material__c
-                                                        FROM AcctSeedERP__Material__c
-                                                        WHERE AcctSeedERP__Project__c = :this.sObjectId
-                                                        AND AcctSeedERP__Product__r.AcctSeed__Revenue_GL_Account__r.AcctSeed__Type__c  = 'Revenue'];
-      for( AcctSeedERP__Material__c mat : materials )
-      {
-        result.add( new DataWrapper( mat, riggingRate ) );
+      List<AcctSeedERP__Material__c> materials = [
+        SELECT
+          Id,
+          AcctSeedERP__Quantity_Per_Unit__c,
+          GMBLASERP__Unit_Price__c,
+          GMBLASERP__Total_Price__c,
+          AcctSeedERP__Product__c,
+          AcctSeedERP__Product__r.RecordTypeId,
+          AcctSeedERP__Product__r.AcctSeedERP__Serialized__c,
+          AcctSeedERP__Product__r.Rigging_Time__c,
+          AcctSeedERP__Product__r.Name,
+          AcctSeedERP__Product__r.Landed_Unit_Cost__c,
+          AcctSeedERP__Product__r.AcctSeed__Revenue_GL_Account__r.AcctSeed__Type__c,
+          Material__c
+        FROM AcctSeedERP__Material__c
+        WHERE
+          AcctSeedERP__Project__c = :this.sObjectId
+          AND AcctSeedERP__Product__r.AcctSeed__Revenue_GL_Account__r.AcctSeed__Type__c = 'Revenue'
+      ];
+      for (AcctSeedERP__Material__c mat : materials) {
+        result.add(new DataWrapper(mat, riggingRate));
       }
       return result;
     }
   }
 
   @AuraEnabled
-  public static String fetchData( String recordId, String pbId, String province )
-  {
-    if( !LGND_Utilities.CustomPermissions.canViewGrossMargin )
+  public static String fetchData(String recordId, String pbId, String province) {
+    if (!LGND_Utilities.CustomPermissions.canViewGrossMargin)
       return 'denied';
-    try
-    {
-      return JSON.serialize(new ResultWrapper(recordId, pbId, province) );
-    }
-    catch( Exception e )
-    {
-      AuraHandledException ae = new AuraHandledException( e.getMessage() );
-      ae.setMessage( e.getMessage() );
+    try {
+      return JSON.serialize(new ResultWrapper(recordId, pbId, province));
+    } catch (Exception e) {
+      AuraHandledException ae = new AuraHandledException(e.getMessage());
+      ae.setMessage(e.getMessage());
       throw ae;
     }
   }
-
 }
