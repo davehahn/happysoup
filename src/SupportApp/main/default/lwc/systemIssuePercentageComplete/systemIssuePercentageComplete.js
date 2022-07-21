@@ -6,7 +6,7 @@ import { LightningElement, api, wire } from "lwc";
 import { getRecord, getFieldValue } from "lightning/uiRecordApi";
 import { loadScript } from "lightning/platformResourceLoader";
 import Chart from "@salesforce/resourceUrl/ChartJS";
-import STORY_COUNT_FIELD from '@salesforce/schema/System_Issue__c.Story_Count__c';
+import STORY_COUNT_FIELD from "@salesforce/schema/System_Issue__c.Story_Count__c";
 import PERCENT_TODO_FIELD from "@salesforce/schema/System_Issue__c.Story_Count_To_Do__c";
 import PERCENT_INPROGRESS_FIELD from "@salesforce/schema/System_Issue__c.Story_Count_In_Progress__c";
 import PERCENT_DONE_FIELD from "@salesforce/schema/System_Issue__c.Story_Count_Done__c";
@@ -16,8 +16,8 @@ export default class SystemIssuePercentageComplete extends LightningElement {
   done = 0;
   todo = 0;
   inProgress = 0;
-  complete=0;
-  storyCount=0;
+  complete = 0;
+  storyCount = 0;
   chart;
   gauge;
   scriptsLoaded = false;
@@ -28,12 +28,12 @@ export default class SystemIssuePercentageComplete extends LightningElement {
   })
   wiredSystemIssue(result) {
     if (result.data) {
-      console.log( JSON.parse( JSON.stringify( result.data ) ) );
+      console.log(JSON.parse(JSON.stringify(result.data)));
       this.todo = getFieldValue(result.data, PERCENT_TODO_FIELD);
       this.inProgress = getFieldValue(result.data, PERCENT_INPROGRESS_FIELD);
       this.done = getFieldValue(result.data, PERCENT_DONE_FIELD) || 0;
-      this.storyCount = getFieldValue( result.data, STORY_COUNT_FIELD) || 0;
-      this.complete = (( (this.done / this.storyCount ) * 100 ) || 0).toFixed();
+      this.storyCount = getFieldValue(result.data, STORY_COUNT_FIELD) || 0;
+      this.complete = ((this.done / this.storyCount) * 100 || 0).toFixed();
       this.initialize();
     }
     if (result.error) {
@@ -126,12 +126,12 @@ export default class SystemIssuePercentageComplete extends LightningElement {
             position: "bottom"
           },
           tooltip: {
-//            callbacks: {
-//              label: function (context) {
-//                console.log(context);
-//                return "  " + context.parsed + "%";
-//              }
-//            }
+            //            callbacks: {
+            //              label: function (context) {
+            //                console.log(context);
+            //                return "  " + context.parsed + "%";
+            //              }
+            //            }
           },
           title: {
             display: true,

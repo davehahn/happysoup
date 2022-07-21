@@ -1,6 +1,3 @@
 ({
-	fetchOptions: function( component )
-  {
-
-	}
-})
+  fetchOptions: function (component) {}
+});

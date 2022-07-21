@@ -4,11 +4,7 @@
       $A.getCallback(function (result) {
         if (result !== undefined) {
           component.set("v.taxZones", result);
-          helper.setCurrentTaxZone(
-            component,
-            component.get("v.currentTaxZone").id,
-            "id"
-          );
+          helper.setCurrentTaxZone(component, component.get("v.currentTaxZone").id, "id");
         }
         helper.calculate(component);
         component.set("v.isLoaded", true);
@@ -53,12 +49,8 @@
     var deposit = component.get("v.deposit"),
       interestRate = component.get("v.interestRate");
 
-    if (interestRate < 0)
-      LightningUtils.errorToast(
-        "Interest Rate must be greater than or equal to zero"
-      );
-    else if (deposit < 0)
-      LightningUtils.errorToast("Deposit can not be less than zero");
+    if (interestRate < 0) LightningUtils.errorToast("Interest Rate must be greater than or equal to zero");
+    else if (deposit < 0) LightningUtils.errorToast("Deposit can not be less than zero");
     else {
       helper.calculate(component);
     }

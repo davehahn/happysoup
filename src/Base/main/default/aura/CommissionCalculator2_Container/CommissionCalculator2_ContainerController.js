@@ -3,9 +3,8 @@
  */
 
 ({
-  doInit: function( component )
-  {
-    console.log( 'container.doInit');
+  doInit: function (component) {
+    console.log("container.doInit");
     component.find("calc").doInit();
   }
 });

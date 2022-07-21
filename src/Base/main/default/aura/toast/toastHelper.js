@@ -7,41 +7,40 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
 */
 
 ({
-    autoHide : function(component) {
-        var self = this;
-        if (component.get('v.typeClass') != 'slds-theme--error') {
-            setTimeout($A.getCallback(self.toggleToastClassHide), component
-                    .get('v.timeout'), component);
-        }
-    },
-
-    toggleToastClassHide : function(component) {
-        $A.util.addClass(component, 'slds-fall-into-ground');
-        $A.util.removeClass(component, 'slds-rise-from-ground');
-    },
-
-    toggleToastClassShow : function(component) {
-        $A.util.removeClass(component, 'slds-fall-into-ground');
-        $A.util.addClass(component, 'slds-rise-from-ground');
-    },
-
-    setToastType : function(component, event) {
-        console.log( event.getParams())
-        var type = event.getParams().value.type.toLowerCase();
-        switch (type) {
-        case 'normal':
-            component.set('v.typeClass', '');
-            return true;
-        case 'success':
-            component.set('v.typeClass', 'slds-theme_success');
-            return true;
-        case 'warning':
-            component.set('v.typeClass', 'slds-theme_warning');
-            return true;
-        case 'error':
-            component.set('v.typeClass', 'slds-theme_error');
-            return true;
-        }
-        return false;
+  autoHide: function (component) {
+    var self = this;
+    if (component.get("v.typeClass") != "slds-theme--error") {
+      setTimeout($A.getCallback(self.toggleToastClassHide), component.get("v.timeout"), component);
     }
-})
+  },
+
+  toggleToastClassHide: function (component) {
+    $A.util.addClass(component, "slds-fall-into-ground");
+    $A.util.removeClass(component, "slds-rise-from-ground");
+  },
+
+  toggleToastClassShow: function (component) {
+    $A.util.removeClass(component, "slds-fall-into-ground");
+    $A.util.addClass(component, "slds-rise-from-ground");
+  },
+
+  setToastType: function (component, event) {
+    console.log(event.getParams());
+    var type = event.getParams().value.type.toLowerCase();
+    switch (type) {
+      case "normal":
+        component.set("v.typeClass", "");
+        return true;
+      case "success":
+        component.set("v.typeClass", "slds-theme_success");
+        return true;
+      case "warning":
+        component.set("v.typeClass", "slds-theme_warning");
+        return true;
+      case "error":
+        component.set("v.typeClass", "slds-theme_error");
+        return true;
+    }
+    return false;
+  }
+});

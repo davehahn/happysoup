@@ -6,4 +6,4 @@
   //   console.log( component.get('v.options') );
   //   console.log( component.get('v.optionsList') );
   // }
-})
+});

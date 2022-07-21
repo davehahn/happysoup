@@ -1,32 +1,30 @@
-import { LightningElement, api } from 'lwc';
+import { LightningElement, api } from "lwc";
 
 export default class RecordType_PicklistValues extends LightningElement {
+  @api objectName;
 
-    @api objectName;
+  @api fieldName;
 
-    @api fieldName;
+  @api recordTypeId;
 
-    @api recordTypeId;
+  @api isRequired;
 
-    @api isRequired;
+  @api errorMessage;
 
-    @api errorMessage;
+  @api fieldValue;
 
-    @api fieldValue;
-
-    @api validate() {
-        if( !this.isRequired
-            || ( this.isRequired && this.fieldValue && this.fieldValue.length > 0 ) ){
-            return { isValid: true };
-        } else {
-            return {
-                isValid: false,
-                errorMessage: this.errorMessage
-             };
-         }
+  @api validate() {
+    if (!this.isRequired || (this.isRequired && this.fieldValue && this.fieldValue.length > 0)) {
+      return { isValid: true };
+    } else {
+      return {
+        isValid: false,
+        errorMessage: this.errorMessage
+      };
     }
+  }
 
-    handleFieldChange( event ){
-        this.fieldValue = event.target.value;
-    }
+  handleFieldChange(event) {
+    this.fieldValue = event.target.value;
+  }
 }

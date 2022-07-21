@@ -2,12 +2,11 @@
  * Created by dave on 2020-06-25.
  */
 
-import { LightningElement, api, track, wire } from 'lwc';
-import { CurrentPageReference } from 'lightning/navigation';
-import { registerListener, fireEvent } from 'c/pubsub';
+import { LightningElement, api, track, wire } from "lwc";
+import { CurrentPageReference } from "lightning/navigation";
+import { registerListener, fireEvent } from "c/pubsub";
 
 export default class BoatResFinanceDetails extends LightningElement {
-
   @api paymentType;
   @api deposit;
   @api amount;
@@ -15,18 +14,18 @@ export default class BoatResFinanceDetails extends LightningElement {
   @api interestRate;
   @api premiumPackValue;
   @api premiumPackItems;
-  @api hideInputs
+  @api hideInputs;
   //@track downPayment = 1000;
 
   numOfAmortYears = 20;
   pages = [
     {
-      label: 'cash',
-      label_fr: 'comptant'
+      label: "cash",
+      label_fr: "comptant"
     },
     {
-      label: 'loan',
-      label_fr: 'emprunt'
+      label: "loan",
+      label_fr: "emprunt"
     }
   ];
   initialRenderComplete = false;
@@ -38,107 +37,94 @@ export default class BoatResFinanceDetails extends LightningElement {
   };
 
   @track isEN = true;
-	@track isFR = false;
+  @track isFR = false;
 
   @wire(CurrentPageReference) pageRef;
 
-  connectedCallback(){
-    registerListener('purchasePriceChanged', this.handlePurchasePriceChange, this);
+  connectedCallback() {
+    registerListener("purchasePriceChanged", this.handlePurchasePriceChange, this);
   }
 
-  renderedCallback()
-  {
+  renderedCallback() {
     this.template.querySelector('select[data-field-name="term"]').value = this.amort;
-    if( !this.initialRenderComplete )
-    {
+    if (!this.initialRenderComplete) {
       this.calculate();
       this.initialRenderComplete = true;
     }
-    registerListener('languageChange', this.handleLanguageChange, this);
+    registerListener("languageChange", this.handleLanguageChange, this);
   }
 
-  get termOptions()
-  {
-    return Array.from( { length: this.numOfAmortYears}, (v,k) => (k+1)*12 )
-    .reduce( (result, currentVal) => {
+  get termOptions() {
+    return Array.from({ length: this.numOfAmortYears }, (v, k) => (k + 1) * 12).reduce((result, currentVal) => {
       result.push({
         value: currentVal,
         label: `${currentVal} months`,
         label_fr: `${currentVal} mois`
       });
       return result;
-    }, [] );
+    }, []);
   }
 
-  get tabData()
-  {
-    return this.pages.map( page => {
+  get tabData() {
+    return this.pages.map((page) => {
       return {
         label: page.label,
         title: this.isEN ? page.label : page.label_fr,
-        class: this.paymentType === page.label ?
-          'finance-nav-item finance-nav-item_selected' :
-          'finance-nav-item'
-      }
+        class: this.paymentType === page.label ? "finance-nav-item finance-nav-item_selected" : "finance-nav-item"
+      };
     });
   }
 
-  handleNav( event )
-  {
-    const navPage =  event.currentTarget.dataset.navName;
+  handleNav(event) {
+    const navPage = event.currentTarget.dataset.navName;
     this.paymentType = navPage;
-    fireEvent( this.pageRef, 'paymentTypeChanged', this.paymentType );
+    fireEvent(this.pageRef, "paymentTypeChanged", this.paymentType);
   }
 
-  handleTermChange( event )
-  {
+  handleTermChange(event) {
     this.amort = event.currentTarget.value;
     this.calculate();
   }
 
-  handlePurchasePriceChange( amount )
-  {
+  handlePurchasePriceChange(amount) {
     this.amount = amount;
     this.calculate();
   }
 
-  @api calculate()
-  {
-    if( this.amount === undefined ) return;
-    if( this.interestRate === undefined ) return;
+  @api calculate() {
+    if (this.amount === undefined) return;
+    if (this.interestRate === undefined) return;
 
     const amountFinanced = this.amount - this.deposit,
-          compound_per_year = 12;
+      compound_per_year = 12;
     let compoundInterest, payment;
 
-    if( parseFloat( this.interestRate ) === 0 )
-    {
-      payment = ( amountFinanced / this.amort );
+    if (parseFloat(this.interestRate) === 0) {
+      payment = amountFinanced / this.amort;
       //remaining = ( amountFinanced - ( payment * term ) );
-    }
-    else
-    {
-      compoundInterest = this.interestRate  / compound_per_year,
-      payment = ( compoundInterest * amountFinanced ) / ( 1 - ( Math.pow( (1 + compoundInterest), (- ( this.amort * compound_per_year / 12 ) ) ) ) );
+    } else {
+      (compoundInterest = this.interestRate / compound_per_year),
+        (payment =
+          (compoundInterest * amountFinanced) /
+          (1 - Math.pow(1 + compoundInterest, -((this.amort * compound_per_year) / 12))));
       //remaining = amountFinanced *( Math.pow((1+ compoundInterest ), ( term * compound_per_year / 12)) ) -( payment )*( ( Math.pow((1+ compoundInterest ),( term * compound_per_year / 12)) - 1 ) /compoundInterest );
     }
-    this.payments.monthly = ( payment / ( 12 / compound_per_year ) );
-    this.payments.biweekly = ( payment / ( 26 / compound_per_year ) );
-    this.payments.weekly = ( payment / ( 52 / compound_per_year ) );
+    this.payments.monthly = payment / (12 / compound_per_year);
+    this.payments.biweekly = payment / (26 / compound_per_year);
+    this.payments.weekly = payment / (52 / compound_per_year);
 
-    fireEvent( this.pageRef, 'paymentAmountChanged', this.payments );
+    fireEvent(this.pageRef, "paymentAmountChanged", this.payments);
   }
 
-  get retailPlusPremium(){
+  get retailPlusPremium() {
     const value = this.amount + this.premiumPackValue;
     return value;
   }
 
-  handleLanguageChange(detail){
-			if(detail){
-				this.isEN = (detail === 'EN') ? true : false;
-				this.isFR = (detail === 'FR') ? true : false;
-		}
-	}
-
+  handleLanguageChange(detail) {
+    if (detail) {
+      this.isEN = detail === "EN" ? true : false;
+      this.isFR = detail === "FR" ? true : false;
+    }
+  }
 }

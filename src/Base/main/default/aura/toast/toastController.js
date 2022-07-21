@@ -7,14 +7,13 @@ WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE SOFTWARE IS PROVIDED "AS I
 */
 
 ({
-    closebuttonOnclicked : function(component, event, helper) {
-        helper.toggleToastClassHide(component);
-    },
+  closebuttonOnclicked: function (component, event, helper) {
+    helper.toggleToastClassHide(component);
+  },
 
-    messageUpdated : function(component, event, helper) {
-        if (!helper.setToastType(component, event))
-            return;
-        helper.toggleToastClassShow(component);
-        helper.autoHide(component);
-    },
-})
+  messageUpdated: function (component, event, helper) {
+    if (!helper.setToastType(component, event)) return;
+    helper.toggleToastClassShow(component);
+    helper.autoHide(component);
+  }
+});

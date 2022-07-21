@@ -43,9 +43,9 @@
   handleJiraProjectChange: function (component, event, helper) {
     const issueTypesByProject = component.get("v.issueTypesByProject");
     const proj = event.getSource().get("v.value");
-    let issue = component.get('v.issue');
+    let issue = component.get("v.issue");
     issue.Type__c = null;
-    component.set('v.issue', issue);
+    component.set("v.issue", issue);
     console.log(proj);
     if (Object.keys(issueTypesByProject).indexOf(proj >= 0)) {
       component.set("v.typeOptions", issueTypesByProject[proj]);

@@ -1,6 +1,5 @@
 ({
-	buildSaleItem : function( option, isIncluded )
-  {
+  buildSaleItem: function (option, isIncluded) {
     return {
       quantity: option.quantitySelected,
       salePrice: isIncluded ? 0 : option.retailPrice,
@@ -12,6 +11,6 @@
       subSaleItems: [],
       taxable: option.taxable,
       lineTotal: isIncluded ? 0 : option.quantitySelected * option.retailPrice
-    }
-	}
-})
+    };
+  }
+});

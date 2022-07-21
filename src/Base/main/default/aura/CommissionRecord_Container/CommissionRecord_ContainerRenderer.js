@@ -3,9 +3,5 @@
  */
 
 ({
-  rerender: function( component, helper )
-  {
-
-  }
-
+  rerender: function (component, helper) {}
 });

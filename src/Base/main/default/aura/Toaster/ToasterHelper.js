@@ -1,3 +1,3 @@
 ({
-    timer: null
-})
+  timer: null
+});

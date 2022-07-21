@@ -2,60 +2,56 @@
  * Created by Tim on 2021-05-17.
  */
 
-import { LightningElement, wire, api } from 'lwc';
-import { CurrentPageReference } from 'lightning/navigation';
-import { fireEvent, registerListener, unregisterAllListeners } from 'c/pubsub';
-import Id from '@salesforce/community/Id';
-import fetchCommunityDetails from '@salesforce/apex/CommSharedURL_Controller.fetchCommunityDetails';
-import { setWrapperClass } from 'c/communitySharedUtils';
+import { LightningElement, wire, api } from "lwc";
+import { CurrentPageReference } from "lightning/navigation";
+import { fireEvent, registerListener, unregisterAllListeners } from "c/pubsub";
+import Id from "@salesforce/community/Id";
+import fetchCommunityDetails from "@salesforce/apex/CommSharedURL_Controller.fetchCommunityDetails";
+import { setWrapperClass } from "c/communitySharedUtils";
 
 export default class FactoryStoreOverlayWithLeadForm extends LightningElement {
-	recordId;
-	boatName;
-	serialNumber = "N/A";
-	serialNumberId = "N/A";
-	wrapperClass = 'overlay';
+  recordId;
+  boatName;
+  serialNumber = "N/A";
+  serialNumberId = "N/A";
+  wrapperClass = "overlay";
 
-	@api introHeading;
-	@api introBlurb;
-	@api sectionWidth;
-	@api campaignId;
+  @api introHeading;
+  @api introBlurb;
+  @api sectionWidth;
+  @api campaignId;
 
-	leadFormName;
-	locationName;
+  leadFormName;
+  locationName;
 
-	@wire(CurrentPageReference) pageRef;
+  @wire(CurrentPageReference) pageRef;
 
-	@wire( fetchCommunityDetails, {communityId: Id} )
-		wiredFetchCommunityDetails( { error, data } )
-		{
-			if( data )
-			{
-				this.locationName = data.name;
-			}
-			else if( error )
-			{
-				console.log('fetch community error: ', error);
-			}
-		}
+  @wire(fetchCommunityDetails, { communityId: Id })
+  wiredFetchCommunityDetails({ error, data }) {
+    if (data) {
+      this.locationName = data.name;
+    } else if (error) {
+      console.log("fetch community error: ", error);
+    }
+  }
 
-	renderedCallback(){
-	  console.log('overlay exists');
-	  registerListener('openOverlay', this.handleOpenOverlay, this);
- }
+  renderedCallback() {
+    console.log("overlay exists");
+    registerListener("openOverlay", this.handleOpenOverlay, this);
+  }
 
- handleOpenOverlay(detail){
-   console.log('handleOpenOverlay');
-   console.log('record: ', detail);
-   this.recordId = detail.recordId;
-   this.boatName = detail.boatName;
-   this.serialNumber = detail.serialNumber;
-   this.serialNumberId = detail.serialNumberId;
-   this.leadFormName = this.boatName + ' - Lead Form';
-   this.wrapperClass = setWrapperClass(this.sectionWidth, 'overlay open');
- }
+  handleOpenOverlay(detail) {
+    console.log("handleOpenOverlay");
+    console.log("record: ", detail);
+    this.recordId = detail.recordId;
+    this.boatName = detail.boatName;
+    this.serialNumber = detail.serialNumber;
+    this.serialNumberId = detail.serialNumberId;
+    this.leadFormName = this.boatName + " - Lead Form";
+    this.wrapperClass = setWrapperClass(this.sectionWidth, "overlay open");
+  }
 
- handleCloseOverlay(){
-   this.wrapperClass = setWrapperClass(this.sectionWidth, 'overlay closed');
- }
+  handleCloseOverlay() {
+    this.wrapperClass = setWrapperClass(this.sectionWidth, "overlay closed");
+  }
 }

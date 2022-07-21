@@ -3,12 +3,11 @@
  */
 
 ({
-  getRecords: function( component )
-  {
-    let action = component.get('c.fetchCommissionRecords');
+  getRecords: function (component) {
+    let action = component.get("c.fetchCommissionRecords");
     action.setParams({
-      erpId: component.get('v.recordId')
+      erpId: component.get("v.recordId")
     });
-    return new LightningApex( this, action ).fire();
+    return new LightningApex(this, action).fire();
   }
 });
