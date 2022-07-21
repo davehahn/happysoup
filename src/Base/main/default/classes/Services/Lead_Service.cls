@@ -3,6 +3,8 @@
  */
 
 public inherited sharing class Lead_Service {
+  public static String NEW_STATUS = 'New';
+  public static String ACCEPTED_STATUS = 'Accepted';
   public static List<Lead_Source_Assignment__mdt> leadSourceAssignments {
     get {
       if (leadSourceAssignments == null) {

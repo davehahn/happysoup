@@ -33,10 +33,10 @@ private class RetailSalesToolController_Test {
     dealerAccounts.add( AccountFactory.buildDealerAccount('Another Cool Business') );
     insert dealerAccounts;
 
-    leads.add( new Lead(FirstName = 'Evan', LastName='Hahnzzzwwwrrr') );
-    leads.add( new Lead(FirstName = 'Adam', LastName='Hahnzzzwwwrrr') );
-    leads.add( new Lead(FirstName = 'Erica', LastName='Hahnzzzwwwrrr') );
-    leads.add( new Lead(FirstName = 'Hulk', LastName='Hogan') );
+    leads.add( Factory_Lead.buildLead('Evan', 'Hahnzzzwwwrrr') );
+    leads.add( Factory_Lead.buildLead('Adam', 'Hahnzzzwwwrrr') );
+    leads.add( Factory_Lead.buildLead('Erica', 'Hahnzzzwwwrrr') );
+    leads.add( Factory_Lead.buildLead('Hulk', 'Hogan') );
     insert leads;
 
     languageEntries = Account.Preferred_Language__c.getDescribe().getPicklistValues();
@@ -176,7 +176,6 @@ private class RetailSalesToolController_Test {
       Test.stopTest();
 
       System.assert( tLead.isConverted );
-      System.assertNotEquals( tLead.OwnerId, salesUser.Id);
       System.assertEquals( opps[0].OwnerId, salesUser.Id);
       System.assertEquals( tAcct.OwnerId, salesUser.Id);
       System.assertEquals(customerData.get('Email'), tLead.Email);

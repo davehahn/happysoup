@@ -12,13 +12,13 @@ public without sharing class TA_Lead_AcceptedTimeStamp implements TriggerAction.
       if( LGND_Utilities.sObjectNameFromId(oldLead.OwnerId) == 'Group' &&
         LGND_Utilities.sObjectNameFromId(newLead.OwnerId) == 'User' ){
         newLead.Accepted_On__c = DateTime.now();
-        newLead.Status = 'Accepted';
+        newLead.Status = Lead_Service.NEW_STATUS;
       }
       //Unaccepted
       if( LGND_Utilities.sObjectNameFromId(oldLead.OwnerId) == 'User' &&
         LGND_Utilities.sObjectNameFromId(newLead.OwnerId) == 'Group' ){
         newLead.Accepted_On__c = null;
-        newLead.Status = 'New';
+        newLead.Status = Lead_Service.NEW_STATUS;
       }
     }
   }

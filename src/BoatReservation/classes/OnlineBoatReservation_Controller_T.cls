@@ -365,11 +365,8 @@ private class OnlineBoatReservation_Controller_T
   @IsTest
   static void createAccount_WithSingleFoundLead_Test()
   {
-    Lead l = new Lead(
-      FirstName = 'TestFirst',
-      LastName = 'TestLast',
-      Email = email
-    );
+    Lead l =  Factory_Lead.buildLead('TestFirst','TestLast');
+    l.Email = email;
     insert l;
 
     Test.startTest();
@@ -390,11 +387,8 @@ private class OnlineBoatReservation_Controller_T
   @IsTest
   static void createAccount_WithSingleFoundLeadAndAccount_Test()
   {
-    Lead l = new Lead(
-      FirstName = 'TestFirst-lead',
-      LastName = 'TestLast-lead',
-      Email = email
-    );
+    Lead l =  Factory_Lead.buildLead('TestFirst-lead','TestLast-lead');
+    l.Email = email;
     insert l;
     insert acct;
 
@@ -420,11 +414,8 @@ private class OnlineBoatReservation_Controller_T
   static void createAccount_WithSingleFoundLeadAndMultipleAccounts_NoMatch_Test()
   {
     String diffEmail = 'someoneelse@somewherelese.somedomain';
-    Lead l = new Lead(
-      FirstName = 'TestFirst',
-      LastName = 'TestLast',
-      Email = diffEmail
-    );
+    Lead l = Factory_Lead.buildLead('TestFirst','TestLast');
+    l.Email = diffEmail;
     insert l;
     insert acct1;
 
@@ -454,11 +445,8 @@ private class OnlineBoatReservation_Controller_T
   @IsTest
   static void createAccount_WithSingleFoundLeadAndMultipleAccounts_WithMatch_Test()
   {
-    Lead l = new Lead(
-      FirstName = 'TestFirst',
-      LastName = 'TestLast',
-      Email = email
-    );
+    Lead l =  Factory_Lead.buildLead('TestFirst','TestLast');
+    l.Email = email;
     insert l;
     insert acct;
     Database.DMLOptions dml = new Database.DMLOptions();

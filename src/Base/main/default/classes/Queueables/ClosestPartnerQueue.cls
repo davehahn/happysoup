@@ -42,7 +42,7 @@ public class ClosestPartnerQueue implements Queueable, Database.AllowsCallouts {
           }
         }
       }
-      if (l.Status == 'New') {
+      if (l.Status == Lead_Service.NEW_STATUS) {
         reassign.add(l);
       } else {
         dontReassign.add(l);

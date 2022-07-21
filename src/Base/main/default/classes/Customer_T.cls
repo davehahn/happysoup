@@ -45,7 +45,8 @@ private class Customer_T
       City = cust.get('city'),
       State = cust.get('state'),
       Country = cust.get('country'),
-      PostalCode = cust.get('postalCode')
+      PostalCode = cust.get('postalCode'),
+      Status = Lead_Service.ACCEPTED_STATUS
     );
     TriggerBase.bypass('Lead');
     insert l;

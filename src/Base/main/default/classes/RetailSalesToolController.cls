@@ -43,6 +43,7 @@ global with sharing class RetailSalesToolController {
     public String Email { get; set; }
     public String Phone { get; set; }
     public String MobilePhone { get; set; }
+    public String LeadStatus { get; set; }
 
     public String PreferredLanguage { get; set; }
     public String RelationshipStatus { get; set; }
@@ -92,6 +93,7 @@ global with sharing class RetailSalesToolController {
       this.Phone = ld.Phone;
       this.MobilePhone = ld.MobilePhone;
       this.PreferredLanguage = ld.Preferred_Language__c;
+      this.LeadStatus = ld.Status;
     }
 
     public Lead revertToLead()
@@ -103,7 +105,8 @@ global with sharing class RetailSalesToolController {
         Email = this.Email,
         Phone = this.Phone,
         MobilePhone = this.MobilePhone,
-        Preferred_Language__c = this.PreferredLanguage
+        Preferred_Language__c = this.PreferredLanguage,
+        Status = (this.LeadStatus == null || this.LeadStatus == 'New') ? 'Accepted' : this.LeadStatus
       );
     }
 
@@ -304,11 +307,15 @@ global with sharing class RetailSalesToolController {
     if( entityType == Lead.sObjectType )
     {
       //try {
-        Lead ld = [SELECT Id, Name, Email, FirstName, LastName, Phone, MobilePhone, Preferred_Language__c
-                           FROM Lead
-                           WHERE Id = :objId
-                           AND isConverted = false];
-        return new CustomerWrapper(ld);
+      List<Lead> leads = Lead_Selector.allUncovertedByIds( new Set<Id>{objId} );
+      if( leads.size() == 1 ){
+        return new CustomerWrapper(leads[0]);
+      }
+//        Lead ld = [SELECT Id, Name, Email, FirstName, LastName, Phone, MobilePhone, Preferred_Language__c
+//                           FROM Lead
+//                           WHERE Id = :objId
+//                           AND isConverted = false];
+//        return new CustomerWrapper(ld);
       //}
       //catch(Exception e)
       //{
@@ -516,6 +523,7 @@ global with sharing class RetailSalesToolController {
     //This is a new customer record we need to create a Lead then convert to an account
     {
       Lead ld = cWrap.revertToLead();
+      ld.OwnerId = UserInfo.getUserId();
       insert ld;
       //and now convert it
       return convertLead(ld);
@@ -524,6 +532,7 @@ global with sharing class RetailSalesToolController {
     {
       //here we have a previously created record so we update it and then convert it
       Lead ld = cWrap.revertToLead();
+      ld.OwnerId = UserInfo.getUserId();
       update ld;
       //and now convert it
       return convertLead(ld);
